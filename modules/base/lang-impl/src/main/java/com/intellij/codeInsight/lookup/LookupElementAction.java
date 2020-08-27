@@ -15,25 +15,25 @@
  */
 package com.intellij.codeInsight.lookup;
 
-import javax.annotation.Nullable;
-import javax.annotation.Nonnull;
+import consulo.ui.image.Image;
 
-import javax.swing.*;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author peter
  */
 public abstract class LookupElementAction {
-  private final Icon myIcon;
+  private final Image myIcon;
   private final String myText;
 
-  protected LookupElementAction(@Nullable Icon icon, @Nonnull String text) {
+  protected LookupElementAction(@Nullable Image icon, @Nonnull String text) {
     myIcon = icon;
     myText = text;
   }
 
   @Nullable
-  public Icon getIcon() {
+  public Image getIcon() {
     return myIcon;
   }
 

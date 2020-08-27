@@ -1199,8 +1199,8 @@ class RunConfigurable extends BaseConfigurable {
         }
 
         @Override
-        public Icon getIconFor(final ConfigurationType type) {
-          return TargetAWT.to(type.getIcon());
+        public Image getIconFor(final ConfigurationType type) {
+          return type.getIcon();
         }
 
         @Override
@@ -1237,8 +1237,8 @@ class RunConfigurable extends BaseConfigurable {
             }
 
             @Override
-            public Icon getIconFor(final ConfigurationFactory factory) {
-              return TargetAWT.to(factory.getIcon());
+            public Image getIconFor(final ConfigurationFactory factory) {
+              return factory.getIcon();
             }
 
             @Override

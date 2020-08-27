@@ -15,18 +15,17 @@
  */
 package com.intellij.codeInsight.lookup;
 
-import consulo.awt.TargetAWT;
-import consulo.ide.IconDescriptorUpdaters;
 import com.intellij.openapi.util.Iconable;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.meta.PsiMetaData;
 import com.intellij.psi.util.PsiUtilCore;
-import com.intellij.ui.SizedIcon;
 import com.intellij.util.IconUtil;
-import com.intellij.util.ui.EmptyIcon;
-import javax.annotation.Nullable;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.ide.IconDescriptorUpdaters;
+import consulo.ui.image.Image;
+import consulo.ui.image.ImageEffects;
 
-import javax.swing.*;
+import javax.annotation.Nullable;
 
 /**
  * @author peter
@@ -45,18 +44,20 @@ public class DefaultLookupItemRenderer extends LookupElementRenderer<LookupItem>
   }
 
   @Nullable
-  public static Icon getRawIcon(final LookupElement item, boolean real) {
-    final Icon icon = _getRawIcon(item, real);
-    if (icon != null && icon.getIconHeight() > IconUtil.getDefaultNodeIconSize()) {
-      return new SizedIcon(icon, icon.getIconWidth(), IconUtil.getDefaultNodeIconSize());
+  @RequiredReadAction
+  public static Image getRawIcon(final LookupElement item, boolean real) {
+    final Image icon = _getRawIcon(item, real);
+    if (icon != null && icon.getHeight() > IconUtil.getDefaultNodeIconSize()) {
+      return ImageEffects.resize(icon, icon.getWidth(), IconUtil.getDefaultNodeIconSize());
     }
     return icon;
   }
 
   @Nullable
-  private static Icon _getRawIcon(LookupElement item, boolean real) {
+  @RequiredReadAction
+  private static Image _getRawIcon(LookupElement item, boolean real) {
     if (item instanceof LookupItem) {
-      Icon icon = (Icon)((LookupItem)item).getAttribute(LookupItem.ICON_ATTR);
+      Image icon = (Image)((LookupItem)item).getAttribute(LookupItem.ICON_ATTR);
       if (icon != null) return icon;
     }
 
@@ -64,19 +65,19 @@ public class DefaultLookupItemRenderer extends LookupElementRenderer<LookupItem>
 
     if (!real) {
       if (item.getObject() instanceof String) {
-        return EmptyIcon.ICON_0;
+        return Image.empty();
       }
 
-      return new EmptyIcon(IconUtil.getDefaultNodeIconSize() * 2, IconUtil.getDefaultNodeIconSize());
+      return Image.empty(IconUtil.getDefaultNodeIconSize() * 2, IconUtil.getDefaultNodeIconSize());
     }
 
     if (o instanceof Iconable && !(o instanceof PsiElement)) {
-      return TargetAWT.to(((Iconable)o).getIcon(Iconable.ICON_FLAG_VISIBILITY));
+      return ((Iconable)o).getIcon(Iconable.ICON_FLAG_VISIBILITY);
     }
 
     final PsiElement element = item.getPsiElement();
     if (element != null && element.isValid()) {
-      return TargetAWT.to(IconDescriptorUpdaters.getIcon(element, Iconable.ICON_FLAG_VISIBILITY));
+      return IconDescriptorUpdaters.getIcon(element, Iconable.ICON_FLAG_VISIBILITY);
     }
     return null;
   }

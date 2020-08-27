@@ -8,8 +8,8 @@ import com.intellij.execution.actions.ChooseRunConfigurationPopup;
 import com.intellij.ide.actions.runAnything.RunAnythingRunConfigurationItem;
 import com.intellij.ide.actions.runAnything.items.RunAnythingItem;
 import com.intellij.openapi.actionSystem.DataContext;
-import consulo.awt.TargetAWT;
 import consulo.ui.image.Image;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -39,7 +39,7 @@ public abstract class RunAnythingRunConfigurationProvider extends RunAnythingPro
   @Nullable
   @Override
   public Image getIcon(@Nonnull ChooseRunConfigurationPopup.ItemWrapper value) {
-    return TargetAWT.from(value.getIcon());
+    return value.getIcon();
   }
 
   @Nullable
@@ -51,6 +51,6 @@ public abstract class RunAnythingRunConfigurationProvider extends RunAnythingPro
   @Nonnull
   @Override
   public RunAnythingItem getMainListItem(@Nonnull DataContext dataContext, @Nonnull ChooseRunConfigurationPopup.ItemWrapper value) {
-    return new RunAnythingRunConfigurationItem(value, TargetAWT.from(value.getIcon()));
+    return new RunAnythingRunConfigurationItem(value, value.getIcon());
   }
 }

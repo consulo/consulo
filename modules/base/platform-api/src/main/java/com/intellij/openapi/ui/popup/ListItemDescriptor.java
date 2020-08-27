@@ -1,9 +1,9 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.openapi.ui.popup;
 
-import javax.annotation.Nullable;
+import consulo.ui.image.Image;
 
-import javax.swing.*;
+import javax.annotation.Nullable;
 
 public interface ListItemDescriptor<T> {
   @Nullable
@@ -13,9 +13,9 @@ public interface ListItemDescriptor<T> {
   String getTooltipFor(T value);
 
   @Nullable
-  Icon getIconFor(T value);
+  Image getIconFor(T value);
 
-  default Icon getSelectedIconFor(T value) {
+  default Image getSelectedIconFor(T value) {
     return getIconFor(value);
   }
 

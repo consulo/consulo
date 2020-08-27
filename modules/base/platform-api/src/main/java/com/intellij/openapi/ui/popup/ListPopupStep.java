@@ -15,9 +15,10 @@
  */
 package com.intellij.openapi.ui.popup;
 
+import consulo.ui.image.Image;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.swing.*;
 import java.util.List;
 
 /**
@@ -52,9 +53,10 @@ public interface ListPopupStep<T> extends PopupStep<T> {
    * @return the icon to display, or null if no icon is necessary.
    */
   @Nullable
-  Icon getIconFor(T aValue);
+  Image getIconFor(T aValue);
 
-  default Icon getSelectedIconFor(T value) {
+  @Nullable
+  default Image getSelectedIconFor(T value) {
     return getIconFor(value);
   }
 

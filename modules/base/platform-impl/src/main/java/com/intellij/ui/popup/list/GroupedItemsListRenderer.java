@@ -20,6 +20,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.ErrorLabel;
 import com.intellij.ui.GroupedElementsRenderer;
 import com.intellij.util.ui.JBUI;
+import consulo.ui.image.Image;
 
 import javax.swing.*;
 import java.awt.*;
@@ -44,7 +45,7 @@ public class GroupedItemsListRenderer<E> extends GroupedElementsRenderer.List im
     boolean hasSeparator = myDescriptor.hasSeparatorAboveOf(value);
     if (index == 0 && StringUtil.isEmptyOrSpaces(caption)) hasSeparator = false;
 
-    Icon icon = isSelected ? myDescriptor.getSelectedIconFor(value) : myDescriptor.getIconFor(value);
+    Image icon = isSelected ? myDescriptor.getSelectedIconFor(value) : myDescriptor.getIconFor(value);
     final JComponent result = configureComponent(myDescriptor.getTextFor(value), myDescriptor.getTooltipFor(value), icon, icon, isSelected, hasSeparator, caption, -1);
     myCurrentIndex = index;
     myRendererComponent.setBackground(list.getBackground());

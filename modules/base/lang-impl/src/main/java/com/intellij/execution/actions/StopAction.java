@@ -34,7 +34,6 @@ import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.components.JBList;
 import com.intellij.ui.popup.list.GroupedItemsListRenderer;
-import consulo.awt.TargetAWT;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
@@ -173,7 +172,7 @@ public class StopAction extends DumbAwareAction implements AnAction.TransparentU
 
         @Nullable
         @Override
-        public Icon getIconFor(HandlerItem item) {
+        public Image getIconFor(HandlerItem item) {
           return item.icon;
         }
 
@@ -238,7 +237,7 @@ public class StopAction extends DumbAwareAction implements AnAction.TransparentU
     for (final RunContentDescriptor descriptor : descriptors) {
       final ProcessHandler handler = descriptor.getProcessHandler();
       if (handler != null) {
-        HandlerItem item = new HandlerItem(descriptor.getDisplayName(), TargetAWT.to(descriptor.getIcon()), false) {
+        HandlerItem item = new HandlerItem(descriptor.getDisplayName(), descriptor.getIcon(), false) {
           @Override
           void stop() {
             ExecutionManagerImpl.stopProcess(descriptor);
@@ -306,10 +305,10 @@ public class StopAction extends DumbAwareAction implements AnAction.TransparentU
 
   private abstract static class HandlerItem {
     final String displayName;
-    final Icon icon;
+    final Image icon;
     final boolean hasSeparator;
 
-    private HandlerItem(String displayName, Icon icon, boolean hasSeparator) {
+    private HandlerItem(String displayName, Image icon, boolean hasSeparator) {
       this.displayName = displayName;
       this.icon = icon;
       this.hasSeparator = hasSeparator;

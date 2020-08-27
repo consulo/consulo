@@ -21,7 +21,6 @@ import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.codeInsight.lookup.LookupElementPresentation;
 import com.intellij.navigation.ChooseByNameContributor;
 import com.intellij.openapi.actionSystem.IdeActions;
-import consulo.logging.Logger;
 import com.intellij.openapi.fileTypes.FileNameMatcher;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.fileTypes.FileTypeManager;
@@ -47,13 +46,13 @@ import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.search.ProjectScope;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.ProcessingContext;
-import consulo.awt.TargetAWT;
 import consulo.codeInsight.completion.CompletionProvider;
+import consulo.logging.Logger;
+import consulo.ui.image.Image;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.swing.*;
 import java.util.*;
 
 import static com.intellij.patterns.PlatformPatterns.psiElement;
@@ -261,7 +260,7 @@ public class FilePathCompletionContributor extends CompletionContributor {
     private final String myName;
     private final String myPath;
     private final String myInfo;
-    private final Icon myIcon;
+    private final Image myIcon;
     private final PsiFile myFile;
     private final List<FileReferenceHelper> myHelpers;
 
@@ -272,7 +271,7 @@ public class FilePathCompletionContributor extends CompletionContributor {
       myHelpers = helpers;
 
       myInfo = FileInfoManager.getFileAdditionalInfo(file);
-      myIcon = TargetAWT.to(file.getFileType().getIcon());
+      myIcon = file.getFileType().getIcon();
 
       myFile = file;
     }

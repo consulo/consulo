@@ -16,9 +16,9 @@
 package com.intellij.execution;
 
 import com.intellij.ide.IdeBundle;
-import javax.annotation.Nonnull;
+import consulo.ui.image.Image;
 
-import javax.swing.*;
+import javax.annotation.Nonnull;
 
 public class DefaultExecutionTarget extends ExecutionTarget {
   public static final ExecutionTarget INSTANCE = new DefaultExecutionTarget();
@@ -37,7 +37,7 @@ public class DefaultExecutionTarget extends ExecutionTarget {
   }
 
   @Override
-  public Icon getIcon() {
+  public Image getIcon() {
     return null;
   }
 

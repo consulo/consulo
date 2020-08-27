@@ -21,10 +21,10 @@ import com.intellij.codeInsight.completion.PlainPrefixMatcher;
 import com.intellij.codeInsight.completion.PrefixMatcher;
 import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
+import consulo.ui.image.Image;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import javax.swing.*;
 import java.util.*;
 
 /**
@@ -37,7 +37,7 @@ public abstract class TextFieldWithAutoCompletionListProvider<T> implements Comp
   private String myCompletionAdvertisement;
 
   @Nullable
-  protected abstract Icon getIcon(@Nonnull final T item);
+  protected abstract Image getIcon(@Nonnull final T item);
 
   @Nonnull
   protected abstract String getLookupString(@Nonnull final T item);

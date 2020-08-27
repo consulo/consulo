@@ -17,7 +17,6 @@ package com.intellij.openapi.roots.ui.configuration.libraries;
 
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.IdeBundle;
-import consulo.logging.Logger;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.LibraryOrderEntry;
@@ -39,12 +38,11 @@ import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.openapi.vfs.newvfs.ArchiveFileSystem;
 import com.intellij.util.ParameterizedRunnable;
-import consulo.awt.TargetAWT;
+import consulo.logging.Logger;
+import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import javax.swing.*;
 import java.util.*;
 
 /**
@@ -175,8 +173,8 @@ public class LibraryEditingUtil {
           }
 
           @Override
-          public Icon getIconFor(LibraryType aValue) {
-            return aValue != null ? TargetAWT.to(aValue.getIcon()) : AllIcons.Nodes.PpLib;
+          public Image getIconFor(LibraryType aValue) {
+            return aValue != null ? aValue.getIcon() : AllIcons.Nodes.PpLib;
           }
 
           @Override

@@ -26,7 +26,6 @@ import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.CommonProcessors;
 import com.intellij.util.FilteringProcessor;
-import consulo.awt.TargetAWT;
 import consulo.ide.IconDescriptorUpdaters;
 import consulo.ui.image.Image;
 import gnu.trove.THashSet;
@@ -112,7 +111,7 @@ public class FileReferenceCompletionImpl extends FileReferenceCompletion {
         if (encoded == null) continue;
         if (!encoded.equals(name)) {
           final Image icon = IconDescriptorUpdaters.getIcon(psiElement, Iconable.ICON_FLAG_READ_STATUS | Iconable.ICON_FLAG_VISIBILITY);
-          LookupElementBuilder item = FileInfoManager.getFileLookupItem(candidates[i], encoded, TargetAWT.to(icon));
+          LookupElementBuilder item = FileInfoManager.getFileLookupItem(candidates[i], encoded, icon);
           encodedVariants.add(item.withTailText(" (" + name + ")"));
         }
         else {

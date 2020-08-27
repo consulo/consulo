@@ -16,9 +16,10 @@
 
 package com.intellij.execution;
 
-import javax.annotation.Nonnull;
+import consulo.ui.image.Image;
 
-import javax.swing.*;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public abstract class ExecutionTarget {
   @Nonnull
@@ -27,8 +28,8 @@ public abstract class ExecutionTarget {
   @Nonnull
   public abstract String getDisplayName();
 
-  @javax.annotation.Nullable
-  public abstract Icon getIcon();
+  @Nullable
+  public abstract Image getIcon();
 
   public abstract boolean canRun(@Nonnull RunnerAndConfigurationSettings configuration);
 

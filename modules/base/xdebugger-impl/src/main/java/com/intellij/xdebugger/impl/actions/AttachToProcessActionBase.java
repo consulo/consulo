@@ -10,7 +10,6 @@ import com.intellij.notification.Notifications;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.application.ApplicationManager;
-import consulo.logging.Logger;
 import com.intellij.openapi.progress.EmptyProgressIndicator;
 import com.intellij.openapi.progress.PerformInBackgroundOption;
 import com.intellij.openapi.progress.ProgressIndicator;
@@ -18,9 +17,6 @@ import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.popup.*;
 import com.intellij.openapi.ui.popup.util.BaseListPopupStep;
-import consulo.util.dataholder.Key;
-import consulo.util.dataholder.UserDataHolder;
-import consulo.util.dataholder.UserDataHolderBase;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.wm.ToolWindowId;
 import com.intellij.ui.popup.async.AsyncPopupStep;
@@ -30,8 +26,11 @@ import com.intellij.util.containers.MultiMap;
 import com.intellij.util.ui.StatusText;
 import com.intellij.xdebugger.XDebuggerBundle;
 import com.intellij.xdebugger.attach.*;
-import consulo.awt.TargetAWT;
+import consulo.logging.Logger;
 import consulo.ui.image.Image;
+import consulo.util.dataholder.Key;
+import consulo.util.dataholder.UserDataHolder;
+import consulo.util.dataholder.UserDataHolderBase;
 import org.intellij.lang.annotations.MagicConstant;
 import org.jetbrains.annotations.TestOnly;
 
@@ -614,8 +613,8 @@ public abstract class AttachToProcessActionBase extends AnAction {
     }
 
     @Override
-    public Icon getIconFor(AttachItem value) {
-      return TargetAWT.to(value.getIcon(myProject));
+    public Image getIconFor(AttachItem value) {
+      return value.getIcon(myProject);
     }
 
     @Nonnull

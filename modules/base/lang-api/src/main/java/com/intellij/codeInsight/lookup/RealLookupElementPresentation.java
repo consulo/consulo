@@ -1,9 +1,9 @@
 package com.intellij.codeInsight.lookup;
 
 import com.intellij.openapi.util.text.StringUtil;
-import javax.annotation.Nullable;
+import consulo.ui.image.Image;
 
-import javax.swing.*;
+import javax.annotation.Nullable;
 import java.awt.*;
 
 /**
@@ -45,9 +45,9 @@ public class RealLookupElementPresentation extends LookupElementPresentation {
       result += getStringWidth(typeText, normalMetrics);
     }
     result += getStringWidth("W", boldMetrics); //for unforeseen Swing size adjustments
-    final Icon typeIcon = presentation.getTypeIcon();
+    final Image typeIcon = presentation.getTypeIcon();
     if (typeIcon != null) {
-      result += typeIcon.getIconWidth();
+      result += typeIcon.getWidth();
     }
     return result;
   }

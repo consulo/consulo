@@ -32,6 +32,9 @@ import com.intellij.openapi.ui.popup.util.BaseListPopupStep;
 import com.intellij.ui.ListCellRendererWithRightAlignedComponent;
 import com.intellij.ui.awt.RelativePoint;
 import com.intellij.ui.popup.list.ListPopupImpl;
+import consulo.awt.TargetAWT;
+import consulo.ui.image.Image;
+
 import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;
@@ -97,7 +100,7 @@ public abstract class FindUsagesInProjectStructureActionBase extends AnAction im
         }
 
         @Override
-        public Icon getIconFor(ProjectStructureElementUsage selection) {
+        public Image getIconFor(ProjectStructureElementUsage selection) {
           return selection.getIcon();
         }
       };
@@ -108,7 +111,7 @@ public abstract class FindUsagesInProjectStructureActionBase extends AnAction im
           @Override
           protected void customize(ProjectStructureElementUsage value) {
             setLeftText(value.getPresentableName());
-            setIcon(value.getIcon());
+            setIcon(TargetAWT.to(value.getIcon()));
             setRightForeground(Color.GRAY);
             setRightText(value.getPresentableLocationInElement());
           }

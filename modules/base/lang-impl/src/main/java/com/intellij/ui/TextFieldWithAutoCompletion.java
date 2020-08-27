@@ -17,7 +17,8 @@
 package com.intellij.ui;
 
 import com.intellij.codeInsight.hint.HintManager;
-import com.intellij.openapi.actionSystem.*;
+import com.intellij.openapi.actionSystem.ActionManager;
+import com.intellij.openapi.actionSystem.IdeActions;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.event.DocumentAdapter;
@@ -29,10 +30,10 @@ import com.intellij.openapi.keymap.KeymapUtil;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.text.StringUtil;
+import consulo.ui.image.Image;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import javax.swing.*;
 import java.util.Collection;
 
 /**
@@ -76,7 +77,7 @@ public class TextFieldWithAutoCompletion<T> extends LanguageTextField {
 
   public static TextFieldWithAutoCompletion<String> create(final Project project,
                                                            @Nonnull final Collection<String> items,
-                                                           @Nullable final Icon icon,
+                                                           @Nullable final Image icon,
                                                            final boolean showAutocompletionIsAvailableHint,
                                                            @Nullable final String text) {
     return new TextFieldWithAutoCompletion<String>(project, new StringsCompletionProvider(items, icon), showAutocompletionIsAvailableHint,
@@ -135,10 +136,10 @@ public class TextFieldWithAutoCompletion<T> extends LanguageTextField {
   }
 
   public static class StringsCompletionProvider extends TextFieldWithAutoCompletionListProvider<String> {
-    @Nullable private final Icon myIcon;
+    @Nullable private final Image myIcon;
 
     public StringsCompletionProvider(@Nullable final Collection<String> variants,
-                                     @Nullable final Icon icon) {
+                                     @Nullable final Image icon) {
       super(variants);
       myIcon = icon;
     }
@@ -149,7 +150,7 @@ public class TextFieldWithAutoCompletion<T> extends LanguageTextField {
     }
 
     @Override
-    protected Icon getIcon(@Nonnull final String item) {
+    protected Image getIcon(@Nonnull final String item) {
       return myIcon;
     }
 

@@ -20,17 +20,14 @@ import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.codeInsight.lookup.LookupElementPresentation;
 import com.intellij.codeInsight.lookup.LookupValueWithUIHint;
 import com.intellij.codeInsight.lookup.RealLookupElementPresentation;
-import consulo.logging.Logger;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.colors.EditorColorsScheme;
 import com.intellij.openapi.editor.colors.EditorFontType;
 import com.intellij.openapi.editor.colors.FontPreferences;
 import com.intellij.openapi.editor.ex.util.EditorUIUtil;
-import com.intellij.openapi.editor.ex.util.EditorUtil;
 import com.intellij.openapi.editor.impl.ComplementaryFontsRegistry;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.util.TextRange;
-import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.codeStyle.NameUtil;
 import com.intellij.ui.*;
@@ -38,12 +35,14 @@ import com.intellij.ui.components.JBList;
 import com.intellij.ui.speedSearch.SpeedSearchUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.FList;
-import com.intellij.util.ui.EmptyIcon;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.accessibility.AccessibleContextUtil;
 import consulo.application.AccessRule;
 import consulo.desktop.util.awt.MorphColor;
+import consulo.logging.Logger;
+import consulo.ui.image.Image;
+import consulo.ui.image.ImageEffects;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -60,13 +59,13 @@ import java.util.Set;
  */
 public class LookupCellRenderer implements ListCellRenderer {
   private static final Logger LOG = Logger.getInstance(LookupCellRenderer.class);
-  //TODO[kb]: move all these awesome constants to Editor's Fonts & Colors settings
-  private Icon myEmptyIcon = JBUI.scale(EmptyIcon.create(5));
+  private Image myEmptyIcon = Image.empty(5);
   private final Font myNormalFont;
   private final Font myBoldFont;
   private final FontMetrics myNormalMetrics;
   private final FontMetrics myBoldMetrics;
 
+  //TODO[kb]: move all these awesome constants to Editor's Fonts & Colors settings
   public static final Color BACKGROUND_COLOR = MorphColor.of(UIUtil::getPanelBackground);
   public static final Color FOREGROUND_COLOR = JBColor.foreground();
   private static final Color GRAYED_FOREGROUND_COLOR = new JBColor(Gray._160, Gray._110);
@@ -213,7 +212,7 @@ public class LookupCellRenderer implements ListCellRenderer {
     return myPanel;
   }
 
-  private static int calcSpacing(@Nonnull SimpleColoredComponent component, @Nullable Icon icon) {
+  private static int calcSpacing(@Nonnull SimpleColoredComponent component, @Nullable Image icon) {
     Insets iPad = component.getIpad();
     int width = iPad.left + iPad.right;
     Border myBorder = component.getMyBorder();
@@ -226,7 +225,7 @@ public class LookupCellRenderer implements ListCellRenderer {
       width += insets.left + insets.right;
     }
     if (icon != null) {
-      width += icon.getIconWidth() + component.getIconTextGap();
+      width += icon.getWidth() + component.getIconTextGap();
     }
     return width;
   }
@@ -389,10 +388,10 @@ public class LookupCellRenderer implements ListCellRenderer {
 
     int used = RealLookupElementPresentation.getStringWidth(labelText, normalMetrics);
 
-    final Icon icon = presentation.getTypeIcon();
+    final Image icon = presentation.getTypeIcon();
     if (icon != null) {
       myTypeLabel.setIcon(icon);
-      used += icon.getIconWidth();
+      used += icon.getWidth();
     }
 
     Color sampleBackground = background;
@@ -417,20 +416,17 @@ public class LookupCellRenderer implements ListCellRenderer {
     return used;
   }
 
-  public static Icon augmentIcon(@Nullable Editor editor, @Nullable Icon icon, @Nonnull Icon standard) {
-    if (Registry.is("editor.scale.completion.icons")) {
-      standard = EditorUtil.scaleIconAccordingEditorFont(standard, editor);
-      icon = EditorUtil.scaleIconAccordingEditorFont(icon, editor);
-    }
+  public static Image augmentIcon(@Nullable Editor editor, @Nullable Image icon, @Nonnull Image standard) {
+    //if (Registry.is("editor.scale.completion.icons")) {
+    //  standard = EditorUtil.scaleIconAccordingEditorFont(standard, editor);
+    //  icon = EditorUtil.scaleIconAccordingEditorFont(icon, editor);
+    //}
     if (icon == null) {
       return standard;
     }
 
-    if (icon.getIconHeight() < standard.getIconHeight() || icon.getIconWidth() < standard.getIconWidth()) {
-      final LayeredIcon layeredIcon = new LayeredIcon(2);
-      layeredIcon.setIcon(icon, 0, 0, (standard.getIconHeight() - icon.getIconHeight()) / 2);
-      layeredIcon.setIcon(standard, 1);
-      return layeredIcon;
+    if (icon.getHeight() < standard.getHeight() || icon.getWidth() < standard.getWidth()) {
+      return ImageEffects.resize(icon, standard.getWidth(), standard.getHeight());
     }
 
     return icon;
@@ -463,16 +459,16 @@ public class LookupCellRenderer implements ListCellRenderer {
 
 
   int updateMaximumWidth(final LookupElementPresentation p, LookupElement item) {
-    final Icon icon = p.getIcon();
-    if (icon != null && (icon.getIconWidth() > myEmptyIcon.getIconWidth() || icon.getIconHeight() > myEmptyIcon.getIconHeight())) {
-      myEmptyIcon = EmptyIcon.create(Math.max(icon.getIconWidth(), myEmptyIcon.getIconWidth()), Math.max(icon.getIconHeight(), myEmptyIcon.getIconHeight()));
+    final Image icon = p.getIcon();
+    if (icon != null && (icon.getWidth() > myEmptyIcon.getWidth() || icon.getHeight() > myEmptyIcon.getHeight())) {
+      myEmptyIcon = Image.empty(Math.max(icon.getWidth(), myEmptyIcon.getWidth()), Math.max(icon.getHeight(), myEmptyIcon.getHeight()));
     }
 
     return RealLookupElementPresentation.calculateWidth(p, getRealFontMetrics(item, false), getRealFontMetrics(item, true)) + calcSpacing(myTailComponent, null) + calcSpacing(myTypeLabel, null);
   }
 
   public int getTextIndent() {
-    return myNameComponent.getIpad().left + myEmptyIcon.getIconWidth() + myNameComponent.getIconTextGap();
+    return myNameComponent.getIpad().left + myEmptyIcon.getWidth() + myNameComponent.getIconTextGap();
   }
 
   private static class MySimpleColoredComponent extends SimpleColoredComponent {

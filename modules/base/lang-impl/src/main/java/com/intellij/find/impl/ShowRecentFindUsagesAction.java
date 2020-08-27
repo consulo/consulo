@@ -30,11 +30,9 @@ import com.intellij.openapi.ui.popup.util.BaseListPopupStep;
 import com.intellij.ui.awt.RelativePoint;
 import com.intellij.usages.ConfigurableUsageTarget;
 import com.intellij.usages.UsageView;
-import consulo.awt.TargetAWT;
+import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
-
-import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
@@ -71,9 +69,9 @@ public class ShowRecentFindUsagesAction extends AnAction {
     BaseListPopupStep<ConfigurableUsageTarget> step =
             new BaseListPopupStep<ConfigurableUsageTarget>(FindBundle.message("recent.find.usages.action.title"), history) {
               @Override
-              public Icon getIconFor(final ConfigurableUsageTarget data) {
+              public Image getIconFor(final ConfigurableUsageTarget data) {
                 ItemPresentation presentation = data == null ? null : data.getPresentation();
-                return presentation == null ? null : TargetAWT.to(presentation.getIcon());
+                return presentation == null ? null : presentation.getIcon();
               }
 
               @Override

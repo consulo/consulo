@@ -68,9 +68,9 @@ import com.intellij.xdebugger.impl.ui.DebuggerUIUtil;
 import com.intellij.xdebugger.impl.ui.tree.actions.XDebuggerTreeActionBase;
 import com.intellij.xdebugger.settings.XDebuggerSettings;
 import com.intellij.xdebugger.ui.DebuggerColors;
-import consulo.ui.annotation.RequiredUIAccess;
 import consulo.annotation.access.RequiredReadAction;
-import consulo.awt.TargetAWT;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.image.Image;
 import consulo.xdebugger.breakpoints.XLineBreakpointResolverTypeExtension;
 import gnu.trove.THashMap;
 
@@ -208,8 +208,8 @@ public class XDebuggerUtilImpl extends XDebuggerUtil {
               }
 
               @Override
-              public Icon getIconFor(XLineBreakpointType.XLineBreakpointVariant value) {
-                return TargetAWT.to(value.getIcon());
+              public Image getIconFor(XLineBreakpointType.XLineBreakpointVariant value) {
+                return value.getIcon();
               }
 
               @Override

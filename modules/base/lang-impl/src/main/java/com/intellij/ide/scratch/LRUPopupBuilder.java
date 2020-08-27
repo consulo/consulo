@@ -26,10 +26,10 @@ import com.intellij.util.ObjectUtils;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.JBIterable;
 import com.intellij.util.ui.EmptyIcon;
-import consulo.awt.TargetAWT;
+import consulo.ui.image.Image;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
@@ -46,7 +46,7 @@ public abstract class LRUPopupBuilder<T> {
 
   private final String myTitle;
   private final PropertiesComponent myPropertiesComponent;
-  private final Map<T, Pair<String, Icon>> myPresentations = new IdentityHashMap<>();
+  private final Map<T, Pair<String, Image>> myPresentations = new IdentityHashMap<>();
 
   private T mySelection;
   private Consumer<? super T> myOnChosen;
@@ -95,9 +95,9 @@ public abstract class LRUPopupBuilder<T> {
       }
 
       @Override
-      public Icon getIcon(Language language) {
+      public Image getIcon(Language language) {
         LanguageFileType associatedLanguage = language.getAssociatedFileType();
-        return associatedLanguage != null ? TargetAWT.to(associatedLanguage.getIcon()) : null;
+        return associatedLanguage != null ? associatedLanguage.getIcon() : null;
       }
 
       @Override
@@ -116,7 +116,7 @@ public abstract class LRUPopupBuilder<T> {
 
   public abstract String getStorageId(T t);
 
-  public abstract Icon getIcon(T t);
+  public abstract Image getIcon(T t);
 
   @Nonnull
   public LRUPopupBuilder<T> forValues(@Nullable Iterable<? extends T> items) {
@@ -131,7 +131,7 @@ public abstract class LRUPopupBuilder<T> {
   }
 
   @Nonnull
-  public LRUPopupBuilder<T> withExtra(@Nonnull T extra, @Nonnull String displayName, @Nullable Icon icon) {
+  public LRUPopupBuilder<T> withExtra(@Nonnull T extra, @Nonnull String displayName, @Nullable Image icon) {
     myExtraItems = myExtraItems.append(extra);
     myPresentations.put(extra, Pair.create(displayName, icon));
     return this;
@@ -180,7 +180,7 @@ public abstract class LRUPopupBuilder<T> {
       }
 
       @Override
-      public Icon getIconFor(T t) {
+      public Image getIconFor(T t) {
         return t == null ? null : getPresentation(t).second;
       }
 
@@ -213,8 +213,8 @@ public abstract class LRUPopupBuilder<T> {
   }
 
   @Nonnull
-  private Pair<String, Icon> getPresentation(T t) {
-    Pair<String, Icon> p = myPresentations.get(t);
+  private Pair<String, Image> getPresentation(T t) {
+    Pair<String, Image> p = myPresentations.get(t);
     if (p == null) myPresentations.put(t, p = Pair.create(getDisplayName(t), getIcon(t)));
     return p;
   }

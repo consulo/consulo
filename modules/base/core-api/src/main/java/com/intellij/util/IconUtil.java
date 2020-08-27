@@ -109,7 +109,7 @@ public class IconUtil {
   }
 
   public static int getDefaultNodeIconSize() {
-    return JBUI.scale(16);
+    return 16;
   }
 
   public static Image toImage(@Nonnull Icon icon) {

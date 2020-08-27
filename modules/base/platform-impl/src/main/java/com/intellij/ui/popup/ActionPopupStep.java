@@ -10,12 +10,10 @@ import com.intellij.openapi.util.text.TextWithMnemonic;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.ui.StatusText;
 import com.intellij.util.ui.UIUtil;
-import consulo.awt.TargetAWT;
+import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import javax.swing.*;
 import java.awt.event.InputEvent;
 import java.util.List;
 import java.util.function.Supplier;
@@ -129,13 +127,13 @@ public class ActionPopupStep implements ListPopupStepEx<PopupFactoryImpl.ActionI
   }
 
   @Override
-  public Icon getIconFor(final PopupFactoryImpl.ActionItem aValue) {
-    return TargetAWT.to(aValue.getIcon(false));
+  public Image getIconFor(final PopupFactoryImpl.ActionItem aValue) {
+    return aValue.getIcon(false);
   }
 
   @Override
-  public Icon getSelectedIconFor(PopupFactoryImpl.ActionItem value) {
-    return TargetAWT.to(value.getIcon(true));
+  public Image getSelectedIconFor(PopupFactoryImpl.ActionItem value) {
+    return value.getIcon(true);
   }
 
   @Override

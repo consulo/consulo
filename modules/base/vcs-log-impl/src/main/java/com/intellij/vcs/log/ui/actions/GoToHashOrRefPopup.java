@@ -21,7 +21,6 @@ import com.intellij.codeInsight.completion.InsertHandler;
 import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
 import com.intellij.openapi.application.ApplicationManager;
-import consulo.logging.Logger;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.popup.JBPopup;
@@ -34,16 +33,18 @@ import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.textCompletion.DefaultTextCompletionValueDescriptor;
 import com.intellij.util.textCompletion.ValuesCompletionProvider;
-import com.intellij.util.ui.ColorIcon;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.vcs.log.VcsLogRefs;
 import com.intellij.vcs.log.VcsRef;
 import com.intellij.vcs.log.ui.VcsLogColorManager;
 import com.intellij.vcs.log.ui.frame.VcsLogGraphTable;
 import com.intellij.vcsUtil.VcsImplUtil;
+import consulo.awt.TargetAWT;
+import consulo.logging.Logger;
+import consulo.ui.image.ImageEffects;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
@@ -240,7 +241,7 @@ public class GoToHashOrRefPopup {
       if (myColorManager.isMultipleRoots()) {
         lookupBuilder = lookupBuilder
           .withTypeText(getTypeText(item),
-                        new ColorIcon(15, VcsLogGraphTable.getRootBackgroundColor(item.getRoot(), myColorManager)),
+                        ImageEffects.colorFilled(15, 15, TargetAWT.from(VcsLogGraphTable.getRootBackgroundColor(item.getRoot(), myColorManager))),
                         true);
       }
       return lookupBuilder;

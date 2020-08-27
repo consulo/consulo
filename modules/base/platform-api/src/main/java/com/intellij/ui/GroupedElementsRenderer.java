@@ -5,6 +5,8 @@ import com.intellij.ui.components.panels.NonOpaquePanel;
 import com.intellij.ui.components.panels.OpaquePanel;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.accessibility.AccessibleContextUtil;
+import consulo.awt.TargetAWT;
+import consulo.ui.image.Image;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -36,7 +38,7 @@ public abstract class GroupedElementsRenderer {
     return new SeparatorWithText();
   }
 
-  protected final JComponent configureComponent(String text, String tooltip, Icon icon, Icon disabledIcon, boolean isSelected, boolean hasSeparatorAbove, String separatorTextAbove, int preferredForcedWidth) {
+  protected final JComponent configureComponent(String text, String tooltip, Image icon, Image disabledIcon, boolean isSelected, boolean hasSeparatorAbove, String separatorTextAbove, int preferredForcedWidth) {
     mySeparatorComponent.setVisible(hasSeparatorAbove);
     mySeparatorComponent.setCaption(separatorTextAbove);
     mySeparatorComponent.setMinimumWidth(preferredForcedWidth);
@@ -46,8 +48,8 @@ public abstract class GroupedElementsRenderer {
     AccessibleContextUtil.setName(myRendererComponent, myTextLabel);
     AccessibleContextUtil.setDescription(myRendererComponent, myTextLabel);
 
-    myTextLabel.setIcon(icon);
-    myTextLabel.setDisabledIcon(disabledIcon);
+    myTextLabel.setIcon(TargetAWT.to(icon));
+    myTextLabel.setDisabledIcon(TargetAWT.to(disabledIcon));
 
     setSelected(myComponent, isSelected);
     setSelected(myTextLabel, isSelected);

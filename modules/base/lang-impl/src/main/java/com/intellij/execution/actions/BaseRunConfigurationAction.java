@@ -24,7 +24,6 @@ import com.intellij.execution.configurations.LocatableConfiguration;
 import com.intellij.execution.configurations.LocatableConfigurationBase;
 import com.intellij.execution.configurations.RunConfiguration;
 import com.intellij.openapi.actionSystem.*;
-import consulo.logging.Logger;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.ui.popup.ListPopup;
@@ -32,11 +31,11 @@ import com.intellij.openapi.ui.popup.PopupStep;
 import com.intellij.openapi.ui.popup.util.BaseListPopupStep;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.awt.RelativePoint;
-import consulo.awt.TargetAWT;
+import consulo.logging.Logger;
+import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.awt.event.InputEvent;
 import java.awt.event.MouseEvent;
@@ -139,8 +138,8 @@ public abstract class BaseRunConfigurationAction extends ActionGroup {
                   }
 
                   @Override
-                  public Icon getIconFor(final ConfigurationFromContext producer) {
-                    return TargetAWT.to(producer.getConfigurationType().getIcon());
+                  public Image getIconFor(final ConfigurationFromContext producer) {
+                    return producer.getConfigurationType().getIcon();
                   }
 
                   @Override

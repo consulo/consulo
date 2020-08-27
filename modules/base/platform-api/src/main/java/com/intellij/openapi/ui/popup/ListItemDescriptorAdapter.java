@@ -15,9 +15,9 @@
  */
 package com.intellij.openapi.ui.popup;
 
-import javax.annotation.Nullable;
+import consulo.ui.image.Image;
 
-import javax.swing.*;
+import javax.annotation.Nullable;
 
 public abstract class ListItemDescriptorAdapter<T> implements ListItemDescriptor<T> {
   @Nullable
@@ -33,7 +33,7 @@ public abstract class ListItemDescriptorAdapter<T> implements ListItemDescriptor
   }
 
   @Override
-  public Icon getIconFor(T value) {
+  public Image getIconFor(T value) {
     return null;
   }
 

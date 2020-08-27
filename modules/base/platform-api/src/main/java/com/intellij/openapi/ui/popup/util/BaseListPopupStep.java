@@ -22,8 +22,6 @@ import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -32,23 +30,23 @@ import java.util.List;
 public class BaseListPopupStep<T> extends BaseStep<T> implements ListPopupStep<T> {
   private String myTitle;
   private List<T> myValues;
-  private List<Icon> myIcons;
+  private List<Image> myIcons;
   private int myDefaultOptionIndex = -1;
 
   public BaseListPopupStep(@Nullable String title, T... values) {
-    this(title, values, new Icon[]{});
+    this(title, values, new Image[0]);
   }
 
   public BaseListPopupStep(@Nullable String title, List<? extends T> values) {
     this(title, values, new ArrayList<>());
   }
 
-  public BaseListPopupStep(@Nullable String title, T[] values, Icon[] icons) {
+  public BaseListPopupStep(@Nullable String title, T[] values, Image[] icons) {
     this(title, Arrays.asList(values), Arrays.asList(icons));
   }
 
-  public BaseListPopupStep(@Nullable String aTitle, @Nonnull List<? extends T> aValues, Icon aSameIcon) {
-    List<Icon> icons = new ArrayList<>();
+  public BaseListPopupStep(@Nullable String aTitle, @Nonnull List<? extends T> aValues, Image aSameIcon) {
+    List<Image> icons = new ArrayList<>(aValues.size());
     //noinspection ForLoopReplaceableByForEach
     for (int i = 0; i < aValues.size(); i++) {
       icons.add(aSameIcon);
@@ -56,13 +54,13 @@ public class BaseListPopupStep<T> extends BaseStep<T> implements ListPopupStep<T
     init(aTitle, aValues, icons);
   }
 
-  public BaseListPopupStep(@Nullable String title, @Nonnull List<? extends T> values, List<Icon> icons) {
+  public BaseListPopupStep(@Nullable String title, @Nonnull List<? extends T> values, List<Image> icons) {
     init(title, values, icons);
   }
 
   protected BaseListPopupStep() { }
 
-  protected final void init(@Nullable String title, @Nonnull List<? extends T> values, @Nullable List<Icon> icons) {
+  protected final void init(@Nullable String title, @Nonnull List<? extends T> values, @Nullable List<Image> icons) {
     myTitle = title;
     myValues = new ArrayList<>(values);
     myIcons = icons;
@@ -86,7 +84,7 @@ public class BaseListPopupStep<T> extends BaseStep<T> implements ListPopupStep<T
   }
 
   @Override
-  public Icon getIconFor(T value) {
+  public Image getIconFor(T value) {
     int index = myValues.indexOf(value);
     if (index != -1 && myIcons != null && index < myIcons.size()) {
       return myIcons.get(index);

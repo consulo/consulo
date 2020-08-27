@@ -28,6 +28,8 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.file.FileLookupInfoProvider;
 import com.intellij.util.containers.HashMap;
+import consulo.ui.image.Image;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -43,8 +45,7 @@ public class FileInfoManager implements Disposable {
   private final Map<FileType, FileLookupInfoProvider> myFileType2InfoProvider = new HashMap<FileType, FileLookupInfoProvider>();
 
   public FileInfoManager() {
-    final FileLookupInfoProvider[] providers = FileLookupInfoProvider.EP_NAME.getExtensions();
-    for (final FileLookupInfoProvider provider : providers) {
+    for (final FileLookupInfoProvider provider : FileLookupInfoProvider.EP_NAME.getExtensionList()) {
       final FileType[] types = provider.getFileTypes();
       for (FileType type : types) {
         myFileType2InfoProvider.put(type, provider);
@@ -62,7 +63,7 @@ public class FileInfoManager implements Disposable {
     }
 
     final PsiFile file = (PsiFile)psiElement;
-    return getFileInfoManager()._getLookupItem(file, file.getName(), TargetAWT.to(IconDescriptorUpdaters.getIcon(file, 0)));
+    return getFileInfoManager()._getLookupItem(file, file.getName(), IconDescriptorUpdaters.getIcon(file, 0));
   }
 
   @Nullable
@@ -89,7 +90,7 @@ public class FileInfoManager implements Disposable {
     return null;
   }
 
-  public static LookupElementBuilder getFileLookupItem(PsiElement psiElement, String encoded, Icon icon) {
+  public static LookupElementBuilder getFileLookupItem(PsiElement psiElement, String encoded, Image icon) {
     if (!(psiElement instanceof PsiFile) || !(psiElement.isPhysical())) {
       return LookupElementBuilder.create(psiElement, encoded).withIcon(icon);
     }
@@ -97,7 +98,7 @@ public class FileInfoManager implements Disposable {
     return getFileInfoManager()._getLookupItem((PsiFile)psiElement, encoded, icon);
   }
 
-  public LookupElementBuilder _getLookupItem(@Nonnull final PsiFile file, String name, Icon icon) {
+  public LookupElementBuilder _getLookupItem(@Nonnull final PsiFile file, String name, Image icon) {
     LookupElementBuilder builder = LookupElementBuilder.create(file, name).withIcon(icon);
 
     final String info = _getInfo(file);

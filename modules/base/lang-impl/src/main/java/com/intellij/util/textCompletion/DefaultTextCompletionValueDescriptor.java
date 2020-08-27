@@ -19,17 +19,17 @@ import com.intellij.codeInsight.completion.InsertHandler;
 import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
 import com.intellij.openapi.util.text.StringUtil;
+import consulo.ui.image.Image;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import javax.swing.*;
 
 public abstract class DefaultTextCompletionValueDescriptor<T> implements TextCompletionValueDescriptor<T> {
   @Nonnull
   protected abstract String getLookupString(@Nonnull T item);
 
   @Nullable
-  protected Icon getIcon(@Nonnull T item) {
+  protected Image getIcon(@Nonnull T item) {
     return null;
   }
 

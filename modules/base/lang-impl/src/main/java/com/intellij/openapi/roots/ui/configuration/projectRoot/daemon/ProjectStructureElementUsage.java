@@ -1,7 +1,8 @@
 package com.intellij.openapi.roots.ui.configuration.projectRoot.daemon;
 
+import consulo.ui.image.Image;
+
 import javax.annotation.Nullable;
-import javax.swing.*;
 
 /**
  * @author nik
@@ -26,7 +27,7 @@ public abstract class ProjectStructureElementUsage {
   @Override
   public abstract boolean equals(Object obj);
 
-  public abstract Icon getIcon();
+  public abstract Image getIcon();
 
   public abstract void removeSourceElement();
 

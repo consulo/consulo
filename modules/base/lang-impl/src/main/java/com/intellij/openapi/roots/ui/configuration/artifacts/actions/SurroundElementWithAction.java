@@ -34,11 +34,9 @@ import com.intellij.packaging.elements.PackagingElementFactory;
 import com.intellij.packaging.impl.artifacts.ArtifactUtil;
 import com.intellij.util.PathUtil;
 import com.intellij.util.containers.ContainerUtil;
-import consulo.awt.TargetAWT;
+import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
-
-import javax.swing.*;
 import java.util.List;
 
 /**
@@ -77,8 +75,8 @@ public class SurroundElementWithAction extends LayoutTreeActionBase {
     else {
       JBPopupFactory.getInstance().createListPopup(new BaseListPopupStep<CompositePackagingElementType>("Surround With...", types) {
         @Override
-        public Icon getIconFor(CompositePackagingElementType aValue) {
-          return TargetAWT.to(aValue.getIcon());
+        public Image getIconFor(CompositePackagingElementType aValue) {
+          return aValue.getIcon();
         }
 
         @Nonnull

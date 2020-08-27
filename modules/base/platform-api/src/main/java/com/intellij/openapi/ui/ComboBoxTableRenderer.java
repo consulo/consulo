@@ -23,6 +23,9 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
+import consulo.awt.TargetAWT;
+import consulo.ui.image.Image;
+
 import javax.annotation.Nonnull;
 
 import javax.swing.*;
@@ -77,7 +80,7 @@ public class ComboBoxTableRenderer<T> extends JLabel implements TableCellRendere
     return value.toString();
   }
 
-  protected Icon getIconFor(@Nonnull T value) {
+  protected Image getIconFor(@Nonnull T value) {
     return null;
   }
 
@@ -161,7 +164,7 @@ public class ComboBoxTableRenderer<T> extends JLabel implements TableCellRendere
       }
 
       @Override
-      public Icon getIconFor(T value) {
+      public Image getIconFor(T value) {
         return ComboBoxTableRenderer.this.getIconFor(value);
       }
 
@@ -203,7 +206,7 @@ public class ComboBoxTableRenderer<T> extends JLabel implements TableCellRendere
     setOpaque(true);
     setText(value == null ? "" : getTextFor(value));
     if (value != null) {
-      setIcon(getIconFor(value));
+      setIcon(TargetAWT.to(getIconFor(value)));
     }
     setBackground(isSelected ? table.getSelectionBackground() : table.getBackground());
     setForeground(isSelected ? table.getSelectionForeground() : table.getForeground());
@@ -345,7 +348,7 @@ public class ComboBoxTableRenderer<T> extends JLabel implements TableCellRendere
     }
 
     @Override
-    public Icon getIconFor(T aValue) {
+    public Image getIconFor(T aValue) {
       return null;
     }
 

@@ -8,6 +8,8 @@ import com.intellij.ui.popup.list.IconListPopupRenderer;
 import com.intellij.ui.popup.list.ListPopupImpl;
 import com.intellij.ui.popup.list.PopupListElementRenderer;
 import com.intellij.util.ui.JBUI;
+import consulo.awt.TargetAWT;
+
 import javax.annotation.Nonnull;
 
 import javax.swing.*;
@@ -37,7 +39,7 @@ public class PopupListElementRendererWithIcon extends PopupListElementRenderer<O
     super.customizeComponent(list, value, isSelected);
     myTextLabel.setIcon(null);
     myTextLabel.setDisabledIcon(null);
-    myIconLabel.setIcon(isSelected ? myDescriptor.getSelectedIconFor(value) : myDescriptor.getIconFor(value));
+    myIconLabel.setIcon(TargetAWT.to(isSelected ? myDescriptor.getSelectedIconFor(value) : myDescriptor.getIconFor(value)));
   }
 
   @Override

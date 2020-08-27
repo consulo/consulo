@@ -16,6 +16,8 @@ import com.intellij.ui.ColorUtil;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
+import consulo.ui.image.Image;
+
 import javax.annotation.Nullable;
 
 import javax.swing.*;
@@ -33,12 +35,12 @@ public class PopupListElementRenderer<E> extends GroupedItemsListRenderer<E> {
       }
 
       @Override
-      public Icon getIconFor(E value) {
+      public Image getIconFor(E value) {
         return aPopup.getListStep().getIconFor(value);
       }
 
       @Override
-      public Icon getSelectedIconFor(E value) {
+      public Image getSelectedIconFor(E value) {
         return aPopup.getListStep().getSelectedIconFor(value);
       }
 

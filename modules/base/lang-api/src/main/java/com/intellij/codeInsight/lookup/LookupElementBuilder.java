@@ -25,10 +25,8 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiNamedElement;
 import com.intellij.psi.SmartPointerManager;
 import com.intellij.psi.util.PsiUtilCore;
-import consulo.awt.TargetAWT;
 import consulo.ide.IconDescriptorUpdaters;
 import consulo.ui.image.Image;
-import consulo.ui.migration.SwingImageRef;
 import gnu.trove.THashSet;
 import org.jetbrains.annotations.Contract;
 
@@ -146,23 +144,12 @@ public final class LookupElementBuilder extends LookupElement {
    * @deprecated use {@link #withIcon(Icon)}
    */
   @Contract(value = "", pure = true)
-  public LookupElementBuilder setIcon(@Nullable Icon icon) {
+  public LookupElementBuilder setIcon(@Nullable Image icon) {
     return withIcon(icon);
-  }
-
-  @Deprecated
-  @Contract(value = "", pure = true)
-  public LookupElementBuilder withIcon(@Nullable SwingImageRef icon) {
-    return withIcon((Icon)icon);
   }
 
   @Contract(value = "", pure = true)
   public LookupElementBuilder withIcon(@Nullable Image icon) {
-    return withIcon(TargetAWT.to(icon));
-  }
-
-  @Contract(value = "", pure = true)
-  public LookupElementBuilder withIcon(@Nullable Icon icon) {
     final LookupElementPresentation presentation = copyPresentation();
     presentation.setIcon(icon);
     return new LookupElementBuilder(myLookupString, myObject, myInsertHandler, null, presentation, myAllLookupStrings, myCaseSensitive);
@@ -275,7 +262,7 @@ public final class LookupElementBuilder extends LookupElement {
   }
 
   @Contract(value = "", pure = true)
-  public LookupElementBuilder withTypeText(@Nullable String typeText, @Nullable Icon typeIcon, boolean grayed) {
+  public LookupElementBuilder withTypeText(@Nullable String typeText, @Nullable Image typeIcon, boolean grayed) {
     final LookupElementPresentation presentation = copyPresentation();
     presentation.setTypeText(typeText, typeIcon);
     presentation.setTypeGrayed(grayed);

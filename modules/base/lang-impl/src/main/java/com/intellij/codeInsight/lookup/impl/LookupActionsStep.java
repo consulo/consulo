@@ -23,6 +23,8 @@ import com.intellij.openapi.ui.popup.PopupStep;
 import com.intellij.openapi.ui.popup.util.BaseListPopupStep;
 import com.intellij.ui.popup.ClosableByLeftArrow;
 import com.intellij.util.ui.EmptyIcon;
+import consulo.ui.image.Image;
+
 import javax.annotation.Nonnull;
 
 import javax.swing.*;
@@ -35,7 +37,7 @@ import java.util.Collection;
 public class LookupActionsStep extends BaseListPopupStep<LookupElementAction> implements ClosableByLeftArrow {
   private final LookupImpl myLookup;
   private final LookupElement myLookupElement;
-  private final Icon myEmptyIcon;
+  private final Image myEmptyIcon;
 
   public LookupActionsStep(Collection<LookupElementAction> actions, LookupImpl lookup, LookupElement lookupElement) {
     super(null, new ArrayList<>(actions));
@@ -44,13 +46,13 @@ public class LookupActionsStep extends BaseListPopupStep<LookupElementAction> im
 
     int w = 0, h = 0;
     for (LookupElementAction action : actions) {
-      final Icon icon = action.getIcon();
+      final Image icon = action.getIcon();
       if (icon != null) {
-        w = Math.max(w, icon.getIconWidth());
-        h = Math.max(h, icon.getIconHeight());
+        w = Math.max(w, icon.getWidth());
+        h = Math.max(h, icon.getHeight());
       }
     }
-    myEmptyIcon = new EmptyIcon(w, h);
+    myEmptyIcon = Image.empty(w, h);
   }
 
   @Override
@@ -70,7 +72,7 @@ public class LookupActionsStep extends BaseListPopupStep<LookupElementAction> im
   }
 
   @Override
-  public Icon getIconFor(LookupElementAction aValue) {
+  public Image getIconFor(LookupElementAction aValue) {
     return LookupCellRenderer.augmentIcon(myLookup.getEditor(), aValue.getIcon(), myEmptyIcon);
   }
 

@@ -37,6 +37,7 @@ import com.intellij.ui.*;
 import com.intellij.ui.components.JBList;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.awt.TargetAWT;
+import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
 
@@ -144,8 +145,8 @@ public class CompoundRunConfigurationSettingsEditor extends SettingsEditor<Compo
           }
 
           @Override
-          public Icon getIconFor(RunConfiguration value) {
-            return TargetAWT.to(value.getType().getIcon());
+          public Image getIconFor(RunConfiguration value) {
+            return value.getType().getIcon();
           }
 
           @Override

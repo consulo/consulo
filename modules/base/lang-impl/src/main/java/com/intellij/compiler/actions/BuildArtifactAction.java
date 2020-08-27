@@ -46,7 +46,6 @@ import com.intellij.packaging.impl.compiler.ArtifactCompileScope;
 import com.intellij.packaging.impl.compiler.ArtifactsWorkspaceSettings;
 import com.intellij.ui.popup.list.ListPopupImpl;
 import com.intellij.util.containers.ContainerUtil;
-import consulo.awt.TargetAWT;
 import consulo.ui.image.Image;
 import gnu.trove.TIntArrayList;
 
@@ -305,8 +304,8 @@ public class BuildArtifactAction extends DumbAwareAction {
     }
 
     @Override
-    public Icon getIconFor(ArtifactPopupItem aValue) {
-      return TargetAWT.to(aValue.getIcon());
+    public Image getIconFor(ArtifactPopupItem aValue) {
+      return aValue.getIcon();
     }
 
     @Nonnull

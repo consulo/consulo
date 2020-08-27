@@ -18,10 +18,10 @@ package com.intellij.codeInsight.lookup;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.JBColor;
 import com.intellij.util.SmartList;
+import consulo.ui.image.Image;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import javax.swing.*;
 import java.awt.*;
 import java.util.Collections;
 import java.util.List;
@@ -30,8 +30,8 @@ import java.util.List;
  * @author peter
  */
 public class LookupElementPresentation {
-  private Icon myIcon;
-  private Icon myTypeIcon;
+  private Image myIcon;
+  private Image myTypeIcon;
   private String myItemText;
   private String myTypeText;
   private boolean myStrikeout;
@@ -42,7 +42,7 @@ public class LookupElementPresentation {
   @Nullable
   private List<TextFragment> myTail;
 
-  public void setIcon(@Nullable Icon icon) {
+  public void setIcon(@Nullable Image icon) {
     myIcon = icon;
   }
 
@@ -99,7 +99,7 @@ public class LookupElementPresentation {
     setTypeText(text, null);
   }
 
-  public void setTypeText(@Nullable String text, @Nullable Icon icon) {
+  public void setTypeText(@Nullable String text, @Nullable Image icon) {
     myTypeText = text;
     myTypeIcon = icon;
   }
@@ -115,12 +115,12 @@ public class LookupElementPresentation {
   }
 
   @Nullable
-  public Icon getIcon() {
+  public Image getIcon() {
     return myIcon;
   }
 
   @Nullable
-  public Icon getTypeIcon() {
+  public Image getTypeIcon() {
     return myTypeIcon;
   }
 

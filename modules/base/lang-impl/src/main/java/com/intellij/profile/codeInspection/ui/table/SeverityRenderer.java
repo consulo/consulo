@@ -67,8 +67,8 @@ public class SeverityRenderer extends ComboBoxTableRenderer<SeverityState> {
   }
 
   @Override
-  protected Icon getIconFor(@Nonnull final SeverityState value) {
-    return TargetAWT.to(HighlightDisplayLevel.find(value.getSeverity()).getIcon());
+  protected Image getIconFor(@Nonnull final SeverityState value) {
+    return HighlightDisplayLevel.find(value.getSeverity()).getIcon();
   }
 
   @Override

@@ -20,6 +20,8 @@ import com.intellij.openapi.ui.popup.util.BaseListPopupStep;
 import com.intellij.ui.content.Content;
 import com.intellij.ui.content.TabbedContent;
 import consulo.awt.TargetAWT;
+import consulo.ui.image.Image;
+
 import javax.annotation.Nullable;
 
 import javax.annotation.Nonnull;
@@ -44,8 +46,8 @@ public class SelectContentStep extends BaseListPopupStep<Content> {
   }
 
   @Override
-  public Icon getIconFor(Content value) {
-    return TargetAWT.to(value.getIcon());
+  public Image getIconFor(Content value) {
+    return value.getIcon();
   }
 
   @Nonnull

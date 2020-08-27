@@ -45,6 +45,8 @@ import com.intellij.ui.popup.list.PopupListElementRenderer;
 import com.intellij.ui.speedSearch.SpeedSearch;
 import com.intellij.util.ui.UIUtil;
 import consulo.awt.TargetAWT;
+import consulo.ui.image.Image;
+
 import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;
@@ -287,7 +289,7 @@ public class ChooseRunConfigurationPopup implements ExecutorProvider {
     }
 
     @Nullable
-    public abstract Icon getIcon();
+    public abstract Image getIcon();
 
     public abstract String getText();
 
@@ -384,8 +386,8 @@ public class ChooseRunConfigurationPopup implements ExecutorProvider {
         }
 
         @Override
-        public Icon getIcon() {
-          return TargetAWT.to(RunManagerEx.getInstanceEx(project).getConfigurationIcon(getValue()));
+        public Image getIcon() {
+          return RunManagerEx.getInstanceEx(project).getConfigurationIcon(getValue());
         }
 
         @Override
@@ -532,7 +534,7 @@ public class ChooseRunConfigurationPopup implements ExecutorProvider {
     }
 
     @Override
-    public Icon getIconFor(ItemWrapper value) {
+    public Image getIconFor(ItemWrapper value) {
       return value.getIcon();
     }
   }
@@ -559,8 +561,8 @@ public class ChooseRunConfigurationPopup implements ExecutorProvider {
       return mySettings.getName();
     }
 
-    public Icon getIcon() {
-      return TargetAWT.to(RunManagerEx.getInstanceEx(myProject).getConfigurationIcon(mySettings));
+    public Image getIcon() {
+      return RunManagerEx.getInstanceEx(myProject).getConfigurationIcon(mySettings);
     }
 
     @Override
@@ -599,7 +601,7 @@ public class ChooseRunConfigurationPopup implements ExecutorProvider {
       for (final Executor executor : ExecutorRegistry.getInstance().getRegisteredExecutors()) {
         final ProgramRunner runner = RunnerRegistry.getInstance().getRunner(executor.getId(), settings.getConfiguration());
         if (runner != null) {
-          result.add(new ActionWrapper(executor.getActionName(), TargetAWT.to(executor.getIcon()), isFirst) {
+          result.add(new ActionWrapper(executor.getActionName(), executor.getIcon(), isFirst) {
             @Override
             public void perform() {
               final RunManagerEx manager = RunManagerEx.getInstanceEx(project);
@@ -648,7 +650,7 @@ public class ChooseRunConfigurationPopup implements ExecutorProvider {
     }
 
     @Override
-    public Icon getIconFor(ActionWrapper aValue) {
+    public Image getIconFor(ActionWrapper aValue) {
       return aValue.getIcon();
     }
 
@@ -661,13 +663,13 @@ public class ChooseRunConfigurationPopup implements ExecutorProvider {
 
   private abstract static class ActionWrapper extends Wrapper {
     private final String myName;
-    private final Icon myIcon;
+    private final Image myIcon;
 
-    private ActionWrapper(String name, Icon icon) {
+    private ActionWrapper(String name, Image icon) {
       this(name, icon, false);
     }
 
-    private ActionWrapper(String name, Icon icon, boolean addSeparatorAbove) {
+    private ActionWrapper(String name, Image icon, boolean addSeparatorAbove) {
       super(addSeparatorAbove);
       myName = name;
       myIcon = icon;
@@ -681,7 +683,7 @@ public class ChooseRunConfigurationPopup implements ExecutorProvider {
     }
 
     @Override
-    public Icon getIcon() {
+    public Image getIcon() {
       return myIcon;
     }
   }
@@ -845,7 +847,7 @@ public class ChooseRunConfigurationPopup implements ExecutorProvider {
 
     @Nullable
     @Override
-    public Icon getIcon() {
+    public Image getIcon() {
       return AllIcons.Nodes.Folder;
     }
 
@@ -874,7 +876,7 @@ public class ChooseRunConfigurationPopup implements ExecutorProvider {
     private final ExecutorProvider myExecutorProvider;
 
     private FolderStep(Project project, ExecutorProvider executorProvider, String folderName, List<ConfigurationActionsStep> children) {
-      super(folderName, children, new ArrayList<Icon>());
+      super(folderName, children, new ArrayList<Image>());
       myProject = project;
       myExecutorProvider = executorProvider;
     }
@@ -897,7 +899,7 @@ public class ChooseRunConfigurationPopup implements ExecutorProvider {
     }
 
     @Override
-    public Icon getIconFor(ConfigurationActionsStep aValue) {
+    public Image getIconFor(ConfigurationActionsStep aValue) {
       return aValue.getIcon();
     }
 
@@ -929,7 +931,7 @@ public class ChooseRunConfigurationPopup implements ExecutorProvider {
     if (createEditAction) {
       ItemWrapper<Void> edit = new ItemWrapper<Void>(null) {
         @Override
-        public Icon getIcon() {
+        public Image getIcon() {
           return AllIcons.Actions.EditSource;
         }
 
@@ -982,7 +984,7 @@ public class ChooseRunConfigurationPopup implements ExecutorProvider {
           }
 
           @Override
-          public Icon getIcon() {
+          public Image getIcon() {
             return getValue().getIcon();
           }
 
@@ -1089,8 +1091,8 @@ public class ChooseRunConfigurationPopup implements ExecutorProvider {
         //noinspection unchecked
         final ItemWrapper wrapper = new ItemWrapper(configuration) {
           @Override
-          public Icon getIcon() {
-            return TargetAWT.to(RunManagerEx.getInstanceEx(project).getConfigurationIcon(configuration));
+          public Image getIcon() {
+            return RunManagerEx.getInstanceEx(project).getConfigurationIcon(configuration);
           }
 
           @Override

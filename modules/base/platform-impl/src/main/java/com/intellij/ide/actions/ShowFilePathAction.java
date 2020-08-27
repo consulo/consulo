@@ -47,7 +47,6 @@ import com.sun.jna.Native;
 import com.sun.jna.platform.win32.Kernel32;
 import com.sun.jna.platform.win32.WinDef;
 import consulo.annotation.UsedInPlugin;
-import consulo.awt.TargetAWT;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -68,7 +67,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class ShowFilePathAction extends AnAction {
@@ -201,7 +199,7 @@ public class ShowFilePathAction extends AnAction {
   }
 
   private static ListPopup createPopup(List<VirtualFile> files, List<Image> icons) {
-    final BaseListPopupStep<VirtualFile> step = new BaseListPopupStep<VirtualFile>("File Path", files, icons.stream().map(TargetAWT::to).collect(Collectors.toList())) {
+    final BaseListPopupStep<VirtualFile> step = new BaseListPopupStep<VirtualFile>("File Path", files, icons) {
       @Nonnull
       @Override
       public String getTextFor(final VirtualFile value) {
