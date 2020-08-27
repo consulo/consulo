@@ -345,7 +345,7 @@ class LookupUi {
 
     @Override
     public void update(@Nonnull AnActionEvent e) {
-      e.getPresentation().setIcon(sortByName ? PlatformIcons.CHECK_ICON : null);
+      e.getPresentation().setIcon(sortByName ? AllIcons.Actions.Checked : null);
     }
   }
 

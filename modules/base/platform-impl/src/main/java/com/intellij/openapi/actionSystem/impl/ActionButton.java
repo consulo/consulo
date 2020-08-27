@@ -23,11 +23,9 @@ import com.intellij.openapi.actionSystem.ex.ActionUtil;
 import com.intellij.openapi.actionSystem.ex.CustomComponentAction;
 import com.intellij.openapi.application.impl.LaterInvocator;
 import com.intellij.openapi.keymap.KeymapUtil;
-import com.intellij.openapi.util.IconLoader;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.util.text.TextWithMnemonic;
-import com.intellij.util.ui.EmptyIcon;
 import com.intellij.util.ui.JBDimension;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
@@ -35,6 +33,8 @@ import com.intellij.util.ui.accessibility.ScreenReader;
 import consulo.annotation.DeprecationInfo;
 import consulo.awt.TargetAWT;
 import consulo.localize.LocalizeValue;
+import consulo.ui.image.Image;
+import consulo.ui.image.ImageEffects;
 import consulo.ui.shared.Size;
 import consulo.util.dataholder.Key;
 import kava.beans.PropertyChangeEvent;
@@ -65,8 +65,8 @@ public class ActionButton extends JComponent implements ActionButtonComponent, A
 
   private JBDimension myMinimumButtonSize;
   private PropertyChangeListener myPresentationListener;
-  private Icon myDisabledIcon;
-  private Icon myIcon;
+  private Image myDisabledIcon;
+  private Image myIcon;
   protected final Presentation myPresentation;
   protected final AnAction myAction;
   protected final String myPlace;
@@ -315,19 +315,19 @@ public class ActionButton extends JComponent implements ActionButtonComponent, A
 
   @Override
   public Dimension getPreferredSize() {
-    Icon icon = getIcon();
-    if (icon.getIconWidth() < myMinimumButtonSize.width && icon.getIconHeight() < myMinimumButtonSize.height) {
+    Image icon = getIcon();
+    if (icon.getWidth() < myMinimumButtonSize.width && icon.getHeight() < myMinimumButtonSize.height) {
       return myMinimumButtonSize;
     }
     else {
-      return new Dimension(Math.max(myMinimumButtonSize.width, icon.getIconWidth() + myInsets.left + myInsets.right),
-                           Math.max(myMinimumButtonSize.height, icon.getIconHeight() + myInsets.top + myInsets.bottom));
+      return new Dimension(Math.max(myMinimumButtonSize.width, icon.getWidth() + myInsets.left + myInsets.right),
+                           Math.max(myMinimumButtonSize.height, icon.getHeight() + myInsets.top + myInsets.bottom));
     }
   }
 
 
   public void setIconInsets(@Nullable Insets insets) {
-    myInsets = insets != null ? JBUI.insets(insets) : new Insets(0, 0, 0, 0);
+    myInsets = insets != null ? JBUI.insets(insets) : JBUI.emptyInsets();
   }
 
   @Override
@@ -340,9 +340,9 @@ public class ActionButton extends JComponent implements ActionButtonComponent, A
    * disabled icon if action is disabled. If the action's icon is {@code null} then it returns
    * an empty icon.
    */
-  public Icon getIcon() {
-    Icon icon = isButtonEnabled() ? myIcon : myDisabledIcon;
-    return icon == null ? EmptyIcon.ICON_18 : icon;
+  public Image getIcon() {
+    Image icon = isButtonEnabled() ? myIcon : myDisabledIcon;
+    return icon == null ? Image.empty(18) : icon;
   }
 
   public void updateIcon() {
@@ -351,11 +351,11 @@ public class ActionButton extends JComponent implements ActionButtonComponent, A
       myDisabledIcon = myPresentation.getDisabledIcon();
     }
     else {
-      myDisabledIcon = IconLoader.getDisabledIcon(myIcon);
+      myDisabledIcon = myIcon == null ? null : ImageEffects.grayed(myIcon);
     }
   }
 
-  private void setDisabledIcon(Icon icon) {
+  private void setDisabledIcon(Image icon) {
     myDisabledIcon = icon;
   }
 
@@ -516,7 +516,9 @@ public class ActionButton extends JComponent implements ActionButtonComponent, A
 
     @Override
     public AccessibleIcon[] getAccessibleIcon() {
-      Icon icon = ActionButton.this.getIcon();
+      Image image = ActionButton.this.getIcon();
+      Icon icon = TargetAWT.to(image);
+
       if (icon instanceof Accessible) {
         AccessibleContext context = ((Accessible)icon).getAccessibleContext();
         if (context != null && context instanceof AccessibleIcon) {

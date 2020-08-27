@@ -24,7 +24,7 @@ import com.intellij.icons.AllIcons;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
 import com.intellij.ide.util.treeView.smartTree.ActionPresentation;
 import com.intellij.ide.util.treeView.smartTree.ActionPresentationData;
-import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -32,7 +32,7 @@ import javax.annotation.Nullable;
  * @author konstantin.aleev
  */
 public class FolderDashboardGroupingRule implements DashboardGroupingRule {
-  @NonNls private static final String NAME = "FolderDashboardGroupingRule";
+  private static final String NAME = "FolderDashboardGroupingRule";
 
   @Override
   @Nonnull

@@ -19,7 +19,9 @@ import com.intellij.ui.AnchorableComponent;
 import com.intellij.ui.ColorUtil;
 import com.intellij.util.SystemProperties;
 import com.intellij.util.ui.UIUtil;
+import consulo.awt.TargetAWT;
 import consulo.desktop.util.awt.StringHtmlUtil;
+import consulo.ui.image.Image;
 import org.intellij.lang.annotations.JdkConstants;
 
 import javax.annotation.Nonnull;
@@ -168,6 +170,10 @@ public class JBLabel extends JLabel implements AnchorableComponent {
       myIconLabel.setIcon(icon);
       updateLayout();
     }
+  }
+
+  public void setIcon(Image icon) {
+    setIcon(TargetAWT.to(icon));
   }
 
   private void checkMultiline() {

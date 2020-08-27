@@ -267,7 +267,7 @@ public class NotificationTestAction extends AnAction implements DumbAware {
       private MyAnAction(@Nullable String text) {
         if (text != null) {
           if (text.endsWith(".png")) {
-            Icon icon = IconLoader.findIcon(text);
+            Image icon = IconLoader.findIcon(text);
             if (icon != null) {
               getTemplatePresentation().setIcon(icon);
               return;

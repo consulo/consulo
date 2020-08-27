@@ -4,6 +4,8 @@ package com.intellij.ui;
 
 import com.intellij.util.IconUtil2;
 import com.intellij.util.ui.JBUI;
+import consulo.annotation.DeprecationInfo;
+import consulo.ui.image.Image;
 import org.jetbrains.annotations.Contract;
 import javax.annotation.Nonnull;
 
@@ -13,7 +15,9 @@ import java.util.Objects;
 
 import static java.lang.Math.ceil;
 
-public final class OffsetIcon extends JBUI.CachingScalableJBIcon<OffsetIcon> {
+@Deprecated
+@DeprecationInfo("Don't use this class - find alternative in new ui framework")
+public final class OffsetIcon extends JBUI.CachingScalableJBIcon<OffsetIcon> implements Image {
 
   public static final int REGULAR_OFFSET = 20;
 
@@ -110,5 +114,15 @@ public final class OffsetIcon extends JBUI.CachingScalableJBIcon<OffsetIcon> {
   @Override
   public String toString() {
     return "OffsetIcon: offset=" + myOffset + "; icon=" + myIcon;
+  }
+
+  @Override
+  public int getHeight() {
+    return getIconHeight();
+  }
+
+  @Override
+  public int getWidth() {
+    return getIconWidth();
   }
 }

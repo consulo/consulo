@@ -6,16 +6,16 @@ import com.intellij.execution.Location;
 import com.intellij.execution.PsiLocation;
 import com.intellij.ide.DataManager;
 import com.intellij.openapi.actionSystem.*;
-import consulo.logging.Logger;
-import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.Pair;
-import consulo.util.dataholder.UserDataHolderBase;
 import com.intellij.psi.PsiElement;
-import org.jetbrains.annotations.NonNls;
+import consulo.logging.Logger;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.image.Image;
+import consulo.util.dataholder.Key;
+import consulo.util.dataholder.UserDataHolderBase;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import javax.swing.*;
 
 /**
  * @author Dmitry Avdeev
@@ -76,11 +76,12 @@ public class LineMarkerActionWrapper extends ActionGroup implements PriorityActi
     return !(myOrigin instanceof ActionGroup) || ((ActionGroup)myOrigin).disableIfNoVisibleChildren();
   }
 
+  @RequiredUIAccess
   @Override
   public void update(@Nonnull AnActionEvent e) {
     AnActionEvent wrapped = wrapEvent(e);
     myOrigin.update(wrapped);
-    Icon icon = wrapped.getPresentation().getIcon();
+    Image icon = wrapped.getPresentation().getIcon();
     if (icon != null) {
       getTemplatePresentation().setIcon(icon);
     }
@@ -102,6 +103,7 @@ public class LineMarkerActionWrapper extends ActionGroup implements PriorityActi
     return pair.second;
   }
 
+  @RequiredUIAccess
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
     myOrigin.actionPerformed(wrapEvent(e));
@@ -128,7 +130,7 @@ public class LineMarkerActionWrapper extends ActionGroup implements PriorityActi
 
     @Nullable
     @Override
-    public synchronized Object getData(@Nonnull @NonNls Key dataId) {
+    public synchronized Object getData(@Nonnull Key dataId) {
       if (Location.DATA_KEY == dataId) return myElement.isValid() ? new PsiLocation<>(myElement) : null;
       return myDelegate.getData(dataId);
     }

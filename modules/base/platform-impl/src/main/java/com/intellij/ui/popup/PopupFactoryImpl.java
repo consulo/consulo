@@ -24,6 +24,7 @@ import com.intellij.openapi.util.EmptyRunnable;
 import com.intellij.openapi.util.text.TextWithMnemonic;
 import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
+import consulo.ui.image.Image;
 import consulo.util.dataholder.Key;
 import com.intellij.openapi.wm.WindowManager;
 import com.intellij.ui.CollectionListModel;
@@ -649,8 +650,8 @@ public class PopupFactoryImpl extends JBPopupFactory {
     private final AnAction myAction;
     private LocalizeValue myTextValue;
     private final boolean myIsEnabled;
-    private final Icon myIcon;
-    private final Icon mySelectedIcon;
+    private final Image myIcon;
+    private final Image mySelectedIcon;
     private final boolean myPrependWithSeparator;
     private final String mySeparatorText;
     private final String myDescription;
@@ -659,8 +660,8 @@ public class PopupFactoryImpl extends JBPopupFactory {
                @Nonnull LocalizeValue textValue,
                @Nullable String description,
                boolean enabled,
-               @Nullable Icon icon,
-               @Nullable Icon selectedIcon,
+               @Nullable Image icon,
+               @Nullable Image selectedIcon,
                final boolean prependWithSeparator,
                String separatorText) {
       myAction = action;
@@ -689,7 +690,7 @@ public class PopupFactoryImpl extends JBPopupFactory {
     }
 
     @Nullable
-    public Icon getIcon(boolean selected) {
+    public Image getIcon(boolean selected) {
       return selected && mySelectedIcon != null ? mySelectedIcon : myIcon;
     }
 

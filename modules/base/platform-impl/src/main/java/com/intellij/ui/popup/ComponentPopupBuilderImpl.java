@@ -20,15 +20,15 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.popup.*;
 import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.util.Condition;
-import consulo.disposer.Disposer;
 import com.intellij.openapi.util.Pair;
 import com.intellij.ui.ActiveComponent;
 import com.intellij.util.BooleanFunction;
 import com.intellij.util.Processor;
-import com.intellij.util.ui.EmptyIcon;
+import consulo.disposer.Disposer;
+import consulo.ui.image.Image;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
@@ -57,7 +57,7 @@ public class ComponentPopupBuilderImpl implements ComponentPopupBuilder {
   private IconButton myCancelButton;
   private MouseChecker myCancelOnMouseOutCallback;
   private boolean myCancelOnWindow;
-  private ActiveIcon myTitleIcon = new ActiveIcon(EmptyIcon.ICON_0);
+  private ActiveIcon myTitleIcon = new ActiveIcon(Image.empty(0));
   private boolean myCancelKeyEnabled = true;
   private boolean myLocateByContent;
   private boolean myPlaceWithinScreen = true;

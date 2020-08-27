@@ -37,12 +37,14 @@ import com.intellij.util.ui.EmptyIcon;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import consulo.actionSystem.ex.TopApplicationMenuUtil;
+import consulo.awt.TargetAWT;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.localize.LocalizeValue;
+import consulo.ui.image.Image;
+import consulo.ui.image.ImageEffects;
 import kava.beans.PropertyChangeEvent;
 import kava.beans.PropertyChangeListener;
-import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -288,16 +290,16 @@ public class ActionMenuItem extends JCheckBoxMenuItem {
     }
     else {
       if (UISettings.getInstance().SHOW_ICONS_IN_MENUS) {
-        Icon icon = myPresentation.getIcon();
+        Image icon = myPresentation.getIcon();
         if (action instanceof ToggleAction && ((ToggleAction)action).isSelected(myEvent)) {
-          icon = new PoppedIcon(icon, JBUI.scale(16), JBUI.scale(16));
+          icon = new PoppedIcon(icon, JBUI.scale(Image.DEFAULT_ICON_SIZE), JBUI.scale(Image.DEFAULT_ICON_SIZE));
         }
-        setIcon(icon);
+        setIcon(TargetAWT.to(icon));
         if (myPresentation.getDisabledIcon() != null) {
-          setDisabledIcon(myPresentation.getDisabledIcon());
+          setDisabledIcon(TargetAWT.to(myPresentation.getDisabledIcon()));
         }
         else {
-          setDisabledIcon(IconLoader.getDisabledIcon(icon));
+          setDisabledIcon(icon == null ? null : TargetAWT.to(ImageEffects.grayed(icon)));
         }
       }
     }

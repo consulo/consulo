@@ -24,6 +24,9 @@ import com.intellij.openapi.keymap.KeyMapBundle;
 import com.intellij.openapi.keymap.KeymapManager;
 import com.intellij.ui.*;
 import com.intellij.ui.components.JBList;
+import consulo.awt.TargetAWT;
+import consulo.ui.image.Image;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -152,7 +155,7 @@ public class QuickListPanel {
                                                   boolean isSelected,
                                                   boolean cellHasFocus) {
       super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-      Icon icon = null;
+      Image icon = null;
       String actionId = (String)value;
       if (QuickList.SEPARATOR_ID.equals(actionId)) {
         // TODO[vova,anton]: beautify
@@ -162,7 +165,7 @@ public class QuickListPanel {
         AnAction action = ActionManager.getInstance().getAction(actionId);
         setText(action != null ? action.getTemplatePresentation().getText() : actionId);
         if (action != null) {
-          Icon actionIcon = action.getTemplatePresentation().getIcon();
+          Image actionIcon = action.getTemplatePresentation().getIcon();
           if (actionIcon != null) {
             icon = actionIcon;
           }
@@ -170,7 +173,7 @@ public class QuickListPanel {
         if (actionId.startsWith(QuickList.QUICK_LIST_PREFIX)) {
           icon = AllIcons.Actions.QuickList;
         }
-        setIcon(ActionsTree.getEvenIcon(icon));
+        setIcon(TargetAWT.to(ActionsTree.getEvenIcon(icon)));
       }
 
       return this;

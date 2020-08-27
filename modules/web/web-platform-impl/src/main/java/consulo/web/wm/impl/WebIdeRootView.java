@@ -72,13 +72,13 @@ public class WebIdeRootView {
       }
       else if (action instanceof ActionGroup) {
         MenuItem menu = Menu.create(presentation.getText());
-        menu.setIcon(presentation.getUIIcon());
+        menu.setIcon(presentation.getIcon());
         actionAdded.accept(menu);
         expandActionGroup((ActionGroup)action, context, actionManager, menuItemPresentationFactory, ((Menu)menu)::add);
       }
       else {
         MenuItem menu = MenuItem.create(presentation.getText());
-        menu.setIcon(presentation.getUIIcon());
+        menu.setIcon(presentation.getIcon());
         actionAdded.accept(menu);
       }
     }

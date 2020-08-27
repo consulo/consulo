@@ -560,7 +560,7 @@ public class RunnerContentUi implements ContentUI, Disposable, CellTransform.Fac
     if (myCurrentOver == null && current != null) {
       myCurrentOver = current;
       Presentation presentation = dockable.getPresentation();
-      myCurrentOverInfo = new TabInfo(new JLabel("")).setText(presentation.getText()).setIcon(TargetAWT.from(presentation.getIcon()));
+      myCurrentOverInfo = new TabInfo(new JLabel("")).setText(presentation.getText()).setIcon(presentation.getIcon());
       myCurrentOverImg = myCurrentOver.startDropOver(myCurrentOverInfo, dropTarget);
     }
 

@@ -3,6 +3,7 @@ package com.intellij.ide.util.scopeChooser;
 
 import com.intellij.ide.DataManager;
 import com.intellij.ide.util.treeView.WeighedItem;
+import consulo.awt.TargetAWT;
 import consulo.disposer.Disposable;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.project.Project;

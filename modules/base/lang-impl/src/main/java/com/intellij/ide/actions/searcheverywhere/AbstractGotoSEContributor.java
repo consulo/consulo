@@ -34,7 +34,6 @@ import com.intellij.pom.Navigatable;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.util.PsiUtilCore;
-import com.intellij.ui.OffsetIcon;
 import com.intellij.ui.TitledSeparator;
 import com.intellij.ui.components.JBList;
 import com.intellij.ui.popup.list.ListPopupImpl;
@@ -471,7 +470,7 @@ public abstract class AbstractGotoSEContributor implements WeightedSearchEverywh
       String name = StringUtil.trimMiddle(selection.getDisplayName(), 30);
       String text = StringUtil.escapeMnemonics(name).replaceFirst("(?i)([" + TOGGLE + CHOOSE + "])", "_$1");
       e.getPresentation().setText(text);
-      e.getPresentation().setIcon(OffsetIcon.getOriginalIcon(selection.getIcon()));
+      e.getPresentation().setIcon(selection.getIcon());
       String shortcutText = KeymapUtil.getKeystrokeText(KeyStroke.getKeyStroke(CHOOSE, MnemonicHelper.getFocusAcceleratorKeyMask(), true));
       String shortcutText2 = KeymapUtil.getKeystrokeText(KeyStroke.getKeyStroke(TOGGLE, MnemonicHelper.getFocusAcceleratorKeyMask(), true));
       e.getPresentation().setDescription("Choose scope (" + shortcutText + ")\n" + "Toggle scope (" + shortcutText2 + ")");

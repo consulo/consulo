@@ -834,8 +834,8 @@ public class DesktopEditorAnalyzeStatusPanel implements Disposable {
 
           @Override
           public Dimension getPreferredSize() {
-            Icon icon = getIcon();
-            Dimension size = new Dimension(icon.getIconWidth(), icon.getIconHeight());
+            Image icon = getIcon();
+            Dimension size = new Dimension(icon.getWidth(), icon.getHeight());
 
             int minSize = getStatusIconSize();
             size.width = Math.max(size.width, minSize);

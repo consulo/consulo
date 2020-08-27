@@ -15,7 +15,6 @@
  */
 package com.intellij.openapi.fileEditor.impl;
 
-import consulo.disposer.Disposable;
 import com.intellij.openapi.actionSystem.DataProvider;
 import com.intellij.openapi.actionSystem.Presentation;
 import com.intellij.openapi.application.Application;
@@ -29,15 +28,15 @@ import com.intellij.ui.docking.DockableContent;
 import com.intellij.ui.tabs.JBTabs;
 import com.intellij.ui.tabs.TabInfo;
 import com.intellij.ui.tabs.impl.JBTabsImpl;
-import consulo.awt.TargetAWT;
+import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.fileEditor.impl.EditorWindow;
-import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import org.jdom.Element;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.awt.*;
 import java.util.concurrent.CopyOnWriteArraySet;
@@ -179,7 +178,7 @@ public class DockableEditorTabbedContainer implements DockContainer.Persistent {
     if (myCurrentOver == null && current != null) {
       myCurrentOver = current;
       Presentation presentation = content.getPresentation();
-      myCurrentOverInfo = new TabInfo(new JLabel("")).setText(presentation.getText()).setIcon(TargetAWT.from(presentation.getIcon()));
+      myCurrentOverInfo = new TabInfo(new JLabel("")).setText(presentation.getText()).setIcon(presentation.getIcon());
       myCurrentOverImg = myCurrentOver.startDropOver(myCurrentOverInfo, point);
     }
 

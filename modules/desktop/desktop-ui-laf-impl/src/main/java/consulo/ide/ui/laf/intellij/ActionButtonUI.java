@@ -26,6 +26,7 @@ import com.intellij.ui.Gray;
 import com.intellij.util.ui.GraphicsUtil;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
+import consulo.awt.TargetAWT;
 import sun.swing.SwingUtilities2;
 
 import javax.swing.*;
@@ -63,7 +64,7 @@ public class ActionButtonUI extends ComponentUI implements consulo.actionSystem.
   private void paintTextButton(Graphics g, ActionButtonWithText c) {
     AnAction action = c.getAction();
 
-    Icon icon = c.getIcon();
+    Icon icon = TargetAWT.to(c.getIcon());
     FontMetrics fm = SwingUtilities2.getFontMetrics(c, g, c.getFont());
     Rectangle viewRect = new Rectangle(c.getSize());
     Insets i = c.getInsets();
@@ -121,7 +122,7 @@ public class ActionButtonUI extends ComponentUI implements consulo.actionSystem.
     if(!c.isWithoutBorder()) {
       paintBorder(c, g, c.getSize(), state);
     }
-    paintIcon(g, c, c.getIcon());
+    paintIcon(g, c, TargetAWT.to(c.getIcon()));
 
     if (c.shallPaintDownArrow()) {
       int x = JBUI.scale(5);

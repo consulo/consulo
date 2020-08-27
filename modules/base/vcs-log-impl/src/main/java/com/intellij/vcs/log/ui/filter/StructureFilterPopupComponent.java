@@ -15,6 +15,7 @@
  */
 package com.intellij.vcs.log.ui.filter;
 
+import com.intellij.icons.AllIcons;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.DumbAwareAction;
@@ -29,7 +30,7 @@ import com.intellij.util.NotNullFunction;
 import com.intellij.util.PlatformIcons;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.ColorIcon;
-import com.intellij.util.ui.EmptyIcon;
+import com.intellij.util.ui.UIUtil;
 import com.intellij.vcs.log.VcsLogDataPack;
 import com.intellij.vcs.log.VcsLogRootFilter;
 import com.intellij.vcs.log.VcsLogRootFilterImpl;
@@ -38,16 +39,17 @@ import com.intellij.vcs.log.data.VcsLogStructureFilterImpl;
 import com.intellij.vcs.log.impl.VcsLogUtil;
 import com.intellij.vcs.log.ui.VcsLogColorManager;
 import com.intellij.vcs.log.ui.frame.VcsLogGraphTable;
+import consulo.ui.image.Image;
+import consulo.ui.image.ImageEffects;
 import org.intellij.lang.annotations.JdkConstants;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.swing.*;
 import java.awt.*;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 class StructureFilterPopupComponent extends FilterPopupComponent<VcsLogFileFilter> {
   private static final int FILTER_LABEL_LENGTH = 30;
@@ -283,7 +285,7 @@ class StructureFilterPopupComponent extends FilterPopupComponent<VcsLogFileFilte
       super(root.getName(), root.getPresentableUrl(), null);
       myRoot = root;
       myIcon = new CheckboxColorIcon(CHECKBOX_ICON_SIZE, VcsLogGraphTable.getRootBackgroundColor(myRoot, myColorManager));
-      getTemplatePresentation().setIcon(EmptyIcon.create(CHECKBOX_ICON_SIZE)); // see PopupFactoryImpl.calcMaxIconSize
+      getTemplatePresentation().setIcon(Image.empty(CHECKBOX_ICON_SIZE)); // see PopupFactoryImpl.calcMaxIconSize
     }
 
     @Override
@@ -317,10 +319,10 @@ class StructureFilterPopupComponent extends FilterPopupComponent<VcsLogFileFilte
 
       updateIcon();
       e.getPresentation().setIcon(myIcon);
-      e.getPresentation().putClientProperty(TOOL_TIP_TEXT_KEY, KeyEvent.getKeyModifiersText(getMask()) +
-                                                               "+Click to see only \"" +
-                                                               e.getPresentation().getText() +
-                                                               "\"");
+      e.getPresentation().putClientProperty(UIUtil.TOOL_TIP_TEXT_KEY, KeyEvent.getKeyModifiersText(getMask()) +
+                                                                      "+Click to see only \"" +
+                                                                      e.getPresentation().getText() +
+                                                                      "\"");
     }
 
     private void updateIcon() {
@@ -332,7 +334,7 @@ class StructureFilterPopupComponent extends FilterPopupComponent<VcsLogFileFilte
     }
   }
 
-  private static class CheckboxColorIcon extends ColorIcon {
+  private static class CheckboxColorIcon extends ColorIcon implements Image {
     private final int mySize;
     private boolean mySelected = false;
     private SizedIcon mySizedIcon;
@@ -360,6 +362,16 @@ class StructureFilterPopupComponent extends FilterPopupComponent<VcsLogFileFilte
       if (mySelected) {
         mySizedIcon.paintIcon(component, g, i, j);
       }
+    }
+
+    @Override
+    public int getHeight() {
+      return getIconHeight();
+    }
+
+    @Override
+    public int getWidth() {
+      return getIconWidth();
     }
   }
 
@@ -406,15 +418,15 @@ class StructureFilterPopupComponent extends FilterPopupComponent<VcsLogFileFilte
     @Nonnull
     private final VcsLogStructureFilter myFilter;
     @Nonnull
-    private final Icon myIcon;
+    private final Image myIcon;
     @Nonnull
-    private final Icon myEmptyIcon;
+    private final Image myEmptyIcon;
 
     private SelectFromHistoryAction(@Nonnull VcsLogStructureFilter filter) {
       super(getStructureActionText(filter), getTooltipTextForFilePaths(filter.getFiles(), false).replace("\n", " "), null);
       myFilter = filter;
-      myIcon = new SizedIcon(PlatformIcons.CHECK_ICON_SMALL, CHECKBOX_ICON_SIZE, CHECKBOX_ICON_SIZE);
-      myEmptyIcon = EmptyIcon.create(CHECKBOX_ICON_SIZE);
+      myIcon = ImageEffects.resize(AllIcons.Actions.Checked_small, CHECKBOX_ICON_SIZE, CHECKBOX_ICON_SIZE);
+      myEmptyIcon = Image.empty(CHECKBOX_ICON_SIZE);
     }
 
     @Override

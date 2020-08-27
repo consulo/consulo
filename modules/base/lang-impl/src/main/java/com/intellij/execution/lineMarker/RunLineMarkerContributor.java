@@ -22,7 +22,6 @@ import com.intellij.openapi.actionSystem.impl.SimpleDataContext;
 import com.intellij.psi.PsiElement;
 import com.intellij.util.Function;
 import consulo.annotation.access.RequiredReadAction;
-import consulo.awt.TargetAWT;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
@@ -43,7 +42,7 @@ public abstract class RunLineMarkerContributor {
     }
 
     public Info(@Nonnull final AnAction action) {
-      this(TargetAWT.from(action.getTemplatePresentation().getIcon()), element -> getText(action, element), action);
+      this(action.getTemplatePresentation().getIcon(), element -> getText(action, element), action);
     }
   }
 

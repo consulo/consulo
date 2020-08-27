@@ -22,6 +22,8 @@ import com.intellij.util.ui.BaseButtonBehavior;
 import com.intellij.util.ui.CenteredIcon;
 import com.intellij.util.ui.TimedDeadzone;
 import com.intellij.util.ui.UIUtil;
+import consulo.awt.TargetAWT;
+import consulo.ui.image.Image;
 
 import javax.accessibility.*;
 import javax.swing.*;
@@ -49,11 +51,11 @@ public class InplaceButton extends JComponent implements ActiveComponent, Access
 
   private boolean myHoveringEnabled;
 
-  public InplaceButton(String tooltip, final Icon icon, final ActionListener listener) {
+  public InplaceButton(String tooltip, final Image icon, final ActionListener listener) {
     this(new IconButton(tooltip, icon, icon), listener, null);
   }
 
-  public InplaceButton(String tooltip, final Icon icon, final ActionListener listener, final Pass<MouseEvent> me) {
+  public InplaceButton(String tooltip, final Image icon, final ActionListener listener, final Pass<MouseEvent> me) {
     this(new IconButton(tooltip, icon, icon), listener, me);
   }
 
@@ -117,22 +119,22 @@ public class InplaceButton extends JComponent implements ActiveComponent, Access
     setIcons(source.getRegular(), source.getInactive(), source.getHovered());
   }
 
-  public void setIcons(final Icon regular, Icon inactive, Icon hovered) {
+  public void setIcons(final consulo.ui.image.Image regular, consulo.ui.image.Image inactive, consulo.ui.image.Image hovered) {
     if (regular == null) return;
     if (inactive == null) inactive = regular;
     if (hovered == null) hovered = regular;
 
-    int width = Math.max(regular.getIconWidth(), inactive.getIconWidth());
-    width = Math.max(width, hovered.getIconWidth());
-    int height = Math.max(regular.getIconHeight(), inactive.getIconHeight());
-    height = Math.max(height, hovered.getIconHeight());
+    int width = Math.max(regular.getWidth(), inactive.getWidth());
+    width = Math.max(width, hovered.getWidth());
+    int height = Math.max(regular.getHeight(), inactive.getHeight());
+    height = Math.max(height, hovered.getHeight());
 
 
     setPreferredSize(new Dimension(width, height));
 
-    myRegular = new CenteredIcon(regular, width, height);
-    myHovered = new CenteredIcon(hovered, width, height);
-    myInactive = new CenteredIcon(inactive, width, height);
+    myRegular = new CenteredIcon(TargetAWT.to(regular), width, height);
+    myHovered = new CenteredIcon(TargetAWT.to(hovered), width, height);
+    myInactive = new CenteredIcon(TargetAWT.to(inactive), width, height);
   }
 
   public InplaceButton setFillBg(boolean fill) {
@@ -154,7 +156,7 @@ public class InplaceButton extends JComponent implements ActiveComponent, Access
     repaint();
   }
 
-  public void setIcon(final Icon icon) {
+  public void setIcon(final Image icon) {
     setIcons(icon, icon, icon);
   }
 

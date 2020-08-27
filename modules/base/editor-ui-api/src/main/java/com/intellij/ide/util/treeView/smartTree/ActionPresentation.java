@@ -15,7 +15,9 @@
  */
 package com.intellij.ide.util.treeView.smartTree;
 
-import javax.swing.*;
+import consulo.ui.image.Image;
+
+import javax.annotation.Nullable;
 
 /**
  * The presentation information for a grouping, sorting or filtering action displayed in
@@ -46,5 +48,6 @@ public interface ActionPresentation {
    *
    * @return the action icon.
    */
-  Icon getIcon();
+  @Nullable
+  Image getIcon();
 }

@@ -16,7 +16,6 @@
 package com.intellij.ide.actions;
 
 import com.intellij.icons.AllIcons;
-import com.intellij.ide.IdeBundle;
 import com.intellij.notification.EventLog;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.keymap.Keymap;
@@ -25,12 +24,13 @@ import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowManager;
-import com.intellij.ui.SizedIcon;
+import consulo.localize.LocalizeValue;
+import consulo.platform.base.localize.IdeLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.awt.TargetAWT;
+import consulo.ui.image.Image;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
@@ -92,15 +92,16 @@ public class ActivateToolWindowAction extends DumbAwareAction {
     }
   }
 
+  @RequiredUIAccess
   private void updatePresentation(@Nonnull Presentation presentation, @Nonnull ToolWindow toolWindow) {
-    String title = toolWindow.getStripeTitle();
-    presentation.setText(title);
-    presentation.setDescription(IdeBundle.message("action.activate.tool.window", title));
-    Icon icon = TargetAWT.to(toolWindow.getIcon());
+    LocalizeValue title = toolWindow.getDisplayName();
+    presentation.setTextValue(title);
+    presentation.setDescriptionValue(IdeLocalize.actionActivateToolWindow(title));
+    Image icon = toolWindow.getIcon();
     if (EventLog.LOG_TOOL_WINDOW_ID.equals(myToolWindowId)) {
       icon = AllIcons.Ide.Info_notifications;
     }
-    presentation.setIcon(icon == null ? null : new SizedIcon(icon, icon.getIconHeight(), icon.getIconHeight()));
+    presentation.setIcon(icon);
   }
 
   @RequiredUIAccess

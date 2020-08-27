@@ -36,6 +36,7 @@ import com.intellij.util.ui.EmptyIcon;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.tree.TreeUtil;
 import com.intellij.util.ui.tree.WideSelectionTreeUI;
+import consulo.ui.image.Image;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nullable;
@@ -48,8 +49,7 @@ import java.util.Enumeration;
 
 public class ActionsTree {
   private static final Icon EMPTY_ICON = EmptyIcon.ICON_18;
-  private static final Icon OPEN_ICON = new DefaultTreeCellRenderer().getOpenIcon();
-  private static final Icon CLOSE_ICON = AllIcons.Nodes.Folder;
+  private static final Image CLOSE_ICON = AllIcons.Nodes.Folder;
 
   private final JTree myTree;
   private DefaultMutableTreeNode myRoot;
@@ -354,14 +354,11 @@ public class ActionsTree {
     return null;
   }
 
-  public static Icon getEvenIcon(Icon icon) {
-    LayeredIcon layeredIcon = new LayeredIcon(2);
-    layeredIcon.setIcon(EMPTY_ICON, 0);
-    if (icon != null && icon.getIconHeight() <= EMPTY_ICON.getIconHeight() && icon.getIconWidth() <= EMPTY_ICON.getIconWidth()) {
-      layeredIcon
-        .setIcon(icon, 1, (-icon.getIconWidth() + EMPTY_ICON.getIconWidth()) / 2, (EMPTY_ICON.getIconHeight() - icon.getIconHeight()) / 2);
+  public static Image getEvenIcon(@Nullable Image icon) {
+    if(icon == null) {
+      return Image.empty(Image.DEFAULT_ICON_SIZE);
     }
-    return layeredIcon;
+    return icon;
   }
 
   private class PathsKeeper {
@@ -439,7 +436,7 @@ public class ActionsTree {
     public void customizeCellRenderer(JTree tree, Object value, boolean selected, boolean expanded, boolean leaf, int row, boolean hasFocus) {
       final boolean showIcons = UISettings.getInstance().SHOW_ICONS_IN_MENUS;
       Keymap originalKeymap = myKeymap != null ? myKeymap.getParent() : null;
-      Icon icon = null;
+      Image icon = null;
       String text;
       boolean bound = false;
 
@@ -465,7 +462,7 @@ public class ActionsTree {
             if (text == null || text.length() == 0) { //fill dynamic presentation gaps
               text = actionId;
             }
-            Icon actionIcon = action.getTemplatePresentation().getIcon();
+            Image actionIcon = action.getTemplatePresentation().getIcon();
             if (actionIcon != null) {
               icon = actionIcon;
             }

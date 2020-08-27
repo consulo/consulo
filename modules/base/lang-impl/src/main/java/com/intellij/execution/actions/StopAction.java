@@ -63,7 +63,7 @@ public class StopAction extends DumbAwareAction implements AnAction.TransparentU
   @Override
   public void update(final AnActionEvent e) {
     boolean enable = false;
-    Image icon = TargetAWT.from(getTemplatePresentation().getIcon());
+    Image icon = getTemplatePresentation().getIcon();
     String description = getTemplatePresentation().getDescription();
     Presentation presentation = e.getPresentation();
     if (isPlaceGlobal(e)) {

@@ -17,7 +17,6 @@ package com.intellij.openapi.diff.impl.util;
 
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.editor.markup.GutterIconRenderer;
-import consulo.awt.TargetAWT;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
@@ -32,7 +31,7 @@ public class GutterActionRenderer extends GutterIconRenderer {
   @Override
   @Nonnull
   public Image getIcon() {
-    return TargetAWT.from(myAction.getTemplatePresentation().getIcon());
+    return myAction.getTemplatePresentation().getIcon();
   }
 
   @Override

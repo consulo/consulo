@@ -270,7 +270,7 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
     myHeaderAlwaysFocusable = headerAlwaysFocusable;
     myMovable = movable;
 
-    ActiveIcon actualIcon = titleIcon == null ? new ActiveIcon(EmptyIcon.ICON_0) : titleIcon;
+    ActiveIcon actualIcon = titleIcon == null ? new ActiveIcon(Image.empty(0)) : titleIcon;
 
     myHeaderPanel = new JPanel(new BorderLayout());
 
@@ -286,7 +286,7 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
       if (pinCallback != null) {
         Image icon =
                 ToolWindowManagerEx.getInstanceEx(myProject != null ? myProject : ProjectUtil.guessCurrentProject((JComponent)myOwner)).getLocationIcon(ToolWindowId.FIND, AllIcons.General.Pin_tab);
-        myCaption.setButtonComponent(new InplaceButton(new IconButton(IdeBundle.message("show.in.find.window.button.name"), TargetAWT.to(icon)), e -> pinCallback.process(this)), JBUI.Borders.empty(4));
+        myCaption.setButtonComponent(new InplaceButton(new IconButton(IdeBundle.message("show.in.find.window.button.name"), icon), e -> pinCallback.process(this)), JBUI.Borders.empty(4));
       }
       else if (cancelButton != null) {
         myCaption.setButtonComponent(new InplaceButton(cancelButton, e -> cancel()), JBUI.Borders.empty(4));

@@ -33,6 +33,9 @@ import com.intellij.util.Consumer;
 import com.intellij.util.containers.ContainerUtilRt;
 import com.intellij.util.ui.GridBag;
 import com.intellij.util.ui.UIUtil;
+import consulo.ui.image.Image;
+import consulo.ui.shared.Size;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -157,8 +160,8 @@ public class ArrangementAtomMatchConditionComponent implements ArrangementUiComp
     }
 
     final ArrangementRemoveConditionAction action = new ArrangementRemoveConditionAction();
-    Icon buttonIcon = action.getTemplatePresentation().getIcon();
-    Dimension buttonSize = new Dimension(buttonIcon.getIconWidth(), buttonIcon.getIconHeight());
+    Image buttonIcon = action.getTemplatePresentation().getIcon();
+    Size buttonSize = new Size(buttonIcon.getWidth(), buttonIcon.getHeight());
     if (closeCallback == null) {
       myCloseButton = null;
       myCloseButtonBounds = null;
@@ -171,11 +174,11 @@ public class ArrangementAtomMatchConditionComponent implements ArrangementUiComp
               buttonSize)
       {
         @Override
-        public Icon getIcon() {
+        public Image getIcon() {
           return myCloseButtonHovered ? action.getTemplatePresentation().getHoveredIcon() : action.getTemplatePresentation().getIcon();
         }
       };
-      myCloseButtonBounds = new Rectangle(0, 0, buttonIcon.getIconWidth(), buttonIcon.getIconHeight());
+      myCloseButtonBounds = new Rectangle(0, 0, buttonIcon.getWidth(), buttonIcon.getHeight());
     }
 
     JPanel insetsPanel = new JPanel(new GridBagLayout()) {

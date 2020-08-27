@@ -31,6 +31,8 @@ import com.intellij.ui.IdeBorderFactory;
 import com.intellij.ui.SimpleColoredComponent;
 import com.intellij.util.ui.GridBag;
 import com.intellij.util.ui.UIUtil;
+import consulo.ui.image.Image;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -73,8 +75,8 @@ public class ArrangementListRowDecorator extends JPanel implements ArrangementUi
 
     AnAction action = ActionManager.getInstance().getAction("Arrangement.Rule.Edit");
     Presentation presentation = action.getTemplatePresentation().clone();
-    Icon editIcon = presentation.getIcon();
-    Dimension buttonSize = new Dimension(editIcon.getIconWidth(), editIcon.getIconHeight());
+    Image editIcon = presentation.getIcon();
+    Dimension buttonSize = new Dimension(editIcon.getWidth(), editIcon.getHeight());
     myEditButton = new ActionButton(action, presentation, ArrangementConstants.MATCHING_RULES_CONTROL_PLACE, buttonSize);
     myEditButton.setVisible(false);
 

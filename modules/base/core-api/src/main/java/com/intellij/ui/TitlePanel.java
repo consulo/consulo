@@ -17,6 +17,8 @@
 package com.intellij.ui;
 
 import com.intellij.util.ui.UIUtil;
+import consulo.awt.TargetAWT;
+import consulo.ui.image.Image;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -27,8 +29,8 @@ import java.awt.*;
  */
 public class TitlePanel extends CaptionPanel {
   private final JLabel myLabel;
-  private final Icon myRegular;
-  private final Icon myInactive;
+  private final Image myRegular;
+  private final Image myInactive;
 
   private boolean myHtml;
   
@@ -36,7 +38,7 @@ public class TitlePanel extends CaptionPanel {
     this(null, null);
   }
 
-  public TitlePanel(Icon regular, Icon inactive) {
+  public TitlePanel(Image regular, Image inactive) {
     myRegular = regular;
     myInactive = inactive;
 
@@ -56,7 +58,7 @@ public class TitlePanel extends CaptionPanel {
 
   public void setActive(final boolean active) {
     super.setActive(active);
-    myLabel.setIcon(active ? myRegular : myInactive);
+    myLabel.setIcon(TargetAWT.to(active ? myRegular : myInactive));
     final Color foreground = UIUtil.getLabelForeground();
     myLabel.setForeground(active ? foreground : Color.gray);
   }

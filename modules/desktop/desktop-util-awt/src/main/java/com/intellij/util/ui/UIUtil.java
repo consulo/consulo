@@ -198,6 +198,14 @@ public class UIUtil {
   @NonNls
   public static final String BORDER_LINE = "<hr size=1 noshade>";
 
+  /**
+   * The comment to display when the cursor is over the component,
+   * also known as a "value tip", "flyover help", or "flyover label".
+   *
+   * @see JComponent#TOOL_TIP_TEXT_KEY
+   */
+  public static final String TOOL_TIP_TEXT_KEY = "ToolTipText";
+
   public static void applyStyle(@Nonnull ComponentStyle componentStyle, @Nonnull Component comp) {
     if (!(comp instanceof JComponent)) return;
 

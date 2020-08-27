@@ -16,9 +16,10 @@
 
 package com.intellij.openapi.ui.popup;
 
-import com.intellij.util.ui.EmptyIcon;
-import javax.annotation.Nullable;
+import consulo.awt.TargetAWT;
+import consulo.ui.image.Image;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 
@@ -26,31 +27,31 @@ public class ActiveIcon implements Icon {
 
   private boolean myActive = true;
 
-  private Icon myRegular;
-  private Icon myInactive;
+  private consulo.ui.image.Image myRegular;
+  private consulo.ui.image.Image myInactive;
 
-  public ActiveIcon(Icon icon) {
+  public ActiveIcon(consulo.ui.image.Image icon) {
     this(icon, icon);
   }
 
-  public ActiveIcon(@Nullable final Icon regular, @Nullable final Icon inactive) {
+  public ActiveIcon(@Nullable final consulo.ui.image.Image regular, @Nullable final consulo.ui.image.Image inactive) {
     setIcons(regular, inactive);
   }
 
-  protected void setIcons(@Nullable final Icon regular, @Nullable final Icon inactive) {
-    myRegular = regular != null ? regular : EmptyIcon.ICON_0;
+  protected void setIcons(@Nullable final consulo.ui.image.Image regular, @Nullable final consulo.ui.image.Image inactive) {
+    myRegular = regular != null ? regular : Image.empty(0);
     myInactive = inactive != null ? inactive : myRegular;
   }
 
-  public Icon getRegular() {
+  public consulo.ui.image.Image getRegular() {
     return myRegular;
   }
 
-  public Icon getInactive() {
+  public consulo.ui.image.Image getInactive() {
     return myInactive;
   }
 
-  private Icon getIcon() {
+  private consulo.ui.image.Image getIcon() {
     return myActive ? getRegular() : getInactive();
   }
 
@@ -58,15 +59,20 @@ public class ActiveIcon implements Icon {
     myActive = active;
   }
 
+  @Override
   public void paintIcon(final Component c, final Graphics g, final int x, final int y) {
-    getIcon().paintIcon(c, g, x, y);
+    Icon icon = TargetAWT.to(getIcon());
+    
+    icon.paintIcon(c, g, x, y);
   }
 
+  @Override
   public int getIconWidth() {
-    return getIcon().getIconWidth();
+    return getIcon().getWidth();
   }
 
+  @Override
   public int getIconHeight() {
-    return getIcon().getIconHeight();
+    return getIcon().getHeight();
   }
 }

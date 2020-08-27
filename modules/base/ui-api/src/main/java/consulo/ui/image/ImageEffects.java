@@ -37,6 +37,11 @@ public final class ImageEffects {
   }
 
   @Nonnull
+  public static Image resize(@Nonnull Image original, int widthWithHeight) {
+    return resize(original, widthWithHeight, widthWithHeight);
+  }
+
+  @Nonnull
   public static Image resize(@Nonnull Image original, int width, int height) {
     return UIInternal.get()._ImageEffects_resize(original, width, height);
   }

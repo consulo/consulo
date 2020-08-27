@@ -308,7 +308,7 @@ public class DarculaComboBoxUI extends BasicComboBoxUI implements Border, ErrorB
       cc.setIpad(JBUI.emptyInsets());
       icon = cc.getIcon();
       if (!cc.isIconOnTheRight()) {
-        cc.setIcon(OffsetIcon.getOriginalIcon(icon));
+        cc.setIcon(icon);
       }
     }
     else if (c instanceof JLabel) {
@@ -316,7 +316,7 @@ public class DarculaComboBoxUI extends BasicComboBoxUI implements Border, ErrorB
       border = cc.getBorder();
       cc.setBorder(JBUI.Borders.empty());
       icon = cc.getIcon();
-      cc.setIcon(OffsetIcon.getOriginalIcon(icon));
+      cc.setIcon(icon);
 
       // the following trimMiddle approach is not good for smooth resizing:
       // the text jumps as more or less space becomes available.

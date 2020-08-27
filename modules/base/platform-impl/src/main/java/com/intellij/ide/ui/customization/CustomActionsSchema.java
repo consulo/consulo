@@ -32,20 +32,17 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.wm.ex.IdeFrameEx;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
-import com.intellij.util.ImageLoader;
 import consulo.logging.Logger;
+import consulo.ui.image.Image;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.inject.Singleton;
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
-import java.awt.*;
 import java.io.File;
-import java.io.IOException;
 import java.util.*;
-import java.util.List;
 
 /**
  * User: anna
@@ -330,17 +327,10 @@ public class CustomActionsSchema implements JDOMExternalizable {
     for (String actionId : myIconCustomizations.keySet()) {
       final AnAction anAction = actionManager.getAction(actionId);
       if (anAction != null) {
-        Icon icon;
+        Image icon;
         final String iconPath = myIconCustomizations.get(actionId);
         if (iconPath != null && new File(FileUtil.toSystemDependentName(iconPath)).exists()) {
-          Image image = null;
-          try {
-            image = ImageLoader.loadFromStream(VfsUtil.convertToURL(VfsUtil.pathToUrl(iconPath)).openStream());
-          }
-          catch (IOException e) {
-            LOG.debug(e);
-          }
-          icon = image != null ? IconLoader.getIcon(image) : null;
+          icon = Image.fromUrl(VfsUtil.convertToURL(VfsUtil.pathToUrl(iconPath)));
         }
         else {
           icon = AllIcons.Toolbar.Unknown;

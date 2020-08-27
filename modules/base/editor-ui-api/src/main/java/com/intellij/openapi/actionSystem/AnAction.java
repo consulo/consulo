@@ -23,6 +23,7 @@ import com.intellij.util.ArrayUtil;
 import com.intellij.util.SmartList;
 import com.intellij.util.ui.UIUtil;
 import consulo.annotation.DeprecationInfo;
+import consulo.awt.TargetAWT;
 import consulo.disposer.Disposer;
 import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -145,7 +146,7 @@ public abstract class AnAction implements PossiblyDumbAware {
     Presentation presentation = getTemplatePresentation();
     presentation.setText(text);
     presentation.setDescription(description);
-    presentation.setIcon(icon);
+    presentation.setIcon(TargetAWT.from(icon));
   }
 
   public AnAction(SwingImageRef icon) {

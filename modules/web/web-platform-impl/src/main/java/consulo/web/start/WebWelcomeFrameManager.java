@@ -109,7 +109,7 @@ public class WebWelcomeFrameManager extends WelcomeFrameManager {
 
         Hyperlink component = Hyperlink.create(text, () -> action.actionPerformed(e));
 
-        component.setImage(presentation.getUIIcon());
+        component.setImage(presentation.getIcon());
 
         projectActionLayout.add(component);
       }

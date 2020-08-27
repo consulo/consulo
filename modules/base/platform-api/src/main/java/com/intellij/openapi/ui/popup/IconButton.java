@@ -16,41 +16,40 @@
 
 package com.intellij.openapi.ui.popup;
 
-import javax.annotation.Nullable;
+import consulo.ui.image.Image;
 
-import javax.swing.*;
+import javax.annotation.Nullable;
 
 public class IconButton extends ActiveIcon {
 
   private String myTooltip;
 
-  private Icon myHovered;
+  private Image myHovered;
 
-  public IconButton(final String tooltip, @Nullable final Icon regular, @Nullable final Icon hovered, @Nullable final Icon inactive) {
+  public IconButton(final String tooltip, @Nullable final Image regular, @Nullable final Image hovered, @Nullable final Image inactive) {
     super(regular, inactive);
     myTooltip = tooltip;
     setHovered(hovered);
   }
 
-  private void setHovered(final Icon hovered) {
+  private void setHovered(final Image hovered) {
     myHovered = hovered != null ? hovered : getRegular();
   }
 
-  public IconButton(final String tooltip, final Icon regular, final Icon hovered) {
+  public IconButton(final String tooltip, final Image regular, final Image hovered) {
     this(tooltip, regular, hovered, regular);
   }
 
-  public IconButton(final String tooltip, final Icon regular) {
+  public IconButton(final String tooltip, final Image regular) {
     this(tooltip, regular, regular, regular);
   }
 
-
-  protected void setIcons(@Nullable final Icon regular, @Nullable final Icon inactive, @Nullable final Icon hovered) {
+  protected void setIcons(@Nullable final Image regular, @Nullable final Image inactive, @Nullable final Image hovered) {
     setIcons(regular, inactive);
     setHovered(hovered);
   }
 
-  public Icon getHovered() {
+  public Image getHovered() {
     return myHovered;
   }
 

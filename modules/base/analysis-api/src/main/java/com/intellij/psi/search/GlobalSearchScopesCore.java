@@ -30,12 +30,10 @@ import com.intellij.psi.PsiManager;
 import com.intellij.psi.search.scope.packageSet.*;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.Function;
-import consulo.awt.TargetAWT;
+import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.swing.*;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.BitSet;
@@ -103,8 +101,8 @@ public class GlobalSearchScopesCore {
 
     @Nullable
     @Override
-    public Icon getIcon() {
-      return TargetAWT.to(mySet.getIcon());
+    public Image getIcon() {
+      return mySet.getIcon();
     }
 
     @Nonnull

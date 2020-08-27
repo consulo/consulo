@@ -19,10 +19,9 @@ import com.intellij.util.ArrayUtil;
 import com.intellij.util.Processor;
 import com.intellij.util.Processors;
 import com.intellij.util.containers.ContainerUtil;
-import consulo.awt.TargetAWT;
 import consulo.ui.image.Image;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -92,8 +91,8 @@ public class GutterIntentionMenuContributor implements IntentionMenuContributor 
         addActions(child, descriptors, renderer, order, dataContext);
       }
     }
-    Image icon = TargetAWT.from(action.getTemplatePresentation().getIcon());
-    if (icon == null) icon = Image.empty(16);
+    Image icon = action.getTemplatePresentation().getIcon();
+    if (icon == null) icon = Image.empty(Image.DEFAULT_ICON_SIZE);
     final GutterIntentionAction gutterAction = new GutterIntentionAction(action, order.getAndIncrement(), icon);
     if (!gutterAction.isAvailable(dataContext)) return;
     descriptors.add(new HighlightInfo.IntentionActionDescriptor(gutterAction, Collections.emptyList(), null, icon) {

@@ -6,16 +6,15 @@ import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.impl.MenuItemPresentationFactory;
 import com.intellij.openapi.actionSystem.impl.PresentationFactory;
 import com.intellij.openapi.actionSystem.impl.Utils;
-import com.intellij.openapi.util.IconLoader;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.ui.SizedIcon;
-import com.intellij.util.ObjectUtils;
-import com.intellij.util.ui.EmptyIcon;
+import com.intellij.util.ui.UIUtil;
 import consulo.localize.LocalizeValue;
+import consulo.ui.image.Image;
+import consulo.ui.image.ImageEffects;
+import consulo.util.lang.ObjectUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,7 +30,7 @@ class ActionStepBuilder {
   private String mySeparatorText;
   private final boolean myHonorActionMnemonics;
   private final String myActionPlace;
-  private Icon myEmptyIcon;
+  private Image myEmptyIcon;
   private int myMaxIconWidth = -1;
   private int myMaxIconHeight = -1;
 
@@ -47,7 +46,7 @@ class ActionStepBuilder {
       myPresentationFactory = new PresentationFactory();
     }
     else {
-      myPresentationFactory = ObjectUtils.notNull(presentationFactory);
+      myPresentationFactory = ObjectUtil.notNull(presentationFactory);
     }
     myListModel = new ArrayList<>();
     myDataContext = dataContext;
@@ -57,7 +56,7 @@ class ActionStepBuilder {
     myPrependWithSeparator = false;
     mySeparatorText = null;
     myHonorActionMnemonics = honorActionMnemonics;
-    myActionPlace = ObjectUtils.notNull(actionPlace, ActionPlaces.UNKNOWN);
+    myActionPlace = ObjectUtil.notNull(actionPlace, ActionPlaces.UNKNOWN);
   }
 
   @Nonnull
@@ -67,7 +66,7 @@ class ActionStepBuilder {
 
   public void buildGroup(@Nonnull ActionGroup actionGroup) {
     calcMaxIconSize(actionGroup);
-    myEmptyIcon = myMaxIconHeight != -1 && myMaxIconWidth != -1 ? EmptyIcon.create(myMaxIconWidth, myMaxIconHeight) : null;
+    myEmptyIcon = myMaxIconHeight != -1 && myMaxIconWidth != -1 ? Image.empty(myMaxIconWidth, myMaxIconHeight) : null;
 
     appendActionsFromGroup(actionGroup);
 
@@ -89,11 +88,11 @@ class ActionStepBuilder {
         }
       }
 
-      Icon icon = action.getTemplatePresentation().getIcon();
-      if (icon == null && action instanceof Toggleable) icon = EmptyIcon.ICON_16;
+      Image icon = action.getTemplatePresentation().getIcon();
+      if (icon == null && action instanceof Toggleable) icon = Image.empty(Image.DEFAULT_ICON_SIZE);
       if (icon != null) {
-        final int width = icon.getIconWidth();
-        final int height = icon.getIconHeight();
+        final int width = icon.getWidth();
+        final int height = icon.getHeight();
         if (myMaxIconWidth < width) {
           myMaxIconWidth = width;
         }
@@ -149,9 +148,9 @@ class ActionStepBuilder {
       }
 
       boolean hideIcon = Boolean.TRUE.equals(presentation.getClientProperty(MenuItemPresentationFactory.HIDE_ICON));
-      Icon icon = hideIcon ? null : presentation.getIcon();
-      Icon selectedIcon = hideIcon ? null : presentation.getSelectedIcon();
-      Icon disabledIcon = hideIcon ? null : presentation.getDisabledIcon();
+      Image icon = hideIcon ? null : presentation.getIcon();
+      Image selectedIcon = hideIcon ? null : presentation.getSelectedIcon();
+      Image disabledIcon = hideIcon ? null : presentation.getDisabledIcon();
 
       if (icon == null && selectedIcon == null) {
         final String actionId = ActionManager.getInstance().getId(action);
@@ -159,25 +158,26 @@ class ActionStepBuilder {
           //icon =  null; // AllIcons.Actions.QuickList;
         }
         else if (action instanceof Toggleable && Toggleable.isSelected(presentation)) {
-          icon = EmptyIcon.ICON_16;
+          icon = Image.empty(Image.DEFAULT_ICON_SIZE);
           selectedIcon = AllIcons.Actions.Checked;
           disabledIcon = null;
         }
       }
       if (!enabled) {
-        icon = disabledIcon != null || icon == null ? disabledIcon : IconLoader.getDisabledIcon(icon);
-        selectedIcon = disabledIcon != null || selectedIcon == null ? disabledIcon : IconLoader.getDisabledIcon(selectedIcon);
+        icon = disabledIcon != null || icon == null ? disabledIcon : ImageEffects.grayed(icon);
+        selectedIcon = disabledIcon != null || selectedIcon == null ? disabledIcon : ImageEffects.grayed(selectedIcon);
       }
 
       if (myMaxIconWidth != -1 && myMaxIconHeight != -1) {
-        if (icon != null) icon = new SizedIcon(icon, myMaxIconWidth, myMaxIconHeight);
-        if (selectedIcon != null) selectedIcon = new SizedIcon(selectedIcon, myMaxIconWidth, myMaxIconHeight);
+        if (icon != null) icon = ImageEffects.resize(icon, myMaxIconWidth, myMaxIconHeight);
+        if (selectedIcon != null) selectedIcon = ImageEffects.resize(selectedIcon, myMaxIconWidth, myMaxIconHeight);
       }
 
       if (icon == null) icon = selectedIcon != null ? selectedIcon : myEmptyIcon;
       boolean prependSeparator = (!myListModel.isEmpty() || mySeparatorText != null) && myPrependWithSeparator;
       assert textValue != LocalizeValue.empty() : action + " has no presentation";
-      myListModel.add(new PopupFactoryImpl.ActionItem(action, textValue, (String)presentation.getClientProperty(JComponent.TOOL_TIP_TEXT_KEY), enabled, icon, selectedIcon, prependSeparator, mySeparatorText));
+      myListModel.add(new PopupFactoryImpl.ActionItem(action, textValue, (String)presentation.getClientProperty(UIUtil.TOOL_TIP_TEXT_KEY), enabled, icon, selectedIcon, prependSeparator,
+                                                      mySeparatorText));
       myPrependWithSeparator = false;
       mySeparatorText = null;
     }

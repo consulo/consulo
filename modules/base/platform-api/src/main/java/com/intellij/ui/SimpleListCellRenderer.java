@@ -5,9 +5,9 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.components.JBLabel;
 import com.intellij.util.Function;
 import com.intellij.util.ui.JBUI;
-import javax.annotation.Nonnull;
 import sun.swing.DefaultLookup;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicHTML;
 import java.awt.*;
@@ -59,7 +59,7 @@ public abstract class SimpleListCellRenderer<T> extends JBLabel implements ListC
     setForeground(fg);
     setFont(list.getFont());
     setText("");
-    setIcon(null);
+    setIcon((Icon)null);
     customize(list, value, index, isSelected, cellHasFocus);
     setOpaque(isSelected);
     return this;

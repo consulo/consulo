@@ -16,8 +16,7 @@
 package com.intellij.openapi.keymap;
 
 import com.intellij.openapi.components.ServiceManager;
-
-import javax.swing.*;
+import consulo.ui.image.Image;
 
 /**
  * @author yole
@@ -28,13 +27,14 @@ public abstract class KeymapGroupFactory {
   }
 
   public abstract KeymapGroup createGroup(String name);
-  public abstract KeymapGroup createGroup(String name, Icon icon);
+
+  public abstract KeymapGroup createGroup(String name, Image icon);
 
   /**
    * closed/open icons supposed to be the same
    */
   @Deprecated
-  public KeymapGroup createGroup(String name, Icon closedIcon, @SuppressWarnings("unused") Icon openIcon) {
+  public KeymapGroup createGroup(String name, Image closedIcon, @SuppressWarnings("unused") Image openIcon) {
     return createGroup(name, closedIcon);
   }
 }

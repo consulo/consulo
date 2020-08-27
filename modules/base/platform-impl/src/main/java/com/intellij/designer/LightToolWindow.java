@@ -31,14 +31,13 @@ import com.intellij.openapi.wm.impl.DesktopStripeButtonUI;
 import com.intellij.ui.*;
 import com.intellij.ui.components.panels.Wrapper;
 import com.intellij.ui.tabs.TabsUtil;
-import com.intellij.util.ui.EmptyIcon;
 import com.intellij.util.ui.UIUtil;
 import consulo.ui.ex.ToolWindowInternalDecorator;
 import consulo.util.ui.ToolwindowPaintUtil;
 import consulo.wm.impl.ToolWindowContentUI;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -474,7 +473,7 @@ public class LightToolWindow extends JPanel {
       myAction = action;
 
       Presentation presentation = action.getTemplatePresentation();
-      InplaceButton button = new InplaceButton(KeymapUtil.createTooltipText(presentation.getText(), action), EmptyIcon.ICON_16, this) {
+      InplaceButton button = new InplaceButton(KeymapUtil.createTooltipText(presentation.getText(), action), consulo.ui.image.Image.empty(consulo.ui.image.Image.DEFAULT_ICON_SIZE), this) {
         @Override
         public boolean isActive() {
           return LightToolWindow.this.isActive();
@@ -483,8 +482,8 @@ public class LightToolWindow extends JPanel {
       button.setHoveringEnabled(!SystemInfo.isMac);
       setContent(button);
 
-      Icon icon = presentation.getIcon();
-      Icon hoveredIcon = presentation.getHoveredIcon();
+      consulo.ui.image.Image icon = presentation.getIcon();
+      consulo.ui.image.Image hoveredIcon = presentation.getHoveredIcon();
       button.setIcons(icon, icon, hoveredIcon == null ? icon : hoveredIcon);
     }
 

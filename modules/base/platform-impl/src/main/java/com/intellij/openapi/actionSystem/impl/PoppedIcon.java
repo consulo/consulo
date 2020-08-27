@@ -22,6 +22,8 @@ import com.intellij.ui.Gray;
 import com.intellij.util.ui.GraphicsUtil;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
+import consulo.awt.TargetAWT;
+import consulo.ui.image.Image;
 
 import javax.swing.*;
 import java.awt.*;
@@ -31,27 +33,27 @@ import java.awt.*;
  *
  * @author Konstantin Bulenkov
  *
- * FIXME [VISTALL] extract paint code from this class
+ * FIXME [VISTALL] extract paint code from this class, or we need create pushed icon as background
  */
-public class PoppedIcon implements Icon {
+public class PoppedIcon implements Icon, Image {
   private static final Color ALPHA_20 = Gray._0.withAlpha(20);
   private static final Color ALPHA_30 = Gray._0.withAlpha(30);
   private static final Color ALPHA_40 = Gray._0.withAlpha(40);
   private static final Color ALPHA_120 = Gray._0.withAlpha(120);
   private static final BasicStroke BASIC_STROKE = new BasicStroke();
 
-  private final Icon myIcon;
+  private final Image myIcon;
   private final int myWidth;
   private final int myHeight;
 
-  public PoppedIcon(Icon icon, int width, int height) {
+  public PoppedIcon(Image icon, int width, int height) {
     myIcon = icon;
     myWidth = width;
     myHeight = height;
   }
 
-  public PoppedIcon(Icon icon) {
-    this(icon, icon.getIconWidth(), icon.getIconHeight());
+  public PoppedIcon(Image icon) {
+    this(icon, icon.getWidth(), icon.getHeight());
   }
 
   @Override
@@ -59,7 +61,9 @@ public class PoppedIcon implements Icon {
     final Dimension size = new Dimension(getIconWidth() + 2 * x, getIconHeight() + 2 * x);
     paintBackground(g, size, ActionButtonComponent.POPPED);
     paintBorder(g, size, ActionButtonComponent.POPPED);
-    myIcon.paintIcon(c, g, x + (getIconWidth() - myIcon.getIconWidth()) / 2, y + (getIconHeight() - myIcon.getIconHeight()) / 2);
+
+    Icon icon = TargetAWT.to(myIcon);
+    icon.paintIcon(c, g, x + (getIconWidth() - icon.getIconWidth()) / 2, y + (getIconHeight() - icon.getIconHeight()) / 2);
   }
 
   private static void paintBackground(Graphics g, Dimension size, int state) {
@@ -113,5 +117,15 @@ public class PoppedIcon implements Icon {
   @Override
   public int getIconHeight() {
     return myHeight;
+  }
+
+  @Override
+  public int getHeight() {
+    return getIconHeight();
+  }
+
+  @Override
+  public int getWidth() {
+    return getIconWidth();
   }
 }

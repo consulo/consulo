@@ -25,14 +25,14 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.*;
 import com.intellij.psi.util.PsiUtilCore;
-import com.intellij.ui.LayeredIcon;
 import com.intellij.util.*;
 import com.intellij.util.containers.JBIterable;
+import consulo.ui.image.Image;
+import consulo.ui.image.ImageEffects;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import javax.swing.*;
 import java.util.LinkedHashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -54,7 +54,7 @@ public class ScratchFileActions {
 
 
   public static class NewFileAction extends DumbAwareAction {
-    private static final Icon ICON = LayeredIcon.create(AllIcons.FileTypes.Text, AllIcons.Actions.Scratch);
+    private static final Image ICON = ImageEffects.layered(AllIcons.FileTypes.Text, AllIcons.Actions.Scratch);
 
     @NonNls
     private static final String ACTION_ID = "NewScratchFile";

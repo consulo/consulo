@@ -22,10 +22,10 @@ import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.Presentation;
 import com.intellij.openapi.project.DumbAwareAction;
+import consulo.ui.image.Image;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import javax.swing.*;
 
 /**
  * @author Sergey Simonchik
@@ -48,7 +48,7 @@ public class StopProcessAction extends DumbAwareAction implements AnAction.Trans
                             @Nonnull Presentation templatePresentation,
                             @Nullable ProcessHandler processHandler) {
     boolean enable = false;
-    Icon icon = templatePresentation.getIcon();
+    Image icon = templatePresentation.getIcon();
     String description = templatePresentation.getDescription();
     if (processHandler != null && !processHandler.isProcessTerminated()) {
       enable = true;

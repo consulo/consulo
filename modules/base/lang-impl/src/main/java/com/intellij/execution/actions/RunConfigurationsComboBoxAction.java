@@ -50,9 +50,11 @@ import java.util.List;
 import java.util.Map;
 
 public class RunConfigurationsComboBoxAction extends ComboBoxAction implements DumbAware {
-
+  @Deprecated
   public static final Icon CHECKED_ICON = new SizedIcon(AllIcons.Actions.Checked, 16, 16);
+  @Deprecated
   public static final Icon CHECKED_SELECTED_ICON = new SizedIcon(AllIcons.Actions.Checked_selected, 16, 16);
+  @Deprecated
   public static final Icon EMPTY_ICON = EmptyIcon.ICON_16;
 
   @RequiredUIAccess
@@ -249,8 +251,8 @@ public class RunConfigurationsComboBoxAction extends ComboBoxAction implements D
       presentation.setText(name, false);
       presentation.setDescription("Select " + name);
 
-      presentation.setIcon(selected ? CHECKED_ICON : EMPTY_ICON);
-      presentation.setSelectedIcon(selected ? CHECKED_SELECTED_ICON : EMPTY_ICON);
+      presentation.setIcon(selected ? ImageEffects.resize(AllIcons.Actions.Checked, Image.DEFAULT_ICON_SIZE) : Image.empty(Image.DEFAULT_ICON_SIZE));
+      presentation.setSelectedIcon(selected ? ImageEffects.resize(AllIcons.Actions.Checked_selected, Image.DEFAULT_ICON_SIZE) : Image.empty(Image.DEFAULT_ICON_SIZE));
     }
 
     @RequiredUIAccess

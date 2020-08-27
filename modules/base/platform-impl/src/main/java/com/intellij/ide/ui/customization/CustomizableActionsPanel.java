@@ -22,6 +22,7 @@ import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnSeparator;
 import com.intellij.openapi.actionSystem.ex.QuickList;
 import com.intellij.openapi.actionSystem.ex.QuickListsManager;
+import consulo.awt.TargetAWT;
 import consulo.logging.Logger;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.keymap.impl.ui.ActionsTree;
@@ -454,7 +455,7 @@ public class CustomizableActionsPanel {
       super.getTreeCellRendererComponent(tree, value, sel, expanded, leaf, row, hasFocus);
       if (value instanceof DefaultMutableTreeNode) {
         Object userObject = ((DefaultMutableTreeNode)value).getUserObject();
-        Icon icon = null;
+        consulo.ui.image.Image icon = null;
         if (userObject instanceof Group) {
           Group group = (Group)userObject;
           String name = group.getName();
@@ -467,7 +468,7 @@ public class CustomizableActionsPanel {
           String name = action != null ? action.getTemplatePresentation().getText() : null;
           setText(!StringUtil.isEmptyOrSpaces(name) ? name : actionId);
           if (action != null) {
-            Icon actionIcon = action.getTemplatePresentation().getIcon();
+            consulo.ui.image.Image actionIcon = action.getTemplatePresentation().getIcon();
             if (actionIcon != null) {
               icon = actionIcon;
             }
@@ -477,7 +478,7 @@ public class CustomizableActionsPanel {
           String actionId = (String)((Pair)userObject).first;
           AnAction action = ActionManager.getInstance().getAction(actionId);
           setText(action != null ? action.getTemplatePresentation().getText() : actionId);
-          icon = (Icon)((Pair)userObject).second;
+          icon = (consulo.ui.image.Image)((Pair)userObject).second;
         }
         else if (userObject instanceof AnSeparator) {
           setText("-------------");
@@ -490,7 +491,7 @@ public class CustomizableActionsPanel {
           throw new IllegalArgumentException("unknown userObject: " + userObject);
         }
 
-        setIcon(ActionsTree.getEvenIcon(icon));
+        setIcon(TargetAWT.to(ActionsTree.getEvenIcon(icon)));
 
         if (sel) {
           setForeground(UIUtil.getTreeSelectionForeground());
@@ -616,7 +617,7 @@ public class CustomizableActionsPanel {
         if (userObject instanceof Pair) {
           String actionId = (String)((Pair)userObject).first;
           final AnAction action = ActionManager.getInstance().getAction(actionId);
-          final Icon icon = (Icon)((Pair)userObject).second;
+          final consulo.ui.image.Image icon = (consulo.ui.image.Image)((Pair)userObject).second;
           action.getTemplatePresentation().setIcon(icon);
           action.setDefaultIcon(icon == null);
           editToolbarIcon(actionId, myNode);
@@ -716,7 +717,7 @@ public class CustomizableActionsPanel {
             if (userObject instanceof Pair) {
               String actionId = (String)((Pair)userObject).first;
               final AnAction action = actionManager.getAction(actionId);
-              Icon icon = (Icon)((Pair)userObject).second;
+              consulo.ui.image.Image icon = (consulo.ui.image.Image)((Pair)userObject).second;
               action.getTemplatePresentation().setIcon(icon);
               action.setDefaultIcon(icon == null);
               editToolbarIcon(actionId, mutableNode);

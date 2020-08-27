@@ -34,6 +34,7 @@ import com.intellij.ui.ClickListener;
 import com.intellij.ui.JBColor;
 import com.intellij.util.Alarm;
 import com.intellij.util.text.DateFormatUtil;
+import consulo.awt.TargetAWT;
 import consulo.logging.Logger;
 
 import javax.annotation.Nullable;
@@ -145,10 +146,9 @@ class StatusPanel extends JPanel {
 
   private Action createCopyAction() {
     ActionManager actionManager = ActionManager.getInstance();
-    if (actionManager == null) return null;
     AnAction action = actionManager.getAction(IdeActions.ACTION_COPY);
     if (action == null) return null;
-    return new AbstractAction(action.getTemplatePresentation().getText(), action.getTemplatePresentation().getIcon()) {
+    return new AbstractAction(action.getTemplatePresentation().getText(), TargetAWT.to(action.getTemplatePresentation().getIcon())) {
       @Override
       public void actionPerformed(ActionEvent e) {
         StringSelection content = new StringSelection(getText());

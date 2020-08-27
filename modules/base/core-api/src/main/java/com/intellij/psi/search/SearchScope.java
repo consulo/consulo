@@ -17,10 +17,10 @@ package com.intellij.psi.search;
 
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiBundle;
-import javax.annotation.Nonnull;
+import consulo.ui.image.Image;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.swing.*;
 
 public abstract class SearchScope {
   private static int hashCodeCounter = 0;
@@ -43,7 +43,7 @@ public abstract class SearchScope {
   }
 
   @Nullable
-  public Icon getIcon() {
+  public Image getIcon() {
     return null;
   }
 

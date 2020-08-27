@@ -1655,10 +1655,7 @@ public class FindPopupPanel extends JBPanel<FindPopupPanel> implements FindUI {
 
     MyShowFilterPopupAction() {
       super(FindBundle.message("find.popup.show.filter.popup"), null, AllIcons.General.Filter);
-      LayeredIcon icon = JBUI.scale(new LayeredIcon(2));
-      icon.setIcon(AllIcons.General.Filter, 0);
-      icon.setIcon(AllIcons.General.Dropdown, 1, 3, 0);
-      getTemplatePresentation().setIcon(icon);
+      getTemplatePresentation().setIcon(AllIcons.General.Filter);
       KeyboardShortcut keyboardShortcut = ActionManager.getInstance().getKeyboardShortcut("ShowFilterPopup");
       if (keyboardShortcut != null) {
         setShortcutSet(new CustomShortcutSet(keyboardShortcut));

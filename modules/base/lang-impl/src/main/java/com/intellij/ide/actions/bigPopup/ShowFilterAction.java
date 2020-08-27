@@ -14,6 +14,8 @@ import com.intellij.openapi.ui.popup.JBPopup;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.ui.popup.JBPopupListener;
 import com.intellij.openapi.ui.popup.LightweightWindowEvent;
+import consulo.ui.image.Image;
+
 import javax.annotation.Nonnull;
 
 import javax.swing.*;
@@ -49,8 +51,8 @@ public abstract class ShowFilterAction extends ToggleAction implements DumbAware
 
   @Override
   public void update(@Nonnull AnActionEvent e) {
-    Icon icon = getTemplatePresentation().getIcon();
-    e.getPresentation().setIcon(isActive() ? ExecutionUtil.getLiveIndicator(icon) : icon);
+    Image icon = getTemplatePresentation().getIcon();
+    e.getPresentation().setIcon(isActive() ? ExecutionUtil.getIconWithLiveIndicator(icon) : icon);
     e.getPresentation().setEnabled(isEnabled());
     Toggleable.setSelected(e.getPresentation(), isSelected(e));
   }

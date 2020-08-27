@@ -18,9 +18,9 @@ package com.intellij.openapi.keymap.impl;
 import com.intellij.openapi.keymap.KeymapGroup;
 import com.intellij.openapi.keymap.KeymapGroupFactory;
 import com.intellij.openapi.keymap.impl.ui.Group;
+import consulo.ui.image.Image;
 
 import javax.inject.Singleton;
-import javax.swing.*;
 
 /**
  * @author yole
@@ -33,7 +33,7 @@ public class KeymapGroupFactoryImpl extends KeymapGroupFactory {
   }
 
   @Override
-  public KeymapGroup createGroup(final String name, final Icon icon) {
+  public KeymapGroup createGroup(final String name, final Image icon) {
     return new Group(name, icon);
   }
 }

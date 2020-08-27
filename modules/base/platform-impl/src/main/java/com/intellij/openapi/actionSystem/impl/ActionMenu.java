@@ -20,7 +20,6 @@ import com.intellij.ide.ui.UISettings;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.impl.actionholder.ActionRef;
 import com.intellij.openapi.application.impl.LaterInvocator;
-import com.intellij.openapi.util.IconLoader;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.text.TextWithMnemonic;
 import com.intellij.openapi.wm.IdeFocusManager;
@@ -32,6 +31,8 @@ import consulo.actionSystem.ex.TopApplicationMenuUtil;
 import consulo.awt.TargetAWT;
 import consulo.desktop.wm.impl.DesktopIdeFrameUtil;
 import consulo.localize.LocalizeValue;
+import consulo.ui.image.Image;
+import consulo.ui.image.ImageEffects;
 import kava.beans.PropertyChangeEvent;
 import kava.beans.PropertyChangeListener;
 
@@ -217,13 +218,13 @@ public final class ActionMenu extends JMenu {
   private void updateIcon() {
     if (UISettings.getInstance().SHOW_ICONS_IN_MENUS) {
       final Presentation presentation = myPresentation;
-      final Icon icon = presentation.getIcon();
-      setIcon(icon);
+      final Image icon = presentation.getIcon();
+      setIcon(TargetAWT.to(icon));
       if (presentation.getDisabledIcon() != null) {
-        setDisabledIcon(presentation.getDisabledIcon());
+        setDisabledIcon(TargetAWT.to(presentation.getDisabledIcon()));
       }
       else {
-        setDisabledIcon(IconLoader.getDisabledIcon(icon));
+        setDisabledIcon(TargetAWT.to(icon == null ? null : ImageEffects.grayed(icon)));
       }
     }
   }

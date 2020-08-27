@@ -4,6 +4,7 @@ package com.intellij.ide.util.scopeChooser;
 import com.intellij.openapi.util.ColoredItem;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.psi.search.SearchScope;
+import consulo.ui.image.Image;
 
 import javax.annotation.Nullable;
 import javax.swing.*;
@@ -24,7 +25,7 @@ public class ScopeDescriptor implements ColoredItem {
   }
 
   @Nullable
-  public Icon getIcon() {
+  public Image getIcon() {
     return myScope == null ? null : myScope.getIcon();
   }
 

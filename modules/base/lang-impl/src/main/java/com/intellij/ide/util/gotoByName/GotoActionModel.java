@@ -13,7 +13,6 @@ import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.ActionUtil;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
-import consulo.logging.Logger;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.keymap.KeymapUtil;
 import com.intellij.openapi.options.Configurable;
@@ -41,12 +40,15 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.EmptyIcon;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
+import consulo.awt.TargetAWT;
 import consulo.ide.base.BaseShowSettingsUtil;
+import consulo.logging.Logger;
+import consulo.ui.image.Image;
 import gnu.trove.THashMap;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
@@ -269,17 +271,18 @@ public class GotoActionModel implements ChooseByNameModel, Comparator<Object>, D
   }
 
   @Nonnull
-  private static JLabel createIconLabel(@Nullable Icon icon, boolean disabled) {
+  private static JLabel createIconLabel(@Nullable Image icon, boolean disabled) {
     LayeredIcon layeredIcon = new LayeredIcon(2);
     layeredIcon.setIcon(EMPTY_ICON, 0);
     if (icon == null) return new JLabel(layeredIcon);
 
-    int width = icon.getIconWidth();
-    int height = icon.getIconHeight();
+    int width = icon.getWidth();
+    int height = icon.getHeight();
     int emptyIconWidth = EMPTY_ICON.getIconWidth();
     int emptyIconHeight = EMPTY_ICON.getIconHeight();
     if (width <= emptyIconWidth && height <= emptyIconHeight) {
-      layeredIcon.setIcon(disabled && IconLoader.isGoodSize(icon) ? IconLoader.getDisabledIcon(icon) : icon, 1, (emptyIconWidth - width) / 2, (emptyIconHeight - height) / 2);
+      Icon awtIcon = TargetAWT.to(icon);
+      layeredIcon.setIcon(disabled && IconLoader.isGoodSize(awtIcon) ? IconLoader.getDisabledIcon(awtIcon) : awtIcon, 1, (emptyIconWidth - width) / 2, (emptyIconHeight - height) / 2);
     }
 
     return new JLabel(layeredIcon);
@@ -751,7 +754,7 @@ public class GotoActionModel implements ChooseByNameModel, Comparator<Object>, D
         }
 
         if (showIcon) {
-          Icon icon = presentation.getIcon();
+          Image icon = presentation.getIcon();
           panel.add(createIconLabel(icon, disabled), BorderLayout.WEST);
         }
 

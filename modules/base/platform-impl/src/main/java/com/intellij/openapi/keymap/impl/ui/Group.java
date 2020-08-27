@@ -19,8 +19,8 @@ import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.QuickList;
 import com.intellij.openapi.keymap.KeymapGroup;
 import com.intellij.openapi.util.text.StringUtil;
+import consulo.ui.image.Image;
 
-import javax.swing.*;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
@@ -33,7 +33,7 @@ public class Group implements KeymapGroup {
   private Group myParent;
   private final String myName;
   private String myId;
-  private final Icon myIcon;
+  private final Image myIcon;
   /**
    * Group or action id (String) or Separator or QuickList
    */
@@ -41,24 +41,24 @@ public class Group implements KeymapGroup {
 
   private final Set<String> myIds = new HashSet<String>();
 
-  public Group(String name, String id, Icon icon) {
+  public Group(String name, String id, Image icon) {
     myName = name;
     myId = id;
     myIcon = icon;
-    myChildren = new ArrayList<Object>();
+    myChildren = new ArrayList<>();
   }
 
-  public Group(final String name, final Icon icon) {
-    myChildren = new ArrayList<Object>();
+  public Group(final String name, final Image icon) {
     myIcon = icon;
     myName = name;
+    myChildren = new ArrayList<>();
   }
 
   public String getName() {
     return myName;
   }
 
-  public Icon getIcon() {
+  public Image getIcon() {
     return myIcon;
   }
 

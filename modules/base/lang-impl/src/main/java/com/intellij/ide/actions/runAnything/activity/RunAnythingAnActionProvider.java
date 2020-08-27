@@ -21,7 +21,7 @@ public abstract class RunAnythingAnActionProvider<V extends AnAction> extends Ru
   @Nonnull
   @Override
   public RunAnythingItem getMainListItem(@Nonnull DataContext dataContext, @Nonnull V value) {
-    return new RunAnythingActionItem<>(value, getCommand(value), TargetAWT.from(value.getTemplatePresentation().getIcon()));
+    return new RunAnythingActionItem<>(value, getCommand(value), value.getTemplatePresentation().getIcon());
   }
 
   @Override
@@ -32,7 +32,7 @@ public abstract class RunAnythingAnActionProvider<V extends AnAction> extends Ru
   @Nullable
   @Override
   public Image getIcon(@Nonnull V value) {
-    return TargetAWT.from(value.getTemplatePresentation().getIcon());
+    return value.getTemplatePresentation().getIcon();
   }
 
   private static void performRunAnythingAction(@Nonnull AnAction action, @Nonnull DataContext dataContext) {

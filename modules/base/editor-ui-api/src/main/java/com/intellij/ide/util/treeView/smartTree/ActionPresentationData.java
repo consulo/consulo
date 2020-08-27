@@ -15,17 +15,18 @@
  */
 package com.intellij.ide.util.treeView.smartTree;
 
-import javax.swing.*;
+import consulo.ui.image.Image;
+
+import javax.annotation.Nullable;
 
 /**
  * The default implementation of the ActionPresentation interface, specifying the presentation
  * information for a grouping, sorting or filtering action displayed in a generic tree.
  */
-
 public class ActionPresentationData implements ActionPresentation {
   private final String myText;
   private final String myDescription;
-  private final Icon myIcon;
+  private final Image myIcon;
 
   /**
    * Creates an action presentation with the specified text, description and icon.
@@ -35,7 +36,7 @@ public class ActionPresentationData implements ActionPresentation {
    * @param icon        the icon for the action, displayed on the toolbar button.
    */
 
-  public ActionPresentationData(String text, String description, Icon icon) {
+  public ActionPresentationData(String text, String description, @Nullable Image icon) {
     myText = text;
     myDescription = description;
     myIcon = icon;
@@ -52,7 +53,7 @@ public class ActionPresentationData implements ActionPresentation {
   }
 
   @Override
-  public Icon getIcon() {
+  public Image getIcon() {
     return myIcon;
   }
 }
