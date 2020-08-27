@@ -147,7 +147,7 @@ public abstract class BigPopupUI extends BorderLayoutPanel implements Disposable
     top.setOpaque(false);
     top.add(topLeftPanel, BorderLayout.WEST);
     top.add(settingsPanel, BorderLayout.EAST);
-    top.setBorder(JBUI.Borders.customLine(UIUtil.getBorderColor(), 0, 0, 1, 0));
+    top.setBorder(JBUI.Borders.customLine(JBUI.CurrentTheme.BigPopup.searchFieldBorderColor(), 0, 0, 1, 0));
 
     JPanel topPanel = new JPanel(new BorderLayout());
     topPanel.setOpaque(false);
