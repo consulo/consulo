@@ -59,7 +59,7 @@ import java.util.Set;
  */
 public class LookupCellRenderer implements ListCellRenderer {
   private static final Logger LOG = Logger.getInstance(LookupCellRenderer.class);
-  private Image myEmptyIcon = Image.empty(5);
+  private Image myEmptyIcon = Image.empty(Image.DEFAULT_ICON_SIZE * 2, Image.DEFAULT_ICON_SIZE);
   private final Font myNormalFont;
   private final Font myBoldFont;
   private final FontMetrics myNormalMetrics;
@@ -461,7 +461,8 @@ public class LookupCellRenderer implements ListCellRenderer {
   int updateMaximumWidth(final LookupElementPresentation p, LookupElement item) {
     final Image icon = p.getIcon();
     if (icon != null && (icon.getWidth() > myEmptyIcon.getWidth() || icon.getHeight() > myEmptyIcon.getHeight())) {
-      myEmptyIcon = Image.empty(Math.max(icon.getWidth(), myEmptyIcon.getWidth()), Math.max(icon.getHeight(), myEmptyIcon.getHeight()));
+      // get width return scaled and image creating also scaled - it will be double scale
+      //myEmptyIcon = Image.empty(Math.max(icon.getWidth(), myEmptyIcon.getWidth()), Math.max(icon.getHeight(), myEmptyIcon.getHeight()));
     }
 
     return RealLookupElementPresentation.calculateWidth(p, getRealFontMetrics(item, false), getRealFontMetrics(item, true)) + calcSpacing(myTailComponent, null) + calcSpacing(myTypeLabel, null);

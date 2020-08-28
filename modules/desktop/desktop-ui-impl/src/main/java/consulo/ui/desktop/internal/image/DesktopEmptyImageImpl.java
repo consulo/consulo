@@ -32,7 +32,7 @@ public class DesktopEmptyImageImpl extends EmptyIcon implements Image {
 
   @Nonnull
   public static DesktopEmptyImageImpl get(int width, int height) {
-    return cache.get(Pair.create(height, width));
+    return cache.get(Pair.create(width, height));
   }
 
   private DesktopEmptyImageImpl(int width, int height) {
