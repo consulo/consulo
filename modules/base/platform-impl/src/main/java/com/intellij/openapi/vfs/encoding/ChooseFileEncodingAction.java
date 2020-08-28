@@ -15,12 +15,12 @@ import com.intellij.openapi.util.VolatileNotNullLazyValue;
 import com.intellij.openapi.vfs.CharsetToolkit;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.IconDeferrer;
-import com.intellij.util.ArrayUtilRt;
 import com.intellij.util.Function;
-import com.intellij.util.ui.EmptyIcon;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
-import javax.annotation.Nonnull;
+import consulo.util.collection.ArrayUtil;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -46,12 +46,14 @@ public abstract class ChooseFileEncodingAction extends ComboBoxAction {
                                   @Nonnull List<? extends Charset> charsets,
                                   @Nonnull final Function<? super Charset, String> charsetFilter) {
     for (final Charset charset : charsets) {
-      AnAction action = new DumbAwareAction(charset.displayName(), null, EmptyIcon.ICON_16) {
+      AnAction action = new DumbAwareAction(charset.displayName(), null, Image.empty(Image.DEFAULT_ICON_SIZE)) {
+        @RequiredUIAccess
         @Override
         public void actionPerformed(@Nonnull AnActionEvent e) {
           chosen(virtualFile, charset);
         }
 
+        @RequiredUIAccess
         @Override
         public void update(@Nonnull AnActionEvent e) {
           super.update(e);
@@ -67,7 +69,7 @@ public abstract class ChooseFileEncodingAction extends ComboBoxAction {
                 return virtualFile.contentsToByteArray();
               }
               catch (IOException e1) {
-                return ArrayUtilRt.EMPTY_BYTE_ARRAY;
+                return ArrayUtil.EMPTY_BYTE_ARRAY;
               }
             });
             defer = IconDeferrer.getInstance().defer(null, Pair.create(virtualFile, charset), pair -> {
