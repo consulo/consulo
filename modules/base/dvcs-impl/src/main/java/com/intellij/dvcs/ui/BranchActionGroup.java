@@ -31,6 +31,7 @@ public abstract class BranchActionGroup extends ActionGroup implements DumbAware
 
   public BranchActionGroup() {
     super("", true);
+    getTemplatePresentation().setDisabledMnemonic(true);
     setIcons(DvcsImplIcons.Favorite, Image.empty(Image.DEFAULT_ICON_SIZE), DvcsImplIcons.Favorite, DvcsImplIcons.NotFavoriteOnHover);
   }
 
