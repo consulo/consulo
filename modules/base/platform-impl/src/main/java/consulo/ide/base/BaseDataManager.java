@@ -301,9 +301,8 @@ public abstract class BaseDataManager extends DataManager {
     return dataContext instanceof UserDataHolder ? ((UserDataHolder)dataContext).getUserData(dataKey) : null;
   }
 
-
   @Nullable
-  private <T> T getData(@Nonnull Key<T> dataId, final consulo.ui.Component focusedComponent) {
+  protected  <T> T getData(@Nonnull Key<T> dataId, final consulo.ui.Component focusedComponent) {
     for (consulo.ui.Component c = focusedComponent; c != null; c = c.getParent()) {
       final DataProvider dataProvider = c::getUserData;
       T data = getDataFromProvider(dataProvider, dataId, null);
@@ -311,7 +310,6 @@ public abstract class BaseDataManager extends DataManager {
     }
     return null;
   }
-
 
   @Nonnull
   @Override

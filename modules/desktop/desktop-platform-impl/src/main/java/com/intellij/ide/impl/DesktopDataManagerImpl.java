@@ -245,6 +245,13 @@ public class DesktopDataManagerImpl extends BaseDataManager {
     return focusedComponent;
   }
 
+  @Override
+  @Nullable
+  // FIXME [VISTALL] hack until not all UI code will return consulo.ui.Component
+  protected <T> T getData(@Nonnull Key<T> dataId, final consulo.ui.Component focusedComponent) {
+    return getData(dataId, TargetAWT.to(focusedComponent));
+  }
+
   @Nullable
   public static Editor validateEditor(Editor editor) {
     Component focusOwner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();

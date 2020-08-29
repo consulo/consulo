@@ -24,146 +24,199 @@ import com.intellij.ide.ui.UISettings;
 import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.IdeActions;
-import com.intellij.openapi.application.ApplicationBundle;
 import com.intellij.openapi.keymap.KeymapUtil;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.NotNullComputable;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.ui.components.JBCheckBox;
+import consulo.localize.LocalizeValue;
+import consulo.platform.base.localize.ApplicationLocalize;
+import consulo.ui.*;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.image.Image;
+import consulo.ui.layout.DockLayout;
+import consulo.ui.layout.LabeledLayout;
+import consulo.ui.layout.Layout;
+import consulo.ui.layout.VerticalLayout;
+import consulo.ui.shared.border.BorderPosition;
+import consulo.ui.shared.border.BorderStyle;
+import consulo.ui.util.LabeledBuilder;
+import consulo.util.lang.Comparing;
+import consulo.util.lang.ThreeState;
 import org.intellij.lang.annotations.MagicConstant;
 
-import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import javax.annotation.Nonnull;
 
-public class CodeCompletionPanel {
-  JPanel myPanel;
-  private JCheckBox myCbAutocompletion;
-  private JCheckBox myCbAutopopupJavaDoc;
-  private JTextField myAutopopupJavaDocField;
+public class CodeCompletionPanel implements NotNullComputable<Layout> {
+  private final VerticalLayout myLayout;
+  private final ComboBox<ThreeState> myCaseSensitiveCombo2;
+  private final CheckBox myCbOnCodeCompletion2;
+  private final CheckBox myCbOnSmartTypeCompletion2;
+  private final CheckBox myCbSorting2;
+  private final CheckBox myCbAutocompletion2;
+  private final CheckBox myCbSelectByChars2;
+  private final CheckBox myCbAutopopupJavaDoc2;
+  private final IntBox myAutopopupJavaDocField2;
+  private final CheckBox myCbParameterInfoPopup2;
+  private final IntBox myParameterInfoDelayField2;
+  private final CheckBox myCbShowFullParameterSignatures2;
 
-  private JCheckBox myCbOnCodeCompletion;
-  private JCheckBox myCbOnSmartTypeCompletion;
+  @RequiredUIAccess
+  public CodeCompletionPanel(ActionManager actionManager) {
+    myLayout = VerticalLayout.create();
 
-  private JCheckBox myCbParameterInfoPopup;
-  private JTextField myParameterInfoDelayField;
-  private JCheckBox myCbShowFullParameterSignatures;
+    ComboBox.Builder<ThreeState> builder = ComboBox.builder();
+    builder.fillByEnumLocalized(ThreeState.class, o -> {
+      switch (o) {
+        case YES:
+          return ApplicationLocalize.comboboxAutocompleteCaseSensitiveAll();
+        case NO:
+          return ApplicationLocalize.comboboxAutocompleteCaseSensitiveNone();
+        case UNSURE:
+          return ApplicationLocalize.comboboxAutocompleteCaseSensitiveFirstLetter();
+        default:
+          throw new UnsupportedOperationException();
+      }
+    });
+    myCaseSensitiveCombo2 = builder.build();
 
-  private JComboBox myCaseSensitiveCombo;
-  private JCheckBox myCbSorting;
-  private JBCheckBox myCbSelectByChars;
-  private static final String CASE_SENSITIVE_ALL = ApplicationBundle.message("combobox.autocomplete.case.sensitive.all");
-  private static final String CASE_SENSITIVE_NONE = ApplicationBundle.message("combobox.autocomplete.case.sensitive.none");
-  private static final String CASE_SENSITIVE_FIRST_LETTER = ApplicationBundle.message("combobox.autocomplete.case.sensitive.first.letter");
-  private static final String[] CASE_VARIANTS = {CASE_SENSITIVE_ALL, CASE_SENSITIVE_NONE, CASE_SENSITIVE_FIRST_LETTER};
+    VerticalLayout completionOptions = VerticalLayout.create();
+    completionOptions.add(LabeledBuilder.sided(ApplicationLocalize.comboboxCaseSensitiveCompletion(), myCaseSensitiveCombo2));
 
-  public CodeCompletionPanel(){
-    //noinspection unchecked
-    myCaseSensitiveCombo.setModel(new DefaultComboBoxModel(CASE_VARIANTS));
+    completionOptions.add(Label.create(ApplicationLocalize.labelAutocompleteWhenOnlyOneChoice()));
 
-    ActionManager actionManager = ActionManager.getInstance();
     String basicShortcut = KeymapUtil.getFirstKeyboardShortcutText(actionManager.getAction(IdeActions.ACTION_CODE_COMPLETION));
-    String smartShortcut = KeymapUtil.getFirstKeyboardShortcutText(actionManager.getAction(IdeActions.ACTION_SMART_TYPE_COMPLETION));
     if (StringUtil.isNotEmpty(basicShortcut)) {
-      myCbOnCodeCompletion.setText(myCbOnCodeCompletion.getText() + " ( " + basicShortcut + " )");
+      LocalizeValue value = ApplicationLocalize.checkboxAutocompleteBasic().map((localizeManager, s) -> s + " (" + basicShortcut + ")");
+      myCbOnCodeCompletion2 = CheckBox.create(value);
     }
+    else {
+      myCbOnCodeCompletion2 = CheckBox.create(ApplicationLocalize.checkboxAutocompleteBasic());
+    }
+
+    String smartShortcut = KeymapUtil.getFirstKeyboardShortcutText(actionManager.getAction(IdeActions.ACTION_SMART_TYPE_COMPLETION));
     if (StringUtil.isNotEmpty(smartShortcut)) {
-      myCbOnSmartTypeCompletion.setText(myCbOnSmartTypeCompletion.getText() + " ( " + smartShortcut + " )");
+      LocalizeValue value = ApplicationLocalize.checkboxAutocompleteSmartType().map((localizeManager, s) -> s + " (" + smartShortcut + ")");
+      myCbOnSmartTypeCompletion2 = CheckBox.create(value);
+    }
+    else {
+      myCbOnSmartTypeCompletion2 = CheckBox.create(ApplicationLocalize.checkboxAutocompleteSmartType());
     }
 
-    myCbAutocompletion.addActionListener(
-            new ActionListener() {
-              @Override
-              public void actionPerformed(ActionEvent event) {
-                boolean selected = myCbAutocompletion.isSelected();
-                myCbSelectByChars.setEnabled(selected);
-              }
-            }
-    );
+    VerticalLayout complGroup = VerticalLayout.create();
+    complGroup.addBorder(BorderPosition.LEFT, BorderStyle.EMPTY, null, Image.DEFAULT_ICON_SIZE);
+    complGroup.add(myCbOnCodeCompletion2);
+    complGroup.add(myCbOnSmartTypeCompletion2);
+    completionOptions.add(complGroup);
 
-    myCbAutopopupJavaDoc.addActionListener(
-            new ActionListener() {
-              @Override
-              public void actionPerformed(ActionEvent event) {
-                myAutopopupJavaDocField.setEnabled(myCbAutopopupJavaDoc.isSelected());
-              }
-            }
-    );
+    myCbSorting2 = CheckBox.create("Sort lookup items lexicographically");
 
-    myCbParameterInfoPopup.addActionListener(
-            new ActionListener() {
-              @Override
-              public void actionPerformed(ActionEvent event) {
-                myParameterInfoDelayField.setEnabled(myCbParameterInfoPopup.isSelected());
-              }
-            }
-    );
+    if(PowerSaveMode.isEnabled()) {
+      myCbAutocompletion2 = CheckBox.create("Autopopup code completion (not available in Power Save mode)");
+    }
+    else {
+      myCbAutocompletion2 = CheckBox.create("Autopopup code completion");
+    }
 
-    reset();
+    completionOptions.add(myCbAutocompletion2);
+
+    myCbSelectByChars2 = CheckBox.create("Insert selected variant by typing dot, space, etc.");
+    myCbSelectByChars2.setEnabled(false);
+
+    VerticalLayout indentChars = VerticalLayout.create().add(myCbSelectByChars2);
+    indentChars.addBorder(BorderPosition.LEFT, BorderStyle.EMPTY, null, Image.DEFAULT_ICON_SIZE);
+    completionOptions.add(indentChars);
+
+    DockLayout autoPopuDocLine = DockLayout.create();
+    myCbAutopopupJavaDoc2 = CheckBox.create(ApplicationLocalize.editboxAutopopupJavadocInMs());
+    autoPopuDocLine.left(myCbAutopopupJavaDoc2);
+    myAutopopupJavaDocField2 = IntBox.create();
+    myAutopopupJavaDocField2.setEnabled(false);
+    autoPopuDocLine.right(myAutopopupJavaDocField2);
+
+    completionOptions.add(autoPopuDocLine);
+
+    myLayout.add(LabeledLayout.create(ApplicationLocalize.titleCodeCompletion(), completionOptions));
+
+    VerticalLayout parameterInfoGroup = VerticalLayout.create();
+
+    myCbParameterInfoPopup2 = CheckBox.create(ApplicationLocalize.editboxAutopopupInMs());
+
+    myParameterInfoDelayField2 = IntBox.create();
+    myParameterInfoDelayField2.setEnabled(false);
+
+    parameterInfoGroup.add(DockLayout.create().left(myCbParameterInfoPopup2).right(myParameterInfoDelayField2));
+
+    myCbShowFullParameterSignatures2 = CheckBox.create(ApplicationLocalize.checkboxShowFullSignatures());
+
+    parameterInfoGroup.add(myCbShowFullParameterSignatures2);
+    
+    myLayout.add(LabeledLayout.create(ApplicationLocalize.titleParameterInfo(), parameterInfoGroup));
+
+    myCbAutocompletion2.addValueListener(event -> myCbSelectByChars2.setEnabled(myCbAutocompletion2.getValue()));
+
+    myCbAutopopupJavaDoc2.addValueListener(event -> myAutopopupJavaDocField2.setEnabled(myCbAutopopupJavaDoc2.getValue()));
+
+    myCbParameterInfoPopup2.addValueListener(event -> myParameterInfoDelayField2.setEnabled(myCbParameterInfoPopup2.getValue()));
   }
 
+  @RequiredUIAccess
   public void reset() {
     CodeInsightSettings codeInsightSettings = CodeInsightSettings.getInstance();
 
-    final String value;
-    switch(codeInsightSettings.COMPLETION_CASE_SENSITIVE){
+    final ThreeState caseSensitiveValue;
+    switch (codeInsightSettings.COMPLETION_CASE_SENSITIVE) {
       case CodeInsightSettings.ALL:
-        value = CASE_SENSITIVE_ALL;
+        caseSensitiveValue = ThreeState.YES;
         break;
-
       case CodeInsightSettings.NONE:
-        value = CASE_SENSITIVE_NONE;
+        caseSensitiveValue = ThreeState.NO;
         break;
-
       default:
-        value = CASE_SENSITIVE_FIRST_LETTER;
+        caseSensitiveValue = ThreeState.UNSURE;
         break;
     }
-    myCaseSensitiveCombo.setSelectedItem(value);
+    myCaseSensitiveCombo2.setValue(caseSensitiveValue);
 
-    myCbSelectByChars.setSelected(codeInsightSettings.SELECT_AUTOPOPUP_SUGGESTIONS_BY_CHARS);
+    myCbSelectByChars2.setValue(codeInsightSettings.SELECT_AUTOPOPUP_SUGGESTIONS_BY_CHARS);
 
-    myCbOnCodeCompletion.setSelected(codeInsightSettings.AUTOCOMPLETE_ON_CODE_COMPLETION);
-    myCbOnSmartTypeCompletion.setSelected(codeInsightSettings.AUTOCOMPLETE_ON_SMART_TYPE_COMPLETION);
+    myCbOnCodeCompletion2.setValue(codeInsightSettings.AUTOCOMPLETE_ON_CODE_COMPLETION);
+    myCbOnSmartTypeCompletion2.setValue(codeInsightSettings.AUTOCOMPLETE_ON_SMART_TYPE_COMPLETION);
 
-    myCbAutocompletion.setSelected(codeInsightSettings.AUTO_POPUP_COMPLETION_LOOKUP);
+    myCbAutocompletion2.setValue(codeInsightSettings.AUTO_POPUP_COMPLETION_LOOKUP);
 
-    myCbAutopopupJavaDoc.setSelected(codeInsightSettings.AUTO_POPUP_JAVADOC_INFO);
-    myAutopopupJavaDocField.setEnabled(codeInsightSettings.AUTO_POPUP_JAVADOC_INFO);
-    myAutopopupJavaDocField.setText(String.valueOf(codeInsightSettings.JAVADOC_INFO_DELAY));
+    myCbAutopopupJavaDoc2.setValue(codeInsightSettings.AUTO_POPUP_JAVADOC_INFO);
+    myAutopopupJavaDocField2.setEnabled(codeInsightSettings.AUTO_POPUP_JAVADOC_INFO);
+    myAutopopupJavaDocField2.setValue(codeInsightSettings.JAVADOC_INFO_DELAY);
 
-    myCbParameterInfoPopup.setSelected(codeInsightSettings.AUTO_POPUP_PARAMETER_INFO);
-    myParameterInfoDelayField.setEnabled(codeInsightSettings.AUTO_POPUP_PARAMETER_INFO);
-    myParameterInfoDelayField.setText(String.valueOf(codeInsightSettings.PARAMETER_INFO_DELAY));
-    myCbShowFullParameterSignatures.setSelected(codeInsightSettings.SHOW_FULL_SIGNATURES_IN_PARAMETER_INFO);
+    myCbParameterInfoPopup2.setValue(codeInsightSettings.AUTO_POPUP_PARAMETER_INFO);
+    myParameterInfoDelayField2.setEnabled(codeInsightSettings.AUTO_POPUP_PARAMETER_INFO);
+    myParameterInfoDelayField2.setValue(codeInsightSettings.PARAMETER_INFO_DELAY);
+    myCbShowFullParameterSignatures2.setValue(codeInsightSettings.SHOW_FULL_SIGNATURES_IN_PARAMETER_INFO);
 
-    myCbAutocompletion.setSelected(codeInsightSettings.AUTO_POPUP_COMPLETION_LOOKUP);
-    myCbSorting.setSelected(UISettings.getInstance().SORT_LOOKUP_ELEMENTS_LEXICOGRAPHICALLY);
-
-    myCbAutocompletion.setText("Autopopup code completion" + (PowerSaveMode.isEnabled() ? " (not available in Power Save mode)" : ""));
+    myCbSorting2.setValue(UISettings.getInstance().SORT_LOOKUP_ELEMENTS_LEXICOGRAPHICALLY);
   }
 
   public void apply() {
-
     CodeInsightSettings codeInsightSettings = CodeInsightSettings.getInstance();
 
     codeInsightSettings.COMPLETION_CASE_SENSITIVE = getCaseSensitiveValue();
 
-    codeInsightSettings.SELECT_AUTOPOPUP_SUGGESTIONS_BY_CHARS = myCbSelectByChars.isSelected();
-    codeInsightSettings.AUTOCOMPLETE_ON_CODE_COMPLETION = myCbOnCodeCompletion.isSelected();
-    codeInsightSettings.AUTOCOMPLETE_ON_SMART_TYPE_COMPLETION = myCbOnSmartTypeCompletion.isSelected();
-    codeInsightSettings.SHOW_FULL_SIGNATURES_IN_PARAMETER_INFO = myCbShowFullParameterSignatures.isSelected();
+    codeInsightSettings.SELECT_AUTOPOPUP_SUGGESTIONS_BY_CHARS = myCbSelectByChars2.getValue();
+    codeInsightSettings.AUTOCOMPLETE_ON_CODE_COMPLETION = myCbOnCodeCompletion2.getValue();
+    codeInsightSettings.AUTOCOMPLETE_ON_SMART_TYPE_COMPLETION = myCbOnSmartTypeCompletion2.getValue();
+    codeInsightSettings.SHOW_FULL_SIGNATURES_IN_PARAMETER_INFO = myCbShowFullParameterSignatures2.getValue();
 
-    codeInsightSettings.AUTO_POPUP_PARAMETER_INFO = myCbParameterInfoPopup.isSelected();
-    codeInsightSettings.AUTO_POPUP_COMPLETION_LOOKUP = myCbAutocompletion.isSelected();
-    codeInsightSettings.AUTO_POPUP_JAVADOC_INFO = myCbAutopopupJavaDoc.isSelected();
+    codeInsightSettings.AUTO_POPUP_PARAMETER_INFO = myCbParameterInfoPopup2.getValue();
+    codeInsightSettings.AUTO_POPUP_COMPLETION_LOOKUP = myCbAutocompletion2.getValue();
+    codeInsightSettings.AUTO_POPUP_JAVADOC_INFO = myCbAutopopupJavaDoc2.getValue();
 
-    codeInsightSettings.PARAMETER_INFO_DELAY = getIntegerValue(myParameterInfoDelayField.getText(), 0);
-    codeInsightSettings.JAVADOC_INFO_DELAY = getIntegerValue(myAutopopupJavaDocField.getText(), 0);
+    codeInsightSettings.PARAMETER_INFO_DELAY = myParameterInfoDelayField2.getValueOrError();
+    codeInsightSettings.JAVADOC_INFO_DELAY = myAutopopupJavaDocField2.getValueOrError();
 
-    UISettings.getInstance().SORT_LOOKUP_ELEMENTS_LEXICOGRAPHICALLY = myCbSorting.isSelected();
+    UISettings.getInstance().SORT_LOOKUP_ELEMENTS_LEXICOGRAPHICALLY = myCbSorting2.getValue();
 
-    final Project project = DataManager.getInstance().getDataContext(myPanel).getData(CommonDataKeys.PROJECT);
-    if (project != null){
+    Project project = DataManager.getInstance().getDataContext(myLayout).getData(CommonDataKeys.PROJECT);
+    if (project != null) {
       DaemonCodeAnalyzer.getInstance(project).settingsChanged();
     }
   }
@@ -175,49 +228,38 @@ public class CodeCompletionPanel {
     //noinspection ConstantConditions
     isModified |= getCaseSensitiveValue() != codeInsightSettings.COMPLETION_CASE_SENSITIVE;
 
-    isModified |= isModified(myCbOnCodeCompletion, codeInsightSettings.AUTOCOMPLETE_ON_CODE_COMPLETION);
-    isModified |= isModified(myCbSelectByChars, codeInsightSettings.SELECT_AUTOPOPUP_SUGGESTIONS_BY_CHARS);
-    isModified |= isModified(myCbOnSmartTypeCompletion, codeInsightSettings.AUTOCOMPLETE_ON_SMART_TYPE_COMPLETION);
-    isModified |= isModified(myCbShowFullParameterSignatures, codeInsightSettings.SHOW_FULL_SIGNATURES_IN_PARAMETER_INFO);
-    isModified |= isModified(myCbParameterInfoPopup, codeInsightSettings.AUTO_POPUP_PARAMETER_INFO);
-    isModified |= isModified(myCbAutocompletion, codeInsightSettings.AUTO_POPUP_COMPLETION_LOOKUP);
+    isModified |= isModified(myCbOnCodeCompletion2, codeInsightSettings.AUTOCOMPLETE_ON_CODE_COMPLETION);
+    isModified |= isModified(myCbSelectByChars2, codeInsightSettings.SELECT_AUTOPOPUP_SUGGESTIONS_BY_CHARS);
+    isModified |= isModified(myCbOnSmartTypeCompletion2, codeInsightSettings.AUTOCOMPLETE_ON_SMART_TYPE_COMPLETION);
+    isModified |= isModified(myCbShowFullParameterSignatures2, codeInsightSettings.SHOW_FULL_SIGNATURES_IN_PARAMETER_INFO);
+    isModified |= isModified(myCbParameterInfoPopup2, codeInsightSettings.AUTO_POPUP_PARAMETER_INFO);
+    isModified |= isModified(myCbAutocompletion2, codeInsightSettings.AUTO_POPUP_COMPLETION_LOOKUP);
 
-    isModified |= isModified(myCbAutopopupJavaDoc, codeInsightSettings.AUTO_POPUP_JAVADOC_INFO);
-    isModified |= isModified(myParameterInfoDelayField, codeInsightSettings.PARAMETER_INFO_DELAY, 0);
-    isModified |= isModified(myAutopopupJavaDocField, codeInsightSettings.JAVADOC_INFO_DELAY, 0);
-    isModified |= isModified(myCbSorting, UISettings.getInstance().SORT_LOOKUP_ELEMENTS_LEXICOGRAPHICALLY);
+    isModified |= isModified(myCbAutopopupJavaDoc2, codeInsightSettings.AUTO_POPUP_JAVADOC_INFO);
+    isModified |= isModified(myParameterInfoDelayField2, codeInsightSettings.PARAMETER_INFO_DELAY);
+    isModified |= isModified(myAutopopupJavaDocField2, codeInsightSettings.JAVADOC_INFO_DELAY);
+    isModified |= isModified(myCbSorting2, UISettings.getInstance().SORT_LOOKUP_ELEMENTS_LEXICOGRAPHICALLY);
 
     return isModified;
   }
 
-  private static boolean isModified(JCheckBox checkBox, boolean value) {
-    return checkBox.isSelected() != value;
+  @Nonnull
+  @Override
+  public Layout compute() {
+    return myLayout;
   }
 
-  private static boolean isModified(JTextField textField, int value, int defaultValue) {
-    return getIntegerValue(textField.getText(), defaultValue) != value;
-  }
-
-  private static int getIntegerValue(String s, int defaultValue) {
-    int value = defaultValue;
-    try {
-      value = Integer.parseInt(s);
-      if(value < 0) {
-        return defaultValue;
-      }
-    }
-    catch (NumberFormatException ignored) {
-    }
-    return value;
+  private static <V> boolean isModified(ValueComponent<V> valueComponent, V value) {
+    return !Comparing.equal(valueComponent.getValue(), value);
   }
 
   @MagicConstant(intValues = {CodeInsightSettings.ALL, CodeInsightSettings.NONE, CodeInsightSettings.FIRST_LETTER})
   private int getCaseSensitiveValue() {
-    Object value = myCaseSensitiveCombo.getSelectedItem();
-    if (CASE_SENSITIVE_ALL.equals(value)){
+    ThreeState value = myCaseSensitiveCombo2.getValue();
+    if (value == ThreeState.YES) {
       return CodeInsightSettings.ALL;
     }
-    else if (CASE_SENSITIVE_NONE.equals(value)){
+    else if (value == ThreeState.NO) {
       return CodeInsightSettings.NONE;
     }
     else {

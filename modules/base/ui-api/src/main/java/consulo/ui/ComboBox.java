@@ -15,6 +15,7 @@
  */
 package consulo.ui;
 
+import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.model.ListModel;
 
@@ -48,13 +49,21 @@ public interface ComboBox<E> extends ValueComponent<E> {
   }
 
   static class Builder<K> {
-    private Map<K, String> myValues = new LinkedHashMap<>();
+    private Map<K, LocalizeValue> myValues = new LinkedHashMap<>();
 
+    @Nonnull
     public Builder<K> add(K key, String value) {
+      myValues.put(key, LocalizeValue.of(value));
+      return this;
+    }
+
+    @Nonnull
+    public Builder<K> add(@Nonnull K key, @Nonnull LocalizeValue value) {
       myValues.put(key, value);
       return this;
     }
 
+    @Nonnull
     public Builder<K> add(K[] iterable, Function<K, String> map) {
       for (K k : iterable) {
         add(k, map.apply(k));
@@ -62,6 +71,7 @@ public interface ComboBox<E> extends ValueComponent<E> {
       return this;
     }
 
+    @Nonnull
     public Builder<K> add(Iterable<? extends K> iterable, Function<K, String> map) {
       for (K k : iterable) {
         add(k, map.apply(k));
@@ -69,7 +79,20 @@ public interface ComboBox<E> extends ValueComponent<E> {
       return this;
     }
 
+    @Nonnull
     public Builder<K> fillByEnum(Class<? extends K> clazz, Function<K, String> presentation) {
+      if (!clazz.isEnum()) {
+        throw new IllegalArgumentException("Accepted only enum");
+      }
+      K[] enumConstants = clazz.getEnumConstants();
+      for (K enumConstant : enumConstants) {
+        add(enumConstant, presentation.apply(enumConstant));
+      }
+      return this;
+    }
+
+    @Nonnull
+    public Builder<K> fillByEnumLocalized(Class<? extends K> clazz, Function<K, LocalizeValue> presentation) {
       if (!clazz.isEnum()) {
         throw new IllegalArgumentException("Accepted only enum");
       }
@@ -85,7 +108,7 @@ public interface ComboBox<E> extends ValueComponent<E> {
     public ComboBox<K> build() {
       K[] objects = (K[])myValues.keySet().toArray();
       ComboBox<K> comboBox = ComboBox.create(objects);
-      comboBox.setRender((render, index, item) -> render.append(item == null ? "" : myValues.get(item)));
+      comboBox.setRender((render, index, item) -> render.append(item == null ? LocalizeValue.empty() : myValues.get(item)));
       return comboBox;
     }
   }

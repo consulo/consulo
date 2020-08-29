@@ -16,46 +16,45 @@
 
 package com.intellij.application.options;
 
+import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.application.ApplicationBundle;
-import com.intellij.openapi.options.Configurable;
+import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.options.SearchableConfigurable;
+import consulo.options.SimpleConfigurable;
+import consulo.ui.annotation.RequiredUIAccess;
+
 import javax.annotation.Nonnull;
 
-import javax.annotation.Nullable;
-import javax.swing.*;
+public class CodeCompletionOptions extends SimpleConfigurable<CodeCompletionPanel> implements SearchableConfigurable {
 
-public class CodeCompletionOptions implements SearchableConfigurable, Configurable.NoScroll {
-  private CodeCompletionPanel myPanel;
-
+  @RequiredUIAccess
+  @Nonnull
   @Override
-  public boolean isModified() {
-    return myPanel != null && myPanel.isModified();
+  protected CodeCompletionPanel createPanel() {
+    return new CodeCompletionPanel(ActionManager.getInstance());
   }
 
+  @RequiredUIAccess
   @Override
-  public JComponent createComponent() {
-    myPanel = new CodeCompletionPanel();
-    return myPanel.myPanel;
+  protected boolean isModified(@Nonnull CodeCompletionPanel component) {
+    return component.isModified();
+  }
+
+  @RequiredUIAccess
+  @Override
+  protected void apply(@Nonnull CodeCompletionPanel component) throws ConfigurationException {
+    component.apply();
+  }
+
+  @RequiredUIAccess
+  @Override
+  protected void reset(@Nonnull CodeCompletionPanel component) {
+    component.reset();
   }
 
   @Override
   public String getDisplayName() {
     return ApplicationBundle.message("title.code.completion");
-  }
-
-  @Override
-  public void reset() {
-    myPanel.reset();
-  }
-
-  @Override
-  public void apply() {
-    myPanel.apply();
-  }
-
-  @Override
-  public void disposeUIResources() {
-    myPanel = null;
   }
 
   @Override
@@ -67,11 +66,5 @@ public class CodeCompletionOptions implements SearchableConfigurable, Configurab
   @Nonnull
   public String getId() {
     return "editor.preferences.completion";
-  }
-
-  @Override
-  @Nullable
-  public Runnable enableSearch(String option) {
-    return null;
   }
 }

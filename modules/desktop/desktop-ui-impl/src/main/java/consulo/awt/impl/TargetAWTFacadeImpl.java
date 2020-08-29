@@ -114,7 +114,12 @@ public class TargetAWTFacadeImpl implements TargetAWTFacade {
     if (component instanceof ToSwingComponentWrapper) {
       return ((ToSwingComponentWrapper)component).toAWTComponent();
     }
-    throw new IllegalArgumentException(component + " is not SwingComponentWrapper");
+
+    if(component instanceof ToSwingWindowWrapper) {
+      return ((ToSwingWindowWrapper)component).toAWTWindow();
+    }
+    
+    throw new IllegalArgumentException(component + " is not SwingComponentWrapper or ToSwingWindowWrapper");
   }
 
   @Override
