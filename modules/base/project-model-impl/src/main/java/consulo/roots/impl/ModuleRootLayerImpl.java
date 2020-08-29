@@ -288,11 +288,11 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, Disposabl
     element.addContent(moduleExtensionElements);
 
     for (ContentEntry contentEntry : getContent()) {
-      if (contentEntry instanceof ContentEntryImpl) {
-        final Element subElement = new Element(ContentEntryImpl.ELEMENT_NAME);
+      final Element subElement = new Element(ContentEntryImpl.ELEMENT_NAME);
+      if(contentEntry instanceof ContentEntryImpl) {
         ((ContentEntryImpl)contentEntry).writeExternal(subElement);
-        element.addContent(subElement);
       }
+      element.addContent(subElement);
     }
 
     for (OrderEntry orderEntry : getOrderEntries()) {
@@ -647,9 +647,9 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, Disposabl
 
   @Nonnull
   @Override
-  public ModuleExtension[] getExtensions() {
+  public List<ModuleExtension> getExtensions() {
     if (myExtensions.length == 0) {
-      return ModuleExtension.EMPTY_ARRAY;
+      return Collections.emptyList();
     }
     List<ModuleExtension> list = new ArrayList<>(myExtensions.length);
     for (ModuleExtension<?> extension : myExtensions) {
@@ -657,7 +657,7 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, Disposabl
         list.add(extension);
       }
     }
-    return list.toArray(new ModuleExtension[list.size()]);
+    return list;
   }
 
   @Nonnull

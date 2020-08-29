@@ -521,7 +521,7 @@ public abstract class RecentProjectsManagerBase extends RecentProjectsManager im
         if (Comparing.equal(project.getBaseDir(), moduleDir)) {
           ModuleRootManager manager = ModuleRootManager.getInstance(module);
 
-          ModuleExtension[] extensions = manager.getExtensions();
+          List<ModuleExtension> extensions = manager.getExtensions();
           for (ModuleExtension extension : extensions) {
             ModuleExtensionProviderEP provider = ModuleExtensionProviders.findProvider(extension.getId());
             assert provider != null;

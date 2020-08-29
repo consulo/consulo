@@ -21,9 +21,11 @@ import com.intellij.openapi.roots.*;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.Processor;
 import consulo.module.extension.ModuleExtension;
+import consulo.roots.ContentFolderTypeProvider;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import consulo.roots.ContentFolderTypeProvider;
+import java.util.List;
 
 /**
  * @author nik
@@ -140,19 +142,19 @@ public abstract class RootModelBase implements ModuleRootModel {
     return getCurrentLayer().getOrderEntries();
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   @Override
   public <T extends ModuleExtension> T getExtension(Class<T> clazz) {
     return getCurrentLayer().getExtension(clazz);
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   @Override
   public <T extends ModuleExtension> T getExtension(@Nonnull String key) {
     return getCurrentLayer().getExtension(key);
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   @Override
   public <T extends ModuleExtension> T getExtensionWithoutCheck(Class<T> clazz) {
     return getCurrentLayer().getExtensionWithoutCheck(clazz);
@@ -166,7 +168,7 @@ public abstract class RootModelBase implements ModuleRootModel {
 
   @Nonnull
   @Override
-  public ModuleExtension[] getExtensions() {
+  public List<ModuleExtension> getExtensions() {
     return getCurrentLayer().getExtensions();
   }
 }

@@ -81,7 +81,7 @@ public class ContentEntryTreeCellRenderer extends NodeRenderer {
 
         boolean hasSupport = false;
         for (ModuleExtension moduleExtension : myTreeEditor.getContentEntryEditor().getModel().getExtensions()) {
-          for (PsiPackageSupportProvider supportProvider : PsiPackageSupportProvider.EP_NAME.getExtensions()) {
+          for (PsiPackageSupportProvider supportProvider : PsiPackageSupportProvider.EP_NAME.getExtensionList()) {
             if (supportProvider.isSupported(moduleExtension)) {
               hasSupport = true;
               break;

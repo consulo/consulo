@@ -20,6 +20,8 @@ import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.util.containers.MultiMap;
+import consulo.annotation.access.RequiredReadAction;
+
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -39,12 +41,7 @@ public class ModuleExtensionHelperImpl extends ModuleExtensionHelper {
   @Inject
   public ModuleExtensionHelperImpl(Project project) {
     myProject = project;
-    project.getMessageBus().connect().subscribe(ModuleExtension.CHANGE_TOPIC, new ModuleExtensionChangeListener() {
-      @Override
-      public void beforeExtensionChanged(@Nonnull ModuleExtension<?> oldExtension, @Nonnull ModuleExtension<?> newExtension) {
-        myExtensions = null;
-      }
-    });
+    project.getMessageBus().connect().subscribe(ModuleExtension.CHANGE_TOPIC, (oldExtension, newExtension) -> myExtensions = null);
   }
 
   @Override
@@ -78,9 +75,10 @@ public class ModuleExtensionHelperImpl extends ModuleExtensionHelper {
     return (Collection)moduleExtensions;
   }
 
+  @RequiredReadAction
   private void checkInit() {
     if(myExtensions == null) {
-      myExtensions = new MultiMap<Class<? extends ModuleExtension>, ModuleExtension>();
+      myExtensions = new MultiMap<>();
       for (Module o : ModuleManager.getInstance(myProject).getModules()) {
         for (ModuleExtension moduleExtension : ModuleRootManager.getInstance(o).getExtensions()) {
           myExtensions.putValue(moduleExtension.getClass(), moduleExtension);

@@ -26,6 +26,7 @@ import consulo.module.extension.ModuleExtension;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.List;
 
 /**
  * @author VISTALL
@@ -208,7 +209,7 @@ public interface ModuleRootLayer {
   <T extends ModuleExtension> T getExtensionWithoutCheck(@Nonnull String key);
 
   @Nonnull
-  ModuleExtension[] getExtensions();
+  List<ModuleExtension> getExtensions();
 
   @Nonnull
   Module[] getModuleDependencies();

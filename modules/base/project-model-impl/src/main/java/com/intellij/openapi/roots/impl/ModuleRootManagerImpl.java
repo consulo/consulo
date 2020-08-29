@@ -47,6 +47,7 @@ import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -231,7 +232,7 @@ public class ModuleRootManagerImpl extends ModuleRootManager implements Disposab
 
   @Nonnull
   @Override
-  public ModuleExtension[] getExtensions() {
+  public List<ModuleExtension> getExtensions() {
     return myRootModel.getExtensions();
   }
 
