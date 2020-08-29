@@ -17,9 +17,6 @@
 package com.intellij.openapi.roots.impl;
 
 import com.google.common.base.Predicate;
-import consulo.disposer.Disposable;
-import consulo.disposer.Disposer;
-import consulo.logging.Logger;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.roots.ContentEntry;
 import com.intellij.openapi.roots.ContentFolder;
@@ -31,25 +28,33 @@ import com.intellij.openapi.vfs.pointers.VirtualFilePointer;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointerManager;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
+import consulo.logging.Logger;
 import consulo.roots.ContentFolderTypeProvider;
 import consulo.roots.impl.ExcludedContentFolderTypeProvider;
 import consulo.roots.impl.LightContentFolderImpl;
 import consulo.roots.impl.ModuleRootLayerImpl;
 import org.jdom.Element;
-import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.util.*;
 
 /**
  * @author dsl
  */
 public class ContentEntryImpl extends BaseModuleRootLayerChild implements ContentEntry, ClonableContentEntry, Comparable<ContentEntryImpl> {
-  public static final Logger LOGGER = Logger.getInstance(ContentEntryImpl.class);
+  public static String getUrlFrom(@Nonnull Element e) {
+    LOG.assertTrue(ELEMENT_NAME.equals(e.getName()));
 
-  @NonNls
+    String url = e.getAttributeValue(URL_ATTRIBUTE);
+    if (url == null) throw new InvalidDataException();
+    return url;
+  }
+
+  private static final Logger LOG = Logger.getInstance(ContentEntryImpl.class);
+
   public static final String ELEMENT_NAME = "content";
-  @NonNls
   public static final String URL_ATTRIBUTE = "url";
 
   @Nonnull
@@ -72,14 +77,6 @@ public class ContentEntryImpl extends BaseModuleRootLayerChild implements Conten
     for (Element child : e.getChildren(ContentFolderImpl.ELEMENT_NAME)) {
       myContentFolders.add(new ContentFolderImpl(child, this));
     }
-  }
-
-  private static String getUrlFrom(@Nonnull Element e) {
-    LOGGER.assertTrue(ELEMENT_NAME.equals(e.getName()));
-
-    String url = e.getAttributeValue(URL_ATTRIBUTE);
-    if (url == null) throw new InvalidDataException();
-    return url;
   }
 
   @Override
@@ -109,7 +106,7 @@ public class ContentEntryImpl extends BaseModuleRootLayerChild implements Conten
   public VirtualFile[] getFolderFiles(@Nonnull Predicate<ContentFolderTypeProvider> predicate) {
     List<VirtualFile> list = new ArrayList<>();
     for (ContentFolder contentFolder : getFolders0(predicate)) {
-      ContainerUtil.addIfNotNull(contentFolder.getFile(), list);
+      ContainerUtil.addIfNotNull(list, contentFolder.getFile());
     }
     return VfsUtilCore.toVirtualFileArray(list);
   }
@@ -138,7 +135,7 @@ public class ContentEntryImpl extends BaseModuleRootLayerChild implements Conten
     }
 
     if (predicate.apply(ExcludedContentFolderTypeProvider.getInstance())) {
-      for (DirectoryIndexExcludePolicy excludePolicy : DirectoryIndexExcludePolicy.EP_NAME.getExtensions(getRootModel().getProject())) {
+      for (DirectoryIndexExcludePolicy excludePolicy : DirectoryIndexExcludePolicy.EP_NAME.getExtensionList(getRootModel().getProject())) {
         final VirtualFilePointer[] files = excludePolicy.getExcludeRootsForModule(myModuleRootLayer);
         for (VirtualFilePointer file : files) {
           list.add(new LightContentFolderImpl(file, ExcludedContentFolderTypeProvider.getInstance(), this));
@@ -189,20 +186,15 @@ public class ContentEntryImpl extends BaseModuleRootLayerChild implements Conten
 
   private <T extends ContentFolder> void assertCanRemoveFrom(T f, @Nonnull Set<T> ff) {
     getRootModel().assertWritable();
-    LOGGER.assertTrue(ff.contains(f));
+    LOG.assertTrue(ff.contains(f));
   }
 
   private void assertFolderUnderMe(@Nonnull String url) {
     final String path = VfsUtilCore.urlToPath(url);
     final String rootPath = VfsUtilCore.urlToPath(getUrl());
     if (!FileUtil.isAncestor(rootPath, path, false)) {
-      LOGGER.error("The file '" + path + "' is not under content entry root '" + rootPath + "'");
+      LOG.error("The file '" + path + "' is not under content entry root '" + rootPath + "'");
     }
-  }
-
-  @Override
-  public boolean isSynthetic() {
-    return false;
   }
 
   @Override
@@ -223,7 +215,7 @@ public class ContentEntryImpl extends BaseModuleRootLayerChild implements Conten
 
   public void writeExternal(@Nonnull Element element) {
     assert !isDisposed();
-    LOGGER.assertTrue(ELEMENT_NAME.equals(element.getName()));
+    LOG.assertTrue(ELEMENT_NAME.equals(element.getName()));
     element.setAttribute(URL_ATTRIBUTE, myRoot.getUrl());
     for (ContentFolder contentFolder : myContentFolders) {
       final Element subElement = new Element(ContentFolderImpl.ELEMENT_NAME);

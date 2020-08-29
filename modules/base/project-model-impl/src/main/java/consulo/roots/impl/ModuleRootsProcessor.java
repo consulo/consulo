@@ -22,11 +22,12 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.Processor;
 import com.intellij.util.containers.ContainerUtil;
-import gnu.trove.TObjectIntHashMap;
-import javax.annotation.Nonnull;
-
 import consulo.annotation.DeprecationInfo;
 import consulo.roots.ContentFolderTypeProvider;
+import gnu.trove.TObjectIntHashMap;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
@@ -35,9 +36,9 @@ import consulo.roots.ContentFolderTypeProvider;
 public abstract class ModuleRootsProcessor {
   public static final ExtensionPointName<ModuleRootsProcessor> EP_NAME = ExtensionPointName.create("com.intellij.moduleRootsProcessor");
 
-  @javax.annotation.Nullable
+  @Nullable
   public static ModuleRootsProcessor findRootsProcessor(@Nonnull ModuleRootModel moduleRootModel) {
-    for (ModuleRootsProcessor moduleRootsProcessor : EP_NAME.getExtensions()) {
+    for (ModuleRootsProcessor moduleRootsProcessor : EP_NAME.getExtensionList()) {
       if (moduleRootsProcessor.canHandle(moduleRootModel)) {
         return moduleRootsProcessor;
       }

@@ -17,6 +17,7 @@ package com.intellij.openapi.roots;
 
 import consulo.roots.ModuleRootLayer;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Map;
 
@@ -36,6 +37,6 @@ public interface ModuleRootModel extends ModuleRootLayer {
   @Nonnull
   ModuleRootLayer getCurrentLayer();
 
-  @javax.annotation.Nullable
+  @Nullable
   ModuleRootLayer findLayerByName(@Nonnull String name);
 }

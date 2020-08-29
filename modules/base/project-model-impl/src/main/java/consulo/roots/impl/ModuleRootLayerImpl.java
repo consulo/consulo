@@ -16,7 +16,6 @@
 package consulo.roots.impl;
 
 import com.google.common.base.Predicate;
-import consulo.disposer.Disposable;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.project.Project;
@@ -26,7 +25,6 @@ import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.roots.libraries.LibraryTable;
 import com.intellij.openapi.updateSettings.impl.pluginsAdvertisement.UnknownFeaturesCollector;
 import com.intellij.openapi.util.Comparing;
-import consulo.disposer.Disposer;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointerListener;
@@ -35,6 +33,8 @@ import com.intellij.util.Processor;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.annotation.access.RequiredReadAction;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
 import consulo.logging.Logger;
 import consulo.module.extension.*;
 import consulo.module.extension.impl.ModuleExtensionImpl;
@@ -45,9 +45,8 @@ import consulo.roots.ContentFolderTypeProvider;
 import consulo.roots.ModifiableModuleRootLayer;
 import consulo.roots.orderEntry.OrderEntrySerializationUtil;
 import org.jdom.Element;
-import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
 
@@ -56,7 +55,7 @@ import java.util.*;
  * @since 29.07.14
  */
 public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, Disposable {
-  public static final Logger LOGGER = Logger.getInstance(ModuleRootLayerImpl.class);
+  private static final Logger LOG = Logger.getInstance(ModuleRootLayerImpl.class);
 
   private static class ContentComparator implements Comparator<ContentEntry> {
     public static final ContentComparator INSTANCE = new ContentComparator();
@@ -236,7 +235,14 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, Disposabl
           }
           break;
         case ContentEntryImpl.ELEMENT_NAME:
-          ContentEntryImpl contentEntry = new ContentEntryImpl(child, this);
+          boolean canUseOptimizedVersion = getModule().getModuleDirUrl() == null && child.getContentSize() == 0;
+          ContentEntry contentEntry;
+          if(canUseOptimizedVersion) {
+            contentEntry = new OptimizedSingleContentEntryImpl(child, this);
+          }
+          else {
+            contentEntry = new ContentEntryImpl(child, this);
+          }
           myContent.add(contentEntry);
           break;
         case OrderEntrySerializationUtil.ORDER_ENTRY_ELEMENT_NAME:
@@ -635,7 +641,7 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, Disposabl
   @Nonnull
   @Override
   public String[] getDependencyModuleNames() {
-    List<String> result = orderEntries().withoutSdk().withoutLibraries().withoutModuleSourceEntries().process(new CollectDependentModules(), new ArrayList<String>());
+    List<String> result = orderEntries().withoutSdk().withoutLibraries().withoutModuleSourceEntries().process(new CollectDependentModules(), new ArrayList<>());
     return ArrayUtil.toStringArray(result);
   }
 
@@ -719,7 +725,7 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, Disposabl
   }
 
   @Override
-  @javax.annotation.Nullable
+  @Nullable
   @SuppressWarnings("unchecked")
   public <T extends ModuleExtension> T getExtension(@Nonnull String key) {
     ModuleExtensionProviderEP ep = ModuleExtensionProviders.findProvider(key);
@@ -760,9 +766,21 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, Disposabl
     return addContentEntry(new ContentEntryImpl(url, this));
   }
 
+  @Nonnull
+  @Override
+  public ContentEntry addSingleContentEntry(@Nonnull VirtualFile file) {
+    return addContentEntry(new OptimizedSingleContentEntryImpl(file, this));
+  }
+
+  @Nonnull
+  @Override
+  public ContentEntry addSingleContentEntry(@Nonnull String url) {
+    return addContentEntry(new OptimizedSingleContentEntryImpl(url, this));
+  }
+
   @Override
   public void removeContentEntry(@Nonnull ContentEntry entry) {
-    LOGGER.assertTrue(myContent.contains(entry));
+    LOG.assertTrue(myContent.contains(entry));
     if (entry instanceof Disposable) {
       Disposer.dispose((Disposable)entry);
     }
@@ -771,7 +789,7 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, Disposabl
 
   @Override
   public void addOrderEntry(@Nonnull OrderEntry entry) {
-    LOGGER.assertTrue(!myOrderEntries.contains(entry));
+    LOG.assertTrue(!myOrderEntries.contains(entry));
     myOrderEntries.add(entry);
   }
 
@@ -816,7 +834,7 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, Disposabl
 
   @Nonnull
   @Override
-  public LibraryOrderEntry addInvalidLibrary(@Nonnull @NonNls String name, @Nonnull String level) {
+  public LibraryOrderEntry addInvalidLibrary(@Nonnull String name, @Nonnull String level) {
     final LibraryOrderEntry libraryOrderEntry = new LibraryOrderEntryImpl(name, level, this);
     myOrderEntries.add(libraryOrderEntry);
     return libraryOrderEntry;
@@ -825,8 +843,8 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, Disposabl
   @Nonnull
   @Override
   public ModuleOrderEntry addModuleOrderEntry(@Nonnull Module module) {
-    LOGGER.assertTrue(!module.equals(getModule()));
-    LOGGER.assertTrue(Comparing.equal(myRootModel.getModule().getProject(), module.getProject()));
+    LOG.assertTrue(!module.equals(getModule()));
+    LOG.assertTrue(Comparing.equal(myRootModel.getModule().getProject(), module.getProject()));
     final ModuleOrderEntryImpl moduleOrderEntry = new ModuleOrderEntryImpl(module, this);
     myOrderEntries.add(moduleOrderEntry);
     return moduleOrderEntry;
@@ -835,7 +853,7 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, Disposabl
   @Nonnull
   @Override
   public ModuleOrderEntry addInvalidModuleEntry(@Nonnull String name) {
-    LOGGER.assertTrue(!name.equals(getModule().getName()));
+    LOG.assertTrue(!name.equals(getModule().getName()));
     final ModuleOrderEntryImpl moduleOrderEntry = new ModuleOrderEntryImpl(name, this);
     myOrderEntries.add(moduleOrderEntry);
     return moduleOrderEntry;
@@ -852,7 +870,7 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, Disposabl
     return null;
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   @Override
   public ModuleExtensionWithSdkOrderEntry findModuleExtensionSdkEntry(@Nonnull ModuleExtension extension) {
     for (OrderEntry orderEntry : getOrderEntries()) {
@@ -869,7 +887,7 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, Disposabl
   }
 
   private void removeOrderEntryInternal(OrderEntry entry) {
-    LOGGER.assertTrue(myOrderEntries.contains(entry));
+    LOG.assertTrue(myOrderEntries.contains(entry));
     Disposer.dispose((OrderEntryBaseImpl)entry);
     myOrderEntries.remove(entry);
   }
@@ -883,7 +901,7 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, Disposabl
 
   private void assertValidRearrangement(@Nonnull OrderEntry[] newEntries) {
     String error = checkValidRearrangement(newEntries);
-    LOGGER.assertTrue(error == null, error);
+    LOG.assertTrue(error == null, error);
   }
 
   @Nullable

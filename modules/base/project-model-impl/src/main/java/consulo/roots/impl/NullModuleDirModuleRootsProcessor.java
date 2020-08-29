@@ -16,12 +16,12 @@
 package consulo.roots.impl;
 
 import com.google.common.base.Predicate;
-import com.intellij.openapi.roots.ContentEntry;
 import com.intellij.openapi.roots.ModuleRootModel;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.Processor;
 import consulo.roots.ContentFolderTypeProvider;
 import gnu.trove.TObjectIntHashMap;
+
 import javax.annotation.Nonnull;
 
 /**
@@ -43,12 +43,9 @@ public class NullModuleDirModuleRootsProcessor extends ModuleRootsProcessor {
   public void processFiles(@Nonnull final ModuleRootModel moduleRootModel,
                            @Nonnull final Predicate<ContentFolderTypeProvider> predicate,
                            @Nonnull final Processor<VirtualFile> processor) {
-    moduleRootModel.iterateContentEntries(new Processor<ContentEntry>() {
-      @Override
-      public boolean process(ContentEntry contentEntry) {
-        VirtualFile file = contentEntry.getFile();
-        return file == null || processor.process(file);
-      }
+    moduleRootModel.iterateContentEntries(contentEntry -> {
+      VirtualFile file = contentEntry.getFile();
+      return file == null || processor.process(file);
     });
   }
 
@@ -56,11 +53,6 @@ public class NullModuleDirModuleRootsProcessor extends ModuleRootsProcessor {
   public void processFileUrls(@Nonnull final ModuleRootModel moduleRootModel,
                               @Nonnull final Predicate<ContentFolderTypeProvider> predicate,
                               @Nonnull final Processor<String> processor) {
-    moduleRootModel.iterateContentEntries(new Processor<ContentEntry>() {
-      @Override
-      public boolean process(ContentEntry contentEntry) {
-        return processor.process(contentEntry.getUrl());
-      }
-    });
+    moduleRootModel.iterateContentEntries(contentEntry -> processor.process(contentEntry.getUrl()));
   }
 }

@@ -20,5 +20,7 @@ package com.intellij.openapi.roots;
  *  @author dsl
  */
 public interface Synthetic {
-  boolean isSynthetic();
+  default boolean isSynthetic() {
+    return false;
+  }
 }

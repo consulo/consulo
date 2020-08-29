@@ -21,10 +21,11 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.*;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.Processor;
+import consulo.annotation.DeprecationInfo;
 import consulo.module.extension.ModuleExtension;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import consulo.annotation.DeprecationInfo;
 
 /**
  * @author VISTALL
@@ -197,7 +198,7 @@ public interface ModuleRootLayer {
   @Nullable
   <T extends ModuleExtension> T getExtension(Class<T> clazz);
 
-  @javax.annotation.Nullable
+  @Nullable
   <T extends ModuleExtension> T getExtension(@Nonnull String key);
 
   @Nullable

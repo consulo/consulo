@@ -339,6 +339,18 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
   }
 
   @Override
+  @Nonnull
+  public ContentEntry addSingleContentEntry(@Nonnull VirtualFile file) {
+    return getCurrentLayer().addSingleContentEntry(file);
+  }
+
+  @Override
+  @Nonnull
+  public ContentEntry addSingleContentEntry(@Nonnull String url) {
+    return getCurrentLayer().addSingleContentEntry(url);
+  }
+
+  @Override
   public boolean isDisposed() {
     return myDisposed;
   }

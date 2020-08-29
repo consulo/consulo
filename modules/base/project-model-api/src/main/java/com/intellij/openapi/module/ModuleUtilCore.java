@@ -231,12 +231,9 @@ public class ModuleUtilCore {
     final List<ContentFolder> contentFolders = new ArrayList<ContentFolder>();
     for (Module module : moduleManager.getModules()) {
       ModuleRootManager moduleRootManager = ModuleRootManager.getInstance(module);
-      moduleRootManager.iterateContentEntries(new Processor<ContentEntry>() {
-        @Override
-        public boolean process(ContentEntry contentEntry) {
-          Collections.addAll(contentFolders, contentEntry.getFolders(Predicates.<ContentFolderTypeProvider>alwaysTrue()));
-          return false;
-        }
+      moduleRootManager.iterateContentEntries(contentEntry -> {
+        Collections.addAll(contentFolders, contentEntry.getFolders(Predicates.<ContentFolderTypeProvider>alwaysTrue()));
+        return false;
       });
     }
     return contentFolders;

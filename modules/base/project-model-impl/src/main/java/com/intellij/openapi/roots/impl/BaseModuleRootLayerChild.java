@@ -29,7 +29,7 @@ public abstract class BaseModuleRootLayerChild implements Disposable {
   protected final ModuleRootLayerImpl myModuleRootLayer;
   private boolean myDisposed;
 
-  BaseModuleRootLayerChild(@Nonnull ModuleRootLayerImpl moduleRootLayer) {
+  public BaseModuleRootLayerChild(@Nonnull ModuleRootLayerImpl moduleRootLayer) {
     myModuleRootLayer = moduleRootLayer;
 
     Disposer.register(moduleRootLayer, this);

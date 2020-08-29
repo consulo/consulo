@@ -22,8 +22,9 @@ import com.intellij.openapi.roots.libraries.LibraryTable;
 import com.intellij.openapi.vfs.VirtualFile;
 import consulo.module.extension.ModuleExtension;
 import consulo.module.extension.ModuleExtensionWithSdk;
-import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
@@ -48,6 +49,28 @@ public interface ModifiableModuleRootLayer extends ModuleRootLayer {
    */
   @Nonnull
   ContentEntry addContentEntry(@Nonnull String url);
+
+  /**
+   * Adds file as single content entry. Can used only when module don't have base dir
+   *
+   * @param file target file
+   * @return new content entry
+   */
+  @Nonnull
+  default ContentEntry addSingleContentEntry(@Nonnull VirtualFile file) {
+    return addContentEntry(file);
+  }
+
+  /**
+   * Adds file as single content entry. Can used only when module don't have base dir   *
+   *
+   * @param url url of file
+   * @return new content entry
+   */
+  @Nonnull
+  default ContentEntry addSingleContentEntry(@Nonnull String url) {
+    return addContentEntry(url);
+  }
 
   /**
    * Remove the specified content root.
@@ -83,7 +106,7 @@ public interface ModifiableModuleRootLayer extends ModuleRootLayer {
    * @return
    */
   @Nonnull
-  LibraryOrderEntry addInvalidLibrary(@Nonnull @NonNls String name, @Nonnull String level);
+  LibraryOrderEntry addInvalidLibrary(@Nonnull String name, @Nonnull String level);
 
   @Nonnull
   ModuleOrderEntry addModuleOrderEntry(@Nonnull Module module);
@@ -91,10 +114,10 @@ public interface ModifiableModuleRootLayer extends ModuleRootLayer {
   @Nonnull
   ModuleOrderEntry addInvalidModuleEntry(@Nonnull String name);
 
-  @javax.annotation.Nullable
+  @Nullable
   LibraryOrderEntry findLibraryOrderEntry(@Nonnull Library library);
 
-  @javax.annotation.Nullable
+  @Nullable
   ModuleExtensionWithSdkOrderEntry findModuleExtensionSdkEntry(@Nonnull ModuleExtension extension);
 
   /**
