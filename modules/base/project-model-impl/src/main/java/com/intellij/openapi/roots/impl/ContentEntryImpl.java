@@ -18,7 +18,6 @@ package com.intellij.openapi.roots.impl;
 
 import com.google.common.base.Predicate;
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.roots.ContentEntry;
 import com.intellij.openapi.roots.ContentFolder;
 import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.openapi.util.io.FileUtil;
@@ -32,6 +31,7 @@ import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
 import consulo.roots.ContentFolderTypeProvider;
+import consulo.roots.impl.ContentEntryEx;
 import consulo.roots.impl.ExcludedContentFolderTypeProvider;
 import consulo.roots.impl.LightContentFolderImpl;
 import consulo.roots.impl.ModuleRootLayerImpl;
@@ -43,7 +43,7 @@ import java.util.*;
 /**
  * @author dsl
  */
-public class ContentEntryImpl extends BaseModuleRootLayerChild implements ContentEntry, ClonableContentEntry {
+public class ContentEntryImpl extends BaseModuleRootLayerChild implements ContentEntryEx {
   public static String getUrlFrom(@Nonnull Element e) {
     LOG.assertTrue(ELEMENT_NAME.equals(e.getName()));
 
@@ -165,6 +165,12 @@ public class ContentEntryImpl extends BaseModuleRootLayerChild implements Conten
     return f;
   }
 
+  @Nonnull
+  @Override
+  public Collection<ContentFolder> getContentFolders() {
+    return myContentFolders;
+  }
+
   @Override
   public void removeFolder(@Nonnull ContentFolder contentFolder) {
     assert !isDisposed();
@@ -199,7 +205,7 @@ public class ContentEntryImpl extends BaseModuleRootLayerChild implements Conten
 
   @Override
   @Nonnull
-  public ContentEntry cloneEntry(@Nonnull ModuleRootLayerImpl rootModel) {
+  public ContentEntryEx cloneEntry(@Nonnull ModuleRootLayerImpl rootModel) {
     assert !isDisposed();
 
     ContentEntryImpl cloned = new ContentEntryImpl(myRoot.getUrl(), rootModel);

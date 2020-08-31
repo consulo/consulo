@@ -17,9 +17,10 @@ package com.intellij.openapi.roots;
 
 import com.google.common.base.Predicate;
 import com.intellij.openapi.vfs.VirtualFile;
+import consulo.roots.ContentFolderTypeProvider;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import consulo.roots.ContentFolderTypeProvider;
 
 /**
  * Represents a module content root.

@@ -57,11 +57,11 @@ import java.util.*;
 public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, Disposable {
   private static final Logger LOG = Logger.getInstance(ModuleRootLayerImpl.class);
 
-  private static class ContentComparator implements Comparator<ContentEntry> {
+  private static class ContentComparator implements Comparator<ContentEntryEx> {
     public static final ContentComparator INSTANCE = new ContentComparator();
 
     @Override
-    public int compare(@Nonnull final ContentEntry o1, @Nonnull final ContentEntry o2) {
+    public int compare(@Nonnull final ContentEntryEx o1, @Nonnull final ContentEntryEx o2) {
       return o1.getUrl().compareTo(o2.getUrl());
     }
   }
@@ -174,7 +174,7 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, Disposabl
     }
   }
 
-  private final Set<ContentEntry> myContent = new TreeSet<>(ContentComparator.INSTANCE);
+  private final Set<ContentEntryEx> myContent = new TreeSet<>(ContentComparator.INSTANCE);
 
   private final List<OrderEntry> myOrderEntries = new Order();
   // cleared by myOrderEntries modification, see Order
@@ -236,7 +236,7 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, Disposabl
           break;
         case ContentEntryImpl.ELEMENT_NAME:
           boolean canUseOptimizedVersion = getModule().getModuleDirUrl() == null && child.getContentSize() == 0;
-          ContentEntry contentEntry;
+          ContentEntryEx contentEntry;
           if(canUseOptimizedVersion) {
             contentEntry = new OptimizedSingleContentEntryImpl(child, this);
           }
@@ -374,10 +374,8 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, Disposabl
 
   private void setContentEntriesFrom(@Nonnull ModuleRootLayerImpl layer) {
     removeAllContentEntries();
-    for (ContentEntry contentEntry : layer.myContent) {
-      if (contentEntry instanceof ClonableContentEntry) {
-        myContent.add(((ClonableContentEntry)contentEntry).cloneEntry(this));
-      }
+    for (ContentEntryEx contentEntry : layer.myContent) {
+      myContent.add(contentEntry.cloneEntry(this));
     }
   }
 
@@ -396,9 +394,9 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, Disposabl
   }
 
   @Nonnull
-  private ContentEntry addContentEntry(@Nonnull ContentEntry e) {
+  private ContentEntry addContentEntry(@Nonnull ContentEntryEx e) {
     if (myContent.contains(e)) {
-      for (ContentEntry contentEntry : getContentEntries()) {
+      for (ContentEntryEx contentEntry : getContentEntries()) {
         if (ContentComparator.INSTANCE.compare(contentEntry, e) == 0) return contentEntry;
       }
     }
@@ -464,7 +462,7 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, Disposabl
   }
 
   @Nonnull
-  public Collection<ContentEntry> getContent() {
+  public Collection<ContentEntryEx> getContent() {
     return myContent;
   }
 
@@ -489,9 +487,9 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, Disposabl
   }
 
   @Override
-  public ContentEntry[] getContentEntries() {
-    final Collection<ContentEntry> content = getContent();
-    return content.toArray(new ContentEntry[content.size()]);
+  public ContentEntryEx[] getContentEntries() {
+    final Collection<ContentEntryEx> content = getContent();
+    return content.toArray(new ContentEntryEx[content.size()]);
   }
 
   @Override
