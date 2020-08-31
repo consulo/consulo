@@ -77,6 +77,7 @@ public class PluginDescriptorImpl extends PluginDescriptorStub {
   private String myDescriptionChildText;
   private boolean myEnabled = true;
   private Boolean mySkipped;
+  private boolean myExperimental;
 
   public PluginDescriptorImpl(@Nonnull File pluginPath, boolean isPreInstalled) {
     myPath = pluginPath;
@@ -111,6 +112,7 @@ public class PluginDescriptorImpl extends PluginDescriptorStub {
     myVersion = StringUtilRt.nullize(pluginBean.pluginVersion);
     myPlatformVersion = pluginBean.platformVersion;
     myCategory = pluginBean.category;
+    myExperimental = pluginBean.experimental;
 
     if (pluginBean.vendor != null) {
       myVendor = pluginBean.vendor.name;
@@ -530,6 +532,11 @@ public class PluginDescriptorImpl extends PluginDescriptorStub {
 
   public void setSkipped(final Boolean skipped) {
     mySkipped = skipped;
+  }
+
+  @Override
+  public boolean isExperimental() {
+    return myExperimental;
   }
 
   @Override

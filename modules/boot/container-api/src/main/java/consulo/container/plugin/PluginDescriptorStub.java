@@ -196,4 +196,9 @@ public abstract class PluginDescriptorStub implements PluginDescriptor {
   public boolean isDeleted() {
     return false;
   }
+
+  @Override
+  public boolean isExperimental() {
+    return false;
+  }
 }

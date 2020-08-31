@@ -112,4 +112,6 @@ public interface PluginDescriptor {
   boolean isLoaded();
 
   boolean isDeleted();
+
+  boolean isExperimental();
 }

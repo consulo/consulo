@@ -63,6 +63,7 @@ public class PluginNode extends PluginDescriptorStub {
 
   private boolean myEnabled = true;
   private String myRating;
+  private boolean myExperimental;
 
   private List<SimpleExtension> mySimpleExtensions = Collections.emptyList();
 
@@ -92,6 +93,7 @@ public class PluginNode extends PluginDescriptorStub {
       addOptionalDependency(Arrays.stream(jsonPlugin.optionalDependencies).map(PluginId::getId).toArray(PluginId[]::new));
     }
 
+    myExperimental = jsonPlugin.experimental;
     PluginJsonNode.Extension[] extensions = jsonPlugin.extensionsV2;
     if(extensions != null) {
       mySimpleExtensions = new ArrayList<>(extensions.length);
@@ -308,6 +310,11 @@ public class PluginNode extends PluginDescriptorStub {
   @Override
   public void setEnabled(boolean enabled) {
     myEnabled = enabled;
+  }
+
+  @Override
+  public boolean isExperimental() {
+    return myExperimental;
   }
 
   @Nullable

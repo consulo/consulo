@@ -3,6 +3,7 @@
   <name>Sand Language</name>
   <platformVersion>SNAPSHOT</platformVersion>
   <localize>consulo.sandbox.SandboxLocalize</localize>
+  <experimental>true</experimental>
 
   <depends config-file="consulo.platform.desktop.xml" optional="true">consulo.platform.desktop</depends>
 

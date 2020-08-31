@@ -53,6 +53,7 @@ public class PluginBeanParser {
     pluginBean.localize = rootTag.getChildText("localize");
     pluginBean.changeNotes = rootTag.getChildText("change-notes");
     pluginBean.url = rootTag.getAttributeValue("url");
+    pluginBean.experimental = Boolean.parseBoolean(rootTag.getChildText("experimental"));
 
     List<String> imports = new ArrayList<String>();
 

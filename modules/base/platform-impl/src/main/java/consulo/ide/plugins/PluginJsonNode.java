@@ -15,7 +15,7 @@
  */
 package consulo.ide.plugins;
 
-import com.intellij.util.ArrayUtilRt;
+import consulo.util.collection.ArrayUtil;
 
 /**
  * @author VISTALL
@@ -25,7 +25,7 @@ public class PluginJsonNode {
   public static class Extension {
     public String key;
 
-    public String[] values = ArrayUtilRt.EMPTY_STRING_ARRAY;
+    public String[] values = ArrayUtil.EMPTY_STRING_ARRAY;
   }
 
   public String id;
@@ -43,4 +43,5 @@ public class PluginJsonNode {
   public String[] optionalDependencies;
   // public Extension[] extensions;  old extensions impl
   public Extension[] extensionsV2;
+  public boolean experimental;
 }

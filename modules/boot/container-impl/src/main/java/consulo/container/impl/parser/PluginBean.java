@@ -73,6 +73,8 @@ public class PluginBean extends ComponentManagerConfig {
   //@Attribute("url")
   public String url;
 
+  public boolean experimental;
+
   public List<PluginListenerDescriptor> applicationListeners = Collections.emptyList();
 
   public List<PluginListenerDescriptor> projectListeners = Collections.emptyList();
