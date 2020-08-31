@@ -18,8 +18,7 @@ package consulo.roots.impl;
 import com.google.common.base.Predicate;
 import com.intellij.openapi.roots.ContentEntry;
 import com.intellij.openapi.roots.ContentFolder;
-import com.intellij.openapi.roots.impl.BaseModuleRootLayerChild;
-import com.intellij.openapi.roots.impl.ContentEntryImpl;
+import com.intellij.openapi.roots.impl.*;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointer;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointerManager;
@@ -35,7 +34,7 @@ import javax.annotation.Nonnull;
  *
  * Optimized version of {@link ContentEntryImpl} without supporting data inside
  */
-public class OptimizedSingleContentEntryImpl extends BaseModuleRootLayerChild implements ContentEntry {
+public class OptimizedSingleContentEntryImpl extends BaseModuleRootLayerChild implements ContentEntry, ClonableContentEntry {
   @Nonnull
   private final VirtualFilePointer myRoot;
 
@@ -96,5 +95,11 @@ public class OptimizedSingleContentEntryImpl extends BaseModuleRootLayerChild im
   @Override
   public void removeFolder(@Nonnull ContentFolder contentFolder) {
     throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public ContentEntry cloneEntry(ModuleRootLayerImpl layer) {
+    assert !isDisposed();
+    return new OptimizedSingleContentEntryImpl(myRoot.getUrl(), layer);
   }
 }

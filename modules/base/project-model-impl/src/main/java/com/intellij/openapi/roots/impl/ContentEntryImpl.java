@@ -43,7 +43,7 @@ import java.util.*;
 /**
  * @author dsl
  */
-public class ContentEntryImpl extends BaseModuleRootLayerChild implements ContentEntry, ClonableContentEntry, Comparable<ContentEntryImpl> {
+public class ContentEntryImpl extends BaseModuleRootLayerChild implements ContentEntry, ClonableContentEntry {
   public static String getUrlFrom(@Nonnull Element e) {
     LOG.assertTrue(ELEMENT_NAME.equals(e.getName()));
 
@@ -231,33 +231,5 @@ public class ContentEntryImpl extends BaseModuleRootLayerChild implements Conten
     public int compare(@Nonnull ContentFolder o1, @Nonnull ContentFolder o2) {
       return o1.getUrl().compareTo(o2.getUrl());
     }
-  }
-
-  @Override
-  public int compareTo(@Nonnull ContentEntryImpl other) {
-    int i = getUrl().compareTo(other.getUrl());
-    if (i != 0) return i;
-    return lexicographicCompare(myContentFolders, other.myContentFolders);
-  }
-
-  public static <T> int lexicographicCompare(@Nonnull Set<T> obj1, @Nonnull Set<T> obj2) {
-    Iterator<T> it1 = obj1.iterator();
-    Iterator<T> it2 = obj2.iterator();
-
-    for (int i = 0; i < Math.max(obj1.size(), obj2.size()); i++) {
-      T o1 = it1.hasNext() ? it1.next() : null;
-      T o2 = it2.hasNext() ? it2.next() : null;
-      if (o1 == null) {
-        return -1;
-      }
-      if (o2 == null) {
-        return 1;
-      }
-      int res = ((Comparable)o1).compareTo(o2);
-      if (res != 0) {
-        return res;
-      }
-    }
-    return 0;
   }
 }
