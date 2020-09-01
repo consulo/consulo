@@ -32,10 +32,9 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
 import consulo.awt.TargetAWT;
 import consulo.disposer.Disposer;
-import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ValidableComponent;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
-import consulo.ui.migration.SwingImageRef;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -319,15 +318,6 @@ public class CreateFileFromTemplateDialog extends DialogWrapper {
     Builder setValidator(InputValidator validator);
 
     Builder setValidator(@Nonnull ValidableComponent.Validator<String> validator);
-
-    @Deprecated
-    default Builder addKind(@Nonnull String kind, @Nullable Icon icon, @Nonnull String templateName) {
-      return addKind(kind, TargetAWT.from(icon), templateName);
-    }
-
-    default Builder addKind(@Nonnull String kind, @Nullable SwingImageRef icon, @Nonnull String templateName) {
-      return addKind(kind, (Image)icon, templateName);
-    }
 
     Builder addKind(@Nonnull String kind, @Nullable Image icon, @Nonnull String templateName);
 
