@@ -15,11 +15,13 @@
  */
 package com.intellij.ide;
 
-import com.intellij.openapi.extensions.ExtensionPointName;
+import com.intellij.openapi.project.Project;
+import consulo.extensions.StrictExtensionPointName;
+
 import javax.annotation.Nullable;
 
 public interface SelectInTarget {
-  ExtensionPointName<SelectInTarget> EP_NAME = ExtensionPointName.create("com.intellij.selectInTarget");
+  StrictExtensionPointName<Project, SelectInTarget> EP_NAME = StrictExtensionPointName.forProject("com.intellij.selectInTarget");
 
   String toString();
 

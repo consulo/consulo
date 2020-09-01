@@ -31,6 +31,8 @@ import java.util.function.Consumer;
 
 /**
  * @author mike
+ *
+ * Prefer {@link consulo.extensions.StrictExtensionPointName}
  */
 public class ExtensionPointName<T> {
   private static final Logger LOG = Logger.getInstance(ExtensionPointName.class);

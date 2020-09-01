@@ -60,7 +60,7 @@ public class SelectInManager {
 
   @Nonnull
   public List<SelectInTarget> getTargets() {
-    List<SelectInTarget> targets = DumbService.getDumbAwareExtensions(myProject, SelectInTarget.EP_NAME);
+    List<SelectInTarget> targets = DumbService.getDumbAwareExtensions(myProject, myProject, SelectInTarget.EP_NAME);
     if(targets.isEmpty()) {
       return Collections.emptyList();
     }

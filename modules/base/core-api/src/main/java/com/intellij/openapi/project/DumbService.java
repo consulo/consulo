@@ -1,6 +1,7 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.openapi.project;
 
+import com.intellij.openapi.components.ComponentManager;
 import consulo.disposer.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
@@ -12,6 +13,8 @@ import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.util.*;
 import com.intellij.util.ThrowableRunnable;
 import com.intellij.util.messages.Topic;
+import consulo.extensions.StrictExtensionPointName;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -62,6 +65,17 @@ public abstract class DumbService {
   @Nonnull
   public static <T> List<T> getDumbAwareExtensions(@Nonnull Project project, @Nonnull ExtensionPointName<T> extensionPoint) {
     List<T> list = extensionPoint.getExtensionList();
+    if (list.isEmpty()) {
+      return list;
+    }
+
+    DumbService dumbService = getInstance(project);
+    return dumbService.filterByDumbAwareness(list);
+  }
+
+  @Nonnull
+  public static <C extends ComponentManager, T> List<T> getDumbAwareExtensions(@Nonnull Project project, @Nonnull C component, @Nonnull StrictExtensionPointName<C, T> extensionPoint) {
+    List<T> list = extensionPoint.getExtensionList(component);
     if (list.isEmpty()) {
       return list;
     }
