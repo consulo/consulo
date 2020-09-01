@@ -25,6 +25,9 @@ import com.intellij.openapi.keymap.KeymapManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.VerticalFlowLayout;
+import consulo.localize.LocalizeValue;
+import consulo.platform.base.localize.IdeLocalize;
+import consulo.ui.image.Image;
 import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.Ref;
@@ -819,11 +822,11 @@ public class MemberChooser<T extends ClassMember> extends DialogWrapper implemen
   }
 
   protected ShowContainersAction getShowContainersAction() {
-    return new ShowContainersAction(IdeBundle.message("action.show.classes"), AllIcons.Nodes.Class);
+    return new ShowContainersAction(IdeLocalize.actionShowClasses(), AllIcons.Nodes.Class);
   }
 
   protected class ShowContainersAction extends ToggleAction {
-    public ShowContainersAction(final String text, final Icon icon) {
+    public ShowContainersAction(final LocalizeValue text, final Image icon) {
       super(text, text, icon);
     }
 

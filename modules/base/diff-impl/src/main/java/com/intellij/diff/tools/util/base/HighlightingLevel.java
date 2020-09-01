@@ -19,41 +19,24 @@ import com.intellij.icons.AllIcons;
 import com.intellij.openapi.editor.markup.HighlighterLayer;
 import com.intellij.openapi.editor.markup.RangeHighlighter;
 import com.intellij.openapi.util.Condition;
+import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.swing.*;
 
 public enum HighlightingLevel {
-  INSPECTIONS("Inspections", AllIcons.Ide.HectorOn, new Condition<RangeHighlighter>() {
-    @Override
-    public boolean value(RangeHighlighter rangeHighlighter) {
-      return true;
-    }
-  }),
-
-  ADVANCED("Syntax", AllIcons.Ide.HectorSyntax, new Condition<RangeHighlighter>() {
-    @Override
-    public boolean value(RangeHighlighter rangeHighlighter) {
-      return rangeHighlighter.getLayer() <= HighlighterLayer.ADDITIONAL_SYNTAX;
-    }
-  }),
-
-  SIMPLE("None", AllIcons.Ide.HectorOff, new Condition<RangeHighlighter>() {
-    @Override
-    public boolean value(RangeHighlighter rangeHighlighter) {
-      return rangeHighlighter.getLayer() <= HighlighterLayer.SYNTAX;
-    }
-  });
+  INSPECTIONS("Inspections", AllIcons.Ide.HectorOn, rangeHighlighter -> true),
+  ADVANCED("Syntax", AllIcons.Ide.HectorSyntax, rangeHighlighter -> rangeHighlighter.getLayer() <= HighlighterLayer.ADDITIONAL_SYNTAX),
+  SIMPLE("None", AllIcons.Ide.HectorOff, rangeHighlighter -> rangeHighlighter.getLayer() <= HighlighterLayer.SYNTAX);
 
   @Nonnull
   private final String myText;
   @Nullable
-  private final Icon myIcon;
+  private final Image myIcon;
   @Nonnull
   private final Condition<RangeHighlighter> myCondition;
 
-  HighlightingLevel(@Nonnull String text, @Nullable Icon icon, @Nonnull Condition<RangeHighlighter> condition) {
+  HighlightingLevel(@Nonnull String text, @Nullable Image icon, @Nonnull Condition<RangeHighlighter> condition) {
     myText = text;
     myIcon = icon;
     myCondition = condition;
@@ -65,7 +48,7 @@ public enum HighlightingLevel {
   }
 
   @Nullable
-  public Icon getIcon() {
+  public Image getIcon() {
     return myIcon;
   }
 

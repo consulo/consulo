@@ -30,14 +30,12 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiElement;
 import com.intellij.util.IncorrectOperationException;
+import consulo.localize.LocalizeValue;
 import consulo.psi.PsiPackageSupportProvider;
 import consulo.ui.image.Image;
-import consulo.ui.migration.SwingImageRef;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import javax.swing.*;
 
 /**
  * @author peter
@@ -45,19 +43,12 @@ import javax.swing.*;
 public abstract class CreateTemplateInPackageAction<T extends PsiElement> extends CreateFromTemplateAction<T> {
   private final boolean myInSourceOnly;
 
-  @Deprecated
-  protected CreateTemplateInPackageAction(String text, String description, Icon icon, boolean inSourceOnly) {
-    super(text, description, icon);
-    myInSourceOnly = inSourceOnly;
-  }
-
   protected CreateTemplateInPackageAction(String text, String description, Image icon, boolean inSourceOnly) {
     super(text, description, icon);
     myInSourceOnly = inSourceOnly;
   }
 
-  @SuppressWarnings("deprecation")
-  protected CreateTemplateInPackageAction(String text, String description, SwingImageRef icon, boolean inSourceOnly) {
+  protected CreateTemplateInPackageAction(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description, @Nullable Image icon, boolean inSourceOnly) {
     super(text, description, icon);
     myInSourceOnly = inSourceOnly;
   }

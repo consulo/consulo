@@ -16,6 +16,9 @@
 package com.intellij.openapi.actionSystem;
 
 import com.intellij.openapi.actionSystem.ex.ActionUtil;
+import consulo.localize.LocalizeValue;
+import consulo.ui.image.Image;
+
 import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;
@@ -42,11 +45,23 @@ public final class EmptyAction extends AnAction {
     myEnabled = enabled;
   }
 
-  public EmptyAction(@Nullable String text, @Nullable String description, @Nullable Icon icon) {
+  public EmptyAction(@Nullable String text, @Nullable String description, @Nullable Image icon) {
     super(text, description, icon);
   }
 
-  public static AnAction createEmptyAction(@Nullable String name, @Nullable Icon icon, boolean alwaysEnabled) {
+  public EmptyAction(@Nonnull LocalizeValue text) {
+    super(text);
+  }
+
+  public EmptyAction(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description) {
+    super(text, description);
+  }
+
+  public EmptyAction(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description, @Nullable Image icon) {
+    super(text, description, icon);
+  }
+
+  public static AnAction createEmptyAction(@Nullable String name, @Nullable Image icon, boolean alwaysEnabled) {
     final EmptyAction emptyAction = new EmptyAction(name, null, icon);
     emptyAction.myEnabled = alwaysEnabled;
     return emptyAction;

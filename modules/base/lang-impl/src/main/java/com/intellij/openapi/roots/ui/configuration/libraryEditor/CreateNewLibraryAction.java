@@ -35,7 +35,6 @@ import com.intellij.openapi.roots.ui.configuration.projectRoot.ModuleStructureCo
 import com.intellij.openapi.roots.ui.configuration.projectRoot.ProjectLibrariesConfigurable;
 import com.intellij.openapi.ui.MasterDetailsComponent;
 import com.intellij.openapi.vfs.VirtualFile;
-import consulo.awt.TargetAWT;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
@@ -60,7 +59,7 @@ public class CreateNewLibraryAction extends DumbAwareAction {
                                  @Nullable LibraryType type,
                                  @Nonnull BaseLibrariesConfigurable librariesConfigurable,
                                  final @Nonnull Project project) {
-    super(text, null, TargetAWT.to(icon));
+    super(text, null, icon);
     myType = type;
     myLibrariesConfigurable = librariesConfigurable;
     myProject = project;

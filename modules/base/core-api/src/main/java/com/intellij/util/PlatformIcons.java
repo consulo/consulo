@@ -26,7 +26,7 @@ import javax.swing.*;
  * @author Konstantin Bulenkov
  */
 @Deprecated
-@DeprecationInfo(value = "Use AllIcons", until = "2.0")
+@DeprecationInfo(value = "Use AllIcons")
 public interface PlatformIcons {
   @NonNls String PUBLIC_ICON_PATH = "/nodes/c_public.png";
   Icon PUBLIC_ICON = AllIcons.Nodes.C_public;

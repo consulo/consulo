@@ -25,6 +25,7 @@ import com.intellij.util.IconUtil;
 import com.intellij.util.ui.MacUIUtil;
 import com.intellij.util.ui.UIUtil;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.image.Image;
 import consulo.ui.migration.SwingImageRef;
 
 import javax.annotation.Nonnull;
@@ -56,7 +57,7 @@ public class CommonActionsPanel extends JPanel {
       return null;
     }
 
-    MyActionButton createButton(final Listener listener, String name, Icon icon) {
+    MyActionButton createButton(final Listener listener, String name, Image icon) {
       return new MyActionButton(this, listener, name == null ? StringUtil.capitalize(name().toLowerCase()) : name, icon);
     }
 
@@ -101,7 +102,7 @@ public class CommonActionsPanel extends JPanel {
   CommonActionsPanel(ListenerFactory factory, @Nullable JComponent contextComponent, ActionToolbarPosition position,
                      @Nullable AnAction[] additionalActions, @Nullable Comparator<AnAction> buttonComparator,
                      String addName, String removeName, String moveUpName, String moveDownName, String editName,
-                     Icon addIcon, Buttons... buttons) {
+                     Image addIcon, Buttons... buttons) {
     super(new BorderLayout());
     final Listener listener = factory.createListener(this);
     AnAction[] actions = new AnAction[buttons.length];
@@ -224,7 +225,7 @@ public class CommonActionsPanel extends JPanel {
     private final Buttons myButton;
     private final Listener myListener;
 
-    MyActionButton(Buttons button, Listener listener, String name, Icon icon) {
+    MyActionButton(Buttons button, Listener listener, String name, Image icon) {
       super(name, name, icon);
       myButton = button;
       myListener = listener;

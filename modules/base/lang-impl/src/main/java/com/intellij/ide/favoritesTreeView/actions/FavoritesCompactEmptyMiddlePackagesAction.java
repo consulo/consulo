@@ -21,15 +21,14 @@ import com.intellij.ide.favoritesTreeView.FavoritesViewTreeBuilder;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.Presentation;
 import com.intellij.openapi.project.Project;
+import consulo.platform.base.localize.IdeLocalize;
 
 /**
  * @author Konstantin Bulenkov
  */
 public class FavoritesCompactEmptyMiddlePackagesAction extends FavoritesToolbarButtonAction {
   public FavoritesCompactEmptyMiddlePackagesAction(Project project, FavoritesViewTreeBuilder builder) {
-    super(project, builder,
-          IdeBundle.message("action.compact.empty.middle.packages"),
-          AllIcons.ObjectBrowser.CompactEmptyPackages);
+    super(project, builder, IdeLocalize.actionCompactEmptyMiddlePackages(), AllIcons.ObjectBrowser.CompactEmptyPackages);
   }
 
   @Override
@@ -37,14 +36,13 @@ public class FavoritesCompactEmptyMiddlePackagesAction extends FavoritesToolbarB
     super.updateButton(e);
     Presentation presentation = e.getPresentation();
     if (getViewSettings().isFlattenPackages()) {
-      presentation.setText(IdeBundle.message("action.hide.empty.middle.packages"));
-      presentation.setDescription(IdeBundle.message("action.show.hide.empty.middle.packages"));
+      presentation.setTextValue(IdeLocalize.actionHideEmptyMiddlePackages());
+      presentation.setDescriptionValue(IdeLocalize.actionShowHideEmptyMiddlePackages());
     }
     else {
-      presentation.setText(IdeBundle.message("action.compact.empty.middle.packages"));
-      presentation.setDescription(IdeBundle.message("action.show.compact.empty.middle.packages"));
+      presentation.setTextValue(IdeLocalize.actionCompactEmptyMiddlePackages());
+      presentation.setDescriptionValue(IdeLocalize.actionShowCompactEmptyMiddlePackages());
     }
-
   }
 
   @Override

@@ -19,8 +19,8 @@ import com.intellij.openapi.actionSystem.*;
 import com.intellij.ui.awt.RelativePoint;
 import com.intellij.util.ui.UIUtil;
 import consulo.annotation.DeprecationInfo;
+import consulo.localize.LocalizeValue;
 import consulo.ui.image.Image;
-import consulo.ui.migration.SwingImageRef;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -46,32 +46,24 @@ public abstract class AnActionButton extends AnAction implements ShortcutProvide
     super(text);
   }
 
-  @Deprecated
-  public AnActionButton(String text, String description, @Nullable Icon icon) {
-    super(text, description, icon);
-  }
-
-  @Deprecated
-  public AnActionButton(String text, Icon icon) {
-    this(text, null, icon);
-  }
-
-  @Deprecated
-  public AnActionButton(String text, String description, @Nullable SwingImageRef icon) {
-    super(text, description, icon);
-  }
-
-  @Deprecated
-  public AnActionButton(String text, SwingImageRef icon) {
-    this(text, null, icon);
-  }
-
   public AnActionButton(String text, String description, @Nullable Image icon) {
     super(text, description, icon);
   }
 
   public AnActionButton(String text, Image icon) {
     this(text, null, icon);
+  }
+
+  protected AnActionButton(@Nonnull LocalizeValue text) {
+    super(text);
+  }
+
+  protected AnActionButton(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description) {
+    super(text, description);
+  }
+
+  protected AnActionButton(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description, @Nullable Image icon) {
+    super(text, description, icon);
   }
 
   public AnActionButton() {

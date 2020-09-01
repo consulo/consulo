@@ -29,6 +29,7 @@ import com.intellij.openapi.ui.popup.JBPopup;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Iconable;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.Pair;
@@ -533,7 +534,7 @@ public class Switcher extends AnAction implements DumbAware {
               }).createPopup();
 
       if (isPinnedMode()) {
-        new DumbAwareAction(null, null, null) {
+        new DumbAwareAction(LocalizeValue.empty(), LocalizeValue.empty(), null) {
           @RequiredUIAccess
           @Override
           public void actionPerformed(@Nonnull AnActionEvent e) {

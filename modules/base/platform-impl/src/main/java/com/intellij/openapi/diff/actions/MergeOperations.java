@@ -31,9 +31,9 @@ import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.vfs.ReadonlyStatusHandler;
 import com.intellij.openapi.vfs.VirtualFile;
-import javax.annotation.Nullable;
+import consulo.ui.image.Image;
 
-import javax.swing.*;
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 
 public class MergeOperations {
@@ -179,17 +179,17 @@ public class MergeOperations {
     private final String myName;
     private final Document myDocument;
     private final Runnable myModification;
-    private final Icon myGutterIcon;
+    private final Image myGutterIcon;
     private boolean myPerformed = false;
 
-    public Operation(String name, Icon icon, final Document document, Runnable modification) {
+    public Operation(String name, Image icon, final Document document, Runnable modification) {
       myName = name;
       myGutterIcon = icon;
       myDocument = document;
       myModification = modification;
     }
 
-    public Icon getGutterIcon() {
+    public Image getGutterIcon() {
       return myGutterIcon;
     }
 

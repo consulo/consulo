@@ -21,11 +21,10 @@ import com.intellij.ide.favoritesTreeView.FavoritesViewTreeBuilder;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.Toggleable;
 import com.intellij.openapi.project.Project;
-import consulo.disposer.Disposable;
-import consulo.disposer.Disposer;
 import com.intellij.ui.AnActionButton;
-
-import javax.swing.*;
+import consulo.disposer.Disposer;
+import consulo.localize.LocalizeValue;
+import consulo.ui.image.Image;
 
 /**
  * @author Konstantin Bulenkov
@@ -34,17 +33,19 @@ public abstract class FavoritesToolbarButtonAction extends AnActionButton implem
   private FavoritesViewTreeBuilder myBuilder;
   private FavoritesViewSettings mySettings;
 
-  public FavoritesToolbarButtonAction(Project project, FavoritesViewTreeBuilder builder, String name, Icon icon) {
-    super(name, icon);
+  @Deprecated
+  public FavoritesToolbarButtonAction(Project project, FavoritesViewTreeBuilder builder, String name, Image icon) {
+    this(project, builder, LocalizeValue.of(name), icon);
+  }
+
+  public FavoritesToolbarButtonAction(Project project, FavoritesViewTreeBuilder builder, LocalizeValue name, Image icon) {
+    super(name, LocalizeValue.empty(), icon);
     myBuilder = builder;
     mySettings = FavoritesManager.getInstance(project).getViewSettings();
     setContextComponent(myBuilder.getTree());
-    Disposer.register(project, new Disposable() {
-      @Override
-      public void dispose() {
-        myBuilder = null;
-        mySettings = null;
-      }
+    Disposer.register(project, () -> {
+      myBuilder = null;
+      mySettings = null;
     });
   }
 

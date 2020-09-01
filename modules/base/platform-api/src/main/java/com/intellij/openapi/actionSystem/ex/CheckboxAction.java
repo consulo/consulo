@@ -20,11 +20,11 @@ import com.intellij.ide.DataManager;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.util.text.TextWithMnemonic;
 import com.intellij.util.ui.UIUtil;
+import consulo.localize.LocalizeValue;
 import consulo.ui.image.Image;
-import consulo.ui.migration.SwingImageRef;
 
 import javax.annotation.Nonnull;
-
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -40,16 +40,20 @@ public abstract class CheckboxAction extends ToggleAction implements CustomCompo
     super(text);
   }
 
-  protected CheckboxAction(final String text, final String description, final Icon icon) {
-    super(text, description, icon);
-  }
-
-  protected CheckboxAction(final String text, final String description, final SwingImageRef icon) {
-    super(text, description, icon);
-  }
-
   protected CheckboxAction(final String text, final String description, final Image icon) {
     super(text, description, icon);
+  }
+
+  protected CheckboxAction(@Nonnull LocalizeValue text) {
+    super(text);
+  }
+
+  protected CheckboxAction(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description, @Nullable Image icon) {
+    super(text, description, icon);
+  }
+
+  protected CheckboxAction(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description) {
+    super(text, description);
   }
 
   @Nonnull

@@ -3,6 +3,7 @@ package com.intellij.openapi.actionSystem;
 
 import com.intellij.util.ReflectionUtil;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import consulo.ui.migration.SwingImageRef;
@@ -13,7 +14,6 @@ import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.swing.*;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -138,8 +138,15 @@ public abstract class ActionGroup extends AnAction {
     super(text, description, icon);
   }
 
-  @Deprecated
-  public ActionGroup(@Nls(capitalization = Nls.Capitalization.Title) String text, @Nls(capitalization = Nls.Capitalization.Sentence) String description, Icon icon) {
+  protected ActionGroup(@Nonnull LocalizeValue text) {
+    super(text);
+  }
+
+  protected ActionGroup(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description) {
+    super(text, description);
+  }
+
+  protected ActionGroup(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description, @Nullable Image icon) {
     super(text, description, icon);
   }
 

@@ -16,6 +16,10 @@
 package com.intellij.ui;
 
 import com.intellij.openapi.project.DumbAware;
+import consulo.localize.LocalizeValue;
+import consulo.ui.image.Image;
+
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import javax.swing.*;
@@ -28,12 +32,16 @@ public abstract class DumbAwareActionButton extends AnActionButton implements Du
     super(text);
   }
 
-  public DumbAwareActionButton(String text, String description, @Nullable Icon icon) {
-    super(text, description, icon);
+  protected DumbAwareActionButton(@Nonnull LocalizeValue text) {
+    super(text);
   }
 
-  public DumbAwareActionButton(String text, Icon icon) {
-    super(text, icon);
+  protected DumbAwareActionButton(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description) {
+    super(text, description);
+  }
+
+  protected DumbAwareActionButton(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description, @Nullable Image icon) {
+    super(text, description, icon);
   }
 
   public DumbAwareActionButton() {

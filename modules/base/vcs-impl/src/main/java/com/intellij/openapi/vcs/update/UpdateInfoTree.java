@@ -25,8 +25,6 @@ import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.PanelWithActionsAndCloseButton;
-import consulo.disposer.Disposer;
-import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.vcs.*;
 import com.intellij.openapi.vcs.changes.committed.CommittedChangesBrowserUseCase;
@@ -46,14 +44,15 @@ import com.intellij.ui.content.ContentManager;
 import com.intellij.ui.treeStructure.Tree;
 import com.intellij.util.EditSourceOnDoubleClickHandler;
 import com.intellij.util.EditSourceOnEnterKeyHandler;
-import com.intellij.util.PlatformIcons;
 import com.intellij.util.ui.StatusText;
 import com.intellij.util.ui.tree.TreeUtil;
 import com.intellij.vcsUtil.VcsUtil;
+import consulo.disposer.Disposer;
+import consulo.util.dataholder.Key;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
@@ -64,8 +63,8 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 public class UpdateInfoTree extends PanelWithActionsAndCloseButton {
   private VirtualFile mySelectedFile;
@@ -409,7 +408,7 @@ public class UpdateInfoTree extends PanelWithActionsAndCloseButton {
 
   private class MyGroupByPackagesAction extends ToggleAction implements DumbAware {
     public MyGroupByPackagesAction() {
-      super(VcsBundle.message("action.name.group.by.packages"), null, PlatformIcons.GROUP_BY_PACKAGES);
+      super(VcsBundle.message("action.name.group.by.packages"), null, AllIcons.Toolbar.Folders);
     }
 
     public boolean isSelected(AnActionEvent e) {

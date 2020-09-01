@@ -19,14 +19,12 @@ package com.intellij.openapi.project;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.util.Consumer;
-import consulo.annotation.DeprecationInfo;
+import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
-import consulo.ui.migration.SwingImageRef;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.swing.*;
 
 /**
  * @author nik
@@ -69,35 +67,26 @@ public abstract class DumbAwareAction extends AnAction implements DumbAware {
   protected DumbAwareAction() {
   }
 
-  protected DumbAwareAction(SwingImageRef icon) {
-    super(icon);
-  }
-
   protected DumbAwareAction(Image icon) {
-    super(icon);
-  }
-
-  @Deprecated
-  @DeprecationInfo("Use contructor with ui image")
-  protected DumbAwareAction(Icon icon) {
     super(icon);
   }
 
   protected DumbAwareAction(@Nullable String text) {
     super(text);
   }
-
-  protected DumbAwareAction(@Nullable String text, @Nullable String description, @Nullable SwingImageRef icon) {
-    super(text, description, icon);
-  }
-
   protected DumbAwareAction(@Nullable String text, @Nullable String description, @Nullable Image icon) {
     super(text, description, icon);
   }
 
-  @Deprecated
-  @DeprecationInfo("Use contructor with ui image")
-  protected DumbAwareAction(@Nullable String text, @Nullable String description, @Nullable Icon icon) {
+  protected DumbAwareAction(@Nonnull LocalizeValue text) {
+    super(text);
+  }
+
+  protected DumbAwareAction(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description) {
+    super(text, description);
+  }
+
+  protected DumbAwareAction(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description, @Nullable Image icon) {
     super(text, description, icon);
   }
 }

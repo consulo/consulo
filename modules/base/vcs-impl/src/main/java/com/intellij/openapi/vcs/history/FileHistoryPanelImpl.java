@@ -1111,7 +1111,7 @@ public class FileHistoryPanelImpl extends PanelWithActionsAndCloseButton impleme
 
   private class MyShowAsTreeAction extends ToggleAction implements DumbAware {
     public MyShowAsTreeAction() {
-      super(VcsBundle.message("action.name.show.files.as.tree"), null, PlatformIcons.SMALL_VCS_CONFIGURABLE);
+      super(VcsBundle.message("action.name.show.files.as.tree"), null, AllIcons.General.SmallConfigurableVcs);
     }
 
     public boolean isSelected(AnActionEvent e) {

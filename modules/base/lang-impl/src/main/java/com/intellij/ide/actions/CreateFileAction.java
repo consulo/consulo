@@ -40,11 +40,12 @@ import com.intellij.psi.PsiElement;
 import com.intellij.util.IncorrectOperationException;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.awt.TargetAWT;
-import consulo.ui.annotation.RequiredUIAccess;
+import consulo.localize.LocalizeValue;
+import consulo.platform.base.localize.IdeLocalize;
 import consulo.ui.TextBox;
 import consulo.ui.ValidableComponent;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
-import consulo.ui.migration.SwingImageRef;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -57,19 +58,18 @@ import java.util.function.Consumer;
 public class CreateFileAction extends CreateElementActionBase implements DumbAware {
 
   public CreateFileAction() {
-    super(IdeBundle.message("action.create.new.file"), IdeBundle.message("action.create.new.file.description"), AllIcons.FileTypes.Text);
-  }
-
-  @Deprecated
-  public CreateFileAction(final String text, final String description, final Icon icon) {
-    super(text, description, icon);
-  }
-
-  public CreateFileAction(@Nullable String text, @Nullable String description, @Nullable SwingImageRef icon) {
-    super(text, description, icon);
+    super(IdeLocalize.actionCreateNewFile(), IdeLocalize.actionCreateNewFileDescription(), AllIcons.FileTypes.Text);
   }
 
   public CreateFileAction(@Nullable String text, @Nullable String description, @Nullable Image icon) {
+    super(text, description, icon);
+  }
+
+  public CreateFileAction(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description) {
+    super(text, description);
+  }
+
+  public CreateFileAction(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description, @Nullable Image icon) {
     super(text, description, icon);
   }
 

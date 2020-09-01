@@ -16,13 +16,12 @@
 package com.intellij.util.config;
 
 import com.intellij.openapi.actionSystem.AnActionEvent;
-
-import javax.swing.*;
+import consulo.ui.image.Image;
 
 public class ToggleInvertedBooleanProperty extends ToggleBooleanProperty {
   public ToggleInvertedBooleanProperty(String text,
                                        String description,
-                                       Icon icon,
+                                       Image icon,
                                        AbstractProperty.AbstractPropertyContainer properties, BooleanProperty property) {
     super(text, description, icon, properties, property);
   }

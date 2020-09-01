@@ -91,6 +91,7 @@ import com.intellij.util.ui.tree.TreeUtil;
 import consulo.ide.projectView.ProjectViewEx;
 import consulo.psi.PsiPackageSupportProviders;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.image.Image;
 import consulo.util.dataholder.Key;
 import consulo.wm.impl.ToolWindowContentUI;
 import gnu.trove.THashMap;
@@ -656,7 +657,7 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
       FlattenPackagesDependableAction(@Nonnull Map<String, Boolean> optionsMap,
                                       @Nonnull String text,
                                       @Nonnull String description,
-                                      @Nonnull Icon icon,
+                                      @Nonnull Image icon,
                                       boolean optionDefaultValue) {
         super(optionsMap, text, description, icon, optionDefaultValue);
       }
@@ -881,7 +882,7 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
     final Map<String, Boolean> myOptionsMap;
     private final boolean myOptionDefaultValue;
 
-    PaneOptionAction(@Nonnull Map<String, Boolean> optionsMap, @Nonnull String text, @Nonnull String description, Icon icon, boolean optionDefaultValue) {
+    PaneOptionAction(@Nonnull Map<String, Boolean> optionsMap, @Nonnull String text, @Nonnull String description, Image icon, boolean optionDefaultValue) {
       super(text, description, icon);
       myOptionsMap = optionsMap;
       myOptionDefaultValue = optionDefaultValue;

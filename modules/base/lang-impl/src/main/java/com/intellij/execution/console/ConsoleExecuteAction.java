@@ -31,6 +31,8 @@ import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.Conditions;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.util.text.StringUtil;
+import consulo.localize.LocalizeValue;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -60,7 +62,7 @@ public class ConsoleExecuteAction extends DumbAwareAction {
                               @Nonnull ConsoleExecuteActionHandler executeActionHandler,
                               @Nonnull String emptyExecuteActionId,
                               @Nullable Condition<LanguageConsoleView> enabledCondition) {
-    super(null, null, AllIcons.Actions.Execute);
+    super(LocalizeValue.empty(), LocalizeValue.empty(), AllIcons.Actions.Execute);
 
     myConsoleView = consoleView;
     myExecuteActionHandler = executeActionHandler;

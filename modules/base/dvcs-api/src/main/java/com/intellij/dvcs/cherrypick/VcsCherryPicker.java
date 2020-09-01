@@ -21,17 +21,15 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.vcs.log.Hash;
 import com.intellij.vcs.log.VcsFullCommitDetails;
 import com.intellij.vcs.log.VcsLog;
-import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
 public abstract class VcsCherryPicker {
 
-  @NonNls public static final ExtensionPointName<VcsCherryPicker> EXTENSION_POINT_NAME =
-          ExtensionPointName.create("com.intellij.cherryPicker");
+  public static final ExtensionPointName<VcsCherryPicker> EXTENSION_POINT_NAME = ExtensionPointName.create("com.intellij.cherryPicker");
   /**
    * @return - return vcs for current cherryPicker
    */

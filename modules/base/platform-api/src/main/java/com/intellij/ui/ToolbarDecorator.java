@@ -26,6 +26,9 @@ import com.intellij.util.ui.EditableModel;
 import com.intellij.util.ui.ElementProducer;
 import com.intellij.util.ui.UIUtil;
 import consulo.annotation.DeprecationInfo;
+import consulo.localize.LocalizeValue;
+import consulo.ui.image.Image;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -73,7 +76,7 @@ public abstract class ToolbarDecorator implements CommonActionsPanel.ListenerFac
   private CommonActionsPanel myActionsPanel;
   private Comparator<AnAction> myButtonComparator;
   private boolean myAsUsualTopToolbar = false;
-  private Icon myAddIcon;
+  private Image myAddIcon;
   private boolean myForcedDnD = false;
 
   protected abstract JComponent getComponent();
@@ -344,7 +347,7 @@ public abstract class ToolbarDecorator implements CommonActionsPanel.ListenerFac
     return this;//do nothing by default
   }
 
-  public ToolbarDecorator setAddIcon(Icon addIcon) {
+  public ToolbarDecorator setAddIcon(Image addIcon) {
     myAddIcon = addIcon;
     return this;
   }
@@ -527,12 +530,16 @@ public abstract class ToolbarDecorator implements CommonActionsPanel.ListenerFac
    * Marker interface, button will be disabled if no selected element
    */
   public abstract static class ElementActionButton extends AnActionButton {
-    public ElementActionButton(String text, String description, @Nullable Icon icon) {
+    public ElementActionButton(String text, String description, @Nullable Image icon) {
       super(text, description, icon);
     }
 
-    public ElementActionButton(String text, Icon icon) {
+    public ElementActionButton(String text, Image icon) {
       super(text, icon);
+    }
+
+    protected ElementActionButton(@Nonnull LocalizeValue text, @Nullable Image image) {
+      super(text, LocalizeValue.empty(), image);
     }
 
     public ElementActionButton() {

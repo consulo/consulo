@@ -12,7 +12,6 @@ import com.intellij.ide.todo.nodes.TodoItemNode;
 import com.intellij.ide.todo.nodes.TodoTreeHelper;
 import com.intellij.ide.util.PsiNavigationSupport;
 import com.intellij.ide.util.treeView.NodeDescriptor;
-import consulo.disposer.Disposable;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
@@ -23,8 +22,6 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.SimpleToolWindowPanel;
 import com.intellij.openapi.ui.Splitter;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
-import consulo.disposer.Disposer;
-import consulo.util.dataholder.Key;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.impl.VisibilityWatcher;
 import com.intellij.psi.PsiDocumentManager;
@@ -40,14 +37,15 @@ import com.intellij.usages.impl.UsagePreviewPanel;
 import com.intellij.util.Alarm;
 import com.intellij.util.EditSourceOnDoubleClickHandler;
 import com.intellij.util.OpenSourceUtil;
-import com.intellij.util.PlatformIcons;
 import com.intellij.util.ui.tree.TreeModelAdapter;
 import com.intellij.util.ui.tree.TreeUtil;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
 import consulo.logging.Logger;
+import consulo.util.dataholder.Key;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import javax.swing.event.TreeModelEvent;
 import javax.swing.event.TreeSelectionEvent;
@@ -638,7 +636,7 @@ abstract class TodoPanel extends SimpleToolWindowPanel implements OccurenceNavig
 
   public static final class MyShowPackagesAction extends ToggleAction {
     public MyShowPackagesAction() {
-      super(IdeBundle.message("action.group.by.packages"), null, PlatformIcons.GROUP_BY_PACKAGES);
+      super(IdeBundle.message("action.group.by.packages"), null, AllIcons.Toolbar.Folders);
     }
 
     @Override
@@ -693,7 +691,7 @@ abstract class TodoPanel extends SimpleToolWindowPanel implements OccurenceNavig
 
   public static final class MyFlattenPackagesAction extends ToggleAction {
     public MyFlattenPackagesAction() {
-      super(IdeBundle.message("action.flatten.view"), null, PlatformIcons.FLATTEN_PACKAGES_ICON);
+      super(IdeBundle.message("action.flatten.view"), null, AllIcons.ObjectBrowser.FlattenPackages);
     }
 
     @Override

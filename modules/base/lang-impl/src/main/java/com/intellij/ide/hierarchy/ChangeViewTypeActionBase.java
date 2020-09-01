@@ -21,15 +21,21 @@ import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.actionSystem.Presentation;
 import com.intellij.openapi.actionSystem.ToggleAction;
 import com.intellij.openapi.application.ApplicationManager;
+import consulo.localize.LocalizeValue;
+import consulo.ui.image.Image;
 
-import javax.swing.*;
+import javax.annotation.Nonnull;
 
 /**
  * @author cdr
  */
 abstract class ChangeViewTypeActionBase extends ToggleAction {
-  public ChangeViewTypeActionBase(final String shortDescription, final String longDescription, final Icon icon) {
+  public ChangeViewTypeActionBase(final String shortDescription, final String longDescription, final Image icon) {
     super(shortDescription, longDescription, icon);
+  }
+
+  protected ChangeViewTypeActionBase(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description) {
+    super(text, description);
   }
 
   @Override

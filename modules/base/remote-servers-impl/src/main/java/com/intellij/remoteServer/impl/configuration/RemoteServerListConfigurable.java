@@ -206,7 +206,7 @@ public class RemoteServerListConfigurable extends MasterDetailsComponent impleme
     private final ServerType<?> myServerType;
 
     private AddRemoteServerAction(ServerType<?> serverType, final Image icon) {
-      super(serverType.getPresentableName(), null, TargetAWT.to(icon));
+      super(serverType.getPresentableName(), null, icon);
       myServerType = serverType;
     }
 

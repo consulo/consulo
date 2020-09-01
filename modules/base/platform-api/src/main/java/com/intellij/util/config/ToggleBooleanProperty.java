@@ -18,23 +18,31 @@ package com.intellij.util.config;
 
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.ToggleAction;
-
-import javax.swing.*;
+import consulo.localize.LocalizeValue;
+import consulo.ui.image.Image;
 
 public class ToggleBooleanProperty extends ToggleAction {
   private final AbstractProperty.AbstractPropertyContainer myProperties;
   private final AbstractProperty<Boolean> myProperty;
 
-  public ToggleBooleanProperty(String text, String description, Icon icon, AbstractProperty.AbstractPropertyContainer properties, BooleanProperty property) {
+  public ToggleBooleanProperty(String text, String description, Image icon, AbstractProperty.AbstractPropertyContainer properties, BooleanProperty property) {
     super(text, description, icon);
     myProperties = properties;
     myProperty = property;
   }
 
+  public ToggleBooleanProperty(LocalizeValue text, LocalizeValue description, Image icon, AbstractProperty.AbstractPropertyContainer properties, BooleanProperty property) {
+    super(text, description, icon);
+    myProperties = properties;
+    myProperty = property;
+  }
+
+  @Override
   public boolean isSelected(AnActionEvent e) {
     return myProperty.get(myProperties).booleanValue();
   }
 
+  @Override
   public void setSelected(AnActionEvent e, boolean state) {
     myProperty.set(myProperties, Boolean.valueOf(state));
   }
@@ -48,7 +56,11 @@ public class ToggleBooleanProperty extends ToggleAction {
   }
 
   public static abstract class Disablable extends ToggleBooleanProperty {
-    public Disablable(String text, String description, Icon icon, AbstractProperty.AbstractPropertyContainer properties, BooleanProperty property) {
+    public Disablable(String text, String description, Image icon, AbstractProperty.AbstractPropertyContainer properties, BooleanProperty property) {
+      super(text, description, icon, properties, property);
+    }
+
+    public Disablable(LocalizeValue text, LocalizeValue description, Image icon, AbstractProperty.AbstractPropertyContainer properties, BooleanProperty property) {
       super(text, description, icon, properties, property);
     }
 

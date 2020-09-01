@@ -19,7 +19,6 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.openapi.roots.ui.configuration.artifacts.ArtifactEditorEx;
 import com.intellij.packaging.elements.PackagingElementType;
-import consulo.awt.TargetAWT;
 
 /**
 * @author nik
@@ -29,7 +28,7 @@ public class AddNewPackagingElementAction extends DumbAwareAction {
   private final ArtifactEditorEx myArtifactEditor;
 
   public AddNewPackagingElementAction(PackagingElementType<?> type, ArtifactEditorEx artifactEditor) {
-    super(type.getPresentableName(), null, TargetAWT.to(type.getIcon()));
+    super(type.getPresentableName(), null, type.getIcon());
     myType = type;
     myArtifactEditor = artifactEditor;
   }

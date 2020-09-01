@@ -32,15 +32,14 @@ import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.util.IncorrectOperationException;
-import consulo.ui.annotation.RequiredUIAccess;
 import consulo.extensions.CompositeExtensionPointName;
+import consulo.localize.LocalizeValue;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
-import consulo.ui.migration.SwingImageRef;
 import org.apache.velocity.runtime.parser.ParseException;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import javax.swing.*;
 import java.util.Collections;
 import java.util.Map;
 
@@ -55,16 +54,11 @@ public abstract class CreateFileFromTemplateAction extends CreateFromTemplateAct
     Module resolveModule(@Nonnull PsiDirectory directory, @Nonnull FileType fileType);
   }
 
-  @Deprecated
-  public CreateFileFromTemplateAction(String text, String description, Icon icon) {
-    super(text, description, icon);
-  }
-
   protected CreateFileFromTemplateAction(String text, String description, Image icon) {
     super(text, description, icon);
   }
 
-  protected CreateFileFromTemplateAction(String text, String description, SwingImageRef icon) {
+  protected CreateFileFromTemplateAction(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description, @Nullable Image icon) {
     super(text, description, icon);
   }
 

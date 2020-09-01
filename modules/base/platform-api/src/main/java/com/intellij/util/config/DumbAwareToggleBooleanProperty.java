@@ -16,13 +16,12 @@
 package com.intellij.util.config;
 
 import com.intellij.openapi.project.DumbAware;
-
-import javax.swing.*;
+import consulo.ui.image.Image;
 
 public class DumbAwareToggleBooleanProperty extends ToggleBooleanProperty implements DumbAware {
   public DumbAwareToggleBooleanProperty(String text,
                                         String description,
-                                        Icon icon,
+                                        Image icon,
                                         AbstractProperty.AbstractPropertyContainer properties, BooleanProperty property) {
     super(text, description, icon, properties, property);
   }

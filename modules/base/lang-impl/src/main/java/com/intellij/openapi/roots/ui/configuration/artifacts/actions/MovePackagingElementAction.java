@@ -22,8 +22,8 @@ import com.intellij.openapi.roots.ui.configuration.artifacts.nodes.CompositePack
 import com.intellij.openapi.roots.ui.configuration.artifacts.nodes.PackagingElementNode;
 import com.intellij.packaging.elements.CompositePackagingElement;
 import com.intellij.packaging.elements.PackagingElement;
+import consulo.ui.image.Image;
 
-import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -35,7 +35,7 @@ public class MovePackagingElementAction extends DumbAwareAction {
   private final LayoutTreeComponent myLayoutTreeComponent;
   private final int myDirection;
 
-  public MovePackagingElementAction(LayoutTreeComponent layoutTreeComponent, String text, String description, Icon icon, int direction) {
+  public MovePackagingElementAction(LayoutTreeComponent layoutTreeComponent, String text, String description, Image icon, int direction) {
     super(text, description, icon);
     myLayoutTreeComponent = layoutTreeComponent;
     myDirection = direction;

@@ -18,25 +18,30 @@ package com.intellij.ui;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.Presentation;
 import com.intellij.openapi.actionSystem.Toggleable;
+import consulo.localize.LocalizeValue;
 import consulo.ui.image.Image;
-import consulo.ui.migration.SwingImageRef;
 
-import javax.swing.*;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author yole
  */
 public abstract class ToggleActionButton extends AnActionButton implements Toggleable {
-  public ToggleActionButton(String text, Icon icon) {
-    super(text, null, icon);
-  }
-
-  public ToggleActionButton(String text, SwingImageRef icon) {
-    super(text, null, icon);
-  }
-
   public ToggleActionButton(String text, Image icon) {
     super(text, null, icon);
+  }
+
+  protected ToggleActionButton(@Nonnull LocalizeValue text) {
+    super(text);
+  }
+
+  protected ToggleActionButton(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description) {
+    super(text, description);
+  }
+
+  protected ToggleActionButton(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description, @Nullable Image icon) {
+    super(text, description, icon);
   }
 
   /**

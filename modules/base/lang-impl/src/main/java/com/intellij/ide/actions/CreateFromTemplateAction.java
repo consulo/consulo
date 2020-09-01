@@ -19,7 +19,6 @@ import com.intellij.CommonBundle;
 import com.intellij.ide.IdeView;
 import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.openapi.actionSystem.*;
-import consulo.logging.Logger;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.fileEditor.FileEditorManager;
@@ -29,15 +28,14 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiNameIdentifierOwner;
-import consulo.ui.annotation.RequiredUIAccess;
+import consulo.localize.LocalizeValue;
+import consulo.logging.Logger;
 import consulo.module.extension.ModuleExtension;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
-import consulo.ui.migration.SwingImageRef;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import javax.swing.*;
 import java.util.Map;
 
 /**
@@ -46,17 +44,19 @@ import java.util.Map;
 public abstract class CreateFromTemplateAction<T extends PsiElement> extends AnAction {
   protected static final Logger LOG = Logger.getInstance(CreateFromTemplateAction.class);
 
-  @Deprecated
-  public CreateFromTemplateAction(String text, String description, Icon icon) {
-    super(text, description, icon);
-  }
-
   public CreateFromTemplateAction(String text, String description, Image icon) {
     super(text, description, icon);
   }
 
-  @SuppressWarnings("deprecation")
-  public CreateFromTemplateAction(String text, String description, SwingImageRef icon) {
+  protected CreateFromTemplateAction(@Nonnull LocalizeValue text) {
+    super(text);
+  }
+
+  protected CreateFromTemplateAction(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description) {
+    super(text, description);
+  }
+
+  protected CreateFromTemplateAction(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description, @Nullable Image icon) {
     super(text, description, icon);
   }
 

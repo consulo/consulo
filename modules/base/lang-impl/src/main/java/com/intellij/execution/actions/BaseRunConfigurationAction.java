@@ -31,12 +31,12 @@ import com.intellij.openapi.ui.popup.PopupStep;
 import com.intellij.openapi.ui.popup.util.BaseListPopupStep;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.awt.RelativePoint;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.swing.*;
 import java.awt.event.InputEvent;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
@@ -46,7 +46,13 @@ import java.util.List;
 public abstract class BaseRunConfigurationAction extends ActionGroup {
   protected static final Logger LOG = Logger.getInstance(BaseRunConfigurationAction.class);
 
-  protected BaseRunConfigurationAction(final String text, final String description, final Icon icon) {
+  protected BaseRunConfigurationAction(final String text, final String description, final Image icon) {
+    super(text, description, icon);
+    setPopup(true);
+    setEnabledInModalContext(true);
+  }
+
+  protected BaseRunConfigurationAction(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description, @Nullable Image icon) {
     super(text, description, icon);
     setPopup(true);
     setEnabledInModalContext(true);

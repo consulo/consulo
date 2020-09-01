@@ -23,12 +23,11 @@ import com.intellij.util.ArrayUtil;
 import com.intellij.util.SmartList;
 import com.intellij.util.ui.UIUtil;
 import consulo.annotation.DeprecationInfo;
-import consulo.awt.TargetAWT;
+import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
-import consulo.ui.migration.SwingImageRef;
 import consulo.util.dataholder.Key;
 import org.intellij.lang.annotations.JdkConstants;
 
@@ -73,6 +72,9 @@ import java.util.function.Consumer;
  */
 public abstract class AnAction implements PossiblyDumbAware {
   @Nonnull
+  @Deprecated
+  @DeprecationInfo("Use constructors with LocalizeValue parameters")
+  @SuppressWarnings("deprecation")
   public static AnAction create(@Nonnull String text, @Nullable String description, @Nullable Image image, @RequiredUIAccess @Nonnull Consumer<AnActionEvent> actionPerformed) {
     return new AnAction(text, description, image) {
       @RequiredUIAccess
@@ -85,7 +87,7 @@ public abstract class AnAction implements PossiblyDumbAware {
 
   @Nonnull
   public static AnAction create(@Nonnull LocalizeValue text, @Nullable LocalizeValue description, @Nullable Image image, @RequiredUIAccess @Nonnull Consumer<AnActionEvent> actionPerformed) {
-    return new AnAction(text, description, image) {
+    return new AnAction(text, description == null ? LocalizeValue.empty() : description, image) {
       @RequiredUIAccess
       @Override
       public void actionPerformed(@Nonnull AnActionEvent e) {
@@ -116,45 +118,13 @@ public abstract class AnAction implements PossiblyDumbAware {
     // avoid eagerly creating template presentation
   }
 
-  public AnAction(Image icon) {
-    this(LocalizeValue.empty(), LocalizeValue.empty(), icon);
-  }
-
   /**
    * Creates a new action with <code>icon</code> provided. Its text, description set to <code>null</code>.
    *
    * @param icon Default icon to appear in toolbars and menus (Note some platform don't have icons in menu).
    */
-  @Deprecated
-  @DeprecationInfo("Use constructor with Image")
-  public AnAction(Icon icon) {
-    this(null, null, icon);
-  }
-
-  /**
-   * Constructs a new action with the specified text, description and icon.
-   *
-   * @param text        Serves as a tooltip when the presentation is a button and the name of the
-   *                    menu item when the presentation is a menu item
-   * @param description Describes current action, this description will appear on
-   *                    the status bar when presentation has focus
-   * @param icon        Action's icon
-   */
-  @Deprecated
-  @DeprecationInfo("Use contructor with ui image")
-  public AnAction(@Nullable String text, @Nullable String description, @Nullable Icon icon) {
-    Presentation presentation = getTemplatePresentation();
-    presentation.setText(text);
-    presentation.setDescription(description);
-    presentation.setIcon(TargetAWT.from(icon));
-  }
-
-  public AnAction(SwingImageRef icon) {
+  public AnAction(@Nullable Image icon) {
     this(LocalizeValue.empty(), LocalizeValue.empty(), icon);
-  }
-
-  public AnAction(@Nullable String text, @Nullable String description, @Nullable SwingImageRef icon) {
-    this(text, description, (Icon)icon);
   }
 
   /**
@@ -164,10 +134,16 @@ public abstract class AnAction implements PossiblyDumbAware {
    * @param text Serves as a tooltip when the presentation is a button and the name of the
    *             menu item when the presentation is a menu item.
    */
+  @Deprecated
+  @DeprecationInfo("Use constructors with LocalizeValue parameters")
+  @SuppressWarnings("deprecation")
   public AnAction(@Nullable String text) {
     this(text, null, null);
   }
 
+  @Deprecated
+  @DeprecationInfo("Use constructors with LocalizeValue parameters")
+  @SuppressWarnings("deprecation")
   public AnAction(@Nullable String text, @Nullable String description, @Nullable Image icon) {
     Presentation presentation = getTemplatePresentation();
     presentation.setText(text);
@@ -208,19 +184,19 @@ public abstract class AnAction implements PossiblyDumbAware {
    * @param component   the component for which the shortcuts will be active.
    */
   public final void registerCustomShortcutSet(@Nonnull ShortcutSet shortcutSet, @Nullable JComponent component) {
-    registerCustomShortcutSet(shortcutSet, component, (consulo.disposer.Disposable)null);
+    registerCustomShortcutSet(shortcutSet, component, (Disposable)null);
   }
 
   public final void registerCustomShortcutSet(int keyCode, @JdkConstants.InputEventMask int modifiers, @Nullable JComponent component) {
     registerCustomShortcutSet(new CustomShortcutSet(KeyStroke.getKeyStroke(keyCode, modifiers)), component);
   }
 
-  public final void registerCustomShortcutSet(@Nonnull ShortcutSet shortcutSet, @Nullable JComponent component, @Nullable consulo.disposer.Disposable parentDisposable) {
+  public final void registerCustomShortcutSet(@Nonnull ShortcutSet shortcutSet, @Nullable JComponent component, @Nullable Disposable parentDisposable) {
     setShortcutSet(shortcutSet);
     registerCustomShortcutSet(component, parentDisposable);
   }
 
-  public final void registerCustomShortcutSet(@Nullable JComponent component, @Nullable consulo.disposer.Disposable parentDisposable) {
+  public final void registerCustomShortcutSet(@Nullable JComponent component, @Nullable Disposable parentDisposable) {
     if (component == null) return;
     List<AnAction> actionList = UIUtil.getClientProperty(component, ACTIONS_KEY);
     if (actionList == null) {

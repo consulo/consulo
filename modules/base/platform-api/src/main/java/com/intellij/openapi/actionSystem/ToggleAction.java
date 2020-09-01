@@ -3,18 +3,15 @@ package com.intellij.openapi.actionSystem;
 
 import consulo.localize.LocalizeValue;
 import consulo.ui.image.Image;
-import consulo.ui.migration.SwingImageRef;
 import org.jetbrains.annotations.Nls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.swing.*;
 
 /**
  * An action which has a selected state, and which toggles its selected state when performed.
  * Can be used to represent a menu item with a checkbox, or a toolbar button which keeps its pressed state.
  */
-@SuppressWarnings("StaticInheritance")
 public abstract class ToggleAction extends AnAction implements Toggleable {
   public ToggleAction() {
   }
@@ -25,25 +22,20 @@ public abstract class ToggleAction extends AnAction implements Toggleable {
 
   public ToggleAction(@Nullable @Nls(capitalization = Nls.Capitalization.Title) final String text,
                       @Nullable @Nls(capitalization = Nls.Capitalization.Sentence) final String description,
-                      @Nullable final Icon icon) {
-    super(text, description, icon);
-  }
-
-  @Deprecated
-  public ToggleAction(@Nullable @Nls(capitalization = Nls.Capitalization.Title) final String text,
-                      @Nullable @Nls(capitalization = Nls.Capitalization.Sentence) final String description,
-                      @Nullable final SwingImageRef icon) {
-    super(text, description, icon);
-  }
-
-  public ToggleAction(@Nullable @Nls(capitalization = Nls.Capitalization.Title) final String text,
-                      @Nullable @Nls(capitalization = Nls.Capitalization.Sentence) final String description,
                       @Nullable final Image icon) {
     super(text, description, icon);
   }
 
+  protected ToggleAction(@Nonnull LocalizeValue text) {
+    super(text);
+  }
+
   public ToggleAction(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description, @Nullable final Image icon) {
     super(text, description, icon);
+  }
+
+  protected ToggleAction(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description) {
+    super(text, description);
   }
 
   @Override

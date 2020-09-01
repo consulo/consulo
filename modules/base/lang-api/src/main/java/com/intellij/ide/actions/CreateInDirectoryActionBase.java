@@ -20,12 +20,12 @@ import com.intellij.ide.IdeView;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
+import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
-import consulo.ui.migration.SwingImageRef;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.swing.*;
 
 /**
  * The base abstract class for actions which create new file elements in IDE view
@@ -36,16 +36,19 @@ public abstract class CreateInDirectoryActionBase extends AnAction {
   protected CreateInDirectoryActionBase() {
   }
 
-  @Deprecated
-  protected CreateInDirectoryActionBase(String text, String description, Icon icon) {
-    super(text, description, icon);
-  }
-
   protected CreateInDirectoryActionBase(@Nullable String text, @Nullable String description, @Nullable Image icon) {
     super(text, description, icon);
   }
 
-  protected CreateInDirectoryActionBase(@Nullable String text, @Nullable String description, @Nullable SwingImageRef icon) {
+  protected CreateInDirectoryActionBase(@Nonnull LocalizeValue text) {
+    super(text);
+  }
+
+  protected CreateInDirectoryActionBase(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description) {
+    super(text, description);
+  }
+
+  protected CreateInDirectoryActionBase(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description, @Nullable Image icon) {
     super(text, description, icon);
   }
 

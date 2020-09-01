@@ -51,6 +51,8 @@ import com.intellij.util.IJSwingUtilities;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.table.JBListTable;
 import com.intellij.util.ui.table.JBTableRowEditor;
+import consulo.ui.image.ImageEffects;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -344,7 +346,7 @@ public abstract class ChangeSignatureDialogBase<ParamInfo extends ParameterInfo,
     }
 
     myPropagateParamChangesButton =
-      new AnActionButton(RefactoringBundle.message("changeSignature.propagate.parameters.title"), null, new LayeredIcon(AllIcons.Nodes.Parameter, AllIcons.Actions.New)) {
+      new AnActionButton(RefactoringBundle.message("changeSignature.propagate.parameters.title"), null, ImageEffects.layered(AllIcons.Nodes.Parameter, AllIcons.Actions.New)) {
         @Override
         public void actionPerformed(AnActionEvent e) {
           final Ref<CallerChooserBase<Method>> chooser = new Ref<CallerChooserBase<Method>>();

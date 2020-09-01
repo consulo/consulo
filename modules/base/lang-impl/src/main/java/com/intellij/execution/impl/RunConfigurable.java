@@ -1541,7 +1541,7 @@ class RunConfigurable extends BaseConfigurable {
   private class MyMoveAction extends AnAction implements AnActionButtonRunnable, AnActionButtonUpdater {
     private final int myDirection;
 
-    protected MyMoveAction(String text, String description, Icon icon, int direction) {
+    protected MyMoveAction(String text, String description, Image icon, int direction) {
       super(text, description, icon);
       myDirection = direction;
     }

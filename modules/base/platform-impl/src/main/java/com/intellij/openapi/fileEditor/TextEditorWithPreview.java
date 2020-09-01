@@ -11,6 +11,7 @@ import com.intellij.openapi.editor.ex.EditorGutterComponentEx;
 import com.intellij.openapi.project.DumbAware;
 import consulo.disposer.Disposer;
 import com.intellij.openapi.util.Pair;
+import consulo.ui.image.Image;
 import consulo.util.dataholder.UserDataHolderBase;
 import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.ui.JBSplitter;
@@ -381,9 +382,9 @@ public class TextEditorWithPreview extends UserDataHolderBase implements FileEdi
     SHOW_EDITOR_AND_PREVIEW("Editor and Preview", AllIcons.General.LayoutEditorPreview);
 
     private final String myName;
-    private final Icon myIcon;
+    private final Image myIcon;
 
-    Layout(String name, Icon icon) {
+    Layout(String name, Image icon) {
       myName = name;
       myIcon = icon;
     }
@@ -401,7 +402,7 @@ public class TextEditorWithPreview extends UserDataHolderBase implements FileEdi
       return myName;
     }
 
-    public Icon getIcon() {
+    public Image getIcon() {
       return myIcon;
     }
   }

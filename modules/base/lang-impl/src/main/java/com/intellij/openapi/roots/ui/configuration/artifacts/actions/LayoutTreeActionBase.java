@@ -18,8 +18,7 @@ package com.intellij.openapi.roots.ui.configuration.artifacts.actions;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.openapi.roots.ui.configuration.artifacts.ArtifactEditorEx;
-
-import javax.swing.*;
+import consulo.ui.image.Image;
 
 /**
  * @author nik
@@ -27,7 +26,7 @@ import javax.swing.*;
 public abstract class LayoutTreeActionBase extends DumbAwareAction {
   protected final ArtifactEditorEx myArtifactEditor;
 
-  protected LayoutTreeActionBase(String text, String description, Icon icon, ArtifactEditorEx artifactEditor) {
+  protected LayoutTreeActionBase(String text, String description, Image icon, ArtifactEditorEx artifactEditor) {
     super(text, description, icon);
     myArtifactEditor = artifactEditor;
   }

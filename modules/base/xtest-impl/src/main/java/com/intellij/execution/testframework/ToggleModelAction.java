@@ -23,12 +23,10 @@ package com.intellij.execution.testframework;
 import com.intellij.util.config.AbstractProperty;
 import com.intellij.util.config.BooleanProperty;
 import com.intellij.util.config.ToggleBooleanProperty;
-
-import javax.swing.*;
+import consulo.ui.image.Image;
 
 public abstract class ToggleModelAction extends ToggleBooleanProperty.Disablable {
-  public ToggleModelAction(String text, String description, Icon icon, AbstractProperty.AbstractPropertyContainer properties,
-                           BooleanProperty property) {
+  public ToggleModelAction(String text, String description, Image icon, AbstractProperty.AbstractPropertyContainer properties, BooleanProperty property) {
     super(text, description, icon, properties, property);
   }
 

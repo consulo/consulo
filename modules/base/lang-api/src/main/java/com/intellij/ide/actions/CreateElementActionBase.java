@@ -24,14 +24,13 @@ import com.intellij.openapi.ui.InputValidator;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiElement;
+import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
-import consulo.ui.migration.SwingImageRef;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.swing.*;
 import java.util.function.Consumer;
 
 /**
@@ -44,12 +43,15 @@ public abstract class CreateElementActionBase extends CreateInDirectoryActionBas
   protected CreateElementActionBase() {
   }
 
-  @Deprecated
-  protected CreateElementActionBase(String text, String description, Icon icon) {
-    super(text, description, icon);
+  protected CreateElementActionBase(@Nonnull LocalizeValue text) {
+    super(text);
   }
 
-  protected CreateElementActionBase(@Nullable String text, @Nullable String description, @Nullable SwingImageRef icon) {
+  protected CreateElementActionBase(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description) {
+    super(text, description);
+  }
+
+  protected CreateElementActionBase(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description, @Nullable Image icon) {
     super(text, description, icon);
   }
 

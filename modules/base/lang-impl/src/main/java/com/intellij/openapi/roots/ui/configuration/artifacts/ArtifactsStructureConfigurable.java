@@ -389,7 +389,7 @@ public class ArtifactsStructureConfigurable extends BaseStructureConfigurable {
     private final ArtifactTemplate myArtifactTemplate;
 
     public AddArtifactAction(@Nonnull ArtifactType type, @Nonnull ArtifactTemplate artifactTemplate, final @Nonnull String actionText, final Image icon) {
-      super(actionText, null, TargetAWT.to(icon));
+      super(actionText, null, icon);
       myType = type;
       myArtifactTemplate = artifactTemplate;
     }

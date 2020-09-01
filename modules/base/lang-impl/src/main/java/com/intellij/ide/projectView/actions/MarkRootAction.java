@@ -25,13 +25,13 @@ import com.intellij.openapi.roots.*;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import consulo.ui.annotation.RequiredUIAccess;
 import consulo.roots.ContentFolderScopes;
 import consulo.roots.ContentFolderTypeProvider;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.image.Image;
 
-import javax.swing.*;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author yole
@@ -42,7 +42,7 @@ public class MarkRootAction extends DumbAwareAction {
 
   public MarkRootAction(@Nullable String text,
                            @Nullable String description,
-                           @Nullable Icon icon,
+                           @Nullable Image icon,
                            @Nullable ContentFolderTypeProvider contentFolderTypeProvider) {
     super(text, description, icon);
     myContentFolderType = contentFolderTypeProvider;

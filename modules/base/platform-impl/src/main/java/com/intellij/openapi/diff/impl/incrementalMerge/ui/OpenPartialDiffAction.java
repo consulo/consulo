@@ -16,7 +16,6 @@
 package com.intellij.openapi.diff.impl.incrementalMerge.ui;
 
 import com.intellij.openapi.actionSystem.*;
-import consulo.logging.Logger;
 import com.intellij.openapi.diff.DiffBundle;
 import com.intellij.openapi.diff.DocumentContent;
 import com.intellij.openapi.diff.SimpleDiffRequest;
@@ -25,16 +24,17 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
-import javax.annotation.Nullable;
+import consulo.logging.Logger;
+import consulo.ui.image.Image;
 
-import javax.swing.*;
+import javax.annotation.Nullable;
 
 class OpenPartialDiffAction extends AnAction implements DumbAware {
   private static final Logger LOG = Logger.getInstance(OpenPartialDiffAction.class);
   private final int myLeftIndex;
   private final int myRightIndex;
 
-  public OpenPartialDiffAction(int leftIndex, int rightIndex, Icon icon) {
+  public OpenPartialDiffAction(int leftIndex, int rightIndex, Image icon) {
     super("", null, icon);
     myLeftIndex = leftIndex;
     myRightIndex = rightIndex;

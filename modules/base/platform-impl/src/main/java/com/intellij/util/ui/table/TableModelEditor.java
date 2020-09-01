@@ -15,7 +15,7 @@
  */
 package com.intellij.util.ui.table;
 
-import com.intellij.ide.IdeBundle;
+import com.intellij.icons.AllIcons;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.JDOMUtil;
@@ -27,7 +27,6 @@ import com.intellij.ui.table.JBTable;
 import com.intellij.ui.table.TableView;
 import com.intellij.util.Function;
 import com.intellij.util.FunctionUtil;
-import com.intellij.util.PlatformIcons;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.CollectionItemEditor;
 import com.intellij.util.ui.CollectionModelEditor;
@@ -35,10 +34,11 @@ import com.intellij.util.ui.ColumnInfo;
 import com.intellij.util.ui.ListTableModel;
 import com.intellij.util.xmlb.SkipDefaultValuesSerializationFilters;
 import com.intellij.util.xmlb.XmlSerializer;
+import consulo.platform.base.localize.IdeLocalize;
 import gnu.trove.TObjectObjectProcedure;
 import org.jdom.Element;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
@@ -259,7 +259,7 @@ public class TableModelEditor<T> extends CollectionModelEditor<T, CollectionItem
   @Nonnull
   public JComponent createComponent() {
     return toolbarDecorator.addExtraAction(
-      new ToolbarDecorator.ElementActionButton(IdeBundle.message("button.copy"), PlatformIcons.COPY_ICON) {
+      new ToolbarDecorator.ElementActionButton(IdeLocalize.buttonCopy(), AllIcons.Actions.Copy) {
         @Override
         public void actionPerformed(@Nonnull AnActionEvent e) {
           TableUtil.stopEditing(table);

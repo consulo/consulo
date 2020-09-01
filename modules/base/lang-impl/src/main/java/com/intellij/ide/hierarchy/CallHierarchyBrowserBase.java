@@ -21,6 +21,7 @@ import com.intellij.ide.IdeBundle;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
+import consulo.ui.image.Image;
 import consulo.util.dataholder.Key;
 import com.intellij.psi.PsiElement;
 import javax.annotation.Nonnull;
@@ -85,7 +86,7 @@ public abstract class CallHierarchyBrowserBase extends HierarchyBrowserBaseEx {
   private class ChangeViewTypeActionBase extends ToggleAction {
     private final String myTypeName;
 
-    private ChangeViewTypeActionBase(final String shortDescription, final String longDescription, final Icon icon, String typeName) {
+    private ChangeViewTypeActionBase(final String shortDescription, final String longDescription, final Image icon, String typeName) {
       super(shortDescription, longDescription, icon);
       myTypeName = typeName;
     }

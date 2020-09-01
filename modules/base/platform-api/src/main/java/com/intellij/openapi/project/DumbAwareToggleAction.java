@@ -9,7 +9,6 @@ import consulo.ui.migration.SwingImageRef;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.swing.*;
 
 public abstract class DumbAwareToggleAction extends ToggleAction implements DumbAware {
   protected DumbAwareToggleAction() {
@@ -19,16 +18,7 @@ public abstract class DumbAwareToggleAction extends ToggleAction implements Dumb
     super(text);
   }
 
-  @Deprecated
-  protected DumbAwareToggleAction(@Nullable String text, @Nullable String description, @Nullable Icon icon) {
-    super(text, description, icon);
-  }
-
   protected DumbAwareToggleAction(@Nullable String text, @Nullable String description, @Nullable Image icon) {
-    super(text, description, icon);
-  }
-
-  protected DumbAwareToggleAction(@Nullable String text, @Nullable String description, @Nullable SwingImageRef icon) {
     super(text, description, icon);
   }
 

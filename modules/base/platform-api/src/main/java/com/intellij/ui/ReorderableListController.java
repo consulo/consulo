@@ -22,6 +22,8 @@ import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.Factory;
 import com.intellij.util.IconUtil;
 import com.intellij.util.containers.Convertor;
+import consulo.ui.image.Image;
+
 import javax.annotation.Nullable;
 
 import javax.swing.*;
@@ -32,7 +34,7 @@ import java.util.*;
  */
 public abstract class ReorderableListController <T> {
   private final JList myList;
-  private static final Icon REMOVE_ICON = IconUtil.getRemoveIcon();
+  private static final Image REMOVE_ICON = IconUtil.getRemoveIcon();
 
   protected ReorderableListController(final JList list) {
     myList = list;
@@ -153,7 +155,7 @@ public abstract class ReorderableListController <T> {
              new BaseAction(this, getActionName(), null, getActionIcon(), behaviour);
     }
 
-    protected abstract Icon getActionIcon();
+    protected abstract Image getActionIcon();
 
     protected abstract String getActionName();
 
@@ -166,7 +168,7 @@ public abstract class ReorderableListController <T> {
       private final CustomActionDescription<V> myCustomActionDescription;
 
       public BaseAction(final CustomActionDescription<V> customActionDescription,
-                        final String text, final String description, final Icon icon, final ActionBehaviour<V> behaviour) {
+                        final String text, final String description, final Image icon, final ActionBehaviour<V> behaviour) {
         super(text, description, icon);
         myBehaviour = behaviour;
         this.myCustomActionDescription = customActionDescription;
@@ -188,7 +190,7 @@ public abstract class ReorderableListController <T> {
     private static class ActionWithText<V> extends BaseAction  {
       public ActionWithText(final CustomActionDescription<V> customActionDescription, final String text,
                             final String description,
-                            final Icon icon,
+                            final Image icon,
                             final ActionBehaviour<V> behaviour) {
         super(customActionDescription, text, description, icon, behaviour);
       }
@@ -219,7 +221,7 @@ public abstract class ReorderableListController <T> {
       final ActionBehaviour<List<T>> behaviour = new ActionBehaviour<List<T>>() {
         @Override
         public List<T> performAction(final AnActionEvent e) {
-          if (myConfirmation != null && !myConfirmation.value((List<T>)Arrays.asList(myList.getSelectedValues()))) {
+          if (myConfirmation != null && !myConfirmation.value((List<T>)myList.getSelectedValuesList())) {
             return Collections.emptyList();
           }
           return ListUtil.removeSelectedItems(myList, myEnableCondition);
@@ -236,7 +238,7 @@ public abstract class ReorderableListController <T> {
     }
 
     @Override
-    protected Icon getActionIcon() {
+    protected Image getActionIcon() {
       return REMOVE_ICON;
     }
 
@@ -262,7 +264,7 @@ public abstract class ReorderableListController <T> {
     private final String myActionDescription;
     private final Factory<V> myAddHandler;
     private final boolean myCreateShortcut;
-    private Icon myIcon = IconUtil.getAddIcon();
+    private Image myIcon = AllIcons.General.Add;
 
     public AddActionDescriptionBase(final String actionDescription, final Factory<V> addHandler, final boolean createShortcut) {
       myActionDescription = actionDescription;
@@ -292,7 +294,7 @@ public abstract class ReorderableListController <T> {
     protected abstract V addInternal(final V v);
 
     @Override
-    public Icon getActionIcon() {
+    public Image getActionIcon() {
       return myIcon;
     }
 
@@ -301,7 +303,7 @@ public abstract class ReorderableListController <T> {
       return myActionDescription;
     }
 
-    public void setIcon(final Icon icon) {
+    public void setIcon(final Image icon) {
       myIcon = icon;
     }
   }
@@ -376,7 +378,7 @@ public abstract class ReorderableListController <T> {
     }
 
     @Override
-    public Icon getActionIcon() {
+    public Image getActionIcon() {
       return AllIcons.Actions.Copy;
     }
 

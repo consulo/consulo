@@ -27,15 +27,14 @@ import com.intellij.ui.components.JBList;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.ui.components.panels.NonOpaquePanel;
 import com.intellij.util.Alarm;
-import com.intellij.util.PlatformIcons;
 import com.intellij.util.ui.AbstractLayoutManager;
 import com.intellij.util.ui.AsyncProcessIcon;
 import com.intellij.util.ui.UIUtil;
 import consulo.disposer.Disposer;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 
 import javax.annotation.Nonnull;
-
 import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -304,7 +303,7 @@ class LookupUi {
 
   private class HintAction extends DumbAwareAction {
     private HintAction() {
-      super(null, null, AllIcons.Actions.IntentionBulb);
+      super(LocalizeValue.empty(), LocalizeValue.empty(), AllIcons.Actions.IntentionBulb);
 
       AnAction showIntentionAction = ActionManager.getInstance().getAction(IdeActions.ACTION_SHOW_INTENTION_ACTIONS);
       if (showIntentionAction != null) {
