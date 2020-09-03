@@ -17,11 +17,9 @@ package com.intellij.ide.plugins;
 
 import com.intellij.CommonBundle;
 import com.intellij.icons.AllIcons;
-import com.intellij.ide.IdeBundle;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.Presentation;
-import consulo.container.plugin.PluginId;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
@@ -29,10 +27,12 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.xml.util.XmlStringUtil;
 import consulo.container.plugin.PluginDescriptor;
+import consulo.container.plugin.PluginId;
 import consulo.ide.plugins.InstalledPluginsState;
 import consulo.ide.updateSettings.impl.PlatformOrPluginDialog;
 import consulo.ide.updateSettings.impl.PlatformOrPluginNode;
 import consulo.ide.updateSettings.impl.PlatformOrPluginUpdateResult;
+import consulo.platform.base.localize.IdeLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
@@ -52,7 +52,7 @@ public class InstallPluginAction extends AnAction implements DumbAware {
   private final PluginManagerMain myAvailablePluginPanel;
 
   public InstallPluginAction(PluginManagerMain availablePluginPanel, PluginManagerMain installedPluginPanel) {
-    super(IdeBundle.message("action.download.and.install.plugin"), IdeBundle.message("action.download.and.install.plugin"), AllIcons.Actions.Install);
+    super(IdeLocalize.actionDownloadAndInstallPlugin(), IdeLocalize.actionDownloadAndInstallPlugin(), AllIcons.Actions.Install);
     myAvailablePluginPanel = availablePluginPanel;
     myInstalledPluginPanel = installedPluginPanel;
   }
@@ -66,20 +66,20 @@ public class InstallPluginAction extends AnAction implements DumbAware {
 
     if (enabled) {
       for (PluginDescriptor descr : selection) {
-        presentation.setText(IdeBundle.message("action.download.and.install.plugin"));
-        presentation.setDescription(IdeBundle.message("action.download.and.install.plugin"));
+        presentation.setTextValue(IdeLocalize.actionDownloadAndInstallPlugin());
+        presentation.setDescriptionValue(IdeLocalize.actionDownloadAndInstallPlugin());
         enabled &= !ourInstallingNodes.contains(descr);
         if (descr instanceof PluginNode) {
           enabled &= !PluginManagerColumnInfo.isDownloaded(descr);
           if (((PluginNode)descr).getStatus() == PluginNode.STATUS_INSTALLED) {
-            presentation.setText(IdeBundle.message("action.update.plugin"));
-            presentation.setDescription(IdeBundle.message("action.update.plugin"));
+            presentation.setTextValue(IdeLocalize.actionUpdatePlugin());
+            presentation.setDescriptionValue(IdeLocalize.actionUpdatePlugin());
             enabled &= InstalledPluginsTableModel.hasNewerVersion(descr.getPluginId());
           }
         }
         else if (descr.isLoaded()) {
-          presentation.setText(IdeBundle.message("action.update.plugin"));
-          presentation.setDescription(IdeBundle.message("action.update.plugin"));
+          presentation.setTextValue(IdeLocalize.actionUpdatePlugin());
+          presentation.setDescriptionValue(IdeLocalize.actionUpdatePlugin());
           PluginId id = descr.getPluginId();
           enabled = enabled && InstalledPluginsTableModel.hasNewerVersion(id);
         }
@@ -109,12 +109,20 @@ public class InstallPluginAction extends AnAction implements DumbAware {
         final PluginId pluginId = descr.getPluginId();
         pluginNode = new PluginNode(pluginId);
         pluginNode.setName(descr.getName());
+        pluginNode.setExperimental(descr.isExperimental());
         pluginNode.addDependency(descr.getDependentPluginIds());
         pluginNode.addOptionalDependency(descr.getOptionalDependentPluginIds());
         pluginNode.setSize("-1");
       }
 
       if (pluginNode != null) {
+        if (pluginNode.isExperimental()) {
+          if (Messages.showOkCancelDialog("Are you sure install experimental plugin? Plugin can make IDE unstable, and may not implement expected features", "Consulo", Messages.getWarningIcon()) !=
+              Messages.OK) {
+            return;
+          }
+        }
+
         list.add(pluginNode);
         ourInstallingNodes.add(pluginNode);
       }

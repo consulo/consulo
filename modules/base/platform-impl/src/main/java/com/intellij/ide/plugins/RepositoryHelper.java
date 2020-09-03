@@ -24,6 +24,8 @@ import com.intellij.util.SystemProperties;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.net.HttpConfigurable;
 import consulo.container.plugin.PluginDescriptor;
+import consulo.ide.eap.EarlyAccessProgramManager;
+import consulo.ide.eap.plugins.ExperimentalPluginsDescriptor;
 import consulo.ide.plugins.PluginJsonNode;
 import consulo.ide.updateSettings.UpdateChannel;
 import consulo.ide.updateSettings.impl.PlatformOrPluginUpdateChecker;
@@ -90,7 +92,15 @@ public class RepositoryHelper {
   public static List<PluginDescriptor> loadOnlyPluginsFromRepository(@Nullable ProgressIndicator indicator, @Nonnull UpdateChannel channel)
           throws Exception {
     List<PluginDescriptor> ideaPluginDescriptors = loadPluginsFromRepository(indicator, channel);
-    return ContainerUtil.filter(ideaPluginDescriptors, it -> !PlatformOrPluginUpdateChecker.isPlatform(it.getPluginId()));
+    return ContainerUtil.filter(ideaPluginDescriptors, RepositoryHelper::isPluginAllowed);
+  }
+
+  private static boolean isPluginAllowed(PluginDescriptor pluginDescriptor) {
+    if(PlatformOrPluginUpdateChecker.isPlatform(pluginDescriptor.getPluginId()))  {
+      return false;
+    }
+
+    return !pluginDescriptor.isExperimental() || EarlyAccessProgramManager.is(ExperimentalPluginsDescriptor.class);
   }
 
   @Nonnull

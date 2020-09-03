@@ -22,6 +22,9 @@
     <eapDescriptor implementation="consulo.diagram.actions.ShowDiagramAction$DiagramSupport" />
     <eapDescriptor implementation="consulo.auth.ServiceAuthEarlyAccessProgramDescriptor" />
     <eapDescriptor implementation="consulo.ui.impl.ModalityPerProjectEAPDescriptor" />
+    <eapDescriptor implementation="consulo.ide.eap.plugins.ExperimentalPluginsDescriptor" />
+
+    <backgroundPostStartupActivity implementation="consulo.ide.eap.plugins.ExperimentalPluginsNotifier" />
 
     <applicationConfigurable parentId="preferences.pluginManager"
                              bundle="messages.IdeBundle"

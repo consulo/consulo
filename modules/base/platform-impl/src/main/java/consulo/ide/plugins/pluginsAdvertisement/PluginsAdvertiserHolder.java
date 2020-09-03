@@ -77,7 +77,7 @@ public class PluginsAdvertiserHolder {
     Application.get().executeOnPooledThread(() -> {
       List<PluginDescriptor> pluginDescriptors = Collections.emptyList();
       try {
-        pluginDescriptors = RepositoryHelper.loadPluginsFromRepository(null, updateSettings.getChannel());
+        pluginDescriptors = RepositoryHelper.loadOnlyPluginsFromRepository(null, updateSettings.getChannel());
       }
       catch (Exception ignored) {
       }

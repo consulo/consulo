@@ -49,7 +49,7 @@ public class EarlyAccessProgramManager implements PersistentStateComponent<Eleme
   private Map<Class<? extends EarlyAccessProgramDescriptor>, Boolean> myStates = new LinkedHashMap<>();
 
   public EarlyAccessProgramManager() {
-    for (EarlyAccessProgramDescriptor descriptor : EarlyAccessProgramDescriptor.EP_NAME.getExtensions()) {
+    for (EarlyAccessProgramDescriptor descriptor : EarlyAccessProgramDescriptor.EP_NAME.getExtensionList()) {
       myStates.put(descriptor.getClass(), descriptor.getDefaultState());
     }
   }

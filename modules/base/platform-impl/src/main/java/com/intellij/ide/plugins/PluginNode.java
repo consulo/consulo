@@ -317,6 +317,10 @@ public class PluginNode extends PluginDescriptorStub {
     return myExperimental;
   }
 
+  public void setExperimental(boolean experimental) {
+    myExperimental = experimental;
+  }
+
   @Nullable
   public String getStatusText() {
     switch (status) {

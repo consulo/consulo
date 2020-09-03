@@ -32,6 +32,7 @@ import com.intellij.util.text.DateFormatUtil;
 import com.intellij.util.ui.GraphicsUtil;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
+import consulo.awt.TargetAWT;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginIds;
 
@@ -59,6 +60,7 @@ public class PluginHeaderPanel {
   private JPanel myButtonPanel;
   private JPanel myDownloadsPanel;
   private JPanel myVersionInfoPanel;
+  private JLabel myExperimentalLabel;
 
   enum ACTION_ID {
     INSTALL,
@@ -145,6 +147,13 @@ public class PluginHeaderPanel {
     myInstallButton.revalidate();
     ((JComponent)myVersion.getParent()).revalidate();
     myVersion.revalidate();
+
+    myExperimentalLabel.setVisible(plugin.isExperimental());
+    if(plugin.isExperimental()) {
+      myExperimentalLabel.setIcon(TargetAWT.to(AllIcons.General.BalloonWarning));
+      myExperimentalLabel.setFont(UIUtil.getLabelFont(UIUtil.FontSize.BIGGER).deriveFont(Font.BOLD));
+      myExperimentalLabel.setForeground(JBColor.RED);
+    }
   }
 
   private void createUIComponents() {
