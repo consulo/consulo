@@ -22,6 +22,7 @@ import com.intellij.openapi.project.Project;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -64,6 +65,8 @@ public class SelectInManager {
     if(targets.isEmpty()) {
       return Collections.emptyList();
     }
+
+    targets = new ArrayList<>(targets);
     targets.sort(SelectInTargetComparator.INSTANCE);
     return targets;
   }
