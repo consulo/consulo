@@ -548,8 +548,8 @@ public class AllIcons {
     public static final SwingImageRef Tab_grey_left_inner = IconLoader.getIcon("/general/tab_grey_left_inner.png"); // 4x17
     public static final SwingImageRef Tab_grey_right = IconLoader.getIcon("/general/tab_grey_right.png"); // 4x17
     public static final SwingImageRef Tab_grey_right_inner = IconLoader.getIcon("/general/tab_grey_right_inner.png"); // 4x17
-    public static final SwingImageRef TbHidden = IconLoader.getIcon("/general/tbHidden.png"); // 16x16
-    public static final SwingImageRef TbShown = IconLoader.getIcon("/general/tbShown.png"); // 16x16
+    public static final SwingImageRef TbHidden = IconLoader.getIcon("/general/tbHidden.svg"); // 16x16
+    public static final SwingImageRef TbShown = IconLoader.getIcon("/general/tbShown.svg"); // 16x16
     public static final SwingImageRef TemplateProjectSettings = IconLoader.getIcon("/general/TemplateProjectSettings.png"); // 32x32
     public static final SwingImageRef TemplateProjectStructure = IconLoader.getIcon("/general/TemplateProjectStructure.png"); // 32x32
     public static final SwingImageRef Tip = IconLoader.getIcon("/general/tip.png"); // 32x32
