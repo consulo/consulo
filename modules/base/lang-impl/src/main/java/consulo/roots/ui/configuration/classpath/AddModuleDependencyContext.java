@@ -13,45 +13,55 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.roots.ui.configuration.classpath.dependencyTab;
+package consulo.roots.ui.configuration.classpath;
 
-import consulo.roots.ModifiableModuleRootLayer;
+import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.OrderEntry;
 import com.intellij.openapi.roots.ui.configuration.classpath.ClasspathPanel;
 import com.intellij.openapi.roots.ui.configuration.classpath.ClasspathTableItem;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.StructureConfigurableContext;
-import com.intellij.openapi.ui.DialogWrapper;
-import javax.annotation.Nonnull;
+import consulo.roots.ModifiableModuleRootLayer;
 
-import javax.swing.*;
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
  * @author VISTALL
  * @since 27.09.14
  */
-public abstract class AddModuleDependencyTabContext {
+public abstract class AddModuleDependencyContext<T> {
   protected final ClasspathPanel myClasspathPanel;
   protected final StructureConfigurableContext myContext;
 
-  protected AddModuleDependencyTabContext(ClasspathPanel classpathPanel, StructureConfigurableContext context) {
+  protected AddModuleDependencyContext(ClasspathPanel classpathPanel, StructureConfigurableContext context) {
     myClasspathPanel = classpathPanel;
     myContext = context;
   }
-
-  @Nonnull
-  public abstract String getTabName();
 
   public boolean isEmpty() {
     return false;
   }
 
-  public final void processAddOrderEntries(DialogWrapper dialogWrapper) {
+  @Nonnull
+  public ClasspathPanel getClasspathPanel() {
+    return myClasspathPanel;
+  }
+
+  @Nonnull
+  public StructureConfigurableContext getStructureContext() {
+    return myContext;
+  }
+
+  @Nonnull
+  public Project getProject() {
+    return myClasspathPanel.getProject();
+  }
+
+  public final void processAddOrderEntries(@Nonnull T value) {
     ModifiableModuleRootLayer currentLayer = (ModifiableModuleRootLayer)myClasspathPanel.getRootModel().getCurrentLayer();
 
-    List<OrderEntry> orderEntries = createOrderEntries(currentLayer, dialogWrapper);
+    List<OrderEntry> orderEntries = createOrderEntries(currentLayer, value);
     if(orderEntries.isEmpty()) {
       return;
     }
@@ -64,10 +74,6 @@ public abstract class AddModuleDependencyTabContext {
     myClasspathPanel.addItems(items);
   }
 
-  public List<OrderEntry> createOrderEntries(@Nonnull ModifiableModuleRootLayer layer, DialogWrapper dialogWrapper) {
-    return Collections.emptyList();
-  }
-
   @Nonnull
-  public abstract JComponent getComponent();
+  public abstract List<OrderEntry> createOrderEntries(@Nonnull ModifiableModuleRootLayer layer, @Nonnull T value);
 }

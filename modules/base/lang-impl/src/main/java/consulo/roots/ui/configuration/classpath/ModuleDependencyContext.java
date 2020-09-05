@@ -13,46 +13,39 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.roots.ui.configuration.classpath.dependencyTab;
+package consulo.roots.ui.configuration.classpath;
 
-import com.intellij.application.options.ModuleListCellRenderer;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.roots.ModifiableRootModel;
 import com.intellij.openapi.roots.OrderEntry;
 import com.intellij.openapi.roots.ui.configuration.classpath.ClasspathPanel;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.StructureConfigurableContext;
-import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.ui.ListSpeedSearch;
-import com.intellij.ui.components.JBList;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.HashSet;
 import consulo.roots.ModifiableModuleRootLayer;
-import javax.annotation.Nonnull;
 
-import javax.swing.*;
-import java.util.*;
+import javax.annotation.Nonnull;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Set;
 
 /**
  * @author VISTALL
  * @since 27.09.14
  */
-public class ModuleDependencyTabContext extends AddModuleDependencyTabContext {
-  private final JBList myModuleList;
+public class ModuleDependencyContext extends AddModuleDependencyContext<List<Module>> {
   private final List<Module> myNotAddedModules;
 
-  public ModuleDependencyTabContext(ClasspathPanel panel, StructureConfigurableContext context) {
+  public ModuleDependencyContext(ClasspathPanel panel, StructureConfigurableContext context) {
     super(panel, context);
-    myNotAddedModules = getNotAddedModules();
-    myModuleList = new JBList(myNotAddedModules);
-    myModuleList.setCellRenderer(new ModuleListCellRenderer());
-
-    new ListSpeedSearch(myModuleList);
+    myNotAddedModules = calcNotAddedModules();
   }
 
-  private List<Module> getNotAddedModules() {
+  private List<Module> calcNotAddedModules() {
     final ModifiableRootModel rootModel = myClasspathPanel.getRootModel();
-    Set<Module> addedModules = new HashSet<Module>(Arrays.asList(rootModel.getModuleDependencies(true)));
+    Set<Module> addedModules = new HashSet<>(Arrays.asList(rootModel.getModuleDependencies(true)));
     addedModules.add(rootModel.getModule());
 
     final Module[] modules = myClasspathPanel.getModuleConfigurationState().getModulesProvider().getModules();
@@ -62,19 +55,12 @@ public class ModuleDependencyTabContext extends AddModuleDependencyTabContext {
         elements.add(module);
       }
     }
-    ContainerUtil.sort(elements, new Comparator<Module>() {
-      @Override
-      public int compare(Module o1, Module o2) {
-        return StringUtil.compare(o1.getName(), o2.getName(), false);
-      }
-    });
+    ContainerUtil.sort(elements, (o1, o2) -> StringUtil.compare(o1.getName(), o2.getName(), false));
     return elements;
   }
 
-  @Nonnull
-  @Override
-  public String getTabName() {
-    return "Module";
+  public List<Module> getNotAddedModules() {
+    return myNotAddedModules;
   }
 
   @Override
@@ -82,19 +68,13 @@ public class ModuleDependencyTabContext extends AddModuleDependencyTabContext {
     return myNotAddedModules.isEmpty();
   }
 
-  @Override
-  public List<OrderEntry> createOrderEntries(@Nonnull ModifiableModuleRootLayer layer, DialogWrapper dialogWrapper) {
-    Object[] selectedValues = myModuleList.getSelectedValues();
-    List<OrderEntry> orderEntries = new ArrayList<OrderEntry>(selectedValues.length);
-    for (Object selectedValue : selectedValues) {
-      orderEntries.add(layer.addModuleOrderEntry((Module)selectedValue));
-    }
-    return orderEntries;
-  }
-
   @Nonnull
   @Override
-  public JComponent getComponent() {
-    return myModuleList;
+  public List<OrderEntry> createOrderEntries(@Nonnull ModifiableModuleRootLayer layer, @Nonnull List<Module> value) {
+    List<OrderEntry> orderEntries = new ArrayList<>();
+    for (Module selectedValue : value) {
+      orderEntries.add(layer.addModuleOrderEntry(selectedValue));
+    }
+    return orderEntries;
   }
 }

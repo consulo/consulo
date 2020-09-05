@@ -17,8 +17,11 @@ package com.intellij.ide.util;
 
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.ui.DoubleClickListener;
 import com.intellij.ui.ScrollPaneFactory;
+import consulo.ui.annotation.RequiredUIAccess;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -70,12 +73,7 @@ public abstract class ChooseElementsDialog<T> extends DialogWrapper {
 
     List<? extends T> elements = new ArrayList<T>(items);
     if (sort) {
-      Collections.sort(elements, new Comparator<T>() {
-        @Override
-        public int compare(final T o1, final T o2) {
-          return getItemText(o1).compareToIgnoreCase(getItemText(o2));
-        }
-      });
+      Collections.sort(elements, (o1, o2) -> getItemText(o1).compareToIgnoreCase(getItemText(o2)));
     }
     setElements(elements, elements.size() > 0 ? elements.subList(0, 1) : Collections.<T>emptyList());
     myChooser.getComponent().registerKeyboardAction(new ActionListener() {
@@ -94,6 +92,16 @@ public abstract class ChooseElementsDialog<T> extends DialogWrapper {
     }.installOn(myChooser.getComponent());
 
     init();
+  }
+
+  @Nonnull
+  @RequiredUIAccess
+  public AsyncResult<List<T>> showAsync2() {
+    AsyncResult<List<T>> result = AsyncResult.undefined();
+    AsyncResult<Void> showAsync = showAsync();
+    showAsync.doWhenDone(() -> result.setDone(getChosenElements()));
+    showAsync.doWhenRejected((Runnable)result::setRejected);
+    return result;
   }
 
   public List<T> showAndGetResult() {

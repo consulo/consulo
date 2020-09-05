@@ -13,15 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.roots.ui.configuration.classpath.dependencyTab;
+package consulo.roots.ui.configuration.classpath;
 
-import consulo.disposer.Disposable;
 import com.intellij.openapi.actionSystem.LangDataKeys;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
-import com.intellij.openapi.fileChooser.FileSystemTree;
-import com.intellij.openapi.fileChooser.FileSystemTreeFactory;
 import com.intellij.openapi.fileChooser.impl.FileChooserUtil;
-import com.intellij.openapi.module.Module;
 import com.intellij.openapi.roots.LibraryOrderEntry;
 import com.intellij.openapi.roots.OrderEntry;
 import com.intellij.openapi.roots.impl.libraries.LibraryEx;
@@ -37,35 +33,31 @@ import com.intellij.openapi.roots.ui.configuration.classpath.ClasspathPanel;
 import com.intellij.openapi.roots.ui.configuration.libraries.LibraryEditingUtil;
 import com.intellij.openapi.roots.ui.configuration.libraryEditor.DefaultLibraryRootsComponentDescriptor;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.StructureConfigurableContext;
-import com.intellij.openapi.ui.DialogWrapper;
-import consulo.disposer.Disposer;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.ArrayUtil;
-import com.intellij.util.ObjectUtil;
 import consulo.roots.ModifiableModuleRootLayer;
 import consulo.roots.types.BinariesOrderRootType;
+import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.swing.*;
 import java.util.*;
 
 /**
  * @author VISTALL
  * @since 27.09.14
  */
-public class FileOrDirectoryDependencyTabContext extends AddModuleDependencyTabContext {
+public class FileOrDirectoryDependencyContext extends AddModuleDependencyContext<VirtualFile[]> {
   private final FileChooserDescriptor myFileChooserDescriptor;
-  private FileSystemTree myFileSystemTree;
 
   private final HashMap<LibraryRootsComponentDescriptor, LibraryType> myLibraryTypes;
   private final DefaultLibraryRootsComponentDescriptor myDefaultDescriptor;
 
-  public FileOrDirectoryDependencyTabContext(Disposable parent, ClasspathPanel panel, StructureConfigurableContext context) {
+  public FileOrDirectoryDependencyContext(ClasspathPanel panel, StructureConfigurableContext context) {
     super(panel, context);
 
-    myLibraryTypes = new HashMap<LibraryRootsComponentDescriptor, LibraryType>();
+    myLibraryTypes = new HashMap<>();
     myDefaultDescriptor = new DefaultLibraryRootsComponentDescriptor();
 
     for (LibraryType<?> libraryType : LibraryEditingUtil.getSuitableTypes(myClasspathPanel)) {
@@ -81,21 +73,7 @@ public class FileOrDirectoryDependencyTabContext extends AddModuleDependencyTabC
       }
     }
 
-    Module module = myClasspathPanel.getRootModel().getModule();
-
     myFileChooserDescriptor = createFileChooserDescriptor();
-    myFileSystemTree = FileSystemTreeFactory.getInstance().createFileSystemTree(module.getProject(), myFileChooserDescriptor);
-    Disposer.register(parent, myFileSystemTree);
-    myFileSystemTree.showHiddens(true);
-    final VirtualFile dirForSelect = ObjectUtil.chooseNotNull(module.getModuleDir(), module.getProject().getBaseDir());
-    if(dirForSelect != null) {
-      myFileSystemTree.select(dirForSelect, new Runnable() {
-        @Override
-        public void run() {
-          myFileSystemTree.expand(dirForSelect, null);
-        }
-      });
-    }
   }
 
   private FileChooserDescriptor createFileChooserDescriptor() {
@@ -110,6 +88,7 @@ public class FileOrDirectoryDependencyTabContext extends AddModuleDependencyTabC
     }
     else {
       chooserDescriptor = new FileChooserDescriptor(true, true, true, false, true, false) {
+        @RequiredUIAccess
         @Override
         public boolean isFileSelectable(VirtualFile file) {
           for (Pair<LibraryRootsComponentDescriptor, FileChooserDescriptor> pair : descriptors) {
@@ -135,15 +114,15 @@ public class FileOrDirectoryDependencyTabContext extends AddModuleDependencyTabC
     return chooserDescriptor;
   }
 
+  @Nonnull
   @Override
-  public List<OrderEntry> createOrderEntries(@Nonnull ModifiableModuleRootLayer layer, DialogWrapper dialogWrapper) {
-    List<VirtualFile> chosenFiles = FileChooserUtil.getChosenFiles(myFileChooserDescriptor, Arrays.asList(myFileSystemTree.getSelectedFiles()));
+  public List<OrderEntry> createOrderEntries(@Nonnull ModifiableModuleRootLayer layer, @Nonnull VirtualFile[] value) {
+    List<VirtualFile> chosenFiles = FileChooserUtil.getChosenFiles(myFileChooserDescriptor, Arrays.asList(value));
     if (chosenFiles.isEmpty()) {
       return Collections.emptyList();
     }
 
-    final List<Pair<LibraryRootsComponentDescriptor, FileChooserDescriptor>> descriptors =
-            new ArrayList<Pair<LibraryRootsComponentDescriptor, FileChooserDescriptor>>();
+    final List<Pair<LibraryRootsComponentDescriptor, FileChooserDescriptor>> descriptors = new ArrayList<Pair<LibraryRootsComponentDescriptor, FileChooserDescriptor>>();
     for (LibraryRootsComponentDescriptor componentDescriptor : myLibraryTypes.keySet()) {
       descriptors.add(Pair.create(componentDescriptor, componentDescriptor.createAttachFilesChooserDescriptor(null)));
     }
@@ -164,8 +143,7 @@ public class FileOrDirectoryDependencyTabContext extends AddModuleDependencyTabC
     else {
       rootsComponentDescriptor = myDefaultDescriptor;
     }
-    List<OrderRoot> chosenRoots =
-            RootDetectionUtil.detectRoots(chosenFiles, dialogWrapper.getRootPane(), layer.getProject(), rootsComponentDescriptor);
+    List<OrderRoot> chosenRoots = RootDetectionUtil.detectRoots(chosenFiles, null, layer.getProject(), rootsComponentDescriptor);
 
     final List<OrderRoot> roots = filterAlreadyAdded(layer, chosenRoots);
     if (roots.isEmpty()) {
@@ -190,7 +168,7 @@ public class FileOrDirectoryDependencyTabContext extends AddModuleDependencyTabC
     List<OrderEntry> orderEntries = new ArrayList<OrderEntry>(addedLibraries.size());
     for (Library addedLibrary : addedLibraries) {
       LibraryOrderEntry libraryOrderEntry = layer.findLibraryOrderEntry(addedLibrary);
-      if(libraryOrderEntry != null) {
+      if (libraryOrderEntry != null) {
         orderEntries.add(libraryOrderEntry);
       }
     }
@@ -240,6 +218,7 @@ public class FileOrDirectoryDependencyTabContext extends AddModuleDependencyTabC
     return false;
   }
 
+  @RequiredUIAccess
   private static boolean acceptAll(FileChooserDescriptor descriptor, Collection<VirtualFile> files) {
     for (VirtualFile file : files) {
       if (!descriptor.isFileSelectable(file) || !descriptor.isFileVisible(file, true)) {
@@ -249,15 +228,7 @@ public class FileOrDirectoryDependencyTabContext extends AddModuleDependencyTabC
     return true;
   }
 
-  @Nonnull
-  @Override
-  public String getTabName() {
-    return "File or directory";
-  }
-
-  @Nonnull
-  @Override
-  public JComponent getComponent() {
-    return myFileSystemTree.getTree();
+  public FileChooserDescriptor getFileChooserDescriptor() {
+    return myFileChooserDescriptor;
   }
 }

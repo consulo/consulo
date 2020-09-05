@@ -46,6 +46,8 @@ import com.intellij.openapi.ui.ComboBox;
 import com.intellij.openapi.ui.ComboBoxTableRenderer;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
+import com.intellij.openapi.ui.popup.JBPopupFactory;
+import com.intellij.openapi.ui.popup.ListPopup;
 import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.openapi.wm.ToolWindowId;
 import com.intellij.packageDependencies.DependenciesBuilder;
@@ -56,9 +58,12 @@ import com.intellij.ui.*;
 import com.intellij.ui.awt.RelativePoint;
 import com.intellij.ui.table.JBTable;
 import com.intellij.util.IconUtil;
+import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.JBUI;
 import consulo.logging.Logger;
-import consulo.roots.ui.configuration.classpath.AddModuleDependencyDialog;
+import consulo.roots.ui.configuration.classpath.AddModuleDependencyActionProvider;
+import consulo.roots.ui.configuration.classpath.AddModuleDependencyContext;
+import consulo.roots.ui.configuration.classpath.AddModuleDependencyListPopupStep;
 import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
@@ -72,9 +77,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class ClasspathPanelImpl extends JPanel implements ClasspathPanel {
   private static final Logger LOG = Logger.getInstance(ClasspathPanelImpl.class);
@@ -281,31 +285,38 @@ public class ClasspathPanelImpl extends JPanel implements ClasspathPanel {
   private JComponent createTableWithButtons() {
     final ToolbarDecorator decorator = ToolbarDecorator.createDecorator(myEntryTable);
     decorator.setPanelBorder(JBUI.Borders.empty());
-    decorator.setAddAction(new AnActionButtonRunnable() {
-      @Override
-      public void run(AnActionButton button) {
-        new AddModuleDependencyDialog(ClasspathPanelImpl.this, getStructureConfigurableContext()).show();
-      }
-    }).setRemoveAction(new AnActionButtonRunnable() {
-      @Override
-      public void run(AnActionButton button) {
-        removeSelectedItems(TableUtil.removeSelectedItems(myEntryTable));
-      }
-    }).setRemoveActionUpdater(e -> {
-      return isRemoveActionEnabled();
-    }).setMoveUpAction(new AnActionButtonRunnable() {
-      @Override
-      public void run(AnActionButton button) {
-        moveSelectedRows(-1);
-      }
-    }).setMoveDownAction(new AnActionButtonRunnable() {
-      @Override
-      public void run(AnActionButton button) {
-        moveSelectedRows(+1);
-      }
-    }).addExtraAction(myEditButton);
+    decorator.setAddAction(this::showAddPopup);
+    decorator.setRemoveAction(button -> removeSelectedItems(TableUtil.removeSelectedItems(myEntryTable)));
+    decorator.setRemoveActionUpdater(e -> isRemoveActionEnabled());
 
+    decorator.setMoveUpAction(button -> moveSelectedRows(-1));
+    decorator.setMoveDownAction(button -> moveSelectedRows(+1));
+    decorator.addExtraAction(myEditButton);
     return decorator.createPanel();
+  }
+
+  @SuppressWarnings("unchecked")
+  private void showAddPopup(@Nonnull AnActionButton button) {
+    Map<AddModuleDependencyActionProvider, AddModuleDependencyContext> contexts = new LinkedHashMap<>();
+
+    AddModuleDependencyActionProvider.EP_NAME.forEachExtensionSafe(getProject().getApplication(), it -> {
+      AddModuleDependencyContext context = it.createContext(this, getStructureConfigurableContext());
+      if(it.isAvailable(context)) {
+        contexts.put(it, context);
+      }
+    });
+
+    // can't be empty - file adding avaliable always
+    if(contexts.size() == 1) {
+      Map.Entry<AddModuleDependencyActionProvider, AddModuleDependencyContext> entry = ContainerUtil.getFirstItem(contexts.entrySet());
+
+      AddModuleDependencyListPopupStep.providerSelected(entry);
+    }
+    else {
+      AddModuleDependencyListPopupStep step = new AddModuleDependencyListPopupStep(getRootModel(), contexts.entrySet());
+      ListPopup popup = JBPopupFactory.getInstance().createListPopup(step);
+      popup.show(button.getPreferredPopupPoint());
+    }
   }
 
   private boolean isRemoveActionEnabled() {
@@ -356,12 +367,7 @@ public class ClasspathPanelImpl extends JPanel implements ClasspathPanel {
   public LibraryTableModifiableModelProvider getModifiableModelProvider(@Nonnull String tableLevel) {
     if (LibraryTableImplUtil.MODULE_LEVEL.equals(tableLevel)) {
       final LibraryTable moduleLibraryTable = getRootModel().getModuleLibraryTable();
-      return new LibraryTableModifiableModelProvider() {
-        @Override
-        public LibraryTable.ModifiableModel getModifiableModel() {
-          return moduleLibraryTable.getModifiableModel();
-        }
-      };
+      return moduleLibraryTable::getModifiableModel;
     }
     else {
       return getStructureConfigurableContext().createModifiableModelProvider(tableLevel);

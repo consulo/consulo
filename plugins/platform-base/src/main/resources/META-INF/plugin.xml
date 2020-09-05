@@ -1149,8 +1149,8 @@
 
     <extensionPoint name="cachesInvalidator" interface="com.intellij.ide.caches.CachesInvalidator"/>
 
-    <extensionPoint name="addModuleDependencyTabFactory"
-                    interface="consulo.roots.ui.configuration.classpath.dependencyTab.AddModuleDependencyTabFactory"/>
+    <extensionPoint name="addModuleDependencyActionProvider"
+                    interface="consulo.roots.ui.configuration.classpath.AddModuleDependencyActionProvider"/>
 
     <extensionPoint name="actionFromOptionDescriptorProvider" interface="com.intellij.ide.ui.search.ActionFromOptionDescriptorProvider"/>
 
@@ -2559,9 +2559,9 @@
     <backspaceHandlerDelegate implementation="com.intellij.codeInsight.editorActions.SimpleIndentingBackspaceHandler"/>
     <backspaceHandlerDelegate implementation="com.intellij.codeInsight.editorActions.SmartIndentingBackspaceHandler"/>
 
-    <addModuleDependencyTabFactory implementation="consulo.roots.ui.configuration.classpath.dependencyTab.FileOrDirectoryDependencyTabFactory"/>
-    <addModuleDependencyTabFactory implementation="consulo.roots.ui.configuration.classpath.dependencyTab.ModuleDependencyTabFactory"/>
-    <addModuleDependencyTabFactory implementation="consulo.roots.ui.configuration.classpath.dependencyTab.ProjectLibraryTabFactory"/>
+    <addModuleDependencyActionProvider implementation="consulo.roots.ui.configuration.classpath.FileOrDirectoryDependencyActionProvider"/>
+    <addModuleDependencyActionProvider implementation="consulo.roots.ui.configuration.classpath.ModuleDependencyActionProvider"/>
+    <addModuleDependencyActionProvider implementation="consulo.roots.ui.configuration.classpath.ProjectLibraryActionProvider"/>
 
     <fileIndentOptionsProvider implementation="com.intellij.psi.codeStyle.autodetect.DetectableIndentOptionsProvider" order="last"/>
 
