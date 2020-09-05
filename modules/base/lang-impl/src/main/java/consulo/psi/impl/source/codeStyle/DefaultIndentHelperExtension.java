@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.consulo.psi.impl.source.codeStyle;
+package consulo.psi.impl.source.codeStyle;
 
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiFile;

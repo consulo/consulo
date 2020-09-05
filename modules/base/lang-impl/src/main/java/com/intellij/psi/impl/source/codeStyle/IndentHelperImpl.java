@@ -22,7 +22,7 @@ import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.codeStyle.CommonCodeStyleSettings;
-import consulo.consulo.psi.impl.source.codeStyle.IndentHelperExtension;
+import consulo.psi.impl.source.codeStyle.IndentHelperExtension;
 
 import javax.annotation.Nonnull;
 import javax.inject.Singleton;
