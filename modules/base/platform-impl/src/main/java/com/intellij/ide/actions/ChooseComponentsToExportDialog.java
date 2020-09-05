@@ -33,6 +33,7 @@ import com.intellij.ui.FieldPanel;
 import com.intellij.util.containers.MultiMap;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.fileChooser.FileChooser;
+import consulo.ui.image.Image;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
@@ -231,7 +232,7 @@ public class ChooseComponentsToExportDialog extends DialogWrapper {
 
     @Override
     @Nullable
-    public Icon getIcon() {
+    public Image getIcon() {
       return null;
     }
 

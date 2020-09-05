@@ -20,6 +20,9 @@ import com.intellij.ui.*;
 import com.intellij.ui.table.JBTable;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.*;
+import consulo.awt.TargetAWT;
+import consulo.ui.image.Image;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -311,7 +314,7 @@ public class MultiStateElementsChooser<T, S> extends JPanel implements Component
 
   public interface ElementProperties {
     @Nullable
-    Icon getIcon();
+    Image getIcon();
 
     @Nullable
     Color getColor();
@@ -630,7 +633,7 @@ public class MultiStateElementsChooser<T, S> extends JPanel implements Component
   }
 
   @Nullable
-  protected Icon getItemIcon(@Nonnull T value) {
+  protected Image getItemIcon(@Nonnull T value) {
     return null;
   }
 
@@ -657,10 +660,10 @@ public class MultiStateElementsChooser<T, S> extends JPanel implements Component
                             (!myColorUnmarkedElements || myMarkStateDescriptor.isMarked(model.getElementMarkState(row)))));
       final ElementProperties properties = myElementToPropertiesMap.get(t);
       if (component instanceof JLabel) {
-        final Icon icon = properties != null ? properties.getIcon() : t != null ? getItemIcon(t) : null;
+        final Image icon = properties != null ? properties.getIcon() : t != null ? getItemIcon(t) : null;
         JLabel label = (JLabel)component;
-        label.setIcon(icon);
-        label.setDisabledIcon(icon);
+        label.setIcon(TargetAWT.to(icon));
+        label.setDisabledIcon(TargetAWT.to(icon));
       }
       component.setForeground(properties != null && properties.getColor() != null
                               ? properties.getColor()

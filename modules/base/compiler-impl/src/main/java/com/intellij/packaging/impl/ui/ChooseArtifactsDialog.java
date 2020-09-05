@@ -15,12 +15,11 @@
  */
 package com.intellij.packaging.impl.ui;
 
-import com.intellij.openapi.project.Project;
 import com.intellij.ide.util.ChooseElementsDialog;
+import com.intellij.openapi.project.Project;
 import com.intellij.packaging.artifacts.Artifact;
-import consulo.awt.TargetAWT;
+import consulo.ui.image.Image;
 
-import javax.swing.*;
 import java.util.List;
 
 /**
@@ -38,7 +37,7 @@ public class ChooseArtifactsDialog extends ChooseElementsDialog<Artifact> {
   }
 
   @Override
-  protected Icon getItemIcon(Artifact item) {
-    return TargetAWT.to(item.getArtifactType().getIcon());
+  protected Image getItemIcon(Artifact item) {
+    return item.getArtifactType().getIcon();
   }
 }

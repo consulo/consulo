@@ -26,9 +26,9 @@ import com.intellij.icons.AllIcons;
 import com.intellij.ide.util.ChooseElementsDialog;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
-import javax.annotation.Nullable;
+import consulo.ui.image.Image;
 
-import javax.swing.*;
+import javax.annotation.Nullable;
 import java.awt.*;
 import java.util.List;
 
@@ -51,7 +51,7 @@ public class ChooseModulesDialog extends ChooseElementsDialog<Module> {
   }
 
   @Override
-  protected Icon getItemIcon(final Module item) {
+  protected Image getItemIcon(final Module item) {
     return AllIcons.Nodes.Module;
   }
 

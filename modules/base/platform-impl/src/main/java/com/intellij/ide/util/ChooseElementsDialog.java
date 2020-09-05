@@ -20,7 +20,9 @@ import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.util.AsyncResult;
 import com.intellij.ui.DoubleClickListener;
 import com.intellij.ui.ScrollPaneFactory;
+import consulo.annotation.DeprecationInfo;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -76,12 +78,7 @@ public abstract class ChooseElementsDialog<T> extends DialogWrapper {
       Collections.sort(elements, (o1, o2) -> getItemText(o1).compareToIgnoreCase(getItemText(o2)));
     }
     setElements(elements, elements.size() > 0 ? elements.subList(0, 1) : Collections.<T>emptyList());
-    myChooser.getComponent().registerKeyboardAction(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        doOKAction();
-      }
-    }, KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), JComponent.WHEN_FOCUSED);
+    myChooser.getComponent().registerKeyboardAction(e -> doOKAction(), KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), JComponent.WHEN_FOCUSED);
 
     new DoubleClickListener() {
       @Override
@@ -104,6 +101,8 @@ public abstract class ChooseElementsDialog<T> extends DialogWrapper {
     return result;
   }
 
+  @Deprecated
+  @DeprecationInfo("See #showAsync2()")
   public List<T> showAndGetResult() {
     show();
     return getChosenElements();
@@ -112,7 +111,7 @@ public abstract class ChooseElementsDialog<T> extends DialogWrapper {
   protected abstract String getItemText(T item);
 
   @Nullable
-  protected abstract Icon getItemIcon(T item);
+  protected abstract Image getItemIcon(T item);
 
   @Nonnull
   public List<T> getChosenElements() {
@@ -149,7 +148,7 @@ public abstract class ChooseElementsDialog<T> extends DialogWrapper {
   private ElementsChooser.ElementProperties createElementProperties(final T item) {
     return new ElementsChooser.ElementProperties() {
       @Override
-      public Icon getIcon() {
+      public Image getIcon() {
         return getItemIcon(item);
       }
 

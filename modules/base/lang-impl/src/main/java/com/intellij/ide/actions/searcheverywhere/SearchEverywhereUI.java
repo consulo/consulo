@@ -32,6 +32,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.popup.JBPopup;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
+import consulo.ui.image.Image;
 import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.wm.ToolWindowId;
@@ -1369,8 +1370,8 @@ public class SearchEverywhereUI extends BigPopupUI implements DataProvider, Quic
 
         @Nullable
         @Override
-        protected Icon getItemIcon(@Nonnull T value) {
-          return TargetAWT.to(filter.getElementIcon(value));
+        protected Image getItemIcon(@Nonnull T value) {
+          return filter.getElementIcon(value);
         }
       };
       res.markElements(filter.getSelectedElements());

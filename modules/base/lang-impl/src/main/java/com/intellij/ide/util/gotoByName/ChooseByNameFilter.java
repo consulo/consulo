@@ -26,6 +26,7 @@ import com.intellij.openapi.ui.popup.JBPopupListener;
 import com.intellij.openapi.ui.popup.LightweightWindowEvent;
 import consulo.awt.TargetAWT;
 import consulo.disposer.Disposer;
+import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -163,8 +164,8 @@ public abstract class ChooseByNameFilter<T> {
       }
 
       @Override
-      protected Icon getItemIcon(@Nonnull final T value) {
-        return TargetAWT.to(iconForFilterValue(value));
+      protected Image getItemIcon(@Nonnull final T value) {
+        return iconForFilterValue(value);
       }
     };
     chooser.setFocusable(false);

@@ -21,6 +21,7 @@ import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.openapi.roots.ContentFolder;
 import com.intellij.openapi.ui.ComboBoxTableRenderer;
 import com.intellij.openapi.ui.DialogWrapper;
+import consulo.ui.image.Image;
 import consulo.util.dataholder.Key;
 import com.intellij.ui.AnActionButton;
 import com.intellij.ui.AnActionButtonRunnable;
@@ -69,7 +70,7 @@ public class ContentFolderPropertiesDialog extends DialogWrapper {
 
     @Nullable
     @Override
-    protected Icon getItemIcon(ContentFolderPropertyProvider<?> item) {
+    protected Image getItemIcon(ContentFolderPropertyProvider<?> item) {
       return null;
     }
   }

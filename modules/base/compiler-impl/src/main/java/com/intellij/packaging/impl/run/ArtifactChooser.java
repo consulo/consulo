@@ -20,11 +20,9 @@ import com.intellij.ide.util.ElementsChooser;
 import com.intellij.packaging.artifacts.Artifact;
 import com.intellij.packaging.artifacts.ArtifactPointer;
 import com.intellij.ui.JBColor;
-import consulo.awt.TargetAWT;
+import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
-
-import javax.swing.*;
 import java.awt.*;
 import java.util.Comparator;
 import java.util.List;
@@ -33,15 +31,10 @@ import java.util.List;
  * @author nik
  */
 public class ArtifactChooser extends ElementsChooser<ArtifactPointer> {
-  private static final Comparator<ArtifactPointer> ARTIFACT_COMPARATOR = new Comparator<ArtifactPointer>() {
-    @Override
-    public int compare(ArtifactPointer o1, ArtifactPointer o2) {
-      return o1.getName().compareToIgnoreCase(o2.getName());
-    }
-  };
+  private static final Comparator<ArtifactPointer> ARTIFACT_COMPARATOR = (o1, o2) -> o1.getName().compareToIgnoreCase(o2.getName());
   private static final ElementProperties INVALID_ARTIFACT_PROPERTIES = new ElementProperties() {
     @Override
-    public Icon getIcon() {
+    public Image getIcon() {
       return AllIcons.Nodes.Artifact;
     }
 
@@ -67,8 +60,8 @@ public class ArtifactChooser extends ElementsChooser<ArtifactPointer> {
   }
 
   @Override
-  protected Icon getItemIcon(@Nonnull ArtifactPointer value) {
+  protected Image getItemIcon(@Nonnull ArtifactPointer value) {
     final Artifact artifact = value.get();
-    return artifact != null ? TargetAWT.to(artifact.getArtifactType().getIcon()) : null;
+    return artifact != null ? artifact.getArtifactType().getIcon() : null;
   }
 }

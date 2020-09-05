@@ -22,7 +22,6 @@ import com.intellij.openapi.roots.ui.configuration.classpath.ClasspathPanel;
 import com.intellij.openapi.roots.ui.configuration.libraries.LibraryPresentationManager;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.StructureConfigurableContext;
 import com.intellij.openapi.util.AsyncResult;
-import consulo.awt.TargetAWT;
 import consulo.localize.LocalizeValue;
 import consulo.roots.ModuleRootLayer;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -30,7 +29,6 @@ import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.swing.*;
 import java.util.List;
 
 /**
@@ -53,10 +51,10 @@ public class ProjectLibraryActionProvider implements AddModuleDependencyActionPr
 
     @Nullable
     @Override
-    protected Icon getItemIcon(Library item) {
+    protected Image getItemIcon(Library item) {
       Image customIcon = LibraryPresentationManager.getInstance().getCustomIcon(item, myContext);
       if(customIcon != null) {
-        return TargetAWT.to(customIcon);
+        return customIcon;
       }
 
       return AllIcons.Nodes.PpLib;
