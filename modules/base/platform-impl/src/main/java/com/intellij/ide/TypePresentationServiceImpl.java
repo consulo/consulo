@@ -24,6 +24,7 @@ import com.intellij.util.containers.ConcurrentFactoryMap;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.ui.image.Image;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Singleton;
 import java.util.HashMap;
@@ -39,7 +40,7 @@ import java.util.concurrent.ConcurrentMap;
 public class TypePresentationServiceImpl extends TypePresentationService {
 
   @Override
-  public Image getIcon(Object o) {
+  public Image getIcon(@Nonnull Object o) {
     return getIcon(o.getClass(), o);
   }
 

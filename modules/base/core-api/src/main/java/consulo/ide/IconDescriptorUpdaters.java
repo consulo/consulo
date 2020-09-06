@@ -107,7 +107,11 @@ public class IconDescriptorUpdaters {
   @Nonnull
   private static Image computeBaseIcon(@Nonnull PsiElement element) {
     if(element instanceof PsiFileSystemItem) {
-      return VirtualFilePresentation.getIcon(((PsiFileSystemItem)element).getVirtualFile());
+      VirtualFile file = ((PsiFileSystemItem)element).getVirtualFile();
+      if(file != null) {
+        return VirtualFilePresentation.getIcon(file);
+      }
+      return AllIcons.Nodes.NodePlaceholder;
     }
 
     PsiFile containingFile = element.getContainingFile();
