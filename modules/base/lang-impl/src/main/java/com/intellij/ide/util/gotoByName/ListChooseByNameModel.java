@@ -5,18 +5,15 @@ import com.intellij.openapi.util.Comparing;
 import com.intellij.psi.codeStyle.NameUtil;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.ui.UIUtil;
-import org.apache.oro.text.regex.MalformedPatternException;
-import org.apache.oro.text.regex.Pattern;
-import org.apache.oro.text.regex.Perl5Compiler;
-import org.apache.oro.text.regex.Perl5Matcher;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 /**
  * Model allowing to show a fixed list of items, each having a name and description, in Choose by Name popup.
@@ -144,7 +141,7 @@ public class ListChooseByNameModel<T extends ChooseByNameItem> extends SimpleCho
       return false;
     }
 
-    return new Perl5Matcher().matches(name, compiledPattern);
+    return compiledPattern.matcher(name).find();
   }
 
   @Nullable
@@ -156,12 +153,7 @@ public class ListChooseByNameModel<T extends ChooseByNameItem> extends SimpleCho
     if (myCompiledPattern == null) {
       final String regex = "^.*" + NameUtil.buildRegexp(pattern, 0, true, true);
 
-      final Perl5Compiler compiler = new Perl5Compiler();
-      try {
-        myCompiledPattern = compiler.compile(regex);
-      }
-      catch (MalformedPatternException ignored) {
-      }
+      myCompiledPattern = Pattern.compile(regex);
     }
     return myCompiledPattern;
   }

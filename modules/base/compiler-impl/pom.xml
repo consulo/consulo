@@ -41,10 +41,5 @@
       <artifactId>consulo-platform-impl</artifactId>
       <version>${project.version}</version>
     </dependency>
-    <dependency>
-      <groupId>oro</groupId>
-      <artifactId>oro</artifactId>
-      <optional>true</optional>
-    </dependency>
   </dependencies>
 </project>

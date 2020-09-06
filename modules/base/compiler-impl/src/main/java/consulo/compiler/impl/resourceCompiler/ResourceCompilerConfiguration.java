@@ -20,7 +20,6 @@ import com.intellij.compiler.MalformedPatternException;
 import com.intellij.openapi.application.ApplicationNamesInfo;
 import com.intellij.openapi.compiler.CompilerBundle;
 import com.intellij.openapi.components.*;
-import consulo.logging.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.ui.InputValidator;
@@ -33,17 +32,19 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.ArrayUtil;
-import org.apache.oro.text.regex.*;
+import consulo.logging.Logger;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * @author VISTALL
@@ -84,13 +85,12 @@ public class ResourceCompilerConfiguration implements PersistentStateComponent<E
 
   private Project myProject;
   // extensions of the files considered as resource files
-  private final List<Pattern> myRegexpResourcePatterns = new ArrayList<Pattern>();
+  private final List<Pattern> myRegexpResourcePatterns = new ArrayList<>();
   // extensions of the files considered as resource files. If present, overrides patterns in old regexp format stored in myRegexpResourcePatterns
-  private final List<String> myWildcardPatterns = new ArrayList<String>();
-  private final List<CompiledPattern> myCompiledPatterns = new ArrayList<CompiledPattern>();
-  private final List<CompiledPattern> myNegatedCompiledPatterns = new ArrayList<CompiledPattern>();
+  private final List<String> myWildcardPatterns = new ArrayList<>();
+  private final List<CompiledPattern> myCompiledPatterns = new ArrayList<>();
+  private final List<CompiledPattern> myNegatedCompiledPatterns = new ArrayList<>();
   private boolean myWildcardPatternsInitialized = false;
-  private final Perl5Matcher myPatternMatcher = new Perl5Matcher();
 
   @Inject
   public ResourceCompilerConfiguration(Project project) {
@@ -102,7 +102,7 @@ public class ResourceCompilerConfiguration implements PersistentStateComponent<E
   }
 
   public List<String> getResourceFilePatterns() {
-    return new ArrayList<String>(myWildcardPatterns);
+    return new ArrayList<>(myWildcardPatterns);
   }
 
   public void removeResourceFilePatterns() {
@@ -160,14 +160,12 @@ public class ResourceCompilerConfiguration implements PersistentStateComponent<E
   }
 
   private boolean matches(String s, Pattern p) {
-    synchronized (myPatternMatcher) {
-      try {
-        return myPatternMatcher.matches(s, p);
-      }
-      catch (Exception e) {
-        ResourceCompilerConfiguration.LOGGER.error("Exception matching file name \"" + s + "\" against the pattern \"" + p + "\"", e);
-        return false;
-      }
+    try {
+      return p.matcher(s).find();
+    }
+    catch (Exception e) {
+      ResourceCompilerConfiguration.LOGGER.error("Exception matching file name \"" + s + "\" against the pattern \"" + p + "\"", e);
+      return false;
     }
   }
 
@@ -262,7 +260,7 @@ public class ResourceCompilerConfiguration implements PersistentStateComponent<E
     String[] patterns = ArrayUtil.newStringArray(myRegexpResourcePatterns.size());
     int index = 0;
     for (final Pattern myRegexpResourcePattern : myRegexpResourcePatterns) {
-      patterns[index++] = myRegexpResourcePattern.getPattern();
+      patterns[index++] = myRegexpResourcePattern.pattern();
     }
     return patterns;
   }
@@ -272,21 +270,18 @@ public class ResourceCompilerConfiguration implements PersistentStateComponent<E
     final List<String> converted = new ArrayList<>();
     final Pattern multipleExtensionsPatternPattern = compilePattern("\\.\\+\\\\\\.\\((\\w+(?:\\|\\w+)*)\\)");
     final Pattern singleExtensionPatternPattern = compilePattern("\\.\\+\\\\\\.(\\w+)");
-    final Perl5Matcher matcher = new Perl5Matcher();
     for (final String regexpPattern : regexpPatterns) {
-      //final Matcher multipleExtensionsMatcher = multipleExtensionsPatternPattern.matcher(regexpPattern);
-      if (matcher.matches(regexpPattern, multipleExtensionsPatternPattern)) {
-        final MatchResult match = matcher.getMatch();
-        final StringTokenizer tokenizer = new StringTokenizer(match.group(1), "|", false);
+      Matcher matcher = multipleExtensionsPatternPattern.matcher(regexpPattern);
+      if (matcher.find()) {
+        final StringTokenizer tokenizer = new StringTokenizer(matcher.group(1), "|", false);
         while (tokenizer.hasMoreTokens()) {
           converted.add("?*." + tokenizer.nextToken());
         }
       }
       else {
-        //final Matcher singleExtensionMatcher = singleExtensionPatternPattern.matcher(regexpPattern);
-        if (matcher.matches(regexpPattern, singleExtensionPatternPattern)) {
-          final MatchResult match = matcher.getMatch();
-          converted.add("?*." + match.group(1));
+        matcher = singleExtensionPatternPattern.matcher(regexpPattern);
+        if (matcher.find()) {
+          converted.add("?*." + matcher.group(1));
         }
         else {
           return false;
@@ -299,14 +294,8 @@ public class ResourceCompilerConfiguration implements PersistentStateComponent<E
     return true;
   }
 
-  private static Pattern compilePattern(@NonNls String s) throws MalformedPatternException {
-    try {
-      final PatternCompiler compiler = new Perl5Compiler();
-      return SystemInfo.isFileSystemCaseSensitive ? compiler.compile(s) : compiler.compile(s, Perl5Compiler.CASE_INSENSITIVE_MASK);
-    }
-    catch (org.apache.oro.text.regex.MalformedPatternException ex) {
-      throw new MalformedPatternException(ex);
-    }
+  private static Pattern compilePattern(String s) throws MalformedPatternException {
+    return SystemInfo.isFileSystemCaseSensitive ? Pattern.compile(s) : Pattern.compile(s, Pattern.CASE_INSENSITIVE);
   }
 
   public static boolean isPatternNegated(String wildcardPattern) {

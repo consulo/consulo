@@ -147,7 +147,6 @@
         <include>dk.brics.automaton:automaton</include>
         <include>cglib:cglib-nodep</include>
         <include>net.bytebuddy:byte-buddy</include>
-        <include>oro:oro</include>
         <include>org.apache.commons:commons-compress</include>
         <include>commons-codec:commons-codec</include>
         <include>be.cyberelf.nanoxml:nanoxml</include>
