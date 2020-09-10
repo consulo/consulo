@@ -461,9 +461,11 @@ class AdvancedEnhancer extends AbstractClassGenerator {
     e.end_class();
   }
 
+  // FIXME [VISTALL] give logic to cglib
+  private static final boolean sendDefaultImplToCgLib = false;
+
   private static boolean isJdk8DefaultMethod(Method method) {
-    // FIXME [VISTALL] give logic to cglib
-    if(Boolean.FALSE) {
+    if(!sendDefaultImplToCgLib) {
       return ((method.getModifiers() & (Modifier.ABSTRACT | Modifier.PUBLIC | Modifier.STATIC)) == Modifier.PUBLIC) && method.getDeclaringClass().isInterface();
     }
     return false;

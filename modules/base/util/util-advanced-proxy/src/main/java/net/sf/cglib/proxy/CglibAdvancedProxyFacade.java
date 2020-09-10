@@ -1,13 +1,14 @@
 package net.sf.cglib.proxy;
 
-import consulo.annotation.DeprecationInfo;
 import consulo.util.advandedProxy.ObjectMethods;
 import consulo.util.advandedProxy.ProxyHelper;
+import consulo.util.advandedProxy.internal.AdvancedProxyFacade;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.Maps;
 import consulo.util.lang.ControlFlowException;
 import net.sf.cglib.core.CodeGenerationException;
 
+import javax.annotation.Nonnull;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -17,10 +18,7 @@ import java.util.Map;
 /**
  * @author peter
  */
-@Deprecated
-@DeprecationInfo("Use AdvancedProxyBuilder")
-@SuppressWarnings("deprecation")
-public class AdvancedProxy {
+public class CglibAdvancedProxyFacade implements AdvancedProxyFacade {
   public static final Method FINALIZE_METHOD = ObjectMethods.FINALIZE_METHOD;
   public static final Method EQUALS_METHOD = ObjectMethods.EQUALS_METHOD;
   public static final Method HASHCODE_METHOD = ObjectMethods.HASHCODE_METHOD;
@@ -29,7 +27,7 @@ public class AdvancedProxy {
   private static final Map<ProxyDescription, Factory> ourFactories = Maps.newConcurrentWeakValueMap();
   private static final CallbackFilter NO_OBJECT_METHODS_FILTER = new CallbackFilter() {
     public int accept(Method method) {
-      if (AdvancedProxy.FINALIZE_METHOD.equals(method)) {
+      if (CglibAdvancedProxyFacade.FINALIZE_METHOD.equals(method)) {
         return 1;
       }
 
@@ -42,7 +40,7 @@ public class AdvancedProxy {
   };
   private static final CallbackFilter WITH_OBJECT_METHODS_FILTER = new CallbackFilter() {
     public int accept(Method method) {
-      if (AdvancedProxy.FINALIZE_METHOD.equals(method)) {
+      if (CglibAdvancedProxyFacade.FINALIZE_METHOD.equals(method)) {
         return 1;
       }
 
@@ -57,10 +55,6 @@ public class AdvancedProxy {
       return 1;
     }
   };
-
-  public static InvocationHandler getInvocationHandler(Object proxy) {
-    return (InvocationHandler)((Factory) proxy).getCallback(0);
-  }
 
   public static <T> T createProxy(final InvocationHandler handler, final Class<T> superClass, final Class... otherInterfaces) {
     return createProxy(superClass, otherInterfaces, handler, ArrayUtil.EMPTY_OBJECT_ARRAY);
@@ -80,6 +74,12 @@ public class AdvancedProxy {
     return createProxy(superClass, interfaces, handler, true, constructorArgs);
   }
 
+  @Override
+  public <T> T create(Class<T> superClass, Class[] interfaces, java.lang.reflect.InvocationHandler invocationHandler, boolean interceptObjectMethods, Object[] superConstructorArguments) {
+    return createProxy(superClass, interfaces, invocationHandler::invoke, true, superConstructorArguments);
+  }
+
+  @Nonnull
   public static <T> T createProxy(final Class<T> superClass,
                                   final Class[] interfaces,
                                   final InvocationHandler handler,
