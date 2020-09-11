@@ -19,7 +19,7 @@ public class MyVOverlay extends VOverlay {
         super();
     }
 
-    public static void setApplicationConnection(ApplicationConnection ac) {
+    public static void setApplicationConnection2(ApplicationConnection ac) {
         // this.ac = ac;
         ac_static = ac;
     }
