@@ -26,10 +26,10 @@
         <include>consulo:consulo-web-ui-impl-server</include>
         <include>consulo:consulo-web-ui-impl-shared</include>
 
-        <include>com.vaadin:vaadin-server</include>
-        <include>com.vaadin:vaadin-push</include>
-        <include>com.vaadin:vaadin-shared</include>
-        <include>com.vaadin:vaadin-themes</include>
+        <include>consulo.internal.vaadin:vaadin-server</include>
+        <include>consulo.internal.vaadin:vaadin-push</include>
+        <include>consulo.internal.vaadin:vaadin-shared</include>
+        <include>consulo.internal.vaadin:vaadin-themes</include>
         <include>com.vaadin:vaadin-sass-compiler</include>
         <include>com.vaadin.external.flute:flute</include>
         <include>com.vaadin.external.atmosphere:atmosphere-runtime</include>

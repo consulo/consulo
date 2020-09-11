@@ -63,7 +63,7 @@
     </dependency>
 
     <dependency>
-      <groupId>com.vaadin</groupId>
+      <groupId>consulo.internal.vaadin</groupId>
       <artifactId>vaadin-server</artifactId>
       <version>${vaadin.version}</version>
       <optional>true</optional>

@@ -79,9 +79,9 @@
         </dependencies>
       </plugin>
       <plugin>
-        <groupId>com.vaadin</groupId>
+        <groupId>consulo.internal.vaadin</groupId>
         <artifactId>vaadin-maven-plugin</artifactId>
-        <version>${maven.vaadin.plugin}</version>
+        <version>${vaadin.version}</version>
 
         <configuration>
           <extraJvmArgs>-Xmx1G</extraJvmArgs>
@@ -120,13 +120,13 @@
     </dependency>
     
     <dependency>
-      <groupId>com.vaadin</groupId>
+      <groupId>consulo.internal.vaadin</groupId>
       <artifactId>vaadin-client</artifactId>
       <version>${vaadin.version}</version>
       <scope>provided</scope>
       <exclusions>
         <exclusion>
-          <groupId>com.vaadin</groupId>
+          <groupId>consulo.internal.vaadin</groupId>
           <artifactId>vaadin-server</artifactId>
         </exclusion>
       </exclusions>
