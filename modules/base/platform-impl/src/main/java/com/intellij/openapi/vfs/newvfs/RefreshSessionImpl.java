@@ -47,7 +47,7 @@ public class RefreshSessionImpl extends RefreshSession {
   private final TransactionId myTransaction;
   private boolean myLaunched;
 
-  RefreshSessionImpl(boolean async, boolean recursive, @Nullable Runnable finishRunnable, @Nonnull ModalityState context) {
+  public RefreshSessionImpl(boolean async, boolean recursive, @Nullable Runnable finishRunnable, @Nonnull ModalityState context) {
     myIsAsync = async;
     myIsRecursive = recursive;
     myFinishRunnable = finishRunnable;
@@ -56,16 +56,16 @@ public class RefreshSessionImpl extends RefreshSession {
     myStartTrace = rememberStartTrace();
   }
 
+  public RefreshSessionImpl(@Nonnull List<? extends VFileEvent> events) {
+    this(false, false, null, ModalityState.defaultModalityState());
+    myEvents.addAll(events);
+  }
+
   private Throwable rememberStartTrace() {
     if (ApplicationManager.getApplication().isUnitTestMode() && (myIsAsync || !ApplicationManager.getApplication().isDispatchThread())) {
       return new Throwable();
     }
     return null;
-  }
-
-  RefreshSessionImpl(@Nonnull List<? extends VFileEvent> events) {
-    this(false, false, null, ModalityState.defaultModalityState());
-    myEvents.addAll(events);
   }
 
   @Override
@@ -175,7 +175,7 @@ public class RefreshSessionImpl extends RefreshSession {
     }
   }
 
-  void fireEvents(@Nonnull List<? extends VFileEvent> events, @Nullable List<? extends AsyncFileListener.ChangeApplier> appliers) {
+  public void fireEvents(@Nonnull List<? extends VFileEvent> events, @Nullable List<? extends AsyncFileListener.ChangeApplier> appliers) {
     try {
       if ((myFinishRunnable != null || !events.isEmpty()) && !ApplicationManager.getApplication().isDisposed()) {
         if (LOG.isDebugEnabled()) LOG.debug("events are about to fire: " + events);

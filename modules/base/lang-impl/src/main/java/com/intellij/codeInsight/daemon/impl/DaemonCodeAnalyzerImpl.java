@@ -38,7 +38,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileManager;
-import com.intellij.openapi.vfs.newvfs.RefreshQueueImpl;
+import com.intellij.openapi.vfs.newvfs.RefreshQueue;
 import com.intellij.packageDependencies.DependencyValidationManager;
 import com.intellij.psi.*;
 import com.intellij.psi.util.PsiModificationTracker;
@@ -56,9 +56,9 @@ import gnu.trove.THashMap;
 import gnu.trove.THashSet;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 import org.jetbrains.annotations.TestOnly;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Singleton;
 import java.util.*;
@@ -285,8 +285,9 @@ public class DaemonCodeAnalyzerImpl extends DaemonCodeAnalyzerEx implements Pers
     // pump first so that queued event do not interfere
     UIUtil.dispatchAllInvocationEvents();
 
+    RefreshQueue refreshQueue = RefreshQueue.getInstance();
     // refresh will fire write actions interfering with highlighting
-    while (RefreshQueueImpl.isRefreshInProgress() || HeavyProcessLatch.INSTANCE.isRunning()) {
+    while (refreshQueue.isRefreshInProgress() || HeavyProcessLatch.INSTANCE.isRunning()) {
       UIUtil.dispatchAllInvocationEvents();
     }
     long dstart = System.currentTimeMillis();

@@ -63,4 +63,6 @@ public abstract class RefreshQueue {
   public abstract void processSingleEvent(@Nonnull VFileEvent event);
 
   public abstract void cancelSession(long id);
+
+  public abstract boolean isRefreshInProgress();
 }

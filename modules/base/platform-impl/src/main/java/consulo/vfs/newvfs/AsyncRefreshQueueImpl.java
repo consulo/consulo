@@ -16,21 +16,18 @@
 package consulo.vfs.newvfs;
 
 import com.intellij.openapi.application.Application;
-import com.intellij.openapi.application.TransactionId;
-import com.intellij.openapi.vfs.AsyncFileListener;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.vfs.newvfs.AsyncEventSupport;
+import com.intellij.openapi.application.ModalityState;
+import com.intellij.openapi.vfs.newvfs.RefreshQueue;
 import com.intellij.openapi.vfs.newvfs.RefreshQueueImpl;
-import com.intellij.openapi.vfs.newvfs.RefreshSessionImpl;
-import com.intellij.openapi.vfs.newvfs.events.VFileCreateEvent;
+import com.intellij.openapi.vfs.newvfs.RefreshSession;
 import com.intellij.openapi.vfs.newvfs.events.VFileEvent;
-import com.intellij.util.containers.ContainerUtil;
+import consulo.disposer.Disposable;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.List;
+import java.util.Collections;
 
 /**
  * @author VISTALL
@@ -39,9 +36,38 @@ import java.util.List;
  * Implementation of {@link RefreshQueueImpl} without sync write version
  */
 @Singleton
-public class AsyncRefreshQueueImpl extends RefreshQueueImpl {
+public class AsyncRefreshQueueImpl extends RefreshQueue implements Disposable {
+  @Nonnull
+  private final Application myApplication;
+
   @Inject
   public AsyncRefreshQueueImpl(@Nonnull Application application) {
-    super(application);
+    myApplication = application;
+  }
+
+  @Nonnull
+  @Override
+  public RefreshSession createSession(boolean async, boolean recursively, @Nullable Runnable finishRunnable, @Nonnull ModalityState state) {
+    return new AsyncRefreshSessionImpl(async, recursively, finishRunnable, state);
+  }
+
+  @Override
+  public void processSingleEvent(@Nonnull VFileEvent event) {
+    new AsyncRefreshSessionImpl(Collections.singletonList(event)).launch();
+  }
+
+  @Override
+  public void cancelSession(long id) {
+
+  }
+
+  @Override
+  public boolean isRefreshInProgress() {
+    return false;
+  }
+
+  @Override
+  public void dispose() {
+
   }
 }

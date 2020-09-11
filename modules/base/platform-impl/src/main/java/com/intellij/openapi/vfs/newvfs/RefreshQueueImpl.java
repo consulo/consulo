@@ -209,10 +209,10 @@ public class RefreshQueueImpl extends RefreshQueue implements Disposable {
     new RefreshSessionImpl(Collections.singletonList(event)).launch();
   }
 
-  public static boolean isRefreshInProgress() {
-    RefreshQueueImpl refreshQueue = (RefreshQueueImpl)RefreshQueue.getInstance();
-    synchronized (refreshQueue.mySessions) {
-      return !refreshQueue.mySessions.isEmpty();
+  @Override
+  public boolean isRefreshInProgress() {
+    synchronized (mySessions) {
+      return !mySessions.isEmpty();
     }
   }
 
