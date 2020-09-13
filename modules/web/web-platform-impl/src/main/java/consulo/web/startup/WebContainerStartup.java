@@ -32,13 +32,13 @@ import consulo.web.main.WebApplicationStarter;
 import consulo.web.servlet.RootUIBuilder;
 import consulo.web.start.WebImportantFolderLocker;
 import org.eclipse.jetty.server.Server;
-import org.eclipse.jetty.server.session.DefaultSessionIdManager;
-import org.eclipse.jetty.server.session.SessionHandler;
-import org.eclipse.jetty.servlet.ServletHandler;
+import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
+import org.eclipse.jetty.websocket.server.WebSocketUpgradeFilter;
 
 import javax.annotation.Nonnull;
 import javax.servlet.Servlet;
+import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import java.util.Arrays;
 import java.util.Map;
@@ -68,19 +68,17 @@ public class WebContainerStartup implements ContainerStartup {
 
     StartupUtil.initializeLogger();
 
-    ServletHandler handler = new ServletHandler();
-
     Server server = new Server(8080);
 
-    DefaultSessionIdManager idmanager = new DefaultSessionIdManager(server);
+    ServletContextHandler handler = new ServletContextHandler(server, "/", ServletContextHandler.SESSIONS | ServletContextHandler.GZIP | ServletContextHandler.SECURITY);
 
-    server.setSessionIdManager(idmanager);
+    try {
+      WebSocketUpgradeFilter.configure(handler);
+    }
+    catch (ServletException e) {
+      throw new RuntimeException(e);
+    }
 
-    SessionHandler sessionHandler = new SessionHandler();
-    sessionHandler.setSessionIdManager(idmanager);
-
-    handler.setHandler(sessionHandler);
-    
     server.setHandler(handler);
 
     registerServlets(handler);
@@ -109,20 +107,21 @@ public class WebContainerStartup implements ContainerStartup {
     });
   }
 
-  private void registerServlets(ServletHandler handler) {
+  private void registerServlets(ServletContextHandler handler) {
     Class[] classes = new Class[]{RootUIServlet.class, UIIconServlet.class};
 
     for (Class aClass : classes) {
       Servlet servlet = (Servlet)ReflectionUtil.newInstance(aClass);
 
       ServletHolder servletHolder = new ServletHolder(servlet);
+      servletHolder.setAsyncSupported(true);
 
       WebServlet declaredAnnotation = (WebServlet)aClass.getDeclaredAnnotation(WebServlet.class);
 
       String[] urls = declaredAnnotation.urlPatterns();
 
       for (String url : urls) {
-        handler.addServletWithMapping(servletHolder, url);
+        handler.addServlet(servletHolder, url);
       }
 
       System.out.println(aClass.getName() + " registered to: " + Arrays.asList(urls));

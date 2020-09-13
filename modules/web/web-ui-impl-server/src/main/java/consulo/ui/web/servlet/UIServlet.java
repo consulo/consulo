@@ -19,6 +19,7 @@ import com.intellij.util.ReflectionUtil;
 import com.vaadin.annotations.StyleSheet;
 import com.vaadin.server.*;
 import com.vaadin.shared.communication.PushMode;
+import com.vaadin.shared.ui.ui.Transport;
 import com.vaadin.ui.UI;
 import consulo.disposer.Disposer;
 import consulo.ui.Component;
@@ -147,6 +148,12 @@ public class UIServlet extends VaadinServlet {
         @Override
         public UI createInstance(UICreateEvent event) {
           return new UIImpl(myURLPrefix, ReflectionUtil.newInstance(myClass));
+        }
+
+        @Override
+        public Transport getPushTransport(UICreateEvent event) {
+          // FIXME [VISTALL] we have problem with searching session from websockets
+          return Transport.LONG_POLLING;
         }
       });
     });
