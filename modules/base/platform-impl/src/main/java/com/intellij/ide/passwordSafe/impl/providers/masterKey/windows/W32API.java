@@ -87,7 +87,7 @@ public interface W32API extends StdCallLibrary {
     }
 
     /** Constant value representing an invalid HANDLE. */
-    HANDLE INVALID_HANDLE_VALUE = new HANDLE(Pointer.createConstant(Pointer.SIZE==8?-1:0xFFFFFFFFL));
+    HANDLE INVALID_HANDLE_VALUE = new HANDLE(Pointer.createConstant(Native.POINTER_SIZE==8?-1:0xFFFFFFFFL));
 
     /** Special HWND value. */
     HWND HWND_BROADCAST = new HWND(Pointer.createConstant(0xFFFF));
@@ -100,7 +100,7 @@ public interface W32API extends StdCallLibrary {
         }
         
         public HANDLEByReference(HANDLE h) {
-            super(Pointer.SIZE);
+            super(Native.POINTER_SIZE);
             setValue(h);
         }
         
@@ -122,7 +122,7 @@ public interface W32API extends StdCallLibrary {
     
     class LONG_PTR extends IntegerType { 
         public LONG_PTR() { this(0); }
-        public LONG_PTR(long value) { super(Pointer.SIZE, value); }
+        public LONG_PTR(long value) { super(Native.POINTER_SIZE, value); }
     }
     
     class SSIZE_T extends LONG_PTR {
@@ -132,7 +132,7 @@ public interface W32API extends StdCallLibrary {
     
     class ULONG_PTR extends IntegerType { 
         public ULONG_PTR() { this(0); }
-        public ULONG_PTR(long value) { super(Pointer.SIZE, value); }
+        public ULONG_PTR(long value) { super(Native.POINTER_SIZE, value); }
     }
     
     class SIZE_T extends ULONG_PTR {
@@ -151,8 +151,8 @@ public interface W32API extends StdCallLibrary {
     }
 
     class UINT_PTR extends IntegerType {
-        public UINT_PTR() { super(Pointer.SIZE); }
-        public UINT_PTR(long value) { super(Pointer.SIZE, value); }
+        public UINT_PTR() { super(Native.POINTER_SIZE); }
+        public UINT_PTR(long value) { super(Native.POINTER_SIZE, value); }
         public Pointer toPointer() { return Pointer.createConstant(longValue()); }
     }
 

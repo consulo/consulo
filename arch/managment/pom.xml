@@ -29,24 +29,24 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-    <jna.version>4.4.0</jna.version>
+    <jna.version>5.6.0</jna.version>
     <jdom.version>3.0-SNAPSHOT</jdom.version>
     <trove4j.version>2.2</trove4j.version>
-    <log4j2.version>2.12.1</log4j2.version>
+    <log4j2.version>2.13.3</log4j2.version>
     <guava.version>29.0-jre</guava.version>
     <!--please exclude common logging library from dependency-->
     <httpclient.version>4.5.3</httpclient.version>
-    <netty.version>4.1.33.Final</netty.version>
+    <netty.version>4.1.52.Final</netty.version>
     <gson.version>2.8.6</gson.version>
     <cglib.version>3.2.4</cglib.version>
-    <slf4j.version>1.7.29</slf4j.version>
+    <slf4j.version>1.7.30</slf4j.version>
     <junit.version>4.12</junit.version>
-    <gwt.version>2.8.2</gwt.version>
+    <gwt.version>2.9.0</gwt.version>
     <servlet.version>3.1.0</servlet.version>
     <websocket.version>1.1</websocket.version>
     <vaadin.version>8.12-SNAPSHOT</vaadin.version>
     <jaxb.version>2.3.2</jaxb.version>
-    <jetty.version>9.4.29.v20200521</jetty.version>
+    <jetty.version>9.4.31.v20200723</jetty.version>
 
     <build.number>SNAPSHOT</build.number>
     <dev.mode>true</dev.mode>
@@ -342,7 +342,7 @@
       <dependency>
         <groupId>commons-codec</groupId>
         <artifactId>commons-codec</artifactId>
-        <version>1.8</version>
+        <version>1.15</version>
       </dependency>
       <dependency>
         <groupId>io.netty</groupId>
@@ -457,7 +457,7 @@
       <dependency>
         <groupId>org.yaml</groupId>
         <artifactId>snakeyaml</artifactId>
-        <version>1.24</version>
+        <version>1.27</version>
       </dependency>
       <dependency>
         <groupId>org.eclipse.jetty</groupId>
@@ -544,7 +544,7 @@
       <dependency>
         <groupId>com.sun.istack</groupId>
         <artifactId>istack-commons-runtime</artifactId>
-        <version>3.0.8</version>
+        <version>3.0.11</version>
       </dependency>
       <dependency>
         <groupId>jakarta.activation</groupId>

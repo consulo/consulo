@@ -117,6 +117,9 @@ public class Java9ModuleInitializer {
       toResolve.add("consulo.util.collection");
       toResolve.add("consulo.util.rmi");
 
+      //toResolve.add("com.sun.jna");
+      //toResolve.add("com.sun.jna.platform");
+
       //toResolve.add("consulo.ui.api.shared");
       //toResolve.add("svg.salamander");
       //toResolve.add("org.slf4j");
