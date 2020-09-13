@@ -89,7 +89,7 @@
           <launcherDir>${project.basedir}/../../../sandbox/web/target/consulo-sandbox-web-${project.version}-main/Consulo/platform/buildSNAPSHOT/modules/consulo.platform.web/VAADIN/widgetsets</launcherDir>
           <draftCompile>false</draftCompile>
           <compileReport>false</compileReport>
-          <style>OBF</style>
+          <style>PRETTY</style>
           <strict>true</strict>
         </configuration>
 
