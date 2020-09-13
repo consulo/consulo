@@ -12,10 +12,10 @@ If you can't describe issue, you can use our [forum](https://discuss.consulo.io/
 
 ### Build Status
 
-| JVM           | [consulo.io](https://ci.consulo.io) | [consulo.io](https://ci.consulo.io) tests |Github Actions|
-| ------------- |:-------------:|--------------:|-----------------:|
-| Java 8        | [![Build Status](https://ci.consulo.io/job/commit-check/job/consulo+java8/badge/icon)](https://ci.consulo.io/job/commit-check/job/consulo+java8/) | [![Test Status](https://img.shields.io/jenkins/t/https/ci.consulo.io/job/commit-check/job/consulo+java8.svg)](https://ci.consulo.io/job/commit-check/consulo+java8)| ![jdk8](https://github.com/consulo/consulo/workflows/jdk8/badge.svg) |
-| Java 11       | [![Build Status](https://ci.consulo.io/job/commit-check/job/consulo+java11/badge/icon)](https://ci.consulo.io/job/commit-check/job/consulo+java11/) | [![Test Status](https://img.shields.io/jenkins/t/https/ci.consulo.io/job/commit-check/job/consulo+java10.svg)](https://ci.consulo.io/job/commit-check/consulo+java11)| ![jdk11](https://github.com/consulo/consulo/workflows/jdk11/badge.svg) |
+| JVM           | Github Actions|
+| ------------- |-----------------:|
+| Java 8        | ![jdk8](https://github.com/consulo/consulo/workflows/jdk8/badge.svg) |
+| Java 11       | ![jdk11](https://github.com/consulo/consulo/workflows/jdk11/badge.svg) |
 
 First of all, you need those tools:
 
