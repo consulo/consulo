@@ -33,6 +33,8 @@ import java.util.function.Consumer;
  * @since 19-Jun-16
  */
 public class GwtTreeImpl extends CellTree {
+  private Runnable myOnShow;
+
   public GwtTreeImpl() {
     super(new GwtTreeModel(), null, GWT.<CellTree.Resources>create(DefaultCellTreeResources.class), new CellTreeMessages() {
       @Override
@@ -58,6 +60,19 @@ public class GwtTreeImpl extends CellTree {
 
   public void setDoubleClickHandler(@Nonnull Consumer<TreeState.TreeNodeState> handler) {
     getTreeViewModel().setDoubleClickHandler(handler);
+  }
+
+  @Override
+  protected void onLoad() {
+    super.onLoad();
+
+    if(myOnShow != null) {
+      myOnShow.run();
+    }
+  }
+
+  public void setOnShow(Runnable onShow) {
+    myOnShow = onShow;
   }
 
   @Override

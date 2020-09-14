@@ -22,6 +22,8 @@ import com.vaadin.shared.communication.ServerRpc;
  * @since 13-Sep-17
  */
 public interface TreeServerRpc extends ServerRpc {
+  void onShow();
+
   void onOpen(String id);
 
   void onDoubleClick(String id);

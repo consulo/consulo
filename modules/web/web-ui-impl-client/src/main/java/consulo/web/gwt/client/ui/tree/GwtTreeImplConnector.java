@@ -59,6 +59,7 @@ public class GwtTreeImplConnector extends AbstractComponentConnector {
       TreeState.TreeNodeState childValue = (TreeState.TreeNodeState)value.getValue();
       getRpcProxy(TreeServerRpc.class).onSelected(childValue.myId);
     });
+    getTree().setOnShow(() -> getRpcProxy(TreeServerRpc.class).onShow());
     getTree().addHandler(new ContextMenuHandler() {
       @Override
       public void onContextMenu(ContextMenuEvent event) {

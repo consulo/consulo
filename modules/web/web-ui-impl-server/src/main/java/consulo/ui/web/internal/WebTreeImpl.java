@@ -39,6 +39,11 @@ public class WebTreeImpl<NODE> extends UIComponentWithVaadinComponent<WebTreeImp
     @SuppressWarnings("unchecked")
     private final TreeServerRpc myTreeServerRpc = new TreeServerRpc() {
       @Override
+      public void onShow() {
+        queue(myRootNode, TreeState.TreeChangeType.SET);
+      }
+
+      @Override
       public void onOpen(String id) {
         WebTreeNodeImpl<E> node = myNodeMap.get(id);
         if (node == null) {
@@ -106,22 +111,16 @@ public class WebTreeImpl<NODE> extends UIComponentWithVaadinComponent<WebTreeImp
 
     private void queue(@Nonnull WebTreeNodeImpl<E> parent, TreeState.TreeChangeType type) {
       UI ui = UI.getCurrent();
-      myUpdater.execute(() -> {
-        WebUIThreadLocal.setUI(ui);
 
-        try {
-          List<WebTreeNodeImpl<E>> children = parent.getChildren();
-          if (children == null) {
-            children = fetchChildren(parent, true);
-          }
-
-          mapChanges(parent, children, type);
-
-          ui.access(this::markAsDirty);
+      ui.access(() -> {
+        List<WebTreeNodeImpl<E>> children = parent.getChildren();
+        if (children == null) {
+          children = fetchChildren(parent, true);
         }
-        finally {
-          WebUIThreadLocal.setUI(null);
-        }
+
+        mapChanges(parent, children, type);
+
+        markAsDirty();
       });
     }
 
@@ -151,14 +150,6 @@ public class WebTreeImpl<NODE> extends UIComponentWithVaadinComponent<WebTreeImp
 
         myChanges.clear();
       }
-    }
-
-    @Override
-    @RequiredUIAccess
-    public void attach() {
-      super.attach();
-
-      queue(myRootNode, TreeState.TreeChangeType.SET);
     }
 
     @Nonnull
