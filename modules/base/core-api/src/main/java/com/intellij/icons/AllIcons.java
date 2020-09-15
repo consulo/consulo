@@ -104,7 +104,7 @@ public class AllIcons {
     public static final SwingImageRef Menu_replace = IconLoader.getIcon("/actions/menu-replace.png"); // 16x16
     public static final SwingImageRef Menu_saveall = IconLoader.getIcon("/actions/menu-saveall.png"); // 16x16
     public static final SwingImageRef Minimize = IconLoader.getIcon("/actions/minimize.png"); // 16x16
-    public static final SwingImageRef Module = IconLoader.getIcon("/actions/module.png"); // 16x16
+    public static final SwingImageRef Module = IconLoader.getIcon("/actions/module.svg"); // 16x16
     public static final SwingImageRef More = IconLoader.getIcon("/actions/more.svg");
     public static final SwingImageRef Move_to_button_top = IconLoader.getIcon("/actions/move-to-button-top.png"); // 11x12
     public static final SwingImageRef Move_to_button = IconLoader.getIcon("/actions/move-to-button.png"); // 11x10
@@ -755,16 +755,16 @@ public class AllIcons {
     public static final SwingImageRef DeleteContentRoot = IconLoader.getIcon("/modules/deleteContentRoot.png"); // 9x9
     public static final SwingImageRef DeleteContentRootRollover = IconLoader.getIcon("/modules/deleteContentRootRollover.png"); // 9x9
     public static final SwingImageRef Edit = IconLoader.getIcon("/modules/edit.png"); // 14x14
-    public static final SwingImageRef ExcludeRoot = IconLoader.getIcon("/modules/excludeRoot.png"); // 16x16
+    public static final SwingImageRef ExcludeRoot = IconLoader.getIcon("/modules/excludeRoot.svg"); // 16x16
     public static final SwingImageRef GeneratedMark = IconLoader.getIcon("/modules/generatedMark.png"); // 16x16
     public static final SwingImageRef Library = IconLoader.getIcon("/modules/library.png"); // 16x16
     public static final SwingImageRef Merge = IconLoader.getIcon("/modules/merge.png"); // 16x16
     public static final SwingImageRef ModulesNode = IconLoader.getIcon("/modules/modulesNode.png"); // 16x16
-    public static final SwingImageRef SourceRoot = IconLoader.getIcon("/modules/sourceRoot.png"); // 16x16
-    public static final SwingImageRef ResourcesRoot = IconLoader.getIcon("/modules/resourcesRoot.png"); // 16x16
-    public static final SwingImageRef TestResourcesRoot = IconLoader.getIcon("/modules/testResourcesRoot.png"); // 16x16
+    public static final SwingImageRef SourceRoot = IconLoader.getIcon("/modules/sourceRoot.svg"); // 16x16
+    public static final SwingImageRef ResourcesRoot = IconLoader.getIcon("/modules/resourcesRoot.svg"); // 16x16
+    public static final SwingImageRef TestResourcesRoot = IconLoader.getIcon("/modules/testResourcesRoot.svg"); // 16x16
     public static final SwingImageRef Split = IconLoader.getIcon("/modules/split.png"); // 16x16
-    public static final SwingImageRef TestRoot = IconLoader.getIcon("/modules/testRoot.png"); // 16x16
+    public static final SwingImageRef TestRoot = IconLoader.getIcon("/modules/testRoot.svg"); // 16x16
     public static final SwingImageRef WebRoot = IconLoader.getIcon("/modules/webRoot.png"); // 16x16
 
   }
@@ -820,7 +820,7 @@ public class AllIcons {
     public static final SwingImageRef Field = IconLoader.getIcon("/nodes/field.png"); // 16x16
     public static final SwingImageRef FieldPK = IconLoader.getIcon("/nodes/fieldPK.png"); // 16x16
     public static final SwingImageRef FinalMark = IconLoader.getIcon("/nodes/finalMark.png"); // 16x16
-    public static final SwingImageRef Folder = IconLoader.getIcon("/nodes/folder.png"); // 16x16
+    public static final SwingImageRef Folder = IconLoader.getIcon("/nodes/folder.svg"); // 16x16
     public static final SwingImageRef Function = IconLoader.getIcon("/nodes/function.png"); // 16x16
     public static final SwingImageRef Lambda = IconLoader.getIcon("/nodes/lambda.png"); // 16x16
     public static final SwingImageRef HomeFolder = IconLoader.getIcon("/nodes/homeFolder.png"); // 16x16
@@ -839,12 +839,12 @@ public class AllIcons {
     public static final SwingImageRef Locked = IconLoader.getIcon("/nodes/locked.png"); // 16x16
     public static final SwingImageRef Method = IconLoader.getIcon("/nodes/method.png"); // 16x16
     public static final SwingImageRef MethodReference = IconLoader.getIcon("/nodes/methodReference.png"); // 16x16
-    public static final SwingImageRef Module = IconLoader.getIcon("/nodes/Module.png"); // 16x16
+    public static final SwingImageRef Module = IconLoader.getIcon("/nodes/Module.svg"); // 16x16
     public static final SwingImageRef ModuleGroup = IconLoader.getIcon("/nodes/moduleGroup.png"); // 16x16
-    public static final SwingImageRef NewFolder = IconLoader.getIcon("/nodes/newFolder.png"); // 16x16
+    public static final SwingImageRef NewFolder = IconLoader.getIcon("/nodes/newFolder.svg"); // 16x16
     public static final SwingImageRef NodePlaceholder = IconLoader.getIcon("/nodes/nodePlaceholder.png"); // 16x16
-    public static final SwingImageRef Package = IconLoader.getIcon("/nodes/package.png"); // 16x16
-    public static final SwingImageRef TestPackage = IconLoader.getIcon("/nodes/testPackage.png"); // 16x16
+    public static final SwingImageRef Package = IconLoader.getIcon("/nodes/package.svg"); // 16x16
+    public static final SwingImageRef TestPackage = Package; // 16x16
     public static final SwingImageRef Padlock = IconLoader.getIcon("/nodes/padlock.png"); // 16x16
     public static final SwingImageRef Parameter = IconLoader.getIcon("/nodes/parameter.png"); // 16x16
     public static final SwingImageRef PinToolWindow = IconLoader.getIcon("/nodes/pinToolWindow.png"); // 13x13
@@ -856,8 +856,8 @@ public class AllIcons {
     public static final SwingImageRef PpInvalid = IconLoader.getIcon("/nodes/ppInvalid.png"); // 16x16
     public static final SwingImageRef PpJar = IconLoader.getIcon("/nodes/ppJar.png"); // 16x16
     public static final SwingImageRef PpJdk = IconLoader.getIcon("/nodes/ppJdk.png"); // 16x16
-    public static final SwingImageRef PpLib = IconLoader.getIcon("/nodes/ppLib.png"); // 16x16
-    public static final SwingImageRef PpLibFolder = IconLoader.getIcon("/nodes/ppLibFolder.png"); // 16x16
+    public static final SwingImageRef PpLib = IconLoader.getIcon("/nodes/ppLib.svg"); // 16x16
+    public static final SwingImageRef PpLibFolder = IconLoader.getIcon("/nodes/ppLibFolder.svg"); // 16x16
     public static final SwingImageRef PpWeb = IconLoader.getIcon("/nodes/ppWeb.png"); // 16x16
     public static final SwingImageRef ProjectTab = IconLoader.getIcon("/nodes/projectTab.png"); // 16x16
     public static final SwingImageRef Property = IconLoader.getIcon("/nodes/property.png"); // 16x16
@@ -881,11 +881,11 @@ public class AllIcons {
     public static final SwingImageRef TabAlert = IconLoader.getIcon("/nodes/tabAlert.png"); // 16x16
     public static final SwingImageRef TabPin = IconLoader.getIcon("/nodes/tabPin.png"); // 16x16
     public static final SwingImageRef Tag = IconLoader.getIcon("/nodes/tag.png"); // 16x16
-    public static final SwingImageRef TreeClosed = IconLoader.getIcon("/nodes/TreeClosed.png"); // 16x16
+    public static final SwingImageRef TreeClosed = IconLoader.getIcon("/nodes/TreeClosed.svg"); // 16x16
     public static final SwingImageRef TreeCollapseNode = IconLoader.getIcon("/nodes/treeCollapseNode.png"); // 16x16
     public static final SwingImageRef TreeDownArrow = IconLoader.getIcon("/nodes/treeDownArrow.png"); // 11x11
     public static final SwingImageRef TreeExpandNode = IconLoader.getIcon("/nodes/treeExpandNode.png"); // 16x16
-    public static final SwingImageRef TreeOpen = IconLoader.getIcon("/nodes/TreeOpen.png"); // 16x16
+    public static final SwingImageRef TreeOpen = IconLoader.getIcon("/nodes/TreeOpen.svg"); // 16x16
     public static final SwingImageRef TreeRightArrow = IconLoader.getIcon("/nodes/treeRightArrow.png"); // 11x11
     public static final SwingImageRef Undeploy = IconLoader.getIcon("/nodes/undeploy.png"); // 16x16
     public static final SwingImageRef UnknownJdk = IconLoader.getIcon("/nodes/unknownJdk.png"); // 16x16
