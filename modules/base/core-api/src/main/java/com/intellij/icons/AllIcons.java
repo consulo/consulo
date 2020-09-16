@@ -769,22 +769,22 @@ public class AllIcons {
   }
 
   public static class Nodes {
-    public static final SwingImageRef Attribute = IconLoader.getIcon("/nodes/attribute.png"); // 16x16
-    public static final SwingImageRef AbstractAttribute = IconLoader.getIcon("/nodes/abstractAttribute.png"); // 16x16
-    public static final SwingImageRef AbstractClass = IconLoader.getIcon("/nodes/abstractClass.png"); // 16x16
-    public static final SwingImageRef AbstractException = IconLoader.getIcon("/nodes/abstractException.png"); // 16x16
+    public static final SwingImageRef Attribute = IconLoader.getIcon("/nodes/attribute.svg"); // 16x16
+    public static final SwingImageRef AbstractAttribute = IconLoader.getIcon("/nodes/abstractAttribute.svg"); // 16x16
+    public static final SwingImageRef AbstractClass = IconLoader.getIcon("/nodes/abstractClass.svg"); // 16x16
+    public static final SwingImageRef AbstractException = IconLoader.getIcon("/nodes/abstractException.svg"); // 16x16
     public static final SwingImageRef AbstractMethod = IconLoader.getIcon("/nodes/abstractMethod.png"); // 16x16
-    public static final SwingImageRef AbstractStruct = IconLoader.getIcon("/nodes/abstractStruct.png"); // 16x16
+    public static final SwingImageRef AbstractStruct = IconLoader.getIcon("/nodes/abstractStruct.svg"); // 16x16
     public static final SwingImageRef Advice = IconLoader.getIcon("/nodes/advice.png"); // 16x16
-    public static final SwingImageRef Annotationtype = IconLoader.getIcon("/nodes/annotationtype.png"); // 16x16
-    public static final SwingImageRef AnonymousClass = IconLoader.getIcon("/nodes/anonymousClass.png"); // 16x16
+    public static final SwingImageRef Annotationtype = IconLoader.getIcon("/nodes/annotationtype.svg"); // 16x16
+    public static final SwingImageRef AnonymousClass = IconLoader.getIcon("/nodes/anonymousClass.svg"); // 16x16
     public static final SwingImageRef Artifact = IconLoader.getIcon("/nodes/artifact.png"); // 16x16
     public static final SwingImageRef Aspect = IconLoader.getIcon("/nodes/aspect.png"); // 14x14
     public static final SwingImageRef C_plocal = IconLoader.getIcon("/nodes/c_plocal.png"); // 16x16
     public static final SwingImageRef C_private = IconLoader.getIcon("/nodes/c_private.png"); // 16x16
     public static final SwingImageRef C_protected = IconLoader.getIcon("/nodes/c_protected.png"); // 16x16
     public static final SwingImageRef C_public = IconLoader.getIcon("/nodes/c_public.png"); // 16x16
-    public static final SwingImageRef Class = IconLoader.getIcon("/nodes/class.png"); // 16x16
+    public static final SwingImageRef Class = IconLoader.getIcon("/nodes/class.svg"); // 16x16
     public static final SwingImageRef ClassInitializer = IconLoader.getIcon("/nodes/classInitializer.png"); // 16x16
     public static final SwingImageRef CollapseNode = IconLoader.getIcon("/nodes/collapseNode.png"); // 9x9
     public static final SwingImageRef CompiledClassesFolder = IconLoader.getIcon("/nodes/compiledClassesFolder.png"); // 16x16
@@ -808,10 +808,10 @@ public class AllIcons {
     public static final SwingImageRef EjbReference = IconLoader.getIcon("/nodes/ejbReference.png"); // 16x16
     public static final SwingImageRef EmptyNode = IconLoader.getIcon("/nodes/emptyNode.png"); // 18x18
     public static final SwingImageRef EntryPoints = IconLoader.getIcon("/nodes/entryPoints.png"); // 16x16
-    public static final SwingImageRef Enum = IconLoader.getIcon("/nodes/enum.png"); // 16x16
+    public static final SwingImageRef Enum = IconLoader.getIcon("/nodes/enum.svg"); // 16x16
     public static final SwingImageRef ErrorIntroduction = IconLoader.getIcon("/nodes/errorIntroduction.png"); // 16x16
     public static final SwingImageRef ErrorMark = IconLoader.getIcon("/nodes/errorMark.png"); // 16x16
-    public static final SwingImageRef ExceptionClass = IconLoader.getIcon("/nodes/exceptionClass.png"); // 16x16
+    public static final SwingImageRef ExceptionClass = IconLoader.getIcon("/nodes/exceptionClass.svg"); // 16x16
     public static final SwingImageRef ExcludedFromCompile = IconLoader.getIcon("/nodes/excludedFromCompile.png"); // 16x16
     public static final SwingImageRef ExpandNode = IconLoader.getIcon("/nodes/expandNode.png"); // 9x9
     public static final SwingImageRef ExtractedFolder = IconLoader.getIcon("/nodes/extractedFolder.png"); // 16x16
@@ -824,9 +824,9 @@ public class AllIcons {
     public static final SwingImageRef Lambda = IconLoader.getIcon("/nodes/lambda.png"); // 16x16
     public static final SwingImageRef HomeFolder = IconLoader.getIcon("/nodes/homeFolder.png"); // 16x16
     public static final SwingImageRef InspectionResults = IconLoader.getIcon("/nodes/inspectionResults.png"); // 16x16
-    public static final SwingImageRef Interface = IconLoader.getIcon("/nodes/interface.png"); // 16x16
-    public static final SwingImageRef Trait = IconLoader.getIcon("/nodes/trait.png"); // 16x16
-    public static final SwingImageRef TypeAlias = IconLoader.getIcon("/nodes/typeAlias.png"); // 16x16
+    public static final SwingImageRef Interface = IconLoader.getIcon("/nodes/interface.svg"); // 16x16
+    public static final SwingImageRef Trait = IconLoader.getIcon("/nodes/trait.svg"); // 16x16
+    public static final SwingImageRef TypeAlias = IconLoader.getIcon("/nodes/typeAlias.svg"); // 16x16
     public static final SwingImageRef J2eeParameter = IconLoader.getIcon("/nodes/j2eeParameter.png"); // 16x16
     public static final SwingImageRef JarDirectory = IconLoader.getIcon("/nodes/jarDirectory.png"); // 16x16
     public static final SwingImageRef JavaDocFolder = IconLoader.getIcon("/nodes/javaDocFolder.png"); // 16x16
@@ -867,14 +867,14 @@ public class AllIcons {
     public static final SwingImageRef PropertyWriteStatic = IconLoader.getIcon("/nodes/propertyWriteStatic.png"); // 16x16
     public static final SwingImageRef Read_access = IconLoader.getIcon("/nodes/read-access.png"); // 13x9
     public static final SwingImageRef ResourceBundle = IconLoader.getIcon("/nodes/resourceBundle.png"); // 16x16
-    public static final SwingImageRef RunnableMark = IconLoader.getIcon("/nodes/runnableMark.png"); // 16x16
+    public static final SwingImageRef RunnableMark = IconLoader.getIcon("/nodes/runnableMark.svg"); // 16x16
     public static final SwingImageRef Rw_access = IconLoader.getIcon("/nodes/rw-access.png"); // 13x9
     public static final SwingImageRef SecurityRole = IconLoader.getIcon("/nodes/SecurityRole.png"); // 16x16
     public static final SwingImageRef Servlet = IconLoader.getIcon("/nodes/servlet.png"); // 16x16
     public static final SwingImageRef SortBySeverity = IconLoader.getIcon("/nodes/sortBySeverity.png"); // 16x16
     public static final SwingImageRef Static = IconLoader.getIcon("/nodes/static.png"); // 16x16
     public static final SwingImageRef StaticMark = IconLoader.getIcon("/nodes/staticMark.png"); // 16x16
-    public static final SwingImageRef Struct = IconLoader.getIcon("/nodes/struct.png"); // 16x16
+    public static final SwingImageRef Struct = IconLoader.getIcon("/nodes/struct.svg"); // 16x16
     public static final SwingImageRef Symlink = IconLoader.getIcon("/nodes/symlink.png"); // 16x16
     public static final SwingImageRef TabAlert = IconLoader.getIcon("/nodes/tabAlert.png"); // 16x16
     public static final SwingImageRef TabPin = IconLoader.getIcon("/nodes/tabPin.png"); // 16x16
