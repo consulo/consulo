@@ -357,4 +357,9 @@ public class DesktopUIInternalImpl extends UIInternal {
   public <S> Image _Image_stated(ImageState<S> state, Function<S, Image> funcCall) {
     return new DesktopStatedImageImpl<>(state, funcCall);
   }
+
+  @Override
+  public <V, E> TableColumn<V, E> _Components_tableColumBuild(String name, Function<E, V> converter) {
+    return new DesktopTableColumnInfo<>(name, converter);
+  }
 }
