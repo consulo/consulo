@@ -209,4 +209,8 @@ public abstract class UIInternal {
   public <S> Image _Image_stated(ImageState<S> state, Function<S, Image> funcCall) {
     throw new UnsupportedOperationException();
   }
+
+  public <Value, Item> TableColumn<Value, Item> _Components_tableColumBuild(String name, Function<Item, Value> converter) {
+    throw new UnsupportedOperationException();
+  }
 }

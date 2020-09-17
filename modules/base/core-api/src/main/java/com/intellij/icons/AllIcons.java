@@ -579,16 +579,17 @@ public class AllIcons {
   }
 
   public static class Gutter {
-    public static final SwingImageRef Colors = IconLoader.getIcon("/gutter/colors.png"); // 12x12
-    public static final SwingImageRef ImplementedMethod = IconLoader.getIcon("/gutter/implementedMethod.png"); // 12x12
-    public static final SwingImageRef ImplementingFunctional = IconLoader.getIcon("/gutter/implementingFunctional.png"); // 12x12
-    public static final SwingImageRef ImplementingMethod = IconLoader.getIcon("/gutter/implementingMethod.png"); // 12x12
-    public static final SwingImageRef OverridenMethod = IconLoader.getIcon("/gutter/overridenMethod.png"); // 12x12
-    public static final SwingImageRef OverridingMethod = IconLoader.getIcon("/gutter/overridingMethod.png"); // 12x12
-    public static final SwingImageRef RecursiveMethod = IconLoader.getIcon("/gutter/recursiveMethod.png"); // 12x12
-    public static final SwingImageRef SiblingInheritedMethod = IconLoader.getIcon("/gutter/siblingInheritedMethod.png"); // 12x12
-    public static final SwingImageRef Unique = IconLoader.getIcon("/gutter/unique.png"); // 8x8
-
+    public static final SwingImageRef Colors = IconLoader.getIcon("/gutter/colors.svg"); // 12x12
+    public static final SwingImageRef ImplementedMethod = IconLoader.getIcon("/gutter/implementedMethod.svg"); // 12x12
+    public static final SwingImageRef ImplementingFunctional = IconLoader.getIcon("/gutter/implementingFunctionalInterface.svg"); // 12x12
+    public static final SwingImageRef ImplementingMethod = IconLoader.getIcon("/gutter/implementingMethod.svg"); // 12x12
+    public static final SwingImageRef OverridenMethod = IconLoader.getIcon("/gutter/overridenMethod.svg"); // 12x12
+    public static final SwingImageRef OverridingMethod = IconLoader.getIcon("/gutter/overridingMethod.svg"); // 12x12
+    public static final SwingImageRef RecursiveMethod = IconLoader.getIcon("/gutter/recursiveMethod.svg"); // 12x12
+    public static final SwingImageRef SiblingInheritedMethod = IconLoader.getIcon("/gutter/siblingInheritedMethod.svg"); // 12x12
+    public static final SwingImageRef Unique = IconLoader.getIcon("/gutter/unique.svg"); // 8x8
+    public static final Image ReadAccess = IconLoader.getIcon("/gutter/readAccess.svg"); // 12x12
+    public static final Image WriteAccess = IconLoader.getIcon("/gutter/writeAccess.svg"); // 12x12
   }
 
   public static class Hierarchy {
