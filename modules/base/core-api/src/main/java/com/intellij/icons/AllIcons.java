@@ -77,7 +77,7 @@ public class AllIcons {
     public static final Image FindAndShowPrevMatchesSmall = IconLoader.getIcon("/actions/findAndShowPrevMatchesSmall.svg");
     public static final SwingImageRef Find = IconLoader.getIcon("/actions/find.svg"); // 16x16
     public static final SwingImageRef FindPlain = Find; // 16x16
-    public static final SwingImageRef ForceRefresh = IconLoader.getIcon("/actions/forceRefresh.png"); // 16x16
+    public static final SwingImageRef ForceRefresh = IconLoader.getIcon("/actions/forceRefresh.svg"); // 16x16
     public static final SwingImageRef Forward = IconLoader.getIcon("/actions/forward.png"); // 16x16
     public static final SwingImageRef GC = IconLoader.getIcon("/actions/gc.png"); // 16x16
     public static final SwingImageRef Get = IconLoader.getIcon("/actions/get.png"); // 16x16
@@ -131,7 +131,7 @@ public class AllIcons {
     public static final SwingImageRef RealIntentionOffBulb = IconLoader.getIcon("/actions/realIntentionOffBulb.png"); // 16x16
     public static final SwingImageRef Redo = IconLoader.getIcon("/actions/redo.png"); // 16x16
     public static final SwingImageRef RefactoringBulb = IconLoader.getIcon("/actions/refactoringBulb.png"); // 16x16
-    public static final SwingImageRef Refresh = IconLoader.getIcon("/actions/refresh.png"); // 16x16
+    public static final SwingImageRef Refresh = IconLoader.getIcon("/actions/refresh.svg"); // 16x16
     public static final SwingImageRef RemoveMulticaret = IconLoader.getIcon("/actions/RemoveMulticaret.png"); // 16x16
     public static final SwingImageRef Replace = IconLoader.getIcon("/actions/replace.png"); // 16x16
     public static final SwingImageRef Rerun = IconLoader.getIcon("/actions/rerun.png"); // 16x16
