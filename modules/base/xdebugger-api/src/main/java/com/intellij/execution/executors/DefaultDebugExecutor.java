@@ -30,7 +30,6 @@ import javax.annotation.Nonnull;
  * @author spleaner
  */
 public class DefaultDebugExecutor extends Executor {
-  @NonNls
   public static final String EXECUTOR_ID = ToolWindowId.DEBUG;
 
   @Override
@@ -47,11 +46,6 @@ public class DefaultDebugExecutor extends Executor {
   @Nonnull
   public Image getIcon() {
     return AllIcons.Actions.StartDebugger;
-  }
-
-  @Override
-  public Image getDisabledIcon() {
-    return AllIcons.Process.DisabledDebug;
   }
 
   @Override

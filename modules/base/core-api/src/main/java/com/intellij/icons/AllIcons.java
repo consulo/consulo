@@ -52,7 +52,7 @@ public class AllIcons {
     public static final SwingImageRef CloseNewHovered = CloseHovered; // 16x16
     public static final SwingImageRef Collapseall = IconLoader.getIcon("/actions/collapseall.png"); // 16x16
     public static final SwingImageRef Commit = IconLoader.getIcon("/actions/commit.svg"); // 16x16
-    public static final SwingImageRef Compile = IconLoader.getIcon("/actions/compile.png"); // 16x16
+    public static final SwingImageRef Compile = IconLoader.getIcon("/actions/compile.svg"); // 16x16
     public static final SwingImageRef Copy = IconLoader.getIcon("/actions/copy.svg"); // 16x16
     public static final SwingImageRef CreateFromUsage = IconLoader.getIcon("/actions/createFromUsage.png"); // 16x16
     public static final SwingImageRef CreatePatch = IconLoader.getIcon("/actions/createPatch.png"); // 16x16
@@ -67,7 +67,7 @@ public class AllIcons {
     public static final SwingImageRef EditSource = IconLoader.getIcon("/actions/editSource.png"); // 16x16
     public static final SwingImageRef ErDiagram = IconLoader.getIcon("/actions/erDiagram.png"); // 16x16
     public static final SwingImageRef Exclude = General.Remove; // 14x14
-    public static final SwingImageRef Execute = IconLoader.getIcon("/actions/execute.png"); // 16x16
+    public static final SwingImageRef Execute = IconLoader.getIcon("/actions/execute.svg"); // 16x16
     public static final SwingImageRef Exit = IconLoader.getIcon("/actions/exit.png"); // 16x16
     public static final SwingImageRef Expandall = IconLoader.getIcon("/actions/expandall.png"); // 16x16
     public static final SwingImageRef Export = IconLoader.getIcon("/actions/export.png"); // 16x16
@@ -92,7 +92,7 @@ public class AllIcons {
     public static final SwingImageRef GroupByTestProduction = IconLoader.getIcon("/actions/groupByTestProduction.png"); // 16x16
     public static final SwingImageRef Help = IconLoader.getIcon("/actions/help.png"); // 16x16
     public static final SwingImageRef Install = IconLoader.getIcon("/actions/install.png"); // 16x16
-    public static final SwingImageRef IntentionBulb = IconLoader.getIcon("/actions/intentionBulb.png"); // 16x16
+    public static final SwingImageRef IntentionBulb = IconLoader.getIcon("/actions/intentionBulb.svg"); // 16x16
     public static final SwingImageRef Left = IconLoader.getIcon("/actions/left.png"); // 16x16
     public static final SwingImageRef LoginAvator = IconLoader.getIcon("/actions/loginAvatar.png"); // 16x16
     public static final SwingImageRef Lightning = IconLoader.getIcon("/actions/lightning.png"); // 16x16
@@ -115,7 +115,7 @@ public class AllIcons {
     public static final SwingImageRef NewFolder = IconLoader.getIcon("/actions/newFolder.svg"); // 16x16
     public static final SwingImageRef Nextfile = IconLoader.getIcon("/actions/nextfile.png"); // 16x16
     public static final SwingImageRef NextOccurence = IconLoader.getIcon("/actions/nextOccurence.png"); // 16x16
-    public static final SwingImageRef Pause = IconLoader.getIcon("/actions/pause.png"); // 16x16
+    public static final SwingImageRef Pause = IconLoader.getIcon("/actions/pause.svg"); // 16x16
     public static final SwingImageRef PopFrame = IconLoader.getIcon("/actions/popFrame.png"); // 16x16
     public static final SwingImageRef Prevfile = IconLoader.getIcon("/actions/prevfile.png"); // 16x16
     public static final SwingImageRef Preview = IconLoader.getIcon("/actions/preview.png"); // 16x16
@@ -124,11 +124,10 @@ public class AllIcons {
     public static final SwingImageRef ProfileCPU = IconLoader.getIcon("/actions/profileCPU.png"); // 16x16
     public static final SwingImageRef ProfileMemory = IconLoader.getIcon("/actions/profileMemory.png"); // 16x16
     public static final SwingImageRef Properties = IconLoader.getIcon("/actions/properties.png"); // 16x16
-    public static final SwingImageRef QuickfixBulb = IconLoader.getIcon("/actions/quickfixBulb.png"); // 16x16
-    public static final SwingImageRef QuickfixOffBulb = IconLoader.getIcon("/actions/quickfixOffBulb.png"); // 16x16
+    public static final SwingImageRef QuickfixBulb = IconLoader.getIcon("/actions/quickfixBulb.svg"); // 16x16
+    public static final SwingImageRef QuickfixOffBulb = IconLoader.getIcon("/actions/quickfixOffBulb.svg"); // 16x16
     public static final SwingImageRef QuickList = IconLoader.getIcon("/actions/quickList.png"); // 16x16
-    public static final SwingImageRef RealIntentionBulb = IconLoader.getIcon("/actions/realIntentionBulb.png"); // 16x16
-    public static final SwingImageRef RealIntentionOffBulb = IconLoader.getIcon("/actions/realIntentionOffBulb.png"); // 16x16
+    public static final SwingImageRef RealIntentionBulb = IconLoader.getIcon("/actions/realIntentionBulb.svg"); // 16x16
     public static final SwingImageRef Redo = IconLoader.getIcon("/actions/redo.png"); // 16x16
     public static final SwingImageRef RefactoringBulb = IconLoader.getIcon("/actions/refactoringBulb.png"); // 16x16
     public static final SwingImageRef Refresh = IconLoader.getIcon("/actions/refresh.svg"); // 16x16
@@ -138,8 +137,8 @@ public class AllIcons {
     public static final SwingImageRef Reset_to_default = IconLoader.getIcon("/actions/reset-to-default.png"); // 16x16
     public static final SwingImageRef Reset = IconLoader.getIcon("/actions/reset.png"); // 16x16
     public static final SwingImageRef Reset_to_empty = IconLoader.getIcon("/actions/Reset_to_empty.png"); // 16x16
-    public static final SwingImageRef Restart = IconLoader.getIcon("/actions/restart.png"); // 16x16
-    public static final SwingImageRef Resume = IconLoader.getIcon("/actions/resume.png"); // 16x16
+    public static final SwingImageRef Restart = IconLoader.getIcon("/actions/restart.svg"); // 16x16
+    public static final SwingImageRef Resume = IconLoader.getIcon("/actions/resume.svg"); // 16x16
     public static final SwingImageRef Right = IconLoader.getIcon("/actions/right.png"); // 16x16
     public static final SwingImageRef Rollback = IconLoader.getIcon("/actions/rollback.svg"); // 16x16
     public static final SwingImageRef RunToCursor = IconLoader.getIcon("/actions/runToCursor.png"); // 16x16
@@ -163,10 +162,10 @@ public class AllIcons {
     public static final SwingImageRef SortDesc = IconLoader.getIcon("/actions/sortDesc.png"); // 9x8
     public static final SwingImageRef SplitHorizontally = IconLoader.getIcon("/actions/splitHorizontally.png"); // 16x16
     public static final SwingImageRef SplitVertically = IconLoader.getIcon("/actions/splitVertically.png"); // 16x16
-    public static final SwingImageRef StartDebugger = IconLoader.getIcon("/actions/startDebugger.png"); // 16x16
+    public static final SwingImageRef StartDebugger = IconLoader.getIcon("/actions/startDebugger.svg"); // 16x16
     public static final SwingImageRef StepOut = IconLoader.getIcon("/actions/stepOut.png"); // 16x16
     public static final SwingImageRef Submit1 = IconLoader.getIcon("/actions/submit1.png"); // 11x11
-    public static final SwingImageRef Suspend = IconLoader.getIcon("/actions/suspend.png"); // 16x16
+    public static final SwingImageRef Suspend = IconLoader.getIcon("/actions/suspend.svg"); // 16x16
     public static final SwingImageRef SwapPanels = IconLoader.getIcon("/actions/swapPanels.png"); // 16x16
     public static final SwingImageRef SynchronizeScrolling = IconLoader.getIcon("/actions/synchronizeScrolling.png"); // 16x16
     public static final SwingImageRef SyncPanels = IconLoader.getIcon("/actions/syncPanels.png"); // 16x16
@@ -419,11 +418,11 @@ public class AllIcons {
     public static final SwingImageRef AutohideOffInactive = IconLoader.getIcon("/general/autohideOffInactive.png"); // 14x14
     public static final SwingImageRef AutoscrollFromSource = IconLoader.getIcon("/general/autoscrollFromSource.png"); // 16x16
     public static final SwingImageRef AutoscrollToSource = IconLoader.getIcon("/general/autoscrollToSource.png"); // 16x16
-    public static final SwingImageRef Balloon = IconLoader.getIcon("/general/balloon.png"); // 16x16
+    public static final SwingImageRef Balloon = IconLoader.getIcon("/general/balloon.svg"); // 16x16
     public static final SwingImageRef BalloonClose = IconLoader.getIcon("/general/balloonClose.png"); // 30x30
-    public static final SwingImageRef BalloonError = IconLoader.getIcon("/general/balloonError.png"); // 16x16
-    public static final SwingImageRef BalloonInformation = IconLoader.getIcon("/general/balloonInformation.png"); // 16x16
-    public static final SwingImageRef BalloonWarning = IconLoader.getIcon("/general/balloonWarning.png"); // 16x16
+    public static final SwingImageRef BalloonError = IconLoader.getIcon("/general/balloonError.svg"); // 16x16
+    public static final SwingImageRef BalloonInformation = IconLoader.getIcon("/general/balloonInformation.svg"); // 16x16
+    public static final SwingImageRef BalloonWarning = IconLoader.getIcon("/general/balloonWarning.svg"); // 16x16
     public static final SwingImageRef Bullet = IconLoader.getIcon("/general/bullet.png"); // 16x16
     public static final SwingImageRef CollapseComponent = IconLoader.getIcon("/general/collapseComponent.svg");
     public static final SwingImageRef CollapseComponentHover = IconLoader.getIcon("/general/collapseComponentHover.svg");
@@ -515,19 +514,18 @@ public class AllIcons {
     public static final SwingImageRef ProjectConfigurableBanner = IconLoader.getIcon("/general/projectConfigurableBanner.png"); // 9x9
     public static final SwingImageRef ProjectConfigurableSelected = IconLoader.getIcon("/general/projectConfigurableSelected.png"); // 9x9
     public static final SwingImageRef ProjectSettings = IconLoader.getIcon("/general/projectSettings.png"); // 16x16
-    public static final SwingImageRef ProjectStructure = IconLoader.getIcon("/general/projectStructure.png"); // 16x16
+    public static final SwingImageRef ProjectStructure = IconLoader.getIcon("/general/projectStructure.svg"); // 16x16
     public static final SwingImageRef ProjectTab = IconLoader.getIcon("/general/projectTab.png"); // 16x16
     public static final SwingImageRef QuestionDialog = IconLoader.getIcon("/general/questionDialog.png"); // 32x32
     public static final SwingImageRef ReadHelp = IconLoader.getIcon("/general/readHelp.png"); // 32x32
     public static final SwingImageRef Remove = IconLoader.getIcon("/general/remove.svg"); // 16x16
     public static final SwingImageRef Reset = IconLoader.getIcon("/general/reset.png"); // 16x16
-    public static final SwingImageRef Run = IconLoader.getIcon("/general/run.png"); // 7x10
-    public static final SwingImageRef RunWithCoverage = IconLoader.getIcon("/general/runWithCoverage.png"); // 16x16
+    public static final SwingImageRef RunWithCoverage = IconLoader.getIcon("/general/runWithCoverage.svg"); // 16x16
     public static final SwingImageRef SafeMode = IconLoader.getIcon("/general/safeMode.png"); // 13x13
     public static final SwingImageRef SearchEverywhereGear = IconLoader.getIcon("/general/searchEverywhereGear.png"); // 16x16
     public static final SwingImageRef SecondaryGroup = IconLoader.getIcon("/general/secondaryGroup.png"); // 16x16
     public static final SwingImageRef SeparatorH = IconLoader.getIcon("/general/separatorH.png"); // 17x11
-    public static final SwingImageRef Settings = IconLoader.getIcon("/general/settings.png"); // 16x16
+    public static final SwingImageRef Settings = IconLoader.getIcon("/general/settings.svg"); // 16x16
     public static final SwingImageRef Show_to_implement = IconLoader.getIcon("/general/show_to_implement.png"); // 16x16
     public static final SwingImageRef Show_to_override = IconLoader.getIcon("/general/show_to_override.png"); // 16x16
     public static final SwingImageRef SmallConfigurableVcs = IconLoader.getIcon("/general/smallConfigurableVcs.png"); // 16x16
@@ -702,8 +700,8 @@ public class AllIcons {
     public static final SwingImageRef Rating2 = IconLoader.getIcon("/ide/rating2.png"); // 11x11
     public static final SwingImageRef Rating3 = IconLoader.getIcon("/ide/rating3.png"); // 11x11
     public static final SwingImageRef Rating4 = IconLoader.getIcon("/ide/rating4.png"); // 11x11
-    public static final SwingImageRef Readonly = IconLoader.getIcon("/ide/readonly.png"); // 16x16
-    public static final SwingImageRef Readwrite = IconLoader.getIcon("/ide/readwrite.png"); // 16x16
+    public static final SwingImageRef Readonly = IconLoader.getIcon("/ide/readonly.svg"); // 16x16
+    public static final SwingImageRef Readwrite = IconLoader.getIcon("/ide/readwrite.svg"); // 16x16
 
     public static class Shadow {
       public static final SwingImageRef Bottom_left = IconLoader.getIcon("/ide/shadow/bottom-left.png"); // 18x22
@@ -1101,7 +1099,7 @@ public class AllIcons {
     public static final SwingImageRef ToolWindowCommander = IconLoader.getIcon("/toolwindows/toolWindowCommander.png"); // 13x13
     public static final SwingImageRef ToolWindowCoverage = IconLoader.getIcon("/toolwindows/toolWindowCoverage.png"); // 13x13
     public static final SwingImageRef ToolWindowCvs = IconLoader.getIcon("/toolwindows/toolWindowCvs.png"); // 13x13
-    public static final SwingImageRef ToolWindowDebugger = IconLoader.getIcon("/toolwindows/toolWindowDebugger.png"); // 13x13
+    public static final SwingImageRef ToolWindowDebugger = IconLoader.getIcon("/toolwindows/toolWindowDebugger.svg"); // 13x13
     public static final SwingImageRef ToolWindowFavorites = IconLoader.getIcon("/toolwindows/toolWindowFavorites.png"); // 13x13
     public static final SwingImageRef ToolWindowFind = IconLoader.getIcon("/toolwindows/toolWindowFind.png"); // 13x13
     public static final SwingImageRef ToolWindowHierarchy = IconLoader.getIcon("/toolwindows/toolWindowHierarchy.png"); // 13x13
@@ -1110,7 +1108,7 @@ public class AllIcons {
     public static final SwingImageRef ToolWindowModuleDependencies = IconLoader.getIcon("/toolwindows/toolWindowModuleDependencies.png"); // 13x13
     public static final SwingImageRef ToolWindowPalette = IconLoader.getIcon("/toolwindows/toolWindowPalette.png"); // 13x13
     public static final SwingImageRef ToolWindowProject = IconLoader.getIcon("/toolwindows/toolWindowProject.svg"); // 13x13
-    public static final SwingImageRef ToolWindowRun = IconLoader.getIcon("/toolwindows/toolWindowRun.png"); // 13x13
+    public static final SwingImageRef ToolWindowRun = IconLoader.getIcon("/toolwindows/toolWindowRun.svg"); // 13x13
     public static final SwingImageRef ToolWindowStructure = IconLoader.getIcon("/toolwindows/toolWindowStructure.png"); // 13x13
     public static final SwingImageRef ToolWindowTodo = IconLoader.getIcon("/toolwindows/toolWindowTodo.png"); // 13x13
     public static final SwingImageRef VcsSmallTab = IconLoader.getIcon("/toolwindows/vcsSmallTab.png"); // 13x13

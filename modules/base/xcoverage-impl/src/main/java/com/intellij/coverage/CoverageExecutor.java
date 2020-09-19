@@ -63,6 +63,6 @@ public class CoverageExecutor extends Executor {
 
   @Override
   public String getHelpId() {
-    return null;//todo
+    return null;
   }
 }

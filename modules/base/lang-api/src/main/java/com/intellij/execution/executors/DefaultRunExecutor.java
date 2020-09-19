@@ -31,7 +31,6 @@ import javax.annotation.Nonnull;
  * @author spleaner
  */
 public class DefaultRunExecutor extends Executor {
-  @NonNls
   public static final String EXECUTOR_ID = ToolWindowId.RUN;
 
   @Override
@@ -54,11 +53,6 @@ public class DefaultRunExecutor extends Executor {
   @Nonnull
   public Image getIcon() {
     return AllIcons.Actions.Execute;
-  }
-
-  @Override
-  public Image getDisabledIcon() {
-    return AllIcons.Process.DisabledRun;
   }
 
   @Override
