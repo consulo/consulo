@@ -27,5 +27,5 @@ public class ExternalSystemIcons {
     return IconLoader.getIcon(path, ExternalSystemIcons.class);
   }
 
-  public static final Image Task = load("/icons/task.png"); // 16x16
+  public static final Image Task = load("/icons/task.svg"); // 16x16
 }
