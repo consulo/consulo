@@ -22,6 +22,8 @@ import com.intellij.openapi.fileTypes.impl.FileTypeRenderer;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.ComboBox;
 import com.intellij.openapi.ui.DialogWrapper;
+import com.intellij.openapi.ui.LabeledComponent;
+import com.intellij.openapi.ui.VerticalFlowLayout;
 import com.intellij.openapi.updateSettings.impl.pluginsAdvertisement.UnknownExtension;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -29,8 +31,11 @@ import com.intellij.openapi.vfs.newvfs.impl.FakeVirtualFile;
 import com.intellij.psi.impl.PsiManagerEx;
 import com.intellij.ui.CollectionComboBoxModel;
 import com.intellij.ui.DoubleClickListener;
+import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.ui.ScrollingUtil;
-import com.intellij.ui.components.JBScrollPane;
+import com.intellij.ui.components.JBLabel;
+import com.intellij.ui.components.JBList;
+import com.intellij.ui.components.JBRadioButton;
 import com.intellij.util.FunctionUtil;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.container.plugin.PluginDescriptor;
@@ -41,6 +46,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
+import java.awt.event.ItemListener;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -49,31 +55,60 @@ import java.util.Set;
 
 public class FileTypeChooser extends DialogWrapper {
   private JList<FileType> myList;
-  private JLabel myTitleLabel;
   private ComboBox<String> myPattern;
   private JPanel myPanel;
   private JRadioButton myOpenInIdea;
   private JRadioButton myOpenAsNative;
-  private JBScrollPane myListScrollPanel;
   private JRadioButton myInstallPluginFromRepository;
-  private final String myFileName;
 
   private final Set<PluginDescriptor> myFeaturePlugins;
 
   private FileTypeChooser(@Nonnull List<String> patterns, @Nonnull String fileName) {
     super(true);
-    myFileName = fileName;
+
+    myPanel = new JPanel(new VerticalFlowLayout());
+    myPanel.add(new JBLabel(FileTypesBundle.message("filetype.chooser.prompt", fileName)));
+
+    myPattern = new ComboBox<>();
+    myPattern.setEditable(true);
+    myPanel.add(LabeledComponent.create(myPattern, FileTypesBundle.message("filetype.chooser.file.pattern")));
+
+    ButtonGroup group = new ButtonGroup();
+    myOpenInIdea = new JBRadioButton("Open matching files as type:");
+    group.add(myOpenInIdea);
+
+    myList = new JBList<>();
+    myList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+    myList.setCellRenderer(new FileTypeRenderer());
+
+    new DoubleClickListener() {
+      @Override
+      protected boolean onDoubleClick(MouseEvent e) {
+        if (myList.isEnabled()) {
+          doOKAction();
+        }
+        return true;
+      }
+    }.installOn(myList);
+
+    myList.getSelectionModel().addListSelectionListener(e -> updateButtonsState());
+
+    ScrollingUtil.selectItem(myList, PlainTextFileType.INSTANCE);
+
+    myPanel.add(myOpenInIdea);
+    JScrollPane scrollPane = ScrollPaneFactory.createScrollPane(myList);
+    myPanel.add(scrollPane);
+    myOpenAsNative = new JBRadioButton("Open matching files in associated application");
+    group.add(myOpenAsNative);
+
+    myPanel.add(myOpenAsNative);
+    myInstallPluginFromRepository = new JBRadioButton(FileTypesBundle.message("filetype.chooser.install.plugin"));
+    group.add(myInstallPluginFromRepository);
+
+    myPanel.add(myInstallPluginFromRepository);
 
     FileType[] fileTypes = FileTypeManager.getInstance().getRegisteredFileTypes();
-    Arrays.sort(fileTypes, (fileType1, fileType2) -> {
-      if (fileType1 == null) {
-        return 1;
-      }
-      if (fileType2 == null) {
-        return -1;
-      }
-      return fileType1.getDescription().compareToIgnoreCase(fileType2.getDescription());
-    });
+    Arrays.sort(fileTypes, (fileType1, fileType2) -> fileType1.getDescription().compareToIgnoreCase(fileType2.getDescription()));
 
     final DefaultListModel<FileType> model = new DefaultListModel<>();
     for (FileType type : fileTypes) {
@@ -88,11 +123,24 @@ public class FileTypeChooser extends DialogWrapper {
     List<PluginDescriptor> allPlugins = PluginsAdvertiserHolder.getLoadedPluginDescriptors();
     myFeaturePlugins = PluginsAdvertiser.findByFeature(allPlugins, fileFeatureForChecking);
 
+    ItemListener listener = e -> {
+      boolean selected = myOpenInIdea.isSelected();
+      
+      myList.setEnabled(selected);
+      scrollPane.setEnabled(selected);
+      scrollPane.getViewport().setEnabled(selected);
+    };
+    
+    myOpenInIdea.addItemListener(listener);
+    myInstallPluginFromRepository.addItemListener(listener);
+    myOpenAsNative.addItemListener(listener);
+
     if (!myFeaturePlugins.isEmpty()) {
       myInstallPluginFromRepository.setSelected(true);
-      myInstallPluginFromRepository.setText(FileTypesBundle.message("filetype.chooser.install.plugin"));
     }
     else {
+      myOpenInIdea.setSelected(true);
+      
       myInstallPluginFromRepository.setVisible(false);
     }
 
@@ -102,30 +150,13 @@ public class FileTypeChooser extends DialogWrapper {
 
   @Override
   protected JComponent createCenterPanel() {
-    myTitleLabel.setText(FileTypesBundle.message("filetype.chooser.prompt", myFileName));
-
-    myList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-    myList.setCellRenderer(new FileTypeRenderer());
-
-    new DoubleClickListener() {
-      @Override
-      protected boolean onDoubleClick(MouseEvent e) {
-        doOKAction();
-        return true;
-      }
-    }.installOn(myList);
-
-    myList.getSelectionModel().addListSelectionListener(e -> updateButtonsState());
-
-    ScrollingUtil.selectItem(myList, PlainTextFileType.INSTANCE);
-
     return myPanel;
   }
 
   @RequiredUIAccess
   @Override
   public JComponent getPreferredFocusedComponent() {
-    return myList;
+    return myList.isEnabled() ? myList : null;
   }
 
   private void updateButtonsState() {

@@ -18,20 +18,14 @@ package com.intellij.openapi.fileTypes.impl;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.fileTypes.FileTypeManager;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.ui.LayeredIcon;
-import com.intellij.ui.ListCellRendererWrapper;
-import com.intellij.util.ui.EmptyIcon;
-import consulo.awt.TargetAWT;
+import com.intellij.ui.ColoredListCellRenderer;
 
 import javax.annotation.Nonnull;
-
 import javax.swing.*;
 import java.util.Arrays;
 import java.util.List;
 
-public class FileTypeRenderer extends ListCellRendererWrapper<FileType> {
-  private static final Icon EMPTY_ICON = EmptyIcon.ICON_18;
-
+public class FileTypeRenderer extends ColoredListCellRenderer<FileType> {
   public interface FileTypeListProvider {
     Iterable<FileType> getCurrentFileTypeList();
   }
@@ -43,29 +37,23 @@ public class FileTypeRenderer extends ListCellRendererWrapper<FileType> {
   }
 
   public FileTypeRenderer(@Nonnull FileTypeListProvider fileTypeListProvider) {
-    super();
     myFileTypeListProvider = fileTypeListProvider;
   }
 
   @Override
-  public void customize(JList list, FileType type, int index, boolean selected, boolean hasFocus) {
-    LayeredIcon layeredIcon = new LayeredIcon(2);
-    layeredIcon.setIcon(EMPTY_ICON, 0);
-    final Icon icon = TargetAWT.to(type.getIcon());
-    if (icon != null) {
-      layeredIcon.setIcon(icon, 1, (- icon.getIconWidth() + EMPTY_ICON.getIconWidth())/2, (EMPTY_ICON.getIconHeight() - icon.getIconHeight())/2);
-    }
-
-    setIcon(layeredIcon);
+  protected void customizeCellRenderer(@Nonnull JList<? extends FileType> list, FileType type, int index, boolean selected, boolean hasFocus) {
+    setEnabled(list.isEnabled());
+    
+    setIcon(type.getIcon());
 
     String description = type.getDescription();
     String trimmedDescription = StringUtil.capitalizeWords(description.replaceAll("(?i)\\s*file(?:s)?$", ""), true);
     if (isDuplicated(description)) {
-      setText(trimmedDescription + " (" + type.getName() + ")");
+      append(trimmedDescription + " (" + type.getId() + ")");
 
     }
     else {
-      setText(trimmedDescription);
+      append(trimmedDescription);
     }
   }
 
