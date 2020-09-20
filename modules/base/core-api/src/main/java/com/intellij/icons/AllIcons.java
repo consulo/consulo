@@ -404,8 +404,6 @@ public class AllIcons {
 
   }
 
-  public static final SwingImageRef Frame_background = IconLoader.getIcon("/frame_background.png"); // 256x256
-
   public static class General {
     public static final SwingImageRef LayoutEditorOnly = IconLoader.getIcon("/general/layoutEditorOnly.png"); // 16x16
     public static final SwingImageRef LayoutEditorPreview = IconLoader.getIcon("/general/layoutEditorPreview.png"); // 16x16
