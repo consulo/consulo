@@ -1117,7 +1117,7 @@ public class AllIcons {
     public static final SwingImageRef Arrow_right = IconLoader.getIcon("/vcs/arrow_right.png"); // 16x16
     public static final SwingImageRef CheckSpelling = IconLoader.getIcon("/vcs/checkSpelling.png"); // 16x16
     public static final SwingImageRef Equal = IconLoader.getIcon("/vcs/equal.png"); // 16x16
-    public static final SwingImageRef History = IconLoader.getIcon("/vcs/history.png"); // 16x16
+    public static final SwingImageRef History = IconLoader.getIcon("/vcs/history.svg"); // 16x16
     public static final SwingImageRef MapBase = IconLoader.getIcon("/vcs/mapBase.png"); // 16x16
     public static final SwingImageRef Merge = IconLoader.getIcon("/vcs/merge.png"); // 12x12
     public static final SwingImageRef MergeSourcesTree = IconLoader.getIcon("/vcs/mergeSourcesTree.png"); // 16x16
