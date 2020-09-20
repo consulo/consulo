@@ -648,7 +648,7 @@ public class NewErrorTreeViewPanel extends JPanel implements DataProvider, Occur
 
   private class ShowWarningsAction extends ToggleAction {
     public ShowWarningsAction() {
-      super(IdeBundle.message("action.hide.warnings"), null, AllIcons.Nodes.WarningIntroduction);
+      super(IdeBundle.message("action.hide.warnings"), null, AllIcons.General.BalloonWarning);
     }
 
     @Override

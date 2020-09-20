@@ -45,7 +45,7 @@ public class SetEditorSettingsAction extends ActionGroup implements DumbAware {
 
   public SetEditorSettingsAction(@Nonnull TextDiffSettingsHolder.TextDiffSettings settings,
                                  @Nonnull List<? extends Editor> editors) {
-    super("Editor Settings", null, AllIcons.General.SecondaryGroup);
+    super("Editor Settings", null, AllIcons.General.GearPlain);
     setPopup(true);
     myTextSettings = settings;
     myEditors = editors;

@@ -112,7 +112,7 @@ public class ToolbarPanel extends JPanel implements OccurenceNavigator, Disposab
 
     final DefaultActionGroup secondaryGroup = new DefaultActionGroup();
     secondaryGroup.setPopup(true);
-    secondaryGroup.getTemplatePresentation().setIcon(AllIcons.General.SecondaryGroup);
+    secondaryGroup.getTemplatePresentation().setIcon(AllIcons.General.GearPlain);
     secondaryGroup.add(new DumbAwareToggleBooleanProperty(ExecutionBundle.message("junit.runing.info.track.test.action.name"),
                                                           ExecutionBundle.message("junit.runing.info.track.test.action.description"),
                                                           null, properties, TestConsoleProperties.TRACK_RUNNING_TEST));

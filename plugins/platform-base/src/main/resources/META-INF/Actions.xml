@@ -1018,7 +1018,7 @@
     <action id="ChooseRunConfiguration" class="com.intellij.execution.actions.ChooseRunConfigurationPopupAction" text="Run..."
             description="Choose and run configuration" icon="AllIcons.Toolwindows.ToolWindowRun"/>
     <action id="ChooseDebugConfiguration" class="com.intellij.execution.actions.ChooseDebugConfigurationPopupAction" text="Debug..."
-            description="Choose and debug configuration" icon="AllIcons.General.Debug"/>
+            description="Choose and debug configuration" icon="AllIcons.Actions.StartDebugger"/>
 
     <group id="RunContextGroup" popup="false">
       <action id="CreateRunConfiguration" class="com.intellij.execution.actions.CreateAction"/>
@@ -1795,7 +1795,7 @@
       <reference ref="XDebugger.ValueGroup"/>
     </group>
 
-    <group id="XDebugger.Settings" icon="AllIcons.General.SecondaryGroup" popup="true">
+    <group id="XDebugger.Settings" icon="AllIcons.General.GearPlain" popup="true">
       <action id="XDebugger.Inline" class="com.intellij.xdebugger.impl.actions.UseInlineDebuggerAction"/>
       <separator/>
       <reference ref="XDebugger.ToggleSortValues"/>
