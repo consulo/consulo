@@ -16,7 +16,6 @@ import com.intellij.openapi.editor.markup.TextAttributesEffectsBuilder.EffectDes
 import com.intellij.openapi.util.Couple;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.util.registry.Registry;
-import com.intellij.openapi.wm.impl.IdeBackgroundUtil;
 import com.intellij.ui.CachingPainter;
 import com.intellij.ui.ColorUtil;
 import com.intellij.ui.Gray;
@@ -1106,7 +1105,7 @@ public class EditorPainter implements TextDrawingCallback {
       DesktopEditorImpl.CaretRectangle[] locations = myEditor.getCaretLocations(true);
       if (locations == null) return;
 
-      Graphics2D g = IdeBackgroundUtil.getOriginalGraphics(myGraphics);
+      Graphics2D g = myGraphics;
       int nominalLineHeight = myView.getNominalLineHeight();
       int topOverhang = myView.getTopOverhang();
       EditorSettings settings = myEditor.getSettings();

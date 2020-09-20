@@ -259,7 +259,6 @@ public class XDebugSessionTab extends DebuggerSessionTabBase {
     }
 
     DefaultActionGroup leftToolbar = new DefaultActionGroup();
-    final Executor debugExecutor = DefaultDebugExecutor.getDebugExecutorInstance();
     if (myEnvironment != null) {
       leftToolbar.add(ActionManager.getInstance().getAction(IdeActions.ACTION_RERUN));
       List<AnAction> additionalRestartActions = session.getRestartActions();

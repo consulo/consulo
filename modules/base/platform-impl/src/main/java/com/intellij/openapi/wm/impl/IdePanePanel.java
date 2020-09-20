@@ -15,7 +15,11 @@
  */
 package com.intellij.openapi.wm.impl;
 
+import com.intellij.ui.ColorUtil;
+import com.intellij.ui.Gray;
+import com.intellij.ui.JBColor;
 import com.intellij.ui.components.JBPanel;
+import com.intellij.util.ui.UIUtil;
 
 import java.awt.*;
 
@@ -23,10 +27,10 @@ public class IdePanePanel extends JBPanel {
 
   public IdePanePanel(LayoutManager layout) {
     super(layout);
-  }
 
-  @Override
-  public Color getBackground() {
-    return IdeBackgroundUtil.getIdeBackgroundColor();
+    setBackground(new JBColor(() -> {
+      Color light = ColorUtil.darker(UIUtil.getPanelBackground(), 3);
+      return UIUtil.isUnderDarcula() ? Gray._40 : light;
+    }));
   }
 }

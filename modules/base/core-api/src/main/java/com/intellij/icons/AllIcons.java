@@ -1019,7 +1019,7 @@ public class AllIcons {
     public static final SwingImageRef LoadingTree = IconLoader.getIcon("/runConfigurations/loadingTree.png"); // 16x16
     public static final SwingImageRef Ql_console = IconLoader.getIcon("/runConfigurations/ql_console.png"); // 16x16
     public static final SwingImageRef Remote = IconLoader.getIcon("/runConfigurations/remote.png"); // 16x16
-    public static final SwingImageRef RerunFailedTests = IconLoader.getIcon("/runConfigurations/rerunFailedTests.png"); // 16x16
+    public static final SwingImageRef RerunFailedTests = IconLoader.getIcon("/runConfigurations/rerunFailedTests.svg"); // 16x16
     public static final SwingImageRef SaveTempConfig = IconLoader.getIcon("/runConfigurations/saveTempConfig.png"); // 16x16
     public static final SwingImageRef Scroll_down = IconLoader.getIcon("/runConfigurations/scroll_down.png"); // 16x16
     public static final SwingImageRef ScrollToStackTrace = IconLoader.getIcon("/runConfigurations/scrollToStackTrace.png"); // 16x16

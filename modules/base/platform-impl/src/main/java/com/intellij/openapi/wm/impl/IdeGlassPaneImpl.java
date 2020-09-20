@@ -33,6 +33,7 @@ import com.intellij.util.containers.FactoryMap;
 import com.intellij.util.ui.EmptyClipboardOwner;
 import com.intellij.util.ui.MouseEventAdapter;
 import com.intellij.util.ui.UIUtil;
+import consulo.annotation.DeprecationInfo;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
@@ -78,18 +79,19 @@ public class IdeGlassPaneImpl extends JPanel implements IdeGlassPaneEx, IdeEvent
   private MouseEvent myPrevPressEvent;
 
   public IdeGlassPaneImpl(JRootPane rootPane) {
-    this(rootPane, false);
+    myRootPane = rootPane;
+    setOpaque(false);
+    setVisible(false);
+    setLayout(null);
   }
 
+  @Deprecated
+  @DeprecationInfo("installPainters parameter not used. use contructor without it")
   public IdeGlassPaneImpl(JRootPane rootPane, boolean installPainters) {
     myRootPane = rootPane;
     setOpaque(false);
     setVisible(false);
     setLayout(null);
-    if (installPainters) {
-      IdeBackgroundUtil.initFramePainters(this);
-      IdeBackgroundUtil.initEditorPainters(this);
-    }
   }
 
   @Override
