@@ -11,12 +11,7 @@ import javax.inject.Singleton;
  * Date: 4/28/11
  */
 @Singleton
-@State(
-  name = "CoverageOptionsProvider",
-  storages = {
-    @Storage( file = StoragePathMacros.WORKSPACE_FILE)
-  }
-)
+@State(name = "CoverageOptionsProvider", storages = @Storage(StoragePathMacros.WORKSPACE_FILE))
 public class CoverageOptionsProvider implements PersistentStateComponent<CoverageOptionsProvider.State> {
   private State myState = new State();
 

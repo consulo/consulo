@@ -4,21 +4,88 @@ import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.options.SearchableConfigurable;
 import com.intellij.openapi.project.Project;
-import com.intellij.util.containers.ContainerUtil;
+import com.intellij.openapi.util.NotNullComputable;
+import consulo.options.SimpleConfigurable;
+import consulo.ui.CheckBox;
+import consulo.ui.Component;
+import consulo.ui.RadioButton;
+import consulo.ui.ValueGroup;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.layout.LabeledLayout;
+import consulo.ui.layout.VerticalLayout;
 import org.jetbrains.annotations.Nls;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import javax.swing.*;
-import java.awt.*;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * User: anna
  * Date: 12/16/10
  */
-public class CoverageOptionsConfigurable implements SearchableConfigurable, Configurable.NoScroll {
-  private CoverageOptionsPanel myPanel;
+public class CoverageOptionsConfigurable extends SimpleConfigurable<CoverageOptionsConfigurable.Panel> implements SearchableConfigurable, Configurable.NoScroll {
+  public static class Panel implements NotNullComputable<Component> {
+    private RadioButton myShowOptionsRB;
+    private RadioButton myReplaceRB;
+    private RadioButton myAddRB;
+    private RadioButton myDoNotApplyRB;
+
+    private CheckBox myActivateCoverageViewCB;
+
+    private VerticalLayout myWholePanel;
+
+    private List<Configurable> myChildren = new ArrayList<>();
+
+    @RequiredUIAccess
+    Panel(Project project) {
+      myWholePanel = VerticalLayout.create();
+
+      ValueGroup<Boolean> group = ValueGroup.createBool();
+      VerticalLayout primaryGroup = VerticalLayout.create();
+
+      myShowOptionsRB = RadioButton.create("Show options before applying coverage to the editor");
+      primaryGroup.add(myShowOptionsRB);
+      group.add(myShowOptionsRB);
+
+      myDoNotApplyRB = RadioButton.create("Do not apply collected coverage");
+      primaryGroup.add(myDoNotApplyRB);
+      group.add(myDoNotApplyRB);
+
+      myReplaceRB = RadioButton.create("Replace active suites with the new one");
+      primaryGroup.add(myReplaceRB);
+      group.add(myReplaceRB);
+
+      myAddRB = RadioButton.create("Add to the active suites");
+      primaryGroup.add(myAddRB);
+      group.add(myAddRB);
+      
+      myActivateCoverageViewCB = CheckBox.create("Activate Coverage &View ");
+      primaryGroup.add(myActivateCoverageViewCB);
+      
+      myWholePanel.add(LabeledLayout.create("When new coverage is gathered", primaryGroup));
+
+      for (CoverageOptions options : CoverageOptions.EP_NAME.getExtensionList(project)) {
+        Configurable configurable = options.createConfigurable();
+        if(configurable != null) {
+          myChildren.add(configurable);
+        }
+      }
+
+      for (Configurable child : myChildren) {
+        Component uiComponent = child.createUIComponent();
+        assert uiComponent != null;
+        myWholePanel.add(LabeledLayout.create(child.getDisplayName(), uiComponent));
+      }
+    }
+
+    @Nonnull
+    @Override
+    public Component compute() {
+      return myWholePanel;
+    }
+  }
+
   private final CoverageOptionsProvider myManager;
   private Project myProject;
 
@@ -34,11 +101,6 @@ public class CoverageOptionsConfigurable implements SearchableConfigurable, Conf
     return "coverage";
   }
 
-  @Override
-  public Runnable enableSearch(String option) {
-    return null;
-  }
-
   @Nls
   @Override
   public String getDisplayName() {
@@ -50,131 +112,87 @@ public class CoverageOptionsConfigurable implements SearchableConfigurable, Conf
     return "reference.project.settings.coverage";
   }
 
+  @RequiredUIAccess
+  @Nonnull
   @Override
-  public JComponent createComponent() {
-    myPanel = new CoverageOptionsPanel();
-
-    List<JComponent> extensionPanels = collectExtensionOptionsComponents();
-
-    if (extensionPanels.size() > 0) {
-      return createCompositePanel(extensionPanels);
-    }
-    else {
-      return myPanel.myWholePanel;
-    }
+  protected Panel createPanel() {
+    return new Panel(myProject);
   }
 
-  private List<JComponent> collectExtensionOptionsComponents() {
-    List<JComponent> additionalPanels = ContainerUtil.newArrayList();
-    for (CoverageOptions coverageOptions : getExtensions()) {
-      additionalPanels.add(coverageOptions.getComponent());
-    }
-    return additionalPanels;
-  }
-
-  private JComponent createCompositePanel(List<JComponent> additionalPanels) {
-    final JPanel panel = new JPanel(new GridBagLayout());
-    final GridBagConstraints c = new GridBagConstraints();
-    c.anchor = GridBagConstraints.NORTHWEST;
-    c.gridx = 0;
-    c.gridy = GridBagConstraints.RELATIVE;
-    c.weightx = 1;
-    c.fill = GridBagConstraints.HORIZONTAL;
-    panel.add(myPanel.myWholePanel, c);
-    for (JComponent p : additionalPanels) {
-      panel.add(p, c);
-    }
-    c.fill = GridBagConstraints.BOTH;
-    c.weightx = 1;
-    c.weighty = 1;
-    panel.add(Box.createVerticalBox(), c);
-    return panel;
-  }
-
-  private List<CoverageOptions> getExtensions() {
-    return CoverageOptions.EP_NAME.getExtensionList(myProject);
-  }
-
+  @RequiredUIAccess
   @Override
-  public boolean isModified() {
-    if (myManager.getOptionToReplace() != getSelectedValue()) {
-      return true;
-    }
+  protected void apply(@Nonnull Panel panel) throws ConfigurationException {
+    myManager.setOptionsToReplace(getSelectedValue(panel));
+    myManager.setActivateViewOnRun(panel.myActivateCoverageViewCB.getValueOrError());
 
-    if (myManager.activateViewOnRun() != myPanel.myActivateCoverageViewCB.isSelected()) {
-      return true;
+    for (Configurable child : panel.myChildren) {
+      child.apply();
     }
-
-    for (CoverageOptions coverageOptions : getExtensions()) {
-      if (coverageOptions.isModified()) {
-        return true;
-      }
-    }
-
-    return false;
   }
 
+  @RequiredUIAccess
   @Override
-  public void apply() throws ConfigurationException {
-    myManager.setOptionsToReplace(getSelectedValue());
-    myManager.setActivateViewOnRun(myPanel.myActivateCoverageViewCB.isSelected());
-    for (CoverageOptions coverageOptions : getExtensions()) {
-      coverageOptions.apply();
-    }
-  }
-
-  private int getSelectedValue() {
-    if (myPanel.myReplaceRB.isSelected()) {
-      return 0;
-    }
-    else if (myPanel.myAddRB.isSelected()) {
-      return 1;
-    }
-    else if (myPanel.myDoNotApplyRB.isSelected()) {
-      return 2;
-    }
-    return 3;
-  }
-
-  @Override
-  public void reset() {
+  protected void reset(@Nonnull Panel panel) {
     final int addOrReplace = myManager.getOptionToReplace();
     switch (addOrReplace) {
       case 0:
-        myPanel.myReplaceRB.setSelected(true);
+        panel.myReplaceRB.setValue(true);
         break;
       case 1:
-        myPanel.myAddRB.setSelected(true);
+        panel.myAddRB.setValue(true);
         break;
       case 2:
-        myPanel.myDoNotApplyRB.setSelected(true);
+        panel.myDoNotApplyRB.setValue(true);
         break;
       default:
-        myPanel.myShowOptionsRB.setSelected(true);
+        panel.myShowOptionsRB.setValue(true);
     }
 
-    myPanel.myActivateCoverageViewCB.setSelected(myManager.activateViewOnRun());
-    for (CoverageOptions coverageOptions : getExtensions()) {
-      coverageOptions.reset();
+    panel.myActivateCoverageViewCB.setValue(myManager.activateViewOnRun());
+
+    for (Configurable child : panel.myChildren) {
+      child.reset();
     }
   }
 
+  @RequiredUIAccess
   @Override
-  public void disposeUIResources() {
-    myPanel = null;
-
-    for (CoverageOptions coverageOptions : getExtensions()) {
-      coverageOptions.disposeUIResources();
+  protected boolean isModified(@Nonnull Panel panel) {
+    if (myManager.getOptionToReplace() != getSelectedValue(panel)) {
+      return true;
     }
+
+    if (myManager.activateViewOnRun() != panel.myActivateCoverageViewCB.getValueOrError()) {
+      return true;
+    }
+
+    for (Configurable child : panel.myChildren) {
+      if(child.isModified()) {
+        return true;
+      }
+    }
+    return false;
   }
 
-  private static class CoverageOptionsPanel {
-    private JRadioButton myShowOptionsRB;
-    private JRadioButton myReplaceRB;
-    private JRadioButton myAddRB;
-    private JRadioButton myDoNotApplyRB;
+  @RequiredUIAccess
+  @Override
+  protected void disposeUIResources(@Nonnull Panel panel) {
+    for (Configurable child : panel.myChildren) {
+      child.disposeUIResources();
+    }
+    super.disposeUIResources(panel);
+  }
 
-    private JPanel myWholePanel;
-    private JCheckBox myActivateCoverageViewCB;
+  private int getSelectedValue(Panel panel) {
+    if (panel.myReplaceRB.getValueOrError()) {
+      return 0;
+    }
+    else if (panel.myAddRB.getValueOrError()) {
+      return 1;
+    }
+    else if (panel.myDoNotApplyRB.getValueOrError()) {
+      return 2;
+    }
+    return 3;
   }
 }

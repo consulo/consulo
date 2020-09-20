@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2010 JetBrains s.r.o.
+ * Copyright 2013-2020 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,19 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.options;
+package consulo.sandboxPlugin.ide.coverage;
+
+import com.intellij.coverage.CoverageOptions;
+import com.intellij.openapi.options.Configurable;
 
 import javax.annotation.Nullable;
 
 /**
- * Register implementation of this class as {@code projectConfigurable} or {@code applicationConfigurable} extension to provide items for
- * "Project Settings" and "IDE Settings" groups correspondingly in the "Settings" dialog
- *
- * @see Configurable
- * @author nik
+ * @author VISTALL
+ * @since 2020-09-20
  */
-public abstract class ConfigurableProvider {
-
+public class SandCoverageOptions extends CoverageOptions {
   @Nullable
-  public abstract Configurable createConfigurable();
+  @Override
+  public Configurable createConfigurable() {
+    return new SandCoverageConfigurable();
+  }
 }

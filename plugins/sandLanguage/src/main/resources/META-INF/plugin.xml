@@ -9,17 +9,17 @@
 
   <actions>
     <action id="ShowUITesterAction" class="consulo.sandboxPlugin.ide.action.ShowUITesterAction">
-        <add-to-group group-id="ToolsMenu" />
+      <add-to-group group-id="ToolsMenu"/>
     </action>
   </actions>
 
   <extensions defaultExtensionNs="com.intellij">
-    <eapDescriptor implementation="consulo.sandboxPlugin.ide.eap.Sand1EapDescriptor" />
-    <eapDescriptor implementation="consulo.sandboxPlugin.ide.eap.Sand2EapDescriptor" />
-    <eapDescriptor implementation="consulo.sandboxPlugin.ide.eap.Sand3EapDescriptor" />
-    <eapDescriptor implementation="consulo.sandboxPlugin.ide.eap.Sand4EapDescriptor" />
-    <eapDescriptor implementation="consulo.sandboxPlugin.ide.eap.Sand5EapDescriptor" />
-    <eapDescriptor implementation="consulo.sandboxPlugin.ide.eap.Sand6EapDescriptor" />
+    <eapDescriptor implementation="consulo.sandboxPlugin.ide.eap.Sand1EapDescriptor"/>
+    <eapDescriptor implementation="consulo.sandboxPlugin.ide.eap.Sand2EapDescriptor"/>
+    <eapDescriptor implementation="consulo.sandboxPlugin.ide.eap.Sand3EapDescriptor"/>
+    <eapDescriptor implementation="consulo.sandboxPlugin.ide.eap.Sand4EapDescriptor"/>
+    <eapDescriptor implementation="consulo.sandboxPlugin.ide.eap.Sand5EapDescriptor"/>
+    <eapDescriptor implementation="consulo.sandboxPlugin.ide.eap.Sand6EapDescriptor"/>
 
     <fileTypeFactory implementation="consulo.sandboxPlugin.lang.SandFileTypeFactory"/>
     <lang.parserDefinition language="SAND" implementationClass="consulo.sandboxPlugin.lang.SandParsingDefinition"/>
@@ -49,10 +49,10 @@
                              immutableClass="consulo.sandboxPlugin.ide.module.extension.Sand2ModuleExtension"
                              mutableClass="consulo.sandboxPlugin.ide.module.extension.Sand2MutableModuleExtension"/>
     <contentFolderSupportPatcher implementation="consulo.sandboxPlugin.ide.module.SandContentFolderSupportPatcher"/>
-    <psi.packageSupportProvider implementation="consulo.sandboxPlugin.ide.module.Sand2PackageProvider" />
+    <psi.packageSupportProvider implementation="consulo.sandboxPlugin.ide.module.Sand2PackageProvider"/>
     <taskByVfsChange implementation="consulo.sandboxPlugin.ide.vfs.backgroundTask.SandBackgroundTaskByVfsChangeProvider"/>
     <sdkType implementation="consulo.sandboxPlugin.ide.bundle.SandBundleType"/>
-    <lang.importOptimizer language="SAND" implementationClass="consulo.sandboxPlugin.lang.format.SandImportOptimizer" />
+    <lang.importOptimizer language="SAND" implementationClass="consulo.sandboxPlugin.lang.format.SandImportOptimizer"/>
     <toolWindow id="Sand"
                 anchor="right"
                 requireModuleExtensions="sand"
@@ -60,15 +60,17 @@
                 canCloseContents="true"
                 factoryClass="consulo.sandboxPlugin.ide.toolwindow.SandToolWindowFactory"/>
     <newModuleBuilder implementation="consulo.sandboxPlugin.ide.module.SandNewModuleBuilder"/>
-    <moduleImportProvider implementation="consulo.sandboxPlugin.lang.moduleImport.SandModuleImportProvider" />
-    <moduleImportProvider implementation="consulo.sandboxPlugin.lang.moduleImport.Sand2ModuleImportProvider" />
+    <moduleImportProvider implementation="consulo.sandboxPlugin.lang.moduleImport.SandModuleImportProvider"/>
+    <moduleImportProvider implementation="consulo.sandboxPlugin.lang.moduleImport.Sand2ModuleImportProvider"/>
 
-    <remoteServer.type implementation="consulo.sandboxPlugin.ide.remoteServer.SandServerType" />
+    <remoteServer.type implementation="consulo.sandboxPlugin.ide.remoteServer.SandServerType"/>
 
-    <xdebugger.attachDebuggerProvider implementation="consulo.sandboxPlugin.ide.debugger.attach.SandAttachToProcessProvider" />
+    <xdebugger.attachDebuggerProvider implementation="consulo.sandboxPlugin.ide.debugger.attach.SandAttachToProcessProvider"/>
 
-    <runConfigurationsSettings implementation="consulo.sandboxPlugin.ide.run.SandRunConfigurationsSettings" />
+    <runConfigurationsSettings implementation="consulo.sandboxPlugin.ide.run.SandRunConfigurationsSettings"/>
 
-    <webSocketAccepter implementation="consulo.sandboxPlugin.webSocket.TestWebSocketAccepter" />
+    <webSocketAccepter implementation="consulo.sandboxPlugin.webSocket.TestWebSocketAccepter"/>
+
+    <coverageOptions implementation="consulo.sandboxPlugin.ide.coverage.SandCoverageOptions"/>
   </extensions>
 </consulo-plugin>
