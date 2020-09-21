@@ -1092,11 +1092,11 @@ public class AllIcons {
     public static final SwingImageRef ToolWindowAnt = IconLoader.getIcon("/toolwindows/toolWindowAnt.png"); // 13x13
     public static final SwingImageRef ToolWindowChanges = IconLoader.getIcon("/toolwindows/toolWindowChanges.png"); // 13x13
     public static final SwingImageRef ToolWindowCommander = IconLoader.getIcon("/toolwindows/toolWindowCommander.png"); // 13x13
-    public static final SwingImageRef ToolWindowCoverage = IconLoader.getIcon("/toolwindows/toolWindowCoverage.png"); // 13x13
+    public static final SwingImageRef ToolWindowCoverage = IconLoader.getIcon("/toolwindows/toolWindowCoverage.svg"); // 13x13
     public static final SwingImageRef ToolWindowCvs = IconLoader.getIcon("/toolwindows/toolWindowCvs.png"); // 13x13
     public static final SwingImageRef ToolWindowDebugger = IconLoader.getIcon("/toolwindows/toolWindowDebugger.svg"); // 13x13
-    public static final SwingImageRef ToolWindowFavorites = IconLoader.getIcon("/toolwindows/toolWindowFavorites.png"); // 13x13
-    public static final SwingImageRef ToolWindowFind = IconLoader.getIcon("/toolwindows/toolWindowFind.png"); // 13x13
+    public static final SwingImageRef ToolWindowFavorites = IconLoader.getIcon("/toolwindows/toolWindowFavorites.svg"); // 13x13
+    public static final SwingImageRef ToolWindowFind = IconLoader.getIcon("/toolwindows/toolWindowFind.svg"); // 13x13
     public static final SwingImageRef ToolWindowHierarchy = IconLoader.getIcon("/toolwindows/toolWindowHierarchy.png"); // 13x13
     public static final SwingImageRef ToolWindowInspection = IconLoader.getIcon("/toolwindows/toolWindowInspection.png"); // 13x13
     public static final SwingImageRef ToolWindowMessages = IconLoader.getIcon("/toolwindows/toolWindowMessages.png"); // 13x13
@@ -1104,7 +1104,7 @@ public class AllIcons {
     public static final SwingImageRef ToolWindowPalette = IconLoader.getIcon("/toolwindows/toolWindowPalette.png"); // 13x13
     public static final SwingImageRef ToolWindowProject = IconLoader.getIcon("/toolwindows/toolWindowProject.svg"); // 13x13
     public static final SwingImageRef ToolWindowRun = IconLoader.getIcon("/toolwindows/toolWindowRun.svg"); // 13x13
-    public static final SwingImageRef ToolWindowStructure = IconLoader.getIcon("/toolwindows/toolWindowStructure.png"); // 13x13
+    public static final SwingImageRef ToolWindowStructure = IconLoader.getIcon("/toolwindows/toolWindowStructure.svg"); // 13x13
     public static final SwingImageRef ToolWindowTodo = IconLoader.getIcon("/toolwindows/toolWindowTodo.png"); // 13x13
     public static final SwingImageRef VcsSmallTab = IconLoader.getIcon("/toolwindows/vcsSmallTab.png"); // 13x13
     public static final SwingImageRef WebToolWindow = IconLoader.getIcon("/toolwindows/webToolWindow.png"); // 13x13
