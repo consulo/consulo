@@ -96,11 +96,11 @@ public class AllIcons {
     public static final SwingImageRef Left = IconLoader.getIcon("/actions/left.png"); // 16x16
     public static final SwingImageRef LoginAvator = IconLoader.getIcon("/actions/loginAvatar.png"); // 16x16
     public static final SwingImageRef Lightning = IconLoader.getIcon("/actions/lightning.png"); // 16x16
-    public static final SwingImageRef Menu_cut = IconLoader.getIcon("/actions/menu-cut.png"); // 16x16
+    public static final SwingImageRef Menu_cut = IconLoader.getIcon("/actions/menu-cut.svg"); // 16x16
     public static final SwingImageRef Menu_find = IconLoader.getIcon("/actions/menu-find.png"); // 16x16
     public static final SwingImageRef Menu_help = IconLoader.getIcon("/actions/menu-help.png"); // 16x16
     public static final SwingImageRef Menu_open = IconLoader.getIcon("/actions/menu-open.svg"); // 16x16
-    public static final SwingImageRef Menu_paste = IconLoader.getIcon("/actions/menu-paste.png"); // 16x16
+    public static final SwingImageRef Menu_paste = IconLoader.getIcon("/actions/menu-paste.svg"); // 16x16
     public static final SwingImageRef Menu_replace = IconLoader.getIcon("/actions/menu-replace.png"); // 16x16
     public static final SwingImageRef Menu_saveall = IconLoader.getIcon("/actions/menu-saveall.png"); // 16x16
     public static final SwingImageRef Minimize = IconLoader.getIcon("/actions/minimize.png"); // 16x16
