@@ -31,6 +31,7 @@ import consulo.awt.TargetAWT;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ide.base.BaseDataManager;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
@@ -298,7 +299,7 @@ public class ActionToolbarImpl extends JPanel implements ActionToolbar, QuickAct
       if (action instanceof AnSeparator) {
         if (isLastElementSeparator) continue;
         if (i > 0 && i < actions.size() - 1) {
-          add(SEPARATOR_CONSTRAINT, new MySeparator(myShowSeparatorTitles ? ((AnSeparator)action).getText() : null));
+          add(SEPARATOR_CONSTRAINT, new MySeparator(myShowSeparatorTitles ? ((AnSeparator)action).getTextValue() : LocalizeValue.empty()));
           isLastElementSeparator = true;
           continue;
         }
@@ -918,10 +919,11 @@ public class ActionToolbarImpl extends JPanel implements ActionToolbar, QuickAct
   }
 
   private final class MySeparator extends JComponent {
-    private final String myText;
+    @Nonnull
+    private final LocalizeValue myTextValue;
 
-    private MySeparator(String text) {
-      myText = text;
+    private MySeparator(@Nonnull LocalizeValue textValue) {
+      myTextValue = textValue;
       setFont(JBUI.Fonts.toolbarSmallComboBoxFont());
     }
 
@@ -933,10 +935,10 @@ public class ActionToolbarImpl extends JPanel implements ActionToolbar, QuickAct
       int height = JBUIScale.scale(24);
 
       if (myOrientation == SwingConstants.HORIZONTAL) {
-        if (myText != null) {
+        if (myTextValue != LocalizeValue.empty()) {
           FontMetrics fontMetrics = getFontMetrics(getFont());
 
-          int textWidth = getTextWidth(fontMetrics, myText, getGraphics());
+          int textWidth = getTextWidth(fontMetrics, myTextValue.get(), getGraphics());
           return new JBDimension(width + gap * 2 + textWidth, Math.max(fontMetrics.getHeight(), height), true);
         }
         else {
@@ -968,12 +970,12 @@ public class ActionToolbarImpl extends JPanel implements ActionToolbar, QuickAct
         int y2 = ActionToolbarImpl.this.getHeight() - gap * 2 - offset;
         LinePainter2D.paint((Graphics2D)g, center, gap, center, y2);
 
-        if (myText != null) {
+        if (myTextValue != LocalizeValue.empty()) {
           FontMetrics fontMetrics = getFontMetrics(getFont());
           int top = (getHeight() - fontMetrics.getHeight()) / 2;
           UISettings.setupAntialiasing(g);
           g.setColor(JBColor.foreground());
-          g.drawString(myText, gap * 2 + center + gap, top + fontMetrics.getAscent());
+          g.drawString(myTextValue.getValue(), gap * 2 + center + gap, top + fontMetrics.getAscent());
         }
       }
       else {

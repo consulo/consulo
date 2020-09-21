@@ -114,10 +114,10 @@ public class Utils {
       }
 
       if (action instanceof AnSeparator) {
-        final String text = ((AnSeparator)action).getText();
-        if (!StringUtil.isEmpty(text) || (i > 0 && i < size - 1)) {
-          component.add(new JPopupMenu.Separator() {
-            private final JMenuItem myMenu = !StringUtil.isEmpty(text) ? new JMenuItem(text) : null;
+        final LocalizeValue textValue = ((AnSeparator)action).getTextValue();
+        if (textValue != LocalizeValue.empty() || (i > 0 && i < size - 1)) {
+          JPopupMenu.Separator separator = new JPopupMenu.Separator() {
+            private final JMenuItem myMenu = textValue != LocalizeValue.empty() ? new JMenuItem(textValue.getValue()) : null;
 
             @Override
             public void doLayout() {
@@ -129,18 +129,25 @@ public class Utils {
 
             @Override
             protected void paintComponent(Graphics g) {
-              if (UIUtil.isUnderWindowsClassicLookAndFeel() || UIUtil.isUnderDarcula() || UIUtil.isUnderWindowsLookAndFeel()) {
+              if (UIUtil.isUnderBuildInLaF()) {
                 g.setColor(component.getBackground());
                 g.fillRect(0, 0, getWidth(), getHeight());
               }
-              super.paintComponent(g);
+              if (myMenu != null) {
+                myMenu.paint(g);
+              }
+              else {
+                super.paintComponent(g);
+              }
             }
 
             @Override
             public Dimension getPreferredSize() {
               return myMenu != null ? myMenu.getPreferredSize() : super.getPreferredSize();
             }
-          });
+          };
+          component.add(separator);
+          children.add(separator);
         }
       }
       else if (action instanceof ActionGroup && !(updater.canBePerformedCached((ActionGroup)action) && !updater.hasVisibleChildren((ActionGroup)action))) {

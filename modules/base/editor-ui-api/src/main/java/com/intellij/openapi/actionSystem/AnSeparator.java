@@ -17,8 +17,11 @@ package com.intellij.openapi.actionSystem;
 
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.util.text.StringUtil;
-import javax.annotation.Nonnull;
+import consulo.annotation.DeprecationInfo;
+import consulo.localize.LocalizeValue;
+import consulo.ui.annotation.RequiredUIAccess;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
@@ -27,36 +30,58 @@ import javax.annotation.Nullable;
 public final class AnSeparator extends AnAction implements DumbAware {
   private static final AnSeparator ourInstance = new AnSeparator();
 
-
   @Nonnull
-  public static AnSeparator create() {
-    return create(null);
-  }
-
-  @Nonnull
-  public static AnSeparator create(@Nullable String text) {
-    return StringUtil.isEmptyOrSpaces(text) ? ourInstance : new AnSeparator(text);
-  }
-
-  private String myText;
-
-  public AnSeparator() {
-  }
-
-  public AnSeparator(@Nullable final String text) {
-    myText = text;
-  }
-
-  public String getText() {
-    return myText;
-  }
-
   public static AnSeparator getInstance() {
     return ourInstance;
   }
 
+  @Nonnull
+  public static AnSeparator create() {
+    return ourInstance;
+  }
+
+  @Nonnull
+  @Deprecated
+  @DeprecationInfo("Use #create(LocalizeValue)")
+  public static AnSeparator create(@Nullable String text) {
+    return StringUtil.isEmptyOrSpaces(text) ? ourInstance : new AnSeparator(text);
+  }
+
+  @Nonnull
+  public static AnSeparator create(@Nonnull LocalizeValue textValue) {
+    return textValue == LocalizeValue.empty() ? ourInstance : new AnSeparator(textValue);
+  }
+
+  @Nonnull
+  private final LocalizeValue myTextValue;
+
+  public AnSeparator() {
+    this(LocalizeValue.empty());
+  }
+
+  public AnSeparator(@Nullable String text) {
+    myTextValue = StringUtil.isEmptyOrSpaces(text) ? LocalizeValue.empty() : LocalizeValue.of(text);
+  }
+
+  public AnSeparator(@Nonnull LocalizeValue textValue) {
+    myTextValue = textValue;
+  }
+
+  @Nullable
+  @Deprecated
+  @DeprecationInfo("Use #getTextValue()")
+  public String getText() {
+    return StringUtil.nullize(myTextValue.getValue());
+  }
+
+  @Nonnull
+  public LocalizeValue getTextValue() {
+    return myTextValue;
+  }
+
+  @RequiredUIAccess
   @Override
-  public void actionPerformed(AnActionEvent e){
+  public void actionPerformed(@Nonnull AnActionEvent e) {
     throw new UnsupportedOperationException();
   }
 }
