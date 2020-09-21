@@ -127,7 +127,7 @@ public class BegMenuItemUI extends BasicMenuItemUI {
         }
         else {
           g.setColor(selectionBackground);
-          if (icon2 != null) {
+          if (icon2 != null && !UIUtil.isUnderBuildInLaF()) {
             g.fillRect(k, 0, j1 - k, k1);
           }
           else {
