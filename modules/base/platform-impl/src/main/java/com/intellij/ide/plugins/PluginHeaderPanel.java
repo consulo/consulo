@@ -230,7 +230,7 @@ public class PluginHeaderPanel {
           case INSTALL:
             return AllIcons.General.DownloadPlugin;
           case UNINSTALL:
-            return AllIcons.Actions.Delete;
+            return AllIcons.Actions.Cancel;
           case RESTART:
             return AllIcons.Actions.Restart;
         }

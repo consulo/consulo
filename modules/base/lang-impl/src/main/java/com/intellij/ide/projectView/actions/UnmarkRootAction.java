@@ -33,7 +33,7 @@ import consulo.roots.ContentFolderScopes;
  */
 public class UnmarkRootAction extends MarkRootAction {
   public UnmarkRootAction() {
-    super(ActionsBundle.message("action.UnmarkRoot.text"), null, AllIcons.Actions.Delete, null);
+    super(ActionsBundle.message("action.UnmarkRoot.text"), null, AllIcons.Actions.Cancel, null);
   }
 
   @Override
