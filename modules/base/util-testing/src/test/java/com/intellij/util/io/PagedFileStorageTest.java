@@ -84,7 +84,7 @@ public class PagedFileStorageTest extends TestCase {
     }
   }
 
-  public void testResizeableMappedFile() throws Exception {
+  public void _testResizeableMappedFile() throws Exception {
     lock.lock();
     try {
       ResizeableMappedFile file = new ResizeableMappedFile(f, 2000000, lock);
