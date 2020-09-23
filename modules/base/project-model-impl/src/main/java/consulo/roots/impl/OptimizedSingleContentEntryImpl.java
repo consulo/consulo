@@ -53,6 +53,11 @@ public class OptimizedSingleContentEntryImpl extends BaseModuleRootLayerChild im
     this(ContentEntryImpl.getUrlFrom(e), m);
   }
 
+  public void writeExternal(@Nonnull Element element) {
+    assert !isDisposed();
+    element.setAttribute(ContentEntryImpl.URL_ATTRIBUTE, myRoot.getUrl());
+  }
+
   @Override
   public VirtualFile getFile() {
     return myRoot.getFile();

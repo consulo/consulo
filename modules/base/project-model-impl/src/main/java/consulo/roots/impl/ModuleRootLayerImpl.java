@@ -237,7 +237,7 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, Disposabl
         case ContentEntryImpl.ELEMENT_NAME:
           boolean canUseOptimizedVersion = getModule().getModuleDirUrl() == null && child.getContentSize() == 0;
           ContentEntryEx contentEntry;
-          if(canUseOptimizedVersion) {
+          if (canUseOptimizedVersion) {
             contentEntry = new OptimizedSingleContentEntryImpl(child, this);
           }
           else {
@@ -289,8 +289,11 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, Disposabl
 
     for (ContentEntry contentEntry : getContent()) {
       final Element subElement = new Element(ContentEntryImpl.ELEMENT_NAME);
-      if(contentEntry instanceof ContentEntryImpl) {
+      if (contentEntry instanceof ContentEntryImpl) {
         ((ContentEntryImpl)contentEntry).writeExternal(subElement);
+      }
+      else if (contentEntry instanceof OptimizedSingleContentEntryImpl) {
+        ((OptimizedSingleContentEntryImpl)contentEntry).writeExternal(subElement);
       }
       element.addContent(subElement);
     }
