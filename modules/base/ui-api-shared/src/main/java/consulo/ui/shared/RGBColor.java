@@ -15,8 +15,6 @@
  */
 package consulo.ui.shared;
 
-import consulo.annotation.UsedInPlugin;
-
 import javax.annotation.Nonnull;
 import java.io.Serializable;
 
@@ -26,15 +24,18 @@ import java.io.Serializable;
  */
 public final class RGBColor implements Serializable, ColorValue {
   @Nonnull
-  @UsedInPlugin
   public static RGBColor fromFloatValues(float r, float g, float b) {
     return fromFloatValues(r, g, b, 1f);
   }
 
   @Nonnull
-  @UsedInPlugin
   public static RGBColor fromFloatValues(float r, float g, float b, float a) {
     return new RGBColor((int)(r * 255 + 0.5), (int)(g * 255 + 0.5), (int)(b * 255 + 0.5), a);
+  }
+
+  @Nonnull
+  public static RGBColor fromRGBValue(int rgb) {
+    return new RGBColor((rgb >> 16) & 0xFF, (rgb >> 8) & 0xFF, rgb & 0xFF);
   }
 
   /**
@@ -48,13 +49,12 @@ public final class RGBColor implements Serializable, ColorValue {
    * @throws NumberFormatException if the specified string cannot
    *                               be interpreted as a decimal,
    *                               octal, or hexadecimal integer.
-   * @see java.lang.Integer#decode
+   * @see Integer#decode
    */
   @Nonnull
-  @UsedInPlugin
   public static RGBColor decode(@Nonnull String nm) {
     int i = Integer.decode(nm);
-    return new RGBColor((i >> 16) & 0xFF, (i >> 8) & 0xFF, i & 0xFF);
+    return fromRGBValue(i);
   }
 
   private int myRed;
