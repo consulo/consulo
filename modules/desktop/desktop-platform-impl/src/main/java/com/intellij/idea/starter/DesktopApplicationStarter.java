@@ -41,6 +41,7 @@ import com.intellij.openapi.wm.impl.DesktopWindowManagerImpl;
 import com.intellij.openapi.wm.impl.SystemDock;
 import com.intellij.openapi.wm.impl.X11UiUtil;
 import com.intellij.ui.AppUIUtil;
+import com.intellij.ui.DesktopAppUIUtil;
 import consulo.application.ApplicationProperties;
 import consulo.awt.TargetAWT;
 import consulo.container.impl.classloader.PluginLoadStatistics;
@@ -120,7 +121,7 @@ public class DesktopApplicationStarter extends ApplicationStarter {
 
     AppUIUtil.updateWindowIcon(JOptionPane.getRootFrame(), false);
 
-    AppUIUtil.registerBundledFonts();
+    DesktopAppUIUtil.registerBundledFonts();
 
     IconLoader.activate();
 
