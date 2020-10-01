@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg version="1.0" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="16px" height="16px" viewBox="0 0 16 16" enable-background="new 0 0 16 16" xml:space="preserve">
+<g>
+	<path fill-rule="evenodd" clip-rule="evenodd" fill="#59BAF1" fill-opacity="0.6" d="M15,8c0,3.9-3.1,7-7,7s-7-3.1-7-7s3.1-7,7-7
+		S15,4.1,15,8"/>
+	<path fill-rule="evenodd" clip-rule="evenodd" fill="#231F20" fill-opacity="0.7" d="M8.7,8.3L8,6.5L7.3,8.3H8.7z M7.6,4.9h0.9
+		l2.4,5.6H9.6L9,9.4H7l-0.6,1.1H5.2L7.6,4.9z"/>
+</g>
+</svg>

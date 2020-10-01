@@ -38,6 +38,7 @@ import com.intellij.util.containers.HashSet;
 import com.intellij.util.ui.tree.TreeUtil;
 import com.intellij.util.xmlb.annotations.AbstractCollection;
 import com.intellij.util.xmlb.annotations.Tag;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import org.jetbrains.annotations.NonNls;
@@ -54,8 +55,8 @@ import javax.swing.tree.TreePath;
 import java.awt.*;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 /**
  * User: anna
@@ -498,7 +499,7 @@ public class ScopeChooserConfigurable extends MasterDetailsComponent implements 
 
   private class MyCopyAction extends AnAction {
     public MyCopyAction() {
-      super(ExecutionBundle.message("copy.configuration.action.name"), ExecutionBundle.message("copy.configuration.action.name"), AllIcons.Actions.Copy);
+      super(ExecutionBundle.message("copy.configuration.action.name"), ExecutionBundle.message("copy.configuration.action.name"), PlatformIconGroup.actionsCopy());
       registerCustomShortcutSet(new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_D, InputEvent.CTRL_MASK)), myTree);
     }
 

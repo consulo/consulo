@@ -6,7 +6,7 @@
     <option name="PLUGINS_HOME_PATH" value="$PROJECT_DIR$/sandbox/desktop/target/consulo-sandbox-desktop-2-SNAPSHOT-main/Consulo/platform/buildSNAPSHOT/plugins" />
     <option name="USE_ALT_CONSULO_SDK" value="true" />
     <option name="ALT_CONSULO_SDK_PATH" value="$PROJECT_DIR$/sandbox/desktop/target/consulo-sandbox-desktop-2-SNAPSHOT-main/Consulo" />
-    <java-sdk name="jb1.8" />
+    <java-sdk name="1.8 graal" />
     <predefined_log_file id="CONSULO_LOG" enabled="true" />
     <ConfigurationWrapper RunnerId="ConsuloDebuggerRunner" />
     <ConfigurationWrapper RunnerId="Cover" />

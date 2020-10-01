@@ -303,10 +303,10 @@
         <action id="$Redo" class="com.intellij.ide.actions.RedoAction" icon="AllIcons.Actions.Redo" text="Redo"/>
         <separator/>
         <group id="CutCopyPasteGroup">
-          <action id="$Cut" class="com.intellij.ide.actions.CutAction" icon="AllIcons.Actions.Menu_cut"/>
-          <action id="$Copy" class="com.intellij.ide.actions.CopyAction" icon="AllIcons.Actions.Copy"/>
+          <action id="$Cut" class="com.intellij.ide.actions.CutAction" icon="consulo.platform.base.PlatformIconGroup@actions.menu_cut"/>
+          <action id="$Copy" class="com.intellij.ide.actions.CopyAction" icon="consulo.platform.base.PlatformIconGroup@actions.copy"/>
           <action id="CopyPaths" class="com.intellij.ide.actions.CopyPathsAction"/>
-          <action id="$Paste" class="com.intellij.ide.actions.PasteAction" icon="AllIcons.Actions.Menu_paste"/>
+          <action id="$Paste" class="com.intellij.ide.actions.PasteAction" icon="consulo.platform.base.PlatformIconGroup@actions.menu_paste"/>
           <action id="PasteMultiple" class="com.intellij.openapi.editor.actions.MultiplePasteAction"/>
           <reference ref="EditorPasteSimple"/>
         </group>
@@ -978,7 +978,7 @@
 
     <action id="Vcs.CopyRevisionNumberAction" class="com.intellij.openapi.vcs.history.CopyRevisionNumberAction"
             text="Copy Revision Number" description="Copy short revision numbers of selected commits to the clipboard"
-            icon="AllIcons.Actions.Copy"/>
+            icon="consulo.platform.base.PlatformIconGroup@actions.copy"/>
 
     <group id="Shelve.KeymapGroup" text="Shelve">
       <reference ref="ChangesView.Shelve"/>
@@ -1706,7 +1706,7 @@
 
       <action id="XDebugger.NewWatch" class="com.intellij.xdebugger.impl.frame.actions.XNewWatchAction" icon="AllIcons.Debugger.NewWatch"/>
       <action id="XDebugger.EditWatch" class="com.intellij.xdebugger.impl.frame.actions.XEditWatchAction"/>
-      <action id="XDebugger.CopyWatch" class="com.intellij.xdebugger.impl.frame.actions.XCopyWatchAction" icon="AllIcons.Actions.Copy" text="Copy Watch"/>
+      <action id="XDebugger.CopyWatch" class="com.intellij.xdebugger.impl.frame.actions.XCopyWatchAction" icon="consulo.platform.base.PlatformIconGroup@actions.copy" text="Copy Watch"/>
       <action id="XDebugger.RemoveWatch" class="com.intellij.xdebugger.impl.frame.actions.XRemoveWatchAction" icon="AllIcons.Actions.Delete"/>
       <action id="XDebugger.RemoveAllWatches" class="com.intellij.xdebugger.impl.frame.actions.XRemoveAllWatchesAction"/>
       <action id="XDebugger.MuteBreakpoints" class="com.intellij.xdebugger.impl.actions.MuteBreakpointAction"

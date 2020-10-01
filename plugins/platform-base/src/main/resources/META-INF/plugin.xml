@@ -2316,16 +2316,16 @@
 
     <toolWindow id="Project"
                 anchor="left"
-                icon="AllIcons.Toolwindows.ToolWindowProject"
+                icon="consulo.platform.base.PlatformIconGroup@toolwindows.toolWindowProject"
                 dispayName="consulo.platform.base.IdeLocalize@title.project"
                 factoryClass="com.intellij.ide.projectView.impl.ProjectViewToolWindowFactory"/>
-    <toolWindow id="TODO" anchor="bottom" icon="AllIcons.Toolwindows.ToolWindowTodo"
+    <toolWindow id="TODO" anchor="bottom" icon="consulo.platform.base.PlatformIconGroup@toolwindows.toolWindowTodo"
                 factoryClass="com.intellij.ide.todo.TodoToolWindowFactory" canCloseContents="true"/>
-    <toolWindow id="Structure" anchor="left" icon="AllIcons.Toolwindows.ToolWindowStructure" secondary="true"
+    <toolWindow id="Structure" anchor="left" icon="consulo.platform.base.PlatformIconGroup@toolwindows.toolWindowStructure" secondary="true"
                 factoryClass="com.intellij.ide.structureView.impl.StructureViewToolWindowFactory"/>
-    <toolWindow id="Favorites" anchor="left" icon="AllIcons.Toolwindows.ToolWindowFavorites" secondary="true"
+    <toolWindow id="Favorites" anchor="left" icon="consulo.platform.base.PlatformIconGroup@toolwindows.toolWindowFavorites" secondary="true"
                 factoryClass="com.intellij.ide.projectView.impl.FavoritesViewToolWindowFactory"/>
-    <toolWindow id="Run Dashboard" anchor="bottom" icon="AllIcons.Toolwindows.ToolWindowRun"
+    <toolWindow id="Run Dashboard" anchor="bottom" icon="consulo.platform.base.PlatformIconGroup@toolwindows.toolWindowRun"
                 factoryClass="com.intellij.execution.dashboard.RunDashboardToolWindowFactory"
                 conditionClass="com.intellij.execution.dashboard.RunDashboardToolWindowFactory"/>
 

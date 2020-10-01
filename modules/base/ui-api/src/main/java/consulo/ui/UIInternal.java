@@ -23,7 +23,9 @@ import consulo.container.plugin.PluginManager;
 import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.font.FontManager;
+import consulo.ui.image.IconLibraryManager;
 import consulo.ui.image.Image;
+import consulo.ui.image.ImageKey;
 import consulo.ui.image.ImageState;
 import consulo.ui.image.canvas.Canvas2D;
 import consulo.ui.layout.*;
@@ -160,6 +162,10 @@ public abstract class UIInternal {
     throw new UnsupportedOperationException();
   }
 
+  public ImageKey _ImageKey_of(@Nonnull String groupId, @Nonnull String imageId, int width, int height) {
+    throw new UnsupportedOperationException();
+  }
+
   public abstract Image _ImageEffects_resize(Image original, int width, int height);
 
   public abstract MenuItem _MenuItem_create(String text);
@@ -211,6 +217,11 @@ public abstract class UIInternal {
   }
 
   public <Value, Item> TableColumn<Value, Item> _Components_tableColumBuild(String name, Function<Item, Value> converter) {
+    throw new UnsupportedOperationException();
+  }
+
+  @Nonnull
+  public IconLibraryManager _IconLibraryManager_get() {
     throw new UnsupportedOperationException();
   }
 }

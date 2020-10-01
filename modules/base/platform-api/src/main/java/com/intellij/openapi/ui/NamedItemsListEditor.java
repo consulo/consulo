@@ -19,7 +19,6 @@
  */
 package com.intellij.openapi.ui;
 
-import com.intellij.icons.AllIcons;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonShortcuts;
@@ -30,6 +29,7 @@ import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.openapi.util.*;
 import com.intellij.util.IconUtil;
 import com.intellij.util.ui.tree.TreeUtil;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.image.Image;
 import gnu.trove.Equality;
 
@@ -299,7 +299,7 @@ public abstract class NamedItemsListEditor<T> extends MasterDetailsComponent {
 
     private class CopyAction extends DumbAwareAction {
         public CopyAction() {
-            super("Copy", "Copy", AllIcons.Actions.Copy);
+            super("Copy", "Copy", PlatformIconGroup.actionsCopy());
             registerCustomShortcutSet(new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_D, KeyEvent.CTRL_MASK)), myTree);
         }
 

@@ -48,6 +48,7 @@ import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.platform.impl.action.LastActionTracker;
 import consulo.ui.image.Image;
+import consulo.ui.image.ImageKey;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.nodep.xml.node.SimpleXmlElement;
 import gnu.trove.THashMap;
@@ -199,17 +200,23 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
   private static void updateIconFromStub(@Nonnull ActionStubBase stub, AnAction anAction) {
     String iconPath = stub.getIconPath();
     if (iconPath != null) {
-      Class<? extends AnAction> actionClass = anAction.getClass();
-      ClassLoader classLoader = actionClass.getClassLoader();
-
-      if (stub.getPluginId() != null) {
-        final PluginDescriptor plugin = PluginManager.findPlugin(stub.getPluginId());
-        if (plugin != null) {
-          classLoader = plugin.getPluginClassLoader();
-        }
+      if(iconPath.contains("@")) {
+        String[] groupIdAndImageId = iconPath.split("@");
+        anAction.getTemplatePresentation().setIcon(ImageKey.of(groupIdAndImageId[0], groupIdAndImageId[1], Image.DEFAULT_ICON_SIZE, Image.DEFAULT_ICON_SIZE));
       }
+      else {
+        Class<? extends AnAction> actionClass = anAction.getClass();
+        ClassLoader classLoader = actionClass.getClassLoader();
 
-      setIconFromClass(actionClass, classLoader, iconPath, anAction.getTemplatePresentation(), stub.getPluginId());
+        if (stub.getPluginId() != null) {
+          final PluginDescriptor plugin = PluginManager.findPlugin(stub.getPluginId());
+          if (plugin != null) {
+            classLoader = plugin.getPluginClassLoader();
+          }
+        }
+
+        setIconFromClass(actionClass, classLoader, iconPath, anAction.getTemplatePresentation(), stub.getPluginId());
+      }
     }
   }
 

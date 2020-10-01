@@ -16,7 +16,6 @@
 package com.intellij.openapi.roots.ui.configuration.projectRoot;
 
 import com.intellij.CommonBundle;
-import com.intellij.icons.AllIcons;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.DefaultActionGroup;
@@ -43,6 +42,7 @@ import com.intellij.util.Consumer;
 import com.intellij.util.ui.tree.TreeUtil;
 import consulo.ide.settings.impl.SettingsSdksModel;
 import consulo.ide.settings.impl.ShowSdksSettingsUtil;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.annotation.RequiredUIAccess;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NonNls;
@@ -95,7 +95,7 @@ public class SdkListConfigurable extends BaseStructureConfigurable {
 
   private class CopySdkAction extends AnAction {
     private CopySdkAction() {
-      super(CommonBundle.message("button.copy"), CommonBundle.message("button.copy"), AllIcons.Actions.Copy);
+      super(CommonBundle.message("button.copy"), CommonBundle.message("button.copy"), PlatformIconGroup.actionsCopy());
     }
 
     @RequiredUIAccess

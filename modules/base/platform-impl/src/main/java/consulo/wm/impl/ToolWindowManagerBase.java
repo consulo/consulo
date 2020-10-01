@@ -52,6 +52,7 @@ import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.*;
 import consulo.ui.image.Image;
+import consulo.ui.image.ImageKey;
 import consulo.ui.shared.Rectangle2D;
 import kava.beans.PropertyChangeEvent;
 import kava.beans.PropertyChangeListener;
@@ -1072,16 +1073,24 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
     ToolWindow window = registerToolWindow(bean.id, bean.displayName, label, toolWindowAnchor, false, bean.canCloseContents, DumbService.isDumbAware(factory), factory.shouldBeAvailable(myProject));
     final ToolWindowBase toolWindow = (ToolWindowBase)registerDisposable(bean.id, myProject, window);
     toolWindow.setContentFactory(factory);
-    if (bean.icon != null && toolWindow.getIcon() == null) {
-      Image icon = IconLoader.findIcon(bean.icon, factory.getClass());
-      if (icon == null) {
-        try {
-          icon = IconLoader.getIcon(bean.icon);
-        }
-        catch (Exception ignored) {
+    String beanIcon = bean.icon;
+    if (beanIcon != null && toolWindow.getIcon() == null) {
+      Image targetIcon = null;
+      if(beanIcon.contains("@")) {
+        String[] ids = beanIcon.split("@");
+        targetIcon = ImageKey.of(ids[0], ids[1], 13, 13);
+      }
+      else {
+        targetIcon = IconLoader.findIcon(beanIcon, factory.getClass());
+        if (targetIcon == null) {
+          try {
+            targetIcon = IconLoader.getIcon(beanIcon);
+          }
+          catch (Exception ignored) {
+          }
         }
       }
-      toolWindow.setIcon(icon);
+      toolWindow.setIcon(targetIcon);
     }
 
     WindowInfoImpl info = getInfo(bean.id);

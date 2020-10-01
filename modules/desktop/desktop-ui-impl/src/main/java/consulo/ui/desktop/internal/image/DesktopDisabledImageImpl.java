@@ -17,6 +17,7 @@ package consulo.ui.desktop.internal.image;
 
 import com.intellij.openapi.util.IconLoader;
 import consulo.awt.TargetAWT;
+import consulo.ui.desktop.internal.image.libraryImage.DesktopLibraryInnerImage;
 import consulo.ui.image.Image;
 import consulo.awt.impl.ToSwingIconWrapper;
 
@@ -28,12 +29,18 @@ import java.util.concurrent.ConcurrentMap;
 /**
  * @author VISTALL
  * @since 6/22/18
+ *
+ * Deprecated? we not use it now
  */
+@Deprecated
 public class DesktopDisabledImageImpl implements ToSwingIconWrapper, Image {
   private static ConcurrentMap<Image, Image> ourCache = new ConcurrentHashMap<>();
 
   public static Image of(Image original) {
-    return ourCache.computeIfAbsent(original, DesktopDisabledImageImpl::new);
+    if(original instanceof DesktopLibraryInnerImage) {
+      return ((DesktopLibraryInnerImage)original).makeGrayed();
+    }
+    return IconLoader.dummyIcon;
   }
 
   private final Icon myIcon;

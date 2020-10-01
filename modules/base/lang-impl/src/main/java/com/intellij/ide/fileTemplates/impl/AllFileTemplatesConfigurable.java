@@ -40,6 +40,7 @@ import com.intellij.util.ui.JBUI;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.annotation.RequiredUIAccess;
 import org.jetbrains.annotations.TestOnly;
 
@@ -277,7 +278,7 @@ public class AllFileTemplatesConfigurable implements SearchableConfigurable, Con
         e.getPresentation().setEnabled(!(myCurrentTab == myCodeTemplatesList || myCurrentTab == myOtherTemplatesList));
       }
     };
-    AnAction cloneAction = new AnAction(IdeBundle.message("action.copy.template"), null, AllIcons.Actions.Copy) {
+    AnAction cloneAction = new AnAction(IdeBundle.message("action.copy.template"), null, PlatformIconGroup.actionsCopy()) {
       @RequiredUIAccess
       @Override
       public void actionPerformed(@Nonnull AnActionEvent e) {

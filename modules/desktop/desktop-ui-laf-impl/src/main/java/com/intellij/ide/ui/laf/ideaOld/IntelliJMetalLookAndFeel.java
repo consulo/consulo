@@ -21,6 +21,8 @@ import com.intellij.openapi.util.Pair;
 import com.intellij.ui.ColoredSideBorder;
 import com.intellij.ui.plaf.beg.*;
 import com.intellij.ui.scale.JBUIScale;
+import consulo.awt.TargetAWT;
+import consulo.platform.base.icon.PlatformIconGroup;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -80,7 +82,7 @@ public final class IntelliJMetalLookAndFeel extends MetalLookAndFeel {
     defaults.put("ToolTip.background", TOOLTIP_BACKGROUND_COLOR);
     defaults.put("ToolTip.border", new ColoredSideBorder(Color.gray, Color.gray, Color.black, Color.black, 1));
     defaults.put("Tree.ancestorInputMap", null);
-    defaults.put("FileView.directoryIcon", AllIcons.Nodes.Folder);
+    defaults.put("FileView.directoryIcon", TargetAWT.to(PlatformIconGroup.nodesFolder()));
     defaults.put("FileChooser.upFolderIcon", AllIcons.Nodes.UpFolder);
     defaults.put("FileChooser.newFolderIcon", AllIcons.Nodes.NewFolder);
     defaults.put("FileChooser.homeFolderIcon", AllIcons.Nodes.HomeFolder);
@@ -88,11 +90,11 @@ public final class IntelliJMetalLookAndFeel extends MetalLookAndFeel {
     defaults.put("OptionPane.informationIcon", AllIcons.General.InformationDialog);
     defaults.put("OptionPane.warningIcon", AllIcons.General.WarningDialog);
     defaults.put("OptionPane.questionIcon", AllIcons.General.QuestionDialog);
-    defaults.put("Tree.openIcon", AllIcons.Nodes.TreeClosed);
-    defaults.put("Tree.closedIcon", AllIcons.Nodes.TreeClosed);
-    defaults.put("Tree.leafIcon", AllIcons.Nodes.TreeClosed);
-    defaults.put("Tree.expandedIcon", AllIcons.Nodes.TreeClosed);
-    defaults.put("Tree.collapsedIcon", AllIcons.Nodes.TreeClosed);
+    defaults.put("Tree.openIcon", TargetAWT.to(PlatformIconGroup.nodesTreeClosed()));
+    defaults.put("Tree.closedIcon", TargetAWT.to(PlatformIconGroup.nodesTreeClosed()));
+    defaults.put("Tree.leafIcon", TargetAWT.to(PlatformIconGroup.nodesTreeClosed()));
+    defaults.put("Tree.expandedIcon", TargetAWT.to(PlatformIconGroup.nodesTreeClosed()));
+    defaults.put("Tree.collapsedIcon", TargetAWT.to(PlatformIconGroup.nodesTreeClosed()));
     defaults.put("Table.ancestorInputMap", new UIDefaults.LazyInputMap(new Object[] {
                        "ctrl C", "copy",
                        "ctrl V", "paste",

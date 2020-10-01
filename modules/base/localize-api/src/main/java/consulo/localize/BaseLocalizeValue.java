@@ -39,7 +39,7 @@ abstract class BaseLocalizeValue implements LocalizeValue {
   @Nonnull
   private LocalizeManager getLocalizeManager() {
     if (myLocalizeManager == null) {
-      myLocalizeManager = LocalizeManager.getInstance();
+      myLocalizeManager = LocalizeManager.get();
     }
 
     return myLocalizeManager;

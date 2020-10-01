@@ -128,7 +128,7 @@ public final class LafManagerImpl extends LafManager implements Disposable, Pers
 
   @Inject
   LafManagerImpl() {
-    myLocalizeManager = LocalizeManager.getInstance();
+    myLocalizeManager = LocalizeManager.get();
 
     List<UIManager.LookAndFeelInfo> lafList = new ArrayList<>();
 
@@ -208,7 +208,7 @@ public final class LafManagerImpl extends LafManager implements Disposable, Pers
     }
 
     // refresh UI on localize change
-    LocalizeManager.getInstance().addListener((oldLocale, newLocale) -> updateUI(), this);
+    LocalizeManager.get().addListener((oldLocale, newLocale) -> updateUI(), this);
   }
 
   @Override

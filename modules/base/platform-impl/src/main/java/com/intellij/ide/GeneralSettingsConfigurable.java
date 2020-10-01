@@ -111,7 +111,7 @@ public class GeneralSettingsConfigurable extends SimpleConfigurable<GeneralSetti
       myRootLayout.add(LabeledLayout.create("Accessibility", screenLayout));
 
       VerticalLayout localizeLayout = VerticalLayout.create();
-      Set<Locale> avaliableLocales = LocalizeManager.getInstance().getAvaliableLocales();
+      Set<Locale> avaliableLocales = LocalizeManager.get().getAvaliableLocales();
       ComboBox.Builder<Locale> builder = ComboBox.builder();
       builder.add(avaliableLocales, Locale::getDisplayName);
 
@@ -196,7 +196,7 @@ public class GeneralSettingsConfigurable extends SimpleConfigurable<GeneralSetti
     isModified |= isModified(myFileOperateDialogSettings.getFileChooseDialogId(), component.myFileChooseDialogBox);
     isModified |= isModified(myFileOperateDialogSettings.getFileSaveDialogId(), component.myFileSaveDialogBox);
 
-    LocalizeManager localizeManager = LocalizeManager.getInstance();
+    LocalizeManager localizeManager = LocalizeManager.get();
     isModified |= !localizeManager.getLocale().equals(component.myLocaleBox.getValueOrError());
 
     int inactiveTimeout = -1;
@@ -234,7 +234,7 @@ public class GeneralSettingsConfigurable extends SimpleConfigurable<GeneralSetti
     myGeneralSettings.setConfirmOpenNewProject(getConfirmOpenNewProject(component));
     myGeneralSettings.setProcessCloseConfirmation(getProcessCloseConfirmation(component));
 
-    LocalizeManager localizeManager = LocalizeManager.getInstance();
+    LocalizeManager localizeManager = LocalizeManager.get();
     localizeManager.setLocale(component.myLocaleBox.getValueOrError());
 
     myGeneralSettings.setAutoSaveIfInactive(component.myChkAutoSaveIfInactive.getValue());
@@ -307,7 +307,7 @@ public class GeneralSettingsConfigurable extends SimpleConfigurable<GeneralSetti
     reset(component.myFileChooseDialogBox, myFileOperateDialogSettings::getFileChooseDialogId);
     reset(component.myFileSaveDialogBox, myFileOperateDialogSettings::getFileSaveDialogId);
 
-    LocalizeManager localizeManager = LocalizeManager.getInstance();
+    LocalizeManager localizeManager = LocalizeManager.get();
     component.myLocaleBox.setValue(localizeManager.getLocale());
   }
 

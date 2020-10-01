@@ -57,6 +57,7 @@
     <module>modules/base/analysis-api</module>
     <module>modules/base/analysis-impl</module>
     <module>modules/base/base-localize-library</module>
+    <module>modules/base/icon/base-icon-library</module>
     <module>modules/base/built-in-server-api</module>
     <module>modules/base/built-in-server-impl</module>
     <module>modules/base/core-api</module>

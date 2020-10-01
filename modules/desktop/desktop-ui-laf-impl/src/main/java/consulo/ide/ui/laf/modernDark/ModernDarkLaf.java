@@ -18,17 +18,19 @@ package consulo.ide.ui.laf.modernDark;
 import com.intellij.ide.ui.laf.DarculaMetalTheme;
 import com.intellij.ide.ui.laf.LafManagerImplUtil;
 import com.intellij.ide.ui.laf.ideaOld.IntelliJMetalLookAndFeel;
-import com.intellij.openapi.util.IconLoader;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.ColorUtil;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
+import consulo.awt.TargetAWT;
 import consulo.desktop.util.awt.laf.BuildInLookAndFeel;
 import consulo.ide.ui.laf.BaseLookAndFeel;
 import consulo.ui.desktop.laf.extend.textBox.SupportTextBoxWithExpandActionExtender;
 import consulo.ui.desktop.laf.extend.textBox.SupportTextBoxWithExtensionsExtender;
+import consulo.ui.image.Image;
+import consulo.ui.image.ImageKey;
 import sun.awt.AppContext;
 
 import javax.annotation.Nonnull;
@@ -263,18 +265,25 @@ public class ModernDarkLaf extends BaseLookAndFeel implements BuildInLookAndFeel
       final Color color = parseColor(value);
       final Integer invVal = getInteger(value);
       final Boolean boolVal = "true".equals(value) ? Boolean.TRUE : "false".equals(value) ? Boolean.FALSE : null;
-      Icon icon = value.startsWith("AllIcons.") ? IconLoader.getIcon(value) : null;
-      if (icon == null && value.endsWith(".png")) {
-        icon = IconLoader.findIcon(value, getClass(), true);
+
+      Image image = null;
+      if(value.contains("@")) {
+        String[] ids = value.split("@");
+
+        String groupId = ids[0];
+        if(groupId.endsWith("IconGroup")) {
+          image = ImageKey.of(groupId, ids[1], Image.DEFAULT_ICON_SIZE, Image.DEFAULT_ICON_SIZE);
+        }
       }
+
       if (color != null) {
         return new ColorUIResource(color);
       }
       else if (invVal != null) {
         return invVal;
       }
-      else if (icon != null) {
-        return new IconUIResource(icon);
+      else if(image != null) {
+        return new IconUIResource(TargetAWT.to(image));
       }
       else if (boolVal != null) {
         return boolVal;

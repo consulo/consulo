@@ -42,12 +42,13 @@ import com.intellij.util.containers.HashMap;
 import com.maddyhome.idea.copyright.CopyrightManager;
 import com.maddyhome.idea.copyright.CopyrightProfile;
 import com.maddyhome.idea.copyright.options.ExternalOptionHelper;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.annotation.RequiredUIAccess;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import javax.swing.tree.TreePath;
 import java.awt.event.KeyEvent;
@@ -169,7 +170,7 @@ public class CopyrightProfilesPanel extends MasterDetailsComponent implements Se
       }
     });
     result.add(new MyDeleteAction(forAll(Conditions.alwaysTrue())));
-    result.add(new AnAction("Copy", "Copy", AllIcons.Actions.Copy) {
+    result.add(new AnAction("Copy", "Copy", PlatformIconGroup.actionsCopy()) {
       {
         registerCustomShortcutSet(new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_D, KeyEvent.CTRL_MASK)), myTree);
       }

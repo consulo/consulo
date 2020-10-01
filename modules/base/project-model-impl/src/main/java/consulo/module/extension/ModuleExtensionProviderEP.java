@@ -29,6 +29,7 @@ import consulo.logging.Logger;
 import consulo.module.extension.impl.ModuleExtensionProviders;
 import consulo.roots.ModuleRootLayer;
 import consulo.ui.image.Image;
+import consulo.ui.image.ImageKey;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -81,6 +82,12 @@ public class ModuleExtensionProviderEP extends AbstractExtensionPointBean {
       if (StringUtil.isEmpty(icon)) {
         return AllIcons.Toolbar.Unknown;
       }
+
+      if (icon.contains("@")) {
+        String[] ids = icon.split("@");
+        return ImageKey.of(ids[0], ids[1], Image.DEFAULT_ICON_SIZE, Image.DEFAULT_ICON_SIZE);
+      }
+      
       Image temp = IconLoader.findIcon(icon, getLoaderForClass());
       return temp == null ? AllIcons.Toolbar.Unknown : temp;
     }

@@ -39,12 +39,12 @@
     <executor implementation="consulo.sandboxPlugin.ide.run.SandExecutor"/>
     <configurationType implementation="consulo.sandboxPlugin.ide.run.SandConfigurationType"/>
     <moduleExtensionProvider key="sand"
-                             icon="/nodes/static.png"
+                             icon="consulo.platform.base.PlatformIconGroup@nodes.static"
                              name="Sand"
                              immutableClass="consulo.sandboxPlugin.ide.module.extension.SandModuleExtension"
                              mutableClass="consulo.sandboxPlugin.ide.module.extension.SandMutableModuleExtension"/>
     <moduleExtensionProvider key="sand2"
-                             icon="/nodes/static.png"
+                             icon="consulo.platform.base.PlatformIconGroup@nodes.static"
                              name="Sand 2"
                              immutableClass="consulo.sandboxPlugin.ide.module.extension.Sand2ModuleExtension"
                              mutableClass="consulo.sandboxPlugin.ide.module.extension.Sand2MutableModuleExtension"/>
@@ -56,7 +56,7 @@
     <toolWindow id="Sand"
                 anchor="right"
                 requireModuleExtensions="sand"
-                icon="/toolwindows/toolWindowCommander.png"
+                icon="consulo.platform.base.PlatformIconGroup@toolwindows.toolWindowCommander"
                 canCloseContents="true"
                 factoryClass="consulo.sandboxPlugin.ide.toolwindow.SandToolWindowFactory"/>
     <newModuleBuilder implementation="consulo.sandboxPlugin.ide.module.SandNewModuleBuilder"/>

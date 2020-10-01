@@ -16,19 +16,15 @@
 package com.intellij.openapi.util;
 
 import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.ui.JBColor;
 import com.intellij.util.ImageLoader;
 import com.intellij.util.ReflectionUtil;
 import com.intellij.util.ui.JBImageIcon;
 import com.intellij.util.ui.JBUI;
 import consulo.annotation.DeprecationInfo;
-import consulo.annotation.ReviewAfterMigrationToJRE;
-import consulo.container.StartupError;
-import consulo.container.plugin.PluginDescriptor;
-import consulo.container.plugin.PluginIds;
-import consulo.container.plugin.PluginManager;
+import consulo.awt.TargetAWT;
 import consulo.logging.Logger;
-import consulo.ui.UIInternal;
-import consulo.ui.migration.IconLoaderFacade;
+import consulo.ui.image.ImageEffects;
 import consulo.ui.migration.SwingImageRef;
 import org.jetbrains.annotations.NonNls;
 
@@ -36,39 +32,42 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
-import java.lang.reflect.Field;
+import java.awt.image.BufferedImage;
 import java.net.URL;
-import java.util.Iterator;
 import java.util.List;
-import java.util.ServiceLoader;
 
-@SuppressWarnings("deprecation")
+@Deprecated
 public final class IconLoader {
   private static final Logger LOG = Logger.getInstance(IconLoader.class);
 
-  private static IconLoaderFacade ourIconLoaderFacade = findImplementation(IconLoaderFacade.class);
-
-  @Nonnull
-  @ReviewAfterMigrationToJRE(value = 9, description = "Use consulo.container.plugin.util.PlatformServiceLocator#findImplementation after migration")
-  private static <T> T findImplementation(@Nonnull Class<T> interfaceClass) {
-    for (T value : ServiceLoader.load(interfaceClass, UIInternal.class.getClassLoader())) {
-      return value;
+  public static final SwingImageRef dummyIcon = new SwingImageRef() {
+    @Override
+    public int getHeight() {
+      return consulo.ui.image.Image.DEFAULT_ICON_SIZE;
     }
 
-    for (PluginDescriptor descriptor : PluginManager.getPlugins()) {
-      if (PluginIds.isPlatformImplementationPlugin(descriptor.getPluginId())) {
-        ServiceLoader<T> loader = ServiceLoader.load(interfaceClass, descriptor.getPluginClassLoader());
-
-        Iterator<T> iterator = loader.iterator();
-        if (iterator.hasNext()) {
-          return iterator.next();
-        }
-      }
+    @Override
+    public int getWidth() {
+      return consulo.ui.image.Image.DEFAULT_ICON_SIZE;
     }
 
-    throw new StartupError("Can't find platform implementation: " + interfaceClass);
-  }
+    @Override
+    public int getIconWidth() {
+      return consulo.ui.image.Image.DEFAULT_ICON_SIZE;
+    }
 
+    @Override
+    public int getIconHeight() {
+      return consulo.ui.image.Image.DEFAULT_ICON_SIZE;
+    }
+
+    @Override
+    public void paintIcon(Component c, Graphics g, int x, int y) {
+      g.setColor(JBColor.GREEN);
+      g.fillRect(x, y, getWidth(), getHeight());
+
+    }
+  };
   public static boolean STRICT = false;
 
   private IconLoader() {
@@ -80,7 +79,6 @@ public final class IconLoader {
   }
 
   public static void resetDark() {
-    ourIconLoaderFacade.resetDark();
   }
 
   @Nonnull
@@ -93,16 +91,7 @@ public final class IconLoader {
 
   @Nullable
   private static SwingImageRef getReflectiveIcon(@Nonnull String path, ClassLoader classLoader) {
-    try {
-      @NonNls String pckg = path.startsWith("AllIcons.") ? "com.intellij.icons." : "icons.";
-      Class cur = Class.forName(pckg + path.substring(0, path.lastIndexOf('.')).replace('.', '$'), true, classLoader);
-      Field field = cur.getField(path.substring(path.lastIndexOf('.') + 1));
-
-      return (SwingImageRef)field.get(null);
-    }
-    catch (Exception e) {
-      return null;
-    }
+    return dummyIcon;
   }
 
   /**
@@ -111,22 +100,15 @@ public final class IconLoader {
    */
   @Nullable
   public static SwingImageRef findIcon(@NonNls @Nonnull String path) {
-    Class callerClass = ReflectionUtil.getGrandCallerClass();
-    if (callerClass == null) return null;
-    return findIcon(path, callerClass);
+    return dummyIcon;
   }
 
   @Nonnull
   public static SwingImageRef getIcon(@Nonnull String path, @Nonnull final Class aClass) {
-    final SwingImageRef icon = findIcon(path, aClass);
-    if (icon == null) {
-      LOG.error("Icon cannot be found in '" + path + "', aClass='" + aClass + "'");
-    }
-    return icon;
+    return dummyIcon;
   }
 
   public static void activate() {
-    ourIconLoaderFacade.activate();
   }
 
   /**
@@ -145,28 +127,7 @@ public final class IconLoader {
 
   @Nullable
   public static SwingImageRef findIcon(@Nonnull String path, @Nonnull Class aClass, boolean computeNow, boolean strict) {
-    String originalPath = path;
-    Pair<String, Class> patchedPath = patchPath(path);
-    path = patchedPath.first;
-    if (patchedPath.second != null) {
-      aClass = patchedPath.second;
-    }
-    if (isReflectivePath(path)) return getReflectiveIcon(path, aClass.getClassLoader());
-
-    URL myURL = aClass.getResource(path);
-    if (myURL == null && path.endsWith(".png")) {
-      path = path.replace(".png", ".svg");
-      myURL = aClass.getResource(path);
-    }
-
-    if (myURL == null) {
-      if (strict) throw new RuntimeException("Can't find icon in '" + path + "' near " + aClass);
-      return null;
-    }
-    final SwingImageRef icon = findIcon(myURL);
-
-    ourIconLoaderFacade.set(icon, originalPath, aClass.getClassLoader());
-    return icon;
+    return dummyIcon;
   }
 
   @Nonnull
@@ -194,25 +155,12 @@ public final class IconLoader {
 
   @Nullable
   public static SwingImageRef findIcon(URL url, boolean useCache) {
-    return ourIconLoaderFacade.findIcon(url, useCache);
+    return dummyIcon;
   }
 
   @Nullable
   public static SwingImageRef findIcon(@Nonnull String path, @Nonnull ClassLoader classLoader) {
-    String originalPath = path;
-    Pair<String, Class> patchedPath = patchPath(path);
-    path = patchedPath.first;
-    if (patchedPath.second != null) {
-      classLoader = patchedPath.second.getClassLoader();
-    }
-    if (isReflectivePath(path)) return getReflectiveIcon(path, classLoader);
-    if (!StringUtil.startsWithChar(path, '/')) return null;
-
-    final URL url = classLoader.getResource(path.substring(1));
-    final SwingImageRef icon = findIcon(url);
-
-    ourIconLoaderFacade.set(icon, originalPath, classLoader);
-    return icon;
+    return dummyIcon;
   }
 
   public static boolean isGoodSize(@Nonnull final Icon icon) {
@@ -228,7 +176,10 @@ public final class IconLoader {
   @Deprecated
   @DeprecationInfo("Use ImageEffects#grayed()")
   public static Icon getDisabledIcon(@Nullable Icon icon) {
-    return ourIconLoaderFacade.getDisabledIcon(icon);
+    if(icon == null) {
+      return null;
+    }
+    return TargetAWT.to(ImageEffects.grayed(TargetAWT.from(icon)));
   }
 
   /**
@@ -240,11 +191,11 @@ public final class IconLoader {
    */
   @Nonnull
   public static Icon getIconSnapshot(@Nonnull Icon icon) {
-    return ourIconLoaderFacade.getIconSnapshot(icon);
+    return icon;
   }
 
   @Nullable
   public static Image toImage(@Nonnull Icon icon, @Nullable JBUI.ScaleContext ctx) {
-    return ourIconLoaderFacade.toImage(icon, ctx);
+    return new BufferedImage(icon.getIconWidth(), icon.getIconHeight(), BufferedImage.TYPE_INT_ARGB);
   }
 }

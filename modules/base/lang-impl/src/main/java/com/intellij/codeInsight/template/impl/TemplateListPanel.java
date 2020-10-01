@@ -18,7 +18,6 @@ package com.intellij.codeInsight.template.impl;
 
 import com.intellij.codeInsight.CodeInsightBundle;
 import com.intellij.codeInsight.template.TemplateContextType;
-import com.intellij.icons.AllIcons;
 import com.intellij.ide.dnd.*;
 import com.intellij.ide.dnd.aware.DnDAwareTree;
 import com.intellij.openapi.actionSystem.*;
@@ -41,6 +40,7 @@ import com.intellij.util.ui.tree.TreeUtil;
 import com.intellij.util.ui.update.UiNotifyConnector;
 import consulo.disposer.Disposable;
 import consulo.logging.Logger;
+import consulo.platform.base.icon.PlatformIconGroup;
 
 import javax.annotation.Nullable;
 import javax.swing.*;
@@ -56,8 +56,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 public class TemplateListPanel extends JPanel implements Disposable {
 
@@ -690,7 +690,7 @@ public class TemplateListPanel extends JPanel implements Disposable {
       })
       .disableDownAction()
       .disableUpAction()
-      .addExtraAction(new AnActionButton("Copy", AllIcons.Actions.Copy) {
+      .addExtraAction(new AnActionButton("Copy", PlatformIconGroup.actionsCopy()) {
         @Override
         public void actionPerformed(AnActionEvent e) {
           copyRow();

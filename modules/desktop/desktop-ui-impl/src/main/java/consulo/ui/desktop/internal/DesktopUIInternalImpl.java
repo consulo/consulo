@@ -28,11 +28,14 @@ import consulo.ui.Window;
 import consulo.ui.*;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.desktop.internal.image.*;
+import consulo.ui.desktop.internal.image.libraryImage.DesktopImageKeyImpl;
 import consulo.ui.desktop.internal.layout.*;
 import consulo.ui.desktop.internal.style.DesktopStyleManagerImpl;
 import consulo.ui.desktop.internal.textBox.*;
 import consulo.ui.font.FontManager;
+import consulo.ui.image.IconLibraryManager;
 import consulo.ui.image.Image;
+import consulo.ui.image.ImageKey;
 import consulo.ui.image.ImageState;
 import consulo.ui.image.canvas.Canvas2D;
 import consulo.ui.impl.model.ImmutableListModelImpl;
@@ -361,5 +364,16 @@ public class DesktopUIInternalImpl extends UIInternal {
   @Override
   public <V, E> TableColumn<V, E> _Components_tableColumBuild(String name, Function<E, V> converter) {
     return new DesktopTableColumnInfo<>(name, converter);
+  }
+
+  @Nonnull
+  @Override
+  public IconLibraryManager _IconLibraryManager_get() {
+    return DesktopIconLibraryManagerImpl.ourInstance;
+  }
+
+  @Override
+  public ImageKey _ImageKey_of(@Nonnull String groupId, @Nonnull String imageId, int width, int height) {
+    return new DesktopImageKeyImpl(groupId, imageId, width, height);
   }
 }
