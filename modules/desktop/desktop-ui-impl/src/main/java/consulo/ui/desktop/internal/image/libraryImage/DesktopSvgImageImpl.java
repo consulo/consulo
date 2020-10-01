@@ -1,7 +1,6 @@
 package consulo.ui.desktop.internal.image.libraryImage;
 
 import com.intellij.ui.paint.PaintUtil;
-import com.intellij.ui.scale.JBUIScale;
 import com.intellij.util.JBHiDPIScaledImage;
 import com.intellij.util.ui.GraphicsUtil;
 import com.intellij.util.ui.ImageUtil;
@@ -25,8 +24,6 @@ public class DesktopSvgImageImpl extends DesktopInnerImageImpl<DesktopSvgImageIm
   private final SVGDiagram myX1Diagram;
   private final SVGDiagram myX2Diagram;
 
-  private java.awt.Image myCachedImage;
-
   public DesktopSvgImageImpl(@Nonnull SVGDiagram x1Diagram, @Nullable SVGDiagram x2Diagram, int width, int height, @Nullable Supplier<ImageFilter> imageFilterSupplier) {
     super(width, height, imageFilterSupplier);
     myX1Diagram = x1Diagram;
@@ -39,15 +36,16 @@ public class DesktopSvgImageImpl extends DesktopInnerImageImpl<DesktopSvgImageIm
     return new DesktopSvgImageImpl(myX1Diagram, myX2Diagram, myWidth, myHeight, filter);
   }
 
+  @Override
   @SuppressWarnings("UndesirableClassUsage")
   @Nonnull
-  protected java.awt.Image calcImage(@Nonnull Graphics originalGraphics) {
+  protected java.awt.Image calcImage() {
     float width = myWidth;
     float height = myHeight;
 
     SVGDiagram targetDiagram = myX1Diagram;
-    float scale = 1f;
-    if ((scale = JBUIScale.sysScale((Graphics2D)originalGraphics)) > 1f) {
+    double scale = 1f;
+    if ((scale = getScale(JBUI.ScaleType.SYS_SCALE)) > 1f) {
       targetDiagram = myX2Diagram != null ? myX2Diagram : targetDiagram;
       
       width *= scale;
@@ -68,7 +66,7 @@ public class DesktopSvgImageImpl extends DesktopInnerImageImpl<DesktopSvgImageIm
       toPaintImage = ImageUtil.filter(toPaintImage, imageFilter);
     }
 
-    toPaintImage = ImageUtil.ensureHiDPI(toPaintImage, JBUI.ScaleContext.create((Graphics2D)originalGraphics));
+    toPaintImage = ImageUtil.ensureHiDPI(toPaintImage, JBUI.ScaleContext.create(JBUI.Scale.create(getScale(JBUI.ScaleType.SYS_SCALE), JBUI.ScaleType.SYS_SCALE)));
     return toPaintImage;
   }
 

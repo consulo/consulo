@@ -31,7 +31,7 @@ import java.util.function.Supplier;
  * @author VISTALL
  * @since 2020-10-01
  */
-public abstract class DesktopInnerImageImpl<T extends DesktopInnerImageImpl<T>> extends JBUI.CachingScalableJBIcon<T> implements Image, DesktopLibraryInnerImage {
+public abstract class DesktopInnerImageImpl<T extends DesktopInnerImageImpl<T>> extends JBUI.RasterJBIcon implements Image, DesktopLibraryInnerImage {
   protected final int myWidth;
   protected final int myHeight;
   protected final Supplier<ImageFilter> myFilter;
@@ -52,27 +52,29 @@ public abstract class DesktopInnerImageImpl<T extends DesktopInnerImageImpl<T>> 
   protected abstract T withFilter(@Nullable Supplier<ImageFilter> filter);
 
   @Nonnull
-  protected abstract java.awt.Image calcImage(@Nonnull Graphics originalGraphics);
+  protected abstract java.awt.Image calcImage();
+
+  @Nonnull
+  @Override
+  public java.awt.Image toAWTImage() {
+    return calcImage();
+  }
 
   @Override
   public void paintIcon(Component c, Graphics originalGraphics, int x, int y) {
-    if (updateScaleContext(JBUI.ScaleContext.create((Graphics2D)originalGraphics))) {
+    JBUI.ScaleContext ctx = JBUI.ScaleContext.create((Graphics2D)originalGraphics);
+    
+    if (updateScaleContext(ctx)) {
       myCachedImage = null;
     }
 
     java.awt.Image cachedImage = myCachedImage;
     if (cachedImage == null) {
-      cachedImage = calcImage(originalGraphics);
+      cachedImage = calcImage();
       myCachedImage = cachedImage;
     }
 
     UIUtil.drawImage(originalGraphics, cachedImage, x, y, null);
-  }
-
-  @Nonnull
-  @Override
-  protected T copy() {
-    return withFilter(myFilter);
   }
 
   @Nonnull

@@ -28,4 +28,10 @@ public interface ImageKey extends Image {
   public static ImageKey of(@Nonnull String groupId, @Nonnull String imageId, int width, int height) {
     return UIInternal.get()._ImageKey_of(groupId, imageId, width, height);
   }
+
+  @Nonnull
+  String getGroupId();
+
+  @Nonnull
+  String getImageId();
 }

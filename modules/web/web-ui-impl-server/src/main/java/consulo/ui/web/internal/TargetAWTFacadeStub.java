@@ -18,6 +18,7 @@ package consulo.ui.web.internal;
 import consulo.awt.TargetAWTFacade;
 import consulo.ui.KeyCode;
 import consulo.ui.image.Image;
+import consulo.ui.image.ImageKey;
 import consulo.ui.shared.ColorValue;
 import consulo.ui.shared.RGBColor;
 import consulo.ui.shared.Rectangle2D;
@@ -146,6 +147,11 @@ public class TargetAWTFacadeStub implements TargetAWTFacade {
 
   @Override
   public int to(@Nonnull KeyCode code) {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public java.awt.Image toImage(@Nonnull ImageKey key) {
     throw new UnsupportedOperationException();
   }
 }

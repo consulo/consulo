@@ -13,4 +13,7 @@ public interface DesktopLibraryInnerImage extends Image {
   Image makeGrayed();
 
   void dropCache();
+
+  @Nonnull
+  java.awt.Image toAWTImage();
 }

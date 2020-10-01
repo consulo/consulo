@@ -15,6 +15,7 @@
  */
 package consulo.ui.desktop.internal.image.libraryImage;
 
+import com.intellij.ui.JBColor;
 import consulo.awt.TargetAWT;
 import consulo.desktop.util.awt.UIModificationTracker;
 import consulo.ui.desktop.internal.image.DesktopBaseLazyImageImpl;
@@ -28,6 +29,8 @@ import consulo.ui.style.StandardColors;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;
+import java.awt.*;
+import java.awt.image.BufferedImage;
 
 /**
  * @author VISTALL
@@ -78,6 +81,36 @@ public class DesktopImageKeyImpl extends DesktopBaseLazyImageImpl implements Ima
     }
 
     return ImageEffects.colorFilled(myWidth, myHeight, StandardColors.LIGHT_GRAY);
+  }
+
+  @Nonnull
+  @Override
+  @SuppressWarnings("UndesirableClassUsage")
+  public java.awt.Image toAWTImage() {
+    Image icon = ourLibraryManager.getIcon(myGroupId, myImageId, myWidth, myHeight);
+    if (icon instanceof DesktopLibraryInnerImage) {
+      return ((DesktopLibraryInnerImage)icon).toAWTImage();
+    }
+
+    BufferedImage b = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_ARGB);
+    Graphics2D g = b.createGraphics();
+    g.setColor(JBColor.YELLOW);
+    g.fillRect(0, 0, getWidth(), getHeight());
+    g.dispose();
+
+    return b;
+  }
+
+  @Nonnull
+  @Override
+  public String getGroupId() {
+    return myGroupId;
+  }
+
+  @Nonnull
+  @Override
+  public String getImageId() {
+    return myImageId;
   }
 
   @Override

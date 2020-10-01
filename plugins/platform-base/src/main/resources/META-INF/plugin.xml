@@ -1485,7 +1485,7 @@
     <virtualFileSystem implementation="com.intellij.openapi.vfs.ex.temp.TempFileSystem"/>
 
     <toolWindow id="Event Log" anchor="bottom" secondary="true"
-                icon="AllIcons.Ide.Notification.NoEvents"
+                icon="consulo.platform.base.PlatformIconGroup@ide.notification.noEvents"
                 factoryClass="com.intellij.notification.EventLogToolWindowFactory"/>
 
     <projectService serviceImplementation="com.intellij.notification.EventLog$ProjectTracker" lazy="false"/>

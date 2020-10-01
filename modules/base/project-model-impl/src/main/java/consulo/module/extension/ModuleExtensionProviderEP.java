@@ -15,9 +15,7 @@
  */
 package consulo.module.extension;
 
-import com.intellij.icons.AllIcons;
 import com.intellij.openapi.extensions.AbstractExtensionPointBean;
-import com.intellij.openapi.util.IconLoader;
 import com.intellij.openapi.util.NotNullLazyValue;
 import com.intellij.openapi.util.NullableLazyValue;
 import com.intellij.openapi.util.Pair;
@@ -27,6 +25,7 @@ import com.intellij.util.xmlb.annotations.Attribute;
 import consulo.annotation.DeprecationInfo;
 import consulo.logging.Logger;
 import consulo.module.extension.impl.ModuleExtensionProviders;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.roots.ModuleRootLayer;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageKey;
@@ -80,16 +79,15 @@ public class ModuleExtensionProviderEP extends AbstractExtensionPointBean {
     @Override
     protected Image compute() {
       if (StringUtil.isEmpty(icon)) {
-        return AllIcons.Toolbar.Unknown;
+        return PlatformIconGroup.actionsHelp();
       }
 
       if (icon.contains("@")) {
         String[] ids = icon.split("@");
         return ImageKey.of(ids[0], ids[1], Image.DEFAULT_ICON_SIZE, Image.DEFAULT_ICON_SIZE);
       }
-      
-      Image temp = IconLoader.findIcon(icon, getLoaderForClass());
-      return temp == null ? AllIcons.Toolbar.Unknown : temp;
+
+      return PlatformIconGroup.actionsHelp();
     }
   };
 

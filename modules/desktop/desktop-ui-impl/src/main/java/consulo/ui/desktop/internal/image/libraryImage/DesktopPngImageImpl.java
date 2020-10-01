@@ -1,7 +1,6 @@
 package consulo.ui.desktop.internal.image.libraryImage;
 
 import com.intellij.ui.JBColor;
-import com.intellij.ui.scale.JBUIScale;
 import com.intellij.util.JBHiDPIScaledImage;
 import com.intellij.util.io.UnsyncByteArrayInputStream;
 import com.intellij.util.ui.ImageUtil;
@@ -79,10 +78,10 @@ public class DesktopPngImageImpl extends DesktopInnerImageImpl<DesktopPngImageIm
   @SuppressWarnings("UndesirableClassUsage")
   @Nonnull
   @Override
-  protected Image calcImage(@Nonnull Graphics originalGraphics) {
+  protected Image calcImage() {
     ImageBytes target = myX1Data;
-    float scale = 1f;
-    if ((scale = JBUIScale.sysScale((Graphics2D)originalGraphics)) > 1f) {
+    double scale = 1f;
+    if ((scale = getScale(JBUI.ScaleType.SYS_SCALE)) > 1f) {
       target = myX2Data != null ? myX2Data : target;
     }
 
@@ -105,7 +104,7 @@ public class DesktopPngImageImpl extends DesktopInnerImageImpl<DesktopPngImageIm
       ImageFilter imageFilter = myFilter.get();
       toPaintImage = ImageUtil.filter(toPaintImage, imageFilter);
 
-      toPaintImage = ImageUtil.ensureHiDPI(toPaintImage, JBUI.ScaleContext.create((Graphics2D)originalGraphics));
+      toPaintImage = ImageUtil.ensureHiDPI(toPaintImage, JBUI.ScaleContext.create(JBUI.Scale.create(getScale(JBUI.ScaleType.SYS_SCALE), JBUI.ScaleType.SYS_SCALE)));
     }
     return toPaintImage;
   }
