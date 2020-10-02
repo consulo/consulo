@@ -10,8 +10,6 @@ import java.awt.event.ActionListener;
 
 public class LoadingDecoratorTest {
   public static void main(String[] args) {
-    IconLoader.activate();
-
     final JFrame frame = new JFrame();
     frame.getContentPane().setLayout(new BorderLayout());
 

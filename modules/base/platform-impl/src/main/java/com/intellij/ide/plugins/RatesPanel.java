@@ -16,7 +16,9 @@
 package com.intellij.ide.plugins;
 
 import com.intellij.icons.AllIcons;
-import com.intellij.openapi.util.IconLoader;
+import consulo.awt.TargetAWT;
+import consulo.ui.image.Image;
+import consulo.ui.image.ImageEffects;
 
 import javax.swing.*;
 import java.awt.*;
@@ -27,13 +29,13 @@ import java.awt.*;
 public class RatesPanel extends JPanel {
   public static int MAX_RATE = 5;
 
-  private static final Icon STAR = AllIcons.Ide.Rating;
+  private static final Image STAR = AllIcons.Ide.Rating;
 
-  private static final Icon STAR3 = AllIcons.Ide.Rating1;
-  private static final Icon STAR4 = AllIcons.Ide.Rating2;
-  private static final Icon STAR5 = AllIcons.Ide.Rating3;
-  private static final Icon STAR6 = AllIcons.Ide.Rating4;
-  private static final Icon[] STARs = new Icon[]{IconLoader.getDisabledIcon(STAR), STAR3, STAR3, STAR4, STAR4, STAR5, STAR5, STAR6, STAR6, STAR};
+  private static final Image STAR3 = AllIcons.Ide.Rating1;
+  private static final Image STAR4 = AllIcons.Ide.Rating2;
+  private static final Image STAR5 = AllIcons.Ide.Rating3;
+  private static final Image STAR6 = AllIcons.Ide.Rating4;
+  private static final Image[] STARs = new Image[]{ImageEffects.grayed(STAR), STAR3, STAR3, STAR4, STAR4, STAR5, STAR5, STAR6, STAR6, STAR};
 
   private JLabel[] myLabels = new JLabel[MAX_RATE];
 
@@ -59,13 +61,13 @@ public class RatesPanel extends JPanel {
     final int intRating = dblRating.intValue();
 
     for (int i = 0; i < intRating; i++) {
-      myLabels[i].setIcon(STAR);
+      myLabels[i].setIcon(TargetAWT.to(STAR));
     }
 
     if (intRating < MAX_RATE) {
-      myLabels[intRating].setIcon(STARs[((Double)(dblRating * 10)).intValue() % 10]);
+      myLabels[intRating].setIcon(TargetAWT.to(STARs[((Double)(dblRating * 10)).intValue() % 10]));
       for (int i = 1 + intRating; i < MAX_RATE; i++) {
-        myLabels[i].setIcon(IconLoader.getDisabledIcon(STAR));
+        myLabels[i].setIcon(TargetAWT.to(ImageEffects.grayed(STAR)));
       }
     }
   }

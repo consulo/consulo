@@ -1,11 +1,12 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.openapi.fileTypes;
 
-import com.intellij.icons.AllIcons;
 import com.intellij.openapi.options.SettingsEditor;
 import com.intellij.openapi.util.IconLoader;
 import com.intellij.openapi.vfs.VirtualFile;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.image.Image;
+
 import javax.annotation.Nonnull;
 
 public abstract class UserFileType<T extends UserFileType> implements FileType, Cloneable {
@@ -64,8 +65,7 @@ public abstract class UserFileType<T extends UserFileType> implements FileType, 
       }
 
       if (icon == null) {
-        // to not load PlatformIcons on UserFileType instantiation
-        icon = AllIcons.FileTypes.Custom;
+        icon = PlatformIconGroup.fileTypesCustom();
       }
     }
     return icon;

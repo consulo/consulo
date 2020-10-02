@@ -27,7 +27,6 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.startup.StartupActivity;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.EmptyRunnable;
-import com.intellij.openapi.util.IconLoader;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.wm.*;
 import com.intellij.openapi.wm.ex.ToolWindowEx;
@@ -52,8 +51,10 @@ import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.*;
 import consulo.ui.image.Image;
+import consulo.ui.image.ImageEffects;
 import consulo.ui.image.ImageKey;
 import consulo.ui.shared.Rectangle2D;
+import consulo.ui.style.StandardColors;
 import kava.beans.PropertyChangeEvent;
 import kava.beans.PropertyChangeListener;
 import org.jdom.Element;
@@ -1081,14 +1082,7 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
         targetIcon = ImageKey.of(ids[0], ids[1], 13, 13);
       }
       else {
-        targetIcon = IconLoader.findIcon(beanIcon, factory.getClass());
-        if (targetIcon == null) {
-          try {
-            targetIcon = IconLoader.getIcon(beanIcon);
-          }
-          catch (Exception ignored) {
-          }
-        }
+        targetIcon = ImageEffects.colorFilled(13, 13, StandardColors.MAGENTA);
       }
       toolWindow.setIcon(targetIcon);
     }

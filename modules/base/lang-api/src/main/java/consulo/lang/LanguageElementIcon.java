@@ -16,11 +16,14 @@
 package consulo.lang;
 
 import com.intellij.openapi.extensions.AbstractExtensionPointBean;
-import com.intellij.openapi.util.IconLoader;
 import com.intellij.openapi.util.NullableLazyValue;
 import com.intellij.util.KeyedLazyInstance;
 import com.intellij.util.xmlb.annotations.Attribute;
+import consulo.annotation.DeprecationInfo;
 import consulo.ui.image.Image;
+import consulo.ui.image.ImageEffects;
+import consulo.ui.image.ImageKey;
+import consulo.ui.style.StandardColors;
 
 /**
  * @author VISTALL
@@ -33,9 +36,31 @@ public class LanguageElementIcon extends AbstractExtensionPointBean implements K
   public String language;
 
   @Attribute("file")
+  @Deprecated
+  @DeprecationInfo("Use 'icon' attribute")
   public String file;
 
-  private NullableLazyValue<Image> myIconValue = NullableLazyValue.<Image>of(() -> IconLoader.findIcon(file, getLoaderForClass()));
+  @Attribute("icon")
+  public String icon;
+
+  @SuppressWarnings("deprecation")
+  private NullableLazyValue<Image> myIconValue = NullableLazyValue.createValue(() -> {
+    String target = icon;
+    if(target == null) {
+      target = file;
+    }
+
+    if(target == null) {
+      return ImageEffects.colorFilled(Image.DEFAULT_ICON_SIZE, Image.DEFAULT_ICON_SIZE, StandardColors.CYAN);
+    }
+
+    if(target.contains("@")) {
+      String[] ids = target.split("@");
+      return ImageKey.of(ids[0], ids[1], Image.DEFAULT_ICON_SIZE, Image.DEFAULT_ICON_SIZE);
+    }
+
+    return ImageEffects.colorFilled(Image.DEFAULT_ICON_SIZE, Image.DEFAULT_ICON_SIZE, StandardColors.CYAN);
+  });
 
   @Override
   public String getKey() {

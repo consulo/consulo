@@ -47,6 +47,7 @@ import com.intellij.xdebugger.impl.XDebuggerHistoryManager;
 import com.intellij.xdebugger.impl.breakpoints.XExpressionImpl;
 import com.intellij.xdebugger.impl.evaluate.CodeFragmentInputComponent;
 import consulo.awt.TargetAWT;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
@@ -162,8 +163,7 @@ public abstract class XDebuggerEditorBase {
   protected JPanel addMultilineButton(JComponent component) {
     ComponentWithBrowseButton<JComponent> componentWithButton =
             new ComponentWithBrowseButton<>(component, e -> showCodeFragmentEditor(component, this));
-    componentWithButton.setButtonIcon(AllIcons.Actions.ShowViewer);
-    componentWithButton.getButton().setDisabledIcon(TargetAWT.to(ImageEffects.grayed(AllIcons.Actions.ShowViewer)));
+    componentWithButton.setButtonIcon(PlatformIconGroup.actionsShowViewer());
     return componentWithButton;
   }
 

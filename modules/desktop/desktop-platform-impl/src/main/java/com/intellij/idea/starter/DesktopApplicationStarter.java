@@ -123,8 +123,6 @@ public class DesktopApplicationStarter extends ApplicationStarter {
 
     DesktopAppUIUtil.registerBundledFonts();
 
-    IconLoader.activate();
-
     invokeAtUIAndWait(() -> {
       if (SystemInfo.isXWindow) {
         String wmName = X11UiUtil.getWmName();

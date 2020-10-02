@@ -38,7 +38,8 @@ public abstract class NullableLazyValue<T> {
   }
 
   private boolean myComputed;
-  @Nullable private T myValue;
+  @Nullable
+  private T myValue;
 
   @Nullable
   protected abstract T compute();
