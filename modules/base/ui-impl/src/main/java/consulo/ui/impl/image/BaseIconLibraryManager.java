@@ -56,24 +56,41 @@ public abstract class BaseIconLibraryManager implements IconLibraryManager {
   private final AtomicBoolean myInitialized = new AtomicBoolean();
 
   private Map<String, IconLibrary> myLibraries = new HashMap<>();
-  private String myActiveLibraryName = DEFAULT_LIBRARY;
+  private String myActiveLibraryName = LIGHT_LIBRARY_ID;
   private IconLibrary myActiveLibrary;
 
   @Nonnull
   @Override
-  public Set<String> getLibrariesName() {
+  public Set<String> getLibrariesId() {
     return myLibraries.keySet();
   }
 
   @Nonnull
   @Override
-  public String getActiveLibraryName() {
+  public String getActiveLibraryId() {
     return myActiveLibraryName;
   }
 
   @Override
   public long getModificationCount() {
     return myModificationCount.get();
+  }
+
+  @Override
+  public void setActiveLibrary(@Nonnull String id) {
+    IconLibrary iconLibrary = myLibraries.get(id);
+    if(iconLibrary != null) {
+      myActiveLibraryName = id;
+      myActiveLibrary = iconLibrary;
+    }
+    else {
+      LOG.error("Can't find icon library with id {0}", id);
+    }
+  }
+
+  @Nullable
+  public IconLibrary getLibrary(@Nonnull String id) {
+    return myLibraries.get(id);
   }
 
   @Nonnull
@@ -89,7 +106,7 @@ public abstract class BaseIconLibraryManager implements IconLibraryManager {
   }
 
   @Nonnull
-  protected abstract IconLibrary createLibrary(@Nonnull String id);
+  protected abstract IconLibrary createLibrary(@Nonnull IconLibraryId id);
 
   public void initialize(@Nullable List<String> files) {
     if (myInitialized.compareAndSet(false, true)) {
@@ -144,12 +161,12 @@ public abstract class BaseIconLibraryManager implements IconLibraryManager {
     }
 
     String[] split = libraryText.split(":");
-    String iconLibrary = split[0];
-    String id = split[1];
+    IconLibraryId iconLibraryId = extractName(split[0]);
+    String groupId = split[1];
 
-    String prefix = "icon/" + id.replace(".", "/") + "/";
+    String prefix = "icon/" + groupId.replace(".", "/") + "/";
 
-    IconLibrary lib = myLibraries.computeIfAbsent(iconLibrary, this::createLibrary);
+    IconLibrary lib = myLibraries.computeIfAbsent(iconLibraryId.getId(), it -> createLibrary(iconLibraryId));
 
     for (Map.Entry<String, JarIcon> entry : iconUrls.entrySet()) {
       String iconPath = entry.getKey();
@@ -165,9 +182,18 @@ public abstract class BaseIconLibraryManager implements IconLibraryManager {
 
         String imageId = imagePathNoExtension.replace("/", ".").replace("-", "_");
 
-        lib.registerIcon(id, imageId, value._1x, value._2x, value.svgState.toBoolean());
+        lib.registerIcon(groupId, imageId, value._1x, value._2x, value.svgState.toBoolean());
       }
     }
+  }
+
+  @Nonnull
+  private IconLibraryId extractName(@Nonnull String nameFull) {
+    if(nameFull.contains(">")) {
+      String[] split = nameFull.split(">");
+      return new IconLibraryId(split[0], split[1]);
+    }
+    return new IconLibraryId(nameFull, null);
   }
 
   private boolean processMaybeIconFile(@Nonnull final String fileName,

@@ -13,36 +13,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui.image;
-
-import consulo.ui.UIInternal;
+package consulo.ui.impl.image;
 
 import javax.annotation.Nonnull;
-import java.util.Set;
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
- * @since 2020-09-26
+ * @since 2020-10-02
  */
-public interface IconLibraryManager {
-  String LIGHT_LIBRARY_ID = "Default";
-  String DARK_LIBRARY_ID = "Dark";
+public class IconLibraryId {
+  private final String myId;
+  private final String myBaseId;
 
-  @Nonnull
-  public static IconLibraryManager get() {
-    return UIInternal.get()._IconLibraryManager_get();
+  public IconLibraryId(@Nonnull String id, @Nullable String baseId) {
+    myId = id;
+    myBaseId = baseId;
   }
 
-  /**
-   * @return libraries id
-   */
-  @Nonnull
-  Set<String> getLibrariesId();
+  public String getId() {
+    return myId;
+  }
 
-  @Nonnull
-  String getActiveLibraryId();
+  public String getBaseId() {
+    return myBaseId;
+  }
 
-  void setActiveLibrary(@Nonnull String iconLibraryId);
-
-  long getModificationCount();
+  @Override
+  public String toString() {
+    return "IconLibName{" + "myId='" + myId + '\'' + ", myBaseId='" + myBaseId + '\'' + '}';
+  }
 }

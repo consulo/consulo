@@ -56,7 +56,7 @@ public abstract class IconLibrary {
       if (myInitialized.compareAndSet(false, true)) {
         Image image = library.createImage(my1xData, my2xData, myIsSVG, width, height, groupId, imageId);
         myImageRef = SimpleReference.create(image);
-        
+
         // reset data
         my1xData = null;
         my2xData = null;
@@ -80,12 +80,15 @@ public abstract class IconLibrary {
 
   private static final Logger LOG = Logger.getInstance(IconLibrary.class);
 
-  private final String myId;
+  private final IconLibraryId myId;
+
+  private final BaseIconLibraryManager myIconLibraryManager;
 
   private final Map<String, IconGroup> myRegisteredGroups = new HashMap<>();
 
-  public IconLibrary(String id) {
+  public IconLibrary(@Nonnull IconLibraryId id, @Nonnull BaseIconLibraryManager baseIconLibraryManager) {
     myId = id;
+    myIconLibraryManager = baseIconLibraryManager;
   }
 
   protected void registerIcon(String groupId, String imageId, byte[] _1xdata, byte[] _2xdata, boolean isSVG) {
@@ -93,7 +96,7 @@ public abstract class IconLibrary {
   }
 
   @Nonnull
-  public String getId() {
+  public IconLibraryId getId() {
     return myId;
   }
 
@@ -102,6 +105,28 @@ public abstract class IconLibrary {
 
   @Nullable
   public Image getIcon(String groupId, String imageId, int width, int height) {
+    Image image = getIconNoLog(groupId, imageId, width, height);
+    if (image != null) {
+      return image;
+    }
+
+    String baseId = myId.getBaseId();
+    if (baseId != null) {
+      IconLibrary library = myIconLibraryManager.getLibrary(baseId);
+      if (library != null) {
+        image = library.getIconNoLog(groupId, imageId, width, height);
+        if (image != null) {
+          return image;
+        }
+      }
+    }
+
+    LOG.warn("Icon: " + groupId + "@" + imageId + " not found.");
+    return null;
+  }
+
+  @Nullable
+  protected Image getIconNoLog(String groupId, String imageId, int width, int height) {
     IconGroup iconGroup = myRegisteredGroups.get(groupId);
     if (iconGroup != null) {
       ImageState imageState = iconGroup.myRegisteredIcons.get(imageId);
@@ -109,8 +134,6 @@ public abstract class IconLibrary {
         return imageState.getOrCreateImage(this, width, height, groupId, imageId);
       }
     }
-
-    LOG.warn("Icon: " + groupId + "@" + imageId + " not found.");
     return null;
   }
 }

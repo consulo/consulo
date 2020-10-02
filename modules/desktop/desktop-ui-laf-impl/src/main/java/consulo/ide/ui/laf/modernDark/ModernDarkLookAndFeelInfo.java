@@ -18,6 +18,8 @@ package consulo.ide.ui.laf.modernDark;
 import com.intellij.ide.IdeBundle;
 import consulo.desktop.ui.laf.LookAndFeelInfoWithClassLoader;
 import consulo.ide.ui.laf.LafWithColorScheme;
+import consulo.ide.ui.laf.LafWithIconLibrary;
+import consulo.ui.image.IconLibraryManager;
 
 import javax.annotation.Nonnull;
 
@@ -25,18 +27,18 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 02.03.14
  */
-public class ModernDarkLookAndFeelInfo extends LookAndFeelInfoWithClassLoader implements LafWithColorScheme {
-  public ModernDarkLookAndFeelInfo(){
+public class ModernDarkLookAndFeelInfo extends LookAndFeelInfoWithClassLoader implements LafWithColorScheme, LafWithIconLibrary {
+  public ModernDarkLookAndFeelInfo() {
     super(IdeBundle.message("modern.dark.intellij.look.and.feel"), ModernDarkLaf.class.getName());
   }
 
   @Override
-  public boolean equals(Object obj){
+  public boolean equals(Object obj) {
     return (obj instanceof ModernDarkLookAndFeelInfo);
   }
 
   @Override
-  public int hashCode(){
+  public int hashCode() {
     return getName().hashCode();
   }
 
@@ -44,5 +46,11 @@ public class ModernDarkLookAndFeelInfo extends LookAndFeelInfoWithClassLoader im
   @Override
   public String getColorSchemeName() {
     return "Darcula";
+  }
+
+  @Nonnull
+  @Override
+  public String getIconLibraryId() {
+    return IconLibraryManager.DARK_LIBRARY_ID;
   }
 }

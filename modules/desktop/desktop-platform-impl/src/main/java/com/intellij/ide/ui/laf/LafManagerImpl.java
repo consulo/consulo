@@ -65,6 +65,7 @@ import consulo.disposer.Disposable;
 import consulo.ide.eap.EarlyAccessProgramManager;
 import consulo.ide.ui.laf.GTKPlusEAPDescriptor;
 import consulo.ide.ui.laf.LafWithColorScheme;
+import consulo.ide.ui.laf.LafWithIconLibrary;
 import consulo.ide.ui.laf.mac.MacButtonlessScrollbarUI;
 import consulo.ide.ui.laf.mac.MacEditorTabsUI;
 import consulo.ide.ui.laf.modernDark.ModernDarkLookAndFeelInfo;
@@ -73,6 +74,7 @@ import consulo.ide.ui.laf.modernWhite.NativeModernWhiteLookAndFeelInfo;
 import consulo.localize.LocalizeManager;
 import consulo.logging.Logger;
 import consulo.ui.desktop.internal.style.DesktopStyleImpl;
+import consulo.ui.image.IconLibraryManager;
 import consulo.ui.style.Style;
 import org.intellij.lang.annotations.JdkConstants;
 import org.jdom.Element;
@@ -125,10 +127,12 @@ public final class LafManagerImpl extends LafManager implements Disposable, Pers
 
   private final Map<UIManager.LookAndFeelInfo, HashMap<String, Object>> myStoredDefaults = new HashMap<>();
   private final LocalizeManager myLocalizeManager;
+  private final IconLibraryManager myIconLibraryManager;
 
   @Inject
   LafManagerImpl() {
     myLocalizeManager = LocalizeManager.get();
+    myIconLibraryManager = IconLibraryManager.get();
 
     List<UIManager.LookAndFeelInfo> lafList = new ArrayList<>();
 
@@ -224,12 +228,12 @@ public final class LafManagerImpl extends LafManager implements Disposable, Pers
     String className = null;
 
     Element lafElement = element.getChild(ELEMENT_LAF);
-    if(lafElement != null) {
+    if (lafElement != null) {
       className = lafElement.getAttributeValue(ATTRIBUTE_CLASS_NAME);
     }
 
     String localeText = element.getChildText(ELEMENT_LOCALE);
-    if(localeText != null) {
+    if (localeText != null) {
       myLocalizeManager.setLocale(myLocalizeManager.parseLocale(localeText), false);
     }
 
@@ -258,7 +262,7 @@ public final class LafManagerImpl extends LafManager implements Disposable, Pers
       element.addContent(child);
     }
 
-    if(!myLocalizeManager.isDefaultLocale()) {
+    if (!myLocalizeManager.isDefaultLocale()) {
       Element localeElement = new Element(ELEMENT_LOCALE);
       element.addContent(localeElement);
 
@@ -363,7 +367,13 @@ public final class LafManagerImpl extends LafManager implements Disposable, Pers
         installMacOSXFonts(UIManager.getLookAndFeelDefaults());
       }
 
-      if(wantChangeScheme) {
+      if (lookAndFeelInfo instanceof LafWithIconLibrary) {
+        String iconLibraryId = ((LafWithIconLibrary)lookAndFeelInfo).getIconLibraryId();
+
+        myIconLibraryManager.setActiveLibrary(iconLibraryId);
+      }
+
+      if (wantChangeScheme) {
         if (lookAndFeelInfo instanceof LafWithColorScheme) {
           EditorColorsManager editorColorsManager = EditorColorsManager.getInstance();
           EditorColorsScheme editorColorsScheme = editorColorsManager.getScheme(((LafWithColorScheme)lookAndFeelInfo).getColorSchemeName());
