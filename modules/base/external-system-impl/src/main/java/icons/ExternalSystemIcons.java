@@ -15,7 +15,7 @@
  */
 package icons;
 
-import com.intellij.openapi.util.IconLoader;
+import com.intellij.openapi.util.NotWorkingIconLoader;
 import consulo.ui.image.Image;
 
 /**
@@ -24,7 +24,7 @@ import consulo.ui.image.Image;
  */
 public class ExternalSystemIcons {
   private static Image load(String path) {
-    return IconLoader.getIcon(path, ExternalSystemIcons.class);
+    return (Image)NotWorkingIconLoader.getIcon(path, ExternalSystemIcons.class);
   }
 
   public static final Image Task = load("/icons/task.svg"); // 16x16

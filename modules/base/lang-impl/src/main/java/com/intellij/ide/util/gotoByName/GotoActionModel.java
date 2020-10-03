@@ -44,6 +44,7 @@ import consulo.awt.TargetAWT;
 import consulo.ide.base.BaseShowSettingsUtil;
 import consulo.logging.Logger;
 import consulo.ui.image.Image;
+import consulo.ui.image.ImageEffects;
 import gnu.trove.THashMap;
 import org.jetbrains.annotations.NonNls;
 
@@ -282,7 +283,7 @@ public class GotoActionModel implements ChooseByNameModel, Comparator<Object>, D
     int emptyIconHeight = EMPTY_ICON.getIconHeight();
     if (width <= emptyIconWidth && height <= emptyIconHeight) {
       Icon awtIcon = TargetAWT.to(icon);
-      layeredIcon.setIcon(disabled && IconLoader.isGoodSize(awtIcon) ? IconLoader.getDisabledIcon(awtIcon) : awtIcon, 1, (emptyIconWidth - width) / 2, (emptyIconHeight - height) / 2);
+      layeredIcon.setIcon(disabled && NotWorkingIconLoader.isGoodSize(awtIcon) ? TargetAWT.to(ImageEffects.grayed(icon)) : awtIcon, 1, (emptyIconWidth - width) / 2, (emptyIconHeight - height) / 2);
     }
 
     return new JLabel(layeredIcon);

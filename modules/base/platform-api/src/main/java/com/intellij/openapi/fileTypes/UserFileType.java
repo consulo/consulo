@@ -2,7 +2,7 @@
 package com.intellij.openapi.fileTypes;
 
 import com.intellij.openapi.options.SettingsEditor;
-import com.intellij.openapi.util.IconLoader;
+import com.intellij.openapi.util.NotWorkingIconLoader;
 import com.intellij.openapi.vfs.VirtualFile;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.image.Image;
@@ -60,7 +60,7 @@ public abstract class UserFileType<T extends UserFileType> implements FileType, 
     Image icon = myIcon;
     if (icon == null) {
       if (myIconPath != null) {
-        icon = IconLoader.getIcon(myIconPath);
+        icon = (Image)NotWorkingIconLoader.getIcon(myIconPath);
         myIcon = icon;
       }
 

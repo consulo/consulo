@@ -15,7 +15,7 @@
  */
 package icons;
 
-import com.intellij.openapi.util.IconLoader;
+import com.intellij.openapi.util.NotWorkingIconLoader;
 import consulo.ui.image.Image;
 
 /**
@@ -24,7 +24,7 @@ import consulo.ui.image.Image;
  */
 public class RemoteServersIcons {
   private static Image load(String path) {
-    return IconLoader.getIcon(path, RemoteServersIcons.class);
+    return (Image)NotWorkingIconLoader.getIcon(path, RemoteServersIcons.class);
   }
 
   public static final Image ResumeScaled = load("/icons/resumeScaled.svg"); // 8x8

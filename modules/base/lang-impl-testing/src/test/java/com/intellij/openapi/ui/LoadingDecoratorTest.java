@@ -1,6 +1,5 @@
 package com.intellij.openapi.ui;
 
-import com.intellij.openapi.util.IconLoader;
 import consulo.disposer.Disposable;
 
 import javax.swing.*;

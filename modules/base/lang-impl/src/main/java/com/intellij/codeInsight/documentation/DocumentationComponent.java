@@ -283,7 +283,7 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
             AttributeSet attrs = elem.getAttributes();
             if ("icon".equals(elem.getName())) {
               Object src = attrs.getAttribute(HTML.Attribute.SRC);
-              Icon icon = src != null ? IconLoader.findIcon((String)src, false) : null;
+              Icon icon = src != null ? NotWorkingIconLoader.findIcon((String)src, false) : null;
               if (icon != null) {
                 return new MyIconView(elem, icon);
               }

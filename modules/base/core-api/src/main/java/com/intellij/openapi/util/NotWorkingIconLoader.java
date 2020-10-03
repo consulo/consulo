@@ -25,7 +25,6 @@ import com.intellij.util.ui.JBUI;
 import consulo.annotation.DeprecationInfo;
 import consulo.awt.TargetAWT;
 import consulo.ui.image.ImageEffects;
-import consulo.ui.migration.SwingImageRef;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
@@ -37,10 +36,10 @@ import java.net.URL;
 import java.util.List;
 
 @Deprecated
-public final class IconLoader {
+public final class NotWorkingIconLoader {
   //private static final Logger LOG = Logger.getInstance(IconLoader.class);
 
-  public static class DummyIcon implements SwingImageRef {
+  public static class DummyIcon implements consulo.ui.image.Image, Icon {
     private final String myCreationTrace = ExceptionUtil.getThrowableText(new Exception());
 
     @Override
@@ -73,7 +72,7 @@ public final class IconLoader {
 
   public static boolean STRICT = false;
 
-  private IconLoader() {
+  private NotWorkingIconLoader() {
   }
 
   @Deprecated
@@ -85,26 +84,26 @@ public final class IconLoader {
   }
 
   @Nonnull
-  public static SwingImageRef getIcon(@NonNls @Nonnull final String path) {
+  public static Icon getIcon(@NonNls @Nonnull final String path) {
     return new DummyIcon();
   }
 
   @Nullable
-  private static SwingImageRef getReflectiveIcon(@Nonnull String path, ClassLoader classLoader) {
+  private static Icon getReflectiveIcon(@Nonnull String path, ClassLoader classLoader) {
     return new DummyIcon();
   }
 
   /**
    * Might return null if icon was not found.
-   * Use only if you expected null return value, otherwise see {@link IconLoader#getIcon(String)}
+   * Use only if you expected null return value, otherwise see {@link NotWorkingIconLoader#getIcon(String)}
    */
   @Nullable
-  public static SwingImageRef findIcon(@NonNls @Nonnull String path) {
+  public static Icon findIcon(@NonNls @Nonnull String path) {
     return new DummyIcon();
   }
 
   @Nonnull
-  public static SwingImageRef getIcon(@Nonnull String path, @Nonnull final Class aClass) {
+  public static Icon getIcon(@Nonnull String path, @Nonnull final Class aClass) {
     return new DummyIcon();
   }
 
@@ -113,20 +112,20 @@ public final class IconLoader {
 
   /**
    * Might return null if icon was not found.
-   * Use only if you expected null return value, otherwise see {@link IconLoader#getIcon(String, Class)}
+   * Use only if you expected null return value, otherwise see {@link NotWorkingIconLoader#getIcon(String, Class)}
    */
   @Nullable
-  public static SwingImageRef findIcon(@Nonnull final String path, @Nonnull final Class aClass) {
+  public static Icon findIcon(@Nonnull final String path, @Nonnull final Class aClass) {
     return findIcon(path, aClass, false);
   }
 
   @Nullable
-  public static SwingImageRef findIcon(@Nonnull String path, @Nonnull final Class aClass, boolean computeNow) {
+  public static Icon findIcon(@Nonnull String path, @Nonnull final Class aClass, boolean computeNow) {
     return findIcon(path, aClass, computeNow, STRICT);
   }
 
   @Nullable
-  public static SwingImageRef findIcon(@Nonnull String path, @Nonnull Class aClass, boolean computeNow, boolean strict) {
+  public static Icon findIcon(@Nonnull String path, @Nonnull Class aClass, boolean computeNow, boolean strict) {
     return new DummyIcon();
   }
 
@@ -141,7 +140,7 @@ public final class IconLoader {
   }
 
   @Nullable
-  public static SwingImageRef findIcon(URL url) {
+  public static Icon findIcon(URL url) {
     return findIcon(url, true);
   }
 
@@ -154,12 +153,12 @@ public final class IconLoader {
   }
 
   @Nullable
-  public static SwingImageRef findIcon(URL url, boolean useCache) {
+  public static Icon findIcon(URL url, boolean useCache) {
     return new DummyIcon();
   }
 
   @Nullable
-  public static SwingImageRef findIcon(@Nonnull String path, @Nonnull ClassLoader classLoader) {
+  public static Icon findIcon(@Nonnull String path, @Nonnull ClassLoader classLoader) {
     return new DummyIcon();
   }
 

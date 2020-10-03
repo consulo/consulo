@@ -541,7 +541,7 @@ public class ShowUsagesAction extends AnAction implements PopupAction {
     SpeedSearchBase<JTable> speedSearch = new MySpeedSearch(table);
     speedSearch.setComparator(new SpeedSearchComparator(false));
 
-    table.setRowHeight(PlatformIcons.CLASS_ICON.getIconHeight() + 2);
+    table.setRowHeight(AllIcons.Nodes.Class.getHeight() + 2);
     table.setShowGrid(false);
     table.setShowVerticalLines(false);
     table.setShowHorizontalLines(false);

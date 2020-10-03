@@ -16,20 +16,12 @@
 package consulo.test.impl.ui;
 
 import consulo.localize.LocalizeValue;
-import consulo.ui.Button;
-import consulo.ui.Component;
-import consulo.ui.Label;
-import consulo.ui.Menu;
-import consulo.ui.MenuBar;
-import consulo.ui.MenuItem;
-import consulo.ui.Window;
 import consulo.ui.*;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.font.FontManager;
 import consulo.ui.image.Image;
 import consulo.ui.image.canvas.Canvas2D;
 import consulo.ui.layout.*;
-import consulo.ui.migration.SwingImageRef;
 import consulo.ui.model.ListModel;
 import consulo.ui.model.MutableListModel;
 import consulo.ui.shared.ColorValue;
@@ -37,7 +29,6 @@ import consulo.ui.style.StyleManager;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.awt.*;
 import java.net.URL;
 import java.util.Collection;
 import java.util.List;
@@ -50,7 +41,7 @@ import java.util.function.Supplier;
  * @since 2020-08-24
  */
 public class TestUIInternal extends UIInternal {
-  private static final SwingImageRef ourDummyRef = new SwingImageRef() {
+  private static final Image ourDummyRef = new Image() {
     @Override
     public int getHeight() {
       return 0;
@@ -58,21 +49,6 @@ public class TestUIInternal extends UIInternal {
 
     @Override
     public int getWidth() {
-      return 0;
-    }
-
-    @Override
-    public void paintIcon(java.awt.Component c, Graphics g, int x, int y) {
-
-    }
-
-    @Override
-    public int getIconWidth() {
-      return 0;
-    }
-
-    @Override
-    public int getIconHeight() {
       return 0;
     }
   };

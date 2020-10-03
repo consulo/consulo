@@ -24,7 +24,6 @@ import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
 import consulo.ui.image.ImageKey;
 import consulo.ui.impl.image.BaseIconLibraryManager;
-import consulo.ui.migration.SwingImageRef;
 import consulo.ui.style.StandardColors;
 
 import javax.annotation.Nonnull;
@@ -36,7 +35,7 @@ import java.awt.image.BufferedImage;
  * @author VISTALL
  * @since 2020-09-27
  */
-public class DesktopImageKeyImpl extends DesktopBaseLazyImageImpl implements ImageKey, SwingImageRef, DesktopLibraryInnerImage {
+public class DesktopImageKeyImpl extends DesktopBaseLazyImageImpl implements ImageKey, Icon, DesktopLibraryInnerImage {
   private static final BaseIconLibraryManager ourLibraryManager = (BaseIconLibraryManager)IconLibraryManager.get();
   private static final UIModificationTracker ourUIModificationTracker = UIModificationTracker.getInstance();
 

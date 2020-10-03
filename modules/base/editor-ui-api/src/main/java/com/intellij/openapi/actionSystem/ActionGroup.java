@@ -6,7 +6,6 @@ import com.intellij.util.containers.ContainerUtil;
 import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
-import consulo.ui.migration.SwingImageRef;
 import kava.beans.PropertyChangeListener;
 import kava.beans.PropertyChangeSupport;
 import org.jetbrains.annotations.Nls;
@@ -131,10 +130,6 @@ public abstract class ActionGroup extends AnAction {
   }
 
   public ActionGroup(@Nls(capitalization = Nls.Capitalization.Title) String text, @Nls(capitalization = Nls.Capitalization.Sentence) String description, Image icon) {
-    super(text, description, icon);
-  }
-
-  public ActionGroup(@Nls(capitalization = Nls.Capitalization.Title) String text, @Nls(capitalization = Nls.Capitalization.Sentence) String description, SwingImageRef icon) {
     super(text, description, icon);
   }
 

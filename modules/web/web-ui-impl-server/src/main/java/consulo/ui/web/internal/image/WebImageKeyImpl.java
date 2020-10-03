@@ -32,7 +32,7 @@ import java.awt.*;
  * @author VISTALL
  * @since 2020-10-03
  */
-public class WebImageKeyImpl implements ImageKey, WebImageWithVaadinState, SwingImageRef {
+public class WebImageKeyImpl implements ImageKey, WebImageWithVaadinState {
   private static final BaseIconLibraryManager ourLibraryManager = (BaseIconLibraryManager)IconLibraryManager.get();
   private static final UIModificationTracker ourUIModificationTracker = UIModificationTracker.getInstance();
 
@@ -86,20 +86,5 @@ public class WebImageKeyImpl implements ImageKey, WebImageWithVaadinState, Swing
   @Override
   public int getWidth() {
     return myWidth;
-  }
-
-  @Override
-  public int getIconWidth() {
-    return myWidth;
-  }
-
-  @Override
-  public int getIconHeight() {
-    return myHeight;
-  }
-
-  @Override
-  public void paintIcon(Component c, Graphics g, int x, int y) {
-
   }
 }

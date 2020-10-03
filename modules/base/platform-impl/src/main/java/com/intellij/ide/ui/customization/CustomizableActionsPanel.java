@@ -34,7 +34,7 @@ import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.ui.TextFieldWithBrowseButton;
-import com.intellij.openapi.util.IconLoader;
+import com.intellij.openapi.util.NotWorkingIconLoader;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
@@ -536,7 +536,7 @@ public class CustomizableActionsPanel {
         catch (IOException e) {
           LOG.debug(e);
         }
-        Icon icon = new File(path).exists() ? IconLoader.getIcon(image) : null;
+        Icon icon = new File(path).exists() ? NotWorkingIconLoader.getIcon(image) : null;
         if (icon != null) {
           if (icon.getIconWidth() >  EmptyIcon.ICON_18.getIconWidth() || icon.getIconHeight() > EmptyIcon.ICON_18.getIconHeight()) {
             Messages.showErrorDialog(component, IdeBundle.message("custom.icon.validation.message"), IdeBundle.message("title.choose.action.icon"));

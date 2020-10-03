@@ -2,11 +2,9 @@ package com.intellij.ui;
 
 import consulo.awt.TargetAWT;
 import consulo.ui.image.Image;
-import consulo.ui.migration.SwingImageRef;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 
 public interface ColoredTextContainer {
@@ -19,10 +17,6 @@ public interface ColoredTextContainer {
 
   default void setIcon(@Nullable Image image) {
     setIcon(TargetAWT.to(image));
-  }
-
-  default void setIcon(@Nullable SwingImageRef imageRef) {
-    setIcon((Icon)imageRef);
   }
 
   void setToolTipText(@Nullable String text);

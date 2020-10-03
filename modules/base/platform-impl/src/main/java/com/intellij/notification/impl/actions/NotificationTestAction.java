@@ -25,7 +25,7 @@ import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.MessageDialogBuilder;
-import com.intellij.openapi.util.IconLoader;
+import com.intellij.openapi.util.NotWorkingIconLoader;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.wm.ToolWindowId;
 import com.intellij.util.messages.MessageBus;
@@ -181,7 +181,7 @@ public class NotificationTestAction extends AnAction implements DumbAware {
       if (myNotification == null) {
         Image icon = null;
         if (!StringUtil.isEmpty(myGroupId)) {
-          icon = IconLoader.findIcon(myGroupId);
+          icon = (Image)NotWorkingIconLoader.findIcon(myGroupId);
         }
         String displayId = mySticky ? TEST_STICKY_GROUP.getDisplayId() : TEST_GROUP_ID;
         if (myToolwindow) {
@@ -267,7 +267,7 @@ public class NotificationTestAction extends AnAction implements DumbAware {
       private MyAnAction(@Nullable String text) {
         if (text != null) {
           if (text.endsWith(".png")) {
-            Image icon = IconLoader.findIcon(text);
+            Image icon = (Image)NotWorkingIconLoader.findIcon(text);
             if (icon != null) {
               getTemplatePresentation().setIcon(icon);
               return;

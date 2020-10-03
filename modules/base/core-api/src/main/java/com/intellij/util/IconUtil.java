@@ -16,14 +16,13 @@
 package com.intellij.util;
 
 import com.intellij.icons.AllIcons;
-import com.intellij.openapi.util.IconLoader;
+import com.intellij.openapi.util.NotWorkingIconLoader;
 import com.intellij.openapi.util.ScalableIcon;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.LayeredIcon;
 import com.intellij.ui.RowIcon;
 import com.intellij.util.ui.*;
 import consulo.annotation.DeprecationInfo;
-import consulo.ui.migration.SwingImageRef;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -117,62 +116,62 @@ public class IconUtil {
   }
 
   public static Image toImage(@Nonnull Icon icon, @Nullable JBUI.ScaleContext ctx) {
-    return IconLoader.toImage(icon, ctx);
+    return NotWorkingIconLoader.toImage(icon, ctx);
   }
 
-  public static SwingImageRef getAddIcon() {
+  public static consulo.ui.image.Image getAddIcon() {
     return AllIcons.General.Add;
   }
 
-  public static SwingImageRef getRemoveIcon() {
+  public static consulo.ui.image.Image getRemoveIcon() {
     return AllIcons.General.Remove;
   }
 
-  public static SwingImageRef getMoveUpIcon() {
+  public static consulo.ui.image.Image getMoveUpIcon() {
     return AllIcons.Actions.MoveUp;
   }
 
-  public static SwingImageRef getMoveDownIcon() {
+  public static consulo.ui.image.Image getMoveDownIcon() {
     return  AllIcons.Actions.MoveDown;
   }
 
-  public static SwingImageRef getEditIcon() {
+  public static consulo.ui.image.Image getEditIcon() {
     return AllIcons.Actions.Edit;
   }
 
-  public static SwingImageRef getAddClassIcon() {
+  public static consulo.ui.image.Image getAddClassIcon() {
     return AllIcons.ToolbarDecorator.AddClass;
   }
 
-  public static SwingImageRef getAddPatternIcon() {
+  public static consulo.ui.image.Image getAddPatternIcon() {
     return AllIcons.ToolbarDecorator.AddPattern;
   }
 
   @Deprecated
   @DeprecationInfo("Use task icons")
-  public static SwingImageRef getAddJiraPatternIcon() {
+  public static consulo.ui.image.Image getAddJiraPatternIcon() {
     return AllIcons.ToolbarDecorator.AddJira;
   }
 
   @Deprecated
   @DeprecationInfo("Use task icons")
-  public static SwingImageRef getAddYouTrackPatternIcon() {
+  public static consulo.ui.image.Image getAddYouTrackPatternIcon() {
     return AllIcons.ToolbarDecorator.AddYouTrack;
   }
 
-  public static SwingImageRef getAddBlankLineIcon() {
+  public static consulo.ui.image.Image getAddBlankLineIcon() {
     return AllIcons.ToolbarDecorator.AddBlankLine;
   }
 
-  public static SwingImageRef getAddPackageIcon() {
+  public static consulo.ui.image.Image getAddPackageIcon() {
     return AllIcons.ToolbarDecorator.AddPackage;
   }
 
-  public static SwingImageRef getAddLinkIcon() {
+  public static consulo.ui.image.Image getAddLinkIcon() {
     return AllIcons.ToolbarDecorator.AddLink;
   }
 
-  public static SwingImageRef getAddFolderIcon() {
+  public static consulo.ui.image.Image getAddFolderIcon() {
     return AllIcons.ToolbarDecorator.AddFolder;
   }
 

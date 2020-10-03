@@ -13,14 +13,13 @@ import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.accessibility.ScreenReader;
 import consulo.awt.TargetAWT;
 import consulo.ui.image.Image;
-import consulo.ui.migration.SwingImageRef;
 import gnu.trove.THashSet;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 import javax.accessibility.AccessibleAction;
 import javax.accessibility.AccessibleContext;
 import javax.accessibility.AccessibleRole;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -50,24 +49,8 @@ public class LinkLabel<T> extends JLabel {
     this("", AllIcons.Ide.Link);
   }
 
-  public LinkLabel(String text, @Nullable Icon icon) {
-    this(text, icon, null, null, null);
-  }
-
   public LinkLabel(String text, @Nullable Image icon) {
     this(text, TargetAWT.to(icon), null, null, null);
-  }
-
-  public LinkLabel(String text, @Nullable Icon icon, @Nullable LinkListener<T> aListener) {
-    this(text, icon, aListener, null, null);
-  }
-
-  public LinkLabel(String text, @Nullable SwingImageRef icon) {
-    this(text, icon, null, null, null);
-  }
-
-  public LinkLabel(String text, @Nullable SwingImageRef icon, @Nullable LinkListener<T> aListener) {
-    this(text, icon, aListener, null, null);
   }
 
   public LinkLabel(String text, @Nullable Image icon, @Nullable LinkListener<T> aListener) {
@@ -76,22 +59,18 @@ public class LinkLabel<T> extends JLabel {
 
   @Nonnull
   public static LinkLabel<?> create(@Nullable String text, @Nullable Runnable action) {
-    return new LinkLabel<>(text, null, action == null ? null : (__, ___) -> action.run(), null, null);
-  }
-
-  public LinkLabel(String text, @Nullable Icon icon, @Nullable LinkListener<T> aListener, @Nullable T aLinkData) {
-    this(text, icon, aListener, aLinkData, null);
-  }
-
-  public LinkLabel(String text, @Nullable SwingImageRef icon, @Nullable LinkListener<T> aListener, @Nullable T aLinkData) {
-    this(text, icon, aListener, aLinkData, null);
+    return new LinkLabel<>(text, (Icon)null, action == null ? null : (__, ___) -> action.run(), null, null);
   }
 
   public LinkLabel(String text, @Nullable Image icon, @Nullable LinkListener<T> aListener, @Nullable T aLinkData) {
     this(text, TargetAWT.to(icon), aListener, aLinkData, null);
   }
 
-  public LinkLabel(String text, @Nullable Icon icon, @Nullable LinkListener<T> aListener, @Nullable T aLinkData, @Nullable String aVisitedLinksKey) {
+  public LinkLabel(String text, @Nullable Image icon, @Nullable LinkListener<T> aListener, @Nullable T aLinkData, @Nullable String aVisitedLinksKey) {
+    this(text, TargetAWT.to(icon), aListener, aLinkData, aVisitedLinksKey);
+  }
+
+  private LinkLabel(String text, @Nullable Icon icon, @Nullable LinkListener<T> aListener, @Nullable T aLinkData, @Nullable String aVisitedLinksKey) {
     super(text, icon, SwingConstants.LEFT);
     setOpaque(false);
     // Note: Ideally, we should be focusable by default in all cases, however,

@@ -1,6 +1,6 @@
 package icons;
 
-import com.intellij.openapi.util.IconLoader;
+import com.intellij.openapi.util.NotWorkingIconLoader;
 import consulo.ui.image.Image;
 
 /**
@@ -9,7 +9,7 @@ import consulo.ui.image.Image;
  */
 public class VcsLogIcons {
   private static Image load(String path) {
-    return IconLoader.getIcon(path, VcsLogIcons.class);
+    return (Image)NotWorkingIconLoader.getIcon(path, VcsLogIcons.class);
   }
 
   public static final Image Branch = load("/icons/branch.png"); // 16x16

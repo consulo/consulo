@@ -3,6 +3,7 @@ package com.intellij.ui;
 
 import com.intellij.icons.AllIcons;
 import com.intellij.util.concurrency.EdtScheduledExecutorService;
+import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.SmartHashSet;
 import com.intellij.util.ui.UIUtil;
 import consulo.awt.TargetAWT;
@@ -18,8 +19,8 @@ import java.awt.*;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
-import static com.intellij.util.containers.ContainerUtil.immutableList;
 import static java.awt.AlphaComposite.SrcAtop;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 
@@ -91,6 +92,10 @@ public class AnimatedIcon implements Icon {
             immutableList(AllIcons.Process.FS.Step_1, AllIcons.Process.FS.Step_2, AllIcons.Process.FS.Step_3, AllIcons.Process.FS.Step_4, AllIcons.Process.FS.Step_5, AllIcons.Process.FS.Step_6,
                           AllIcons.Process.FS.Step_7, AllIcons.Process.FS.Step_8, AllIcons.Process.FS.Step_9, AllIcons.Process.FS.Step_10, AllIcons.Process.FS.Step_11, AllIcons.Process.FS.Step_12,
                           AllIcons.Process.FS.Step_13, AllIcons.Process.FS.Step_14, AllIcons.Process.FS.Step_15, AllIcons.Process.FS.Step_16, AllIcons.Process.FS.Step_17, AllIcons.Process.FS.Step_18);
+  }
+
+  private static List<Icon> immutableList(Image... images) {
+      return ContainerUtil.immutableList(Arrays.stream(images).map(TargetAWT::to).collect(Collectors.toList()));
   }
 
   //@ApiStatus.Internal
