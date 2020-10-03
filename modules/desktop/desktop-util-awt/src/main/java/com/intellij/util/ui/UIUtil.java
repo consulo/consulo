@@ -1321,15 +1321,15 @@ public class UIUtil {
   }
 
   public static Icon getTreeNodeIcon(boolean expanded, boolean selected, boolean focused) {
-    boolean white = (selected && focused) || isUnderDarkBuildInLaf();
-
+    boolean selectedAndFocused = selected && focused;
+    
     Icon selectedIcon = getTreeSelectedExpandedIcon();
     Icon notSelectedIcon = getTreeExpandedIcon();
 
     int width = Math.max(selectedIcon.getIconWidth(), notSelectedIcon.getIconWidth());
     int height = Math.max(selectedIcon.getIconWidth(), notSelectedIcon.getIconWidth());
 
-    return new CenteredIcon(expanded ? (white ? getTreeSelectedExpandedIcon() : getTreeExpandedIcon()) : (white ? getTreeSelectedCollapsedIcon() : getTreeCollapsedIcon()), width, height, false);
+    return new CenteredIcon(expanded ? (selectedAndFocused ? getTreeSelectedExpandedIcon() : getTreeExpandedIcon()) : (selectedAndFocused ? getTreeSelectedCollapsedIcon() : getTreeCollapsedIcon()), width, height, false);
   }
 
   public static Icon getTreeCollapsedIcon() {

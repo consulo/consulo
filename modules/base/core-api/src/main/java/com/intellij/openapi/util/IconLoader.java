@@ -17,6 +17,7 @@ package com.intellij.openapi.util;
 
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.JBColor;
+import com.intellij.util.ExceptionUtil;
 import com.intellij.util.ImageLoader;
 import com.intellij.util.ReflectionUtil;
 import com.intellij.util.ui.JBImageIcon;
@@ -40,7 +41,9 @@ import java.util.List;
 public final class IconLoader {
   private static final Logger LOG = Logger.getInstance(IconLoader.class);
 
-  public static final SwingImageRef dummyIcon = new SwingImageRef() {
+  public static class DummyIcon implements SwingImageRef {
+    private final String myCreationTrace = ExceptionUtil.getThrowableText(new Exception());
+
     @Override
     public int getHeight() {
       return consulo.ui.image.Image.DEFAULT_ICON_SIZE;
@@ -67,7 +70,8 @@ public final class IconLoader {
       g.fillRect(x, y, getWidth(), getHeight());
 
     }
-  };
+  }
+
   public static boolean STRICT = false;
 
   private IconLoader() {
@@ -91,7 +95,7 @@ public final class IconLoader {
 
   @Nullable
   private static SwingImageRef getReflectiveIcon(@Nonnull String path, ClassLoader classLoader) {
-    return dummyIcon;
+    return new DummyIcon();
   }
 
   /**
@@ -100,12 +104,12 @@ public final class IconLoader {
    */
   @Nullable
   public static SwingImageRef findIcon(@NonNls @Nonnull String path) {
-    return dummyIcon;
+    return new DummyIcon();
   }
 
   @Nonnull
   public static SwingImageRef getIcon(@Nonnull String path, @Nonnull final Class aClass) {
-    return dummyIcon;
+    return new DummyIcon();
   }
 
   public static void activate() {
@@ -127,7 +131,7 @@ public final class IconLoader {
 
   @Nullable
   public static SwingImageRef findIcon(@Nonnull String path, @Nonnull Class aClass, boolean computeNow, boolean strict) {
-    return dummyIcon;
+    return new DummyIcon();
   }
 
   @Nonnull
@@ -155,12 +159,12 @@ public final class IconLoader {
 
   @Nullable
   public static SwingImageRef findIcon(URL url, boolean useCache) {
-    return dummyIcon;
+    return new DummyIcon();
   }
 
   @Nullable
   public static SwingImageRef findIcon(@Nonnull String path, @Nonnull ClassLoader classLoader) {
-    return dummyIcon;
+    return new DummyIcon();
   }
 
   public static boolean isGoodSize(@Nonnull final Icon icon) {
@@ -176,22 +180,10 @@ public final class IconLoader {
   @Deprecated
   @DeprecationInfo("Use ImageEffects#grayed()")
   public static Icon getDisabledIcon(@Nullable Icon icon) {
-    if(icon == null) {
+    if (icon == null) {
       return null;
     }
     return TargetAWT.to(ImageEffects.grayed(TargetAWT.from(icon)));
-  }
-
-  /**
-   * Gets a snapshot of the icon, immune to changes made by these calls:
-   * {@link {@link IconLoader#resetDark()}
-   *
-   * @param icon the source icon
-   * @return the icon snapshot
-   */
-  @Nonnull
-  public static Icon getIconSnapshot(@Nonnull Icon icon) {
-    return icon;
   }
 
   @Nullable

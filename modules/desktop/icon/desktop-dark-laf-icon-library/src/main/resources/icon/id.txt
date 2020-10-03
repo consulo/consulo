@@ -1,0 +1,1 @@
+Dark>Default:consulo.platform.desktop.laf.LookAndFeelIconGroup

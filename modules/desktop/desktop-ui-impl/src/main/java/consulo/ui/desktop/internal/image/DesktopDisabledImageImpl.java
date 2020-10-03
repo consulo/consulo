@@ -40,7 +40,7 @@ public class DesktopDisabledImageImpl implements ToSwingIconWrapper, Image {
     if(original instanceof DesktopLibraryInnerImage) {
       return ((DesktopLibraryInnerImage)original).makeGrayed();
     }
-    return IconLoader.dummyIcon;
+    return new IconLoader.DummyIcon();
   }
 
   private final Icon myIcon;
