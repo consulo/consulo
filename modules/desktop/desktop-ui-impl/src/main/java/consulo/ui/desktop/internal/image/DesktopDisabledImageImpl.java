@@ -15,38 +15,35 @@
  */
 package consulo.ui.desktop.internal.image;
 
-import com.intellij.openapi.util.IconLoader;
 import consulo.awt.TargetAWT;
+import consulo.awt.impl.ToSwingIconWrapper;
 import consulo.ui.desktop.internal.image.libraryImage.DesktopLibraryInnerImage;
 import consulo.ui.image.Image;
-import consulo.awt.impl.ToSwingIconWrapper;
+import consulo.ui.migration.impl.AWTIconLoader;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
 
 /**
  * @author VISTALL
  * @since 6/22/18
  *
- * Deprecated? we not use it now
+ * If image is from library - use method from library class.
+ *
+ * In other ways, we will return not cached image
  */
-@Deprecated
 public class DesktopDisabledImageImpl implements ToSwingIconWrapper, Image {
-  private static ConcurrentMap<Image, Image> ourCache = new ConcurrentHashMap<>();
-
-  public static Image of(Image original) {
+  public static Image of(@Nonnull Image original) {
     if(original instanceof DesktopLibraryInnerImage) {
       return ((DesktopLibraryInnerImage)original).makeGrayed();
     }
-    return new IconLoader.DummyIcon();
+    return new DesktopDisabledImageImpl(original);
   }
 
   private final Icon myIcon;
 
   private DesktopDisabledImageImpl(Image original) {
-    myIcon = IconLoader.getDisabledIcon(TargetAWT.to(original));
+    myIcon = AWTIconLoader.INSTANCE.getDisabledIcon(TargetAWT.to(original));
   }
 
   @Nonnull

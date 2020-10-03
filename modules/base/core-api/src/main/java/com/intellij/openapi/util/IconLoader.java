@@ -24,7 +24,6 @@ import com.intellij.util.ui.JBImageIcon;
 import com.intellij.util.ui.JBUI;
 import consulo.annotation.DeprecationInfo;
 import consulo.awt.TargetAWT;
-import consulo.logging.Logger;
 import consulo.ui.image.ImageEffects;
 import consulo.ui.migration.SwingImageRef;
 import org.jetbrains.annotations.NonNls;
@@ -39,7 +38,7 @@ import java.util.List;
 
 @Deprecated
 public final class IconLoader {
-  private static final Logger LOG = Logger.getInstance(IconLoader.class);
+  //private static final Logger LOG = Logger.getInstance(IconLoader.class);
 
   public static class DummyIcon implements SwingImageRef {
     private final String myCreationTrace = ExceptionUtil.getThrowableText(new Exception());

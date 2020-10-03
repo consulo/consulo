@@ -15,26 +15,24 @@
  */
 package consulo.ui.migration.impl;
 
-import com.intellij.openapi.util.*;
+import com.intellij.openapi.util.Couple;
+import com.intellij.openapi.util.Pair;
+import com.intellij.openapi.util.ScalableIcon;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.reference.SoftReference;
 import com.intellij.ui.RetrievableIcon;
 import com.intellij.ui.paint.PaintUtil;
-import com.intellij.util.ConcurrencyUtil;
 import com.intellij.util.ImageLoader;
 import com.intellij.util.ReflectionUtil;
 import com.intellij.util.RetinaImage;
-import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.hash.LinkedHashMap;
 import com.intellij.util.ui.ImageUtil;
 import com.intellij.util.ui.JBImageIcon;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
+import consulo.desktop.util.awt.UIModificationTracker;
 import consulo.logging.Logger;
 import consulo.ui.desktop.internal.image.DesktopLazyImageImpl;
-import consulo.desktop.util.awt.UIModificationTracker;
-import consulo.ui.migration.IconLoaderFacade;
-import consulo.ui.migration.SwingImageRef;
 import consulo.ui.style.StyleManager;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.TestOnly;
@@ -56,7 +54,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentMap;
 import java.util.function.Supplier;
 
 import static com.intellij.util.ui.JBUI.ScaleType.*;
@@ -64,39 +61,27 @@ import static com.intellij.util.ui.JBUI.ScaleType.*;
 /**
  * @author VISTALL
  * @since 2018-05-07
+ *
+ * Code from old IconLoader
  */
-public class AWTIconLoaderFacade implements IconLoaderFacade {
-  private static final Logger LOG = Logger.getInstance(AWTIconLoaderFacade.class);
+public class AWTIconLoader {
+  public static final AWTIconLoader INSTANCE = new AWTIconLoader();
 
-  private final ConcurrentMap<URL, CachedImageIcon> myIconsCache = ContainerUtil.newConcurrentMap(100, 0.9f, 2);
-  /**
-   * This cache contains mapping between icons and disabled icons.
-   */
-  private final Map<Icon, Icon> myIcon2DisabledIcon = ContainerUtil.createWeakMap(200);
+  private static final Logger LOG = Logger.getInstance(AWTIconLoader.class);
 
   private static final ImageIcon EMPTY_ICON = new ImageIcon(UIUtil.createImage(1, 1, BufferedImage.TYPE_3BYTE_BGR)) {
-    @NonNls
     public String toString() {
       return "Empty icon " + super.toString();
     }
   };
 
+  public static boolean STRICT = false;
+
   private static final UIModificationTracker ourUIModificationTracker = UIModificationTracker.getInstance();
 
-  private static boolean ourIsActivated = false;
-
-  @Override
-  public void resetDark() {
-    clearCache();
-  }
-
-  private void clearCache() {
-    myIconsCache.clear();
-    myIcon2DisabledIcon.clear();
-  }
 
   @Nonnull
-  public SwingImageRef getIcon(@NonNls @Nonnull final String path) {
+  public consulo.ui.image.Image getIcon(@Nonnull final String path) {
     Class callerClass = ReflectionUtil.getGrandCallerClass();
 
     assert callerClass != null : path;
@@ -104,13 +89,13 @@ public class AWTIconLoaderFacade implements IconLoaderFacade {
   }
 
   @Nullable
-  private static SwingImageRef getReflectiveIcon(@Nonnull String path, ClassLoader classLoader) {
+  private static consulo.ui.image.Image getReflectiveIcon(@Nonnull String path, ClassLoader classLoader) {
     try {
       @NonNls String pckg = path.startsWith("AllIcons.") ? "com.intellij.icons." : "icons.";
       Class cur = Class.forName(pckg + path.substring(0, path.lastIndexOf('.')).replace('.', '$'), true, classLoader);
       Field field = cur.getField(path.substring(path.lastIndexOf('.') + 1));
 
-      return (SwingImageRef)field.get(null);
+      return (consulo.ui.image.Image)field.get(null);
     }
     catch (Exception e) {
       return null;
@@ -119,49 +104,40 @@ public class AWTIconLoaderFacade implements IconLoaderFacade {
 
   /**
    * Might return null if icon was not found.
-   * Use only if you expected null return value, otherwise see {@link IconLoader#getIcon(String)}
+   * Use only if you expected null return value, otherwise see {@link #getIcon(String)}
    */
   @Nullable
-  public SwingImageRef findIcon(@NonNls @Nonnull String path) {
+  public consulo.ui.image.Image findIcon(@Nonnull String path) {
     Class callerClass = ReflectionUtil.getGrandCallerClass();
     if (callerClass == null) return null;
     return findIcon(path, callerClass);
   }
 
   @Nonnull
-  public SwingImageRef getIcon(@Nonnull String path, @Nonnull final Class aClass) {
-    final SwingImageRef icon = findIcon(path, aClass);
+  public consulo.ui.image.Image getIcon(@Nonnull String path, @Nonnull final Class aClass) {
+    final consulo.ui.image.Image icon = findIcon(path, aClass);
     if (icon == null) {
       LOG.error("Icon cannot be found in '" + path + "', aClass='" + aClass + "'");
     }
     return icon;
   }
 
-  @Override
-  public void activate() {
-    ourIsActivated = true;
-  }
-
-  private static boolean isLoaderDisabled() {
-    return !ourIsActivated;
-  }
-
   /**
    * Might return null if icon was not found.
-   * Use only if you expected null return value, otherwise see {@link IconLoader#getIcon(String, Class)}
+   * Use only if you expected null return value, otherwise see {@link #getIcon(String, Class)}
    */
   @Nullable
-  public SwingImageRef findIcon(@Nonnull final String path, @Nonnull final Class aClass) {
+  public consulo.ui.image.Image findIcon(@Nonnull final String path, @Nonnull final Class aClass) {
     return findIcon(path, aClass, false);
   }
 
   @Nullable
-  public SwingImageRef findIcon(@Nonnull String path, @Nonnull final Class aClass, boolean computeNow) {
-    return findIcon(path, aClass, computeNow, IconLoader.STRICT);
+  public consulo.ui.image.Image findIcon(@Nonnull String path, @Nonnull final Class aClass, boolean computeNow) {
+    return findIcon(path, aClass, computeNow, STRICT);
   }
 
   @Nullable
-  public SwingImageRef findIcon(@Nonnull String path, @Nonnull Class aClass, boolean computeNow, boolean strict) {
+  public consulo.ui.image.Image findIcon(@Nonnull String path, @Nonnull Class aClass, boolean computeNow, boolean strict) {
     String originalPath = path;
     Pair<String, Class> patchedPath = patchPath(path);
     path = patchedPath.first;
@@ -175,7 +151,7 @@ public class AWTIconLoaderFacade implements IconLoaderFacade {
       if (strict) throw new RuntimeException("Can't find icon in '" + path + "' near " + aClass);
       return null;
     }
-    final SwingImageRef icon = findIcon(myURL);
+    final consulo.ui.image.Image icon = findIcon(myURL);
     if (icon instanceof CachedImageIcon) {
       ((CachedImageIcon)icon).myOriginalPath = originalPath;
       ((CachedImageIcon)icon).myClassLoader = aClass.getClassLoader();
@@ -194,27 +170,19 @@ public class AWTIconLoaderFacade implements IconLoaderFacade {
   }
 
   @Nullable
-  public SwingImageRef findIcon(URL url) {
+  public consulo.ui.image.Image findIcon(URL url) {
     return findIcon(url, true);
   }
 
-  @Override
   @Nullable
-  public SwingImageRef findIcon(URL url, boolean useCache) {
+  public consulo.ui.image.Image findIcon(URL url, boolean useCache) {
     if (url == null) {
       return null;
     }
-    CachedImageIcon icon = myIconsCache.get(url);
-    if (icon == null) {
-      icon = new CachedImageIcon(url);
-      if (useCache) {
-        icon = ConcurrencyUtil.cacheOrGet(myIconsCache, url, icon);
-      }
-    }
-    return icon;
+
+    return new CachedImageIcon(url);
   }
 
-  @Override
   public void set(Icon icon, String originalPath, ClassLoader classLoader) {
     if (icon instanceof CachedImageIcon) {
       ((CachedImageIcon)icon).myOriginalPath = originalPath;
@@ -223,7 +191,7 @@ public class AWTIconLoaderFacade implements IconLoaderFacade {
   }
 
   @Nullable
-  public SwingImageRef findIcon(@Nonnull String path, @Nonnull ClassLoader classLoader) {
+  public consulo.ui.image.Image findIcon(@Nonnull String path, @Nonnull ClassLoader classLoader) {
     String originalPath = path;
     Pair<String, Class> patchedPath = patchPath(path);
     path = patchedPath.first;
@@ -234,7 +202,7 @@ public class AWTIconLoaderFacade implements IconLoaderFacade {
     if (!StringUtil.startsWithChar(path, '/')) return null;
 
     final URL url = classLoader.getResource(path.substring(1));
-    final SwingImageRef icon = findIcon(url);
+    final consulo.ui.image.Image icon = findIcon(url);
     if (icon instanceof CachedImageIcon) {
       ((CachedImageIcon)icon).myOriginalPath = originalPath;
       ((CachedImageIcon)icon).myClassLoader = classLoader;
@@ -248,7 +216,7 @@ public class AWTIconLoaderFacade implements IconLoaderFacade {
       return null;
     }
 
-    final Icon icon = IconLoader.getIcon(image);
+    final Icon icon = new JBImageIcon(image);
     if (icon != null && !isGoodSize(icon)) {
       LOG.error("Invalid icon: " + url); // # 22481
       return EMPTY_ICON;
@@ -266,18 +234,12 @@ public class AWTIconLoaderFacade implements IconLoaderFacade {
    *
    * @return <code>ImageIcon</code> constructed from disabled image of passed icon.
    */
-  @Override
   @Nullable
   public Icon getDisabledIcon(@Nullable Icon icon) {
     if (icon instanceof DesktopLazyImageImpl) icon = ((DesktopLazyImageImpl)icon).getOrComputeIcon();
     if (icon == null) return null;
 
-    Icon disabledIcon = myIcon2DisabledIcon.get(icon);
-    if (disabledIcon == null) {
-      disabledIcon = filterIcon(icon, UIUtil.getGrayFilter(StyleManager.get().getCurrentStyle().isDark()), null);
-      myIcon2DisabledIcon.put(icon, disabledIcon);
-    }
-    return disabledIcon;
+    return filterIcon(icon, UIUtil.getGrayFilter(StyleManager.get().getCurrentStyle().isDark()), null);
   }
 
   /**
@@ -321,7 +283,6 @@ public class AWTIconLoaderFacade implements IconLoaderFacade {
     return icon;
   }
 
-  @Override
   public Image toImage(Icon icon, @Nullable JBUI.ScaleContext ctx) {
     if (icon instanceof RetrievableIcon) {
       icon = ((RetrievableIcon)icon).retrieveIcon();
@@ -353,7 +314,6 @@ public class AWTIconLoaderFacade implements IconLoaderFacade {
     }
   }
 
-  @Override
   @Nonnull
   public Icon getIconSnapshot(@Nonnull Icon icon) {
     if (icon instanceof CachedImageIcon) {
@@ -362,7 +322,7 @@ public class AWTIconLoaderFacade implements IconLoaderFacade {
     return icon;
   }
 
-  public static final class CachedImageIcon extends JBUI.RasterJBIcon implements ScalableIcon, SwingImageRef, consulo.ui.image.Image {
+  public static final class CachedImageIcon extends JBUI.RasterJBIcon implements ScalableIcon, consulo.ui.image.Image {
     private static final Supplier<ImageFilter>[] EMPTY_FILTER_ARRAY = new Supplier[0];
 
     private volatile Object myRealIcon;
@@ -427,7 +387,6 @@ public class AWTIconLoaderFacade implements IconLoaderFacade {
     @Nonnull
     private synchronized Icon getRealIcon(@Nullable JBUI.ScaleContext ctx) {
       if (!isValid()) {
-        if (isLoaderDisabled()) return EMPTY_ICON;
         myRealIcon = null;
         myModificationCount = ourUIModificationTracker.getModificationCount();
         myScaledIconsCache.clear();

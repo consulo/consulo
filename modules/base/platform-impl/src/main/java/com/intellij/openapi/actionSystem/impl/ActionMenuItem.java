@@ -27,11 +27,9 @@ import com.intellij.openapi.application.TransactionGuard;
 import com.intellij.openapi.keymap.KeymapManager;
 import com.intellij.openapi.keymap.KeymapUtil;
 import com.intellij.openapi.util.ActionCallback;
-import com.intellij.openapi.util.IconLoader;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.text.TextWithMnemonic;
 import com.intellij.openapi.wm.IdeFocusManager;
-import com.intellij.ui.SizedIcon;
 import com.intellij.ui.plaf.gtk.GtkMenuItemUI;
 import com.intellij.util.ui.EmptyIcon;
 import com.intellij.util.ui.JBUI;
@@ -59,7 +57,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class ActionMenuItem extends JCheckBoxMenuItem {
-  private static final int outIconSize = 18;
+  private static final int outIconSize = Image.DEFAULT_ICON_SIZE;
 
   private final ActionRef<AnAction> myAction;
   private final Presentation myPresentation;
@@ -277,9 +275,9 @@ public class ActionMenuItem extends JCheckBoxMenuItem {
       }
       else if (!(getUI() instanceof GtkMenuItemUI)) {
         if (myToggled) {
-          SizedIcon icon = new SizedIcon(AllIcons.Actions.Checked, JBUI.scale(outIconSize), JBUI.scale(outIconSize));
-          setIcon(icon);
-          setDisabledIcon(IconLoader.getDisabledIcon(icon));
+          Image icon = ImageEffects.resize(AllIcons.Actions.Checked, Image.DEFAULT_ICON_SIZE);
+          setIcon(TargetAWT.to(icon));
+          setDisabledIcon(TargetAWT.to(ImageEffects.grayed(icon)));
         }
         else {
           EmptyIcon emptyIcon = JBUI.emptyIcon(outIconSize);

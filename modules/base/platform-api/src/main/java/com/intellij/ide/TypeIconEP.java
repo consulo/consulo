@@ -17,10 +17,10 @@ package com.intellij.ide;
 
 import com.intellij.openapi.extensions.AbstractExtensionPointBean;
 import com.intellij.openapi.extensions.ExtensionPointName;
-import com.intellij.openapi.util.IconLoader;
 import com.intellij.openapi.util.NullableLazyValue;
 import com.intellij.util.xmlb.annotations.Attribute;
 import consulo.ui.image.Image;
+import consulo.ui.image.ImageKey;
 
 /**
  * @author yole
@@ -34,12 +34,13 @@ public class TypeIconEP extends AbstractExtensionPointBean {
   @Attribute("icon")
   public String icon;
 
-  private final NullableLazyValue<Image> myIcon = new NullableLazyValue<Image>() {
-    @Override
-    protected Image compute() {
-      return IconLoader.findIcon(icon, getLoaderForClass());
+  private final NullableLazyValue<Image> myIcon = NullableLazyValue.createValue(() -> {
+    if (icon != null && icon.contains("@")) {
+      String[] ids = icon.split("@");
+      return ImageKey.of(ids[0], ids[1], Image.DEFAULT_ICON_SIZE, Image.DEFAULT_ICON_SIZE);
     }
-  };
+    return null;
+  });
 
   public NullableLazyValue<Image> getIcon() {
     return myIcon;
