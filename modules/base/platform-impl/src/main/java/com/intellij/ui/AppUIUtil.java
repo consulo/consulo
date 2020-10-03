@@ -52,8 +52,8 @@ public class AppUIUtil {
     ApplicationInfo appInfo = ApplicationInfoImpl.getInstance();
     List<Image> images = ContainerUtil.newArrayListWithCapacity(2);
 
-    images.add(ImageLoader.loadFromResource(appInfo.getIconUrl(), isDark));
-    images.add(ImageLoader.loadFromResource(appInfo.getSmallIconUrl(), isDark));
+    images.add(ImageLoader.loadFromResource(appInfo.getIconUrl(), AppUIUtil.class, isDark));
+    images.add(ImageLoader.loadFromResource(appInfo.getSmallIconUrl(), AppUIUtil.class, isDark));
 
     for (int i = 0; i < images.size(); i++) {
       Image image = images.get(i);

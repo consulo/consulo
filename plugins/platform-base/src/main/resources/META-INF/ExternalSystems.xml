@@ -17,10 +17,10 @@
   <actions>
     <action id="ExternalSystem.RefreshAllProjects"
             class="com.intellij.openapi.externalSystem.action.RefreshAllExternalProjectsAction"
-            icon="AllIcons.Actions.Refresh"/>
+            icon="consulo.platform.base.PlatformIconGroup@actions.refresh"/>
     <action id="ExternalSystem.RefreshProject"
             class="com.intellij.openapi.externalSystem.action.RefreshExternalProjectAction"
-            icon="AllIcons.Actions.Refresh"/>
+            icon="consulo.platform.base.PlatformIconGroup@actions.refresh"/>
     <action id="ExternalSystem.AttachProject"
             class="com.intellij.openapi.externalSystem.action.AttachExternalProjectAction"/>
     <action id="ExternalSystem.DetachProject"

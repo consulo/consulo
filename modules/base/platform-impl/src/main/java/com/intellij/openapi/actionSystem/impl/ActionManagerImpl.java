@@ -205,6 +205,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
         anAction.getTemplatePresentation().setIcon(ImageKey.of(groupIdAndImageId[0], groupIdAndImageId[1], Image.DEFAULT_ICON_SIZE, Image.DEFAULT_ICON_SIZE));
       }
       else {
+        LOG.warn("Wrong icon path: " + iconPath);
         anAction.getTemplatePresentation().setIcon(ImageEffects.colorFilled(Image.DEFAULT_ICON_SIZE, Image.DEFAULT_ICON_SIZE, StandardColors.MAGENTA));
       }
     }
@@ -711,6 +712,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
           group.getTemplatePresentation().setIcon(ImageKey.of(groupIdAndImageId[0], groupIdAndImageId[1], Image.DEFAULT_ICON_SIZE, Image.DEFAULT_ICON_SIZE));
         }
         else {
+          LOG.warn("Wrong icon path: " + iconPath);
           group.getTemplatePresentation().setIcon(ImageEffects.colorFilled(Image.DEFAULT_ICON_SIZE, Image.DEFAULT_ICON_SIZE, StandardColors.MAGENTA));
         }
       }

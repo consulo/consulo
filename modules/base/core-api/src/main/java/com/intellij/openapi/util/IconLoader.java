@@ -87,10 +87,7 @@ public final class IconLoader {
 
   @Nonnull
   public static SwingImageRef getIcon(@NonNls @Nonnull final String path) {
-    Class callerClass = ReflectionUtil.getGrandCallerClass();
-
-    assert callerClass != null : path;
-    return getIcon(path, callerClass);
+    return new DummyIcon();
   }
 
   @Nullable

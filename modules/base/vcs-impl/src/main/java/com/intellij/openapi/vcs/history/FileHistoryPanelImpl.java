@@ -44,7 +44,6 @@ import com.intellij.openapi.ui.Splitter;
 import com.intellij.openapi.util.Clock;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Getter;
-import com.intellij.openapi.util.IconLoader;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vcs.*;
@@ -69,7 +68,10 @@ import com.intellij.ui.dualView.DualView;
 import com.intellij.ui.dualView.DualViewColumnInfo;
 import com.intellij.ui.dualView.TreeTableView;
 import com.intellij.ui.table.TableView;
-import com.intellij.util.*;
+import com.intellij.util.Alarm;
+import com.intellij.util.AsynchConsumer;
+import com.intellij.util.Consumer;
+import com.intellij.util.TreeItem;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.text.DateFormatUtil;
 import com.intellij.util.ui.ColumnInfo;
@@ -78,10 +80,12 @@ import com.intellij.util.ui.TableViewModel;
 import com.intellij.util.ui.UIUtil;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.ui.image.Image;
 import consulo.util.dataholder.Key;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.table.TableCellRenderer;
@@ -944,10 +948,10 @@ public class FileHistoryPanelImpl extends PanelWithActionsAndCloseButton impleme
 
     public AbstractActionForSomeSelection(String name,
                                           String description,
-                                          @NonNls String iconName,
+                                          @Nonnull Image icon,
                                           int suitableSelectionSize,
                                           FileHistoryPanelImpl tableProvider) {
-      super(name, description, IconLoader.getIcon("/actions/" + iconName + ".png"));
+      super(name, description, icon);
       mySuitableSelectedElements = suitableSelectionSize;
       mySelectionProvider = tableProvider;
     }
@@ -1126,8 +1130,7 @@ public class FileHistoryPanelImpl extends PanelWithActionsAndCloseButton impleme
 
   private class MyDiffAction extends AbstractActionForSomeSelection {
     public MyDiffAction() {
-      super(VcsBundle.message("action.name.compare"), VcsBundle.message("action.description.compare"), "diff", 2,
-            FileHistoryPanelImpl.this);
+      super(VcsBundle.message("action.name.compare"), VcsBundle.message("action.description.compare"), PlatformIconGroup.actionsDiff(), 2, FileHistoryPanelImpl.this);
     }
 
     protected void executeAction(AnActionEvent e) {
@@ -1188,7 +1191,7 @@ public class FileHistoryPanelImpl extends PanelWithActionsAndCloseButton impleme
   private class MyGetVersionAction extends AbstractActionForSomeSelection {
     public MyGetVersionAction() {
       super(VcsBundle.message("action.name.get.file.content.from.repository"),
-            VcsBundle.message("action.description.get.file.content.from.repository"), "get", 1, FileHistoryPanelImpl.this);
+            VcsBundle.message("action.description.get.file.content.from.repository"), PlatformIconGroup.actionsGet(), 1, FileHistoryPanelImpl.this);
     }
 
     @Override
