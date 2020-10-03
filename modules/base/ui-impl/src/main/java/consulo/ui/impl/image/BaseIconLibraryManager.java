@@ -115,9 +115,11 @@ public abstract class BaseIconLibraryManager implements IconLibraryManager {
         return;
       }
 
+      Set<String> analyzedGroups = new HashSet<>();
+      
       for (String file : files) {
         try {
-          analyzeLibraryJar(file);
+          analyzeLibraryJar(file, analyzedGroups);
         }
         catch (IOException e) {
           LOG.error("Fail to analyze library from url: " + file, e);
@@ -127,7 +129,7 @@ public abstract class BaseIconLibraryManager implements IconLibraryManager {
     }
   }
 
-  private void analyzeLibraryJar(String filePath) throws IOException {
+  private void analyzeLibraryJar(@Nonnull String filePath, @Nonnull Set<String> analyzedGroups) throws IOException {
     String libraryText = null;
     File jarFile = new File(filePath);
 
@@ -166,6 +168,11 @@ public abstract class BaseIconLibraryManager implements IconLibraryManager {
     String groupId = split[1];
 
     String prefix = "icon/" + groupId.replace(".", "/") + "/";
+
+    if (!analyzedGroups.add(iconLibraryId.getId() + ":" + groupId)) {
+      LOG.error("Can't redefine icon group " + groupId + " in library " + iconLibraryId.getId() + ". Path: " + filePath);
+      return;
+    }
 
     IconLibrary lib = myLibraries.computeIfAbsent(iconLibraryId.getId(), it -> createLibrary(iconLibraryId));
 
