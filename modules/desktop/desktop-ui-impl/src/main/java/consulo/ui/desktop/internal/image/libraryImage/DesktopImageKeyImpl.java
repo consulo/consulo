@@ -89,6 +89,7 @@ public class DesktopImageKeyImpl extends DesktopBaseLazyImageImpl implements Ima
   public java.awt.Image toAWTImage() {
     Image icon = ourLibraryManager.getIcon(myGroupId, myImageId, myWidth, myHeight);
     if (icon instanceof DesktopLibraryInnerImage) {
+      ((DesktopLibraryInnerImage)icon).dropCache();
       return ((DesktopLibraryInnerImage)icon).toAWTImage();
     }
 

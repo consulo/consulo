@@ -82,6 +82,7 @@ public abstract class BaseIconLibraryManager implements IconLibraryManager {
     if(iconLibrary != null) {
       myActiveLibraryName = id;
       myActiveLibrary = iconLibrary;
+      myModificationCount.incrementAndGet();
     }
     else {
       LOG.error("Can't find icon library with id {0}", id);

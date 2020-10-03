@@ -31,13 +31,13 @@ import com.intellij.util.containers.JBIterable;
 import com.intellij.util.containers.JBTreeTraverser;
 import consulo.annotation.DeprecationInfo;
 import consulo.desktop.awt.util.DarkThemeCalculator;
-import consulo.desktop.util.awt.AllIconsHack;
 import consulo.desktop.util.awt.MorphColor;
 import consulo.desktop.util.awt.StringHtmlUtil;
 import consulo.desktop.util.awt.laf.BuildInLookAndFeel;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
+import consulo.ui.image.ImageKey;
 import consulo.util.dataholder.Key;
 import org.intellij.lang.annotations.JdkConstants;
 import org.intellij.lang.annotations.Language;
@@ -1344,13 +1344,17 @@ public class UIUtil {
     return expanded ? getTreeExpandedIcon() : getTreeCollapsedIcon();
   }
 
+  private static final ImageKey selectedCollapsedIcon = ImageKey.of("consulo.platform.desktop.laf.LookAndFeelIconGroup", "components.treeCollapsedSelected", 9, 11);
+  
   public static Icon getTreeSelectedCollapsedIcon() {
     Icon icon = UIManager.getIcon("Tree.selectedCollapsedIcon");
     if (icon != null) {
       return icon;
     }
-    return isUnderAquaBasedLookAndFeel() || isUnderGTKLookAndFeel() || isUnderBuildInLaF() ? AllIconsHack.Tree_white_right_arrow() : getTreeCollapsedIcon();
+    return isUnderAquaBasedLookAndFeel() || isUnderGTKLookAndFeel() || isUnderBuildInLaF() ? (Icon)selectedCollapsedIcon: getTreeCollapsedIcon();
   }
+
+  private static final ImageKey selectedExpandedIcon = ImageKey.of("consulo.platform.desktop.laf.LookAndFeelIconGroup", "components.treeExpandedSelected", 9, 11);
 
   public static Icon getTreeSelectedExpandedIcon() {
     Icon icon = UIManager.getIcon("Tree.selectedExpandedIcon");
@@ -1358,7 +1362,7 @@ public class UIUtil {
       return icon;
     }
 
-    return isUnderAquaBasedLookAndFeel() || isUnderGTKLookAndFeel() || isUnderBuildInLaF() ? AllIconsHack.Tree_white_down_arrow() : getTreeExpandedIcon();
+    return isUnderAquaBasedLookAndFeel() || isUnderGTKLookAndFeel() || isUnderBuildInLaF() ? (Icon)selectedExpandedIcon : getTreeExpandedIcon();
   }
 
   public static Border getTableHeaderCellBorder() {

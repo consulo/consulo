@@ -34,6 +34,7 @@
     <module>modules/desktop/desktop-ui-laf-impl</module>
     <module>modules/desktop/desktop-graph-impl</module>
     <module>modules/desktop/desktop-util-awt</module>
+    <module>modules/desktop/desktop-base-laf-icon-library</module>
     <module>plugins/platform-desktop</module>
 
     <module>modules/web/web-bootstrap</module>

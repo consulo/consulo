@@ -17,28 +17,21 @@ package consulo.ide.ui.laf.modernDark;
 
 import com.intellij.ide.ui.laf.DarculaMetalTheme;
 import com.intellij.ide.ui.laf.LafManagerImplUtil;
+import com.intellij.ide.ui.laf.darcula.DarculaLaf;
 import com.intellij.ide.ui.laf.ideaOld.IntelliJMetalLookAndFeel;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.registry.Registry;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.ui.ColorUtil;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
-import consulo.awt.TargetAWT;
 import consulo.desktop.util.awt.laf.BuildInLookAndFeel;
 import consulo.ide.ui.laf.BaseLookAndFeel;
 import consulo.ui.desktop.laf.extend.textBox.SupportTextBoxWithExpandActionExtender;
 import consulo.ui.desktop.laf.extend.textBox.SupportTextBoxWithExtensionsExtender;
-import consulo.ui.image.Image;
-import consulo.ui.image.ImageKey;
 import sun.awt.AppContext;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;
-import javax.swing.plaf.ColorUIResource;
 import javax.swing.plaf.FontUIResource;
-import javax.swing.plaf.IconUIResource;
-import javax.swing.plaf.InsetsUIResource;
 import javax.swing.plaf.basic.BasicLookAndFeel;
 import javax.swing.plaf.metal.DefaultMetalTheme;
 import javax.swing.plaf.metal.MetalLookAndFeel;
@@ -51,7 +44,6 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Properties;
 
 /**
@@ -220,11 +212,11 @@ public class ModernDarkLaf extends BaseLookAndFeel implements BuildInLookAndFeel
       properties.load(stream);
       stream.close();
 
-      HashMap<String, Object> darculaGlobalSettings = new HashMap<String, Object>();
+      HashMap<String, Object> darculaGlobalSettings = new HashMap<>();
       final String prefix = getPrefix() + ".";
       for (String key : properties.stringPropertyNames()) {
         if (key.startsWith(prefix)) {
-          darculaGlobalSettings.put(key.substring(prefix.length()), parseValue(key, properties.getProperty(key)));
+          darculaGlobalSettings.put(key.substring(prefix.length()), DarculaLaf.parseValue(key, properties.getProperty(key)));
         }
       }
 
@@ -240,81 +232,11 @@ public class ModernDarkLaf extends BaseLookAndFeel implements BuildInLookAndFeel
 
       for (String key : properties.stringPropertyNames()) {
         final String value = properties.getProperty(key);
-        defaults.put(key, parseValue(key, value));
+        defaults.put(key, DarculaLaf.parseValue(key, value));
       }
     }
     catch (IOException e) {
       log(e);
-    }
-  }
-
-  protected Object parseValue(String key, @Nonnull String value) {
-    if (key.endsWith("Insets")) {
-      final List<String> numbers = StringUtil.split(value, ",");
-      return new InsetsUIResource(Integer.parseInt(numbers.get(0)), Integer.parseInt(numbers.get(1)), Integer.parseInt(numbers.get(2)), Integer.parseInt(numbers.get(3)));
-    }
-    else if (key.endsWith(".border")) {
-      try {
-        return Class.forName(value).newInstance();
-      }
-      catch (Exception e) {
-        log(e);
-      }
-    }
-    else {
-      final Color color = parseColor(value);
-      final Integer invVal = getInteger(value);
-      final Boolean boolVal = "true".equals(value) ? Boolean.TRUE : "false".equals(value) ? Boolean.FALSE : null;
-
-      Image image = null;
-      if(value.contains("@")) {
-        String[] ids = value.split("@");
-
-        String groupId = ids[0];
-        if(groupId.endsWith("IconGroup")) {
-          image = ImageKey.of(groupId, ids[1], Image.DEFAULT_ICON_SIZE, Image.DEFAULT_ICON_SIZE);
-        }
-      }
-
-      if (color != null) {
-        return new ColorUIResource(color);
-      }
-      else if (invVal != null) {
-        return invVal;
-      }
-      else if(image != null) {
-        return new IconUIResource(TargetAWT.to(image));
-      }
-      else if (boolVal != null) {
-        return boolVal;
-      }
-    }
-    return value;
-  }
-
-  @SuppressWarnings("UseJBColor")
-  private static Color parseColor(String value) {
-    if (value != null && value.length() == 8) {
-      final Color color = ColorUtil.fromHex(value.substring(0, 6));
-      if (color != null) {
-        try {
-          int alpha = Integer.parseInt(value.substring(6, 8), 16);
-          return new ColorUIResource(new Color(color.getRed(), color.getGreen(), color.getBlue(), alpha));
-        }
-        catch (Exception ignore) {
-        }
-      }
-      return null;
-    }
-    return ColorUtil.fromHex(value, null);
-  }
-
-  private static Integer getInteger(String value) {
-    try {
-      return Integer.parseInt(value);
-    }
-    catch (NumberFormatException e) {
-      return null;
     }
   }
 

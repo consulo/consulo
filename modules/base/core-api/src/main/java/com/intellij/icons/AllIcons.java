@@ -727,9 +727,6 @@ public class AllIcons {
 
   public static class Mac {
     public static final SwingImageRef AppIconOk512 = (SwingImageRef)PlatformIconGroup.macAppIconOk512(); // 55x55
-    public static final SwingImageRef Tree_white_down_arrow = (SwingImageRef)PlatformIconGroup.macTree_white_down_arrow(); // 11x11
-    public static final SwingImageRef Tree_white_right_arrow = (SwingImageRef)PlatformIconGroup.macTree_white_right_arrow(); // 11x11
-
   }
 
   public static class Modules {

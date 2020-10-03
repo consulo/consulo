@@ -344,8 +344,6 @@ public final class LafManagerImpl extends LafManager implements Disposable, Pers
     try {
       JBColor.resetDark();
 
-      IconLoader.resetDark();
-
       UIModificationTracker.getInstance().incModificationCount();
 
       ClassLoader targetClassLoader = null;
@@ -371,6 +369,9 @@ public final class LafManagerImpl extends LafManager implements Disposable, Pers
         String iconLibraryId = ((LafWithIconLibrary)lookAndFeelInfo).getIconLibraryId();
 
         myIconLibraryManager.setActiveLibrary(iconLibraryId);
+      }
+      else {
+        myIconLibraryManager.setActiveLibrary(IconLibraryManager.LIGHT_LIBRARY_ID);
       }
 
       if (wantChangeScheme) {
