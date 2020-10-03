@@ -19,7 +19,7 @@ import consulo.ui.MenuItem;
 import consulo.ui.image.Image;
 import consulo.ui.web.internal.base.UIComponentWithVaadinComponent;
 import consulo.ui.web.internal.base.VaadinComponent;
-import consulo.ui.web.servlet.WebImageUrlCache;
+import consulo.ui.web.servlet.WebImageMapper;
 import consulo.web.gwt.shared.ui.state.menu.MenuItemState;
 
 import javax.annotation.Nonnull;
@@ -50,7 +50,7 @@ public class WebMenuItemImpl extends UIComponentWithVaadinComponent<WebMenuItemI
   @Override
   public void setIcon(@Nullable Image icon) {
     Vaadin vaadinComponent = getVaadinComponent();
-    vaadinComponent.getState().myImageState = icon == null ? null : WebImageUrlCache.map(icon).getState();
+    vaadinComponent.getState().myImageState = icon == null ? null : WebImageMapper.map(icon).getState();
     vaadinComponent.markAsDirty();
   }
 

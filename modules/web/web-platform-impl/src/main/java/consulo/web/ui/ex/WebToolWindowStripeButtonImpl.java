@@ -23,7 +23,7 @@ import consulo.ui.ex.ToolWindowStripeButton;
 import consulo.ui.image.Image;
 import consulo.ui.web.internal.base.UIComponentWithVaadinComponent;
 import consulo.ui.web.internal.base.VaadinComponent;
-import consulo.ui.web.servlet.WebImageUrlCache;
+import consulo.ui.web.servlet.WebImageMapper;
 import consulo.web.gwt.shared.ui.ex.state.toolWindow.ToolWindowStripeButtonRpc;
 import consulo.web.gwt.shared.ui.ex.state.toolWindow.ToolWindowStripeButtonState;
 import consulo.web.wm.impl.WebToolWindowInternalDecorator;
@@ -68,7 +68,7 @@ public class WebToolWindowStripeButtonImpl extends UIComponentWithVaadinComponen
       Image icon = toolWindow.getIcon();
 
       try {
-        state.myImageState = icon == null ? null : WebImageUrlCache.map(icon).getState();
+        state.myImageState = icon == null ? null : WebImageMapper.map(icon).getState();
       }
       catch (Exception e) {
         e.printStackTrace();

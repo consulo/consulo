@@ -23,7 +23,7 @@ import consulo.ui.layout.TabbedLayout;
 import consulo.ui.web.internal.TargetVaddin;
 import consulo.ui.web.internal.base.UIComponentWithVaadinComponent;
 import consulo.ui.web.internal.base.VaadinComponentContainer;
-import consulo.ui.web.servlet.WebImageUrlCache;
+import consulo.ui.web.servlet.WebImageMapper;
 import consulo.web.gwt.shared.ui.state.tab.TabbedLayoutClientRpc;
 import consulo.web.gwt.shared.ui.state.tab.TabbedLayoutServerRpc;
 import consulo.web.gwt.shared.ui.state.tab.TabbedLayoutState;
@@ -134,8 +134,8 @@ public class WebTabbedLayoutImpl extends UIComponentWithVaadinComponent<WebTabbe
         tabState.myItemSegments = tab.getItem().myItemSegments;
         BiConsumer<Tab, Component> closeHandler = tab.getCloseHandler();
         if (closeHandler != null) {
-          tabState.myCloseButton = WebImageUrlCache.map(AllIcons.Actions.Close).getState();
-          tabState.myCloseHoverButton = WebImageUrlCache.map(AllIcons.Actions.CloseHovered).getState();
+          tabState.myCloseButton = WebImageMapper.map(AllIcons.Actions.Close).getState();
+          tabState.myCloseHoverButton = WebImageMapper.map(AllIcons.Actions.CloseHovered).getState();
         }
 
         tabStates.add(tabState);

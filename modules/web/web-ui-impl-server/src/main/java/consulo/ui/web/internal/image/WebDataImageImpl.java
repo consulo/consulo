@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2019 consulo.io
+ * Copyright 2013-2020 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,23 +16,26 @@
 package consulo.ui.web.internal.image;
 
 import consulo.ui.image.Image;
-import consulo.ui.web.servlet.WebImageMapper;
-import consulo.web.gwt.shared.ui.state.image.FoldedImageState;
-import consulo.web.gwt.shared.ui.state.image.MultiImageState;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
- * @since 2019-02-09
+ * @since 2020-10-03
  */
-public class WebResizeImageImpl implements Image, WebImageWithVaadinState {
-  private final Image myOriginal;
-  private final int myHeight;
+public class WebDataImageImpl implements Image {
+  private final byte[] myX1Data;
+  private final byte[] myX2Data;
+  private final boolean myIsSVG;
   private final int myWidth;
+  private final int myHeight;
 
-  public WebResizeImageImpl(Image original, int width, int height) {
-    myOriginal = original;
-    myHeight = height;
+  public WebDataImageImpl(byte[] x1Data, byte[] x2Data, boolean isSVG, int width, int height) {
+    myX1Data = x1Data;
+    myX2Data = x2Data;
+    myIsSVG = isSVG;
     myWidth = width;
+    myHeight = height;
   }
 
   @Override
@@ -45,12 +48,16 @@ public class WebResizeImageImpl implements Image, WebImageWithVaadinState {
     return myWidth;
   }
 
-  @Override
-  public void toState(MultiImageState m) {
-    m.myFoldedImageState = new FoldedImageState();
-    m.myFoldedImageState.myChildren = new MultiImageState[]{WebImageMapper.map(myOriginal).getState()};
+  public boolean isSVG() {
+    return myIsSVG;
+  }
 
-    m.myHeight = myHeight;
-    m.myWidth = myWidth;
+  @Nonnull
+  public byte[] getData() {
+    if(myX2Data != null) {
+      return myX2Data;
+    }
+
+    return myX1Data;
   }
 }
