@@ -16,8 +16,10 @@
 package consulo.ui.image;
 
 import consulo.ui.UIInternal;
+import consulo.ui.style.Style;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.Set;
 
 /**
@@ -42,7 +44,11 @@ public interface IconLibraryManager {
   @Nonnull
   String getActiveLibraryId();
 
-  void setActiveLibrary(@Nonnull String iconLibraryId);
+  boolean isFromStyle();
+
+  void setActiveLibrary(@Nullable String iconLibraryId);
+
+  void setActiveLibraryFromStyle(@Nonnull Style style);
 
   long getModificationCount();
 }

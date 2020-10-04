@@ -24,19 +24,7 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 05-Nov-17
  */
-public class StyleImpl implements Style {
-  @Nonnull
-  @Override
-  public String getName() {
-    return null;
-  }
-
-  @Nonnull
-  @Override
-  public ColorValue getColor(@Nonnull ColorKey colorKey) {
-    return null;
-  }
-
+public abstract class StyleImpl implements Style {
   @Override
   public boolean isDark() {
     return false;

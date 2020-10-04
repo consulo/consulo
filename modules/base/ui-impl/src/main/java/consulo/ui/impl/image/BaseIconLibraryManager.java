@@ -21,6 +21,8 @@ import com.intellij.util.io.URLUtil;
 import consulo.logging.Logger;
 import consulo.ui.image.IconLibraryManager;
 import consulo.ui.image.Image;
+import consulo.ui.style.Style;
+import consulo.ui.style.StyleManager;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.ThreeState;
 
@@ -56,7 +58,8 @@ public abstract class BaseIconLibraryManager implements IconLibraryManager {
   private final AtomicBoolean myInitialized = new AtomicBoolean();
 
   private Map<String, IconLibrary> myLibraries = new HashMap<>();
-  private String myActiveLibraryName = LIGHT_LIBRARY_ID;
+
+  private String myActiveLibraryId;
   private IconLibrary myActiveLibrary;
 
   @Nonnull
@@ -68,7 +71,15 @@ public abstract class BaseIconLibraryManager implements IconLibraryManager {
   @Nonnull
   @Override
   public String getActiveLibraryId() {
-    return myActiveLibraryName;
+    if(myActiveLibraryId == null) {
+      return StyleManager.get().getCurrentStyle().getIconLibraryId();
+    }
+    return myActiveLibraryId;
+  }
+
+  @Override
+  public boolean isFromStyle() {
+    return myActiveLibraryId == null;
   }
 
   @Override
@@ -77,16 +88,30 @@ public abstract class BaseIconLibraryManager implements IconLibraryManager {
   }
 
   @Override
-  public void setActiveLibrary(@Nonnull String id) {
+  public void setActiveLibrary(@Nullable String id) {
+    if(id == null) {
+      myActiveLibraryId = null;
+      myActiveLibrary = null;
+      myModificationCount.incrementAndGet();
+      return;
+    }
+
     IconLibrary iconLibrary = myLibraries.get(id);
     if(iconLibrary != null) {
-      myActiveLibraryName = id;
+      myActiveLibraryId = id;
       myActiveLibrary = iconLibrary;
       myModificationCount.incrementAndGet();
     }
     else {
-      LOG.error("Can't find icon library with id {0}", id);
+      LOG.error("Can't find icon library with id: " + id);
     }
+  }
+
+  @Override
+  public void setActiveLibraryFromStyle(@Nonnull Style style) {
+    myActiveLibraryId = null;
+    myActiveLibrary = null;
+    myModificationCount.incrementAndGet();
   }
 
   @Nullable
@@ -97,7 +122,9 @@ public abstract class BaseIconLibraryManager implements IconLibraryManager {
   @Nonnull
   public IconLibrary getActiveLibrary() {
     if (myActiveLibrary == null) {
-      myActiveLibrary = myLibraries.get(myActiveLibraryName);
+      String activeLibraryId = getActiveLibraryId();
+      
+      myActiveLibrary = myLibraries.get(activeLibraryId);
     }
 
     if (myActiveLibrary == null) {

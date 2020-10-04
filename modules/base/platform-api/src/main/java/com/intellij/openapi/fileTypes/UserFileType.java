@@ -2,12 +2,13 @@
 package com.intellij.openapi.fileTypes;
 
 import com.intellij.openapi.options.SettingsEditor;
-import com.intellij.openapi.util.NotWorkingIconLoader;
 import com.intellij.openapi.vfs.VirtualFile;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
+import java.io.File;
+import java.net.MalformedURLException;
 
 public abstract class UserFileType<T extends UserFileType> implements FileType, Cloneable {
   @Nonnull
@@ -55,12 +56,17 @@ public abstract class UserFileType<T extends UserFileType> implements FileType, 
     return "";
   }
 
+  @Nonnull
   @Override
   public Image getIcon() {
     Image icon = myIcon;
     if (icon == null) {
       if (myIconPath != null) {
-        icon = (Image)NotWorkingIconLoader.getIcon(myIconPath);
+        try {
+          icon = Image.fromUrl(new File(myIconPath).toURI().toURL());
+        }
+        catch (MalformedURLException ignored) {
+        }
         myIcon = icon;
       }
 

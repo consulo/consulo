@@ -27,6 +27,9 @@ public interface Style {
   String getName();
 
   @Nonnull
+  String getIconLibraryId();
+
+  @Nonnull
   ColorValue getColor(@Nonnull ColorKey colorKey);
 
   boolean isDark();

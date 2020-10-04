@@ -20,7 +20,9 @@ import com.intellij.util.ui.UIUtil;
 import consulo.awt.TargetAWT;
 import consulo.desktop.util.awt.MorphValue;
 import consulo.desktop.util.awt.laf.GTKPlusUIUtil;
+import consulo.ide.ui.laf.LafWithIconLibrary;
 import consulo.ui.SwingUIDecorator;
+import consulo.ui.image.IconLibraryManager;
 import consulo.ui.impl.style.StyleImpl;
 import consulo.ui.shared.ColorValue;
 import consulo.ui.style.ColorKey;
@@ -106,6 +108,15 @@ public class DesktopStyleImpl extends StyleImpl {
   @Override
   public String getName() {
     return myLookAndFeelInfo.getName();
+  }
+
+  @Nonnull
+  @Override
+  public String getIconLibraryId() {
+    if(myLookAndFeelInfo instanceof LafWithIconLibrary) {
+      return ((LafWithIconLibrary)myLookAndFeelInfo).getIconLibraryId();
+    }
+    return IconLibraryManager.LIGHT_LIBRARY_ID;
   }
 
   @Override
