@@ -17,9 +17,10 @@
 package com.intellij.codeInsight.generation;
 
 import com.intellij.psi.PsiElement;
-import javax.annotation.Nonnull;
+import consulo.ui.image.Image;
 
-import javax.swing.*;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class PsiElementMemberChooserObject extends MemberChooserObjectBase {
   private final PsiElement myPsiElement;
@@ -29,7 +30,7 @@ public class PsiElementMemberChooserObject extends MemberChooserObjectBase {
     myPsiElement = psiElement;
   }
 
-  public PsiElementMemberChooserObject(final PsiElement psiElement, final String text, @javax.annotation.Nullable final Icon icon) {
+  public PsiElementMemberChooserObject(final PsiElement psiElement, final String text, @Nullable final Image icon) {
     super(text, icon);
     myPsiElement = psiElement;
   }

@@ -21,7 +21,6 @@ import com.intellij.openapi.actionSystem.ActionGroup;
 import com.intellij.openapi.actionSystem.ActionPlaces;
 import com.intellij.openapi.actionSystem.DefaultActionGroup;
 import com.intellij.openapi.util.Pass;
-import com.intellij.openapi.util.SystemInfo;
 import com.intellij.ui.*;
 import com.intellij.ui.components.panels.Wrapper;
 import com.intellij.ui.tabs.JBTabsPosition;
@@ -33,20 +32,32 @@ import com.intellij.util.PairConsumer;
 import com.intellij.util.ui.Centerizer;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
-import javax.annotation.Nullable;
+import consulo.awt.TargetAWT;
+import consulo.ui.image.Image;
+import consulo.ui.image.ImageEffects;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
+import java.util.Arrays;
+import java.util.Objects;
 
 public class TabLabel extends JPanel {
+  public class IconInfo {
+    public Image myImage;
+    public boolean myActive = true;
+  }
+
   protected final SimpleColoredComponent myLabel;
 
-  private final LayeredIcon myIcon;
-  private Icon myOverlayedIcon;
+  private final IconInfo[] myIconInfos = new IconInfo[2];
+
+  private Image myOverlayedIcon;
 
   private final TabInfo myInfo;
   protected ActionPanel myActionPanel;
@@ -74,7 +85,8 @@ public class TabLabel extends JPanel {
 
     setAlignmentToCenter(true);
 
-    myIcon = new LayeredIcon(2);
+    myIconInfos[0] = new IconInfo();
+    myIconInfos[1] = new IconInfo();
 
     addMouseListener(new MouseAdapter() {
       @Override
@@ -110,11 +122,6 @@ public class TabLabel extends JPanel {
   private SimpleColoredComponent createLabel(final JBTabsImpl tabs) {
     SimpleColoredComponent label = new SimpleColoredComponent() {
       @Override
-      protected boolean shouldDrawMacShadow() {
-        return SystemInfo.isMac || UIUtil.isUnderDarcula();
-      }
-
-      @Override
       protected boolean shouldDrawDimmed() {
         return myTabs.getSelectedInfo() != myInfo || myTabs.useBoldLabels();
       }
@@ -129,9 +136,7 @@ public class TabLabel extends JPanel {
 
       @Override
       protected void doPaint(Graphics2D g) {
-        if (UISettings.getInstance().HIDE_TABS_IF_NEED ||
-            tabs.getTabsPosition() == JBTabsPosition.left ||
-            tabs.getTabsPosition() == JBTabsPosition.right) {
+        if (UISettings.getInstance().HIDE_TABS_IF_NEED || tabs.getTabsPosition() == JBTabsPosition.left || tabs.getTabsPosition() == JBTabsPosition.right) {
           super.doPaint(g);
           return;
         }
@@ -150,8 +155,7 @@ public class TabLabel extends JPanel {
 
           for (int x = clip.x + clip.width - dimSize; x < clip.x + clip.width; x += dimStep) {
             g.setClip(x, clip.y, dimStep, clip.height);
-            g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,
-                                                      1 - ((float)x - (clip.x + clip.width - dimSize)) / dimSize));
+            g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1 - ((float)x - (clip.x + clip.width - dimSize)) / dimSize));
             super.doPaint(g);
           }
         }
@@ -163,9 +167,7 @@ public class TabLabel extends JPanel {
     };
     label.setOpaque(false);
     label.setBorder(null);
-    label.setIconTextGap(tabs.isEditorTabs()
-                         ? (!UISettings.getInstance().HIDE_TABS_IF_NEED ? JBUI.scale(4) : JBUI.scale(2))
-                         : new JLabel().getIconTextGap());
+    label.setIconTextGap(tabs.isEditorTabs() ? (!UISettings.getInstance().HIDE_TABS_IF_NEED ? JBUI.scale(4) : JBUI.scale(2)) : new JLabel().getIconTextGap());
     label.setIconOpaque(false);
     label.setIpad(JBUI.emptyInsets());
 
@@ -228,7 +230,7 @@ public class TabLabel extends JPanel {
     final Rectangle b = getBounds();
     final Graphics lG = g.create(b.x, b.y, b.width, b.height);
     try {
-      lG.setColor(Color.red);
+      lG.setColor(JBColor.red);
       doPaint(lG);
     }
     finally {
@@ -276,12 +278,7 @@ public class TabLabel extends JPanel {
   }
 
   private void doPaint(final Graphics g) {
-    doTranslate(new PairConsumer<Integer, Integer>() {
-      @Override
-      public void consume(Integer x, Integer y) {
-        g.translate(x, y);
-      }
-    });
+    doTranslate((x, y) -> g.translate(x, y));
 
     final Composite oldComposite = ((Graphics2D)g).getComposite();
     //if (myTabs instanceof JBEditorTabs && !myTabs.isSingleRow() && myTabs.getSelectedInfo() != myInfo) {
@@ -290,17 +287,11 @@ public class TabLabel extends JPanel {
     super.paint(g);
     ((Graphics2D)g).setComposite(oldComposite);
 
-    doTranslate(new PairConsumer<Integer, Integer>() {
-      @Override
-      public void consume(Integer x, Integer y) {
-        g.translate(-x, -y);
-      }
-    });
+    doTranslate((x, y) -> g.translate(-x, -y));
   }
 
   protected int getNonSelectedOffset() {
-    if (myTabs.isEditorTabs() &&
-        (myTabs.isSingleRow() || ((TableLayout)myTabs.getEffectiveLayout()).isLastRow(getInfo()))) {
+    if (myTabs.isEditorTabs() && (myTabs.isSingleRow() || ((TableLayout)myTabs.getEffectiveLayout()).isLastRow(getInfo()))) {
       return -myTabs.getActiveTabUnderlineHeight() / 2 + 1;
     }
     return 1;
@@ -337,10 +328,7 @@ public class TabLabel extends JPanel {
   private void handlePopup(final MouseEvent e) {
     if (e.getClickCount() != 1 || !e.isPopupTrigger()) return;
 
-    if (e.getX() < 0 ||
-        e.getX() >= e.getComponent().getWidth() ||
-        e.getY() < 0 ||
-        e.getY() >= e.getComponent().getHeight()) {
+    if (e.getX() < 0 || e.getX() >= e.getComponent().getWidth() || e.getY() < 0 || e.getY() >= e.getComponent().getHeight()) {
       return;
     }
 
@@ -370,17 +358,13 @@ public class TabLabel extends JPanel {
 
 
   public void setText(final SimpleColoredText text) {
-    myLabel.change(new Runnable() {
-      @Override
-      public void run() {
-        myLabel.clear();
-        myLabel.setIcon(hasIcons() ? myIcon : null);
+    myLabel.change(() -> {
+      myLabel.clear();
+      myLabel.setIcon(hasIcons() ? buildLabelImage() : null);
 
-        if (text != null) {
-          SimpleColoredText derive =
-                  myTabs.useBoldLabels() ? text.derive(SimpleTextAttributes.REGULAR_BOLD_ATTRIBUTES, true) : text;
-          derive.appendToComponent(myLabel);
-        }
+      if (text != null) {
+        SimpleColoredText derive = myTabs.useBoldLabels() ? text.derive(SimpleTextAttributes.REGULAR_BOLD_ATTRIBUTES, true) : text;
+        derive.appendToComponent(myLabel);
       }
     }, false);
 
@@ -408,29 +392,25 @@ public class TabLabel extends JPanel {
     myTabs.revalidateAndRepaint(false);
   }
 
-  public void setIcon(final Icon icon) {
+  public void setIcon(final Image icon) {
     setIcon(icon, 0);
   }
 
   private boolean hasIcons() {
-    LayeredIcon layeredIcon = getLayeredIcon();
-    boolean hasIcons = false;
-    Icon[] layers = layeredIcon.getAllLayers();
-    for (Icon layer1 : layers) {
-      if (layer1 != null) {
-        hasIcons = true;
-        break;
+    for (IconInfo icon : myIconInfos) {
+      if (icon.myImage != null) {
+        return true;
       }
     }
-
-    return hasIcons;
+    return false;
   }
 
-  private void setIcon(@Nullable final Icon icon, int layer) {
-    LayeredIcon layeredIcon = getLayeredIcon();
-    layeredIcon.setIcon(icon, layer);
+  private void setIcon(@Nullable final Image icon, int layer) {
+    IconInfo info = myIconInfos[layer];
+    info.myImage = icon;
+
     if (hasIcons()) {
-      myLabel.setIcon(layeredIcon);
+      myLabel.setIcon(buildLabelImage());
     }
     else {
       myLabel.setIcon(null);
@@ -439,8 +419,10 @@ public class TabLabel extends JPanel {
     invalidateIfNeeded();
   }
 
-  private LayeredIcon getLayeredIcon() {
-    return myIcon;
+  @Nonnull
+  private Image buildLabelImage() {
+    Image[] images = Arrays.stream(myIconInfos).map(iconInfo -> iconInfo.myImage).filter(Objects::nonNull).toArray(Image[]::new);
+    return ImageEffects.layered(images);
   }
 
   public TabInfo getInfo() {
@@ -457,8 +439,7 @@ public class TabLabel extends JPanel {
     if (insets != null) {
       Insets current = JBTabsImpl.ourDefaultDecorator.getDecoration().getLabelInsets();
       if (current != null) {
-        setBorder(new EmptyBorder(getValue(current.top, insets.top), getValue(current.left, insets.left),
-                                  getValue(current.bottom, insets.bottom), getValue(current.right, insets.right)));
+        setBorder(new EmptyBorder(getValue(current.top, insets.top), getValue(current.left, insets.left), getValue(current.bottom, insets.bottom), getValue(current.right, insets.right)));
       }
     }
   }
@@ -499,8 +480,8 @@ public class TabLabel extends JPanel {
     return myActionPanel != null && myActionPanel.update();
   }
 
-  private void setAttractionIcon(@Nullable Icon icon) {
-    if (myIcon.getIcon(0) == null) {
+  private void setAttractionIcon(@Nullable Image icon) {
+    if (myIconInfos[0].myImage == null) {
       setIcon(null, 1);
       myOverlayedIcon = icon;
     }
@@ -512,8 +493,8 @@ public class TabLabel extends JPanel {
 
   public boolean repaintAttraction() {
     if (!myTabs.myAttractions.contains(myInfo)) {
-      if (getLayeredIcon().isLayerEnabled(1)) {
-        getLayeredIcon().setLayerEnabled(1, false);
+      if (isLayerIconEnabled(1)) {
+        setLayerIconEnabled(1, false);
         setAttractionIcon(null);
         invalidateIfNeeded();
         return true;
@@ -523,7 +504,7 @@ public class TabLabel extends JPanel {
 
     boolean needsUpdate = false;
 
-    if (getLayeredIcon().getIcon(1) != myInfo.getAlertIcon()) {
+    if (getLayeredIcon(1) != myInfo.getAlertIcon()) {
       setAttractionIcon(myInfo.getAlertIcon());
       needsUpdate = true;
     }
@@ -531,7 +512,7 @@ public class TabLabel extends JPanel {
     int maxInitialBlinkCount = 5;
     int maxRefireBlinkCount = maxInitialBlinkCount + 2;
     if (myInfo.getBlinkCount() < maxInitialBlinkCount && myInfo.isAlertRequested()) {
-      getLayeredIcon().setLayerEnabled(1, !getLayeredIcon().isLayerEnabled(1));
+      setLayerIconEnabled(1, !isLayerIconEnabled(1));
       if (myInfo.getBlinkCount() == 0) {
         needsUpdate = true;
       }
@@ -545,7 +526,7 @@ public class TabLabel extends JPanel {
     }
     else {
       if (myInfo.getBlinkCount() < maxRefireBlinkCount && myInfo.isAlertRequested()) {
-        getLayeredIcon().setLayerEnabled(1, !getLayeredIcon().isLayerEnabled(1));
+        setLayerIconEnabled(1, !isLayerIconEnabled(1));
         myInfo.setBlinkCount(myInfo.getBlinkCount() + 1);
 
         if (myInfo.getBlinkCount() == maxRefireBlinkCount) {
@@ -556,8 +537,8 @@ public class TabLabel extends JPanel {
         repaint();
       }
       else {
-        needsUpdate = !getLayeredIcon().isLayerEnabled(1);
-        getLayeredIcon().setLayerEnabled(1, true);
+        needsUpdate = !isLayerIconEnabled(1);
+        setLayerIconEnabled(1, true);
       }
     }
 
@@ -572,14 +553,25 @@ public class TabLabel extends JPanel {
 
     if (myOverlayedIcon == null || getLabelComponent().getParent() == null) return;
 
-    final Rectangle textBounds =
-            SwingUtilities.convertRectangle(getLabelComponent().getParent(), getLabelComponent().getBounds(), this);
-    if (getLayeredIcon().isLayerEnabled(1)) {
+    final Rectangle textBounds = SwingUtilities.convertRectangle(getLabelComponent().getParent(), getLabelComponent().getBounds(), this);
 
-      final int top = (getSize().height - myOverlayedIcon.getIconHeight()) / 2;
+    if (isLayerIconEnabled(1)) {
+      final int top = (getSize().height - myOverlayedIcon.getHeight()) / 2;
 
-      myOverlayedIcon.paintIcon(this, g, textBounds.x - myOverlayedIcon.getIconWidth() / 2, top);
+      TargetAWT.to(myOverlayedIcon).paintIcon(this, g, textBounds.x - myOverlayedIcon.getWidth() / 2, top);
     }
+  }
+
+  private boolean isLayerIconEnabled(int layer) {
+    return myIconInfos[layer].myActive;
+  }
+
+  private void setLayerIconEnabled(int layer, boolean enabled) {
+    myIconInfos[layer].myActive = enabled;
+  }
+
+  private Image getLayeredIcon(int layer) {
+    return myIconInfos[layer].myImage;
   }
 
   public void setTabActionsAutoHide(final boolean autoHide) {
@@ -615,8 +607,7 @@ public class TabLabel extends JPanel {
   @Nullable
   public BufferedImage getInactiveStateImage(Rectangle effectiveBounds) {
     BufferedImage img = null;
-    if (myLastPaintedInactiveImageBounds != null &&
-        myLastPaintedInactiveImageBounds.getSize().equals(effectiveBounds.getSize())) {
+    if (myLastPaintedInactiveImageBounds != null && myLastPaintedInactiveImageBounds.getSize().equals(effectiveBounds.getSize())) {
       img = myInactiveStateImage;
     }
     else {

@@ -536,7 +536,7 @@ public class ListPopupImpl extends WizardPopup implements ListPopup, NextStepHan
       JBInsets.removeFrom(bounds, UIUtil.getListCellPadding());
     }
     final Point point = e.getPoint();
-    return bounds != null && point.getX() > bounds.width + bounds.getX() - AllIcons.Icons.Ide.NextStep.getIconWidth();
+    return bounds != null && point.getX() > bounds.width + bounds.getX() - AllIcons.Icons.Ide.NextStep.getWidth();
   }
 
   @Override

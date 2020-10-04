@@ -22,16 +22,13 @@ import com.intellij.openapi.ui.popup.util.BaseListPopupStep;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.EmptyRunnable;
 import com.intellij.openapi.util.text.TextWithMnemonic;
-import consulo.disposer.Disposable;
-import consulo.localize.LocalizeValue;
-import consulo.ui.image.Image;
-import consulo.util.dataholder.Key;
 import com.intellij.openapi.wm.WindowManager;
 import com.intellij.ui.CollectionListModel;
 import com.intellij.ui.ColorUtil;
 import com.intellij.ui.HintHint;
 import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.ui.awt.RelativePoint;
+import com.intellij.ui.components.JBLabel;
 import com.intellij.ui.components.JBList;
 import com.intellij.ui.components.panels.NonOpaquePanel;
 import com.intellij.ui.popup.list.ListPopupImpl;
@@ -40,7 +37,11 @@ import com.intellij.ui.popup.tree.TreePopupImpl;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.JBUI;
+import consulo.disposer.Disposable;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
+import consulo.ui.image.Image;
+import consulo.util.dataholder.Key;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -604,7 +605,7 @@ public class PopupFactoryImpl extends JBPopupFactory {
 
   @Nonnull
   @Override
-  public BalloonBuilder createHtmlTextBalloonBuilder(@Nonnull final String htmlContent, @Nullable final Icon icon, Color textColor, final Color fillColor, @Nullable final HyperlinkListener listener) {
+  public BalloonBuilder createHtmlTextBalloonBuilder(@Nonnull final String htmlContent, @Nullable final Image icon, Color textColor, final Color fillColor, @Nullable final HyperlinkListener listener) {
     JEditorPane text = IdeTooltipManager.initPane(htmlContent, new HintHint().setTextFg(textColor).setAwtTooltip(true), null);
 
     if (listener != null) {
@@ -626,7 +627,7 @@ public class PopupFactoryImpl extends JBPopupFactory {
     content.add(textWrapper, BorderLayout.CENTER);
     if (icon != null) {
       final NonOpaquePanel north = new NonOpaquePanel(new BorderLayout());
-      north.add(new JLabel(icon), BorderLayout.NORTH);
+      north.add(new JBLabel(icon), BorderLayout.NORTH);
       content.add(north, BorderLayout.WEST);
     }
 

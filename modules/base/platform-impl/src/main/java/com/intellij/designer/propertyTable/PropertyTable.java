@@ -36,6 +36,7 @@ import com.intellij.ui.table.JBTable;
 import com.intellij.util.PairFunction;
 import com.intellij.util.ThrowableRunnable;
 import com.intellij.util.ui.UIUtil;
+import consulo.awt.TargetAWT;
 import consulo.logging.Logger;
 import consulo.util.ui.ToolwindowPaintUtil;
 import javax.annotation.Nonnull;
@@ -1293,7 +1294,7 @@ public abstract class PropertyTable extends JBTable {
         Icon icon = UIUtil.getTreeNodeIcon(isExpanded(property), selected, tableHasFocus);
         boolean hasChildren = !getChildren(property).isEmpty();
 
-        renderer.setIcon(hasChildren ? icon : null);
+        renderer.setIcon(hasChildren ? TargetAWT.from(icon) : null);
 
         Pair<Integer, Integer> indents = getBeforeIconAndAfterIndents(property, icon);
         int indent = indents.first;

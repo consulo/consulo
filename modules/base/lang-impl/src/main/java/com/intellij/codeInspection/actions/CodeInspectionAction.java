@@ -36,6 +36,7 @@ import com.intellij.profile.codeInspection.ui.ErrorsConfigurable;
 import com.intellij.profile.codeInspection.ui.IDEInspectionToolsConfigurable;
 import com.intellij.ui.ComboboxWithBrowseButton;
 import com.intellij.ui.ListCellRendererWrapper;
+import consulo.awt.TargetAWT;
 import consulo.ui.annotation.RequiredUIAccess;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
@@ -109,7 +110,7 @@ public class CodeInspectionAction extends BaseAnalysisAction {
         if (value instanceof Profile) {
           Profile profile = (Profile)value;
           setText(profile.getName());
-          setIcon(profile.isProjectLevel() ? AllIcons.General.ProjectSettings : AllIcons.General.Settings);
+          setIcon(TargetAWT.to(profile.isProjectLevel() ? AllIcons.General.ProjectSettings : AllIcons.General.Settings));
         }
       }
     });

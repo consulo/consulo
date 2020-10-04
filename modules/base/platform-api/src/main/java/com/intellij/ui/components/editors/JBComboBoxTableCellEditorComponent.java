@@ -26,6 +26,8 @@ import com.intellij.ui.components.JBList;
 import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.EmptyIcon;
+import consulo.awt.TargetAWT;
+import consulo.ui.image.Image;
 
 import javax.swing.*;
 import javax.swing.event.TableModelEvent;
@@ -68,7 +70,7 @@ public class JBComboBoxTableCellEditorComponent extends JBLabel {
     public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
       final JLabel label = (JLabel)super.getListCellRendererComponent(list, myToString.fun(value), index, isSelected, cellHasFocus);
       if (value == myValue) {
-        label.setIcon(getIcon(isSelected));
+        label.setIcon(TargetAWT.to(getIcon(isSelected)));
       } else {
         label.setIcon(getEmptyIcon());
       }
@@ -77,12 +79,12 @@ public class JBComboBoxTableCellEditorComponent extends JBLabel {
 
     private Icon getEmptyIcon() {
       if (myEmptyIcon == null) {
-        myEmptyIcon = EmptyIcon.create(getIcon(true).getIconWidth());
+        myEmptyIcon = EmptyIcon.create(getIcon(true).getWidth());
       }
       return myEmptyIcon;
     }
 
-    private Icon getIcon(boolean selected) {
+    private Image getIcon(boolean selected) {
       final boolean small = "small".equals(JBComboBoxTableCellEditorComponent.this.getClientProperty("JComponent.sizeVariant"));
       return small
              ? selected ? AllIcons.Actions.Checked_small_selected :  AllIcons.Actions.Checked_small

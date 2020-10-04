@@ -17,8 +17,7 @@ package com.intellij.openapi.roots.ui.util;
 
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.vfs.VirtualFile;
-
-import javax.swing.*;
+import consulo.ui.image.Image;
 
 public class HttpUrlCellAppearance extends ValidFileCellAppearance {
   public HttpUrlCellAppearance(VirtualFile file) {
@@ -26,7 +25,7 @@ public class HttpUrlCellAppearance extends ValidFileCellAppearance {
   }
 
   @Override
-  protected Icon getIcon() {
+  protected Image getIcon() {
     return AllIcons.Nodes.PpWeb;
   }
 }

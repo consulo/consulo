@@ -15,9 +15,10 @@
  */
 package com.intellij.ui;
 
-import javax.annotation.Nonnull;
+import consulo.awt.TargetAWT;
+import consulo.ui.image.Image;
 
-import javax.swing.*;
+import javax.annotation.Nonnull;
 import java.awt.*;
 
 /**
@@ -27,15 +28,15 @@ import java.awt.*;
  * Time: 2:54 PM
  */
 public abstract class HideableDetailsUnderSeparator extends AbstractTitledSeparatorWithIcon {
-  public HideableDetailsUnderSeparator(@Nonnull Icon icon,
-                                       @Nonnull Icon iconOpen,
+  public HideableDetailsUnderSeparator(@Nonnull Image icon,
+                                       @Nonnull Image iconOpen,
                                        @Nonnull String text) {
     super(icon, iconOpen, text);
   }
 
   public void on() {
     initDetails();
-    myLabel.setIcon(myIconOpen);
+    myLabel.setIcon(TargetAWT.to(myIconOpen));
     myWrapper.add(myDetailsComponent.getPanel(), BorderLayout.CENTER);
     myOn = true;
     revalidate();
@@ -43,7 +44,7 @@ public abstract class HideableDetailsUnderSeparator extends AbstractTitledSepara
   }
 
   public void off() {
-    myLabel.setIcon(myIcon);
+    myLabel.setIcon(TargetAWT.to(myIcon));
     myWrapper.removeAll();
     myOn = false;
     revalidate();

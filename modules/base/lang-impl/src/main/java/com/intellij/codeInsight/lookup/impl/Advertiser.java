@@ -8,6 +8,9 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.JBInsets;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
+import consulo.awt.TargetAWT;
+import consulo.ui.image.Image;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -91,7 +94,7 @@ public class Advertiser {
     return font.deriveFont((float)(font.getSize() - JBUIScale.scale(2)));
   }
 
-  public void addAdvertisement(@Nonnull String text, @Nullable Icon icon) {
+  public void addAdvertisement(@Nonnull String text, @Nullable Image icon) {
     ApplicationManager.getApplication().assertIsDispatchThread();
     myTexts.add(new Item(text, icon));
     updateAdvertisements();
@@ -132,12 +135,12 @@ public class Advertiser {
         int width = SwingUtilities.computeStringWidth(fm, item.toString());
 
         if (item.icon != null) {
-          width += myTextPanel.getIconTextGap() + item.icon.getIconWidth();
+          width += myTextPanel.getIconTextGap() + item.icon.getWidth();
         }
 
         width += nextButtonSize.width + i.left + i.right;
 
-        int height = Math.max(fm.getHeight(), item.icon != null ? item.icon.getIconHeight() : 0) + i.top + i.bottom;
+        int height = Math.max(fm.getHeight(), item.icon != null ? item.icon.getHeight() : 0) + i.top + i.bottom;
         size.width = Math.max(size.width, width);
         size.height = Math.max(size.height, Math.max(height, nextButtonSize.height));
       }
@@ -168,16 +171,16 @@ public class Advertiser {
 
   private static class Item {
     private final String text;
-    private final Icon icon;
+    private final Image icon;
 
-    private Item(@Nonnull String text, @Nullable Icon icon) {
+    private Item(@Nonnull String text, @Nullable Image icon) {
       this.text = text;
       this.icon = icon;
     }
 
     private void setForLabel(JLabel label) {
       label.setText(toString());
-      label.setIcon(icon);
+      label.setIcon(TargetAWT.to(icon));
       label.setForeground(icon != null ? UIManager.getColor("Label.foreground") : JBUI.CurrentTheme.Advertiser.foreground());
     }
 

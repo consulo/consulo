@@ -19,6 +19,7 @@ import com.intellij.ide.BrowserUtil;
 import com.intellij.ide.ui.UISettings;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
+import consulo.awt.TargetAWT;
 import consulo.logging.Logger;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.SystemInfo;
@@ -26,6 +27,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.ui.JBInsets;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
+import consulo.ui.image.Image;
 import gnu.trove.TIntIntHashMap;
 import org.intellij.lang.annotations.JdkConstants;
 import javax.annotation.Nonnull;
@@ -73,7 +75,7 @@ public class SimpleColoredComponent extends JComponent implements Accessible, Co
   /**
    * Component's icon. It can be <code>null</code>.
    */
-  private Icon myIcon;
+  private Image myIcon;
   /**
    * Internal padding
    */
@@ -283,7 +285,7 @@ public class SimpleColoredComponent extends JComponent implements Accessible, Co
    * @return component's icon. This method returns <code>null</code>
    * if there is no icon.
    */
-  public final Icon getIcon() {
+  public final Image getIcon() {
     return myIcon;
   }
 
@@ -292,9 +294,7 @@ public class SimpleColoredComponent extends JComponent implements Accessible, Co
    *
    * @param icon icon
    */
-  @Override
-  @Deprecated
-  public final void setIcon(@Nullable final Icon icon) {
+  public final void setIcon(@Nullable final Image icon) {
     myIcon = icon;
     revalidateAndRepaint();
   }
@@ -408,7 +408,7 @@ public class SimpleColoredComponent extends JComponent implements Accessible, Co
     int width = myIpad.left;
 
     if (myIcon != null) {
-      width += myIcon.getIconWidth() + myIconTextGap;
+      width += myIcon.getWidth() + myIconTextGap;
     }
 
     final Insets borderInsets = myBorder != null ? myBorder.getBorderInsets(this) : new Insets(0, 0, 0, 0);
@@ -432,7 +432,7 @@ public class SimpleColoredComponent extends JComponent implements Accessible, Co
     textHeight += borderInsets.top + borderInsets.bottom;
 
     if (myIcon != null) {
-      height += Math.max(myIcon.getIconHeight(), textHeight);
+      height += Math.max(myIcon.getHeight(), textHeight);
     }
     else {
       height += textHeight;
@@ -548,7 +548,7 @@ public class SimpleColoredComponent extends JComponent implements Accessible, Co
   public int findFragmentAt(int x) {
     int curX = myIpad.left;
     if (myIcon != null && !myIconOnTheRight) {
-      final int iconRight = myIcon.getIconWidth() + myIconTextGap;
+      final int iconRight = myIcon.getWidth() + myIconTextGap;
       if (x < iconRight) {
         return FRAGMENT_ICON;
       }
@@ -583,7 +583,7 @@ public class SimpleColoredComponent extends JComponent implements Accessible, Co
 
     if (myIcon != null && myIconOnTheRight) {
       curX += myIconTextGap;
-      if (x >= curX && x < curX + myIcon.getIconWidth()) {
+      if (x >= curX && x < curX + myIcon.getWidth()) {
         return FRAGMENT_ICON;
       }
     }
@@ -598,7 +598,7 @@ public class SimpleColoredComponent extends JComponent implements Accessible, Co
 
   @Nonnull
   protected JLabel formatToLabel(@Nonnull JLabel label) {
-    label.setIcon(myIcon);
+    label.setIcon(TargetAWT.to(myIcon));
 
     if (!myFragments.isEmpty()) {
       final StringBuilder text = new StringBuilder();
@@ -691,10 +691,10 @@ public class SimpleColoredComponent extends JComponent implements Accessible, Co
 
   protected void doPaint(final Graphics2D g) {
     int offset = 0;
-    final Icon icon = myIcon; // guard against concurrent modification (IDEADEV-12635)
+    final Image icon = myIcon; // guard against concurrent modification (IDEADEV-12635)
     if (icon != null && !myIconOnTheRight) {
       doPaintIcon(g, icon, 0);
-      offset += myIpad.left + icon.getIconWidth() + myIconTextGap;
+      offset += myIpad.left + icon.getWidth() + myIconTextGap;
     }
 
     doPaintTextBackground(g, offset);
@@ -715,7 +715,7 @@ public class SimpleColoredComponent extends JComponent implements Accessible, Co
     g.fillRect(x, 0, width, height);
   }
 
-  protected void doPaintIcon(@Nonnull Graphics2D g, @Nonnull Icon icon, int offset) {
+  protected void doPaintIcon(@Nonnull Graphics2D g, @Nonnull Image icon, int offset) {
     final Container parent = getParent();
     Color iconBackgroundColor = null;
     if ((isOpaque() || isIconOpaque()) && !isTransparentIconBackground()) {
@@ -729,7 +729,7 @@ public class SimpleColoredComponent extends JComponent implements Accessible, Co
 
     if (iconBackgroundColor != null) {
       g.setColor(iconBackgroundColor);
-      g.fillRect(offset, 0, icon.getIconWidth() + myIpad.left + myIconTextGap, getHeight());
+      g.fillRect(offset, 0, icon.getWidth() + myIpad.left + myIconTextGap, getHeight());
     }
 
     paintIcon(g, icon, offset + myIpad.left);
@@ -910,8 +910,8 @@ public class SimpleColoredComponent extends JComponent implements Accessible, Co
     return false;
   }
 
-  protected void paintIcon(@Nonnull Graphics g, @Nonnull Icon icon, int offset) {
-    icon.paintIcon(this, g, offset, (getHeight() - icon.getIconHeight()) / 2);
+  protected void paintIcon(@Nonnull Graphics g, @Nonnull Image icon, int offset) {
+    TargetAWT.to(icon).paintIcon(this, g, offset, (getHeight() - icon.getHeight()) / 2);
   }
 
   protected void applyAdditionalHints(@Nonnull Graphics2D g) {

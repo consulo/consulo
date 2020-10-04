@@ -71,7 +71,7 @@ public class FileLevelIntentionComponent extends EditorNotificationPanel {
     }
 
     if (intentions != null && !intentions.isEmpty()) {
-      myGearLabel.setIcon(AllIcons.General.GearPlain);
+      myGearLabel.setIcon(TargetAWT.to(AllIcons.General.GearPlain));
 
       new ClickListener() {
         @Override

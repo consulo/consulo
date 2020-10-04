@@ -18,6 +18,8 @@ package com.intellij.vcs.log.ui.render;
 import com.intellij.openapi.ui.GraphicsConfig;
 import com.intellij.util.ui.GraphicsUtil;
 import com.intellij.util.ui.UIUtil;
+import consulo.ui.image.Image;
+
 import javax.annotation.Nonnull;
 
 import javax.swing.*;
@@ -27,7 +29,8 @@ import java.awt.geom.Ellipse2D;
 import java.awt.geom.Path2D;
 import java.awt.image.BufferedImage;
 
-public class LabelIcon implements Icon {
+// TODO [VISTALL] we need impl UI Image, due we don't have unified impl
+public class LabelIcon implements Icon, Image {
   private final int mySize;
   @Nonnull
   private final Color[] myColors;
@@ -99,5 +102,15 @@ public class LabelIcon implements Icon {
   @Override
   public int getIconHeight() {
     return mySize;
+  }
+
+  @Override
+  public int getHeight() {
+    return getIconHeight();
+  }
+
+  @Override
+  public int getWidth() {
+    return getIconWidth();
   }
 }

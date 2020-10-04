@@ -349,9 +349,9 @@ class DesktopColorPicker extends JPanel implements DocumentListener {
       final JButton pipette = new JButton();
       pipette.setUI(new BasicButtonUI());
       pipette.setRolloverEnabled(true);
-      pipette.setIcon(AllIcons.Ide.Pipette);
+      pipette.setIcon(TargetAWT.to(AllIcons.Ide.Pipette));
       pipette.setBorder(JBUI.Borders.empty());
-      pipette.setRolloverIcon(AllIcons.Ide.Pipette_rollover);
+      pipette.setRolloverIcon(TargetAWT.to(AllIcons.Ide.Pipette_rollover));
       pipette.setFocusable(false);
       pipette.addActionListener(new ActionListener() {
         @Override
@@ -1161,7 +1161,7 @@ class DesktopColorPicker extends JPanel implements DocumentListener {
         //
         //graphics.drawLine(16, 2, 16, 12);
         //graphics.drawLine(16, 20, 16, 30);
-        AllIcons.Ide.Pipette.paintIcon(null, graphics, 14, 0);
+        TargetAWT.to(AllIcons.Ide.Pipette).paintIcon(null, graphics, 14, 0);
 
         graphics.dispose();
 

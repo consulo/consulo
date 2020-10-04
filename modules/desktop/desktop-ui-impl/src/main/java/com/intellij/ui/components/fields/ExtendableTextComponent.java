@@ -1,6 +1,8 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.ui.components.fields;
 
+import consulo.ui.image.Image;
+
 import javax.annotation.Nonnull;
 
 import javax.swing.*;
@@ -27,19 +29,19 @@ public interface ExtendableTextComponent {
   void removeExtension(@Nonnull Extension extension);
 
   interface Extension {
-    Icon getIcon(boolean hovered);
+    Image getIcon(boolean hovered);
 
     default int getIconGap() {
       return scale(5);
     }
 
     default int getPreferredSpace() {
-      Icon icon1 = getIcon(true);
-      Icon icon2 = getIcon(false);
+      Image icon1 = getIcon(true);
+      Image icon2 = getIcon(false);
       if (icon1 == null && icon2 == null) return 0;
-      if (icon1 == null) return getIconGap() + icon2.getIconWidth();
-      if (icon2 == null) return getIconGap() + icon1.getIconWidth();
-      return getIconGap() + Math.max(icon1.getIconWidth(), icon2.getIconWidth());
+      if (icon1 == null) return getIconGap() + icon2.getWidth();
+      if (icon2 == null) return getIconGap() + icon1.getWidth();
+      return getIconGap() + Math.max(icon1.getWidth(), icon2.getWidth());
     }
 
     default int getAfterIconOffset() {
@@ -58,14 +60,14 @@ public interface ExtendableTextComponent {
       return null;
     }
 
-    static Extension create(@Nonnull Icon icon, String tooltip, Runnable action) {
+    static Extension create(@Nonnull Image icon, String tooltip, Runnable action) {
       return create(icon, icon, tooltip, action);
     }
 
-    static Extension create(@Nonnull Icon defaultIcon, @Nonnull Icon hoveredIcon, String tooltip, Runnable action) {
+    static Extension create(@Nonnull Image defaultIcon, @Nonnull Image hoveredIcon, String tooltip, Runnable action) {
       return new Extension() {
         @Override
-        public Icon getIcon(boolean hovered) {
+        public Image getIcon(boolean hovered) {
           return hovered ? hoveredIcon : defaultIcon;
         }
 

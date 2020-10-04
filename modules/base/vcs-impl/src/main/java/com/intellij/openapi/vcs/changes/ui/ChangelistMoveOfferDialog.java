@@ -21,6 +21,8 @@ import com.intellij.openapi.ui.MultiLineLabelUI;
 import com.intellij.openapi.vcs.VcsBundle;
 import com.intellij.openapi.vcs.VcsConfiguration;
 import com.intellij.util.ui.OptionsDialog;
+import consulo.awt.TargetAWT;
+
 import javax.annotation.Nonnull;
 
 import javax.swing.*;
@@ -64,7 +66,7 @@ public class ChangelistMoveOfferDialog extends OptionsDialog {
     final JLabel label = new JLabel(VcsBundle.message("changes.commit.partial.offer.to.move.text"));
     label.setUI(new MultiLineLabelUI());
     label.setIconTextGap(10);
-    label.setIcon(Messages.getQuestionIcon());
+    label.setIcon(TargetAWT.to(Messages.getQuestionIcon()));
     panel.add(label, BorderLayout.CENTER);
     panel.add(Box.createVerticalStrut(10), BorderLayout.SOUTH);
     return panel;

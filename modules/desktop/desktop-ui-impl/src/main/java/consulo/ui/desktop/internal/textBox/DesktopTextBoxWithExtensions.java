@@ -22,18 +22,18 @@ import com.intellij.ui.components.fields.ExtendableTextField;
 import com.intellij.ui.roots.ScalableIconComponent;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
-import consulo.awt.TargetAWT;
 import consulo.disposer.Disposable;
 import consulo.ui.Clickable;
-import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.TextBox;
 import consulo.ui.TextBoxWithExtensions;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.desktop.internal.util.AWTFocusAdapterAsFocusListener;
 import consulo.ui.desktop.internal.util.AWTKeyAdapterAsKeyListener;
 import consulo.ui.desktop.internal.validableComponent.DocumentSwingValidator;
 import consulo.ui.desktop.laf.extend.textBox.SupportTextBoxWithExtensionsExtender;
 import consulo.ui.event.FocusListener;
 import consulo.ui.event.KeyListener;
+import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -91,8 +91,8 @@ public class DesktopTextBoxWithExtensions {
       for (Extension extension : extensions) {
         ExtendableTextComponent.Extension ex = new ExtendableTextComponent.Extension() {
           @Override
-          public Icon getIcon(boolean hovered) {
-            return TargetAWT.to(hovered ? extension.getHoveredIcon() : extension.getIcon());
+          public Image getIcon(boolean hovered) {
+            return hovered ? extension.getHoveredIcon() : extension.getIcon();
           }
 
           @Override
@@ -195,7 +195,7 @@ public class DesktopTextBoxWithExtensions {
       }
 
       for (Extension extension : extensions) {
-        ScalableIconComponent icon = new ScalableIconComponent(TargetAWT.to(extension.getIcon()));
+        ScalableIconComponent icon = new ScalableIconComponent(extension.getIcon());
 
         if (extension.isLeft()) {
           panel.add(icon, BorderLayout.WEST);

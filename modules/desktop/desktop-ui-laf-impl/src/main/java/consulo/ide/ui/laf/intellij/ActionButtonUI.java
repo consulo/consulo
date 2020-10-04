@@ -128,12 +128,7 @@ public class ActionButtonUI extends ComponentUI implements consulo.actionSystem.
       int x = JBUI.scale(5);
       int y = JBUI.scale(4);
 
-      if (state == ActionButtonComponent.PUSHED) {
-        x += JBUI.scale(1);
-        y += JBUI.scale(1);
-      }
-
-      AllIcons.General.Dropdown.paintIcon(c, g, x, y);
+      TargetAWT.to(AllIcons.General.Dropdown).paintIcon(c, g, x, y);
     }
   }
 

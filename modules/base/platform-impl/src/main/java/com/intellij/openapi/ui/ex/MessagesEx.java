@@ -23,6 +23,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.UIBundle;
 import com.intellij.util.ArrayUtil;
+import consulo.ui.image.Image;
 
 import javax.swing.*;
 
@@ -60,7 +61,7 @@ public class MessagesEx extends Messages {
     private Project myProject;
     private String myMessage;
     private String myTitle;
-    private Icon myIcon;
+    private Image myIcon;
     private String[] myOptions = new String[]{CommonBundle.getOkButtonText()};
     private int myDefaultOption = 0;
 
@@ -68,7 +69,7 @@ public class MessagesEx extends Messages {
       myProject = project;
     }
 
-    public BaseDialogInfo(Project project, String message, String title, Icon icon) {
+    public BaseDialogInfo(Project project, String message, String title, Image icon) {
       this(project);
       myMessage = message;
       myTitle = title;
@@ -91,7 +92,7 @@ public class MessagesEx extends Messages {
 
     protected abstract ThisClass getThis();
 
-    public ThisClass setIcon(Icon icon) { myIcon = icon; return getThis(); }
+    public ThisClass setIcon(Image icon) { myIcon = icon; return getThis(); }
 
     public void setMessage(String message) {
       myMessage = message;
@@ -113,7 +114,7 @@ public class MessagesEx extends Messages {
       return myDefaultOption;
     }
 
-    public Icon getIcon() {
+    public Image getIcon() {
       return myIcon;
     }
   }

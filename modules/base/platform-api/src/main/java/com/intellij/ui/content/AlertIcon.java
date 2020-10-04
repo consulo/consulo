@@ -15,10 +15,13 @@
  */
 package com.intellij.ui.content;
 
+import consulo.ui.image.Image;
+
 import javax.swing.*;
 import java.awt.*;
 
-public class AlertIcon implements Icon {
+// TODO [VISTALL] we need impl UI Image, due we don't have unified impl
+public class AlertIcon implements Icon, Image {
 
   private Icon myIcon;
   private int myVShift;
@@ -46,15 +49,28 @@ public class AlertIcon implements Icon {
     return myHShift;
   }
 
+  @Override
   public void paintIcon(final Component c, final Graphics g, final int x, final int y) {
     myIcon.paintIcon(c, g, x + myHShift, y + myVShift);
   }
 
+  @Override
   public int getIconWidth() {
     return myIcon.getIconWidth();
   }
 
+  @Override
   public int getIconHeight() {
     return myIcon.getIconHeight();
+  }
+
+  @Override
+  public int getHeight() {
+    return myIcon.getIconHeight();
+  }
+
+  @Override
+  public int getWidth() {
+    return myIcon.getIconWidth();
   }
 }

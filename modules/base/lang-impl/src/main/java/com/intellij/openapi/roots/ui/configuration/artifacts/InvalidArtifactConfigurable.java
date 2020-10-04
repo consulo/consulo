@@ -19,6 +19,7 @@ import com.intellij.icons.AllIcons;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.ui.ex.MultiLineLabel;
 import com.intellij.packaging.impl.artifacts.InvalidArtifact;
+import consulo.awt.TargetAWT;
 
 import javax.swing.*;
 
@@ -68,7 +69,7 @@ public class InvalidArtifactConfigurable extends ArtifactConfigurableBase {
     private JLabel myIconLabel;
 
     private InvalidArtifactComponent(String errorMessage) {
-      myIconLabel.setIcon(AllIcons.RunConfigurations.ConfigurationWarning);
+      myIconLabel.setIcon(TargetAWT.to(AllIcons.RunConfigurations.ConfigurationWarning));
       myDescriptionLabel.setText(errorMessage);
     }
   }

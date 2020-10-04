@@ -30,7 +30,7 @@ import java.util.Collection;
  * @deprecated
  * @see com.intellij.ui.popup.HintUpdateSupply
  */
-public abstract class JBListWithHintProvider extends JBList {
+public abstract class JBListWithHintProvider<T> extends JBList<T> {
   {
     new HintUpdateSupply(this) {
       @Override
@@ -47,7 +47,8 @@ public abstract class JBListWithHintProvider extends JBList {
     super(dataModel);
   }
 
-  public JBListWithHintProvider(Object... listData) {
+  @SafeVarargs
+  public JBListWithHintProvider(T... listData) {
     super(listData);
   }
 

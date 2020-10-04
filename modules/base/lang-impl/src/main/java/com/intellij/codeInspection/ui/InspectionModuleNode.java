@@ -2,8 +2,7 @@ package com.intellij.codeInspection.ui;
 
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.module.Module;
-
-import javax.swing.*;
+import consulo.ui.image.Image;
 
 /**
  * User: anna
@@ -17,7 +16,7 @@ public class InspectionModuleNode extends InspectionTreeNode{
   }
 
   @Override
-  public Icon getIcon() {
+  public Image getIcon() {
     return AllIcons.Nodes.Module;
   }
 

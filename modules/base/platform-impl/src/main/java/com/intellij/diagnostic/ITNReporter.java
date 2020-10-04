@@ -49,6 +49,7 @@ import consulo.ide.webService.WebServiceApi;
 import consulo.ide.webService.WebServiceException;
 import consulo.logging.Logger;
 import consulo.platform.impl.action.LastActionTracker;
+import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;
@@ -192,7 +193,7 @@ public class ITNReporter extends ErrorReportSubmitter {
     return true;
   }
 
-  private static void showMessageDialog(Component parentComponent, Project project, String message, String title, Icon icon) {
+  private static void showMessageDialog(Component parentComponent, Project project, String message, String title, Image icon) {
     if (parentComponent.isShowing()) {
       Messages.showMessageDialog(parentComponent, message, title, icon);
     }
@@ -201,7 +202,7 @@ public class ITNReporter extends ErrorReportSubmitter {
     }
   }
 
-  private static int showYesNoDialog(Component parentComponent, Project project, String message, String title, Icon icon) {
+  private static int showYesNoDialog(Component parentComponent, Project project, String message, String title, Image icon) {
     if (parentComponent.isShowing()) {
       return Messages.showYesNoDialog(parentComponent, message, title, icon);
     }

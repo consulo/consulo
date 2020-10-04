@@ -29,6 +29,7 @@ import com.intellij.openapi.wm.ex.ToolWindowEx;
 import com.intellij.openapi.wm.impl.AnchoredButton;
 import com.intellij.openapi.wm.impl.DesktopStripeButtonUI;
 import com.intellij.ui.*;
+import com.intellij.ui.components.JBLabel;
 import com.intellij.ui.components.panels.Wrapper;
 import com.intellij.ui.tabs.TabsUtil;
 import com.intellij.util.ui.UIUtil;
@@ -126,7 +127,7 @@ public class LightToolWindow extends JPanel {
         addAction(actionPanel, action);
       }
 
-      actionPanel.add(new JLabel(AllIcons.General.Divider));
+      actionPanel.add(new JBLabel(AllIcons.General.Divider));
     }
 
     addAction(actionPanel, new GearAction());

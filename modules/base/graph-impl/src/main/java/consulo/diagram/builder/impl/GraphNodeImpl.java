@@ -17,11 +17,11 @@ package consulo.diagram.builder.impl;
 
 import consulo.diagram.builder.GraphNode;
 import consulo.diagram.builder.GraphPositionStrategy;
+import consulo.ui.image.Image;
 import consulo.util.pointers.Named;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,11 +33,11 @@ public class GraphNodeImpl<E> implements GraphNode<E>, Named {
   private final List<GraphNode<?>> myArrowNodes = new ArrayList<>();
   private String myName;
   @Nullable
-  private Icon myIcon;
+  private Image myIcon;
   private final E myValue;
   private final GraphPositionStrategy myStrategy;
 
-  public GraphNodeImpl(@Nonnull String name, @Nullable Icon icon, @Nullable E value, GraphPositionStrategy strategy) {
+  public GraphNodeImpl(@Nonnull String name, @Nullable Image icon, @Nullable E value, GraphPositionStrategy strategy) {
     myName = name;
     myIcon = icon;
     myValue = value;
@@ -73,7 +73,7 @@ public class GraphNodeImpl<E> implements GraphNode<E>, Named {
 
   @Nullable
   @Override
-  public Icon getIcon() {
+  public Image getIcon() {
     return myIcon;
   }
 }

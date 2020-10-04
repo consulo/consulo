@@ -17,17 +17,15 @@
 package com.intellij.util.ui;
 
 import com.intellij.icons.AllIcons;
-import consulo.awt.TargetAWT;
 import consulo.ui.image.Image;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
-import java.util.Arrays;
 
 public class AsyncProcessIcon extends AnimatedIcon {
-  private static final Icon[] SMALL_ICONS = com.intellij.ui.AnimatedIcon.Default.ICONS.toArray(new Icon[0]);
+  private static final Image[] SMALL_ICONS = com.intellij.ui.AnimatedIcon.Default.ICONS.toArray(new Image[0]);
 
   public static final int COUNT = SMALL_ICONS.length;
   public static final int CYCLE_LENGTH = com.intellij.ui.AnimatedIcon.Default.DELAY * SMALL_ICONS.length;
@@ -36,21 +34,17 @@ public class AsyncProcessIcon extends AnimatedIcon {
     this(name, SMALL_ICONS, AllIcons.Process.Step_passive);
   }
 
-  public AsyncProcessIcon(@NonNls String name, Icon[] icons, Icon passive) {
-    super(name, icons, passive, CYCLE_LENGTH);
-  }
-
   public AsyncProcessIcon(@NonNls String name, Image[] icons, Image passive) {
-    super(name, Arrays.stream(icons).map(TargetAWT::to).toArray(Icon[]::new), TargetAWT.to(passive), CYCLE_LENGTH);
+    super(name, icons, passive, CYCLE_LENGTH);
   }
 
   @Override
   protected Dimension calcPreferredSize() {
-    return new Dimension(myPassiveIcon.getIconWidth(), myPassiveIcon.getIconHeight());
+    return new Dimension(myPassiveIcon.getWidth(), myPassiveIcon.getHeight());
   }
 
   @Override
-  protected void paintIcon(Graphics g, Icon icon, int x, int y) {
+  protected void paintIcon(Graphics g, Image icon, int x, int y) {
     super.paintIcon(g, icon, x, y);
   }
 
@@ -72,7 +66,7 @@ public class AsyncProcessIcon extends AnimatedIcon {
   }
 
   public static class Big extends AsyncProcessIcon {
-    private static final Icon[] BIG_ICONS = com.intellij.ui.AnimatedIcon.Big.ICONS.toArray(new Icon[0]);
+    private static final Image[] BIG_ICONS = com.intellij.ui.AnimatedIcon.Big.ICONS.toArray(new Image[0]);
 
     public Big(@NonNls final String name) {
       super(name, BIG_ICONS, AllIcons.Process.Big.Step_passive);

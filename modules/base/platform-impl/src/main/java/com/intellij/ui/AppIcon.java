@@ -317,12 +317,12 @@ public abstract class AppIcon {
       AppImage img = createAppImage();
 
       if (visible) {
-        Icon okIcon = AllIcons.Mac.AppIconOk512;
+        consulo.ui.image.Image okIcon = AllIcons.Mac.AppIconOk512;
 
-        int x = img.myImg.getWidth() - okIcon.getIconWidth();
+        int x = img.myImg.getWidth() - okIcon.getWidth();
         int y = 0;
 
-        okIcon.paintIcon(JOptionPane.getRootFrame(), img.myG2d, x, y);
+        TargetAWT.to(okIcon).paintIcon(JOptionPane.getRootFrame(), img.myG2d, x, y);
       }
 
       setDockIcon(img.myImg);

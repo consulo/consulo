@@ -1,6 +1,7 @@
 package com.intellij.util.net.ssl;
 
 import com.intellij.icons.AllIcons;
+import consulo.awt.TargetAWT;
 import consulo.logging.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
@@ -56,7 +57,7 @@ public class CertificateWarningDialog extends DialogWrapper {
     myMessagePane.setBackground(UIUtil.getPanelBackground());
     setOKButtonText("Accept");
     setCancelButtonText("Reject");
-    myWarningSign.setIcon(AllIcons.General.WarningDialog);
+    myWarningSign.setIcon(TargetAWT.to(AllIcons.General.WarningDialog));
 
     Messages.installHyperlinkSupport(myNoticePane);
     //    myNoticePane.setFont(myNoticePane.getFont().deriveFont((float)FontSize.SMALL.getSize()));

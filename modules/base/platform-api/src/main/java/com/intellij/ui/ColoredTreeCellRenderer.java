@@ -92,7 +92,7 @@ public abstract class ColoredTreeCellRenderer extends SimpleColoredComponent imp
     }
     else {
       setForeground(tree.getForeground());
-      setIcon(null);
+      setIcon((Image)null);
     }
 
     if (UIUtil.isUnderGTKLookAndFeel()){

@@ -34,6 +34,7 @@ import com.intellij.ui.TextAccessor;
 import com.intellij.ui.components.JBList;
 import com.intellij.util.PathUtil;
 import com.intellij.util.ui.UIUtil;
+import consulo.awt.TargetAWT;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -107,7 +108,7 @@ public class CommonProgramParametersPanel extends JPanel implements PanelWithAnc
   @Deprecated // use MacroComboBoxWithBrowseButton instead
   protected JComponent createComponentWithMacroBrowse(@Nonnull final TextFieldWithBrowseButton textAccessor) {
     final FixedSizeButton button = new FixedSizeButton(textAccessor);
-    button.setIcon(AllIcons.RunConfigurations.Variables);
+    button.setIcon(TargetAWT.to(AllIcons.RunConfigurations.Variables));
     button.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {

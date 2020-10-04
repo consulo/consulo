@@ -16,25 +16,22 @@
 
 package com.intellij.ide.todo.configurable;
 
+import consulo.awt.TargetAWT;
+import consulo.ui.image.Image;
+
 import javax.swing.*;
 import java.awt.*;
 
-final class TodoTypeListCellRenderer extends DefaultListCellRenderer{
-  public TodoTypeListCellRenderer(){
+final class TodoTypeListCellRenderer extends DefaultListCellRenderer {
+  public TodoTypeListCellRenderer() {
     setHorizontalAlignment(JLabel.CENTER);
   }
 
   @Override
-  public Component getListCellRendererComponent(
-    JList list,
-    Object value,
-    int index,
-    boolean isSelected,
-    boolean cellHasFocus
-  ){
-    super.getListCellRendererComponent(list,null,index,isSelected,cellHasFocus);
-    Icon attributes=(Icon)value;
-    setIcon(attributes);
+  public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+    super.getListCellRendererComponent(list, null, index, isSelected, cellHasFocus);
+    Image attributes = (Image)value;
+    setIcon(TargetAWT.to(attributes));
     return this;
   }
 }

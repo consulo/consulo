@@ -8,11 +8,10 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
 import com.intellij.patterns.ElementPattern;
 import consulo.disposer.Disposable;
+import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import javax.swing.*;
 import java.util.function.Supplier;
 
 /**
@@ -43,7 +42,7 @@ interface CompletionProcessEx extends CompletionProcess {
 
   void addWatchedPrefix(int startOffset, ElementPattern<String> restartCondition);
 
-  void addAdvertisement(@Nonnull String message, @Nullable Icon icon);
+  void addAdvertisement(@Nonnull String message, @Nullable Image icon);
 
   CompletionParameters getParameters();
 

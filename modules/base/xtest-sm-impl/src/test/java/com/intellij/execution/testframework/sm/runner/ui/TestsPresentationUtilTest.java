@@ -28,9 +28,8 @@ import com.intellij.util.containers.HashSet;
 import consulo.ui.image.Image;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 
-import javax.swing.*;
+import javax.annotation.Nonnull;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -713,7 +712,7 @@ public abstract class TestsPresentationUtilTest extends BaseSMTRunnerTestCase {
     return createTestProxy(FAKE_TEST_NAME);
   }
 
-  private void assertIsAnimatorProgressIcon(final Icon icon) {
+  private void assertIsAnimatorProgressIcon(final Image icon) {
     for (Image frame : TestsProgressAnimator.FRAMES) {
       if (icon == frame) {
         return;

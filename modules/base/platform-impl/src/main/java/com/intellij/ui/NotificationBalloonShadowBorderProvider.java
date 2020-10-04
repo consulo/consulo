@@ -53,27 +53,27 @@ public class NotificationBalloonShadowBorderProvider implements BalloonImpl.Shad
     int width = component.getWidth();
     int height = component.getHeight();
 
-    int topLeftWidth = Shadow.Top_left.getIconWidth();
-    int topLeftHeight = Shadow.Top_left.getIconHeight();
+    int topLeftWidth = Shadow.Top_left.getWidth();
+    int topLeftHeight = Shadow.Top_left.getHeight();
 
-    int topRightWidth = Shadow.Top_right.getIconWidth();
-    int topRightHeight = Shadow.Top_right.getIconHeight();
+    int topRightWidth = Shadow.Top_right.getWidth();
+    int topRightHeight = Shadow.Top_right.getHeight();
 
-    int bottomLeftWidth = Shadow.Bottom_left.getIconWidth();
-    int bottomLeftHeight = Shadow.Bottom_left.getIconHeight();
+    int bottomLeftWidth = Shadow.Bottom_left.getWidth();
+    int bottomLeftHeight = Shadow.Bottom_left.getHeight();
 
-    int bottomRightWidth = Shadow.Bottom_right.getIconWidth();
-    int bottomRightHeight = Shadow.Bottom_right.getIconHeight();
+    int bottomRightWidth = Shadow.Bottom_right.getWidth();
+    int bottomRightHeight = Shadow.Bottom_right.getHeight();
 
-    int topWidth = Shadow.Top.getIconWidth();
+    int topWidth = Shadow.Top.getWidth();
 
-    int bottomWidth = Shadow.Bottom.getIconWidth();
-    int bottomHeight = Shadow.Bottom.getIconHeight();
+    int bottomWidth = Shadow.Bottom.getWidth();
+    int bottomHeight = Shadow.Bottom.getHeight();
 
-    int leftHeight = Shadow.Left.getIconHeight();
+    int leftHeight = Shadow.Left.getHeight();
 
-    int rightWidth = Shadow.Right.getIconWidth();
-    int rightHeight = Shadow.Right.getIconHeight();
+    int rightWidth = Shadow.Right.getWidth();
+    int rightHeight = Shadow.Right.getHeight();
 
     drawLine(component, g, PlatformIconGroup.ideNotificationShadowTop(), width, topLeftWidth, topRightWidth, topWidth, 0, true);
     drawLine(component, g, PlatformIconGroup.ideNotificationShadowBottom(), width, bottomLeftWidth, bottomRightWidth, bottomWidth, height - bottomHeight, true);
@@ -81,10 +81,10 @@ public class NotificationBalloonShadowBorderProvider implements BalloonImpl.Shad
     drawLine(component, g, PlatformIconGroup.ideNotificationShadowLeft(), height, topLeftHeight, bottomLeftHeight, leftHeight, 0, false);
     drawLine(component, g, PlatformIconGroup.ideNotificationShadowRight(), height, topRightHeight, bottomRightHeight, rightHeight, width - rightWidth, false);
 
-    Shadow.Top_left.paintIcon(component, g, 0, 0);
-    Shadow.Top_right.paintIcon(component, g, width - topRightWidth, 0);
-    Shadow.Bottom_right.paintIcon(component, g, width - bottomRightWidth, height - bottomRightHeight);
-    Shadow.Bottom_left.paintIcon(component, g, 0, height - bottomLeftHeight);
+    TargetAWT.to(Shadow.Top_left).paintIcon(component, g, 0, 0);
+    TargetAWT.to(Shadow.Top_right).paintIcon(component, g, width - topRightWidth, 0);
+    TargetAWT.to(Shadow.Bottom_right).paintIcon(component, g, width - bottomRightWidth, height - bottomRightHeight);
+    TargetAWT.to(Shadow.Bottom_left).paintIcon(component, g, 0, height - bottomLeftHeight);
   }
 
   private static void drawLine(@Nonnull JComponent component, @Nonnull Graphics g, @Nonnull consulo.ui.image.Image icon, int fullLength, int start, int end, int step, int start2, boolean horizontal) {

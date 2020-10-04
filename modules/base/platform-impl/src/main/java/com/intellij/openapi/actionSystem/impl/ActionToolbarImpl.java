@@ -265,12 +265,12 @@ public class ActionToolbarImpl extends JPanel implements ActionToolbar, QuickAct
 
     if (myLayoutPolicy == AUTO_LAYOUT_POLICY && myAutoPopupRec != null) {
       if (myOrientation == SwingConstants.HORIZONTAL) {
-        final int dy = myAutoPopupRec.height / 2 - AllIcons.Ide.Link.getIconHeight() / 2;
-        AllIcons.Ide.Link.paintIcon(this, g, (int)myAutoPopupRec.getMaxX() - AllIcons.Ide.Link.getIconWidth() - 1, myAutoPopupRec.y + dy);
+        final int dy = myAutoPopupRec.height / 2 - AllIcons.Ide.Link.getHeight() / 2;
+        TargetAWT.to(AllIcons.Ide.Link).paintIcon(this, g, (int)myAutoPopupRec.getMaxX() - AllIcons.Ide.Link.getWidth() - 1, myAutoPopupRec.y + dy);
       }
       else {
-        final int dx = myAutoPopupRec.width / 2 - AllIcons.Ide.Link.getIconWidth() / 2;
-        AllIcons.Ide.Link.paintIcon(this, g, myAutoPopupRec.x + dx, (int)myAutoPopupRec.getMaxY() - AllIcons.Ide.Link.getIconWidth() - 1);
+        final int dx = myAutoPopupRec.width / 2 - AllIcons.Ide.Link.getWidth() / 2;
+        TargetAWT.to(AllIcons.Ide.Link).paintIcon(this, g, myAutoPopupRec.x + dx, (int)myAutoPopupRec.getMaxY() - AllIcons.Ide.Link.getWidth() - 1);
       }
     }
   }
@@ -522,7 +522,7 @@ public class ActionToolbarImpl extends JPanel implements ActionToolbar, QuickAct
       myAutoPopupRec = null;
     }
 
-    int autoButtonSize = AllIcons.Ide.Link.getIconWidth();
+    int autoButtonSize = AllIcons.Ide.Link.getWidth();
     boolean full = false;
 
     final Insets insets = getInsets();
@@ -830,10 +830,10 @@ public class ActionToolbarImpl extends JPanel implements ActionToolbar, QuickAct
 
     if (myLayoutPolicy == AUTO_LAYOUT_POLICY && myReservePlaceAutoPopupIcon && !isInsideNavBar()) {
       if (myOrientation == SwingConstants.HORIZONTAL) {
-        dimension.width += AllIcons.Ide.Link.getIconWidth();
+        dimension.width += AllIcons.Ide.Link.getWidth();
       }
       else {
-        dimension.height += AllIcons.Ide.Link.getIconHeight();
+        dimension.height += AllIcons.Ide.Link.getHeight();
       }
     }
 
@@ -879,13 +879,13 @@ public class ActionToolbarImpl extends JPanel implements ActionToolbar, QuickAct
         Component c = getComponent(0);
         Dimension firstSize = c.getPreferredSize();
         if (myOrientation == SwingConstants.HORIZONTAL) {
-          return new Dimension(firstSize.width + AllIcons.Ide.Link.getIconWidth() + i.left + i.right, Math.max(firstSize.height, myMinimumButtonSize.height()) + i.top + i.bottom);
+          return new Dimension(firstSize.width + AllIcons.Ide.Link.getWidth() + i.left + i.right, Math.max(firstSize.height, myMinimumButtonSize.height()) + i.top + i.bottom);
         }
         else {
-          return new Dimension(Math.max(firstSize.width, AllIcons.Ide.Link.getIconWidth()) + i.left + i.right, firstSize.height + myMinimumButtonSize.height() + i.top + i.bottom);
+          return new Dimension(Math.max(firstSize.width, AllIcons.Ide.Link.getWidth()) + i.left + i.right, firstSize.height + myMinimumButtonSize.height() + i.top + i.bottom);
         }
       }
-      return new Dimension(AllIcons.Ide.Link.getIconWidth() + i.left + i.right, myMinimumButtonSize.height() + i.top + i.bottom);
+      return new Dimension(AllIcons.Ide.Link.getWidth() + i.left + i.right, myMinimumButtonSize.height() + i.top + i.bottom);
     }
     else {
       return super.getMinimumSize();

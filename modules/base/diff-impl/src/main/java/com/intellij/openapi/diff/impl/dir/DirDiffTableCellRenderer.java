@@ -71,7 +71,7 @@ public class DirDiffTableCellRenderer extends DefaultTableCellRenderer {
 
       final DirDiffOperation op = element.getOperation();
       if (modelColumn == (table.getColumnCount() - 1) / 2) {
-        label.setIcon(op.getIcon());
+        label.setIcon(TargetAWT.to(op.getIcon()));
         label.setHorizontalAlignment(CENTER);
         return label;
       }

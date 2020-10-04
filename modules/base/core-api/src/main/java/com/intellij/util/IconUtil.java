@@ -23,6 +23,7 @@ import com.intellij.ui.LayeredIcon;
 import com.intellij.ui.RowIcon;
 import com.intellij.util.ui.*;
 import consulo.annotation.DeprecationInfo;
+import consulo.ui.image.ImageEffects;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -98,17 +99,15 @@ public class IconUtil {
   }
 
   @Nonnull
-  public static Icon getEmptyIcon(boolean showVisibility) {
-    RowIcon baseIcon = new RowIcon(2);
-    baseIcon.setIcon(EmptyIcon.create(getDefaultNodeIconSize()), 0);
-    if (showVisibility) {
-      baseIcon.setIcon(EmptyIcon.create(getDefaultNodeIconSize()), 1);
+  public static consulo.ui.image.Image getEmptyIcon(boolean showVisibility) {
+    if(showVisibility) {
+      return ImageEffects.appendRight(consulo.ui.image.Image.empty(getDefaultNodeIconSize()), consulo.ui.image.Image.empty(getDefaultNodeIconSize()));
     }
-    return baseIcon;
+    return consulo.ui.image.Image.empty(getDefaultNodeIconSize());
   }
 
   public static int getDefaultNodeIconSize() {
-    return 16;
+    return consulo.ui.image.Image.DEFAULT_ICON_SIZE;
   }
 
   public static Image toImage(@Nonnull Icon icon) {

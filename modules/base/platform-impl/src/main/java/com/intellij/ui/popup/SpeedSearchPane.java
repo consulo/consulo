@@ -17,6 +17,7 @@ package com.intellij.ui.popup;
 
 import com.intellij.icons.AllIcons;
 import com.intellij.ui.CaptionPanel;
+import consulo.awt.TargetAWT;
 
 import javax.swing.*;
 import java.awt.*;
@@ -46,7 +47,7 @@ public class SpeedSearchPane extends JDialog {
     myPanel.add(myLabel, BorderLayout.CENTER);
 
     myPanel.setBackground(SPEEDSEARCH_BACKGROUND);
-    myLabel.setIcon(AllIcons.Icons.Ide.SpeedSearchPrompt);
+    myLabel.setIcon(TargetAWT.to(AllIcons.Icons.Ide.SpeedSearchPrompt));
 
     myPanel.setBorder(BorderFactory.createLineBorder(SPEEDSEARCH_FOREGROUND));
     myLabel.setBorder(BorderFactory.createEmptyBorder(1, 4, 1, 4));

@@ -236,7 +236,7 @@ class RunConfigurable extends BaseConfigurable {
             }
           }
           if (shared != null) {
-            consulo.ui.image.Image icon = TargetAWT.from(getIcon());
+            consulo.ui.image.Image icon = getIcon();
 
             if(shared) {
               setIcon(ImageEffects.layered(icon, AllIcons.Nodes.Symlink));

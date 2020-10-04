@@ -22,10 +22,10 @@ import com.intellij.openapi.ui.popup.BalloonHandler;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.wm.StatusBar;
 import consulo.disposer.Disposable;
+import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.swing.*;
 import javax.swing.event.HyperlinkListener;
 import java.awt.*;
 import java.util.List;
@@ -40,7 +40,7 @@ public interface StatusBarEx extends StatusBar, Disposable {
 
   BalloonHandler notifyProgressByBalloon(@Nonnull MessageType type, @Nonnull String htmlBody);
 
-  BalloonHandler notifyProgressByBalloon(@Nonnull MessageType type, @Nonnull String htmlBody, @Nullable Icon icon, @Nullable HyperlinkListener listener);
+  BalloonHandler notifyProgressByBalloon(@Nonnull MessageType type, @Nonnull String htmlBody, @Nullable Image icon, @Nullable HyperlinkListener listener);
 
   void addProgress(@Nonnull ProgressIndicatorEx indicator, @Nonnull TaskInfo info);
 

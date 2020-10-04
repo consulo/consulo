@@ -24,6 +24,8 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.update.Activatable;
 import com.intellij.util.ui.update.UiNotifyConnector;
 import com.intellij.xml.util.XmlStringUtil;
+import consulo.awt.TargetAWT;
+
 import javax.annotation.Nonnull;
 
 import javax.swing.*;
@@ -42,8 +44,8 @@ public class ArtifactErrorPanel {
   private String myErrorText;
 
   public ArtifactErrorPanel(final ArtifactEditorImpl artifactEditor) {
-    myErrorLabel.setIcon(AllIcons.RunConfigurations.ConfigurationWarning);
-    new UiNotifyConnector(myMainPanel, new Activatable.Adapter() {
+    myErrorLabel.setIcon(TargetAWT.to(AllIcons.RunConfigurations.ConfigurationWarning));
+    new UiNotifyConnector(myMainPanel, new Activatable() {
       @Override
       public void showNotify() {
         if (myErrorText != null) {

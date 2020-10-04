@@ -16,16 +16,16 @@
 package com.intellij.remote.ext;
 
 import com.intellij.icons.AllIcons;
-import javax.annotation.Nullable;
+import consulo.ui.image.Image;
 
-import javax.swing.*;
+import javax.annotation.Nullable;
 
 public class PathMappingType {
   public static final PathMappingType REPLICATED_FOLDER = new PathMappingType(AllIcons.Ide.Readonly, "Shared folders from Vagrantfile:");
   public static final PathMappingType DEPLOYMENT = new PathMappingType(AllIcons.Ide.Readonly, "From deployment configuration:");
 
   @Nullable
-  private final Icon myIcon;
+  private final Image myIcon;
   @Nullable
   private final String myTooltip;
 
@@ -34,13 +34,13 @@ public class PathMappingType {
     myTooltip = null;
   }
 
-  public PathMappingType(@Nullable Icon icon, @Nullable String tooltip) {
+  public PathMappingType(@Nullable Image icon, @Nullable String tooltip) {
     myIcon = icon;
     myTooltip = tooltip;
   }
 
   @Nullable
-  public Icon getIcon() {
+  public Image getIcon() {
     return myIcon;
   }
 

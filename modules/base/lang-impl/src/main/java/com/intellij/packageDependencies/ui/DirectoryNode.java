@@ -17,8 +17,6 @@
 package com.intellij.packageDependencies.ui;
 
 import com.intellij.icons.AllIcons;
-import consulo.awt.TargetAWT;
-import consulo.ide.IconDescriptorUpdaters;
 import com.intellij.ide.projectView.impl.ProjectRootsUtil;
 import com.intellij.ide.projectView.impl.nodes.BaseProjectViewDirectoryHelper;
 import com.intellij.openapi.project.Project;
@@ -33,9 +31,10 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
 import com.intellij.psi.search.scope.packageSet.FilePatternPackageSet;
-import javax.annotation.Nullable;
+import consulo.ide.IconDescriptorUpdaters;
+import consulo.ui.image.Image;
 
-import javax.swing.*;
+import javax.annotation.Nullable;
 import java.util.Map;
 import java.util.Set;
 
@@ -203,9 +202,9 @@ public class DirectoryNode extends PackageDependenciesNode {
   }
 
   @Override
-  public Icon getIcon() {
+  public Image getIcon() {
     if (myDirectory != null) {
-      return TargetAWT.to(IconDescriptorUpdaters.getIcon(myDirectory, 0));
+      return IconDescriptorUpdaters.getIcon(myDirectory, 0);
     }
     return AllIcons.Nodes.TreeOpen;
   }

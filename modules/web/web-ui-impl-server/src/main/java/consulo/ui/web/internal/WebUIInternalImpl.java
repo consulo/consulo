@@ -230,7 +230,7 @@ public class WebUIInternalImpl extends UIInternal {
 
   @Override
   public Image _ImageEffects_canvas(int width, int height, Consumer<Canvas2D> consumer) {
-    throw new UnsupportedOperationException();
+    return new WebCanvasImageImpl(width, height, consumer);
   }
 
   @Override

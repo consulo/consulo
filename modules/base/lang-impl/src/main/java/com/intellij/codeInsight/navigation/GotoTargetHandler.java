@@ -41,6 +41,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiNamedElement;
 import com.intellij.ui.CollectionListModel;
+import com.intellij.ui.ColoredListCellRenderer;
 import com.intellij.ui.JBListWithHintProvider;
 import com.intellij.ui.popup.AbstractPopup;
 import com.intellij.ui.popup.HintUpdateSupply;
@@ -49,6 +50,7 @@ import com.intellij.util.Alarm;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.containers.HashSet;
 import consulo.logging.Logger;
+import consulo.ui.image.Image;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -61,7 +63,7 @@ import java.util.List;
 public abstract class GotoTargetHandler implements CodeInsightActionHandler {
   private static final Logger LOG = Logger.getInstance(GotoTargetHandler.class);
   private final PsiElementListCellRenderer myDefaultTargetElementRenderer = new DefaultPsiElementListCellRenderer();
-  private final DefaultListCellRenderer myActionElementRenderer = new ActionCellRenderer();
+  private final ListCellRenderer<AdditionalAction> myActionElementRenderer = new ActionCellRenderer();
 
   @Override
   public boolean startInWriteAction() {
@@ -122,7 +124,7 @@ public abstract class GotoTargetHandler implements CodeInsightActionHandler {
     Collections.addAll(allElements, targets);
     allElements.addAll(additionalActions);
 
-    final JBListWithHintProvider list = new JBListWithHintProvider(new CollectionListModel<>(allElements)) {
+    final JBListWithHintProvider<Object> list = new JBListWithHintProvider<Object>(new CollectionListModel<>(allElements)) {
       @Override
       protected PsiElement getPsiElementForHint(final Object selectedValue) {
         return selectedValue instanceof PsiElement ? (PsiElement) selectedValue : null;
@@ -136,7 +138,7 @@ public abstract class GotoTargetHandler implements CodeInsightActionHandler {
       public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
         if (value == null) return super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
         if (value instanceof AdditionalAction) {
-          return myActionElementRenderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+          return myActionElementRenderer.getListCellRendererComponent(list, (AdditionalAction) value, index, isSelected, cellHasFocus);
         }
         PsiElementListCellRenderer renderer = getRenderer(value, gotoData.renderers, gotoData);
         return renderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
@@ -289,7 +291,7 @@ public abstract class GotoTargetHandler implements CodeInsightActionHandler {
     @Nonnull
     String getText();
 
-    Icon getIcon();
+    Image getIcon();
 
     void execute();
   }
@@ -375,16 +377,13 @@ public abstract class GotoTargetHandler implements CodeInsightActionHandler {
     }
   }
 
-  private static class ActionCellRenderer extends DefaultListCellRenderer {
+  private static class ActionCellRenderer extends ColoredListCellRenderer<AdditionalAction> {
     @Override
-    public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-      Component result = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-      if (value != null) {
-        AdditionalAction action = (AdditionalAction)value;
-        setText(action.getText());
+    protected void customizeCellRenderer(@Nonnull JList<? extends AdditionalAction> list, AdditionalAction action, int index, boolean selected, boolean hasFocus) {
+      if(action != null) {
+        append(action.getText());
         setIcon(action.getIcon());
       }
-      return result;
     }
   }
 }

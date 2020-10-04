@@ -22,10 +22,11 @@ import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.MultiLineLabelUI;
-import consulo.util.dataholder.Key;
 import com.intellij.psi.PsiElement;
-import javax.annotation.Nonnull;
+import com.intellij.ui.components.JBLabel;
+import consulo.util.dataholder.Key;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 
@@ -60,19 +61,19 @@ public abstract class MethodHierarchyBrowserBase extends HierarchyBrowserBaseEx 
     final GridBagConstraints gc =
             new GridBagConstraints(0, 0, 1, 1, 1, 0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(3, 5, 0, 5), 0, 0);
 
-    JLabel label = new JLabel(methodDefinedText, AllIcons.Hierarchy.MethodDefined, SwingConstants.LEFT);
+    JLabel label = new JBLabel(methodDefinedText, AllIcons.Hierarchy.MethodDefined, SwingConstants.LEFT);
     label.setUI(new MultiLineLabelUI());
     label.setIconTextGap(10);
     panel.add(label, gc);
 
     gc.gridy++;
-    label = new JLabel(methodNotDefinedLegallyText, AllIcons.Hierarchy.MethodNotDefined, SwingConstants.LEFT);
+    label = new JBLabel(methodNotDefinedLegallyText, AllIcons.Hierarchy.MethodNotDefined, SwingConstants.LEFT);
     label.setUI(new MultiLineLabelUI());
     label.setIconTextGap(10);
     panel.add(label, gc);
 
     gc.gridy++;
-    label = new JLabel(methodShouldBeDefined, AllIcons.Hierarchy.ShouldDefineMethod, SwingConstants.LEFT);
+    label = new JBLabel(methodShouldBeDefined, AllIcons.Hierarchy.ShouldDefineMethod, SwingConstants.LEFT);
     label.setUI(new MultiLineLabelUI());
     label.setIconTextGap(10);
     panel.add(label, gc);

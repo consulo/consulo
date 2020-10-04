@@ -28,6 +28,8 @@ import com.intellij.ui.HoverHyperlinkLabel;
 import com.intellij.ui.ToolbarDecorator;
 import com.intellij.ui.table.TableView;
 import com.intellij.util.IconUtil;
+import consulo.awt.TargetAWT;
+import consulo.ui.image.Image;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -50,8 +52,8 @@ import java.util.List;
 
 public abstract class ValidatingTableEditor<Item> implements ComponentWithEmptyText {
 
-  private static final Icon WARNING_ICON = AllIcons.General.BalloonWarning;
-  private static final Icon EMPTY_ICON = EmptyIcon.create(WARNING_ICON);
+  private static final Image WARNING_ICON = AllIcons.General.BalloonWarning;
+  private static final Image EMPTY_ICON = Image.empty(WARNING_ICON.getWidth(), WARNING_ICON.getHeight());
   @NonNls private static final String REMOVE_KEY = "REMOVE_SELECTED";
 
   public interface RowHeightProvider {
@@ -151,20 +153,16 @@ public abstract class ValidatingTableEditor<Item> implements ComponentWithEmptyT
 
     @Override
     public int getWidth(JTable table) {
-      return WARNING_ICON.getIconWidth() + 2;
+      return WARNING_ICON.getWidth() + 2;
     }
 
     public int getRowHeight() {
-      return WARNING_ICON.getIconHeight();
+      return WARNING_ICON.getHeight();
     }
 
     @Override
     public TableCellRenderer getRenderer(final Item item) {
-      return new WarningIconCellRenderer(new NullableComputable<String>() {
-        public String compute() {
-          return myWarnings.get(doGetItems().indexOf(item));
-        }
-      });
+      return new WarningIconCellRenderer(() -> myWarnings.get(doGetItems().indexOf(item)));
     }
   }
 
@@ -368,7 +366,7 @@ public abstract class ValidatingTableEditor<Item> implements ComponentWithEmptyT
   protected void displayMessageAndFix(@Nullable Pair<String, Fix> messageAndFix) {
     if (messageAndFix != null) {
       myMessageLabel.setText(messageAndFix.first);
-      myMessageLabel.setIcon(WARNING_ICON);
+      myMessageLabel.setIcon(TargetAWT.to(WARNING_ICON));
       myMessageLabel.setVisible(true);
       myFixRunnable = messageAndFix.second;
       myFixLink.setVisible(myFixRunnable != null);
@@ -376,7 +374,7 @@ public abstract class ValidatingTableEditor<Item> implements ComponentWithEmptyT
     }
     else {
       myMessageLabel.setText(" ");
-      myMessageLabel.setIcon(EMPTY_ICON);
+      myMessageLabel.setIcon(TargetAWT.to(EMPTY_ICON));
       myFixLink.setVisible(false);
       myFixRunnable = null;
     }
@@ -403,7 +401,7 @@ public abstract class ValidatingTableEditor<Item> implements ComponentWithEmptyT
     public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
       JLabel label = (JLabel)super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
       String message = myWarningProvider.compute();
-      label.setIcon(message != null ? WARNING_ICON : null);
+      label.setIcon(message != null ? TargetAWT.to(WARNING_ICON) : null);
       label.setToolTipText(message);
       label.setHorizontalAlignment(CENTER);
       label.setVerticalAlignment(CENTER);

@@ -15,9 +15,7 @@
  */
 package com.intellij.usages.impl;
 
-import com.intellij.icons.AllIcons;
 import com.intellij.navigation.ItemPresentation;
-import consulo.logging.Logger;
 import com.intellij.openapi.editor.colors.EditorColorsScheme;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.util.text.StringUtil;
@@ -32,8 +30,10 @@ import com.intellij.usageView.UsageViewBundle;
 import com.intellij.usages.*;
 import com.intellij.util.FontUtil;
 import com.intellij.util.ui.UIUtil;
-import javax.annotation.Nonnull;
+import consulo.logging.Logger;
+import consulo.ui.image.Image;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import java.awt.*;
@@ -58,7 +58,7 @@ class UsageViewTreeCellRenderer extends ColoredTreeCellRenderer {
   private final UsageViewPresentation myPresentation;
   private final UsageView myView;
   private boolean myCalculated;
-  private int myRowHeight = AllIcons.Nodes.AbstractClass.getIconHeight() + 2;
+  private int myRowHeight = Image.DEFAULT_ICON_SIZE + 2;
 
   UsageViewTreeCellRenderer(@Nonnull UsageView view) {
     myView = view;

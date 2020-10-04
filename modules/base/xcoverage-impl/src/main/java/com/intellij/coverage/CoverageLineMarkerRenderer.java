@@ -52,6 +52,7 @@ import com.intellij.ui.ColoredSideBorder;
 import com.intellij.ui.HintHint;
 import com.intellij.ui.LightweightHint;
 import com.intellij.util.Function;
+import consulo.awt.TargetAWT;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -111,7 +112,7 @@ public class CoverageLineMarkerRenderer implements LineMarkerRendererEx, ActiveG
     g.fillRect(r.x, r.y, r.width, r.height);
     final LineData lineData = getLineData(editor.xyToLogicalPosition(new Point(0, r.y)).line);
     if (lineData != null && lineData.isCoveredByOneTest()) {
-      AllIcons.Gutter.Unique.paintIcon(editor.getComponent(), g, r.x, r.y);
+      TargetAWT.to(AllIcons.Gutter.Unique).paintIcon(editor.getComponent(), g, r.x, r.y);
     }
   }
 

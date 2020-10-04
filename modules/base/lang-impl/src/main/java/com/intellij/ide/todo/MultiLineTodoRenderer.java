@@ -5,7 +5,6 @@ import com.intellij.ide.IdeBundle;
 import com.intellij.ide.todo.nodes.TodoItemNode;
 import com.intellij.ui.HighlightableCellRenderer;
 import com.intellij.ui.HighlightedRegion;
-import consulo.awt.TargetAWT;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -43,7 +42,7 @@ public class MultiLineTodoRenderer extends JPanel implements TreeCellRenderer {
     int parenPos = text.indexOf(')');
     int contentStartPos = (parenPos >= 0 && parenPos < (text.length() - 1)) ? parenPos + 2 : 0;
     myPrefixRenderer.getTreeCellRendererComponent(tree, text.substring(0, contentStartPos), selected, expanded, leaf, row, hasFocus);
-    myPrefixRenderer.setIcon(TargetAWT.to(node.getIcon()));
+    myPrefixRenderer.setIcon(node.getIcon());
 
     List<HighlightedRegionProvider> additionalLines = node.getAdditionalLines();
     for (int i = 0; i < MAX_DISPLAYED_LINES; i++) {

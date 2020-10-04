@@ -35,13 +35,12 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiFileSystemItem;
 import com.intellij.util.IncorrectOperationException;
-import consulo.ui.annotation.RequiredUIAccess;
-import consulo.awt.TargetAWT;
 import consulo.psi.PsiPackageManager;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.swing.*;
 import java.awt.*;
 import java.io.File;
 import java.util.StringTokenizer;
@@ -171,7 +170,7 @@ public class CreateDirectoryOrPackageHandler implements InputValidatorEx {
       if (fileType != null) {
         String message = "The name you entered looks like a file name. Do you want to create a file named " + subDirName + " instead?";
         int ec = Messages.showYesNoCancelDialog(myProject, message, "File Name Detected", "&Yes, create file", "&No, create " + (myIsDirectory ? "directory" : "packages"),
-                                                CommonBundle.getCancelButtonText(), TargetAWT.to(fileType.getIcon()));
+                                                CommonBundle.getCancelButtonText(), fileType.getIcon());
         if (ec == Messages.CANCEL) {
           createFile = null;
         }
@@ -220,7 +219,7 @@ public class CreateDirectoryOrPackageHandler implements InputValidatorEx {
 
   private void showErrorDialog(String message) {
     String title = CommonBundle.getErrorTitle();
-    Icon icon = Messages.getErrorIcon();
+    Image icon = Messages.getErrorIcon();
     if (myDialogParent != null) {
       Messages.showMessageDialog(myDialogParent, message, title, icon);
     }

@@ -17,10 +17,10 @@
 package com.intellij.ui;
 
 import com.intellij.openapi.util.text.StringUtil;
-import javax.annotation.Nonnull;
+import consulo.ui.image.Image;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.swing.*;
 import java.util.ArrayList;
 
 public class SimpleColoredText implements ColoredTextContainer {
@@ -57,7 +57,7 @@ public class SimpleColoredText implements ColoredTextContainer {
   }
 
   @Override
-  public void setIcon(@Nullable Icon icon) {
+  public void setIcon(@Nullable Image icon) {
   }
 
   @Override

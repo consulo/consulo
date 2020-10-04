@@ -16,16 +16,13 @@
 
 package com.intellij.codeInspection.ui;
 
-import com.intellij.util.ui.EmptyIcon;
-import com.intellij.util.IconUtil;
-
-import javax.swing.*;
+import consulo.ui.image.Image;
 
 /**
  * @author max
  */
 public class InspectionGroupNode extends InspectionTreeNode {
-  private static final Icon EMPTY = new EmptyIcon(0, IconUtil.getEmptyIcon(false).getIconHeight());
+  private static final Image EMPTY = Image.empty(0, Image.DEFAULT_ICON_SIZE);
 
   public InspectionGroupNode(String groupTitle) {
     super(groupTitle);
@@ -36,7 +33,7 @@ public class InspectionGroupNode extends InspectionTreeNode {
   }
 
   @Override
-  public Icon getIcon() {
+  public Image getIcon() {
     return EMPTY;
   }
 

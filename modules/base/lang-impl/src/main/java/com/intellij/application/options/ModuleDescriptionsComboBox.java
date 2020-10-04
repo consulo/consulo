@@ -21,10 +21,7 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.impl.LoadedModuleDescriptionImpl;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.ComboBox;
-import com.intellij.ui.ComboboxSpeedSearch;
-import com.intellij.ui.JBColor;
-import com.intellij.ui.ListCellRendererWrapper;
-import com.intellij.ui.SortedComboBoxModel;
+import com.intellij.ui.*;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -118,7 +115,7 @@ public final class ModuleDescriptionsComboBox extends ComboBox<ModuleDescription
     return selected != null ? selected.getName() : null;
   }
 
-  private static class ModuleDescriptionListCellRenderer extends ListCellRendererWrapper<ModuleDescription> {
+  private static class ModuleDescriptionListCellRenderer extends ColoredListCellRenderer<ModuleDescription> {
     private final String myEmptySelectionText;
 
     public ModuleDescriptionListCellRenderer() {
@@ -130,9 +127,9 @@ public final class ModuleDescriptionsComboBox extends ComboBox<ModuleDescription
     }
 
     @Override
-    public void customize(JList list, ModuleDescription moduleDescription, int index, boolean selected, boolean hasFocus) {
+    protected void customizeCellRenderer(@Nonnull JList<? extends ModuleDescription> list, ModuleDescription moduleDescription, int index, boolean selected, boolean hasFocus) {
       if (moduleDescription == null) {
-        setText(myEmptySelectionText);
+        append(myEmptySelectionText);
       }
       else {
         if (moduleDescription instanceof LoadedModuleDescription) {
@@ -143,7 +140,7 @@ public final class ModuleDescriptionsComboBox extends ComboBox<ModuleDescription
           setIcon(AllIcons.Nodes.Module); //FIXME [VISTALL] another icon?
           setForeground(JBColor.RED);
         }
-        setText(moduleDescription.getName());
+        append(moduleDescription.getName());
       }
     }
   }

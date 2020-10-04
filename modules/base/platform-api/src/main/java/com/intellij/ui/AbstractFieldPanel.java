@@ -19,6 +19,7 @@ import com.intellij.icons.AllIcons;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CustomShortcutSet;
+import consulo.awt.TargetAWT;
 import consulo.logging.Logger;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.FixedSizeButton;
@@ -134,7 +135,7 @@ public abstract class AbstractFieldPanel extends JPanel {
         myDoClickAction = new TextFieldWithBrowseButton.MyDoClickAction(showViewerButton);
       }
       showViewerButton.setFocusable(false);
-      showViewerButton.setIcon(AllIcons.Actions.ShowViewer);
+      showViewerButton.setIcon(TargetAWT.to(AllIcons.Actions.ShowViewer));
       showViewerButton.addActionListener(new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {

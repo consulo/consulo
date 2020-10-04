@@ -48,6 +48,7 @@ import com.intellij.util.ui.update.Update;
 import consulo.awt.TargetAWT;
 import consulo.desktop.util.awt.migration.AWTComponentProviderUtil;
 import consulo.fileEditor.impl.EditorsSplitters;
+import consulo.ui.image.Image;
 import consulo.ui.impl.ToolWindowPanelImplEx;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -535,7 +536,7 @@ public class InfoAndProgressPanel extends JPanel implements CustomStatusBarWidge
     myRefreshIcon.setToolTipText(tooltip);
   }
 
-  public BalloonHandler notifyByBalloon(MessageType type, String htmlBody, @Nullable Icon icon, @Nullable HyperlinkListener listener) {
+  public BalloonHandler notifyByBalloon(MessageType type, String htmlBody, @Nullable Image icon, @Nullable HyperlinkListener listener) {
     final Balloon balloon =
             JBPopupFactory.getInstance().createHtmlTextBalloonBuilder(htmlBody.replace("\n", "<br>"), icon != null ? icon : type.getDefaultIcon(), type.getPopupBackground(), listener).createBalloon();
 

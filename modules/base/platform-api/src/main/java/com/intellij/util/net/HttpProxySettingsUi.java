@@ -32,6 +32,8 @@ import com.intellij.ui.components.JBRadioButton;
 import com.intellij.util.io.HttpRequests;
 import com.intellij.util.proxy.CommonProxy;
 import com.intellij.util.proxy.JavaProxyProperty;
+import consulo.awt.TargetAWT;
+
 import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;
@@ -108,7 +110,7 @@ class HttpProxySettingsUi implements ConfigurableUi<HttpConfigurable> {
     Boolean property = Boolean.getBoolean(JavaProxyProperty.USE_SYSTEM_PROXY);
     mySystemProxyDefined.setVisible(Boolean.TRUE.equals(property));
     if (Boolean.TRUE.equals(property)) {
-      mySystemProxyDefined.setIcon(Messages.getWarningIcon());
+      mySystemProxyDefined.setIcon(TargetAWT.to(Messages.getWarningIcon()));
       RelativeFont.BOLD.install(mySystemProxyDefined);
     }
 
@@ -250,7 +252,7 @@ class HttpProxySettingsUi implements ConfigurableUi<HttpConfigurable> {
     myOtherWarning.setVisible(oldStyleText != null);
     if (oldStyleText != null) {
       myOtherWarning.setText(oldStyleText);
-      myOtherWarning.setIcon(Messages.getWarningIcon());
+      myOtherWarning.setIcon(TargetAWT.to(Messages.getWarningIcon()));
     }
   }
 

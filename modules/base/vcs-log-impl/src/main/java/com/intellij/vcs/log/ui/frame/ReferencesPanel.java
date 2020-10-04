@@ -27,6 +27,8 @@ import com.intellij.vcs.log.VcsRef;
 import com.intellij.vcs.log.VcsRefType;
 import com.intellij.vcs.log.ui.render.LabelIcon;
 import com.intellij.vcs.log.ui.render.RectanglePainter;
+import consulo.ui.image.Image;
+
 import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;
@@ -82,7 +84,7 @@ public class ReferencesPanel extends JPanel {
       Collection<VcsRef> refs = typeAndRefs.getValue();
       int refIndex = 0;
       for (VcsRef reference : refs) {
-        Icon icon = createIcon(type, refs, refIndex, height);
+        Image icon = createIcon(type, refs, refIndex, height);
         String ending = (refIndex != refs.size() - 1) ? "," : "";
         String text = reference.getName() + ending;
         JBLabel label = createLabel(text, icon);
@@ -119,7 +121,7 @@ public class ReferencesPanel extends JPanel {
   }
 
   @Nullable
-  protected Icon createIcon(@Nonnull VcsRefType type,
+  protected Image createIcon(@Nonnull VcsRefType type,
                             @Nonnull Collection<VcsRef> refs,
                             int refIndex, int height) {
     if (refIndex == 0) {
@@ -137,7 +139,7 @@ public class ReferencesPanel extends JPanel {
   }
 
   @Nonnull
-  protected JBLabel createLabel(@Nonnull String text, @Nullable Icon icon) {
+  protected JBLabel createLabel(@Nonnull String text, @Nullable Image icon) {
     JBLabel label = new JBLabel(text, icon, SwingConstants.LEFT);
     label.setFont(getLabelsFont());
     label.setIconTextGap(0);

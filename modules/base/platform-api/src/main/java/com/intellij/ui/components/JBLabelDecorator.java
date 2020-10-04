@@ -16,11 +16,11 @@
 package com.intellij.ui.components;
 
 import com.intellij.util.ui.UIUtil;
+import consulo.ui.image.Image;
 import org.intellij.lang.annotations.JdkConstants;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import javax.swing.*;
 import java.awt.*;
 
 /**
@@ -31,7 +31,7 @@ public class JBLabelDecorator extends JBLabel {
     super();
   }
 
-  private JBLabelDecorator(@Nullable Icon image) {
+  private JBLabelDecorator(@Nullable Image image) {
     super(image);
   }
 
@@ -43,11 +43,11 @@ public class JBLabelDecorator extends JBLabel {
     super(text, horizontalAlignment);
   }
 
-  private JBLabelDecorator(@Nullable Icon image, @JdkConstants.HorizontalAlignment int horizontalAlignment) {
+  private JBLabelDecorator(@Nullable Image image, @JdkConstants.HorizontalAlignment int horizontalAlignment) {
     super(image, horizontalAlignment);
   }
 
-  private JBLabelDecorator(@Nonnull String text, @Nullable Icon icon, @JdkConstants.HorizontalAlignment int horizontalAlignment) {
+  private JBLabelDecorator(@Nonnull String text, @Nullable Image icon, @JdkConstants.HorizontalAlignment int horizontalAlignment) {
     super(text, icon, horizontalAlignment);
   }
 

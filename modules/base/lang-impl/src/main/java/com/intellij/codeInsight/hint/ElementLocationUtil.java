@@ -22,6 +22,7 @@ import com.intellij.openapi.roots.*;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
+import consulo.awt.TargetAWT;
 
 import javax.swing.*;
 import java.util.List;
@@ -48,7 +49,7 @@ public class ElementLocationUtil {
 
       if (module != null) {
         label.setText(module.getName());
-        label.setIcon(AllIcons.Nodes.Module);
+        label.setIcon(TargetAWT.to(AllIcons.Nodes.Module));
       }
       else {
         final List<OrderEntry> entries = fileIndex.getOrderEntriesForFile(vfile);
@@ -64,7 +65,7 @@ public class ElementLocationUtil {
 
         if (entry != null) {
           label.setText(entry.getPresentableName());
-          label.setIcon(AllIcons.Nodes.PpLibFolder);
+          label.setIcon(TargetAWT.to(AllIcons.Nodes.PpLibFolder));
         }
       }
     }

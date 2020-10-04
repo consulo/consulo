@@ -26,6 +26,8 @@ import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.ui.components.JBList;
 import com.intellij.util.Function;
 import com.intellij.util.IconUtil;
+import consulo.awt.TargetAWT;
+
 import javax.annotation.Nullable;
 
 import javax.swing.*;
@@ -56,7 +58,7 @@ public class TestDnd extends AnAction {
           .setImageProvider(new Function<DnDActionInfo, DnDImage>() {
             @Override
             public DnDImage fun(DnDActionInfo info) {
-              return new DnDImage(IconUtil.toImage(AllIcons.Icon32));
+              return new DnDImage(IconUtil.toImage(TargetAWT.to(AllIcons.Icon32)));
             }
           })
           .install();

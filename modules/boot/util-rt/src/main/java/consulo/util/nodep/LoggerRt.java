@@ -18,10 +18,6 @@ package consulo.util.nodep;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import java.lang.reflect.Method;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 /**
  * A wrapper which uses either IDE logging subsystem (if available) or java.util.logging.
  *
@@ -36,12 +32,7 @@ public abstract class LoggerRt {
 
   private synchronized static Factory getFactory() {
     if (ourFactory == null) {
-      try {
-        ourFactory = new IdeaFactory();
-      }
-      catch (Throwable t) {
-        ourFactory = new JavaFactory();
-      }
+      ourFactory = new SystemFactory();
     }
     return ourFactory;
   }
@@ -53,7 +44,7 @@ public abstract class LoggerRt {
 
   @Nonnull
   public static LoggerRt getInstance(@Nonnull final Class<?> clazz) {
-    return getInstance('#' + clazz.getName());
+    return getInstance(clazz.getName());
   }
 
   public void info(@Nullable final String message) {
@@ -84,80 +75,34 @@ public abstract class LoggerRt {
   public abstract void warn(@Nullable final String message, @Nullable final Throwable t);
   public abstract void error(@Nullable final String message, @Nullable final Throwable t);
 
-  private static class JavaFactory implements Factory {
+  private static class SystemFactory implements Factory {
     @Override
-    public LoggerRt getInstance(@Nonnull final String category) {
-      final Logger logger = Logger.getLogger(category);
+    public LoggerRt getInstance(@Nonnull String category) {
       return new LoggerRt() {
         @Override
-        public void info(@Nullable final String message, @Nullable final Throwable t) {
-          logger.log(Level.INFO, message, t);
+        public void info(@Nullable String message, @Nullable Throwable t) {
+          System.out.println("[INFO] " + message);
+          if(t != null) {
+            t.printStackTrace(System.out);
+          }
         }
 
         @Override
-        public void warn(@Nullable final String message, @Nullable final Throwable t) {
-          logger.log(Level.WARNING, message, t);
+        public void warn(@Nullable String message, @Nullable Throwable t) {
+          System.out.println("[WARN] " + message);
+          if (t != null) {
+            t.printStackTrace(System.out);
+          }
         }
 
         @Override
-        public void error(@Nullable final String message, @Nullable final Throwable t) {
-          logger.log(Level.SEVERE, message, t);
+        public void error(@Nullable String message, @Nullable Throwable t) {
+          System.err.println("[ERROR] " + message);
+          if (t != null) {
+            t.printStackTrace(System.err);
+          }
         }
       };
-    }
-  }
-
-  private static class IdeaFactory implements Factory {
-    private final Method myGetInstance;
-    private final Method myInfo;
-    private final Method myWarn;
-    private final Method myError;
-
-    private IdeaFactory() throws Exception {
-      final Class<?> loggerClass = Class.forName("com.intellij.openapi.diagnostic.Logger");
-      myGetInstance = loggerClass.getMethod("getInstance", String.class);
-      myGetInstance.setAccessible(true);
-      myInfo = loggerClass.getMethod("info", String.class, Throwable.class);
-      myInfo.setAccessible(true);
-      myWarn = loggerClass.getMethod("warn", String.class, Throwable.class);
-      myInfo.setAccessible(true);
-      myError = loggerClass.getMethod("error", String.class, Throwable.class);
-      myError.setAccessible(true);
-    }
-
-    @Override
-    public LoggerRt getInstance(@Nonnull final String category) {
-      try {
-        final Object logger = myGetInstance.invoke(null, category);
-        return new LoggerRt() {
-          @Override
-          public void info(@Nullable final String message, @Nullable final Throwable t) {
-            try {
-              myInfo.invoke(logger, message, t);
-            }
-            catch (Exception ignored) { }
-          }
-
-          @Override
-          public void warn(@Nullable final String message, @Nullable final Throwable t) {
-            try {
-              myWarn.invoke(logger, message, t);
-            }
-            catch (Exception ignored) { }
-          }
-
-          @Override
-          public void error(@Nullable final String message, @Nullable final Throwable t) {
-            try {
-              myError.invoke(logger, message, t);
-            }
-            catch (Exception ignored) { }
-          }
-        };
-      }
-      catch (Exception e) {
-        throw new RuntimeException(e);
-      }
     }
   }
 }

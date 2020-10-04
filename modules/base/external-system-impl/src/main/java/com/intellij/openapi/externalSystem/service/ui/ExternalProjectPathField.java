@@ -53,6 +53,7 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.ContainerUtilRt;
 import com.intellij.util.ui.GridBag;
 import com.intellij.util.ui.UIUtil;
+import consulo.awt.TargetAWT;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.fileChooser.FileChooser;
 
@@ -105,7 +106,7 @@ public class ExternalProjectPathField extends ComponentWithBrowseButton<External
     final EditorTextField textField = createTextField(project, externalSystemId);
     
     final FixedSizeButton selectRegisteredProjectButton = new FixedSizeButton();
-    selectRegisteredProjectButton.setIcon(AllIcons.Actions.Module);
+    selectRegisteredProjectButton.setIcon(TargetAWT.to(AllIcons.Actions.Module));
     String tooltipText = ExternalSystemBundle.message("run.configuration.tooltip.choose.registered.project",
                                                       externalSystemId.getReadableName());
     selectRegisteredProjectButton.setToolTipText(tooltipText);

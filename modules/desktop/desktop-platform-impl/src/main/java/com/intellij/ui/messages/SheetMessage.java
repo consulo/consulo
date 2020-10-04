@@ -72,7 +72,7 @@ public class SheetMessage {
   public SheetMessage(@Nullable consulo.ui.Window uiOwner,
                       final String title,
                       final String message,
-                      final Icon icon,
+                      final consulo.ui.image.Image icon,
                       final String[] buttons,
                       final DialogWrapper.DoNotAskOption doNotAskOption,
                       final String defaultButton,
@@ -101,7 +101,7 @@ public class SheetMessage {
 
     myWindow.setUndecorated(true);
     myWindow.setBackground(Gray.TRANSPARENT);
-    myController = new SheetController(this, title, message, icon, buttons, defaultButton, doNotAskOption, focusedButton);
+    myController = new SheetController(this, title, message, TargetAWT.to(icon), buttons, defaultButton, doNotAskOption, focusedButton);
 
     imageHeight = 0;
     myParent.addComponentListener(myPositionListener);

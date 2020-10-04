@@ -15,6 +15,9 @@
  */
 package com.intellij.ui.roots;
 
+import consulo.awt.TargetAWT;
+import consulo.ui.image.Image;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
@@ -25,34 +28,35 @@ import java.awt.geom.AffineTransform;
  * @author 2003
  */
 public class ScalableIconComponent extends JComponent {
-  private final Icon myIcon;
-  private final Icon mySelectedIcon;
+  private final Image myIcon;
+  private final Image mySelectedIcon;
   private boolean myIsSelected = false;
 
-  public ScalableIconComponent(Icon icon) {
+  public ScalableIconComponent(Image icon) {
     this(icon, icon);
   }
 
-  public ScalableIconComponent(Icon icon, Icon selectedIcon) {
+  public ScalableIconComponent(Image icon, Image selectedIcon) {
     myIcon = icon;
     mySelectedIcon = selectedIcon != null? selectedIcon : icon;
     if (icon != null) {
-      final Dimension size = new Dimension(icon.getIconWidth(), icon.getIconHeight());
+      final Dimension size = new Dimension(icon.getWidth(), icon.getHeight());
       this.setPreferredSize(size);
       this.setMinimumSize(size);
     }
   }
 
+  @Override
   protected void paintComponent(Graphics g) {
-    final Icon icon = myIsSelected? mySelectedIcon : myIcon;
+    final consulo.ui.image.Image icon = myIsSelected? mySelectedIcon : myIcon;
     if (icon != null) {
       final Graphics2D g2 = (Graphics2D)g;
 
       g2.setBackground(getBackground());
       final AffineTransform savedTransform = g2.getTransform();
 
-      g2.scale(((double)getWidth()) / icon.getIconWidth(), ((double)getHeight()) / icon.getIconHeight());
-      icon.paintIcon(this, g2, 0, 0);
+      g2.scale(((double)getWidth()) / icon.getWidth(), ((double)getHeight()) / icon.getHeight());
+      TargetAWT.to(icon).paintIcon(this, g2, 0, 0);
 
       g2.setTransform(savedTransform);
     }

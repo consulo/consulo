@@ -15,6 +15,8 @@
  */
 package com.intellij.ui.components.labels;
 
+import consulo.ui.image.Image;
+
 import javax.annotation.Nonnull;
 
 import javax.swing.*;
@@ -29,7 +31,7 @@ public class SwingActionLink extends LinkLabel<Action> implements LinkListener<A
   private final ActionEvent myEvent = new ActionEvent(this, ActionEvent.ACTION_PERFORMED, Action.ACTION_COMMAND_KEY);
 
   public SwingActionLink(@Nonnull Action action) {
-    super((String)action.getValue(Action.NAME), (Icon)action.getValue(Action.SMALL_ICON));
+    super((String)action.getValue(Action.NAME), (Image)action.getValue(Action.SMALL_ICON));
     setToolTipText((String)action.getValue(Action.SHORT_DESCRIPTION));
     setVisible(action.isEnabled());
     setListener(this, action);

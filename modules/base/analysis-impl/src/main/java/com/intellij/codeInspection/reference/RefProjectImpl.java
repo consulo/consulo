@@ -25,9 +25,7 @@
 package com.intellij.codeInspection.reference;
 
 import com.intellij.openapi.application.Application;
-import consulo.awt.TargetAWT;
-
-import javax.swing.*;
+import consulo.ui.image.Image;
 
 public class RefProjectImpl extends RefEntityImpl implements RefProject {
   public RefProjectImpl(RefManager refManager) {
@@ -40,7 +38,7 @@ public class RefProjectImpl extends RefEntityImpl implements RefProject {
   }
 
   @Override
-  public Icon getIcon(final boolean expanded) {
-    return TargetAWT.to(Application.get().getIcon());
+  public Image getIcon(final boolean expanded) {
+    return Application.get().getIcon();
   }
 }

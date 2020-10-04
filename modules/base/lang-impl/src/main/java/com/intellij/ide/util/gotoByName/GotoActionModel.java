@@ -728,7 +728,7 @@ public class GotoActionModel implements ChooseByNameModel, Comparator<Object>, D
 
       if (matchedValue instanceof String) { //...
         if (showIcon) {
-          panel.add(new JBLabel(EMPTY_ICON), BorderLayout.WEST);
+          panel.add(new JBLabel(Image.empty(Image.DEFAULT_ICON_SIZE)), BorderLayout.WEST);
         }
         String str = cutName((String)matchedValue, null, list, panel, nameComponent);
         nameComponent.append(str, new SimpleTextAttributes(STYLE_PLAIN, defaultActionForeground(isSelected, cellHasFocus, null)));

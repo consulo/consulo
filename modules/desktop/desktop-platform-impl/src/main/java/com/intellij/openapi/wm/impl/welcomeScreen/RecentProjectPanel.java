@@ -47,10 +47,12 @@ import com.intellij.util.messages.MessageBusConnection;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.accessibility.AccessibleContextUtil;
+import consulo.awt.TargetAWT;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;
@@ -77,17 +79,17 @@ public class RecentProjectPanel {
   protected FilePathChecker myChecker;
   private int myHoverIndex = -1;
   private final int closeButtonInset = JBUI.scale(7);
-  private Icon currentIcon = AllIcons.Welcome.Project.Remove;
+  private Image currentIcon = AllIcons.Welcome.Project.Remove;
 
   private final JPanel myCloseButtonForEditor = new JPanel() {
     {
-      setPreferredSize(new Dimension(currentIcon.getIconWidth(), currentIcon.getIconHeight()));
+      setPreferredSize(new Dimension(currentIcon.getWidth(), currentIcon.getHeight()));
       setOpaque(true);
     }
 
     @Override
     protected void paintComponent(Graphics g) {
-      currentIcon.paintIcon(this, g, 0, 0);
+      TargetAWT.to(currentIcon).paintIcon(this, g, 0, 0);
     }
   };
 
@@ -345,8 +347,8 @@ public class RecentProjectPanel {
 
     public Rectangle getCloseIconRect(int index) {
       final Rectangle bounds = getCellBounds(index, index);
-      Icon icon = AllIcons.Welcome.Project.Remove;
-      return new Rectangle(bounds.width - icon.getIconWidth() - 10, bounds.y + 10, icon.getIconWidth(), icon.getIconHeight());
+      Image icon = AllIcons.Welcome.Project.Remove;
+      return new Rectangle(bounds.width - icon.getWidth() - 10, bounds.y + 10, icon.getWidth(), icon.getHeight());
     }
 
     @Override
@@ -356,8 +358,8 @@ public class RecentProjectPanel {
         final int index = locationToIndex(myMousePoint);
         if (index != -1) {
           final Rectangle iconRect = getCloseIconRect(index);
-          Icon icon = iconRect.contains(myMousePoint) ? AllIcons.Welcome.Project.Remove_hover : AllIcons.Welcome.Project.Remove;
-          icon.paintIcon(this, g, iconRect.x, iconRect.y);
+          Image icon = iconRect.contains(myMousePoint) ? AllIcons.Welcome.Project.Remove_hover : AllIcons.Welcome.Project.Remove;
+          TargetAWT.to(icon).paintIcon(this, g, iconRect.x, iconRect.y);
         }
       }
     }

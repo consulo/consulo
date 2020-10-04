@@ -1300,20 +1300,20 @@ public class UIUtil {
     return UIManager.getBorder("Button.border");
   }
 
-  public static Icon getErrorIcon() {
-    return UIManager.getIcon("OptionPane.errorIcon");
+  public static consulo.ui.image.Image getErrorIcon() {
+    return (consulo.ui.image.Image)UIManager.getIcon("OptionPane.errorIcon");
   }
 
-  public static Icon getInformationIcon() {
-    return UIManager.getIcon("OptionPane.informationIcon");
+  public static consulo.ui.image.Image getInformationIcon() {
+    return (consulo.ui.image.Image)UIManager.getIcon("OptionPane.informationIcon");
   }
 
-  public static Icon getQuestionIcon() {
-    return UIManager.getIcon("OptionPane.questionIcon");
+  public static consulo.ui.image.Image getQuestionIcon() {
+    return (consulo.ui.image.Image)UIManager.getIcon("OptionPane.questionIcon");
   }
 
-  public static Icon getWarningIcon() {
-    return UIManager.getIcon("OptionPane.warningIcon");
+  public static consulo.ui.image.Image getWarningIcon() {
+    return (consulo.ui.image.Image)UIManager.getIcon("OptionPane.warningIcon");
   }
 
   public static Icon getRadioButtonIcon() {

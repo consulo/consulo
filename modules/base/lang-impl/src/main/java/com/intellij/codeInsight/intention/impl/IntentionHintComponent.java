@@ -10,11 +10,9 @@ import com.intellij.codeInsight.intention.impl.config.IntentionManagerSettings;
 import com.intellij.codeInsight.unwrap.ScopeHighlighter;
 import com.intellij.codeInspection.SuppressIntentionActionFromFix;
 import com.intellij.icons.AllIcons;
-import consulo.disposer.Disposable;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.impl.SimpleDataContext;
 import com.intellij.openapi.application.ApplicationManager;
-import consulo.logging.Logger;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.VisualPosition;
 import com.intellij.openapi.editor.actions.EditorActionUtil;
@@ -24,7 +22,6 @@ import com.intellij.openapi.editor.ex.util.EditorUtil;
 import com.intellij.openapi.keymap.KeymapUtil;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.popup.*;
-import consulo.disposer.Disposer;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiElement;
@@ -34,13 +31,18 @@ import com.intellij.refactoring.BaseRefactoringIntentionAction;
 import com.intellij.ui.HintHint;
 import com.intellij.ui.LightweightHint;
 import com.intellij.ui.PopupMenuListenerAdapter;
-import com.intellij.ui.RowIcon;
 import com.intellij.ui.awt.RelativePoint;
+import com.intellij.ui.components.JBLabel;
 import com.intellij.ui.popup.WizardPopup;
 import com.intellij.util.Alarm;
 import com.intellij.util.ThreeState;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.ui.EmptyIcon;
+import consulo.awt.TargetAWT;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
+import consulo.logging.Logger;
+import consulo.ui.image.Image;
+import consulo.ui.image.ImageEffects;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;
@@ -67,7 +69,7 @@ import java.util.List;
 public class IntentionHintComponent implements Disposable, ScrollAwareHint {
   private static final Logger LOG = Logger.getInstance(IntentionHintComponent.class);
 
-  private static final Icon ourInactiveArrowIcon = EmptyIcon.create(AllIcons.General.ArrowDown);
+  private static final Image ourInactiveArrowIcon = Image.empty(AllIcons.General.ArrowDown.getWidth(), AllIcons.General.ArrowDown.getHeight());
 
   private static final int NORMAL_BORDER_SIZE = 6;
   private static final int SMALL_BORDER_SIZE = 4;
@@ -104,10 +106,10 @@ public class IntentionHintComponent implements Disposable, ScrollAwareHint {
 
   private static final Alarm myAlarm = new Alarm();
 
-  private final RowIcon myHighlightedIcon;
+  private final Image myHighlightedIcon;
   private final JLabel myIconLabel;
 
-  private final RowIcon myInactiveIcon;
+  private final Image myInactiveIcon;
 
   private static final int DELAY = 500;
   private final MyComponentHint myComponentHint;
@@ -266,22 +268,22 @@ public class IntentionHintComponent implements Disposable, ScrollAwareHint {
         }
       }
 
-      realPoint = new Point(-(AllIcons.Actions.RealIntentionBulb.getIconWidth() / 2) - 4, -(AllIcons.Actions.RealIntentionBulb.getIconHeight() / 2));
+      realPoint = new Point(-(AllIcons.Actions.RealIntentionBulb.getWidth() / 2) - 4, -(AllIcons.Actions.RealIntentionBulb.getHeight() / 2));
     }
     else {
       Rectangle visibleArea = editor.getScrollingModel().getVisibleArea();
       if (position.y < visibleArea.y || position.y >= visibleArea.y + visibleArea.height) return null;
 
       // try to place bulb on the same line
-      int yShift = -(NORMAL_BORDER_SIZE + AllIcons.Actions.RealIntentionBulb.getIconHeight());
+      int yShift = -(NORMAL_BORDER_SIZE + AllIcons.Actions.RealIntentionBulb.getHeight());
       if (canPlaceBulbOnTheSameLine(editor)) {
-        yShift = -(NORMAL_BORDER_SIZE + (AllIcons.Actions.RealIntentionBulb.getIconHeight() - editor.getLineHeight()) / 2 + 3);
+        yShift = -(NORMAL_BORDER_SIZE + (AllIcons.Actions.RealIntentionBulb.getHeight() - editor.getLineHeight()) / 2 + 3);
       }
       else if (position.y < visibleArea.y + editor.getLineHeight()) {
         yShift = editor.getLineHeight() - NORMAL_BORDER_SIZE;
       }
 
-      final int xShift = AllIcons.Actions.RealIntentionBulb.getIconWidth();
+      final int xShift = AllIcons.Actions.RealIntentionBulb.getWidth();
 
       realPoint = new Point(Math.max(0, visibleArea.x - xShift), position.y + yShift);
     }
@@ -300,7 +302,7 @@ public class IntentionHintComponent implements Disposable, ScrollAwareHint {
     final int firstNonSpaceColumnOnTheLine = EditorActionUtil.findFirstNonSpaceColumnOnTheLine(editor, line);
     if (firstNonSpaceColumnOnTheLine == -1) return false;
     final Point point = editor.visualPositionToXY(new VisualPosition(line, firstNonSpaceColumnOnTheLine));
-    return point.x > AllIcons.Actions.RealIntentionBulb.getIconWidth() + (editor.isOneLineMode() ? SMALL_BORDER_SIZE : NORMAL_BORDER_SIZE) * 2;
+    return point.x > AllIcons.Actions.RealIntentionBulb.getWidth() + (editor.isOneLineMode() ? SMALL_BORDER_SIZE : NORMAL_BORDER_SIZE) * 2;
   }
 
   private IntentionHintComponent(@Nonnull Project project, @Nonnull PsiFile file, @Nonnull final Editor editor, @Nonnull CachedIntentions cachedIntentions) {
@@ -314,12 +316,12 @@ public class IntentionHintComponent implements Disposable, ScrollAwareHint {
     boolean showRefactoringsBulb = ContainerUtil.exists(cachedIntentions.getInspectionFixes(), descriptor -> descriptor.getAction() instanceof BaseRefactoringIntentionAction);
     boolean showFix = !showRefactoringsBulb && ContainerUtil.exists(cachedIntentions.getErrorFixes(), descriptor -> IntentionManagerSettings.getInstance().isShowLightBulb(descriptor.getAction()));
 
-    Icon smartTagIcon = showRefactoringsBulb ? AllIcons.Actions.RefactoringBulb : showFix ? AllIcons.Actions.QuickfixBulb : AllIcons.Actions.IntentionBulb;
+    Image smartTagIcon = showRefactoringsBulb ? AllIcons.Actions.RefactoringBulb : showFix ? AllIcons.Actions.QuickfixBulb : AllIcons.Actions.IntentionBulb;
 
-    myHighlightedIcon = new RowIcon(smartTagIcon, AllIcons.General.ArrowDown);
-    myInactiveIcon = new RowIcon(smartTagIcon, ourInactiveArrowIcon);
+    myHighlightedIcon = ImageEffects.appendRight(smartTagIcon, AllIcons.General.ArrowDown);
+    myInactiveIcon = ImageEffects.appendRight(smartTagIcon, ourInactiveArrowIcon);
 
-    myIconLabel = new JLabel(myInactiveIcon);
+    myIconLabel = new JBLabel(myInactiveIcon);
     myIconLabel.setOpaque(false);
 
     myPanel.add(myIconLabel, BorderLayout.CENTER);
@@ -364,13 +366,13 @@ public class IntentionHintComponent implements Disposable, ScrollAwareHint {
   private void onMouseExit(final boolean small) {
     Window ancestor = SwingUtilities.getWindowAncestor(myPopup.getContent());
     if (ancestor == null) {
-      myIconLabel.setIcon(myInactiveIcon);
+      myIconLabel.setIcon(TargetAWT.to(myInactiveIcon));
       myPanel.setBorder(small ? INACTIVE_BORDER_SMALL : INACTIVE_BORDER);
     }
   }
 
   private void onMouseEnter(final boolean small) {
-    myIconLabel.setIcon(myHighlightedIcon);
+    myIconLabel.setIcon(TargetAWT.to(myHighlightedIcon));
     myPanel.setBorder(small ? createActiveBorderSmall() : createActiveBorder());
 
     String acceleratorsText = KeymapUtil.getFirstKeyboardShortcutText(ActionManager.getInstance().getAction(IdeActions.ACTION_SHOW_INTENTION_ACTIONS));

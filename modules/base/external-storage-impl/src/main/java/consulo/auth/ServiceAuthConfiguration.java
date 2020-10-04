@@ -63,7 +63,7 @@ public class ServiceAuthConfiguration implements PersistentStateComponent<Servic
     }
 
     // get node size
-    int size = (int)Math.ceil(AllIcons.Actions.Find.getIconHeight() * JBUI.sysScale());
+    int size = (int)Math.ceil(Image.DEFAULT_ICON_SIZE * JBUI.sysScale());
     Application.get().executeOnPooledThread(() -> {
       String emailHash = DigestUtils.md5Hex(email.toLowerCase().trim());
 

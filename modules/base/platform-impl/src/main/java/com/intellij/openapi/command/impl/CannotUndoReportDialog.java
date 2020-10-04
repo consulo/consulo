@@ -22,6 +22,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.vfs.VirtualFile;
+import consulo.awt.TargetAWT;
 import org.jetbrains.annotations.Nls;
 import javax.annotation.Nonnull;
 
@@ -55,7 +56,7 @@ public class CannotUndoReportDialog extends DialogWrapper {
     setTitle(CommonBundle.message("cannot.undo.dialog.title"));
 
     myProblemMessageLabel.setText(problemText);
-    myProblemMessageLabel.setIcon(Messages.getErrorIcon());
+    myProblemMessageLabel.setIcon(TargetAWT.to(Messages.getErrorIcon()));
 
     init();
   }

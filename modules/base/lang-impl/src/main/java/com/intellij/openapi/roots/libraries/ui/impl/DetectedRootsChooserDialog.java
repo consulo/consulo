@@ -29,6 +29,7 @@ import com.intellij.ui.treeStructure.treetable.TreeColumnInfo;
 import com.intellij.util.ui.ColumnInfo;
 import com.intellij.util.ui.ComboBoxCellEditor;
 import com.intellij.util.ui.tree.TreeUtil;
+import consulo.ui.image.Image;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nullable;
 
@@ -143,7 +144,7 @@ public class DetectedRootsChooserDialog extends DialogWrapper {
         VirtualFile file = node.getFile();
         String text;
         SimpleTextAttributes attributes;
-        Icon icon;
+        Image icon;
         boolean isValid = true;
         if (leaf) {
           VirtualFile ancestor = ((VirtualFileCheckedTreeNode)node.getParent()).getFile();

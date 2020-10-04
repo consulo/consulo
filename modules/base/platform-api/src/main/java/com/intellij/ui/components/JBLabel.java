@@ -54,10 +54,10 @@ public class JBLabel extends JLabel implements AnchorableComponent {
     setComponentStyle(componentStyle);
   }
 
-  public JBLabel(@Nullable Icon image) {
-    super(image);
+  public JBLabel(@Nullable Image image) {
+    super(TargetAWT.to(image));
   }
-
+  
   public JBLabel(@Nonnull String text) {
     super(text);
   }
@@ -77,12 +77,12 @@ public class JBLabel extends JLabel implements AnchorableComponent {
     super(text, horizontalAlignment);
   }
 
-  public JBLabel(@Nullable Icon image, @JdkConstants.HorizontalAlignment int horizontalAlignment) {
-    super(image, horizontalAlignment);
+  public JBLabel(@Nullable Image image, @JdkConstants.HorizontalAlignment int horizontalAlignment) {
+    super(TargetAWT.to(image), horizontalAlignment);
   }
 
-  public JBLabel(@Nonnull String text, @Nullable Icon icon, @JdkConstants.HorizontalAlignment int horizontalAlignment) {
-    super(text, icon, horizontalAlignment);
+  public JBLabel(@Nonnull String text, @Nullable Image icon, @JdkConstants.HorizontalAlignment int horizontalAlignment) {
+    super(text, TargetAWT.to(icon), horizontalAlignment);
   }
 
   public void setComponentStyle(@Nonnull UIUtil.ComponentStyle componentStyle) {

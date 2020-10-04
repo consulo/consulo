@@ -1094,7 +1094,7 @@ public abstract class JBTabsImpl extends JComponent
 
   private void updateIcon(final TabInfo tabInfo) {
     updateTab(() -> {
-      myInfo2Label.get(tabInfo).setIcon(TargetAWT.to(tabInfo.getIcon()));
+      myInfo2Label.get(tabInfo).setIcon(tabInfo.getIcon());
       return true;
     }, tabInfo);
   }

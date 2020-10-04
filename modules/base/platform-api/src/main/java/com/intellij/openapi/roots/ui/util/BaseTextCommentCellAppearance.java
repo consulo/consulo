@@ -19,15 +19,15 @@ import com.intellij.openapi.roots.ui.CellAppearanceEx;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.SimpleColoredComponent;
 import com.intellij.ui.SimpleTextAttributes;
+import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
-import javax.swing.*;
 
 public abstract class BaseTextCommentCellAppearance implements CellAppearanceEx {
   private SimpleTextAttributes myCommentAttributes = SimpleTextAttributes.GRAY_ATTRIBUTES;
   private SimpleTextAttributes myTextAttributes = SimpleTextAttributes.REGULAR_ATTRIBUTES;
 
-  protected abstract Icon getIcon();
+  protected abstract Image getIcon();
 
   protected abstract String getSecondaryText();
 

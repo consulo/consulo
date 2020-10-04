@@ -12,6 +12,7 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.actionSystem.ex.AnActionListener;
 import com.intellij.openapi.application.ApplicationManager;
+import consulo.awt.TargetAWT;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
 import com.intellij.openapi.ui.GraphicsConfig;
@@ -736,9 +737,9 @@ public class BalloonImpl implements Balloon, IdeTooltip.Ui, ScreenAreaConsumer {
             return;
           }
 
-          Icon icon = getCloseButton();
-          int iconWidth = icon.getIconWidth();
-          int iconHeight = icon.getIconHeight();
+          consulo.ui.image.Image icon = getCloseButton();
+          int iconWidth = icon.getWidth();
+          int iconHeight = icon.getHeight();
           Insets borderInsets = getShadowBorderInsets();
 
           myCloseButton.setBounds(lpBounds.x + lpBounds.width - iconWidth - borderInsets.right - JBUIScale.scale(8), lpBounds.y + borderInsets.top + JBUIScale.scale(6), iconWidth, iconHeight);
@@ -1101,7 +1102,7 @@ public class BalloonImpl implements Balloon, IdeTooltip.Ui, ScreenAreaConsumer {
     myShowPointer = show;
   }
 
-  public Icon getCloseButton() {
+  public consulo.ui.image.Image getCloseButton() {
     return AllIcons.Ide.Notification.Close;
   }
 
@@ -1611,12 +1612,12 @@ public class BalloonImpl implements Balloon, IdeTooltip.Ui, ScreenAreaConsumer {
   }
 
   public class ActionButton extends NonOpaquePanel implements IdeGlassPane.TopComponent {
-    private final Icon myIcon;
-    private final Icon myHoverIcon;
+    private final consulo.ui.image.Image myIcon;
+    private final consulo.ui.image.Image myHoverIcon;
     private final Consumer<? super MouseEvent> myListener;
     protected final BaseButtonBehavior myButton;
 
-    public ActionButton(@Nonnull Icon icon, @Nullable Icon hoverIcon, @Nullable String hint, @Nonnull Consumer<? super MouseEvent> listener) {
+    public ActionButton(@Nonnull consulo.ui.image.Image icon, @Nullable consulo.ui.image.Image hoverIcon, @Nullable String hint, @Nonnull Consumer<? super MouseEvent> listener) {
       myIcon = icon;
       myHoverIcon = hoverIcon;
       myListener = listener;
@@ -1633,7 +1634,7 @@ public class BalloonImpl implements Balloon, IdeTooltip.Ui, ScreenAreaConsumer {
 
     @Override
     public Dimension getPreferredSize() {
-      return new Dimension(myIcon.getIconWidth(), myIcon.getIconHeight());
+      return new Dimension(myIcon.getWidth(), myIcon.getHeight());
     }
 
     @Override
@@ -1648,8 +1649,8 @@ public class BalloonImpl implements Balloon, IdeTooltip.Ui, ScreenAreaConsumer {
       return getWidth() > 0 && myLastMoveWasInsideBalloon;
     }
 
-    protected void paintIcon(@Nonnull Graphics g, @Nonnull Icon icon) {
-      icon.paintIcon(this, g, 0, 0);
+    protected void paintIcon(@Nonnull Graphics g, @Nonnull consulo.ui.image.Image icon) {
+      TargetAWT.to(icon).paintIcon(this, g, 0, 0);
     }
 
     @Override
@@ -1665,10 +1666,10 @@ public class BalloonImpl implements Balloon, IdeTooltip.Ui, ScreenAreaConsumer {
     }
 
     @Override
-    protected void paintIcon(@Nonnull Graphics g, @Nonnull Icon icon) {
+    protected void paintIcon(@Nonnull Graphics g, @Nonnull consulo.ui.image.Image icon) {
       if (myEnableButtons) {
         final boolean pressed = myButton.isPressedByMouse();
-        icon.paintIcon(this, g, pressed ? JBUIScale.scale(1) : 0, pressed ? JBUIScale.scale(1) : 0);
+        TargetAWT.to(icon).paintIcon(this, g, pressed ? JBUIScale.scale(1) : 0, pressed ? JBUIScale.scale(1) : 0);
       }
     }
   }

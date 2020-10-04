@@ -52,6 +52,7 @@ import consulo.disposer.Disposer;
 import consulo.ui.AntialiasingType;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.desktop.internal.window.JDialogAsUIWindow;
+import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
 import net.miginfocom.swing.MigLayout;
 
@@ -927,7 +928,7 @@ public class UiInspectorAction extends ToggleAction implements DumbAware {
         Color insideColor = getBorderColor(((CompoundBorder)value).getInsideBorder());
         Color outsideColor = getBorderColor(((CompoundBorder)value).getOutsideBorder());
         if (insideColor != null && outsideColor != null) {
-          setIcon(createColorIcon(outsideColor, insideColor));
+          setIcon(TargetAWT.to(createColorIcon(outsideColor, insideColor)));
         }
         else if (insideColor != null) {
           setIcon(createColorIcon(insideColor));
@@ -1017,11 +1018,11 @@ public class UiInspectorAction extends ToggleAction implements DumbAware {
     return JBUI.scale(new ColorIcon(13, 11, color, true));
   }
 
-  private static Icon createColorIcon(Color color1, @Nullable Color color2) {
+  private static Image createColorIcon(Color color1, @Nullable Color color2) {
     if (color2 == null) {
-      return TargetAWT.to(ImageEffects.colorFilled(11, 11, TargetAWT.from(color1)));
+      return ImageEffects.colorFilled(11, 11, TargetAWT.from(color1));
     }
-    return TargetAWT.to(ImageEffects.twoColorFilled(11, 11, TargetAWT.from(color1), TargetAWT.from(color2)));
+    return ImageEffects.twoColorFilled(11, 11, TargetAWT.from(color1), TargetAWT.from(color2));
   }
 
 

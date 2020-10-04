@@ -18,8 +18,7 @@ package com.intellij.openapi.roots.ui.util;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.newvfs.ArchiveFileSystem;
-
-import javax.swing.*;
+import consulo.ui.image.Image;
 
 public class JarSubfileCellAppearance extends ValidFileCellAppearance {
   public JarSubfileCellAppearance(VirtualFile file) {
@@ -27,7 +26,7 @@ public class JarSubfileCellAppearance extends ValidFileCellAppearance {
   }
 
   @Override
-  protected Icon getIcon() {
+  protected Image getIcon() {
     return AllIcons.FileTypes.Archive;
   }
 

@@ -16,9 +16,12 @@
 package com.intellij.ui;
 
 import com.intellij.openapi.vcs.changes.RefreshablePanel;
+import com.intellij.ui.components.JBLabel;
 import com.intellij.util.ui.UIUtil;
-import javax.annotation.Nonnull;
+import consulo.awt.TargetAWT;
+import consulo.ui.image.Image;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
@@ -36,17 +39,17 @@ public abstract class AbstractTitledSeparatorWithIcon extends JPanel {
   private String originalText;
   protected final JPanel myWrapper;
   protected boolean myOn;
-  protected final Icon myIcon;
-  protected final Icon myIconOpen;
+  protected final Image myIcon;
+  protected final Image myIconOpen;
   protected final JSeparator mySeparator;
 
-  public AbstractTitledSeparatorWithIcon(@Nonnull final Icon icon,
-                                         @Nonnull final Icon iconOpen,
+  public AbstractTitledSeparatorWithIcon(@Nonnull final Image icon,
+                                         @Nonnull final Image iconOpen,
                                          @Nonnull final String text) {
     myIcon = icon;
     myIconOpen = iconOpen;
     setLayout(new GridBagLayout());
-    myLabel = new JLabel(icon);
+    myLabel = new JBLabel(icon);
     add(myLabel, new GridBagConstraints(0, 0, 1, 1, 0, 0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 0, 0, 8), 0, 0));
     Color oldColor = UIManager.getColor("Separator.foreground");
     UIManager.put("Separator.foreground", UIUtil.getBorderColor());
@@ -109,14 +112,14 @@ public abstract class AbstractTitledSeparatorWithIcon extends JPanel {
   public void on() {
     initDetails();
     myOn = true;
-    myLabel.setIcon(myIconOpen);
+    myLabel.setIcon(TargetAWT.to(myIconOpen));
     onImpl();
   }
 
   public void initOn() {
     initDetails();
     myOn = true;
-    myLabel.setIcon(myIconOpen);
+    myLabel.setIcon(TargetAWT.to(myIconOpen));
     initOnImpl();
   }
 
@@ -124,7 +127,7 @@ public abstract class AbstractTitledSeparatorWithIcon extends JPanel {
 
   public void off() {
     myOn = false;
-    myLabel.setIcon(myIcon);
+    myLabel.setIcon(TargetAWT.to(myIcon));
     offImpl();
   }
 

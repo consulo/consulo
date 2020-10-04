@@ -140,7 +140,7 @@ public class HyperlinkLabel extends HighlightableComponent {
   }
 
   private boolean isOnLink(int x) {
-    if (myUseIconAsLink && myIcon != null && x < myIcon.getIconWidth()) {
+    if (myUseIconAsLink && myIcon != null && x < myIcon.getWidth()) {
       return true;
     }
     final HighlightedRegion region = findRegionByX(x);

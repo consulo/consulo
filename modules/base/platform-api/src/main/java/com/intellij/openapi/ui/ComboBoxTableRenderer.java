@@ -72,8 +72,8 @@ public class ComboBoxTableRenderer<T> extends JLabel implements TableCellRendere
   }
 
   private static Dimension addIconSize(final Dimension d) {
-    return new Dimension(d.width + AllIcons.General.ArrowDown.getIconWidth() + JBUI.scale(2),
-                         Math.max(d.height, AllIcons.General.ArrowDown.getIconHeight()));
+    return new Dimension(d.width + AllIcons.General.ArrowDown.getWidth() + JBUI.scale(2),
+                         Math.max(d.height, AllIcons.General.ArrowDown.getHeight()));
   }
 
   protected String getTextFor(@Nonnull T value) {
@@ -106,9 +106,9 @@ public class ComboBoxTableRenderer<T> extends JLabel implements TableCellRendere
     if (!StringUtil.isEmpty(getText()) && myPaintArrow) {
       final Rectangle r = getBounds();
       final Insets i = getInsets();
-      final int x = r.width - i.right - AllIcons.General.ArrowDown.getIconWidth();
-      final int y = i.top + (r.height - i.top - i.bottom - AllIcons.General.ArrowDown.getIconHeight()) / 2;
-      AllIcons.General.ArrowDown.paintIcon(this, g, x, y);
+      final int x = r.width - i.right - AllIcons.General.ArrowDown.getWidth();
+      final int y = i.top + (r.height - i.top - i.bottom - AllIcons.General.ArrowDown.getHeight()) / 2;
+      TargetAWT.to(AllIcons.General.ArrowDown).paintIcon(this, g, x, y);
     }
   }
 

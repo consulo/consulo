@@ -11,6 +11,7 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.ui.MessageType;
 import com.intellij.openapi.util.Condition;
 import com.intellij.ui.awt.RelativePoint;
+import consulo.ui.image.Image;
 import org.jetbrains.annotations.Nls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -400,12 +401,12 @@ public abstract class JBPopupFactory {
   public abstract BalloonBuilder createDialogBalloonBuilder(@Nonnull JComponent content, String title);
 
   @Nonnull
-  public BalloonBuilder createHtmlTextBalloonBuilder(@Nonnull String htmlContent, @Nullable Icon icon, Color fillColor, @Nullable HyperlinkListener listener) {
+  public BalloonBuilder createHtmlTextBalloonBuilder(@Nonnull String htmlContent, @Nullable Image icon, Color fillColor, @Nullable HyperlinkListener listener) {
     return createHtmlTextBalloonBuilder(htmlContent, icon, null, fillColor, listener);
   }
 
   @Nonnull
-  public abstract BalloonBuilder createHtmlTextBalloonBuilder(@Nonnull String htmlContent, @Nullable Icon icon, Color textColor, Color fillColor, @Nullable HyperlinkListener listener);
+  public abstract BalloonBuilder createHtmlTextBalloonBuilder(@Nonnull String htmlContent, @Nullable Image icon, Color textColor, Color fillColor, @Nullable HyperlinkListener listener);
 
   @Nonnull
   public abstract BalloonBuilder createHtmlTextBalloonBuilder(@Nonnull String htmlContent, MessageType messageType, @Nullable HyperlinkListener listener);

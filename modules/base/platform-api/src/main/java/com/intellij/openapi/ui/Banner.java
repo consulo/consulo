@@ -19,6 +19,7 @@ import com.intellij.icons.AllIcons;
 import com.intellij.openapi.options.OptionsBundle;
 import com.intellij.openapi.project.Project;
 import com.intellij.ui.JBColor;
+import com.intellij.ui.components.JBLabel;
 import com.intellij.ui.components.labels.LinkLabel;
 import com.intellij.ui.components.labels.LinkListener;
 import com.intellij.ui.components.panels.NonOpaquePanel;
@@ -37,7 +38,7 @@ import java.util.Set;
 class Banner extends NonOpaquePanel implements PropertyChangeListener {
   private int myBannerMinHeight;
   private final JComponent myText = new MyText();
-  private final JLabel myProjectIcon = new JLabel(AllIcons.General.ProjectConfigurableBanner, SwingConstants.LEFT);
+  private final JLabel myProjectIcon = new JBLabel(AllIcons.General.ProjectConfigurableBanner, SwingConstants.LEFT);
   private final NonOpaquePanel myActionsPanel = new NonOpaquePanel(new FlowLayout(FlowLayout.RIGHT, 2, 2));
 
   private final Map<Action, LinkLabel> myActions = new HashMap<Action, LinkLabel>();
@@ -133,7 +134,7 @@ class Banner extends NonOpaquePanel implements PropertyChangeListener {
       eachLabel.setFont(eachLabel.getFont().deriveFont(Font.BOLD, eachLabel.getFont().getSize()));
       myText.add(eachLabel);
       if (i < text.length - 1) {
-        final JLabel eachIcon = new JLabel(AllIcons.General.ComboArrowRight, SwingConstants.CENTER);
+        final JLabel eachIcon = new JBLabel(AllIcons.General.ComboArrowRight, SwingConstants.CENTER);
         eachIcon.setBorder(new EmptyBorder(0, 0, 0, gap));
         myText.add(eachIcon);
       }

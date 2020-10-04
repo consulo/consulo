@@ -19,6 +19,7 @@ import com.intellij.icons.AllIcons;
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.ui.UISettings;
 import com.intellij.openapi.application.ApplicationNamesInfo;
+import consulo.awt.TargetAWT;
 import consulo.container.plugin.PluginId;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.text.StringUtil;
@@ -92,7 +93,7 @@ public class PluginsTableRenderer extends DefaultTableCellRenderer {
     final Color grayedFg = isSelected ? fg : new JBColor(Gray._130, Gray._120);
     myName.setForeground(fg);
     myStatus.setForeground(grayedFg);
-    myStatus.setIcon(AllIcons.Nodes.Plugin);
+    myStatus.setIcon(TargetAWT.to(AllIcons.Nodes.Plugin));
     String category = myPluginDescriptor.getCategory();
     myCategory.setForeground(grayedFg);
     if (category != null) {
@@ -137,7 +138,7 @@ public class PluginsTableRenderer extends DefaultTableCellRenderer {
         if (!isSelected) {
           myName.setForeground(FileStatus.MODIFIED.getColor());
         }
-        myStatus.setIcon(AllIcons.Nodes.Pluginobsolete);
+        myStatus.setIcon(TargetAWT.to(AllIcons.Nodes.Pluginobsolete));
       }
     }
 

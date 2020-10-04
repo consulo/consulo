@@ -24,11 +24,10 @@ import com.intellij.openapi.roots.ContentEntry;
 import com.intellij.openapi.roots.ContentFolder;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
-import consulo.ui.annotation.RequiredUIAccess;
-import consulo.awt.TargetAWT;
 import consulo.module.extension.ModuleExtension;
 import consulo.psi.PsiPackageSupportProvider;
 import consulo.roots.ContentFolderScopes;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
@@ -57,7 +56,7 @@ public class ContentEntryTreeCellRenderer extends NodeRenderer {
           if (file != null && file.isDirectory()) {
             final ContentEntry contentEntry = editor.getContentEntry();
             if (contentEntry != null) {
-              setIcon(updateIcon(contentEntry, file, TargetAWT.from(getIcon())));
+              setIcon(updateIcon(contentEntry, file, getIcon()));
             }
           }
         }

@@ -21,6 +21,7 @@ import com.intellij.openapi.ui.PseudoSplitter;
 import com.intellij.openapi.ui.Splitter;
 import com.intellij.openapi.vcs.changes.RefreshablePanel;
 import com.intellij.util.ui.JBUI;
+import consulo.ui.image.Image;
 
 import javax.swing.*;
 import java.awt.*;
@@ -48,8 +49,8 @@ public abstract class SplitterWithSecondHideable {
                                     OnOffListener<Integer> listener) {
     myListener = listener;
     myFictivePanel = new JPanel(new BorderLayout());
-    Icon icon;
-    Icon openIcon;
+    Image icon;
+    Image openIcon;
     if (vertical) {
       icon = AllIcons.General.ComboArrowRight;
       openIcon = AllIcons.General.ComboArrowDown;

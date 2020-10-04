@@ -58,6 +58,7 @@ import com.intellij.util.ui.update.Activatable;
 import com.intellij.util.ui.update.UiNotifyConnector;
 import consulo.disposer.util.DisposerUtil;
 import consulo.logging.Logger;
+import consulo.ui.image.Image;
 import consulo.util.dataholder.Key;
 import org.jetbrains.annotations.TestOnly;
 
@@ -1216,7 +1217,7 @@ public class LookupImpl extends LightweightHint implements LookupEx, Disposable,
     requestResize();
   }
 
-  public void addAdvertisement(@Nonnull String text, @Nullable Icon icon) {
+  public void addAdvertisement(@Nonnull String text, @Nullable Image icon) {
     if (!containsDummyIdentifier(text)) {
       myAdComponent.addAdvertisement(text, icon);
       requestResize();

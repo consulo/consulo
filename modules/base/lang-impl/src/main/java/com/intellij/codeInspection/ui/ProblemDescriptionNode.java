@@ -24,10 +24,10 @@ import com.intellij.icons.AllIcons;
 import com.intellij.openapi.vcs.FileStatus;
 import com.intellij.psi.PsiElement;
 import com.intellij.xml.util.XmlStringUtil;
-import javax.annotation.Nonnull;
+import consulo.ui.image.Image;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.swing.*;
 
 import static com.intellij.codeInspection.ProblemDescriptorUtil.APPEND_LINE_NUMBER;
 import static com.intellij.codeInspection.ProblemDescriptorUtil.TRIM_AT_TREE_END;
@@ -78,7 +78,7 @@ public class ProblemDescriptionNode extends InspectionTreeNode {
   }
 
   @Override
-  public Icon getIcon() {
+  public Image getIcon() {
     if (myDescriptor instanceof ProblemDescriptorBase) {
       ProblemHighlightType problemHighlightType = ((ProblemDescriptorBase)myDescriptor).getHighlightType();
       if (problemHighlightType == ProblemHighlightType.ERROR) return AllIcons.General.Error;

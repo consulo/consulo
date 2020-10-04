@@ -398,8 +398,8 @@ public class GlassPaneDialogWrapperPeer extends DialogWrapperPeer {
     private MyDialog(IdeGlassPaneEx pane, DialogWrapper wrapper, Project project) {
       setLayout(new BorderLayout());
       setOpaque(false);
-      setBorder(BorderFactory.createEmptyBorder(AllIcons.Ide.Shadow.Top.getIconHeight(), AllIcons.Ide.Shadow.Left.getIconWidth(), AllIcons.Ide.Shadow.Bottom.getIconHeight(),
-                                                AllIcons.Ide.Shadow.Right.getIconWidth()));
+      setBorder(BorderFactory.createEmptyBorder(AllIcons.Ide.Shadow.Top.getHeight(), AllIcons.Ide.Shadow.Left.getWidth(), AllIcons.Ide.Shadow.Bottom.getHeight(),
+                                                AllIcons.Ide.Shadow.Right.getWidth()));
 
       myPane = pane;
       myDialogWrapper = new WeakReference<>(wrapper);

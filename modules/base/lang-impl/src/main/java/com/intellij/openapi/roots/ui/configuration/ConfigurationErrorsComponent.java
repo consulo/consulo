@@ -27,6 +27,8 @@ import com.intellij.util.ui.BaseButtonBehavior;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.TimedDeadzone;
 import com.intellij.util.ui.UIUtil;
+import consulo.awt.TargetAWT;
+import consulo.ui.image.Image;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 
@@ -98,15 +100,15 @@ public class ConfigurationErrorsComponent extends JPanel {
 
   private abstract static class ToolbarAlikeButton extends JComponent {
     private BaseButtonBehavior myBehavior;
-    private Icon myIcon;
+    private Image myIcon;
     private String myName;
 
-    ToolbarAlikeButton(@Nonnull final Icon icon, @Nonnull final String name) {
+    ToolbarAlikeButton(@Nonnull final Image icon, @Nonnull final String name) {
       this(icon);
       myName = name;
     }
 
-    ToolbarAlikeButton(@Nonnull final Icon icon) {
+    ToolbarAlikeButton(@Nonnull final Image icon) {
       myIcon = icon;
 
       myBehavior = new BaseButtonBehavior(this, TimedDeadzone.NULL) {
@@ -139,7 +141,7 @@ public class ConfigurationErrorsComponent extends JPanel {
     @Override
     public Dimension getMinimumSize() {
       final Insets insets = getInsets();
-      return new Dimension(myIcon.getIconWidth() + insets.left + insets.right, myIcon.getIconHeight() + insets.top + insets.bottom);
+      return new Dimension(myIcon.getWidth() + insets.left + insets.right, myIcon.getHeight() + insets.top + insets.bottom);
     }
 
     @Override
@@ -147,8 +149,8 @@ public class ConfigurationErrorsComponent extends JPanel {
       final Insets insets = getInsets();
       final Dimension d = getSize();
 
-      int x = (d.width - myIcon.getIconWidth() - insets.left - insets.right) / 2;
-      int y = (d.height - myIcon.getIconHeight() - insets.top - insets.bottom) / 2;
+      int x = (d.width - myIcon.getWidth() - insets.left - insets.right) / 2;
+      int y = (d.height - myIcon.getHeight() - insets.top - insets.bottom) / 2;
 
       if (myBehavior.isHovered()) {
         // todo
@@ -159,7 +161,7 @@ public class ConfigurationErrorsComponent extends JPanel {
         y += 1;
       }
 
-      myIcon.paintIcon(this, g, x + insets.left, y + insets.top);
+      TargetAWT.to(myIcon).paintIcon(this, g, x + insets.left, y + insets.top);
     }
   }
 

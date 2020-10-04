@@ -21,6 +21,7 @@ import com.intellij.ide.ui.UISettings;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataProvider;
 import com.intellij.openapi.application.ApplicationManager;
+import consulo.awt.TargetAWT;
 import consulo.logging.Logger;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.ScrollType;
@@ -108,7 +109,7 @@ public class DesktopEditorWindow extends EditorWindowBase implements EditorWindo
     public int getIconHeight() {
       return 9;
     }
-  } : AllIcons.General.Modified;
+  } : TargetAWT.to(AllIcons.General.Modified);
   private static final Icon GAP_ICON = EmptyIcon.create(MODIFIED_ICON);
 
   private boolean myIsDisposed;
@@ -674,8 +675,8 @@ public class DesktopEditorWindow extends EditorWindowBase implements EditorWindo
         }
 
         final VirtualFile file = editor.getFile();
-        final Icon template = AllIcons.FileTypes.Text;
-        myTabbedPane.insertTab(file, Image.empty(template.getIconWidth(), template.getIconHeight()), new TComp(this, (DesktopEditorWithProviderComposite)editor), null, indexToInsert);
+        final Image template = AllIcons.FileTypes.Text;
+        myTabbedPane.insertTab(file, Image.empty(template.getWidth(), template.getHeight()), new TComp(this, (DesktopEditorWithProviderComposite)editor), null, indexToInsert);
         trimToSize(UISettings.getInstance().getEditorTabLimit(), file, false);
         if (selectEditor) {
           setSelectedEditor((DesktopEditorWithProviderComposite)editor, focusEditor);

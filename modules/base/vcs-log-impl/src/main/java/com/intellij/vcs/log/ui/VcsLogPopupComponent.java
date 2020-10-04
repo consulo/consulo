@@ -22,10 +22,11 @@ import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.ui.popup.ListPopup;
 import com.intellij.ui.ClickListener;
 import com.intellij.ui.RoundedLineBorder;
+import com.intellij.ui.components.JBLabel;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.event.*;
@@ -61,7 +62,7 @@ public abstract class VcsLogPopupComponent extends JPanel {
     add(myNameLabel);
     add(myValueLabel);
     add(Box.createHorizontalStrut(GAP_BEFORE_ARROW));
-    add(new JLabel(AllIcons.Ide.Statusbar_arrows));
+    add(new JBLabel(AllIcons.Ide.Statusbar_arrows));
 
     installChangeListener(() -> {
       myValueLabel.revalidate();

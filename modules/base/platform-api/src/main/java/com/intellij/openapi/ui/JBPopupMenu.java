@@ -8,8 +8,9 @@ import com.intellij.ui.ScreenUtil;
 import com.intellij.util.ui.GraphicsUtil;
 import com.intellij.util.ui.TimerUtil;
 import com.intellij.util.ui.UIUtil;
-import javax.annotation.Nonnull;
+import consulo.awt.TargetAWT;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
@@ -174,14 +175,15 @@ public class JBPopupMenu extends JPopupMenu {
           g.setColor(dim[i]);
           g.drawLine(0, i, myTarget.getWidth(), i);
         }
-        AllIcons.General.SplitUp.paintIcon(myTarget, g, myTarget.getWidth() / 2 - AllIcons.General.SplitUp.getIconWidth() / 2, 0);
+        TargetAWT.to(AllIcons.General.SplitUp).paintIcon(myTarget, g, myTarget.getWidth() / 2 - AllIcons.General.SplitUp.getWidth() / 2, 0);
       }
       if (super.preferredLayoutSize(myTarget).height - getMaxHeight() - myShift > 0) {
         for (int i = 0; i < dim.length; i++) {
           g.setColor(dim[i]);
           g.drawLine(0, myTarget.getHeight() - i, myTarget.getWidth(), myTarget.getHeight() - i);
         }
-        AllIcons.General.ArrowDown.paintIcon(myTarget, g, myTarget.getWidth() / 2 - AllIcons.General.ArrowDown.getIconWidth() / 2, myTarget.getHeight() - AllIcons.General.ArrowDown.getIconHeight());
+        TargetAWT.to(AllIcons.General.ArrowDown)
+                .paintIcon(myTarget, g, myTarget.getWidth() / 2 - AllIcons.General.ArrowDown.getWidth() / 2, myTarget.getHeight() - AllIcons.General.ArrowDown.getHeight());
       }
     }
 

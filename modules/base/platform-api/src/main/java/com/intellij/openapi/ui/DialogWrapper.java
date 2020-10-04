@@ -20,6 +20,7 @@ import com.intellij.icons.AllIcons;
 import com.intellij.ide.ui.UISettings;
 import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.idea.ActionsBundle;
+import consulo.awt.TargetAWT;
 import consulo.disposer.Disposable;
 import com.intellij.openapi.MnemonicHelper;
 import com.intellij.openapi.actionSystem.*;
@@ -2434,11 +2435,11 @@ public abstract class DialogWrapper {
           switch (getErrorPaintingType()) {
             case DOT:
               p = SwingUtilities.convertPoint(i.component, 2, h / 2, component);
-              AllIcons.Ide.ErrorPoint.paintIcon(component, g, p.x, p.y);
+              TargetAWT.to(AllIcons.Ide.ErrorPoint).paintIcon(component, g, p.x, p.y);
               break;
             case SIGN:
               p = SwingUtilities.convertPoint(i.component, w, 0, component);
-              AllIcons.General.Error.paintIcon(component, g, p.x - 8, p.y - 8);
+              TargetAWT.to(AllIcons.General.Error).paintIcon(component, g, p.x - 8, p.y - 8);
               break;
             case LINE:
               p = SwingUtilities.convertPoint(i.component, 0, h, component);

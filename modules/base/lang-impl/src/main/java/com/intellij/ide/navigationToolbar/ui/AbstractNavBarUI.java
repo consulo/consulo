@@ -13,6 +13,8 @@ import com.intellij.ui.scale.JBUIScale;
 import com.intellij.util.ui.JBInsets;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
+import consulo.awt.TargetAWT;
+import consulo.ui.image.Image;
 import gnu.trove.THashMap;
 import javax.annotation.Nonnull;
 
@@ -109,11 +111,11 @@ public abstract class AbstractNavBarUI implements NavBarUI {
     final int offset = item.isFirstElement() ? getFirstElementLeftOffset() : 0;
     int textOffset = getElementPadding().width() + offset;
     if (item.needPaintIcon()) {
-      Icon icon = item.getIcon();
+      Image icon = item.getIcon();
       if (icon != null) {
         int iconOffset = getElementPadding().left + offset;
-        icon.paintIcon(item, g, iconOffset, (item.getHeight() - icon.getIconHeight()) / 2);
-        textOffset += icon.getIconWidth();
+        TargetAWT.to(icon).paintIcon(item, g, iconOffset, (item.getHeight() - icon.getHeight()) / 2);
+        textOffset += icon.getWidth();
       }
     }
 
@@ -192,7 +194,7 @@ public abstract class AbstractNavBarUI implements NavBarUI {
 
     if (!item.isLastElement()) {
       if (!selected && (!navbar.isFocused() | !item.isNextSelected())) {
-        Icon icon = AllIcons.Ide.NavBarSeparator;
+        Icon icon = TargetAWT.to(AllIcons.Ide.NavBarSeparator);
         icon.paintIcon(item, g2, w - icon.getIconWidth() - JBUIScale.scale(1), h2 - icon.getIconHeight() / 2);
       }
     }

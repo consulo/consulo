@@ -23,13 +23,14 @@ import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.DefaultActionGroup;
 import com.intellij.openapi.ui.Divider;
 import com.intellij.openapi.ui.Splitter;
+import com.intellij.ui.components.JBLabel;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.GridBag;
 import com.intellij.util.ui.JBUI;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import consulo.ui.annotation.RequiredUIAccess;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;
@@ -66,7 +67,7 @@ public class DiffSplitter extends Splitter {
           add(Box.createVerticalStrut(JBUI.scale(20)), bag.nextLine());
         }
 
-        add(new JLabel(AllIcons.General.SplitGlueH), bag.nextLine());
+        add(new JBLabel(AllIcons.General.SplitGlueH), bag.nextLine());
 
         if (syncComponents.get(1) != null) {
           add(Box.createVerticalStrut(JBUI.scale(20)), bag.nextLine());

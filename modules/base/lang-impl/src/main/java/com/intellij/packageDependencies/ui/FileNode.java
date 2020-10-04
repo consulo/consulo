@@ -26,6 +26,8 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
 import consulo.awt.TargetAWT;
 import consulo.fileTypes.impl.VfsIconUtil;
+import consulo.ui.image.Image;
+
 import javax.annotation.Nullable;
 
 import javax.swing.*;
@@ -67,8 +69,8 @@ public class FileNode extends PackageDependenciesNode implements Comparable<File
   }
 
   @Override
-  public Icon getIcon() {
-    return TargetAWT.to(VfsIconUtil.getIcon(myVFile, Iconable.ICON_FLAG_VISIBILITY | Iconable.ICON_FLAG_READ_STATUS, myProject));
+  public Image getIcon() {
+    return VfsIconUtil.getIcon(myVFile, Iconable.ICON_FLAG_VISIBILITY | Iconable.ICON_FLAG_READ_STATUS, myProject);
   }
 
   @Override

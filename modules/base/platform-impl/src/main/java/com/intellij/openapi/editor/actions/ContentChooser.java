@@ -36,6 +36,8 @@ import com.intellij.util.Alarm;
 import com.intellij.util.Function;
 import com.intellij.util.ObjectUtil;
 import com.intellij.util.ui.UIUtil;
+import consulo.ui.image.Image;
+
 import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;
@@ -61,7 +63,7 @@ public abstract class ContentChooser<Data> extends DialogWrapper {
   private final Project    myProject;
   private final boolean    myAllowMultipleSelections;
   private final Alarm      myUpdateAlarm;
-  private Icon myListEntryIcon = AllIcons.FileTypes.Text;
+  private Image myListEntryIcon = AllIcons.FileTypes.Text;
 
   public ContentChooser(Project project, String title, boolean useIdeaEditor) {
     this(project, title, useIdeaEditor, false);
@@ -83,7 +85,7 @@ public abstract class ContentChooser<Data> extends DialogWrapper {
     init();
   }
 
-  public void setContentIcon(@Nullable Icon icon) {
+  public void setContentIcon(@Nullable Image icon) {
     myListEntryIcon = icon;
   }
 

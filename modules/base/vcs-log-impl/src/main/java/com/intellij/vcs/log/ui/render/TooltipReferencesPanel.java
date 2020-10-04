@@ -21,15 +21,15 @@ import com.intellij.ui.ColorUtil;
 import com.intellij.ui.components.JBLabel;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.ui.EmptyIcon;
 import com.intellij.util.ui.JBUI;
 import com.intellij.vcs.log.VcsRef;
 import com.intellij.vcs.log.VcsRefType;
 import com.intellij.vcs.log.data.VcsLogData;
 import com.intellij.vcs.log.ui.frame.ReferencesPanel;
+import consulo.ui.image.Image;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.awt.*;
 import java.util.Collection;
@@ -70,7 +70,7 @@ class TooltipReferencesPanel extends ReferencesPanel {
 
   @Nullable
   @Override
-  protected Icon createIcon(@Nonnull VcsRefType type, @Nonnull Collection<VcsRef> refs, int refIndex, int height) {
+  protected Image createIcon(@Nonnull VcsRefType type, @Nonnull Collection<VcsRef> refs, int refIndex, int height) {
     if (refIndex == 0) {
       Color color = type.getBackgroundColor();
       return new LabelIcon(height, getBackground(),
@@ -85,8 +85,8 @@ class TooltipReferencesPanel extends ReferencesPanel {
   }
 
   @Nonnull
-  private static Icon createEmptyIcon(int height) {
-    return EmptyIcon.create(LabelIcon.getWidth(height, 2), height);
+  private static consulo.ui.image.Image createEmptyIcon(int height) {
+    return consulo.ui.image.Image.empty(LabelIcon.getWidth(height, 2), height);
   }
 
   @Nonnull

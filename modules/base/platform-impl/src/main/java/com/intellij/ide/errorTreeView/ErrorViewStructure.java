@@ -30,11 +30,10 @@ import com.intellij.ui.CustomizeColoredTreeCellRenderer;
 import com.intellij.ui.SimpleColoredComponent;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.ui.MutableErrorTreeView;
-import consulo.awt.TargetAWT;
+import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.util.*;
 
@@ -449,7 +448,7 @@ public class ErrorViewStructure extends AbstractTreeStructure {
                                           boolean leaf,
                                           int row,
                                           boolean hasFocus) {
-          final Icon icon = TargetAWT.to(myVf.getFileType().getIcon());
+          final Image icon = myVf.getFileType().getIcon();
           renderer.setIcon(icon);
           final String[] messages = getText();
           final String text = messages == null || messages.length == 0 ? vf.getPath() : messages[0];
