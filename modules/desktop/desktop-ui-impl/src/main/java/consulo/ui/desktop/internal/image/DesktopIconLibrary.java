@@ -68,7 +68,7 @@ public class DesktopIconLibrary extends IconLibrary {
       }
     }
     else {
-      return new DesktopPngImageImpl(new DesktopPngImageImpl.ImageBytes(_1xData, null), new DesktopPngImageImpl.ImageBytes(_2xdata, null), width, height, null);
+      return new DesktopPngImageImpl(DesktopPngImageImpl.ImageBytes.of(_1xData), DesktopPngImageImpl.ImageBytes.of(_2xdata), width, height, null);
     }
   }
 }

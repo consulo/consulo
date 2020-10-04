@@ -24,6 +24,10 @@ public class DesktopPngImageImpl extends DesktopInnerImageImpl<DesktopPngImageIm
   private static final Logger LOG = Logger.getInstance(DesktopPngImageImpl.class);
 
   public static class ImageBytes {
+    public static ImageBytes of(@Nullable byte[] data) {
+      return data != null ? new ImageBytes(data, null) : null;
+    }
+
     private volatile byte[] myBytes;
     private BufferedImage myImage;
 
@@ -34,16 +38,16 @@ public class DesktopPngImageImpl extends DesktopInnerImageImpl<DesktopPngImageIm
 
     @Nullable
     public BufferedImage getOrLoad() {
-      if(myBytes == null && myImage == null) {
+      if (myBytes == null && myImage == null) {
         return null;
       }
 
-      if(myImage != null) {
+      if (myImage != null) {
         return myImage;
       }
 
       byte[] bytes = myBytes;
-      if(bytes != null) {
+      if (bytes != null) {
         try {
           BufferedImage image = ImageIO.read(new UnsyncByteArrayInputStream(bytes));
           myImage = image;
@@ -58,7 +62,7 @@ public class DesktopPngImageImpl extends DesktopInnerImageImpl<DesktopPngImageIm
       return myImage;
     }
   }
-  
+
   private final ImageBytes myX1Data;
   private final ImageBytes myX2Data;
 
@@ -97,14 +101,19 @@ public class DesktopPngImageImpl extends DesktopInnerImageImpl<DesktopPngImageIm
 
     JBHiDPIScaledImage image = new JBHiDPIScaledImage(bufferedImage, myWidth, myHeight, BufferedImage.TYPE_INT_ARGB);
 
-    image = image.scale(JBUI.scale(1f));
+    image = image.scale(getWidth(), getHeight());
 
     java.awt.Image toPaintImage = image;
     if (myFilter != null) {
       ImageFilter imageFilter = myFilter.get();
+      
       toPaintImage = ImageUtil.filter(toPaintImage, imageFilter);
 
       toPaintImage = ImageUtil.ensureHiDPI(toPaintImage, JBUI.ScaleContext.create(JBUI.Scale.create(getScale(JBUI.ScaleType.SYS_SCALE), JBUI.ScaleType.SYS_SCALE)));
+
+      if(toPaintImage instanceof JBHiDPIScaledImage) {
+        toPaintImage = ((JBHiDPIScaledImage)toPaintImage).scale(getWidth(), getHeight());
+      }
     }
     return toPaintImage;
   }
