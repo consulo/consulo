@@ -15,19 +15,11 @@
  */
 package icons;
 
-import com.intellij.openapi.util.NotWorkingIconLoader;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.image.Image;
 
-/**
- * NOTE THIS FILE IS AUTO-GENERATED
- * DO NOT EDIT IT BY HAND, run build/scripts/icons.gant instead
- */
 public class RemoteServersIcons {
-  private static Image load(String path) {
-    return (Image)NotWorkingIconLoader.getIcon(path, RemoteServersIcons.class);
-  }
-
-  public static final Image ResumeScaled = load("/icons/resumeScaled.svg"); // 8x8
-  public static final Image ServersToolWindow = load("/icons/serversToolWindow.png"); // 13x13
-  public static final Image SuspendScaled = load("/icons/suspendScaled.svg"); // 8x8
+  public static final Image ResumeScaled = PlatformIconGroup.remoteServersResumeScaled();
+  public static final Image ServersToolWindow = PlatformIconGroup.remoteServersServersToolWindow();
+  public static final Image SuspendScaled = PlatformIconGroup.remoteServersSuspendScaled();
 }
