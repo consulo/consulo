@@ -70,10 +70,7 @@ import java.awt.font.FontRenderContext;
 import java.awt.font.GlyphVector;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.GeneralPath;
-import java.awt.image.BufferedImage;
-import java.awt.image.BufferedImageOp;
-import java.awt.image.ImageObserver;
-import java.awt.image.PixelGrabber;
+import java.awt.image.*;
 import java.beans.PropertyChangeListener;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -1301,19 +1298,61 @@ public class UIUtil {
   }
 
   public static consulo.ui.image.Image getErrorIcon() {
-    return (consulo.ui.image.Image)UIManager.getIcon("OptionPane.errorIcon");
+    return wrapToImageIfNeed("OptionPane.errorIcon");
   }
 
   public static consulo.ui.image.Image getInformationIcon() {
-    return (consulo.ui.image.Image)UIManager.getIcon("OptionPane.informationIcon");
+    return wrapToImageIfNeed("OptionPane.informationIcon");
   }
 
   public static consulo.ui.image.Image getQuestionIcon() {
-    return (consulo.ui.image.Image)UIManager.getIcon("OptionPane.questionIcon");
+    return wrapToImageIfNeed("OptionPane.questionIcon");
   }
 
   public static consulo.ui.image.Image getWarningIcon() {
-    return (consulo.ui.image.Image)UIManager.getIcon("OptionPane.warningIcon");
+    return wrapToImageIfNeed("OptionPane.warningIcon");
+  }
+
+  private static consulo.ui.image.Image wrapToImageIfNeed(String id) {
+    Icon icon = UIManager.getIcon("OptionPane.warningIcon");
+    if(icon instanceof consulo.ui.image.Image) {
+      return (consulo.ui.image.Image)icon;
+    }
+
+    return new ImageWrapper(icon);
+  }
+
+  private static class ImageWrapper implements Icon, consulo.ui.image.Image {
+    private final Icon myDelegate;
+
+    private ImageWrapper(Icon delegate) {
+      myDelegate = delegate;
+    }
+
+    @Override
+    public void paintIcon(Component c, Graphics g, int x, int y) {
+      myDelegate.paintIcon(c, g, x, y);
+    }
+
+    @Override
+    public int getIconWidth() {
+      return getWidth();
+    }
+
+    @Override
+    public int getIconHeight() {
+      return getHeight();
+    }
+
+    @Override
+    public int getHeight() {
+      return myDelegate.getIconHeight();
+    }
+
+    @Override
+    public int getWidth() {
+      return myDelegate.getIconWidth();
+    }
   }
 
   public static Icon getRadioButtonIcon() {
