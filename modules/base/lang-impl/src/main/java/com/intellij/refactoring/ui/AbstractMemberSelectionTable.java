@@ -190,8 +190,6 @@ public abstract class AbstractMemberSelectionTable<T extends PsiElement, M exten
 
   protected abstract boolean isAbstractColumnEditable(int rowIndex);
 
-  protected abstract void setVisibilityIcon(M memberInfo, RowIcon icon);
-
   protected abstract Image getOverrideIcon(M memberInfo);
 
   private static class DefaultMemberInfoModel<T extends PsiElement, M extends MemberInfoBase<T>> implements MemberInfoModel<T, M> {

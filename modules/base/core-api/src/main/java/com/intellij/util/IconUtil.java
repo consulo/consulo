@@ -19,8 +19,6 @@ import com.intellij.icons.AllIcons;
 import com.intellij.openapi.util.NotWorkingIconLoader;
 import com.intellij.openapi.util.ScalableIcon;
 import com.intellij.ui.JBColor;
-import com.intellij.ui.LayeredIcon;
-import com.intellij.ui.RowIcon;
 import com.intellij.util.ui.*;
 import consulo.annotation.DeprecationInfo;
 import consulo.ui.image.ImageEffects;
@@ -392,15 +390,5 @@ public class IconUtil {
         return height;
       }
     };
-  }
-
-  @Nonnull
-  @Deprecated
-  @DeprecationInfo("Use ImageEffects#withText")
-  public static Icon addText(@Nonnull Icon base, @Nonnull String text) {
-    LayeredIcon icon = new LayeredIcon(2);
-    icon.setIcon(base, 0);
-    icon.setIcon(textToIcon(text, new JLabel(), JBUI.scale(6f)), 1, SwingConstants.SOUTH_EAST);
-    return icon;
   }
 }

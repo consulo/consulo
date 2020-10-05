@@ -300,7 +300,16 @@ public abstract class BaseIconLibraryManager implements IconLibraryManager {
   }
 
   @Nullable
-  public Image getIcon(String libraryId, String id, int width, int height) {
+  public Image getIcon(@Nullable String forceIconLibraryId, String libraryId, String id, int width, int height) {
+    if(forceIconLibraryId != null) {
+      IconLibrary targetIconLibrary = myLibraries.get(forceIconLibraryId);
+      if(targetIconLibrary != null) {
+        Image icon = targetIconLibrary.getIcon(libraryId, id, width, height);
+        if(icon != null) {
+          return icon;
+        }
+      }
+    }
     IconLibrary iconLibrary = getActiveLibrary();
     return iconLibrary.getIcon(libraryId, id, width, height);
   }

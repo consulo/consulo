@@ -44,6 +44,11 @@ public interface IconLibraryManager {
   @Nonnull
   String getActiveLibraryId();
 
+  @Nonnull
+  default Image forceChangeLibrary(@Nonnull String libraryId, @Nonnull Image image) {
+    return image;
+  }
+
   boolean isFromStyle();
 
   void setActiveLibrary(@Nullable String iconLibraryId);

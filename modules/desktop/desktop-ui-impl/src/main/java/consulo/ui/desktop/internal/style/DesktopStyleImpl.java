@@ -22,7 +22,9 @@ import consulo.desktop.util.awt.MorphValue;
 import consulo.desktop.util.awt.laf.GTKPlusUIUtil;
 import consulo.ide.ui.laf.LafWithIconLibrary;
 import consulo.ui.SwingUIDecorator;
+import consulo.ui.desktop.internal.image.DesktopStyledImage;
 import consulo.ui.image.IconLibraryManager;
+import consulo.ui.image.Image;
 import consulo.ui.impl.style.StyleImpl;
 import consulo.ui.shared.ColorValue;
 import consulo.ui.style.ColorKey;
@@ -92,6 +94,15 @@ public class DesktopStyleImpl extends StyleImpl {
       return TargetAWT.from(JBColor.MAGENTA);
     }
     throw new UnsupportedOperationException(colorKey.toString());
+  }
+
+  @Nonnull
+  @Override
+  public Image getImage(@Nonnull Image image) {
+    if(image instanceof DesktopStyledImage) {
+      return ((DesktopStyledImage<?>)image).withTargetIconLibrary(getIconLibraryId(), this::getImage);
+    }
+    return image;
   }
 
   @Nonnull

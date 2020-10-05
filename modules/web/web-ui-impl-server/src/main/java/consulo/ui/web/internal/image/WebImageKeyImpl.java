@@ -67,7 +67,7 @@ public class WebImageKeyImpl implements ImageKey, WebImageWithVaadinState {
 
   @Nullable
   public Image calcImage() {
-    return ourLibraryManager.getIcon(myGroupId, myImageId, myWidth, myHeight);
+    return ourLibraryManager.getIcon(null, myGroupId, myImageId, myWidth, myHeight);
   }
 
   @Nonnull

@@ -19,6 +19,7 @@ import com.intellij.ui.JBColor;
 import consulo.awt.TargetAWT;
 import consulo.desktop.util.awt.UIModificationTracker;
 import consulo.ui.desktop.internal.image.DesktopBaseLazyImageImpl;
+import consulo.ui.desktop.internal.image.DesktopStyledImage;
 import consulo.ui.image.IconLibraryManager;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
@@ -27,24 +28,30 @@ import consulo.ui.impl.image.BaseIconLibraryManager;
 import consulo.ui.style.StandardColors;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.util.Objects;
+import java.util.function.Function;
 
 /**
  * @author VISTALL
  * @since 2020-09-27
  */
-public class DesktopImageKeyImpl extends DesktopBaseLazyImageImpl implements ImageKey, Icon, DesktopLibraryInnerImage {
+public class DesktopImageKeyImpl extends DesktopBaseLazyImageImpl implements ImageKey, Icon, DesktopLibraryInnerImage, DesktopStyledImage<DesktopImageKeyImpl> {
   private static final BaseIconLibraryManager ourLibraryManager = (BaseIconLibraryManager)IconLibraryManager.get();
   private static final UIModificationTracker ourUIModificationTracker = UIModificationTracker.getInstance();
 
+  @Nullable
+  private final String myForceIconLibraryId;
   private final String myGroupId;
   private final String myImageId;
   private final int myWidth;
   private final int myHeight;
 
-  public DesktopImageKeyImpl(String groupId, String imageId, int width, int height) {
+  public DesktopImageKeyImpl(@Nullable String forceIconLibraryId, String groupId, String imageId, int width, int height) {
+    myForceIconLibraryId = forceIconLibraryId;
     myGroupId = groupId;
     myImageId = imageId;
     myWidth = width;
@@ -59,7 +66,7 @@ public class DesktopImageKeyImpl extends DesktopBaseLazyImageImpl implements Ima
   @Nonnull
   @Override
   protected Icon calcIcon() {
-    Image icon = ourLibraryManager.getIcon(myGroupId, myImageId, myWidth, myHeight);
+    Image icon = ourLibraryManager.getIcon(myForceIconLibraryId, myGroupId, myImageId, myWidth, myHeight);
     if (icon instanceof DesktopLibraryInnerImage) {
       ((DesktopLibraryInnerImage)icon).dropCache();
     }
@@ -73,7 +80,7 @@ public class DesktopImageKeyImpl extends DesktopBaseLazyImageImpl implements Ima
   @Nonnull
   @Override
   public Image makeGrayed() {
-    Image icon = ourLibraryManager.getIcon(myGroupId, myImageId, myWidth, myHeight);
+    Image icon = ourLibraryManager.getIcon(myForceIconLibraryId, myGroupId, myImageId, myWidth, myHeight);
 
     if (icon instanceof DesktopLibraryInnerImage) {
       return ((DesktopLibraryInnerImage)icon).makeGrayed();
@@ -86,7 +93,7 @@ public class DesktopImageKeyImpl extends DesktopBaseLazyImageImpl implements Ima
   @Override
   @SuppressWarnings("UndesirableClassUsage")
   public java.awt.Image toAWTImage() {
-    Image icon = ourLibraryManager.getIcon(myGroupId, myImageId, myWidth, myHeight);
+    Image icon = ourLibraryManager.getIcon(myForceIconLibraryId, myGroupId, myImageId, myWidth, myHeight);
     if (icon instanceof DesktopLibraryInnerImage) {
       ((DesktopLibraryInnerImage)icon).dropCache();
       return ((DesktopLibraryInnerImage)icon).toAWTImage();
@@ -116,5 +123,43 @@ public class DesktopImageKeyImpl extends DesktopBaseLazyImageImpl implements Ima
   @Override
   public void dropCache() {
     throw new UnsupportedOperationException();
+  }
+
+  @Nonnull
+  @Override
+  public DesktopImageKeyImpl withTargetIconLibrary(@Nonnull String targetIconLibrary, @Nonnull Function<Image, Image> converter) {
+    return new DesktopImageKeyImpl(targetIconLibrary, myGroupId, myImageId, myWidth, myHeight);
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    DesktopImageKeyImpl that = (DesktopImageKeyImpl)o;
+    return Objects.equals(myForceIconLibraryId, that.myForceIconLibraryId) && Objects.equals(myGroupId, that.myGroupId) && Objects.equals(myImageId, that.myImageId);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(myForceIconLibraryId, myGroupId, myImageId);
+  }
+
+  @Override
+  public String toString() {
+    return "DesktopImageKeyImpl{" +
+           "myForceIconLibraryId='" +
+           myForceIconLibraryId +
+           '\'' +
+           ", myGroupId='" +
+           myGroupId +
+           '\'' +
+           ", myImageId='" +
+           myImageId +
+           '\'' +
+           ", myWidth=" +
+           myWidth +
+           ", myHeight=" +
+           myHeight +
+           '}';
   }
 }

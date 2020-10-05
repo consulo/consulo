@@ -15,6 +15,7 @@
  */
 package consulo.ui.desktop.internal.image;
 
+import consulo.ui.image.Image;
 import consulo.ui.impl.image.BaseIconLibraryManager;
 import consulo.ui.impl.image.IconLibrary;
 import consulo.ui.impl.image.IconLibraryId;
@@ -32,5 +33,14 @@ public class DesktopIconLibraryManagerImpl extends BaseIconLibraryManager {
   @Override
   protected IconLibrary createLibrary(@Nonnull IconLibraryId id) {
     return new DesktopIconLibrary(id, this);
+  }
+
+  @Nonnull
+  @Override
+  public Image forceChangeLibrary(@Nonnull String libraryId, @Nonnull Image image) {
+    if(image instanceof DesktopStyledImage) {
+      return ((DesktopStyledImage<?>)image).withTargetIconLibrary(libraryId, it -> forceChangeLibrary(libraryId, image));
+    }
+    return image;
   }
 }

@@ -29,16 +29,13 @@ import com.intellij.notification.NotificationListener;
 import com.intellij.notification.NotificationType;
 import com.intellij.openapi.actionSystem.LangDataKeys;
 import com.intellij.openapi.application.ApplicationManager;
-import consulo.logging.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.MessageType;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.wm.ToolWindowManager;
-import com.intellij.ui.LayeredIcon;
 import com.intellij.ui.content.Content;
 import com.intellij.util.ui.UIUtil;
-import consulo.annotation.DeprecationInfo;
-import consulo.awt.TargetAWT;
+import consulo.logging.Logger;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
 import consulo.ui.style.StandardColors;
@@ -198,24 +195,5 @@ public class ExecutionUtil {
       ctx.arc(width - iSize - 1, height - iSize - 1, iSize, 0, 2 * Math.PI);
       ctx.stroke();
     }));
-  }
-
-  @Nonnull
-  @Deprecated
-  @DeprecationInfo("Use #getLiveIndicatorIcon(Image)")
-  public static Icon getLiveIndicator(@Nullable final Icon base) {
-    int width = base == null ? 13 : base.getIconWidth();
-    int height = base == null ? 13 : base.getIconHeight();
-    return new LayeredIcon(base, TargetAWT.to(ImageEffects.canvas(width, height, ctx -> {
-      int iSize = 2;
-
-      ctx.setFillStyle(StandardColors.GREEN);
-      ctx.arc(width - iSize - 1, height - iSize - 1, iSize, 0, 2 * Math.PI);
-      ctx.fill();
-
-      ctx.setStrokeStyle(StandardColors.BLACK.withAlpha(0.4f));
-      ctx.arc(width - iSize - 1, height - iSize - 1, iSize, 0, 2 * Math.PI);
-      ctx.stroke();
-    })));
   }
 }

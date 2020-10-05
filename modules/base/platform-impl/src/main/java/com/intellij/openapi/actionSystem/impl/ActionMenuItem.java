@@ -39,8 +39,11 @@ import consulo.awt.TargetAWT;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.localize.LocalizeValue;
+import consulo.ui.image.IconLibraryManager;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
+import consulo.ui.style.Style;
+import consulo.ui.style.StyleManager;
 import kava.beans.PropertyChangeEvent;
 import kava.beans.PropertyChangeListener;
 
@@ -63,6 +66,7 @@ public class ActionMenuItem extends JCheckBoxMenuItem {
   private final Presentation myPresentation;
   private final String myPlace;
   private final boolean myInsideCheckedGroup;
+  private final boolean myUseDarkIcons;
   private DataContext myContext;
   private AnActionEvent myEvent;
   private MenuItemSynchronizer myMenuItemSynchronizer;
@@ -80,6 +84,7 @@ public class ActionMenuItem extends JCheckBoxMenuItem {
                         final boolean prepareNow,
                         final boolean insideCheckedGroup,
                         boolean useDarkIcons) {
+    myUseDarkIcons = useDarkIcons;
     myAction = ActionRef.fromAction(action);
     myPresentation = presentation;
     myPlace = place;
@@ -289,6 +294,13 @@ public class ActionMenuItem extends JCheckBoxMenuItem {
     else {
       if (UISettings.getInstance().SHOW_ICONS_IN_MENUS) {
         Image icon = myPresentation.getIcon();
+        if (myUseDarkIcons) {
+          Style currentStyle = StyleManager.get().getCurrentStyle();
+          if(!currentStyle.isDark()) {
+            icon = IconLibraryManager.get().forceChangeLibrary(IconLibraryManager.DARK_LIBRARY_ID, icon);
+          }
+        }
+
         if (action instanceof ToggleAction && ((ToggleAction)action).isSelected(myEvent)) {
           icon = new PoppedIcon(icon, JBUI.scale(Image.DEFAULT_ICON_SIZE), JBUI.scale(Image.DEFAULT_ICON_SIZE));
         }

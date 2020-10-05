@@ -95,10 +95,7 @@ public class DesktopUIInternalImpl extends UIInternal {
 
   @Override
   public Image _ImageEffects_appendRight(@Nonnull Image i0, @Nonnull Image i1) {
-    DesktopAppendImageImpl image = new DesktopAppendImageImpl(2);
-    image.setIcon(TargetAWT.to(i0), 0);
-    image.setIcon(TargetAWT.to(i1), 1);
-    return image;
+    return new DesktopAppendImageImpl(i0, i1);
   }
 
   @Override
@@ -374,6 +371,6 @@ public class DesktopUIInternalImpl extends UIInternal {
 
   @Override
   public ImageKey _ImageKey_of(@Nonnull String groupId, @Nonnull String imageId, int width, int height) {
-    return new DesktopImageKeyImpl(groupId, imageId, width, height);
+    return new DesktopImageKeyImpl(null, groupId, imageId, width, height);
   }
 }
