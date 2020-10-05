@@ -226,20 +226,12 @@ public class AllIcons {
     public static final Image PreserveCaseSelected = PlatformIconGroup.actionsPreserveCaseSelected();
   }
 
-  public static class Darcula {
-    public static final Image DoubleComboArrow = PlatformIconGroup.darculaDoubleComboArrow(); // 7x11
-    public static final Image TreeNodeCollapsed = PlatformIconGroup.darculaTreeNodeCollapsed(); // 9x9
-    public static final Image TreeNodeExpanded = PlatformIconGroup.darculaTreeNodeExpanded(); // 9x9
-
-  }
-
   public static class Debugger {
 
     public static class Actions {
       public static final Image Force_run_to_cursor = PlatformIconGroup.debuggerActionsForce_run_to_cursor(); // 16x16
       public static final Image Force_step_into = PlatformIconGroup.debuggerActionsForce_step_into(); // 16x16
       public static final Image Force_step_over = PlatformIconGroup.debuggerActionsForce_step_over(); // 16x16
-
     }
 
     public static final Image AddToWatch = PlatformIconGroup.debuggerAddToWatch(); // 16x16

@@ -73,6 +73,7 @@ import consulo.localize.LocalizeManager;
 import consulo.logging.Logger;
 import consulo.ui.desktop.internal.style.DesktopStyleImpl;
 import consulo.ui.image.IconLibraryManager;
+import consulo.ui.impl.image.BaseIconLibraryManager;
 import consulo.ui.style.Style;
 import org.intellij.lang.annotations.JdkConstants;
 import org.jdom.Element;
@@ -187,9 +188,9 @@ public final class LafManagerImpl extends LafManager implements Disposable, Pers
     if (myCurrentStyle != null) {
       final DesktopStyleImpl laf = findStyleByClassName(myCurrentStyle.getLookAndFeelInfo().getClassName());
       if (laf != null) {
-        IconLibraryManager iconLibraryManager = IconLibraryManager.get();
+        BaseIconLibraryManager iconLibraryManager = (BaseIconLibraryManager)IconLibraryManager.get();
         boolean fromStyle = iconLibraryManager.isFromStyle();
-        String activeLibraryId = iconLibraryManager.getActiveLibraryId();
+        String activeLibraryId = iconLibraryManager.getActiveLibraryId(myCurrentStyle);
         setCurrentStyle(laf, false, false, fromStyle ? null : activeLibraryId);
       }
     }

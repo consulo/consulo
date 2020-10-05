@@ -71,8 +71,13 @@ public abstract class BaseIconLibraryManager implements IconLibraryManager {
   @Nonnull
   @Override
   public String getActiveLibraryId() {
-    if(myActiveLibraryId == null) {
-      return StyleManager.get().getCurrentStyle().getIconLibraryId();
+    return getActiveLibraryId(StyleManager.get().getCurrentStyle());
+  }
+
+  @Nonnull
+  public String getActiveLibraryId(@Nonnull Style currentStyle) {
+    if (myActiveLibraryId == null) {
+      return currentStyle.getIconLibraryId();
     }
     return myActiveLibraryId;
   }
