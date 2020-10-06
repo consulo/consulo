@@ -39,6 +39,12 @@ public class TestStyleManagerImpl implements StyleManager {
 
     @Nonnull
     @Override
+    public String getIconLibraryId() {
+      return "Default";
+    }
+
+    @Nonnull
+    @Override
     public ColorValue getColor(@Nonnull ColorKey colorKey) {
       return StandardColors.BLACK;
     }
