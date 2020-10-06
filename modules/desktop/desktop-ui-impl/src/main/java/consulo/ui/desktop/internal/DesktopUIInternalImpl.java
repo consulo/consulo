@@ -373,4 +373,10 @@ public class DesktopUIInternalImpl extends UIInternal {
   public ImageKey _ImageKey_of(@Nonnull String groupId, @Nonnull String imageId, int width, int height) {
     return new DesktopImageKeyImpl(null, groupId, imageId, width, height);
   }
+
+  @Nonnull
+  @Override
+  public TaskBar _TaskBar_get() {
+    return DesktopTaskBarImpl.ourInstance;
+  }
 }

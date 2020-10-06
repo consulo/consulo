@@ -15,10 +15,10 @@
  */
 package consulo.platform;
 
-import consulo.container.plugin.PluginId;
 import com.intellij.util.LineSeparator;
 import com.intellij.util.ObjectUtil;
 import consulo.annotation.DeprecationInfo;
+import consulo.container.plugin.PluginId;
 import consulo.platform.internal.PlatformInternal;
 import consulo.ui.image.Image;
 
@@ -82,7 +82,7 @@ public interface Platform {
 
     @Nonnull
     default LineSeparator getLineSeparator() {
-      if(isWindows()) {
+      if (isWindows()) {
         return LineSeparator.CRLF;
       }
       return LineSeparator.LF;

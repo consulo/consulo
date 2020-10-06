@@ -224,4 +224,9 @@ public abstract class UIInternal {
   public IconLibraryManager _IconLibraryManager_get() {
     throw new UnsupportedOperationException();
   }
+
+  @Nonnull
+  public TaskBar _TaskBar_get() {
+    throw new UnsupportedOperationException();
+  }
 }

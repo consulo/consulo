@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui.taskbar;
+package consulo.ui.desktop.internal.taskBar;
 
 import com.intellij.openapi.util.ThrowableComputable;
 
@@ -25,7 +25,6 @@ import java.util.function.Supplier;
  * @author VISTALL
  * @since 8/29/18
  */
-@Deprecated
 public class TaskbarWrapper {
   private static Class ourTaskbarClass;
   private static Method ourTaskbar;

@@ -13,11 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.ui;
+package consulo.ui.desktop.internal.taskBar;
 
-import com.intellij.openapi.application.ApplicationManager;
-import consulo.logging.Logger;
-import com.intellij.openapi.wm.IdeFrame;
 import com.sun.jna.Function;
 import com.sun.jna.Memory;
 import com.sun.jna.Native;
@@ -27,6 +24,8 @@ import com.sun.jna.ptr.PointerByReference;
 import com.sun.jna.win32.StdCallLibrary;
 import com.sun.jna.win32.W32APIOptions;
 import consulo.awt.TargetAWT;
+import consulo.logging.Logger;
+import consulo.ui.Window;
 
 /**
  * @author Alexander Lobas
@@ -56,13 +55,7 @@ class Win7TaskBar {
 
     int LookupIconIdFromDirectoryEx(Memory presbits, boolean fIcon, int cxDesired, int cyDesired, int Flags);
 
-    WinDef.HICON CreateIconFromResourceEx(Pointer presbits,
-                                          WinDef.DWORD dwResSize,
-                                          boolean fIcon,
-                                          WinDef.DWORD dwVer,
-                                          int cxDesired,
-                                          int cyDesired,
-                                          int Flags);
+    WinDef.HICON CreateIconFromResourceEx(Pointer presbits, WinDef.DWORD dwResSize, boolean fIcon, WinDef.DWORD dwVer, int cxDesired, int cyDesired, int Flags);
 
     boolean FlashWindow(WinDef.HWND hwnd, boolean bInvert);
   }
@@ -80,7 +73,7 @@ class Win7TaskBar {
 
   private static boolean ourInitialized = true;
 
-  static {
+  public static void setup() {
     try {
       initialize();
     }
@@ -91,10 +84,6 @@ class Win7TaskBar {
   }
 
   private static void initialize() {
-    if (ApplicationManager.getApplication().isUnitTestMode()) {
-      return;
-    }
-
     Ole32 ole32 = Ole32.INSTANCE;
     ole32.CoInitializeEx(Pointer.NULL, 0);
 
@@ -118,7 +107,7 @@ class Win7TaskBar {
     mySetOverlayIcon = Function.getFunction(vTable[TaskBarList_SetOverlayIcon], Function.ALT_CONVENTION);
   }
 
-  static void setProgress(IdeFrame frame, double value, boolean isOk) {
+  static void setProgress(Window frame, double value, boolean isOk) {
     if (!isEnabled()) {
       return;
     }
@@ -129,10 +118,10 @@ class Win7TaskBar {
   }
 
   private static boolean isEnabled() {
-    return !ApplicationManager.getApplication().isUnitTestMode() && ourInitialized;
+    return ourInitialized;
   }
 
-  static void hideProgress(IdeFrame frame) {
+  static void hideProgress(Window frame) {
     if (!isEnabled()) {
       return;
     }
@@ -140,7 +129,7 @@ class Win7TaskBar {
     mySetProgressState.invokeInt(new Object[]{myInterfacePointer, getHandle(frame), TBPF_NOPROGRESS});
   }
 
-  static void setOverlayIcon(IdeFrame frame, Object icon, boolean dispose) {
+  static void setOverlayIcon(Window frame, Object icon, boolean dispose) {
     if (!isEnabled()) {
       return;
     }
@@ -148,7 +137,7 @@ class Win7TaskBar {
     if (icon == null) {
       icon = Pointer.NULL;
     }
-    mySetOverlayIcon.invokeInt(new Object[]{myInterfacePointer, getHandle(frame), icon, Pointer.NULL});
+    int i = mySetOverlayIcon.invokeInt(new Object[]{myInterfacePointer, getHandle(frame), icon, Pointer.NULL});
     if (dispose) {
       User32.INSTANCE.DestroyIcon((WinDef.HICON)icon);
     }
@@ -165,9 +154,9 @@ class Win7TaskBar {
       memory.write(0, ico, 0, ico.length);
 
       int nSize = 100;
-      int offset = User32Ex.INSTANCE.LookupIconIdFromDirectoryEx(memory, true, nSize, nSize, 0);
+      int offset = User32Ex.INSTANCE.LookupIconIdFromDirectoryEx(memory, true, nSize , nSize, 0);
       if (offset != 0) {
-        return User32Ex.INSTANCE.CreateIconFromResourceEx(memory.share(offset), DWORD_ZERO, true, ICO_VERSION, nSize, nSize, 0);
+        return User32Ex.INSTANCE.CreateIconFromResourceEx(memory.share(offset), new WinDef.DWORD(ico.length - offset), true, ICO_VERSION, nSize, nSize, 0);
       }
       return null;
     }
@@ -176,7 +165,7 @@ class Win7TaskBar {
     }
   }
 
-  static void attention(IdeFrame frame, boolean critical) {
+  static void attention(Window frame, boolean critical) {
     if (!isEnabled()) {
       return;
     }
@@ -184,9 +173,9 @@ class Win7TaskBar {
     User32Ex.INSTANCE.FlashWindow(getHandle(frame), true);
   }
 
-  private static WinDef.HWND getHandle(IdeFrame frame) {
+  private static WinDef.HWND getHandle(Window frame) {
     try {
-      Pointer pointer = Native.getWindowPointer(TargetAWT.to(frame.getWindow()));
+      Pointer pointer = Native.getWindowPointer(TargetAWT.to(frame));
       return new WinDef.HWND(pointer);
     }
     catch (Throwable e) {

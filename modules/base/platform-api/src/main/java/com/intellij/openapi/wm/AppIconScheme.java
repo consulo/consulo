@@ -15,50 +15,68 @@
  */
 package com.intellij.openapi.wm;
 
-import java.awt.*;
+import consulo.ui.TaskBar;
+import consulo.ui.shared.ColorValue;
+import consulo.ui.shared.RGBColor;
+import consulo.ui.style.StandardColors;
+
+import javax.annotation.Nonnull;
 
 public class AppIconScheme {
+  private static ColorValue TESTS_OK_COLOR = new RGBColor(46, 191, 38);
+  private static ColorValue BUILD_OK_COLOR = new RGBColor(51, 153, 255);
+  private static ColorValue INDEXING_OK_COLOR = new RGBColor(255, 170, 0);
+  private static ColorValue ERROR_COLOR = StandardColors.RED.getStaticValue();
 
-  private static Color TESTS_OK_COLOR = new Color(46, 191, 38);
-  private static Color BUILD_OK_COLOR = new Color(51, 153, 255);
-  private static Color INDEXING_OK_COLOR = new Color(255, 170, 0);
-  private static Color ERROR_COLOR = Color.red;
-
-  public interface Progress {
-
+  public interface Progress extends TaskBar.ProgressScheme {
     static final Progress TESTS = new Progress() {
-      public Color getOkColor() {
+      @Nonnull
+      @Override
+      public ColorValue getOkColor() {
         return TESTS_OK_COLOR;
       }
 
-      public Color getErrorColor() {
+      @Nonnull
+      @Override
+      public ColorValue getErrorColor() {
         return ERROR_COLOR;
       }
     };
 
     static final Progress BUILD = new Progress() {
-      public Color getOkColor() {
+      @Nonnull
+      @Override
+      public ColorValue getOkColor() {
         return BUILD_OK_COLOR;
       }
 
-      public Color getErrorColor() {
+      @Nonnull
+      @Override
+      public ColorValue getErrorColor() {
         return ERROR_COLOR;
       }
     };
 
     static final Progress INDEXING = new Progress() {
-      public Color getOkColor() {
+      @Nonnull
+      @Override
+      public ColorValue getOkColor() {
         return INDEXING_OK_COLOR;
       }
 
+      @Nonnull
       @Override
-      public Color getErrorColor() {
+      public ColorValue getErrorColor() {
         return ERROR_COLOR;
       }
     };
 
-    Color getOkColor();
+    @Nonnull
+    @Override
+    ColorValue getOkColor();
 
-    Color getErrorColor();
+    @Nonnull
+    @Override
+    ColorValue getErrorColor();
   }
 }
