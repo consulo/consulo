@@ -655,7 +655,7 @@
       <action id="FileChooser.NewFolder" class="com.intellij.openapi.fileChooser.actions.NewFolderAction"
               icon="consulo.platform.base.PlatformIconGroup@actions.newFolder"/>
       <action id="FileChooser.Delete" class="com.intellij.openapi.fileChooser.actions.FileDeleteAction"
-              icon="consulo.platform.base.PlatformIconGroup@actions.delete"/>
+              icon="consulo.platform.base.PlatformIconGroup@actions.cancel"/>
       <separator/>
       <action id="FileChooser.Refresh" class="com.intellij.openapi.fileChooser.actions.RefreshFileChooserAction"
               icon="consulo.platform.base.PlatformIconGroup@actions.refresh"/>

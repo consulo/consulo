@@ -200,9 +200,9 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
   private static void updateIconFromStub(@Nonnull ActionStubBase stub, AnAction anAction) {
     String iconPath = stub.getIconPath();
     if (iconPath != null) {
-      if(iconPath.contains("@")) {
-        String[] groupIdAndImageId = iconPath.split("@");
-        anAction.getTemplatePresentation().setIcon(ImageKey.of(groupIdAndImageId[0], groupIdAndImageId[1], Image.DEFAULT_ICON_SIZE, Image.DEFAULT_ICON_SIZE));
+      ImageKey imageKey = ImageKey.fromString(iconPath, Image.DEFAULT_ICON_SIZE, Image.DEFAULT_ICON_SIZE);
+      if(imageKey != null) {
+        anAction.getTemplatePresentation().setIcon(imageKey);
       }
       else {
         LOG.warn("Wrong icon path: " + iconPath);

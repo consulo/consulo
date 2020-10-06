@@ -82,9 +82,9 @@ public class ModuleExtensionProviderEP extends AbstractExtensionPointBean {
         return PlatformIconGroup.actionsHelp();
       }
 
-      if (icon.contains("@")) {
-        String[] ids = icon.split("@");
-        return ImageKey.of(ids[0], ids[1], Image.DEFAULT_ICON_SIZE, Image.DEFAULT_ICON_SIZE);
+      ImageKey imageKey = ImageKey.fromString(icon, Image.DEFAULT_ICON_SIZE, Image.DEFAULT_ICON_SIZE);
+      if (imageKey != null) {
+        return imageKey;
       }
 
       return PlatformIconGroup.actionsHelp();

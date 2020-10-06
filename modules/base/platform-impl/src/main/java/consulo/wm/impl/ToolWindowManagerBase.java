@@ -1076,10 +1076,10 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
     toolWindow.setContentFactory(factory);
     String beanIcon = bean.icon;
     if (beanIcon != null && toolWindow.getIcon() == null) {
-      Image targetIcon = null;
-      if(beanIcon.contains("@")) {
-        String[] ids = beanIcon.split("@");
-        targetIcon = ImageKey.of(ids[0], ids[1], 13, 13);
+      Image targetIcon;
+      ImageKey imageKey = ImageKey.fromString(beanIcon, 13, 13);
+      if(imageKey != null) {
+        targetIcon = imageKey;
       }
       else {
         targetIcon = ImageEffects.colorFilled(13, 13, StandardColors.MAGENTA);

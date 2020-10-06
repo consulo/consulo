@@ -34,13 +34,7 @@ public class TypeIconEP extends AbstractExtensionPointBean {
   @Attribute("icon")
   public String icon;
 
-  private final NullableLazyValue<Image> myIcon = NullableLazyValue.createValue(() -> {
-    if (icon != null && icon.contains("@")) {
-      String[] ids = icon.split("@");
-      return ImageKey.of(ids[0], ids[1], Image.DEFAULT_ICON_SIZE, Image.DEFAULT_ICON_SIZE);
-    }
-    return null;
-  });
+  private final NullableLazyValue<Image> myIcon = NullableLazyValue.createValue(() -> ImageKey.fromString(icon, Image.DEFAULT_ICON_SIZE, Image.DEFAULT_ICON_SIZE));
 
   public NullableLazyValue<Image> getIcon() {
     return myIcon;

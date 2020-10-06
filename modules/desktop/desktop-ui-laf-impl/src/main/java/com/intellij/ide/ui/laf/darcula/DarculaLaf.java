@@ -51,6 +51,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.List;
+import java.util.Locale;
 import java.util.Properties;
 
 /**
@@ -294,9 +295,9 @@ public class DarculaLaf extends BaseLookAndFeel {
       String[] idSize = imageIdWithSize.split(",");
       String imageId = idSize[0];
       String[] size = idSize[1].split(":");
-      return ImageKey.of(groupId, imageId, Integer.parseInt(size[0]), Integer.parseInt(size[1]));
+      return ImageKey.of(groupId, imageId.toLowerCase(Locale.ROOT), Integer.parseInt(size[0]), Integer.parseInt(size[1]));
     }
-    return ImageKey.of(groupId, imageIdWithSize, Image.DEFAULT_ICON_SIZE, Image.DEFAULT_ICON_SIZE);
+    return ImageKey.of(groupId, imageIdWithSize.toLowerCase(Locale.ROOT), Image.DEFAULT_ICON_SIZE, Image.DEFAULT_ICON_SIZE);
   }
 
   @SuppressWarnings("UseJBColor")

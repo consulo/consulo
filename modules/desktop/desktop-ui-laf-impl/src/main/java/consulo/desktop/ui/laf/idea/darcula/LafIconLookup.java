@@ -21,6 +21,7 @@ import consulo.ui.image.ImageKey;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;
+import java.util.Locale;
 
 /**
  * from kotlin
@@ -59,6 +60,6 @@ public class LafIconLookup {
       key = key + "Disabled";
     }
 
-    return TargetAWT.to(ImageKey.of("consulo.platform.desktop.laf.LookAndFeelIconGroup", "components." + key, Image.DEFAULT_ICON_SIZE, Image.DEFAULT_ICON_SIZE));
+    return TargetAWT.to(ImageKey.of("consulo.platform.desktop.laf.LookAndFeelIconGroup", "components." + key.toLowerCase(Locale.ROOT), Image.DEFAULT_ICON_SIZE, Image.DEFAULT_ICON_SIZE));
   }
 }

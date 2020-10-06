@@ -54,9 +54,9 @@ public class LanguageElementIcon extends AbstractExtensionPointBean implements K
       return ImageEffects.colorFilled(Image.DEFAULT_ICON_SIZE, Image.DEFAULT_ICON_SIZE, StandardColors.CYAN);
     }
 
-    if(target.contains("@")) {
-      String[] ids = target.split("@");
-      return ImageKey.of(ids[0], ids[1], Image.DEFAULT_ICON_SIZE, Image.DEFAULT_ICON_SIZE);
+    ImageKey imageKey = ImageKey.fromString(target, Image.DEFAULT_ICON_SIZE, Image.DEFAULT_ICON_SIZE);
+    if(imageKey != null) {
+      return imageKey;
     }
 
     return ImageEffects.colorFilled(Image.DEFAULT_ICON_SIZE, Image.DEFAULT_ICON_SIZE, StandardColors.CYAN);

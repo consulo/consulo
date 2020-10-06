@@ -1383,7 +1383,7 @@ public class UIUtil {
     return expanded ? getTreeExpandedIcon() : getTreeCollapsedIcon();
   }
 
-  private static final ImageKey selectedCollapsedIcon = ImageKey.of("consulo.platform.desktop.laf.LookAndFeelIconGroup", "components.treeCollapsedSelected", 9, 11);
+  private static final ImageKey selectedCollapsedIcon = ImageKey.fromString("consulo.platform.desktop.laf.LookAndFeelIconGroup@components.treeCollapsedSelected", 9, 11);
   
   public static Icon getTreeSelectedCollapsedIcon() {
     Icon icon = UIManager.getIcon("Tree.selectedCollapsedIcon");
@@ -1393,7 +1393,7 @@ public class UIUtil {
     return isUnderAquaBasedLookAndFeel() || isUnderGTKLookAndFeel() || isUnderBuildInLaF() ? (Icon)selectedCollapsedIcon: getTreeCollapsedIcon();
   }
 
-  private static final ImageKey selectedExpandedIcon = ImageKey.of("consulo.platform.desktop.laf.LookAndFeelIconGroup", "components.treeExpandedSelected", 9, 11);
+  private static final ImageKey selectedExpandedIcon = ImageKey.fromString("consulo.platform.desktop.laf.LookAndFeelIconGroup@components.treeExpandedSelected", 11, 9);
 
   public static Icon getTreeSelectedExpandedIcon() {
     Icon icon = UIManager.getIcon("Tree.selectedExpandedIcon");

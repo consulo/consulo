@@ -29,10 +29,7 @@ import consulo.ui.style.StandardColors;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Singleton;
-import java.util.HashMap;
-import java.util.LinkedHashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ConcurrentMap;
 
 /**
@@ -220,7 +217,7 @@ public class TypePresentationServiceImpl extends TypePresentationService {
         String groupId = myPresentation.iconGroupId();
         String imageId = myPresentation.imageId();
         if(!StringUtil.isEmpty(groupId) && !StringUtil.isEmpty(imageId)) {
-          return ImageKey.of(groupId, imageId, Image.DEFAULT_ICON_SIZE, Image.DEFAULT_ICON_SIZE);
+          return ImageKey.of(groupId, imageId.toLowerCase(Locale.ROOT), Image.DEFAULT_ICON_SIZE, Image.DEFAULT_ICON_SIZE);
         }
         return null;
       }
