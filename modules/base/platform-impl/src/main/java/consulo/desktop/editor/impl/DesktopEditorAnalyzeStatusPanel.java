@@ -817,7 +817,7 @@ public class DesktopEditorAnalyzeStatusPanel implements Disposable {
                                                  boolean decorateButtons,
                                                  @Nonnull String place,
                                                  @Nonnull Presentation presentation,
-                                                 @Nonnull Dimension minimumSize) {
+                                                 @Nonnull Size minimumSize) {
         ActionButton actionButton = new ActionButton(action, presentation, place, minimumSize) {
 
           @Override

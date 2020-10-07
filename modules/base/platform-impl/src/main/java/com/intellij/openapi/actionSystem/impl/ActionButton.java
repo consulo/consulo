@@ -26,7 +26,6 @@ import com.intellij.openapi.keymap.KeymapUtil;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.util.text.TextWithMnemonic;
-import com.intellij.util.ui.JBDimension;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.accessibility.ScreenReader;
@@ -63,7 +62,7 @@ public class ActionButton extends JComponent implements ActionButtonComponent, A
   // Contains actions IDs which descriptions are permitted for displaying in the ActionButton tooltip
   private static final Set<String> WHITE_LIST = Collections.emptySet();
 
-  private JBDimension myMinimumButtonSize;
+  private Size myMinimumButtonSize;
   private PropertyChangeListener myPresentationListener;
   private Image myDisabledIcon;
   private Image myIcon;
@@ -92,7 +91,7 @@ public class ActionButton extends JComponent implements ActionButtonComponent, A
   }
 
   public ActionButton(AnAction action, Presentation presentation, String place, @Nonnull Size minimumSize) {
-    setMinimumButtonSize(TargetAWT.to(minimumSize));
+    setMinimumButtonSize(minimumSize);
     setIconInsets(null);
     myRollover = false;
     myMouseDown = false;
@@ -173,8 +172,8 @@ public class ActionButton extends JComponent implements ActionButtonComponent, A
     myNoIconsInPopup = noIconsInPopup;
   }
 
-  public void setMinimumButtonSize(@Nonnull Dimension size) {
-    myMinimumButtonSize = JBDimension.create(size);
+  public void setMinimumButtonSize(@Nonnull Size size) {
+    myMinimumButtonSize = size;
   }
 
   @Override
@@ -316,12 +315,13 @@ public class ActionButton extends JComponent implements ActionButtonComponent, A
   @Override
   public Dimension getPreferredSize() {
     Image icon = getIcon();
-    if (icon.getWidth() < myMinimumButtonSize.width && icon.getHeight() < myMinimumButtonSize.height) {
-      return myMinimumButtonSize;
+    Dimension minSize = TargetAWT.to(myMinimumButtonSize);
+    if (icon.getWidth() < minSize.width && icon.getHeight() < minSize.height) {
+      return minSize;
     }
     else {
-      return new Dimension(Math.max(myMinimumButtonSize.width, icon.getWidth() + myInsets.left + myInsets.right),
-                           Math.max(myMinimumButtonSize.height, icon.getHeight() + myInsets.top + myInsets.bottom));
+      return new Dimension(Math.max(minSize.width, icon.getWidth() + myInsets.left + myInsets.right),
+                           Math.max(minSize.height, icon.getHeight() + myInsets.top + myInsets.bottom));
     }
   }
 
