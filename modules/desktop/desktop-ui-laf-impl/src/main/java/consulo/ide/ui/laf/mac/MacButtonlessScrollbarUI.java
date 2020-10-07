@@ -187,7 +187,7 @@ public class MacButtonlessScrollbarUI extends BasicScrollBarUI {
   @Override
   protected Dimension getMinimumThumbSize() {
     final int thickness = getThickness();
-    return isVertical() ? new Dimension(thickness, thickness * 2) : new Dimension(thickness * 2, thickness);
+    return isVertical() ? JBUI.size(thickness, thickness * 2) : JBUI.size(thickness * 2, thickness);
   }
 
   protected int getThickness() {
@@ -197,7 +197,7 @@ public class MacButtonlessScrollbarUI extends BasicScrollBarUI {
   @Override
   public Dimension getMaximumSize(JComponent c) {
     int thickness = getThickness();
-    return new Dimension(thickness, thickness);
+    return JBUI.size(thickness, thickness);
   }
 
   @Override
@@ -233,7 +233,7 @@ public class MacButtonlessScrollbarUI extends BasicScrollBarUI {
     final Stroke stroke = g.getStroke();
     g.setStroke(ourBorderStroke);
     g.setColor(adjustColor(getThumbColor()));
-    g.fillRoundRect(hGap, vGap, w, h, 8, 8);
+    g.fillRoundRect(hGap, vGap, w, h, JBUI.scale(8), JBUI.scale(8));
     g.setStroke(stroke);
   }
 
