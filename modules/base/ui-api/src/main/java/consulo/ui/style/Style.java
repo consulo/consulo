@@ -15,6 +15,7 @@
  */
 package consulo.ui.style;
 
+import consulo.ui.image.IconLibraryManager;
 import consulo.ui.image.Image;
 import consulo.ui.shared.ColorValue;
 
@@ -29,7 +30,9 @@ public interface Style {
   String getName();
 
   @Nonnull
-  String getIconLibraryId();
+  default String getIconLibraryId() {
+    return IconLibraryManager.LIGHT_LIBRARY_ID;
+  }
 
   @Nonnull
   ColorValue getColor(@Nonnull ColorKey colorKey);
@@ -44,5 +47,7 @@ public interface Style {
     return image;
   }
 
-  boolean isDark();
+  default boolean isDark() {
+    return false;
+  }
 }

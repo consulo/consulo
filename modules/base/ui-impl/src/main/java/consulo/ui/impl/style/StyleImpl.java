@@ -15,18 +15,11 @@
  */
 package consulo.ui.impl.style;
 
-import consulo.ui.shared.ColorValue;
-import consulo.ui.style.ColorKey;
 import consulo.ui.style.Style;
-import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 05-Nov-17
  */
 public abstract class StyleImpl implements Style {
-  @Override
-  public boolean isDark() {
-    return false;
-  }
 }
