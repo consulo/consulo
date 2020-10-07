@@ -228,11 +228,11 @@ public class PluginHeaderPanel {
       public Icon getIcon() {
         switch (myActionId) {
           case INSTALL:
-            return AllIcons.General.DownloadPlugin;
+            return TargetAWT.to(AllIcons.General.DownloadPlugin);
           case UNINSTALL:
-            return AllIcons.Actions.Cancel;
+            return TargetAWT.to(AllIcons.Actions.Cancel);
           case RESTART:
-            return AllIcons.Actions.Restart;
+            return TargetAWT.to(AllIcons.Actions.Restart);
         }
         return super.getIcon();
 

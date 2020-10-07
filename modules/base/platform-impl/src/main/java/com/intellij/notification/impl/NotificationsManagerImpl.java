@@ -56,6 +56,7 @@ import consulo.awt.TargetAWT;
 import consulo.platform.Platform;
 import consulo.start.WelcomeFrameManager;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -505,15 +506,15 @@ public class NotificationsManagerImpl extends NotificationsManager {
         if (layoutData.showMinSize) {
           size1.height = layoutData.twoLineHeight;
           pane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
-          link.setIcon(AllIcons.Ide.Notification.Expand);
-          link.setHoveringIcon(AllIcons.Ide.Notification.ExpandHover);
+          link.setIcon(TargetAWT.to(AllIcons.Ide.Notification.Expand));
+          link.setHoveringIcon(TargetAWT.to(AllIcons.Ide.Notification.ExpandHover));
         }
         else {
           text.select(0, 0);
           size1.height = layoutData.fullHeight;
           pane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
-          link.setIcon(AllIcons.Ide.Notification.Collapse);
-          link.setHoveringIcon(AllIcons.Ide.Notification.CollapseHover);
+          link.setIcon(TargetAWT.to(AllIcons.Ide.Notification.Collapse));
+          link.setHoveringIcon(TargetAWT.to(AllIcons.Ide.Notification.CollapseHover));
         }
 
         text.setPreferredSize(size1);
@@ -527,7 +528,7 @@ public class NotificationsManagerImpl extends NotificationsManager {
         content.doLayout();
         layoutData.doLayout.run();
       });
-      expandAction.setHoveringIcon(AllIcons.Ide.Notification.ExpandHover);
+      expandAction.setHoveringIcon(TargetAWT.to(AllIcons.Ide.Notification.ExpandHover));
     }
 
     final CenteredLayoutWithActions layout = new CenteredLayoutWithActions(text, layoutData);
@@ -963,7 +964,7 @@ public class NotificationsManagerImpl extends NotificationsManager {
   }
 
   private static class DropDownAction extends LinkLabel<Void> {
-    Icon myIcon = AllIcons.Ide.Notification.DropTriangle;
+    Image myIcon = AllIcons.Ide.Notification.DropTriangle;
 
     public DropDownAction(String text, @Nullable LinkListener<Void> listener) {
       super(text, null, listener);
@@ -975,17 +976,17 @@ public class NotificationsManagerImpl extends NotificationsManager {
         @Override
         public void paintIcon(Component c, Graphics g, int x, int y) {
           int lineY = getUI().getBaseline(DropDownAction.this, getWidth(), getHeight()) - getIconHeight();
-          IconUtil.colorize(myIcon, getTextColor()).paintIcon(c, g, x - 1, lineY);
+          IconUtil.colorize(TargetAWT.to(myIcon), getTextColor()).paintIcon(c, g, x - 1, lineY);
         }
 
         @Override
         public int getIconWidth() {
-          return myIcon.getIconWidth();
+          return myIcon.getWidth();
         }
 
         @Override
         public int getIconHeight() {
-          return myIcon.getIconHeight();
+          return myIcon.getHeight();
         }
       });
     }

@@ -11,6 +11,7 @@ import com.intellij.ui.awt.RelativePoint;
 import com.intellij.ui.components.fields.ExtendableTextComponent.Extension;
 import com.intellij.util.Function;
 import com.intellij.util.ui.UIUtil;
+import consulo.awt.TargetAWT;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;
@@ -172,18 +173,18 @@ public abstract class ExpandableSupport<Source extends JComponent> implements Ex
 
   @Nonnull
   public static JLabel createLabel(@Nonnull Extension extension) {
-    return new JLabel(extension.getIcon(false)) {{
+    return new JLabel(TargetAWT.to(extension.getIcon(false))) {{
       setToolTipText(extension.getTooltip());
       setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
       addMouseListener(new MouseAdapter() {
         @Override
         public void mouseEntered(MouseEvent event) {
-          setIcon(extension.getIcon(true));
+          setIcon(TargetAWT.to(extension.getIcon(true)));
         }
 
         @Override
         public void mouseExited(MouseEvent event) {
-          setIcon(extension.getIcon(false));
+          setIcon(TargetAWT.to(extension.getIcon(false)));
         }
 
         @Override

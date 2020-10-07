@@ -16,6 +16,7 @@
 package com.intellij.ui.roots;
 
 import com.intellij.ui.ClickListener;
+import consulo.ui.image.Image;
 
 import javax.swing.*;
 import java.awt.*;
@@ -28,7 +29,7 @@ import java.awt.event.MouseEvent;
  * @author 2003
  */
 public class IconActionComponent extends ScalableIconComponent {
-  public IconActionComponent(Icon icon, Icon rolloverIcon, String tooltipText, final Runnable action) {
+  public IconActionComponent(Image icon, Image rolloverIcon, String tooltipText, final Runnable action) {
     super(icon, rolloverIcon);
     this.addMouseListener(new MouseAdapter() {
       public void mouseEntered(MouseEvent e) {

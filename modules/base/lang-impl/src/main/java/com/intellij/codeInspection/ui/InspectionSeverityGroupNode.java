@@ -17,11 +17,9 @@
 package com.intellij.codeInspection.ui;
 
 import com.intellij.codeHighlighting.HighlightDisplayLevel;
-import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.project.Project;
-import consulo.awt.TargetAWT;
-
-import javax.swing.*;
+import com.intellij.openapi.util.text.StringUtil;
+import consulo.ui.image.Image;
 
 
 /**
@@ -40,8 +38,8 @@ public class InspectionSeverityGroupNode extends InspectionTreeNode {
   }
 
   @Override
-  public Icon getIcon() {
-    return TargetAWT.to(myLevel.getIcon());
+  public Image getIcon() {
+    return myLevel.getIcon();
   }
 
   @Override

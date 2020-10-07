@@ -19,14 +19,15 @@ package com.intellij.ui.tabs;
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.ui.UISettings;
 import com.intellij.ide.util.scopeChooser.EditScopesDialog;
-import consulo.disposer.Disposable;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.ui.MessageType;
 import com.intellij.ui.AnActionButton;
 import com.intellij.ui.IdeBorderFactory;
 import com.intellij.ui.ToolbarDecorator;
-import javax.annotation.Nonnull;
+import com.intellij.ui.components.JBLabel;
+import consulo.disposer.Disposable;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -144,8 +145,8 @@ public class FileColorsConfigurablePanel extends JPanel implements Disposable {
 
     final JPanel infoPanel = new JPanel(new BorderLayout());
     infoPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-    infoPanel.add(new JLabel("Scopes are processed from top to bottom with Local colors first.",
-                                MessageType.INFO.getDefaultIcon(), SwingConstants.LEFT));
+    infoPanel.add(new JBLabel("Scopes are processed from top to bottom with Local colors first.",
+                              MessageType.INFO.getDefaultIcon(), SwingConstants.LEFT));
     final JButton editScopes = new JButton("Manage Scopes...");
     editScopes.addActionListener(new ActionListener() {
       @Override

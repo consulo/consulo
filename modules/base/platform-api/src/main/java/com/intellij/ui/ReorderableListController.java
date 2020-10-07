@@ -22,10 +22,10 @@ import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.Factory;
 import com.intellij.util.IconUtil;
 import com.intellij.util.containers.Convertor;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.util.*;
 
@@ -379,7 +379,7 @@ public abstract class ReorderableListController <T> {
 
     @Override
     public Image getActionIcon() {
-      return AllIcons.Actions.Copy;
+      return PlatformIconGroup.actionsCopy();
     }
 
     @Override

@@ -20,12 +20,14 @@ import com.intellij.openapi.util.AsyncResult;
 import com.intellij.ui.BrowserHyperlinkListener;
 import com.intellij.ui.IdeBorderFactory;
 import com.intellij.ui.ScrollPaneFactory;
+import com.intellij.ui.components.JBLabel;
 import com.intellij.util.ui.DialogUtil;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import consulo.localize.LocalizeValue;
-import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.Window;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.image.Image;
 import consulo.ui.impl.BaseAlert;
 
 import javax.annotation.Nonnull;
@@ -113,9 +115,9 @@ class DesktopAlertImpl<V> extends BaseAlert<V> {
     protected JComponent doCreateCenterPanel() {
       JPanel panel = new JPanel(new BorderLayout(15, 0));
 
-      Icon icon = getIcon();
+      Image icon = getIcon();
       if (icon != null) {
-        JLabel iconLabel = new JLabel(icon);
+        JLabel iconLabel = new JBLabel(icon);
         Container container = new Container();
         container.setLayout(new BorderLayout());
         container.add(iconLabel, BorderLayout.NORTH);
@@ -186,7 +188,7 @@ class DesktopAlertImpl<V> extends BaseAlert<V> {
   }
 
   @Nullable
-  private Icon getIcon() {
+  private Image getIcon() {
     switch (myType) {
       case INFO:
         return UIUtil.getInformationIcon();

@@ -15,10 +15,9 @@
  */
 package consulo.ui.web.servlet;
 
-import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.util.containers.ConcurrentFactoryMap;
-import com.intellij.util.io.URLUtil;
+import consulo.ui.image.ImageKey;
+import consulo.ui.web.internal.image.WebDataImageImpl;
+import consulo.ui.web.internal.image.WebImageKeyImpl;
 
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
@@ -27,9 +26,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
-import java.util.concurrent.ConcurrentMap;
 
 /**
  * @author VISTALL
@@ -37,41 +33,31 @@ import java.util.concurrent.ConcurrentMap;
  */
 @WebServlet(urlPatterns = "/app/image")
 public class UIIconServlet extends HttpServlet {
-  private static ConcurrentMap<URL, byte[]> ourCache = ConcurrentFactoryMap.createMap(k -> {
-    try {
-      final InputStream inputStream = URLUtil.openStream(k);
-      return FileUtil.loadBytes(inputStream);
-    }
-    catch (IOException e) {
-      return new byte[0];
-    }
-  });
-
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-    String urlHash = req.getParameter("urlHash");
-    if (urlHash == null) {
+    String groupId = req.getParameter("groupId");
+    String imageId = req.getParameter("imageId");
+    if (groupId == null || imageId == null) {
       resp.sendError(HttpServletResponse.SC_NOT_FOUND);
       return;
     }
 
-    final URL url = WebImageUrlCache.ourURLCache.get(Integer.parseInt(StringUtil.unquoteString(urlHash)));
-    if (url == null) {
+    WebImageKeyImpl imageKey = (WebImageKeyImpl)ImageKey.of(groupId, imageId, 0, 0);
+
+    WebDataImageImpl image = (WebDataImageImpl)imageKey.calcImage();
+    if(image == null) {
       resp.sendError(HttpServletResponse.SC_NOT_FOUND);
       return;
     }
 
-    byte[] bytes = ourCache.get(url);
-
-    assert bytes != null;
-
-    String urlText = url.toString();
-    if (urlText.endsWith(".svg")) {
+    if (image.isSVG()) {
       resp.setContentType("image/svg+xml");
     }
     else {
       resp.setContentType("image/png");
     }
+
+    byte[] bytes = image.getData();
 
     resp.setContentLength(bytes.length);
 

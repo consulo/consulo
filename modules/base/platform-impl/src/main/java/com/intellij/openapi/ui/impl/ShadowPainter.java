@@ -9,6 +9,8 @@ import com.intellij.util.ui.JBUI.ScaleContext;
 import com.intellij.util.ui.JBUI.ScaleContextAware;
 import com.intellij.util.ui.JBUI.ScaleContextSupport;
 import com.intellij.util.ui.UIUtil;
+import consulo.awt.TargetAWT;
+import consulo.ui.image.Image;
 
 import javax.annotation.Nullable;
 import javax.swing.*;
@@ -21,14 +23,14 @@ import java.awt.image.BufferedImage;
  * @author Konstantin Bulenkov
  */
 public class ShadowPainter extends ScaleContextSupport<ScaleContext> {
-  private final Icon myTop;
-  private final Icon myTopRight;
-  private final Icon myRight;
-  private final Icon myBottomRight;
-  private final Icon myBottom;
-  private final Icon myBottomLeft;
-  private final Icon myLeft;
-  private final Icon myTopLeft;
+  private final Image myTop;
+  private final Image myTopRight;
+  private final Image myRight;
+  private final Image myBottomRight;
+  private final Image myBottom;
+  private final Image myBottomLeft;
+  private final Image myLeft;
+  private final Image myTopLeft;
 
   private Icon myCroppedTop = null;
   private Icon myCroppedRight = null;
@@ -38,7 +40,7 @@ public class ShadowPainter extends ScaleContextSupport<ScaleContext> {
   @Nullable
   private Color myBorderColor;
 
-  public ShadowPainter(Icon top, Icon topRight, Icon right, Icon bottomRight, Icon bottom, Icon bottomLeft, Icon left, Icon topLeft) {
+  public ShadowPainter(Image top, Image topRight, Image right, Image bottomRight, Image bottom, Image bottomLeft, Image left, Image topLeft) {
     super(ScaleContext.create());
     myTop = top;
     myTopRight = topRight;
@@ -53,7 +55,7 @@ public class ShadowPainter extends ScaleContextSupport<ScaleContext> {
     LafManager.getInstance().addLafManagerListener(source -> updateIcons(null));
   }
 
-  public ShadowPainter(Icon top, Icon topRight, Icon right, Icon bottomRight, Icon bottom, Icon bottomLeft, Icon left, Icon topLeft, @Nullable Color borderColor) {
+  public ShadowPainter(Image top, Image topRight, Image right, Image bottomRight, Image bottom, Image bottomLeft, Image left, Image topLeft, @Nullable Color borderColor) {
     this(top, topRight, right, bottomRight, bottom, bottomLeft, left, topLeft);
     myBorderColor = borderColor;
   }
@@ -73,14 +75,14 @@ public class ShadowPainter extends ScaleContextSupport<ScaleContext> {
   }
 
   private void updateIcons(ScaleContext ctx) {
-    updateIcon(myTop, ctx, () -> myCroppedTop = IconUtil.cropIcon(myTop, 1, Integer.MAX_VALUE));
-    updateIcon(myTopRight, ctx, null);
-    updateIcon(myRight, ctx, () -> myCroppedRight = IconUtil.cropIcon(myRight, Integer.MAX_VALUE, 1));
-    updateIcon(myBottomRight, ctx, null);
-    updateIcon(myBottom, ctx, () -> myCroppedBottom = IconUtil.cropIcon(myBottom, 1, Integer.MAX_VALUE));
-    updateIcon(myBottomLeft, ctx, null);
-    updateIcon(myLeft, ctx, () -> myCroppedLeft = IconUtil.cropIcon(myLeft, Integer.MAX_VALUE, 1));
-    updateIcon(myTopLeft, ctx, null);
+    updateIcon(TargetAWT.to(myTop), ctx, () -> myCroppedTop = IconUtil.cropIcon(TargetAWT.to(myTop), 1, Integer.MAX_VALUE));
+    updateIcon(TargetAWT.to(myTopRight), ctx, null);
+    updateIcon(TargetAWT.to(myRight), ctx, () -> myCroppedRight = IconUtil.cropIcon(TargetAWT.to(myRight), Integer.MAX_VALUE, 1));
+    updateIcon(TargetAWT.to(myBottomRight), ctx, null);
+    updateIcon(TargetAWT.to(myBottom), ctx, () -> myCroppedBottom = IconUtil.cropIcon(TargetAWT.to(myBottom), 1, Integer.MAX_VALUE));
+    updateIcon(TargetAWT.to(myBottomLeft), ctx, null);
+    updateIcon(TargetAWT.to(myLeft), ctx, () -> myCroppedLeft = IconUtil.cropIcon(TargetAWT.to(myLeft), Integer.MAX_VALUE, 1));
+    updateIcon(TargetAWT.to(myTopLeft), ctx, null);
   }
 
   private static void updateIcon(Icon icon, ScaleContext ctx, Runnable r) {
@@ -98,43 +100,43 @@ public class ShadowPainter extends ScaleContextSupport<ScaleContext> {
     final int bottomSize = myCroppedBottom.getIconHeight();
     final int topSize = myCroppedTop.getIconHeight();
 
-    int delta = myTopLeft.getIconHeight() + myBottomLeft.getIconHeight() - height;
+    int delta = myTopLeft.getHeight() + myBottomLeft.getHeight() - height;
     if (delta > 0) { // Corner icons are overlapping. Need to handle this
       Shape clip = g.getClip();
 
-      int topHeight = myTopLeft.getIconHeight() - delta / 2;
+      int topHeight = myTopLeft.getHeight() - delta / 2;
       Area top = new Area(new Rectangle2D.Float(x, y, width, topHeight));
       if (clip != null) {
         top.intersect(new Area(clip));
       }
       g.setClip(top);
 
-      myTopLeft.paintIcon(c, g, x, y);
-      myTopRight.paintIcon(c, g, x + width - myTopRight.getIconWidth(), y);
+      TargetAWT.to(myTopLeft).paintIcon(c, g, x, y);
+      TargetAWT.to(myTopRight).paintIcon(c, g, x + width - myTopRight.getWidth(), y);
 
-      int bottomHeight = myBottomLeft.getIconHeight() - delta + delta / 2;
+      int bottomHeight = myBottomLeft.getHeight() - delta + delta / 2;
       Area bottom = new Area(new Rectangle2D.Float(x, y + topHeight, width, bottomHeight));
       if (clip != null) {
         bottom.intersect(new Area(clip));
       }
       g.setClip(bottom);
 
-      myBottomLeft.paintIcon(c, g, x, y + height - myBottomLeft.getIconHeight());
-      myBottomRight.paintIcon(c, g, x + width - myBottomRight.getIconWidth(), y + height - myBottomRight.getIconHeight());
+      TargetAWT.to(myBottomLeft).paintIcon(c, g, x, y + height - myBottomLeft.getHeight());
+      TargetAWT.to(myBottomRight).paintIcon(c, g, x + width - myBottomRight.getWidth(), y + height - myBottomRight.getHeight());
 
       g.setClip(clip);
     }
     else {
-      myTopLeft.paintIcon(c, g, x, y);
-      myTopRight.paintIcon(c, g, x + width - myTopRight.getIconWidth(), y);
-      myBottomLeft.paintIcon(c, g, x, y + height - myBottomLeft.getIconHeight());
-      myBottomRight.paintIcon(c, g, x + width - myBottomRight.getIconWidth(), y + height - myBottomRight.getIconHeight());
+      TargetAWT.to(myTopLeft).paintIcon(c, g, x, y);
+      TargetAWT.to(myTopRight).paintIcon(c, g, x + width - myTopRight.getWidth(), y);
+      TargetAWT.to(myBottomLeft).paintIcon(c, g, x, y + height - myBottomLeft.getHeight());
+      TargetAWT.to(myBottomRight).paintIcon(c, g, x + width - myBottomRight.getWidth(), y + height - myBottomRight.getHeight());
     }
 
-    fill(g, myCroppedTop, x, y, myTopLeft.getIconWidth(), width - myTopRight.getIconWidth(), true);
-    fill(g, myCroppedBottom, x, y + height - bottomSize, myBottomLeft.getIconWidth(), width - myBottomRight.getIconWidth(), true);
-    fill(g, myCroppedLeft, x, y, myTopLeft.getIconHeight(), height - myBottomLeft.getIconHeight(), false);
-    fill(g, myCroppedRight, x + width - rightSize, y, myTopRight.getIconHeight(), height - myBottomRight.getIconHeight(), false);
+    fill(g, myCroppedTop, x, y, myTopLeft.getWidth(), width - myTopRight.getWidth(), true);
+    fill(g, myCroppedBottom, x, y + height - bottomSize, myBottomLeft.getWidth(), width - myBottomRight.getWidth(), true);
+    fill(g, myCroppedLeft, x, y, myTopLeft.getHeight(), height - myBottomLeft.getHeight(), false);
+    fill(g, myCroppedRight, x + width - rightSize, y, myTopRight.getHeight(), height - myBottomRight.getHeight(), false);
 
     if (myBorderColor != null) {
       g.setColor(myBorderColor);

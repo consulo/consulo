@@ -836,14 +836,18 @@ public class FileUtil extends FileUtilRt {
   }
 
   /**
-   * @deprecated this method returns extension converted to lower case, this may not be correct for case-sensitive FS.
-   * Use {@link FileUtilRt#getExtension(String)} instead to get the unchanged extension.
+   * This method returns extension converted to lower case, this may not be correct for case-sensitive FS.
+   * Use {@link #getCaseSensitiveExtension(String)} instead to get the unchanged extension.
    * If you need to check whether a file has a specified extension use {@link FileUtilRt#extensionEquals(String, String)}
    */
-  @SuppressWarnings("StringToUpperCaseOrToLowerCaseWithoutLocale")
   @Nonnull
   public static String getExtension(@Nonnull String fileName) {
-    return FileUtilRt.getExtension(fileName).toLowerCase();
+    return FileUtilRt.getExtension(fileName).toLowerCase(Locale.ROOT);
+  }
+
+  @Nonnull
+  public static String getCaseSensitiveExtension(@Nonnull String fileName) {
+    return FileUtilRt.getExtension(fileName);
   }
 
   @Nonnull

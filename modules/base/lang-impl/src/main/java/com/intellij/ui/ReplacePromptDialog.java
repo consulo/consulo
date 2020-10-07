@@ -20,6 +20,9 @@ import com.intellij.find.FindManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
+import consulo.awt.TargetAWT;
+import consulo.ui.image.Image;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -83,9 +86,9 @@ public class ReplacePromptDialog extends DialogWrapper {
   public JComponent createNorthPanel() {
     JPanel panel = new JPanel(new BorderLayout());
     panel.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
-    Icon icon = Messages.getQuestionIcon();
+    Image icon = Messages.getQuestionIcon();
     if (icon != null){
-      JLabel iconLabel = new JLabel(icon);
+      JLabel iconLabel = new JLabel(TargetAWT.to(icon));
       panel.add(iconLabel, BorderLayout.WEST);
     }
     JLabel label = new JLabel(getMessage());

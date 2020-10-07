@@ -64,7 +64,7 @@ public class CreateFileFromTemplateDialog extends DialogWrapper {
 
     myKindLabel.setLabelFor(myKindCombo);
     myKindCombo.registerUpDownHint(myNameField);
-    myUpDownHint.setIcon(AllIcons.Ide.UpDown);
+    myUpDownHint.setIcon(TargetAWT.to(AllIcons.Ide.UpDown));
     setTemplateKindComponentsVisible(false);
     init();
   }

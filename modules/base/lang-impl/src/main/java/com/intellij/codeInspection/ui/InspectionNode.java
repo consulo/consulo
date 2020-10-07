@@ -18,18 +18,17 @@ package com.intellij.codeInspection.ui;
 
 import com.intellij.codeInspection.ex.InspectionToolWrapper;
 import com.intellij.icons.AllIcons;
-import com.intellij.ui.LayeredIcon;
-import com.intellij.util.IconUtil;
-import javax.annotation.Nonnull;
+import consulo.ui.image.Image;
+import consulo.ui.image.ImageEffects;
 
-import javax.swing.*;
+import javax.annotation.Nonnull;
 import java.util.Enumeration;
 
 /**
  * @author max
  */
 public class InspectionNode extends InspectionTreeNode {
-  public static final Icon TOOL = LayeredIcon.create(AllIcons.Toolwindows.ToolWindowInspection, IconUtil.getEmptyIcon(false));
+  public static final Image TOOL = ImageEffects.resize(AllIcons.Toolwindows.ToolWindowInspection, Image.DEFAULT_ICON_SIZE);
   private boolean myTooBigForOnlineRefresh = false;
 
   public InspectionNode(@Nonnull InspectionToolWrapper toolWrapper) {
@@ -46,7 +45,7 @@ public class InspectionNode extends InspectionTreeNode {
   }
 
   @Override
-  public Icon getIcon() {
+  public Image getIcon() {
     return TOOL;
   }
 

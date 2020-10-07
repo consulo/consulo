@@ -31,13 +31,13 @@ import com.intellij.util.containers.JBIterable;
 import com.intellij.util.containers.JBTreeTraverser;
 import consulo.annotation.DeprecationInfo;
 import consulo.desktop.awt.util.DarkThemeCalculator;
-import consulo.desktop.util.awt.AllIconsHack;
 import consulo.desktop.util.awt.MorphColor;
 import consulo.desktop.util.awt.StringHtmlUtil;
 import consulo.desktop.util.awt.laf.BuildInLookAndFeel;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
+import consulo.ui.image.ImageKey;
 import consulo.util.dataholder.Key;
 import org.intellij.lang.annotations.JdkConstants;
 import org.intellij.lang.annotations.Language;
@@ -70,10 +70,7 @@ import java.awt.font.FontRenderContext;
 import java.awt.font.GlyphVector;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.GeneralPath;
-import java.awt.image.BufferedImage;
-import java.awt.image.BufferedImageOp;
-import java.awt.image.ImageObserver;
-import java.awt.image.PixelGrabber;
+import java.awt.image.*;
 import java.beans.PropertyChangeListener;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -1300,20 +1297,62 @@ public class UIUtil {
     return UIManager.getBorder("Button.border");
   }
 
-  public static Icon getErrorIcon() {
-    return UIManager.getIcon("OptionPane.errorIcon");
+  public static consulo.ui.image.Image getErrorIcon() {
+    return wrapToImageIfNeed("OptionPane.errorIcon");
   }
 
-  public static Icon getInformationIcon() {
-    return UIManager.getIcon("OptionPane.informationIcon");
+  public static consulo.ui.image.Image getInformationIcon() {
+    return wrapToImageIfNeed("OptionPane.informationIcon");
   }
 
-  public static Icon getQuestionIcon() {
-    return UIManager.getIcon("OptionPane.questionIcon");
+  public static consulo.ui.image.Image getQuestionIcon() {
+    return wrapToImageIfNeed("OptionPane.questionIcon");
   }
 
-  public static Icon getWarningIcon() {
-    return UIManager.getIcon("OptionPane.warningIcon");
+  public static consulo.ui.image.Image getWarningIcon() {
+    return wrapToImageIfNeed("OptionPane.warningIcon");
+  }
+
+  private static consulo.ui.image.Image wrapToImageIfNeed(String id) {
+    Icon icon = UIManager.getIcon("OptionPane.warningIcon");
+    if(icon instanceof consulo.ui.image.Image) {
+      return (consulo.ui.image.Image)icon;
+    }
+
+    return new ImageWrapper(icon);
+  }
+
+  private static class ImageWrapper implements Icon, consulo.ui.image.Image {
+    private final Icon myDelegate;
+
+    private ImageWrapper(Icon delegate) {
+      myDelegate = delegate;
+    }
+
+    @Override
+    public void paintIcon(Component c, Graphics g, int x, int y) {
+      myDelegate.paintIcon(c, g, x, y);
+    }
+
+    @Override
+    public int getIconWidth() {
+      return getWidth();
+    }
+
+    @Override
+    public int getIconHeight() {
+      return getHeight();
+    }
+
+    @Override
+    public int getHeight() {
+      return myDelegate.getIconHeight();
+    }
+
+    @Override
+    public int getWidth() {
+      return myDelegate.getIconWidth();
+    }
   }
 
   public static Icon getRadioButtonIcon() {
@@ -1321,15 +1360,15 @@ public class UIUtil {
   }
 
   public static Icon getTreeNodeIcon(boolean expanded, boolean selected, boolean focused) {
-    boolean white = (selected && focused) || isUnderDarkBuildInLaf();
-
+    boolean selectedAndFocused = selected && focused;
+    
     Icon selectedIcon = getTreeSelectedExpandedIcon();
     Icon notSelectedIcon = getTreeExpandedIcon();
 
     int width = Math.max(selectedIcon.getIconWidth(), notSelectedIcon.getIconWidth());
     int height = Math.max(selectedIcon.getIconWidth(), notSelectedIcon.getIconWidth());
 
-    return new CenteredIcon(expanded ? (white ? getTreeSelectedExpandedIcon() : getTreeExpandedIcon()) : (white ? getTreeSelectedCollapsedIcon() : getTreeCollapsedIcon()), width, height, false);
+    return new CenteredIcon(expanded ? (selectedAndFocused ? getTreeSelectedExpandedIcon() : getTreeExpandedIcon()) : (selectedAndFocused ? getTreeSelectedCollapsedIcon() : getTreeCollapsedIcon()), width, height, false);
   }
 
   public static Icon getTreeCollapsedIcon() {
@@ -1344,13 +1383,17 @@ public class UIUtil {
     return expanded ? getTreeExpandedIcon() : getTreeCollapsedIcon();
   }
 
+  private static final ImageKey selectedCollapsedIcon = ImageKey.fromString("consulo.platform.desktop.laf.LookAndFeelIconGroup@components.treeCollapsedSelected", 9, 11);
+  
   public static Icon getTreeSelectedCollapsedIcon() {
     Icon icon = UIManager.getIcon("Tree.selectedCollapsedIcon");
     if (icon != null) {
       return icon;
     }
-    return isUnderAquaBasedLookAndFeel() || isUnderGTKLookAndFeel() || isUnderBuildInLaF() ? AllIconsHack.Tree_white_right_arrow() : getTreeCollapsedIcon();
+    return isUnderAquaBasedLookAndFeel() || isUnderGTKLookAndFeel() || isUnderBuildInLaF() ? (Icon)selectedCollapsedIcon: getTreeCollapsedIcon();
   }
+
+  private static final ImageKey selectedExpandedIcon = ImageKey.fromString("consulo.platform.desktop.laf.LookAndFeelIconGroup@components.treeExpandedSelected", 11, 9);
 
   public static Icon getTreeSelectedExpandedIcon() {
     Icon icon = UIManager.getIcon("Tree.selectedExpandedIcon");
@@ -1358,7 +1401,7 @@ public class UIUtil {
       return icon;
     }
 
-    return isUnderAquaBasedLookAndFeel() || isUnderGTKLookAndFeel() || isUnderBuildInLaF() ? AllIconsHack.Tree_white_down_arrow() : getTreeExpandedIcon();
+    return isUnderAquaBasedLookAndFeel() || isUnderGTKLookAndFeel() || isUnderBuildInLaF() ? (Icon)selectedExpandedIcon : getTreeExpandedIcon();
   }
 
   public static Border getTableHeaderCellBorder() {

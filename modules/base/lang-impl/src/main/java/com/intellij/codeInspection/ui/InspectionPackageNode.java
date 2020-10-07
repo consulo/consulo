@@ -17,8 +17,7 @@
 package com.intellij.codeInspection.ui;
 
 import com.intellij.icons.AllIcons;
-
-import javax.swing.*;
+import consulo.ui.image.Image;
 
 /**
  * @author max
@@ -34,7 +33,7 @@ public class InspectionPackageNode extends InspectionTreeNode {
   }
 
   @Override
-  public Icon getIcon() {
+  public Image getIcon() {
     return AllIcons.Nodes.Package;
   }
 }

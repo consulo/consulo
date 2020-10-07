@@ -900,7 +900,7 @@ public class SearchEverywhereUI extends BigPopupUI implements DataProvider, Quic
     @Override
     protected void customizeCellRenderer(@Nonnull JList<?> list, Object value, int index, boolean selected, boolean hasFocus) {
       setPaintFocusBorder(false);
-      setIcon(EmptyIcon.ICON_16);
+      setIcon(Image.empty(Image.DEFAULT_ICON_SIZE));
       setFont(list.getFont());
 
       SearchEverywhereCommandInfo command = (SearchEverywhereCommandInfo)value;

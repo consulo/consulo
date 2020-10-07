@@ -15,9 +15,10 @@
  */
 package consulo.diagram.builder;
 
+import consulo.ui.image.Image;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.swing.*;
 import java.util.List;
 
 /**
@@ -39,7 +40,7 @@ public interface GraphNode<T> {
   String getName();
 
   @Nullable
-  Icon getIcon();
+  Image getIcon();
 
   T getValue();
 

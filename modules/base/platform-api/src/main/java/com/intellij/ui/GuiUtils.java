@@ -178,24 +178,6 @@ public class GuiUtils {
             aRight ? paddingInsideDialog.right : 0));
   }
 
-  public static void setAdditionalIcon(JRadioButton button, Icon icon) {
-    final Icon defaultIcon = UIUtil.getRadioButtonIcon();
-    LayeredIcon deficon = new LayeredIcon(2);
-    deficon.setIcon(defaultIcon, 0);
-    deficon.setIcon(icon, 1, defaultIcon.getIconWidth() + 5, 0);
-    button.setIcon(deficon);
-
-    LayeredIcon pressed = new LayeredIcon(2);
-    pressed.setIcon(defaultIcon, 0);
-    pressed.setIcon(icon, 1, defaultIcon.getIconWidth() + 5, 0);
-    button.setPressedIcon(pressed);
-
-    LayeredIcon selected = new LayeredIcon(2);
-    selected.setIcon(defaultIcon, 0);
-    selected.setIcon(icon, 1, defaultIcon.getIconWidth() + 5, 0);
-    button.setSelectedIcon(selected);
-  }
-
   public static String getTextWithoutMnemonicEscaping(String text) {
     return StringUtil.strip(text, NOT_MNEMONIC_CHAR_FILTER);
   }

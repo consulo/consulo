@@ -27,6 +27,7 @@ import com.intellij.openapi.help.HelpManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.ComboBox;
 import com.intellij.openapi.ui.DialogWrapper;
+import consulo.awt.TargetAWT;
 import consulo.disposer.Disposer;
 import com.intellij.psi.search.SearchScope;
 import com.intellij.ui.IdeBorderFactory;
@@ -89,7 +90,7 @@ public class LayoutProjectCodeDialog extends DialogWrapper implements ReformatFi
     myOptionsPanel.setBorder(IdeBorderFactory.createTitledBorder(CodeInsightBundle.message("reformat.directory.dialog.options")));
     myFiltersPanel.setBorder(IdeBorderFactory.createTitledBorder(CodeInsightBundle.message("reformat.directory.dialog.filters")));
 
-    myMaskWarningLabel.setIcon(AllIcons.General.Warning);
+    myMaskWarningLabel.setIcon(TargetAWT.to(AllIcons.General.Warning));
     myMaskWarningLabel.setVisible(false);
 
     myIncludeSubdirsCb.setVisible(shouldShowIncludeSubdirsCb());

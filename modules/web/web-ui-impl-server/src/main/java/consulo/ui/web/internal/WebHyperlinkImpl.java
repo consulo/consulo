@@ -20,7 +20,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import consulo.ui.web.internal.base.UIComponentWithVaadinComponent;
 import consulo.ui.web.internal.base.VaadinComponent;
-import consulo.ui.web.servlet.WebImageUrlCache;
+import consulo.ui.web.servlet.WebImageMapper;
 import consulo.web.gwt.shared.ui.state.button.ButtonRpc;
 import consulo.web.gwt.shared.ui.state.button.ButtonState;
 
@@ -56,7 +56,7 @@ public class WebHyperlinkImpl extends UIComponentWithVaadinComponent<WebHyperlin
     public void beforeClientResponse(boolean initial) {
       super.beforeClientResponse(initial);
 
-      getState().myImageState = myImage == null ? null : WebImageUrlCache.map(myImage).getState();
+      getState().myImageState = myImage == null ? null : WebImageMapper.map(myImage).getState();
     }
 
     private void setText(String text) {

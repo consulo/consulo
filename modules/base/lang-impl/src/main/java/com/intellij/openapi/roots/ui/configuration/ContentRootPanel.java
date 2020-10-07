@@ -35,11 +35,11 @@ import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.util.containers.MultiMap;
 import com.intellij.util.ui.UIUtil;
-import javax.annotation.Nonnull;
 import consulo.roots.ContentFolderScopes;
 import consulo.roots.ContentFolderTypeProvider;
 import consulo.roots.impl.ExcludedContentFolderTypeProvider;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
@@ -51,7 +51,7 @@ import java.util.Map;
 
 /**
  * @author Eugene Zhuravlev
- *         Date: Jan 19, 2004
+ * Date: Jan 19, 2004
  */
 public abstract class ContentRootPanel extends JPanel {
   private static final Color SELECTED_HEADER_COLOR = new JBColor(new Color(0xDEF2FF), UIUtil.getPanelBackground().darker());
@@ -85,16 +85,13 @@ public abstract class ContentRootPanel extends JPanel {
 
   public void initUI() {
     myHeader = createHeader();
-    this.add(myHeader, new GridBagConstraints(0, GridBagConstraints.RELATIVE, 1, 1, 1.0, 0.0, GridBagConstraints.NORTHWEST,
-                                              GridBagConstraints.HORIZONTAL, new Insets(0, 0, 8, 0), 0, 0));
+    this.add(myHeader, new GridBagConstraints(0, GridBagConstraints.RELATIVE, 1, 1, 1.0, 0.0, GridBagConstraints.NORTHWEST, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 8, 0), 0, 0));
 
     addFolderGroupComponents();
 
     myBottom = new JPanel(new BorderLayout());
     myBottom.add(Box.createVerticalStrut(3), BorderLayout.NORTH);
-    this.add(myBottom,
-             new GridBagConstraints(0, GridBagConstraints.RELATIVE, 1, 1, 1.0, 1.0, GridBagConstraints.NORTH, GridBagConstraints.HORIZONTAL,
-                                    new Insets(0, 0, 0, 0), 0, 0));
+    this.add(myBottom, new GridBagConstraints(0, GridBagConstraints.RELATIVE, 1, 1, 1.0, 1.0, GridBagConstraints.NORTH, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
 
     setSelected(false);
   }
@@ -114,9 +111,7 @@ public abstract class ContentRootPanel extends JPanel {
     }
 
     Insets insets = new Insets(0, 0, 10, 0);
-    GridBagConstraints constraints =
-      new GridBagConstraints(0, GridBagConstraints.RELATIVE, 1, 1, 1.0, 0.0, GridBagConstraints.NORTH, GridBagConstraints.HORIZONTAL,
-                             insets, 0, 0);
+    GridBagConstraints constraints = new GridBagConstraints(0, GridBagConstraints.RELATIVE, 1, 1, 1.0, 0.0, GridBagConstraints.NORTH, GridBagConstraints.HORIZONTAL, insets, 0, 0);
     for (Map.Entry<ContentFolderTypeProvider, Collection<ContentFolder>> entry : folderByType.entrySet()) {
       Collection<ContentFolder> folders = entry.getValue();
       if (folders.isEmpty()) continue;
@@ -124,9 +119,7 @@ public abstract class ContentRootPanel extends JPanel {
       ContentFolderTypeProvider contentFolderTypeProvider = entry.getKey();
 
       ContentFolder[] foldersArray = folders.toArray(new ContentFolder[folders.size()]);
-      final JComponent sourcesComponent = createFolderGroupComponent(contentFolderTypeProvider.getName(), foldersArray,
-                                                                     contentFolderTypeProvider.getGroupColor(),
-                                                                     contentFolderTypeProvider);
+      final JComponent sourcesComponent = createFolderGroupComponent(contentFolderTypeProvider.getName(), foldersArray, contentFolderTypeProvider.getGroupColor(), contentFolderTypeProvider);
       add(sourcesComponent, constraints);
     }
   }
@@ -140,27 +133,20 @@ public abstract class ContentRootPanel extends JPanel {
       headerLabel.setForeground(Color.RED);
     }
     final IconActionComponent deleteIconComponent =
-      new IconActionComponent(AllIcons.Modules.DeleteContentRoot, AllIcons.Modules.DeleteContentRootRollover,
-                              ProjectBundle.message("module.paths.remove.content.tooltip"), new Runnable() {
-        @Override
-        public void run() {
-          myCallback.deleteContentEntry();
-        }
-      });
+            new IconActionComponent(AllIcons.Modules.DeleteContentRoot, AllIcons.Modules.DeleteContentRootRollover, ProjectBundle.message("module.paths.remove.content.tooltip"), new Runnable() {
+              @Override
+              public void run() {
+                myCallback.deleteContentEntry();
+              }
+            });
     final ResizingWrapper wrapper = new ResizingWrapper(headerLabel);
-    panel.add(wrapper, new GridBagConstraints(0, GridBagConstraints.RELATIVE, 1, 1, 1.0, 1.0, GridBagConstraints.NORTHWEST,
-                                              GridBagConstraints.HORIZONTAL, new Insets(0, 2, 0, 0), 0, 0));
-    panel.add(deleteIconComponent,
-              new GridBagConstraints(1, GridBagConstraints.RELATIVE, 1, 1, 0.0, 1.0, GridBagConstraints.EAST, GridBagConstraints.NONE,
-                                     new Insets(0, 0, 0, 2), 0, 0));
+    panel.add(wrapper, new GridBagConstraints(0, GridBagConstraints.RELATIVE, 1, 1, 1.0, 1.0, GridBagConstraints.NORTHWEST, GridBagConstraints.HORIZONTAL, new Insets(0, 2, 0, 0), 0, 0));
+    panel.add(deleteIconComponent, new GridBagConstraints(1, GridBagConstraints.RELATIVE, 1, 1, 0.0, 1.0, GridBagConstraints.EAST, GridBagConstraints.NONE, new Insets(0, 0, 0, 2), 0, 0));
     FilePathClipper.install(headerLabel, wrapper);
     return panel;
   }
 
-  protected JComponent createFolderGroupComponent(String title,
-                                                  ContentFolder[] folders,
-                                                  Color foregroundColor,
-                                                  @Nonnull ContentFolderTypeProvider editor) {
+  protected JComponent createFolderGroupComponent(String title, ContentFolder[] folders, Color foregroundColor, @Nonnull ContentFolderTypeProvider editor) {
     final JPanel panel = new JPanel(new GridLayoutManager(folders.length, 3, new Insets(1, 17, 0, 2), 0, 1));
     panel.setOpaque(false);
 
@@ -168,9 +154,8 @@ public abstract class ContentRootPanel extends JPanel {
       final ContentFolder folder = folders[idx];
       final int verticalPolicy = idx == folders.length - 1 ? GridConstraints.SIZEPOLICY_CAN_GROW : GridConstraints.SIZEPOLICY_FIXED;
       panel.add(createFolderComponent(folder, foregroundColor),
-                new GridConstraints(idx, 0, 1, 1, GridConstraints.ANCHOR_NORTHWEST, GridConstraints.FILL_HORIZONTAL,
-                                    GridConstraints.SIZEPOLICY_CAN_GROW | GridConstraints.SIZEPOLICY_CAN_SHRINK, verticalPolicy, null, null,
-                                    null));
+                new GridConstraints(idx, 0, 1, 1, GridConstraints.ANCHOR_NORTHWEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_GROW | GridConstraints.SIZEPOLICY_CAN_SHRINK,
+                                    verticalPolicy, null, null, null));
 
       panel.add(createFolderChangeOptionsComponent(folder, editor),
                 new GridConstraints(idx, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, verticalPolicy, null, null, null));
@@ -202,10 +187,9 @@ public abstract class ContentRootPanel extends JPanel {
   private JComponent createFolderComponent(final ContentFolder folder, Color foreground) {
     final VirtualFile folderFile = folder.getFile();
     final VirtualFile contentEntryFile = getContentEntry().getFile();
-    final String properties ="";
+    final String properties = "";
     if (folderFile != null && contentEntryFile != null) {
-      String path =
-        folderFile.equals(contentEntryFile) ? "." : VfsUtilCore.getRelativePath(folderFile, contentEntryFile, File.separatorChar);
+      String path = folderFile.equals(contentEntryFile) ? "." : VfsUtilCore.getRelativePath(folderFile, contentEntryFile, File.separatorChar);
       HoverHyperlinkLabel hyperlinkLabel = new HoverHyperlinkLabel(path + properties, foreground);
       hyperlinkLabel.setMinimumSize(new Dimension(0, 0));
       hyperlinkLabel.addHyperlinkListener(new HyperlinkListener() {
@@ -228,13 +212,12 @@ public abstract class ContentRootPanel extends JPanel {
   }
 
   private JComponent createFolderChangeOptionsComponent(final ContentFolder folder, @Nonnull ContentFolderTypeProvider editor) {
-    return new IconActionComponent(AllIcons.Modules.ContentFolderOptions, AllIcons.Modules.ContentFolderOptions, ProjectBundle.message("module.paths.properties.tooltip"),
-                                   new Runnable() {
-                                     @Override
-                                     public void run() {
-                                       myCallback.showChangeOptionsDialog(getContentEntry(), folder);
-                                     }
-                                   });
+    return new IconActionComponent(AllIcons.Modules.ContentFolderOptions, AllIcons.Modules.ContentFolderOptions, ProjectBundle.message("module.paths.properties.tooltip"), new Runnable() {
+      @Override
+      public void run() {
+        myCallback.showChangeOptionsDialog(getContentEntry(), folder);
+      }
+    });
   }
 
   private JComponent createFolderDeleteComponent(final ContentFolder folder, @Nonnull ContentFolderTypeProvider editor) {
@@ -245,13 +228,12 @@ public abstract class ContentRootPanel extends JPanel {
     else {
       tooltipText = ProjectBundle.message("module.paths.remove.tooltip");
     }
-    return new IconActionComponent(AllIcons.Modules.DeleteContentFolder, AllIcons.Modules.DeleteContentFolderRollover, tooltipText,
-                                   new Runnable() {
-                                     @Override
-                                     public void run() {
-                                       myCallback.deleteContentFolder(getContentEntry(), folder);
-                                     }
-                                   });
+    return new IconActionComponent(AllIcons.Modules.DeleteContentFolder, AllIcons.Modules.DeleteContentFolderRollover, tooltipText, new Runnable() {
+      @Override
+      public void run() {
+        myCallback.deleteContentFolder(getContentEntry(), folder);
+      }
+    });
   }
 
   public boolean isExcludedOrUnderExcludedDirectory(final VirtualFile file) {

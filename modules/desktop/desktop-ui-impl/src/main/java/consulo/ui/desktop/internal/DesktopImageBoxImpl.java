@@ -16,7 +16,6 @@
 package consulo.ui.desktop.internal;
 
 import com.intellij.ui.roots.ScalableIconComponent;
-import consulo.awt.TargetAWT;
 import consulo.awt.impl.FromSwingComponentWrapper;
 import consulo.ui.Component;
 import consulo.ui.ImageBox;
@@ -24,7 +23,6 @@ import consulo.ui.desktop.internal.base.SwingComponentDelegate;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
-import javax.swing.*;
 
 /**
  * @author VISTALL
@@ -32,7 +30,7 @@ import javax.swing.*;
  */
 class DesktopImageBoxImpl extends SwingComponentDelegate<ScalableIconComponent> implements ImageBox {
   class MyScalableIconComponent extends ScalableIconComponent implements FromSwingComponentWrapper {
-    MyScalableIconComponent(Icon icon) {
+    MyScalableIconComponent(Image icon) {
       super(icon);
     }
 
@@ -46,7 +44,7 @@ class DesktopImageBoxImpl extends SwingComponentDelegate<ScalableIconComponent> 
   private Image myIcon;
 
   public DesktopImageBoxImpl(@Nonnull Image image) {
-    myComponent = new MyScalableIconComponent(TargetAWT.to(image));
+    initialize(new MyScalableIconComponent(image));
     myIcon = image;
   }
 

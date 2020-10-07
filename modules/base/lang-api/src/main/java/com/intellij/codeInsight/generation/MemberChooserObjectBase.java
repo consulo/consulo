@@ -18,6 +18,8 @@ package com.intellij.codeInsight.generation;
 import com.intellij.ui.SimpleColoredComponent;
 import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.ui.speedSearch.SpeedSearchUtil;
+import consulo.ui.image.Image;
+
 import javax.annotation.Nullable;
 
 import javax.swing.*;
@@ -27,13 +29,13 @@ import javax.swing.*;
 */
 public class MemberChooserObjectBase implements MemberChooserObject {
   private final String myText;
-  private final Icon myIcon;
+  private final Image myIcon;
 
   public MemberChooserObjectBase(final String text) {
     this(text, null);
   }
 
-  public MemberChooserObjectBase(final String text, @Nullable final Icon icon) {
+  public MemberChooserObjectBase(final String text, @Nullable final Image icon) {
     myText = text;
     myIcon = icon;
   }

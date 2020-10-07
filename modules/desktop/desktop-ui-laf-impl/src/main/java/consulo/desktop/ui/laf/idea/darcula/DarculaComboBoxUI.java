@@ -8,15 +8,19 @@ import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.ui.*;
+import com.intellij.ui.EditorTextField;
+import com.intellij.ui.IdeBorderFactory;
+import com.intellij.ui.JBColor;
+import com.intellij.ui.SimpleColoredComponent;
 import com.intellij.ui.scale.JBUIScale;
 import com.intellij.util.ObjectUtil;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.ui.JBInsets;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
-import javax.annotation.Nonnull;
+import consulo.awt.TargetAWT;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -306,9 +310,9 @@ public class DarculaComboBoxUI extends BasicComboBoxUI implements Border, ErrorB
       border = cc.getBorder();
       cc.setBorder(JBUI.Borders.empty());
       cc.setIpad(JBUI.emptyInsets());
-      icon = cc.getIcon();
+      icon = TargetAWT.to(cc.getIcon());
       if (!cc.isIconOnTheRight()) {
-        cc.setIcon(icon);
+        cc.setIcon(TargetAWT.from(icon));
       }
     }
     else if (c instanceof JLabel) {
@@ -350,7 +354,7 @@ public class DarculaComboBoxUI extends BasicComboBoxUI implements Border, ErrorB
     if (c instanceof SimpleColoredComponent) {
       SimpleColoredComponent cc = (SimpleColoredComponent)c;
       cc.setIpad(iPad);
-      cc.setIcon(icon);
+      cc.setIcon(TargetAWT.from(icon));
       cc.setBorder(border);
     }
     else if (c instanceof JLabel) {

@@ -19,10 +19,10 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.WindowManager;
 import com.intellij.ui.mac.MacMessages;
 import com.intellij.util.ObjectUtil;
+import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.swing.*;
 
 public abstract class MessageDialogBuilder<T extends MessageDialogBuilder> {
   protected final String myMessage;
@@ -32,7 +32,7 @@ public abstract class MessageDialogBuilder<T extends MessageDialogBuilder> {
   protected String myNoText;
 
   protected Project myProject;
-  protected Icon myIcon;
+  protected Image myIcon;
   protected DialogWrapper.DoNotAskOption myDoNotAskOption;
 
   private MessageDialogBuilder(@Nonnull String title, @Nonnull String message) {
@@ -63,7 +63,7 @@ public abstract class MessageDialogBuilder<T extends MessageDialogBuilder> {
    * @see {@link com.intellij.openapi.ui.Messages#getErrorIcon()}
    * @see {@link com.intellij.openapi.ui.Messages#getQuestionIcon()}
    */
-  public T icon(@Nullable Icon icon) {
+  public T icon(@Nullable Image icon) {
     myIcon = icon;
     return getThis();
   }

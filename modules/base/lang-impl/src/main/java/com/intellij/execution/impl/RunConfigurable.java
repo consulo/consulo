@@ -22,7 +22,6 @@ import com.intellij.execution.configurations.*;
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.DataManager;
 import com.intellij.openapi.actionSystem.*;
-import consulo.logging.Logger;
 import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.options.*;
 import com.intellij.openapi.project.Project;
@@ -36,7 +35,6 @@ import com.intellij.openapi.ui.popup.ListPopupStep;
 import com.intellij.openapi.ui.popup.PopupStep;
 import com.intellij.openapi.ui.popup.util.BaseListPopupStep;
 import com.intellij.openapi.util.Comparing;
-import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.Trinity;
 import com.intellij.openapi.wm.IdeFocusManager;
@@ -49,13 +47,19 @@ import com.intellij.util.config.StorageAccessors;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.Convertor;
 import com.intellij.util.containers.HashMap;
-import com.intellij.util.ui.*;
+import com.intellij.util.ui.EditableModel;
+import com.intellij.util.ui.GridBag;
+import com.intellij.util.ui.JBUI;
+import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.tree.TreeUtil;
-import consulo.ui.annotation.RequiredUIAccess;
 import consulo.awt.TargetAWT;
+import consulo.logging.Logger;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.SwingUIDecorator;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
+import consulo.util.dataholder.Key;
 import gnu.trove.THashSet;
 import org.jetbrains.annotations.NonNls;
 
@@ -69,8 +73,8 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 import static com.intellij.execution.impl.RunConfigurable.NodeKind.*;
 import static com.intellij.ui.RowsDnDSupport.RefinedDropSupport.Position.*;
@@ -232,7 +236,7 @@ class RunConfigurable extends BaseConfigurable {
             }
           }
           if (shared != null) {
-            consulo.ui.image.Image icon = TargetAWT.from(getIcon());
+            consulo.ui.image.Image icon = getIcon();
 
             if(shared) {
               setIcon(ImageEffects.layered(icon, AllIcons.Nodes.Symlink));
@@ -1422,9 +1426,7 @@ class RunConfigurable extends BaseConfigurable {
 
   private class MyCopyAction extends AnAction {
     public MyCopyAction() {
-      super(ExecutionBundle.message("copy.configuration.action.name"),
-            ExecutionBundle.message("copy.configuration.action.name"),
-            AllIcons.Actions.Copy);
+      super(ExecutionBundle.message("copy.configuration.action.name"), ExecutionBundle.message("copy.configuration.action.name"), PlatformIconGroup.actionsCopy());
 
       final AnAction action = ActionManager.getInstance().getAction(IdeActions.ACTION_EDITOR_DUPLICATE);
       registerCustomShortcutSet(action.getShortcutSet(), myTree);

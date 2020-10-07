@@ -26,10 +26,11 @@ import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.ui.IdeBorderFactory;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.ScrollPaneFactory;
+import com.intellij.ui.components.JBLabel;
 import com.intellij.util.ui.UIUtil;
 import org.intellij.lang.annotations.JdkConstants;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -276,7 +277,7 @@ class MouseShortcutDialog extends DialogWrapper{
     }
   }
 
-  private class MyClickPad extends JLabel{
+  private class MyClickPad extends JBLabel {
     public MyClickPad(){
       super(
               KeyMapBundle.message("mouse.shortcut.label"),

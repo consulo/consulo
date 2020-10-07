@@ -27,6 +27,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.vfs.CharsetToolkit;
+import consulo.ui.image.Image;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -226,7 +228,7 @@ public abstract class ExecutableValidator {
   private int showMessage(@Nullable Component parentComponent) {
     String okText = "Fix it";
     String cancelText = CommonBundle.getCancelButtonText();
-    Icon icon = Messages.getErrorIcon();
+    Image icon = Messages.getErrorIcon();
     String title = myNotificationErrorTitle;
     String description = myNotificationErrorDescription;
     return parentComponent != null

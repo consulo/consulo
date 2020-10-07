@@ -20,14 +20,12 @@ import com.kitfox.svg.SVGCache;
 import com.kitfox.svg.SVGDiagram;
 import consulo.ui.image.Image;
 import consulo.ui.web.internal.WebUIThreadLocal;
-import consulo.ui.migration.SwingImageRef;
 import consulo.ui.web.servlet.UIServlet;
-import consulo.ui.web.servlet.WebImageUrlCache;
+import consulo.ui.web.servlet.WebImageMapper;
 import consulo.web.gwt.shared.ui.state.image.ImageState;
 import consulo.web.gwt.shared.ui.state.image.MultiImageState;
 
 import javax.annotation.Nonnull;
-import java.awt.*;
 import java.awt.geom.Rectangle2D;
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -37,11 +35,11 @@ import java.net.URL;
  * @author VISTALL
  * @since 13-Jun-16
  */
-public class WebImageImpl implements Image, WebImageWithVaadinState, SwingImageRef {
+public class WebImageImpl implements Image, WebImageWithVaadinState {
   private int myURLHash, myHeight, myWidth;
 
   public WebImageImpl(@Nonnull URL url) {
-    myURLHash = WebImageUrlCache.hashCode(url);
+    myURLHash = WebImageMapper.hashCode(url);
 
     URL scaledImageUrl = url;
     String urlText = url.toString();
@@ -57,7 +55,7 @@ public class WebImageImpl implements Image, WebImageWithVaadinState, SwingImageR
 
     try (InputStream ignored = scaledImageUrl.openStream()) {
       // if scaled image resolved - map it for better quality
-      myURLHash = WebImageUrlCache.hashCode(scaledImageUrl);
+      myURLHash = WebImageMapper.hashCode(scaledImageUrl);
     }
     catch (Throwable ignored) {
     }
@@ -102,23 +100,8 @@ public class WebImageImpl implements Image, WebImageWithVaadinState, SwingImageR
   public void toState(MultiImageState m) {
     ImageState state = new ImageState();
     UIServlet.UIImpl current = (UIServlet.UIImpl)WebUIThreadLocal.getUI();
-    state.myURL = WebImageUrlCache.createURL(myURLHash, current.getURLPrefix());
+    state.myURL = WebImageMapper.createURL(myURLHash, current.getURLPrefix());
 
     m.myImageState = state;
-  }
-
-  @Override
-  public void paintIcon(Component c, Graphics g, int x, int y) {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public int getIconWidth() {
-    return getWidth();
-  }
-
-  @Override
-  public int getIconHeight() {
-    return getHeight();
   }
 }

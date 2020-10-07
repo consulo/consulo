@@ -29,6 +29,9 @@
         <include>consulo:consulo-desktop-ui-impl</include>
         <include>consulo:consulo-desktop-ui-laf-impl</include>
 
+        <include>consulo:consulo-desktop-base-laf-icon-library</include>
+        <include>consulo:consulo-desktop-dark-laf-icon-library</include>
+
         <!--TODO [VISTALL] this dependency must be moved from base plugin-->
         <!--<include>consulo:consulo-desktop-util-awt</include>-->
 

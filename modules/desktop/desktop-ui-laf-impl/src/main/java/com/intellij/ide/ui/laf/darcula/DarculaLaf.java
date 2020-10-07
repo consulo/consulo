@@ -18,7 +18,6 @@ package com.intellij.ide.ui.laf.darcula;
 import com.intellij.ide.ui.laf.DarculaMetalTheme;
 import com.intellij.ide.ui.laf.LafManagerImplUtil;
 import com.intellij.ide.ui.laf.ideaOld.IntelliJMetalLookAndFeel;
-import com.intellij.openapi.util.IconLoader;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
@@ -26,9 +25,12 @@ import com.intellij.ui.ColorUtil;
 import com.intellij.util.containers.hash.HashMap;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
+import consulo.awt.TargetAWT;
 import consulo.ide.ui.laf.BaseLookAndFeel;
 import consulo.ui.desktop.laf.extend.textBox.SupportTextBoxWithExpandActionExtender;
 import consulo.ui.desktop.laf.extend.textBox.SupportTextBoxWithExtensionsExtender;
+import consulo.ui.image.Image;
+import consulo.ui.image.ImageKey;
 import sun.awt.AppContext;
 
 import javax.annotation.Nonnull;
@@ -49,6 +51,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.List;
+import java.util.Locale;
 import java.util.Properties;
 
 /**
@@ -62,7 +65,8 @@ public class DarculaLaf extends BaseLookAndFeel {
     try {
       if (SystemInfo.isWindows || SystemInfo.isLinux) {
         base = new IntelliJMetalLookAndFeel();
-      } else {
+      }
+      else {
         final String name = UIManager.getSystemLookAndFeelClassName();
         base = (BasicLookAndFeel)Class.forName(name).newInstance();
       }
@@ -182,56 +186,21 @@ public class DarculaLaf extends BaseLookAndFeel {
   @SuppressWarnings({"HardCodedStringLiteral"})
   protected void initIdeaDefaults(UIDefaults defaults) {
     loadDefaults(defaults);
-    defaults.put("Table.ancestorInputMap", new UIDefaults.LazyInputMap(new Object[] {
-      "ctrl C", "copy",
-      "ctrl V", "paste",
-      "ctrl X", "cut",
-      "COPY", "copy",
-      "PASTE", "paste",
-      "CUT", "cut",
-      "control INSERT", "copy",
-      "shift INSERT", "paste",
-      "shift DELETE", "cut",
-      "RIGHT", "selectNextColumn",
-      "KP_RIGHT", "selectNextColumn",
-      "LEFT", "selectPreviousColumn",
-      "KP_LEFT", "selectPreviousColumn",
-      "DOWN", "selectNextRow",
-      "KP_DOWN", "selectNextRow",
-      "UP", "selectPreviousRow",
-      "KP_UP", "selectPreviousRow",
-      "shift RIGHT", "selectNextColumnExtendSelection",
-      "shift KP_RIGHT", "selectNextColumnExtendSelection",
-      "shift LEFT", "selectPreviousColumnExtendSelection",
-      "shift KP_LEFT", "selectPreviousColumnExtendSelection",
-      "shift DOWN", "selectNextRowExtendSelection",
-      "shift KP_DOWN", "selectNextRowExtendSelection",
-      "shift UP", "selectPreviousRowExtendSelection",
-      "shift KP_UP", "selectPreviousRowExtendSelection",
-      "PAGE_UP", "scrollUpChangeSelection",
-      "PAGE_DOWN", "scrollDownChangeSelection",
-      "HOME", "selectFirstColumn",
-      "END", "selectLastColumn",
-      "shift PAGE_UP", "scrollUpExtendSelection",
-      "shift PAGE_DOWN", "scrollDownExtendSelection",
-      "shift HOME", "selectFirstColumnExtendSelection",
-      "shift END", "selectLastColumnExtendSelection",
-      "ctrl PAGE_UP", "scrollLeftChangeSelection",
-      "ctrl PAGE_DOWN", "scrollRightChangeSelection",
-      "ctrl HOME", "selectFirstRow",
-      "ctrl END", "selectLastRow",
-      "ctrl shift PAGE_UP", "scrollRightExtendSelection",
-      "ctrl shift PAGE_DOWN", "scrollLeftExtendSelection",
-      "ctrl shift HOME", "selectFirstRowExtendSelection",
-      "ctrl shift END", "selectLastRowExtendSelection",
-      "TAB", "selectNextColumnCell",
-      "shift TAB", "selectPreviousColumnCell",
-      //"ENTER", "selectNextRowCell",
-      "shift ENTER", "selectPreviousRowCell",
-      "ctrl A", "selectAll",
-      //"ESCAPE", "cancel",
-      "F2", "startEditing"
-    }));
+    defaults.put("Table.ancestorInputMap", new UIDefaults.LazyInputMap(
+            new Object[]{"ctrl C", "copy", "ctrl V", "paste", "ctrl X", "cut", "COPY", "copy", "PASTE", "paste", "CUT", "cut", "control INSERT", "copy", "shift INSERT", "paste", "shift DELETE", "cut",
+                    "RIGHT", "selectNextColumn", "KP_RIGHT", "selectNextColumn", "LEFT", "selectPreviousColumn", "KP_LEFT", "selectPreviousColumn", "DOWN", "selectNextRow", "KP_DOWN", "selectNextRow",
+                    "UP", "selectPreviousRow", "KP_UP", "selectPreviousRow", "shift RIGHT", "selectNextColumnExtendSelection", "shift KP_RIGHT", "selectNextColumnExtendSelection", "shift LEFT",
+                    "selectPreviousColumnExtendSelection", "shift KP_LEFT", "selectPreviousColumnExtendSelection", "shift DOWN", "selectNextRowExtendSelection", "shift KP_DOWN",
+                    "selectNextRowExtendSelection", "shift UP", "selectPreviousRowExtendSelection", "shift KP_UP", "selectPreviousRowExtendSelection", "PAGE_UP", "scrollUpChangeSelection",
+                    "PAGE_DOWN", "scrollDownChangeSelection", "HOME", "selectFirstColumn", "END", "selectLastColumn", "shift PAGE_UP", "scrollUpExtendSelection", "shift PAGE_DOWN",
+                    "scrollDownExtendSelection", "shift HOME", "selectFirstColumnExtendSelection", "shift END", "selectLastColumnExtendSelection", "ctrl PAGE_UP", "scrollLeftChangeSelection",
+                    "ctrl PAGE_DOWN", "scrollRightChangeSelection", "ctrl HOME", "selectFirstRow", "ctrl END", "selectLastRow", "ctrl shift PAGE_UP", "scrollRightExtendSelection",
+                    "ctrl shift PAGE_DOWN", "scrollLeftExtendSelection", "ctrl shift HOME", "selectFirstRowExtendSelection", "ctrl shift END", "selectLastRowExtendSelection", "TAB",
+                    "selectNextColumnCell", "shift TAB", "selectPreviousColumnCell",
+                    //"ENTER", "selectNextRowCell",
+                    "shift ENTER", "selectPreviousRowCell", "ctrl A", "selectAll",
+                    //"ESCAPE", "cancel",
+                    "F2", "startEditing"}));
   }
 
   @SuppressWarnings("IOResourceOpenedButNotSafelyClosed")
@@ -244,7 +213,7 @@ public class DarculaLaf extends BaseLookAndFeel {
       stream.close();
 
       stream = getClass().getResourceAsStream(getPrefix() + "_" + osSuffix + ".properties");
-      if(stream != null) {
+      if (stream != null) {
         properties.load(stream);
         stream.close();
       }
@@ -272,39 +241,63 @@ public class DarculaLaf extends BaseLookAndFeel {
         defaults.put(key, parseValue(key, value));
       }
     }
-    catch (IOException e) {log(e);}
+    catch (IOException e) {
+      log(e);
+    }
   }
 
-  protected Object parseValue(String key, @Nonnull String value) {
+  public static Object parseValue(String key, @Nonnull String value) {
     if (key.endsWith("Insets") || key.endsWith("padding")) {
       final List<String> numbers = StringUtil.split(value, ",");
-      return new InsetsUIResource(Integer.parseInt(numbers.get(0)),
-                                  Integer.parseInt(numbers.get(1)),
-                                  Integer.parseInt(numbers.get(2)),
-                                  Integer.parseInt(numbers.get(3)));
-    } else if (key.endsWith(".border")) {
+      return new InsetsUIResource(Integer.parseInt(numbers.get(0)), Integer.parseInt(numbers.get(1)), Integer.parseInt(numbers.get(2)), Integer.parseInt(numbers.get(3)));
+    }
+    else if (key.endsWith(".border")) {
       try {
         return Class.forName(value).newInstance();
-      } catch (Exception e) {log(e);}
-    } else {
+      }
+      catch (Exception e) {
+        log(e);
+      }
+    }
+    else {
       final Color color = parseColor(value);
       final Integer invVal = getInteger(value);
       final Boolean boolVal = "true".equals(value) ? Boolean.TRUE : "false".equals(value) ? Boolean.FALSE : null;
-      Icon icon = value.startsWith("AllIcons.") ? IconLoader.getIcon(value) : null;
-      if (icon == null && (value.endsWith(".png") || value.endsWith(".svg"))) {
-        icon = IconLoader.findIcon(value, getClass(), true);
+
+      Image image = null;
+      if (value.contains("@")) {
+        String[] ids = value.split("@");
+
+        String groupId = ids[0];
+        if (groupId.endsWith("IconGroup")) {
+          image = parseImageKey(groupId, ids[1]);
+        }
       }
+
       if (color != null) {
-        return  new ColorUIResource(color);
-      } else if (invVal != null) {
+        return new ColorUIResource(color);
+      }
+      else if (invVal != null) {
         return invVal;
-      } else if (icon != null) {
-        return new IconUIResource(icon);
-      } else if (boolVal != null) {
+      }
+      else if (image != null) {
+        return new IconUIResource(TargetAWT.to(image));
+      }
+      else if (boolVal != null) {
         return boolVal;
       }
     }
     return value;
+  }
+
+  private static ImageKey parseImageKey(@Nonnull String groupId, @Nonnull String imageIdWithSize) {
+    if(imageIdWithSize.contains(",")) {
+      String[] idSize = imageIdWithSize.split(",");
+      String imageId = idSize[0];
+      String[] size = idSize[1].split(":");
+      return ImageKey.of(groupId, imageId.toLowerCase(Locale.ROOT), Integer.parseInt(size[0]), Integer.parseInt(size[1]));
+    }
+    return ImageKey.of(groupId, imageIdWithSize.toLowerCase(Locale.ROOT), Image.DEFAULT_ICON_SIZE, Image.DEFAULT_ICON_SIZE);
   }
 
   @SuppressWarnings("UseJBColor")
@@ -315,7 +308,9 @@ public class DarculaLaf extends BaseLookAndFeel {
         try {
           int alpha = Integer.parseInt(value.substring(6, 8), 16);
           return new ColorUIResource(new Color(color.getRed(), color.getGreen(), color.getBlue(), alpha));
-        } catch (Exception ignore){}
+        }
+        catch (Exception ignore) {
+        }
       }
       return null;
     }
@@ -383,10 +378,7 @@ public class DarculaLaf extends BaseLookAndFeel {
   @Override
   protected void loadSystemColors(UIDefaults defaults, String[] systemColors, boolean useNative) {
     try {
-      final Method superMethod = BasicLookAndFeel.class.getDeclaredMethod("loadSystemColors",
-                                                                          UIDefaults.class,
-                                                                          String[].class,
-                                                                          boolean.class);
+      final Method superMethod = BasicLookAndFeel.class.getDeclaredMethod("loadSystemColors", UIDefaults.class, String[].class, boolean.class);
       superMethod.setAccessible(true);
       superMethod.invoke(base, defaults, systemColors, useNative);
     }

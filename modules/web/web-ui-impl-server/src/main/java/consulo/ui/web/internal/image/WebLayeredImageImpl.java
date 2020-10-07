@@ -16,7 +16,7 @@
 package consulo.ui.web.internal.image;
 
 import consulo.ui.image.Image;
-import consulo.ui.web.servlet.WebImageUrlCache;
+import consulo.ui.web.servlet.WebImageMapper;
 import consulo.web.gwt.shared.ui.state.image.FoldedImageState;
 import consulo.web.gwt.shared.ui.state.image.MultiImageState;
 
@@ -48,7 +48,7 @@ public class WebLayeredImageImpl implements Image, WebImageWithVaadinState {
 
     for (int i = 0; i < myImages.length; i++) {
       Image image = myImages[i];
-      state.myChildren[i] = WebImageUrlCache.map(image).getState();
+      state.myChildren[i] = WebImageMapper.map(image).getState();
     }
 
     m.myFoldedImageState = state;

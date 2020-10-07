@@ -20,7 +20,6 @@ import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataSink;
 import com.intellij.openapi.actionSystem.TypeSafeDataProvider;
 import com.intellij.openapi.util.Iconable;
-import consulo.util.dataholder.Key;
 import com.intellij.psi.PsiElement;
 import com.intellij.refactoring.RefactoringBundle;
 import com.intellij.refactoring.classMembers.MemberInfoBase;
@@ -30,11 +29,13 @@ import com.intellij.refactoring.classMembers.MemberInfoModel;
 import com.intellij.ui.*;
 import com.intellij.ui.table.JBTable;
 import com.intellij.util.ui.EmptyIcon;
-import consulo.awt.TargetAWT;
 import consulo.ide.IconDescriptorUpdaters;
+import consulo.ui.image.Image;
+import consulo.ui.image.ImageEffects;
+import consulo.util.dataholder.Key;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableColumn;
@@ -189,9 +190,7 @@ public abstract class AbstractMemberSelectionTable<T extends PsiElement, M exten
 
   protected abstract boolean isAbstractColumnEditable(int rowIndex);
 
-  protected abstract void setVisibilityIcon(M memberInfo, RowIcon icon);
-
-  protected abstract Icon getOverrideIcon(M memberInfo);
+  protected abstract Image getOverrideIcon(M memberInfo);
 
   private static class DefaultMemberInfoModel<T extends PsiElement, M extends MemberInfoBase<T>> implements MemberInfoModel<T, M> {
     @Override
@@ -377,14 +376,10 @@ public abstract class AbstractMemberSelectionTable<T extends PsiElement, M exten
       setToolTipText(myTable.myMemberInfoModel.getTooltipText(memberInfo));
       switch (modelColumn) {
         case DISPLAY_NAME_COLUMN: {
-          Icon memberIcon = myTable.getMemberIcon(memberInfo, 0);
-          Icon overrideIcon = myTable.getOverrideIcon(memberInfo);
+          Image memberIcon = myTable.getMemberIcon(memberInfo, 0);
+          Image overrideIcon = myTable.getOverrideIcon(memberInfo);
 
-          RowIcon icon = new RowIcon(3);
-          icon.setIcon(memberIcon, MEMBER_ICON_POSITION);
-          myTable.setVisibilityIcon(memberInfo, icon);
-          icon.setIcon(overrideIcon, OVERRIDE_ICON_POSITION);
-          setIcon(icon);
+          setIcon(ImageEffects.appendRight(ImageEffects.appendRight(memberIcon, Image.empty(Image.DEFAULT_ICON_SIZE)), overrideIcon));
           break;
         }
         default: {
@@ -410,8 +405,8 @@ public abstract class AbstractMemberSelectionTable<T extends PsiElement, M exten
 
   }
 
-  protected Icon getMemberIcon(M memberInfo, @Iconable.IconFlags int flags) {
-    return TargetAWT.to(IconDescriptorUpdaters.getIcon(memberInfo.getMember(), flags));
+  protected Image getMemberIcon(M memberInfo, @Iconable.IconFlags int flags) {
+    return IconDescriptorUpdaters.getIcon(memberInfo.getMember(), flags);
   }
 
   private static class MyBooleanRenderer<T extends PsiElement, M extends MemberInfoBase<T>> extends BooleanTableCellRenderer {

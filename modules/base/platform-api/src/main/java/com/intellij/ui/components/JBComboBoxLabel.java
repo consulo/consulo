@@ -16,6 +16,7 @@
 package com.intellij.ui.components;
 
 import com.intellij.icons.AllIcons;
+import consulo.awt.TargetAWT;
 
 import javax.swing.*;
 import java.awt.*;
@@ -24,7 +25,7 @@ import java.awt.*;
  * @author Konstantin Bulenkov
  */
 public class JBComboBoxLabel extends JPanel {
-  private final JLabel myIcon = new JLabel(AllIcons.General.ComboArrow);
+  private final JLabel myIcon = new JLabel(TargetAWT.to(AllIcons.General.ComboArrow));
   private final JLabel myText = new JLabel();
 
   public JBComboBoxLabel() {
@@ -50,11 +51,11 @@ public class JBComboBoxLabel extends JPanel {
   }
 
   public void setRegularIcon() {
-    myIcon.setIcon(AllIcons.General.ComboArrow);
+    myIcon.setIcon(TargetAWT.to(AllIcons.General.ComboArrow));
   }
 
   public void setSelectionIcon() {
-    myIcon.setIcon(AllIcons.General.Combo);
+    myIcon.setIcon(TargetAWT.to(AllIcons.General.Combo));
   }
 
   @Override

@@ -18,9 +18,9 @@ package com.intellij.openapi.ui;
 import com.intellij.icons.AllIcons;
 import com.intellij.notification.NotificationType;
 import com.intellij.ui.JBColor;
-import javax.annotation.Nonnull;
+import consulo.ui.image.Image;
 
-import javax.swing.*;
+import javax.annotation.Nonnull;
 import java.awt.*;
 
 public class MessageType {
@@ -35,19 +35,19 @@ public class MessageType {
                                                             new JBColor(new Color(249, 247, 142, 230), new Color(90, 82, 33)),
                                                             new JBColor(new Color(164, 145, 82), new Color(0xBBB529)));
 
-  private final Icon myDefaultIcon;
+  private final Image myDefaultIcon;
   private final Color myPopupBackground;
   @Nonnull
   private final Color myForeground;
 
-  private MessageType(@Nonnull Icon defaultIcon, @Nonnull Color popupBackground, @Nonnull Color foreground) {
+  private MessageType(@Nonnull Image defaultIcon, @Nonnull Color popupBackground, @Nonnull Color foreground) {
     myDefaultIcon = defaultIcon;
     myPopupBackground = popupBackground;
     myForeground = foreground;
   }
 
   @Nonnull
-  public Icon getDefaultIcon() {
+  public Image getDefaultIcon() {
     return myDefaultIcon;
   }
 

@@ -29,6 +29,7 @@ import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ApplicationNamesInfo;
 import com.intellij.openapi.application.ex.ApplicationEx;
+import consulo.awt.TargetAWT;
 import consulo.disposer.Disposable;
 import consulo.logging.Logger;
 import com.intellij.openapi.project.DumbAwareAction;
@@ -145,7 +146,7 @@ public abstract class PluginManagerMain implements Disposable {
     final JLabel mySortLabel = new JLabel();
     mySortLabel.setForeground(UIUtil.getLabelDisabledForeground());
     mySortLabel.setBorder(JBUI.Borders.empty(1, 1, 1, 5));
-    mySortLabel.setIcon(AllIcons.General.SplitDown);
+    mySortLabel.setIcon(TargetAWT.to(AllIcons.General.SplitDown));
     mySortLabel.setHorizontalTextPosition(SwingConstants.LEADING);
     header.add(mySortLabel, BorderLayout.EAST);
     myTablePanel.add(header, BorderLayout.NORTH);

@@ -1,11 +1,13 @@
 package com.mxgraph.swing.handler;
 
 import com.intellij.icons.AllIcons;
+import com.intellij.ui.components.JBLabel;
 import com.mxgraph.swing.mxGraphComponent;
 import com.mxgraph.swing.util.mxMouseAdapter;
 import com.mxgraph.util.*;
 import com.mxgraph.util.mxEventSource.mxIEventListener;
 import com.mxgraph.view.mxCellState;
+import consulo.ui.image.Image;
 
 import javax.swing.*;
 import java.awt.*;
@@ -110,9 +112,9 @@ public class mxRotationHandler extends mxMouseAdapter {
    *
    */
   protected JComponent createHandle() {
-    Icon refresh = AllIcons.Actions.Refresh;
-    JLabel label = new JLabel(refresh);
-    label.setSize(refresh.getIconWidth(), refresh.getIconHeight());
+    Image refresh = AllIcons.Actions.Refresh;
+    JLabel label = new JBLabel(refresh);
+    label.setSize(refresh.getWidth(), refresh.getHeight());
     label.setOpaque(false);
 
     return label;

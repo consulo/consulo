@@ -45,6 +45,7 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.io.URLUtil;
 import com.intellij.util.io.ZipUtil;
 import com.intellij.util.ui.OptionsDialog;
+import consulo.awt.TargetAWT;
 import consulo.container.boot.ContainerPathManager;
 import consulo.logging.Logger;
 import org.jetbrains.annotations.Contract;
@@ -359,7 +360,7 @@ public class BrowserLauncherAppless extends BrowserLauncher {
       JLabel label = new JLabel(message);
 
       label.setIconTextGap(10);
-      label.setIcon(Messages.getQuestionIcon());
+      label.setIcon(TargetAWT.to(Messages.getQuestionIcon()));
 
       panel.add(label, BorderLayout.CENTER);
       panel.add(Box.createVerticalStrut(10), BorderLayout.SOUTH);

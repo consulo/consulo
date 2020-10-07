@@ -16,15 +16,11 @@
 package consulo.localize.impl;
 
 import com.intellij.CommonBundle;
-import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.io.FileUtilRt;
 import com.intellij.openapi.util.io.StreamUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.EventDispatcher;
 import com.intellij.util.io.URLUtil;
-import consulo.container.classloader.PluginClassLoader;
-import consulo.container.plugin.PluginDescriptor;
-import consulo.container.plugin.PluginManager;
 import consulo.disposer.Disposable;
 import consulo.localize.LocalizeKey;
 import consulo.localize.LocalizeManager;
@@ -56,7 +52,7 @@ public class LocalizeManagerImpl extends LocalizeManager {
 
   private final AtomicBoolean myInitialized = new AtomicBoolean();
 
-  private static final String LOCALIZE_LIBRARY_MARKER = "localize/id.txt";
+  public static final String LOCALIZE_LIBRARY_MARKER = "localize/id.txt";
 
   private final Map<Locale, Map<String, LocalizeFileState>> myLocalizes = new HashMap<>();
 
@@ -64,42 +60,22 @@ public class LocalizeManagerImpl extends LocalizeManager {
 
   private final EventDispatcher<LocalizeManagerListener> myEventDispatcher = EventDispatcher.create(LocalizeManagerListener.class);
 
-  private AtomicLong myModificationCount = new AtomicLong();
+  private final AtomicLong myModificationCount = new AtomicLong();
 
-  public void initialize() {
-    List<PluginDescriptor> pluginDescriptors = PluginManager.getPlugins();
+  public void initialize(@Nullable List<String> files) {
     if (myInitialized.compareAndSet(false, true)) {
-      for (PluginDescriptor pluginDescriptor : pluginDescriptors) {
-        if(PluginManager.shouldSkipPlugin(pluginDescriptor)) {
-          continue;
-        }
-
-        try {
-          ClassLoader classLoader = pluginDescriptor.getPluginClassLoader();
-
-          Enumeration<URL> ownResources = ((PluginClassLoader)classLoader).findOwnResources(LOCALIZE_LIBRARY_MARKER);
-
-          while (ownResources.hasMoreElements()) {
-            URL url = ownResources.nextElement();
-
-            Pair<String, String> urlFileInfo = URLUtil.splitJarUrl(url.getFile());
-            if (urlFileInfo == null) {
-              continue;
-            }
-
-            try {
-              analyzeLibraryJar(urlFileInfo.getFirst());
-            }
-            catch (IOException e) {
-              LOG.error("Fail to analyze library from url: " + url, e);
-            }
-          }
-        }
-        catch (IOException e) {
-          LOG.error(e);
-        }
+      if(files == null) {
+        return;
       }
 
+      for (String file : files) {
+        try {
+          analyzeLibraryJar(file);
+        }
+        catch (IOException e) {
+          LOG.error("Fail to analyze library from url: " + file, e);
+        }
+      }
       myModificationCount.incrementAndGet();
     }
   }

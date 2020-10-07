@@ -16,7 +16,6 @@
 package com.intellij.ide.browsers;
 
 import com.intellij.execution.filters.HyperlinkWithPopupMenuInfo;
-import com.intellij.icons.AllIcons;
 import com.intellij.openapi.actionSystem.ActionGroup;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
@@ -25,6 +24,7 @@ import com.intellij.openapi.ide.CopyPasteManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.Conditions;
+import consulo.platform.base.icon.PlatformIconGroup;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -68,7 +68,7 @@ public final class OpenUrlHyperlinkInfo implements HyperlinkWithPopupMenuInfo {
       }
     }
 
-    group.add(new AnAction("Copy URL", "Copy URL to clipboard", AllIcons.Actions.Copy) {
+    group.add(new AnAction("Copy URL", "Copy URL to clipboard", PlatformIconGroup.actionsCopy()) {
       @Override
       public void actionPerformed(AnActionEvent e) {
         CopyPasteManager.getInstance().setContents(new StringSelection(url));

@@ -25,6 +25,7 @@ import consulo.logging.Logger;
 import sun.awt.AWTAccessor;
 import sun.misc.Unsafe;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
@@ -45,7 +46,8 @@ public class X11UiUtil {
   private static final int CLIENT_MESSAGE = 33;
   private static final int FORMAT_BYTE = 8;
   private static final int FORMAT_LONG = 32;
-  private static final long EVENT_MASK = (3l << 19);
+  private static final long EVENT_MASK = (3L << 19);
+  private static final long NET_WM_STATE_ADD = 1;
   private static final long NET_WM_STATE_TOGGLE = 2;
 
   @SuppressWarnings("SpellCheckingInspection")
@@ -69,6 +71,8 @@ public class X11UiUtil {
     private long NET_WM_STATE;
     private long NET_WM_ACTION_FULLSCREEN;
     private long NET_WM_STATE_FULLSCREEN;
+    private long NET_WM_STATE_DEMANDS_ATTENTION;
+    private long NET_ACTIVE_WINDOW;
 
     @Nullable
     private static Xlib getInstance() {
@@ -105,6 +109,8 @@ public class X11UiUtil {
         x11.NET_WM_STATE = (Long)atom.get(get.invoke(null, "_NET_WM_STATE"));
         x11.NET_WM_ACTION_FULLSCREEN = (Long)atom.get(get.invoke(null, "_NET_WM_ACTION_FULLSCREEN"));
         x11.NET_WM_STATE_FULLSCREEN = (Long)atom.get(get.invoke(null, "_NET_WM_STATE_FULLSCREEN"));
+        x11.NET_WM_STATE_DEMANDS_ATTENTION = (Long)atom.get(get.invoke(null, "_NET_WM_STATE_DEMANDS_ATTENTION"));
+        x11.NET_ACTIVE_WINDOW = (Long)atom.get(get.invoke(null, "_NET_ACTIVE_WINDOW"));
 
         // check for _NET protocol support
         Long netWmWindow = x11.getNetWmWindow();
@@ -184,6 +190,30 @@ public class X11UiUtil {
       }
 
       return property;
+    }
+
+    private void sendClientMessage(Window window, String operation, long type, long... params) {
+      try {
+        ComponentPeer peer = AWTAccessor.getComponentAccessor().getPeer(window);
+        if (peer == null) throw new IllegalStateException(window + " has no peer");
+        long windowId = (Long)getWindow.invoke(peer);
+        long screen = (Long)getScreenNumber.invoke(peer);
+        long rootWindow = getRootWindow(screen);
+        sendClientMessage(rootWindow, windowId, type, params);
+      }
+      catch (Throwable t) {
+        LOG.info("cannot " + operation, t);
+      }
+    }
+
+    private long getRootWindow(long screen) throws Exception {
+      awtLock.invoke(null);
+      try {
+        return (Long)RootWindow.invoke(null, display, screen);
+      }
+      finally {
+        awtUnlock.invoke(null);
+      }
     }
 
     private void sendClientMessage(long target, long window, long type, long... data) throws Exception {
@@ -339,6 +369,23 @@ public class X11UiUtil {
     catch (Throwable t) {
       LOG.info("cannot toggle mode", t);
     }
+  }
+
+  /**
+   * This method requests window manager to activate the specified application window. This might cause the window to steal focus
+   * from another (currently active) application, which is generally not considered acceptable. So it should be used only in
+   * special cases, when we know that the user definitely expects such behaviour. In most cases, requesting focus in the target
+   * window should be used instead - in that case window manager is expected to indicate that the application requires user
+   * attention but won't switch the focus to it automatically.
+   */
+  public static void activate(@Nonnull Window window) {
+    if (X11 == null) return;
+    X11.sendClientMessage(window, "activate", X11.NET_ACTIVE_WINDOW);
+  }
+
+  public static void requestAttention(@Nonnull Window window) {
+    if (X11 == null) return;
+    X11.sendClientMessage(window, "request attention", X11.NET_WM_STATE, NET_WM_STATE_ADD, X11.NET_WM_STATE_DEMANDS_ATTENTION);
   }
 
   // reflection utilities

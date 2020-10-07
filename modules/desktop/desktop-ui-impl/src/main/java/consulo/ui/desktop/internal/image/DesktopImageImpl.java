@@ -15,11 +15,11 @@
  */
 package consulo.ui.desktop.internal.image;
 
-import com.intellij.openapi.util.IconLoader;
-import consulo.ui.image.Image;
 import consulo.awt.impl.ToSwingIconWrapper;
-import javax.annotation.Nonnull;
+import consulo.ui.image.Image;
+import consulo.ui.migration.impl.AWTIconLoader;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import java.net.URL;
 
@@ -28,25 +28,25 @@ import java.net.URL;
  * @since 13-Jun-16
  */
 public class DesktopImageImpl implements Image, ToSwingIconWrapper {
-  private Icon myIcon;
+  private Image myIcon;
 
   public DesktopImageImpl(URL url) {
-    myIcon = IconLoader.findIcon(url);
+    myIcon = AWTIconLoader.INSTANCE.findIcon(url);
   }
 
   @Override
   public int getHeight() {
-    return myIcon.getIconHeight();
+    return myIcon.getHeight();
   }
 
   @Override
   public int getWidth() {
-    return myIcon.getIconWidth();
+    return myIcon.getWidth();
   }
 
   @Nonnull
   @Override
   public Icon toSwingIcon() {
-    return myIcon;
+    return (Icon)myIcon;
   }
 }

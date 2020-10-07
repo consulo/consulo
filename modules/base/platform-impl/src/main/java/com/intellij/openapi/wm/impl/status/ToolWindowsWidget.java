@@ -26,6 +26,8 @@ import com.intellij.util.ui.TimedDeadzone;
 import com.intellij.util.ui.UIUtil;
 import consulo.awt.TargetAWT;
 import consulo.desktop.wm.impl.DesktopIdeFrameUtil;
+import consulo.ui.image.Image;
+
 import javax.annotation.Nonnull;
 
 import javax.swing.*;
@@ -195,9 +197,9 @@ class ToolWindowsWidget extends JLabel implements CustomStatusBarWidget, StatusB
         changes = true;
       }
 
-      Icon icon = UISettings.getInstance().getHideToolStripes() ? AllIcons.General.TbShown : AllIcons.General.TbHidden;
+      Image icon = UISettings.getInstance().getHideToolStripes() ? AllIcons.General.TbShown : AllIcons.General.TbHidden;
       if (icon != getIcon()) {
-        setIcon(icon);
+        setIcon(TargetAWT.to(icon));
         changes = true;
       }
 

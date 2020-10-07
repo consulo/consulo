@@ -103,7 +103,7 @@ public final class JBHiDPIScaledImage extends BufferedImage {
     this(JBUI.sysScale(gc), width, height, type, rm);
   }
 
-  private JBHiDPIScaledImage(double scale, double width, double height, int type, @Nonnull RoundingMode rm) {
+  public JBHiDPIScaledImage(double scale, double width, double height, int type, @Nonnull RoundingMode rm) {
     super(rm.round(width * scale), rm.round(height * scale), type);
     myImage = null;
     myUserWidth = width;

@@ -54,11 +54,10 @@ import com.intellij.ui.treeStructure.WeightBasedComparator;
 import com.intellij.util.CommonProcessors;
 import com.intellij.util.Processor;
 import com.intellij.util.ui.UIUtil;
-import consulo.awt.TargetAWT;
 import consulo.disposer.Disposer;
 import gnu.trove.THashMap;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.event.TreeSelectionEvent;
@@ -68,8 +67,8 @@ import javax.swing.tree.DefaultTreeModel;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 /**
  * @author Gregory.Shrago
@@ -319,7 +318,7 @@ public abstract class ChooseLibrariesDialogBase extends DialogWrapper {
       final SimpleColoredComponent coloredComponent = new SimpleColoredComponent();
       appearance.customize(coloredComponent);
       final PresentationData templatePresentation = getTemplatePresentation();
-      templatePresentation.setIcon(TargetAWT.from(coloredComponent.getIcon()));
+      templatePresentation.setIcon(coloredComponent.getIcon());
       templatePresentation.addText(notEmpty(appearance.getText()), SimpleTextAttributes.REGULAR_ATTRIBUTES);
     }
   }

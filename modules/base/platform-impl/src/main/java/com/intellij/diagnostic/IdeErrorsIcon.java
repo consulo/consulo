@@ -3,6 +3,7 @@ package com.intellij.diagnostic;
 
 import com.intellij.icons.AllIcons;
 import com.intellij.ui.AnimatedIcon.Blinking;
+import consulo.awt.TargetAWT;
 
 import javax.swing.*;
 import java.awt.*;
@@ -17,9 +18,9 @@ class IdeErrorsIcon extends JLabel {
   }
 
   void setState(MessagePool.State state) {
-    Icon myUnreadIcon = !myEnableBlink ? AllIcons.Ide.FatalError : new Blinking(AllIcons.Ide.FatalError);
+    Icon myUnreadIcon = !myEnableBlink ? TargetAWT.to(AllIcons.Ide.FatalError) : new Blinking(AllIcons.Ide.FatalError);
     if (state != null && state != MessagePool.State.NoErrors) {
-      setIcon(state == MessagePool.State.ReadErrors ? AllIcons.Ide.FatalError_read : myUnreadIcon);
+      setIcon(state == MessagePool.State.ReadErrors ? TargetAWT.to(AllIcons.Ide.FatalError_read): myUnreadIcon);
       setToolTipText(DiagnosticBundle.message("error.notification.tooltip"));
       if (!myEnableBlink) {
         setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));

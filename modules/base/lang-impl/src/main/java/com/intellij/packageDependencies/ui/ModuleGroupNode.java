@@ -22,8 +22,8 @@ import com.intellij.ide.projectView.impl.ModuleGroup;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.psi.PsiFile;
+import consulo.ui.image.Image;
 
-import javax.swing.*;
 import java.util.Set;
 
 /**
@@ -49,7 +49,7 @@ public class ModuleGroupNode extends PackageDependenciesNode {
   }
 
   @Override
-  public Icon getIcon() {
+  public Image getIcon() {
     return AllIcons.Nodes.ModuleGroup;
   }
 

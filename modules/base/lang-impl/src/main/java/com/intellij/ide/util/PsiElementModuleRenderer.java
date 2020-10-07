@@ -21,27 +21,22 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtil;
 import com.intellij.openapi.roots.*;
 import com.intellij.openapi.vfs.VirtualFile;
-import consulo.vfs.util.ArchiveVfsUtil;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.util.ui.UIUtil;
+import consulo.awt.TargetAWT;
+import consulo.vfs.util.ArchiveVfsUtil;
 
 import javax.swing.*;
 import java.awt.*;
 import java.io.File;
 
-public class PsiElementModuleRenderer extends DefaultListCellRenderer{
+public class PsiElementModuleRenderer extends DefaultListCellRenderer {
   private String myText;
 
   @Override
-  public Component getListCellRendererComponent(
-    JList list,
-    Object value,
-    int index,
-    boolean isSelected,
-    boolean cellHasFocus) {
-    final Component listCellRendererComponent = super.getListCellRendererComponent(list, value, index, isSelected,
-                                                                                   cellHasFocus);
+  public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+    final Component listCellRendererComponent = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
     customizeCellRenderer(value, index, isSelected, cellHasFocus);
     return listCellRendererComponent;
   }
@@ -51,12 +46,7 @@ public class PsiElementModuleRenderer extends DefaultListCellRenderer{
     return myText;
   }
 
-  protected void customizeCellRenderer(
-    Object value,
-    int index,
-    boolean selected,
-    boolean hasFocus
-  ) {
+  protected void customizeCellRenderer(Object value, int index, boolean selected, boolean hasFocus) {
     myText = "";
     if (value instanceof PsiElement) {
       PsiElement element = (PsiElement)value;
@@ -69,7 +59,7 @@ public class PsiElementModuleRenderer extends DefaultListCellRenderer{
           VirtualFile vFile = psiFile.getVirtualFile();
           if (vFile != null) {
             isInLibraries = fileIndex.isInLibrarySource(vFile) || fileIndex.isInLibraryClasses(vFile);
-            if (isInLibraries){
+            if (isInLibraries) {
               showLibraryLocation(fileIndex, vFile);
             }
           }
@@ -101,15 +91,15 @@ public class PsiElementModuleRenderer extends DefaultListCellRenderer{
     }
     myText = module.getName();
     if (inTestSource) {
-      setIcon(AllIcons.Nodes.TestPackage);
+      setIcon(TargetAWT.to(AllIcons.Nodes.TestPackage));
     }
     else {
-      setIcon(AllIcons.Nodes.Module);
+      setIcon(TargetAWT.to(AllIcons.Nodes.Module));
     }
   }
 
   private void showLibraryLocation(ProjectFileIndex fileIndex, VirtualFile vFile) {
-    setIcon(AllIcons.Nodes.PpLibFolder);
+    setIcon(TargetAWT.to(AllIcons.Nodes.PpLibFolder));
     for (OrderEntry order : fileIndex.getOrderEntriesForFile(vFile)) {
       if (order instanceof LibraryOrderEntry || order instanceof ModuleExtensionWithSdkOrderEntry) {
         myText = getPresentableName(order, vFile);

@@ -29,13 +29,13 @@ import com.intellij.psi.codeStyle.arrangement.std.ArrangementSettingsToken;
 import com.intellij.psi.codeStyle.arrangement.std.ArrangementUiComponent;
 import com.intellij.ui.IdeBorderFactory;
 import com.intellij.ui.SimpleColoredComponent;
+import com.intellij.ui.components.JBLabel;
 import com.intellij.util.ui.GridBag;
 import com.intellij.util.ui.UIUtil;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -48,7 +48,7 @@ import java.util.Set;
 public class ArrangementListRowDecorator extends JPanel implements ArrangementUiComponent {
 
   @Nonnull
-  private final JLabel mySortLabel = new JLabel(AllIcons.ObjectBrowser.Sorted);
+  private final JLabel mySortLabel = new JBLabel(AllIcons.ObjectBrowser.Sorted);
 
   @Nonnull
   private final ArrangementRuleIndexControl     myRowIndexControl;

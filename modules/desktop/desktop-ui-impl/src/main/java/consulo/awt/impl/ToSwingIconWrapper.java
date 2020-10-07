@@ -23,8 +23,6 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 11-Sep-17
  */
-@Deprecated
-@DeprecationInfo("Internal class, don't use it in plugins")
 public interface ToSwingIconWrapper {
   @Nonnull
   javax.swing.Icon toSwingIcon();

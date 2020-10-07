@@ -20,7 +20,11 @@ import com.intellij.util.ui.UIUtil;
 import consulo.awt.TargetAWT;
 import consulo.desktop.util.awt.MorphValue;
 import consulo.desktop.util.awt.laf.GTKPlusUIUtil;
+import consulo.ide.ui.laf.LafWithIconLibrary;
 import consulo.ui.SwingUIDecorator;
+import consulo.ui.desktop.internal.image.DesktopStyledImage;
+import consulo.ui.image.IconLibraryManager;
+import consulo.ui.image.Image;
 import consulo.ui.impl.style.StyleImpl;
 import consulo.ui.shared.ColorValue;
 import consulo.ui.style.ColorKey;
@@ -86,7 +90,19 @@ public class DesktopStyleImpl extends StyleImpl {
     else if (colorKey == StandardColors.WHITE) {
       return TargetAWT.from(JBColor.WHITE);
     }
+    else if (colorKey == StandardColors.MAGENTA) {
+      return TargetAWT.from(JBColor.MAGENTA);
+    }
     throw new UnsupportedOperationException(colorKey.toString());
+  }
+
+  @Nonnull
+  @Override
+  public Image getImage(@Nonnull Image image) {
+    if(image instanceof DesktopStyledImage) {
+      return ((DesktopStyledImage<?>)image).withTargetIconLibrary(getIconLibraryId(), this::getImage);
+    }
+    return image;
   }
 
   @Nonnull
@@ -103,6 +119,15 @@ public class DesktopStyleImpl extends StyleImpl {
   @Override
   public String getName() {
     return myLookAndFeelInfo.getName();
+  }
+
+  @Nonnull
+  @Override
+  public String getIconLibraryId() {
+    if(myLookAndFeelInfo instanceof LafWithIconLibrary) {
+      return ((LafWithIconLibrary)myLookAndFeelInfo).getIconLibraryId();
+    }
+    return IconLibraryManager.LIGHT_LIBRARY_ID;
   }
 
   @Override

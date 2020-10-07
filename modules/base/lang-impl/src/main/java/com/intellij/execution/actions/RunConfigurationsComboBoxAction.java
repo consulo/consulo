@@ -31,9 +31,7 @@ import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.openapi.project.IndexNotReadyException;
 import com.intellij.openapi.project.Project;
 import com.intellij.ui.IdeBorderFactory;
-import com.intellij.ui.SizedIcon;
 import com.intellij.ui.components.panels.NonOpaquePanel;
-import com.intellij.util.ui.EmptyIcon;
 import consulo.actionSystem.ex.ComboBoxButton;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.localize.ExecutionLocalize;
@@ -51,11 +49,11 @@ import java.util.Map;
 
 public class RunConfigurationsComboBoxAction extends ComboBoxAction implements DumbAware {
   @Deprecated
-  public static final Icon CHECKED_ICON = new SizedIcon(AllIcons.Actions.Checked, 16, 16);
+  public static final Image CHECKED_ICON = ImageEffects.resize(AllIcons.Actions.Checked, Image.DEFAULT_ICON_SIZE, Image.DEFAULT_ICON_SIZE);
   @Deprecated
-  public static final Icon CHECKED_SELECTED_ICON = new SizedIcon(AllIcons.Actions.Checked_selected, 16, 16);
+  public static final Image CHECKED_SELECTED_ICON = ImageEffects.resize(AllIcons.Actions.Checked_selected, Image.DEFAULT_ICON_SIZE, Image.DEFAULT_ICON_SIZE);
   @Deprecated
-  public static final Icon EMPTY_ICON = EmptyIcon.ICON_16;
+  public static final Image EMPTY_ICON = Image.empty(Image.DEFAULT_ICON_SIZE);
 
   @RequiredUIAccess
   @Override

@@ -2,21 +2,25 @@
 package com.intellij.ui;
 
 import com.intellij.icons.AllIcons;
-import com.intellij.openapi.util.IconLoader;
-import consulo.util.dataholder.Key;
 import com.intellij.util.concurrency.EdtScheduledExecutorService;
+import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.SmartHashSet;
 import com.intellij.util.ui.UIUtil;
+import consulo.awt.TargetAWT;
+import consulo.ui.image.Image;
+import consulo.ui.image.ImageEffects;
+import consulo.util.dataholder.Key;
 import gnu.trove.TObjectIdentityHashingStrategy;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.awt.*;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
-import static com.intellij.util.containers.ContainerUtil.immutableList;
 import static java.awt.AlphaComposite.SrcAtop;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 
@@ -90,14 +94,18 @@ public class AnimatedIcon implements Icon {
                           AllIcons.Process.FS.Step_13, AllIcons.Process.FS.Step_14, AllIcons.Process.FS.Step_15, AllIcons.Process.FS.Step_16, AllIcons.Process.FS.Step_17, AllIcons.Process.FS.Step_18);
   }
 
+  private static List<Icon> immutableList(Image... images) {
+      return ContainerUtil.immutableList(Arrays.stream(images).map(TargetAWT::to).collect(Collectors.toList()));
+  }
+
   //@ApiStatus.Internal
   public static class Blinking extends AnimatedIcon {
-    public Blinking(@Nonnull Icon icon) {
+    public Blinking(@Nonnull Image icon) {
       this(1000, icon);
     }
 
-    public Blinking(int delay, @Nonnull Icon icon) {
-      super(delay, icon, IconLoader.getDisabledIcon(icon));
+    public Blinking(int delay, @Nonnull Image icon) {
+      super(delay, icon, ImageEffects.grayed(icon));
     }
   }
 
@@ -154,6 +162,10 @@ public class AnimatedIcon implements Icon {
 
   public AnimatedIcon(int delay, @Nonnull Icon... icons) {
     this(getFrames(delay, icons));
+  }
+
+  public AnimatedIcon(int delay, @Nonnull Image... icons) {
+    this(getFrames(delay, Arrays.stream(icons).map(TargetAWT::to).toArray(Icon[]::new)));
   }
 
   public AnimatedIcon(@Nonnull Frame... frames) {

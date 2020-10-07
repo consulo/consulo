@@ -19,6 +19,7 @@ import com.intellij.lang.Language;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.util.ui.EmptyIcon;
 import consulo.awt.TargetAWT;
+import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -44,8 +45,8 @@ public abstract class Injectable implements Comparable<Injectable> {
   }
 
   @Nonnull
-  public Icon getIcon() {
-    return EmptyIcon.ICON_16;
+  public Image getIcon() {
+    return Image.empty(Image.DEFAULT_ICON_SIZE);
   }
 
   @Override
@@ -56,7 +57,7 @@ public abstract class Injectable implements Comparable<Injectable> {
   /**
    * @return null for reference injections
    */
-  @javax.annotation.Nullable
+  @Nullable
   public abstract Language getLanguage();
 
   public Language toLanguage() {
@@ -91,10 +92,10 @@ public abstract class Injectable implements Comparable<Injectable> {
 
       @Nonnull
       @Override
-      public Icon getIcon() {
+      public Image getIcon() {
         final FileType ft = language.getAssociatedFileType();
         //noinspection ConstantConditions
-        return ft != null && ft.getIcon() != null ? TargetAWT.to(ft.getIcon()) : EmptyIcon.ICON_16;
+        return ft != null && ft.getIcon() != null ? ft.getIcon() : Image.empty(Image.DEFAULT_ICON_SIZE);
       }
 
       @Override

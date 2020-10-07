@@ -19,10 +19,10 @@ import com.intellij.ui.components.panels.NonOpaquePanel;
 import com.intellij.util.concurrency.AppExecutorUtil;
 import com.intellij.util.concurrency.EdtScheduledExecutorService;
 import com.intellij.util.ui.AsyncProcessIcon;
-import com.intellij.util.ui.EmptyIcon;
 import com.intellij.util.ui.UIUtil;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
+import consulo.ui.image.Image;
 import org.jetbrains.concurrency.CancellablePromise;
 
 import javax.annotation.Nonnull;
@@ -98,7 +98,7 @@ class ParameterInfoTaskRunnerUtil {
           return result;
         }
       });
-      loadingPanel.add(new JBLabel(EmptyIcon.ICON_18));
+      loadingPanel.add(new JBLabel(Image.empty(Image.DEFAULT_ICON_SIZE)));
       loadingPanel.add(new JBLabel(progressTitle));
 
       ComponentPopupBuilder builder = JBPopupFactory.getInstance().createComponentPopupBuilder(loadingPanel, null).setProject(project).setCancelCallback(() -> {

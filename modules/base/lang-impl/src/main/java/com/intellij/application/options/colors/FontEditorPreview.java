@@ -24,6 +24,8 @@ import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.editor.ex.EditorMarkupModel;
 import com.intellij.openapi.editor.markup.ErrorStripeRenderer;
 import com.intellij.util.EventDispatcher;
+import consulo.awt.TargetAWT;
+import consulo.ui.image.Image;
 import org.jetbrains.annotations.Nls;
 
 import javax.annotation.Nonnull;
@@ -71,13 +73,13 @@ public class FontEditorPreview implements PreviewPanel{
   private static class DumbTrafficLightRenderer implements ErrorStripeRenderer {
     @Override
     public void paint(@Nonnull Component c, Graphics g, @Nonnull Rectangle r) {
-      Icon icon = AllIcons.General.InspectionsOK;
-      icon.paintIcon(c, g, r.x, r.y);
+      Image icon = AllIcons.General.InspectionsOK;
+      TargetAWT.to(icon).paintIcon(c, g, r.x, r.y);
     }
 
     @Override
     public int getSquareSize() {
-      return AllIcons.General.InspectionsOK.getIconHeight();
+      return AllIcons.General.InspectionsOK.getHeight();
     }
   }
 

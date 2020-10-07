@@ -30,6 +30,8 @@ import com.intellij.ui.*;
 import com.intellij.ui.table.JBTable;
 import com.intellij.util.ui.Table;
 import com.intellij.util.ui.UIUtil;
+import consulo.ui.image.Image;
+
 import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;
@@ -142,13 +144,13 @@ public class TodoConfigurable implements SearchableConfigurable, Configurable.No
       @Override
       protected JComponent createMainComponent() {
         // JTable with TodoPaterns
-        myPatternsTable = new Table(myPatternsModel);
+        myPatternsTable = new JBTable(myPatternsModel);
         myPatternsTable.getEmptyText().setText(IdeBundle.message("text.todo.no.patterns"));
         myPatternsTable.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
         // Column "Icon"
-        JComboBox todoTypeCombo =
-          new JComboBox(new Icon[]{AllIcons.General.TodoDefault, AllIcons.General.TodoQuestion, AllIcons.General.TodoImportant});
+        JComboBox<Image> todoTypeCombo =
+          new JComboBox(new Image[]{AllIcons.General.TodoDefault, AllIcons.General.TodoQuestion, AllIcons.General.TodoImportant});
         todoTypeCombo.setRenderer(new TodoTypeListCellRenderer());
         TableColumn typeColumn = myPatternsTable.getColumnModel().getColumn(0);
         DefaultCellEditor todoTypeEditor = new DefaultCellEditor(todoTypeCombo);

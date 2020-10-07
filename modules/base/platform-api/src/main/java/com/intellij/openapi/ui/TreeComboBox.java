@@ -23,6 +23,7 @@ import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.util.containers.Stack;
 import com.intellij.util.ui.UIUtil;
 import consulo.awt.TargetAWT;
+import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -99,12 +100,12 @@ public class TreeComboBox extends ComboBoxWithWidePopup {
       setOpaque(!myUnderAquaLookAndFeel);
     }
 
-    private static Icon getValueIcon(final Object value, final int index) {
+    private static Image getValueIcon(final Object value, final int index) {
       if (value instanceof CustomPresentation) {
         return ((CustomPresentation)value).getIcon(index, 0);
       }
       if (value instanceof Iconable) {
-        return TargetAWT.to(((Iconable)value).getIcon(0));
+        return ((Iconable)value).getIcon(0);
       }
 
       return null;
@@ -323,7 +324,7 @@ public class TreeComboBox extends ComboBoxWithWidePopup {
 
   public interface CustomPresentation {
     void append(SimpleColoredComponent component, int index);
-    Icon getIcon(int index, @Iconable.IconFlags int flags);
-  }
 
+    Image getIcon(int index, @Iconable.IconFlags int flags);
+  }
 }

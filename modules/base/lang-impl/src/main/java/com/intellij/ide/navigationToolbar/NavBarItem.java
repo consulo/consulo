@@ -13,6 +13,7 @@ import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.util.containers.JBIterable;
 import com.intellij.util.ui.UIUtil;
 import consulo.disposer.Disposer;
+import consulo.ui.image.Image;
 import consulo.util.dataholder.Key;
 
 import javax.accessibility.AccessibleAction;
@@ -35,7 +36,7 @@ public class NavBarItem extends SimpleColoredComponent implements DataProvider, 
   private final String myText;
   private final SimpleTextAttributes myAttributes;
   private final int myIndex;
-  private final Icon myIcon;
+  private final Image myIcon;
   private final NavBarPanel myPanel;
   private final Object myObject;
   private final boolean isPopupElement;
@@ -176,7 +177,7 @@ public class NavBarItem extends SimpleColoredComponent implements DataProvider, 
     final Dimension offsets = myUI.getOffsets(this);
     int width = size.width + offsets.width;
     if (!needPaintIcon() && myIcon != null) {
-      width -= myIcon.getIconWidth();
+      width -= myIcon.getWidth();
     }
     return new Dimension(width, size.height + offsets.height);
   }

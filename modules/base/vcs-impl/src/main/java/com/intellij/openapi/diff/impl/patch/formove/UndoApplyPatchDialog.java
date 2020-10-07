@@ -24,6 +24,7 @@ import com.intellij.openapi.vcs.changes.ui.FilePathChangesTreeList;
 import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.ui.components.JBLabel;
 import com.intellij.xml.util.XmlStringUtil;
+import consulo.awt.TargetAWT;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;
@@ -60,7 +61,7 @@ class UndoApplyPatchDialog extends DialogWrapper {
     labelsPanel.add(infoLabel, BorderLayout.NORTH);
     if (myShouldInformAboutBinaries) {
       JLabel warningLabel = new JLabel("Rollback will not affect binaries");
-      warningLabel.setIcon(AllIcons.General.BalloonWarning);
+      warningLabel.setIcon(TargetAWT.to(AllIcons.General.BalloonWarning));
       labelsPanel.add(warningLabel, BorderLayout.CENTER);
     }
     panel.add(labelsPanel, BorderLayout.NORTH);

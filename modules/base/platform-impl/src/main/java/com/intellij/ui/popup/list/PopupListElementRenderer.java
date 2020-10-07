@@ -16,6 +16,7 @@ import com.intellij.ui.ColorUtil;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
+import consulo.awt.TargetAWT;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nullable;
@@ -113,7 +114,7 @@ public class PopupListElementRenderer<E> extends GroupedItemsListRenderer<E> {
     if (step.hasSubstep(value) && isSelectable) {
       myNextStepLabel.setVisible(true);
       final boolean isDark = ColorUtil.isDark(UIUtil.getListSelectionBackground());
-      myNextStepLabel.setIcon(isSelected ? isDark ? AllIcons.Icons.Ide.NextStepInverted : AllIcons.Icons.Ide.NextStep : AllIcons.Icons.Ide.NextStepGrayed);
+      myNextStepLabel.setIcon(TargetAWT.to(isSelected ? isDark ? AllIcons.Icons.Ide.NextStepInverted : AllIcons.Icons.Ide.NextStep : AllIcons.Icons.Ide.NextStepGrayed));
     }
     else {
       myNextStepLabel.setVisible(false);

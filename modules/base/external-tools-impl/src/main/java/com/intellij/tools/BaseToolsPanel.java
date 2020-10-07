@@ -17,7 +17,6 @@
 package com.intellij.tools;
 
 import com.intellij.CommonBundle;
-import com.intellij.icons.AllIcons;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.Comparing;
@@ -25,8 +24,9 @@ import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.ui.*;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.ui.tree.TreeUtil;
-import javax.annotation.Nullable;
+import consulo.platform.base.icon.PlatformIconGroup;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.TreeSelectionEvent;
@@ -164,7 +164,7 @@ public abstract class BaseToolsPanel<T extends Tool> extends JPanel {
         moveNode(Direction.DOWN);
         myIsModified = true;
       }
-    }).addExtraAction(myCopyButton = new AnActionButton(ToolsBundle.message("tools.copy.button"), AllIcons.Actions.Copy) {
+    }).addExtraAction(myCopyButton = new AnActionButton(ToolsBundle.message("tools.copy.button"), PlatformIconGroup.actionsCopy()) {
       @Override
       public void actionPerformed(AnActionEvent e) {
         Tool originalTool = getSelectedTool();

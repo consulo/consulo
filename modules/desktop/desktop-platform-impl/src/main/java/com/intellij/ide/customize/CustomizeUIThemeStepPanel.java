@@ -19,10 +19,13 @@ import com.intellij.CommonBundle;
 import com.intellij.ide.ui.LafManager;
 import com.intellij.openapi.editor.colors.EditorColorsManager;
 import com.intellij.openapi.editor.colors.EditorColorsScheme;
-import com.intellij.openapi.util.IconLoader;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.util.IconUtil;
+import consulo.awt.TargetAWT;
 import consulo.ide.ui.laf.LafWithColorScheme;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.ui.image.Image;
+import consulo.ui.migration.impl.AWTIconLoader;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -36,32 +39,31 @@ public class CustomizeUIThemeStepPanel extends AbstractCustomizeWizardStep {
   private static final String INTELLIJ = "IntelliJ";
   private boolean myColumnMode;
   private JLabel myPreviewLabel;
-  private Map<String, Icon> myLafNames = new LinkedHashMap<>();
+  private Map<String, Image> myLafNames = new LinkedHashMap<>();
 
   public CustomizeUIThemeStepPanel() {
     setLayout(new BorderLayout(10, 10));
-    IconLoader.activate();
 
     if (SystemInfo.isMac) {
-      myLafNames.put(INTELLIJ, IconLoader.getIcon("/lafs/OSXAqua.png"));
-      myLafNames.put(DARCULA, IconLoader.getIcon("/lafs/OSXDarcula.png"));
+      myLafNames.put(INTELLIJ, AWTIconLoader.INSTANCE.getIcon("/icon/consulo/platform/base/PlatformIconGroup/lafs/OSXAqua.png", PlatformIconGroup.class));
+      myLafNames.put(DARCULA, AWTIconLoader.INSTANCE.getIcon("/icon/consulo/platform/base/PlatformIconGroup/lafs/OSXDarcula.png", PlatformIconGroup.class));
     }
     else if (SystemInfo.isWindows) {
-      myLafNames.put(INTELLIJ, IconLoader.getIcon("/lafs/WindowsIntelliJ.png"));
-      myLafNames.put(DARCULA, IconLoader.getIcon("/lafs/WindowsDarcula.png"));
+      myLafNames.put(INTELLIJ, AWTIconLoader.INSTANCE.getIcon("/icon/consulo/platform/base/PlatformIconGroup/lafs/WindowsIntelliJ.png", PlatformIconGroup.class));
+      myLafNames.put(DARCULA, AWTIconLoader.INSTANCE.getIcon("/icon/consulo/platform/base/PlatformIconGroup/lafs/WindowsDarcula.png", PlatformIconGroup.class));
     }
     else {
-      myLafNames.put(INTELLIJ, IconLoader.getIcon("/lafs/LinuxIntelliJ.png"));
-      myLafNames.put(DARCULA, IconLoader.getIcon("/lafs/LinuxDarcula.png"));
+      myLafNames.put(INTELLIJ, AWTIconLoader.INSTANCE.getIcon("/icon/consulo/platform/base/PlatformIconGroup/lafs/LinuxIntelliJ.png"));
+      myLafNames.put(DARCULA, AWTIconLoader.INSTANCE.getIcon("/icon/consulo/platform/base/PlatformIconGroup/lafs/LinuxDarcula.png", PlatformIconGroup.class));
     }
     myColumnMode = myLafNames.size() > 2;
     JPanel buttonsPanel = new JPanel(new GridLayout(myColumnMode ? myLafNames.size() : 1, myColumnMode ? 1 : myLafNames.size(), 5, 5));
     ButtonGroup group = new ButtonGroup();
     String defaultLafName = null;
 
-    for (Map.Entry<String, Icon> entry : myLafNames.entrySet()) {
+    for (Map.Entry<String, Image> entry : myLafNames.entrySet()) {
       final String lafName = entry.getKey();
-      Icon icon = entry.getValue();
+      Image icon = entry.getValue();
       final JRadioButton radioButton = new JRadioButton(lafName, defaultLafName == null);
       radioButton.setOpaque(false);
       if (defaultLafName == null) {
@@ -71,7 +73,7 @@ public class CustomizeUIThemeStepPanel extends AbstractCustomizeWizardStep {
       final JPanel panel = createBigButtonPanel(new BorderLayout(10, 10), radioButton, () -> applyLaf(lafName, CustomizeUIThemeStepPanel.this));
       panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
       panel.add(radioButton, BorderLayout.NORTH);
-      final JLabel label = new JLabel(myColumnMode ? IconUtil.scale(icon, .2) : icon) {
+      final JLabel label = new JLabel(myColumnMode ? IconUtil.scale(TargetAWT.to(icon), .2) : TargetAWT.to(icon)) {
         @Override
         public Dimension getPreferredSize() {
           Dimension size = super.getPreferredSize();
@@ -134,7 +136,7 @@ public class CustomizeUIThemeStepPanel extends AbstractCustomizeWizardStep {
     }
 
     if (myColumnMode) {
-      myPreviewLabel.setIcon(myLafNames.get(lafName));
+      myPreviewLabel.setIcon(TargetAWT.to(myLafNames.get(lafName)));
       myPreviewLabel.setBorder(BorderFactory.createLineBorder(UIManager.getColor("Label.foreground")));
     }
   }

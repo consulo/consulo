@@ -5,7 +5,6 @@ package com.intellij.openapi.project;
 import com.intellij.openapi.actionSystem.ToggleAction;
 import consulo.localize.LocalizeValue;
 import consulo.ui.image.Image;
-import consulo.ui.migration.SwingImageRef;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

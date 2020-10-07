@@ -16,38 +16,26 @@
 
 package com.intellij.diagnostic.logging;
 
-import consulo.logging.Logger;
-import com.intellij.openapi.util.*;
-import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.openapi.vfs.VfsUtil;
-import com.intellij.util.ImageLoader;
+import com.intellij.openapi.util.DefaultJDOMExternalizer;
+import com.intellij.openapi.util.InvalidDataException;
+import com.intellij.openapi.util.JDOMExternalizable;
+import com.intellij.openapi.util.WriteExternalException;
+import consulo.ui.image.Image;
 import org.jdom.Element;
 
-import javax.swing.*;
-import java.awt.*;
-import java.io.File;
-import java.io.IOException;
+import javax.annotation.Nullable;
 
 /**
  * User: anna
  * Date: 22-Mar-2006
  */
 public class LogFilter implements JDOMExternalizable {
-  private static final Logger LOG = Logger.getInstance(LogFilter.class);
-
   public String myName;
-  public String myIconPath;
-  private Icon myIcon;
+  private Image myIcon;
 
-
-  public LogFilter(final String name, final Icon icon) {
+  public LogFilter(final String name, final Image icon) {
     myName = name;
     myIcon = icon;
-  }
-
-  public LogFilter(final String name, final String iconPath) {
-    myName = name;
-    myIconPath = iconPath;
   }
 
   public LogFilter(String name) {
@@ -63,7 +51,7 @@ public class LogFilter implements JDOMExternalizable {
     return myName;
   }
 
-  public void setIcon(final Icon icon) {
+  public void setIcon(final Image icon) {
     myIcon = icon;
   }
 
@@ -75,26 +63,9 @@ public class LogFilter implements JDOMExternalizable {
     return myName;
   }
 
-
-  public Icon getIcon() {
-    if (myIcon != null) {
-      return myIcon;
-    }
-    if (myIconPath != null && new File(FileUtil.toSystemDependentName(myIconPath)).exists()) {
-      Image image = null;
-      try {
-        image = ImageLoader.loadFromStream(VfsUtil.convertToURL(VfsUtil.pathToUrl(myIconPath)).openStream());
-      }
-      catch (IOException e) {
-        LOG.debug(e);
-      }
-
-      if (image != null){
-        return IconLoader.getIcon(image);
-      }
-    }
-    //return IconLoader.getIcon("/ant/filter.png");
-    return null;
+  @Nullable
+  public Image getIcon() {
+    return myIcon;
   }
 
   @Override

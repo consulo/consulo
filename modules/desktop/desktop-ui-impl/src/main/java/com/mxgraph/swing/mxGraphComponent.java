@@ -21,6 +21,7 @@ import com.mxgraph.util.*;
 import com.mxgraph.util.mxEventSource.mxIEventListener;
 import com.mxgraph.view.*;
 import com.mxgraph.view.mxEdgeStyle.mxEdgeStyleFunction;
+import consulo.awt.TargetAWT;
 
 import javax.swing.*;
 import java.awt.*;
@@ -315,17 +316,17 @@ public class mxGraphComponent extends JScrollPane implements Printable {
   /**
    *
    */
-  protected Icon expandedIcon = AllIcons.Nodes.TreeDownArrow;
+  protected Icon expandedIcon = TargetAWT.to(AllIcons.Nodes.TreeDownArrow);
 
   /**
    *
    */
-  protected Icon collapsedIcon = AllIcons.Nodes.TreeRightArrow;
+  protected Icon collapsedIcon = TargetAWT.to(AllIcons.Nodes.TreeRightArrow);
 
   /**
    *
    */
-  protected Icon warningIcon = AllIcons.General.Warning;
+  protected Icon warningIcon = TargetAWT.to(AllIcons.General.Warning);
 
   /**
    *

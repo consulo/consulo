@@ -1,13 +1,11 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.openapi.actionSystem.impl;
 
-import com.intellij.icons.AllIcons;
 import com.intellij.ide.ActivityTracker;
 import com.intellij.ide.DataManager;
 import com.intellij.ide.plugins.PluginManagerCore;
 import com.intellij.internal.statistic.collectors.fus.actions.persistence.ActionIdProvider;
 import com.intellij.lang.Language;
-import consulo.disposer.Disposable;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.ActionManagerEx;
 import com.intellij.openapi.actionSystem.ex.ActionPopupMenuListener;
@@ -22,7 +20,6 @@ import com.intellij.openapi.keymap.ex.KeymapManagerEx;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.util.ActionCallback;
-import com.intellij.openapi.util.IconLoader;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.wm.IdeFocusManager;
@@ -42,12 +39,16 @@ import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginId;
 import consulo.container.plugin.PluginManager;
 import consulo.container.util.StatCollector;
+import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.extensions.ListOfElementsEP;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.platform.impl.action.LastActionTracker;
 import consulo.ui.image.Image;
+import consulo.ui.image.ImageEffects;
+import consulo.ui.image.ImageKey;
+import consulo.ui.style.StandardColors;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.nodep.xml.node.SimpleXmlElement;
 import gnu.trove.THashMap;
@@ -199,17 +200,14 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
   private static void updateIconFromStub(@Nonnull ActionStubBase stub, AnAction anAction) {
     String iconPath = stub.getIconPath();
     if (iconPath != null) {
-      Class<? extends AnAction> actionClass = anAction.getClass();
-      ClassLoader classLoader = actionClass.getClassLoader();
-
-      if (stub.getPluginId() != null) {
-        final PluginDescriptor plugin = PluginManager.findPlugin(stub.getPluginId());
-        if (plugin != null) {
-          classLoader = plugin.getPluginClassLoader();
-        }
+      ImageKey imageKey = ImageKey.fromString(iconPath, Image.DEFAULT_ICON_SIZE, Image.DEFAULT_ICON_SIZE);
+      if(imageKey != null) {
+        anAction.getTemplatePresentation().setIcon(imageKey);
       }
-
-      setIconFromClass(actionClass, classLoader, iconPath, anAction.getTemplatePresentation(), stub.getPluginId());
+      else {
+        LOG.warn("Wrong icon path: " + iconPath);
+        anAction.getTemplatePresentation().setIcon(ImageEffects.colorFilled(Image.DEFAULT_ICON_SIZE, Image.DEFAULT_ICON_SIZE, StandardColors.MAGENTA));
+      }
     }
   }
 
@@ -242,44 +240,6 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
 
   private static boolean isSecondary(SimpleXmlElement element) {
     return "true".equalsIgnoreCase(element.getAttributeValue(SECONDARY));
-  }
-
-  private static void setIcon(@Nullable final String iconPath, @Nonnull String className, @Nonnull PluginDescriptor pluginDescriptor, @Nonnull Presentation presentation) {
-    if (iconPath == null) return;
-
-    PluginId pluginId = pluginDescriptor.getPluginId();
-    ClassLoader pluginClassLoader = pluginDescriptor.getPluginClassLoader();
-    try {
-      Class<?> actionClass = Class.forName(className, true, pluginClassLoader);
-      setIconFromClass(actionClass, pluginClassLoader, iconPath, presentation, pluginId);
-    }
-    catch (ClassNotFoundException | NoClassDefFoundError e) {
-      LOG.error(e);
-      reportActionError(pluginId, "class with name \"" + className + "\" not found");
-    }
-  }
-
-  private static void setIconFromClass(@Nonnull Class<?> actionClass,
-                                       @Nonnull final ClassLoader classLoader,
-                                       @Nonnull final String iconPath,
-                                       @Nonnull Presentation presentation,
-                                       final PluginId pluginId) {
-    Image lazyIcon = consulo.ui.image.Image.lazy(() -> {
-      //try to find icon in idea class path
-      consulo.ui.image.Image icon = IconLoader.findIcon(iconPath, actionClass, true);
-      if (icon == null) {
-        icon = IconLoader.findIcon(iconPath, classLoader);
-      }
-
-      if (icon == null) {
-        reportActionError(pluginId, "Icon cannot be found in '" + iconPath + "', action class='" + actionClass + "'");
-        icon = AllIcons.Toolbar.Unknown;
-      }
-
-      return icon;
-    });
-
-    presentation.setIcon(lazyIcon);
   }
 
   @Nonnull
@@ -746,8 +706,15 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
       if (group instanceof ActionGroupStub) {
         ((ActionGroupStub)group).setIconPath(iconPath);
       }
-      else {
-        setIcon(iconPath, className, plugin, presentation);
+      else if(iconPath != null) {
+        if (iconPath.contains("@")) {
+          String[] groupIdAndImageId = iconPath.split("@");
+          group.getTemplatePresentation().setIcon(ImageKey.of(groupIdAndImageId[0], groupIdAndImageId[1], Image.DEFAULT_ICON_SIZE, Image.DEFAULT_ICON_SIZE));
+        }
+        else {
+          LOG.warn("Wrong icon path: " + iconPath);
+          group.getTemplatePresentation().setIcon(ImageEffects.colorFilled(Image.DEFAULT_ICON_SIZE, Image.DEFAULT_ICON_SIZE, StandardColors.MAGENTA));
+        }
       }
 
       // popup

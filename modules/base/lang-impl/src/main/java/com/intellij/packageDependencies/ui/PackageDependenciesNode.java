@@ -27,13 +27,11 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
 import com.intellij.ui.Gray;
-import com.intellij.util.IconUtil;
-import com.intellij.util.ui.EmptyIcon;
 import com.intellij.util.ui.tree.TreeUtil;
+import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.MutableTreeNode;
 import java.awt.*;
@@ -41,7 +39,7 @@ import java.util.List;
 import java.util.*;
 
 public class PackageDependenciesNode extends DefaultMutableTreeNode implements Navigatable{
-  private static final EmptyIcon EMPTY_ICON = new EmptyIcon(0, IconUtil.getEmptyIcon(false).getIconHeight());
+  private static final Image EMPTY_ICON = Image.empty(0, Image.DEFAULT_ICON_SIZE);
 
   private Set<VirtualFile> myRegisteredFiles = null;
   private boolean myHasUnmarked = false;
@@ -79,7 +77,7 @@ public class PackageDependenciesNode extends DefaultMutableTreeNode implements N
     updateMarked(!isMarked, isMarked);
   }
 
-  public Icon getIcon() {
+  public Image getIcon() {
     return EMPTY_ICON;
   }
 

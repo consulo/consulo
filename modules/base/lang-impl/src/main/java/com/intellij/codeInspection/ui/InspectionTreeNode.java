@@ -17,9 +17,9 @@
 package com.intellij.codeInspection.ui;
 
 import com.intellij.openapi.vcs.FileStatus;
-import javax.annotation.Nullable;
+import consulo.ui.image.Image;
 
-import javax.swing.*;
+import javax.annotation.Nullable;
 import javax.swing.tree.DefaultMutableTreeNode;
 import java.util.Enumeration;
 
@@ -33,7 +33,7 @@ public abstract class InspectionTreeNode extends DefaultMutableTreeNode {
   }
 
   @Nullable
-  public abstract Icon getIcon();
+  public abstract Image getIcon();
 
   public int getProblemCount() {
     int sum = 0;

@@ -20,6 +20,7 @@ import com.intellij.ide.ui.UISettings;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
+import consulo.awt.TargetAWT;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -74,7 +75,7 @@ public class IdeaMenuUI extends BasicMenuUI{
 
     // define selft icon due with hidpi, jdk icon is too small
     if (JBUI.isHiDPI()) {
-      arrowIcon = AllIcons.Nodes.TreeExpandNode;
+      arrowIcon = TargetAWT.to(AllIcons.Nodes.TreeExpandNode);
     }
   }
 

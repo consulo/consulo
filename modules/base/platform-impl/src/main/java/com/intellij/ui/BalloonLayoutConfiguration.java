@@ -79,8 +79,8 @@ public class BalloonLayoutConfiguration {
       RawStyleWidth = 205;
     }
 
-    width += AllIcons.Ide.Notification.Shadow.Left.getIconWidth();
-    width += AllIcons.Ide.Notification.Shadow.Right.getIconWidth();
+    width += AllIcons.Ide.Notification.Shadow.Left.getWidth();
+    width += AllIcons.Ide.Notification.Shadow.Right.getWidth();
 
     RawWidth = width;
   }
@@ -172,9 +172,9 @@ public class BalloonLayoutConfiguration {
     }
     else {
       this.rightActionsOffset = rightActionsOffset;
-      this.closeOffset = beforeCloseSpace + AllIcons.Ide.Notification.Close.getIconWidth() + rightActionsOffset.width;
+      this.closeOffset = beforeCloseSpace + AllIcons.Ide.Notification.Close.getWidth() + rightActionsOffset.width;
       this.gearCloseSpace = afterGearSpace + beforeCloseSpace;
-      this.allActionsOffset = closeOffset + afterGearSpace + AllIcons.Ide.Notification.Gear.getIconWidth();
+      this.allActionsOffset = closeOffset + afterGearSpace + AllIcons.Ide.Notification.Gear.getWidth();
       this.beforeGearSpace = beforeGearSpace;
     }
   }

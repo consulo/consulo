@@ -52,6 +52,7 @@ import com.intellij.ui.ColoredSideBorder;
 import com.intellij.ui.HintHint;
 import com.intellij.ui.LightweightHint;
 import com.intellij.util.Function;
+import consulo.awt.TargetAWT;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -111,7 +112,7 @@ public class CoverageLineMarkerRenderer implements LineMarkerRendererEx, ActiveG
     g.fillRect(r.x, r.y, r.width, r.height);
     final LineData lineData = getLineData(editor.xyToLogicalPosition(new Point(0, r.y)).line);
     if (lineData != null && lineData.isCoveredByOneTest()) {
-      AllIcons.Gutter.Unique.paintIcon(editor.getComponent(), g, r.x, r.y);
+      TargetAWT.to(AllIcons.Gutter.Unique).paintIcon(editor.getComponent(), g, r.x, r.y);
     }
   }
 
@@ -215,10 +216,9 @@ public class CoverageLineMarkerRenderer implements LineMarkerRendererEx, ActiveG
   }
 
   protected JComponent createActionsToolbar(final Editor editor, final int lineNumber) {
-
     final JComponent editorComponent = editor.getComponent();
 
-    final DefaultActionGroup group = new DefaultActionGroup();
+    final ActionGroup.Builder group = ActionGroup.newImmutableBuilder();
     final GotoPreviousCoveredLineAction prevAction = new GotoPreviousCoveredLineAction(editor, lineNumber);
     final GotoNextCoveredLineAction nextAction = new GotoNextCoveredLineAction(editor, lineNumber);
 
@@ -239,7 +239,7 @@ public class CoverageLineMarkerRenderer implements LineMarkerRendererEx, ActiveG
     group.add(new EditCoverageColorsAction(editor, lineNumber));
     group.add(new HideCoverageInfoAction());
 
-    final ActionToolbar toolbar = ActionManager.getInstance().createActionToolbar(ActionPlaces.FILEHISTORY_VIEW_TOOLBAR, group, true);
+    final ActionToolbar toolbar = ActionManager.getInstance().createActionToolbar(ActionPlaces.FILEHISTORY_VIEW_TOOLBAR, group.build(), true);
     final JComponent toolbarComponent = toolbar.getComponent();
 
     final Color background = ((EditorEx)editor).getBackgroundColor();

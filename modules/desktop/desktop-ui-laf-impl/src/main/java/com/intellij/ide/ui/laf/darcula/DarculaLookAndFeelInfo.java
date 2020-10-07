@@ -18,13 +18,15 @@ package com.intellij.ide.ui.laf.darcula;
 import com.intellij.ide.IdeBundle;
 import consulo.desktop.ui.laf.LookAndFeelInfoWithClassLoader;
 import consulo.ide.ui.laf.LafWithColorScheme;
+import consulo.ide.ui.laf.LafWithIconLibrary;
+import consulo.ui.image.IconLibraryManager;
 
 import javax.annotation.Nonnull;
 
 /**
  * @author Konstantin Bulenkov
  */
-public class DarculaLookAndFeelInfo extends LookAndFeelInfoWithClassLoader implements LafWithColorScheme {
+public class DarculaLookAndFeelInfo extends LookAndFeelInfoWithClassLoader implements LafWithColorScheme, LafWithIconLibrary {
   public DarculaLookAndFeelInfo() {
     super(IdeBundle.message("idea.dark.look.and.feel"), DarculaLaf.class.getName());
   }
@@ -43,5 +45,11 @@ public class DarculaLookAndFeelInfo extends LookAndFeelInfoWithClassLoader imple
   @Override
   public String getColorSchemeName() {
     return getName();
+  }
+
+  @Nonnull
+  @Override
+  public String getIconLibraryId() {
+    return IconLibraryManager.DARK_LIBRARY_ID;
   }
 }

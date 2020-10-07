@@ -19,9 +19,10 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.vcs.VcsShowConfirmationOption;
+import com.intellij.ui.components.JBLabel;
 import com.intellij.util.ui.OptionsDialog;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -74,7 +75,7 @@ class VcsConfirmationDialog extends OptionsDialog {
   protected JComponent createCenterPanel() {
     JPanel panel = new JPanel(new BorderLayout(15, 0));
     panel.add(new JLabel(myMessage));
-    panel.add(new JLabel(Messages.getQuestionIcon()), BorderLayout.WEST);
+    panel.add(new JBLabel(Messages.getQuestionIcon()), BorderLayout.WEST);
     return panel;
   }
 

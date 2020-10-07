@@ -29,6 +29,8 @@ import com.intellij.ui.components.JBList;
 import com.intellij.ui.components.JBTextField;
 import com.intellij.util.ui.JBInsets;
 import com.intellij.util.ui.UIUtil;
+import consulo.awt.TargetAWT;
+import consulo.ui.image.Image;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -108,7 +110,8 @@ public class SearchTextField extends JPanel {
         if (e.getKeyCode() == KeyEvent.VK_DOWN) {
           if (isSearchControlUISupported() && myNativeSearchPopup != null) {
             myNativeSearchPopup.show(myTextField, 5, myTextField.getHeight());
-          } else if (myPopup == null || !myPopup.isVisible()) {
+          }
+          else if (myPopup == null || !myPopup.isVisible()) {
             showPopup();
           }
         }
@@ -135,7 +138,7 @@ public class SearchTextField extends JPanel {
       }
     }
     else {
-      myToggleHistoryLabel = new JLabel(AllIcons.Actions.SearchWithHistory);
+      myToggleHistoryLabel = new JLabel(TargetAWT.to(AllIcons.Actions.SearchWithHistory));
       myToggleHistoryLabel.setOpaque(true);
       myToggleHistoryLabel.addMouseListener(new MouseAdapter() {
         @Override
@@ -147,7 +150,7 @@ public class SearchTextField extends JPanel {
         add(myToggleHistoryLabel, BorderLayout.WEST);
       }
 
-      myClearFieldLabel = new JLabel(UIUtil.isUnderDarcula() ? AllIcons.Actions.Clean : AllIcons.Actions.CleanLight);
+      myClearFieldLabel = new JLabel(TargetAWT.to(UIUtil.isUnderDarcula() ? AllIcons.Actions.Clean : AllIcons.Actions.CleanLight));
       myClearFieldLabel.setOpaque(true);
       add(myClearFieldLabel, BorderLayout.EAST);
       myClearFieldLabel.addMouseListener(new MouseAdapter() {
@@ -421,10 +424,7 @@ public class SearchTextField extends JPanel {
     if (myPopup == null || !myPopup.isVisible()) {
       final JList list = new JBList(myModel);
       final Runnable chooseRunnable = createItemChosenCallback(list);
-      myPopup = JBPopupFactory.getInstance().createListPopupBuilder(list)
-              .setMovable(false)
-              .setRequestFocus(true)
-              .setItemChoosenCallback(chooseRunnable).createPopup();
+      myPopup = JBPopupFactory.getInstance().createListPopupBuilder(list).setMovable(false).setRequestFocus(true).setItemChoosenCallback(chooseRunnable).createPopup();
       if (isShowing()) {
         myPopup.showUnderneathOf(getPopupLocationComponent());
       }
@@ -467,9 +467,9 @@ public class SearchTextField extends JPanel {
     return false;
   }
 
-  public void setSearchIcon(final Icon icon) {
-    if (! isSearchControlUISupported()) {
-      myToggleHistoryLabel.setIcon(icon);
+  public void setSearchIcon(final Image icon) {
+    if (!isSearchControlUISupported()) {
+      myToggleHistoryLabel.setIcon(TargetAWT.to(icon));
     }
   }
 }

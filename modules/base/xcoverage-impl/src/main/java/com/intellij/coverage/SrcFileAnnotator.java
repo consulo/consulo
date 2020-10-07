@@ -8,6 +8,7 @@ import com.intellij.codeInsight.CodeInsightBundle;
 import com.intellij.history.FileRevisionTimestampComparator;
 import com.intellij.history.LocalHistory;
 import com.intellij.icons.AllIcons;
+import consulo.awt.TargetAWT;
 import consulo.disposer.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import consulo.logging.Logger;
@@ -498,7 +499,7 @@ public class SrcFileAnnotator implements Disposable {
           if (isCurrentEditor(editor)) {
             final EditorNotificationPanel panel = new EditorNotificationPanel() {
               {
-                myLabel.setIcon(AllIcons.General.ExclMark);
+                myLabel.setIcon(TargetAWT.to(AllIcons.General.ExclMark));
                 myLabel.setText(message);
               }
             };

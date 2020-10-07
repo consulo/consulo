@@ -8,11 +8,12 @@ import com.intellij.openapi.ui.GraphicsConfig;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.ui.*;
-import com.intellij.util.IconUtil;
 import com.intellij.util.ui.JBUI;
-import consulo.awt.TargetAWT;
-import javax.annotation.Nonnull;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.image.Image;
+import consulo.ui.image.ImageEffects;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 import java.util.Map;
@@ -40,6 +41,7 @@ class SwitcherToolWindowsListRenderer extends ColoredListCellRenderer<Object> {
   }
 
   @Override
+  @RequiredUIAccess
   protected void customizeCellRenderer(@Nonnull JList<?> list, Object value, int index, boolean selected, boolean hasFocus) {
     setBorder(value == RECENT_LOCATIONS ? JBUI.Borders.customLine(selected ? getBackground() : new JBColor(Gray._220, Gray._80), 1, 0, 0, 0) : JBUI.Borders.empty());
 
@@ -50,7 +52,7 @@ class SwitcherToolWindowsListRenderer extends ColoredListCellRenderer<Object> {
       setPaintFocusBorder(false);
       setIcon(getIcon(tw));
 
-      nameToMatch = tw.getStripeTitle();
+      nameToMatch = tw.getDisplayName().getValue();
       String shortcut = shortcuts.get(tw);
       String name;
       if (myPinned || shortcut == null) {
@@ -90,13 +92,13 @@ class SwitcherToolWindowsListRenderer extends ColoredListCellRenderer<Object> {
     config.restore();
   }
 
-  private static Icon getIcon(ToolWindow toolWindow) {
-    Icon icon = TargetAWT.to(toolWindow.getIcon());
+  @RequiredUIAccess
+  private static Image getIcon(ToolWindow toolWindow) {
+    Image icon = toolWindow.getIcon();
     if (icon == null) {
       return AllIcons.FileTypes.UiForm;
     }
 
-    icon = IconUtil.toSize(icon, 16, 16);
-    return icon;
+    return ImageEffects.resize(icon, Image.DEFAULT_ICON_SIZE, Image.DEFAULT_ICON_SIZE);
   }
 }

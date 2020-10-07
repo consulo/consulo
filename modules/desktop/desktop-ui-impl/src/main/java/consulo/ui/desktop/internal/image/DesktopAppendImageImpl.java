@@ -16,15 +16,26 @@
 package consulo.ui.desktop.internal.image;
 
 import com.intellij.ui.RowIcon;
+import consulo.awt.TargetAWT;
 import consulo.ui.image.Image;
+
+import javax.annotation.Nonnull;
+import java.util.function.Function;
 
 /**
  * @author VISTALL
  * @since 2018-05-07
  */
-public class DesktopAppendImageImpl extends RowIcon implements Image {
-  public DesktopAppendImageImpl(int iconCount) {
-    super(iconCount, Alignment.CENTER);
+public class DesktopAppendImageImpl extends RowIcon implements Image, DesktopStyledImage<DesktopAppendImageImpl> {
+  private final Image myImg1;
+  private final Image myImg2;
+
+  public DesktopAppendImageImpl(Image img1, Image img2) {
+    super(2, Alignment.CENTER);
+    myImg1 = img1;
+    setIcon(TargetAWT.to(img1), 0);
+    myImg2 = img2;             
+    setIcon(TargetAWT.to(img2), 1);
   }
 
   @Override
@@ -35,5 +46,11 @@ public class DesktopAppendImageImpl extends RowIcon implements Image {
   @Override
   public int getWidth() {
     return getIconWidth();
+  }
+
+  @Nonnull
+  @Override
+  public DesktopAppendImageImpl withTargetIconLibrary(@Nonnull String iconLibraryId, @Nonnull Function<Image, Image> converter) {
+    return new DesktopAppendImageImpl(converter.apply(myImg1), converter.apply(myImg2));
   }
 }

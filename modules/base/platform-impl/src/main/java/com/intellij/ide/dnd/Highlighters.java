@@ -22,6 +22,8 @@ import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.awt.RelativePoint;
+import consulo.awt.TargetAWT;
+import consulo.ui.image.Image;
 
 import javax.swing.*;
 import java.awt.*;
@@ -232,15 +234,15 @@ public class Highlighters implements DnDEvent.DropTargetHighlightingType {
   private static class HorizontalLinesHighlighter extends AbstractComponentHighlighter {
 
     protected void _show(JLayeredPane aPane, Rectangle aRectangle, DnDEvent aEvent) {
-      final Rectangle rectangle = new Rectangle(aRectangle.x - AllIcons.Ide.Dnd.Left.getIconWidth(), aRectangle.y - AllIcons.Ide.Dnd.Left
-        .getIconHeight(), aRectangle.width + AllIcons.Ide.Dnd.Left.getIconWidth() + AllIcons.Ide.Dnd.Right.getIconWidth(), aRectangle.height + AllIcons.Ide.Dnd.Left
-        .getIconHeight());
+      final Rectangle rectangle = new Rectangle(aRectangle.x - AllIcons.Ide.Dnd.Left.getWidth(), aRectangle.y - AllIcons.Ide.Dnd.Left
+        .getHeight(), aRectangle.width + AllIcons.Ide.Dnd.Left.getWidth() + AllIcons.Ide.Dnd.Right.getWidth(), aRectangle.height + AllIcons.Ide.Dnd.Left
+        .getHeight());
       setBounds(rectangle);
     }
 
     protected void paintComponent(Graphics g) {
-      AllIcons.Ide.Dnd.Left.paintIcon(this, g, 0, (getHeight() / 2));
-      AllIcons.Ide.Dnd.Right.paintIcon(this, g, getWidth() - AllIcons.Ide.Dnd.Right.getIconWidth(), (getHeight() / 2));
+      TargetAWT.to(AllIcons.Ide.Dnd.Left).paintIcon(this, g, 0, (getHeight() / 2));
+      TargetAWT.to(AllIcons.Ide.Dnd.Right).paintIcon(this, g, getWidth() - AllIcons.Ide.Dnd.Right.getWidth(), (getHeight() / 2));
     }
 
     public int getMask() {
@@ -249,18 +251,18 @@ public class Highlighters implements DnDEvent.DropTargetHighlightingType {
   }
 
   private static class VerticalLinesHighlighter extends AbstractComponentHighlighter {
-    private static final Icon TOP = AllIcons.Ide.Dnd.Top;
-    private static final Icon BOTTOM = AllIcons.Ide.Dnd.Bottom;
+    private static final Image TOP = AllIcons.Ide.Dnd.Top;
+    private static final Image BOTTOM = AllIcons.Ide.Dnd.Bottom;
 
     protected void _show(JLayeredPane aPane, Rectangle aRectangle, DnDEvent aEvent) {
-      final Rectangle rectangle = new Rectangle(aRectangle.x, aRectangle.y - TOP.getIconHeight(), aRectangle.width, aRectangle.height + TOP.getIconHeight() + BOTTOM
-        .getIconHeight());
+      final Rectangle rectangle = new Rectangle(aRectangle.x, aRectangle.y - TOP.getHeight(), aRectangle.width, aRectangle.height + TOP.getHeight() + BOTTOM
+        .getHeight());
       setBounds(rectangle);
     }
 
     protected void paintComponent(Graphics g) {
-      TOP.paintIcon(this, g, (getWidth() - TOP.getIconWidth()) / 2, 0);
-      BOTTOM.paintIcon(this, g, (getWidth() - BOTTOM.getIconWidth()) / 2, getHeight() - BOTTOM.getIconHeight());
+      TargetAWT.to(TOP).paintIcon(this, g, (getWidth() - TOP.getWidth()) / 2, 0);
+      TargetAWT.to(BOTTOM).paintIcon(this, g, (getWidth() - BOTTOM.getWidth()) / 2, getHeight() - BOTTOM.getHeight());
     }
 
     public int getMask() {

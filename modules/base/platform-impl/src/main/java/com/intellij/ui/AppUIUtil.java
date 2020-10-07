@@ -28,7 +28,6 @@ import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.util.ImageLoader;
 import com.intellij.util.JBHiDPIScaledImage;
 import com.intellij.util.containers.ContainerUtil;
-import consulo.logging.Logger;
 import consulo.ui.style.StyleManager;
 import sun.awt.AWTAccessor;
 
@@ -37,10 +36,7 @@ import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
 import java.lang.reflect.Field;
-import java.net.URL;
 import java.util.List;
 
 /**
@@ -56,8 +52,8 @@ public class AppUIUtil {
     ApplicationInfo appInfo = ApplicationInfoImpl.getInstance();
     List<Image> images = ContainerUtil.newArrayListWithCapacity(2);
 
-    images.add(ImageLoader.loadFromResource(appInfo.getIconUrl(), isDark));
-    images.add(ImageLoader.loadFromResource(appInfo.getSmallIconUrl(), isDark));
+    images.add(ImageLoader.loadFromResource(appInfo.getIconUrl(), AppUIUtil.class, isDark));
+    images.add(ImageLoader.loadFromResource(appInfo.getSmallIconUrl(), AppUIUtil.class, isDark));
 
     for (int i = 0; i < images.size(); i++) {
       Image image = images.get(i);
@@ -122,38 +118,6 @@ public class AppUIUtil {
       wmClass += "-debug";
     }
     return wmClass;
-  }
-
-  public static void registerBundledFonts() {
-    registerFont("/fonts/Inconsolata.ttf");
-    registerFont("/fonts/SourceCodePro-Regular.ttf");
-    registerFont("/fonts/SourceCodePro-Bold.ttf");
-    registerFont("/fonts/FiraCode-Bold.ttf");
-    registerFont("/fonts/FiraCode-Light.ttf");
-    registerFont("/fonts/FiraCode-Medium.ttf");
-    registerFont("/fonts/FiraCode-Regular.ttf");
-    registerFont("/fonts/FiraCode-Retina.ttf");
-  }
-
-  private static void registerFont(String name) {
-    try {
-      URL url = AppUIUtil.class.getResource(name);
-      if (url == null) {
-        throw new IOException("Resource missing: " + name);
-      }
-
-      InputStream is = url.openStream();
-      try {
-        Font font = Font.createFont(Font.TRUETYPE_FONT, is);
-        GraphicsEnvironment.getLocalGraphicsEnvironment().registerFont(font);
-      }
-      finally {
-        is.close();
-      }
-    }
-    catch (Exception e) {
-      Logger.getInstance(AppUIUtil.class).error("Cannot register font: " + name, e);
-    }
   }
 
   public static void hideToolWindowBalloon(@Nonnull final String id, @Nonnull final Project project) {

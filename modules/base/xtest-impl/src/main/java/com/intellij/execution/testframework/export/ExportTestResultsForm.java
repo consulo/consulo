@@ -29,6 +29,7 @@ import com.intellij.ui.DocumentAdapter;
 import com.intellij.ui.UserActivityListener;
 import com.intellij.ui.UserActivityWatcher;
 import com.intellij.util.EventDispatcher;
+import consulo.awt.TargetAWT;
 
 import javax.annotation.Nullable;
 import javax.swing.*;
@@ -97,7 +98,7 @@ public class ExportTestResultsForm {
       }
     });
 
-    myMessageLabel.setIcon(AllIcons.General.BalloonWarning);
+    myMessageLabel.setIcon(TargetAWT.to(AllIcons.General.BalloonWarning));
     JRadioButton b;
     if (config.getExportFormat() == ExportTestResultsConfiguration.ExportFormat.Xml) {
       b = myXmlRb;

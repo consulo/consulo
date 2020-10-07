@@ -19,8 +19,13 @@ import com.intellij.ide.StartupProgress;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.TransactionGuard;
 import com.intellij.openapi.application.ex.ApplicationEx;
+import com.intellij.openapi.util.Pair;
+import com.intellij.util.io.URLUtil;
 import consulo.application.TransactionGuardEx;
 import consulo.container.boot.ContainerPathManager;
+import consulo.container.classloader.PluginClassLoader;
+import consulo.container.plugin.PluginDescriptor;
+import consulo.container.plugin.PluginManager;
 import consulo.container.util.StatCollector;
 import consulo.localize.LocalizeManager;
 import consulo.localize.impl.LocalizeManagerImpl;
@@ -28,10 +33,15 @@ import consulo.logging.Logger;
 import consulo.plugins.internal.PluginsInitializeInfo;
 import consulo.plugins.internal.PluginsLoader;
 import consulo.start.CommandLineArgs;
+import consulo.ui.image.IconLibraryManager;
+import consulo.ui.impl.image.BaseIconLibraryManager;
 import consulo.util.lang.ref.SimpleReference;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.io.IOException;
+import java.net.URL;
+import java.util.*;
 
 public abstract class ApplicationStarter {
   private static final Logger LOG = Logger.getInstance(ApplicationStarter.class);
@@ -86,11 +96,55 @@ public abstract class ApplicationStarter {
 
     myPluginsInitializeInfo = PluginsLoader.initPlugins(splash, isHeadlessMode);
 
-    LocalizeManagerImpl localizeManager = (LocalizeManagerImpl)LocalizeManager.getInstance();
+    StatCollector libraryStats = new StatCollector();
+    LocalizeManagerImpl localizeManager = (LocalizeManagerImpl)LocalizeManager.get();
+    BaseIconLibraryManager iconLibraryManager = (BaseIconLibraryManager)IconLibraryManager.get();
 
-    localizeManager.initialize();
+    Map<String, List<String>> filesWithMarkers = new HashMap<>();
 
+    libraryStats.markWith("library.analyze", () -> analyzeLibraries(filesWithMarkers));
+
+    libraryStats.markWith("localize.initialize", () -> localizeManager.initialize(filesWithMarkers.get(LocalizeManagerImpl.LOCALIZE_LIBRARY_MARKER)));
+    libraryStats.markWith("icon.initialize", () -> iconLibraryManager.initialize(filesWithMarkers.get(BaseIconLibraryManager.ICON_LIBRARY_MARKER)));
+
+    libraryStats.dump("Libraries", LOG::info);
+    
     createApplication(isHeadlessMode, mySplashRef, args);
+  }
+
+  protected void analyzeLibraries(Map<String, List<String>> filesWithMarkers) {
+    List<PluginDescriptor> pluginDescriptors = PluginManager.getPlugins();
+    for (PluginDescriptor pluginDescriptor : pluginDescriptors) {
+      if (PluginManager.shouldSkipPlugin(pluginDescriptor)) {
+        continue;
+      }
+
+      searchMarkerInClassLoader(pluginDescriptor, filesWithMarkers, LocalizeManagerImpl.LOCALIZE_LIBRARY_MARKER);
+      searchMarkerInClassLoader(pluginDescriptor, filesWithMarkers, BaseIconLibraryManager.ICON_LIBRARY_MARKER);
+    }
+  }
+
+  private void searchMarkerInClassLoader(PluginDescriptor pluginDescriptor, Map<String, List<String>> filesWithMarkers, String marker) {
+
+    try {
+      ClassLoader classLoader = pluginDescriptor.getPluginClassLoader();
+
+      Enumeration<URL> ownResources = ((PluginClassLoader)classLoader).findOwnResources(marker);
+
+      while (ownResources.hasMoreElements()) {
+        URL url = ownResources.nextElement();
+
+        Pair<String, String> urlFileInfo = URLUtil.splitJarUrl(url.getFile());
+        if (urlFileInfo == null) {
+          continue;
+        }
+
+        filesWithMarkers.computeIfAbsent(marker, it -> new ArrayList<>()).add(urlFileInfo.getFirst());
+      }
+    }
+    catch (IOException e) {
+      LOG.error(e);
+    }
   }
 
   public void run(StatCollector stat, Runnable appInitalizeMark, boolean newConfigFolder) {

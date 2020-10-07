@@ -53,6 +53,7 @@ import com.intellij.util.ui.BaseButtonBehavior;
 import com.intellij.util.ui.PositionTracker;
 import com.intellij.util.ui.UIUtil;
 import consulo.platform.Platform;
+import consulo.ui.image.Image;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 
@@ -170,7 +171,7 @@ public class ActionMacroManager implements JDOMExternalizable, Disposable {
   private class Widget implements CustomStatusBarWidget, Consumer<MouseEvent> {
 
     private AnimatedIcon myIcon =
-            new AnimatedIcon("Macro recording", new Icon[]{AllIcons.Ide.Macro.Recording_1, AllIcons.Ide.Macro.Recording_2, AllIcons.Ide.Macro.Recording_3, AllIcons.Ide.Macro.Recording_4},
+            new AnimatedIcon("Macro recording", new Image[]{AllIcons.Ide.Macro.Recording_1, AllIcons.Ide.Macro.Recording_2, AllIcons.Ide.Macro.Recording_3, AllIcons.Ide.Macro.Recording_4},
                              AllIcons.Ide.Macro.Recording_1, 1000);
     private StatusBar myStatusBar;
     private final WidgetPresentation myPresentation;

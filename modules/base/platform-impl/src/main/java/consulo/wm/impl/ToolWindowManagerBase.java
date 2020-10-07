@@ -27,7 +27,6 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.startup.StartupActivity;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.EmptyRunnable;
-import com.intellij.openapi.util.IconLoader;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.wm.*;
 import com.intellij.openapi.wm.ex.ToolWindowEx;
@@ -52,7 +51,10 @@ import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.*;
 import consulo.ui.image.Image;
+import consulo.ui.image.ImageEffects;
+import consulo.ui.image.ImageKey;
 import consulo.ui.shared.Rectangle2D;
+import consulo.ui.style.StandardColors;
 import kava.beans.PropertyChangeEvent;
 import kava.beans.PropertyChangeListener;
 import org.jdom.Element;
@@ -1072,16 +1074,17 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
     ToolWindow window = registerToolWindow(bean.id, bean.displayName, label, toolWindowAnchor, false, bean.canCloseContents, DumbService.isDumbAware(factory), factory.shouldBeAvailable(myProject));
     final ToolWindowBase toolWindow = (ToolWindowBase)registerDisposable(bean.id, myProject, window);
     toolWindow.setContentFactory(factory);
-    if (bean.icon != null && toolWindow.getIcon() == null) {
-      Image icon = IconLoader.findIcon(bean.icon, factory.getClass());
-      if (icon == null) {
-        try {
-          icon = IconLoader.getIcon(bean.icon);
-        }
-        catch (Exception ignored) {
-        }
+    String beanIcon = bean.icon;
+    if (beanIcon != null && toolWindow.getIcon() == null) {
+      Image targetIcon;
+      ImageKey imageKey = ImageKey.fromString(beanIcon, 13, 13);
+      if(imageKey != null) {
+        targetIcon = imageKey;
       }
-      toolWindow.setIcon(icon);
+      else {
+        targetIcon = ImageEffects.colorFilled(13, 13, StandardColors.MAGENTA);
+      }
+      toolWindow.setIcon(targetIcon);
     }
 
     WindowInfoImpl info = getInfo(bean.id);

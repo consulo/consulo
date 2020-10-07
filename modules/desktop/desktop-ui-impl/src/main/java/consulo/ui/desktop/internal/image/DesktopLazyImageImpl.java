@@ -15,79 +15,35 @@
  */
 package consulo.ui.desktop.internal.image;
 
-import com.intellij.util.ui.JBUI;
 import consulo.awt.TargetAWT;
-import consulo.ui.image.Image;
 import consulo.desktop.util.awt.UIModificationTracker;
+import consulo.ui.image.Image;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
-import java.awt.*;
 import java.util.function.Supplier;
 
 /**
  * @author VISTALL
  * @since 2019-01-26
  */
-public class DesktopLazyImageImpl extends JBUI.RasterJBIcon implements Image {
+public class DesktopLazyImageImpl extends DesktopBaseLazyImageImpl {
   private static final UIModificationTracker ourTracker = UIModificationTracker.getInstance();
 
-  private boolean myWasComputed;
-  private Icon myIcon;
-
-  private Supplier<Image> myImageSupplier;
-
-  private volatile long myModificationCount = -1;
+  private final Supplier<Image> myImageSupplier;
 
   public DesktopLazyImageImpl(Supplier<Image> imageSupplier) {
     myImageSupplier = imageSupplier;
   }
 
   @Override
-  public void paintIcon(Component c, Graphics g, int x, int y) {
-    if (updateScaleContext(JBUI.ScaleContext.create((Graphics2D)g))) {
-      myIcon = null;
-    }
-    final Icon icon = getOrComputeIcon();
-    if (icon != null) {
-      icon.paintIcon(c, g, x, y);
-    }
+  protected long getModificationCount() {
+    return ourTracker.getModificationCount();
   }
 
+  @Nonnull
   @Override
-  public int getIconWidth() {
-    final Icon icon = getOrComputeIcon();
-    return icon != null ? icon.getIconWidth() : 0;
-  }
-
-  @Override
-  public int getIconHeight() {
-    final Icon icon = getOrComputeIcon();
-    return icon != null ? icon.getIconHeight() : 0;
-  }
-
-  public final synchronized Icon getOrComputeIcon() {
-    long modificationCount = ourTracker.getModificationCount();
-
-    if (!myWasComputed || myModificationCount != modificationCount || myIcon == null) {
-      myModificationCount = modificationCount;
-      myWasComputed = true;
-      myIcon = TargetAWT.to(myImageSupplier.get());
-    }
-
-    return myIcon;
-  }
-
-  public final void load() {
-    getIconWidth();
-  }
-
-  @Override
-  public int getHeight() {
-    return getIconHeight();
-  }
-
-  @Override
-  public int getWidth() {
-    return getIconWidth();
+  protected Icon calcIcon() {
+    return TargetAWT.to(myImageSupplier.get());
   }
 }

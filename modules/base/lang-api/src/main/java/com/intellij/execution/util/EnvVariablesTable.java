@@ -16,7 +16,6 @@
 
 package com.intellij.execution.util;
 
-import com.intellij.icons.AllIcons;
 import com.intellij.idea.ActionsBundle;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.application.ApplicationManager;
@@ -26,9 +25,10 @@ import com.intellij.ui.AnActionButton;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.ColumnInfo;
 import com.intellij.util.ui.ListTableModel;
+import consulo.platform.base.icon.PlatformIconGroup;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.table.TableCellEditor;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.StringSelection;
@@ -138,7 +138,7 @@ public class EnvVariablesTable extends ListTableWithButtons<EnvironmentVariable>
   @Nonnull
   @Override
   protected AnActionButton[] createExtraActions() {
-    AnActionButton copyButton = new AnActionButton(ActionsBundle.message("action.EditorCopy.text"), AllIcons.Actions.Copy) {
+    AnActionButton copyButton = new AnActionButton(ActionsBundle.message("action.EditorCopy.text"), PlatformIconGroup.actionsCopy()) {
       @Override
       public void actionPerformed(@Nonnull AnActionEvent e) {
         stopEditing();
@@ -158,7 +158,7 @@ public class EnvVariablesTable extends ListTableWithButtons<EnvironmentVariable>
         return super.isEnabled() && !getSelection().isEmpty();
       }
     };
-    AnActionButton pasteButton = new AnActionButton(ActionsBundle.message("action.EditorPaste.text"), AllIcons.Actions.Menu_paste) {
+    AnActionButton pasteButton = new AnActionButton(ActionsBundle.message("action.EditorPaste.text"), PlatformIconGroup.actionsMenu_paste()) {
       @Override
       public void actionPerformed(@Nonnull AnActionEvent e) {
         removeSelected();

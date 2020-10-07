@@ -107,7 +107,7 @@ public abstract class SingleRowLayoutStrategy {
     }
 
     public int getMoreRectAxisSize() {
-      return AllIcons.General.MoreTabs.getIconWidth() + 15;
+      return AllIcons.General.MoreTabs.getWidth() + 15;
     }
 
     public int getToFitLength(final SingleRowPassInfo data) {
@@ -263,7 +263,7 @@ public abstract class SingleRowLayoutStrategy {
     }
 
     int getMoreRectAxisSize() {
-      return AllIcons.General.MoreTabs.getIconHeight() + 4;
+      return AllIcons.General.MoreTabs.getHeight() + 4;
     }
 
     @Override

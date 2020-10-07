@@ -20,7 +20,9 @@ import consulo.localize.LocalizeValue;
 import consulo.ui.*;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.font.FontManager;
+import consulo.ui.image.IconLibraryManager;
 import consulo.ui.image.Image;
+import consulo.ui.image.ImageKey;
 import consulo.ui.image.canvas.Canvas2D;
 import consulo.ui.impl.model.ImmutableListModelImpl;
 import consulo.ui.impl.model.MutableListModelImpl;
@@ -228,7 +230,7 @@ public class WebUIInternalImpl extends UIInternal {
 
   @Override
   public Image _ImageEffects_canvas(int width, int height, Consumer<Canvas2D> consumer) {
-    throw new UnsupportedOperationException();
+    return new WebCanvasImageImpl(width, height, consumer);
   }
 
   @Override
@@ -345,6 +347,17 @@ public class WebUIInternalImpl extends UIInternal {
   @Override
   public boolean _UIAccess_isUIThread() {
     return UI.getCurrent() != null;
+  }
+
+  @Nonnull
+  @Override
+  public IconLibraryManager _IconLibraryManager_get() {
+    return WebIconLibraryManagerImpl.ourInstance;
+  }
+
+  @Override
+  public ImageKey _ImageKey_of(@Nonnull String groupId, @Nonnull String imageId, int width, int height) {
+    return new WebImageKeyImpl(groupId, imageId, width, height);
   }
 
   @Override

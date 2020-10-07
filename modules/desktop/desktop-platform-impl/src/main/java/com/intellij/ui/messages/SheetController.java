@@ -23,6 +23,7 @@ import com.intellij.ui.Gray;
 import com.intellij.ui.JBColor;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.ui.UIUtil;
+import consulo.awt.TargetAWT;
 import consulo.desktop.util.awt.graphics.GraphicsUtilities;
 import consulo.desktop.util.awt.graphics.ShadowRenderer;
 import consulo.logging.Logger;
@@ -84,7 +85,7 @@ public class SheetController {
   int SHEET_NC_HEIGHT = SHEET_HEIGHT + SHADOW_BORDER ;
 
 
-  private Icon myIcon = UIUtil.getInformationIcon();
+  private Icon myIcon = TargetAWT.to(UIUtil.getInformationIcon());
 
   private String myResult;
   private final JPanel mySheetPanel;

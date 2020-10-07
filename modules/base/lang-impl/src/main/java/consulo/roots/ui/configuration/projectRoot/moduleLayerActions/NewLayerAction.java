@@ -23,11 +23,10 @@ import com.intellij.openapi.roots.ui.configuration.ModuleEditor;
 import com.intellij.openapi.ui.InputValidator;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.util.IconUtil;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
-
 import java.util.Set;
 
 /**
@@ -39,7 +38,7 @@ public class NewLayerAction extends AnAction {
   private boolean myCopy;
 
   public NewLayerAction(ModuleEditor moduleEditor, boolean copy) {
-    super(copy ? "Copy layer" : "New layer", null, copy ? AllIcons.Actions.Copy : IconUtil.getAddIcon());
+    super(copy ? "Copy layer" : "New layer", null, copy ? PlatformIconGroup.actionsCopy() : AllIcons.General.Add);
     myModuleEditor = moduleEditor;
     myCopy = copy;
   }

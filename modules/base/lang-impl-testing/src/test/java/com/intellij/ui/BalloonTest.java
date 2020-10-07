@@ -17,7 +17,6 @@ package com.intellij.ui;
 
 import com.intellij.openapi.ui.MessageType;
 import com.intellij.openapi.ui.popup.Balloon;
-import com.intellij.openapi.util.IconLoader;
 import com.intellij.openapi.util.Ref;
 import com.intellij.ui.awt.RelativePoint;
 import com.intellij.ui.treeStructure.Tree;
@@ -31,8 +30,6 @@ import java.awt.event.MouseMotionAdapter;
 
 public class BalloonTest {
   public static void main(String[] args) {
-    IconLoader.activate();
-
     final JFrame frame = new JFrame();
     frame.getContentPane().setLayout(new BorderLayout());
     final JPanel content = new JPanel(new BorderLayout());

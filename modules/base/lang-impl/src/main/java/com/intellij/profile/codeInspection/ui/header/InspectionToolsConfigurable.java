@@ -61,6 +61,7 @@ import com.intellij.util.Alarm;
 import com.intellij.util.Consumer;
 import com.intellij.util.SystemProperties;
 import com.intellij.util.containers.HashMap;
+import consulo.awt.TargetAWT;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -159,7 +160,7 @@ public abstract class InspectionToolsConfigurable implements ErrorsConfigurable,
       public void customize(final JList list, final Profile value, final int index, final boolean selected, final boolean hasFocus) {
         final SingleInspectionProfilePanel singleInspectionProfilePanel = myPanels.get(value);
         final boolean isShared = singleInspectionProfilePanel.isProfileShared();
-        setIcon(isShared ? AllIcons.General.ProjectSettings : AllIcons.General.Settings);
+        setIcon(TargetAWT.to(isShared ? AllIcons.General.ProjectSettings : AllIcons.General.Settings));
         setText(singleInspectionProfilePanel.getCurrentProfileName());
       }
     }) {

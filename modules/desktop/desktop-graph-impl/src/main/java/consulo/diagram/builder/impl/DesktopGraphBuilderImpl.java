@@ -23,6 +23,7 @@ import com.mxgraph.view.mxGraph;
 import consulo.diagram.builder.GraphBuilder;
 import consulo.diagram.builder.GraphNode;
 import consulo.diagram.builder.GraphPositionStrategy;
+import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -100,7 +101,7 @@ public class DesktopGraphBuilderImpl implements GraphBuilder {
 
   @Nonnull
   @Override
-  public <E> GraphNode<E> createNode(@Nonnull String name, @Nullable Icon icon, @Nullable E value, GraphPositionStrategy strategy) {
+  public <E> GraphNode<E> createNode(@Nonnull String name, @Nullable Image icon, @Nullable E value, GraphPositionStrategy strategy) {
     GraphNodeImpl<E> graphNode = new GraphNodeImpl<>(name, icon, value, strategy);
     myGraphNodes.add(graphNode);
     return graphNode;

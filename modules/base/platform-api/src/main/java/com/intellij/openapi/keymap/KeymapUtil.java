@@ -28,6 +28,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.disposer.Disposer;
+import consulo.ui.image.Image;
 import org.intellij.lang.annotations.JdkConstants;
 import org.jetbrains.annotations.NonNls;
 
@@ -103,7 +104,7 @@ public class KeymapUtil {
     return s;
   }
 
-  public static Icon getShortcutIcon(Shortcut shortcut) {
+  public static Image getShortcutIcon(Shortcut shortcut) {
     if (shortcut instanceof KeyboardShortcut) {
       return AllIcons.General.KeyboardShortcut;
     }

@@ -48,6 +48,7 @@ import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.ui.*;
 import com.intellij.ui.components.JBCheckBox;
+import com.intellij.ui.components.JBLabel;
 import com.intellij.ui.popup.AbstractPopup;
 import com.intellij.ui.popup.HintUpdateSupply;
 import com.intellij.ui.popup.PopupUpdateProcessor;
@@ -581,7 +582,7 @@ public class FileStructurePopup implements Disposable, TreeActionsOwner {
 
   @Nonnull
   private JComponent createSettingsButton() {
-    JLabel label = new JLabel(AllIcons.General.GearPlain);
+    JLabel label = new JBLabel(AllIcons.General.GearPlain);
     label.setBorder(JBUI.Borders.empty(0, 4));
     label.setHorizontalAlignment(SwingConstants.RIGHT);
     label.setVerticalAlignment(SwingConstants.CENTER);

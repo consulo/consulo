@@ -25,6 +25,7 @@ import java.util.function.Supplier;
  * @author VISTALL
  * @since 8/29/18
  */
+@Deprecated
 public class TaskbarWrapper {
   private static Class ourTaskbarClass;
   private static Method ourTaskbar;

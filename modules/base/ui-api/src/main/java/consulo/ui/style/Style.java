@@ -15,7 +15,10 @@
  */
 package consulo.ui.style;
 
+import consulo.ui.image.IconLibraryManager;
+import consulo.ui.image.Image;
 import consulo.ui.shared.ColorValue;
+
 import javax.annotation.Nonnull;
 
 /**
@@ -27,7 +30,24 @@ public interface Style {
   String getName();
 
   @Nonnull
+  default String getIconLibraryId() {
+    return IconLibraryManager.LIGHT_LIBRARY_ID;
+  }
+
+  @Nonnull
   ColorValue getColor(@Nonnull ColorKey colorKey);
 
-  boolean isDark();
+  /**
+   * Try to modify source image to showing in current style. Can return same image. Also step into composite icons
+   * @param image source image
+   * @return cloned image in current style, or source image
+   */
+  @Nonnull
+  default Image getImage(@Nonnull Image image) {
+    return image;
+  }
+
+  default boolean isDark() {
+    return false;
+  }
 }

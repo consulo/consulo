@@ -15,13 +15,13 @@
  */
 package com.intellij.util.ui;
 
-import consulo.logging.Logger;
 import com.intellij.ui.ColoredTextContainer;
 import com.intellij.ui.SimpleTextAttributes;
+import consulo.logging.Logger;
+import consulo.ui.image.Image;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import javax.swing.*;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
@@ -112,7 +112,7 @@ public class TextTransferable implements Transferable {
     }
 
     @Override
-    public void setIcon(@Nullable Icon icon) {
+    public void setIcon(@Nullable Image icon) {
     }
 
     @Override

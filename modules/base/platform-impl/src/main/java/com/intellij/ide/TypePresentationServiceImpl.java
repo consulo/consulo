@@ -17,20 +17,19 @@ package com.intellij.ide;
 
 import com.intellij.ide.presentation.Presentation;
 import com.intellij.ide.presentation.PresentationProvider;
-import com.intellij.openapi.util.IconLoader;
 import com.intellij.openapi.util.NullableLazyValue;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.containers.ConcurrentFactoryMap;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.ui.image.Image;
+import consulo.ui.image.ImageEffects;
+import consulo.ui.image.ImageKey;
+import consulo.ui.style.StandardColors;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Singleton;
-import java.util.HashMap;
-import java.util.LinkedHashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ConcurrentMap;
 
 /**
@@ -106,7 +105,7 @@ public class TypePresentationServiceImpl extends TypePresentationService {
   private PresentationTemplate createPresentationTemplate(Class<?> type) {
     Presentation presentation = type.getAnnotation(Presentation.class);
     if (presentation != null) {
-      return new PresentationTemplateImpl(presentation, type);
+      return new PresentationTemplateImpl(presentation);
     }
     final NullableLazyValue<Image> icon = myIcons.get(type.getName());
     final NullableLazyValue<String> typeName = myNames.get(type.getName());
@@ -202,19 +201,25 @@ public class TypePresentationServiceImpl extends TypePresentationService {
       return namer == null ? null : namer.getName(o);
     }
 
-    public PresentationTemplateImpl(Presentation presentation, Class<?> aClass) {
+    public PresentationTemplateImpl(Presentation presentation) {
       this.myPresentation = presentation;
-      myClass = aClass;
     }
 
     private final Presentation myPresentation;
-    private final Class<?> myClass;
 
     private final NullableLazyValue<Image> myIcon = new NullableLazyValue<Image>() {
       @Override
       protected Image compute() {
-        if (StringUtil.isEmpty(myPresentation.icon())) return null;
-        return IconLoader.getIcon(myPresentation.icon(), myClass);
+        if (!StringUtil.isEmpty(myPresentation.icon())) {
+          return ImageEffects.colorFilled(Image.DEFAULT_ICON_SIZE, Image.DEFAULT_ICON_SIZE, StandardColors.BLACK);
+        }
+
+        String groupId = myPresentation.iconGroupId();
+        String imageId = myPresentation.imageId();
+        if(!StringUtil.isEmpty(groupId) && !StringUtil.isEmpty(imageId)) {
+          return ImageKey.of(groupId, imageId.toLowerCase(Locale.ROOT), Image.DEFAULT_ICON_SIZE, Image.DEFAULT_ICON_SIZE);
+        }
+        return null;
       }
     };
 

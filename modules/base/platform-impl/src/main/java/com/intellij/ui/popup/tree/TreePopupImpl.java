@@ -6,6 +6,7 @@ import com.intellij.ide.util.treeView.AlphaComparator;
 import com.intellij.ide.util.treeView.NodeRenderer;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
+import consulo.awt.TargetAWT;
 import consulo.logging.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.popup.JBPopup;
@@ -425,7 +426,7 @@ public class TreePopupImpl extends WizardPopup implements TreePopup, NextStepHan
         final boolean hasNextStep = getTreeStep().hasSubstep(extractUserObject(lastPathComponent));
         if (!hasNextStep) continue;
 
-        Icon icon = isPathSelected(eachPath) ? AllIcons.Icons.Ide.NextStep : AllIcons.Icons.Ide.NextStepGrayed;
+        Icon icon = TargetAWT.to(isPathSelected(eachPath) ? AllIcons.Icons.Ide.NextStep : AllIcons.Icons.Ide.NextStepGrayed);
         final Rectangle rec = getPathBounds(eachPath);
         int x = getSize().width - icon.getIconWidth() - 1;
         int y = rec.y + (rec.height - icon.getIconWidth()) / 2;

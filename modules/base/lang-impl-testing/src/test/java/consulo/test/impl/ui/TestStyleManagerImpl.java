@@ -42,11 +42,6 @@ public class TestStyleManagerImpl implements StyleManager {
     public ColorValue getColor(@Nonnull ColorKey colorKey) {
       return StandardColors.BLACK;
     }
-
-    @Override
-    public boolean isDark() {
-      return false;
-    }
   };
 
   @Nonnull

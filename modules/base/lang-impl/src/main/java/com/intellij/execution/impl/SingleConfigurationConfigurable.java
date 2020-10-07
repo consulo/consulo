@@ -27,6 +27,7 @@ import com.intellij.openapi.options.SettingsEditorListener;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.ui.DocumentAdapter;
 import com.intellij.ui.components.JBCheckBox;
+import consulo.awt.TargetAWT;
 import consulo.logging.Logger;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nullable;
@@ -295,14 +296,14 @@ public final class SingleConfigurationConfigurable<Config extends RunConfigurati
         }
       });
 
-      myWarningLabel.setIcon(AllIcons.RunConfigurations.ConfigurationWarning);
+      myWarningLabel.setIcon(TargetAWT.to(AllIcons.RunConfigurations.ConfigurationWarning));
 
       myComponentPlace.setLayout(new GridBagLayout());
       myComponentPlace.add(getEditorComponent(),
                            new GridBagConstraints(0, 0, 1, 1, 1.0, 1.0, GridBagConstraints.NORTHWEST, GridBagConstraints.BOTH,
                                                   new Insets(0, 0, 0, 0), 0, 0));
       myComponentPlace.doLayout();
-      myFixButton.setIcon(AllIcons.Actions.QuickfixBulb);
+      myFixButton.setIcon(TargetAWT.to(AllIcons.Actions.QuickfixBulb));
       updateWarning();
       myFixButton.addActionListener(new ActionListener() {
         @Override

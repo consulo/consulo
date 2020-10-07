@@ -39,16 +39,15 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.SimpleTextAttributes;
-import com.intellij.util.IconUtil;
 import com.intellij.util.ui.JBUI;
 import consulo.application.AccessRule;
-import consulo.awt.TargetAWT;
 import consulo.bundle.SdkUtil;
 import consulo.ide.IconDescriptorUpdaters;
+import consulo.ui.image.Image;
+import consulo.ui.image.ImageEffects;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.swing.*;
 
 /**
  * @author Konstantin Bulenkov
@@ -64,16 +63,16 @@ public class NavBarPresentation {
 
   @SuppressWarnings("MethodMayBeStatic")
   @Nullable
-  public Icon getIcon(final Object object) {
+  public Image getIcon(final Object object) {
     if (!NavBarModel.isValid(object)) return null;
     if (object instanceof Project) return AllIcons.Nodes.ProjectTab;
     if (object instanceof Module) return AllIcons.Nodes.Module;
     try {
       if (object instanceof PsiElement) {
-        Icon icon = TargetAWT.to(AccessRule.read(() -> ((PsiElement)object).isValid() ? IconDescriptorUpdaters.getIcon(((PsiElement)object), 0) : null));
+        Image icon = AccessRule.read(() -> ((PsiElement)object).isValid() ? IconDescriptorUpdaters.getIcon(((PsiElement)object), 0) : null);
 
-        if (icon != null && (icon.getIconHeight() > JBUI.scale(16) || icon.getIconWidth() > JBUI.scale(16))) {
-          icon = IconUtil.cropIcon(icon, JBUI.scale(16), JBUI.scale(16));
+        if (icon != null && (icon.getHeight() > JBUI.scale(16) || icon.getWidth() > JBUI.scale(16))) {
+          icon = ImageEffects.resize(icon, Image.DEFAULT_ICON_SIZE, Image.DEFAULT_ICON_SIZE);
         }
         return icon;
       }
@@ -82,7 +81,7 @@ public class NavBarPresentation {
       return null;
     }
     if (object instanceof ModuleExtensionWithSdkOrderEntry) {
-      return TargetAWT.to(SdkUtil.getIcon(((ModuleExtensionWithSdkOrderEntry)object).getSdk()));
+      return SdkUtil.getIcon(((ModuleExtensionWithSdkOrderEntry)object).getSdk());
     }
     if (object instanceof LibraryOrderEntry) return AllIcons.Nodes.PpLibFolder;
     if (object instanceof ModuleOrderEntry) return AllIcons.Nodes.Module;
@@ -115,12 +114,7 @@ public class NavBarPresentation {
   protected SimpleTextAttributes getTextAttributes(final Object object, final boolean selected) {
     if (!NavBarModel.isValid(object)) return SimpleTextAttributes.REGULAR_ATTRIBUTES;
     if (object instanceof PsiElement) {
-      if (!ApplicationManager.getApplication().runReadAction(new Computable<Boolean>() {
-        @Override
-        public Boolean compute() {
-          return ((PsiElement)object).isValid();
-        }
-      }).booleanValue()) {
+      if (!ApplicationManager.getApplication().runReadAction((Computable<Boolean>)() -> ((PsiElement)object).isValid())) {
         return SimpleTextAttributes.GRAYED_ATTRIBUTES;
       }
       PsiFile psiFile = ((PsiElement)object).getContainingFile();

@@ -6,6 +6,9 @@ import com.intellij.openapi.editor.markup.EffectType;
 import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.ui.UIUtil;
+import consulo.awt.TargetAWT;
+import consulo.ui.image.Image;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -20,7 +23,7 @@ import java.util.Map;
 
 public class HighlightableComponent extends JComponent implements Accessible {
   protected String myText = "";
-  protected Icon myIcon;
+  protected Image myIcon;
   protected int myIconTextGap;
   protected ArrayList<HighlightedRegion> myHighlightedRegions;
   protected boolean myIsSelected;
@@ -57,7 +60,7 @@ public class HighlightableComponent extends JComponent implements Accessible {
     }
   }
 
-  public void setIcon(Icon icon) {
+  public void setIcon(Image icon) {
     myIcon = icon;
     invalidate();
     repaint();
@@ -233,7 +236,7 @@ public class HighlightableComponent extends JComponent implements Accessible {
     // paint icon
 
     if (myIcon != null) {
-      myIcon.paintIcon(this, g, 0, (getHeight() - myIcon.getIconHeight()) / 2);
+      TargetAWT.to(myIcon).paintIcon(this, g, 0, (getHeight() - myIcon.getHeight()) / 2);
     }
 
     // paint text
@@ -338,7 +341,7 @@ public class HighlightableComponent extends JComponent implements Accessible {
     if (myIcon == null) {
       return 2;
     }
-    return myIcon.getIconWidth() + myIconTextGap;
+    return myIcon.getWidth() + myIconTextGap;
   }
 
   @Nullable
@@ -422,7 +425,7 @@ public class HighlightableComponent extends JComponent implements Accessible {
     int height = defFontMetrics.getHeight() + defFontMetrics.getLeading();
 
     if (myIcon != null) {
-      height = Math.max(myIcon.getIconHeight() + defFontMetrics.getLeading(), height);
+      height = Math.max(myIcon.getHeight() + defFontMetrics.getLeading(), height);
     }
 
     return new Dimension(width + 2, height);

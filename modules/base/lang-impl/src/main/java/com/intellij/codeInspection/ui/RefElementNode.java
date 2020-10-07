@@ -21,6 +21,7 @@ import com.intellij.codeInspection.InspectionsBundle;
 import com.intellij.codeInspection.reference.RefElement;
 import com.intellij.codeInspection.reference.RefEntity;
 import com.intellij.openapi.vcs.FileStatus;
+import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -34,7 +35,7 @@ public class RefElementNode extends InspectionTreeNode {
   private boolean myHasDescriptorsUnder = false;
   private CommonProblemDescriptor mySingleDescriptor = null;
   protected final InspectionToolPresentation myToolPresentation;
-  private final Icon myIcon;
+  private final Image myIcon;
 
   public RefElementNode(@Nonnull Object userObject, @Nonnull InspectionToolPresentation presentation) {
     super(userObject);
@@ -57,7 +58,7 @@ public class RefElementNode extends InspectionTreeNode {
 
   @Override
   @Nullable
-  public Icon getIcon() {
+  public Image getIcon() {
     return myIcon;
   }
 

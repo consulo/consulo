@@ -15,17 +15,9 @@
  */
 package icons;
 
-import com.intellij.openapi.util.IconLoader;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.image.Image;
 
-/**
- * NOTE THIS FILE IS AUTO-GENERATED
- * DO NOT EDIT IT BY HAND, run build/scripts/icons.gant instead
- */
 public class ExternalSystemIcons {
-  private static Image load(String path) {
-    return IconLoader.getIcon(path, ExternalSystemIcons.class);
-  }
-
-  public static final Image Task = load("/icons/task.svg"); // 16x16
+  public static final Image Task = PlatformIconGroup.nodesTask(); // 16x16
 }

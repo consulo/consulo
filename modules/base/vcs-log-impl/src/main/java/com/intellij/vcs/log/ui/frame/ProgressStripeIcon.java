@@ -24,6 +24,7 @@ import com.intellij.util.ui.AsyncProcessIcon;
 import com.intellij.util.ui.GraphicsUtil;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
+import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;
@@ -34,7 +35,8 @@ import java.awt.geom.Area;
 import java.awt.geom.Path2D;
 import java.util.List;
 
-public abstract class ProgressStripeIcon implements Icon {
+// TODO [VISTALL] we need impl UI Image, due we don't have unified impl
+public abstract class ProgressStripeIcon implements Icon, Image {
   private static final int TRANSLATE = 1;
   private static final int HEIGHT = 3;
   @Nonnull
@@ -74,7 +76,17 @@ public abstract class ProgressStripeIcon implements Icon {
     return getHeight();
   }
 
-  public static int getHeight() {
+  @Override
+  public int getHeight() {
+    return getIconHeight();
+  }
+
+  @Override
+  public int getWidth() {
+    return getIconWidth();
+  }
+
+  public static int getScaledHeight() {
     return JBUI.scale(HEIGHT);
   }
 
@@ -156,7 +168,7 @@ public abstract class ProgressStripeIcon implements Icon {
 
   @Nonnull
   public static AsyncProcessIcon generateIcon(@Nonnull JComponent component) {
-    List<Icon> result = ContainerUtil.newArrayList();
+    List<Image> result = ContainerUtil.newArrayList();
     if (UIUtil.isUnderAquaBasedLookAndFeel() && !UIUtil.isUnderDarcula()) {
       for (int i = 0; i < 2 * JBUI.scale(GradientIcon.GRADIENT); i += JBUI.scale(TRANSLATE)) {
         result.add(new GradientIcon(component, i));
@@ -169,11 +181,11 @@ public abstract class ProgressStripeIcon implements Icon {
       result = ContainerUtil.reverse(result);
     }
 
-    Icon passive = result.get(0);
-    AsyncProcessIcon icon = new AsyncProcessIcon("ProgressWithStripes", result.toArray(new Icon[result.size()]), passive) {
+    Image passive = result.get(0);
+    AsyncProcessIcon icon = new AsyncProcessIcon("ProgressWithStripes", result.toArray(new Image[result.size()]), passive) {
       @Override
       public Dimension getPreferredSize() {
-        return new Dimension(component.getWidth(), passive.getIconHeight());
+        return new Dimension(component.getWidth(), passive.getHeight());
       }
     };
     component.addComponentListener(new ComponentAdapter() {

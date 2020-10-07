@@ -32,10 +32,10 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.util.SmartList;
+import consulo.ui.image.Image;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import javax.swing.*;
 import java.util.Collection;
 import java.util.List;
 
@@ -70,7 +70,7 @@ public class GotoTestOrCodeHandler extends GotoTargetHandler {
           }
 
           @Override
-          public Icon getIcon() {
+          public Image getIcon() {
             return AllIcons.Actions.IntentionBulb;
           }
 

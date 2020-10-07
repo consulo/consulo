@@ -38,7 +38,6 @@ import com.intellij.openapi.ui.JBPopupMenu;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.ui.popup.util.PopupUtil;
 import com.intellij.openapi.util.Comparing;
-import com.intellij.openapi.util.IconLoader;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vcs.FileStatusManager;
@@ -73,6 +72,8 @@ import consulo.ide.ui.laf.modernWhite.NativeModernWhiteLookAndFeelInfo;
 import consulo.localize.LocalizeManager;
 import consulo.logging.Logger;
 import consulo.ui.desktop.internal.style.DesktopStyleImpl;
+import consulo.ui.image.IconLibraryManager;
+import consulo.ui.impl.image.BaseIconLibraryManager;
 import consulo.ui.style.Style;
 import org.intellij.lang.annotations.JdkConstants;
 import org.jdom.Element;
@@ -106,6 +107,7 @@ public final class LafManagerImpl extends LafManager implements Disposable, Pers
 
   private static final String ELEMENT_LAF = "laf";
   private static final String ELEMENT_LOCALE = "locale";
+  private static final String ELEMENT_ICON = "icon";
   private static final String ATTRIBUTE_CLASS_NAME = "class-name";
 
   private static final String GNOME_THEME_PROPERTY_NAME = "gnome.Net/ThemeName";
@@ -125,10 +127,12 @@ public final class LafManagerImpl extends LafManager implements Disposable, Pers
 
   private final Map<UIManager.LookAndFeelInfo, HashMap<String, Object>> myStoredDefaults = new HashMap<>();
   private final LocalizeManager myLocalizeManager;
+  private final IconLibraryManager myIconLibraryManager;
 
   @Inject
   LafManagerImpl() {
-    myLocalizeManager = LocalizeManager.getInstance();
+    myLocalizeManager = LocalizeManager.get();
+    myIconLibraryManager = IconLibraryManager.get();
 
     List<UIManager.LookAndFeelInfo> lafList = new ArrayList<>();
 
@@ -184,7 +188,10 @@ public final class LafManagerImpl extends LafManager implements Disposable, Pers
     if (myCurrentStyle != null) {
       final DesktopStyleImpl laf = findStyleByClassName(myCurrentStyle.getLookAndFeelInfo().getClassName());
       if (laf != null) {
-        setCurrentStyle(laf, false, false);
+        BaseIconLibraryManager iconLibraryManager = (BaseIconLibraryManager)IconLibraryManager.get();
+        boolean fromStyle = iconLibraryManager.isFromStyle();
+        String activeLibraryId = iconLibraryManager.getActiveLibraryId(myCurrentStyle);
+        setCurrentStyle(laf, false, false, fromStyle ? null : activeLibraryId);
       }
     }
 
@@ -208,7 +215,7 @@ public final class LafManagerImpl extends LafManager implements Disposable, Pers
     }
 
     // refresh UI on localize change
-    LocalizeManager.getInstance().addListener((oldLocale, newLocale) -> updateUI(), this);
+    LocalizeManager.get().addListener((oldLocale, newLocale) -> updateUI(), this);
   }
 
   @Override
@@ -224,13 +231,23 @@ public final class LafManagerImpl extends LafManager implements Disposable, Pers
     String className = null;
 
     Element lafElement = element.getChild(ELEMENT_LAF);
-    if(lafElement != null) {
+    if (lafElement != null) {
       className = lafElement.getAttributeValue(ATTRIBUTE_CLASS_NAME);
     }
 
     String localeText = element.getChildText(ELEMENT_LOCALE);
-    if(localeText != null) {
+    if (localeText != null) {
       myLocalizeManager.setLocale(myLocalizeManager.parseLocale(localeText), false);
+    }
+
+    String iconId = element.getChildText(ELEMENT_ICON);
+    if(iconId != null) {
+      if(myIconLibraryManager.getLibrariesId().contains(iconId)) {
+        myIconLibraryManager.setActiveLibrary(iconId);
+      }
+      else {
+        myIconLibraryManager.setActiveLibrary(null);
+      }
     }
 
     DesktopStyleImpl styleFromXml = className == null ? null : findStyleByClassName(className);
@@ -240,7 +257,7 @@ public final class LafManagerImpl extends LafManager implements Disposable, Pers
     }
 
     if (myCurrentStyle != null && !styleFromXml.equals(myCurrentStyle)) {
-      setCurrentStyle(styleFromXml, false, true);
+      setCurrentStyle(styleFromXml, false, true, iconId);
       updateUI();
     }
 
@@ -258,11 +275,18 @@ public final class LafManagerImpl extends LafManager implements Disposable, Pers
       element.addContent(child);
     }
 
-    if(!myLocalizeManager.isDefaultLocale()) {
+    if (!myLocalizeManager.isDefaultLocale()) {
       Element localeElement = new Element(ELEMENT_LOCALE);
       element.addContent(localeElement);
 
       localeElement.setText(myLocalizeManager.getLocale().toString());
+    }
+
+    if(!myIconLibraryManager.isFromStyle()){
+      Element iconElement = new Element(ELEMENT_ICON);
+      element.addContent(iconElement);
+
+      iconElement.setText(myIconLibraryManager.getActiveLibraryId());
     }
     return element;
   }
@@ -320,16 +344,16 @@ public final class LafManagerImpl extends LafManager implements Disposable, Pers
   public void setCurrentLookAndFeel(@Nonnull UIManager.LookAndFeelInfo lookAndFeelInfo) {
     DesktopStyleImpl style = findStyleByClassName(lookAndFeelInfo.getClassName());
     LOG.assertTrue(style != null, "Class not found : " + lookAndFeelInfo.getClassName());
-    setCurrentStyle(style, true, true);
+    setCurrentStyle(style, true, true, null);
   }
 
   @Override
   public void setCurrentStyle(@Nonnull Style currentStyle) {
     DesktopStyleImpl style = (DesktopStyleImpl)currentStyle;
-    setCurrentStyle(style, true, true);
+    setCurrentStyle(style, true, true, null);
   }
 
-  private void setCurrentStyle(DesktopStyleImpl style, boolean wantChangeScheme, boolean fire) {
+  private void setCurrentStyle(DesktopStyleImpl style, boolean wantChangeScheme, boolean fire, String iconLibraryId) {
     if (findStyleByClassName(style.getClassName()) == null) {
       LOG.error("unknown LookAndFeel : " + style);
       return;
@@ -339,8 +363,6 @@ public final class LafManagerImpl extends LafManager implements Disposable, Pers
 
     try {
       JBColor.resetDark();
-
-      IconLoader.resetDark();
 
       UIModificationTracker.getInstance().incModificationCount();
 
@@ -363,7 +385,14 @@ public final class LafManagerImpl extends LafManager implements Disposable, Pers
         installMacOSXFonts(UIManager.getLookAndFeelDefaults());
       }
 
-      if(wantChangeScheme) {
+      if(iconLibraryId != null) {
+        myIconLibraryManager.setActiveLibrary(iconLibraryId);
+      }
+      else {
+        myIconLibraryManager.setActiveLibraryFromStyle(style);
+      }
+
+      if (wantChangeScheme) {
         if (lookAndFeelInfo instanceof LafWithColorScheme) {
           EditorColorsManager editorColorsManager = EditorColorsManager.getInstance();
           EditorColorsScheme editorColorsScheme = editorColorsManager.getScheme(((LafWithColorScheme)lookAndFeelInfo).getColorSchemeName());

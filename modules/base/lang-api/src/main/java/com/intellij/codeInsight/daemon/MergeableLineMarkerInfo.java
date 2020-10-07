@@ -30,7 +30,6 @@ import com.intellij.util.SmartList;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.awt.TargetAWT;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
@@ -156,7 +155,7 @@ public abstract class MergeableLineMarkerInfo<T extends PsiElement> extends Line
                   final String elementPresentation = dom instanceof MergeableLineMarkerInfo ? ((MergeableLineMarkerInfo)dom).getElementPresentation(element) : element.getText();
                   String text = StringUtil.first(elementPresentation, 100, true).replace('\n', ' ');
 
-                  final JBLabel label = new JBLabel(text, TargetAWT.to(icon), SwingConstants.LEFT);
+                  final JBLabel label = new JBLabel(text, icon, SwingConstants.LEFT);
                   label.setBorder(JBUI.Borders.empty(2));
                   return label;
                 }

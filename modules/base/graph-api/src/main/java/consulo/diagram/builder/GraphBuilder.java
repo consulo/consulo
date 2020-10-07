@@ -15,6 +15,8 @@
  */
 package consulo.diagram.builder;
 
+import consulo.ui.image.Image;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
@@ -28,5 +30,5 @@ public interface GraphBuilder {
   JComponent getComponent();
 
   @Nonnull
-  <E> GraphNode<E> createNode(@Nonnull String name, @Nullable Icon icon, @Nullable E value, GraphPositionStrategy strategy);
+  <E> GraphNode<E> createNode(@Nonnull String name, @Nullable Image icon, @Nullable E value, GraphPositionStrategy strategy);
 }

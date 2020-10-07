@@ -21,7 +21,6 @@ import com.intellij.ide.DataManager;
 import com.intellij.internal.statistic.UsageTrigger;
 import com.intellij.notification.NotificationType;
 import com.intellij.notification.impl.IdeNotificationArea;
-import consulo.disposer.Disposable;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.util.Computable;
@@ -29,6 +28,7 @@ import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.ui.ClickListener;
 import com.intellij.ui.JBColor;
+import com.intellij.ui.components.JBLabel;
 import com.intellij.ui.components.labels.ActionLink;
 import com.intellij.ui.components.panels.NonOpaquePanel;
 import com.intellij.ui.popup.PopupFactoryImpl;
@@ -38,10 +38,11 @@ import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.accessibility.AccessibleContextDelegate;
 import consulo.application.ApplicationProperties;
 import consulo.awt.TargetAWT;
+import consulo.desktop.start.splash.AnimatedLogoLabel;
 import consulo.desktop.util.awt.MorphColor;
+import consulo.disposer.Disposable;
 import consulo.ide.welcomeScreen.BaseWelcomeScreenPanel;
 import consulo.ide.welcomeScreen.WelcomeScreenConstants;
-import consulo.desktop.start.splash.AnimatedLogoLabel;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import consulo.ui.style.StyleManager;
@@ -229,7 +230,7 @@ public abstract class FlatWelcomePanel extends BaseWelcomeScreenPanel {
   }
 
   public static JLabel createArrow(final ActionLink link) {
-    JLabel arrow = new JLabel(AllIcons.General.Combo3);
+    JLabel arrow = new JBLabel(AllIcons.General.Combo3);
     arrow.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
     arrow.setVerticalAlignment(SwingConstants.BOTTOM);
     new ClickListener() {

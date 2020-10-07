@@ -15,13 +15,13 @@
  */
 package consulo.desktop.ui.laf.idea.darcula;
 
-import com.intellij.openapi.util.IconLoader;
-import com.intellij.util.ui.EmptyIcon;
-import com.intellij.util.ui.UIUtil;
-import javax.annotation.Nonnull;
+import consulo.awt.TargetAWT;
+import consulo.ui.image.Image;
+import consulo.ui.image.ImageKey;
 
-import javax.annotation.Nullable;
+import javax.annotation.Nonnull;
 import javax.swing.*;
+import java.util.Locale;
 
 /**
  * from kotlin
@@ -36,15 +36,10 @@ public class LafIconLookup {
   }
 
   public static Icon getIcon(@Nonnull String name, boolean selected, boolean focused, boolean enabled, boolean editable, boolean pressed) {
-    Icon icon = findIcon(name, selected, focused, enabled, editable, pressed, true);
-    if (icon == null) {
-      icon = EmptyIcon.ICON_16;
-    }
-
-    return icon;
+    return findIcon(name, selected, focused, enabled, editable, pressed, true);
   }
 
-  @Nullable
+  @Nonnull
   public static Icon findIcon(@Nonnull String name, boolean selected, boolean focused, boolean enabled, boolean editable, boolean pressed, boolean isThrowErrorIfNotFound) {
     String key = name;
     if (editable) {
@@ -65,31 +60,6 @@ public class LafIconLookup {
       key = key + "Disabled";
     }
 
-    String dir;
-    /*if (UIUtil.isUnderDefaultMacTheme()) {
-      dir = (UIUtil.isGraphite() ? "graphite/" : "");
-    }
-    else*/
-    {
-     /* if (UIUtil.isUnderWin10LookAndFeel()) {
-        dir = "win10/";
-      }
-      else */
-      {
-        if (UIUtil.isUnderDarcula()) {
-          dir = "darcula/";
-        }
-        else {
-          dir = (UIUtil.isUnderIntelliJLaF() ? "intellij/" : "");
-        }
-      }
-    }
-    return findLafIcon(dir + key, LafIconLookup.class, isThrowErrorIfNotFound);
+    return TargetAWT.to(ImageKey.of("consulo.platform.desktop.laf.LookAndFeelIconGroup", "components." + key.toLowerCase(Locale.ROOT), Image.DEFAULT_ICON_SIZE, Image.DEFAULT_ICON_SIZE));
   }
-
-  @Nullable
-  public static Icon findLafIcon(@Nonnull String key, @Nonnull Class aClass, boolean strict) {
-    return IconLoader.findIcon("/icons/" + key + ".png", aClass, true, strict);
-  }
-
 }

@@ -19,10 +19,10 @@ import com.intellij.icons.AllIcons;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
+import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.swing.*;
 import java.util.ArrayList;
 
 public class RefModuleImpl extends RefEntityImpl implements RefModule {
@@ -70,7 +70,7 @@ public class RefModuleImpl extends RefEntityImpl implements RefModule {
   }
 
   @Override
-  public Icon getIcon(final boolean expanded) {
+  public Image getIcon(final boolean expanded) {
     return AllIcons.Nodes.Module;
   }
 

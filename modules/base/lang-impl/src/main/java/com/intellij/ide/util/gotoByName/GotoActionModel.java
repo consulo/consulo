@@ -28,7 +28,10 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.codeStyle.WordPrefixMatcher;
-import com.intellij.ui.*;
+import com.intellij.ui.ColorUtil;
+import com.intellij.ui.LightColors;
+import com.intellij.ui.SimpleColoredComponent;
+import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.ui.components.JBLabel;
 import com.intellij.ui.components.OnOffButton;
 import com.intellij.ui.speedSearch.SpeedSearchUtil;
@@ -37,13 +40,12 @@ import com.intellij.util.Function;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.concurrency.Semaphore;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.ui.EmptyIcon;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
-import consulo.awt.TargetAWT;
 import consulo.ide.base.BaseShowSettingsUtil;
 import consulo.logging.Logger;
 import consulo.ui.image.Image;
+import consulo.ui.image.ImageEffects;
 import gnu.trove.THashMap;
 import org.jetbrains.annotations.NonNls;
 
@@ -74,8 +76,6 @@ public class GotoActionModel implements ChooseByNameModel, Comparator<Object>, D
   private final Editor myEditor;
 
   protected final ActionManager myActionManager = ActionManager.getInstance();
-
-  private static final Icon EMPTY_ICON = EmptyIcon.ICON_18;
 
   private final Map<AnAction, GroupMapping> myActionGroups = new HashMap<>();
 
@@ -272,20 +272,15 @@ public class GotoActionModel implements ChooseByNameModel, Comparator<Object>, D
 
   @Nonnull
   private static JLabel createIconLabel(@Nullable Image icon, boolean disabled) {
-    LayeredIcon layeredIcon = new LayeredIcon(2);
-    layeredIcon.setIcon(EMPTY_ICON, 0);
-    if (icon == null) return new JLabel(layeredIcon);
+    if (icon == null) return new JBLabel(Image.empty(Image.DEFAULT_ICON_SIZE));
 
     int width = icon.getWidth();
     int height = icon.getHeight();
-    int emptyIconWidth = EMPTY_ICON.getIconWidth();
-    int emptyIconHeight = EMPTY_ICON.getIconHeight();
-    if (width <= emptyIconWidth && height <= emptyIconHeight) {
-      Icon awtIcon = TargetAWT.to(icon);
-      layeredIcon.setIcon(disabled && IconLoader.isGoodSize(awtIcon) ? IconLoader.getDisabledIcon(awtIcon) : awtIcon, 1, (emptyIconWidth - width) / 2, (emptyIconHeight - height) / 2);
+    if(width != Image.DEFAULT_ICON_SIZE || height != Image.DEFAULT_ICON_SIZE) {
+      return new JBLabel(ImageEffects.resize(icon, Image.DEFAULT_ICON_SIZE, Image.DEFAULT_ICON_SIZE));
     }
 
-    return new JLabel(layeredIcon);
+    return new JBLabel(icon);
   }
 
   @Override
@@ -727,7 +722,7 @@ public class GotoActionModel implements ChooseByNameModel, Comparator<Object>, D
 
       if (matchedValue instanceof String) { //...
         if (showIcon) {
-          panel.add(new JBLabel(EMPTY_ICON), BorderLayout.WEST);
+          panel.add(new JBLabel(Image.empty(Image.DEFAULT_ICON_SIZE)), BorderLayout.WEST);
         }
         String str = cutName((String)matchedValue, null, list, panel, nameComponent);
         nameComponent.append(str, new SimpleTextAttributes(STYLE_PLAIN, defaultActionForeground(isSelected, cellHasFocus, null)));
@@ -794,7 +789,7 @@ public class GotoActionModel implements ChooseByNameModel, Comparator<Object>, D
         Color fg = UIUtil.getListForeground(isSelected, cellHasFocus);
 
         if (showIcon) {
-          panel.add(new JLabel(EMPTY_ICON), BorderLayout.WEST);
+          panel.add(new JBLabel(Image.empty(Image.DEFAULT_ICON_SIZE)), BorderLayout.WEST);
         }
         if (value instanceof BooleanOptionDescription) {
           boolean selected = ((BooleanOptionDescription)value).isOptionEnabled();

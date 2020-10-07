@@ -15,7 +15,6 @@
  */
 package com.intellij.util.ui.table;
 
-import com.intellij.icons.AllIcons;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.JDOMUtil;
@@ -34,6 +33,7 @@ import com.intellij.util.ui.ColumnInfo;
 import com.intellij.util.ui.ListTableModel;
 import com.intellij.util.xmlb.SkipDefaultValuesSerializationFilters;
 import com.intellij.util.xmlb.XmlSerializer;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.platform.base.localize.IdeLocalize;
 import gnu.trove.TObjectObjectProcedure;
 import org.jdom.Element;
@@ -259,7 +259,7 @@ public class TableModelEditor<T> extends CollectionModelEditor<T, CollectionItem
   @Nonnull
   public JComponent createComponent() {
     return toolbarDecorator.addExtraAction(
-      new ToolbarDecorator.ElementActionButton(IdeLocalize.buttonCopy(), AllIcons.Actions.Copy) {
+      new ToolbarDecorator.ElementActionButton(IdeLocalize.buttonCopy(), PlatformIconGroup.actionsCopy()) {
         @Override
         public void actionPerformed(@Nonnull AnActionEvent e) {
           TableUtil.stopEditing(table);

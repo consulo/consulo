@@ -27,8 +27,10 @@ import consulo.ui.Window;
 import consulo.ui.*;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.desktop.internal.DesktopFontImpl;
+import consulo.ui.desktop.internal.image.libraryImage.DesktopImageKeyImpl;
 import consulo.ui.desktop.internal.window.WindowOverAWTWindow;
 import consulo.ui.image.Image;
+import consulo.ui.image.ImageKey;
 import consulo.ui.shared.ColorValue;
 import consulo.ui.shared.RGBColor;
 import consulo.ui.shared.Rectangle2D;
@@ -275,6 +277,12 @@ public class TargetAWTFacadeImpl implements TargetAWTFacade {
       return java.awt.event.KeyEvent.VK_A + diff;
     }
     throw new IllegalArgumentException(code + "' is not supported");
+  }
+
+  @Override
+  public java.awt.Image toImage(@Nonnull ImageKey key) {
+    DesktopImageKeyImpl desktopImageKey = (DesktopImageKeyImpl)key;
+    return desktopImageKey.toAWTImage();
   }
 
   public static SimpleTextAttributes from(@Nonnull TextAttribute textAttribute) {

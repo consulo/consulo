@@ -15,30 +15,11 @@
  */
 package consulo.ui.impl.style;
 
-import consulo.ui.shared.ColorValue;
-import consulo.ui.style.ColorKey;
 import consulo.ui.style.Style;
-import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 05-Nov-17
  */
-public class StyleImpl implements Style {
-  @Nonnull
-  @Override
-  public String getName() {
-    return null;
-  }
-
-  @Nonnull
-  @Override
-  public ColorValue getColor(@Nonnull ColorKey colorKey) {
-    return null;
-  }
-
-  @Override
-  public boolean isDark() {
-    return false;
-  }
+public abstract class StyleImpl implements Style {
 }

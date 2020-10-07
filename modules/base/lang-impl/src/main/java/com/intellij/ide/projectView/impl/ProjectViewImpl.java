@@ -34,7 +34,6 @@ import com.intellij.ide.util.EditorHelper;
 import com.intellij.ide.util.treeView.AbstractTreeBuilder;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
 import com.intellij.ide.util.treeView.NodeDescriptor;
-import consulo.disposer.Disposable;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.command.CommandProcessor;
@@ -42,7 +41,6 @@ import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.components.StoragePathMacros;
-import consulo.logging.Logger;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.fileEditor.FileEditor;
@@ -88,9 +86,13 @@ import com.intellij.util.io.URLUtil;
 import com.intellij.util.messages.MessageBusConnection;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.tree.TreeUtil;
+import consulo.disposer.Disposable;
 import consulo.ide.projectView.ProjectViewEx;
+import consulo.logging.Logger;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.psi.PsiPackageSupportProviders;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.image.IconLibraryManager;
 import consulo.ui.image.Image;
 import consulo.util.dataholder.Key;
 import consulo.wm.impl.ToolWindowContentUI;
@@ -99,8 +101,8 @@ import gnu.trove.THashSet;
 import org.jdom.Attribute;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -2031,7 +2033,7 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
 
   private class ScrollFromSourceAction extends AnAction implements DumbAware {
     private ScrollFromSourceAction() {
-      super("Scroll from Source", "Select the file open in the active editor", AllIcons.General.Locate);
+      super("Scroll from Source", "Select the file open in the active editor", PlatformIconGroup.generalLocate());
     }
 
     @RequiredUIAccess

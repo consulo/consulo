@@ -18,10 +18,10 @@ package com.intellij.util.ui;
 import com.intellij.CommonBundle;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vcs.VcsShowConfirmationOption;
+import consulo.ui.image.Image;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import javax.swing.*;
 
 public class ConfirmationDialog extends OptionsMessageDialog {
   private final VcsShowConfirmationOption myOption;
@@ -33,7 +33,7 @@ public class ConfirmationDialog extends OptionsMessageDialog {
                                                @Nonnull Project project,
                                                @Nonnull String message,
                                                @Nonnull String title,
-                                               @javax.annotation.Nullable Icon icon) {
+                                               @Nullable Image icon) {
     return requestForConfirmation(option, project, message, title, icon, null, null);
   }
 
@@ -41,7 +41,7 @@ public class ConfirmationDialog extends OptionsMessageDialog {
                                                @Nonnull Project project,
                                                @Nonnull String message,
                                                @Nonnull String title,
-                                               @Nullable Icon icon,
+                                               @Nullable Image icon,
                                                @Nullable String okActionName,
                                                @Nullable String cancelActionName) {
     if (option.getValue() == VcsShowConfirmationOption.Value.DO_NOTHING_SILENTLY) return false;
@@ -55,16 +55,16 @@ public class ConfirmationDialog extends OptionsMessageDialog {
     return dialog.showAndGet();
   }
 
-  public ConfirmationDialog(Project project, final String message, String title, final Icon icon, final VcsShowConfirmationOption option) {
+  public ConfirmationDialog(Project project, final String message, String title, final Image icon, final VcsShowConfirmationOption option) {
     this(project, message, title, icon, option, null, null);
   }
 
   public ConfirmationDialog(Project project,
                             final String message,
                             String title,
-                            final Icon icon,
+                            final Image icon,
                             final VcsShowConfirmationOption option,
-                            @javax.annotation.Nullable String okActionName,
+                            @Nullable String okActionName,
                             @Nullable String cancelActionName) {
     super(project, message, title, icon);
     myOption = option;

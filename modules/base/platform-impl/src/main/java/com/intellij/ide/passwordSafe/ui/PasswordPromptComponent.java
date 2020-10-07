@@ -20,6 +20,7 @@ import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.ui.DialogUtil;
 import com.intellij.util.ui.UIUtil;
+import consulo.awt.TargetAWT;
 
 import javax.swing.*;
 
@@ -44,7 +45,7 @@ public class PasswordPromptComponent {
                                  String passwordPrompt,
                                  String rememberPrompt) {
     myIconLabel.setText("");
-    myIconLabel.setIcon(Messages.getWarningIcon());
+    myIconLabel.setIcon(TargetAWT.to(Messages.getWarningIcon()));
     myMessageLabel.setFont(UIUtil.getLabelFont(UIUtil.FontSize.SMALL));
     myMessageLabel.setText(message);
     setTargetProviderType(type);

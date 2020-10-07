@@ -20,11 +20,10 @@ import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.DocumentAdapter;
 import com.intellij.ui.components.fields.ExpandableTextField;
-import consulo.awt.TargetAWT;
 import consulo.disposer.Disposable;
-import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.TextBox;
 import consulo.ui.TextBoxWithExpandAction;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.desktop.internal.validableComponent.DocumentSwingValidator;
 import consulo.ui.desktop.laf.extend.LafExtendUtil;
 import consulo.ui.desktop.laf.extend.textBox.SupportTextBoxWithExpandActionExtender;
@@ -131,7 +130,7 @@ public class DesktopTextBoxWithExpandAction {
       addDocumentListenerForValidator(awtTextField.getDocument());
 
       if (editButtonImage != null) {
-        toAWTComponent().setButtonIcon(TargetAWT.to(editButtonImage));
+        toAWTComponent().setButtonIcon(editButtonImage);
       }
     }
 

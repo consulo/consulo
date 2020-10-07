@@ -19,6 +19,7 @@ import com.intellij.openapi.fileEditor.*;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.popup.ListPopup;
 import consulo.disposer.Disposer;
+import consulo.ui.image.Image;
 import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -299,7 +300,7 @@ public abstract class EditorBasedStatusBarPopup extends EditorBasedWidget implem
     protected final String toolTip;
     private final String text;
     private final boolean actionEnabled;
-    private Icon icon;
+    private Image icon;
 
     private WidgetState() {
       this("", "", false);
@@ -323,7 +324,7 @@ public abstract class EditorBasedStatusBarPopup extends EditorBasedWidget implem
       return new WidgetState(ActionUtil.getUnavailableMessage(name, false), widgetPrefix + IdeBundle.message("progress.indexing.updating"), false);
     }
 
-    public void setIcon(Icon icon) {
+    public void setIcon(Image icon) {
       this.icon = icon;
     }
   }

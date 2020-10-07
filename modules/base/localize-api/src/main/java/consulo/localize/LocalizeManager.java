@@ -43,7 +43,7 @@ public abstract class LocalizeManager {
   }
 
   @Nonnull
-  public static LocalizeManager getInstance() {
+  public static LocalizeManager get() {
     return ourInstance;
   }
 

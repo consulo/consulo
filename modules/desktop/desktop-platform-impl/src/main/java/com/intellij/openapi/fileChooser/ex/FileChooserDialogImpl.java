@@ -32,7 +32,6 @@ import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.util.AsyncResult;
-import consulo.disposer.Disposer;
 import com.intellij.openapi.util.Iconable;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
@@ -43,6 +42,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.ui.*;
+import com.intellij.ui.components.JBLabel;
 import com.intellij.ui.components.JBList;
 import com.intellij.ui.components.labels.LinkLabel;
 import com.intellij.ui.treeStructure.Tree;
@@ -54,6 +54,7 @@ import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.update.MergingUpdateQueue;
 import com.intellij.util.ui.update.UiNotifyConnector;
 import com.intellij.util.ui.update.Update;
+import consulo.disposer.Disposer;
 import consulo.fileChooser.impl.FileChooserFactoryImpl;
 import consulo.fileTypes.impl.VfsIconUtil;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -263,7 +264,7 @@ public class FileChooserDialogImpl extends DialogWrapper implements FileChooserD
 
 
   protected JComponent createHistoryButton() {
-    JLabel label = new JLabel(AllIcons.Actions.Get);
+    JLabel label = new JBLabel(AllIcons.Actions.Get);
     label.setToolTipText("Recent files");
     new ClickListener() {
       @Override

@@ -17,8 +17,9 @@ package com.intellij.openapi.ui;
 
 import com.intellij.icons.AllIcons;
 import com.intellij.util.ui.UIUtil;
-import javax.annotation.Nonnull;
+import consulo.awt.TargetAWT;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 
@@ -35,14 +36,7 @@ public class FixedSizeButton extends JButton {
   }
 
   private FixedSizeButton(int size, JComponent component) {
-    Icon icon = AllIcons.General.Ellipsis;
-    if (icon != null) {
-      // loading may fail at design time
-      setIcon(icon);
-    }
-    else {
-      setText(".");
-    }
+    setIcon(TargetAWT.to(AllIcons.General.Ellipsis));
     mySize = size;
     myComponent = component;
     setMargin(new Insets(0, 0, 0, 0));

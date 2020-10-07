@@ -20,16 +20,17 @@ import com.intellij.ide.ui.UISettings;
 import com.intellij.ui.ColorUtil;
 import com.intellij.ui.JBColor;
 import com.intellij.util.ui.UIUtil;
+import consulo.awt.TargetAWT;
+import consulo.ui.image.Image;
 
 import javax.annotation.Nullable;
-import javax.swing.*;
 import java.awt.*;
 
 /**
  * @author pegov
  */
 public abstract class MoreTabsIcon {
-  private final Icon icon = AllIcons.General.MoreTabs;
+  private final Image icon = AllIcons.General.MoreTabs;
   private int myCounter;
 
   public void paintIcon(final Component c, Graphics graphics) {
@@ -44,7 +45,7 @@ public abstract class MoreTabsIcon {
     int width = graphics.getFontMetrics().stringWidth(String.valueOf(myCounter));
     iconX -= width / 2 + 1;
 
-    icon.paintIcon(c, graphics, iconX, iconY);
+    TargetAWT.to(icon).paintIcon(c, graphics, iconX, iconY);
     Graphics g = graphics.create();
     try {
       UISettings.setupAntialiasing(g);
@@ -56,11 +57,11 @@ public abstract class MoreTabsIcon {
   }
 
   public int getIconWidth() {
-    return icon.getIconWidth();
+    return icon.getWidth();
   }
 
   public int getIconHeight() {
-    return icon.getIconHeight();
+    return icon.getHeight();
   }
 
   protected int getIconX(final Rectangle iconRec) {

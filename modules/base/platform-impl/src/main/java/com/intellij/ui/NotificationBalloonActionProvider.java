@@ -22,6 +22,9 @@ import com.intellij.openapi.options.ShowSettingsUtil;
 import com.intellij.openapi.util.Computable;
 import com.intellij.util.Consumer;
 import com.intellij.util.ui.JBRectangle;
+import consulo.awt.TargetAWT;
+import consulo.ui.image.Image;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -132,8 +135,8 @@ public class NotificationBalloonActionProvider implements BalloonImpl.ActionProv
       }
     }) {
       @Override
-      protected void paintIcon(@Nonnull Graphics g, @Nonnull Icon icon) {
-        icon.paintIcon(this, g, CloseHoverBounds.x, CloseHoverBounds.y);
+      protected void paintIcon(@Nonnull Graphics g, @Nonnull Image icon) {
+        TargetAWT.to(icon).paintIcon(this, g, CloseHoverBounds.x, CloseHoverBounds.y);
       }
     };
     myActions.add(myCloseButton);

@@ -41,7 +41,7 @@ import java.awt.event.ActionListener;
 class PatternDialog extends DialogWrapper{
   private final TodoPattern myPattern;
 
-  private final JComboBox myIconComboBox;
+  private final JComboBox<Image> myIconComboBox;
   private final JCheckBox myCaseSensitiveCheckBox;
   private final JTextField myPatternStringField;
   private final ColorAndFontDescriptionPanel myColorAndFontDescriptionPanel;
@@ -53,8 +53,8 @@ class PatternDialog extends DialogWrapper{
 
     final TodoAttributes attrs = pattern.getAttributes();
     myPattern=pattern;
-    myIconComboBox=new JComboBox(
-      new Icon[]{AllIcons.General.TodoDefault, AllIcons.General.TodoQuestion, AllIcons.General.TodoImportant}
+    myIconComboBox=new JComboBox<>(
+      new Image[]{AllIcons.General.TodoDefault, AllIcons.General.TodoQuestion, AllIcons.General.TodoImportant}
     );
     myIconComboBox.setSelectedItem(attrs.getIcon());
     myIconComboBox.setRenderer(new TodoTypeListCellRenderer());

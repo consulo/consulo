@@ -27,6 +27,7 @@ import com.intellij.ui.mac.MacMessagesEmulation;
 import com.intellij.ui.mac.foundation.MacUtil;
 import com.intellij.util.ui.UIUtil;
 import consulo.awt.TargetAWT;
+import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -75,7 +76,7 @@ public class JBMacMessages extends MacMessagesEmulation {
       window = getForemostWindow(null);
     }
 
-    Icon icon = errorStyle ? UIUtil.getErrorIcon() : UIUtil.getInformationIcon();
+    Image icon = errorStyle ? UIUtil.getErrorIcon() : UIUtil.getInformationIcon();
 
     focusedOptionIndex = (defaultOptionIndex == focusedOptionIndex) ? buttons.length - 1 : focusedOptionIndex;
 

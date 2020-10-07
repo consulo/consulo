@@ -10,6 +10,8 @@ import com.intellij.ui.components.fields.ExtendableTextComponent.Extension;
 import com.intellij.util.ui.JBInsets;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
+import consulo.awt.TargetAWT;
+import consulo.ui.image.Image;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;
@@ -55,7 +57,7 @@ public abstract class TextFieldWithPopupHandlerUI extends BasicTextFieldUI imple
   /**
    * @return a search icon in one of the four states or {@code null} to hide it
    */
-  protected Icon getSearchIcon(boolean hovered, boolean clickable) {
+  protected Image getSearchIcon(boolean hovered, boolean clickable) {
     return clickable ? AllIcons.Actions.SearchWithHistory : AllIcons.Actions.Find;
   }
 
@@ -63,8 +65,8 @@ public abstract class TextFieldWithPopupHandlerUI extends BasicTextFieldUI imple
    * @return a preferred space to paint the search icon
    */
   protected int getSearchIconPreferredSpace() {
-    Icon icon = getSearchIcon(true, true);
-    return icon == null ? 0 : icon.getIconWidth() + getSearchIconGap();
+    Image icon = getSearchIcon(true, true);
+    return icon == null ? 0 : icon.getWidth() + getSearchIconGap();
   }
 
   /**
@@ -77,7 +79,7 @@ public abstract class TextFieldWithPopupHandlerUI extends BasicTextFieldUI imple
   /**
    * @return a clear icon in one of the four states or {@code null} to hide it
    */
-  protected Icon getClearIcon(boolean hovered, boolean clickable) {
+  protected Image getClearIcon(boolean hovered, boolean clickable) {
     return !clickable ? null : hovered ? AllIcons.Actions.CloseHovered : AllIcons.Actions.Close;
   }
 
@@ -85,8 +87,8 @@ public abstract class TextFieldWithPopupHandlerUI extends BasicTextFieldUI imple
    * @return a preferred space to paint the clear icon
    */
   protected int getClearIconPreferredSpace() {
-    Icon icon = getClearIcon(true, true);
-    return icon == null ? 0 : icon.getIconWidth() + getClearIconGap();
+    Image icon = getClearIcon(true, true);
+    return icon == null ? 0 : icon.getWidth() + getClearIconGap();
   }
 
   /**
@@ -433,7 +435,7 @@ public abstract class TextFieldWithPopupHandlerUI extends BasicTextFieldUI imple
       g.setClip(clip);
       for (IconHolder holder : icons.values()) {
         if (holder.icon != null) {
-          holder.icon.paintIcon(component, g, holder.bounds.x, holder.bounds.y);
+          TargetAWT.to(holder.icon).paintIcon(component, g, holder.bounds.x, holder.bounds.y);
         }
       }
     }
@@ -459,7 +461,7 @@ public abstract class TextFieldWithPopupHandlerUI extends BasicTextFieldUI imple
 
   private void updateIcon(IconHolder holder) {
     if (holder != null) {
-      Icon icon = holder.extension.getIcon(holder.hovered);
+      Image icon = holder.extension.getIcon(holder.hovered);
       if (holder.icon != icon) repaint(holder.setIcon(icon));
     }
   }
@@ -490,7 +492,7 @@ public abstract class TextFieldWithPopupHandlerUI extends BasicTextFieldUI imple
     for (IconHolder holder : icons.values()) {
       holder.hovered = component.isEnabled() && holder.bounds.contains(x, y);
       if (holder.hovered) result = holder;
-      Icon icon = holder.extension.getIcon(holder.hovered);
+      Image icon = holder.extension.getIcon(holder.hovered);
       if (holder.icon != icon) {
         if (holder.setIcon(icon)) invalid = true;
         repaint = true;
@@ -558,7 +560,7 @@ public abstract class TextFieldWithPopupHandlerUI extends BasicTextFieldUI imple
     public final Rectangle bounds = new Rectangle();
     public final Extension extension;
     public boolean hovered;
-    public Icon icon;
+    public Image icon;
 
     private IconHolder(Extension extension) {
       this.extension = extension;
@@ -569,10 +571,10 @@ public abstract class TextFieldWithPopupHandlerUI extends BasicTextFieldUI imple
       setIcon(extension.getIcon(false));
     }
 
-    private boolean setIcon(Icon icon) {
+    private boolean setIcon(Image icon) {
       this.icon = icon;
-      int width = icon == null ? 0 : icon.getIconWidth();
-      int height = icon == null ? 0 : icon.getIconHeight();
+      int width = icon == null ? 0 : icon.getWidth();
+      int height = icon == null ? 0 : icon.getHeight();
       if (bounds.width == width && bounds.height == height) return false;
       bounds.width = width;
       bounds.height = height;
@@ -589,7 +591,7 @@ public abstract class TextFieldWithPopupHandlerUI extends BasicTextFieldUI imple
     private Rectangle bounds; // should be bound to IconHandler#bounds
 
     @Override
-    public Icon getIcon(boolean hovered) {
+    public Image getIcon(boolean hovered) {
       return getSearchIcon(hovered, null != getActionOnClick());
     }
 
@@ -636,7 +638,7 @@ public abstract class TextFieldWithPopupHandlerUI extends BasicTextFieldUI imple
 
   private class ClearExtension implements Extension {
     @Override
-    public Icon getIcon(boolean hovered) {
+    public Image getIcon(boolean hovered) {
       return getClearIcon(hovered, hasText());
     }
 

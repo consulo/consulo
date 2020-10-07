@@ -32,7 +32,6 @@ import com.intellij.openapi.application.impl.DesktopApplicationImpl;
 import com.intellij.openapi.options.ShowSettingsUtil;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.AsyncResult;
-import com.intellij.openapi.util.IconLoader;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.openapi.wm.WindowManager;
@@ -40,7 +39,9 @@ import com.intellij.openapi.wm.ex.WindowManagerEx;
 import com.intellij.openapi.wm.impl.DesktopWindowManagerImpl;
 import com.intellij.openapi.wm.impl.SystemDock;
 import com.intellij.openapi.wm.impl.X11UiUtil;
+import com.intellij.ui.AppIcon;
 import com.intellij.ui.AppUIUtil;
+import com.intellij.ui.DesktopAppUIUtil;
 import consulo.application.ApplicationProperties;
 import consulo.awt.TargetAWT;
 import consulo.container.impl.classloader.PluginLoadStatistics;
@@ -120,9 +121,7 @@ public class DesktopApplicationStarter extends ApplicationStarter {
 
     AppUIUtil.updateWindowIcon(JOptionPane.getRootFrame(), false);
 
-    AppUIUtil.registerBundledFonts();
-
-    IconLoader.activate();
+    DesktopAppUIUtil.registerBundledFonts();
 
     invokeAtUIAndWait(() -> {
       if (SystemInfo.isXWindow) {

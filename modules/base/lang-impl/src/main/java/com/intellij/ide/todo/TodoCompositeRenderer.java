@@ -9,6 +9,7 @@ import com.intellij.ui.HighlightableCellRenderer;
 import com.intellij.ui.HighlightedRegion;
 import com.intellij.util.ui.UIUtil;
 import consulo.awt.TargetAWT;
+import consulo.ui.image.Image;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -39,7 +40,7 @@ final class TodoCompositeRenderer implements TreeCellRenderer {
     if (userObject instanceof SummaryNode) {
       myNodeRenderer.getTreeCellRendererComponent(tree, userObject.toString(), selected, expanded, leaf, row, hasFocus);
       myNodeRenderer.setFont(UIUtil.getTreeFont().deriveFont(Font.BOLD));
-      myNodeRenderer.setIcon(null);
+      myNodeRenderer.setIcon((Image)null);
       result = myNodeRenderer;
     }
     else if (userObject instanceof TodoItemNode && !((TodoItemNode)userObject).getAdditionalLines().isEmpty()) {
@@ -53,7 +54,7 @@ final class TodoCompositeRenderer implements TreeCellRenderer {
       for (HighlightedRegion region : regionProvider.getHighlightedRegions()) {
         myColorTreeCellRenderer.addHighlighter(region.startOffset, region.endOffset, region.textAttributes);
       }
-      myColorTreeCellRenderer.setIcon(TargetAWT.to(descriptor.getIcon()));
+      myColorTreeCellRenderer.setIcon(descriptor.getIcon());
       result = myColorTreeCellRenderer;
     }
     else {

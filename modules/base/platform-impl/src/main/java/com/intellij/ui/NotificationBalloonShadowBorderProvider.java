@@ -17,11 +17,13 @@ package com.intellij.ui;
 
 import com.intellij.icons.AllIcons.Ide.Notification.Shadow;
 import com.intellij.openapi.ui.popup.Balloon;
-import com.intellij.openapi.util.IconLoader;
 import com.intellij.util.ui.JBInsets;
 import com.intellij.util.ui.UIUtil;
-import javax.annotation.Nonnull;
+import consulo.awt.TargetAWT;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.ui.image.ImageKey;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.Rectangle2D;
@@ -51,41 +53,41 @@ public class NotificationBalloonShadowBorderProvider implements BalloonImpl.Shad
     int width = component.getWidth();
     int height = component.getHeight();
 
-    int topLeftWidth = Shadow.Top_left.getIconWidth();
-    int topLeftHeight = Shadow.Top_left.getIconHeight();
+    int topLeftWidth = Shadow.Top_left.getWidth();
+    int topLeftHeight = Shadow.Top_left.getHeight();
 
-    int topRightWidth = Shadow.Top_right.getIconWidth();
-    int topRightHeight = Shadow.Top_right.getIconHeight();
+    int topRightWidth = Shadow.Top_right.getWidth();
+    int topRightHeight = Shadow.Top_right.getHeight();
 
-    int bottomLeftWidth = Shadow.Bottom_left.getIconWidth();
-    int bottomLeftHeight = Shadow.Bottom_left.getIconHeight();
+    int bottomLeftWidth = Shadow.Bottom_left.getWidth();
+    int bottomLeftHeight = Shadow.Bottom_left.getHeight();
 
-    int bottomRightWidth = Shadow.Bottom_right.getIconWidth();
-    int bottomRightHeight = Shadow.Bottom_right.getIconHeight();
+    int bottomRightWidth = Shadow.Bottom_right.getWidth();
+    int bottomRightHeight = Shadow.Bottom_right.getHeight();
 
-    int topWidth = Shadow.Top.getIconWidth();
+    int topWidth = Shadow.Top.getWidth();
 
-    int bottomWidth = Shadow.Bottom.getIconWidth();
-    int bottomHeight = Shadow.Bottom.getIconHeight();
+    int bottomWidth = Shadow.Bottom.getWidth();
+    int bottomHeight = Shadow.Bottom.getHeight();
 
-    int leftHeight = Shadow.Left.getIconHeight();
+    int leftHeight = Shadow.Left.getHeight();
 
-    int rightWidth = Shadow.Right.getIconWidth();
-    int rightHeight = Shadow.Right.getIconHeight();
+    int rightWidth = Shadow.Right.getWidth();
+    int rightHeight = Shadow.Right.getHeight();
 
-    drawLine(component, g, Shadow.Top, width, topLeftWidth, topRightWidth, topWidth, 0, true);
-    drawLine(component, g, Shadow.Bottom, width, bottomLeftWidth, bottomRightWidth, bottomWidth, height - bottomHeight, true);
+    drawLine(component, g, PlatformIconGroup.ideNotificationShadowTop(), width, topLeftWidth, topRightWidth, topWidth, 0, true);
+    drawLine(component, g, PlatformIconGroup.ideNotificationShadowBottom(), width, bottomLeftWidth, bottomRightWidth, bottomWidth, height - bottomHeight, true);
 
-    drawLine(component, g, Shadow.Left, height, topLeftHeight, bottomLeftHeight, leftHeight, 0, false);
-    drawLine(component, g, Shadow.Right, height, topRightHeight, bottomRightHeight, rightHeight, width - rightWidth, false);
+    drawLine(component, g, PlatformIconGroup.ideNotificationShadowLeft(), height, topLeftHeight, bottomLeftHeight, leftHeight, 0, false);
+    drawLine(component, g, PlatformIconGroup.ideNotificationShadowRight(), height, topRightHeight, bottomRightHeight, rightHeight, width - rightWidth, false);
 
-    Shadow.Top_left.paintIcon(component, g, 0, 0);
-    Shadow.Top_right.paintIcon(component, g, width - topRightWidth, 0);
-    Shadow.Bottom_right.paintIcon(component, g, width - bottomRightWidth, height - bottomRightHeight);
-    Shadow.Bottom_left.paintIcon(component, g, 0, height - bottomLeftHeight);
+    TargetAWT.to(Shadow.Top_left).paintIcon(component, g, 0, 0);
+    TargetAWT.to(Shadow.Top_right).paintIcon(component, g, width - topRightWidth, 0);
+    TargetAWT.to(Shadow.Bottom_right).paintIcon(component, g, width - bottomRightWidth, height - bottomRightHeight);
+    TargetAWT.to(Shadow.Bottom_left).paintIcon(component, g, 0, height - bottomLeftHeight);
   }
 
-  private static void drawLine(@Nonnull JComponent component, @Nonnull Graphics g, @Nonnull Icon icon, int fullLength, int start, int end, int step, int start2, boolean horizontal) {
+  private static void drawLine(@Nonnull JComponent component, @Nonnull Graphics g, @Nonnull consulo.ui.image.Image icon, int fullLength, int start, int end, int step, int start2, boolean horizontal) {
     int length = fullLength - start - end;
     int count = length / step;
     int calcLength = step * count;
@@ -93,23 +95,23 @@ public class NotificationBalloonShadowBorderProvider implements BalloonImpl.Shad
 
     if (horizontal) {
       for (int i = start; i < lastValue; i += step) {
-        icon.paintIcon(component, g, i, start2);
+        TargetAWT.to(icon).paintIcon(component, g, i, start2);
       }
     }
     else {
       for (int i = start; i < lastValue; i += step) {
-        icon.paintIcon(component, g, start2, i);
+        TargetAWT.to(icon).paintIcon(component, g, start2, i);
       }
     }
 
     if (calcLength < length) {
-      ImageIcon imageIcon = (ImageIcon)IconLoader.getIconSnapshot(icon);
+      Image image = TargetAWT.toImage((ImageKey)icon);
       if (horizontal) {
-        UIUtil.drawImage(g, imageIcon.getImage(), new Rectangle(lastValue, start2, length - calcLength, imageIcon.getIconHeight()), new Rectangle(0, 0, length - calcLength, imageIcon.getIconHeight()),
+        UIUtil.drawImage(g, image, new Rectangle(lastValue, start2, length - calcLength, icon.getHeight()), new Rectangle(0, 0, length - calcLength, icon.getHeight()),
                          component);
       }
       else {
-        UIUtil.drawImage(g, imageIcon.getImage(), new Rectangle(start2, lastValue, imageIcon.getIconWidth(), length - calcLength), new Rectangle(0, 0, imageIcon.getIconWidth(), length - calcLength),
+        UIUtil.drawImage(g, image, new Rectangle(start2, lastValue, icon.getWidth(), length - calcLength), new Rectangle(0, 0, icon.getWidth(), length - calcLength),
                          component);
       }
     }

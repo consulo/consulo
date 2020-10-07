@@ -2,19 +2,21 @@
 package com.intellij.openapi.wm.impl.status;
 
 import com.intellij.ide.ui.UISettings;
-import com.intellij.openapi.util.IconLoader;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.scale.JBUIScale;
 import com.intellij.util.ui.JBFont;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import consulo.awt.TargetAWT;
+import consulo.ui.image.Image;
+import consulo.ui.image.ImageEffects;
 
 import javax.accessibility.Accessible;
 import javax.accessibility.AccessibleContext;
 import javax.accessibility.AccessibleRole;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 
@@ -167,12 +169,12 @@ public class TextPanel extends JComponent implements Accessible {
   public static class WithIconAndArrows extends TextPanel {
     private final static int GAP = JBUIScale.scale(2);
     @Nullable
-    private Icon myIcon;
+    private Image myIcon;
 
     @Override
     protected void paintComponent(@Nonnull final Graphics g) {
       super.paintComponent(g);
-      Icon icon = myIcon == null || isEnabled() ? myIcon : IconLoader.getDisabledIcon(myIcon);
+      Icon icon = TargetAWT.to(myIcon == null || isEnabled() ? myIcon : ImageEffects.grayed(myIcon));
       if (icon != null) {
         icon.paintIcon(this, g, getIconX(g), getHeight() / 2 - icon.getIconHeight() / 2);
       }
@@ -192,7 +194,7 @@ public class TextPanel extends JComponent implements Accessible {
       if (myIcon == null) {
         return preferredSize;
       }
-      return new Dimension(Math.max(preferredSize.width + myIcon.getIconWidth(), getHeight()), preferredSize.height);
+      return new Dimension(Math.max(preferredSize.width + myIcon.getWidth(), getHeight()), preferredSize.height);
     }
 
     @Override
@@ -202,10 +204,10 @@ public class TextPanel extends JComponent implements Accessible {
         return x;
       }
       if (myAlignment == CENTER_ALIGNMENT) {
-        return x + (myIcon.getIconWidth() + GAP) / 2;
+        return x + (myIcon.getWidth() + GAP) / 2;
       }
       if (myAlignment == LEFT_ALIGNMENT) {
-        return x + myIcon.getIconWidth() + GAP;
+        return x + myIcon.getWidth() + GAP;
       }
       return x;
     }
@@ -216,15 +218,15 @@ public class TextPanel extends JComponent implements Accessible {
         return x;
       }
       if (myAlignment == CENTER_ALIGNMENT) {
-        return x - (myIcon.getIconWidth() + GAP) / 2;
+        return x - (myIcon.getWidth() + GAP) / 2;
       }
       if (myAlignment == RIGHT_ALIGNMENT) {
-        return x - myIcon.getIconWidth() - GAP;
+        return x - myIcon.getWidth() - GAP;
       }
       return x;
     }
 
-    public void setIcon(@Nullable Icon icon) {
+    public void setIcon(@Nullable Image icon) {
       myIcon = icon;
     }
 

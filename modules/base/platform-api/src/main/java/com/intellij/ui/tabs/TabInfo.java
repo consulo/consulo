@@ -25,6 +25,7 @@ import com.intellij.ui.PlaceProvider;
 import com.intellij.ui.SimpleColoredText;
 import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.ui.content.AlertIcon;
+import consulo.awt.TargetAWT;
 import consulo.ui.image.Image;
 import consulo.util.lang.ref.SoftReference;
 import kava.beans.PropertyChangeSupport;
@@ -59,7 +60,7 @@ public final class TabInfo implements Queryable, PlaceProvider<String> {
 
   private final PropertyChangeSupport myChangeSupport = new PropertyChangeSupport(this);
 
-  private consulo.ui.image.Image myIcon;
+  private Image myIcon;
   private String myPlace;
   private Object myObject;
   private JComponent mySideComponent;
@@ -69,7 +70,7 @@ public final class TabInfo implements Queryable, PlaceProvider<String> {
   private ActionGroup myTabLabelActions;
   private String myTabActionPlace;
 
-  private AlertIcon myAlertIcon;
+  private Image myAlertIcon;
 
   private int myBlinkCount;
   private boolean myAlertRequested;
@@ -84,7 +85,7 @@ public final class TabInfo implements Queryable, PlaceProvider<String> {
   private Color myDefaultWaveColor;
 
   private SimpleTextAttributes myDefaultAttributes;
-  private static final AlertIcon DEFAULT_ALERT_ICON = new AlertIcon(AllIcons.Nodes.TabAlert);
+  private static final Image DEFAULT_ALERT_ICON = new AlertIcon(TargetAWT.to(AllIcons.Nodes.TabAlert));
 
   private boolean myEnabled = true;
   private Color myTabColor;
@@ -258,8 +259,8 @@ public final class TabInfo implements Queryable, PlaceProvider<String> {
     return SoftReference.dereference(myLastFocusOwner);
   }
 
-  public TabInfo setAlertIcon(final AlertIcon alertIcon) {
-    AlertIcon old = myAlertIcon;
+  public TabInfo setAlertIcon(final Image alertIcon) {
+    Image old = myAlertIcon;
     myAlertIcon = alertIcon;
     myChangeSupport.firePropertyChange(ALERT_ICON, old, myAlertIcon);
     return this;
@@ -287,7 +288,7 @@ public final class TabInfo implements Queryable, PlaceProvider<String> {
     return getText();
   }
 
-  public AlertIcon getAlertIcon() {
+  public Image getAlertIcon() {
     return myAlertIcon == null ? DEFAULT_ALERT_ICON : myAlertIcon;
   }
 

@@ -11,6 +11,8 @@ import com.intellij.util.Consumer;
 import com.intellij.util.ui.Html;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
+import consulo.awt.TargetAWT;
+import consulo.ui.image.Image;
 import org.intellij.lang.annotations.JdkConstants;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -101,11 +103,11 @@ public class HintUtil {
   }
 
   public static JComponent createQuestionLabel(String text) {
-    final Icon icon = AllIcons.General.ContextHelp;
+    final Image icon = AllIcons.General.ContextHelp;
     return createQuestionLabel(text, icon);
   }
 
-  public static JComponent createQuestionLabel(String text, Icon icon) {
+  public static JComponent createQuestionLabel(String text, Image icon) {
     Color bg = getQuestionColor();
     HintHint hintHint = new HintHint().setTextBg(bg).setTextFg(JBColor.foreground()).setFont(getBoldFont()).setAwtTooltip(true);
 
@@ -138,7 +140,7 @@ public class HintUtil {
   }
 
   @Nonnull
-  public static JComponent createInformationLabel(@Nonnull SimpleColoredText text, @Nullable Icon icon) {
+  public static JComponent createInformationLabel(@Nonnull SimpleColoredText text, @Nullable Image icon) {
     SimpleColoredComponent component = createInformationComponent();
     component.setIcon(icon);
     text.appendToComponent(component);
@@ -163,10 +165,10 @@ public class HintUtil {
   }
 
   @Nonnull
-  private static HintLabel createLabel(String text, @Nullable Icon icon, @Nonnull Color color, @Nonnull HintHint hintHint) {
+  private static HintLabel createLabel(String text, @Nullable Image icon, @Nonnull Color color, @Nonnull HintHint hintHint) {
     HintLabel label = new HintLabel();
     label.setText(text, hintHint);
-    label.setIcon(icon);
+    label.setIcon(TargetAWT.to(icon));
 
     if (!hintHint.isAwtTooltip()) {
       label.setBorder(createHintBorder());

@@ -20,6 +20,7 @@ import consulo.ui.KeyCode;
 import consulo.ui.Window;
 import consulo.ui.font.Font;
 import consulo.ui.image.Image;
+import consulo.ui.image.ImageKey;
 import consulo.ui.shared.ColorValue;
 import consulo.ui.shared.RGBColor;
 import consulo.ui.shared.Rectangle2D;
@@ -75,4 +76,6 @@ public interface TargetAWTFacade {
   java.awt.Font to(@Nonnull Font font);
 
   int to(@Nonnull KeyCode code);
+
+  java.awt.Image toImage(@Nonnull ImageKey key);
 }

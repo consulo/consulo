@@ -21,6 +21,7 @@ import com.intellij.openapi.actionSystem.ActionPlaces;
 import com.intellij.openapi.actionSystem.ActionToolbar;
 import com.intellij.openapi.actionSystem.DefaultActionGroup;
 import com.intellij.openapi.application.ApplicationManager;
+import consulo.awt.TargetAWT;
 import consulo.logging.Logger;
 import com.intellij.openapi.fileEditor.TextEditor;
 import com.intellij.openapi.options.ShowSettingsUtil;
@@ -78,7 +79,7 @@ public class RemoteFilePanel implements PropertyChangeListener {
   public RemoteFilePanel(final Project project, final HttpVirtualFile virtualFile) {
     myProject = project;
     myVirtualFile = virtualFile;
-    myErrorLabel.setIcon(AllIcons.RunConfigurations.ConfigurationWarning);
+    myErrorLabel.setIcon(TargetAWT.to(AllIcons.RunConfigurations.ConfigurationWarning));
     myUrlTextField.setText(virtualFile.getUrl());
     myProgressUpdatesQueue = new MergingUpdateQueue("downloading progress updates", 300, false, myMainPanel);
     initToolbar(project);

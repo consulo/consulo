@@ -23,6 +23,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogBuilder;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.ui.ScrollPaneFactory;
+import com.intellij.ui.components.JBLabel;
 import com.intellij.util.ui.UIUtil;
 
 import javax.swing.*;
@@ -60,7 +61,7 @@ public class ExecutionErrorDialog {
     final JPanel panel = new JPanel(new BorderLayout(10, 0));
     panel.setPreferredSize(new Dimension(500, 200));
     panel.add(scrollPane, BorderLayout.CENTER);
-    panel.add(new JLabel(Messages.getErrorIcon()), BorderLayout.WEST);
+    panel.add(new JBLabel(Messages.getErrorIcon()), BorderLayout.WEST);
     builder.setCenterPanel(panel);
     builder.setButtonsAlignment(SwingConstants.CENTER);
     builder.addOkAction();

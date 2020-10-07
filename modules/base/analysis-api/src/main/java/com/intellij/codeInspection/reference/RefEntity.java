@@ -15,10 +15,10 @@
  */
 package com.intellij.codeInspection.reference;
 
+import consulo.ui.image.Image;
 import consulo.util.dataholder.UserDataHolder;
 
 import javax.annotation.Nullable;
-import javax.swing.*;
 import java.util.List;
 
 /**
@@ -83,5 +83,5 @@ public interface RefEntity extends UserDataHolder {
   RefManager getRefManager();
 
   @Nullable
-  Icon getIcon(boolean expanded);
+  Image getIcon(boolean expanded);
 }

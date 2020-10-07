@@ -27,7 +27,6 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.SizedIcon;
 import com.intellij.ui.popup.KeepingPopupOpenAction;
 import com.intellij.util.NotNullFunction;
-import com.intellij.util.PlatformIcons;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.ColorIcon;
 import com.intellij.util.ui.UIUtil;
@@ -39,6 +38,7 @@ import com.intellij.vcs.log.data.VcsLogStructureFilterImpl;
 import com.intellij.vcs.log.impl.VcsLogUtil;
 import com.intellij.vcs.log.ui.VcsLogColorManager;
 import com.intellij.vcs.log.ui.frame.VcsLogGraphTable;
+import consulo.awt.TargetAWT;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
 import org.intellij.lang.annotations.JdkConstants;
@@ -342,7 +342,7 @@ class StructureFilterPopupComponent extends FilterPopupComponent<VcsLogFileFilte
     public CheckboxColorIcon(int size, @Nonnull Color color) {
       super(size, color);
       mySize = size;
-      mySizedIcon = new SizedIcon(PlatformIcons.CHECK_ICON_SMALL, mySize, mySize);
+      mySizedIcon = new SizedIcon(TargetAWT.to(AllIcons.Actions.Checked_small), mySize, mySize);
     }
 
     public void prepare(boolean selected) {

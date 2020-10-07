@@ -26,7 +26,7 @@ import javax.annotation.Nonnull;
 public final class LocalizeValueConverter extends Converter<LocalizeValue> {
   @Override
   public LocalizeValue fromString(@Nonnull String value) {
-    return LocalizeManager.getInstance().fromStringKey(value);
+    return LocalizeManager.get().fromStringKey(value);
   }
 
   @Nonnull

@@ -739,11 +739,11 @@ public class ChooseRunConfigurationPopup implements ExecutorProvider {
         }
         else {
           if (wrapper.isChecked()) {
-            myTextLabel.setIcon(isSelected ? RunConfigurationsComboBoxAction.CHECKED_SELECTED_ICON : RunConfigurationsComboBoxAction.CHECKED_ICON);
+            myTextLabel.setIcon(TargetAWT.to(isSelected ? RunConfigurationsComboBoxAction.CHECKED_SELECTED_ICON : RunConfigurationsComboBoxAction.CHECKED_ICON));
           }
           else {
             if (myTextLabel.getIcon() == null) {
-              myTextLabel.setIcon(RunConfigurationsComboBoxAction.EMPTY_ICON);
+              myTextLabel.setIcon(TargetAWT.to(RunConfigurationsComboBoxAction.EMPTY_ICON));
             }
           }
           myLabel.setText("");

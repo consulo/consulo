@@ -17,19 +17,21 @@ package com.intellij.util.ui;
 
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.MultiLineLabelUI;
-import javax.annotation.Nonnull;
+import com.intellij.ui.components.JBLabel;
+import consulo.ui.image.Image;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 
 public abstract class OptionsMessageDialog extends OptionsDialog{
   private final String myMessage;
-  private final Icon myIcon;
+  private final Image myIcon;
 
   protected OptionsMessageDialog(Project project,
                                  final String message,
                                  String title,
-                                 final Icon icon) {
+                                 final Image icon) {
     super(project);
     myMessage = message;
     myIcon = icon;
@@ -64,7 +66,7 @@ public abstract class OptionsMessageDialog extends OptionsDialog{
   protected JComponent createNorthPanel() {
     JPanel panel = new JPanel(new BorderLayout(15, 0));
     if (myIcon != null) {
-      JLabel iconLabel = new JLabel(myIcon);
+      JLabel iconLabel = new JBLabel(myIcon);
       Container container = new Container();
       container.setLayout(new BorderLayout());
       container.add(iconLabel, BorderLayout.NORTH);

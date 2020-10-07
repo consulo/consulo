@@ -26,7 +26,6 @@ import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.swing.*;
 
 /**
  * @author VISTALL
@@ -41,7 +40,7 @@ class DesktopItemPresentationImpl<E> implements ItemPresentation {
 
   @Override
   public void clearText() {
-    Icon icon = myRenderer.getIcon();
+    Image icon = myRenderer.getIcon();
     myRenderer.clear();
     myRenderer.setIcon(icon);
   }

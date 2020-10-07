@@ -20,8 +20,7 @@ import com.intellij.codeInspection.InspectionsBundle;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.project.Project;
 import consulo.awt.TargetAWT;
-
-import javax.swing.*;
+import consulo.ui.image.Image;
 
 /**
  * @author max
@@ -44,7 +43,7 @@ public class InspectionRootNode extends InspectionTreeNode {
   }
 
   @Override
-  public Icon getIcon() {
-    return TargetAWT.to(Application.get().getIcon());
+  public Image getIcon() {
+    return Application.get().getIcon();
   }
 }

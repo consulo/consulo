@@ -15,6 +15,8 @@
  */
 package com.intellij.ide.presentation;
 
+import consulo.annotation.DeprecationInfo;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -27,10 +29,13 @@ import java.lang.annotation.Target;
 @Target({ElementType.TYPE})
 public @interface Presentation {
 
-  /**
-   * @return Path to image resource, e.g. /foo/bar/MyIcon.png
-   */
+  @Deprecated
+  @DeprecationInfo("Disabled, you will get black icon if #icon() not empty. Use #iconGroupId() and #imageId()")
   String icon() default "";
+
+  String iconGroupId() default "";
+
+  String imageId() default "";
 
   Class<? extends PresentationProvider> provider() default PresentationProvider.class;
 

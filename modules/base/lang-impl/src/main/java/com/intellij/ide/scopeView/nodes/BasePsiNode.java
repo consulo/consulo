@@ -24,11 +24,10 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.SmartPointerManager;
 import com.intellij.psi.SmartPsiElementPointer;
-import consulo.awt.TargetAWT;
 import consulo.ide.IconDescriptorUpdaters;
+import consulo.ui.image.Image;
 
 import javax.annotation.Nullable;
-import javax.swing.*;
 import java.awt.*;
 
 /**
@@ -37,7 +36,7 @@ import java.awt.*;
  */
 public class BasePsiNode<T extends PsiElement> extends PackageDependenciesNode {
   private final SmartPsiElementPointer myPsiElementPointer;
-  private Icon myIcon;
+  private Image myIcon;
 
   public BasePsiNode(final T element) {
     super(element.getProject());
@@ -58,10 +57,10 @@ public class BasePsiNode<T extends PsiElement> extends PackageDependenciesNode {
   }
 
   @Override
-  public Icon getIcon() {
+  public Image getIcon() {
     final PsiElement element = getPsiElement();
     if (myIcon == null) {
-      myIcon = element != null && element.isValid() ? TargetAWT.to(IconDescriptorUpdaters.getIcon(element, Iconable.ICON_FLAG_VISIBILITY | Iconable.ICON_FLAG_READ_STATUS)) : null;
+      myIcon = element != null && element.isValid() ? IconDescriptorUpdaters.getIcon(element, Iconable.ICON_FLAG_VISIBILITY | Iconable.ICON_FLAG_READ_STATUS) : null;
     }
     return myIcon;
   }

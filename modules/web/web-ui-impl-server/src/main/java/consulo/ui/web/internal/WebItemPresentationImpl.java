@@ -19,7 +19,7 @@ import consulo.localize.LocalizeValue;
 import consulo.ui.ItemPresentation;
 import consulo.ui.TextAttribute;
 import consulo.ui.image.Image;
-import consulo.ui.web.servlet.WebImageUrlCache;
+import consulo.ui.web.servlet.WebImageMapper;
 import consulo.web.gwt.shared.ui.state.combobox.ComboBoxState;
 
 import javax.annotation.Nonnull;
@@ -35,7 +35,7 @@ public class WebItemPresentationImpl implements ItemPresentation {
   @Nonnull
   @Override
   public ItemPresentation withIcon(@Nullable Image image) {
-    myItem.myImageState = image == null ? null : WebImageUrlCache.map(image).getState();
+    myItem.myImageState = image == null ? null : WebImageMapper.map(image).getState();
 
     after();
     return this;

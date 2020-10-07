@@ -60,9 +60,4 @@ public class WebStyleImpl implements Style {
     }
     return colorValue;
   }
-
-  @Override
-  public boolean isDark() {
-    return false;
-  }
 }

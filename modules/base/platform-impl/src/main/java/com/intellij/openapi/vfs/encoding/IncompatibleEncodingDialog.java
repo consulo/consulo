@@ -9,6 +9,8 @@ import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.io.FileUtilRt;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.xml.util.XmlStringUtil;
+import consulo.awt.TargetAWT;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -50,7 +52,7 @@ public class IncompatibleEncodingDialog extends DialogWrapper {
                                                        "' and overwrite editor contents or<br>" +
                                                        "2. <b>Convert</b> the text and overwrite file in the new encoding" +
                                                        "?"));
-    label.setIcon(Messages.getQuestionIcon());
+    label.setIcon(TargetAWT.to(Messages.getQuestionIcon()));
     label.setIconTextGap(10);
     return label;
   }

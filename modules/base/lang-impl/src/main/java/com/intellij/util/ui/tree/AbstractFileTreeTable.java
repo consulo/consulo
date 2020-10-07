@@ -37,17 +37,16 @@ import com.intellij.util.containers.HashMap;
 import com.intellij.util.ui.UIUtil;
 import consulo.awt.TargetAWT;
 import consulo.fileTypes.impl.VfsIconUtil;
-import consulo.ui.image.*;
 import gnu.trove.THashMap;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import javax.swing.table.TableColumn;
 import javax.swing.tree.*;
 import java.awt.*;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 public abstract class AbstractFileTreeTable<T> extends TreeTable {
   private final MyModel<T> myModel;
@@ -92,7 +91,7 @@ public abstract class AbstractFileTreeTable<T> extends TreeTable {
         super.getTreeCellRendererComponent(tree, value, sel, expanded, leaf, row, hasFocus);
         if (value instanceof ProjectRootNode) {
           setText(getProjectNodeText());
-          setIcon(AllIcons.Nodes.ProjectTab);
+          setIcon(TargetAWT.to(AllIcons.Nodes.ProjectTab));
           return this;
         }
         FileNode fileNode = (FileNode)value;

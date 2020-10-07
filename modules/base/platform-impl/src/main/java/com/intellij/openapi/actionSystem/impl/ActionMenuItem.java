@@ -27,11 +27,9 @@ import com.intellij.openapi.application.TransactionGuard;
 import com.intellij.openapi.keymap.KeymapManager;
 import com.intellij.openapi.keymap.KeymapUtil;
 import com.intellij.openapi.util.ActionCallback;
-import com.intellij.openapi.util.IconLoader;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.text.TextWithMnemonic;
 import com.intellij.openapi.wm.IdeFocusManager;
-import com.intellij.ui.SizedIcon;
 import com.intellij.ui.plaf.gtk.GtkMenuItemUI;
 import com.intellij.util.ui.EmptyIcon;
 import com.intellij.util.ui.JBUI;
@@ -41,8 +39,11 @@ import consulo.awt.TargetAWT;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.localize.LocalizeValue;
+import consulo.ui.image.IconLibraryManager;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
+import consulo.ui.style.Style;
+import consulo.ui.style.StyleManager;
 import kava.beans.PropertyChangeEvent;
 import kava.beans.PropertyChangeListener;
 
@@ -59,12 +60,13 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class ActionMenuItem extends JCheckBoxMenuItem {
-  private static final int outIconSize = 18;
+  private static final int outIconSize = Image.DEFAULT_ICON_SIZE;
 
   private final ActionRef<AnAction> myAction;
   private final Presentation myPresentation;
   private final String myPlace;
   private final boolean myInsideCheckedGroup;
+  private final boolean myUseDarkIcons;
   private DataContext myContext;
   private AnActionEvent myEvent;
   private MenuItemSynchronizer myMenuItemSynchronizer;
@@ -82,6 +84,7 @@ public class ActionMenuItem extends JCheckBoxMenuItem {
                         final boolean prepareNow,
                         final boolean insideCheckedGroup,
                         boolean useDarkIcons) {
+    myUseDarkIcons = useDarkIcons;
     myAction = ActionRef.fromAction(action);
     myPresentation = presentation;
     myPlace = place;
@@ -277,9 +280,9 @@ public class ActionMenuItem extends JCheckBoxMenuItem {
       }
       else if (!(getUI() instanceof GtkMenuItemUI)) {
         if (myToggled) {
-          SizedIcon icon = new SizedIcon(AllIcons.Actions.Checked, JBUI.scale(outIconSize), JBUI.scale(outIconSize));
-          setIcon(icon);
-          setDisabledIcon(IconLoader.getDisabledIcon(icon));
+          Image icon = ImageEffects.resize(AllIcons.Actions.Checked, Image.DEFAULT_ICON_SIZE);
+          setIcon(TargetAWT.to(icon));
+          setDisabledIcon(TargetAWT.to(ImageEffects.grayed(icon)));
         }
         else {
           EmptyIcon emptyIcon = JBUI.emptyIcon(outIconSize);
@@ -291,6 +294,13 @@ public class ActionMenuItem extends JCheckBoxMenuItem {
     else {
       if (UISettings.getInstance().SHOW_ICONS_IN_MENUS) {
         Image icon = myPresentation.getIcon();
+        if (myUseDarkIcons) {
+          Style currentStyle = StyleManager.get().getCurrentStyle();
+          if(!currentStyle.isDark()) {
+            icon = IconLibraryManager.get().forceChangeLibrary(IconLibraryManager.DARK_LIBRARY_ID, icon);
+          }
+        }
+
         if (action instanceof ToggleAction && ((ToggleAction)action).isSelected(myEvent)) {
           icon = new PoppedIcon(icon, JBUI.scale(Image.DEFAULT_ICON_SIZE), JBUI.scale(Image.DEFAULT_ICON_SIZE));
         }

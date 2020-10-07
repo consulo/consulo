@@ -23,8 +23,8 @@ import com.intellij.openapi.roots.ui.configuration.ProjectSettingsService;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.pom.NavigatableWithText;
 import com.intellij.psi.PsiFile;
+import consulo.ui.image.Image;
 
-import javax.swing.*;
 import java.util.Set;
 
 public class ModuleNode extends PackageDependenciesNode implements NavigatableWithText{
@@ -61,7 +61,7 @@ public class ModuleNode extends PackageDependenciesNode implements NavigatableWi
   }
 
   @Override
-  public Icon getIcon() {
+  public Image getIcon() {
     return AllIcons.Nodes.Module;
   }
 

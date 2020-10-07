@@ -23,14 +23,10 @@ import com.intellij.ide.util.treeView.AbstractTreeNode;
 import com.intellij.openapi.project.Project;
 import com.intellij.ui.ColoredTreeCellRenderer;
 import com.intellij.ui.CommonActionsPanel;
-import com.intellij.ui.RowIcon;
-import com.intellij.util.ui.EmptyIcon;
-import com.intellij.util.ui.JBUI;
-import consulo.awt.TargetAWT;
+import consulo.ui.image.ImageEffects;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.inject.Inject;
 import javax.swing.*;
 import java.util.Collection;
@@ -195,11 +191,7 @@ public class BookmarksFavoriteListProvider extends AbstractFavoritesListProvider
       Bookmark bookmark = (Bookmark)value;
       BookmarkItem.setupRenderer(renderer, myProject, bookmark, selected);
       if (renderer.getIcon() != null) {
-        RowIcon icon = new RowIcon(3, RowIcon.Alignment.CENTER);
-        icon.setIcon(TargetAWT.to(bookmark.getIcon()), 0);
-        icon.setIcon(JBUI.scale(EmptyIcon.create(1)), 1);
-        icon.setIcon(renderer.getIcon(), 2);
-        renderer.setIcon(icon);
+        renderer.setIcon(ImageEffects.appendRight(bookmark.getIcon(), renderer.getIcon()));
       }
       else {
         renderer.setIcon(bookmark.getIcon());

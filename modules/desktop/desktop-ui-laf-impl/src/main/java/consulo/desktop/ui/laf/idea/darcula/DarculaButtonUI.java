@@ -11,6 +11,7 @@ import com.intellij.ui.JBColor;
 import com.intellij.ui.scale.JBUIScale;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.ui.*;
+import consulo.awt.TargetAWT;
 import sun.swing.SwingUtilities2;
 
 import javax.swing.*;
@@ -93,7 +94,7 @@ public class DarculaButtonUI extends BasicButtonUI {
       int y = r.x + (r.height - diam) / 2;
 
       g.fill(new Ellipse2D.Float(x, y, diam, diam));
-      AllIcons.Actions.Help.paintIcon(c, g, x + JBUIScale.scale(3), y + JBUIScale.scale(3));
+      TargetAWT.to(AllIcons.Actions.Help).paintIcon(c, g, x + JBUIScale.scale(3), y + JBUIScale.scale(3));
       return false;
     }
     else {

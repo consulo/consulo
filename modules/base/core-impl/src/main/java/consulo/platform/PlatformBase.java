@@ -16,7 +16,7 @@
 package consulo.platform;
 
 import consulo.container.plugin.PluginId;
-import com.intellij.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -28,7 +28,7 @@ import java.util.Properties;
 /**
  * @author VISTALL
  * @since 15-Sep-17
- *
+ * <p>
  * static fields from SystemInfo from IDEA
  */
 public abstract class PlatformBase implements Platform {
