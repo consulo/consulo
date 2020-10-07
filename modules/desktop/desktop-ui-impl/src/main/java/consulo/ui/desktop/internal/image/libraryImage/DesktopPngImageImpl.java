@@ -2,6 +2,7 @@ package consulo.ui.desktop.internal.image.libraryImage;
 
 import com.intellij.ui.JBColor;
 import com.intellij.util.JBHiDPIScaledImage;
+import com.intellij.util.RetinaImage;
 import com.intellij.util.io.UnsyncByteArrayInputStream;
 import com.intellij.util.ui.ImageUtil;
 import com.intellij.util.ui.JBUI;
@@ -103,12 +104,18 @@ public class DesktopPngImageImpl extends DesktopInnerImageImpl<DesktopPngImageIm
 
     image = image.scale(getWidth(), getHeight());
 
+    float ideScale = JBUI.scale(1f);
+
     java.awt.Image toPaintImage = image;
     if (myFilter != null) {
       ImageFilter imageFilter = myFilter.get();
       
       toPaintImage = ImageUtil.filter(toPaintImage, imageFilter);
 
+      if (ideScale > 1f) {
+        toPaintImage = RetinaImage.createFrom(toPaintImage, scale, null);
+      }
+      
       toPaintImage = ImageUtil.ensureHiDPI(toPaintImage, JBUI.ScaleContext.create(JBUI.Scale.create(getScale(JBUI.ScaleType.SYS_SCALE), JBUI.ScaleType.SYS_SCALE)));
 
       if(toPaintImage instanceof JBHiDPIScaledImage) {

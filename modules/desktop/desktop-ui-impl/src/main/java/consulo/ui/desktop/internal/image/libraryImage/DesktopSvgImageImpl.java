@@ -2,6 +2,7 @@ package consulo.ui.desktop.internal.image.libraryImage;
 
 import com.intellij.ui.paint.PaintUtil;
 import com.intellij.util.JBHiDPIScaledImage;
+import com.intellij.util.RetinaImage;
 import com.intellij.util.ui.GraphicsUtil;
 import com.intellij.util.ui.ImageUtil;
 import com.intellij.util.ui.JBUI;
@@ -47,7 +48,7 @@ public class DesktopSvgImageImpl extends DesktopInnerImageImpl<DesktopSvgImageIm
     double scale = 1f;
     if ((scale = getScale(JBUI.ScaleType.SYS_SCALE)) > 1f) {
       targetDiagram = myX2Diagram != null ? myX2Diagram : targetDiagram;
-      
+
       width *= scale;
       height *= scale;
     }
@@ -58,12 +59,19 @@ public class DesktopSvgImageImpl extends DesktopInnerImageImpl<DesktopSvgImageIm
     paintIcon(targetDiagram, g, 0, 0, width, height);
     g.dispose();
 
-    image = image.scale(JBUI.scale(1f));
+    float ideScale = JBUI.scale(1f);
+
+    image = image.scale(ideScale);
 
     java.awt.Image toPaintImage = image;
     if (myFilter != null) {
       ImageFilter imageFilter = myFilter.get();
+
       toPaintImage = ImageUtil.filter(toPaintImage, imageFilter);
+
+      if (ideScale > 1f) {
+        toPaintImage = RetinaImage.createFrom(toPaintImage, scale, null);
+      }
     }
 
     toPaintImage = ImageUtil.ensureHiDPI(toPaintImage, JBUI.ScaleContext.create(JBUI.Scale.create(getScale(JBUI.ScaleType.SYS_SCALE), JBUI.ScaleType.SYS_SCALE)));
