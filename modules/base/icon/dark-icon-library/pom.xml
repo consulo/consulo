@@ -31,25 +31,6 @@
 
   <packaging>jar</packaging>
 
-  <build>
-    <plugins>
-      <plugin>
-        <groupId>consulo.maven</groupId>
-        <artifactId>consulo-maven-plugin</artifactId>
-        <version>2-SNAPSHOT</version>
-        <extensions>true</extensions>
-        <executions>
-          <execution>
-            <phase>generate-sources</phase>
-            <goals>
-              <goal>generate-icon</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-    </plugins>
-  </build>
-
   <dependencies>
     <dependency>
       <groupId>${project.groupId}</groupId>
