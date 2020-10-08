@@ -16,6 +16,8 @@
 package consulo.ui.desktop.internal;
 
 import com.intellij.ui.scale.JBUIScale;
+import com.intellij.util.io.UnsyncByteArrayInputStream;
+import com.kitfox.svg.SVGDiagram;
 import consulo.awt.TargetAWT;
 import consulo.localize.LocalizeValue;
 import consulo.ui.Button;
@@ -28,7 +30,10 @@ import consulo.ui.Window;
 import consulo.ui.*;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.desktop.internal.image.*;
+import consulo.ui.desktop.internal.image.libraryImage.DesktopAWTImageImpl;
 import consulo.ui.desktop.internal.image.libraryImage.DesktopImageKeyImpl;
+import consulo.ui.desktop.internal.image.libraryImage.DesktopSvgImageImpl;
+import consulo.ui.desktop.internal.image.libraryImage.ThreadLocalSVGUniverse;
 import consulo.ui.desktop.internal.layout.*;
 import consulo.ui.desktop.internal.style.DesktopStyleManagerImpl;
 import consulo.ui.desktop.internal.textBox.*;
@@ -49,8 +54,13 @@ import consulo.ui.style.StyleManager;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Collection;
 import java.util.List;
@@ -64,13 +74,33 @@ import java.util.function.Supplier;
  */
 public class DesktopUIInternalImpl extends UIInternal {
   @Override
-  public Image _Image_fromUrl(URL url) {
-    return new DesktopImageImpl(url);
+  public Image _Image_fromUrl(URL url) throws IOException {
+
+    if (url.toString().endsWith(".svg")) {
+      ThreadLocalSVGUniverse svgUniverse = new ThreadLocalSVGUniverse();
+
+      try {
+        SVGDiagram diagram = svgUniverse.getDiagram(url.toURI());
+        return new DesktopSvgImageImpl(diagram, null, (int)diagram.getWidth(), (int)diagram.getHeight(), null);
+      }
+      catch (URISyntaxException e) {
+        throw new IOException(e);
+      }
+    }
+    else {
+      BufferedImage image;
+      try (InputStream stream = url.openStream()) {
+        image = ImageIO.read(stream);
+      }
+
+      return new DesktopAWTImageImpl(new DesktopAWTImageImpl.ImageBytes(null, image), null, image.getWidth(), image.getHeight(), null);
+    }
   }
 
   @Override
-  public Image _Image_fromBytes(byte[] bytes, int width, int height) {
-    return new DesktopFromBytesImageImpl(bytes, width, height);
+  public Image _Image_fromBytes(byte[] bytes, int width, int height) throws IOException {
+    BufferedImage image = ImageIO.read(new UnsyncByteArrayInputStream(bytes));
+    return new DesktopAWTImageImpl(new DesktopAWTImageImpl.ImageBytes(null, image), null, width, height, null);
   }
 
   @Override

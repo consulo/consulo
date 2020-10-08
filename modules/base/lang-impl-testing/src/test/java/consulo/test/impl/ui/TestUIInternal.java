@@ -30,6 +30,7 @@ import consulo.ui.style.StyleManager;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.io.IOException;
 import java.net.URL;
 import java.util.Collection;
 import java.util.List;
@@ -171,12 +172,12 @@ public class TestUIInternal extends UIInternal {
   }
 
   @Override
-  public Image _Image_fromUrl(URL url) {
+  public Image _Image_fromUrl(URL url) throws IOException {
     return ourDummyRef;
   }
 
   @Override
-  public Image _Image_fromBytes(byte[] bytes, int width, int height) {
+  public Image _Image_fromBytes(byte[] bytes, int width, int height) throws IOException {
     return ourDummyRef;
   }
 

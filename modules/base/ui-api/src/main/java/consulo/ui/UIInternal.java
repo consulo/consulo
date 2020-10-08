@@ -37,6 +37,7 @@ import consulo.ui.style.StyleManager;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.io.IOException;
 import java.net.URL;
 import java.util.Collection;
 import java.util.Iterator;
@@ -138,9 +139,9 @@ public abstract class UIInternal {
     throw new UnsupportedOperationException();
   }
 
-  public abstract Image _Image_fromUrl(URL url);
+  public abstract Image _Image_fromUrl(URL url) throws IOException;
 
-  public abstract Image _Image_fromBytes(byte[] bytes, int width, int height);
+  public abstract Image _Image_fromBytes(byte[] bytes, int width, int height) throws IOException;
 
   public abstract Image _Image_lazy(Supplier<Image> imageSupplier);
 

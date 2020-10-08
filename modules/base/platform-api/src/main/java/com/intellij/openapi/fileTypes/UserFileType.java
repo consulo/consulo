@@ -65,7 +65,7 @@ public abstract class UserFileType<T extends UserFileType> implements FileType, 
         try {
           icon = Image.fromUrl(new File(myIconPath).toURI().toURL());
         }
-        catch (MalformedURLException ignored) {
+        catch (Exception ignored) {
         }
         myIcon = icon;
       }

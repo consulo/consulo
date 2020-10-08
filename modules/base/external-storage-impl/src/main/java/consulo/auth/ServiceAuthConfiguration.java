@@ -18,10 +18,10 @@ package consulo.auth;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.components.*;
-import consulo.logging.Logger;
 import com.intellij.util.io.HttpRequests;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.xmlb.XmlSerializerUtil;
+import consulo.logging.Logger;
 import consulo.ui.image.Image;
 import org.apache.commons.codec.digest.DigestUtils;
 
@@ -87,7 +87,11 @@ public class ServiceAuthConfiguration implements PersistentStateComponent<Servic
     String iconBytes = myState.iconBytes;
     if (iconBytes != null) {
       byte[] bytes = Base64.getDecoder().decode(iconBytes);
-      myUserIcon = Image.fromBytes(bytes, AllIcons.Actions.Find.getWidth(), AllIcons.Actions.Find.getHeight());
+      try {
+        myUserIcon = Image.fromBytes(bytes, AllIcons.Actions.Find.getWidth(), AllIcons.Actions.Find.getHeight());
+      }
+      catch (IOException ignored) {
+      }
     }
     return myUserIcon;
   }

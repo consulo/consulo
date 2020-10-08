@@ -21,8 +21,8 @@ import java.util.function.Supplier;
  * @author VISTALL
  * @since 2020-09-30
  */
-public class DesktopPngImageImpl extends DesktopInnerImageImpl<DesktopPngImageImpl> {
-  private static final Logger LOG = Logger.getInstance(DesktopPngImageImpl.class);
+public class DesktopAWTImageImpl extends DesktopInnerImageImpl<DesktopAWTImageImpl> {
+  private static final Logger LOG = Logger.getInstance(DesktopAWTImageImpl.class);
 
   public static class ImageBytes {
     public static ImageBytes of(@Nullable byte[] data) {
@@ -67,7 +67,7 @@ public class DesktopPngImageImpl extends DesktopInnerImageImpl<DesktopPngImageIm
   private final ImageBytes myX1Data;
   private final ImageBytes myX2Data;
 
-  public DesktopPngImageImpl(@Nonnull ImageBytes x1Data, @Nullable ImageBytes x2Data, int width, int height, @Nullable Supplier<ImageFilter> imageFilterSupplier) {
+  public DesktopAWTImageImpl(@Nonnull ImageBytes x1Data, @Nullable ImageBytes x2Data, int width, int height, @Nullable Supplier<ImageFilter> imageFilterSupplier) {
     super(width, height, imageFilterSupplier);
 
     myX1Data = x1Data;
@@ -76,8 +76,8 @@ public class DesktopPngImageImpl extends DesktopInnerImageImpl<DesktopPngImageIm
 
   @Nonnull
   @Override
-  protected DesktopPngImageImpl withFilter(@Nullable Supplier<ImageFilter> filter) {
-    return new DesktopPngImageImpl(myX1Data, myX2Data, myWidth, myHeight, filter);
+  protected DesktopAWTImageImpl withFilter(@Nullable Supplier<ImageFilter> filter) {
+    return new DesktopAWTImageImpl(myX1Data, myX2Data, myWidth, myHeight, filter);
   }
 
   @SuppressWarnings("UndesirableClassUsage")

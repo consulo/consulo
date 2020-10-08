@@ -42,6 +42,7 @@ import javax.inject.Singleton;
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import java.io.File;
+import java.io.IOException;
 import java.util.*;
 
 /**
@@ -330,7 +331,14 @@ public class CustomActionsSchema implements JDOMExternalizable {
         Image icon;
         final String iconPath = myIconCustomizations.get(actionId);
         if (iconPath != null && new File(FileUtil.toSystemDependentName(iconPath)).exists()) {
-          icon = Image.fromUrl(VfsUtil.convertToURL(VfsUtil.pathToUrl(iconPath)));
+          try {
+            icon = Image.fromUrl(VfsUtil.convertToURL(VfsUtil.pathToUrl(iconPath)));
+          }
+          catch (IOException e) {
+            icon = AllIcons.Toolbar.Unknown;
+
+            LOG.warn(e);
+          }
         }
         else {
           icon = AllIcons.Toolbar.Unknown;

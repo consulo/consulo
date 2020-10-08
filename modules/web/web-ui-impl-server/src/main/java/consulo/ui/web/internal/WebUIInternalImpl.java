@@ -37,6 +37,7 @@ import consulo.ui.web.internal.layout.*;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.io.IOException;
 import java.net.URL;
 import java.util.Collection;
 import java.util.List;
@@ -76,7 +77,7 @@ public class WebUIInternalImpl extends UIInternal {
 
   @Override
   public TwoComponentSplitLayout _TwoComponentSplitLayout_create(SplitLayoutPosition position) {
-    if(position == SplitLayoutPosition.HORIZONTAL) {
+    if (position == SplitLayoutPosition.HORIZONTAL) {
       return new WebHorizontalTwoComponentSplitLayoutImpl();
     }
     else if (position == SplitLayoutPosition.VERTICAL) {
@@ -189,12 +190,12 @@ public class WebUIInternalImpl extends UIInternal {
   }
 
   @Override
-  public Image _Image_fromUrl(URL url) {
+  public Image _Image_fromUrl(URL url) throws IOException {
     return new WebImageImpl(url);
   }
 
   @Override
-  public Image _Image_fromBytes(byte[] bytes, int width, int height) {
+  public Image _Image_fromBytes(byte[] bytes, int width, int height) throws IOException {
     return null;
   }
 
@@ -334,7 +335,7 @@ public class WebUIInternalImpl extends UIInternal {
     UI ui = UI.getCurrent();
     assert ui != null;
     Object data = ui.getData();
-    if(data != null) {
+    if (data != null) {
       return (UIAccess)data;
     }
     else {

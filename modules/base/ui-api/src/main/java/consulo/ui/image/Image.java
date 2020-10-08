@@ -16,8 +16,9 @@
 package consulo.ui.image;
 
 import consulo.ui.UIInternal;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
+import java.io.IOException;
 import java.net.URL;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -33,17 +34,20 @@ public interface Image {
 
   @Nonnull
   @Deprecated
-  static Image create(@Nonnull URL url) {
+  static Image create(@Nonnull URL url) throws IOException {
     return fromUrl(url);
   }
 
   @Nonnull
-  static Image fromUrl(@Nonnull URL url) {
+  static Image fromUrl(@Nonnull URL url) throws IOException {
     return UIInternal.get()._Image_fromUrl(url);
   }
 
+  /**
+   * Return image from bytes. JPG, PNG only
+   */
   @Nonnull
-  static Image fromBytes(@Nonnull byte[] bytes, int width, int height) {
+  static Image fromBytes(@Nonnull byte[] bytes, int width, int height) throws IOException {
     return UIInternal.get()._Image_fromBytes(bytes, width, height);
   }
 

@@ -44,6 +44,7 @@ import com.kitfox.svg.SVGCache;
 import com.kitfox.svg.SVGDiagram;
 import com.kitfox.svg.SVGException;
 import com.kitfox.svg.SVGUniverse;
+import consulo.annotation.DeprecationInfo;
 
 import javax.annotation.Nonnull;
 import java.awt.*;
@@ -57,6 +58,8 @@ import java.util.function.Supplier;
 /**
  * @author kitfox
  */
+@Deprecated
+@DeprecationInfo("Old svg icon implementation, used by old icon loader. Use ImageKey, or target DesktopSvgImageImpl impl")
 class SVGIconImpl extends JBUI.CachingScalableJBIcon<SVGIconImpl> {
   public static final long serialVersionUID = 1;
 

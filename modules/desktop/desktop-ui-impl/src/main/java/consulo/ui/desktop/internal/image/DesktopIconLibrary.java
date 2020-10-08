@@ -18,7 +18,7 @@ package consulo.ui.desktop.internal.image;
 import com.intellij.util.io.UnsyncByteArrayInputStream;
 import com.kitfox.svg.SVGDiagram;
 import consulo.logging.Logger;
-import consulo.ui.desktop.internal.image.libraryImage.DesktopPngImageImpl;
+import consulo.ui.desktop.internal.image.libraryImage.DesktopAWTImageImpl;
 import consulo.ui.desktop.internal.image.libraryImage.DesktopSvgImageImpl;
 import consulo.ui.desktop.internal.image.libraryImage.ThreadLocalSVGUniverse;
 import consulo.ui.image.Image;
@@ -68,7 +68,7 @@ public class DesktopIconLibrary extends IconLibrary {
       }
     }
     else {
-      return new DesktopPngImageImpl(DesktopPngImageImpl.ImageBytes.of(_1xData), DesktopPngImageImpl.ImageBytes.of(_2xdata), width, height, null);
+      return new DesktopAWTImageImpl(DesktopAWTImageImpl.ImageBytes.of(_1xData), DesktopAWTImageImpl.ImageBytes.of(_2xdata), width, height, null);
     }
   }
 }
