@@ -20,6 +20,7 @@ import consulo.ui.*;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.font.FontManager;
 import consulo.ui.image.Image;
+import consulo.ui.image.ImageKey;
 import consulo.ui.image.canvas.Canvas2D;
 import consulo.ui.layout.*;
 import consulo.ui.model.ListModel;
@@ -319,5 +320,10 @@ public class TestUIInternal extends UIInternal {
   @Override
   public FoldoutLayout _Layouts_foldout(LocalizeValue titleValue, Component component, boolean show) {
     return null;
+  }
+
+  @Override
+  public ImageKey _ImageKey_of(@Nonnull String groupId, @Nonnull String imageId, int width, int height) {
+    return new TestImageKey(groupId, imageId, width, height);
   }
 }
