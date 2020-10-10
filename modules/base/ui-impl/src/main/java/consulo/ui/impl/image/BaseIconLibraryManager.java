@@ -280,7 +280,7 @@ public abstract class BaseIconLibraryManager implements IconLibraryManager {
       iconPath = iconPath.substring(0, iconPath.length() - 3);
     }
 
-    String imageId = iconPath.replace("/", ".").toLowerCase(Locale.ROOT);
+    String imageId = iconPath.replace("/", ".").replace("-", "_").toLowerCase(Locale.ROOT);
 
     JarIcon icon = iconUrls.get(imageId);
     if (icon != null) {

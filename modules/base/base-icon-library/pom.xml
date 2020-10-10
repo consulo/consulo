@@ -21,15 +21,34 @@
     <groupId>consulo</groupId>
     <artifactId>arch.global</artifactId>
     <version>2-SNAPSHOT</version>
-    <relativePath>../../../../arch/global/pom.xml</relativePath>
+    <relativePath>../../../arch/global/pom.xml</relativePath>
   </parent>
 
   <modelVersion>4.0.0</modelVersion>
 
-  <artifactId>consulo-dark-icon-library</artifactId>
+  <artifactId>consulo-base-icon-library</artifactId>
   <version>2-SNAPSHOT</version>
 
   <packaging>jar</packaging>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>consulo.maven</groupId>
+        <artifactId>consulo-maven-plugin</artifactId>
+        <version>2-SNAPSHOT</version>
+        <extensions>true</extensions>
+        <executions>
+          <execution>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>generate-icon</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
 
   <dependencies>
     <dependency>

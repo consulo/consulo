@@ -1368,7 +1368,7 @@ label.font.name:
 label.font.size:
   text: 'Size:'
 combobox.look.and.feel:
-  text: 'Theme'
+  text: 'UI Theme'
 combobox.icon.theme:
   text: Icon Theme
 combobox.icon.theme.ui.default:

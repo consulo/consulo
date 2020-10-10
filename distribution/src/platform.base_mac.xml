@@ -94,7 +94,6 @@
 
         <include>consulo:consulo-base-localize-library</include>
         <include>consulo:consulo-base-icon-library</include>
-        <include>consulo:consulo-dark-icon-library</include>
 
         <!--util group-->
         <include>consulo:consulo-util-advanced-proxy</include>

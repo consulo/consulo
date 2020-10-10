@@ -34,8 +34,7 @@
     <module>modules/desktop/desktop-ui-laf-impl</module>
     <module>modules/desktop/desktop-graph-impl</module>
     <module>modules/desktop/desktop-util-awt</module>
-    <module>modules/desktop/icon/desktop-base-laf-icon-library</module>
-    <module>modules/desktop/icon/desktop-dark-laf-icon-library</module>
+    <module>modules/desktop/desktop-base-laf-icon-library</module>
     <module>plugins/platform-desktop</module>
 
     <module>modules/web/web-bootstrap</module>
@@ -59,8 +58,7 @@
     <module>modules/base/analysis-api</module>
     <module>modules/base/analysis-impl</module>
     <module>modules/base/base-localize-library</module>
-    <module>modules/base/icon/base-icon-library</module>
-    <module>modules/base/icon/dark-icon-library</module>
+    <module>modules/base/base-icon-library</module>
     <module>modules/base/built-in-server-api</module>
     <module>modules/base/built-in-server-impl</module>
     <module>modules/base/core-api</module>
