@@ -23,8 +23,7 @@ import consulo.ui.desktop.internal.image.libraryImage.DesktopSvgImageImpl;
 import consulo.ui.desktop.internal.image.libraryImage.ThreadLocalSVGUniverse;
 import consulo.ui.image.Image;
 import consulo.ui.impl.image.BaseIconLibraryManager;
-import consulo.ui.impl.image.IconLibrary;
-import consulo.ui.impl.image.IconLibraryId;
+import consulo.ui.impl.image.BaseIconLibraryImpl;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -36,12 +35,12 @@ import java.util.Objects;
  * @author VISTALL
  * @since 2020-09-27
  */
-public class DesktopIconLibrary extends IconLibrary {
+public class DesktopIconLibrary extends BaseIconLibraryImpl {
   private static final Logger LOG = Logger.getInstance(DesktopIconLibrary.class);
 
   private final ThreadLocalSVGUniverse mySVGUniverse = new ThreadLocalSVGUniverse();
   
-  public DesktopIconLibrary(IconLibraryId id, BaseIconLibraryManager baseIconLibraryManager) {
+  public DesktopIconLibrary(String id, BaseIconLibraryManager baseIconLibraryManager) {
     super(id, baseIconLibraryManager);
   }
 
@@ -50,13 +49,13 @@ public class DesktopIconLibrary extends IconLibrary {
   protected Image createImage(@Nonnull byte[] _1xData, @Nullable byte[] _2xdata, boolean isSVG, int width, int height, String groupId, String imageId) {
     if (isSVG) {
       try {
-        URI _x1Url = mySVGUniverse.loadSVG(new UnsyncByteArrayInputStream(_1xData), getId().getId() + "/" + groupId + "/" + imageId);
+        URI _x1Url = mySVGUniverse.loadSVG(new UnsyncByteArrayInputStream(_1xData), getId() + "/" + groupId + "/" + imageId);
 
         SVGDiagram _x1Diagram = Objects.requireNonNull(mySVGUniverse.getDiagram(_x1Url, false));
         SVGDiagram _x2Diagram = null;
 
         if(_2xdata != null) {
-          URI _x2Url = mySVGUniverse.loadSVG(new UnsyncByteArrayInputStream(_2xdata), getId().getId() + "/" + groupId + "/" + imageId + "/2x");
+          URI _x2Url = mySVGUniverse.loadSVG(new UnsyncByteArrayInputStream(_2xdata), getId() + "/" + groupId + "/" + imageId + "/2x");
           _x2Diagram = Objects.requireNonNull(mySVGUniverse.getDiagram(_x2Url));
         }
 

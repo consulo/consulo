@@ -17,8 +17,7 @@ package consulo.ui.desktop.internal.image;
 
 import consulo.ui.image.Image;
 import consulo.ui.impl.image.BaseIconLibraryManager;
-import consulo.ui.impl.image.IconLibrary;
-import consulo.ui.impl.image.IconLibraryId;
+import consulo.ui.impl.image.BaseIconLibraryImpl;
 
 import javax.annotation.Nonnull;
 
@@ -31,7 +30,7 @@ public class DesktopIconLibraryManagerImpl extends BaseIconLibraryManager {
 
   @Nonnull
   @Override
-  protected IconLibrary createLibrary(@Nonnull IconLibraryId id) {
+  protected BaseIconLibraryImpl createLibrary(@Nonnull String id) {
     return new DesktopIconLibrary(id, this);
   }
 

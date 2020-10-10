@@ -13,24 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui.web.internal.image;
+package consulo.ui.image;
 
-import consulo.ui.impl.image.BaseIconLibraryManager;
-import consulo.ui.impl.image.BaseIconLibraryImpl;
-import consulo.ui.impl.image.IconLibraryId;
+import consulo.localize.LocalizeValue;
 
 import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
- * @since 2020-10-03
+ * @since 2020-10-09
  */
-public class WebIconLibraryManagerImpl extends BaseIconLibraryManager {
-  public static final WebIconLibraryManagerImpl ourInstance = new WebIconLibraryManagerImpl();
+public interface IconLibrary {
+  @Nonnull
+  String getId();
 
   @Nonnull
-  @Override
-  protected BaseIconLibraryImpl createLibrary(@Nonnull String id) {
-    return new WebIconLibrary(id, this);
-  }
+  LocalizeValue getName();
 }

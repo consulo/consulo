@@ -16,46 +16,21 @@
 package consulo.ui.image;
 
 import consulo.localize.LocalizeValue;
-import consulo.ui.UIInternal;
-import consulo.ui.style.Style;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.Map;
-import java.util.Set;
 
 /**
  * @author VISTALL
- * @since 2020-09-26
+ * @since 2020-10-08
  */
-public interface IconLibraryManager {
-  String LIGHT_LIBRARY_ID = "Default";
-  String DARK_LIBRARY_ID = "Dark";
+public interface IconLibraryDescriptor {
+  @Nonnull
+  String getLibraryId();
+
+  @Nullable
+  String getBaseLibraryId();
 
   @Nonnull
-  public static IconLibraryManager get() {
-    return UIInternal.get()._IconLibraryManager_get();
-  }
-
-  @Nonnull
-  Map<String, IconLibrary> getLibraries();
-
-  @Nonnull
-  String getActiveLibraryId();
-
-  @Nonnull
-  IconLibrary getActiveLibrary();
-
-  @Nonnull
-  default Image forceChangeLibrary(@Nonnull String libraryId, @Nonnull Image image) {
-    return image;
-  }
-
-  boolean isFromStyle();
-
-  void setActiveLibrary(@Nullable String iconLibraryId);
-
-  void setActiveLibraryFromStyle(@Nonnull Style style);
-
-  long getModificationCount();
+  LocalizeValue getName();
 }

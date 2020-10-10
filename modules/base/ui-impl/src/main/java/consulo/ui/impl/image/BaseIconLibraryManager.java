@@ -18,7 +18,12 @@ package consulo.ui.impl.image;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.io.StreamUtil;
 import com.intellij.util.io.URLUtil;
+import consulo.annotation.ReviewAfterMigrationToJRE;
+import consulo.container.plugin.PluginDescriptor;
+import consulo.container.plugin.PluginManager;
 import consulo.logging.Logger;
+import consulo.ui.image.IconLibrary;
+import consulo.ui.image.IconLibraryDescriptor;
 import consulo.ui.image.IconLibraryManager;
 import consulo.ui.image.Image;
 import consulo.ui.style.Style;
@@ -60,12 +65,12 @@ public abstract class BaseIconLibraryManager implements IconLibraryManager {
   private Map<String, IconLibrary> myLibraries = new HashMap<>();
 
   private String myActiveLibraryId;
-  private IconLibrary myActiveLibrary;
+  private BaseIconLibraryImpl myActiveLibrary;
 
   @Nonnull
   @Override
-  public Set<String> getLibrariesId() {
-    return myLibraries.keySet();
+  public Map<String, IconLibrary> getLibraries() {
+    return Collections.unmodifiableMap(myLibraries);
   }
 
   @Nonnull
@@ -94,7 +99,7 @@ public abstract class BaseIconLibraryManager implements IconLibraryManager {
 
   @Override
   public void setActiveLibrary(@Nullable String id) {
-    if(id == null) {
+    if (id == null) {
       myActiveLibraryId = null;
       myActiveLibrary = null;
       myModificationCount.incrementAndGet();
@@ -102,9 +107,9 @@ public abstract class BaseIconLibraryManager implements IconLibraryManager {
     }
 
     IconLibrary iconLibrary = myLibraries.get(id);
-    if(iconLibrary != null) {
+    if (iconLibrary != null) {
       myActiveLibraryId = id;
-      myActiveLibrary = iconLibrary;
+      myActiveLibrary = (BaseIconLibraryImpl)iconLibrary;
       myModificationCount.incrementAndGet();
     }
     else {
@@ -120,16 +125,17 @@ public abstract class BaseIconLibraryManager implements IconLibraryManager {
   }
 
   @Nullable
-  public IconLibrary getLibrary(@Nonnull String id) {
-    return myLibraries.get(id);
+  public BaseIconLibraryImpl getLibrary(@Nonnull String id) {
+    return (BaseIconLibraryImpl)myLibraries.get(id);
   }
 
+  @Override
   @Nonnull
-  public IconLibrary getActiveLibrary() {
+  public BaseIconLibraryImpl getActiveLibrary() {
     if (myActiveLibrary == null) {
       String activeLibraryId = getActiveLibraryId();
-      
-      myActiveLibrary = myLibraries.get(activeLibraryId);
+
+      myActiveLibrary = (BaseIconLibraryImpl)myLibraries.get(activeLibraryId);
     }
 
     if (myActiveLibrary == null) {
@@ -139,7 +145,7 @@ public abstract class BaseIconLibraryManager implements IconLibraryManager {
   }
 
   @Nonnull
-  protected abstract IconLibrary createLibrary(@Nonnull IconLibraryId id);
+  protected abstract BaseIconLibraryImpl createLibrary(@Nonnull String id);
 
   public void initialize(@Nullable List<String> files) {
     if (myInitialized.compareAndSet(false, true)) {
@@ -148,7 +154,7 @@ public abstract class BaseIconLibraryManager implements IconLibraryManager {
       }
 
       Set<String> analyzedGroups = new HashSet<>();
-      
+
       for (String file : files) {
         try {
           analyzeLibraryJar(file, analyzedGroups);
@@ -157,8 +163,42 @@ public abstract class BaseIconLibraryManager implements IconLibraryManager {
           LOG.error("Fail to analyze library from url: " + file, e);
         }
       }
+
+      Map<String, IconLibraryDescriptor> descriptors = getAllDescriptors();
+
+      for (Map.Entry<String, IconLibrary> entry : myLibraries.entrySet()) {
+        String libraryId = entry.getKey();
+
+        BaseIconLibraryImpl iconLibrary = (BaseIconLibraryImpl)entry.getValue();
+
+        IconLibraryDescriptor descriptor = descriptors.get(libraryId);
+        if(descriptor != null) {
+          iconLibrary.setBaseId(descriptor.getBaseLibraryId());
+          iconLibrary.setName(descriptor.getName());
+        }
+      }
       myModificationCount.incrementAndGet();
     }
+  }
+
+  @Nonnull
+  @ReviewAfterMigrationToJRE(value = 9, description = "Use consulo.container.plugin.util.PlatformServiceLocator#findImplementation after migration")
+  private static Map<String, IconLibraryDescriptor> getAllDescriptors() {
+    Map<String, IconLibraryDescriptor> list = new HashMap<>();
+
+    for (IconLibraryDescriptor value : ServiceLoader.load(IconLibraryDescriptor.class, BaseIconLibraryManager.class.getClassLoader())) {
+      list.putIfAbsent(value.getLibraryId(), value);
+    }
+
+    for (PluginDescriptor descriptor : PluginManager.getPlugins()) {
+      ServiceLoader<IconLibraryDescriptor> loader = ServiceLoader.load(IconLibraryDescriptor.class, descriptor.getPluginClassLoader());
+
+      for (IconLibraryDescriptor libraryDescriptor : loader) {
+        list.putIfAbsent(libraryDescriptor.getLibraryId(), libraryDescriptor);
+      }
+    }
+
+    return list;
   }
 
   private void analyzeLibraryJar(@Nonnull String filePath, @Nonnull Set<String> analyzedGroups) throws IOException {
@@ -196,17 +236,17 @@ public abstract class BaseIconLibraryManager implements IconLibraryManager {
     }
 
     String[] split = libraryText.split(":");
-    IconLibraryId iconLibraryId = extractName(split[0]);
+    String iconLibraryId = extractName(split[0]);
     String groupId = split[1];
 
     String prefix = "icon/" + groupId.replace(".", "/") + "/";
 
-    if (!analyzedGroups.add(iconLibraryId.getId() + ":" + groupId)) {
-      LOG.error("Can't redefine icon group " + groupId + " in library " + iconLibraryId.getId() + ". Path: " + filePath);
+    if (!analyzedGroups.add(iconLibraryId + ":" + groupId)) {
+      LOG.error("Can't redefine icon group " + groupId + " in library " + iconLibraryId + ". Path: " + filePath);
       return;
     }
 
-    IconLibrary lib = myLibraries.computeIfAbsent(iconLibraryId.getId(), it -> createLibrary(iconLibraryId));
+    BaseIconLibraryImpl lib = (BaseIconLibraryImpl)myLibraries.computeIfAbsent(iconLibraryId, it -> createLibrary(iconLibraryId));
 
     for (Map.Entry<String, JarIcon> entry : iconUrls.entrySet()) {
       String iconPath = entry.getKey();
@@ -228,12 +268,13 @@ public abstract class BaseIconLibraryManager implements IconLibraryManager {
   }
 
   @Nonnull
-  private IconLibraryId extractName(@Nonnull String nameFull) {
-    if(nameFull.contains(">")) {
+  @Deprecated
+  private String extractName(@Nonnull String nameFull) {
+    if (nameFull.contains(">")) {
       String[] split = nameFull.split(">");
-      return new IconLibraryId(split[0], split[1]);
+      return split[0];
     }
-    return new IconLibraryId(nameFull, null);
+    return nameFull;
   }
 
   private boolean processMaybeIconFile(@Nonnull final String fileName,
@@ -301,16 +342,16 @@ public abstract class BaseIconLibraryManager implements IconLibraryManager {
 
   @Nullable
   public Image getIcon(@Nullable String forceIconLibraryId, String libraryId, String imageId, int width, int height) {
-    if(forceIconLibraryId != null) {
-      IconLibrary targetIconLibrary = myLibraries.get(forceIconLibraryId);
-      if(targetIconLibrary != null) {
+    if (forceIconLibraryId != null) {
+      BaseIconLibraryImpl targetIconLibrary = (BaseIconLibraryImpl)myLibraries.get(forceIconLibraryId);
+      if (targetIconLibrary != null) {
         Image icon = targetIconLibrary.getIcon(libraryId, imageId, width, height);
-        if(icon != null) {
+        if (icon != null) {
           return icon;
         }
       }
     }
-    IconLibrary iconLibrary = getActiveLibrary();
+    BaseIconLibraryImpl iconLibrary = getActiveLibrary();
     return iconLibrary.getIcon(libraryId, imageId, width, height);
   }
 }

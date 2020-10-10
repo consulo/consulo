@@ -242,7 +242,7 @@ public final class LafManagerImpl extends LafManager implements Disposable, Pers
 
     String iconId = element.getChildText(ELEMENT_ICON);
     if(iconId != null) {
-      if(myIconLibraryManager.getLibrariesId().contains(iconId)) {
+      if(myIconLibraryManager.getLibraries().containsKey(iconId)) {
         myIconLibraryManager.setActiveLibrary(iconId);
       }
       else {

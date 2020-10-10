@@ -13,34 +13,35 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui.impl.image;
+package consulo.ui.impl;
+
+import consulo.localize.LocalizeValue;
+import consulo.ui.image.IconLibraryDescriptor;
+import consulo.ui.image.IconLibraryManager;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
- * @since 2020-10-02
+ * @since 2020-10-08
  */
-public class IconLibraryId {
-  private final String myId;
-  private final String myBaseId;
-
-  public IconLibraryId(@Nonnull String id, @Nullable String baseId) {
-    myId = id;
-    myBaseId = baseId;
-  }
-
-  public String getId() {
-    return myId;
-  }
-
-  public String getBaseId() {
-    return myBaseId;
-  }
-
+public class LightIconLibraryDescriptor implements IconLibraryDescriptor {
+  @Nonnull
   @Override
-  public String toString() {
-    return "IconLibName{" + "myId='" + myId + '\'' + ", myBaseId='" + myBaseId + '\'' + '}';
+  public String getLibraryId() {
+    return IconLibraryManager.LIGHT_LIBRARY_ID;
+  }
+
+  @Nullable
+  @Override
+  public String getBaseLibraryId() {
+    return null;
+  }
+
+  @Nonnull
+  @Override
+  public LocalizeValue getName() {
+    return LocalizeValue.of("Light");
   }
 }

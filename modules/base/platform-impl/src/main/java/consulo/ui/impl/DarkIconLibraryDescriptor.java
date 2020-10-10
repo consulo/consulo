@@ -13,28 +13,35 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui.web.internal.image;
+package consulo.ui.impl;
 
-import consulo.ui.image.Image;
-import consulo.ui.impl.image.BaseIconLibraryManager;
-import consulo.ui.impl.image.BaseIconLibraryImpl;
-import consulo.ui.impl.image.IconLibraryId;
+import consulo.localize.LocalizeValue;
+import consulo.ui.image.IconLibraryDescriptor;
+import consulo.ui.image.IconLibraryManager;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
- * @since 2020-10-03
+ * @since 2020-10-08
  */
-public class WebIconLibrary extends BaseIconLibraryImpl {
-  public WebIconLibrary(@Nonnull String id, @Nonnull BaseIconLibraryManager baseIconLibraryManager) {
-    super(id, baseIconLibraryManager);
+public class DarkIconLibraryDescriptor implements IconLibraryDescriptor {
+  @Nonnull
+  @Override
+  public String getLibraryId() {
+    return IconLibraryManager.DARK_LIBRARY_ID;
   }
 
   @Nullable
   @Override
-  protected Image createImage(@Nonnull byte[] _1xData, @Nullable byte[] _2xdata, boolean isSVG, int width, int height, String groupId, String imageId) {
-    return new WebDataImageImpl(_1xData, _2xdata, isSVG, width, height);
+  public String getBaseLibraryId() {
+    return IconLibraryManager.LIGHT_LIBRARY_ID;
+  }
+
+  @Nonnull
+  @Override
+  public LocalizeValue getName() {
+    return LocalizeValue.of("Dark");
   }
 }

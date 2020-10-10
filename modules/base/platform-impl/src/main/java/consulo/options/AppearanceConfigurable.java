@@ -30,6 +30,7 @@ import consulo.ui.*;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.font.Font;
 import consulo.ui.font.FontManager;
+import consulo.ui.image.IconLibrary;
 import consulo.ui.image.IconLibraryManager;
 import consulo.ui.layout.*;
 import consulo.ui.shared.StaticPosition;
@@ -40,9 +41,7 @@ import consulo.util.lang.Comparing;
 import consulo.util.lang.ObjectUtil;
 
 import javax.annotation.Nonnull;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author VISTALL
@@ -99,14 +98,15 @@ public class AppearanceConfigurable extends SimpleConfigurable<AppearanceConfigu
 
       List<Object> iconThemes = new ArrayList<>();
       iconThemes.add(ObjectUtil.NULL);
-      iconThemes.addAll(IconLibraryManager.get().getLibrariesId());
+      Map<String, IconLibrary> libraries = IconLibraryManager.get().getLibraries();
+      iconThemes.addAll(libraries.values());
       myIconThemeComboBox = ComboBox.create(iconThemes);
       myIconThemeComboBox.setRender((render, index, item) -> {
         if (item == ObjectUtil.NULL) {
           render.append(IdeLocalize.comboboxIconThemeUiDefault());
         }
         else {
-          render.append(item.toString());
+          render.append(((IconLibrary)item).getName());
         }
       });
       uiOptions.add(LabeledBuilder.simple(IdeLocalize.comboboxIconTheme(), myIconThemeComboBox));
@@ -254,7 +254,7 @@ public class AppearanceConfigurable extends SimpleConfigurable<AppearanceConfigu
     isModified |= component.myAltDNDCheckBox.getValue() != settings.DND_WITH_PRESSED_ALT_ONLY;
     isModified |= component.mySmoothScrollingBox.getValue() != settings.SMOOTH_SCROLLING;
     isModified |= !Comparing.equal(component.myLafComboBox.getValue(), StyleManager.get().getCurrentStyle());
-    isModified |= !Comparing.equal(component.myIconThemeComboBox.getValue(), getActiveIconLibraryIdOrNull());
+    isModified |= !Comparing.equal(component.myIconThemeComboBox.getValue(), getActiveIconLibraryOrNull());
 
     return isModified;
   }
@@ -291,7 +291,7 @@ public class AppearanceConfigurable extends SimpleConfigurable<AppearanceConfigu
     component.myEditorTooltipCheckBox.setValue(settings.SHOW_EDITOR_TOOLTIP);
     component.myDisableMnemonicInControlsCheckBox.setValue(settings.DISABLE_MNEMONICS_IN_CONTROLS);
     component.mySmoothScrollingBox.setValue(settings.SMOOTH_SCROLLING);
-    component.myIconThemeComboBox.setValue(getActiveIconLibraryIdOrNull());
+    component.myIconThemeComboBox.setValue(getActiveIconLibraryOrNull());
   }
 
   @RequiredUIAccess
@@ -389,14 +389,14 @@ public class AppearanceConfigurable extends SimpleConfigurable<AppearanceConfigu
         refreshUI = true;
       }
 
-      if (!Comparing.equal(component.myIconThemeComboBox.getValue(), getActiveIconLibraryIdOrNull())) {
+      if (!Comparing.equal(component.myIconThemeComboBox.getValue(), getActiveIconLibraryOrNull())) {
         Object iconLib = component.myIconThemeComboBox.getValue();
 
         if (iconLib == ObjectUtil.NULL) {
           IconLibraryManager.get().setActiveLibrary(null);
         }
         else {
-          IconLibraryManager.get().setActiveLibrary(String.valueOf(iconLib));
+          IconLibraryManager.get().setActiveLibrary(((IconLibrary)iconLib).getId());
         }
 
         refreshUI = true;
@@ -415,14 +415,14 @@ public class AppearanceConfigurable extends SimpleConfigurable<AppearanceConfigu
   }
 
   @Nonnull
-  private static Object getActiveIconLibraryIdOrNull() {
+  private static Object getActiveIconLibraryOrNull() {
     IconLibraryManager iconLibraryManager = IconLibraryManager.get();
 
     if (iconLibraryManager.isFromStyle()) {
       return ObjectUtil.NULL;
     }
 
-    return iconLibraryManager.getActiveLibraryId();
+    return iconLibraryManager.getActiveLibrary();
   }
 
   private static int getIntValue(TextBox combo, int defaultValue) {

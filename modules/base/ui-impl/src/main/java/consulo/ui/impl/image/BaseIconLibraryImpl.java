@@ -15,7 +15,9 @@
  */
 package consulo.ui.impl.image;
 
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
+import consulo.ui.image.IconLibrary;
 import consulo.ui.image.Image;
 import consulo.util.lang.ref.SimpleReference;
 import consulo.util.lang.ref.SoftReference;
@@ -31,7 +33,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * @author VISTALL
  * @since 2020-09-26
  */
-public abstract class IconLibrary {
+public abstract class BaseIconLibraryImpl implements IconLibrary {
   public static class ImageState {
     private byte[] my1xData;
     private byte[] my2xData;
@@ -48,7 +50,7 @@ public abstract class IconLibrary {
     }
 
     @Nullable
-    public Image getOrCreateImage(@Nonnull IconLibrary library, int width, int height, String groupId, String imageId) {
+    public Image getOrCreateImage(@Nonnull BaseIconLibraryImpl library, int width, int height, String groupId, String imageId) {
       if (myInitialized.get()) {
         return Objects.requireNonNull(SoftReference.deref(myImageRef));
       }
@@ -78,15 +80,19 @@ public abstract class IconLibrary {
     }
   }
 
-  private static final Logger LOG = Logger.getInstance(IconLibrary.class);
+  private static final Logger LOG = Logger.getInstance(BaseIconLibraryImpl.class);
 
-  private final IconLibraryId myId;
+  private final String myId;
+
+  private String myBaseId;
+
+  private LocalizeValue myName;
 
   private final BaseIconLibraryManager myIconLibraryManager;
 
   private final Map<String, IconGroup> myRegisteredGroups = new HashMap<>();
 
-  public IconLibrary(@Nonnull IconLibraryId id, @Nonnull BaseIconLibraryManager baseIconLibraryManager) {
+  public BaseIconLibraryImpl(@Nonnull String id, @Nonnull BaseIconLibraryManager baseIconLibraryManager) {
     myId = id;
     myIconLibraryManager = baseIconLibraryManager;
   }
@@ -95,8 +101,26 @@ public abstract class IconLibrary {
     myRegisteredGroups.computeIfAbsent(groupId, IconGroup::new).registerIcon(imageId, _1xdata, _2xdata, isSVG);
   }
 
+  public void setBaseId(String baseId) {
+    myBaseId = baseId;
+  }
+
+  public void setName(LocalizeValue name) {
+    myName = name;
+  }
+
+  @Override
   @Nonnull
-  public IconLibraryId getId() {
+  public LocalizeValue getName() {
+    if (myName == null) {
+      return myName = LocalizeValue.of(myId);
+    }
+    return myName;
+  }
+
+  @Override
+  @Nonnull
+  public String getId() {
     return myId;
   }
 
@@ -110,9 +134,9 @@ public abstract class IconLibrary {
       return image;
     }
 
-    String baseId = myId.getBaseId();
+    String baseId = myBaseId;
     if (baseId != null) {
-      IconLibrary library = myIconLibraryManager.getLibrary(baseId);
+      BaseIconLibraryImpl library = myIconLibraryManager.getLibrary(baseId);
       if (library != null) {
         image = library.getIconNoLog(groupId, imageId, width, height);
         if (image != null) {
