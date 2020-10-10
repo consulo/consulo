@@ -119,12 +119,12 @@ public abstract class ApplicationStarter {
         continue;
       }
 
-      searchMarkerInClassLoader(pluginDescriptor, filesWithMarkers, LocalizeManagerImpl.LOCALIZE_LIBRARY_MARKER);
-      searchMarkerInClassLoader(pluginDescriptor, filesWithMarkers, BaseIconLibraryManager.ICON_LIBRARY_MARKER);
+      searchMarkerInClassLoaderMarker(pluginDescriptor, filesWithMarkers, LocalizeManagerImpl.LOCALIZE_LIBRARY_MARKER);
+      searchMarkerInClassLoaderMarker(pluginDescriptor, filesWithMarkers, BaseIconLibraryManager.ICON_LIBRARY_MARKER);
     }
   }
 
-  private void searchMarkerInClassLoader(PluginDescriptor pluginDescriptor, Map<String, List<String>> filesWithMarkers, String marker) {
+  private void searchMarkerInClassLoaderMarker(PluginDescriptor pluginDescriptor, Map<String, List<String>> filesWithMarkers, String marker) {
 
     try {
       ClassLoader classLoader = pluginDescriptor.getPluginClassLoader();

@@ -29,8 +29,8 @@ import java.util.Set;
  * @since 2020-09-26
  */
 public interface IconLibraryManager {
-  String LIGHT_LIBRARY_ID = "Default";
-  String DARK_LIBRARY_ID = "Dark";
+  String LIGHT_LIBRARY_ID = "light";
+  String DARK_LIBRARY_ID = "dark";
 
   @Nonnull
   public static IconLibraryManager get() {
