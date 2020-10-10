@@ -16,9 +16,8 @@
 package consulo.ui.web.internal.image;
 
 import consulo.ui.image.Image;
-import consulo.ui.impl.image.BaseIconLibraryManager;
 import consulo.ui.impl.image.BaseIconLibraryImpl;
-import consulo.ui.impl.image.IconLibraryId;
+import consulo.ui.impl.image.BaseIconLibraryManager;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
