@@ -53,8 +53,8 @@ public class Main {
       }
     }
 
-    if (!SystemInfoRt.isJavaVersionAtLeast(8)) {
-      showMessage("Unsupported Java Version", "Cannot start under Java " + SystemInfoRt.JAVA_RUNTIME_VERSION + ": Java 1.8 or later is required.", true);
+    if (!SystemInfoRt.isJavaVersionAtLeast(11)) {
+      showMessage("Unsupported Java Version", "Cannot start under Java " + SystemInfoRt.JAVA_RUNTIME_VERSION + ": Java 11 or later is required.", true);
       System.exit(ExitCodes.UNSUPPORTED_JAVA_VERSION);
     }
 
