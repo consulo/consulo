@@ -28,7 +28,9 @@ import consulo.module.extension.impl.ModuleExtensionProviders;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.roots.ModuleRootLayer;
 import consulo.ui.image.Image;
+import consulo.ui.image.ImageEffects;
 import consulo.ui.image.ImageKey;
+import consulo.ui.style.StandardColors;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -87,7 +89,7 @@ public class ModuleExtensionProviderEP extends AbstractExtensionPointBean {
         return imageKey;
       }
 
-      return PlatformIconGroup.actionsHelp();
+      return ImageEffects.colorFilled(Image.DEFAULT_ICON_SIZE, Image.DEFAULT_ICON_SIZE, StandardColors.YELLOW);
     }
   };
 
