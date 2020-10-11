@@ -14,7 +14,6 @@ If you can't describe issue, you can use our [forum](https://discuss.consulo.io/
 
 | JVM           | Github Actions|
 | ------------- |-----------------:|
-| Java 8        | ![jdk8](https://github.com/consulo/consulo/workflows/jdk8/badge.svg) |
 | Java 11       | ![jdk11](https://github.com/consulo/consulo/workflows/jdk11/badge.svg) |
 | Java 14       | ![jdk14](https://github.com/consulo/consulo/workflows/jdk14/badge.svg) |
 | Java 15 EA    | ![jdk15](https://github.com/consulo/consulo/workflows/jdk15/badge.svg) |
@@ -23,7 +22,7 @@ If you can't describe issue, you can use our [forum](https://discuss.consulo.io/
 First of all, you need those tools:
 
  * Maven 3.3+
- * JDK 1.8
+ * JDK 11
 
 Then execute from command line:
 
@@ -75,12 +74,3 @@ If you want run Consulo from repository
 * [Donate](https://github.com/consulo/consulo/wiki/Donation)
 * [Issues](https://github.com/consulo/consulo/issues)
 * [Forum](https://discuss.consulo.io/)
-
-
-## Tools
-
- *  [YourKit Java Profiler](https://www.yourkit.com/java/profiler) with open source license provided by [YourKit](https://www.yourkit.com/)
-
-    ![](https://www.yourkit.com/images/yklogo.png)
-
-    YourKit supports open source projects with its full-featured  [YourKit Java Profiler](https://www.yourkit.com/java/profiler/) and [YourKit .NET Profiler](https://www.yourkit.com/.net/profiler/)
