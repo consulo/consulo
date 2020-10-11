@@ -17,14 +17,10 @@ package com.intellij.psi.injection;
 
 import com.intellij.lang.Language;
 import com.intellij.openapi.fileTypes.FileType;
-import com.intellij.util.ui.EmptyIcon;
-import consulo.awt.TargetAWT;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import javax.swing.*;
 
 /**
  * @author Dmitry Avdeev

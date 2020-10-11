@@ -56,7 +56,6 @@ import com.intellij.util.diff.Diff;
 import com.intellij.util.diff.FilesTooBigForDiffException;
 import com.intellij.util.messages.MessageBusConnection;
 import com.intellij.util.text.MatcherHolder;
-import com.intellij.util.ui.EmptyIcon;
 import com.intellij.util.ui.JBInsets;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;

@@ -28,7 +28,6 @@ import com.intellij.refactoring.classMembers.MemberInfoChangeListener;
 import com.intellij.refactoring.classMembers.MemberInfoModel;
 import com.intellij.ui.*;
 import com.intellij.ui.table.JBTable;
-import com.intellij.util.ui.EmptyIcon;
 import consulo.ide.IconDescriptorUpdaters;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
@@ -53,7 +52,7 @@ public abstract class AbstractMemberSelectionTable<T extends PsiElement, M exten
   protected static final int CHECKED_COLUMN = 0;
   protected static final int DISPLAY_NAME_COLUMN = 1;
   protected static final int ABSTRACT_COLUMN = 2;
-  protected static final Icon EMPTY_OVERRIDE_ICON = EmptyIcon.ICON_16;
+  public static final Image EMPTY_OVERRIDE_ICON = Image.empty(Image.DEFAULT_ICON_SIZE);
   protected static final String DISPLAY_NAME_COLUMN_HEADER = RefactoringBundle.message("member.column");
   protected static final int OVERRIDE_ICON_POSITION = 2;
   protected static final int VISIBILITY_ICON_POSITION = 1;

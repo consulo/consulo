@@ -22,12 +22,9 @@ import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.ui.popup.PopupStep;
 import com.intellij.openapi.ui.popup.util.BaseListPopupStep;
 import com.intellij.ui.popup.ClosableByLeftArrow;
-import com.intellij.util.ui.EmptyIcon;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
-
-import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Collection;
 
