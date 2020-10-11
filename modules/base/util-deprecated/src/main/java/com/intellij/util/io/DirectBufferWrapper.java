@@ -1,7 +1,7 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.util.io;
 
-import consulo.util.io.PreJava9IOUtil;
+import consulo.util.lang.reflect.unsafe.UnsafeDelegate;
 
 import java.io.File;
 import java.io.IOException;
@@ -34,7 +34,7 @@ abstract class DirectBufferWrapper extends ByteBufferWrapper {
   public void unmap() {
     if (isDirty()) flush();
     if (myBuffer != null) {
-      PreJava9IOUtil.invokeCleaner(myBuffer);
+      UnsafeDelegate.get().invokeCleaner(myBuffer);
       myBuffer = null;
     }
   }

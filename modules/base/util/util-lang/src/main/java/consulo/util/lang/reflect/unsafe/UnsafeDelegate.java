@@ -15,16 +15,20 @@
  */
 package consulo.util.lang.reflect.unsafe;
 
+import consulo.logging.Logger;
 import sun.misc.Unsafe;
 
 import javax.annotation.Nonnull;
 import java.lang.reflect.Field;
+import java.nio.ByteBuffer;
 
 /**
  * @author VISTALL
  * @since 2019-12-01
  */
 public class UnsafeDelegate {
+  private static final Logger LOG = Logger.getInstance(UnsafeDelegate.class);
+
   @Nonnull
   public static UnsafeDelegate get() {
     return ourInstance;
@@ -79,5 +83,16 @@ public class UnsafeDelegate {
 
   public void putObjectVolatile(Object o, long offset, Object x) {
     myUnsafe.putObjectVolatile(o, offset, x);
+  }
+
+  public boolean invokeCleaner(@Nonnull ByteBuffer buffer) {
+    try {
+      myUnsafe.invokeCleaner(buffer);
+      return true;
+    }
+    catch (Exception e) {
+      LOG.error(e);
+      return false;
+    }
   }
 }

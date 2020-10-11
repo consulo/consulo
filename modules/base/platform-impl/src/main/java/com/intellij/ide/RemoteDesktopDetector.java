@@ -27,6 +27,9 @@ import com.sun.jna.platform.win32.User32;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.awt.*;
+import java.awt.desktop.UserSessionEvent;
+import java.awt.desktop.UserSessionListener;
 
 @Singleton
 public class RemoteDesktopDetector extends RemoteDesktopService {
@@ -40,12 +43,18 @@ public class RemoteDesktopDetector extends RemoteDesktopService {
   @Inject
   private RemoteDesktopDetector() {
     if (SystemInfo.isWindows) {
-      DisplayChangeDetector.getInstance().addListener(new DisplayChangeDetector.Listener() {
+      Desktop.getDesktop().addAppEventListener(new UserSessionListener() {
         @Override
-        public void displayChanged() {
+        public void userSessionDeactivated(UserSessionEvent e) {
+          updateState();
+        }
+
+        @Override
+        public void userSessionActivated(UserSessionEvent e) {
           updateState();
         }
       });
+
       updateState();
     }
   }
@@ -77,6 +86,7 @@ public class RemoteDesktopDetector extends RemoteDesktopService {
     }
   }
 
+  @Override
   public boolean isRemoteDesktopConnected() {
     return myRemoteDesktopConnected;
   }

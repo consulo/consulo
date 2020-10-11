@@ -613,7 +613,6 @@
           <target>${java.level}</target>
           <showDeprecation>true</showDeprecation>
           <showWarnings>true</showWarnings>
-          <fork>true</fork>
           <meminitial>2048</meminitial>
           <maxmem>4096</maxmem>
         </configuration>

@@ -3,7 +3,7 @@ package com.intellij.util.io;
 
 import com.intellij.util.TimeoutUtil;
 import consulo.logging.Logger;
-import consulo.util.io.PreJava9IOUtil;
+import consulo.util.lang.reflect.unsafe.UnsafeDelegate;
 
 import java.io.File;
 import java.io.IOException;
@@ -30,7 +30,7 @@ abstract class MappedBufferWrapper extends ByteBufferWrapper {
 
     if (myBuffer != null) {
       if (isDirty()) flush();
-      if (!PreJava9IOUtil.invokeCleaner(myBuffer)) {
+      if (!UnsafeDelegate.get().invokeCleaner(myBuffer)) {
         Logger.getInstance(MappedBufferWrapper.class).error("Unmapping failed for: " + myFile);
       }
       myBuffer = null;

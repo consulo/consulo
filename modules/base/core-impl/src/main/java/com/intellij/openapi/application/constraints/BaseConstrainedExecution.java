@@ -4,7 +4,6 @@ package com.intellij.openapi.application.constraints;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.ArrayUtil;
 import consulo.logging.Logger;
-import consulo.stream.StreamJava9;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -38,7 +37,7 @@ public abstract class BaseConstrainedExecution<E extends ConstrainedExecution<E>
     public static final ReschedulingAttempt NULL = new ReschedulingAttempt(null, null, 0);
 
     private Stream<ReschedulingAttempt> attemptChain() {
-      return StreamJava9.iterate(this, it -> it.previousAttempt != null, it -> it.previousAttempt);
+      return Stream.iterate(this, it -> it.previousAttempt != null, it -> it.previousAttempt);
     }
 
     @Nullable

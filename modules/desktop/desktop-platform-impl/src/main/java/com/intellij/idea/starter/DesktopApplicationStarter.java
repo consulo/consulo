@@ -15,7 +15,6 @@
  */
 package com.intellij.idea.starter;
 
-import com.intellij.Patches;
 import com.intellij.ide.*;
 import com.intellij.ide.plugins.PluginManagerConfigurable;
 import com.intellij.ide.plugins.PluginManagerUISettings;
@@ -39,7 +38,6 @@ import com.intellij.openapi.wm.ex.WindowManagerEx;
 import com.intellij.openapi.wm.impl.DesktopWindowManagerImpl;
 import com.intellij.openapi.wm.impl.SystemDock;
 import com.intellij.openapi.wm.impl.X11UiUtil;
-import com.intellij.ui.AppIcon;
 import com.intellij.ui.AppUIUtil;
 import com.intellij.ui.DesktopAppUIUtil;
 import consulo.application.ApplicationProperties;
@@ -113,10 +111,6 @@ public class DesktopApplicationStarter extends ApplicationStarter {
       System.setProperty("sun.awt.noerasebackground", "true");
 
       IdeEventQueue.getInstance(); // replace system event queue
-
-      if (Patches.SUN_BUG_ID_6209673) {
-        RepaintManager.setCurrentManager(new IdeRepaintManager());
-      }
     });
 
     AppUIUtil.updateWindowIcon(JOptionPane.getRootFrame(), false);

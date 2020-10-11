@@ -15,15 +15,13 @@
  */
 package com.intellij.util.text;
 
-import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.text.CharSequenceWithStringHash;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.CharsetToolkit;
-import consulo.annotation.ReviewAfterMigrationToJRE;
+import consulo.annotation.DeprecationInfo;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.Arrays;
 
 //@ReviseWhenPortedToJDK("9")
@@ -88,13 +86,8 @@ public class ByteArrayCharSequence implements CharSequenceWithStringHash {
    * as a byte array of 8-bit code points (for more compact representation); its {@code string} argument otherwise
    */
   @Nonnull
-  @ReviewAfterMigrationToJRE(9)
   public static CharSequence convertToBytesIfPossible(@Nonnull CharSequence string) {
-    if (SystemInfo.IS_AT_LEAST_JAVA9) return string; // see JEP 254: Compact Strings
-    if (string.length() == 0) return "";
-    if (string instanceof ByteArrayCharSequence) return string;
-    byte[] bytes = toBytesIfPossible(string);
-    return bytes == null ? string : new ByteArrayCharSequence(bytes);
+    return string;
   }
 
   @Nonnull
