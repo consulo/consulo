@@ -93,6 +93,9 @@ public class DesktopStyleImpl extends StyleImpl {
     else if (colorKey == StandardColors.MAGENTA) {
       return TargetAWT.from(JBColor.MAGENTA);
     }
+    else if (colorKey == StandardColors.YELLOW) {
+      return TargetAWT.from(JBColor.YELLOW);
+    }
     throw new UnsupportedOperationException(colorKey.toString());
   }
 
