@@ -55,6 +55,20 @@ public final class PluginManager {
     return ourInternal.getPlugins();
   }
 
+  @Nonnull
+  public static List<PluginDescriptor> getEnabledPlugins() {
+    List<PluginDescriptor> plugins = getPlugins();
+    List<PluginDescriptor> result = new ArrayList<PluginDescriptor>(plugins.size());
+    for (PluginDescriptor plugin : plugins) {
+      if(shouldSkipPlugin(plugin)) {
+        continue;
+      }
+
+      result.add(plugin);
+    }
+    return result;
+  }
+
   public static int getPluginsCount() {
     return getPlugins().size();
   }

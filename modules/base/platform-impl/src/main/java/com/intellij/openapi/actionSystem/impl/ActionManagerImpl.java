@@ -3,7 +3,6 @@ package com.intellij.openapi.actionSystem.impl;
 
 import com.intellij.ide.ActivityTracker;
 import com.intellij.ide.DataManager;
-import com.intellij.ide.plugins.PluginManagerCore;
 import com.intellij.internal.statistic.collectors.fus.actions.persistence.ActionIdProvider;
 import com.intellij.lang.Language;
 import com.intellij.openapi.actionSystem.*;
@@ -143,11 +142,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
 
     StatCollector collector = new StatCollector();
 
-    for (PluginDescriptor plugin : PluginManager.getPlugins()) {
-      if (PluginManagerCore.shouldSkipPlugin(plugin)) {
-        continue;
-      }
-
+    for (PluginDescriptor plugin : PluginManager.getEnabledPlugins()) {
       collector.markWith(plugin.getPluginId().toString(), () -> {
         LocalizeHelper localizeHelper = LocalizeHelper.build(plugin);
 
