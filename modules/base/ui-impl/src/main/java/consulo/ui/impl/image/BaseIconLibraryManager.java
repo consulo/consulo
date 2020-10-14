@@ -255,6 +255,11 @@ public abstract class BaseIconLibraryManager implements IconLibraryManager {
         String imageId = image.getKey();
         JarIcon jarIcon = image.getValue();
 
+        if (jarIcon._1x == null) {
+          LOG.error("There no x1 scale icon for imageId: " + imageId);
+          continue;
+        }
+
         lib.registerIcon(groupId, imageId, jarIcon._1x, jarIcon._2x, jarIcon.svgState.toBoolean());
       }
     }
