@@ -16,6 +16,7 @@
 
 package com.intellij.openapi.ui.popup;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.awt.TargetAWT;
 import consulo.ui.image.Image;
 
@@ -23,6 +24,8 @@ import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 
+@Deprecated
+@DeprecationInfo("Use Image#stated")
 public class ActiveIcon implements Icon {
 
   private boolean myActive = true;

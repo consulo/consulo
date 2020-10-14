@@ -92,7 +92,6 @@ import consulo.logging.Logger;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.psi.PsiPackageSupportProviders;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.image.IconLibraryManager;
 import consulo.ui.image.Image;
 import consulo.util.dataholder.Key;
 import consulo.wm.impl.ToolWindowContentUI;
@@ -358,7 +357,8 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
     @Override
     public void update(@Nonnull AnActionEvent e) {
       AbstractProjectViewPane pane = getProjectViewPaneById(myId);
-      e.getPresentation().setText(pane.getTitle() + (mySubId != null ? (" - " + pane.getPresentableSubIdName(mySubId)) : ""));
+      e.getPresentation().setText(mySubId != null ? pane.getPresentableSubIdName(mySubId) : pane.getTitle());
+      e.getPresentation().setIcon(mySubId != null ? pane.getPresentableSubIdIcon(mySubId) : pane.getIcon());
     }
 
     @RequiredUIAccess
@@ -474,7 +474,8 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
       content.putUserData(ID_KEY, id);
       content.putUserData(SUB_ID_KEY, subId);
       content.putUserData(ToolWindow.SHOW_CONTENT_ICON, Boolean.TRUE);
-      content.setIcon(newPane.getIcon());
+      Image icon = subId != null ? newPane.getPresentableSubIdIcon(subId) : newPane.getIcon();
+      content.setIcon(icon);
       content.setPopupIcon(subId != null ? AllIcons.General.Bullet : newPane.getIcon());
       content.setPreferredFocusedComponent(() -> {
         final AbstractProjectViewPane current = getCurrentProjectViewPane();

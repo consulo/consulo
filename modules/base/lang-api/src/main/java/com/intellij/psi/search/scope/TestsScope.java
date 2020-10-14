@@ -15,6 +15,7 @@
  */
 package com.intellij.psi.search.scope;
 
+import com.intellij.icons.AllIcons;
 import com.intellij.ide.IdeBundle;
 import com.intellij.openapi.roots.TestSourcesFilter;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -30,7 +31,7 @@ import com.intellij.ui.Colored;
 public class TestsScope extends NamedScope {
   public static final String NAME = IdeBundle.message("predefined.scope.tests.name");
   public TestsScope() {
-    super(NAME, new AbstractPackageSet("test:*..*") {
+    super(NAME, AllIcons.Modules.TestRoot, new AbstractPackageSet("test:*..*") {
       @Override
       public boolean contains(VirtualFile file, NamedScopesHolder holder) {
         return file != null && TestSourcesFilter.isTestSources(file, holder.getProject());

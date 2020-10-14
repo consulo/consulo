@@ -15,19 +15,19 @@
  */
 package com.intellij.openapi.wm.impl.content;
 
-import com.intellij.openapi.wm.ToolWindow;
+import com.intellij.openapi.ui.popup.JBPopup;
 import com.intellij.ui.Gray;
 import com.intellij.ui.content.Content;
+import com.intellij.ui.popup.PopupState;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
-import consulo.ui.image.Image;
 
-import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 public class ContentComboLabel extends BaseLabel {
+  private final PopupState<JBPopup> myPopupState = PopupState.forPopup();
 
   private final ComboIcon myComboIcon = new ComboIcon() {
     @Override
@@ -40,6 +40,7 @@ public class ContentComboLabel extends BaseLabel {
       return myUi.myWindow.isActive();
     }
   };
+
   private final ComboContentLayout myLayout;
 
   public ContentComboLabel(ComboContentLayout layout) {
@@ -53,7 +54,8 @@ public class ContentComboLabel extends BaseLabel {
     super.processMouseEvent(e);
 
     if (UIUtil.isActionClick(e)) {
-      myUi.toggleContentPopup();
+      if (myPopupState.isRecentlyHidden()) return; // do not show new popup
+      DesktopToolWindowContentUi.toggleContentPopup(myUi, myUi.getContentManager(), myPopupState);
     }
   }
 
@@ -74,31 +76,11 @@ public class ContentComboLabel extends BaseLabel {
 
   @Override
   public Dimension getPreferredSize() {
-    if (!isToDrawCombo()) {
-      return super.getPreferredSize();
+    Dimension size = super.getPreferredSize();
+    if (!isPreferredSizeSet() && isToDrawCombo()) {
+      size.width += myComboIcon.getIconWidth();
     }
-
-    int width = 0;
-    for (int i = 0; i < myUi.myManager.getContentCount(); i++) {
-      final Content content = myUi.myManager.getContent(i);
-      assert content != null;
-      String text = content.getDisplayName();
-      final Image icon = content.getUserData(ToolWindow.SHOW_CONTENT_ICON) == Boolean.TRUE ? content.getIcon() : null;
-      FontMetrics metrics = getFontMetrics(getFont());
-      int eachTextWidth = metrics.stringWidth(text != null ? text : "");
-      int iconWidth = icon != null ? icon.getWidth() : 0;
-      width = Math.max(eachTextWidth + iconWidth, width);
-    }
-
-    Border border = getBorder();
-    if (border != null) {
-      Insets insets = border.getBorderInsets(this);
-      width += (insets.left + insets.right);
-    }
-
-    width += myComboIcon.getIconWidth();
-
-    return new Dimension(width, super.getPreferredSize().height);
+    return size;
   }
 
   private boolean isToDrawCombo() {

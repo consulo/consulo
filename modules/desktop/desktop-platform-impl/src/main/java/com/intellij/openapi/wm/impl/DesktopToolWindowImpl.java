@@ -144,6 +144,7 @@ public final class DesktopToolWindowImpl extends ToolWindowBase {
 
   @Override
   public void showContentPopup(InputEvent inputEvent) {
-    myContentUI.toggleContentPopup();
+    // called only when tool window is already opened, so, content should be already created
+    DesktopToolWindowContentUi.toggleContentPopup(myContentUI, myContentManager);
   }
 }

@@ -16,6 +16,7 @@
 package com.intellij.psi.search.scope.packageSet;
 
 import com.intellij.icons.AllIcons;
+import consulo.localize.LocalizeValue;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
@@ -42,6 +43,19 @@ public class NamedScope {
     return myIcon;
   }
 
+  @Nonnull
+  public String getScopeId() {
+    return myName;
+  }
+
+  @Nonnull
+  public LocalizeValue getPresentableName() {
+    return LocalizeValue.of(myName);
+  }
+
+  /**
+   * @deprecated please use {@link NamedScope#getScopeId()} for search/serialization/mappings and {@link #getPresentableName()} to display in UI
+   */
   @Nonnull
   public String getName() {
     return myName;

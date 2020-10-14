@@ -2039,10 +2039,10 @@
 
     <patternDialectProvider implementation="com.intellij.packageDependencies.ui.ProjectPatternProvider" id="file"/>
     <customScopesProvider implementation="com.intellij.packageDependencies.DefaultScopesProvider"/>
+    <customScopesProvider implementation="consulo.packageDependencies.SourceScopeProvider"/>
     <customScopesProvider implementation="com.intellij.packageDependencies.TestScopeProvider"/>
     <customScopesProvider implementation="consulo.packageDependencies.ResourceScopeProvider"/>
     <customScopesProvider implementation="consulo.packageDependencies.TestResourceScopeProvider"/>
-    <customScopesProvider implementation="consulo.packageDependencies.SourceScopeProvider"/>
     <customScopesProvider implementation="com.intellij.packageDependencies.ChangeListsScopesProvider" order="last"/>
     <refactoring.elementListenerProvider implementation="com.intellij.packageDependencies.ui.RefactoringScopeElementListenerProvider"/>
 

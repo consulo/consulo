@@ -15,6 +15,7 @@
  */
 package consulo.psi.search.scope;
 
+import com.intellij.icons.AllIcons;
 import com.intellij.ide.IdeBundle;
 import com.intellij.openapi.roots.ProjectFileIndex;
 import com.intellij.openapi.roots.ProjectRootManager;
@@ -33,7 +34,7 @@ public class ResourcesScope extends NamedScope {
   public static final String NAME = IdeBundle.message("predefined.scope.resources.name");
 
   public ResourcesScope() {
-    super(NAME, new AbstractPackageSet("rsc:*..*") {
+    super(NAME, AllIcons.Modules.ResourcesRoot, new AbstractPackageSet("rsc:*..*") {
       @Override
       public boolean contains(VirtualFile file, NamedScopesHolder holder) {
         final ProjectFileIndex index = ProjectRootManager.getInstance(holder.getProject()).getFileIndex();

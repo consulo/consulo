@@ -15,7 +15,6 @@
  */
 package com.intellij.openapi.wm.impl.content;
 
-import com.intellij.ide.DataManager;
 import com.intellij.ide.IdeEventQueue;
 import com.intellij.ide.actions.CloseAction;
 import com.intellij.ide.actions.ShowContentAction;
@@ -26,9 +25,11 @@ import com.intellij.openapi.actionSystem.impl.MenuItemPresentationFactory;
 import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.openapi.ui.Splitter;
 import com.intellij.openapi.ui.ThreeComponentsSplitter;
+import com.intellij.openapi.ui.popup.JBPopup;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.ui.popup.ListPopup;
-import com.intellij.openapi.util.*;
+import com.intellij.openapi.util.Pair;
+import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.wm.*;
 import com.intellij.openapi.wm.impl.DesktopToolWindowImpl;
 import com.intellij.openapi.wm.impl.DesktopToolWindowManagerImpl;
@@ -36,6 +37,7 @@ import com.intellij.ui.PopupHandler;
 import com.intellij.ui.content.*;
 import com.intellij.ui.content.tabs.PinToolwindowTabAction;
 import com.intellij.ui.content.tabs.TabbedContentAction;
+import com.intellij.ui.popup.PopupState;
 import com.intellij.util.Alarm;
 import com.intellij.util.ContentUtilEx;
 import com.intellij.util.Function;
@@ -142,7 +144,6 @@ public class DesktopToolWindowContentUi extends JPanel implements ToolWindowCont
   ComboContentLayout myComboLayout = new ComboContentLayout(this);
 
   private ToolWindowContentUiType myType = ToolWindowContentUiType.TABBED;
-  private boolean myShouldNotShowPopup;
   public Predicate<Point> isResizableArea = p -> true;
 
   public DesktopToolWindowContentUi(DesktopToolWindowImpl window) {
@@ -155,6 +156,11 @@ public class DesktopToolWindowContentUi extends JPanel implements ToolWindowCont
     myContent.setFocusable(false);
 
     myShowContent = new ShowContentAction(myWindow, myContent);
+  }
+
+  @Nonnull
+  public ContentManager getContentManager() {
+    return myManager;
   }
 
   public void setType(@Nonnull ToolWindowContentUiType type) {
@@ -683,72 +689,23 @@ public class DesktopToolWindowContentUi extends JPanel implements ToolWindowCont
     return getCurrentLayout() == layout;
   }
 
-  public void toggleContentPopup() {
-    if (myShouldNotShowPopup) {
-      myShouldNotShowPopup = false;
-      return;
-    }
-    final Ref<AnAction> selected = Ref.create();
-    final Ref<AnAction> selectedTab = Ref.create();
-    final Content[] contents = myManager.getContents();
-    final Content selectedContent = myManager.getSelectedContent();
-    final AnAction[] actions = new AnAction[contents.length];
-    for (int i = 0; i < actions.length; i++) {
-      final Content content = contents[i];
-      if (content instanceof TabbedContent) {
-        final TabbedContent tabbedContent = (TabbedContent)content;
+  public static void toggleContentPopup(@Nonnull DesktopToolWindowContentUi content, @Nonnull ContentManager contentManager) {
+    toggleContentPopup(content, contentManager, null);
+  }
 
-        final List<Pair<String, JComponent>> tabs = ((TabbedContent)content).getTabs();
-        final AnAction[] tabActions = new AnAction[tabs.size()];
-        for (int j = 0; j < tabActions.length; j++) {
-          final int index = j;
-          tabActions[j] = new DumbAwareAction(tabs.get(index).first) {
-            @RequiredUIAccess
-            @Override
-            public void actionPerformed(@Nonnull AnActionEvent e) {
-              myManager.setSelectedContent(tabbedContent);
-              tabbedContent.selectContent(index);
-            }
-          };
-        }
-        final DefaultActionGroup group = new DefaultActionGroup(tabActions);
-        group.getTemplatePresentation().setText(((TabbedContent)content).getTitlePrefix());
-        group.setPopup(true);
-        actions[i] = group;
-        if (content == selectedContent) {
-          selected.set(group);
-          final int selectedIndex = ContentUtilEx.getSelectedTab(tabbedContent);
-          if (selectedIndex != -1) {
-            selectedTab.set(tabActions[selectedIndex]);
-          }
-        }
-      }
-      else {
-        actions[i] = new DumbAwareAction(content.getTabName()) {
-          @RequiredUIAccess
-          @Override
-          public void actionPerformed(@Nonnull AnActionEvent e) {
-            myManager.setSelectedContent(content, true, true);
-          }
-        };
-        if (content == selectedContent) {
-          selected.set(actions[i]);
-        }
-      }
+  static void toggleContentPopup(@Nonnull DesktopToolWindowContentUi content, @Nonnull ContentManager contentManager, @Nullable PopupState<JBPopup> popupState) {
+    SelectContentStep step = new SelectContentStep(contentManager.getContents());
+    Content selectedContent = contentManager.getSelectedContent();
+    if (selectedContent != null) {
+      step.setDefaultOptionIndex(contentManager.getIndexOfContent(selectedContent));
     }
 
-    final ListPopup popup = JBPopupFactory.getInstance()
-            .createActionGroupPopup(null, new DefaultActionGroup(actions), DataManager.getInstance().getDataContext(myManager.getComponent()), false, true, true, null, -1, new Condition<AnAction>() {
-              @Override
-              public boolean value(AnAction action) {
-                return action == selected.get() || action == selectedTab.get();
-              }
-            });
-
-    getCurrentLayout().showContentPopup(popup);
+    ListPopup popup = JBPopupFactory.getInstance().createListPopup(step);
+    if (popupState != null) popupState.prepareToShow(popup);
+    content.getCurrentLayout().showContentPopup(popup);
 
     if (selectedContent instanceof TabbedContent) {
-      new Alarm(Alarm.ThreadToUse.SWING_THREAD, popup).addRequest(() -> popup.handleSelect(true), 30);
+      new Alarm(Alarm.ThreadToUse.SWING_THREAD, popup).addRequest(() -> popup.handleSelect(false), 50);
     }
   }
 }

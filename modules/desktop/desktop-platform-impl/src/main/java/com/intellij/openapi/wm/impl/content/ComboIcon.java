@@ -16,16 +16,24 @@
 package com.intellij.openapi.wm.impl.content;
 
 import com.intellij.icons.AllIcons;
-import com.intellij.openapi.ui.popup.ActiveIcon;
+import consulo.awt.TargetAWT;
+import consulo.ui.image.Image;
+import consulo.ui.image.ImageEffects;
+import consulo.ui.image.ImageState;
 
 import java.awt.*;
 
 public abstract class ComboIcon {
+  private final ImageState<Boolean> myState = new ImageState<>(Boolean.FALSE);
 
-  private final ActiveIcon myIcon = new ActiveIcon(AllIcons.General.Combo2);
+  private final Image myImage;
+
+  public ComboIcon() {
+    myImage = Image.stated(myState, active -> active ? AllIcons.General.Combo2 : ImageEffects.grayed(AllIcons.General.Combo2));
+  }
 
   public void paintIcon(final Component c, final Graphics g) {
-    myIcon.setActive(isActive());
+    myState.setState(isActive());
 
     final Rectangle moreRect = getIconRec();
 
@@ -34,8 +42,7 @@ public abstract class ComboIcon {
     int iconY = getIconY(moreRect);
     int iconX = getIconX(moreRect);
 
-
-    myIcon.paintIcon(c, g, iconX, iconY);
+    TargetAWT.to(myImage).paintIcon(c, g, iconX, iconY);
   }
 
   protected int getIconX(final Rectangle iconRec) {
@@ -43,7 +50,7 @@ public abstract class ComboIcon {
   }
 
   public int getIconWidth() {
-    return myIcon.getIconWidth();
+    return myImage.getWidth();
   }
 
   protected int getIconY(final Rectangle iconRec) {
@@ -51,12 +58,10 @@ public abstract class ComboIcon {
   }
 
   public int getIconHeight() {
-    return myIcon.getIconHeight();
+    return myImage.getHeight();
   }
-
 
   public abstract Rectangle getIconRec();
 
   public abstract boolean isActive();
-
 }

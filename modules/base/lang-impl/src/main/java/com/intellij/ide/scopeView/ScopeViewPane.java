@@ -27,7 +27,8 @@ import com.intellij.openapi.actionSystem.ActionPlaces;
 import com.intellij.openapi.actionSystem.DefaultActionGroup;
 import com.intellij.openapi.actionSystem.IdeActions;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.*;
+import com.intellij.openapi.util.ActionCallback;
+import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.packageDependencies.DependencyValidationManager;
 import com.intellij.packageDependencies.ui.PackageDependenciesNode;
@@ -35,34 +36,41 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiFileSystemItem;
 import com.intellij.psi.PsiManager;
-import com.intellij.psi.search.scope.NonProjectFilesScope;
 import com.intellij.psi.search.scope.packageSet.*;
 import com.intellij.ui.PopupHandler;
-import com.intellij.util.Alarm;
-import com.intellij.util.ArrayUtil;
+import com.intellij.util.concurrency.EdtExecutorService;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.disposer.Disposer;
+import consulo.logging.Logger;
+import consulo.ui.image.Image;
+import consulo.util.collection.ArrayUtil;
 import consulo.util.dataholder.Key;
 import org.jetbrains.annotations.NonNls;
-
 import javax.annotation.Nonnull;
+
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * @author cdr
  */
 public class ScopeViewPane extends AbstractProjectViewPane {
+  private static final Logger LOG = Logger.getInstance(ScopeViewPane.class);
+  private LinkedHashMap<String, NamedScopeFilter> myFilters;
+
   @NonNls
   public static final String ID = "Scope";
   private final ProjectView myProjectView;
   private ScopeTreeViewPanel myViewPanel;
   private final DependencyValidationManager myDependencyValidationManager;
   private final NamedScopeManager myNamedScopeManager;
-  private final NamedScopesHolder.ScopeListener myScopeListener;
 
   @Inject
   public ScopeViewPane(final Project project, ProjectView projectView, DependencyValidationManager dependencyValidationManager, NamedScopeManager namedScopeManager) {
@@ -70,44 +78,61 @@ public class ScopeViewPane extends AbstractProjectViewPane {
     myProjectView = projectView;
     myDependencyValidationManager = dependencyValidationManager;
     myNamedScopeManager = namedScopeManager;
-    myScopeListener = new NamedScopesHolder.ScopeListener() {
-      Alarm refreshProjectViewAlarm = new Alarm();
+    myFilters = map(myDependencyValidationManager, myNamedScopeManager);
+
+    NamedScopesHolder.ScopeListener scopeListener = new NamedScopesHolder.ScopeListener() {
+      private final AtomicLong counter = new AtomicLong();
 
       @Override
       public void scopesChanged() {
-        // amortize batch scope changes
-        refreshProjectViewAlarm.cancelAllRequests();
-        refreshProjectViewAlarm.addRequest(new Runnable() {
-          @Override
-          public void run() {
-            if (myProject.isDisposed()) return;
-            final String subId = getSubId();
-            final String id = myProjectView.getCurrentViewId();
-            myProjectView.removeProjectPane(ScopeViewPane.this);
-            myProjectView.addProjectPane(ScopeViewPane.this);
-            if (id != null) {
-              if (Comparing.strEqual(id, getId())) {
-                myProjectView.changeView(id, subId);
-              }
-              else {
-                myProjectView.changeView(id);
-              }
-            }
+        if (myProject.isDisposed()) {
+          return;
+        }
+
+        long count = counter.incrementAndGet();
+        EdtExecutorService.getScheduledExecutorInstance().schedule(() -> {
+          // is this request still actual after 10 ms?
+          if (count != counter.get()) {
+            return;
           }
-        }, 10);
+
+          ProjectView view = myProject.isDisposed() ? null : ProjectView.getInstance(myProject);
+          if (view == null) {
+            return;
+          }
+          myFilters = map(myDependencyValidationManager, myNamedScopeManager);
+          String currentId = view.getCurrentViewId();
+          String currentSubId = getSubId();
+          // update changes subIds if needed
+          view.removeProjectPane(ScopeViewPane.this);
+          view.addProjectPane(ScopeViewPane.this);
+          if (currentId == null) {
+            return;
+          }
+          if (currentId.equals(getId())) {
+            // try to restore selected subId
+            view.changeView(currentId, currentSubId);
+          }
+          else {
+            view.changeView(currentId);
+          }
+        }, 10, TimeUnit.MILLISECONDS);
       }
     };
-    myDependencyValidationManager.addScopeListener(myScopeListener, this);
-    myNamedScopeManager.addScopeListener(myScopeListener, this);
+
+    myDependencyValidationManager.addScopeListener(scopeListener, this);
+    myNamedScopeManager.addScopeListener(scopeListener, this);
   }
 
+  @Nonnull
   @Override
   public String getTitle() {
     return IdeBundle.message("scope.view.title");
   }
 
+  @Nonnull
   @Override
-  public consulo.ui.image.Image getIcon() {
+  public Image getIcon() {
     return AllIcons.Ide.LocalScope;
   }
 
@@ -117,6 +142,7 @@ public class ScopeViewPane extends AbstractProjectViewPane {
     return ID;
   }
 
+  @Nonnull
   @Override
   public JComponent createComponent() {
     myViewPanel = new ScopeTreeViewPanel(myProject);
@@ -138,22 +164,26 @@ public class ScopeViewPane extends AbstractProjectViewPane {
 
   @Override
   @Nonnull
-  public String[] getSubIds() {
-    NamedScope[] scopes = myDependencyValidationManager.getScopes();
-    scopes = ArrayUtil.mergeArrays(scopes, myNamedScopeManager.getScopes());
-    scopes = NonProjectFilesScope.removeFromList(scopes);
-    String[] ids = new String[scopes.length];
-    for (int i = 0; i < scopes.length; i++) {
-      final NamedScope scope = scopes[i];
-      ids[i] = scope.getName();
+  public String [] getSubIds() {
+    LinkedHashMap<String, NamedScopeFilter> map = myFilters;
+    if (map == null || map.isEmpty()) {
+      return ArrayUtil.EMPTY_STRING_ARRAY;
     }
-    return ids;
+    return ArrayUtil.toStringArray(map.keySet());
   }
 
-  @Override
   @Nonnull
-  public String getPresentableSubIdName(@Nonnull final String subId) {
-    return subId;
+  @Override
+  public String getPresentableSubIdName(@Nonnull String subId) {
+    NamedScopeFilter filter = getFilter(subId);
+    return filter == null ? getTitle() : filter.getScope().getPresentableName().getValue();
+  }
+
+  @Nonnull
+  @Override
+  public Image getPresentableSubIdIcon(@Nonnull String subId) {
+    NamedScopeFilter filter = getFilter(subId);
+    return filter != null ? filter.getScope().getIcon() : getIcon();
   }
 
   @Override
@@ -167,6 +197,7 @@ public class ScopeViewPane extends AbstractProjectViewPane {
     }).setAsSecondary(true);
   }
 
+  @Nonnull
   @Override
   public ActionCallback updateFromRoot(boolean restoreExpandedPaths) {
     saveExpandedPaths();
@@ -231,6 +262,7 @@ public class ScopeViewPane extends AbstractProjectViewPane {
     myViewPanel.setSortByType();
   }
 
+  @Nonnull
   @Override
   public SelectInTarget createSelectInTarget() {
     return new ScopePaneSelectInTarget(myProject);
@@ -258,5 +290,34 @@ public class ScopeViewPane extends AbstractProjectViewPane {
   public AsyncResult<Void> getReady(@Nonnull Object requestor) {
     final AsyncResult<Void> callback = myViewPanel.getActionCallback();
     return myViewPanel == null ? AsyncResult.rejected() : callback != null ? callback : AsyncResult.resolved();
+  }
+
+  @Nullable
+  public NamedScope getSelectedScope() {
+    NamedScopeFilter filter = getFilter(getSubId());
+    return filter == null ? null : filter.getScope();
+  }
+
+  @Nonnull
+  Iterable<NamedScopeFilter> getFilters() {
+    return myFilters.values();
+  }
+
+  @Nullable
+  NamedScopeFilter getFilter(@Nullable String subId) {
+    LinkedHashMap<String, NamedScopeFilter> map = myFilters;
+    return map == null || subId == null ? null : map.get(subId);
+  }
+
+  @Nonnull
+  private static LinkedHashMap<String, NamedScopeFilter> map(NamedScopesHolder... holders) {
+    LinkedHashMap<String, NamedScopeFilter> map = new LinkedHashMap<>();
+    for (NamedScopeFilter filter : NamedScopeFilter.list(holders)) {
+      NamedScopeFilter old = map.put(filter.toString(), filter);
+      if (old != null) {
+        LOG.warn("DUPLICATED: " + filter);
+      }
+    }
+    return map;
   }
 }

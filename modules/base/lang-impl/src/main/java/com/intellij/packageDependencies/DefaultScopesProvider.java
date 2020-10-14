@@ -17,18 +17,15 @@ package com.intellij.packageDependencies;
 
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.scratch.ScratchesNamedScope;
-import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.problems.WolfTheProblemSolver;
 import com.intellij.psi.search.scope.NonProjectFilesScope;
 import com.intellij.psi.search.scope.ProjectFilesScope;
 import com.intellij.psi.search.scope.packageSet.*;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.inject.Inject;
 
-import java.util.ArrayList;
+import javax.annotation.Nonnull;
+import javax.inject.Inject;
 import java.util.Arrays;
 import java.util.List;
 
@@ -58,7 +55,7 @@ public class DefaultScopesProvider extends CustomScopesProviderEx {
                && WolfTheProblemSolver.getInstance(myProject).isProblemFile(file);
       }
     });
-    myScopes = Arrays.asList(projectScope, getProblemsScope(), getAllScope(), nonProjectScope, new ScratchesNamedScope());
+    myScopes = Arrays.asList(projectScope, getAllScope(), nonProjectScope, new ScratchesNamedScope());
   }
 
   @Override
@@ -67,40 +64,11 @@ public class DefaultScopesProvider extends CustomScopesProviderEx {
     return myScopes;
   }
 
-  @SuppressWarnings({"UtilityClassWithoutPrivateConstructor"})
-  private static class AllScopeHolder {
-    private static final String TEXT = FilePatternPackageSet.SCOPE_FILE + ":*//*";
-    private static final NamedScope ALL = new NamedScope("All", new AbstractPackageSet(TEXT, 0) {
-      @Override
-      public boolean contains(final VirtualFile file, final NamedScopesHolder scopesHolder) {
-        return true;
-      }
-    });
-  }
-
   public static NamedScope getAllScope() {
-    return AllScopeHolder.ALL;
+    return CustomScopesProviderEx.getAllScope();
   }
 
   public NamedScope getProblemsScope() {
     return myProblemsScope;
-  }
-
-  public List<NamedScope> getAllCustomScopes() {
-    final List<NamedScope> scopes = new ArrayList<NamedScope>();
-    for (CustomScopesProvider provider : Extensions.getExtensions(CUSTOM_SCOPES_PROVIDER, myProject)) {
-      scopes.addAll(provider.getCustomScopes());
-    }
-    return scopes;
-  }
-
-  @Nullable
-  public NamedScope findCustomScope(String name) {
-    for (NamedScope scope : getAllCustomScopes()) {
-      if (name.equals(scope.getName())) {
-        return scope;
-      }
-    }
-    return null;
   }
 }
