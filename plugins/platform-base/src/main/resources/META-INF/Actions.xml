@@ -257,7 +257,7 @@
     <group id="MainMenu">
       <group id="FileMenu" popup="true">
         <group id="FileOpenGroup">
-          <action id="OpenFile" class="com.intellij.ide.actions.OpenFileAction" icon="consulo.platform.base.PlatformIconGroup@actions.menu_open"/>
+          <action id="OpenFile" class="com.intellij.ide.actions.OpenFileAction" icon="consulo.platform.base.PlatformIconGroup@nodes.folderopened"/>
           <group id="$LRU" popup="true">
             <group id="RecentProjectListGroup" class="com.intellij.ide.actions.RecentProjectsGroup" popup="false"/>
           </group>

@@ -15,7 +15,6 @@
  */
 package consulo.ide.ui;
 
-import com.intellij.icons.AllIcons;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.fileChooser.FileChooserFactory;
@@ -25,7 +24,11 @@ import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.Function;
 import consulo.disposer.Disposable;
-import consulo.ui.*;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.ui.Clickable;
+import consulo.ui.PseudoComponent;
+import consulo.ui.TextBox;
+import consulo.ui.TextBoxWithExtensions;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.fileChooser.FileChooser;
 import consulo.util.lang.StringUtil;
@@ -60,7 +63,7 @@ public final class FileChooserTextBoxBuilder {
         FileChooserFactory.getInstance().installFileCompletion(myTextBox, myFileChooserDescriptor, true, builder.myDisposable);
       }
 
-      myTextBox.setExtensions(new TextBoxWithExtensions.Extension(false, AllIcons.Nodes.CopyOfFolder, null, new Clickable.ClickListener() {
+      myTextBox.setExtensions(new TextBoxWithExtensions.Extension(false, PlatformIconGroup.nodesFolderOpened(), null, new Clickable.ClickListener() {
         @RequiredUIAccess
         @Override
         public void onClick() {

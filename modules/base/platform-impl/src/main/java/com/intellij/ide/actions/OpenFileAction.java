@@ -15,7 +15,6 @@
  */
 package com.intellij.ide.actions;
 
-import com.intellij.icons.AllIcons;
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.impl.ProjectUtil;
 import com.intellij.openapi.actionSystem.AnAction;
@@ -40,10 +39,11 @@ import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.projectImport.ProjectOpenProcessor;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.ProjectOpenProcessors;
 import consulo.start.WelcomeFrameManager;
-import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.fileChooser.FileChooser;
 
 import javax.annotation.Nonnull;
@@ -105,7 +105,7 @@ public class OpenFileAction extends AnAction implements DumbAware {
   @Override
   public void update(@Nonnull AnActionEvent e) {
     if (WelcomeFrameManager.isFromWelcomeFrame(e)) {
-      e.getPresentation().setIcon(AllIcons.Welcome.OpenProject);
+      e.getPresentation().setIcon(PlatformIconGroup.nodesFolderOpened());
     }
   }
 
