@@ -81,7 +81,7 @@ public class JBLabel extends JLabel implements AnchorableComponent {
     super(TargetAWT.to(image), horizontalAlignment);
   }
 
-  public JBLabel(@Nonnull String text, @Nullable Image icon, @JdkConstants.HorizontalAlignment int horizontalAlignment) {
+  public JBLabel(@Nullable String text, @Nullable Image icon, @JdkConstants.HorizontalAlignment int horizontalAlignment) {
     super(text, TargetAWT.to(icon), horizontalAlignment);
   }
 
