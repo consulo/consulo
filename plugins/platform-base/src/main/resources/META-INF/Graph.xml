@@ -15,7 +15,7 @@
   -->
 <consulo-plugin>
   <actions>
-    <action id="ShowDiagram" class="consulo.diagram.actions.ShowDiagramAction" icon="AllIcons.FileTypes.Diagram">
+    <action id="ShowDiagram" class="consulo.diagram.actions.ShowDiagramAction" icon="consulo.platform.base.PlatformIconGroup@filetypes.diagram">
       <keyboard-shortcut first-keystroke="control shift alt U" keymap="$default"/>
       <add-to-group group-id="EditorPopupMenu" anchor="last" />
       <add-to-group group-id="ProjectViewPopupMenu" anchor="last" />

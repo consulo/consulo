@@ -41,7 +41,7 @@
     <applicationConfigurable parentId="execution" instance="com.intellij.remoteServer.impl.configuration.RemoteServerListConfigurable"/>
     <programRunner implementation="com.intellij.remoteServer.impl.runtime.DeployToServerRunner"/>
 
-    <toolWindow id="Application Servers" icon="/icons/serversToolWindow.png" factoryClass="consulo.remoteServer.ui.ServersToolWindowFactory" anchor="bottom" />
+    <toolWindow id="Application Servers" icon="consulo.platform.base.PlatformIconGroup@remoteservers.serverstoolwindow" factoryClass="consulo.remoteServer.ui.ServersToolWindowFactory" anchor="bottom" />
     <projectService serviceImplementation="consulo.remoteServer.ui.ServersToolWindowManager" />
 
     <remoteServer.deploymentSource.type implementation="com.intellij.remoteServer.impl.configuration.deploySource.ModuleDeploymentSourceType"/>
