@@ -15,25 +15,26 @@
  */
 package com.intellij.psi.impl.source;
 
-import com.intellij.extapi.psi.StubBasedPsiElementBase;
 import com.intellij.lang.ASTNode;
-import consulo.logging.Logger;
-import com.intellij.openapi.util.Getter;
+import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.impl.DebugUtil;
 import com.intellij.psi.impl.source.tree.CompositeElement;
 import com.intellij.psi.impl.source.tree.FileElement;
 import com.intellij.psi.stubs.*;
-import com.intellij.reference.SoftReference;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.logging.Logger;
+import consulo.psi.impl.source.internal.SubstrateRefOwner;
+import consulo.util.lang.ref.SoftReference;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -45,15 +46,15 @@ final class FileTrees {
   private static final int firstNonFilePsiIndex = 1;
   private final PsiFileImpl myFile;
   private final Reference<StubTree> myStub;
-  private final Getter<FileElement> myTreeElementPointer; // SoftReference/WeakReference to ASTNode or a strong reference to a tree if the file is a DummyHolder
+  private final Supplier<FileElement> myTreeElementPointer; // SoftReference/WeakReference to ASTNode or a strong reference to a tree if the file is a DummyHolder
 
   /**
    * Keeps references to all alive stubbed PSI (using {@link SpineRef}) to ensure PSI identity is preserved after AST/stubs are gc-ed and reloaded
    */
   @Nullable
-  private final Reference<StubBasedPsiElementBase>[] myRefToPsi;
+  private final Reference<SubstrateRefOwner>[] myRefToPsi;
 
-  private FileTrees(@Nonnull PsiFileImpl file, @Nullable Reference<StubTree> stub, @Nullable Getter<FileElement> ast, @Nullable Reference<StubBasedPsiElementBase>[] refToPsi) {
+  private FileTrees(@Nonnull PsiFileImpl file, @Nullable Reference<StubTree> stub, @Nullable Supplier<FileElement> ast, @Nullable Reference<SubstrateRefOwner>[] refToPsi) {
     myFile = file;
     myStub = stub;
     myTreeElementPointer = ast;
@@ -82,9 +83,9 @@ final class FileTrees {
     return new FileTrees(myFile, myStub, myTreeElementPointer, null);
   }
 
-  private void forEachCachedPsi(Consumer<? super StubBasedPsiElementBase> consumer) {
+  private void forEachCachedPsi(Consumer<? super SubstrateRefOwner> consumer) {
     ContainerUtil.process(myRefToPsi, ref -> {
-      StubBasedPsiElementBase psi = SoftReference.dereference(ref);
+      SubstrateRefOwner psi = SoftReference.dereference(ref);
       if (psi != null) {
         consumer.accept(psi);
       }
@@ -93,7 +94,7 @@ final class FileTrees {
   }
 
   private boolean hasCachedPsi() {
-    Reference<StubBasedPsiElementBase>[] refToPsi = myRefToPsi;
+    Reference<SubstrateRefOwner>[] refToPsi = myRefToPsi;
     return refToPsi != null && ContainerUtil.exists(refToPsi, ref -> SoftReference.dereference(ref) != null);
   }
 
@@ -102,7 +103,7 @@ final class FileTrees {
   }
 
   FileTrees switchToSpineRefs(@Nonnull List<PsiElement> spine) {
-    Reference<StubBasedPsiElementBase>[] refToPsi = myRefToPsi;
+    Reference<SubstrateRefOwner>[] refToPsi = myRefToPsi;
     if (refToPsi == null) {
       //noinspection unchecked
       refToPsi = new Reference[spine.size()];
@@ -110,9 +111,9 @@ final class FileTrees {
 
     try {
       for (int i = firstNonFilePsiIndex; i < refToPsi.length; i++) {
-        StubBasedPsiElementBase psi = (StubBasedPsiElementBase)Objects.requireNonNull(spine.get(i));
+        SubstrateRefOwner psi = (SubstrateRefOwner)Objects.requireNonNull(spine.get(i));
         psi.setSubstrateRef(new SpineRef(myFile, i));
-        StubBasedPsiElementBase existing = SoftReference.dereference(refToPsi[i]);
+        SubstrateRefOwner existing = SoftReference.dereference(refToPsi[i]);
         if (existing != null) {
           assert existing == psi : "Duplicate PSI found";
         }
@@ -145,7 +146,7 @@ final class FileTrees {
     return new FileTrees(myFile, null, myTreeElementPointer, null);
   }
 
-  FileTrees withAst(@Nonnull Getter<FileElement> ast) {
+  FileTrees withAst(@Nonnull Supplier<FileElement> ast) {
     return new FileTrees(myFile, myStub, ast, myRefToPsi).reconcilePsi(derefStub(), ast.get(), true);
   }
 
@@ -200,7 +201,7 @@ final class FileTrees {
   }
 
   /**
-   * {@link StubbedSpine#getStubPsi(int)} may throw {@link com.intellij.openapi.progress.ProcessCanceledException},
+   * {@link StubbedSpine#getStubPsi(int)} may throw {@link ProcessCanceledException},
    * so shouldn't be invoked in the middle of a mutating operation to avoid leaving inconsistent state.
    * So we obtain PSI all at once in advance.
    */
@@ -211,7 +212,7 @@ final class FileTrees {
   private void bindSubstratesToCachedPsi(List<StubElement<?>> stubList, List<CompositeElement> nodeList) {
     assert myRefToPsi != null;
     for (int i = firstNonFilePsiIndex; i < myRefToPsi.length; i++) {
-      StubBasedPsiElementBase cachedPsi = SoftReference.dereference(myRefToPsi[i]);
+      SubstrateRefOwner cachedPsi = SoftReference.dereference(myRefToPsi[i]);
       if (cachedPsi != null) {
         if (stubList != null) {
           //noinspection unchecked

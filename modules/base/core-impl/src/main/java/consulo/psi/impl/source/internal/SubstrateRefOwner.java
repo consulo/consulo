@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2013-2020 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,31 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package consulo.psi.impl.source.internal;
 
-/*
- * @author max
- */
-package com.intellij.psi;
-
-import com.intellij.psi.stubs.IStubElementType;
+import com.intellij.psi.StubBasedPsiElement;
+import com.intellij.psi.impl.source.SubstrateRef;
 import com.intellij.psi.stubs.StubElement;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
-public interface StubBasedPsiElement<Stub extends StubElement> extends PsiElement {
-  @Nonnull
-  IStubElementType getElementType();
-
-  @Nullable
-  Stub getStub();
-
-  /**
-   * Like {@link #getStub()}, but can return a non-null value after the element has been switched to AST. Can be used
-   * to retrieve the information which is cheaper to get from a stub than by tree traversal.
-   */
-  @Nullable
-  default Stub getGreenStub() {
-    return getStub();
-  }
+/**
+ * @author VISTALL
+ * @since 2020-10-16
+ */
+public interface SubstrateRefOwner<T extends StubElement> extends StubBasedPsiElement<T> {
+  void setSubstrateRef(@Nonnull SubstrateRef substrateRef);
 }

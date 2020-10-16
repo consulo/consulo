@@ -2,7 +2,6 @@
 
 package com.intellij.psi;
 
-import com.intellij.extapi.psi.StubBasedPsiElementBase;
 import com.intellij.injected.editor.VirtualFileWindow;
 import com.intellij.lang.Language;
 import com.intellij.openapi.application.ApplicationManager;
@@ -28,9 +27,9 @@ import com.intellij.psi.tree.IStubFileElementType;
 import com.intellij.psi.util.PsiUtilCore;
 import consulo.logging.Logger;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.Set;
 
 /**
@@ -152,7 +151,7 @@ public abstract class PsiAnchor {
       return 0;
     }
 
-    StubElement liveStub = psi instanceof StubBasedPsiElementBase ? ((StubBasedPsiElementBase)psi).getGreenStub() : psi.getStub();
+    StubElement liveStub = psi.getStub();
     if (liveStub != null) {
       return ((StubBase)liveStub).getStubId();
     }

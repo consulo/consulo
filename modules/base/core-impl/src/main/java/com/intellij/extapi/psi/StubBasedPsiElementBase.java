@@ -25,15 +25,16 @@ import com.intellij.openapi.progress.ProgressIndicatorProvider;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectCoreUtil;
-import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.RecursionManager;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiInvalidElementAccessException;
+import com.intellij.psi.StubBasedPsiElement;
 import com.intellij.psi.impl.DebugUtil;
 import com.intellij.psi.impl.PsiManagerEx;
 import com.intellij.psi.impl.source.PsiFileImpl;
+import com.intellij.psi.impl.source.PsiFileWithStubSupport;
 import com.intellij.psi.impl.source.SourceTreeToPsiMap;
 import com.intellij.psi.impl.source.SubstrateRef;
 import com.intellij.psi.impl.source.tree.CompositeElement;
@@ -46,9 +47,11 @@ import com.intellij.psi.tree.TokenSet;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.ArrayFactory;
 import com.intellij.util.ArrayUtil;
+import consulo.psi.impl.source.internal.SubstrateRefOwner;
+import consulo.util.dataholder.Key;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
@@ -79,9 +82,9 @@ import java.util.List;
  * in the memory at once, but results in occasionally expensive {@link #getNode()} calls that have to load and parse the AST anew.
  *
  * @see IStubElementType
- * @see com.intellij.psi.impl.source.PsiFileWithStubSupport
+ * @see PsiFileWithStubSupport
  */
-public class StubBasedPsiElementBase<T extends StubElement> extends ASTDelegatePsiElement {
+public class StubBasedPsiElementBase<T extends StubElement> extends ASTDelegatePsiElement implements StubBasedPsiElement<T>, SubstrateRefOwner<T> {
   public static final Key<String> CREATION_TRACE = Key.create("CREATION_TRACE");
   public static final boolean ourTraceStubAstBinding = "true".equals(System.getProperty("trace.stub.ast.binding", "false"));
   private volatile SubstrateRef mySubstrateRef;

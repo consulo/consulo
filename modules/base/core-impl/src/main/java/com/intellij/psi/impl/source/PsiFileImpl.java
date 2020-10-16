@@ -32,7 +32,6 @@ import com.intellij.psi.stubs.*;
 import com.intellij.psi.tree.*;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.psi.util.PsiUtilCore;
-import com.intellij.reference.SoftReference;
 import com.intellij.testFramework.ReadOnlyLightVirtualFile;
 import com.intellij.util.*;
 import com.intellij.util.concurrency.AtomicFieldUpdater;
@@ -46,11 +45,13 @@ import consulo.psi.PsiElementWithSubtreeChangeNotifier;
 import consulo.ui.image.Image;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolderBase;
+import consulo.util.lang.ref.SoftReference;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import java.util.*;
+import java.util.function.Supplier;
 
 public abstract class PsiFileImpl extends UserDataHolderBase implements PsiFileEx, PsiFileWithStubSupport, Queryable, PsiElementWithSubtreeChangeNotifier, Cloneable {
   private static final Logger LOG = Logger.getInstance(PsiFileImpl.class);
@@ -704,11 +705,11 @@ public abstract class PsiFileImpl extends UserDataHolderBase implements PsiFileE
   }
 
   @Nonnull
-  private Getter<FileElement> createTreeElementPointer(@Nonnull FileElement treeElement) {
+  private Supplier<FileElement> createTreeElementPointer(@Nonnull FileElement treeElement) {
     if (isKeepTreeElementByHardReference()) {
       return treeElement;
     }
-    return myManager.isBatchFilesProcessingMode() ? new PatchedWeakReference<>(treeElement) : new SoftReference<>(treeElement);
+    return myManager.isBatchFilesProcessingMode() ? new PatchedWeakReference<>(treeElement) : new SoftReference<FileElement>(treeElement);
   }
 
   @Override

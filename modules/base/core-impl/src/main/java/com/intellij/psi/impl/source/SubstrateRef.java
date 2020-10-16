@@ -15,7 +15,6 @@
  */
 package com.intellij.psi.impl.source;
 
-import com.intellij.extapi.psi.StubBasedPsiElementBase;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.FileASTNode;
 import com.intellij.openapi.application.ApplicationManager;
@@ -23,6 +22,7 @@ import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiInvalidElementAccessException;
+import com.intellij.psi.StubBasedPsiElement;
 import com.intellij.psi.impl.source.tree.SharedImplUtil;
 import com.intellij.psi.stubs.PsiFileStub;
 import com.intellij.psi.stubs.PsiFileStubImpl;
@@ -58,7 +58,7 @@ public abstract class SubstrateRef {
   public abstract PsiFile getContainingFile();
 
   @Nonnull
-  static SubstrateRef createInvalidRef(@Nonnull final StubBasedPsiElementBase<?> psi) {
+  static SubstrateRef createInvalidRef(@Nonnull final StubBasedPsiElement<?> psi) {
     return new SubstrateRef() {
       @Nonnull
       @Override
