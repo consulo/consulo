@@ -141,7 +141,7 @@ public class DesktopUIInternalImpl extends UIInternal {
   @Override
   public Image _ImageEffects_withText(Image baseImage, String text) {
     DesktopImageWithTextImpl withText = new DesktopImageWithTextImpl(text, new JLabel(), JBUIScale.scaleFontSize(6f));
-    DesktopLayeredImageImpl image = new DesktopLayeredImageImpl(2);
+    DesktopHeavyLayeredImageImpl image = new DesktopHeavyLayeredImageImpl(2);
     image.setIcon(TargetAWT.to(baseImage), 0);
     image.setIcon(TargetAWT.to(withText), 1, SwingConstants.SOUTH_EAST);
     return image;
