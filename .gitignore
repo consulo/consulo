@@ -8,6 +8,7 @@
 .consulo/uiDesigner.xml
 .consulo/artifacts/
 .consulo/.name
+.vs/
 /out
 
 .DS_Store

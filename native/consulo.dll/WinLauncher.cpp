@@ -42,7 +42,13 @@ HANDLE hEvent;
 HANDLE hSingleInstanceWatcherThread;
 const int FILE_MAPPING_SIZE = 16000;
 
-#define BOOTCLASSPATH "consulo-bootstrap.jar;consulo-container-api.jar;consulo-container-impl.jar;consulo-desktop-bootstrap.jar;consulo-util-rt.jar"
+// java 9 module mode
+#define RUN_IN_MODULE_MODE
+
+#ifndef RUN_IN_MODULE_MODE
+#define BOOTCLASSPATH "consulo-bootstrap.jar;consulo-container-api.jar;consulo-container-impl.jar;consulo-desktop-bootstrap.jar;consulo-util-nodep.jar"
+#endif
+
 #define CONSULO_JRE "CONSULO_JRE"
 
 #ifdef _M_X64
@@ -125,6 +131,15 @@ std::string GetAdjacentDir(char* suffix)
 	return target + "\\" + suffix + "\\";
 }
 
+std::wstring GetAdjacentDirW(WCHAR* suffix)
+{
+    std::wstring path(workingDirectoryPath);
+
+    std::wstring target = std::wstring(path.begin(), path.end());
+
+    return target + L"\\" + suffix + L"\\";
+}
+
 bool FindJVMInEnvVar(const char* envVarName, bool& result)
 {
   char envVarValue[_MAX_PATH];
@@ -204,22 +219,16 @@ bool FindJVMInRegistryWithVersion(std::string version, bool wow64_32)
 bool FindJVMInRegistry()
 {
 #ifndef _M_X64
-  if (FindJVMInRegistryWithVersion("1.8", true))
-    return true;
-  if (FindJVMInRegistryWithVersion("9", true))
-    return true;
-  if (FindJVMInRegistryWithVersion("10", true))
-    return true;
   if (FindJVMInRegistryWithVersion("11", true))
     return true;
   if (FindJVMInRegistryWithVersion("12", true))
     return true;
-
-  //obsolete java versions
-  if (FindJVMInRegistryWithVersion("1.7", true))
-    return true;
-  if (FindJVMInRegistryWithVersion("1.6", true))
-    return true;
+  if (FindJVMInRegistryWithVersion("13", true))
+      return true;
+  if (FindJVMInRegistryWithVersion("14", true))
+      return true;
+  if (FindJVMInRegistryWithVersion("15", true))
+      return true;
 
   std::string currentVersion2 = FindJRECurrentVersionRegistryKey(true);
   if(currentVersion2 != EMPTY_STRING && FindJVMInRegistryWithVersion(currentVersion2, true)) {
@@ -227,22 +236,16 @@ bool FindJVMInRegistry()
   }
 #endif
 
-  if (FindJVMInRegistryWithVersion("1.8", false))
-    return true;
-  if (FindJVMInRegistryWithVersion("9", false))
-    return true;
-  if (FindJVMInRegistryWithVersion("10", false))
-    return true;
   if (FindJVMInRegistryWithVersion("11", false))
     return true;
   if (FindJVMInRegistryWithVersion("12", false))
     return true;
-
-  //obsolete java versions
-  if (FindJVMInRegistryWithVersion("1.7", false))
-    return true;
-  if (FindJVMInRegistryWithVersion("1.6", false))
-    return true;
+  if (FindJVMInRegistryWithVersion("13", true))
+      return true;
+  if (FindJVMInRegistryWithVersion("14", true))
+      return true;
+  if (FindJVMInRegistryWithVersion("15", true))
+      return true;
 
   std::string currentVersion = FindJRECurrentVersionRegistryKey(false);
   if(currentVersion != EMPTY_STRING && FindJVMInRegistryWithVersion(currentVersion, false)) {
@@ -304,7 +307,7 @@ bool LocateJVM()
   }
 
   std::string jvmError;
-  jvmError = "No JVM installation found. Please install a " BITS_STR " JRE/JDK.\n"
+  jvmError = "No JVM installation found. Please install a " BITS_STR " JRE/JDK 11+.\n"
     "If you already have a JRE/JDK installed, define a JAVA_HOME variable in\n"
     "Computer > System Properties > System Settings > Environment Variables.";
 
@@ -390,6 +393,7 @@ std::string CollectBootJars(const std::string& jarList)
   return result;
 }
 
+#ifndef RUN_IN_MODULE_MODE
 std::string BuildClassPath()
 {
   std::string classpathLibs = std::string(BOOTCLASSPATH);
@@ -397,13 +401,22 @@ std::string BuildClassPath()
   return result;
 }
 
-bool AddClassPathOptions(std::vector<std::string>& vmOptionLines)
+void AddClassPathOptions(std::vector<std::string>& vmOptionLines)
 {
-  std::string classPath = BuildClassPath();
-  if (classPath.size() == 0) return false;
-  vmOptionLines.push_back(std::string("-Djava.class.path=") + classPath);
-  return true;
+    std::string classPath = BuildClassPath();
+    if (classPath.size() == 0) return;
+    vmOptionLines.push_back(std::string("-Djava.class.path=") + classPath);
 }
+#else
+
+void AddModulePathOptions(std::vector<std::string>& vmOptionLines)
+{
+    std::wstring bootDir = GetAdjacentDirW(L"boot");
+    vmOptionLines.push_back("--module-path=" + EncodeWideACP(bootDir));
+    vmOptionLines.push_back("-Djdk.module.main=consulo.desktop.bootstrap");
+    vmOptionLines.push_back("-Dconsulo.module.path.boot=true");
+}
+#endif
 
 void AddPredefinedVMOptions(std::vector<std::string>& vmOptionLines)
 {
@@ -442,12 +455,26 @@ bool LoadVMOptions(WCHAR* targetVmOptionFile)
     }
   }
 
+#ifdef RUN_IN_MODULE_MODE
+  std::wstring systemVmOptions = GetAdjacentDirW(L"bin") + L"\\app.vmoptions";
+
+  if (GetFileAttributes(systemVmOptions.c_str()) != INVALID_FILE_ATTRIBUTES)
+  {
+      LoadVMOptionsFile(systemVmOptions.c_str(), vmOptionLines);
+  }
+#endif
+
   // deprecated options - will removed later
   vmOptionLines.push_back(std::string("-Djb.vmOptions=") + EncodeWideACP(used));
 
   vmOptionLines.push_back(std::string("-Dconsulo.vm.options.files=") + EncodeWideACP(used));
 
-  if (!AddClassPathOptions(vmOptionLines)) return false;
+#ifdef RUN_IN_MODULE_MODE
+  AddModulePathOptions(vmOptionLines);
+#else
+  AddClassPathOptions(vmOptionLines);
+#endif
+
   AddPredefinedVMOptions(vmOptionLines);
 
   vmOptionCount = vmOptionLines.size();
@@ -500,7 +527,7 @@ bool LoadJVMLibrary()
 bool CreateJVM()
 {
   JavaVMInitArgs initArgs;
-  initArgs.version = JNI_VERSION_1_2;
+  initArgs.version = JNI_VERSION_9;
   initArgs.options = vmOptions;
   initArgs.nOptions = vmOptionCount;
   initArgs.ignoreUnrecognized = JNI_FALSE;
@@ -752,6 +779,7 @@ extern "C" int __declspec(dllexport) __cdecl launchConsulo2(HINSTANCE hInstance,
 
   if (!CheckSingleInstance()) 
   {
+      //MessageBox(NULL, L"CheckSingleInstance Fail", L"Consulo", 0);
 	  return 1;
   }
 

@@ -1,0 +1,6 @@
+--add-opens=java.desktop/sun.awt=consulo.container.impl
+--add-opens=java.desktop/sun.java2d=consulo.container.impl
+--add-opens=java.desktop/sun.font=consulo.container.impl
+--add-opens=java.desktop/java.awt=consulo.container.impl
+--add-opens=java.desktop/javax.swing=consulo.container.impl
+--add-opens=java.desktop/javax.swing.plaf.basic=consulo.container.impl
