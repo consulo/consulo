@@ -530,7 +530,7 @@ bool CreateJVM()
   initArgs.version = JNI_VERSION_9;
   initArgs.options = vmOptions;
   initArgs.nOptions = vmOptionCount;
-  initArgs.ignoreUnrecognized = JNI_FALSE;
+  initArgs.ignoreUnrecognized = JNI_TRUE;
 
   int result = pCreateJavaVM(&jvm, &env, &initArgs);
 
