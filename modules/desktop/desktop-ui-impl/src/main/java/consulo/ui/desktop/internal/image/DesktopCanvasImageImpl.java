@@ -18,11 +18,10 @@ package consulo.ui.desktop.internal.image;
 import com.intellij.util.ui.GraphicsUtil;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
+import consulo.ui.desktop.internal.image.canvas.DesktopCanvas2DImpl;
 import consulo.ui.image.Image;
 import consulo.ui.image.canvas.Canvas2D;
-import consulo.ui.desktop.internal.image.canvas.DesktopCanvas2DImpl;
 
-import javax.annotation.Nonnull;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.function.Consumer;
@@ -31,13 +30,12 @@ import java.util.function.Consumer;
  * @author VISTALL
  * @since 2018-06-15
  */
-public class DesktopCanvasImageImpl extends JBUI.CachingScalableJBIcon<DesktopCanvasImageImpl> implements Image {
+public class DesktopCanvasImageImpl extends JBUI.RasterJBIcon implements Image {
   private final int myWidth;
   private final int myHeight;
   private final Consumer<Canvas2D> myCanvas2DConsumer;
 
   private java.awt.Image myImage;
-  private float myScaleFactor;
 
   public DesktopCanvasImageImpl(int width, int height, Consumer<Canvas2D> canvas2DConsumer) {
     myWidth = width;
@@ -46,21 +44,10 @@ public class DesktopCanvasImageImpl extends JBUI.CachingScalableJBIcon<DesktopCa
   }
 
   @Override
-  public int getHeight() {
-    return getIconHeight();
-  }
-
-  @Override
-  public int getWidth() {
-    return getIconWidth();
-  }
-
-  @Override
   public void paintIcon(Component c, Graphics g, int x, int y) {
-    float current = JBUI.sysScale((Graphics2D)g);
-    float old = myScaleFactor;
-    if(current != old) {
-      myScaleFactor = current;
+    JBUI.ScaleContext ctx = JBUI.ScaleContext.create((Graphics2D)g);
+
+    if (updateScaleContext(ctx)) {
       myImage = null;
     }
 
@@ -79,18 +66,22 @@ public class DesktopCanvasImageImpl extends JBUI.CachingScalableJBIcon<DesktopCa
   }
 
   @Override
+  public int getHeight() {
+    return getIconHeight();
+  }
+
+  @Override
+  public int getWidth() {
+    return getIconWidth();
+  }
+
+  @Override
   public int getIconWidth() {
-    return (int)Math.ceil(scaleVal(myWidth, JBUI.ScaleType.OBJ_SCALE));
+    return JBUI.scale(myWidth);
   }
 
   @Override
   public int getIconHeight() {
-    return (int)Math.ceil(scaleVal(myHeight, JBUI.ScaleType.OBJ_SCALE));
-  }
-
-  @Nonnull
-  @Override
-  protected DesktopCanvasImageImpl copy() {
-    return new DesktopCanvasImageImpl(myWidth, myHeight, myCanvas2DConsumer);
+    return JBUI.scale(myHeight);
   }
 }
