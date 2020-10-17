@@ -22,6 +22,7 @@ import consulo.ui.image.Image;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
+import java.util.Objects;
 
 /**
  * @author VISTALL
@@ -72,5 +73,18 @@ public class DesktopTransparentImageImpl implements RetrievableIcon, Image {
   @Override
   public int getWidth() {
     return getIconWidth();
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    DesktopTransparentImageImpl that = (DesktopTransparentImageImpl)o;
+    return Float.compare(that.myAlpha, myAlpha) == 0 && Objects.equals(myImage, that.myImage);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(myImage, myAlpha);
   }
 }
