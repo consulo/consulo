@@ -110,7 +110,7 @@ fi
 # Collect JVM options and properties.
 # ---------------------------------------------------------------------
 
-MAIN_CLASS_NAME="consulo.desktop.boot.main.Main"
+MAIN_CLASS_NAME="-m consulo.desktop.bootstrap/consulo.desktop.boot.main.Main"
 
 VM_OPTIONS_FILE="$ROOT_DIR/consulo$BITS.vmoptions"
 
@@ -119,20 +119,16 @@ if [ -r "$VM_OPTIONS_FILE" ]; then
   VM_OPTIONS="$VM_OPTIONS -Djb.vmOptionsFile=\"$VM_OPTIONS_FILE\" -Dconsulo.vm.options.file=\"$VM_OPTIONS_FILE\""
 fi
 
-COMMON_JVM_ARGS="-Dconsulo.home.path=\"$IDE_HOME\" -Didea.home.path=\"$IDE_HOME\" -Didea.properties.file=\"$ROOT_DIR/consulo.properties\" -Dconsulo.properties.file=\"$ROOT_DIR/consulo.properties\""
-IDE_JVM_ARGS=""
-ALL_JVM_ARGS="$VM_OPTIONS $COMMON_JVM_ARGS $IDE_JVM_ARGS $AGENT $REQUIRED_JVM_ARGS"
+APP_OPTIONS_FILE="$IDE_HOME/bin/app.vmoptions"
+APP_OPTIONS=""
 
-CLASSPATH="$IDE_HOME/boot/consulo-bootstrap.jar"
-CLASSPATH="$CLASSPATH:$IDE_HOME/boot/consulo-container-api.jar"
-CLASSPATH="$CLASSPATH:$IDE_HOME/boot/consulo-container-impl.jar"
-CLASSPATH="$CLASSPATH:$IDE_HOME/boot/consulo-desktop-bootstrap.jar"
-CLASSPATH="$CLASSPATH:$IDE_HOME/boot/consulo-util-rt.jar"
-
-if [ -n "$IDEA_CLASSPATH" ]; then
-  CLASSPATH="$CLASSPATH:$IDEA_CLASSPATH"
+if [ -r "$APP_OPTIONS_FILE" ]; then
+  APP_OPTIONS=`"$CAT" "$APP_OPTIONS_FILE" | "$GREP" -v "^#.*" | "$TR" '\n' ' '`
 fi
-export CLASSPATH
+
+COMMON_JVM_ARGS="-p \"$IDE_HOME/boot\" -Dconsulo.module.path.boot=true -Dconsulo.home.path=\"$IDE_HOME\" -Didea.home.path=\"$IDE_HOME\" -Didea.properties.file=\"$ROOT_DIR/consulo.properties\" -Dconsulo.properties.file=\"$ROOT_DIR/consulo.properties\""
+IDE_JVM_ARGS=""
+ALL_JVM_ARGS="$APP_OPTIONS $VM_OPTIONS $COMMON_JVM_ARGS $IDE_JVM_ARGS $AGENT $REQUIRED_JVM_ARGS"
 
 LD_LIBRARY_PATH="$IDE_BIN_HOME:$LD_LIBRARY_PATH"
 export LD_LIBRARY_PATH
