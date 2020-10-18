@@ -15,8 +15,6 @@
  */
 package consulo.container.plugin;
 
-import org.jetbrains.annotations.NonNls;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.HashMap;
@@ -62,7 +60,6 @@ public class PluginId implements Comparable<PluginId> {
     return null;
   }
 
-  @NonNls
   @Nonnull
   public String getIdString() {
     return myIdString;

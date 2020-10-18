@@ -141,6 +141,11 @@ public abstract class PluginDescriptorStub implements PluginDescriptor {
   }
 
   @Override
+  public Object getModuleLayer() {
+    return null;
+  }
+
+  @Override
   public String getVendorEmail() {
     return null;
   }

@@ -49,6 +49,12 @@ public class FrameTitleUtil {
     if (Platform.current().isUnderRoot()) {
       builder.append(" (Administrator)");
     }
+
+    String jdkModuleMain = Platform.current().jvm().getRuntimeProperty("jdk.module.main");
+    if(!StringUtil.isEmptyOrSpaces(jdkModuleMain)) {
+      builder.append(" [Jigsaw]");
+    }
+
     return builder.toString();
   }
 }

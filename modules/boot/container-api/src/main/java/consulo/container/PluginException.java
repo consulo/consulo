@@ -16,7 +16,6 @@
 package consulo.container;
 
 import consulo.container.plugin.PluginId;
-import org.jetbrains.annotations.NonNls;
 
 /**
  * Created by IntelliJ IDEA.
@@ -49,7 +48,7 @@ public class PluginException extends RuntimeException {
 
   @Override
   public String getMessage() {
-    @NonNls String message = super.getMessage();
+    String message = super.getMessage();
 
     if (message == null) {
       message = "";

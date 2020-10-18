@@ -101,6 +101,12 @@ public interface PluginDescriptor {
   @Nonnull
   List<PluginListenerDescriptor> getModuleListeners();
 
+  /**
+   * If return not null, plugin loaded in module mode. Object instance of {@link ModuleLayer}
+   */
+  @Nullable
+  Object getModuleLayer();
+
   @Deprecated
   @DeprecationInfo("This method is obsolete now. Bundled plugin is always platform modules - it can't load plugins")
   boolean isBundled();
