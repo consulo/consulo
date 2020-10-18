@@ -380,10 +380,10 @@ public class AllIcons {
     public static final Image Htaccess = PlatformIconGroup.fileTypesHtaccess(); // 16x16
     public static final Image Html = PlatformIconGroup.fileTypesHtml(); // 16x16
     public static final Image Idl = PlatformIconGroup.fileTypesIdl(); // 16x16
-    public static final Image Properties = PlatformIconGroup.actionsProperties(); // 16x16
+    public static final Image Properties = PlatformIconGroup.fileTypesProperties(); // 16x16
     public static final Image Text = PlatformIconGroup.fileTypesText(); // 16x16
     public static final Image UiForm = PlatformIconGroup.fileTypesUiForm(); // 16x16
-    public static final Image Unknown = PlatformIconGroup.toolbarUnknown(); // 16x16
+    public static final Image Unknown = PlatformIconGroup.fileTypesUnknown(); // 16x16
     public static final Image WsdlFile = PlatformIconGroup.fileTypesWsdlFile(); // 16x16
     public static final Image Xhtml = PlatformIconGroup.fileTypesXhtml(); // 16x16
     public static final Image Xml = PlatformIconGroup.fileTypesXml(); // 16x16
