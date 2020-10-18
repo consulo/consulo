@@ -16,7 +16,6 @@
 package consulo.util.nodep.function;
 
 import consulo.util.nodep.Conditions;
-import org.jetbrains.annotations.NonNls;
 
 /**
  * Returns {@code true} or {@code false} for the given input object.
@@ -34,7 +33,6 @@ public interface Condition<T> {
       return object != null;
     }
 
-    @NonNls
     @Override
     public String toString() {
       return "Condition.NOT_NULL";
@@ -50,7 +48,6 @@ public interface Condition<T> {
       return true;
     }
 
-    @NonNls
     @Override
     public String toString() {
       return "Condition.TRUE";
@@ -65,7 +62,6 @@ public interface Condition<T> {
       return false;
     }
 
-    @NonNls
     @Override
     public String toString() {
       return "Condition.FALSE";

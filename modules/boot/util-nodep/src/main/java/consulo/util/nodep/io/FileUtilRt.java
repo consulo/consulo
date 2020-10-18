@@ -5,8 +5,6 @@ import consulo.util.nodep.SystemInfoRt;
 import consulo.util.nodep.ArrayUtilRt;
 import consulo.util.nodep.LoggerRt;
 import consulo.util.nodep.text.StringUtilRt;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -217,12 +215,10 @@ public class FileUtilRt {
    * what {@link File#getCanonicalPath()} will return), so if the path may contain symlinks,
    * consider using {@link com.intellij.openapi.util.io.FileUtil#toCanonicalPath(String, boolean)} instead.
    */
-  @Contract("null, _, _ -> null")
   public static String toCanonicalPath(@Nullable String path, char separatorChar, boolean removeLastSlash) {
     return toCanonicalPath(path, separatorChar, removeLastSlash, null);
   }
 
-  @Contract("null, _, _, _ -> null")
   protected static String toCanonicalPath(@Nullable String path, final char separatorChar, final boolean removeLastSlash, final @Nullable SymlinkResolver resolver) {
     if (path == null || path.length() == 0) {
       return path;
@@ -350,7 +346,6 @@ public class FileUtilRt {
     }
   }
 
-  @Contract("_, _, _, null -> true")
   private static boolean processDots(@Nonnull StringBuilder result, int dots, int start, SymlinkResolver symlinkResolver) {
     if (dots == 2) {
       int pos = -1;
@@ -397,7 +392,6 @@ public class FileUtilRt {
     return getExtension(fileName, "");
   }
 
-  @Contract("_,!null -> !null")
   public static CharSequence getExtension(@Nonnull CharSequence fileName, @Nullable String defaultValue) {
     int index = StringUtilRt.lastIndexOf(fileName, '.', 0, fileName.length());
     if (index < 0) {
@@ -680,7 +674,6 @@ public class FileUtilRt {
     return file.getAbsolutePath();
   }
 
-  @TestOnly
   static void resetCanonicalTempPathCache(final String tempPath) {
     ourCanonicalTempPathCache = tempPath;
   }

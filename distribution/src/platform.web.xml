@@ -66,7 +66,7 @@
         <include>consulo:consulo-container-impl</include>
         <include>consulo:consulo-web-bootstrap</include>
         <include>consulo:consulo-bootstrap</include>
-        <include>consulo:consulo-util-rt</include>
+        <include>consulo:consulo-util-nodep</include>
       </includes>
     </dependencySet>
   </dependencySets>

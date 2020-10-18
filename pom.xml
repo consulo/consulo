@@ -51,7 +51,7 @@
     <module>modules/boot/bootstrap</module>
     <module>modules/boot/container-api</module>
     <module>modules/boot/container-impl</module>
-    <module>modules/boot/util-rt</module>
+    <module>modules/boot/util-nodep</module>
 
     <module>modules/base/annotation</module>
     <module>modules/base/annotations</module>

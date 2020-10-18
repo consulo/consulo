@@ -15,9 +15,6 @@
  */
 package consulo.util.nodep.text;
 
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NonNls;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -29,7 +26,6 @@ import javax.annotation.Nullable;
  */
 @SuppressWarnings({"UtilityClassWithoutPrivateConstructor"})
 public class StringUtilRt {
-  @Contract("null,!null,_ -> false; !null,null,_ -> false; null,null,_ -> true")
   public static boolean equal(@Nullable CharSequence s1, @Nullable CharSequence s2, boolean caseSensitive) {
     if (s1 == s2) return true;
     if (s1 == null || s2 == null) return false;
@@ -54,7 +50,6 @@ public class StringUtilRt {
     return true;
   }
 
-  @Contract(pure = true)
   public static long parseLong(@Nullable String string, long defaultValue) {
     if (string != null) {
       try {
@@ -66,53 +61,44 @@ public class StringUtilRt {
     return defaultValue;
   }
 
-  @Contract(pure = true)
   public static boolean charsEqualIgnoreCase(char a, char b) {
     return a == b || toUpperCase(a) == toUpperCase(b) || toLowerCase(a) == toLowerCase(b);
   }
 
   @Nonnull
-  @Contract(pure = true)
-  public static String replace(@NonNls @Nonnull String text, @NonNls @Nonnull String oldS, @NonNls @Nonnull String newS) {
+  public static String replace(@Nonnull String text, @Nonnull String oldS, @Nonnull String newS) {
     return replace(text, oldS, newS, false);
   }
 
-  @Contract(value = "null -> true", pure = true)
   public static boolean isEmpty(@Nullable String s) {
     return s == null || s.isEmpty();
   }
 
-  @Contract(value = "null -> true", pure = true)
   public static boolean isEmpty(@Nullable CharSequence cs) {
     return cs == null || cs.length() == 0;
   }
 
   @Nonnull
-  @Contract(pure = true)
   public static String notNullize(@Nullable final String s) {
     return notNullize(s, "");
   }
 
   @Nonnull
-  @Contract(pure = true)
   public static String notNullize(@Nullable final String s, @Nonnull String defaultValue) {
     return s == null ? defaultValue : s;
   }
 
   @Nonnull
-  @Contract(pure = true)
   public static String notNullizeIfEmpty(@Nullable final String s, @Nonnull String defaultValue) {
     return isEmpty(s) ? defaultValue : s;
   }
 
   @Nullable
-  @Contract(pure = true)
   public static String nullize(@Nullable final String s) {
     return nullize(s, false);
   }
 
   @Nullable
-  @Contract(pure = true)
   public static String nullize(@Nullable final String s, boolean nullizeSpaces) {
     if (nullizeSpaces) {
       if (isEmptyOrSpaces(s)) return null;
@@ -123,13 +109,11 @@ public class StringUtilRt {
     return s;
   }
 
-  @Contract(value = "null -> true", pure = true)
   // we need to keep this method to preserve backward compatibility
   public static boolean isEmptyOrSpaces(@Nullable String s) {
     return isEmptyOrSpaces(((CharSequence)s));
   }
 
-  @Contract(value = "null -> true", pure = true)
   public static boolean isEmptyOrSpaces(@Nullable CharSequence s) {
     if (isEmpty(s)) {
       return true;
@@ -142,8 +126,7 @@ public class StringUtilRt {
     return true;
   }
 
-  @Contract(pure = true)
-  public static String replace(@NonNls @Nonnull final String text, @NonNls @Nonnull final String oldS, @NonNls @Nonnull final String newS, final boolean ignoreCase) {
+  public static String replace(@Nonnull final String text, @Nonnull final String oldS, @Nonnull final String newS, final boolean ignoreCase) {
     if (text.length() < oldS.length()) return text;
 
     StringBuilder newText = null;
@@ -178,7 +161,6 @@ public class StringUtilRt {
   /**
    * Implementation copied from {@link String#indexOf(String, int)} except character comparisons made case insensitive
    */
-  @Contract(pure = true)
   public static int indexOfIgnoreCase(@Nonnull String where, @Nonnull String what, int fromIndex) {
     int targetCount = what.length();
     int sourceCount = where.length();
@@ -221,7 +203,6 @@ public class StringUtilRt {
   }
 
   @Nonnull
-  @Contract(pure = true)
   public static CharSequence toUpperCase(@Nonnull CharSequence s) {
     StringBuilder answer = null;
 
@@ -241,7 +222,6 @@ public class StringUtilRt {
     return answer == null ? s : answer;
   }
 
-  @Contract(pure = true)
   public static char toUpperCase(char a) {
     if (a < 'a') {
       return a;
@@ -252,7 +232,6 @@ public class StringUtilRt {
     return Character.toUpperCase(a);
   }
 
-  @Contract(pure = true)
   public static char toLowerCase(char a) {
     if (a < 'A' || a >= 'a' && a <= 'z') {
       return a;
@@ -269,25 +248,21 @@ public class StringUtilRt {
    * Converts line separators to <code>"\n"</code>
    */
   @Nonnull
-  @Contract(pure = true)
   public static String convertLineSeparators(@Nonnull String text) {
     return convertLineSeparators(text, false);
   }
 
   @Nonnull
-  @Contract(pure = true)
   public static String convertLineSeparators(@Nonnull String text, boolean keepCarriageReturn) {
     return convertLineSeparators(text, "\n", null, keepCarriageReturn);
   }
 
   @Nonnull
-  @Contract(pure = true)
   public static String convertLineSeparators(@Nonnull String text, @Nonnull String newSeparator) {
     return convertLineSeparators(text, newSeparator, null);
   }
 
   @Nonnull
-  @Contract(pure = true)
   public static CharSequence convertLineSeparators(@Nonnull CharSequence text, @Nonnull String newSeparator) {
     return unifyLineSeparators(text, newSeparator, null, false);
   }
@@ -303,7 +278,6 @@ public class StringUtilRt {
   }
 
   @Nonnull
-  @Contract(pure = true)
   public static CharSequence unifyLineSeparators(@Nonnull CharSequence text) {
     return unifyLineSeparators(text, "\n", null, false);
   }
@@ -380,7 +354,6 @@ public class StringUtilRt {
     }
   }
 
-  @Contract(pure = true)
   public static int parseInt(@Nullable String string, final int defaultValue) {
     if (string == null) {
       return defaultValue;
@@ -394,7 +367,6 @@ public class StringUtilRt {
     }
   }
 
-  @Contract(pure = true)
   public static double parseDouble(final String string, final double defaultValue) {
     try {
       return Double.parseDouble(string);
@@ -404,7 +376,6 @@ public class StringUtilRt {
     }
   }
 
-  @Contract(pure = true)
   public static boolean parseBoolean(final String string, final boolean defaultValue) {
     try {
       return Boolean.parseBoolean(string);
@@ -414,7 +385,6 @@ public class StringUtilRt {
     }
   }
 
-  @Contract(pure = true)
   public static <E extends Enum<E>> E parseEnum(String string, E defaultValue, Class<E> clazz) {
     try {
       return Enum.valueOf(clazz, string);
@@ -425,19 +395,16 @@ public class StringUtilRt {
   }
 
   @Nonnull
-  @Contract(pure = true)
   public static String getShortName(@Nonnull Class aClass) {
     return getShortName(aClass.getName());
   }
 
   @Nonnull
-  @Contract(pure = true)
   public static String getShortName(@Nonnull String fqName) {
     return getShortName(fqName, '.');
   }
 
   @Nonnull
-  @Contract(pure = true)
   public static String getShortName(@Nonnull String fqName, char separator) {
     int lastPointIdx = fqName.lastIndexOf(separator);
     if (lastPointIdx >= 0) {
@@ -446,17 +413,14 @@ public class StringUtilRt {
     return fqName;
   }
 
-  @Contract(pure = true)
   public static boolean startsWithChar(@Nullable CharSequence s, char prefix) {
     return s != null && s.length() != 0 && s.charAt(0) == prefix;
   }
 
-  @Contract(pure = true)
   public static boolean endsWithChar(@Nullable CharSequence s, char suffix) {
     return s != null && s.length() != 0 && s.charAt(s.length() - 1) == suffix;
   }
 
-  @Contract(pure = true)
   public static boolean endsWith(@Nonnull CharSequence text, @Nonnull CharSequence suffix) {
     int l1 = text.length();
     int l2 = suffix.length();
@@ -469,15 +433,13 @@ public class StringUtilRt {
     return true;
   }
 
-  @Contract(pure = true)
-  public static boolean startsWithIgnoreCase(@NonNls @Nonnull String str, @NonNls @Nonnull String prefix) {
+  public static boolean startsWithIgnoreCase(@Nonnull String str, @Nonnull String prefix) {
     final int stringLength = str.length();
     final int prefixLength = prefix.length();
     return stringLength >= prefixLength && str.regionMatches(true, 0, prefix, 0, prefixLength);
   }
 
-  @Contract(pure = true)
-  public static boolean endsWithIgnoreCase(@NonNls @Nonnull CharSequence text, @NonNls @Nonnull CharSequence suffix) {
+  public static boolean endsWithIgnoreCase(@Nonnull CharSequence text,  @Nonnull CharSequence suffix) {
     int l1 = text.length();
     int l2 = suffix.length();
     if (l1 < l2) return false;
@@ -501,7 +463,6 @@ public class StringUtilRt {
    * @return index of the last occurrence of the given symbol at the target sub-sequence of the given text if any;
    * <code>-1</code> otherwise
    */
-  @Contract(pure = true)
   public static int lastIndexOf(@Nonnull CharSequence s, char c, int start, int end) {
     for (int i = end - 1; i >= start; i--) {
       if (s.charAt(i) == c) return i;
@@ -510,8 +471,7 @@ public class StringUtilRt {
   }
 
   @Nonnull
-  @Contract(pure = true)
-  public static String trimStart(@Nonnull String s, @NonNls @Nonnull String prefix) {
+  public static String trimStart(@Nonnull String s,  @Nonnull String prefix) {
     if (s.startsWith(prefix)) {
       return s.substring(prefix.length());
     }

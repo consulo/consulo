@@ -11,7 +11,7 @@
 
   <modelVersion>4.0.0</modelVersion>
 
-  <artifactId>consulo-util-rt</artifactId>
+  <artifactId>consulo-util-nodep</artifactId>
   <version>2-SNAPSHOT</version>
 
   <packaging>jar</packaging>
@@ -37,13 +37,7 @@
           <meminitial>2048</meminitial>
           <maxmem>4096</maxmem>
         </configuration>
-        <!--workaround for java 9-->
         <dependencies>
-          <dependency>
-            <groupId>org.codehaus.plexus</groupId>
-            <artifactId>plexus-archiver</artifactId>
-            <version>2.4.4</version>
-          </dependency>
           <dependency>
             <groupId>org.codehaus.plexus</groupId>
             <artifactId>plexus-compiler-eclipse</artifactId>
@@ -72,7 +66,7 @@
   <dependencies>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>consulo-annotations</artifactId>
+      <artifactId>consulo-annotation</artifactId>
       <version>${project.version}</version>
     </dependency>
   </dependencies>

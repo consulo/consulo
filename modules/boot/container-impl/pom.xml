@@ -92,7 +92,7 @@
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>consulo-util-rt</artifactId>
+      <artifactId>consulo-util-nodep</artifactId>
       <version>${project.version}</version>
       <optional>true</optional>
     </dependency>

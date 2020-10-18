@@ -18,7 +18,6 @@ package consulo.util.nodep.collection;
 import consulo.util.nodep.Pair;
 import consulo.util.nodep.ArrayUtilRt;
 import consulo.util.nodep.function.Function;
-import org.jetbrains.annotations.Contract;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -41,19 +40,16 @@ public class ContainerUtilRt {
   private static final int ARRAY_COPY_THRESHOLD = 20;
 
   @Nonnull
-  @Contract(pure=true)
   public static <K, V> HashMap<K, V> newHashMap() {
     return new consulo.util.nodep.collection.HashMap<K, V>();
   }
 
   @Nonnull
-  @Contract(pure=true)
   public static <K, V> HashMap<K, V> newHashMap(@Nonnull Map<? extends K, ? extends V> map) {
     return new consulo.util.nodep.collection.HashMap<K, V>(map);
   }
 
   @Nonnull
-  @Contract(pure=true)
   public static <K, V> Map<K, V> newHashMap(@Nonnull List<K> keys, @Nonnull List<V> values) {
     if (keys.size() != values.size()) {
       throw new IllegalArgumentException(keys + " should have same length as " + values);
@@ -67,7 +63,6 @@ public class ContainerUtilRt {
   }
 
   @Nonnull
-  @Contract(pure=true)
   public static <K, V> Map<K, V> newHashMap(@Nonnull Pair<K, ? extends V> first, @Nonnull Pair<K, ? extends V>... entries) {
     Map<K, V> map = newHashMap(entries.length + 1);
     map.put(first.getFirst(), first.getSecond());
@@ -78,43 +73,36 @@ public class ContainerUtilRt {
   }
 
   @Nonnull
-  @Contract(pure=true)
   public static <K, V> Map<K, V> newHashMap(int initialCapacity) {
     return new consulo.util.nodep.collection.HashMap<K, V>(initialCapacity);
   }
 
   @Nonnull
-  @Contract(pure=true)
   public static <K extends Comparable, V> TreeMap<K, V> newTreeMap() {
     return new TreeMap<K, V>();
   }
 
   @Nonnull
-  @Contract(pure=true)
   public static <K extends Comparable, V> TreeMap<K, V> newTreeMap(@Nonnull Map<K, V> map) {
     return new TreeMap<K, V>(map);
   }
 
   @Nonnull
-  @Contract(pure=true)
   public static <K, V> LinkedHashMap<K, V> newLinkedHashMap() {
     return new consulo.util.nodep.collection.LinkedHashMap<K, V>();
   }
 
   @Nonnull
-  @Contract(pure=true)
   public static <K, V> LinkedHashMap<K, V> newLinkedHashMap(int capacity) {
     return new consulo.util.nodep.collection.LinkedHashMap<K, V>(capacity);
   }
 
   @Nonnull
-  @Contract(pure=true)
   public static <K, V> LinkedHashMap<K, V> newLinkedHashMap(@Nonnull Map<K, V> map) {
     return new consulo.util.nodep.collection.LinkedHashMap<K, V>(map);
   }
 
   @Nonnull
-  @Contract(pure=true)
   public static <K, V> LinkedHashMap<K,V> newLinkedHashMap(@Nonnull Pair<K, V> first, @Nonnull Pair<K, V>[] entries) {
     LinkedHashMap<K, V> map = newLinkedHashMap();
     map.put(first.getFirst(), first.getSecond());
@@ -125,13 +113,11 @@ public class ContainerUtilRt {
   }
 
   @Nonnull
-  @Contract(pure=true)
   public static <T> LinkedList<T> newLinkedList() {
     return new LinkedList<T>();
   }
 
   @Nonnull
-  @Contract(pure=true)
   public static <T> LinkedList<T> newLinkedList(@Nonnull T... elements) {
     final LinkedList<T> list = newLinkedList();
     Collections.addAll(list, elements);
@@ -139,19 +125,16 @@ public class ContainerUtilRt {
   }
 
   @Nonnull
-  @Contract(pure=true)
   public static <T> LinkedList<T> newLinkedList(@Nonnull Iterable<? extends T> elements) {
     return copy(ContainerUtilRt.<T>newLinkedList(), elements);
   }
 
   @Nonnull
-  @Contract(pure=true)
   public static <T> ArrayList<T> newArrayList() {
     return new ArrayList<T>();
   }
 
   @Nonnull
-  @Contract(pure=true)
   public static <T> ArrayList<T> newArrayList(@Nonnull T... elements) {
     ArrayList<T> list = newArrayListWithCapacity(elements.length);
     Collections.addAll(list, elements);
@@ -159,7 +142,6 @@ public class ContainerUtilRt {
   }
 
   @Nonnull
-  @Contract(pure=true)
   public static <T> ArrayList<T> newArrayList(@Nonnull Iterable<? extends T> elements) {
     if (elements instanceof Collection) {
       @SuppressWarnings("unchecked") Collection<? extends T> collection = (Collection<? extends T>)elements;
@@ -169,7 +151,6 @@ public class ContainerUtilRt {
   }
 
   @Nonnull
-  @Contract(pure=true)
   public static <T> ArrayList<T> newArrayListWithCapacity(int size) {
     return new ArrayList<T>(size);
   }
@@ -183,25 +164,21 @@ public class ContainerUtilRt {
   }
 
   @Nonnull
-  @Contract(pure=true)
   public static <T> HashSet<T> newHashSet() {
     return new consulo.util.nodep.collection.HashSet<T>();
   }
 
   @Nonnull
-  @Contract(pure=true)
   public static <T> HashSet<T> newHashSet(int initialCapacity) {
     return new consulo.util.nodep.collection.HashSet<T>(initialCapacity);
   }
 
   @Nonnull
-  @Contract(pure=true)
   public static <T> HashSet<T> newHashSet(@Nonnull T... elements) {
     return new consulo.util.nodep.collection.HashSet<T>(Arrays.asList(elements));
   }
 
   @Nonnull
-  @Contract(pure=true)
   public static <T> HashSet<T> newHashSet(@Nonnull Iterable<? extends T> elements) {
     if (elements instanceof Collection) {
       @SuppressWarnings("unchecked") Collection<? extends T> collection = (Collection<? extends T>)elements;
@@ -211,7 +188,6 @@ public class ContainerUtilRt {
   }
 
   @Nonnull
-  @Contract(pure=true)
   public static <T> HashSet<T> newHashSet(@Nonnull Iterator<? extends T> iterator) {
     HashSet<T> set = newHashSet();
     while (iterator.hasNext()) set.add(iterator.next());
@@ -219,19 +195,16 @@ public class ContainerUtilRt {
   }
 
   @Nonnull
-  @Contract(pure=true)
   public static <T> LinkedHashSet<T> newLinkedHashSet() {
     return new consulo.util.nodep.collection.LinkedHashSet<T>();
   }
 
   @Nonnull
-  @Contract(pure=true)
   public static <T> LinkedHashSet<T> newLinkedHashSet(@Nonnull T... elements) {
     return newLinkedHashSet(Arrays.asList(elements));
   }
 
   @Nonnull
-  @Contract(pure=true)
   public static <T> LinkedHashSet<T> newLinkedHashSet(@Nonnull Iterable<? extends T> elements) {
     if (elements instanceof Collection) {
       @SuppressWarnings("unchecked") Collection<? extends T> collection = (Collection<? extends T>)elements;
@@ -241,13 +214,11 @@ public class ContainerUtilRt {
   }
 
   @Nonnull
-  @Contract(pure=true)
   public static <T> TreeSet<T> newTreeSet() {
     return new TreeSet<T>();
   }
 
   @Nonnull
-  @Contract(pure=true)
   public static <T> TreeSet<T> newTreeSet(@Nonnull T... elements) {
     TreeSet<T> set = newTreeSet();
     Collections.addAll(set, elements);
@@ -255,31 +226,26 @@ public class ContainerUtilRt {
   }
 
   @Nonnull
-  @Contract(pure=true)
   public static <T> TreeSet<T> newTreeSet(@Nonnull Iterable<? extends T> elements) {
     return copy(ContainerUtilRt.<T>newTreeSet(), elements);
   }
 
   @Nonnull
-  @Contract(pure=true)
   public static <T> TreeSet<T> newTreeSet(@Nullable Comparator<? super T> comparator) {
     return new TreeSet<T>(comparator);
   }
 
   @Nonnull
-  @Contract(pure=true)
   public static <T> Stack<T> newStack() {
     return new Stack<T>();
   }
 
   @Nonnull
-  @Contract(pure=true)
   public static <T> Stack<T> newStack(@Nonnull Collection<T> elements) {
     return new Stack<T>(elements);
   }
 
   @Nonnull
-  @Contract(pure=true)
   public static <T> Stack<T> newStack(@Nonnull T... initial) {
     return new Stack<T>(Arrays.asList(initial));
   }
@@ -331,14 +297,12 @@ public class ContainerUtilRt {
   }
 
   @Nonnull
-  @Contract(pure=true)
   public static <T> List<T> emptyList() {
     //noinspection unchecked
     return (List<T>)EmptyList.INSTANCE;
   }
 
   @Nonnull
-  @Contract(pure=true)
   public static <T> CopyOnWriteArrayList<T> createEmptyCOWList() {
     // does not create garbage new Object[0]
     return new CopyOnWriteArrayList<T>(ContainerUtilRt.<T>emptyList());
@@ -364,7 +328,6 @@ public class ContainerUtilRt {
    * @return read-only list consisting of the elements from array converted by mapper
    */
   @Nonnull
-  @Contract(pure=true)
   public static <T, V> List<V> map2List(@Nonnull T[] array, @Nonnull Function<T, V> mapper) {
     return map2List(Arrays.asList(array), mapper);
   }
@@ -373,7 +336,6 @@ public class ContainerUtilRt {
    * @return read-only list consisting of the elements from collection converted by mapper
    */
   @Nonnull
-  @Contract(pure=true)
   public static <T, V> List<V> map2List(@Nonnull Collection<? extends T> collection, @Nonnull Function<T, V> mapper) {
     if (collection.isEmpty()) return emptyList();
     List<V> list = new ArrayList<V>(collection.size());
@@ -387,7 +349,6 @@ public class ContainerUtilRt {
    * @return read-only set consisting of the elements from collection converted by mapper
    */
   @Nonnull
-  @Contract(pure=true)
   public static <T, V> Set<V> map2Set(@Nonnull T[] collection, @Nonnull Function<T, V> mapper) {
     return map2Set(Arrays.asList(collection), mapper);
   }
@@ -396,7 +357,6 @@ public class ContainerUtilRt {
    * @return read-only set consisting of the elements from collection converted by mapper
    */
   @Nonnull
-  @Contract(pure=true)
   public static <T, V> Set<V> map2Set(@Nonnull Collection<? extends T> collection, @Nonnull Function<T, V> mapper) {
     if (collection.isEmpty()) return Collections.emptySet();
     Set <V> set = new HashSet<V>(collection.size());
