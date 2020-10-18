@@ -17,7 +17,6 @@
 package consulo.container.impl.parser;
 
 import consulo.container.plugin.ComponentConfig;
-import org.jetbrains.annotations.NonNls;
 
 import java.util.Collections;
 import java.util.List;
@@ -31,6 +30,6 @@ public class ComponentManagerConfig {
   //@AbstractCollection(surroundWithTag = false)
   public List<ComponentConfig> projectComponents = Collections.emptyList();
 
-  @NonNls public static final String APPLICATION_COMPONENTS = "application-components";
-  @NonNls public static final String PROJECT_COMPONENTS = "project-components";
+  public static final String APPLICATION_COMPONENTS = "application-components";
+  public static final String PROJECT_COMPONENTS = "project-components";
 }
