@@ -17,7 +17,7 @@ typedef jint (JNICALL* fun_ptr_t_CreateJavaVM)(JavaVM** pvm, void** env, void* a
 NSBundle* vm;
 NSString* minRequiredJavaVersion = @"1.8";
 
-NSString* ourBootclasspath = @"$CONSULO_HOME/boot/consulo-bootstrap.jar:$CONSULO_HOME/boot/consulo-container-api.jar:$CONSULO_HOME/boot/consulo-container-impl.jar:$CONSULO_HOME/boot/consulo-desktop-bootstrap.jar:$CONSULO_HOME/boot/consulo-util-rt.jar";
+NSString* ourBootclasspath = @"$CONSULO_HOME/boot/consulo-bootstrap.jar:$CONSULO_HOME/boot/consulo-container-api.jar:$CONSULO_HOME/boot/consulo-container-impl.jar:$CONSULO_HOME/boot/consulo-desktop-bootstrap.jar:$CONSULO_HOME/boot/consulo-util-nodep.jar";
 
 @interface NSString (CustomReplacements)
 - (NSString*)replaceAll:(NSString*)pattern to:(NSString*)replacement;
@@ -121,18 +121,16 @@ BOOL appendJvmBundlesAt(NSString* path, NSMutableArray* sink) {
 NSArray* allVms(NSString* workingDirectory) {
     NSMutableArray* jvmBundlePaths = [NSMutableArray array];
 
-    if (!jvmBundlePaths.count > 0) {
-        NSString* appDir = workingDirectory;
+    NSString* appDir = workingDirectory;
 
-        if (!appendJvmBundlesAt([appDir stringByAppendingPathComponent:@"/jre"], jvmBundlePaths)) {
-            appendBundle([appDir stringByAppendingPathComponent:@"/jdk"], jvmBundlePaths);
-        }
-        if (jvmBundlePaths.count > 0) return jvmBundlePaths;
-
-        appendJvmBundlesAt([NSHomeDirectory() stringByAppendingPathComponent:@"Library/Java/JavaVirtualMachines"], jvmBundlePaths);
-        appendJvmBundlesAt(@"/Library/Java/JavaVirtualMachines", jvmBundlePaths);
-        appendJvmBundlesAt(@"/System/Library/Java/JavaVirtualMachines", jvmBundlePaths);
+    if (!appendJvmBundlesAt([appDir stringByAppendingPathComponent:@"/jre"], jvmBundlePaths)) {
+        appendBundle([appDir stringByAppendingPathComponent:@"/jdk"], jvmBundlePaths);
     }
+    if (jvmBundlePaths.count > 0) return jvmBundlePaths;
+
+    appendJvmBundlesAt([NSHomeDirectory() stringByAppendingPathComponent:@"Library/Java/JavaVirtualMachines"], jvmBundlePaths);
+    appendJvmBundlesAt(@"/Library/Java/JavaVirtualMachines", jvmBundlePaths);
+    appendJvmBundlesAt(@"/System/Library/Java/JavaVirtualMachines", jvmBundlePaths);
 
     return jvmBundlePaths;
 }
@@ -220,6 +218,20 @@ CFBundleRef NSBundle2CFBundle(NSBundle* bundle) {
     return [str replaceAll:@"$CONSULO_HOME" to:myWorkingDirectory];
 }
 
+NSArray* parseAppVMOptions(NSString* vmOptionsFile) {
+    NSMutableArray* options = [NSMutableArray array];
+
+    NSLog(@"Processing AppVMOptions file at %@", vmOptionsFile);
+    NSArray* contents = [VMOptionsReader readFile:vmOptionsFile];
+    if (contents != nil) {
+        NSLog(@"Done");
+        [options addObjectsFromArray:contents];
+    } else {
+        NSLog(@"No content found at %@ ", vmOptionsFile);
+    }
+    return options;
+}
+
 NSArray* parseVMOptions(NSString* vmOptionsFile) {
     NSMutableArray* options = [NSMutableArray array];
     NSMutableArray* used = [NSMutableArray array];
@@ -244,7 +256,13 @@ NSArray* parseVMOptions(NSString* vmOptionsFile) {
 - (JavaVMInitArgs)buildArgsFor:(NSBundle*)jvm {
     NSMutableArray* args_array = [NSMutableArray array];
 
-    [args_array addObject:[NSString stringWithFormat:@"-Djava.class.path=%@", ourBootclasspath]];
+    //[args_array addObject:[NSString stringWithFormat:@"-Djava.class.path=%@", ourBootclasspath]];
+    [args_array addObject:[NSString stringWithFormat:@"--module-path=%@/boot", myWorkingDirectory]];
+    [args_array addObject:@"-Djdk.module.main=consulo.desktop.bootstrap"];
+    [args_array addObject:@"-Dconsulo.module.path.boot=true"];
+
+    [args_array addObjectsFromArray:parseAppVMOptions([NSString stringWithFormat:@"%@/bin/app.vmoptions", myWorkingDirectory])];
+
     [args_array addObjectsFromArray:parseVMOptions(myVmOptionsFile)];
     [args_array addObjectsFromArray:[@"-Dfile.encoding=UTF-8 -ea -Dsun.io.useCanonCaches=false -Djava.net.preferIPv4Stack=true -XX:+HeapDumpOnOutOfMemoryError -XX:-OmitStackTraceInFastThrow -Xverify:none" componentsSeparatedByString:@" "]];
     [args_array addObject:[NSString stringWithFormat:@"-Dconsulo.properties.file=%@", myPropertiesFile]];
@@ -256,7 +274,7 @@ NSArray* parseVMOptions(NSString* vmOptionsFile) {
     [args_array addObject:[NSString stringWithFormat:@"-Didea.home.path=%@", myWorkingDirectory]];
 
     JavaVMInitArgs args;
-    args.version = JNI_VERSION_1_6;
+    args.version = JNI_VERSION_9;
     args.ignoreUnrecognized = JNI_TRUE;
 
     args.nOptions = (jint) [args_array count];

@@ -8,6 +8,9 @@
 #import <Foundation/Foundation.h>
 #import <JavaVM/jni.h>
 
+#ifndef JNI_VERSION_9
+#define JNI_VERSION_9   0x00090000
+#endif
 
 @interface Launcher : NSObject {
     int argc;
