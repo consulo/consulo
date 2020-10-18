@@ -15,8 +15,8 @@
  */
 package com.intellij.openapi.util;
 
-import com.intellij.util.ReflectionUtil;
 import consulo.logging.Logger;
+import consulo.util.lang.reflect.ReflectionUtil;
 import org.jdom.Element;
 import javax.annotation.Nonnull;
 

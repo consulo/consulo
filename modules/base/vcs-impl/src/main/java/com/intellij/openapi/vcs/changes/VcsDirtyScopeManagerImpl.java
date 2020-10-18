@@ -30,10 +30,10 @@ import com.intellij.openapi.vcs.impl.ProjectLevelVcsManagerImpl;
 import com.intellij.openapi.vcs.impl.VcsInitObject;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.Function;
-import com.intellij.util.ReflectionUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.MultiMap;
 import com.intellij.vcsUtil.VcsUtil;
+import consulo.util.lang.reflect.ReflectionUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -177,7 +177,7 @@ public class VcsDirtyScopeManagerImpl extends VcsDirtyScopeManager implements Pr
   }
 
   @Nonnull
-  private static Collection<FilePath> toFilePaths(@javax.annotation.Nullable Collection<VirtualFile> files) {
+  private static Collection<FilePath> toFilePaths(@Nullable Collection<VirtualFile> files) {
     if (files == null) return Collections.emptyList();
     return ContainerUtil.map(files, new Function<VirtualFile, FilePath>() {
       @Override
@@ -213,7 +213,7 @@ public class VcsDirtyScopeManagerImpl extends VcsDirtyScopeManager implements Pr
   }
 
   @Override
-  @javax.annotation.Nullable
+  @Nullable
   public VcsInvalidated retrieveScopes() {
     DirtBuilder dirtBuilder;
     synchronized (LOCK) {
@@ -305,7 +305,7 @@ public class VcsDirtyScopeManagerImpl extends VcsDirtyScopeManager implements Pr
     }, "\n");
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   private static Class findFirstInterestingCallerClass() {
     for (int i = 1; i <= 5; i++) {
       Class clazz = ReflectionUtil.findCallerClass(i);

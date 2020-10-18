@@ -25,14 +25,11 @@ import com.intellij.util.containers.JBTreeTraverser;
 import consulo.annotation.DeprecationInfo;
 import consulo.logging.Logger;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.lang.reflect.*;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class ReflectionUtil {
   private static final Logger LOG = Logger.getInstance(ReflectionUtil.class);
@@ -537,14 +534,6 @@ public class ReflectionUtil {
     }
   }
 
-  private static class MySecurityManager extends SecurityManager {
-    private static final MySecurityManager INSTANCE = new MySecurityManager();
-
-    public Class[] getStack() {
-      return getClassContext();
-    }
-  }
-
   /**
    * Returns the class this method was called 'framesToSkip' frames up the caller hierarchy.
    * <p/>
@@ -557,15 +546,14 @@ public class ReflectionUtil {
   @Deprecated
   @DeprecationInfo("Use consulo.util.lang.reflect.ReflectionUtil")
   public static Class findCallerClass(int framesToSkip) {
-    try {
-      Class[] stack = MySecurityManager.INSTANCE.getStack();
-      int indexFromTop = 1 + framesToSkip;
-      return stack.length > indexFromTop ? stack[indexFromTop] : null;
-    }
-    catch (Exception e) {
-      LOG.warn(e);
-      return null;
-    }
+    StackWalker walker = StackWalker.getInstance(StackWalker.Option.RETAIN_CLASS_REFERENCE);
+
+    StackWalker.StackFrame frame = walker.walk(it -> {
+      Optional<StackWalker.StackFrame> first = it.skip(framesToSkip).findFirst();
+      return first.get();
+    });
+
+    return frame.getDeclaringClass();
   }
 
   @Deprecated

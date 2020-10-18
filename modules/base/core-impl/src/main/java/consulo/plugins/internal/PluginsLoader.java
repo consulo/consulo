@@ -17,6 +17,7 @@ package consulo.plugins.internal;
 
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.StartupProgress;
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationInfo;
 import com.intellij.openapi.util.BuildNumber;
 import com.intellij.openapi.util.Couple;
@@ -32,7 +33,6 @@ import consulo.container.plugin.*;
 import consulo.container.util.StatCollector;
 import consulo.logging.Logger;
 import consulo.util.lang.StringUtil;
-import consulo.util.lang.reflect.ReflectionUtil;
 import gnu.trove.THashMap;
 import gnu.trove.TIntProcedure;
 
@@ -121,9 +121,7 @@ public class PluginsLoader {
 
     List<PluginDescriptorImpl> pluginDescriptors = loadPluginDescriptors(progress, isHeadlessMode);
 
-    final Class callerClass = ReflectionUtil.findCallerClass(1);
-    assert callerClass != null;
-    final ClassLoader parentLoader = callerClass.getClassLoader();
+    final ClassLoader parentLoader = Application.class.getClassLoader();
 
     final List<PluginDescriptorImpl> result = new ArrayList<>();
     final Map<String, String> disabledPluginNames = new THashMap<>();
