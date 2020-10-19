@@ -14,22 +14,19 @@
 package com.intellij.execution.process;
 
 import com.intellij.jna.JnaLoader;
-import consulo.logging.Logger;
 import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.util.Processor;
-import com.intellij.util.ReflectionUtil;
 import com.sun.jna.Library;
 import com.sun.jna.Native;
-import javax.annotation.Nonnull;
+import consulo.logging.Logger;
 
+import javax.annotation.Nonnull;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.*;
-
-import static com.intellij.util.ObjectUtils.assertNotNull;
 
 /**
  * Use {@code com.intellij.execution.process.OSProcessUtil} wherever possible.
@@ -65,22 +62,14 @@ public class UnixProcessManager {
 
   private UnixProcessManager() { }
 
+  @Deprecated
   public static int getProcessId(@Nonnull Process process) {
-    try {
-      if (SystemInfo.IS_AT_LEAST_JAVA9 && "java.lang.ProcessImpl".equals(process.getClass().getName())) {
-        //noinspection JavaReflectionMemberAccess
-        return ((Long)Process.class.getMethod("pid").invoke(process)).intValue();
-      }
-
-      return assertNotNull(ReflectionUtil.getField(process.getClass(), process, int.class, "pid"));
-    }
-    catch (Throwable t) {
-      throw new IllegalStateException("Failed to get PID from instance of " + process.getClass() + ", OS: " + SystemInfo.OS_NAME, t);
-    }
+    return (int)process.pid();
   }
 
+  @Deprecated
   public static int getCurrentProcessId() {
-    return C_LIB != null ? C_LIB.getpid() : 0;
+    return (int)ProcessHandle.current().pid();
   }
 
   public static int sendSignal(int pid, int signal) {

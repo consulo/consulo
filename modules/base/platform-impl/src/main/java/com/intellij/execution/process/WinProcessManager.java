@@ -1,16 +1,9 @@
 // Copyright 2000-2017 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.execution.process;
 
-import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.util.ReflectionUtil;
-import com.sun.jna.Pointer;
-import com.sun.jna.platform.win32.Kernel32;
-import com.sun.jna.platform.win32.WinNT;
 import consulo.logging.Logger;
-
-import static com.intellij.util.ObjectUtils.assertNotNull;
 
 /**
  * Do not call this class directly - use {@link consulo.execution.process.OSProcessUtil} instead.
@@ -23,28 +16,9 @@ public class WinProcessManager {
   private WinProcessManager() {
   }
 
-  public static int getCurrentProcessId() {
-    return Kernel32.INSTANCE.GetCurrentProcessId();
-  }
-
+  @Deprecated
   public static int getProcessId(Process process) {
-    String processClassName = process.getClass().getName();
-    if (processClassName.equals("java.lang.Win32Process") || processClassName.equals("java.lang.ProcessImpl")) {
-      try {
-        if (SystemInfo.IS_AT_LEAST_JAVA9) {
-          //noinspection JavaReflectionMemberAccess
-          return ((Long)Process.class.getMethod("pid").invoke(process)).intValue();
-        }
-
-        long handle = assertNotNull(ReflectionUtil.getField(process.getClass(), process, long.class, "handle"));
-        return Kernel32.INSTANCE.GetProcessId(new WinNT.HANDLE(Pointer.createConstant(handle)));
-      }
-      catch (Throwable t) {
-        throw new IllegalStateException("Failed to get PID from instance of " + process.getClass() + ", OS: " + SystemInfo.OS_NAME, t);
-      }
-    }
-
-    throw new IllegalStateException("Unable to get PID from instance of " + process.getClass() + ", OS: " + SystemInfo.OS_NAME);
+    return (int)process.pid();
   }
 
   public static boolean kill(Process process, boolean tree) {
@@ -83,12 +57,5 @@ public class WinProcessManager {
       LOG.warn(e);
     }
     return false;
-  }
-
-  /**
-   * @deprecated to be removed in IDEA 2018
-   */
-  public static int getProcessPid(Process process) {
-    return getProcessId(process);
   }
 }

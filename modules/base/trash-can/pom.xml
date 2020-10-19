@@ -46,10 +46,5 @@
       <artifactId>consulo-util</artifactId>
       <version>${project.version}</version>
     </dependency>
-    <dependency>
-      <groupId>consulo.internal</groupId>
-      <artifactId>eawtstub</artifactId>
-      <scope>provided</scope>
-    </dependency>
   </dependencies>
 </project>

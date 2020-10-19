@@ -18,22 +18,12 @@ package com.intellij.execution.process.impl;
 import com.intellij.execution.process.OSProcessManager;
 import com.intellij.execution.process.RunnerWinProcess;
 import com.intellij.execution.process.UnixProcessManager;
-import consulo.logging.Logger;
 import com.intellij.openapi.util.SystemInfo;
-import com.intellij.openapi.util.text.StringUtil;
-import javax.annotation.Nonnull;
-
+import consulo.logging.Logger;
 import jakarta.inject.Singleton;
 import org.jvnet.winp.WinProcess;
-import org.jvnet.winp.WinpException;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import javax.annotation.Nonnull;
 
 /**
  * @author nik
@@ -63,61 +53,9 @@ public class OSProcessManagerImpl extends OSProcessManager {
   @Nonnull
   private static WinProcess createWinProcess(@Nonnull Process process) {
     if (process instanceof RunnerWinProcess) {
-      RunnerWinProcess runnerWinProcess = (RunnerWinProcess) process;
-      return new WinProcess(runnerWinProcess.getOriginalProcess());
+      RunnerWinProcess runnerWinProcess = (RunnerWinProcess)process;
+      return new WinProcess((int)runnerWinProcess.getOriginalProcess().pid());
     }
-    return new WinProcess(process);
-  }
-
-  @Override
-  public List<String> getCommandLinesOfRunningProcesses() {
-    try {
-      if (SystemInfo.isWindows) {
-        List<String> commandLines = new ArrayList<String>();
-        Iterable<WinProcess> processes = WinProcess.all();
-        for (WinProcess process : processes) {
-          try {
-            commandLines.add(process.getCommandLine());
-          }
-          catch (WinpException ignored) {
-          }
-        }
-        return commandLines;
-      }
-      else {
-        String[] cmd = UnixProcessManager.getPSCmd(true);
-        Process process = Runtime.getRuntime().exec(cmd);
-        List<String> outputLines = readLines(process.getInputStream(), false);
-        List<String> errorLines = readLines(process.getErrorStream(), false);
-        if (!errorLines.isEmpty()) {
-          throw new IOException(Arrays.toString(cmd) + " failed: " + StringUtil.join(errorLines, "\n"));
-        }
-
-        //trim 'ps' output header
-        return outputLines.subList(1, outputLines.size());
-      }
-    }
-    catch (Throwable e) {
-      LOG.info("Cannot collect command lines");
-      LOG.info(e);
-      return null;
-    }
-  }
-
-  private static List<String> readLines(@Nonnull InputStream inputStream, boolean includeEmpty) throws IOException {
-    BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
-    try {
-      List<String> lines = new ArrayList<String>();
-      String line;
-      while ((line = reader.readLine()) != null) {
-        if (includeEmpty || !line.isEmpty()) {
-          lines.add(line);
-        }
-      }
-      return lines;
-    }
-    finally {
-      reader.close();
-    }
+    return new WinProcess((int)process.pid());
   }
 }

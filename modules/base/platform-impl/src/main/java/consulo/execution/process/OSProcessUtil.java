@@ -16,79 +16,54 @@
 package consulo.execution.process;
 
 import com.intellij.execution.process.ProcessInfo;
-import com.intellij.execution.process.UnixProcessManager;
-import com.intellij.execution.process.WinProcessManager;
-import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.text.StringUtil;
-import com.jezhumble.javasysmon.JavaSysMon;
-import com.pty4j.windows.WinPtyProcess;
-import javax.annotation.Nonnull;
+import consulo.util.collection.ArrayUtil;
 
+import javax.annotation.Nonnull;
+import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Stream;
 
 /**
  * @author VISTALL
  * @since 31-Jan-17
  */
 public class OSProcessUtil {
+  @Deprecated
   public static int getCurrentProcessId() {
-    int pid;
-
-    if (SystemInfo.isWindows) {
-      pid = WinProcessManager.getCurrentProcessId();
-    }
-    else {
-      pid = UnixProcessManager.getCurrentProcessId();
-    }
-
-    return pid;
+    return (int)ProcessHandle.current().pid();
   }
 
   public static int getProcessID(@Nonnull Process process) {
-    if (SystemInfo.isWindows) {
-      try {
-        if (process instanceof WinPtyProcess) {
-          return ((WinPtyProcess)process).getChildProcessId();
-        }
-        return WinProcessManager.getProcessId(process);
-      }
-      catch (Throwable e) {
-        throw new IllegalStateException("Cannot get PID from instance of " + process.getClass() + ", OS: " + SystemInfo.OS_NAME, e);
-      }
-    }
-    else if (SystemInfo.isUnix) {
-      return UnixProcessManager.getProcessId(process);
-    }
-    throw new IllegalStateException("Unknown OS: " + SystemInfo.OS_NAME);
+    return (int)process.pid();
   }
 
   @Nonnull
   public static ProcessInfo[] getProcessList() {
-    JavaSysMon javaSysMon = new JavaSysMon();
-    com.jezhumble.javasysmon.ProcessInfo[] processInfos = javaSysMon.processTable();
-    ProcessInfo[] infos = new ProcessInfo[processInfos.length];
-    for (int i = 0; i < processInfos.length; i++) {
-      com.jezhumble.javasysmon.ProcessInfo info = processInfos[i];
+    Stream<ProcessHandle> stream = ProcessHandle.allProcesses();
 
-      String executable;
-      String args;
-      List<String> commandLineList = StringUtil.splitHonorQuotes(info.getCommand(), ' ');
-      if (commandLineList.isEmpty()) {
-        executable = info.getName();
-        args = "";
-      }
-      else {
-        executable = commandLineList.get(0);
-        if (commandLineList.size() > 1) {
-          args = StringUtil.join(commandLineList.subList(1, commandLineList.size()), " ");
-        }
-        else {
-          args = "";
-        }
-      }
+    List<ProcessInfo> processInfos = new ArrayList<>();
 
-      infos[i] = new ProcessInfo(info.getPid(), info.getCommand(), StringUtil.unquoteString(executable, '\"'), args);
-    }
-    return infos;
+    stream.forEach(it -> {
+      long pid = it.pid();
+      
+      ProcessHandle.Info info = it.info();
+
+      Optional<String> commandOptional = info.command();
+      // no access to process info
+      if(commandOptional.isEmpty() && info.user().isEmpty()) {
+        return;
+      }
+      
+      String command = commandOptional.orElse("");
+      String commandLine = info.commandLine().orElse("");
+      String args = StringUtil.join(info.arguments().orElse(ArrayUtil.EMPTY_STRING_ARRAY), " ");
+
+      processInfos.add(new ProcessInfo((int)pid, commandLine, new File(command).getName(), args, command));
+    });
+
+    return processInfos.toArray(ProcessInfo[]::new);
   }
 }

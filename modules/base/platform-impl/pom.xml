@@ -116,10 +116,6 @@
     <!--internal libraries-->
     <dependency>
       <groupId>consulo.internal</groupId>
-      <artifactId>javasysmon</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>consulo.internal</groupId>
       <artifactId>eawtstub</artifactId>
       <optional>true</optional>
     </dependency>
@@ -140,6 +136,7 @@
     <dependency>
       <groupId>org.jvnet.winp</groupId>
       <artifactId>winp</artifactId>
+      <optional>true</optional>
     </dependency>
     <dependency>
       <groupId>org.apache.commons</groupId>

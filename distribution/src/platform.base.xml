@@ -118,7 +118,6 @@
         <include>org.jdom:jdom-xpath-jaxen</include>
         <include>consulo.internal:forms_rt</include>
         <include>consulo.internal:svg-salamander</include>
-        <include>consulo.internal:javasysmon</include>
         <include>consulo.internal:pty4j</include>
         <include>consulo.internal:build.serviceMessages</include>
         <include>consulo.internal:purejavacomm</include>

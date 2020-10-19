@@ -16,10 +16,8 @@
 package com.intellij.execution.process;
 
 import com.intellij.openapi.components.ServiceManager;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
-import java.util.List;
+import javax.annotation.Nonnull;
 
 /**
  * @author nik
@@ -30,7 +28,4 @@ public abstract class OSProcessManager {
   }
 
   public abstract boolean killProcessTree(@Nonnull Process process);
-
-  @Nullable
-  public abstract List<String> getCommandLinesOfRunningProcesses();
 }
