@@ -25,13 +25,14 @@ import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import consulo.awt.hacking.BasicTreeUIHacking;
 import consulo.logging.Logger;
+import consulo.ui.UIAccess;
 import org.jetbrains.annotations.Contract;
-import javax.annotation.Nonnull;
 import org.jetbrains.concurrency.AsyncPromise;
 import org.jetbrains.concurrency.Promise;
 import org.jetbrains.concurrency.Promises;
 
 import javax.accessibility.AccessibleContext;
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.plaf.TreeUI;
@@ -1463,7 +1464,7 @@ public final class TreeUtil {
    */
   @Contract("_, null, _ -> false")
   public static boolean scrollToVisible(@Nonnull JTree tree, @Nonnull TreePath path, boolean centered) {
-    assert EventQueue.isDispatchThread();
+    assert UIAccess.isUIThread();
     Rectangle bounds = tree.getPathBounds(path);
     if (bounds == null) {
       LOG.debug("cannot scroll to: ", path);

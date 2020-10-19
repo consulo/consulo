@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 JetBrains s.r.o.
+ * Copyright 2013-2020 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,30 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.editor.richcopy;
+package consulo.awt.hacking;
 
-import com.intellij.util.ReflectionUtil;
 import consulo.logging.Logger;
-
-import javax.annotation.Nonnull;
 
 import java.awt.*;
 import java.lang.reflect.Method;
-import java.util.HashMap;
 import java.util.Locale;
-import java.util.Map;
+import java.util.function.BiConsumer;
 
 /**
- * Java logical font names (like 'Monospaced') don't necessarily make sense for other applications, so we try to map those fonts to
- * the corresponding physical font names.
+ * @author VISTALL
+ * @since 2020-10-19
  */
-public class FontMapper {
-  private static final Logger LOG = Logger.getInstance(FontMapper.class);
+public class FontManagerFactoryHacking {
+  private static final Logger LOG = Logger.getInstance(FontManagerFactoryHacking.class);
 
-  private static final String[] logicalFontsToMap = {Font.DIALOG, Font.DIALOG_INPUT, Font.MONOSPACED, Font.SERIF, Font.SANS_SERIF};
-  private static final Map<String, String> logicalToPhysicalMapping = new HashMap<String, String>();
-
-  static {
+  public static void mapLogicFontsToPhysical(String[] logicalFontsToMap, BiConsumer<String, String> mapper) {
     try {
       Object fontManager = null;
       try {
@@ -58,22 +51,16 @@ public class FontMapper {
           physicalFont = (String)Class.forName("sun.font.Font2D").getMethod("getFamilyName", Locale.class).invoke(physicalFontObject, Locale.getDefault());
         }
         else if ("sun.font.CFont".equals(fontClassName)) { // MacOS case
-          physicalFont = ReflectionUtil.getField(Class.forName("sun.font.CFont"), font2D, String.class, "nativeFontName");
+          Class<?> cFontClazz = Class.forName("sun.font.CFont");
+          physicalFont = (String)cFontClazz.getDeclaredField("nativeFontName").get(font2D);
         }
         if (physicalFont != null) {
-          logicalToPhysicalMapping.put(logicalFont, physicalFont);
+          mapper.accept(logicalFont, physicalFont);
         }
       }
     }
     catch (Throwable e) {
-      LOG.warn("Failed to determine logical to physical font mappings");
+      LOG.warn("Failed to determine logical to physical font mappings", e);
     }
-  }
-
-  public static
-  @Nonnull
-  String getPhysicalFontName(@Nonnull String logicalFontName) {
-    String mapped = logicalToPhysicalMapping.get(logicalFontName);
-    return mapped == null ? logicalFontName : mapped;
   }
 }

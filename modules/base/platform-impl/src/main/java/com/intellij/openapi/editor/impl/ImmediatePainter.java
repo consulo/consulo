@@ -27,8 +27,8 @@ import com.intellij.util.Processor;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.ImageUtil;
 import com.intellij.util.ui.UIUtil;
+import consulo.awt.hacking.SunVolatileImageHacking;
 import consulo.disposer.Disposer;
-import sun.awt.image.SunVolatileImage;
 
 import javax.swing.*;
 import java.awt.*;
@@ -235,8 +235,9 @@ class ImmediatePainter {
 
   private static boolean isImageValid(VolatileImage image, Component component) {
     GraphicsConfiguration componentConfig = component.getGraphicsConfiguration();
-    if (SystemInfo.isWindows && image instanceof SunVolatileImage) { // JBR-1540
-      GraphicsConfiguration imageConfig = ((SunVolatileImage)image).getGraphicsConfig();
+    // JBR-1540
+    if (SystemInfo.isWindows && SunVolatileImageHacking.isSunVolatileImage(image)) {
+      GraphicsConfiguration imageConfig = SunVolatileImageHacking.getGraphicsConfig(image);
       if (imageConfig != null && componentConfig != null && imageConfig.getDevice() != componentConfig.getDevice()) return false;
     }
     return image.validate(componentConfig) != VolatileImage.IMAGE_INCOMPATIBLE;

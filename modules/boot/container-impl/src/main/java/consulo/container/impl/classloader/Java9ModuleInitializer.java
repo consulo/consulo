@@ -207,6 +207,7 @@ public class Java9ModuleInitializer {
     Object desktopHackingModule = findModuleUnwrap(plaformModuleLayer, "consulo.desktop.awt.hacking");
 
     instanceInvoke(java_lang_Module_addOpens, javaDesktopModule, "sun.awt", desktopHackingModule);
+    instanceInvoke(java_lang_Module_addOpens, javaDesktopModule, "sun.awt.image", desktopHackingModule);
     instanceInvoke(java_lang_Module_addOpens, javaDesktopModule, "sun.java2d", desktopHackingModule);
     instanceInvoke(java_lang_Module_addOpens, javaDesktopModule, "sun.font", desktopHackingModule);
     instanceInvoke(java_lang_Module_addOpens, javaDesktopModule, "java.awt", desktopHackingModule);

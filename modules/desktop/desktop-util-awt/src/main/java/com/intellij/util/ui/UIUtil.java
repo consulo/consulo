@@ -2606,7 +2606,7 @@ public class UIUtil {
   }
 
   public static void invokeLaterIfNeeded(@Nonnull Runnable runnable) {
-    if (SwingUtilities.isEventDispatchThread()) {
+    if (EDT.isCurrentThreadEdt()) {
       runnable.run();
     }
     else {
@@ -2624,7 +2624,7 @@ public class UIUtil {
    * @see #invokeAndWaitIfNeeded(com.intellij.util.ThrowableRunnable)
    */
   public static void invokeAndWaitIfNeeded(@Nonnull Runnable runnable) {
-    if (SwingUtilities.isEventDispatchThread()) {
+    if (EDT.isCurrentThreadEdt()) {
       runnable.run();
     }
     else {
@@ -2649,7 +2649,7 @@ public class UIUtil {
   }
 
   public static void invokeAndWaitIfNeeded(@Nonnull final ThrowableRunnable runnable) throws Throwable {
-    if (SwingUtilities.isEventDispatchThread()) {
+    if (EDT.isCurrentThreadEdt()) {
       runnable.run();
     }
     else {

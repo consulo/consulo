@@ -45,6 +45,7 @@ import com.intellij.util.ArrayUtil;
 import com.intellij.util.Restarter;
 import com.intellij.util.concurrency.AppExecutorUtil;
 import com.intellij.util.concurrency.AppScheduledExecutorService;
+import com.intellij.util.ui.EDT;
 import com.intellij.util.ui.UIUtil;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.ApplicationProperties;
@@ -210,7 +211,7 @@ public class DesktopApplicationImpl extends BaseApplication implements Applicati
 
   @Override
   public boolean isDispatchThread() {
-    return EventQueue.isDispatchThread();
+    return EDT.isCurrentThreadEdt();
   }
 
   @Nonnull

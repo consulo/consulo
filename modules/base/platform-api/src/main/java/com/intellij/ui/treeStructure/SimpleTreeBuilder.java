@@ -19,12 +19,12 @@ import com.intellij.ide.util.treeView.AbstractTreeBuilder;
 import com.intellij.ide.util.treeView.AbstractTreeStructure;
 import com.intellij.ide.util.treeView.NodeDescriptor;
 import com.intellij.openapi.application.ApplicationManager;
-import javax.annotation.Nullable;
+import consulo.ui.UIAccess;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
-import java.awt.*;
 import java.util.Comparator;
 
 public class SimpleTreeBuilder extends AbstractTreeBuilder {
@@ -53,7 +53,7 @@ public class SimpleTreeBuilder extends AbstractTreeBuilder {
       cleanUpStructureCaches();
     }
 
-    if (EventQueue.isDispatchThread()) {
+    if (UIAccess.isUIThread()) {
       super.queueUpdate();
     }
     else {

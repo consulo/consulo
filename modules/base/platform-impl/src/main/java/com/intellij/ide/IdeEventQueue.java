@@ -20,7 +20,6 @@ import com.intellij.ide.dnd.DnDManagerImpl;
 import com.intellij.ide.plugins.PluginManager;
 import com.intellij.ide.ui.UISettings;
 import com.intellij.idea.ApplicationStarter;
-import consulo.disposer.Disposable;
 import com.intellij.openapi.application.*;
 import com.intellij.openapi.application.impl.LaterInvocator;
 import com.intellij.openapi.components.ServiceManager;
@@ -44,10 +43,12 @@ import com.intellij.util.Alarm;
 import com.intellij.util.ReflectionUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.HashMap;
+import com.intellij.util.ui.EDT;
 import com.intellij.util.ui.UIUtil;
 import consulo.application.TransactionGuardEx;
 import consulo.awt.TargetAWT;
 import consulo.awt.hacking.PostEventQueueHacking;
+import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
@@ -195,6 +196,8 @@ public class IdeEventQueue extends EventQueue {
     assert !(systemEventQueue instanceof IdeEventQueue) : systemEventQueue;
     systemEventQueue.push(this);
     addIdleTimeCounterRequest();
+
+    EDT.updateEdt();
 
     KeyboardFocusManager keyboardFocusManager = IdeKeyboardFocusManager.replaceDefault();
     keyboardFocusManager.addPropertyChangeListener("permanentFocusOwner", e -> {
@@ -353,7 +356,13 @@ public class IdeEventQueue extends EventQueue {
 
   @Override
   public void dispatchEvent(@Nonnull AWTEvent e) {
-    if (e.getSource() instanceof TrayIcon) return;
+    // Update EDT if it changes (might happen after Application disposal)
+    EDT.updateEdt();
+
+    if (e.getSource() instanceof TrayIcon) {
+      dispatchTrayIconEvent(e);
+      return;
+    }
 
     checkForTimeJump();
     if (!appIsLoaded()) {
@@ -1140,6 +1149,14 @@ public class IdeEventQueue extends EventQueue {
   public enum BlockMode {
     COMPLETE,
     ACTIONS
+  }
+
+  private static void dispatchTrayIconEvent(@Nonnull AWTEvent e) {
+    if (e instanceof ActionEvent) {
+      for (ActionListener listener : ((TrayIcon)e.getSource()).getActionListeners()) {
+        listener.actionPerformed((ActionEvent)e);
+      }
+    }
   }
 
   public void flushDelayedKeyEvents() {

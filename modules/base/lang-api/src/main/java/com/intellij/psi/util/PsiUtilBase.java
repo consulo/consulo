@@ -36,14 +36,12 @@ import com.intellij.openapi.vfs.VFileProperty;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.*;
 import consulo.logging.Logger;
+import consulo.ui.UIAccess;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
-import java.awt.*;
 import java.util.*;
-import java.util.List;
 
 public class PsiUtilBase extends PsiUtilCore {
   private static final Logger LOG = Logger.getInstance(PsiUtilBase.class);
@@ -232,7 +230,7 @@ public class PsiUtilBase extends PsiUtilCore {
    */
   @Nullable
   public static Editor findEditor(@Nonnull PsiElement element) {
-    if (!EventQueue.isDispatchThread()) {
+    if (!UIAccess.isUIThread()) {
       LOG.warn("Invoke findEditor() from EDT only. Otherwise, it causes deadlocks.");
     }
     PsiFile psiFile = element.getContainingFile();

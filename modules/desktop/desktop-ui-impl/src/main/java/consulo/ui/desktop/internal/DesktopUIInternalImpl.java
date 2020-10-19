@@ -17,6 +17,7 @@ package consulo.ui.desktop.internal;
 
 import com.intellij.ui.scale.JBUIScale;
 import com.intellij.util.io.UnsyncByteArrayInputStream;
+import com.intellij.util.ui.EDT;
 import com.kitfox.svg.SVGDiagram;
 import consulo.awt.TargetAWT;
 import consulo.localize.LocalizeValue;
@@ -359,7 +360,7 @@ public class DesktopUIInternalImpl extends UIInternal {
 
   @Override
   public boolean _UIAccess_isUIThread() {
-    return SwingUtilities.isEventDispatchThread();
+    return EDT.isCurrentThreadEdt();
   }
 
   @Override

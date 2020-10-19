@@ -46,7 +46,6 @@ import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.swing.*;
 import java.util.*;
 import java.util.concurrent.ConcurrentMap;
 
@@ -517,7 +516,7 @@ public abstract class PsiDocumentManagerBase extends PsiDocumentManager implemen
   @Override
   public void commitAndRunReadAction(@Nonnull final Runnable runnable) {
     final Application application = ApplicationManager.getApplication();
-    if (SwingUtilities.isEventDispatchThread()) {
+    if (application.isDispatchThread()) {
       commitAllDocuments();
       runnable.run();
       return;

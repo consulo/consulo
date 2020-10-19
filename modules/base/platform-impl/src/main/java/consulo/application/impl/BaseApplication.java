@@ -53,6 +53,7 @@ import com.intellij.util.concurrency.AppExecutorUtil;
 import com.intellij.util.concurrency.AppScheduledExecutorService;
 import com.intellij.util.containers.Stack;
 import com.intellij.util.io.storage.HeavyProcessLatch;
+import com.intellij.util.ui.EDT;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.application.ApplicationProperties;
 import consulo.application.ex.ApplicationEx2;
@@ -78,7 +79,6 @@ import org.jetbrains.ide.PooledThreadExecutor;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
@@ -705,7 +705,7 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
 
   @Override
   public boolean isWriteThread() {
-    return myLock.isWriteThread(EventQueue::isDispatchThread);
+    return myLock.isWriteThread(EDT::isCurrentThreadEdt);
   }
 
   public boolean startWriteUI(Class<?> clazz) {

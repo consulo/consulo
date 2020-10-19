@@ -23,11 +23,12 @@ import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
+import consulo.awt.hacking.AppContextHacking;
+import consulo.awt.hacking.HTMLEditorKitHacking;
 import consulo.desktop.util.awt.laf.BuildInLookAndFeel;
 import consulo.ide.ui.laf.BaseLookAndFeel;
 import consulo.ui.desktop.laf.extend.textBox.SupportTextBoxWithExpandActionExtender;
 import consulo.ui.desktop.laf.extend.textBox.SupportTextBoxWithExtensionsExtender;
-import sun.awt.AppContext;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;
@@ -35,12 +36,10 @@ import javax.swing.plaf.FontUIResource;
 import javax.swing.plaf.basic.BasicLookAndFeel;
 import javax.swing.plaf.metal.DefaultMetalTheme;
 import javax.swing.plaf.metal.MetalLookAndFeel;
-import javax.swing.text.html.HTMLEditorKit;
 import javax.swing.text.html.StyleSheet;
 import java.awt.*;
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.HashMap;
@@ -150,13 +149,10 @@ public class ModernDarkLaf extends BaseLookAndFeel implements BuildInLookAndFeel
     URL url = getClass().getResource(getPrefix() + (JBUI.isHiDPI() ? "@2x.css" : ".css"));
     StyleSheet styleSheet = UIUtil.loadStyleSheet(url);
     defaults.put("StyledEditorKit.JBDefaultStyle", styleSheet);
-    try {
-      Field keyField = HTMLEditorKit.class.getDeclaredField("DEFAULT_STYLES_KEY");
-      keyField.setAccessible(true);
-      AppContext.getAppContext().put(keyField.get(null), UIUtil.loadStyleSheet(url));
-    }
-    catch (Exception e) {
-      log(e);
+
+    Object value = HTMLEditorKitHacking.DEFAULT_STYLES_KEY();
+    if (value != null) {
+      AppContextHacking.put(value, UIUtil.loadStyleSheet(url));
     }
   }
 

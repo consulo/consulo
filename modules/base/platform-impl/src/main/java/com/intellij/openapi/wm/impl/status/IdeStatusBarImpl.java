@@ -41,6 +41,7 @@ import com.intellij.util.ui.JBFont;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import consulo.awt.TargetAWT;
+import consulo.ui.UIAccess;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
@@ -494,7 +495,7 @@ public class IdeStatusBarImpl extends JComponent implements StatusBarEx, IdeEven
 
   @Override
   public void removeWidget(@Nonnull final String id) {
-    assert EventQueue.isDispatchThread() : "Must be EDT";
+    assert UIAccess.isUIThread() : "Must be EDT";
     final WidgetBean bean = myWidgetMap.get(id);
     if (bean != null) {
       if (Position.LEFT == bean.position) {
