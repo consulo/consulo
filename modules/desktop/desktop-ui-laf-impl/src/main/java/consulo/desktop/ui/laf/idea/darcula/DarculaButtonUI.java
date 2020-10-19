@@ -12,7 +12,6 @@ import com.intellij.ui.scale.JBUIScale;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.ui.*;
 import consulo.awt.TargetAWT;
-import sun.swing.SwingUtilities2;
 
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
@@ -157,10 +156,10 @@ public class DarculaButtonUI extends BasicButtonUI {
     ButtonModel model = button.getModel();
     g.setColor(getButtonTextColor(button));
 
-    FontMetrics metrics = SwingUtilities2.getFontMetrics(c, g);
+    FontMetrics metrics = c.getFontMetrics(c.getFont());
     if (model.isEnabled()) {
 
-      SwingUtilities2.drawStringUnderlineCharAt(c, g, text, getMnemonicIndex(button), textRect.x + getTextShiftOffset(), textRect.y + metrics.getAscent() + getTextShiftOffset());
+      BasicGraphicsUtils.drawStringUnderlineCharAt(c, (Graphics2D)g, text, getMnemonicIndex(button), textRect.x + getTextShiftOffset(), textRect.y + metrics.getAscent() + getTextShiftOffset());
     }
     else {
       paintDisabledText(g, text, c, textRect, metrics);
@@ -182,11 +181,11 @@ public class DarculaButtonUI extends BasicButtonUI {
 
   protected void paintDisabledText(Graphics g, String text, JComponent c, Rectangle textRect, FontMetrics metrics) {
     g.setColor(UIManager.getColor("Button.disabledText"));
-    SwingUtilities2.drawStringUnderlineCharAt(c, g, text, -1, textRect.x + getTextShiftOffset(), textRect.y + metrics.getAscent() + getTextShiftOffset());
+    BasicGraphicsUtils.drawStringUnderlineCharAt(c, (Graphics2D)g, text, -1, textRect.x + getTextShiftOffset(), textRect.y + metrics.getAscent() + getTextShiftOffset());
   }
 
   protected void paintContents(Graphics g, AbstractButton b) {
-    FontMetrics fm = SwingUtilities2.getFontMetrics(b, g);
+    FontMetrics fm = b.getFontMetrics(b.getFont());
     boolean isDotButton = isSquare(b) && b.getIcon() == AllIcons.General.Ellipsis;
     String text = isDotButton ? "..." : b.getText();
     Icon icon = isDotButton ? null : b.getIcon();

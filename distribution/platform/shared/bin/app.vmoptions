@@ -4,3 +4,6 @@
 --add-opens=java.desktop/java.awt=consulo.container.impl
 --add-opens=java.desktop/javax.swing=consulo.container.impl
 --add-opens=java.desktop/javax.swing.plaf.basic=consulo.container.impl
+--add-opens=java.base/java.lang=consulo.container.impl
+--add-opens=java.desktop/javax.swing.text.html=consulo.container.impl
+--illegal-access=deny

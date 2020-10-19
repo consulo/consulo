@@ -22,6 +22,7 @@ import com.intellij.ui.IdeBorderFactory;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.ReflectionUtil;
 import com.intellij.util.ui.*;
+import consulo.awt.hacking.BasicScrollPaneUIHacking;
 import consulo.logging.Logger;
 import consulo.util.dataholder.Key;
 
@@ -38,7 +39,6 @@ import java.awt.event.InputEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
-import java.lang.reflect.Field;
 
 public class JBScrollPane extends JScrollPane {
   private static final Logger LOG = Logger.getInstance(JBScrollPane.class);
@@ -240,13 +240,11 @@ public class JBScrollPane extends JScrollPane {
     updateViewportBorder();
     if (ui instanceof BasicScrollPaneUI) {
       try {
-        Field field = BasicScrollPaneUI.class.getDeclaredField("mouseScrollListener");
-        field.setAccessible(true);
-        Object value = field.get(ui);
+        Object value = BasicScrollPaneUIHacking.getMouseScrollListener((BasicScrollPaneUI)ui);
         if (value instanceof MouseWheelListener) {
           MouseWheelListener oldListener = (MouseWheelListener)value;
           MouseWheelListener newListener = new JBMouseWheelListener(oldListener);
-          field.set(ui, newListener);
+          BasicScrollPaneUIHacking.setMouseScrollListener((BasicScrollPaneUI)ui, newListener);
           // replace listener if field updated successfully
           removeMouseWheelListener(oldListener);
           addMouseWheelListener(newListener);

@@ -21,7 +21,6 @@ import com.intellij.util.ObjectUtil;
 import com.intellij.util.ui.GraphicsUtil;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
-import sun.swing.SwingUtilities2;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;
@@ -30,6 +29,7 @@ import javax.swing.plaf.ColorUIResource;
 import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.UIResource;
 import javax.swing.plaf.basic.BasicButtonUI;
+import javax.swing.plaf.basic.BasicGraphicsUtils;
 import java.awt.*;
 
 /**
@@ -85,19 +85,19 @@ public class DarculaButtonUI extends BasicButtonUI {
     }
     g.setColor(fg);
 
-    FontMetrics metrics = SwingUtilities2.getFontMetrics(c, g);
+    FontMetrics metrics = c.getFontMetrics(c.getFont());
     int mnemonicIndex = button.getDisplayedMnemonicIndex();
     if (model.isEnabled()) {
 
-      SwingUtilities2
-              .drawStringUnderlineCharAt(c, g, text, mnemonicIndex, textRect.x + getTextShiftOffset(), textRect.y + metrics.getAscent() + getTextShiftOffset());
+      BasicGraphicsUtils
+              .drawStringUnderlineCharAt(c, (Graphics2D)g, text, mnemonicIndex, textRect.x + getTextShiftOffset(), textRect.y + metrics.getAscent() + getTextShiftOffset());
     }
     else {
       g.setColor(UIManager.getColor("Button.darcula.disabledText.shadow"));
-      SwingUtilities2.drawStringUnderlineCharAt(c, g, text, -1, textRect.x + getTextShiftOffset() + JBUI.scale(1),
+      BasicGraphicsUtils.drawStringUnderlineCharAt(c, (Graphics2D)g, text, -1, textRect.x + getTextShiftOffset() + JBUI.scale(1),
                                                 textRect.y + metrics.getAscent() + getTextShiftOffset() + JBUI.scale(1));
       g.setColor(UIManager.getColor("Button.disabledText"));
-      SwingUtilities2.drawStringUnderlineCharAt(c, g, text, -1, textRect.x + getTextShiftOffset(), textRect.y + metrics.getAscent() + getTextShiftOffset());
+      BasicGraphicsUtils.drawStringUnderlineCharAt(c, (Graphics2D)g, text, -1, textRect.x + getTextShiftOffset(), textRect.y + metrics.getAscent() + getTextShiftOffset());
 
 
     }

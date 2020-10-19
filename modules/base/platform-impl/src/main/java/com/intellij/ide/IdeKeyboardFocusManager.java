@@ -16,7 +16,7 @@
 package com.intellij.ide;
 
 import com.intellij.openapi.application.AccessToken;
-import sun.awt.AppContext;
+import consulo.awt.hacking.AppContextHacking;
 
 import java.awt.*;
 
@@ -29,7 +29,7 @@ class IdeKeyboardFocusManager extends DefaultKeyboardFocusManager {
   }
 
   static IdeKeyboardFocusManager replaceDefault() {
-    AppContext.getAppContext().put(KeyboardFocusManager.class, new IdeKeyboardFocusManager());
+    AppContextHacking.put(KeyboardFocusManager.class, new IdeKeyboardFocusManager());
     return (IdeKeyboardFocusManager)getCurrentKeyboardFocusManager();
   }
 }

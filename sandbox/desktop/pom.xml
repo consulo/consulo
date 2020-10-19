@@ -221,6 +221,11 @@
       <artifactId>consulo-desktop-base-laf-icon-library</artifactId>
       <version>${project.version}</version>
     </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>consulo-hacking-java-base</artifactId>
+      <version>${project.version}</version>
+    </dependency>
 
     <!--copied from consulo-bundle module-->
 

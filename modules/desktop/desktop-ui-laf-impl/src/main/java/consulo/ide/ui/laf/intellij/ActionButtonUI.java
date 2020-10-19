@@ -27,10 +27,10 @@ import com.intellij.util.ui.GraphicsUtil;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import consulo.awt.TargetAWT;
-import sun.swing.SwingUtilities2;
 
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
+import javax.swing.plaf.basic.BasicGraphicsUtils;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 
@@ -65,7 +65,7 @@ public class ActionButtonUI extends ComponentUI implements consulo.actionSystem.
     AnAction action = c.getAction();
 
     Icon icon = TargetAWT.to(c.getIcon());
-    FontMetrics fm = SwingUtilities2.getFontMetrics(c, g, c.getFont());
+    FontMetrics fm = c.getFontMetrics(c.getFont());
     Rectangle viewRect = new Rectangle(c.getSize());
     Insets i = c.getInsets();
     viewRect.x += i.left;
@@ -88,7 +88,7 @@ public class ActionButtonUI extends ComponentUI implements consulo.actionSystem.
 
     UISettings.setupAntialiasing(g);
     g.setColor(c.isButtonEnabled() ? c.getForeground() : UIUtil.getInactiveTextColor());
-    SwingUtilities2.drawStringUnderlineCharAt(c, g, text, getMnemonicCharIndex(c, action, text), textRect.x, textRect.y + fm.getAscent());
+    BasicGraphicsUtils.drawStringUnderlineCharAt(c, (Graphics2D)g, text, getMnemonicCharIndex(c, action, text), textRect.x, textRect.y + fm.getAscent());
   }
 
   private int getMnemonicCharIndex(ActionButton button, AnAction action, String text) {

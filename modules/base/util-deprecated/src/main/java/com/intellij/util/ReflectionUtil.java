@@ -285,12 +285,7 @@ public class ReflectionUtil {
 
   @Nullable
   public static Field getDeclaredField(@Nonnull Class aClass, @NonNls @Nonnull final String name) {
-    return processFields(aClass, new Condition<Field>() {
-      @Override
-      public boolean value(Field field) {
-        return name.equals(field.getName());
-      }
-    });
+    return processFields(aClass, field -> name.equals(field.getName()));
   }
 
   @Nonnull

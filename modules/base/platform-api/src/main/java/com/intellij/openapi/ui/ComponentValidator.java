@@ -1,11 +1,9 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.openapi.ui;
 
-import consulo.disposer.Disposable;
 import com.intellij.openapi.ui.popup.ComponentPopupBuilder;
 import com.intellij.openapi.ui.popup.JBPopup;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
-import consulo.disposer.Disposer;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.ColorUtil;
@@ -18,14 +16,16 @@ import com.intellij.util.ui.JBEmptyBorder;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.JBValue;
 import com.intellij.util.ui.UIUtil;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import sun.swing.SwingUtilities2;
-
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.HyperlinkListener;
+import javax.swing.plaf.basic.BasicGraphicsUtils;
 import javax.swing.plaf.basic.BasicHTML;
 import javax.swing.text.DefaultCaret;
 import javax.swing.text.EditorKit;
@@ -295,7 +295,7 @@ public class ComponentValidator {
     StringBuilder result = new StringBuilder();
 
     for (String word : words) {
-      word = SwingUtilities2.clipStringIfNecessary(c, c.getFontMetrics(c.getFont()), word, MAX_WIDTH.get());
+      word = BasicGraphicsUtils.getClippedString(c, c.getFontMetrics(c.getFont()), word, MAX_WIDTH.get());
       result.append(word).append(" ");
     }
 

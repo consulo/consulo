@@ -26,7 +26,7 @@
 
   <modelVersion>4.0.0</modelVersion>
 
-  <artifactId>consulo-desktop-awt-hacking</artifactId>
+  <artifactId>consulo-hacking-java-base</artifactId>
   <version>2-SNAPSHOT</version>
 
   <packaging>jar</packaging>
@@ -35,26 +35,6 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <java.level>11</java.level>
   </properties>
-
-  <build>
-    <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <configuration>
-          <source>${java.level}</source>
-          <target>${java.level}</target>
-          <showDeprecation>true</showDeprecation>
-          <showWarnings>true</showWarnings>
-          <compilerArgs>
-            <args>--add-exports=java.desktop/sun.awt=consulo.desktop.awt.hacking</args>
-            <args>--add-exports=java.desktop/sun.java2d=consulo.desktop.awt.hacking</args>
-            <args>--add-exports=java.desktop/sun.font=consulo.desktop.awt.hacking</args>
-          </compilerArgs>
-        </configuration>
-      </plugin>
-    </plugins>
-  </build>
 
   <dependencies>
     <dependency>

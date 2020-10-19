@@ -24,11 +24,11 @@ import com.intellij.util.ui.UIUtil;
 import gnu.trove.THashMap;
 import kava.beans.PropertyChangeEvent;
 import kava.beans.PropertyChangeListener;
-import sun.swing.SwingUtilities2;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+import javax.swing.plaf.basic.BasicGraphicsUtils;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.util.List;
@@ -159,14 +159,14 @@ class ContentTabLabel extends BaseLabel {
 
   private void updateText() {
     FontMetrics fm = getFontMetrics(getFont());
-    int textWidth = SwingUtilities2.stringWidth(this, fm, myText);
-    int prefWidth = myIconWithInsetsWidth + textWidth;
+    float textWidth = BasicGraphicsUtils.getStringWidth(this, fm, myText);
+    float prefWidth = myIconWithInsetsWidth + textWidth;
 
     int maxWidth = getMaximumSize().width;
 
     if (prefWidth > maxWidth) {
       int offset = maxWidth - myIconWithInsetsWidth;
-      String s = SwingUtilities2.clipString(this, fm, myText, offset);
+      String s = BasicGraphicsUtils.getClippedString(this, fm, myText, offset);
       super.setText(s);
       return;
     }

@@ -103,6 +103,8 @@
         <include>consulo:consulo-util-rmi</include>
         <include>consulo:consulo-util-dataholder</include>
         <include>consulo:consulo-util</include>
+        
+        <include>consulo:consulo-hacking-java-base</include>
 
         <!--TODO [VISTALL] those dependencies must be removed from base plugin-->
         <include>consulo:consulo-desktop-util-awt</include>

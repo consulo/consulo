@@ -10,12 +10,12 @@ import com.intellij.openapi.util.registry.Registry;
 import com.intellij.ui.components.JBScrollPane.Alignment;
 import com.intellij.ui.scale.JBUIScale;
 import com.intellij.ui.table.JBTable;
-import com.intellij.util.MethodInvocator;
 import com.intellij.util.ui.*;
 import com.intellij.util.ui.tree.TreeUtil;
+import consulo.awt.hacking.JBViewportHacking;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.Timer;
 import javax.swing.*;
 import javax.swing.border.AbstractBorder;
@@ -28,10 +28,6 @@ import java.awt.event.ContainerListener;
 import static com.intellij.util.ui.JBUI.emptyInsets;
 
 public class JBViewport extends JViewport implements ZoomableViewport {
-  private static final MethodInvocator ourCanUseWindowBlitterMethod = new MethodInvocator(JViewport.class, "canUseWindowBlitter");
-  private static final MethodInvocator ourGetPaintManagerMethod = new MethodInvocator(RepaintManager.class, "getPaintManager");
-  private static final MethodInvocator ourGetUseTrueDoubleBufferingMethod = new MethodInvocator(JRootPane.class, "getUseTrueDoubleBuffering");
-
   private static final NotificationGroup NOTIFICATION_GROUP = NotificationGroup.logOnlyGroup("scrolling-capabilities-debug");
   private static final int NOTIFICATION_TIMEOUT = 1500;
 
@@ -140,11 +136,7 @@ public class JBViewport extends JViewport implements ZoomableViewport {
      Generally, this requires that viewport must not be obscured by its ancestors and must be showing. */
   @Nullable
   private static Boolean isWindowBlitterAvailableFor(JViewport viewport) {
-    if (ourCanUseWindowBlitterMethod.isAvailable()) {
-      return (Boolean)ourCanUseWindowBlitterMethod.invoke(viewport);
-    }
-
-    return null;
+    return JBViewportHacking.isWindowBlitterAvailableFor(viewport);
   }
 
   @Override
@@ -164,23 +156,7 @@ public class JBViewport extends JViewport implements ZoomableViewport {
      See GraphicsUtil.safelyGetGraphics() for more info. */
   @Nullable
   private static Boolean isTrueDoubleBufferingAvailableFor(JComponent component) {
-    if (ourGetPaintManagerMethod.isAvailable()) {
-      Object paintManager = ourGetPaintManagerMethod.invoke(RepaintManager.currentManager(component));
-
-      if (!"javax.swing.BufferStrategyPaintManager".equals(paintManager.getClass().getName())) {
-        return false;
-      }
-
-      if (ourGetUseTrueDoubleBufferingMethod.isAvailable()) {
-        JRootPane rootPane = component.getRootPane();
-
-        if (rootPane != null) {
-          return (Boolean)ourGetUseTrueDoubleBufferingMethod.invoke(rootPane);
-        }
-      }
-    }
-
-    return null;
+    return JBViewportHacking.isTrueDoubleBufferingAvailableFor(component);
   }
 
   private static Notification notify(String message) {

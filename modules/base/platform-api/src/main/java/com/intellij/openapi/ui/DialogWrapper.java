@@ -20,8 +20,6 @@ import com.intellij.icons.AllIcons;
 import com.intellij.ide.ui.UISettings;
 import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.idea.ActionsBundle;
-import consulo.awt.TargetAWT;
-import consulo.disposer.Disposable;
 import com.intellij.openapi.MnemonicHelper;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.ActionUtil;
@@ -36,7 +34,6 @@ import com.intellij.openapi.ui.popup.*;
 import com.intellij.openapi.ui.popup.util.PopupUtil;
 import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.Computable;
-import consulo.disposer.Disposer;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.wm.IdeFocusManager;
@@ -56,7 +53,10 @@ import com.intellij.util.ReflectionUtil;
 import com.intellij.util.TimeoutUtil;
 import com.intellij.util.ui.*;
 import consulo.annotation.DeprecationInfo;
+import consulo.awt.TargetAWT;
 import consulo.desktop.ui.swing.LocalizeAction;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.platform.base.localize.CommonLocalize;
@@ -65,7 +65,6 @@ import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import org.intellij.lang.annotations.MagicConstant;
 import org.jetbrains.annotations.NonNls;
-import sun.swing.SwingUtilities2;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -73,6 +72,7 @@ import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import javax.swing.plaf.UIResource;
+import javax.swing.plaf.basic.BasicGraphicsUtils;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.List;
@@ -2065,12 +2065,12 @@ public abstract class DialogWrapper {
 
   private void setErrorTipText(JComponent component, JLabel label, String text) {
     Insets insets = UIManager.getInsets("Balloon.error.textInsets");
-    int oneLineWidth = SwingUtilities2.stringWidth(label, label.getFontMetrics(label.getFont()), text);
-    int textWidth = getRootPane().getWidth() - component.getX() - insets.left - insets.right - JBUI.scale(30);
+    float oneLineWidth = BasicGraphicsUtils.getStringWidth(label, label.getFontMetrics(label.getFont()), text);
+    float textWidth = getRootPane().getWidth() - component.getX() - insets.left - insets.right - JBUI.scale(30);
     if (textWidth < JBUI.scale(90)) textWidth = JBUI.scale(90);
     if (textWidth > oneLineWidth) textWidth = oneLineWidth;
 
-    String htmlText = String.format("<html><div width=%d>%s</div></html>", textWidth, text);
+    String htmlText = String.format("<html><div width=%d>%s</div></html>", (int)textWidth, text);
     label.setText(htmlText);
   }
 
@@ -2096,7 +2096,7 @@ public abstract class DialogWrapper {
       synchronized (container.getTreeLock()) {
         cl = Arrays.asList(container.getComponents());
       }
-      return cl.stream().filter(c -> c.isFocusable()).count() > 1 ? null : source;
+      return cl.stream().filter(Component::isFocusable).count() > 1 ? null : source;
     }
     else {
       return source;

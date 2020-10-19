@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.util;
+package consulo.awt.hacking.util;
 
 import consulo.logging.Logger;
 
@@ -47,10 +47,7 @@ public class MethodInvocator {
     try {
       return myMethod.invoke(object, arguments);
     }
-    catch (IllegalAccessException e) {
-      throw new RuntimeException(e);
-    }
-    catch (InvocationTargetException e) {
+    catch (IllegalAccessException | InvocationTargetException e) {
       throw new RuntimeException(e);
     }
   }

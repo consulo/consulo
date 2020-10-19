@@ -133,6 +133,7 @@
 
     <module>modules/base/injecting/injecting-api</module>
     <module>modules/base/injecting/injecting-pico-impl</module>
+    <module>modules/base/hacking-java-base</module>
 
     <module>modules/base/language-editor-api</module>
 

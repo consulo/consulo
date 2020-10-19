@@ -17,14 +17,14 @@ package consulo.desktop.util.awt.laf;
 
 import com.intellij.openapi.util.ClearableLazyValue;
 import com.intellij.util.ui.UIUtil;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.synth.ColorType;
 import javax.swing.plaf.synth.SynthContext;
+import javax.swing.plaf.synth.SynthUI;
 import java.awt.*;
-import java.lang.reflect.Method;
 
 /**
  * @author VISTALL
@@ -43,13 +43,15 @@ public class GTKPlusUIUtil {
       dummyArea.updateUI();
 
       SynthContext synthContext = getSynthContext(dummyArea.getUI(), dummyArea);
+      if(synthContext != null) {
+        Color colorBack = synthContext.getStyle().getColor(synthContext, ColorType.TEXT_BACKGROUND);
+        Color colorFore = synthContext.getStyle().getColor(synthContext, ColorType.TEXT_FOREGROUND);
 
-      Color colorBack = synthContext.getStyle().getColor(synthContext, ColorType.TEXT_BACKGROUND);
-      Color colorFore = synthContext.getStyle().getColor(synthContext, ColorType.TEXT_FOREGROUND);
-
-      double textAvg = colorFore.getRed() / 256. + colorFore.getGreen() / 256. + colorFore.getBlue() / 256.;
-      double bgAvg = colorBack.getRed() / 256. + colorBack.getGreen() / 256. + colorBack.getBlue() / 256.;
-      return textAvg > bgAvg;
+        double textAvg = colorFore.getRed() / 256. + colorFore.getGreen() / 256. + colorFore.getBlue() / 256.;
+        double bgAvg = colorBack.getRed() / 256. + colorBack.getGreen() / 256. + colorBack.getBlue() / 256.;
+        return textAvg > bgAvg;
+      }
+      return false;
     }
   };
 
@@ -63,9 +65,10 @@ public class GTKPlusUIUtil {
 
   public static SynthContext getSynthContext(final ComponentUI ui, final JComponent item) {
     try {
-      final Method getContext = ui.getClass().getMethod("getContext", JComponent.class);
-      getContext.setAccessible(true);
-      return (SynthContext)getContext.invoke(ui, item);
+      if(ui instanceof SynthUI) {
+        return ((SynthUI)ui).getContext(item);
+      }
+      return null;
     }
     catch (Exception e) {
       throw new RuntimeException(e);

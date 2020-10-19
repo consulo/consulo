@@ -26,12 +26,14 @@ import com.intellij.util.containers.hash.HashMap;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import consulo.awt.TargetAWT;
+import consulo.awt.hacking.AppContextHacking;
+import consulo.awt.hacking.BasicLookAndFeelHacking;
+import consulo.awt.hacking.HTMLEditorKitHacking;
 import consulo.ide.ui.laf.BaseLookAndFeel;
 import consulo.ui.desktop.laf.extend.textBox.SupportTextBoxWithExpandActionExtender;
 import consulo.ui.desktop.laf.extend.textBox.SupportTextBoxWithExtensionsExtender;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageKey;
-import sun.awt.AppContext;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;
@@ -42,13 +44,10 @@ import javax.swing.plaf.InsetsUIResource;
 import javax.swing.plaf.basic.BasicLookAndFeel;
 import javax.swing.plaf.metal.DefaultMetalTheme;
 import javax.swing.plaf.metal.MetalLookAndFeel;
-import javax.swing.text.html.HTMLEditorKit;
 import javax.swing.text.html.StyleSheet;
 import java.awt.*;
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.List;
 import java.util.Locale;
@@ -76,16 +75,6 @@ public class DarculaLaf extends BaseLookAndFeel {
     }
   }
 
-  private void callInit(String method, UIDefaults defaults) {
-    try {
-      final Method superMethod = BasicLookAndFeel.class.getDeclaredMethod(method, UIDefaults.class);
-      superMethod.setAccessible(true);
-      superMethod.invoke(base, defaults);
-    }
-    catch (Exception e) {
-      log(e);
-    }
-  }
 
   @SuppressWarnings("UnusedParameters")
   private static void log(Exception e) {
@@ -155,9 +144,10 @@ public class DarculaLaf extends BaseLookAndFeel {
     StyleSheet styleSheet = UIUtil.loadStyleSheet(url);
     defaults.put("StyledEditorKit.JBDefaultStyle", styleSheet);
     try {
-      Field keyField = HTMLEditorKit.class.getDeclaredField("DEFAULT_STYLES_KEY");
-      keyField.setAccessible(true);
-      AppContext.getAppContext().put(keyField.get(null), UIUtil.loadStyleSheet(url));
+      Object defaultStylesKey = HTMLEditorKitHacking.DEFAULT_STYLES_KEY();
+      if(defaultStylesKey != null) {
+        AppContextHacking.put(defaultStylesKey, UIUtil.loadStyleSheet(url));
+      }
     }
     catch (Exception e) {
       log(e);
@@ -168,19 +158,9 @@ public class DarculaLaf extends BaseLookAndFeel {
     return "darcula";
   }
 
-  private void call(String method) {
-    try {
-      final Method superMethod = BasicLookAndFeel.class.getDeclaredMethod(method);
-      superMethod.setAccessible(true);
-      superMethod.invoke(base);
-    }
-    catch (Exception ignore) {
-      log(ignore);
-    }
-  }
-
+  @Override
   public void initComponentDefaults(UIDefaults defaults) {
-    callInit("initComponentDefaults", defaults);
+    BasicLookAndFeelHacking.initComponentDefaults(base, defaults);
   }
 
   @SuppressWarnings({"HardCodedStringLiteral"})
@@ -291,7 +271,7 @@ public class DarculaLaf extends BaseLookAndFeel {
   }
 
   private static ImageKey parseImageKey(@Nonnull String groupId, @Nonnull String imageIdWithSize) {
-    if(imageIdWithSize.contains(",")) {
+    if (imageIdWithSize.contains(",")) {
       String[] idSize = imageIdWithSize.split(",");
       String imageId = idSize[0];
       String[] size = idSize[1].split(":");
@@ -357,34 +337,27 @@ public class DarculaLaf extends BaseLookAndFeel {
 
   @Override
   protected void initSystemColorDefaults(UIDefaults defaults) {
-    callInit("initSystemColorDefaults", defaults);
+    BasicLookAndFeelHacking.initSystemColorDefaults(base, defaults);
   }
 
   @Override
   protected void initClassDefaults(UIDefaults defaults) {
-    callInit("initClassDefaults", defaults);
+    BasicLookAndFeelHacking.initClassDefaults(base, defaults);
   }
 
   @Override
   public void initialize() {
-    call("initialize");
+    BasicLookAndFeelHacking.initialize(base);
   }
 
   @Override
   public void uninitialize() {
-    call("uninitialize");
+    BasicLookAndFeelHacking.uninitialize(base);
   }
 
   @Override
   protected void loadSystemColors(UIDefaults defaults, String[] systemColors, boolean useNative) {
-    try {
-      final Method superMethod = BasicLookAndFeel.class.getDeclaredMethod("loadSystemColors", UIDefaults.class, String[].class, boolean.class);
-      superMethod.setAccessible(true);
-      superMethod.invoke(base, defaults, systemColors, useNative);
-    }
-    catch (Exception ignore) {
-      log(ignore);
-    }
+    BasicLookAndFeelHacking.loadSystemColors(base, defaults, systemColors, useNative);
   }
 
   @Override

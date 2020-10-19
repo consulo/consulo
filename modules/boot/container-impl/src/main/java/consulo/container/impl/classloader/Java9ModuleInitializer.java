@@ -111,6 +111,9 @@ public class Java9ModuleInitializer {
       toResolve.add("consulo.injecting.api");
       toResolve.add("consulo.disposer.api");
 
+      toResolve.add("consulo.hacking.java.base");
+
+      // TODO [VISTALL] this module must be moved to desktop impl
       toResolve.add("consulo.desktop.awt.hacking");
 
       toResolve.add("consulo.util.lang");
@@ -150,6 +153,7 @@ public class Java9ModuleInitializer {
 
     if (ourConsuloModulePathBoot) {
       alohomora(bootModuleLayer, controller);
+      aberto(bootModuleLayer, controller);
     }
 
     return instanceInvoke(java_lang_ModuleLayer$Controller_layout, controller);
@@ -177,6 +181,16 @@ public class Java9ModuleInitializer {
     return instanceInvoke(java_lang_ModuleLayer$Controller_layout, controller);
   }
 
+  private static void aberto(Object bootModuleLayer, Object controller) {
+    Object javaBaseModule = findModuleUnwrap(bootModuleLayer, "java.base");
+
+    Object plaformModuleLayer = instanceInvoke(java_lang_ModuleLayer$Controller_layout, controller);
+
+    Object hackingJavaBaseModule = findModuleUnwrap(plaformModuleLayer, "consulo.hacking.java.base");
+
+    instanceInvoke(java_lang_Module_addOpens, javaBaseModule, "java.lang", hackingJavaBaseModule);
+  }
+
   private static void alohomora(Object bootModuleLayer, Object controller) {
     Object javaDesktopModule = findModuleUnwrap(bootModuleLayer, "java.desktop");
 
@@ -190,6 +204,7 @@ public class Java9ModuleInitializer {
     instanceInvoke(java_lang_Module_addOpens, javaDesktopModule, "java.awt", desktopHackingModule);
     instanceInvoke(java_lang_Module_addOpens, javaDesktopModule, "javax.swing", desktopHackingModule);
     instanceInvoke(java_lang_Module_addOpens, javaDesktopModule, "javax.swing.plaf.basic", desktopHackingModule);
+    instanceInvoke(java_lang_Module_addOpens, javaDesktopModule, "javax.swing.text.html", desktopHackingModule);
   }
 
   private static <T> T findModuleUnwrap(Object moduleLayer, String moduleName) {

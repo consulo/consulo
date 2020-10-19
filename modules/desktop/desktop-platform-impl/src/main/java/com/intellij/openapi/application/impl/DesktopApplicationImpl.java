@@ -50,6 +50,7 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.application.ApplicationProperties;
 import consulo.application.ex.ApplicationEx2;
 import consulo.application.impl.BaseApplication;
+import consulo.awt.hacking.AWTAutoShutdownHacking;
 import consulo.desktop.boot.main.windows.WindowsCommandLineProcessor;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
@@ -63,7 +64,6 @@ import consulo.util.lang.ref.SimpleReference;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.TestOnly;
 import sun.awt.AWTAccessor;
-import sun.awt.AWTAutoShutdown;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -147,9 +147,9 @@ public class DesktopApplicationImpl extends BaseApplication implements Applicati
       // that thread was chosen because we know for sure it's running
       AppScheduledExecutorService service = (AppScheduledExecutorService)AppExecutorUtil.getAppScheduledExecutorService();
       Thread thread = service.getPeriodicTasksThread();
-      AWTAutoShutdown.getInstance().notifyThreadBusy(thread); // needed for EDT not to exit suddenly
+      AWTAutoShutdownHacking.notifyThreadBusy(thread); // needed for EDT not to exit suddenly
       Disposer.register(this, () -> {
-        AWTAutoShutdown.getInstance().notifyThreadFree(thread); // allow for EDT to exit - needed for Upsource
+        AWTAutoShutdownHacking.notifyThreadFree(thread); // allow for EDT to exit - needed for Upsource
       });
       return Thread.currentThread();
     });
