@@ -19,9 +19,8 @@ package com.intellij.codeEditor.printing;
 import com.intellij.openapi.components.*;
 import com.intellij.openapi.editor.colors.EditorColorsManager;
 import com.intellij.util.xmlb.XmlSerializerUtil;
+import jakarta.inject.Singleton;
 import org.jetbrains.annotations.NonNls;
-
-import javax.inject.Singleton;
 
 @Singleton
 @State(name="PrintSettings", storages= { @Storage(file = StoragePathMacros.APP_CONFIG + "/print.xml")})

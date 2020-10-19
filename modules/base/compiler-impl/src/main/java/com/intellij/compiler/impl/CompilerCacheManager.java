@@ -23,10 +23,11 @@ import com.intellij.openapi.compiler.generic.GenericCompiler;
 import consulo.logging.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.io.FileUtil;
+import jakarta.inject.Singleton;
 import org.jetbrains.annotations.NonNls;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
+import jakarta.inject.Inject;
+
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.File;

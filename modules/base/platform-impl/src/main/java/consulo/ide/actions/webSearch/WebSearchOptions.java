@@ -22,7 +22,7 @@ import com.intellij.util.ObjectUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 /**
  * @author VISTALL

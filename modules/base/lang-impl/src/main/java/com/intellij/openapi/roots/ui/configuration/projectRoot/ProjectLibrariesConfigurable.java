@@ -20,11 +20,12 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.openapi.roots.libraries.LibraryTablePresentation;
 import com.intellij.openapi.roots.libraries.LibraryTablesRegistrar;
+import jakarta.inject.Inject;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
-import javax.inject.Singleton;
+
+import jakarta.inject.Singleton;
 
 @Singleton
 public class ProjectLibrariesConfigurable extends BaseLibrariesConfigurable {

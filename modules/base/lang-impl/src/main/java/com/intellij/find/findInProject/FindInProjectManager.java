@@ -14,11 +14,12 @@ import com.intellij.openapi.project.Project;
 import com.intellij.usageView.UsageInfo;
 import com.intellij.usages.*;
 import com.intellij.util.Processor;
+import jakarta.inject.Inject;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 @Singleton
 public class FindInProjectManager {

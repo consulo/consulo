@@ -18,7 +18,7 @@ package com.intellij.ide.projectView.impl;
 import com.intellij.openapi.components.*;
 import com.intellij.util.xmlb.XmlSerializerUtil;
 import javax.annotation.Nonnull;
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 /**
  * @author VISTALL

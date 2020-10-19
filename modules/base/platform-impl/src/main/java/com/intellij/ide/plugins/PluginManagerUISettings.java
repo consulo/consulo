@@ -24,10 +24,10 @@ import com.intellij.openapi.progress.PerformInBackgroundOption;
 import com.intellij.openapi.ui.SplitterProportionsData;
 import com.intellij.util.xmlb.SkipDefaultValuesSerializationFilters;
 import com.intellij.util.xmlb.XmlSerializer;
+import jakarta.inject.Singleton;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 
-import javax.inject.Singleton;
 import javax.swing.*;
 
 /**

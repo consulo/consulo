@@ -31,11 +31,11 @@ import com.intellij.psi.*;
 import consulo.application.AccessRule;
 import consulo.logging.Logger;
 import consulo.util.collection.ArrayUtil;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.StringSelection;
 import java.awt.datatransfer.Transferable;

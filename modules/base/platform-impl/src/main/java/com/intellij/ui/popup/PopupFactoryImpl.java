@@ -42,10 +42,10 @@ import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.ui.image.Image;
 import consulo.util.dataholder.Key;
+import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.inject.Singleton;
 import javax.swing.*;
 import javax.swing.event.HyperlinkListener;
 import java.awt.*;

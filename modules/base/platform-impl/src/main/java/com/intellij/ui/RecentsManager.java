@@ -19,11 +19,11 @@ import com.intellij.openapi.components.*;
 import com.intellij.openapi.components.StoragePathMacros;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.containers.HashMap;
+import jakarta.inject.Singleton;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nullable;
-import javax.inject.Singleton;
 import java.util.*;
 
 /**

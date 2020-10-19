@@ -64,6 +64,7 @@ import consulo.util.dataholder.Key;
 import consulo.util.lang.DeprecatedMethodException;
 import gnu.trove.THashMap;
 import gnu.trove.THashSet;
+import jakarta.inject.Singleton;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.TestOnly;
@@ -71,8 +72,8 @@ import org.jetbrains.ide.PooledThreadExecutor;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.inject.Inject;
-import javax.inject.Singleton;
+import jakarta.inject.Inject;
+
 import java.io.*;
 import java.lang.reflect.Field;
 import java.net.URL;

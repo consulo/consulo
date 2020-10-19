@@ -19,10 +19,10 @@ import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.command.impl.UndoManagerImpl;
 import com.intellij.openapi.project.ex.ProjectEx;
 import consulo.command.undo.ProjectUndoManager;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 
 import javax.annotation.Nullable;
-import javax.inject.Inject;
-import javax.inject.Singleton;
 
 /**
  * @author VISTALL

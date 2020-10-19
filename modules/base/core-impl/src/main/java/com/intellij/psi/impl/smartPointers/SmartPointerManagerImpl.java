@@ -18,10 +18,11 @@ import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.reference.SoftReference;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import org.jetbrains.annotations.TestOnly;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import java.lang.ref.Reference;
 import java.util.List;
 

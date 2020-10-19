@@ -17,11 +17,11 @@ import consulo.builtInServer.BuiltInServerManager;
 import consulo.builtInServer.custom.CustomPortServerManager;
 import consulo.builtInServer.custom.CustomPortServerManagerBase;
 import consulo.builtInServer.impl.BuiltInServerManagerImpl;
+import jakarta.inject.Singleton;
 import org.jdom.Element;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.inject.Singleton;
 import java.util.Collection;
 import java.util.Collections;
 

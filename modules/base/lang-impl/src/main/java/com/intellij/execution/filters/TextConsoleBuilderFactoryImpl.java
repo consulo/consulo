@@ -25,7 +25,7 @@ package com.intellij.execution.filters;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.search.GlobalSearchScope;
 import javax.annotation.Nonnull;
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 /**
  * @author dyoma

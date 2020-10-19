@@ -39,11 +39,11 @@ import com.intellij.ui.content.*;
 import com.intellij.util.Alarm;
 import com.intellij.util.NotNullFunction;
 import consulo.annotation.DeprecationInfo;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import javax.swing.*;
 import java.util.*;
 import java.util.concurrent.CountDownLatch;

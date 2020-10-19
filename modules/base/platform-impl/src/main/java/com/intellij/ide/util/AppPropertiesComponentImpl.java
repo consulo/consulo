@@ -19,7 +19,7 @@ import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
 import consulo.util.ApplicationPropertiesComponent;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 @Singleton
 @State(name = "PropertiesComponent", storages = @Storage("options.xml"))

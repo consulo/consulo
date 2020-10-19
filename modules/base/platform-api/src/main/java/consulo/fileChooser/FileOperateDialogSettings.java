@@ -21,7 +21,7 @@ import consulo.ui.fileOperateDialog.FileOperateDialogProvider;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 /**
  * @author VISTALL

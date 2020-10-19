@@ -37,7 +37,7 @@ import consulo.ui.util.LabeledComponents;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.Set;

@@ -32,9 +32,11 @@ import com.intellij.psi.util.CachedValueProvider;
 import com.intellij.psi.util.CachedValuesManager;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
+import jakarta.inject.Inject;
+
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
-import javax.inject.Singleton;
+
+import jakarta.inject.Singleton;
 
 import java.util.ArrayList;
 import java.util.Collection;

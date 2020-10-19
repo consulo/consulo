@@ -56,12 +56,13 @@ import consulo.disposer.Disposer;
 import consulo.fileEditor.impl.EditorWindow;
 import consulo.ui.UIAccess;
 import consulo.ui.popup.JWindowPopupFactory;
+import jakarta.inject.Inject;
 import org.jdom.Element;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.inject.Inject;
-import javax.inject.Singleton;
+
+import jakarta.inject.Singleton;
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 import java.awt.*;

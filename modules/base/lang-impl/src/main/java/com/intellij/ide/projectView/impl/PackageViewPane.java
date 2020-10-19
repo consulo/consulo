@@ -52,11 +52,11 @@ import com.intellij.util.containers.ContainerUtil;
 import consulo.ide.projectView.impl.nodes.PackageElement;
 import consulo.psi.PsiPackage;
 import consulo.psi.PsiPackageManager;
+import jakarta.inject.Inject;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.inject.Inject;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import java.util.*;

@@ -4,9 +4,10 @@ import com.intellij.openapi.util.ThrowableComputable;
 import com.intellij.openapi.vcs.changes.Change;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.vcs.log.*;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
+
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
-import javax.inject.Singleton;
 
 import java.util.Collection;
 import java.util.List;

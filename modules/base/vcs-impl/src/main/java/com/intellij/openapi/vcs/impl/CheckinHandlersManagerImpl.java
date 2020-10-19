@@ -15,7 +15,6 @@
  */
 package com.intellij.openapi.vcs.impl;
 
-import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.vcs.AbstractVcs;
 import com.intellij.openapi.vcs.VcsKey;
 import com.intellij.openapi.vcs.checkin.BaseCheckinHandlerFactory;
@@ -25,7 +24,7 @@ import com.intellij.util.SmartList;
 import com.intellij.util.containers.MultiMap;
 
 import javax.annotation.Nonnull;
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;

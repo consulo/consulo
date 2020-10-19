@@ -25,10 +25,11 @@ import com.intellij.usages.UsageView;
 import com.intellij.usages.UsageViewSettings;
 import com.intellij.usages.rules.UsageFilteringRuleProvider;
 import com.intellij.util.containers.ContainerUtil;
+import jakarta.inject.Inject;
+
 import javax.annotation.Nonnull;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 import javax.swing.*;
 import java.util.Arrays;
 import java.util.List;

@@ -25,7 +25,7 @@ import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
 import com.intellij.openapi.project.Project;
 import consulo.annotation.access.RequiredWriteAction;
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 public class EnterHandler extends BaseEnterHandler {
   private final EditorActionHandler myOriginalHandler;

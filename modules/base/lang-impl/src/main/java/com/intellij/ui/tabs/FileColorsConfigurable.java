@@ -22,10 +22,10 @@ import com.intellij.openapi.options.SearchableConfigurable;
 import com.intellij.openapi.project.Project;
 import consulo.disposer.Disposer;
 import com.intellij.ui.FileColorManager;
+import jakarta.inject.Inject;
 import org.jetbrains.annotations.Nls;
 import javax.annotation.Nonnull;
 
-import javax.inject.Inject;
 import javax.swing.*;
 
 /**

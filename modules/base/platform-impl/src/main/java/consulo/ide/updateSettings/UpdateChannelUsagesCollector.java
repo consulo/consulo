@@ -4,10 +4,10 @@ import com.intellij.internal.statistic.CollectUsagesException;
 import com.intellij.internal.statistic.UsagesCollector;
 import com.intellij.internal.statistic.beans.UsageDescriptor;
 import com.intellij.openapi.project.Project;
+import jakarta.inject.Inject;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.inject.Inject;
 import java.util.Collections;
 import java.util.Set;
 

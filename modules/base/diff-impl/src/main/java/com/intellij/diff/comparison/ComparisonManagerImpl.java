@@ -30,7 +30,7 @@ import com.intellij.util.text.CharSequenceSubSequence;
 import consulo.logging.Logger;
 
 import javax.annotation.Nonnull;
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;

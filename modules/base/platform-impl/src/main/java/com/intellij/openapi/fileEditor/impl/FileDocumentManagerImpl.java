@@ -65,7 +65,7 @@ import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;

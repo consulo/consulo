@@ -29,11 +29,11 @@ import com.intellij.openapi.util.JDOMUtil;
 import com.intellij.util.PathUtilRt;
 import com.intellij.util.ThrowableConvertor;
 import gnu.trove.THashSet;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import org.jdom.Element;
 
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import java.util.Collection;
 import java.util.Set;
 

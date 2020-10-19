@@ -41,11 +41,12 @@ import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginManager;
 import consulo.logging.Logger;
 import consulo.ui.UIAccess;
+import jakarta.inject.Inject;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
-import javax.inject.Singleton;
+
+import jakarta.inject.Singleton;
 import java.io.FileNotFoundException;
 import java.util.*;
 import java.util.concurrent.ScheduledFuture;

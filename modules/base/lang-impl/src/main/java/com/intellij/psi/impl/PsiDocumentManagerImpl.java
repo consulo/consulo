@@ -34,12 +34,12 @@ import com.intellij.util.ArrayUtil;
 import com.intellij.util.FileContentUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.messages.MessageBusConnection;
+import jakarta.inject.Singleton;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.inject.Singleton;
 import java.util.*;
 
 //todo listen & notifyListeners readonly events?

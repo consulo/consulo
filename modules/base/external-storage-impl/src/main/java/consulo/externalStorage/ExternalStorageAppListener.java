@@ -20,9 +20,9 @@ import com.intellij.openapi.application.Application;
 import consulo.components.impl.stores.IApplicationStore;
 import consulo.components.impl.stores.storage.StateStorageManager;
 import consulo.application.ex.ApplicationEx2;
+import jakarta.inject.Inject;
 
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
 
 /**
  * @author VISTALL

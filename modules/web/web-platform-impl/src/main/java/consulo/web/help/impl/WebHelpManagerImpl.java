@@ -18,7 +18,7 @@ package consulo.web.help.impl;
 import com.intellij.openapi.help.HelpManager;
 import org.jetbrains.annotations.NonNls;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 /**
  * @author VISTALL

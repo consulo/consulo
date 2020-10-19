@@ -24,10 +24,10 @@ import com.intellij.openapi.project.Project;
 import com.intellij.ui.ColoredTreeCellRenderer;
 import com.intellij.ui.CommonActionsPanel;
 import consulo.ui.image.ImageEffects;
+import jakarta.inject.Inject;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.inject.Inject;
 import javax.swing.*;
 import java.util.Collection;
 import java.util.Collections;

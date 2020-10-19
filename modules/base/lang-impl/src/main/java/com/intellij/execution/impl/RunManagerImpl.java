@@ -49,12 +49,13 @@ import consulo.util.ProjectPropertiesComponent;
 import consulo.util.dataholder.Key;
 import gnu.trove.THashMap;
 import gnu.trove.THashSet;
+import jakarta.inject.Singleton;
 import org.jdom.Element;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.inject.Inject;
-import javax.inject.Singleton;
+import jakarta.inject.Inject;
+
 import java.util.*;
 
 @State(name = "RunManager", storages = @Storage(file = StoragePathMacros.WORKSPACE_FILE))

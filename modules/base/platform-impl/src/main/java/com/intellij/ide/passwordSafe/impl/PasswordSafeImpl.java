@@ -25,8 +25,8 @@ import com.intellij.ide.passwordSafe.impl.providers.nil.NilProvider;
 import consulo.logging.Logger;
 import com.intellij.openapi.project.Project;
 import javax.annotation.Nullable;
-import javax.inject.Inject;
-import javax.inject.Singleton;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 
 /**
  * The implementation of password safe service

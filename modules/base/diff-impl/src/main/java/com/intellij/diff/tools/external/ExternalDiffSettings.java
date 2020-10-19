@@ -25,9 +25,10 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.config.AbstractProperty;
 import com.intellij.util.config.BooleanProperty;
 import com.intellij.util.config.StringProperty;
+import jakarta.inject.Singleton;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.inject.Singleton;
 
 @Singleton
 @State(

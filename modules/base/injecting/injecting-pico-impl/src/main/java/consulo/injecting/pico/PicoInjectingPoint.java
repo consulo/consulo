@@ -18,9 +18,9 @@ package consulo.injecting.pico;
 import consulo.injecting.InjectingPoint;
 import consulo.injecting.PostInjectListener;
 import consulo.injecting.key.InjectingKey;
+import jakarta.inject.Provider;
 
 import javax.annotation.Nonnull;
-import javax.inject.Provider;
 import java.util.function.Function;
 
 /**

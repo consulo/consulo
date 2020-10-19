@@ -17,8 +17,9 @@ package com.intellij.execution.process;
 
 import com.intellij.execution.ExecutionException;
 import com.intellij.execution.configurations.GeneralCommandLine;
+import jakarta.inject.Singleton;
+
 import javax.annotation.Nonnull;
-import javax.inject.Singleton;
 
 @Singleton
 public class ProcessHandlerFactoryImpl extends ProcessHandlerFactory {

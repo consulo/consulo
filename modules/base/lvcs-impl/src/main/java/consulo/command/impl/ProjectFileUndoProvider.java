@@ -15,16 +15,11 @@
  */
 package consulo.command.impl;
 
-import com.intellij.history.core.LocalHistoryFacade;
-import com.intellij.history.core.changes.Change;
-import com.intellij.history.core.changes.ContentChange;
-import com.intellij.history.core.changes.StructuralChange;
-import com.intellij.history.integration.LocalHistoryImpl;
 import com.intellij.openapi.command.impl.FileUndoProvider;
 import com.intellij.openapi.project.Project;
+import jakarta.inject.Inject;
 
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
 
 /**
  * @author VISTALL

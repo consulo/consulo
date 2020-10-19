@@ -19,9 +19,9 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.startup.StartupActivity;
 import consulo.ide.tipOfDay.TipOfDayManager;
 import consulo.ui.UIAccess;
+import jakarta.inject.Inject;
 
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
 
 public class TipOfTheDayStartupActivity implements StartupActivity.DumbAware {
   private final TipOfDayManager myManager;

@@ -21,9 +21,9 @@ import com.intellij.openapi.roots.libraries.LibraryTablePresentation;
 import com.intellij.openapi.roots.libraries.LibraryTablesRegistrar;
 import com.intellij.util.SmartList;
 import consulo.disposer.Disposable;
+import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
-import javax.inject.Singleton;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

@@ -24,7 +24,7 @@ import consulo.platform.Platform;
 import consulo.ui.taskbar.Java9DockDelegateImpl;
 
 import javax.annotation.Nonnull;
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 /**
  * @author VISTALL

@@ -20,7 +20,7 @@ import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 import javax.swing.*;
 import java.awt.*;
 import java.util.Set;

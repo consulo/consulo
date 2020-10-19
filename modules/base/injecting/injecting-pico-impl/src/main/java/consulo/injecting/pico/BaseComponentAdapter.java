@@ -21,10 +21,10 @@ import consulo.injecting.InjectingContainer;
 import consulo.injecting.PostInjectListener;
 import consulo.injecting.key.InjectingKey;
 import consulo.logging.Logger;
+import jakarta.inject.Provider;
+import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
-import javax.inject.Provider;
-import javax.inject.Singleton;
 import java.util.function.Function;
 
 /**

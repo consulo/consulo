@@ -43,8 +43,8 @@ import com.intellij.util.ui.UIUtil;
 import org.jdom.Element;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.inject.Inject;
-import javax.inject.Singleton;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 
 import java.awt.*;
 import java.awt.event.InputEvent;

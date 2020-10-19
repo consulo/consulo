@@ -17,8 +17,7 @@ package consulo.diagram.builder.impl;
 
 import consulo.diagram.builder.GraphBuilder;
 import consulo.diagram.builder.GraphBuilderFactory;
-
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 /**
  * @author VISTALL

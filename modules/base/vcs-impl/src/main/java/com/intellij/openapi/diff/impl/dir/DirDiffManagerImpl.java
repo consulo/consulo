@@ -22,10 +22,11 @@ import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.vfs.VirtualFile;
 import consulo.vfs.util.ArchiveVfsUtil;
 import com.intellij.openapi.wm.IdeFocusManager;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.inject.Inject;
-import javax.inject.Singleton;
 
 import java.awt.*;
 import java.awt.event.WindowAdapter;

@@ -25,7 +25,7 @@ import consulo.util.dataholder.Key;
 import com.intellij.util.xmlb.annotations.MapAnnotation;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 import java.util.Map;
 import java.util.TreeMap;

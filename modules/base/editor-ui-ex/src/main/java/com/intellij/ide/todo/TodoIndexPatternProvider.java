@@ -17,8 +17,9 @@ package com.intellij.ide.todo;
 
 import com.intellij.psi.search.IndexPattern;
 import com.intellij.psi.search.IndexPatternProvider;
+import jakarta.inject.Inject;
+
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
 
 /**
  * @author yole

@@ -21,10 +21,10 @@ import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.project.Project;
+import jakarta.inject.Inject;
 import org.jetbrains.annotations.Nls;
 import javax.annotation.Nullable;
 
-import javax.inject.Inject;
 import javax.swing.*;
 
 /**

@@ -27,7 +27,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.ui.AutoScrollToSourceHandler;
 import com.intellij.util.xmlb.XmlSerializerUtil;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 /**
  * User: anna

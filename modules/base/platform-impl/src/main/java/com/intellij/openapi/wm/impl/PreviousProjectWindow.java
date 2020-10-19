@@ -22,7 +22,7 @@ import com.intellij.openapi.project.DumbAware;
 import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 public class PreviousProjectWindow extends AnAction implements DumbAware {
   private final ActionManager myActionManager;

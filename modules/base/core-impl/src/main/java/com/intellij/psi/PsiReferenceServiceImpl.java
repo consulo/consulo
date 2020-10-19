@@ -17,7 +17,7 @@ package com.intellij.psi;
 
 import com.intellij.psi.impl.source.resolve.reference.ReferenceProvidersRegistry;
 import javax.annotation.Nonnull;
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 import consulo.annotation.access.RequiredReadAction;
 

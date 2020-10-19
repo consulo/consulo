@@ -30,7 +30,7 @@ import consulo.ui.layout.VerticalLayout;
 import consulo.ui.util.LabeledComponents;
 
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 public class CompilerConfigurable extends SimpleConfigurable<CompilerConfigurable.Root> implements Configurable {
   protected static class Root implements NotNullComputable<Component> {

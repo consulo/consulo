@@ -22,7 +22,7 @@ import com.intellij.openapi.options.colors.ColorSettingsPages;
 import com.intellij.openapi.util.Pair;
 
 import javax.annotation.Nullable;
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

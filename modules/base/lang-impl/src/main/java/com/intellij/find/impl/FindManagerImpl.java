@@ -69,11 +69,12 @@ import com.intellij.util.text.ImmutableCharSequence;
 import com.intellij.util.text.StringSearcher;
 import consulo.lang.LanguageVersion;
 import gnu.trove.THashSet;
+import jakarta.inject.Inject;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.inject.Inject;
-import javax.inject.Singleton;
+
+import jakarta.inject.Singleton;
 import javax.swing.*;
 import java.awt.*;
 import java.util.*;

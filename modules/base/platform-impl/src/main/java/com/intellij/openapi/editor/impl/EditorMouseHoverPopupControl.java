@@ -9,9 +9,9 @@ import com.intellij.openapi.project.Project;
 import consulo.logging.Logger;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolder;
+import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
-import javax.inject.Singleton;
 import java.util.Collection;
 import java.util.concurrent.CopyOnWriteArrayList;
 

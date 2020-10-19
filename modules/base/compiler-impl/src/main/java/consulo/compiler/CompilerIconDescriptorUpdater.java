@@ -25,9 +25,9 @@ import com.intellij.psi.util.PsiUtilCore;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.ide.IconDescriptor;
 import consulo.ide.IconDescriptorUpdater;
+import jakarta.inject.Inject;
 
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
 
 /**
  * @author VISTALL

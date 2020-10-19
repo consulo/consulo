@@ -23,7 +23,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.editor.notifications.EditorNotificationProvider;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 /**
  * @author Dmitry Avdeev

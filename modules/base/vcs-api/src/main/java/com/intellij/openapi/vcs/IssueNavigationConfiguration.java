@@ -21,10 +21,10 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.SimpleModificationTracker;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.util.xmlb.XmlSerializerUtil;
+import jakarta.inject.Singleton;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
-import javax.inject.Singleton;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;

@@ -30,9 +30,10 @@ import com.intellij.psi.util.CachedValueProvider;
 import com.intellij.psi.util.CachedValuesManager;
 import com.intellij.util.containers.ContainerUtil;
 import gnu.trove.THashMap;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
+
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
-import javax.inject.Singleton;
 
 import java.nio.charset.Charset;
 import java.util.Collection;

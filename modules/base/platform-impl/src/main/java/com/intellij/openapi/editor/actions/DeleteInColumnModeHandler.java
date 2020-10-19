@@ -11,9 +11,9 @@ import com.intellij.openapi.editor.ex.util.EditorUIUtil;
 import com.intellij.openapi.ide.CopyPasteManager;
 import com.intellij.util.DocumentUtil;
 import consulo.annotation.access.RequiredWriteAction;
+import jakarta.inject.Inject;
 
 import javax.annotation.Nullable;
-import javax.inject.Inject;
 
 public class DeleteInColumnModeHandler extends EditorWriteActionHandler {
   private final EditorActionHandler myOriginalHandler;

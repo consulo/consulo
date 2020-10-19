@@ -19,12 +19,13 @@ import com.intellij.util.Alarm;
 import com.intellij.vcsUtil.VcsUtil;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
+import jakarta.inject.Inject;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.inject.Inject;
-import javax.inject.Singleton;
+
+import jakarta.inject.Singleton;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;

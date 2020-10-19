@@ -25,9 +25,9 @@ import com.intellij.util.containers.ContainerUtilRt;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.roots.types.BinariesOrderRootType;
 import consulo.vfs.util.ArchiveVfsUtil;
+import jakarta.inject.Inject;
 
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
 import java.io.File;
 import java.util.Collection;
 import java.util.HashSet;

@@ -42,14 +42,15 @@ import com.intellij.profile.Profile;
 import com.intellij.util.ArrayUtil;
 import consulo.logging.Logger;
 import consulo.ui.image.Image;
+import jakarta.inject.Singleton;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.inject.Inject;
-import javax.inject.Singleton;
+import jakarta.inject.Inject;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.Collection;

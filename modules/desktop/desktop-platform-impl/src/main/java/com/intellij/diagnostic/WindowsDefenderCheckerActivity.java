@@ -23,10 +23,10 @@ import com.intellij.openapi.startup.StartupActivity;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.ui.UIAccess;
+import jakarta.inject.Inject;
 
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
-import javax.inject.Provider;
+import jakarta.inject.Provider;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;

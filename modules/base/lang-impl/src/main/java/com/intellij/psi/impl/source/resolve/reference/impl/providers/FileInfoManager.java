@@ -17,7 +17,6 @@
 package com.intellij.psi.impl.source.resolve.reference.impl.providers;
 
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
-import consulo.awt.TargetAWT;
 import consulo.disposer.Disposable;
 import consulo.ide.IconDescriptorUpdaters;
 import com.intellij.openapi.components.ServiceManager;
@@ -29,12 +28,11 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.file.FileLookupInfoProvider;
 import com.intellij.util.containers.HashMap;
 import consulo.ui.image.Image;
+import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import javax.inject.Singleton;
-import javax.swing.*;
 import java.util.Map;
 
 /**

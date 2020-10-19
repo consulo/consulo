@@ -40,11 +40,12 @@ import consulo.lang.util.LanguageVersionUtil;
 import com.intellij.util.LocalTimeCounter;
 import com.intellij.util.text.CharSequenceSubSequence;
 import consulo.logging.Logger;
+import jakarta.inject.Inject;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.inject.Inject;
-import javax.inject.Singleton;
+
+import jakarta.inject.Singleton;
 
 @Singleton
 public class PsiFileFactoryImpl extends PsiFileFactory {

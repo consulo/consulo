@@ -61,14 +61,15 @@ import com.intellij.util.ui.UIUtil;
 import com.intellij.vcsUtil.FilesProgress;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
+import jakarta.inject.Singleton;
 import org.jdom.Element;
 import org.jdom.Parent;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.inject.Inject;
-import javax.inject.Singleton;
+import jakarta.inject.Inject;
+
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.io.*;

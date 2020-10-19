@@ -29,11 +29,11 @@ import com.intellij.util.ScrambledInputStream;
 import com.intellij.util.ScrambledOutputStream;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.container.boot.ContainerPathManager;
+import jakarta.inject.Singleton;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;
-import javax.inject.Singleton;
 import java.io.*;
 import java.util.Collections;
 import java.util.HashSet;

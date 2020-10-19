@@ -21,8 +21,8 @@ import com.intellij.ui.treeStructure.Tree;
 import com.intellij.util.EditSourceOnDoubleClickHandler;
 import com.intellij.util.EditSourceOnEnterKeyHandler;
 import com.intellij.util.containers.Convertor;
+import jakarta.inject.Singleton;
 
-import javax.inject.Singleton;
 import javax.swing.*;
 import javax.swing.tree.TreePath;
 

@@ -22,8 +22,7 @@ import com.intellij.openapi.editor.Caret;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
 import com.intellij.ui.ScrollingUtil;
-
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 public class EndHandler extends EditorActionHandler {
   private final EditorActionHandler myOriginalHandler;

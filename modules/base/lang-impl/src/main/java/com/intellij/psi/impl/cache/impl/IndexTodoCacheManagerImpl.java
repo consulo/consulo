@@ -33,8 +33,8 @@ import com.intellij.psi.search.IndexPatternProvider;
 import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.util.indexing.FileBasedIndex;
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
-import javax.inject.Singleton;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 
 import java.util.Arrays;
 import java.util.Collection;

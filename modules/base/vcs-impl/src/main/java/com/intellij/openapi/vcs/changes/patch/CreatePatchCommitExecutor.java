@@ -42,14 +42,15 @@ import com.intellij.util.WaitForProgressToShow;
 import com.intellij.vcsUtil.VcsUtil;
 import consulo.container.boot.ContainerPathManager;
 import consulo.logging.Logger;
+import jakarta.inject.Inject;
 import org.jdom.Element;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.inject.Inject;
-import javax.inject.Singleton;
+
+import jakarta.inject.Singleton;
 import javax.swing.*;
 import java.io.File;
 import java.util.Collection;

@@ -18,10 +18,11 @@ import com.intellij.psi.WeighingService;
 import com.intellij.psi.impl.DebugUtil;
 import com.intellij.util.Consumer;
 import com.intellij.util.ExceptionUtil;
+import jakarta.inject.Singleton;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import javax.inject.Singleton;
 import java.util.ArrayList;
 
 /**

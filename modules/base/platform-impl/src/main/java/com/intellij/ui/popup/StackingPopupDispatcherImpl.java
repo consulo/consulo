@@ -22,11 +22,12 @@ import com.intellij.openapi.ui.popup.JBPopup;
 import com.intellij.openapi.ui.popup.StackingPopupDispatcher;
 import com.intellij.util.containers.WeakList;
 import com.intellij.util.ui.UIUtil;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.AWTEventListener;

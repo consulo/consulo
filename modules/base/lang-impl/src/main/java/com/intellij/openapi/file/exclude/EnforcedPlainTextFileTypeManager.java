@@ -33,9 +33,9 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.containers.WeakList;
 import com.intellij.util.indexing.FileBasedIndex;
 import consulo.ui.UIAccess;
+import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
-import javax.inject.Singleton;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;

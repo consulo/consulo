@@ -56,11 +56,12 @@ import consulo.roots.ContentFolderScopes;
 import consulo.roots.OrderEntryWithTracking;
 import consulo.vfs.ArchiveFileSystem;
 import gnu.trove.THashSet;
+import jakarta.inject.Inject;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.inject.Inject;
-import javax.inject.Singleton;
+
+import jakarta.inject.Singleton;
 import java.io.File;
 import java.util.Collection;
 import java.util.Set;

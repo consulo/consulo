@@ -20,8 +20,8 @@ import com.intellij.psi.impl.source.codeStyle.CodeStyleFacadeImpl;
 import consulo.codeStyle.ProjectCodeStyleFacade;
 
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
-import javax.inject.Singleton;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 
 /**
  * @author VISTALL

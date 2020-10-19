@@ -31,7 +31,7 @@ import com.intellij.openapi.vcs.impl.VcsDescriptor;
 import org.jetbrains.annotations.Nls;
 import javax.annotation.Nonnull;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Arrays;

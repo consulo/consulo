@@ -29,11 +29,12 @@ import consulo.annotation.DeprecationInfo;
 import consulo.roots.orderEntry.OrderEntryType;
 import consulo.roots.orderEntry.OrderEntryTypeEditor;
 import consulo.ui.annotation.RequiredUIAccess;
+import jakarta.inject.Inject;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.inject.Inject;
-import javax.inject.Singleton;
+
+import jakarta.inject.Singleton;
 
 /**
  * @author yole

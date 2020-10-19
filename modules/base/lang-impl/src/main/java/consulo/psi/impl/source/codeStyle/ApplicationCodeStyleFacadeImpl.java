@@ -17,9 +17,9 @@ package consulo.psi.impl.source.codeStyle;
 
 import com.intellij.psi.impl.source.codeStyle.CodeStyleFacadeImpl;
 import consulo.codeStyle.ApplicationCodeStyleFacade;
+import jakarta.inject.Inject;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 /**
  * @author VISTALL

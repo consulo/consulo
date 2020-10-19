@@ -40,13 +40,14 @@ import com.intellij.util.containers.SmartHashSet;
 import com.intellij.util.messages.MessageBusConnection;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.fileTypes.ArchiveFileType;
+import jakarta.inject.Inject;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.inject.Inject;
-import javax.inject.Singleton;
+
+import jakarta.inject.Singleton;
 import java.util.*;
 import java.util.function.Consumer;
 

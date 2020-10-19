@@ -34,7 +34,7 @@ import com.intellij.util.Chunk;
 import com.intellij.util.ExceptionUtil;
 import consulo.compiler.impl.resourceCompiler.ResourceCompilerConfiguration;
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import java.io.File;
 import java.io.IOException;

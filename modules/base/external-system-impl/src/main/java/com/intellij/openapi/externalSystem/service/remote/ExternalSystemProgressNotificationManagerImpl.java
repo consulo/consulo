@@ -6,9 +6,9 @@ import com.intellij.openapi.externalSystem.model.task.ExternalSystemTaskNotifica
 import com.intellij.openapi.externalSystem.service.notification.ExternalSystemProgressNotificationManager;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.util.rmi.RemoteObject;
+import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
-import javax.inject.Singleton;
 import java.rmi.RemoteException;
 import java.util.Collections;
 import java.util.Map;

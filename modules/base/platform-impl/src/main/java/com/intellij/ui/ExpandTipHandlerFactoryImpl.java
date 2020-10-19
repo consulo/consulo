@@ -15,7 +15,8 @@
  */
 package com.intellij.ui;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
+
 import javax.swing.*;
 
 @Singleton

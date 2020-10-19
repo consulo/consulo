@@ -24,12 +24,12 @@ import consulo.ide.settings.impl.ShowSdksSettingsUtil;
 import consulo.options.ProjectStructureSelector;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.app.impl.settings.UnifiedSettingsDialog;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import java.awt.*;
 import java.util.function.Consumer;
 

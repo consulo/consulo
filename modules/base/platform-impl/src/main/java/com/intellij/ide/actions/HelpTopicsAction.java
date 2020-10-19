@@ -23,8 +23,8 @@ import com.intellij.openapi.project.DumbAware;
 import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
-import javax.inject.Provider;
+import jakarta.inject.Inject;
+import jakarta.inject.Provider;
 
 public class HelpTopicsAction extends AnAction implements DumbAware {
   private final Provider<ApplicationInfo> myInfoProvider;

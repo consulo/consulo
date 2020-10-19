@@ -27,10 +27,10 @@ import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.roots.types.BinariesOrderRootType;
 import consulo.ui.image.Image;
+import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.inject.Singleton;
 import java.util.*;
 
 /**

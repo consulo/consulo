@@ -38,10 +38,10 @@ import com.intellij.packaging.impl.run.AbstractArtifactsBeforeRunTaskProvider;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.application.AccessRule;
 import consulo.ui.UIAccess;
+import jakarta.inject.Inject;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;

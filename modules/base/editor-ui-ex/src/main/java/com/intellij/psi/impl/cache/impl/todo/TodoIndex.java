@@ -34,10 +34,10 @@ import com.intellij.util.io.DataExternalizer;
 import com.intellij.util.io.IntInlineKeyDescriptor;
 import com.intellij.util.io.KeyDescriptor;
 import consulo.lang.util.LanguageVersionUtil;
+import jakarta.inject.Inject;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;

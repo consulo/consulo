@@ -37,10 +37,10 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.project.ProjectKt;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.application.AccessRule;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
-import javax.inject.Singleton;
 
 import java.util.Arrays;
 import java.util.Collection;

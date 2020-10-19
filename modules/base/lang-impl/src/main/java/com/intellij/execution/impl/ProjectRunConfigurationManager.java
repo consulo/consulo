@@ -25,11 +25,11 @@ import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.application.AccessRule;
 import gnu.trove.THashSet;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import org.jdom.Element;
 
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;

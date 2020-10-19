@@ -32,9 +32,9 @@ import consulo.psi.PsiPackageManager;
 import consulo.roots.ContentFolderTypeProvider;
 import consulo.ui.image.Image;
 import consulo.vfs.ArchiveFileSystem;
+import jakarta.inject.Inject;
 
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
 
 /**
  * @author VISTALL

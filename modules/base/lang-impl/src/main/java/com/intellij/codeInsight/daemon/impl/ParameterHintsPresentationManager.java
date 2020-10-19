@@ -30,10 +30,11 @@ import com.intellij.util.ui.GraphicsUtil;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.util.dataholder.Key;
+import jakarta.inject.Singleton;
+
 import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;
-import javax.inject.Singleton;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.font.FontRenderContext;

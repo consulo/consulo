@@ -50,7 +50,7 @@ import consulo.logging.Logger;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 import java.awt.datatransfer.DataFlavor;
 import java.io.File;
 import java.io.IOException;

@@ -32,11 +32,11 @@ import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolder;
+import jakarta.inject.Inject;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.inject.Inject;
 import java.io.File;
 import java.util.Arrays;
 import java.util.Collection;

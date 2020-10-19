@@ -34,7 +34,7 @@ import gnu.trove.THashSet;
 import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 import javax.swing.*;
 import java.util.Arrays;
 import java.util.Collection;

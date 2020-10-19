@@ -24,7 +24,7 @@ import com.intellij.util.xmlb.annotations.OptionTag;
 import org.intellij.lang.annotations.MagicConstant;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nullable;
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 import kava.beans.PropertyChangeListener;
 import kava.beans.PropertyChangeSupport;

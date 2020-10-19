@@ -75,13 +75,13 @@ import consulo.ui.desktop.internal.style.DesktopStyleImpl;
 import consulo.ui.image.IconLibraryManager;
 import consulo.ui.impl.image.BaseIconLibraryManager;
 import consulo.ui.style.Style;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import org.intellij.lang.annotations.JdkConstants;
 import org.jdom.Element;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import javax.swing.*;
 import javax.swing.plaf.FontUIResource;
 import javax.swing.plaf.UIResource;

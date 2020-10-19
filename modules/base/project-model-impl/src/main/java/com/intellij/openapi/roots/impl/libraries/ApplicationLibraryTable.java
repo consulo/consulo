@@ -21,7 +21,7 @@ import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.openapi.roots.libraries.LibraryTablePresentation;
 import com.intellij.openapi.roots.libraries.LibraryTablesRegistrar;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 /**
  *  @author dsl

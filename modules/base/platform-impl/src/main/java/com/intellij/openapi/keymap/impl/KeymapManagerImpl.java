@@ -27,13 +27,14 @@ import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
+import jakarta.inject.Singleton;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.inject.Inject;
-import javax.inject.Singleton;
+import jakarta.inject.Inject;
+
 import java.util.*;
 
 @State(name = "KeymapManager", storages = @Storage(file = StoragePathMacros.APP_CONFIG +

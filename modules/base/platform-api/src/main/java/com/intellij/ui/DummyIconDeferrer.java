@@ -21,9 +21,9 @@ package com.intellij.ui;
 
 import com.intellij.util.Function;
 import consulo.ui.image.Image;
+import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
-import javax.inject.Singleton;
 
 @Singleton
 public class DummyIconDeferrer extends IconDeferrer {

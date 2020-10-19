@@ -23,10 +23,10 @@ import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.ExpirableRunnable;
 import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.openapi.wm.IdeFrame;
+import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.inject.Singleton;
 import javax.swing.*;
 import java.awt.*;
 

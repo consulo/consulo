@@ -17,7 +17,7 @@ package com.intellij.vcs.log.graph;
 
 import com.intellij.vcs.log.graph.impl.facade.PermanentGraphImpl;
 import javax.annotation.Nonnull;
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 import java.util.Collections;
 import java.util.List;

@@ -19,7 +19,7 @@ import com.intellij.openapi.editor.colors.EditorColorsManager;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.openapi.editor.markup.TextAttributes;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 /**
  * @author Dennis.Ushakov

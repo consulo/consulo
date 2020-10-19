@@ -23,8 +23,8 @@ import com.intellij.openapi.editor.actionSystem.*;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.injected.editor.DocumentWindow;
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
-import javax.inject.Singleton;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 
 @Singleton
 public class EditorActionManagerImpl extends EditorActionManager {

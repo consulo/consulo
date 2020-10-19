@@ -20,7 +20,7 @@ import com.intellij.openapi.project.Project;
 import org.jdom.Element;
 
 import javax.annotation.Nullable;
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 import java.util.HashSet;
 import java.util.Set;
 

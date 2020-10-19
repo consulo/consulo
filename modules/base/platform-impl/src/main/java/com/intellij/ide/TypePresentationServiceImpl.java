@@ -25,10 +25,10 @@ import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
 import consulo.ui.image.ImageKey;
 import consulo.ui.style.StandardColors;
+import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.inject.Singleton;
 import java.util.*;
 import java.util.concurrent.ConcurrentMap;
 

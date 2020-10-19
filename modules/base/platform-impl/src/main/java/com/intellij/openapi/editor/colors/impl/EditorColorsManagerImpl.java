@@ -36,14 +36,15 @@ import com.intellij.util.ThrowableConvertor;
 import com.intellij.util.io.URLUtil;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.xmlb.annotations.OptionTag;
+import jakarta.inject.Singleton;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.inject.Inject;
-import javax.inject.Singleton;
+import jakarta.inject.Inject;
+
 import java.net.URL;
 import java.util.*;
 

@@ -19,7 +19,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import javax.crypto.BadPaddingException;
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 import javax.net.ssl.*;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;

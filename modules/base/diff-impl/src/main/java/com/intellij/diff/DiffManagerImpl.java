@@ -34,7 +34,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;

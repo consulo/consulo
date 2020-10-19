@@ -22,11 +22,11 @@ import com.intellij.internal.statistic.configurable.SendPeriod;
 import com.intellij.openapi.components.*;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.application.ApplicationProperties;
+import jakarta.inject.Singleton;
 import org.jdom.Element;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.inject.Singleton;
 import java.util.*;
 
 @State(name = "UsagesStatistic", storages = @Storage(value = "usage.statistics.xml", roamingType = RoamingType.DISABLED))

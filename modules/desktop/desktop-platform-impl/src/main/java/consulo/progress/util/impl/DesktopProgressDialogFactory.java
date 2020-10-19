@@ -20,10 +20,10 @@ import com.intellij.openapi.progress.util.ProgressWindow;
 import com.intellij.openapi.project.Project;
 import consulo.progress.util.ProgressDialog;
 import consulo.progress.util.ProgressDialogFactory;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import javax.swing.*;
 import java.awt.*;
 

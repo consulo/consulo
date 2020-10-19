@@ -76,14 +76,14 @@ import consulo.ui.shared.Rectangle2D;
 import consulo.wm.impl.DesktopCommandProcessorImpl;
 import consulo.wm.impl.ToolWindowManagerBase;
 import gnu.trove.THashSet;
+import jakarta.inject.Singleton;
 import org.intellij.lang.annotations.JdkConstants;
 import org.jdom.Element;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.inject.Inject;
-import javax.inject.Provider;
-import javax.inject.Singleton;
+import jakarta.inject.Inject;
+import jakarta.inject.Provider;
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;

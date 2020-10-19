@@ -14,7 +14,7 @@ import com.intellij.util.ui.UIUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 import javax.swing.*;
 import java.util.*;
 

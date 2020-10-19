@@ -27,10 +27,11 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.ObjectUtils;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
+import jakarta.inject.Inject;
+
 import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;
-import javax.inject.Inject;
 
 /**
  * @author gregsh

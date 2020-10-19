@@ -24,8 +24,9 @@ import com.intellij.openapi.vcs.history.VcsRevisionNumber;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.ThreeState;
 import com.intellij.util.containers.SLRUMap;
+import jakarta.inject.Singleton;
+
 import javax.annotation.Nullable;
-import javax.inject.Singleton;
 
 import java.util.Date;
 import java.util.Map;

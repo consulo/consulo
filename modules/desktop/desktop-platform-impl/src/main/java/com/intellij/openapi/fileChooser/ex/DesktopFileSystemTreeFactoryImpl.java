@@ -24,8 +24,9 @@ import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.fileChooser.FileSystemTree;
 import com.intellij.openapi.fileChooser.FileSystemTreeFactory;
 import com.intellij.openapi.project.Project;
+import jakarta.inject.Singleton;
+
 import javax.annotation.Nonnull;
-import javax.inject.Singleton;
 
 @Singleton
 public class DesktopFileSystemTreeFactoryImpl extends FileSystemTreeFactory {

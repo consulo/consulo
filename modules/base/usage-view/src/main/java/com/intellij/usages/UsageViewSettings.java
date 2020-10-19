@@ -21,9 +21,9 @@ import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
 import com.intellij.util.xmlb.XmlSerializerUtil;
 import com.intellij.util.xmlb.annotations.Transient;
+import jakarta.inject.Singleton;
 import org.jetbrains.annotations.NonNls;
 
-import javax.inject.Singleton;
 import java.io.File;
 
 @Singleton

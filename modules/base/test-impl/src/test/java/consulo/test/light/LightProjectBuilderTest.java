@@ -27,7 +27,7 @@ import com.intellij.util.ThrowableRunnable;
 import org.junit.Assert;
 import org.junit.Test;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 /**
  * @author VISTALL

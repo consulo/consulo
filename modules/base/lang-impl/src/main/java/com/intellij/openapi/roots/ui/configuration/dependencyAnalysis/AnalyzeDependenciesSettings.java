@@ -18,8 +18,7 @@ package com.intellij.openapi.roots.ui.configuration.dependencyAnalysis;
 import com.intellij.openapi.components.*;
 import com.intellij.openapi.components.StoragePathMacros;
 import com.intellij.openapi.project.Project;
-
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 /**
  * The default mode for classpath details settings

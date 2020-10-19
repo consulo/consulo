@@ -28,11 +28,10 @@ import com.intellij.openapi.util.WriteExternalException;
 import com.intellij.profile.codeInspection.InspectionProfileManager;
 import com.intellij.profile.codeInspection.InspectionProfileManagerImpl;
 import consulo.logging.Logger;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-
-import javax.inject.Inject;
-import javax.inject.Singleton;
 
 @Singleton
 @State(name = "DaemonCodeAnalyzerSettings", storages = {@Storage(file = StoragePathMacros.APP_CONFIG + "/editor.codeinsight.xml")})

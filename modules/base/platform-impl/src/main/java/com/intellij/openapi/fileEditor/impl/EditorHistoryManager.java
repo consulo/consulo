@@ -43,12 +43,12 @@ import consulo.component.PersistentStateComponentWithUIState;
 import consulo.disposer.Disposable;
 import consulo.logging.Logger;
 import consulo.ui.annotation.RequiredUIAccess;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import org.jdom.Element;
 import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashSet;

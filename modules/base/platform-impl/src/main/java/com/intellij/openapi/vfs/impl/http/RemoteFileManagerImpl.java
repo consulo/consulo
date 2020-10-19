@@ -23,7 +23,7 @@ import com.intellij.util.EventDispatcher;
 import consulo.disposer.Disposer;
 import gnu.trove.THashMap;
 import javax.annotation.Nonnull;
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 import java.io.IOException;
 import java.util.ArrayList;

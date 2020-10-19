@@ -29,7 +29,7 @@ import com.intellij.ui.AppUIUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 

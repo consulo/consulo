@@ -20,10 +20,11 @@ import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.project.Project;
 import consulo.disposer.Disposer;
 import com.intellij.util.containers.WeakList;
+import jakarta.inject.Inject;
 
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
-import javax.inject.Singleton;
+
+import jakarta.inject.Singleton;
 
 /**
  * @author max

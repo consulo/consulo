@@ -22,7 +22,7 @@ import consulo.components.impl.stores.storage.XmlElementStorage;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
-import javax.inject.Provider;
+import jakarta.inject.Provider;
 import java.io.IOException;
 
 abstract class BaseFileConfigurableStoreImpl extends ComponentStoreImpl {

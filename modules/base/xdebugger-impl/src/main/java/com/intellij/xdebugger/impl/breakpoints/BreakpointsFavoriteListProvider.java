@@ -36,7 +36,7 @@ import com.intellij.xdebugger.impl.breakpoints.ui.tree.BreakpointsSimpleTree;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeNode;

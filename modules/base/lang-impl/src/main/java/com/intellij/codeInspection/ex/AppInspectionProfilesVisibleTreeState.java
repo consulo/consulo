@@ -18,8 +18,7 @@ package com.intellij.codeInspection.ex;
 
 import com.intellij.codeInspection.InspectionProfile;
 import com.intellij.openapi.components.*;
-
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 @Singleton
 @State(

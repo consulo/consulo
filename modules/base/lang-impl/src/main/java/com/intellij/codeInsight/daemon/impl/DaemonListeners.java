@@ -64,11 +64,11 @@ import consulo.logging.Logger;
 import consulo.module.extension.ModuleExtension;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolderEx;
+import jakarta.inject.Singleton;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.inject.Singleton;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Collections;

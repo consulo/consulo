@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.components.impl;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 /**
  * @author mike

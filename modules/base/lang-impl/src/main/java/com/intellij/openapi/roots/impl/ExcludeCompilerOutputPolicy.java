@@ -24,9 +24,9 @@ import consulo.compiler.ModuleCompilerPathsManager;
 import consulo.roots.ContentFolderScopes;
 import consulo.roots.ContentFolderTypeProvider;
 import consulo.roots.ModuleRootLayer;
+import jakarta.inject.Inject;
 
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
 

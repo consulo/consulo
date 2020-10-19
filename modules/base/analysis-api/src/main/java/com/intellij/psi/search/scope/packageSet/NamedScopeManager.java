@@ -23,9 +23,9 @@ import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.components.StoragePathMacros;
 import com.intellij.openapi.project.Project;
 import consulo.ui.image.Image;
+import jakarta.inject.Inject;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 @Singleton
 @State(name = "NamedScopeManager", storages = {@Storage(file = StoragePathMacros.WORKSPACE_FILE)})

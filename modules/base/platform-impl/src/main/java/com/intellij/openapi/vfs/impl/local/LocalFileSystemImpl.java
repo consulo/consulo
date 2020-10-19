@@ -37,11 +37,11 @@ import com.intellij.util.io.URLUtil;
 import consulo.vfs.RefreshableFileSystem;
 import gnu.trove.THashMap;
 import gnu.trove.THashSet;
+import jakarta.inject.Inject;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.inject.Inject;
 import java.io.File;
 import java.util.*;
 import java.util.concurrent.TimeUnit;

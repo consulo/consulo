@@ -37,10 +37,10 @@ import consulo.logging.Logger;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.UIAccess;
 import consulo.ui.image.Image;
+import jakarta.inject.Inject;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
 
 /**
  * @author spleaner

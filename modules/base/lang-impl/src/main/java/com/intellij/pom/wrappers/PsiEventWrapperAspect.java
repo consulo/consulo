@@ -35,8 +35,9 @@ import com.intellij.psi.impl.PsiToDocumentSynchronizer;
 import com.intellij.psi.impl.source.DummyHolder;
 import com.intellij.testFramework.LightVirtualFile;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
+
 import java.util.Collections;
 
 @Singleton

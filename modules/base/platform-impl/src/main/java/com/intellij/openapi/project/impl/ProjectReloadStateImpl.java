@@ -21,7 +21,7 @@ import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.components.StoragePathMacros;
 import com.intellij.openapi.project.ProjectReloadState;
 import javax.annotation.Nullable;
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 @Singleton
 @State(name = "ProjectReloadState", storages = @Storage(StoragePathMacros.WORKSPACE_FILE))

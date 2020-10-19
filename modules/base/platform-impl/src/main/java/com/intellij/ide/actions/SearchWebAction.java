@@ -15,7 +15,7 @@ import consulo.ide.actions.webSearch.WebSearchOptions;
 import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 import java.awt.datatransfer.DataFlavor;
 
 public class SearchWebAction extends AnAction implements DumbAware {

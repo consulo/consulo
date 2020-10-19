@@ -24,9 +24,9 @@ import com.intellij.openapi.application.ApplicationManager;
 import consulo.logging.Logger;
 import com.intellij.openapi.util.SystemInfo;
 import com.sun.jna.platform.win32.User32;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import java.awt.*;
 import java.awt.desktop.UserSessionEvent;
 import java.awt.desktop.UserSessionListener;

@@ -9,8 +9,8 @@ import com.intellij.util.ui.UIUtil;
 import consulo.remoteServer.ui.ServersToolWindowManager;
 
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
-import javax.inject.Singleton;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 
 /**
  * @author nik

@@ -20,7 +20,7 @@ import com.intellij.util.NotNullFunction;
 import consulo.logging.Logger;
 
 import javax.annotation.Nullable;
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 import java.io.*;
 import java.util.concurrent.Future;
 

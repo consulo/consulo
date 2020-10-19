@@ -26,14 +26,14 @@ import consulo.components.impl.stores.storage.StateStorageManager;
 import consulo.components.impl.stores.storage.StorageData;
 import consulo.components.impl.stores.storage.VfsFileBasedStorage;
 import consulo.components.impl.stores.storage.XmlElementStorage;
+import jakarta.inject.Inject;
+import jakarta.inject.Provider;
+import jakarta.inject.Singleton;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.inject.Inject;
-import javax.inject.Provider;
-import javax.inject.Singleton;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collection;

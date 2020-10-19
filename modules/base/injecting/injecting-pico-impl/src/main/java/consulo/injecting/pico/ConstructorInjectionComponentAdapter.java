@@ -20,10 +20,10 @@ import com.intellij.util.ReflectionUtil;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.injecting.InjectingContainer;
 import consulo.logging.Logger;
+import jakarta.inject.Inject;
+import jakarta.inject.Provider;
 
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
-import javax.inject.Provider;
 import java.lang.reflect.*;
 import java.util.Arrays;
 import java.util.HashSet;

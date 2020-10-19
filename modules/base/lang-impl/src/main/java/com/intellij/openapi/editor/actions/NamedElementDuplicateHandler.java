@@ -32,10 +32,10 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiNameIdentifierOwner;
 import com.intellij.util.text.CharArrayUtil;
 import consulo.annotation.access.RequiredWriteAction;
+import jakarta.inject.Inject;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.inject.Inject;
 
 /**
  * @author peter

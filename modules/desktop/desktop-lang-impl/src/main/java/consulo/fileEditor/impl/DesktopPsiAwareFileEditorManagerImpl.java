@@ -30,9 +30,10 @@ import com.intellij.ui.docking.DockManager;
 import com.intellij.util.ui.JBUI;
 
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
-import javax.inject.Provider;
-import javax.inject.Singleton;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
+
+import jakarta.inject.Provider;
 import javax.swing.*;
 import java.awt.*;
 

@@ -20,10 +20,11 @@ import com.intellij.openapi.module.ModuleScopeProvider;
 import com.intellij.psi.search.GlobalSearchScope;
 import consulo.util.collection.ConcurrentIntObjectMap;
 import consulo.util.collection.Maps;
+import jakarta.inject.Inject;
 
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
-import javax.inject.Singleton;
+
+import jakarta.inject.Singleton;
 
 /**
  * Author: dmitrylomov

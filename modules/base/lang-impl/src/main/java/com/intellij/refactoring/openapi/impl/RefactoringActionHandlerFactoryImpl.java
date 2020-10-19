@@ -20,8 +20,7 @@ import com.intellij.refactoring.RefactoringActionHandlerFactory;
 import com.intellij.refactoring.move.MoveHandler;
 import com.intellij.refactoring.rename.PsiElementRenameHandler;
 import com.intellij.refactoring.safeDelete.SafeDeleteHandler;
-
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 /**
  * @author dsl

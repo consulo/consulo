@@ -20,11 +20,11 @@ import com.intellij.openapi.components.*;
 import com.intellij.openapi.util.JDOMUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.HashMap;
+import jakarta.inject.Singleton;
 import org.jdom.Attribute;
 import org.jdom.Element;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.inject.Singleton;
 
 import java.util.*;
 

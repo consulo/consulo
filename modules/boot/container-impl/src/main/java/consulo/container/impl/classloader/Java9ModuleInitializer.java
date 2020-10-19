@@ -95,7 +95,8 @@ public class Java9ModuleInitializer {
 
     containerLogger.info("Java 9 modules: " + (ourConsuloModulePathBoot ? "enabled" : "disabled"));
     if (ourConsuloModulePathBoot) {
-      //toResolve.add("javax.inject");
+      // we can't enable it, due jvm will initialize all unnamed modules
+      //toResolve.add("jakarta.inject");
       toResolve.add("jsr305");
 
       //toResolve.add("org.apache.commons.compress");
@@ -106,7 +107,7 @@ public class Java9ModuleInitializer {
       toResolve.add("kava.beans");
       // google
       //toResolve.add("com.google.common");
-      //toResolve.add("com.google.gson");
+      toResolve.add("com.google.gson");
 
       toResolve.add("consulo.annotation");
       toResolve.add("consulo.logging.api");
@@ -122,6 +123,10 @@ public class Java9ModuleInitializer {
       toResolve.add("consulo.util.lang");
       toResolve.add("consulo.util.collection");
       toResolve.add("consulo.util.rmi");
+
+      //toResolve.add("jakarta.activation");
+      // requires java.desktop???
+      //toResolve.add("java.xml.bind");
 
       //toResolve.add("com.sun.jna");
       //toResolve.add("com.sun.jna.platform");

@@ -2,8 +2,7 @@ package com.intellij.codeInsight.documentation;
 
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.psi.PsiElement;
-
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 @Singleton
 public class DocumentationManagerUtil {

@@ -30,9 +30,9 @@ import consulo.ide.IconDescriptorUpdaters;
 import consulo.ui.image.Image;
 import gnu.trove.THashSet;
 import gnu.trove.TObjectHashingStrategy;
+import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
-import javax.inject.Singleton;
 import java.util.ArrayList;
 import java.util.List;
 

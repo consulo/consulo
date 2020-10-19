@@ -20,7 +20,7 @@ import com.intellij.openapi.keymap.KeymapGroupFactory;
 import com.intellij.openapi.keymap.impl.ui.Group;
 import consulo.ui.image.Image;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 /**
  * @author yole

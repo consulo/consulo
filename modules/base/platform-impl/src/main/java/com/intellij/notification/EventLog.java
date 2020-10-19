@@ -45,8 +45,8 @@ import consulo.disposer.Disposable;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.inject.Inject;
-import javax.inject.Singleton;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
 import java.util.*;

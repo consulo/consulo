@@ -29,9 +29,11 @@ import com.intellij.util.graph.DFSTBuilder;
 import com.intellij.util.graph.GraphGenerator;
 import gnu.trove.TIntArrayList;
 import gnu.trove.TIntProcedure;
+import jakarta.inject.Inject;
+
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
-import javax.inject.Singleton;
+
+import jakarta.inject.Singleton;
 
 import java.util.*;
 

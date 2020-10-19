@@ -6,8 +6,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.ui.content.Content;
 import javax.annotation.Nonnull;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import javax.swing.*;
 
 /**

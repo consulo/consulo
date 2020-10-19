@@ -12,10 +12,11 @@ import com.intellij.openapi.roots.impl.DirectoryInfo;
 import com.intellij.openapi.roots.impl.ProjectFileIndexImpl;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiBundle;
+import jakarta.inject.Inject;
+
 import javax.annotation.Nonnull;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 import java.util.Collection;
 import java.util.Collections;
 

@@ -27,10 +27,10 @@ import com.intellij.openapi.roots.libraries.ui.LibraryPropertiesEditor;
 import com.intellij.openapi.vfs.VirtualFile;
 import consulo.sandboxPlugin.ide.module.extension.SandModuleExtension;
 import consulo.ui.image.Image;
+import jakarta.inject.Inject;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.inject.Inject;
 import javax.swing.*;
 
 /**

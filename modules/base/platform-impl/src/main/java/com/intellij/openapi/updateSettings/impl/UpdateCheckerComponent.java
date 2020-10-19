@@ -20,10 +20,10 @@ import com.intellij.util.text.DateFormatUtil;
 import consulo.disposer.Disposable;
 import consulo.ide.updateSettings.UpdateSettings;
 import consulo.ide.updateSettings.impl.PlatformOrPluginUpdateChecker;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;

@@ -20,9 +20,11 @@ import com.intellij.ide.scratch.ScratchFileService;
 import com.intellij.openapi.components.*;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.project.Project;
+import jakarta.inject.Inject;
+
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
-import javax.inject.Singleton;
+
+import jakarta.inject.Singleton;
 
 /**
  * @author yole

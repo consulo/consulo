@@ -41,8 +41,8 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.Window;
 
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
-import javax.inject.Singleton;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;

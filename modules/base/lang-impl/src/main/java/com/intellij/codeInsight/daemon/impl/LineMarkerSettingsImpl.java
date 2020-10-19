@@ -21,9 +21,9 @@ import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
 import com.intellij.util.xmlb.annotations.MapAnnotation;
+import jakarta.inject.Singleton;
 
 import javax.annotation.Nullable;
-import javax.inject.Singleton;
 import java.util.HashMap;
 import java.util.Map;
 

@@ -17,8 +17,7 @@ package com.intellij.profile.codeInspection.ui;
 
 import com.intellij.profile.codeInspection.InspectionProfileManager;
 import com.intellij.profile.codeInspection.InspectionProjectProfileManager;
-
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 /**
  * @author nik

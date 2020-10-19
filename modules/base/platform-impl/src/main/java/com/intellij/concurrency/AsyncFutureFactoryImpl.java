@@ -15,7 +15,7 @@
  */
 package com.intellij.concurrency;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 /**
  * Author: dmitrylomov

@@ -2,9 +2,10 @@
 package com.intellij.openapi.application.impl;
 
 import com.intellij.openapi.application.*;
+import jakarta.inject.Singleton;
+
 import javax.annotation.Nonnull;
 
-import javax.inject.Singleton;
 import java.util.concurrent.Callable;
 
 /**

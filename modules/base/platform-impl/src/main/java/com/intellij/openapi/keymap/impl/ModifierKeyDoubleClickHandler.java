@@ -34,8 +34,9 @@ import gnu.trove.TIntIntHashMap;
 import gnu.trove.TIntIntProcedure;
 
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
-import javax.inject.Singleton;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
+
 import java.awt.*;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;

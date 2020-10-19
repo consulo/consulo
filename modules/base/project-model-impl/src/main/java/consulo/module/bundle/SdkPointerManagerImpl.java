@@ -24,9 +24,10 @@ import consulo.util.pointers.NamedPointerManagerImpl;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.inject.Inject;
-import javax.inject.Provider;
-import javax.inject.Singleton;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
+
+import jakarta.inject.Provider;
 import java.util.List;
 
 /**

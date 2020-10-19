@@ -40,7 +40,7 @@ import consulo.disposer.Disposer;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nullable;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 import javax.swing.*;
 import java.awt.*;
 

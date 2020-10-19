@@ -9,6 +9,7 @@
     <java-sdk name="11.0" />
     <predefined_log_file id="CONSULO_LOG" enabled="true" />
     <ConfigurationWrapper RunnerId="ConsuloDebuggerRunner" />
+    <ConfigurationWrapper RunnerId="Run" />
     <method>
       <option name="Make" enabled="false" />
       <option name="Maven.BeforeRunTask" enabled="true" file="$PROJECT_DIR$/pom.xml" goal=" -T 1C -Dmaven.test.skip=true package -pl :consulo-sandbox-desktop -am" />

@@ -18,8 +18,9 @@ package com.intellij.execution.filters.impl;
 import com.intellij.execution.filters.*;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
+import jakarta.inject.Singleton;
+
 import javax.annotation.Nonnull;
-import javax.inject.Singleton;
 
 import java.util.List;
 

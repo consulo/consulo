@@ -21,8 +21,8 @@ import com.intellij.openapi.project.Project;
 import consulo.disposer.Disposable;
 
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
-import javax.inject.Singleton;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 
 @Singleton
 public class RunnerLayoutUiFactoryImpl extends RunnerLayoutUi.Factory {

@@ -21,10 +21,10 @@ import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.options.SearchableConfigurable;
 import com.intellij.openapi.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
+import jakarta.inject.Inject;
 
 import javax.annotation.Nonnull;
 
-import javax.inject.Inject;
 import javax.swing.*;
 
 public class CopyrightProjectConfigurable extends SearchableConfigurable.Parent.Abstract implements Configurable.NoScroll {

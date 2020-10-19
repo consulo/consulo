@@ -23,8 +23,8 @@ import com.intellij.util.containers.MultiMap;
 import consulo.annotation.access.RequiredReadAction;
 
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
-import javax.inject.Singleton;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 
 import java.util.Collection;
 import java.util.Map;

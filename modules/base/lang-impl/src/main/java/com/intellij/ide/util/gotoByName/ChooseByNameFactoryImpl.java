@@ -18,9 +18,11 @@ package com.intellij.ide.util.gotoByName;
 
 import com.intellij.ide.actions.GotoActionBase;
 import com.intellij.openapi.project.Project;
+import jakarta.inject.Inject;
+
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
-import javax.inject.Singleton;
+
+import jakarta.inject.Singleton;
 
 /**
  * User: anna

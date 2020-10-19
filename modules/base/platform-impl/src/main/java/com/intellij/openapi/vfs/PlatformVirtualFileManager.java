@@ -22,11 +22,13 @@ import com.intellij.openapi.vfs.newvfs.ManagingFS;
 import com.intellij.openapi.vfs.newvfs.RefreshQueue;
 import com.intellij.openapi.vfs.newvfs.RefreshSession;
 import com.intellij.openapi.vfs.newvfs.impl.FileNameCache;
+import jakarta.inject.Inject;
+
 import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;
-import javax.inject.Inject;
-import javax.inject.Singleton;
+
+import jakarta.inject.Singleton;
 
 @Singleton
 public class PlatformVirtualFileManager extends VirtualFileManagerImpl {

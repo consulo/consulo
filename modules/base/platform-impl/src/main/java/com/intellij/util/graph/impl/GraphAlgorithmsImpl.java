@@ -19,7 +19,7 @@ import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.util.Chunk;
 import com.intellij.util.graph.*;
 import javax.annotation.Nonnull;
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 import java.util.*;
 

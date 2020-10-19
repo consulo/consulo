@@ -25,7 +25,7 @@ import com.intellij.util.containers.hash.LinkedHashMap;
 import org.jdom.Element;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 import java.util.Map;
 

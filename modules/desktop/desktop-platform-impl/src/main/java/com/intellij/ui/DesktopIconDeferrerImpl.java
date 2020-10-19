@@ -35,8 +35,9 @@ import consulo.ui.UIAccess;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
-import javax.inject.Singleton;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
+
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;

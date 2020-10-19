@@ -21,9 +21,10 @@ import com.intellij.openapi.editor.HectorComponentPanelsProvider;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.impl.include.FileIncludeManager;
+import jakarta.inject.Inject;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.inject.Inject;
 
 /**
  * @author mike

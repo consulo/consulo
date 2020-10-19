@@ -6,7 +6,7 @@ import com.intellij.remoteServer.agent.RemoteAgentManager;
 import com.intellij.remoteServer.agent.RemoteAgentProxyFactory;
 import com.intellij.util.PathUtil;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;

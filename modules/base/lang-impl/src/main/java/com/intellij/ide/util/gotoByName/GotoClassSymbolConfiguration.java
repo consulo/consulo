@@ -22,7 +22,7 @@ import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.components.StoragePathMacros;
 import com.intellij.openapi.project.Project;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 /**
  * @author yole

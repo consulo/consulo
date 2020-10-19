@@ -21,7 +21,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.util.xmlb.XmlSerializerUtil;
 import org.jetbrains.annotations.NonNls;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 @Singleton
 @State(name = "ExportToHTMLSettings", storages = @Storage(file = StoragePathMacros.WORKSPACE_FILE))

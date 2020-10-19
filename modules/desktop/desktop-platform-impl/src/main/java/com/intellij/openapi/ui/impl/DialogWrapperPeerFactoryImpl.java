@@ -20,10 +20,10 @@ import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.DialogWrapperPeer;
 import com.intellij.openapi.ui.DialogWrapperPeerFactory;
 import consulo.awt.TargetAWT;
+import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.inject.Singleton;
 import java.awt.*;
 
 @Singleton

@@ -24,9 +24,10 @@ import com.intellij.openapi.editor.actions.TextComponentEditorAction;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.project.Project;
 import consulo.util.dataholder.Key;
+import jakarta.inject.Singleton;
+
 import javax.annotation.Nonnull;
 
-import javax.inject.Singleton;
 import javax.swing.*;
 import java.util.Comparator;
 

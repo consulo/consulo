@@ -25,7 +25,7 @@ import com.intellij.psi.codeStyle.CommonCodeStyleSettings;
 import consulo.psi.impl.source.codeStyle.IndentHelperExtension;
 
 import javax.annotation.Nonnull;
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 @Singleton
 public final class IndentHelperImpl extends IndentHelper {

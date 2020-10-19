@@ -23,7 +23,7 @@ import com.intellij.util.xmlb.annotations.Attribute;
 import com.intellij.util.xmlb.annotations.Property;
 import com.intellij.util.xmlb.annotations.Tag;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 /**
  * @author VISTALL

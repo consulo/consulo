@@ -43,10 +43,10 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.HashMap;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import java.awt.*;
 import java.util.Collections;
 import java.util.List;

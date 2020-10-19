@@ -27,7 +27,7 @@ import org.apache.commons.codec.digest.DigestUtils;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 import java.io.IOException;
 import java.util.Base64;
 

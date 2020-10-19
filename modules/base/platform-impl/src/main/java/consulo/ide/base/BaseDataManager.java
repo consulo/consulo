@@ -32,14 +32,14 @@ import consulo.ide.impl.DataValidators;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolder;
 import gnu.trove.THashSet;
+import jakarta.inject.Inject;
+import jakarta.inject.Provider;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.concurrency.AsyncPromise;
 import org.jetbrains.concurrency.Promise;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.inject.Inject;
-import javax.inject.Provider;
 import java.awt.*;
 import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;

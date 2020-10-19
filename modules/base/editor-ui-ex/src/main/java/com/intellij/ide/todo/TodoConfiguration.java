@@ -24,13 +24,14 @@ import com.intellij.openapi.components.Storage;
 import com.intellij.psi.search.*;
 import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.Topic;
+import jakarta.inject.Inject;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.inject.Inject;
-import javax.inject.Singleton;
+
+import jakarta.inject.Singleton;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;

@@ -19,9 +19,9 @@ import com.intellij.execution.configurations.ConfigurationType;
 import com.intellij.openapi.components.ComponentManager;
 import com.intellij.remoteServer.ServerType;
 import consulo.extensions.ExtensionExtender;
+import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
-import javax.inject.Singleton;
 import java.util.function.Consumer;
 
 /**

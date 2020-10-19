@@ -21,7 +21,7 @@ import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.components.StoragePathMacros;
 import consulo.util.ProjectPropertiesComponent;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 @Singleton
 @State(name = "PropertiesComponent", storages = @Storage(file = StoragePathMacros.WORKSPACE_FILE, roamingType = RoamingType.DISABLED))

@@ -19,8 +19,7 @@ import com.intellij.openapi.components.RoamingType;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
 import consulo.util.ApplicationWindowStateService;
-
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 /**
  * @author Sergey.Malenkov

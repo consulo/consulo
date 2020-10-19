@@ -20,11 +20,11 @@ import com.intellij.internal.statistic.updater.StatisticsSendManager;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.options.SearchableConfigurable;
 import consulo.ui.annotation.RequiredUIAccess;
+import jakarta.inject.Inject;
 import org.jetbrains.annotations.Nls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.inject.Inject;
 import javax.swing.*;
 
 public class StatisticsConfigurable implements SearchableConfigurable {

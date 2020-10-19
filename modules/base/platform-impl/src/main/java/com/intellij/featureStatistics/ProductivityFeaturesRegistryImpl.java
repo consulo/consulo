@@ -16,16 +16,14 @@
 package com.intellij.featureStatistics;
 
 import com.intellij.openapi.util.JDOMUtil;
-import com.intellij.openapi.util.Pair;
 import consulo.logging.Logger;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
-import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 import java.io.IOException;
 import java.net.URL;
 import java.util.*;

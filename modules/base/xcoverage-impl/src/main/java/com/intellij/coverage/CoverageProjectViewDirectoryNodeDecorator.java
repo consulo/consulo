@@ -8,8 +8,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.SmartPsiElementPointer;
 import com.intellij.ui.ColoredTreeCellRenderer;
-
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 /**
  * @author yole

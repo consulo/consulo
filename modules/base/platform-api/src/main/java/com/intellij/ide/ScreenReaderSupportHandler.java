@@ -17,11 +17,11 @@ package com.intellij.ide;
 
 import com.intellij.util.ui.accessibility.ScreenReader;
 import consulo.disposer.Disposable;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import kava.beans.PropertyChangeListener;
 
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
-import javax.inject.Singleton;
 
 /**
  * Keep {@link ScreenReader#isActive} in sync with {@link GeneralSettings#isSupportScreenReaders}

@@ -24,11 +24,11 @@ import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.ui.*;
 import com.intellij.ui.components.JBList;
+import jakarta.inject.Inject;
 import org.jetbrains.annotations.Nls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import javax.inject.Inject;
 import javax.swing.*;
 import java.awt.*;
 

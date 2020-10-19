@@ -20,10 +20,10 @@ import com.intellij.execution.RunnerRegistry;
 import com.intellij.execution.configurations.RunProfile;
 import com.intellij.execution.runners.ProgramRunner;
 import com.intellij.openapi.util.Comparing;
+import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.inject.Singleton;
 
 // TODO[spLeaner]: eliminate
 @Singleton

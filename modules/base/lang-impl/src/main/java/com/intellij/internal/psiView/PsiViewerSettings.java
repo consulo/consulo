@@ -17,8 +17,7 @@ package com.intellij.internal.psiView;
 
 import com.intellij.openapi.components.*;
 import com.intellij.util.xmlb.XmlSerializerUtil;
-
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 /**
  * @author Konstantin Bulenkov

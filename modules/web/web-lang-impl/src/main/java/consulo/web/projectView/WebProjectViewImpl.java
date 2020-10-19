@@ -46,11 +46,12 @@ import consulo.ui.Tree;
 import consulo.ui.TreeNode;
 import consulo.ui.layout.WrappedLayout;
 import consulo.web.ui.TreeStructureWrappenModel;
+import jakarta.inject.Inject;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.inject.Inject;
-import javax.inject.Singleton;
+
+import jakarta.inject.Singleton;
 import javax.swing.tree.DefaultMutableTreeNode;
 import java.util.*;
 import java.util.function.Function;

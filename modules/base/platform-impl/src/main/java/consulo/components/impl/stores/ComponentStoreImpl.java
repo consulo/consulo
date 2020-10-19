@@ -31,11 +31,11 @@ import consulo.components.impl.stores.storage.StateStorageManager.Externalizatio
 import consulo.logging.Logger;
 import consulo.ui.UIAccess;
 import consulo.util.collection.ArrayUtil;
+import jakarta.inject.Provider;
 import org.jdom.Element;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.inject.Provider;
 import java.io.File;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;

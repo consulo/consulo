@@ -16,7 +16,7 @@
 package com.intellij.find.impl;
 
 import javax.annotation.Nonnull;
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 @Singleton
 public class FindPopupScopeUIProviderImpl implements FindPopupScopeUIProvider {

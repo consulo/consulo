@@ -34,7 +34,7 @@ import org.intellij.lang.annotations.MagicConstant;
 import org.jdom.Element;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 
 @Singleton

@@ -20,10 +20,10 @@ import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.vcs.ProjectLevelVcsManager;
+import jakarta.inject.Singleton;
 import org.jdom.Element;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
+import jakarta.inject.Inject;
 
 /**
  * @author yole

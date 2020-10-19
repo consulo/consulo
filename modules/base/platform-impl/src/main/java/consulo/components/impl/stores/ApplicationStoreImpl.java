@@ -29,9 +29,9 @@ import consulo.components.impl.stores.storage.StateStorageManager;
 import consulo.components.impl.stores.storage.StateStorageManagerImpl;
 
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
-import javax.inject.Provider;
-import javax.inject.Singleton;
+import jakarta.inject.Inject;
+import jakarta.inject.Provider;
+import jakarta.inject.Singleton;
 import java.io.IOException;
 
 @Singleton

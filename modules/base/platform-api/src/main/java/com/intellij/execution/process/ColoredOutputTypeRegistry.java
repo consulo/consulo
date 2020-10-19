@@ -7,9 +7,9 @@ import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.openapi.editor.markup.EffectType;
 import com.intellij.openapi.editor.markup.TextAttributes;
 import consulo.util.dataholder.Key;
+import jakarta.inject.Singleton;
 import org.jetbrains.annotations.NonNls;
 
-import javax.inject.Singleton;
 import java.awt.*;
 import java.util.HashMap;
 import java.util.Map;

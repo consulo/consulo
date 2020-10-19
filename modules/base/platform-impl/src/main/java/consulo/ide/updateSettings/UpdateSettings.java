@@ -18,9 +18,9 @@ package consulo.ide.updateSettings;
 import com.intellij.openapi.components.*;
 import consulo.application.ApplicationProperties;
 import consulo.container.boot.ContainerPathManager;
+import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
-import javax.inject.Singleton;
 import java.io.File;
 
 /**

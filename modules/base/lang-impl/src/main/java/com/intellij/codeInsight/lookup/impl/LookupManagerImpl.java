@@ -30,8 +30,8 @@ import kava.beans.PropertyChangeSupport;
 import javax.annotation.Nonnull;
 import org.jetbrains.annotations.TestOnly;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 
 @Singleton
 public class LookupManagerImpl extends LookupManager {

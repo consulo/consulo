@@ -25,7 +25,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import consulo.backgroundTaskByVfsChange.tree.BackgroundTaskPsiFileTreeNode;
 import javax.annotation.Nullable;
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import java.util.*;
 

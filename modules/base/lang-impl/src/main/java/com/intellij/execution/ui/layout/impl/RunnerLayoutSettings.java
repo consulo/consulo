@@ -17,9 +17,9 @@
 package com.intellij.execution.ui.layout.impl;
 
 import com.intellij.openapi.components.*;
+import jakarta.inject.Singleton;
 import org.jdom.Element;
 import javax.annotation.Nonnull;
-import javax.inject.Singleton;
 
 import java.util.LinkedHashMap;
 import java.util.List;

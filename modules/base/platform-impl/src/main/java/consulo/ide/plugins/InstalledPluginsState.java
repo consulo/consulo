@@ -22,9 +22,9 @@ import com.intellij.openapi.components.ServiceManager;
 import consulo.container.plugin.PluginId;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.container.plugin.PluginDescriptor;
+import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
-import javax.inject.Singleton;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.TreeSet;

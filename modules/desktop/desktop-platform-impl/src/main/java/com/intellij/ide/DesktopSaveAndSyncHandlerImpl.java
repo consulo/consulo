@@ -36,9 +36,9 @@ import com.intellij.openapi.vfs.newvfs.RefreshSession;
 import com.intellij.util.SingleAlarm;
 import com.intellij.util.containers.ContainerUtil;
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
-import javax.inject.Singleton;
 
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import kava.beans.PropertyChangeEvent;
 import kava.beans.PropertyChangeListener;
 import java.util.List;

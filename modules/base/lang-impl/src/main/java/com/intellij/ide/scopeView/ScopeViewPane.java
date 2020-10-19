@@ -45,11 +45,11 @@ import consulo.logging.Logger;
 import consulo.ui.image.Image;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.dataholder.Key;
+import jakarta.inject.Inject;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;
-import javax.inject.Inject;
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import java.util.ArrayList;

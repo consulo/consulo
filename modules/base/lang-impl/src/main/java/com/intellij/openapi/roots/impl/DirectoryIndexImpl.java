@@ -38,11 +38,11 @@ import consulo.disposer.Disposer;
 import consulo.logging.Logger;
 import consulo.roots.ContentFolderTypeProvider;
 import consulo.util.collection.ConcurrentIntObjectMap;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import java.util.List;
 
 @Singleton

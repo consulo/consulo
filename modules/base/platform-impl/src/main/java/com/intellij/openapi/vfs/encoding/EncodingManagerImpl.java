@@ -34,6 +34,7 @@ import com.intellij.util.xmlb.annotations.Attribute;
 import consulo.logging.Logger;
 import gnu.trove.Equality;
 import gnu.trove.THashSet;
+import jakarta.inject.Singleton;
 import kava.beans.PropertyChangeEvent;
 import kava.beans.PropertyChangeListener;
 import kava.beans.PropertyChangeSupport;
@@ -42,7 +43,6 @@ import org.jetbrains.ide.PooledThreadExecutor;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.inject.Singleton;
 import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
 import java.nio.charset.Charset;

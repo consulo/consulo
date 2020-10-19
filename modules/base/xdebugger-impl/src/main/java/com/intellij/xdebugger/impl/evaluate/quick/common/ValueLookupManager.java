@@ -35,8 +35,8 @@ import com.intellij.xdebugger.impl.DebuggerSupport;
 import com.intellij.xdebugger.settings.XDebuggerSettingsManager;
 import consulo.ui.annotation.RequiredUIAccess;
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
-import javax.inject.Singleton;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 
 import java.awt.*;
 import java.util.List;

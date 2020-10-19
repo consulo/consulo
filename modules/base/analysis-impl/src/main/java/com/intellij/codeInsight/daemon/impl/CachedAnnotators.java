@@ -19,9 +19,9 @@ import com.intellij.lang.Language;
 import com.intellij.lang.LanguageAnnotators;
 import com.intellij.lang.annotation.Annotator;
 import com.intellij.util.containers.ContainerUtil;
+import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
-import javax.inject.Singleton;
 import java.util.Collection;
 import java.util.List;
 

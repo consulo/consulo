@@ -34,12 +34,13 @@ import consulo.application.AccessRule;
 import consulo.fileEditor.impl.EditorComposite;
 import consulo.fileEditor.impl.EditorWithProviderComposite;
 import consulo.fileEditor.impl.text.TextEditorProvider;
+import jakarta.inject.Singleton;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.inject.Inject;
-import javax.inject.Singleton;
+import jakarta.inject.Inject;
+
 import java.util.*;
 
 /**

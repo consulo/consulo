@@ -21,9 +21,10 @@ import com.intellij.openapi.editor.colors.EditorColorsManager;
 import com.intellij.openapi.editor.colors.EditorColorsScheme;
 import com.intellij.codeHighlighting.ColorGenerator;
 import com.intellij.util.containers.ContainerUtil;
+import jakarta.inject.Singleton;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.inject.Singleton;
 
 import java.awt.*;
 import java.util.ArrayList;

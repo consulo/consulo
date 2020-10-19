@@ -19,10 +19,11 @@ import com.intellij.openapi.util.NotNullLazyValue;
 import com.intellij.platform.DefaultProjectOpenProcessor;
 import com.intellij.projectImport.ProjectOpenProcessor;
 import consulo.moduleImport.ImportProjectOpenProcessor;
+import jakarta.inject.Inject;
 
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
-import javax.inject.Singleton;
+
+import jakarta.inject.Singleton;
 import java.util.ArrayList;
 import java.util.List;
 

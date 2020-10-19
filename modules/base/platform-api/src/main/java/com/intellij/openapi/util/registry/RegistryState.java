@@ -18,9 +18,8 @@ package com.intellij.openapi.util.registry;
 import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
+import jakarta.inject.Singleton;
 import org.jdom.Element;
-
-import javax.inject.Singleton;
 
 @State(name = "Registry", storages = @Storage("other.xml"))
 @Singleton

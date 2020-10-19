@@ -22,10 +22,11 @@ import consulo.logging.Logger;
 import gnu.trove.TLongObjectHashMap;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import org.jetbrains.ide.PooledThreadExecutor;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.Executor;

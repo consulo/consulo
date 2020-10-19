@@ -22,7 +22,7 @@ import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.project.Project;
 import com.intellij.ui.AutoScrollToSourceHandler;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 import javax.swing.*;
 
 /**

@@ -35,7 +35,7 @@ import com.intellij.util.ui.accessibility.AccessibleContextUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 import javax.swing.*;
 import javax.swing.event.HyperlinkListener;
 import java.awt.*;

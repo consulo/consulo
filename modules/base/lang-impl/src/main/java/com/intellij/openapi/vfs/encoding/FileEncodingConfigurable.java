@@ -32,12 +32,12 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.ui.table.JBTable;
 import consulo.ui.annotation.RequiredUIAccess;
+import jakarta.inject.Inject;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.inject.Inject;
 import javax.swing.*;
 import java.awt.*;
 import java.nio.charset.Charset;

@@ -19,9 +19,9 @@ import com.intellij.ide.actions.AboutNewDialog;
 import consulo.ide.actions.AboutManager;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.Window;
+import jakarta.inject.Singleton;
 
 import javax.annotation.Nullable;
-import javax.inject.Singleton;
 
 /**
  * @author VISTALL

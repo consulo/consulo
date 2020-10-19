@@ -6,10 +6,10 @@ import com.intellij.psi.impl.cache.TodoCacheManager;
 import com.intellij.psi.search.IndexPattern;
 import com.intellij.psi.search.IndexPatternProvider;
 import com.intellij.psi.search.searches.IndexPatternSearch;
-import javax.annotation.Nonnull;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
+import javax.annotation.Nonnull;
 
 /**
  * @author yole

@@ -17,9 +17,9 @@ package consulo.application.internal;
 
 import com.intellij.openapi.application.Application;
 import consulo.disposer.Disposer;
+import jakarta.inject.Provider;
 
 import javax.annotation.Nonnull;
-import javax.inject.Provider;
 import java.util.function.Supplier;
 
 /**

@@ -28,8 +28,8 @@ import com.intellij.psi.search.TodoPattern;
 import com.intellij.psi.search.searches.IndexPatternSearch;
 
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
-import javax.inject.Singleton;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;

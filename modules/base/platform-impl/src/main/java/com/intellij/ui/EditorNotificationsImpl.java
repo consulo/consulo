@@ -43,7 +43,7 @@ import consulo.editor.notifications.EditorNotificationProvider;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 import javax.swing.*;
 import java.lang.ref.WeakReference;
 import java.util.List;

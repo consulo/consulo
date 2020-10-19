@@ -26,12 +26,13 @@ import com.intellij.util.io.storage.HeavyProcessLatch;
 import consulo.container.util.StatCollector;
 import consulo.disposer.Disposable;
 import consulo.logging.Logger;
+import jakarta.inject.Singleton;
 import org.jetbrains.concurrency.AsyncPromise;
 import org.jetbrains.concurrency.Promises;
 
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
-import javax.inject.Singleton;
+import jakarta.inject.Inject;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executor;

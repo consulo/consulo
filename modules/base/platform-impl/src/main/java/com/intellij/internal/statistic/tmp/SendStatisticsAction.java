@@ -24,8 +24,8 @@ import com.intellij.openapi.project.Project;
 import consulo.ui.Alerts;
 import consulo.ui.annotation.RequiredUIAccess;
 
-import javax.inject.Inject;
-import javax.inject.Provider;
+import jakarta.inject.Inject;
+import jakarta.inject.Provider;
 
 public class SendStatisticsAction extends DumbAwareAction {
   private final Provider<UsageStatisticsPersistenceComponent> myUsageStatisticsPersistenceComponent;

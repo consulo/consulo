@@ -21,10 +21,10 @@ import com.intellij.openapi.components.*;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.Function;
 import com.intellij.util.containers.HashSet;
+import jakarta.inject.Singleton;
 import org.jdom.Element;
 
 import javax.annotation.Nonnull;
-import javax.inject.Singleton;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;

@@ -25,10 +25,10 @@ import consulo.util.dataholder.KeyWithDefaultValue;
 import consulo.util.lang.Comparing;
 import consulo.vfs.ArchiveFileSystem;
 import consulo.vfs.util.ArchiveVfsUtil;
+import jakarta.inject.Inject;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
 import javax.swing.plaf.FontUIResource;
 import javax.swing.tree.DefaultTreeModel;
 import java.awt.*;

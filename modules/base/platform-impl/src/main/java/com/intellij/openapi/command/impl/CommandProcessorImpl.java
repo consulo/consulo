@@ -12,7 +12,7 @@ import com.intellij.util.ExceptionUtil;
 import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 @Singleton
 public class CommandProcessorImpl extends CoreCommandProcessor {

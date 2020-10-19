@@ -20,8 +20,9 @@ import com.intellij.find.FindSettings;
 import com.intellij.openapi.components.*;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.ArrayUtil;
+import jakarta.inject.Singleton;
+
 import javax.annotation.Nonnull;
-import javax.inject.Singleton;
 
 import java.util.ArrayList;
 import java.util.List;

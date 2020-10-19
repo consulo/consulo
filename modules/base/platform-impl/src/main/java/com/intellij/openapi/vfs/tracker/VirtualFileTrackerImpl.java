@@ -19,11 +19,11 @@ import consulo.disposer.Disposable;
 import com.intellij.openapi.vfs.*;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.disposer.Disposer;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Map;

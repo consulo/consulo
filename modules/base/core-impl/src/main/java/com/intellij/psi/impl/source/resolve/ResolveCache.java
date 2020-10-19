@@ -31,11 +31,11 @@ import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.util.ObjectUtil;
 import consulo.util.collection.ConcurrentWeakKeySoftValueHashMap;
 import consulo.util.collection.ContainerUtil;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import java.lang.ref.ReferenceQueue;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicReferenceArray;

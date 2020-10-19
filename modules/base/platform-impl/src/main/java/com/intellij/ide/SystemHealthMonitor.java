@@ -42,10 +42,10 @@ import consulo.container.boot.ContainerPathManager;
 import consulo.ide.updateSettings.impl.PlatformOrPluginUpdateChecker;
 import consulo.logging.Logger;
 import consulo.util.ApplicationPropertiesComponent;
+import jakarta.inject.Inject;
 import org.jetbrains.annotations.PropertyKey;
 
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
 import java.io.File;

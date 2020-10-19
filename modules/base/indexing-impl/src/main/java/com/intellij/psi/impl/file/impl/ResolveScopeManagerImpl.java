@@ -34,8 +34,8 @@ import com.intellij.util.containers.ConcurrentFactoryMap;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.roots.OrderEntryWithTracking;
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
-import javax.inject.Singleton;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 
 import java.util.ArrayList;
 import java.util.List;

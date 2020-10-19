@@ -22,9 +22,9 @@ import com.intellij.openapi.extensions.Extensions;
 import com.intellij.psi.search.scope.packageSet.lexer.ScopeTokenTypes;
 import com.intellij.psi.search.scope.packageSet.lexer.ScopesLexer;
 import consulo.logging.Logger;
+import jakarta.inject.Singleton;
 
 import javax.annotation.Nullable;
-import javax.inject.Singleton;
 
 @Singleton
 public class PackageSetFactoryImpl extends PackageSetFactory {

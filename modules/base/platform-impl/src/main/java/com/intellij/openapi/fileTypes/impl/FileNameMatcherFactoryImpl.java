@@ -17,7 +17,7 @@ package com.intellij.openapi.fileTypes.impl;
 
 import com.intellij.openapi.fileTypes.*;
 import javax.annotation.Nonnull;
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 /**
  * @author nik

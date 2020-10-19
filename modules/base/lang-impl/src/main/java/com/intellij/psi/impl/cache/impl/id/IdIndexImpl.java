@@ -9,8 +9,9 @@ import com.intellij.openapi.util.ThreadLocalCachedIntArray;
 import com.intellij.util.indexing.CustomInputsIndexFileBasedIndexExtension;
 import com.intellij.util.io.DataExternalizer;
 import com.intellij.util.io.DataInputOutputUtil;
+import jakarta.inject.Inject;
+
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
 
 import java.io.DataInput;
 import java.io.DataOutput;

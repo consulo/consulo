@@ -10,12 +10,12 @@ import com.intellij.openapi.ide.KillRingTransferable;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.util.EventDispatcher;
 import consulo.disposer.Disposable;
+import jakarta.inject.Inject;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 import java.awt.datatransfer.*;
 import java.io.IOException;
 import java.util.ArrayList;

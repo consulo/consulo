@@ -19,6 +19,8 @@ import consulo.builtInServer.custom.CustomPortServerManager;
 import consulo.builtInServer.impl.net.http.ImportantFolderLockerViaBuiltInServer;
 import consulo.start.ImportantFolderLocker;
 import io.netty.channel.oio.OioEventLoopGroup;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import org.jetbrains.annotations.NonNls;
 import consulo.builtInServer.impl.ide.BuiltInServerOptions;
 import consulo.builtInServer.impl.net.http.BuiltInServer;
@@ -26,8 +28,6 @@ import consulo.builtInServer.impl.net.http.SubServer;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.NetworkInterface;

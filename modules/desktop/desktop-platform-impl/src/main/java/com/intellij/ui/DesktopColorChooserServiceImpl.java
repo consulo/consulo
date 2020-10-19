@@ -16,7 +16,7 @@
 package com.intellij.ui;
 
 import javax.annotation.Nonnull;
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 import java.awt.*;
 import java.util.function.Consumer;
 

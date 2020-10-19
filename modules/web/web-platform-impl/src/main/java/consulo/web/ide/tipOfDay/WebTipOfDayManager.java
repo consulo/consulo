@@ -19,9 +19,9 @@ import com.intellij.openapi.project.Project;
 import consulo.ide.tipOfDay.TipOfDayManager;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
+import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
-import javax.inject.Singleton;
 
 /**
  * @author VISTALL

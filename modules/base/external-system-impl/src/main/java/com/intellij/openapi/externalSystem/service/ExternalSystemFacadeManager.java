@@ -19,8 +19,8 @@ import com.intellij.util.containers.ContainerUtilRt;
 import consulo.disposer.Disposer;
 
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
-import javax.inject.Singleton;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;

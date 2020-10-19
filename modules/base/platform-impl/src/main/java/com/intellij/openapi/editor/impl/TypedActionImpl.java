@@ -2,8 +2,7 @@
 package com.intellij.openapi.editor.impl;
 
 import com.intellij.openapi.editor.actionSystem.TypedAction;
-
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 @Singleton
 public class TypedActionImpl extends TypedAction {

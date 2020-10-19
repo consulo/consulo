@@ -28,7 +28,7 @@ import com.intellij.packaging.ui.ArtifactEditorContext;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 import java.util.*;
 
 /**

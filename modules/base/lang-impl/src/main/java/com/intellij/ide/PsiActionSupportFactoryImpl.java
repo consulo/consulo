@@ -21,7 +21,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.ide.util.DeleteHandler;
 import javax.annotation.Nonnull;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 import javax.swing.*;
 
 /**

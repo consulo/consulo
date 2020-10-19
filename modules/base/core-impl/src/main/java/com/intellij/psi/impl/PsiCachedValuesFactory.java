@@ -10,8 +10,8 @@ import com.intellij.psi.util.ParameterizedCachedValueProvider;
 import com.intellij.util.CachedValuesFactory;
 import javax.annotation.Nonnull;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 
 /**
  * @author Dmitry Avdeev

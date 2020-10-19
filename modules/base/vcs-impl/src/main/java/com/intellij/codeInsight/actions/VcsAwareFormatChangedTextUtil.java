@@ -38,7 +38,7 @@ import com.intellij.util.containers.ContainerUtilRt;
 import com.intellij.util.diff.FilesTooBigForDiffException;
 import com.intellij.vcsUtil.VcsUtil;
 import javax.annotation.Nonnull;
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 import java.util.List;
 

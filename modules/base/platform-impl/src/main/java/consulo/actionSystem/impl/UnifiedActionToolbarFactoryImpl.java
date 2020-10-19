@@ -18,10 +18,9 @@ package consulo.actionSystem.impl;
 import com.intellij.openapi.actionSystem.ActionGroup;
 import com.intellij.openapi.actionSystem.ActionToolbar;
 import consulo.actionSystem.ActionToolbarFactory;
-import org.jetbrains.annotations.NonNls;
+import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
-import javax.inject.Singleton;
 
 /**
  * @author VISTALL

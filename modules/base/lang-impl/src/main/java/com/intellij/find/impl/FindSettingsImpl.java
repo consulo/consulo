@@ -26,9 +26,9 @@ import com.intellij.util.xmlb.annotations.AbstractCollection;
 import com.intellij.util.xmlb.annotations.Property;
 import com.intellij.util.xmlb.annotations.Tag;
 import com.intellij.util.xmlb.annotations.Transient;
+import jakarta.inject.Singleton;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
-import javax.inject.Singleton;
 
 import java.util.ArrayList;
 import java.util.List;

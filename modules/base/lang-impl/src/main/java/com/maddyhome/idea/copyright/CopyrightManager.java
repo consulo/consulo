@@ -43,13 +43,14 @@ import com.maddyhome.idea.copyright.util.NewFileTracker;
 import consulo.copyright.config.CopyrightFileConfig;
 import consulo.copyright.config.CopyrightFileConfigManager;
 import consulo.logging.Logger;
+import jakarta.inject.Singleton;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.inject.Inject;
-import javax.inject.Singleton;
+import jakarta.inject.Inject;
+
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedHashMap;

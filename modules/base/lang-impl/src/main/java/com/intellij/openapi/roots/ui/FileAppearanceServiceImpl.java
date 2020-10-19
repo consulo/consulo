@@ -24,9 +24,9 @@ import com.intellij.openapi.vfs.VirtualFileSystem;
 import com.intellij.openapi.vfs.ex.http.HttpFileSystem;
 import com.intellij.ui.SimpleColoredComponent;
 import consulo.vfs.ArchiveFileSystem;
+import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
-import javax.inject.Singleton;
 import java.io.File;
 
 @Singleton

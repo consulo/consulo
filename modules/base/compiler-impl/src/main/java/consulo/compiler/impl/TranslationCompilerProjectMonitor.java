@@ -29,13 +29,13 @@ import consulo.compiler.ModuleCompilerPathsManager;
 import consulo.logging.Logger;
 import consulo.roots.impl.ProductionContentFolderTypeProvider;
 import consulo.roots.impl.TestContentFolderTypeProvider;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;

@@ -31,12 +31,13 @@ import com.intellij.psi.SingleRootFileViewProvider;
 import com.intellij.psi.search.ProjectScope;
 import com.intellij.psi.util.PsiUtilBase;
 import com.intellij.util.messages.MessageBus;
+import jakarta.inject.Inject;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
-import javax.inject.Singleton;
+
+import jakarta.inject.Singleton;
 import java.util.*;
 
 @Singleton

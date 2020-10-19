@@ -18,8 +18,8 @@ import consulo.disposer.Disposer;
 import consulo.logging.Logger;
 
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
-import javax.inject.Singleton;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 
 import java.util.HashMap;
 import java.util.Map;

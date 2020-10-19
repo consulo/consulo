@@ -39,10 +39,10 @@ import com.intellij.util.io.DataExternalizer;
 import com.intellij.util.io.DataInputOutputUtil;
 import com.intellij.util.io.PersistentHashMapValueStorage;
 import consulo.logging.Logger;
+import jakarta.inject.Inject;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.inject.Inject;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;

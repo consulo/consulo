@@ -16,7 +16,7 @@ import consulo.disposer.Disposable;
 import consulo.util.dataholder.Key;
 import javax.annotation.Nonnull;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;

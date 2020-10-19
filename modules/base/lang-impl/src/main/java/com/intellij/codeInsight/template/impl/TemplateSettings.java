@@ -35,6 +35,8 @@ import com.intellij.util.xmlb.annotations.OptionTag;
 import consulo.codeInsight.template.impl.BundleLiveTemplateSetEP;
 import consulo.container.classloader.PluginClassLoader;
 import consulo.logging.Logger;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
@@ -42,8 +44,6 @@ import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;

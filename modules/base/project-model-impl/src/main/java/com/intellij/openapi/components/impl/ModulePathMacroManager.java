@@ -23,8 +23,8 @@ import com.intellij.openapi.components.ExpandMacroToPathMap;
 import com.intellij.openapi.components.PathMacroUtil;
 import com.intellij.openapi.module.Module;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 
 @Singleton
 public class ModulePathMacroManager extends BasePathMacroManager {

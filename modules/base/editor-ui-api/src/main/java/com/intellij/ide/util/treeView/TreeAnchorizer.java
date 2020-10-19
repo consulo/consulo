@@ -17,10 +17,10 @@ package com.intellij.ide.util.treeView;
 
 import com.intellij.util.containers.ContainerUtil;
 import consulo.application.internal.PerApplicationInstance;
+import jakarta.inject.Provider;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.inject.Provider;
 import java.util.Collection;
 import java.util.List;
 

@@ -16,8 +16,9 @@
 package com.intellij.conversion;
 
 import com.intellij.openapi.project.Project;
+import jakarta.inject.Singleton;
+
 import javax.annotation.Nonnull;
-import javax.inject.Singleton;
 
 import java.io.File;
 

@@ -21,8 +21,8 @@ import com.intellij.openapi.components.StoragePathMacros;
 import com.intellij.openapi.fileTypes.FileTypeManager;
 
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
-import javax.inject.Singleton;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 
 
 /**

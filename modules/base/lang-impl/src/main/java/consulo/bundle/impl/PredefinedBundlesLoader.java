@@ -31,8 +31,8 @@ import consulo.logging.Logger;
 import consulo.module.bundle.SdkPointerManagerImpl;
 
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
-import javax.inject.Provider;
+import jakarta.inject.Inject;
+import jakarta.inject.Provider;
 import java.util.ArrayList;
 import java.util.List;
 

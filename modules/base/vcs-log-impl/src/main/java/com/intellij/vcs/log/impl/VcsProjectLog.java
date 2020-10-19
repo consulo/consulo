@@ -36,8 +36,9 @@ import com.intellij.vcs.log.ui.VcsLogUiImpl;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
+
 import javax.swing.*;
 import java.util.Arrays;
 import java.util.Collection;

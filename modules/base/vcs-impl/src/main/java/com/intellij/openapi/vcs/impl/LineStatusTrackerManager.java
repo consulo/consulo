@@ -55,11 +55,11 @@ import com.intellij.util.concurrency.QueueProcessorRemovePartner;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.HashMap;
 import com.intellij.util.messages.MessageBusConnection;
+import jakarta.inject.Singleton;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
-import javax.inject.Provider;
-import javax.inject.Singleton;
+import jakarta.inject.Inject;
+import jakarta.inject.Provider;
 
 import java.nio.charset.Charset;
 import java.util.List;

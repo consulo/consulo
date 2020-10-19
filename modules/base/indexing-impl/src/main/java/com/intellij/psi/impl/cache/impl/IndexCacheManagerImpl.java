@@ -35,10 +35,10 @@ import com.intellij.util.CommonProcessors;
 import com.intellij.util.Processor;
 import com.intellij.util.indexing.FileBasedIndex;
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
-import javax.inject.Singleton;
+import jakarta.inject.Inject;
 
 import consulo.annotation.access.RequiredReadAction;
+import jakarta.inject.Singleton;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -10,8 +10,8 @@ import consulo.container.boot.ContainerPathManager;
 import consulo.logging.Logger;
 
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
-import javax.inject.Singleton;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import java.io.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 

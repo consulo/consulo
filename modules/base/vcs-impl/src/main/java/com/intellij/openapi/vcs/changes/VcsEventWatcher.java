@@ -28,8 +28,8 @@ import com.intellij.problems.ProblemListener;
 import com.intellij.util.messages.MessageBusConnection;
 
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
-import javax.inject.Singleton;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 
 /**
  * @author yole

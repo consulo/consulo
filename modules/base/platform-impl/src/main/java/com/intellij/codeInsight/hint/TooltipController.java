@@ -24,8 +24,9 @@ import com.intellij.openapi.util.Comparing;
 import com.intellij.ui.HintHint;
 import com.intellij.ui.LightweightHint;
 import com.intellij.ui.awt.RelativePoint;
+import jakarta.inject.Singleton;
+
 import javax.annotation.Nonnull;
-import javax.inject.Singleton;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;

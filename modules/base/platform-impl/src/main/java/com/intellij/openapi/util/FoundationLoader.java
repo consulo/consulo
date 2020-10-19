@@ -17,7 +17,7 @@ package com.intellij.openapi.util;
 
 import com.intellij.ui.mac.foundation.Foundation;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 /**
  * User: spLeaner

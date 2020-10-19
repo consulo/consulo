@@ -16,7 +16,6 @@
 
 package com.intellij.openapi.roots.ui.configuration.projectRoot;
 
-import consulo.disposer.Disposable;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.DefaultActionGroup;
@@ -38,15 +37,16 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.Consumer;
 import com.intellij.util.EventDispatcher;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.disposer.Disposable;
 import consulo.ide.settings.impl.SettingsSdksModel;
 import consulo.logging.Logger;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.collection.ArrayUtil;
+import jakarta.inject.Provider;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.inject.Provider;
 import javax.swing.*;
 import java.util.*;
 

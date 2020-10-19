@@ -42,7 +42,7 @@ import org.jdom.Element;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 import javax.swing.event.DocumentEvent;
 import java.io.IOException;
 import java.net.URL;

@@ -16,8 +16,6 @@
 package com.intellij.ide.actions;
 
 import com.intellij.CommonBundle;
-import com.intellij.openapi.application.Application;
-import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.SearchableConfigurable;
 import com.intellij.openapi.options.ShowSettingsUtil;
@@ -45,12 +43,12 @@ import consulo.roots.ui.configuration.DesktopProjectStructureDialog;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.impl.ModalityPerProjectEAPDescriptor;
+import jakarta.inject.Inject;
+import jakarta.inject.Provider;
+import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.inject.Inject;
-import javax.inject.Provider;
-import javax.inject.Singleton;
 import java.awt.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;

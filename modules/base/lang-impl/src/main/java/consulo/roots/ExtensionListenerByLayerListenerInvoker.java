@@ -28,8 +28,9 @@ import consulo.module.extension.MutableModuleExtension;
 import consulo.module.extension.impl.ModuleExtensionProviders;
 
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
-import javax.inject.Singleton;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
+
 import java.util.ArrayList;
 import java.util.List;
 

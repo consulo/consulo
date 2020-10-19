@@ -17,8 +17,9 @@
 package com.intellij.codeInsight.template;
 
 import com.intellij.psi.PsiElement;
+import jakarta.inject.Singleton;
+
 import javax.annotation.Nonnull;
-import javax.inject.Singleton;
 
 /**
  * @author yole

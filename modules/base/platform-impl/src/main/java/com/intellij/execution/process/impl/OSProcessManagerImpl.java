@@ -22,8 +22,8 @@ import consulo.logging.Logger;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.text.StringUtil;
 import javax.annotation.Nonnull;
-import javax.inject.Singleton;
 
+import jakarta.inject.Singleton;
 import org.jvnet.winp.WinProcess;
 import org.jvnet.winp.WinpException;
 

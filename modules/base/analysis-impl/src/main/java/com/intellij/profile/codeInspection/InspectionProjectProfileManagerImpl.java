@@ -37,8 +37,8 @@ import com.intellij.util.ui.UIUtil;
 import org.jdom.Element;
 
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
-import javax.inject.Singleton;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;

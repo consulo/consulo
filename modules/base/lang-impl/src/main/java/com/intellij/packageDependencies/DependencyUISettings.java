@@ -21,7 +21,7 @@ import com.intellij.openapi.extensions.Extensions;
 import com.intellij.packageDependencies.ui.PatternDialectProvider;
 import com.intellij.util.xmlb.XmlSerializerUtil;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 @Singleton
 @State(

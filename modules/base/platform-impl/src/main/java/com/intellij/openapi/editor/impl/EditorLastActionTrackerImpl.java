@@ -27,10 +27,10 @@ import com.intellij.openapi.editor.event.EditorMouseEvent;
 import com.intellij.openapi.editor.event.EditorMouseListener;
 import consulo.disposer.Disposer;
 import consulo.util.dataholder.Key;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 
 import javax.annotation.Nullable;
-import javax.inject.Inject;
-import javax.inject.Singleton;
 
 @Singleton
 public class EditorLastActionTrackerImpl extends EditorLastActionTracker implements Disposable,

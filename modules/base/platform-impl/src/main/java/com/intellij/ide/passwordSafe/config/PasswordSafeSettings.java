@@ -19,8 +19,7 @@ import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.components.StoragePathMacros;
-
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 /**
  * The password safe settings

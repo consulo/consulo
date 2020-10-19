@@ -26,7 +26,7 @@ import org.jdom.Document;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 import java.io.InputStream;
 import java.util.ArrayList;

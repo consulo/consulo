@@ -28,10 +28,10 @@ import consulo.backgroundTaskByVfsChange.BackgroundTaskByVfsChangeProvider;
 import consulo.backgroundTaskByVfsChange.BackgroundTaskByVfsChangeProviders;
 import consulo.backgroundTaskByVfsChange.BackgroundTaskByVfsChangeTask;
 import consulo.editor.notifications.EditorNotificationProvider;
+import jakarta.inject.Inject;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.inject.Inject;
 import java.util.List;
 
 /**

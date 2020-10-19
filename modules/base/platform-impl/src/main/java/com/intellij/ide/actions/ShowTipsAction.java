@@ -22,7 +22,7 @@ import consulo.ide.tipOfDay.TipOfDayManager;
 import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 public class ShowTipsAction extends AnAction implements DumbAware {
   private final TipOfDayManager myManager;

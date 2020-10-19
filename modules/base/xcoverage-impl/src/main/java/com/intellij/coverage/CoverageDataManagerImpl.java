@@ -52,13 +52,14 @@ import com.intellij.util.ui.UIUtil;
 import consulo.container.boot.ContainerPathManager;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
+import jakarta.inject.Inject;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.inject.Inject;
-import javax.inject.Singleton;
+
+import jakarta.inject.Singleton;
 import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;

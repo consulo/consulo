@@ -26,11 +26,11 @@ import com.intellij.psi.PsiManager;
 import com.intellij.ui.docking.DockManager;
 import consulo.fileEditor.impl.EditorWithProviderComposite;
 import consulo.ui.Component;
+import jakarta.inject.Inject;
+import jakarta.inject.Provider;
+import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
-import javax.inject.Provider;
-import javax.inject.Singleton;
 
 /**
  * @author VISTALL

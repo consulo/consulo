@@ -13,10 +13,10 @@ import consulo.ui.ValueGroup;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.LabeledLayout;
 import consulo.ui.layout.VerticalLayout;
+import jakarta.inject.Inject;
 import org.jetbrains.annotations.Nls;
 
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
 

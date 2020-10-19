@@ -54,13 +54,13 @@ import com.intellij.util.ui.PositionTracker;
 import com.intellij.util.ui.UIUtil;
 import consulo.platform.Platform;
 import consulo.ui.image.Image;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.InputEvent;

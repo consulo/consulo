@@ -42,7 +42,7 @@ import com.intellij.util.ui.UIUtil;
 import consulo.ui.UIAccess;
 
 import javax.annotation.Nonnull;
-import javax.inject.Provider;
+import jakarta.inject.Provider;
 
 /**
  * @author yole

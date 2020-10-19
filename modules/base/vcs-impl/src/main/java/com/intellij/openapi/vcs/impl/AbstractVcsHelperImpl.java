@@ -83,13 +83,14 @@ import com.intellij.util.ui.MessageCategory;
 import com.intellij.vcs.history.VcsHistoryProviderEx;
 import com.intellij.vcsUtil.VcsUtil;
 import consulo.awt.TargetAWT;
+import jakarta.inject.Inject;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.inject.Inject;
-import javax.inject.Singleton;
+
+import jakarta.inject.Singleton;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;

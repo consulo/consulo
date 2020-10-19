@@ -31,8 +31,8 @@ import com.intellij.openapi.util.registry.Registry;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;
 import consulo.annotation.access.RequiredWriteAction;
+import jakarta.inject.Inject;
 
-import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;

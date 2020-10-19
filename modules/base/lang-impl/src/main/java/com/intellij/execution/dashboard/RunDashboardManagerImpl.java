@@ -43,11 +43,11 @@ import com.intellij.ui.content.ContentManager;
 import com.intellij.ui.content.ContentUI;
 import com.intellij.util.messages.MessageBusConnection;
 import consulo.ui.image.Image;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;

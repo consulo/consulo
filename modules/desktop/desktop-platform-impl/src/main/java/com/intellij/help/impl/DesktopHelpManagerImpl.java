@@ -30,7 +30,7 @@ import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nullable;
 import javax.help.BadIDException;
 import javax.help.HelpSet;
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 import java.awt.*;
 import java.net.URL;
 import java.util.Collection;

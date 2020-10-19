@@ -20,9 +20,9 @@ import com.intellij.openapi.application.Application;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.Topic;
+import jakarta.inject.Inject;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 /**
  * @author yole

@@ -26,7 +26,7 @@ import com.intellij.util.containers.ContainerUtil;
 import consulo.application.ex.ApplicationEx2;
 import consulo.util.pointers.Named;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 import java.io.File;
 import java.util.List;
 

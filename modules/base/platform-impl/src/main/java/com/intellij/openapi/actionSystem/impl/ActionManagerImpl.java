@@ -55,7 +55,7 @@ import gnu.trove.TObjectIntHashMap;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 import javax.swing.Timer;
 import javax.swing.*;
 import java.awt.*;

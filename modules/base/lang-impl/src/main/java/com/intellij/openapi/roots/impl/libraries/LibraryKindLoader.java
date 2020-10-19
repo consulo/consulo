@@ -16,8 +16,7 @@
 package com.intellij.openapi.roots.impl.libraries;
 
 import com.intellij.openapi.roots.libraries.LibraryType;
-
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 /**
  * @author nik

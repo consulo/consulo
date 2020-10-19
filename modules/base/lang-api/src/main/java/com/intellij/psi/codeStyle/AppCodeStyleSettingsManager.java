@@ -18,8 +18,7 @@ package com.intellij.psi.codeStyle;
 
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
-
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 
 @Singleton

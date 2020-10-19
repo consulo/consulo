@@ -20,9 +20,9 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.problems.WolfTheProblemSolver;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.SimpleTextAttributes;
+import jakarta.inject.Inject;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 import java.awt.*;
 
 /**

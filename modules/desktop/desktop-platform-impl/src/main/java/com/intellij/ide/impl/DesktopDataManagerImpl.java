@@ -23,7 +23,6 @@ import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.keymap.impl.IdeKeyEventDispatcher;
 import com.intellij.openapi.project.Project;
-import consulo.util.dataholder.Key;
 import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.openapi.wm.WindowManager;
@@ -35,12 +34,13 @@ import consulo.ide.base.BaseDataManager;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
 import consulo.ui.ex.ToolWindowFloatingDecorator;
-import javax.annotation.Nonnull;
+import consulo.util.dataholder.Key;
+import jakarta.inject.Inject;
+import jakarta.inject.Provider;
+import jakarta.inject.Singleton;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.inject.Inject;
-import javax.inject.Provider;
-import javax.inject.Singleton;
 import javax.swing.*;
 import java.awt.*;
 

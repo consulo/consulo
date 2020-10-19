@@ -28,7 +28,7 @@ import com.intellij.xdebugger.settings.XDebuggerSettings;
 import gnu.trove.THashMap;
 import org.jdom.Element;
 import javax.annotation.Nonnull;
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 import java.util.*;
 

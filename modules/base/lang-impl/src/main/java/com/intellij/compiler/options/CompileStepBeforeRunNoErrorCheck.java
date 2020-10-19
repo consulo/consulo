@@ -31,7 +31,7 @@ import consulo.ui.UIAccess;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 /**
  * User: Vassiliy.Kudryashov

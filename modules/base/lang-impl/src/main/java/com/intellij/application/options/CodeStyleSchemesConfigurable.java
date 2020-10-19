@@ -30,10 +30,10 @@ import com.intellij.psi.codeStyle.CodeStyleSettings;
 import com.intellij.psi.codeStyle.CodeStyleSettingsProvider;
 import com.intellij.psi.impl.source.codeStyle.CodeStyleSchemeImpl;
 import consulo.ui.annotation.RequiredUIAccess;
+import jakarta.inject.Inject;
 import org.jetbrains.annotations.Nls;
 
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.HashSet;

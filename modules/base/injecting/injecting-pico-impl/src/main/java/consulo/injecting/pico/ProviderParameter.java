@@ -15,7 +15,7 @@
  */
 package consulo.injecting.pico;
 
-import javax.inject.Provider;
+import jakarta.inject.Provider;
 
 /**
  * @author VISTALL
