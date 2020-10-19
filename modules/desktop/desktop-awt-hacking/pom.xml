@@ -51,6 +51,7 @@
             <args>--add-exports=java.desktop/sun.awt.image=consulo.desktop.awt.hacking</args>
             <args>--add-exports=java.desktop/sun.java2d=consulo.desktop.awt.hacking</args>
             <args>--add-exports=java.desktop/sun.font=consulo.desktop.awt.hacking</args>
+            <args>--add-exports=java.desktop/java.awt.peer=consulo.desktop.awt.hacking</args>
           </compilerArgs>
         </configuration>
       </plugin>

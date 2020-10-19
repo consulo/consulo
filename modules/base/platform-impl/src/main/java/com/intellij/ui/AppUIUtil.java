@@ -28,8 +28,8 @@ import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.util.ImageLoader;
 import com.intellij.util.JBHiDPIScaledImage;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.awt.hacking.AWTAccessorHacking;
 import consulo.ui.style.StyleManager;
-import sun.awt.AWTAccessor;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -71,12 +71,7 @@ public class AppUIUtil {
       runnable.run();
     }
     else {
-      application.invokeLater(runnable, new Condition() {
-        @Override
-        public boolean value(Object o) {
-          return !project.isOpen() || project.isDisposed();
-        }
-      });
+      application.invokeLater(runnable, o -> !project.isOpen() || project.isDisposed());
     }
   }
 
@@ -192,6 +187,6 @@ public class AppUIUtil {
   }
 
   public static void setGraphicsConfiguration(@Nonnull Component comp, @Nullable GraphicsConfiguration gc) {
-    AWTAccessor.getComponentAccessor().setGraphicsConfiguration(comp, gc);
+    AWTAccessorHacking.setGraphicsConfiguration(comp, gc);
   }
 }

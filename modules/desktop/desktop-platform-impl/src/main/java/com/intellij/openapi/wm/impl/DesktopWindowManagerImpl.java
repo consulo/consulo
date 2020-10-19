@@ -25,6 +25,7 @@ import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.RoamingType;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
+import consulo.awt.hacking.AWTAccessorHacking;
 import consulo.logging.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
@@ -817,11 +818,7 @@ public final class DesktopWindowManagerImpl extends WindowManagerEx implements P
   private int updateFrameBounds(JFrame frame, IdeFrameEx ideFrame) {
     int extendedState = frame.getExtendedState();
     if (SystemInfo.isMacOSLion) {
-      ComponentPeer peer = AWTAccessor.getComponentAccessor().getPeer(frame);
-      if (peer instanceof FramePeer) {
-        // frame.state is not updated by jdk so get it directly from peer
-        extendedState = ((FramePeer)peer).getState();
-      }
+      extendedState = AWTAccessorHacking.getExtendedStateFromPeer(frame);
     }
     boolean isMaximized = extendedState == Frame.MAXIMIZED_BOTH || isFullScreenSupportedInCurrentOS() && ideFrame.isInFullScreen();
     boolean usePreviousBounds = isMaximized && myFrameBounds != null && frame.getBounds().contains(new Point((int)myFrameBounds.getCenterX(), (int)myFrameBounds.getCenterY()));

@@ -7,14 +7,13 @@ import com.intellij.openapi.util.SystemInfo;
 import com.intellij.util.FieldAccessor;
 import com.intellij.util.MethodInvocator;
 import com.intellij.util.ui.UIUtil;
+import consulo.awt.hacking.AWTAccessorHacking;
 import org.intellij.lang.annotations.JdkConstants;
-import sun.awt.AWTAccessor;
 
 import javax.annotation.Nullable;
 import javax.swing.event.MouseInputListener;
 import java.awt.*;
 import java.awt.event.*;
-import java.awt.peer.ComponentPeer;
 
 import static java.awt.Cursor.*;
 
@@ -321,9 +320,9 @@ abstract class WindowMouseListener extends MouseAdapter implements MouseInputLis
     }
 
     @Nullable
-    public static ComponentPeer getPeer(@Nullable Component comp) {
+    public static Object getPeer(@Nullable Component comp) {
       if (comp == null) return null;
-      return AWTAccessor.getComponentAccessor().getPeer(comp);
+      return AWTAccessorHacking.getPeer(comp);
     }
   }
 }

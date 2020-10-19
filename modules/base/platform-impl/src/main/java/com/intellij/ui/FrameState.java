@@ -20,14 +20,12 @@ import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.openapi.wm.WindowManager;
 import com.intellij.openapi.wm.ex.IdeFrameEx;
 import consulo.awt.TargetAWT;
-import sun.awt.AWTAccessor;
+import consulo.awt.hacking.AWTAccessorHacking;
 
 import javax.annotation.Nonnull;
 import java.awt.*;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
-import java.awt.peer.ComponentPeer;
-import java.awt.peer.FramePeer;
 
 /**
  * @author Sergey Malenkov
@@ -62,11 +60,7 @@ public class FrameState {
     if (component instanceof Frame) {
       state = ((Frame)component).getExtendedState();
       if (SystemInfo.isMacOSLion) {
-        // workaround: frame.state is not updated by jdk so get it directly from peer
-        ComponentPeer peer = AWTAccessor.getComponentAccessor().getPeer(component);
-        if (peer instanceof FramePeer) {
-          state = ((FramePeer)peer).getState();
-        }
+        state = AWTAccessorHacking.getExtendedStateFromPeer((Frame)component);
       }
     }
     return state;
