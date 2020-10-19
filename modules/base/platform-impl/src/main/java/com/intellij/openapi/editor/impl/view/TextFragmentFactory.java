@@ -16,21 +16,17 @@
 package com.intellij.openapi.editor.impl.view;
 
 import com.intellij.openapi.editor.impl.FontInfo;
+
 import javax.annotation.Nonnull;
-import sun.swing.SwingUtilities2;
+import java.awt.*;
 
 class TextFragmentFactory {
   public static TextFragment createTextFragment(@Nonnull char[] lineChars, int start, int end, boolean isRtl, @Nonnull FontInfo fontInfo) {
-    if (isRtl || fontInfo.getFont().hasLayoutAttributes() || isComplexText(lineChars, start, end)) {
+    if (isRtl || fontInfo.getFont().hasLayoutAttributes() || Font.textRequiresLayout(lineChars, start, end)) {
       return new ComplexTextFragment(lineChars, start, end, isRtl, fontInfo);
     }
     else {
       return new SimpleTextFragment(lineChars, start, end, fontInfo);
     }
-  }
-
-  private static boolean isComplexText(char[] chars, int start, int end) {
-    // replace with Font.textRequiresLayout in Java 9
-    return SwingUtilities2.isComplexLayout(chars, start, end);
   }
 }

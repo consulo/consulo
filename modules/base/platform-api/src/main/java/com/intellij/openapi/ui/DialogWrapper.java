@@ -49,11 +49,11 @@ import com.intellij.ui.components.JBOptionButton;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.util.Alarm;
 import com.intellij.util.ArrayUtil;
-import com.intellij.util.ReflectionUtil;
 import com.intellij.util.TimeoutUtil;
 import com.intellij.util.ui.*;
 import consulo.annotation.DeprecationInfo;
 import consulo.awt.TargetAWT;
+import consulo.awt.hacking.JComponentHacking;
 import consulo.desktop.ui.swing.LocalizeAction;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
@@ -942,13 +942,8 @@ public abstract class DialogWrapper {
     if (rootPane.getGlassPane() instanceof IdeGlassPane && rootPane.getClass() == JRootPane.class) {
       rootPane.setGlassPane(new JPanel()); // resizeable AbstractPopup but not DialogWrapperPeer
     }
-    ReflectionUtil.clearOwnFields(rootPane, field -> {
-      String clazz = field.getDeclaringClass().getName();
-      // keep AWT and Swing fields intact, except some
-      if (!clazz.startsWith("java.") && !clazz.startsWith("javax.")) return true;
-      String name = field.getName();
-      return "clientProperties".equals(name);
-    });
+
+    JComponentHacking.setClientProperties(rootPane, null);
   }
 
   public static void unregisterKeyboardActions(final Component rootPane) {

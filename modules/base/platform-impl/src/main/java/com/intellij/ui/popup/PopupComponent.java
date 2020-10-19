@@ -15,11 +15,12 @@
  */
 package com.intellij.ui.popup;
 
+import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.popup.JBPopup;
 import com.intellij.openapi.ui.popup.util.PopupUtil;
 import com.intellij.openapi.util.SystemInfo;
-import com.intellij.util.ReflectionUtil;
 import com.intellij.util.ui.UIUtil;
+import consulo.awt.hacking.PopupHacking;
 import consulo.logging.Logger;
 
 import javax.swing.*;
@@ -154,7 +155,7 @@ public interface PopupComponent {
       myJBPopup = jbPopup;
 
       if (SystemInfo.isMac && UIUtil.isUnderAquaLookAndFeel()) {
-        final Component c = (Component)ReflectionUtil.getField(Popup.class, myPopup, Component.class, "component");
+        final Component c = PopupHacking.getComponent(myPopup);
         c.setBackground(UIUtil.getPanelBackground());
       }
     }
@@ -168,17 +169,10 @@ public interface PopupComponent {
     public void hide(boolean dispose) {
       myPopup.hide();
 
-      Window wnd = getWindow();
-      if (wnd instanceof JWindow) {
-        JRootPane rootPane = ((JWindow)wnd).getRootPane();
-        if (rootPane != null) {
-          ReflectionUtil.resetField(rootPane, "clientProperties");
-          final Container cp = rootPane.getContentPane();
-          if (cp != null) {
-            cp.removeAll();
-          }
-        }
-      }
+      Window window = getWindow();
+      JRootPane rootPane = window instanceof RootPaneContainer ? ((RootPaneContainer)window).getRootPane() : null;
+      DialogWrapper.cleanupRootPane(rootPane);
+      DialogWrapper.cleanupWindowListeners(window);
     }
 
     public void show() {
@@ -190,7 +184,7 @@ public interface PopupComponent {
     }
 
     public Window getWindow() {
-      final Component c = (Component)ReflectionUtil.getField(Popup.class, myPopup, Component.class, "component");
+      final Component c = PopupHacking.getComponent(myPopup);
       return c instanceof JWindow ? (JWindow)c : null;
     }
 

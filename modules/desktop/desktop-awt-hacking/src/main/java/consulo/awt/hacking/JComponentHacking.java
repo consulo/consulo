@@ -15,6 +15,8 @@
  */
 package consulo.awt.hacking;
 
+import consulo.awt.hacking.util.FieldAccessor;
+
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
@@ -26,6 +28,8 @@ import java.lang.reflect.Method;
  * @since 2019-11-19
  */
 public class JComponentHacking {
+  private static final FieldAccessor<JComponent, Object> clientProperties = new FieldAccessor<>(JComponent.class, "clientProperties");
+
   private static Method ourSafelyGetGraphicsMethod;
 
   static {
@@ -47,6 +51,12 @@ public class JComponentHacking {
     }
     catch (IllegalAccessException | InvocationTargetException ignored) {
       return null;
+    }
+  }
+
+  public static void setClientProperties(JComponent component, Object value) {
+    if(clientProperties.isAvailable()) {
+      clientProperties.set(component, value);
     }
   }
 }

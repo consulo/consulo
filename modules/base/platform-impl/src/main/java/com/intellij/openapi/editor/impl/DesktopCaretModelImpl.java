@@ -3,7 +3,6 @@
 package com.intellij.openapi.editor.impl;
 
 import com.intellij.diagnostic.Dumpable;
-import consulo.disposer.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.editor.*;
 import com.intellij.openapi.editor.colors.EditorColors;
@@ -17,12 +16,13 @@ import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.util.EventDispatcher;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.EmptyClipboardOwner;
+import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import gnu.trove.TIntArrayList;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.awt.*;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
@@ -45,7 +45,7 @@ public class DesktopCaretModelImpl implements CaretModel, PrioritizedDocumentLis
   private final LinkedList<DesktopCaretImpl> myCarets = new LinkedList<>();
   @Nonnull
   private volatile DesktopCaretImpl myPrimaryCaret;
-  private DesktopCaretImpl myCurrentCaret; // active caret in the context of 'runForEachCaret' call
+  private final ThreadLocal<DesktopCaretImpl> myCurrentCaret = new ThreadLocal<>(); // active caret in the context of 'runForEachCaret' call
   private boolean myPerformCaretMergingAfterCurrentOperation;
   private boolean myVisualPositionUpdateScheduled;
   private boolean myEditorSizeValidationScheduled;
@@ -219,7 +219,7 @@ public class DesktopCaretModelImpl implements CaretModel, PrioritizedDocumentLis
   @Override
   @Nonnull
   public DesktopCaretImpl getCurrentCaret() {
-    DesktopCaretImpl currentCaret = myCurrentCaret;
+    DesktopCaretImpl currentCaret = myCurrentCaret.get();
     return ApplicationManager.getApplication().isDispatchThread() && currentCaret != null ? currentCaret : getPrimaryCaret();
   }
 
@@ -338,7 +338,7 @@ public class DesktopCaretModelImpl implements CaretModel, PrioritizedDocumentLis
   @Override
   public void runForEachCaret(@Nonnull final CaretAction action, final boolean reverseOrder) {
     DesktopEditorImpl.assertIsDispatchThread();
-    if (myCurrentCaret != null) {
+    if (myCurrentCaret.get() != null) {
       throw new IllegalStateException("Recursive runForEachCaret invocations are not allowed");
     }
     myCaretActionListeners.getMulticaster().beforeAllCaretsAction();
@@ -349,12 +349,12 @@ public class DesktopCaretModelImpl implements CaretModel, PrioritizedDocumentLis
           Collections.reverse(sortedCarets);
         }
         for (Caret caret : sortedCarets) {
-          myCurrentCaret = (DesktopCaretImpl)caret;
+          myCurrentCaret.set((DesktopCaretImpl)caret);
           action.perform(caret);
         }
       }
       finally {
-        myCurrentCaret = null;
+        myCurrentCaret.set(null);
       }
     });
     myCaretActionListeners.getMulticaster().afterAllCaretsAction();
@@ -585,7 +585,7 @@ public class DesktopCaretModelImpl implements CaretModel, PrioritizedDocumentLis
   }
 
   public boolean isIteratingOverCarets() {
-    return myCurrentCaret != null;
+    return myCurrentCaret.get() != null;
   }
 
   @Nonnull
@@ -598,7 +598,7 @@ public class DesktopCaretModelImpl implements CaretModel, PrioritizedDocumentLis
            ", perform caret merging: " +
            myPerformCaretMergingAfterCurrentOperation +
            ", current caret: " +
-           myCurrentCaret +
+           myCurrentCaret.get() +
            ", all carets: " +
            ContainerUtil.map(myCarets, DesktopCaretImpl::dumpState) +
            "]";

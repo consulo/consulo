@@ -15,18 +15,16 @@
  */
 package com.intellij.openapi.editor.impl.view;
 
-import com.intellij.util.ReflectionUtil;
 import consulo.awt.hacking.FontDesignMetricsHacking;
 import consulo.logging.Logger;
 import org.jetbrains.annotations.TestOnly;
-import sun.font.FontDesignMetrics;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.awt.*;
 import java.awt.font.FontRenderContext;
 import java.awt.font.GlyphVector;
-import java.lang.reflect.Method;
+import java.util.function.BiFunction;
 
 /**
  * Encapsulates logic related to font metrics. Mock instance can be used in tests to make them independent on font properties on particular
@@ -66,15 +64,15 @@ public abstract class FontLayoutService {
     // this flag is supported by JetBrains Runtime
     private static final int LAYOUT_NO_PAIRED_CHARS_AT_SCRIPT_SPLIT = 8;
 
-    private final Method myHandleCharWidthMethod;
-    private final Method myGetLatinCharWidthMethod;
+    private final BiFunction<FontMetrics, Integer, Integer> myHandleCharWidthMethod;
+    private final BiFunction<FontMetrics, Character, Float> myGetLatinCharWidthMethod;
 
     private DefaultFontLayoutService() {
-      myHandleCharWidthMethod = ReflectionUtil.getDeclaredMethod(FontDesignMetrics.class, "handleCharWidth", int.class);
+      myHandleCharWidthMethod = FontDesignMetricsHacking.handleCharWidth();
       if (myHandleCharWidthMethod == null) {
         LOG.warn("Couldn't access FontDesignMetrics.handleCharWidth method");
       }
-      myGetLatinCharWidthMethod = ReflectionUtil.getDeclaredMethod(FontDesignMetrics.class, "getLatinCharWidth", char.class);
+      myGetLatinCharWidthMethod = FontDesignMetricsHacking.getLatinCharWidth();
       if (myGetLatinCharWidthMethod == null) {
         LOG.warn("Couldn't access FontDesignMetrics.getLatinCharWidth method");
       }
@@ -100,20 +98,10 @@ public abstract class FontLayoutService {
     public float charWidth2D(@Nonnull FontMetrics fontMetrics, int codePoint) {
       if (FontDesignMetricsHacking.isFontDesignMetrics(fontMetrics)) {
         if (codePoint < 256 && myGetLatinCharWidthMethod != null) {
-          try {
-            return (float)myGetLatinCharWidthMethod.invoke(fontMetrics, (char)codePoint);
-          }
-          catch (Exception e) {
-            LOG.debug(e);
-          }
+          return myGetLatinCharWidthMethod.apply(fontMetrics, (char)codePoint);
         }
         if (myHandleCharWidthMethod != null) {
-          try {
-            return (float)myHandleCharWidthMethod.invoke(fontMetrics, codePoint);
-          }
-          catch (Exception e) {
-            LOG.debug(e);
-          }
+          return (float)myHandleCharWidthMethod.apply(fontMetrics, codePoint);
         }
       }
       return charWidth(fontMetrics, codePoint);
