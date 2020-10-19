@@ -1,4 +1,5 @@
 module consulo.logging.api {
+  requires transitive consulo.annotation;
   requires consulo.util.nodep;
 
   exports consulo.logging;

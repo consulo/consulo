@@ -17,7 +17,6 @@ package consulo.util.collection;
 
 import consulo.util.lang.ref.SoftReference;
 import gnu.trove.TObjectHashingStrategy;
-import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import java.lang.ref.ReferenceQueue;
@@ -69,7 +68,6 @@ final class SoftHashMap<K, V> extends RefHashMap<K, V> {
       return myHash;
     }
 
-    @NonNls
     @Override
     public String toString() {
       return "SoftHashMap.SoftKey(" + get() + ")";

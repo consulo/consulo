@@ -95,21 +95,24 @@ public class Java9ModuleInitializer {
 
     containerLogger.info("Java 9 modules: " + (ourConsuloModulePathBoot ? "enabled" : "disabled"));
     if (ourConsuloModulePathBoot) {
-      // apache
+      //toResolve.add("javax.inject");
+      toResolve.add("jsr305");
+
       //toResolve.add("org.apache.commons.compress");
       toResolve.add("org.apache.logging.log4j");
       // consulo internal
       toResolve.add("org.jdom");
-      //toResolve.add("jsr305");
       toResolve.add("gnu.trove");
       toResolve.add("kava.beans");
       // google
       //toResolve.add("com.google.common");
       //toResolve.add("com.google.gson");
 
+      toResolve.add("consulo.annotation");
       toResolve.add("consulo.logging.api");
-      toResolve.add("consulo.injecting.api");
+      //toResolve.add("consulo.injecting.api");
       toResolve.add("consulo.disposer.api");
+      toResolve.add("consulo.localize.api");
 
       toResolve.add("consulo.hacking.java.base");
 

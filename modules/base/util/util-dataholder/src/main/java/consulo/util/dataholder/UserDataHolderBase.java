@@ -17,7 +17,6 @@ package consulo.util.dataholder;
 
 import consulo.util.concurrent.atomic.AtomicFieldUpdater;
 import consulo.util.dataholder.keyFMap.KeyFMap;
-import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -46,7 +45,9 @@ public class UserDataHolderBase implements UserDataHolderEx, Cloneable {
     }
   }
 
-  @TestOnly
+  /**
+   * Test Only
+   */
   public String getUserDataString() {
     final KeyFMap userMap = getUserMap();
     final KeyFMap copyableMap = getUserData(COPYABLE_USER_MAP_KEY);

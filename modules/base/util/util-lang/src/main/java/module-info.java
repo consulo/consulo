@@ -1,5 +1,6 @@
 module consulo.util.lang {
   requires jdk.unsupported;
+  requires consulo.annotation;
   requires consulo.logging.api;
 
   exports consulo.util.lang;

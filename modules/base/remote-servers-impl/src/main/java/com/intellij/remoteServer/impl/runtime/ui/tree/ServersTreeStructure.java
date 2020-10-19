@@ -27,9 +27,9 @@ import com.intellij.remoteServer.runtime.ServerConnectionManager;
 import com.intellij.remoteServer.runtime.deployment.DeploymentRuntime;
 import com.intellij.remoteServer.runtime.deployment.DeploymentStatus;
 import com.intellij.remoteServer.runtime.deployment.DeploymentTask;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
-import icons.RemoteServersIcons;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -199,8 +199,8 @@ public class ServersTreeStructure extends AbstractTreeStructureBase {
     @Nullable
     private Image getStatusIcon(final ConnectionStatus status) {
       switch (status) {
-        case CONNECTED: return RemoteServersIcons.ResumeScaled;
-        case DISCONNECTED: return RemoteServersIcons.SuspendScaled;
+        case CONNECTED: return PlatformIconGroup.remoteServersResumeScaled();
+        case DISCONNECTED: return PlatformIconGroup.remoteServersSuspendScaled();
         default: return null;
       }
     }

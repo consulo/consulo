@@ -17,7 +17,6 @@ package consulo.util.dataholder;
 
 import consulo.annotation.DeprecationInfo;
 import consulo.util.dataholder.internal.KeyRegistry;
-import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -37,7 +36,7 @@ public class Key<T> {
 
   @Deprecated
   @DeprecationInfo("Use #create(name)")
-  public Key(@Nonnull @NonNls String name) {
+  public Key(@Nonnull String name) {
     myName = name;
     myIndex = ourRegistry.register(this);
   }
@@ -60,7 +59,7 @@ public class Key<T> {
 
   @Nonnull
   @SuppressWarnings("deprecation")
-  public static <T> Key<T> create(@Nonnull @NonNls String name) {
+  public static <T> Key<T> create(@Nonnull String name) {
     return new Key<>(name);
   }
 

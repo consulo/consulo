@@ -16,7 +16,6 @@
 package consulo.util.collection;
 
 import gnu.trove.TObjectHashingStrategy;
-import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import java.lang.ref.ReferenceQueue;
@@ -72,7 +71,6 @@ final class WeakHashMap<K, V> extends RefHashMap<K, V> {
       return myHash;
     }
 
-    @NonNls
     @Override
     public String toString() {
       Object t = get();

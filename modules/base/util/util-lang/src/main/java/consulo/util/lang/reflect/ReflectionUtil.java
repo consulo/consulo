@@ -17,7 +17,6 @@ package consulo.util.lang.reflect;
 
 import consulo.logging.Logger;
 import consulo.util.lang.ref.SimpleReference;
-import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -38,7 +37,7 @@ public class ReflectionUtil {
     return ancestor == descendant || ancestor.isAssignableFrom(descendant);
   }
 
-  public static <T> T getStaticFieldValue(@Nonnull Class objectClass, @Nullable Class<T> fieldType, @Nonnull @NonNls String fieldName) {
+  public static <T> T getStaticFieldValue(@Nonnull Class objectClass, @Nullable Class<T> fieldType, @Nonnull String fieldName) {
     try {
       final Field field = findAssignableField(objectClass, fieldType, fieldName);
       if (!Modifier.isStatic(field.getModifiers())) {

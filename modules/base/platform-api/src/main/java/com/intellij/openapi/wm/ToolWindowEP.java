@@ -22,7 +22,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Condition;
 import com.intellij.util.xmlb.annotations.Attribute;
 import consulo.localize.LocalizeValue;
-import consulo.localize.LocalizeValueConverter;
+import consulo.extensions.LocalizeValueConverter;
 import consulo.logging.Logger;
 import consulo.module.extension.condition.ExtensionPointBeanWithModuleExtensionCondition;
 

@@ -3,4 +3,5 @@ module consulo.annotation {
 
   exports consulo.annotation;
   exports consulo.annotation.access;
+  exports org.jetbrains.annotations;
 }

@@ -1,5 +1,6 @@
 module consulo.util.collection {
-  requires consulo.util.lang;
+  requires transitive consulo.annotation;
+  requires transitive consulo.util.lang;
 
   requires gnu.trove;
 

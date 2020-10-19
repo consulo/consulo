@@ -33,6 +33,7 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <java.level>11</java.level>
   </properties>
 
   <dependencies>
@@ -45,12 +46,6 @@
       <groupId>${project.groupId}</groupId>
       <artifactId>consulo-disposer-api</artifactId>
       <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>consulo-util-nodep</artifactId>
-      <version>${project.version}</version>
-      <optional>true</optional>
     </dependency>
   </dependencies>
 </project>

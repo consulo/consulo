@@ -16,7 +16,6 @@
 package consulo.util.lang;
 
 import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -29,13 +28,13 @@ import java.util.function.Function;
 public class StringUtil {
   @Nonnull
   @Contract(pure = true)
-  public static <T> String join(@Nonnull Collection<? extends T> items, @Nonnull Function<? super T, String> f, @Nonnull @NonNls String separator) {
+  public static <T> String join(@Nonnull Collection<? extends T> items, @Nonnull Function<? super T, String> f, @Nonnull String separator) {
     if (items.isEmpty()) return "";
     return join((Iterable<? extends T>)items, f, separator);
   }
 
   @Contract(pure = true)
-  public static String join(@Nonnull Iterable<?> items, @Nonnull @NonNls String separator) {
+  public static String join(@Nonnull Iterable<?> items, @Nonnull String separator) {
     StringBuilder result = new StringBuilder();
     for (Object item : items) {
       result.append(item).append(separator);
@@ -48,7 +47,7 @@ public class StringUtil {
 
   @Nonnull
   @Contract(pure = true)
-  public static <T> String join(@Nonnull Iterable<? extends T> items, @Nonnull Function<? super T, String> f, @Nonnull @NonNls String separator) {
+  public static <T> String join(@Nonnull Iterable<? extends T> items, @Nonnull Function<? super T, String> f, @Nonnull String separator) {
     final StringBuilder result = new StringBuilder();
     for (T item : items) {
       String string = f.apply(item);
@@ -186,7 +185,7 @@ public class StringUtil {
 
   @Nonnull
   @Contract(pure = true)
-  public static String trimStart(@Nonnull String s, @NonNls @Nonnull String prefix) {
+  public static String trimStart(@Nonnull String s, @Nonnull String prefix) {
     if (s.startsWith(prefix)) {
       return s.substring(prefix.length());
     }

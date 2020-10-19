@@ -18,6 +18,7 @@ package consulo.util.dataholder;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.concurrent.ConcurrentMap;
 
 /**
  * @author cdr
@@ -32,7 +33,7 @@ public interface UserDataHolderEx extends UserDataHolder {
   /**
    * Replaces (atomically) old value in the map with the new one
    * @return true if old value got replaced, false otherwise
-   * @see java.util.concurrent.ConcurrentMap#replace(Object, Object, Object)
+   * @see ConcurrentMap#replace(Object, Object, Object)
    */
   <T> boolean replace(@Nonnull Key<T> key, @Nullable T oldValue, @Nullable T newValue);
 }
