@@ -24,7 +24,6 @@ import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.SystemInfoRt;
 import com.intellij.openapi.util.io.win32.IdeaWin32;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.ui.AppUIUtil;
 import com.intellij.util.EnvironmentUtil;
 import com.intellij.util.PairConsumer;
 import com.intellij.util.containers.ContainerUtil;
@@ -88,7 +87,6 @@ public class StartupUtil {
       System.exit(ExitCodes.VERSION_INFO);
     }
 
-    AppUIUtil.updateFrameClass();
     newConfigFolder = !new File(ContainerPathManager.get().getConfigPath()).exists();
 
     ActivationResult result = lockSystemFolders(lockFactory, args);

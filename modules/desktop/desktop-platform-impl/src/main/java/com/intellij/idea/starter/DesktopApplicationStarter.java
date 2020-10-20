@@ -60,6 +60,7 @@ import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
 import java.awt.*;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.Set;
@@ -120,6 +121,8 @@ public class DesktopApplicationStarter extends ApplicationStarter {
 
     invokeAtUIAndWait(() -> {
       if (myPlatform.os().isXWindow()) {
+        updateFrameClass();
+
         String wmName = X11UiUtil.getWmName();
         LOG.info("WM detected: " + wmName);
         if (wmName != null) {
@@ -129,6 +132,20 @@ public class DesktopApplicationStarter extends ApplicationStarter {
     });
 
     super.initApplication(isHeadlessMode, args);
+  }
+
+  public static void updateFrameClass() {
+    try {
+      final Toolkit toolkit = Toolkit.getDefaultToolkit();
+      final Class<? extends Toolkit> aClass = toolkit.getClass();
+      if ("sun.awt.X11.XToolkit".equals(aClass.getName())) {
+        final Field awtAppClassName = aClass.getDeclaredField("awtAppClassName");
+        awtAppClassName.setAccessible(true);
+        awtAppClassName.set(toolkit, AppUIUtil.getFrameClass());
+      }
+    }
+    catch (Exception ignore) {
+    }
   }
 
   @Override

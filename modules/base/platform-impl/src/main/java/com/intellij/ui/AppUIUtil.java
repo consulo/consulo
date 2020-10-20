@@ -36,7 +36,6 @@ import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.io.File;
-import java.lang.reflect.Field;
 import java.util.List;
 
 /**
@@ -89,20 +88,6 @@ public class AppUIUtil {
     }
     else {
       application.invokeLater(runnable, condition);
-    }
-  }
-
-  public static void updateFrameClass() {
-    try {
-      final Toolkit toolkit = Toolkit.getDefaultToolkit();
-      final Class<? extends Toolkit> aClass = toolkit.getClass();
-      if ("sun.awt.X11.XToolkit".equals(aClass.getName())) {
-        final Field awtAppClassName = aClass.getDeclaredField("awtAppClassName");
-        awtAppClassName.setAccessible(true);
-        awtAppClassName.set(toolkit, getFrameClass());
-      }
-    }
-    catch (Exception ignore) {
     }
   }
 
