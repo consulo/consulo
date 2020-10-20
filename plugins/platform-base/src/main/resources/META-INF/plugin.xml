@@ -1448,9 +1448,6 @@
     <applicationService serviceInterface="com.intellij.find.impl.FindPopupScopeUIProvider"
                         serviceImplementation="com.intellij.find.impl.FindPopupScopeUIProviderImpl"/>
 
-    <applicationService serviceInterface="com.intellij.ide.RemoteDesktopService"
-                        serviceImplementation="com.intellij.ide.RemoteDesktopDetector"/>
-
     <projectService serviceInterface="consulo.psi.PsiPackageManager"
                     serviceImplementation="consulo.psi.impl.PsiPackageManagerImpl"/>
     <fileEditorProvider implementation="com.intellij.openapi.fileEditor.impl.http.HttpFileEditorProvider"/>

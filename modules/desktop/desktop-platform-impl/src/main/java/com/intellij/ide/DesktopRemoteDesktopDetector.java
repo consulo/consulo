@@ -32,8 +32,8 @@ import java.awt.desktop.UserSessionEvent;
 import java.awt.desktop.UserSessionListener;
 
 @Singleton
-public class RemoteDesktopDetector extends RemoteDesktopService {
-  private static final Logger LOG = Logger.getInstance(RemoteDesktopDetector.class);
+public class DesktopRemoteDesktopDetector extends RemoteDesktopService {
+  private static final Logger LOG = Logger.getInstance(DesktopRemoteDesktopDetector.class);
   private static final NotificationGroup NOTIFICATION_GROUP =
           new NotificationGroup("Remote Desktop", NotificationDisplayType.BALLOON, false);
 
@@ -41,7 +41,7 @@ public class RemoteDesktopDetector extends RemoteDesktopService {
   private volatile boolean myRemoteDesktopConnected;
 
   @Inject
-  private RemoteDesktopDetector() {
+  private DesktopRemoteDesktopDetector() {
     if (SystemInfo.isWindows) {
       Desktop.getDesktop().addAppEventListener(new UserSessionListener() {
         @Override

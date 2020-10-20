@@ -159,9 +159,9 @@
 
     <uiDebuggerExtension implementation="com.intellij.ui.debugger.extensions.PlaybackDebugger"/>
 
-    <applicationService serviceInterface="consulo.progress.util.ProgressDialogFactory" serviceImplementation="consulo.progress.util.impl.DesktopProgressDialogFactory" />
+    <applicationService serviceInterface="consulo.progress.util.ProgressDialogFactory" serviceImplementation="consulo.progress.util.impl.DesktopProgressDialogFactory"/>
 
-    <applicationService serviceInterface="consulo.actionSystem.ActionToolbarFactory" serviceImplementation="consulo.desktop.actionSystem.impl.DesktopActionToolbarFactory" />
+    <applicationService serviceInterface="consulo.actionSystem.ActionToolbarFactory" serviceImplementation="consulo.desktop.actionSystem.impl.DesktopActionToolbarFactory"/>
 
     <applicationService serviceInterface="com.intellij.ui.debugger.extensions.PlaybackDebugger$PlaybackDebuggerState"
                         serviceImplementation="com.intellij.ui.debugger.extensions.PlaybackDebugger$PlaybackDebuggerState"/>
@@ -198,7 +198,7 @@
 
     <applicationService serviceInterface="com.intellij.openapi.ui.FrameWrapperPeerFactory" serviceImplementation="consulo.desktop.impl.ui.FrameWrapperPeerFactoryImpl"/>
     <applicationService serviceInterface="consulo.ide.actions.AboutManager" serviceImplementation="consulo.desktop.impl.ide.actions.DesktopAboutManager"/>
-    <applicationService serviceInterface="consulo.ide.tipOfDay.TipOfDayManager" serviceImplementation="consulo.desktop.ide.tipOfDay.DesktopTipOfDayManager" />
+    <applicationService serviceInterface="consulo.ide.tipOfDay.TipOfDayManager" serviceImplementation="consulo.desktop.ide.tipOfDay.DesktopTipOfDayManager"/>
 
     <fileChooseDialogProvider implementation="consulo.fileChooser.impl.system.WindowsFileChooseDialogProvider"/>
     <fileChooseDialogProvider implementation="consulo.fileChooser.impl.system.MacFileChooseDialogProvider"/>
@@ -214,6 +214,7 @@
 
     <applicationService serviceInterface="com.intellij.openapi.wm.impl.SystemDock" serviceImplementation="consulo.wm.impl.DesktopSystemDockImpl"/>
 
+    <applicationService serviceInterface="com.intellij.ide.RemoteDesktopService" serviceImplementation="com.intellij.ide.DesktopRemoteDesktopDetector"/>
     <applicationService serviceInterface="consulo.wm.ApplicationIdeFocusManager" serviceImplementation="com.intellij.openapi.wm.impl.FocusManagerImpl" lazy="false"/>
     <applicationService serviceInterface="com.intellij.openapi.wm.WindowManager" serviceImplementation="com.intellij.openapi.wm.impl.DesktopWindowManagerImpl" lazy="false"/>
     <applicationService serviceInterface="com.intellij.openapi.ui.DialogWrapperPeerFactory" serviceImplementation="com.intellij.openapi.ui.impl.DialogWrapperPeerFactoryImpl"/>
@@ -224,8 +225,8 @@
     <projectService serviceInterface="com.intellij.openapi.wm.ToolWindowManager" serviceImplementation="com.intellij.openapi.wm.impl.DesktopToolWindowManagerImpl" lazy="false"/>
     <projectService serviceInterface="consulo.wm.ProjectIdeFocusManager" serviceImplementation="com.intellij.openapi.wm.impl.DesktopIdeFocusManagerImpl" lazy="false"/>
 
-    <backgroundPostStartupActivity implementation="com.intellij.diagnostic.WindowsDefenderCheckerActivity" />
-    <applicationService serviceImplementation="com.intellij.diagnostic.WindowsDefenderChecker" />
+    <backgroundPostStartupActivity implementation="com.intellij.diagnostic.WindowsDefenderCheckerActivity"/>
+    <applicationService serviceImplementation="com.intellij.diagnostic.WindowsDefenderChecker"/>
 
     <uiDecorator implementation="consulo.ide.ui.impl.mac.MacAquaUIDecorator"/>
     <uiDecorator implementation="consulo.ide.ui.impl.DefaultUIDecorator" order="last"/>
