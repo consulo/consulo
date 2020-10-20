@@ -30,6 +30,7 @@ import consulo.container.util.StatCollector;
 import consulo.localize.LocalizeManager;
 import consulo.localize.impl.LocalizeManagerImpl;
 import consulo.logging.Logger;
+import consulo.platform.Platform;
 import consulo.plugins.internal.PluginsInitializeInfo;
 import consulo.plugins.internal.PluginsLoader;
 import consulo.start.CommandLineArgs;
@@ -62,6 +63,8 @@ public abstract class ApplicationStarter {
 
   protected final SimpleReference<StartupProgress> mySplashRef = SimpleReference.create();
 
+  protected final Platform myPlatform;
+
   protected PluginsInitializeInfo myPluginsInitializeInfo;
 
   public ApplicationStarter(@Nonnull CommandLineArgs args) {
@@ -70,6 +73,8 @@ public abstract class ApplicationStarter {
     ourInstance = this;
 
     myArgs = args;
+
+    myPlatform = Platform.current();
 
     initApplication(false, args);
   }

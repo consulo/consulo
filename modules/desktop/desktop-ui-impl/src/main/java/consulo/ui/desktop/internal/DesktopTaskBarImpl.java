@@ -19,10 +19,9 @@ import consulo.annotation.ReviewAfterMigrationToJRE;
 import consulo.platform.Platform;
 import consulo.ui.TaskBar;
 import consulo.ui.Window;
-import consulo.ui.desktop.internal.taskBar.MacPreJava9TaskBarImpl;
+import consulo.ui.desktop.internal.taskBar.DefaultJava9TaskBarImpl;
+import consulo.ui.desktop.internal.taskBar.MacTaskBarImpl;
 import consulo.ui.desktop.internal.taskBar.Windows7TaskBarImpl;
-import consulo.ui.desktop.internal.taskBar.XTaskBarImpl;
-import consulo.ui.impl.DummyTaskBarImpl;
 
 import javax.annotation.Nonnull;
 
@@ -43,13 +42,10 @@ public class DesktopTaskBarImpl implements TaskBar {
       myDelegate = new Windows7TaskBarImpl();
     }
     else if(operatingSystem.isMac()) {
-      myDelegate = new MacPreJava9TaskBarImpl();
-    }
-    else if(operatingSystem.isXWindow()) {
-      myDelegate = new XTaskBarImpl();
+      myDelegate = new MacTaskBarImpl();
     }
     else {
-      myDelegate = new DummyTaskBarImpl();
+      myDelegate = new DefaultJava9TaskBarImpl();
     }
   }
 

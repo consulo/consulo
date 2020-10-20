@@ -31,7 +31,6 @@ import com.intellij.openapi.application.impl.DesktopApplicationImpl;
 import com.intellij.openapi.options.ShowSettingsUtil;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.AsyncResult;
-import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.openapi.wm.WindowManager;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
@@ -45,6 +44,8 @@ import consulo.awt.TargetAWT;
 import consulo.container.impl.classloader.PluginLoadStatistics;
 import consulo.container.plugin.PluginManager;
 import consulo.container.util.StatCollector;
+import consulo.desktop.impl.ide.MacTopMenuInitializer;
+import consulo.desktop.impl.ide.TopMenuInitializer;
 import consulo.desktop.start.splash.DesktopSplash;
 import consulo.desktop.startup.customize.FirstStartCustomizeUtil;
 import consulo.logging.Logger;
@@ -118,7 +119,7 @@ public class DesktopApplicationStarter extends ApplicationStarter {
     DesktopAppUIUtil.registerBundledFonts();
 
     invokeAtUIAndWait(() -> {
-      if (SystemInfo.isXWindow) {
+      if (myPlatform.os().isXWindow()) {
         String wmName = X11UiUtil.getWmName();
         LOG.info("WM detected: " + wmName);
         if (wmName != null) {
@@ -145,6 +146,12 @@ public class DesktopApplicationStarter extends ApplicationStarter {
         mySplashRef.set(null);
       }
     });
+
+    TopMenuInitializer.register(app);
+
+    if(myPlatform.os().isMac()) {
+      MacTopMenuInitializer.installAutoUpdateMenu();
+    }
 
     if (Boolean.getBoolean("consulo.first.start.testing") || newConfigFolder && !ApplicationProperties.isInSandbox()) {
       SwingUtilities.invokeLater(() -> FirstStartCustomizeUtil.showDialog(true));
