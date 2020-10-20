@@ -22,7 +22,7 @@ import com.intellij.openapi.application.ApplicationNamesInfo;
 import com.intellij.openapi.util.SystemInfo;
 import consulo.application.ApplicationProperties;
 import consulo.container.boot.ContainerPathManager;
-import consulo.wm.impl.SystemDockImpl;
+import consulo.wm.impl.DesktopSystemDockImpl;
 
 import java.io.File;
 import java.util.Locale;
@@ -32,7 +32,7 @@ import java.util.concurrent.Executors;
 /**
  * @author Denis Fokin
  */
-public class WinDockDelegate implements SystemDockImpl.Delegate {
+public class WinDockDelegate implements DesktopSystemDockImpl.Delegate {
   private ExecutorService myExecutorService = Executors.newSingleThreadExecutor(r -> new Thread(r, "Windows JumpList Updater"));
 
   @Override

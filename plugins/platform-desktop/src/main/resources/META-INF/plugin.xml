@@ -212,6 +212,8 @@
 
     <fileEditorProvider implementation="com.intellij.openapi.fileEditor.impl.text.DesktopPsiAwareTextEditorProvider"/>
 
+    <applicationService serviceInterface="com.intellij.openapi.wm.impl.SystemDock" serviceImplementation="consulo.wm.impl.DesktopSystemDockImpl"/>
+
     <applicationService serviceInterface="consulo.wm.ApplicationIdeFocusManager" serviceImplementation="com.intellij.openapi.wm.impl.FocusManagerImpl" lazy="false"/>
     <applicationService serviceInterface="com.intellij.openapi.wm.WindowManager" serviceImplementation="com.intellij.openapi.wm.impl.DesktopWindowManagerImpl" lazy="false"/>
     <applicationService serviceInterface="com.intellij.openapi.ui.DialogWrapperPeerFactory" serviceImplementation="com.intellij.openapi.ui.impl.DialogWrapperPeerFactoryImpl"/>

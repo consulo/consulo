@@ -21,7 +21,7 @@ import com.intellij.ide.ReopenProjectAction;
 import com.intellij.openapi.actionSystem.ActionPlaces;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import consulo.wm.impl.SystemDockImpl;
+import consulo.wm.impl.DesktopSystemDockImpl;
 
 import java.awt.*;
 
@@ -29,17 +29,13 @@ import java.awt.*;
  * @author VISTALL
  * @since 2018-09-01
  */
-public class Java9DockDelegateImpl implements SystemDockImpl.Delegate {
-  private final PopupMenu dockMenu = new PopupMenu("DockMenu");
+public class Java9DockDelegateImpl implements DesktopSystemDockImpl.Delegate {
   private final Menu recentProjectsMenu = new Menu("Recent projects");
 
   public Java9DockDelegateImpl() {
-    if (TaskbarWrapper.isTaskbarSupported()) {
-      TaskbarWrapper taskbar = TaskbarWrapper.getTaskbar();
-      if (taskbar.isSupported(TaskbarWrapper.FeatureWrapper.MENU)) {
-        taskbar.setMenu(dockMenu);
-      }
-    }
+    PopupMenu dockMenu = new PopupMenu("DockMenu");
+    Taskbar.getTaskbar().setMenu(dockMenu);
+    dockMenu.add(recentProjectsMenu);
   }
 
   @Override

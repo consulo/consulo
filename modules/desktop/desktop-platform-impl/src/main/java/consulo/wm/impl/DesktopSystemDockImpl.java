@@ -15,23 +15,22 @@
  */
 package consulo.wm.impl;
 
-import consulo.disposer.Disposable;
-import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.wm.impl.SystemDock;
-import com.intellij.ui.mac.MacDockDelegate;
 import com.intellij.ui.win.WinDockDelegate;
+import consulo.disposer.Disposable;
 import consulo.platform.Platform;
 import consulo.ui.taskbar.Java9DockDelegateImpl;
+import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
-import jakarta.inject.Singleton;
+import java.awt.*;
 
 /**
  * @author VISTALL
  * @since 2019-05-11
  */
 @Singleton
-public class SystemDockImpl extends SystemDock implements Disposable {
+public class DesktopSystemDockImpl extends SystemDock implements Disposable {
   public interface Delegate {
     void updateRecentProjectsMenu();
 
@@ -42,20 +41,11 @@ public class SystemDockImpl extends SystemDock implements Disposable {
   @Nonnull
   private final Delegate myDelegate;
 
-  public SystemDockImpl() {
-    if (Platform.current().isWebService()) {
-      myDelegate = () -> {
-      };
+  public DesktopSystemDockImpl() {
+    if (Taskbar.isTaskbarSupported() && Taskbar.getTaskbar().isSupported(Taskbar.Feature.MENU)) {
+      myDelegate = new Java9DockDelegateImpl();
     }
-    else if (SystemInfo.isMac) {
-      if (SystemInfo.isJavaVersionAtLeast(9, 0, 0)) {
-        myDelegate = new Java9DockDelegateImpl();
-      }
-      else {
-        myDelegate = new MacDockDelegate();
-      }
-    }
-    else if (SystemInfo.isWin7OrNewer) {
+    else if (Platform.current().os().isWindows7OrNewer()) {
       myDelegate = new WinDockDelegate();
     }
     else {

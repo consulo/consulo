@@ -2643,7 +2643,6 @@
 
 
     <applicationService serviceImplementation="com.intellij.ide.ScreenReaderSupportHandler" lazy="false"/>
-    <applicationService serviceInterface="com.intellij.openapi.wm.impl.SystemDock" serviceImplementation="consulo.wm.impl.SystemDockImpl"/>
 
     <projectService serviceInterface="com.intellij.problems.WolfTheProblemSolver" serviceImplementation="com.intellij.codeInsight.problems.WolfTheProblemSolverImpl" lazy="false"/>
 

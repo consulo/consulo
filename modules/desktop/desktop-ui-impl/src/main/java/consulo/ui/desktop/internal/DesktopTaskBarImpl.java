@@ -22,8 +22,10 @@ import consulo.ui.Window;
 import consulo.ui.desktop.internal.taskBar.DefaultJava9TaskBarImpl;
 import consulo.ui.desktop.internal.taskBar.MacTaskBarImpl;
 import consulo.ui.desktop.internal.taskBar.Windows7TaskBarImpl;
+import consulo.ui.impl.DummyTaskBarImpl;
 
 import javax.annotation.Nonnull;
+import java.awt.*;
 
 /**
  * @author VISTALL
@@ -32,20 +34,24 @@ import javax.annotation.Nonnull;
 public class DesktopTaskBarImpl implements TaskBar {
   public static final DesktopTaskBarImpl ourInstance = new DesktopTaskBarImpl();
 
-  private TaskBar myDelegate;
+  private final TaskBar myDelegate;
 
-  @ReviewAfterMigrationToJRE(9)
   private DesktopTaskBarImpl() {
     Platform.OperatingSystem operatingSystem = Platform.current().os();
 
-    if(operatingSystem.isWindows7OrNewer()) {
-      myDelegate = new Windows7TaskBarImpl();
-    }
-    else if(operatingSystem.isMac()) {
-      myDelegate = new MacTaskBarImpl();
+    if(Taskbar.isTaskbarSupported()) {
+      if (operatingSystem.isWindows7OrNewer()) {
+        myDelegate = new Windows7TaskBarImpl();
+      }
+      else if (operatingSystem.isMac()) {
+        myDelegate = new MacTaskBarImpl();
+      }
+      else {
+        myDelegate = new DefaultJava9TaskBarImpl();
+      }
     }
     else {
-      myDelegate = new DefaultJava9TaskBarImpl();
+      myDelegate = new DummyTaskBarImpl();
     }
   }
 

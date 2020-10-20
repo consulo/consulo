@@ -55,6 +55,9 @@
 
     <applicationService serviceInterface="com.intellij.openapi.fileChooser.FileChooserFactory"
                         serviceImplementation="consulo.fileChooser.impl.FileChooserFactoryImpl" />
+
+    <applicationService serviceInterface="com.intellij.openapi.wm.impl.SystemDock" serviceImplementation="consulo.web.wm.impl.WebSystemDockImpl" />
+
     <fileChooseDialogProvider implementation="consulo.web.fileChooser.impl.WebFileChooseDialogProvider" order="last"/>
 
     <fileEditorProvider implementation="consulo.web.fileEditor.impl.text.WebTextEditorProvider"/>

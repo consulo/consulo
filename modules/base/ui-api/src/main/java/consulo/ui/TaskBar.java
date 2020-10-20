@@ -18,6 +18,7 @@ package consulo.ui;
 import consulo.ui.shared.ColorValue;
 
 import javax.annotation.Nonnull;
+import java.util.List;
 
 /**
  * @author VISTALL
