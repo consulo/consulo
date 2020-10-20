@@ -190,11 +190,10 @@ public class Messages {
 
   public static boolean canShowMacSheetPanel() {
     return SystemInfo.isMac && !isApplicationInUnitTestOrHeadless() && Registry.is("ide.mac.message.dialogs.as.sheets");
-    //&& !DialogWrapper.isMultipleModalDialogs();
   }
 
   public static boolean isMacSheetEmulation() {
-    return SystemInfo.isMac && Registry.is("ide.mac.message.dialogs.as.sheets") && Registry.is("ide.mac.message.sheets.java.emulation");
+    return false;
   }
 
   /**

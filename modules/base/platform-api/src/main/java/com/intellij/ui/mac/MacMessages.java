@@ -18,7 +18,6 @@ package com.intellij.ui.mac;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
-import com.intellij.openapi.util.registry.Registry;
 import consulo.ui.Window;
 
 import javax.annotation.Nonnull;
@@ -38,7 +37,7 @@ public abstract class MacMessages {
                                             @Nullable DialogWrapper.DoNotAskOption doNotAskOption);
 
   public static MacMessages getInstance() {
-    return Registry.is("ide.mac.message.sheets.java.emulation.dialogs") ? ServiceManager.getService(MacMessagesEmulation.class) : ServiceManager.getService(MacMessages.class);
+    return  ServiceManager.getService(MacMessages.class);
   }
 
   /**

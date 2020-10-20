@@ -23,16 +23,15 @@ import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.openapi.wm.WindowManager;
 import com.intellij.openapi.wm.impl.ModalityHelper;
 import com.intellij.ui.mac.MacMessageException;
-import com.intellij.ui.mac.MacMessagesEmulation;
+import com.intellij.ui.mac.MacMessages;
 import com.intellij.ui.mac.foundation.MacUtil;
 import com.intellij.util.ui.UIUtil;
 import consulo.awt.TargetAWT;
 import consulo.ui.image.Image;
+import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import jakarta.inject.Singleton;
 import javax.swing.*;
 import java.awt.*;
 
@@ -40,7 +39,7 @@ import java.awt.*;
  * Created by Denis Fokin
  */
 @Singleton
-public class JBMacMessages extends MacMessagesEmulation {
+public class JBMacMessages extends MacMessages {
 
   @Override
   public int showYesNoCancelDialog(@Nonnull String title,
