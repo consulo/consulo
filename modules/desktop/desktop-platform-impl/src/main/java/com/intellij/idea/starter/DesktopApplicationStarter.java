@@ -157,10 +157,7 @@ public class DesktopApplicationStarter extends ApplicationStarter {
       SwingUtilities.invokeLater(() -> FirstStartCustomizeUtil.showDialog(true));
     }
     else {
-      SwingUtilities.invokeLater(() -> SystemDock.getInstance().updateMenu());
-
-      // if OS has dock, RecentProjectsManager will be already created, but not all OS have dock, so, we trigger creation here to ensure that RecentProjectsManager app listener will be added
-      RecentProjectsManager.getInstance();
+      SystemDock.getInstance().updateMenu();
 
       // Event queue should not be changed during initialization of application components.
       // It also cannot be changed before initialization of application components because IdeEventQueue uses other
@@ -168,7 +165,7 @@ public class DesktopApplicationStarter extends ApplicationStarter {
       DesktopWindowManagerImpl windowManager = (DesktopWindowManagerImpl)WindowManager.getInstance();
       IdeEventQueue.getInstance().setWindowManager(windowManager);
 
-      RecentProjectsManagerBase recentProjectsManager = RecentProjectsManagerBase.getInstanceEx();
+      RecentProjectsManagerBase recentProjectsManager = (RecentProjectsManagerBase)RecentProjectsManager.getInstance();
 
       if (recentProjectsManager.willReopenProjectOnStart() && !args.isNoRecentProjects()) {
         app.invokeLater(windowManager::showFrame, ModalityState.any());

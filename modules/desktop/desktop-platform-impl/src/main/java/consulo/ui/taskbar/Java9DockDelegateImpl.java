@@ -21,6 +21,7 @@ import com.intellij.ide.ReopenProjectAction;
 import com.intellij.openapi.actionSystem.ActionPlaces;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.application.Application;
 import consulo.wm.impl.DesktopSystemDockImpl;
 
 import java.awt.*;
@@ -40,15 +41,17 @@ public class Java9DockDelegateImpl implements DesktopSystemDockImpl.Delegate {
 
   @Override
   public void updateRecentProjectsMenu() {
-    RecentProjectsManager projectsManager = RecentProjectsManager.getInstance();
+    Application.get().getLastUIAccess().give(() -> {
+      RecentProjectsManager projectsManager = RecentProjectsManager.getInstance();
 
-    final AnAction[] recentProjectActions = projectsManager.getRecentProjectsActions(false);
-    recentProjectsMenu.removeAll();
+      final AnAction[] recentProjectActions = projectsManager.getRecentProjectsActions(false);
+      recentProjectsMenu.removeAll();
 
-    for (final AnAction action : recentProjectActions) {
-      MenuItem menuItem = new MenuItem(((ReopenProjectAction)action).getProjectName());
-      menuItem.addActionListener(e -> action.actionPerformed(AnActionEvent.createFromAnAction(action, null, ActionPlaces.DOCK_MENU, DataManager.getInstance().getDataContext((Component)null))));
-      recentProjectsMenu.add(menuItem);
-    }
+      for (final AnAction action : recentProjectActions) {
+        MenuItem menuItem = new MenuItem(((ReopenProjectAction)action).getProjectName());
+        menuItem.addActionListener(e -> action.actionPerformed(AnActionEvent.createFromAnAction(action, null, ActionPlaces.DOCK_MENU, DataManager.getInstance().getDataContext((Component)null))));
+        recentProjectsMenu.add(menuItem);
+      }
+    });
   }
 }

@@ -58,10 +58,6 @@ import java.util.*;
 public abstract class RecentProjectsManagerBase extends RecentProjectsManager implements PersistentStateComponent<RecentProjectsManagerBase.State> {
   private static final int MAX_PROJECTS_IN_MAIN_MENU = 6;
 
-  public static RecentProjectsManagerBase getInstanceEx() {
-    return (RecentProjectsManagerBase)RecentProjectsManager.getInstance();
-  }
-
   public static boolean isFileSystemPath(String path) {
     return path.indexOf('/') != -1 || path.indexOf('\\') != -1;
   }
