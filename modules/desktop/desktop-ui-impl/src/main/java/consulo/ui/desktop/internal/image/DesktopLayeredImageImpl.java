@@ -37,7 +37,7 @@ public class DesktopLayeredImageImpl extends JBUI.RasterJBIcon implements Image,
   private final Image[] myImages;
   private int[] myCachedSize;
 
-  public DesktopLayeredImageImpl(Image[] images) {
+  public DesktopLayeredImageImpl(@Nonnull Image[] images) {
     myImages = images;
   }
 

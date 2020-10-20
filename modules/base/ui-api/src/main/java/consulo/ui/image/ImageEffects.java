@@ -21,6 +21,7 @@ import consulo.ui.image.canvas.Canvas2D;
 import consulo.ui.shared.ColorValue;
 
 import javax.annotation.Nonnull;
+import java.util.Objects;
 import java.util.function.Consumer;
 
 /**
@@ -32,6 +33,9 @@ public final class ImageEffects {
   public static Image layered(@Nonnull Image... images) {
     if (images.length == 0) {
       throw new IllegalArgumentException("empty array");
+    }
+    for (Image image : images) {
+      Objects.requireNonNull(image);
     }
     return UIInternal.get()._ImageEffects_layered(images);
   }

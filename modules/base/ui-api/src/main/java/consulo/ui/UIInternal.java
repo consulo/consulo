@@ -145,7 +145,7 @@ public abstract class UIInternal {
 
   public abstract Image _Image_lazy(Supplier<Image> imageSupplier);
 
-  public abstract Image _ImageEffects_layered(Image[] images);
+  public abstract Image _ImageEffects_layered(@Nonnull Image[] images);
 
   public abstract Image _ImageEffects_transparent(@Nonnull Image original, float alpha);
 
