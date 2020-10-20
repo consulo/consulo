@@ -73,7 +73,7 @@ public abstract class ProgressStripeIcon implements Icon, Image {
 
   @Override
   public int getIconHeight() {
-    return getHeight();
+    return getScaledHeight();
   }
 
   @Override
