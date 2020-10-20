@@ -27,13 +27,13 @@ import consulo.annotation.access.RequiredWriteAction;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import org.jdom.Element;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import jakarta.inject.Inject;
-import jakarta.inject.Singleton;
 import java.io.IOException;
 
 /**
@@ -51,6 +51,7 @@ public class DefaultProjectFactoryImpl extends DefaultProjectFactory implements 
   public DefaultProjectFactoryImpl(@Nonnull Application application, @Nonnull ProjectManager projectManager) {
     myDefaultProject = new DefaultProjectImpl(application, projectManager, "", application.isUnitTestMode());
     myDefaultProject.initNotLazyServices(null);
+    myDefaultProject.setInitialized();
   }
 
   @TestOnly

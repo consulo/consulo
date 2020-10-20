@@ -29,6 +29,7 @@ public class DefaultProjectImpl extends ProjectImpl {
   private static final String TEMPLATE_PROJECT_NAME = "Default (Template) Project";
 
   private Element myStateElement;
+  private boolean myInitialized;
 
   DefaultProjectImpl(@Nonnull Application application, @Nonnull ProjectManager manager, @Nonnull String filePath, boolean optimiseTestLoadSpeed) {
     super(application, manager, filePath, optimiseTestLoadSpeed, TEMPLATE_PROJECT_NAME, false);
@@ -41,6 +42,15 @@ public class DefaultProjectImpl extends ProjectImpl {
 
   public void setStateElement(@Nullable Element stateElement) {
     myStateElement = stateElement;
+  }
+
+  public void setInitialized() {
+    myInitialized = true;
+  }
+
+  @Override
+  public boolean isInitialized() {
+    return myInitialized;
   }
 
   @Override

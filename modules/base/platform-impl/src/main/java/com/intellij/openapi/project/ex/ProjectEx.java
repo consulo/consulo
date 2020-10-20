@@ -15,14 +15,16 @@
  */
 package com.intellij.openapi.project.ex;
 
-import consulo.components.impl.stores.IProjectStore;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.messages.Topic;
+import consulo.components.impl.stores.IProjectStore;
+
 import javax.annotation.Nonnull;
 
 public interface ProjectEx extends Project {
   interface ProjectSaved {
     Topic<ProjectSaved> TOPIC = Topic.create("SaveProjectTopic", ProjectSaved.class, Topic.BroadcastDirection.NONE);
+
     void saved(@Nonnull final Project project);
   }
 

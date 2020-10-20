@@ -73,7 +73,7 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
 
   @Nonnull
   private final ApplicationEx myApplication;
-  private final ProjectManager myManager;
+  private final ProjectManagerEx myManager;
   @Nonnull
   private final String myDirPath;
 
@@ -112,7 +112,7 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
 
     myOptimiseTestLoadSpeed = isOptimiseTestLoadSpeed;
 
-    myManager = manager;
+    myManager = (ProjectManagerEx)manager;
 
     myName = projectName;
   }
@@ -199,12 +199,15 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
 
   @Override
   public boolean isOpen() {
-    return ProjectManagerEx.getInstanceEx().isProjectOpened(this);
+    return myManager.isProjectOpened(this);
   }
 
   @Override
   public boolean isInitialized() {
-    return isOpen() && !isDisposed() && StartupManagerEx.getInstanceEx(this).startupActivityPassed();
+    if(isDisposed()) {
+      return false;
+    }
+    return isOpen() && StartupManagerEx.getInstanceEx(this).startupActivityPassed();
   }
 
   @Override
@@ -285,6 +288,11 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
   public void save() {
     if (myApplication.isDoNotSave()) {
       // no need to save
+      return;
+    }
+
+    if(!isInitialized()) {
+      LOG.warn(new Exception("Calling Project#save() but project not initialized"));
       return;
     }
 
@@ -372,7 +380,7 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
     assert myApplication.isWriteAccessAllowed();  // dispose must be under write action
 
     // can call dispose only via com.intellij.ide.impl.ProjectUtil.closeAndDispose()
-    LOG.assertTrue(myApplication.isUnitTestMode() || !ProjectManagerEx.getInstanceEx().isProjectOpened(this));
+    LOG.assertTrue(myApplication.isUnitTestMode() || !myManager.isProjectOpened(this));
 
     LOG.assertTrue(!isDisposed());
     if (myProjectManagerListener != null) {
@@ -422,11 +430,6 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
       LOG.assertTrue(project == ProjectImpl.this);
       ProjectImpl.this.projectClosed();
     }
-  }
-
-  @Override
-  public boolean isDefault() {
-    return false;
   }
 
   @Override
