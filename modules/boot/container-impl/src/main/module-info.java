@@ -4,6 +4,8 @@ module consulo.container.impl {
 
   // add temp dependency
   requires transitive java.scripting;
+  // this depedency fix batik runtime
+  requires transitive jdk.xml.dom;
 
   exports consulo.container.impl;
   exports consulo.container.impl.classloader;
