@@ -46,7 +46,7 @@ public class DefaultJava9TaskBarImpl implements TaskBar {
   }
 
   @Override
-  public final boolean setProgress(@Nonnull Window window, Object processId, ProgressScheme scheme, double value, boolean isOk) {
+  public boolean setProgress(@Nonnull Window window, Object processId, ProgressScheme scheme, double value, boolean isOk) {
     myCurrentProcessId = processId;
 
     if (Math.abs(myLastValue - value) < 0.02d) {
@@ -66,7 +66,7 @@ public class DefaultJava9TaskBarImpl implements TaskBar {
   }
 
   @Override
-  public final boolean hideProgress(@Nonnull Window window, Object processId) {
+  public boolean hideProgress(@Nonnull Window window, Object processId) {
     if (myCurrentProcessId != null && !myCurrentProcessId.equals(processId)) {
       return false;
     }
@@ -115,7 +115,7 @@ public class DefaultJava9TaskBarImpl implements TaskBar {
   }
 
   @Override
-  public final void setOkBadge(@Nonnull Window window, boolean visible) {
+  public void setOkBadge(@Nonnull Window window, boolean visible) {
     if (!isValid(window)) {
       return;
     }
