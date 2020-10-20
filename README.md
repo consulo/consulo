@@ -22,7 +22,7 @@ If you can't describe issue, you can use our [forum](https://discuss.consulo.io/
 First of all, you need those tools:
 
  * Maven 3.3+
- * JDK 11
+ * JDK 11+
 
 Then execute from command line:
 

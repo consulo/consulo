@@ -46,8 +46,6 @@
     <module>modules/web/web-lang-impl</module>
     <module>plugins/platform-web</module>
 
-    <module>jre9-stub</module>
-
     <module>modules/boot/bootstrap</module>
     <module>modules/boot/container-api</module>
     <module>modules/boot/container-impl</module>

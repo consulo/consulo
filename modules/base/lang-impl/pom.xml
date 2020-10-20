@@ -93,13 +93,6 @@
       <optional>true</optional>
     </dependency>
 
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>jre9-stub</artifactId>
-      <version>${project.version}</version>
-      <scope>provided</scope>
-    </dependency>
-
     <!--external dependencies-->
     <dependency>
       <groupId>org.apache.velocity</groupId>
