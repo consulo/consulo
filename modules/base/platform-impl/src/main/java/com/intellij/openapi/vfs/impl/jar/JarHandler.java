@@ -251,7 +251,7 @@ public class JarHandler extends ZipHandler {
     private final long myFileLength;
 
     private static final PersistentHashMap<String, CacheLibraryInfo> ourCachedLibraryInfo;
-    private static final int VERSION = 1 + (PersistentHashMapValueStorage.COMPRESSION_ENABLED ? 15 : 0);
+    private static final int VERSION = 2 + (PersistentHashMapValueStorage.COMPRESSION_ENABLED ? 15 : 0);
 
     static {
       File jarsDir = new File(getJarsDir());
