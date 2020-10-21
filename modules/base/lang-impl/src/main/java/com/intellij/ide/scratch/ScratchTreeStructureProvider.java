@@ -39,6 +39,7 @@ import com.intellij.util.containers.JBIterable;
 import consulo.container.boot.ContainerPathManager;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.util.dataholder.Key;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -204,7 +205,7 @@ public class ScratchTreeStructureProvider implements TreeStructureProvider, Dumb
     @Override
     protected void update(@Nonnull PresentationData presentation) {
       presentation.setPresentableText(getValue());
-      presentation.setIcon(ScratchFileService.getScratchIcon());
+      presentation.setIcon(PlatformIconGroup.scopeScratches());
     }
 
     @Override

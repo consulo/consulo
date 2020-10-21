@@ -32,6 +32,7 @@
     <navbar implementation="com.intellij.ide.scratch.ScratchFileServiceImpl$NavBarExtension"/>
     <nonProjectFileWritingAccessExtension implementation="com.intellij.ide.scratch.ScratchFileServiceImpl$AccessExtension"/>
     <editorTabTitleProvider implementation="com.intellij.ide.scratch.ScratchFileServiceImpl$FilePresentation"/>
+    <iconDescriptorUpdater implementation="com.intellij.ide.scratch.ScratchFileServiceImpl$FilePresentation"/>
     <indexedRootsContributor implementation="com.intellij.ide.scratch.ScratchFileServiceImpl$IndexSetContributor"/>
     <usageTypeProvider implementation="com.intellij.ide.scratch.ScratchFileServiceImpl$UsageTypeExtension" order="last"/>
     <useScopeEnlarger implementation="com.intellij.ide.scratch.ScratchFileServiceImpl$UseScopeExtension"/>

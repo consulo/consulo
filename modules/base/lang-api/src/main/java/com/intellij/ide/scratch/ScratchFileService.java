@@ -15,17 +15,13 @@
  */
 package com.intellij.ide.scratch;
 
-import com.intellij.icons.AllIcons;
 import com.intellij.lang.Language;
 import com.intellij.lang.PerFileMappings;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.vfs.VirtualFile;
-import consulo.ui.image.Image;
-import consulo.ui.image.ImageEffects;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.io.IOException;
 
 public abstract class ScratchFileService {
@@ -60,10 +56,5 @@ public abstract class ScratchFileService {
   @Deprecated
   public static boolean isInScratchRoot(@Nullable VirtualFile file) {
     return findRootType(file) != null;
-  }
-
-  @Nonnull
-  public static Image getScratchIcon() {
-    return ImageEffects.layered(AllIcons.Debugger.Console, AllIcons.Actions.Scratch);
   }
 }

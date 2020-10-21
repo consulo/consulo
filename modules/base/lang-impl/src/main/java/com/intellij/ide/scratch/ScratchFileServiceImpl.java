@@ -62,13 +62,12 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.container.boot.ContainerPathManager;
 import consulo.ide.IconDescriptor;
 import consulo.ide.IconDescriptorUpdater;
+import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import jakarta.inject.Inject;
-
 import java.io.IOException;
 import java.util.Collection;
 import java.util.HashSet;
@@ -245,7 +244,6 @@ public class ScratchFileServiceImpl extends ScratchFileService implements Persis
         iconDescriptor.setMainIcon(rootType.substituteIcon(element.getProject(), virtualFile));
       }
     }
-
 
     @Nullable
     @Override

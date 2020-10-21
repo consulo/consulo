@@ -7,6 +7,8 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.search.scope.packageSet.AbstractPackageSet;
 import com.intellij.psi.search.scope.packageSet.NamedScope;
 import com.intellij.psi.search.scope.packageSet.NamedScopesHolder;
+import consulo.platform.base.icon.PlatformIconGroup;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -16,7 +18,7 @@ public class ScratchesNamedScope extends NamedScope {
   }
 
   public ScratchesNamedScope() {
-    super(scratchesAndConsoles(), ScratchFileService.getScratchIcon(), new AbstractPackageSet(scratchesAndConsoles()) {
+    super(scratchesAndConsoles(), PlatformIconGroup.scopeScratches(), new AbstractPackageSet(scratchesAndConsoles()) {
       @Override
       public boolean contains(@Nonnull VirtualFile file, NamedScopesHolder holder) {
         return ScratchesNamedScope.contains(holder.getProject(), file);
