@@ -398,6 +398,10 @@
       <artifactId>pngj</artifactId>
     </dependency>
     <dependency>
+      <groupId>org.jvnet.winp</groupId>
+      <artifactId>winp</artifactId>
+    </dependency>
+    <dependency>
       <groupId>org.jdom</groupId>
       <artifactId>jdom-xpath-jaxen</artifactId>
     </dependency>

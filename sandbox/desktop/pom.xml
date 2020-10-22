@@ -342,5 +342,9 @@
       <groupId>org.jdom</groupId>
       <artifactId>jdom-xpath-jaxen</artifactId>
     </dependency>
+    <dependency>
+      <groupId>org.jvnet.winp</groupId>
+      <artifactId>winp</artifactId>
+    </dependency>
   </dependencies>
 </project>
