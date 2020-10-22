@@ -60,7 +60,7 @@ public class FSRecords {
   private static final boolean ourStoreRootsSeparately = SystemProperties.getBooleanProperty("idea.store.roots.separately", false);
 
   //TODO[anyone] when bumping the version, please delete `ourSymlinkTargetAttr_old` and use it's value for `ourSymlinkTargetAttr`
-  private static final int VERSION = 53 +
+  private static final int VERSION = 54 +
                                      (WE_HAVE_CONTENT_HASHES ? 0x10 : 0) +
                                      (IOUtil.BYTE_BUFFERS_USE_NATIVE_BYTE_ORDER ? 0x37 : 0) +
                                      (bulkAttrReadSupport ? 0x27 : 0) +
