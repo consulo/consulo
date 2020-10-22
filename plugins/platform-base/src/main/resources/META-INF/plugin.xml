@@ -2516,6 +2516,7 @@
 
     <projectService serviceImplementation="com.intellij.openapi.updateSettings.impl.pluginsAdvertisement.UnknownFeaturesCollector"/>
     <backgroundPostStartupActivity implementation="com.intellij.ide.plugins.pluginsAdvertisement.PluginsAdvertiser"/>
+    <backgroundPostStartupActivity implementation="consulo.project.impl.ReopenProjectToolWindowActivity"/>
 
     <moduleService serviceInterface="consulo.compiler.ModuleCompilerPathsManager"
                    serviceImplementation="consulo.compiler.impl.ModuleCompilerPathsManagerImpl"/>
