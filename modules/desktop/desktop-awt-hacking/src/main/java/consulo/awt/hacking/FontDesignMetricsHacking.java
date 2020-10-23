@@ -46,18 +46,18 @@ public class FontDesignMetricsHacking {
   }
 
   @Nullable
-  public static BiFunction<FontMetrics, Integer, Integer> handleCharWidth() {
+  public static BiFunction<FontMetrics, Integer, Float> handleCharWidth() {
     try {
       Method method = FontDesignMetrics.class.getDeclaredMethod("handleCharWidth", int.class);
       method.setAccessible(true);
 
       return (fontMetrics, codePoint) -> {
         try {
-          return (Integer)method.invoke(fontMetrics, codePoint);
+          return (Float)method.invoke(fontMetrics, codePoint);
         }
         catch (Throwable e) {
           LOG.warn(e);
-          return null;
+          return 0f;
         }
       };
     }
@@ -79,7 +79,7 @@ public class FontDesignMetricsHacking {
         }
         catch (Throwable e) {
           LOG.warn(e);
-          return null;
+          return 0f;
         }
       };
     }

@@ -64,7 +64,7 @@ public abstract class FontLayoutService {
     // this flag is supported by JetBrains Runtime
     private static final int LAYOUT_NO_PAIRED_CHARS_AT_SCRIPT_SPLIT = 8;
 
-    private final BiFunction<FontMetrics, Integer, Integer> myHandleCharWidthMethod;
+    private final BiFunction<FontMetrics, Integer, Float> myHandleCharWidthMethod;
     private final BiFunction<FontMetrics, Character, Float> myGetLatinCharWidthMethod;
 
     private DefaultFontLayoutService() {
@@ -101,7 +101,7 @@ public abstract class FontLayoutService {
           return myGetLatinCharWidthMethod.apply(fontMetrics, (char)codePoint);
         }
         if (myHandleCharWidthMethod != null) {
-          return (float)myHandleCharWidthMethod.apply(fontMetrics, codePoint);
+          return myHandleCharWidthMethod.apply(fontMetrics, codePoint);
         }
       }
       return charWidth(fontMetrics, codePoint);
