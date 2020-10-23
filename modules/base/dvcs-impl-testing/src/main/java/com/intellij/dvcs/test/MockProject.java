@@ -17,12 +17,12 @@ package com.intellij.dvcs.test;
 
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.messages.MessageBus;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.ui.UIAccess;
+import consulo.util.concurrent.AsyncResult;
 import consulo.util.dataholder.Key;
 
 import javax.annotation.Nonnull;
