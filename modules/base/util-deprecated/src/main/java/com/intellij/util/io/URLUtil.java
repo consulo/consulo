@@ -28,10 +28,12 @@ import gnu.trove.TIntArrayList;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.*;
-import java.net.*;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URL;
+import java.net.URLEncoder;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
 public class URLUtil {
@@ -68,57 +70,15 @@ public class URLUtil {
    * mapped into memory.
    */
   @Nonnull
+  @Deprecated
   public static InputStream openStream(@Nonnull URL url) throws IOException {
-    String protocol = url.getProtocol();
-    return protocol.equals(JAR_PROTOCOL) ? openJarStream(url) : url.openStream();
+    return consulo.util.io.URLUtil.openStream(url);
   }
 
   @Nonnull
+  @Deprecated
   public static InputStream openResourceStream(@Nonnull URL url) throws IOException {
-    try {
-      return openStream(url);
-    }
-    catch (FileNotFoundException ex) {
-      String protocol = url.getProtocol();
-      String file = null;
-      if (protocol.equals(FILE_PROTOCOL)) {
-        file = url.getFile();
-      }
-      else if (protocol.equals(JAR_PROTOCOL)) {
-        int pos = url.getFile().indexOf("!");
-        if (pos >= 0) {
-          file = url.getFile().substring(pos + 1);
-        }
-      }
-      if (file != null && file.startsWith("/")) {
-        InputStream resourceStream = URLUtil.class.getResourceAsStream(file);
-        if (resourceStream != null) return resourceStream;
-      }
-      throw ex;
-    }
-  }
-
-  @Nonnull
-  private static InputStream openJarStream(@Nonnull URL url) throws IOException {
-    Pair<String, String> paths = splitJarUrl(url.getFile());
-    if (paths == null) {
-      throw new MalformedURLException(url.getFile());
-    }
-
-    @SuppressWarnings("IOResourceOpenedButNotSafelyClosed") final ZipFile zipFile = new ZipFile(paths.first);
-    ZipEntry zipEntry = zipFile.getEntry(paths.second);
-    if (zipEntry == null) {
-      zipFile.close();
-      throw new FileNotFoundException("Entry " + paths.second + " not found in " + paths.first);
-    }
-
-    return new FilterInputStream(zipFile.getInputStream(zipEntry)) {
-      @Override
-      public void close() throws IOException {
-        super.close();
-        zipFile.close();
-      }
-    };
+    return consulo.util.io.URLUtil.openResourceStream(url);
   }
 
   /**
@@ -138,12 +98,8 @@ public class URLUtil {
         return ThreeState.NO;
       }
       try {
-        ZipFile file = new ZipFile(paths.first);
-        try {
+        try (ZipFile file = new ZipFile(paths.first)) {
           return ThreeState.fromBoolean(file.getEntry(paths.second) != null);
-        }
-        finally {
-          file.close();
         }
       }
       catch (IOException e) {
@@ -162,43 +118,19 @@ public class URLUtil {
    * Please note that the first part is platform-dependent - see UrlUtilTest.testJarUrlSplitter() for examples.
    */
   @Nullable
+  @Deprecated
   public static Pair<String, String> splitJarUrl(@Nonnull String url) {
-    int pivot = url.indexOf(JAR_SEPARATOR);
-    if (pivot < 0) return null;
-
-    String resourcePath = url.substring(pivot + 2);
-    String jarPath = url.substring(0, pivot);
-
-    if (StringUtil.startsWithConcatenation(jarPath, JAR_PROTOCOL, ":")) {
-      jarPath = jarPath.substring(JAR_PROTOCOL.length() + 1);
+    consulo.util.lang.Pair<String, String> pair = consulo.util.io.URLUtil.splitJarUrl(url);
+    if(pair == null) {
+      return null;
     }
-
-    if (jarPath.startsWith(FILE_PROTOCOL)) {
-      try {
-        jarPath = urlToFile(new URL(jarPath)).getPath().replace('\\', '/');
-      }
-      catch (Exception e) {
-        jarPath = jarPath.substring(FILE_PROTOCOL.length());
-        if (jarPath.startsWith(SCHEME_SEPARATOR)) {
-          jarPath = jarPath.substring(SCHEME_SEPARATOR.length());
-        }
-        else if (StringUtil.startsWithChar(jarPath, ':')) {
-          jarPath = jarPath.substring(1);
-        }
-      }
-    }
-
-    return Pair.create(jarPath, resourcePath);
+    return Pair.create(pair.first, pair.second);
   }
 
   @Nonnull
+  @Deprecated
   public static File urlToFile(@Nonnull URL url) {
-    try {
-      return new File(url.toURI().getSchemeSpecificPart());
-    }
-    catch (URISyntaxException e) {
-      throw new IllegalArgumentException("URL='" + url.toString() + "'", e);
-    }
+    return consulo.util.io.URLUtil.urlToFile(url);
   }
 
   @Nonnull

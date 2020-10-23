@@ -65,6 +65,39 @@ public class ContainerUtil {
   }
 
   /**
+   * Adds all not-null elements from the {@code elements}, ignoring nulls
+   */
+  public static <T> void addAllNotNull(@Nonnull Collection<T> collection, @Nonnull Iterable<? extends T> elements) {
+    addAllNotNull(collection, elements.iterator());
+  }
+
+  /**
+   * Adds all not-null elements from the {@code elements}, ignoring nulls
+   */
+  @SafeVarargs
+  @Nonnull
+  public static <T, A extends T, C extends Collection<T>> C addAllNotNull(@Nonnull C collection, @Nonnull A... elements) {
+    for (T element : elements) {
+      if (element != null) {
+        collection.add(element);
+      }
+    }
+    return collection;
+  }
+
+  /**
+   * Adds all not-null elements from the {@code elements}, ignoring nulls
+   */
+  public static <T> void addAllNotNull(@Nonnull Collection<T> collection, @Nonnull Iterator<? extends T> elements) {
+    while (elements.hasNext()) {
+      T o = elements.next();
+      if (o != null) {
+        collection.add(o);
+      }
+    }
+  }
+  
+  /**
    * Soft keys hard values hash map.
    * Null keys are NOT allowed
    * Null values are allowed
@@ -360,6 +393,21 @@ public class ContainerUtil {
     return Maps.newConcurrentIntObjectSoftValueHashMap();
   }
 
+  public static <T> void addIfNotNull(@Nonnull Collection<T> result, @Nullable T element) {
+    if (element != null) {
+      result.add(element);
+    }
+  }
+
+  @Contract(value = "null -> true", pure = true)
+  public static <T> boolean isEmpty(Collection<T> collection) {
+    return collection == null || collection.isEmpty();
+  }
+
+  @Contract(value = "null -> true", pure = true)
+  public static boolean isEmpty(Map map) {
+    return map == null || map.isEmpty();
+  }
 
   @Nonnull
   @Contract(pure = true)

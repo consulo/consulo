@@ -19,13 +19,13 @@ import com.intellij.icons.AllIcons;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.roots.ui.configuration.classpath.ClasspathPanel;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.StructureConfigurableContext;
-import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.vfs.VirtualFile;
 import consulo.localize.LocalizeValue;
 import consulo.roots.ModuleRootLayer;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.fileChooser.FileChooser;
 import consulo.ui.image.Image;
+import consulo.util.concurrent.AsyncResult;
 
 import javax.annotation.Nonnull;
 

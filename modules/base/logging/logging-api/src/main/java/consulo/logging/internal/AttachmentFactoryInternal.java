@@ -15,15 +15,31 @@
  */
 package consulo.logging.internal;
 
+import consulo.annotation.ReviewAfterMigrationToJRE;
 import consulo.logging.attachment.AttachmentFactory;
 import consulo.util.nodep.ServiceLoaderUtil;
+
+import javax.annotation.Nonnull;
+import java.util.Iterator;
+import java.util.ServiceLoader;
 
 /**
  * @author VISTALL
  * @since 2019-08-10
  */
 public class AttachmentFactoryInternal {
-  private static final AttachmentFactory ourInstance = ServiceLoaderUtil.loadSingleOrError(AttachmentFactory.class);
+  private static final AttachmentFactory ourInstance = loadSingleOrError(AttachmentFactory.class);
+
+  @Nonnull
+  @ReviewAfterMigrationToJRE(9)
+  private static <T> T loadSingleOrError(@Nonnull Class<T> clazz) {
+    ServiceLoader<T> serviceLoader = ServiceLoader.load(clazz, clazz.getClassLoader());
+    Iterator<T> iterator = serviceLoader.iterator();
+    if (iterator.hasNext()) {
+      return iterator.next();
+    }
+    throw new Error("Unable to find '" + clazz.getName() + "' implementation");
+  }
 
   public static AttachmentFactory get() {
     return ourInstance;

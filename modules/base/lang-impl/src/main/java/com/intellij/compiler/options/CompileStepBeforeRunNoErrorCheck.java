@@ -24,14 +24,14 @@ import com.intellij.execution.runners.ExecutionEnvironment;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.AsyncResult;
-import consulo.util.dataholder.Key;
-import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
+import consulo.util.concurrent.AsyncResult;
+import consulo.util.dataholder.Key;
+import jakarta.inject.Inject;
 
 import javax.annotation.Nonnull;
-import jakarta.inject.Inject;
 
 /**
  * User: Vassiliy.Kudryashov

@@ -20,10 +20,10 @@
 package com.intellij.projectImport;
 
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.vfs.VirtualFile;
 import consulo.ui.UIAccess;
 import consulo.ui.image.Image;
+import consulo.util.concurrent.AsyncResult;
 import org.intellij.lang.annotations.Language;
 
 import javax.annotation.Nonnull;

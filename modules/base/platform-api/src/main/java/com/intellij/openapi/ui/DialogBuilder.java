@@ -16,13 +16,13 @@
 package com.intellij.openapi.ui;
 
 import com.intellij.CommonBundle;
-import consulo.disposer.Disposable;
 import com.intellij.openapi.help.HelpManager;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.AsyncResult;
-import consulo.disposer.Disposer;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.util.concurrent.AsyncResult;
 import org.intellij.lang.annotations.MagicConstant;
 import org.jetbrains.annotations.NonNls;
 

@@ -18,11 +18,11 @@ package com.intellij.platform;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
-import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.projectImport.ProjectOpenProcessor;
 import consulo.ui.UIAccess;
 import consulo.ui.image.Image;
+import consulo.util.concurrent.AsyncResult;
 
 import javax.annotation.Nonnull;
 import java.io.File;

@@ -20,8 +20,6 @@ import com.intellij.ide.impl.ProjectUtil;
 import com.intellij.ide.impl.util.NewOrImportModuleUtil;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
-import com.intellij.openapi.util.AsyncResult;
-import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -33,6 +31,8 @@ import consulo.moduleImport.ui.ModuleImportProcessor;
 import consulo.ui.Alert;
 import consulo.ui.UIAccess;
 import consulo.ui.image.Image;
+import consulo.util.concurrent.AsyncResult;
+import consulo.util.lang.Pair;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

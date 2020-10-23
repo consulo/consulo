@@ -18,8 +18,8 @@ package com.intellij.openapi.ui;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.util.ActionCallback;
-import com.intellij.openapi.util.AsyncResult;
 import com.intellij.util.ArrayUtil;
+import consulo.util.concurrent.AsyncResult;
 
 import javax.annotation.Nullable;
 import javax.swing.*;

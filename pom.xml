@@ -121,6 +121,9 @@
     <module>modules/base/util/util-concurrent</module>
     <module>modules/base/util/util-advanced-proxy</module>
     <module>modules/base/util/util-dataholder</module>
+    <module>modules/base/util/util-jdom</module>
+    <module>modules/base/util/util-io</module>
+    <module>modules/base/util/util-serializer</module>
     <module>modules/base/util-testing</module>
     <module>modules/base/xcoverage-data</module>
     <module>modules/base/xcoverage-impl</module>

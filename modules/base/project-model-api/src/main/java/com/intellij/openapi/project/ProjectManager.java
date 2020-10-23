@@ -16,14 +16,14 @@
 package com.intellij.openapi.project;
 
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.messages.Topic;
 import consulo.annotation.DeprecationInfo;
 import consulo.disposer.Disposable;
-import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.util.concurrent.AsyncResult;
 import org.jdom.JDOMException;
 
 import javax.annotation.Nonnull;

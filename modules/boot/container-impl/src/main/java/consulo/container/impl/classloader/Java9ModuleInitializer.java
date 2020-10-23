@@ -98,6 +98,7 @@ public class Java9ModuleInitializer {
       // we can't enable it, due jvm will initialize all unnamed modules
       //toResolve.add("jakarta.inject");
       toResolve.add("jsr305");
+      toResolve.add("org.slf4j");
 
       //toResolve.add("org.apache.commons.compress");
       toResolve.add("org.apache.logging.log4j");
@@ -122,7 +123,11 @@ public class Java9ModuleInitializer {
 
       toResolve.add("consulo.util.lang");
       toResolve.add("consulo.util.collection");
+      toResolve.add("consulo.util.concurrent");
+      toResolve.add("consulo.util.io");
+      toResolve.add("consulo.util.serializer");
       toResolve.add("consulo.util.rmi");
+      toResolve.add("consulo.util.jdom");
 
       //toResolve.add("jakarta.activation");
       // requires java.desktop???

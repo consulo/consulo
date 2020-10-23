@@ -16,7 +16,6 @@
 package consulo.ui.desktop.internal;
 
 import com.intellij.openapi.ui.DialogWrapper;
-import com.intellij.openapi.util.AsyncResult;
 import com.intellij.ui.BrowserHyperlinkListener;
 import com.intellij.ui.IdeBorderFactory;
 import com.intellij.ui.ScrollPaneFactory;
@@ -29,6 +28,7 @@ import consulo.ui.Window;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import consulo.ui.impl.BaseAlert;
+import consulo.util.concurrent.AsyncResult;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

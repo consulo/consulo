@@ -17,13 +17,13 @@ package com.intellij.mock;
 
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.vfs.VirtualFile;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.disposer.Disposable;
 import consulo.logging.Logger;
 import consulo.ui.UIAccess;
+import consulo.util.concurrent.AsyncResult;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;

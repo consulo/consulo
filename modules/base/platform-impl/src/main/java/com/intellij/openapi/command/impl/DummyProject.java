@@ -16,15 +16,15 @@
 package com.intellij.openapi.command.impl;
 
 import com.intellij.openapi.application.Application;
-import consulo.container.plugin.ComponentConfig;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.Condition;
-import consulo.util.dataholder.UserDataHolderBase;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.messages.MessageBus;
 import consulo.annotation.access.RequiredWriteAction;
+import consulo.container.plugin.ComponentConfig;
 import consulo.ui.UIAccess;
+import consulo.util.concurrent.AsyncResult;
+import consulo.util.dataholder.UserDataHolderBase;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;

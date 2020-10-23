@@ -21,7 +21,6 @@ import com.intellij.openapi.roots.ContentEntry;
 import com.intellij.openapi.roots.ContentFolder;
 import com.intellij.openapi.roots.ModifiableRootModel;
 import com.intellij.openapi.ui.Messages;
-import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -29,6 +28,8 @@ import com.intellij.util.EventDispatcher;
 import consulo.roots.ContentFolderScopes;
 import consulo.roots.ContentFolderTypeProvider;
 import consulo.roots.ui.configuration.ContentFolderPropertiesDialog;
+import consulo.util.concurrent.AsyncResult;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

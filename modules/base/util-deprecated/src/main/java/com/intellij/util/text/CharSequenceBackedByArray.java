@@ -26,7 +26,7 @@ import javax.annotation.Nonnull;
  * @see com.intellij.util.text.CharArrayUtil#getChars(CharSequence, char[], int)
  * @see com.intellij.util.text.CharArrayUtil#fromSequenceWithoutCopying(CharSequence)
  */
-public interface CharSequenceBackedByArray extends CharSequence {
+public interface CharSequenceBackedByArray extends consulo.util.lang.CharSequenceBackedByArray {
   @Nonnull
   char[] getChars();
 

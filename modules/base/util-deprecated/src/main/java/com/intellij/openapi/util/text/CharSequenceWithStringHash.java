@@ -19,5 +19,5 @@ package com.intellij.openapi.util.text;
  * This interface implementations must have hashCode values equal to those for String
  * @see com.intellij.openapi.util.text.StringUtil#stringHashCode(CharSequence)  
  */
-public interface CharSequenceWithStringHash extends CharSequence{
+public interface CharSequenceWithStringHash extends consulo.util.lang.CharSequenceWithStringHash {
 }

@@ -15,7 +15,8 @@
  */
 package consulo.util.lang.reflect.unsafe;
 
-import consulo.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import sun.misc.Unsafe;
 
 import javax.annotation.Nonnull;
@@ -27,7 +28,7 @@ import java.nio.ByteBuffer;
  * @since 2019-12-01
  */
 public class UnsafeDelegate {
-  private static final Logger LOG = Logger.getInstance(UnsafeDelegate.class);
+  private static final Logger LOG = LoggerFactory.getLogger(UnsafeDelegate.class);
 
   @Nonnull
   public static UnsafeDelegate get() {
@@ -91,7 +92,7 @@ public class UnsafeDelegate {
       return true;
     }
     catch (Exception e) {
-      LOG.error(e);
+      LOG.error(e.getMessage(), e);
       return false;
     }
   }

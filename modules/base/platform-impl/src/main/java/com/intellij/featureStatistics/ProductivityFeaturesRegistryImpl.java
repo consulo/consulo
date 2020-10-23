@@ -17,16 +17,18 @@ package com.intellij.featureStatistics;
 
 import com.intellij.openapi.util.JDOMUtil;
 import consulo.logging.Logger;
-import org.jdom.Document;
+import jakarta.inject.Singleton;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;
-import jakarta.inject.Singleton;
 import java.io.IOException;
 import java.net.URL;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 @Singleton
 public class ProductivityFeaturesRegistryImpl extends ProductivityFeaturesRegistry {
@@ -49,16 +51,15 @@ public class ProductivityFeaturesRegistryImpl extends ProductivityFeaturesRegist
 
   private void reloadFromXml() {
     try {
-      readFromXml("file:///ProductivityFeaturesRegistry.xml");
+      readFromXml(ProductivityFeaturesRegistryImpl.class.getResource("/ProductivityFeaturesRegistry.xml"));
     }
     catch (Exception e) {
       LOG.error(e);
     }
   }
 
-  private void readFromXml(String path) throws JDOMException, IOException {
-    final Document document = JDOMUtil.loadResourceDocument(new URL(path));
-    final Element root = document.getRootElement();
+  private void readFromXml(URL url) throws JDOMException, IOException {
+    Element root = JDOMUtil.load(url);
     readGroups(root);
   }
 
@@ -145,7 +146,7 @@ public class ProductivityFeaturesRegistryImpl extends ProductivityFeaturesRegist
 
   @Override
   public String toString() {
-    return super.toString() + "; myAdditionalFeaturesLoaded="+myAdditionalFeaturesLoaded;
+    return super.toString() + "; myAdditionalFeaturesLoaded=" + myAdditionalFeaturesLoaded;
   }
 
   @TestOnly

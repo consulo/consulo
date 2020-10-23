@@ -16,75 +16,47 @@
 package com.intellij.openapi.util;
 
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.CharsetToolkit;
-import com.intellij.util.ArrayUtil;
-import com.intellij.util.SmartList;
 import com.intellij.util.containers.StringInterner;
-import com.intellij.util.io.URLUtil;
 import com.intellij.util.text.CharArrayUtil;
-import com.intellij.util.text.CharSequenceReader;
-import com.intellij.util.text.StringFactory;
+import consulo.annotation.internal.MigratedExtensionsTo;
 import consulo.logging.Logger;
-import consulo.util.jdom.CustomWalker;
-import consulo.util.jdom.JDOMInterner;
+import consulo.util.jdom.interner.JDOMInterner;
 import org.jdom.*;
 import org.jdom.filter.AbstractFilter;
 import org.jdom.filter.ElementFilter;
-import org.jdom.input.DOMBuilder;
-import org.jdom.input.SAXBuilder;
-import org.jdom.output.DOMOutputter;
-import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
-import org.jdom.output.support.AbstractXMLOutputProcessor;
-import org.jdom.output.support.FormatStack;
-import org.jdom.output.support.Walker;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NonNls;
-import org.xml.sax.EntityResolver;
-import org.xml.sax.InputSource;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.awt.*;
 import java.io.*;
-import java.lang.ref.SoftReference;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 
 /**
  * @author mike
  */
-@SuppressWarnings({"HardCodedStringLiteral"})
+@SuppressWarnings("MigratedExtensionsTo")
+@MigratedExtensionsTo(consulo.util.jdom.JDOMUtil.class)
 public class JDOMUtil {
   private static final String X = "x";
   private static final String Y = "y";
   private static final String WIDTH = "width";
   private static final String HEIGHT = "height";
 
-  private static final ThreadLocal<SoftReference<SAXBuilder>> ourSaxBuilder = new ThreadLocal<SoftReference<SAXBuilder>>();
-
   private JDOMUtil() {
   }
 
   @Nonnull
   public static List<Element> getChildren(@Nullable Element parent) {
-    if (parent == null) {
-      return Collections.emptyList();
-    }
-    else {
-      return parent.getChildren();
-    }
+    return consulo.util.jdom.JDOMUtil.getChildren(parent);
   }
 
   @Nonnull
   public static List<Element> getChildren(@Nullable Element parent, @Nonnull String name) {
-    if (parent != null) {
-      return parent.getChildren(name);
-    }
-    return Collections.emptyList();
+    return consulo.util.jdom.JDOMUtil.getChildren(parent, name);
   }
 
   @SuppressWarnings("UtilityClassWithoutPrivateConstructor")
@@ -97,26 +69,21 @@ public class JDOMUtil {
   }
 
   public static boolean areElementsEqual(@Nullable Element e1, @Nullable Element e2) {
-    if (e1 == null && e2 == null) return true;
-    if (e1 == null || e2 == null) return false;
-
-    return Comparing.equal(e1.getName(), e2.getName()) && attListsEqual(e1.getAttributes(), e2.getAttributes()) && contentListsEqual(e1.getContent(CONTENT_FILTER), e2.getContent(CONTENT_FILTER));
+    return consulo.util.jdom.JDOMUtil.areElementsEqual(e1, e2);
   }
 
-  private static final EmptyTextFilter CONTENT_FILTER = new EmptyTextFilter();
-
   public static int getTreeHash(@Nonnull Element root) {
-    return getTreeHash(root, false);
+    return consulo.util.jdom.JDOMUtil.getTreeHash(root);
   }
 
   public static int getTreeHash(@Nonnull Element root, boolean skipEmptyText) {
-    return addToHash(0, root, skipEmptyText);
+    return consulo.util.jdom.JDOMUtil.getTreeHash(root, skipEmptyText);
   }
 
   @SuppressWarnings("unused")
   @Deprecated
   public static int getTreeHash(@Nonnull Document document) {
-    return getTreeHash(document.getRootElement());
+    return consulo.util.jdom.JDOMUtil.getTreeHash(document);
   }
 
   private static int addToHash(int i, @Nonnull Element element, boolean skipEmptyText) {
@@ -151,47 +118,28 @@ public class JDOMUtil {
   /**
    * to remove in IDEA 15
    */ public static Object[] getChildNodesWithAttrs(@Nonnull Element e) {
-    ArrayList<Object> result = new ArrayList<Object>();
-    result.addAll(e.getContent());
-    result.addAll(e.getAttributes());
-    return ArrayUtil.toObjectArray(result);
+    return consulo.util.jdom.JDOMUtil.getChildNodesWithAttrs(e);
   }
 
   @Nonnull
   public static Content[] getContent(@Nonnull Element m) {
-    List<Content> list = m.getContent();
-    return list.toArray(new Content[list.size()]);
+    return consulo.util.jdom.JDOMUtil.getContent(m);
   }
 
   @Nonnull
   public static Element[] getElements(@Nonnull Element m) {
-    List<Element> list = m.getChildren();
-    return list.toArray(new Element[list.size()]);
+    return consulo.util.jdom.JDOMUtil.getElements(m);
   }
 
   @Deprecated
   @SuppressWarnings("unused")
   @Nonnull
   public static String concatTextNodesValues(@Nonnull final Object[] nodes) {
-    StringBuilder result = new StringBuilder();
-    for (Object node : nodes) {
-      result.append(((Content)node).getValue());
-    }
-    return result.toString();
+    return consulo.util.jdom.JDOMUtil.concatTextNodesValues(nodes);
   }
 
   public static void addContent(@Nonnull final Element targetElement, final Object node) {
-    if (node instanceof Content) {
-      Content content = (Content)node;
-      targetElement.addContent(content);
-    }
-    else if (node instanceof List) {
-      //noinspection unchecked
-      targetElement.addContent((List)node);
-    }
-    else {
-      throw new IllegalArgumentException("Wrong node: " + node);
-    }
+    consulo.util.jdom.JDOMUtil.addContent(targetElement, node);
   }
 
   /**
@@ -232,28 +180,16 @@ public class JDOMUtil {
 
   @Nonnull
   public static String legalizeText(@Nonnull String str) {
-    return legalizeChars(str).toString();
+    return consulo.util.jdom.JDOMUtil.legalizeText(str);
   }
 
   @Nonnull
   public static CharSequence legalizeChars(@Nonnull CharSequence str) {
-    StringBuilder result = new StringBuilder(str.length());
-    for (int i = 0, len = str.length(); i < len; i++) {
-      appendLegalized(result, str.charAt(i));
-    }
-    return result;
+    return consulo.util.jdom.JDOMUtil.legalizeChars(str);
   }
 
   public static void appendLegalized(@Nonnull StringBuilder sb, char each) {
-    if (each == '<' || each == '>') {
-      sb.append(each == '<' ? "&lt;" : "&gt;");
-    }
-    else if (!Verifier.isXMLCharacter(each)) {
-      sb.append("0x").append(StringUtil.toUpperCase(Long.toHexString(each)));
-    }
-    else {
-      sb.append(each);
-    }
+    consulo.util.jdom.JDOMUtil.appendLegalized(sb, each);
   }
 
   private static class EmptyTextFilter extends AbstractFilter<Content> {
@@ -266,297 +202,143 @@ public class JDOMUtil {
     }
   }
 
-  private static boolean contentListsEqual(final List c1, final List c2) {
-    if (c1 == null && c2 == null) return true;
-    if (c1 == null || c2 == null) return false;
-
-    Iterator l1 = c1.listIterator();
-    Iterator l2 = c2.listIterator();
-    while (l1.hasNext() && l2.hasNext()) {
-      if (!contentsEqual((Content)l1.next(), (Content)l2.next())) {
-        return false;
-      }
-    }
-
-    return l1.hasNext() == l2.hasNext();
-  }
-
-  private static boolean contentsEqual(Content c1, Content c2) {
-    if (!(c1 instanceof Element) && !(c2 instanceof Element)) {
-      return c1.getValue().equals(c2.getValue());
-    }
-
-    return c1 instanceof Element && c2 instanceof Element && areElementsEqual((Element)c1, (Element)c2);
-  }
-
-  private static boolean attListsEqual(@Nonnull List a1, @Nonnull List a2) {
-    if (a1.size() != a2.size()) return false;
-    for (int i = 0; i < a1.size(); i++) {
-      if (!attEqual((Attribute)a1.get(i), (Attribute)a2.get(i))) return false;
-    }
-    return true;
-  }
-
   private static boolean attEqual(@Nonnull Attribute a1, @Nonnull Attribute a2) {
     return a1.getName().equals(a2.getName()) && a1.getValue().equals(a2.getValue());
   }
 
   public static boolean areDocumentsEqual(@Nonnull Document d1, @Nonnull Document d2) {
-    if (d1.hasRootElement() != d2.hasRootElement()) return false;
-
-    if (!d1.hasRootElement()) return true;
-
-    CharArrayWriter w1 = new CharArrayWriter();
-    CharArrayWriter w2 = new CharArrayWriter();
-
-    try {
-      writeDocument(d1, w1, "\n");
-      writeDocument(d2, w2, "\n");
-    }
-    catch (IOException e) {
-      getLogger().error(e);
-    }
-
-    return w1.size() == w2.size() && w1.toString().equals(w2.toString());
+    return consulo.util.jdom.JDOMUtil.areDocumentsEqual(d1, d2);
   }
 
   @Nonnull
   public static Document loadDocument(char[] chars, int length) throws IOException, JDOMException {
-    return getSaxBuilder().build(new CharArrayReader(chars, 0, length));
+    return consulo.util.jdom.JDOMUtil.loadDocument(chars, length);
   }
 
   @Nonnull
   public static Document loadDocument(byte[] bytes) throws IOException, JDOMException {
-    return loadDocument(new ByteArrayInputStream(bytes));
+    return consulo.util.jdom.JDOMUtil.loadDocument(bytes);
   }
-
-  private static SAXBuilder getSaxBuilder() {
-    SoftReference<SAXBuilder> reference = ourSaxBuilder.get();
-    SAXBuilder saxBuilder = com.intellij.reference.SoftReference.dereference(reference);
-    if (saxBuilder == null) {
-      saxBuilder = new SAXBuilder();
-      saxBuilder.setEntityResolver(new EntityResolver() {
-        @Override
-        @Nonnull
-        public InputSource resolveEntity(String publicId, String systemId) {
-          return new InputSource(new CharArrayReader(ArrayUtil.EMPTY_CHAR_ARRAY));
-        }
-      });
-      ourSaxBuilder.set(new SoftReference<SAXBuilder>(saxBuilder));
-    }
-    return saxBuilder;
-  }
-
   @Nonnull
   public static Document loadDocument(@Nonnull CharSequence seq) throws IOException, JDOMException {
-    return loadDocument(new CharSequenceReader(seq));
+    return consulo.util.jdom.JDOMUtil.loadDocument(seq);
   }
 
   @Nonnull
   public static Document loadDocument(@Nonnull Reader reader) throws IOException, JDOMException {
-    try {
-      return getSaxBuilder().build(reader);
-    }
-    finally {
-      reader.close();
-    }
+    return consulo.util.jdom.JDOMUtil.loadDocument(reader);
   }
 
   @Nonnull
   public static Document loadDocument(File file) throws JDOMException, IOException {
-    return loadDocument(new BufferedInputStream(new FileInputStream(file)));
+    return consulo.util.jdom.JDOMUtil.loadDocument(file);
   }
 
   @Nonnull
   public static Element load(@Nonnull File file) throws JDOMException, IOException {
-    return load(new BufferedInputStream(new FileInputStream(file)));
+    return consulo.util.jdom.JDOMUtil.load(file);
   }
 
   @Nonnull
   public static Document loadDocument(@Nonnull InputStream stream) throws JDOMException, IOException {
-    return loadDocument(new InputStreamReader(stream, CharsetToolkit.UTF8_CHARSET));
+    return consulo.util.jdom.JDOMUtil.loadDocument(stream);
   }
 
   @Contract("null -> null; !null -> !null")
   public static Element load(Reader reader) throws JDOMException, IOException {
-    return reader == null ? null : loadDocument(reader).detachRootElement();
+    return consulo.util.jdom.JDOMUtil.load(reader);
   }
 
   @Contract("null -> null; !null -> !null")
   public static Element load(URL url) throws JDOMException, IOException {
-    return url == null ? null : loadDocument(url).detachRootElement();
+    return consulo.util.jdom.JDOMUtil.load(url);
   }
 
   @Contract("null -> null; !null -> !null")
   public static Element load(InputStream stream) throws JDOMException, IOException {
-    return stream == null ? null : loadDocument(stream).detachRootElement();
+    return consulo.util.jdom.JDOMUtil.load(stream);
   }
 
   @Nonnull
   public static Document loadDocument(@Nonnull Class clazz, String resource) throws JDOMException, IOException {
-    InputStream stream = clazz.getResourceAsStream(resource);
-    if (stream == null) {
-      throw new FileNotFoundException(resource);
-    }
-    return loadDocument(stream);
+    return consulo.util.jdom.JDOMUtil.loadDocument(clazz, resource);
   }
 
   @Nonnull
   public static Document loadDocument(URL url) throws JDOMException, IOException {
-    return loadDocument(URLUtil.openStream(url));
+    return consulo.util.jdom.JDOMUtil.loadDocument(url);
   }
 
   @Nonnull
   public static Document loadResourceDocument(URL url) throws JDOMException, IOException {
-    return loadDocument(URLUtil.openResourceStream(url));
+    return consulo.util.jdom.JDOMUtil.loadResourceDocument(url);
   }
 
   public static void writeDocument(@Nonnull Document document, @Nonnull String filePath, String lineSeparator) throws IOException {
-    OutputStream stream = new BufferedOutputStream(new FileOutputStream(filePath));
-    try {
-      writeDocument(document, stream, lineSeparator);
-    }
-    finally {
-      stream.close();
-    }
+    consulo.util.jdom.JDOMUtil.writeDocument(document, filePath, lineSeparator);
   }
 
   public static void writeDocument(@Nonnull Document document, @Nonnull File file, String lineSeparator) throws IOException {
-    writeParent(document, file, lineSeparator);
+    consulo.util.jdom.JDOMUtil.writeDocument(document, file, lineSeparator);
   }
 
   public static void writeParent(@Nonnull Parent element, @Nonnull File file, String lineSeparator) throws IOException {
-    OutputStream stream = new BufferedOutputStream(new FileOutputStream(file));
-    try {
-      writeParent(element, stream, lineSeparator);
-    }
-    finally {
-      stream.close();
-    }
+    consulo.util.jdom.JDOMUtil.writeParent(element, file, lineSeparator);
   }
 
   public static void writeDocument(@Nonnull Document document, @Nonnull OutputStream stream, String lineSeparator) throws IOException {
-    writeParent(document, stream, lineSeparator);
+    consulo.util.jdom.JDOMUtil.writeDocument(document, stream, lineSeparator);
   }
 
   public static void writeParent(@Nonnull Parent element, @Nonnull OutputStream stream, @Nonnull String lineSeparator) throws IOException {
-    OutputStreamWriter writer = new OutputStreamWriter(stream, CharsetToolkit.UTF8_CHARSET);
-    try {
-      if (element instanceof Document) {
-        writeDocument((Document)element, writer, lineSeparator);
-      }
-      else {
-        writeElement((Element)element, writer, lineSeparator);
-      }
-    }
-    finally {
-      writer.close();
-    }
+    consulo.util.jdom.JDOMUtil.writeParent(element, stream, lineSeparator);
   }
 
   @Nonnull
   public static byte[] printDocument(@Nonnull Document document, String lineSeparator) throws IOException {
-    CharArrayWriter writer = new CharArrayWriter();
-    writeDocument(document, writer, lineSeparator);
-
-    return StringFactory.createShared(writer.toCharArray()).getBytes(CharsetToolkit.UTF8_CHARSET);
+    return consulo.util.jdom.JDOMUtil.printDocument(document, lineSeparator);
   }
 
   @Nonnull
   public static String writeDocument(@Nonnull Document document, String lineSeparator) {
-    try {
-      final StringWriter writer = new StringWriter();
-      writeDocument(document, writer, lineSeparator);
-      return writer.toString();
-    }
-    catch (IOException ignored) {
-      // Can't be
-      return "";
-    }
+    return consulo.util.jdom.JDOMUtil.writeDocument(document, lineSeparator);
   }
 
   @Nonnull
   public static String writeParent(Parent element, String lineSeparator) {
-    try {
-      final StringWriter writer = new StringWriter();
-      writeParent(element, writer, lineSeparator);
-      return writer.toString();
-    }
-    catch (IOException e) {
-      throw new RuntimeException(e);
-    }
+    return consulo.util.jdom.JDOMUtil.writeParent(element, lineSeparator);
   }
 
   public static void writeParent(Parent element, Writer writer, String lineSeparator) throws IOException {
-    if (element instanceof Element) {
-      writeElement((Element)element, writer, lineSeparator);
-    }
-    else if (element instanceof Document) {
-      writeDocument((Document)element, writer, lineSeparator);
-    }
+    consulo.util.jdom.JDOMUtil.writeParent(element, writer, lineSeparator);
   }
 
   public static void writeElement(@Nonnull Element element, Writer writer, String lineSeparator) throws IOException {
-    XMLOutputter xmlOutputter = createOutputter(lineSeparator);
-    try {
-      xmlOutputter.output(element, writer);
-    }
-    catch (NullPointerException ex) {
-      getLogger().error(ex);
-      printDiagnostics(element, "");
-    }
+    consulo.util.jdom.JDOMUtil.writeElement(element, writer, lineSeparator);
   }
 
   @Nonnull
   public static String writeElement(@Nonnull Element element) {
-    return writeElement(element, "\n");
+    return consulo.util.jdom.JDOMUtil.writeElement(element);
   }
 
   @Nonnull
   public static String writeElement(@Nonnull Element element, String lineSeparator) {
-    try {
-      final StringWriter writer = new StringWriter();
-      writeElement(element, writer, lineSeparator);
-      return writer.toString();
-    }
-    catch (IOException e) {
-      throw new RuntimeException(e);
-    }
+    return consulo.util.jdom.JDOMUtil.writeElement(element, lineSeparator);
   }
 
   @Nonnull
   public static String writeChildren(@Nullable final Element element, @Nonnull final String lineSeparator) throws IOException {
-    final StringWriter writer = new StringWriter();
-    for (Element child : getChildren(element)) {
-      writeElement(child, writer, lineSeparator);
-      writer.append(lineSeparator);
-    }
-    return writer.toString();
+    return consulo.util.jdom.JDOMUtil.writeChildren(element, lineSeparator);
   }
 
   public static void writeDocument(@Nonnull Document document, @Nonnull Writer writer, String lineSeparator) throws IOException {
-    XMLOutputter xmlOutputter = createOutputter(lineSeparator);
-    try {
-      xmlOutputter.output(document, writer);
-    }
-    catch (NullPointerException ex) {
-      getLogger().error(ex);
-      printDiagnostics(document.getRootElement(), "");
-    }
+    consulo.util.jdom.JDOMUtil.writeDocument(document, writer, lineSeparator);
   }
 
   @Nonnull
   public static XMLOutputter createOutputter(String lineSeparator) {
-    XMLOutputter xmlOutputter = newXmlOutputter();
-    Format format = Format.getCompactFormat().
-            setIndent("  ").
-            setTextMode(Format.TextMode.TRIM).
-            setEncoding(CharsetToolkit.UTF8).
-            setOmitEncoding(false).
-            setOmitDeclaration(false).
-            setLineSeparator(lineSeparator);
-    xmlOutputter.setFormat(format);
-    return xmlOutputter;
+    return consulo.util.jdom.JDOMUtil.createOutputter(lineSeparator);
   }
 
   /**
@@ -589,80 +371,28 @@ public class JDOMUtil {
 
   @Nonnull
   public static String escapeText(@Nonnull String text) {
-    return escapeText(text, false, false);
+    return consulo.util.jdom.JDOMUtil.escapeText(text);
   }
 
   @Nonnull
   public static String escapeText(@Nonnull String text, boolean escapeSpaces, boolean escapeLineEnds) {
-    return escapeText(text, false, escapeSpaces, escapeLineEnds);
+    return consulo.util.jdom.JDOMUtil.escapeText(text, escapeSpaces, escapeLineEnds);
   }
 
   @Nonnull
   public static String escapeText(@Nonnull String text, boolean escapeApostrophes, boolean escapeSpaces, boolean escapeLineEnds) {
-    StringBuilder buffer = null;
-    for (int i = 0; i < text.length(); i++) {
-      final char ch = text.charAt(i);
-      final String quotation = escapeChar(ch, escapeApostrophes, escapeSpaces, escapeLineEnds);
-      if (buffer == null) {
-        if (quotation != null) {
-          // An quotation occurred, so we'll have to use StringBuffer
-          // (allocate room for it plus a few more entities).
-          buffer = new StringBuilder(text.length() + 20);
-          // Copy previous skipped characters and fall through
-          // to pickup current character
-          buffer.append(text, 0, i);
-          buffer.append(quotation);
-        }
-      }
-      else if (quotation == null) {
-        buffer.append(ch);
-      }
-      else {
-        buffer.append(quotation);
-      }
-    }
-    // If there were any entities, return the escaped characters
-    // that we put in the StringBuffer. Otherwise, just return
-    // the unmodified input string.
-    return buffer == null ? text : buffer.toString();
+    return consulo.util.jdom.JDOMUtil.escapeText(text, escapeApostrophes, escapeSpaces, escapeLineEnds);
   }
 
   @SuppressWarnings("unused")
   @Deprecated
   @Nonnull
   public static List<Element> getChildrenFromAllNamespaces(@Nonnull final Element element, @Nonnull @NonNls final String name) {
-    List<Element> result = new SmartList<Element>();
-    for (Element child : element.getChildren()) {
-      if (name.equals(child.getName())) {
-        result.add(child);
-      }
-    }
-    return result;
-  }
-
-  private static class XmlProcessor extends AbstractXMLOutputProcessor {
-    @Override
-    protected void attributeEscapedEntitiesFilter(Writer out, FormatStack fstack, String value) throws IOException {
-      if (!fstack.getEscapeOutput()) {
-        // no escaping...
-        write(out, value);
-        return;
-      }
-
-      write(out, escapeText(value, false, true));
-    }
-
-    @Override
-    protected Walker buildWalker(FormatStack fstack, List<? extends Content> content, boolean escape) {
-      if (fstack.getTextMode() != Format.TextMode.TRIM) {
-        throw new IllegalArgumentException("not trim mode unsupported: " + fstack.getTextMode());
-      }
-      return new CustomWalker(content, fstack, escape);
-    }
+    return consulo.util.jdom.JDOMUtil.getChildrenFromAllNamespaces(element, name);
   }
 
   public static XMLOutputter newXmlOutputter() {
-    return new XMLOutputter(new XmlProcessor());
+    return consulo.util.jdom.JDOMUtil.newXmlOutputter();
   }
 
   private static void printDiagnostics(@Nonnull Element element, String prefix) {
@@ -708,45 +438,7 @@ public class JDOMUtil {
   }
 
   public static void updateFileSet(@Nonnull File[] oldFiles, @Nonnull String[] newFilePaths, @Nonnull Document[] newFileDocuments, String lineSeparator) throws IOException {
-    getLogger().assertTrue(newFilePaths.length == newFileDocuments.length);
-
-    ArrayList<String> writtenFilesPaths = new ArrayList<String>();
-
-    // check if files are writable
-    for (String newFilePath : newFilePaths) {
-      File file = new File(newFilePath);
-      if (file.exists() && !file.canWrite()) {
-        throw new IOException("File \"" + newFilePath + "\" is not writeable");
-      }
-    }
-    for (File file : oldFiles) {
-      if (file.exists() && !file.canWrite()) {
-        throw new IOException("File \"" + file.getAbsolutePath() + "\" is not writeable");
-      }
-    }
-
-    for (int i = 0; i < newFilePaths.length; i++) {
-      String newFilePath = newFilePaths[i];
-
-      writeDocument(newFileDocuments[i], newFilePath, lineSeparator);
-      writtenFilesPaths.add(newFilePath);
-    }
-
-    // delete files if necessary
-
-    outer:
-    for (File oldFile : oldFiles) {
-      String oldFilePath = oldFile.getAbsolutePath();
-      for (final String writtenFilesPath : writtenFilesPaths) {
-        if (oldFilePath.equals(writtenFilesPath)) {
-          continue outer;
-        }
-      }
-      boolean result = oldFile.delete();
-      if (!result) {
-        throw new IOException("File \"" + oldFilePath + "\" was not deleted");
-      }
-    }
+    consulo.util.jdom.JDOMUtil.updateFileSet(oldFiles, newFilePaths, newFileDocuments, lineSeparator);
   }
 
   private static class ElementInfo {
@@ -758,81 +450,28 @@ public class JDOMUtil {
   @SuppressWarnings("unused")
   @Deprecated
   public static org.w3c.dom.Element convertToDOM(@Nonnull Element e) {
-    try {
-      final Document d = new Document();
-      final Element newRoot = new Element(e.getName());
-      final List attributes = e.getAttributes();
-
-      for (Object o : attributes) {
-        Attribute attr = (Attribute)o;
-        newRoot.setAttribute(attr.getName(), attr.getValue(), attr.getNamespace());
-      }
-
-      d.addContent(newRoot);
-      newRoot.addContent(e.cloneContent());
-
-      return new DOMOutputter().output(d).getDocumentElement();
-    }
-    catch (JDOMException e1) {
-      throw new RuntimeException(e1);
-    }
+    return consulo.util.jdom.JDOMUtil.convertToDOM(e);
   }
 
   @SuppressWarnings("unused")
   @Deprecated
   public static Element convertFromDOM(org.w3c.dom.Element e) {
-    return new DOMBuilder().build(e);
+    return consulo.util.jdom.JDOMUtil.convertFromDOM(e);
   }
 
   public static String getValue(Object node) {
-    if (node instanceof Content) {
-      Content content = (Content)node;
-      return content.getValue();
-    }
-    else if (node instanceof Attribute) {
-      Attribute attribute = (Attribute)node;
-      return attribute.getValue();
-    }
-    else {
-      throw new IllegalArgumentException("Wrong node: " + node);
-    }
+    return consulo.util.jdom.JDOMUtil.getValue(node);
   }
 
   @SuppressWarnings("unused")
   @Nullable
   @Deprecated
   public static Element cloneElement(@Nonnull Element element, @Nonnull ElementFilter elementFilter) {
-    Element result = new Element(element.getName(), element.getNamespace());
-    List<Attribute> attributes = element.getAttributes();
-    if (!attributes.isEmpty()) {
-      ArrayList<Attribute> list = new ArrayList<Attribute>(attributes.size());
-      for (Attribute attribute : attributes) {
-        list.add(attribute.clone());
-      }
-      result.setAttributes(list);
-    }
-
-    for (Namespace namespace : element.getAdditionalNamespaces()) {
-      result.addNamespaceDeclaration(namespace);
-    }
-
-    boolean hasContent = false;
-    for (Content content : element.getContent()) {
-      if (content instanceof Element) {
-        if (elementFilter.matches(content)) {
-          hasContent = true;
-        }
-        else {
-          continue;
-        }
-      }
-      result.addContent(content.clone());
-    }
-    return hasContent ? result : null;
+    return consulo.util.jdom.JDOMUtil.cloneElement(element, elementFilter);
   }
 
   public static boolean isEmpty(@Nullable Element element) {
-    return element == null || (element.getAttributes().isEmpty() && element.getContent().isEmpty());
+    return consulo.util.jdom.JDOMUtil.isEmpty(element);
   }
 
   private static final JDOMInterner ourJDOMInterner = new JDOMInterner();
@@ -887,22 +526,7 @@ public class JDOMUtil {
    */
   @Nonnull
   public static String removeControlChars(@Nonnull String text) {
-    StringBuilder result = null;
-    for (int i = 0; i < text.length(); i++) {
-      char c = text.charAt(i);
-      if (!Verifier.isXMLCharacter(c)) {
-        if (result == null) {
-          result = new StringBuilder(text.length());
-          result.append(text, 0, i);
-        }
-        continue;
-      }
-
-      if (result != null) {
-        result.append(c);
-      }
-    }
-    return result == null ? text : result.toString();
+    return consulo.util.jdom.JDOMUtil.removeControlChars(text);
   }
 
 

@@ -17,11 +17,10 @@ package com.intellij.openapi.options;
 
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.AsyncResult;
-import com.intellij.openapi.util.SystemInfo;
 import consulo.options.ProjectStructureSelector;
+import consulo.platform.Platform;
 import consulo.ui.annotation.RequiredUIAccess;
-import org.jetbrains.annotations.NonNls;
+import consulo.util.concurrent.AsyncResult;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -84,12 +83,12 @@ public abstract class ShowSettingsUtil {
   public abstract AsyncResult<Void> editConfigurable(Component parent, Configurable configurable, Runnable advancedInitialization);
 
   @RequiredUIAccess
-  public AsyncResult<Void> editConfigurable(Project project, @NonNls String dimensionServiceKey, Configurable configurable) {
+  public AsyncResult<Void> editConfigurable(Project project, String dimensionServiceKey, Configurable configurable) {
     return editConfigurable(null, project, dimensionServiceKey, configurable);
   }
 
   @RequiredUIAccess
-  public abstract AsyncResult<Void> editConfigurable(@Nullable String title, Project project, @NonNls String dimensionServiceKey, Configurable configurable);
+  public abstract AsyncResult<Void> editConfigurable(@Nullable String title, Project project, String dimensionServiceKey, Configurable configurable);
 
   @RequiredUIAccess
   public abstract AsyncResult<Void> editConfigurable(Component parent, String dimensionServiceKey, Configurable configurable);
@@ -108,6 +107,6 @@ public abstract class ShowSettingsUtil {
 
   @Nonnull
   public static String getSettingsMenuName() {
-    return SystemInfo.isMac ? "Preferences" : "Settings";
+    return Platform.current().os().isMac() ? "Preferences" : "Settings";
   }
 }

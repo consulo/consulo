@@ -18,9 +18,9 @@ package consulo.roots.ui.configuration.classpath;
 import com.intellij.openapi.roots.ModifiableRootModel;
 import com.intellij.openapi.ui.popup.PopupStep;
 import com.intellij.openapi.ui.popup.util.BaseListPopupStep;
-import com.intellij.openapi.util.AsyncResult;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
+import consulo.util.concurrent.AsyncResult;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;

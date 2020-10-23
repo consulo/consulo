@@ -23,13 +23,13 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.options.ShowSettingsUtil;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
-import com.intellij.openapi.util.AsyncResult;
-import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.AppUIUtil;
+import consulo.util.concurrent.AsyncResult;
+import consulo.util.lang.StringUtil;
+import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import jakarta.inject.Singleton;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 

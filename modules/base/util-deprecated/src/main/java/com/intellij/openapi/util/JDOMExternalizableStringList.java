@@ -23,6 +23,7 @@ import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Collection;
 
+// TODO [VISTALL] DO NOT CHANGE PACKAGE NAME. SOFT REF inside XmlSerializerImpl
 @SuppressWarnings({"HardCodedStringLiteral"})
 public class JDOMExternalizableStringList extends ArrayList<String> implements JDOMExternalizable {
   private static final Logger LOG = Logger.getInstance(JDOMExternalizableStringList.class);

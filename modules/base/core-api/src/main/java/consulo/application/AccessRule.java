@@ -16,7 +16,6 @@
 package consulo.application;
 
 import com.intellij.openapi.application.Application;
-import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.ThrowableComputable;
 import com.intellij.util.ThrowableRunnable;
 import com.intellij.util.concurrency.AppExecutorUtil;
@@ -24,6 +23,7 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.application.internal.ApplicationWithIntentWriteLock;
 import consulo.logging.Logger;
+import consulo.util.concurrent.AsyncResult;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

@@ -15,11 +15,11 @@
  */
 package consulo.ui.web.internal;
 
-import consulo.logging.Logger;
-import com.intellij.openapi.util.AsyncResult;
 import com.vaadin.ui.UI;
 import consulo.components.impl.stores.ComponentStoreImpl;
+import consulo.logging.Logger;
 import consulo.ui.UIAccess;
+import consulo.util.concurrent.AsyncResult;
 
 import javax.annotation.Nonnull;
 import java.util.function.Supplier;

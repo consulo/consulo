@@ -15,12 +15,15 @@
  */
 package consulo.util.lang.reflect;
 
-import consulo.logging.Logger;
 import consulo.util.lang.ref.SimpleReference;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Modifier;
 import java.util.HashSet;
 import java.util.Optional;
@@ -31,7 +34,7 @@ import java.util.function.Predicate;
  * Based on IDEA version
  */
 public class ReflectionUtil {
-  private static final Logger LOG = Logger.getInstance(ReflectionUtil.class);
+  private static final Logger LOG = LoggerFactory.getLogger(ReflectionUtil.class);
 
   public static boolean isAssignable(@Nonnull Class<?> ancestor, @Nonnull Class<?> descendant) {
     return ancestor == descendant || ancestor.isAssignableFrom(descendant);
@@ -45,13 +48,21 @@ public class ReflectionUtil {
       }
       return (T)field.get(null);
     }
-    catch (NoSuchFieldException e) {
-      LOG.debug(e);
+    catch (NoSuchFieldException | IllegalAccessException e) {
+      LOG.debug(e.getMessage(), e);
       return null;
     }
-    catch (IllegalAccessException e) {
-      LOG.debug(e);
-      return null;
+  }
+
+  @Nonnull
+  public static <T> T newInstance(@Nonnull Class<? extends T> clazz) {
+    try {
+      Constructor<? extends T> declaredConstructor = clazz.getDeclaredConstructor();
+      declaredConstructor.setAccessible(true);
+      return declaredConstructor.newInstance();
+    }
+    catch (NoSuchMethodException | IllegalAccessException | InstantiationException | InvocationTargetException e) {
+      throw new RuntimeException(e);
     }
   }
 

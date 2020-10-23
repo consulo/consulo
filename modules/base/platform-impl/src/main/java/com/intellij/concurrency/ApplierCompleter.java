@@ -21,11 +21,11 @@ import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.util.Processor;
-import com.intellij.util.concurrency.AtomicFieldUpdater;
 import consulo.application.ex.ApplicationEx2;
+import consulo.util.concurrent.atomic.AtomicFieldUpdater;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.CountedCompleter;

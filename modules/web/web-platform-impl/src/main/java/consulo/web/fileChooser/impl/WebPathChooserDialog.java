@@ -20,7 +20,6 @@ import com.intellij.openapi.fileChooser.FileChooserDialog;
 import com.intellij.openapi.fileChooser.FileElement;
 import com.intellij.openapi.fileChooser.PathChooserDialog;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.vfs.VirtualFile;
 import consulo.ui.Component;
 import consulo.ui.Tree;
@@ -28,6 +27,7 @@ import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.app.WindowWrapper;
 import consulo.ui.shared.Size;
+import consulo.util.concurrent.AsyncResult;
 import consulo.web.fileChooser.FileTreeComponent;
 
 import javax.annotation.Nonnull;

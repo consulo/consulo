@@ -31,7 +31,6 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
-import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.Iconable;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
@@ -58,6 +57,7 @@ import consulo.disposer.Disposer;
 import consulo.fileChooser.impl.FileChooserFactoryImpl;
 import consulo.fileTypes.impl.VfsIconUtil;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.util.concurrent.AsyncResult;
 import consulo.util.dataholder.Key;
 import org.jetbrains.annotations.NonNls;
 

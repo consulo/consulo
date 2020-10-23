@@ -18,15 +18,14 @@ package consulo.web.options;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.project.DefaultProjectFactory;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.AsyncResult;
 import consulo.ide.base.BaseShowSettingsUtil;
 import consulo.ide.settings.impl.ShowSdksSettingsUtil;
 import consulo.options.ProjectStructureSelector;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.app.impl.settings.UnifiedSettingsDialog;
+import consulo.util.concurrent.AsyncResult;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
-import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -88,37 +87,37 @@ public class WebShowSettingsUtil extends BaseShowSettingsUtil implements ShowSdk
   @RequiredUIAccess
   @Override
   public AsyncResult<Void> editConfigurable(@Nullable String title, Project project, Configurable configurable) {
-    return null;
+    return AsyncResult.resolved();
   }
 
   @RequiredUIAccess
   @Override
   public AsyncResult<Void> editConfigurable(@Nullable String title, Project project, Configurable configurable, Runnable advancedInitialization) {
-    return null;
+    return AsyncResult.resolved();
   }
 
   @RequiredUIAccess
   @Override
   public AsyncResult<Void> editConfigurable(Component parent, Configurable configurable) {
-    return null;
+    return AsyncResult.resolved();
   }
 
   @RequiredUIAccess
   @Override
   public AsyncResult<Void> editConfigurable(Component parent, Configurable configurable, Runnable advancedInitialization) {
-    return null;
+    return AsyncResult.resolved();
   }
 
   @RequiredUIAccess
   @Override
-  public AsyncResult<Void> editConfigurable(@Nullable String title, Project project, @NonNls String dimensionServiceKey, Configurable configurable) {
-    return null;
+  public AsyncResult<Void> editConfigurable(@Nullable String title, Project project, String dimensionServiceKey, Configurable configurable) {
+    return AsyncResult.resolved();
   }
 
   @RequiredUIAccess
   @Override
   public AsyncResult<Void> editConfigurable(Component parent, String dimensionServiceKey, Configurable configurable) {
-    return null;
+    return AsyncResult.resolved();
   }
 
   @Override

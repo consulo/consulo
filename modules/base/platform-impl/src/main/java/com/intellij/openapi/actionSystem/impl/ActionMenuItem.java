@@ -296,7 +296,7 @@ public class ActionMenuItem extends JCheckBoxMenuItem {
         Image icon = myPresentation.getIcon();
         if (myUseDarkIcons) {
           Style currentStyle = StyleManager.get().getCurrentStyle();
-          if(!currentStyle.isDark()) {
+          if(icon != null && !currentStyle.isDark()) {
             icon = IconLibraryManager.get().forceChangeLibrary(IconLibraryManager.DARK_LIBRARY_ID, icon);
           }
         }

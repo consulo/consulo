@@ -15,10 +15,10 @@
  */
 package consulo.application;
 
-import com.intellij.openapi.util.AsyncResult;
 import consulo.annotation.access.RequiredWriteAction;
-import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.util.concurrent.AsyncResult;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

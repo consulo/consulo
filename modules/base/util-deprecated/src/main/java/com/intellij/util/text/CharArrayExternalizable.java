@@ -22,7 +22,7 @@ import javax.annotation.Nonnull;
  * @see com.intellij.util.text.CharSequenceBackedByArray
  * @see com.intellij.util.text.CharArrayUtil#getChars(CharSequence, char[], int)
  */
-public interface CharArrayExternalizable extends CharSequence {
+public interface CharArrayExternalizable extends consulo.util.lang.CharArrayExternalizable {
 
   /**
    * Copies own character sub-sequence to the given array

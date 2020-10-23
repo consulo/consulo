@@ -15,8 +15,8 @@
  */
 package consulo.test.impl.ui;
 
-import com.intellij.openapi.util.AsyncResult;
 import consulo.ui.UIAccess;
+import consulo.util.concurrent.AsyncResult;
 
 import javax.annotation.Nonnull;
 import java.util.concurrent.Executor;

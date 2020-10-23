@@ -17,9 +17,9 @@ package com.intellij.openapi.project;
 
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.components.ComponentManager;
-import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.vfs.VirtualFile;
 import consulo.ui.UIAccess;
+import consulo.util.concurrent.AsyncResult;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

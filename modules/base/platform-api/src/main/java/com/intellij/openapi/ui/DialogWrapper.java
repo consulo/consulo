@@ -32,7 +32,6 @@ import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.popup.*;
 import com.intellij.openapi.ui.popup.util.PopupUtil;
-import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.registry.Registry;
@@ -63,6 +62,7 @@ import consulo.platform.base.localize.CommonLocalize;
 import consulo.ui.SwingUIDecorator;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.util.concurrent.AsyncResult;
 import org.intellij.lang.annotations.MagicConstant;
 import org.jetbrains.annotations.NonNls;
 
@@ -1656,12 +1656,12 @@ public abstract class DialogWrapper {
     registerKeyboardShortcuts();
 
 
-    final consulo.disposer.Disposable uiParent = consulo.disposer.Disposer.get("ui");
+    final Disposable uiParent = Disposer.get("ui");
     if (uiParent != null) { // may be null if no app yet (license agreement)
-      consulo.disposer.Disposer.register(uiParent, myDisposable); // ensure everything is disposed on app quit
+      Disposer.register(uiParent, myDisposable); // ensure everything is disposed on app quit
     }
 
-    consulo.disposer.Disposer.register(myDisposable, () -> result.setDone(isOK()));
+    Disposer.register(myDisposable, () -> result.setDone(isOK()));
 
     myPeer.show();
 
@@ -1691,9 +1691,9 @@ public abstract class DialogWrapper {
 
     registerKeyboardShortcuts();
 
-    final consulo.disposer.Disposable uiParent = consulo.disposer.Disposer.get("ui");
+    final Disposable uiParent = Disposer.get("ui");
     if (uiParent != null) {
-      consulo.disposer.Disposer.register(uiParent, myDisposable); // ensure everything is disposed on app quit
+      Disposer.register(uiParent, myDisposable); // ensure everything is disposed on app quit
     }
     return myPeer.showAsync();
   }

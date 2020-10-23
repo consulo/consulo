@@ -45,6 +45,131 @@ public class StringUtil {
     return result.toString();
   }
 
+  /**
+   * Equivalent to string.startsWith(prefixes[0] + prefixes[1] + ...) but avoids creating an object for concatenation.
+   */
+  @Contract(pure = true)
+  public static boolean startsWithConcatenation(@Nonnull String string, @Nonnull String... prefixes) {
+    int offset = 0;
+    for (String prefix : prefixes) {
+      int prefixLen = prefix.length();
+      if (!string.regionMatches(offset, prefix, 0, prefixLen)) {
+        return false;
+      }
+      offset += prefixLen;
+    }
+    return true;
+  }
+
+  @Contract(value = "null -> null", pure = true)
+  public static String decapitalize(@Nullable String name) {
+    if (isEmpty(name)) {
+      return name;
+    }
+    if (name.length() > 1 && Character.isUpperCase(name.charAt(1)) && Character.isUpperCase(name.charAt(0))) {
+      return name;
+    }
+    char chars[] = name.toCharArray();
+    chars[0] = Character.toLowerCase(chars[0]);
+    return new String(chars);
+  }
+
+  @Contract(pure = true)
+  public static boolean startsWithChar(@Nullable CharSequence s, char prefix) {
+    return s != null && s.length() != 0 && s.charAt(0) == prefix;
+  }
+
+  public static int stringHashCode(@Nonnull CharSequence chars) {
+    if (chars instanceof String || chars instanceof CharSequenceWithStringHash) {
+      // we know for sure these classes have conformant (and maybe faster) hashCode()
+      return chars.hashCode();
+    }
+
+    return stringHashCode(chars, 0, chars.length());
+  }
+
+  @Contract(pure = true)
+  public static int stringHashCode(@Nonnull CharSequence chars, int from, int to) {
+    int h = 0;
+    for (int off = from; off < to; off++) {
+      h = 31 * h + chars.charAt(off);
+    }
+    return h;
+  }
+
+
+  @Contract(pure = true)
+  public static int stringHashCode(char[] chars, int from, int to) {
+    int h = 0;
+    for (int off = from; off < to; off++) {
+      h = 31 * h + chars[off];
+    }
+    return h;
+  }
+
+  @Contract(pure = true)
+  public static int stringHashCodeInsensitive(@Nonnull char[] chars, int from, int to) {
+    int h = 0;
+    for (int off = from; off < to; off++) {
+      h = 31 * h + toLowerCase(chars[off]);
+    }
+    return h;
+  }
+
+  @Contract(pure = true)
+  public static int stringHashCodeInsensitive(@Nonnull CharSequence chars, int from, int to) {
+    int h = 0;
+    for (int off = from; off < to; off++) {
+      h = 31 * h + toLowerCase(chars.charAt(off));
+    }
+    return h;
+  }
+
+  @Contract(pure = true)
+  public static int stringHashCodeInsensitive(@Nonnull CharSequence chars) {
+    return stringHashCodeInsensitive(chars, 0, chars.length());
+  }
+
+  @Contract(pure = true)
+  public static int stringHashCodeIgnoreWhitespaces(char[] chars, int from, int to) {
+    int h = 0;
+    for (int off = from; off < to; off++) {
+      char c = chars[off];
+      if (!isWhiteSpace(c)) {
+        h = 31 * h + c;
+      }
+    }
+    return h;
+  }
+
+  @Contract(pure = true)
+  public static int stringHashCodeIgnoreWhitespaces(@Nonnull CharSequence chars, int from, int to) {
+    int h = 0;
+    for (int off = from; off < to; off++) {
+      char c = chars.charAt(off);
+      if (!isWhiteSpace(c)) {
+        h = 31 * h + c;
+      }
+    }
+    return h;
+  }
+
+  /**
+   * Allows to answer if given symbol is white space, tabulation or line feed.
+   *
+   * @param c symbol to check
+   * @return <code>true</code> if given symbol is white space, tabulation or line feed; <code>false</code> otherwise
+   */
+  @Contract(pure = true)
+  public static boolean isWhiteSpace(char c) {
+    return c == '\n' || c == '\t' || c == ' ';
+  }
+
+  @Contract(pure = true)
+  public static int stringHashCodeIgnoreWhitespaces(@Nonnull CharSequence chars) {
+    return stringHashCodeIgnoreWhitespaces(chars, 0, chars.length());
+  }
+
   @Nonnull
   @Contract(pure = true)
   public static <T> String join(@Nonnull Iterable<? extends T> items, @Nonnull Function<? super T, String> f, @Nonnull String separator) {
