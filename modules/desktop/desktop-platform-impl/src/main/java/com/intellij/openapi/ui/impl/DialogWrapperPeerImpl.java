@@ -61,7 +61,7 @@ import consulo.awt.hacking.DialogHacking;
 import consulo.desktop.start.splash.DesktopSplash;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
-import consulo.ui.SwingUIDecorator;
+import consulo.ui.decorator.SwingUIDecorator;
 import consulo.ui.UIAccess;
 import consulo.ui.desktop.internal.window.JDialogAsUIWindow;
 import consulo.ui.impl.ModalityPerProjectEAPDescriptor;

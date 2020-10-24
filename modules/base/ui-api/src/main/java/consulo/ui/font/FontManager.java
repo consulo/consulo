@@ -15,7 +15,7 @@
  */
 package consulo.ui.font;
 
-import consulo.ui.UIInternal;
+import consulo.ui.internal.UIInternal;
 
 import javax.annotation.Nonnull;
 import java.util.Set;

@@ -1181,7 +1181,7 @@
 
     <extensionPoint name="searchScopesProvider" interface="com.intellij.psi.search.SearchScopeProvider"/>
 
-    <extensionPoint name="uiDecorator" interface="consulo.ui.UIDecorator"/>
+    <extensionPoint name="uiDecorator" interface="consulo.ui.decorator.UIDecorator"/>
 
     <extensionPoint name="statusBarWidgetProvider" interface="com.intellij.openapi.wm.StatusBarWidgetProvider"/>
   </extensionPoints>

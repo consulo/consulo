@@ -60,7 +60,7 @@ import consulo.disposer.Disposer;
 import consulo.logging.Logger;
 import consulo.options.ConfigurableUIMigrationUtil;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.SwingUIDecorator;
+import consulo.ui.decorator.SwingUIDecorator;
 import consulo.util.ProtectedRunnable;
 import consulo.util.dataholder.Key;
 import org.jetbrains.annotations.Nls;

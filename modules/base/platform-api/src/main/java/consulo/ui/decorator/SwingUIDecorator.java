@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui;
+package consulo.ui.decorator;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

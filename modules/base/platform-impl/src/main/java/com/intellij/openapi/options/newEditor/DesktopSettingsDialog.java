@@ -33,7 +33,7 @@ import com.intellij.ui.border.CustomLineBorder;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.components.BorderLayoutPanel;
 import consulo.platform.base.localize.CommonLocalize;
-import consulo.ui.WholeWestDialogWrapper;
+import consulo.application.ui.WholeWestDialogWrapper;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.dataholder.Key;
 import org.jetbrains.annotations.NonNls;

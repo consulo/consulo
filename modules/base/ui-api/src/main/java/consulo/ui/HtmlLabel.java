@@ -16,6 +16,7 @@
 package consulo.ui;
 
 import consulo.localize.LocalizeValue;
+import consulo.ui.internal.UIInternal;
 
 import javax.annotation.Nonnull;
 

@@ -16,6 +16,7 @@
 package consulo.ui;
 
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.internal.UIInternal;
 import consulo.ui.util.TraverseUtil;
 import consulo.util.concurrent.AsyncResult;
 

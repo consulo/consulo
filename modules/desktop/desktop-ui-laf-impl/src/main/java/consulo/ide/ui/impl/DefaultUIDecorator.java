@@ -19,7 +19,7 @@ import com.intellij.ide.ui.laf.darcula.DarculaUIUtil;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.ui.ColorUtil;
 import com.intellij.util.ui.JBUI;
-import consulo.ui.SwingUIDecorator;
+import consulo.ui.decorator.SwingUIDecorator;
 import consulo.desktop.util.awt.MorphColor;
 import consulo.ui.style.StyleManager;
 import consulo.desktop.util.awt.laf.BuildInLookAndFeel;

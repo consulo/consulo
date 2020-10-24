@@ -15,7 +15,7 @@
  */
 package consulo.ui.layout;
 
-import consulo.ui.UIInternal;
+import consulo.ui.internal.UIInternal;
 import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;

@@ -22,6 +22,7 @@ import consulo.ui.font.FontManager;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageKey;
 import consulo.ui.image.canvas.Canvas2D;
+import consulo.ui.internal.UIInternal;
 import consulo.ui.layout.*;
 import consulo.ui.model.ListModel;
 import consulo.ui.model.MutableListModel;

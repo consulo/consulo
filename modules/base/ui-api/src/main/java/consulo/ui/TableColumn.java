@@ -15,6 +15,8 @@
  */
 package consulo.ui;
 
+import consulo.ui.internal.UIInternal;
+
 import javax.annotation.Nonnull;
 import java.util.function.Function;
 

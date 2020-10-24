@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui;
+package consulo.ui.internal;
 
 import consulo.annotation.ReviewAfterMigrationToJRE;
 import consulo.container.StartupError;
@@ -21,6 +21,7 @@ import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginIds;
 import consulo.container.plugin.PluginManager;
 import consulo.localize.LocalizeValue;
+import consulo.ui.*;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.font.FontManager;
 import consulo.ui.image.IconLibraryManager;

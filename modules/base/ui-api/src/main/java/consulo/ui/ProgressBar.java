@@ -15,6 +15,8 @@
  */
 package consulo.ui;
 
+import consulo.ui.internal.UIInternal;
+
 /**
  * @author VISTALL
  * @since 2020-05-11

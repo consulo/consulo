@@ -38,7 +38,7 @@ import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.accessibility.AccessibleContextUtil;
 import consulo.awt.TargetAWT;
 import consulo.disposer.Disposable;
-import consulo.ui.SwingUIDecorator;
+import consulo.ui.decorator.SwingUIDecorator;
 import consulo.ui.image.Image;
 
 import javax.swing.*;

@@ -17,6 +17,7 @@ package consulo.ui;
 
 import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.internal.UIInternal;
 import consulo.ui.model.ListModel;
 
 import javax.annotation.Nonnull;

@@ -46,6 +46,7 @@ import consulo.ui.image.ImageState;
 import consulo.ui.image.canvas.Canvas2D;
 import consulo.ui.impl.model.ImmutableListModelImpl;
 import consulo.ui.impl.model.MutableListModelImpl;
+import consulo.ui.internal.UIInternal;
 import consulo.ui.layout.*;
 import consulo.ui.model.ListModel;
 import consulo.ui.model.MutableListModel;

@@ -25,7 +25,7 @@ import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.WholeWestDialogWrapper;
+import consulo.application.ui.WholeWestDialogWrapper;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

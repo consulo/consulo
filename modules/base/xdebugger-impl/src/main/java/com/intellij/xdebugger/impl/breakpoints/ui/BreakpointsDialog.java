@@ -44,8 +44,8 @@ import com.intellij.xdebugger.impl.breakpoints.ui.tree.BreakpointItemsTreeContro
 import com.intellij.xdebugger.impl.breakpoints.ui.tree.BreakpointsCheckboxTree;
 import consulo.disposer.Disposer;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.SwingUIDecorator;
-import consulo.ui.WholeWestDialogWrapper;
+import consulo.ui.decorator.SwingUIDecorator;
+import consulo.application.ui.WholeWestDialogWrapper;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

@@ -33,6 +33,7 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <java.level>11</java.level>
   </properties>
 
   <dependencies>
@@ -60,11 +61,6 @@
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>consulo-localize-api</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>consulo-ui-api-shared</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>

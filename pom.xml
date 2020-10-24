@@ -110,7 +110,6 @@
     <module>modules/base/vcs-log-impl-testing</module>
     <module>modules/base/vcs-impl</module>
     <module>modules/base/ui-api</module>
-    <module>modules/base/ui-api-shared</module>
     <module>modules/base/ui-impl</module>
     <module>modules/base/vcs-impl-testing</module>
     <module>modules/base/usage-view</module>

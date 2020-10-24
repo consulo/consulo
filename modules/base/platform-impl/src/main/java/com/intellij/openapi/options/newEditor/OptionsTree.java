@@ -35,7 +35,7 @@ import com.intellij.util.ui.update.MergingUpdateQueue;
 import com.intellij.util.ui.update.Update;
 import consulo.disposer.Disposer;
 import consulo.ui.ItemPresentation;
-import consulo.ui.SwingUIDecorator;
+import consulo.ui.decorator.SwingUIDecorator;
 import consulo.ui.TreeNode;
 import consulo.ui.app.impl.settings.UnifiedConfigurableComparator;
 import org.jetbrains.concurrency.Promise;

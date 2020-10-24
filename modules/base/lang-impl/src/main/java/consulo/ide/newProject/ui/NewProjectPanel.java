@@ -41,7 +41,7 @@ import consulo.ide.newProject.node.NewModuleContextItem;
 import consulo.ide.welcomeScreen.BaseWelcomeScreenPanel;
 import consulo.ide.wizard.newModule.NewModuleWizardContext;
 import consulo.logging.Logger;
-import consulo.ui.SwingUIDecorator;
+import consulo.ui.decorator.SwingUIDecorator;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.wizard.WizardSession;
 import consulo.ui.wizard.WizardStep;

@@ -17,6 +17,7 @@ package consulo.ui;
 
 import consulo.disposer.Disposable;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.internal.UIInternal;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

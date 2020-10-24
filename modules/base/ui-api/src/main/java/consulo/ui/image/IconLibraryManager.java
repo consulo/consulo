@@ -15,14 +15,12 @@
  */
 package consulo.ui.image;
 
-import consulo.localize.LocalizeValue;
-import consulo.ui.UIInternal;
+import consulo.ui.internal.UIInternal;
 import consulo.ui.style.Style;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * @author VISTALL

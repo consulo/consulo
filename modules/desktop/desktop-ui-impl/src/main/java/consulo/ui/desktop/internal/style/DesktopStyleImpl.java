@@ -21,7 +21,7 @@ import consulo.awt.TargetAWT;
 import consulo.desktop.util.awt.MorphValue;
 import consulo.desktop.util.awt.laf.GTKPlusUIUtil;
 import consulo.ide.ui.laf.LafWithIconLibrary;
-import consulo.ui.SwingUIDecorator;
+import consulo.ui.decorator.SwingUIDecorator;
 import consulo.ui.desktop.internal.image.DesktopStyledImage;
 import consulo.ui.image.IconLibraryManager;
 import consulo.ui.image.Image;

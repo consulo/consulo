@@ -18,7 +18,7 @@ import com.intellij.ui.tabs.impl.singleRow.MoreTabsIcon;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.BaseButtonBehavior;
 import com.intellij.util.ui.UIUtil;
-import consulo.ui.SwingUIDecorator;
+import consulo.ui.decorator.SwingUIDecorator;
 import consulo.ui.style.StyleManager;
 
 import javax.annotation.Nonnull;

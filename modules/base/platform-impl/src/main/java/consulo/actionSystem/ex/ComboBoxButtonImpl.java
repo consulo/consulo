@@ -26,7 +26,7 @@ import com.intellij.ui.ColoredListCellRenderer;
 import com.intellij.util.ObjectUtil;
 import consulo.awt.hacking.BasicComboBoxUIHacking;
 import consulo.localize.LocalizeValue;
-import consulo.ui.SwingUIDecorator;
+import consulo.ui.decorator.SwingUIDecorator;
 import kava.beans.PropertyChangeEvent;
 import kava.beans.PropertyChangeListener;
 

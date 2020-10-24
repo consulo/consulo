@@ -15,7 +15,6 @@
  */
 package consulo.ui.shared;
 
-import com.google.common.annotations.GwtIncompatible;
 import javax.annotation.Nonnull;
 
 import java.io.Serializable;
@@ -73,7 +72,6 @@ public class Rectangle2D implements Serializable, Cloneable {
   }
 
   @Override
-  @GwtIncompatible
   public Rectangle2D clone() {
     return new Rectangle2D(myCoordinate, mySize);
   }

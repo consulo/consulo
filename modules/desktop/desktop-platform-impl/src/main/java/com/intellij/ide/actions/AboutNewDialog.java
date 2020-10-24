@@ -31,7 +31,7 @@ import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginManager;
 import consulo.platform.Platform;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.WholeWestDialogWrapper;
+import consulo.application.ui.WholeWestDialogWrapper;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

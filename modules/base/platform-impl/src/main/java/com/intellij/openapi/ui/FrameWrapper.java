@@ -34,7 +34,7 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.ImageUtil;
 import consulo.awt.TargetAWT;
 import consulo.disposer.Disposer;
-import consulo.ui.SwingUIDecorator;
+import consulo.ui.decorator.SwingUIDecorator;
 import consulo.ui.impl.ModalityPerProjectEAPDescriptor;
 import consulo.util.dataholder.Key;
 import org.jetbrains.annotations.NonNls;

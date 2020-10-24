@@ -75,7 +75,6 @@
         <include>consulo:consulo-remote-servers-impl</include>
         <include>consulo:consulo-trash-can</include>
         <include>consulo:consulo-ui-api</include>
-        <include>consulo:consulo-ui-api-shared</include>
         <include>consulo:consulo-ui-impl</include>
         <include>consulo:consulo-usage-view</include>
         <include>consulo:consulo-vcs-api</include>

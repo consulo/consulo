@@ -16,6 +16,7 @@
 package consulo.ui;
 
 import consulo.ui.image.Image;
+import consulo.ui.internal.UIInternal;
 import consulo.util.lang.ObjectUtil;
 
 import javax.annotation.Nonnull;

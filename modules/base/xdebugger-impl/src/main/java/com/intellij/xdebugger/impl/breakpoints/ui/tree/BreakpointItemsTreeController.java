@@ -22,7 +22,7 @@ import com.intellij.util.ui.tree.TreeUtil;
 import com.intellij.xdebugger.breakpoints.ui.XBreakpointGroup;
 import com.intellij.xdebugger.breakpoints.ui.XBreakpointGroupingRule;
 import com.intellij.xdebugger.impl.breakpoints.ui.BreakpointItem;
-import consulo.ui.SwingUIDecorator;
+import consulo.ui.decorator.SwingUIDecorator;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

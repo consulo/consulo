@@ -18,7 +18,7 @@ package consulo.ui.layout;
 import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
 import consulo.ui.Component;
-import consulo.ui.UIInternal;
+import consulo.ui.internal.UIInternal;
 import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
