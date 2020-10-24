@@ -18,7 +18,7 @@ package consulo.ui.web.internal.layout;
 import com.vaadin.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.TableLayout;
-import consulo.ui.shared.StaticPosition;
+import consulo.ui.StaticPosition;
 import consulo.ui.web.internal.TargetVaddin;
 import consulo.ui.web.internal.base.UIComponentWithVaadinComponent;
 import consulo.ui.web.internal.base.VaadinComponentContainer;

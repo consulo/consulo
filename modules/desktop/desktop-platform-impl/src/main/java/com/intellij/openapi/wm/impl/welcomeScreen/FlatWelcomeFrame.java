@@ -40,7 +40,7 @@ import consulo.start.WelcomeFrameManager;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.decorator.SwingUIDecorator;
 import consulo.ui.desktop.internal.window.JFrameAsUIWindow;
-import consulo.ui.shared.Rectangle2D;
+import consulo.ui.Rectangle2D;
 
 import javax.accessibility.AccessibleContext;
 import javax.annotation.Nullable;

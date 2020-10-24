@@ -21,9 +21,9 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.DockLayout;
 import consulo.ui.layout.HorizontalLayout;
 import consulo.ui.layout.Layout;
-import consulo.ui.shared.Size;
-import consulo.ui.shared.border.BorderPosition;
-import consulo.ui.shared.border.BorderStyle;
+import consulo.ui.Size;
+import consulo.ui.border.BorderPosition;
+import consulo.ui.border.BorderStyle;
 import consulo.ui.style.ComponentColors;
 
 import javax.annotation.Nonnull;

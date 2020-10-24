@@ -26,7 +26,7 @@ import consulo.ui.desktop.internal.image.DesktopStyledImage;
 import consulo.ui.image.IconLibraryManager;
 import consulo.ui.image.Image;
 import consulo.ui.impl.style.StyleImpl;
-import consulo.ui.shared.ColorValue;
+import consulo.ui.color.ColorValue;
 import consulo.ui.style.ColorKey;
 import consulo.ui.style.ComponentColors;
 import consulo.ui.style.StandardColors;

@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2018 consulo.io
+ * Copyright 2013-2017 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,27 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui.shared;
-
-import javax.annotation.Nonnull;
+package consulo.ui.border;
 
 /**
  * @author VISTALL
- * @since 2018-06-17
+ * @since 15-Sep-17
  */
-final class WithAlphaColorValue implements ColorValue {
-  private final ColorValue myColorValue;
-  private final float myAlpha;
-
-  public WithAlphaColorValue(ColorValue colorValue, float alpha) {
-    myColorValue = colorValue;
-    myAlpha = alpha;
-  }
-
-  @Nonnull
-  @Override
-  public RGBColor toRGB() {
-    RGBColor rgbColor = myColorValue.toRGB();
-    return new RGBColor(rgbColor, myAlpha);
-  }
+public enum BorderPosition {
+  TOP,
+  BOTTOM,
+  LEFT,
+  RIGHT
 }

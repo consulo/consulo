@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2020 consulo.io
+ * Copyright 2013-2018 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,25 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui.shared;
+package consulo.ui.color;
 
 import javax.annotation.Nonnull;
-import java.util.function.Supplier;
 
 /**
  * @author VISTALL
- * @since 2020-08-09
+ * @since 2018-06-17
  */
-class LazyColorValue implements ColorValue {
-  private Supplier<? extends ColorValue> myColorSupplier;
+final class WithAlphaColorValue implements ColorValue {
+  private final ColorValue myColorValue;
+  private final float myAlpha;
 
-  LazyColorValue(Supplier<? extends ColorValue> colorSupplier) {
-    myColorSupplier = colorSupplier;
+  public WithAlphaColorValue(ColorValue colorValue, float alpha) {
+    myColorValue = colorValue;
+    myAlpha = alpha;
   }
 
   @Nonnull
   @Override
   public RGBColor toRGB() {
-    return myColorSupplier.get().toRGB();
+    RGBColor rgbColor = myColorValue.toRGB();
+    return new RGBColor(rgbColor, myAlpha);
   }
 }

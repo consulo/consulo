@@ -16,7 +16,7 @@
 package consulo.ui.ex;
 
 import consulo.disposer.Disposable;
-import consulo.ui.shared.Rectangle2D;
+import consulo.ui.Rectangle2D;
 import javax.annotation.Nonnull;
 
 /**

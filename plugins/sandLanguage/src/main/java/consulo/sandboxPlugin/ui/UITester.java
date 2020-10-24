@@ -24,7 +24,7 @@ import consulo.ui.Label;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.app.WindowWrapper;
 import consulo.ui.layout.*;
-import consulo.ui.shared.Size;
+import consulo.ui.Size;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

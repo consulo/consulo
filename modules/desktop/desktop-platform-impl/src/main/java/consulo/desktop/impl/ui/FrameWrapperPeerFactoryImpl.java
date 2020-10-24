@@ -39,7 +39,7 @@ import com.intellij.util.ui.UIUtil;
 import consulo.ui.Window;
 import consulo.ui.desktop.internal.window.JDialogAsUIWindow;
 import consulo.ui.desktop.internal.window.JFrameAsUIWindow;
-import consulo.ui.shared.Rectangle2D;
+import consulo.ui.Rectangle2D;
 import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;

@@ -19,8 +19,8 @@ import consulo.localize.LocalizeValue;
 import consulo.ui.Label;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
-import consulo.ui.shared.ColorValue;
-import consulo.ui.shared.HorizontalAlignment;
+import consulo.ui.color.ColorValue;
+import consulo.ui.HorizontalAlignment;
 import consulo.ui.web.internal.base.UIComponentWithVaadinComponent;
 
 import javax.annotation.Nonnull;

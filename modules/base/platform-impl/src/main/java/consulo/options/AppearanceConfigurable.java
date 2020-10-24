@@ -33,7 +33,7 @@ import consulo.ui.font.FontManager;
 import consulo.ui.image.IconLibrary;
 import consulo.ui.image.IconLibraryManager;
 import consulo.ui.layout.*;
-import consulo.ui.shared.StaticPosition;
+import consulo.ui.StaticPosition;
 import consulo.ui.style.Style;
 import consulo.ui.style.StyleManager;
 import consulo.ui.util.LabeledBuilder;

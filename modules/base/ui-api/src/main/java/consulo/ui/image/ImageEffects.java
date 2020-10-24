@@ -18,7 +18,7 @@ package consulo.ui.image;
 import consulo.annotation.DeprecationInfo;
 import consulo.ui.internal.UIInternal;
 import consulo.ui.image.canvas.Canvas2D;
-import consulo.ui.shared.ColorValue;
+import consulo.ui.color.ColorValue;
 
 import javax.annotation.Nonnull;
 import java.util.Objects;

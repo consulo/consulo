@@ -32,8 +32,8 @@ import consulo.ui.image.canvas.Canvas2D;
 import consulo.ui.layout.*;
 import consulo.ui.model.ListModel;
 import consulo.ui.model.MutableListModel;
-import consulo.ui.shared.ColorValue;
-import consulo.ui.shared.StaticPosition;
+import consulo.ui.color.ColorValue;
+import consulo.ui.StaticPosition;
 import consulo.ui.style.StyleManager;
 
 import javax.annotation.Nonnull;

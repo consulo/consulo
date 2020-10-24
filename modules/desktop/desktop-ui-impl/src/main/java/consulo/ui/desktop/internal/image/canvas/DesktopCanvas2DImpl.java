@@ -7,8 +7,8 @@ import consulo.awt.TargetAWT;
 import consulo.logging.Logger;
 import consulo.ui.image.Image;
 import consulo.ui.image.canvas.Canvas2D;
-import consulo.ui.shared.ColorValue;
-import consulo.ui.shared.RGBColor;
+import consulo.ui.color.ColorValue;
+import consulo.ui.color.RGBColor;
 import consulo.ui.style.StandardColors;
 import org.imgscalr.Scalr;
 

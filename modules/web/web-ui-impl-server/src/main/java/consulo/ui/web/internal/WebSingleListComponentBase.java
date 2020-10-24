@@ -19,7 +19,7 @@ import consulo.ui.ListItemRender;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ValueComponent;
 import consulo.ui.model.ListModel;
-import consulo.ui.shared.Size;
+import consulo.ui.Size;
 import consulo.ui.web.internal.base.UIComponentWithVaadinComponent;
 
 import javax.annotation.Nonnull;

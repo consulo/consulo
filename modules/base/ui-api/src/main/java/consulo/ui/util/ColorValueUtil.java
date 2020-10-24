@@ -1,7 +1,7 @@
 package consulo.ui.util;
 
 import consulo.annotation.UsedInPlugin;
-import consulo.ui.shared.RGBColor;
+import consulo.ui.color.RGBColor;
 import consulo.util.lang.StringUtil;
 
 import javax.annotation.Nonnull;

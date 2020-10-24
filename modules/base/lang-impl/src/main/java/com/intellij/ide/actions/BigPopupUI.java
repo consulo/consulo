@@ -19,7 +19,7 @@ import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.components.BorderLayoutPanel;
 import consulo.awt.TargetAWT;
 import consulo.ui.TextBoxWithExtensions;
-import consulo.ui.shared.border.BorderStyle;
+import consulo.ui.border.BorderStyle;
 
 import javax.annotation.Nonnull;
 

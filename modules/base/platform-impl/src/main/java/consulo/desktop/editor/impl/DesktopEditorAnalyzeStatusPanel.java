@@ -67,7 +67,7 @@ import consulo.awt.TargetAWT;
 import consulo.disposer.Disposable;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
-import consulo.ui.shared.Size;
+import consulo.ui.Size;
 import consulo.util.dataholder.Key;
 import kava.beans.PropertyChangeListener;
 

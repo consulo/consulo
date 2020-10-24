@@ -32,9 +32,9 @@ import consulo.ui.event.FocusListener;
 import consulo.ui.event.KeyListener;
 import consulo.ui.impl.BorderInfo;
 import consulo.ui.impl.UIDataObject;
-import consulo.ui.shared.Size;
-import consulo.ui.shared.border.BorderPosition;
-import consulo.ui.shared.border.BorderStyle;
+import consulo.ui.Size;
+import consulo.ui.border.BorderPosition;
+import consulo.ui.border.BorderStyle;
 import consulo.ui.style.ColorKey;
 
 import javax.annotation.Nonnull;

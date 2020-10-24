@@ -16,7 +16,7 @@
 package consulo.test.impl.ui;
 
 import com.intellij.openapi.util.EmptyRunnable;
-import consulo.ui.shared.ColorValue;
+import consulo.ui.color.ColorValue;
 import consulo.ui.style.*;
 
 import javax.annotation.Nonnull;

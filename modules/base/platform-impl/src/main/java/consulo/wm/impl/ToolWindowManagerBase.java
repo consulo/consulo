@@ -53,7 +53,7 @@ import consulo.ui.ex.*;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
 import consulo.ui.image.ImageKey;
-import consulo.ui.shared.Rectangle2D;
+import consulo.ui.Rectangle2D;
 import consulo.ui.style.StandardColors;
 import kava.beans.PropertyChangeEvent;
 import kava.beans.PropertyChangeListener;

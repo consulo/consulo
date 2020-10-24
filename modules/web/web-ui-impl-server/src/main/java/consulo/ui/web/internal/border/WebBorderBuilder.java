@@ -17,7 +17,7 @@ package consulo.ui.web.internal.border;
 
 import consulo.ui.Component;
 import consulo.ui.impl.BorderInfo;
-import consulo.ui.shared.ColorValue;
+import consulo.ui.color.ColorValue;
 import consulo.ui.style.Style;
 import consulo.ui.style.StyleManager;
 import consulo.ui.web.internal.base.DataObjectHolder;

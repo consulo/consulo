@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui.shared;
+package consulo.ui;
 
 import java.io.Serializable;
 
@@ -21,7 +21,7 @@ import java.io.Serializable;
  * @author VISTALL
  * @since 25-Sep-17
  */
-public class Coordinate2D implements Serializable {
+public final class Coordinate2D implements Serializable {
   private static final long serialVersionUID = -8454212049522017852L;
 
   private int myX;

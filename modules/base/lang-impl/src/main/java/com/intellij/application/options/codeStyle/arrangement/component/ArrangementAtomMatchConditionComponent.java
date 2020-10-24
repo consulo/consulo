@@ -34,7 +34,7 @@ import com.intellij.util.containers.ContainerUtilRt;
 import com.intellij.util.ui.GridBag;
 import com.intellij.util.ui.UIUtil;
 import consulo.ui.image.Image;
-import consulo.ui.shared.Size;
+import consulo.ui.Size;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

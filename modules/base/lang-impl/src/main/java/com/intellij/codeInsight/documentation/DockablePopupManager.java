@@ -26,7 +26,7 @@ import com.intellij.util.ui.update.Activatable;
 import com.intellij.util.ui.update.UiNotifyConnector;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.ui.shared.Rectangle2D;
+import consulo.ui.Rectangle2D;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;

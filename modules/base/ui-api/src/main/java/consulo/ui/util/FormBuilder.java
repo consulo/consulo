@@ -19,7 +19,7 @@ import consulo.ui.Component;
 import consulo.ui.Label;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.TableLayout;
-import consulo.ui.shared.StaticPosition;
+import consulo.ui.StaticPosition;
 import consulo.util.lang.StringUtil;
 
 import javax.annotation.Nonnull;

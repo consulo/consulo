@@ -17,7 +17,7 @@ package consulo.ui.style;
 
 import consulo.ui.image.IconLibraryManager;
 import consulo.ui.image.Image;
-import consulo.ui.shared.ColorValue;
+import consulo.ui.color.ColorValue;
 
 import javax.annotation.Nonnull;
 

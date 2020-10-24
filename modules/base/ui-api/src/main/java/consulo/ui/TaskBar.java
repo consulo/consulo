@@ -16,7 +16,7 @@
 package consulo.ui;
 
 import consulo.ui.internal.UIInternal;
-import consulo.ui.shared.ColorValue;
+import consulo.ui.color.ColorValue;
 
 import javax.annotation.Nonnull;
 

@@ -23,7 +23,7 @@ import consulo.ui.Component;
 import consulo.ui.Window;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.desktop.internal.window.WindowOverAWTWindow;
-import consulo.ui.shared.Size;
+import consulo.ui.Size;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

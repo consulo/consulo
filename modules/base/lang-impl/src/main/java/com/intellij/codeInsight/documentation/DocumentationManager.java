@@ -70,7 +70,7 @@ import com.intellij.util.text.DateFormatUtil;
 import com.intellij.util.ui.UIUtil;
 import consulo.codeInsight.TargetElementUtil;
 import consulo.fileTypes.ArchiveFileType;
-import consulo.ui.shared.Rectangle2D;
+import consulo.ui.Rectangle2D;
 import consulo.util.dataholder.Key;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;

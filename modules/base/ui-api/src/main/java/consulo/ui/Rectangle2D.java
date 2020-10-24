@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui.shared;
+package consulo.ui;
 
 import javax.annotation.Nonnull;
 
@@ -23,7 +23,7 @@ import java.io.Serializable;
  * @author VISTALL
  * @since 25-Sep-17
  */
-public class Rectangle2D implements Serializable, Cloneable {
+public final class Rectangle2D implements Serializable, Cloneable {
   private static final long serialVersionUID = 4140523038283686399L;
 
   private Coordinate2D myCoordinate;

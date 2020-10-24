@@ -24,7 +24,7 @@ import com.intellij.openapi.wm.impl.welcomeScreen.FlatWelcomeFrame;
 import com.intellij.ui.BalloonLayout;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.Window;
-import consulo.ui.shared.Rectangle2D;
+import consulo.ui.Rectangle2D;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

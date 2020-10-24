@@ -25,11 +25,11 @@ import consulo.web.gwt.shared.ui.state.border.BorderStyle;
  * @since 2020-10-24
  */
 public class Mappers {
-  public static RGBColor map(consulo.ui.shared.RGBColor color) {
+  public static RGBColor map(consulo.ui.color.RGBColor color) {
     return new RGBColor(color.getRed(), color.getGreen(), color.getBlue());
   }
 
-  public static BorderPosition map(consulo.ui.shared.border.BorderPosition position) {
+  public static BorderPosition map(consulo.ui.border.BorderPosition position) {
     switch (position) {
       case TOP:
         return BorderPosition.TOP;
@@ -43,7 +43,7 @@ public class Mappers {
     throw new UnsupportedOperationException();
   }
 
-  public static HorizontalAlignment map(consulo.ui.shared.HorizontalAlignment alignment) {
+  public static HorizontalAlignment map(consulo.ui.HorizontalAlignment alignment) {
     switch (alignment) {
 
       case LEFT:
@@ -57,7 +57,7 @@ public class Mappers {
     throw new UnsupportedOperationException();
   }
 
-  public static BorderStyle map(consulo.ui.shared.border.BorderStyle style) {
+  public static BorderStyle map(consulo.ui.border.BorderStyle style) {
     switch (style) {
       case LINE:
       return BorderStyle.LINE;

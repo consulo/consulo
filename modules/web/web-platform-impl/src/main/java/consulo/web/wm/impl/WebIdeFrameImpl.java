@@ -25,7 +25,7 @@ import com.vaadin.shared.ui.window.WindowMode;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.UIAccess;
 import consulo.ui.Window;
-import consulo.ui.shared.Rectangle2D;
+import consulo.ui.Rectangle2D;
 import consulo.ui.web.internal.TargetVaddin;
 import consulo.ui.web.internal.WebRootPaneImpl;
 import consulo.web.application.WebApplication;

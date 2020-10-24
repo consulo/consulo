@@ -25,7 +25,7 @@ import consulo.moduleImport.ModuleImportContext;
 import consulo.moduleImport.ModuleImportProvider;
 import consulo.start.WelcomeFrameManager;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.shared.Size;
+import consulo.ui.Size;
 import consulo.ui.wizard.WizardSession;
 import consulo.ui.wizard.WizardStep;
 

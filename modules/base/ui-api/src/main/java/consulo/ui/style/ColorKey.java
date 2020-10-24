@@ -15,8 +15,8 @@
  */
 package consulo.ui.style;
 
-import consulo.ui.shared.ColorValue;
-import consulo.ui.shared.RGBColor;
+import consulo.ui.color.ColorValue;
+import consulo.ui.color.RGBColor;
 import javax.annotation.Nonnull;
 
 /**

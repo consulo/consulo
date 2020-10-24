@@ -16,7 +16,7 @@
 package consulo.ui.web.internal;
 
 import consulo.localize.LocalizeValue;
-import consulo.ui.shared.HorizontalAlignment;
+import consulo.ui.HorizontalAlignment;
 import consulo.ui.web.internal.base.VaadinComponent;
 import consulo.ui.web.internal.util.Mappers;
 import consulo.web.gwt.shared.ui.state.LabelState;

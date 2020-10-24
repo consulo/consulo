@@ -21,7 +21,7 @@ import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.desktop.internal.base.SwingComponentDelegate;
 import consulo.ui.layout.TableLayout;
-import consulo.ui.shared.StaticPosition;
+import consulo.ui.StaticPosition;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;

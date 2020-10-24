@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2017 consulo.io
+ * Copyright 2013-2020 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,15 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui.shared.border;
+package consulo.ui.color;
+
+import javax.annotation.Nonnull;
+import java.util.function.Supplier;
 
 /**
  * @author VISTALL
- * @since 15-Sep-17
+ * @since 2020-08-09
  */
-public enum BorderPosition {
-  TOP,
-  BOTTOM,
-  LEFT,
-  RIGHT
+class LazyColorValue implements ColorValue {
+  private Supplier<? extends ColorValue> myColorSupplier;
+
+  LazyColorValue(Supplier<? extends ColorValue> colorSupplier) {
+    myColorSupplier = colorSupplier;
+  }
+
+  @Nonnull
+  @Override
+  public RGBColor toRGB() {
+    return myColorSupplier.get().toRGB();
+  }
 }

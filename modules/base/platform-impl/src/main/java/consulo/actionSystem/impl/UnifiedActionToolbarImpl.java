@@ -24,7 +24,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.HorizontalLayout;
 import consulo.ui.layout.Layout;
 import consulo.ui.layout.VerticalLayout;
-import consulo.ui.shared.Size;
+import consulo.ui.Size;
 import org.intellij.lang.annotations.MagicConstant;
 
 import javax.annotation.Nonnull;

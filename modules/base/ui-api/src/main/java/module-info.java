@@ -16,9 +16,9 @@ module consulo.ui.api {
 
   exports consulo.ui;
   exports consulo.ui.annotation;
+  exports consulo.ui.color;
+  exports consulo.ui.border;
   exports consulo.ui.event;
-  exports consulo.ui.shared;
-  exports consulo.ui.shared.border;
   exports consulo.ui.font;
   exports consulo.ui.image;
   exports consulo.ui.image.canvas;

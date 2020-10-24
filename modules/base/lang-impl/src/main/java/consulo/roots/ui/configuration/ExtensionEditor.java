@@ -42,7 +42,7 @@ import consulo.roots.ui.configuration.extension.ExtensionTreeCellRenderer;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.Layout;
-import consulo.ui.shared.border.BorderStyle;
+import consulo.ui.border.BorderStyle;
 import org.jetbrains.annotations.Nls;
 
 import javax.annotation.Nonnull;

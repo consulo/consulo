@@ -21,7 +21,7 @@ import com.intellij.util.ui.EmptyIcon;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import consulo.annotation.DeprecationInfo;
-import consulo.ui.shared.Size;
+import consulo.ui.Size;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;

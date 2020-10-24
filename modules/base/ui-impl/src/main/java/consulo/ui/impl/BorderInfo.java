@@ -15,8 +15,8 @@
  */
 package consulo.ui.impl;
 
-import consulo.ui.shared.border.BorderPosition;
-import consulo.ui.shared.border.BorderStyle;
+import consulo.ui.border.BorderPosition;
+import consulo.ui.border.BorderStyle;
 import consulo.ui.style.ColorKey;
 
 import javax.annotation.Nonnull;

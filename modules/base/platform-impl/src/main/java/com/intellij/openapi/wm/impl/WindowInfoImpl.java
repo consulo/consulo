@@ -17,7 +17,7 @@ package com.intellij.openapi.wm.impl;
 
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.wm.*;
-import consulo.ui.shared.Rectangle2D;
+import consulo.ui.Rectangle2D;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;

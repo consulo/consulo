@@ -26,7 +26,7 @@ import consulo.ui.internal.UIInternal;
 import consulo.ui.layout.*;
 import consulo.ui.model.ListModel;
 import consulo.ui.model.MutableListModel;
-import consulo.ui.shared.ColorValue;
+import consulo.ui.color.ColorValue;
 import consulo.ui.style.StyleManager;
 
 import javax.annotation.Nonnull;

@@ -21,7 +21,7 @@ import consulo.ui.Label;
 import consulo.ui.ProgressBar;
 import consulo.ui.Window;
 import consulo.ui.layout.VerticalLayout;
-import consulo.ui.shared.Size;
+import consulo.ui.Size;
 import consulo.web.application.WebApplication;
 
 /**

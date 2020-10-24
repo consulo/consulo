@@ -31,10 +31,10 @@ import consulo.ui.desktop.internal.image.libraryImage.DesktopImageKeyImpl;
 import consulo.ui.desktop.internal.window.WindowOverAWTWindow;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageKey;
-import consulo.ui.shared.ColorValue;
-import consulo.ui.shared.RGBColor;
-import consulo.ui.shared.Rectangle2D;
-import consulo.ui.shared.Size;
+import consulo.ui.color.ColorValue;
+import consulo.ui.color.RGBColor;
+import consulo.ui.Rectangle2D;
+import consulo.ui.Size;
 import org.jetbrains.annotations.Contract;
 
 import javax.annotation.Nonnull;

@@ -19,7 +19,7 @@ import com.vaadin.server.Sizeable;
 import consulo.disposer.Disposer;
 import consulo.ui.*;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.shared.Size;
+import consulo.ui.Size;
 import consulo.ui.web.internal.base.ComponentHolder;
 import consulo.ui.web.internal.base.FromVaadinComponentWrapper;
 import consulo.ui.web.internal.base.UIComponentWithVaadinComponent;

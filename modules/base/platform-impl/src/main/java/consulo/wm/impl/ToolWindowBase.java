@@ -35,7 +35,7 @@ import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.ToolWindowInternalDecorator;
 import consulo.ui.image.Image;
-import consulo.ui.shared.Rectangle2D;
+import consulo.ui.Rectangle2D;
 import kava.beans.PropertyChangeListener;
 import kava.beans.PropertyChangeSupport;
 

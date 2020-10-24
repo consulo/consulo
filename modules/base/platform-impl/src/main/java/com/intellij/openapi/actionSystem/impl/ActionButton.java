@@ -34,7 +34,7 @@ import consulo.awt.TargetAWT;
 import consulo.localize.LocalizeValue;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
-import consulo.ui.shared.Size;
+import consulo.ui.Size;
 import consulo.util.dataholder.Key;
 import kava.beans.PropertyChangeEvent;
 import kava.beans.PropertyChangeListener;

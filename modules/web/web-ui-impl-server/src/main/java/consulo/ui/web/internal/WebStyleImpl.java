@@ -15,8 +15,8 @@
  */
 package consulo.ui.web.internal;
 
-import consulo.ui.shared.ColorValue;
-import consulo.ui.shared.RGBColor;
+import consulo.ui.color.ColorValue;
+import consulo.ui.color.RGBColor;
 import consulo.ui.style.ColorKey;
 import consulo.ui.style.ComponentColors;
 import consulo.ui.style.StandardColors;

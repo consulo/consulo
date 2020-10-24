@@ -21,7 +21,7 @@ import com.intellij.openapi.wm.StatusBar;
 import com.intellij.openapi.wm.ex.IdeFrameEx;
 import com.intellij.ui.BalloonLayout;
 import consulo.ui.Window;
-import consulo.ui.shared.Rectangle2D;
+import consulo.ui.Rectangle2D;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

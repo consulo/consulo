@@ -13,7 +13,7 @@ import consulo.ui.TextBoxWithExtensions;
 import consulo.ui.ValidableComponent;
 import consulo.ui.event.KeyEvent;
 import consulo.ui.event.KeyListener;
-import consulo.ui.shared.border.BorderStyle;
+import consulo.ui.border.BorderStyle;
 
 import javax.annotation.Nonnull;
 import java.awt.*;

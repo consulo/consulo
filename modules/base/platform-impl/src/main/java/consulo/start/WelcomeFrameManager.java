@@ -29,7 +29,7 @@ import com.intellij.openapi.wm.WindowManager;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.UIAccess;
-import consulo.ui.shared.Size;
+import consulo.ui.Size;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

@@ -16,8 +16,8 @@
 package com.intellij.openapi.wm;
 
 import consulo.ui.TaskBar;
-import consulo.ui.shared.ColorValue;
-import consulo.ui.shared.RGBColor;
+import consulo.ui.color.ColorValue;
+import consulo.ui.color.RGBColor;
 import consulo.ui.style.StandardColors;
 
 import javax.annotation.Nonnull;

@@ -23,7 +23,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.app.WholeLeftWindowWrapper;
 import consulo.ui.layout.DockLayout;
 import consulo.ui.layout.ScrollLayout;
-import consulo.ui.shared.Size;
+import consulo.ui.Size;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

@@ -26,7 +26,7 @@ import consulo.ui.Tree;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.app.WindowWrapper;
-import consulo.ui.shared.Size;
+import consulo.ui.Size;
 import consulo.util.concurrent.AsyncResult;
 import consulo.web.fileChooser.FileTreeComponent;
 
