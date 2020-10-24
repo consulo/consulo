@@ -128,6 +128,7 @@ public class Java9ModuleInitializer {
       toResolve.add("consulo.util.serializer");
       toResolve.add("consulo.util.rmi");
       toResolve.add("consulo.util.jdom");
+      toResolve.add("consulo.util.dataholder");
 
       //toResolve.add("jakarta.activation");
       // requires java.desktop???

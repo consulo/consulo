@@ -15,16 +15,26 @@
  */
 package consulo.util.dataholder;
 
-import consulo.util.concurrent.atomic.AtomicFieldUpdater;
 import consulo.util.dataholder.keyFMap.KeyFMap;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.lang.invoke.MethodHandles;
+import java.lang.invoke.VarHandle;
 
 public class UserDataHolderBase implements UserDataHolderEx, Cloneable {
   public static final Key<KeyFMap> COPYABLE_USER_MAP_KEY = Key.create("COPYABLE_USER_MAP_KEY");
 
-  private static final AtomicFieldUpdater<UserDataHolderBase, KeyFMap> updater = AtomicFieldUpdater.forFieldOfType(UserDataHolderBase.class, KeyFMap.class);
+  private static VarHandle ourUpdaterVarHandle;
+
+  static {
+    try {
+      ourUpdaterVarHandle = MethodHandles.lookup().findVarHandle(UserDataHolderBase.class, "myUserMap", KeyFMap.class);
+    }
+    catch (NoSuchFieldException | IllegalAccessException e) {
+      throw new Error(e);
+    }
+  }
 
   /**
    * Concurrent writes to this field are via CASes only, using the {@link #updater}
@@ -81,7 +91,7 @@ public class UserDataHolderBase implements UserDataHolderEx, Cloneable {
   }
 
   protected boolean changeUserMap(KeyFMap oldMap, KeyFMap newMap) {
-    return updater.compareAndSet(this, oldMap, newMap);
+    return ourUpdaterVarHandle.compareAndSet(this, oldMap, newMap);
   }
 
   public <T> T getCopyableUserData(Key<T> key) {

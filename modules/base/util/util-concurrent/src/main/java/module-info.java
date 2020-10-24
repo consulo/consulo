@@ -8,5 +8,4 @@ module consulo.util.concurrent {
   requires consulo.util.lang;
 
   exports consulo.util.concurrent;
-  exports consulo.util.concurrent.atomic;
 }
