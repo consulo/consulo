@@ -114,13 +114,6 @@
     </dependency>
 
     <dependency>
-      <!--TODO REMOVE-->
-      <groupId>${project.groupId}</groupId>
-      <artifactId>consulo-ui-api-shared</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    
-    <dependency>
       <groupId>consulo.internal.vaadin</groupId>
       <artifactId>vaadin-client</artifactId>
       <version>${vaadin.version}</version>

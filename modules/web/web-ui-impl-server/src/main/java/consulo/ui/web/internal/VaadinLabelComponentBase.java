@@ -18,6 +18,7 @@ package consulo.ui.web.internal;
 import consulo.localize.LocalizeValue;
 import consulo.ui.shared.HorizontalAlignment;
 import consulo.ui.web.internal.base.VaadinComponent;
+import consulo.ui.web.internal.util.Mappers;
 import consulo.web.gwt.shared.ui.state.LabelState;
 
 import javax.annotation.Nonnull;
@@ -37,7 +38,7 @@ public abstract class VaadinLabelComponentBase extends VaadinComponent {
 
   public void setHorizontalAlignment(@Nonnull HorizontalAlignment horizontalAlignment) {
     myHorizontalAlignment = horizontalAlignment;
-    getState().myHorizontalAlignment = horizontalAlignment;
+    getState().myHorizontalAlignment = Mappers.map(horizontalAlignment);
     markAsDirty();
   }
 

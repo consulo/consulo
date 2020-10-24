@@ -15,9 +15,7 @@
  */
 package consulo.web.gwt.shared.ui.state.border;
 
-import consulo.ui.shared.RGBColor;
-import consulo.ui.shared.border.BorderPosition;
-import consulo.ui.shared.border.BorderStyle;
+import consulo.web.gwt.shared.ui.state.RGBColor;
 
 import java.io.Serializable;
 import java.util.ArrayList;

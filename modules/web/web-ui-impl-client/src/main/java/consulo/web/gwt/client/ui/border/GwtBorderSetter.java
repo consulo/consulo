@@ -17,9 +17,9 @@ package consulo.web.gwt.client.ui.border;
 
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.ui.Widget;
-import consulo.ui.shared.border.BorderPosition;
 import consulo.web.gwt.client.util.GwtStyleUtil;
 import consulo.web.gwt.shared.ui.state.border.BorderListState;
+import consulo.web.gwt.shared.ui.state.border.BorderPosition;
 
 /**
  * @author VISTALL

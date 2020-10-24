@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2017 consulo.io
+ * Copyright 2013-2020 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,12 +15,12 @@
  */
 package consulo.web.gwt.shared.ui.state;
 
-import com.vaadin.shared.AbstractComponentState;
-
 /**
  * @author VISTALL
- * @since 27-Oct-17
+ * @since 2020-10-24
  */
-public class LabelState extends AbstractComponentState {
-  public HorizontalAlignment myHorizontalAlignment = HorizontalAlignment.LEFT;
+public enum HorizontalAlignment {
+  LEFT,
+  CENTER,
+  RIGHT
 }

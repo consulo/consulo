@@ -21,6 +21,7 @@ import consulo.ui.shared.ColorValue;
 import consulo.ui.style.Style;
 import consulo.ui.style.StyleManager;
 import consulo.ui.web.internal.base.DataObjectHolder;
+import consulo.ui.web.internal.util.Mappers;
 import consulo.web.gwt.shared.ui.state.border.BorderListState;
 
 import java.util.Collection;
@@ -44,12 +45,12 @@ public class WebBorderBuilder {
     
     for (BorderInfo info : borders) {
       BorderListState.BorderState borderState = new BorderListState.BorderState();
-      borderState.myPosition = info.getBorderPosition();
-      borderState.myStyle = info.getBorderStyle();
+      borderState.myPosition = Mappers.map(info.getBorderPosition());
+      borderState.myStyle = Mappers.map(info.getBorderStyle());
 
       ColorValue colorValue = info.getColorKey() == null ? null : currentStyle.getColor(info.getColorKey());
 
-      borderState.myColor = colorValue == null ? null : colorValue.toRGB();
+      borderState.myColor = colorValue == null ? null : Mappers.map(colorValue.toRGB());
       borderState.myWidth = info.getWidth();
 
       borderListState.myBorders.add(borderState);

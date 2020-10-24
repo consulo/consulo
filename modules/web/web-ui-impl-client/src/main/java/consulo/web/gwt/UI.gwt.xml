@@ -17,7 +17,6 @@
 <module>
   <inherits name="com.vaadin.DefaultWidgetSet" />
   <inherits name="org.gwt.advanced.Grid"/>
-  <inherits name="consulo.ui.UI" />
 
   <source path="client"/>
   <source path="shared"/>
