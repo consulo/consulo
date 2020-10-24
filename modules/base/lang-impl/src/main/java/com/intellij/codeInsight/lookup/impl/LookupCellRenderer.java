@@ -60,6 +60,7 @@ import java.util.Set;
 public class LookupCellRenderer implements ListCellRenderer {
   private static final Logger LOG = Logger.getInstance(LookupCellRenderer.class);
   private Image myEmptyIcon = Image.empty(Image.DEFAULT_ICON_SIZE * 2, Image.DEFAULT_ICON_SIZE);
+
   private final Font myNormalFont;
   private final Font myBoldFont;
   private final FontMetrics myNormalMetrics;
@@ -425,11 +426,11 @@ public class LookupCellRenderer implements ListCellRenderer {
       return standard;
     }
 
-    if (icon.getHeight() < standard.getHeight() || icon.getWidth() < standard.getWidth()) {
-      return ImageEffects.resize(icon, standard.getWidth(), standard.getHeight());
+    if(icon.getWidth() == standard.getWidth() && icon.getHeight() == standard.getHeight()) {
+      return icon;
     }
 
-    return icon;
+    return ImageEffects.layered(standard, icon);
   }
 
   @Nullable
