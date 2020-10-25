@@ -15,11 +15,11 @@
  */
 package consulo.injecting.pico;
 
-import consulo.logging.Logger;
-import com.intellij.openapi.util.Pair;
 import consulo.injecting.InjectingContainer;
 import consulo.injecting.InjectingContainerBuilder;
 import consulo.injecting.key.InjectingKey;
+import consulo.logging.Logger;
+import consulo.util.lang.Pair;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -33,7 +33,7 @@ import java.util.concurrent.CopyOnWriteArraySet;
  * @author VISTALL
  * @since 2018-08-23
  */
-class PicoInjectingContainer implements InjectingContainer {
+public class PicoInjectingContainer implements InjectingContainer {
   private static final Logger LOG = Logger.getInstance(PicoInjectingContainer.class);
 
   private final DefaultPicoContainer myContainer;

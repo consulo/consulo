@@ -15,6 +15,7 @@
  */
 package consulo.util.collection;
 
+import gnu.trove.THashSet;
 import gnu.trove.TObjectHashingStrategy;
 import org.jetbrains.annotations.Contract;
 
@@ -296,6 +297,18 @@ public class ContainerUtil {
     ArrayList<T> list = newArrayListWithCapacity(elements.length);
     Collections.addAll(list, elements);
     return list;
+  }
+
+  @Nonnull
+  @Contract(pure = true)
+  public static <K> Set<K> newIdentityTroveSet() {
+    return new THashSet<>(ObjectHashingStrategies.<K>identityStrategy());
+  }
+
+  @Nonnull
+  @Contract(pure = true)
+  public static <K> Set<K> newIdentityTroveSet(int initialCapacity) {
+    return new THashSet<>(initialCapacity, ObjectHashingStrategies.<K>identityStrategy());
   }
 
   public static <T> void weightSort(List<T> list, final Function<T, Integer> weighterFunc) {

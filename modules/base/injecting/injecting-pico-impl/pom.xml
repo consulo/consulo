@@ -33,6 +33,7 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <java.level>11</java.level>
   </properties>
 
   <dependencies>
@@ -50,10 +51,14 @@
       <artifactId>consulo-logging-api</artifactId>
       <version>${project.version}</version>
     </dependency>
-
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>consulo-util</artifactId>
+      <artifactId>consulo-util-lang</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>consulo-util-collection</artifactId>
       <version>${project.version}</version>
     </dependency>
   </dependencies>

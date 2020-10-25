@@ -47,6 +47,7 @@ import consulo.injecting.InjectingContainerBuilder;
 import consulo.injecting.InjectingPoint;
 import consulo.injecting.key.InjectingKey;
 import consulo.logging.Logger;
+import consulo.platform.Platform;
 import consulo.plugins.internal.PluginExtensionRegistrator;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.dataholder.UserDataHolderBase;
@@ -191,7 +192,22 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
 
     myExtensionsArea.setLocked();
 
-    InjectingContainerBuilder builder = myParent == null ? InjectingContainer.root().childBuilder() : myParent.getInjectingContainer().childBuilder();
+    String jdkModuleMain = Platform.current().jvm().getRuntimeProperty("jdk.module.main");
+
+    InjectingContainer root;
+    if (jdkModuleMain != null) {
+      PluginDescriptor plugin = PluginManager.getPlugin(getClass());
+      assert plugin != null;
+      ModuleLayer moduleLayer = (ModuleLayer)plugin.getModuleLayer();
+      assert moduleLayer != null;
+      root = InjectingContainer.root(moduleLayer);
+
+    }
+    else {
+      root = InjectingContainer.root(getClass().getClassLoader());
+    }
+
+    InjectingContainerBuilder builder = myParent == null ? root.childBuilder() : myParent.getInjectingContainer().childBuilder();
 
     registerServices(builder);
 
@@ -329,7 +345,7 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
         throw new IllegalArgumentException("Injector already build");
       }
 
-      if(progressIndicator != null) {
+      if (progressIndicator != null) {
         progressIndicator.setIndeterminate(false);
         progressIndicator.setFraction(0);
       }
@@ -339,10 +355,10 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
         try {
           myCurrentNotLazyServiceClass = serviceClass;
 
-          if(progressIndicator != null) {
+          if (progressIndicator != null) {
             progressIndicator.checkCanceled();
 
-            progressIndicator.setFraction(i / (float) myNotLazyServices.size());
+            progressIndicator.setFraction(i / (float)myNotLazyServices.size());
           }
           else {
             ProgressIndicator indicator = ProgressManager.getGlobalProgressIndicator();

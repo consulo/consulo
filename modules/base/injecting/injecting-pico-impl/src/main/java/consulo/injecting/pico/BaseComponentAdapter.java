@@ -15,12 +15,12 @@
  */
 package consulo.injecting.pico;
 
-import com.intellij.openapi.progress.ProcessCanceledException;
-import com.intellij.util.ExceptionUtil;
 import consulo.injecting.InjectingContainer;
 import consulo.injecting.PostInjectListener;
 import consulo.injecting.key.InjectingKey;
 import consulo.logging.Logger;
+import consulo.util.lang.ControlFlowException;
+import consulo.util.lang.ExceptionUtil;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
 
@@ -122,17 +122,18 @@ class BaseComponentAdapter<T> implements ComponentAdapter<T> {
         try {
           myAfterInjectionListener.afterInject(l, instance);
         }
-        catch (ProcessCanceledException e) {
-          throw e;
-        }
         catch (Throwable t) {
+          if(t instanceof ControlFlowException) {
+            throw t;
+          }
+
           LOG.error("Problem with after inject: " + targetClass.getName(), t);
         }
       }
-      catch (ProcessCanceledException e) {
-        throw e;
-      }
       catch (Throwable t) {
+        if(t instanceof ControlFlowException) {
+          throw t;
+        }
         LOG.error("Problem with initializing: " + targetClass.getName(), t);
       }
       finally {

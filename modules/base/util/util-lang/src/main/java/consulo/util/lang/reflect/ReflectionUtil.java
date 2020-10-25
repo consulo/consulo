@@ -21,10 +21,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Modifier;
+import java.lang.reflect.*;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
@@ -149,5 +146,21 @@ public class ReflectionUtil {
     });
 
     return frame.getDeclaringClass();
+  }
+
+  @Nonnull
+  public static Class<?> getRawType(@Nonnull Type type) {
+    if (type instanceof Class) {
+      return (Class)type;
+    }
+    if (type instanceof ParameterizedType) {
+      return getRawType(((ParameterizedType)type).getRawType());
+    }
+    if (type instanceof GenericArrayType) {
+      //todo[peter] don't create new instance each time
+      return Array.newInstance(getRawType(((GenericArrayType)type).getGenericComponentType()), 0).getClass();
+    }
+    assert false : type;
+    return null;
   }
 }

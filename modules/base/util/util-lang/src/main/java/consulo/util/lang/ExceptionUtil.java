@@ -15,7 +15,10 @@
  */
 package consulo.util.lang;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 
 /**
  * @author VISTALL
@@ -53,5 +56,55 @@ public class ExceptionUtil {
       rethrowUnchecked(t);
       throw new RuntimeException(t);
     }
+  }
+
+  @Nonnull
+  public static String getThrowableText(@Nonnull Throwable aThrowable) {
+    StringWriter stringWriter = new StringWriter();
+    PrintWriter writer = new PrintWriter(stringWriter);
+    aThrowable.printStackTrace(writer);
+    return stringWriter.getBuffer().toString();
+  }
+
+  @Nonnull
+  public static String getThrowableText(@Nonnull Throwable aThrowable, @Nonnull String stackFrameSkipPattern) {
+    final String prefix = "\tat ";
+    final String prefixProxy = prefix + "$Proxy";
+    final String prefixRemoteUtil = prefix + "consulo.util.rmi.RemoteUtil";
+    final String skipPattern = prefix + stackFrameSkipPattern;
+
+    final StringWriter stringWriter = new StringWriter();
+    final PrintWriter writer = new PrintWriter(stringWriter) {
+      private boolean skipping;
+
+      @Override
+      public void println(final String x) {
+        boolean curSkipping = skipping;
+        if (x != null) {
+          if (!skipping && x.startsWith(skipPattern)) curSkipping = true;
+          else if (skipping && !x.startsWith(prefix)) curSkipping = false;
+          if (curSkipping && !skipping) {
+            super.println("\tin " + stripPackage(x, skipPattern.length()));
+          }
+          skipping = curSkipping;
+          if (skipping) {
+            skipping = !x.startsWith(prefixRemoteUtil);
+            return;
+          }
+          if (x.startsWith(prefixProxy)) return;
+          super.println(x);
+        }
+      }
+    };
+    aThrowable.printStackTrace(writer);
+    return stringWriter.getBuffer().toString();
+  }
+
+  private static String stripPackage(String x, int offset) {
+    int idx = offset;
+    while (idx > 0 && idx < x.length() && !Character.isUpperCase(x.charAt(idx))) {
+      idx = x.indexOf('.', idx) + 1;
+    }
+    return x.substring(Math.max(idx, offset));
   }
 }

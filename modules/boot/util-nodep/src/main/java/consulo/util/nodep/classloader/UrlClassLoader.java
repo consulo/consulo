@@ -329,6 +329,16 @@ public class UrlClassLoader extends ClassLoader {
     return clazz;
   }
 
+  // java 9 module method. we can't use override annotation here
+  protected Class<?> findClass(String moduleName, String name) {
+    try {
+      return findClass(name);
+    }
+    catch (ClassNotFoundException ignore) {
+    }
+    return null;
+  }
+
   @Nullable
   protected final Class _findClass(@Nonnull String name) {
     Resource res = getClassPath().getResource(name.replace('.', '/') + CLASS_EXTENSION);

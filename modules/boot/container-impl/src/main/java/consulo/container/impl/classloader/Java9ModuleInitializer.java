@@ -95,8 +95,7 @@ public class Java9ModuleInitializer {
 
     containerLogger.info("Java 9 modules: " + (ourConsuloModulePathBoot ? "enabled" : "disabled"));
     if (ourConsuloModulePathBoot) {
-      // we can't enable it, due jvm will initialize all unnamed modules
-      //toResolve.add("jakarta.inject");
+      toResolve.add("jakarta.inject");
       toResolve.add("jsr305");
       toResolve.add("org.slf4j");
 
@@ -115,6 +114,8 @@ public class Java9ModuleInitializer {
       //toResolve.add("consulo.injecting.api");
       toResolve.add("consulo.disposer.api");
       toResolve.add("consulo.localize.api");
+
+      toResolve.add("consulo.injecting.pico.impl");
 
       toResolve.add("consulo.hacking.java.base");
 

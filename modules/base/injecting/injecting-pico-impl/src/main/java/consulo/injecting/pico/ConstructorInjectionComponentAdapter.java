@@ -15,11 +15,11 @@
  */
 package consulo.injecting.pico;
 
-import com.intellij.util.ExceptionUtil;
-import com.intellij.util.ReflectionUtil;
-import com.intellij.util.containers.ContainerUtil;
 import consulo.injecting.InjectingContainer;
 import consulo.logging.Logger;
+import consulo.util.collection.ContainerUtil;
+import consulo.util.lang.ExceptionUtil;
+import consulo.util.lang.reflect.ReflectionUtil;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 

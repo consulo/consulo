@@ -26,12 +26,12 @@ import java.util.ServiceLoader;
  * @since 2018-08-23
  */
 public interface InjectingContainer {
-  static InjectingContainer root() {
-    for (RootInjectingContainerFactory factory : ServiceLoader.load(RootInjectingContainerFactory.class, RootInjectingContainerFactory.class.getClassLoader())) {
-      return factory.getRoot();
-    }
+  static InjectingContainer root(@Nonnull ModuleLayer moduleLayer) {
+    return ServiceLoader.load(moduleLayer, RootInjectingContainerFactory.class).findFirst().get().getRoot();
+  }
 
-    throw new UnsupportedOperationException("RootInjectingContainerFactory not found");
+  static InjectingContainer root(@Nonnull ClassLoader classLoader) {
+    return ServiceLoader.load(RootInjectingContainerFactory.class, classLoader).findFirst().get().getRoot();
   }
 
   boolean LOG_INJECTING_PROBLEMS = Boolean.getBoolean("consulo.log.injecting.problems");
