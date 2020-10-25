@@ -160,14 +160,24 @@
       <artifactId>consulo-hacking-java-base</artifactId>
       <version>${project.version}</version>
     </dependency>
-
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>consulo-localize-impl</artifactId>
+      <version>${project.version}</version>
+    </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>consulo-web-bootstrap</artifactId>
       <version>${project.version}</version>
     </dependency>
 
-    <!--copied from consulo-bundle module-->
+    <!--TODO [VISTALL] temp depedency-->
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>consulo-desktop-awt-hacking</artifactId>
+      <version>${project.version}</version>
+      <optional>true</optional>
+    </dependency>
 
     <!--optional dependency-->
     <dependency>
