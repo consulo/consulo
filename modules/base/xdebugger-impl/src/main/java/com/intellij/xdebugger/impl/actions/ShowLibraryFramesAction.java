@@ -37,7 +37,7 @@ final class ShowLibraryFramesAction extends ToggleAction {
   private static final String ourTextWhenShowIsOff = "Show All Frames";
 
   public ShowLibraryFramesAction() {
-    super("", "", AllIcons.Debugger.Class_filter);
+    super("", "", AllIcons.General.Filter);
     myShouldShow = XDebuggerSettingManagerImpl.getInstanceImpl().getDataViewSettings().isShowLibraryStackFrames();
   }
 

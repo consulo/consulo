@@ -23,7 +23,7 @@
 
   <actions>
     <group id="XDebugger.AttachGroup">
-      <action id="XDebugger.AttachToLocalProcess" class="com.intellij.xdebugger.impl.actions.AttachToLocalProcessAction"/>
+      <action id="XDebugger.AttachToLocalProcess" class="com.intellij.xdebugger.impl.actions.AttachToProcessAction"/>
       <add-to-group group-id="RunMenu" anchor="before" relative-to-action="editRunConfigurations"/>
     </group>
   </actions>

@@ -237,10 +237,8 @@ public class AllIcons {
     public static final Image AddToWatch = PlatformIconGroup.debuggerAddToWatch(); // 16x16
     public static final Image AutoVariablesMode = PlatformIconGroup.debuggerAutoVariablesMode(); // 16x16
     public static final Image BreakpointAlert = PlatformIconGroup.debuggerBreakpointAlert(); // 16x16
-    public static final Image Class_filter = PlatformIconGroup.debuggerClass_filter(); // 16x16
     public static final Image CommandLine = PlatformIconGroup.debuggerCommandLine(); // 16x16
     public static final Image Console = PlatformIconGroup.debuggerConsole(); // 16x16
-    public static final Image Console_log = PlatformIconGroup.debuggerConsole_log(); // 16x16
     public static final Image Db_array = PlatformIconGroup.debuggerDb_array(); // 16x16
     public static final Image Db_db_object = PlatformIconGroup.debuggerDb_db_object(); // 16x16
     public static final Image Db_dep_exception_breakpoint = PlatformIconGroup.debuggerDb_dep_exception_breakpoint(); // 12x12

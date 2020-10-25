@@ -4,11 +4,11 @@ package com.intellij.xdebugger.impl.actions;
 import com.intellij.xdebugger.XDebuggerBundle;
 import com.intellij.xdebugger.attach.XAttachDebuggerProvider;
 import com.intellij.xdebugger.attach.XAttachHostProvider;
-import consulo.ui.image.Image;
+import consulo.platform.base.icon.PlatformIconGroup;
 
 public class AttachToProcessAction extends AttachToProcessActionBase {
   public AttachToProcessAction() {
-    super(XDebuggerBundle.message("xdebugger.attach.action"), XDebuggerBundle.message("xdebugger.attach.action.description"), Image.empty(16),
+    super(XDebuggerBundle.message("xdebugger.attach.action"), XDebuggerBundle.message("xdebugger.attach.action.description"), PlatformIconGroup.debuggerAttachToProcess(),
           () -> XAttachDebuggerProvider.getAttachDebuggerProviders(), () -> XAttachHostProvider.EP.getExtensionList(), XDebuggerBundle.message("xdebugger.attach.popup.selectDebugger.title"));
   }
 }

@@ -1704,7 +1704,7 @@
       <action id="Debugger.Tree.AddToWatches" class="com.intellij.xdebugger.impl.ui.tree.actions.XAddToWatchesTreeAction" icon="consulo.platform.base.PlatformIconGroup@debugger.addtowatch"/>
       <action id="Debugger.Tree.EvaluateInConsole" class="com.intellij.xdebugger.impl.ui.tree.actions.EvaluateInConsoleFromTreeAction"/>
 
-      <action id="XDebugger.NewWatch" class="com.intellij.xdebugger.impl.frame.actions.XNewWatchAction" icon="consulo.platform.base.PlatformIconGroup@debugger.newwatch"/>
+      <action id="XDebugger.NewWatch" class="com.intellij.xdebugger.impl.frame.actions.XNewWatchAction" icon="consulo.platform.base.PlatformIconGroup@general.add"/>
       <action id="XDebugger.EditWatch" class="com.intellij.xdebugger.impl.frame.actions.XEditWatchAction"/>
       <action id="XDebugger.CopyWatch" class="com.intellij.xdebugger.impl.frame.actions.XCopyWatchAction" icon="consulo.platform.base.PlatformIconGroup@actions.copy" text="Copy Watch"/>
       <action id="XDebugger.RemoveWatch" class="com.intellij.xdebugger.impl.frame.actions.XRemoveWatchAction" icon="consulo.platform.base.PlatformIconGroup@actions.cancel"/>
@@ -1765,6 +1765,7 @@
     </group>
 
     <group id="XDebugger.Frames.TopToolbar">
+      <action id="Debugger.ShowLibraryFrames" class="com.intellij.xdebugger.impl.actions.ShowLibraryFramesAction"/>
     </group>
 
     <group id="XDebugger.Variables.Tree.Popup">
