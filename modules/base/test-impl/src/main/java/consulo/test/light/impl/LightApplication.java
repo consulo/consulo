@@ -28,6 +28,7 @@ import com.intellij.util.containers.MultiMap;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.disposer.Disposable;
+import consulo.injecting.InjectingContainer;
 import consulo.injecting.InjectingContainerBuilder;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.UIAccess;
@@ -60,6 +61,12 @@ public class LightApplication extends ComponentManagerImpl implements Applicatio
 
   @Override
   protected void fillListenerDescriptors(MultiMap<String, PluginListenerDescriptor> mapByTopic) {
+  }
+
+  @Nonnull
+  @Override
+  protected InjectingContainer findRootContainer() {
+    return InjectingContainer.root(getClass().getClassLoader());
   }
 
   @Override

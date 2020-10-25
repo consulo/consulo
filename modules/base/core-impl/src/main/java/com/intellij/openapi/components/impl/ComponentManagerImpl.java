@@ -192,20 +192,7 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
 
     myExtensionsArea.setLocked();
 
-    String jdkModuleMain = Platform.current().jvm().getRuntimeProperty("jdk.module.main");
-
-    InjectingContainer root;
-    if (jdkModuleMain != null) {
-      PluginDescriptor plugin = PluginManager.getPlugin(getClass());
-      assert plugin != null;
-      ModuleLayer moduleLayer = (ModuleLayer)plugin.getModuleLayer();
-      assert moduleLayer != null;
-      root = InjectingContainer.root(moduleLayer);
-
-    }
-    else {
-      root = InjectingContainer.root(getClass().getClassLoader());
-    }
+    InjectingContainer root = findRootContainer();
 
     InjectingContainerBuilder builder = myParent == null ? root.childBuilder() : myParent.getInjectingContainer().childBuilder();
 
@@ -216,6 +203,23 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
     bootstrapInjectingContainer(builder);
 
     myInjectingContainer = builder.build();
+  }
+
+  @Nonnull
+  protected InjectingContainer findRootContainer() {
+    InjectingContainer root;
+    String jdkModuleMain = Platform.current().jvm().getRuntimeProperty("jdk.module.main");
+    if (jdkModuleMain != null) {
+      PluginDescriptor plugin = PluginManager.getPlugin(getClass());
+      assert plugin != null;
+      ModuleLayer moduleLayer = (ModuleLayer)plugin.getModuleLayer();
+      assert moduleLayer != null;
+      root = InjectingContainer.root(moduleLayer);
+    }
+    else {
+      root = InjectingContainer.root(getClass().getClassLoader());
+    }
+    return root;
   }
 
   protected void fillListenerDescriptors(MultiMap<String, PluginListenerDescriptor> mapByTopic) {

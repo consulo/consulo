@@ -24,6 +24,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.containers.MultiMap;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.container.plugin.PluginListenerDescriptor;
+import consulo.injecting.InjectingContainer;
 import consulo.injecting.InjectingContainerBuilder;
 import consulo.ui.UIAccess;
 import consulo.util.concurrent.AsyncResult;
@@ -60,6 +61,12 @@ public class LightProject extends ComponentManagerImpl implements Project {
 
   @Override
   protected void fillListenerDescriptors(MultiMap<String, PluginListenerDescriptor> mapByTopic) {
+  }
+
+  @Nonnull
+  @Override
+  protected InjectingContainer findRootContainer() {
+    return InjectingContainer.root(getClass().getClassLoader());
   }
 
   @Override
