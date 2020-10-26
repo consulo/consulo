@@ -1,15 +1,15 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.util.messages.impl;
 
-import consulo.disposer.Disposable;
-import consulo.disposer.Disposer;
-import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.MessageBusConnection;
 import com.intellij.util.messages.Topic;
-import javax.annotation.Nonnull;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
 
+import javax.annotation.Nonnull;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author yole
@@ -17,7 +17,7 @@ import java.util.Map;
 public class MessageListenerList<T> {
   private final MessageBus myMessageBus;
   private final Topic<T> myTopic;
-  private final Map<T, MessageBusConnection> myListenerToConnectionMap = ContainerUtil.newConcurrentMap();
+  private final Map<T, MessageBusConnection> myListenerToConnectionMap = new ConcurrentHashMap<>();
 
   public MessageListenerList(@Nonnull MessageBus messageBus, @Nonnull Topic<T> topic) {
     myTopic = topic;

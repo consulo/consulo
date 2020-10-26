@@ -22,7 +22,6 @@
  */
 package com.intellij.util.messages;
 
-import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 
 /**
@@ -39,11 +38,11 @@ public class Topic<L> {
     this(listenerClass.getSimpleName(), listenerClass, BroadcastDirection.TO_CHILDREN);
   }
 
-  public Topic(@NonNls @Nonnull String displayName, @Nonnull Class<L> listenerClass) {
+  public Topic(@Nonnull String displayName, @Nonnull Class<L> listenerClass) {
     this(displayName, listenerClass, BroadcastDirection.TO_CHILDREN);
   }
 
-  public Topic(@NonNls @Nonnull String displayName, @Nonnull Class<L> listenerClass, final BroadcastDirection broadcastDirection) {
+  public Topic(@Nonnull String displayName, @Nonnull Class<L> listenerClass, final BroadcastDirection broadcastDirection) {
     myDisplayName = displayName;
     myListenerClass = listenerClass;
     myBroadcastDirection = broadcastDirection;
@@ -53,7 +52,6 @@ public class Topic<L> {
    * @return    human-readable name of the current topic. Is intended to be used in informational/logging purposes only
    */
   @Nonnull
-  @NonNls
   public String getDisplayName() {
     return myDisplayName;
   }
@@ -82,12 +80,12 @@ public class Topic<L> {
     return myDisplayName;
   }
 
-  public static <L> Topic<L> create(@NonNls @Nonnull String displayName, @Nonnull Class<L> listenerClass) {
-    return new Topic<L>(displayName, listenerClass);
+  public static <L> Topic<L> create(@Nonnull String displayName, @Nonnull Class<L> listenerClass) {
+    return new Topic<>(displayName, listenerClass);
   }
 
-  public static <L> Topic<L> create(@NonNls @Nonnull String displayName, @Nonnull Class<L> listenerClass, BroadcastDirection direction) {
-    return new Topic<L>(displayName, listenerClass, direction);
+  public static <L> Topic<L> create(@Nonnull String displayName, @Nonnull Class<L> listenerClass, BroadcastDirection direction) {
+    return new Topic<>(displayName, listenerClass, direction);
   }
 
   /**

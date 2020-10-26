@@ -25,6 +25,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 /**
@@ -43,17 +44,17 @@ public class MessageBusImpl implements MessageBus, Disposable {
    */
   private final int[] myOrder;
 
-  private final ConcurrentMap<Topic<?>, Object> myPublishers = ContainerUtil.newConcurrentMap();
+  private final ConcurrentMap<Topic<?>, Object> myPublishers = new ConcurrentHashMap<>();
 
   /**
    * This bus's subscribers
    */
-  private final ConcurrentMap<Topic<?>, List<MessageBusConnectionImpl>> mySubscribers = ContainerUtil.newConcurrentMap();
+  private final ConcurrentMap<Topic<?>, List<MessageBusConnectionImpl>> mySubscribers = new ConcurrentHashMap<>();
 
   /**
    * Caches subscribers for this bus and its children or parent, depending on the topic's broadcast policy
    */
-  private final Map<Topic<?>, List<MessageBusConnectionImpl>> mySubscriberCache = ContainerUtil.newConcurrentMap();
+  private final Map<Topic<?>, List<MessageBusConnectionImpl>> mySubscriberCache = new ConcurrentHashMap<>();
   private final List<MessageBusImpl> myChildBuses = ContainerUtil.createLockFreeCopyOnWriteList();
 
   @Nonnull
@@ -146,7 +147,6 @@ public class MessageBusImpl implements MessageBus, Disposable {
     public final MessageBusConnectionImpl connection;
     public final Message message;
 
-    @NonNls
     @Override
     public String toString() {
       return "{ DJob connection:" + connection + "; message: " + message + " }";
