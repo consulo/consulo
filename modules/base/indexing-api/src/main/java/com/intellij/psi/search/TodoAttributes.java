@@ -21,7 +21,6 @@ import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.openapi.util.WriteExternalException;
 import consulo.ui.image.Image;
 import org.jdom.Element;
-import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 
@@ -34,20 +33,14 @@ public class TodoAttributes implements Cloneable {
   private TextAttributes myTextAttributes = new TextAttributes();
   private boolean myShouldUseCustomColors;
 
-  @NonNls
   private static final String ATTRIBUTE_ICON = "icon";
-  @NonNls
   private static final String ICON_DEFAULT = "default";
-  @NonNls
   private static final String ICON_QUESTION = "question";
-  @NonNls
   private static final String ICON_IMPORTANT = "important";
-  @NonNls
   private static final String ELEMENT_OPTION = "option";
-  @NonNls
   private static final String USE_CUSTOM_COLORS_ATT = "useCustomColors";
 
-  public TodoAttributes(@Nonnull Element element, @Nonnull TextAttributes defaultTodoAttributes) throws InvalidDataException {
+  public TodoAttributes(@Nonnull Element element) throws InvalidDataException {
     String icon = element.getAttributeValue(ATTRIBUTE_ICON, ICON_DEFAULT);
 
     if (ICON_DEFAULT.equals(icon)) {
@@ -62,14 +55,16 @@ public class TodoAttributes implements Cloneable {
     else {
       throw new InvalidDataException(icon);
     }
+    
     myTextAttributes.readExternal(element);
-    if (element.getChild(ELEMENT_OPTION) == null) {
-      myTextAttributes = defaultTodoAttributes;
-    }
 
     // default color setting
     final String useCustomColors = element.getAttributeValue(USE_CUSTOM_COLORS_ATT);
-    myShouldUseCustomColors = useCustomColors != null && Boolean.valueOf(useCustomColors).booleanValue();
+    myShouldUseCustomColors = Boolean.parseBoolean(useCustomColors);
+
+    if (element.getChild(ELEMENT_OPTION) == null) {
+      myShouldUseCustomColors = false;
+    }
   }
 
   TodoAttributes(@Nonnull Image icon, @Nonnull TextAttributes textAttributes) {
@@ -81,13 +76,11 @@ public class TodoAttributes implements Cloneable {
     return myIcon;
   }
 
+  /**
+   * @see com.intellij.psi.search.TodoAttributesUtil#getTextAttributes(TodoAttributes)
+   */
   @Nonnull
   public TextAttributes getTextAttributes() {
-    return getCustomizedTextAttributes();
-  }
-
-  @Nonnull
-  public TextAttributes getCustomizedTextAttributes() {
     return myTextAttributes;
   }
 
@@ -145,7 +138,6 @@ public class TodoAttributes implements Cloneable {
       myTextAttributes = defaultTodoAttributes;
     }
   }
-
 
   @Override
   public TodoAttributes clone() {

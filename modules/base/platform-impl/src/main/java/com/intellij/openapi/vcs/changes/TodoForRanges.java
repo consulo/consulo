@@ -27,6 +27,7 @@ import com.intellij.openapi.vcs.checkin.StepIntersection;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiFileFactory;
 import com.intellij.psi.search.PsiTodoSearchHelper;
+import com.intellij.psi.search.TodoAttributesUtil;
 import com.intellij.psi.search.TodoItem;
 import com.intellij.util.containers.Convertor;
 
@@ -91,7 +92,7 @@ public abstract class TodoForRanges {
         if (range.contains(item.getTextRange())) {
           TextRange todoRange = new TextRange(offset - range.getStartOffset() + item.getTextRange().getStartOffset(),
                                               offset - range.getStartOffset() + item.getTextRange().getEndOffset());
-          result.add(new Pair<TextRange, TextAttributes>(todoRange, item.getPattern().getAttributes().getTextAttributes()));
+          result.add(Pair.create(todoRange, TodoAttributesUtil.getTextAttributes(item.getPattern().getAttributes())));
           iterator.remove();
         } else {
           break;

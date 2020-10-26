@@ -25,13 +25,12 @@ import com.intellij.psi.search.*;
 import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.Topic;
 import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import jakarta.inject.Singleton;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
@@ -151,12 +150,12 @@ public class TodoConfiguration implements PersistentStateComponent<Element> {
 
   @Override
   public void loadState(Element state) {
-    List<TodoPattern> patternsList = new ArrayList<TodoPattern>();
-    List<TodoFilter> filtersList = new ArrayList<TodoFilter>();
+    List<TodoPattern> patternsList = new ArrayList<>();
+    List<TodoFilter> filtersList = new ArrayList<>();
     for (Element child : state.getChildren()) {
       if (ELEMENT_PATTERN.equals(child.getName())) {
         TodoPattern pattern = new TodoPattern(TodoAttributesUtil.createDefault());
-        pattern.readExternal(child, TodoAttributesUtil.getDefaultColorSchemeTextAttributes());
+        pattern.readExternal(child);
         patternsList.add(pattern);
       }
       else if (ELEMENT_FILTER.equals(child.getName())) {

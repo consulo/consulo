@@ -7,6 +7,7 @@ import com.intellij.ide.todo.HighlightedRegionProvider;
 import com.intellij.ide.todo.SmartTodoItemPointer;
 import com.intellij.ide.todo.TodoTreeBuilder;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
+import com.intellij.psi.search.TodoAttributesUtil;
 import consulo.logging.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.RangeMarker;
@@ -124,7 +125,7 @@ public final class TodoItemNode extends BaseToDoNode<SmartTodoItemPointer> imple
     myHighlightedRegions.clear();
     EditorHighlighter highlighter = myBuilder.getHighlighter(todoItem.getFile(), document);
     collectHighlights(myHighlightedRegions, highlighter, lineStartOffset, lineEndOffset, lineColumnPrefix.length());
-    TextAttributes attributes = todoItem.getPattern().getAttributes().getTextAttributes();
+    TextAttributes attributes = TodoAttributesUtil.getTextAttributes(todoItem.getPattern().getAttributes());
     myHighlightedRegions.add(new HighlightedRegion(lineColumnPrefix.length() + startOffset - lineStartOffset, lineColumnPrefix.length() + endOffset - lineStartOffset, attributes));
 
     //

@@ -68,7 +68,7 @@ class PatternDialog extends DialogWrapper{
 
     myColorAndFontDescriptionPanel = new ColorAndFontDescriptionPanel();
 
-    TextAttributes attributes = myPattern.getAttributes().getCustomizedTextAttributes();
+    TextAttributes attributes = TodoAttributesUtil.getTextAttributes(myPattern.getAttributes());
 
     myColorAndFontDescription = new TextAttributesDescription(null, null, attributes, null, EditorColorsManager.getInstance().getGlobalScheme(),
                                                               null, null) {

@@ -19,6 +19,7 @@ import com.intellij.icons.AllIcons;
 import com.intellij.openapi.editor.colors.CodeInsightColors;
 import com.intellij.openapi.editor.colors.EditorColorsManager;
 import com.intellij.openapi.editor.markup.TextAttributes;
+
 import javax.annotation.Nonnull;
 
 public class TodoAttributesUtil {
@@ -30,5 +31,14 @@ public class TodoAttributesUtil {
   @Nonnull
   public static TextAttributes getDefaultColorSchemeTextAttributes() {
     return EditorColorsManager.getInstance().getGlobalScheme().getAttributes(CodeInsightColors.TODO_DEFAULT_ATTRIBUTES).clone();
+  }
+
+  @Nonnull
+  public static TextAttributes getTextAttributes(@Nonnull TodoAttributes todoAttributes) {
+    if(todoAttributes.shouldUseCustomTodoColor()) {
+      return todoAttributes.getTextAttributes();
+    }
+
+    return getDefaultColorSchemeTextAttributes();
   }
 }
