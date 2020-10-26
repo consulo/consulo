@@ -89,6 +89,7 @@
     <module>modules/base/project-model-impl</module>
     <module>modules/base/lang-api</module>
     <module>modules/base/lang-impl</module>
+    <module>modules/base/lang-injecting-impl</module>
     <module>modules/base/lang-impl-testing</module>
     <module>modules/base/lvcs-api</module>
     <module>modules/base/lvcs-impl</module>

@@ -56,6 +56,7 @@
         <include>consulo:consulo-injecting-pico-impl</include>
         <include>consulo:consulo-lang-api</include>
         <include>consulo:consulo-lang-impl</include>
+        <include>consulo:consulo-lang-injecting-impl</include>
         <include>consulo:consulo-language-editor-api</include>
         <include>consulo:consulo-localize-api</include>
         <include>consulo:consulo-localize-impl</include>

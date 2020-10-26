@@ -40,6 +40,7 @@
   <import path="/META-INF/ExternalStorage.xml"/>
   <import path="/META-INF/BuildInServer.xml"/>
   <import path="/META-INF/TipsOfTheDay.xml"/>
+  <import path="/META-INF/Injecting.xml"/>
 
   <extensionPoints>
     <extensionPoint name="listOfElements" beanClass="consulo.extensions.ListOfElementsEP"/>
