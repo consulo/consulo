@@ -27,7 +27,6 @@ import java.awt.*;
  * @since 2020-09-26
  */
 public abstract class DesktopBaseLazyImageImpl extends JBUI.RasterJBIcon implements Image {
-  private boolean myWasComputed;
   private Icon myIcon;
 
   private volatile long myModificationCount = -1;
@@ -38,33 +37,35 @@ public abstract class DesktopBaseLazyImageImpl extends JBUI.RasterJBIcon impleme
       myIcon = null;
     }
     final Icon icon = getOrComputeIcon();
-    if (icon != null) {
-      icon.paintIcon(c, g, x, y);
-    }
+    icon.paintIcon(c, g, x, y);
   }
 
   @Override
   public int getIconWidth() {
     final Icon icon = getOrComputeIcon();
-    return icon != null ? icon.getIconWidth() : 0;
+    return icon.getIconWidth();
   }
 
   @Override
   public int getIconHeight() {
     final Icon icon = getOrComputeIcon();
-    return icon != null ? icon.getIconHeight() : 0;
+    return icon.getIconHeight();
   }
 
   public final synchronized Icon getOrComputeIcon() {
     long modificationCount = getModificationCount();
 
-    if (!myWasComputed || myModificationCount != modificationCount || myIcon == null) {
+    if (myModificationCount != modificationCount) {
       myModificationCount = modificationCount;
-      myWasComputed = true;
-      myIcon = calcIcon();
     }
 
-    return myIcon;
+    Icon icon = myIcon;
+    if(icon == null) {
+      icon = calcIcon();
+      myIcon = icon;
+    }
+
+    return icon;
   }
 
   protected abstract long getModificationCount();
@@ -77,12 +78,12 @@ public abstract class DesktopBaseLazyImageImpl extends JBUI.RasterJBIcon impleme
   }
 
   @Override
-  public int getHeight() {
+  public final int getHeight() {
     return getIconHeight();
   }
 
   @Override
-  public int getWidth() {
+  public final int getWidth() {
     return getIconWidth();
   }
 }

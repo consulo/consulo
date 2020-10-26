@@ -118,7 +118,7 @@ public abstract class BaseIconLibraryManager implements IconLibraryManager {
   }
 
   @Override
-  public void setActiveLibraryFromStyle(@Nonnull Style style) {
+  public void setActiveLibraryFromActiveStyle() {
     myActiveLibraryId = null;
     myActiveLibrary = null;
     myModificationCount.incrementAndGet();

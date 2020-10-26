@@ -16,6 +16,7 @@
 package consulo.ui.desktop.internal.image.libraryImage;
 
 import com.intellij.ui.JBColor;
+import com.intellij.util.ui.JBUI;
 import consulo.awt.TargetAWT;
 import consulo.desktop.util.awt.UIModificationTracker;
 import consulo.ui.desktop.internal.image.DesktopBaseLazyImageImpl;
@@ -61,6 +62,16 @@ public class DesktopImageKeyImpl extends DesktopBaseLazyImageImpl implements Ima
   @Override
   protected long getModificationCount() {
     return ourLibraryManager.getModificationCount() + ourUIModificationTracker.getModificationCount();
+  }
+
+  @Override
+  public int getIconHeight() {
+    return JBUI.scale(myHeight);
+  }
+
+  @Override
+  public int getIconWidth() {
+    return JBUI.scale(myWidth);
   }
 
   @Nonnull

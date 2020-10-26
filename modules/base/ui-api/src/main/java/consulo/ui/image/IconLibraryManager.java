@@ -53,7 +53,7 @@ public interface IconLibraryManager {
 
   void setActiveLibrary(@Nullable String iconLibraryId);
 
-  void setActiveLibraryFromStyle(@Nonnull Style style);
+  void setActiveLibraryFromActiveStyle();
 
   long getModificationCount();
 }

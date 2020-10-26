@@ -375,6 +375,8 @@ public final class LafManagerImpl extends LafManager implements Disposable, Pers
         UIManager.setLookAndFeel(lookAndFeelInfo.getClassName());
       }
 
+      myCurrentStyle = style;
+
       if (targetClassLoader != null) {
         final UIDefaults uiDefaults = UIManager.getLookAndFeelDefaults();
 
@@ -389,7 +391,7 @@ public final class LafManagerImpl extends LafManager implements Disposable, Pers
         myIconLibraryManager.setActiveLibrary(iconLibraryId);
       }
       else {
-        myIconLibraryManager.setActiveLibraryFromStyle(style);
+        myIconLibraryManager.setActiveLibraryFromActiveStyle();
       }
 
       if (wantChangeScheme) {
@@ -409,10 +411,7 @@ public final class LafManagerImpl extends LafManager implements Disposable, Pers
     catch (Exception e) {
       LOG.error(e);
       Messages.showMessageDialog(IdeBundle.message("error.cannot.set.look.and.feel", lookAndFeelInfo.getName(), e.getMessage()), CommonBundle.getErrorTitle(), Messages.getErrorIcon());
-      return;
     }
-
-    myCurrentStyle = style;
   }
 
   public static void installMacOSXFonts(UIDefaults defaults) {

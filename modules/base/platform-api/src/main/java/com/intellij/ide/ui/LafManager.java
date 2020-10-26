@@ -48,11 +48,6 @@ public abstract class LafManager {
   @Nonnull
   public abstract UIManager.LookAndFeelInfo getCurrentLookAndFeel();
 
-  @Deprecated
-  public final boolean checkLookAndFeel(UIManager.LookAndFeelInfo lookAndFeelInfo) {
-    return true;
-  }
-
   public abstract void setCurrentLookAndFeel(@Nonnull UIManager.LookAndFeelInfo lookAndFeelInfo);
 
   public abstract void updateUI();
