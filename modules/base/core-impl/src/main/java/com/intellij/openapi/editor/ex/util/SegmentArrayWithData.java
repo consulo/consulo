@@ -36,11 +36,10 @@ public class SegmentArrayWithData extends SegmentArray {
     return myStorage.createStorage();
   }
 
-  public void setElementAt(int i, int startOffset, int endOffset, int data) {
-    setElementAt(i, startOffset, endOffset);
+  public void setElementAt(int i, int startOffset, int endOffset, int data, String debugInfo) {
+    setElementAt(i, startOffset, endOffset, debugInfo);
     myStorage.setData(i, data);
   }
-
 
   @Override
   public void remove(int startIndex, int endIndex) {
@@ -59,7 +58,7 @@ public class SegmentArrayWithData extends SegmentArray {
     else if (delta > 0) {
       SegmentArrayWithData deltaData = new SegmentArrayWithData(myStorage.createStorage());
       for (int i = oldLen; i < newLen; i++) {
-        deltaData.setElementAt(i - oldLen, newData.getSegmentStart(i), newData.getSegmentEnd(i), newData.getSegmentData(i));
+        deltaData.setElementAt(i - oldLen, newData.getSegmentStart(i), newData.getSegmentEnd(i), newData.getSegmentData(i), null);
       }
       insert(deltaData, startIndex + oldLen);
     }

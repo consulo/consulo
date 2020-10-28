@@ -39,12 +39,12 @@ public class SegmentArray {
     myEnds = new int[INITIAL_SIZE];
   }
 
-  protected void setElementAt(int i, int startOffset, int endOffset) {
+  protected void setElementAt(int i, int startOffset, int endOffset, String debugInfo) {
     if (startOffset < 0) {
-      LOG.error("Invalid startOffset:" + startOffset);
+      LOG.error("Invalid startOffset:" + startOffset + ", Debug: " + debugInfo);
     }
     if (endOffset < 0) {
-      LOG.error("Invalid endOffset:" + endOffset);
+      LOG.error("Invalid endOffset:" + endOffset + ", Debug: " + debugInfo);
     }
 
     if (i >= mySegmentCount) {
