@@ -21,7 +21,10 @@ import com.intellij.openapi.util.ScalableIcon;
 import com.intellij.ui.JBColor;
 import com.intellij.util.ui.*;
 import consulo.annotation.DeprecationInfo;
+import consulo.awt.TargetAWT;
+import consulo.logging.Logger;
 import consulo.ui.image.ImageEffects;
+import consulo.ui.image.ImageKey;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -108,12 +111,25 @@ public class IconUtil {
     return consulo.ui.image.Image.DEFAULT_ICON_SIZE;
   }
 
+  @Deprecated
+  @DeprecationInfo("Not always work")
   public static Image toImage(@Nonnull Icon icon) {
     return toImage(icon, null);
   }
 
+  @Deprecated
+  @DeprecationInfo("Not always work")
   public static Image toImage(@Nonnull Icon icon, @Nullable JBUI.ScaleContext ctx) {
-    return NotWorkingIconLoader.toImage(icon, ctx);
+    if(icon instanceof ImageKey) {
+      return TargetAWT.toImage((ImageKey)icon);
+    }
+    else if(icon instanceof ImageIcon) {
+      return ((ImageIcon)icon).getImage();
+    }
+    else {
+      Logger.getInstance(IconUtil.class).error(new IllegalArgumentException("Returning empty icon via #toImage()"));
+      return NotWorkingIconLoader.toImage(icon, ctx);
+    }
   }
 
   public static consulo.ui.image.Image getAddIcon() {

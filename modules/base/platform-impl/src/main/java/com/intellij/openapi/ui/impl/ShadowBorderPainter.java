@@ -30,10 +30,6 @@ import java.awt.image.BufferedImage;
  * @author Konstantin Bulenkov
  */
 public class ShadowBorderPainter {
-  public static final ShadowPainter ourPopupShadowPainter =
-          new ShadowPainter(AllIcons.Ide.Shadow.Popup.Top, AllIcons.Ide.Shadow.Popup.Top_right, AllIcons.Ide.Shadow.Popup.Right, AllIcons.Ide.Shadow.Popup.Bottom_right,
-                            AllIcons.Ide.Shadow.Popup.Bottom, AllIcons.Ide.Shadow.Popup.Bottom_left, AllIcons.Ide.Shadow.Popup.Left, AllIcons.Ide.Shadow.Popup.Top_left, Gray.x00.withAlpha(30));
-
   public static final ShadowPainter ourShadowPainter =
           new ShadowPainter(AllIcons.Ide.Shadow.Top, AllIcons.Ide.Shadow.Top_right, AllIcons.Ide.Shadow.Right, AllIcons.Ide.Shadow.Bottom_right, AllIcons.Ide.Shadow.Bottom,
                             AllIcons.Ide.Shadow.Bottom_left, AllIcons.Ide.Shadow.Left, AllIcons.Ide.Shadow.Top_left, Gray.x00.withAlpha(30));
@@ -43,11 +39,7 @@ public class ShadowBorderPainter {
   }
 
   public static BufferedImage createShadow(final JComponent c, final int width, final int height, boolean isPopup) {
-    return getPainter(isPopup).createShadow(c, width, height);
-  }
-
-  private static ShadowPainter getPainter(boolean isPopup) {
-    return isPopup ? ourPopupShadowPainter : ourShadowPainter;
+    return ourShadowPainter.createShadow(c, width, height);
   }
 
   public static BufferedImage createShadow(final JComponent c, final int width, final int height) {
