@@ -62,8 +62,6 @@ public class ErrorLabel extends JLabel {
     }
   }
 
-
-
   private void updateLabelView(boolean newUnderline, String tooltip) {
     super.setToolTipText(tooltip);
     myUnderline = newUnderline;

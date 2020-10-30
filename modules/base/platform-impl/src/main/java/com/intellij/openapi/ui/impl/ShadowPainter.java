@@ -2,13 +2,13 @@
 package com.intellij.openapi.ui.impl;
 
 import com.intellij.ide.ui.LafManager;
+import com.intellij.ui.JreHiDpiUtil;
 import com.intellij.util.IconUtil;
 import com.intellij.util.ui.ImageUtil;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.JBUI.ScaleContext;
 import com.intellij.util.ui.JBUI.ScaleContextAware;
 import com.intellij.util.ui.JBUI.ScaleContextSupport;
-import com.intellij.util.ui.UIUtil;
 import consulo.awt.TargetAWT;
 import consulo.ui.image.Image;
 
@@ -146,7 +146,7 @@ public class ShadowPainter extends ScaleContextSupport<ScaleContext> {
 
   private static void fill(Graphics g, Icon pattern, int x, int y, int from, int to, boolean horizontally) {
     double scale = JBUI.sysScale((Graphics2D)g);
-    if (UIUtil.isJreHiDPIEnabled() && Math.ceil(scale) > scale) {
+    if (JreHiDpiUtil.isJreHiDPIEnabled() && Math.ceil(scale) > scale) {
       // Direct painting for fractional scale
       BufferedImage img = ImageUtil.toBufferedImage(IconUtil.toImage(pattern));
       int patternSize = horizontally ? img.getWidth() : img.getHeight();

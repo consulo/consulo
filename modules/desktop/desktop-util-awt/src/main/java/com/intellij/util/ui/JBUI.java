@@ -332,6 +332,10 @@ public class JBUI {
         return JBColor.border();
       }
 
+      public static int headerHeight(boolean hasControls) {
+        return hasControls ? JBUIScale.scale(28) : JBUIScale.scale(24);
+      }
+
       public static Color headerBackground(boolean active) {
         return active ? JBColor.namedColor("Popup.Header.activeBackground", 0xe6e6e6) : JBColor.namedColor("Popup.Header.inactiveBackground", 0xededed);
       }

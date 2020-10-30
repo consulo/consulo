@@ -82,4 +82,8 @@ public class CaptionPanel extends JPanel {
     final Component c = findComponentAt(p);
     return c != null && c != myButtonComponent;
   }
+
+  protected boolean containsSettingsControls() {
+    return mySettingComponent != null || myButtonComponent != null;
+  }
 }
