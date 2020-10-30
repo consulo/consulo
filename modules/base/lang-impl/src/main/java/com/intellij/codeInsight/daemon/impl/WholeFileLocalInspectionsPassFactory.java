@@ -46,7 +46,6 @@ import java.util.stream.Collectors;
 /**
  * @author cdr
  */
-@Singleton
 public class WholeFileLocalInspectionsPassFactory implements TextEditorHighlightingPassFactory {
   private final Map<PsiFile, Boolean> myFileToolsCache = ContainerUtil.createConcurrentWeakMap();
   private final Project myProject;
