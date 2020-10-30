@@ -284,6 +284,11 @@ public class ChangesViewContentManager implements ChangesViewContentI {
   }
 
   private void addIntoCorrectPlace(final Content content) {
+    if(myContentManager == null) {
+      myAddedContents.add(content);
+      return;
+    }
+    
     final String name = content.getTabName();
     final Content[] contents = myContentManager.getContents();
 
