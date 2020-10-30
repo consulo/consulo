@@ -22,12 +22,15 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowFactory;
 import consulo.ide.projectView.ProjectViewEx;
+import consulo.ui.annotation.RequiredUIAccess;
+
 import javax.annotation.Nonnull;
 
 /**
  * @author yole
  */
 public class ProjectViewToolWindowFactory implements ToolWindowFactory, DumbAware {
+  @RequiredUIAccess
   @Override
   public void createToolWindowContent(@Nonnull Project project, @Nonnull ToolWindow toolWindow) {
     ((ProjectViewEx) ProjectView.getInstance(project)).setupToolWindow(toolWindow, true);

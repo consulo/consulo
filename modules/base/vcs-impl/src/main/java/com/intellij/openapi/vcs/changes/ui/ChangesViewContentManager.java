@@ -16,29 +16,26 @@
 
 package com.intellij.openapi.vcs.changes.ui;
 
-import com.intellij.icons.AllIcons;
-import consulo.disposer.Disposable;
-import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
-import com.intellij.openapi.components.ProjectComponent;
-import consulo.disposer.Disposer;
-import consulo.logging.Logger;
-import com.intellij.openapi.project.DumbAwareRunnable;
+import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.startup.StartupManager;
 import com.intellij.openapi.util.Comparing;
-import consulo.util.dataholder.Key;
 import com.intellij.openapi.vcs.AbstractVcs;
 import com.intellij.openapi.vcs.ProjectLevelVcsManager;
 import com.intellij.openapi.vcs.VcsListener;
 import com.intellij.openapi.wm.ToolWindow;
-import com.intellij.openapi.wm.ToolWindowAnchor;
 import com.intellij.openapi.wm.ToolWindowId;
-import com.intellij.openapi.wm.ToolWindowManager;
+import com.intellij.ui.UIBundle;
 import com.intellij.ui.content.*;
 import com.intellij.util.Alarm;
 import com.intellij.util.NotNullFunction;
 import consulo.annotation.DeprecationInfo;
+import consulo.disposer.Disposer;
+import consulo.localize.LocalizeValue;
+import consulo.logging.Logger;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.util.dataholder.Key;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -46,104 +43,66 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.util.*;
-import java.util.concurrent.CountDownLatch;
 
 /**
  * @author yole
  */
 @Singleton
-public class ChangesViewContentManager implements ChangesViewContentI, ProjectComponent {
+public class ChangesViewContentManager implements ChangesViewContentI {
+  public static ChangesViewContentI getInstance(Project project) {
+    return ServiceManager.getService(project, ChangesViewContentI.class);
+  }
+
   @Deprecated
   @DeprecationInfo(value = "Use ToolWindowId#VCS", until = "2.0")
   public static final String TOOLWINDOW_ID = ToolWindowId.VCS;
   private static final Key<ChangesViewContentEP> myEPKey = Key.create("ChangesViewContentEP");
+
   private static final Logger LOG = Logger.getInstance(ChangesViewContentManager.class);
 
-  private MyContentManagerListener myContentManagerListener;
   private final ProjectLevelVcsManager myVcsManager;
 
-  public static ChangesViewContentI getInstance(Project project) {
-    return project.getComponent(ChangesViewContentI.class);
-  }
-
-  private ContentManager myContentManager;
-  private ToolWindow myToolWindow;
-  private final VcsListener myVcsListener = new MyVcsListener();
   private final Alarm myVcsChangeAlarm;
+
   private final List<Content> myAddedContents = new ArrayList<>();
   @Nonnull
-  private final CountDownLatch myInitializationWaiter = new CountDownLatch(1);
   private final Project myProject;
+
+  private ToolWindow myToolWindow;
+  private ContentManager myContentManager;
 
   @Inject
   public ChangesViewContentManager(@Nonnull Project project, final ProjectLevelVcsManager vcsManager) {
     myProject = project;
     myVcsManager = vcsManager;
     myVcsChangeAlarm = new Alarm(Alarm.ThreadToUse.SWING_THREAD, project);
+    project.getMessageBus().connect().subscribe(ProjectLevelVcsManager.VCS_CONFIGURATION_CHANGED, new MyVcsListener());
   }
 
-  @Override
-  public void projectOpened() {
-    if (ApplicationManager.getApplication().isHeadlessEnvironment()) return;
-    StartupManager.getInstance(myProject).registerPostStartupActivity(new DumbAwareRunnable() {
-      @Override
-      public void run() {
-        final ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(myProject);
-        if (toolWindowManager != null) {
-          myToolWindow = toolWindowManager.registerToolWindow(ToolWindowId.VCS, true, ToolWindowAnchor.BOTTOM, myProject, true);
-          myToolWindow.setIcon(AllIcons.Toolwindows.ToolWindowChanges);
-
-          updateToolWindowAvailability();
-          final ContentManager contentManager = myToolWindow.getContentManager();
-          myContentManagerListener = new MyContentManagerListener();
-          contentManager.addContentManagerListener(myContentManagerListener);
-
-          myVcsManager.addVcsListener(myVcsListener);
-
-          Disposer.register(myProject, new Disposable(){
-            @Override
-            public void dispose() {
-              contentManager.removeContentManagerListener(myContentManagerListener);
-
-              myVcsManager.removeVcsListener(myVcsListener);
-            }
-          });
-
-          loadExtensionTabs();
-          myContentManager = contentManager;
-          final List<Content> ordered = doPresetOrdering(myAddedContents);
-          for(Content content: ordered) {
-            myContentManager.addContent(content);
-          }
-          myAddedContents.clear();
-          if (contentManager.getContentCount() > 0) {
-            contentManager.setSelectedContent(contentManager.getContent(0));
-          }
-          myInitializationWaiter.countDown();
-        }
-      }
-    });
-  }
-
-  /**
-   * Makes the current thread wait until the ChangesViewContentManager is initialized.
-   * When it initializes, executes the given runnable.
-   */
-  public void executeWhenInitialized(@Nonnull final Runnable runnable) {
-    try {
-      myInitializationWaiter.await();
-      runnable.run();
+  @Nonnull
+  public List<Content> setContentManager(@Nonnull ToolWindow toolWindow, @Nonnull ContentManager contentManager) {
+    if (myToolWindow != null) {
+      throw new IllegalArgumentException();
     }
-    catch (InterruptedException e) {
-      LOG.error(e);
-    }
+
+    myToolWindow = toolWindow;
+    ArrayList<Content> contents = new ArrayList<>(myAddedContents);
+    myAddedContents.clear();
+    myContentManager = contentManager;
+
+    MyContentManagerListener contentManagerListener = new MyContentManagerListener();
+    contentManager.addContentManagerListener(contentManagerListener);
+
+    Disposer.register(myProject, () -> contentManager.removeContentManagerListener(contentManagerListener));
+
+    return contents;
   }
 
-  private void loadExtensionTabs() {
+  public void loadExtensionTabs() {
     final List<Content> contentList = new LinkedList<>();
-    final ChangesViewContentEP[] contentEPs = myProject.getExtensions(ChangesViewContentEP.EP_NAME);
-    for(ChangesViewContentEP ep: contentEPs) {
-      final NotNullFunction<Project,Boolean> predicate = ep.newPredicateInstance(myProject);
+    final ChangesViewContentEP[] contentEPs = ChangesViewContentEP.EP_NAME.getExtensions(myProject);
+    for (ChangesViewContentEP ep : contentEPs) {
+      final NotNullFunction<Project, Boolean> predicate = ep.newPredicateInstance(myProject);
       if (predicate == null || predicate.fun(myProject).equals(Boolean.TRUE)) {
         final Content content = ContentFactory.getInstance().createContent(new ContentStub(ep), ep.getTabName(), false);
         content.setCloseable(false);
@@ -163,8 +122,8 @@ public class ChangesViewContentManager implements ChangesViewContentI, ProjectCo
 
   private void updateExtensionTabs() {
     final ChangesViewContentEP[] contentEPs = myProject.getExtensions(ChangesViewContentEP.EP_NAME);
-    for(ChangesViewContentEP ep: contentEPs) {
-      final NotNullFunction<Project,Boolean> predicate = ep.newPredicateInstance(myProject);
+    for (ChangesViewContentEP ep : contentEPs) {
+      final NotNullFunction<Project, Boolean> predicate = ep.newPredicateInstance(myProject);
       if (predicate == null) continue;
       Content epContent = findEPContent(ep);
       final Boolean predicateResult = predicate.fun(myProject);
@@ -177,10 +136,14 @@ public class ChangesViewContentManager implements ChangesViewContentI, ProjectCo
     }
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   private Content findEPContent(final ChangesViewContentEP ep) {
+    if(myContentManager == null) {
+      return null;
+    }
+    
     final Content[] contents = myContentManager.getContents();
-    for(Content content: contents) {
+    for (Content content : contents) {
       if (content.getUserData(myEPKey) == ep) {
         return content;
       }
@@ -188,18 +151,24 @@ public class ChangesViewContentManager implements ChangesViewContentI, ProjectCo
     return null;
   }
 
+  @RequiredUIAccess
   private void updateToolWindowAvailability() {
-    final AbstractVcs[] abstractVcses = myVcsManager.getAllActiveVcss();
-    myToolWindow.setAvailable(abstractVcses.length > 0, null);
-  }
+    if (myToolWindow == null) {
+      return;
+    }
+    AbstractVcs[] vcses = myVcsManager.getAllActiveVcss();
 
-  public boolean isToolwindowVisible() {
-    return ! myToolWindow.isDisposed() && myToolWindow.isVisible();
-  }
+    if(vcses.length == 1) {
+      AbstractVcs vcs = vcses[0];
+      myToolWindow.setDisplayName(LocalizeValue.of(vcs.getDisplayName()));
+      myToolWindow.setIcon(vcs.getIcon());
+    }
+    else {
+      myToolWindow.setDisplayName(LocalizeValue.of(UIBundle.message("tool.window.name.version.control")));
+      myToolWindow.setIcon(PlatformIconGroup.toolwindowsVcsSmallTab());
+    }
 
-  @Override
-  public void projectClosed() {
-    myVcsChangeAlarm.cancelAllRequests();
+    myToolWindow.setAvailable(vcses.length > 0, null);
   }
 
   @Override
@@ -214,7 +183,7 @@ public class ChangesViewContentManager implements ChangesViewContentI, ProjectCo
 
   @Override
   public void removeContent(final Content content) {
-    if (myContentManager != null && (! myContentManager.isDisposed())) { // for unit tests
+    if (myContentManager != null && (!myContentManager.isDisposed())) { // for unit tests
       myContentManager.removeContent(content, true);
     }
   }
@@ -230,7 +199,7 @@ public class ChangesViewContentManager implements ChangesViewContentI, ProjectCo
     final Content content = myContentManager.getSelectedContent();
     if (content != null && aClass.isInstance(content.getComponent())) {
       //noinspection unchecked
-      return (T) content.getComponent();
+      return (T)content.getComponent();
     }
     return null;
   }
@@ -247,7 +216,7 @@ public class ChangesViewContentManager implements ChangesViewContentI, ProjectCo
   }
 
   public void selectContent(@Nonnull String tabName, boolean requestFocus) {
-    for(Content content: myContentManager.getContents()) {
+    for (Content content : myContentManager.getContents()) {
       if (content.getDisplayName().equals(tabName)) {
         myContentManager.setSelectedContent(content, requestFocus);
         break;
@@ -259,13 +228,10 @@ public class ChangesViewContentManager implements ChangesViewContentI, ProjectCo
     @Override
     public void directoryMappingChanged() {
       myVcsChangeAlarm.cancelAllRequests();
-      myVcsChangeAlarm.addRequest(new Runnable() {
-        @Override
-        public void run() {
-          if (myProject.isDisposed()) return;
-          updateToolWindowAvailability();
-          updateExtensionTabs();
-        }
+      myVcsChangeAlarm.addRequest(() -> {
+        if (myProject.isDisposed()) return;
+        updateToolWindowAvailability();
+        updateExtensionTabs();
       }, 100, ModalityState.NON_MODAL);
     }
   }
@@ -287,16 +253,11 @@ public class ChangesViewContentManager implements ChangesViewContentI, ProjectCo
     public void selectionChanged(final ContentManagerEvent event) {
       Content content = event.getContent();
       if (content.getComponent() instanceof ContentStub) {
-        ChangesViewContentEP ep = ((ContentStub) content.getComponent()).getEP();
+        ChangesViewContentEP ep = ((ContentStub)content.getComponent()).getEP();
         final ChangesViewContentProvider provider = ep.getInstance(myProject);
         final JComponent contentComponent = provider.initContent();
         content.setComponent(contentComponent);
-        content.setDisposer(new Disposable() {
-          @Override
-          public void dispose() {
-            provider.disposeContent();
-          }
-        });
+        content.setDisposer(() -> provider.disposeContent());
       }
     }
   }
@@ -306,10 +267,11 @@ public class ChangesViewContentManager implements ChangesViewContentI, ProjectCo
   public static final String INCOMING = "Incoming";
   public static final String SHELF = "Shelf";
   private static final String[] ourPresetOrder = {LOCAL_CHANGES, REPOSITORY, INCOMING, SHELF};
-  private static List<Content> doPresetOrdering(final List<Content> contents) {
+
+  public static List<Content> doPresetOrdering(final List<Content> contents) {
     final List<Content> result = new ArrayList<>(contents.size());
     for (final String preset : ourPresetOrder) {
-      for (Iterator<Content> iterator = contents.iterator(); iterator.hasNext();) {
+      for (Iterator<Content> iterator = contents.iterator(); iterator.hasNext(); ) {
         final Content current = iterator.next();
         if (preset.equals(current.getTabName())) {
           iterator.remove();
@@ -344,8 +306,8 @@ public class ChangesViewContentManager implements ChangesViewContentI, ProjectCo
 
     int place = idxOfBeingInserted;
     for (int i = 0; i < idxOfBeingInserted; i++) {
-      if (! existingNames.contains(ourPresetOrder[i])) {
-        -- place;
+      if (!existingNames.contains(ourPresetOrder[i])) {
+        --place;
       }
 
     }

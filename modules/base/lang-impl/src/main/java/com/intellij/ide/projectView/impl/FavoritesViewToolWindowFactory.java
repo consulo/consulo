@@ -24,19 +24,21 @@ import com.intellij.openapi.wm.ToolWindowFactory;
 import com.intellij.openapi.wm.ex.ToolWindowEx;
 import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentManager;
+import consulo.ui.annotation.RequiredUIAccess;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author Konstantin Bulenkov
  */
 public class FavoritesViewToolWindowFactory implements ToolWindowFactory, DumbAware {
+  @RequiredUIAccess
   @Override
-  public void createToolWindowContent(Project project, ToolWindow toolWindow) {
-    if (toolWindow != null) {
-      final ContentManager contentManager = toolWindow.getContentManager();
-      final FavoritesTreeViewPanel panel = new FavoritesPanel(project).getPanel();
-      panel.setupToolWindow((ToolWindowEx)toolWindow);
-      final Content content = contentManager.getFactory().createContent(panel, null, false);
-      contentManager.addContent(content);
-    }
+  public void createToolWindowContent(@Nonnull Project project, ToolWindow toolWindow) {
+    final ContentManager contentManager = toolWindow.getContentManager();
+    final FavoritesTreeViewPanel panel = new FavoritesPanel(project).getPanel();
+    panel.setupToolWindow((ToolWindowEx)toolWindow);
+    final Content content = contentManager.getFactory().createContent(panel, null, false);
+    contentManager.addContent(content);
   }
 }

@@ -29,6 +29,7 @@ import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.SimpleToolWindowPanel;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.dataholder.Key;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowFactory;
@@ -45,6 +46,7 @@ import javax.swing.event.AncestorEvent;
  * @author peter
  */
 public class EventLogToolWindowFactory implements ToolWindowFactory, DumbAware {
+  @RequiredUIAccess
   @Override
   public void createToolWindowContent(@Nonnull final Project project, @Nonnull ToolWindow toolWindow) {
     EventLog.getProjectComponent(project).initDefaultContent();

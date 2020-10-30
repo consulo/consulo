@@ -13,38 +13,48 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.remoteServer.ui;
+package consulo.vcs.changes.ui;
 
+import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.vcs.changes.ui.ChangesViewContentManager;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowFactory;
-import com.intellij.remoteServer.impl.runtime.ui.ServersToolWindowContent;
 import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentManager;
 import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
+import java.util.List;
 
 /**
  * @author VISTALL
- * @since 2020-05-30
+ * @since 2020-10-30
  */
-public class ServersToolWindowFactory implements ToolWindowFactory {
+public class VcsToolWindowFactory implements ToolWindowFactory, DumbAware {
   @RequiredUIAccess
   @Override
   public void createToolWindowContent(@Nonnull Project project, @Nonnull ToolWindow toolWindow) {
-    ContentManager contentManager = toolWindow.getContentManager();
+    final ContentManager contentManager = toolWindow.getContentManager();
 
-    final ServersToolWindowContent serversContent = new ServersToolWindowContent(project);
+    ChangesViewContentManager manager = (ChangesViewContentManager)ChangesViewContentManager.getInstance(project);
 
-    Content content = contentManager.getFactory().createContent(serversContent, null, false);
-    content.setDisposer(serversContent);
-    
-    contentManager.addContent(content);
+    manager.loadExtensionTabs();
+
+    List<Content> contents = manager.setContentManager(toolWindow, contentManager);
+
+    final List<Content> ordered = ChangesViewContentManager.doPresetOrdering(contents);
+    for (Content content : ordered) {
+      contentManager.addContent(content);
+    }
+
+    if (contentManager.getContentCount() > 0) {
+      contentManager.setSelectedContent(contentManager.getContent(0));
+    }
   }
 
   @Override
   public boolean shouldBeAvailable(@Nonnull Project project) {
-    return ServersToolWindowManager.getInstance(project).isAvailable();
+    return false;
   }
 }

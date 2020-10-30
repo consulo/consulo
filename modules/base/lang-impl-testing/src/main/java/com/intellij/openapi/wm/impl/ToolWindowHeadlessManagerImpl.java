@@ -276,6 +276,11 @@ public class ToolWindowHeadlessManagerImpl extends ToolWindowManagerEx {
       return LocalizeValue.empty();
     }
 
+    @Override
+    public void setDisplayName(@Nonnull LocalizeValue displayName) {
+
+    }
+
     @RequiredUIAccess
     @Override
     public boolean isActive() {

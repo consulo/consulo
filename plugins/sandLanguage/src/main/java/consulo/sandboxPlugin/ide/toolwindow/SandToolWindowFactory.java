@@ -36,6 +36,7 @@ import javax.annotation.Nonnull;
  * @since 19.03.14
  */
 public class SandToolWindowFactory implements ToolWindowFactory {
+  @RequiredUIAccess
   @Override
   public void createToolWindowContent(@Nonnull Project project, @Nonnull ToolWindow toolWindow) {
     ContentFactory contentFactory = ContentFactory.getInstance();

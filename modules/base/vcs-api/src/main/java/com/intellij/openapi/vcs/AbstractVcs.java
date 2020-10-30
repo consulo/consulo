@@ -37,6 +37,8 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.ThreeState;
 import com.intellij.util.ThrowableRunnable;
 import com.intellij.util.ui.VcsSynchronousProgressWrapper;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.ui.image.Image;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
@@ -52,7 +54,8 @@ import java.util.function.Function;
  * @see ProjectLevelVcsManager
  */
 public abstract class AbstractVcs<ComList extends CommittedChangeList> extends StartedActivated {
-  @NonNls protected static final String ourIntegerPattern = "\\d+";
+  @NonNls
+  protected static final String ourIntegerPattern = "\\d+";
 
   @Nonnull
   protected final Project myProject;
@@ -71,6 +74,11 @@ public abstract class AbstractVcs<ComList extends CommittedChangeList> extends S
     myProject = project;
     myName = name;
     myKey = new VcsKey(myName);
+  }
+
+  @Nonnull
+  public Image getIcon() {
+    return PlatformIconGroup.toolwindowsToolWindowChanges();
   }
 
   // acts as adapter
@@ -149,7 +157,7 @@ public abstract class AbstractVcs<ComList extends CommittedChangeList> extends S
   /**
    * !!! concrete VCS should define {@link #createCheckinEnvironment} method
    * this method wraps created environment with a listener
-   *
+   * <p>
    * Returns the interface for performing checkin / commit / submit operations.
    *
    * @return the checkin interface, or null if checkins are not supported by the VCS.
@@ -254,7 +262,8 @@ public abstract class AbstractVcs<ComList extends CommittedChangeList> extends S
   /**
    * Invoked when a changelist is deleted explicitly by user or implicitly (e.g. after default changelist switch
    * when the previous one was empty).
-   * @param list change list that's about to be removed
+   *
+   * @param list       change list that's about to be removed
    * @param explicitly whether it's a result of explicit Delete action, or just after switching the active changelist.
    * @return UNSURE if the VCS has nothing to say about this changelist.
    * YES or NO if the changelist has to be removed or not, and no further confirmations are needed about this changelist
@@ -554,8 +563,7 @@ public abstract class AbstractVcs<ComList extends CommittedChangeList> extends S
   public CommittedChangeList loadRevisions(final VirtualFile vf, final VcsRevisionNumber number) {
     final CommittedChangeList[] list = new CommittedChangeList[1];
     final ThrowableRunnable<VcsException> runnable = () -> {
-      final Pair<CommittedChangeList, FilePath> pair =
-              getCommittedChangesProvider().getOneList(vf, number);
+      final Pair<CommittedChangeList, FilePath> pair = getCommittedChangesProvider().getOneList(vf, number);
       if (pair != null) {
         list[0] = pair.getFirst();
       }

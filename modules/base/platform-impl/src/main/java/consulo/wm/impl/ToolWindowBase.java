@@ -56,7 +56,7 @@ public abstract class ToolWindowBase implements ToolWindowEx {
 
   private final PropertyChangeSupport myChangeSupport;
   private final String myId;
-  private final LocalizeValue myDisplayName;
+  private LocalizeValue myDisplayName;
   protected boolean myAvailable;
 
   private ToolWindowInternalDecorator myDecorator;
@@ -87,6 +87,11 @@ public abstract class ToolWindowBase implements ToolWindowEx {
   @Override
   public LocalizeValue getDisplayName() {
     return myDisplayName;
+  }
+
+  @Override
+  public void setDisplayName(@Nonnull LocalizeValue displayName) {
+    myDisplayName = displayName;
   }
 
   @Override

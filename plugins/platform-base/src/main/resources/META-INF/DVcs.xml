@@ -46,6 +46,15 @@
   <extensions defaultExtensionNs="com.intellij">
     <projectService serviceImplementation="com.intellij.dvcs.push.PushSettings"/>
     <projectService serviceImplementation="com.intellij.dvcs.cherrypick.VcsCherryPickManager"/>
+
+    <projectService serviceInterface="com.intellij.openapi.vcs.changes.ui.ChangesViewContentI" serviceImplementation="com.intellij.openapi.vcs.changes.ui.ChangesViewContentManager"/>
+
+    <toolWindow id="Version Control"
+                icon="consulo.platform.base.PlatformIconGroup@toolwindows.toolwindowchanges"
+                anchor="bottom"
+                canCloseContents="true"
+                dispayName="Version Control"
+                factoryClass="consulo.vcs.changes.ui.VcsToolWindowFactory"/>
   </extensions>
 </consulo-plugin>
 

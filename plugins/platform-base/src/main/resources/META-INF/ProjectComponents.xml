@@ -190,13 +190,6 @@
       <skipForDefaultProject/>
     </component>
     <component>
-      <interface-class>com.intellij.openapi.vcs.changes.ui.ChangesViewContentI</interface-class>
-      <implementation-class>com.intellij.openapi.vcs.changes.ui.ChangesViewContentManager</implementation-class>
-      <headless-implementation-class>com.intellij.openapi.vcs.changes.ui.DummyChangesViewContentManager</headless-implementation-class>
-      <option name="workspace" value="true"/>
-      <skipForDefaultProject/>
-    </component>
-    <component>
       <implementation-class>com.intellij.openapi.vcs.changes.committed.CommittedChangesCache</implementation-class>
       <skipForDefaultProject/>
     </component>

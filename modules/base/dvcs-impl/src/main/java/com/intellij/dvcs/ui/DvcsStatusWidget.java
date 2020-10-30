@@ -18,6 +18,7 @@ package com.intellij.dvcs.ui;
 import com.intellij.dvcs.repo.Repository;
 import com.intellij.dvcs.repo.VcsRepositoryManager;
 import com.intellij.dvcs.repo.VcsRepositoryMappingListener;
+import com.intellij.icons.AllIcons;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.FileEditorManagerEvent;
@@ -31,11 +32,13 @@ import com.intellij.openapi.wm.StatusBarWidget;
 import com.intellij.openapi.wm.WindowManager;
 import com.intellij.openapi.wm.impl.status.EditorBasedWidget;
 import com.intellij.util.Consumer;
-import javax.annotation.Nonnull;
-
 import consulo.logging.Logger;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.image.Image;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.awt.event.MouseEvent;
 
 public abstract class DvcsStatusWidget<T extends Repository> extends EditorBasedWidget
@@ -45,19 +48,21 @@ public abstract class DvcsStatusWidget<T extends Repository> extends EditorBased
   private static final String MAX_STRING = "VCS: Rebasing feature-12345";
 
   @Nonnull
-  private final String myPrefix;
+  private final String myVcsName;
 
-  @javax.annotation.Nullable
+  @Nullable
   private String myText;
-  @javax.annotation.Nullable
+  @Nullable
   private String myTooltip;
+  @Nullable
+  private Image myIcon;
 
-  protected DvcsStatusWidget(@Nonnull Project project, @Nonnull String prefix) {
+  protected DvcsStatusWidget(@Nonnull Project project, @Nonnull String vcsName) {
     super(project);
-    myPrefix = prefix;
+    myVcsName = vcsName;
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   protected abstract T guessCurrentRepository(@Nonnull Project project);
 
   @Nonnull
@@ -92,6 +97,12 @@ public abstract class DvcsStatusWidget<T extends Repository> extends EditorBased
     super.dispose();
   }
 
+  @Override
+  @Nullable
+  public Image getIcon() {
+    return myIcon;
+  }
+
   @Nonnull
   @Override
   public String ID() {
@@ -122,26 +133,19 @@ public abstract class DvcsStatusWidget<T extends Repository> extends EditorBased
   }
 
   @RequiredUIAccess
-  @javax.annotation.Nullable
+  @Nullable
   @Override
   public String getSelectedValue() {
-    return StringUtil.isEmpty(myText) ? "" : myPrefix + ": " + myText;
+    return StringUtil.defaultIfEmpty(myText, "");
   }
 
-  @Nonnull
-  @Override
-  @Deprecated
-  public String getMaxValue() {
-    return "";
-  }
-
-  @javax.annotation.Nullable
+  @Nullable
   @Override
   public String getTooltipText() {
     return myTooltip;
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   @Override
   public ListPopup getPopupStep() {
     Project project = getProject();
@@ -152,7 +156,7 @@ public abstract class DvcsStatusWidget<T extends Repository> extends EditorBased
     return getPopup(project, repository);
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   @Override
   public Consumer<MouseEvent> getClickConsumer() {
     // has no effect since the click opens a list popup, and the consumer is not called for the MultipleTextValuesPresentation
@@ -173,6 +177,7 @@ public abstract class DvcsStatusWidget<T extends Repository> extends EditorBased
   private void update() {
     myText = null;
     myTooltip = null;
+    myIcon = null;
 
     Project project = getProject();
     if (project == null || project.isDisposed()) return;
@@ -182,13 +187,20 @@ public abstract class DvcsStatusWidget<T extends Repository> extends EditorBased
     int maxLength = MAX_STRING.length() - 1; // -1, because there are arrows indicating that it is a popup
     myText = StringUtil.shortenTextWithEllipsis(getFullBranchName(repository), maxLength, 5);
     myTooltip = getToolTip(project);
+    myIcon = getIcon(repository);
     if (myStatusBar != null) {
       myStatusBar.updateWidget(ID());
     }
     rememberRecentRoot(repository.getRoot().getPath());
   }
 
-  @javax.annotation.Nullable
+  @Nullable
+  protected Image getIcon(@Nonnull T repository) {
+    if (repository.getState() != Repository.State.NORMAL) return AllIcons.General.Warning;
+    return PlatformIconGroup.vcsBranch();
+  }
+
+  @Nullable
   private String getToolTip(@Nonnull Project project) {
     T currentRepository = guessCurrentRepository(project);
     if (currentRepository == null) return null;

@@ -17,6 +17,8 @@
 package com.intellij.openapi.wm;
 
 import com.intellij.openapi.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
+
 import javax.annotation.Nonnull;
 
 /**
@@ -29,6 +31,7 @@ import javax.annotation.Nonnull;
  * @see ToolWindowEP
  */
 public interface ToolWindowFactory {
+  @RequiredUIAccess
   void createToolWindowContent(@Nonnull Project project, @Nonnull ToolWindow toolWindow);
 
   /**

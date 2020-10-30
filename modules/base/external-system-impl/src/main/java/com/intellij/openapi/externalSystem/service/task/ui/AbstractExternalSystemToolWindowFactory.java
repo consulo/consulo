@@ -26,6 +26,8 @@ import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowFactory;
 import com.intellij.ui.content.ContentManager;
 import com.intellij.ui.content.impl.ContentImpl;
+import consulo.ui.annotation.RequiredUIAccess;
+
 import javax.annotation.Nonnull;
 
 /**
@@ -46,6 +48,7 @@ public abstract class AbstractExternalSystemToolWindowFactory implements ToolWin
                                                             true);
   }
 
+  @RequiredUIAccess
   @Override
   public void createToolWindowContent(final Project project, final ToolWindow toolWindow) {
     toolWindow.setTitle(myExternalSystemId.getReadableName());

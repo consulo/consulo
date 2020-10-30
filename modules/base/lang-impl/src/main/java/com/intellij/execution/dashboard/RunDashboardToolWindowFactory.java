@@ -20,6 +20,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowFactory;
+import consulo.ui.annotation.RequiredUIAccess;
+
 import javax.annotation.Nonnull;
 
 /**
@@ -31,6 +33,7 @@ public class RunDashboardToolWindowFactory implements ToolWindowFactory, Conditi
     return RunDashboardManager.getInstance(project).isToolWindowAvailable();
   }
 
+  @RequiredUIAccess
   @Override
   public void createToolWindowContent(@Nonnull Project project, @Nonnull ToolWindow toolWindow) {
     RunDashboardManager.getInstance(project).createToolWindowContent(toolWindow);

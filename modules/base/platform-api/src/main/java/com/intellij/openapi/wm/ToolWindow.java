@@ -37,6 +37,8 @@ public interface ToolWindow extends BusyObject {
   @Nonnull
   LocalizeValue getDisplayName();
 
+  void setDisplayName(@Nonnull LocalizeValue displayName);
+
   /**
    * @throws IllegalStateException if tool window isn't installed.
    */

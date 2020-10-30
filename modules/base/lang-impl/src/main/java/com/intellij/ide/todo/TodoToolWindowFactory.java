@@ -17,17 +17,21 @@
 package com.intellij.ide.todo;
 
 import com.intellij.openapi.components.ServiceManager;
-import com.intellij.openapi.project.DumbService;
+import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowFactory;
+import consulo.ui.annotation.RequiredUIAccess;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author yole
  */
-public class TodoToolWindowFactory implements ToolWindowFactory {
+public class TodoToolWindowFactory implements ToolWindowFactory, DumbAware {
+  @RequiredUIAccess
   @Override
-  public void createToolWindowContent(Project project, ToolWindow toolWindow) {
-    DumbService.getInstance(project).runWhenSmart(() -> ServiceManager.getService(project, TodoView.class).initToolWindow(toolWindow));
+  public void createToolWindowContent(@Nonnull Project project, @Nonnull ToolWindow toolWindow) {
+    ServiceManager.getService(project, TodoView.class).initToolWindow(toolWindow);
   }
 }

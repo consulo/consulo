@@ -17,14 +17,20 @@ package com.intellij.openapi.vcs.changes.ui;
 
 import com.intellij.ui.content.Content;
 
+import javax.annotation.Nullable;
+
 /**
  * @author irengrig
  */
 public interface ChangesViewContentI {
   void addContent(Content content);
+
   void removeContent(final Content content);
+
   void setSelectedContent(final Content content);
-  @javax.annotation.Nullable
+
+  @Nullable
   <T> T getActiveComponent(final Class<T> aClass);
+
   void selectContent(final String tabName);
 }
