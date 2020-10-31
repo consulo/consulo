@@ -7,6 +7,8 @@
  *****************************************************************************/
 package consulo.injecting.pico;
 
+import javax.annotation.Nullable;
+
 /**
  * A component adapter is responsible for providing a specific component instance. An instance of an implementation of
  * this interface is used inside a {@link PicoContainer} for every registered component or instance.  Each
@@ -51,4 +53,9 @@ interface ComponentAdapter<T> {
    *                                     container.
    */
   T getComponentInstance(DefaultPicoContainer container) throws PicoInitializationException, PicoIntrospectionException;
+
+  @Nullable
+  default T getComponentInstanceOfCreated(DefaultPicoContainer container) {
+    return getComponentInstance(container);
+  }
 }

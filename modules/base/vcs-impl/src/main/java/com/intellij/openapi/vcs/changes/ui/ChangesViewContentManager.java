@@ -16,25 +16,24 @@
 
 package com.intellij.openapi.vcs.changes.ui;
 
-import com.intellij.openapi.application.ModalityState;
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Comparing;
+import com.intellij.openapi.util.Trinity;
 import com.intellij.openapi.vcs.AbstractVcs;
 import com.intellij.openapi.vcs.ProjectLevelVcsManager;
-import com.intellij.openapi.vcs.VcsListener;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowId;
 import com.intellij.ui.UIBundle;
 import com.intellij.ui.content.*;
-import com.intellij.util.Alarm;
 import com.intellij.util.NotNullFunction;
 import consulo.annotation.DeprecationInfo;
 import consulo.disposer.Disposer;
 import consulo.localize.LocalizeValue;
-import consulo.logging.Logger;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.image.Image;
 import consulo.util.dataholder.Key;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -56,27 +55,24 @@ public class ChangesViewContentManager implements ChangesViewContentI {
   @Deprecated
   @DeprecationInfo(value = "Use ToolWindowId#VCS", until = "2.0")
   public static final String TOOLWINDOW_ID = ToolWindowId.VCS;
+
   private static final Key<ChangesViewContentEP> myEPKey = Key.create("ChangesViewContentEP");
-
-  private static final Logger LOG = Logger.getInstance(ChangesViewContentManager.class);
-
-  private final ProjectLevelVcsManager myVcsManager;
-
-  private final Alarm myVcsChangeAlarm;
 
   private final List<Content> myAddedContents = new ArrayList<>();
   @Nonnull
   private final Project myProject;
 
   private ToolWindow myToolWindow;
+
   private ContentManager myContentManager;
 
+  private Trinity<Image, LocalizeValue, Boolean> myAlreadyLoadedState;
+
+  @RequiredUIAccess
   @Inject
-  public ChangesViewContentManager(@Nonnull Project project, final ProjectLevelVcsManager vcsManager) {
+  public ChangesViewContentManager(@Nonnull Project project) {
     myProject = project;
-    myVcsManager = vcsManager;
-    myVcsChangeAlarm = new Alarm(Alarm.ThreadToUse.SWING_THREAD, project);
-    project.getMessageBus().connect().subscribe(ProjectLevelVcsManager.VCS_CONFIGURATION_CHANGED, new MyVcsListener());
+    project.getMessageBus().connect().subscribe(ProjectLevelVcsManager.VCS_CONFIGURATION_CHANGED, () -> update());
   }
 
   @Nonnull
@@ -138,10 +134,10 @@ public class ChangesViewContentManager implements ChangesViewContentI {
 
   @Nullable
   private Content findEPContent(final ChangesViewContentEP ep) {
-    if(myContentManager == null) {
+    if (myContentManager == null) {
       return null;
     }
-    
+
     final Content[] contents = myContentManager.getContents();
     for (Content content : contents) {
       if (content.getUserData(myEPKey) == ep) {
@@ -153,22 +149,39 @@ public class ChangesViewContentManager implements ChangesViewContentI {
 
   @RequiredUIAccess
   private void updateToolWindowAvailability() {
-    if (myToolWindow == null) {
-      return;
-    }
-    AbstractVcs[] vcses = myVcsManager.getAllActiveVcss();
+    AbstractVcs[] vcses = ProjectLevelVcsManager.getInstance(myProject).getAllActiveVcss();
 
-    if(vcses.length == 1) {
+    LocalizeValue displayName;
+    Image image;
+    boolean avaliable = vcses.length > 0;
+
+    if (vcses.length == 1) {
       AbstractVcs vcs = vcses[0];
-      myToolWindow.setDisplayName(LocalizeValue.of(vcs.getDisplayName()));
-      myToolWindow.setIcon(vcs.getIcon());
+      displayName = LocalizeValue.of(vcs.getDisplayName());
+      image = vcs.getIcon();
     }
     else {
-      myToolWindow.setDisplayName(LocalizeValue.of(UIBundle.message("tool.window.name.version.control")));
-      myToolWindow.setIcon(PlatformIconGroup.toolwindowsVcsSmallTab());
+      displayName = LocalizeValue.of(UIBundle.message("tool.window.name.version.control"));
+      image = PlatformIconGroup.toolwindowsVcsSmallTab();
     }
 
-    myToolWindow.setAvailable(vcses.length > 0, null);
+    if (myToolWindow != null) {
+      myToolWindow.setIcon(image);
+      myToolWindow.setDisplayName(displayName);
+      myToolWindow.setAvailable(avaliable, null);
+    }
+    else {
+      myAlreadyLoadedState = Trinity.create(image, displayName, avaliable);
+    }
+  }
+
+  @Nullable
+  public Trinity<Image, LocalizeValue, Boolean> getAlreadyLoadedState() {
+    return myAlreadyLoadedState;
+  }
+
+  public void setAlreadyLoadedState(Trinity<Image, LocalizeValue, Boolean> alreadyLoadedState) {
+    myAlreadyLoadedState = alreadyLoadedState;
   }
 
   @Override
@@ -224,16 +237,11 @@ public class ChangesViewContentManager implements ChangesViewContentI {
     }
   }
 
-  private class MyVcsListener implements VcsListener {
-    @Override
-    public void directoryMappingChanged() {
-      myVcsChangeAlarm.cancelAllRequests();
-      myVcsChangeAlarm.addRequest(() -> {
-        if (myProject.isDisposed()) return;
-        updateToolWindowAvailability();
-        updateExtensionTabs();
-      }, 100, ModalityState.NON_MODAL);
-    }
+  public void update() {
+    Application.get().invokeLater(() -> {
+      updateToolWindowAvailability();
+      updateExtensionTabs();
+    });
   }
 
   private static class ContentStub extends JPanel {
@@ -284,11 +292,11 @@ public class ChangesViewContentManager implements ChangesViewContentI {
   }
 
   private void addIntoCorrectPlace(final Content content) {
-    if(myContentManager == null) {
+    if (myContentManager == null) {
       myAddedContents.add(content);
       return;
     }
-    
+
     final String name = content.getTabName();
     final Content[] contents = myContentManager.getContents();
 

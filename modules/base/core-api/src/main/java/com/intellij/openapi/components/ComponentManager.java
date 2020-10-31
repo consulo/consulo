@@ -53,12 +53,16 @@ public interface ComponentManager extends UserDataHolder, Disposable, InjectingC
     throw new UnsupportedOperationException();
   }
 
-  /**
-   * Gets the component by its interface class.
-   *
-   * @param clazz the interface class of the component
-   * @return component that matches interface class or null if there is no such component
-   */
+  @Nonnull
+  default <T> T getInstance(@Nonnull Class<T> clazz) {
+    return getComponent(clazz);
+  }
+
+  @Nullable
+  default <T> T getInstanceIfCreated(@Nonnull Class<T> clazz) {
+    return getInjectingContainer().getInstanceIfCreated(clazz);
+  }
+
   default <T> T getComponent(@Nonnull Class<T> clazz) {
     return getInjectingContainer().getInstance(clazz);
   }

@@ -59,6 +59,18 @@ class DefaultPicoContainer {
     return null;
   }
 
+  @Nullable
+  public <T> T getComponentInstanceIfCreated(Object componentKey) {
+    ComponentAdapter<T> adapter = findLocalAdapter(componentKey);
+    if (adapter != null) {
+      return adapter.getComponentInstanceOfCreated(this);
+    }
+    if (myParent != null) {
+      return myParent.getComponentInstanceIfCreated(componentKey);
+    }
+    return null;
+  }
+
   private boolean contains(int key) {
     return myClassNameToComponentAdapters.containsKey(key) || myParent != null && myParent.contains(key);
   }

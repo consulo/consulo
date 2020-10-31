@@ -19,6 +19,7 @@ import consulo.injecting.key.InjectingKey;
 import jakarta.inject.Provider;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
@@ -51,6 +52,6 @@ class ProvideComponentAdapter<T> implements ComponentAdapter<T> {
 
   @Override
   public String toString() {
-    return "InstanceComponentAdapter[" + myInterfaceKey.getTargetClassName() + "]";
+    return "ProvideComponentAdapter[" + myInterfaceKey.getTargetClassName() + "]";
   }
 }

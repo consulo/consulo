@@ -73,6 +73,18 @@ public class PicoInjectingContainer implements InjectingContainer {
     throw new UnsupportedOperationException("Class " + clazz + " is not binded");
   }
 
+  @Nullable
+  @Override
+  @SuppressWarnings("unchecked")
+  public <T> T getInstanceIfCreated(@Nonnull Class<T> clazz) {
+    Class<?> insideObjectCreation = GetInstanceValidator.insideObjectCreation();
+    if (InjectingContainer.LOG_INJECTING_PROBLEMS && insideObjectCreation != null && myGetInstanceWarningSet.add(Pair.create(clazz, insideObjectCreation))) {
+      LOG.warn("Calling #getInstance(" + clazz + ".class) inside object initialization. Use contructor injection instead. MainInjecting: " + insideObjectCreation);
+    }
+
+    return (T)myContainer.getComponentInstanceIfCreated(clazz);
+  }
+
   @Nonnull
   @Override
   @SuppressWarnings("unchecked")

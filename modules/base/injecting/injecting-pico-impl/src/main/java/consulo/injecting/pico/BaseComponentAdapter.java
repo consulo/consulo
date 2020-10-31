@@ -25,6 +25,7 @@ import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.function.Function;
 
 /**
@@ -81,6 +82,17 @@ class BaseComponentAdapter<T> implements ComponentAdapter<T> {
   @Override
   public Class getComponentImplementation() {
     return myImplementationKey.getTargetClass();
+  }
+
+  @Nullable
+  @Override
+  public T getComponentInstanceOfCreated(DefaultPicoContainer container) {
+    T instance = myInstanceIfSingleton;
+    if (instance != null) {
+      return instance;
+    }
+
+    return null;
   }
 
   @Override

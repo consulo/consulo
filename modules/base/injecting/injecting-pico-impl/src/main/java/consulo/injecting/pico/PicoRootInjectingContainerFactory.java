@@ -21,6 +21,7 @@ import consulo.injecting.RootInjectingContainerFactory;
 import consulo.injecting.key.InjectingKey;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.List;
 
@@ -33,6 +34,12 @@ public class PicoRootInjectingContainerFactory implements RootInjectingContainer
     @Nonnull
     @Override
     public <T> T getInstance(@Nonnull Class<T> clazz) {
+      throw new UnsupportedOperationException();
+    }
+
+    @Nullable
+    @Override
+    public <T> T getInstanceIfCreated(@Nonnull Class<T> clazz) {
       throw new UnsupportedOperationException();
     }
 

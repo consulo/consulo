@@ -68,7 +68,7 @@ public class VcsRootProblemNotifier {
   @Nonnull
   private final Object NOTIFICATION_LOCK = new Object();
 
-  public static VcsRootProblemNotifier getInstance(@Nonnull Project project) {
+  public static VcsRootProblemNotifier createInstance(@Nonnull Project project) {
     return new VcsRootProblemNotifier(project);
   }
 
@@ -238,7 +238,7 @@ public class VcsRootProblemNotifier {
     protected void hyperlinkActivated(@Nonnull Notification notification, @Nonnull HyperlinkEvent event) {
       if (event.getDescription().equals("configure") && !myProject.isDisposed()) {
         ShowSettingsUtil.getInstance().showSettingsDialog(myProject, ActionsBundle.message("group.VcsGroup.text"));
-        Collection<VcsRootError> errorsAfterPossibleFix = getInstance(myProject).scan();
+        Collection<VcsRootError> errorsAfterPossibleFix = createInstance(myProject).scan();
         if (errorsAfterPossibleFix.isEmpty() && !notification.isExpired()) {
           notification.expire();
         }

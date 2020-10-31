@@ -1,37 +1,28 @@
-/*
- * Copyright 2000-2014 JetBrains s.r.o.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.openapi.vcs.impl;
 
-import com.intellij.diagnostic.ThreadDumper;
-import consulo.disposer.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.diagnostic.Attachment;
-import consulo.logging.Logger;
+import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.progress.Task;
-import com.intellij.openapi.progress.impl.ProgressManagerImpl;
+import com.intellij.openapi.progress.impl.CoreProgressManager;
+import com.intellij.openapi.progress.util.BackgroundTaskUtil;
 import com.intellij.openapi.progress.util.StandardProgressIndicatorBase;
-import com.intellij.openapi.project.DumbAwareRunnable;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.startup.StartupManager;
-import com.intellij.openapi.util.Pair;
+import com.intellij.openapi.project.ProjectManagerListener;
+import com.intellij.openapi.startup.StartupActivity;
+import com.intellij.openapi.util.Condition;
+import com.intellij.openapi.vcs.VcsBundle;
 import com.intellij.util.TimeoutUtil;
-import javax.annotation.Nonnull;
+import com.intellij.util.concurrency.QueueProcessor;
+import com.intellij.util.containers.ContainerUtil;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
+import org.jetbrains.annotations.TestOnly;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -40,69 +31,97 @@ import java.util.List;
 import java.util.concurrent.Future;
 import java.util.function.Predicate;
 
-public class VcsInitialization implements Disposable {
+@Singleton
+public final class VcsInitialization {
   private static final Logger LOG = Logger.getInstance(VcsInitialization.class);
+  private static final ExtensionPointName<VcsStartupActivity> EP_NAME = new ExtensionPointName<>("com.intellij.vcsStartupActivity");
 
-  private final List<Pair<VcsInitObject, Runnable>> myList = new ArrayList<>();
+  @Nonnull
+  public static VcsInitialization getInstance(Project project) {
+    return project.getInstance(VcsInitialization.class);
+  }
+  
   private final Object myLock = new Object();
+
   @Nonnull
   private final Project myProject;
+  private enum Status {
+    PENDING,
+    RUNNING_INIT,
+    RUNNING_POST,
+    FINISHED
 
-  // the initialization lifecycle: IDLE -(on startup completion)-> RUNNING -(on all tasks executed or project canceled)-> FINISHED
-  private enum Status { IDLE, RUNNING, FINISHED, }
-  private Status myStatus = Status.IDLE; // guarded by myLock
+  }
+  // guarded by myLock
+  private Status myStatus = Status.PENDING;
+  private final List<VcsStartupActivity> myInitActivities = new ArrayList<>();
 
+  private final List<VcsStartupActivity> myPostActivities = new ArrayList<>();
   private volatile Future<?> myFuture;
+
   private final ProgressIndicator myIndicator = new StandardProgressIndicatorBase();
 
-  VcsInitialization(@Nonnull final Project project) {
+  @Inject
+  VcsInitialization(@Nonnull Project project) {
     myProject = project;
-    if (project.isDefault()) return;
 
-    StartupManager.getInstance(project).registerPostStartupActivity((DumbAwareRunnable)() -> {
-      if (project.isDisposed()) return;
-      myFuture = ((ProgressManagerImpl)ProgressManager.getInstance()).runProcessWithProgressAsynchronously(
-              new Task.Backgroundable(myProject, "VCS Initialization") {
-                @Override
-                public void run(@Nonnull ProgressIndicator indicator) {
-                  execute(indicator);
-                }
-              }, myIndicator, null);
-    });
+    //if (ApplicationManager.getApplication().isUnitTestMode()) {
+    //  // Fix "MessageBusImpl is already disposed: (disposed temporarily)" during LightPlatformTestCase
+    //  Disposable disposable = ((ProjectEx)project).getEarlyDisposable();
+    //  Disposer.register(disposable, () -> cancelBackgroundInitialization());
+    //}
   }
 
-  public void add(@Nonnull final VcsInitObject vcsInitObject, @Nonnull final Runnable runnable) {
-    synchronized (myLock) {
-      if (myStatus != Status.IDLE) {
-        if (!vcsInitObject.isCanBeLast()) {
-          LOG.info("Registering startup activity AFTER initialization ", new Throwable());
-        }
-        // post startup are normally called on awt thread
-        ApplicationManager.getApplication().invokeLater(runnable, myProject.getDisposed());
-        return;
+  private void startInitialization() {
+    myFuture = ((CoreProgressManager)ProgressManager.getInstance()).runProcessWithProgressAsynchronously(new Task.Backgroundable(myProject, VcsBundle.message("impl.vcs.initialization")) {
+      @Override
+      public void run(@Nonnull ProgressIndicator indicator) {
+        execute();
       }
-      myList.add(Pair.create(vcsInitObject, runnable));
+    }, myIndicator, null);
+  }
+
+  void add(@Nonnull VcsInitObject vcsInitObject, @Nonnull Runnable runnable) {
+    if (myProject.isDefault()) return;
+    boolean wasScheduled = scheduleActivity(vcsInitObject, runnable);
+    if (!wasScheduled) {
+      BackgroundTaskUtil.executeOnPooledThread(myProject, runnable);
     }
   }
 
-  private void execute(@Nonnull ProgressIndicator indicator) {
-    try {
-      final List<Pair<VcsInitObject, Runnable>> list;
-      synchronized (myLock) {
-        list = myList;
-        // list will not be modified starting from this point
-        if (myStatus != Status.IDLE) return; // somebody already set status to finished, the project must have been disposed
-        myStatus = Status.RUNNING;
-        Future<?> future = myFuture;
-        if (future != null && future.isCancelled() || indicator.isCanceled()) {
-          return;
+  private boolean scheduleActivity(@Nonnull VcsInitObject vcsInitObject, @Nonnull Runnable runnable) {
+    synchronized (myLock) {
+      ProxyVcsStartupActivity activity = new ProxyVcsStartupActivity(vcsInitObject, runnable);
+      if (isInitActivity(activity)) {
+        if (myStatus == Status.PENDING) {
+          myInitActivities.add(activity);
+          return true;
+        }
+        else {
+          LOG.warn(String.format("scheduling late initialization: %s", activity));
+          return false;
         }
       }
-      Collections.sort(list, Comparator.comparingInt(o -> o.getFirst().getOrder()));
-      for (Pair<VcsInitObject, Runnable> pair : list) {
-        ProgressManager.checkCanceled();
-        pair.getSecond().run();
+      else {
+        if (myStatus == Status.PENDING || myStatus == Status.RUNNING_INIT) {
+          myPostActivities.add(activity);
+          return true;
+        }
+        else {
+          if (LOG.isDebugEnabled()) {
+            LOG.debug(String.format("scheduling late post activity: %s", activity));
+          }
+          return false;
+        }
       }
+    }
+  }
+
+  private void execute() {
+    LOG.assertTrue(!myProject.isDefault());
+    try {
+      runInitStep(Status.PENDING, Status.RUNNING_INIT, it -> isInitActivity(it), myInitActivities);
+      runInitStep(Status.RUNNING_INIT, Status.RUNNING_POST, it -> !isInitActivity(it), myPostActivities);
     }
     finally {
       synchronized (myLock) {
@@ -111,22 +130,49 @@ public class VcsInitialization implements Disposable {
     }
   }
 
-  @Override
-  public void dispose() {
-    myIndicator.cancel();
-    cancelBackgroundInitialization();
+  private void runInitStep(@Nonnull Status current, @Nonnull Status next, @Nonnull Condition<VcsStartupActivity> extensionFilter, @Nonnull List<VcsStartupActivity> pendingActivities) {
+    List<VcsStartupActivity> epActivities = ContainerUtil.filter(EP_NAME.getExtensionList(), extensionFilter);
+
+    List<VcsStartupActivity> activities = new ArrayList<>();
+    synchronized (myLock) {
+      assert myStatus == current;
+      myStatus = next;
+
+      activities.addAll(epActivities);
+      activities.addAll(pendingActivities);
+      pendingActivities.clear();
+    }
+
+    runActivities(activities);
+  }
+
+  private void runActivities(@Nonnull List<VcsStartupActivity> activities) {
+    Future<?> future = myFuture;
+    if (future != null && future.isCancelled()) return;
+
+    Collections.sort(activities, Comparator.comparingInt(VcsStartupActivity::getOrder));
+
+    for (VcsStartupActivity activity : activities) {
+      ProgressManager.checkCanceled();
+      if (LOG.isDebugEnabled()) {
+        LOG.debug(String.format("running activity: %s", activity));
+      }
+
+      QueueProcessor.runSafely(() -> activity.runActivity(myProject));
+    }
   }
 
   private void cancelBackgroundInitialization() {
+    myIndicator.cancel();
+
     // do not leave VCS initialization run in background when the project is closed
     Future<?> future = myFuture;
-    LOG.debug("cancelBackgroundInitialization() future=" + future +" from "+Thread.currentThread()+" with write access="+ApplicationManager.getApplication().isWriteAccessAllowed());
+    LOG.debug(String.format("cancelBackgroundInitialization() future=%s from %s with write access=%s", future, Thread.currentThread(), ApplicationManager.getApplication().isWriteAccessAllowed()));
     if (future != null) {
       future.cancel(false);
       if (ApplicationManager.getApplication().isWriteAccessAllowed()) {
         // dispose happens without prior project close (most likely light project case in tests)
         // get out of write action and wait there
-        //noinspection SSBasedInspection
         SwingUtilities.invokeLater(this::waitNotRunning);
       }
       else {
@@ -135,31 +181,84 @@ public class VcsInitialization implements Disposable {
     }
   }
 
-  void waitNotRunning() {
-    waitFor(status -> status != Status.RUNNING);
+  private void waitNotRunning() {
+    boolean success = waitFor(status -> status == Status.PENDING || status == Status.FINISHED);
+    if (!success) {
+      LOG.warn("Failed to wait for VCS initialization cancellation for project " + myProject, new Throwable());
+    }
   }
 
+  @TestOnly
   void waitFinished() {
-    waitFor(status -> status == Status.FINISHED);
+    boolean success = waitFor(status -> status == Status.FINISHED);
+    if (!success) {
+      LOG.error("Failed to wait for VCS initialization completion for project " + myProject, new Throwable());
+    }
   }
 
-  private void waitFor(@Nonnull Predicate<Status> predicate) {
-    LOG.debug("waitFor() status=" + myStatus);
+  private boolean waitFor(@Nonnull Predicate<? super Status> predicate) {
+    if (myProject.isDefault()) throw new IllegalArgumentException();
     // have to wait for task completion to avoid running it in background for closed project
     long start = System.currentTimeMillis();
-    Status status = null;
     while (System.currentTimeMillis() < start + 10000) {
       synchronized (myLock) {
-        status = myStatus;
-        if (predicate.test(status)) {
-          break;
+        if (predicate.test(myStatus)) {
+          return true;
         }
       }
       TimeoutUtil.sleep(10);
     }
-    if (status == Status.RUNNING) {
-      LOG.error("Failed to wait for completion of VCS initialization for project " + myProject,
-                new Attachment("thread dump", ThreadDumper.dumpThreadsToString()));
+    return false;
+  }
+
+  private static boolean isInitActivity(@Nonnull VcsStartupActivity activity) {
+    return activity.getOrder() < VcsInitObject.AFTER_COMMON.getOrder();
+  }
+
+  static final class StartUpActivity implements StartupActivity.DumbAware {
+    @Override
+    public void runActivity(@Nonnull Project project) {
+      if (project.isDefault()) return;
+      VcsInitialization vcsInitialization = project.getInstance(VcsInitialization.class);
+      vcsInitialization.startInitialization();
+    }
+  }
+
+  static final class ShutDownProjectListener implements ProjectManagerListener {
+    @Override
+    public void projectClosing(@Nonnull Project project) {
+      if (project.isDefault()) return;
+      VcsInitialization vcsInitialization = project.getInstanceIfCreated(VcsInitialization.class);
+      if (vcsInitialization != null) {
+        // Wait for the task to terminate, to avoid running it in background for closed project
+        vcsInitialization.cancelBackgroundInitialization();
+      }
+    }
+  }
+
+  private static final class ProxyVcsStartupActivity implements VcsStartupActivity {
+    @Nonnull
+    private final Runnable myRunnable;
+    private final int myOrder;
+
+    private ProxyVcsStartupActivity(@Nonnull VcsInitObject vcsInitObject, @Nonnull Runnable runnable) {
+      myOrder = vcsInitObject.getOrder();
+      myRunnable = runnable;
+    }
+
+    @Override
+    public void runActivity(@Nonnull Project project) {
+      myRunnable.run();
+    }
+
+    @Override
+    public int getOrder() {
+      return myOrder;
+    }
+
+    @Override
+    public String toString() {
+      return String.format("ProxyVcsStartupActivity{runnable=%s, order=%s}", myRunnable, myOrder); //NON-NLS
     }
   }
 }

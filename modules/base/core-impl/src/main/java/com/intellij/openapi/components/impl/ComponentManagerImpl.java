@@ -405,6 +405,16 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
     return myNotLazyStepFinished;
   }
 
+  @Nullable
+  @Override
+  public <T> T getInstanceIfCreated(@Nonnull Class<T> clazz) {
+    if (myDisposed) {
+      ProgressManager.checkCanceled();
+      throw new AssertionError("Already disposed: " + this);
+    }
+    return getInjectingContainer().getInstanceIfCreated(clazz);
+  }
+
   @Override
   public <T> T getComponent(@Nonnull Class<T> clazz) {
     if (myDisposed) {

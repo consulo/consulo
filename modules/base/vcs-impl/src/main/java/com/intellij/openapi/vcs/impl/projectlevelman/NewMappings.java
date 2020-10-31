@@ -16,9 +16,6 @@
 package com.intellij.openapi.vcs.impl.projectlevelman;
 
 import com.intellij.openapi.application.ApplicationManager;
-import consulo.disposer.Disposable;
-import consulo.logging.Logger;
-import com.intellij.openapi.project.DumbAwareRunnable;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.MessageType;
 import com.intellij.openapi.util.EmptyRunnable;
@@ -29,7 +26,6 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vcs.*;
 import com.intellij.openapi.vcs.impl.DefaultVcsRootPolicy;
 import com.intellij.openapi.vcs.impl.ProjectLevelVcsManagerImpl;
-import com.intellij.openapi.vcs.impl.VcsInitObject;
 import com.intellij.openapi.vcs.ui.VcsBalloonProblemNotifier;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -37,9 +33,11 @@ import com.intellij.util.ArrayUtil;
 import com.intellij.util.Functions;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.MultiMap;
+import consulo.disposer.Disposable;
+import consulo.logging.Logger;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.*;
 import java.util.function.Function;
 
@@ -88,12 +86,6 @@ public class NewMappings implements Disposable {
       mySortedMappings = VcsDirectoryMapping.EMPTY_ARRAY;
     }
     myActivated = false;
-
-    vcsManager.addInitializationRequest(VcsInitObject.MAPPINGS, (DumbAwareRunnable)() -> {
-      if (!myProject.isDisposed()) {
-        activateActiveVcses();
-      }
-    });
   }
 
   // for tests

@@ -20,11 +20,12 @@ import com.intellij.openapi.progress.util.BackgroundTaskUtil;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vcs.AbstractVcs;
 import com.intellij.openapi.vcs.ProjectLevelVcsManager;
-import com.intellij.openapi.vcs.VcsListener;
 import com.intellij.openapi.vcs.VcsRoot;
+import com.intellij.openapi.vcs.impl.VcsInitObject;
+import com.intellij.openapi.vcs.impl.VcsStartupActivity;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.util.Alarm;
 import com.intellij.util.ArrayUtil;
-import com.intellij.util.ObjectUtils;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.messages.Topic;
 import consulo.disposer.Disposable;
@@ -44,7 +45,23 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  * extension point in a thread safe way.
  */
 @Singleton
-public class VcsRepositoryManager implements Disposable, VcsListener {
+public class VcsRepositoryManager implements Disposable {
+  static final class MyStartupActivity implements VcsStartupActivity {
+    @Override
+    public void runActivity(@Nonnull Project project) {
+      getInstance(project).checkAndUpdateRepositoriesCollection(null);
+    }
+
+    @Override
+    public int getOrder() {
+      return VcsInitObject.OTHER_INITIALIZATION.getOrder();
+    }
+  }
+
+  @Nonnull
+  public static VcsRepositoryManager getInstance(@Nonnull Project project) {
+    return project.getInstance(VcsRepositoryManager.class);
+  }
 
   public static final Topic<VcsRepositoryMappingListener> VCS_REPOSITORY_MAPPING_UPDATED =
           Topic.create("VCS repository mapping updated", VcsRepositoryMappingListener.class);
@@ -64,18 +81,15 @@ public class VcsRepositoryManager implements Disposable, VcsListener {
 
   private volatile boolean myDisposed;
 
-  @Nonnull
-  public static VcsRepositoryManager getInstance(@Nonnull Project project) {
-    return ObjectUtils.assertNotNull(project.getComponent(VcsRepositoryManager.class));
-  }
-
   private final Project myProject;
+
+  private final Alarm myUpdateAlarm = new Alarm(Alarm.ThreadToUse.POOLED_THREAD, this);
 
   @Inject
   public VcsRepositoryManager(@Nonnull Project project, @Nonnull ProjectLevelVcsManager vcsManager) {
     myProject = project;
     myVcsManager = vcsManager;
-    myProject.getMessageBus().connect().subscribe(ProjectLevelVcsManager.VCS_CONFIGURATION_CHANGED, this);
+    project.getMessageBus().connect(this).subscribe(ProjectLevelVcsManager.VCS_CONFIGURATION_CHANGED, this::scheduleUpdate);
   }
 
   @Override
@@ -90,9 +104,10 @@ public class VcsRepositoryManager implements Disposable, VcsListener {
     }
   }
 
-  @Override
-  public void directoryMappingChanged() {
-    checkAndUpdateRepositoriesCollection(null);
+  private void scheduleUpdate() {
+    if (myUpdateAlarm.isDisposed()) return;
+    myUpdateAlarm.cancelAllRequests();
+    myUpdateAlarm.addRequest(() -> checkAndUpdateRepositoriesCollection(null), 0);
   }
 
   @Nullable
@@ -100,11 +115,7 @@ public class VcsRepositoryManager implements Disposable, VcsListener {
     return getRepositoryForFile(file, false);
   }
 
-  /**
-   * @Deprecated to delete in 2017.X
-   */
   @Nullable
-  @Deprecated
   public Repository getRepositoryForFileQuick(@Nonnull VirtualFile file) {
     return getRepositoryForFile(file, true);
   }
