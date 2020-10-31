@@ -51,7 +51,7 @@ class DesktopAlertImpl<V> extends BaseAlert<V> {
     DialogImpl(boolean canBeParent) {
       super(canBeParent);
 
-      setTitle(myTitle);
+      setTitle(myTitle.getValue());
 
       init();
     }
@@ -69,11 +69,11 @@ class DesktopAlertImpl<V> extends BaseAlert<V> {
       for (int i = 0; i < myButtons.size(); i++) {
         ButtonImpl button = myButtons.get(i);
         final int exitCode = i;
-        final String text = getText(button);
+        final LocalizeValue localizeValue = getText(button);
 
-        actions[i] = new AbstractAction(UIUtil.replaceMnemonicAmpersand(text)) {
+        actions[i] = new DialogWrapperAction(localizeValue) {
           @Override
-          public void actionPerformed(ActionEvent e) {
+          protected void doAction(ActionEvent e) {
             close(exitCode, true);
 
             mySelectedValue = button.myValue.get();
@@ -83,9 +83,6 @@ class DesktopAlertImpl<V> extends BaseAlert<V> {
         if (button.myDefault) {
           actions[i].putValue(DEFAULT_ACTION, Boolean.TRUE);
         }
-
-        UIUtil.assignMnemonic(text, actions[i]);
-
       }
       return actions;
     }
@@ -123,12 +120,14 @@ class DesktopAlertImpl<V> extends BaseAlert<V> {
         container.add(iconLabel, BorderLayout.NORTH);
         panel.add(container, BorderLayout.WEST);
       }
-      if (myText != null) {
-        final JTextPane messageComponent = createMessageComponent(myText);
+
+      String textValue = myText.getValue();
+      if (!textValue.isEmpty()) {
+        final JTextPane messageComponent = createMessageComponent(textValue);
 
         final Dimension screenSize = messageComponent.getToolkit().getScreenSize();
         final Dimension textSize = messageComponent.getPreferredSize();
-        if (myText.length() > 100) {
+        if (textValue.length() > 100) {
           final JScrollPane pane = ScrollPaneFactory.createScrollPane(messageComponent);
           pane.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
           pane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);

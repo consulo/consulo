@@ -15,6 +15,8 @@
  */
 package consulo.ui;
 
+import consulo.annotation.DeprecationInfo;
+import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.internal.UIInternal;
 import consulo.ui.util.TraverseUtil;
@@ -69,7 +71,12 @@ public interface Alert<V> {
   }
 
   @Nonnull
-  Alert<V> button(@Nonnull String text, @Nonnull Supplier<V> valueGetter);
+  default Alert<V> button(@Nonnull String text, @Nonnull Supplier<V> valueGetter) {
+    return button(LocalizeValue.of(text), valueGetter);
+  }
+
+  @Nonnull
+  Alert<V> button(@Nonnull LocalizeValue text, @Nonnull Supplier<V> valueGetter);
 
   /**
    * Mark last added button as default (enter will hit it)
@@ -91,14 +98,28 @@ public interface Alert<V> {
   @Nonnull
   Alert<V> exitValue(@Nonnull Supplier<V> valueGetter);
 
+  @Nonnull
+  @Deprecated
+  @DeprecationInfo("Use with #title(LocalizeValue)")
+  default Alert<V> title(@Nonnull String text) {
+    return title(LocalizeValue.of(text));
+  }
+
   /**
    * Default title is application name
    */
   @Nonnull
-  Alert<V> title(@Nonnull String text);
+  Alert<V> title(@Nonnull LocalizeValue value);
 
   @Nonnull
-  Alert<V> text(@Nonnull String text);
+  @Deprecated
+  @DeprecationInfo("Use with #text(LocalizeValue)")
+  default Alert<V> text(@Nonnull String text) {
+    return text(LocalizeValue.of(text));
+  }
+
+  @Nonnull
+  Alert<V> text(@Nonnull LocalizeValue value);
 
   /**
    * Does not block UI thread

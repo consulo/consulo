@@ -15,6 +15,8 @@
  */
 package consulo.ui;
 
+import consulo.annotation.DeprecationInfo;
+import consulo.localize.LocalizeValue;
 import consulo.util.lang.ThreeState;
 
 import javax.annotation.Nonnull;
@@ -28,17 +30,44 @@ public final class Alerts {
   private static final Object ourStableNull = new Object();
 
   @Nonnull
+  @Deprecated
+  @DeprecationInfo("Use #okInfo(LocalizeValue)")
   public static Alert<Object> okInfo(@Nonnull String text) {
-    return okTemplate(text, o -> o);
+    return okTemplate(LocalizeValue.of(text), o -> o);
   }
 
   @Nonnull
+  @Deprecated
+  @DeprecationInfo("Use #okWarning(LocalizeValue)")
+  public static Alert<Object> okWarning(@Nonnull String text) {
+    return okTemplate(LocalizeValue.of(text), Alert::asWarning);
+  }
+
+  @Nonnull
+  @Deprecated
+  @DeprecationInfo("Use #okError(LocalizeValue)")
   public static Alert<Object> okError(@Nonnull String text) {
-    return okTemplate(text, Alert::asError);
+    return okTemplate(LocalizeValue.of(text), Alert::asError);
   }
 
   @Nonnull
-  private static Alert<Object> okTemplate(@Nonnull String text, Function<Alert<Object>, Alert<Object>> levelSet) {
+  public static Alert<Object> okInfo(@Nonnull LocalizeValue textValue) {
+    return okTemplate(textValue, o -> o);
+  }
+
+  @Nonnull
+  public static Alert<Object> okWarning(@Nonnull LocalizeValue textValue) {
+    return okTemplate(textValue, Alert::asWarning);
+  }
+
+  @Nonnull
+  @Deprecated
+  public static Alert<Object> okError(@Nonnull LocalizeValue textValue) {
+    return okTemplate(textValue, Alert::asError);
+  }
+
+  @Nonnull
+  private static Alert<Object> okTemplate(@Nonnull LocalizeValue text, Function<Alert<Object>, Alert<Object>> levelSet) {
     Alert<Object> builder = Alert.create();
     levelSet.apply(builder);
     builder.text(text);

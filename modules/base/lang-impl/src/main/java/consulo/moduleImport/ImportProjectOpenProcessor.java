@@ -28,6 +28,7 @@ import com.intellij.projectImport.ProjectOpenProcessor;
 import com.intellij.util.ThreeState;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.moduleImport.ui.ModuleImportProcessor;
+import consulo.platform.base.localize.IdeLocalize;
 import consulo.ui.Alert;
 import consulo.ui.UIAccess;
 import consulo.ui.image.Image;
@@ -103,7 +104,7 @@ public class ImportProjectOpenProcessor extends ProjectOpenProcessor {
     AsyncResult<ThreeState> askDialogResult = AsyncResult.undefined();
     if (!uiAccess.isHeadless() && DefaultProjectOpenProcessor.getInstance().canOpenProject(new File(expectedProjectPath))) {
       Alert<ThreeState> alert = Alert.create();
-      alert.title(IdeBundle.message("title.open.project"));
+      alert.title(IdeLocalize.titleOpenProject());
       alert.text(IdeBundle.message("project.import.open.existing", "an existing project", FileUtil.toSystemDependentName(ioPath.getPath()), virtualFile.getName()));
       alert.asQuestion();
 

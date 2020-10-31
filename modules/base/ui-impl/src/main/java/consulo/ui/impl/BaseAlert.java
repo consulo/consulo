@@ -15,8 +15,9 @@
  */
 package consulo.ui.impl;
 
-import com.intellij.CommonBundle;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.localize.LocalizeValue;
+import consulo.platform.base.localize.CommonLocalize;
 import consulo.ui.Alert;
 import consulo.ui.AlertValueRemember;
 import consulo.ui.NotificationType;
@@ -33,40 +34,40 @@ import java.util.function.Supplier;
 public abstract class BaseAlert<V> implements Alert<V> {
   protected class ButtonImpl {
     public int myButtonId;
-    public String myText;
+    public LocalizeValue myText;
     public Supplier<V> myValue;
     public boolean myDefault;
 
-    ButtonImpl(int buttonId, String text, Supplier<V> value) {
+    ButtonImpl(int buttonId, LocalizeValue text, Supplier<V> value) {
       myButtonId = buttonId;
       myText = text;
       myValue = value;
     }
   }
 
-  protected String getText(ButtonImpl button) {
+  protected LocalizeValue getText(ButtonImpl button) {
     if (button.myText != null) {
       return button.myText;
     }
 
     switch (button.myButtonId) {
       case YES:
-        return CommonBundle.getYesButtonText();
+        return CommonLocalize.buttonYes();
       case NO:
-        return CommonBundle.getNoButtonText();
+        return CommonLocalize.buttonNo();
       case OK:
-        return CommonBundle.getOkButtonText();
+        return CommonLocalize.buttonOk();
       case CANCEL:
-        return CommonBundle.getCancelButtonText();
+        return CommonLocalize.buttonCancel();
       case APPLY:
-        return CommonBundle.getApplyButtonText();
+        return CommonLocalize.buttonApply();
       default:
         throw new UnsupportedOperationException(String.valueOf(button.myButtonId));
     }
   }
 
-  protected String myText;
-  protected String myTitle = "Consulo";
+  protected LocalizeValue myText = LocalizeValue.empty();
+  protected LocalizeValue myTitle = LocalizeValue.of("Consulo");
   protected NotificationType myType = NotificationType.INFO;
   protected List<ButtonImpl> myButtons = new ArrayList<>();
   protected AlertValueRemember<V> myRemember;
@@ -110,8 +111,8 @@ public abstract class BaseAlert<V> implements Alert<V> {
 
   @Nonnull
   @Override
-  public Alert<V> button(@Nonnull String text, @Nonnull Supplier<V> valueGetter) {
-    myButtons.add(new ButtonImpl(-1, text, valueGetter));
+  public Alert<V> button(@Nonnull LocalizeValue textValue, @Nonnull Supplier<V> valueGetter) {
+    myButtons.add(new ButtonImpl(-1, textValue, valueGetter));
     return this;
   }
 
@@ -144,14 +145,14 @@ public abstract class BaseAlert<V> implements Alert<V> {
 
   @Nonnull
   @Override
-  public Alert<V> title(@Nonnull String text) {
+  public Alert<V> title(@Nonnull LocalizeValue text) {
     myTitle = text;
     return this;
   }
 
   @Nonnull
   @Override
-  public Alert<V> text(@Nonnull String text) {
+  public Alert<V> text(@Nonnull LocalizeValue text) {
     myText = text;
     return this;
   }
