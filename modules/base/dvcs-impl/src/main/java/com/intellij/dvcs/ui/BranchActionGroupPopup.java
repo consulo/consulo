@@ -15,13 +15,11 @@ import com.intellij.openapi.ui.popup.LightweightWindowEvent;
 import com.intellij.openapi.ui.popup.ListPopupStep;
 import com.intellij.openapi.ui.popup.PopupStep;
 import com.intellij.openapi.util.Condition;
-import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.WindowStateService;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vcs.ui.FlatSpeedSearchPopup;
 import com.intellij.openapi.vcs.ui.PopupListElementRendererWithIcon;
 import com.intellij.ui.*;
-import com.intellij.ui.components.panels.NonOpaquePanel;
 import com.intellij.ui.components.panels.OpaquePanel;
 import com.intellij.ui.popup.KeepingPopupOpenAction;
 import com.intellij.ui.popup.WizardPopup;
@@ -32,10 +30,12 @@ import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import consulo.awt.TargetAWT;
 import consulo.ui.image.Image;
+import consulo.util.dataholder.Key;
 import icons.DvcsImplIcons;
+import org.jetbrains.annotations.NotNull;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicButtonUI;
 import java.awt.*;
@@ -43,9 +43,8 @@ import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
-import static com.intellij.icons.AllIcons.General.CollapseComponent;
-import static com.intellij.icons.AllIcons.General.CollapseComponentHover;
 import static com.intellij.util.ObjectUtils.assertNotNull;
 import static com.intellij.util.ObjectUtils.chooseNotNull;
 import static com.intellij.util.ui.UIUtil.DEFAULT_HGAP;
@@ -64,15 +63,9 @@ public class BranchActionGroupPopup extends FlatSpeedSearchPopup {
   private final String myKey;
   @Nonnull
   private Dimension myPrevSize = JBUI.emptySize();
-  //these toolbar buttons can be null for child popup components
-  @Nullable
-  private MyToolbarButton myRestoreSizeButton;
-  @Nullable
-  private MyToolbarButton mySettingsButton;
 
   private final List<AnAction> mySettingsActions = new ArrayList<>();
-  @Nullable
-  private JPanel myTitleToolbarPanel;
+  private final List<AnAction> myToolbarActions = new ArrayList<>();
 
   public BranchActionGroupPopup(@Nonnull String title, @Nonnull Project project, @Nonnull Condition<AnAction> preselectActionCondition, @Nonnull ActionGroup actions, @Nullable String dimensionKey) {
     super(title, createBranchSpeedSearchActionGroup(actions), SimpleDataContext.getProjectContext(project), preselectActionCondition, true);
@@ -88,41 +81,56 @@ public class BranchActionGroupPopup extends FlatSpeedSearchPopup {
       }
       createTitlePanelToolbar(myKey);
     }
+    setSpeedSearchAlwaysShown();
     myMeanRowHeight = getList().getCellBounds(0, 0).height + UIUtil.getListCellVPadding() * 2;
   }
 
   private void createTitlePanelToolbar(@Nonnull String dimensionKey) {
-    myTitleToolbarPanel = new NonOpaquePanel();
-    myTitleToolbarPanel.setLayout(new BoxLayout(myTitleToolbarPanel, BoxLayout.LINE_AXIS));
-    myTitleToolbarPanel.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
-    myRestoreSizeButton = new MyToolbarButton("Restore Size", CollapseComponent, CollapseComponentHover, e -> {
-      WindowStateService.getInstance(myProject).putSizeFor(myProject, dimensionKey, null);
-      myInternalSizeChanged = true;
-      pack(true, true);
-    }) {
+    ActionGroup actionGroup = new LightActionGroup() {
       @Override
-      protected boolean isButtonEnabled() {
-        return myUserSizeChanged;
+      @Nonnull
+      public AnAction [] getChildren(@Nullable AnActionEvent e) {
+        return myToolbarActions.toArray(AnAction.EMPTY_ARRAY);
       }
     };
-
-    mySettingsButton = new MyToolbarButton("Settings", AllIcons.General.GearPlain, null, e -> {
-      final ActionPopupMenu popupMenu = ActionManager.getInstance().createActionPopupMenu(BRANCH_POPUP, new DefaultActionGroup(mySettingsActions));
-      popupMenu.getComponent().show(mySettingsButton, 0, assertNotNull(mySettingsButton).getHeight());
-    }) {
+    AnAction restoreSizeButton = new AnAction(DvcsBundle.message("action.BranchActionGroupPopup.Anonymous.text.restore.size"), null, AllIcons.General.CollapseComponent) {
       @Override
-      protected boolean isButtonEnabled() {
-        return !mySettingsActions.isEmpty();
+      public void actionPerformed(@Nonnull AnActionEvent e) {
+        WindowStateService.getInstance(myProject).putSizeFor(myProject, dimensionKey, null);
+        myInternalSizeChanged = true;
+        pack(true, true);
+      }
+
+      @Override
+      public void update(@Nonnull AnActionEvent e) {
+        e.getPresentation().setEnabled(myUserSizeChanged);
       }
     };
+    ActionGroup settingsGroup = new ActionGroup(DvcsBundle.message("action.BranchActionGroupPopup.settings.text"), true) {
+      @Override
+      @Nonnull
+      public AnAction[] getChildren(@Nullable AnActionEvent e) {
+        return mySettingsActions.toArray(AnAction.EMPTY_ARRAY);
+      }
 
-    myTitleToolbarPanel.add(mySettingsButton);
-    myTitleToolbarPanel.add(myRestoreSizeButton);
+      @Override
+      public boolean hideIfNoVisibleChildren() {
+        return true;
+      }
+    };
+    settingsGroup.getTemplatePresentation().setIcon(AllIcons.General.GearPlain);
+
+    myToolbarActions.add(restoreSizeButton);
+    myToolbarActions.add(settingsGroup);
+
+    ActionToolbar toolbar = ActionManager.getInstance().createActionToolbar(BRANCH_POPUP, actionGroup, true);
+    toolbar.setReservePlaceAutoPopupIcon(false);
+    toolbar.getComponent().setOpaque(false);
     getTitle().setButtonComponent(new ActiveComponent.Adapter() {
       @Nonnull
       @Override
       public JComponent getComponent() {
-        return myTitleToolbarPanel;
+        return toolbar.getComponent();
       }
     }, JBUI.Borders.emptyRight(2));
   }
@@ -159,7 +167,7 @@ public class BranchActionGroupPopup extends FlatSpeedSearchPopup {
   }
 
   private void processOnSizeChanged() {
-    Dimension newSize = assertNotNull(getSize());
+    Dimension newSize = Objects.requireNonNull(getSize());
     int preferredHeight = getComponent().getPreferredSize().height;
     int realHeight = getComponent().getHeight();
     boolean shouldExpand = preferredHeight + myMeanRowHeight < realHeight;
@@ -178,9 +186,6 @@ public class BranchActionGroupPopup extends FlatSpeedSearchPopup {
     //ugly properties to distinguish user size changed from pack method call after Restore Size action performed
     myUserSizeChanged = !myInternalSizeChanged;
     myInternalSizeChanged = false;
-    if (myRestoreSizeButton != null) {
-      myRestoreSizeButton.update();
-    }
   }
 
   @Nonnull
@@ -197,18 +202,11 @@ public class BranchActionGroupPopup extends FlatSpeedSearchPopup {
   }
 
   public void addToolbarAction(@Nonnull AnAction action, boolean underSettingsPopup) {
-    if (myTitleToolbarPanel == null) return;
-    if (mySettingsButton != null && underSettingsPopup) {
+    if (underSettingsPopup) {
       mySettingsActions.add(action);
-      mySettingsButton.update();
     }
     else {
-      myTitleToolbarPanel.add(new MyToolbarButton(action) {
-        @Override
-        protected boolean isButtonEnabled() {
-          return action.getTemplatePresentation().isEnabled();
-        }
-      });
+      myToolbarActions.add(0, action);
     }
   }
 
@@ -303,6 +301,11 @@ public class BranchActionGroupPopup extends FlatSpeedSearchPopup {
 
   @Override
   protected void onSpeedSearchPatternChanged() {
+    String newFilter = mySpeedSearch.getFilter();
+    if (newFilter.endsWith(" ")) {
+      mySpeedSearch.updatePattern(newFilter.trim());
+      return;
+    }
     getList().setSelectedIndex(0);
     super.onSpeedSearchPatternChanged();
     ScrollingUtil.ensureSelectionExists(getList());
@@ -537,40 +540,5 @@ public class BranchActionGroupPopup extends FlatSpeedSearchPopup {
     else {
       parentGroup.addAll(actionList);
     }
-  }
-
-  private static abstract class MyToolbarButton extends JButton {
-
-    private MyToolbarButton(@Nullable String text, @Nullable Image icon, @Nullable Image rolloverIcon) {
-      setBorder(JBUI.Borders.empty(0, 2));
-      setBorderPainted(false);
-      setContentAreaFilled(false);
-      setOpaque(false);
-      setRolloverEnabled(true);
-      Image regularIcon = chooseNotNull(icon, Image.empty());
-      setIcon(TargetAWT.to(regularIcon));
-      setToolTipText(text);
-      setRolloverIcon(TargetAWT.to(chooseNotNull(rolloverIcon, regularIcon)));
-      update();
-      setUI(new BasicButtonUI());
-    }
-
-    MyToolbarButton(@Nullable String text, @Nullable Image icon, @Nullable Image rolloverIcon, @Nonnull ActionListener buttonListener) {
-      this(text, icon, rolloverIcon);
-      addActionListener(buttonListener);
-    }
-
-    MyToolbarButton(AnAction action) {
-      this(action.getTemplatePresentation().getText(), action.getTemplatePresentation().getIcon(), action.getTemplatePresentation().getHoveredIcon());
-      addActionListener(ActionUtil.createActionListener(action, this, BRANCH_POPUP));
-    }
-
-    public void update() {
-      boolean enabled = isButtonEnabled();
-      setEnabled(enabled);
-      setVisible(enabled);
-    }
-
-    protected abstract boolean isButtonEnabled();
   }
 }
