@@ -16,32 +16,38 @@
 package com.intellij.dvcs.branch;
 
 import com.intellij.dvcs.repo.Repository;
+import com.intellij.dvcs.ui.DvcsBundle;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.containers.ContainerUtil;
+import org.jetbrains.annotations.Nls;
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
+import javax.annotation.Nullable;
 import java.util.Collection;
 
 public class DvcsBranchUtil {
 
 
   @Nullable
-  public static <T extends DvcsBranchInfo> T find(@Nullable final Collection<T> branches,
-                                                  @javax.annotation.Nullable Repository repository,
-                                                  @Nonnull String sourceBranch) {
+  public static <T extends DvcsBranchInfo> T find(@Nullable final Collection<T> branches, @javax.annotation.Nullable Repository repository, @Nonnull String sourceBranch) {
     if (branches == null) return null;
     return ContainerUtil.find(branches, targetInfo -> repoAndSourceAreEqual(repository, sourceBranch, targetInfo));
   }
 
-  private static boolean repoAndSourceAreEqual(@javax.annotation.Nullable Repository repository,
-                                               @Nonnull String sourceBranch,
-                                               @Nonnull DvcsBranchInfo targetInfo) {
+  private static boolean repoAndSourceAreEqual(@javax.annotation.Nullable Repository repository, @Nonnull String sourceBranch, @Nonnull DvcsBranchInfo targetInfo) {
     return getPathFor(repository).equals(targetInfo.repoPath) && StringUtil.equals(targetInfo.sourceName, sourceBranch);
   }
 
   @Nonnull
   public static String getPathFor(@Nullable Repository repository) {
     return repository == null ? "" : repository.getRoot().getPath();
+  }
+
+  @Nls
+  @Nonnull
+  public static String shortenBranchName(@Nls @Nonnull String fullBranchName) {
+    // -1, because there are arrows indicating that it is a popup
+    int maxLength = DvcsBundle.message("branch.popup.maximum.branch.length.sample").length() - 1;
+    return StringUtil.shortenTextWithEllipsis(fullBranchName, maxLength, 5);
   }
 }

@@ -79,6 +79,7 @@ public interface StatusBar extends StatusBarInfo, Disposable {
     public static final String COLUMN_SELECTION_MODE_PANEL = "InsertOverwrite"; // Keep the old ID for backwards compatibility
     public static final String READONLY_ATTRIBUTE_PANEL = "ReadOnlyAttribute";
     public static final String POSITION_PANEL = "Position";
+    public static final String LINE_SEPARATOR_PANEL = "LineSeparator";
   }
 
   void addWidget(@Nonnull StatusBarWidget widget);
@@ -88,22 +89,6 @@ public interface StatusBar extends StatusBarInfo, Disposable {
   void addWidget(@Nonnull StatusBarWidget widget, @Nonnull Disposable parentDisposable);
 
   void addWidget(@Nonnull StatusBarWidget widget, @Nonnull String anchor, @Nonnull Disposable parentDisposable);
-
-  /**
-   * @deprecated use addWidget instead
-   */
-  @Deprecated
-  default void addCustomIndicationComponent(@Nonnull JComponent c) {
-    throw new UnsupportedOperationException("deprecated");
-  }
-
-  /**
-   * @deprecated use removeWidget instead
-   */
-  @Deprecated
-  default void removeCustomIndicationComponent(@Nonnull JComponent c) {
-    throw new UnsupportedOperationException("deprecated");
-  }
 
   void removeWidget(@Nonnull String id);
 

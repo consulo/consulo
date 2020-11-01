@@ -10,7 +10,6 @@ import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.components.ServiceManager;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.SystemInfo;
@@ -19,6 +18,7 @@ import com.intellij.openapi.vfs.impl.local.NativeFileWatcherImpl;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.UIUtil;
 import consulo.container.boot.ContainerPathManager;
+import consulo.logging.Logger;
 import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;

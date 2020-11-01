@@ -10,8 +10,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiFile;
 import com.intellij.util.containers.ContainerUtil;
 import gnu.trove.THashSet;
-
 import javax.annotation.Nonnull;
+
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
@@ -117,6 +117,21 @@ public abstract class LanguageCodeStyleSettingsProvider extends CodeStyleSetting
   public static int getRightMargin(Language lang, @Nonnull SettingsType settingsType) {
     final LanguageCodeStyleSettingsProvider provider = forLanguage(lang);
     return provider != null ? provider.getRightMargin(settingsType) : -1;
+  }
+
+  /**
+   * Searches a provider for a specific language or its base language.
+   *
+   * @param language The original language.
+   * @return Found provider or {@code null} if it doesn't exist neither for the language itself nor for any of its base languages.
+   */
+  @Nullable
+  public static LanguageCodeStyleSettingsProvider findUsingBaseLanguage(@Nonnull final Language language) {
+    for (Language currLang = language; currLang != null; currLang = currLang.getBaseLanguage()) {
+      LanguageCodeStyleSettingsProvider curr = forLanguage(currLang);
+      if (curr != null) return curr;
+    }
+    return null;
   }
 
   @Nonnull

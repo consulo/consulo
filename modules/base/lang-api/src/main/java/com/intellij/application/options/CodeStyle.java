@@ -1,17 +1,19 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.application.options;
 
+import com.intellij.application.options.codeStyle.cache.CodeStyleCachingService;
 import com.intellij.lang.Language;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;
+import com.intellij.psi.PsiFileFactory;
 import com.intellij.psi.codeStyle.*;
+import org.jetbrains.annotations.TestOnly;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import org.jetbrains.annotations.TestOnly;
 
 /**
  * Utility class for miscellaneous code style settings retrieving methods.
@@ -63,14 +65,27 @@ public class CodeStyle {
    */
   @Nonnull
   public static CodeStyleSettings getSettings(@Nonnull PsiFile file) {
-    if (file.isValid()) {
-      Project project = file.getProject();
-      //noinspection deprecation
-      return CodeStyleSettingsManager.getInstance(project).getCurrentSettings();
+    final Project project = file.getProject();
+    CodeStyleSettings tempSettings = CodeStyleSettingsManager.getInstance(project).getTemporarySettings();
+    if (tempSettings != null) {
+      return tempSettings;
     }
-    return getDefaultSettings();
-  }
 
+    //CodeStyleSettings result = FileCodeStyleProvider.EP_NAME.computeSafeIfAny(provider -> provider.getSettings(file));
+    //if (result != null) {
+    //  return result;
+    //}
+
+    if (!file.isPhysical()) {
+      PsiFile originalFile = file.getUserData(PsiFileFactory.ORIGINAL_FILE);
+      if (originalFile != null && originalFile.isPhysical()) {
+        return getSettings(originalFile);
+      }
+      return getSettings(project);
+    }
+    CodeStyleSettings cachedSettings = CodeStyleCachingService.getInstance(project).tryGetSettings(file);
+    return cachedSettings != null ? cachedSettings : getSettings(project);
+  }
 
   public static CodeStyleSettings getSettings(@Nonnull Editor editor) {
     Project project = editor.getProject();

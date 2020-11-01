@@ -1,9 +1,10 @@
-// Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+// Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.openapi.wm.impl.status;
 
 import com.intellij.ide.ui.UISettings;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.ui.components.panels.NonOpaquePanel;
 import com.intellij.ui.scale.JBUIScale;
 import com.intellij.util.ui.JBFont;
 import com.intellij.util.ui.JBUI;
@@ -11,16 +12,17 @@ import com.intellij.util.ui.UIUtil;
 import consulo.awt.TargetAWT;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
+import org.jetbrains.annotations.Nls;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import javax.accessibility.Accessible;
 import javax.accessibility.AccessibleContext;
 import javax.accessibility.AccessibleRole;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 
-public class TextPanel extends JComponent implements Accessible {
+public class TextPanel extends NonOpaquePanel implements Accessible {
   @Nullable
   private String myText;
 
@@ -30,8 +32,15 @@ public class TextPanel extends JComponent implements Accessible {
   protected float myAlignment;
 
   protected TextPanel() {
-    setOpaque(true);
+    updateUI();
+  }
+
+  @Override
+  public void updateUI() {
     UISettings.setupComponentAntialiasing(this);
+    Object value = UIManager.getDefaults().get(RenderingHints.KEY_FRACTIONALMETRICS);
+    if (value == null) value = RenderingHints.VALUE_FRACTIONALMETRICS_OFF;
+    putClientProperty(RenderingHints.KEY_FRACTIONALMETRICS, value);
   }
 
   @Override
@@ -54,14 +63,9 @@ public class TextPanel extends JComponent implements Accessible {
 
   @Override
   protected void paintComponent(final Graphics g) {
-    String s = getText();
+    @Nls String s = getText();
     int panelWidth = getWidth();
     int panelHeight = getHeight();
-    Color background = getBackground();
-    if (background != null && isOpaque()) {
-      g.setColor(background);
-      g.fillRect(0, 0, panelWidth, panelHeight);
-    }
     if (s == null) return;
 
     Graphics2D g2 = (Graphics2D)g;
@@ -69,10 +73,10 @@ public class TextPanel extends JComponent implements Accessible {
     UISettings.setupAntialiasing(g);
 
     Rectangle bounds = new Rectangle(panelWidth, panelHeight);
-    int x = getTextX(g2);
-    int maxWidth = panelWidth - x - getInsets().right;
     FontMetrics fm = g.getFontMetrics();
     int textWidth = fm.stringWidth(s);
+    int x = textWidth > panelWidth ? getInsets().left : getTextX(g2);
+    int maxWidth = panelWidth - x - getInsets().right;
     if (textWidth > maxWidth) {
       s = truncateText(s, bounds, fm, new Rectangle(), new Rectangle(), maxWidth);
     }
@@ -102,7 +106,8 @@ public class TextPanel extends JComponent implements Accessible {
     return insets.left;
   }
 
-  protected String truncateText(String text, Rectangle bounds, FontMetrics fm, Rectangle textR, Rectangle iconR, int maxWidth) {
+  @Nls
+  protected String truncateText(@Nls String text, Rectangle bounds, FontMetrics fm, Rectangle textR, Rectangle iconR, int maxWidth) {
     return SwingUtilities.layoutCompoundLabel(this, fm, text, null, SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.TRAILING, bounds, iconR, textR, 0);
   }
 
@@ -133,6 +138,7 @@ public class TextPanel extends JComponent implements Accessible {
   }
 
   @Nullable
+  @Nls
   public String getText() {
     return myText;
   }
@@ -232,6 +238,11 @@ public class TextPanel extends JComponent implements Accessible {
 
     public boolean hasIcon() {
       return myIcon != null;
+    }
+
+    @Nullable
+    public Image getIcon() {
+      return myIcon;
     }
   }
 

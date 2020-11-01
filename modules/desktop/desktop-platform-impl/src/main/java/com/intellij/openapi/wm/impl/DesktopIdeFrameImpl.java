@@ -15,15 +15,14 @@
  */
 package com.intellij.openapi.wm.impl;
 
-import com.intellij.diagnostic.IdeMessagePanel;
 import com.intellij.ide.AppLifecycleListener;
 import com.intellij.ide.DataManager;
 import com.intellij.ide.impl.ProjectUtil;
 import com.intellij.ide.ui.UISettings;
 import com.intellij.ide.util.PropertiesComponent;
-import com.intellij.notification.impl.IdeNotificationArea;
 import com.intellij.openapi.MnemonicHelper;
 import com.intellij.openapi.actionSystem.ActionManager;
+import com.intellij.openapi.actionSystem.ActionPlaces;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.impl.MouseGestureManager;
 import com.intellij.openapi.application.Application;
@@ -31,12 +30,18 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
-import com.intellij.openapi.util.*;
+import com.intellij.openapi.util.ActionCallback;
+import com.intellij.openapi.util.Ref;
+import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.wm.*;
+import com.intellij.openapi.wm.IdeFrame;
+import com.intellij.openapi.wm.IdeRootPaneNorthExtension;
+import com.intellij.openapi.wm.StatusBar;
+import com.intellij.openapi.wm.WindowManager;
 import com.intellij.openapi.wm.ex.IdeFrameEx;
 import com.intellij.openapi.wm.ex.LayoutFocusTraversalPolicyExt;
-import com.intellij.openapi.wm.impl.status.*;
+import com.intellij.openapi.wm.impl.status.widget.StatusBarWidgetsActionGroup;
+import com.intellij.openapi.wm.impl.status.widget.StatusBarWidgetsManager;
 import com.intellij.openapi.wm.impl.welcomeScreen.WelcomeFrame;
 import com.intellij.ui.*;
 import com.intellij.ui.mac.MacMainFrameDecorator;
@@ -48,10 +53,9 @@ import consulo.application.impl.FrameTitleUtil;
 import consulo.awt.TargetAWT;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
-import consulo.ui.desktop.internal.window.JFrameAsUIWindow;
 import consulo.ui.Rectangle2D;
+import consulo.ui.desktop.internal.window.JFrameAsUIWindow;
 import consulo.util.dataholder.Key;
-import consulo.wm.impl.status.ModuleLayerWidget;
 
 import javax.accessibility.AccessibleContext;
 import javax.annotation.Nonnull;
@@ -63,8 +67,7 @@ import java.awt.event.WindowEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Objects;
 
 /**
  * @author Anton Katilin
@@ -482,52 +485,10 @@ public final class DesktopIdeFrameImpl implements IdeFrameEx, AccessibleContextA
   }
 
   private void installDefaultProjectStatusBarWidgets(@Nonnull final Project project) {
-    final StatusBar statusBar = getStatusBar();
-    assert statusBar != null;
-
-    final PositionPanel positionPanel = new PositionPanel(project);
-    statusBar.addWidget(positionPanel, "before " + IdeMessagePanel.FATAL_ERROR);
-
-    final IdeNotificationArea notificationArea = new IdeNotificationArea();
-    statusBar.addWidget(notificationArea, "before " + IdeMessagePanel.FATAL_ERROR);
-
-    final EncodingPanel encodingPanel = new EncodingPanel(project);
-    statusBar.addWidget(encodingPanel, "after Position");
-
-    final LineSeparatorPanel lineSeparatorPanel = new LineSeparatorPanel(project);
-    statusBar.addWidget(lineSeparatorPanel, "before " + encodingPanel.ID());
-
-    final ToggleReadOnlyAttributePanel readOnlyAttributePanel = new ToggleReadOnlyAttributePanel();
-
-    final ColumnSelectionModePanel insertOverwritePanel = new ColumnSelectionModePanel(project);
-    statusBar.addWidget(insertOverwritePanel, "after " + encodingPanel.ID());
-    statusBar.addWidget(readOnlyAttributePanel, "after " + insertOverwritePanel.ID());
-
-    final ModuleLayerWidget moduleLayerWidget = new ModuleLayerWidget(project);
-    statusBar.addWidget(moduleLayerWidget, "after " + insertOverwritePanel.ID());
-
-    List<StatusBarWidget> toRemove = new ArrayList<>();
-    for (StatusBarWidgetProvider provider : StatusBarWidgetProvider.EP_NAME.getExtensionList()) {
-      StatusBarWidget widget = provider.getWidget(project);
-      if(widget == null) {
-        continue;
-      }
-      toRemove.add(widget);
-      statusBar.addWidget(widget, provider.getAnchor());
-    }
-
-    Disposer.register(project, () -> {
-      statusBar.removeWidget(encodingPanel.ID());
-      statusBar.removeWidget(moduleLayerWidget.ID());
-      statusBar.removeWidget(lineSeparatorPanel.ID());
-      statusBar.removeWidget(positionPanel.ID());
-      statusBar.removeWidget(notificationArea.ID());
-      statusBar.removeWidget(readOnlyAttributePanel.ID());
-      statusBar.removeWidget(insertOverwritePanel.ID());
-      for (StatusBarWidget widget : toRemove) {
-        statusBar.removeWidget(widget.ID());
-      }
-    });
+    project.getInstance(StatusBarWidgetsManager.class).updateAllWidgets();
+    
+    JComponent component = Objects.requireNonNull(getStatusBar()).getComponent();
+    PopupHandler.installPopupHandler(component, StatusBarWidgetsActionGroup.GROUP_ID, ActionPlaces.STATUS_BAR_PLACE);
   }
 
   @Override

@@ -27,13 +27,15 @@ import com.intellij.openapi.options.SearchableConfigurable;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.codeStyle.CodeStyleScheme;
 import com.intellij.psi.codeStyle.CodeStyleSettings;
+import com.intellij.psi.codeStyle.CodeStyleSettingsManager;
 import com.intellij.psi.codeStyle.CodeStyleSettingsProvider;
 import com.intellij.psi.impl.source.codeStyle.CodeStyleSchemeImpl;
 import consulo.ui.annotation.RequiredUIAccess;
 import jakarta.inject.Inject;
 import org.jetbrains.annotations.Nls;
-
 import javax.annotation.Nonnull;
+
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -198,11 +200,31 @@ public class CodeStyleSchemesConfigurable extends SearchableConfigurable.Parent.
 
         myModel.apply();
         EditorFactory.getInstance().refreshAllEditors();
+        
+        CodeStyleSettingsManager.getInstance(myProject).fireCodeStyleSettingsChanged(null);
       }
       finally {
         myApplyCompleted = true;
       }
     }
+  }
+
+  @Nullable
+  public SearchableConfigurable findSubConfigurable(@Nonnull final String name) {
+    return findSubConfigurable(this, name);
+  }
+
+  private static SearchableConfigurable findSubConfigurable(SearchableConfigurable.Parent topConfigurable, @Nonnull final String name) {
+    for (Configurable configurable : topConfigurable.getConfigurables()) {
+      if (configurable instanceof SearchableConfigurable) {
+        if (name.equals(configurable.getDisplayName())) return (SearchableConfigurable)configurable;
+        if (configurable instanceof SearchableConfigurable.Parent) {
+          SearchableConfigurable child = findSubConfigurable((Parent)configurable, name);
+          if (child != null) return child;
+        }
+      }
+    }
+    return null;
   }
 
   private boolean isSchemeModified(final CodeStyleScheme scheme) {
@@ -296,7 +318,7 @@ public class CodeStyleSchemesConfigurable extends SearchableConfigurable.Parent.
     return result;
   }
 
-  private class CodeStyleConfigurableWrapper implements SearchableConfigurable, NoScroll, NoMargin, OptionsContainingConfigurable {
+  public class CodeStyleConfigurableWrapper implements SearchableConfigurable, NoScroll, NoMargin, OptionsContainingConfigurable {
     private boolean myInitialResetInvoked;
     private CodeStyleMainPanel myPanel;
     private final CodeStyleSettingsProvider myProvider;
@@ -391,6 +413,11 @@ public class CodeStyleSchemesConfigurable extends SearchableConfigurable.Parent.
       if (myPanel != null) {
         myPanel.disposeUIResources();
       }
+    }
+
+    public void selectTab(@Nonnull String tab) {
+      createComponent();
+      myPanel.showTabOnCurrentPanel(tab);
     }
 
     public boolean isPanelModified(CodeStyleScheme scheme) {

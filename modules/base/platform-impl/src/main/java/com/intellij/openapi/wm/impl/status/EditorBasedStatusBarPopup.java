@@ -1,4 +1,4 @@
-// Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+// Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.openapi.wm.impl.status;
 
 import com.intellij.ide.DataManager;
@@ -17,10 +17,8 @@ import com.intellij.openapi.editor.event.DocumentEvent;
 import com.intellij.openapi.editor.event.DocumentListener;
 import com.intellij.openapi.fileEditor.*;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.ui.popup.JBPopup;
 import com.intellij.openapi.ui.popup.ListPopup;
-import consulo.disposer.Disposer;
-import consulo.ui.image.Image;
-import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileListener;
@@ -32,9 +30,16 @@ import com.intellij.openapi.wm.StatusBar;
 import com.intellij.openapi.wm.StatusBarWidget;
 import com.intellij.ui.ClickListener;
 import com.intellij.ui.awt.RelativePoint;
+import com.intellij.ui.popup.PopupState;
 import com.intellij.util.Alarm;
+import com.intellij.util.ObjectUtils;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.UIUtil;
+import consulo.disposer.Disposer;
+import consulo.ui.image.Image;
+import consulo.util.dataholder.Key;
+import consulo.util.lang.ObjectUtil;
+import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;
@@ -46,7 +51,8 @@ import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
 
 public abstract class EditorBasedStatusBarPopup extends EditorBasedWidget implements StatusBarWidget.Multiframe, CustomStatusBarWidget {
-  private final TextPanel.WithIconAndArrows myComponent;
+  private final PopupState<JBPopup> myPopupState = PopupState.forPopup();
+  private final JPanel myComponent;
   private final boolean myWriteableFileRequired;
   private boolean actionEnabled;
   private final Alarm update;
@@ -57,7 +63,7 @@ public abstract class EditorBasedStatusBarPopup extends EditorBasedWidget implem
     super(project);
     myWriteableFileRequired = writeableFileRequired;
     update = new Alarm(this);
-    myComponent = new TextPanel.WithIconAndArrows();
+    myComponent = createComponent();
     myComponent.setVisible(false);
 
     new ClickListener() {
@@ -67,8 +73,12 @@ public abstract class EditorBasedStatusBarPopup extends EditorBasedWidget implem
         showPopup(e);
         return true;
       }
-    }.installOn(myComponent);
+    }.installOn(myComponent, true);
     myComponent.setBorder(WidgetBorder.WIDE);
+  }
+
+  protected JPanel createComponent() {
+    return new TextPanel.WithIconAndArrows();
   }
 
   @Override
@@ -78,9 +88,13 @@ public abstract class EditorBasedStatusBarPopup extends EditorBasedWidget implem
 
     FileEditor fileEditor = newFile == null ? null : FileEditorManager.getInstance(getProject()).getSelectedEditor(newFile);
     Editor editor = fileEditor instanceof TextEditor ? ((TextEditor)fileEditor).getEditor() : null;
-    myEditor = new WeakReference<>(editor);
+    setEditor(editor);
 
     fileChanged(newFile);
+  }
+
+  public final void setEditor(@Nullable Editor editor) {
+    myEditor = new WeakReference<>(editor);
   }
 
   public final void selectionChanged(@Nullable VirtualFile newFile) {
@@ -145,6 +159,8 @@ public abstract class EditorBasedStatusBarPopup extends EditorBasedWidget implem
         }
       }));
     }
+    setEditor(getEditor());
+    update();
   }
 
   /**
@@ -170,15 +186,14 @@ public abstract class EditorBasedStatusBarPopup extends EditorBasedWidget implem
   }
 
   private void showPopup(@Nonnull MouseEvent e) {
-    if (!actionEnabled) {
-      return;
-    }
+    if (!actionEnabled || myPopupState.isRecentlyHidden()) return; // do not show popup
     DataContext dataContext = getContext();
     ListPopup popup = createPopup(dataContext);
 
     if (popup != null) {
       Dimension dimension = popup.getContent().getPreferredSize();
       Point at = new Point(0, -dimension.height);
+      myPopupState.prepareToShow(popup);
       popup.show(new RelativePoint(e.getComponent(), at));
       Disposer.register(this, popup); // destroy popup on unexpected project close
     }
@@ -191,8 +206,8 @@ public abstract class EditorBasedStatusBarPopup extends EditorBasedWidget implem
     VirtualFile selectedFile = getSelectedFile();
     return SimpleDataContext.getSimpleContext(ContainerUtil.<Key, Object>immutableMapBuilder().put(CommonDataKeys.VIRTUAL_FILE, selectedFile)
                                                       .put(CommonDataKeys.VIRTUAL_FILE_ARRAY, selectedFile == null ? VirtualFile.EMPTY_ARRAY : new VirtualFile[]{selectedFile})
-                                                      .put(CommonDataKeys.PROJECT, getProject()).put(PlatformDataKeys.CONTEXT_COMPONENT, editor == null ? null : editor.getComponent()).build(),
-                                              parent);
+                                                      .put(CommonDataKeys.PROJECT, getProject())
+                                                      .put(PlatformDataKeys.CONTEXT_COMPONENT, editor == null ? null : editor.getComponent()).build(), parent);
   }
 
   @Override
@@ -201,11 +216,21 @@ public abstract class EditorBasedStatusBarPopup extends EditorBasedWidget implem
   }
 
   protected boolean isEmpty() {
-    return StringUtil.isEmpty(myComponent.getText()) && !myComponent.hasIcon();
+    Boolean result = ObjectUtils.doIfCast(myComponent, TextPanel.WithIconAndArrows.class, textPanel -> StringUtil.isEmpty(textPanel.getText()) && !textPanel.hasIcon());
+    return result != null && result;
   }
 
   public boolean isActionEnabled() {
     return actionEnabled;
+  }
+
+  protected void updateComponent(@Nonnull WidgetState state) {
+    myComponent.setToolTipText(state.toolTip);
+    ObjectUtil.consumeIfCast(myComponent, TextPanel.WithIconAndArrows.class, textPanel -> {
+      textPanel.setTextAlignment(Component.CENTER_ALIGNMENT);
+      textPanel.setIcon(state.icon);
+      textPanel.setText(state.text);
+    });
   }
 
   @TestOnly
@@ -255,18 +280,12 @@ public abstract class EditorBasedStatusBarPopup extends EditorBasedWidget implem
 
       myComponent.setVisible(true);
 
-      actionEnabled = state.actionEnabled && file != null && (!requiresWritableFile() || file.isWritable());
+      actionEnabled = state.actionEnabled && isEnabledForFile(file);
 
-      String widgetText = state.text;
-      String toolTipText = state.toolTip;
       myComponent.setEnabled(actionEnabled);
-      myComponent.setTextAlignment(Component.CENTER_ALIGNMENT);
-      myComponent.setIcon(state.icon);
-      myComponent.setToolTipText(toolTipText);
-      myComponent.setText(widgetText);
-      myComponent.invalidate();
+      updateComponent(state);
 
-      if (myStatusBar != null) {
+      if (myStatusBar != null && !myComponent.isValid()) {
         myStatusBar.updateWidget(ID());
       }
 
@@ -319,7 +338,7 @@ public abstract class EditorBasedStatusBarPopup extends EditorBasedWidget implem
      * Use myConnection.subscribe(DumbService.DUMB_MODE, your_listener) inside registerCustomListeners,
      * and call update() inside listener callbacks, to refresh your widget state when indexes are loaded
      */
-    public static WidgetState getDumbModeState(String name, String widgetPrefix) {
+    public static WidgetState getDumbModeState(@Nls String name, String widgetPrefix) {
       // todo: update accordingly to UX-252
       return new WidgetState(ActionUtil.getUnavailableMessage(name, false), widgetPrefix + IdeBundle.message("progress.indexing.updating"), false);
     }
@@ -327,14 +346,32 @@ public abstract class EditorBasedStatusBarPopup extends EditorBasedWidget implem
     public void setIcon(Image icon) {
       this.icon = icon;
     }
-  }
 
-  protected boolean requiresWritableFile() {
-    return true;
+    @Nls
+    public String getText() {
+      return text;
+    }
+
+    public String getToolTip() {
+      return toolTip;
+    }
+
+    public Image getIcon() {
+      return icon;
+    }
   }
 
   @Nonnull
   protected abstract WidgetState getWidgetState(@Nullable VirtualFile file);
+
+  /**
+   * @param file result of {@link EditorBasedStatusBarPopup#getSelectedFile()}
+   * @return false if widget should be disabled for {@code file}
+   * even if {@link EditorBasedStatusBarPopup#getWidgetState(VirtualFile)} returned {@link WidgetState#actionEnabled}.
+   */
+  protected boolean isEnabledForFile(@Nullable VirtualFile file) {
+    return file == null || !myWriteableFileRequired || file.isWritable();
+  }
 
   @Nullable
   protected abstract ListPopup createPopup(DataContext context);

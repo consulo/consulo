@@ -19,15 +19,15 @@ import com.intellij.formatting.ASTBlock;
 import com.intellij.formatting.Block;
 import com.intellij.formatting.Indent;
 import com.intellij.openapi.editor.Document;
-import com.intellij.openapi.util.Condition;
+import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiComment;
 import com.intellij.psi.formatter.common.AbstractBlock;
 import com.intellij.psi.formatter.common.NewLineBlocksIterator;
-import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.text.CharArrayUtil;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,36 +35,35 @@ import java.util.List;
 public class FormatterBasedLineIndentInfoBuilder {
   private static final int MAX_NEW_LINE_BLOCKS_TO_PROCESS = 500;
 
+  private final ProgressIndicator myProgressIndicator;
   private final Document myDocument;
   private final CharSequence myText;
   private final Block myRootBlock;
 
-  public FormatterBasedLineIndentInfoBuilder(@Nonnull Document document, @Nonnull Block rootBlock) {
+  public FormatterBasedLineIndentInfoBuilder(@Nonnull Document document, @Nonnull Block rootBlock, @Nullable ProgressIndicator indicator) {
     myDocument = document;
     myText = myDocument.getCharsSequence();
     myRootBlock = rootBlock;
+    myProgressIndicator = indicator;
   }
 
   public List<LineIndentInfo> build() {
     List<Block> newLineBlocks = getBlocksStartingNewLine();
 
-    return ContainerUtil.map(newLineBlocks, new Function<Block, LineIndentInfo>() {
-      @Override
-      public LineIndentInfo fun(Block newLineBlock) {
-        int blockStartOffset = newLineBlock.getTextRange().getStartOffset();
-        int line = myDocument.getLineNumber(blockStartOffset);
-        int lineStartOffset = myDocument.getLineStartOffset(line);
+    return ContainerUtil.map(newLineBlocks, newLineBlock -> {
+      int blockStartOffset = newLineBlock.getTextRange().getStartOffset();
+      int line = myDocument.getLineNumber(blockStartOffset);
+      int lineStartOffset = myDocument.getLineStartOffset(line);
 
-        if (rangeHasTabs(lineStartOffset, blockStartOffset)) {
-          return LineIndentInfo.LINE_WITH_TABS;
-        }
+      if (rangeHasTabs(lineStartOffset, blockStartOffset)) {
+        return LineIndentInfo.LINE_WITH_TABS;
+      }
 
-        if (hasNormalIndent(newLineBlock)) {
-          return LineIndentInfo.newNormalIndent(blockStartOffset - lineStartOffset);
-        }
-        else {
-          return LineIndentInfo.LINE_WITH_NOT_COUNTABLE_INDENT;
-        }
+      if (hasNormalIndent(newLineBlock)) {
+        return LineIndentInfo.newNormalIndent(blockStartOffset - lineStartOffset);
+      }
+      else {
+        return LineIndentInfo.LINE_WITH_NOT_COUNTABLE_INDENT;
       }
     });
   }
@@ -76,12 +75,7 @@ public class FormatterBasedLineIndentInfoBuilder {
     List<Indent.Type> allIndents = getIndentOnStartOffset(block, range, startOffset);
 
     if (hasOnlyNormalOrNoneIndents(allIndents)) {
-      int normalIndents = ContainerUtil.filter(allIndents, new Condition<Indent.Type>() {
-        @Override
-        public boolean value(Indent.Type type) {
-          return type == Indent.Type.NORMAL;
-        }
-      }).size();
+      int normalIndents = ContainerUtil.filter(allIndents, type -> type == Indent.Type.NORMAL).size();
       return normalIndents < 2;
     }
 
@@ -96,8 +90,7 @@ public class FormatterBasedLineIndentInfoBuilder {
 
     List<Indent.Type> innerIndents = indents.subList(1, indents.size());
     for (Indent.Type indent : innerIndents) {
-      if (indent != Indent.Type.NONE && indent != Indent.Type.NORMAL
-          && indent != Indent.Type.CONTINUATION_WITHOUT_FIRST) {
+      if (indent != Indent.Type.NONE && indent != Indent.Type.NORMAL && indent != Indent.Type.CONTINUATION_WITHOUT_FIRST) {
         //continuation without first here because it is CONTINUATION only if it's owner is not the first child
         return false;
       }
@@ -107,7 +100,7 @@ public class FormatterBasedLineIndentInfoBuilder {
   }
 
   private static List<Indent.Type> getIndentOnStartOffset(Block block, TextRange range, int startOffset) {
-    List<Indent.Type> indentsOnStartOffset = new ArrayList<Indent.Type>();
+    List<Indent.Type> indentsOnStartOffset = new ArrayList<>();
 
     while (block != null && range.getStartOffset() == startOffset) {
       Indent.Type type = block.getIndent() != null ? block.getIndent().getType() : Indent.Type.CONTINUATION_WITHOUT_FIRST;
@@ -125,9 +118,9 @@ public class FormatterBasedLineIndentInfoBuilder {
 
   @Nonnull
   private List<Block> getBlocksStartingNewLine() {
-    NewLineBlocksIterator newLineBlocksIterator = new NewLineBlocksIterator(myRootBlock, myDocument);
+    NewLineBlocksIterator newLineBlocksIterator = new NewLineBlocksIterator(myRootBlock, myDocument, myProgressIndicator);
 
-    List<Block> newLineBlocks = new ArrayList<Block>();
+    List<Block> newLineBlocks = new ArrayList<>();
     int currentLine = 0;
     while (newLineBlocksIterator.hasNext() && currentLine < MAX_NEW_LINE_BLOCKS_TO_PROCESS) {
       Block next = newLineBlocksIterator.next();

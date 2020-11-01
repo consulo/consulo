@@ -17,8 +17,12 @@ package com.intellij.psi.codeStyle.autodetect;
 
 import com.intellij.psi.codeStyle.CommonCodeStyleSettings;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public interface IndentOptionsDetector {
+
+  @Nullable
+  IndentOptionsAdjuster getIndentOptionsAdjuster();
 
   @Nonnull
   CommonCodeStyleSettings.IndentOptions getIndentOptions();

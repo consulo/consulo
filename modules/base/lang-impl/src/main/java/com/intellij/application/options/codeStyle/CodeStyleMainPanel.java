@@ -76,7 +76,7 @@ public class CodeStyleMainPanel extends JPanel implements TabbedLanguageCodeStyl
     mySchemesPanel = new CodeStyleSchemesPanel(model);
     myProperties = PropertiesComponent.getInstance();
 
-    model.addListener(new CodeStyleSettingsListener(){
+    model.addListener(new CodeStyleSchemesModelListener(){
       @Override
       public void currentSchemeChanged(final Object source) {
         if (source != mySchemesPanel) {
@@ -171,6 +171,15 @@ public class CodeStyleMainPanel extends JPanel implements TabbedLanguageCodeStyl
       if (panel.isModified()) return true;
     }
     return false;
+  }
+
+  public void showTabOnCurrentPanel(String tab) {
+    NewCodeStyleSettingsPanel selectedPanel = ensureCurrentPanel();
+    CodeStyleAbstractPanel settingsPanel = selectedPanel.getSelectedPanel();
+    if (settingsPanel instanceof TabbedLanguageCodeStylePanel) {
+      TabbedLanguageCodeStylePanel tabbedPanel = (TabbedLanguageCodeStylePanel)settingsPanel;
+      tabbedPanel.changeTab(tab);
+    }
   }
 
   public void reset() {

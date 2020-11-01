@@ -16,8 +16,8 @@
 package com.intellij.openapi.actionSystem;
 
 import com.intellij.util.containers.ContainerUtil;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Set;
 
@@ -166,6 +166,10 @@ public abstract class ActionPlaces {
   @Nonnull
   public static String getActionGroupPopupPlace(@Nullable String actionId) {
     return actionId == null ? POPUP : POPUP_PREFIX + actionId;
+  }
+
+  public static boolean isMainMenuOrShortcut(@Nonnull String place) {
+    return MAIN_MENU.equals(place) || KEYBOARD_SHORTCUT.equals(place);
   }
 
   public static boolean isPopupPlace(@Nonnull String place) {

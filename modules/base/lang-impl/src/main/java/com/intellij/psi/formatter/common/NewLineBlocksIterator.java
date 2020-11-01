@@ -17,8 +17,13 @@ package com.intellij.psi.formatter.common;
 
 import com.intellij.formatting.Block;
 import com.intellij.openapi.editor.Document;
+import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.util.text.CharArrayUtil;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+import org.jetbrains.annotations.TestOnly;
 
 import java.util.Iterator;
 import java.util.List;
@@ -26,20 +31,28 @@ import java.util.ListIterator;
 import java.util.Stack;
 
 public class NewLineBlocksIterator implements Iterator<Block> {
+  private final ProgressIndicator myIndicator;
   private final Document myDocument;
   private final int myTotalLines;
 
   private int myCurrentLineStartOffset;
   private int myCurrentDocumentLine;
-  private Stack<Block> myStack = new Stack<Block>();
+  private final Stack<Block> myStack = new Stack<>();
 
-  public NewLineBlocksIterator(Block root, Document document) {
+  @TestOnly
+  public NewLineBlocksIterator(@Nonnull Block root, @Nonnull Document document) {
+    this(root, document, null);
+  }
+
+  public NewLineBlocksIterator(@Nonnull Block root, @Nonnull Document document, @Nullable ProgressIndicator indicator) {
     myStack.add(root);
     myDocument = document;
     myTotalLines = myDocument.getLineCount();
 
     myCurrentDocumentLine = 0;
     myCurrentLineStartOffset = 0;
+
+    myIndicator = indicator;
   }
 
   @Override
@@ -57,6 +70,7 @@ public class NewLineBlocksIterator implements Iterator<Block> {
 
     Block block = myStack.peek();
     while (block != null && !isStartingNewLine(block)) {
+      checkCancelled();
       myCurrentDocumentLine++;
       if (myCurrentDocumentLine >= myTotalLines) {
         myStack.clear();
@@ -65,6 +79,12 @@ public class NewLineBlocksIterator implements Iterator<Block> {
       myCurrentLineStartOffset = myDocument.getLineStartOffset(myCurrentDocumentLine);
       popUntilTopBlockStartOffsetGreaterOrEqual(myCurrentLineStartOffset);
       block = myStack.isEmpty() ? null : myStack.peek();
+    }
+  }
+
+  private void checkCancelled() {
+    if (myIndicator != null) {
+      myIndicator.checkCanceled();
     }
   }
 
@@ -92,6 +112,7 @@ public class NewLineBlocksIterator implements Iterator<Block> {
 
   private void popUntilTopBlockStartOffsetGreaterOrEqual(final int lineStartOffset) {
     while (!myStack.isEmpty()) {
+      checkCancelled();
       Block current = myStack.peek();
       TextRange range = current.getTextRange();
       if (range.getStartOffset() < lineStartOffset) {

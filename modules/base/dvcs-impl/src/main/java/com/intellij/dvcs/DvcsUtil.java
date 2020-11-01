@@ -164,7 +164,7 @@ public class DvcsUtil {
   @Nullable
   public static VirtualFile getSelectedFile(@Nonnull Project project) {
     StatusBar statusBar = WindowManager.getInstance().getStatusBar(project);
-    final FileEditor fileEditor = StatusBarUtil.getCurrentFileEditor(project, statusBar);
+    final FileEditor fileEditor = StatusBarUtil.getCurrentFileEditor(statusBar);
     VirtualFile result = null;
     if (fileEditor != null) {
       if (fileEditor instanceof TextEditor) {

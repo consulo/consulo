@@ -15,8 +15,6 @@
  */
 package com.intellij.openapi.wm.impl;
 
-import com.intellij.diagnostic.IdeMessagePanel;
-import com.intellij.diagnostic.MessagePool;
 import com.intellij.ide.DataManager;
 import com.intellij.ide.actions.CustomizeUIAction;
 import com.intellij.ide.actions.ViewToolbarAction;
@@ -27,14 +25,12 @@ import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Comparing;
-import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.openapi.wm.IdeRootPaneNorthExtension;
 import com.intellij.openapi.wm.StatusBar;
 import com.intellij.openapi.wm.ex.IdeFrameEx;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
 import com.intellij.openapi.wm.impl.status.IdeStatusBarImpl;
-import com.intellij.openapi.wm.impl.status.MemoryUsagePanel;
 import com.intellij.ui.BalloonLayout;
 import com.intellij.ui.DesktopBalloonLayoutImpl;
 import com.intellij.ui.PopupHandler;
@@ -78,8 +74,6 @@ public class IdeRootPane extends JRootPane implements Disposable, UISettingsList
   private final ActionManager myActionManager;
 
   private final boolean myGlassPaneInitialized;
-
-  private MemoryUsagePanel myMemoryWidget;
 
   private boolean myFullScreen;
 
@@ -229,22 +223,6 @@ public class IdeRootPane extends JRootPane implements Disposable, UISettingsList
     myStatusBar = new IdeStatusBarImpl();
     Disposer.register(this, myStatusBar);
     myStatusBar.install(frame);
-
-    myMemoryWidget = new MemoryUsagePanel();
-
-    myStatusBar.addWidget(myMemoryWidget);
-    myStatusBar.addWidget(new IdeMessagePanel(frame, MessagePool.getInstance()), "before " + MemoryUsagePanel.WIDGET_ID);
-
-    setMemoryIndicatorVisible(UISettings.getInstance().getShowMemoryIndicator());
-  }
-
-  private void setMemoryIndicatorVisible(final boolean visible) {
-    if (myMemoryWidget != null) {
-      myMemoryWidget.setShowing(visible);
-      if (!SystemInfo.isMac) {
-        myStatusBar.setBorder(BorderFactory.createEmptyBorder(1, 4, 0, visible ? 0 : 2));
-      }
-    }
   }
 
   @Nullable
@@ -292,7 +270,6 @@ public class IdeRootPane extends JRootPane implements Disposable, UISettingsList
   @Override
   public void uiSettingsChanged(UISettings uiSettings) {
     SwingUIDecorator.apply(SwingUIDecorator::decorateWindowTitle, this);
-    setMemoryIndicatorVisible(uiSettings.getShowMemoryIndicator());
     updateToolbarVisibility();
     updateStatusBarVisibility();
     for (IdeRootPaneNorthExtension component : myNorthComponents) {

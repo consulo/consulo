@@ -1,138 +1,98 @@
-/*
- * Copyright 2000-2014 JetBrains s.r.o.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.psi.codeStyle.autodetect;
 
+import com.intellij.application.options.CodeStyle;
 import com.intellij.formatting.Block;
+import com.intellij.formatting.FormattingContext;
 import com.intellij.formatting.FormattingModel;
 import com.intellij.formatting.FormattingModelBuilder;
 import com.intellij.lang.LanguageFormatting;
-import consulo.logging.Logger;
 import com.intellij.openapi.editor.Document;
+import com.intellij.openapi.progress.ProgressIndicator;
+import com.intellij.openapi.project.IndexNotReadyException;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.io.FileUtilRt;
+import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.codeStyle.CodeStyleSettings;
-import com.intellij.psi.codeStyle.CodeStyleSettingsManager;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import org.jetbrains.annotations.TestOnly;
 
 import java.util.List;
 
 import static com.intellij.psi.codeStyle.CommonCodeStyleSettings.IndentOptions;
 
 public class IndentOptionsDetectorImpl implements IndentOptionsDetector {
-  private static Logger LOG = Logger.getInstance(IndentOptionsDetectorImpl.class);
-
-  private static final double RATE_THRESHOLD = 0.8;
-  private static final int MAX_INDENT_TO_DETECT = 8;
-
   private final PsiFile myFile;
   private final Project myProject;
   private final Document myDocument;
+  private final ProgressIndicator myProgressIndicator;
 
+  public IndentOptionsDetectorImpl(@Nonnull PsiFile file, @Nonnull ProgressIndicator indicator) {
+    myFile = file;
+    myProject = file.getProject();
+    myDocument = PsiDocumentManager.getInstance(myProject).getDocument(myFile);
+    myProgressIndicator = indicator;
+  }
+
+  @TestOnly
   public IndentOptionsDetectorImpl(@Nonnull PsiFile file) {
     myFile = file;
     myProject = file.getProject();
     myDocument = PsiDocumentManager.getInstance(myProject).getDocument(myFile);
+    myProgressIndicator = null;
+  }
+
+  @Override
+  @Nullable
+  public IndentOptionsAdjuster getIndentOptionsAdjuster() {
+    try {
+      List<LineIndentInfo> linesInfo = calcLineIndentInfo(myProgressIndicator);
+      if (linesInfo != null) {
+        return new IndentOptionsAdjusterImpl(new IndentUsageStatisticsImpl(linesInfo));
+      }
+    }
+    catch (IndexNotReadyException ignore) {
+    }
+    return null;
   }
 
   @Override
   @Nonnull
   public IndentOptions getIndentOptions() {
-    IndentOptions indentOptions = (IndentOptions)CodeStyleSettingsManager.getSettings(myProject).getIndentOptions(myFile.getFileType()).clone();
+    IndentOptions indentOptions = (IndentOptions)CodeStyle.getSettings(myFile).getIndentOptions(myFile.getFileType()).clone();
 
-    List<LineIndentInfo> linesInfo = calcLineIndentInfo();
-    if (linesInfo != null) {
-      IndentUsageStatistics stats = new IndentUsageStatisticsImpl(linesInfo);
-      adjustIndentOptions(indentOptions, stats);
+    IndentOptionsAdjuster adjuster = getIndentOptionsAdjuster();
+    if (adjuster != null) {
+      adjuster.adjust(indentOptions);
     }
 
     return indentOptions;
   }
 
-  private List<LineIndentInfo> calcLineIndentInfo() {
-    if (myDocument == null) return null;
-    CodeStyleSettings settings = CodeStyleSettingsManager.getSettings(myProject);
+  @Nullable
+  private List<LineIndentInfo> calcLineIndentInfo(@Nullable ProgressIndicator indicator) {
+    if (myDocument == null || myDocument.getLineCount() < 3 || isFileBigToDetect()) {
+      return null;
+    }
+
+    CodeStyleSettings settings = CodeStyle.getSettings(myFile);
     FormattingModelBuilder modelBuilder = LanguageFormatting.INSTANCE.forContext(myFile);
     if (modelBuilder == null) return null;
 
-    FormattingModel model = modelBuilder.createModel(myFile, settings);
+    FormattingModel model = modelBuilder.createModel(FormattingContext.create(myFile, settings));
     Block rootBlock = model.getRootBlock();
-    return new FormatterBasedLineIndentInfoBuilder(myDocument, rootBlock).build();
+    return new FormatterBasedLineIndentInfoBuilder(myDocument, rootBlock, indicator).build();
   }
 
-  private void adjustIndentOptions(@Nonnull IndentOptions indentOptions, @Nonnull IndentUsageStatistics stats) {
-    if (isTabsUsed(stats)) {
-      adjustForTabUsage(indentOptions);
+  private boolean isFileBigToDetect() {
+    VirtualFile file = myFile.getVirtualFile();
+    if (file != null && file.getLength() > FileUtilRt.MEGABYTE) {
+      return true;
     }
-    else if (isSpacesUsed(stats)) {
-      indentOptions.USE_TAB_CHARACTER = false;
-
-      int newIndentSize = getPositiveIndentSize(stats);
-      if (newIndentSize > 0) {
-        if (indentOptions.INDENT_SIZE != newIndentSize) {
-          indentOptions.INDENT_SIZE = newIndentSize;
-          LOG.debug("Detected indent size: " + newIndentSize + " for file " + myFile);
-        }
-      }
-    }
-  }
-
-  private static boolean isSpacesUsed(IndentUsageStatistics stats) {
-    int spaces = stats.getTotalLinesWithLeadingSpaces();
-    int total = stats.getTotalLinesWithLeadingSpaces() + stats.getTotalLinesWithLeadingTabs();
-    return (double)spaces / total > RATE_THRESHOLD;
-  }
-
-  private static boolean isTabsUsed(IndentUsageStatistics stats) {
-    return stats.getTotalLinesWithLeadingTabs() > stats.getTotalLinesWithLeadingSpaces();
-  }
-
-  private void adjustForTabUsage(@Nonnull IndentOptions indentOptions) {
-    if (indentOptions.USE_TAB_CHARACTER) return;
-
-    int continuationRatio = indentOptions.INDENT_SIZE == 0 ? 1 : indentOptions.CONTINUATION_INDENT_SIZE / indentOptions.INDENT_SIZE;
-
-    indentOptions.USE_TAB_CHARACTER = true;
-    indentOptions.INDENT_SIZE = indentOptions.TAB_SIZE;
-    indentOptions.CONTINUATION_INDENT_SIZE = indentOptions.TAB_SIZE * continuationRatio;
-
-    LOG.debug("Using tabs for: " + myFile);
-  }
-
-  private static int getPositiveIndentSize(@Nonnull IndentUsageStatistics stats) {
-    int totalIndentSizesDetected = stats.getTotalIndentSizesDetected();
-    if (totalIndentSizesDetected == 0) return -1;
-
-    IndentUsageInfo maxUsedIndentInfo = stats.getKMostUsedIndentInfo(0);
-    int maxUsedIndentSize = maxUsedIndentInfo.getIndentSize();
-
-    if (maxUsedIndentSize == 0) {
-      if (totalIndentSizesDetected < 2) return -1;
-
-      maxUsedIndentInfo = stats.getKMostUsedIndentInfo(1);
-      maxUsedIndentSize = maxUsedIndentInfo.getIndentSize();
-    }
-
-    if (maxUsedIndentSize <= MAX_INDENT_TO_DETECT) {
-      double usageRate = (double)maxUsedIndentInfo.getTimesUsed() / stats.getTotalLinesWithLeadingSpaces();
-      if (usageRate > RATE_THRESHOLD) {
-        return maxUsedIndentSize;
-      }
-    }
-
-    return -1;
+    return false;
   }
 }
+

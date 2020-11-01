@@ -25,10 +25,13 @@ import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.openapi.util.WriteExternalException;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;
+import com.intellij.util.containers.ContainerUtil;
 import consulo.logging.Logger;
 import org.jdom.Element;
 import javax.annotation.Nonnull;
+
 import javax.annotation.Nullable;
+import java.util.List;
 
 public class CodeStyleSettingsManager implements PersistentStateComponent<Element> {
   private static final Logger LOG = Logger.getInstance(CodeStyleSettingsManager.class);
@@ -38,6 +41,8 @@ public class CodeStyleSettingsManager implements PersistentStateComponent<Elemen
   public volatile String PREFERRED_PROJECT_CODE_STYLE = null;
   private volatile CodeStyleSettings myTemporarySettings;
   private volatile boolean myIsLoaded = false;
+
+  private final List<CodeStyleSettingsListener> myListeners = ContainerUtil.createLockFreeCopyOnWriteList();
 
   public static CodeStyleSettingsManager getInstance(@Nullable Project project) {
     if (project == null || project.isDefault()) {
@@ -76,7 +81,7 @@ public class CodeStyleSettingsManager implements PersistentStateComponent<Elemen
   }
 
   private void writeExternal(Element element) throws WriteExternalException {
-    DefaultJDOMExternalizer.writeExternal(this, element, new DifferenceFilter<CodeStyleSettingsManager>(this, new CodeStyleSettingsManager()));
+    DefaultJDOMExternalizer.writeExternal(this, element, new DifferenceFilter<>(this, new CodeStyleSettingsManager()));
   }
 
   @Override
@@ -136,6 +141,52 @@ public class CodeStyleSettingsManager implements PersistentStateComponent<Elemen
           indentOptions.associateWithDocument(document);
         }
       }
+    }
+  }
+
+  public void addListener(@Nonnull CodeStyleSettingsListener listener) {
+    myListeners.add(listener);
+  }
+
+  private void removeListener(@Nonnull CodeStyleSettingsListener listener) {
+    myListeners.remove(listener);
+  }
+
+  public static void removeListener(@Nullable Project project, @Nonnull CodeStyleSettingsListener listener) {
+    if (project == null || project.isDefault()) {
+      getInstance().removeListener(listener);
+    }
+    else {
+      if (!project.isDisposed()) {
+        CodeStyleSettingsManager projectInstance = ServiceManager.getService(project, ProjectCodeStyleSettingsManager.class);
+        if (projectInstance != null) {
+          projectInstance.removeListener(listener);
+        }
+      }
+    }
+  }
+
+  /**
+   * Increase current project's code style modification tracker and notify all the listeners on changed code style. The
+   * method must be called if project code style is changed programmatically so that editors and etc. are aware of
+   * code style update and refresh their settings accordingly.
+   *
+   * @see CodeStyleSettingsListener
+   * @see #addListener(CodeStyleSettingsListener)
+   */
+  public final void notifyCodeStyleSettingsChanged() {
+    updateSettingsTracker();
+    fireCodeStyleSettingsChanged(null);
+  }
+
+  public void updateSettingsTracker() {
+    CodeStyleSettings settings = getCurrentSettings();
+    settings.getModificationTracker().incModificationCount();
+  }
+
+  public void fireCodeStyleSettingsChanged(@Nullable PsiFile file) {
+    for (CodeStyleSettingsListener listener : myListeners) {
+      listener.codeStyleSettingsChanged(new CodeStyleSettingsChangeEvent(file));
     }
   }
 }

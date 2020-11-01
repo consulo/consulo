@@ -638,7 +638,7 @@
                     interface="com.intellij.psi.search.scope.packageSet.CustomScopesProvider"
                     area="PROJECT"/>
 
-    <extensionPoint name="customScopesFilter" interface="com.intellij.psi.search.scope.packageSet.CustomScopesFilter" />
+    <extensionPoint name="customScopesFilter" interface="com.intellij.psi.search.scope.packageSet.CustomScopesFilter"/>
 
     <extensionPoint name="scopeDescriptorProvider" interface="com.intellij.ide.util.scopeChooser.ScopeDescriptorProvider"/>
     <extensionPoint name="patternDialectProvider" interface="com.intellij.packageDependencies.ui.PatternDialectProvider"/>
@@ -1089,6 +1089,8 @@
 
     <extensionPoint name="langCodeStyleSettingsProvider" interface="com.intellij.psi.codeStyle.LanguageCodeStyleSettingsProvider"/>
 
+    <extensionPoint name="codeStyleSettingsModifier" interface="com.intellij.psi.codeStyle.modifier.CodeStyleSettingsModifier"/>
+
     <extensionPoint name="predefinedCodeStyle" interface="com.intellij.psi.codeStyle.PredefinedCodeStyle"/>
 
     <extensionPoint name="semContributor"
@@ -1185,6 +1187,7 @@
     <extensionPoint name="uiDecorator" interface="consulo.ui.decorator.UIDecorator"/>
 
     <extensionPoint name="statusBarWidgetProvider" interface="com.intellij.openapi.wm.StatusBarWidgetProvider"/>
+    <extensionPoint name="statusBarWidgetFactory" interface="com.intellij.openapi.wm.StatusBarWidgetFactory"/>
   </extensionPoints>
 
   <extensions defaultExtensionNs="com.intellij">
@@ -1293,9 +1296,9 @@
                         serviceImplementation="com.intellij.reporting.FreezeLoggerImpl"/>
     <applicationService serviceInterface="com.intellij.featureStatistics.ProductivityFeaturesRegistry"
                         serviceImplementation="com.intellij.featureStatistics.ProductivityFeaturesRegistryImpl"/>
-    <applicationService serviceImplementation="com.intellij.internal.statistic.persistence.ApplicationStatisticsPersistenceComponent" />
-    <applicationService serviceImplementation="com.intellij.internal.statistic.persistence.UsageStatisticsPersistenceComponent" />
-    <applicationService serviceImplementation="consulo.internal.statistic.ApplicationStatisticsListeners" lazy="false" />
+    <applicationService serviceImplementation="com.intellij.internal.statistic.persistence.ApplicationStatisticsPersistenceComponent"/>
+    <applicationService serviceImplementation="com.intellij.internal.statistic.persistence.UsageStatisticsPersistenceComponent"/>
+    <applicationService serviceImplementation="consulo.internal.statistic.ApplicationStatisticsListeners" lazy="false"/>
 
     <applicationService serviceInterface="com.intellij.internal.psiView.PsiViewerSettings"
                         serviceImplementation="com.intellij.internal.psiView.PsiViewerSettings"/>
@@ -1737,8 +1740,8 @@
     <applicationService serviceInterface="com.intellij.codeInsight.template.impl.ExportableTemplateSettings"
                         serviceImplementation="com.intellij.codeInsight.template.impl.ExportableTemplateSettings"/>
     <projectService serviceInterface="com.intellij.codeInsight.template.TemplateManager"
-                        serviceImplementation="com.intellij.codeInsight.template.impl.TemplateManagerImpl" />
-    <editorFactoryListener implementation="com.intellij.codeInsight.template.impl.TemplateManagerImpl$MyEditorFactoryListener" />
+                    serviceImplementation="com.intellij.codeInsight.template.impl.TemplateManagerImpl"/>
+    <editorFactoryListener implementation="com.intellij.codeInsight.template.impl.TemplateManagerImpl$MyEditorFactoryListener"/>
 
     <applicationService serviceInterface="com.intellij.execution.ui.layout.impl.RunnerLayoutSettings"
                         serviceImplementation="com.intellij.execution.ui.layout.impl.RunnerLayoutSettings"/>
@@ -1972,7 +1975,7 @@
     <moduleService serviceInterface="com.intellij.openapi.roots.ModuleRootManager"
                    serviceImplementation="com.intellij.openapi.roots.impl.ModuleRootManagerImpl"/>
     <moduleService serviceInterface="com.intellij.openapi.module.ModuleScopeProvider"
-                   serviceImplementation="com.intellij.openapi.module.impl.scopes.ModuleScopeProviderImpl" />
+                   serviceImplementation="com.intellij.openapi.module.impl.scopes.ModuleScopeProviderImpl"/>
     <projectService serviceInterface="com.intellij.openapi.roots.ProjectRootModificationTracker"
                     serviceImplementation="com.intellij.openapi.roots.ProjectRootModificationTrackerImpl"/>
 
@@ -2291,6 +2294,7 @@
     <dynamicContextProvider implementation="com.intellij.openapi.paths.GenericDynamicContextProvider"/>
 
     <codeStyleSettingsProvider implementation="com.intellij.application.options.GeneralCodeStyleSettingsProvider"/>
+    <codeStyleSettingsProvider implementation="com.intellij.application.options.codeStyle.OtherFileTypesCodeStyleOptionsProvider" order="last"/>
 
     <projectService serviceInterface="com.intellij.ide.todo.TodoView"
                     serviceImplementation="com.intellij.ide.todo.TodoView"/>
@@ -2562,9 +2566,7 @@
     <addModuleDependencyActionProvider implementation="consulo.roots.ui.configuration.classpath.ModuleDependencyActionProvider"/>
     <addModuleDependencyActionProvider implementation="consulo.roots.ui.configuration.classpath.ProjectLibraryActionProvider"/>
 
-    <fileIndentOptionsProvider implementation="com.intellij.psi.codeStyle.autodetect.DetectableIndentOptionsProvider" order="last"/>
-
-    <editorNotificationProvider implementation="com.intellij.psi.codeStyle.autodetect.DetectedIndentOptionsNotificationProvider"/>
+    <fileIndentOptionsProvider implementation="com.intellij.psi.codeStyle.DetectableIndentOptionsProvider" order="last"/>
 
     <predefinedBundlesProvider implementation="consulo.bundle.impl.DefaultPredefinedBundlesProvider" order="first"/>
 
@@ -2700,7 +2702,7 @@
     <cachesInvalidator implementation="com.intellij.compiler.impl.TranslatingCompilerFilesMonitorImpl$MonitorCachesInvalidator"/>
 
     <applicationService serviceInterface="com.intellij.openapi.project.ProjectManager" serviceImplementation="com.intellij.openapi.project.impl.ProjectManagerImpl"/>
-    <projectService serviceInterface="com.intellij.openapi.module.ModuleManager" serviceImplementation="com.intellij.openapi.module.impl.ModuleManagerComponent" />
+    <projectService serviceInterface="com.intellij.openapi.module.ModuleManager" serviceImplementation="com.intellij.openapi.module.impl.ModuleManagerComponent"/>
     <applicationService serviceInterface="com.intellij.openapi.vfs.pointers.VirtualFilePointerManager" serviceImplementation="com.intellij.openapi.vfs.impl.VirtualFilePointerManagerImpl"/>
 
     <applicationService serviceInterface="com.intellij.openapi.editor.actionSystem.TypedAction" serviceImplementation="com.intellij.openapi.editor.impl.TypedActionImpl"/>
@@ -2748,7 +2750,27 @@
 
     <postStartupActivity implementation="com.intellij.openapi.vcs.update.RestoreUpdateTree$MyStartUpActivity"/>
 
-    <projectService serviceInterface="com.intellij.execution.RunManager" serviceImplementation="com.intellij.execution.impl.RunManagerImpl" />
+    <projectService serviceInterface="com.intellij.execution.RunManager" serviceImplementation="com.intellij.execution.impl.RunManagerImpl"/>
+
+    <projectService serviceImplementation="com.intellij.openapi.wm.impl.status.widget.StatusBarWidgetsManager"/>
+    <applicationService serviceImplementation="com.intellij.openapi.wm.impl.status.widget.StatusBarWidgetSettings"/>
+
+    <statusBarWidgetFactory id="positionWidget" implementation="com.intellij.openapi.wm.impl.status.PositionPanelWidgetFactory"/>
+    <statusBarWidgetFactory id="lineSeparatorWidget" implementation="com.intellij.openapi.wm.impl.status.LineSeparatorWidgetFactory" order="after positionWidget"/>
+    <statusBarWidgetFactory id="encodingWidget" implementation="com.intellij.openapi.wm.impl.status.EncodingPanelWidgetFactory" order="after lineSeparatorWidget"/>
+    <!--TODO <statusBarWidgetFactory id="largeFileEncodingWidget" implementation="com.intellij.largeFilesEditor.encoding.LargeFileEncodingWidgetFactory" order="after encodingWidget"/> -->
+    <statusBarWidgetFactory id="moduleLayerWidget" implementation="consulo.wm.impl.status.ModuleLayerWidgetFactory" order=" after encodingWidget"/>
+    <statusBarWidgetFactory id="selectionModeWidget" implementation="com.intellij.openapi.wm.impl.status.ColumnSelectionModeWidgetFactory" order="after moduleLayerWidget"/>
+    <statusBarWidgetFactory id="codeStyleWidget" implementation="com.intellij.psi.codeStyle.statusbar.CodeStyleStatusBarWidgetFactory" order="after selectionModeWidget"/>
+    <statusBarWidgetFactory id="readOnlyWidget" implementation="com.intellij.openapi.wm.impl.status.ReadOnlyAttributeWidgetFactory" order="after codeStyleWidget"/>
+    <statusBarWidgetFactory id="inspectionProfileWidget" implementation="com.intellij.openapi.wm.impl.status.InspectionProfileWidgetFactory" order="after readOnlyWidget"/>
+    <statusBarWidgetFactory id="notificationsWidget" implementation="com.intellij.notification.impl.widget.NotificationWidgetFactory" order="after inspectionProfileWidget"/>
+    <statusBarWidgetFactory id="fatalErrorWidget" implementation="com.intellij.openapi.wm.impl.status.FatalErrorWidgetFactory" order="after notificationsWidget"/>
+    <!--<statusBarWidgetFactory id="writeActionWidget" implementation="com.intellij.openapi.wm.impl.status.WriteThreadIndicatorWidgetFactory" order="after fatalErrorWidget"/>-->
+    <statusBarWidgetFactory id="memoryUsageWidget" implementation="com.intellij.openapi.wm.impl.status.MemoryIndicatorWidgetFactory" order="last"/>
+
+    <projectService serviceInterface="com.intellij.application.options.codeStyle.cache.CodeStyleCachingService"
+                    serviceImplementation="com.intellij.application.options.codeStyle.cache.CodeStyleCachingServiceImpl"/>
   </extensions>
 
   <applicationListeners>

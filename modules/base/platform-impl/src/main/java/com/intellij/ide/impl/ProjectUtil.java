@@ -176,18 +176,6 @@ public class ProjectUtil {
     return PooledAsyncResult.create((result) -> {
       ProjectOpenProcessor provider = ProjectOpenProcessors.getInstance().findProcessor(VfsUtilCore.virtualToIoFile(virtualFile));
       if (provider != null) {
-        result.doWhenDone((project) -> {
-          uiAccess.give(() -> {
-            if (project.isDisposed()) return;
-
-            final ToolWindow toolWindow = ToolWindowManager.getInstance(project).getToolWindow(ToolWindowId.PROJECT_VIEW);
-
-            if (toolWindow != null && toolWindow.getType() != ToolWindowType.SLIDING) {
-              toolWindow.activate(null);
-            }
-          });
-        });
-
         result.doWhenRejected(() -> WelcomeFrameManager.getInstance().showIfNoProjectOpened());
 
         AsyncResult<Void> reopenAsync = AsyncResult.undefined();

@@ -37,7 +37,7 @@ public class CodeStyleSchemesModel {
   private final CodeStyleScheme myDefault;
   private final Map<CodeStyleScheme, CodeStyleSettings> mySettingsToClone = new HashMap<CodeStyleScheme, CodeStyleSettings>();
 
-  private final EventDispatcher<CodeStyleSettingsListener> myDispatcher = EventDispatcher.create(CodeStyleSettingsListener.class);
+  private final EventDispatcher<CodeStyleSchemesModelListener> myDispatcher = EventDispatcher.create(CodeStyleSchemesModelListener.class);
   private final Project myProject;
   private boolean myUsePerProjectSettings;
 
@@ -88,7 +88,7 @@ public class CodeStyleSchemesModel {
     return myGlobalSelected;
   }
 
-  public void addListener(CodeStyleSettingsListener listener) {
+  public void addListener(CodeStyleSchemesModelListener listener) {
     myDispatcher.addListener(listener);
   }
 
@@ -170,7 +170,6 @@ public class CodeStyleSchemesModel {
     projectSettingsManager.PREFERRED_PROJECT_CODE_STYLE =
             myUsePerProjectSettings || myGlobalSelected == null ? null : myGlobalSelected.getName();
     projectSettingsManager.PER_PROJECT_SETTINGS = myProjectScheme.getCodeStyleSettings();
-
     final CodeStyleScheme[] savedSchemes = CodeStyleSchemes.getInstance().getSchemes();
     final Set<CodeStyleScheme> savedSchemesSet = new HashSet<CodeStyleScheme>(Arrays.asList(savedSchemes));
     List<CodeStyleScheme> configuredSchemes = getSchemes();
@@ -193,6 +192,8 @@ public class CodeStyleSchemesModel {
     // are 'committed' by pressing 'Apply' button). So, we reset the copies here assuming that this method is called on 'Apply'
     // button processing
     mySettingsToClone.clear();
+
+    projectSettingsManager.notifyCodeStyleSettingsChanged();
   }
 
   static SchemesManager<CodeStyleScheme, CodeStyleSchemeImpl> getSchemesManager() {

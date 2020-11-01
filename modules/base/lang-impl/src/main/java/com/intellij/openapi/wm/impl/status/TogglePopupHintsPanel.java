@@ -33,6 +33,8 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 
 public class TogglePopupHintsPanel extends EditorBasedWidget implements StatusBarWidget.Multiframe, StatusBarWidget.IconPresentation {
+  public static final String ID = "InspectionProfile";
+
   private Image myCurrentIcon;
   private String myToolTipText;
 

@@ -38,7 +38,7 @@ public abstract class EditorBasedWidget implements StatusBarWidget, FileEditorMa
     final Project project = getProject();
     if (project.isDisposed()) return null;
 
-    FileEditor fileEditor = StatusBarUtil.getCurrentFileEditor(project, myStatusBar);
+    FileEditor fileEditor = StatusBarUtil.getCurrentFileEditor(myStatusBar);
     Editor result = null;
     if (fileEditor instanceof TextEditor) {
       Editor editor = ((TextEditor)fileEditor).getEditor();

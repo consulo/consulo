@@ -67,23 +67,23 @@ import consulo.fileEditor.impl.EditorWithProviderComposite;
 import consulo.fileEditor.impl.EditorsSplitters;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
+import consulo.ui.Rectangle2D;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.ToolWindowInternalDecorator;
 import consulo.ui.ex.ToolWindowStripeButton;
 import consulo.ui.image.Image;
-import consulo.ui.Rectangle2D;
 import consulo.wm.impl.DesktopCommandProcessorImpl;
 import consulo.wm.impl.ToolWindowManagerBase;
 import gnu.trove.THashSet;
+import jakarta.inject.Inject;
+import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
 import org.intellij.lang.annotations.JdkConstants;
 import org.jdom.Element;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import jakarta.inject.Inject;
-import jakarta.inject.Provider;
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
@@ -469,7 +469,12 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
 
     WindowManagerEx windowManager = (WindowManagerEx)myWindowManager.get();
 
-    myFrame = (DesktopIdeFrameImpl)windowManager.allocateFrame(myProject);
+    try {
+      myFrame = (DesktopIdeFrameImpl)windowManager.allocateFrame(myProject);
+    }
+    catch (Exception e) {
+      e.printStackTrace();
+    }
 
     myToolWindowPanel = new DesktopToolWindowPanelImpl(myFrame, this);
     Disposer.register(myProject, getToolWindowPanel());
@@ -789,6 +794,10 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
 
   @Override
   protected void appendUpdateToolWindowsPaneCmd(final List<FinalizableCommand> commandsList) {
+    // frame is not initialized = we don't need update root
+    if(myFrame == null) {
+      return;
+    }
     final JRootPane rootPane = ((JFrame)TargetAWT.to(myFrame.getWindow())).getRootPane();
     if (rootPane != null) {
       final FinalizableCommand command = new UpdateRootPaneCmd(rootPane, myCommandProcessor);

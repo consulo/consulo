@@ -77,11 +77,13 @@ public class CodeStyleSettings extends LegacyCodeStyleSettings implements Clonea
 
   private int myVersion = CURR_VERSION;
 
+  private final SimpleModificationTracker myModificationTracker = new SimpleModificationTracker();
+
   public CodeStyleSettings() {
-    this(true);
+    this(true, true);
   }
 
-  public CodeStyleSettings(boolean loadExtensions) {
+  public CodeStyleSettings(boolean loadExtensions, boolean needRegistration) {
     initTypeToName();
     initImportsByDefault();
 
@@ -1578,5 +1580,9 @@ public class CodeStyleSettings extends LegacyCodeStyleSettings implements Clonea
   @Nonnull
   public ExcludedFiles getExcludedFiles() {
     return myExcludedFiles;
+  }
+
+  public SimpleModificationTracker getModificationTracker() {
+    return myModificationTracker;
   }
 }

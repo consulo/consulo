@@ -47,14 +47,15 @@ import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.module.extension.ModuleExtension;
 import consulo.module.extension.condition.ModuleExtensionCondition;
+import consulo.ui.Rectangle2D;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.*;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
 import consulo.ui.image.ImageKey;
-import consulo.ui.Rectangle2D;
 import consulo.ui.style.StandardColors;
+import jakarta.inject.Provider;
 import kava.beans.PropertyChangeEvent;
 import kava.beans.PropertyChangeListener;
 import org.jdom.Element;
@@ -62,7 +63,6 @@ import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import jakarta.inject.Provider;
 import java.util.*;
 
 /**
@@ -296,6 +296,10 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
   protected abstract void appendUpdateToolWindowsPaneCmd(final List<FinalizableCommand> commandsList);
 
   public void appendSetEditorComponentCmd(@Nullable Object component, final List<FinalizableCommand> commandsList) {
+    if(myToolWindowPanel == null) {
+      return;
+    }
+    
     final CommandProcessorBase commandProcessor = myCommandProcessor;
     final FinalizableCommand command = myToolWindowPanel.createSetEditorComponentCmd(component, commandProcessor);
     commandsList.add(command);

@@ -25,15 +25,9 @@ import com.intellij.execution.process.ProcessHandler;
 import com.intellij.execution.runners.ExecutionEnvironment;
 import com.intellij.execution.runners.ExecutionUtil;
 import com.intellij.execution.ui.layout.impl.DockableGridContainerFactory;
-import com.intellij.ide.DataManager;
 import com.intellij.ide.GeneralSettings;
-import com.intellij.ide.impl.ContentManagerWatcher;
-import consulo.disposer.Disposable;
-import com.intellij.openapi.actionSystem.DataProvider;
-import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
-import consulo.logging.Logger;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.progress.Task;
@@ -42,26 +36,22 @@ import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.project.ProjectManagerListener;
 import com.intellij.openapi.project.ex.ProjectManagerEx;
 import com.intellij.openapi.util.Comparing;
-import consulo.disposer.Disposer;
-import consulo.util.dataholder.Key;
 import com.intellij.openapi.wm.ToolWindow;
-import com.intellij.openapi.wm.ToolWindowAnchor;
 import com.intellij.openapi.wm.ToolWindowManager;
-import com.intellij.openapi.wm.ex.ToolWindowManagerEx;
-import com.intellij.openapi.wm.ex.ToolWindowManagerListener;
-import com.intellij.ui.AppUIUtil;
 import com.intellij.ui.content.*;
 import com.intellij.ui.docking.DockManager;
 import com.intellij.util.SmartList;
 import com.intellij.util.concurrency.Semaphore;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.UIUtil;
-import consulo.ui.annotation.RequiredUIAccess;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
+import consulo.execution.ui.impl.RunToolWindowManager;
+import consulo.logging.Logger;
 import consulo.ui.UIAccess;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
-import gnu.trove.THashMap;
-import gnu.trove.THashSet;
+import consulo.util.dataholder.Key;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -73,122 +63,20 @@ public class RunContentManagerImpl implements RunContentManager, Disposable {
   private static final Key<Executor> EXECUTOR_KEY = Key.create("Executor");
 
   private final Project myProject;
-  private final Map<String, ContentManager> myToolwindowIdToContentManagerMap = new THashMap<>();
-  private final Map<String, Image> myToolwindowIdToBaseIconMap = new THashMap<>();
-  private final LinkedList<String> myToolwindowIdZBuffer = new LinkedList<>();
+
+  private final RunToolWindowManager myRunToolWindowManager;
 
   public RunContentManagerImpl(@Nonnull Project project, @Nonnull DockManager dockManager) {
     myProject = project;
+    myRunToolWindowManager = new RunToolWindowManager(project, this);
+
     DockableGridContainerFactory containerFactory = new DockableGridContainerFactory();
     dockManager.register(DockableGridContainerFactory.TYPE, containerFactory);
     Disposer.register(myProject, containerFactory);
-
-    AppUIUtil.invokeOnEdt(this::init, myProject.getDisposed());
-  }
-
-  // must be called on EDT
-  private void init() {
-    ToolWindowManagerEx toolWindowManager = ToolWindowManagerEx.getInstanceEx(myProject);
-    if (toolWindowManager == null) {
-      return;
-    }
-
-    for (Executor executor : ExecutorRegistry.getInstance().getRegisteredExecutors()) {
-      registerToolWindow(executor, toolWindowManager);
-    }
-
-    RunDashboardManager dashboardManager = RunDashboardManager.getInstance(myProject);
-    initToolWindow(null, dashboardManager.getToolWindowId(), dashboardManager.getToolWindowIcon(), dashboardManager.getDashboardContentManager());
-
-    toolWindowManager.addToolWindowManagerListener(new ToolWindowManagerListener() {
-      @Override
-      public void stateChanged() {
-        if (myProject.isDisposed()) {
-          return;
-        }
-
-        ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(myProject);
-        Set<String> currentWindows = new THashSet<>();
-        ContainerUtil.addAll(currentWindows, toolWindowManager.getToolWindowIds());
-        myToolwindowIdZBuffer.retainAll(currentWindows);
-
-        final String activeToolWindowId = toolWindowManager.getActiveToolWindowId();
-        if (activeToolWindowId != null) {
-          if (myToolwindowIdZBuffer.remove(activeToolWindowId)) {
-            myToolwindowIdZBuffer.addFirst(activeToolWindowId);
-          }
-        }
-      }
-    });
   }
 
   @Override
   public void dispose() {
-  }
-
-  @RequiredUIAccess
-  private void registerToolWindow(@Nonnull final Executor executor, @Nonnull ToolWindowManagerEx toolWindowManager) {
-    final String toolWindowId = executor.getToolWindowId();
-    if (toolWindowManager.getToolWindow(toolWindowId) != null) {
-      return;
-    }
-
-    final ToolWindow toolWindow = toolWindowManager.registerToolWindow(toolWindowId, true, ToolWindowAnchor.BOTTOM, this, true);
-    final ContentManager contentManager = toolWindow.getContentManager();
-    contentManager.addDataProvider(new DataProvider() {
-      private int myInsideGetData = 0;
-
-      @Override
-      public Object getData(@Nonnull Key<?> dataId) {
-        myInsideGetData++;
-        try {
-          if (PlatformDataKeys.HELP_ID == dataId) {
-            return executor.getHelpId();
-          }
-          else {
-            return myInsideGetData == 1 ? DataManager.getInstance().getDataContext(contentManager.getComponent()).getData(dataId) : null;
-          }
-        }
-        finally {
-          myInsideGetData--;
-        }
-      }
-    });
-
-    toolWindow.setIcon(executor.getToolWindowIcon());
-    new ContentManagerWatcher(toolWindow, contentManager);
-    initToolWindow(executor, toolWindowId, executor.getToolWindowIcon(), contentManager);
-  }
-
-  private void initToolWindow(@Nullable final Executor executor, String toolWindowId, Image toolWindowIcon, ContentManager contentManager) {
-    myToolwindowIdToBaseIconMap.put(toolWindowId, toolWindowIcon);
-    contentManager.addContentManagerListener(new ContentManagerAdapter() {
-      @Override
-      public void selectionChanged(final ContentManagerEvent event) {
-        if (event.getOperation() == ContentManagerEvent.ContentOperation.add) {
-          Content content = event.getContent();
-          Executor contentExecutor = executor;
-          if (contentExecutor == null) {
-            // Content manager contains contents related with different executors.
-            // Try to get executor from content.
-            contentExecutor = getExecutorByContent(content);
-            // Must contain this user data since all content is added by this class.
-            LOG.assertTrue(contentExecutor != null);
-          }
-          getSyncPublisher().contentSelected(getRunContentDescriptorByContent(content), contentExecutor);
-        }
-      }
-    });
-    myToolwindowIdToContentManagerMap.put(toolWindowId, contentManager);
-    Disposer.register(contentManager, new Disposable() {
-      @Override
-      public void dispose() {
-        myToolwindowIdToContentManagerMap.remove(toolWindowId).removeAllContents(true);
-        myToolwindowIdZBuffer.remove(toolWindowId);
-        myToolwindowIdToBaseIconMap.remove(toolWindowId);
-      }
-    });
-    myToolwindowIdZBuffer.addLast(toolWindowId);
   }
 
   private RunContentWithExecutorListener getSyncPublisher() {
@@ -236,8 +124,8 @@ public class RunContentManagerImpl implements RunContentManager, Disposable {
   @Override
   @Nullable
   public RunContentDescriptor getSelectedContent() {
-    for (String activeWindow : myToolwindowIdZBuffer) {
-      final ContentManager contentManager = myToolwindowIdToContentManagerMap.get(activeWindow);
+    for (String activeWindow : myRunToolWindowManager.getToolwindowIdZBuffer()) {
+      final ContentManager contentManager = myRunToolWindowManager.get(activeWindow);
       if (contentManager == null) {
         continue;
       }
@@ -307,7 +195,7 @@ public class RunContentManagerImpl implements RunContentManager, Disposable {
         public void startNotified(final ProcessEvent event) {
           UIUtil.invokeLaterIfNeeded(() -> {
             content.setIcon(ExecutionUtil.getIconWithLiveIndicator(descriptor.getIcon()));
-            toolWindow.setIcon(ExecutionUtil.getIconWithLiveIndicator(myToolwindowIdToBaseIconMap.get(toolWindowId)));
+            toolWindow.setIcon(ExecutionUtil.getIconWithLiveIndicator(myRunToolWindowManager.getImage(toolWindowId)));
           });
         }
 
@@ -315,7 +203,7 @@ public class RunContentManagerImpl implements RunContentManager, Disposable {
         public void processTerminated(final ProcessEvent event) {
           Application.get().invokeLater(() -> {
             boolean alive = false;
-            ContentManager manager = myToolwindowIdToContentManagerMap.get(toolWindowId);
+            ContentManager manager = myRunToolWindowManager.get(toolWindowId);
             if (manager == null) return;
             for (Content content1 : manager.getContents()) {
               RunContentDescriptor descriptor1 = getRunContentDescriptorByContent(content1);
@@ -327,7 +215,7 @@ public class RunContentManagerImpl implements RunContentManager, Disposable {
                 }
               }
             }
-            Image base = myToolwindowIdToBaseIconMap.get(toolWindowId);
+            Image base = myRunToolWindowManager.getImage(toolWindowId);
             toolWindow.setIcon(alive ? ExecutionUtil.getIconWithLiveIndicator(base) : base);
 
             Image icon = descriptor.getIcon();
@@ -382,8 +270,7 @@ public class RunContentManagerImpl implements RunContentManager, Disposable {
 
     // TODO [konstantin.aleev] Should content be reused in case of dashboard?
     String toolWindowId = getContentDescriptorToolWindowId(executionEnvironment.getRunnerAndConfigurationSettings());
-    final ContentManager contentManager =
-            toolWindowId == null ? getContentManagerForRunner(executionEnvironment.getExecutor(), null) : myToolwindowIdToContentManagerMap.get(toolWindowId);
+    final ContentManager contentManager = toolWindowId == null ? getContentManagerForRunner(executionEnvironment.getExecutor(), null) : myRunToolWindowManager.get(toolWindowId);
     return chooseReuseContentForDescriptor(contentManager, null, executionEnvironment.getExecutionId(), executionEnvironment.toString());
   }
 
@@ -476,7 +363,7 @@ public class RunContentManagerImpl implements RunContentManager, Disposable {
 
   @Nonnull
   private ContentManager getContentManagerForRunner(final Executor executor, final RunContentDescriptor descriptor) {
-    final ContentManager contentManager = myToolwindowIdToContentManagerMap.get(getToolWindowIdForRunner(executor, descriptor));
+    final ContentManager contentManager = myRunToolWindowManager.get(getToolWindowIdForRunner(executor, descriptor));
     if (contentManager == null) {
       LOG.error("Runner " + executor.getId() + " is not registered");
     }
@@ -519,7 +406,7 @@ public class RunContentManagerImpl implements RunContentManager, Disposable {
   @Override
   @Nullable
   public ToolWindow getToolWindowByDescriptor(@Nonnull RunContentDescriptor descriptor) {
-    for (Map.Entry<String, ContentManager> entry : myToolwindowIdToContentManagerMap.entrySet()) {
+    for (Map.Entry<String, ContentManager> entry : myRunToolWindowManager.entrySet()) {
       if (getRunContentByDescriptor(entry.getValue(), descriptor) != null) {
         return ToolWindowManager.getInstance(myProject).getToolWindow(entry.getKey());
       }
@@ -540,13 +427,16 @@ public class RunContentManagerImpl implements RunContentManager, Disposable {
   @Override
   @Nonnull
   public List<RunContentDescriptor> getAllDescriptors() {
-    if (myToolwindowIdToContentManagerMap.isEmpty()) {
-      return Collections.emptyList();
+    Set<Map.Entry<String, ContentManager>> entries = myRunToolWindowManager.entrySet();
+    if(entries.isEmpty()) {
+      return List.of();
     }
 
     List<RunContentDescriptor> descriptors = new SmartList<>();
-    for (String id : myToolwindowIdToContentManagerMap.keySet()) {
-      for (Content content : myToolwindowIdToContentManagerMap.get(id).getContents()) {
+    for (Map.Entry<String, ContentManager> entry : entries) {
+      ContentManager value = entry.getValue();
+
+      for (Content content : value.getContents()) {
         RunContentDescriptor descriptor = getRunContentDescriptorByContent(content);
         if (descriptor != null) {
           descriptors.add(descriptor);
@@ -558,7 +448,7 @@ public class RunContentManagerImpl implements RunContentManager, Disposable {
 
   @Override
   public void selectRunContent(@Nonnull RunContentDescriptor descriptor) {
-    for (Map.Entry<String, ContentManager> entry : myToolwindowIdToContentManagerMap.entrySet()) {
+    for (Map.Entry<String, ContentManager> entry : myRunToolWindowManager.entrySet()) {
       Content content = getRunContentByDescriptor(entry.getValue(), descriptor);
       if (content != null) {
         entry.getValue().setSelectedContent(content);
@@ -593,7 +483,7 @@ public class RunContentManagerImpl implements RunContentManager, Disposable {
   private RunContentDescriptor getDescriptorBy(ProcessHandler handler, Executor runnerInfo) {
     List<Content> contents = new ArrayList<>();
     ContainerUtil.addAll(contents, getContentManagerForRunner(runnerInfo, null).getContents());
-    ContainerUtil.addAll(contents, myToolwindowIdToContentManagerMap.get(RunDashboardManager.getInstance(myProject).getToolWindowId()).getContents());
+    ContainerUtil.addAll(contents, myRunToolWindowManager.get(RunDashboardManager.getInstance(myProject).getToolWindowId()).getContents());
     for (Content content : contents) {
       RunContentDescriptor runContentDescriptor = getRunContentDescriptorByContent(content);
       assert runContentDescriptor != null;

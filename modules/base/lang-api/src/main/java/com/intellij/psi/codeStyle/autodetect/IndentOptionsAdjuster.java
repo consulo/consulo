@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,21 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package com.intellij.psi.codeStyle.autodetect;
 
-package com.intellij.application.options.codeStyle;
+import com.intellij.psi.codeStyle.CommonCodeStyleSettings;
+import javax.annotation.Nonnull;
 
-import com.intellij.psi.codeStyle.CodeStyleScheme;
-
-import java.util.EventListener;
-
-public interface CodeStyleSettingsListener extends EventListener {
-  void currentSchemeChanged(final Object source);
-
-  void schemeListChanged();
-
-  void currentSettingsChanged();
-
-  void usePerProjectSettingsOptionChanged();
-
-  void schemeChanged(CodeStyleScheme scheme);
+public interface IndentOptionsAdjuster {
+  void adjust(@Nonnull CommonCodeStyleSettings.IndentOptions indentOptions);
 }
