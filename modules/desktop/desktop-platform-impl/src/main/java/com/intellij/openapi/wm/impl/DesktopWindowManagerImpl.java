@@ -25,12 +25,9 @@ import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.RoamingType;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
-import consulo.awt.hacking.AWTAccessorHacking;
-import consulo.logging.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.ui.popup.JBPopup;
-import consulo.disposer.Disposer;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.openapi.wm.StatusBar;
@@ -44,25 +41,24 @@ import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import com.sun.jna.platform.WindowUtils;
 import consulo.awt.TargetAWT;
+import consulo.awt.hacking.AWTAccessorHacking;
+import consulo.disposer.Disposer;
+import consulo.logging.Logger;
 import consulo.start.WelcomeFrameManager;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.wm.impl.DesktopCommandProcessorImpl;
+import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import sun.awt.AWTAccessor;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import jakarta.inject.Inject;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
-import java.awt.peer.ComponentPeer;
-import java.awt.peer.FramePeer;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -588,7 +584,7 @@ public final class DesktopWindowManagerImpl extends WindowManagerEx implements P
   @RequiredUIAccess
   @Nonnull
   @Override
-  public final IdeFrameEx allocateFrame(final Project project) {
+  public final IdeFrameEx allocateFrame(@Nonnull final Project project) {
     LOG.assertTrue(!myProject2Frame.containsKey(project));
 
     JFrame jFrame;
@@ -614,8 +610,8 @@ public final class DesktopWindowManagerImpl extends WindowManagerEx implements P
       if (myFrameBounds != null) {
         jFrame.setBounds(myFrameBounds);
       }
-      ideFrame.setProject(project);
       myProject2Frame.put(project, ideFrame);
+      ideFrame.setProject(project);
       jFrame.setExtendedState(myFrameExtendedState);
       jFrame.setVisible(true);
     }

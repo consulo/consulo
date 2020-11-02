@@ -46,6 +46,7 @@ import com.intellij.openapi.wm.impl.welcomeScreen.WelcomeFrame;
 import com.intellij.ui.*;
 import com.intellij.ui.mac.MacMainFrameDecorator;
 import com.intellij.util.Alarm;
+import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.accessibility.AccessibleContextAccessor;
 import consulo.actionSystem.ex.TopApplicationMenuUtil;
@@ -98,7 +99,7 @@ public final class DesktopIdeFrameImpl implements IdeFrameEx, AccessibleContextA
     @Override
     public Insets getInsets() {
       if (SystemInfo.isMac && isInFullScreen()) {
-        return new Insets(0, 0, 0, 0);
+        return JBUI.emptyInsets();
       }
       return super.getInsets();
     }

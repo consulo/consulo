@@ -469,12 +469,7 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
 
     WindowManagerEx windowManager = (WindowManagerEx)myWindowManager.get();
 
-    try {
-      myFrame = (DesktopIdeFrameImpl)windowManager.allocateFrame(myProject);
-    }
-    catch (Exception e) {
-      e.printStackTrace();
-    }
+    myFrame = (DesktopIdeFrameImpl)windowManager.allocateFrame(myProject);
 
     myToolWindowPanel = new DesktopToolWindowPanelImpl(myFrame, this);
     Disposer.register(myProject, getToolWindowPanel());

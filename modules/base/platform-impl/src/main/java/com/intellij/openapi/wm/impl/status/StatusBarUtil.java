@@ -67,7 +67,12 @@ public class StatusBarUtil {
       return null;
     }
 
-    DockContainer c = DockManager.getInstance(statusBar.getProject()).getContainerFor(statusBar.getComponent());
+    Project project = statusBar.getProject();
+    if (project == null) {
+      return null;
+    }
+
+    DockContainer c = DockManager.getInstance(project).getContainerFor(statusBar.getComponent());
     EditorsSplitters splitters = null;
     if (c instanceof DockableEditorTabbedContainer) {
       splitters = ((DockableEditorTabbedContainer)c).getSplitters();
