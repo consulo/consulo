@@ -56,7 +56,6 @@ public class AppearanceConfigurable extends SimpleConfigurable<AppearanceConfigu
     private CheckBox myAnimateWindowsCheckBox;
     private CheckBox myWindowShortcutsCheckBox;
     private CheckBox myShowToolStripesCheckBox;
-    private CheckBox myShowMemoryIndicatorCheckBox;
     private ComboBox<Style> myLafComboBox;
     private ComboBox<Object> myIconThemeComboBox;
     private CheckBox myCycleScrollingCheckBox;
@@ -150,7 +149,6 @@ public class AppearanceConfigurable extends SimpleConfigurable<AppearanceConfigu
       windowOptions.add(rightWindowOption, TableLayout.cell(0, 1).fill());
 
       leftWindowOption.add(myAnimateWindowsCheckBox = CheckBox.create(IdeLocalize.checkboxAnimateWindows()));
-      leftWindowOption.add(myShowMemoryIndicatorCheckBox = CheckBox.create(IdeLocalize.checkboxShowMemoryIndicator()));
       leftWindowOption.add(myDisableMnemonics = CheckBox.create(KeyMapLocalize.disableMnemonicInMenuCheckBox()));
       leftWindowOption.add(myDisableMnemonicInControlsCheckBox = CheckBox.create(KeyMapLocalize.disableMnemonicInControlsCheckBox()));
       leftWindowOption.add(myCbDisplayIconsInMenu = CheckBox.create(IdeLocalize.checkboxShowIconsInMenuItems()));
@@ -230,7 +228,6 @@ public class AppearanceConfigurable extends SimpleConfigurable<AppearanceConfigu
     isModified |= component.myWindowShortcutsCheckBox.getValue() != settings.SHOW_TOOL_WINDOW_NUMBERS;
     isModified |= component.myShowToolStripesCheckBox.getValue() == settings.HIDE_TOOL_STRIPES;
     isModified |= component.myCbDisplayIconsInMenu.getValue() != settings.SHOW_ICONS_IN_MENUS;
-    isModified |= component.myShowMemoryIndicatorCheckBox.getValue() != settings.SHOW_MEMORY_INDICATOR;
     isModified |= component.myAllowMergeButtons.getValue() != settings.ALLOW_MERGE_BUTTONS;
     isModified |= component.myCycleScrollingCheckBox.getValue() != settings.CYCLE_SCROLLING;
 
@@ -273,7 +270,6 @@ public class AppearanceConfigurable extends SimpleConfigurable<AppearanceConfigu
     component.myWindowShortcutsCheckBox.setValue(settings.SHOW_TOOL_WINDOW_NUMBERS);
     component.myShowToolStripesCheckBox.setValue(!settings.HIDE_TOOL_STRIPES);
     component.myCbDisplayIconsInMenu.setValue(settings.SHOW_ICONS_IN_MENUS);
-    component.myShowMemoryIndicatorCheckBox.setValue(settings.SHOW_MEMORY_INDICATOR);
     component.myAllowMergeButtons.setValue(settings.ALLOW_MERGE_BUTTONS);
     component.myCycleScrollingCheckBox.setValue(settings.CYCLE_SCROLLING);
 
@@ -334,8 +330,6 @@ public class AppearanceConfigurable extends SimpleConfigurable<AppearanceConfigu
     settings.HIDE_TOOL_STRIPES = !component.myShowToolStripesCheckBox.getValue();
     update |= settings.SHOW_ICONS_IN_MENUS != component.myCbDisplayIconsInMenu.getValue();
     settings.SHOW_ICONS_IN_MENUS = component.myCbDisplayIconsInMenu.getValue();
-    update |= settings.SHOW_MEMORY_INDICATOR != component.myShowMemoryIndicatorCheckBox.getValue();
-    settings.SHOW_MEMORY_INDICATOR = component.myShowMemoryIndicatorCheckBox.getValue();
     update |= settings.ALLOW_MERGE_BUTTONS != component.myAllowMergeButtons.getValue();
     settings.ALLOW_MERGE_BUTTONS = component.myAllowMergeButtons.getValue();
     update |= settings.CYCLE_SCROLLING != component.myCycleScrollingCheckBox.getValue();
