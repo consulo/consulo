@@ -51,6 +51,7 @@ import consulo.platform.Platform;
 import consulo.plugins.internal.PluginExtensionRegistrator;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.dataholder.UserDataHolderBase;
+import consulo.util.lang.ThreeState;
 import gnu.trove.THashMap;
 import org.jetbrains.annotations.TestOnly;
 
@@ -142,8 +143,6 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
 
   private InjectingContainer myInjectingContainer;
 
-  private volatile boolean myDisposed = false;
-
   protected volatile boolean temporarilyDisposed = false;
 
   private MessageBusImpl myMessageBus;
@@ -166,6 +165,8 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
   private Map<Class<?>, Object> myChecker = new ConcurrentHashMap<>();
 
   private Class<?> myCurrentNotLazyServiceClass;
+
+  private volatile ThreeState myDisposeState = ThreeState.NO;
 
   protected ComponentManagerImpl(@Nullable ComponentManager parent, @Nonnull String name, @Nullable ExtensionAreaId extensionAreaId, boolean buildInjectionContainer) {
     myParent = parent;
@@ -203,6 +204,20 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
     bootstrapInjectingContainer(builder);
 
     myInjectingContainer = builder.build();
+  }
+
+  @Nonnull
+  @Override
+  public Supplier<ThreeState> getDisposeState() {
+    return this::getDisposeStateImpl;
+  }
+
+  @Nonnull
+  private ThreeState getDisposeStateImpl() {
+    if (temporarilyDisposed) {
+      return ThreeState.YES;
+    }
+    return myDisposeState;
   }
 
   @Nonnull
@@ -393,7 +408,7 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
   @Nonnull
   @Override
   public MessageBus getMessageBus() {
-    if (myDisposed) {
+    if (myDisposeState == ThreeState.YES) {
       checkCanceled();
       throw new AssertionError("Already disposed");
     }
@@ -404,7 +419,7 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
   @Nullable
   @Override
   public <T> T getInstanceIfCreated(@Nonnull Class<T> clazz) {
-    if (myDisposed) {
+    if (myDisposeState == ThreeState.YES) {
       checkCanceled();
       throw new AssertionError("Already disposed: " + this);
     }
@@ -413,7 +428,7 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
 
   @Override
   public <T> T getComponent(@Nonnull Class<T> clazz) {
-    if (myDisposed) {
+    if (myDisposeState == ThreeState.YES) {
       checkCanceled();
       throw new AssertionError("Already disposed: " + this);
     }
@@ -424,7 +439,7 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
   @Override
   public InjectingContainer getInjectingContainer() {
     InjectingContainer container = myInjectingContainer;
-    if (container == null || myDisposed) {
+    if (container == null || myDisposeState == ThreeState.YES) {
       checkCanceled();
       throw new AssertionError("Already disposed: " + toString());
     }
@@ -445,11 +460,6 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
     return myExtensionsArea.getExtensionPoint(extensionPointName);
   }
 
-  @Override
-  public boolean isDisposed() {
-    return myDisposed || temporarilyDisposed;
-  }
-
   @TestOnly
   public void setTemporarilyDisposed(boolean disposed) {
     temporarilyDisposed = disposed;
@@ -463,6 +473,11 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
   @Nonnull
   public Condition getDisposed() {
     return myDisposedCondition;
+  }
+
+  @Override
+  public boolean isDisposed() {
+    return myDisposeState == ThreeState.YES;
   }
 
   @Nonnull
@@ -484,6 +499,8 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
   public void dispose() {
     Application.get().assertIsDispatchThread();
 
+    myDisposeState = ThreeState.UNSURE;
+
     if (myMessageBus != null) {
       Disposer.dispose(myMessageBus);
       myMessageBus = null;
@@ -496,7 +513,8 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
     myComponentsRegistry = null;
     myNotLazyStepFinished = false;
     myNotLazyServices.clear();
-    myDisposed = true;
+
+    myDisposeState = ThreeState.YES;
   }
 
   @Override

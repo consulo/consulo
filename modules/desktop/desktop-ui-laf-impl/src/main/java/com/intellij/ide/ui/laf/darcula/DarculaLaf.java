@@ -145,7 +145,7 @@ public class DarculaLaf extends BaseLookAndFeel {
     defaults.put("StyledEditorKit.JBDefaultStyle", styleSheet);
     try {
       Object defaultStylesKey = HTMLEditorKitHacking.DEFAULT_STYLES_KEY();
-      if(defaultStylesKey != null) {
+      if (defaultStylesKey != null) {
         AppContextHacking.put(defaultStylesKey, UIUtil.loadStyleSheet(url));
       }
     }

@@ -15,9 +15,9 @@
  */
 package consulo.logging.impl.log4j2;
 
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationInfo;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.ex.ApplicationEx;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.diagnostic.IdeaLoggingEvent;
 import com.intellij.openapi.util.text.StringUtil;
@@ -28,6 +28,7 @@ import consulo.logging.Logger;
 import consulo.logging.LoggerLevel;
 import consulo.platform.impl.action.LastActionTracker;
 import consulo.util.lang.ControlFlowException;
+import consulo.util.lang.ThreeState;
 import consulo.util.lang.reflect.ReflectionUtil;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.core.LoggerContext;
@@ -114,8 +115,9 @@ public class Log4J2Logger implements Logger {
     myLogger.error("Vendor: " + System.getProperties().getProperty("java.vendor", "unknown"));
     myLogger.error("OS: " + System.getProperties().getProperty("os.name", "unknown"));
 
-    ApplicationEx application = (ApplicationEx)ApplicationManager.getApplication();
-    if (application != null) {
+    Application application = ApplicationManager.getApplication();
+    // only if app not disposed or not started disposing
+    if (application != null && application.getDisposeState().get() == ThreeState.NO) {
       final String lastPreformedActionId = LastActionTracker.ourLastActionId;
       if (lastPreformedActionId != null) {
         myLogger.error("Last Action: " + lastPreformedActionId);

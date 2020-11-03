@@ -26,10 +26,12 @@ import consulo.disposer.Disposable;
 import consulo.injecting.InjectingContainer;
 import consulo.injecting.InjectingContainerOwner;
 import consulo.util.dataholder.UserDataHolder;
+import consulo.util.lang.ThreeState;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.function.Supplier;
 
 /**
  * Provides access to components. Serves as a base interface for {@link Application}
@@ -70,12 +72,6 @@ public interface ComponentManager extends UserDataHolder, Disposable, InjectingC
   @Nonnull
   MessageBus getMessageBus();
 
-  boolean isDisposed();
-
-  default boolean isDisposedOrDisposeInProgress() {
-    return isDisposed();
-  }
-
   @Nonnull
   @Deprecated
   default <T> T[] getExtensions(@Nonnull ExtensionPointName<T> extensionPointName) {
@@ -103,4 +99,19 @@ public interface ComponentManager extends UserDataHolder, Disposable, InjectingC
    */
   @Nonnull
   Condition getDisposed();
+
+  @Nonnull
+  default Supplier<ThreeState> getDisposeState() {
+    return () -> isDisposed() ? ThreeState.YES : ThreeState.NO;
+  }
+
+  default boolean isDisposed() {
+    return getDisposeState().get() == ThreeState.YES;
+  }
+
+  @Deprecated
+  default boolean isDisposedOrDisposeInProgress() {
+    Supplier<ThreeState> disposeState = getDisposeState();
+    return disposeState.get() != ThreeState.NO;
+  }
 }
