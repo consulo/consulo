@@ -56,7 +56,7 @@ public class ChangesViewContentManager implements ChangesViewContentI {
   @DeprecationInfo(value = "Use ToolWindowId#VCS", until = "2.0")
   public static final String TOOLWINDOW_ID = ToolWindowId.VCS;
 
-  private static final Key<ChangesViewContentEP> myEPKey = Key.create("ChangesViewContentEP");
+  private static final Key<ChangesViewContentEP> ourEpKey = Key.create("ChangesViewContentEP");
 
   private final List<Content> myAddedContents = new ArrayList<>();
   @Nonnull
@@ -96,13 +96,13 @@ public class ChangesViewContentManager implements ChangesViewContentI {
 
   public void loadExtensionTabs() {
     final List<Content> contentList = new LinkedList<>();
-    final ChangesViewContentEP[] contentEPs = ChangesViewContentEP.EP_NAME.getExtensions(myProject);
+    final List<ChangesViewContentEP> contentEPs = ChangesViewContentEP.EP_NAME.getExtensionList(myProject);
     for (ChangesViewContentEP ep : contentEPs) {
       final NotNullFunction<Project, Boolean> predicate = ep.newPredicateInstance(myProject);
       if (predicate == null || predicate.fun(myProject).equals(Boolean.TRUE)) {
         final Content content = ContentFactory.getInstance().createContent(new ContentStub(ep), ep.getTabName(), false);
         content.setCloseable(false);
-        content.putUserData(myEPKey, ep);
+        content.putUserData(ourEpKey, ep);
         contentList.add(content);
       }
     }
@@ -112,12 +112,12 @@ public class ChangesViewContentManager implements ChangesViewContentI {
   private void addExtensionTab(final ChangesViewContentEP ep) {
     final Content content = ContentFactory.getInstance().createContent(new ContentStub(ep), ep.getTabName(), false);
     content.setCloseable(false);
-    content.putUserData(myEPKey, ep);
+    content.putUserData(ourEpKey, ep);
     addIntoCorrectPlace(content);
   }
 
   private void updateExtensionTabs() {
-    final ChangesViewContentEP[] contentEPs = myProject.getExtensions(ChangesViewContentEP.EP_NAME);
+    final List<ChangesViewContentEP> contentEPs = ChangesViewContentEP.EP_NAME.getExtensionList(myProject);
     for (ChangesViewContentEP ep : contentEPs) {
       final NotNullFunction<Project, Boolean> predicate = ep.newPredicateInstance(myProject);
       if (predicate == null) continue;
@@ -135,12 +135,17 @@ public class ChangesViewContentManager implements ChangesViewContentI {
   @Nullable
   private Content findEPContent(final ChangesViewContentEP ep) {
     if (myContentManager == null) {
+      for (Content content : myAddedContents) {
+        if (content instanceof ContentStub && ((ContentStub)content).getEP() == ep) {
+          return content;
+        }
+      }
       return null;
     }
 
     final Content[] contents = myContentManager.getContents();
     for (Content content : contents) {
-      if (content.getUserData(myEPKey) == ep) {
+      if (content.getUserData(ourEpKey) == ep) {
         return content;
       }
     }
@@ -240,7 +245,9 @@ public class ChangesViewContentManager implements ChangesViewContentI {
   public void update() {
     Application.get().invokeLater(() -> {
       updateToolWindowAvailability();
-      updateExtensionTabs();
+      if (myToolWindow != null) {
+        updateExtensionTabs();
+      }
     });
   }
 

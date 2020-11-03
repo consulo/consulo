@@ -20,6 +20,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.util.NotNullFunction;
 import com.intellij.util.xmlb.annotations.Attribute;
 import consulo.container.plugin.PluginDescriptor;
+import consulo.container.plugin.PluginManager;
 import consulo.extensions.PluginAware;
 import consulo.logging.Logger;
 
@@ -74,26 +75,23 @@ public class ChangesViewContentEP implements PluginAware {
 
   public ChangesViewContentProvider getInstance(Project project) {
     if (myInstance == null) {
-      myInstance = (ChangesViewContentProvider)newClassInstance(project, className);
+      myInstance = newClassInstance(project, className);
     }
     return myInstance;
   }
 
   @Nullable
   public NotNullFunction<Project, Boolean> newPredicateInstance(Project project) {
-    //noinspection unchecked
-    return predicateClassName != null ? (NotNullFunction<Project, Boolean>)newClassInstance(project, predicateClassName) : null;
+    return predicateClassName != null ? newClassInstance(project, predicateClassName) : null;
   }
 
-  private Object newClassInstance(final Project project, final String className) {
-    try {
-      final Class<?> aClass =
-              Class.forName(className, true, myPluginDescriptor == null ? getClass().getClassLoader() : myPluginDescriptor.getPluginClassLoader());
-      return project.getInjectingContainer().getUnbindedInstance(aClass);
-    }
-    catch (Exception e) {
-      LOG.error(e);
+  @Nullable
+  private <T> T newClassInstance(final Project project, final String className) {
+    Class<T> resolvedClass = PluginManager.resolveClass(className, myPluginDescriptor);
+    if (resolvedClass == null) {
+      LOG.error("Can't resolve class by name: " + className + " plugin: " + myPluginDescriptor);
       return null;
     }
+    return project.getInjectingContainer().getUnbindedInstance(resolvedClass);
   }
 }

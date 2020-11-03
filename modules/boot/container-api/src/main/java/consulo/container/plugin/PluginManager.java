@@ -130,6 +130,17 @@ public final class PluginManager {
     return ourInternal.isInitialized();
   }
 
+  @Nullable
+  @SuppressWarnings("unchecked")
+  public static <T> Class<T> resolveClass(@Nonnull String className, @Nullable PluginDescriptor descriptor) {
+    try {
+      return (Class<T>)Class.forName(className, true, descriptor == null ? PluginManager.class.getClassLoader() : descriptor.getPluginClassLoader());
+    }
+    catch (ClassNotFoundException e) {
+      return null;
+    }
+  }
+
   public static void checkDependants(final PluginDescriptor pluginDescriptor, final Function<PluginId, PluginDescriptor> pluginId2Descriptor, final Condition<PluginId> check) {
     checkDependants(pluginDescriptor, pluginId2Descriptor, check, new HashSet<PluginId>());
   }
