@@ -15,25 +15,22 @@
  */
 package com.intellij.openapi.progress;
 
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.util.ThrowableComputable;
-import consulo.application.internal.PerApplicationInstance;
 import gnu.trove.THashSet;
 import org.jetbrains.annotations.Nls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.util.Set;
-import java.util.function.Supplier;
 
 public abstract class ProgressManager extends ProgressIndicatorProvider {
-  static Supplier<ProgressManager> ourInstance = PerApplicationInstance.of(ProgressManager.class);
-
   @Nonnull
   public static ProgressManager getInstance() {
-    return ourInstance.get();
+    return Application.get().getProgressManager();
   }
 
   public abstract boolean hasProgressIndicator();

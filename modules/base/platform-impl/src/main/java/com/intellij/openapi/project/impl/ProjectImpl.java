@@ -24,6 +24,7 @@ import com.intellij.openapi.components.impl.ProjectPathMacroManager;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.extensions.impl.ExtensionAreaId;
 import com.intellij.openapi.progress.ProgressIndicator;
+import com.intellij.openapi.progress.ProgressIndicatorProvider;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.project.DumbAwareRunnable;
 import com.intellij.openapi.project.Project;
@@ -126,6 +127,12 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
   @Nonnull
   public Application getApplication() {
     return myApplication;
+  }
+
+  @Nullable
+  @Override
+  protected ProgressIndicatorProvider getProgressIndicatorProvider() {
+    return myApplication.getProgressManager();
   }
 
   @Nullable

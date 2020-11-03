@@ -19,11 +19,9 @@ import com.google.gson.Gson;
 import com.intellij.errorreport.error.AuthorizationFailedException;
 import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationType;
-import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.WriteAction;
 import com.intellij.openapi.components.RoamingType;
 import com.intellij.openapi.components.StateStorage;
-import consulo.logging.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.openapi.project.ProjectManager;
@@ -37,11 +35,11 @@ import com.intellij.openapi.wm.WindowManager;
 import com.intellij.util.concurrency.AppExecutorUtil;
 import com.intellij.util.io.UnsyncByteArrayInputStream;
 import com.intellij.util.ui.UIUtil;
-import consulo.application.ex.ApplicationEx2;
 import consulo.components.impl.stores.IApplicationStore;
 import consulo.components.impl.stores.storage.StateStorageManager;
 import consulo.ide.webService.WebServiceApi;
 import consulo.ide.webService.WebServicesConfiguration;
+import consulo.logging.Logger;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.utils.URIBuilder;
@@ -93,11 +91,13 @@ class ExternalStorageQueue {
   private final Map<String, Ref<byte[]>> myLoadedBytes = new ConcurrentHashMap<>();
   private final Map<String, LoadItem> myLoadItems = new ConcurrentHashMap<>();
   private final ExternalStorage myExternalStorage;
+  private final IApplicationStore myApplicationStore;
 
   private Future<?> myLoadTask = CompletableFuture.completedFuture(null);
 
-  ExternalStorageQueue(ExternalStorage externalStorage) {
+  ExternalStorageQueue(ExternalStorage externalStorage, IApplicationStore applicationStore) {
     myExternalStorage = externalStorage;
+    myApplicationStore = applicationStore;
   }
 
   @Nullable
@@ -217,9 +217,7 @@ class ExternalStorageQueue {
     }
 
     UIUtil.invokeLaterIfNeeded(() -> {
-      ApplicationEx2 app = (ApplicationEx2)Application.get();
-
-      IApplicationStore stateStore = app.getStateStore();
+      IApplicationStore stateStore = myApplicationStore;
 
       String files = StringUtil.join(stateStorages.keySet(), "<br>");
 

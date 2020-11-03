@@ -15,7 +15,9 @@
  */
 package consulo.externalStorage;
 
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.components.RoamingType;
+import consulo.components.impl.stores.IApplicationStore;
 import consulo.components.impl.stores.storage.StateStorageManager;
 import consulo.components.impl.stores.StreamProvider;
 import com.intellij.openapi.util.text.StringUtil;
@@ -37,9 +39,9 @@ public class ExternalStorageStreamProvider extends StreamProvider {
   private final ExternalStorage myStorage;
   private final StateStorageManager myStateStorageManager;
 
-  public ExternalStorageStreamProvider(StateStorageManager stateStorageManager) {
-    myStorage = new ExternalStorage();
-    myStateStorageManager = stateStorageManager;
+  public ExternalStorageStreamProvider(Application application, IApplicationStore applicationStore) {
+    myStorage = new ExternalStorage(applicationStore);
+    myStateStorageManager = applicationStore.getStateStorageManager();
   }
 
   @Override

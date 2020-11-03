@@ -20,6 +20,7 @@ import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.util.io.UnsyncByteArrayInputStream;
+import consulo.components.impl.stores.IApplicationStore;
 import consulo.components.impl.stores.storage.StateStorageManager;
 import consulo.container.boot.ContainerPathManager;
 
@@ -40,10 +41,11 @@ import java.util.Collections;
 public class ExternalStorage {
   private File myProxyDirectory;
 
-  private final ExternalStorageQueue myQueue = new ExternalStorageQueue(this);
+  private final ExternalStorageQueue myQueue;
 
-  public ExternalStorage() {
+  public ExternalStorage(IApplicationStore applicationStore) {
     myProxyDirectory = new File(ContainerPathManager.get().getSystemPath(), "externalStorage");
+    myQueue = new ExternalStorageQueue(this, applicationStore);
   }
 
   File getProxyDirectory() {

@@ -394,7 +394,7 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
   @Override
   public MessageBus getMessageBus() {
     if (myDisposed) {
-      ProgressManager.checkCanceled();
+      checkCanceled();
       throw new AssertionError("Already disposed");
     }
     assert myMessageBus != null : "Not initialized yet";
@@ -405,7 +405,7 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
   @Override
   public <T> T getInstanceIfCreated(@Nonnull Class<T> clazz) {
     if (myDisposed) {
-      ProgressManager.checkCanceled();
+      checkCanceled();
       throw new AssertionError("Already disposed: " + this);
     }
     return getInjectingContainer().getInstanceIfCreated(clazz);
@@ -414,7 +414,7 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
   @Override
   public <T> T getComponent(@Nonnull Class<T> clazz) {
     if (myDisposed) {
-      ProgressManager.checkCanceled();
+      checkCanceled();
       throw new AssertionError("Already disposed: " + this);
     }
     return getInjectingContainer().getInstance(clazz);
@@ -425,10 +425,13 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
   public InjectingContainer getInjectingContainer() {
     InjectingContainer container = myInjectingContainer;
     if (container == null || myDisposed) {
-      ProgressManager.checkCanceled();
+      checkCanceled();
       throw new AssertionError("Already disposed: " + toString());
     }
     return container;
+  }
+
+  protected void checkCanceled() {
   }
 
   @Nonnull

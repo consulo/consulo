@@ -49,7 +49,6 @@ import com.intellij.util.ui.EDT;
 import com.intellij.util.ui.UIUtil;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.ApplicationProperties;
-import consulo.application.ex.ApplicationEx2;
 import consulo.application.impl.BaseApplication;
 import consulo.awt.hacking.AWTAutoShutdownHacking;
 import consulo.desktop.boot.main.windows.WindowsCommandLineProcessor;
@@ -75,7 +74,7 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 
-public class DesktopApplicationImpl extends BaseApplication implements ApplicationEx2 {
+public class DesktopApplicationImpl extends BaseApplication {
   private static final Logger LOG = Logger.getInstance(DesktopApplicationImpl.class);
 
   private final ModalityInvokator myInvokator = new ModalityInvokatorImpl();

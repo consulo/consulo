@@ -18,16 +18,17 @@ package consulo.components.impl;
 import com.intellij.ide.plugins.PluginManager;
 import com.intellij.openapi.application.AccessToken;
 import com.intellij.openapi.application.Application;
-import consulo.container.plugin.ComponentConfig;
 import com.intellij.openapi.components.ComponentManager;
 import com.intellij.openapi.components.ServiceDescriptor;
 import com.intellij.openapi.components.impl.ComponentManagerImpl;
 import com.intellij.openapi.extensions.impl.ExtensionAreaId;
-import consulo.components.impl.stores.IComponentStore;
-import consulo.logging.Logger;
+import com.intellij.openapi.progress.ProgressIndicatorProvider;
 import com.intellij.util.io.storage.HeavyProcessLatch;
-import consulo.ui.annotation.RequiredUIAccess;
+import consulo.components.impl.stores.IComponentStore;
 import consulo.components.impl.stores.StateComponentInfo;
+import consulo.container.plugin.ComponentConfig;
+import consulo.logging.Logger;
+import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -35,7 +36,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Supplier;
 
 public abstract class PlatformComponentManagerImpl extends ComponentManagerImpl {
-  private static final Logger LOGGER = Logger.getInstance(PlatformComponentManagerImpl.class);
+  private static final Logger LOG = Logger.getInstance(PlatformComponentManagerImpl.class);
 
   private boolean myHandlingInitComponentError;
   private AtomicInteger myCreatedNotLazyServicesCount = new AtomicInteger();
@@ -59,7 +60,7 @@ public abstract class PlatformComponentManagerImpl extends ComponentManagerImpl 
       StateComponentInfo<Object> info = stateStore.loadStateIfStorable(component);
       if (info != null) {
         if (Application.get().isWriteAccessAllowed()) {
-          LOGGER.warn(new Throwable("Getting service from write-action leads to possible deadlock. Service implementation " + component.getClass().getName()));
+          LOG.warn(new IllegalArgumentException("Getting service from write-action leads to possible deadlock. Service implementation " + component.getClass().getName()));
         }
 
         info.getComponent().afterLoadState();
@@ -83,6 +84,19 @@ public abstract class PlatformComponentManagerImpl extends ComponentManagerImpl 
   public synchronized void dispose() {
     myCreatedNotLazyServicesCount.set(0);
     super.dispose();
+  }
+
+  @Override
+  protected void checkCanceled() {
+    ProgressIndicatorProvider provider = getProgressIndicatorProvider();
+    if(provider != null) {
+      provider.checkForCanceled();
+    }
+  }
+
+  @Nullable
+  protected ProgressIndicatorProvider getProgressIndicatorProvider() {
+    return null;
   }
 
   @Nullable

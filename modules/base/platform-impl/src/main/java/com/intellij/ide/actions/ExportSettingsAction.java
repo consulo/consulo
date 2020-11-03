@@ -27,7 +27,6 @@ import com.intellij.ide.plugins.PluginManagerCore;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.application.Application;
-import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.RoamingType;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
@@ -40,7 +39,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.MultiMap;
 import com.intellij.util.io.ZipUtil;
-import consulo.application.ex.ApplicationEx2;
+import consulo.components.impl.stores.IApplicationStore;
 import consulo.components.impl.stores.storage.StateStorageManager;
 import consulo.container.boot.ContainerPathManager;
 import consulo.container.classloader.PluginClassLoader;
@@ -49,6 +48,7 @@ import consulo.container.plugin.PluginIds;
 import consulo.injecting.key.InjectingKey;
 import consulo.ui.annotation.RequiredUIAccess;
 import gnu.trove.THashSet;
+import jakarta.inject.Inject;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -58,17 +58,29 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.util.*;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.ResourceBundle;
+import java.util.Set;
 import java.util.zip.ZipOutputStream;
 
 public class ExportSettingsAction extends AnAction implements DumbAware {
+  private final Application myApplication;
+  private final IApplicationStore myApplicationStore;
+
+  @Inject
+  public ExportSettingsAction(Application application, IApplicationStore applicationStore) {
+    myApplication = application;
+    myApplicationStore = applicationStore;
+  }
+
   @RequiredUIAccess
   @Override
   public void actionPerformed(@Nullable AnActionEvent e) {
-    ApplicationManager.getApplication().saveSettings();
+    myApplication.saveSettings();
 
     ChooseComponentsToExportDialog dialog =
-            new ChooseComponentsToExportDialog(getExportableComponentsMap(true), true, IdeBundle.message("title.select.components.to.export"),
+            new ChooseComponentsToExportDialog(getExportableComponentsMap(myApplication, myApplicationStore, true), true, IdeBundle.message("title.select.components.to.export"),
                                                IdeBundle.message("prompt.please.check.all.components.to.export"));
     if (!dialog.showAndGet()) {
       return;
@@ -135,11 +147,10 @@ public class ExportSettingsAction extends AnAction implements DumbAware {
   }
 
   @Nonnull
-  public static MultiMap<File, ExportableItem> getExportableComponentsMap(final boolean onlyExisting) {
+  public static MultiMap<File, ExportableItem> getExportableComponentsMap(Application application, IApplicationStore applicationStore, final boolean onlyExisting) {
     final MultiMap<File, ExportableItem> result = MultiMap.createLinkedSet();
 
-    ApplicationEx2 application = (ApplicationEx2)Application.get();
-    final StateStorageManager storageManager = application.getStateStore().getStateStorageManager();
+    final StateStorageManager storageManager = applicationStore.getStateStorageManager();
     for (InjectingKey<?> key : application.getInjectingContainer().getKeys()) {
       Class<?> targetClass = key.getTargetClass();
       State stateAnnotation = targetClass.getAnnotation(State.class);

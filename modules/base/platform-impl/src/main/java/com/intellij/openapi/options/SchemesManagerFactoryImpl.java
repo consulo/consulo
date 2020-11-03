@@ -15,37 +15,40 @@
  */
 package com.intellij.openapi.options;
 
-import com.intellij.openapi.application.Application;
-import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.RoamingType;
 import com.intellij.openapi.components.ServiceBean;
 import com.intellij.openapi.components.SettingsSavingComponent;
-import consulo.components.impl.stores.StreamProvider;
-import consulo.logging.Logger;
 import com.intellij.util.containers.ContainerUtil;
-import consulo.application.ex.ApplicationEx2;
+import consulo.components.impl.stores.IApplicationStore;
+import consulo.components.impl.stores.StreamProvider;
+import consulo.components.impl.stores.storage.StateStorageManager;
+import consulo.logging.Logger;
 import consulo.util.pointers.Named;
-
+import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
+
 import java.io.File;
 import java.util.List;
 
 @Singleton
 public class SchemesManagerFactoryImpl extends SchemesManagerFactory implements SettingsSavingComponent {
-  public static final Logger LOGGER = Logger.getInstance(SchemesManagerFactoryImpl.class);
+  private static final Logger LOG = Logger.getInstance(SchemesManagerFactoryImpl.class);
 
   private final List<SchemesManagerImpl> myRegisteredManagers = ContainerUtil.createLockFreeCopyOnWriteList();
 
-  @Override
-  public <T extends Named, E extends ExternalizableScheme> SchemesManager<T, E> createSchemesManager(final String fileSpec,
-                                                                                                      final SchemeProcessor<E> processor,
-                                                                                                      final RoamingType roamingType) {
-    final Application application = ApplicationManager.getApplication();
-    if (!(application instanceof ApplicationEx2)) return null;
-    String baseDirPath = ((ApplicationEx2)application).getStateStore().getStateStorageManager().expandMacros(fileSpec);
+  private final IApplicationStore myApplicationStore;
 
-    StreamProvider
-            provider = ((ApplicationEx2)ApplicationManager.getApplication()).getStateStore().getStateStorageManager().getStreamProvider();
+  @Inject
+  public SchemesManagerFactoryImpl(IApplicationStore applicationStore) {
+    myApplicationStore = applicationStore;
+  }
+
+  @Override
+  public <T extends Named, E extends ExternalizableScheme> SchemesManager<T, E> createSchemesManager(final String fileSpec, final SchemeProcessor<E> processor, final RoamingType roamingType) {
+    StateStorageManager stateStorageManager = myApplicationStore.getStateStorageManager();
+    
+    String baseDirPath = stateStorageManager.expandMacros(fileSpec);
+    StreamProvider provider = stateStorageManager.getStreamProvider();
     SchemesManagerImpl<T, E> manager = new SchemesManagerImpl<T, E>(fileSpec, processor, roamingType, provider, new File(baseDirPath));
     myRegisteredManagers.add(manager);
     return manager;
@@ -59,7 +62,7 @@ public class SchemesManagerFactoryImpl extends SchemesManagerFactory implements 
         registeredManager.updateConfigFilesFromStreamProviders();
       }
       catch (Throwable e) {
-        LOGGER.info("Cannot save settings for " + registeredManager.getClass().getName(), e);
+        LOG.info("Cannot save settings for " + registeredManager.getClass().getName(), e);
       }
     }
   }
@@ -72,7 +75,7 @@ public class SchemesManagerFactoryImpl extends SchemesManagerFactory implements 
         registeredManager.save();
       }
       catch (Throwable e) {
-        LOGGER.info("Cannot save settings for " + registeredManager.getClass().getName(), e);
+        LOG.info("Cannot save settings for " + registeredManager.getClass().getName(), e);
       }
     }
   }

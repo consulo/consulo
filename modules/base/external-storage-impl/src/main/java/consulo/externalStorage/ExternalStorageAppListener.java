@@ -19,7 +19,6 @@ import com.intellij.ide.ApplicationLoadListener;
 import com.intellij.openapi.application.Application;
 import consulo.components.impl.stores.IApplicationStore;
 import consulo.components.impl.stores.storage.StateStorageManager;
-import consulo.application.ex.ApplicationEx2;
 import jakarta.inject.Inject;
 
 import javax.annotation.Nonnull;
@@ -29,19 +28,19 @@ import javax.annotation.Nonnull;
  * @since 11-Feb-17
  */
 public class ExternalStorageAppListener implements ApplicationLoadListener {
-  private final ApplicationEx2 myApplication;
+  private final Application myApplication;
+  private final IApplicationStore myApplicationStore;
 
   @Inject
-  public ExternalStorageAppListener(@Nonnull Application application) {
-    myApplication = (ApplicationEx2)application;
+  public ExternalStorageAppListener(@Nonnull Application application, IApplicationStore applicationStore) {
+    myApplicationStore = applicationStore;
+    myApplication = application;
   }
 
   @Override
   public void beforeApplicationLoaded() {
-    IApplicationStore stateStore = myApplication.getStateStore();
+    StateStorageManager stateStorageManager = myApplicationStore.getStateStorageManager();
 
-    StateStorageManager stateStorageManager = stateStore.getStateStorageManager();
-
-    stateStorageManager.setStreamProvider(new ExternalStorageStreamProvider(stateStorageManager));
+    stateStorageManager.setStreamProvider(new ExternalStorageStreamProvider(myApplication, myApplicationStore));
   }
 }

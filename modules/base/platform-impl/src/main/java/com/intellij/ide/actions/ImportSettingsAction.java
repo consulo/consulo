@@ -25,6 +25,7 @@ import com.intellij.ide.startup.StartupActionScriptManager;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ApplicationNamesInfo;
 import com.intellij.openapi.application.ex.ApplicationEx;
@@ -34,6 +35,7 @@ import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.io.FileUtilRt;
 import com.intellij.util.containers.MultiMap;
 import com.intellij.util.io.ZipUtil;
+import consulo.components.impl.stores.IApplicationStore;
 import consulo.container.boot.ContainerPathManager;
 import consulo.ide.updateSettings.UpdateSettings;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -49,15 +51,23 @@ import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
 
 public class ImportSettingsAction extends AnAction implements DumbAware {
+  private final Application myApplication;
+  private final IApplicationStore myApplicationStore;
+
+  public ImportSettingsAction(Application application, IApplicationStore applicationStore) {
+    myApplication = application;
+    myApplicationStore = applicationStore;
+  }
+
   @RequiredUIAccess
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
     final Component component = e.getData(PlatformDataKeys.CONTEXT_COMPONENT);
     ChooseComponentsToExportDialog.chooseSettingsFile(ContainerPathManager.get().getConfigPath(), component, IdeBundle.message("title.import.file.location"),
-                                                      IdeBundle.message("prompt.choose.import.file.path")).doWhenDone(ImportSettingsAction::doImport);
+                                                      IdeBundle.message("prompt.choose.import.file.path")).doWhenDone(this::doImport);
   }
 
-  private static void doImport(String path) {
+  private void doImport(String path) {
     final File saveFile = new File(path);
     try {
       if (!saveFile.exists()) {
@@ -76,7 +86,7 @@ public class ImportSettingsAction extends AnAction implements DumbAware {
         return;
       }
 
-      MultiMap<File, ExportSettingsAction.ExportableItem> fileToComponents = ExportSettingsAction.getExportableComponentsMap(false);
+      MultiMap<File, ExportSettingsAction.ExportableItem> fileToComponents = ExportSettingsAction.getExportableComponentsMap(myApplication, myApplicationStore, false);
       List<ExportSettingsAction.ExportableItem> components = getComponentsStored(saveFile, fileToComponents.values());
       fileToComponents.values().retainAll(components);
       final ChooseComponentsToExportDialog dialog =

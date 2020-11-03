@@ -17,6 +17,7 @@ package com.intellij.openapi.application;
 
 import com.intellij.openapi.components.ComponentManager;
 import com.intellij.openapi.progress.ProcessCanceledException;
+import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.ThrowableComputable;
@@ -379,6 +380,11 @@ public interface Application extends ComponentManager {
    */
   default boolean isCommandLine() {
     return false;
+  }
+
+  @Nonnull
+  default ProgressManager getProgressManager() {
+    return getComponent(ProgressManager.class);
   }
 
   @Override

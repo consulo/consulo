@@ -37,6 +37,9 @@ import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.fileTypes.FileTypeManager;
 import com.intellij.openapi.fileTypes.FileTypeRegistry;
 import com.intellij.openapi.progress.ProcessCanceledException;
+import com.intellij.openapi.progress.ProgressIndicator;
+import com.intellij.openapi.progress.ProgressIndicatorProvider;
+import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.project.ex.ProjectEx;
@@ -56,7 +59,6 @@ import com.intellij.util.io.storage.HeavyProcessLatch;
 import com.intellij.util.ui.EDT;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.application.ApplicationProperties;
-import consulo.application.ex.ApplicationEx2;
 import consulo.application.internal.ApplicationWithIntentWriteLock;
 import consulo.components.impl.PlatformComponentManagerImpl;
 import consulo.components.impl.stores.ApplicationStoreImpl;
@@ -92,7 +94,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * @author VISTALL
  * @since 2018-05-12
  */
-public abstract class BaseApplication extends PlatformComponentManagerImpl implements ApplicationEx2, ApplicationWithIntentWriteLock {
+public abstract class BaseApplication extends PlatformComponentManagerImpl implements ApplicationEx, ApplicationWithIntentWriteLock {
   private class ReadAccessToken extends AccessToken {
     private ReadAccessToken() {
       startRead();
@@ -200,10 +202,26 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
 
   private final AtomicBoolean mySaveSettingsIsInProgress = new AtomicBoolean(false);
 
+  private ProgressManager myProgressManager;
+
   public BaseApplication(@Nonnull SimpleReference<? extends StartupProgress> splashRef) {
     super(null, "Application", ExtensionAreaId.APPLICATION);
     mySplashRef = splashRef;
     myStartTime = System.currentTimeMillis();
+  }
+
+  @Override
+  public void initNotLazyServices(@Nullable ProgressIndicator progressIndicator) {
+    super.initNotLazyServices(progressIndicator);
+
+    // reinit progress manager since, it can try call getInstance while application is disposed
+    myProgressManager = getInjectingContainer().getInstance(ProgressManager.class);
+  }
+
+  @Nullable
+  @Override
+  public ProgressIndicatorProvider getProgressIndicatorProvider() {
+    return myProgressManager;
   }
 
   @Override
@@ -212,7 +230,6 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
 
     builder.bind(Application.class).to(this);
     builder.bind(ApplicationEx.class).to(this);
-    builder.bind(ApplicationEx2.class).to(this);
     builder.bind(ApplicationInfo.class).to(ApplicationInfo::getInstance);
     builder.bind(ContainerPathManager.class).to(ContainerPathManager::get);
 
