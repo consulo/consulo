@@ -16,7 +16,6 @@
 package consulo.desktop.editor.impl.ui;
 
 import com.intellij.codeHighlighting.HighlightDisplayLevel;
-import com.intellij.openapi.application.Application;
 import com.intellij.openapi.editor.ex.MarkupIterator;
 import com.intellij.openapi.editor.ex.MarkupModelEx;
 import com.intellij.openapi.editor.ex.RangeHighlighterEx;
@@ -26,7 +25,6 @@ import com.intellij.openapi.util.ProperTextRange;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
-import consulo.application.ex.ApplicationEx2;
 import consulo.desktop.editor.impl.DesktopEditorErrorPanel;
 import consulo.ui.annotation.RequiredUIAccess;
 
@@ -153,17 +151,10 @@ public class DesktopEditorErrorPanelUI extends ComponentUI {
     if (myDirtyYPositions != null) {
       final Graphics2D imageGraphics = myCachedTrack.createGraphics();
 
-      ((ApplicationEx2)Application.get()).editorPaintStart();
-
-      try {
-        myDirtyYPositions = myDirtyYPositions.intersection(docRange);
-        if (myDirtyYPositions == null) myDirtyYPositions = docRange;
-        repaint(imageGraphics, componentBounds.width, myDirtyYPositions);
-        myDirtyYPositions = null;
-      }
-      finally {
-        ((ApplicationEx2)Application.get()).editorPaintFinish();
-      }
+      myDirtyYPositions = myDirtyYPositions.intersection(docRange);
+      if (myDirtyYPositions == null) myDirtyYPositions = docRange;
+      repaint(imageGraphics, componentBounds.width, myDirtyYPositions);
+      myDirtyYPositions = null;
     }
 
     UIUtil.drawImage(g, myCachedTrack, null, 0, 0);

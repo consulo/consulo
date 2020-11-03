@@ -18,11 +18,11 @@ package com.intellij.ide;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationActivationListener;
 import com.intellij.openapi.application.ApplicationManager;
-import consulo.logging.Logger;
+import com.intellij.openapi.application.ex.ApplicationEx;
 import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.util.ui.UIUtil;
-import consulo.application.ex.ApplicationEx2;
 import consulo.awt.TargetAWT;
+import consulo.logging.Logger;
 
 import javax.annotation.Nullable;
 import javax.swing.*;
@@ -73,7 +73,7 @@ public class ApplicationActivationStateManager {
   public static boolean updateState(final WindowEvent windowEvent) {
 
     final Application application = ApplicationManager.getApplication();
-    if (!(application instanceof ApplicationEx2)) return false;
+    if (!(application instanceof ApplicationEx)) return false;
 
     if (windowEvent.getID() == WindowEvent.WINDOW_ACTIVATED || windowEvent.getID() == WindowEvent.WINDOW_GAINED_FOCUS) {
 
@@ -140,7 +140,7 @@ public class ApplicationActivationStateManager {
 
   public static void updateState(Window window) {
     final Application application = ApplicationManager.getApplication();
-    if (!(application instanceof ApplicationEx2)) return;
+    if (!(application instanceof ApplicationEx)) return;
 
     if (state.isInactive() && window != null) {
       setActive(application, window);

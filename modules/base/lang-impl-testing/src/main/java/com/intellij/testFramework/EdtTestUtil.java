@@ -17,10 +17,10 @@ package com.intellij.testFramework;
 
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.application.ex.ApplicationEx;
 import com.intellij.openapi.util.Ref;
 import com.intellij.util.ExceptionUtil;
 import com.intellij.util.ThrowableRunnable;
-import consulo.application.ex.ApplicationEx2;
 
 import javax.swing.*;
 import java.lang.reflect.InvocationTargetException;
@@ -37,7 +37,7 @@ public class EdtTestUtil {
 
   public static void runInEdtAndWaitImpl(ThrowableRunnable<Throwable> runnable) throws Throwable {
     Application app = ApplicationManager.getApplication();
-    if (app instanceof ApplicationEx2) {
+    if (app instanceof ApplicationEx) {
       if (app.isDispatchThread()) {
         // reduce stack trace
         runnable.run();

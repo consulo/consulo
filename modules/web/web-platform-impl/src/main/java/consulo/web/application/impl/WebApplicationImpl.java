@@ -289,11 +289,6 @@ public class WebApplicationImpl extends BaseApplication implements WebApplicatio
   }
 
   @Override
-  public void executeSuspendingWriteAction(@Nullable Project project, @Nonnull String title, @Nonnull Runnable runnable) {
-
-  }
-
-  @Override
   public boolean isReadAccessAllowed() {
     if (isDispatchThread()) {
       return true;

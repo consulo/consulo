@@ -153,7 +153,7 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
   private ComponentsRegistry myComponentsRegistry = new ComponentsRegistry();
   private final Condition myDisposedCondition = o -> isDisposed();
 
-  private boolean myNotLazyStepFinished = false;
+  private boolean myNotLazyStepFinished;
 
   private ExtensionsAreaImpl myExtensionsArea;
   @Nonnull
@@ -399,10 +399,6 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
     }
     assert myMessageBus != null : "Not initialized yet";
     return myMessageBus;
-  }
-
-  public boolean isComponentsCreated() {
-    return myNotLazyStepFinished;
   }
 
   @Nullable

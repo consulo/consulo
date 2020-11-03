@@ -85,8 +85,6 @@ public class DesktopApplicationImpl extends BaseApplication implements Applicati
 
   private DesktopTransactionGuardImpl myTransactionGuardImpl;
 
-  private int myInEditorPaintCounter; // EDT only
-
   private volatile boolean myDisposeInProgress;
 
   private static final String WAS_EVER_SHOWN = "was.ever.shown";
@@ -677,6 +675,7 @@ public class DesktopApplicationImpl extends BaseApplication implements Applicati
     return ApplicationActivationStateManager.getState().isActive();
   }
 
+  @RequiredUIAccess
   @Override
   public void executeSuspendingWriteAction(@Nullable Project project, @Nonnull String title, @Nonnull Runnable runnable) {
     assertIsDispatchThread();
@@ -702,17 +701,6 @@ public class DesktopApplicationImpl extends BaseApplication implements Applicati
         runnable.run();
       }
     }.queue();
-  }
-
-  @Override
-  public void editorPaintStart() {
-    myInEditorPaintCounter++;
-  }
-
-  @Override
-  public void editorPaintFinish() {
-    myInEditorPaintCounter--;
-    LOG.assertTrue(myInEditorPaintCounter >= 0);
   }
 
   @Override

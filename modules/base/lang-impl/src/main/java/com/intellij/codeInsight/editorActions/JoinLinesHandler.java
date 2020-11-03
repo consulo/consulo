@@ -14,7 +14,7 @@ import com.intellij.lang.LanguageFormatting;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.application.ApplicationManager;
-import consulo.logging.Logger;
+import com.intellij.openapi.application.ex.ApplicationEx;
 import com.intellij.openapi.editor.*;
 import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
 import com.intellij.openapi.editor.ex.DocumentEx;
@@ -29,10 +29,10 @@ import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.DocumentUtil;
 import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.text.CharArrayUtil;
-import consulo.application.ex.ApplicationEx2;
+import consulo.logging.Logger;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -85,7 +85,7 @@ public class JoinLinesHandler extends EditorActionHandler {
     int lineCount = endLine - startLine;
     int line = startLine;
 
-    ((ApplicationEx2)ApplicationManager.getApplication()).runWriteActionWithCancellableProgressInDispatchThread("Join Lines", project, null, indicator -> {
+    ((ApplicationEx)ApplicationManager.getApplication()).runWriteActionWithCancellableProgressInDispatchThread("Join Lines", project, null, indicator -> {
       indicator.setIndeterminate(false);
       JoinLineProcessor processor = new JoinLineProcessor(doc, psiFile, line, indicator);
       processor.process(editor, caret, lineCount);

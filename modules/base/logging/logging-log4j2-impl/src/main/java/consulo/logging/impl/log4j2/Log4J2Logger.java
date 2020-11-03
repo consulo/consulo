@@ -17,10 +17,10 @@ package consulo.logging.impl.log4j2;
 
 import com.intellij.openapi.application.ApplicationInfo;
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.application.ex.ApplicationEx;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.diagnostic.IdeaLoggingEvent;
 import com.intellij.openapi.util.text.StringUtil;
-import consulo.application.ex.ApplicationEx2;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginIds;
 import consulo.container.plugin.PluginManager;
@@ -114,8 +114,8 @@ public class Log4J2Logger implements Logger {
     myLogger.error("Vendor: " + System.getProperties().getProperty("java.vendor", "unknown"));
     myLogger.error("OS: " + System.getProperties().getProperty("os.name", "unknown"));
 
-    ApplicationEx2 application = (ApplicationEx2)ApplicationManager.getApplication();
-    if (application != null && application.isComponentsCreated()) {
+    ApplicationEx application = (ApplicationEx)ApplicationManager.getApplication();
+    if (application != null) {
       final String lastPreformedActionId = LastActionTracker.ourLastActionId;
       if (lastPreformedActionId != null) {
         myLogger.error("Last Action: " + lastPreformedActionId);

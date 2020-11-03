@@ -16,11 +16,9 @@
 package consulo.application.ex;
 
 import com.intellij.openapi.application.ex.ApplicationEx;
-import com.intellij.openapi.project.Project;
 import consulo.components.impl.stores.IApplicationStore;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
@@ -29,15 +27,4 @@ import javax.annotation.Nullable;
 public interface ApplicationEx2 extends ApplicationEx {
   @Nonnull
   IApplicationStore getStateStore();
-
-  boolean isComponentsCreated();
-
-  void executeSuspendingWriteAction(@Nullable Project project, @Nonnull String title, @Nonnull Runnable runnable);
-
-
-  default void editorPaintStart() {
-  }
-
-  default void editorPaintFinish() {
-  }
 }
