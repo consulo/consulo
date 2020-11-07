@@ -270,10 +270,6 @@ public class HighlightInfo implements Segment {
     return unescapedTooltip == null ? null : XmlStringUtil.wrapInHtml(XmlStringUtil.escapeString(unescapedTooltip));
   }
 
-  private static class Holder {
-    private static final HighlightInfoFilter[] FILTERS = HighlightInfoFilter.EXTENSION_POINT_NAME.getExtensions();
-  }
-
   boolean needUpdateOnTyping() {
     return isFlagSet(NEEDS_UPDATE_ON_TYPING_MASK);
   }
@@ -465,7 +461,7 @@ public class HighlightInfo implements Segment {
 
   private static boolean isAcceptedByFilters(@Nonnull HighlightInfo info, @Nullable PsiElement psiElement) {
     PsiFile file = psiElement == null ? null : psiElement.getContainingFile();
-    for (HighlightInfoFilter filter : Holder.FILTERS) {
+    for (HighlightInfoFilter filter : HighlightInfoFilter.EXTENSION_POINT_NAME.getExtensionList()) {
       if (!filter.accept(info, file)) {
         return false;
       }
