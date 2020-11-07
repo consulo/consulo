@@ -218,6 +218,12 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
     myProgressManager = getInjectingContainer().getInstance(ProgressManager.class);
   }
 
+  @Nonnull
+  @Override
+  public ProgressManager getProgressManager() {
+    return myProgressManager;
+  }
+
   @Nullable
   @Override
   public ProgressIndicatorProvider getProgressIndicatorProvider() {
