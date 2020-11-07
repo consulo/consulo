@@ -79,8 +79,19 @@ public abstract class XDebuggerUtil {
    * @param line 0-based line number
    * @return source position
    */
-  @javax.annotation.Nullable
-  public abstract XSourcePosition createPosition(@javax.annotation.Nullable VirtualFile file, int line);
+  @Nullable
+  public abstract XSourcePosition createPosition(@Nullable VirtualFile file, int line);
+
+  /**
+   * Create {@link XSourcePosition} instance by line and column number
+   *
+   * @param file   file
+   * @param line   0-based line number
+   * @param column 0-based column number
+   * @return source position
+   */
+  @Nullable
+  public abstract XSourcePosition createPosition(@Nullable VirtualFile file, int line, int column);
 
   /**
    * Create {@link XSourcePosition} instance by line number
@@ -92,8 +103,8 @@ public abstract class XDebuggerUtil {
   @Nullable
   public abstract XSourcePosition createPositionByOffset(@Nullable VirtualFile file, int offset);
 
-  @javax.annotation.Nullable
-  public abstract XSourcePosition createPositionByElement(@javax.annotation.Nullable PsiElement element);
+  @Nullable
+  public abstract XSourcePosition createPositionByElement(@Nullable PsiElement element);
 
   public abstract <B extends XLineBreakpoint<?>> XBreakpointGroupingRule<B, ?> getGroupingByFileRule();
 
@@ -105,7 +116,7 @@ public abstract class XDebuggerUtil {
 
   public abstract <T extends XDebuggerSettings<?>> T getDebuggerSettings(Class<T> aClass);
 
-  @javax.annotation.Nullable
+  @Nullable
   public abstract XValueContainer getValueContainer(DataContext dataContext);
 
   /**
@@ -124,7 +135,7 @@ public abstract class XDebuggerUtil {
    */
   public abstract void disableValueLookup(@Nonnull Editor editor);
 
-  @javax.annotation.Nullable
+  @Nullable
   @RequiredReadAction
   public abstract PsiElement findContextElement(@Nonnull VirtualFile virtualFile, int offset, @Nonnull Project project, boolean checkXml);
 

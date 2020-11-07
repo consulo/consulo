@@ -306,8 +306,14 @@ public class XDebuggerUtilImpl extends XDebuggerUtil {
 
   @Override
   @Nullable
-  public XSourcePosition createPosition(final VirtualFile file, final int line) {
-    return XSourcePositionImpl.create(file, line);
+  public XSourcePosition createPosition(@Nullable VirtualFile file, int line) {
+    return file == null ? null : XSourcePositionImpl.create(file, line);
+  }
+
+  @Override
+  @Nullable
+  public XSourcePosition createPosition(@Nullable VirtualFile file, final int line, final int column) {
+    return file == null ? null : XSourcePositionImpl.create(file, line, column);
   }
 
   @Override
