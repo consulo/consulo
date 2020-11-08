@@ -24,7 +24,6 @@ import com.intellij.openapi.components.impl.ProjectPathMacroManager;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.extensions.impl.ExtensionAreaId;
 import com.intellij.openapi.progress.ProgressIndicator;
-import com.intellij.openapi.progress.ProgressIndicatorProvider;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.project.DumbAwareRunnable;
 import com.intellij.openapi.project.Project;
@@ -72,8 +71,6 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
 
   public static final String NAME_FILE = ".name";
 
-  @Nonnull
-  private final ApplicationEx myApplication;
   private final ProjectManagerEx myManager;
   @Nonnull
   private final String myDirPath;
@@ -93,12 +90,11 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
 
   protected ProjectImpl(@Nonnull Application application, @Nonnull ProjectManager manager, @Nonnull String dirPath, boolean isOptimiseTestLoadSpeed, String projectName, boolean noUIThread) {
     super(application, "Project " + (projectName == null ? dirPath : projectName), ExtensionAreaId.PROJECT);
-    myApplication = (ApplicationEx)application;
     myDirPath = dirPath;
 
     putUserData(CREATION_TIME, System.nanoTime());
 
-    if (myApplication.isUnitTestMode()) {
+    if (application.isUnitTestMode()) {
       putUserData(CREATION_TRACE, DebugUtil.currentStackTrace());
     }
 
@@ -126,13 +122,7 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
   @Override
   @Nonnull
   public Application getApplication() {
-    return myApplication;
-  }
-
-  @Nullable
-  @Override
-  protected ProgressIndicatorProvider getProgressIndicatorProvider() {
-    return myApplication.getProgressManager();
+    return (Application)myParent;
   }
 
   @Nullable
@@ -293,7 +283,8 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
 
   @Override
   public void save() {
-    if (myApplication.isDoNotSave()) {
+    ApplicationEx application = (ApplicationEx)getApplication();
+    if (application.isDoNotSave()) {
       // no need to save
       return;
     }
@@ -331,7 +322,7 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
     }
     finally {
       mySavingInProgress.set(false);
-      myApplication.getMessageBus().syncPublisher(ProjectSaved.TOPIC).saved(this);
+      application.getMessageBus().syncPublisher(ProjectSaved.TOPIC).saved(this);
     }
   }
 
@@ -342,7 +333,9 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
   }
 
   private void saveAsyncImpl(@Nonnull UIAccess uiAccess) {
-    if (myApplication.isDoNotSave()) {
+    ApplicationEx application = (ApplicationEx)getApplication();
+
+    if (application.isDoNotSave()) {
       // no need to save
       return;
     }
@@ -377,17 +370,19 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
     }
     finally {
       mySavingInProgress.set(false);
-      myApplication.getMessageBus().syncPublisher(ProjectSaved.TOPIC).saved(this);
+      application.getMessageBus().syncPublisher(ProjectSaved.TOPIC).saved(this);
     }
   }
 
   @RequiredUIAccess
   @Override
   public void dispose() {
-    assert myApplication.isWriteAccessAllowed();  // dispose must be under write action
+    ApplicationEx application = (ApplicationEx)getApplication();
+
+    assert application.isWriteAccessAllowed();  // dispose must be under write action
 
     // can call dispose only via com.intellij.ide.impl.ProjectUtil.closeAndDispose()
-    LOG.assertTrue(myApplication.isUnitTestMode() || !myManager.isProjectOpened(this));
+    LOG.assertTrue(application.isUnitTestMode() || !myManager.isProjectOpened(this));
 
     LOG.assertTrue(!isDisposed());
     if (myProjectManagerListener != null) {

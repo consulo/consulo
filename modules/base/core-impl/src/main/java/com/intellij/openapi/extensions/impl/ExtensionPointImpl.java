@@ -19,17 +19,15 @@ import com.intellij.openapi.components.ComponentManager;
 import com.intellij.openapi.extensions.ExtensionPoint;
 import com.intellij.openapi.extensions.LoadingOrder;
 import com.intellij.openapi.progress.ProcessCanceledException;
-import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.util.AtomicNotNullLazyValue;
-import com.intellij.openapi.util.Pair;
 import com.intellij.util.KeyedLazyInstanceEP;
 import com.intellij.util.ObjectUtil;
-import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginManager;
 import consulo.extensions.ExtensionExtender;
 import consulo.logging.Logger;
+import consulo.util.lang.Pair;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -90,11 +88,19 @@ public class ExtensionPointImpl<T> implements ExtensionPoint<T> {
 
   private final AtomicNotNullLazyValue<Map<Class, Object>> myInstanceOfCacheValue = AtomicNotNullLazyValue.createValue(ConcurrentHashMap::new);
 
-  public ExtensionPointImpl(@Nonnull String name, @Nonnull String className, @Nonnull Kind kind, @Nonnull ComponentManager componentManager, @Nonnull PluginDescriptor descriptor) {
+  private final Runnable myCheckCanceled;
+
+  public ExtensionPointImpl(@Nonnull String name,
+                            @Nonnull String className,
+                            @Nonnull Kind kind,
+                            @Nonnull ComponentManager componentManager,
+                            @Nonnull Runnable checkCanceled,
+                            @Nonnull PluginDescriptor descriptor) {
     myName = name;
     myClassName = className;
     myKind = kind;
     myComponentManager = componentManager;
+    myCheckCanceled = checkCanceled;
     myDescriptor = descriptor;
 
     myCacheValue = new CacheValue<>(null, new ArrayList<>());
@@ -137,7 +143,7 @@ public class ExtensionPointImpl<T> implements ExtensionPoint<T> {
       return extensionCache;
     }
 
-    List<Pair<T, PluginDescriptor>> result = build(cacheValue.myExtensionAdapters, ProgressManager.getInstance(), it -> myComponentManager.getInjectingContainer().getUnbindedInstance(it), true);
+    List<Pair<T, PluginDescriptor>> result = build(cacheValue.myExtensionAdapters, it -> myComponentManager.getInjectingContainer().getUnbindedInstance(it), true);
     CacheValue<T> value = setExtensionCache(result);
     return value.myUnwrapExtensionCache;
   }
@@ -162,7 +168,7 @@ public class ExtensionPointImpl<T> implements ExtensionPoint<T> {
 
     List<Pair<T, PluginDescriptor>> extensionCache = cacheValue.myExtensionCache;
     if (extensionCache == null) {
-      List<Pair<T, PluginDescriptor>> result = build(cacheValue.myExtensionAdapters, ProgressManager.getInstance(), it -> myComponentManager.getInjectingContainer().getUnbindedInstance(it), true);
+      List<Pair<T, PluginDescriptor>> result = build(cacheValue.myExtensionAdapters, it -> myComponentManager.getInjectingContainer().getUnbindedInstance(it), true);
       CacheValue<T> value = setExtensionCache(result);
       extensionCache = value.myExtensionCache;
     }
@@ -199,7 +205,7 @@ public class ExtensionPointImpl<T> implements ExtensionPoint<T> {
       return Collections.emptyList();
     }
 
-    List<ExtensionExtender<T>> extenders = new SmartList<>();
+    List<ExtensionExtender<T>> extenders = new ArrayList<>();
 
     for (KeyedLazyInstanceEP<ExtensionExtender> ep : ExtensionExtender.EP_NAME.getExtensionList()) {
       if (myName.equals(ep.getKey())) {
@@ -227,15 +233,12 @@ public class ExtensionPointImpl<T> implements ExtensionPoint<T> {
 
   @Nonnull
   public List<Pair<T, PluginDescriptor>> buildUnsafe(Function<Class<T>, T> unbindedInstanceFun) {
-    return build(myCacheValue.myExtensionAdapters, null, unbindedInstanceFun, false);
+    return build(myCacheValue.myExtensionAdapters, unbindedInstanceFun, false);
   }
 
   @Nonnull
   @SuppressWarnings("unchecked")
-  private List<Pair<T, PluginDescriptor>> build(List<ExtensionComponentAdapter<T>> extensionAdapters,
-                                                @Nullable ProgressManager progressManager,
-                                                Function<Class<T>, T> unbindedInstanceFunc,
-                                                boolean withExtenders) {
+  private List<Pair<T, PluginDescriptor>> build(List<ExtensionComponentAdapter<T>> extensionAdapters, Function<Class<T>, T> unbindedInstanceFunc, boolean withExtenders) {
     if (extensionAdapters == null) {
       throw new IllegalArgumentException("Data dropped...");
     }
@@ -244,9 +247,7 @@ public class ExtensionPointImpl<T> implements ExtensionPoint<T> {
       return Collections.emptyList();
     }
 
-    if(progressManager != null) {
-      progressManager.checkForCanceled();
-    }
+    myCheckCanceled.run();
 
     List<Pair<T, PluginDescriptor>> extensions = new ArrayList<>(extensionAdapters.size());
     List<ExtensionComponentAdapter<T>> adapters = new ArrayList<>(extensionAdapters);
@@ -255,10 +256,8 @@ public class ExtensionPointImpl<T> implements ExtensionPoint<T> {
     Class<T> extensionClass = getExtensionClass();
     for (ExtensionComponentAdapter<T> adapter : adapters) {
       try {
-        if (progressManager != null) {
-          progressManager.checkForCanceled();
-        }
-        
+        myCheckCanceled.run();
+
         T extension = adapter.getExtension(unbindedInstanceFunc);
         if (!extensionClass.isInstance(extension)) {
           LOG.error("Extension " + extension.getClass() + " does not implement " + extensionClass);

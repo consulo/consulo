@@ -27,10 +27,8 @@ import com.intellij.openapi.extensions.impl.ExtensionAreaId;
 import com.intellij.openapi.extensions.impl.ExtensionPointImpl;
 import com.intellij.openapi.extensions.impl.ExtensionsAreaImpl;
 import com.intellij.openapi.progress.ProgressIndicator;
-import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Condition;
-import com.intellij.openapi.util.Pair;
 import com.intellij.util.containers.MultiMap;
 import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.impl.MessageBusFactory;
@@ -51,6 +49,7 @@ import consulo.platform.Platform;
 import consulo.plugins.internal.PluginExtensionRegistrator;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.dataholder.UserDataHolderBase;
+import consulo.util.lang.Pair;
 import consulo.util.lang.ThreeState;
 import gnu.trove.THashMap;
 import org.jetbrains.annotations.TestOnly;
@@ -147,7 +146,7 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
 
   private MessageBusImpl myMessageBus;
 
-  private final ComponentManager myParent;
+  protected final ComponentManager myParent;
 
   private ComponentsRegistry myComponentsRegistry = new ComponentsRegistry();
   private final Condition myDisposedCondition = o -> isDisposed();
@@ -187,7 +186,7 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
 
     myMessageBus.setLazyListeners(mapByTopic);
 
-    myExtensionsArea = new ExtensionsAreaImpl(this);
+    myExtensionsArea = new ExtensionsAreaImpl(this, this::checkCanceled);
 
     registerExtensionPointsAndExtensions(myExtensionsArea);
 
@@ -380,10 +379,7 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
             progressIndicator.setFraction(i / (float)myNotLazyServices.size());
           }
           else {
-            ProgressIndicator indicator = ProgressManager.getGlobalProgressIndicator();
-            if (indicator != null) {
-              indicator.checkCanceled();
-            }
+            checkCanceled();
           }
 
           Object component = getComponent(serviceClass);

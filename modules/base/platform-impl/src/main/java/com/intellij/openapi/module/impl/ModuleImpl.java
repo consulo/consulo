@@ -21,7 +21,6 @@ import com.intellij.openapi.components.impl.ModulePathMacroManager;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.extensions.impl.ExtensionAreaId;
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.progress.ProgressIndicatorProvider;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.roots.impl.ModuleRootManagerImpl;
@@ -45,9 +44,6 @@ public class ModuleImpl extends PlatformComponentManagerImpl implements ModuleEx
   private static final ExtensionPointName<ServiceDescriptor> MODULE_SERVICES = ExtensionPointName.create("com.intellij.moduleService");
 
   @Nonnull
-  private final Project myProject;
-
-  @Nonnull
   private String myName;
 
   @Nullable
@@ -56,14 +52,7 @@ public class ModuleImpl extends PlatformComponentManagerImpl implements ModuleEx
   public ModuleImpl(@Nonnull String name, @Nullable String dirUrl, @Nonnull Project project) {
     super(project, "Module " + name, ExtensionAreaId.MODULE);
     myName = name;
-    myProject = project;
     myDirVirtualFilePointer = dirUrl == null ? null : VirtualFilePointerManager.getInstance().create(dirUrl, this, null);
-  }
-
-  @Nullable
-  @Override
-  protected ProgressIndicatorProvider getProgressIndicatorProvider() {
-    return myProject.getApplication().getProgressManager();
   }
 
   @Override
@@ -112,7 +101,7 @@ public class ModuleImpl extends PlatformComponentManagerImpl implements ModuleEx
   @Override
   @Nonnull
   public Project getProject() {
-    return myProject;
+    return (Project)myParent;
   }
 
   @Override

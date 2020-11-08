@@ -41,7 +41,7 @@ public abstract class PlatformComponentManagerImpl extends ComponentManagerImpl 
   private boolean myHandlingInitComponentError;
   private AtomicInteger myCreatedNotLazyServicesCount = new AtomicInteger();
 
-  protected PlatformComponentManagerImpl(ComponentManager parent, @Nonnull String name, @Nullable ExtensionAreaId areaId) {
+  protected PlatformComponentManagerImpl(@Nullable ComponentManager parent, @Nonnull String name, @Nullable ExtensionAreaId areaId) {
     super(parent, name, areaId, true);
   }
 
@@ -96,6 +96,9 @@ public abstract class PlatformComponentManagerImpl extends ComponentManagerImpl 
 
   @Nullable
   protected ProgressIndicatorProvider getProgressIndicatorProvider() {
+    if(myParent instanceof PlatformComponentManagerImpl) {
+      return ((PlatformComponentManagerImpl)myParent).getProgressIndicatorProvider();
+    }
     return null;
   }
 

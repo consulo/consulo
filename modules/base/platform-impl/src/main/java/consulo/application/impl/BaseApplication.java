@@ -212,10 +212,10 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
 
   @Override
   public void initNotLazyServices(@Nullable ProgressIndicator progressIndicator) {
-    super.initNotLazyServices(progressIndicator);
-
     // reinit progress manager since, it can try call getInstance while application is disposed
     myProgressManager = getInjectingContainer().getInstance(ProgressManager.class);
+
+    super.initNotLazyServices(progressIndicator);
   }
 
   @Nonnull
@@ -323,14 +323,7 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
   }
 
   private void fireBeforeApplicationLoaded() {
-    for (ApplicationLoadListener listener : ApplicationLoadListener.EP_NAME.getExtensionList()) {
-      try {
-        listener.beforeApplicationLoaded();
-      }
-      catch (Exception e) {
-        LOG.error(e);
-      }
-    }
+    ApplicationLoadListener.EP_NAME.forEachExtensionSafe(this, it -> it.beforeApplicationLoaded());
   }
 
   @Override

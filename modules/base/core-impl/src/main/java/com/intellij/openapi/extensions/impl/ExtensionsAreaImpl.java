@@ -41,13 +41,17 @@ public class ExtensionsAreaImpl {
 
   private final Map<String, ExtensionPointImpl> myExtensionPoints = new THashMap<>();
 
-  private final ComponentManager myAreaInstance;
+  private final ComponentManager myComponentManager;
+
+  @Nonnull
+  private final Runnable myCheckCanceled;
 
   private boolean myLocked;
 
-  public ExtensionsAreaImpl(ComponentManager areaInstance) {
+  public ExtensionsAreaImpl(ComponentManager componentManager, @Nonnull Runnable checkCanceled) {
     myCreationTrace = DEBUG_REGISTRATION ? new Throwable("Area creation trace") : null;
-    myAreaInstance = areaInstance;
+    myCheckCanceled = checkCanceled;
+    myComponentManager = componentManager;
   }
 
   public void registerExtensionPoint(@Nonnull PluginDescriptor pluginDescriptor, @Nonnull SimpleXmlElement extensionPointElement) {
@@ -160,7 +164,7 @@ public class ExtensionsAreaImpl {
       throw new RuntimeException("Duplicate registration for EP: " + extensionPointName);
     }
 
-    registerExtensionPoint(new ExtensionPointImpl(extensionPointName, extensionPointBeanClass, kind, myAreaInstance, descriptor));
+    registerExtensionPoint(new ExtensionPointImpl(extensionPointName, extensionPointBeanClass, kind, myComponentManager, myCheckCanceled, descriptor));
   }
 
   public void registerExtensionPoint(@Nonnull ExtensionPointImpl extensionPoint) {
@@ -190,7 +194,7 @@ public class ExtensionsAreaImpl {
     //noinspection unchecked
     ExtensionPointImpl<T> extensionPoint = myExtensionPoints.get(extensionPointName);
     if (extensionPoint == null) {
-      throw new IllegalArgumentException("Missing extension point: " + extensionPointName + " in area " + myAreaInstance);
+      throw new IllegalArgumentException("Missing extension point: " + extensionPointName + " in area " + myComponentManager);
     }
     return extensionPoint;
   }

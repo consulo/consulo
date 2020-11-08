@@ -3,7 +3,6 @@
  */
 package com.intellij.openapi.progress.impl;
 
-import consulo.disposer.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.progress.EmptyProgressIndicator;
 import com.intellij.openapi.progress.ProcessCanceledException;
@@ -15,12 +14,13 @@ import com.intellij.openapi.progress.util.ProgressWindow;
 import com.intellij.openapi.wm.WindowManager;
 import com.intellij.ui.SystemNotifications;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.disposer.Disposable;
 import consulo.util.dataholder.Key;
+import jakarta.inject.Singleton;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import jakarta.inject.Singleton;
 import javax.swing.*;
 import java.awt.*;
 import java.util.Set;
@@ -33,7 +33,6 @@ public class ProgressManagerImpl extends CoreProgressManager implements Disposab
   private final CheckCanceledHook mySleepHook = __ -> sleepIfNeededToGivePriorityToAnotherThread();
 
   public ProgressManagerImpl() {
-    // ExtensionPointImpl.setCheckCanceledAction(ProgressManager::checkCanceled);
   }
 
   @Override
