@@ -22,7 +22,6 @@ import com.intellij.ide.ui.search.SearchUtil;
 import com.intellij.ide.ui.search.SearchableOptionsRegistrar;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.AnActionListener;
-import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.ConfigurationException;
@@ -34,7 +33,10 @@ import com.intellij.openapi.ui.AbstractPainter;
 import com.intellij.openapi.ui.DetailsComponent;
 import com.intellij.openapi.ui.LoadingDecorator;
 import com.intellij.openapi.ui.NullableComponent;
-import com.intellij.openapi.util.*;
+import com.intellij.openapi.util.ActionCallback;
+import com.intellij.openapi.util.AsyncResult;
+import com.intellij.openapi.util.Conditions;
+import com.intellij.openapi.util.EdtRunnable;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.openapi.wm.IdeGlassPaneUtil;
@@ -59,9 +61,9 @@ import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
 import consulo.options.ConfigurableUIMigrationUtil;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.decorator.SwingUIDecorator;
-import consulo.util.ProtectedRunnable;
 import consulo.util.dataholder.Key;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NonNls;
@@ -544,7 +546,7 @@ public class OptionsEditor implements DataProvider, Place.Navigator, Disposable,
   private final ContentWrapper myContentWrapper = new ContentWrapper();
 
   private final Map<Configurable, ConfigurableContext> myConfigurable2Content = new HashMap<>();
-  private final Map<Configurable, ActionCallback> myConfigurable2LoadCallback = new HashMap<>();
+  private final Map<Configurable, AsyncResult<Void>> myConfigurable2LoadCallback = new HashMap<>();
 
   private final MergingUpdateQueue myModificationChecker;
   private final Configurable[] myConfigurables;
@@ -777,65 +779,58 @@ public class OptionsEditor implements DataProvider, Place.Navigator, Disposable,
     ApplicationManager.getApplication().assertIsDispatchThread();
   }
 
-  private ActionCallback getUiFor(final Configurable configurable) {
+  @RequiredUIAccess
+  private AsyncResult<Void> getUiFor(final Configurable target) {
     assertIsDispatchThread();
 
     if (myDisposed) {
-      return new ActionCallback.Rejected();
+      return AsyncResult.rejected();
     }
 
-    final ActionCallback result = new ActionCallback();
+    UIAccess uiAccess = UIAccess.current();
+    if (!myConfigurable2Content.containsKey(target)) {
 
-    if (!myConfigurable2Content.containsKey(configurable)) {
+      return myConfigurable2LoadCallback.computeIfAbsent(target, configurable -> {
+        AsyncResult<Void> result = AsyncResult.undefined();
 
-      final ActionCallback readyCallback = myConfigurable2LoadCallback.get(configurable);
-      if (readyCallback != null) {
-        return readyCallback;
-      }
+        myLoadingDecorator.startLoading(false);
 
-      myConfigurable2LoadCallback.put(configurable, result);
-      myLoadingDecorator.startLoading(false);
-      final Application app = ApplicationManager.getApplication();
-      Runnable action = () -> UIUtil.invokeAndWaitIfNeeded((ProtectedRunnable)() -> {
-        if (myProject.isDisposed()) {
-          result.setRejected();
-        }
-        else {
-          initConfigurable(configurable).notifyWhenDone(result);
-        }
+        uiAccess.give(() -> {
+          if (myProject.isDisposed()) {
+            result.setRejected();
+            return;
+          }
+
+          initConfigurable(configurable, result);
+        });
+
+        return result;
       });
-      if (app.isUnitTestMode()) {
-        action.run();
-      }
-      else {
-        app.executeOnPooledThread(action);
-      }
-    }
-    else {
-      result.setDone();
     }
 
-    return result;
+    return AsyncResult.resolved();
   }
 
   @RequiredUIAccess
-  private ActionCallback initConfigurable(@Nonnull final Configurable configurable) {
-    final ActionCallback result = new ActionCallback();
+  private void initConfigurable(@Nonnull final Configurable configurable, AsyncResult<Void> result) {
+    UIAccess.assertIsUIThread();
+    
+    if (myDisposed) {
+      result.setRejected();
+      return;
+    }
 
-    final ConfigurableContext content = new ConfigurableContext(configurable);
-
-    UIUtil.invokeLaterIfNeeded(() -> {
-      if (myDisposed) return;
-
+    try {
+      final ConfigurableContext content = new ConfigurableContext(configurable);
       if (!myConfigurable2Content.containsKey(configurable)) {
         configurable.reset();
       }
-
       myConfigurable2Content.put(configurable, content);
       result.setDone();
-    });
-
-    return result;
+    }
+    catch (Throwable e) {
+      result.rejectWithThrowable(e);
+    }
   }
 
   private void updateSpotlight(boolean now) {
@@ -905,7 +900,9 @@ public class OptionsEditor implements DataProvider, Place.Navigator, Disposable,
       if (!myConfigurable2Content.containsKey(configurable) && ConfigurableWrapper.hasOwnContent(configurable)) {
         ApplicationManager.getApplication().invokeLater(() -> {
           if (myDisposed) return;
-          initConfigurable(configurable).doWhenDone(() -> {
+          AsyncResult<Void> result = AsyncResult.undefined();
+          initConfigurable(configurable, result);
+          result.doWhenDone(() -> {
             if (myDisposed) return;
             fireModificationInt(configurable);
           });

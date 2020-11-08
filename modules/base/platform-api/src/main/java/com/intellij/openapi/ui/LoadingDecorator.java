@@ -1,30 +1,19 @@
-/*
- * Copyright 2000-2009 JetBrains s.r.o.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.openapi.ui;
 
-import consulo.disposer.Disposable;
-import consulo.disposer.Disposer;
+import com.intellij.CommonBundle;
+import com.intellij.ide.RemoteDesktopService;
 import com.intellij.ui.components.JBLayeredPane;
 import com.intellij.ui.components.panels.NonOpaquePanel;
 import com.intellij.util.Alarm;
 import com.intellij.util.ui.Animator;
 import com.intellij.util.ui.AsyncProcessIcon;
+import com.intellij.util.ui.ImageUtil;
 import com.intellij.util.ui.UIUtil;
-import javax.annotation.Nonnull;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -55,27 +44,47 @@ public class LoadingDecorator {
     myDelay = startDelayMs;
     myStartAlarm = new Alarm(Alarm.ThreadToUse.POOLED_THREAD, parent);
 
-    setLoadingText("Loading...");
+    setLoadingText(CommonBundle.getLoadingTreeNodeText());
 
-
-    myFadeOutAnimator = new Animator("Loading", 10, 500, false) {
+    myFadeOutAnimator = new Animator("Loading", 10, RemoteDesktopService.isRemoteSession() ? 2500 : 500, false) {
+      @Override
       public void paintNow(final int frame, final int totalFrames, final int cycle) {
         myLoadingLayer.setAlpha(1f - ((float)frame) / ((float)totalFrames));
       }
 
       @Override
       protected void paintCycleEnd() {
-        myLoadingLayer.setVisible(false);
+        myLoadingLayer.setAlpha(0); // paint with zero alpha before hiding completely
+        hideLoadingLayer();
         myLoadingLayer.setAlpha(-1);
       }
     };
     Disposer.register(parent, myFadeOutAnimator);
 
-
     myPane.add(content, JLayeredPane.DEFAULT_LAYER, 0);
-    myPane.add(myLoadingLayer, JLayeredPane.DRAG_LAYER, 1);
 
     Disposer.register(parent, myLoadingLayer.myProgress);
+  }
+
+  /**
+   * Removes a loading layer to restore a blit-accelerated scrolling.
+   */
+  private void hideLoadingLayer() {
+    myPane.remove(myLoadingLayer);
+    myLoadingLayer.setVisible(false);
+  }
+
+  /* Placing the invisible layer on top of JViewport suppresses blit-accelerated scrolling
+     as JViewport.canUseWindowBlitter() doesn't take component's visibility into account.
+
+     We need to add / remove the loading layer on demand to preserve the blit-based scrolling.
+
+     Blit-acceleration copies as much of the rendered area as possible and then repaints only newly exposed region.
+     This helps to improve scrolling performance and to reduce CPU usage (especially if drawing is compute-intensive). */
+  private void addLoadingLayerOnDemand() {
+    if (myPane != myLoadingLayer.getParent()) {
+      myPane.add(myLoadingLayer, JLayeredPane.DRAG_LAYER, 1);
+    }
   }
 
   protected NonOpaquePanel customizeLoadingLayer(JPanel parent, JLabel text, AsyncProcessIcon icon) {
@@ -114,6 +123,7 @@ public class LoadingDecorator {
   }
 
   protected void _startLoading(final boolean takeSnapshot) {
+    addLoadingLayerOnDemand();
     myLoadingLayer.setVisible(true, takeSnapshot);
   }
 
@@ -131,7 +141,7 @@ public class LoadingDecorator {
     return myLoadingLayer.myText.getText();
   }
 
-  public void setLoadingText(final String loadingText) {
+  public void setLoadingText(String loadingText) {
     myLoadingLayer.myText.setText(loadingText);
   }
 
@@ -139,7 +149,7 @@ public class LoadingDecorator {
     return myLoadingLayer.isLoading();
   }
 
-  private class LoadingLayer extends JPanel {
+  private final class LoadingLayer extends JPanel {
     private final JLabel myText = new JLabel("", SwingConstants.CENTER);
 
     private BufferedImage mySnapshot;
@@ -164,16 +174,16 @@ public class LoadingDecorator {
     public void setVisible(final boolean visible, boolean takeSnapshot) {
       if (myVisible == visible) return;
 
-      if (myVisible && !visible && myCurrentAlpha != -1) return;
+      if (myVisible && myCurrentAlpha != -1) return;
 
       myVisible = visible;
       myFadeOutAnimator.reset();
       if (myVisible) {
-        setVisible(myVisible);
+        setVisible(true);
         myCurrentAlpha = -1;
 
         if (takeSnapshot && getWidth() > 0 && getHeight() > 0) {
-          mySnapshot = UIUtil.createImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_RGB);
+          mySnapshot = ImageUtil.createImage(getGraphics(), getWidth(), getHeight(), BufferedImage.TYPE_INT_RGB);
           final Graphics2D g = mySnapshot.createGraphics();
           myPane.paint(g);
           final Component opaque = UIUtil.findNearestOpaque(this);
@@ -240,7 +250,7 @@ public class LoadingDecorator {
   public interface CursorAware {
   }
 
-  private static class MyLayeredPane extends JBLayeredPane implements CursorAware {
+  private static final class MyLayeredPane extends JBLayeredPane implements CursorAware {
     private final JComponent myContent;
 
     private MyLayeredPane(JComponent content) {
@@ -249,16 +259,12 @@ public class LoadingDecorator {
 
     @Override
     public Dimension getMinimumSize() {
-      return myContent != null && !isMinimumSizeSet()
-             ? myContent.getMinimumSize()
-             : super.getMinimumSize();
+      return myContent != null && !isMinimumSizeSet() ? myContent.getMinimumSize() : super.getMinimumSize();
     }
 
     @Override
     public Dimension getPreferredSize() {
-      return myContent != null && !isPreferredSizeSet()
-             ? myContent.getPreferredSize()
-             : super.getPreferredSize();
+      return myContent != null && !isPreferredSizeSet() ? myContent.getPreferredSize() : super.getPreferredSize();
     }
 
     @Override
