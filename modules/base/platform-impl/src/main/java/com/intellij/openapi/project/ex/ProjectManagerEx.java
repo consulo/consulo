@@ -34,7 +34,7 @@ import java.util.function.Predicate;
 
 public abstract class ProjectManagerEx extends ProjectManager {
   public static ProjectManagerEx getInstanceEx() {
-    return (ProjectManagerEx)ApplicationManager.getApplication().getComponent(ProjectManager.class);
+    return (ProjectManagerEx)ProjectManager.getInstance();
   }
 
   /**
@@ -42,9 +42,6 @@ public abstract class ProjectManagerEx extends ProjectManager {
    */
   @Nullable
   public abstract Project newProject(final String projectName, @Nonnull String dirPath, boolean useDefaultProjectSettings, boolean isDummy);
-
-  @Nullable
-  public abstract Project loadProject(@Nonnull String filePath) throws IOException, JDOMException, InvalidDataException;
 
   @RequiredUIAccess
   public boolean openProject(Project project) {

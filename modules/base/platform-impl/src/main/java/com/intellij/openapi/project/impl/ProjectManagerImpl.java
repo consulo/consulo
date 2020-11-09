@@ -286,20 +286,6 @@ public class ProjectManagerImpl extends ProjectManagerEx implements Disposable {
     return new ProjectImpl(myApplication, this, new File(dirPath).getAbsolutePath(), isOptimiseTestLoadSpeed, projectName, noUICall);
   }
 
-  @Override
-  @Nullable
-  public Project loadProject(@Nonnull String filePath) throws IOException, JDOMException, InvalidDataException {
-    try {
-      ProjectImpl project = createProject(null, filePath, false, false);
-      initProject(project, null);
-      return project;
-    }
-    catch (Throwable t) {
-      LOG.info(t);
-      throw new IOException(t);
-    }
-  }
-
   @Nonnull
   private static String toCanonicalName(@Nonnull final String filePath) {
     try {
@@ -421,23 +407,6 @@ public class ProjectManagerImpl extends ProjectManagerEx implements Disposable {
   private static boolean canCancelProjectLoading() {
     ProgressIndicator indicator = ProgressIndicatorProvider.getGlobalProgressIndicator();
     return !(indicator instanceof NonCancelableSection);
-  }
-
-  @RequiredUIAccess
-  @Override
-  public Project loadAndOpenProject(@Nonnull final String filePath) throws IOException {
-    final Project project = convertAndLoadProject(filePath);
-    if (project == null) {
-      WelcomeFrameManager.getInstance().showIfNoProjectOpened();
-      return null;
-    }
-
-    if (!openProject(project)) {
-      WelcomeFrameManager.getInstance().showIfNoProjectOpened();
-      myApplication.runWriteAction(() -> Disposer.dispose(project));
-    }
-
-    return project;
   }
 
   /**

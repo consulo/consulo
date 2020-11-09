@@ -15,6 +15,7 @@
  */
 package com.intellij.openapi.project;
 
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -41,22 +42,10 @@ public abstract class ProjectManager {
    *
    * @return <code>ProjectManager</code> instance
    */
+  @Nonnull
   public static ProjectManager getInstance() {
-    return ApplicationManager.getApplication().getComponent(ProjectManager.class);
+    return Application.get().getInstance(ProjectManager.class);
   }
-
-  /**
-   * Adds global listener to all projects
-   *
-   * @param listener listener to add
-   */
-  @Deprecated
-  @DeprecationInfo("Use ProjectManager#TOPIC")
-  public abstract void addProjectManagerListener(@Nonnull ProjectManagerListener listener);
-
-  @Deprecated
-  @DeprecationInfo("Use ProjectManager#TOPIC")
-  public abstract void addProjectManagerListener(@Nonnull ProjectManagerListener listener, @Nonnull Disposable parentDisposable);
 
   @Nonnull
   public abstract AsyncResult<Project> openProjectAsync(@Nonnull VirtualFile file, @Nonnull UIAccess uiAccess);
@@ -71,15 +60,6 @@ public abstract class ProjectManager {
 
   @Nonnull
   public abstract AsyncResult<Void> closeAndDisposeAsync(@Nonnull Project project, @Nonnull UIAccess uiAccess, boolean checkCanClose, boolean save, boolean dispose);
-
-  /**
-   * Removes global listener from all projects.
-   *
-   * @param listener listener to remove
-   */
-  @Deprecated
-  @DeprecationInfo("Use ProjectManager#TOPIC")
-  public abstract void removeProjectManagerListener(@Nonnull ProjectManagerListener listener);
 
   /**
    * Adds listener to the specified project.
@@ -118,22 +98,6 @@ public abstract class ProjectManager {
   }
 
   /**
-   * Loads and opens a project with the specified path. If the project file is from an older IDEA
-   * version, prompts the user to convert it to the latest version. If the project file is from a
-   * newer version, shows a message box telling the user that the load failed.
-   *
-   * @param filePath the .ipr file path
-   * @return the opened project file, or null if the project failed to load because of version mismatch
-   *         or because the project is already open.
-   * @throws IOException          if the project file was not found or failed to read
-   * @throws JDOMException        if the project file contained invalid XML
-   * @throws InvalidDataException if the project file contained invalid data
-   */
-  @Nullable
-  @RequiredUIAccess
-  public abstract Project loadAndOpenProject(@Nonnull String filePath) throws IOException, JDOMException, InvalidDataException;
-
-  /**
    * Closes the specified project.
    *
    * @param project the project to close.
@@ -159,4 +123,29 @@ public abstract class ProjectManager {
    */
   @Nullable
   public abstract Project createProject(String name, String path);
+
+  // region deprecated code
+  /**
+   * Adds global listener to all projects
+   *
+   * @param listener listener to add
+   */
+  @Deprecated
+  @DeprecationInfo("Use ProjectManager#TOPIC")
+  public abstract void addProjectManagerListener(@Nonnull ProjectManagerListener listener);
+
+  @Deprecated
+  @DeprecationInfo("Use ProjectManager#TOPIC")
+  public abstract void addProjectManagerListener(@Nonnull ProjectManagerListener listener, @Nonnull Disposable parentDisposable);
+
+  /**
+   * Removes global listener from all projects.
+   *
+   * @param listener listener to remove
+   */
+  @Deprecated
+  @DeprecationInfo("Use ProjectManager#TOPIC")
+  public abstract void removeProjectManagerListener(@Nonnull ProjectManagerListener listener);
+  
+  //endregion
 }
