@@ -49,4 +49,10 @@ class WebContainerPathManager extends ContainerPathManager {
   public String getSystemPath() {
     return new File(getAppHomeDirectory(), "/.sandbox/system").getPath();
   }
+
+  @Nonnull
+  @Override
+  public File getDocumentsDir() {
+    return new File(System.getProperty("user.dir"), "Consulo Projects");
+  }
 }

@@ -445,8 +445,9 @@ public final class DesktopWindowManagerImpl extends WindowManagerEx implements P
       consulo.ui.Window uiWindow = TargetAWT.from((Window)parent);
 
       IdeFrame ideFrame = uiWindow.getUserData(IdeFrame.KEY);
-      if(ideFrame != null) {
-        return ideFrame.getStatusBar().findChild(c);
+      if (ideFrame != null) {
+        StatusBar statusBar = ideFrame.getStatusBar();
+        if (statusBar != null) return statusBar.findChild(c);
       }
     }
 
@@ -476,7 +477,7 @@ public final class DesktopWindowManagerImpl extends WindowManagerEx implements P
         if (eachParent instanceof Window) {
           consulo.ui.Window uiWIndow = TargetAWT.from((Window)eachParent);
           IdeFrame ideFrame = uiWIndow.getUserData(IdeFrame.KEY);
-          if(ideFrame != null) {
+          if (ideFrame != null) {
             frame = ideFrame;
             break;
           }
@@ -497,7 +498,7 @@ public final class DesktopWindowManagerImpl extends WindowManagerEx implements P
     final Frame[] all = Frame.getFrames();
     for (Frame each : all) {
       consulo.ui.Window uiWindow = TargetAWT.from(each);
-      if(uiWindow == null) {
+      if (uiWindow == null) {
         continue;
       }
 
@@ -534,11 +535,11 @@ public final class DesktopWindowManagerImpl extends WindowManagerEx implements P
     }
     final Window window = KeyboardFocusManager.getCurrentKeyboardFocusManager().getActiveWindow();
     final Component parentMaybeWindow = UIUtil.findUltimateParent(window);
-    if(parentMaybeWindow instanceof Window) {
+    if (parentMaybeWindow instanceof Window) {
       consulo.ui.Window uiWindow = TargetAWT.from((Window)parentMaybeWindow);
 
       IdeFrame ideFrame = uiWindow.getUserData(IdeFrame.KEY);
-      if(ideFrame instanceof IdeFrameEx) {
+      if (ideFrame instanceof IdeFrameEx) {
         return (IdeFrameEx)ideFrame;
       }
     }
@@ -546,7 +547,7 @@ public final class DesktopWindowManagerImpl extends WindowManagerEx implements P
     final Frame[] frames = Frame.getFrames();
     for (Frame each : frames) {
       consulo.ui.Window uiWindow = TargetAWT.from(each);
-      if(uiWindow == null) {
+      if (uiWindow == null) {
         continue;
       }
 

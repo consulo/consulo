@@ -166,7 +166,7 @@ public abstract class CloneDvcsDialog extends DialogWrapper {
     myParentDirectory.getChildComponent().getDocument().addDocumentListener(updateOkButtonListener);
     String parentDir = getRememberedInputs().getCloneParentDir();
     if (StringUtil.isEmptyOrSpaces(parentDir)) {
-      parentDir = ProjectUtil.getBaseDir();
+      parentDir = ProjectUtil.getProjectsDirectory().toString();
     }
     myParentDirectory.setText(parentDir);
 

@@ -20,7 +20,6 @@ import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.annotation.DeprecationInfo;
 import consulo.application.ApplicationProperties;
-import consulo.application.DefaultPaths;
 import consulo.container.boot.ContainerPathManager;
 import consulo.util.collection.ArrayUtil;
 import org.jetbrains.annotations.Contract;
@@ -293,6 +292,12 @@ public class DesktopContainerPathManager extends ContainerPathManager {
 
     checkAndCreate(ourSystemPath, true);
     return ourSystemPath;
+  }
+
+  @Nonnull
+  @Override
+  public File getDocumentsDir() {
+    return DefaultPaths.getInstance().getDocumentsDir();
   }
 
   @Override

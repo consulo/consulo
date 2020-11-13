@@ -71,6 +71,9 @@ public abstract class ContainerPathManager {
   @Nonnull
   public abstract String getSystemPath();
 
+  @Nonnull
+  public abstract File getDocumentsDir();
+
   /**
    * Looks for a file in all possible bin directories.
    *

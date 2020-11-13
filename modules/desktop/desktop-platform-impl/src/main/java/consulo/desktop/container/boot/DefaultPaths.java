@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.application;
+package consulo.desktop.container.boot;
 
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.util.SystemProperties;
@@ -31,14 +31,14 @@ public abstract class DefaultPaths {
   private static class Fallback extends DefaultPaths {
     @Nonnull
     @Override
-    public String getDocumentsDir() {
+    public File getDocumentsDir() {
       String userHome = SystemProperties.getUserHome();
       // some OS-es can have documents dir inside user home, for example Ubuntu
       File file = new File(userHome, "Documents");
       if (file.exists()) {
-        return userHome + File.separatorChar + "Documents" + File.separatorChar + ourDefaultPrefix;
+        return new File(userHome + File.separatorChar + "Documents" + File.separatorChar + ourDefaultPrefix);
       }
-      return userHome + File.separatorChar + ourDefaultPrefix + " Project";
+      return new File(userHome + File.separatorChar + ourDefaultPrefix + " Project");
     }
 
     @Nonnull
@@ -62,8 +62,8 @@ public abstract class DefaultPaths {
 
     @Override
     @Nonnull
-    public String getDocumentsDir() {
-      return getDocumentsDirNoPrefix() + File.separatorChar + ourDefaultPrefix;
+    public File getDocumentsDir() {
+      return new File(getDocumentsDirNoPrefix(), ourDefaultPrefix);
     }
 
     @Nonnull
@@ -173,7 +173,7 @@ public abstract class DefaultPaths {
    * @return default directory for new projects
    */
   @Nonnull
-  public abstract String getDocumentsDir();
+  public abstract File getDocumentsDir();
 
   /**
    * @return directory for caches, etc. Removing will not broke user settings

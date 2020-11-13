@@ -52,6 +52,7 @@ import javax.swing.*;
 import javax.swing.tree.TreePath;
 import java.awt.*;
 import java.io.File;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -181,8 +182,8 @@ public abstract class NewProjectPanel extends BaseWelcomeScreenPanel implements 
             myWizardContext.setPath(myModuleHome.getPath());
           }
           else {
-            String baseDir = ProjectUtil.getBaseDir();
-            File suggestedProjectDirectory = FileUtil.findSequentNonexistentFile(new File(baseDir), "untitled", "");
+            Path baseDir = ProjectUtil.getProjectsDirectory();
+            File suggestedProjectDirectory = FileUtil.findSequentNonexistentFile(baseDir.toFile(), "untitled", "");
 
             myWizardContext.setName(suggestedProjectDirectory.getName());
             myWizardContext.setPath(suggestedProjectDirectory.getPath());

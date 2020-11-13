@@ -26,13 +26,14 @@ import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.wm.*;
+import com.intellij.openapi.wm.IdeFocusManager;
+import com.intellij.openapi.wm.WindowManager;
 import com.intellij.projectImport.ProjectOpenProcessor;
 import com.intellij.ui.AppIcon;
 import consulo.annotation.DeprecationInfo;
-import consulo.application.DefaultPaths;
 import consulo.async.ex.PooledAsyncResult;
 import consulo.components.impl.stores.IProjectStore;
+import consulo.container.boot.ContainerPathManager;
 import consulo.logging.Logger;
 import consulo.project.ProjectOpenProcessors;
 import consulo.start.WelcomeFrameManager;
@@ -46,6 +47,8 @@ import javax.annotation.Nullable;
 import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 /**
  * @author Eugene Belyaev
@@ -159,12 +162,12 @@ public class ProjectUtil {
   }
 
   @Nonnull
-  public static String getBaseDir() {
+  public static Path getProjectsDirectory() {
     final String lastProjectLocation = RecentProjectsManager.getInstance().getLastProjectCreationLocation();
     if (lastProjectLocation != null) {
-      return lastProjectLocation.replace('/', File.separatorChar);
+      return Paths.get(lastProjectLocation);
     }
-    return DefaultPaths.getInstance().getDocumentsDir();
+    return ContainerPathManager.get().getDocumentsDir().toPath();
   }
 
   @Nonnull
