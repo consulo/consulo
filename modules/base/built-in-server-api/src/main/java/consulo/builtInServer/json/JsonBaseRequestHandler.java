@@ -82,5 +82,10 @@ public abstract class JsonBaseRequestHandler extends HttpRequestHandler {
   }
 
   @Nonnull
+  public String getApiUrl() {
+    return myApiUrl;
+  }
+
+  @Nonnull
   protected abstract HttpMethod getMethod();
 }

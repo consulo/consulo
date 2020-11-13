@@ -34,6 +34,9 @@ public class CommandLineArgs {
   @Option(name = "--line", metaVar = "<line>", usage = "Line of file")
   private int myLine = -1;
 
+  @Option(name = "--json", metaVar = "<json>", usage = "JSON file of API request after start")
+  private String myJson;
+
   @Option(name = "--version", usage = "Print version")
   private boolean myShowVersion;
 
@@ -73,6 +76,14 @@ public class CommandLineArgs {
 
   public String getFile() {
     return file;
+  }
+
+  public String getJson() {
+    return myJson;
+  }
+
+  public void setJson(String json) {
+    myJson = json;
   }
 
   public static CommandLineArgs parse(String[] args) {

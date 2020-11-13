@@ -22,9 +22,10 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.http.FullHttpRequest;
 import io.netty.handler.codec.http.HttpMethod;
 import io.netty.handler.codec.http.QueryStringDecoder;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 
 /**
  * @author VISTALL
@@ -47,11 +48,16 @@ public abstract class JsonPostRequestHandler<Request> extends JsonBaseRequestHan
   @Nonnull
   public abstract JsonResponse handle(@Nonnull Request request);
 
+  @Nonnull
+  public Class<Request> getRequestClass() {
+    return myRequestClass;
+  }
+
   @Override
   public boolean process(@Nonnull QueryStringDecoder urlDecoder, @Nonnull FullHttpRequest request, @Nonnull ChannelHandlerContext context) throws IOException {
     Object handle = null;
     try {
-      String json = request.content().toString(CharsetToolkit.UTF8_CHARSET);
+      String json = request.content().toString(StandardCharsets.UTF_8);
 
       final Request body = new Gson().fromJson(json, myRequestClass);
 

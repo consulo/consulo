@@ -15,6 +15,7 @@
  */
 package com.intellij.idea.starter;
 
+import com.google.gson.Gson;
 import com.intellij.ide.*;
 import com.intellij.ide.plugins.PluginManagerConfigurable;
 import com.intellij.ide.plugins.PluginManagerUISettings;
@@ -40,6 +41,10 @@ import com.intellij.ui.AppUIUtil;
 import com.intellij.ui.DesktopAppUIUtil;
 import consulo.application.ApplicationProperties;
 import consulo.awt.TargetAWT;
+import consulo.builtInServer.http.HttpRequestHandler;
+import consulo.builtInServer.json.JsonBaseRequestHandler;
+import consulo.builtInServer.json.JsonGetRequestHandler;
+import consulo.builtInServer.json.JsonPostRequestHandler;
 import consulo.container.impl.classloader.PluginLoadStatistics;
 import consulo.container.plugin.PluginManager;
 import consulo.container.util.StatCollector;
@@ -60,8 +65,11 @@ import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
 import java.awt.*;
+import java.io.Reader;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Set;
 
@@ -166,7 +174,7 @@ public class DesktopApplicationStarter extends ApplicationStarter {
 
     TopMenuInitializer.register(app);
 
-    if(myPlatform.os().isMac()) {
+    if (myPlatform.os().isMac()) {
       MacTopMenuInitializer.installAutoUpdateMenu();
     }
 
@@ -202,10 +210,58 @@ public class DesktopApplicationStarter extends ApplicationStarter {
           projectFromCommandLine.doWhenRejected(recentProjectsManager::doReopenLastProject);
         }
 
+        if (args.getJson() != null) {
+          runJsonRequest(args.getJson());
+        }
+
         SwingUtilities.invokeLater(() -> reportPluginError(myPluginsInitializeInfo));
 
         UsageTrigger.trigger("consulo.app.started");
       }, ModalityState.NON_MODAL);
+    }
+  }
+
+  @SuppressWarnings("unchecked")
+  private void runJsonRequest(String jsonFile) {
+    CommandLineJsonValue jsonValue = null;
+
+    try (Reader reader = Files.newBufferedReader(Paths.get(jsonFile))) {
+      jsonValue = new Gson().fromJson(reader, CommandLineJsonValue.class);
+    }
+    catch (Exception ignored) {
+    }
+
+    if (jsonValue == null) {
+      return;
+    }
+
+    HttpRequestHandler targetRequestHandler = null;
+    for (HttpRequestHandler requestHandler : HttpRequestHandler.EP_NAME.getExtensionList()) {
+      if (requestHandler instanceof JsonBaseRequestHandler) {
+        String apiUrl = ((JsonBaseRequestHandler)requestHandler).getApiUrl();
+
+        if (apiUrl.equals(jsonValue.url)) {
+          targetRequestHandler = requestHandler;
+          break;
+        }
+      }
+    }
+
+    if (targetRequestHandler == null) {
+      return;
+    }
+
+    if (targetRequestHandler instanceof JsonPostRequestHandler) {
+      if (jsonValue.body == null) {
+        return;
+      }
+
+      Class requestClass = ((JsonPostRequestHandler)targetRequestHandler).getRequestClass();
+      Object content = new Gson().fromJson(jsonValue.body, requestClass);
+      ((JsonPostRequestHandler)targetRequestHandler).handle(content);
+    }
+    else if (targetRequestHandler instanceof JsonGetRequestHandler) {
+      ((JsonGetRequestHandler)targetRequestHandler).handle();
     }
   }
 
