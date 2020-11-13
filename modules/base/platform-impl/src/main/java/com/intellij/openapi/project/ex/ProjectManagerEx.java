@@ -15,20 +15,16 @@
  */
 package com.intellij.openapi.project.ex;
 
-import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
-import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.openapi.vfs.VirtualFile;
 import consulo.disposer.Disposable;
-import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.UIAccess;
-import org.jdom.JDOMException;
-import javax.annotation.Nonnull;
+import consulo.ui.annotation.RequiredUIAccess;
 import org.jetbrains.annotations.TestOnly;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.io.IOException;
 import java.util.Collection;
 import java.util.function.Predicate;
 
@@ -76,9 +72,6 @@ public abstract class ProjectManagerEx extends ProjectManager {
   public Project createProject(String name, String path) {
     return newProject(name, path, true, false);
   }
-
-  @Nullable
-  public abstract Project convertAndLoadProject(String filePath) throws IOException;
 
   public abstract boolean canClose(Project project);
 

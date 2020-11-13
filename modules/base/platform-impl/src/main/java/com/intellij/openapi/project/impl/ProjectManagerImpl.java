@@ -25,7 +25,6 @@ import com.intellij.notification.NotificationsManager;
 import com.intellij.openapi.application.*;
 import com.intellij.openapi.application.impl.LaterInvocator;
 import com.intellij.openapi.components.StateStorage;
-import com.intellij.openapi.components.StateStorageException;
 import com.intellij.openapi.components.TrackingPathMacroSubstitutor;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.module.ModuleManager;
@@ -37,9 +36,7 @@ import com.intellij.openapi.project.ex.ProjectManagerEx;
 import com.intellij.openapi.startup.StartupManager;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.Couple;
-import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.openapi.util.ShutDownTracker;
-import com.intellij.openapi.util.ThrowableComputable;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -75,7 +72,6 @@ import consulo.util.dataholder.UserDataHolderEx;
 import gnu.trove.THashSet;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
-import org.jdom.JDOMException;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -407,66 +403,6 @@ public class ProjectManagerImpl extends ProjectManagerEx implements Disposable {
   private static boolean canCancelProjectLoading() {
     ProgressIndicator indicator = ProgressIndicatorProvider.getGlobalProgressIndicator();
     return !(indicator instanceof NonCancelableSection);
-  }
-
-  /**
-   * Converts and loads the project at the specified path.
-   *
-   * @param filePath the path to open the project.
-   * @return the project, or null if the user has cancelled opening the project.
-   */
-  @Override
-  @Nullable
-  public Project convertAndLoadProject(String filePath) throws IOException {
-    final String fp = toCanonicalName(filePath);
-    final ConversionResult conversionResult = ConversionService.getInstance().convert(fp);
-    if (conversionResult.openingIsCanceled()) {
-      return null;
-    }
-
-    final Project project;
-    try {
-      project = loadProjectWithProgress(filePath);
-      if (project == null) return null;
-    }
-    catch (IOException e) {
-      LOG.info(e);
-      throw e;
-    }
-    catch (Throwable t) {
-      LOG.info(t);
-      throw new IOException(t);
-    }
-
-    if (!conversionResult.conversionNotNeeded()) {
-      StartupManager.getInstance(project).registerPostStartupActivity(() -> conversionResult.postStartupActivity(project));
-    }
-    return project;
-  }
-
-  /**
-   * Opens the project at the specified path.
-   *
-   * @param filePath the path to open the project.
-   * @return the project, or null if the user has cancelled opening the project.
-   */
-  @Nullable
-  private Project loadProjectWithProgress(@Nonnull final String filePath) throws IOException {
-    final ProjectImpl project = createProject(null, toCanonicalName(filePath), false, false);
-    try {
-      myProgressManager.runProcessWithProgressSynchronously((ThrowableComputable<Project, IOException>)() -> {
-        initProject(project, null);
-        return project;
-      }, ProjectBundle.message("project.load.progress"), canCancelProjectLoading(), project);
-    }
-    catch (StateStorageException e) {
-      throw new IOException(e);
-    }
-    catch (ProcessCanceledException ignore) {
-      return null;
-    }
-
-    return project;
   }
 
   private void notifyProjectOpenFailed() {
