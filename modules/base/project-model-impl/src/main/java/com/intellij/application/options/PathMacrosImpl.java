@@ -15,18 +15,17 @@
  */
 package com.intellij.application.options;
 
-import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.PathMacros;
 import com.intellij.openapi.components.*;
 import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.logging.Logger;
 import gnu.trove.THashSet;
+import jakarta.inject.Singleton;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
-import jakarta.inject.Singleton;
 import java.util.*;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
@@ -73,10 +72,6 @@ public class PathMacrosImpl extends PathMacros implements PersistentStateCompone
 
   public PathMacrosImpl() {
     //setMacro(USER_HOME_MACRO_NAME, FileUtil.toSystemIndependentName(SystemProperties.getUserHome()));
-  }
-
-  public static PathMacrosImpl getInstanceEx() {
-    return (PathMacrosImpl)ApplicationManager.getApplication().getComponent(PathMacros.class);
   }
 
   @Override

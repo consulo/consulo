@@ -23,7 +23,7 @@ import java.util.Set;
 public abstract class PathMacros {
 
   public static PathMacros getInstance() {
-    return ApplicationManager.getApplication().getComponent(PathMacros.class);
+    return Application.get().getInstance(PathMacros.class);
   }
 
   public abstract Set<String> getAllMacroNames();

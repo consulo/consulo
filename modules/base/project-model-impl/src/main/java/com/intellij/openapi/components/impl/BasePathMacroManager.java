@@ -132,7 +132,7 @@ public class BasePathMacroManager extends PathMacroManager {
 
   public PathMacrosImpl getPathMacros() {
     if (myPathMacros == null) {
-      myPathMacros = PathMacrosImpl.getInstanceEx();
+      myPathMacros = (PathMacrosImpl)PathMacros.getInstance();
     }
 
     return myPathMacros;

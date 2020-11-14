@@ -2771,6 +2771,8 @@
 
     <projectService serviceInterface="com.intellij.application.options.codeStyle.cache.CodeStyleCachingService"
                     serviceImplementation="com.intellij.application.options.codeStyle.cache.CodeStyleCachingServiceImpl"/>
+
+    <applicationService serviceInterface="com.intellij.openapi.application.PathMacros" serviceImplementation="com.intellij.application.options.PathMacrosImpl"/>
   </extensions>
 
   <applicationListeners>

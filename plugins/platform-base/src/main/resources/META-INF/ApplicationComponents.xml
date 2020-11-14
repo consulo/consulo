@@ -61,11 +61,6 @@
     </component>
 
     <component>
-      <interface-class>com.intellij.openapi.application.PathMacros</interface-class>
-      <implementation-class>com.intellij.application.options.PathMacrosImpl</implementation-class>
-    </component>
-
-    <component>
       <implementation-class>com.intellij.diagnostic.PerformanceWatcher</implementation-class>
     </component>
 
