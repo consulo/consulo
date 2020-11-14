@@ -22,7 +22,7 @@ import consulo.desktop.util.awt.MorphValue;
 import consulo.desktop.util.awt.laf.GTKPlusUIUtil;
 import consulo.ide.ui.laf.LafWithIconLibrary;
 import consulo.ui.decorator.SwingUIDecorator;
-import consulo.ui.desktop.internal.image.DesktopStyledImage;
+import consulo.ui.desktop.internal.image.DesktopImage;
 import consulo.ui.image.IconLibraryManager;
 import consulo.ui.image.Image;
 import consulo.ui.impl.style.StyleImpl;
@@ -102,8 +102,8 @@ public class DesktopStyleImpl extends StyleImpl {
   @Nonnull
   @Override
   public Image getImage(@Nonnull Image image) {
-    if(image instanceof DesktopStyledImage) {
-      return ((DesktopStyledImage<?>)image).withTargetIconLibrary(getIconLibraryId(), this::getImage);
+    if(image instanceof DesktopImage) {
+      return ((DesktopImage<?>)image).copyWithTargetIconLibrary(getIconLibraryId(), this::getImage);
     }
     return image;
   }

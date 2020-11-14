@@ -170,6 +170,10 @@ public abstract class UIInternal {
 
   public abstract Image _ImageEffects_resize(Image original, int width, int height);
 
+  public Image _ImageEffects_resize(Image original, float scale) {
+    return original;
+  }
+
   public abstract MenuItem _MenuItem_create(String text);
 
   public abstract Menu _Menu_create(String text);

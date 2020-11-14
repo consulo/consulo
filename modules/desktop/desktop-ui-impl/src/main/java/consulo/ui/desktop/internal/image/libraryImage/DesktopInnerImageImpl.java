@@ -40,16 +40,32 @@ public abstract class DesktopInnerImageImpl<T extends DesktopInnerImageImpl<T>> 
 
   protected java.awt.Image myCachedImage;
 
-  protected DesktopInnerImageImpl(int width, int height, @Nullable Supplier<ImageFilter> imageFilterSupplier) {
+  // additional scale. in most cases it's 1
+  protected float myScale;
+
+  protected DesktopInnerImageImpl(int width, int height, float scale, @Nullable Supplier<ImageFilter> imageFilterSupplier) {
     myWidth = width;
     myHeight = height;
+    myScale = scale;
     myFilter = imageFilterSupplier;
 
     myGrayedImageValue = NotNullLazyValue.createValue(() -> withFilter(() -> UIUtil.getGrayFilter(DarkThemeCalculator.isDark())));
   }
 
   @Nonnull
+  @Override
+  public Image copyWithScale(float scale) {
+    if (scale == 1f) {
+      return this;
+    }
+    return withScale(scale);
+  }
+
+  @Nonnull
   protected abstract T withFilter(@Nullable Supplier<ImageFilter> filter);
+
+  @Nonnull
+  protected abstract T withScale(float scale);
 
   @Nonnull
   protected abstract java.awt.Image calcImage();
@@ -63,7 +79,7 @@ public abstract class DesktopInnerImageImpl<T extends DesktopInnerImageImpl<T>> 
   @Override
   public void paintIcon(Component c, Graphics originalGraphics, int x, int y) {
     JBUI.ScaleContext ctx = JBUI.ScaleContext.create((Graphics2D)originalGraphics);
-    
+
     if (updateScaleContext(ctx)) {
       myCachedImage = null;
     }
@@ -104,11 +120,11 @@ public abstract class DesktopInnerImageImpl<T extends DesktopInnerImageImpl<T>> 
 
   @Override
   public int getHeight() {
-    return JBUI.scale(myHeight);
+    return (int)Math.ceil(JBUI.scale(myHeight) * myScale);
   }
 
   @Override
   public int getWidth() {
-    return JBUI.scale(myWidth);
+    return (int)Math.ceil(JBUI.scale(myWidth) * myScale);
   }
 }

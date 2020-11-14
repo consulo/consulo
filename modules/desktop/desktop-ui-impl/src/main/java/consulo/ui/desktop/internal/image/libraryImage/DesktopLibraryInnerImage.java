@@ -16,4 +16,9 @@ public interface DesktopLibraryInnerImage extends Image {
 
   @Nonnull
   java.awt.Image toAWTImage();
+
+  @Nonnull
+  default Image copyWithScale(float scale) {
+    return this;
+  }
 }

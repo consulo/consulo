@@ -50,6 +50,8 @@ import com.intellij.util.messages.MessageBusConnection;
 import consulo.disposer.Disposer;
 import consulo.fileEditor.impl.text.TextEditorProvider;
 import consulo.logging.Logger;
+import consulo.ui.image.Image;
+import consulo.ui.image.ImageEffects;
 import org.intellij.lang.annotations.JdkConstants;
 import javax.annotation.Nonnull;
 
@@ -321,11 +323,11 @@ public final class EditorUtil {
     return ComplementaryFontsRegistry.getFontAbleToDisplay(c, style, colorsScheme.getFontPreferences(), FontInfo.getFontRenderContext(editor.getContentComponent()));
   }
 
-  public static Icon scaleIconAccordingEditorFont(Icon icon, Editor editor) {
-    if (Registry.is("editor.scale.gutter.icons") && editor instanceof DesktopEditorImpl && icon instanceof ScalableIcon) {
+  public static Image scaleIconAccordingEditorFont(@Nonnull Image icon, Editor editor) {
+    if (Registry.is("editor.scale.gutter.icons") && editor instanceof DesktopEditorImpl) {
       float scale = ((DesktopEditorImpl)editor).getScale();
       if (Math.abs(1f - scale) > 0.1f) {
-        return ((ScalableIcon)icon).scale(scale);
+        return ImageEffects.resize(icon, scale);
       }
     }
     return icon;

@@ -25,9 +25,11 @@ import com.intellij.openapi.editor.colors.EditorColorsScheme;
 import com.intellij.openapi.editor.colors.EditorFontType;
 import com.intellij.openapi.editor.colors.FontPreferences;
 import com.intellij.openapi.editor.ex.util.EditorUIUtil;
+import com.intellij.openapi.editor.ex.util.EditorUtil;
 import com.intellij.openapi.editor.impl.ComplementaryFontsRegistry;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.util.TextRange;
+import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.codeStyle.NameUtil;
 import com.intellij.ui.*;
@@ -418,15 +420,19 @@ public class LookupCellRenderer implements ListCellRenderer {
   }
 
   public static Image augmentIcon(@Nullable Editor editor, @Nullable Image icon, @Nonnull Image standard) {
-    //if (Registry.is("editor.scale.completion.icons")) {
-    //  standard = EditorUtil.scaleIconAccordingEditorFont(standard, editor);
-    //  icon = EditorUtil.scaleIconAccordingEditorFont(icon, editor);
-    //}
+    if (Registry.is("editor.scale.completion.icons")) {
+      standard = EditorUtil.scaleIconAccordingEditorFont(standard, editor);
+
+      if (icon != null) {
+        icon = EditorUtil.scaleIconAccordingEditorFont(icon, editor);
+      }
+    }
+
     if (icon == null) {
       return standard;
     }
 
-    if(icon.getWidth() == standard.getWidth() && icon.getHeight() == standard.getHeight()) {
+    if (icon.getWidth() == standard.getWidth() && icon.getHeight() == standard.getHeight()) {
       return icon;
     }
 

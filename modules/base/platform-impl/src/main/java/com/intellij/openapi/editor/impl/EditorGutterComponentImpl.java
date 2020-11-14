@@ -56,6 +56,7 @@ import com.intellij.util.ui.*;
 import com.intellij.util.ui.JBValue.JBValueGroup;
 import com.intellij.util.ui.accessibility.ScreenReader;
 import consulo.awt.TargetAWT;
+import consulo.ui.image.ImageEffects;
 import consulo.util.dataholder.Key;
 import gnu.trove.*;
 import org.jetbrains.annotations.NonNls;
@@ -977,7 +978,7 @@ class EditorGutterComponentImpl extends EditorGutterComponentEx implements Mouse
     // => add one line height to make height correct (bottom edge of the highlighted area)
     endY += myEditor.getLineHeight();
 
-    LineMarkerRenderer renderer = ObjectUtils.assertNotNull(highlighter.getLineMarkerRenderer());
+    LineMarkerRenderer renderer = ObjectUtil.assertNotNull(highlighter.getLineMarkerRenderer());
     LineMarkerRendererEx.Position position = getLineMarkerPosition(renderer);
 
     int w;
@@ -1019,8 +1020,12 @@ class EditorGutterComponentImpl extends EditorGutterComponentEx implements Mouse
   }
 
   Icon scaleIcon(consulo.ui.image.Image icon) {
+    return TargetAWT.to(scaleImage(icon));
+  }
+
+  consulo.ui.image.Image scaleImage(consulo.ui.image.Image icon) {
     float scale = getEditorScaleFactor();
-    return scale == 1 ? TargetAWT.to(icon) : IconUtil.scale(TargetAWT.to(icon), this, scale);
+    return scale == 1f ? icon : ImageEffects.resize(icon, scale);
   }
 
   private int scaleWidth(int width) {

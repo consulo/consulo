@@ -18,6 +18,7 @@ package consulo.ui.desktop.internal.image;
 import com.intellij.util.ui.JBUI;
 import consulo.awt.TargetAWT;
 import consulo.ui.image.Image;
+import consulo.ui.image.ImageEffects;
 
 import javax.annotation.Nonnull;
 import java.awt.*;
@@ -30,7 +31,7 @@ import java.util.function.Function;
  * <p>
  * Light version of {@link DesktopHeavyLayeredImageImpl} without calculating sizes inside constructor, and without support shift icons
  */
-public class DesktopLayeredImageImpl extends JBUI.RasterJBIcon implements Image, DesktopStyledImage<DesktopLayeredImageImpl> {
+public class DesktopLayeredImageImpl extends JBUI.RasterJBIcon implements Image, DesktopImage<DesktopLayeredImageImpl> {
   private static final int WIDTH = 0;
   private static final int HEIGHT = 1;
 
@@ -62,11 +63,11 @@ public class DesktopLayeredImageImpl extends JBUI.RasterJBIcon implements Image,
       int h = image.getHeight();
       int w = image.getWidth();
 
-      if(h > height) {
+      if (h > height) {
         height = h;
       }
 
-      if(w > width) {
+      if (w > width) {
         width = w;
       }
     }
@@ -102,10 +103,20 @@ public class DesktopLayeredImageImpl extends JBUI.RasterJBIcon implements Image,
 
   @Nonnull
   @Override
-  public DesktopLayeredImageImpl withTargetIconLibrary(@Nonnull String iconLibraryId, @Nonnull Function<Image, Image> converter) {
+  public DesktopLayeredImageImpl copyWithTargetIconLibrary(@Nonnull String iconLibraryId, @Nonnull Function<Image, Image> converter) {
     Image[] converted = new Image[myImages.length];
     for (int i = 0; i < myImages.length; i++) {
       converted[i] = converter.apply(myImages[i]);
+    }
+    return new DesktopLayeredImageImpl(converted);
+  }
+
+  @Nonnull
+  @Override
+  public DesktopLayeredImageImpl copyWithScale(float scale) {
+    Image[] converted = new Image[myImages.length];
+    for (int i = 0; i < myImages.length; i++) {
+      converted[i] = ImageEffects.resize(myImages[i], scale);
     }
     return new DesktopLayeredImageImpl(converted);
   }

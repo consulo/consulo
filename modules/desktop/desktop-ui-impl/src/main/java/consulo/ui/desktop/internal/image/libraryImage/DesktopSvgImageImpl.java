@@ -26,9 +26,19 @@ public class DesktopSvgImageImpl extends DesktopInnerImageImpl<DesktopSvgImageIm
   private final SVGDiagram myX2Diagram;
 
   public DesktopSvgImageImpl(@Nonnull SVGDiagram x1Diagram, @Nullable SVGDiagram x2Diagram, int width, int height, @Nullable Supplier<ImageFilter> imageFilterSupplier) {
-    super(width, height, imageFilterSupplier);
+    this(x1Diagram, x2Diagram, width, height, 1f, imageFilterSupplier);
+  }
+
+  public DesktopSvgImageImpl(@Nonnull SVGDiagram x1Diagram, @Nullable SVGDiagram x2Diagram, int width, int height, float scale, @Nullable Supplier<ImageFilter> imageFilterSupplier) {
+    super(width, height, scale, imageFilterSupplier);
     myX1Diagram = x1Diagram;
     myX2Diagram = x2Diagram;
+  }
+
+  @Nonnull
+  @Override
+  protected DesktopSvgImageImpl withScale(float scale) {
+    return new DesktopSvgImageImpl(myX1Diagram, myX2Diagram, myWidth, myHeight, scale, myFilter);
   }
 
   @Nonnull
@@ -41,16 +51,20 @@ public class DesktopSvgImageImpl extends DesktopInnerImageImpl<DesktopSvgImageIm
   @SuppressWarnings("UndesirableClassUsage")
   @Nonnull
   protected java.awt.Image calcImage() {
-    float width = myWidth;
-    float height = myHeight;
+    float width = myWidth * myScale;
+    float height = myHeight * myScale;
 
     SVGDiagram targetDiagram = myX1Diagram;
     double scale = 1f;
     if ((scale = getScale(JBUI.ScaleType.SYS_SCALE)) > 1f) {
-      targetDiagram = myX2Diagram != null ? myX2Diagram : targetDiagram;
-
       width *= scale;
       height *= scale;
+    }
+
+    float ideScale = JBUI.scale(1f);
+
+    if(scale > 1f || myScale > 1.5f) {
+      targetDiagram = myX2Diagram != null ? myX2Diagram : targetDiagram;
     }
 
     JBHiDPIScaledImage image = new JBHiDPIScaledImage(scale, width, height, BufferedImage.TYPE_INT_ARGB, PaintUtil.RoundingMode.ROUND);
@@ -59,9 +73,7 @@ public class DesktopSvgImageImpl extends DesktopInnerImageImpl<DesktopSvgImageIm
     paintIcon(targetDiagram, g, 0, 0, width, height);
     g.dispose();
 
-    float ideScale = JBUI.scale(1f);
-
-    image = image.scale(ideScale);
+    image = image.scale(ideScale * myScale);
 
     java.awt.Image toPaintImage = image;
     if (myFilter != null) {

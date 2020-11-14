@@ -16,11 +16,12 @@
 package consulo.ui.desktop.internal.image.libraryImage;
 
 import com.intellij.ui.JBColor;
+import com.intellij.util.ui.ImageUtil;
 import com.intellij.util.ui.JBUI;
 import consulo.awt.TargetAWT;
 import consulo.desktop.util.awt.UIModificationTracker;
 import consulo.ui.desktop.internal.image.DesktopBaseLazyImageImpl;
-import consulo.ui.desktop.internal.image.DesktopStyledImage;
+import consulo.ui.desktop.internal.image.DesktopImage;
 import consulo.ui.image.IconLibraryManager;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
@@ -40,7 +41,7 @@ import java.util.function.Function;
  * @author VISTALL
  * @since 2020-09-27
  */
-public class DesktopImageKeyImpl extends DesktopBaseLazyImageImpl implements ImageKey, Icon, DesktopLibraryInnerImage, DesktopStyledImage<DesktopImageKeyImpl> {
+public class DesktopImageKeyImpl extends DesktopBaseLazyImageImpl implements ImageKey, Icon, DesktopLibraryInnerImage, DesktopImage<DesktopImageKeyImpl> {
   private static final BaseIconLibraryManager ourLibraryManager = (BaseIconLibraryManager)IconLibraryManager.get();
   private static final UIModificationTracker ourUIModificationTracker = UIModificationTracker.getInstance();
 
@@ -50,13 +51,19 @@ public class DesktopImageKeyImpl extends DesktopBaseLazyImageImpl implements Ima
   private final String myImageId;
   private final int myWidth;
   private final int myHeight;
+  private final float myScale;
 
   public DesktopImageKeyImpl(@Nullable String forceIconLibraryId, String groupId, String imageId, int width, int height) {
+    this(forceIconLibraryId, groupId, imageId, width, height, 1f);
+  }
+
+  public DesktopImageKeyImpl(@Nullable String forceIconLibraryId, String groupId, String imageId, int width, int height, float scale) {
     myForceIconLibraryId = forceIconLibraryId;
     myGroupId = groupId;
     myImageId = imageId;
     myWidth = width;
     myHeight = height;
+    myScale = scale;
   }
 
   @Override
@@ -66,12 +73,12 @@ public class DesktopImageKeyImpl extends DesktopBaseLazyImageImpl implements Ima
 
   @Override
   public int getIconHeight() {
-    return JBUI.scale(myHeight);
+    return (int)Math.ceil(JBUI.scale(myHeight) * myScale);
   }
 
   @Override
   public int getIconWidth() {
-    return JBUI.scale(myWidth);
+    return (int)Math.ceil(JBUI.scale(myWidth) * myScale);
   }
 
   @Nonnull
@@ -80,12 +87,23 @@ public class DesktopImageKeyImpl extends DesktopBaseLazyImageImpl implements Ima
     Image icon = ourLibraryManager.getIcon(myForceIconLibraryId, myGroupId, myImageId, myWidth, myHeight);
     if (icon instanceof DesktopLibraryInnerImage) {
       ((DesktopLibraryInnerImage)icon).dropCache();
+
+      icon = ((DesktopLibraryInnerImage)icon).copyWithScale(myScale);
     }
 
     if (icon == null) {
-      icon = ImageEffects.colorFilled(myWidth, myHeight, StandardColors.RED);
+      icon = ImageEffects.colorFilled(getWidth(), getHeight(), StandardColors.RED);
     }
     return TargetAWT.to(icon);
+  }
+
+  @Nonnull
+  @Override
+  public DesktopImageKeyImpl copyWithScale(float scale) {
+    if (scale == 1f) {
+      return this;
+    }
+    return new DesktopImageKeyImpl(myForceIconLibraryId, myGroupId, myImageId, myWidth, myHeight, scale);
   }
 
   @Nonnull
@@ -94,6 +112,8 @@ public class DesktopImageKeyImpl extends DesktopBaseLazyImageImpl implements Ima
     Image icon = ourLibraryManager.getIcon(myForceIconLibraryId, myGroupId, myImageId, myWidth, myHeight);
 
     if (icon instanceof DesktopLibraryInnerImage) {
+      icon = ((DesktopLibraryInnerImage)icon).copyWithScale(myScale);
+
       return ((DesktopLibraryInnerImage)icon).makeGrayed();
     }
 
@@ -116,7 +136,7 @@ public class DesktopImageKeyImpl extends DesktopBaseLazyImageImpl implements Ima
     g.fillRect(0, 0, getWidth(), getHeight());
     g.dispose();
 
-    return b;
+    return ImageUtil.scaleImage(b, myScale);
   }
 
   @Nonnull
@@ -138,7 +158,7 @@ public class DesktopImageKeyImpl extends DesktopBaseLazyImageImpl implements Ima
 
   @Nonnull
   @Override
-  public DesktopImageKeyImpl withTargetIconLibrary(@Nonnull String targetIconLibrary, @Nonnull Function<Image, Image> converter) {
+  public DesktopImageKeyImpl copyWithTargetIconLibrary(@Nonnull String targetIconLibrary, @Nonnull Function<Image, Image> converter) {
     return new DesktopImageKeyImpl(targetIconLibrary, myGroupId, myImageId, myWidth, myHeight);
   }
 

@@ -68,7 +68,11 @@ public class DesktopAWTImageImpl extends DesktopInnerImageImpl<DesktopAWTImageIm
   private final ImageBytes myX2Data;
 
   public DesktopAWTImageImpl(@Nonnull ImageBytes x1Data, @Nullable ImageBytes x2Data, int width, int height, @Nullable Supplier<ImageFilter> imageFilterSupplier) {
-    super(width, height, imageFilterSupplier);
+    this(x1Data, x2Data, width, height, 1f, imageFilterSupplier);
+  }
+
+  public DesktopAWTImageImpl(@Nonnull ImageBytes x1Data, @Nullable ImageBytes x2Data, int width, int height, float scale, @Nullable Supplier<ImageFilter> imageFilterSupplier) {
+    super(width, height, scale, imageFilterSupplier);
 
     myX1Data = x1Data;
     myX2Data = x2Data;
@@ -80,13 +84,19 @@ public class DesktopAWTImageImpl extends DesktopInnerImageImpl<DesktopAWTImageIm
     return new DesktopAWTImageImpl(myX1Data, myX2Data, myWidth, myHeight, filter);
   }
 
+  @Nonnull
+  @Override
+  protected DesktopAWTImageImpl withScale(float scale) {
+    return new DesktopAWTImageImpl(myX1Data, myX2Data, myWidth, myHeight, scale, myFilter);
+  }
+
   @SuppressWarnings("UndesirableClassUsage")
   @Nonnull
   @Override
   protected Image calcImage() {
     ImageBytes target = myX1Data;
-    double scale = 1f;
-    if ((scale = getScale(JBUI.ScaleType.SYS_SCALE)) > 1f) {
+    double scale = getScale(JBUI.ScaleType.SYS_SCALE);
+    if (scale > 1f || myScale > 1.5f) {
       target = myX2Data != null ? myX2Data : target;
     }
 
@@ -109,16 +119,16 @@ public class DesktopAWTImageImpl extends DesktopInnerImageImpl<DesktopAWTImageIm
     java.awt.Image toPaintImage = image;
     if (myFilter != null) {
       ImageFilter imageFilter = myFilter.get();
-      
+
       toPaintImage = ImageUtil.filter(toPaintImage, imageFilter);
 
       if (ideScale > 1f) {
         toPaintImage = RetinaImage.createFrom(toPaintImage, scale, null);
       }
-      
+
       toPaintImage = ImageUtil.ensureHiDPI(toPaintImage, JBUI.ScaleContext.create(JBUI.Scale.create(getScale(JBUI.ScaleType.SYS_SCALE), JBUI.ScaleType.SYS_SCALE)));
 
-      if(toPaintImage instanceof JBHiDPIScaledImage) {
+      if (toPaintImage instanceof JBHiDPIScaledImage) {
         toPaintImage = ((JBHiDPIScaledImage)toPaintImage).scale(getWidth(), getHeight());
       }
     }

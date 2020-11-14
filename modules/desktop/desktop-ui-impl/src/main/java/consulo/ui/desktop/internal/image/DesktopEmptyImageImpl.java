@@ -27,7 +27,7 @@ import java.util.concurrent.ConcurrentMap;
  * @author VISTALL
  * @since 2018-05-07
  */
-public class DesktopEmptyImageImpl extends EmptyIcon implements Image {
+public class DesktopEmptyImageImpl extends EmptyIcon implements Image, DesktopImage<DesktopEmptyImageImpl> {
   private static final ConcurrentMap<Pair<Integer, Integer>, DesktopEmptyImageImpl> cache = ConcurrentFactoryMap.createMap(p -> new DesktopEmptyImageImpl(p.getFirst(), p.getSecond()));
 
   @Nonnull
@@ -48,5 +48,11 @@ public class DesktopEmptyImageImpl extends EmptyIcon implements Image {
   @Override
   public int getWidth() {
     return getIconWidth();
+  }
+
+  @Nonnull
+  @Override
+  public DesktopEmptyImageImpl copyWithScale(float scale) {
+    return get((int)Math.ceil(getWidth() * scale), (int)Math.ceil(getHeight() * scale));
   }
 }

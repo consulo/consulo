@@ -50,6 +50,14 @@ public final class ImageEffects {
     return UIInternal.get()._ImageEffects_resize(original, width, height);
   }
 
+  /**
+   * Return copy image with scaling. {@link Image#getHeight} and {@link Image#getWidth()} will return originalValue * scale
+   */
+  @Nonnull
+  public static Image resize(@Nonnull Image original, float scale) {
+    return UIInternal.get()._ImageEffects_resize(original, scale);
+  }
+
   @Nonnull
   public static Image transparent(@Nonnull Image original) {
     return transparent(original, .5f);

@@ -37,8 +37,8 @@ public class DesktopIconLibraryManagerImpl extends BaseIconLibraryManager {
   @Nonnull
   @Override
   public Image forceChangeLibrary(@Nonnull String libraryId, @Nonnull Image image) {
-    if(image instanceof DesktopStyledImage) {
-      return ((DesktopStyledImage<?>)image).withTargetIconLibrary(libraryId, it -> forceChangeLibrary(libraryId, image));
+    if(image instanceof DesktopImage) {
+      return ((DesktopImage<?>)image).copyWithTargetIconLibrary(libraryId, it -> forceChangeLibrary(libraryId, image));
     }
     return image;
   }

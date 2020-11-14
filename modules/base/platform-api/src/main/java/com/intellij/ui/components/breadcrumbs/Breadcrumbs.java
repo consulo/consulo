@@ -11,15 +11,12 @@ import com.intellij.ui.paint.EffectPainter;
 import com.intellij.ui.paint.RectanglePainter;
 import com.intellij.ui.scale.JBUIScale;
 import com.intellij.util.IconUtil;
-import com.intellij.util.ui.AbstractLayoutManager;
-import com.intellij.util.ui.JBInsets;
-import com.intellij.util.ui.MouseEventHandler;
-import com.intellij.util.ui.UIUtil;
+import com.intellij.util.ui.*;
 import consulo.awt.TargetAWT;
 import consulo.ui.image.Image;
 import org.intellij.lang.annotations.JdkConstants.FontStyle;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.InputEvent;

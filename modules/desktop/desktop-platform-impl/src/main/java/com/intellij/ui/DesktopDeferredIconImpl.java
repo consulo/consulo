@@ -37,7 +37,9 @@ import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import consulo.awt.TargetAWT;
 import consulo.logging.Logger;
+import consulo.ui.desktop.internal.image.DesktopImage;
 import consulo.ui.image.Image;
+import consulo.ui.image.ImageEffects;
 import consulo.util.lang.ref.SimpleReference;
 
 import javax.annotation.Nonnull;
@@ -51,18 +53,21 @@ import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 
-public class DesktopDeferredIconImpl<T> extends JBUI.CachingScalableJBIcon<DesktopDeferredIconImpl<T>> implements DeferredIcon, RetrievableIcon, consulo.ui.image.Image {
+public class DesktopDeferredIconImpl<T> extends JBUI.CachingScalableJBIcon<DesktopDeferredIconImpl<T>>
+        implements DeferredIcon, DesktopImage<DesktopDeferredIconImpl<T>>, RetrievableIcon, consulo.ui.image.Image {
   private static final consulo.ui.image.Image EMPTY_ICON = Image.empty(16);
 
   private static final Logger LOG = Logger.getInstance(DesktopDeferredIconImpl.class);
   private static final int MIN_AUTO_UPDATE_MILLIS = 950;
   private static final RepaintScheduler ourRepaintScheduler = new RepaintScheduler();
   @Nonnull
-  private final consulo.ui.image.Image myDelegateIcon;
+  private consulo.ui.image.Image myDelegateIcon;
   private volatile consulo.ui.image.Image myScaledDelegateIcon;
   private Function<T, consulo.ui.image.Image> myEvaluator;
   private volatile boolean myIsScheduled;
   private final T myParam;
+
+  protected float myEvaluateScale = 1f;
 
   private final boolean myNeedReadAction;
   private boolean myDone;
@@ -101,6 +106,24 @@ public class DesktopDeferredIconImpl<T> extends JBUI.CachingScalableJBIcon<Deskt
     if (getScale() != scale && myDelegateIcon instanceof ScalableIcon) {
       myScaledDelegateIcon = TargetAWT.from(((ScalableIcon)myDelegateIcon).scale(scale));
       super.scale(scale);
+    }
+    return this;
+  }
+
+  @Nonnull
+  @Override
+  // special case - we don't return copy of that icon
+  public DesktopDeferredIconImpl<T> copyWithScale(float scale) {
+    if (scale == 1f) {
+      return this;
+    }
+
+    // one time scale only
+    if(myEvaluateScale == 1f) {
+      Image delegate = ImageEffects.resize(myDelegateIcon, scale);
+      myDelegateIcon = delegate;
+      myScaledDelegateIcon = delegate;
+      myEvaluateScale = scale;
     }
     return this;
   }
@@ -309,12 +332,8 @@ public class DesktopDeferredIconImpl<T> extends JBUI.CachingScalableJBIcon<Deskt
       checkDoesntReferenceThis(result);
     }
 
-    Icon icon = TargetAWT.to(result);
-
-    if (getScale() != 1f && icon instanceof ScalableIcon) {
-      icon = ((ScalableIcon)result).scale(getScale());
-    }
-    return icon;
+    result = ImageEffects.resize(result, myEvaluateScale);
+    return TargetAWT.to(result);
   }
 
   @Nonnull
@@ -331,12 +350,7 @@ public class DesktopDeferredIconImpl<T> extends JBUI.CachingScalableJBIcon<Deskt
       checkDoesntReferenceThis(result);
     }
 
-    Icon icon = TargetAWT.to(result);
-
-    if (getScale() != 1f && icon instanceof ScalableIcon) {
-      icon = ((ScalableIcon)result).scale(getScale());
-    }
-    return TargetAWT.from(icon);
+    return ImageEffects.resize(result, myEvaluateScale);
   }
 
   private void checkDoesntReferenceThis(final consulo.ui.image.Image icon) {
@@ -445,7 +459,7 @@ public class DesktopDeferredIconImpl<T> extends JBUI.CachingScalableJBIcon<Deskt
 
   @Override
   public boolean equals(Object obj) {
-    if(obj instanceof Image) {
+    if (obj instanceof Image) {
       return equalIcons(this, (Image)obj);
     }
     return false;

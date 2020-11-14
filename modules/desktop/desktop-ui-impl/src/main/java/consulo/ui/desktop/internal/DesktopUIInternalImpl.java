@@ -30,6 +30,7 @@ import consulo.ui.MenuItem;
 import consulo.ui.Window;
 import consulo.ui.*;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.color.ColorValue;
 import consulo.ui.desktop.internal.image.*;
 import consulo.ui.desktop.internal.image.libraryImage.DesktopAWTImageImpl;
 import consulo.ui.desktop.internal.image.libraryImage.DesktopImageKeyImpl;
@@ -50,8 +51,6 @@ import consulo.ui.internal.UIInternal;
 import consulo.ui.layout.*;
 import consulo.ui.model.ListModel;
 import consulo.ui.model.MutableListModel;
-import consulo.ui.color.ColorValue;
-import consulo.ui.StaticPosition;
 import consulo.ui.style.StyleManager;
 
 import javax.annotation.Nonnull;
@@ -157,6 +156,14 @@ public class DesktopUIInternalImpl extends UIInternal {
   @Override
   public Image _ImageEffects_resize(Image original, int width, int height) {
     return new DesktopResizeImageImpl(TargetAWT.to(original), width, height);
+  }
+
+  @Override
+  public Image _ImageEffects_resize(Image original, float scale) {
+    if(original instanceof DesktopImage) {
+      return ((DesktopImage)original).copyWithScale(scale);
+    }
+    return original;
   }
 
   @Override
