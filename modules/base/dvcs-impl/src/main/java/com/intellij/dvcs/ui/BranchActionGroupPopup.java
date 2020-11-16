@@ -151,7 +151,7 @@ public class BranchActionGroupPopup extends FlatSpeedSearchPopup {
       }
     };
     popupWindow.addComponentListener(windowListener);
-    addPopupListener(new JBPopupAdapter() {
+    addListener(new JBPopupAdapter() {
       @Override
       public void onClosed(@Nonnull LightweightWindowEvent event) {
         popupWindow.removeComponentListener(windowListener);

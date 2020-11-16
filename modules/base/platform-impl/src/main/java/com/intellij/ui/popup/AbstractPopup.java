@@ -7,7 +7,6 @@ import com.intellij.ide.*;
 import com.intellij.ide.actions.WindowAction;
 import com.intellij.ide.ui.PopupLocationTracker;
 import com.intellij.ide.ui.ScreenAreaConsumer;
-import consulo.disposer.Disposable;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.actionSystem.DataProvider;
@@ -15,8 +14,6 @@ import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.application.TransactionGuard;
-import consulo.disposer.Disposer;
-import consulo.logging.Logger;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.project.Project;
@@ -42,19 +39,25 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.WeakList;
 import com.intellij.util.ui.*;
 import com.intellij.util.ui.accessibility.AccessibleContextUtil;
+import consulo.annotation.DeprecationInfo;
 import consulo.application.TransactionGuardEx;
 import consulo.awt.TargetAWT;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
+import consulo.logging.Logger;
 import consulo.ui.image.Image;
 import consulo.util.dataholder.Key;
-import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-import java.util.*;
+import java.util.Set;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.Supplier;
 
 import static java.awt.event.MouseEvent.*;
@@ -88,7 +91,7 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
   private Computable<Boolean> myCallBack;
   private Project myProject;
   private boolean myCancelOnClickOutside;
-  private Set<JBPopupListener> myListeners;
+  private final List<JBPopupListener> myListeners = new CopyOnWriteArrayList<>();
   private boolean myUseDimServiceForXYLocation;
   private MouseChecker myCancelOnMouseOutCallback;
   private Canceller myMouseOutCanceller;
@@ -319,7 +322,7 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
     myCallBack = callback;
     myCancelOnClickOutside = cancelOnClickOutside;
     myCancelOnMouseOutCallback = cancelOnMouseOutCallback;
-    myListeners = listeners == null ? new HashSet<>() : listeners;
+    myListeners.addAll(listeners);
     myUseDimServiceForXYLocation = useDimServiceForXYLocation;
     myCancelOnWindow = cancelOnWindow;
     myMinSize = minSize;
@@ -612,6 +615,8 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
     return new Point(preferredBounds.x, adjustedY);
   }
 
+  @Deprecated
+  @DeprecationInfo("Use #addListener()")
   protected void addPopupListener(JBPopupListener listener) {
     myListeners.add(listener);
   }
@@ -1423,7 +1428,7 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
     myPreferredFocusedComponent = null;
     myComponent = null;
     myCallBack = null;
-    myListeners = null;
+    myListeners.clear();
 
     if (myMouseOutCanceller != null) {
       final Toolkit toolkit = Toolkit.getDefaultToolkit();
@@ -1535,7 +1540,7 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
 
     @Nullable
     @Override
-    public Object getData(@Nonnull @NonNls Key dataId) {
+    public Object getData(@Nonnull Key dataId) {
       return myDataProvider != null ? myDataProvider.getData(dataId) : null;
     }
 
@@ -1765,8 +1770,7 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
     if (myUserData != null) {
       for (Object o : myUserData) {
         if (userDataClass.isInstance(o)) {
-          @SuppressWarnings("unchecked") T t = (T)o;
-          return t;
+          return userDataClass.cast(o);
         }
       }
     }
