@@ -322,7 +322,9 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
     myCallBack = callback;
     myCancelOnClickOutside = cancelOnClickOutside;
     myCancelOnMouseOutCallback = cancelOnMouseOutCallback;
-    myListeners.addAll(listeners);
+    if(listeners != null) {
+      myListeners.addAll(listeners);
+    }
     myUseDimServiceForXYLocation = useDimServiceForXYLocation;
     myCancelOnWindow = cancelOnWindow;
     myMinSize = minSize;
