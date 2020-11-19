@@ -102,7 +102,7 @@ public class PluginDescriptorLoader {
           descriptors.put(entry.getKey(), optionalDescriptor);
         }
         else {
-          containerLogger.info("Cannot find optional descriptor " + optionalDescriptorName);
+          containerLogger.info("Cannot find optional descriptor " + optionalDescriptorName + ", Plugin: " + descriptor);
         }
       }
       descriptor.setOptionalDescriptors(descriptors);
