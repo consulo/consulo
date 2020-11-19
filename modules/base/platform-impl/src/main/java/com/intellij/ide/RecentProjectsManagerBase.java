@@ -31,6 +31,7 @@ import com.intellij.openapi.roots.ModuleRootListener;
 import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.SystemInfo;
+import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -55,7 +56,7 @@ import java.util.*;
  * @author yole
  * @author Konstantin Bulenkov
  */
-public abstract class RecentProjectsManagerBase extends RecentProjectsManager implements PersistentStateComponent<RecentProjectsManagerBase.State> {
+public class RecentProjectsManagerBase extends RecentProjectsManager implements PersistentStateComponent<RecentProjectsManagerBase.State> {
   private static final int MAX_PROJECTS_IN_MAIN_MENU = 6;
 
   public static boolean isFileSystemPath(String path) {
@@ -350,6 +351,7 @@ public abstract class RecentProjectsManagerBase extends RecentProjectsManager im
     //return null;
   }
 
+  @RequiredReadAction
   private void markPathRecent(String path, @Nullable Project project) {
     synchronized (myStateLock) {
       if (path.endsWith(File.separator)) {
@@ -365,7 +367,9 @@ public abstract class RecentProjectsManagerBase extends RecentProjectsManager im
         group.save(projects);
       }
       myState.additionalInfo.remove(path);
-      myState.additionalInfo.put(path, RecentProjectMetaInfo.create(project));
+      if(project != null) {
+        myState.additionalInfo.put(path, RecentProjectMetaInfo.create(project));
+      }
     }
   }
 
@@ -381,7 +385,10 @@ public abstract class RecentProjectsManagerBase extends RecentProjectsManager im
   }
 
   @Nullable
-  protected abstract String getProjectPath(@Nonnull Project project);
+  private String getProjectPath(@Nonnull Project project) {
+    final VirtualFile baseDirVFile = project.getBaseDir();
+    return baseDirVFile != null ? FileUtil.toSystemDependentName(baseDirVFile.getPath()) : null;
+  }
 
   public static boolean isValidProjectPath(String projectPath) {
     final File file = new File(projectPath);
@@ -502,14 +509,11 @@ public abstract class RecentProjectsManagerBase extends RecentProjectsManager im
   }
 
   public static class RecentProjectMetaInfo {
-    public List<String> extensions = new ArrayList<>();
+    public Set<String> extensions = new HashSet<>();
 
     @RequiredReadAction
-    public static RecentProjectMetaInfo create(@Nullable Project project) {
+    public static RecentProjectMetaInfo create(@Nonnull Project project) {
       RecentProjectMetaInfo info = new RecentProjectMetaInfo();
-      if (project == null) {
-        return info;
-      }
 
       ModuleManager moduleManager = ModuleManager.getInstance(project);
       for (Module module : moduleManager.getModules()) {

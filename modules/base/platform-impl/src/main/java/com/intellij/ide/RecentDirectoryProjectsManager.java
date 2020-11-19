@@ -36,11 +36,4 @@ public class RecentDirectoryProjectsManager extends RecentProjectsManagerBase {
   public RecentDirectoryProjectsManager(Application application) {
     super(application);
   }
-
-  @Override
-  @Nullable
-  protected String getProjectPath(@Nonnull Project project) {
-    final VirtualFile baseDirVFile = project.getBaseDir();
-    return baseDirVFile != null ? FileUtil.toSystemDependentName(baseDirVFile.getPath()) : null;
-  }
 }
