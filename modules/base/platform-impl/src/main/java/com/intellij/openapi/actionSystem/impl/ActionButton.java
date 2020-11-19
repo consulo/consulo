@@ -32,9 +32,9 @@ import com.intellij.util.ui.accessibility.ScreenReader;
 import consulo.annotation.DeprecationInfo;
 import consulo.awt.TargetAWT;
 import consulo.localize.LocalizeValue;
+import consulo.ui.Size;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
-import consulo.ui.Size;
 import consulo.util.dataholder.Key;
 import kava.beans.PropertyChangeEvent;
 import kava.beans.PropertyChangeListener;
@@ -341,8 +341,16 @@ public class ActionButton extends JComponent implements ActionButtonComponent, A
    * an empty icon.
    */
   public Image getIcon() {
-    Image icon = isButtonEnabled() ? myIcon : myDisabledIcon;
-    return icon == null ? Image.empty(18) : icon;
+    boolean enabled = isButtonEnabled();
+    int popState = getPopState();
+    Image hoveredIcon = (popState == POPPED || popState == PUSHED) ? myPresentation.getHoveredIcon() : null;
+    Image icon = enabled ? hoveredIcon != null ? hoveredIcon : myIcon : myDisabledIcon;
+    return icon == null ? getFallbackIcon(enabled) : icon;
+  }
+
+  @Nonnull
+  protected Image getFallbackIcon(boolean enabled) {
+    return Image.empty(18);
   }
 
   public void updateIcon() {
@@ -428,6 +436,10 @@ public class ActionButton extends JComponent implements ActionButtonComponent, A
     ActionUtil.performDumbAwareUpdate(LaterInvocator.isInModalContext(), myAction, e, false);
     updateToolTipText();
     updateIcon();
+  }
+
+  public final boolean isSelected() {
+    return myAction instanceof Toggleable && Toggleable.isSelected(myPresentation);
   }
 
   @Override

@@ -25,6 +25,8 @@ import com.intellij.util.ui.JBInsets;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.image.Image;
+
 import javax.annotation.Nonnull;
 
 import javax.swing.*;
@@ -362,6 +364,20 @@ public class SearchTextArea extends JPanel implements PropertyChangeListener {
     @Override
     protected DataContext getDataContext() {
       return DataManager.getInstance().getDataContext(this);
+    }
+
+    @Override
+    public int getPopState() {
+      return isSelected() ? SELECTED : super.getPopState();
+    }
+
+    @Override
+    public Image getIcon() {
+      if (isEnabled() && isSelected()) {
+        Image selectedIcon = myPresentation.getSelectedIcon();
+        if (selectedIcon != null) return selectedIcon;
+      }
+      return super.getIcon();
     }
   }
 }
