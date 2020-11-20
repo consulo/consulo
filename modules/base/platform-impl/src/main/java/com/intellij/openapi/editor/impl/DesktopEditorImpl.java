@@ -1910,9 +1910,7 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
     myHeaderPanel.revalidate();
     myHeaderPanel.repaint();
 
-    if (SystemInfo.isMac) {
-      TouchBarsManager.onUpdateEditorHeader(this, header);
-    }
+    TouchBarsManager.onUpdateEditorHeader(this, header);
   }
 
   @Override

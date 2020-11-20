@@ -101,8 +101,8 @@ public abstract class JBPopupFactory {
    */
   @Deprecated
   @Nonnull
-  public PopupChooserBuilder createListPopupBuilder(@Nonnull JList list) {
-    return new PopupChooserBuilder(list);
+  public <T> PopupChooserBuilder<T> createListPopupBuilder(@Nonnull JList<T> list) {
+    return new PopupChooserBuilder<>(list);
   }
 
   /**

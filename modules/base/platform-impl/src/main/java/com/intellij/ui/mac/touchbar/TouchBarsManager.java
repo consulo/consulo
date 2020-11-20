@@ -15,19 +15,28 @@
  */
 package com.intellij.ui.mac.touchbar;
 
-import consulo.disposer.Disposable;
+import com.intellij.execution.ui.RunContentDescriptor;
 import com.intellij.openapi.editor.Editor;
+import com.intellij.openapi.util.Pair;
 import com.intellij.ui.popup.AbstractPopup;
+import consulo.disposer.Disposable;
 
 import javax.annotation.Nonnull;
-
 import javax.swing.*;
 import java.awt.*;
+import java.util.List;
 
 /**
  * TODO [VISTALL] stub
  */
 public class TouchBarsManager {
+  public static boolean isTouchBarEnabled() {
+    return false;
+  }
+
+  public static void showStopRunningBar(List<? extends Pair<RunContentDescriptor, Runnable>> stoppableDescriptors) {
+  }
+
   public static void onFocusEvent(AWTEvent e) {
     // nothing
   }
