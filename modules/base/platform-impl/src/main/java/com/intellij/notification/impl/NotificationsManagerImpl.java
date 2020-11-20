@@ -32,8 +32,6 @@ import com.intellij.openapi.startup.StartupManager;
 import com.intellij.openapi.ui.DialogWrapperDialog;
 import com.intellij.openapi.ui.MessageType;
 import com.intellij.openapi.ui.popup.*;
-import consulo.disposer.Disposable;
-import consulo.disposer.Disposer;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.SystemInfo;
@@ -53,16 +51,18 @@ import com.intellij.util.Function;
 import com.intellij.util.IconUtil;
 import com.intellij.util.ui.*;
 import consulo.awt.TargetAWT;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
 import consulo.platform.Platform;
 import consulo.start.WelcomeFrameManager;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
+import consulo.ui.impl.BalloonLayoutEx;
 import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import jakarta.inject.Singleton;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.HyperlinkEvent;
@@ -207,7 +207,7 @@ public class NotificationsManagerImpl extends NotificationsManager {
         if (ideFrame != null) {
           BalloonLayout layout = ideFrame.getBalloonLayout();
           if (layout != null) {
-            ((DesktopBalloonLayoutImpl)layout).remove(notification);
+            ((BalloonLayoutEx)layout).remove(notification);
           }
         }
 
@@ -238,7 +238,7 @@ public class NotificationsManagerImpl extends NotificationsManager {
         layoutDataRef.set(layoutData);
       }
       else {
-        BalloonLayoutData.MergeInfo mergeData = ((DesktopBalloonLayoutImpl)layout).preMerge(notification);
+        BalloonLayoutData.MergeInfo mergeData = ((BalloonLayoutEx)layout).preMerge(notification);
         if (mergeData != null) {
           BalloonLayoutData layoutData = new BalloonLayoutData();
           layoutData.mergeData = mergeData;

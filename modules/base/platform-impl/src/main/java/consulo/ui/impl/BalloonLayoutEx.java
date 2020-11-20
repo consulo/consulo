@@ -13,13 +13,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui;
+package consulo.ui.impl;
 
+import com.intellij.notification.Notification;
 import com.intellij.ui.BalloonLayout;
+import com.intellij.ui.BalloonLayoutData;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.awt.*;
 
 /**
  * @author VISTALL
  * @since 14-Oct-17
  */
 public interface BalloonLayoutEx extends BalloonLayout {
+  @Nullable
+  Component getTopBalloonComponent();
+
+  void addListener(Runnable listener);
+
+  void removeListener(Runnable listener);
+
+  void remove(@Nonnull Notification notification);
+
+  @Nullable
+  BalloonLayoutData.MergeInfo preMerge(@Nonnull Notification notification);
 }

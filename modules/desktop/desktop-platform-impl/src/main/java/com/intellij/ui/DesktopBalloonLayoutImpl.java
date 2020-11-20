@@ -19,16 +19,17 @@ import com.intellij.ide.ui.LafManager;
 import com.intellij.ide.ui.LafManagerListener;
 import com.intellij.notification.EventLog;
 import com.intellij.notification.Notification;
-import consulo.disposer.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.ui.popup.Balloon;
-import consulo.disposer.Disposer;
 import com.intellij.openapi.wm.impl.IdeRootPane;
 import com.intellij.util.Alarm;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.JBInsets;
-import consulo.ui.impl.ToolWindowPanelImplEx;
 import consulo.desktop.util.awt.migration.AWTComponentProviderUtil;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
+import consulo.ui.impl.BalloonLayoutEx;
+import consulo.ui.impl.ToolWindowPanelImplEx;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -36,10 +37,10 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
-public class DesktopBalloonLayoutImpl implements BalloonLayout {
+public class DesktopBalloonLayoutImpl implements BalloonLayoutEx {
   private final ComponentAdapter myResizeListener = new ComponentAdapter() {
     @Override
     public void componentResized(@Nonnull ComponentEvent e) {
@@ -103,10 +104,12 @@ public class DesktopBalloonLayoutImpl implements BalloonLayout {
     myParent = null;
   }
 
+  @Override
   public void addListener(Runnable listener) {
     myListeners.add(listener);
   }
 
+  @Override
   public void removeListener(Runnable listener) {
     myListeners.remove(listener);
   }
@@ -117,6 +120,7 @@ public class DesktopBalloonLayoutImpl implements BalloonLayout {
     }
   }
 
+  @Override
   @Nullable
   public Component getTopBalloonComponent() {
     BalloonImpl balloon = (BalloonImpl)ContainerUtil.getLastItem(myBalloons);
@@ -150,6 +154,7 @@ public class DesktopBalloonLayoutImpl implements BalloonLayout {
       myLayoutData.put(balloon, balloonLayoutData);
     }
     Disposer.register(balloon, new Disposable() {
+      @Override
       public void dispose() {
         clearNMore(balloon);
         remove(balloon, false);
@@ -198,6 +203,7 @@ public class DesktopBalloonLayoutImpl implements BalloonLayout {
     return null;
   }
 
+  @Override
   @Nullable
   public BalloonLayoutData.MergeInfo preMerge(@Nonnull Notification notification) {
     Balloon balloon = merge(notification.getGroupId());
@@ -210,6 +216,7 @@ public class DesktopBalloonLayoutImpl implements BalloonLayout {
     return null;
   }
 
+  @Override
   public void remove(@Nonnull Notification notification) {
     Balloon balloon = merge(notification.getGroupId());
     if (balloon != null) {

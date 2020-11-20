@@ -9,9 +9,6 @@ import com.intellij.openapi.actionSystem.ActionGroup;
 import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.actionSystem.ActionPlaces;
 import com.intellij.openapi.application.ApplicationManager;
-import consulo.disposer.Disposable;
-import consulo.disposer.Disposer;
-import consulo.logging.Logger;
 import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.TaskInfo;
@@ -30,10 +27,7 @@ import com.intellij.openapi.wm.StatusBarWidget;
 import com.intellij.openapi.wm.ex.ProgressIndicatorEx;
 import com.intellij.reference.SoftReference;
 import com.intellij.ui.AnimatedIcon;
-import com.intellij.ui.DesktopBalloonLayoutImpl;
-import com.intellij.ui.Gray;
-import com.intellij.ui.InplaceButton;
-import com.intellij.ui.TabbedPaneWrapper;
+import com.intellij.ui.*;
 import com.intellij.ui.awt.RelativePoint;
 import com.intellij.ui.components.labels.LinkLabel;
 import com.intellij.ui.components.panels.Wrapper;
@@ -47,12 +41,16 @@ import com.intellij.util.ui.update.MergingUpdateQueue;
 import com.intellij.util.ui.update.Update;
 import consulo.awt.TargetAWT;
 import consulo.desktop.util.awt.migration.AWTComponentProviderUtil;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
 import consulo.fileEditor.impl.EditorsSplitters;
+import consulo.logging.Logger;
+import consulo.ui.impl.BalloonLayoutEx;
 import consulo.ui.image.Image;
 import consulo.ui.impl.ToolWindowPanelImplEx;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import javax.swing.event.HyperlinkListener;
 import java.awt.*;
@@ -438,7 +436,7 @@ public class InfoAndProgressPanel extends JPanel implements CustomStatusBarWidge
     inline.myPresentationModeProgressPanel = new PresentationModeProgressPanel(inline);
 
     Component anchor = getAnchor(pane);
-    final DesktopBalloonLayoutImpl balloonLayout = getBalloonLayout(pane);
+    final BalloonLayoutEx balloonLayout = getBalloonLayout(pane);
 
     Balloon balloon =
             JBPopupFactory.getInstance().createBalloonBuilder(inline.myPresentationModeProgressPanel.getProgressPanel()).setFadeoutTime(0).setFillColor(Gray.TRANSPARENT).setShowCallout(false)
@@ -483,7 +481,7 @@ public class InfoAndProgressPanel extends JPanel implements CustomStatusBarWidge
   }
 
   @Nullable
-  private static DesktopBalloonLayoutImpl getBalloonLayout(@Nonnull JRootPane pane) {
+  private static BalloonLayoutEx getBalloonLayout(@Nonnull JRootPane pane) {
     Component parent = UIUtil.findUltimateParent(pane);
     if (parent instanceof Window) {
       consulo.ui.Window uiWindow = TargetAWT.from((Window)parent);
@@ -492,7 +490,7 @@ public class InfoAndProgressPanel extends JPanel implements CustomStatusBarWidge
       if (ideFrame == null) {
         return null;
       }
-      return (DesktopBalloonLayoutImpl)ideFrame.getBalloonLayout();
+      return (BalloonLayoutEx)ideFrame.getBalloonLayout();
     }
     return null;
   }
