@@ -1,18 +1,4 @@
-/*
- * Copyright 2000-2015 JetBrains s.r.o.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.find.editorHeaderActions;
 
 import com.intellij.find.SearchSession;
@@ -21,30 +7,33 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.Presentation;
 import com.intellij.openapi.actionSystem.ex.CustomComponentAction;
 import com.intellij.openapi.project.DumbAwareAction;
-import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.scale.JBUIScale;
+import com.intellij.util.ui.UIUtil;
+import consulo.ui.annotation.RequiredUIAccess;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 
 public class StatusTextAction extends DumbAwareAction implements CustomComponentAction {
+  @RequiredUIAccess
   @Override
-  public void update(AnActionEvent e) {
+  public void update(@Nonnull AnActionEvent e) {
     SearchSession search = e.getData(SearchSession.KEY);
-    String statusText = search == null ? "" : search.getComponent().getStatusText();
     JLabel label = (JLabel)e.getPresentation().getClientProperty(COMPONENT_KEY);
-    if (label != null) {
-      label.setText(statusText);
-      label.setVisible(StringUtil.isNotEmpty(statusText));
-    }
+    if (label == null) return;
+    label.setText(search == null ? "" : search.getComponent().getStatusText());
+    label.setForeground(search == null ? UIUtil.getLabelForeground() : search.getComponent().getStatusColor());
   }
 
+  @RequiredUIAccess
   @Override
-  public void actionPerformed(AnActionEvent e) {
+  public void actionPerformed(@Nonnull AnActionEvent e) {
   }
 
+  @Nonnull
   @Override
-  public JComponent createCustomComponent(Presentation presentation, String place) {
+  public JComponent createCustomComponent(@Nonnull Presentation presentation, @Nonnull String place) {
     JLabel label = new JLabel();
     //noinspection HardCodedStringLiteral
     label.setText("9888 results");
