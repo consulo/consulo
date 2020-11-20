@@ -21,8 +21,10 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.wm.IdeFrame;
+import com.intellij.openapi.wm.IdeRootPaneNorthExtension;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
-import com.intellij.openapi.wm.impl.IdeRootPane;
+import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.swing.*;
 
@@ -31,17 +33,22 @@ import javax.swing.*;
  * @author Konstantin Bulenkov
  */
 public class ActivateNavigationBarAction extends AnAction implements DumbAware {
+  @RequiredUIAccess
   @Override
   public void actionPerformed(AnActionEvent e) {
     final Project project = e.getDataContext().getData(CommonDataKeys.PROJECT);
-    if (project != null && UISettings.getInstance().SHOW_NAVIGATION_BAR){
-      final JFrame frame = WindowManagerEx.getInstance().getFrame(project);
-      final IdeRootPane ideRootPane = ((IdeRootPane)frame.getRootPane());
-      final NavBarPanel navBarPanel = (NavBarPanel)ideRootPane.findByName(NavBarRootPaneExtension.NAV_BAR).getComponent();
-      navBarPanel.rebuildAndSelectTail(true);
+    if (project != null && UISettings.getInstance().SHOW_NAVIGATION_BAR) {
+      final IdeFrame frame = WindowManagerEx.getInstance().getIdeFrame(project);
+      final IdeRootPaneNorthExtension navBarExt = frame.getNorthExtension(NavBarRootPaneExtension.NAV_BAR);
+      if (navBarExt != null) {
+        final JComponent c = navBarExt.getComponent();
+        final NavBarPanel panel = (NavBarPanel)c.getClientProperty("NavBarPanel");
+        panel.rebuildAndSelectTail(true);
+      }
     }
   }
 
+  @RequiredUIAccess
   @Override
   public void update(AnActionEvent e) {
     final Project project = e.getDataContext().getData(CommonDataKeys.PROJECT);
