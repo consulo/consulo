@@ -225,6 +225,8 @@
     <projectService serviceInterface="com.intellij.openapi.wm.ToolWindowManager" serviceImplementation="com.intellij.openapi.wm.impl.DesktopToolWindowManagerImpl" lazy="false"/>
     <projectService serviceInterface="consulo.wm.ProjectIdeFocusManager" serviceImplementation="com.intellij.openapi.wm.impl.DesktopIdeFocusManagerImpl" lazy="false"/>
 
+    <projectService serviceInterface="com.intellij.ui.docking.DockManager" serviceImplementation="com.intellij.ui.docking.impl.DesktopDockManagerImpl"/>
+
     <backgroundPostStartupActivity implementation="com.intellij.diagnostic.WindowsDefenderCheckerActivity"/>
     <applicationService serviceImplementation="com.intellij.diagnostic.WindowsDefenderChecker"/>
 

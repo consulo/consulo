@@ -17,6 +17,8 @@ package consulo.ui.desktop.internal.base;
 
 import consulo.disposer.Disposable;
 import consulo.ui.desktop.internal.DesktopFontImpl;
+import consulo.ui.event.ClickEvent;
+import consulo.ui.event.ClickListener;
 import consulo.ui.font.Font;
 import consulo.util.dataholder.Key;
 import com.intellij.util.ui.JBUI;
@@ -40,6 +42,7 @@ import consulo.ui.style.ColorKey;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
+import java.awt.event.MouseEvent;
 import java.util.Collection;
 import java.util.EventListener;
 import java.util.LinkedHashMap;
@@ -64,6 +67,19 @@ public class SwingComponentDelegate<T extends java.awt.Component> implements Com
     if (this instanceof FocusableComponent) {
       myComponent.addFocusListener(new AWTFocusAdapterAsFocusListener((FocusableComponent)this, getListenerDispatcher(FocusListener.class)));
     }
+  }
+
+  @Override
+  public Disposable addClickListener(@Nonnull ClickListener clickListener) {
+    com.intellij.ui.ClickListener awtClickListener = new com.intellij.ui.ClickListener() {
+      @Override
+      public boolean onClick(@Nonnull MouseEvent event, int clickCount) {
+        clickListener.clicked(new ClickEvent(SwingComponentDelegate.this));
+        return true;
+      }
+    };
+    awtClickListener.installOn(toAWTComponent());
+    return () -> awtClickListener.uninstall(toAWTComponent());
   }
 
   public boolean hasFocus() {

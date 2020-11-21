@@ -15,97 +15,43 @@
  */
 package consulo.ui.web.internal;
 
-import com.vaadin.ui.Component;
-import consulo.ui.web.internal.base.UIComponentWithVaadinComponent;
-import consulo.ui.web.internal.base.VaadinComponentContainer;
-import consulo.web.gwt.shared.ui.state.RootPanelState;
+import com.intellij.openapi.wm.StatusBar;
+import consulo.ui.Component;
+import consulo.ui.MenuBar;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.layout.DockLayout;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 
 /**
  * @author VISTALL
  * @since 2019-02-18
  */
-public class WebRootPaneImpl extends UIComponentWithVaadinComponent<WebRootPaneImpl.Vaadin> {
-  public static class Vaadin extends VaadinComponentContainer {
-    private Component myMenuBar;
-    private Component myCenterComponent;
+public class WebRootPaneImpl {
+  private DockLayout myDockLayout = DockLayout.create();
 
-    public void setMenuBar(@Nullable Component menuBar) {
-      if (myMenuBar != null) {
-        removeComponent(myMenuBar);
-      }
-      myMenuBar = menuBar;
-      if (menuBar != null) {
-        addComponent(menuBar);
-      }
+  public void setSizeFull() {
+    TargetVaddin.to(myDockLayout).setSizeFull();
+  }
 
-      getState().menuBarExists = menuBar != null;
-      markAsDirty();
-    }
+  @RequiredUIAccess
+  public void setCenterComponent(@Nullable Component centerComponent) {
+    myDockLayout.center(centerComponent);
+  }
 
-    private void setCenterComponent(@Nullable Component centerComponent) {
-      if (myCenterComponent != null) {
-        removeComponent(myCenterComponent);
-      }
-      myCenterComponent = centerComponent;
-      if (centerComponent != null) {
-        addComponent(myCenterComponent);
-      }
-
-      getState().contentExists = centerComponent != null;
-      markAsDirty();
-    }
-
-    @Override
-    public int getComponentCount() {
-      int i = 0;
-      if (myMenuBar != null) {
-        i++;
-      }
-      if (myCenterComponent != null) {
-        i++;
-      }
-      return i;
-    }
-
-    @Override
-    public Iterator<Component> iterator() {
-      List<Component> list = new ArrayList<>(getComponentCount());
-      if (myMenuBar != null) {
-        list.add(myMenuBar);
-      }
-      if (myCenterComponent != null) {
-        list.add(myCenterComponent);
-      }
-      return list.iterator();
-    }
-
-    @Override
-    public RootPanelState getState() {
-      return (RootPanelState)super.getState();
-    }
+  @RequiredUIAccess
+  public void setMenuBar(@Nullable MenuBar menuBar) {
+    myDockLayout.top(menuBar);
   }
 
   @Nonnull
-  @Override
-  public Vaadin createVaadinComponent() {
-    return new Vaadin();
+  public Component getComponent() {
+    return myDockLayout;
   }
 
-  public void setSizeFull() {
-    getVaadinComponent().setSizeFull();
-  }
-
-  public void setCenterComponent(@Nullable consulo.ui.Component centerComponent) {
-    getVaadinComponent().setCenterComponent(TargetVaddin.to(centerComponent));
-  }
-
-  public void setMenuBar(@Nullable consulo.ui.MenuBar menuBar) {
-    getVaadinComponent().setMenuBar(TargetVaddin.to(menuBar));
+  @RequiredUIAccess
+  public void setStatusBar(StatusBar statusBar) {
+    myDockLayout.bottom(statusBar.getUIComponent());
   }
 }

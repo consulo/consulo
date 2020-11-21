@@ -16,6 +16,7 @@
 package consulo.ui;
 
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.event.ClickListener;
 import consulo.ui.image.Image;
 import consulo.ui.internal.UIInternal;
 
@@ -26,7 +27,7 @@ import javax.annotation.Nullable;
  * @author VISTALL
  * @since 2018-05-11
  */
-public interface Hyperlink extends Clickable {
+public interface Hyperlink extends Component {
   @Nonnull
   static Hyperlink create(@Nonnull String text) {
     return UIInternal.get()._Components_hyperlink(text);
@@ -35,7 +36,7 @@ public interface Hyperlink extends Clickable {
   @Nonnull
   static Hyperlink create(@Nonnull String text, @Nonnull @RequiredUIAccess ClickListener clickListener) {
     Hyperlink button = UIInternal.get()._Components_hyperlink(text);
-    button.addListener(ClickListener.class, clickListener);
+    button.addClickListener(clickListener);
     return button;
   }
 

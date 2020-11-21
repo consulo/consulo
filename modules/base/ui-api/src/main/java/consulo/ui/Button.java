@@ -16,6 +16,7 @@
 package consulo.ui;
 
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.event.ClickListener;
 import consulo.ui.internal.UIInternal;
 
 import javax.annotation.Nonnull;
@@ -24,7 +25,7 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 13-Sep-17
  */
-public interface Button extends Clickable {
+public interface Button extends Component {
   @Nonnull
   static Button create(@Nonnull String text) {
     return UIInternal.get()._Components_button(text);

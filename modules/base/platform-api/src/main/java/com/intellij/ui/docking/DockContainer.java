@@ -15,10 +15,11 @@
  */
 package com.intellij.ui.docking;
 
-import consulo.disposer.Disposable;
 import com.intellij.ui.awt.RelativePoint;
 import com.intellij.ui.awt.RelativeRectangle;
 import com.intellij.util.ui.update.Activatable;
+import consulo.disposer.Disposable;
+import consulo.ui.Component;
 import org.jdom.Element;
 
 import javax.annotation.Nonnull;
@@ -27,21 +28,34 @@ import javax.swing.*;
 import java.awt.*;
 
 public interface DockContainer extends Disposable, Activatable {
-  enum ContentResponse {ACCEPT_MOVE, ACCEPT_COPY, DENY;
-    public boolean canAccept() {return this != DENY;}
+  enum ContentResponse {
+    ACCEPT_MOVE,
+    ACCEPT_COPY,
+    DENY;
+
+    public boolean canAccept() {
+      return this != DENY;
+    }
   }
 
   RelativeRectangle getAcceptArea();
 
   /**
-   * This area is used when nothing was found with getAcceptArea 
+   * This area is used when nothing was found with getAcceptArea
    */
   RelativeRectangle getAcceptAreaFallback();
 
   @Nonnull
   ContentResponse getContentResponse(@Nonnull DockableContent content, RelativePoint point);
 
-  JComponent getContainerComponent();
+  default JComponent getContainerComponent() {
+    throw new AbstractMethodError();
+  }
+
+  @Nonnull
+  default Component getUIContainerComponent() {
+    throw new AbstractMethodError();
+  }
 
   void add(@Nonnull DockableContent content, RelativePoint dropTarget);
 
@@ -62,17 +76,19 @@ public interface DockContainer extends Disposable, Activatable {
 
   boolean isDisposeWhenEmpty();
 
-  interface Dialog extends DockContainer {}
+  interface Dialog extends DockContainer {
+  }
 
   interface Persistent extends DockContainer {
-
     String getDockContainerType();
+
     Element getState();
 
   }
 
   interface Listener {
     void contentAdded(Object key);
+
     void contentRemoved(Object key);
 
     class Adapter implements Listener {

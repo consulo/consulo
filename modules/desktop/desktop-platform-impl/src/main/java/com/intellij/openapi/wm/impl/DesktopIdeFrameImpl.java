@@ -55,6 +55,7 @@ import consulo.awt.TargetAWT;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
 import consulo.ui.Rectangle2D;
+import consulo.ui.UIAccess;
 import consulo.ui.desktop.internal.window.JFrameAsUIWindow;
 import consulo.util.dataholder.Key;
 
@@ -486,7 +487,7 @@ public final class DesktopIdeFrameImpl implements IdeFrameEx, AccessibleContextA
   }
 
   private void installDefaultProjectStatusBarWidgets(@Nonnull final Project project) {
-    project.getInstance(StatusBarWidgetsManager.class).updateAllWidgets();
+    project.getInstance(StatusBarWidgetsManager.class).updateAllWidgets(UIAccess.current());
     
     JComponent component = Objects.requireNonNull(getStatusBar()).getComponent();
     PopupHandler.installPopupHandler(component, StatusBarWidgetsActionGroup.GROUP_ID, ActionPlaces.STATUS_BAR_PLACE);

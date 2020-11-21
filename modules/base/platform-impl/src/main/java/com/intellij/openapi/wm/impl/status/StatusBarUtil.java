@@ -33,8 +33,8 @@ import consulo.fileEditor.impl.EditorsSplitters;
 import consulo.logging.Logger;
 import consulo.util.collection.ArrayUtil;
 import org.jetbrains.annotations.Nls;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
@@ -72,7 +72,14 @@ public class StatusBarUtil {
       return null;
     }
 
-    DockContainer c = DockManager.getInstance(project).getContainerFor(statusBar.getComponent());
+    DockContainer c = null;
+    if(statusBar.isUnified()) {
+      c = DockManager.getInstance(project).getContainerFor(statusBar.getUIComponent());
+    }
+    else {
+      c = DockManager.getInstance(project).getContainerFor(statusBar.getComponent());
+    }
+    
     EditorsSplitters splitters = null;
     if (c instanceof DockableEditorTabbedContainer) {
       splitters = ((DockableEditorTabbedContainer)c).getSplitters();

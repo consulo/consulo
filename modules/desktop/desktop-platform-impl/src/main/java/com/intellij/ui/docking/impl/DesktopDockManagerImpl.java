@@ -17,22 +17,23 @@ package com.intellij.ui.docking.impl;
 
 import com.intellij.ide.IdeEventQueue;
 import com.intellij.ide.ui.UISettings;
-import com.intellij.ide.ui.UISettingsListener;
 import com.intellij.openapi.actionSystem.Presentation;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.components.StoragePathMacros;
 import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.fileEditor.FileEditorProvider;
 import com.intellij.openapi.fileEditor.impl.DockableEditorContainerFactory;
-import com.intellij.openapi.fileEditor.impl.DockableEditorTabbedContainer;
+import com.intellij.openapi.fileEditor.impl.DesktopDockableEditorTabbedContainer;
 import com.intellij.openapi.fileEditor.impl.EditorTabbedContainer;
 import com.intellij.openapi.fileEditor.impl.FileEditorManagerImpl;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.FrameWrapper;
-import com.intellij.openapi.util.*;
+import com.intellij.openapi.util.AsyncResult;
+import com.intellij.openapi.util.BusyObject;
+import com.intellij.openapi.util.MutualMap;
+import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.openapi.wm.IdeFrame;
@@ -44,25 +45,25 @@ import com.intellij.ui.awt.RelativePoint;
 import com.intellij.ui.awt.RelativeRectangle;
 import com.intellij.ui.components.panels.NonOpaquePanel;
 import com.intellij.ui.components.panels.VerticalBox;
-import com.intellij.ui.docking.*;
+import com.intellij.ui.docking.DockContainer;
+import com.intellij.ui.docking.DockContainerFactory;
+import com.intellij.ui.docking.DockableContent;
+import com.intellij.ui.docking.DragSession;
 import com.intellij.ui.tabs.impl.JBTabsImpl;
 import com.intellij.util.IconUtil;
-import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.update.UiNotifyConnector;
 import consulo.awt.TargetAWT;
-import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.fileEditor.impl.EditorWindow;
 import consulo.ui.UIAccess;
+import consulo.ui.docking.BaseDockManager;
 import consulo.ui.popup.JWindowPopupFactory;
 import jakarta.inject.Inject;
-import org.jdom.Element;
+import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import jakarta.inject.Singleton;
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 import java.awt.*;
@@ -71,19 +72,14 @@ import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
-import java.util.List;
-import java.util.*;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 @Singleton
 @State(name = "DockManager", storages = @Storage(file = StoragePathMacros.WORKSPACE_FILE))
-public class DockManagerImpl extends DockManager implements PersistentStateComponent<Element> {
-
-  private final Project myProject;
-
-  private final Map<String, DockContainerFactory> myFactories = new HashMap<>();
-
-  private final Set<DockContainer> myContainers = new HashSet<>();
-
+public class DesktopDockManagerImpl extends BaseDockManager {
   private final MutualMap<DockContainer, DockWindow> myWindows = new MutualMap<>();
 
   private MyDragSession myCurrentDragSession;
@@ -95,48 +91,9 @@ public class DockManagerImpl extends DockManager implements PersistentStateCompo
     }
   };
 
-  private int myWindowIdCounter = 1;
-
-  private Element myLoadedState;
-
   @Inject
-  public DockManagerImpl(Project project) {
-    myProject = project;
-  }
-
-  @Override
-  public void register(final DockContainer container) {
-    myContainers.add(container);
-    Disposer.register(container, new Disposable() {
-      @Override
-      public void dispose() {
-        myContainers.remove(container);
-      }
-    });
-  }
-
-  @Override
-  public void register(final String id, DockContainerFactory factory) {
-    myFactories.put(id, factory);
-    Disposer.register(factory, new Disposable() {
-      @Override
-      public void dispose() {
-        myFactories.remove(id);
-      }
-    });
-
-    readStateFor(id);
-  }
-
-  public void readState() {
-    for (String id : myFactories.keySet()) {
-      readStateFor(id);
-    }
-  }
-
-  @Override
-  public Set<DockContainer> getContainers() {
-    return Collections.unmodifiableSet(ContainerUtil.newHashSet(myContainers));
+  public DesktopDockManagerImpl(Project project) {
+    super(project);
   }
 
   @Override
@@ -158,6 +115,11 @@ public class DockManagerImpl extends DockManager implements PersistentStateCompo
     DockWindow wnd = myWindows.getValue(getContainerFor(owner));
 
     return wnd != null ? key + "#" + wnd.myId : key;
+  }
+
+  @Override
+  public DockContainer getContainerFor(consulo.ui.Component c) {
+    return getContainerFor(TargetAWT.to(c));
   }
 
   @Override
@@ -384,6 +346,7 @@ public class DockManagerImpl extends DockManager implements PersistentStateCompo
     return myFactories.get(type);
   }
 
+  @Override
   public void createNewDockContainerFor(DockableContent content, RelativePoint point) {
     DockContainer container = getFactory(content.getDockContainerType()).createContainer(content);
     register(container);
@@ -411,6 +374,7 @@ public class DockManagerImpl extends DockManager implements PersistentStateCompo
     SwingUtilities.invokeLater(() -> window.myUiContainer.setPreferredSize(null));
   }
 
+  @Override
   @Nonnull
   public Pair<FileEditor[], FileEditorProvider[]> createNewDockContainerFor(@Nonnull VirtualFile file, @Nonnull FileEditorManagerImpl fileEditorManager) {
     DockContainer container = getFactory(DockableEditorContainerFactory.TYPE).createContainer(null);
@@ -419,15 +383,16 @@ public class DockManagerImpl extends DockManager implements PersistentStateCompo
     final DockWindow window = createWindowFor(null, container);
 
     window.show(true);
-    final EditorWindow editorWindow = ((DockableEditorTabbedContainer)container).getSplitters().getOrCreateCurrentWindow(file);
-    final Pair<FileEditor[], FileEditorProvider[]> result = fileEditorManager.openFileImpl2(UIAccess.get(), editorWindow, file, true);
+    final EditorWindow editorWindow = ((DesktopDockableEditorTabbedContainer)container).getSplitters().getOrCreateCurrentWindow(file);
+    final Pair<FileEditor[], FileEditorProvider[]> result = fileEditorManager.openFileImpl2(UIAccess.current(), editorWindow, file, true);
     container.add(EditorTabbedContainer.createDockableEditor(myProject, null, file, new Presentation(file.getName()), editorWindow), null);
 
     SwingUtilities.invokeLater(() -> window.myUiContainer.setPreferredSize(null));
     return result;
   }
 
-  private DockWindow createWindowFor(@Nullable String id, DockContainer container) {
+  @Override
+  protected DockWindow createWindowFor(@Nullable String id, DockContainer container) {
     String windowId = id != null ? id : String.valueOf(myWindowIdCounter++);
     DockWindow window = new DockWindow(windowId, myProject, container, container instanceof DockContainer.Dialog);
     window.setDimensionKey("dock-window-" + windowId);
@@ -435,7 +400,7 @@ public class DockManagerImpl extends DockManager implements PersistentStateCompo
     return window;
   }
 
-  private class DockWindow extends FrameWrapper implements IdeEventQueue.EventDispatcher {
+  private class DockWindow extends FrameWrapper implements IdeEventQueue.EventDispatcher, BaseDockManager.DockWindow {
 
     private final String myId;
     private final DockContainer myContainer;
@@ -491,16 +456,15 @@ public class DockManagerImpl extends DockManager implements PersistentStateCompo
         }
       }, this);
 
-      UISettings.getInstance().addUISettingsListener(new UISettingsListener() {
-        @Override
-        public void uiSettingsChanged(UISettings source) {
-          updateNorthPanel();
-        }
-      }, this);
+      UISettings.getInstance().addUISettingsListener(source -> updateNorthPanel(), this);
 
       updateNorthPanel();
     }
 
+    @Override
+    public String getId() {
+      return myId;
+    }
 
     @Override
     public IdeRootPaneNorthExtension getNorthExtension(String key) {
@@ -595,62 +559,6 @@ public class DockManagerImpl extends DockManager implements PersistentStateCompo
 
       UiNotifyConnector connector = new UiNotifyConnector(((RootPaneContainer)frame).getContentPane(), myContainer);
       Disposer.register(myContainer, connector);
-    }
-  }
-
-
-  @Override
-  public Element getState() {
-    Element root = new Element("DockManager");
-    for (DockContainer each : myContainers) {
-      DockWindow eachWindow = myWindows.getValue(each);
-      if (eachWindow != null) {
-        if (each instanceof DockContainer.Persistent) {
-          DockContainer.Persistent eachContainer = (DockContainer.Persistent)each;
-          Element eachWindowElement = new Element("window");
-          eachWindowElement.setAttribute("id", eachWindow.myId);
-          Element content = new Element("content");
-          content.setAttribute("type", eachContainer.getDockContainerType());
-          content.addContent(eachContainer.getState());
-          eachWindowElement.addContent(content);
-
-          root.addContent(eachWindowElement);
-        }
-      }
-    }
-    return root;
-  }
-
-  @Override
-  public void loadState(Element state) {
-    myLoadedState = state;
-  }
-
-  private void readStateFor(String type) {
-    if (myLoadedState == null) return;
-
-    List windows = myLoadedState.getChildren("window");
-    for (Object window1 : windows) {
-      Element eachWindow = (Element)window1;
-      if (eachWindow == null) continue;
-
-      String eachId = eachWindow.getAttributeValue("id");
-
-      Element eachContent = eachWindow.getChild("content");
-      if (eachContent == null) continue;
-
-      String eachType = eachContent.getAttributeValue("type");
-      if (eachType == null || !type.equals(eachType) || !myFactories.containsKey(eachType)) continue;
-
-      DockContainerFactory factory = myFactories.get(eachType);
-      if (!(factory instanceof DockContainerFactory.Persistent)) continue;
-
-      DockContainerFactory.Persistent persistentFactory = (DockContainerFactory.Persistent)factory;
-      DockContainer container = persistentFactory.loadContainerFrom(eachContent);
-      register(container);
-
-      final DockWindow window = createWindowFor(eachId, container);
-      UIUtil.invokeLaterIfNeeded(window::show);
     }
   }
 }

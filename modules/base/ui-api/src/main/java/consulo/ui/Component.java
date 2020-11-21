@@ -18,6 +18,7 @@ package consulo.ui;
 import consulo.annotation.ApiType;
 import consulo.disposer.Disposable;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.event.ClickListener;
 import consulo.ui.event.KeyListener;
 import consulo.ui.font.Font;
 import consulo.ui.border.BorderPosition;
@@ -123,6 +124,10 @@ public interface Component extends Disposable, UserDataHolder {
 
   default Disposable addKeyListener(@Nonnull KeyListener keyListener) {
     return addListener(KeyListener.class, keyListener);
+  }
+
+  default Disposable addClickListener(@Nonnull ClickListener clickListener) {
+    return addListener(ClickListener.class, clickListener);
   }
 
   @Override

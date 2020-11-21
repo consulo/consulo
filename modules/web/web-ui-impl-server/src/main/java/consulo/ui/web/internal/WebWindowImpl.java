@@ -54,8 +54,10 @@ public class WebWindowImpl extends UIComponentWithVaadinComponent<WebWindowImpl.
     Vaadin vaadinComponent = getVaadinComponent();
 
     vaadinComponent.setModal(modal);
-    vaadinComponent.setContent(TargetVaddin.to(myRootPanel));
+    vaadinComponent.setContent(TargetVaddin.to(myRootPanel.getComponent()));
     vaadinComponent.addCloseListener(closeEvent -> getListenerDispatcher(Window.CloseListener.class).onClose());
+
+    WebFocusManagerImpl.register(toVaadinComponent());
   }
 
   @Nonnull

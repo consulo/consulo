@@ -19,6 +19,7 @@ import com.vaadin.ui.UI;
 import consulo.localize.LocalizeValue;
 import consulo.ui.*;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.color.ColorValue;
 import consulo.ui.font.FontManager;
 import consulo.ui.image.IconLibraryManager;
 import consulo.ui.image.Image;
@@ -30,8 +31,6 @@ import consulo.ui.internal.UIInternal;
 import consulo.ui.layout.*;
 import consulo.ui.model.ListModel;
 import consulo.ui.model.MutableListModel;
-import consulo.ui.color.ColorValue;
-import consulo.ui.StaticPosition;
 import consulo.ui.style.StyleManager;
 import consulo.ui.web.internal.image.*;
 import consulo.ui.web.internal.layout.*;
@@ -217,7 +216,7 @@ public class WebUIInternalImpl extends UIInternal {
 
   @Override
   public Image _ImageEffects_grayed(@Nonnull Image original) {
-    throw new UnsupportedOperationException();
+    return original;
   }
 
   @Override
@@ -375,5 +374,10 @@ public class WebUIInternalImpl extends UIInternal {
   @Override
   public FoldoutLayout _Layouts_foldout(LocalizeValue titleValue, Component component, boolean show) {
     throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public FocusManager _FocusManager_get() {
+    return WebFocusManagerImpl.ourInstance;
   }
 }

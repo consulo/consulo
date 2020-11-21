@@ -16,7 +16,10 @@
 package consulo.ui.web.internal;
 
 import consulo.ui.Button;
+import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.event.ClickEvent;
+import consulo.ui.event.ClickListener;
 import consulo.ui.web.internal.base.UIComponentWithVaadinComponent;
 import consulo.ui.web.internal.base.VaadinComponent;
 import consulo.web.gwt.shared.ui.state.button.ButtonRpc;
@@ -32,7 +35,8 @@ public class WebButtonImpl extends UIComponentWithVaadinComponent<WebButtonImpl.
     private final ButtonRpc myRpc = new ButtonRpc() {
       @Override
       public void onClick() {
-        toUIComponent().getListenerDispatcher(ClickListener.class).onClick();
+        Component component = toUIComponent();
+        component.getListenerDispatcher(ClickListener.class).clicked(new ClickEvent(component));
       }
     };
 

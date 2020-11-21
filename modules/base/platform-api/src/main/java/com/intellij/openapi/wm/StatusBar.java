@@ -15,6 +15,7 @@
  */
 package com.intellij.openapi.wm;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.disposer.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
@@ -101,8 +102,6 @@ public interface StatusBar extends StatusBarInfo, Disposable {
 
   StatusBar createChild();
 
-  JComponent getComponent();
-
   StatusBar findChild(Component c);
 
   IdeFrame getFrame();
@@ -111,4 +110,20 @@ public interface StatusBar extends StatusBarInfo, Disposable {
 
   @Nullable
   Project getProject();
+
+  @Nonnull
+  default consulo.ui.Component getUIComponent() {
+    throw new AbstractMethodError();
+  }
+
+  @Deprecated
+  @DeprecationInfo("AWT Dependency")
+  default JComponent getComponent() {
+    // override isUnified() too
+    throw new AbstractMethodError();
+  }
+
+  default boolean isUnified() {
+    return false;
+  }
 }

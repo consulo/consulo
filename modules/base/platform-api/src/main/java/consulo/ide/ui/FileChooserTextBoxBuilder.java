@@ -25,11 +25,12 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.Function;
 import consulo.disposer.Disposable;
 import consulo.platform.base.icon.PlatformIconGroup;
-import consulo.ui.Clickable;
 import consulo.ui.PseudoComponent;
 import consulo.ui.TextBox;
 import consulo.ui.TextBoxWithExtensions;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.event.ClickEvent;
+import consulo.ui.event.ClickListener;
 import consulo.ui.fileChooser.FileChooser;
 import consulo.util.lang.StringUtil;
 
@@ -63,10 +64,10 @@ public final class FileChooserTextBoxBuilder {
         FileChooserFactory.getInstance().installFileCompletion(myTextBox, myFileChooserDescriptor, true, builder.myDisposable);
       }
 
-      myTextBox.setExtensions(new TextBoxWithExtensions.Extension(false, PlatformIconGroup.nodesFolderOpened(), null, new Clickable.ClickListener() {
+      myTextBox.setExtensions(new TextBoxWithExtensions.Extension(false, PlatformIconGroup.nodesFolderOpened(), null, new ClickListener() {
         @RequiredUIAccess
         @Override
-        public void onClick() {
+        public void clicked(ClickEvent e) {
           FileChooserDescriptor fileChooserDescriptor = (FileChooserDescriptor)myFileChooserDescriptor.clone();
           fileChooserDescriptor.setTitle(builder.myDialogTitle);
           fileChooserDescriptor.setDescription(builder.myDialogDescription);

@@ -38,20 +38,30 @@ public class WebIdeRootView {
   private Project myProject;
 
   private MenuBar myMenuBar;
+  private WebStatusBarImpl myStatusBar;
 
+  @RequiredUIAccess
   public WebIdeRootView(Project project) {
     myProject = project;
     myRootPanel.setSizeFull();
     myPresentationFactory = new MenuItemPresentationFactory();
 
-    myRootPanel.putUserData(CommonDataKeys.PROJECT, myProject);
+    myRootPanel.getComponent().putUserData(CommonDataKeys.PROJECT, myProject);
+
     myMenuBar = MenuBar.create();
     myRootPanel.setMenuBar(myMenuBar);
   }
 
   @RequiredUIAccess
+  public void setStatusBar(WebStatusBarImpl statusBar) {
+    myStatusBar = statusBar;
+
+    myRootPanel.setStatusBar(statusBar);
+  }
+
+  @RequiredUIAccess
   public void update() {
-    DataContext dataContext = ((BaseDataManager)DataManager.getInstance()).getDataContextTest(myRootPanel);
+    DataContext dataContext = ((BaseDataManager)DataManager.getInstance()).getDataContextTest(myRootPanel.getComponent());
 
     AnAction action = ActionManager.getInstance().getAction(IdeActions.GROUP_MAIN_MENU);
 
@@ -101,7 +111,7 @@ public class WebIdeRootView {
     }
   }
 
-  public WebRootPaneImpl getComponent() {
+  public WebRootPaneImpl getRootPanel() {
     return myRootPanel;
   }
 }

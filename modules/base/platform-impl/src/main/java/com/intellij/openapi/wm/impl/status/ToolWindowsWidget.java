@@ -3,21 +3,25 @@ package com.intellij.openapi.wm.impl.status;
 
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.IdeEventQueue;
+import com.intellij.ide.actions.ActivateToolWindowAction;
 import com.intellij.ide.ui.UISettings;
 import com.intellij.ide.ui.UISettingsListener;
+import com.intellij.openapi.actionSystem.ActionManager;
+import com.intellij.openapi.actionSystem.KeyboardShortcut;
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.keymap.KeymapUtil;
 import com.intellij.openapi.ui.popup.JBPopup;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.ui.popup.PopupChooserBuilder;
-import consulo.disposer.Disposable;
-import consulo.disposer.Disposer;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.wm.*;
 import com.intellij.openapi.wm.ex.IdeFrameEx;
+import com.intellij.ui.ColoredListCellRenderer;
+import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.ui.awt.RelativePoint;
-import com.intellij.ui.components.JBLabel;
 import com.intellij.ui.components.JBList;
 import com.intellij.util.Alarm;
 import com.intellij.util.ui.BaseButtonBehavior;
@@ -26,15 +30,19 @@ import com.intellij.util.ui.TimedDeadzone;
 import com.intellij.util.ui.UIUtil;
 import consulo.awt.TargetAWT;
 import consulo.desktop.wm.impl.DesktopIdeFrameUtil;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
+import consulo.platform.Platform;
+import consulo.ui.FocusManager;
+import consulo.ui.Label;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
-
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -42,52 +50,61 @@ import java.util.List;
 /**
  * @author Konstantin Bulenkov
  */
-class ToolWindowsWidget extends JLabel implements CustomStatusBarWidget, StatusBarWidget, Disposable, UISettingsListener, PropertyChangeListener {
-
+public class ToolWindowsWidget implements CustomStatusBarWidget, StatusBarWidget, Disposable, UISettingsListener {
   private final Alarm myAlarm;
   private StatusBar myStatusBar;
   private JBPopup popup;
   private boolean wasExited = false;
 
-  ToolWindowsWidget(@Nonnull Disposable parent) {
-    setBorder(JBUI.Borders.empty());
-    new BaseButtonBehavior(this, TimedDeadzone.NULL) {
-      @Override
-      protected void execute(MouseEvent e) {
-        performAction();
-      }
-    }.setActionTrigger(MouseEvent.MOUSE_PRESSED);
+  private Label myLabel;
 
-    IdeEventQueue.getInstance().addDispatcher(e -> {
-      if (e instanceof MouseEvent) {
-        MouseEvent mouseEvent = (MouseEvent)e;
-        if (mouseEvent.getComponent() == null || !SwingUtilities.isDescendingFrom(mouseEvent.getComponent(), SwingUtilities.getWindowAncestor(this))) {
-          return false;
+  public ToolWindowsWidget(@Nonnull Disposable parent) {
+    myLabel = Label.create();
+
+    // FIXME [VISTALL] desktop hack
+    if(Platform.current().isDesktop()) {
+      JComponent awtLabel = (JComponent)TargetAWT.to(myLabel);
+      
+      new BaseButtonBehavior(awtLabel, TimedDeadzone.NULL) {
+        @Override
+        protected void execute(MouseEvent e) {
+          performAction();
         }
+      }.setActionTrigger(MouseEvent.MOUSE_PRESSED);
 
-        if (e.getID() == MouseEvent.MOUSE_MOVED && isShowing()) {
-          Point p = mouseEvent.getLocationOnScreen();
-          Point screen = this.getLocationOnScreen();
-          if (new Rectangle(screen.x - 4, screen.y - 2, getWidth() + 4, getHeight() + 4).contains(p)) {
-            mouseEntered();
-            wasExited = false;
+      IdeEventQueue.getInstance().addDispatcher(e -> {
+        if (e instanceof MouseEvent) {
+          MouseEvent mouseEvent = (MouseEvent)e;
+          if (mouseEvent.getComponent() == null || !SwingUtilities.isDescendingFrom(mouseEvent.getComponent(), SwingUtilities.getWindowAncestor(awtLabel))) {
+            return false;
           }
-          else {
-            if (!wasExited) {
-              wasExited = mouseExited(p);
+
+          if (e.getID() == MouseEvent.MOUSE_MOVED && awtLabel.isShowing()) {
+            Point p = mouseEvent.getLocationOnScreen();
+            Point screen = awtLabel.getLocationOnScreen();
+            if (new Rectangle(screen.x - 4, screen.y - 2, awtLabel.getWidth() + 4, awtLabel.getHeight() + 4).contains(p)) {
+              mouseEntered();
+              wasExited = false;
+            }
+            else {
+              if (!wasExited) {
+                wasExited = mouseExited(p);
+              }
             }
           }
+          else if (e.getID() == MouseEvent.MOUSE_EXITED) {
+            //mouse exits WND
+            mouseExited(mouseEvent.getLocationOnScreen());
+          }
         }
-        else if (e.getID() == MouseEvent.MOUSE_EXITED) {
-          //mouse exits WND
-          mouseExited(mouseEvent.getLocationOnScreen());
-        }
-      }
-      return false;
-    }, parent);
+        return false;
+      }, parent);
+    }
 
-    ApplicationManager.getApplication().getMessageBus().connect(this).subscribe(UISettingsListener.TOPIC, this);
-    KeyboardFocusManager.getCurrentKeyboardFocusManager().addPropertyChangeListener("focusOwner", this);
+    Disposer.register(this, FocusManager.get().addListener(this::updateIcon));
+
+    Application.get().getMessageBus().connect(this).subscribe(UISettingsListener.TOPIC, this);
+    
     myAlarm = new Alarm(parent);
   }
 
@@ -116,7 +133,7 @@ class ToolWindowsWidget extends JLabel implements CustomStatusBarWidget, StatusB
     }
     if (myAlarm.getActiveRequestCount() == 0) {
       myAlarm.addRequest(() -> {
-        final IdeFrameEx frame = DesktopIdeFrameUtil.findIdeFrameExFromParent(this);
+        final IdeFrameEx frame = DesktopIdeFrameUtil.findIdeFrameExFromParent(TargetAWT.to(myLabel));
         if (frame == null) return;
 
         List<ToolWindow> toolWindows = new ArrayList<>();
@@ -127,28 +144,26 @@ class ToolWindowsWidget extends JLabel implements CustomStatusBarWidget, StatusB
             toolWindows.add(tw);
           }
         }
-        Collections.sort(toolWindows, (o1, o2) -> StringUtil.naturalCompare(o1.getStripeTitle(), o2.getStripeTitle()));
+        Collections.sort(toolWindows, (o1, o2) -> StringUtil.naturalCompare(o1.getDisplayName().getValue(), o2.getDisplayName().getValue()));
 
-        final JBList<ToolWindow> list = new JBList(toolWindows);
-        list.setCellRenderer(new ListCellRenderer<ToolWindow>() {
-          final JBLabel label = new JBLabel();
-
+        final JBList<ToolWindow> list = new JBList<>(toolWindows);
+        list.setCellRenderer(new ColoredListCellRenderer<ToolWindow>() {
           @Override
-          public Component getListCellRendererComponent(JList<? extends ToolWindow> list, ToolWindow toolWindow, int index, boolean isSelected, boolean cellHasFocus) {
-            label.setText(toolWindow.getStripeTitle());
-            label.setIcon(TargetAWT.to(toolWindow.getIcon()));
-            label.setBorder(JBUI.Borders.empty(4, 10));
-            label.setForeground(UIUtil.getListForeground(isSelected));
-            label.setBackground(UIUtil.getListBackground(isSelected));
-            final JPanel panel = new JPanel(new BorderLayout());
-            panel.add(label, BorderLayout.CENTER);
-            panel.setBackground(UIUtil.getListBackground(isSelected));
-            return panel;
+          @RequiredUIAccess
+          protected void customizeCellRenderer(@Nonnull JList<? extends ToolWindow> list, ToolWindow value, int index, boolean selected, boolean hasFocus) {
+            append(value.getDisplayName().getValue());
+            String activateActionId = ActivateToolWindowAction.getActionIdForToolWindow(value.getId());
+            KeyboardShortcut shortcut = ActionManager.getInstance().getKeyboardShortcut(activateActionId);
+            if (shortcut != null) {
+              append(" " + KeymapUtil.getShortcutText(shortcut), SimpleTextAttributes.GRAY_ATTRIBUTES);
+            }
+            setIcon(value.getIcon());
+            setBorder(JBUI.Borders.empty(2, 10));
           }
         });
 
         final Dimension size = list.getPreferredSize();
-        final JComponent c = this;
+        final JComponent c = (JComponent)TargetAWT.to(myLabel);
         final Insets padding = UIUtil.getListViewportPadding();
         final RelativePoint point = new RelativePoint(c, new Point(-4, -padding.top - padding.bottom - 4 - size.height + (SystemInfo.isMac ? 2 : 0)));
 
@@ -171,11 +186,6 @@ class ToolWindowsWidget extends JLabel implements CustomStatusBarWidget, StatusB
   }
 
   @Override
-  public void propertyChange(PropertyChangeEvent evt) {
-    updateIcon();
-  }
-
-  @Override
   public void uiSettingsChanged(UISettings uiSettings) {
     updateIcon();
   }
@@ -187,19 +197,20 @@ class ToolWindowsWidget extends JLabel implements CustomStatusBarWidget, StatusB
     }
   }
 
+  @RequiredUIAccess
   private void updateIcon() {
-    setToolTipText(null);
+    myLabel.setToolTipText(null);
     if (isActive()) {
       boolean changes = false;
 
-      if (!isVisible()) {
-        setVisible(true);
+      if (!myLabel.isVisible()) {
+        myLabel.setVisible(true);
         changes = true;
       }
 
       Image icon = UISettings.getInstance().getHideToolStripes() ? AllIcons.General.TbShown : AllIcons.General.TbHidden;
-      if (icon != getIcon()) {
-        setIcon(TargetAWT.to(icon));
+      if (icon != myLabel.getImage()) {
+        myLabel.setImage(icon);
         changes = true;
       }
 
@@ -216,13 +227,18 @@ class ToolWindowsWidget extends JLabel implements CustomStatusBarWidget, StatusB
       //}
 
       if (changes) {
-        revalidate();
-        repaint();
+        // FIXME [VISTALL] desktop hack
+        if (Platform.current().isDesktop()) {
+          Component to = TargetAWT.to(myLabel);
+
+          to.revalidate();
+          to.repaint();
+        }
       }
     }
     else {
-      setVisible(false);
-      setToolTipText(null);
+      myLabel.setVisible(false);
+      myLabel.setToolTipText(null);
     }
   }
 
@@ -230,9 +246,15 @@ class ToolWindowsWidget extends JLabel implements CustomStatusBarWidget, StatusB
     return myStatusBar != null && myStatusBar.getProject() != null && Registry.is("ide.windowSystem.showTooWindowButtonsSwitcher");
   }
 
+  @Nullable
   @Override
-  public JComponent getComponent() {
-    return this;
+  public consulo.ui.Component getUIComponent() {
+    return myLabel;
+  }
+
+  @Override
+  public boolean isUnified() {
+    return true;
   }
 
   @Nonnull
@@ -255,7 +277,6 @@ class ToolWindowsWidget extends JLabel implements CustomStatusBarWidget, StatusB
   @Override
   public void dispose() {
     Disposer.dispose(this);
-    KeyboardFocusManager.getCurrentKeyboardFocusManager().removePropertyChangeListener("focusOwner", this);
     myStatusBar = null;
     popup = null;
   }

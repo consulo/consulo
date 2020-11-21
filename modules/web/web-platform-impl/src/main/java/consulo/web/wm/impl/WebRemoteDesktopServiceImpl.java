@@ -16,11 +16,13 @@
 package consulo.web.wm.impl;
 
 import com.intellij.ide.RemoteDesktopService;
+import jakarta.inject.Singleton;
 
 /**
  * @author VISTALL
  * @since 2020-10-21
  */
+@Singleton
 public class WebRemoteDesktopServiceImpl extends RemoteDesktopService {
   @Override
   public boolean isRemoteDesktopConnected() {

@@ -17,16 +17,20 @@ package consulo.web.fileEditor.impl;
 
 import com.intellij.openapi.application.AccessToken;
 import com.intellij.openapi.fileEditor.FileEditor;
+import com.intellij.openapi.fileEditor.impl.DesktopDockableEditorTabbedContainer;
 import com.intellij.openapi.fileEditor.impl.FileEditorManagerImpl;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.ui.docking.DockManager;
+import consulo.disposer.Disposer;
 import consulo.fileEditor.impl.EditorWindow;
 import consulo.fileEditor.impl.EditorWithProviderComposite;
 import consulo.fileEditor.impl.EditorsSplitters;
 import consulo.fileEditor.impl.EditorsSplittersBase;
 import consulo.ui.Component;
-import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.WrappedLayout;
+import consulo.web.ui.docking.impl.WebDockableEditorTabbedContainer;
 import org.jdom.Element;
 
 import javax.annotation.Nonnull;
@@ -43,10 +47,16 @@ public class WebEditorsSplitters extends EditorsSplittersBase implements Editors
 
   private WrappedLayout myLayout;
 
-  public WebEditorsSplitters(FileEditorManagerImpl editorManager) {
+  public WebEditorsSplitters(FileEditorManagerImpl editorManager, DockManager dockManager, boolean createOwnDockableContainer) {
     super(editorManager);
 
     myLayout = WrappedLayout.create();
+
+    if (createOwnDockableContainer) {
+      WebDockableEditorTabbedContainer dockable = new WebDockableEditorTabbedContainer(myManager.getProject(), this, false);
+      Disposer.register(editorManager.getProject(), dockable);
+      dockManager.register(dockable);
+    }
   }
 
   @Nonnull
@@ -101,7 +111,7 @@ public class WebEditorsSplitters extends EditorsSplittersBase implements Editors
   public void setCurrentWindow(EditorWindow window, boolean requestFocus) {
     myCurrentWindow = window;
 
-    if(window != null) {
+    if (window != null) {
       myLayout.set(window.getUIComponent());
     }
   }

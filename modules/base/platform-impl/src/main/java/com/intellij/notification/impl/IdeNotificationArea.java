@@ -16,7 +16,6 @@
 package com.intellij.notification.impl;
 
 import com.intellij.icons.AllIcons;
-import com.intellij.ide.DataManager;
 import com.intellij.ide.ui.UISettings;
 import com.intellij.ide.ui.UISettingsListener;
 import com.intellij.notification.EventLog;
@@ -24,16 +23,13 @@ import com.intellij.notification.LogModel;
 import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationType;
 import com.intellij.notification.impl.ui.NotificationsUtil;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.CustomStatusBarWidget;
 import com.intellij.openapi.wm.IconLikeCustomStatusBarWidget;
 import com.intellij.openapi.wm.StatusBar;
 import com.intellij.openapi.wm.ToolWindow;
-import com.intellij.ui.ClickListener;
 import com.intellij.util.messages.MessageBusConnection;
-import consulo.awt.TargetAWT;
 import consulo.ui.Component;
 import consulo.ui.Label;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -46,7 +42,6 @@ import consulo.ui.style.ComponentColors;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -61,14 +56,7 @@ public class IdeNotificationArea implements CustomStatusBarWidget, IconLikeCusto
 
   public IdeNotificationArea() {
     myLabel = Label.create();
-
-    new ClickListener() {
-      @Override
-      public boolean onClick(@Nonnull MouseEvent e, int clickCount) {
-        EventLog.toggleLog(getProject(), null);
-        return true;
-      }
-    }.installOn(TargetAWT.to(myLabel));
+    myLabel.addClickListener(event -> EventLog.toggleLog(getProject(), null));
 
     MessageBusConnection connection = Application.get().getMessageBus().connect(this);
     connection.subscribe(UISettingsListener.TOPIC, source -> updateStatus());
@@ -92,7 +80,7 @@ public class IdeNotificationArea implements CustomStatusBarWidget, IconLikeCusto
 
   @Nullable
   private Project getProject() {
-    return DataManager.getInstance().getDataContext(myStatusBar.getComponent()).getData(CommonDataKeys.PROJECT);
+    return myStatusBar == null ? null : myStatusBar.getProject();
   }
 
   @Override
@@ -162,6 +150,11 @@ public class IdeNotificationArea implements CustomStatusBarWidget, IconLikeCusto
   @Override
   public Component getUIComponent() {
     return myLabel;
+  }
+
+  @Override
+  public boolean isUnified() {
+    return true;
   }
 
   @Nonnull

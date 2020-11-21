@@ -15,6 +15,7 @@
  */
 package consulo.ui;
 
+import consulo.ui.event.ClickListener;
 import consulo.ui.image.Image;
 import consulo.ui.internal.UIInternal;
 import consulo.util.lang.ObjectUtil;
@@ -32,13 +33,13 @@ public interface TextBoxWithExtensions extends TextBox {
     private final Image myIcon;
     private final Image myHoveredIcon;
 
-    private Clickable.ClickListener myClickListener;
+    private ClickListener myClickListener;
 
     public Extension(boolean left, @Nonnull Image icon, @Nullable Image hoveredIcon) {
       this(left, icon, hoveredIcon, null);
     }
 
-    public Extension(boolean left, @Nonnull Image icon, @Nullable Image hoveredIcon, @Nullable Clickable.ClickListener clickListener) {
+    public Extension(boolean left, @Nonnull Image icon, @Nullable Image hoveredIcon, @Nullable ClickListener clickListener) {
       myLeft = left;
       myIcon = icon;
       myHoveredIcon = ObjectUtil.notNull(hoveredIcon, icon);
@@ -46,7 +47,7 @@ public interface TextBoxWithExtensions extends TextBox {
     }
 
     @Nullable
-    public Clickable.ClickListener getClickListener() {
+    public ClickListener getClickListener() {
       return myClickListener;
     }
 

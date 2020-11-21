@@ -45,7 +45,6 @@ import com.intellij.ui.docking.DockContainer;
 import com.intellij.ui.docking.DockManager;
 import com.intellij.ui.docking.DockableContent;
 import com.intellij.ui.docking.DragSession;
-import com.intellij.ui.docking.impl.DockManagerImpl;
 import com.intellij.ui.switcher.QuickActionProvider;
 import com.intellij.ui.tabs.JBTabs;
 import com.intellij.ui.tabs.TabInfo;
@@ -59,6 +58,7 @@ import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import consulo.awt.TargetAWT;
 import consulo.disposer.Disposer;
+import consulo.ui.docking.BaseDockManager;
 import consulo.util.dataholder.Key;
 import kava.beans.PropertyChangeEvent;
 import kava.beans.PropertyChangeListener;
@@ -1740,8 +1740,8 @@ public class RunnerContentUi implements ContentUI, Disposable, CellTransform.Fac
     return myChildren.stream().anyMatch(child -> child.getWindow() == i);
   }
 
-  private DockManagerImpl getDockManager() {
-    return (DockManagerImpl)DockManager.getInstance(myProject);
+  private BaseDockManager getDockManager() {
+    return (BaseDockManager)DockManager.getInstance(myProject);
   }
 
   class MyDragOutDelegate implements TabInfo.DragOutDelegate {

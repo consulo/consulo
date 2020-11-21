@@ -46,7 +46,7 @@ public class WebPsiAwareFileEditorManagerImpl extends PsiAwareFileEditorManagerI
   @Override
   protected void initUI() {
     if (mySplitters == null) {
-      mySplitters = new WebEditorsSplitters(this);
+      mySplitters = new WebEditorsSplitters(this, myDockManager, true);
     }
   }
 

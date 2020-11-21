@@ -16,13 +16,16 @@
 package consulo.ui.desktop.internal;
 
 import consulo.awt.impl.FromSwingComponentWrapper;
+import consulo.disposer.Disposable;
 import consulo.ui.Button;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.desktop.internal.base.SwingComponentDelegate;
+import consulo.ui.event.ClickListener;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;
+import java.awt.event.ActionListener;
 
 /**
  * @author VISTALL
@@ -43,8 +46,13 @@ class DesktopButtonImpl extends SwingComponentDelegate<JButton> implements Butto
 
   public DesktopButtonImpl(String text) {
     initialize(new MyButton(text));
+  }
 
-    toAWTComponent().addActionListener(e -> getListenerDispatcher(ClickListener.class).onClick());
+  @Override
+  public Disposable addClickListener(@Nonnull ClickListener clickListener) {
+    ActionListener actionListener = e -> getListenerDispatcher(ClickListener.class);
+    toAWTComponent().addActionListener(actionListener);
+    return () -> toAWTComponent().removeActionListener(actionListener);
   }
 
   @Nonnull

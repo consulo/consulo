@@ -674,11 +674,7 @@ public class CharsetToolkit {
       try {
         charset = Charset.forName(name);
       }
-      catch (IllegalCharsetNameException ignored) {
-        //ignore
-      }
-      catch(UnsupportedCharsetException ignored){
-        //ignore
+      catch (IllegalCharsetNameException | UnsupportedCharsetException ignored) {
       }
     }
 

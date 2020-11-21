@@ -21,35 +21,14 @@ import java.io.Serializable;
  * @author VISTALL
  * @since 2020-10-24
  */
-public class RGBColor implements Serializable  {
-  private int myRed;
-  private int myGreen;
-  private int myBlue;
-
-  public RGBColor(int red, int green, int blue) {
-    myRed = red;
-    myBlue = blue;
-    myGreen = green;
-  }
-
-  public RGBColor() {
-  }
-
-  public int getRed() {
-    return myRed;
-  }
-
-  public int getGreen() {
-    return myGreen;
-  }
-
-  public int getBlue() {
-    return myBlue;
-  }
+public class RGBColorShared implements Serializable  {
+  public int myRed;
+  public int myGreen;
+  public int myBlue;
 
   @Override
   public String toString() {
-    final StringBuilder sb = new StringBuilder("GwtColor{");
+    final StringBuilder sb = new StringBuilder("RGBColor{");
     sb.append("myRed=").append(myRed);
     sb.append(", myGreen=").append(myGreen);
     sb.append(", myBlue=").append(myBlue);

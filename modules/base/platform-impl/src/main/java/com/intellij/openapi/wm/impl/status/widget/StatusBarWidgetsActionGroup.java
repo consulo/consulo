@@ -11,6 +11,9 @@ import com.intellij.openapi.wm.StatusBarWidgetFactory;
 import com.intellij.openapi.wm.impl.status.IdeStatusBarImpl;
 import com.intellij.ui.UIBundle;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -66,12 +69,13 @@ public class StatusBarWidgetsActionGroup extends ActionGroup {
     public void setSelected(@Nonnull AnActionEvent e, boolean state) {
       StatusBarWidgetSettings.getInstance().setEnabled(myWidgetFactory, state);
       for (Project project : ProjectManager.getInstance().getOpenProjects()) {
-        StatusBarWidgetsManager.getInstance(project).updateWidget(myWidgetFactory);
+        StatusBarWidgetsManager.getInstance(project).updateWidget(myWidgetFactory, UIAccess.current());
       }
     }
   }
 
   private static class HideCurrentWidgetAction extends DumbAwareAction {
+    @RequiredUIAccess
     @Override
     public void actionPerformed(@Nonnull AnActionEvent e) {
       StatusBarWidgetFactory factory = getFactory(e);
@@ -79,7 +83,7 @@ public class StatusBarWidgetsActionGroup extends ActionGroup {
 
       StatusBarWidgetSettings.getInstance().setEnabled(factory, false);
       for (Project project : ProjectManager.getInstance().getOpenProjects()) {
-        StatusBarWidgetsManager.getInstance(project).updateWidget(factory);
+        StatusBarWidgetsManager.getInstance(project).updateWidget(factory, UIAccess.current());
       }
     }
 

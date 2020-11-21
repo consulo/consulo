@@ -16,7 +16,6 @@
 package com.intellij.openapi.fileEditor.impl;
 
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.ui.docking.DockContainer;
@@ -24,6 +23,7 @@ import com.intellij.ui.docking.DockContainerFactory;
 import com.intellij.ui.docking.DockManager;
 import com.intellij.ui.docking.DockableContent;
 import consulo.disposer.Disposer;
+import consulo.util.lang.ref.SimpleReference;
 import org.jdom.Element;
 
 public class DockableEditorContainerFactory implements DockContainerFactory.Persistent {
@@ -46,7 +46,7 @@ public class DockableEditorContainerFactory implements DockContainerFactory.Pers
   }
 
   private DockContainer createContainer(boolean loadingState) {
-    final Ref<DockableEditorTabbedContainer> containerRef = new Ref<DockableEditorTabbedContainer>();
+    final SimpleReference<DesktopDockableEditorTabbedContainer> containerRef = SimpleReference.create();
     DesktopEditorsSplitters splitters = new DesktopEditorsSplitters(myFileEditorManager, myDockManager, false) {
       @Override
       protected void afterFileClosed(VirtualFile file) {
@@ -71,7 +71,7 @@ public class DockableEditorContainerFactory implements DockContainerFactory.Pers
     if (!loadingState) {
       splitters.createCurrentWindow();
     }
-    final DockableEditorTabbedContainer container = new DockableEditorTabbedContainer(myProject, splitters, true);
+    final DesktopDockableEditorTabbedContainer container = new DesktopDockableEditorTabbedContainer(myProject, splitters, true);
     Disposer.register(container, splitters);
     containerRef.set(container);
     container.getSplitters().startListeningFocus();
@@ -80,7 +80,7 @@ public class DockableEditorContainerFactory implements DockContainerFactory.Pers
 
   @Override
   public DockContainer loadContainerFrom(Element element) {
-    DockableEditorTabbedContainer container = (DockableEditorTabbedContainer)createContainer(true);
+    DesktopDockableEditorTabbedContainer container = (DesktopDockableEditorTabbedContainer)createContainer(true);
     container.getSplitters().readExternal(element.getChild("state"));
     return container;
   }

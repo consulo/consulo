@@ -132,7 +132,7 @@ public class DesktopEditorsSplitters implements Disposable, EditorsSplitters {
     clear();
 
     if (createOwnDockableContainer) {
-      DockableEditorTabbedContainer dockable = new DockableEditorTabbedContainer(myManager.getProject(), this, false);
+      DesktopDockableEditorTabbedContainer dockable = new DesktopDockableEditorTabbedContainer(myManager.getProject(), this, false);
       Disposer.register(manager.getProject(), dockable);
       dockManager.register(dockable);
     }

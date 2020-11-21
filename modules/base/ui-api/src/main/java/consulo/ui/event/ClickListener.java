@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2018 consulo.io
+ * Copyright 2013-2020 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,26 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui;
-
-import consulo.disposer.Disposable;
-import consulo.ui.annotation.RequiredUIAccess;
+package consulo.ui.event;
 
 import javax.annotation.Nonnull;
 import java.util.EventListener;
 
 /**
  * @author VISTALL
- * @since 2018-05-11
+ * @since 2020-11-21
  */
-public interface Clickable extends Component {
-  interface ClickListener extends EventListener {
-    @RequiredUIAccess
-    void onClick();
-  }
-
-  @Nonnull
-  default Disposable addClickListener(@RequiredUIAccess ClickListener listener) {
-    return addListener(ClickListener.class, listener);
-  }
+public interface ClickListener extends EventListener {
+  void clicked(@Nonnull ClickEvent event);
 }

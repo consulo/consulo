@@ -92,7 +92,7 @@ public class GwtToolWindowStripeButton extends SimplePanel {
     myClickListener = clickListener;
   }
 
-  public void build(String text, @javax.annotation.Nullable MultiImageState imageState) {
+  public void build(String text, @Nullable MultiImageState imageState) {
     CellPanel cell = (CellPanel)getWidget();
 
     CellPanel panel = isVertical() ? new VerticalPanel() : new HorizontalPanel();

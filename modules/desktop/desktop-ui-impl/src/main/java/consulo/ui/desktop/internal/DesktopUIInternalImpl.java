@@ -23,6 +23,7 @@ import consulo.awt.TargetAWT;
 import consulo.localize.LocalizeValue;
 import consulo.ui.Button;
 import consulo.ui.Component;
+import consulo.ui.FocusManager;
 import consulo.ui.Label;
 import consulo.ui.Menu;
 import consulo.ui.MenuBar;
@@ -417,5 +418,10 @@ public class DesktopUIInternalImpl extends UIInternal {
   @Override
   public TaskBar _TaskBar_get() {
     return DesktopTaskBarImpl.ourInstance;
+  }
+
+  @Override
+  public FocusManager _FocusManager_get() {
+    return DesktopFocusManager.ourInstance;
   }
 }

@@ -18,21 +18,21 @@ package com.intellij.ui.docking;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.IdeFrame;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.util.Set;
 
 public abstract class DockManager {
-
-  public abstract void register(DockContainer container);
-  public abstract void register(String id, DockContainerFactory factory);
-
   public static DockManager getInstance(Project project) {
     return ServiceManager.getService(project, DockManager.class);
   }
+
+  public abstract void register(DockContainer container);
+
+  public abstract void register(String id, DockContainerFactory factory);
 
   public abstract DragSession createDragSession(MouseEvent mouseEvent, @Nonnull DockableContent content);
 
@@ -43,5 +43,10 @@ public abstract class DockManager {
   public abstract String getDimensionKeyForFocus(@Nonnull String key);
 
   @Nullable
-  public abstract DockContainer getContainerFor(Component c);
+  public DockContainer getContainerFor(Component c) {
+    throw new UnsupportedOperationException("desktop only");
+  }
+
+  @Nullable
+  public abstract DockContainer getContainerFor(consulo.ui.Component c);
 }

@@ -23,7 +23,6 @@ import com.intellij.ui.roots.ScalableIconComponent;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import consulo.disposer.Disposable;
-import consulo.ui.Clickable;
 import consulo.ui.TextBox;
 import consulo.ui.TextBoxWithExtensions;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -31,6 +30,8 @@ import consulo.ui.desktop.internal.util.AWTFocusAdapterAsFocusListener;
 import consulo.ui.desktop.internal.util.AWTKeyAdapterAsKeyListener;
 import consulo.ui.desktop.internal.validableComponent.DocumentSwingValidator;
 import consulo.ui.desktop.laf.extend.textBox.SupportTextBoxWithExtensionsExtender;
+import consulo.ui.event.ClickEvent;
+import consulo.ui.event.ClickListener;
 import consulo.ui.event.FocusListener;
 import consulo.ui.event.KeyListener;
 import consulo.ui.image.Image;
@@ -102,8 +103,8 @@ public class DesktopTextBoxWithExtensions {
 
           @Override
           public Runnable getActionOnClick() {
-            Clickable.ClickListener clickListener = extension.getClickListener();
-            return clickListener == null ? null : clickListener::onClick;
+            ClickListener clickListener = extension.getClickListener();
+            return clickListener == null ? null : () -> clickListener.clicked(new ClickEvent(Supported.this));
           }
         };
 

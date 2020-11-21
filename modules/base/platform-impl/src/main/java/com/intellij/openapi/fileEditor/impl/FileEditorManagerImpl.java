@@ -62,7 +62,6 @@ import com.intellij.openapi.wm.ex.StatusBarEx;
 import com.intellij.reference.SoftReference;
 import com.intellij.ui.docking.DockContainer;
 import com.intellij.ui.docking.DockManager;
-import com.intellij.ui.docking.impl.DockManagerImpl;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.messages.MessageBusConnection;
@@ -84,6 +83,7 @@ import consulo.logging.Logger;
 import consulo.platform.Platform;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.UIAccess;
+import consulo.ui.docking.BaseDockManager;
 import consulo.util.dataholder.Key;
 import gnu.trove.THashSet;
 import kava.beans.PropertyChangeEvent;
@@ -247,8 +247,8 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
     all.add(getMainSplitters());
     Set<DockContainer> dockContainers = myDockManager.getContainers();
     for (DockContainer each : dockContainers) {
-      if (each instanceof DockableEditorTabbedContainer) {
-        all.add(((DockableEditorTabbedContainer)each).getSplitters());
+      if (each instanceof DesktopDockableEditorTabbedContainer) {
+        all.add(((DesktopDockableEditorTabbedContainer)each).getSplitters());
       }
     }
 
@@ -266,8 +266,8 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
       }
       Component focusOwner = fm.getFocusOwner();
       DockContainer container = myDockManager.getContainerFor(focusOwner);
-      if (container instanceof DockableEditorTabbedContainer) {
-        result.setDone(((DockableEditorTabbedContainer)container).getSplitters());
+      if (container instanceof DesktopDockableEditorTabbedContainer) {
+        result.setDone(((DesktopDockableEditorTabbedContainer)container).getSplitters());
       }
       else {
         result.setDone(getMainSplitters());
@@ -279,23 +279,26 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
   private EditorsSplitters getActiveSplittersSync() {
     assertDispatchThread();
 
-    final IdeFocusManager fm = IdeFocusManager.getInstance(myProject);
-    Component focusOwner = fm.getFocusOwner();
-    if (focusOwner == null) {
-      focusOwner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
-    }
-    if (focusOwner == null) {
-      focusOwner = fm.getLastFocusedFor(fm.getLastFocusedFrame());
-    }
+    // FIXME [VISTALL] reimpl this
+    if(Platform.current().isDesktop()) {
+      final IdeFocusManager fm = IdeFocusManager.getInstance(myProject);
+      Component focusOwner = fm.getFocusOwner();
+      if (focusOwner == null) {
+        focusOwner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
+      }
+      if (focusOwner == null) {
+        focusOwner = fm.getLastFocusedFor(fm.getLastFocusedFrame());
+      }
 
-    DockContainer container = myDockManager.getContainerFor(focusOwner);
-    if (container == null) {
-      focusOwner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getActiveWindow();
-      container = myDockManager.getContainerFor(focusOwner);
-    }
+      DockContainer container = myDockManager.getContainerFor(focusOwner);
+      if (container == null) {
+        focusOwner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getActiveWindow();
+        container = myDockManager.getContainerFor(focusOwner);
+      }
 
-    if (container instanceof DockableEditorTabbedContainer) {
-      return ((DockableEditorTabbedContainer)container).getSplitters();
+      if (container instanceof DockableEditorTabbedContainer) {
+        return ((DockableEditorTabbedContainer)container).getSplitters();
+      }
     }
     return getMainSplitters();
   }
@@ -644,7 +647,7 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
   }
 
   public Pair<FileEditor[], FileEditorProvider[]> openFileInNewWindow(@Nonnull VirtualFile file) {
-    return ((DockManagerImpl)DockManager.getInstance(getProject())).createNewDockContainerFor(file, this);
+    return ((BaseDockManager)DockManager.getInstance(getProject())).createNewDockContainerFor(file, this);
   }
 
   private static boolean isOpenInNewWindow() {
@@ -1873,8 +1876,8 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
   public EditorsSplitters getSplittersFor(Component c) {
     EditorsSplitters splitters = null;
     DockContainer dockContainer = myDockManager.getContainerFor(c);
-    if (dockContainer instanceof DockableEditorTabbedContainer) {
-      splitters = ((DockableEditorTabbedContainer)dockContainer).getSplitters();
+    if (dockContainer instanceof DesktopDockableEditorTabbedContainer) {
+      splitters = ((DesktopDockableEditorTabbedContainer)dockContainer).getSplitters();
     }
 
     if (splitters == null) {

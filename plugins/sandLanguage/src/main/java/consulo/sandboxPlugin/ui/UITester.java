@@ -59,7 +59,7 @@ public class UITester {
 
       VerticalLayout fold = VerticalLayout.create();
       fold.add(Label.create("Some label"));
-      fold.add(Button.create("Some Button", () -> Alerts.okError("Clicked!").showAsync()));
+      fold.add(Button.create("Some Button", (e) -> Alerts.okError("Clicked!").showAsync()));
 
       FoldoutLayout layout = FoldoutLayout.create(LocalizeValue.of("Show Me"), fold);
       layout.addStateListener(state -> Alerts.okInfo("State " + state).showAsync());
@@ -86,7 +86,7 @@ public class UITester {
     private Layout swipeChildLayout(String text, @RequiredUIAccess Runnable runnable) {
       DockLayout dockLayout = DockLayout.create();
 
-      dockLayout.center(HorizontalLayout.create().add(Button.create(text, runnable::run)));
+      dockLayout.center(HorizontalLayout.create().add(Button.create(text, e -> runnable.run())));
 
       return dockLayout;
     }

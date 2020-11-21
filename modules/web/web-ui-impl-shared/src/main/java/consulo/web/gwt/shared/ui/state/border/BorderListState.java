@@ -15,7 +15,7 @@
  */
 package consulo.web.gwt.shared.ui.state.border;
 
-import consulo.web.gwt.shared.ui.state.RGBColor;
+import consulo.web.gwt.shared.ui.state.RGBColorShared;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -30,7 +30,7 @@ public class BorderListState implements Serializable {
   public static class BorderState implements Serializable {
     public BorderPosition myPosition;
     public BorderStyle myStyle;
-    public RGBColor myColor;
+    public RGBColorShared myColor;
     public int myWidth;
 
     @Override

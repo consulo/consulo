@@ -15,8 +15,9 @@
  */
 package consulo.ui.web.internal.util;
 
+import consulo.ui.color.RGBColor;
 import consulo.web.gwt.shared.ui.state.HorizontalAlignment;
-import consulo.web.gwt.shared.ui.state.RGBColor;
+import consulo.web.gwt.shared.ui.state.RGBColorShared;
 import consulo.web.gwt.shared.ui.state.border.BorderPosition;
 import consulo.web.gwt.shared.ui.state.border.BorderStyle;
 
@@ -25,8 +26,12 @@ import consulo.web.gwt.shared.ui.state.border.BorderStyle;
  * @since 2020-10-24
  */
 public class Mappers {
-  public static RGBColor map(consulo.ui.color.RGBColor color) {
-    return new RGBColor(color.getRed(), color.getGreen(), color.getBlue());
+  public static RGBColorShared map(RGBColor color) {
+    RGBColorShared rgbColorShared = new RGBColorShared();
+    rgbColorShared.myBlue = color.getBlue();
+    rgbColorShared.myRed = color.getRed();
+    rgbColorShared.myGreen = color.getGreen();
+    return rgbColorShared;
   }
 
   public static BorderPosition map(consulo.ui.border.BorderPosition position) {

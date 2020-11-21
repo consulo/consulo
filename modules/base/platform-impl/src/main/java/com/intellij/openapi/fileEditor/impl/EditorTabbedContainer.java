@@ -619,7 +619,7 @@ public final class EditorTabbedContainer implements Disposable, CloseAction.Clos
 
   public static class DockableEditor implements DockableContent<VirtualFile> {
     final Image myImg;
-    private final DockableEditorTabbedContainer myContainer;
+    private final DesktopDockableEditorTabbedContainer myContainer;
     private final Presentation myPresentation;
     private final Dimension myPreferredSize;
     private final boolean myPinned;
@@ -629,7 +629,7 @@ public final class EditorTabbedContainer implements Disposable, CloseAction.Clos
       myImg = img;
       myFile = file;
       myPresentation = presentation;
-      myContainer = new DockableEditorTabbedContainer(project);
+      myContainer = new DesktopDockableEditorTabbedContainer(project);
       myPreferredSize = preferredSize;
       myPinned = isFilePinned;
     }

@@ -16,6 +16,7 @@
 package consulo.web.gwt.shared.ui.state;
 
 import com.vaadin.shared.AbstractComponentState;
+import consulo.web.gwt.shared.ui.state.image.MultiImageState;
 
 /**
  * @author VISTALL
@@ -23,4 +24,5 @@ import com.vaadin.shared.AbstractComponentState;
  */
 public class LabelState extends AbstractComponentState {
   public HorizontalAlignment myHorizontalAlignment = HorizontalAlignment.LEFT;
+  public MultiImageState myImageState;
 }

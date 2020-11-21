@@ -53,7 +53,7 @@ class UIWindowOverVaadinUI implements Window {
   public UIWindowOverVaadinUI(UI ui) {
     myUI = ui;
     myUI.setSizeFull();
-    myUI.setContent(TargetVaddin.to(myRootPanel));
+    myUI.setContent(TargetVaddin.to(myRootPanel.getComponent()));
   }
 
   @Override

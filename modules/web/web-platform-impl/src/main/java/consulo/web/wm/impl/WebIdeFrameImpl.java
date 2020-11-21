@@ -20,13 +20,17 @@ import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.wm.IdeRootPaneNorthExtension;
 import com.intellij.openapi.wm.StatusBar;
 import com.intellij.openapi.wm.ex.IdeFrameEx;
+import com.intellij.openapi.wm.impl.status.widget.StatusBarWidgetsManager;
 import com.intellij.ui.BalloonLayout;
 import com.vaadin.shared.ui.window.WindowMode;
-import consulo.ui.annotation.RequiredUIAccess;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
+import consulo.ui.Rectangle2D;
 import consulo.ui.UIAccess;
 import consulo.ui.Window;
-import consulo.ui.Rectangle2D;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.web.internal.TargetVaddin;
+import consulo.ui.web.internal.WebFocusManagerImpl;
 import consulo.ui.web.internal.WebRootPaneImpl;
 import consulo.web.application.WebApplication;
 
@@ -38,12 +42,12 @@ import java.io.File;
  * @author VISTALL
  * @since 24-Sep-17
  */
-public class WebIdeFrameImpl implements IdeFrameEx {
-  private final WebStatusBarImpl myStatusBar = new WebStatusBarImpl(this);
+public class WebIdeFrameImpl implements IdeFrameEx, Disposable {
   private final Project myProject;
+  private final WebIdeRootView myRootView;
 
   private Window myWindow;
-  private final WebIdeRootView myRootView;
+  private WebStatusBarImpl myStatusBar;
 
   public WebIdeFrameImpl(Project project) {
     myProject = project;
@@ -54,7 +58,16 @@ public class WebIdeFrameImpl implements IdeFrameEx {
   public void show() {
     myWindow = Window.createModal(myProject.getName());
 
+    myStatusBar = new WebStatusBarImpl(myProject.getApplication(), null);
+    Disposer.register(this, myStatusBar);
+    myStatusBar.install(this);
+
+    myRootView.setStatusBar(myStatusBar);
+
+    StatusBarWidgetsManager.getInstance(myProject).updateAllWidgets(UIAccess.current());
+
     com.vaadin.ui.Window vaadinWindow = (com.vaadin.ui.Window)TargetVaddin.to(myWindow);
+    WebFocusManagerImpl.register(vaadinWindow);
     vaadinWindow.setWindowMode(WindowMode.MAXIMIZED);
 
     myWindow.setResizable(false);
@@ -64,7 +77,7 @@ public class WebIdeFrameImpl implements IdeFrameEx {
       ProjectManager.getInstance().closeAndDisposeAsync(myProject, UIAccess.current());
     });
 
-    myWindow.setContent(myRootView.getComponent());
+    myWindow.setContent(myRootView.getRootPanel().getComponent());
 
     myRootView.update();
 
@@ -72,7 +85,7 @@ public class WebIdeFrameImpl implements IdeFrameEx {
   }
 
   public WebRootPaneImpl getRootPanel() {
-    return myRootView.getComponent();
+    return myRootView.getRootPanel();
   }
 
   @Nonnull
@@ -122,5 +135,10 @@ public class WebIdeFrameImpl implements IdeFrameEx {
   @Override
   public BalloonLayout getBalloonLayout() {
     return null;
+  }
+
+  @Override
+  public void dispose() {
+
   }
 }

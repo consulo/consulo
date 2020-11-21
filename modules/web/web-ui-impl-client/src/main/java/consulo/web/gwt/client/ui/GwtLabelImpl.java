@@ -16,15 +16,44 @@
 package consulo.web.gwt.client.ui;
 
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.Widget;
+
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
  * @since 12-Jun-16
  */
-public class GwtLabelImpl extends Label {
-  public GwtLabelImpl() {
-    setHorizontalAlignment(ALIGN_LEFT);
+public class GwtLabelImpl extends GwtHorizontalLayoutImpl {
+  private Label myLabel;
 
-    setStyleName("ui-label");
+  public GwtLabelImpl() {
+    myLabel = new GwtHtmlLabelImpl();
+    myLabel.setHorizontalAlignment(ALIGN_LEFT);
+    myLabel.setStyleName("ui-label");
+
+    setSpacing(4);
+    
+    add(myLabel);
+  }
+
+  public void setText(String text) {
+    myLabel.setText(text);
+  }
+
+  public void setIcon(@Nullable Widget iconWidget) {
+    clear();
+
+    if (iconWidget == null) {
+      add(myLabel);
+    }
+    else {
+      add(iconWidget);
+      add(myLabel);
+    }
+  }
+
+  public Label getLabel() {
+    return myLabel;
   }
 }

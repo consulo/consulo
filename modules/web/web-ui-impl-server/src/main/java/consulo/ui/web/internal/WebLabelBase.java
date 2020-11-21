@@ -83,11 +83,12 @@ public abstract class WebLabelBase<V extends VaadinLabelComponentBase> extends U
   @Nonnull
   @Override
   public Label setImage(@Nullable Image icon) {
+    toVaadinComponent().setImage(icon);
     return this;
   }
 
   @Override
   public Image getImage() {
-    return null;
+    return toVaadinComponent().getImage();
   }
 }

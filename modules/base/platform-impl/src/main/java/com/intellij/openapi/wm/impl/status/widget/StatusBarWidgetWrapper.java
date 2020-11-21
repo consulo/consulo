@@ -15,6 +15,8 @@ import com.intellij.ui.popup.PopupState;
 import com.intellij.util.Consumer;
 import com.intellij.util.ui.JBFont;
 import com.intellij.util.ui.JBUI;
+import consulo.ui.annotation.RequiredUIAccess;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -42,6 +44,7 @@ public interface StatusBarWidgetWrapper {
   @Nonnull
   StatusBarWidget.WidgetPresentation getPresentation();
 
+  @RequiredUIAccess
   void beforeUpdate();
 
   default void setWidgetTooltip(JComponent widgetComponent, @Nullable String toolTipText, @Nullable String shortcutText) {
@@ -81,6 +84,7 @@ public interface StatusBarWidgetWrapper {
       return SystemInfo.isMac ? JBUI.Fonts.label(11) : JBFont.label();
     }
 
+    @RequiredUIAccess
     @Override
     public void beforeUpdate() {
       String value = myPresentation.getSelectedValue();
@@ -117,6 +121,7 @@ public interface StatusBarWidgetWrapper {
       return myPresentation;
     }
 
+    @RequiredUIAccess
     @Override
     public void beforeUpdate() {
       String text = myPresentation.getText();
@@ -147,6 +152,7 @@ public interface StatusBarWidgetWrapper {
       return myPresentation;
     }
 
+    @RequiredUIAccess
     @Override
     public void beforeUpdate() {
       setIcon(myPresentation.getIcon());

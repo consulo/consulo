@@ -107,7 +107,7 @@ public class WebWelcomeFrameManager extends WelcomeFrameManager {
           text = text.substring(0, text.length() - 3);
         }
 
-        Hyperlink component = Hyperlink.create(text, () -> action.actionPerformed(e));
+        Hyperlink component = Hyperlink.create(text, (event) -> action.actionPerformed(e));
 
         component.setImage(presentation.getIcon());
 
@@ -115,7 +115,7 @@ public class WebWelcomeFrameManager extends WelcomeFrameManager {
       }
     }
 
-    projectActionLayout.add(Button.create("Settings", () -> {
+    projectActionLayout.add(Button.create("Settings", (e) -> {
       ShowSettingsUtil.getInstance().showSettingsDialog(null);
     }));
 

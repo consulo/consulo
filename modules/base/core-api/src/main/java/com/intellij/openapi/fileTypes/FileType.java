@@ -36,7 +36,6 @@ public interface FileType extends Named {
    * @return The file type id.
    */
   @Nonnull
-  @NonNls
   default String getId() {
     return getName();
   }
@@ -108,7 +107,6 @@ public interface FileType extends Named {
    * @return The character set name, in the format supported by {@link java.nio.charset.Charset} class.
    */
   @Nullable
-  @NonNls
   default String getCharset(@Nonnull VirtualFile file, final byte[] content) {
     return null;
   }

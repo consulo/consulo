@@ -38,6 +38,11 @@ public interface CustomStatusBarWidget extends StatusBarWidget {
 
   @Nullable
   default Component getUIComponent() {
+    // override isUnified() too
     return null;
+  }
+
+  default boolean isUnified() {
+    return false;
   }
 }

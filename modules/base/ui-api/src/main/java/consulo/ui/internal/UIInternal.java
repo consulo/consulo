@@ -235,4 +235,8 @@ public abstract class UIInternal {
   public TaskBar _TaskBar_get() {
     throw new UnsupportedOperationException();
   }
+
+  public FocusManager _FocusManager_get() {
+    throw new UnsupportedOperationException();
+  }
 }

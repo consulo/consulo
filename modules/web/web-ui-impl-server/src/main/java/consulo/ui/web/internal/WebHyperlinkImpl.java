@@ -15,8 +15,11 @@
  */
 package consulo.ui.web.internal;
 
+import consulo.ui.Component;
 import consulo.ui.Hyperlink;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.event.ClickEvent;
+import consulo.ui.event.ClickListener;
 import consulo.ui.image.Image;
 import consulo.ui.web.internal.base.UIComponentWithVaadinComponent;
 import consulo.ui.web.internal.base.VaadinComponent;
@@ -36,7 +39,8 @@ public class WebHyperlinkImpl extends UIComponentWithVaadinComponent<WebHyperlin
     private final ButtonRpc myRpc = new ButtonRpc() {
       @Override
       public void onClick() {
-        toUIComponent().getListenerDispatcher(ClickListener.class).onClick();
+        Component component = toUIComponent();
+        component.getListenerDispatcher(ClickListener.class).clicked(new ClickEvent(component));
       }
     };
 

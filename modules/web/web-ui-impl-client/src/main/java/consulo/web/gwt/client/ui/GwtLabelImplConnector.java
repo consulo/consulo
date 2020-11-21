@@ -16,11 +16,14 @@
 package consulo.web.gwt.client.ui;
 
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
+import com.google.gwt.user.client.ui.Label;
 import com.vaadin.client.StyleConstants;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.AbstractComponentConnector;
 import com.vaadin.shared.ui.Connect;
+import consulo.web.gwt.client.ui.image.ImageConverter;
 import consulo.web.gwt.shared.ui.state.LabelState;
+import consulo.web.gwt.shared.ui.state.image.MultiImageState;
 
 /**
  * @author VISTALL
@@ -54,18 +57,23 @@ public class GwtLabelImplConnector extends AbstractComponentConnector {
   public void onStateChanged(StateChangeEvent stateChangeEvent) {
     super.onStateChanged(stateChangeEvent);
 
-    getWidget().setText(getState().caption);
+    Label label = getWidget().getLabel();
+
+    label.setText(getState().caption);
 
     switch (getState().myHorizontalAlignment) {
       case LEFT:
-        getWidget().setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
+        label.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
         break;
       case CENTER:
-        getWidget().setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
+        label.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
         break;
       case RIGHT:
-        getWidget().setHorizontalAlignment(HasHorizontalAlignment.ALIGN_RIGHT);
+        label.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_RIGHT);
         break;
     }
+
+    MultiImageState state = getState().myImageState;
+    getWidget().setIcon(state == null ? null : ImageConverter.create(state));
   }
 }
