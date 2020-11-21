@@ -39,7 +39,7 @@ public class GwtRadionButtonImplConnector extends AbstractComponentConnector imp
 
   @Override
   protected void updateComponentSize() {
-    // nothing
+    GwtComponentSizeUpdater.updateForComponent(this);
   }
 
   @Override

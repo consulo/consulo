@@ -27,6 +27,7 @@ import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.app.WindowWrapper;
 import consulo.ui.Size;
+import consulo.ui.layout.ScrollLayout;
 import consulo.util.concurrent.AsyncResult;
 import consulo.web.fileChooser.FileTreeComponent;
 
@@ -66,7 +67,7 @@ public class WebPathChooserDialog implements PathChooserDialog, FileChooserDialo
         setOKEnabled(myDescriptor.isFileSelectable(file));
       });
 
-      return myTree;
+      return ScrollLayout.create(myTree);
     }
 
     @Nullable

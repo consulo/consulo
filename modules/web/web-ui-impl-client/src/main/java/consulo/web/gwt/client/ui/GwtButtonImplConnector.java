@@ -38,7 +38,7 @@ public class GwtButtonImplConnector extends AbstractComponentConnector implement
 
   @Override
   protected void updateComponentSize() {
-    // ignore
+    GwtComponentSizeUpdater.updateForComponent(this);
   }
 
   @Override

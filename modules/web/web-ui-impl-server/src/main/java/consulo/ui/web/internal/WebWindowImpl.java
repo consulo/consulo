@@ -15,11 +15,12 @@
  */
 package consulo.ui.web.internal;
 
-import com.vaadin.server.Sizeable;
 import consulo.disposer.Disposer;
-import consulo.ui.*;
+import consulo.ui.Component;
+import consulo.ui.MenuBar;
+import consulo.ui.UIAccess;
+import consulo.ui.Window;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.Size;
 import consulo.ui.web.internal.base.ComponentHolder;
 import consulo.ui.web.internal.base.FromVaadinComponentWrapper;
 import consulo.ui.web.internal.base.UIComponentWithVaadinComponent;
@@ -120,17 +121,5 @@ public class WebWindowImpl extends UIComponentWithVaadinComponent<WebWindowImpl.
   @Override
   public Window getParent() {
     return (Window)super.getParent();
-  }
-
-  @RequiredUIAccess
-  @Override
-  public void setSize(@Nonnull Size size) {
-    if (size.getWidth() != -1) {
-      getVaadinComponent().setWidth(size.getWidth(), Sizeable.Unit.PIXELS);
-    }
-
-    if (size.getHeight() != -1) {
-      getVaadinComponent().setHeight(size.getHeight(), Sizeable.Unit.PIXELS);
-    }
   }
 }

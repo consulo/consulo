@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2016 consulo.io
+ * Copyright 2013-2020 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,25 +15,28 @@
  */
 package consulo.web.gwt.client.ui;
 
-import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
+import consulo.web.gwt.client.util.GwtUIUtil;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 /**
  * @author VISTALL
- * @since 12-Jun-16
+ * @since 2020-11-21
  */
-public class GwtHorizontalLayoutImpl extends HorizontalPanel {
-  public GwtHorizontalLayoutImpl() {
-    setHorizontalAlignment(ALIGN_LEFT);
-    setVerticalAlignment(ALIGN_MIDDLE);
-  }
+public class GwtApplicationContainer extends SimplePanel {
+  public void build(@Nonnull List<Widget> widgets) {
+    GwtUIUtil.fill(this);
 
-  public void setChildren(List<Widget> children) {
-    clear();
-    for (Widget child : children) {
-      add(child);
+    if (widgets.isEmpty()) {
+      setWidget(null);
+    }
+    else {
+      Widget widget = widgets.get(0);
+      GwtUIUtil.fill(widget);
+      setWidget(widget);
     }
   }
 }

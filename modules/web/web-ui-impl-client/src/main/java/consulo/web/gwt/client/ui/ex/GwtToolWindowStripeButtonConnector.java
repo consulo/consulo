@@ -70,7 +70,7 @@ public class GwtToolWindowStripeButtonConnector extends AbstractComponentConnect
 
   @Override
   protected void updateComponentSize() {
-    // nothing
+    //GwtComponentSizeUpdater.update(this);
   }
 
   @Override

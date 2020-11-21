@@ -17,7 +17,11 @@ package consulo.web.gwt.client.ui.ex;
 
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.ui.*;
+import consulo.web.gwt.client.ApplicationHolder;
+import consulo.web.gwt.client.ComponentColors;
+import consulo.web.gwt.client.util.GwtStyleUtil;
 import consulo.web.gwt.client.util.GwtUIUtil;
+import consulo.web.gwt.shared.ui.state.RGBColorShared;
 import consulo.web.gwt.shared.ui.state.layout.DockLayoutState;
 
 import java.util.HashMap;
@@ -117,7 +121,10 @@ public class GwtToolWindowPanel extends VerticalPanel {
 
     if (borderPosition != null) {
       Element widgetTd = panel.getWidgetTd(widget);
-      widgetTd.getStyle().setProperty("border" + borderPosition + "Color", "gray");
+
+      RGBColorShared borderColor = ApplicationHolder.INSTANCE.getComponentColor(ComponentColors.BORDER);
+
+      widgetTd.getStyle().setProperty("border" + borderPosition + "Color", GwtStyleUtil.toString(borderColor));
       widgetTd.getStyle().setProperty("border" + borderPosition + "Style", "solid");
       widgetTd.getStyle().setProperty("border" + borderPosition + "Width", "1px");
     }

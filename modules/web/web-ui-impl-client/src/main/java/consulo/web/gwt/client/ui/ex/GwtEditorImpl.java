@@ -22,6 +22,8 @@ import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.*;
+import consulo.web.gwt.client.ApplicationHolder;
+import consulo.web.gwt.client.util.GwtStyleUtil;
 import consulo.web.gwt.client.util.GwtUIUtil;
 import consulo.web.gwt.shared.ui.ex.state.editor.EditorServerRpc;
 
@@ -78,7 +80,7 @@ public class GwtEditorImpl extends SimplePanel {
     public LineNumberSpan(String html, GwtEditorImpl editor) {
       super(html);
 
-      getElement().addClassName(GwtEditorSchemeKeys.LINE_NUMBERS_COLOR + "_fg");
+      getElement().getStyle().setColor(GwtStyleUtil.toString(ApplicationHolder.INSTANCE.getSchemeColor(GwtEditorSchemeKeys.LINE_NUMBERS_COLOR)));
     }
   }
 
@@ -107,10 +109,11 @@ public class GwtEditorImpl extends SimplePanel {
       getCellFormatter().getElement(lineCount, 0).getStyle().setHeight(100, Style.Unit.PCT);
 
       getElement().getStyle().setWhiteSpace(Style.WhiteSpace.NOWRAP);
-      getElement().addClassName(GwtEditorSchemeKeys.GUTTER_BACKGROUND + "_bg");
-      getElement().addClassName(GwtEditorSchemeKeys.TEARLINE_COLOR + "_brc");
+      getElement().getStyle().setBackgroundColor(GwtStyleUtil.toString(ApplicationHolder.INSTANCE.getSchemeColor(GwtEditorSchemeKeys.GUTTER_BACKGROUND)));
+
       getElement().getStyle().setProperty("borderRightStyle", "solid");
       getElement().getStyle().setProperty("borderRightWidth", "1px");
+      getElement().getStyle().setProperty("borderRightColor", GwtStyleUtil.toString(ApplicationHolder.INSTANCE.getSchemeColor(GwtEditorSchemeKeys.TEARLINE_COLOR)));
     }
 
     public void set(int row, Widget widget) {
@@ -232,7 +235,7 @@ public class GwtEditorImpl extends SimplePanel {
   }
 
   private void setDefaultTextColors(Element element) {
-    element.addClassName(GwtEditorSchemeKeys.TEXT + "_attr");
+    //element.addClassName(GwtEditorSchemeKeys.TEXT + "_attr");
   }
 
   private boolean insideGutter(Element element) {

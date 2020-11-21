@@ -37,7 +37,6 @@ import java.util.Properties;
  * @since 11-Sep-17
  */
 public class UIServlet extends VaadinServlet {
-  @StyleSheet("app://GENERATED/__scheme.css?")
   public static class UIImpl extends UI implements FromVaadinComponentWrapper {
     private String myURLPrefix;
     private final UIBuilder myBuilder;
@@ -105,14 +104,7 @@ public class UIServlet extends VaadinServlet {
 
   @Override
   protected VaadinServletService createServletService(DeploymentConfiguration deploymentConfiguration) throws ServiceException {
-    VaadinServletService service = new VaadinServletService(this, deploymentConfiguration) {
-      @Override
-      protected List<RequestHandler> createRequestHandlers() throws ServiceException {
-        List<RequestHandler> requestHandlers = super.createRequestHandlers();
-        requestHandlers.add(new SchemeRequestHandler());
-        return requestHandlers;
-      }
-    };
+    VaadinServletService service = new VaadinServletService(this, deploymentConfiguration);
     service.init();
     service.setClassLoader(UIImpl.class.getClassLoader());
     return service;

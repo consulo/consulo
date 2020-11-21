@@ -33,7 +33,7 @@ import consulo.web.gwt.shared.ui.state.image.MultiImageState;
 public class GwtLabelImplConnector extends AbstractComponentConnector {
   @Override
   protected void updateComponentSize() {
-    // nothing
+    GwtComponentSizeUpdater.updateForComponent(this);
   }
 
   @Override

@@ -21,15 +21,16 @@ import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ui.Component;
 import consulo.ui.MenuBar;
+import consulo.ui.Size;
 import consulo.ui.Window;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.font.Font;
-import consulo.ui.font.FontManager;
-import consulo.ui.Size;
 import consulo.ui.border.BorderPosition;
 import consulo.ui.border.BorderStyle;
+import consulo.ui.font.Font;
+import consulo.ui.font.FontManager;
 import consulo.ui.style.ColorKey;
 import consulo.ui.web.internal.TargetVaddin;
+import consulo.ui.web.internal.WebApplicationContainerImpl;
 import consulo.ui.web.internal.WebRootPaneImpl;
 import consulo.util.dataholder.Key;
 
@@ -50,10 +51,16 @@ class UIWindowOverVaadinUI implements Window {
 
   private boolean myDisposed;
 
+  private WebApplicationContainerImpl myContainer;
+
+  @RequiredUIAccess
   public UIWindowOverVaadinUI(UI ui) {
     myUI = ui;
     myUI.setSizeFull();
-    myUI.setContent(TargetVaddin.to(myRootPanel.getComponent()));
+    myContainer = new WebApplicationContainerImpl();
+    myContainer.set(myRootPanel.getComponent());
+
+    myUI.setContent(TargetVaddin.to(myContainer));
   }
 
   @Override

@@ -36,7 +36,7 @@ public class GwtLabeledLayoutImplConnector extends AbstractSingleComponentContai
 
   @Override
   protected void updateComponentSize() {
-    // nothing
+    GwtComponentSizeUpdater.updateForLayout(this);
   }
 
   @Override

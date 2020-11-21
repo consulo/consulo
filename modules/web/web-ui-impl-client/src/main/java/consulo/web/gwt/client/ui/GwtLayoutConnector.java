@@ -33,7 +33,7 @@ public abstract class GwtLayoutConnector extends AbstractComponentContainerConne
 
   @Override
   protected void updateComponentSize() {
-    // nothing
+    GwtComponentSizeUpdater.updateForLayout(this);
   }
 
   @Override

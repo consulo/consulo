@@ -41,7 +41,7 @@ public class GwtHyperlinkImplConnector extends AbstractComponentConnector implem
 
   @Override
   protected void updateComponentSize() {
-    // ignore
+    GwtComponentSizeUpdater.updateForComponent(this);
   }
 
   @Override

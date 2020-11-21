@@ -36,7 +36,7 @@ public class GwtScrollLayoutImplConnector extends AbstractSingleComponentContain
 
   @Override
   protected void updateComponentSize() {
-    // nothing
+    GwtComponentSizeUpdater.updateForLayout(this);
   }
 
   @Override

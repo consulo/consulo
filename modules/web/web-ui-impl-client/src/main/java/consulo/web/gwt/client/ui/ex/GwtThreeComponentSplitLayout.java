@@ -48,7 +48,7 @@ public class GwtThreeComponentSplitLayout extends SimplePanel {
     mySplitLayoutPanel.setWidgetHidden(myCenterPanel, true);
   }
 
-  public void rebuild(@Nullable Widget leftWidget, @Nullable Widget rightWidget, @javax.annotation.Nullable Widget centerWidget) {
+  public void rebuild(@Nullable Widget leftWidget, @Nullable Widget rightWidget, @Nullable Widget centerWidget) {
     myLeftPanel.setWidget(leftWidget);
     myRightPanel.setWidget(rightWidget);
     myCenterPanel.setWidget(centerWidget);

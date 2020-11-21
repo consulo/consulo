@@ -18,6 +18,7 @@ package consulo.web.gwt.client.ui.ex;
 import com.vaadin.client.StyleConstants;
 import com.vaadin.client.ui.AbstractComponentConnector;
 import com.vaadin.shared.ui.Connect;
+import consulo.web.gwt.client.ui.GwtComponentSizeUpdater;
 import consulo.web.gwt.shared.ui.ex.state.editor.EditorClientRpc;
 import consulo.web.gwt.shared.ui.ex.state.editor.EditorServerRpc;
 import consulo.web.gwt.shared.ui.ex.state.editor.EditorState;
@@ -44,7 +45,7 @@ public class GwtEditorImplConnector extends AbstractComponentConnector {
 
   @Override
   protected void updateComponentSize() {
-    // nothing
+    GwtComponentSizeUpdater.updateForComponent(this);
   }
 
   @Override

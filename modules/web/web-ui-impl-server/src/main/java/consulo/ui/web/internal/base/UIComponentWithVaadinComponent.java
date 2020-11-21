@@ -15,6 +15,7 @@
  */
 package consulo.ui.web.internal.base;
 
+import com.vaadin.server.Sizeable;
 import com.vaadin.ui.AbstractComponent;
 import consulo.disposer.Disposable;
 import consulo.ui.Component;
@@ -98,7 +99,21 @@ public abstract class UIComponentWithVaadinComponent<T extends AbstractComponent
   @RequiredUIAccess
   @Override
   public void setSize(@Nonnull Size size) {
+    T vaadinComponent = getVaadinComponent();
+    if(size.getHeight() == -1) {
+      vaadinComponent.setHeight(null);
+    }
+    else {
+      vaadinComponent.setHeight(size.getHeight(), Sizeable.Unit.PIXELS);
+    }
 
+    if (size.getWidth() == -1) {
+      vaadinComponent.setWidth(null);
+    }
+    else {
+      vaadinComponent.setWidth(size.getWidth(), Sizeable.Unit.PIXELS);
+    }
+    vaadinComponent.markAsDirty();
   }
 
   @Override

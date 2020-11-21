@@ -56,7 +56,7 @@ public class GwtThreeComponentSplitLayoutConnector extends AbstractComponentConn
 
   @Override
   protected void updateComponentSize() {
-    // nothing
+    //GwtComponentSizeUpdater.update(this);
   }
 
   @Override

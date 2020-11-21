@@ -56,7 +56,7 @@ public class WebStyleImpl implements Style {
   public ColorValue getColor(@Nonnull ColorKey colorKey) {
     ColorValue colorValue = myColors.get(colorKey);
     if(colorValue == null) {
-      throw new UnsupportedOperationException(colorKey + " is not supported");
+      return StandardColors.RED.getStaticValue();
     }
     return colorValue;
   }

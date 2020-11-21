@@ -39,7 +39,7 @@ public class GwtCheckBoxImplConnector extends AbstractComponentConnector impleme
 
   @Override
   protected void updateComponentSize() {
-    // nothing
+    GwtComponentSizeUpdater.updateForComponent(this);
   }
 
   @Override

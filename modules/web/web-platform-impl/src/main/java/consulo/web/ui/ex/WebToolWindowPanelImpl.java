@@ -39,7 +39,7 @@ import java.util.*;
  * @since 25-Sep-17
  */
 public class WebToolWindowPanelImpl extends UIComponentWithVaadinComponent<WebToolWindowPanelImpl.Vaadin> implements ToolWindowPanel {
-  private static final Logger LOGGER = Logger.getInstance(WebToolWindowPanelImpl.class);
+  private static final Logger LOG = Logger.getInstance(WebToolWindowPanelImpl.class);
 
   public static class Vaadin extends VaadinComponentContainer {
     private final List<com.vaadin.ui.Component> myChildren = new ArrayList<>();
@@ -89,7 +89,7 @@ public class WebToolWindowPanelImpl extends UIComponentWithVaadinComponent<WebTo
           myRightStripe.addButton(myButton, myComparator);
         }
         else {
-          LOGGER.error("unknown anchor: " + anchor);
+          LOG.error("unknown anchor: " + anchor);
         }
         getVaadinComponent().markAsDirtyRecursive();
       }
@@ -131,7 +131,7 @@ public class WebToolWindowPanelImpl extends UIComponentWithVaadinComponent<WebTo
           myRightStripe.markAsDirtyRecursive();
         }
         else {
-          LOGGER.error("unknown anchor: " + anchor);
+          LOG.error("unknown anchor: " + anchor);
         }
       }
       finally {

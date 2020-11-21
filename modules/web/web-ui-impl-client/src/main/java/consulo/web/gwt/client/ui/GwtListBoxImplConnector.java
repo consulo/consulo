@@ -17,7 +17,6 @@ package consulo.web.gwt.client.ui;
 
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.StyleConstants;
-import com.vaadin.client.annotations.OnStateChange;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.AbstractComponentConnector;
 import com.vaadin.shared.ui.Connect;
@@ -37,7 +36,7 @@ import java.util.List;
 public class GwtListBoxImplConnector extends AbstractComponentConnector {
   @Override
   protected void updateComponentSize() {
-    //
+    GwtComponentSizeUpdater.updateForComponent(this);
   }
 
   @Override
@@ -59,17 +58,6 @@ public class GwtListBoxImplConnector extends AbstractComponentConnector {
       widgets.add(buildItem(item));
     }
     getWidget().setItems(getState().mySelectedIndex, widgets);
-  }
-
-  @OnStateChange({"myWidth", "myHeight"})
-  private void onSizeChanged() {
-    if (getState().myWidth != -1) {
-      getWidget().setWidth(getState().myWidth + "px");
-    }
-
-    if (getState().myHeight != -1) {
-      getWidget().setHeight(getState().myHeight + "px");
-    }
   }
 
   public Widget buildItem(ComboBoxState.Item item) {

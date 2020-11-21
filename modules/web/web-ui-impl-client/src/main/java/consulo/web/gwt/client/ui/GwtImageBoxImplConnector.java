@@ -51,7 +51,7 @@ public class GwtImageBoxImplConnector extends AbstractComponentConnector {
 
   @Override
   protected void updateComponentSize() {
-    // nothing
+    GwtComponentSizeUpdater.updateForComponent(this);
   }
 
   @Override

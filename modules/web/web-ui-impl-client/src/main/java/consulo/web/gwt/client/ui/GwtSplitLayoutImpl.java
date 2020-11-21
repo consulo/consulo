@@ -18,6 +18,11 @@ package consulo.web.gwt.client.ui;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.SplitLayoutPanel;
 import com.google.gwt.user.client.ui.Widget;
+import consulo.web.gwt.client.ApplicationHolder;
+import consulo.web.gwt.client.ComponentColors;
+import consulo.web.gwt.client.util.GwtStyleUtil;
+import consulo.web.gwt.shared.ui.state.RGBColorShared;
+
 import javax.annotation.Nullable;
 
 /**
@@ -115,6 +120,35 @@ public abstract class GwtSplitLayoutImpl extends SplitLayoutPanel {
     double elementSize = getElementSize(myFirstWidget);
 
     myProportion = (int)(elementSize / thisElementSize * 100.);
+  }
+
+  @Override
+  protected void insertSplitter(Widget widget, Widget before) {
+    assert getChildren().size() > 0 : "Can't add a splitter before any children";
+
+    LayoutData layout = (LayoutData)widget.getLayoutData();
+    Splitter splitter = null;
+    switch (getResolvedDirection(layout.direction)) {
+      case WEST:
+        splitter = new HSplitter(widget, false);
+        break;
+      case EAST:
+        splitter = new HSplitter(widget, true);
+        break;
+      case NORTH:
+        splitter = new VSplitter(widget, false);
+        break;
+      case SOUTH:
+        splitter = new VSplitter(widget, true);
+        break;
+      default:
+        assert false : "Unexpected direction";
+    }
+
+    RGBColorShared borderColor = ApplicationHolder.INSTANCE.getComponentColor(ComponentColors.BORDER);
+    splitter.getElement().getStyle().setBackgroundColor(GwtStyleUtil.toString(borderColor));
+    
+    super.insert(splitter, layout.direction, splitterSize, before);
   }
 
   public void updateOnResize() {

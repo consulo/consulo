@@ -15,45 +15,38 @@
  */
 package consulo.web.gwt.client.ui;
 
+import com.vaadin.client.ConnectorHierarchyChangeEvent;
 import com.vaadin.client.communication.StateChangeEvent;
-import com.vaadin.client.ui.AbstractComponentConnector;
 import com.vaadin.shared.ui.Connect;
-import consulo.web.gwt.shared.ui.state.ProgressBarState;
+import consulo.web.gwt.client.ApplicationHolder;
+import consulo.web.gwt.client.util.GwtUIUtil;
+import consulo.web.gwt.shared.ui.state.ApplicationContainerState;
 
 /**
  * @author VISTALL
- * @since 2020-05-11
+ * @since 2020-11-21
  */
-@Connect(canonicalName = "consulo.ui.web.internal.WebProgressBarImpl.Vaadin")
-public class GwtProgressBarImplConnector extends AbstractComponentConnector {
+@Connect(canonicalName = "consulo.ui.web.internal.WebApplicationContainerImpl.Vaadin")
+public class GwtApplicationContainerConnector extends GwtLayoutConnector {
   @Override
-  protected void updateComponentSize() {
-    GwtComponentSizeUpdater.updateForComponent(this);
+  public void onConnectorHierarchyChange(ConnectorHierarchyChangeEvent event) {
+    getWidget().build(GwtUIUtil.remapWidgets(this));
   }
 
   @Override
   public void onStateChanged(StateChangeEvent stateChangeEvent) {
     super.onStateChanged(stateChangeEvent);
 
-    ProgressBarState state = getState();
-
-    getWidget().setIndeterminate(state.indeterminate);
-
-    int minimum = state.minimum;
-    int maximum = state.maximum;
-
-    // TODO [VISTALL] handle if maximum not equal 100
-    
-    getWidget().setState((float)(state.value / 100.));
+    ApplicationHolder.INSTANCE.setApplicationState(getState().myApplicationState);
   }
 
   @Override
-  public GwtProgressBarImpl getWidget() {
-    return (GwtProgressBarImpl)super.getWidget();
+  public ApplicationContainerState getState() {
+    return (ApplicationContainerState)super.getState();
   }
 
   @Override
-  public ProgressBarState getState() {
-    return (ProgressBarState)super.getState();
+  public GwtApplicationContainer getWidget() {
+    return (GwtApplicationContainer)super.getWidget();
   }
 }

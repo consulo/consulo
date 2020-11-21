@@ -16,10 +16,9 @@
 package consulo.ui.web.internal;
 
 import consulo.ui.ListItemRender;
-import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ValueComponent;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.model.ListModel;
-import consulo.ui.Size;
 import consulo.ui.web.internal.base.UIComponentWithVaadinComponent;
 
 import javax.annotation.Nonnull;
@@ -48,15 +47,6 @@ public abstract class WebSingleListComponentBase<E, V extends VaadinSingleListCo
   @RequiredUIAccess
   public void setValueByIndex(int index) {
     setValue(getVaadinComponent().getModel().get(index));
-  }
-
-  @RequiredUIAccess
-  @Override
-  public void setSize(@Nonnull Size size) {
-    V vaadinComponent = getVaadinComponent();
-    vaadinComponent.getState().myHeight = size.getHeight();
-    vaadinComponent.getState().myWidth = size.getWidth();
-    vaadinComponent.markAsDirty();
   }
 
   @Nullable
