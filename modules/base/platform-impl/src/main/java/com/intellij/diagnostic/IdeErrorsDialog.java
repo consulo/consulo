@@ -50,6 +50,7 @@ import consulo.application.ApplicationProperties;
 import consulo.container.PluginException;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginId;
+import consulo.container.plugin.PluginIds;
 import consulo.desktop.wm.impl.DesktopIdeFrameUtil;
 import consulo.ide.base.BaseDataManager;
 import consulo.logging.Logger;
@@ -99,7 +100,7 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
   private HyperlinkLabel myAttachmentWarningLabel;
 
   private int myIndex = 0;
-  private final List<ArrayList<AbstractMessage>> myMergedMessages = new ArrayList<ArrayList<AbstractMessage>>();
+  private final List<ArrayList<AbstractMessage>> myMergedMessages = new ArrayList<>();
   private List<AbstractMessage> myRawMessages;
   private final MessagePool myMessagePool;
   private HeaderlessTabbedPane myTabs;
@@ -412,7 +413,7 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
   }
 
   private void disablePlugin() {
-    final PluginId pluginId = findPluginId(getSelectedMessage().getThrowable());
+    final PluginId pluginId = findFirstPluginId(getSelectedMessage().getThrowable());
     if (pluginId == null) {
       return;
     }
@@ -497,7 +498,7 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
       return false;
     }
 
-    PluginId pluginId = findPluginId(message.getThrowable());
+    PluginId pluginId = findFirstPluginId(message.getThrowable());
     if (pluginId == null) {
       return false;
     }
@@ -549,7 +550,7 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
     }
 
     StringBuilder text = new StringBuilder();
-    PluginId pluginId = findPluginId(throwable);
+    PluginId pluginId = findFirstPluginId(throwable);
     if (pluginId == null) {
       if (throwable instanceof AbstractMethodError) {
         text.append(DiagnosticBundle.message("error.list.message.blame.unknown.plugin"));
@@ -610,7 +611,7 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
       final Throwable throwable = message.getThrowable();
       ErrorReportSubmitter submitter = getSubmitter(throwable);
       if (submitter == null) {
-        PluginId pluginId = findPluginId(throwable);
+        PluginId pluginId = findFirstPluginId(throwable);
         PluginDescriptor plugin = pluginId == null ? null : consulo.container.plugin.PluginManager.findPlugin(pluginId);
         if (plugin == null) {
           // unknown plugin
@@ -764,7 +765,7 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
   }
 
   private static Map<String, ArrayList<AbstractMessage>> mergeMessages(List<AbstractMessage> aErrors) {
-    Map<String, ArrayList<AbstractMessage>> hash2Messages = new LinkedHashMap<String, ArrayList<AbstractMessage>>();
+    Map<String, ArrayList<AbstractMessage>> hash2Messages = new LinkedHashMap<>();
     for (final AbstractMessage each : aErrors) {
       final String hashCode = getThrowableHashCode(each.getThrowable());
       ArrayList<AbstractMessage> list;
@@ -772,7 +773,7 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
         list = hash2Messages.get(hashCode);
       }
       else {
-        list = new ArrayList<AbstractMessage>();
+        list = new ArrayList<>();
         hash2Messages.put(hashCode, list);
       }
       list.add(0, each);
@@ -790,79 +791,43 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
   }
 
   @Nonnull
-  public static Set<PluginId> findPluginIds(@Nonnull Throwable t) {
+  public static Set<PluginId> findAllPluginIds(@Nonnull Throwable t) {
     if (t instanceof PluginException) {
       PluginId pluginId = ((PluginException)t).getPluginId();
-      return Collections.singleton(pluginId);
+      return Set.of(pluginId);
+    }
+
+    if(t instanceof ExtensionException) {
+      Class extensionClass = ((ExtensionException)t).getExtensionClass();
+      PluginId pluginId = consulo.container.plugin.PluginManager.getPluginId(extensionClass);
+      if (pluginId == null) {
+        LOG.error("There no plugin for extension class: " + extensionClass);
+        return Set.of();
+      }
+      return Set.of(pluginId);
     }
 
     Set<PluginId> pluginIds = new TreeSet<>();
-    if (t instanceof NoSuchMethodException) {
-      // check is method called from plugin classes
-      if (t.getMessage() != null) {
-        String className = "";
-        StringTokenizer tok = new StringTokenizer(t.getMessage(), ".");
-        while (tok.hasMoreTokens()) {
-          String token = tok.nextToken();
-          if (token.length() > 0 && Character.isJavaIdentifierStart(token.charAt(0))) {
-            className += token;
-          }
-        }
-
-        addPluginIdByClassName(className, pluginIds);
-      }
-    }
-    else if (t instanceof ClassNotFoundException) {
-      // check is class from plugin classes
-      if (t.getMessage() != null) {
-        String className = t.getMessage();
-
-        addPluginIdByClassName(className, pluginIds);
-      }
-    }
-    else if (t instanceof AbstractMethodError && t.getMessage() != null) {
-      String s = t.getMessage();
-      // org.antlr.works.plugin.intellij.PIFileType.getHighlighter(Lcom/intellij/openapi/project/Project;Lcom/intellij/openapi/vfs/VirtualFile;)Lcom/intellij/openapi/fileTypes/SyntaxHighlighter;
-      int pos = s.indexOf('(');
-      if (pos >= 0) {
-        s = s.substring(0, pos);
-        pos = s.lastIndexOf('.');
-        if (pos >= 0) {
-          s = s.substring(0, pos);
-          addPluginIdByClassName(s, pluginIds);
-        }
-      }
-    }
-
-    else if (t instanceof ExtensionException) {
-      String className = ((ExtensionException)t).getExtensionClass().getName();
-      addPluginIdByClassName(className, pluginIds);
-    }
 
     for (StackTraceElement element : t.getStackTrace()) {
-      if (element != null) {
-        String className = element.getClassName();
-
-        addPluginIdByClassName(className, pluginIds);
+      String classLoaderName = element.getClassLoaderName();
+      if(classLoaderName == null) {
+        continue;
       }
+
+      PluginDescriptor plugin = consulo.container.plugin.PluginManager.findPlugin(PluginId.getId(classLoaderName));
+      if(plugin == null) {
+        continue;
+      }
+      pluginIds.add(plugin.getPluginId());
     }
     return pluginIds;
   }
 
-  private static void addPluginIdByClassName(String className, Set<PluginId> pluginIds) {
-    if (PluginManager.isPluginClass(className)) {
-      PluginId pluginByClassName = PluginManager.getPluginByClassName(className);
-      if (pluginByClassName == null) {
-        return;
-      }
-      pluginIds.add(pluginByClassName);
-    }
-  }
-
   @Nullable
-  public static PluginId findPluginId(Throwable t) {
-    Set<PluginId> pluginIds = findPluginIds(t);
-    return ContainerUtil.getFirstItem(pluginIds);
+  public static PluginId findFirstPluginId(@Nonnull Throwable t) {
+    Set<PluginId> pluginIds = findAllPluginIds(t);
+    return pluginIds.stream().filter(pluginId -> !PluginIds.isPlatformPlugin(pluginId)).findFirst().orElse(null);
   }
 
   private class ClearFatalsAction extends AbstractAction {

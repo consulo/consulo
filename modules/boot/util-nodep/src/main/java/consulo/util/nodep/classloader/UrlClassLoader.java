@@ -265,6 +265,22 @@ public class UrlClassLoader extends ClassLoader {
                  .useLazyClassloadingCaches(Boolean.parseBoolean(System.getProperty("idea.lazy.classloading.caches", "false"))));
   }
 
+  /**
+   * Java 9 Constructor. Do not call it lower java 9 version
+   */
+  protected UrlClassLoader(@Nonnull String name, @Nonnull Builder builder) {
+    super(name, builder.myParent);
+    myURLs = ContainerUtilRt.map2List(builder.myURLs, new Function<URL, URL>() {
+      @Override
+      public URL fun(URL url) {
+        return internProtocol(url);
+      }
+    });
+    myClassPath = createClassPath(builder);
+    myAllowBootstrapResources = builder.myAllowBootstrapResources;
+    myClassLoadingLocks = ourParallelCapableLoaders != null && ourParallelCapableLoaders.contains(getClass()) ? new ClassLoadingLocks() : null;
+  }
+
   protected UrlClassLoader(@Nonnull Builder builder) {
     super(builder.myParent);
     myURLs = ContainerUtilRt.map2List(builder.myURLs, new Function<URL, URL>() {

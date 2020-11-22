@@ -497,7 +497,7 @@ public class CompileDriver {
       }
 
       wereExceptions = true;
-      final PluginId pluginId = IdeErrorsDialog.findPluginId(ex);
+      final PluginId pluginId = IdeErrorsDialog.findFirstPluginId(ex);
 
       final StringBuilder message = new StringBuilder();
       message.append("Internal error");

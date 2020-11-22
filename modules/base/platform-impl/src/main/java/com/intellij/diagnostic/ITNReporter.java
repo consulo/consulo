@@ -52,7 +52,6 @@ import consulo.platform.impl.action.LastActionTracker;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
-import javax.swing.*;
 import java.awt.*;
 import java.util.Set;
 
@@ -101,7 +100,7 @@ public class ITNReporter extends ErrorReportSubmitter {
 
     Throwable t = event.getThrowable();
     if (t != null) {
-      Set<PluginId> pluginIds = IdeErrorsDialog.findPluginIds(t);
+      Set<PluginId> pluginIds = IdeErrorsDialog.findAllPluginIds(t);
       for (PluginId pluginId : pluginIds) {
         final PluginDescriptor pluginDescriptor = PluginManager.findPlugin(pluginId);
         if (pluginDescriptor != null) {

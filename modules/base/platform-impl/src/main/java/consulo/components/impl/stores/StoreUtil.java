@@ -59,7 +59,7 @@ public final class StoreUtil {
       String messagePostfix =
               " Please restart " + ApplicationNamesInfo.getInstance().getFullProductName() + "</p>" + (Application.get().isInternal() ? "<p>" + StringUtil.getThrowableText(e) + "</p>" : "");
 
-      PluginId pluginId = IdeErrorsDialog.findPluginId(e);
+      PluginId pluginId = IdeErrorsDialog.findFirstPluginId(e);
       if (pluginId == null) {
         new Notification("Settings Error", "Unable to save settings", "<p>Failed to save settings." + messagePostfix, NotificationType.ERROR).notify(project);
       }
@@ -97,7 +97,7 @@ public final class StoreUtil {
         String messagePostfix =
                 " Please restart " + ApplicationNamesInfo.getInstance().getFullProductName() + "</p>" + (Application.get().isInternal() ? "<p>" + StringUtil.getThrowableText(e) + "</p>" : "");
 
-        PluginId pluginId = IdeErrorsDialog.findPluginId(e);
+        PluginId pluginId = IdeErrorsDialog.findFirstPluginId(e);
         if (pluginId == null) {
           new Notification("Settings Error", "Unable to save settings", "<p>Failed to save settings." + messagePostfix, NotificationType.ERROR).notify(project);
         }
