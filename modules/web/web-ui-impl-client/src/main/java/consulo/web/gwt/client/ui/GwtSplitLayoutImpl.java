@@ -147,8 +147,8 @@ public abstract class GwtSplitLayoutImpl extends SplitLayoutPanel {
 
     RGBColorShared borderColor = ApplicationHolder.INSTANCE.getComponentColor(ComponentColors.BORDER);
     splitter.getElement().getStyle().setBackgroundColor(GwtStyleUtil.toString(borderColor));
-    
-    super.insert(splitter, layout.direction, splitterSize, before);
+
+    superInsert(splitter, layout.direction, splitterSize, before);
   }
 
   public void updateOnResize() {

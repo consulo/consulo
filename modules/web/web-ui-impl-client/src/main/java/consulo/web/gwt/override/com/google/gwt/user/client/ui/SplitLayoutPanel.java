@@ -481,6 +481,10 @@ public class SplitLayoutPanel extends DockLayoutPanel {
         assert false : "Unexpected direction";
     }
 
-    super.insert(splitter, layout.direction, splitterSize, before);
+    superInsert(splitter, layout.direction, splitterSize, before);
+  }
+
+  protected void superInsert(Widget widget, Direction direction, double size, Widget before) {
+    super.insert(widget, direction, size, before);
   }
 }

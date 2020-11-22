@@ -107,6 +107,6 @@ public class UnifiedSettingsDialog extends WholeLeftWindowWrapper {
       }
     });
 
-    return Couple.of(component, rightPart);
+    return Couple.of(ScrollLayout.create(component), rightPart);
   }
 }

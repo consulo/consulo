@@ -87,9 +87,9 @@
           <extraJvmArgs>-Xmx1G</extraJvmArgs>
           <webappDirectory>${basedir}/target/classes/VAADIN/widgetsets</webappDirectory>
           <launcherDir>${project.basedir}/../../../sandbox/web/target/consulo-sandbox-web-${project.version}-main/Consulo/platform/buildSNAPSHOT/modules/consulo.platform.web/VAADIN/widgetsets</launcherDir>
-          <draftCompile>false</draftCompile>
+          <draftCompile>true</draftCompile>
           <compileReport>false</compileReport>
-          <style>PRETTY</style>
+          <style>DETAILED</style>
           <strict>true</strict>
         </configuration>
 
