@@ -14,7 +14,7 @@ import java.awt.*;
  * See {@link #updateEdt()} usage for the details
  */
 public final class EDT {
-  private static Thread myEventDispatchThread = null;
+  private static Thread ourEventDispatchThread = null;
 
   private EDT() {
   }
@@ -23,11 +23,12 @@ public final class EDT {
    * Do not use it unless you know what you are doing. Updates cached EDT thread.
    */
   public static void updateEdt() {
-    myEventDispatchThread = Thread.currentThread();
+    // FIXME[VISTALL] disabled, in some cases works not as expected, and will throw wrong assertion
+    // ourEventDispatchThread = Thread.currentThread();
   }
 
   public static boolean isEdt(@Nonnull Thread thread) {
-    return thread == myEventDispatchThread;
+    return thread == ourEventDispatchThread;
   }
 
   /**
@@ -42,7 +43,7 @@ public final class EDT {
    */
   public static boolean isCurrentThreadEdt() {
     // Actually, this `if` is not required, but it makes this class work correctly before IdeEventQueue initialization
-    if (myEventDispatchThread == null) {
+    if (ourEventDispatchThread == null) {
       return EventQueue.isDispatchThread();
     }
     return isEdt(Thread.currentThread());
