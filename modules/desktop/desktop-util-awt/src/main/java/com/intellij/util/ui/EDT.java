@@ -23,7 +23,7 @@ public final class EDT {
    * Do not use it unless you know what you are doing. Updates cached EDT thread.
    */
   public static void updateEdt() {
-    // FIXME[VISTALL] disabled, in some cases works not as expected, and will throw wrong assertion
+    // FIXME [VISTALL] disabled, in some cases works not as expected, and will throw wrong assertion
     // ourEventDispatchThread = Thread.currentThread();
   }
 
