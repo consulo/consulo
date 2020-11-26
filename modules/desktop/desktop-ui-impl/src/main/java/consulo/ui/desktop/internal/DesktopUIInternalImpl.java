@@ -435,4 +435,9 @@ public class DesktopUIInternalImpl extends UIInternal {
   public <T> TableModel<T> _TableModel_create(Collection<? extends T> list) {
     return new DesktopTableModelImpl<>(list);
   }
+
+  @Override
+  public ToggleSwitch _Components_toggleSwitch(boolean selected) {
+    return new DesktopToggleSwitchImpl(selected);
+  }
 }

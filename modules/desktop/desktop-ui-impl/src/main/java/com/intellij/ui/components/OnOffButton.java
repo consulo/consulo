@@ -21,6 +21,7 @@ import com.intellij.util.ui.GraphicsUtil;
 import com.intellij.util.ui.UIUtil;
 
 import javax.swing.*;
+import javax.swing.plaf.ButtonUI;
 import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.basic.BasicToggleButtonUI;
 import java.awt.*;
@@ -29,12 +30,26 @@ import java.awt.*;
  * @author Konstantin Bulenkov
  */
 public class OnOffButton extends JToggleButton {
+  private static final String uiClassID = "OnOffButtonUI";
+  
   private String myOnText;
   private String myOffText;
+
   public OnOffButton() {
     setUI(OnOffButtonUI.createUI(this));
     setOpaque(false);
     setBorder(null);
+  }
+
+  @Override
+  public String getUIClassID() {
+    return uiClassID;
+  }
+
+  @Override
+  public void updateUI() {
+    ButtonUI componentUI = (ButtonUI)UIManager.getUI(this);
+    setUI(componentUI == null ? OnOffButtonUI.createUI(this) : componentUI);
   }
 
   public String getOnText() {
@@ -59,10 +74,7 @@ public class OnOffButton extends JToggleButton {
   }
 
   public static class OnOffButtonUI extends BasicToggleButtonUI {
-    private final OnOffButton myButton;
-
     public OnOffButtonUI(OnOffButton checkBox) {
-      myButton = checkBox;
     }
 
     @SuppressWarnings({"MethodOverridesStaticMethodOfSuperclass", "UnusedDeclaration"})
@@ -78,40 +90,47 @@ public class OnOffButton extends JToggleButton {
       final FontMetrics fm = c.getFontMetrics(c.getFont());
       int w = fm.stringWidth(text);
       int h = fm.getHeight();
-      h += 2*4;
+      h += 2 * 4;
       w += 3 * h / 2;
       return new Dimension(w, h);
     }
+
     @Override
     public void paint(Graphics gr, JComponent c) {
       final OnOffButton button = (OnOffButton)c;
       final Dimension size = button.getSize();
-      int w = size.width-8;
-      int h = size.height-6;
+      int w = size.width - 8;
+      int h = size.height - 6;
       if (h % 2 == 1) {
         h--;
       }
       Graphics2D g = ((Graphics2D)gr);
       GraphicsUtil.setupAAPainting(g);
-      g.translate(1,1);
+      g.translate(1, 1);
       if (button.isSelected()) {
-        g.setColor(new JBColor(new Color(57, 113, 238), new Color(13, 41, 62)));
+        Color color = UIManager.getColor("Hyperlink.linkColor");
+        if (color == null) {
+          color = new JBColor(new Color(57, 113, 238), new Color(13, 41, 62));
+        }
+
+        g.setColor(color);
         g.fillRoundRect(0, 0, w, h, h, h);
         g.setColor(UIUtil.getBorderColor());
         g.drawRoundRect(0, 0, w, h, h, h);
         g.setColor(new JBColor(Gray._220, Gray._128));
         g.fillOval(w - h + 1, 1, h - 1, h - 1);
         g.setColor(UIUtil.getListForeground(true));
-        g.drawString(button.getOnText(), h/2, h - 4);
-      } else {
+        g.drawString(button.getOnText(), h / 2, h - 4);
+      }
+      else {
         g.setColor(UIUtil.getPanelBackground());
         g.fillRoundRect(0, 0, w, h, h, h);
         g.setColor(UIUtil.getBorderColor());
         g.drawRoundRect(0, 0, w, h, h, h);
         g.setColor(UIUtil.getLabelDisabledForeground());
-        g.drawString(button.getOffText(), h + 4 , h - 4);
+        g.drawString(button.getOffText(), h + 4, h - 4);
         g.setColor(UIUtil.getBorderColor());
-        g.setPaint(new GradientPaint(h,0, Gray._178, 0,h, Gray._240));
+        g.setPaint(new GradientPaint(h, 0, Gray._178, 0, h, Gray._240));
         g.fillOval(0, 0, h, h);
         g.setColor(UIUtil.getBorderColor());
         g.drawOval(0, 0, h, h);

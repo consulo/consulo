@@ -33,7 +33,6 @@ import com.intellij.ui.LightColors;
 import com.intellij.ui.SimpleColoredComponent;
 import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.ui.components.JBLabel;
-import com.intellij.ui.components.OnOffButton;
 import com.intellij.ui.speedSearch.SpeedSearchUtil;
 import com.intellij.util.ArrayUtilRt;
 import com.intellij.util.Function;
@@ -42,8 +41,11 @@ import com.intellij.util.concurrency.Semaphore;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
+import consulo.awt.TargetAWT;
 import consulo.ide.base.BaseShowSettingsUtil;
 import consulo.logging.Logger;
+import consulo.ui.ToggleSwitch;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
 import gnu.trove.THashMap;
@@ -865,10 +867,10 @@ public class GotoActionModel implements ChooseByNameModel, Comparator<Object>, D
       return freeSpace;
     }
 
+    @RequiredUIAccess
     private static void addOnOffButton(@Nonnull JPanel panel, boolean selected) {
-      OnOffButton button = new OnOffButton();
-      button.setSelected(selected);
-      panel.add(button, BorderLayout.EAST);
+      ToggleSwitch toggleSwitch = ToggleSwitch.create(selected);
+      panel.add(TargetAWT.to(toggleSwitch), BorderLayout.EAST);
       panel.setBorder(JBUI.Borders.empty(0, 2));
     }
 

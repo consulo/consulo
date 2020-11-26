@@ -99,6 +99,14 @@ public class UITester {
       FileChooserTextBoxBuilder builder = FileChooserTextBoxBuilder.create(null);
       layout.add(builder.build());
 
+      ToggleSwitch toggleSwitch = ToggleSwitch.create(true);
+      toggleSwitch.addValueListener(event -> Alerts.okInfo("toggle").showAsync());
+
+      CheckBox checkBox = CheckBox.create("Check box");
+      checkBox.addValueListener(event -> Alerts.okInfo("checkBox").showAsync());
+      
+      layout.add(HorizontalLayout.create().add(Label.create("Toggle Switch")).add(toggleSwitch).add(checkBox));
+      
       Map<String, String> map = new TreeMap<>();
       map.put("test1", "1");
       map.put("test2", "3");

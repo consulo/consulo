@@ -247,4 +247,8 @@ public abstract class UIInternal {
   public <T> Table<T> _Table_create(@Nonnull Iterable<? extends TableColumn> columns, @Nonnull TableModel<T> model) {
     throw new UnsupportedOperationException();
   }
+
+  public ToggleSwitch _Components_toggleSwitch(boolean selected) {
+    throw new UnsupportedOperationException();
+  }
 }

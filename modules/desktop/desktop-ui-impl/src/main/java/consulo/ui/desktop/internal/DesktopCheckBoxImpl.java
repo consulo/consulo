@@ -15,7 +15,6 @@
  */
 package consulo.ui.desktop.internal;
 
-import consulo.disposer.Disposable;
 import com.intellij.ui.components.JBCheckBox;
 import consulo.awt.TargetAWT;
 import consulo.awt.impl.FromSwingComponentWrapper;
@@ -23,15 +22,12 @@ import consulo.localize.LocalizeValue;
 import consulo.ui.CheckBox;
 import consulo.ui.Component;
 import consulo.ui.KeyCode;
-import consulo.ui.ValueComponent;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.desktop.internal.base.SwingComponentDelegate;
 import consulo.ui.util.MnemonicInfo;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 
 /**
  * @author VISTALL
@@ -84,7 +80,9 @@ class DesktopCheckBoxImpl extends SwingComponentDelegate<DesktopCheckBoxImpl.MyJ
   }
 
   public DesktopCheckBoxImpl() {
-    initialize(new MyJBCheckBox());
+    MyJBCheckBox component = new MyJBCheckBox();
+    initialize(component);
+    component.addActionListener(e -> fireListeners());
   }
 
   @Nonnull
@@ -95,12 +93,18 @@ class DesktopCheckBoxImpl extends SwingComponentDelegate<DesktopCheckBoxImpl.MyJ
 
   @RequiredUIAccess
   @Override
-  public void setValue(@Nullable Boolean value, boolean fireEvents) {
-    if (value == null) {
-      throw new IllegalArgumentException();
-    }
-
+  public void setValue(@Nonnull Boolean value, boolean fireEvents) {
     toAWTComponent().setSelected(value);
+
+    if(fireEvents) {
+      fireListeners();
+    }
+  }
+
+  @SuppressWarnings("unchecked")
+  @RequiredUIAccess
+  private void fireListeners() {
+    getListenerDispatcher(ValueListener.class).valueChanged(new ValueEvent(this, toAWTComponent().isSelected()));
   }
 
   @Nonnull
@@ -114,18 +118,6 @@ class DesktopCheckBoxImpl extends SwingComponentDelegate<DesktopCheckBoxImpl.MyJ
   public void setLabelText(@Nonnull LocalizeValue labelText) {
     toAWTComponent().setLabelText(labelText);
     toAWTComponent().updateLabelText();
-  }
-
-  @Nonnull
-  @Override
-  public Disposable addValueListener(@Nonnull ValueComponent.ValueListener<Boolean> valueListener) {
-    ItemListener listener = e -> {
-      if (e.getStateChange() == ItemEvent.SELECTED || e.getStateChange() == ItemEvent.DESELECTED) {
-        valueListener.valueChanged(new ValueEvent<>(this, toAWTComponent().isSelected()));
-      }
-    };
-    toAWTComponent().addItemListener(listener);
-    return () -> toAWTComponent().removeItemListener(listener);
   }
 
   @Override
