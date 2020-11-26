@@ -24,9 +24,9 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 2018-07-03
  */
-public interface ScrollLayout extends Layout {
+public interface ScrollableLayout extends Layout {
   @Nonnull
-  static ScrollLayout create(@Nonnull Component component) {
+  static ScrollableLayout create(@Nonnull Component component) {
     return UIInternal.get()._ScrollLayout_create(component);
   }
 }

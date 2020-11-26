@@ -107,7 +107,7 @@ public class WebUIInternalImpl extends UIInternal {
   }
 
   @Override
-  public ScrollLayout _ScrollLayout_create(Component component) {
+  public ScrollableLayout _ScrollLayout_create(Component component) {
     return new WebScrollLayoutImpl(component);
   }
 

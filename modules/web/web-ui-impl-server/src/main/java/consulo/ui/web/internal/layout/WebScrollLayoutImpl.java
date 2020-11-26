@@ -17,7 +17,7 @@ package consulo.ui.web.internal.layout;
 
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.layout.ScrollLayout;
+import consulo.ui.layout.ScrollableLayout;
 import consulo.ui.web.internal.TargetVaddin;
 import consulo.ui.web.internal.base.UIComponentWithVaadinComponent;
 import consulo.ui.web.internal.base.VaadinSingleComponentContainer;
@@ -28,7 +28,7 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 2020-05-10
  */
-public class WebScrollLayoutImpl extends UIComponentWithVaadinComponent<WebScrollLayoutImpl.Vaadin> implements ScrollLayout {
+public class WebScrollLayoutImpl extends UIComponentWithVaadinComponent<WebScrollLayoutImpl.Vaadin> implements ScrollableLayout {
   public static class Vaadin extends VaadinSingleComponentContainer {
 
   }

@@ -23,6 +23,8 @@ import javax.annotation.Nonnull;
 /**
  * @author VISTALL
  * @since 2020-09-15
+ *
+ * Table without scrolllable layout parent header can be not painted
  */
 public interface Table<E> extends Component {
   @Nonnull

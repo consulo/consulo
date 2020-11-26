@@ -22,7 +22,7 @@ import consulo.ui.*;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.app.WholeLeftWindowWrapper;
 import consulo.ui.layout.DockLayout;
-import consulo.ui.layout.ScrollLayout;
+import consulo.ui.layout.ScrollableLayout;
 import consulo.ui.Size;
 
 import javax.annotation.Nonnull;
@@ -99,7 +99,7 @@ public class UnifiedSettingsDialog extends WholeLeftWindowWrapper {
           rightPart.center(uiComponent);
         }
         else {
-          rightPart.center(ScrollLayout.create(uiComponent));
+          rightPart.center(ScrollableLayout.create(uiComponent));
         }
       }
       else {
@@ -107,6 +107,6 @@ public class UnifiedSettingsDialog extends WholeLeftWindowWrapper {
       }
     });
 
-    return Couple.of(ScrollLayout.create(component), rightPart);
+    return Couple.of(ScrollableLayout.create(component), rightPart);
   }
 }

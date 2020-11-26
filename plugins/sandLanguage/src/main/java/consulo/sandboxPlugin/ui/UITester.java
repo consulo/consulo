@@ -50,6 +50,7 @@ public class UITester {
       tabbedLayout.addTab("Layouts", layouts()).setCloseHandler((tab, component) -> {
       });
       tabbedLayout.addTab("Components", components());
+      tabbedLayout.addTab("Components > Table", table());
 
       return tabbedLayout;
     }
@@ -106,7 +107,13 @@ public class UITester {
       checkBox.addValueListener(event -> Alerts.okInfo("checkBox").showAsync());
       
       layout.add(HorizontalLayout.create().add(Label.create("Toggle Switch")).add(toggleSwitch).add(checkBox));
-      
+
+      return layout;
+    }
+
+    @RequiredUIAccess
+    private Component table() {
+      DockLayout layout = DockLayout.create();
       Map<String, String> map = new TreeMap<>();
       map.put("test1", "1");
       map.put("test2", "3");
@@ -118,7 +125,8 @@ public class UITester {
 
       TableModel<Map.Entry<String, String>> model = TableModel.of(map.entrySet());
 
-      layout.add(Table.create(columns, model));
+      layout.center(ScrollableLayout.create(Table.create(columns, model)));
+
       return layout;
     }
 

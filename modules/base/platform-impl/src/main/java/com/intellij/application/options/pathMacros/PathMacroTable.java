@@ -20,7 +20,7 @@ import com.intellij.openapi.application.PathMacros;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.Pair;
 import com.intellij.ui.JBColor;
-import com.intellij.util.ui.Table;
+import com.intellij.ui.table.JBTable;
 import consulo.application.options.PathMacrosService;
 import consulo.logging.Logger;
 
@@ -30,13 +30,13 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumn;
 import java.awt.*;
 import java.io.File;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 /**
  *  @author dsl
  */
-public class PathMacroTable extends Table {
+public class PathMacroTable extends JBTable {
   private static final Logger LOG = Logger.getInstance(PathMacroTable.class);
   private final PathMacros myPathMacros = PathMacros.getInstance();
   private final MyTableModel myTableModel = new MyTableModel();

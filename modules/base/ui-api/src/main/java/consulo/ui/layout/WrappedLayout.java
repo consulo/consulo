@@ -20,6 +20,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.internal.UIInternal;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
@@ -39,7 +40,7 @@ public interface WrappedLayout extends Layout {
 
   @RequiredUIAccess
   @Nonnull
-  WrappedLayout set(@javax.annotation.Nullable Component component);
+  WrappedLayout set(@Nullable Component component);
 
   @RequiredUIAccess
   @Nonnull

@@ -26,6 +26,7 @@ import consulo.ui.desktop.internal.base.SwingComponentDelegate;
 import consulo.ui.model.TableModel;
 
 import javax.annotation.Nonnull;
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,11 +34,11 @@ import java.util.List;
  * @author VISTALL
  * @since 2020-09-15
  */
-class DesktopTableImpl<Item> extends SwingComponentDelegate<TableView<Item>> implements Table<Item> {
+class DesktopTableImpl<Item> extends SwingComponentDelegate<DesktopTableImpl.MyTableView> implements Table<Item> {
   class MyTableView<K> extends TableView<K> implements FromSwingComponentWrapper {
     MyTableView(ListTableModel<K> model) {
       super(model);
-      setShowColumns(true);
+      setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
     }
 
     @Nonnull
