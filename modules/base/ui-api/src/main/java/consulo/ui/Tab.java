@@ -25,7 +25,7 @@ import java.util.function.BiConsumer;
  * @since 14-Jun-16
  */
 @ApiType
-public interface Tab extends ItemPresentation {
+public interface Tab extends TextItemPresentation {
   void setCloseHandler(@Nullable BiConsumer<Tab, Component> closeHandler);
 
   void select();

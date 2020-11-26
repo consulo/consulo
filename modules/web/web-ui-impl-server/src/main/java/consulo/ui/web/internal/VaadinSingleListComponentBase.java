@@ -15,7 +15,7 @@
  */
 package consulo.ui.web.internal;
 
-import consulo.ui.ListItemRender;
+import consulo.ui.TextItemRender;
 import consulo.ui.ListItemRenders;
 import consulo.ui.ValueComponent;
 import consulo.ui.model.ListModel;
@@ -31,14 +31,14 @@ import java.util.List;
  * @since 2019-02-19
  */
 public abstract class VaadinSingleListComponentBase<E> extends VaadinComponent {
-  private ListItemRender<E> myRender = ListItemRenders.defaultRender();
+  private TextItemRender<E> myRender = ListItemRenders.defaultRender();
   private ListModel<E> myModel;
 
   public void setModel(ListModel<E> model) {
     myModel = model;
   }
 
-  public void setRender(ListItemRender<E> render) {
+  public void setRender(TextItemRender<E> render) {
     myRender = render;
   }
 
@@ -46,7 +46,7 @@ public abstract class VaadinSingleListComponentBase<E> extends VaadinComponent {
     return myModel;
   }
 
-  public ListItemRender<E> getRender() {
+  public TextItemRender<E> getRender() {
     return myRender;
   }
 

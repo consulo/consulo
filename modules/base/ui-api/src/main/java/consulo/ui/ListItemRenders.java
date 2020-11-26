@@ -22,11 +22,11 @@ import javax.annotation.Nonnull;
  * @since 12-Jun-16
  */
 public class ListItemRenders {
-  private static final ListItemRender ourDefaultRender = (render, index, item) -> render.append(item == null ? "" : item.toString());
+  private static final TextItemRender ourDefaultRender = (render, index, item) -> render.append(item == null ? "" : item.toString());
 
   @SuppressWarnings("unchecked")
   @Nonnull
-  public static <E> ListItemRender<E> defaultRender() {
+  public static <E> TextItemRender<E> defaultRender() {
     return ourDefaultRender;
   }
 }

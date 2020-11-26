@@ -16,13 +16,9 @@
 package com.intellij.ui;
 
 import com.intellij.util.ui.EditableModel;
-import javax.annotation.Nullable;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 
 /**
  * @author Konstantin Bulenkov
@@ -36,18 +32,8 @@ class ListToolbarDecorator extends ToolbarDecorator {
     myEditableModel = editableModel;
     myAddActionEnabled = myRemoveActionEnabled = myUpActionEnabled = myDownActionEnabled = true;
     createActions();
-    myList.addListSelectionListener(new ListSelectionListener() {
-      @Override
-      public void valueChanged(ListSelectionEvent e) {
-        updateButtons();
-      }
-    });
-    myList.addPropertyChangeListener("enabled", new PropertyChangeListener() {
-      @Override
-      public void propertyChange(PropertyChangeEvent evt) {
-        updateButtons();
-      }
-    });
+    myList.addListSelectionListener(e -> updateButtons());
+    myList.addPropertyChangeListener("enabled", evt -> updateButtons());
   }
 
   private void createActions() {

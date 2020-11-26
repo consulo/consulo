@@ -24,7 +24,7 @@ import java.util.function.BiConsumer;
  * @since 13-Sep-17
  */
 public interface TreeNode<T> {
-  void setRender(@Nonnull BiConsumer<T, ItemPresentation> render);
+  void setRender(@Nonnull BiConsumer<T, TextItemPresentation> render);
 
   void setLeaf(boolean leaf);
 

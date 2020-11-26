@@ -26,21 +26,21 @@ import javax.annotation.Nullable;
  * @author VISTALL
  * @since 12-Jun-16
  */
-public interface ItemPresentation {
+public interface TextItemPresentation {
   @Nonnull
-  default ItemPresentation withIcon(@Nullable Image image) {
+  default TextItemPresentation withIcon(@Nullable Image image) {
     // unwarranted action
     return this;
   }
 
   @Nonnull
-  default ItemPresentation withAntialiasingType(@Nonnull AntialiasingType type) {
+  default TextItemPresentation withAntialiasingType(@Nonnull AntialiasingType type) {
     // unwarranted action
     return this;
   }
 
   @Nonnull
-  default ItemPresentation withFont(@Nonnull Font font) {
+  default TextItemPresentation withFont(@Nonnull Font font) {
     // unwarranted action
     return this;
   }
@@ -52,7 +52,7 @@ public interface ItemPresentation {
   }
 
   default void append(@Nonnull String text, @Nonnull TextAttribute textAttribute) {
-    append(LocalizeValue.of(text));
+    append(LocalizeValue.of(text), textAttribute);
   }
 
   default void append(@Nonnull LocalizeValue text) {

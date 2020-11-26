@@ -23,7 +23,7 @@ import com.intellij.ui.tabs.TabInfo;
 import consulo.awt.TargetAWT;
 import consulo.localize.LocalizeValue;
 import consulo.ui.Component;
-import consulo.ui.ItemPresentation;
+import consulo.ui.TextItemPresentation;
 import consulo.ui.Tab;
 import consulo.ui.TextAttribute;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -86,7 +86,7 @@ public class DesktopTabImpl implements Tab {
 
   @Nonnull
   @Override
-  public ItemPresentation withIcon(@Nullable Image image) {
+  public TextItemPresentation withIcon(@Nullable Image image) {
     myTabInfo.setIcon(image);
     return this;
   }

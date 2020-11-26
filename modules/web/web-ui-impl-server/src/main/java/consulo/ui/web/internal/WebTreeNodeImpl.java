@@ -15,7 +15,7 @@
  */
 package consulo.ui.web.internal;
 
-import consulo.ui.ItemPresentation;
+import consulo.ui.TextItemPresentation;
 import consulo.ui.TreeNode;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -36,7 +36,7 @@ public class WebTreeNodeImpl<N> implements TreeNode<N> {
   private N myNode;
 
   private List<WebTreeNodeImpl<N>> myChildren;
-  private BiConsumer<N, ItemPresentation> myRender = (n, itemPresentation) -> itemPresentation.append(String.valueOf(n));
+  private BiConsumer<N, TextItemPresentation> myRender = (n, itemPresentation) -> itemPresentation.append(String.valueOf(n));
   private boolean myLeaf;
 
   public WebTreeNodeImpl(@Nullable WebTreeNodeImpl<N> parent, @Nullable N node, Map<String, WebTreeNodeImpl<N>> nodeMap) {
@@ -71,7 +71,7 @@ public class WebTreeNodeImpl<N> implements TreeNode<N> {
   }
 
   @Override
-  public void setRender(@Nonnull BiConsumer<N, ItemPresentation> render) {
+  public void setRender(@Nonnull BiConsumer<N, TextItemPresentation> render) {
     myRender = render;
   }
 
@@ -85,7 +85,7 @@ public class WebTreeNodeImpl<N> implements TreeNode<N> {
     return myLeaf;
   }
 
-  public BiConsumer<N, ItemPresentation> getRender() {
+  public BiConsumer<N, TextItemPresentation> getRender() {
     return myRender;
   }
 }

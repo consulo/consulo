@@ -22,6 +22,6 @@ import javax.annotation.Nullable;
  * @author VISTALL
  * @since 12-Jun-16
  */
-public interface ListItemRender<E> {
-  void render(@Nonnull ItemPresentation render, int index, @Nullable E item);
+public interface TextItemRender<E> {
+  void render(@Nonnull TextItemPresentation render, int index, @Nullable E item);
 }

@@ -170,7 +170,7 @@ public class AppearanceConfigurable extends SimpleConfigurable<AppearanceConfigu
       myPanel.add(LabeledLayout.create(IdeLocalize.groupPresentationMode(), presentationOptions));
     }
 
-    private ListItemRender<AntialiasingType> buildItemRender(boolean editor) {
+    private TextItemRender<AntialiasingType> buildItemRender(boolean editor) {
       return (render, index, item) -> {
         if (item == null) {
           return;

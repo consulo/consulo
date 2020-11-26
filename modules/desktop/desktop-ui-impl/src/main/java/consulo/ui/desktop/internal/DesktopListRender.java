@@ -21,8 +21,8 @@ import com.intellij.util.ui.GraphicsUtil;
 import com.intellij.util.ui.UIUtil;
 import consulo.desktop.util.awt.DesktopAntialiasingType;
 import consulo.ui.AntialiasingType;
-import consulo.ui.ItemPresentation;
-import consulo.ui.ListItemRender;
+import consulo.ui.TextItemPresentation;
+import consulo.ui.TextItemRender;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;
@@ -35,9 +35,9 @@ import java.util.function.Supplier;
  */
 class DesktopListRender<E> extends ColoredListCellRenderer<E> {
   private Supplier<AntialiasingType> myAntialiasingType = () -> DesktopAntialiasingTypeUtil.getAntialiasingTypeForSwingComponent().to();
-  private Supplier<ListItemRender<E>> myRenderSupplier;
+  private Supplier<TextItemRender<E>> myRenderSupplier;
 
-  public DesktopListRender(Supplier<ListItemRender<E>> renderSupplier) {
+  public DesktopListRender(Supplier<TextItemRender<E>> renderSupplier) {
     myRenderSupplier = renderSupplier;
   }
 
@@ -46,7 +46,7 @@ class DesktopListRender<E> extends ColoredListCellRenderer<E> {
     DesktopItemPresentationImpl<E> render = new DesktopItemPresentationImpl<E>(this) {
       @Nonnull
       @Override
-      public ItemPresentation withAntialiasingType(@Nonnull AntialiasingType type) {
+      public TextItemPresentation withAntialiasingType(@Nonnull AntialiasingType type) {
         myAntialiasingType = () -> type;
         updateUI();
         return super.withAntialiasingType(type);

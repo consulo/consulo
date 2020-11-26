@@ -16,7 +16,7 @@
 package consulo.ui.web.internal;
 
 import consulo.localize.LocalizeValue;
-import consulo.ui.ItemPresentation;
+import consulo.ui.TextItemPresentation;
 import consulo.ui.TextAttribute;
 import consulo.ui.image.Image;
 import consulo.ui.web.servlet.WebImageMapper;
@@ -29,12 +29,12 @@ import javax.annotation.Nullable;
  * @author VISTALL
  * @since 2019-02-18
  */
-public class WebItemPresentationImpl implements ItemPresentation {
+public class WebItemPresentationImpl implements TextItemPresentation {
   private ComboBoxState.Item myItem = new ComboBoxState.Item();
 
   @Nonnull
   @Override
-  public ItemPresentation withIcon(@Nullable Image image) {
+  public TextItemPresentation withIcon(@Nullable Image image) {
     myItem.myImageState = image == null ? null : WebImageMapper.map(image).getState();
 
     after();

@@ -15,7 +15,7 @@
  */
 package consulo.ui.web.internal;
 
-import consulo.ui.ListItemRender;
+import consulo.ui.TextItemRender;
 import consulo.ui.ValueComponent;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.model.ListModel;
@@ -40,7 +40,7 @@ public abstract class WebSingleListComponentBase<E, V extends VaadinSingleListCo
   }
 
   //@Override
-  public void setRender(@Nonnull ListItemRender<E> render) {
+  public void setRender(@Nonnull TextItemRender<E> render) {
     getVaadinComponent().setRender(render);
   }
 

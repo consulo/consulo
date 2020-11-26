@@ -122,7 +122,7 @@ public interface ComboBox<E> extends ValueComponent<E> {
   @Nonnull
   ListModel<E> getListModel();
 
-  void setRender(@Nonnull ListItemRender<E> render);
+  void setRender(@Nonnull TextItemRender<E> render);
 
   default void setTextRender(@Nonnull Function<E, String> stringFuc) {
     setRender((render, index, item) -> render.append(stringFuc.apply(item)));

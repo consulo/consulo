@@ -34,7 +34,7 @@ import com.intellij.util.ui.tree.TreeUtil;
 import com.intellij.util.ui.update.MergingUpdateQueue;
 import com.intellij.util.ui.update.Update;
 import consulo.disposer.Disposer;
-import consulo.ui.ItemPresentation;
+import consulo.ui.TextItemPresentation;
 import consulo.ui.decorator.SwingUIDecorator;
 import consulo.ui.TreeNode;
 import consulo.ui.app.impl.settings.UnifiedConfigurableComparator;
@@ -422,7 +422,7 @@ class OptionsTree implements Disposable, OptionsEditorColleague {
     }
 
     @Override
-    public void setRender(@Nonnull BiConsumer<Configurable, ItemPresentation> render) {
+    public void setRender(@Nonnull BiConsumer<Configurable, TextItemPresentation> render) {
       throw new UnsupportedOperationException("just stub, for comparator");
     }
 

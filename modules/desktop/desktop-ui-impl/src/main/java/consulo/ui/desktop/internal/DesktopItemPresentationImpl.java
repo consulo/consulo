@@ -19,7 +19,7 @@ import com.intellij.ui.ColoredListCellRenderer;
 import consulo.awt.TargetAWT;
 import consulo.awt.impl.TargetAWTFacadeImpl;
 import consulo.localize.LocalizeValue;
-import consulo.ui.ItemPresentation;
+import consulo.ui.TextItemPresentation;
 import consulo.ui.TextAttribute;
 import consulo.ui.font.Font;
 import consulo.ui.image.Image;
@@ -31,7 +31,7 @@ import javax.annotation.Nullable;
  * @author VISTALL
  * @since 12-Jun-16
  */
-class DesktopItemPresentationImpl<E> implements ItemPresentation {
+class DesktopItemPresentationImpl<E> implements TextItemPresentation {
   private ColoredListCellRenderer<E> myRenderer;
 
   public DesktopItemPresentationImpl(ColoredListCellRenderer<E> renderer) {
@@ -47,14 +47,14 @@ class DesktopItemPresentationImpl<E> implements ItemPresentation {
 
   @Nonnull
   @Override
-  public ItemPresentation withFont(@Nonnull Font font) {
+  public TextItemPresentation withFont(@Nonnull Font font) {
     myRenderer.setFont(TargetAWT.to(font));
     return this;
   }
 
   @Nonnull
   @Override
-  public ItemPresentation withIcon(@Nullable Image icon) {
+  public TextItemPresentation withIcon(@Nullable Image icon) {
     myRenderer.setIcon(icon);
     return this;
   }
