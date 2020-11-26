@@ -17,17 +17,18 @@ package consulo.sandboxPlugin.ui;
 
 import consulo.ide.ui.FileChooserTextBoxBuilder;
 import consulo.localize.LocalizeValue;
-import consulo.ui.Alerts;
-import consulo.ui.Button;
-import consulo.ui.Component;
-import consulo.ui.Label;
+import consulo.ui.*;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.app.WindowWrapper;
 import consulo.ui.layout.*;
-import consulo.ui.Size;
+import consulo.ui.model.TableModel;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * @author VISTALL
@@ -98,6 +99,18 @@ public class UITester {
       FileChooserTextBoxBuilder builder = FileChooserTextBoxBuilder.create(null);
       layout.add(builder.build());
 
+      Map<String, String> map = new TreeMap<>();
+      map.put("test1", "1");
+      map.put("test2", "3");
+      map.put("test3", "5");
+
+      List<TableColumn<?, Map.Entry<String, String>>> columns = new ArrayList<>();
+      columns.add(TableColumn.<String, Map.Entry<String, String>>create("Column 1", Map.Entry::getKey).build());
+      columns.add(TableColumn.<String, Map.Entry<String, String>>create("Column 2", Map.Entry::getValue).build());
+
+      TableModel<Map.Entry<String, String>> model = TableModel.of(map.entrySet());
+
+      layout.add(Table.create(columns, model));
       return layout;
     }
 

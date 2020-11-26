@@ -23,6 +23,7 @@ import consulo.container.plugin.PluginManager;
 import consulo.localize.LocalizeValue;
 import consulo.ui.*;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.color.ColorValue;
 import consulo.ui.font.FontManager;
 import consulo.ui.image.IconLibraryManager;
 import consulo.ui.image.Image;
@@ -32,8 +33,7 @@ import consulo.ui.image.canvas.Canvas2D;
 import consulo.ui.layout.*;
 import consulo.ui.model.ListModel;
 import consulo.ui.model.MutableListModel;
-import consulo.ui.color.ColorValue;
-import consulo.ui.StaticPosition;
+import consulo.ui.model.TableModel;
 import consulo.ui.style.StyleManager;
 
 import javax.annotation.Nonnull;
@@ -203,6 +203,10 @@ public abstract class UIInternal {
 
   public abstract <T> ListModel<T> _ListModel_create(Collection<? extends T> list);
 
+  public <T> TableModel<T> _TableModel_create(Collection<? extends T> list) {
+    throw new UnsupportedOperationException();
+  }
+
   public abstract <T> MutableListModel<T> _MutableListModel_create(Collection<? extends T> list);
 
   @RequiredUIAccess
@@ -237,6 +241,10 @@ public abstract class UIInternal {
   }
 
   public FocusManager _FocusManager_get() {
+    throw new UnsupportedOperationException();
+  }
+
+  public <T> Table<T> _Table_create(@Nonnull Iterable<? extends TableColumn> columns, @Nonnull TableModel<T> model) {
     throw new UnsupportedOperationException();
   }
 }

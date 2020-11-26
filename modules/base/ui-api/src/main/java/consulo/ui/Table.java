@@ -15,6 +15,7 @@
  */
 package consulo.ui;
 
+import consulo.ui.internal.UIInternal;
 import consulo.ui.model.TableModel;
 
 import javax.annotation.Nonnull;
@@ -25,7 +26,7 @@ import javax.annotation.Nonnull;
  */
 public interface Table<E> extends Component {
   @Nonnull
-  static <T> Table<T> create(@Nonnull Iterable<? extends TableColumn> columns, @Nonnull TableModel<T> model) {
-    return null;
+  static <T> Table<T> create(@Nonnull Iterable<? extends TableColumn<?, T>> columns, @Nonnull TableModel<T> model) {
+    return UIInternal.get()._Table_create(columns, model);
   }
 }

@@ -52,6 +52,7 @@ import consulo.ui.internal.UIInternal;
 import consulo.ui.layout.*;
 import consulo.ui.model.ListModel;
 import consulo.ui.model.MutableListModel;
+import consulo.ui.model.TableModel;
 import consulo.ui.style.StyleManager;
 
 import javax.annotation.Nonnull;
@@ -423,5 +424,15 @@ public class DesktopUIInternalImpl extends UIInternal {
   @Override
   public FocusManager _FocusManager_get() {
     return DesktopFocusManager.ourInstance;
+  }
+
+  @Override
+  public <T> Table<T> _Table_create(@Nonnull Iterable<? extends TableColumn> columns, @Nonnull TableModel<T> model) {
+    return new DesktopTableImpl<>(columns, model);
+  }
+
+  @Override
+  public <T> TableModel<T> _TableModel_create(Collection<? extends T> list) {
+    return new DesktopTableModelImpl<>(list);
   }
 }

@@ -15,6 +15,7 @@
  */
 package consulo.ui.model;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.disposer.Disposable;
 import consulo.ui.internal.UIInternal;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -29,6 +30,13 @@ import java.util.List;
  */
 public interface MutableListModel<E> extends ListModel<E> {
   @Nonnull
+  static <T> MutableListModel<T> of(@Nonnull Collection<? extends T> items) {
+    return UIInternal.get()._MutableListModel_create(items);
+  }
+
+  @Nonnull
+  @Deprecated
+  @DeprecationInfo("Use #of()")
   static <T> MutableListModel<T> create(@Nonnull Collection<? extends T> items) {
     return UIInternal.get()._MutableListModel_create(items);
   }

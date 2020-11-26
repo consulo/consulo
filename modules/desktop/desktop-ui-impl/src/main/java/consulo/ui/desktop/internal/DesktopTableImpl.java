@@ -16,14 +16,51 @@
 package consulo.ui.desktop.internal;
 
 import com.intellij.ui.table.TableView;
+import com.intellij.util.ui.ColumnInfo;
+import com.intellij.util.ui.ListTableModel;
+import consulo.awt.impl.FromSwingComponentWrapper;
+import consulo.ui.Component;
+import consulo.ui.Table;
+import consulo.ui.TableColumn;
 import consulo.ui.desktop.internal.base.SwingComponentDelegate;
+import consulo.ui.model.TableModel;
+
+import javax.annotation.Nonnull;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author VISTALL
  * @since 2020-09-15
  */
-public class DesktopTableImpl<Value> extends SwingComponentDelegate<TableView<Value>> {
-  public DesktopTableImpl() {
-    initialize(new TableView<Value>());
+class DesktopTableImpl<Item> extends SwingComponentDelegate<TableView<Item>> implements Table<Item> {
+  class MyTableView<K> extends TableView<K> implements FromSwingComponentWrapper {
+    MyTableView(ListTableModel<K> model) {
+      super(model);
+      setShowColumns(true);
+    }
+
+    @Nonnull
+    @Override
+    public Component toUIComponent() {
+      return DesktopTableImpl.this;
+    }
+  }
+
+  @SuppressWarnings("unchecked")
+  public DesktopTableImpl(@Nonnull Iterable<? extends TableColumn> columns, @Nonnull TableModel<Item> model) {
+    List<ColumnInfo<Item, ?>> cols = new ArrayList<>();
+    for (TableColumn column : columns) {
+      cols.add((ColumnInfo<Item, ?>)column);
+    }
+
+    ColumnInfo<Item, ?>[] array = cols.toArray(new ColumnInfo[cols.size()]);
+
+    DesktopTableModelImpl tableModel = (DesktopTableModelImpl)model;
+    tableModel.setColumnInfos(array);
+
+    MyTableView<Item> tableView = new MyTableView<>(tableModel);
+
+    initialize(tableView);
   }
 }

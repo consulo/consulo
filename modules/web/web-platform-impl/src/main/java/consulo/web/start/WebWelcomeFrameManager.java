@@ -72,7 +72,7 @@ public class WebWelcomeFrameManager extends WelcomeFrameManager {
 
     AnAction[] recentProjectsActions = myRecentProjectsManager.getRecentProjectsActions(false);
 
-    ListModel<AnAction> model = ListModel.create(Arrays.asList(recentProjectsActions));
+    ListModel<AnAction> model = ListModel.of(Arrays.asList(recentProjectsActions));
 
     ListBox<AnAction> listSelect = ListBox.create(model);
     listSelect.setRender((render, index, item) -> render.append(((ReopenProjectAction)item).getProjectName()));

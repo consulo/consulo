@@ -15,9 +15,23 @@
  */
 package consulo.ui.model;
 
+import consulo.ui.internal.UIInternal;
+
+import javax.annotation.Nonnull;
+import java.util.Collection;
+
 /**
  * @author VISTALL
  * @since 2020-09-15
  */
 public interface TableModel<E> {
+  @Nonnull
+  static <T> TableModel<T> of(@Nonnull Collection<? extends T> items) {
+    return UIInternal.get()._TableModel_create(items);
+  }
+
+  int getSize();
+
+  @Nonnull
+  E get(int index);
 }
