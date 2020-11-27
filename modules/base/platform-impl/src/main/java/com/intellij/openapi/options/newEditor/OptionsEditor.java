@@ -829,6 +829,7 @@ public class OptionsEditor implements DataProvider, Place.Navigator, Disposable,
       result.setDone();
     }
     catch (Throwable e) {
+      LOG.warn(e);
       result.rejectWithThrowable(e);
     }
   }

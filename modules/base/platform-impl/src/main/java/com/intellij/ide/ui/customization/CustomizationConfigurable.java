@@ -19,9 +19,10 @@ import com.intellij.ide.IdeBundle;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.options.SearchableConfigurable;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import consulo.disposer.Disposer;
+import consulo.ui.annotation.RequiredUIAccess;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 
 /**
@@ -31,6 +32,7 @@ import javax.swing.*;
 public class CustomizationConfigurable implements SearchableConfigurable, Configurable.NoScroll {
   private CustomizableActionsPanel myPanel;
 
+  @RequiredUIAccess
   @Override
   public JComponent createComponent() {
     if (myPanel == null) {
@@ -49,34 +51,36 @@ public class CustomizationConfigurable implements SearchableConfigurable, Config
     return "preferences.customizations";
   }
 
+  @RequiredUIAccess
   @Override
   public void apply() throws ConfigurationException {
     myPanel.apply();
   }
 
+  @RequiredUIAccess
   @Override
   public void reset() {
     myPanel.reset();
   }
 
+  @RequiredUIAccess
   @Override
   public boolean isModified() {
     return myPanel.isModified();
   }
 
+  @RequiredUIAccess
   @Override
   public void disposeUIResources() {
+    if(myPanel != null) {
+      Disposer.dispose(myPanel);
+      myPanel = null;
+    }
   }
 
   @Override
   @Nonnull
   public String getId() {
     return getHelpTopic();
-  }
-
-  @Override
-  @Nullable
-  public Runnable enableSearch(String option) {
-    return null;
   }
 }

@@ -220,7 +220,7 @@ public class CustomActionsSchema implements JDOMExternalizable {
   public void resetMainActionGroups() {
     for (Pair pair : myIdToNameList) {
       final ActionGroup actionGroup = (ActionGroup)ActionManager.getInstance().getAction(pair.first);
-      if (actionGroup != null) { //J2EE/Commander plugin was disabled
+      if (actionGroup != null) {
         myIdToActionGroup.put(pair.first, CustomizationUtil.correctActionGroup(actionGroup, this, pair.second));
       }
     }
@@ -230,7 +230,7 @@ public class CustomActionsSchema implements JDOMExternalizable {
     final ActionManager actionManager = ActionManager.getInstance();
     for (Pair pair : myIdToNameList) {
       final ActionGroup actionGroup = (ActionGroup)actionManager.getAction(pair.first);
-      if (actionGroup != null) { //J2EE/Commander plugin was disabled
+      if (actionGroup != null) {
         root.add(ActionsTreeUtil.createNode(ActionsTreeUtil.createGroup(actionGroup, pair.second, null, null, true, null, false)));
       }
     }
