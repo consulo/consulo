@@ -35,15 +35,23 @@ public interface TextBox extends ValueComponent<String>, ValidableComponent<Stri
     return UIInternal.get()._Components_textBox(text);
   }
 
-  @Nonnull
-  default TextBox setPlaceholder(@Nullable String text) {
+  default void setPlaceholder(@Nullable String text) {
     // unwarranted action
-    return this;
   }
 
   @Nonnull
-  default TextBox setVisibleLength(int columns) {
+  default TextBox withPlaceholder(@Nullable String text) {
+    setPlaceholder(text);
+    return this;
+  }
+
+  default void setVisibleLength(int columns) {
     // unwarranted action
+  }
+
+  @Nonnull
+  default TextBox withVisibleLength(int columns) {
+    setVisibleLength(columns);
     return this;
   }
 

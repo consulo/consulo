@@ -18,11 +18,11 @@ package consulo.ui;
 import consulo.annotation.ApiType;
 import consulo.disposer.Disposable;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.border.BorderPosition;
+import consulo.ui.border.BorderStyle;
 import consulo.ui.event.ClickListener;
 import consulo.ui.event.KeyListener;
 import consulo.ui.font.Font;
-import consulo.ui.border.BorderPosition;
-import consulo.ui.border.BorderStyle;
 import consulo.ui.style.ColorKey;
 import consulo.ui.style.ComponentColors;
 import consulo.util.dataholder.Key;
@@ -89,16 +89,36 @@ public interface Component extends Disposable, UserDataHolder {
   @RequiredUIAccess
   void setVisible(boolean value);
 
+  @RequiredUIAccess
+  @Nonnull
+  default Component withVisible(boolean visible) {
+    setVisible(visible);
+    return this;
+  }
+
   boolean isEnabled();
 
   @RequiredUIAccess
   void setEnabled(boolean value);
+
+  @RequiredUIAccess
+  default Component withEnabled(boolean enabled) {
+    setEnabled(enabled);
+    return this;
+  }
 
   @Nullable
   Component getParent();
 
   @RequiredUIAccess
   void setSize(@Nonnull Size size);
+
+  @Nonnull
+  @RequiredUIAccess
+  default Component withSize(@Nonnull Size size) {
+    setSize(size);
+    return this;
+  }
 
   @Nonnull
   default <T> Disposable addUserDataProvider(@Nonnull Key<T> key, @Nonnull Supplier<T> supplier) {
@@ -112,6 +132,13 @@ public interface Component extends Disposable, UserDataHolder {
   Font getFont();
 
   void setFont(@Nonnull Font font);
+
+  @Nonnull
+  @RequiredUIAccess
+  default Component withFont(@Nonnull Font font) {
+    setFont(font);
+    return this;
+  }
 
   /**
    * @return runner for unregister listener

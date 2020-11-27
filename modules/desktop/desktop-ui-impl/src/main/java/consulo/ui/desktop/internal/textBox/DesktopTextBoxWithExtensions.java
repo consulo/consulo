@@ -23,7 +23,6 @@ import com.intellij.ui.roots.ScalableIconComponent;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import consulo.disposer.Disposable;
-import consulo.ui.TextBox;
 import consulo.ui.TextBoxWithExtensions;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.desktop.internal.util.AWTFocusAdapterAsFocusListener;
@@ -115,18 +114,14 @@ public class DesktopTextBoxWithExtensions {
       return this;
     }
 
-    @Nonnull
     @Override
-    public TextBox setPlaceholder(@Nullable String text) {
+    public void setPlaceholder(@Nullable String text) {
       toAWTComponent().getEmptyText().setText(text);
-      return this;
     }
 
-    @Nonnull
     @Override
-    public TextBox setVisibleLength(int columns) {
+    public void setVisibleLength(int columns) {
       toAWTComponent().setColumns(columns);
-      return this;
     }
 
     @Override
@@ -231,18 +226,14 @@ public class DesktopTextBoxWithExtensions {
       return myTextField.hasFocus();
     }
 
-    @Nonnull
     @Override
-    public TextBox setPlaceholder(@Nullable String text) {
+    public void setPlaceholder(@Nullable String text) {
       myTextField.getEmptyText().setText(text);
-      return this;
     }
 
-    @Nonnull
     @Override
-    public TextBox setVisibleLength(int columns) {
+    public void setVisibleLength(int columns) {
       myTextField.setColumns(columns);
-      return this;
     }
 
     @Override

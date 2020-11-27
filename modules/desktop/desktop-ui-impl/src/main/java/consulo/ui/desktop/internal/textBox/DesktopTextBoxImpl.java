@@ -75,18 +75,14 @@ public class DesktopTextBoxImpl extends DocumentSwingValidator<String, JBTextFie
     return toAWTComponent();
   }
 
-  @Nonnull
   @Override
-  public TextBox setPlaceholder(@Nullable String text) {
+  public void setPlaceholder(@Nullable String text) {
     toAWTComponent().getEmptyText().setText(text);
-    return this;
   }
 
-  @Nonnull
   @Override
-  public TextBox setVisibleLength(int columns) {
+  public void setVisibleLength(int columns) {
     toAWTComponent().setColumns(columns);
-    return this;
   }
 
   @Override

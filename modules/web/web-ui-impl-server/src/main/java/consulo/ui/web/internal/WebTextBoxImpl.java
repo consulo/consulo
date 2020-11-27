@@ -55,18 +55,6 @@ public class WebTextBoxImpl extends UIComponentWithVaadinComponent<WebTextBoxImp
     getVaadinComponent().markAsDirty();
   }
 
-  @Nullable
-  @Override
-  public TextBox setPlaceholder(@Nullable String text) {
-    return null;
-  }
-
-  @Nonnull
-  @Override
-  public TextBox setVisibleLength(int columns) {
-    return this;
-  }
-
   @Override
   public void selectAll() {
 

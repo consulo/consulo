@@ -21,7 +21,6 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.DocumentAdapter;
 import com.intellij.ui.components.fields.ExpandableTextField;
 import consulo.disposer.Disposable;
-import consulo.ui.TextBox;
 import consulo.ui.TextBoxWithExpandAction;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.desktop.internal.validableComponent.DocumentSwingValidator;
@@ -93,18 +92,14 @@ public class DesktopTextBoxWithExpandAction {
       return this;
     }
 
-    @Nonnull
     @Override
-    public TextBox setPlaceholder(@Nullable String text) {
+    public void setPlaceholder(@Nullable String text) {
       toAWTComponent().getEmptyText().setText(text);
-      return this;
     }
 
-    @Nonnull
     @Override
-    public TextBox setVisibleLength(int columns) {
+    public void setVisibleLength(int columns) {
       toAWTComponent().setColumns(columns);
-      return this;
     }
 
     @Override
@@ -176,18 +171,14 @@ public class DesktopTextBoxWithExpandAction {
       return this;
     }
 
-    @Nonnull
     @Override
-    public TextBox setPlaceholder(@Nullable String text) {
+    public void setPlaceholder(@Nullable String text) {
       myTextBox.setPlaceholder(text);
-      return this;
     }
 
-    @Nonnull
     @Override
-    public TextBox setVisibleLength(int columns) {
+    public void setVisibleLength(int columns) {
       myTextBox.setVisibleLength(columns);
-      return this;
     }
 
     @Override

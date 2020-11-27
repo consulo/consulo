@@ -71,4 +71,11 @@ public interface ValueComponent<V> extends Component {
 
   @RequiredUIAccess
   void setValue(V value, boolean fireEvents);
+
+  @RequiredUIAccess
+  @SuppressWarnings("unchecked")
+  default ValueComponent<V> withValue(@Nullable V value) {
+    setValue(value);
+    return this;
+  }
 }
