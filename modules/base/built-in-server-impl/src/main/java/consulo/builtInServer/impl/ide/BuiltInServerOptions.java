@@ -7,7 +7,6 @@ import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.options.Configurable;
-import com.intellij.openapi.options.SimpleConfigurable;
 import com.intellij.openapi.util.Getter;
 import com.intellij.util.xmlb.XmlSerializerUtil;
 import com.intellij.util.xmlb.annotations.Attribute;
@@ -23,7 +22,7 @@ import org.jdom.Element;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Collection;
-import java.util.Collections;
+import java.util.List;
 
 @Singleton
 @State(name = "BuiltInServerOptions", storages = @Storage("other.xml"))
@@ -56,11 +55,9 @@ public class BuiltInServerOptions implements PersistentStateComponent<BuiltInSer
     @Override
     public Collection<? extends Configurable> createConfigurables(@Nonnull DebuggerSettingsCategory category) {
       if (category == DebuggerSettingsCategory.GENERAL) {
-        SimpleConfigurable<BuiltInServerConfigurableUi, BuiltInServerOptions> configurable =
-                SimpleConfigurable.create("builtInServer", "Built-in server", BuiltInServerConfigurableUi.class, BuiltInServerOptions.getInstance());
-        return Collections.singletonList(configurable);
+        return List.of(new BuiltInServerConfigurable());
       }
-      return Collections.emptyList();
+      return List.of();
     }
 
     @Override

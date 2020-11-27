@@ -21,11 +21,9 @@ import consulo.options.ApplicationConfigurableEP;
 import consulo.options.ProjectConfigurableEP;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
-import org.jetbrains.annotations.Nls;
-import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 
 /**
@@ -68,7 +66,6 @@ public interface Configurable extends UnnamedConfigurable {
    *
    * @return the visible name of the component.
    */
-  @Nls
   default String getDisplayName() {
     return null;
   }
@@ -80,7 +77,6 @@ public interface Configurable extends UnnamedConfigurable {
    * @return the help topic, or null if no help is available.
    */
   @Nullable
-  @NonNls
   default String getHelpTopic() {
     return null;
   }

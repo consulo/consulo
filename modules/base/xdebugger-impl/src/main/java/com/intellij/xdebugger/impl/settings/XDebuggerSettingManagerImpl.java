@@ -25,33 +25,27 @@ import com.intellij.util.xmlb.annotations.Attribute;
 import com.intellij.util.xmlb.annotations.Property;
 import com.intellij.util.xmlb.annotations.Tag;
 import com.intellij.xdebugger.settings.XDebuggerSettings;
+import com.intellij.xdebugger.settings.XDebuggerSettingsManager;
 import gnu.trove.THashMap;
-import org.jdom.Element;
-import javax.annotation.Nonnull;
 import jakarta.inject.Singleton;
+import org.jdom.Element;
 
+import javax.annotation.Nonnull;
 import java.util.*;
 
 /**
  * @author nik
  */
 @Singleton
-@SuppressWarnings("ClassNameSameAsAncestorName")
-@State(
-        name = "XDebuggerSettings",
-        storages = {
-                @Storage(file = StoragePathMacros.APP_CONFIG + "/other.xml", deprecated = true),
-                @Storage(file = StoragePathMacros.APP_CONFIG + "/debugger.xml")
-        }
-)
-public class XDebuggerSettingManagerImpl extends com.intellij.xdebugger.settings.XDebuggerSettingsManager implements PersistentStateComponent<XDebuggerSettingManagerImpl.SettingsState> {
+@State(name = "XDebuggerSettings", storages = {@Storage(file = StoragePathMacros.APP_CONFIG + "/other.xml", deprecated = true), @Storage(file = StoragePathMacros.APP_CONFIG + "/debugger.xml")})
+public class XDebuggerSettingManagerImpl extends XDebuggerSettingsManager implements PersistentStateComponent<XDebuggerSettingManagerImpl.SettingsState> {
   private Map<String, XDebuggerSettings<?>> mySettingsById;
   private Map<Class<? extends XDebuggerSettings>, XDebuggerSettings<?>> mySettingsByClass;
   private XDebuggerDataViewSettings myDataViewSettings = new XDebuggerDataViewSettings();
   private XDebuggerGeneralSettings myGeneralSettings = new XDebuggerGeneralSettings();
 
   public static XDebuggerSettingManagerImpl getInstanceImpl() {
-    return (XDebuggerSettingManagerImpl)com.intellij.xdebugger.settings.XDebuggerSettingsManager.getInstance();
+    return (XDebuggerSettingManagerImpl)XDebuggerSettingsManager.getInstance();
   }
 
   @Override
