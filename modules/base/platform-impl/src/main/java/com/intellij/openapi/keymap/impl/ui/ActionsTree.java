@@ -21,7 +21,6 @@ import com.intellij.ide.ui.UISettings;
 import com.intellij.ide.ui.search.SearchUtil;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.QuickList;
-import com.intellij.openapi.keymap.KeyMapBundle;
 import com.intellij.openapi.keymap.Keymap;
 import com.intellij.openapi.keymap.KeymapUtil;
 import com.intellij.openapi.keymap.impl.KeymapImpl;
@@ -29,16 +28,19 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.ui.*;
+import com.intellij.ui.ColoredTreeCellRenderer;
+import com.intellij.ui.Gray;
+import com.intellij.ui.JBColor;
+import com.intellij.ui.ScrollPaneFactory;
+import com.intellij.ui.tree.AsyncTreeModel;
 import com.intellij.ui.treeStructure.Tree;
-import com.intellij.ui.treeStructure.treetable.TreeTableModel;
-import com.intellij.util.ui.EmptyIcon;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.tree.TreeUtil;
 import com.intellij.util.ui.tree.WideSelectionTreeUI;
+import consulo.disposer.Disposable;
 import consulo.ui.image.Image;
-import org.jetbrains.annotations.NonNls;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.event.TreeSelectionListener;
@@ -48,7 +50,6 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 
 public class ActionsTree {
-  private static final Icon EMPTY_ICON = EmptyIcon.ICON_18;
   private static final Image CLOSE_ICON = AllIcons.Nodes.Folder;
 
   private final JTree myTree;
@@ -58,15 +59,16 @@ public class ActionsTree {
   private Group myMainGroup = new Group("", null, null);
   private boolean myShowBoundActions = Registry.is("keymap.show.alias.actions");
 
-  @NonNls
   private static final String ROOT = "ROOT";
 
   private String myFilter = null;
+  private final DefaultTreeModel myModel;
 
-  public ActionsTree() {
+  public ActionsTree(@Nonnull Disposable disposable) {
     myRoot = new DefaultMutableTreeNode(ROOT);
 
-    myTree = new Tree(new MyModel(myRoot)) {
+    myModel = new DefaultTreeModel(myRoot);
+    myTree = new Tree(new AsyncTreeModel(myModel, disposable)) {
       @Override
       public void paint(Graphics g) {
         super.paint(g);
@@ -170,9 +172,8 @@ public class ActionsTree {
     }
     myRoot = ActionsTreeUtil.createNode(mainGroup);
     myMainGroup = mainGroup;
-    MyModel model = (MyModel)myTree.getModel();
-    model.setRoot(myRoot);
-    model.nodeStructureChanged(myRoot);
+    myModel.setRoot(myRoot);
+    myModel.nodeStructureChanged(myRoot);
 
     pathsKeeper.restorePaths();
   }
@@ -180,80 +181,6 @@ public class ActionsTree {
   public void filterTree(final KeyboardShortcut keyboardShortcut, final QuickList [] currentQuickListIds) {
     reset(myKeymap, currentQuickListIds, myFilter, keyboardShortcut);
   }
-
-  private class MyModel extends DefaultTreeModel implements TreeTableModel {
-    protected MyModel(DefaultMutableTreeNode root) {
-      super(root);
-    }
-
-    @Override
-    public void setTree(JTree tree) {
-    }
-
-    public int getColumnCount() {
-      return 2;
-    }
-
-    public String getColumnName(int column) {
-      switch (column) {
-        case 0: return KeyMapBundle.message("action.column.name");
-        case 1: return KeyMapBundle.message("shortcuts.column.name");
-      }
-      return "";
-    }
-
-    public Object getValueAt(Object value, int column) {
-      if (!(value instanceof DefaultMutableTreeNode)) {
-        return "???";
-      }
-
-      if (column == 0) {
-        return value;
-      }
-      else if (column == 1) {
-        Object userObject = ((DefaultMutableTreeNode)value).getUserObject();
-        if (userObject instanceof QuickList) {
-          userObject = ((QuickList)userObject).getActionId();
-        }
-
-        if (userObject instanceof String) {
-          Shortcut[] shortcuts = myKeymap.getShortcuts((String)userObject);
-          return KeymapUtil.getShortcutsText(shortcuts);
-        }
-        else {
-          return "";
-        }
-      }
-      else {
-        return "???";
-      }
-    }
-
-    public Object getChild(Object parent, int index) {
-      return ((TreeNode)parent).getChildAt(index);
-    }
-
-    public int getChildCount(Object parent) {
-      return ((TreeNode)parent).getChildCount();
-    }
-
-    public Class getColumnClass(int column) {
-      if (column == 0) {
-        return TreeTableModel.class;
-      }
-      else {
-        return Object.class;
-      }
-    }
-
-    public boolean isCellEditable(Object node, int column) {
-      return column == 0;
-    }
-
-    public void setValueAt(Object aValue, Object node, int column) {
-    }
-  }
-
 
   private static boolean isActionChanged(String actionId, Keymap oldKeymap, Keymap newKeymap) {
     if (!newKeymap.canModify()) return false;

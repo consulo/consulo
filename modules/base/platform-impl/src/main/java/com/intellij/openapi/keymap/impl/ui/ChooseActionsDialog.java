@@ -66,7 +66,7 @@ public class ChooseActionsDialog extends DialogWrapper {
     myKeymap = keymap;
     myQuicklists = quicklists;
 
-    myActionsTree = new ActionsTree();
+    myActionsTree = new ActionsTree(getDisposable());
     myActionsTree.reset(keymap, quicklists);
     myActionsTree.getTree().getSelectionModel().setSelectionMode(TreeSelectionModel.DISCONTIGUOUS_TREE_SELECTION);
 

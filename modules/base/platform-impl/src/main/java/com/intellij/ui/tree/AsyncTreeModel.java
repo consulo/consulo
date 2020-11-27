@@ -292,7 +292,7 @@ public final class AsyncTreeModel extends AbstractTreeModel implements Identifia
 
   private boolean isValidThread() {
     if (processor.foreground.isValidThread()) return true;
-    LOG.warn(new IllegalStateException("AsyncTreeModel is used from unexpected thread"));
+    LOG.warn(new IllegalStateException("AsyncTreeModel is used from unexpected thread: " + Thread.currentThread()));
     return false;
   }
 
