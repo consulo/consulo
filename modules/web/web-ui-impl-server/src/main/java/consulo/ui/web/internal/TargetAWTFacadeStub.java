@@ -16,13 +16,12 @@
 package consulo.ui.web.internal;
 
 import consulo.awt.TargetAWTFacade;
-import consulo.ui.KeyCode;
-import consulo.ui.image.Image;
-import consulo.ui.image.ImageKey;
-import consulo.ui.color.ColorValue;
-import consulo.ui.color.RGBColor;
 import consulo.ui.Rectangle2D;
 import consulo.ui.Size;
+import consulo.ui.color.ColorValue;
+import consulo.ui.color.RGBColor;
+import consulo.ui.image.Image;
+import consulo.ui.image.ImageKey;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -142,11 +141,6 @@ public class TargetAWTFacadeStub implements TargetAWTFacade {
   @Nonnull
   @Override
   public Font to(@Nonnull consulo.ui.font.Font font) {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public int to(@Nonnull KeyCode code) {
     throw new UnsupportedOperationException();
   }
 

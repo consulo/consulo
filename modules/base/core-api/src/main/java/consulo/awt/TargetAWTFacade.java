@@ -16,15 +16,14 @@
 package consulo.awt;
 
 import consulo.ui.Component;
-import consulo.ui.KeyCode;
+import consulo.ui.Rectangle2D;
+import consulo.ui.Size;
 import consulo.ui.Window;
+import consulo.ui.color.ColorValue;
+import consulo.ui.color.RGBColor;
 import consulo.ui.font.Font;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageKey;
-import consulo.ui.color.ColorValue;
-import consulo.ui.color.RGBColor;
-import consulo.ui.Rectangle2D;
-import consulo.ui.Size;
 import org.jetbrains.annotations.Contract;
 
 import javax.annotation.Nonnull;
@@ -74,8 +73,6 @@ public interface TargetAWTFacade {
 
   @Nonnull
   java.awt.Font to(@Nonnull Font font);
-
-  int to(@Nonnull KeyCode code);
 
   java.awt.Image toImage(@Nonnull ImageKey key);
 }

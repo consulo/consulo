@@ -116,7 +116,6 @@ public class DesktopIntBoxImpl extends DocumentSwingValidator<Integer, JBTextFie
     return StringUtil.isEmpty(text) ? 0 : Integer.parseInt(text);
   }
 
-  @Nonnull
   @Override
   public IntBox setRange(int min, int max) {
     myMinValue = min;
@@ -124,11 +123,9 @@ public class DesktopIntBoxImpl extends DocumentSwingValidator<Integer, JBTextFie
     return this;
   }
 
-  @Nonnull
   @Override
-  public IntBox setPlaceholder(@Nullable String text) {
+  public void setPlaceholder(@Nullable String text) {
     toAWTComponent().getEmptyText().setText(text);
-    return this;
   }
 
   @SuppressWarnings("unchecked")

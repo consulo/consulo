@@ -271,15 +271,6 @@ public class TargetAWTFacadeImpl implements TargetAWTFacade {
   }
 
   @Override
-  public int to(@Nonnull KeyCode code) {
-    if (code.ordinal() >= KeyCode.A.ordinal() && code.ordinal() <= KeyCode.Z.ordinal()) {
-      int diff = code.ordinal() - KeyCode.A.ordinal();
-      return java.awt.event.KeyEvent.VK_A + diff;
-    }
-    throw new IllegalArgumentException(code + "' is not supported");
-  }
-
-  @Override
   public java.awt.Image toImage(@Nonnull ImageKey key) {
     DesktopImageKeyImpl desktopImageKey = (DesktopImageKeyImpl)key;
     return desktopImageKey.toAWTImage();

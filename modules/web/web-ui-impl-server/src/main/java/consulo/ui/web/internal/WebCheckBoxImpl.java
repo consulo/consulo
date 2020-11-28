@@ -17,12 +17,10 @@ package consulo.ui.web.internal;
 
 import consulo.localize.LocalizeValue;
 import consulo.ui.CheckBox;
-import consulo.ui.KeyCode;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
@@ -75,15 +73,5 @@ public class WebCheckBoxImpl extends WebBooleanValueComponentBase<WebCheckBoxImp
     UIAccess.assertIsUIThread();
 
     toVaadinComponent().setLabelText(textValue);
-  }
-
-  @Override
-  public void setMnemonicKey(@Nullable KeyCode key) {
-
-  }
-
-  @Override
-  public void setMnemonicTextIndex(int index) {
-
   }
 }

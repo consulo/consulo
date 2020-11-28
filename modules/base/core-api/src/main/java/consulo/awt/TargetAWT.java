@@ -21,7 +21,6 @@ import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginIds;
 import consulo.container.plugin.PluginManager;
 import consulo.ui.Component;
-import consulo.ui.KeyCode;
 import consulo.ui.Window;
 import consulo.ui.font.Font;
 import consulo.ui.image.Image;
@@ -132,10 +131,6 @@ public class TargetAWT {
   @Nonnull
   public static java.awt.Font to(@Nonnull Font font) {
     return ourFacade.to(font);
-  }
-
-  public static int to(@Nonnull KeyCode code) {
-    return ourFacade.to(code);
   }
 
   public static java.awt.Image toImage(@Nonnull ImageKey key) {

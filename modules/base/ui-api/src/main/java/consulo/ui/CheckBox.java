@@ -28,7 +28,7 @@ import javax.annotation.Nonnull;
  * @since 09-Jun-16
  */
 @ApiType
-public interface CheckBox extends ValueComponent<Boolean>, Mnemonicable{
+public interface CheckBox extends ValueComponent<Boolean>, Mnemonicable {
   @Nonnull
   @RequiredUIAccess
   @Deprecated

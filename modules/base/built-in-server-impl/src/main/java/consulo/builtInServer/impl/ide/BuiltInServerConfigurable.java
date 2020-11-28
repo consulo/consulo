@@ -51,9 +51,8 @@ public class BuiltInServerConfigurable extends SimpleConfigurableByProperties im
     BuiltInServerOptions options = BuiltInServerOptions.getInstance();
 
     VerticalLayout root = VerticalLayout.create();
-    IntBox portBox = IntBox.create();
+    IntBox portBox = IntBox.create().withRange(1024, Short.MAX_VALUE & 0xFFFF);
     propertyBuilder.add(portBox, () -> options.builtInServerPort, it -> options.builtInServerPort = it);
-    portBox.setRange(1024, Short.MAX_VALUE & 0xFFFF);
     root.add(LabeledBuilder.simple(LocalizeValue.of("Port"), portBox));
 
     CheckBox canAcceptExternalConnectionsBox = CheckBox.create("Can accept external connections");

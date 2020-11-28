@@ -16,18 +16,15 @@
 package consulo.ui.desktop.internal;
 
 import com.intellij.ui.components.JBCheckBox;
-import consulo.awt.TargetAWT;
 import consulo.awt.impl.FromSwingComponentWrapper;
 import consulo.localize.LocalizeValue;
 import consulo.ui.CheckBox;
 import consulo.ui.Component;
-import consulo.ui.KeyCode;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.desktop.internal.base.SwingComponentDelegate;
 import consulo.ui.util.MnemonicInfo;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
@@ -73,7 +70,7 @@ class DesktopCheckBoxImpl extends SwingComponentDelegate<DesktopCheckBoxImpl.MyJ
       }
       else {
         toAWTComponent().setText(mnemonicInfo.getText());
-        setMnemonic(TargetAWT.to(mnemonicInfo.getKeyCode()));
+        setMnemonic(mnemonicInfo.getKeyCode());
         setDisplayedMnemonicIndex(mnemonicInfo.getIndex());
       }
     }
@@ -118,15 +115,5 @@ class DesktopCheckBoxImpl extends SwingComponentDelegate<DesktopCheckBoxImpl.MyJ
   public void setLabelText(@Nonnull LocalizeValue labelText) {
     toAWTComponent().setLabelText(labelText);
     toAWTComponent().updateLabelText();
-  }
-
-  @Override
-  public void setMnemonicKey(@Nullable KeyCode key) {
-    toAWTComponent().setMnemonic(key == null ? 0 : TargetAWT.to(key));
-  }
-
-  @Override
-  public void setMnemonicTextIndex(int index) {
-    toAWTComponent().setDisplayedMnemonicIndex(index);
   }
 }

@@ -27,6 +27,7 @@ import consulo.ui.desktop.internal.base.SwingComponentDelegate;
 import consulo.ui.image.Image;
 import consulo.ui.color.ColorValue;
 import consulo.ui.HorizontalAlignment;
+import consulo.ui.util.MnemonicInfo;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -43,11 +44,13 @@ class DesktopLabelImpl extends SwingComponentDelegate<DesktopLabelImpl.MyJLabel>
     private HorizontalAlignment myHorizontalAlignment2 = HorizontalAlignment.LEFT;
 
     MyJLabel(@Nonnull LocalizeValue text) {
-      super(text.get());
+      super("");
 
       setHorizontalAlignment2(HorizontalAlignment.LEFT);
 
       myTextValue = text;
+
+      updateText();
     }
 
     @Override
@@ -100,7 +103,18 @@ class DesktopLabelImpl extends SwingComponentDelegate<DesktopLabelImpl.MyJLabel>
         return;
       }
 
-      setText(myTextValue.getValue());
+      String text = myTextValue.getValue();
+      MnemonicInfo mnemonicInfo = MnemonicInfo.parse(text);
+      if(mnemonicInfo == null) {
+         setText(text);
+         setDisplayedMnemonicIndex(-1);
+         setDisplayedMnemonic(0);
+      }
+      else {
+        setText(mnemonicInfo.getText());
+        setDisplayedMnemonicIndex(mnemonicInfo.getIndex());
+        setDisplayedMnemonic(mnemonicInfo.getKeyCode());
+      }
     }
   }
 

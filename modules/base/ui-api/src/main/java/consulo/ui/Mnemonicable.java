@@ -15,14 +15,9 @@
  */
 package consulo.ui;
 
-import javax.annotation.Nullable;
-
 /**
  * @author VISTALL
  * @since 2018-05-14
  */
 public interface Mnemonicable {
-  void setMnemonicKey(@Nullable KeyCode key);
-
-  void setMnemonicTextIndex(int index);
 }

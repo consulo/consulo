@@ -15,6 +15,7 @@
  */
 package consulo.ui;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.ui.internal.UIInternal;
 
 import javax.annotation.Nonnull;
@@ -35,9 +36,21 @@ public interface IntBox extends ValueComponent<Integer>, ValidableComponent<Inte
     return UIInternal.get()._Components_intBox(value);
   }
 
-  @Nonnull
-  IntBox setPlaceholder(@Nullable String text);
+  void setPlaceholder(@Nullable String text);
 
   @Nonnull
+  default IntBox withPlaceholder(@Nullable String text) {
+    setPlaceholder(text);
+    return this;
+  }
+
+  @Deprecated
+  @DeprecationInfo("Return type will be changed to void, use #withRange")
   IntBox setRange(int min, int max);
+
+  @Nonnull
+  default IntBox withRange(int min, int max) {
+    setRange(min, max);
+    return this;
+  }
 }

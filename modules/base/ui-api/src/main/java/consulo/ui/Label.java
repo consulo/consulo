@@ -29,7 +29,7 @@ import javax.annotation.Nullable;
  * @author VISTALL
  * @since 11-Jun-16
  */
-public interface Label extends Component {
+public interface Label extends Component, Mnemonicable {
   @Nonnull
   static Label create() {
     return create(LocalizeValue.empty());

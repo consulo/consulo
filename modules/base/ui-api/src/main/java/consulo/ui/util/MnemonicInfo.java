@@ -15,8 +15,7 @@
  */
 package consulo.ui.util;
 
-import consulo.ui.KeyCode;
-
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
@@ -25,7 +24,7 @@ import javax.annotation.Nullable;
  */
 public class MnemonicInfo {
   @Nullable
-  public static MnemonicInfo parse(String text) {
+  public static MnemonicInfo parse(@Nonnull String text) {
     final StringBuilder realText = new StringBuilder();
     char mnemonic = '\0';
     int index = -1;
@@ -40,20 +39,20 @@ public class MnemonicInfo {
       }
     }
 
-    return mnemonic == '\0' ? null : new MnemonicInfo(KeyCode.from(mnemonic), index, realText.toString());
+    return mnemonic == '\0' ? null : new MnemonicInfo(mnemonic, index, realText.toString());
   }
 
-  private final KeyCode myKeyCode;
+  private final char myKeyCode;
   private final int myIndex;
   private final String myText;
 
-  public MnemonicInfo(KeyCode keyCode, int index, String text) {
+  public MnemonicInfo(char keyCode, int index, String text) {
     myKeyCode = keyCode;
     myIndex = index;
     myText = text;
   }
 
-  public KeyCode getKeyCode() {
+  public char getKeyCode() {
     return myKeyCode;
   }
 

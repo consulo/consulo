@@ -55,10 +55,8 @@ public class WebIntBoxImpl extends UIComponentWithVaadinComponent<WebIntBoxImpl.
     getVaadinComponent().markAsDirty();
   }
 
-  @Nullable
   @Override
-  public IntBox setPlaceholder(@Nullable String text) {
-    return null;
+  public void setPlaceholder(@Nullable String text) {
   }
 
   @Nonnull
