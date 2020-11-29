@@ -109,7 +109,7 @@ public class DesktopTextBoxImpl extends DocumentSwingValidator<String, JBTextFie
 
   @RequiredUIAccess
   @Override
-  public void setValue(String value, boolean fireEvents) {
+  public void setValue(String value, boolean fireListeners) {
     toAWTComponent().setText(value);
   }
 }

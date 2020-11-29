@@ -90,10 +90,10 @@ class DesktopCheckBoxImpl extends SwingComponentDelegate<DesktopCheckBoxImpl.MyJ
 
   @RequiredUIAccess
   @Override
-  public void setValue(@Nonnull Boolean value, boolean fireEvents) {
+  public void setValue(@Nonnull Boolean value, boolean fireListeners) {
     toAWTComponent().setSelected(value);
 
-    if(fireEvents) {
+    if(fireListeners) {
       fireListeners();
     }
   }

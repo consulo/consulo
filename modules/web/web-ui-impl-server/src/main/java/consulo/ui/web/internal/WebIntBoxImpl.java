@@ -50,7 +50,7 @@ public class WebIntBoxImpl extends UIComponentWithVaadinComponent<WebIntBoxImpl.
 
   @RequiredUIAccess
   @Override
-  public void setValue(Integer value, boolean fireEvents) {
+  public void setValue(Integer value, boolean fireListeners) {
     getVaadinComponent().getState().caption = String.valueOf(value);
     getVaadinComponent().markAsDirty();
   }

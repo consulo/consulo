@@ -69,7 +69,7 @@ public class DesktopComboBoxImpl<E> extends SwingComponentDelegate<ComboBoxWithW
 
   @RequiredUIAccess
   @Override
-  public void setValue(E value, boolean fireEvents) {
+  public void setValue(E value, boolean fireListeners) {
     myComponent.setSelectedItem(value);
   }
 

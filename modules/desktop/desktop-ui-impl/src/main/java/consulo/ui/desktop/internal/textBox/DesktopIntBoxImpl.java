@@ -147,7 +147,7 @@ public class DesktopIntBoxImpl extends DocumentSwingValidator<Integer, JBTextFie
 
   @RequiredUIAccess
   @Override
-  public void setValue(Integer value, boolean fireEvents) {
+  public void setValue(Integer value, boolean fireListeners) {
     toAWTComponent().setText(String.valueOf(Objects.requireNonNull(value, "Value must be not null")));
   }
 }

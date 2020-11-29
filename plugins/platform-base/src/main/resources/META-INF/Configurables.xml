@@ -209,7 +209,7 @@
 
     <!--Version Control-->
     <projectConfigurable id="diff.base"
-                         displayName="Diff"
+                         displayName="Diff &amp; Merge"
                          parentId="vcs"
                          instance="com.intellij.diff.settings.DiffSettingsConfigurable">
       <configurable id="diff.external" displayName="External Diff Tools"

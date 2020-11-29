@@ -669,8 +669,6 @@
       <reference ref="$Copy"/>
       <reference ref="PreviousDiff"/>
       <reference ref="NextDiff"/>
-      <separator/>
-      <action id="Diff.IgnoreWhitespace" class="com.intellij.openapi.diff.actions.IgnoreWhiteSpacesAction" text=""/>
     </group>
 
     <group id="ChangeScheme">

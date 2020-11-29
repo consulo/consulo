@@ -64,7 +64,7 @@ class DesktopColorBoxImpl extends SwingComponentDelegate<ColorPanel> implements 
 
   @RequiredUIAccess
   @Override
-  public void setValue(ColorValue value, boolean fireEvents) {
+  public void setValue(ColorValue value, boolean fireListeners) {
     myComponent.setSelectedColor(TargetAWT.to(value));
   }
 }

@@ -39,7 +39,7 @@ public abstract class WebBooleanValueComponentBase<E extends VaadinBooleanValueC
 
   @RequiredUIAccess
   @Override
-  public void setValue(Boolean value, boolean fireEvents) {
+  public void setValue(Boolean value, boolean fireListeners) {
     UIAccess.assertIsUIThread();
 
     if (value == null) {
@@ -50,7 +50,7 @@ public abstract class WebBooleanValueComponentBase<E extends VaadinBooleanValueC
       return;
     }
 
-    setValueImpl(value, fireEvents);
+    setValueImpl(value, fireListeners);
 
     getVaadinComponent().markAsDirty();
   }

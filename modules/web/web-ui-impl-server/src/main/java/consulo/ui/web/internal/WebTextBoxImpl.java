@@ -50,7 +50,7 @@ public class WebTextBoxImpl extends UIComponentWithVaadinComponent<WebTextBoxImp
 
   @RequiredUIAccess
   @Override
-  public void setValue(String value, boolean fireEvents) {
+  public void setValue(String value, boolean fireListeners) {
     getVaadinComponent().getState().caption = value;
     getVaadinComponent().markAsDirty();
   }

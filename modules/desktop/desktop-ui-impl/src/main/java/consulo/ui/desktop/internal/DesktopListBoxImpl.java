@@ -72,7 +72,7 @@ class DesktopListBoxImpl<E> extends SwingComponentDelegate<JBList<E>> implements
 
   @RequiredUIAccess
   @Override
-  public void setValue(E value, boolean fireEvents) {
+  public void setValue(E value, boolean fireListeners) {
     myComponent.setSelectedValue(value, true);
   }
 

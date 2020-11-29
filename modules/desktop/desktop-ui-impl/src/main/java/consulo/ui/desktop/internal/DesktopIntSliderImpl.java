@@ -15,55 +15,63 @@
  */
 package consulo.ui.desktop.internal;
 
-import com.intellij.ui.components.OnOffButton;
 import consulo.awt.impl.FromSwingComponentWrapper;
 import consulo.ui.Component;
-import consulo.ui.ToggleSwitch;
+import consulo.ui.IntSlider;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.desktop.internal.base.SwingComponentDelegate;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.swing.*;
 
 /**
  * @author VISTALL
- * @since 2020-11-26
+ * @since 11/29/2020
  */
-public class DesktopToggleSwitchImpl extends SwingComponentDelegate<DesktopToggleSwitchImpl.MyOnOffButton> implements ToggleSwitch {
-  class MyOnOffButton extends OnOffButton implements FromSwingComponentWrapper {
+public class DesktopIntSliderImpl extends SwingComponentDelegate<DesktopIntSliderImpl.MyJSlider> implements IntSlider {
+  public class MyJSlider extends JSlider implements FromSwingComponentWrapper {
+    public MyJSlider(int min, int max, int value) {
+      super(min, max, value);
+    }
+
     @Nonnull
     @Override
     public Component toUIComponent() {
-      return DesktopToggleSwitchImpl.this;
+      return DesktopIntSliderImpl.this;
     }
   }
 
-  public DesktopToggleSwitchImpl(boolean enabled) {
-    MyOnOffButton component = new MyOnOffButton();
-    initialize(component);
-    component.setSelected(enabled);
-    component.addActionListener(e -> fireListeners());
+  public DesktopIntSliderImpl(int min, int max, int value) {
+    MyJSlider slider = new MyJSlider(min, max, value);
+    initialize(slider);
+    slider.addChangeListener(e -> fireListeners());
   }
 
-  @Nonnull
   @Override
-  public Boolean getValue() {
-    return toAWTComponent().isSelected();
+  public void setRange(int min, int max) {
+    toAWTComponent().setMinimum(min);
+    toAWTComponent().setMaximum(max);
+  }
+
+  @Nullable
+  @Override
+  public Integer getValue() {
+    return toAWTComponent().getValue();
   }
 
   @RequiredUIAccess
   @Override
-  @SuppressWarnings("unchecked")
-  public void setValue(@Nonnull Boolean value, boolean fireListeners) {
-    toAWTComponent().setSelected(value);
+  public void setValue(Integer value, boolean fireListeners) {
+    toAWTComponent().setValue(value);
 
-    if(fireListeners) {
+    if (fireListeners) {
       fireListeners();
     }
   }
 
-  @SuppressWarnings("unchecked")
   @RequiredUIAccess
   private void fireListeners() {
-    getListenerDispatcher(ValueListener.class).valueChanged(new ValueEvent(this, toAWTComponent().isSelected()));
+    getListenerDispatcher(ValueListener.class).valueChanged(new ValueEvent(this, getValue()));
   }
 }

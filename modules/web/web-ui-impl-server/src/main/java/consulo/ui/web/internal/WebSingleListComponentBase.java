@@ -62,7 +62,7 @@ public abstract class WebSingleListComponentBase<E, V extends VaadinSingleListCo
 
   @RequiredUIAccess
   @Override
-  public void setValue(E value, boolean fireEvents) {
-    getVaadinComponent().setValueImpl(value, fireEvents);
+  public void setValue(E value, boolean fireListeners) {
+    getVaadinComponent().setValueImpl(value, fireListeners);
   }
 }

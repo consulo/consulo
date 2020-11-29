@@ -62,7 +62,7 @@ class DesktopRadioButtonImpl extends SwingComponentDelegate<JRadioButton> implem
 
   @RequiredUIAccess
   @Override
-  public void setValue(@Nonnull Boolean value, boolean fireEvents) {
+  public void setValue(@Nonnull Boolean value, boolean fireListeners) {
     myComponent.setSelected(value);
   }
 

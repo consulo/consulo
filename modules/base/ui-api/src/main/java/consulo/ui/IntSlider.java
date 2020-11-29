@@ -15,40 +15,35 @@
  */
 package consulo.ui;
 
-import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.internal.UIInternal;
 
 import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
- * @since 2020-11-26
- *
- * Similar component to {@link CheckBox}, but has different cases for usage
- *
- * Read for example {@linkplain https://docs.microsoft.com/ru-ru/windows/uwp/design/controls-and-patterns/toggles}
+ * @since 11/29/2020
  */
-public interface ToggleSwitch extends ValueComponent<Boolean> {
+public interface IntSlider extends ValueComponent<Integer>, FocusableComponent {
   @Nonnull
-  static ToggleSwitch create() {
-    return create(false);
+  static IntSlider create() {
+    return create(0);
   }
 
   @Nonnull
-  static ToggleSwitch create(boolean enabled) {
-    return UIInternal.get()._Components_toggleSwitch(enabled);
+  static IntSlider create(int value) {
+    return UIInternal.get()._Components_intSlider(0, 100, value);
   }
 
   @Nonnull
-  @Override
-  Boolean getValue();
-
-  @Override
-  @RequiredUIAccess
-  default void setValue(@Nonnull Boolean value) {
-    setValue(value, true);
+  static IntSlider create(int min, int max, int value) {
+    return UIInternal.get()._Components_intSlider(min, max, value);
   }
 
-  @RequiredUIAccess
-  void setValue(@Nonnull Boolean value, boolean fireListeners);
+  void setRange(int min, int max);
+
+  @Nonnull
+  default IntSlider withRange(int min, int max) {
+    setRange(min, max);
+    return this;
+  }
 }

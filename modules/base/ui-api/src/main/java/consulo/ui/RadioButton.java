@@ -47,7 +47,7 @@ public interface RadioButton extends ValueComponent<Boolean> {
 
   @Override
   @RequiredUIAccess
-  void setValue(@Nonnull Boolean value, boolean fireEvents);
+  void setValue(@Nonnull Boolean value, boolean fireListeners);
 
   @Nonnull
   String getText();

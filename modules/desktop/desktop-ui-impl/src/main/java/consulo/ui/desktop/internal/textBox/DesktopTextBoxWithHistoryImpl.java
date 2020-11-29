@@ -65,7 +65,7 @@ public class DesktopTextBoxWithHistoryImpl extends SwingValidableComponent<Strin
 
   @RequiredUIAccess
   @Override
-  public void setValue(String value, boolean fireEvents) {
+  public void setValue(String value, boolean fireListeners) {
     toAWTComponent().setText(value);
   }
 }

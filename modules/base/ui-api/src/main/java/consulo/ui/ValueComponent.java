@@ -70,7 +70,7 @@ public interface ValueComponent<V> extends Component {
   }
 
   @RequiredUIAccess
-  void setValue(V value, boolean fireEvents);
+  void setValue(V value, boolean fireListeners);
 
   @RequiredUIAccess
   @SuppressWarnings("unchecked")

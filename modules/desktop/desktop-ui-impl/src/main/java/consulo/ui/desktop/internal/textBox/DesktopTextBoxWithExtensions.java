@@ -79,7 +79,7 @@ public class DesktopTextBoxWithExtensions {
 
     @RequiredUIAccess
     @Override
-    public void setValue(String value, boolean fireEvents) {
+    public void setValue(String value, boolean fireListeners) {
       toAWTComponent().setText(value);
     }
 
@@ -249,7 +249,7 @@ public class DesktopTextBoxWithExtensions {
 
     @RequiredUIAccess
     @Override
-    public void setValue(String value, boolean fireEvents) {
+    public void setValue(String value, boolean fireListeners) {
       myTextField.setText(value);
     }
   }

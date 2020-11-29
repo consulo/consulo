@@ -327,6 +327,11 @@ public class DesktopUIInternalImpl extends UIInternal {
   }
 
   @Override
+  public IntSlider _Components_intSlider(int min, int max, int value) {
+    return new DesktopIntSliderImpl(min, max, value);
+  }
+
+  @Override
   public <E> ListBox<E> _Components_listBox(ListModel<E> model) {
     return new DesktopListBoxImpl<>(model);
   }

@@ -71,7 +71,7 @@ public interface CheckBox extends ValueComponent<Boolean>, Mnemonicable {
   }
 
   @RequiredUIAccess
-  void setValue(@Nonnull Boolean value, boolean fireEvents);
+  void setValue(@Nonnull Boolean value, boolean fireListeners);
 
   @Nonnull
   LocalizeValue getLabelText();

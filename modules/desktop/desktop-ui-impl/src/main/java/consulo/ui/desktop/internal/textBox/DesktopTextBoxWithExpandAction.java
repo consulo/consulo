@@ -82,7 +82,7 @@ public class DesktopTextBoxWithExpandAction {
 
     @RequiredUIAccess
     @Override
-    public void setValue(String value, boolean fireEvents) {
+    public void setValue(String value, boolean fireListeners) {
       toAWTComponent().setText(value);
     }
 
@@ -160,8 +160,8 @@ public class DesktopTextBoxWithExpandAction {
 
     @RequiredUIAccess
     @Override
-    public void setValue(String value, boolean fireEvents) {
-      myTextBox.setValue(value, fireEvents);
+    public void setValue(String value, boolean fireListeners) {
+      myTextBox.setValue(value, fireListeners);
     }
 
     @Nonnull
