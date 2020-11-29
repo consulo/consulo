@@ -268,7 +268,7 @@ public class DiffLineSeparatorRenderer implements LineMarkerRendererEx, LineSepa
   // Parameters
   //
 
-  private static final EditorColorKey BACKGROUND = EditorColorKey.createColorKey("DIFF_SEPARATORS_BACKGROUND");
+  public static final EditorColorKey BACKGROUND = EditorColorKey.createColorKey("DIFF_SEPARATORS_BACKGROUND");
   private static final EditorColorKey TOP_BORDER = EditorColorKey.createColorKey("DIFF_SEPARATORS_TOP_BORDER");
   private static final EditorColorKey BOTTOM_BORDER = EditorColorKey.createColorKey("DIFF_SEPARATORS_BOTTOM_BORDER");
 

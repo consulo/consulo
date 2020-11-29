@@ -52,5 +52,8 @@
     <openapi.vcs.actions.AnnotateToggleAction.Provider implementation="com.intellij.openapi.vcs.actions.AnnotateDiffViewerAction$Provider" order="first"/>
 
     <getDataRule implementation="com.intellij.diff.actions.impl.DiffNavigatableArrayRule"/>
+
+    <colorAndFontPanelFactory implementation="com.intellij.openapi.diff.impl.settings.DiffColorsPageFactory"/>
+    <colorAndFontDescriptorProvider implementation="com.intellij.openapi.diff.impl.settings.DiffColorsPageFactory"/>
   </extensions>
 </consulo-plugin>

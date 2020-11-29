@@ -18,7 +18,6 @@ package com.intellij.application.options;
 import com.intellij.application.options.codeStyle.CodeStyleSchemesModel;
 import com.intellij.codeStyle.CodeStyleFacade;
 import com.intellij.lang.Language;
-import consulo.disposer.Disposable;
 import com.intellij.openapi.application.ApplicationBundle;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.command.CommandProcessor;
@@ -48,19 +47,19 @@ import com.intellij.util.Alarm;
 import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.LocalTimeCounter;
 import com.intellij.util.ui.update.UiNotifyConnector;
-import consulo.disposer.Disposer;
+import consulo.disposer.Disposable;
 import consulo.logging.Logger;
 import consulo.ui.annotation.RequiredUIAccess;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 public abstract class CodeStyleAbstractPanel implements Disposable {
@@ -69,8 +68,8 @@ public abstract class CodeStyleAbstractPanel implements Disposable {
 
   private static final Logger LOG = Logger.getInstance(CodeStyleAbstractPanel.class);
 
-  private final ChangesDiffCalculator myDiffCalculator           = new ChangesDiffCalculator();
-  private final List<TextRange>       myPreviewRangesToHighlight = new ArrayList<TextRange>();
+  private final ChangesDiffCalculator myDiffCalculator = new ChangesDiffCalculator();
+  private final List<TextRange> myPreviewRangesToHighlight = new ArrayList<TextRange>();
 
   private final Editor myEditor;
   private final CodeStyleSettings mySettings;
@@ -95,11 +94,7 @@ public abstract class CodeStyleAbstractPanel implements Disposable {
     this(null, null, settings);
   }
 
-  protected CodeStyleAbstractPanel(@Nullable Language defaultLanguage,
-                                   @Nullable CodeStyleSettings currentSettings,
-                                   @Nonnull CodeStyleSettings settings)
-  {
-    Disposer.register(this, myDiffCalculator);
+  protected CodeStyleAbstractPanel(@Nullable Language defaultLanguage, @Nullable CodeStyleSettings currentSettings, @Nonnull CodeStyleSettings settings) {
     myCurrentSettings = currentSettings;
     mySettings = settings;
     myDefaultLanguage = defaultLanguage;
@@ -254,9 +249,9 @@ public abstract class CodeStyleAbstractPanel implements Disposable {
    * Reformats {@link #myTextToReformat target text} with the {@link #mySettings current code style settings} and returns
    * list of changes applied to the target text during that.
    *
-   * @param project   project to use
-   * @return          list of changes applied to the {@link #myTextToReformat target text} during reformatting. It is sorted
-   *                  by change start offset in ascending order
+   * @param project project to use
+   * @return list of changes applied to the {@link #myTextToReformat target text} during reformatting. It is sorted
+   * by change start offset in ascending order
    */
   @Nullable
   private Document collectChangesBeforeCurrentSettingsAppliance(Project project) {
@@ -291,9 +286,7 @@ public abstract class CodeStyleAbstractPanel implements Disposable {
   }
 
   protected PsiFile createFileFromText(Project project, String text) {
-    return PsiFileFactory.getInstance(project).createFileFromText(
-            "a." + getFileExt(), getFileType(), text, LocalTimeCounter.currentTime(), true
-    );
+    return PsiFileFactory.getInstance(project).createFileFromText("a." + getFileExt(), getFileType(), text, LocalTimeCounter.currentTime(), true);
   }
 
   protected PsiFile doReformat(final Project project, final PsiFile psiFile) {
@@ -328,15 +321,14 @@ public abstract class CodeStyleAbstractPanel implements Disposable {
    * Allows to answer if particular visual position belongs to visual rectangle identified by the given visual position of
    * its top-left and bottom-right corners.
    *
-   * @param targetPosition    position which belonging to target visual rectangle should be checked
-   * @param startPosition     visual position of top-left corner of the target visual rectangle
-   * @param endPosition       visual position of bottom-right corner of the target visual rectangle
-   * @return                  <code>true</code> if given visual position belongs to the target visual rectangle;
-   *                          <code>false</code> otherwise
+   * @param targetPosition position which belonging to target visual rectangle should be checked
+   * @param startPosition  visual position of top-left corner of the target visual rectangle
+   * @param endPosition    visual position of bottom-right corner of the target visual rectangle
+   * @return <code>true</code> if given visual position belongs to the target visual rectangle;
+   * <code>false</code> otherwise
    */
   private static boolean isWithinBounds(VisualPosition targetPosition, VisualPosition startPosition, VisualPosition endPosition) {
-    return targetPosition.line >= startPosition.line && targetPosition.line <= endPosition.line
-           && targetPosition.column >= startPosition.column && targetPosition.column <= endPosition.column;
+    return targetPosition.line >= startPosition.line && targetPosition.line <= endPosition.line && targetPosition.column >= startPosition.column && targetPosition.column <= endPosition.column;
   }
 
   /**
@@ -346,8 +338,8 @@ public abstract class CodeStyleAbstractPanel implements Disposable {
    * <p/>
    * This method encapsulates logic of adjusting preview highlight change if necessary.
    *
-   * @param range   initial range to highlight
-   * @return        resulting range to highlight
+   * @param range initial range to highlight
+   * @return resulting range to highlight
    */
   private TextRange calculateChangeHighlightRange(TextRange range) {
     CharSequence text = myEditor.getDocument().getCharsSequence();
@@ -363,9 +355,7 @@ public abstract class CodeStyleAbstractPanel implements Disposable {
     int startOffset = range.getStartOffset() + 1;
     int endOffset = range.getEndOffset() + 1;
     boolean useSameRange = true;
-    while (endOffset <= text.length()
-           && StringUtil.equals(text.subSequence(range.getStartOffset(), range.getEndOffset()), text.subSequence(startOffset, endOffset)))
-    {
+    while (endOffset <= text.length() && StringUtil.equals(text.subSequence(range.getStartOffset(), range.getEndOffset()), text.subSequence(startOffset, endOffset))) {
       useSameRange = false;
       startOffset++;
       endOffset++;
@@ -515,14 +505,12 @@ public abstract class CodeStyleAbstractPanel implements Disposable {
       int offsetToScroll = -1;
       CharSequence text = myEditor.getDocument().getCharsSequence();
       TextAttributes backgroundAttributes = myEditor.getColorsScheme().getAttributes(EditorColors.SEARCH_RESULT_ATTRIBUTES);
-      TextAttributes borderAttributes = new TextAttributes(
-              null, null, backgroundAttributes.getBackgroundColor(), EffectType.BOXED, Font.PLAIN
-      );
+      TextAttributes borderAttributes = new TextAttributes(null, null, backgroundAttributes.getBackgroundColor(), EffectType.BOXED, Font.PLAIN);
       boolean scrollToChange = true;
       for (TextRange range : myPreviewRangesToHighlight) {
         if (scrollToChange) {
-          boolean rangeVisible = isWithinBounds(myEditor.offsetToVisualPosition(range.getStartOffset()), visualStart, visualEnd)
-                                 || isWithinBounds(myEditor.offsetToVisualPosition(range.getEndOffset()), visualStart, visualEnd);
+          boolean rangeVisible = isWithinBounds(myEditor.offsetToVisualPosition(range.getStartOffset()), visualStart, visualEnd) ||
+                                 isWithinBounds(myEditor.offsetToVisualPosition(range.getEndOffset()), visualStart, visualEnd);
           scrollToChange = !rangeVisible;
           if (offsetToScroll < 0) {
             if (offsetToScroll < 0) {
@@ -537,9 +525,7 @@ public abstract class CodeStyleAbstractPanel implements Disposable {
         }
 
         TextAttributes attributesToUse = range.getLength() > 0 ? backgroundAttributes : borderAttributes;
-        markupModel.addRangeHighlighter(
-                range.getStartOffset(), range.getEndOffset(), HighlighterLayer.SELECTION, attributesToUse, HighlighterTargetArea.EXACT_RANGE
-        );
+        markupModel.addRangeHighlighter(range.getStartOffset(), range.getEndOffset(), HighlighterLayer.SELECTION, attributesToUse, HighlighterTargetArea.EXACT_RANGE);
       }
 
       if (scrollToChange) {
@@ -553,9 +539,7 @@ public abstract class CodeStyleAbstractPanel implements Disposable {
           offsetToScroll++;
         }
         if (offsetToScroll >= 0 && offsetToScroll < myEditor.getDocument().getTextLength()) {
-          myEditor.getScrollingModel().scrollTo(
-                  myEditor.offsetToLogicalPosition(offsetToScroll), ScrollType.RELATIVE
-          );
+          myEditor.getScrollingModel().scrollTo(myEditor.offsetToLogicalPosition(offsetToScroll), ScrollType.RELATIVE);
         }
       }
     }
@@ -587,10 +571,11 @@ public abstract class CodeStyleAbstractPanel implements Disposable {
 
   /**
    * Override this method if the panel is linked to a specific language.
+   *
    * @return The language this panel is associated with.
    */
   @Nullable
-  public Language getDefaultLanguage()  {
+  public Language getDefaultLanguage() {
     return myDefaultLanguage;
   }
 

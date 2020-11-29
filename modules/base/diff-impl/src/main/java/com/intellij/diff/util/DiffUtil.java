@@ -57,7 +57,6 @@ import consulo.disposer.Disposer;
 import consulo.logging.Logger;
 import com.intellij.openapi.diff.DiffBundle;
 import com.intellij.openapi.diff.impl.GenericDataProvider;
-import com.intellij.openapi.diff.impl.external.DiffManagerImpl;
 import com.intellij.openapi.editor.*;
 import com.intellij.openapi.editor.colors.EditorColors;
 import com.intellij.openapi.editor.colors.EditorColorsManager;
@@ -132,7 +131,7 @@ public class DiffUtil {
   //
 
   public static boolean isDiffEditor(@Nonnull Editor editor) {
-    return editor.getUserData(DiffManagerImpl.EDITOR_IS_DIFF_KEY) != null;
+    return editor.getEditorKind() == EditorKind.DIFF;
   }
 
   @Nullable
@@ -208,9 +207,7 @@ public class DiffUtil {
   @Nonnull
   public static EditorEx createEditor(@Nonnull Document document, @Nullable Project project, boolean isViewer, boolean enableFolding) {
     EditorFactory factory = EditorFactory.getInstance();
-    EditorEx editor = (EditorEx)(isViewer ? factory.createViewer(document, project) : factory.createEditor(document, project));
-
-    editor.putUserData(DiffManagerImpl.EDITOR_IS_DIFF_KEY, Boolean.TRUE);
+    EditorEx editor = (EditorEx)(isViewer ? factory.createViewer(document, project, EditorKind.DIFF) : factory.createEditor(document, project, EditorKind.DIFF));
 
     editor.getSettings().setShowIntentionBulb(false);
     ((EditorMarkupModel)editor.getMarkupModel()).setErrorStripeVisible(true);

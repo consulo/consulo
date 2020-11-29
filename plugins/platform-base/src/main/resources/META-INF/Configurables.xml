@@ -81,10 +81,10 @@
                              bundle="messages.ApplicationBundle"/>
 
     <projectConfigurable instance="com.intellij.ide.fileTemplates.impl.AllFileTemplatesConfigurable"
-                             id="fileTemplates"
-                             parentId="editor"
-                             key="title.file.templates"
-                             bundle="messages.IdeBundle"/>
+                         id="fileTemplates"
+                         parentId="editor"
+                         key="title.file.templates"
+                         bundle="messages.IdeBundle"/>
 
     <applicationConfigurable instance="com.intellij.codeInsight.template.impl.LiveTemplatesConfigurable"
                              id="editing.templates"
@@ -209,11 +209,11 @@
 
     <!--Version Control-->
     <projectConfigurable id="diff.base"
-                             displayName="Diff"
-                             parentId="vcs"
-                             instance="com.intellij.diff.settings.DiffSettingsConfigurable">
+                         displayName="Diff"
+                         parentId="vcs"
+                         instance="com.intellij.diff.settings.DiffSettingsConfigurable">
       <configurable id="diff.external" displayName="External Diff Tools"
-                    instance="com.intellij.diff.settings.ExternalDiffSettingsConfigurable"/>
+                    instance="consulo.diff.preferences.impl.ExternalDiffSettingsConfigurable"/>
     </projectConfigurable>
   </extensions>
 </consulo-plugin>

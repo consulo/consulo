@@ -20,10 +20,10 @@ import com.intellij.ide.startup.StartupManagerEx;
 import com.intellij.openapi.actionSystem.IdeActions;
 import com.intellij.openapi.actionSystem.ex.ActionManagerEx;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.diff.impl.DiffUtil;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.EditorFactory;
+import com.intellij.openapi.editor.EditorKind;
 import com.intellij.openapi.editor.colors.EditorColorsListener;
 import com.intellij.openapi.editor.colors.EditorColorsManager;
 import com.intellij.openapi.editor.colors.EditorColorsScheme;
@@ -264,7 +264,7 @@ public class XLineBreakpointManager {
           mouseEvent.isMetaDown() ||
           mouseEvent.isControlDown() ||
           mouseEvent.getButton() != MouseEvent.BUTTON1 ||
-          DiffUtil.isDiffEditor(editor) ||
+          editor.getEditorKind() == EditorKind.DIFF ||
           !isInsideGutter(e, editor) ||
           ConsoleViewUtil.isConsoleViewEditor(editor) ||
           !isFromMyProject(editor) ||
@@ -279,8 +279,7 @@ public class XLineBreakpointManager {
       if (line >= 0 && line < document.getLineCount() && file != null) {
         ActionManagerEx.getInstanceEx().fireBeforeActionPerformed(IdeActions.ACTION_TOGGLE_LINE_BREAKPOINT, e.getMouseEvent());
 
-        final AsyncResult<XLineBreakpoint> lineBreakpoint =
-                XBreakpointUtil.toggleLineBreakpoint(myProject, XSourcePositionImpl.create(file, line), editor, mouseEvent.isAltDown(), false);
+        final AsyncResult<XLineBreakpoint> lineBreakpoint = XBreakpointUtil.toggleLineBreakpoint(myProject, XSourcePositionImpl.create(file, line), editor, mouseEvent.isAltDown(), false);
         lineBreakpoint.doWhenDone(breakpoint -> {
           if (!mouseEvent.isAltDown() && mouseEvent.isShiftDown() && breakpoint != null) {
             breakpoint.setSuspendPolicy(SuspendPolicy.NONE);

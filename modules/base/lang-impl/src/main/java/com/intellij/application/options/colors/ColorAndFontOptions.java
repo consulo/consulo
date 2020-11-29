@@ -25,10 +25,11 @@ import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.application.ApplicationBundle;
-import com.intellij.openapi.diff.impl.settings.DiffOptionsPanel;
-import com.intellij.openapi.diff.impl.settings.DiffPreviewPanel;
 import com.intellij.openapi.editor.EditorFactory;
-import com.intellij.openapi.editor.colors.*;
+import com.intellij.openapi.editor.colors.EditorColorKey;
+import com.intellij.openapi.editor.colors.EditorColorsManager;
+import com.intellij.openapi.editor.colors.EditorColorsScheme;
+import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.openapi.editor.colors.impl.DefaultColorsScheme;
 import com.intellij.openapi.editor.colors.impl.EditorColorsSchemeImpl;
 import com.intellij.openapi.editor.colors.impl.ReadOnlyColorsScheme;
@@ -52,7 +53,6 @@ import com.intellij.psi.search.scope.packageSet.NamedScopesHolder;
 import com.intellij.psi.search.scope.packageSet.PackageSet;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.containers.HashMap;
-import com.intellij.util.diff.FilesTooBigForDiffException;
 import com.intellij.util.ui.UIUtil;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
@@ -436,7 +436,6 @@ public class ColorAndFontOptions extends SearchableConfigurable.Parent.Abstract 
     }
     extensions.addAll(ColorAndFontPanelFactory.EP_NAME.getExtensionList());
     result.addAll(extensions);
-    result.add(new DiffColorsPageFactory());
     result.add(new FileStatusColorsPageFactory());
     result.add(new ScopeColorsPageFactory());
 
@@ -498,46 +497,6 @@ public class ColorAndFontOptions extends SearchableConfigurable.Parent.Abstract 
     }
   }
 
-  private class DiffColorsPageFactory implements ColorAndFontPanelFactory, Weighted {
-    @Override
-    @Nonnull
-    public NewColorAndFontPanel createPanel(@Nonnull ColorAndFontOptions options) {
-      final DiffOptionsPanel optionsPanel = new DiffOptionsPanel(options);
-      SchemesPanel schemesPanel = new SchemesPanel(options);
-      PreviewPanel previewPanel;
-      try {
-        final DiffPreviewPanel diffPreviewPanel = new DiffPreviewPanel(myDisposable);
-        diffPreviewPanel.setMergeRequest(null);
-        schemesPanel.addListener(new ColorAndFontSettingsListener.Abstract() {
-          @Override
-          public void schemeChanged(final Object source) {
-            diffPreviewPanel.setColorScheme(getSelectedScheme());
-            optionsPanel.updateOptionsList();
-            diffPreviewPanel.updateView();
-          }
-        });
-        previewPanel = diffPreviewPanel;
-      }
-      catch (FilesTooBigForDiffException e) {
-        LOG.info(e);
-        previewPanel = new PreviewPanel.Empty();
-      }
-
-      return new NewColorAndFontPanel(schemesPanel, optionsPanel, previewPanel, DIFF_GROUP, null, null);
-    }
-
-    @Override
-    @Nonnull
-    public String getPanelDisplayName() {
-      return DIFF_GROUP;
-    }
-
-    @Override
-    public double getWeight() {
-      return Integer.MAX_VALUE - 1;
-    }
-  }
-
   private void initAll() {
     EditorColorsManager colorsManager = EditorColorsManager.getInstance();
     EditorColorsScheme[] allSchemes = colorsManager.getAllSchemes();
@@ -556,7 +515,6 @@ public class ColorAndFontOptions extends SearchableConfigurable.Parent.Abstract 
   private static void initScheme(@Nonnull MyColorScheme scheme) {
     List<EditorSchemeAttributeDescriptor> descriptions = new ArrayList<>();
     initPluggedDescriptions(descriptions, scheme);
-    initDiffDescriptors(descriptions, scheme);
     initFileStatusDescriptors(descriptions, scheme);
     initScopesDescriptors(descriptions, scheme);
 
@@ -586,10 +544,6 @@ public class ColorAndFontOptions extends SearchableConfigurable.Parent.Abstract 
       EditorColorKey fore = descriptor.getKind() == ColorDescriptor.Kind.FOREGROUND ? descriptor.getKey() : null;
       addEditorSettingDescription(descriptions, descriptor.getDisplayName().getValue(), group, back, fore, scheme);
     }
-  }
-
-  private static void initDiffDescriptors(@Nonnull List<EditorSchemeAttributeDescriptor> descriptions, @Nonnull MyColorScheme scheme) {
-    DiffOptionsPanel.addSchemeDescriptions(descriptions, scheme);
   }
 
   private static void initFileStatusDescriptors(@Nonnull List<EditorSchemeAttributeDescriptor> descriptions, MyColorScheme scheme) {

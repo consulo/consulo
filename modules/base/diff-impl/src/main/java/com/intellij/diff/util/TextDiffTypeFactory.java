@@ -23,8 +23,8 @@ import com.intellij.openapi.editor.markup.TextAttributes;
 import consulo.ui.color.ColorValue;
 import consulo.ui.color.RGBColor;
 import org.jetbrains.annotations.NonNls;
-
 import javax.annotation.Nonnull;
+
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
@@ -44,15 +44,15 @@ public class TextDiffTypeFactory {
     return type;
   }
 
-  public synchronized TextDiffType[] getAllDiffTypes() {
-    return myTypes.toArray(new TextDiffType[myTypes.size()]);
+  public synchronized TextDiffTypeImpl[] getAllDiffTypes() {
+    return myTypes.toArray(new TextDiffTypeImpl[0]);
   }
 
   public static TextDiffTypeFactory getInstance() {
     return ourInstance;
   }
 
-  private static class TextDiffTypeImpl implements TextDiffType {
+  public static class TextDiffTypeImpl implements TextDiffType {
     @Nonnull
     private final TextAttributesKey myKey;
     @Nonnull
@@ -115,12 +115,17 @@ public class TextDiffTypeFactory {
     public String toString() {
       return myName;
     }
+
+    @Nonnull
+    public TextAttributesKey getKey() {
+      return myKey;
+    }
   }
 
   private static final double MIDDLE_COLOR_FACTOR = 0.6;
 
   @Nonnull
-  private static ColorValue getMiddleColor(@Nonnull ColorValue fg, @Nonnull ColorValue bg) {
+  public static ColorValue getMiddleColor(@Nonnull ColorValue fg, @Nonnull ColorValue bg) {
     RGBColor f = fg.toRGB();
     RGBColor b = bg.toRGB();
     

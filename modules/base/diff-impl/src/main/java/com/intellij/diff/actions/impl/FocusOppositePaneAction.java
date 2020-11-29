@@ -19,9 +19,10 @@ import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.ex.ActionUtil;
 import com.intellij.openapi.project.DumbAware;
-import javax.annotation.Nonnull;
 import consulo.ui.annotation.RequiredUIAccess;
+import jakarta.inject.Inject;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 
 public class FocusOppositePaneAction extends AnAction implements DumbAware {

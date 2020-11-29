@@ -15,7 +15,6 @@
  */
 package com.intellij.diff.util;
 
-import com.intellij.openapi.diff.impl.splitter.Transformation;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.LogicalPosition;
 import com.intellij.openapi.editor.colors.EditorColorsScheme;
@@ -26,15 +25,17 @@ import consulo.ui.color.ColorValue;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class DiffDividerDrawUtil {
-  public static final BasicStroke BOLD_DOTTED_STROKE =
-          new BasicStroke(2.3f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10.0f, new float[]{2, 2}, 0.0f);
+  public static final BasicStroke BOLD_DOTTED_STROKE = new BasicStroke(2.3f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10.0f, new float[]{2, 2}, 0.0f);
+
+  public interface Transformation {
+    int transform(int line);
+  }
 
   /*
    * Clip given graphics of divider component such that result graphics is aligned with base component by 'y' coordinate.
@@ -48,11 +49,7 @@ public class DiffDividerDrawUtil {
     return (Graphics2D)g.create(0, editorOffset - dividerOffset, width, editorHeight);
   }
 
-  public static void paintSeparators(@Nonnull Graphics2D gg,
-                                     int width,
-                                     @Nonnull Editor editor1,
-                                     @Nonnull Editor editor2,
-                                     @Nonnull DividerSeparatorPaintable paintable) {
+  public static void paintSeparators(@Nonnull Graphics2D gg, int width, @Nonnull Editor editor1, @Nonnull Editor editor2, @Nonnull DividerSeparatorPaintable paintable) {
     List<DividerSeparator> polygons = createVisibleSeparators(editor1, editor2, paintable);
 
     GraphicsConfig config = GraphicsUtil.setupAAPainting(gg);
@@ -62,11 +59,7 @@ public class DiffDividerDrawUtil {
     config.restore();
   }
 
-  public static void paintSeparatorsOnScrollbar(@Nonnull Graphics2D gg,
-                                                int width,
-                                                @Nonnull Editor editor1,
-                                                @Nonnull Editor editor2,
-                                                @Nonnull DividerSeparatorPaintable paintable) {
+  public static void paintSeparatorsOnScrollbar(@Nonnull Graphics2D gg, int width, @Nonnull Editor editor1, @Nonnull Editor editor2, @Nonnull DividerSeparatorPaintable paintable) {
     List<DividerSeparator> polygons = createVisibleSeparators(editor1, editor2, paintable);
 
     GraphicsConfig config = GraphicsUtil.setupAAPainting(gg);
@@ -76,29 +69,15 @@ public class DiffDividerDrawUtil {
     config.restore();
   }
 
-  public static void paintPolygons(@Nonnull Graphics2D gg,
-                                   int width,
-                                   @Nonnull Editor editor1,
-                                   @Nonnull Editor editor2,
-                                   @Nonnull DividerPaintable paintable) {
+  public static void paintPolygons(@Nonnull Graphics2D gg, int width, @Nonnull Editor editor1, @Nonnull Editor editor2, @Nonnull DividerPaintable paintable) {
     paintPolygons(gg, width, true, true, editor1, editor2, paintable);
   }
 
-  public static void paintSimplePolygons(@Nonnull Graphics2D gg,
-                                         int width,
-                                         @Nonnull Editor editor1,
-                                         @Nonnull Editor editor2,
-                                         @Nonnull DividerPaintable paintable) {
+  public static void paintSimplePolygons(@Nonnull Graphics2D gg, int width, @Nonnull Editor editor1, @Nonnull Editor editor2, @Nonnull DividerPaintable paintable) {
     paintPolygons(gg, width, true, false, editor1, editor2, paintable);
   }
 
-  public static void paintPolygons(@Nonnull Graphics2D gg,
-                                   int width,
-                                   boolean paintBorder,
-                                   boolean curved,
-                                   @Nonnull Editor editor1,
-                                   @Nonnull Editor editor2,
-                                   @Nonnull DividerPaintable paintable) {
+  public static void paintPolygons(@Nonnull Graphics2D gg, int width, boolean paintBorder, boolean curved, @Nonnull Editor editor1, @Nonnull Editor editor2, @Nonnull DividerPaintable paintable) {
     List<DividerPolygon> polygons = createVisiblePolygons(editor1, editor2, paintable);
 
     GraphicsConfig config = GraphicsUtil.setupAAPainting(gg);
@@ -108,11 +87,7 @@ public class DiffDividerDrawUtil {
     config.restore();
   }
 
-  public static void paintPolygonsOnScrollbar(@Nonnull Graphics2D g,
-                                              int width,
-                                              @Nonnull Editor editor1,
-                                              @Nonnull Editor editor2,
-                                              @Nonnull DividerPaintable paintable) {
+  public static void paintPolygonsOnScrollbar(@Nonnull Graphics2D g, int width, @Nonnull Editor editor1, @Nonnull Editor editor2, @Nonnull DividerPaintable paintable) {
     List<DividerPolygon> polygons = createVisiblePolygons(editor1, editor2, paintable);
 
     for (DividerPolygon polygon : polygons) {
@@ -121,9 +96,7 @@ public class DiffDividerDrawUtil {
   }
 
   @Nonnull
-  public static List<DividerPolygon> createVisiblePolygons(@Nonnull Editor editor1,
-                                                           @Nonnull Editor editor2,
-                                                           @Nonnull DividerPaintable paintable) {
+  public static List<DividerPolygon> createVisiblePolygons(@Nonnull Editor editor1, @Nonnull Editor editor2, @Nonnull DividerPaintable paintable) {
     final List<DividerPolygon> polygons = new ArrayList<DividerPolygon>();
 
     final Transformation[] transformations = new Transformation[]{getTransformation(editor1), getTransformation(editor2)};
@@ -151,9 +124,7 @@ public class DiffDividerDrawUtil {
   }
 
   @Nonnull
-  public static List<DividerSeparator> createVisibleSeparators(@Nonnull Editor editor1,
-                                                               @Nonnull Editor editor2,
-                                                               @Nonnull DividerSeparatorPaintable paintable) {
+  public static List<DividerSeparator> createVisibleSeparators(@Nonnull Editor editor1, @Nonnull Editor editor2, @Nonnull DividerSeparatorPaintable paintable) {
     final List<DividerSeparator> separators = new ArrayList<DividerSeparator>();
 
     final Transformation[] transformations = new Transformation[]{getTransformation(editor1), getTransformation(editor2)};
@@ -196,18 +167,12 @@ public class DiffDividerDrawUtil {
   }
 
   @Nonnull
-  private static DividerPolygon createPolygon(@Nonnull Transformation[] transformations,
-                                              int startLine1, int endLine1,
-                                              int startLine2, int endLine2,
-                                              @Nonnull ColorValue color) {
+  private static DividerPolygon createPolygon(@Nonnull Transformation[] transformations, int startLine1, int endLine1, int startLine2, int endLine2, @Nonnull ColorValue color) {
     return createPolygon(transformations, startLine1, endLine1, startLine2, endLine2, color, false);
   }
 
   @Nonnull
-  private static DividerPolygon createPolygon(@Nonnull Transformation[] transformations,
-                                              int startLine1, int endLine1,
-                                              int startLine2, int endLine2,
-                                              @Nonnull ColorValue color, boolean resolved) {
+  private static DividerPolygon createPolygon(@Nonnull Transformation[] transformations, int startLine1, int endLine1, int startLine2, int endLine2, @Nonnull ColorValue color, boolean resolved) {
     int start1 = transformations[0].transform(startLine1);
     int end1 = transformations[0].transform(endLine1);
     int start2 = transformations[1].transform(startLine2);
@@ -216,9 +181,7 @@ public class DiffDividerDrawUtil {
   }
 
   @Nonnull
-  private static DividerSeparator createSeparator(@Nonnull Transformation[] transformations,
-                                                  int line1, int line2, int height1, int height2,
-                                                  @Nullable EditorColorsScheme scheme) {
+  private static DividerSeparator createSeparator(@Nonnull Transformation[] transformations, int line1, int line2, int height1, int height2, @Nullable EditorColorsScheme scheme) {
     int start1 = transformations[0].transform(line1);
     int start2 = transformations[1].transform(line2);
     return new DividerSeparator(start1, start2, start1 + height1, start2 + height2, scheme);
@@ -336,7 +299,8 @@ public class DiffDividerDrawUtil {
     private final int myStart2;
     private final int myEnd1;
     private final int myEnd2;
-    @Nullable private final EditorColorsScheme myScheme;
+    @Nullable
+    private final EditorColorsScheme myScheme;
 
     public DividerSeparator(int start1, int start2, int end1, int end2) {
       this(start1, start2, end1, end2, null);

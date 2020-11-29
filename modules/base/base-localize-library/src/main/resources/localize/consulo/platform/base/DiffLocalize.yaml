@@ -1,0 +1,178 @@
+diff.application.usage.parameters.and.description:
+  text: 'Usage: {0} diff <left file> <right file> [<base file>]'
+merge.application.usage.parameters.and.description:
+  text: 'Usage: {0} merge <left file> <right file> [<base file>] <output file>'
+cannot.file.file.error:
+  text: 'Cannot find file: {0}'
+cannot.create.diff.error:
+  text: 'Cannot create diff element from: {0}'
+cannot.compare.error:
+  text: Diff manager cannot compare ''{0}'' and ''{1}''
+unknown.file.type.error:
+  text: 'Unknown file type: {0}'
+save.merge.result.command.name:
+  text: Merge
+compare.file.vs.file.dialog.title:
+  text: '{0} vs {1}'
+diff.content.editor.content.title:
+  text: Editor
+diff.content.clipboard.content.title:
+  text: Clipboard
+diff.clipboard.vs.editor.dialog.title:
+  text: Clipboard vs Editor
+diff.clipboard.vs.file.dialog.title:
+  text: Clipboard vs {0}
+diff.content.selection.from.editor.content.title:
+  text: Selection from Editor
+diff.content.selection.from.file.content.title:
+  text: Selection from {0}
+diff.compare.element.type.with.editor.action.name:
+  text: Compare File with Editor
+diff.element.qualified.name.vs.editor.dialog.title:
+  text: '{0} vs Editor'
+diff.element.qualified.name.vs.file.dialog.title:
+  text: '{0} vs {1}'
+diff.element.qualified.name.vs.element.qualified.name.dialog.title:
+  text: '{0} vs {1}'
+diff.acton.ignore.whitespace.policy.do.not.ignore:
+  text: Do not ignore
+diff.acton.ignore.whitespace.policy.leading.and.trailing:
+  text: Leading and trailing
+diff.acton.ignore.whitespace.policy.all:
+  text: All
+ignore.whitespace.acton.name:
+  text: 'Ignore whitespace:'
+diff.panel.combo.box.action.not.available.action.name:
+  text: <Not available>
+diff.dialog.select.change.action.name:
+  text: Select Change
+diff.dialog.select.change.action.description:
+  text: Select changed text in this version and corresponding in other
+merge.files.dialog.title:
+  text: Merge
+merge.dialog.cannot.load.file.error.message:
+  text: 'Cannot load file: {0}'
+merge.editor.replace.operation.name:
+  text: Replace
+merge.editor.insert.operation.name:
+  text: Insert
+merge.editor.remove.operation.name:
+  text: Remove
+diff.count.differences.status.text:
+  text: '{0, choice, 0#no differences|1#1 difference|2#{0, number} differences}'
+cant.launch.diff.tool.error.message:
+  text: Can't Launch Diff Tool
+binary.files.are.identical.message:
+  text: Binary files are identical
+files.are.identical.dialog.title:
+  text: Files Are Identical
+binary.files.are.different.message:
+  text: Binary files are different
+files.are.different.dialog.title:
+  text: Files Are Different
+diff.options.diff.options.border:
+  text: Diff Options
+diff.options.use.external.tool.for.files.checkbox:
+  text: 'Use external tool to compare files/folders:'
+diff.options.use.external.merge.tool.for.files.checkbox:
+  text: 'Use external merge tool:'
+select.external.diff.program.dialog.title:
+  text: Select External Diff Program
+select.external.merge.program.dialog.title:
+  text: Select External Merge Program
+diff.contents.are.identical.message.text:
+  text: Contents are identical
+diff.contents.have.differences.only.in.line.separators.message.text:
+  text: Contents have differences only in line separators
+diff.contents.have.differences.only.in.line.separators.or.whitespaces:
+  text: Contents have differences only in line separators or whitespaces
+show.diff.anyway.dialog.message:
+  text: Show diff anyway?
+no.differences.dialog.title:
+  text: No Differences
+merge.dialog.apply.change.action.name:
+  text: Apply change
+merge.dialog.append.change.action.name:
+  text: Apply selected change side
+merge.dialog.ignore.change.action.name:
+  text: Ignore change
+merge.dialog.apply.all.non.conflicting.changes.action.name:
+  text: Apply all non-conflicting changes
+merge.dialog.apply.left.non.conflicting.changes.action.name:
+  text: Apply non-conflicting changes from left side
+merge.dialog.apply.right.non.conflicting.changes.action.name:
+  text: Apply non-conflicting changes from right side
+merge.dialog.all.conflicts.resolved.message.text:
+  text: All conflicts resolved
+merge.statistics.message:
+  text: '{0, choice, 0#No changes|1#One change|2#{0, number} changes}. {1, choice, 0#No conflicts|1#One conflict|2#{0, number} conflicts}'
+merge.partial.diff.action.name:
+  text: Compare left and right panel contents
+merge.partial.diff.action.name.0.1:
+  text: Compare left and middle panel contents
+merge.partial.diff.action.name.1.2:
+  text: Compare middle and right panel contents
+merge.dialog.exit.without.applying.changes.confirmation.message:
+  text: Are you sure you want to exit without applying changes?
+cancel.visual.merge.dialog.title:
+  text: Cancel Visual Merge
+merge.dialog.apply.partially.resolved.changes.confirmation.message:
+  text: |-
+    There are {0, choice, 0#|1#one change|2#{0, number} changes}{0, choice, 0#|1#'{1, choice, 0#|1# and }'}{1, choice, 0#|1#one conflict|2#{1, number} conflicts} left unprocessed.
+    Are you sure you want to save changes and finish merging?
+apply.partially.resolved.merge.dialog.title:
+  text: Apply Changes
+merge.dialog.resolve.side.with.discard.title:
+  text: Accept Changes
+merge.dialog.resolve.side.with.discard.message:
+  text: Are you sure you want to discard your changes and accept {0, choice, 0#left|1#right} side?
+merge.all.changes.have.processed.save.and.finish.confirmation.text:
+  text: |-
+    All changes have been processed.
+    Would you like to save changes and finish merging?
+all.changes.processed.dialog.title:
+  text: All Changes Processed
+merge.save.and.finish.button:
+  text: Save and &Finish
+merge.continue.button:
+  text: '&Continue'
+merge.init.merge.content.command.name:
+  text: initMergeContent
+merge.color.options.stripe.mark.color.label:
+  text: '&Stripe mark color:'
+diff.content.read.only.content.title.suffix:
+  text: (Read-only)
+diff.type.inserted.name:
+  text: Inserted
+diff.type.changed.name:
+  text: Changed
+diff.type.deleted.name:
+  text: Deleted
+diff.type.conflict.name:
+  text: Conflict
+diff.type.none.name:
+  text: None
+diff.content.selected.value:
+  text: Selected Value
+diff.clipboard.vs.value.dialog.title:
+  text: Clipboard vs Selected Value
+diff.can.not.show.unknown:
+  text: Can not show diff for unknown file type
+diff.can.not.show:
+  text: Can not show diff
+diff.acton.highlight.mode.action.by.word:
+  text: By word
+diff.acton.highlight.mode.action.by.line:
+  text: By line
+diff.acton.highlight.mode.action.no.highlighting:
+  text: Do not highlight
+diff.acton.highlight.mode.action.name:
+  text: 'Highlight:'
+merge.color.options.background.color.label:
+  text: Important
+merge.color.options.ignored.color.label:
+  text: Ignored
+merge.color.options.dialog.title:
+  text: Merge Color Options
+option.inherit.ignored.color:
+  text: Inherit ignored color

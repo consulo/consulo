@@ -17,7 +17,6 @@ package com.intellij.openapi.actionSystem;
 
 import com.intellij.ide.*;
 import com.intellij.openapi.application.ModalityState;
-import com.intellij.openapi.diff.DiffViewer;
 import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -48,8 +47,6 @@ public interface PlatformDataKeys extends CommonDataKeys {
    * is unknown then the value of this data constant is <code>null</code>.
    */
   Key<Boolean> IS_MODAL_CONTEXT = Key.create("isModalContext");
-  Key<DiffViewer> DIFF_VIEWER = Key.create("diffViewer");
-  Key<DiffViewer> COMPOSITE_DIFF_VIEWER = Key.create("compositeDiffViewer");
 
   /**
    * Returns help id (String)

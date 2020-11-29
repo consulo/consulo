@@ -18,13 +18,13 @@ package com.intellij.diff;
 import com.intellij.diff.chains.DiffRequestChain;
 import com.intellij.diff.merge.MergeRequest;
 import com.intellij.diff.requests.DiffRequest;
-import consulo.disposer.Disposable;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import consulo.disposer.Disposable;
 import consulo.ui.annotation.RequiredUIAccess;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.awt.*;
 
 public abstract class DiffManager {
@@ -38,16 +38,16 @@ public abstract class DiffManager {
   //
 
   @RequiredUIAccess
-  public abstract void showDiff(@javax.annotation.Nullable Project project, @Nonnull DiffRequest request);
+  public abstract void showDiff(@Nullable Project project, @Nonnull DiffRequest request);
 
   @RequiredUIAccess
   public abstract void showDiff(@Nullable Project project, @Nonnull DiffRequest request, @Nonnull DiffDialogHints hints);
 
   @RequiredUIAccess
-  public abstract void showDiff(@javax.annotation.Nullable Project project, @Nonnull DiffRequestChain requests, @Nonnull DiffDialogHints hints);
+  public abstract void showDiff(@Nullable Project project, @Nonnull DiffRequestChain requests, @Nonnull DiffDialogHints hints);
 
   @Nonnull
-  public abstract DiffRequestPanel createRequestPanel(@javax.annotation.Nullable Project project, @Nonnull Disposable parent, @Nullable Window window);
+  public abstract DiffRequestPanel createRequestPanel(@Nullable Project project, @Nonnull Disposable parent, @Nullable Window window);
 
   @RequiredUIAccess
   public abstract void showMerge(@Nullable Project project, @Nonnull MergeRequest request);

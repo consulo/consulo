@@ -28,16 +28,18 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.Couple;
-import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vcs.FilePath;
 import com.intellij.openapi.vcs.history.VcsRevisionNumber;
 import com.intellij.openapi.vcs.merge.MergeData;
+import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.util.dataholder.Key;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.util.List;
@@ -78,6 +80,12 @@ public class MergeUtil {
       default:
         throw new IllegalArgumentException(result.toString());
     }
+  }
+
+  public static void reportProjectFileChangeIfNeeded(@Nullable Project project, @Nullable VirtualFile file) {
+    //if (project != null && file != null && isProjectFile(file)) {
+    //  ProjectManagerEx.getInstanceEx().saveChangedProjectFile(file, project);
+    //}
   }
 
   @Nonnull

@@ -21,20 +21,17 @@ import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
-import consulo.util.dataholder.Key;
 import com.intellij.util.xmlb.annotations.MapAnnotation;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import consulo.util.dataholder.Key;
 import jakarta.inject.Singleton;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.Map;
 import java.util.TreeMap;
 
 @Singleton
-@State(
-        name = "TextDiffSettings",
-        storages = @Storage(file = DiffUtil.DIFF_CONFIG)
-)
+@State(name = "TextDiffSettings", storages = @Storage(file = DiffUtil.DIFF_CONFIG))
 public class TextDiffSettingsHolder implements PersistentStateComponent<TextDiffSettingsHolder.State> {
   public static final Key<TextDiffSettings> KEY = Key.create("TextDiffSettings");
 
@@ -69,6 +66,7 @@ public class TextDiffSettingsHolder implements PersistentStateComponent<TextDiff
   }
 
   public static class TextDiffSettings {
+    public static Key<TextDiffSettings> KEY = Key.create("TextDiffSettings");
     @Nonnull
     public SharedSettings SHARED_SETTINGS = new SharedSettings();
     @Nonnull
@@ -77,8 +75,7 @@ public class TextDiffSettingsHolder implements PersistentStateComponent<TextDiff
     public TextDiffSettings() {
     }
 
-    public TextDiffSettings(@Nonnull SharedSettings SHARED_SETTINGS,
-                            @Nonnull PlaceSettings PLACE_SETTINGS) {
+    public TextDiffSettings(@Nonnull SharedSettings SHARED_SETTINGS, @Nonnull PlaceSettings PLACE_SETTINGS) {
       this.SHARED_SETTINGS = SHARED_SETTINGS;
       this.PLACE_SETTINGS = PLACE_SETTINGS;
     }

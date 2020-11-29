@@ -22,12 +22,11 @@ import com.intellij.diff.DiffRequestFactory;
 import com.intellij.diff.InvalidDiffRequestException;
 import com.intellij.diff.merge.MergeRequest;
 import com.intellij.diff.merge.MergeResult;
+import com.intellij.diff.merge.MergeUtil;
 import com.intellij.diff.util.DiffUtil;
 import com.intellij.ide.presentation.VirtualFilePresentation;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.command.CommandProcessor;
-import consulo.logging.Logger;
-import com.intellij.openapi.diff.impl.mergeTool.MergeVersion;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.project.Project;
@@ -51,10 +50,11 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.ColumnInfo;
 import com.intellij.util.ui.ListTableModel;
 import com.intellij.util.ui.UIUtil;
+import consulo.logging.Logger;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -386,7 +386,7 @@ public class MultipleFileMergeDialog extends DialogWrapper {
   }
 
   private void checkMarkModifiedProject(@Nonnull VirtualFile file) {
-    MergeVersion.MergeDocumentVersion.reportProjectFileChangeIfNeeded(myProject, file);
+    MergeUtil.reportProjectFileChangeIfNeeded(myProject, file);
   }
 
   private void createUIComponents() {
