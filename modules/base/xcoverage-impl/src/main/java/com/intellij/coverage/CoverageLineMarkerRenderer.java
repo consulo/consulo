@@ -47,12 +47,12 @@ import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;
 import com.intellij.rt.coverage.data.LineCoverage;
 import com.intellij.rt.coverage.data.LineData;
-import com.intellij.ui.ColorUtil;
 import com.intellij.ui.ColoredSideBorder;
 import com.intellij.ui.HintHint;
 import com.intellij.ui.LightweightHint;
 import com.intellij.util.Function;
 import consulo.awt.TargetAWT;
+import consulo.ui.color.ColorValue;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -97,17 +97,17 @@ public class CoverageLineMarkerRenderer implements LineMarkerRendererEx, ActiveG
 
   public void paint(Editor editor, Graphics g, Rectangle r) {
     final TextAttributes color = editor.getColorsScheme().getAttributes(myKey);
-    Color bgColor = color.getBackgroundColor();
+    ColorValue bgColor = color.getBackgroundColor();
     if (bgColor == null) {
       bgColor = color.getForegroundColor();
     }
     if (editor.getSettings().isLineNumbersShown() || ((EditorGutterComponentEx)editor.getGutter()).isAnnotationsShown()) {
       if (bgColor != null) {
-        bgColor = ColorUtil.toAlpha(bgColor, 150);
+        bgColor = bgColor.withAlpha(0.6f);
       }
     }
     if (bgColor != null) {
-      g.setColor(bgColor);
+      g.setColor(TargetAWT.to(bgColor));
     }
     g.fillRect(r.x, r.y, r.width, r.height);
     final LineData lineData = getLineData(editor.xyToLogicalPosition(new Point(0, r.y)).line);
@@ -242,10 +242,11 @@ public class CoverageLineMarkerRenderer implements LineMarkerRendererEx, ActiveG
     final ActionToolbar toolbar = ActionManager.getInstance().createActionToolbar(ActionPlaces.FILEHISTORY_VIEW_TOOLBAR, group.build(), true);
     final JComponent toolbarComponent = toolbar.getComponent();
 
-    final Color background = ((EditorEx)editor).getBackgroundColor();
-    final Color foreground = editor.getColorsScheme().getColor(EditorColors.CARET_COLOR);
-    toolbarComponent.setBackground(background);
-    toolbarComponent.setBorder(new ColoredSideBorder(foreground, foreground, lineData == null || lineData.getStatus() == LineCoverage.NONE || mySubCoverageActive ? foreground : null, foreground, 1));
+    final ColorValue background = ((EditorEx)editor).getBackgroundColor();
+    final ColorValue foreground = editor.getColorsScheme().getColor(EditorColors.CARET_COLOR);
+    toolbarComponent.setBackground(TargetAWT.to(background));
+    Color awtForeground = TargetAWT.to(foreground);
+    toolbarComponent.setBorder(new ColoredSideBorder(awtForeground, awtForeground, lineData == null || lineData.getStatus() == LineCoverage.NONE || mySubCoverageActive ? awtForeground : null, awtForeground, 1));
     toolbar.updateActionsImmediately();
     return toolbarComponent;
   }
@@ -271,7 +272,7 @@ public class CoverageLineMarkerRenderer implements LineMarkerRendererEx, ActiveG
     return myLines != null ? myLines.get(myNewToOldConverter != null ? myNewToOldConverter.fun(lineNumber).intValue() : lineNumber) : null;
   }
 
-  public Color getErrorStripeColor(final Editor editor) {
+  public ColorValue getErrorStripeColor(final Editor editor) {
     return editor.getColorsScheme().getAttributes(myKey).getErrorStripeColor();
   }
 

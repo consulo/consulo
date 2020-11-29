@@ -15,25 +15,26 @@
  */
 package com.intellij.ui.stripe;
 
-import java.awt.Color;
+import consulo.ui.color.ColorValue;
+import consulo.ui.color.RGBColor;
 
 /**
  * @author Sergey.Malenkov
  */
 public final class ErrorStripe implements Comparable<ErrorStripe> {
-  private final Color myColor;
+  private final ColorValue myColor;
   private final int myLayer;
 
-  private ErrorStripe(Color color, int layer) {
+  private ErrorStripe(ColorValue color, int layer) {
     myColor = color;
     myLayer = layer;
   }
 
-  public static ErrorStripe create(Color color, int layer) {
+  public static ErrorStripe create(ColorValue color, int layer) {
     return color == null ? null : new ErrorStripe(color, layer);
   }
 
-  public Color getColor() {
+  public ColorValue getColor() {
     return myColor;
   }
 
@@ -51,7 +52,7 @@ public final class ErrorStripe implements Comparable<ErrorStripe> {
     if (object == this) return true;
     if (object instanceof ErrorStripe) {
       ErrorStripe stripe = (ErrorStripe)object;
-      return stripe.myLayer == myLayer && stripe.myColor.getRGB() == myColor.getRGB();
+      return stripe.myLayer == myLayer && RGBColor.toRGBValue(stripe.myColor.toRGB()) == RGBColor.toRGBValue(myColor.toRGB());
     }
     return false;
   }
@@ -62,8 +63,8 @@ public final class ErrorStripe implements Comparable<ErrorStripe> {
     if (stripe == null || stripe.myLayer < myLayer) return -1;
     if (stripe.myLayer > myLayer) return 1;
 
-    int thisRGB = myColor.getRGB();
-    int thatRGB = stripe.myColor.getRGB();
+    int thisRGB = RGBColor.toRGBValue(myColor.toRGB());
+    int thatRGB = RGBColor.toRGBValue(stripe.myColor.toRGB());
     if (thatRGB == thisRGB) return 0;
     return thatRGB < thisRGB ? -1 : 1;
   }

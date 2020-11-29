@@ -15,7 +15,11 @@
  */
 package com.intellij.openapi.options.colors;
 
-import com.intellij.openapi.editor.colors.ColorKey;
+import com.intellij.openapi.editor.colors.EditorColorKey;
+import consulo.annotation.DeprecationInfo;
+import consulo.localize.LocalizeValue;
+
+import javax.annotation.Nonnull;
 
 /**
  * Describes a color which can be configured in a custom colors and fonts page.
@@ -31,8 +35,8 @@ public final class ColorDescriptor {
   }
 
   private final Kind myKind;
-  private final String myDisplayName;
-  private final ColorKey myKey;
+  private final LocalizeValue myDisplayName;
+  private final EditorColorKey myKey;
 
   /**
    * Creates a color descriptor with the specified name and color key.
@@ -41,7 +45,20 @@ public final class ColorDescriptor {
    * @param key         the color key for which the color is specified.
    * @param kind        the type of color corresponding to the color key (foreground or background).
    */
-  public ColorDescriptor(String displayName, ColorKey key, Kind kind) {
+  @Deprecated
+  @DeprecationInfo("Use with parameter LocalizeValue")
+  public ColorDescriptor(String displayName, EditorColorKey key, Kind kind) {
+    this(LocalizeValue.of(displayName), key, kind);
+  }
+
+  /**
+   * Creates a color descriptor with the specified name and color key.
+   *
+   * @param displayName the name of the color shown in the colors list.
+   * @param key         the color key for which the color is specified.
+   * @param kind        the type of color corresponding to the color key (foreground or background).
+   */
+  public ColorDescriptor(@Nonnull LocalizeValue displayName, @Nonnull EditorColorKey key, @Nonnull Kind kind) {
     myKind = kind;
     myDisplayName = displayName;
     myKey = key;
@@ -52,6 +69,7 @@ public final class ColorDescriptor {
    *
    * @return the type of color.
    */
+  @Nonnull
   public Kind getKind() {
     return myKind;
   }
@@ -61,7 +79,8 @@ public final class ColorDescriptor {
    *
    * @return the name of the color.
    */
-  public String getDisplayName() {
+  @Nonnull
+  public LocalizeValue getDisplayName() {
     return myDisplayName;
   }
 
@@ -70,7 +89,8 @@ public final class ColorDescriptor {
    *
    * @return the color key.
    */
-  public ColorKey getKey() {
+  @Nonnull
+  public EditorColorKey getKey() {
     return myKey;
   }
 }

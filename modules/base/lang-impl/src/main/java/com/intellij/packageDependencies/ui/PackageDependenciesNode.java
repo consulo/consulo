@@ -26,27 +26,26 @@ import com.intellij.pom.Navigatable;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
-import com.intellij.ui.Gray;
 import com.intellij.util.ui.tree.TreeUtil;
+import consulo.ui.color.ColorValue;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.MutableTreeNode;
-import java.awt.*;
-import java.util.List;
 import java.util.*;
 
-public class PackageDependenciesNode extends DefaultMutableTreeNode implements Navigatable{
+public class PackageDependenciesNode extends DefaultMutableTreeNode implements Navigatable {
   private static final Image EMPTY_ICON = Image.empty(0, Image.DEFAULT_ICON_SIZE);
+
+  protected static final ColorValue NOT_CHANGED = ColorValue.dummy("must be never called");
 
   private Set<VirtualFile> myRegisteredFiles = null;
   private boolean myHasUnmarked = false;
   private boolean myHasMarked = false;
   private boolean myEquals;
-  protected Color myColor = null;
-  protected static final Color NOT_CHANGED = Gray._0;
+  protected ColorValue myColor = null;
   protected Project myProject;
   private boolean mySorted;
 
@@ -99,7 +98,7 @@ public class PackageDependenciesNode extends DefaultMutableTreeNode implements N
   }
 
   @Nullable
-  public Color getColor() {
+  public ColorValue getColor() {
     return myColor;
   }
 
@@ -107,7 +106,7 @@ public class PackageDependenciesNode extends DefaultMutableTreeNode implements N
     myColor = null;
   }
 
-  public int getContainingFiles(){
+  public int getContainingFiles() {
     int result = 0;
     for (int i = 0; i < getChildCount(); i++) {
       result += ((PackageDependenciesNode)getChildAt(i)).getContainingFiles();
@@ -115,7 +114,7 @@ public class PackageDependenciesNode extends DefaultMutableTreeNode implements N
     return result;
   }
 
-  public String getPresentableFilesCount(){
+  public String getPresentableFilesCount() {
     final int filesCount = getContainingFiles();
     return filesCount > 0 ? " (" + AnalysisScopeBundle.message("package.dependencies.node.items.count", filesCount) + ")" : "";
   }
@@ -170,9 +169,9 @@ public class PackageDependenciesNode extends DefaultMutableTreeNode implements N
   }
 
   @Nullable
-  private Project getProject(){
+  private Project getProject() {
     final PsiElement psiElement = getPsiElement();
-    if (psiElement == null || psiElement.getContainingFile() == null){
+    if (psiElement == null || psiElement.getContainingFile() == null) {
       return null;
     }
     return psiElement.getContainingFile().getProject();
@@ -209,7 +208,7 @@ public class PackageDependenciesNode extends DefaultMutableTreeNode implements N
     return null;
   }
 
-  public boolean canSelectInLeftTree(Map<PsiFile, Set<PsiFile>> deps){
+  public boolean canSelectInLeftTree(Map<PsiFile, Set<PsiFile>> deps) {
     return false;
   }
 

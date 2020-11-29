@@ -50,6 +50,7 @@ import com.intellij.psi.PsiManager;
 import com.intellij.ui.JBColor;
 import com.intellij.util.Processor;
 import consulo.awt.TargetAWT;
+import consulo.ui.color.ColorValue;
 import consulo.ui.font.FontManager;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
@@ -148,8 +149,8 @@ public class Bookmark implements Navigatable {
 
         TextAttributes textAttributes = EditorColorsManager.getInstance().getGlobalScheme().getAttributes(CodeInsightColors.BOOKMARKS_ATTRIBUTES);
 
-        Color stripeColor = textAttributes.getErrorStripeColor();
-        myHighlighter.setErrorStripeMarkColor(stripeColor != null ? stripeColor : Color.black);
+        ColorValue stripeColor = textAttributes.getErrorStripeColor();
+        myHighlighter.setErrorStripeMarkColor(stripeColor != null ? stripeColor : StandardColors.BLACK);
         myHighlighter.setErrorStripeTooltip(getBookmarkTooltip());
 
         TextAttributes attributes = myHighlighter.getTextAttributes();

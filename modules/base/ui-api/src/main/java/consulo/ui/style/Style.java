@@ -35,7 +35,7 @@ public interface Style {
   }
 
   @Nonnull
-  ColorValue getColor(@Nonnull ColorKey colorKey);
+  ColorValue getColorValue(@Nonnull StyleColorValue colorKey);
 
   /**
    * Try to modify source image to showing in current style. Can return same image. Also step into composite icons

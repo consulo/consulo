@@ -25,10 +25,10 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.SmartPointerManager;
 import com.intellij.psi.SmartPsiElementPointer;
 import consulo.ide.IconDescriptorUpdaters;
+import consulo.ui.color.ColorValue;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nullable;
-import java.awt.*;
 
 /**
  * User: anna
@@ -67,7 +67,7 @@ public class BasePsiNode<T extends PsiElement> extends PackageDependenciesNode {
 
   @Override
   @Nullable
-  public Color getColor() {
+  public ColorValue getColor() {
     if (myColor == null && getContainingFile() != null) {
       myColor = FileStatusManager.getInstance(myProject).getStatus(myPsiElementPointer.getVirtualFile()).getColor();
       if (myColor == null) {

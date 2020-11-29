@@ -3,7 +3,7 @@ package com.intellij.codeInsight.hint;
 
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.IdeTooltipManager;
-import com.intellij.openapi.editor.colors.ColorKey;
+import com.intellij.openapi.editor.colors.EditorColorKey;
 import com.intellij.openapi.editor.colors.EditorColorsScheme;
 import com.intellij.openapi.util.Ref;
 import com.intellij.ui.*;
@@ -12,11 +12,14 @@ import com.intellij.util.ui.Html;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import consulo.awt.TargetAWT;
+import consulo.ui.color.ColorValue;
+import consulo.ui.color.RGBColor;
+import consulo.ui.ex.util.LightDarkColorValue;
 import consulo.ui.image.Image;
 import org.intellij.lang.annotations.JdkConstants;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.CompoundBorder;
@@ -40,35 +43,36 @@ public class HintUtil {
   @Deprecated
   public static final Color ERROR_COLOR = new JBColor(0xffdcdc, 0x781732);
 
-  public static final ColorKey INFORMATION_COLOR_KEY = ColorKey.createColorKey("INFORMATION_HINT", INFORMATION_COLOR);
-  public static final ColorKey QUESTION_COLOR_KEY = ColorKey.createColorKey("QUESTION_HINT", new JBColor(0xb5d0fb, 0x376c89));
-  public static final ColorKey ERROR_COLOR_KEY = ColorKey.createColorKey("ERROR_HINT", ERROR_COLOR);
+  public static final EditorColorKey INFORMATION_COLOR_KEY = EditorColorKey.createColorKey("INFORMATION_HINT", new LightDarkColorValue(new RGBColor(247, 247, 247), new RGBColor(75, 77, 77)));
+  public static final EditorColorKey QUESTION_COLOR_KEY = EditorColorKey.createColorKey("QUESTION_HINT", new LightDarkColorValue(new RGBColor(181, 208, 251), new RGBColor(55, 108, 137)));
+  public static final EditorColorKey ERROR_COLOR_KEY = EditorColorKey.createColorKey("ERROR_HINT", new LightDarkColorValue(new RGBColor(255, 220, 220), new RGBColor(120, 23, 50)));
 
   public static final Color QUESTION_UNDERSCORE_COLOR = JBColor.foreground();
 
-  public static final ColorKey RECENT_LOCATIONS_SELECTION_KEY = ColorKey.createColorKey("RECENT_LOCATIONS_SELECTION", new JBColor(0xE9EEF5, 0x383838));
+  public static final EditorColorKey RECENT_LOCATIONS_SELECTION_KEY =
+          EditorColorKey.createColorKey("RECENT_LOCATIONS_SELECTION", new LightDarkColorValue(new RGBColor(233, 238, 245), new RGBColor(56, 56, 56)));
 
   private HintUtil() {
   }
 
   @Nonnull
-  public static Color getInformationColor() {
-    return notNull(getGlobalOrDefaultColor(INFORMATION_COLOR_KEY), INFORMATION_COLOR_KEY.getDefaultColor());
+  public static ColorValue getInformationColor() {
+    return notNull(getGlobalOrDefaultColor(INFORMATION_COLOR_KEY), INFORMATION_COLOR_KEY.getDefaultColorValue());
   }
 
   @Nonnull
-  public static Color getQuestionColor() {
-    return notNull(getGlobalOrDefaultColor(QUESTION_COLOR_KEY), QUESTION_COLOR_KEY.getDefaultColor());
+  public static ColorValue getQuestionColor() {
+    return notNull(getGlobalOrDefaultColor(QUESTION_COLOR_KEY), QUESTION_COLOR_KEY.getDefaultColorValue());
   }
 
   @Nonnull
-  public static Color getErrorColor() {
-    return notNull(getGlobalOrDefaultColor(ERROR_COLOR_KEY), ERROR_COLOR_KEY.getDefaultColor());
+  public static ColorValue getErrorColor() {
+    return notNull(getGlobalOrDefaultColor(ERROR_COLOR_KEY), ERROR_COLOR_KEY.getDefaultColorValue());
   }
 
   @Nonnull
-  public static Color getRecentLocationsSelectionColor(EditorColorsScheme colorsScheme) {
-    return notNull(colorsScheme.getColor(RECENT_LOCATIONS_SELECTION_KEY), RECENT_LOCATIONS_SELECTION_KEY.getDefaultColor());
+  public static ColorValue getRecentLocationsSelectionColor(EditorColorsScheme colorsScheme) {
+    return notNull(colorsScheme.getColor(RECENT_LOCATIONS_SELECTION_KEY), RECENT_LOCATIONS_SELECTION_KEY.getDefaultColorValue());
   }
 
   public static JComponent createInformationLabel(@Nonnull String text) {
@@ -87,8 +91,7 @@ public class HintUtil {
 
   @Nonnull
   public static HintHint getInformationHint() {
-    //noinspection UseJBColor
-    return new HintHint().setBorderColor(INFORMATION_BORDER_COLOR).setTextBg(getInformationColor()).setTextFg(UIUtil.isUnderDarcula() ? UIUtil.getLabelForeground() : Color.black)
+    return new HintHint().setBorderColor(INFORMATION_BORDER_COLOR).setTextBg(TargetAWT.to(getInformationColor())).setTextFg(UIUtil.isUnderDarcula() ? UIUtil.getLabelForeground() : Color.black)
             .setFont(getBoldFont()).setAwtTooltip(true);
   }
 
@@ -108,7 +111,7 @@ public class HintUtil {
   }
 
   public static JComponent createQuestionLabel(String text, Image icon) {
-    Color bg = getQuestionColor();
+    Color bg = TargetAWT.to(getQuestionColor());
     HintHint hintHint = new HintHint().setTextBg(bg).setTextFg(JBColor.foreground()).setFont(getBoldFont()).setAwtTooltip(true);
 
     return createLabel(text, icon, bg, hintHint);
@@ -133,7 +136,7 @@ public class HintUtil {
   @Nonnull
   public static SimpleColoredComponent createInformationComponent() {
     SimpleColoredComponent component = new SimpleColoredComponent();
-    component.setBackground(getInformationColor());
+    component.setBackground(TargetAWT.to(getInformationColor()));
     component.setForeground(JBColor.foreground());
     component.setFont(getBoldFont());
     return component;
@@ -151,7 +154,7 @@ public class HintUtil {
                                             @Nullable HyperlinkListener hyperlinkListener,
                                             @Nullable MouseListener mouseListener,
                                             @Nullable Ref<? super Consumer<? super String>> updatedTextConsumer) {
-    Color bg = getErrorColor();
+    Color bg = TargetAWT.to(getErrorColor());
     HintHint hintHint = new HintHint().setTextBg(bg).setTextFg(JBColor.foreground()).setFont(getBoldFont()).setAwtTooltip(true);
 
     HintLabel label = createLabel(text, null, bg, hintHint);

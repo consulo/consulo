@@ -21,17 +21,17 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.EditorLinePainter;
 import com.intellij.openapi.editor.LineExtensionInfo;
 import com.intellij.openapi.editor.TextAnnotationGutterProvider;
-import com.intellij.openapi.editor.colors.ColorKey;
+import com.intellij.openapi.editor.colors.EditorColorKey;
 import com.intellij.openapi.editor.colors.EditorFontType;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.ui.UIUtil;
+import consulo.ui.color.ColorValue;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.awt.*;
 import java.util.Collection;
 import java.util.List;
 
@@ -39,7 +39,7 @@ import java.util.List;
  * from kotlin
  */
 public class ConsolePromptDecorator extends EditorLinePainter implements TextAnnotationGutterProvider {
-  private static final ColorKey promptColor = ColorKey.createColorKey("CONSOLE_PROMPT_COLOR");
+  private static final EditorColorKey promptColor = EditorColorKey.createColorKey("CONSOLE_PROMPT_COLOR");
 
   private final EditorEx myEditorEx;
 
@@ -120,14 +120,14 @@ public class ConsolePromptDecorator extends EditorLinePainter implements TextAnn
 
   @Nullable
   @Override
-  public ColorKey getColor(int line, Editor editor) {
+  public EditorColorKey getColor(int line, Editor editor) {
     return promptColor;
   }
 
   @Nullable
   @Override
-  public Color getBgColor(int line, Editor editor) {
-    Color backgroundColor = this.promptAttributes.getAttributes().getBackgroundColor();
+  public ColorValue getBgColor(int line, Editor editor) {
+    ColorValue backgroundColor = this.promptAttributes.getAttributes().getBackgroundColor();
     if(backgroundColor == null) {
       backgroundColor = myEditorEx.getBackgroundColor();
     }

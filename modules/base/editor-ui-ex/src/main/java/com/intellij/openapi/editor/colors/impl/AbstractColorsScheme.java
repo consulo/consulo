@@ -28,17 +28,18 @@ import com.intellij.openapi.options.FontSize;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.WriteExternalException;
-import com.intellij.util.containers.ContainerUtilRt;
 import com.intellij.util.containers.HashMap;
 import com.intellij.util.ui.JBUI;
-import gnu.trove.THashMap;
+import consulo.ui.color.ColorValue;
+import consulo.ui.color.RGBColor;
+import consulo.ui.style.StandardColors;
 import org.jdom.Element;
-import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.awt.*;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 public abstract class AbstractColorsScheme implements EditorColorsScheme {
   private static final String OS_VALUE_PREFIX = SystemInfo.isWindows ? "windows" : SystemInfo.isMac ? "mac" : "linux";
@@ -53,11 +54,11 @@ public abstract class AbstractColorsScheme implements EditorColorsScheme {
   protected float myLineSpacing;
 
   @Nonnull
-  private final Map<EditorFontType, Font> myFonts                  = new EnumMap<EditorFontType, Font>(EditorFontType.class);
+  private final Map<EditorFontType, Font> myFonts = new EnumMap<>(EditorFontType.class);
   @Nonnull
-  private final FontPreferencesImpl           myFontPreferences        = new FontPreferencesImpl();
+  private final FontPreferencesImpl myFontPreferences = new FontPreferencesImpl();
   @Nonnull
-  private final FontPreferencesImpl           myConsoleFontPreferences = new FontPreferencesImpl();
+  private final FontPreferencesImpl myConsoleFontPreferences = new FontPreferencesImpl();
 
   private final ValueElementReader myValueReader = new TextAttributesReader();
   private String myFallbackFontName;
@@ -68,55 +69,50 @@ public abstract class AbstractColorsScheme implements EditorColorsScheme {
   // version influences XML format and triggers migration
   private int myVersion = CURR_VERSION;
 
-  protected Map<ColorKey, Color>                   myColorsMap     = ContainerUtilRt.newHashMap();
-  protected Map<TextAttributesKey, TextAttributes> myAttributesMap = ContainerUtilRt.newHashMap();
+  protected Map<EditorColorKey, ColorValue> myColorsMap = new HashMap<>();
+  protected Map<TextAttributesKey, TextAttributes> myAttributesMap = new HashMap<>();
 
-  @NonNls private static final String EDITOR_FONT       = "font";
-  @NonNls private static final String CONSOLE_FONT      = "console-font";
-  @NonNls private static final String EDITOR_FONT_NAME  = "EDITOR_FONT_NAME";
-  @NonNls private static final String CONSOLE_FONT_NAME = "CONSOLE_FONT_NAME";
-  private                      Color  myDeprecatedBackgroundColor    = null;
-  @NonNls private static final String SCHEME_ELEMENT                 = "scheme";
-  @NonNls public static final  String NAME_ATTR                      = "name";
-  @NonNls private static final String VERSION_ATTR                   = "version";
-  @NonNls private static final String DEFAULT_SCHEME_ATTR            = "default_scheme";
-  @NonNls private static final String PARENT_SCHEME_ATTR             = "parent_scheme";
-  @NonNls private static final String OPTION_ELEMENT                 = "option";
-  @NonNls private static final String COLORS_ELEMENT                 = "colors";
-  @NonNls private static final String ATTRIBUTES_ELEMENT             = "attributes";
-  @NonNls private static final String VALUE_ELEMENT                  = "value";
-  @NonNls private static final String BACKGROUND_COLOR_NAME          = "BACKGROUND";
-  @NonNls private static final String LINE_SPACING                   = "LINE_SPACING";
-  @NonNls private static final String CONSOLE_LINE_SPACING           = "CONSOLE_LINE_SPACING";
-  @NonNls private static final String EDITOR_FONT_SIZE               = "EDITOR_FONT_SIZE";
-  @NonNls private static final String CONSOLE_FONT_SIZE              = "CONSOLE_FONT_SIZE";
-  @NonNls private static final String EDITOR_LIGATURES               = "EDITOR_LIGATURES";
-  @NonNls private static final String CONSOLE_LIGATURES              = "CONSOLE_LIGATURES";
-  @NonNls private static final String EDITOR_QUICK_JAVADOC_FONT_SIZE = "EDITOR_QUICK_DOC_FONT_SIZE";
+  private static final String EDITOR_FONT = "font";
+  private static final String CONSOLE_FONT = "console-font";
+  private static final String EDITOR_FONT_NAME = "EDITOR_FONT_NAME";
+  private static final String CONSOLE_FONT_NAME = "CONSOLE_FONT_NAME";
+  private ColorValue myDeprecatedBackgroundColor = null;
+  private static final String SCHEME_ELEMENT = "scheme";
+  public static final String NAME_ATTR = "name";
+  private static final String VERSION_ATTR = "version";
+  private static final String DEFAULT_SCHEME_ATTR = "default_scheme";
+  private static final String PARENT_SCHEME_ATTR = "parent_scheme";
+  private static final String OPTION_ELEMENT = "option";
+  private static final String COLORS_ELEMENT = "colors";
+  private static final String ATTRIBUTES_ELEMENT = "attributes";
+  private static final String VALUE_ELEMENT = "value";
+  private static final String BACKGROUND_COLOR_NAME = "BACKGROUND";
+  private static final String LINE_SPACING = "LINE_SPACING";
+  private static final String CONSOLE_LINE_SPACING = "CONSOLE_LINE_SPACING";
+  private static final String EDITOR_FONT_SIZE = "EDITOR_FONT_SIZE";
+  private static final String CONSOLE_FONT_SIZE = "CONSOLE_FONT_SIZE";
+  private static final String EDITOR_LIGATURES = "EDITOR_LIGATURES";
+  private static final String CONSOLE_LIGATURES = "CONSOLE_LIGATURES";
+  private static final String EDITOR_QUICK_JAVADOC_FONT_SIZE = "EDITOR_QUICK_DOC_FONT_SIZE";
 
-  protected AbstractColorsScheme(@javax.annotation.Nullable EditorColorsScheme parentScheme, @Nonnull EditorColorsManager editorColorsManager) {
+  protected AbstractColorsScheme(@Nullable EditorColorsScheme parentScheme, @Nonnull EditorColorsManager editorColorsManager) {
     myParentScheme = parentScheme;
     myEditorColorsManager = editorColorsManager;
-    myFontPreferences.setChangeListener(new Runnable() {
-      @Override
-      public void run() {
-        initFonts();
-      }
-    });
+    myFontPreferences.setChangeListener(() -> initFonts());
   }
 
   @Nonnull
   @Override
-  public Color getDefaultBackground() {
-    final Color c = getAttributes(HighlighterColors.TEXT).getBackgroundColor();
-    return c != null ? c : Color.white;
+  public ColorValue getDefaultBackground() {
+    final ColorValue c = getAttributes(HighlighterColors.TEXT).getBackgroundColor();
+    return c != null ? c : StandardColors.WHITE;
   }
 
   @Nonnull
   @Override
-  public Color getDefaultForeground() {
-    final Color c = getAttributes(HighlighterColors.TEXT).getForegroundColor();
-    return c != null ? c : Color.black;
+  public ColorValue getDefaultForeground() {
+    final ColorValue c = getAttributes(HighlighterColors.TEXT).getForegroundColor();
+    return c != null ? c : StandardColors.BLACK;
   }
 
   @Nonnull
@@ -146,8 +142,8 @@ public abstract class AbstractColorsScheme implements EditorColorsScheme {
       newScheme.setFont(type, font);
     }
 
-    newScheme.myAttributesMap = new HashMap<TextAttributesKey, TextAttributes>(myAttributesMap);
-    newScheme.myColorsMap = new HashMap<ColorKey, Color>(myColorsMap);
+    newScheme.myAttributesMap = new HashMap<>(myAttributesMap);
+    newScheme.myColorsMap = new HashMap<>(myColorsMap);
     newScheme.myVersion = myVersion;
   }
 
@@ -327,7 +323,7 @@ public abstract class AbstractColorsScheme implements EditorColorsScheme {
     if (myDeprecatedBackgroundColor != null) {
       TextAttributes textAttributes = myAttributesMap.get(HighlighterColors.TEXT);
       if (textAttributes == null) {
-        textAttributes = new TextAttributes(Color.black, myDeprecatedBackgroundColor, null, EffectType.BOXED, Font.PLAIN);
+        textAttributes = new TextAttributes(StandardColors.BLACK, myDeprecatedBackgroundColor, null, EffectType.BOXED, Font.PLAIN);
         myAttributesMap.put(HighlighterColors.TEXT, textAttributes);
       }
       else {
@@ -347,50 +343,34 @@ public abstract class AbstractColorsScheme implements EditorColorsScheme {
       TextAttributesKey name = TextAttributesKey.find(e.getAttributeValue(NAME_ATTR));
       TextAttributes attr = new TextAttributes(e.getChild(VALUE_ELEMENT));
       myAttributesMap.put(name, attr);
-      migrateErrorStripeColorFrom45(name, attr);
     }
-  }
-
-  private void migrateErrorStripeColorFrom45(final TextAttributesKey name, final TextAttributes attr) {
-    if (myVersion != 0) return;
-    Color defaultColor = DEFAULT_ERROR_STRIPE_COLOR.get(name.getExternalName());
-    if (defaultColor != null && attr.getErrorStripeColor() == null) {
-      attr.setErrorStripeColor(defaultColor);
-    }
-  }
-  public static final Map<String, Color> DEFAULT_ERROR_STRIPE_COLOR = new THashMap<String, Color>();
-  static {
-    DEFAULT_ERROR_STRIPE_COLOR.put(CodeInsightColors.ERRORS_ATTRIBUTES.getExternalName(), Color.red);
-    DEFAULT_ERROR_STRIPE_COLOR.put(CodeInsightColors.WRONG_REFERENCES_ATTRIBUTES.getExternalName(), Color.red);
-    DEFAULT_ERROR_STRIPE_COLOR.put(CodeInsightColors.WARNINGS_ATTRIBUTES.getExternalName(), Color.yellow);
-    DEFAULT_ERROR_STRIPE_COLOR.put(CodeInsightColors.INFO_ATTRIBUTES.getExternalName(), Color.yellow.brighter());
-    DEFAULT_ERROR_STRIPE_COLOR.put(CodeInsightColors.WEAK_WARNING_ATTRIBUTES.getExternalName(), Color.yellow.brighter());
-    DEFAULT_ERROR_STRIPE_COLOR.put(CodeInsightColors.NOT_USED_ELEMENT_ATTRIBUTES.getExternalName(), Color.yellow);
-    DEFAULT_ERROR_STRIPE_COLOR.put(CodeInsightColors.NOT_USED_ELEMENT_ATTRIBUTES.getExternalName(), Color.yellow);
-    DEFAULT_ERROR_STRIPE_COLOR.put(CodeInsightColors.DEPRECATED_ATTRIBUTES.getExternalName(), Color.yellow);
   }
 
   private void readColors(Element childNode) {
-    for (final Object o : childNode.getChildren(OPTION_ELEMENT)) {
-      Element colorElement = (Element)o;
-      Color valueColor = readColorValue(colorElement);
+    for (final Element colorElement : childNode.getChildren(OPTION_ELEMENT)) {
+      ColorValue valueColor = readColor(colorElement);
+      if(valueColor == null) {
+        continue;
+      }
+      
       final String colorName = colorElement.getAttributeValue(NAME_ATTR);
       if (BACKGROUND_COLOR_NAME.equals(colorName)) {
         // This setting has been deprecated to usages of HighlighterColors.TEXT attributes.
         myDeprecatedBackgroundColor = valueColor;
       }
 
-      ColorKey name = ColorKey.find(colorName);
+      EditorColorKey name = EditorColorKey.find(colorName);
       myColorsMap.put(name, valueColor);
     }
   }
 
-  private static Color readColorValue(final Element colorElement) {
+  @Nullable
+  private static ColorValue readColor(final Element colorElement) {
     String value = getValue(colorElement);
-    Color valueColor = null;
+    ColorValue valueColor = null;
     if (value != null && value.trim().length() > 0) {
       try {
-        valueColor = new Color(Integer.parseInt(value, 16));
+        valueColor = RGBColor.fromRGBValue(Integer.parseInt(value, 16));
       }
       catch (NumberFormatException ignored) {
       }
@@ -406,7 +386,7 @@ public abstract class AbstractColorsScheme implements EditorColorsScheme {
     }
     else if (EDITOR_FONT_SIZE.equals(name)) {
       Integer value = myValueReader.read(Integer.class, childNode);
-      if (value  != null) setEditorFontSize(value);
+      if (value != null) setEditorFontSize(value);
     }
     else if (EDITOR_FONT_NAME.equals(name)) {
       String value = myValueReader.read(String.class, childNode);
@@ -585,13 +565,13 @@ public abstract class AbstractColorsScheme implements EditorColorsScheme {
   }
 
   private void writeAttributes(Element attrElements) throws WriteExternalException {
-    List<TextAttributesKey> list = new ArrayList<TextAttributesKey>(myAttributesMap.keySet());
+    List<TextAttributesKey> list = new ArrayList<>(myAttributesMap.keySet());
     Collections.sort(list);
 
-    for (TextAttributesKey key: list) {
+    for (TextAttributesKey key : list) {
       TextAttributes defaultAttr = myParentScheme != null ? myParentScheme.getAttributes(key) : new TextAttributes();
       TextAttributes value = myAttributesMap.get(key);
-      if (!haveToWrite(key,value,defaultAttr)) continue;
+      if (!haveToWrite(key, value, defaultAttr)) continue;
       Element element = new Element(OPTION_ELEMENT);
       element.setAttribute(NAME_ATTR, key.getExternalName());
       Element valueElement = new Element(VALUE_ELEMENT);
@@ -601,27 +581,35 @@ public abstract class AbstractColorsScheme implements EditorColorsScheme {
     }
   }
 
-  protected Color getOwnColor(ColorKey key) {
+  protected ColorValue getOwnColor(EditorColorKey key) {
     return myColorsMap.get(key);
   }
 
   private void writeColors(Element colorElements) {
-    List<ColorKey> list = new ArrayList<ColorKey>(myColorsMap.keySet());
+    List<EditorColorKey> list = new ArrayList<>(myColorsMap.keySet());
     Collections.sort(list);
 
-    for (ColorKey key : list) {
+    for (EditorColorKey key : list) {
       if (haveToWrite(key)) {
-        Color value = myColorsMap.get(key);
+        ColorValue value = myColorsMap.get(key);
+        if(value == null) {
+          continue;
+        }
+        
         Element element = new Element(OPTION_ELEMENT);
         element.setAttribute(NAME_ATTR, key.getExternalName());
-        element.setAttribute(VALUE_ELEMENT, value != null ? Integer.toString(value.getRGB() & 0xFFFFFF, 16) : "");
+
+        int color = RGBColor.toRGBValue(value.toRGB());
+
+        element.setAttribute(VALUE_ELEMENT, Integer.toString(color, 16));
+        
         colorElements.addContent(element);
       }
     }
   }
 
-  private boolean haveToWrite(final ColorKey key) {
-    Color value = myColorsMap.get(key);
+  private boolean haveToWrite(final EditorColorKey key) {
+    ColorValue value = myColorsMap.get(key);
     if (myParentScheme != null) {
       if (myParentScheme instanceof AbstractColorsScheme) {
         if (Comparing.equal(((AbstractColorsScheme)myParentScheme).getOwnColor(key), value) && ((AbstractColorsScheme)myParentScheme).myColorsMap.containsKey(key)) {

@@ -39,6 +39,7 @@ import com.intellij.psi.tree.IElementType;
 import com.intellij.util.Alarm;
 import com.intellij.util.EventDispatcher;
 import com.intellij.util.ui.UIUtil;
+import consulo.awt.TargetAWT;
 import consulo.disposer.Disposer;
 import org.intellij.lang.annotations.JdkConstants;
 import javax.annotation.Nonnull;
@@ -323,7 +324,7 @@ public class SimpleEditorPreview implements PreviewPanel {
   }
 
   private void setCursor(@JdkConstants.CursorType int type) {
-    final Cursor cursor = type == Cursor.TEXT_CURSOR ? UIUtil.getTextCursor(myEditor.getBackgroundColor())
+    final Cursor cursor = type == Cursor.TEXT_CURSOR ? UIUtil.getTextCursor(TargetAWT.to(myEditor.getBackgroundColor()))
                                                      : Cursor.getPredefinedCursor(type);
     myEditor.getContentComponent().setCursor(cursor);
   }

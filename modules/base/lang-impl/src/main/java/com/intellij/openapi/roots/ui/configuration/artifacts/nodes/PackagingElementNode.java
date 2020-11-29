@@ -25,16 +25,15 @@ import com.intellij.openapi.util.MultiValuesMap;
 import com.intellij.packaging.elements.CompositePackagingElement;
 import com.intellij.packaging.elements.PackagingElement;
 import com.intellij.packaging.ui.ArtifactEditorContext;
-import com.intellij.ui.JBColor;
 import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.ui.treeStructure.SimpleNode;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.SmartList;
-import com.intellij.util.StringBuilderSpinAllocator;
 import com.intellij.xml.util.XmlStringUtil;
+import consulo.ui.style.StandardColors;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.*;
 
 /**
@@ -102,19 +101,14 @@ public class PackagingElementNode<E extends PackagingElement<?>> extends Artifac
       super.update(presentation);
       return;
     }
-    StringBuilder buffer = StringBuilderSpinAllocator.alloc();
+    StringBuilder buffer = new StringBuilder();
     final String tooltip;
     boolean isError = false;
-    try {
-      for (ArtifactProblemDescription problem : problems) {
-        isError |= problem.getSeverity() == ProjectStructureProblemType.Severity.ERROR;
-        buffer.append(problem.getMessage(false)).append("<br>");
-      }
-      tooltip = XmlStringUtil.wrapInHtml(buffer);
+    for (ArtifactProblemDescription problem : problems) {
+      isError |= problem.getSeverity() == ProjectStructureProblemType.Severity.ERROR;
+      buffer.append(problem.getMessage(false)).append("<br>");
     }
-    finally {
-      StringBuilderSpinAllocator.dispose(buffer);
-    }
+    tooltip = XmlStringUtil.wrapInHtml(buffer);
 
     getElementPresentation().render(presentation, addErrorHighlighting(isError, SimpleTextAttributes.REGULAR_ATTRIBUTES),
                                     addErrorHighlighting(isError, SimpleTextAttributes.GRAY_ATTRIBUTES));
@@ -124,7 +118,7 @@ public class PackagingElementNode<E extends PackagingElement<?>> extends Artifac
   private static SimpleTextAttributes addErrorHighlighting(boolean error, SimpleTextAttributes attributes) {
     final TextAttributes textAttributes = attributes.toTextAttributes();
     textAttributes.setEffectType(EffectType.WAVE_UNDERSCORE);
-    textAttributes.setEffectColor(error ? JBColor.RED : JBColor.GRAY);
+    textAttributes.setEffectColor(error ? StandardColors.RED : StandardColors.GRAY);
     return SimpleTextAttributes.fromTextAttributes(textAttributes);
   }
 

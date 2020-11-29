@@ -33,6 +33,7 @@ import com.intellij.diff.tools.util.base.TextDiffViewerUtil;
 import com.intellij.diff.tools.util.side.TwosideContentPanel;
 import com.intellij.diff.util.*;
 import com.intellij.icons.AllIcons;
+import consulo.awt.TargetAWT;
 import consulo.disposer.Disposable;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.ActionUtil;
@@ -48,6 +49,7 @@ import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.BooleanGetter;
 import consulo.disposer.Disposer;
+import consulo.ui.color.ColorValue;
 import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.vcs.CalledInAwt;
@@ -740,7 +742,7 @@ class ApplyPatchViewer implements DataProvider, Disposable {
     public void paint(@Nonnull Graphics g, @Nonnull JComponent divider) {
       Graphics2D gg = DiffDividerDrawUtil.getDividerGraphics(g, divider, myPatchEditor.getComponent());
 
-      gg.setColor(DiffDrawUtil.getDividerColor(myPatchEditor));
+      gg.setColor(TargetAWT.to(DiffDrawUtil.getDividerColor(myPatchEditor)));
       gg.fill(gg.getClipBounds());
 
       DiffDividerDrawUtil.paintPolygons(gg, divider.getWidth(), myResultEditor, myPatchEditor, this);
@@ -755,7 +757,7 @@ class ApplyPatchViewer implements DataProvider, Disposable {
         LineRange patchRange = change.getPatchRange();
         assert resultRange != null;
 
-        Color color = change.getDiffType().getColor(myPatchEditor);
+        ColorValue color = change.getDiffType().getColor(myPatchEditor);
 
         // do not abort - ranges are ordered in patch order, but they can be not ordered in terms of resultRange
         handler.process(resultRange.start, resultRange.end, patchRange.start, patchRange.end, color, change.isResolved());

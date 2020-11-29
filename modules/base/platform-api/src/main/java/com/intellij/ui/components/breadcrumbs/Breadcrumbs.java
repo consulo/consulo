@@ -13,6 +13,7 @@ import com.intellij.ui.scale.JBUIScale;
 import com.intellij.util.IconUtil;
 import com.intellij.util.ui.*;
 import consulo.awt.TargetAWT;
+import consulo.ui.color.ColorValue;
 import consulo.ui.image.Image;
 import org.intellij.lang.annotations.JdkConstants.FontStyle;
 
@@ -192,18 +193,18 @@ public class Breadcrumbs extends JBPanelWithEmptyText {
     return attributes == null ? Font.PLAIN : attributes.getFontType();
   }
 
-  protected Color getForeground(Crumb crumb) {
+  protected ColorValue getForeground(Crumb crumb) {
     TextAttributes attributes = getAttributes(crumb);
-    Color foreground = attributes == null ? null : attributes.getForegroundColor();
-    return foreground != null ? foreground : getForeground();
+    ColorValue foreground = attributes == null ? null : attributes.getForegroundColor();
+    return foreground != null ? foreground : TargetAWT.from(getForeground());
   }
 
-  protected Color getBackground(Crumb crumb) {
+  protected ColorValue getBackground(Crumb crumb) {
     TextAttributes attributes = getAttributes(crumb);
     return attributes == null ? null : attributes.getBackgroundColor();
   }
 
-  protected Color getEffectColor(Crumb crumb) {
+  protected ColorValue getEffectColor(Crumb crumb) {
     TextAttributes attributes = getAttributes(crumb);
     return attributes == null ? null : attributes.getEffectColor();
   }
@@ -389,10 +390,10 @@ public class Breadcrumbs extends JBPanelWithEmptyText {
       }
       text = crumb.getText();
       font = getFont(crumb);
-      foreground = getForeground(crumb);
-      background = getBackground(crumb);
+      foreground = TargetAWT.to(getForeground(crumb));
+      background = TargetAWT.to(getBackground(crumb));
       effectType = getEffectType(crumb);
-      effectColor = getEffectColor(crumb);
+      effectColor = TargetAWT.to(getEffectColor(crumb));
 
       // use shared foreground and font if not set
       if (foreground == null) foreground = getForeground();

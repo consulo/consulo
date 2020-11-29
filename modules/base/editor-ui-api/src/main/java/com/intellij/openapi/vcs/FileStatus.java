@@ -15,10 +15,12 @@
  */
 package com.intellij.openapi.vcs;
 
-import com.intellij.openapi.editor.colors.ColorKey;
+import com.intellij.openapi.editor.colors.EditorColorKey;
 import com.intellij.ui.Gray;
-import javax.annotation.Nonnull;
+import consulo.ui.color.ColorValue;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.awt.*;
 
 @SuppressWarnings("UseJBColor")
@@ -58,10 +60,11 @@ public interface FileStatus {
 
   String getText();
 
-  Color getColor();
+  @Nullable
+  ColorValue getColor();
 
   @Nonnull
-  ColorKey getColorKey();
+  EditorColorKey getColorKey();
 
   @Nonnull
   String getId();

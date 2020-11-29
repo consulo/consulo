@@ -105,7 +105,10 @@ public class TargetAWTFacadeStub implements TargetAWTFacade {
 
   @Override
   public RGBColor from(@Nullable Color color) {
-    throw new UnsupportedOperationException();
+    if(color == null) {
+      return null;
+    }
+    return new RGBColor(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha() / 255f);
   }
 
   @Override

@@ -17,10 +17,11 @@ package com.intellij.ide.diff;
 
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.vcs.FileStatus;
-import com.intellij.ui.JBColor;
+import consulo.ui.color.ColorValue;
 import consulo.ui.image.Image;
+import consulo.ui.style.ComponentColors;
 
-import java.awt.*;
+import javax.annotation.Nullable;
 
 /**
  * @author Konstantin Bulenkov
@@ -40,7 +41,8 @@ public enum DirDiffOperation {
     return Image.empty(Image.DEFAULT_ICON_SIZE);
   }
 
-  public Color getTextColor() {
+  @Nullable
+  public ColorValue getTextColor() {
     switch (this) {
       case COPY_TO:
       case COPY_FROM:
@@ -52,6 +54,6 @@ public enum DirDiffOperation {
       case EQUAL:
       case NONE:
     }
-    return JBColor.foreground();
+    return ComponentColors.TEXT;
   }
 }

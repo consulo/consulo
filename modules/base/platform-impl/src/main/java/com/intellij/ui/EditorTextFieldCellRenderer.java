@@ -15,6 +15,7 @@
  */
 package com.intellij.ui;
 
+import consulo.awt.TargetAWT;
 import consulo.disposer.Disposable;
 import com.intellij.openapi.editor.SelectionModel;
 import com.intellij.openapi.editor.colors.EditorColors;
@@ -88,9 +89,9 @@ public abstract class EditorTextFieldCellRenderer implements TableCellRenderer, 
     EditorEx editor = panel.getEditor();
     editor.getColorsScheme().setEditorFontSize(table.getFont().getSize());
 
-    editor.getColorsScheme().setColor(EditorColors.SELECTION_BACKGROUND_COLOR, table.getSelectionBackground());
-    editor.getColorsScheme().setColor(EditorColors.SELECTION_FOREGROUND_COLOR, table.getSelectionForeground());
-    editor.setBackgroundColor(selected ? table.getSelectionBackground() : table.getBackground());
+    editor.getColorsScheme().setColor(EditorColors.SELECTION_BACKGROUND_COLOR, TargetAWT.from(table.getSelectionBackground()));
+    editor.getColorsScheme().setColor(EditorColors.SELECTION_FOREGROUND_COLOR, TargetAWT.from(table.getSelectionForeground()));
+    editor.setBackgroundColor(TargetAWT.from(selected ? table.getSelectionBackground() : table.getBackground()));
     panel.setSelected(!Comparing.equal(editor.getBackgroundColor(), table.getBackground()));
 
     panel.setBorder(null); // prevents double border painting when ExtendedItemRendererComponentWrapper is used
@@ -177,7 +178,7 @@ public abstract class EditorTextFieldCellRenderer implements TableCellRenderer, 
     public void setBackground(Color bg) {
       // allows for striped tables
       if (myEditor != null) {
-        myEditor.setBackgroundColor(bg);
+        myEditor.setBackgroundColor(TargetAWT.from(bg));
       }
       super.setBackground(bg);
     }

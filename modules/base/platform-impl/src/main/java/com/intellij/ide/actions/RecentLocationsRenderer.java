@@ -29,7 +29,9 @@ import com.intellij.util.FontUtil;
 import com.intellij.util.text.DateFormatUtil;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
+import consulo.awt.TargetAWT;
 import consulo.fileTypes.impl.VfsIconUtil;
+import consulo.ui.color.ColorValue;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
@@ -78,7 +80,7 @@ class RecentLocationsRenderer extends ColoredListCellRenderer<RecentLocationItem
   }
 
   @Nonnull
-  private static Color getBackgroundColor(@Nonnull EditorColorsScheme colorsScheme, boolean selected) {
+  private static ColorValue getBackgroundColor(@Nonnull EditorColorsScheme colorsScheme, boolean selected) {
     return selected ? HintUtil.getRecentLocationsSelectionColor(colorsScheme) : colorsScheme.getDefaultBackground();
   }
 
@@ -93,14 +95,14 @@ class RecentLocationsRenderer extends ColoredListCellRenderer<RecentLocationItem
     JComponent title = JBUI.Panels.simplePanel().withBorder(JBUI.Borders.empty()).addToLeft(createTitleTextComponent(project, list, speedSearch, placeInfo, colorsScheme, breadcrumb, selected));
 
     title.setBorder(JBUI.Borders.empty(8, 6, 5, 0));
-    title.setBackground(getBackgroundColor(colorsScheme, selected));
+    title.setBackground(TargetAWT.to(getBackgroundColor(colorsScheme, selected)));
 
     return title;
   }
 
   @Nonnull
   private static JPanel createSeparatorLine(@Nonnull EditorColorsScheme colorsScheme) {
-    Color color = colorsScheme.getColor(CodeInsightColors.METHOD_SEPARATORS_COLOR);
+    Color color = TargetAWT.to(colorsScheme.getColor(CodeInsightColors.METHOD_SEPARATORS_COLOR));
     if (color == null) {
       color = JBColor.namedColor("Group.separatorColor", new JBColor(Gray.xCD, Gray.x51));
     }
@@ -166,7 +168,7 @@ class RecentLocationsRenderer extends ColoredListCellRenderer<RecentLocationItem
     }
 
     long timeStamp = placeInfo.getTimeStamp();
-    if (UISettings.getInstance().getShowInplaceComments() && Registry.is("show.last.visited.timestamps") && timeStamp != -1) {
+    if (UISettings.getInstance().getShowInplaceComments() && Registry.is("show.last.visited.timestamps", true) && timeStamp != -1) {
       titleTextComponent.append(" " + DateFormatUtil.formatPrettyDateTime(timeStamp), SimpleTextAttributes.GRAYED_SMALL_ATTRIBUTES);
     }
 
@@ -188,10 +190,10 @@ class RecentLocationsRenderer extends ColoredListCellRenderer<RecentLocationItem
 
   @Nonnull
   private static SimpleTextAttributes createBreadcrumbsTextAttributes(@Nonnull EditorColorsScheme colorsScheme, boolean selected) {
-    Color backgroundColor = getBackgroundColor(colorsScheme, selected);
+    ColorValue backgroundColor = getBackgroundColor(colorsScheme, selected);
     TextAttributes attributes = colorsScheme.getAttributes(CodeInsightColors.NOT_USED_ELEMENT_ATTRIBUTES);
     if (attributes != null) {
-      Color unusedForeground = attributes.getForegroundColor();
+      ColorValue unusedForeground = attributes.getForegroundColor();
       if (unusedForeground != null) {
         return SimpleTextAttributes.fromTextAttributes(new TextAttributes(unusedForeground, backgroundColor, null, null, Font.PLAIN));
       }
@@ -201,7 +203,7 @@ class RecentLocationsRenderer extends ColoredListCellRenderer<RecentLocationItem
   }
 
   @Nonnull
-  private static TextAttributes createDefaultTextAttributesWithBackground(@Nonnull EditorColorsScheme colorsScheme, @Nonnull Color backgroundColor) {
+  private static TextAttributes createDefaultTextAttributesWithBackground(@Nonnull EditorColorsScheme colorsScheme, @Nonnull ColorValue backgroundColor) {
     TextAttributes defaultTextAttributes = new TextAttributes();
     TextAttributes textAttributes = colorsScheme.getAttributes(HighlighterColors.TEXT);
     if (textAttributes != null) {

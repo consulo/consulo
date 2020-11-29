@@ -30,25 +30,26 @@ import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
 import com.intellij.ui.ColorUtil;
-import com.intellij.ui.JBColor;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.ui.color.ColorValue;
+import consulo.ui.color.RGBColor;
+import consulo.ui.ex.util.LightDarkColorValue;
 import org.jetbrains.annotations.Contract;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import java.awt.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
 public class RainbowHighlighter {
-  private static final JBColor[] RAINBOW_JB_COLORS_DEFAULT = {
-          new JBColor(0x9b3b6a, 0x529d52),
-          new JBColor(0x114d77, 0xbe7070),
-          new JBColor(0xbc8650, 0x3d7676),
-          new JBColor(0x005910, 0xbe9970),
-          new JBColor(0xbc5150, 0x9d527c),
+  private static final ColorValue[] RAINBOW_JB_COLORS_DEFAULT = {
+          new LightDarkColorValue(new RGBColor(155, 59, 106), new RGBColor(82, 157, 82)),
+          new LightDarkColorValue(new RGBColor(17, 77, 119), new RGBColor(190, 112, 112)),
+          new LightDarkColorValue(new RGBColor(188, 134, 80), new RGBColor(61, 118, 118)),
+          new LightDarkColorValue(new RGBColor(0, 89, 16), new RGBColor(190, 153, 112)),
+          new LightDarkColorValue(new RGBColor(188, 81, 80), new RGBColor(157, 82, 124)),
   };
   public static final TextAttributesKey[] RAINBOW_COLOR_KEYS = new TextAttributesKey[RAINBOW_JB_COLORS_DEFAULT.length];
   private static final int RAINBOW_COLORS_BETWEEN = 4;
@@ -73,7 +74,7 @@ public class RainbowHighlighter {
   @Nonnull
   private final TextAttributesScheme myColorsScheme;
   @Nonnull
-  private final Color[] myRainbowColors;
+  private final ColorValue[] myRainbowColors;
 
   public RainbowHighlighter(@Nullable TextAttributesScheme colorsScheme) {
     myColorsScheme = colorsScheme != null ? colorsScheme : EditorColorsManager.getInstance().getGlobalScheme();
@@ -133,7 +134,7 @@ public class RainbowHighlighter {
 
   @Nonnull
   @Contract(pure = true)
-  private Color calculateForeground(int colorIndex) {
+  private ColorValue calculateForeground(int colorIndex) {
     return myRainbowColors[colorIndex];
   }
 
@@ -142,19 +143,19 @@ public class RainbowHighlighter {
   }
 
   @Nonnull
-  private static Color[] generateColorSequence(@Nonnull TextAttributesScheme colorsScheme) {
+  private static ColorValue[] generateColorSequence(@Nonnull TextAttributesScheme colorsScheme) {
     String colorDump = ApplicationManager.getApplication().isUnitTestMode()
                        ? UNIT_TEST_COLORS
                        : Registry.get("rainbow.highlighter.colors").asString();
 
     final List<String> registryColors = StringUtil.split(colorDump, ",");
     if (!registryColors.isEmpty()) {
-      return registryColors.stream().map(s -> ColorUtil.fromHex(s.trim())).toArray(Color[]::new);
+      return registryColors.stream().map(s -> ColorUtil.fromHex(s.trim())).toArray(ColorValue[]::new);
     }
 
-    List<Color> stopColors = ContainerUtil.map(RAINBOW_COLOR_KEYS, key -> colorsScheme.getAttributes(key).getForegroundColor());
-    List<Color> colors = ColorGenerator.generateLinearColorSequence(stopColors, RAINBOW_COLORS_BETWEEN);
-    return colors.toArray(new Color[colors.size()]);
+    List<ColorValue> stopColors = ContainerUtil.map(RAINBOW_COLOR_KEYS, key -> colorsScheme.getAttributes(key).getForegroundColor());
+    List<ColorValue> colors = ColorGenerator.generateLinearColorSequence(stopColors, RAINBOW_COLORS_BETWEEN);
+    return colors.toArray(new ColorValue[colors.size()]);
   }
 
   @Nonnull
@@ -198,7 +199,7 @@ public class RainbowHighlighter {
   private static final TextAttributesKey[] RAINBOW_TEMP_KEYS = new RainbowHighlighter(null).getRainbowTempKeys();
 
   @Nonnull
-  public static  TextAttributes createRainbowAttribute(@Nullable Color color) {
+  public static  TextAttributes createRainbowAttribute(@Nullable ColorValue color) {
     TextAttributes ret = new TextAttributes();
     ret.setForegroundColor(color);
     return ret;

@@ -34,9 +34,9 @@ import com.intellij.psi.search.scope.packageSet.NamedScopeManager;
 import com.intellij.psi.search.scope.packageSet.NamedScopesHolder;
 import com.intellij.psi.search.scope.packageSet.PackageSet;
 import com.intellij.psi.util.PsiTreeUtil;
-import com.intellij.ui.JBColor;
 import com.intellij.util.ArrayUtil;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.style.StandardColors;
 
 import javax.annotation.Nonnull;
 
@@ -194,7 +194,7 @@ public abstract class HierarchyTreeStructure extends AbstractTreeStructure {
     public TextInfoNodeDescriptor(final NodeDescriptor parentDescriptor, final String text, final Project project) {
       super(project, parentDescriptor);
       myName = text;
-      myColor = JBColor.RED;
+      myColor = StandardColors.RED;
     }
 
     @Override

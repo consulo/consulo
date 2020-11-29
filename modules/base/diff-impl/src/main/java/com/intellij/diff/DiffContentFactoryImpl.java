@@ -41,16 +41,16 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.testFramework.BinaryLightVirtualFile;
 import com.intellij.testFramework.LightVirtualFile;
-import com.intellij.ui.LightColors;
 import com.intellij.util.LineSeparator;
 import com.intellij.util.PathUtil;
 import consulo.application.AccessRule;
 import consulo.fileTypes.ArchiveFileType;
 import consulo.logging.Logger;
+import consulo.ui.style.StandardColors;
+import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import jakarta.inject.Singleton;
 import java.awt.datatransfer.DataFlavor;
 import java.io.File;
 import java.io.IOException;
@@ -373,7 +373,7 @@ public class DiffContentFactoryImpl extends DiffContentFactoryEx {
 
     if (malformedContent) {
       String notificationText = "Content was decoded with errors (using " + "'" + charset.name() + "' charset)";
-      DiffUtil.addNotification(DiffNotifications.createNotification(notificationText, LightColors.RED), documentContent);
+      DiffUtil.addNotification(DiffNotifications.createNotification(notificationText, StandardColors.LIGHT_RED), documentContent);
     }
 
     return documentContent;

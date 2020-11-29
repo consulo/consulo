@@ -17,8 +17,8 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.util.Couple;
 import com.intellij.openapi.vcs.annotate.FileAnnotation;
 import com.intellij.openapi.vcs.history.VcsRevisionNumber;
+import consulo.ui.color.ColorValue;
 
-import java.awt.*;
 import java.util.Map;
 
 /**
@@ -31,7 +31,7 @@ public class ExtraFieldGutter extends AnnotationFieldGutter  {
 
   public ExtraFieldGutter(FileAnnotation fileAnnotation,
                           AnnotationPresentation presentation,
-                          Couple<Map<VcsRevisionNumber, Color>> bgColorMap, AnnotateActionGroup actionGroup) {
+                          Couple<Map<VcsRevisionNumber, ColorValue>> bgColorMap, AnnotateActionGroup actionGroup) {
     super(fileAnnotation, presentation, bgColorMap);
     myActionGroup = actionGroup;
   }

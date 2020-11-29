@@ -41,6 +41,7 @@ import com.intellij.ui.JBColor;
 import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.util.ui.JBUI;
 import consulo.application.AccessRule;
+import consulo.awt.TargetAWT;
 import consulo.bundle.SdkUtil;
 import consulo.ide.IconDescriptorUpdaters;
 import consulo.ui.image.Image;
@@ -120,7 +121,7 @@ public class NavBarPresentation {
       PsiFile psiFile = ((PsiElement)object).getContainingFile();
       if (psiFile != null) {
         final VirtualFile virtualFile = psiFile.getVirtualFile();
-        return new SimpleTextAttributes(null, selected ? null : FileStatusManager.getInstance(myProject).getStatus(virtualFile).getColor(), JBColor.red,
+        return new SimpleTextAttributes(null, selected ? null : TargetAWT.to(FileStatusManager.getInstance(myProject).getStatus(virtualFile).getColor()), JBColor.red,
                                         WolfTheProblemSolver.getInstance(myProject).isProblemFile(virtualFile) ? SimpleTextAttributes.STYLE_WAVED : SimpleTextAttributes.STYLE_PLAIN);
       }
       else {

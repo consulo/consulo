@@ -20,6 +20,7 @@ import com.intellij.util.BitUtil;
 import com.intellij.util.DocumentUtil;
 import com.intellij.util.SmartList;
 import com.intellij.util.text.CharArrayUtil;
+import consulo.ui.color.ColorValue;
 import org.intellij.lang.annotations.JdkConstants;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -603,11 +604,11 @@ abstract class LineLayout {
 
       char[] chars = CharArrayUtil.fromSequence(view.getEditor().getDocument().getImmutableCharSequence(), start, end);
       int currentFontType = 0;
-      Color currentColor = null;
+      ColorValue currentColor = null;
       int currentStart = start;
       while (!it.atEnd()) {
         int fontType = it.getMergedAttributes().getFontType();
-        Color color = it.getMergedAttributes().getForegroundColor();
+        ColorValue color = it.getMergedAttributes().getForegroundColor();
         if (fontType != currentFontType || !color.equals(currentColor)) {
           int tokenStart = it.getStartOffset();
           if (tokenStart > currentStart) {

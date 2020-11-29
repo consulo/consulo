@@ -29,6 +29,23 @@ public interface ColorValue {
   }
 
   @Nonnull
+  static ColorValue dummy(@Nonnull String errorMessage) {
+    return new ColorValue() {
+      @Nonnull
+      @Override
+      public RGBColor toRGB() {
+        throw new UnsupportedOperationException(errorMessage);
+      }
+
+      @Nonnull
+      @Override
+      public ColorValue withAlpha(float value) {
+        throw new UnsupportedOperationException(errorMessage);
+      }
+    };
+  }
+
+  @Nonnull
   RGBColor toRGB();
 
   @Nonnull

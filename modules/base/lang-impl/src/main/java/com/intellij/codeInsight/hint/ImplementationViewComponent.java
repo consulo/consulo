@@ -222,7 +222,7 @@ public class ImplementationViewComponent extends JPanel {
           VirtualFile file = psiFile.getVirtualFile();
           if (file != null) {
             myLabel.setIcon(getIconForFile(psiFile));
-            myLabel.setForeground(FileStatusManager.getInstance(project).getStatus(file).getColor());
+            myLabel.setForeground(TargetAWT.to(FileStatusManager.getInstance(project).getStatus(file).getColor()));
             myLabel.setText(file.getPresentableName());
             myLabel.setBorder(new CompoundBorder(IdeBorderFactory.createRoundedBorder(), IdeBorderFactory.createEmptyBorder(0, 0, 0, 5)));
           }
@@ -251,7 +251,7 @@ public class ImplementationViewComponent extends JPanel {
         final PsiFile file = value.myFile;
         setIcon(getIconForFile(file));
         final VirtualFile vFile = file.getVirtualFile();
-        setForeground(FileStatusManager.getInstance(project).getStatus(vFile).getColor());
+        setForeground(TargetAWT.to(FileStatusManager.getInstance(project).getStatus(vFile).getColor()));
         //noinspection ConstantConditions
         setText(value.getPresentableName(vFile));
       }
@@ -307,7 +307,7 @@ public class ImplementationViewComponent extends JPanel {
           VirtualFile file = psiFile.getVirtualFile();
           if (file != null) {
             myLabel.setIcon(getIconForFile(psiFile));
-            myLabel.setForeground(FileStatusManager.getInstance(project).getStatus(file).getColor());
+            myLabel.setForeground(TargetAWT.to(FileStatusManager.getInstance(project).getStatus(file).getColor()));
             myLabel.setText(file.getPresentableName());
             myLabel.setBorder(new CompoundBorder(IdeBorderFactory.createRoundedBorder(), IdeBorderFactory.createEmptyBorder(0, 0, 0, 5)));
             myLabel.setVisible(true);

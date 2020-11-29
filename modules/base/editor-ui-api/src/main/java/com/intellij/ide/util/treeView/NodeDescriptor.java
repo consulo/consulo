@@ -17,6 +17,7 @@ package com.intellij.ide.util.treeView;
 
 import com.intellij.openapi.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.color.ColorValue;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nullable;
@@ -29,7 +30,7 @@ public abstract class NodeDescriptor<E> {
   protected String myName;
   protected Image myIcon;
 
-  protected java.awt.Color myColor;
+  protected ColorValue myColor;
 
   private int myIndex = -1;
 
@@ -70,7 +71,7 @@ public abstract class NodeDescriptor<E> {
     return myIcon;
   }
 
-  public final java.awt.Color getColor() {
+  public final ColorValue getColor() {
     return myColor;
   }
 

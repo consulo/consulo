@@ -17,7 +17,7 @@ package consulo.ui.impl;
 
 import consulo.ui.border.BorderPosition;
 import consulo.ui.border.BorderStyle;
-import consulo.ui.style.ColorKey;
+import consulo.ui.color.ColorValue;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -29,13 +29,13 @@ import javax.annotation.Nullable;
 public class BorderInfo {
   private BorderPosition myBorderPosition;
   private BorderStyle myBorderStyle;
-  private ColorKey myColorKey;
+  private ColorValue myColorValue;
   private int myWidth;
 
-  public BorderInfo(@Nonnull BorderPosition borderPosition, @Nonnull BorderStyle borderStyle, @Nullable ColorKey colorKey, int width) {
+  public BorderInfo(@Nonnull BorderPosition borderPosition, @Nonnull BorderStyle borderStyle, @Nullable ColorValue colorValue, int width) {
     myBorderPosition = borderPosition;
     myBorderStyle = borderStyle;
-    myColorKey = colorKey;
+    myColorValue = colorValue;
     myWidth = width;
   }
 
@@ -48,8 +48,8 @@ public class BorderInfo {
   }
 
   @Nullable
-  public ColorKey getColorKey() {
-    return myColorKey;
+  public ColorValue getColorValue() {
+    return myColorValue;
   }
 
   public int getWidth() {

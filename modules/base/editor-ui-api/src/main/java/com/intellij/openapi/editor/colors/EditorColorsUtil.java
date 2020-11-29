@@ -15,13 +15,14 @@
  */
 package com.intellij.openapi.editor.colors;
 
-import com.intellij.ui.ColorUtil;
 import com.intellij.util.ui.UIUtil;
+import consulo.awt.TargetAWT;
+import consulo.ui.color.ColorValue;
+import consulo.ui.util.ColorValueUtil;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
-import java.awt.*;
 
 /**
  * @author gregsh
@@ -40,7 +41,7 @@ public class EditorColorsUtil {
   }
 
   @Nullable
-  public static Color getGlobalOrDefaultColor(@Nonnull ColorKey colorKey) {
+  public static ColorValue getGlobalOrDefaultColor(@Nonnull EditorColorKey colorKey) {
     return getColorSchemeForBackground(null).getColor(colorKey);
   }
 
@@ -50,17 +51,17 @@ public class EditorColorsUtil {
    */
   @Nonnull
   public static EditorColorsScheme getColorSchemeForComponent(@Nullable JComponent component) {
-    return getColorSchemeForBackground(component != null ? component.getBackground() : null);
+    return getColorSchemeForBackground(component != null ? TargetAWT.from(component.getBackground()) : null);
   }
 
   /**
    * @return the appropriate color scheme for UI other than text editor (QuickDoc, UsagesView, etc.)
    * depending on the current LAF, current editor color scheme and background color.
    */
-  public static EditorColorsScheme getColorSchemeForBackground(@Nullable Color background) {
+  public static EditorColorsScheme getColorSchemeForBackground(@Nullable ColorValue background) {
     EditorColorsScheme globalScheme = EditorColorsManager.getInstance().getGlobalScheme();
-    boolean dark1 = background == null ? UIUtil.isUnderDarcula() : ColorUtil.isDark(background);
-    boolean dark2 = ColorUtil.isDark(globalScheme.getDefaultBackground());
+    boolean dark1 = background == null ? UIUtil.isUnderDarcula() : ColorValueUtil.isDark(background);
+    boolean dark2 = ColorValueUtil.isDark(globalScheme.getDefaultBackground());
     if (dark1 != dark2) {
       EditorColorsScheme scheme = EditorColorsManager.getInstance().getScheme(EditorColorsScheme.DEFAULT_SCHEME_NAME);
       if (scheme != null) {

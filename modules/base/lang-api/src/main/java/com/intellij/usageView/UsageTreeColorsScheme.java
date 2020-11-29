@@ -19,6 +19,7 @@ import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.editor.colors.EditorColorsScheme;
 import com.intellij.openapi.editor.colors.EditorColorsUtil;
 import com.intellij.util.ui.UIUtil;
+import consulo.awt.TargetAWT;
 import jakarta.inject.Singleton;
 
 @Singleton
@@ -28,6 +29,6 @@ public class UsageTreeColorsScheme {
   }
 
   public EditorColorsScheme getScheme() {
-    return EditorColorsUtil.getColorSchemeForBackground(UIUtil.getTreeTextBackground());
+    return EditorColorsUtil.getColorSchemeForBackground(TargetAWT.from(UIUtil.getTreeTextBackground()));
   }
 }

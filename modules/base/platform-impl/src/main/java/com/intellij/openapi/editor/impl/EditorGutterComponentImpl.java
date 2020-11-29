@@ -17,7 +17,7 @@ import com.intellij.openapi.actionSystem.ex.ActionUtil;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ReadAction;
 import com.intellij.openapi.editor.*;
-import com.intellij.openapi.editor.colors.ColorKey;
+import com.intellij.openapi.editor.colors.EditorColorKey;
 import com.intellij.openapi.editor.colors.EditorColors;
 import com.intellij.openapi.editor.colors.EditorFontType;
 import com.intellij.openapi.editor.event.EditorMouseEventArea;
@@ -37,7 +37,10 @@ import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.popup.Balloon;
-import com.intellij.openapi.util.*;
+import com.intellij.openapi.util.Comparing;
+import com.intellij.openapi.util.Ref;
+import com.intellij.openapi.util.Segment;
+import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.wm.impl.IdeGlassPaneImpl;
@@ -56,7 +59,9 @@ import com.intellij.util.ui.*;
 import com.intellij.util.ui.JBValue.JBValueGroup;
 import com.intellij.util.ui.accessibility.ScreenReader;
 import consulo.awt.TargetAWT;
+import consulo.ui.color.ColorValue;
 import consulo.ui.image.ImageEffects;
+import consulo.ui.style.StandardColors;
 import consulo.util.dataholder.Key;
 import gnu.trove.*;
 import org.jetbrains.annotations.NonNls;
@@ -145,7 +150,7 @@ class EditorGutterComponentImpl extends EditorGutterComponentEx implements Mouse
   private boolean myCanCloseAnnotations = true;
   @Nullable
   private ActionGroup myCustomGutterPopupGroup;
-  private final TIntObjectHashMap<Color> myTextFgColors = new TIntObjectHashMap<>();
+  private final TIntObjectHashMap<ColorValue> myTextFgColors = new TIntObjectHashMap<>();
   private boolean myPaintBackground = true;
   private boolean myLeftFreePaintersAreaShown;
   private boolean myRightFreePaintersAreaShown;
@@ -329,7 +334,7 @@ class EditorGutterComponentImpl extends EditorGutterComponentEx implements Mouse
 
     // paint all backgrounds
     int gutterSeparatorX = getWhitespaceSeparatorOffset();
-    paintBackground(g, clip, 0, gutterSeparatorX, backgroundColor);
+    paintBackground(g, clip, 0, gutterSeparatorX, TargetAWT.from(backgroundColor));
     paintBackground(g, clip, gutterSeparatorX, getFoldingAreaWidth(), myEditor.getBackgroundColor());
 
     paintEditorBackgrounds(g, firstVisibleOffset, lastVisibleOffset);
@@ -364,8 +369,8 @@ class EditorGutterComponentImpl extends EditorGutterComponentEx implements Mouse
 
   private void paintEditorBackgrounds(Graphics g, int firstVisibleOffset, int lastVisibleOffset) {
     myTextFgColors.clear();
-    Color defaultBackgroundColor = myEditor.getBackgroundColor();
-    Color defaultForegroundColor = myEditor.getColorsScheme().getDefaultForeground();
+    ColorValue defaultBackgroundColor = myEditor.getBackgroundColor();
+    ColorValue defaultForegroundColor = myEditor.getColorsScheme().getDefaultForeground();
     int startX = myEditor.isInDistractionFreeMode() ? 0 : getWhitespaceSeparatorOffset();
     IterationState state = new IterationState(myEditor, firstVisibleOffset, lastVisibleOffset, null, true, false, true, false);
     while (!state.atEnd()) {
@@ -374,8 +379,8 @@ class EditorGutterComponentImpl extends EditorGutterComponentEx implements Mouse
     }
   }
 
-  private void drawEditorBackgroundForRange(Graphics g, int startOffset, int endOffset, TextAttributes attributes, Color defaultBackgroundColor, Color defaultForegroundColor, int startX) {
-    Color bgColor = myEditor.getBackgroundColor(attributes);
+  private void drawEditorBackgroundForRange(Graphics g, int startOffset, int endOffset, TextAttributes attributes, ColorValue defaultBackgroundColor, ColorValue defaultForegroundColor, int startX) {
+    ColorValue bgColor = myEditor.getBackgroundColor(attributes);
     if (Comparing.equal(bgColor, defaultBackgroundColor)) return;
 
     VisualPosition visualStart = myEditor.offsetToVisualPosition(startOffset, true, false);
@@ -385,10 +390,10 @@ class EditorGutterComponentImpl extends EditorGutterComponentEx implements Mouse
     if (startVisualLine <= endVisualLine) {
       int startY = myEditor.visualLineToY(startVisualLine);
       int endY = myEditor.visualLineToY(endVisualLine) + myEditor.getLineHeight();
-      g.setColor(bgColor);
+      g.setColor(TargetAWT.to(bgColor));
       g.fillRect(startX, startY, getWidth() - startX, endY - startY);
 
-      Color fgColor = attributes.getForegroundColor();
+      ColorValue fgColor = attributes.getForegroundColor();
       if (!Comparing.equal(fgColor, defaultForegroundColor)) {
         for (int line = startVisualLine; line <= endVisualLine; line++) {
           myTextFgColors.put(line, fgColor);
@@ -427,7 +432,7 @@ class EditorGutterComponentImpl extends EditorGutterComponentEx implements Mouse
 
     AffineTransform old = setMirrorTransformIfNeeded(g, x, w);
     try {
-      Color color = myEditor.getColorsScheme().getColor(EditorColors.ANNOTATIONS_COLOR);
+      Color color = TargetAWT.to(myEditor.getColorsScheme().getColor(EditorColors.ANNOTATIONS_COLOR));
       g.setColor(color != null ? color : JBColor.blue);
       g.setFont(myEditor.getColorsScheme().getFont(EditorFontType.PLAIN));
 
@@ -467,13 +472,13 @@ class EditorGutterComponentImpl extends EditorGutterComponentEx implements Mouse
 
   private void paintAnnotationLine(Graphics g, TextAnnotationGutterProvider gutterProvider, int line, int x, int y, int width, int height) {
     String s = gutterProvider.getLineText(line, myEditor);
-    final Color bg = gutterProvider.getBgColor(line, myEditor);
+    final ColorValue bg = gutterProvider.getBgColor(line, myEditor);
     if (bg != null) {
-      g.setColor(bg);
+      g.setColor(TargetAWT.to(bg));
       g.fillRect(x, y, width, height);
     }
     if (!StringUtil.isEmpty(s)) {
-      g.setColor(myEditor.getColorsScheme().getColor(gutterProvider.getColor(line, myEditor)));
+      g.setColor(TargetAWT.to(myEditor.getColorsScheme().getColor(gutterProvider.getColor(line, myEditor))));
       EditorFontType style = gutterProvider.getStyle(line, myEditor);
       Font font = getFontForText(s, style);
       g.setFont(font);
@@ -501,8 +506,8 @@ class EditorGutterComponentImpl extends EditorGutterComponentEx implements Mouse
     }
   }
 
-  private void paintBackground(final Graphics g, final Rectangle clip, final int x, final int width, Color background) {
-    g.setColor(background);
+  private void paintBackground(final Graphics g, final Rectangle clip, final int x, final int width, ColorValue background) {
+    g.setColor(TargetAWT.to(background));
     g.fillRect(x, clip.y, width, clip.height);
 
     paintCaretRowBackground(g, x, width);
@@ -511,7 +516,7 @@ class EditorGutterComponentImpl extends EditorGutterComponentEx implements Mouse
   private void paintCaretRowBackground(final Graphics g, final int x, final int width) {
     if (!myEditor.getSettings().isCaretRowShown()) return;
     final VisualPosition visCaret = myEditor.getCaretModel().getVisualPosition();
-    Color caretRowColor = myEditor.getColorsScheme().getColor(EditorColors.CARET_ROW_COLOR);
+    Color caretRowColor = TargetAWT.to(myEditor.getColorsScheme().getColor(EditorColors.CARET_ROW_COLOR));
     if (caretRowColor != null) {
       g.setColor(caretRowColor);
       final Point caretPoint = myEditor.visualPositionToXY(visCaret);
@@ -538,10 +543,10 @@ class EditorGutterComponentImpl extends EditorGutterComponentEx implements Mouse
   @Override
   public Color getBackground() {
     if (myEditor.isInDistractionFreeMode() || !myPaintBackground) {
-      return myEditor.getBackgroundColor();
+      return TargetAWT.to(myEditor.getBackgroundColor());
     }
-    Color color = myEditor.getColorsScheme().getColor(EditorColors.GUTTER_BACKGROUND);
-    return color != null ? color : EditorColors.GUTTER_BACKGROUND.getDefaultColor();
+    Color color = TargetAWT.to(myEditor.getColorsScheme().getColor(EditorColors.GUTTER_BACKGROUND));
+    return color != null ? color : TargetAWT.to(EditorColors.GUTTER_BACKGROUND.getDefaultColorValue());
   }
 
   private Font getFontForLineNumbers() {
@@ -561,8 +566,8 @@ class EditorGutterComponentImpl extends EditorGutterComponentEx implements Mouse
       return;
     }
 
-    Color color = myEditor.getColorsScheme().getColor(EditorColors.LINE_NUMBERS_COLOR);
-    Color colorUnderCaretRow = myEditor.getColorsScheme().getColor(EditorColors.LINE_NUMBER_ON_CARET_ROW_COLOR);
+    ColorValue color = myEditor.getColorsScheme().getColor(EditorColors.LINE_NUMBERS_COLOR);
+    Color colorUnderCaretRow = TargetAWT.to(myEditor.getColorsScheme().getColor(EditorColors.LINE_NUMBER_ON_CARET_ROW_COLOR));
     Font font = getFontForLineNumbers();
     g.setFont(font);
 
@@ -577,11 +582,11 @@ class EditorGutterComponentImpl extends EditorGutterComponentEx implements Mouse
           if (lineToDisplay >= 0) {
             int startY = visLinesIterator.getY();
             if (myEditor.isInDistractionFreeMode()) {
-              Color fgColor = myTextFgColors.get(visLinesIterator.getVisualLine());
-              g.setColor(fgColor != null ? fgColor : color != null ? color : JBColor.blue);
+              ColorValue fgColor = myTextFgColors.get(visLinesIterator.getVisualLine());
+              g.setColor(TargetAWT.to(fgColor != null ? fgColor : color != null ? color : StandardColors.BLUE));
             }
             else {
-              g.setColor(color);
+              g.setColor(TargetAWT.to(color));
             }
 
             if (colorUnderCaretRow != null && caretLogicalLine == logicalLine) {
@@ -1089,9 +1094,9 @@ class EditorGutterComponentImpl extends EditorGutterComponentEx implements Mouse
   }
 
   private Color getOutlineColor(boolean isActive) {
-    ColorKey key = isActive ? EditorColors.SELECTED_TEARLINE_COLOR : EditorColors.TEARLINE_COLOR;
-    Color color = myEditor.getColorsScheme().getColor(key);
-    return color != null ? color : JBColor.black;
+    EditorColorKey key = isActive ? EditorColors.SELECTED_TEARLINE_COLOR : EditorColors.TEARLINE_COLOR;
+    ColorValue color = myEditor.getColorsScheme().getColor(key);
+    return color != null ? TargetAWT.to(color) : JBColor.black;
   }
 
   @Override
@@ -1224,7 +1229,7 @@ class EditorGutterComponentImpl extends EditorGutterComponentEx implements Mouse
     double[] dxPoints = {x1, x1, x2, x2, centerX};
     double[] dyPoints = {y + baseHeight, y, y, y + baseHeight, y + height + (height < 0 ? 1 : 0)};
 
-    g.setColor(myEditor.getBackgroundColor());
+    g.setColor(TargetAWT.to(myEditor.getBackgroundColor()));
     LinePainter2D.fillPolygon(g, dxPoints, dyPoints, 5, StrokeType.CENTERED_CAPS_SQUARE, sw, RenderingHints.VALUE_ANTIALIAS_ON);
 
     g.setColor(getOutlineColor(active));
@@ -1244,7 +1249,7 @@ class EditorGutterComponentImpl extends EditorGutterComponentEx implements Mouse
     double sw = getStrokeWidth();
     Rectangle2D rect = RectanglePainter2D.align(g, EnumSet.of(LinePainter2D.Align.CENTER_X, LinePainter2D.Align.CENTER_Y), centerX, centerY, width, width, StrokeType.CENTERED, sw);
 
-    g.setColor(myEditor.getBackgroundColor());
+    g.setColor(TargetAWT.to(myEditor.getBackgroundColor()));
     RectanglePainter2D.FILL.paint(g, rect, null, StrokeType.CENTERED, sw, RenderingHints.VALUE_ANTIALIAS_OFF);
 
     g.setColor(getOutlineColor(active));

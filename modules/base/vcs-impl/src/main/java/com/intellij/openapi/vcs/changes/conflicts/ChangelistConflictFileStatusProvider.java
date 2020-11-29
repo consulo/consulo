@@ -24,22 +24,19 @@ import com.intellij.openapi.vcs.changes.ChangeListManagerImpl;
 import com.intellij.openapi.vcs.impl.FileStatusProvider;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.ThreeState;
-import javax.annotation.Nullable;
 import jakarta.inject.Inject;
 
-import java.awt.*;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author Dmitry Avdeev
  */
 public class ChangelistConflictFileStatusProvider implements FileStatusProvider {
 
-  private static final FileStatus MODIFIED_OUTSIDE =
-    FileStatusFactory.getInstance().createFileStatus("modifiedOutside", "Modified in not active changelist", FileStatus.COLOR_MODIFIED.brighter());
-  private static final FileStatus ADDED_OUTSIDE =
-    FileStatusFactory.getInstance().createFileStatus("addedOutside", "Added in not active changelist", FileStatus.COLOR_ADDED.brighter());
-  private static final FileStatus CHANGELIST_CONFLICT =
-    FileStatusFactory.getInstance().createFileStatus("changelistConflict", "Changelist conflict", Color.red);
+  private static final FileStatus MODIFIED_OUTSIDE = FileStatusFactory.getInstance().createFileStatus("modifiedOutside", "Modified in not active changelist", null);
+  private static final FileStatus ADDED_OUTSIDE = FileStatusFactory.getInstance().createFileStatus("addedOutside", "Added in not active changelist", null);
+  private static final FileStatus CHANGELIST_CONFLICT = FileStatusFactory.getInstance().createFileStatus("changelistConflict", "Changelist conflict", null);
 
   private final ChangelistConflictTracker myConflictTracker;
   private final ChangeListManager myChangeListManager;
@@ -77,6 +74,7 @@ public class ChangelistConflictFileStatusProvider implements FileStatusProvider 
 
   }
 
+  @Nonnull
   @Override
   public ThreeState getNotChangedDirectoryParentingStatus(VirtualFile vf) {
     throw new UnsupportedOperationException("Shouldn't be called");

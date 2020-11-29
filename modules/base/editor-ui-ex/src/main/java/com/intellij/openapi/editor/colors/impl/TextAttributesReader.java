@@ -17,12 +17,11 @@ package com.intellij.openapi.editor.colors.impl;
 
 import com.intellij.openapi.editor.markup.EffectType;
 import com.intellij.openapi.editor.markup.TextAttributes;
+import consulo.ui.color.ColorValue;
 import org.intellij.lang.annotations.JdkConstants;
 import org.jdom.Element;
-import org.jetbrains.annotations.NonNls;
 
-import java.awt.Color;
-import java.awt.Font;
+import java.awt.*;
 
 /**
  * This class is intended to read text attributes from an element,
@@ -33,14 +32,14 @@ import java.awt.Font;
  * @author Sergey.Malenkov
  */
 class TextAttributesReader extends ValueElementReader {
-  @NonNls private static final String NAME = "name";
-  @NonNls private static final String OPTION = "option";
-  @NonNls private static final String BACKGROUND = "BACKGROUND";
-  @NonNls private static final String FOREGROUND = "FOREGROUND";
-  @NonNls private static final String ERROR_STRIPE = "ERROR_STRIPE_COLOR";
-  @NonNls private static final String EFFECT_COLOR = "EFFECT_COLOR";
-  @NonNls private static final String EFFECT_TYPE = "EFFECT_TYPE";
-  @NonNls private static final String FONT_TYPE = "FONT_TYPE";
+  private static final String NAME = "name";
+  private static final String OPTION = "option";
+  private static final String BACKGROUND = "BACKGROUND";
+  private static final String FOREGROUND = "FOREGROUND";
+  private static final String ERROR_STRIPE = "ERROR_STRIPE_COLOR";
+  private static final String EFFECT_COLOR = "EFFECT_COLOR";
+  private static final String EFFECT_TYPE = "EFFECT_TYPE";
+  private static final String FONT_TYPE = "FONT_TYPE";
 
   /**
    * Reads a value of the specified type from the given element.
@@ -57,10 +56,10 @@ class TextAttributesReader extends ValueElementReader {
       TextAttributes attributes = new TextAttributes();
       if (element != null) {
         attributes.setAttributes(
-                readChild(Color.class, element, FOREGROUND),
-                readChild(Color.class, element, BACKGROUND),
-                readChild(Color.class, element, EFFECT_COLOR),
-                readChild(Color.class, element, ERROR_STRIPE),
+                readChild(ColorValue.class, element, FOREGROUND),
+                readChild(ColorValue.class, element, BACKGROUND),
+                readChild(ColorValue.class, element, EFFECT_COLOR),
+                readChild(ColorValue.class, element, ERROR_STRIPE),
                 Effect.read(this, element),
                 FontStyle.read(this, element));
         // needed for compatibility with TextAttributes(Element)

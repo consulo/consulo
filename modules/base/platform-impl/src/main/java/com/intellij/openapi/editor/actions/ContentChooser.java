@@ -36,6 +36,7 @@ import com.intellij.util.Alarm;
 import com.intellij.util.Function;
 import com.intellij.util.ObjectUtil;
 import com.intellij.util.ui.UIUtil;
+import consulo.awt.TargetAWT;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
@@ -106,8 +107,8 @@ public abstract class ContentChooser<Data> extends DialogWrapper {
     if (myUseIdeaEditor) {
       EditorColorsScheme scheme = EditorColorsManager.getInstance().getGlobalScheme();
       myList.setFont(scheme.getFont(EditorFontType.PLAIN));
-      Color fg = ObjectUtil.chooseNotNull(scheme.getDefaultForeground(), UIUtil.getListForeground());
-      Color bg = ObjectUtil.chooseNotNull(scheme.getDefaultBackground(), UIUtil.getListBackground());
+      Color fg = ObjectUtil.chooseNotNull(TargetAWT.to(scheme.getDefaultForeground()), UIUtil.getListForeground());
+      Color bg = ObjectUtil.chooseNotNull(TargetAWT.to(scheme.getDefaultBackground()), UIUtil.getListBackground());
       myList.setForeground(fg);
       myList.setBackground(bg);
     }

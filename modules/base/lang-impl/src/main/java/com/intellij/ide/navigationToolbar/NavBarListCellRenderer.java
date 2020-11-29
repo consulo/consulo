@@ -27,9 +27,11 @@ import com.intellij.problems.WolfTheProblemSolver;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.ui.ColoredListCellRenderer;
-import com.intellij.ui.JBColor;
 import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.util.ui.UIUtil;
+import consulo.awt.TargetAWT;
+import consulo.ui.color.ColorValue;
+import consulo.ui.style.StandardColors;
 
 import javax.swing.*;
 import java.awt.*;
@@ -51,7 +53,7 @@ public class NavBarListCellRenderer extends ColoredListCellRenderer {
     setFocusBorderAroundIcon(false);
     final String name = myPanel.getPresentation().getPresentableText(value);
 
-    Color color = list.getForeground();
+    ColorValue color = TargetAWT.from(list.getForeground());
     boolean isProblemFile = false;
     if (value instanceof PsiElement) {
       final PsiElement psiElement = (PsiElement)value;
@@ -85,11 +87,11 @@ public class NavBarListCellRenderer extends ColoredListCellRenderer {
     }
     final SimpleTextAttributes nameAttributes;
     if (isProblemFile) {
-      TextAttributes attributes = new TextAttributes(color, null, JBColor.RED, EffectType.WAVE_UNDERSCORE, Font.PLAIN);
+      TextAttributes attributes = new TextAttributes(color, null, StandardColors.RED, EffectType.WAVE_UNDERSCORE, Font.PLAIN);
       nameAttributes = SimpleTextAttributes.fromTextAttributes(attributes);
     }
     else {
-      nameAttributes = new SimpleTextAttributes(Font.PLAIN, color);
+      nameAttributes = new SimpleTextAttributes(Font.PLAIN, TargetAWT.to(color));
     }
     append(name, nameAttributes);
     // manually set icon opaque to prevent background artifacts

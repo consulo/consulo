@@ -48,7 +48,7 @@ public class WebBorderBuilder {
       borderState.myPosition = Mappers.map(info.getBorderPosition());
       borderState.myStyle = Mappers.map(info.getBorderStyle());
 
-      ColorValue colorValue = info.getColorKey() == null ? null : currentStyle.getColor(info.getColorKey());
+      ColorValue colorValue = info.getColorValue() == null ? null : info.getColorValue();
 
       borderState.myColor = colorValue == null ? null : Mappers.map(colorValue.toRGB());
       borderState.myWidth = info.getWidth();

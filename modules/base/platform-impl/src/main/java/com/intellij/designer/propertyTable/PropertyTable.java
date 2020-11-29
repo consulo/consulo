@@ -1266,7 +1266,7 @@ public abstract class PropertyTable extends JBTable {
         SimpleTextAttributes attr = SimpleTextAttributes.REGULAR_ATTRIBUTES;
 
         if (!selected && !isDefault) {
-          attr = attr.derive(-1, FileStatus.MODIFIED.getColor(), null, null);
+          attr = attr.derive(-1, TargetAWT.to(FileStatus.MODIFIED.getColor()), null, null);
         }
         if (property.isImportant()) {
           attr = attr.derive(attr.getStyle() | SimpleTextAttributes.STYLE_BOLD, null, null, null);

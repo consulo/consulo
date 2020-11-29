@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.editor.colors.impl;
 
-import com.intellij.openapi.editor.colors.ColorKey;
+import com.intellij.openapi.editor.colors.EditorColorKey;
 import com.intellij.openapi.editor.colors.EditorColorsManager;
 import com.intellij.openapi.editor.colors.EditorColorsScheme;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
@@ -23,10 +23,10 @@ import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.openapi.options.ExternalInfo;
 import com.intellij.openapi.options.ExternalizableScheme;
 import com.intellij.openapi.util.Comparing;
+import consulo.ui.color.ColorValue;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.awt.*;
 import java.util.Map;
 
 /**
@@ -47,7 +47,7 @@ public class EditorColorsSchemeImpl extends AbstractColorsScheme implements Exte
   }
 
   @Override
-  public void setColor(ColorKey key, Color color) {
+  public void setColor(EditorColorKey key, ColorValue color) {
     if (!Comparing.equal(color, getColor(key))) {
       myColorsMap.put(key, color);
     }
@@ -76,7 +76,7 @@ public class EditorColorsSchemeImpl extends AbstractColorsScheme implements Exte
 
   @Nullable
   @Override
-  public Color getColor(ColorKey key) {
+  public ColorValue getColor(EditorColorKey key) {
     if (myColorsMap.containsKey(key)) {
       return myColorsMap.get(key);
     }
@@ -86,7 +86,7 @@ public class EditorColorsSchemeImpl extends AbstractColorsScheme implements Exte
   }
 
   @Override
-  public void fillColors(Map<ColorKey, Color> colors) {
+  public void fillColors(Map<EditorColorKey, ColorValue> colors) {
     if (myParentScheme != null) {
       myParentScheme.fillColors(colors);
     }

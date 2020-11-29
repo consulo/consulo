@@ -21,6 +21,7 @@ import com.intellij.openapi.fileChooser.tree.*;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.project.Project;
 import consulo.disposer.Disposer;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
@@ -149,6 +150,7 @@ public class FileSystemTreeImpl implements FileSystemTree {
 
     if (renderer == null) {
       renderer = new NodeRenderer() {
+        @RequiredUIAccess
         @Override
         public void customizeCellRenderer(@Nonnull JTree tree, Object value, boolean selected, boolean expanded, boolean leaf, int row, boolean hasFocus) {
           super.customizeCellRenderer(tree, value, selected, expanded, leaf, row, hasFocus);

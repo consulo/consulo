@@ -15,8 +15,10 @@
  */
 package com.intellij.openapi.vcs.actions;
 
-import consulo.disposer.Disposable;
-import com.intellij.openapi.actionSystem.*;
+import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.actionSystem.AnSeparator;
+import com.intellij.openapi.actionSystem.CommonDataKeys;
+import com.intellij.openapi.actionSystem.ToggleAction;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.colors.EditorColorsScheme;
 import com.intellij.openapi.editor.ex.EditorGutterComponentEx;
@@ -26,7 +28,6 @@ import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Couple;
-import consulo.disposer.Disposer;
 import com.intellij.openapi.vcs.AbstractVcs;
 import com.intellij.openapi.vcs.ProjectLevelVcsManager;
 import com.intellij.openapi.vcs.VcsBundle;
@@ -44,10 +45,12 @@ import com.intellij.ui.LightColors;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.UIUtil;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
+import consulo.ui.color.ColorValue;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -136,12 +139,7 @@ public class AnnotateToggleAction extends ToggleAction implements DumbAware {
       VcsAnnotationLocalChangesListener changesListener = ProjectLevelVcsManager.getInstance(project).getAnnotationLocalChangesListener();
 
       changesListener.registerAnnotation(fileAnnotation.getFile(), fileAnnotation);
-      Disposer.register(disposable, new Disposable() {
-        @Override
-        public void dispose() {
-          changesListener.unregisterAnnotation(fileAnnotation.getFile(), fileAnnotation);
-        }
-      });
+      Disposer.register(disposable, () -> changesListener.unregisterAnnotation(fileAnnotation.getFile(), fileAnnotation));
     }
 
     editor.getGutter().closeAllAnnotations();
@@ -171,7 +169,7 @@ public class AnnotateToggleAction extends ToggleAction implements DumbAware {
     presentation.addAction(new CopyRevisionNumberFromAnnotateAction(fileAnnotation));
     presentation.addAction(AnSeparator.getInstance());
 
-    final Couple<Map<VcsRevisionNumber, Color>> bgColorMap = computeBgColors(fileAnnotation, editor);
+    final Couple<Map<VcsRevisionNumber, ColorValue>> bgColorMap = computeBgColors(fileAnnotation, editor);
     final Map<VcsRevisionNumber, Integer> historyIds = computeLineNumbers(fileAnnotation);
 
     if (switcher != null) {
@@ -250,30 +248,30 @@ public class AnnotateToggleAction extends ToggleAction implements DumbAware {
   }
 
   @Nullable
-  private static Couple<Map<VcsRevisionNumber, Color>> computeBgColors(@Nonnull FileAnnotation fileAnnotation, @Nonnull Editor editor) {
-    Map<VcsRevisionNumber, Color> commitOrderColors = new HashMap<>();
-    Map<VcsRevisionNumber, Color> commitAuthorColors = new HashMap<>();
+  private static Couple<Map<VcsRevisionNumber, ColorValue>> computeBgColors(@Nonnull FileAnnotation fileAnnotation, @Nonnull Editor editor) {
+    Map<VcsRevisionNumber, ColorValue> commitOrderColors = new HashMap<>();
+    Map<VcsRevisionNumber, ColorValue> commitAuthorColors = new HashMap<>();
 
     EditorColorsScheme colorScheme = editor.getColorsScheme();
     AnnotationsSettings settings = AnnotationsSettings.getInstance();
-    List<Color> authorsColorPalette = settings.getAuthorsColors(colorScheme);
-    List<Color> orderedColorPalette = settings.getOrderedColors(colorScheme);
+    List<ColorValue> authorsColorPalette = settings.getAuthorsColors(colorScheme);
+    List<ColorValue> orderedColorPalette = settings.getOrderedColors(colorScheme);
 
     FileAnnotation.AuthorsMappingProvider authorsMappingProvider = fileAnnotation.getAuthorsMappingProvider();
     if (authorsMappingProvider != null) {
       Map<VcsRevisionNumber, String> authorsMap = authorsMappingProvider.getAuthors();
 
-      Map<String, Color> authorColors = new HashMap<>();
+      Map<String, ColorValue> authorColors = new HashMap<>();
       for (String author : ContainerUtil.sorted(authorsMap.values(), Comparing::compare)) {
         int index = authorColors.size();
-        Color color = authorsColorPalette.get(index % authorsColorPalette.size());
+        ColorValue color = authorsColorPalette.get(index % authorsColorPalette.size());
         authorColors.put(author, color);
       }
 
       for (Map.Entry<VcsRevisionNumber, String> entry : authorsMap.entrySet()) {
         VcsRevisionNumber revision = entry.getKey();
         String author = entry.getValue();
-        Color color = authorColors.get(author);
+        ColorValue color = authorColors.get(author);
         commitAuthorColors.put(revision, color);
       }
     }
@@ -284,7 +282,7 @@ public class AnnotateToggleAction extends ToggleAction implements DumbAware {
 
       int revisionsCount = orderedRevisions.size();
       for (int index = 0; index < revisionsCount; index++) {
-        Color color = orderedColorPalette.get(orderedColorPalette.size() * index / revisionsCount);
+        ColorValue color = orderedColorPalette.get(orderedColorPalette.size() * index / revisionsCount);
 
         for (VcsRevisionNumber number : orderedRevisions.get(index)) {
           commitOrderColors.put(number, color);

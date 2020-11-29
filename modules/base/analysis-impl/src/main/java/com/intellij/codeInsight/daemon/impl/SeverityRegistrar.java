@@ -31,6 +31,8 @@ import com.intellij.util.concurrency.AtomicFieldUpdater;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.Topic;
+import consulo.ui.color.ColorValue;
+import consulo.ui.color.RGBColor;
 import consulo.ui.image.Image;
 import gnu.trove.TIntFunction;
 import gnu.trove.TObjectIntHashMap;
@@ -39,8 +41,6 @@ import org.jdom.Element;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.awt.*;
-import java.util.List;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -53,7 +53,7 @@ public class SeverityRegistrar implements JDOMExternalizable, Comparator<Highlig
   private static final String COLOR_ATTRIBUTE = "color";
 
   private final Map<String, SeverityBasedTextAttributes> myMap = new ConcurrentHashMap<>();
-  private final Map<String, Color> myRendererColors = new ConcurrentHashMap<>();
+  private final Map<String, ColorValue> myRendererColors = new ConcurrentHashMap<>();
   public static final Topic<Runnable> SEVERITIES_CHANGED_TOPIC =
           Topic.create("SEVERITIES_CHANGED_TOPIC", Runnable.class, Topic.BroadcastDirection.TO_PARENT);
   @Nonnull
@@ -87,7 +87,7 @@ public class SeverityRegistrar implements JDOMExternalizable, Comparator<Highlig
            : InspectionProjectProfileManager.getInstance(project).getSeverityRegistrar();
   }
 
-  public void registerSeverity(@Nonnull SeverityBasedTextAttributes info, Color renderColor) {
+  public void registerSeverity(@Nonnull SeverityBasedTextAttributes info, @Nullable ColorValue renderColor) {
     final HighlightSeverity severity = info.getType().getSeverity(null);
     myMap.put(severity.getName(), info);
     if (renderColor != null) {
@@ -145,10 +145,10 @@ public class SeverityRegistrar implements JDOMExternalizable, Comparator<Highlig
 
       final SeverityBasedTextAttributes highlightInfo = new SeverityBasedTextAttributes(infoElement);
 
-      Color color = null;
+      ColorValue color = null;
       final String colorStr = infoElement.getAttributeValue(COLOR_ATTRIBUTE);
       if (colorStr != null){
-        color = new Color(Integer.parseInt(colorStr, 16));
+        color = RGBColor.fromRGBValue(Integer.parseInt(colorStr, 16));
       }
       registerSeverity(highlightInfo, color);
     }
@@ -197,9 +197,9 @@ public class SeverityRegistrar implements JDOMExternalizable, Comparator<Highlig
       final SeverityBasedTextAttributes infoType = getAttributesBySeverity(severity);
       if (infoType != null) {
         infoType.writeExternal(info);
-        final Color color = myRendererColors.get(severityName);
+        final ColorValue color = myRendererColors.get(severityName);
         if (color != null) {
-          info.setAttribute(COLOR_ATTRIBUTE, Integer.toString(color.getRGB() & 0xFFFFFF, 16));
+          info.setAttribute(COLOR_ATTRIBUTE, Integer.toString(RGBColor.toRGBValue(color.toRGB()) & 0xFFFFFF, 16));
         }
         element.addContent(info);
       }

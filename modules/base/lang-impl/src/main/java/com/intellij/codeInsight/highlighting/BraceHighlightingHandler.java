@@ -55,7 +55,6 @@ import com.intellij.openapi.fileTypes.SyntaxHighlighterFactory;
 import com.intellij.openapi.project.DumbAwareRunnable;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Conditions;
-import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.*;
 import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil;
@@ -63,12 +62,15 @@ import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.ILazyParseableElementType;
 import com.intellij.psi.util.PsiUtilBase;
 import com.intellij.psi.util.PsiUtilCore;
-import com.intellij.ui.ColorUtil;
 import com.intellij.ui.LightweightHint;
 import com.intellij.util.Alarm;
 import com.intellij.util.Processor;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.text.CharArrayUtil;
+import consulo.awt.TargetAWT;
+import consulo.ui.color.ColorValue;
+import consulo.ui.util.ColorValueUtil;
+import consulo.util.dataholder.Key;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -474,9 +476,9 @@ public class BraceHighlightingHandler {
       if (endLine - startLine > 0) {
         final Runnable runnable = () -> {
           if (myProject.isDisposed() || myEditor.isDisposed()) return;
-          Color color = attributes.getBackgroundColor();
+          ColorValue color = attributes.getBackgroundColor();
           if (color == null) return;
-          color = ColorUtil.isDark(EditorColorsManager.getInstance().getGlobalScheme().getDefaultBackground()) ? ColorUtil.shift(color, 1.5d) : color.darker();
+          color = ColorValueUtil.isDark(EditorColorsManager.getInstance().getGlobalScheme().getDefaultBackground()) ? ColorValueUtil.shift(color, 1.5d) : ColorValueUtil.darker(color);
           lineMarkFragment(startLine, endLine, color);
         };
 
@@ -574,7 +576,7 @@ public class BraceHighlightingHandler {
     }
   }
 
-  private void lineMarkFragment(int startLine, int endLine, @Nonnull Color color) {
+  private void lineMarkFragment(int startLine, int endLine, @Nonnull ColorValue color) {
     removeLineMarkers();
 
     if (startLine >= endLine || endLine >= myDocument.getLineCount()) return;
@@ -599,16 +601,16 @@ public class BraceHighlightingHandler {
   private static class MyLineMarkerRenderer implements LineMarkerRenderer {
     private static final int DEEPNESS = 0;
     private static final int THICKNESS = 1;
-    private final Color myColor;
+    private final ColorValue myColor;
 
-    private MyLineMarkerRenderer(@Nonnull Color color) {
+    private MyLineMarkerRenderer(@Nonnull ColorValue color) {
       myColor = color;
     }
 
     @Override
     public void paint(Editor editor, Graphics g, Rectangle r) {
       int height = r.height + editor.getLineHeight();
-      g.setColor(myColor);
+      g.setColor(TargetAWT.to(myColor));
       g.fillRect(r.x, r.y, THICKNESS, height);
       g.fillRect(r.x + THICKNESS, r.y, DEEPNESS, THICKNESS);
       g.fillRect(r.x + THICKNESS, r.y + height - THICKNESS, DEEPNESS, THICKNESS);

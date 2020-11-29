@@ -170,7 +170,7 @@ public class ExportToFileUtil {
       settings.setAdditionalLinesCount(0);
       settings.setAdditionalColumnsCount(0);
       settings.setAdditionalPageAtBottom(false);
-      ((EditorEx)myTextArea).setBackgroundColor(UIUtil.getInactiveTextFieldBackgroundColor());
+      ((EditorEx)myTextArea).setBackgroundColor(TargetAWT.from(UIUtil.getInactiveTextFieldBackgroundColor()));
       return myTextArea.getComponent();
     }
 

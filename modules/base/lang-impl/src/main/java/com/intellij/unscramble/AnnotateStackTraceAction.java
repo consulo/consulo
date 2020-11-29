@@ -11,7 +11,7 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.EditorGutterAction;
 import com.intellij.openapi.editor.TextAnnotationGutterProvider;
-import com.intellij.openapi.editor.colors.ColorKey;
+import com.intellij.openapi.editor.colors.EditorColorKey;
 import com.intellij.openapi.editor.colors.EditorFontType;
 import com.intellij.openapi.editor.ex.EditorGutterComponentEx;
 import com.intellij.openapi.editor.markup.RangeHighlighter;
@@ -42,9 +42,10 @@ import com.intellij.vcsUtil.VcsUtil;
 import com.intellij.xml.util.XmlStringUtil;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.color.ColorValue;
 
 import javax.annotation.Nonnull;
-
 import javax.annotation.Nullable;
 import java.awt.*;
 import java.util.List;
@@ -307,12 +308,12 @@ public class AnnotateStackTraceAction extends DumbAwareAction {
     }
 
     @Override
-    public ColorKey getColor(int line, Editor editor) {
+    public EditorColorKey getColor(int line, Editor editor) {
       return AnnotationSource.LOCAL.getColor();
     }
 
     @Override
-    public Color getBgColor(int line, Editor editor) {
+    public ColorValue getBgColor(int line, Editor editor) {
       return null;
     }
 
@@ -326,7 +327,7 @@ public class AnnotateStackTraceAction extends DumbAwareAction {
       myIndicator.cancel();
     }
 
-    @CalledInAwt
+    @RequiredUIAccess
     public void updateData(@Nonnull Map<Integer, LastRevision> revisions) {
       myRevisions = revisions;
 

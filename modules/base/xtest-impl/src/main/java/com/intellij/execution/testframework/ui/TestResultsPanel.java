@@ -19,6 +19,7 @@ import com.intellij.execution.testframework.TestConsoleProperties;
 import com.intellij.execution.testframework.TestFrameworkPropertyListener;
 import com.intellij.execution.testframework.TestTreeView;
 import com.intellij.execution.testframework.ToolbarPanel;
+import consulo.awt.TargetAWT;
 import consulo.disposer.Disposable;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.editor.colors.EditorColorsManager;
@@ -189,7 +190,7 @@ public abstract class TestResultsPanel extends JPanel implements Disposable, Dat
                                      AnAction[] consoleActions) {
     JPanel outputTab = new JPanel(new BorderLayout());
     console.setFocusable(true);
-    final Color editorBackground = EditorColorsManager.getInstance().getGlobalScheme().getDefaultBackground();
+    final Color editorBackground = TargetAWT.to(EditorColorsManager.getInstance().getGlobalScheme().getDefaultBackground());
     console.setBorder(new CompoundBorder(IdeBorderFactory.createBorder(SideBorder.RIGHT | SideBorder.TOP),
                                          new SideBorder(editorBackground, SideBorder.LEFT)));
     outputTab.add(console, BorderLayout.CENTER);

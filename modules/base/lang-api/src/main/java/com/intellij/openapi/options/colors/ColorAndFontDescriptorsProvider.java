@@ -15,6 +15,7 @@
  */
 package com.intellij.openapi.options.colors;
 
+import com.intellij.openapi.editor.colors.EditorColorKey;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import javax.annotation.Nonnull;
@@ -41,7 +42,7 @@ public interface ColorAndFontDescriptorsProvider {
   AttributesDescriptor[] getAttributeDescriptors();
 
   /**
-   * Returns the list of descriptors specifying the {@link com.intellij.openapi.editor.colors.ColorKey}
+   * Returns the list of descriptors specifying the {@link EditorColorKey}
    * instances for which colors are specified in the page. For such color keys, the user can
    * choose only the background or foreground color.
    *

@@ -52,6 +52,7 @@ import com.intellij.util.ui.GraphicsUtil;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import consulo.annotation.DeprecationInfo;
+import consulo.awt.TargetAWT;
 import consulo.desktop.editor.impl.DesktopEditorAnalyzeStatusPanel;
 import consulo.desktop.editor.impl.DesktopEditorErrorPanel;
 import consulo.disposer.Disposable;
@@ -593,7 +594,7 @@ public class DesktopEditorMarkupModelImpl extends MarkupModelImpl implements Edi
               final AffineTransform transform = g2d.getTransform();
               EditorUIUtil.setupAntialiasing(g2d);
               GraphicsUtil.setupAAPainting(g2d);
-              g2d.setColor(myEditor.getBackgroundColor());
+              g2d.setColor(TargetAWT.to(myEditor.getBackgroundColor()));
               g2d.fillRect(0, 0, getWidth(), getHeight());
               AffineTransform translateInstance = AffineTransform.getTranslateInstance(gutterWidth, myEditor.getLineHeight() * (myCacheStartLine - myStartVisualLine));
               translateInstance.preConcatenate(transform);
@@ -684,8 +685,8 @@ public class DesktopEditorMarkupModelImpl extends MarkupModelImpl implements Edi
         myEditorPreviewHint.setForceLightweightPopup(true);
       }
       Point point = new Point(hintInfo.getOriginalPoint());
-      hintInfo.setTextBg(myEditor.getColorsScheme().getDefaultBackground());
-      hintInfo.setBorderColor(myEditor.getColorsScheme().getDefaultForeground());
+      hintInfo.setTextBg(TargetAWT.to(myEditor.getColorsScheme().getDefaultBackground()));
+      hintInfo.setBorderColor(TargetAWT.to(myEditor.getColorsScheme().getDefaultForeground()));
       point = SwingUtilities.convertPoint(((DesktopEditorImpl)editor).getVerticalScrollBar(), point, myEditor.getComponent().getRootPane());
       myPointHolder.set(point);
       myHintHolder.set(hintInfo);

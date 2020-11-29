@@ -16,13 +16,12 @@
 package com.intellij.execution.ui;
 
 import com.intellij.execution.process.ProcessOutputTypes;
-import com.intellij.openapi.editor.colors.ColorKey;
+import com.intellij.openapi.editor.colors.EditorColorKey;
 import com.intellij.openapi.editor.colors.EditorColorsManager;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.openapi.editor.markup.TextAttributes;
-import consulo.util.dataholder.Key;
 import com.intellij.util.containers.HashMap;
-import org.jetbrains.annotations.NonNls;
+import consulo.util.dataholder.Key;
 
 import java.util.Collection;
 import java.util.Map;
@@ -35,9 +34,9 @@ public class ConsoleViewContentType {
   private final TextAttributes myTextAttributes;
   private final TextAttributesKey myTextAttributesKey;
 
-  private static final Map<Key, ConsoleViewContentType> ourRegisteredTypes = new HashMap<Key, ConsoleViewContentType>();
+  private static final Map<Key, ConsoleViewContentType> ourRegisteredTypes = new HashMap<>();
 
-  public static final ColorKey CONSOLE_BACKGROUND_KEY = ColorKey.createColorKey("CONSOLE_BACKGROUND_KEY");
+  public static final EditorColorKey CONSOLE_BACKGROUND_KEY = EditorColorKey.createColorKey("CONSOLE_BACKGROUND_KEY");
 
   public static final TextAttributesKey NORMAL_OUTPUT_KEY = TextAttributesKey.createTextAttributesKey("CONSOLE_NORMAL_OUTPUT");
   public static final TextAttributesKey LOG_WARNING_OUTPUT_KEY = TextAttributesKey.createTextAttributesKey("LOG_WARNING_OUTPUT");
@@ -60,13 +59,13 @@ public class ConsoleViewContentType {
     ourRegisteredTypes.put(ProcessOutputTypes.STDERR, ERROR_OUTPUT);
   }
 
-  public ConsoleViewContentType(@NonNls final String name, final TextAttributes textAttributes) {
+  public ConsoleViewContentType(final String name, final TextAttributes textAttributes) {
     myName = name;
     myTextAttributes = textAttributes;
     myTextAttributesKey = null;
   }
 
-  public ConsoleViewContentType(@NonNls String name, TextAttributesKey textAttributesKey) {
+  public ConsoleViewContentType(String name, TextAttributesKey textAttributesKey) {
     myName = name;
     myTextAttributes = null;
     myTextAttributesKey = textAttributesKey;

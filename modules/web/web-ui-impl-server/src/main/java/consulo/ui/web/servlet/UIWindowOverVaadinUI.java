@@ -26,9 +26,9 @@ import consulo.ui.Window;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.border.BorderPosition;
 import consulo.ui.border.BorderStyle;
+import consulo.ui.color.ColorValue;
 import consulo.ui.font.Font;
 import consulo.ui.font.FontManager;
-import consulo.ui.style.ColorKey;
 import consulo.ui.web.internal.TargetVaddin;
 import consulo.ui.web.internal.WebApplicationContainerImpl;
 import consulo.ui.web.internal.WebRootPaneImpl;
@@ -70,7 +70,7 @@ class UIWindowOverVaadinUI implements Window {
 
   @RequiredUIAccess
   @Override
-  public void addBorder(@Nonnull BorderPosition borderPosition, BorderStyle borderStyle, ColorKey colorKey, int width) {
+  public void addBorder(@Nonnull BorderPosition borderPosition, BorderStyle borderStyle, ColorValue colorValue, int width) {
     throw new UnsupportedOperationException();
   }
 

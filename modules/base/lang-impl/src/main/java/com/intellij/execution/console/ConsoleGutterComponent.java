@@ -28,6 +28,8 @@ import com.intellij.ui.HintHint;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.awt.RelativePoint;
 import com.intellij.util.ui.UIUtil;
+import consulo.awt.TargetAWT;
+
 import javax.annotation.Nonnull;
 
 import javax.swing.*;
@@ -148,7 +150,7 @@ class ConsoleGutterComponent extends JComponent implements MouseMotionListener {
         return;
       }
 
-      g.setColor(editor.getBackgroundColor());
+      g.setColor(TargetAWT.to(editor.getBackgroundColor()));
       g.fillRect(clip.x, clip.y, Math.min(clip.width, maxContentWidth - clip.x), clip.height);
     }
 

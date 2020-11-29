@@ -22,6 +22,7 @@ import com.intellij.psi.codeStyle.arrangement.std.ArrangementSettingsToken;
 import com.intellij.ui.JBColor;
 import com.intellij.util.containers.ContainerUtilRt;
 import com.intellij.util.ui.UIUtil;
+import consulo.awt.TargetAWT;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -57,10 +58,10 @@ public class ArrangementColorsProviderImpl implements ArrangementColorsProvider 
     myColorsAware = colorsAware;
 
     // Default settings.
-    myDefaultNormalAttributes.setForegroundColor(UIUtil.getTreeTextForeground());
-    myDefaultNormalAttributes.setBackgroundColor(UIUtil.getPanelBackground());
-    myDefaultSelectedAttributes.setForegroundColor(UIUtil.getTreeSelectionForeground());
-    myDefaultSelectedAttributes.setBackgroundColor(UIUtil.getTreeSelectionBackground());
+    myDefaultNormalAttributes.setForegroundColor(TargetAWT.from(UIUtil.getTreeTextForeground()));
+    myDefaultNormalAttributes.setBackgroundColor(TargetAWT.from(UIUtil.getPanelBackground()));
+    myDefaultSelectedAttributes.setForegroundColor(TargetAWT.from(UIUtil.getTreeSelectionForeground()));
+    myDefaultSelectedAttributes.setBackgroundColor(TargetAWT.from(UIUtil.getTreeSelectionBackground()));
     myDefaultNormalBorderColor = UIUtil.getBorderColor();
     Color selectionBorderColor = UIUtil.getTreeSelectionBorderColor();
     if (selectionBorderColor == null) {

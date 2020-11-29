@@ -279,14 +279,14 @@ public class HighlightableComponent extends JComponent implements Accessible {
         // paint highlight background
 
         if (hRegion.textAttributes.getBackgroundColor() != null && paintHighlightsBackground) {
-          g.setColor(hRegion.textAttributes.getBackgroundColor());
+          g.setColor(TargetAWT.to(hRegion.textAttributes.getBackgroundColor()));
           g.fillRect(offset, 0, fontMetrics.stringWidth(text), fontMetrics.getHeight() + fontMetrics.getLeading());
         }
 
         // draw highlight text
 
         if (hRegion.textAttributes.getForegroundColor() != null && paintHighlightsForeground) {
-          g.setColor(hRegion.textAttributes.getForegroundColor());
+          g.setColor(TargetAWT.to(hRegion.textAttributes.getForegroundColor()));
         }
         else {
           g.setColor(fgColor);
@@ -298,7 +298,7 @@ public class HighlightableComponent extends JComponent implements Accessible {
         // draw highlight underscored line
 
         if (hRegion.textAttributes.getEffectType() != null && hRegion.textAttributes.getEffectColor() != null) {
-          g.setColor(hRegion.textAttributes.getEffectColor());
+          g.setColor(TargetAWT.to(hRegion.textAttributes.getEffectColor()));
           int y = yOffset/*fontMetrics.getMaxAscent()*/ + 2;
           UIUtil.drawLine(g, offset, y, offset + fontMetrics.stringWidth(text) - 1, y);
         }
@@ -306,7 +306,7 @@ public class HighlightableComponent extends JComponent implements Accessible {
         // draw highlight border
 
         if (hRegion.textAttributes.getEffectColor() != null && hRegion.textAttributes.getEffectType() == EffectType.BOXED) {
-          g.setColor(hRegion.textAttributes.getEffectColor());
+          g.setColor(TargetAWT.to(hRegion.textAttributes.getEffectColor()));
           g.drawRect(offset, 0, fontMetrics.stringWidth(text) - 1, fontMetrics.getHeight() + fontMetrics.getLeading() - 1);
         }
 

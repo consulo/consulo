@@ -25,6 +25,10 @@ import com.intellij.util.IconUtil;
 import com.intellij.util.text.Matcher;
 import com.intellij.util.text.MatcherHolder;
 import com.intellij.util.ui.UIUtil;
+import consulo.awt.TargetAWT;
+import consulo.ui.color.ColorValue;
+import consulo.ui.style.StandardColors;
+
 import javax.annotation.Nonnull;
 
 import javax.swing.*;
@@ -98,7 +102,7 @@ public class NavigationItemListCellRenderer extends OpaquePanel implements ListC
                               item.toString() +
                               ", class " +
                               item.getClass().getName();
-        Color color = list.getForeground();
+        ColorValue color = TargetAWT.from(list.getForeground());
         boolean isProblemFile = item instanceof PsiElement && WolfTheProblemSolver.getInstance(((PsiElement)item).getProject()).isProblemFile(PsiUtilCore.getVirtualFile((PsiElement)item));
 
         PsiElement psiElement = getPsiElement(item);
@@ -123,7 +127,7 @@ public class NavigationItemListCellRenderer extends OpaquePanel implements ListC
         final TextAttributes textAttributes = NodeRenderer.getSimpleTextAttributes(presentation).toTextAttributes();
         if (isProblemFile) {
           textAttributes.setEffectType(EffectType.WAVE_UNDERSCORE);
-          textAttributes.setEffectColor(JBColor.red);
+          textAttributes.setEffectColor(StandardColors.RED);
         }
         textAttributes.setForegroundColor(color);
         SimpleTextAttributes nameAttributes = SimpleTextAttributes.fromTextAttributes(textAttributes);

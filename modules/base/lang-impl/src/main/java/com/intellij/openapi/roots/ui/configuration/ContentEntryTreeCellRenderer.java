@@ -55,9 +55,7 @@ public class ContentEntryTreeCellRenderer extends NodeRenderer {
           final VirtualFile file = ((FileElement)element).getFile();
           if (file != null && file.isDirectory()) {
             final ContentEntry contentEntry = editor.getContentEntry();
-            if (contentEntry != null) {
-              setIcon(updateIcon(contentEntry, file, getIcon()));
-            }
+            setIcon(updateIcon(contentEntry, file, getIcon()));
           }
         }
       }

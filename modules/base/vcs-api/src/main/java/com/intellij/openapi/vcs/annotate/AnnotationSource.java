@@ -15,27 +15,41 @@
  */
 package com.intellij.openapi.vcs.annotate;
 
-import com.intellij.openapi.editor.colors.ColorKey;
+import com.intellij.openapi.editor.colors.EditorColorKey;
 import com.intellij.openapi.editor.colors.EditorColors;
 
+import javax.annotation.Nonnull;
+
 public enum AnnotationSource {
-  LOCAL() {
-    public ColorKey getColor() {
+  LOCAL {
+    @Nonnull
+    @Override
+    public EditorColorKey getColor() {
       return EditorColors.ANNOTATIONS_COLOR;
     }
+
+    @Override
     public boolean showMerged() {
       return false;
-    }},
-  MERGE() {
-    public ColorKey getColor() {
+    }
+  },
+  MERGE {
+    @Nonnull
+    @Override
+    public EditorColorKey getColor() {
       return EditorColors.ANNOTATIONS_COLOR;
     }
+
+    @Override
     public boolean showMerged() {
       return true;
-    }};
+    }
+  };
 
   public abstract boolean showMerged();
-  public abstract ColorKey getColor();
+
+  @Nonnull
+  public abstract EditorColorKey getColor();
 
   public static AnnotationSource getInstance(final boolean showMerged) {
     return showMerged ? MERGE : LOCAL;

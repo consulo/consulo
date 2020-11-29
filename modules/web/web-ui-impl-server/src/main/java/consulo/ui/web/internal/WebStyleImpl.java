@@ -17,7 +17,7 @@ package consulo.ui.web.internal;
 
 import consulo.ui.color.ColorValue;
 import consulo.ui.color.RGBColor;
-import consulo.ui.style.ColorKey;
+import consulo.ui.style.StyleColorValue;
 import consulo.ui.style.ComponentColors;
 import consulo.ui.style.StandardColors;
 import consulo.ui.style.Style;
@@ -31,7 +31,7 @@ import java.util.Map;
  * @since 15-Sep-17
  */
 public class WebStyleImpl implements Style {
-  private Map<ColorKey, ColorValue> myColors = new HashMap<>();
+  private Map<StyleColorValue, ColorValue> myColors = new HashMap<>();
   private final String myName;
 
   public WebStyleImpl(String name) {
@@ -53,7 +53,7 @@ public class WebStyleImpl implements Style {
 
   @Nonnull
   @Override
-  public ColorValue getColor(@Nonnull ColorKey colorKey) {
+  public ColorValue getColorValue(@Nonnull StyleColorValue colorKey) {
     ColorValue colorValue = myColors.get(colorKey);
     if(colorValue == null) {
       return StandardColors.RED.getStaticValue();

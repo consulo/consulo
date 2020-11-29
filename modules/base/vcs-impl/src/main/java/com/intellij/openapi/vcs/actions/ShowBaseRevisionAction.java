@@ -32,9 +32,10 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.ObjectUtil;
 import com.intellij.util.text.DateFormatUtil;
 import com.intellij.util.ui.UIUtil;
-import javax.annotation.Nonnull;
+import consulo.awt.TargetAWT;
 import consulo.ui.annotation.RequiredUIAccess;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 
@@ -132,7 +133,7 @@ public class ShowBaseRevisionAction extends AbstractVcsAction {
 
     @Override
     public Color getBackground() {
-      Color color = EditorColorsManager.getInstance().getGlobalScheme().getColor(EditorColors.NOTIFICATION_BACKGROUND);
+      Color color = TargetAWT.to(EditorColorsManager.getInstance().getGlobalScheme().getColor(EditorColors.NOTIFICATION_BACKGROUND));
       return color == null ? new Color(0xffffcc) : color;
     }
   }

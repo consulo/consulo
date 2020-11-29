@@ -6,6 +6,7 @@ import com.intellij.navigation.ColoredItemPresentation;
 import com.intellij.navigation.ItemPresentation;
 import com.intellij.navigation.NavigationItem;
 import com.intellij.openapi.application.ReadAction;
+import consulo.awt.TargetAWT;
 import consulo.logging.Logger;
 import com.intellij.openapi.editor.colors.EditorColorsManager;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
@@ -116,7 +117,7 @@ public abstract class PsiElementListCellRenderer<T extends PsiElement> extends J
         Project project = target.getProject();
         isProblemFile = WolfTheProblemSolver.getInstance(project).isProblemFile(vFile);
         FileStatus status = FileStatusManager.getInstance(project).getStatus(vFile);
-        color = status.getColor();
+        color = TargetAWT.to(status.getColor());
 
         Color fileBgColor = getFileBackgroundColor(project, vFile);
         bgColor = fileBgColor == null ? bgColor : fileBgColor;

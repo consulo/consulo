@@ -18,10 +18,9 @@ package com.intellij.openapi.vcs;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import consulo.disposer.Disposable;
+import consulo.ui.color.ColorValue;
 
 import javax.annotation.Nonnull;
-
-import java.awt.*;
 
 /**
  * @author mike
@@ -54,11 +53,11 @@ public abstract class FileStatusManager {
   /**
    * @deprecated Use getStatus(file).getColor()} instead
    */
-  public Color getStatusColor(VirtualFile file) {
+  public ColorValue getStatusColor(VirtualFile file) {
     return getStatus(file).getColor();
   }
 
-  public abstract Color getNotChangedDirectoryColor(VirtualFile vf);
+  public abstract ColorValue getNotChangedDirectoryColor(VirtualFile vf);
 
   /**
    * @See VcsConfiguration#SHOW_DIRTY_RECURSIVELY

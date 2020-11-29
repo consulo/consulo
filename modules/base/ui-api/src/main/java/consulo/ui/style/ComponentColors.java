@@ -19,7 +19,7 @@ package consulo.ui.style;
  * @author VISTALL
  * @since 15-Sep-17
  */
-public enum ComponentColors implements ColorKey {
+public enum ComponentColors implements StyleColorValue {
   BORDER,
   TEXT,
   LAYOUT,

@@ -56,6 +56,7 @@ import com.intellij.ui.paint.PaintUtil;
 import com.intellij.util.ui.JBSwingUtilities;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.accessibility.ScreenReader;
+import consulo.awt.TargetAWT;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.util.dataholder.Key;
@@ -167,7 +168,7 @@ public class EditorComponentImpl extends JTextComponent implements Scrollable, D
 
   @Override
   public Color getBackground() {
-    return myEditor.getBackgroundColor();
+    return TargetAWT.to(myEditor.getBackgroundColor());
   }
 
   @Override

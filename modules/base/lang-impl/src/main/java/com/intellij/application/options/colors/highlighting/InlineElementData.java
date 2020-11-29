@@ -22,6 +22,7 @@ import com.intellij.openapi.editor.Inlay;
 import com.intellij.openapi.editor.colors.EditorColorsScheme;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.openapi.editor.markup.TextAttributes;
+import consulo.awt.TargetAWT;
 import consulo.disposer.Disposer;
 import javax.annotation.Nonnull;
 
@@ -90,7 +91,7 @@ public class InlineElementData extends HighlightData {
       if (drawBorder) {
         TextAttributes attributes = inlay.getEditor().getColorsScheme().getAttributes(BLINKING_HIGHLIGHTS_ATTRIBUTES);
         if (attributes != null && attributes.getEffectColor() != null) {
-          g.setColor(attributes.getEffectColor());
+          g.setColor(TargetAWT.to(attributes.getEffectColor()));
           g.drawRect(r.x, r.y, r.width, r.height);
         }
       }

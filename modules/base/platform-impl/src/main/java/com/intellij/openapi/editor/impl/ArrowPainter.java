@@ -16,9 +16,10 @@
 package com.intellij.openapi.editor.impl;
 
 import com.intellij.openapi.util.Computable;
-import com.intellij.util.ui.UIUtil;
-import javax.annotation.Nonnull;
+import com.intellij.ui.paint.LinePainter2D;
+import consulo.awt.TargetAWT;
 
+import javax.annotation.Nonnull;
 import java.awt.*;
 
 /**
@@ -57,13 +58,13 @@ public class ArrowPainter {
   public void paint(Graphics g, int y, int start, int stop) {
     stop -= myWidthProvider.compute() / 4;
     Color oldColor = g.getColor();
-    g.setColor(myColorHolder.getColor());
+    g.setColor(TargetAWT.to(myColorHolder.getColor()));
     final int height = myHeightProvider.compute();
     final int halfHeight = height / 2;
     int mid = y - halfHeight;
     int top = y - height;
-    UIUtil.drawLine(g, start, mid, stop, mid);
-    UIUtil.drawLine(g, stop, y, stop, top);
+    LinePainter2D.paint((Graphics2D)g, start, mid, stop, mid);
+    LinePainter2D.paint((Graphics2D)g, stop, y, stop, top);
     g.fillPolygon(new int[]{stop - halfHeight, stop - halfHeight, stop}, new int[]{y, y - height, y - halfHeight}, 3);
     g.setColor(oldColor);
   }

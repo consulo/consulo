@@ -2,14 +2,13 @@
 package com.intellij.ide;
 
 import com.intellij.codeInsight.hint.HintUtil;
-import consulo.disposer.Disposable;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.actionSystem.ex.AnActionListener;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.editor.colors.ColorKey;
+import com.intellij.openapi.editor.colors.EditorColorKey;
 import com.intellij.openapi.editor.colors.EditorColorsManager;
 import com.intellij.openapi.editor.colors.EditorColorsUtil;
 import com.intellij.openapi.keymap.impl.IdeMouseEventDispatcher;
@@ -17,8 +16,6 @@ import com.intellij.openapi.ui.popup.Balloon;
 import com.intellij.openapi.ui.popup.BalloonBuilder;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.util.Comparing;
-import consulo.disposer.Disposer;
-import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.util.registry.RegistryValue;
@@ -30,7 +27,13 @@ import com.intellij.ui.components.panels.Wrapper;
 import com.intellij.ui.scale.JBUIScale;
 import com.intellij.util.Alarm;
 import com.intellij.util.ui.*;
-import org.jetbrains.annotations.*;
+import consulo.awt.TargetAWT;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
+import consulo.ui.color.ColorValue;
+import consulo.util.dataholder.Key;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -46,7 +49,7 @@ import java.awt.event.MouseEvent;
 import java.lang.reflect.Field;
 
 public final class IdeTooltipManager implements Disposable, AWTEventListener {
-  public static final ColorKey TOOLTIP_COLOR_KEY = ColorKey.createColorKey("TOOLTIP", null);
+  public static final EditorColorKey TOOLTIP_COLOR_KEY = EditorColorKey.createColorKey("TOOLTIP", null);
 
   private static final Key<IdeTooltip> CUSTOM_TOOLTIP = Key.create("custom.tooltip");
   private static final MouseEventAdapter<Void> DUMMY_LISTENER = new MouseEventAdapter<>(null);
@@ -463,8 +466,8 @@ public final class IdeTooltipManager implements Disposable, AWTEventListener {
 
   @SuppressWarnings({"UnusedParameters"})
   public Color getTextBackground(boolean awtTooltip) {
-    Color color = EditorColorsUtil.getGlobalOrDefaultColor(TOOLTIP_COLOR_KEY);
-    return color != null ? color : UIUtil.getToolTipBackground();
+    ColorValue color = EditorColorsUtil.getGlobalOrDefaultColor(TOOLTIP_COLOR_KEY);
+    return color != null ? TargetAWT.to(color) : UIUtil.getToolTipBackground();
   }
 
   @SuppressWarnings({"UnusedParameters"})
@@ -760,7 +763,7 @@ public final class IdeTooltipManager implements Disposable, AWTEventListener {
 
   public static void setColors(JComponent pane) {
     pane.setForeground(JBColor.foreground());
-    pane.setBackground(HintUtil.getInformationColor());
+    pane.setBackground(TargetAWT.to(HintUtil.getInformationColor()));
     pane.setOpaque(true);
   }
 

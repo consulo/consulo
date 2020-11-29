@@ -18,6 +18,8 @@ package com.intellij.diff.util;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.markup.CustomHighlighterRenderer;
 import com.intellij.openapi.editor.markup.RangeHighlighter;
+import consulo.awt.TargetAWT;
+
 import javax.annotation.Nonnull;
 
 import java.awt.*;
@@ -32,7 +34,7 @@ public class DiffEmptyHighlighterRenderer implements CustomHighlighterRenderer {
 
   @Override
   public void paint(@Nonnull Editor editor, @Nonnull RangeHighlighter highlighter, @Nonnull Graphics g) {
-    g.setColor(myDiffType.getColor(editor));
+    g.setColor(TargetAWT.to(myDiffType.getColor(editor)));
     Point point = editor.logicalPositionToXY(editor.offsetToLogicalPosition(highlighter.getStartOffset()));
     int endy = point.y + editor.getLineHeight() - 1;
     g.drawLine(point.x, point.y, point.x, endy);

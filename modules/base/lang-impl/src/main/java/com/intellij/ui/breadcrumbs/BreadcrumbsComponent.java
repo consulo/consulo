@@ -16,6 +16,7 @@
 package com.intellij.ui.breadcrumbs;
 
 import com.intellij.ide.ui.UISettings;
+import consulo.awt.TargetAWT;
 import consulo.disposer.Disposable;
 import com.intellij.openapi.editor.colors.EditorColors;
 import com.intellij.openapi.editor.colors.EditorColorsManager;
@@ -27,6 +28,7 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.GraphicsUtil;
 import com.intellij.util.ui.JBInsets;
 import consulo.logging.Logger;
+import consulo.ui.color.ColorValue;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -599,17 +601,17 @@ public class BreadcrumbsComponent<T extends BreadcrumbsItem> extends JComponent 
 
   abstract static class PainterSettings {
     @Nullable
-    Color getBackgroundColor(@Nonnull final Crumb c) {
+    ColorValue getBackgroundColor(@Nonnull final Crumb c) {
       return getAttributes(c).getBackgroundColor();
     }
 
     @Nullable
-    Color getForegroundColor(@Nonnull final Crumb c) {
+    ColorValue getForegroundColor(@Nonnull final Crumb c) {
       return getAttributes(c).getForegroundColor();
     }
 
     @Nullable
-    Color getBorderColor(@Nonnull final Crumb c) {
+    ColorValue getBorderColor(@Nonnull final Crumb c) {
       return getAttributes(c).getEffectColor();
     }
 
@@ -632,7 +634,7 @@ public class BreadcrumbsComponent<T extends BreadcrumbsItem> extends JComponent 
   }
 
   public static class ButtonSettings extends PainterSettings {
-    public static Color getBackgroundColor(boolean selected, boolean hovered, boolean light, boolean navigationCrumb) {
+    public static ColorValue getBackgroundColor(boolean selected, boolean hovered, boolean light, boolean navigationCrumb) {
       return EditorColorsManager.getInstance().getGlobalScheme().getAttributes(hovered
                                                                                ? EditorColors.BREADCRUMBS_HOVERED
                                                                                : selected
@@ -643,7 +645,7 @@ public class BreadcrumbsComponent<T extends BreadcrumbsItem> extends JComponent 
 
     @Override
     @Nullable
-    Color getBackgroundColor(@Nonnull final Crumb c) {
+    ColorValue getBackgroundColor(@Nonnull final Crumb c) {
       final BreadcrumbsItem item = c.getItem();
       if (item != null) {
         final CrumbPresentation presentation = item.getPresentation();
@@ -690,11 +692,11 @@ public class BreadcrumbsComponent<T extends BreadcrumbsItem> extends JComponent 
       final int offset = c.getOffset() - pageOffset;
 
       final int width = c.getWidth();
-      RectanglePainter.paint(g2, offset + 2, 2, width - 4, height - 4, ROUND_VALUE + 2, s.getBackgroundColor(c), s.getBorderColor(c));
+      RectanglePainter.paint(g2, offset + 2, 2, width - 4, height - 4, ROUND_VALUE + 2, TargetAWT.to(s.getBackgroundColor(c)), TargetAWT.to(s.getBorderColor(c)));
 
-      final Color textColor = s.getForegroundColor(c);
+      final ColorValue textColor = s.getForegroundColor(c);
       if (textColor != null) {
-        g2.setColor(textColor);
+        g2.setColor(TargetAWT.to(textColor));
       }
 
       final Font font = s.getFont(g2, c);

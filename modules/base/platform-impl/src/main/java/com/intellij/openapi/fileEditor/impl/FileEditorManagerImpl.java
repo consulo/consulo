@@ -22,6 +22,7 @@ import com.intellij.ide.plugins.PluginManagerCore;
 import com.intellij.ide.ui.UISettings;
 import com.intellij.ide.ui.UISettingsListener;
 import com.intellij.injected.editor.VirtualFileWindow;
+import consulo.awt.TargetAWT;
 import consulo.disposer.Disposable;
 import com.intellij.openapi.application.AccessToken;
 import com.intellij.openapi.application.Application;
@@ -83,6 +84,7 @@ import consulo.logging.Logger;
 import consulo.platform.Platform;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.UIAccess;
+import consulo.ui.color.ColorValue;
 import consulo.ui.docking.BaseDockManager;
 import consulo.util.dataholder.Key;
 import gnu.trove.THashSet;
@@ -325,10 +327,10 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
    * @return color of the {@code file} which corresponds to the
    * file's status
    */
-  public Color getFileColor(@Nonnull final VirtualFile file) {
+  public ColorValue getFileColor(@Nonnull final VirtualFile file) {
     final FileStatusManager fileStatusManager = FileStatusManager.getInstance(myProject);
-    Color statusColor = fileStatusManager != null ? fileStatusManager.getStatus(file).getColor() : UIUtil.getLabelForeground();
-    if (statusColor == null) statusColor = UIUtil.getLabelForeground();
+    ColorValue statusColor = fileStatusManager.getStatus(file).getColor();
+    if (statusColor == null) statusColor = TargetAWT.from(UIUtil.getLabelForeground());
     return statusColor;
   }
 

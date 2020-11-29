@@ -24,6 +24,7 @@ import com.intellij.openapi.vcs.changes.Change;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.ColoredListCellRenderer;
 import com.intellij.ui.SimpleTextAttributes;
+import consulo.awt.TargetAWT;
 
 import javax.swing.*;
 import java.io.File;
@@ -51,7 +52,7 @@ public class VirtualFileListCellRenderer extends ColoredListCellRenderer {
     final FilePath path = TreeModelBuilder.getPathForObject(value);
     renderIcon(path);
     final FileStatus fileStatus = myIgnoreFileStatus ? FileStatus.NOT_CHANGED : getStatus(value, path);
-    append(getName(path), new SimpleTextAttributes(SimpleTextAttributes.STYLE_PLAIN, fileStatus.getColor(), null));
+    append(getName(path), new SimpleTextAttributes(SimpleTextAttributes.STYLE_PLAIN, TargetAWT.to(fileStatus.getColor()), null));
     putParentPath(value, path, path);
   }
 

@@ -15,10 +15,11 @@ import com.intellij.util.DocumentUtil;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.logging.Logger;
+import consulo.ui.color.ColorValue;
 import org.intellij.lang.annotations.JdkConstants;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -51,14 +52,14 @@ public class IterationState {
       return result;
     }
 
-    final Color fore1 = a1.getForegroundColor();
-    final Color fore2 = a2.getForegroundColor();
+    final ColorValue fore1 = a1.getForegroundColor();
+    final ColorValue fore2 = a2.getForegroundColor();
     if (fore1 == null ^ fore2 == null) {
       return fore1 == null ? 1 : -1;
     }
 
-    final Color back1 = a1.getBackgroundColor();
-    final Color back2 = a2.getBackgroundColor();
+    final ColorValue back1 = a1.getBackgroundColor();
+    final ColorValue back2 = a2.getBackgroundColor();
     if (back1 == null ^ back2 == null) {
       return back1 == null ? 1 : -1;
     }
@@ -84,8 +85,8 @@ public class IterationState {
   private final int myInitialStartOffset;
 
   private int myCurrentSelectionIndex = 0;
-  private Color myCurrentBackgroundColor;
-  private Color myLastBackgroundColor;
+  private ColorValue myCurrentBackgroundColor;
+  private ColorValue myLastBackgroundColor;
 
   private final List<RangeHighlighterEx> myCurrentHighlighters = new ArrayList<>();
 
@@ -95,14 +96,14 @@ public class IterationState {
 
   private final TextAttributes mySelectionAttributes;
   private final TextAttributes myCaretRowAttributes;
-  private final Color myDefaultBackground;
-  private final Color myDefaultForeground;
+  private final ColorValue myDefaultBackground;
+  private final ColorValue myDefaultForeground;
   private final int myDefaultFontType;
   private final List<TextAttributes> myCachedAttributesList = new ArrayList<>(5);
   private final DocumentEx myDocument;
   private final EditorEx myEditor;
   private final CaretData myCaretData;
-  private final Color myReadOnlyColor;
+  private final ColorValue myReadOnlyColor;
   private final boolean myUseOnlyFullLineHighlighters;
   private final boolean myReverseIteration;
 
@@ -592,8 +593,8 @@ public class IterationState {
     if (caret != null) cachedAttributes.add(caret);
     if (syntax != null) cachedAttributes.add(syntax);
 
-    Color fore = null;
-    Color back = isInGuardedBlock ? myReadOnlyColor : null;
+    ColorValue fore = null;
+    ColorValue back = isInGuardedBlock ? myReadOnlyColor : null;
     @JdkConstants.FontStyle int fontType = Font.PLAIN;
 
     TextAttributesEffectsBuilder effectsBuilder = null;
@@ -674,7 +675,7 @@ public class IterationState {
     return isEditorRightAligned() && !hasSoftWrap() ? getBreakAttributes() : new TextAttributes(null, getBreakBackgroundColor(false), null, null, Font.PLAIN);
   }
 
-  private Color getBreakBackgroundColor(boolean lineEnd) {
+  private ColorValue getBreakBackgroundColor(boolean lineEnd) {
     return getBreakAttributes(lineEnd).getBackgroundColor();
   }
 

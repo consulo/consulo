@@ -24,18 +24,15 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
-import consulo.awt.TargetAWT;
 import consulo.fileTypes.impl.VfsIconUtil;
+import consulo.ui.color.ColorValue;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nullable;
-
-import javax.swing.*;
-import java.awt.*;
 import java.util.Map;
 import java.util.Set;
 
-public class FileNode extends PackageDependenciesNode implements Comparable<FileNode>{
+public class FileNode extends PackageDependenciesNode implements Comparable<FileNode> {
   private final VirtualFile myVFile;
   private final boolean myMarked;
 
@@ -89,7 +86,7 @@ public class FileNode extends PackageDependenciesNode implements Comparable<File
   }
 
   @Override
-  public Color getColor() {
+  public ColorValue getColor() {
     if (myColor == null) {
       myColor = FileStatusManager.getInstance(myProject).getStatus(myVFile).getColor();
       if (myColor == null) {
@@ -100,7 +97,7 @@ public class FileNode extends PackageDependenciesNode implements Comparable<File
   }
 
   public boolean equals(Object o) {
-    if (isEquals()){
+    if (isEquals()) {
       return super.equals(o);
     }
     if (this == o) return true;
@@ -135,9 +132,7 @@ public class FileNode extends PackageDependenciesNode implements Comparable<File
 
   @Override
   public int compareTo(FileNode o) {
-    final int compare = StringUtil.compare(myVFile != null ? myVFile.getFileType().getDefaultExtension() : null,
-                                           o.myVFile != null ? o.myVFile.getFileType().getDefaultExtension() : null,
-                                           true);
+    final int compare = StringUtil.compare(myVFile != null ? myVFile.getFileType().getDefaultExtension() : null, o.myVFile != null ? o.myVFile.getFileType().getDefaultExtension() : null, true);
     if (compare != 0) return compare;
     return StringUtil.compare(toString(), o.toString(), true);
   }

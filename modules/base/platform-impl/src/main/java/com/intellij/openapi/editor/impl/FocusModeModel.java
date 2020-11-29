@@ -2,7 +2,6 @@
 package com.intellij.openapi.editor.impl;
 
 import com.intellij.ide.IdeEventQueue;
-import consulo.disposer.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.editor.Caret;
 import com.intellij.openapi.editor.RangeMarker;
@@ -18,17 +17,20 @@ import com.intellij.openapi.editor.ex.util.EditorUtil;
 import com.intellij.openapi.editor.markup.MarkupModel;
 import com.intellij.openapi.editor.markup.RangeHighlighter;
 import com.intellij.openapi.editor.markup.TextAttributes;
-import consulo.disposer.Disposer;
-import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.Segment;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.util.registry.Registry;
-import com.intellij.ui.ColorUtil;
 import com.intellij.util.DocumentUtil;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.containers.ContainerUtil;
-import javax.annotation.Nonnull;
+import consulo.awt.TargetAWT;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
+import consulo.ui.color.ColorValue;
+import consulo.ui.util.ColorValueUtil;
+import consulo.util.dataholder.Key;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -193,9 +195,9 @@ public class FocusModeModel implements Disposable {
 
   private void applyFocusMode(@Nonnull Segment focusRange) {
     EditorColorsScheme scheme = ObjectUtils.notNull(myEditor.getColorsScheme(), EditorColorsManager.getInstance().getGlobalScheme());
-    Color background = scheme.getDefaultBackground();
+    ColorValue background = scheme.getDefaultBackground();
     //noinspection UseJBColor
-    Color foreground = Registry.getColor(ColorUtil.isDark(background) ? "editor.focus.mode.color.dark" : "editor.focus.mode.color.light", Color.GRAY);
+    ColorValue foreground = TargetAWT.from(Registry.getColor(ColorValueUtil.isDark(background) ? "editor.focus.mode.color.dark" : "editor.focus.mode.color.light", Color.GRAY));
     TextAttributes attributes = new TextAttributes(foreground, background, background, LINE_UNDERSCORE, Font.PLAIN);
     myEditor.putUserData(FOCUS_MODE_ATTRIBUTES, attributes);
 

@@ -40,16 +40,21 @@ import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.project.ProjectManagerAdapter;
-import com.intellij.openapi.util.*;
+import com.intellij.openapi.util.NotNullLazyValue;
+import com.intellij.openapi.util.Pair;
+import com.intellij.openapi.util.Ref;
+import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.ColorUtil;
-import com.intellij.ui.JBColor;
 import com.intellij.ui.awt.RelativePoint;
 import com.intellij.util.Function;
 import com.intellij.util.Processor;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.text.DateFormatUtil;
+import consulo.awt.TargetAWT;
 import consulo.ui.UIAccess;
+import consulo.ui.color.ColorValue;
+import consulo.ui.style.StandardColors;
 import consulo.util.dataholder.Key;
 
 import javax.annotation.Nonnull;
@@ -341,9 +346,9 @@ class EventLogConsole {
     TextAttributes bold = new TextAttributes(null, null, null, null, Font.BOLD);
     final RangeHighlighter colorHighlighter =
             markupModel.addRangeHighlighter(titleOffset, titleOffset + titleLength, HighlighterLayer.CARET_ROW + 1, bold, HighlighterTargetArea.EXACT_RANGE);
-    Color color = notification.getType() == NotificationType.ERROR
-                  ? JBColor.RED
-                  : notification.getType() == NotificationType.WARNING ? JBColor.YELLOW : JBColor.GREEN;
+    ColorValue color = notification.getType() == NotificationType.ERROR
+                  ? StandardColors.RED
+                  : notification.getType() == NotificationType.WARNING ? StandardColors.YELLOW : StandardColors.GREEN;
     colorHighlighter.setErrorStripeMarkColor(color);
     colorHighlighter.setErrorStripeTooltip(message);
 
@@ -420,7 +425,7 @@ class EventLogConsole {
 
       //noinspection UseJBColor
       TextAttributes attributes =
-              new TextAttributes(null, ColorUtil.mix(editor.getBackgroundColor(), new Color(0x808080), 0.1), null, EffectType.BOXED, Font.PLAIN);
+              new TextAttributes(null, TargetAWT.from(ColorUtil.mix(TargetAWT.to(editor.getBackgroundColor()), new Color(0x808080), 0.1)), null, EffectType.BOXED, Font.PLAIN);
       MarkupModelEx markupModel = editor.getMarkupModel();
 
       for (Point range : ranges) {

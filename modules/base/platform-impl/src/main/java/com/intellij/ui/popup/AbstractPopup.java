@@ -1852,7 +1852,7 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
   public void setWarning(@Nonnull String text) {
     JBLabel label = new JBLabel(text, AllIcons.General.BalloonWarning, SwingConstants.CENTER);
     label.setOpaque(true);
-    Color color = HintUtil.getInformationColor();
+    Color color = TargetAWT.to(HintUtil.getInformationColor());
     label.setBackground(color);
     label.setBorder(BorderFactory.createLineBorder(color, 3));
     myHeaderPanel.add(label, BorderLayout.SOUTH);

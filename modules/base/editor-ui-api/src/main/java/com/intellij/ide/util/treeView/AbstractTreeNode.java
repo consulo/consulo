@@ -3,7 +3,6 @@ package com.intellij.ide.util.treeView;
 
 import com.intellij.ide.projectView.PresentationData;
 import com.intellij.navigation.NavigationItem;
-import consulo.logging.Logger;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.openapi.ide.CopyPasteManager;
 import com.intellij.openapi.project.Project;
@@ -14,12 +13,13 @@ import com.intellij.openapi.vcs.FileStatusManager;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.tree.LeafState;
 import consulo.annotation.access.RequiredReadAction;
+import consulo.logging.Logger;
+import consulo.ui.color.ColorValue;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.awt.*;
 import java.util.Collection;
 import java.util.Map;
 
@@ -74,7 +74,7 @@ public abstract class AbstractTreeNode<T> extends PresentableNodeDescriptor<Abst
 
   private void setForcedForeground(@Nonnull PresentationData presentation) {
     final FileStatus status = getFileStatus();
-    Color fgColor = getFileStatusColor(status);
+    ColorValue fgColor = getFileStatusColor(status);
     fgColor = fgColor == null ? status.getColor() : fgColor;
 
     if (valueIsCut()) {
@@ -207,7 +207,7 @@ public abstract class AbstractTreeNode<T> extends PresentableNodeDescriptor<Abst
     return null;
   }
 
-  public Color getFileStatusColor(final FileStatus status) {
+  public ColorValue getFileStatusColor(final FileStatus status) {
     if (FileStatus.NOT_CHANGED.equals(status) && !myProject.isDefault()) {
       final VirtualFile vf = getVirtualFile();
       if (vf != null && vf.isDirectory()) {

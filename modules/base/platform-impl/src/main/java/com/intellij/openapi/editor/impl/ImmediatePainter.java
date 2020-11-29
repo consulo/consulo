@@ -18,8 +18,6 @@ import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.util.registry.RegistryValue;
 import com.intellij.ui.EditorTextField;
-import com.intellij.ui.Gray;
-import com.intellij.ui.JBColor;
 import com.intellij.ui.paint.PaintUtil;
 import com.intellij.ui.scale.JBUIScale;
 import com.intellij.util.Consumer;
@@ -27,8 +25,12 @@ import com.intellij.util.Processor;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.ImageUtil;
 import com.intellij.util.ui.UIUtil;
+import consulo.awt.TargetAWT;
 import consulo.awt.hacking.SunVolatileImageHacking;
 import consulo.disposer.Disposer;
+import consulo.ui.color.ColorValue;
+import consulo.ui.color.RGBColor;
+import consulo.ui.ex.util.LightDarkColorValue;
 
 import javax.swing.*;
 import java.awt.*;
@@ -243,22 +245,22 @@ class ImmediatePainter {
     return image.validate(componentConfig) != VolatileImage.IMAGE_INCOMPATIBLE;
   }
 
-  private static void fillRect(final Graphics2D g, final Rectangle2D r, final Color color) {
-    g.setColor(color);
+  private static void fillRect(final Graphics2D g, final Rectangle2D r, final ColorValue color) {
+    g.setColor(TargetAWT.to(color));
     g.fill(r);
   }
 
-  private static void drawChar(final Graphics2D g, final char c, final float x, final float y, final Font font, final Color color) {
+  private static void drawChar(final Graphics2D g, final char c, final float x, final float y, final Font font, final ColorValue color) {
     g.setFont(font);
-    g.setColor(color);
+    g.setColor(TargetAWT.to(color));
     g.drawString(String.valueOf(c), x, y);
   }
 
-  private static Color getCaretColor(final Editor editor) {
-    Color overriddenColor = editor.getCaretModel().getPrimaryCaret().getVisualAttributes().getColor();
+  private static ColorValue getCaretColor(final Editor editor) {
+    ColorValue overriddenColor = editor.getCaretModel().getPrimaryCaret().getVisualAttributes().getColor();
     if (overriddenColor != null) return overriddenColor;
-    final Color caretColor = editor.getColorsScheme().getColor(EditorColors.CARET_COLOR);
-    return caretColor == null ? new JBColor(Gray._0, Gray._255) : caretColor;
+    final ColorValue caretColor = editor.getColorsScheme().getColor(EditorColors.CARET_COLOR);
+    return caretColor == null ? new LightDarkColorValue(new RGBColor(0, 0, 0), new RGBColor(255, 255, 255)) : caretColor;
   }
 
   private static void updateAttributes(final DesktopEditorImpl editor, final int offset, final List<? extends TextAttributes> attributes) {
@@ -332,9 +334,9 @@ class ImmediatePainter {
     if (caretRow != null) cachedAttributes.add(caretRow);
     if (syntax != null) cachedAttributes.add(syntax);
 
-    Color foreground = null;
-    Color background = null;
-    Color effect = null;
+    ColorValue foreground = null;
+    ColorValue background = null;
+    ColorValue effect = null;
     EffectType effectType = null;
     int fontType = 0;
 

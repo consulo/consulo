@@ -19,6 +19,8 @@ import com.intellij.openapi.editor.markup.EffectType;
 import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.util.ui.UIUtil;
+import consulo.awt.TargetAWT;
+import consulo.ui.color.ColorValue;
 import org.intellij.lang.annotations.JdkConstants;
 import org.intellij.lang.annotations.MagicConstant;
 import javax.annotation.Nonnull;
@@ -178,8 +180,8 @@ public final class SimpleTextAttributes {
   public static SimpleTextAttributes fromTextAttributes(TextAttributes attributes) {
     if (attributes == null) return REGULAR_ATTRIBUTES;
 
-    Color foregroundColor = attributes.getForegroundColor();
-    if (foregroundColor == null) foregroundColor = REGULAR_ATTRIBUTES.getFgColor();
+    ColorValue foregroundColor = attributes.getForegroundColor();
+    if (foregroundColor == null) foregroundColor = TargetAWT.from(REGULAR_ATTRIBUTES.getFgColor());
 
     int style = attributes.getFontType();
     if (attributes.getEffectColor() != null) {
@@ -202,7 +204,7 @@ public final class SimpleTextAttributes {
         // not supported
       }
     }
-    return new SimpleTextAttributes(attributes.getBackgroundColor(), foregroundColor, attributes.getEffectColor(), style);
+    return new SimpleTextAttributes(TargetAWT.to(attributes.getBackgroundColor()), TargetAWT.to(foregroundColor), TargetAWT.to(attributes.getEffectColor()), style);
   }
 
   @JdkConstants.FontStyle
@@ -237,7 +239,7 @@ public final class SimpleTextAttributes {
       effectColor = null;
       effectType = null;
     }
-    return new TextAttributes(myFgColor, null, effectColor, effectType, myStyle & FONT_MASK);
+    return new TextAttributes(TargetAWT.from(myFgColor), null, TargetAWT.from(effectColor), effectType, myStyle & FONT_MASK);
   }
 
   public SimpleTextAttributes derive(@StyleAttributeConstant int style, @Nullable Color fg, @Nullable Color bg, @Nullable Color wave) {

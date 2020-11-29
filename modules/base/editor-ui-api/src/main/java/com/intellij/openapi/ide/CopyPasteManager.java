@@ -15,19 +15,19 @@
  */
 package com.intellij.openapi.ide;
 
-import consulo.disposer.Disposable;
 import com.intellij.openapi.components.ServiceManager;
-import com.intellij.ui.Gray;
+import consulo.disposer.Disposable;
+import consulo.ui.color.ColorValue;
+import consulo.ui.color.RGBColor;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import java.awt.*;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.util.EventListener;
 
 public abstract class CopyPasteManager {
-  public static final Color CUT_COLOR = Gray._160;
+  public static final ColorValue CUT_COLOR = new RGBColor(160, 160, 160);
 
   public static CopyPasteManager getInstance() {
     return ServiceManager.getService(CopyPasteManager.class);

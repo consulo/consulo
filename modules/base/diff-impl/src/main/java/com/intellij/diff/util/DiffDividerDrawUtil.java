@@ -21,6 +21,9 @@ import com.intellij.openapi.editor.LogicalPosition;
 import com.intellij.openapi.editor.colors.EditorColorsScheme;
 import com.intellij.openapi.ui.GraphicsConfig;
 import com.intellij.util.ui.GraphicsUtil;
+import consulo.awt.TargetAWT;
+import consulo.ui.color.ColorValue;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -130,7 +133,7 @@ public class DiffDividerDrawUtil {
 
     paintable.process(new DividerPaintable.Handler() {
       @Override
-      public boolean process(int startLine1, int endLine1, int startLine2, int endLine2, @Nonnull Color color, boolean resolved) {
+      public boolean process(int startLine1, int endLine1, int startLine2, int endLine2, @Nonnull ColorValue color, boolean resolved) {
         if (leftInterval.startLine > endLine1 && rightInterval.startLine > endLine2) return true;
         if (leftInterval.endLine < startLine1 && rightInterval.endLine < startLine2) return false;
 
@@ -139,7 +142,7 @@ public class DiffDividerDrawUtil {
       }
 
       @Override
-      public boolean process(int startLine1, int endLine1, int startLine2, int endLine2, @Nonnull Color color) {
+      public boolean process(int startLine1, int endLine1, int startLine2, int endLine2, @Nonnull ColorValue color) {
         return process(startLine1, endLine1, startLine2, endLine2, color, false);
       }
     });
@@ -196,7 +199,7 @@ public class DiffDividerDrawUtil {
   private static DividerPolygon createPolygon(@Nonnull Transformation[] transformations,
                                               int startLine1, int endLine1,
                                               int startLine2, int endLine2,
-                                              @Nonnull Color color) {
+                                              @Nonnull ColorValue color) {
     return createPolygon(transformations, startLine1, endLine1, startLine2, endLine2, color, false);
   }
 
@@ -204,7 +207,7 @@ public class DiffDividerDrawUtil {
   private static DividerPolygon createPolygon(@Nonnull Transformation[] transformations,
                                               int startLine1, int endLine1,
                                               int startLine2, int endLine2,
-                                              @Nonnull Color color, boolean resolved) {
+                                              @Nonnull ColorValue color, boolean resolved) {
     int start1 = transformations[0].transform(startLine1);
     int end1 = transformations[0].transform(endLine1);
     int start2 = transformations[1].transform(startLine2);
@@ -233,9 +236,9 @@ public class DiffDividerDrawUtil {
     void process(@Nonnull Handler handler);
 
     abstract class Handler {
-      public abstract boolean process(int startLine1, int endLine1, int startLine2, int endLine2, @Nonnull Color color);
+      public abstract boolean process(int startLine1, int endLine1, int startLine2, int endLine2, @Nonnull ColorValue color);
 
-      public abstract boolean process(int startLine1, int endLine1, int startLine2, int endLine2, @Nonnull Color color, boolean resolved);
+      public abstract boolean process(int startLine1, int endLine1, int startLine2, int endLine2, @Nonnull ColorValue color, boolean resolved);
     }
   }
 
@@ -257,14 +260,14 @@ public class DiffDividerDrawUtil {
     private final int myEnd1;
     private final int myEnd2;
     @Nonnull
-    private final Color myColor;
+    private final ColorValue myColor;
     private final boolean myResolved;
 
-    public DividerPolygon(int start1, int start2, int end1, int end2, @Nonnull Color color) {
+    public DividerPolygon(int start1, int start2, int end1, int end2, @Nonnull ColorValue color) {
       this(start1, start2, end1, end2, color, false);
     }
 
-    public DividerPolygon(int start1, int start2, int end1, int end2, @Nonnull Color color, boolean resolved) {
+    public DividerPolygon(int start1, int start2, int end1, int end2, @Nonnull ColorValue color, boolean resolved) {
       myStart1 = start1;
       myStart2 = start2;
       myEnd1 = end1;
@@ -288,8 +291,8 @@ public class DiffDividerDrawUtil {
         g.setStroke(BOLD_DOTTED_STROKE);
       }
 
-      Color fillColor = myResolved ? null : myColor;
-      Color borderColor = myResolved ? myColor : null;
+      Color fillColor = myResolved ? null : TargetAWT.to(myColor);
+      Color borderColor = myResolved ? TargetAWT.to(myColor) : null;
       if (curve) {
         DiffDrawUtil.drawCurveTrapezium(g, 0, width, startY1, endY1, startY2, endY2, fillColor, borderColor);
       }
@@ -308,7 +311,7 @@ public class DiffDividerDrawUtil {
       int startX = 0;
       int endX = startX + width - 1;
 
-      g.setColor(myColor);
+      g.setColor(TargetAWT.to(myColor));
       if (height > 2) {
         if (!myResolved) {
           g.fillRect(startX, startY, width, height);

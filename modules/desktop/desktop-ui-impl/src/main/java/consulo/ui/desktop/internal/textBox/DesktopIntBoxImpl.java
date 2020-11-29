@@ -117,10 +117,9 @@ public class DesktopIntBoxImpl extends DocumentSwingValidator<Integer, JBTextFie
   }
 
   @Override
-  public IntBox setRange(int min, int max) {
+  public void setRange(int min, int max) {
     myMinValue = min;
     myMaxValue = max;
-    return this;
   }
 
   @Override

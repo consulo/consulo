@@ -39,6 +39,7 @@ import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.project.DumbAware;
+import consulo.awt.TargetAWT;
 import consulo.disposer.Disposable;
 import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.ThrowableComputable;
@@ -801,7 +802,7 @@ public class SimpleDiffViewer extends TwosideTextDiffViewer {
     public void paint(@Nonnull Graphics g, @Nonnull JComponent divider) {
       Graphics2D gg = DiffDividerDrawUtil.getDividerGraphics(g, divider, getEditor1().getComponent());
 
-      gg.setColor(DiffDrawUtil.getDividerColor(getEditor1()));
+      gg.setColor(TargetAWT.to(DiffDrawUtil.getDividerColor(getEditor1())));
       gg.fill(gg.getClipBounds());
 
       //DividerPolygonUtil.paintSimplePolygons(gg, divider.getWidth(), getEditor1(), getEditor2(), this);

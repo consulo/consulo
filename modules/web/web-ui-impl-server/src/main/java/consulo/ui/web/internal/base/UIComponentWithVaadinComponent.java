@@ -19,14 +19,14 @@ import com.vaadin.server.Sizeable;
 import com.vaadin.ui.AbstractComponent;
 import consulo.disposer.Disposable;
 import consulo.ui.Component;
+import consulo.ui.Size;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.border.BorderPosition;
+import consulo.ui.border.BorderStyle;
+import consulo.ui.color.ColorValue;
 import consulo.ui.font.Font;
 import consulo.ui.font.FontManager;
 import consulo.ui.impl.UIDataObject;
-import consulo.ui.Size;
-import consulo.ui.border.BorderPosition;
-import consulo.ui.border.BorderStyle;
-import consulo.ui.style.ColorKey;
 import consulo.ui.web.internal.TargetVaddin;
 import consulo.ui.web.internal.WebFontImpl;
 import consulo.util.dataholder.Key;
@@ -147,8 +147,8 @@ public abstract class UIComponentWithVaadinComponent<T extends AbstractComponent
 
   @RequiredUIAccess
   @Override
-  public void addBorder(@Nonnull BorderPosition borderPosition, BorderStyle borderStyle, ColorKey colorKey, int width) {
-    dataObject().addBorder(borderPosition, borderStyle, colorKey, width);
+  public void addBorder(@Nonnull BorderPosition borderPosition, BorderStyle borderStyle, ColorValue colorValue, int width) {
+    dataObject().addBorder(borderPosition, borderStyle, colorValue, width);
 
     bordersChanged();
   }

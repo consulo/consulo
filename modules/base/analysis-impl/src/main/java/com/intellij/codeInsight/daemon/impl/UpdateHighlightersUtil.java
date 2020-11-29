@@ -17,21 +17,23 @@ import com.intellij.openapi.editor.impl.RedBlackTree;
 import com.intellij.openapi.editor.impl.SweepProcessor;
 import com.intellij.openapi.editor.markup.*;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.*;
+import com.intellij.openapi.util.Comparing;
+import com.intellij.openapi.util.Pair;
+import com.intellij.openapi.util.ProperTextRange;
+import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;
 import com.intellij.util.Consumer;
 import com.intellij.util.Processor;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.ui.color.ColorValue;
 import consulo.util.dataholder.Key;
 import gnu.trove.THashMap;
 import gnu.trove.THashSet;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import java.awt.*;
 import java.util.*;
-import java.util.List;
 
 public class UpdateHighlightersUtil {
   private static final Comparator<HighlightInfo> BY_START_OFFSET_NODUPS = (o1, o2) -> {
@@ -334,7 +336,7 @@ public class UpdateHighlightersUtil {
       info.setHighlighter(finalHighlighter);
       finalHighlighter.setAfterEndOfLine(info.isAfterEndOfLine());
 
-      Color color = info.getErrorStripeMarkColor(psiFile, colorsScheme);
+      ColorValue color = info.getErrorStripeMarkColor(psiFile, colorsScheme);
       finalHighlighter.setErrorStripeMarkColor(color);
       if (info != finalHighlighter.getErrorStripeTooltip()) {
         finalHighlighter.setErrorStripeTooltip(info);

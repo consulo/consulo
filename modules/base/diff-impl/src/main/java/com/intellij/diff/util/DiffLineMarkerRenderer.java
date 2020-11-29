@@ -20,6 +20,9 @@ import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.editor.ex.EditorGutterComponentEx;
 import com.intellij.openapi.editor.markup.LineMarkerRendererEx;
 import com.intellij.openapi.editor.markup.RangeHighlighter;
+import consulo.awt.TargetAWT;
+import consulo.ui.color.ColorValue;
+
 import javax.annotation.Nonnull;
 
 import java.awt.*;
@@ -98,10 +101,10 @@ public class DiffLineMarkerRenderer implements LineMarkerRendererEx {
                           boolean ignoredBackgroundColor) {
     if (x1 >= x2) return;
 
-    Color color = myDiffType.getColor(editor);
+    ColorValue color = myDiffType.getColor(editor);
     if (y2 - y1 > 2) {
       if (!myResolved) {
-        g2.setColor(ignoredBackgroundColor ? myDiffType.getIgnoredColor(editor) : color);
+        g2.setColor(TargetAWT.to(ignoredBackgroundColor ? myDiffType.getIgnoredColor(editor) : color));
         g2.fillRect(x1, y1, x2 - x1, y2 - y1);
       }
 

@@ -28,18 +28,18 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.SmartPointerManager;
 import com.intellij.psi.SmartPsiElementPointer;
 import com.intellij.util.Function;
+import consulo.ui.color.ColorValue;
 import consulo.ui.image.Image;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.awt.*;
 
 public class LineMarkerInfo<T extends PsiElement> {
   protected final Image myIcon;
   private final SmartPsiElementPointer<T> elementRef;
   public final int startOffset;
   public final int endOffset;
-  public Color separatorColor;
+  public ColorValue separatorColor;
   public SeparatorPlacement separatorPlacement;
   public RangeHighlighter highlighter;
 

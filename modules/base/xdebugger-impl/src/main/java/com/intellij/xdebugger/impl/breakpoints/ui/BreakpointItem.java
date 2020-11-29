@@ -22,20 +22,19 @@ import com.intellij.openapi.editor.markup.MarkupModel;
 import com.intellij.openapi.editor.markup.RangeHighlighter;
 import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.openapi.project.Project;
-import consulo.util.dataholder.Key;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.pom.Navigatable;
-import com.intellij.ui.ColorUtil;
 import com.intellij.ui.ColoredListCellRenderer;
 import com.intellij.ui.ColoredTreeCellRenderer;
 import com.intellij.ui.SimpleColoredComponent;
 import com.intellij.ui.popup.util.DetailView;
 import com.intellij.ui.popup.util.ItemWrapper;
 import com.intellij.xdebugger.ui.DebuggerColors;
+import consulo.ui.color.ColorValue;
 import consulo.ui.image.Image;
+import consulo.util.dataholder.Key;
 
 import javax.swing.*;
-import java.awt.*;
 
 public abstract class BreakpointItem extends ItemWrapper implements Comparable<BreakpointItem>, Navigatable {
   public static final Key<Object> EDITOR_ONLY = Key.create("EditorOnly");
@@ -63,9 +62,9 @@ public abstract class BreakpointItem extends ItemWrapper implements Comparable<B
     panel.navigateInPreviewEditor(state);
 
     TextAttributes softerAttributes = attributes.clone();
-    Color backgroundColor = softerAttributes.getBackgroundColor();
+    ColorValue backgroundColor = softerAttributes.getBackgroundColor();
     if (backgroundColor != null) {
-      softerAttributes.setBackgroundColor(ColorUtil.softer(backgroundColor));
+      // FIXME [VISTALL] softer is not supported softerAttributes.setBackgroundColor(ColorUtil.softer(backgroundColor));
     }
 
     final Editor editor = panel.getEditor();

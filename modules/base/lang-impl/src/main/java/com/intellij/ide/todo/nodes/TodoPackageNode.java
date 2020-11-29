@@ -43,10 +43,10 @@ import consulo.ide.projectView.impl.nodes.PackageElement;
 import consulo.logging.Logger;
 import consulo.psi.PsiPackage;
 import consulo.psi.PsiPackageManager;
+import consulo.ui.color.ColorValue;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.awt.*;
 import java.util.*;
 
 public final class TodoPackageNode extends PackageElementNode implements HighlightedRegionProvider {
@@ -117,7 +117,7 @@ public final class TodoPackageNode extends PackageElementNode implements Highlig
       myHighlightedRegions.clear();
 
       TextAttributes textAttributes = new TextAttributes();
-      Color newColor = null;
+      ColorValue newColor = null;
 
       if (CopyPasteManager.getInstance().isCutElement(packageElement)) {
         newColor = CopyPasteManager.CUT_COLOR;

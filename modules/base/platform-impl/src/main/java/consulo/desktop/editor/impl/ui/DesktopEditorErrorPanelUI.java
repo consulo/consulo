@@ -25,8 +25,10 @@ import com.intellij.openapi.util.ProperTextRange;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
+import consulo.awt.TargetAWT;
 import consulo.desktop.editor.impl.DesktopEditorErrorPanel;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.color.ColorValue;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -47,12 +49,12 @@ import java.util.Queue;
 public class DesktopEditorErrorPanelUI extends ComponentUI {
   private static class PositionedStripe {
     @Nonnull
-    private Color color;
+    private ColorValue color;
     private int yEnd;
     private final boolean thin;
     private final int layer;
 
-    private PositionedStripe(@Nonnull Color color, int yEnd, boolean thin, int layer) {
+    private PositionedStripe(@Nonnull ColorValue color, int yEnd, boolean thin, int layer) {
       this.color = color;
       this.yEnd = yEnd;
       this.thin = thin;
@@ -203,7 +205,7 @@ public class DesktopEditorErrorPanelUI extends ComponentUI {
     MarkupIterator<RangeHighlighterEx> iterator = MarkupIterator.mergeIterators(iterator1, iterator2, RangeHighlighterEx.BY_AFFECTED_START_OFFSET);
     try {
       ContainerUtil.process(iterator, highlighter -> {
-        Color color = highlighter.getErrorStripeMarkColor();
+        ColorValue color = highlighter.getErrorStripeMarkColor();
         if (color == null) return true;
         boolean isThin = highlighter.isThinErrorStripeMark();
         int[] yStart = isThin ? thinYStart : wideYStart;
@@ -290,7 +292,7 @@ public class DesktopEditorErrorPanelUI extends ComponentUI {
     return yStart;
   }
 
-  private void drawSpot(@Nonnull Graphics g, boolean thinErrorStripeMark, int yStart, int yEnd, @Nonnull Color color) {
+  private void drawSpot(@Nonnull Graphics g, boolean thinErrorStripeMark, int yStart, int yEnd, @Nonnull ColorValue color) {
     int paintWidth;
     int x;
     if (thinErrorStripeMark) {
@@ -306,7 +308,7 @@ public class DesktopEditorErrorPanelUI extends ComponentUI {
       x = myPanel.getEditor().isMirrored() ? getBorderWidth() : myPanel.getMarkupModel().getMinMarkHeight() + getBorderWidth();
       paintWidth = myPanel.getWidth() - myPanel.getMarkupModel().getMinMarkHeight();
     }
-    g.setColor(color);
+    g.setColor(TargetAWT.to(color));
     g.fillRect(x, yStart, paintWidth, yEnd - yStart);
   }
 

@@ -128,7 +128,7 @@ public class PluginsTableRenderer extends DefaultTableCellRenderer {
     final PluginDescriptor installed = PluginManager.getPlugin(myPluginDescriptor.getPluginId());
     if (PluginManagerColumnInfo.isDownloaded(pluginNode) || installed != null && InstalledPluginsTableModel.wasUpdated(installed.getPluginId())) {
       if (!isSelected) {
-        myName.setForeground(FileStatus.ADDED.getColor());
+        myName.setForeground(TargetAWT.to(FileStatus.ADDED.getColor()));
       }
     }
     else if (pluginNode instanceof PluginNode && ((PluginNode)pluginNode).getStatus() == PluginNode.STATUS_INSTALLED || installed != null) {
@@ -136,7 +136,7 @@ public class PluginsTableRenderer extends DefaultTableCellRenderer {
       final boolean hasNewerVersion = InstalledPluginsTableModel.hasNewerVersion(pluginId);
       if (hasNewerVersion) {
         if (!isSelected) {
-          myName.setForeground(FileStatus.MODIFIED.getColor());
+          myName.setForeground(TargetAWT.to(FileStatus.MODIFIED.getColor()));
         }
         myStatus.setIcon(TargetAWT.to(AllIcons.Nodes.Pluginobsolete));
       }

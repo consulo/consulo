@@ -10,13 +10,14 @@ import com.intellij.openapi.editor.ex.RangeHighlighterEx;
 import com.intellij.openapi.editor.markup.*;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Getter;
-import consulo.util.dataholder.Key;
 import com.intellij.util.BitUtil;
 import com.intellij.util.Consumer;
+import consulo.ui.color.ColorValue;
+import consulo.util.dataholder.Key;
 import org.intellij.lang.annotations.MagicConstant;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.awt.*;
 
 /**
@@ -25,14 +26,13 @@ import java.awt.*;
  * @author max
  */
 class RangeHighlighterImpl extends RangeMarkerImpl implements RangeHighlighterEx, Getter<RangeHighlighterEx> {
-  @SuppressWarnings({"InspectionUsingGrayColors", "UseJBColor"})
-  private static final Color NULL_COLOR = new Color(0, 0, 0); // must be new instance to work as a sentinel
+  private static final ColorValue NULL_COLOR = ColorValue.dummy("must be never called");
   private static final Key<Boolean> VISIBLE_IF_FOLDED = Key.create("visible.folded");
 
   private final MarkupModelImpl myModel;
   private TextAttributes myTextAttributes;
   private LineMarkerRenderer myLineMarkerRenderer;
-  private Color myErrorStripeColor;
+  private ColorValue myErrorStripeColor;
   private Color myLineSeparatorColor;
   private SeparatorPlacement mySeparatorPlacement;
   private GutterIconRenderer myGutterIconRenderer;
@@ -119,7 +119,7 @@ class RangeHighlighterImpl extends RangeMarkerImpl implements RangeHighlighterEx
     return textAttributes == null ? Font.PLAIN : textAttributes.getFontType();
   }
 
-  private static Color getForegroundColor(TextAttributes textAttributes) {
+  private static ColorValue getForegroundColor(TextAttributes textAttributes) {
     return textAttributes == null ? null : textAttributes.getForegroundColor();
   }
 
@@ -180,7 +180,7 @@ class RangeHighlighterImpl extends RangeMarkerImpl implements RangeHighlighterEx
   }
 
   @Override
-  public Color getErrorStripeMarkColor() {
+  public ColorValue getErrorStripeMarkColor() {
     if (myErrorStripeColor == NULL_COLOR) return null;
     if (myErrorStripeColor != null) return myErrorStripeColor;
     if (myTextAttributes != null) return myTextAttributes.getErrorStripeColor();
@@ -188,10 +188,10 @@ class RangeHighlighterImpl extends RangeMarkerImpl implements RangeHighlighterEx
   }
 
   @Override
-  public void setErrorStripeMarkColor(Color color) {
+  public void setErrorStripeMarkColor(ColorValue color) {
     boolean oldRenderedInScrollBar = isRenderedInScrollBar();
     if (color == null) color = NULL_COLOR;
-    Color old = myErrorStripeColor;
+    ColorValue old = myErrorStripeColor;
     myErrorStripeColor = color;
     if (isRenderedInScrollBar() != oldRenderedInScrollBar) {
       myModel.treeFor(this).updateRenderedFlags(this);

@@ -33,6 +33,8 @@ import com.intellij.util.Consumer;
 import com.intellij.util.containers.ContainerUtilRt;
 import com.intellij.util.ui.GridBag;
 import com.intellij.util.ui.UIUtil;
+import consulo.awt.TargetAWT;
+import consulo.ui.color.ColorValue;
 import consulo.ui.image.Image;
 import consulo.ui.Size;
 
@@ -106,7 +108,7 @@ public class ArrangementAtomMatchConditionComponent implements ArrangementUiComp
   @Nullable private final Consumer<ArrangementAtomMatchConditionComponent> myCloseCallback;
 
   @Nonnull
-  private Color myBackgroundColor;
+  private ColorValue myBackgroundColor;
 
   @Nullable
   private final Dimension myTextControlSize;
@@ -204,7 +206,7 @@ public class ArrangementAtomMatchConditionComponent implements ArrangementUiComp
         }
 
         Rectangle bounds = getBounds();
-        g.setColor(myBackgroundColor);
+        g.setColor(TargetAWT.to(myBackgroundColor));
         g.fillRoundRect(0, 0, bounds.width, bounds.height, ArrangementConstants.BORDER_ARC_SIZE, ArrangementConstants.BORDER_ARC_SIZE);
         super.paint(g);
       }

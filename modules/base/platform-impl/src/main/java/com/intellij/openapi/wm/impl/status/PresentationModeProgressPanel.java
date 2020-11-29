@@ -25,6 +25,9 @@ import com.intellij.util.ui.EmptyIcon;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.update.MergingUpdateQueue;
 import com.intellij.util.ui.update.Update;
+import consulo.awt.TargetAWT;
+import consulo.ui.color.ColorValue;
+
 import javax.annotation.Nonnull;
 
 import javax.swing.*;
@@ -67,12 +70,12 @@ public class PresentationModeProgressPanel {
   }
 
   @Nonnull
-  private static Color getTextForeground() {
+  private static ColorValue getTextForeground() {
     return EditorColorsManager.getInstance().getGlobalScheme().getDefaultForeground();
   }
 
   private void updateImpl() {
-    Color color = getTextForeground();
+    Color color = TargetAWT.to(getTextForeground());
     myText.setForeground(color);
     myText2.setForeground(color);
     myProgressBar.setForeground(color);

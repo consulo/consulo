@@ -35,22 +35,21 @@ import com.intellij.openapi.editor.event.DocumentListener;
 import com.intellij.openapi.editor.ex.MarkupModelEx;
 import com.intellij.openapi.editor.markup.*;
 import com.intellij.openapi.project.Project;
-import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.TextRange;
-import consulo.util.dataholder.UserDataHolderEx;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiReference;
 import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil;
 import com.intellij.util.containers.HashMap;
+import consulo.ui.color.ColorValue;
+import consulo.ui.util.ColorValueUtil;
+import consulo.util.dataholder.Key;
+import consulo.util.dataholder.UserDataHolderEx;
 import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import jakarta.inject.Singleton;
-
-import java.awt.*;
 import java.util.*;
 
 @Singleton
@@ -117,8 +116,7 @@ public class HighlightManagerImpl extends HighlightManager implements ProjectCom
   }
 
   private RangeHighlighter addSegmentHighlighter(@Nonnull Editor editor, int startOffset, int endOffset, TextAttributes attributes, @HideFlags int flags) {
-    RangeHighlighter highlighter = editor.getMarkupModel()
-      .addRangeHighlighter(startOffset, endOffset, HighlighterLayer.SELECTION - 1, attributes, HighlighterTargetArea.EXACT_RANGE);
+    RangeHighlighter highlighter = editor.getMarkupModel().addRangeHighlighter(startOffset, endOffset, HighlighterLayer.SELECTION - 1, attributes, HighlighterTargetArea.EXACT_RANGE);
     HighlightInfo info = new HighlightInfo(editor instanceof EditorWindow ? ((EditorWindow)editor).getDelegate() : editor, flags);
     Map<RangeHighlighter, HighlightInfo> map = getHighlightInfoMap(editor, true);
     map.put(highlighter, info);
@@ -150,7 +148,7 @@ public class HighlightManagerImpl extends HighlightManager implements ProjectCom
     if (hideByTextChange) {
       flags |= HIDE_BY_TEXT_CHANGE;
     }
-    Color scrollmarkColor = getScrollMarkColor(attributes);
+    ColorValue scrollmarkColor = getScrollMarkColor(attributes);
 
     int oldOffset = editor.getCaretModel().getOffset();
     int horizontalScrollOffset = editor.getScrollingModel().getHorizontalScrollOffset();
@@ -184,13 +182,7 @@ public class HighlightManagerImpl extends HighlightManager implements ProjectCom
   }
 
   @Override
-  public void addOccurrenceHighlight(@Nonnull Editor editor,
-                                     int start,
-                                     int end,
-                                     TextAttributes attributes,
-                                     int flags,
-                                     Collection<RangeHighlighter> outHighlighters,
-                                     Color scrollmarkColor) {
+  public void addOccurrenceHighlight(@Nonnull Editor editor, int start, int end, TextAttributes attributes, int flags, Collection<RangeHighlighter> outHighlighters, ColorValue scrollmarkColor) {
     RangeHighlighter highlighter = addSegmentHighlighter(editor, start, end, attributes, flags);
     if (outHighlighters != null) {
       outHighlighters.add(highlighter);
@@ -226,7 +218,7 @@ public class HighlightManagerImpl extends HighlightManager implements ProjectCom
       flags |= HIDE_BY_ANY_KEY;
     }
 
-    Color scrollmarkColor = getScrollMarkColor(attributes);
+    ColorValue scrollmarkColor = getScrollMarkColor(attributes);
 
     addOccurrenceHighlight(editor, startOffset, endOffset, attributes, flags, highlighters, scrollmarkColor);
   }
@@ -243,7 +235,7 @@ public class HighlightManagerImpl extends HighlightManager implements ProjectCom
       flags |= HIDE_BY_TEXT_CHANGE;
     }
 
-    Color scrollmarkColor = getScrollMarkColor(attributes);
+    ColorValue scrollmarkColor = getScrollMarkColor(attributes);
     if (editor instanceof EditorWindow) {
       editor = ((EditorWindow)editor).getDelegate();
     }
@@ -256,9 +248,9 @@ public class HighlightManagerImpl extends HighlightManager implements ProjectCom
   }
 
   @Nullable
-  private static Color getScrollMarkColor(@Nonnull TextAttributes attributes) {
+  private static ColorValue getScrollMarkColor(@Nonnull TextAttributes attributes) {
     if (attributes.getErrorStripeColor() != null) return attributes.getErrorStripeColor();
-    if (attributes.getBackgroundColor() != null) return attributes.getBackgroundColor().darker();
+    if (attributes.getBackgroundColor() != null) return ColorValueUtil.darker(attributes.getBackgroundColor());
     return null;
   }
 
@@ -312,7 +304,8 @@ public class HighlightManagerImpl extends HighlightManager implements ProjectCom
 
   static class HighlightInfo {
     final Editor editor;
-    @HideFlags final int flags;
+    @HideFlags
+    final int flags;
 
     public HighlightInfo(Editor editor, @HideFlags int flags) {
       this.editor = editor;

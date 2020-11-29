@@ -62,7 +62,10 @@ import com.intellij.ui.popup.list.PopupListElementRenderer;
 import com.intellij.util.Processor;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.UIUtil;
+import consulo.ui.color.ColorValue;
+import consulo.ui.color.RGBColor;
 import consulo.ui.image.Image;
+import consulo.ui.style.StandardColors;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -244,15 +247,15 @@ public final class NavigationUtil {
         if (highlighter.isValid() && highlighter.getTargetArea() == HighlighterTargetArea.LINES_IN_RANGE) {
           TextAttributes textAttributes = highlighter.getTextAttributes();
           if (textAttributes != null) {
-            Color color = textAttributes.getBackgroundColor();
+            RGBColor color = textAttributes.getBackgroundColor() == null ? null : textAttributes.getBackgroundColor().toRGB();
             return !(color != null && color.getBlue() > 128 && color.getRed() < 128 && color.getGreen() < 128);
           }
         }
         return true;
       })) {
         TextAttributes clone = attributes.clone();
-        clone.setForegroundColor(Color.orange);
-        clone.setEffectColor(Color.orange);
+        clone.setForegroundColor(StandardColors.ORANGE);
+        clone.setEffectColor(StandardColors.ORANGE);
         return clone;
       }
     }

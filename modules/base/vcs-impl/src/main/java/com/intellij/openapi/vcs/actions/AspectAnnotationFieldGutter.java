@@ -23,9 +23,10 @@ import com.intellij.openapi.vcs.annotate.LineAnnotationAspect;
 import com.intellij.openapi.vcs.annotate.TextAnnotationPresentation;
 import com.intellij.openapi.vcs.history.VcsRevisionNumber;
 import com.intellij.xml.util.XmlStringUtil;
+import consulo.ui.color.ColorValue;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.awt.*;
 import java.util.Map;
 
@@ -41,7 +42,7 @@ public class AspectAnnotationFieldGutter extends AnnotationFieldGutter {
   public AspectAnnotationFieldGutter(@Nonnull FileAnnotation annotation,
                                      @Nonnull LineAnnotationAspect aspect,
                                      @Nonnull TextAnnotationPresentation presentation,
-                                     @javax.annotation.Nullable Couple<Map<VcsRevisionNumber, Color>> colorScheme) {
+                                     @Nullable Couple<Map<VcsRevisionNumber, ColorValue>> colorScheme) {
     super(annotation, presentation, colorScheme);
     myAspect = aspect;
     myIsGutterAction = myAspect instanceof EditorGutterAction;

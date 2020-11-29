@@ -3,11 +3,11 @@ package com.intellij.openapi.editor;
 
 import com.intellij.openapi.editor.markup.EffectType;
 import com.intellij.openapi.editor.markup.TextAttributes;
+import consulo.ui.color.ColorValue;
 import org.intellij.lang.annotations.JdkConstants;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import java.awt.*;
 
 /**
  * @author Konstantin Bulenkov
@@ -16,17 +16,17 @@ public class LineExtensionInfo {
   @Nonnull
   private final String myText;
   @Nullable
-  private final Color myColor;
+  private final ColorValue myColor;
   @Nullable
   private final EffectType myEffectType;
   @Nullable
-  private final Color myEffectColor;
+  private final ColorValue myEffectColor;
   @Nullable
-  private final Color myBgColor;
+  private final ColorValue myBgColor;
   @JdkConstants.FontStyle
   private final int myFontType;
 
-  public LineExtensionInfo(@Nonnull String text, @Nullable Color color, @Nullable EffectType effectType, @Nullable Color effectColor, @JdkConstants.FontStyle int fontType) {
+  public LineExtensionInfo(@Nonnull String text, @Nullable ColorValue color, @Nullable EffectType effectType, @Nullable ColorValue effectColor, @JdkConstants.FontStyle int fontType) {
     myText = text;
     myColor = color;
     myEffectType = effectType;
@@ -50,12 +50,12 @@ public class LineExtensionInfo {
   }
 
   @Nullable
-  public Color getColor() {
+  public ColorValue getColor() {
     return myColor;
   }
 
   @Nullable
-  public Color getBgColor() {
+  public ColorValue getBgColor() {
     return myBgColor;
   }
 
@@ -65,7 +65,7 @@ public class LineExtensionInfo {
   }
 
   @Nullable
-  public Color getEffectColor() {
+  public ColorValue getEffectColor() {
     return myEffectColor;
   }
 

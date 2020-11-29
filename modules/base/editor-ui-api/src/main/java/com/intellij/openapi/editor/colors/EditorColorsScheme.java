@@ -17,9 +17,9 @@ package com.intellij.openapi.editor.colors;
 
 import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.openapi.options.FontSize;
+import consulo.ui.color.ColorValue;
 import consulo.util.pointers.Named;
 import org.jdom.Element;
-import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -27,7 +27,6 @@ import java.awt.*;
 import java.util.Map;
 
 public interface EditorColorsScheme extends Cloneable, TextAttributesScheme, Named {
-  @NonNls
   String DEFAULT_SCHEME_NAME = "Default";
 
   void setName(String name);
@@ -35,17 +34,17 @@ public interface EditorColorsScheme extends Cloneable, TextAttributesScheme, Nam
   void setAttributes(TextAttributesKey key, TextAttributes attributes);
 
   @Nonnull
-  Color getDefaultBackground();
+  ColorValue getDefaultBackground();
 
   @Nonnull
-  Color getDefaultForeground();
+  ColorValue getDefaultForeground();
 
   @Nullable
-  Color getColor(ColorKey key);
+  ColorValue getColor(EditorColorKey key);
 
-  void setColor(ColorKey key, Color color);
+  void setColor(EditorColorKey key, ColorValue color);
 
-  void fillColors(Map<ColorKey, Color> colors);
+  void fillColors(Map<EditorColorKey, ColorValue> colors);
 
   /**
    * The IDE has allowed to configure only a single font family for a while. However, that doesn't handle a situation when

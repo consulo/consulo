@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2016 consulo.io
+ * Copyright 2013-2020 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,20 +13,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui.style;
+package consulo.ui.ex.util;
 
 import consulo.ui.color.ColorValue;
 import consulo.ui.color.RGBColor;
+import consulo.ui.style.StyleManager;
+
 import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
- * @since 22-Jun-16
+ * @since 11/29/2020
  */
-public interface ColorKey extends ColorValue {
+public class LightDarkColorValue implements ColorValue {
+  private final ColorValue myLightColorValue;
+  private final ColorValue myDarkColorValue;
+
+  public LightDarkColorValue(ColorValue lightColorValue, ColorValue darkColorValue) {
+    myLightColorValue = lightColorValue;
+    myDarkColorValue = darkColorValue;
+  }
+
   @Nonnull
   @Override
-  default RGBColor toRGB() {
-    return StyleManager.get().getCurrentStyle().getColor(this).toRGB();
+  public RGBColor toRGB() {
+    return StyleManager.get().getCurrentStyle().isDark() ? myDarkColorValue.toRGB() : myLightColorValue.toRGB();
   }
 }

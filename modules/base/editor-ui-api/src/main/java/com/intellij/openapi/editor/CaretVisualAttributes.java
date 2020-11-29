@@ -15,10 +15,10 @@
  */
 package com.intellij.openapi.editor;
 
+import consulo.ui.color.ColorValue;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import java.awt.*;
 
 /**
  * Used to override caret painting color and, for non-block carets, their width.
@@ -26,18 +26,18 @@ import java.awt.*;
 public final class CaretVisualAttributes {
   public static final CaretVisualAttributes DEFAULT = new CaretVisualAttributes(null, Weight.NORMAL);
 
-  @javax.annotation.Nullable
-  private final Color myColor;
+  @Nullable
+  private final ColorValue myColor;
   @Nonnull
   private final Weight myWeight;
 
-  public CaretVisualAttributes(@Nullable Color color, @Nonnull Weight weight) {
+  public CaretVisualAttributes(@Nullable ColorValue color, @Nonnull Weight weight) {
     myColor = color;
     myWeight = weight;
   }
 
-  @javax.annotation.Nullable
-  public Color getColor() {
+  @Nullable
+  public ColorValue getColor() {
     return myColor;
   }
 

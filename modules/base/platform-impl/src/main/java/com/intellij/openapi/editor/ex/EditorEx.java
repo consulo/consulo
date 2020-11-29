@@ -30,6 +30,7 @@ import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Condition;
 import consulo.disposer.Disposable;
+import consulo.ui.color.ColorValue;
 import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -167,14 +168,13 @@ public interface EditorEx extends Editor {
 
   void setFontSize(int fontSize);
 
-  default Color getBackgroundColor() {
-    throw new UnsupportedOperationException("Unsupported platform");
+  default ColorValue getBackgroundColor() {
+    throw new AbstractMethodError();
   }
 
-  default void setBackgroundColor(Color color) {
-    throw new UnsupportedOperationException("Unsupported platform");
+  default void setBackgroundColor(ColorValue color) {
+    throw new AbstractMethodError();
   }
-
 
   default Dimension getContentSize() {
     throw new UnsupportedOperationException("Unsupported platform");

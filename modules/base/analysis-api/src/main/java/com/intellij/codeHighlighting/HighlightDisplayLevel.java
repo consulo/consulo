@@ -24,14 +24,12 @@ import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.util.containers.HashMap;
 import com.intellij.util.ui.JBUI;
-import consulo.awt.TargetAWT;
+import consulo.ui.color.ColorValue;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
-import consulo.ui.color.ColorValue;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.awt.*;
 import java.util.Map;
 
 public class HighlightDisplayLevel {
@@ -121,9 +119,9 @@ public class HighlightDisplayLevel {
     return ColorValue.lazy(() -> {
       final EditorColorsManager manager = EditorColorsManager.getInstance();
       TextAttributes attributes = manager.getGlobalScheme().getAttributes(key);
-      Color stripe = attributes.getErrorStripeColor();
-      if (stripe != null) return TargetAWT.from(stripe);
-      return TargetAWT.from(attributes.getEffectColor());
+      ColorValue stripe = attributes.getErrorStripeColor();
+      if (stripe != null) return stripe;
+      return attributes.getEffectColor();
     });
   }
 
@@ -142,7 +140,7 @@ public class HighlightDisplayLevel {
   }
 
   @Nonnull
-  public static Image createIconByMask(final Color renderColor) {
-    return ImageEffects.colorFilled(getEmptyIconDim(), getEmptyIconDim(), TargetAWT.from(renderColor));
+  public static Image createIconByMask(final ColorValue renderColor) {
+    return ImageEffects.colorFilled(getEmptyIconDim(), getEmptyIconDim(), renderColor);
   }
 }

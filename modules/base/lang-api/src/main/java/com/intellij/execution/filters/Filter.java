@@ -22,6 +22,8 @@ import com.intellij.openapi.editor.markup.HighlighterLayer;
 import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.UIUtil;
+import consulo.awt.TargetAWT;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -237,8 +239,8 @@ public interface Filter {
         TextAttributes normalHyperlinkAttrs = globalScheme.getAttributes(normalHyperlinkAttrsKey);
         if (normalHyperlinkAttrs != null) {
           grayedHyperlinkAttrs = normalHyperlinkAttrs.clone();
-          grayedHyperlinkAttrs.setForegroundColor(UIUtil.getInactiveTextColor());
-          grayedHyperlinkAttrs.setEffectColor(UIUtil.getInactiveTextColor());
+          grayedHyperlinkAttrs.setForegroundColor(TargetAWT.from(UIUtil.getInactiveTextColor()));
+          grayedHyperlinkAttrs.setEffectColor(TargetAWT.from(UIUtil.getInactiveTextColor()));
           GRAYED_BY_NORMAL_CACHE.put(normalHyperlinkAttrsKey, grayedHyperlinkAttrs);
         }
       }

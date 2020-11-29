@@ -27,19 +27,19 @@ import com.intellij.ui.ColoredTreeCellRenderer;
 import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.ui.speedSearch.SpeedSearchUtil;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.color.ColorValue;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
-import java.awt.*;
 import java.util.List;
 
 public class NodeRenderer extends ColoredTreeCellRenderer {
   @RequiredUIAccess
   @Override
   public void customizeCellRenderer(@Nonnull JTree tree, Object value, boolean selected, boolean expanded, boolean leaf, int row, boolean hasFocus) {
-    Color color = null;
+    ColorValue color = null;
     NodeDescriptor descriptor = null;
     if (value instanceof DefaultMutableTreeNode) {
       DefaultMutableTreeNode node = (DefaultMutableTreeNode)value;
@@ -114,13 +114,13 @@ public class NodeRenderer extends ColoredTreeCellRenderer {
     return EditorColorsManager.getInstance().getGlobalScheme();
   }
 
-  protected SimpleTextAttributes getSimpleTextAttributes(final PresentableNodeDescriptor node, final Color color) {
+  protected SimpleTextAttributes getSimpleTextAttributes(final PresentableNodeDescriptor node, final ColorValue color) {
     SimpleTextAttributes simpleTextAttributes = getSimpleTextAttributes(node.getPresentation(), getColorsScheme());
 
     return addColorToSimpleTextAttributes(simpleTextAttributes, color);
   }
 
-  private SimpleTextAttributes addColorToSimpleTextAttributes(SimpleTextAttributes simpleTextAttributes, Color color) {
+  private SimpleTextAttributes addColorToSimpleTextAttributes(SimpleTextAttributes simpleTextAttributes, ColorValue color) {
     if (color != null) {
       final TextAttributes textAttributes = simpleTextAttributes.toTextAttributes();
       textAttributes.setForegroundColor(color);

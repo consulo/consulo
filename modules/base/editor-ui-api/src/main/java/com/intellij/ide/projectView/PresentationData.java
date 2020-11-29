@@ -25,6 +25,7 @@ import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.update.ComparableObject;
 import com.intellij.util.ui.update.ComparableObjectCheck;
+import consulo.ui.color.ColorValue;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
@@ -47,7 +48,7 @@ public class PresentationData implements ColoredItemPresentation, ComparableObje
   private String myTooltip;
   private TextAttributesKey myAttributesKey;
 
-  private Color myForcedTextForeground;
+  private ColorValue myForcedTextForeground;
 
   private Font myFont;
 
@@ -87,11 +88,11 @@ public class PresentationData implements ColoredItemPresentation, ComparableObje
   }
 
   @Nullable
-  public Color getForcedTextForeground() {
+  public ColorValue getForcedTextForeground() {
     return myForcedTextForeground;
   }
 
-  public void setForcedTextForeground(@Nullable Color forcedTextForeground) {
+  public void setForcedTextForeground(@Nullable ColorValue forcedTextForeground) {
     myForcedTextForeground = forcedTextForeground;
   }
 

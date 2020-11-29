@@ -7,7 +7,6 @@ import com.intellij.openapi.actionSystem.ex.ActionManagerEx;
 import com.intellij.openapi.actionSystem.ex.AnActionListener;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.ServiceManager;
-import consulo.logging.Logger;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.LogicalPosition;
 import com.intellij.openapi.editor.ScrollType;
@@ -23,7 +22,6 @@ import com.intellij.openapi.project.ProjectManagerListener;
 import com.intellij.openapi.ui.popup.Balloon;
 import com.intellij.openapi.ui.popup.JBPopup;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
-import consulo.disposer.Disposer;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.ui.*;
 import com.intellij.ui.awt.RelativePoint;
@@ -32,10 +30,13 @@ import com.intellij.util.BitUtil;
 import com.intellij.util.messages.MessageBusConnection;
 import com.intellij.util.ui.TimerUtil;
 import com.intellij.util.ui.accessibility.AccessibleContextUtil;
+import consulo.awt.TargetAWT;
+import consulo.disposer.Disposer;
+import consulo.logging.Logger;
+import jakarta.inject.Singleton;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import jakarta.inject.Singleton;
 import javax.swing.*;
 import javax.swing.event.HyperlinkListener;
 import java.awt.*;
@@ -744,7 +745,7 @@ public class HintManagerImpl extends HintManager {
     ApplicationManager.getApplication().assertIsDispatchThread();
     hideQuestionHint();
     TextAttributes attributes = new TextAttributes();
-    attributes.setEffectColor(HintUtil.QUESTION_UNDERSCORE_COLOR);
+    attributes.setEffectColor(TargetAWT.from(HintUtil.QUESTION_UNDERSCORE_COLOR));
     attributes.setEffectType(EffectType.LINE_UNDERSCORE);
     final RangeHighlighter highlighter = editor.getMarkupModel().addRangeHighlighter(offset1, offset2, HighlighterLayer.ERROR + 1, attributes, HighlighterTargetArea.EXACT_RANGE);
 

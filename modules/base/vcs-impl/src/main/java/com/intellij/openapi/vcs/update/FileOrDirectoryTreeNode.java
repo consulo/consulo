@@ -15,6 +15,7 @@
  */
 package com.intellij.openapi.vcs.update;
 
+import consulo.awt.TargetAWT;
 import consulo.disposer.Disposable;
 import com.intellij.openapi.project.Project;
 import consulo.disposer.Disposer;
@@ -120,7 +121,7 @@ public abstract class FileOrDirectoryTreeNode extends AbstractTreeNode implement
 
   @Nonnull
   private static SimpleTextAttributes getAttributesFor(@Nonnull FileStatus status) {
-    Color color = status.getColor();
+    Color color = TargetAWT.to(status.getColor());
     if (color == null) color = UIUtil.getListForeground();
 
     if (!myFileStatusToAttributeMap.containsKey(status)) {

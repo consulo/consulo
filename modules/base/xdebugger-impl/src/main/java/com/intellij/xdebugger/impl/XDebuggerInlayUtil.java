@@ -30,6 +30,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.xdebugger.ui.DebuggerColors;
+import consulo.awt.TargetAWT;
 import consulo.disposer.Disposer;
 
 import javax.annotation.Nonnull;
@@ -103,7 +104,7 @@ public class XDebuggerInlayUtil {
       Editor editor = inlay.getEditor();
       TextAttributes attributes = editor.getColorsScheme().getAttributes(DebuggerColors.INLINED_VALUES_EXECUTION_LINE);
       if (attributes == null) return;
-      Color fgColor = attributes.getForegroundColor();
+      Color fgColor = TargetAWT.to(attributes.getForegroundColor());
       if (fgColor == null) return;
       g.setColor(fgColor);
       FontInfo fontInfo = getFontInfo(editor);

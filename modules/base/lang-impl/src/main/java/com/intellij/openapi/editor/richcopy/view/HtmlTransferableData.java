@@ -19,10 +19,11 @@ import com.intellij.openapi.editor.richcopy.model.ColorRegistry;
 import com.intellij.openapi.editor.richcopy.model.FontNameRegistry;
 import com.intellij.openapi.editor.richcopy.model.MarkupHandler;
 import com.intellij.openapi.editor.richcopy.model.SyntaxInfo;
-import com.intellij.util.ui.UIUtil;
+import consulo.ui.color.ColorValue;
+import consulo.ui.color.RGBColor;
 import gnu.trove.TIntObjectHashMap;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.awt.*;
 import java.awt.datatransfer.DataFlavor;
 
@@ -129,9 +130,20 @@ public class HtmlTransferableData extends AbstractSyntaxAwareReaderTransferableD
   private void buildColorMap() {
     for (int id : myColorRegistry.getAllIds()) {
       StringBuilder b = new StringBuilder("#");
-      UIUtil.appendColor(myColorRegistry.dataById(id), b);
+      appendColor(myColorRegistry.dataById(id), b);
       myColors.put(id, b.toString());
     }
+  }
+
+  private static void appendColor(final ColorValue color, final StringBuilder sb) {
+    RGBColor rgb = color.toRGB();
+
+    if (rgb.getRed() < 16) sb.append('0');
+    sb.append(Integer.toHexString(rgb.getRed()));
+    if (rgb.getGreen() < 16) sb.append('0');
+    sb.append(Integer.toHexString(rgb.getGreen()));
+    if (rgb.getBlue() < 16) sb.append('0');
+    sb.append(Integer.toHexString(rgb.getBlue()));
   }
 
   @Override

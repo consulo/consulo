@@ -41,6 +41,7 @@ import com.intellij.ui.ColorUtil;
 import com.intellij.ui.JBColor;
 import com.intellij.util.PairConsumer;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.awt.TargetAWT;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
@@ -158,7 +159,7 @@ class ApplyPatchChange {
     PairConsumer<Editor, MouseEvent> clickHandler = getResultRange() != null ?
                                                     (e, event) -> myViewer.scrollToChange(this, Side.RIGHT, false) :
                                                     null;
-    highlighter.setLineMarkerRenderer(LineStatusMarkerRenderer.createRenderer(line1, line2, color, tooltip, clickHandler));
+    highlighter.setLineMarkerRenderer(LineStatusMarkerRenderer.createRenderer(line1, line2, TargetAWT.from(color), tooltip, clickHandler));
 
     myHighlighters.add(highlighter);
   }

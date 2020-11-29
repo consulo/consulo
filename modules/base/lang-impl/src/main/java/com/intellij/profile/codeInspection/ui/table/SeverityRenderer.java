@@ -45,7 +45,7 @@ public class SeverityRenderer extends ComboBoxTableRenderer<SeverityState> {
   public SeverityRenderer(final SeverityState[] values, @Nullable final Runnable onClose) {
     super(values);
     myOnClose = onClose;
-    myDisabledIcon = HighlightDisplayLevel.createIconByMask(UIUtil.getLabelDisabledForeground());
+    myDisabledIcon = HighlightDisplayLevel.createIconByMask(TargetAWT.from(UIUtil.getLabelDisabledForeground()));
   }
 
   public static SeverityRenderer create(final InspectionProfileImpl inspectionProfile, @Nullable final Runnable onClose) {

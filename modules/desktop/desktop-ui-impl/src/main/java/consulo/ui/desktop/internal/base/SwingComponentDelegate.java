@@ -15,29 +15,29 @@
  */
 package consulo.ui.desktop.internal.base;
 
-import consulo.disposer.Disposable;
-import consulo.ui.desktop.internal.DesktopFontImpl;
-import consulo.ui.event.ClickEvent;
-import consulo.ui.event.ClickListener;
-import consulo.ui.font.Font;
-import consulo.util.dataholder.Key;
 import com.intellij.util.ui.JBUI;
 import consulo.annotation.DeprecationInfo;
 import consulo.awt.TargetAWT;
 import consulo.awt.impl.ToSwingComponentWrapper;
+import consulo.disposer.Disposable;
 import consulo.ui.Component;
 import consulo.ui.FocusableComponent;
-import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.desktop.internal.util.AWTFocusAdapterAsFocusListener;
-import consulo.ui.desktop.internal.util.AWTKeyAdapterAsKeyListener;
-import consulo.ui.event.FocusListener;
-import consulo.ui.event.KeyListener;
-import consulo.ui.impl.BorderInfo;
-import consulo.ui.impl.UIDataObject;
 import consulo.ui.Size;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.border.BorderPosition;
 import consulo.ui.border.BorderStyle;
-import consulo.ui.style.ColorKey;
+import consulo.ui.color.ColorValue;
+import consulo.ui.desktop.internal.DesktopFontImpl;
+import consulo.ui.desktop.internal.util.AWTFocusAdapterAsFocusListener;
+import consulo.ui.desktop.internal.util.AWTKeyAdapterAsKeyListener;
+import consulo.ui.event.ClickEvent;
+import consulo.ui.event.ClickListener;
+import consulo.ui.event.FocusListener;
+import consulo.ui.event.KeyListener;
+import consulo.ui.font.Font;
+import consulo.ui.impl.BorderInfo;
+import consulo.ui.impl.UIDataObject;
+import consulo.util.dataholder.Key;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -169,8 +169,8 @@ public class SwingComponentDelegate<T extends java.awt.Component> implements Com
 
   @RequiredUIAccess
   @Override
-  public void addBorder(@Nonnull BorderPosition borderPosition, @Nonnull BorderStyle borderStyle, ColorKey colorKey, int width) {
-    dataObject().addBorder(borderPosition, borderStyle, colorKey, width);
+  public void addBorder(@Nonnull BorderPosition borderPosition, @Nonnull BorderStyle borderStyle, ColorValue colorValue, int width) {
+    dataObject().addBorder(borderPosition, borderStyle, colorValue, width);
 
     bordersChanged();
   }

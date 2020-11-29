@@ -56,6 +56,7 @@ import com.intellij.util.containers.ArrayListSet;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.UIUtil;
 import consulo.annotation.DeprecationInfo;
+import consulo.awt.TargetAWT;
 import consulo.desktop.util.awt.migration.AWTComponentProviderUtil;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
@@ -442,7 +443,7 @@ public class DesktopEditorsSplitters implements Disposable, EditorsSplitters {
     for (DesktopEditorWindow window : windows) {
       final int index = window.findEditorIndex(window.findFileComposite(file));
       LOG.assertTrue(index != -1);
-      window.setForegroundAt(index, getManager().getFileColor(file));
+      window.setForegroundAt(index, TargetAWT.to(getManager().getFileColor(file)));
       window.setWaveColor(index, getManager().isProblem(file) ? JBColor.red : null);
     }
   }

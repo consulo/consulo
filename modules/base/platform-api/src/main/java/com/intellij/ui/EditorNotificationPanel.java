@@ -35,9 +35,9 @@ import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import consulo.awt.TargetAWT;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.color.ColorValue;
 import consulo.ui.image.Image;
 import org.jetbrains.annotations.Nls;
-import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -100,11 +100,11 @@ public class EditorNotificationPanel extends JPanel implements IntentionActionPr
     if (myBackgroundColor != null) {
       return myBackgroundColor;
     }
-    Color color = EditorColorsManager.getInstance().getGlobalScheme().getColor(EditorColors.NOTIFICATION_BACKGROUND);
-    return color == null ? UIUtil.getToolTipBackground() : color;
+    ColorValue color = EditorColorsManager.getInstance().getGlobalScheme().getColor(EditorColors.NOTIFICATION_BACKGROUND);
+    return color == null ? UIUtil.getToolTipBackground() : TargetAWT.to(color);
   }
 
-  public HyperlinkLabel createActionLabel(final String text, @NonNls final String actionId) {
+  public HyperlinkLabel createActionLabel(final String text, final String actionId) {
     return createActionLabel(text, () -> executeAction(actionId));
   }
 

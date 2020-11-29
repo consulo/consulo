@@ -22,10 +22,10 @@ import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.openapi.options.colors.AttributesDescriptor;
 import com.intellij.openapi.options.colors.ColorSettingsPage;
 import com.intellij.openapi.util.Pair;
+import consulo.ui.color.ColorValue;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nullable;
-import java.awt.*;
 
 public abstract class ColorAndFontDescription extends TextAttributes implements EditorSchemeAttributeDescriptor {
   private final String myName;
@@ -88,28 +88,28 @@ public abstract class ColorAndFontDescription extends TextAttributes implements 
     super.setErrorStripeColor(getExternalErrorStripe());
   }
 
-  public abstract Color getExternalForeground();
+  public abstract ColorValue getExternalForeground();
 
-  public abstract Color getExternalBackground();
+  public abstract ColorValue getExternalBackground();
 
-  public abstract Color getExternalErrorStripe();
+  public abstract ColorValue getExternalErrorStripe();
 
-  public abstract Color getExternalEffectColor();
+  public abstract ColorValue getExternalEffectColor();
 
   public abstract EffectType getExternalEffectType();
 
-  public abstract void setExternalForeground(Color col);
+  public abstract void setExternalForeground(ColorValue col);
 
-  public abstract void setExternalBackground(Color col);
+  public abstract void setExternalBackground(ColorValue col);
 
-  public abstract void setExternalErrorStripe(Color col);
+  public abstract void setExternalErrorStripe(ColorValue col);
 
-  public abstract void setExternalEffectColor(Color color);
+  public abstract void setExternalEffectColor(ColorValue color);
 
   public abstract void setExternalEffectType(EffectType type);
 
   @Override
-  public final void setForegroundColor(Color col) {
+  public final void setForegroundColor(ColorValue col) {
     super.setForegroundColor(col);
     if (isForegroundChecked) {
       setExternalForeground(col);
@@ -119,7 +119,7 @@ public abstract class ColorAndFontDescription extends TextAttributes implements 
   }
 
   @Override
-  public final void setBackgroundColor(Color col) {
+  public final void setBackgroundColor(ColorValue col) {
     super.setBackgroundColor(col);
     if (isBackgroundChecked) {
       setExternalBackground(col);
@@ -129,7 +129,7 @@ public abstract class ColorAndFontDescription extends TextAttributes implements 
   }
 
   @Override
-  public void setErrorStripeColor(Color color) {
+  public void setErrorStripeColor(ColorValue color) {
     super.setErrorStripeColor(color);
     if (isErrorStripeChecked) {
       setExternalErrorStripe(color);
@@ -140,7 +140,7 @@ public abstract class ColorAndFontDescription extends TextAttributes implements 
   }
 
   @Override
-  public final void setEffectColor(Color col) {
+  public final void setEffectColor(ColorValue col) {
     super.setEffectColor(col);
     if (isEffectsColorChecked) {
       setExternalEffectColor(col);

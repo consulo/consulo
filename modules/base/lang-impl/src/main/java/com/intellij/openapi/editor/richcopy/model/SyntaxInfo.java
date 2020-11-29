@@ -15,9 +15,9 @@
  */
 package com.intellij.openapi.editor.richcopy.model;
 
-import javax.annotation.Nonnull;
+import consulo.ui.color.ColorValue;
 
-import java.awt.*;
+import javax.annotation.Nonnull;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -153,7 +153,7 @@ public class SyntaxInfo {
     private final OutputInfoSerializer.OutputStream myOutputInfoStream;
     private int myOutputInfoCount;
 
-    public Builder(Color defaultForeground, Color defaultBackground, float fontSize) {
+    public Builder(ColorValue defaultForeground, ColorValue defaultBackground, float fontSize) {
       myDefaultForeground = myColorRegistry.getId(defaultForeground);
       myDefaultBackground = myColorRegistry.getId(defaultBackground);
       myFontSize = fontSize;
@@ -185,7 +185,7 @@ public class SyntaxInfo {
       myOutputInfoCount++;
     }
 
-    public void addForeground(Color foreground) {
+    public void addForeground(ColorValue foreground) {
       try {
         myOutputInfoStream.handleForeground(myColorRegistry.getId(foreground));
       }
@@ -195,7 +195,7 @@ public class SyntaxInfo {
       myOutputInfoCount++;
     }
 
-    public void addBackground(Color background) {
+    public void addBackground(ColorValue background) {
       try {
         myOutputInfoStream.handleBackground(myColorRegistry.getId(background));
       }

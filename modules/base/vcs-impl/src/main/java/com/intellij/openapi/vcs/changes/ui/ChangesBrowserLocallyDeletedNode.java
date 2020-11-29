@@ -21,6 +21,7 @@ import com.intellij.openapi.vcs.FileStatus;
 import com.intellij.openapi.vcs.changes.LocallyDeletedChange;
 import com.intellij.openapi.vcs.changes.issueLinks.TreeLinkMouseListener;
 import com.intellij.ui.SimpleTextAttributes;
+import consulo.awt.TargetAWT;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
@@ -48,7 +49,7 @@ public class ChangesBrowserLocallyDeletedNode extends ChangesBrowserNode<Locally
   public void render(@Nonnull ChangesBrowserNodeRenderer renderer, boolean selected, boolean expanded, boolean hasFocus) {
     // todo would be good to have render code in one place
     FilePath filePath = getUserObject().getPath();
-    renderer.appendFileName(filePath.getVirtualFile(), filePath.getName(), FileStatus.NOT_CHANGED.getColor());
+    renderer.appendFileName(filePath.getVirtualFile(), filePath.getName(), TargetAWT.to(FileStatus.NOT_CHANGED.getColor()));
 
     if (renderer.isShowFlatten()) {
       FilePath parentPath = filePath.getParentPath();

@@ -15,12 +15,12 @@
  */
 package consulo.ui.web.internal;
 
-import com.intellij.openapi.editor.colors.ColorKey;
+import com.intellij.openapi.editor.colors.EditorColorKey;
 import com.intellij.openapi.editor.colors.EditorColorsManager;
 import com.intellij.openapi.editor.colors.EditorColorsScheme;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.color.RGBColor;
+import consulo.ui.color.ColorValue;
 import consulo.ui.style.ComponentColors;
 import consulo.ui.style.StandardColors;
 import consulo.ui.style.Style;
@@ -32,7 +32,6 @@ import consulo.web.gwt.shared.ui.state.ApplicationContainerState;
 import consulo.web.gwt.shared.ui.state.ApplicationState;
 
 import javax.annotation.Nonnull;
-import java.awt.*;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -70,25 +69,25 @@ public class WebApplicationContainerImpl extends UIComponentWithVaadinComponent<
     Style currentStyle = StyleManager.get().getCurrentStyle();
 
     for (StandardColors color : StandardColors.values()) {
-      applicationState.myStandardColors.put(color.name(), Mappers.map(currentStyle.getColor(color).toRGB()));
+      applicationState.myStandardColors.put(color.name(), Mappers.map(currentStyle.getColorValue(color).toRGB()));
     }
 
     for (ComponentColors color : ComponentColors.values()) {
-      applicationState.myComponentColors.put(color.name(), Mappers.map(currentStyle.getColor(color).toRGB()));
+      applicationState.myComponentColors.put(color.name(), Mappers.map(currentStyle.getColorValue(color).toRGB()));
     }
 
     EditorColorsScheme globalScheme = EditorColorsManager.getInstance().getGlobalScheme();
 
-    Map<ColorKey, Color> colors = new LinkedHashMap<>();
+    Map<EditorColorKey, ColorValue> colors = new LinkedHashMap<>();
     globalScheme.fillColors(colors);
 
-    for (Map.Entry<ColorKey, Color> entry : colors.entrySet()) {
-      Color value = entry.getValue();
+    for (Map.Entry<EditorColorKey, ColorValue> entry : colors.entrySet()) {
+      ColorValue value = entry.getValue();
       if (value == null) {
         continue;
       }
 
-      applicationState.mySchemeColors.put(entry.getKey().getExternalName(), Mappers.map(new RGBColor(value.getRed(), value.getBlue(), value.getGreen())));
+      applicationState.mySchemeColors.put(entry.getKey().getExternalName(), Mappers.map(value.toRGB()));
     }
   }
 

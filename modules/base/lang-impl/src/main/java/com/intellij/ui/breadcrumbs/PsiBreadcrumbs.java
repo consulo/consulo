@@ -27,7 +27,9 @@ import com.intellij.ui.UIBundle;
 import com.intellij.ui.components.breadcrumbs.Breadcrumbs;
 import com.intellij.ui.components.breadcrumbs.Crumb;
 import com.intellij.util.concurrency.AppExecutorUtil;
+import consulo.awt.TargetAWT;
 import consulo.logging.Logger;
+import consulo.ui.color.ColorValue;
 import org.jetbrains.concurrency.Promise;
 
 import javax.annotation.Nonnull;
@@ -62,8 +64,8 @@ final class PsiBreadcrumbs extends Breadcrumbs {
   @Override
   public Color getForeground() {
     if (!isForegroundSet()) {
-      Color foreground = EditorColorsManager.getInstance().getGlobalScheme().getColor(EditorColors.LINE_NUMBERS_COLOR);
-      if (foreground != null) return foreground;
+      ColorValue foreground = EditorColorsManager.getInstance().getGlobalScheme().getColor(EditorColors.LINE_NUMBERS_COLOR);
+      if (foreground != null) return TargetAWT.to(foreground);
     }
     return super.getForeground();
   }
@@ -71,8 +73,8 @@ final class PsiBreadcrumbs extends Breadcrumbs {
   @Override
   public Color getBackground() {
     if (!isBackgroundSet()) {
-      Color background = EditorColorsManager.getInstance().getGlobalScheme().getColor(EditorColors.GUTTER_BACKGROUND);
-      if (background != null) return background;
+      ColorValue background = EditorColorsManager.getInstance().getGlobalScheme().getColor(EditorColors.GUTTER_BACKGROUND);
+      if (background != null) return TargetAWT.to(background);
     }
     return super.getBackground();
   }
@@ -127,22 +129,22 @@ final class PsiBreadcrumbs extends Breadcrumbs {
   }
 
   @Override
-  protected Color getForeground(Crumb crumb) {
+  protected ColorValue getForeground(Crumb crumb) {
     CrumbPresentation presentation = PsiCrumb.getPresentation(crumb);
     if (presentation == null) return super.getForeground(crumb);
 
-    Color background = super.getBackground(crumb);
+    ColorValue background = super.getBackground(crumb);
     if (background != null) return super.getForeground(crumb);
 
     return presentation.getBackgroundColor(isSelected(crumb), isHovered(crumb), isAfterSelected(crumb));
   }
 
   @Override
-  protected Color getBackground(Crumb crumb) {
+  protected ColorValue getBackground(Crumb crumb) {
     CrumbPresentation presentation = PsiCrumb.getPresentation(crumb);
     if (presentation == null) return super.getBackground(crumb);
 
-    Color background = super.getBackground(crumb);
+    ColorValue background = super.getBackground(crumb);
     if (background == null) return null;
 
     return presentation.getBackgroundColor(isSelected(crumb), isHovered(crumb), isAfterSelected(crumb));

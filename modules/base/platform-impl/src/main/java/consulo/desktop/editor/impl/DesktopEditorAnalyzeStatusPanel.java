@@ -30,7 +30,7 @@ import com.intellij.openapi.actionSystem.impl.ActionToolbarImpl;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.editor.EditorBundle;
 import com.intellij.openapi.editor.VisualPosition;
-import com.intellij.openapi.editor.colors.ColorKey;
+import com.intellij.openapi.editor.colors.EditorColorKey;
 import com.intellij.openapi.editor.colors.EditorColorsScheme;
 import com.intellij.openapi.editor.ex.EditorSettingsExternalizable;
 import com.intellij.openapi.editor.impl.DesktopEditorImpl;
@@ -52,7 +52,7 @@ import com.intellij.ui.popup.util.PopupState;
 import com.intellij.ui.scale.JBUIScale;
 import com.intellij.util.Function;
 import com.intellij.util.IJSwingUtilities;
-import com.intellij.util.ObjectUtils;
+import com.intellij.util.ObjectUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.messages.MessageBusConnection;
 import com.intellij.util.ui.GridBag;
@@ -65,9 +65,9 @@ import com.intellij.xml.util.XmlStringUtil;
 import consulo.actionSystem.impl.ActionButtonUI;
 import consulo.awt.TargetAWT;
 import consulo.disposer.Disposable;
+import consulo.ui.Size;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
-import consulo.ui.Size;
 import consulo.util.dataholder.Key;
 import kava.beans.PropertyChangeListener;
 
@@ -389,7 +389,7 @@ public class DesktopEditorAnalyzeStatusPanel implements Disposable {
         }
       };
 
-      label.setForeground(new JBColor(() -> ObjectUtils.notNull(colorsScheme.getColor(ICON_TEXT_COLOR), ICON_TEXT_COLOR.getDefaultColor())));
+      label.setForeground(new JBColor(() -> ObjectUtil.notNull(TargetAWT.to(colorsScheme.getColor(ICON_TEXT_COLOR)), TargetAWT.to(ICON_TEXT_COLOR.getDefaultColorValue()))));
       label.setIconTextGap(JBUIScale.scale(1));
 
       return label;
@@ -750,11 +750,11 @@ public class DesktopEditorAnalyzeStatusPanel implements Disposable {
   private static final int DELTA_X = 6;
   private static final int DELTA_Y = 6;
 
-  private static final ColorKey HOVER_BACKGROUND = ColorKey.createColorKey("ActionButton.hoverBackground", JBUI.CurrentTheme.ActionButton.hoverBackground());
+  private static final EditorColorKey HOVER_BACKGROUND = EditorColorKey.createColorKey("ActionButton.hoverBackground", TargetAWT.from(JBUI.CurrentTheme.ActionButton.hoverBackground()));
 
-  private static final ColorKey PRESSED_BACKGROUND = ColorKey.createColorKey("ActionButton.pressedBackground", JBUI.CurrentTheme.ActionButton.pressedBackground());
+  private static final EditorColorKey PRESSED_BACKGROUND = EditorColorKey.createColorKey("ActionButton.pressedBackground", TargetAWT.from(JBUI.CurrentTheme.ActionButton.pressedBackground()));
 
-  private static final ColorKey ICON_TEXT_COLOR = ColorKey.createColorKey("ActionButton.iconTextForeground", UIUtil.getContextHelpForeground());
+  private static final EditorColorKey ICON_TEXT_COLOR = EditorColorKey.createColorKey("ActionButton.iconTextForeground", TargetAWT.from(UIUtil.getContextHelpForeground()));
 
   private static int getStatusIconSize() {
     return JBUIScale.scale(18);

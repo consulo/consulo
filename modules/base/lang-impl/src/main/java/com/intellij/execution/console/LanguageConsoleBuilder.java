@@ -48,6 +48,8 @@ import com.intellij.psi.PsiFile;
 import com.intellij.testFramework.LightVirtualFile;
 import com.intellij.util.Consumer;
 import com.intellij.util.PairFunction;
+import consulo.awt.TargetAWT;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -347,7 +349,7 @@ public final class LanguageConsoleBuilder {
           // workaround - editor ask us to paint line 4-6, but we should draw line for line 3 (startLine - 1) also, otherwise it will be not rendered
           int actualStartLine = startLine == 0 ? 0 : startLine - 1;
           int y = (actualStartLine + 1) * lineHeight;
-          g.setColor(editor.getColorsScheme().getColor(EditorColors.INDENT_GUIDE_COLOR));
+          g.setColor(TargetAWT.to(editor.getColorsScheme().getColor(EditorColors.INDENT_GUIDE_COLOR)));
           for (int visualLine = actualStartLine; visualLine < endLine; visualLine++) {
             if (gutterContentProvider.isShowSeparatorLine(editor.visualToLogicalPosition(new VisualPosition(visualLine, 0)).line, editor)) {
               g.drawLine(clip.x, y, clip.x + clip.width, y);

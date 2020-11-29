@@ -15,30 +15,30 @@
  */
 package com.intellij.codeHighlighting;
 
-import com.intellij.ui.JBColor;
-import javax.annotation.Nonnull;
+import consulo.ui.color.ColorValue;
+import consulo.ui.color.RGBColor;
+import consulo.ui.style.StandardColors;
 
-import java.awt.*;
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class ColorGenerator {
   @Nonnull
-  public static List<Color> generateLinearColorSequence(@Nonnull List<Color> anchorColors, int colorsBetweenAnchors) {
+  public static List<ColorValue> generateLinearColorSequence(@Nonnull List<ColorValue> anchorColors, int colorsBetweenAnchors) {
     assert colorsBetweenAnchors >= 0;
-    if (anchorColors.isEmpty()) return Collections.singletonList(JBColor.GRAY);
-    if (anchorColors.size() == 1) return Collections.singletonList(anchorColors.get(0));
+    if (anchorColors.isEmpty()) return List.of(StandardColors.GRAY);
+    if (anchorColors.size() == 1) return List.of(anchorColors.get(0));
 
     int segmentCount = anchorColors.size() - 1;
-    List<Color> result = new ArrayList<>(anchorColors.size() + segmentCount * colorsBetweenAnchors);
+    List<ColorValue> result = new ArrayList<>(anchorColors.size() + segmentCount * colorsBetweenAnchors);
     result.add(anchorColors.get(0));
 
     for (int i = 0; i < segmentCount; i++) {
-      Color color1 = anchorColors.get(i);
-      Color color2 = anchorColors.get(i + 1);
+      ColorValue color1 = anchorColors.get(i);
+      ColorValue color2 = anchorColors.get(i + 1);
 
-      List<Color> linearColors = generateLinearColorSequence(color1, color2, colorsBetweenAnchors);
+      List<ColorValue> linearColors = generateLinearColorSequence(color1, color2, colorsBetweenAnchors);
 
       // skip first element from sequence to avoid duplication from connected segments
       result.addAll(linearColors.subList(1, linearColors.size()));
@@ -47,20 +47,21 @@ public class ColorGenerator {
   }
 
   @Nonnull
-  public static List<Color> generateLinearColorSequence(@Nonnull Color color1, @Nonnull Color color2, int colorsBetweenAnchors) {
+  public static List<ColorValue> generateLinearColorSequence(@Nonnull ColorValue color1, @Nonnull ColorValue color2, int colorsBetweenAnchors) {
     assert colorsBetweenAnchors >= 0;
 
-    List<Color> result = new ArrayList<>(colorsBetweenAnchors + 2);
+    List<ColorValue> result = new ArrayList<>(colorsBetweenAnchors + 2);
     result.add(color1);
 
     for (int i = 1; i <= colorsBetweenAnchors; i++) {
       float ratio = (float)i / (colorsBetweenAnchors + 1);
 
-      //noinspection UseJBColor
-      result.add(new Color(
-              ratio(color1.getRed(), color2.getRed(), ratio),
-              ratio(color1.getGreen(), color2.getGreen(), ratio),
-              ratio(color1.getBlue(), color2.getBlue(), ratio)
+      RGBColor rgb1 = color1.toRGB();
+      RGBColor rgb2 = color2.toRGB();
+      result.add(new RGBColor(
+              ratio(rgb1.getRed(), rgb2.getRed(), ratio),
+              ratio(rgb1.getGreen(), rgb2.getGreen(), ratio),
+              ratio(rgb1.getBlue(), rgb2.getBlue(), ratio)
       ));
     }
 

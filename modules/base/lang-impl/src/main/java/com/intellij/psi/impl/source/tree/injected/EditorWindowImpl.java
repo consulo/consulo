@@ -36,6 +36,8 @@ import com.intellij.util.Consumer;
 import com.intellij.util.containers.UnsafeWeakList;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.color.ColorValue;
 import kava.beans.PropertyChangeListener;
 
 import javax.annotation.Nonnull;
@@ -542,11 +544,13 @@ class EditorWindowImpl extends com.intellij.injected.editor.EditorWindowImpl imp
   public void addEditorMouseMotionListener(@Nonnull final EditorMouseMotionListener listener) {
     checkValid();
     EditorMouseMotionListener wrapper = new EditorMouseMotionListener() {
+      @RequiredUIAccess
       @Override
       public void mouseMoved(@Nonnull EditorMouseEvent e) {
         listener.mouseMoved(new EditorMouseEvent(EditorWindowImpl.this, e.getMouseEvent(), e.getArea()));
       }
 
+      @RequiredUIAccess
       @Override
       public void mouseDragged(@Nonnull EditorMouseEvent e) {
         listener.mouseDragged(new EditorMouseEvent(EditorWindowImpl.this, e.getMouseEvent(), e.getArea()));
@@ -570,13 +574,13 @@ class EditorWindowImpl extends com.intellij.injected.editor.EditorWindowImpl imp
   }
 
   @Override
-  public void setBackgroundColor(final Color color) {
+  public void setBackgroundColor(final ColorValue color) {
     myDelegate.setBackgroundColor(color);
   }
 
   @Nonnull
   @Override
-  public Color getBackgroundColor() {
+  public ColorValue getBackgroundColor() {
     return myDelegate.getBackgroundColor();
   }
 

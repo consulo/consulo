@@ -15,11 +15,11 @@
  */
 package com.intellij.ui.breadcrumbs;
 
-import java.awt.*;
+import consulo.ui.color.ColorValue;
 
 /**
  * @author Eugene.Kudelevsky
  */
 public abstract class CrumbPresentation {
-  public abstract Color getBackgroundColor(boolean selected, boolean hovered, boolean light);
+  public abstract ColorValue getBackgroundColor(boolean selected, boolean hovered, boolean light);
 }

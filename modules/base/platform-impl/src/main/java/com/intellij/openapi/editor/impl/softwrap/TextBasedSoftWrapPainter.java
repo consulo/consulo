@@ -20,6 +20,8 @@ import com.intellij.openapi.editor.ex.util.EditorUtil;
 import com.intellij.openapi.editor.impl.ColorProvider;
 import com.intellij.openapi.editor.impl.FontInfo;
 import com.intellij.openapi.editor.impl.TextDrawingCallback;
+import consulo.awt.TargetAWT;
+
 import javax.annotation.Nonnull;
 
 import javax.swing.*;
@@ -74,7 +76,7 @@ public class TextBasedSoftWrapPainter implements SoftWrapPainter {
     if (fontInfo != null) {
       char[] buffer = mySymbols.get(drawingType);
       int vGap = myVGaps.get(drawingType);
-      myDrawingCallback.drawChars(g, buffer, 0, buffer.length, x, y + lineHeight - vGap, myColorHolder.getColor(), fontInfo);
+      myDrawingCallback.drawChars(g, buffer, 0, buffer.length, x, y + lineHeight - vGap, TargetAWT.to(myColorHolder.getColor()), fontInfo);
     }
     return getMinDrawingWidth(drawingType);
   }

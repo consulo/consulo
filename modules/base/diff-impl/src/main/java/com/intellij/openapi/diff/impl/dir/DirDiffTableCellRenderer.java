@@ -76,7 +76,7 @@ public class DirDiffTableCellRenderer extends DefaultTableCellRenderer {
         return label;
       }
 
-      Color fg = isSelected ? UIUtil.getTableSelectionForeground() : op.getTextColor();
+      Color fg = isSelected ? UIUtil.getTableSelectionForeground() : TargetAWT.to(op.getTextColor());
       label.setForeground(fg);
       final String name = table.getColumnName(column);
       if (DirDiffTableModel.COLUMN_DATE.equals(name)) {

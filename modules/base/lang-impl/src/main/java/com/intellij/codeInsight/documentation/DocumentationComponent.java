@@ -24,10 +24,7 @@ import com.intellij.openapi.actionSystem.impl.ActionToolbarImpl;
 import com.intellij.openapi.actionSystem.impl.MenuItemPresentationFactory;
 import com.intellij.openapi.application.ApplicationBundle;
 import com.intellij.openapi.application.ApplicationManager;
-import consulo.disposer.Disposable;
-import consulo.disposer.Disposer;
-import consulo.logging.Logger;
-import com.intellij.openapi.editor.colors.ColorKey;
+import com.intellij.openapi.editor.colors.EditorColorKey;
 import com.intellij.openapi.editor.colors.EditorColorsManager;
 import com.intellij.openapi.editor.colors.EditorColorsUtil;
 import com.intellij.openapi.editor.ex.EditorSettingsExternalizable;
@@ -43,7 +40,9 @@ import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.ui.popup.JBPopup;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.ui.popup.util.PopupUtil;
-import com.intellij.openapi.util.*;
+import com.intellij.openapi.util.DimensionService;
+import com.intellij.openapi.util.InvalidDataException;
+import com.intellij.openapi.util.NotWorkingIconLoader;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -71,8 +70,14 @@ import com.intellij.util.Url;
 import com.intellij.util.Urls;
 import com.intellij.util.ui.*;
 import com.intellij.util.ui.accessibility.ScreenReader;
+import consulo.awt.TargetAWT;
 import consulo.builtInServer.BuiltInServerManager;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
+import consulo.logging.Logger;
 import consulo.roots.OrderEntryWithTracking;
+import consulo.ui.color.RGBColor;
+import consulo.ui.ex.util.LightDarkColorValue;
 import consulo.util.dataholder.Key;
 import org.jetbrains.annotations.NonNls;
 
@@ -112,7 +117,7 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
 
   private static final Color DOCUMENTATION_COLOR = new JBColor(new Color(0xf7f7f7), new Color(0x46484a));
   private static final JBColor BORDER_COLOR = new JBColor(new Color(0xadadad), new Color(0x616366));
-  public static final ColorKey COLOR_KEY = ColorKey.createColorKey("DOCUMENTATION_COLOR", DOCUMENTATION_COLOR);
+  public static final EditorColorKey COLOR_KEY = EditorColorKey.createColorKey("DOCUMENTATION_COLOR", new LightDarkColorValue(new RGBColor(247, 247, 247), new RGBColor(70, 72, 74)));
   public static final Color SECTION_COLOR = Gray.get(0x90);
 
   private static final Highlighter.HighlightPainter LINK_HIGHLIGHTER = new LinkHighlighter();
@@ -273,7 +278,7 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
         UIUtil.doNotScrollToCaret(myEditorPane);
       }
     }
-    myEditorPane.setBackground(EditorColorsUtil.getGlobalOrDefaultColor(COLOR_KEY));
+    myEditorPane.setBackground(TargetAWT.to(EditorColorsUtil.getGlobalOrDefaultColor(COLOR_KEY)));
     HTMLEditorKit editorKit = new JBHtmlEditorKit(true) {
       @Override
       public ViewFactory getViewFactory() {

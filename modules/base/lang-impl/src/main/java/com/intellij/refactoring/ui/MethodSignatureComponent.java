@@ -24,6 +24,7 @@ import com.intellij.openapi.editor.highlighter.EditorHighlighterFactory;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.project.Project;
 import com.intellij.ui.EditorTextField;
+import consulo.awt.TargetAWT;
 
 import javax.annotation.Nullable;
 
@@ -38,7 +39,7 @@ public class MethodSignatureComponent extends EditorTextField {
   public MethodSignatureComponent(Document document, Project project, FileType filetype) {
     super(document, project, filetype, true, false);
     setFontInheritedFromLAF(false);
-    setBackground(EditorColorsManager.getInstance().getGlobalScheme().getColor(EditorColors.CARET_ROW_COLOR));
+    setBackground(TargetAWT.to(EditorColorsManager.getInstance().getGlobalScheme().getColor(EditorColors.CARET_ROW_COLOR)));
   }
 
   public void setSignature(String signature) {

@@ -16,16 +16,16 @@
 package consulo.ui.desktop.internal;
 
 import consulo.disposer.Disposable;
-import consulo.ui.font.Font;
-import consulo.util.dataholder.Key;
 import consulo.ui.Component;
 import consulo.ui.MenuSeparator;
-import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.image.Image;
 import consulo.ui.Size;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.border.BorderPosition;
 import consulo.ui.border.BorderStyle;
-import consulo.ui.style.ColorKey;
+import consulo.ui.color.ColorValue;
+import consulo.ui.font.Font;
+import consulo.ui.image.Image;
+import consulo.util.dataholder.Key;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -52,7 +52,7 @@ class DesktopMenuSeparatorImpl implements MenuSeparator {
 
   @RequiredUIAccess
   @Override
-  public void addBorder(@Nonnull BorderPosition borderPosition, BorderStyle borderStyle, ColorKey colorKey, int width) {
+  public void addBorder(@Nonnull BorderPosition borderPosition, @Nonnull BorderStyle borderStyle, ColorValue colorValue, int width) {
     throw new UnsupportedOperationException();
   }
 

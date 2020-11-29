@@ -76,6 +76,10 @@ import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.tree.TreeUtil;
+import consulo.ui.color.ColorValue;
+import consulo.ui.color.RGBColor;
+import consulo.ui.ex.util.LightDarkColorValue;
+import consulo.ui.style.StandardColors;
 import consulo.util.dataholder.Key;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
@@ -99,7 +103,7 @@ import java.util.regex.Pattern;
  */
 public class PsiViewerDialog extends DialogWrapper implements DataProvider, Disposable {
   private static final String REFS_CACHE = "References Resolve Cache";
-  private static final Color SELECTION_BG_COLOR = new JBColor(new Color(0x009999), new Color(0, 80, 80));
+  private static final ColorValue SELECTION_BG_COLOR = new LightDarkColorValue(new RGBColor(0, 153, 153), new RGBColor(0, 80, 80));
   private static final Logger LOG = Logger.getInstance(PsiViewerDialog.class);
   private final Project myProject;
 
@@ -252,7 +256,7 @@ public class PsiViewerDialog extends DialogWrapper implements DataProvider, Disp
             if ((element instanceof PsiElement && FileContextUtil.getFileContext(((PsiElement)element).getContainingFile()) != null) ||
                 element instanceof ViewerTreeStructure.Inject) {
               final TextAttributes attr = EditorColorsManager.getInstance().getGlobalScheme().getAttributes(EditorColors.INJECTED_LANGUAGE_FRAGMENT);
-              c.setBackground(attr.getBackgroundColor());
+              c.setBackground(TargetAWT.to(attr.getBackgroundColor()));
             }
           }
         }
@@ -553,8 +557,8 @@ public class PsiViewerDialog extends DialogWrapper implements DataProvider, Disp
       TextRange resRange = new TextRange(highlightStart, highlightEnd).intersection(new TextRange(selectionStart, selectionEnd));
       if (resRange != null) {
         TextAttributes attributes = new TextAttributes();
-        attributes.setBackgroundColor(Color.LIGHT_GRAY);
-        attributes.setForegroundColor(Color.white);
+        attributes.setBackgroundColor(StandardColors.LIGHT_GRAY);
+        attributes.setForegroundColor(StandardColors.WHITE);
         myIntersectHighlighter = myEditor.getMarkupModel()
           .addRangeHighlighter(resRange.getStartOffset(), resRange.getEndOffset(), HighlighterLayer.LAST + 1, attributes,
                                HighlighterTargetArea.EXACT_RANGE);
@@ -851,7 +855,7 @@ public class PsiViewerDialog extends DialogWrapper implements DataProvider, Disp
     public MyPsiTreeSelectionListener() {
       myAttributes = new TextAttributes();
       myAttributes.setBackgroundColor(SELECTION_BG_COLOR);
-      myAttributes.setForegroundColor(Color.white);
+      myAttributes.setForegroundColor(StandardColors.WHITE);
     }
 
     @Override
@@ -941,7 +945,7 @@ public class PsiViewerDialog extends DialogWrapper implements DataProvider, Disp
     public MyBlockTreeSelectionListener() {
       myAttributes = new TextAttributes();
       myAttributes.setBackgroundColor(SELECTION_BG_COLOR);
-      myAttributes.setForegroundColor(Color.white);
+      myAttributes.setForegroundColor(StandardColors.WHITE);
     }
 
     @Override
@@ -1104,7 +1108,7 @@ public class PsiViewerDialog extends DialogWrapper implements DataProvider, Disp
   private class GoToListener implements KeyListener, MouseListener, ListSelectionListener {
     private RangeHighlighter myListenerHighlighter;
     private final TextAttributes myAttributes =
-      new TextAttributes(Color.white, SELECTION_BG_COLOR, JBColor.RED, EffectType.BOXED, Font.PLAIN);
+      new TextAttributes(StandardColors.WHITE, SELECTION_BG_COLOR, StandardColors.RED, EffectType.BOXED, Font.PLAIN);
 
     private void navigate() {
       final Object value = myRefs.getSelectedValue();

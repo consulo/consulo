@@ -25,9 +25,9 @@ import com.intellij.openapi.editor.markup.HighlighterTargetArea;
 import com.intellij.openapi.editor.markup.RangeHighlighter;
 import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.util.ui.UIUtil;
-import javax.annotation.Nonnull;
+import consulo.ui.color.ColorValue;
 
-import java.awt.*;
+import javax.annotation.Nonnull;
 import java.util.Collection;
 import java.util.Map;
 
@@ -71,7 +71,7 @@ public class HighlightData {
           RangeHighlighter highlighter = view.getMarkupModel()
                   .addRangeHighlighter(myStartOffset, myEndOffset, HighlighterLayer.ADDITIONAL_SYNTAX, attr,
                                        HighlighterTargetArea.EXACT_RANGE);
-          final Color errorStripeColor = attr.getErrorStripeColor();
+          final ColorValue errorStripeColor = attr.getErrorStripeColor();
           highlighter.setErrorStripeMarkColor(errorStripeColor);
           final String tooltip = displayText.get(myHighlightType);
           highlighter.setErrorStripeTooltip(tooltip);

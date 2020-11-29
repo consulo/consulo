@@ -35,6 +35,7 @@ import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.fileTypes.PlainTextFileType;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.util.BackgroundTaskUtil;
+import consulo.awt.TargetAWT;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import com.intellij.openapi.util.registry.Registry;
@@ -74,7 +75,7 @@ public abstract class LineStatusMarkerPopup {
   }
 
   @Nonnull
-  protected abstract ActionToolbar buildToolbar(@javax.annotation.Nullable Point mousePosition, @Nonnull Disposable parentDisposable);
+  protected abstract ActionToolbar buildToolbar(@Nullable Point mousePosition, @Nonnull Disposable parentDisposable);
 
   @Nonnull
   protected FileType getFileType() {
@@ -113,7 +114,7 @@ public abstract class LineStatusMarkerPopup {
     e.consume();
   }
 
-  public void showHintAt(@javax.annotation.Nullable Point mousePosition) {
+  public void showHintAt(@Nullable Point mousePosition) {
     if (!myTracker.isValid()) return;
     final Disposable disposable = Disposable.newDisposable();
 
@@ -155,7 +156,7 @@ public abstract class LineStatusMarkerPopup {
     }
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   private List<DiffFragment> computeWordDiff() {
     if (!isShowInnerDifferences()) return null;
     if (myRange.getType() != Range.MODIFIED) return null;
@@ -171,7 +172,7 @@ public abstract class LineStatusMarkerPopup {
     }, Registry.intValue("diff.status.tracker.byword.delay"));
   }
 
-  private void installMasterEditorHighlighters(@javax.annotation.Nullable List<DiffFragment> wordDiff, @Nonnull Disposable parentDisposable) {
+  private void installMasterEditorHighlighters(@Nullable List<DiffFragment> wordDiff, @Nonnull Disposable parentDisposable) {
     if (wordDiff == null) return;
     final List<RangeHighlighter> highlighters = new ArrayList<RangeHighlighter>();
 
@@ -195,7 +196,7 @@ public abstract class LineStatusMarkerPopup {
   }
 
   @Nullable
-  private EditorFragmentComponent createEditorComponent(@Nullable FileType fileType, @javax.annotation.Nullable List<DiffFragment> wordDiff) {
+  private EditorFragmentComponent createEditorComponent(@Nullable FileType fileType, @Nullable List<DiffFragment> wordDiff) {
     if (myRange.getType() == Range.INSERTED) return null;
 
     EditorEx uEditor = (EditorEx)EditorFactory.getInstance().createViewer(myTracker.getVcsDocument(), myTracker.getProject());
@@ -236,15 +237,15 @@ public abstract class LineStatusMarkerPopup {
 
     public PopupPanel(@Nonnull final Editor editor,
                       @Nonnull ActionToolbar toolbar,
-                      @javax.annotation.Nullable JComponent editorComponent) {
+                      @Nullable JComponent editorComponent) {
       super(new BorderLayout());
       setOpaque(false);
 
       myEditorComponent = editorComponent;
       boolean isEditorVisible = myEditorComponent != null;
 
-      Color background = ((EditorEx)editor).getBackgroundColor();
-      Color borderColor = editor.getColorsScheme().getColor(EditorColors.SELECTED_TEARLINE_COLOR);
+      Color background = TargetAWT.to(((EditorEx)editor).getBackgroundColor());
+      Color borderColor = TargetAWT.to(editor.getColorsScheme().getColor(EditorColors.SELECTED_TEARLINE_COLOR));
 
       JComponent toolbarComponent = toolbar.getComponent();
       toolbarComponent.setBackground(background);

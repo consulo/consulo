@@ -41,6 +41,7 @@ import consulo.awt.TargetAWT;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
+import consulo.ui.color.ColorValue;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
 import org.jetbrains.annotations.TestOnly;
@@ -85,16 +86,16 @@ public class IntentionHintComponent implements Disposable, ScrollAwareHint {
   private final CachedIntentions myCachedIntentions;
 
   private static Border createActiveBorder() {
-    return BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(getBorderColor(), 1),
+    return BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(TargetAWT.to(getBorderColor()), 1),
                                               BorderFactory.createEmptyBorder(NORMAL_BORDER_SIZE - 1, NORMAL_BORDER_SIZE - 1, NORMAL_BORDER_SIZE - 1, NORMAL_BORDER_SIZE - 1));
   }
 
   private static Border createActiveBorderSmall() {
-    return BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(getBorderColor(), 1),
+    return BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(TargetAWT.to(getBorderColor()), 1),
                                               BorderFactory.createEmptyBorder(SMALL_BORDER_SIZE - 1, SMALL_BORDER_SIZE - 1, SMALL_BORDER_SIZE - 1, SMALL_BORDER_SIZE - 1));
   }
 
-  private static Color getBorderColor() {
+  private static ColorValue getBorderColor() {
     return EditorColorsManager.getInstance().getGlobalScheme().getColor(EditorColors.SELECTED_TEARLINE_COLOR);
   }
 

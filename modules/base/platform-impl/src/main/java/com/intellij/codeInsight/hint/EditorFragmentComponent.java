@@ -2,6 +2,7 @@
 package com.intellij.codeInsight.hint;
 
 import com.intellij.openapi.application.ApplicationManager;
+import consulo.awt.TargetAWT;
 import consulo.logging.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
@@ -13,6 +14,7 @@ import com.intellij.openapi.editor.ex.FoldingModelEx;
 import com.intellij.openapi.editor.ex.util.EditorUIUtil;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
 import com.intellij.openapi.editor.impl.DesktopEditorImpl;
+import consulo.ui.color.ColorValue;
 import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.util.text.StringUtil;
@@ -95,7 +97,7 @@ public class EditorFragmentComponent extends JPanel {
 
         markerGraphics.translate(0, -y1);
         markerGraphics.setClip(0, y1, rowHeader.getWidth(), textImageHeight);
-        markerGraphics.setColor(getBackgroundColor(editor));
+        markerGraphics.setColor(TargetAWT.to(getBackgroundColor(editor)));
         markerGraphics.fillRect(0, y1, rowHeader.getWidth(), textImageHeight);
         rowHeader.paint(markerGraphics);
       }
@@ -237,11 +239,11 @@ public class EditorFragmentComponent extends JPanel {
                                                                        boolean showGutter,
                                                                        boolean useCaretRowBackground) {
     final EditorEx editorEx = (EditorEx)editor;
-    final Color old = editorEx.getBackgroundColor();
-    Color backColor = getBackgroundColor(editor, useCaretRowBackground);
+    final ColorValue old = editorEx.getBackgroundColor();
+    ColorValue backColor = getBackgroundColor(editor, useCaretRowBackground);
     editorEx.setBackgroundColor(backColor);
     EditorFragmentComponent fragmentComponent = new EditorFragmentComponent(component, editorEx, startLine, endLine, showFolding, showGutter);
-    fragmentComponent.setBackground(backColor);
+    fragmentComponent.setBackground(TargetAWT.to(backColor));
 
     editorEx.setBackgroundColor(old);
     return fragmentComponent;
@@ -260,13 +262,13 @@ public class EditorFragmentComponent extends JPanel {
     return showEditorFragmentHintAt(editor, range, point.y, true, showFolding, hideByAnyKey, true, false);
   }
 
-  public static Color getBackgroundColor(Editor editor) {
+  public static ColorValue getBackgroundColor(Editor editor) {
     return getBackgroundColor(editor, true);
   }
 
-  public static Color getBackgroundColor(Editor editor, boolean useCaretRowBackground) {
+  public static ColorValue getBackgroundColor(Editor editor, boolean useCaretRowBackground) {
     EditorColorsScheme colorsScheme = editor.getColorsScheme();
-    Color color = colorsScheme.getColor(EditorColors.CARET_ROW_COLOR);
+    ColorValue color = colorsScheme.getColor(EditorColors.CARET_ROW_COLOR);
     if (!useCaretRowBackground || color == null) {
       color = colorsScheme.getDefaultBackground();
     }
@@ -275,8 +277,8 @@ public class EditorFragmentComponent extends JPanel {
 
   @Nonnull
   public static CompoundBorder createEditorFragmentBorder(@Nonnull Editor editor) {
-    Color borderColor = editor.getColorsScheme().getColor(EditorColors.SELECTED_TEARLINE_COLOR);
-    Border outsideBorder = JBUI.Borders.customLine(borderColor, LINE_BORDER_THICKNESS);
+    ColorValue borderColor = editor.getColorsScheme().getColor(EditorColors.SELECTED_TEARLINE_COLOR);
+    Border outsideBorder = JBUI.Borders.customLine(TargetAWT.to(borderColor), LINE_BORDER_THICKNESS);
     Border insideBorder = JBUI.Borders.empty(EMPTY_BORDER_THICKNESS, EMPTY_BORDER_THICKNESS);
     return BorderFactory.createCompoundBorder(outsideBorder, insideBorder);
   }

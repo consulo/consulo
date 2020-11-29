@@ -6,6 +6,7 @@ import com.intellij.openapi.editor.colors.EditorColorsManager;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.openapi.editor.markup.EffectType;
 import com.intellij.openapi.editor.markup.TextAttributes;
+import consulo.ui.color.ColorValue;
 import consulo.util.dataholder.Key;
 import jakarta.inject.Singleton;
 import org.jetbrains.annotations.NonNls;
@@ -152,11 +153,11 @@ public class ColoredOutputTypeRegistry {
     return newKey;
   }
 
-  private static Color getAnsiColor(final int value) {
+  private static ColorValue getAnsiColor(final int value) {
     return getColorByKey(getAnsiColorKey(value));
   }
 
-  private static Color getColorByKey(TextAttributesKey colorKey) {
+  private static ColorValue getColorByKey(TextAttributesKey colorKey) {
     return EditorColorsManager.getInstance().getGlobalScheme().getAttributes(colorKey).getForegroundColor();
   }
 

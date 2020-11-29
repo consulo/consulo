@@ -1,12 +1,13 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.openapi.editor.markup;
 
-import consulo.logging.Logger;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.logging.Logger;
+import consulo.ui.color.ColorValue;
 import org.jetbrains.annotations.Contract;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.awt.*;
 import java.util.Collections;
 import java.util.HashMap;
@@ -81,7 +82,7 @@ public class TextAttributesEffectsBuilder {
    * If current state has underline and we applying attributes with wave underline, underline effect will be removed.
    */
   @Nonnull
-  public TextAttributesEffectsBuilder coverWith(@Nullable EffectType effectType, @Nullable Color effectColor) {
+  public TextAttributesEffectsBuilder coverWith(@Nullable EffectType effectType, @Nullable ColorValue effectColor) {
     return mutateBuilder(effectType, effectColor, myEffectsMap::put);
   }
 
@@ -89,12 +90,12 @@ public class TextAttributesEffectsBuilder {
    * Applies effect with {@code effectType} and {@code effectColor} to the current state if effect slot is not used.
    */
   @Nonnull
-  public TextAttributesEffectsBuilder slipUnder(@Nullable EffectType effectType, @Nullable Color effectColor) {
+  public TextAttributesEffectsBuilder slipUnder(@Nullable EffectType effectType, @Nullable ColorValue effectColor) {
     return mutateBuilder(effectType, effectColor, myEffectsMap::putIfAbsent);
   }
 
   @Nonnull
-  private TextAttributesEffectsBuilder mutateBuilder(@Nullable EffectType effectType, @Nullable Color effectColor, @Nonnull BiConsumer<? super EffectSlot, ? super EffectDescriptor> slotMutator) {
+  private TextAttributesEffectsBuilder mutateBuilder(@Nullable EffectType effectType, @Nullable ColorValue effectColor, @Nonnull BiConsumer<? super EffectSlot, ? super EffectDescriptor> slotMutator) {
     if (effectColor != null && effectType != null) {
       EffectSlot slot = EFFECT_SLOTS_MAP.get(effectType);
       if (slot != null) {
@@ -111,11 +112,11 @@ public class TextAttributesEffectsBuilder {
    * @return map of {@link EffectType} => {@link Color} representation of builder state
    */
   @Nonnull
-  Map<EffectType, Color> getEffectsMap() {
+  Map<EffectType, ColorValue> getEffectsMap() {
     if (myEffectsMap.isEmpty()) {
       return Collections.emptyMap();
     }
-    Map<EffectType, Color> result = new HashMap<>();
+    Map<EffectType, ColorValue> result = new HashMap<>();
     myEffectsMap.forEach((key, val) -> {
       if (val != null) {
         result.put(val.effectType, val.effectColor);
@@ -152,7 +153,7 @@ public class TextAttributesEffectsBuilder {
         targetAttributes.setAdditionalEffects(Collections.singletonMap(additionalEffect.effectType, additionalEffect.effectColor));
       }
       else {
-        Map<EffectType, Color> effectsMap = new HashMap<>(effectsLeft);
+        Map<EffectType, ColorValue> effectsMap = new HashMap<>(effectsLeft);
         effectsIterator.forEachRemaining(it -> effectsMap.put(it.effectType, it.effectColor));
         targetAttributes.setAdditionalEffects(effectsMap);
       }
@@ -170,15 +171,15 @@ public class TextAttributesEffectsBuilder {
     @Nonnull
     public final EffectType effectType;
     @Nonnull
-    public final Color effectColor;
+    public final ColorValue effectColor;
 
-    private EffectDescriptor(@Nonnull EffectType effectType, @Nonnull Color effectColor) {
+    private EffectDescriptor(@Nonnull EffectType effectType, @Nonnull ColorValue effectColor) {
       this.effectType = effectType;
       this.effectColor = effectColor;
     }
 
     @Nonnull
-    static EffectDescriptor create(@Nonnull EffectType effectType, @Nonnull Color effectColor) {
+    static EffectDescriptor create(@Nonnull EffectType effectType, @Nonnull ColorValue effectColor) {
       return new EffectDescriptor(effectType, effectColor);
     }
   }

@@ -30,6 +30,7 @@ import com.intellij.usageView.UsageViewBundle;
 import com.intellij.usages.*;
 import com.intellij.util.FontUtil;
 import com.intellij.util.ui.UIUtil;
+import consulo.awt.TargetAWT;
 import consulo.logging.Logger;
 import consulo.ui.image.Image;
 
@@ -287,7 +288,7 @@ class UsageViewTreeCellRenderer extends ColoredTreeCellRenderer {
       UsageGroup group = ((GroupNode)node).getGroup();
       FileStatus fileStatus = group != null ? group.getFileStatus() : null;
       if (fileStatus != null && fileStatus != FileStatus.NOT_CHANGED) {
-        original = new SimpleTextAttributes(original.getStyle(), fileStatus.getColor(), original.getWaveColor());
+        original = new SimpleTextAttributes(original.getStyle(), TargetAWT.to(fileStatus.getColor()), original.getWaveColor());
       }
 
       DefaultMutableTreeNode parent = (DefaultMutableTreeNode)node.getParent();

@@ -16,11 +16,11 @@
 package com.intellij.openapi.editor;
 
 import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.editor.colors.ColorKey;
+import com.intellij.openapi.editor.colors.EditorColorKey;
 import com.intellij.openapi.editor.colors.EditorFontType;
-import javax.annotation.Nullable;
+import consulo.ui.color.ColorValue;
 
-import java.awt.*;
+import javax.annotation.Nullable;
 import java.util.List;
 
 /**
@@ -48,7 +48,7 @@ public interface TextAnnotationGutterProvider {
   EditorFontType getStyle(int line, Editor editor);
 
   @Nullable
-  ColorKey getColor(int line, Editor editor);
+  EditorColorKey getColor(int line, Editor editor);
 
   /**
    * Returns the background color for the text
@@ -58,7 +58,7 @@ public interface TextAnnotationGutterProvider {
    * @return the text to draw, or null if no text should be drawn.
    */
   @Nullable
-  Color getBgColor(int line, Editor editor);
+  ColorValue getBgColor(int line, Editor editor);
 
   /***
    * enables annotation view modifications

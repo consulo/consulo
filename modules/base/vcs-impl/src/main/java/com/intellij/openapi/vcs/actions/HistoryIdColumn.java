@@ -21,8 +21,8 @@ import com.intellij.openapi.vcs.VcsBundle;
 import com.intellij.openapi.vcs.annotate.FileAnnotation;
 import com.intellij.openapi.vcs.annotate.TextAnnotationPresentation;
 import com.intellij.openapi.vcs.history.VcsRevisionNumber;
+import consulo.ui.color.ColorValue;
 
-import java.awt.*;
 import java.util.Map;
 
 /**
@@ -33,7 +33,7 @@ class HistoryIdColumn extends AnnotationFieldGutter {
 
   HistoryIdColumn(FileAnnotation annotation,
                   final TextAnnotationPresentation presentation,
-                  Couple<Map<VcsRevisionNumber, Color>> colorScheme,
+                  Couple<Map<VcsRevisionNumber, ColorValue>> colorScheme,
                   Map<VcsRevisionNumber, Integer> ids) {
     super(annotation, presentation, colorScheme);
     myHistoryIds = ids;

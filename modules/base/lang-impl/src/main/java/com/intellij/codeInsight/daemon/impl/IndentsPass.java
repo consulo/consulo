@@ -52,6 +52,7 @@ import com.intellij.util.DocumentUtil;
 import com.intellij.util.containers.ContainerUtilRt;
 import com.intellij.util.containers.IntStack;
 import com.intellij.util.text.CharArrayUtil;
+import consulo.awt.TargetAWT;
 import consulo.lang.util.LanguageVersionUtil;
 import consulo.util.dataholder.Key;
 
@@ -69,8 +70,8 @@ public class IndentsPass extends TextEditorHighlightingPass implements DumbAware
   private final EditorEx myEditor;
   private final PsiFile myFile;
 
-  private volatile List<TextRange> myRanges = Collections.emptyList();
-  private volatile List<IndentGuideDescriptor> myDescriptors = Collections.emptyList();
+  private volatile List<TextRange> myRanges = List.of();
+  private volatile List<IndentGuideDescriptor> myDescriptors = List.of();
 
   private static final CustomHighlighterRenderer RENDERER = (editor, highlighter, g) -> {
     int startOffset = highlighter.getStartOffset();
@@ -136,7 +137,7 @@ public class IndentsPass extends TextEditorHighlightingPass implements DumbAware
 
     int targetX = Math.max(0, start.x + EditorPainter.getIndentGuideShift(editor));
     final EditorColorsScheme scheme = editor.getColorsScheme();
-    g.setColor(scheme.getColor(selected ? EditorColors.SELECTED_INDENT_GUIDE_COLOR : EditorColors.INDENT_GUIDE_COLOR));
+    g.setColor(TargetAWT.to(scheme.getColor(selected ? EditorColors.SELECTED_INDENT_GUIDE_COLOR : EditorColors.INDENT_GUIDE_COLOR)));
 
     // There is a possible case that indent line intersects soft wrap-introduced text. Example:
     //     this is a long line <soft-wrap>

@@ -23,9 +23,9 @@ package com.intellij.codeInsight.daemon.impl;
 import com.intellij.lang.annotation.HighlightSeverity;
 import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.openapi.extensions.ExtensionPointName;
-import javax.annotation.Nonnull;
+import consulo.ui.color.ColorValue;
 
-import java.awt.*;
+import javax.annotation.Nonnull;
 import java.util.List;
 
 public abstract class SeveritiesProvider {
@@ -41,7 +41,7 @@ public abstract class SeveritiesProvider {
     return minSeverity != HighlightSeverity.INFORMATION;
   }
 
-  public Color getTrafficRendererColor(@Nonnull TextAttributes textAttributes) {
+  public ColorValue getTrafficRendererColor(@Nonnull TextAttributes textAttributes) {
     return textAttributes.getErrorStripeColor();
   }
 }

@@ -99,7 +99,7 @@ public class RecentLocationsAction extends DumbAwareAction {
 
     list.setCellRenderer(new RecentLocationsRenderer(project, speedSearch, model, checkBox));
     list.setEmptyText(IdeBundle.message("recent.locations.popup.empty.text"));
-    list.setBackground(EditorColorsManager.getInstance().getGlobalScheme().getDefaultBackground());
+    list.setBackground(TargetAWT.to(EditorColorsManager.getInstance().getGlobalScheme().getDefaultBackground()));
     ScrollingUtil.installActions(list);
     ScrollingUtil.ensureSelectionExists(list);
 

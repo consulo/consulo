@@ -22,9 +22,10 @@ import com.intellij.openapi.actionSystem.AnSeparator;
 import com.intellij.openapi.editor.ex.EditorGutterComponentEx;
 import com.intellij.openapi.util.Couple;
 import com.intellij.openapi.vcs.history.VcsRevisionNumber;
-import javax.annotation.Nonnull;
+import consulo.ui.color.ColorValue;
 
-import java.awt.*;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -34,7 +35,7 @@ public class AnnotateActionGroup extends ActionGroup {
 
   public AnnotateActionGroup(@Nonnull List<AnnotationFieldGutter> gutters,
                              @Nonnull EditorGutterComponentEx gutterComponent,
-                             @javax.annotation.Nullable Couple<Map<VcsRevisionNumber, Color>> bgColorMap) {
+                             @Nullable Couple<Map<VcsRevisionNumber, ColorValue>> bgColorMap) {
     super("View", true);
     final List<AnAction> actions = new ArrayList<>();
     for (AnnotationFieldGutter g : gutters) {
@@ -52,7 +53,7 @@ public class AnnotateActionGroup extends ActionGroup {
 
   @Nonnull
   @Override
-  public AnAction[] getChildren(@javax.annotation.Nullable AnActionEvent e) {
+  public AnAction[] getChildren(@Nullable AnActionEvent e) {
     return myActions;
   }
 }

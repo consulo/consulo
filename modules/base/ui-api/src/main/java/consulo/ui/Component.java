@@ -20,10 +20,10 @@ import consulo.disposer.Disposable;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.border.BorderPosition;
 import consulo.ui.border.BorderStyle;
+import consulo.ui.color.ColorValue;
 import consulo.ui.event.ClickListener;
 import consulo.ui.event.KeyListener;
 import consulo.ui.font.Font;
-import consulo.ui.style.ColorKey;
 import consulo.ui.style.ComponentColors;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolder;
@@ -53,12 +53,12 @@ public interface Component extends Disposable, UserDataHolder {
   }
 
   @RequiredUIAccess
-  default void addBorder(@Nonnull BorderPosition borderPosition, @Nonnull BorderStyle borderStyle, @Nullable ColorKey colorKey) {
+  default void addBorder(@Nonnull BorderPosition borderPosition, @Nonnull BorderStyle borderStyle, @Nullable ColorValue colorKey) {
     addBorder(borderPosition, borderStyle, colorKey, 1);
   }
 
   @RequiredUIAccess
-  default void addBorders(@Nonnull BorderStyle borderStyle, @Nullable ColorKey colorKey, @Nonnegative int width) {
+  default void addBorders(@Nonnull BorderStyle borderStyle, @Nullable ColorValue colorKey, @Nonnegative int width) {
     for (BorderPosition position : BorderPosition.values()) {
       addBorder(position, borderStyle, colorKey, width);
     }
@@ -72,7 +72,12 @@ public interface Component extends Disposable, UserDataHolder {
   }
 
   @RequiredUIAccess
-  void addBorder(@Nonnull BorderPosition borderPosition, @Nonnull BorderStyle borderStyle, @Nullable ColorKey colorKey, @Nonnegative int width);
+  default void addBorder(@Nonnull BorderPosition borderPosition, @Nonnull BorderStyle borderStyle, @Nonnegative int width) {
+    addBorder(borderPosition, borderStyle, null, width);
+  }
+
+  @RequiredUIAccess
+  void addBorder(@Nonnull BorderPosition borderPosition, @Nonnull BorderStyle borderStyle, @Nullable ColorValue colorValue, @Nonnegative int width);
 
   @RequiredUIAccess
   default void removeBorders() {

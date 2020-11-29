@@ -17,16 +17,17 @@ package com.intellij.openapi.vcs.actions;
 
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.editor.colors.ColorKey;
+import com.intellij.openapi.editor.colors.EditorColorKey;
 import com.intellij.openapi.editor.colors.EditorFontType;
 import com.intellij.openapi.util.Couple;
 import com.intellij.openapi.vcs.annotate.FileAnnotation;
 import com.intellij.openapi.vcs.annotate.TextAnnotationPresentation;
 import com.intellij.openapi.vcs.history.VcsRevisionNumber;
 import com.intellij.vcsUtil.VcsUtil;
+import consulo.ui.color.ColorValue;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.awt.*;
 import java.util.List;
 import java.util.Map;
@@ -40,12 +41,12 @@ public abstract class AnnotationFieldGutter implements ActiveAnnotationGutter {
   protected final FileAnnotation myAnnotation;
   @Nonnull
   private final TextAnnotationPresentation myPresentation;
-  @javax.annotation.Nullable
-  private Couple<Map<VcsRevisionNumber, Color>> myColorScheme;
+  @Nullable
+  private Couple<Map<VcsRevisionNumber, ColorValue>> myColorScheme;
 
   AnnotationFieldGutter(@Nonnull FileAnnotation annotation,
                         @Nonnull TextAnnotationPresentation presentation,
-                        @javax.annotation.Nullable Couple<Map<VcsRevisionNumber, Color>> colorScheme) {
+                        @Nullable Couple<Map<VcsRevisionNumber, ColorValue>> colorScheme) {
     myAnnotation = annotation;
     myPresentation = presentation;
     myColorScheme = colorScheme;
@@ -55,7 +56,7 @@ public abstract class AnnotationFieldGutter implements ActiveAnnotationGutter {
     return false;
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   @Override
   public String getToolTip(final int line, final Editor editor) {
     return null;
@@ -75,9 +76,9 @@ public abstract class AnnotationFieldGutter implements ActiveAnnotationGutter {
     return myPresentation.getFontType(line);
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   @Override
-  public ColorKey getColor(final int line, final Editor editor) {
+  public EditorColorKey getColor(final int line, final Editor editor) {
     return myPresentation.getColor(line);
   }
 
@@ -93,10 +94,10 @@ public abstract class AnnotationFieldGutter implements ActiveAnnotationGutter {
 
   @Nullable
   @Override
-  public Color getBgColor(int line, Editor editor) {
+  public ColorValue getBgColor(int line, Editor editor) {
     if (myColorScheme == null) return null;
     ColorMode type = ShowAnnotationColorsAction.getType();
-    Map<VcsRevisionNumber, Color> colorMap = type == ColorMode.AUTHOR ? myColorScheme.second : myColorScheme.first;
+    Map<VcsRevisionNumber, ColorValue> colorMap = type == ColorMode.AUTHOR ? myColorScheme.second : myColorScheme.first;
     if (colorMap == null || type == ColorMode.NONE) return null;
     final VcsRevisionNumber number = myAnnotation.getLineRevisionNumber(line);
     if (number == null) return null;

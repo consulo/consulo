@@ -67,6 +67,7 @@ import com.intellij.util.ui.*;
 import com.intellij.util.ui.update.Activatable;
 import com.intellij.util.ui.update.UiNotifyConnector;
 import consulo.application.TransactionGuardEx;
+import consulo.awt.TargetAWT;
 import consulo.desktop.editor.impl.DesktopEditorLayeredPanel;
 import consulo.desktop.editor.impl.StatusComponentContainer;
 import consulo.desktop.util.awt.migration.AWTComponentProviderUtil;
@@ -75,6 +76,8 @@ import consulo.disposer.Disposer;
 import consulo.disposer.TraceableDisposable;
 import consulo.fileEditor.impl.EditorsSplitters;
 import consulo.logging.Logger;
+import consulo.ui.color.ColorValue;
+import consulo.ui.util.ColorValueUtil;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolderBase;
 import kava.beans.PropertyChangeEvent;
@@ -275,7 +278,7 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
   private VirtualFile myVirtualFile;
   private boolean myIsColumnMode;
   @Nullable
-  private Color myForcedBackground;
+  private ColorValue myForcedBackground;
   @Nullable
   private Dimension myPreferredSize;
 
@@ -712,7 +715,7 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
   }
 
   boolean isDarkEnough() {
-    return ColorUtil.isDark(getBackgroundColor());
+    return ColorValueUtil.isDark(getBackgroundColor());
   }
 
   private void repaintCaretRegion(CaretEvent e) {
@@ -1940,8 +1943,8 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
   }
 
   @Override
-  public void setBackgroundColor(Color color) {
-    myScrollPane.setBackground(color);
+  public void setBackgroundColor(ColorValue color) {
+    myScrollPane.setBackground(TargetAWT.to(color));
 
     if (getBackgroundIgnoreForced().equals(color)) {
       myForcedBackground = null;
@@ -1951,13 +1954,13 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
   }
 
   @Nonnull
-  Color getForegroundColor() {
+  ColorValue getForegroundColor() {
     return myScheme.getDefaultForeground();
   }
 
   @Nonnull
   @Override
-  public Color getBackgroundColor() {
+  public ColorValue getBackgroundColor() {
     if (myForcedBackground != null) return myForcedBackground;
 
     return getBackgroundIgnoreForced();
@@ -1997,18 +2000,18 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
     return myShowPlaceholderWhenFocused;
   }
 
-  Color getBackgroundColor(@Nonnull final TextAttributes attributes) {
-    final Color attrColor = attributes.getBackgroundColor();
+  ColorValue getBackgroundColor(@Nonnull final TextAttributes attributes) {
+    final ColorValue attrColor = attributes.getBackgroundColor();
     return Comparing.equal(attrColor, myScheme.getDefaultBackground()) ? getBackgroundColor() : attrColor;
   }
 
   @Nonnull
-  private Color getBackgroundIgnoreForced() {
-    Color color = myScheme.getDefaultBackground();
+  private ColorValue getBackgroundIgnoreForced() {
+    ColorValue color = myScheme.getDefaultBackground();
     if (myDocument.isWritable()) {
       return color;
     }
-    Color readOnlyColor = myScheme.getColor(EditorColors.READONLY_BACKGROUND_COLOR);
+    ColorValue readOnlyColor = myScheme.getColor(EditorColors.READONLY_BACKGROUND_COLOR);
     return readOnlyColor != null ? readOnlyColor : color;
   }
 
@@ -2388,7 +2391,7 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
         return Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR);
       }
     }
-    return UIUtil.getTextCursor(getBackgroundColor());
+    return UIUtil.getTextCursor(TargetAWT.to(getBackgroundColor()));
   }
 
   private void runMouseDraggedCommand(@Nonnull final MouseEvent e) {
@@ -3006,7 +3009,7 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
 
     private OpaqueAwareScrollBar(@JdkConstants.AdjustableOrientation int orientation) {
       super(orientation);
-      UIUtil.putClientProperty(this, ColorKey.FUNCTION_KEY, key -> getColorsScheme().getColor(key));
+      UIUtil.putClientProperty(this, EditorColorKey.FUNCTION_KEY, key -> getColorsScheme().getColor(key));
       addPropertyChangeListener("opaque", event -> {
         revalidate();
         repaint();
@@ -4127,7 +4130,7 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
     private final FontPreferencesImpl myFontPreferences = new FontPreferencesImpl();
     private final FontPreferencesImpl myConsoleFontPreferences = new FontPreferencesImpl();
     private final Map<TextAttributesKey, TextAttributes> myOwnAttributes = new HashMap<>();
-    private final Map<ColorKey, Color> myOwnColors = new HashMap<>();
+    private final Map<EditorColorKey, ColorValue> myOwnColors = new HashMap<>();
     private final EditorColorsScheme myCustomGlobalScheme;
     private Map<EditorFontType, Font> myFontsMap;
     private int myMaxFontSize = EditorFontsConstants.getMaxEditorFontSize();
@@ -4195,7 +4198,7 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
 
     @Nullable
     @Override
-    public Color getColor(ColorKey key) {
+    public ColorValue getColor(EditorColorKey key) {
       if (myOwnColors.containsKey(key)) {
         return myOwnColors.get(key);
       }
@@ -4203,7 +4206,7 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
     }
 
     @Override
-    public void setColor(ColorKey key, Color color) {
+    public void setColor(EditorColorKey key, ColorValue color) {
       myOwnColors.put(key, color);
 
       // These two are here because those attributes are cached and I do not whant the clients to call editor's reinit

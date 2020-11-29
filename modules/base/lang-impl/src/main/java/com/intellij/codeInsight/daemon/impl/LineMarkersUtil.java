@@ -4,6 +4,7 @@ package com.intellij.codeInsight.daemon.impl;
 import com.intellij.codeInsight.daemon.LineMarkerInfo;
 import com.intellij.lang.injection.InjectedLanguageManager;
 import com.intellij.openapi.application.ApplicationManager;
+import consulo.awt.TargetAWT;
 import consulo.logging.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.ex.MarkupModelEx;
@@ -83,7 +84,7 @@ class LineMarkersUtil {
       newHighlighter = true;
       highlighter = markupModel.addRangeHighlighterAndChangeAttributes(info.startOffset, info.endOffset, HighlighterLayer.ADDITIONAL_SYNTAX, null, HighlighterTargetArea.LINES_IN_RANGE, false, markerEx -> {
                 markerEx.setGutterIconRenderer(newRenderer);
-                markerEx.setLineSeparatorColor(info.separatorColor);
+                markerEx.setLineSeparatorColor(TargetAWT.to(info.separatorColor));
                 markerEx.setLineSeparatorPlacement(info.separatorPlacement);
 
                 markerEx.putUserData(LINE_MARKER_INFO, info);
@@ -110,7 +111,7 @@ class LineMarkersUtil {
             markerEx.setGutterIconRenderer(newRenderer);
           }
           if (lineSeparatorColorChanged) {
-            markerEx.setLineSeparatorColor(info.separatorColor);
+            markerEx.setLineSeparatorColor(TargetAWT.to(info.separatorColor));
           }
           if (lineSeparatorPlacementChanged) {
             markerEx.setLineSeparatorPlacement(info.separatorPlacement);

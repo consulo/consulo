@@ -18,7 +18,6 @@ package com.intellij.codeEditor.printing;
 
 import com.intellij.codeInsight.daemon.LineMarkerInfo;
 import com.intellij.ide.highlighter.HighlighterFactory;
-import consulo.logging.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.colors.EditorColorsManager;
 import com.intellij.openapi.editor.colors.EditorColorsScheme;
@@ -35,14 +34,17 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiReference;
 import com.intellij.psi.codeStyle.CodeStyleSettingsManager;
 import com.intellij.psi.impl.file.PsiPackageHelper;
-import com.intellij.ui.JBColor;
-import org.jetbrains.annotations.NonNls;
 import consulo.annotation.access.RequiredReadAction;
+import consulo.logging.Logger;
+import consulo.ui.color.ColorValue;
+import consulo.ui.color.RGBColor;
+import consulo.ui.style.StandardColors;
+import org.jetbrains.annotations.NonNls;
 
 import java.awt.*;
 import java.io.*;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 class HTMLTextPainter {
   private static final Logger LOG = Logger.getInstance(HTMLTextPainter.class);
@@ -321,9 +323,9 @@ class HTMLTextPainter {
     writer.write("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\">\r\n");
     writeStyles(writer);
     writer.write("</head>\r\n");
-    Color color = scheme.getDefaultBackground();
-    if (color==null) color = JBColor.GRAY;
-    writer.write("<BODY BGCOLOR=\"#" + Integer.toString(color.getRGB() & 0xFFFFFF, 16) + "\">\r\n");
+    ColorValue color = scheme.getDefaultBackground();
+    if (color==null) color = StandardColors.GRAY;
+    writer.write("<BODY BGCOLOR=\"#" + Integer.toString(RGBColor.toRGBValue(color.toRGB()) & 0xFFFFFF, 16) + "\">\r\n");
     writer.write("<TABLE CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH=\"100%\" BGCOLOR=\"#C0C0C0\" >\r\n");
     writer.write("<TR><TD><CENTER>\r\n");
     writer.write("<FONT FACE=\"Arial, Helvetica\" COLOR=\"#000000\">\r\n");
@@ -339,12 +341,13 @@ class HTMLTextPainter {
     while(!hIterator.atEnd()) {
       TextAttributes textAttributes = hIterator.getTextAttributes();
       if (!myStyleMap.containsKey(textAttributes)) {
-        @NonNls String styleName = "s" + myStyleMap.size();
+        String styleName = "s" + myStyleMap.size();
         myStyleMap.put(textAttributes, styleName);
         writer.write("." + styleName + " { ");
-        final Color foreColor = textAttributes.getForegroundColor();
+        final ColorValue foreColor = textAttributes.getForegroundColor();
         if (foreColor != null) {
-          writer.write("color: rgb(" + foreColor.getRed() + "," + foreColor.getGreen() + "," + foreColor.getBlue() + "); ");
+          RGBColor rgb = foreColor.toRGB();
+          writer.write("color: rgb(" + rgb.getRed() + "," + rgb.getGreen() + "," + rgb.getBlue() + "); ");
         }
         if ((textAttributes.getFontType() & Font.BOLD) != 0) {
           writer.write("font-weight: bold; ");

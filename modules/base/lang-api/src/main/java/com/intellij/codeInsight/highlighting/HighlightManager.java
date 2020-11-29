@@ -21,11 +21,11 @@ import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiReference;
+import consulo.ui.color.ColorValue;
 import org.intellij.lang.annotations.MagicConstant;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import java.awt.*;
 import java.util.Collection;
 
 /**
@@ -74,7 +74,7 @@ public abstract class HighlightManager {
                                          int endOffset,
                                          @Nonnull TextAttributes attributes,
                                          boolean hideByTextChange,
-                                         @javax.annotation.Nullable Collection<RangeHighlighter> outHighlighters);
+                                         @Nullable Collection<RangeHighlighter> outHighlighters);
 
   /**
    * Highlights a specified range of text in an editor. The highlighting is removed when the user presses the Esc key or (optionally)
@@ -120,7 +120,7 @@ public abstract class HighlightManager {
                                                @Nonnull PsiReference[] occurrences,
                                                @Nonnull TextAttributes attributes,
                                                boolean hideByTextChange,
-                                               @javax.annotation.Nullable Collection<RangeHighlighter> outHighlighters);
+                                               @Nullable Collection<RangeHighlighter> outHighlighters);
 
   /**
    * Highlights the text ranges of the specified elements in the specified editor. The highlighting is removed when the user presses
@@ -136,7 +136,7 @@ public abstract class HighlightManager {
                                                @Nonnull PsiElement[] elements,
                                                @Nonnull TextAttributes attributes,
                                                boolean hideByTextChange,
-                                               @javax.annotation.Nullable Collection<RangeHighlighter> outHighlighters);
+                                               @Nullable Collection<RangeHighlighter> outHighlighters);
 
   /**
    * Highlights a specified range of text in an editor and optionally adds a mark on the gutter. The highlighting is optionally removed
@@ -157,8 +157,8 @@ public abstract class HighlightManager {
                                               int end,
                                               TextAttributes attributes,
                                               @HideFlags int flags,
-                                              @javax.annotation.Nullable Collection<RangeHighlighter> outHighlighters,
-                                              @javax.annotation.Nullable Color scrollmarkColor);
+                                              @Nullable Collection<RangeHighlighter> outHighlighters,
+                                              @Nullable ColorValue scrollmarkColor);
 
   /**
    * @deprecated Use {@link #addOccurrenceHighlights(com.intellij.openapi.editor.Editor, com.intellij.psi.PsiElement[], com.intellij.openapi.editor.markup.TextAttributes, boolean, java.util.Collection)} instead (it does the same thing).
@@ -167,5 +167,5 @@ public abstract class HighlightManager {
                                                        @Nonnull PsiElement[] elements,
                                                        @Nonnull TextAttributes attributes,
                                                        boolean hideByTextChange,
-                                                       @javax.annotation.Nullable Collection<RangeHighlighter> outHighlighters);
+                                                       @Nullable Collection<RangeHighlighter> outHighlighters);
 }

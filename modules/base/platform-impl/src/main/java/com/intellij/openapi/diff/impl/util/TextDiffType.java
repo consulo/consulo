@@ -24,6 +24,9 @@ import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.util.containers.Convertor;
+import consulo.awt.TargetAWT;
+import consulo.ui.color.ColorValue;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -112,7 +115,7 @@ public class TextDiffType implements DiffStatusBar.LegendTypeDescriptor {
   @Nullable
   public Color getLegendColor(EditorColorsScheme colorScheme) {
     TextAttributes attributes = colorScheme.getAttributes(myAttributesKey);
-    return attributes != null ? attributes.getBackgroundColor() : null;
+    return attributes != null ? TargetAWT.to(attributes.getBackgroundColor()) : null;
   }
 
   public TextAttributesKey getAttributesKey() {
@@ -134,7 +137,7 @@ public class TextDiffType implements DiffStatusBar.LegendTypeDescriptor {
     }
     else {
       TextAttributes attributes = getTextAttributes(editor);
-      return attributes == null ? null : attributes.getBackgroundColor();
+      return attributes == null ? null : TargetAWT.to(attributes.getBackgroundColor());
     }
   }
 
@@ -149,7 +152,7 @@ public class TextDiffType implements DiffStatusBar.LegendTypeDescriptor {
       overridingAttributes.setBackgroundColor(((EditorEx)editor).getBackgroundColor());
     }
     else if (myInlineWrapper) {
-      overridingAttributes.setBackgroundColor(getBgColorForFragmentContainingInlines((EditorEx)editor));
+      overridingAttributes.setBackgroundColor(TargetAWT.from(getBgColorForFragmentContainingInlines((EditorEx)editor)));
     }
     return TextAttributes.merge(originalAttrs, overridingAttributes);
   }
@@ -157,7 +160,7 @@ public class TextDiffType implements DiffStatusBar.LegendTypeDescriptor {
   @Nullable
   public Color getTextBackground(Editor editor) {
     TextAttributes attributes = getTextAttributes(editor);
-    return attributes != null ? attributes.getBackgroundColor() : null;
+    return attributes != null ? TargetAWT.to(attributes.getBackgroundColor()) : null;
   }
 
   public String toString(){
@@ -174,12 +177,12 @@ public class TextDiffType implements DiffStatusBar.LegendTypeDescriptor {
     if (originalAttrs == null) {
       return null;
     }
-    Color fg = originalAttrs.getBackgroundColor();
+    Color fg = TargetAWT.to(originalAttrs.getBackgroundColor());
     if (fg == null) {
       return null;
     }
-    Color bg = editor.getBackgroundColor();
-    return getMiddleColor(fg, bg, MIDDLE_COLOR_FACTOR);
+    ColorValue bg = editor.getBackgroundColor();
+    return getMiddleColor(fg, TargetAWT.to(bg), MIDDLE_COLOR_FACTOR);
   }
 
   @Nonnull

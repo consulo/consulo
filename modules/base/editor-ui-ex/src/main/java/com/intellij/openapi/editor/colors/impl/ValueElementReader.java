@@ -15,13 +15,14 @@
  */
 package com.intellij.openapi.editor.colors.impl;
 
-import consulo.logging.Logger;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.text.StringUtil;
+import consulo.logging.Logger;
+import consulo.ui.color.ColorValue;
+import consulo.ui.color.RGBColor;
 import org.jdom.Element;
-import org.jetbrains.annotations.NonNls;
 
-import java.awt.Color;
+import java.awt.*;
 
 /**
  * This class is intended to read a value from the value element
@@ -33,10 +34,10 @@ import java.awt.Color;
  * @author Sergey.Malenkov
  */
 class ValueElementReader {
-  @NonNls private static final String VALUE = "value";
-  @NonNls private static final String MAC = "mac";
-  @NonNls private static final String LINUX = "linux";
-  @NonNls private static final String WINDOWS = "windows";
+  private static final String VALUE = "value";
+  private static final String MAC = "mac";
+  private static final String LINUX = "linux";
+  private static final String WINDOWS = "windows";
   private static final String OS = SystemInfo.isWindows ? WINDOWS : SystemInfo.isMac ? MAC : LINUX;
   private static final Logger LOG = Logger.getInstance(ValueElementReader.class);
 
@@ -131,6 +132,10 @@ class ValueElementReader {
       //noinspection unchecked
       return (T)toColor(value);
     }
+    if (ColorValue.class.equals(type)) {
+      //noinspection unchecked
+      return (T)toColorValue(value);
+    }
     if (Enum.class.isAssignableFrom(type)) {
       //noinspection unchecked
       return (T)(toEnum((Class<Enum>)type, value));
@@ -149,6 +154,17 @@ class ValueElementReader {
       }
     }
     throw new IllegalArgumentException(value);
+  }
+
+  private static ColorValue toColorValue(String value) {
+    int rgb;
+    try {
+      rgb = Integer.parseInt(value, 16);
+    }
+    catch (NumberFormatException ignored) {
+      rgb = Integer.decode(value);
+    }
+    return RGBColor.fromRGBValue(rgb);
   }
 
   private static Color toColor(String value) {

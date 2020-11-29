@@ -4,6 +4,7 @@ package com.intellij.ui.breadcrumbs;
 import com.intellij.codeInsight.breadcrumbs.FileBreadcrumbsCollector;
 import com.intellij.codeInsight.highlighting.HighlightManager;
 import com.intellij.ide.ui.UISettings;
+import consulo.awt.TargetAWT;
 import consulo.disposer.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
@@ -23,6 +24,8 @@ import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.project.Project;
 import consulo.disposer.Disposer;
+import consulo.ui.color.ColorValue;
+import consulo.ui.color.RGBColor;
 import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.util.registry.Registry;
@@ -242,23 +245,26 @@ public class BreadcrumbsWrapper extends JComponent implements Disposable {
       if (range == null) return;
       final TextAttributes attributes = new TextAttributes();
       final CrumbPresentation p = PsiCrumb.getPresentation(crumb);
-      Color color = p == null ? null : p.getBackgroundColor(false, false, false);
+      ColorValue color = p == null ? null : p.getBackgroundColor(false, false, false);
       if (color == null) color = BreadcrumbsComponent.ButtonSettings.getBackgroundColor(false, false, false, false);
-      if (color == null) color = UIUtil.getLabelBackground();
-      final Color background = EditorColorsManager.getInstance().getGlobalScheme().getColor(EditorColors.CARET_ROW_COLOR);
-      attributes.setBackgroundColor(makeTransparent(color, background != null ? background : Gray._200, 0.3));
+      if (color == null) color = TargetAWT.from(UIUtil.getLabelBackground());
+      final ColorValue background = EditorColorsManager.getInstance().getGlobalScheme().getColor(EditorColors.CARET_ROW_COLOR);
+      attributes.setBackgroundColor(makeTransparent(color, background != null ? background : new RGBColor(200, 200, 200), 0.3));
       myHighlighed = new ArrayList<>(1);
       int flags = HighlightManager.HIDE_BY_ESCAPE | HighlightManager.HIDE_BY_TEXT_CHANGE | HighlightManager.HIDE_BY_ANY_KEY;
       hm.addOccurrenceHighlight(myEditor, range.getStartOffset(), range.getEndOffset(), attributes, flags, myHighlighed, null);
     }
   }
 
-  private static Color makeTransparent(@Nonnull Color color, @Nonnull Color backgroundColor, double transparency) {
+  private static RGBColor makeTransparent(@Nonnull ColorValue c, @Nonnull ColorValue cb, double transparency) {
+    RGBColor color = c.toRGB();
+    RGBColor backgroundColor = cb.toRGB();
+    
     int r = makeTransparent(transparency, color.getRed(), backgroundColor.getRed());
     int g = makeTransparent(transparency, color.getGreen(), backgroundColor.getGreen());
     int b = makeTransparent(transparency, color.getBlue(), backgroundColor.getBlue());
 
-    return new Color(r, g, b);
+    return new RGBColor(r, g, b);
   }
 
   private static int makeTransparent(double transparency, int channel, int backgroundChannel) {

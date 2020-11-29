@@ -28,10 +28,7 @@ import com.intellij.openapi.application.ApplicationBundle;
 import com.intellij.openapi.diff.impl.settings.DiffOptionsPanel;
 import com.intellij.openapi.diff.impl.settings.DiffPreviewPanel;
 import com.intellij.openapi.editor.EditorFactory;
-import com.intellij.openapi.editor.colors.ColorKey;
-import com.intellij.openapi.editor.colors.EditorColorsManager;
-import com.intellij.openapi.editor.colors.EditorColorsScheme;
-import com.intellij.openapi.editor.colors.TextAttributesKey;
+import com.intellij.openapi.editor.colors.*;
 import com.intellij.openapi.editor.colors.impl.DefaultColorsScheme;
 import com.intellij.openapi.editor.colors.impl.EditorColorsSchemeImpl;
 import com.intellij.openapi.editor.colors.impl.ReadOnlyColorsScheme;
@@ -61,6 +58,7 @@ import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.color.ColorValue;
 import consulo.ui.image.Image;
 import gnu.trove.THashSet;
 import gnu.trove.TObjectHashingStrategy;
@@ -584,9 +582,9 @@ public class ColorAndFontOptions extends SearchableConfigurable.Parent.Abstract 
 
     ColorDescriptor[] colorDescriptors = provider.getColorDescriptors();
     for (ColorDescriptor descriptor : colorDescriptors) {
-      ColorKey back = descriptor.getKind() == ColorDescriptor.Kind.BACKGROUND ? descriptor.getKey() : null;
-      ColorKey fore = descriptor.getKind() == ColorDescriptor.Kind.FOREGROUND ? descriptor.getKey() : null;
-      addEditorSettingDescription(descriptions, descriptor.getDisplayName(), group, back, fore, scheme);
+      EditorColorKey back = descriptor.getKind() == ColorDescriptor.Kind.BACKGROUND ? descriptor.getKey() : null;
+      EditorColorKey fore = descriptor.getKind() == ColorDescriptor.Kind.FOREGROUND ? descriptor.getKey() : null;
+      addEditorSettingDescription(descriptions, descriptor.getDisplayName().getValue(), group, back, fore, scheme);
     }
   }
 
@@ -647,7 +645,7 @@ public class ColorAndFontOptions extends SearchableConfigurable.Parent.Abstract 
   }
 
   @Nullable
-  private static String calcType(@Nullable ColorKey backgroundKey, @Nullable ColorKey foregroundKey) {
+  private static String calcType(@Nullable EditorColorKey backgroundKey, @Nullable EditorColorKey foregroundKey) {
     if (foregroundKey != null) {
       return foregroundKey.getExternalName();
     }
@@ -660,8 +658,8 @@ public class ColorAndFontOptions extends SearchableConfigurable.Parent.Abstract 
   private static void addEditorSettingDescription(@Nonnull List<EditorSchemeAttributeDescriptor> list,
                                                   String name,
                                                   String group,
-                                                  @Nullable ColorKey backgroundKey,
-                                                  @Nullable ColorKey foregroundKey,
+                                                  @Nullable EditorColorKey backgroundKey,
+                                                  @Nullable EditorColorKey foregroundKey,
                                                   @Nonnull EditorColorsScheme scheme) {
     list.add(new EditorSettingColorDescription(name, group, backgroundKey, foregroundKey, calcType(backgroundKey, foregroundKey), scheme));
   }
@@ -878,22 +876,22 @@ public class ColorAndFontOptions extends SearchableConfigurable.Parent.Abstract 
   }
 
   private static class GetSetColor {
-    private final ColorKey myKey;
+    private final EditorColorKey myKey;
     private final EditorColorsScheme myScheme;
     private boolean isModified = false;
-    private Color myColor;
+    private ColorValue myColor;
 
-    private GetSetColor(ColorKey key, EditorColorsScheme scheme) {
+    private GetSetColor(EditorColorKey key, EditorColorsScheme scheme) {
       myKey = key;
       myScheme = scheme;
       myColor = myScheme.getColor(myKey);
     }
 
-    public Color getColor() {
+    public ColorValue getColor() {
       return myColor;
     }
 
-    public void setColor(Color col) {
+    public void setColor(ColorValue col) {
       if (getColor() == null || !getColor().equals(col)) {
         isModified = true;
         myColor = col;
@@ -914,7 +912,7 @@ public class ColorAndFontOptions extends SearchableConfigurable.Parent.Abstract 
     private GetSetColor myGetSetForeground;
     private GetSetColor myGetSetBackground;
 
-    private EditorSettingColorDescription(String name, String group, ColorKey backgroundKey, ColorKey foregroundKey, String type, EditorColorsScheme scheme) {
+    private EditorSettingColorDescription(String name, String group, EditorColorKey backgroundKey, EditorColorKey foregroundKey, String type, EditorColorsScheme scheme) {
       super(name, group, type, scheme, null, null);
       if (backgroundKey != null) {
         myGetSetBackground = new GetSetColor(backgroundKey, scheme);
@@ -935,12 +933,12 @@ public class ColorAndFontOptions extends SearchableConfigurable.Parent.Abstract 
     }
 
     @Override
-    public Color getExternalEffectColor() {
+    public ColorValue getExternalEffectColor() {
       return null;
     }
 
     @Override
-    public void setExternalEffectColor(Color color) {
+    public void setExternalEffectColor(ColorValue color) {
     }
 
     @Override
@@ -954,7 +952,7 @@ public class ColorAndFontOptions extends SearchableConfigurable.Parent.Abstract 
     }
 
     @Override
-    public Color getExternalForeground() {
+    public ColorValue getExternalForeground() {
       if (myGetSetForeground == null) {
         return null;
       }
@@ -962,7 +960,7 @@ public class ColorAndFontOptions extends SearchableConfigurable.Parent.Abstract 
     }
 
     @Override
-    public void setExternalForeground(Color col) {
+    public void setExternalForeground(ColorValue col) {
       if (myGetSetForeground == null) {
         return;
       }
@@ -970,7 +968,7 @@ public class ColorAndFontOptions extends SearchableConfigurable.Parent.Abstract 
     }
 
     @Override
-    public Color getExternalBackground() {
+    public ColorValue getExternalBackground() {
       if (myGetSetBackground == null) {
         return null;
       }
@@ -978,7 +976,7 @@ public class ColorAndFontOptions extends SearchableConfigurable.Parent.Abstract 
     }
 
     @Override
-    public void setExternalBackground(Color col) {
+    public void setExternalBackground(ColorValue col) {
       if (myGetSetBackground == null) {
         return;
       }
@@ -986,12 +984,12 @@ public class ColorAndFontOptions extends SearchableConfigurable.Parent.Abstract 
     }
 
     @Override
-    public Color getExternalErrorStripe() {
+    public ColorValue getExternalErrorStripe() {
       return null;
     }
 
     @Override
-    public void setExternalErrorStripe(Color col) {
+    public void setExternalErrorStripe(ColorValue col) {
     }
 
     @Override

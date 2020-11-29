@@ -21,7 +21,7 @@ import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.components.ProjectComponent;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.EditorFactory;
-import com.intellij.openapi.editor.colors.ColorKey;
+import com.intellij.openapi.editor.colors.EditorColorKey;
 import com.intellij.openapi.editor.colors.EditorColorsListener;
 import com.intellij.openapi.editor.colors.EditorColorsManager;
 import com.intellij.openapi.editor.colors.EditorColorsScheme;
@@ -43,6 +43,7 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.HashMap;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
+import consulo.ui.color.ColorValue;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -73,13 +74,13 @@ public class FileStatusManagerImpl extends FileStatusManager implements ProjectC
     }
 
     @Override
-    public Color getColor() {
+    public ColorValue getColor() {
       throw new AssertionError("Should not be called");
     }
 
     @Nonnull
     @Override
-    public ColorKey getColorKey() {
+    public EditorColorKey getColorKey() {
       throw new AssertionError("Should not be called");
     }
 
@@ -269,7 +270,7 @@ public class FileStatusManagerImpl extends FileStatusManager implements ProjectC
   }
 
   @Override
-  public Color getNotChangedDirectoryColor(@Nonnull VirtualFile file) {
+  public ColorValue getNotChangedDirectoryColor(@Nonnull VirtualFile file) {
     return getRecursiveStatus(file).getColor();
   }
 

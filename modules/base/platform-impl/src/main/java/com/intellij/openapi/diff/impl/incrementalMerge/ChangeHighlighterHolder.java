@@ -21,13 +21,16 @@ import com.intellij.openapi.diff.impl.util.GutterActionRenderer;
 import com.intellij.openapi.diff.impl.util.TextDiffType;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.ex.RangeHighlighterEx;
-import com.intellij.openapi.editor.markup.*;
+import com.intellij.openapi.editor.markup.HighlighterTargetArea;
+import com.intellij.openapi.editor.markup.MarkupModel;
+import com.intellij.openapi.editor.markup.RangeHighlighter;
+import com.intellij.openapi.editor.markup.TextAttributes;
 import consulo.logging.Logger;
+import consulo.ui.color.ColorValue;
+import consulo.ui.color.RGBColor;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import java.awt.*;
 import java.util.ArrayList;
 
 /**
@@ -38,7 +41,6 @@ import java.util.ArrayList;
 class ChangeHighlighterHolder {
 
   private static final Logger LOG = Logger.getInstance(ChangeHighlighterHolder.class);
-  static final int APPLIED_CHANGE_TRANSPARENCY = 30;
 
   private Editor myEditor;
   private final ArrayList<RangeHighlighter> myHighlighters = new ArrayList<RangeHighlighter>(3);
@@ -59,7 +61,7 @@ class ChangeHighlighterHolder {
 
   private void highlighterCreated(RangeHighlighter highlighter, TextAttributes attrs, boolean applied) {
     if (attrs != null) {
-      Color color = attrs.getErrorStripeColor();
+      ColorValue color = attrs.getErrorStripeColor();
       if (color != null && applied) {
         color = makeColorForApplied(color);
       }
@@ -69,8 +71,9 @@ class ChangeHighlighterHolder {
   }
 
   @Nonnull
-  private static Color makeColorForApplied(@Nonnull Color color) {
-    return new Color(color.getRed(), color.getGreen(), color.getBlue(), APPLIED_CHANGE_TRANSPARENCY);
+  private static ColorValue makeColorForApplied(@Nonnull ColorValue colorValue) {
+    RGBColor color = colorValue.toRGB();
+    return new RGBColor(color, 0.1f);
   }
 
   @Nullable

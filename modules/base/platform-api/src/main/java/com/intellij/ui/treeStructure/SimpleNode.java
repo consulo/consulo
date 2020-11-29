@@ -27,6 +27,8 @@ import com.intellij.ui.tree.LeafState;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.update.ComparableObject;
 import com.intellij.util.ui.update.ComparableObjectCheck;
+import consulo.awt.TargetAWT;
+import consulo.ui.color.ColorValue;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
@@ -71,11 +73,11 @@ public abstract class SimpleNode extends PresentableNodeDescriptor implements Co
   }
 
   protected SimpleTextAttributes getErrorAttributes() {
-    return new SimpleTextAttributes(SimpleTextAttributes.STYLE_WAVED, getColor(), JBColor.RED);
+    return new SimpleTextAttributes(SimpleTextAttributes.STYLE_WAVED, TargetAWT.to(getColor()), JBColor.RED);
   }
 
   protected SimpleTextAttributes getPlainAttributes() {
-    return new SimpleTextAttributes(Font.PLAIN, getColor());
+    return new SimpleTextAttributes(Font.PLAIN, TargetAWT.to(getColor()));
   }
 
   private FileStatus getFileStatus() {
@@ -95,12 +97,12 @@ public abstract class SimpleNode extends PresentableNodeDescriptor implements Co
     }
     if (newElement == null) return;
 
-    Color oldColor = myColor;
+    ColorValue oldColor = myColor;
     String oldName = myName;
     Image oldIcon = getIcon();
     List<ColoredFragment> oldFragments = new ArrayList<ColoredFragment>(presentation.getColoredText());
 
-    myColor = UIUtil.getTreeTextForeground();
+    myColor = TargetAWT.from(UIUtil.getTreeTextForeground());
     updateFileStatus();
 
     doUpdate();
@@ -118,7 +120,7 @@ public abstract class SimpleNode extends PresentableNodeDescriptor implements Co
   protected void updateFileStatus() {
     assert getFileStatus() != null : getClass().getName() + ' ' + toString();
 
-    Color fileStatusColor = getFileStatus().getColor();
+    ColorValue fileStatusColor = getFileStatus().getColor();
     if (fileStatusColor != null) {
       myColor = fileStatusColor;
     }

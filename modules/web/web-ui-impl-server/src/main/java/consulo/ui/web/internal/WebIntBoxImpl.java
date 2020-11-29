@@ -59,10 +59,8 @@ public class WebIntBoxImpl extends UIComponentWithVaadinComponent<WebIntBoxImpl.
   public void setPlaceholder(@Nullable String text) {
   }
 
-  @Nonnull
   @Override
-  public IntBox setRange(int min, int max) {
-    return this;
+  public void setRange(int min, int max) {
   }
 
   @Nonnull

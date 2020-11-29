@@ -20,11 +20,12 @@ import com.intellij.openapi.editor.colors.EditorColorsManager;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.editor.markup.TextAttributes;
+import consulo.ui.color.ColorValue;
+import consulo.ui.color.RGBColor;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -81,32 +82,32 @@ public class TextDiffTypeFactory {
 
     @Nonnull
     @Override
-    public Color getColor(@javax.annotation.Nullable Editor editor) {
+    public ColorValue getColor(@Nullable Editor editor) {
       return getAttributes(editor).getBackgroundColor();
     }
 
     @Nonnull
     @Override
-    public Color getIgnoredColor(@Nullable Editor editor) {
+    public ColorValue getIgnoredColor(@Nullable Editor editor) {
       TextAttributes attributes = getAttributes(editor);
-      Color color = attributes.getForegroundColor();
+      ColorValue color = attributes.getForegroundColor();
       if (color != null) return color;
 
       if (editor instanceof EditorEx) {
-        Color fg = attributes.getBackgroundColor();
-        Color bg = ((EditorEx)editor).getBackgroundColor();
+        ColorValue fg = attributes.getBackgroundColor();
+        ColorValue bg = ((EditorEx)editor).getBackgroundColor();
         return getMiddleColor(fg, bg);
       }
       else {
-        Color fg = attributes.getBackgroundColor();
-        Color bg = EditorColorsManager.getInstance().getGlobalScheme().getDefaultBackground();
+        ColorValue fg = attributes.getBackgroundColor();
+        ColorValue bg = EditorColorsManager.getInstance().getGlobalScheme().getDefaultBackground();
         return getMiddleColor(fg, bg);
       }
     }
 
-    @javax.annotation.Nullable
+    @Nullable
     @Override
-    public Color getMarkerColor(@javax.annotation.Nullable Editor editor) {
+    public ColorValue getMarkerColor(@Nullable Editor editor) {
       return getAttributes(editor).getErrorStripeColor();
     }
 
@@ -119,12 +120,15 @@ public class TextDiffTypeFactory {
   private static final double MIDDLE_COLOR_FACTOR = 0.6;
 
   @Nonnull
-  private static Color getMiddleColor(@Nonnull Color fg, @Nonnull Color bg) {
-    int red = avg(fg.getRed(), bg.getRed(), MIDDLE_COLOR_FACTOR);
-    int green = avg(fg.getGreen(), bg.getGreen(), MIDDLE_COLOR_FACTOR);
-    int blue = avg(fg.getBlue(), bg.getBlue(), MIDDLE_COLOR_FACTOR);
+  private static ColorValue getMiddleColor(@Nonnull ColorValue fg, @Nonnull ColorValue bg) {
+    RGBColor f = fg.toRGB();
+    RGBColor b = bg.toRGB();
+    
+    int red = avg(f.getRed(), b.getRed(), MIDDLE_COLOR_FACTOR);
+    int green = avg(f.getGreen(), b.getGreen(), MIDDLE_COLOR_FACTOR);
+    int blue = avg(f.getBlue(), b.getBlue(), MIDDLE_COLOR_FACTOR);
     //noinspection UseJBColor
-    return new Color(red, green, blue);
+    return new RGBColor(red, green, blue);
   }
 
   private static int avg(int fg, int bg, double factor) {

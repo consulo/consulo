@@ -15,13 +15,12 @@
  */
 package com.intellij.openapi.vcs;
 
-import com.intellij.openapi.editor.colors.ColorKey;
+import com.intellij.openapi.editor.colors.EditorColorKey;
 import com.intellij.openapi.editor.colors.EditorColorsManager;
-import org.jetbrains.annotations.NonNls;
+import consulo.ui.color.ColorValue;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,12 +31,12 @@ public class FileStatusFactory {
   private FileStatusFactory() {
   }
 
-  public synchronized FileStatus createFileStatus(@NonNls @Nonnull String id, @Nonnull String description) {
+  public synchronized FileStatus createFileStatus(@Nonnull String id, @Nonnull String description) {
     return createFileStatus(id, description, null);
   }
 
-  public synchronized FileStatus createFileStatus(@NonNls @Nonnull String id, @Nonnull String description, @Nullable Color color) {
-    FileStatusImpl result = new FileStatusImpl(id, ColorKey.createColorKey("FILESTATUS_" + id, color), description);
+  public synchronized FileStatus createFileStatus(@Nonnull String id, @Nonnull String description, @Nullable ColorValue color) {
+    FileStatusImpl result = new FileStatusImpl(id, EditorColorKey.createColorKey("FILESTATUS_" + id, color), description);
     myStatuses.add(result);
     return result;
   }
@@ -55,10 +54,10 @@ public class FileStatusFactory {
    */
   private static class FileStatusImpl implements FileStatus {
     private final String myStatus;
-    private final ColorKey myColorKey;
+    private final EditorColorKey myColorKey;
     private final String myText;
 
-    public FileStatusImpl(@Nonnull String status, @Nonnull ColorKey key, String text) {
+    public FileStatusImpl(@Nonnull String status, @Nonnull EditorColorKey key, String text) {
       myStatus = status;
       myColorKey = key;
       myText = text;
@@ -74,13 +73,13 @@ public class FileStatusFactory {
     }
 
     @Override
-    public Color getColor() {
+    public ColorValue getColor() {
       return EditorColorsManager.getInstance().getGlobalScheme().getColor(getColorKey());
     }
 
     @Nonnull
     @Override
-    public ColorKey getColorKey() {
+    public EditorColorKey getColorKey() {
       return myColorKey;
     }
 

@@ -28,6 +28,9 @@ import com.intellij.ui.components.JBCheckBox;
 import com.intellij.util.FontUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.UIUtil;
+import consulo.awt.TargetAWT;
+import consulo.ui.color.ColorValue;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -148,11 +151,11 @@ public class ColorAndFontDescriptionPanel extends JPanel {
                                          ColorPanel colorPanel,
                                          boolean isEnabled,
                                          boolean isChecked,
-                                         @Nullable Color color) {
+                                         @Nullable ColorValue color) {
     checkBox.setEnabled(isEnabled);
     checkBox.setSelected(isChecked);
     if (color != null) {
-      colorPanel.setSelectedColor(color);
+      colorPanel.setSelectedColor(TargetAWT.to(color));
     }
     else {
       colorPanel.setSelectedColor(JBColor.WHITE);
@@ -280,13 +283,13 @@ public class ColorAndFontDescriptionPanel extends JPanel {
         if (myCbItalic.isSelected()) fontType |= Font.ITALIC;
         description.setFontType(fontType);
         description.setForegroundChecked(myCbForeground.isSelected());
-        description.setForegroundColor(myForegroundChooser.getSelectedColor());
+        description.setForegroundColor(TargetAWT.from(myForegroundChooser.getSelectedColor()));
         description.setBackgroundChecked(myCbBackground.isSelected());
-        description.setBackgroundColor(myBackgroundChooser.getSelectedColor());
+        description.setBackgroundColor(TargetAWT.from(myBackgroundChooser.getSelectedColor()));
         description.setErrorStripeChecked(myCbErrorStripe.isSelected());
-        description.setErrorStripeColor(myErrorStripeColorChooser.getSelectedColor());
+        description.setErrorStripeColor(TargetAWT.from(myErrorStripeColorChooser.getSelectedColor()));
         description.setEffectsColorChecked(myCbEffects.isSelected());
-        description.setEffectColor(myEffectsColorChooser.getSelectedColor());
+        description.setEffectColor(TargetAWT.from(myEffectsColorChooser.getSelectedColor()));
 
         if (myEffectsCombo.isEnabled()) {
           String effectType = (String)myEffectsCombo.getModel().getSelectedItem();

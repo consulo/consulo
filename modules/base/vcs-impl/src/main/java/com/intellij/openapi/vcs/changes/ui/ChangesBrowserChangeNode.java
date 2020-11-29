@@ -26,6 +26,7 @@ import com.intellij.openapi.vcs.changes.ChangesUtil;
 import com.intellij.openapi.vcs.changes.issueLinks.TreeLinkMouseListener;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.SimpleTextAttributes;
+import consulo.awt.TargetAWT;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
@@ -66,7 +67,7 @@ public class ChangesBrowserChangeNode extends ChangesBrowserNode<Change> impleme
       myDecorator.preDecorate(change, renderer, renderer.isShowFlatten());
     }
 
-    renderer.appendFileName(file, filePath.getName(), change.getFileStatus().getColor());
+    renderer.appendFileName(file, filePath.getName(), TargetAWT.to(change.getFileStatus().getColor()));
 
     String originText = change.getOriginText(myProject);
     if (originText != null) {

@@ -15,18 +15,18 @@
  */
 package com.intellij.openapi.vcs.actions;
 
-import consulo.disposer.Disposable;
 import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.editor.colors.ColorKey;
+import com.intellij.openapi.editor.colors.EditorColorKey;
 import com.intellij.openapi.editor.colors.EditorFontType;
 import com.intellij.openapi.localVcs.UpToDateLineNumberProvider;
-import consulo.disposer.Disposer;
 import com.intellij.openapi.vcs.annotate.*;
 import com.intellij.openapi.vcs.history.VcsRevisionNumber;
 import com.intellij.util.ObjectUtils;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -60,7 +60,7 @@ class AnnotationPresentation implements TextAnnotationPresentation {
   }
 
   @Override
-  public ColorKey getColor(final int line) {
+  public EditorColorKey getColor(final int line) {
     if (mySwitcher == null) return AnnotationSource.LOCAL.getColor();
     return mySwitcher.getAnnotationSource(line).getColor();
   }

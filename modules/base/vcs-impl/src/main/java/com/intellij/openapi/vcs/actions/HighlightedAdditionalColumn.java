@@ -20,15 +20,15 @@ import com.intellij.openapi.util.Couple;
 import com.intellij.openapi.vcs.annotate.FileAnnotation;
 import com.intellij.openapi.vcs.annotate.TextAnnotationPresentation;
 import com.intellij.openapi.vcs.history.VcsRevisionNumber;
+import consulo.ui.color.ColorValue;
 
-import java.awt.*;
 import java.util.Map;
 
 class HighlightedAdditionalColumn extends AnnotationFieldGutter {
 
   HighlightedAdditionalColumn(FileAnnotation annotation,
                               TextAnnotationPresentation presentation,
-                              Couple<Map<VcsRevisionNumber, Color>> colorScheme) {
+                              Couple<Map<VcsRevisionNumber, ColorValue>> colorScheme) {
     super(annotation, presentation, colorScheme);
   }
 

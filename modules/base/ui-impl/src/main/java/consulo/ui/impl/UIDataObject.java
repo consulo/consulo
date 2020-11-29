@@ -21,7 +21,7 @@ import com.intellij.util.containers.ContainerUtil;
 import consulo.disposer.Disposable;
 import consulo.ui.border.BorderPosition;
 import consulo.ui.border.BorderStyle;
-import consulo.ui.style.ColorKey;
+import consulo.ui.color.ColorValue;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolderBase;
 
@@ -74,12 +74,12 @@ public class UIDataObject extends UserDataHolderBase {
     return super.getUserData(key);
   }
 
-  public void addBorder(BorderPosition borderPosition, BorderStyle borderStyle, ColorKey colorKey, int width) {
+  public void addBorder(BorderPosition borderPosition, BorderStyle borderStyle, ColorValue colorValue, int width) {
     if (myBorders == null) {
       myBorders = new ConcurrentHashMap<>();
     }
 
-    BorderInfo borderInfo = new BorderInfo(borderPosition, borderStyle, colorKey, width);
+    BorderInfo borderInfo = new BorderInfo(borderPosition, borderStyle, colorValue, width);
     myBorders.put(borderPosition, borderInfo);
   }
 

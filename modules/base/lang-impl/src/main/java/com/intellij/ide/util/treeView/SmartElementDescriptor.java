@@ -28,14 +28,15 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.SmartPointerManager;
 import com.intellij.psi.SmartPsiElementPointer;
 import com.intellij.psi.util.PsiUtilCore;
-import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ide.IconDescriptorUpdaters;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.color.ColorValue;
+import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.awt.*;
 
-public class SmartElementDescriptor extends NodeDescriptor{
+public class SmartElementDescriptor extends NodeDescriptor {
   private final SmartPsiElementPointer mySmartPointer;
 
   public SmartElementDescriptor(@Nonnull Project project, NodeDescriptor parentDescriptor, @Nonnull PsiElement element) {
@@ -68,18 +69,18 @@ public class SmartElementDescriptor extends NodeDescriptor{
     PsiElement element = mySmartPointer.getElement();
     if (element == null) return true;
     int flags = Iconable.ICON_FLAG_VISIBILITY;
-    if (isMarkReadOnly()){
+    if (isMarkReadOnly()) {
       flags |= Iconable.ICON_FLAG_READ_STATUS;
     }
-    consulo.ui.image.Image icon = null;
+    Image icon = null;
     try {
       icon = IconDescriptorUpdaters.getIcon(element, flags);
     }
     catch (IndexNotReadyException ignored) {
     }
-    Color color = null;
+    ColorValue color = null;
 
-    if (isMarkModified() ){
+    if (isMarkModified()) {
       VirtualFile virtualFile = PsiUtilCore.getVirtualFile(element);
       if (virtualFile != null) {
         color = FileStatusManager.getInstance(myProject).getStatus(virtualFile).getColor();

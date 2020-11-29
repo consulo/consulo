@@ -20,9 +20,11 @@ import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vcs.changes.ui.ChangesViewContentManager;
-import javax.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 @Singleton
 public class VcsNotifier {
@@ -50,7 +52,7 @@ public class VcsNotifier {
                                                 @Nonnull String title,
                                                 @Nonnull String message,
                                                 @Nonnull NotificationType type,
-                                                @javax.annotation.Nullable NotificationListener listener) {
+                                                @Nullable NotificationListener listener) {
     // title can be empty; message can't be neither null, nor empty
     if (StringUtil.isEmptyOrSpaces(message)) {
       message = title;
@@ -65,7 +67,7 @@ public class VcsNotifier {
                              @Nonnull String title,
                              @Nonnull String message,
                              @Nonnull NotificationType type,
-                             @javax.annotation.Nullable NotificationListener listener) {
+                             @Nullable NotificationListener listener) {
     Notification notification = createNotification(notificationGroup, title, message, type, listener);
     notification.notify(myProject);
     return notification;
@@ -83,7 +85,7 @@ public class VcsNotifier {
   }
 
   @Nonnull
-  public Notification notifyError(@Nonnull String title, @Nonnull String message, @javax.annotation.Nullable NotificationListener listener) {
+  public Notification notifyError(@Nonnull String title, @Nonnull String message, @Nullable NotificationListener listener) {
     return notify(IMPORTANT_ERROR_NOTIFICATION, title, message, NotificationType.ERROR, listener);
   }
 
@@ -103,7 +105,7 @@ public class VcsNotifier {
   }
 
   @Nonnull
-  public Notification notifySuccess(@Nonnull String title, @Nonnull String message, @javax.annotation.Nullable NotificationListener listener) {
+  public Notification notifySuccess(@Nonnull String title, @Nonnull String message, @Nullable NotificationListener listener) {
     return notify(NOTIFICATION_GROUP_ID, title, message, NotificationType.INFORMATION, listener);
   }
 
@@ -113,7 +115,7 @@ public class VcsNotifier {
   }
 
   @Nonnull
-  public Notification notifyImportantInfo(@Nonnull String title, @Nonnull String message, @javax.annotation.Nullable NotificationListener listener) {
+  public Notification notifyImportantInfo(@Nonnull String title, @Nonnull String message, @Nullable NotificationListener listener) {
     return notify(IMPORTANT_ERROR_NOTIFICATION, title, message, NotificationType.INFORMATION, listener);
   }
 
@@ -128,7 +130,7 @@ public class VcsNotifier {
   }
 
   @Nonnull
-  public Notification notifyInfo(@Nonnull String title, @Nonnull String message, @javax.annotation.Nullable NotificationListener listener) {
+  public Notification notifyInfo(@Nonnull String title, @Nonnull String message, @Nullable NotificationListener listener) {
     return notify(NOTIFICATION_GROUP_ID, title, message, NotificationType.INFORMATION, listener);
   }
 
@@ -138,7 +140,7 @@ public class VcsNotifier {
   }
 
   @Nonnull
-  public Notification notifyMinorWarning(@Nonnull String title, @Nonnull String message, @javax.annotation.Nullable NotificationListener listener) {
+  public Notification notifyMinorWarning(@Nonnull String title, @Nonnull String message, @Nullable NotificationListener listener) {
     return notify(STANDARD_NOTIFICATION, title, message, NotificationType.WARNING, listener);
   }
 
@@ -148,7 +150,7 @@ public class VcsNotifier {
   }
 
   @Nonnull
-  public Notification notifyWarning(@Nonnull String title, @Nonnull String message, @javax.annotation.Nullable NotificationListener listener) {
+  public Notification notifyWarning(@Nonnull String title, @Nonnull String message, @Nullable NotificationListener listener) {
     return notify(NOTIFICATION_GROUP_ID, title, message, NotificationType.WARNING, listener);
   }
 
@@ -158,7 +160,7 @@ public class VcsNotifier {
   }
 
   @Nonnull
-  public Notification notifyImportantWarning(@Nonnull String title, @Nonnull String message, @javax.annotation.Nullable NotificationListener listener) {
+  public Notification notifyImportantWarning(@Nonnull String title, @Nonnull String message, @Nullable NotificationListener listener) {
     return notify(IMPORTANT_ERROR_NOTIFICATION, title, message, NotificationType.WARNING, listener);
   }
 
@@ -168,7 +170,7 @@ public class VcsNotifier {
   }
 
   @Nonnull
-  public Notification notifyMinorInfo(@Nonnull String title, @Nonnull String message, @javax.annotation.Nullable NotificationListener listener) {
+  public Notification notifyMinorInfo(@Nonnull String title, @Nonnull String message, @Nullable NotificationListener listener) {
     return notify(STANDARD_NOTIFICATION, title, message, NotificationType.INFORMATION, listener);
   }
 

@@ -32,11 +32,12 @@ import com.intellij.openapi.fileEditor.ex.FileEditorProviderManager;
 import com.intellij.openapi.fileEditor.ex.FileEditorWithProvider;
 import com.intellij.openapi.fileEditor.ex.IdeDocumentHistory;
 import com.intellij.openapi.project.DumbService;
-import com.intellij.openapi.util.*;
+import com.intellij.openapi.util.Comparing;
+import com.intellij.openapi.util.NullUtils;
+import com.intellij.openapi.util.Weighted;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.FocusWatcher;
 import com.intellij.openapi.wm.IdeFocusManager;
-import com.intellij.ui.JBColor;
 import com.intellij.ui.PrevNextActionsDescriptor;
 import com.intellij.ui.SideBorder;
 import com.intellij.ui.TabbedPaneWrapper;
@@ -50,10 +51,13 @@ import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.UIUtil;
 import consulo.annotation.DeprecationInfo;
+import consulo.awt.TargetAWT;
 import consulo.disposer.Disposer;
 import consulo.fileEditor.impl.EditorComposite;
 import consulo.logging.Logger;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.color.ColorValue;
+import consulo.ui.style.StandardColors;
 import consulo.util.dataholder.Key;
 
 import javax.annotation.Nonnull;
@@ -519,8 +523,8 @@ public abstract class DesktopEditorComposite implements EditorComposite {
 
     @Override
     public Color getBackground() {
-      Color color = EditorColorsManager.getInstance().getGlobalScheme().getColor(EditorColors.GUTTER_BACKGROUND);
-      return color == null ? EditorColors.GUTTER_BACKGROUND.getDefaultColor() : color;
+      ColorValue color = EditorColorsManager.getInstance().getGlobalScheme().getColor(EditorColors.GUTTER_BACKGROUND);
+      return TargetAWT.to(color == null ? EditorColors.GUTTER_BACKGROUND.getDefaultColorValue() : color);
     }
   }
 
@@ -529,8 +533,8 @@ public abstract class DesktopEditorComposite implements EditorComposite {
     return new SideBorder(null, top ? SideBorder.BOTTOM : SideBorder.TOP) {
       @Override
       public Color getLineColor() {
-        Color result = EditorColorsManager.getInstance().getGlobalScheme().getColor(EditorColors.TEARLINE_COLOR);
-        return result == null ? JBColor.BLACK : result;
+        ColorValue result = EditorColorsManager.getInstance().getGlobalScheme().getColor(EditorColors.TEARLINE_COLOR);
+        return TargetAWT.to(result == null ? StandardColors.BLACK : result);
       }
     };
   }

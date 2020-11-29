@@ -45,6 +45,8 @@ import com.intellij.openapi.util.Comparing;
 import com.intellij.ui.*;
 import com.intellij.ui.components.JBList;
 import consulo.logging.Logger;
+import consulo.ui.color.ColorValue;
+import consulo.ui.style.StandardColors;
 import consulo.util.concurrent.AsyncResult;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
@@ -328,8 +330,8 @@ public class SeverityEditorDialog extends DialogWrapper {
       order.add(info.getSeverity());
       if (!mySeverityRegistrar.isDefaultSeverity(info.getSeverity())) {
         infoTypes.remove(info);
-        final Color stripeColor = info.getAttributes().getErrorStripeColor();
-        mySeverityRegistrar.registerSeverity(info, stripeColor != null ? stripeColor : LightColors.YELLOW);
+        final ColorValue stripeColor = info.getAttributes().getErrorStripeColor();
+        mySeverityRegistrar.registerSeverity(info, stripeColor != null ? stripeColor : StandardColors.YELLOW);
       }
     }
     for (SeverityBasedTextAttributes info : infoTypes) {

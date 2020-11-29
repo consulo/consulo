@@ -63,6 +63,7 @@ import consulo.annotation.access.RequiredWriteAction;
 import consulo.application.AccessRule;
 import consulo.disposer.Disposer;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.color.ColorValue;
 import gnu.trove.TIntArrayList;
 
 import javax.annotation.Nonnull;
@@ -1164,7 +1165,7 @@ public class TextMergeViewer implements MergeTool.MergeViewer {
         ThreeSide right = mySide.select(ThreeSide.BASE, ThreeSide.RIGHT);
         for (TextMergeChange mergeChange : myAllMergeChanges) {
           if (!mergeChange.isChange(mySide)) continue;
-          Color color = mergeChange.getDiffType().getColor(getEditor());
+          ColorValue color = mergeChange.getDiffType().getColor(getEditor());
           boolean isResolved = mergeChange.isResolved(mySide);
           if (!handler.process(mergeChange.getStartLine(left), mergeChange.getEndLine(left),
                                mergeChange.getStartLine(right), mergeChange.getEndLine(right),

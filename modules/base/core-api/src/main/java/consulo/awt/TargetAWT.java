@@ -114,7 +114,7 @@ public class TargetAWT {
   }
 
   @Contract("null -> null")
-  public static RGBColor from(@Nullable java.awt.Color color) {
+  public static ColorValue from(@Nullable java.awt.Color color) {
     return ourFacade.from(color);
   }
 

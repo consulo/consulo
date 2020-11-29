@@ -16,7 +16,7 @@
 package com.intellij.openapi.vcs.actions;
 
 import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.editor.colors.ColorKey;
+import com.intellij.openapi.editor.colors.EditorColorKey;
 import com.intellij.openapi.util.Couple;
 import com.intellij.openapi.vcs.VcsBundle;
 import com.intellij.openapi.vcs.annotate.AnnotationSource;
@@ -25,8 +25,8 @@ import com.intellij.openapi.vcs.annotate.LineAnnotationAspect;
 import com.intellij.openapi.vcs.annotate.TextAnnotationPresentation;
 import com.intellij.openapi.vcs.history.VcsRevisionNumber;
 import com.intellij.util.Consumer;
+import consulo.ui.color.ColorValue;
 
-import java.awt.*;
 import java.util.Map;
 
 /**
@@ -41,12 +41,12 @@ class CurrentRevisionAnnotationFieldGutter extends AspectAnnotationFieldGutter i
   CurrentRevisionAnnotationFieldGutter(FileAnnotation annotation,
                                        LineAnnotationAspect aspect,
                                        TextAnnotationPresentation highlighting,
-                                       Couple<Map<VcsRevisionNumber, Color>> colorScheme) {
+                                       Couple<Map<VcsRevisionNumber, ColorValue>> colorScheme) {
     super(annotation, aspect, highlighting, colorScheme);
   }
 
   @Override
-  public ColorKey getColor(int line, Editor editor) {
+  public EditorColorKey getColor(int line, Editor editor) {
     return AnnotationSource.LOCAL.getColor();
   }
 
@@ -70,6 +70,7 @@ class CurrentRevisionAnnotationFieldGutter extends AspectAnnotationFieldGutter i
     return ((text == null) || (text.length() == 0)) ? "" : VcsBundle.message("annotation.original.revision.text", text);
   }
 
+  @Override
   public void consume(final AnnotationSource annotationSource) {
     myTurnedOn = annotationSource.showMerged();
   }

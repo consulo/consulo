@@ -255,7 +255,7 @@ public class CoverageView extends JPanel implements DataProvider, Disposable {
         NodeDescriptor descriptor = (NodeDescriptor)value;
         setIcon(TargetAWT.to(descriptor.getIcon()));
         setText(descriptor.toString());
-        if (!isSelected) setForeground(((CoverageListNode)descriptor).getFileStatus().getColor());
+        if (!isSelected) setForeground(TargetAWT.to(((CoverageListNode)descriptor).getFileStatus().getColor()));
       }
       return component;
     }

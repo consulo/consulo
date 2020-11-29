@@ -15,11 +15,10 @@
  */
 package com.intellij.openapi.editor.colors;
 
-import consulo.disposer.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.util.messages.Topic;
-import org.jetbrains.annotations.NonNls;
+import consulo.disposer.Disposable;
 
 import javax.annotation.Nonnull;
 import java.util.Map;
@@ -27,7 +26,6 @@ import java.util.Map;
 public abstract class EditorColorsManager {
   public static final Topic<EditorColorsListener> TOPIC = Topic.create("EditorColorsListener", EditorColorsListener.class);
 
-  @NonNls
   public static final String DEFAULT_SCHEME_NAME = "Default";
 
   public static EditorColorsManager getInstance() {
@@ -49,7 +47,12 @@ public abstract class EditorColorsManager {
   @Nonnull
   public abstract EditorColorsScheme getGlobalScheme();
 
-  public abstract EditorColorsScheme getScheme(@NonNls String schemeName);
+  @Nonnull
+  public EditorColorsScheme getCurrentScheme() {
+    return getGlobalScheme();
+  }
+
+  public abstract EditorColorsScheme getScheme(String schemeName);
 
   public abstract boolean isDefaultScheme(EditorColorsScheme scheme);
 

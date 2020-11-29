@@ -21,9 +21,10 @@ import com.intellij.openapi.editor.richcopy.model.SyntaxInfo;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.psi.TokenType;
 import com.intellij.util.text.CharArrayUtil;
+import consulo.ui.color.ColorValue;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.awt.*;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -64,8 +65,8 @@ public final class SyntaxInfoBuilder {
     private final SegmentIterator mySegmentIterator;
     private final RangeIterator myRangeIterator;
     private int myCurrentFontStyle;
-    private Color myCurrentForegroundColor;
-    private Color myCurrentBackgroundColor;
+    private ColorValue myCurrentForegroundColor;
+    private ColorValue myCurrentBackgroundColor;
 
     MyMarkupIterator(@Nonnull CharSequence charSequence, @Nonnull RangeIterator rangeIterator, @Nonnull EditorColorsScheme colorsScheme) {
       myRangeIterator = rangeIterator;
@@ -106,12 +107,12 @@ public final class SyntaxInfoBuilder {
     }
 
     @Nullable
-    public Color getForegroundColor() {
+    public ColorValue getForegroundColor() {
       return myCurrentForegroundColor;
     }
 
     @Nullable
-    public Color getBackgroundColor() {
+    public ColorValue getBackgroundColor() {
       return myCurrentBackgroundColor;
     }
 
@@ -121,12 +122,10 @@ public final class SyntaxInfoBuilder {
   }
 
   static class CompositeRangeIterator implements RangeIterator {
-    private final
     @Nonnull
-    Color myDefaultForeground;
-    private final
+    private final ColorValue myDefaultForeground;
     @Nonnull
-    Color myDefaultBackground;
+    private final ColorValue myDefaultBackground;
     private final IteratorWrapper[] myIterators;
     private final TextAttributes myMergedAttributes = new TextAttributes();
     private int overlappingRangesCount;
@@ -244,11 +243,11 @@ public final class SyntaxInfoBuilder {
     }
 
     private void merge(TextAttributes attributes) {
-      Color myBackground = myMergedAttributes.getBackgroundColor();
+      ColorValue myBackground = myMergedAttributes.getBackgroundColor();
       if (myBackground == null || myDefaultBackground.equals(myBackground)) {
         myMergedAttributes.setBackgroundColor(attributes.getBackgroundColor());
       }
-      Color myForeground = myMergedAttributes.getForegroundColor();
+      ColorValue myForeground = myMergedAttributes.getForegroundColor();
       if (myForeground == null || myDefaultForeground.equals(myForeground)) {
         myMergedAttributes.setForegroundColor(attributes.getForegroundColor());
       }
@@ -282,8 +281,8 @@ public final class SyntaxInfoBuilder {
     private final int myStartOffset;
     private final int myEndOffset;
     private final EditorColorsScheme myColorsScheme;
-    private final Color myDefaultForeground;
-    private final Color myDefaultBackground;
+    private final ColorValue myDefaultForeground;
+    private final ColorValue myDefaultBackground;
     private final MarkupIterator<RangeHighlighterEx> myIterator;
 
     private int myCurrentStart;
@@ -358,8 +357,8 @@ public final class SyntaxInfoBuilder {
         if (attributes == null) {
           continue;
         }
-        Color foreground = attributes.getForegroundColor();
-        Color background = attributes.getBackgroundColor();
+        ColorValue foreground = attributes.getForegroundColor();
+        ColorValue background = attributes.getBackgroundColor();
         if ((foreground == null || myDefaultForeground.equals(foreground)) && (background == null || myDefaultBackground.equals(background)) && attributes.getFontType() == Font.PLAIN) {
           continue;
         }
@@ -369,7 +368,11 @@ public final class SyntaxInfoBuilder {
     }
 
     private static boolean isInterestedInLayer(int layer) {
-      return layer != HighlighterLayer.CARET_ROW && layer != HighlighterLayer.SELECTION && layer != HighlighterLayer.ERROR && layer != HighlighterLayer.WARNING && layer != HighlighterLayer.ELEMENT_UNDER_CARET;
+      return layer != HighlighterLayer.CARET_ROW &&
+             layer != HighlighterLayer.SELECTION &&
+             layer != HighlighterLayer.ERROR &&
+             layer != HighlighterLayer.WARNING &&
+             layer != HighlighterLayer.ELEMENT_UNDER_CARET;
     }
 
     @Override
@@ -503,14 +506,14 @@ public final class SyntaxInfoBuilder {
     @Nonnull
     private final CharSequence myText;
     @Nonnull
-    private final Color myDefaultForeground;
+    private final ColorValue myDefaultForeground;
     @Nonnull
-    private final Color myDefaultBackground;
+    private final ColorValue myDefaultBackground;
 
     @Nullable
-    private Color myBackground;
+    private ColorValue myBackground;
     @Nullable
-    private Color myForeground;
+    private ColorValue myForeground;
     @Nullable
     private String myFontFamilyName;
 
@@ -528,7 +531,9 @@ public final class SyntaxInfoBuilder {
       myDefaultBackground = scheme.getDefaultBackground();
 
       int javaFontSize = scheme.getEditorFontSize();
-      float fontSize = SystemInfo.isMac || ApplicationManager.getApplication().isHeadlessEnvironment() ? javaFontSize : javaFontSize * 0.75f / UISettings.getDefFontScale(); // matching font size in external apps
+      float fontSize = SystemInfo.isMac || ApplicationManager.getApplication().isHeadlessEnvironment()
+                       ? javaFontSize
+                       : javaFontSize * 0.75f / UISettings.getDefFontScale(); // matching font size in external apps
 
       builder = new SyntaxInfo.Builder(myDefaultForeground, myDefaultBackground, fontSize);
       myIndentSymbolsToStrip = indentSymbolsToStrip;
@@ -580,14 +585,14 @@ public final class SyntaxInfoBuilder {
       }
     }
 
-    private void processForeground(int startOffset, Color foreground) {
+    private void processForeground(int startOffset, ColorValue foreground) {
       if (myForeground == null && foreground != null) {
         addTextIfPossible(startOffset);
         myForeground = foreground;
         builder.addForeground(foreground);
       }
       else if (myForeground != null) {
-        Color c = foreground == null ? myDefaultForeground : foreground;
+        ColorValue c = foreground == null ? myDefaultForeground : foreground;
         if (!myForeground.equals(c)) {
           addTextIfPossible(startOffset);
           builder.addForeground(c);
@@ -596,14 +601,14 @@ public final class SyntaxInfoBuilder {
       }
     }
 
-    private void processBackground(int startOffset, Color background) {
+    private void processBackground(int startOffset, ColorValue background) {
       if (myBackground == null && background != null && !myDefaultBackground.equals(background)) {
         addTextIfPossible(startOffset);
         myBackground = background;
         builder.addBackground(background);
       }
       else if (myBackground != null) {
-        Color c = background == null ? myDefaultBackground : background;
+        ColorValue c = background == null ? myDefaultBackground : background;
         if (!myBackground.equals(c)) {
           addTextIfPossible(startOffset);
           builder.addBackground(c);

@@ -27,8 +27,10 @@ import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.openapi.ui.GraphicsConfig;
 import com.intellij.util.Alarm;
 import com.intellij.util.ui.GraphicsUtil;
+import consulo.awt.TargetAWT;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
+import consulo.ui.color.ColorValue;
 import consulo.util.dataholder.Key;
 import jakarta.inject.Singleton;
 
@@ -215,18 +217,18 @@ public class ParameterHintsPresentationManager implements Disposable {
         TextAttributes attributes = editor.getColorsScheme().getAttributes(DefaultLanguageHighlighterColors.INLINE_PARAMETER_HINT);
         if (attributes != null) {
           MyFontMetrics fontMetrics = getFontMetrics(editor);
-          Color backgroundColor = attributes.getBackgroundColor();
+          ColorValue backgroundColor = attributes.getBackgroundColor();
           if (backgroundColor != null) {
             GraphicsConfig config = GraphicsUtil.setupAAPainting(g);
             GraphicsUtil.paintWithAlpha(g, BACKGROUND_ALPHA);
-            g.setColor(backgroundColor);
+            g.setColor(TargetAWT.to(backgroundColor));
             int gap = r.height < (fontMetrics.lineHeight + 2) ? 1 : 2;
             g.fillRoundRect(r.x + 2, r.y + gap, r.width - 4, r.height - gap * 2, 8, 8);
             config.restore();
           }
-          Color foregroundColor = attributes.getForegroundColor();
+          ColorValue foregroundColor = attributes.getForegroundColor();
           if (foregroundColor != null) {
-            g.setColor(foregroundColor);
+            g.setColor(TargetAWT.to(foregroundColor));
             g.setFont(getFont(editor));
             Shape savedClip = g.getClip();
             g.clipRect(r.x + 3, r.y + 2, r.width - 6, r.height - 4);

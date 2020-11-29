@@ -15,6 +15,7 @@
  */
 package com.intellij.openapi.diff.impl.highlighting;
 
+import consulo.awt.TargetAWT;
 import consulo.disposer.Disposable;
 import consulo.logging.Logger;
 import com.intellij.openapi.diff.actions.MergeActionGroup;
@@ -37,6 +38,7 @@ import consulo.disposer.Disposer;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.util.containers.HashSet;
 import com.intellij.util.ui.UIUtil;
+import consulo.ui.color.ColorValue;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -88,15 +90,12 @@ public abstract class DiffMarkup implements EditorSource, Disposable {
       final int offset = range.getStartOffset();
       rangeMarker = markupModel.addRangeHighlighter(offset, offset, LAYER,
                                                     attributes, HighlighterTargetArea.EXACT_RANGE);
-      rangeMarker.setCustomRenderer(new CustomHighlighterRenderer() {
-        @Override
-        public void paint(@Nonnull Editor ed, @Nonnull RangeHighlighter highlighter, @Nonnull Graphics g) {
-          g.setColor(attributes.getBackgroundColor());
-          Point point = ed.logicalPositionToXY(ed.offsetToLogicalPosition(highlighter.getStartOffset()));
-          int endy = point.y + ed.getLineHeight() - 1;
-          g.drawLine(point.x, point.y, point.x, endy);
-          g.drawLine(point.x - 1, point.y, point.x - 1, endy);
-        }
+      rangeMarker.setCustomRenderer((ed, highlighter, g) -> {
+        g.setColor(TargetAWT.to(attributes.getBackgroundColor()));
+        Point point = ed.logicalPositionToXY(ed.offsetToLogicalPosition(highlighter.getStartOffset()));
+        int endy = point.y + ed.getLineHeight() - 1;
+        g.drawLine(point.x, point.y, point.x, endy);
+        g.drawLine(point.x - 1, point.y, point.x - 1, endy);
       });
     }
     else {
@@ -112,7 +111,7 @@ public abstract class DiffMarkup implements EditorSource, Disposable {
     saveHighlighter(rangeMarker);
   }
 
-  private static void setErrorStripes(@Nonnull RangeHighlighter rangeMarker, @Nonnull Fragment fragment, @Nullable Color stripeBarColor) {
+  private static void setErrorStripes(@Nonnull RangeHighlighter rangeMarker, @Nonnull Fragment fragment, @Nullable ColorValue stripeBarColor) {
     if (DiffUtil.isInlineWrapper(fragment)) {
       rangeMarker.setErrorStripeMarkColor(null);
     }

@@ -16,6 +16,7 @@
 package com.intellij.ui.stripe;
 
 import com.intellij.util.ui.RegionPainter;
+import consulo.awt.TargetAWT;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -286,7 +287,7 @@ public class ErrorStripePainter extends RegionPainter.Image {
       if (myStripe != null) {
         int thickness = myAlignment != null ? myMin + myGap : height;
         y += getOffset(height, thickness);
-        g.setColor(myStripe.getColor());
+        g.setColor(TargetAWT.to(myStripe.getColor()));
         g.fillRect(x, y, width, thickness - myGap);
       }
     }
@@ -330,14 +331,14 @@ public class ErrorStripePainter extends RegionPainter.Image {
             int count = Math.min(height / thickness, mySet.size());
             y += getOffset(height, thickness * count);
             do {
-              g.setColor(iterator.next().getColor());
+              g.setColor(TargetAWT.to(iterator.next().getColor()));
               g.fillRect(x, y, width, thickness - myGap);
               y += thickness;
             }
             while (--count > 0 && iterator.hasNext());
           }
           else {
-            g.setColor(iterator.next().getColor());
+            g.setColor(TargetAWT.to(iterator.next().getColor()));
             g.fillRect(x, y, width, thickness - myGap);
           }
         }

@@ -32,15 +32,14 @@ import com.intellij.util.ui.tree.TreeUtil;
 import com.intellij.util.ui.update.Activatable;
 import com.intellij.util.ui.update.UiNotifyConnector;
 import consulo.disposer.Disposer;
+import consulo.ui.color.ColorValue;
 
 import javax.annotation.Nonnull;
-
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
-import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
@@ -263,7 +262,7 @@ public abstract class AbstractProjectViewPSIPane extends AbstractProjectViewPane
       PresentableNodeDescriptor node = (PresentableNodeDescriptor)object;
       TextAttributesKey key = node.getPresentation().getTextAttributesKey();
       TextAttributes attributes = key == null ? null : EditorColorsManager.getInstance().getSchemeForCurrentUITheme().getAttributes(key);
-      Color color = attributes == null ? null : attributes.getErrorStripeColor();
+      ColorValue color = attributes == null ? null : attributes.getErrorStripeColor();
       if (color != null) return ErrorStripe.create(color, 1);
     }
     return null;

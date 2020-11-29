@@ -21,6 +21,10 @@ import com.intellij.openapi.editor.richcopy.model.FontNameRegistry;
 import com.intellij.openapi.editor.richcopy.model.MarkupHandler;
 import com.intellij.openapi.editor.richcopy.model.SyntaxInfo;
 import com.intellij.openapi.util.SystemInfo;
+import consulo.awt.TargetAWT;
+import consulo.ui.color.ColorValue;
+import consulo.ui.color.RGBColor;
+
 import javax.annotation.Nonnull;
 
 import java.awt.*;
@@ -56,8 +60,8 @@ public class RtfTransferableData extends AbstractSyntaxAwareInputStreamTransfera
     holder.append("{\\colortbl;");
     ColorRegistry colorRegistry = mySyntaxInfo.getColorRegistry();
     for (int id : colorRegistry.getAllIds()) {
-      Color color = colorRegistry.dataById(id);
-      int[] components = getAdjustedColorComponents(color);
+      ColorValue color = colorRegistry.dataById(id);
+      int[] components = getAdjustedColorComponents(color.toRGB());
       holder.append(String.format("\\red%d\\green%d\\blue%d;", components[0], components[1], components[2]));
     }
     holder.append("}\n");
@@ -82,12 +86,13 @@ public class RtfTransferableData extends AbstractSyntaxAwareInputStreamTransfera
     holder.append(HEADER_SUFFIX);
   }
 
-  private static int[] getAdjustedColorComponents(Color color) {
+  private static int[] getAdjustedColorComponents(RGBColor color) {
     if (SystemInfo.isMac) {
       // on Mac OS color components are expected in Apple's 'Generic RGB' color space
       ColorSpace genericRgbSpace = MacOSApplicationProvider.getInstance().getGenericRgbColorSpace();
       if (genericRgbSpace != null) {
-        float[] components = genericRgbSpace.fromRGB(color.getRGBColorComponents(null));
+        Color col = TargetAWT.to(color);
+        float[] components = genericRgbSpace.fromRGB(col.getRGBColorComponents(null));
         return new int[] {
                 colorComponentFloatToInt(components[0]),
                 colorComponentFloatToInt(components[1]),

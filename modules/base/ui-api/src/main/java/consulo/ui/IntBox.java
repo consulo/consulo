@@ -44,9 +44,7 @@ public interface IntBox extends ValueComponent<Integer>, ValidableComponent<Inte
     return this;
   }
 
-  @Deprecated
-  @DeprecationInfo("Return type will be changed to void, use #withRange")
-  IntBox setRange(int min, int max);
+  void setRange(int min, int max);
 
   @Nonnull
   default IntBox withRange(int min, int max) {

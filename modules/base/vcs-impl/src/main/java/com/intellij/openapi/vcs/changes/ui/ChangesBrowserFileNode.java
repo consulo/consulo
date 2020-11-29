@@ -25,6 +25,7 @@ import com.intellij.openapi.vcs.FileStatusManager;
 import com.intellij.openapi.vcs.changes.ChangeListManager;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.SimpleTextAttributes;
+import consulo.awt.TargetAWT;
 
 import javax.annotation.Nonnull;
 
@@ -57,7 +58,7 @@ public class ChangesBrowserFileNode extends ChangesBrowserNode<VirtualFile> impl
   @Override
   public void render(final ChangesBrowserNodeRenderer renderer, final boolean selected, final boolean expanded, final boolean hasFocus) {
     final VirtualFile file = getUserObject();
-    renderer.appendFileName(file, file.getName(), ChangeListManager.getInstance(myProject).getStatus(file).getColor());
+    renderer.appendFileName(file, file.getName(), TargetAWT.to(ChangeListManager.getInstance(myProject).getStatus(file).getColor()));
     if (renderer.isShowFlatten() && file.isValid()) {
       final VirtualFile parentFile = file.getParent();
       assert parentFile != null;

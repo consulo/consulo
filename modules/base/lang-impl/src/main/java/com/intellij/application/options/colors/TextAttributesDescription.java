@@ -23,9 +23,8 @@ import com.intellij.openapi.editor.colors.EditorColorsScheme;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.openapi.editor.markup.EffectType;
 import com.intellij.openapi.editor.markup.TextAttributes;
+import consulo.ui.color.ColorValue;
 import consulo.ui.image.Image;
-
-import java.awt.*;
 
 public abstract class TextAttributesDescription extends ColorAndFontDescription {
   private final TextAttributes myAttributes;
@@ -47,7 +46,7 @@ public abstract class TextAttributesDescription extends ColorAndFontDescription 
   }
 
   @Override
-  public Color getExternalEffectColor() {
+  public ColorValue getExternalEffectColor() {
     return myAttributes.getEffectColor();
   }
 
@@ -57,7 +56,7 @@ public abstract class TextAttributesDescription extends ColorAndFontDescription 
   }
 
   @Override
-  public void setExternalEffectColor(Color color) {
+  public void setExternalEffectColor(ColorValue color) {
     myAttributes.setEffectColor(color);
   }
 
@@ -67,32 +66,32 @@ public abstract class TextAttributesDescription extends ColorAndFontDescription 
   }
 
   @Override
-  public Color getExternalForeground() {
+  public ColorValue getExternalForeground() {
     return myAttributes.getForegroundColor();
   }
 
   @Override
-  public void setExternalForeground(Color col) {
+  public void setExternalForeground(ColorValue col) {
     myAttributes.setForegroundColor(col);
   }
 
   @Override
-  public Color getExternalBackground() {
+  public ColorValue getExternalBackground() {
     return myAttributes.getBackgroundColor();
   }
 
   @Override
-  public Color getExternalErrorStripe() {
+  public ColorValue getExternalErrorStripe() {
     return myAttributes.getErrorStripeColor();
   }
 
   @Override
-  public void setExternalBackground(Color col) {
+  public void setExternalBackground(ColorValue col) {
     myAttributes.setBackgroundColor(col);
   }
 
   @Override
-  public void setExternalErrorStripe(Color col) {
+  public void setExternalErrorStripe(ColorValue col) {
     myAttributes.setErrorStripeColor(col);
   }
 

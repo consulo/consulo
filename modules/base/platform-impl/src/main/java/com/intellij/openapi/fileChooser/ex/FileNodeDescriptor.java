@@ -20,6 +20,7 @@ import com.intellij.openapi.fileChooser.FileElement;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.SimpleTextAttributes;
+import consulo.awt.TargetAWT;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
@@ -66,7 +67,7 @@ public class FileNodeDescriptor extends NodeDescriptor {
       setIcon(ImageEffects.transparent(getIcon()));
     }
 
-    myColor = myFileElement.isHidden() ? SimpleTextAttributes.DARK_TEXT.getFgColor() : null;
+    myColor = myFileElement.isHidden() ? TargetAWT.from(SimpleTextAttributes.DARK_TEXT.getFgColor()) : null;
     return changed;
   }
 

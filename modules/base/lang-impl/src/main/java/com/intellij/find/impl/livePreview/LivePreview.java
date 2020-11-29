@@ -35,6 +35,8 @@ import com.intellij.openapi.util.registry.Registry;
 import com.intellij.ui.awt.RelativePoint;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.PositionTracker;
+import consulo.ui.color.ColorValue;
+import consulo.ui.style.StandardColors;
 import consulo.util.dataholder.Key;
 import javax.annotation.Nonnull;
 
@@ -201,7 +203,7 @@ public class LivePreview implements SearchResults.SearchResultsListener, Selecti
     final FindResult cursor = mySearchResults.getCursor();
     Editor editor = mySearchResults.getEditor();
     if (cursor != null && cursor.getEndOffset() <= editor.getDocument().getTextLength()) {
-      Color color = editor.getColorsScheme().getColor(EditorColors.CARET_COLOR);
+      ColorValue color = editor.getColorsScheme().getColor(EditorColors.CARET_COLOR);
       myCursorHighlighter = addHighlighter(cursor.getStartOffset(), cursor.getEndOffset(), new TextAttributes(null, null, color, EffectType.ROUNDED_BOX, Font.PLAIN));
 
       editor.getScrollingModel().runActionOnScrollingFinished(() -> showReplacementPreview());
@@ -331,7 +333,8 @@ public class LivePreview implements SearchResults.SearchResultsListener, Selecti
         }
       }
       else if (needsAdditionalHighlighting) {
-        RangeHighlighter additionalHighlighter = addHighlighter(highlighter.getStartOffset(), highlighter.getEndOffset(), new TextAttributes(null, null, Color.WHITE, EffectType.ROUNDED_BOX, Font.PLAIN));
+        RangeHighlighter additionalHighlighter = addHighlighter(highlighter.getStartOffset(), highlighter.getEndOffset(), new TextAttributes(null, null, StandardColors.WHITE, EffectType.ROUNDED_BOX, Font
+                .PLAIN));
         highlighter.putUserData(IN_SELECTION_KEY, additionalHighlighter);
       }
     }

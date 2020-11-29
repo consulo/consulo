@@ -22,7 +22,9 @@ import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
+import consulo.awt.TargetAWT;
 import consulo.logging.Logger;
+import consulo.ui.color.ColorValue;
 
 import javax.annotation.Nullable;
 import javax.swing.*;
@@ -43,7 +45,7 @@ import java.util.List;
  * @author Eugene Belyaev
  */
 public class HyperlinkLabel extends HighlightableComponent {
-  private static final TextAttributes BOLD_ATTRIBUTES = new TextAttributes(UIUtil.getLabelTextForeground(), null, null, null, Font.BOLD);
+  private static final TextAttributes BOLD_ATTRIBUTES = new TextAttributes(TargetAWT.from(UIUtil.getLabelTextForeground()), null, null, null, Font.BOLD);
 
   private static final Logger LOG = Logger.getInstance(HyperlinkLabel.class);
 
@@ -61,10 +63,7 @@ public class HyperlinkLabel extends HighlightableComponent {
   }
 
   public HyperlinkLabel(String text) {
-    this(text,
-         JBColor.BLUE,
-         UIUtil.getLabelBackground(),
-         JBColor.BLUE);
+    this(text, JBColor.BLUE, UIUtil.getLabelBackground(), JBColor.BLUE);
   }
 
   public HyperlinkLabel(String text, Color background) {
@@ -72,7 +71,7 @@ public class HyperlinkLabel extends HighlightableComponent {
   }
 
   public HyperlinkLabel(String text, final Color textForegroundColor, final Color textBackgroundColor, final Color textEffectColor) {
-    myAnchorAttributes = new CustomTextAttributes(textBackgroundColor);
+    myAnchorAttributes = new CustomTextAttributes(TargetAWT.from(textBackgroundColor));
     enforceBackgroundOutsideText(textBackgroundColor);
     setHyperlinkText(text);
     enableEvents(AWTEvent.MOUSE_EVENT_MASK | AWTEvent.MOUSE_MOTION_EVENT_MASK);
@@ -245,17 +244,19 @@ public class HyperlinkLabel extends HighlightableComponent {
   }
 
   private class CustomTextAttributes extends TextAttributes {
-    private CustomTextAttributes(Color textBackgroundColor) {
+    private CustomTextAttributes(ColorValue textBackgroundColor) {
       super(null, textBackgroundColor, null, null, Font.PLAIN);
     }
 
     @Override
-    public Color getForegroundColor() {
-      return !isEnabled() ? UIManager.getColor("Label.disabledForeground") : myMousePressed ? JBUI.CurrentTheme.Link.linkPressedColor() : myMouseHover ? JBUI.CurrentTheme.Link.linkHoverColor() : JBUI.CurrentTheme.Link.linkColor();
+    public ColorValue getForegroundColor() {
+      return TargetAWT.from(!isEnabled()
+                            ? UIManager.getColor("Label.disabledForeground")
+                            : myMousePressed ? JBUI.CurrentTheme.Link.linkPressedColor() : myMouseHover ? JBUI.CurrentTheme.Link.linkHoverColor() : JBUI.CurrentTheme.Link.linkColor());
     }
 
     @Override
-    public Color getEffectColor() {
+    public ColorValue getEffectColor() {
       return getForegroundColor();
     }
 
@@ -265,12 +266,12 @@ public class HyperlinkLabel extends HighlightableComponent {
     }
 
     @Override
-    public void setForegroundColor(Color color) {
+    public void setForegroundColor(ColorValue color) {
       throw new UnsupportedOperationException();
     }
 
     @Override
-    public void setEffectColor(Color color) {
+    public void setEffectColor(ColorValue color) {
       throw new UnsupportedOperationException();
     }
 

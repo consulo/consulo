@@ -18,9 +18,10 @@ package com.intellij.diff.util;
 import com.intellij.openapi.diff.DiffBundle;
 import com.intellij.openapi.diff.DiffColors;
 import com.intellij.openapi.editor.Editor;
-import javax.annotation.Nonnull;
+import consulo.ui.color.ColorValue;
 
-import java.awt.*;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public interface TextDiffType {
   @Nonnull
@@ -40,11 +41,11 @@ public interface TextDiffType {
   String getName();
 
   @Nonnull
-  Color getColor(@javax.annotation.Nullable Editor editor);
+  ColorValue getColor(@Nullable Editor editor);
 
   @Nonnull
-  Color getIgnoredColor(@javax.annotation.Nullable Editor editor);
+  ColorValue getIgnoredColor(@Nullable Editor editor);
 
-  @javax.annotation.Nullable
-  Color getMarkerColor(@javax.annotation.Nullable Editor editor);
+  @Nullable
+  ColorValue getMarkerColor(@Nullable Editor editor);
 }

@@ -21,6 +21,7 @@ import com.intellij.util.ui.JBUI;
 import consulo.awt.TargetAWT;
 import consulo.awt.TargetAWTFacade;
 import consulo.container.StartupError;
+import consulo.desktop.util.awt.MorphColor;
 import consulo.logging.Logger;
 import consulo.ui.Component;
 import consulo.ui.Window;
@@ -94,7 +95,7 @@ public class TargetAWTFacadeImpl implements TargetAWTFacade {
   @Override
   @Contract("null -> null")
   public java.awt.Color to(@Nullable ColorValue colorValue) {
-    return colorValue == null ? null : to(colorValue.toRGB());
+    return colorValue == null ? null : MorphColor.of(() -> to(colorValue.toRGB()));
   }
 
   @Override
@@ -222,12 +223,11 @@ public class TargetAWTFacadeImpl implements TargetAWTFacade {
 
   @Override
   @Contract("null -> null")
-  public RGBColor from(@Nullable java.awt.Color color) {
+  public ColorValue from(@Nullable java.awt.Color color) {
     if (color == null) {
       return null;
     }
-    float[] components = color.getRGBComponents(null);
-    return new RGBColor(color.getRed(), color.getGreen(), color.getBlue(), components[3]);
+    return new AWTColorValue(color);
   }
 
   @Override

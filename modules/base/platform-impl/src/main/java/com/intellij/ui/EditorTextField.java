@@ -17,6 +17,7 @@ package com.intellij.ui;
 
 import com.intellij.codeInsight.daemon.DaemonCodeAnalyzer;
 import com.intellij.ide.ui.UISettings;
+import consulo.awt.TargetAWT;
 import consulo.disposer.Disposable;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataProvider;
@@ -219,7 +220,7 @@ public class EditorTextField extends NonOpaquePanel implements DocumentListener,
     super.setBackground(bg);
     myEnforcedBgColor = bg;
     if (myEditor != null) {
-      myEditor.setBackgroundColor(bg);
+      myEditor.setBackgroundColor(TargetAWT.from(bg));
     }
   }
 
@@ -501,7 +502,7 @@ public class EditorTextField extends NonOpaquePanel implements DocumentListener,
     // color scheme settings:
     setupEditorFont(editor);
     updateBorder(editor);
-    editor.setBackgroundColor(getBackgroundColor(isEnabled()));
+    editor.setBackgroundColor(TargetAWT.from(getBackgroundColor(isEnabled())));
   }
 
   public void setOneLineMode(boolean oneLineMode) {
@@ -570,10 +571,10 @@ public class EditorTextField extends NonOpaquePanel implements DocumentListener,
 
     if (myIsRendererWithSelection) {
       ((DesktopEditorImpl)editor).setPaintSelection(true);
-      editor.getColorsScheme().setColor(EditorColors.SELECTION_BACKGROUND_COLOR, myRendererBg);
-      editor.getColorsScheme().setColor(EditorColors.SELECTION_FOREGROUND_COLOR, myRendererFg);
+      editor.getColorsScheme().setColor(EditorColors.SELECTION_BACKGROUND_COLOR, TargetAWT.from(myRendererBg));
+      editor.getColorsScheme().setColor(EditorColors.SELECTION_FOREGROUND_COLOR, TargetAWT.from(myRendererFg));
       editor.getSelectionModel().setSelection(0, myDocument.getTextLength());
-      editor.setBackgroundColor(myRendererBg);
+      editor.setBackgroundColor(TargetAWT.from(myRendererBg));
     }
 
     for (EditorSettingsProvider provider : mySettingsProviders) {

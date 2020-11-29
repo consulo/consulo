@@ -16,20 +16,21 @@
 package com.intellij.openapi.roots.ui.configuration.libraryEditor;
 
 import com.intellij.ide.util.treeView.NodeDescriptor;
-import com.intellij.ui.JBColor;
 import com.intellij.util.ui.UIUtil;
+import consulo.awt.TargetAWT;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.color.ColorValue;
+import consulo.ui.style.StandardColors;
 
 import javax.annotation.Nullable;
-import java.awt.*;
 
 public abstract class LibraryTableTreeContentElement<E> extends NodeDescriptor<E> {
   protected LibraryTableTreeContentElement(@Nullable NodeDescriptor parentDescriptor) {
     super(null, parentDescriptor);
   }
 
-  protected static Color getForegroundColor(boolean isValid) {
-    return isValid ? UIUtil.getListForeground() : JBColor.RED;
+  protected static ColorValue getForegroundColor(boolean isValid) {
+    return isValid ? TargetAWT.from(UIUtil.getListForeground()) : StandardColors.RED;
   }
 
   @RequiredUIAccess

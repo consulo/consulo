@@ -22,10 +22,10 @@ import com.intellij.openapi.editor.colors.EditorColorsManager;
 import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.project.Project;
-import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.ui.*;
+import com.intellij.ui.SimpleColoredText;
+import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.xdebugger.XDebugSession;
 import com.intellij.xdebugger.XDebuggerManager;
 import com.intellij.xdebugger.XSourcePosition;
@@ -38,17 +38,37 @@ import com.intellij.xdebugger.impl.ui.tree.nodes.XValueNodeImpl;
 import com.intellij.xdebugger.impl.ui.tree.nodes.XValueTextRendererImpl;
 import com.intellij.xdebugger.settings.XDebuggerSettingsManager;
 import com.intellij.xdebugger.ui.DebuggerColors;
+import consulo.ui.color.ColorValue;
+import consulo.ui.color.RGBColor;
+import consulo.ui.util.ColorValueUtil;
+import consulo.util.dataholder.Key;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.awt.*;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 /**
  * @author Konstantin Bulenkov
  */
 public class XDebuggerEditorLinePainter extends EditorLinePainter {
+  private static class LightDarkEditorColor implements ColorValue {
+    private final RGBColor myLightColor;
+    private final RGBColor myDarkColor;
+
+    public LightDarkEditorColor(RGBColor lightColor, RGBColor darkColor) {
+      myLightColor = lightColor;
+      myDarkColor = darkColor;
+    }
+
+    @Nonnull
+    @Override
+    public RGBColor toRGB() {
+      return isDarkEditor() ? myLightColor : myDarkColor;
+    }
+  }
+
   public static final Key<Map<Variable, VariableValue>> CACHE = Key.create("debug.inline.variables.cache");
   // we want to limit number of line extensions to avoid very slow painting
   // the constant is rather random (feel free to adjust it upon getting a new information)
@@ -78,9 +98,7 @@ public class XDebuggerEditorLinePainter extends EditorLinePainter {
       final int bpLine = getCurrentBreakPointLineInFile(session, file);
       boolean isTopFrame = session instanceof XDebugSessionImpl && ((XDebugSessionImpl)session).isTopFrameSelected();
       final TextAttributes attributes =
-              bpLine == lineNumber && isTopFrame && ((XDebuggerManagerImpl)XDebuggerManager.getInstance(project)).isFullLineHighlighter()
-              ? getTopFrameSelectedAttributes()
-              : getNormalAttributes();
+              bpLine == lineNumber && isTopFrame && ((XDebuggerManagerImpl)XDebuggerManager.getInstance(project)).isFullLineHighlighter() ? getTopFrameSelectedAttributes() : getNormalAttributes();
 
       ArrayList<VariableText> result = new ArrayList<>();
       for (XValueNodeImpl value : values) {
@@ -155,14 +173,14 @@ public class XDebuggerEditorLinePainter extends EditorLinePainter {
   }
 
   private static boolean isDarkEditor() {
-    Color bg = EditorColorsManager.getInstance().getGlobalScheme().getDefaultBackground();
-    return ColorUtil.isDark(bg);
+    ColorValue bg = EditorColorsManager.getInstance().getGlobalScheme().getDefaultBackground();
+    return ColorValueUtil.isDark(bg);
   }
 
   public static TextAttributes getNormalAttributes() {
     TextAttributes attributes = EditorColorsManager.getInstance().getGlobalScheme().getAttributes(DebuggerColors.INLINED_VALUES);
     if (attributes == null || attributes.getForegroundColor() == null) {
-      return new TextAttributes(new JBColor(() -> isDarkEditor() ? new Color(0x3d8065) : Gray._135), null, null, null, Font.ITALIC);
+      return new TextAttributes(new LightDarkEditorColor(new RGBColor(61, 128, 101), new RGBColor(135, 135, 135)), null, null, null, Font.ITALIC);
     }
     return attributes;
   }
@@ -170,7 +188,7 @@ public class XDebuggerEditorLinePainter extends EditorLinePainter {
   public static TextAttributes getChangedAttributes() {
     TextAttributes attributes = EditorColorsManager.getInstance().getGlobalScheme().getAttributes(DebuggerColors.INLINED_VALUES_MODIFIED);
     if (attributes == null || attributes.getForegroundColor() == null) {
-      return new TextAttributes(new JBColor(() -> isDarkEditor() ? new Color(0xa1830a) : new Color(0xca8021)), null, null, null, Font.ITALIC);
+      return new TextAttributes(new LightDarkEditorColor(new RGBColor(161, 131, 10), new RGBColor(202, 128, 33)), null, null, null, Font.ITALIC);
     }
     return attributes;
   }
@@ -179,7 +197,7 @@ public class XDebuggerEditorLinePainter extends EditorLinePainter {
     TextAttributes attributes = EditorColorsManager.getInstance().getGlobalScheme().getAttributes(DebuggerColors.INLINED_VALUES_EXECUTION_LINE);
     if (attributes == null || attributes.getForegroundColor() == null) {
       //noinspection UseJBColor
-      return new TextAttributes(isDarkEditor() ? new Color(255, 235, 9) : new Color(0, 255, 86), null, null, null, Font.ITALIC);
+      return new TextAttributes(new LightDarkEditorColor(new RGBColor(255, 235, 9), new RGBColor(0, 255, 86)), null, null, null, Font.ITALIC);
     }
     return attributes;
   }

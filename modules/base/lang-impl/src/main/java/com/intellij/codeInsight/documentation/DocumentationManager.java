@@ -71,6 +71,7 @@ import com.intellij.util.ui.UIUtil;
 import consulo.codeInsight.TargetElementUtil;
 import consulo.fileTypes.ArchiveFileType;
 import consulo.ui.Rectangle2D;
+import consulo.ui.util.ColorValueUtil;
 import consulo.util.dataholder.Key;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -1159,7 +1160,7 @@ public final class DocumentationManager extends DockablePopupManager<Documentati
   @Nonnull
   private static String getVcsStatus(Project project, VirtualFile file) {
     FileStatus status = ChangeListManager.getInstance(project).getStatus(file);
-    return status != FileStatus.NOT_CHANGED ? "<p><span class='grayed'>VCS Status:</span> <span color='" + ColorUtil.toHex(status.getColor()) + "'>" + status.getText() + "</span>" : "";
+    return status != FileStatus.NOT_CHANGED ? "<p><span class='grayed'>VCS Status:</span> <span color='" + ColorValueUtil.toHex(status.getColor()) + "'>" + status.getText() + "</span>" : "";
   }
 
   private Optional<QuickSearchComponent> findQuickSearchComponent() {

@@ -18,6 +18,7 @@ package com.intellij.openapi.editor.colors.impl;
 import com.intellij.openapi.editor.colors.*;
 import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.openapi.options.FontSize;
+import consulo.ui.color.ColorValue;
 import org.jdom.Element;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -61,24 +62,24 @@ public abstract class DelegateColorScheme implements EditorColorsScheme {
 
   @Nonnull
   @Override
-  public Color getDefaultBackground() {
+  public ColorValue getDefaultBackground() {
     return myDelegate.getDefaultBackground();
   }
 
   @Nonnull
   @Override
-  public Color getDefaultForeground() {
+  public ColorValue getDefaultForeground() {
     return myDelegate.getDefaultForeground();
   }
 
   @Nullable
   @Override
-  public Color getColor(ColorKey key) {
+  public ColorValue getColor(EditorColorKey key) {
     return myDelegate.getColor(key);
   }
 
   @Override
-  public void fillColors(Map<ColorKey, Color> colors) {
+  public void fillColors(Map<EditorColorKey, ColorValue> colors) {
     myDelegate.fillColors(colors);
   }
 
@@ -88,7 +89,7 @@ public abstract class DelegateColorScheme implements EditorColorsScheme {
   }
 
   @Override
-  public void setColor(ColorKey key, @Nullable Color color) {
+  public void setColor(EditorColorKey key, @Nullable ColorValue color) {
     myDelegate.setColor(key, color);
   }
 

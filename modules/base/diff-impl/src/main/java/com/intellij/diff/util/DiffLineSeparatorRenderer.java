@@ -16,7 +16,7 @@
 package com.intellij.diff.util;
 
 import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.editor.colors.ColorKey;
+import com.intellij.openapi.editor.colors.EditorColorKey;
 import com.intellij.openapi.editor.colors.EditorColors;
 import com.intellij.openapi.editor.colors.EditorColorsManager;
 import com.intellij.openapi.editor.colors.EditorColorsScheme;
@@ -26,12 +26,14 @@ import com.intellij.openapi.editor.markup.LineMarkerRendererEx;
 import com.intellij.openapi.editor.markup.LineSeparatorRenderer;
 import com.intellij.openapi.ui.GraphicsConfig;
 import com.intellij.openapi.util.BooleanGetter;
-import com.intellij.ui.ColorUtil;
-import com.intellij.ui.Gray;
 import com.intellij.util.ui.GraphicsUtil;
+import consulo.awt.TargetAWT;
+import consulo.ui.color.ColorValue;
+import consulo.ui.color.RGBColor;
+import consulo.ui.util.ColorValueUtil;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.util.Arrays;
@@ -111,7 +113,7 @@ public class DiffLineSeparatorRenderer implements LineMarkerRendererEx, LineSepa
     int annotationsOffset = gutter.getAnnotationsAreaOffset();
     int annotationsWidth = gutter.getAnnotationsAreaWidth();
     if (annotationsWidth != 0) {
-      g.setColor(editor.getColorsScheme().getColor(EditorColors.GUTTER_BACKGROUND));
+      g.setColor(TargetAWT.to(editor.getColorsScheme().getColor(EditorColors.GUTTER_BACKGROUND)));
       g.fillRect(annotationsOffset, y, annotationsWidth, lineHeight);
     }
 
@@ -208,11 +210,11 @@ public class DiffLineSeparatorRenderer implements LineMarkerRendererEx, LineSepa
     AffineTransform oldTransform = gg.getTransform();
 
     for (int i = 0; i < height; i++) {
-      Color color = getTopBorderColor(i, lineHeight, scheme);
+      ColorValue color = getTopBorderColor(i, lineHeight, scheme);
       if (color == null) color = getBottomBorderColor(i, lineHeight, scheme);
       if (color == null) color = getBackgroundColor(scheme);
 
-      gg.setColor(color);
+      gg.setColor(TargetAWT.to(color));
       gg.drawPolyline(xPoints, yPoints, xPoints.length);
       gg.translate(0, 1);
     }
@@ -231,15 +233,15 @@ public class DiffLineSeparatorRenderer implements LineMarkerRendererEx, LineSepa
     AffineTransform oldTransform = gg.getTransform();
 
     // background
-    gg.setColor(getBackgroundColor(scheme));
+    gg.setColor(TargetAWT.to(getBackgroundColor(scheme)));
     gg.fillPolygon(xPoints, yPoints, xPoints.length);
 
     if (scheme.getColor(TOP_BORDER) != null) {
       for (int i = 0; i < height; i++) {
-        Color color = getTopBorderColor(i, lineHeight, scheme);
+        ColorValue color = getTopBorderColor(i, lineHeight, scheme);
         if (color == null) break;
 
-        gg.setColor(color);
+        gg.setColor(TargetAWT.to(color));
         gg.drawPolyline(xPoints, yPoints, xPoints.length / 2);
         gg.translate(0, 1);
       }
@@ -251,10 +253,10 @@ public class DiffLineSeparatorRenderer implements LineMarkerRendererEx, LineSepa
       int[] yBottomPoints = Arrays.copyOfRange(yPoints, xPoints.length / 2, xPoints.length);
 
       for (int i = height - 1; i >= 0; i--) {
-        Color color = getBottomBorderColor(i, lineHeight, scheme);
+        ColorValue color = getBottomBorderColor(i, lineHeight, scheme);
         if (color == null) break;
 
-        gg.setColor(color);
+        gg.setColor(TargetAWT.to(color));
         gg.drawPolyline(xBottomPoints, yBottomPoints, xPoints.length / 2);
         gg.translate(0, -1);
       }
@@ -266,9 +268,9 @@ public class DiffLineSeparatorRenderer implements LineMarkerRendererEx, LineSepa
   // Parameters
   //
 
-  private static final ColorKey BACKGROUND = ColorKey.createColorKey("DIFF_SEPARATORS_BACKGROUND");
-  private static final ColorKey TOP_BORDER = ColorKey.createColorKey("DIFF_SEPARATORS_TOP_BORDER");
-  private static final ColorKey BOTTOM_BORDER = ColorKey.createColorKey("DIFF_SEPARATORS_BOTTOM_BORDER");
+  private static final EditorColorKey BACKGROUND = EditorColorKey.createColorKey("DIFF_SEPARATORS_BACKGROUND");
+  private static final EditorColorKey TOP_BORDER = EditorColorKey.createColorKey("DIFF_SEPARATORS_TOP_BORDER");
+  private static final EditorColorKey BOTTOM_BORDER = EditorColorKey.createColorKey("DIFF_SEPARATORS_BOTTOM_BORDER");
 
   private static int getStepSize(int lineHeight) {
     return Math.max(lineHeight / 3, 1);
@@ -287,26 +289,26 @@ public class DiffLineSeparatorRenderer implements LineMarkerRendererEx, LineSepa
   }
 
   @Nonnull
-  private static Color getBackgroundColor(@Nonnull EditorColorsScheme scheme) {
-    Color color = scheme.getColor(BACKGROUND);
-    return color != null ? color : Gray._128;
+  private static ColorValue getBackgroundColor(@Nonnull EditorColorsScheme scheme) {
+    ColorValue color = scheme.getColor(BACKGROUND);
+    return color != null ? color : new RGBColor(128, 128, 128);
   }
 
   @Nullable
-  private static Color getTopBorderColor(int i, int lineHeight, @Nonnull EditorColorsScheme scheme) {
+  private static ColorValue getTopBorderColor(int i, int lineHeight, @Nonnull EditorColorsScheme scheme) {
     int border = Math.max(lineHeight / 4, 1);
     double ratio = (double)i / border;
     if (ratio > 1) return null;
 
-    Color top = scheme.getColor(TOP_BORDER);
+    ColorValue top = scheme.getColor(TOP_BORDER);
     if (top == null) return null;
 
-    Color background = getBackgroundColor(scheme);
-    return ColorUtil.mix(top, background, ratio);
+    ColorValue background = getBackgroundColor(scheme);
+    return ColorValueUtil.mix(top, background, ratio);
   }
 
   @Nullable
-  private static Color getBottomBorderColor(int i, int lineHeight, @Nonnull EditorColorsScheme scheme) {
+  private static ColorValue getBottomBorderColor(int i, int lineHeight, @Nonnull EditorColorsScheme scheme) {
     int height = getHeight(lineHeight);
     int border = Math.max(lineHeight / 12, 1);
 
@@ -314,10 +316,10 @@ public class DiffLineSeparatorRenderer implements LineMarkerRendererEx, LineSepa
     double ratio = (double)index / border;
     if (ratio > 1) return null;
 
-    Color bottom = scheme.getColor(BOTTOM_BORDER);
+    ColorValue bottom = scheme.getColor(BOTTOM_BORDER);
     if (bottom == null) return null;
 
-    Color background = getBackgroundColor(scheme);
-    return ColorUtil.mix(bottom, background, ratio);
+    ColorValue background = getBackgroundColor(scheme);
+    return ColorValueUtil.mix(bottom, background, ratio);
   }
 }

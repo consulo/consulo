@@ -19,18 +19,17 @@
  */
 package com.intellij.xdebugger.ui;
 
-import com.intellij.openapi.editor.colors.ColorKey;
+import com.intellij.openapi.editor.colors.EditorColorKey;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.openapi.editor.markup.HighlighterLayer;
+import consulo.ui.color.RGBColor;
 import consulo.util.dataholder.Key;
-
-import java.awt.*;
 
 public interface DebuggerColors {
   TextAttributesKey BREAKPOINT_ATTRIBUTES = TextAttributesKey.createTextAttributesKey("BREAKPOINT_ATTRIBUTES");
   TextAttributesKey EXECUTIONPOINT_ATTRIBUTES = TextAttributesKey.createTextAttributesKey("EXECUTIONPOINT_ATTRIBUTES");
   TextAttributesKey NOT_TOP_FRAME_ATTRIBUTES = TextAttributesKey.createTextAttributesKey("NOT_TOP_FRAME_ATTRIBUTES");
-  ColorKey RECURSIVE_CALL_ATTRIBUTES = ColorKey.createColorKey("RECURSIVE_CALL_ATTRIBUTES", new Color(255, 255, 215));
+  EditorColorKey RECURSIVE_CALL_ATTRIBUTES = EditorColorKey.createColorKey("RECURSIVE_CALL_ATTRIBUTES", new RGBColor(255, 255, 215));
 
   int BREAKPOINT_HIGHLIGHTER_LAYER = HighlighterLayer.CARET_ROW + 1;
 

@@ -21,6 +21,7 @@ package com.intellij.openapi.editor.colors.impl;
 
 import com.intellij.openapi.editor.colors.*;
 import com.intellij.openapi.editor.markup.TextAttributes;
+import consulo.ui.color.ColorValue;
 import org.jdom.Element;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -55,9 +56,9 @@ public class DefaultColorsScheme extends AbstractColorsScheme implements ReadOnl
 
   @Nullable
   @Override
-  public Color getColor(ColorKey key) {
+  public ColorValue getColor(EditorColorKey key) {
     if (key == null) return null;
-    Color color = myColorsMap.get(key);
+    ColorValue color = myColorsMap.get(key);
     if (color != null) {
       return color;
     }
@@ -67,11 +68,11 @@ public class DefaultColorsScheme extends AbstractColorsScheme implements ReadOnl
         return color;
       }
     }
-    return key.getDefaultColor();
+    return null;
   }
 
   @Override
-  public void fillColors(Map<ColorKey, Color> colors) {
+  public void fillColors(Map<EditorColorKey, ColorValue> colors) {
     if(myParentScheme != null) {
       myParentScheme.fillColors(colors);
     }
@@ -105,7 +106,7 @@ public class DefaultColorsScheme extends AbstractColorsScheme implements ReadOnl
   }
 
   @Override
-  public void setColor(ColorKey key, Color color) {
+  public void setColor(EditorColorKey key, ColorValue color) {
   }
 
   @Override

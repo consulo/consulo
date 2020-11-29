@@ -40,6 +40,8 @@ import com.intellij.ui.treeStructure.Tree;
 import com.intellij.util.containers.Convertor;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.tree.TreeUtil;
+import consulo.awt.TargetAWT;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -292,7 +294,7 @@ public class InspectionTree extends Tree {
       }
       final FileStatus nodeStatus = node.getNodeStatus();
       if (nodeStatus != FileStatus.NOT_CHANGED){
-        foreground = new SimpleTextAttributes(foreground.getBgColor(), nodeStatus.getColor(), foreground.getWaveColor(), foreground.getStyle());
+        foreground = new SimpleTextAttributes(foreground.getBgColor(), TargetAWT.to(nodeStatus.getColor()), foreground.getWaveColor(), foreground.getStyle());
       }
       return foreground;
     }

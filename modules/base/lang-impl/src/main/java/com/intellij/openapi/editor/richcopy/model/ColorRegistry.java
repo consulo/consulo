@@ -15,11 +15,11 @@
  */
 package com.intellij.openapi.editor.richcopy.model;
 
-import java.awt.*;
+import consulo.ui.color.ColorValue;
 
 /**
  * @author Denis Zhdanov
  * @since 3/23/13 3:13 PM
  */
-public class ColorRegistry extends AbstractRegistry<Color> {
+public class ColorRegistry extends AbstractRegistry<ColorValue> {
 }

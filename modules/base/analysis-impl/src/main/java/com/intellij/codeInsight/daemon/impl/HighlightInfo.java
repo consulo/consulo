@@ -14,7 +14,6 @@ import com.intellij.lang.annotation.Annotation;
 import com.intellij.lang.annotation.HighlightSeverity;
 import com.intellij.lang.annotation.ProblemGroup;
 import com.intellij.openapi.application.ApplicationManager;
-import consulo.logging.Logger;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.HighlighterColors;
 import com.intellij.openapi.editor.RangeMarker;
@@ -32,12 +31,13 @@ import com.intellij.util.ArrayUtil;
 import com.intellij.util.BitUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.xml.util.XmlStringUtil;
+import consulo.logging.Logger;
+import consulo.ui.color.ColorValue;
 import org.intellij.lang.annotations.MagicConstant;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -223,7 +223,7 @@ public class HighlightInfo implements Segment {
    */
   @Nullable
   @SuppressWarnings("deprecation")
-  Color getErrorStripeMarkColor(@Nonnull PsiElement element, @Nullable EditorColorsScheme colorsScheme) {
+  ColorValue getErrorStripeMarkColor(@Nonnull PsiElement element, @Nullable EditorColorsScheme colorsScheme) {
     if (forcedTextAttributes != null) {
       return forcedTextAttributes.getErrorStripeColor();
     }
@@ -232,7 +232,7 @@ public class HighlightInfo implements Segment {
     if (forcedTextAttributesKey != null) {
       TextAttributes forcedTextAttributes = scheme.getAttributes(forcedTextAttributesKey);
       if (forcedTextAttributes != null) {
-        Color errorStripeColor = forcedTextAttributes.getErrorStripeColor();
+        ColorValue errorStripeColor = forcedTextAttributes.getErrorStripeColor();
         // let's copy above behaviour of forcedTextAttributes stripe color, but I'm not sure the behaviour is correct in general
         if (errorStripeColor != null) {
           return errorStripeColor;

@@ -29,6 +29,9 @@ import com.intellij.util.Function;
 import com.intellij.util.PairConsumer;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
+import consulo.awt.TargetAWT;
+import consulo.ui.color.ColorValue;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -67,7 +70,7 @@ public abstract class LineStatusMarkerRenderer implements ActiveGutterRenderer {
 
   @Nonnull
   public static LineMarkerRenderer createRenderer(@Nonnull Range range,
-                                                  @javax.annotation.Nullable Function<Editor, LineStatusMarkerPopup> popupBuilder) {
+                                                  @Nullable Function<Editor, LineStatusMarkerPopup> popupBuilder) {
     return new LineStatusMarkerRenderer(range) {
       @Override
       public boolean canDoAction(MouseEvent e) {
@@ -83,13 +86,13 @@ public abstract class LineStatusMarkerRenderer implements ActiveGutterRenderer {
   }
 
   @Nonnull
-  public static LineMarkerRenderer createRenderer(int line1, int line2, @Nonnull Color color, @javax.annotation.Nullable String tooltip,
+  public static LineMarkerRenderer createRenderer(int line1, int line2, @Nonnull ColorValue color, @Nullable String tooltip,
                                                   @Nullable PairConsumer<Editor, MouseEvent> action) {
     return new ActiveGutterRenderer() {
       @Override
       public void paint(Editor editor, Graphics g, Rectangle r) {
         Rectangle area = getMarkerArea(editor, r, line1, line2);
-        Color borderColor = getGutterBorderColor(editor);
+        ColorValue borderColor = getGutterBorderColor(editor);
         if (area.height != 0) {
           paintRect(g, color, borderColor, area.x, area.y, area.x + area.width, area.y + area.height);
         }
@@ -98,7 +101,7 @@ public abstract class LineStatusMarkerRenderer implements ActiveGutterRenderer {
         }
       }
 
-      @javax.annotation.Nullable
+      @Nullable
       @Override
       public String getTooltipText() {
         return tooltip;
@@ -120,7 +123,7 @@ public abstract class LineStatusMarkerRenderer implements ActiveGutterRenderer {
   private static TextAttributes getTextAttributes(@Nonnull final Range range) {
     return new TextAttributes() {
       @Override
-      public Color getErrorStripeColor() {
+      public ColorValue getErrorStripeColor() {
         return LineStatusMarkerRenderer.getErrorStripeColor(range, null);
       }
     };
@@ -150,8 +153,8 @@ public abstract class LineStatusMarkerRenderer implements ActiveGutterRenderer {
 
   @Override
   public void paint(Editor editor, Graphics g, Rectangle r) {
-    Color gutterColor = getGutterColor(myRange, editor);
-    Color borderColor = getGutterBorderColor(editor);
+    ColorValue gutterColor = getGutterColor(myRange, editor);
+    ColorValue borderColor = getGutterBorderColor(editor);
 
     Rectangle area = getMarkerArea(editor, r, myRange.getLine1(), myRange.getLine2());
     final int x = area.x;
@@ -195,13 +198,13 @@ public abstract class LineStatusMarkerRenderer implements ActiveGutterRenderer {
     }
   }
 
-  private static void paintRect(@Nonnull Graphics g, @javax.annotation.Nullable Color color, @Nullable Color borderColor, int x1, int y1, int x2, int y2) {
+  private static void paintRect(@Nonnull Graphics g, @Nullable ColorValue color, @Nullable ColorValue borderColor, int x1, int y1, int x2, int y2) {
     if (color != null) {
-      g.setColor(color);
+      g.setColor(TargetAWT.to(color));
       g.fillRect(x1, y1, x2 - x1, y2 - y1);
     }
     if (borderColor != null) {
-      g.setColor(borderColor);
+      g.setColor(TargetAWT.to(borderColor));
       UIUtil.drawLine(g, x1, y1, x2 - JBUI.scale(1), y1);
       UIUtil.drawLine(g, x1, y1, x1, y2 - JBUI.scale(1));
       UIUtil.drawLine(g, x1, y2 - JBUI.scale(1), x2 - JBUI.scale(1), y2 - JBUI.scale(1));
@@ -223,24 +226,24 @@ public abstract class LineStatusMarkerRenderer implements ActiveGutterRenderer {
     return e.getX() > gutter.getLineMarkerFreePaintersAreaOffset();
   }
 
-  private static void paintTriangle(@Nonnull Graphics g, @javax.annotation.Nullable Color color, @javax.annotation.Nullable Color borderColor, int x1, int x2, int y) {
+  private static void paintTriangle(@Nonnull Graphics g, @Nullable ColorValue color, @Nullable ColorValue borderColor, int x1, int x2, int y) {
     int size = JBUI.scale(4);
 
     final int[] xPoints = new int[]{x1, x1, x2};
     final int[] yPoints = new int[]{y - size, y + size, y};
 
     if (color != null) {
-      g.setColor(color);
+      g.setColor(TargetAWT.to(color));
       g.fillPolygon(xPoints, yPoints, xPoints.length);
     }
     if (borderColor != null) {
-      g.setColor(borderColor);
+      g.setColor(TargetAWT.to(borderColor));
       g.drawPolygon(xPoints, yPoints, xPoints.length);
     }
   }
 
-  @javax.annotation.Nullable
-  private static Color getGutterColor(@Nonnull Range.InnerRange range, @javax.annotation.Nullable Editor editor) {
+  @Nullable
+  private static ColorValue getGutterColor(@Nonnull Range.InnerRange range, @Nullable Editor editor) {
     final EditorColorsScheme scheme = getColorScheme(editor);
     switch (range.getType()) {
       case Range.INSERTED:
@@ -257,8 +260,8 @@ public abstract class LineStatusMarkerRenderer implements ActiveGutterRenderer {
     }
   }
 
-  @javax.annotation.Nullable
-  private static Color getErrorStripeColor(@Nonnull Range range, @javax.annotation.Nullable Editor editor) {
+  @Nullable
+  private static ColorValue getErrorStripeColor(@Nonnull Range range, @Nullable Editor editor) {
     final EditorColorsScheme scheme = getColorScheme(editor);
     switch (range.getType()) {
       case Range.INSERTED:
@@ -273,8 +276,8 @@ public abstract class LineStatusMarkerRenderer implements ActiveGutterRenderer {
     }
   }
 
-  @javax.annotation.Nullable
-  private static Color getGutterColor(@Nonnull Range range, @javax.annotation.Nullable Editor editor) {
+  @Nullable
+  private static ColorValue getGutterColor(@Nonnull Range range, @Nullable Editor editor) {
     final EditorColorsScheme scheme = getColorScheme(editor);
     switch (range.getType()) {
       case Range.INSERTED:
@@ -289,8 +292,8 @@ public abstract class LineStatusMarkerRenderer implements ActiveGutterRenderer {
     }
   }
 
-  @javax.annotation.Nullable
-  private static Color getGutterBorderColor(@javax.annotation.Nullable Editor editor) {
+  @Nullable
+  private static ColorValue getGutterBorderColor(@Nullable Editor editor) {
     return getColorScheme(editor).getColor(EditorColors.BORDER_LINES_COLOR);
   }
 

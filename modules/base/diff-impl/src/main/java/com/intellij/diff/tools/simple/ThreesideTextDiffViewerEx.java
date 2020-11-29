@@ -28,6 +28,7 @@ import com.intellij.openapi.diff.DiffBundle;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.event.DocumentEvent;
 import com.intellij.openapi.editor.ex.EditorEx;
+import consulo.awt.TargetAWT;
 import consulo.disposer.Disposable;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolder;
@@ -370,7 +371,7 @@ public abstract class ThreesideTextDiffViewerEx extends ThreesideTextDiffViewer 
     public void paint(@Nonnull Graphics g, @Nonnull JComponent divider) {
       Graphics2D gg = DiffDividerDrawUtil.getDividerGraphics(g, divider, getEditor(ThreeSide.BASE).getComponent());
 
-      gg.setColor(DiffDrawUtil.getDividerColor(getEditor(ThreeSide.BASE)));
+      gg.setColor(TargetAWT.to(DiffDrawUtil.getDividerColor(getEditor(ThreeSide.BASE))));
       gg.fill(gg.getClipBounds());
 
       Editor editor1 = mySide.select(getEditor(ThreeSide.LEFT), getEditor(ThreeSide.BASE));

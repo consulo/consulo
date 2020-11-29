@@ -63,7 +63,7 @@ public interface TargetAWTFacade {
   Rectangle2D from(@Nullable java.awt.Rectangle rectangle);
 
   @Contract("null -> null")
-  RGBColor from(@Nullable java.awt.Color color);
+  ColorValue from(@Nullable java.awt.Color color);
 
   @Contract("null -> null")
   javax.swing.Icon to(@Nullable Image image);

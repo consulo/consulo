@@ -27,6 +27,9 @@ import com.intellij.ui.*;
 import com.intellij.util.EventDispatcher;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.HashMap;
+import consulo.awt.TargetAWT;
+import consulo.ui.color.ColorValue;
+
 import javax.annotation.Nonnull;
 
 import javax.swing.*;
@@ -69,8 +72,8 @@ public class DiffOptionsPanel implements OptionsPanel {
               myStripeMarkColorPanel.setEnabled(true);
               MyColorAndFontDescription description = getSelectedDescription();
               if (description != null) {
-                myBackgroundColorPanel.setSelectedColor(description.getBackgroundColor());
-                myStripeMarkColorPanel.setSelectedColor(description.getStripeMarkColor());
+                myBackgroundColorPanel.setSelectedColor(TargetAWT.to(description.getBackgroundColor()));
+                myStripeMarkColorPanel.setSelectedColor(TargetAWT.to(description.getStripeMarkColor()));
               }
             }
 
@@ -83,10 +86,10 @@ public class DiffOptionsPanel implements OptionsPanel {
       public void actionPerformed(ActionEvent e) {
         MyColorAndFontDescription selectedDescription = getSelectedDescription();
         if (!checkModifiableScheme()) {
-          myBackgroundColorPanel.setSelectedColor(selectedDescription.getBackgroundColor());
+          myBackgroundColorPanel.setSelectedColor(TargetAWT.to(selectedDescription.getBackgroundColor()));
           return;
         }
-        selectedDescription.setBackgroundColor(myBackgroundColorPanel.getSelectedColor());
+        selectedDescription.setBackgroundColor(TargetAWT.from(myBackgroundColorPanel.getSelectedColor()));
         myDispatcher.getMulticaster().settingsChanged();
       }
     });
@@ -95,10 +98,10 @@ public class DiffOptionsPanel implements OptionsPanel {
       public void actionPerformed(ActionEvent e) {
         MyColorAndFontDescription selectedDescription = getSelectedDescription();
         if (!checkModifiableScheme()) {
-          myStripeMarkColorPanel.setSelectedColor(selectedDescription.getStripeMarkColor());
+          myStripeMarkColorPanel.setSelectedColor(TargetAWT.to(selectedDescription.getStripeMarkColor()));
           return;
         }
-        selectedDescription.setStripeMarkColor(myStripeMarkColorPanel.getSelectedColor());
+        selectedDescription.setStripeMarkColor(TargetAWT.from(myStripeMarkColorPanel.getSelectedColor()));
         myDispatcher.getMulticaster().settingsChanged();
       }
     });
@@ -249,10 +252,10 @@ public class DiffOptionsPanel implements OptionsPanel {
 
 
   private static class MyColorAndFontDescription implements EditorSchemeAttributeDescriptor {
-    private Color myBackgroundColor;
-    private Color myStripebarColor;
-    private final Color myOriginalBackground;
-    private final Color myOriginalStripebar;
+    private ColorValue myBackgroundColor;
+    private ColorValue myStripebarColor;
+    private final ColorValue myOriginalBackground;
+    private final ColorValue myOriginalStripebar;
     private final EditorColorsScheme myScheme;
     private final TextDiffType myDiffType;
 
@@ -296,19 +299,19 @@ public class DiffOptionsPanel implements OptionsPanel {
              !Comparing.equal(myOriginalStripebar, attrs.getErrorStripeColor());
     }
 
-    public void setBackgroundColor(Color selectedColor) {
+    public void setBackgroundColor(ColorValue selectedColor) {
       myBackgroundColor = selectedColor;
     }
 
-    public Color getBackgroundColor() {
+    public ColorValue getBackgroundColor() {
       return myBackgroundColor;
     }
 
-    public void setStripeMarkColor(Color selectedColor) {
+    public void setStripeMarkColor(ColorValue selectedColor) {
       myStripebarColor = selectedColor;
     }
 
-    public Color getStripeMarkColor() {
+    public ColorValue getStripeMarkColor() {
       return myStripebarColor;
     }
   }

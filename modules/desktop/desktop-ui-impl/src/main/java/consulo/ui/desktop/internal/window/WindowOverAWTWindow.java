@@ -15,21 +15,21 @@
  */
 package consulo.ui.desktop.internal.window;
 
-import consulo.disposer.Disposable;
-import consulo.ui.desktop.internal.DesktopFontImpl;
-import consulo.ui.font.Font;
-import consulo.util.dataholder.Key;
 import consulo.awt.TargetAWT;
 import consulo.awt.impl.ToSwingWindowWrapper;
+import consulo.disposer.Disposable;
 import consulo.ui.Component;
 import consulo.ui.MenuBar;
-import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.Window;
-import consulo.ui.impl.UIDataObject;
 import consulo.ui.Size;
+import consulo.ui.Window;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.border.BorderPosition;
 import consulo.ui.border.BorderStyle;
-import consulo.ui.style.ColorKey;
+import consulo.ui.color.ColorValue;
+import consulo.ui.desktop.internal.DesktopFontImpl;
+import consulo.ui.font.Font;
+import consulo.ui.impl.UIDataObject;
+import consulo.util.dataholder.Key;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -104,7 +104,7 @@ public abstract class WindowOverAWTWindow implements Window, ToSwingWindowWrappe
 
   @RequiredUIAccess
   @Override
-  public void addBorder(@Nonnull BorderPosition borderPosition, @Nonnull BorderStyle borderStyle, ColorKey colorKey, int width) {
+  public void addBorder(@Nonnull BorderPosition borderPosition, @Nonnull BorderStyle borderStyle, ColorValue colorValue, int width) {
     throw new UnsupportedOperationException();
   }
 

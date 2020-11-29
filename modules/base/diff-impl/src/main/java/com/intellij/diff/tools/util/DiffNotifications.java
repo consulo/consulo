@@ -20,6 +20,9 @@ import com.intellij.diff.util.TextDiffType;
 import com.intellij.openapi.diff.DiffBundle;
 import com.intellij.ui.EditorNotificationPanel;
 import com.intellij.ui.HyperlinkLabel;
+import consulo.awt.TargetAWT;
+import consulo.ui.color.ColorValue;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -81,13 +84,13 @@ public class DiffNotifications {
   }
 
   @Nonnull
-  public static JPanel createNotification(@Nonnull String text, @Nullable final Color background) {
+  public static JPanel createNotification(@Nonnull String text, @Nullable final ColorValue background) {
     return createNotification(text, background, true);
   }
 
   @Nonnull
-  public static JPanel createNotification(@Nonnull String text, @Nullable final Color background, boolean showHideAction) {
-    final EditorNotificationPanel panel = new EditorNotificationPanel(background);
+  public static JPanel createNotification(@Nonnull String text, @Nullable final ColorValue background, boolean showHideAction) {
+    final EditorNotificationPanel panel = new EditorNotificationPanel(TargetAWT.to(background));
     panel.text(text);
     if (showHideAction) {
       HyperlinkLabel link = panel.createActionLabel("Hide", () -> panel.setVisible(false));

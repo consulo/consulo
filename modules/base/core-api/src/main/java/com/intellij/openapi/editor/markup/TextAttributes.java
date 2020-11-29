@@ -16,12 +16,13 @@
 package com.intellij.openapi.editor.markup;
 
 import consulo.logging.Logger;
+import consulo.ui.color.ColorValue;
 import org.intellij.lang.annotations.JdkConstants;
 import org.jdom.Element;
 import org.jetbrains.annotations.Contract;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.awt.*;
 import java.util.Collections;
 import java.util.Map;
@@ -85,7 +86,7 @@ public class TextAttributes implements Cloneable {
     myEnforceEmpty = enforced;
   }
 
-  public TextAttributes(@Nullable Color foregroundColor, @Nullable Color backgroundColor, @Nullable Color effectColor, EffectType effectType, @JdkConstants.FontStyle int fontType) {
+  public TextAttributes(@Nullable ColorValue foregroundColor, @Nullable ColorValue backgroundColor, @Nullable ColorValue effectColor, EffectType effectType, @JdkConstants.FontStyle int fontType) {
     setAttributes(foregroundColor, backgroundColor, effectColor, null, effectType, fontType);
   }
 
@@ -93,17 +94,17 @@ public class TextAttributes implements Cloneable {
     myAttrs = other.myAttrs;
   }
 
-  public void setAttributes(Color foregroundColor, Color backgroundColor, Color effectColor, Color errorStripeColor, EffectType effectType, @JdkConstants.FontStyle int fontType) {
+  public void setAttributes(ColorValue foregroundColor, ColorValue backgroundColor, ColorValue effectColor, ColorValue errorStripeColor, EffectType effectType, @JdkConstants.FontStyle int fontType) {
     setAttributes(foregroundColor, backgroundColor, effectColor, errorStripeColor, effectType, Collections.emptyMap(), fontType);
   }
 
   //@ApiStatus.Experimental
-  public void setAttributes(Color foregroundColor,
-                            Color backgroundColor,
-                            Color effectColor,
-                            Color errorStripeColor,
+  public void setAttributes(ColorValue foregroundColor,
+                            ColorValue backgroundColor,
+                            ColorValue effectColor,
+                            ColorValue errorStripeColor,
                             EffectType effectType,
-                            @Nonnull Map<EffectType, Color> additionalEffects,
+                            @Nonnull Map<EffectType, ColorValue> additionalEffects,
                             @JdkConstants.FontStyle int fontType) {
     myAttrs = AttributesFlyweight.create(foregroundColor, backgroundColor, fontType, effectColor, effectType, additionalEffects, errorStripeColor);
   }
@@ -126,35 +127,35 @@ public class TextAttributes implements Cloneable {
     return new TextAttributes(flyweight);
   }
 
-  public Color getForegroundColor() {
+  public ColorValue getForegroundColor() {
     return myAttrs.getForeground();
   }
 
-  public void setForegroundColor(Color color) {
+  public void setForegroundColor(ColorValue color) {
     myAttrs = myAttrs.withForeground(color);
   }
 
-  public Color getBackgroundColor() {
+  public ColorValue getBackgroundColor() {
     return myAttrs.getBackground();
   }
 
-  public void setBackgroundColor(Color color) {
+  public void setBackgroundColor(ColorValue color) {
     myAttrs = myAttrs.withBackground(color);
   }
 
-  public Color getEffectColor() {
+  public ColorValue getEffectColor() {
     return myAttrs.getEffectColor();
   }
 
-  public void setEffectColor(Color color) {
+  public void setEffectColor(ColorValue color) {
     myAttrs = myAttrs.withEffectColor(color);
   }
 
-  public Color getErrorStripeColor() {
+  public ColorValue getErrorStripeColor() {
     return myAttrs.getErrorStripeColor();
   }
 
-  public void setErrorStripeColor(Color color) {
+  public void setErrorStripeColor(ColorValue color) {
     myAttrs = myAttrs.withErrorStripeColor(color);
   }
 
@@ -172,7 +173,7 @@ public class TextAttributes implements Cloneable {
    * @param effectsMap map of effect types and colors to use.
    */
   //@ApiStatus.Experimental
-  public void setAdditionalEffects(@Nonnull Map<EffectType, Color> effectsMap) {
+  public void setAdditionalEffects(@Nonnull Map<EffectType, ColorValue> effectsMap) {
     myAttrs = myAttrs.withAdditionalEffects(effectsMap);
   }
 
@@ -182,7 +183,7 @@ public class TextAttributes implements Cloneable {
    * @see TextAttributes#setAdditionalEffects(Map)
    */
   //@ApiStatus.Experimental
-  public void withAdditionalEffect(@Nonnull EffectType effectType, @Nonnull Color color) {
+  public void withAdditionalEffect(@Nonnull EffectType effectType, @Nonnull ColorValue color) {
     withAdditionalEffects(Collections.singletonMap(effectType, color));
   }
 
@@ -193,7 +194,7 @@ public class TextAttributes implements Cloneable {
    * @see TextAttributesEffectsBuilder
    */
   //@ApiStatus.Experimental
-  public void withAdditionalEffects(@Nonnull Map<EffectType, Color> effectsMap) {
+  public void withAdditionalEffects(@Nonnull Map<EffectType, ColorValue> effectsMap) {
     if (effectsMap.isEmpty()) {
       return;
     }
@@ -207,12 +208,12 @@ public class TextAttributes implements Cloneable {
   }
 
   //@ApiStatus.Experimental
-  public void forEachAdditionalEffect(@Nonnull BiConsumer<? super EffectType, ? super Color> consumer) {
+  public void forEachAdditionalEffect(@Nonnull BiConsumer<? super EffectType, ? super ColorValue> consumer) {
     myAttrs.getAdditionalEffects().forEach(consumer);
   }
 
   //@ApiStatus.Experimental
-  public void forEachEffect(@Nonnull BiConsumer<? super EffectType, ? super Color> consumer) {
+  public void forEachEffect(@Nonnull BiConsumer<? super EffectType, ? super ColorValue> consumer) {
     myAttrs.getAllEffects().forEach(consumer);
   }
 

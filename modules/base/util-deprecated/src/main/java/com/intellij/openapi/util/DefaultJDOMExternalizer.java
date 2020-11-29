@@ -15,21 +15,21 @@
  */
 package com.intellij.openapi.util;
 
-import consulo.logging.Logger;
 import com.intellij.util.ReflectionUtil;
+import consulo.logging.Logger;
 import org.jdom.Element;
 import org.jdom.Verifier;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.awt.*;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.List;
 
 /**
- * @deprecated {@link com.intellij.util.xmlb.XmlSerializer} should be used instead
  * @author mike
+ * @deprecated {@link com.intellij.util.xmlb.XmlSerializer} should be used instead
  */
 @SuppressWarnings({"HardCodedStringLiteral"})
 public class DefaultJDOMExternalizer {
@@ -38,7 +38,7 @@ public class DefaultJDOMExternalizer {
   private DefaultJDOMExternalizer() {
   }
 
-  public interface JDOMFilter{
+  public interface JDOMFilter {
     boolean isAccept(@Nonnull Field field);
   }
 
@@ -47,15 +47,12 @@ public class DefaultJDOMExternalizer {
   }
 
   /**
-   *
    * @param data
    * @param parentNode
-   * @param filter null means all elements accepted
+   * @param filter     null means all elements accepted
    * @throws WriteExternalException
    */
-  public static void writeExternal(@Nonnull Object data,
-                                   @Nonnull Element parentNode,
-                                   @Nullable JDOMFilter filter) throws WriteExternalException {
+  public static void writeExternal(@Nonnull Object data, @Nonnull Element parentNode, @Nullable JDOMFilter filter) throws WriteExternalException {
     Field[] fields = data.getClass().getFields();
 
     for (Field field : fields) {
@@ -140,7 +137,7 @@ public class DefaultJDOMExternalizer {
   public static String filterXMLCharacters(String value) {
     if (value != null) {
       StringBuilder builder = null;
-      for (int i=0; i<value.length();i++) {
+      for (int i = 0; i < value.length(); i++) {
         char c = value.charAt(i);
         if (Verifier.isXMLCharacter(c)) {
           if (builder != null) {
@@ -149,7 +146,7 @@ public class DefaultJDOMExternalizer {
         }
         else {
           if (builder == null) {
-            builder = new StringBuilder(value.length()+5);
+            builder = new StringBuilder(value.length() + 5);
             builder.append(value, 0, i);
           }
         }
@@ -161,7 +158,7 @@ public class DefaultJDOMExternalizer {
     return value;
   }
 
-  public static void readExternal(@Nonnull Object data, Element parentNode) throws InvalidDataException{
+  public static void readExternal(@Nonnull Object data, Element parentNode) throws InvalidDataException {
     if (parentNode == null) return;
 
     for (final Element e : parentNode.getChildren("option")) {

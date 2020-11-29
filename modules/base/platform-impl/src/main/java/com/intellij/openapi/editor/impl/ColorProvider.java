@@ -16,8 +16,9 @@
 package com.intellij.openapi.editor.impl;
 
 import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.editor.colors.ColorKey;
+import com.intellij.openapi.editor.colors.EditorColorKey;
 import com.intellij.openapi.editor.colors.EditorColorsScheme;
+import consulo.ui.color.ColorValue;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -37,7 +38,7 @@ public abstract class ColorProvider {
   /**
    * @return    target {@link Color} object managed by the current holder
    */
-  public abstract Color getColor();
+  public abstract ColorValue getColor();
 
   /**
    * Factory method for creating color holder that always returns given {@link Color} object.
@@ -45,19 +46,19 @@ public abstract class ColorProvider {
    * @param color   target color to use
    * @return        color holder that uses given color all the time
    */
-  public static ColorProvider byColor(Color color) {
+  public static ColorProvider byColor(ColorValue color) {
     return new StaticColorHolder(color);
   }
 
   /**
-   * Shortcut for calling {@link #byColorsScheme(EditorColorsScheme, ColorKey...)} with colors scheme retrieved from the given editor.
+   * Shortcut for calling {@link #byColorsScheme(EditorColorsScheme, EditorColorKey...)} with colors scheme retrieved from the given editor.
    *
    * @param editor    target colors scheme holder
    * @param keys      target color identifiers
    * @return          color holder that delegates target color retrieval to the colors scheme associated
    *                  with the given editor using given color keys
    */
-  public static ColorProvider byColorScheme(Editor editor, ColorKey ... keys) {
+  public static ColorProvider byColorScheme(Editor editor, EditorColorKey... keys) {
     return byColorsScheme(editor.getColorsScheme(), keys);
   }
 
@@ -73,20 +74,19 @@ public abstract class ColorProvider {
    * @param keys      target color identifiers
    * @return          color holder that delegates target color retrieval to the given colors scheme using given color keys
    */
-  public static ColorProvider byColorsScheme(EditorColorsScheme scheme, ColorKey ... keys) {
+  public static ColorProvider byColorsScheme(EditorColorsScheme scheme, EditorColorKey ... keys) {
     return new ColorSchemeBasedHolder(scheme, keys);
   }
 
   private static class StaticColorHolder extends ColorProvider {
+    private final ColorValue myColor;
 
-    private final Color myColor;
-
-    StaticColorHolder(Color color) {
+    StaticColorHolder(ColorValue color) {
       myColor = color;
     }
 
     @Override
-    public Color getColor() {
+    public ColorValue getColor() {
       return myColor;
     }
   }
@@ -94,19 +94,19 @@ public abstract class ColorProvider {
   private static class ColorSchemeBasedHolder extends ColorProvider {
 
     private final EditorColorsScheme myScheme;
-    private final List<ColorKey> myKeys = new ArrayList<ColorKey>();
+    private final List<EditorColorKey> myKeys = new ArrayList<>();
 
-    ColorSchemeBasedHolder(EditorColorsScheme scheme, ColorKey ... keys) {
+    ColorSchemeBasedHolder(EditorColorsScheme scheme, EditorColorKey ... keys) {
       myScheme = scheme;
       myKeys.addAll(Arrays.asList(keys));
       Collections.reverse(myKeys); // Reverse collection in order to reduce removal cost
     }
 
     @Override
-    public Color getColor() {
+    public ColorValue getColor() {
       while (!myKeys.isEmpty()) {
-        ColorKey key = myKeys.get(myKeys.size() - 1);
-        Color result = myScheme.getColor(key);
+        EditorColorKey key = myKeys.get(myKeys.size() - 1);
+        ColorValue result = myScheme.getColor(key);
         if (result == null || result.equals(myScheme.getDefaultForeground())) {
           myKeys.remove(myKeys.size() - 1);
         }

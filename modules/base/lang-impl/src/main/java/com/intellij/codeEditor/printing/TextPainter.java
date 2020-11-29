@@ -33,6 +33,9 @@ import com.intellij.psi.codeStyle.CodeStyleSettings;
 import com.intellij.psi.codeStyle.CodeStyleSettingsManager;
 import com.intellij.util.containers.IntArrayList;
 import com.intellij.util.ui.UIUtil;
+import consulo.awt.TargetAWT;
+import consulo.ui.color.ColorValue;
+import consulo.ui.style.StandardColors;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 
@@ -214,18 +217,18 @@ public class TextPainter implements Printable {
     return myCharWidth;
   }
 
-  private void setForegroundColor(Graphics2D g, Color color) {
+  private void setForegroundColor(Graphics2D g, ColorValue color) {
     if (color == null || !myPrintSettings.COLOR_PRINTING || !myPrintSettings.SYNTAX_PRINTING) {
-      color = Color.black;
+      color = StandardColors.BLACK;
     }
-    g.setColor(color);
+    g.setColor(TargetAWT.to(color));
   }
 
-  private void setBackgroundColor(Graphics2D g, Color color) {
+  private void setBackgroundColor(Graphics2D g, ColorValue color) {
     if (color == null || !myPrintSettings.COLOR_PRINTING || !myPrintSettings.SYNTAX_PRINTING) {
-      color = Color.white;
+      color = StandardColors.WHITE;
     }
-    g.setColor(color);
+    g.setColor(TargetAWT.to(color));
   }
 
   private void setFont(Graphics2D g, Font font) {
@@ -249,9 +252,9 @@ public class TextPainter implements Printable {
       return;
     }
     TextAttributes attributes = hIterator.getTextAttributes();
-    Color currentColor = attributes.getForegroundColor();
-    Color backColor = attributes.getBackgroundColor();
-    Color underscoredColor = attributes.getEffectColor();
+    ColorValue currentColor = attributes.getForegroundColor();
+    ColorValue backColor = attributes.getBackgroundColor();
+    ColorValue underscoredColor = attributes.getEffectColor();
     Font currentFont = getFont(attributes.getFontType());
     setForegroundColor(g, currentColor);
     setFont(g, currentFont);
@@ -285,7 +288,7 @@ public class TextPainter implements Printable {
             Color save = g.getColor();
             setForegroundColor(g, marker.separatorColor);
             UIUtil.drawLine(g, 0, (int)lineY, (int)clip.getWidth(), (int)lineY);
-            setForegroundColor(g, save);
+            setForegroundColor(g, TargetAWT.from(save));
             myCurrentMethodSeparator++;
           }
         }
@@ -311,9 +314,9 @@ public class TextPainter implements Printable {
         }
         hIterator.advance();
         attributes = hIterator.getTextAttributes();
-        Color color = attributes.getForegroundColor();
+        ColorValue color = attributes.getForegroundColor();
         if (color == null) {
-          color = Color.black;
+          color = StandardColors.BLACK;
         }
         if (color != currentColor) {
           setForegroundColor(g, color);
@@ -478,8 +481,7 @@ public class TextPainter implements Printable {
     g.setFont(savedFont);
   }
 
-  private boolean drawString(Graphics2D g, int end, int colNumber, Point2D position, Rectangle2D clip, Color backColor,
-                             Color underscoredColor) {
+  private boolean drawString(Graphics2D g, int end, int colNumber, Point2D position, Rectangle2D clip, ColorValue backColor, ColorValue underscoredColor) {
     ProgressManager.checkCanceled();
     if (myOffset >= end)
       return true;
@@ -492,7 +494,7 @@ public class TextPainter implements Printable {
   }
 
   private boolean drawTabbedString(Graphics2D g, char[] text, int length, Point2D position, Rectangle2D clip,
-                                   int colNumber, Color backColor, Color underscoredColor) {
+                                   int colNumber, ColorValue backColor, ColorValue underscoredColor) {
     boolean ret = true;
     if (myOffset + length >= mySegmentEnd) {
       ret = false;

@@ -15,18 +15,17 @@
  */
 package com.intellij.openapi.vcs.actions;
 
+import com.intellij.codeHighlighting.ColorGenerator;
 import com.intellij.openapi.components.ServiceManager;
-import com.intellij.openapi.editor.colors.ColorKey;
+import com.intellij.openapi.editor.colors.EditorColorKey;
 import com.intellij.openapi.editor.colors.EditorColorsManager;
 import com.intellij.openapi.editor.colors.EditorColorsScheme;
-import com.intellij.codeHighlighting.ColorGenerator;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.ui.color.ColorValue;
 import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,13 +35,13 @@ public class AnnotationsSettings {
   private static final int COLORS_BETWEEN_ANCHORS = 4;
   private static final int SHUFFLE_STEP = 4;
 
-  static final List<ColorKey> ANCHOR_COLOR_KEYS = createColorKeys(ANCHORS_COUNT);
+  static final List<EditorColorKey> ANCHOR_COLOR_KEYS = createColorKeys(ANCHORS_COUNT);
 
   @Nonnull
-  private static List<ColorKey> createColorKeys(int count) {
-    List<ColorKey> keys = new ArrayList<>();
+  private static List<EditorColorKey> createColorKeys(int count) {
+    List<EditorColorKey> keys = new ArrayList<>();
     for (int i = 0; i < count; i++) {
-      keys.add(ColorKey.createColorKey("VCS_ANNOTATIONS_COLOR_" + (i + 1)));
+      keys.add(EditorColorKey.createColorKey("VCS_ANNOTATIONS_COLOR_" + (i + 1)));
     }
     return keys;
   }
@@ -52,11 +51,11 @@ public class AnnotationsSettings {
   }
 
   @Nonnull
-  public List<Color> getAuthorsColors(@Nullable EditorColorsScheme scheme) {
+  public List<ColorValue> getAuthorsColors(@Nullable EditorColorsScheme scheme) {
     if (scheme == null) scheme = EditorColorsManager.getInstance().getGlobalScheme();
-    List<Color> colors = getOrderedColors(scheme);
+    List<ColorValue> colors = getOrderedColors(scheme);
 
-    List<Color> authorColors = new ArrayList<>();
+    List<ColorValue> authorColors = new ArrayList<>();
     for (int i = 0; i < SHUFFLE_STEP; i++) {
       for (int k = 0; k <= colors.size() / SHUFFLE_STEP; k++) {
         int index = k * SHUFFLE_STEP + i;
@@ -68,11 +67,11 @@ public class AnnotationsSettings {
   }
 
   @Nonnull
-  public List<Color> getOrderedColors(@Nullable EditorColorsScheme scheme) {
+  public List<ColorValue> getOrderedColors(@Nullable EditorColorsScheme scheme) {
     if (scheme == null) scheme = EditorColorsManager.getInstance().getGlobalScheme();
 
-    List<Color> anchorColors = new ArrayList<>();
-    for (ColorKey key : ANCHOR_COLOR_KEYS) {
+    List<ColorValue> anchorColors = new ArrayList<>();
+    for (EditorColorKey key : ANCHOR_COLOR_KEYS) {
       ContainerUtil.addIfNotNull(anchorColors, scheme.getColor(key));
     }
 
@@ -86,7 +85,7 @@ public class AnnotationsSettings {
     List<Integer> result = new ArrayList<>(ANCHORS_COUNT);
 
     int count = 0;
-    for (ColorKey key : ANCHOR_COLOR_KEYS) {
+    for (EditorColorKey key : ANCHOR_COLOR_KEYS) {
       if (scheme.getColor(key) != null) {
         result.add(count);
         count += COLORS_BETWEEN_ANCHORS + 1;

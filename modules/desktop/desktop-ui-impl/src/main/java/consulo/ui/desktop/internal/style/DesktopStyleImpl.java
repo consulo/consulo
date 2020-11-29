@@ -16,6 +16,7 @@
 package consulo.ui.desktop.internal.style;
 
 import com.intellij.ui.JBColor;
+import com.intellij.ui.LightColors;
 import com.intellij.util.ui.UIUtil;
 import consulo.awt.TargetAWT;
 import consulo.desktop.util.awt.MorphValue;
@@ -27,7 +28,7 @@ import consulo.ui.image.IconLibraryManager;
 import consulo.ui.image.Image;
 import consulo.ui.impl.style.StyleImpl;
 import consulo.ui.color.ColorValue;
-import consulo.ui.style.ColorKey;
+import consulo.ui.style.StyleColorValue;
 import consulo.ui.style.ComponentColors;
 import consulo.ui.style.StandardColors;
 
@@ -56,47 +57,56 @@ public class DesktopStyleImpl extends StyleImpl {
 
   @Nonnull
   @Override
-  public ColorValue getColor(@Nonnull ColorKey colorKey) {
-    if (colorKey == ComponentColors.TEXT) {
+  public ColorValue getColorValue(@Nonnull StyleColorValue colorValue) {
+    if (colorValue == ComponentColors.TEXT) {
       return TargetAWT.from(UIUtil.getLabelForeground());
     }
-    else if (colorKey == ComponentColors.DISABLED_TEXT) {
+    else if (colorValue == ComponentColors.DISABLED_TEXT) {
       return TargetAWT.from(UIUtil.getInactiveTextColor());
     }
-    else if (colorKey == ComponentColors.LAYOUT) {
+    else if (colorValue == ComponentColors.LAYOUT) {
       return TargetAWT.from(UIUtil.getPanelBackground());
     }
-    else if (colorKey == ComponentColors.BORDER) {
+    else if (colorValue == ComponentColors.BORDER) {
       return TargetAWT.from(UIUtil.getBorderColor());
     }
-    else if (colorKey == StandardColors.BLUE) {
+    else if (colorValue == StandardColors.BLUE) {
       return TargetAWT.from(JBColor.BLUE);
     }
-    else if (colorKey == StandardColors.RED) {
+    else if (colorValue == StandardColors.RED) {
       return TargetAWT.from(JBColor.RED);
     }
-    else if (colorKey == StandardColors.GREEN) {
+    else if (colorValue == StandardColors.GREEN) {
       return TargetAWT.from(JBColor.GREEN);
     }
-    else if (colorKey == StandardColors.GRAY) {
+    else if (colorValue == StandardColors.GRAY) {
       return TargetAWT.from(JBColor.GRAY);
     }
-    else if (colorKey == StandardColors.LIGHT_GRAY) {
+    else if (colorValue == StandardColors.LIGHT_GRAY) {
       return TargetAWT.from(JBColor.LIGHT_GRAY);
     }
-    else if (colorKey == StandardColors.BLACK) {
+    else if (colorValue == StandardColors.LIGHT_YELLOW) {
+      return TargetAWT.from(LightColors.YELLOW);
+    }
+    else if (colorValue == StandardColors.BLACK) {
       return TargetAWT.from(JBColor.BLACK);
     }
-    else if (colorKey == StandardColors.WHITE) {
+    else if (colorValue == StandardColors.WHITE) {
       return TargetAWT.from(JBColor.WHITE);
     }
-    else if (colorKey == StandardColors.MAGENTA) {
+    else if (colorValue == StandardColors.MAGENTA) {
       return TargetAWT.from(JBColor.MAGENTA);
     }
-    else if (colorKey == StandardColors.YELLOW) {
+    else if (colorValue == StandardColors.YELLOW) {
       return TargetAWT.from(JBColor.YELLOW);
     }
-    throw new UnsupportedOperationException(colorKey.toString());
+    else if (colorValue == StandardColors.ORANGE) {
+      return TargetAWT.from(JBColor.ORANGE);
+    }
+    else if (colorValue == StandardColors.LIGHT_RED) {
+      return TargetAWT.from(LightColors.RED);
+    }
+    throw new UnsupportedOperationException(colorValue.toString());
   }
 
   @Nonnull

@@ -39,7 +39,7 @@ public class TestStyleManagerImpl implements StyleManager {
 
     @Nonnull
     @Override
-    public ColorValue getColor(@Nonnull ColorKey colorKey) {
+    public ColorValue getColorValue(@Nonnull StyleColorValue colorKey) {
       return StandardColors.BLACK;
     }
   };
