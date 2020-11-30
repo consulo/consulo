@@ -26,14 +26,13 @@ import com.intellij.psi.PsiNamedElement;
 import com.intellij.psi.SmartPointerManager;
 import com.intellij.psi.util.PsiUtilCore;
 import consulo.ide.IconDescriptorUpdaters;
+import consulo.ui.color.ColorValue;
 import consulo.ui.image.Image;
 import gnu.trove.THashSet;
 import org.jetbrains.annotations.Contract;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.swing.*;
-import java.awt.*;
 import java.util.Collections;
 import java.util.Set;
 
@@ -206,15 +205,15 @@ public final class LookupElementBuilder extends LookupElement {
   }
 
   /**
-   * @deprecated use {@link #withItemTextForeground(Color)}
+   * @deprecated use {@link #withItemTextForeground(ColorValue)}
    */
   @Contract(value = "", pure = true)
-  public LookupElementBuilder setItemTextForeground(@Nonnull Color itemTextForeground) {
+  public LookupElementBuilder setItemTextForeground(@Nonnull ColorValue itemTextForeground) {
     return withItemTextForeground(itemTextForeground);
   }
 
   @Contract(value = "", pure = true)
-  public LookupElementBuilder withItemTextForeground(@Nonnull Color itemTextForeground) {
+  public LookupElementBuilder withItemTextForeground(@Nonnull ColorValue itemTextForeground) {
     final LookupElementPresentation presentation = copyPresentation();
     presentation.setItemTextForeground(itemTextForeground);
     return new LookupElementBuilder(myLookupString, myObject, myInsertHandler, null, presentation, myAllLookupStrings, myCaseSensitive);

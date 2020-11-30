@@ -41,10 +41,13 @@ import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.accessibility.AccessibleContextUtil;
 import consulo.application.AccessRule;
+import consulo.awt.TargetAWT;
 import consulo.desktop.util.awt.MorphColor;
 import consulo.logging.Logger;
+import consulo.ui.color.ColorValue;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
+import consulo.ui.style.StandardColors;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -146,7 +149,7 @@ public class LookupCellRenderer implements ListCellRenderer {
         }
         catch (ProcessCanceledException e) {
           LOG.info(e);
-          presentation.setItemTextForeground(JBColor.RED);
+          presentation.setItemTextForeground(StandardColors.RED);
           presentation.setItemText("Error occurred, see the log in Help | Show Log");
         }
         catch (Exception | Error e) {
@@ -154,15 +157,15 @@ public class LookupCellRenderer implements ListCellRenderer {
         }
       }
       else {
-        presentation.setItemTextForeground(JBColor.RED);
+        presentation.setItemTextForeground(StandardColors.RED);
         presentation.setItemText("Invalid");
       }
     });
 
     myNameComponent.clear();
     myNameComponent.setBackground(background);
-    allowedWidth -= setItemTextLabel(item, new JBColor(isSelected ? SELECTED_FOREGROUND_COLOR : presentation.getItemTextForeground(), presentation.getItemTextForeground()), isSelected, presentation,
-                                     allowedWidth);
+    Color itemTextForeground = TargetAWT.to(presentation.getItemTextForeground());
+    allowedWidth -= setItemTextLabel(item, new JBColor(isSelected ? SELECTED_FOREGROUND_COLOR : itemTextForeground, itemTextForeground), isSelected, presentation, allowedWidth);
 
     Font font = myLookup.getCustomFont(item, false);
     if (font == null) {
@@ -310,9 +313,9 @@ public class LookupCellRenderer implements ListCellRenderer {
     }
 
     if (!isSelected) {
-      final Color tailForeground = fragment.getForegroundColor();
+      final ColorValue tailForeground = fragment.getForegroundColor();
       if (tailForeground != null) {
-        return tailForeground;
+        return TargetAWT.to(tailForeground);
       }
     }
 

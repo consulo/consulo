@@ -16,13 +16,13 @@
 package com.intellij.codeInsight.lookup;
 
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.ui.JBColor;
 import com.intellij.util.SmartList;
+import consulo.ui.color.ColorValue;
 import consulo.ui.image.Image;
+import consulo.ui.style.ComponentColors;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.awt.*;
 import java.util.Collections;
 import java.util.List;
 
@@ -35,7 +35,7 @@ public class LookupElementPresentation {
   private String myItemText;
   private String myTypeText;
   private boolean myStrikeout;
-  private Color myItemTextForeground = JBColor.foreground();
+  private ColorValue myItemTextForeground = ComponentColors.TEXT_FOREGROUND;
   private boolean myItemTextBold;
   private boolean myItemTextUnderlined;
   private boolean myTypeGrayed;
@@ -88,7 +88,7 @@ public class LookupElementPresentation {
     }
   }
 
-  public void setTailText(@Nullable String text, @Nullable Color foreground) {
+  public void setTailText(@Nullable String text, @Nullable ColorValue foreground) {
     clearTail();
     if (text != null) {
       appendTailText(new TextFragment(text, false, false, foreground));
@@ -156,7 +156,7 @@ public class LookupElementPresentation {
 
   @Nullable
   @Deprecated
-  public Color getTailForeground() {
+  public ColorValue getTailForeground() {
     return myTail != null ? myTail.get(0).myFgColor : null;
   }
 
@@ -173,11 +173,11 @@ public class LookupElementPresentation {
   }
 
   @Nonnull
-  public Color getItemTextForeground() {
+  public ColorValue getItemTextForeground() {
     return myItemTextForeground;
   }
 
-  public void setItemTextForeground(@Nonnull Color itemTextForeground) {
+  public void setItemTextForeground(@Nonnull ColorValue itemTextForeground) {
     myItemTextForeground = itemTextForeground;
   }
 
@@ -221,9 +221,9 @@ public class LookupElementPresentation {
     private final boolean myGrayed;
     private final boolean myItalic;
     @Nullable
-    private final Color myFgColor;
+    private final ColorValue myFgColor;
 
-    private TextFragment(String text, boolean grayed, boolean italic, @Nullable Color fgColor) {
+    private TextFragment(String text, boolean grayed, boolean italic, @Nullable ColorValue fgColor) {
       this.text = text;
       myGrayed = grayed;
       myItalic = italic;
@@ -244,7 +244,7 @@ public class LookupElementPresentation {
     }
 
     @Nullable
-    public Color getForegroundColor() {
+    public ColorValue getForegroundColor() {
       return myFgColor;
     }
   }
