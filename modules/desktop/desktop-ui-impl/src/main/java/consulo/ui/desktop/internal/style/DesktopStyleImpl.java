@@ -58,7 +58,7 @@ public class DesktopStyleImpl extends StyleImpl {
   @Nonnull
   @Override
   public ColorValue getColorValue(@Nonnull StyleColorValue colorValue) {
-    if (colorValue == ComponentColors.TEXT) {
+    if (colorValue == ComponentColors.TEXT || colorValue == ComponentColors.TEXT_FOREGROUND) {
       return TargetAWT.from(UIUtil.getLabelForeground());
     }
     else if (colorValue == ComponentColors.DISABLED_TEXT) {

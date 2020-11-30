@@ -42,6 +42,8 @@ public class WebStyleImpl implements Style {
     }
 
     myColors.put(ComponentColors.BORDER, new RGBColor(192, 192, 192));
+    myColors.put(ComponentColors.TEXT, StandardColors.BLACK.getStaticValue());
+    myColors.put(ComponentColors.TEXT_FOREGROUND, StandardColors.BLACK.getStaticValue());
     myColors.put(ComponentColors.LAYOUT, StandardColors.WHITE.getStaticValue());
   }
 

@@ -19,6 +19,8 @@ import com.intellij.openapi.util.ClearableLazyValue;
 import com.intellij.util.NotNullProducer;
 import com.intellij.util.ObjectUtil;
 import com.intellij.util.ui.UIUtil;
+import consulo.annotation.DeprecationInfo;
+
 import javax.annotation.Nonnull;
 
 import javax.swing.*;
@@ -311,6 +313,8 @@ public class JBColor extends Color {
   public static final Color cyan = new JBColor(Color.cyan, new Color(0, 137, 137));
   public static final Color CYAN = cyan;
 
+  @Deprecated
+  @DeprecationInfo("ComponentColors#TEXT_FOREGROUND")
   public static Color foreground() {
     return new JBColor(new NotNullProducer<Color>() {
       @Nonnull

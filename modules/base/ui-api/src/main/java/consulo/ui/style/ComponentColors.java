@@ -21,7 +21,9 @@ package consulo.ui.style;
  */
 public enum ComponentColors implements StyleColorValue {
   BORDER,
+  @Deprecated
+  // Use Use TEXT_FOREGROUND
   TEXT,
+  TEXT_FOREGROUND,
   LAYOUT,
-  DISABLED_TEXT
-}
+  DISABLED_TEXT}
