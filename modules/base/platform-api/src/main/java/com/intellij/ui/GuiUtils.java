@@ -33,6 +33,7 @@ import com.intellij.ui.components.JBTextField;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.Consumer;
 import com.intellij.util.ui.UIUtil;
+import consulo.annotation.DeprecationInfo;
 import org.intellij.lang.annotations.JdkConstants;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
@@ -329,6 +330,8 @@ public class GuiUtils {
     }
   }
 
+  @Deprecated
+  @DeprecationInfo("Use ColorValueUtil#toHex or ColorUtil#toHex")
   public static String colorToHex(final Color color) {
     return to2DigitsHex(color.getRed())
            +to2DigitsHex(color.getGreen())
