@@ -120,6 +120,10 @@ public class ConfigurableWrapper implements SearchableConfigurable {
     return myConfigurable;
   }
 
+  public ConfigurableEP getEp() {
+    return myEp;
+  }
+
   @Nls
   @Override
   public String getDisplayName() {

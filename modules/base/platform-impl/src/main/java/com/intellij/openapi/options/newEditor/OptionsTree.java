@@ -17,27 +17,32 @@ package com.intellij.openapi.options.newEditor;
 
 import com.intellij.ide.projectView.PresentationData;
 import com.intellij.ide.util.treeView.NodeDescriptor;
-import com.intellij.util.ui.JBUI;
-import consulo.disposer.Disposable;
+import com.intellij.ide.util.treeView.NodeRenderer;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.SearchableConfigurable;
 import com.intellij.openapi.options.ex.ConfigurableWrapper;
 import com.intellij.openapi.util.ActionCallback;
-import com.intellij.ui.ScrollPaneFactory;
-import com.intellij.ui.SimpleTextAttributes;
-import com.intellij.ui.TreeUIHelper;
+import com.intellij.ui.*;
+import com.intellij.ui.components.JBLabel;
 import com.intellij.ui.treeStructure.*;
 import com.intellij.ui.treeStructure.filtered.FilteringTreeBuilder;
 import com.intellij.ui.treeStructure.filtered.FilteringTreeStructure;
 import com.intellij.util.containers.ContainerUtil;
+import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.tree.TreeUtil;
 import com.intellij.util.ui.update.MergingUpdateQueue;
 import com.intellij.util.ui.update.Update;
+import consulo.awt.TargetAWT;
+import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.TextItemPresentation;
-import consulo.ui.decorator.SwingUIDecorator;
 import consulo.ui.TreeNode;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.app.impl.settings.UnifiedConfigurableComparator;
+import consulo.ui.decorator.SwingUIDecorator;
+import consulo.ui.image.Image;
+import consulo.ui.image.ImageKey;
 import org.jetbrains.concurrency.Promise;
 
 import javax.annotation.Nonnull;
@@ -46,12 +51,15 @@ import javax.swing.*;
 import javax.swing.event.TreeExpansionEvent;
 import javax.swing.event.TreeExpansionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.TreeCellRenderer;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
+import java.awt.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.List;
 import java.util.*;
 import java.util.function.BiConsumer;
 
@@ -94,6 +102,40 @@ class OptionsTree implements Disposable, OptionsEditorColleague {
     myTree.setRootVisible(false);
     myTree.setRowHeight(JBUI.scale(24));
     myTree.setShowsRootHandles(true);
+    myTree.setCellRenderer(new NodeRenderer() {
+      private int myIconGap = 5;
+
+      @RequiredUIAccess
+      @Override
+      public void customizeCellRenderer(@Nonnull JTree tree, Object value, boolean selected, boolean expanded, boolean leaf, int row, boolean hasFocus) {
+        super.customizeCellRenderer(tree, value, selected, expanded, leaf, row, hasFocus);
+
+        Base node = extractNode(value);
+
+        if (node instanceof ConfigurableNode) {
+          Configurable configurable = node.getConfigurable();
+
+          if (OptionsEditor.isProjectConfigurable(configurable)) {
+            ImageKey imageKey = selected ? PlatformIconGroup.generalProjectConfigurableSelected() : PlatformIconGroup.generalProjectConfigurableBanner();
+            setIcon(imageKey);
+            setIconOnTheRight(true);
+          }
+        }
+      }
+
+      @Nonnull
+      @Override
+      public Dimension getPreferredSize() {
+        Dimension size = super.getPreferredSize();
+        size.width += JBUI.scale(myIconGap);
+        return size;
+      }
+
+      @Override
+      protected void doPaintIcon(@Nonnull Graphics2D g, @Nonnull Image icon, int offset) {
+        super.doPaintIcon(g, icon, offset + JBUI.scale(myIconGap));
+      }
+    });
     myBuilder = new MyBuilder(structure);
     myBuilder.setFilteringMerge(300, null);
     Disposer.register(this, myBuilder);
@@ -278,15 +320,19 @@ class OptionsTree implements Disposable, OptionsEditorColleague {
 
   @Nullable
   private Base extractNode(Object object) {
-    if (object instanceof DefaultMutableTreeNode) {
-      final DefaultMutableTreeNode uiNode = (DefaultMutableTreeNode)object;
-      final Object o = uiNode.getUserObject();
-      if (o instanceof FilteringTreeStructure.FilteringNode) {
-        return (Base)((FilteringTreeStructure.FilteringNode)o).getDelegate();
-      }
+    if (object instanceof TreePath) {
+      TreePath path = (TreePath)object;
+      object = path.getLastPathComponent();
     }
-
-    return null;
+    if (object instanceof DefaultMutableTreeNode) {
+      DefaultMutableTreeNode node = (DefaultMutableTreeNode)object;
+      object = node.getUserObject();
+    }
+    if (object instanceof FilteringTreeStructure.FilteringNode) {
+      FilteringTreeStructure.FilteringNode node = (FilteringTreeStructure.FilteringNode)object;
+      object = node.getDelegate();
+    }
+    return object instanceof Base ? (Base)object : null;
   }
 
   abstract static class Base extends CachingSimpleNode {

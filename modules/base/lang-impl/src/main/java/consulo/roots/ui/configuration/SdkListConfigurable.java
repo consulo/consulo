@@ -23,6 +23,7 @@ import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.options.ShowSettingsUtil;
+import com.intellij.openapi.project.DefaultProjectFactory;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.openapi.projectRoots.Sdk;
@@ -45,14 +46,13 @@ import consulo.ide.settings.impl.SettingsSdksModel;
 import consulo.ide.settings.impl.ShowSdksSettingsUtil;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.annotation.RequiredUIAccess;
+import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import jakarta.inject.Inject;
-
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.MutableTreeNode;
 import javax.swing.tree.TreeNode;
@@ -132,8 +132,8 @@ public class SdkListConfigurable extends BaseStructureConfigurableNoDaemon imple
   }
 
   @Inject
-  public SdkListConfigurable(final Project project, ShowSettingsUtil showSettingsUtil) {
-    super(project);
+  public SdkListConfigurable(ShowSettingsUtil showSettingsUtil) {
+    super(DefaultProjectFactory.getInstance().getDefaultProject());
 
     ShowSdksSettingsUtil sdksSettingsUtil = (ShowSdksSettingsUtil)showSettingsUtil;
 

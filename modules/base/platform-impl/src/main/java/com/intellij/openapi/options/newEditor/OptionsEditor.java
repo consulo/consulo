@@ -61,6 +61,7 @@ import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
 import consulo.options.ConfigurableUIMigrationUtil;
+import consulo.options.ProjectConfigurableEP;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.decorator.SwingUIDecorator;
@@ -542,7 +543,7 @@ public class OptionsEditor implements DataProvider, Place.Navigator, Disposable,
   private final OptionsTree myTree;
   private final MySearchField mySearch;
 
-  private final DetailsComponent myOwnDetails = new DetailsComponent(false, false).setEmptyContentText("Select configuration element in the tree to edit its settings");
+  private final DetailsComponent myOwnDetails = new DetailsComponent(true, false).setEmptyContentText("Select configuration element in the tree to edit its settings");
   private final ContentWrapper myContentWrapper = new ContentWrapper();
 
   private final Map<Configurable, ConfigurableContext> myConfigurable2Content = new HashMap<>();
@@ -730,6 +731,7 @@ public class OptionsEditor implements DataProvider, Place.Navigator, Disposable,
 
     if (configurable == null) {
       myOwnDetails.setContent(null);
+      myOwnDetails.forProject(null);
 
       updateSpotlight(true);
       checkModified(oldConfigurable);
@@ -752,8 +754,13 @@ public class OptionsEditor implements DataProvider, Place.Navigator, Disposable,
           updateContent();
 
           myOwnDetails.setContent(myContentWrapper);
-          myOwnDetails.setBannerMinHeight(mySearchWrapper.getHeight());
           myOwnDetails.setText(getBannerText(configurable));
+          if(isProjectConfigurable(configurable)) {
+            myOwnDetails.forProject(myProject);
+          }
+          else {
+            myOwnDetails.forProject(null);
+          }
 
           myLoadingDecorator.stopLoading();
 
@@ -773,6 +780,10 @@ public class OptionsEditor implements DataProvider, Place.Navigator, Disposable,
     }
 
     return result;
+  }
+
+  public static boolean isProjectConfigurable(@Nonnull Configurable configurable) {
+    return configurable instanceof ConfigurableWrapper && ((ConfigurableWrapper)configurable).getEp() instanceof ProjectConfigurableEP;
   }
 
   private static void assertIsDispatchThread() {

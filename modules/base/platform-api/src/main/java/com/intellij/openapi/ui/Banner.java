@@ -24,6 +24,7 @@ import com.intellij.ui.components.labels.LinkLabel;
 import com.intellij.ui.components.labels.LinkListener;
 import com.intellij.ui.components.panels.NonOpaquePanel;
 import com.intellij.util.containers.HashMap;
+import com.intellij.util.ui.JBUI;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;
@@ -46,10 +47,11 @@ class Banner extends NonOpaquePanel implements PropertyChangeListener {
   public Banner() {
     setLayout(new BorderLayout());
 
-    setBorder(new EmptyBorder(2, 6, 2, 4));
+    setBorder(JBUI.Borders.empty(10, 10, 4, 0));
 
     myProjectIcon.setVisible(false);
-    myProjectIcon.setBorder(new EmptyBorder(0, 12, 0, 4));
+    myProjectIcon.setForeground(JBColor.GRAY);
+    myProjectIcon.setBorder(new EmptyBorder(0, 10, 0, 4));
     add(myText, BorderLayout.WEST);
     add(myProjectIcon, BorderLayout.CENTER);
     add(myActionsPanel, BorderLayout.EAST);
@@ -128,14 +130,13 @@ class Banner extends NonOpaquePanel implements PropertyChangeListener {
     myText.removeAll();
     for (int i = 0; i < text.length; i++) {
       final JLabel eachLabel = new JLabel(text[i], SwingConstants.CENTER);
-      final int gap = eachLabel.getIconTextGap();
-      eachLabel.setBorder(new EmptyBorder(0, 0, 0, gap));
+      eachLabel.setBorder(new EmptyBorder(0, 0, 0, 5));
       eachLabel.setVerticalTextPosition(SwingConstants.TOP);
       eachLabel.setFont(eachLabel.getFont().deriveFont(Font.BOLD, eachLabel.getFont().getSize()));
       myText.add(eachLabel);
       if (i < text.length - 1) {
-        final JLabel eachIcon = new JBLabel(AllIcons.General.ComboArrowRight, SwingConstants.CENTER);
-        eachIcon.setBorder(new EmptyBorder(0, 0, 0, gap));
+        final JLabel eachIcon = new JLabel("\u203A", SwingConstants.CENTER);
+        eachIcon.setBorder(new EmptyBorder(0, 0, 0, 5));
         myText.add(eachIcon);
       }
     }

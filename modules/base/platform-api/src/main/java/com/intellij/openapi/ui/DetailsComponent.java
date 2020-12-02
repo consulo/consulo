@@ -22,9 +22,8 @@ import com.intellij.ui.components.panels.Wrapper;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.xml.util.XmlStringUtil;
-import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nullable;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
@@ -35,7 +34,6 @@ public class DetailsComponent {
   private final JPanel myComponent;
 
   private JComponent myContent;
-
 
   private final Banner myBannerLabel;
 
@@ -172,7 +170,7 @@ public class DetailsComponent {
   }
 
   public DetailsComponent setEmptyContentText(@Nullable final String emptyContentText) {
-    @NonNls final String s = XmlStringUtil.wrapInHtml("<center>" + (emptyContentText != null ? emptyContentText : "") + "</center>");
+    final String s = XmlStringUtil.wrapInHtml("<center>" + (emptyContentText != null ? emptyContentText : "") + "</center>");
     myEmptyContentLabel.setText(s);
     return this;
   }
@@ -185,8 +183,9 @@ public class DetailsComponent {
     return myContentGutter;
   }
 
-  public void setBannerMinHeight(final int height) {
+  public DetailsComponent setBannerMinHeight(final int height) {
     myBannerLabel.setMinHeight(height);
+    return this;
   }
 
   public void disposeUIResources() {
