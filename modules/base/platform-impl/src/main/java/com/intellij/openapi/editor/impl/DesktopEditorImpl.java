@@ -3204,6 +3204,7 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
     else {
       myScrollPane.setLayout(new ScrollPaneLayout());
     }
+    myMarkupModel.updateErrorStripePanel();
     myScrollingModel.scrollHorizontally(currentHorOffset);
   }
 

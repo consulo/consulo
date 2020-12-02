@@ -306,12 +306,18 @@ public class DesktopEditorMarkupModelImpl extends MarkupModelImpl implements Edi
     myErrorPanel.setPopupHandler(null);
 
     myStatusPanel.setTrafficLightIconVisible(val);
-    if (val) {
-      myEditor.getPanel().add(myErrorPanel, myEditor.getVerticalScrollbarOrientation() == EditorEx.VERTICAL_SCROLLBAR_LEFT ? BorderLayout.WEST : BorderLayout.EAST);
+
+    updateErrorStripePanel();
+  }
+
+  public void updateErrorStripePanel() {
+    if(!isErrorStripeVisible()) {
+      return;
     }
-    else {
-      myEditor.getPanel().remove(myErrorPanel);
-    }
+
+    myEditor.getPanel().remove(myErrorPanel);
+
+    myEditor.getPanel().add(myErrorPanel, myEditor.getVerticalScrollbarOrientation() == EditorEx.VERTICAL_SCROLLBAR_LEFT ? BorderLayout.WEST : BorderLayout.EAST);
   }
 
   @Nullable
