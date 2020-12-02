@@ -21,9 +21,9 @@ import com.intellij.ide.util.treeView.NodeRenderer;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.SearchableConfigurable;
 import com.intellij.openapi.options.ex.ConfigurableWrapper;
-import com.intellij.openapi.util.ActionCallback;
-import com.intellij.ui.*;
-import com.intellij.ui.components.JBLabel;
+import com.intellij.ui.ScrollPaneFactory;
+import com.intellij.ui.SimpleTextAttributes;
+import com.intellij.ui.TreeUIHelper;
 import com.intellij.ui.treeStructure.*;
 import com.intellij.ui.treeStructure.filtered.FilteringTreeBuilder;
 import com.intellij.ui.treeStructure.filtered.FilteringTreeStructure;
@@ -32,7 +32,6 @@ import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.tree.TreeUtil;
 import com.intellij.util.ui.update.MergingUpdateQueue;
 import com.intellij.util.ui.update.Update;
-import consulo.awt.TargetAWT;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.platform.base.icon.PlatformIconGroup;
@@ -43,6 +42,7 @@ import consulo.ui.app.impl.settings.UnifiedConfigurableComparator;
 import consulo.ui.decorator.SwingUIDecorator;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageKey;
+import consulo.util.concurrent.AsyncResult;
 import org.jetbrains.concurrency.Promise;
 
 import javax.annotation.Nonnull;
@@ -51,7 +51,6 @@ import javax.swing.*;
 import javax.swing.event.TreeExpansionEvent;
 import javax.swing.event.TreeExpansionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.TreeCellRenderer;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 import java.awt.*;
@@ -205,7 +204,7 @@ class OptionsTree implements Disposable, OptionsEditorColleague {
   protected void onTreeKeyEvent(KeyEvent e) {
   }
 
-  ActionCallback select(@Nullable Configurable configurable) {
+  AsyncResult<Void> select(@Nullable Configurable configurable) {
     return queueSelection(configurable);
   }
 
@@ -217,12 +216,12 @@ class OptionsTree implements Disposable, OptionsEditorColleague {
 
   private Configurable myQueuedConfigurable;
 
-  ActionCallback queueSelection(final Configurable configurable) {
+  AsyncResult<Void> queueSelection(final Configurable configurable) {
     if (myBuilder.isSelectionBeingAdjusted()) {
-      return new ActionCallback.Rejected();
+      return AsyncResult.rejected();
     }
 
-    final ActionCallback callback = new ActionCallback();
+    final AsyncResult<Void> callback = AsyncResult.undefined();
 
     myQueuedConfigurable = configurable;
     final Update update = new Update(this) {
@@ -262,7 +261,7 @@ class OptionsTree implements Disposable, OptionsEditorColleague {
     return callback;
   }
 
-  private void fireSelected(Configurable configurable, final ActionCallback callback) {
+  private void fireSelected(Configurable configurable, final AsyncResult<Void> callback) {
     myContext.fireSelected(configurable, this).doWhenProcessed(callback.createSetDoneRunnable());
   }
 
@@ -495,25 +494,25 @@ class OptionsTree implements Disposable, OptionsEditorColleague {
   }
 
   @Override
-  public ActionCallback onSelected(final Configurable configurable, final Configurable oldConfigurable) {
+  public AsyncResult<Void> onSelected(final Configurable configurable, final Configurable oldConfigurable) {
     return queueSelection(configurable);
   }
 
   @Override
-  public ActionCallback onModifiedAdded(final Configurable colleague) {
+  public AsyncResult<Void> onModifiedAdded(final Configurable colleague) {
     myTree.repaint();
-    return new ActionCallback.Done();
+    return AsyncResult.resolved();
   }
 
   @Override
-  public ActionCallback onModifiedRemoved(final Configurable configurable) {
+  public AsyncResult<Void> onModifiedRemoved(final Configurable configurable) {
     myTree.repaint();
-    return new ActionCallback.Done();
+    return AsyncResult.resolved();
   }
 
   @Override
-  public ActionCallback onErrorsChanged() {
-    return new ActionCallback.Done();
+  public AsyncResult<Void> onErrorsChanged() {
+    return AsyncResult.resolved();
   }
 
   public void processTextEvent(KeyEvent e) {

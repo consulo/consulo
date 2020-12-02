@@ -20,6 +20,7 @@ import com.intellij.ide.util.scopeChooser.PackageSetChooserCombo;
 import com.intellij.ide.util.scopeChooser.ScopeChooserConfigurable;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.options.Configurable;
+import com.intellij.openapi.options.ex.Settings;
 import com.intellij.openapi.options.newEditor.OptionsEditor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.LabeledComponent;
@@ -107,7 +108,7 @@ public class ProjectSettingsPanel {
       public void hyperlinkUpdate(final HyperlinkEvent e) {
         if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
           final DataContext dataContext = DataManager.getInstance().getDataContextFromFocus().getResult();
-          final OptionsEditor optionsEditor = dataContext.getData(OptionsEditor.KEY);
+          final Settings optionsEditor = dataContext.getData(Settings.KEY);
           if (optionsEditor != null) {
             Configurable configurable = optionsEditor.findConfigurableById(ScopeChooserConfigurable.PROJECT_SCOPES);
             if (configurable != null) {

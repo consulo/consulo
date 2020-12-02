@@ -28,13 +28,13 @@ import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.options.SearchableConfigurable;
 import com.intellij.openapi.options.ex.ConfigurableWrapper;
 import com.intellij.openapi.options.ex.GlassPanel;
+import com.intellij.openapi.options.ex.Settings;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.AbstractPainter;
 import com.intellij.openapi.ui.DetailsComponent;
 import com.intellij.openapi.ui.LoadingDecorator;
 import com.intellij.openapi.ui.NullableComponent;
 import com.intellij.openapi.util.ActionCallback;
-import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.Conditions;
 import com.intellij.openapi.util.EdtRunnable;
 import com.intellij.openapi.util.text.StringUtil;
@@ -65,6 +65,7 @@ import consulo.options.ProjectConfigurableEP;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.decorator.SwingUIDecorator;
+import consulo.util.concurrent.AsyncResult;
 import consulo.util.dataholder.Key;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NonNls;
@@ -83,7 +84,7 @@ import java.util.List;
 import java.util.*;
 import java.util.function.Consumer;
 
-public class OptionsEditor implements DataProvider, Place.Navigator, Disposable, AWTEventListener, UISettingsListener {
+public class OptionsEditor implements DataProvider, Place.Navigator, Disposable, AWTEventListener, UISettingsListener, Settings {
   private static class SearchableWrapper implements SearchableConfigurable {
     private final Configurable myConfigurable;
 
@@ -356,32 +357,32 @@ public class OptionsEditor implements DataProvider, Place.Navigator, Disposable,
 
   private class MyColleague implements OptionsEditorColleague {
     @Override
-    public ActionCallback onSelected(final Configurable configurable, final Configurable oldConfigurable) {
+    public AsyncResult<Void> onSelected(final Configurable configurable, final Configurable oldConfigurable) {
       return processSelected(configurable, oldConfigurable);
     }
 
     @Override
-    public ActionCallback onModifiedRemoved(final Configurable configurable) {
+    public AsyncResult<Void> onModifiedRemoved(final Configurable configurable) {
       return updateIfCurrent(configurable);
     }
 
     @Override
-    public ActionCallback onModifiedAdded(final Configurable configurable) {
+    public AsyncResult<Void> onModifiedAdded(final Configurable configurable) {
       return updateIfCurrent(configurable);
     }
 
     @Override
-    public ActionCallback onErrorsChanged() {
+    public AsyncResult<Void> onErrorsChanged() {
       return updateIfCurrent(getContext().getCurrentConfigurable());
     }
 
-    private ActionCallback updateIfCurrent(final Configurable configurable) {
+    private AsyncResult<Void> updateIfCurrent(final Configurable configurable) {
       if (getContext().getCurrentConfigurable() == configurable && configurable != null) {
         updateContent();
-        return new ActionCallback.Done();
+        return AsyncResult.resolved();
       }
       else {
-        return new ActionCallback.Rejected();
+        return AsyncResult.rejected();
       }
     }
   }
@@ -525,8 +526,6 @@ public class OptionsEditor implements DataProvider, Place.Navigator, Disposable,
     }
 
   }
-
-  public static Key<OptionsEditor> KEY = Key.create("options.editor");
 
   private static final Logger LOG = Logger.getInstance(OptionsEditor.class);
 
@@ -686,48 +685,53 @@ public class OptionsEditor implements DataProvider, Place.Navigator, Disposable,
   }
 
   @Nonnull
-  public ActionCallback select(Class<? extends Configurable> configurableClass) {
+  public AsyncResult<Void> select(Class<? extends Configurable> configurableClass) {
     final Configurable configurable = findConfigurable(configurableClass);
     if (configurable == null) {
-      return new ActionCallback.Rejected();
+      return AsyncResult.rejected();
     }
     return select(configurable);
   }
 
+  @Override
   @Nullable
   public <T extends Configurable> T findConfigurable(Class<T> configurableClass) {
     return myTree.findConfigurable(configurableClass);
   }
 
+  @Override
   @Nullable
   public SearchableConfigurable findConfigurableById(@Nonnull String configurableId) {
     return myTree.findConfigurableById(configurableId);
   }
 
-  public ActionCallback clearSearchAndSelect(Configurable configurable) {
+  @Override
+  public AsyncResult<Void> clearSearchAndSelect(Configurable configurable) {
     clearFilter();
     return select(configurable, "");
   }
 
-  public ActionCallback select(Configurable configurable) {
+  @Override
+  public AsyncResult<Void> select(Configurable configurable) {
     if (StringUtil.isEmpty(mySearch.getText())) {
       return select(configurable, "");
     }
     else {
-      return Promises.toActionCallback(myFilter.refilterFor(mySearch.getText(), true, true));
+      return Promises.toAsyncResult(myFilter.refilterFor(mySearch.getText(), true, true));
     }
   }
 
-  public ActionCallback select(Configurable configurable, final String text) {
-    ActionCallback callback = new ActionCallback();
+  @Override
+  public AsyncResult<Void> select(Configurable configurable, final String text) {
+    AsyncResult<Void> callback = AsyncResult.undefined();
     Promises.toActionCallback(myFilter.refilterFor(text, false, true)).doWhenDone(() -> myTree.select(configurable).notify(callback));
     return callback;
   }
 
-  private ActionCallback processSelected(final Configurable configurable, final Configurable oldConfigurable) {
-    if (isShowing(configurable)) return new ActionCallback.Done();
+  private AsyncResult<Void> processSelected(final Configurable configurable, final Configurable oldConfigurable) {
+    if (isShowing(configurable)) return AsyncResult.resolved();
 
-    final ActionCallback result = new ActionCallback();
+    final AsyncResult<Void> result = AsyncResult.undefined();
 
     if (configurable == null) {
       myOwnDetails.setContent(null);
@@ -1024,7 +1028,7 @@ public class OptionsEditor implements DataProvider, Place.Navigator, Disposable,
 
   @Override
   public Object getData(@Nonnull Key<?> dataId) {
-    if (KEY == dataId) {
+    if (Settings.KEY == dataId) {
       return this;
     }
     return null;
@@ -1070,7 +1074,7 @@ public class OptionsEditor implements DataProvider, Place.Navigator, Disposable,
     Toolkit.getDefaultToolkit().removeAWTEventListener(this);
 
     visitRecursive(myConfigurables, each -> {
-      ActionCallback loadCb = myConfigurable2LoadCallback.get(each);
+      AsyncResult<Void> loadCb = myConfigurable2LoadCallback.get(each);
       if (loadCb != null) {
         loadCb.doWhenProcessed(() -> {
           assertIsDispatchThread();

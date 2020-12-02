@@ -25,16 +25,17 @@ import com.intellij.openapi.help.HelpManager;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.options.SearchableConfigurable;
+import com.intellij.openapi.options.ex.Settings;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.ActionCallback;
 import com.intellij.openapi.util.Couple;
-import consulo.disposer.Disposer;
 import com.intellij.ui.border.CustomLineBorder;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.components.BorderLayoutPanel;
-import consulo.platform.base.localize.CommonLocalize;
 import consulo.application.ui.WholeWestDialogWrapper;
+import consulo.disposer.Disposer;
+import consulo.platform.base.localize.CommonLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.util.concurrent.AsyncResult;
 import consulo.util.dataholder.Key;
 import org.jetbrains.annotations.NonNls;
 
@@ -136,21 +137,21 @@ public class DesktopSettingsDialog extends WholeWestDialogWrapper implements Dat
     myEditor = new OptionsEditor(myProject, myConfigurables, myPreselected, rootPanel);
     myEditor.getContext().addColleague(new OptionsEditorColleague() {
       @Override
-      public ActionCallback onModifiedAdded(final Configurable configurable) {
+      public AsyncResult<Void> onModifiedAdded(final Configurable configurable) {
         updateStatus();
-        return new ActionCallback.Done();
+        return AsyncResult.resolved();
       }
 
       @Override
-      public ActionCallback onModifiedRemoved(final Configurable configurable) {
+      public AsyncResult<Void> onModifiedRemoved(final Configurable configurable) {
         updateStatus();
-        return new ActionCallback.Done();
+        return AsyncResult.resolved();
       }
 
       @Override
-      public ActionCallback onErrorsChanged() {
+      public AsyncResult<Void> onErrorsChanged() {
         updateStatus();
-        return new ActionCallback.Done();
+        return AsyncResult.resolved();
       }
     });
     Disposer.register(myDisposable, myEditor);
@@ -309,7 +310,7 @@ public class DesktopSettingsDialog extends WholeWestDialogWrapper implements Dat
 
   @Override
   public Object getData(@Nonnull @NonNls Key<?> dataId) {
-    if (OptionsEditor.KEY == dataId) {
+    if (Settings.KEY == dataId) {
       return myEditor;
     }
     return null;

@@ -4,14 +4,13 @@ import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleConfigurationEditor;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.AsyncResult;
 import com.intellij.ui.TabbedPaneWrapper;
 import com.intellij.ui.navigation.Place;
+import consulo.util.concurrent.AsyncResult;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
-import javax.swing.event.ChangeEvent;
 
 /**
  * @author ksafonov
@@ -48,13 +47,10 @@ public abstract class TabbedModuleEditor extends ModuleEditor {
     }
     restoreSelectedEditor();
 
-    myTabbedPane.addChangeListener(new javax.swing.event.ChangeListener() {
-      @Override
-      public void stateChanged(ChangeEvent e) {
-        saveSelectedEditor();
-        if (myHistory != null) {
-          myHistory.pushQueryPlace();
-        }
+    myTabbedPane.addChangeListener(e -> {
+      saveSelectedEditor();
+      if (myHistory != null) {
+        myHistory.pushQueryPlace();
       }
     });
     return myTabbedPane.getComponent();

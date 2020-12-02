@@ -16,9 +16,9 @@
 
 package com.intellij.ui.navigation;
 
-import com.intellij.openapi.util.AsyncResult;
 import com.intellij.util.ui.update.ComparableObject;
 import com.intellij.util.ui.update.ComparableObjectCheck;
+import consulo.util.concurrent.AsyncResult;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -26,7 +26,6 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 
 public class Place implements ComparableObject {
-
   private LinkedHashMap<String, Object> myPath = new LinkedHashMap<>();
 
   @Override

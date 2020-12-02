@@ -17,6 +17,7 @@ package org.jetbrains.concurrency;
 
 import com.intellij.openapi.util.ActionCallback;
 import consulo.logging.Logger;
+import consulo.util.concurrent.AsyncResult;
 import consulo.util.lang.ControlFlowException;
 import org.jetbrains.concurrency.internal.DonePromise;
 import org.jetbrains.concurrency.internal.InternalPromiseUtil;
@@ -192,6 +193,14 @@ public class Promises {
   @Nonnull
   public static ActionCallback toActionCallback(Promise<?> promise) {
     ActionCallback result = new ActionCallback();
+    promise.onSuccess(o -> result.setDone());
+    promise.onError(throwable -> result.setRejected());
+    return result;
+  }
+
+  @Nonnull
+  public static AsyncResult<Void> toAsyncResult(Promise<?> promise) {
+    AsyncResult<Void> result = AsyncResult.undefined();
     promise.onSuccess(o -> result.setDone());
     promise.onError(throwable -> result.setRejected());
     return result;

@@ -18,11 +18,11 @@ package com.intellij.openapi.options.newEditor;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.util.MultiValuesMap;
-import com.intellij.openapi.util.ActionCallback;
 import com.intellij.ui.speedSearch.ElementFilter;
+import consulo.util.concurrent.AsyncResult;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.function.Function;
@@ -44,48 +44,48 @@ class OptionsEditorContext {
     myFilter = filter;
   }
 
-  ActionCallback fireSelected(@Nullable final Configurable configurable, @Nonnull OptionsEditorColleague requestor) {
-    if (myCurrentConfigurable == configurable) return new ActionCallback.Rejected();
-
+  AsyncResult<Void> fireSelected(@Nullable final Configurable configurable, @Nonnull OptionsEditorColleague requestor) {
     final Configurable old = myCurrentConfigurable;
     myCurrentConfigurable = configurable;
 
     return notify(colleague -> colleague.onSelected(configurable, old), requestor);
   }
 
-  ActionCallback fireModifiedAdded(@Nonnull final Configurable configurable, @Nullable OptionsEditorColleague requestor) {
-    if (myModified.contains(configurable)) return new ActionCallback.Rejected();
-
+  AsyncResult<Void> fireModifiedAdded(@Nonnull final Configurable configurable, @Nullable OptionsEditorColleague requestor) {
+    if(myModified.contains(configurable)) {
+      return AsyncResult.rejected();
+    }
+    
     myModified.add(configurable);
 
     return notify(colleague -> colleague.onModifiedAdded(configurable), requestor);
   }
 
-  ActionCallback fireModifiedRemoved(@Nonnull final Configurable configurable, @Nullable OptionsEditorColleague requestor) {
-    if (!myModified.contains(configurable)) return new ActionCallback.Rejected();
+  AsyncResult<Void> fireModifiedRemoved(@Nonnull final Configurable configurable, @Nullable OptionsEditorColleague requestor) {
+    if (!myModified.contains(configurable)) return AsyncResult.rejected();
 
     myModified.remove(configurable);
 
     return notify(colleague -> colleague.onModifiedRemoved(configurable), requestor);
   }
 
-  ActionCallback fireErrorsChanged(final Map<Configurable, ConfigurationException> errors, OptionsEditorColleague requestor) {
-    if (myErrors.equals(errors)) return new ActionCallback.Rejected();
+  AsyncResult<Void> fireErrorsChanged(final Map<Configurable, ConfigurationException> errors, OptionsEditorColleague requestor) {
+    if (myErrors.equals(errors)) return AsyncResult.rejected();
 
     myErrors = errors != null ? errors : new HashMap<>();
 
     return notify(OptionsEditorColleague::onErrorsChanged, requestor);
   }
 
-  ActionCallback notify(Function<OptionsEditorColleague, ActionCallback> action, OptionsEditorColleague requestor) {
-    final ActionCallback.Chunk chunk = new ActionCallback.Chunk();
+  AsyncResult<Void> notify(Function<OptionsEditorColleague, AsyncResult<Void>> action, OptionsEditorColleague requestor) {
+    List<AsyncResult<Void>> all = new ArrayList<>();
     for (OptionsEditorColleague each : myColleagues) {
       if (each != requestor) {
-        chunk.add(action.apply(each));
+        all.add(action.apply(each));
       }
     }
 
-    return chunk.getWhenProcessed();
+    return AsyncResult.merge(all);
   }
 
   public void fireReset(final Configurable configurable) {

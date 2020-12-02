@@ -26,12 +26,12 @@ import com.intellij.openapi.projectRoots.impl.SdkImpl;
 import com.intellij.openapi.projectRoots.ui.BaseSdkEditor;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureElement;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.SdkProjectStructureElement;
-import com.intellij.openapi.util.AsyncResult;
 import com.intellij.ui.navigation.History;
 import com.intellij.ui.navigation.Place;
 import consulo.bundle.SdkUtil;
 import consulo.bundle.ui.SdkEditor;
 import consulo.ui.image.Image;
+import consulo.util.concurrent.AsyncResult;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;

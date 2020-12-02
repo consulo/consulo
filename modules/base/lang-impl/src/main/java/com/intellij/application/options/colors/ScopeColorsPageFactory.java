@@ -22,7 +22,7 @@ import com.intellij.ide.util.scopeChooser.ScopeChooserConfigurable;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.application.ApplicationBundle;
 import com.intellij.openapi.options.Configurable;
-import com.intellij.openapi.options.newEditor.OptionsEditor;
+import com.intellij.openapi.options.ex.Settings;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.util.Weighted;
@@ -74,7 +74,7 @@ class ScopeColorsPageFactory implements ColorAndFontPanelFactory, Weighted {
     button.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
-        final OptionsEditor optionsEditor = DataManager.getInstance().getDataContext().getData(OptionsEditor.KEY);
+        final Settings optionsEditor = DataManager.getInstance().getDataContext().getData(Settings.KEY);
         if (optionsEditor != null) {
           try {
             Configurable configurable = optionsEditor.findConfigurableById(ScopeChooserConfigurable.PROJECT_SCOPES);

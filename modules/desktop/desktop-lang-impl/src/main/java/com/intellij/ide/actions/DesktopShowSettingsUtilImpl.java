@@ -19,9 +19,9 @@ import com.intellij.CommonBundle;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.SearchableConfigurable;
 import com.intellij.openapi.options.ShowSettingsUtil;
+import com.intellij.openapi.options.ex.Settings;
 import com.intellij.openapi.options.ex.SingleConfigurableEditor;
 import com.intellij.openapi.options.newEditor.DesktopSettingsDialog;
-import com.intellij.openapi.options.newEditor.OptionsEditor;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.DefaultProjectFactory;
@@ -169,7 +169,7 @@ public class DesktopShowSettingsUtilImpl extends BaseShowSettingsUtil implements
     final Configurable configurable2Select = findConfigurable2Select(id2Select, configurables);
 
     showSettingsImpl(project, it -> configurables, configurable2Select, dialog -> {
-      final OptionsEditor editor = dialog.getDataUnchecked(OptionsEditor.KEY);
+      final Settings editor = dialog.getDataUnchecked(Settings.KEY);
       LOG.assertTrue(editor != null);
       editor.select(configurable2Select, filter);
     });

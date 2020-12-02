@@ -41,6 +41,7 @@ import com.intellij.util.xmlb.XmlSerializerUtil;
 import consulo.logging.Logger;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
+import consulo.util.concurrent.AsyncResult;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;

@@ -33,7 +33,6 @@ import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.ModuleProj
 import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureElement;
 import com.intellij.openapi.ui.ComboBox;
 import com.intellij.openapi.ui.LabeledComponent;
-import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.MutableCollectionComboBoxModel;
@@ -44,6 +43,7 @@ import com.intellij.util.ui.components.BorderLayoutPanel;
 import consulo.roots.ui.configuration.projectRoot.moduleLayerActions.DeleteLayerAction;
 import consulo.roots.ui.configuration.projectRoot.moduleLayerActions.NewLayerAction;
 import consulo.ui.image.Image;
+import consulo.util.concurrent.AsyncResult;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;

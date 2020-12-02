@@ -16,9 +16,9 @@
 
 package com.intellij.ui.navigation;
 
-import com.intellij.openapi.util.ActionCallback;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
+import consulo.util.concurrent.AsyncResult;
 import consulo.util.dataholder.Key;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -102,7 +102,7 @@ public final class History {
     final Place from = getCurrent();
     fireStarted(from, next);
     try {
-      final ActionCallback callback = myRoot.navigateTo(next, false);
+      final AsyncResult<Void> callback = myRoot.navigateTo(next, false);
       callback.doWhenDone(new Runnable() {
         @Override
         public void run() {

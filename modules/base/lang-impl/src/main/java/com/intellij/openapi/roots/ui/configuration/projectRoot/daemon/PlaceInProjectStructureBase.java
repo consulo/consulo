@@ -17,8 +17,8 @@ package com.intellij.openapi.roots.ui.configuration.projectRoot.daemon;
 
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ui.configuration.ProjectStructureConfigurable;
-import com.intellij.openapi.util.AsyncResult;
 import com.intellij.ui.navigation.Place;
+import consulo.util.concurrent.AsyncResult;
 
 import javax.annotation.Nonnull;
 

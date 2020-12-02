@@ -20,12 +20,12 @@ import com.intellij.ide.DataManager;
 import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.openapi.editor.colors.EditorColorsScheme;
 import com.intellij.openapi.options.SearchableConfigurable;
-import com.intellij.openapi.options.newEditor.OptionsEditor;
-import com.intellij.openapi.util.ActionCallback;
+import com.intellij.openapi.options.ex.Settings;
 import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.util.EventDispatcher;
-import javax.annotation.Nonnull;
+import consulo.util.concurrent.AsyncResult;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.text.BadLocationException;
@@ -91,7 +91,7 @@ public class OptionsPanelImpl extends JPanel implements OptionsPanel {
       @Override
       public void onHyperLinkClicked(@Nonnull HyperlinkEvent e) {
         if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
-          OptionsEditor settings = DataManager.getInstance().getDataContext(OptionsPanelImpl.this).getData(OptionsEditor.KEY);
+          Settings settings = DataManager.getInstance().getDataContext(OptionsPanelImpl.this).getData(Settings.KEY);
           String pageName = e.getDescription();
           Element element = e.getSourceElement();
           String attrName;
@@ -104,7 +104,7 @@ public class OptionsPanelImpl extends JPanel implements OptionsPanel {
           final SearchableConfigurable page = myOptions.findSubConfigurable(pageName);
           if (page != null && settings != null) {
             Runnable runnable = page.enableSearch(attrName);
-            ActionCallback callback = settings.select(page);
+            AsyncResult<Void> callback = settings.select(page);
             if (runnable != null) callback.doWhenDone(runnable);
           }
         }

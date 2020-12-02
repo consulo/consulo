@@ -37,6 +37,7 @@ import com.intellij.openapi.editor.markup.EffectType;
 import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.openapi.options.*;
 import com.intellij.openapi.options.colors.*;
+import com.intellij.openapi.options.ex.Settings;
 import com.intellij.openapi.options.newEditor.OptionsEditor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
@@ -115,7 +116,7 @@ public class ColorAndFontOptions extends SearchableConfigurable.Parent.Abstract 
   }
 
   private static boolean select(DataContext context, String search, Function<ColorAndFontOptions, SearchableConfigurable> function) {
-    OptionsEditor settings = context.getData(OptionsEditor.KEY);
+    Settings settings = context.getData(Settings.KEY);
     if (settings == null) return false;
 
     ColorAndFontOptions options = settings.findConfigurable(ColorAndFontOptions.class);

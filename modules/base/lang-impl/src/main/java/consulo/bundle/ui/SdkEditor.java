@@ -15,24 +15,21 @@
  */
 package consulo.bundle.ui;
 
-import consulo.logging.Logger;
 import com.intellij.openapi.projectRoots.SdkModel;
 import com.intellij.openapi.projectRoots.impl.SdkImpl;
 import com.intellij.openapi.projectRoots.ui.BaseSdkEditor;
 import com.intellij.openapi.projectRoots.ui.SdkPathEditor;
 import com.intellij.openapi.roots.OrderRootType;
 import com.intellij.openapi.roots.ui.OrderRootTypeUIFactory;
-import com.intellij.openapi.util.AsyncResult;
 import com.intellij.ui.TabbedPaneWrapper;
 import com.intellij.ui.navigation.History;
 import com.intellij.ui.navigation.Place;
-import org.jetbrains.annotations.NonNls;
+import consulo.logging.Logger;
+import consulo.util.concurrent.AsyncResult;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 
 /**
  * @author VISTALL
@@ -41,7 +38,6 @@ import javax.swing.event.ChangeListener;
 public class SdkEditor extends BaseSdkEditor {
   public static final Logger LOGGER = Logger.getInstance(SdkEditor.class);
 
-  @NonNls
   private static final String SDK_TAB = "sdkTab";
   @Nonnull
   private final History myHistory;
@@ -60,7 +56,7 @@ public class SdkEditor extends BaseSdkEditor {
     for (OrderRootType type : OrderRootType.getAllTypes()) {
       if (showTabForType(type)) {
         final OrderRootTypeUIFactory factory = OrderRootTypeUIFactory.FACTORY.getByKey(type);
-        if(factory == null) {
+        if (factory == null) {
           continue;
         }
 
@@ -70,12 +66,7 @@ public class SdkEditor extends BaseSdkEditor {
       }
     }
 
-    myTabbedPane.addChangeListener(new ChangeListener() {
-      @Override
-      public void stateChanged(final ChangeEvent e) {
-        myHistory.pushQueryPlace();
-      }
-    });
+    myTabbedPane.addChangeListener(e -> myHistory.pushQueryPlace());
     return myTabbedPane.getComponent();
   }
 

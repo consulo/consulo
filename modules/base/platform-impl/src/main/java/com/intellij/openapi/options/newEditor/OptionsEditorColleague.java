@@ -16,23 +16,24 @@
 package com.intellij.openapi.options.newEditor;
 
 import com.intellij.openapi.options.Configurable;
-import com.intellij.openapi.util.ActionCallback;
+import consulo.util.concurrent.AsyncResult;
+
 import javax.annotation.Nullable;
 
 interface OptionsEditorColleague {
-  default ActionCallback onSelected(@Nullable Configurable configurable, final Configurable oldConfigurable) {
-    return new ActionCallback.Done();
+  default AsyncResult<Void> onSelected(@Nullable Configurable configurable, final Configurable oldConfigurable) {
+    return AsyncResult.resolved();
   }
 
-  default ActionCallback onModifiedAdded(final Configurable configurable) {
-    return new ActionCallback.Done();
+  default AsyncResult<Void> onModifiedAdded(final Configurable configurable) {
+    return AsyncResult.resolved();
   }
 
-  default ActionCallback onModifiedRemoved(final Configurable configurable) {
-    return new ActionCallback.Done();
+  default AsyncResult<Void> onModifiedRemoved(final Configurable configurable) {
+    return AsyncResult.resolved();
   }
 
-  default ActionCallback onErrorsChanged() {
-    return new ActionCallback.Done();
+  default AsyncResult<Void> onErrorsChanged() {
+    return AsyncResult.resolved();
   }
 }
