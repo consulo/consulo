@@ -52,6 +52,9 @@ public interface MutableListModel<E> extends ListModel<E> {
   @RequiredUIAccess
   void remove(@Nonnull E e);
 
+  @RequiredUIAccess
+  void removeAll();
+
   /**
    * @param newItems
    * @return oldItems

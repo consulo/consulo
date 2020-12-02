@@ -31,6 +31,7 @@ import com.intellij.ui.components.JBList;
 import com.intellij.util.Alarm;
 import com.intellij.util.Consumer;
 import com.intellij.util.containers.ContainerUtil;
+import com.intellij.util.ui.UIUtil;
 import consulo.ide.base.BaseShowSettingsUtil;
 import org.jetbrains.annotations.NonNls;
 
@@ -110,6 +111,8 @@ public class SearchUtil {
 
   public static void processComponent(final JComponent component, final Set<OptionDescription> configurableOptions, @NonNls String path) {
     if (component instanceof SkipSelfSearchComponent) return;
+    if (UIUtil.getClientProperty(component, SkipSelfSearchComponent.KEY) == Boolean.TRUE) return;
+
     final Border border = component.getBorder();
     if (border instanceof TitledBorder) {
       final TitledBorder titledBorder = (TitledBorder)border;

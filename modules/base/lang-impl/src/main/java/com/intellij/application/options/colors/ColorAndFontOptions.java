@@ -157,7 +157,7 @@ public class ColorAndFontOptions extends SearchableConfigurable.Parent.Abstract 
 
   private HashMap<String, MyColorScheme> mySchemes;
   private MyColorScheme mySelectedScheme;
-  public static final String DIFF_GROUP = ApplicationBundle.message("title.diff");
+
   public static final String FILE_STATUS_GROUP = ApplicationBundle.message("title.file.status");
   public static final String SCOPES_GROUP = ApplicationBundle.message("title.scope.based");
 
@@ -361,12 +361,14 @@ public class ColorAndFontOptions extends SearchableConfigurable.Parent.Abstract 
     }
   }
 
+  @RequiredUIAccess
+  @Nullable
   @Override
-  public JComponent createComponent() {
+  public consulo.ui.Component createUIComponent() {
     if (myRootSchemesPanel == null) {
       ensureSchemesPanel();
     }
-    return myRootSchemesPanel;
+    return myRootSchemesPanel.getComponent();
   }
 
   @Override

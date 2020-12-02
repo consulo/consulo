@@ -55,6 +55,18 @@ public class MutableListModelImpl<E> extends ImmutableListModelImpl<E> implement
 
   @RequiredUIAccess
   @Override
+  public void removeAll() {
+    ArrayList<E> old = new ArrayList<>(myItems);
+
+    myItems.clear();
+
+    for (E item : old) {
+      myDispatcher.getMulticaster().itemRemoved(item);
+    }
+  }
+
+  @RequiredUIAccess
+  @Override
   public List<E> replaceAll(@Nonnull Iterable<E> newItems) {
     List<E> oldItems = new ArrayList<>(myItems);
 

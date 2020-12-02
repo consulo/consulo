@@ -22,6 +22,8 @@ import com.intellij.openapi.editor.colors.EditorColorsScheme;
 import com.intellij.openapi.options.colors.ColorSettingsPage;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.GuiUtils;
+import consulo.awt.TargetAWT;
+
 import javax.annotation.Nonnull;
 
 import javax.swing.*;
@@ -54,7 +56,7 @@ public class NewColorAndFontPanel extends JPanel {
 
     JPanel top = new JPanel(new BorderLayout());
 
-    top.add(mySchemesPanel, BorderLayout.NORTH);
+    top.add(TargetAWT.to(mySchemesPanel.getComponent()), BorderLayout.NORTH);
     top.add(myOptionsPanel.getPanel(), BorderLayout.CENTER);
     if (optionsPanel instanceof ConsoleFontOptions) {
       JPanel wrapper = new JPanel(new FlowLayout(FlowLayout.TRAILING));

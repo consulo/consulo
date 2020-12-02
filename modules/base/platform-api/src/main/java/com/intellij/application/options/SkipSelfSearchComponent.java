@@ -15,8 +15,11 @@
  */
 package com.intellij.application.options;
 
+import consulo.util.dataholder.Key;
+
 /**
  * Marker interface to skip helper panels
  */
 public interface SkipSelfSearchComponent {
+  Key<Boolean> KEY = Key.create("SkipSelfSearchComponent");
 }

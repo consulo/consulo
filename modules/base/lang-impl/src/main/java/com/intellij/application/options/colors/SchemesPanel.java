@@ -22,51 +22,79 @@ import com.intellij.openapi.application.ApplicationBundle;
 import com.intellij.openapi.editor.colors.EditorColorsScheme;
 import com.intellij.util.EventDispatcher;
 import com.intellij.util.containers.ContainerUtil;
+import com.intellij.util.ui.UIUtil;
+import consulo.awt.TargetAWT;
+import consulo.platform.Platform;
+import consulo.ui.Button;
+import consulo.ui.ComboBox;
+import consulo.ui.Component;
+import consulo.ui.Label;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.layout.DockLayout;
+import consulo.ui.layout.HorizontalLayout;
+import consulo.ui.model.MutableListModel;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.List;
 
-public class SchemesPanel extends JPanel implements SkipSelfSearchComponent {
+public class SchemesPanel implements SkipSelfSearchComponent {
   private final ColorAndFontOptions myOptions;
 
-  private JComboBox mySchemeComboBox;
-
-  private JButton myDeleteButton;
+  private Button myDeleteButton;
 
   private final EventDispatcher<ColorAndFontSettingsListener> myDispatcher = EventDispatcher.create(ColorAndFontSettingsListener.class);
 
+  private DockLayout myLayout;
+
+  private ComboBox<String> mySchemeComboBox;
+  private MutableListModel<String> myModel;
+
+  @RequiredUIAccess
   public SchemesPanel(ColorAndFontOptions options) {
-    super(new BorderLayout());
+    myLayout = DockLayout.create();
+
     myOptions = options;
 
-    JPanel schemesGroup = new JPanel(new BorderLayout());
+    HorizontalLayout topLayout = HorizontalLayout.create();
+    myLayout.top(topLayout);
 
-    JPanel panel = new JPanel(new BorderLayout());
-    schemesGroup.add(createSchemePanel(), BorderLayout.NORTH);
-    schemesGroup.add(panel, BorderLayout.CENTER);
-    add(schemesGroup, BorderLayout.CENTER);
+    myModel = MutableListModel.of(new ArrayList<>());
+    mySchemeComboBox = ComboBox.create(myModel);
 
-    mySchemeComboBox.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        if (mySchemeComboBox.getSelectedIndex() != -1) {
-          EditorColorsScheme selected = myOptions.selectScheme((String)mySchemeComboBox.getSelectedItem());
-          if (ColorAndFontOptions.isReadOnly(selected)) {
-            myDeleteButton.setEnabled(false);
-          }
-          else {
-            myDeleteButton.setEnabled(true);
-          }
+    topLayout.add(Label.create(ApplicationBundle.message("combobox.scheme.name")));
+    topLayout.add(mySchemeComboBox);
 
-          if (areSchemesLoaded()) {
-            myDispatcher.getMulticaster().schemeChanged(SchemesPanel.this);
-          }
+    mySchemeComboBox.addValueListener(event -> {
+      Object value = mySchemeComboBox.getValue();
+      if (value != null) {
+        EditorColorsScheme selected = myOptions.selectScheme((String)value);
+        if (ColorAndFontOptions.isReadOnly(selected)) {
+          myDeleteButton.setEnabled(false);
+        }
+        else {
+          myDeleteButton.setEnabled(true);
+        }
+
+        if (areSchemesLoaded()) {
+          myDispatcher.getMulticaster().schemeChanged(SchemesPanel.this);
         }
       }
     });
+
+    Button saveAsButton = Button.create(ApplicationBundle.message("button.save.as"), event -> showSaveAsDialog());
+
+    topLayout.add(saveAsButton);
+
+    myDeleteButton = Button.create(ApplicationBundle.message("button.delete"), event -> {
+      Object value = mySchemeComboBox.getValue();
+      if (value != null) {
+        myOptions.removeScheme((String)value);
+      }
+    });
+
+    topLayout.add(myDeleteButton);
   }
 
   private boolean myListLoaded = false;
@@ -75,54 +103,23 @@ public class SchemesPanel extends JPanel implements SkipSelfSearchComponent {
     return myListLoaded;
   }
 
-  public void clearSearch() {
+  @Nonnull
+  public Component getComponent() {
+    // todo hack
+    if (Platform.current().isDesktop()) {
+      JComponent component = (JComponent)TargetAWT.to(myLayout);
+      UIUtil.putClientProperty(component, SkipSelfSearchComponent.KEY, Boolean.TRUE);
+    }
+    return myLayout;
   }
 
-  private JPanel createSchemePanel() {
-    JPanel panel = new JPanel(new GridBagLayout());
-
-    panel.add(new JLabel(ApplicationBundle.message("combobox.scheme.name")),
-              new GridBagConstraints(0, 0, 1, 1, 0, 0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 5, 5), 0,
-                                     0));
-
-    mySchemeComboBox = new JComboBox();
-    panel.add(mySchemeComboBox,
-              new GridBagConstraints(1, 0, 1, 1, 0, 0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 5, 10), 0,
-                                     0));
-
-    JButton saveAsButton = new JButton(ApplicationBundle.message("button.save.as"));
-    saveAsButton.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        showSaveAsDialog();
-      }
-    });
-    panel.add(saveAsButton,
-              new GridBagConstraints(2, 0, 1, 1, 0, 0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 5, 5), 0,
-                                     0));
-
-    myDeleteButton = new JButton(ApplicationBundle.message("button.delete"));
-    myDeleteButton.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        if (mySchemeComboBox.getSelectedIndex() != -1) {
-          myOptions.removeScheme((String)mySchemeComboBox.getSelectedItem());
-        }
-      }
-    });
-    panel.add(myDeleteButton,
-              new GridBagConstraints(3, 0, 1, 1, 1, 0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 0, 5, 5), 0, 0));
-
-    return panel;
-  }
-
+  @RequiredUIAccess
   private void showSaveAsDialog() {
     List<String> names = ContainerUtil.newArrayList(myOptions.getSchemeNames());
     String selectedName = myOptions.getSelectedScheme().getName();
-    SaveSchemeDialog dialog = new SaveSchemeDialog(this, ApplicationBundle.message("title.save.color.scheme.as"), names, selectedName);
-    if (dialog.showAndGet()) {
-      myOptions.saveSchemeAs(dialog.getSchemeName());
-    }
+    SaveSchemeDialog dialog = new SaveSchemeDialog(TargetAWT.to(getComponent()), ApplicationBundle.message("title.save.color.scheme.as"), names, selectedName);
+
+    dialog.showAsync().doWhenDone(() -> dialog.getSchemeName());
   }
 
   private void changeToScheme() {
@@ -133,26 +130,27 @@ public class SchemesPanel extends JPanel implements SkipSelfSearchComponent {
     EditorColorsScheme scheme = myOptions.getSelectedScheme();
 
     if (modified && (ColorAndFontOptions.isReadOnly(scheme))) {
-      FontOptions.showReadOnlyMessage(this, false);
+      FontOptions.showReadOnlyMessage((JComponent)TargetAWT.to(getComponent()), false);
       return false;
     }
 
     return true;
   }
 
+  @RequiredUIAccess
   public void resetSchemesCombo(final Object source) {
     if (this != source) {
       setListLoaded(false);
 
       String selectedSchemeBackup = myOptions.getSelectedScheme().getName();
-      mySchemeComboBox.removeAllItems();
+      myModel.removeAll();
 
       String[] schemeNames = myOptions.getSchemeNames();
       for (String schemeName : schemeNames) {
-        mySchemeComboBox.addItem(schemeName);
+        myModel.add(schemeName);
       }
 
-      mySchemeComboBox.setSelectedItem(selectedSchemeBackup);
+      mySchemeComboBox.setValue(selectedSchemeBackup);
       setListLoaded(true);
 
       changeToScheme();
@@ -167,9 +165,5 @@ public class SchemesPanel extends JPanel implements SkipSelfSearchComponent {
 
   public void addListener(ColorAndFontSettingsListener listener) {
     myDispatcher.addListener(listener);
-  }
-
-  public void disposeUIResources() {
-    
   }
 }
