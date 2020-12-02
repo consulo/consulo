@@ -219,7 +219,7 @@ public class SeverityEditorDialog extends DialogWrapper {
                  new GridBagConstraints(0, 0, 1, 1, 0, 0, GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0,
                                         0));
     myRightPanel.add(DEFAULT, disabled);
-    myRightPanel.add(EDITABLE, myOptionsPanel);
+    myRightPanel.add(EDITABLE, myOptionsPanel.getPanel());
     myCard.show(myRightPanel, EDITABLE);
     myPanel.add(myRightPanel, BorderLayout.EAST);
     fillList(severity);

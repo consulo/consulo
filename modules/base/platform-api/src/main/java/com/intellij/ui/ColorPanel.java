@@ -83,6 +83,10 @@ public class ColorPanel extends JComponent {
     }
   }
 
+  public boolean isEditable() {
+    return myEditable;
+  }
+
   @Override
   public void doLayout() {
     Rectangle bounds = new Rectangle(getWidth(), getHeight());

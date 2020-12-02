@@ -31,7 +31,6 @@ import javax.swing.event.HyperlinkEvent;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Element;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.util.EventListener;
 import java.util.HashSet;
 import java.util.Set;
@@ -52,7 +51,7 @@ public class OptionsPanelImpl extends JPanel implements OptionsPanel {
     void addListener(@Nonnull Listener listener);
 
     interface Listener extends EventListener {
-      void onSettingsChanged(@Nonnull ActionEvent e);
+      void onSettingsChanged();
 
       void onHyperLinkClicked(@Nonnull HyperlinkEvent e);
     }
@@ -84,7 +83,7 @@ public class OptionsPanelImpl extends JPanel implements OptionsPanel {
     myOptionsPanel = optionsPanel;
     optionsPanel.addListener(new ColorDescriptionPanel.Listener() {
       @Override
-      public void onSettingsChanged(@Nonnull ActionEvent e) {
+      public void onSettingsChanged() {
         myDispatcher.getMulticaster().settingsChanged();
       }
 

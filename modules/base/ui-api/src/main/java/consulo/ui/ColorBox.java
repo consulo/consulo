@@ -34,4 +34,8 @@ public interface ColorBox extends ValueComponent<ColorValue> {
   static ColorBox create(@Nullable ColorValue colorValue) {
     return UIInternal.get()._Components_colorBox(colorValue);
   }
+
+  void setEditable(boolean editable);
+
+  boolean isEditable();
 }

@@ -17,9 +17,9 @@ package consulo.ui.util;
 
 import consulo.ui.Component;
 import consulo.ui.Label;
+import consulo.ui.StaticPosition;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.TableLayout;
-import consulo.ui.StaticPosition;
 import consulo.util.lang.StringUtil;
 
 import javax.annotation.Nonnull;
@@ -46,6 +46,16 @@ public class FormBuilder {
     }
 
     myLayout.add(Label.create(newLabelText), TableLayout.cell(myLineCount, 0));
+    myLayout.add(component, TableLayout.cell(myLineCount, 1).fill());
+
+    myLineCount++;
+    return this;
+  }
+
+  @Nonnull
+  @RequiredUIAccess
+  public FormBuilder addLabeled(@Nonnull final Component label, @Nonnull Component component) {
+    myLayout.add(label, TableLayout.cell(myLineCount, 0));
     myLayout.add(component, TableLayout.cell(myLineCount, 1).fill());
 
     myLineCount++;

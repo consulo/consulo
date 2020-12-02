@@ -179,7 +179,7 @@ class PatternDialog extends DialogWrapper{
     gb.gridx = 0;
     gb.gridwidth = GridBagConstraints.REMAINDER;
     gb.weightx = 1;
-    panel.add(myColorAndFontDescriptionPanel, gb);
+    panel.add(myColorAndFontDescriptionPanel.getPanel(), gb);
     return panel;
   }
 }

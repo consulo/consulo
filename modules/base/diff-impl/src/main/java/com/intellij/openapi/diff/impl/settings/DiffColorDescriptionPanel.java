@@ -7,91 +7,103 @@ import com.intellij.application.options.colors.ColorAndFontOptions;
 import com.intellij.application.options.colors.EditorSchemeAttributeDescriptor;
 import com.intellij.application.options.colors.OptionsPanelImpl;
 import com.intellij.diff.util.TextDiffTypeFactory;
+import com.intellij.openapi.diff.DiffBundle;
 import com.intellij.openapi.editor.colors.EditorColorsScheme;
 import com.intellij.openapi.editor.markup.TextAttributes;
-import com.intellij.ui.ColorPanel;
-import com.intellij.ui.components.JBCheckBox;
 import com.intellij.util.EventDispatcher;
-import com.intellij.util.ObjectUtils;
 import consulo.awt.TargetAWT;
+import consulo.ui.CheckBox;
+import consulo.ui.ColorBox;
+import consulo.ui.Label;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
+import consulo.ui.layout.VerticalLayout;
 import consulo.ui.style.StandardColors;
+import consulo.ui.util.FormBuilder;
+import consulo.util.lang.ObjectUtil;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
-class DiffColorDescriptionPanel extends JPanel implements OptionsPanelImpl.ColorDescriptionPanel {
+class DiffColorDescriptionPanel implements OptionsPanelImpl.ColorDescriptionPanel {
   private final EventDispatcher<Listener> myDispatcher = EventDispatcher.create(Listener.class);
 
-  private JPanel myPanel;
+  private final VerticalLayout myPanel;
 
-  private ColorPanel myBackgroundColorPanel;
-  private ColorPanel myIgnoredColorPanel;
-  private ColorPanel myStripeMarkColorPanel;
-  private JBCheckBox myInheritIgnoredCheckBox;
+  private ColorBox myBackgroundColorPanel;
+  private ColorBox myIgnoredColorPanel;
+  private ColorBox myStripeMarkColorPanel;
+  private CheckBox myInheritIgnoredCheckBox;
 
   @Nonnull
   private final ColorAndFontOptions myOptions;
 
+  @RequiredUIAccess
   DiffColorDescriptionPanel(@Nonnull ColorAndFontOptions options) {
-    super(new BorderLayout());
     myOptions = options;
-    add(myPanel, BorderLayout.CENTER);
 
-    myBackgroundColorPanel.addActionListener(this::onSettingsChanged);
-    myIgnoredColorPanel.addActionListener(this::onSettingsChanged);
-    myStripeMarkColorPanel.addActionListener(this::onSettingsChanged);
+    myPanel = VerticalLayout.create();
 
-    myInheritIgnoredCheckBox.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        myIgnoredColorPanel.setEnabled(!myInheritIgnoredCheckBox.isSelected());
+    FormBuilder builder = FormBuilder.create();
+    builder.addLabeled(Label.create(DiffBundle.message("merge.color.options.background.color.label")), myBackgroundColorPanel = ColorBox.create());
+    builder.addLabeled(Label.create(DiffBundle.message("merge.color.options.ignored.color.label")), myIgnoredColorPanel = ColorBox.create());
+    builder.addLabeled(Label.create(DiffBundle.message("merge.color.options.stripe.mark.color.label")), myStripeMarkColorPanel = ColorBox.create());
 
-        if (myInheritIgnoredCheckBox.isSelected()) {
-          myIgnoredColorPanel.setSelectedColor(null);
-        }
-        else {
-          ColorValue background = ObjectUtils.notNull(TargetAWT.from(myBackgroundColorPanel.getSelectedColor()), StandardColors.WHITE);
-          ColorValue gutterBackground = myOptions.getSelectedScheme().getDefaultBackground();
-          myIgnoredColorPanel.setSelectedColor(TargetAWT.to(TextDiffTypeFactory.getMiddleColor(background, gutterBackground)));
-        }
+    myPanel.add(builder.build());
 
-        onSettingsChanged(e);
+    myInheritIgnoredCheckBox = CheckBox.create(DiffBundle.message("option.inherit.ignored.color"));
+    myPanel.add(myInheritIgnoredCheckBox);
+
+    myBackgroundColorPanel.addValueListener(event -> onSettingsChanged());
+    myIgnoredColorPanel.addValueListener(event -> onSettingsChanged());
+    myStripeMarkColorPanel.addValueListener(event -> onSettingsChanged());
+
+    myInheritIgnoredCheckBox.addValueListener(e -> {
+      myIgnoredColorPanel.setEnabled(!myInheritIgnoredCheckBox.getValueOrError());
+
+      if (myInheritIgnoredCheckBox.getValueOrError()) {
+        myIgnoredColorPanel.setValue(null);
       }
+      else {
+        ColorValue background = ObjectUtil.notNull(myBackgroundColorPanel.getValue(), StandardColors.WHITE);
+        ColorValue gutterBackground = myOptions.getSelectedScheme().getDefaultBackground();
+        myIgnoredColorPanel.setValue(TextDiffTypeFactory.getMiddleColor(background, gutterBackground));
+      }
+
+      onSettingsChanged();
     });
   }
 
   @Nonnull
   @Override
   public JComponent getPanel() {
-    return this;
+    return (JComponent)TargetAWT.to(myPanel);
   }
 
-  private void onSettingsChanged(@Nonnull ActionEvent e) {
-    myDispatcher.getMulticaster().onSettingsChanged(e);
+  private void onSettingsChanged() {
+    myDispatcher.getMulticaster().onSettingsChanged();
   }
 
   @Override
+  @RequiredUIAccess
   public void resetDefault() {
     myBackgroundColorPanel.setEnabled(false);
     myIgnoredColorPanel.setEnabled(false);
     myStripeMarkColorPanel.setEnabled(false);
     myInheritIgnoredCheckBox.setEnabled(false);
-    myInheritIgnoredCheckBox.setSelected(false);
+    myInheritIgnoredCheckBox.setValue(false);
   }
 
   @Override
+  @RequiredUIAccess
   public void reset(@Nonnull EditorSchemeAttributeDescriptor attrDescription) {
     if (!(attrDescription instanceof ColorAndFontDescription)) return;
     ColorAndFontDescription description = (ColorAndFontDescription)attrDescription;
 
-    Color backgroundColor = TargetAWT.to(getBackgroundColor(description));
-    Color ignoredColor = TargetAWT.to(getIgnoredColor(description));
-    Color stripeMarkColor = TargetAWT.to(getStripeMarkColor(description));
+    ColorValue backgroundColor = getBackgroundColor(description);
+    ColorValue ignoredColor = getIgnoredColor(description);
+    ColorValue stripeMarkColor = getStripeMarkColor(description);
     boolean inheritIgnored = ignoredColor == null;
 
     myBackgroundColorPanel.setEnabled(true);
@@ -99,10 +111,10 @@ class DiffColorDescriptionPanel extends JPanel implements OptionsPanelImpl.Color
     myStripeMarkColorPanel.setEnabled(true);
     myInheritIgnoredCheckBox.setEnabled(true);
 
-    myBackgroundColorPanel.setSelectedColor(backgroundColor);
-    myIgnoredColorPanel.setSelectedColor(ignoredColor);
-    myStripeMarkColorPanel.setSelectedColor(stripeMarkColor);
-    myInheritIgnoredCheckBox.setSelected(inheritIgnored);
+    myBackgroundColorPanel.setValue(backgroundColor, false);
+    myIgnoredColorPanel.setValue(ignoredColor, false);
+    myStripeMarkColorPanel.setValue(stripeMarkColor, false);
+    myInheritIgnoredCheckBox.setValue(inheritIgnored);
   }
 
   @Override
@@ -142,14 +154,14 @@ class DiffColorDescriptionPanel extends JPanel implements OptionsPanelImpl.Color
   }
 
   private void setBackgroundColor(@Nonnull TextAttributes attributes) {
-    attributes.setBackgroundColor(TargetAWT.from(myBackgroundColorPanel.getSelectedColor()));
+    attributes.setBackgroundColor(myBackgroundColorPanel.getValue());
   }
 
   private void setIgnoredColor(@Nonnull TextAttributes attributes) {
-    attributes.setForegroundColor(myInheritIgnoredCheckBox.isSelected() ? null : TargetAWT.from(myIgnoredColorPanel.getSelectedColor()));
+    attributes.setForegroundColor(myInheritIgnoredCheckBox.getValueOrError() ? null : myIgnoredColorPanel.getValue());
   }
 
   private void setStripeMarkColor(@Nonnull TextAttributes attributes) {
-    attributes.setErrorStripeColor(TargetAWT.from(myStripeMarkColorPanel.getSelectedColor()));
+    attributes.setErrorStripeColor(myStripeMarkColorPanel.getValue());
   }
 }

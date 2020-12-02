@@ -21,23 +21,32 @@ import com.intellij.openapi.editor.markup.EffectType;
 import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.openapi.options.colors.AttributesDescriptor;
 import com.intellij.openapi.options.colors.ColorSettingsPage;
+import com.intellij.openapi.ui.ComboBox;
 import com.intellij.openapi.ui.Messages;
+import com.intellij.openapi.ui.VerticalFlowLayout;
 import com.intellij.openapi.util.Pair;
-import com.intellij.ui.*;
+import com.intellij.ui.CollectionComboBoxModel;
+import com.intellij.ui.ColoredListCellRenderer;
+import com.intellij.ui.HyperlinkAdapter;
 import com.intellij.ui.components.JBCheckBox;
+import com.intellij.ui.components.panels.HorizontalLayout;
 import com.intellij.util.EventDispatcher;
 import com.intellij.util.FontUtil;
 import com.intellij.util.containers.ContainerUtil;
+import com.intellij.util.ui.FormBuilder;
 import com.intellij.util.ui.UIUtil;
+import com.intellij.util.ui.components.BorderLayoutPanel;
 import consulo.awt.TargetAWT;
+import consulo.ui.ColorBox;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
-import javax.annotation.Nonnull;
+import consulo.ui.style.StandardColors;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Collections;
 import java.util.List;
@@ -46,16 +55,15 @@ import java.util.Map;
 /**
  * @author cdr
  */
-public class ColorAndFontDescriptionPanel extends JPanel implements OptionsPanelImpl.ColorDescriptionPanel {
-
+public class ColorAndFontDescriptionPanel implements OptionsPanelImpl.ColorDescriptionPanel {
   private EventDispatcher<Listener> myListeners = EventDispatcher.create(Listener.class);
 
   private JPanel myPanel;
 
-  private ColorPanel myBackgroundChooser;
-  private ColorPanel myForegroundChooser;
-  private ColorPanel myEffectsColorChooser;
-  private ColorPanel myErrorStripeColorChooser;
+  private ColorBox myBackgroundChooser;
+  private ColorBox myForegroundChooser;
+  private ColorBox myEffectsColorChooser;
+  private ColorBox myErrorStripeColorChooser;
 
   private JBCheckBox myCbBackground;
   private JBCheckBox myCbForeground;
@@ -63,6 +71,7 @@ public class ColorAndFontDescriptionPanel extends JPanel implements OptionsPanel
   private JBCheckBox myCbErrorStripe;
 
   private Map<String, EffectType> myEffectsMap;
+
   {
     Map<String, EffectType> map = ContainerUtil.newLinkedHashMap();
     map.put(ApplicationBundle.message("combobox.effect.underscored"), EffectType.LINE_UNDERSCORE);
@@ -73,25 +82,46 @@ public class ColorAndFontDescriptionPanel extends JPanel implements OptionsPanel
     map.put(ApplicationBundle.message("combobox.effect.bold.dottedline"), EffectType.BOLD_DOTTED_LINE);
     myEffectsMap = Collections.unmodifiableMap(map);
   }
-  private JComboBox myEffectsCombo;
+
+  private JComboBox<String> myEffectsCombo;
   private final EffectsComboModel myEffectsModel;
 
   private JBCheckBox myCbBold;
   private JBCheckBox myCbItalic;
-  private JLabel myLabelFont;
   private JTextPane myInheritanceLabel;
 
   private JBCheckBox myInheritAttributesBox;
 
   public ColorAndFontDescriptionPanel() {
-    super(new BorderLayout());
-    add(myPanel, BorderLayout.CENTER);
+    myPanel = new JPanel(new VerticalFlowLayout());
 
-    setBorder(BorderFactory.createEmptyBorder(4, 0, 4, 4));
+    myCbBold = new JBCheckBox(ApplicationBundle.message("checkbox.font.bold"));
+    myCbItalic = new JBCheckBox(ApplicationBundle.message("checkbox.font.italic"));
+
+    JPanel leftFontLine = new JPanel(new HorizontalLayout(0));
+    leftFontLine.add(myCbBold);
+    leftFontLine.add(myCbItalic);
+    myPanel.add(new BorderLayoutPanel().addToRight(leftFontLine));
+
+    myCbForeground = new JBCheckBox(ApplicationBundle.message("checkbox.color.foreground"));
+    myForegroundChooser = ColorBox.create();
+    myCbBackground = new JBCheckBox(ApplicationBundle.message("checkbox.color.background"));
+    myBackgroundChooser = ColorBox.create();
+    myCbErrorStripe = new JBCheckBox(ApplicationBundle.message("checkbox.color.error.stripe.mark"));
+    myErrorStripeColorChooser = ColorBox.create();
+    myCbEffects = new JBCheckBox(ApplicationBundle.message("checkbox.color.effects"));
+    myEffectsColorChooser = ColorBox.create();
+
+    FormBuilder fontColorOptions = FormBuilder.createFormBuilder();
+    fontColorOptions.addLabeledComponent(myCbForeground, (JComponent)TargetAWT.to(myForegroundChooser));
+    fontColorOptions.addLabeledComponent(myCbBackground, (JComponent)TargetAWT.to(myBackgroundChooser));
+    fontColorOptions.addLabeledComponent(myCbErrorStripe, (JComponent)TargetAWT.to(myErrorStripeColorChooser));
+    fontColorOptions.addLabeledComponent(myCbEffects, (JComponent)TargetAWT.to(myEffectsColorChooser));
+    myPanel.add(fontColorOptions.getPanel());
+
+    myEffectsCombo = new ComboBox<>();
     myEffectsModel = new EffectsComboModel(ContainerUtil.newArrayList(myEffectsMap.keySet()));
-    //noinspection unchecked
     myEffectsCombo.setModel(myEffectsModel);
-    //noinspection unchecked
     myEffectsCombo.setRenderer(new ColoredListCellRenderer<String>() {
       @Override
       protected void customizeCellRenderer(@Nonnull JList list, String value, int index, boolean selected, boolean hasFocus) {
@@ -99,17 +129,19 @@ public class ColorAndFontDescriptionPanel extends JPanel implements OptionsPanel
       }
     });
 
-    ActionListener actionListener = new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        onSettingsChanged(e);
-      }
-    };
+    myPanel.add(new BorderLayoutPanel().addToRight(myEffectsCombo));
+
+    myInheritAttributesBox = new JBCheckBox(ApplicationBundle.message("label.inherit.attributes"));
+    myPanel.add(myInheritAttributesBox);
+    myInheritanceLabel = new JTextPane();
+    myPanel.add(myInheritanceLabel);
+
+    ActionListener actionListener = e -> onSettingsChanged();
     for (JBCheckBox c : new JBCheckBox[]{myCbBackground, myCbForeground, myCbEffects, myCbErrorStripe, myCbItalic, myCbBold, myInheritAttributesBox}) {
       c.addActionListener(actionListener);
     }
-    for (ColorPanel c : new ColorPanel[]{myBackgroundChooser, myForegroundChooser, myEffectsColorChooser, myErrorStripeColorChooser}) {
-      c.addActionListener(actionListener);
+    for (ColorBox c : new ColorBox[]{myBackgroundChooser, myForegroundChooser, myEffectsColorChooser, myErrorStripeColorChooser}) {
+      c.addValueListener(it -> onSettingsChanged());
     }
     myEffectsCombo.addActionListener(actionListener);
     Messages.configureMessagePaneUi(myInheritanceLabel, "<html>", null);
@@ -120,21 +152,21 @@ public class ColorAndFontDescriptionPanel extends JPanel implements OptionsPanel
       }
     });
     myInheritanceLabel.setBorder(BorderFactory.createEmptyBorder());
-    myLabelFont.setVisible(false); // hide for now as it doesn't look that good
   }
 
   protected void onHyperLinkClicked(HyperlinkEvent e) {
     myListeners.getMulticaster().onHyperLinkClicked(e);
   }
 
-  protected void onSettingsChanged(ActionEvent e) {
+  @RequiredUIAccess
+  protected void onSettingsChanged() {
     myErrorStripeColorChooser.setEnabled(myCbErrorStripe.isSelected());
     myForegroundChooser.setEnabled(myCbForeground.isSelected());
     myBackgroundChooser.setEnabled(myCbBackground.isSelected());
     myEffectsColorChooser.setEnabled(myCbEffects.isSelected());
     myEffectsCombo.setEnabled(myCbEffects.isSelected());
 
-    myListeners.getMulticaster().onSettingsChanged(e);
+    myListeners.getMulticaster().onSettingsChanged();
   }
 
   @Nonnull
@@ -144,8 +176,8 @@ public class ColorAndFontDescriptionPanel extends JPanel implements OptionsPanel
   }
 
   @Override
+  @RequiredUIAccess
   public void resetDefault() {
-    myLabelFont.setEnabled(false);
     myCbBold.setSelected(false);
     myCbBold.setEnabled(false);
     myCbItalic.setSelected(false);
@@ -161,14 +193,13 @@ public class ColorAndFontDescriptionPanel extends JPanel implements OptionsPanel
 
   @Override
   public void reset(@Nonnull EditorSchemeAttributeDescriptor d) {
-    if(!(d instanceof ColorAndFontDescription)) {
+    if (!(d instanceof ColorAndFontDescription)) {
       return;
     }
 
     ColorAndFontDescription description = (ColorAndFontDescription)d;
-    
+
     if (description.isFontEnabled()) {
-      myLabelFont.setEnabled(true);
       myCbBold.setEnabled(true);
       myCbItalic.setEnabled(true);
       int fontType = description.getFontType();
@@ -176,7 +207,6 @@ public class ColorAndFontDescriptionPanel extends JPanel implements OptionsPanel
       myCbItalic.setSelected((fontType & Font.ITALIC) != 0);
     }
     else {
-      myLabelFont.setEnabled(false);
       myCbBold.setSelected(false);
       myCbBold.setEnabled(false);
       myCbItalic.setSelected(false);
@@ -200,7 +230,6 @@ public class ColorAndFontDescriptionPanel extends JPanel implements OptionsPanel
       myEffectsCombo.setEnabled(false);
     }
     setInheritanceInfo(description);
-    myLabelFont.setEnabled(myCbBold.isEnabled() || myCbItalic.isEnabled());
   }
 
   @Override
@@ -238,13 +267,13 @@ public class ColorAndFontDescriptionPanel extends JPanel implements OptionsPanel
       if (myCbItalic.isSelected()) fontType |= Font.ITALIC;
       description.setFontType(fontType);
       description.setForegroundChecked(myCbForeground.isSelected());
-      description.setForegroundColor(TargetAWT.from(myForegroundChooser.getSelectedColor()));
+      description.setForegroundColor(myForegroundChooser.getValueOrError());
       description.setBackgroundChecked(myCbBackground.isSelected());
-      description.setBackgroundColor(TargetAWT.from(myBackgroundChooser.getSelectedColor()));
+      description.setBackgroundColor(myBackgroundChooser.getValueOrError());
       description.setErrorStripeChecked(myCbErrorStripe.isSelected());
-      description.setErrorStripeColor(TargetAWT.from(myErrorStripeColorChooser.getSelectedColor()));
+      description.setErrorStripeColor(myErrorStripeColorChooser.getValueOrError());
       description.setEffectsColorChecked(myCbEffects.isSelected());
-      description.setEffectColor(TargetAWT.from(myEffectsColorChooser.getSelectedColor()));
+      description.setEffectColor(myEffectsColorChooser.getValueOrError());
 
       if (myEffectsCombo.isEnabled()) {
         String effectType = (String)myEffectsCombo.getModel().getSelectedItem();
@@ -259,22 +288,20 @@ public class ColorAndFontDescriptionPanel extends JPanel implements OptionsPanel
     myListeners.addListener(listener);
   }
 
-  private static void updateColorChooser(JCheckBox checkBox,
-                                         ColorPanel colorPanel,
-                                         boolean isEnabled,
-                                         boolean isChecked,
-                                         @Nullable ColorValue color) {
+  @RequiredUIAccess
+  private static void updateColorChooser(JCheckBox checkBox, ColorBox colorPanel, boolean isEnabled, boolean isChecked, @Nullable ColorValue color) {
     checkBox.setEnabled(isEnabled);
     checkBox.setSelected(isChecked);
     if (color != null) {
-      colorPanel.setSelectedColor(TargetAWT.to(color));
+      colorPanel.setValue(color, false);
     }
     else {
-      colorPanel.setSelectedColor(JBColor.WHITE);
+      colorPanel.setValue(StandardColors.WHITE, false);
     }
     colorPanel.setEnabled(isChecked);
   }
 
+  @RequiredUIAccess
   private void setInheritanceInfo(ColorAndFontDescription description) {
     Pair<ColorSettingsPage, AttributesDescriptor> baseDescriptor = description.getBaseAttributeDescriptor();
     if (baseDescriptor != null && baseDescriptor.second.getDisplayName() != null) {
@@ -311,6 +338,7 @@ public class ColorAndFontDescriptionPanel extends JPanel implements OptionsPanel
     }
   }
 
+  @RequiredUIAccess
   private void setEditEnabled(boolean isEditEnabled, ColorAndFontDescription description) {
     myCbBackground.setEnabled(isEditEnabled && description.isBackgroundEnabled());
     myCbForeground.setEnabled(isEditEnabled && description.isForegroundEnabled());

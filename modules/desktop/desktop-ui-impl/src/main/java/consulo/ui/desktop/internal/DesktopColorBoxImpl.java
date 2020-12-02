@@ -18,24 +18,21 @@ package consulo.ui.desktop.internal;
 import com.intellij.ui.ColorPanel;
 import consulo.awt.TargetAWT;
 import consulo.awt.impl.FromSwingComponentWrapper;
-import consulo.disposer.Disposable;
 import consulo.ui.ColorBox;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.desktop.internal.base.SwingComponentDelegate;
 import consulo.ui.color.ColorValue;
+import consulo.ui.desktop.internal.base.SwingComponentDelegate;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.awt.event.ActionListener;
 
 /**
  * @author VISTALL
  * @since 6/9/18
  */
-class DesktopColorBoxImpl extends SwingComponentDelegate<ColorPanel> implements ColorBox {
+class DesktopColorBoxImpl extends SwingComponentDelegate<DesktopColorBoxImpl.MyColorPanel> implements ColorBox {
   class MyColorPanel extends ColorPanel implements FromSwingComponentWrapper {
-
     @Nonnull
     @Override
     public Component toUIComponent() {
@@ -44,27 +41,41 @@ class DesktopColorBoxImpl extends SwingComponentDelegate<ColorPanel> implements 
   }
 
   public DesktopColorBoxImpl(ColorValue colorValue) {
-    myComponent = new MyColorPanel();
-    myComponent.setSelectedColor(TargetAWT.to(colorValue));
-  }
-
-  @Nonnull
-  @Override
-  public Disposable addValueListener(@Nonnull ValueListener<ColorValue> valueListener) {
-    ActionListener actionListener = e -> valueListener.valueChanged(new ValueEvent<>(this, TargetAWT.from(myComponent.getSelectedColor())));
-    myComponent.addActionListener(actionListener);
-    return () -> myComponent.removeActionListener(actionListener);
+    MyColorPanel component = new MyColorPanel();
+    initialize(component);
+    component.setSelectedColor(TargetAWT.to(colorValue));
+    component.addActionListener(e -> fireListeners());
   }
 
   @Nullable
   @Override
   public ColorValue getValue() {
-    return TargetAWT.from(myComponent.getSelectedColor());
+    return TargetAWT.from(toAWTComponent().getSelectedColor());
   }
 
   @RequiredUIAccess
   @Override
   public void setValue(ColorValue value, boolean fireListeners) {
-    myComponent.setSelectedColor(TargetAWT.to(value));
+    toAWTComponent().setSelectedColor(TargetAWT.to(value));
+
+    if(fireListeners) {
+      fireListeners();
+    }
+  }
+
+  @Override
+  public void setEditable(boolean editable) {
+    toAWTComponent().setEditable(editable);
+  }
+
+  @Override
+  public boolean isEditable() {
+    return toAWTComponent().isEditable();
+  }
+
+  @RequiredUIAccess
+  @SuppressWarnings("unchecked")
+  private void fireListeners() {
+    getListenerDispatcher(ValueListener.class).valueChanged(new ValueEvent(this, getValue()));
   }
 }
