@@ -119,7 +119,7 @@ public class SchemesPanel implements SkipSelfSearchComponent {
     String selectedName = myOptions.getSelectedScheme().getName();
     SaveSchemeDialog dialog = new SaveSchemeDialog(TargetAWT.to(getComponent()), ApplicationBundle.message("title.save.color.scheme.as"), names, selectedName);
 
-    dialog.showAsync().doWhenDone(() -> dialog.getSchemeName());
+    dialog.showAsync().doWhenDone(() -> myOptions.saveSchemeAs(dialog.getSchemeName()));
   }
 
   private void changeToScheme() {
