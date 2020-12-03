@@ -19,7 +19,6 @@ package com.intellij.ide.ui.search;
 import com.intellij.application.options.CodeStyle;
 import com.intellij.codeStyle.CodeStyleFacade;
 import com.intellij.ide.IdeBundle;
-import com.intellij.ide.plugins.PluginManagerConfigurable;
 import com.intellij.openapi.application.ApplicationBundle;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.SearchableConfigurable;
@@ -34,15 +33,16 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.StringInterner;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginManager;
+import consulo.ide.plugins.PluginsConfigurable;
 import consulo.logging.Logger;
 import gnu.trove.THashMap;
 import gnu.trove.THashSet;
+import jakarta.inject.Singleton;
 import org.jdom.Document;
 import org.jdom.Element;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import jakarta.inject.Singleton;
 import javax.swing.event.DocumentEvent;
 import java.io.IOException;
 import java.net.URL;
@@ -173,7 +173,7 @@ public class SearchableOptionsRegistrarImpl extends SearchableOptionsRegistrar {
         words.addAll(getProcessedWordsWithoutStemming(description));
       }
       for (String word : words) {
-        addOption(word, null, plugin.getName(), PluginManagerConfigurable.ID, IdeBundle.message("title.plugins"));
+        addOption(word, null, plugin.getName(), PluginsConfigurable.ID, IdeBundle.message("title.plugins"));
       }
     }
 

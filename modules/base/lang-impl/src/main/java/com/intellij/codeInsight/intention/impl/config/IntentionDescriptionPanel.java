@@ -21,8 +21,6 @@ package com.intellij.codeInsight.intention.impl.config;
 
 import com.intellij.codeInsight.CodeInsightBundle;
 import com.intellij.ide.plugins.PluginManager;
-import com.intellij.ide.plugins.PluginManagerConfigurable;
-import com.intellij.ide.plugins.PluginManagerUISettings;
 import com.intellij.ide.ui.search.SearchUtil;
 import com.intellij.openapi.application.ApplicationNamesInfo;
 import com.intellij.openapi.fileTypes.FileType;
@@ -34,7 +32,9 @@ import com.intellij.ui.HyperlinkLabel;
 import com.intellij.ui.TitledSeparator;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginId;
+import consulo.ide.plugins.PluginsConfigurable;
 import consulo.logging.Logger;
+import consulo.ui.annotation.RequiredUIAccess;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nullable;
@@ -60,12 +60,10 @@ public class IntentionDescriptionPanel {
   private final List<IntentionUsagePanel> myBeforeUsagePanels = new ArrayList<IntentionUsagePanel>();
   private final List<IntentionUsagePanel> myAfterUsagePanels = new ArrayList<IntentionUsagePanel>();
 
-  public void reset(IntentionActionMetaData actionMetaData, String filter)  {
+  public void reset(IntentionActionMetaData actionMetaData, String filter) {
     try {
       final TextDescriptor url = actionMetaData.getDescription();
-      final String description = url == null ?
-                                 CodeInsightBundle.message("under.construction.string") :
-                                 SearchUtil.markup(url.getText(), filter);
+      final String description = url == null ? CodeInsightBundle.message("under.construction.string") : SearchUtil.markup(url.getText(), filter);
       myDescriptionBrowser.setText(description);
       setupPoweredByPanel(actionMetaData);
 
@@ -96,17 +94,13 @@ public class IntentionDescriptionPanel {
       final PluginDescriptor pluginDescriptor = PluginManager.getPlugin(pluginId);
       HyperlinkLabel label = new HyperlinkLabel(CodeInsightBundle.message("powered.by.plugin", pluginDescriptor.getName()));
       label.addHyperlinkListener(new HyperlinkListener() {
+        @RequiredUIAccess
         @Override
         public void hyperlinkUpdate(HyperlinkEvent e) {
           final ShowSettingsUtil util = ShowSettingsUtil.getInstance();
-          final PluginManagerConfigurable pluginConfigurable = new PluginManagerConfigurable(PluginManagerUISettings.getInstance());
+          final PluginsConfigurable pluginConfigurable = new PluginsConfigurable();
           final Project project = ProjectManager.getInstance().getDefaultProject();
-          util.editConfigurable(project, pluginConfigurable, new Runnable(){
-            @Override
-            public void run() {
-              pluginConfigurable.select(pluginDescriptor);
-            }
-          });
+          util.editConfigurable(project, pluginConfigurable, () -> pluginConfigurable.select(pluginDescriptor));
         }
       });
       owner = label;
@@ -117,7 +111,7 @@ public class IntentionDescriptionPanel {
   }
 
 
-  public void reset(String intentionCategory)  {
+  public void reset(String intentionCategory) {
     try {
       String text = CodeInsightBundle.message("intention.settings.category.text", intentionCategory);
 
@@ -143,10 +137,7 @@ public class IntentionDescriptionPanel {
     }
   }
 
-  private static void showUsages(final JPanel panel,
-                                 final TitledSeparator separator,
-                                 final List<IntentionUsagePanel> usagePanels,
-                                 @Nullable final TextDescriptor[] exampleUsages) throws IOException {
+  private static void showUsages(final JPanel panel, final TitledSeparator separator, final List<IntentionUsagePanel> usagePanels, @Nullable final TextDescriptor[] exampleUsages) throws IOException {
     GridBagConstraints gb = null;
     boolean reuse = exampleUsages != null && panel.getComponents().length == exampleUsages.length;
     if (!reuse) {
@@ -160,7 +151,7 @@ public class IntentionDescriptionPanel {
       gb.gridwidth = 1;
       gb.gridx = 0;
       gb.gridy = 0;
-      gb.insets = new Insets(0,0,0,0);
+      gb.insets = new Insets(0, 0, 0, 0);
       gb.ipadx = 5;
       gb.ipady = 5;
       gb.weightx = 1;

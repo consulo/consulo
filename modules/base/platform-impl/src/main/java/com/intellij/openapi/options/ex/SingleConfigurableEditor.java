@@ -27,16 +27,20 @@ import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.wm.ex.IdeFocusTraversalPolicy;
+import com.intellij.ui.border.CustomLineBorder;
 import com.intellij.util.Alarm;
-import consulo.logging.Logger;
-import consulo.ui.annotation.RequiredUIAccess;
+import com.intellij.util.ui.JBUI;
+import com.intellij.util.ui.components.BorderLayoutPanel;
 import consulo.ide.base.BaseShowSettingsUtil;
+import consulo.logging.Logger;
 import consulo.options.ConfigurableUIMigrationUtil;
+import consulo.ui.annotation.RequiredUIAccess;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
+import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
@@ -143,6 +147,27 @@ public class SingleConfigurableEditor extends DialogWrapper {
     String displayName = configurable.getDisplayName();
     LOG.assertTrue(displayName != null, configurable.getClass().getName());
     return displayName.replaceAll("\n", " ");
+  }
+
+  @Nullable
+  @Override
+  protected Border createContentPaneBorder() {
+    return myConfigurable instanceof Configurable.NoMargin ? JBUI.Borders.empty() : super.createContentPaneBorder();
+  }
+
+  @Nullable
+  @Override
+  protected JComponent createSouthPanel() {
+    if(myConfigurable instanceof Configurable.NoMargin) {
+      JComponent southPanel = super.createSouthPanel();
+      if (southPanel != null) {
+        southPanel.setBorder(JBUI.Borders.empty(ourDefaultBorderInsets));
+        BorderLayoutPanel borderLayoutPanel = JBUI.Panels.simplePanel(southPanel);
+        borderLayoutPanel.setBorder(new CustomLineBorder(JBUI.scale(1), 0, 0, 0));
+        return borderLayoutPanel;
+      }
+    }
+    return super.createSouthPanel();
   }
 
   @Override

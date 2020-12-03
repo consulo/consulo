@@ -18,8 +18,6 @@ package consulo.ide.updateSettings.impl;
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.plugins.*;
 import com.intellij.openapi.application.ex.ApplicationManagerEx;
-import consulo.awt.TargetAWT;
-import consulo.container.plugin.PluginId;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.Project;
@@ -36,7 +34,9 @@ import com.intellij.util.ui.ColumnInfo;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.components.BorderLayoutPanel;
+import consulo.awt.TargetAWT;
 import consulo.container.plugin.PluginDescriptor;
+import consulo.container.plugin.PluginId;
 import consulo.ide.plugins.InstalledPluginsState;
 import consulo.logging.Logger;
 
@@ -260,7 +260,7 @@ public class PlatformOrPluginDialog extends DialogWrapper {
 
     }, () -> {
       if (myType != PlatformOrPluginUpdateResult.Type.PLUGIN_INSTALL) {
-        if (PluginManagerConfigurable.showRestartIDEADialog() == Messages.YES) {
+        if (PluginInstallUtil.showRestartIDEADialog() == Messages.YES) {
           ApplicationManagerEx.getApplicationEx().restart(true);
         }
       }

@@ -15,10 +15,15 @@
  */
 package com.intellij.ide.plugins;
 
+import com.intellij.ide.IdeBundle;
 import com.intellij.ide.startup.StartupActionScriptManager;
-import consulo.container.plugin.PluginId;
+import com.intellij.openapi.application.Application;
+import com.intellij.openapi.application.ApplicationNamesInfo;
+import com.intellij.openapi.application.ex.ApplicationEx;
+import com.intellij.openapi.ui.Messages;
 import com.intellij.util.containers.ArrayListSet;
 import consulo.container.plugin.PluginDescriptor;
+import consulo.container.plugin.PluginId;
 import consulo.ide.plugins.InstalledPluginsState;
 
 import javax.annotation.Nonnull;
@@ -33,8 +38,37 @@ import java.util.Set;
  * @since Nov 29, 2003
  */
 public class PluginInstallUtil {
+  private static final String POSTPONE = "&Postpone";
 
   private PluginInstallUtil() {
+  }
+
+  @Messages.YesNoResult
+  public static int showShutDownIDEADialog() {
+    return showShutDownIDEADialog(IdeBundle.message("title.plugins.changed"));
+  }
+
+  @Messages.YesNoResult
+  private static int showShutDownIDEADialog(final String title) {
+    String message = IdeBundle.message("message.idea.shutdown.required", ApplicationNamesInfo.getInstance().getFullProductName());
+    return Messages.showYesNoDialog(message, title, "Shut Down", POSTPONE, Messages.getQuestionIcon());
+  }
+
+  @Messages.YesNoResult
+  public static int showRestartIDEADialog() {
+    return showRestartIDEADialog(IdeBundle.message("title.plugins.changed"));
+  }
+
+  @Messages.YesNoResult
+  private static int showRestartIDEADialog(final String title) {
+    String message = IdeBundle.message("message.idea.restart.required", ApplicationNamesInfo.getInstance().getFullProductName());
+    return Messages.showYesNoDialog(message, title, "Restart", POSTPONE, Messages.getQuestionIcon());
+  }
+
+  public static void shutdownOrRestartApp(String title) {
+    final ApplicationEx app = (ApplicationEx)Application.get();
+    int response = app.isRestartCapable() ? showRestartIDEADialog(title) : showShutDownIDEADialog(title);
+    if (response == Messages.YES) app.restart(true);
   }
 
   @Nonnull

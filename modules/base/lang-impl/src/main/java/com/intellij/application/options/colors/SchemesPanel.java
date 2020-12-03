@@ -25,6 +25,7 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.UIUtil;
 import consulo.awt.TargetAWT;
 import consulo.platform.Platform;
+import consulo.platform.base.localize.ApplicationLocalize;
 import consulo.ui.Button;
 import consulo.ui.ComboBox;
 import consulo.ui.Component;
@@ -63,7 +64,7 @@ public class SchemesPanel implements SkipSelfSearchComponent {
     myModel = MutableListModel.of(new ArrayList<>());
     mySchemeComboBox = ComboBox.create(myModel);
 
-    topLayout.add(Label.create(ApplicationBundle.message("combobox.scheme.name")));
+    topLayout.add(Label.create(ApplicationLocalize.comboboxSchemeName()));
     topLayout.add(mySchemeComboBox);
 
     mySchemeComboBox.addValueListener(event -> {
@@ -83,11 +84,11 @@ public class SchemesPanel implements SkipSelfSearchComponent {
       }
     });
 
-    Button saveAsButton = Button.create(ApplicationBundle.message("button.save.as"), event -> showSaveAsDialog());
+    Button saveAsButton = Button.create(ApplicationLocalize.buttonSaveAs(), event -> showSaveAsDialog());
 
     topLayout.add(saveAsButton);
 
-    myDeleteButton = Button.create(ApplicationBundle.message("button.delete"), event -> {
+    myDeleteButton = Button.create(ApplicationLocalize.buttonDelete(), event -> {
       Object value = mySchemeComboBox.getValue();
       if (value != null) {
         myOptions.removeScheme((String)value);

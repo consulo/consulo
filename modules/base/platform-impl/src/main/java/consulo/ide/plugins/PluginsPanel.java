@@ -18,12 +18,18 @@ package consulo.ide.plugins;
 import com.intellij.ide.DataManager;
 import com.intellij.ide.plugins.AvailablePluginsManagerMain;
 import com.intellij.ide.plugins.InstalledPluginsManagerMain;
+import com.intellij.ide.plugins.PluginInstallUtil;
 import com.intellij.ide.plugins.PluginManagerMain;
 import com.intellij.openapi.actionSystem.ActionManager;
+import com.intellij.openapi.application.Application;
+import com.intellij.openapi.application.ex.ApplicationEx;
+import com.intellij.openapi.options.ConfigurationException;
+import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.ui.components.panels.Wrapper;
 import com.intellij.ui.tabs.TabInfo;
 import com.intellij.ui.tabs.impl.JBEditorTabs;
+import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginManager;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
@@ -87,6 +93,16 @@ public class PluginsPanel implements Disposable {
     });
   }
 
+  public void filter(String option) {
+    select(myInstalledPluginsPanel);
+
+    myInstalledPluginsPanel.filter(option);
+  }
+
+  public void select(PluginDescriptor... pluginDescriptor) {
+    myInstalledPluginsPanel.select(pluginDescriptor);
+  }
+
   public void select(PluginManagerMain main) {
     int index;
     if (main == myInstalledPluginsPanel) {
@@ -120,8 +136,24 @@ public class PluginsPanel implements Disposable {
     return myInstalledPluginsPanel.isModified() || myAvailablePluginsManagerMain.isModified();
   }
 
-  public void apply() {
-    myInstalledPluginsPanel.apply();
+  public void apply() throws ConfigurationException {
+    String applyMessage = myInstalledPluginsPanel.apply();
     myAvailablePluginsManagerMain.apply();
+
+    if (applyMessage != null) {
+      throw new ConfigurationException(applyMessage);
+    }
+
+    if (myInstalledPluginsPanel.isRequireShutdown()) {
+      final ApplicationEx app = (ApplicationEx)Application.get();
+
+      int response = app.isRestartCapable() ? PluginInstallUtil.showRestartIDEADialog() : PluginInstallUtil.showShutDownIDEADialog();
+      if (response == Messages.YES) {
+        app.restart(true);
+      }
+      else {
+        myInstalledPluginsPanel.ignoreChanges();
+      }
+    }
   }
 }

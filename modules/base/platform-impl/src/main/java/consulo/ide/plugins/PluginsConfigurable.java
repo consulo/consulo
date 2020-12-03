@@ -19,6 +19,7 @@ import com.intellij.ide.IdeBundle;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.options.SearchableConfigurable;
+import consulo.container.plugin.PluginDescriptor;
 import consulo.disposer.Disposer;
 import consulo.ui.annotation.RequiredUIAccess;
 import jakarta.inject.Inject;
@@ -32,6 +33,7 @@ import javax.swing.*;
  * @since 2020-06-26
  */
 public class PluginsConfigurable implements SearchableConfigurable, Configurable.NoScroll, Configurable.HoldPreferredFocusedComponent, Configurable.NoMargin {
+  public static final String ID = "preferences.pluginManager";
 
   private PluginsPanel myPanel;
 
@@ -69,7 +71,7 @@ public class PluginsConfigurable implements SearchableConfigurable, Configurable
   @RequiredUIAccess
   @Override
   public void apply() throws ConfigurationException {
-    if(myPanel!= null) {
+    if (myPanel != null) {
       myPanel.apply();
     }
   }
@@ -77,7 +79,7 @@ public class PluginsConfigurable implements SearchableConfigurable, Configurable
   @RequiredUIAccess
   @Override
   public void reset() {
-    if(myPanel != null) {
+    if (myPanel != null) {
       myPanel.reset();
     }
   }
@@ -88,5 +90,17 @@ public class PluginsConfigurable implements SearchableConfigurable, Configurable
     if (myPanel != null) {
       Disposer.dispose(myPanel);
     }
+  }
+
+  @Override
+  @Nullable
+  public Runnable enableSearch(final String option) {
+    return () -> {
+      if (myPanel != null) myPanel.filter(option);
+    };
+  }
+
+  public void select(PluginDescriptor... descriptors) {
+    myPanel.select(descriptors);
   }
 }

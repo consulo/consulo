@@ -153,11 +153,6 @@ public class TestUIInternal extends UIInternal {
   }
 
   @Override
-  public Button _Components_button(String text) {
-    return null;
-  }
-
-  @Override
   public Hyperlink _Components_hyperlink(String text) {
     return null;
   }

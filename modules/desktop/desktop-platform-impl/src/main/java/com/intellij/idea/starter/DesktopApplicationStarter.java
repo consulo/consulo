@@ -17,8 +17,6 @@ package com.intellij.idea.starter;
 
 import com.google.gson.Gson;
 import com.intellij.ide.*;
-import com.intellij.ide.plugins.PluginManagerConfigurable;
-import com.intellij.ide.plugins.PluginManagerUISettings;
 import com.intellij.idea.ApplicationStarter;
 import com.intellij.internal.statistic.UsageTrigger;
 import com.intellij.notification.Notification;
@@ -52,6 +50,7 @@ import consulo.desktop.impl.ide.MacTopMenuInitializer;
 import consulo.desktop.impl.ide.TopMenuInitializer;
 import consulo.desktop.start.splash.DesktopSplash;
 import consulo.desktop.startup.customize.FirstStartCustomizeUtil;
+import consulo.ide.plugins.PluginsConfigurable;
 import consulo.logging.Logger;
 import consulo.plugins.internal.PluginsInitializeInfo;
 import consulo.start.CommandLineArgs;
@@ -282,9 +281,8 @@ public class DesktopApplicationStarter extends ApplicationStarter {
 
             String description = event.getDescription();
             if (PluginsInitializeInfo.EDIT.equals(description)) {
-              PluginManagerConfigurable configurable = new PluginManagerConfigurable(PluginManagerUISettings.getInstance());
               IdeFrame ideFrame = WindowManagerEx.getInstanceEx().findFrameFor(null);
-              ShowSettingsUtil.getInstance().editConfigurable(ideFrame == null ? null : TargetAWT.to(ideFrame.getWindow()), configurable);
+              ShowSettingsUtil.getInstance().editConfigurable(ideFrame == null ? null : TargetAWT.to(ideFrame.getWindow()), new PluginsConfigurable());
               return;
             }
 
