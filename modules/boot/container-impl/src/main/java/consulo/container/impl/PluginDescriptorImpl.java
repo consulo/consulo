@@ -330,7 +330,7 @@ public class PluginDescriptorImpl extends PluginDescriptorStub {
 
   @Override
   public String getCategory() {
-    return myCategory;
+    return normalizeCategory(myCategory);
   }
 
   /*

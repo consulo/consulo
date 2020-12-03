@@ -18,12 +18,9 @@ package com.intellij.ide.plugins;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ApplicationNamesInfo;
-import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.application.ex.ApplicationEx;
-import com.intellij.openapi.options.newEditor.DesktopSettingsDialog;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.GraphicsConfig;
-import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.ui.Gray;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.LightColors;
@@ -98,10 +95,9 @@ public class PluginHeaderPanel {
 
     //data
     myName.setText("<html><body>" + plugin.getName() + "</body></html>");
-    myCategory.setText(plugin.getCategory() == null ? "UNKNOWN" : plugin.getCategory().toUpperCase());
+    myCategory.setText( plugin.getCategory().toUpperCase());
     if (plugin instanceof PluginNode) {
       final PluginNode node = (PluginNode)plugin;
-
 
       myRating.setRate(node.getRating());
       myDownloads.setText(node.getDownloads() + " downloads");
@@ -138,7 +134,7 @@ public class PluginHeaderPanel {
         myActionId = null;
       }
     }
-    if (myManager == null || myActionId == null || (myManager.getInstalled() != myManager.getAvailable() && myActionId == ACTION_ID.UNINSTALL)) {
+    if (myManager == null || myActionId == null) {
       myActionId = ACTION_ID.INSTALL;
       myButtonPanel.setVisible(false);
     }
@@ -241,8 +237,7 @@ public class PluginHeaderPanel {
     myInstallButton.addActionListener(e -> {
       switch (myActionId) {
         case INSTALL:
-          new InstallPluginAction(myManager.getAvailable(), myManager.getInstalled())
-                  .install(null, () -> UIUtil.invokeLaterIfNeeded(() -> setPlugin(myPlugin)));
+          new InstallPluginAction(myManager).install(null, () -> UIUtil.invokeLaterIfNeeded(() -> setPlugin(myPlugin)));
           break;
         case UNINSTALL:
           UninstallPluginAction.uninstall(myManager.getInstalled(), myPlugin);
@@ -252,16 +247,11 @@ public class PluginHeaderPanel {
             myManager.apply();
           }
           final DialogWrapper dialog = DialogWrapper.findInstance(KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner());
-          if (dialog != null && dialog.isModal()) {
-            dialog.close(DialogWrapper.OK_EXIT_CODE);
-          }
-          IdeFocusManager.getGlobalInstance().doWhenFocusSettlesDown(() -> {
-            DialogWrapper settings = DialogWrapper.findInstance(IdeFocusManager.findInstance().getFocusOwner());
-            if (settings instanceof DesktopSettingsDialog) {
-              ((DesktopSettingsDialog)settings).doOKAction();
-            }
+          if (dialog != null) {
+            dialog.doOKActionPublic();
+
             ((ApplicationEx)ApplicationManager.getApplication()).restart(true);
-          }, ModalityState.current());
+          }
           break;
       }
       setPlugin(myPlugin);

@@ -194,8 +194,7 @@ public abstract class SingleRowLayoutStrategy {
         final int vToolbarWidth = data.vToolbar != null ? data.vToolbar.getPreferredSize().width : 0;
         final int x = vToolbarWidth > 0 ? vToolbarWidth + 1 : 0;
         final int hToolbarHeight = !myTabs.isSideComponentOnTabs() && data.hToolbar != null ? data.hToolbar.getPreferredSize().height : 0;
-        final int y = myTabs.myHeaderFitSize.height + (myTabs.isEditorTabs() ? 0 : 1) +
-                      (hToolbarHeight > 0 ? hToolbarHeight - 2 : 0);
+        final int y = myTabs.myHeaderFitSize.height + (myTabs.isEditorTabs() ? 0 : 1);
 
         if (data.hToolbar != null) {
           final Rectangle compBounds = myTabs.layoutComp(x, y, data.comp, 0, 0);

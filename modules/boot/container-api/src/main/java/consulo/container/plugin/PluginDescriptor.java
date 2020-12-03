@@ -67,6 +67,7 @@ public interface PluginDescriptor {
   @Nullable
   String getLocalize();
 
+  @Nonnull
   String getCategory();
 
   @Nonnull

@@ -48,13 +48,12 @@ import java.util.stream.Collectors;
 public class InstallPluginAction extends AnAction implements DumbAware {
   private static final Set<PluginDescriptor> ourInstallingNodes = new HashSet<>();
 
-  private final PluginManagerMain myInstalledPluginPanel;
-  private final PluginManagerMain myAvailablePluginPanel;
+  private final PluginManagerMain myCurrentPage;
 
-  public InstallPluginAction(PluginManagerMain availablePluginPanel, PluginManagerMain installedPluginPanel) {
+  public InstallPluginAction(PluginManagerMain currentPage) {
     super(IdeLocalize.actionDownloadAndInstallPlugin(), IdeLocalize.actionDownloadAndInstallPlugin(), AllIcons.Actions.Install);
-    myAvailablePluginPanel = availablePluginPanel;
-    myInstalledPluginPanel = installedPluginPanel;
+
+    myCurrentPage = currentPage;
   }
 
   @RequiredUIAccess
@@ -98,6 +97,8 @@ public class InstallPluginAction extends AnAction implements DumbAware {
   @RequiredUIAccess
   public void install(@Nullable Project project, @Nullable final Runnable onSuccess) {
     PluginDescriptor[] selection = getPluginTable().getSelectedObjects();
+    PluginManagerMain installed = myCurrentPage.getInstalled();
+    PluginManagerMain available = myCurrentPage.getAvailable();
 
     final List<PluginDescriptor> list = new ArrayList<>();
     for (PluginDescriptor descr : selection) {
@@ -126,7 +127,7 @@ public class InstallPluginAction extends AnAction implements DumbAware {
         list.add(pluginNode);
         ourInstallingNodes.add(pluginNode);
       }
-      final InstalledPluginsTableModel pluginsModel = (InstalledPluginsTableModel)myInstalledPluginPanel.getPluginsModel();
+      final InstalledPluginsTableModel pluginsModel = (InstalledPluginsTableModel)installed.getPluginsModel();
       final Set<PluginDescriptor> disabled = new HashSet<>();
       final Set<PluginDescriptor> disabledDependants = new HashSet<>();
       for (PluginDescriptor node : list) {
@@ -142,7 +143,7 @@ public class InstallPluginAction extends AnAction implements DumbAware {
         }
       }
       if (suggestToEnableInstalledPlugins(pluginsModel, disabled, disabledDependants, list)) {
-        myInstalledPluginPanel.setRequireShutdown(true);
+        installed.setRequireShutdown(true);
       }
     }
     final Consumer<Collection<PluginDescriptor>> afterCallback = pluginNodes -> {
@@ -151,10 +152,10 @@ public class InstallPluginAction extends AnAction implements DumbAware {
       }
       UIUtil.invokeLaterIfNeeded(() -> installedPluginsToModel(pluginNodes));
 
-      if (!myInstalledPluginPanel.isDisposed()) {
+      if (!installed.isDisposed()) {
         UIUtil.invokeLaterIfNeeded(() -> {
           getPluginTable().updateUI();
-          myInstalledPluginPanel.setRequireShutdown(true);
+          installed.setRequireShutdown(true);
         });
       }
       else {
@@ -178,7 +179,7 @@ public class InstallPluginAction extends AnAction implements DumbAware {
 
       ourInstallingNodes.removeAll(pluginNodes);
     };
-    downloadAndInstallPlugins(project, list, myAvailablePluginPanel.getPluginsModel().getAllPlugins(), afterCallback);
+    downloadAndInstallPlugins(project, list, available.getPluginsModel().getAllPlugins(), afterCallback);
   }
 
   public static boolean downloadAndInstallPlugins(@Nullable Project project,
@@ -274,13 +275,13 @@ public class InstallPluginAction extends AnAction implements DumbAware {
       pluginsState.getOutdatedPlugins().remove(id);
     }
 
-    final InstalledPluginsTableModel installedPluginsModel = (InstalledPluginsTableModel)myInstalledPluginPanel.getPluginsModel();
+    final InstalledPluginsTableModel installedPluginsModel = (InstalledPluginsTableModel)myCurrentPage.getInstalled().getPluginsModel();
     for (PluginDescriptor node : list) {
       installedPluginsModel.appendOrUpdateDescriptor(node);
     }
   }
 
   public PluginTable getPluginTable() {
-    return myAvailablePluginPanel.getPluginTable();
+    return myCurrentPage.getAvailable().getPluginTable();
   }
 }

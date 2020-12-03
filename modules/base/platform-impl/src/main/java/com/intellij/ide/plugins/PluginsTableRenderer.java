@@ -96,10 +96,7 @@ public class PluginsTableRenderer extends DefaultTableCellRenderer {
     myStatus.setIcon(TargetAWT.to(AllIcons.Nodes.Plugin));
     String category = myPluginDescriptor.getCategory();
     myCategory.setForeground(grayedFg);
-    if (category != null) {
-      myCategory.setText(category.toUpperCase() + " ");
-    }
-
+    myCategory.setText(category.toUpperCase() + " ");
     myPanel.setBackground(bg);
     myLastUpdated.setForeground(grayedFg);
     myLastUpdated.setText("");

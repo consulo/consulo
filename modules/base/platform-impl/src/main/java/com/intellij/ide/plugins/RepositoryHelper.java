@@ -18,7 +18,6 @@ package com.intellij.ide.plugins;
 import com.google.gson.Gson;
 import com.intellij.ide.IdeBundle;
 import com.intellij.openapi.application.ApplicationInfo;
-import com.intellij.openapi.application.impl.ApplicationInfoImpl;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.util.SystemProperties;
 import com.intellij.util.containers.ContainerUtil;
@@ -60,7 +59,7 @@ public class RepositoryHelper {
                                            boolean noTracking,
                                            boolean viaUpdate) {
     if (platformVersion == null) {
-      platformVersion = ApplicationInfoImpl.getShadowInstance().getBuild().asString();
+      platformVersion = ApplicationInfo.getInstance().getBuild().asString();
     }
 
     StringBuilder builder = new StringBuilder();

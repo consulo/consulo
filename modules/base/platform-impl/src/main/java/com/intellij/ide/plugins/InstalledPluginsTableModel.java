@@ -15,7 +15,6 @@
  */
 package com.intellij.ide.plugins;
 
-import consulo.container.plugin.PluginId;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.BooleanTableCellEditor;
@@ -23,8 +22,8 @@ import com.intellij.ui.BooleanTableCellRenderer;
 import com.intellij.util.containers.hash.HashSet;
 import com.intellij.util.ui.ColumnInfo;
 import consulo.container.plugin.PluginDescriptor;
+import consulo.container.plugin.PluginId;
 import consulo.ide.plugins.InstalledPluginsState;
-import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nullable;
 import javax.swing.*;
@@ -55,7 +54,7 @@ public class InstalledPluginsTableModel extends PluginTableModel {
     reset(view);
 
     for (Iterator<PluginDescriptor> iterator = view.iterator(); iterator.hasNext(); ) {
-      @NonNls final PluginId pluginId = iterator.next().getPluginId();
+      final PluginId pluginId = iterator.next().getPluginId();
       if (PluginManagerCore.isSystemPlugin(pluginId)) {
         iterator.remove();
       }
@@ -423,8 +422,7 @@ public class InstalledPluginsTableModel extends PluginTableModel {
                                " are disabled:<br>" +
                                listOfDependencies +
                                "<br>Would you like to enable them?</html>";
-      if (Messages.showOkCancelDialog(message, newVal ? "Enable Dependant Plugins" : "Disable Plugins with Dependency on this", Messages.getQuestionIcon()) ==
-          Messages.OK) {
+      if (Messages.showOkCancelDialog(message, newVal ? "Enable Dependant Plugins" : "Disable Plugins with Dependency on this", Messages.getQuestionIcon()) == Messages.OK) {
         for (PluginId pluginId : deps) {
           myEnabled.put(pluginId, newVal);
         }

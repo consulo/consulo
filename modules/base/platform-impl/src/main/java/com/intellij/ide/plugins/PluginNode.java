@@ -131,7 +131,7 @@ public class PluginNode extends PluginDescriptorStub {
 
   @Override
   public String getCategory() {
-    return category;
+    return normalizeCategory(category);
   }
 
   /**

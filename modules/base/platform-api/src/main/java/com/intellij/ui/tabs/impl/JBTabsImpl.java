@@ -1446,7 +1446,6 @@ public abstract class JBTabsImpl extends JComponent
         layout(label, insets.left, bounds.y, getWidth() - insets.right - insets.left, bounds.height);
       }
 
-
       moveDraggedTabLabel();
 
       myTabActionsAutoHideListener.processMouseOver();
@@ -1524,7 +1523,7 @@ public abstract class JBTabsImpl extends JComponent
   }
 
   public int getToolbarInset() {
-    return getArcSize() + 1;
+    return 0;
   }
 
   public void resetLayout(boolean resetLabels) {
@@ -2350,6 +2349,10 @@ public abstract class JBTabsImpl extends JComponent
 
   public Rectangle layout(JComponent c, Rectangle bounds) {
     final Rectangle now = c.getBounds();
+    if (c instanceof Toolbar) {
+      bounds.height -= JBUI.scale(5);
+    }
+
     if (!bounds.equals(now)) {
       c.setBounds(bounds);
     }

@@ -23,25 +23,21 @@ import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.options.SearchableConfigurable;
 import com.intellij.openapi.ui.Messages;
-import com.intellij.openapi.ui.SplitterProportionsData;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.disposer.Disposer;
-import org.jetbrains.annotations.NonNls;
+import consulo.ui.annotation.RequiredUIAccess;
+import jakarta.inject.Inject;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import jakarta.inject.Inject;
 import javax.swing.*;
-import javax.swing.table.TableModel;
-import java.util.List;
 
 /**
  * @author stathik
  * @since 9:30:44 PM Oct 26, 2003
  */
 public class PluginManagerConfigurable implements SearchableConfigurable, Configurable.NoScroll, Configurable.HoldPreferredFocusedComponent {
-
-  @NonNls private static final String POSTPONE = "&Postpone";
+  private static final String POSTPONE = "&Postpone";
   public static final String ID = "preferences.pluginManager";
   public static final String DISPLAY_NAME = IdeBundle.message("title.plugins");
 
@@ -59,6 +55,7 @@ public class PluginManagerConfigurable implements SearchableConfigurable, Config
     myAvailable = available;
   }
 
+  @RequiredUIAccess
   @Override
   public JComponent getPreferredFocusedComponent() {
     return myPluginManagerMain.getPluginTable();
@@ -69,25 +66,11 @@ public class PluginManagerConfigurable implements SearchableConfigurable, Config
     return DISPLAY_NAME;
   }
 
+  @RequiredUIAccess
   @Override
   public void reset() {
     myPluginManagerMain.reset();
-    //if (myAvailable) {
-    //  final int column = myUISettings.AVAILABLE_SORT_MODE;
-    //  if (column >= 0) {
-    //    for (final SortOrder sortOrder : SortOrder.values()) {
-    //      if (sortOrder.ordinal() == myUISettings.AVAILABLE_SORT_COLUMN_ORDER) {
-    //        myPluginManagerMain.pluginsModel.setSortKey(new RowSorter.SortKey(column, sortOrder));
-    //        break;
-    //      }
-    //    }
-    //  }
-    //  myPluginManagerMain.pluginsModel.setSortByStatus(myUISettings.AVAILABLE_SORT_BY_STATUS);
-    //} else {
-    //  myPluginManagerMain.pluginsModel.setSortByStatus(myUISettings.INSTALLED_SORT_BY_STATUS);
-    //}
     myPluginManagerMain.myPluginsModel.sort();
-    getSplitterProportions().restoreSplitterProportions(myPluginManagerMain.getMainPanel());
   }
 
   @Override
@@ -95,44 +78,26 @@ public class PluginManagerConfigurable implements SearchableConfigurable, Config
     return ID;
   }
 
+  @RequiredUIAccess
   @Override
   public void disposeUIResources() {
     if (myPluginManagerMain != null) {
-      getSplitterProportions().saveSplitterProportions(myPluginManagerMain.getMainPanel());
-
-      if (myAvailable) {
-        final RowSorter<? extends TableModel> rowSorter = myPluginManagerMain.myPluginTable.getRowSorter();
-        if (rowSorter != null) {
-          final List<? extends RowSorter.SortKey> sortKeys = rowSorter.getSortKeys();
-          if (sortKeys.size() > 0) {
-            final RowSorter.SortKey sortKey = sortKeys.get(0);
-            myUISettings.AVAILABLE_SORT_MODE = sortKey.getColumn();
-            myUISettings.AVAILABLE_SORT_COLUMN_ORDER = sortKey.getSortOrder().ordinal();
-          }
-        }
-        myUISettings.AVAILABLE_SORT_BY_STATUS = myPluginManagerMain.myPluginsModel.isSortByStatus();
-      } else {
-        myUISettings.INSTALLED_SORT_BY_STATUS = myPluginManagerMain.myPluginsModel.isSortByStatus();
-      }
-
       Disposer.dispose(myPluginManagerMain);
       myPluginManagerMain = null;
     }
   }
 
-  private SplitterProportionsData getSplitterProportions() {
-    return myAvailable ? myUISettings.getAvailableSplitterProportionsData() : myUISettings.getSplitterProportionsData();
-  }
-
+  @RequiredUIAccess
   @Override
   public JComponent createComponent() {
     return getOrCreatePanel().getMainPanel();
   }
 
   protected PluginManagerMain createPanel() {
-    return new InstalledPluginsManagerMain(myUISettings);
+    return new InstalledPluginsManagerMain();
   }
 
+  @RequiredUIAccess
   @Override
   public void apply() throws ConfigurationException {
     final String applyMessage = myPluginManagerMain.apply();
@@ -188,6 +153,7 @@ public class PluginManagerConfigurable implements SearchableConfigurable, Config
     if (response == Messages.YES) app.restart(true);
   }
 
+  @RequiredUIAccess
   @Override
   public boolean isModified() {
     return myPluginManagerMain != null && myPluginManagerMain.isModified();
@@ -202,7 +168,7 @@ public class PluginManagerConfigurable implements SearchableConfigurable, Config
   @Override
   @Nullable
   public Runnable enableSearch(final String option) {
-    return new Runnable(){
+    return new Runnable() {
       @Override
       public void run() {
         if (myPluginManagerMain == null) return;

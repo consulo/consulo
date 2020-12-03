@@ -315,6 +315,10 @@ public class TabLabel extends JPanel {
       case top:
       case bottom:
         if (myTabs.hasUnderline()) size.height += myTabs.getActiveTabUnderlineHeight() - 1;
+
+        if(myInfo.getGroup() != null) {
+          size.height += JBUI.scale(4);
+        }
         break;
       case left:
       case right:

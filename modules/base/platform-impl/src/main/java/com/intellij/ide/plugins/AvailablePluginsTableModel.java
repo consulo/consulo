@@ -119,5 +119,4 @@ public class AvailablePluginsTableModel extends PluginTableModel {
   public int getNameColumn() {
     return 0;
   }
-
 }

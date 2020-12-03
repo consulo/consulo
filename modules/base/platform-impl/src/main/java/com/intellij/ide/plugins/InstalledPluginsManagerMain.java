@@ -16,61 +16,55 @@
 package com.intellij.ide.plugins;
 
 import com.intellij.CommonBundle;
+import com.intellij.icons.AllIcons;
+import com.intellij.ide.DataManager;
 import com.intellij.ide.startup.StartupActionScriptManager;
-import com.intellij.openapi.actionSystem.*;
-import com.intellij.openapi.actionSystem.ex.ComboBoxAction;
-import com.intellij.openapi.fileChooser.FileChooser;
+import com.intellij.openapi.actionSystem.ActionGroup;
+import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.actionSystem.DefaultActionGroup;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
-import com.intellij.openapi.project.DumbAware;
+import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.updateSettings.impl.PluginDownloader;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.ui.IdeBorderFactory;
-import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.util.io.ZipUtil;
 import com.intellij.util.ui.StatusText;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginId;
 import consulo.fileTypes.ArchiveFileType;
-import consulo.ide.plugins.AvailablePluginsDialog;
+import consulo.ide.plugins.PluginsPanel;
 import consulo.plugins.internal.PluginsLoader;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.fileChooser.FileChooser;
 import consulo.util.collection.ArrayUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
 import java.util.*;
+import java.util.function.Consumer;
 
 /**
  * User: anna
  */
 public class InstalledPluginsManagerMain extends PluginManagerMain {
+  private class InstallPluginFromDiskAction extends DumbAwareAction {
+    private InstallPluginFromDiskAction() {
+      super("Install plugin from disk...", null, AllIcons.Actions.Install);
+    }
 
-  public InstalledPluginsManagerMain(PluginManagerUISettings uiSettings) {
-    super(uiSettings);
-    init();
-    myActionsPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
-
-    final JButton viewAvailablePlugins = new JButton("View available plugins...");
-    viewAvailablePlugins.setMnemonic('v');
-    viewAvailablePlugins.addActionListener(new BrowseRepoListener());
-    myActionsPanel.add(viewAvailablePlugins);
-
-    final JButton installPluginFromFileSystem = new JButton("Install plugin from disk...");
-    installPluginFromFileSystem.setMnemonic('d');
-    installPluginFromFileSystem.addActionListener(e -> {
+    @RequiredUIAccess
+    @Override
+    public void actionPerformed(@Nonnull AnActionEvent e) {
       final FileChooserDescriptor descriptor = new FileChooserDescriptor(false, false, true, true, false, false) {
         @RequiredUIAccess
         @Override
@@ -80,7 +74,8 @@ public class InstalledPluginsManagerMain extends PluginManagerMain {
       };
       descriptor.setTitle("Choose Plugin File");
       descriptor.setDescription("JAR and ZIP archives are accepted");
-      FileChooser.chooseFile(descriptor, null, myActionsPanel, null, virtualFile -> {
+
+      FileChooser.chooseFile(descriptor, null, getMainPanel(), null).doWhenDone(virtualFile -> {
         final File file = VfsUtilCore.virtualToIoFile(virtualFile);
         try {
           final PluginDescriptor pluginDescriptor = loadDescriptionFromJar(file);
@@ -106,22 +101,59 @@ public class InstalledPluginsManagerMain extends PluginManagerMain {
             setRequireShutdown(true);
           }
           else {
-            Messages.showInfoMessage(myActionsPanel, "Plugin " + pluginDescriptor.getName() + " was already installed", CommonBundle.getWarningTitle());
+            Messages.showInfoMessage(getMainPanel(), "Plugin " + pluginDescriptor.getName() + " was already installed", CommonBundle.getWarningTitle());
           }
         }
         catch (IOException ex) {
           Messages.showErrorDialog(ex.getMessage(), CommonBundle.getErrorTitle());
         }
       });
-    });
-    myActionsPanel.add(installPluginFromFileSystem);
+    }
+  }
 
+  public InstalledPluginsManagerMain() {
+    super();
+    init();
 
     final StatusText emptyText = myPluginTable.getEmptyText();
     emptyText.setText("Nothing to show.");
     emptyText.appendText(" Click ");
     emptyText.appendText("View available plugins...", SimpleTextAttributes.LINK_ATTRIBUTES, new BrowseRepoListener());
     emptyText.appendText(" to view available plugins.");
+  }
+
+  @Override
+  protected void addCustomFilters(Consumer<JComponent> adder) {
+    LabelPopup showPopupLabel = new LabelPopup("Show:", labelPopup -> createShowGroupPopup(labelPopup));
+
+    adder.accept(showPopupLabel);
+
+    updateShowPopupText(showPopupLabel);
+  }
+
+  private void updateShowPopupText(LabelPopup labelPopup) {
+    labelPopup.setPrefixedText(((InstalledPluginsTableModel)myPluginsModel).getEnabledFilter());
+  }
+
+  private DefaultActionGroup createShowGroupPopup(LabelPopup labelPopup) {
+    final DefaultActionGroup gr = new DefaultActionGroup();
+    for (final String enabledValue : InstalledPluginsTableModel.ENABLED_VALUES) {
+      gr.addAction(new DumbAwareAction(enabledValue) {
+        @RequiredUIAccess
+        @Override
+        public void actionPerformed(@Nonnull AnActionEvent e) {
+          final PluginDescriptor[] selection = myPluginTable.getSelectedObjects();
+          final String filter = myFilter.getFilter().toLowerCase(Locale.ROOT);
+          ((InstalledPluginsTableModel)myPluginsModel).setEnabledFilter(enabledValue, filter);
+          if (selection != null) {
+            select(selection);
+          }
+
+          updateShowPopupText(labelPopup);
+        }
+      });
+    }
+    return gr;
   }
 
   @Nullable
@@ -181,7 +213,8 @@ public class InstalledPluginsManagerMain extends PluginManagerMain {
                        ". Enable " +
                        disabledPluginsMessage.trim() +
                        "?";
-      if (Messages.showOkCancelDialog(myActionsPanel, message, CommonBundle.getWarningTitle(), Messages.getWarningIcon()) == Messages.OK) {
+
+      if (Messages.showOkCancelDialog(getMainPanel(), message, CommonBundle.getWarningTitle(), Messages.getWarningIcon()) == Messages.OK) {
         ((InstalledPluginsTableModel)myPluginsModel).enableRows(dependencies.toArray(new PluginDescriptor[dependencies.size()]), Boolean.TRUE);
       }
     }
@@ -192,60 +225,40 @@ public class InstalledPluginsManagerMain extends PluginManagerMain {
   }
 
 
+  @Nonnull
   @Override
-  protected JScrollPane createTable() {
+  protected PluginTable createTable() {
     myPluginsModel = new InstalledPluginsTableModel();
-    myPluginTable = new PluginTable(myPluginsModel);
-    myPluginTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
-    JScrollPane installedScrollPane = ScrollPaneFactory.createScrollPane(myPluginTable, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-    myPluginTable.registerKeyboardAction(e -> {
+    PluginTable table = new PluginTable(myPluginsModel);
+    table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+    table.registerKeyboardAction(e -> {
       final int column = InstalledPluginsTableModel.getCheckboxColumn();
-      final int[] selectedRows = myPluginTable.getSelectedRows();
+      final int[] selectedRows = table.getSelectedRows();
       boolean currentlyMarked = true;
       for (final int selectedRow : selectedRows) {
-        if (selectedRow < 0 || !myPluginTable.isCellEditable(selectedRow, column)) {
+        if (selectedRow < 0 || !table.isCellEditable(selectedRow, column)) {
           return;
         }
-        final Boolean enabled = (Boolean)myPluginTable.getValueAt(selectedRow, column);
+        final Boolean enabled = (Boolean)table.getValueAt(selectedRow, column);
         currentlyMarked &= enabled == null || enabled;
       }
       final PluginDescriptor[] selected = new PluginDescriptor[selectedRows.length];
       for (int i = 0, selectedLength = selected.length; i < selectedLength; i++) {
-        selected[i] = myPluginsModel.getObjectAt(myPluginTable.convertRowIndexToModel(selectedRows[i]));
+        selected[i] = myPluginsModel.getObjectAt(table.convertRowIndexToModel(selectedRows[i]));
       }
       ((InstalledPluginsTableModel)myPluginsModel).enableRows(selected, currentlyMarked ? Boolean.FALSE : Boolean.TRUE);
-      myPluginTable.repaint();
+      table.repaint();
     }, KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, 0), JComponent.WHEN_FOCUSED);
-    myPluginTable.setExpandableItemsEnabled(false);
-    return installedScrollPane;
+    table.setExpandableItemsEnabled(false);
+    return table;
   }
 
   @Override
-  protected PluginManagerMain getAvailable() {
-    return this;
-  }
-
-  @Override
-  protected PluginManagerMain getInstalled() {
-    return this;
-  }
-
-  @Override
-  protected ActionGroup getActionGroup(boolean inToolbar) {
+  public ActionGroup getActionGroup() {
     final DefaultActionGroup actionGroup = new DefaultActionGroup();
-    if (inToolbar) {
-      //actionGroup.add(new SortByStatusAction("Sort by Status"));
-      actionGroup.add(new MyFilterEnabledAction());
-      //actionGroup.add(new MyFilterBundleAction());
-    }
-    else {
-      actionGroup.add(new RefreshAction());
-      actionGroup.addAction(createSortersGroup());
-      actionGroup.add(AnSeparator.getInstance());
-      actionGroup.add(new InstallPluginAction(getAvailable(), getInstalled()));
-      actionGroup.add(new UninstallPluginAction(this, myPluginTable));
-    }
+    actionGroup.addAction(new RefreshAction());
+    actionGroup.addAction(new InstallPluginFromDiskAction());
     return actionGroup;
   }
 
@@ -264,7 +277,7 @@ public class InstalledPluginsManagerMain extends PluginManagerMain {
         return true;
       }
     }
-    final List<String> disabledPlugins = PluginManagerCore.getDisabledPlugins();
+    final List<String> disabledPlugins = consulo.container.plugin.PluginManager.getDisabledPlugins();
     for (Map.Entry<PluginId, Boolean> entry : ((InstalledPluginsTableModel)myPluginsModel).getEnabledMap().entrySet()) {
       final Boolean enabled = entry.getValue();
       if (enabled != null && !enabled && !disabledPlugins.contains(entry.getKey().toString())) {
@@ -287,7 +300,7 @@ public class InstalledPluginsManagerMain extends PluginManagerMain {
     for (PluginDescriptor descriptor : myPluginsModel.filtered) {
       descriptor.setEnabled(((InstalledPluginsTableModel)myPluginsModel).isEnabled(descriptor.getPluginId()));
     }
-    
+
     final ArrayList<String> ids = new ArrayList<>();
     for (Map.Entry<PluginId, Boolean> entry : ((InstalledPluginsTableModel)myPluginsModel).getEnabledMap().entrySet()) {
       final Boolean value = entry.getValue();
@@ -321,74 +334,14 @@ public class InstalledPluginsManagerMain extends PluginManagerMain {
     return super.canApply();
   }
 
-  private class MyFilterEnabledAction extends ComboBoxAction implements DumbAware {
-
-    @RequiredUIAccess
-    @Override
-    public void update(@Nonnull AnActionEvent e) {
-      super.update(e);
-      e.getPresentation().setText(((InstalledPluginsTableModel)myPluginsModel).getEnabledFilter());
-    }
-
-    @Nonnull
-    @Override
-    public DefaultActionGroup createPopupActionGroup(JComponent component) {
-      final DefaultActionGroup gr = new DefaultActionGroup();
-      for (final String enabledValue : InstalledPluginsTableModel.ENABLED_VALUES) {
-        gr.add(new AnAction(enabledValue) {
-          @RequiredUIAccess
-          @Override
-          public void actionPerformed(@Nonnull AnActionEvent e) {
-            final PluginDescriptor[] selection = myPluginTable.getSelectedObjects();
-            final String filter = myFilter.getFilter().toLowerCase();
-            ((InstalledPluginsTableModel)myPluginsModel).setEnabledFilter(enabledValue, filter);
-            if (selection != null) {
-              select(selection);
-            }
-          }
-        });
-      }
-      return gr;
-    }
-
-    @Nonnull
-    @Override
-    public JComponent createCustomComponent(Presentation presentation) {
-      final JComponent component = super.createCustomComponent(presentation);
-      final JPanel panel = new JPanel(new BorderLayout());
-      panel.setOpaque(false);
-      panel.add(component, BorderLayout.CENTER);
-      final JLabel comp = new JLabel("Show:");
-      comp.setIconTextGap(0);
-      comp.setHorizontalTextPosition(SwingConstants.RIGHT);
-      comp.setVerticalTextPosition(SwingConstants.CENTER);
-      comp.setAlignmentX(Component.RIGHT_ALIGNMENT);
-      panel.add(comp, BorderLayout.WEST);
-      panel.setBorder(IdeBorderFactory.createEmptyBorder(0, 2, 0, 0));
-      return panel;
-    }
-  }
-
   private class BrowseRepoListener implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
-      final PluginManagerConfigurable configurable = createAvailableConfigurable();
+      PluginsPanel pluginsPanel = DataManager.getInstance().getDataContext(getMainPanel()).getData(PluginsPanel.KEY);
 
-      new AvailablePluginsDialog(myActionsPanel, configurable, myFilter).show();
-    }
-
-    private PluginManagerConfigurable createAvailableConfigurable() {
-      return new PluginManagerConfigurable(PluginManagerUISettings.getInstance(), true) {
-        @Override
-        protected PluginManagerMain createPanel() {
-          return new AvailablePluginsManagerMain(InstalledPluginsManagerMain.this, myUISettings);
-        }
-
-        @Override
-        public String getDisplayName() {
-          return "Available Plugins";
-        }
-      };
+      if (pluginsPanel != null) {
+        pluginsPanel.select(getAvailable());
+      }
     }
   }
 }

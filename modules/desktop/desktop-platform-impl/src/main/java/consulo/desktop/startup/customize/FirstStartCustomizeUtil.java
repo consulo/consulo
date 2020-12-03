@@ -35,7 +35,6 @@ import consulo.logging.Logger;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
-import consulo.util.lang.StringUtil;
 import org.jdom.Document;
 import org.jdom.Element;
 
@@ -93,9 +92,6 @@ public class FirstStartCustomizeUtil {
         List<PluginDescriptor> ideaPluginDescriptors = RepositoryHelper.loadOnlyPluginsFromRepository(null, UpdateSettings.getInstance().getChannel());
         for (PluginDescriptor pluginDescriptor : ideaPluginDescriptors) {
           String category = pluginDescriptor.getCategory();
-          if (StringUtil.isEmptyOrSpaces(category)) {
-            category = "Uncategorized";
-          }
           pluginDescriptors.putValue(category, pluginDescriptor);
         }
         loadPredefinedTemplateSets(predefinedTemplateSets);

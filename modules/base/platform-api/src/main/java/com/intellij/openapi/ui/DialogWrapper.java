@@ -59,9 +59,9 @@ import consulo.disposer.Disposer;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.platform.base.localize.CommonLocalize;
-import consulo.ui.decorator.SwingUIDecorator;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.decorator.SwingUIDecorator;
 import consulo.util.concurrent.AsyncResult;
 import org.intellij.lang.annotations.MagicConstant;
 import org.jetbrains.annotations.NonNls;
@@ -730,9 +730,9 @@ public abstract class DialogWrapper {
           super.updateUI();
 
           Action a = getAction();
-          if(a instanceof LocalizeAction) {
+          if (a instanceof LocalizeAction) {
             ((LocalizeAction)a).updateName();
-            
+
             updateMnemonic(this, this.getText(), a);
           }
         }
@@ -777,7 +777,7 @@ public abstract class DialogWrapper {
   }
 
   private void updateMnemonic(JButton button, String text, Action action) {
-    if(text == null) {
+    if (text == null) {
       return;
     }
 
@@ -1016,6 +1016,10 @@ public abstract class DialogWrapper {
     if (button != null) {
       button.doClick();
     }
+  }
+
+  public void doOKActionPublic() {
+    doOKAction();
   }
 
   /**

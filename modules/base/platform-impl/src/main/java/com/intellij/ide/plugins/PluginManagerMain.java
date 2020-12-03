@@ -18,7 +18,6 @@ package com.intellij.ide.plugins;
 import com.intellij.CommonBundle;
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.BrowserUtil;
-import com.intellij.ide.DataManager;
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.plugins.sorters.SortByStatusAction;
 import com.intellij.ide.ui.search.SearchUtil;
@@ -26,45 +25,42 @@ import com.intellij.ide.ui.search.SearchableOptionsRegistrar;
 import com.intellij.notification.*;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.application.Application;
-import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ApplicationNamesInfo;
 import com.intellij.openapi.application.ex.ApplicationEx;
-import consulo.awt.TargetAWT;
-import consulo.disposer.Disposable;
-import consulo.logging.Logger;
 import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
-import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.*;
 import com.intellij.ui.border.CustomLineBorder;
-import com.intellij.ui.components.JBLabel;
-import com.intellij.ui.components.JBScrollPane;
+import com.intellij.ui.components.panels.HorizontalLayout;
+import com.intellij.ui.components.panels.Wrapper;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
+import com.intellij.util.ui.components.BorderLayoutPanel;
 import com.intellij.util.ui.update.UiNotifyConnector;
 import com.intellij.xml.util.XmlStringUtil;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginIds;
+import consulo.disposer.Disposable;
 import consulo.ide.updateSettings.UpdateSettings;
+import consulo.logging.Logger;
 import consulo.ui.annotation.RequiredUIAccess;
-import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
-import javax.swing.border.Border;
-import javax.swing.event.*;
-import javax.swing.plaf.BorderUIResource;
+import javax.swing.event.HyperlinkEvent;
+import javax.swing.event.HyperlinkListener;
+import javax.swing.event.TableModelListener;
 import javax.swing.text.html.HTMLDocument;
 import javax.swing.text.html.HTMLFrameHyperlinkEvent;
 import java.awt.*;
-import java.awt.event.MouseEvent;
 import java.net.URL;
 import java.util.List;
 import java.util.*;
+import java.util.function.Consumer;
 
 import static com.intellij.openapi.util.text.StringUtil.isEmptyOrSpaces;
 
@@ -75,122 +71,113 @@ import static com.intellij.openapi.util.text.StringUtil.isEmptyOrSpaces;
 public abstract class PluginManagerMain implements Disposable {
   public static Logger LOG = Logger.getInstance(PluginManagerMain.class);
 
-  @NonNls
   private static final String TEXT_SUFFIX = "</body></html>";
-
-  @NonNls
   private static final String HTML_PREFIX = "<a href=\"";
-  @NonNls
   private static final String HTML_SUFFIX = "</a>";
 
   private boolean requireShutdown = false;
 
-  private JPanel myToolbarPanel;
-  private JPanel main;
+  private Wrapper myRoot;
 
   private JEditorPane myDescriptionTextArea;
 
-  private JPanel myTablePanel;
-  protected JPanel myActionsPanel;
-  private JPanel myHeader;
   private PluginHeaderPanel myPluginHeaderPanel;
-  private JPanel myInfoPanel;
-  private JBScrollPane myScrollPane;
-  protected JBLabel myPanelDescription;
-  private JBScrollPane myPanel;
 
-
+  protected JPanel myTablePanel;
   protected PluginTableModel myPluginsModel;
   protected PluginTable myPluginTable;
 
-  private ActionToolbar myActionToolbar;
-
   protected final MyPluginsFilter myFilter = new MyPluginsFilter();
-  protected PluginManagerUISettings myUISettings;
   private boolean myDisposed = false;
   private boolean myBusy = false;
 
-  public PluginManagerMain(PluginManagerUISettings uiSettings) {
-    myUISettings = uiSettings;
+  private InstalledPluginsManagerMain myInstalledTab;
+  private AvailablePluginsManagerMain myAvailableTab;
+
+  public PluginManagerMain() {
   }
 
   protected void init() {
-    GuiUtils.replaceJSplitPaneWithIDEASplitter(main);
+    myRoot = new Wrapper();
+
+    OnePixelSplitter splitter = new OnePixelSplitter(false, 0.5f);
+    myRoot.setContent(splitter);
+
+    myDescriptionTextArea = new JEditorPane("text/html", "");
     myDescriptionTextArea.setEditorKit(UIUtil.getHTMLEditorKit());
     myDescriptionTextArea.setEditable(false);
     myDescriptionTextArea.addHyperlinkListener(new MyHyperlinkListener());
 
-    JScrollPane installedScrollPane = createTable();
     myPluginHeaderPanel = new PluginHeaderPanel(this, getPluginTable());
-    myHeader.setBackground(UIUtil.getTextFieldBackground());
+
+    JPanel headerPanel = new JPanel(new BorderLayout());
+    headerPanel.setBackground(UIUtil.getTextFieldBackground());
+
     myPluginHeaderPanel.getPanel().setBackground(UIUtil.getTextFieldBackground());
     myPluginHeaderPanel.getPanel().setOpaque(true);
+    myPluginHeaderPanel.getPanel().setBorder(JBUI.Borders.empty(5));
 
-    myHeader.add(myPluginHeaderPanel.getPanel(), BorderLayout.CENTER);
+    headerPanel.add(myPluginHeaderPanel.getPanel(), BorderLayout.NORTH);
+    headerPanel.add(myDescriptionTextArea, BorderLayout.CENTER);
+    splitter.setSecondComponent(ScrollPaneFactory.createScrollPane(headerPanel, true));
+
+    myTablePanel = new JPanel(new BorderLayout());
+    splitter.setFirstComponent(myTablePanel);
+
+    PluginTable table = createTable();
+    myPluginTable = table;
+
     installTableActions();
-
-    myTablePanel.add(installedScrollPane, BorderLayout.CENTER);
-    UIUtil.applyStyle(UIUtil.ComponentStyle.SMALL, myPanelDescription);
-    myPanelDescription.setBorder(JBUI.Borders.empty(0, 7, 0, 0));
+    myTablePanel.add(ScrollPaneFactory.createScrollPane(table, true), BorderLayout.CENTER);
 
     final JPanel header = new JPanel(new BorderLayout()) {
       @Override
       protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        final Color bg = UIUtil.getTableBackground(false);
-        ((Graphics2D)g).setPaint(new GradientPaint(0, 0, ColorUtil.shift(bg, 1.4), 0, getHeight(), ColorUtil.shift(bg, 0.9)));
+        g.setColor(UIUtil.getPanelBackground());
         g.fillRect(0, 0, getWidth(), getHeight());
       }
     };
-    header.setBorder(new CustomLineBorder(JBUI.scale(1), JBUI.scale(1), 0, JBUI.scale(1)));
-    final JLabel mySortLabel = new JLabel();
-    mySortLabel.setForeground(UIUtil.getLabelDisabledForeground());
-    mySortLabel.setBorder(JBUI.Borders.empty(1, 1, 1, 5));
-    mySortLabel.setIcon(TargetAWT.to(AllIcons.General.SplitDown));
-    mySortLabel.setHorizontalTextPosition(SwingConstants.LEADING);
-    header.add(mySortLabel, BorderLayout.EAST);
+    header.setBorder(new CustomLineBorder(0, 0, JBUI.scale(1), 0));
+
+    LabelPopup sortLabel = new LabelPopup("Sort by:", labelPopup -> createSortersGroup());
+
+    header.add(myFilter, BorderLayout.CENTER);
+    JPanel rightHelpPanel = new JPanel(new HorizontalLayout(JBUI.scale(5)));
+    rightHelpPanel.add(sortLabel);
+    addCustomFilters(rightHelpPanel::add);
+    
+    header.add(new BorderLayoutPanel().addToRight(rightHelpPanel), BorderLayout.SOUTH);
+
     myTablePanel.add(header, BorderLayout.NORTH);
-    myToolbarPanel.setLayout(new BorderLayout());
-    myActionToolbar = ActionManager.getInstance().createActionToolbar("PluginManager", getActionGroup(true), true);
-    final JComponent component = myActionToolbar.getComponent();
-    myToolbarPanel.add(component, BorderLayout.CENTER);
-    myToolbarPanel.add(myFilter, BorderLayout.WEST);
-    new ClickListener() {
-      @Override
-      public boolean onClick(@Nonnull MouseEvent event, int clickCount) {
-        JBPopupFactory.getInstance().createActionGroupPopup("Sort by:", createSortersGroup(), DataManager.getInstance().getDataContext(myPluginTable),
-                                                            JBPopupFactory.ActionSelectionAid.SPEEDSEARCH, true).showUnderneathOf(mySortLabel);
-        return true;
+
+    final TableModelListener modelListener = e -> {
+      String text = "";
+      if (myPluginsModel.isSortByStatus()) {
+        text += "status,";
       }
-    }.installOn(mySortLabel);
-    final TableModelListener modelListener = new TableModelListener() {
-      @Override
-      public void tableChanged(TableModelEvent e) {
-        String text = "Sort by:";
-        if (myPluginsModel.isSortByStatus()) {
-          text += " status,";
-        }
-        if (myPluginsModel.isSortByRating()) {
-          text += " rating,";
-        }
-        if (myPluginsModel.isSortByDownloads()) {
-          text += " downloads,";
-        }
-        if (myPluginsModel.isSortByUpdated()) {
-          text += " updated,";
-        }
-        text += " name";
-        mySortLabel.setText(text);
+      if (myPluginsModel.isSortByRating()) {
+        text += "rating,";
       }
+      if (myPluginsModel.isSortByDownloads()) {
+        text += "downloads,";
+      }
+      if (myPluginsModel.isSortByUpdated()) {
+        text += "updated,";
+      }
+      text += "name";
+      sortLabel.setPrefixedText(text);
     };
     myPluginTable.getModel().addTableModelListener(modelListener);
     modelListener.tableChanged(null);
-
-    Border border = new BorderUIResource.LineBorderUIResource(new JBColor(Gray._220, Gray._55), JBUI.scale(1));
-    myInfoPanel.setBorder(border);
   }
 
-  protected abstract JScrollPane createTable();
+  protected void addCustomFilters(Consumer<JComponent> adder) {
+
+  }
+
+  @Nonnull
+  protected abstract PluginTable createTable();
 
   @Override
   public void dispose() {
@@ -206,12 +193,9 @@ public abstract class PluginManagerMain implements Disposable {
   }
 
   public void reset() {
-    UiNotifyConnector.doWhenFirstShown(getPluginTable(), new Runnable() {
-      @Override
-      public void run() {
-        requireShutdown = false;
-        TableUtil.ensureSelectionExists(getPluginTable());
-      }
+    UiNotifyConnector.doWhenFirstShown(getPluginTable(), () -> {
+      requireShutdown = false;
+      TableUtil.ensureSelectionExists(getPluginTable());
     });
   }
 
@@ -219,18 +203,12 @@ public abstract class PluginManagerMain implements Disposable {
     return myPluginTable;
   }
 
-
   public PluginTableModel getPluginsModel() {
     return myPluginsModel;
   }
 
   protected void installTableActions() {
-    myPluginTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
-      @Override
-      public void valueChanged(ListSelectionEvent e) {
-        refresh();
-      }
-    });
+    myPluginTable.getSelectionModel().addListSelectionListener(e -> refresh());
 
     //PopupHandler.installUnknownPopupHandler(pluginTable, getActionGroup(false), ActionManager.getInstance());
 
@@ -242,10 +220,10 @@ public abstract class PluginManagerMain implements Disposable {
     final PluginDescriptor[] descriptors = myPluginTable.getSelectedObjects();
     pluginInfoUpdate(descriptors != null && descriptors.length == 1 ? descriptors[0] : null, myFilter.getFilter(), myDescriptionTextArea, myPluginHeaderPanel,
                      this);
-    myActionToolbar.updateActionsImmediately();
-    final JComponent parent = (JComponent)myHeader.getParent();
-    parent.revalidate();
-    parent.repaint();
+    //myActionToolbar.updateActionsImmediately();
+    //final JComponent parent = (JComponent)myHeader.getParent();
+    //parent.revalidate();
+    //parent.repaint();
   }
 
   public void setRequireShutdown(boolean val) {
@@ -265,14 +243,28 @@ public abstract class PluginManagerMain implements Disposable {
     }
   }
 
-  protected abstract ActionGroup getActionGroup(boolean inToolbar);
+  public abstract ActionGroup getActionGroup();
 
-  protected abstract PluginManagerMain getAvailable();
+  @Nonnull
+  protected PluginManagerMain getAvailable() {
+    return Objects.requireNonNull(myAvailableTab);
+  }
 
-  protected abstract PluginManagerMain getInstalled();
+  @Nonnull
+  protected PluginManagerMain getInstalled() {
+    return Objects.requireNonNull(myInstalledTab);
+  }
+
+  public void setAvailableTab(AvailablePluginsManagerMain availableTab) {
+    myAvailableTab = availableTab;
+  }
+
+  public void setInstalledTab(InstalledPluginsManagerMain installedTab) {
+    myInstalledTab = installedTab;
+  }
 
   public JPanel getMainPanel() {
-    return main;
+    return myRoot;
   }
 
   /**
@@ -282,7 +274,7 @@ public abstract class PluginManagerMain implements Disposable {
   protected void loadPluginsFromHostInBackground() {
     setDownloadStatus(true);
 
-    ApplicationManager.getApplication().executeOnPooledThread(() -> {
+    Application.get().executeOnPooledThread(() -> {
       Ref<List<PluginDescriptor>> ref = Ref.create();
       List<String> errorMessages = new ArrayList<>();
 
@@ -512,7 +504,7 @@ public abstract class PluginManagerMain implements Disposable {
         return true;
       }
       final String category = descriptor.getCategory();
-      if (category != null && isAccepted(search, filter, category)) {
+      if (isAccepted(search, filter, category)) {
         return true;
       }
       final String changeNotes = descriptor.getChangeNotes();

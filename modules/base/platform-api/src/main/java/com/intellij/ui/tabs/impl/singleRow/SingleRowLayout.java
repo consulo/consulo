@@ -205,10 +205,6 @@ public class SingleRowLayout extends TabLayout {
     data.hToolbar = selectedToolbar != null && myTabs.myHorizontalSide && !selectedToolbar.isEmpty() ? selectedToolbar : null;
     data.vToolbar = selectedToolbar != null && !myTabs.myHorizontalSide && !selectedToolbar.isEmpty() ? selectedToolbar : null;
     data.toFitLength = getStrategy().getToFitLength(data);
-
-    if (myTabs.isGhostsAlwaysVisible()) {
-      data.toFitLength -= myTabs.getGhostTabLength() * 2 + (myTabs.getInterTabSpaceLength() * 2);
-    }
   }
 
   protected void updateMoreIconVisibility(SingleRowPassInfo data) {
