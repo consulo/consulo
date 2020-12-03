@@ -214,6 +214,10 @@ public class ChangesViewContentManager implements ChangesViewContentI {
   @Override
   @Nullable
   public <T> T getActiveComponent(final Class<T> aClass) {
+    if(myContentManager == null) {
+      return null;
+    }
+    
     final Content content = myContentManager.getSelectedContent();
     if (content != null && aClass.isInstance(content.getComponent())) {
       //noinspection unchecked
