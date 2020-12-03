@@ -17,6 +17,7 @@ package consulo.ui.desktop.internal;
 
 import consulo.awt.impl.FromSwingComponentWrapper;
 import consulo.disposer.Disposable;
+import consulo.localize.LocalizeValue;
 import consulo.ui.Button;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -33,8 +34,20 @@ import javax.swing.*;
  */
 class DesktopButtonImpl extends SwingComponentDelegate<JButton> implements Button {
   class MyButton extends JButton implements FromSwingComponentWrapper {
-    MyButton(String text) {
-      super(text);
+    private final LocalizeValue myTextValue;
+
+    MyButton(LocalizeValue textValue) {
+      super("");
+      myTextValue = textValue;
+
+      updateText();
+    }
+
+    @Override
+    public void updateUI() {
+      super.updateUI();
+
+      updateText();
     }
 
     @Nonnull
@@ -42,9 +55,18 @@ class DesktopButtonImpl extends SwingComponentDelegate<JButton> implements Butto
     public Component toUIComponent() {
       return DesktopButtonImpl.this;
     }
+
+    private void updateText() {
+      // first call from super constructor
+      if (myTextValue == null) {
+        return;
+      }
+
+      setText(myTextValue.getValue());
+    }
   }
 
-  public DesktopButtonImpl(String text) {
+  public DesktopButtonImpl(LocalizeValue text) {
     initialize(new MyButton(text));
 
     toAWTComponent().addActionListener(e -> getListenerDispatcher(ClickListener.class).clicked(new ClickEvent(this)));

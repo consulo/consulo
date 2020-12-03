@@ -132,7 +132,9 @@ public abstract class UIInternal {
 
   public abstract RadioButton _Components_radioButton(String text, boolean selected);
 
-  public abstract Button _Components_button(String text);
+  public Button _Components_button(LocalizeValue text) {
+    throw new UnsupportedOperationException();
+  }
 
   public abstract Hyperlink _Components_hyperlink(String text);
 

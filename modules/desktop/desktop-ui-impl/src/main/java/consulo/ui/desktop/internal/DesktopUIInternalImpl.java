@@ -342,7 +342,7 @@ public class DesktopUIInternalImpl extends UIInternal {
   }
 
   @Override
-  public Button _Components_button(String text) {
+  public Button _Components_button(LocalizeValue text) {
     return new DesktopButtonImpl(text);
   }
 
