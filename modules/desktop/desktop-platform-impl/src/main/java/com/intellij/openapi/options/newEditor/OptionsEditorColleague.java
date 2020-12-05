@@ -20,7 +20,7 @@ import consulo.util.concurrent.AsyncResult;
 
 import javax.annotation.Nullable;
 
-interface OptionsEditorColleague {
+public interface OptionsEditorColleague {
   default AsyncResult<Void> onSelected(@Nullable Configurable configurable, final Configurable oldConfigurable) {
     return AsyncResult.resolved();
   }

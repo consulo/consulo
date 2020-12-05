@@ -30,6 +30,11 @@ public interface LocalizeValue extends Supplier<String> {
   }
 
   @Nonnull
+  static LocalizeValue localizeTODO(@Nonnull String text) {
+    return of(text);
+  }
+
+  @Nonnull
   static LocalizeValue of(@Nonnull String text) {
     if(text.length() == 0) {
       return empty();

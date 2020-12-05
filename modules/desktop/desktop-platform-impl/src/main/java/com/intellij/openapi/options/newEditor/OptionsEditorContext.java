@@ -27,7 +27,7 @@ import java.util.*;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.function.Function;
 
-class OptionsEditorContext {
+public class OptionsEditorContext {
   ElementFilter.Active myFilter;
 
   CopyOnWriteArraySet<OptionsEditorColleague> myColleagues = new CopyOnWriteArraySet<>();

@@ -23,8 +23,11 @@ import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.Function;
+import consulo.annotation.DeprecationInfo;
 import consulo.disposer.Disposable;
+import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.platform.base.localize.UILocalize;
 import consulo.ui.PseudoComponent;
 import consulo.ui.TextBox;
 import consulo.ui.TextBoxWithExtensions;
@@ -39,7 +42,7 @@ import javax.annotation.Nullable;
 
 /**
  * Builder for {@link TextBox} with browse button. On click show file chooser dialog
- *
+ * <p>
  * If disposable is not set used {@link PlatformDataKeys#UI_DISPOSABLE)
  *
  * @author VISTALL
@@ -60,17 +63,17 @@ public final class FileChooserTextBoxBuilder {
       mySelectedFileMapper = builder.mySelectedFileMapper;
 
       myTextBox = TextBoxWithExtensions.create();
-      if(!builder.myDisableCompletion) {
+      if (!builder.myDisableCompletion) {
         FileChooserFactory.getInstance().installFileCompletion(myTextBox, myFileChooserDescriptor, true, builder.myDisposable);
       }
 
       myTextBox.setExtensions(new TextBoxWithExtensions.Extension(false, PlatformIconGroup.nodesFolderOpened(), null, new ClickListener() {
         @RequiredUIAccess
         @Override
-        public void clicked(ClickEvent e) {
+        public void clicked(@Nonnull ClickEvent e) {
           FileChooserDescriptor fileChooserDescriptor = (FileChooserDescriptor)myFileChooserDescriptor.clone();
-          fileChooserDescriptor.setTitle(builder.myDialogTitle);
-          fileChooserDescriptor.setDescription(builder.myDialogDescription);
+          fileChooserDescriptor.withTitleValue(builder.myDialogTitle);
+          fileChooserDescriptor.withDescriptionValue(builder.myDialogDescription);
 
           String text = myAccessor.getValue(myTextBox);
 
@@ -113,9 +116,9 @@ public final class FileChooserTextBoxBuilder {
 
   private final Project myProject;
 
-  private String myDialogTitle = "Choose File";
+  private LocalizeValue myDialogTitle = UILocalize.fileChooserDefaultTitle();
 
-  private String myDialogDescription = "Select file";
+  private LocalizeValue myDialogDescription = LocalizeValue.empty();
 
   private FileChooserDescriptor myFileChooserDescriptor = new FileChooserDescriptor(true, false, false, false, false, false);
 
@@ -142,15 +145,29 @@ public final class FileChooserTextBoxBuilder {
   };
 
   @Nonnull
-  public FileChooserTextBoxBuilder dialogTitle(@Nonnull String dialogTitle) {
+  public FileChooserTextBoxBuilder dialogTitle(@Nonnull LocalizeValue dialogTitle) {
     myDialogTitle = dialogTitle;
     return this;
   }
 
   @Nonnull
-  public FileChooserTextBoxBuilder dialogDescription(@Nonnull String dialogDescription) {
+  @Deprecated
+  @DeprecationInfo("Use #dialogTitle(LocalizeValue)")
+  public FileChooserTextBoxBuilder dialogTitle(@Nonnull String dialogTitle) {
+    return dialogTitle(LocalizeValue.of(dialogTitle));
+  }
+
+  @Nonnull
+  public FileChooserTextBoxBuilder dialogDescription(@Nonnull LocalizeValue dialogDescription) {
     myDialogDescription = dialogDescription;
     return this;
+  }
+
+  @Nonnull
+  @Deprecated
+  @DeprecationInfo("Use #dialogDescription(LocalizeValue)")
+  public FileChooserTextBoxBuilder dialogDescription(@Nonnull String dialogDescription) {
+    return dialogTitle(LocalizeValue.of(dialogDescription));
   }
 
   @Nonnull

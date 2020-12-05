@@ -62,7 +62,7 @@ import java.util.List;
 import java.util.*;
 import java.util.function.BiConsumer;
 
-class OptionsTree implements Disposable, OptionsEditorColleague {
+public class OptionsTree implements Disposable, OptionsEditorColleague {
   private final Configurable[] myConfigurables;
   FilteringTreeBuilder myBuilder;
   private Root myRoot;

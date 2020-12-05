@@ -19,17 +19,19 @@ import com.intellij.icons.AllIcons;
 import com.intellij.openapi.fileTypes.FileTypeManager;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.Iconable;
-import consulo.util.dataholder.UserDataHolderBase;
 import com.intellij.openapi.vfs.VFileProperty;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.ui.UIBundle;
 import consulo.annotation.DeprecationInfo;
-import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.fileOperateDialog.FileOperateDialogProvider;
 import consulo.fileTypes.ArchiveFileType;
 import consulo.fileTypes.impl.VfsIconUtil;
+import consulo.localize.LocalizeValue;
+import consulo.platform.base.localize.UILocalize;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.fileOperateDialog.FileOperateDialogProvider;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
+import consulo.util.dataholder.UserDataHolderBase;
+import consulo.util.lang.StringUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -49,8 +51,10 @@ public class FileChooserDescriptor extends UserDataHolderBase implements Cloneab
   private final boolean myChooseJarContents;
   private final boolean myChooseMultiple;
 
-  private String myTitle = UIBundle.message("file.chooser.default.title");
-  private String myDescription;
+  @Nonnull
+  private LocalizeValue myTitleValue = UILocalize.fileChooserDefaultTitle();
+  @Nonnull
+  private LocalizeValue myDescriptionValue = LocalizeValue.empty();
 
   private boolean myHideIgnored = true;
   private final List<VirtualFile> myRoots = new ArrayList<>();
@@ -70,12 +74,7 @@ public class FileChooserDescriptor extends UserDataHolderBase implements Cloneab
    * @param chooseJarContents controls whether .jar file contents can be chosen
    * @param chooseMultiple    controls how many files can be chosen
    */
-  public FileChooserDescriptor(boolean chooseFiles,
-                               boolean chooseFolders,
-                               boolean chooseJars,
-                               boolean chooseJarsAsFiles,
-                               boolean chooseJarContents,
-                               boolean chooseMultiple) {
+  public FileChooserDescriptor(boolean chooseFiles, boolean chooseFolders, boolean chooseJars, boolean chooseJarsAsFiles, boolean chooseJarContents, boolean chooseMultiple) {
     myChooseFiles = chooseFiles;
     myChooseFolders = chooseFolders;
     myChooseJars = chooseJars;
@@ -86,8 +85,8 @@ public class FileChooserDescriptor extends UserDataHolderBase implements Cloneab
 
   public FileChooserDescriptor(@Nonnull FileChooserDescriptor d) {
     this(d.isChooseFiles(), d.isChooseFolders(), d.isChooseJars(), d.isChooseJarsAsFiles(), d.isChooseJarContents(), d.isChooseMultiple());
-    withTitle(d.getTitle());
-    withDescription(d.getDescription());
+    withTitleValue(d.getTitleValue());
+    withDescriptionValue(d.getDescriptionValue());
     withHideIgnored(d.isHideIgnored());
     withRoots(d.getRoots());
     withShowFileSystemRoots(d.isShowFileSystemRoots());
@@ -127,30 +126,68 @@ public class FileChooserDescriptor extends UserDataHolderBase implements Cloneab
     return isChooseMultiple();
   }
 
-  public String getTitle() {
-    return myTitle;
+  @Nonnull
+  public LocalizeValue getTitleValue() {
+    return myTitleValue;
   }
 
+  @Nullable
+  @Deprecated
+  @DeprecationInfo("See #getTitleValue()")
+  public String getTitle() {
+    return StringUtil.nullize(myTitleValue.getValue());
+  }
+
+  @Deprecated
+  @DeprecationInfo("Use #withTitleValue(LocalizeValue)")
   public void setTitle(String title) {
     withTitle(title);
   }
 
-  public FileChooserDescriptor withTitle(String title) {
-    myTitle = title;
+  @Nonnull
+  @Deprecated
+  @DeprecationInfo("Use #withTitleValue(LocalizeValue)")
+  public FileChooserDescriptor withTitle(@Nullable String title) {
+    myTitleValue = title == null ? LocalizeValue.empty() : LocalizeValue.of(title);
     return this;
   }
 
-  public String getDescription() {
-    return myDescription;
+  @Nonnull
+  public FileChooserDescriptor withTitleValue(@Nonnull LocalizeValue title) {
+    myTitleValue = title;
+    return this;
   }
 
+  @Deprecated
+  @DeprecationInfo("Use #withDescription(LocalizeValue)")
   public void setDescription(String description) {
     withDescription(description);
   }
 
-  public FileChooserDescriptor withDescription(String description) {
-    myDescription = description;
+  @Nonnull
+  @Deprecated
+  @DeprecationInfo("Use #withDescription(LocalizeValue)")
+  public FileChooserDescriptor withDescription(@Nullable String description) {
+    myDescriptionValue = description == null ? LocalizeValue.empty() : LocalizeValue.of(description);
     return this;
+  }
+
+  @Nonnull
+  public FileChooserDescriptor withDescriptionValue(@Nonnull LocalizeValue description) {
+    myDescriptionValue = description;
+    return this;
+  }
+
+  @Nullable
+  @Deprecated
+  @DeprecationInfo("See #getDescriptionValue()")
+  public String getDescription() {
+    return StringUtil.nullize(myDescriptionValue.get());
+  }
+
+  @Nonnull
+  public LocalizeValue getDescriptionValue() {
+    return myDescriptionValue;
   }
 
   public boolean isHideIgnored() {
@@ -166,6 +203,7 @@ public class FileChooserDescriptor extends UserDataHolderBase implements Cloneab
     return this;
   }
 
+  @Nonnull
   public List<VirtualFile> getRoots() {
     return Collections.unmodifiableList(myRoots);
   }
@@ -373,6 +411,6 @@ public class FileChooserDescriptor extends UserDataHolderBase implements Cloneab
 
   @Override
   public String toString() {
-    return "FileChooserDescriptor [" + myTitle + "]";
+    return "FileChooserDescriptor [" + myTitleValue + "]";
   }
 }

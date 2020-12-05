@@ -38,7 +38,6 @@ import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.openapi.options.*;
 import com.intellij.openapi.options.colors.*;
 import com.intellij.openapi.options.ex.Settings;
-import com.intellij.openapi.options.newEditor.OptionsEditor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.util.Comparing;
@@ -84,7 +83,7 @@ public class ColorAndFontOptions extends SearchableConfigurable.Parent.Abstract 
    * where is {@code myComponent} is a {@link JComponent} in a Swing hierarchy.
    * A specific color can be requested by the {@code search} text.
    *
-   * @param context a data context to find {@link OptionsEditor} or a parent for dialog
+   * @param context a data context to find {@link Settings} or a parent for dialog
    * @param search  a text to find on the found page
    * @param name    a name of a page to find via {@link #findSubConfigurable(String)}
    * @return {@code true} if a color was shown to edit, {@code false} if a requested page does not exist
@@ -102,7 +101,7 @@ public class ColorAndFontOptions extends SearchableConfigurable.Parent.Abstract 
    * where is {@code myComponent} is a {@link JComponent} in a Swing hierarchy.
    * A specific color can be requested by the {@code search} text.
    *
-   * @param context a data context to find {@link OptionsEditor} or a parent for dialog
+   * @param context a data context to find {@link Settings} or a parent for dialog
    * @param search  a text to find on the found page
    * @param type    a type of a page to find via {@link #findSubConfigurable(Class)}
    * @return {@code true} if a color was shown to edit, {@code false} if a requested page does not exist
