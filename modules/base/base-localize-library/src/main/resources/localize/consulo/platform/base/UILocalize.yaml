@@ -1,0 +1,368 @@
+color.panel.select.color.dialog.description:
+  text: Select Color
+color.panel.right.click.to.customize.tooltip.suffix:
+  text: Right-click to customize
+insert.file.path.to.text.action.name:
+  text: Insert Path
+order.entries.panel.export.column.name:
+  text: Export
+tree.view.expand.all.action.name:
+  text: Expand All
+tree.view.collapse.all.action.name:
+  text: Collapse All
+component.with.browse.button.browse.button.tooltip.text:
+  text: Click or press Alt-Enter
+there.is.no.help.for.this.dialog.error.message:
+  text: There is no help for this dialog
+no.help.available.dialog.title:
+  text: No Help Available
+invalid.user.input.dialog.title:
+  text: Input Error
+splitter.down.tooltip.text:
+  text: Down
+splitter.right.tooltip.text:
+  text: Right
+splitter.center.tooltip.text:
+  text: Center
+splitter.up.tooltip.text:
+  text: Up
+splitter.left.tooltip.text:
+  text: Left
+autoscroll.from.source.action.name:
+  text: Autoscroll from Source
+autoscroll.from.source.action.description:
+  text: Autoscroll from Source
+autoscroll.to.source.action.name:
+  text: Autoscroll to Source
+autoscroll.to.source.action.description:
+  text: Autoscroll to Source
+collapsible.panel.collapsed.state.tooltip.text:
+  text: Expand Panel
+collapsible.panel.expanded.state.tooltip.text:
+  text: Collapse Panel
+idea.blue.metal.theme.name:
+  text: beg blue
+replace.prompt.replace.button:
+  text: '&Replace'
+replace.prompt.skip.button:
+  text: '&Skip'
+replace.prompt.all.in.this.file.button:
+  text: All in This &File
+replace.prompt.all.files.action:
+  text: '&All Files'
+replace.prompt.all.button:
+  text: '&All'
+replace.prompt.replace.occurrence.label:
+  text: Do you want to replace this occurrence?
+search.popup.search.for.label:
+  text: 'Search for:'
+tabbed.pane.close.all.action.name:
+  text: Close All
+tabbed.pane.close.all.but.this.action.name:
+  text: Close All But This
+tabbed.pane.pin.tab.action.name:
+  text: Pin Tab
+tabbed.pane.pin.tab.action.description:
+  text: Pin tool window tab
+tabbed.pane.close.tab.action.name:
+  text: Close Tab
+tabbed.pane.close.all.tabs.but.this.action.name:
+  text: Close Other Tabs
+file.is.read.only.message.text:
+  text: File ''{0}'' is read-only.
+files.are.read.only.message.text:
+  text: Files {0} are read-only.
+error.dialog.title:
+  text: Error
+tool.window.name.commander:
+  text: Commander
+tool.window.name.messages:
+  text: Messages
+tool.window.name.project:
+  text: Project
+tool.window.name.structure:
+  text: Structure
+tool.window.name.favorites:
+  text: Favorites
+tool.window.name.ant.build:
+  text: Ant Build
+tool.window.name.debug:
+  text: Debug
+tool.window.name.run:
+  text: Run
+tool.window.name.find:
+  text: Find
+tool.window.name.cvs:
+  text: CVS
+tool.window.name.preview:
+  text: Preview
+tool.window.name.run.dashboard:
+  text: Run Dashboard
+tool.window.name.hierarchy:
+  text: Hierarchy
+tool.window.name.inspection:
+  text: Inspection
+tool.window.name.todo:
+  text: TODO
+tool.window.name.dependency.viewer:
+  text: Dependency Viewer
+tool.window.name.version.control:
+  text: Version Control
+tool.window.name.module.dependencies:
+  text: Module Dependencies
+tool.window.name.tasks:
+  text: Time Tracking
+tool.window.move.to.action.group.name:
+  text: Move to
+tool.window.move.to.top.action.name:
+  text: Top
+tool.window.move.to.left.action.name:
+  text: Left
+tool.window.move.to.bottom.action.name:
+  text: Bottom
+tool.window.move.to.right.action.name:
+  text: Right
+tool.window.hide.action.name:
+  text: Hide
+tool.window.hideSide.action.name:
+  text: Hide Side
+memory.usage.panel.statistics.message:
+  text: 'Allocated heap size: {0}M   Used: {1}M'
+memory.usage.panel.run.garbage.collector.action.name:
+  text: Run Garbage Collector
+memory.usage.panel.run.garbage.collector.action.description:
+  text: Run Garbage Collector
+memory.usage.panel.message.text:
+  text: '{0,number,####}M of {1,number,####}M'
+go.to.line.command.name:
+  text: Go to Line
+go.to.line.command.double.click:
+  text: Click to go to line
+position.panel.caret.count:
+  text: '{0} carets'
+position.panel.selected.chars.count:
+  text: '{0} chars'
+position.panel.selected.line.breaks.count:
+  text: '{0} line {0,choice,1#break|2#breaks}'
+position.panel.selected.lines.count:
+  text: '{0} lines'
+status.bar.insert.status.text:
+  text: Insert
+status.bar.overwrite.status.text:
+  text: Overwrite
+popup.hints.panel.click.to.configure.highlighting.tooltip.text:
+  text: Click to configure highlighting for this file
+popup.hints.panel.click.to.configure.profile.text:
+  text: Click to configure inspection profiles
+read.only.attr.panel.double.click.to.toggle.attr.tooltip.text:
+  text: Click to toggle the read-only attribute
+welcome.screen.get.from.vcs.action.no.vcs.plugins.with.check.out.action.installed.action.name:
+  text: No VCS plugins with Check-out action installed.
+welcome.screen.get.from.vcs.action.checkout.from.list.popup.title:
+  text: Checkout from
+welcome.screen.recent.projects.action.no.recent.projects.to.display.action.name:
+  text: No recent projects to display.
+welcome.screen.quick.start.action.group.name:
+  text: Quick Start
+welcome.screen.documentation.action.group.name:
+  text: Documentation
+welcome.screen.plugins.panel.plugins.label:
+  text: Plugins
+welcome.screen.plugins.panel.manager.link:
+  text: <html><body><u>Open Plugin Manager</u></body></html>
+welcome.screen.plugins.panel.my.plugins.label:
+  text: 'My Plugins:'
+welcome.screen.plugins.panel.bundled.plugins.label:
+  text: 'Bundled Plugins:'
+welcome.screen.plugins.panel.no.plugins.currently.installed.message.text:
+  text: No plugins currently installed.
+welcome.screen.plugins.panel.all.bundled.plugins.were.uninstalled.message.text:
+  text: All bundled plugins were uninstalled.
+welcome.screen.plugins.panel.learn.more.link:
+  text: <html><body><u>...</u></body></html>
+welcome.screen.plugins.panel.learn.more.tooltip.text:
+  text: Learn more...
+welcome.screen.text.not.specified.message:
+  text: Not specified
+welcome.screen.jetbrains.tv.action.description:
+  text: View short live demos introducing features of {0}.
+file.chooser.default.title:
+  text: Select Path
+file.chooser.save.dialog.default.title:
+  text: Select File to Save
+file.chooser.save.dialog.confirmation:
+  text: |-
+    {0} is already exists.
+    Do you want to replace it?
+file.chooser.save.dialog.confirmation.title:
+  text: Confirm Save as
+file.chooser.select.object.title:
+  text: Select {0}
+delete.dialog.title:
+  text: Delete
+are.you.sure.you.want.to.delete.selected.folder.confirmation.message:
+  text: Are you sure you want to delete selected folder?
+are.you.sure.you.want.to.delete.selected.file.confirmation.message:
+  text: Delete {0}?
+are.you.sure.you.want.to.delete.selected.files.and.directories.confirmation.message:
+  text: Are you sure you want to delete selected files and directories?
+are.you.sure.you.want.to.delete.selected.folders.confirmation.message:
+  text: Are you sure you want to delete selected directories?
+are.you.sure.you.want.to.delete.selected.files.and.files.confirmation.message:
+  text: Are you sure you want to delete selected files?
+create.new.folder.enter.new.folder.name.prompt.text:
+  text: 'Enter a new folder name:'
+create.new.folder.folder.name.cannot.be.empty.error.message:
+  text: Folder name cannot be empty
+create.new.folder.could.not.create.folder.error.message:
+  text: Could not create folder ''{0}''
+new.folder.dialog.title:
+  text: New Folder
+create.new.file.enter.new.file.name.prompt.text:
+  text: 'Enter a new file name:'
+create.new.file.file.name.cannot.be.empty.error.message:
+  text: File name cannot be empty
+create.new.file.could.not.create.file.error.message:
+  text: Could not create file ''{0}''
+new.file.dialog.title:
+  text: New File
+file.chooser.create.new.folder.command.name:
+  text: Create New Folder
+file.chooser.create.new.file.command.name:
+  text: Create New File
+file.cache.conflict.action:
+  text: Reload From Disk
+file.cache.conflict.message.text:
+  text: Changes have been made to ''{0}'' in memory and on disk.
+file.cache.conflict.load.fs.changes.button:
+  text: '&Load File System Changes'
+file.cache.conflict.keep.memory.changes.button:
+  text: '&Keep Memory Changes'
+file.cache.conflict.show.difference.button:
+  text: '&Show difference'
+file.cache.conflict.for.file.dialog.title:
+  text: File Cache Conflict {0}
+file.cache.conflict.dialog.title:
+  text: File Cache Conflict
+file.cache.conflict.diff.content.file.system.content:
+  text: File system content
+file.cache.conflict.diff.content.memory.content:
+  text: Memory content
+file.cache.conflict.save.changes.button:
+  text: Save memory content
+cannot.save.files.dialog.title:
+  text: Cannot Save Files
+cannot.save.files.dialog.message:
+  text: 'Following errors occurred on attempt to save files:'
+cannot.save.files.dialog.revert.changes:
+  text: '&Revert Changes'
+cannot.save.files.dialog.ignore.changes:
+  text: '&Ignore Changes'
+status.bar.column.status.text:
+  text: Column
+choose.content.to.paste.dialog.title:
+  text: Choose Content to Paste
+downloading.file.try.again.button:
+  text: Tr&y Again
+downloading.file.change.http.proxy.settings:
+  text: Change HTTP &Proxy Settings...
+remove.field.initializer.quick.fix:
+  text: Remove field initializer
+button.add.class:
+  text: Add Class...
+button.add.pattern:
+  text: Add Pattern...
+button.remove:
+  text: '&Remove'
+no.patterns:
+  text: No class patterns configured
+class.filter.editor.choose.class.title:
+  text: Choose Class
+class.filter.editor.add.dialog.title:
+  text: New Filter
+label.class.filter.editor.add.dialog.filter.pattern:
+  text: 'Enter the filter pattern:'
+choose.class:
+  text: Choose class
+big.text.control.window.title:
+  text: Text
+tool.window.name.module.duplicates:
+  text: Duplicates
+welcome.screen.disabled.plugins.description:
+  text: (disabled)
+welcome.screen.incompatible.plugins.description:
+  text: (incompatible)
+row.add:
+  text: '&Add'
+row.remove:
+  text: R&emove
+row.move.up:
+  text: Move &Up
+row.move.down:
+  text: Move &Down
+row.add.without.mnemonic:
+  text: Add
+row.remove.without.mnemonic:
+  text: Remove
+row.move.up.without.mnemonic:
+  text: Move Up
+row.move.down.without.mnemonic:
+  text: Move Down
+move.up.action.name:
+  text: Move Up
+move.down.action.name:
+  text: Move Down
+file.chooser.save.dialog.file.name:
+  text: 'File name:'
+tool.window.name.documentation:
+  text: Documentation
+tool.window.quick.access.title:
+  text: Tool Windows Quick Access
+tool.window.quick.access.message:
+  text: |-
+    Hover over the icon below to access tool windows
+    To restore the old layout simply click the icon
+got.it:
+  text: Got it!
+crumbs.calculating.tooltip:
+  text: Calculating...
+message.nothingToShow:
+  text: Nothing to show
+message.nothingToShow.with.problem:
+  text: Nothing to show ({0})
+message.noMatchesFound:
+  text: No matches found
+message.matches:
+  text: '{0,choice, 0# matches|1# match|2# matches}'
+message.files:
+  text: '{0,choice, 0# files|1# file|2# files}'
+status.bar.hide.widget.action.name:
+  text: Hide ''{0}''
+status.bar.position.widget.name:
+  text: Line:Column Number
+status.bar.line.separator.widget.name:
+  text: Line Separator
+status.bar.encoding.widget.name:
+  text: File Encoding
+status.bar.selection.mode.widget.name:
+  text: Editor Selection Mode
+status.bar.read.only.widget.name:
+  text: Read-Only Attribute
+status.bar.notifications.widget.name:
+  text: Notifications
+status.bar.notifications.widget.tooltip:
+  text: '{0} {0,choice, 1#notification|2#notifications} pending'
+status.bar.notifications.widget.no.notification.tooltip:
+  text: No new notifications
+status.bar.fatal.error.widget.name:
+  text: Internal Error
+status.bar.inspection.profile.widget.name:
+  text: Inspection Profile
+status.bar.code.style.widget.name:
+  text: Indentation
+status.bar.memory.usage.widget.name:
+  text: Memory Indicator
+status.bar.write.thread.widget.name:
+  text: Write Thread
+status.bar.column.status.tooltip.text:
+  text: Column selection mode
