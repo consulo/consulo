@@ -887,21 +887,6 @@ public class AllIcons {
 
   }
 
-  public static class Preferences {
-    public static final Image Appearance = PlatformIconGroup.preferencesAppearance(); // 32x32
-    public static final Image CodeStyle = PlatformIconGroup.preferencesCodeStyle(); // 32x32
-    public static final Image Compiler = PlatformIconGroup.preferencesCompiler(); // 32x32
-    public static final Image Editor = PlatformIconGroup.preferencesEditor(); // 32x32
-    public static final Image FileColors = PlatformIconGroup.preferencesFileColors(); // 32x32
-    public static final Image FileTypes = PlatformIconGroup.preferencesFileTypes(); // 32x32
-    public static final Image General = PlatformIconGroup.preferencesGeneral(); // 32x32
-    public static final Image Keymap = PlatformIconGroup.preferencesKeymap(); // 32x32
-    public static final Image Plugins = PlatformIconGroup.preferencesPlugins(); // 32x32
-    public static final Image Updates = PlatformIconGroup.preferencesUpdates(); // 32x32
-    public static final Image VersionControl = PlatformIconGroup.preferencesVersionControl(); // 32x32
-
-  }
-
   public static class Process {
 
     public static class Big {

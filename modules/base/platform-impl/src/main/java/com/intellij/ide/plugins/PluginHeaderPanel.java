@@ -20,18 +20,15 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ApplicationNamesInfo;
 import com.intellij.openapi.application.ex.ApplicationEx;
 import com.intellij.openapi.ui.DialogWrapper;
-import com.intellij.openapi.ui.GraphicsConfig;
 import com.intellij.ui.Gray;
 import com.intellij.ui.JBColor;
-import com.intellij.ui.LightColors;
 import com.intellij.ui.components.JBLabel;
 import com.intellij.util.text.DateFormatUtil;
-import com.intellij.util.ui.GraphicsUtil;
-import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import consulo.awt.TargetAWT;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginIds;
+import consulo.platform.base.icon.PlatformIconGroup;
 
 import javax.annotation.Nullable;
 import javax.swing.*;
@@ -54,10 +51,10 @@ public class PluginHeaderPanel {
   private JButton myInstallButton;
   private JBLabel myVersion;
   private JPanel myRoot;
-  private JPanel myButtonPanel;
   private JPanel myDownloadsPanel;
   private JPanel myVersionInfoPanel;
   private JLabel myExperimentalLabel;
+  private JLabel myIconLabel;
 
   enum ACTION_ID {
     INSTALL,
@@ -90,12 +87,12 @@ public class PluginHeaderPanel {
     myRoot.setVisible(true);
     myCategory.setVisible(true);
     myDownloadsPanel.setVisible(true);
-    myButtonPanel.setVisible(true);
+    myInstallButton.setVisible(true);
     myUpdated.setVisible(true);
 
-    //data
-    myName.setText("<html><body>" + plugin.getName() + "</body></html>");
-    myCategory.setText( plugin.getCategory().toUpperCase());
+    myName.setText(plugin.getName());
+    myName.setFont(UIUtil.getLabelFont(UIUtil.FontSize.BIGGER).deriveFont(Font.BOLD));
+    myCategory.setText(plugin.getCategory().toUpperCase());
     if (plugin instanceof PluginNode) {
       final PluginNode node = (PluginNode)plugin;
 
@@ -134,18 +131,47 @@ public class PluginHeaderPanel {
         myActionId = null;
       }
     }
+
     if (myManager == null || myActionId == null) {
       myActionId = ACTION_ID.INSTALL;
-      myButtonPanel.setVisible(false);
+      myInstallButton.setVisible(false);
     }
+
+    myIconLabel.setOpaque(false);
+    myIconLabel.setIcon(TargetAWT.to(PlatformIconGroup.nodesPlugin()));
+
+    switch (myActionId) {
+      case INSTALL:
+        myInstallButton.setIcon(TargetAWT.to(AllIcons.Actions.Install));
+        break;
+      case UNINSTALL:
+        myInstallButton.setIcon(TargetAWT.to(AllIcons.Actions.Cancel));
+        break;
+      case RESTART:
+        myInstallButton.setIcon(TargetAWT.to(AllIcons.Actions.Restart));
+        break;
+    }
+
+    switch (myActionId) {
+      case INSTALL:
+        myInstallButton.setText("Install plugin");
+        break;
+      case UNINSTALL:
+        myInstallButton.setText("Uninstall plugin");
+        break;
+      case RESTART:
+        myInstallButton.setText("Restart " + ApplicationNamesInfo.getInstance().getFullProductName());
+        break;
+    }
+
     myRoot.revalidate();
-    ((JComponent)myInstallButton.getParent()).revalidate();
+    myInstallButton.getParent().revalidate();
     myInstallButton.revalidate();
-    ((JComponent)myVersion.getParent()).revalidate();
+    myVersion.getParent().revalidate();
     myVersion.revalidate();
 
     myExperimentalLabel.setVisible(plugin.isExperimental());
-    if(plugin.isExperimental()) {
+    if (plugin.isExperimental()) {
       myExperimentalLabel.setIcon(TargetAWT.to(AllIcons.General.BalloonWarning));
       myExperimentalLabel.setFont(UIUtil.getLabelFont(UIUtil.FontSize.BIGGER).deriveFont(Font.BOLD));
       myExperimentalLabel.setForeground(JBColor.RED);
@@ -153,87 +179,8 @@ public class PluginHeaderPanel {
   }
 
   private void createUIComponents() {
-    myInstallButton = new JButton() {
-      {
-        setOpaque(false);
-        setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-      }
+    myInstallButton = new JButton();
 
-      @Override
-      public Dimension getPreferredSize() {
-        final FontMetrics metrics = getFontMetrics(getFont());
-        final int textWidth = metrics.stringWidth(getText());
-        final int width = JBUI.scale(8 + 16 + 4 + 8) + textWidth;
-        final int height = JBUI.scale(2) + Math.max(JBUI.scale(16), metrics.getHeight()) + JBUI.scale(2);
-        return new Dimension(width, height);
-      }
-
-      @Override
-      public void paint(Graphics g2) {
-        final Graphics2D g = (Graphics2D)g2;
-        final GraphicsConfig config = GraphicsUtil.setupAAPainting(g);
-        final int w = g.getClipBounds().width;
-        final int h = g.getClipBounds().height;
-
-        g.setPaint(getBackgroundBorderPaint());
-        g.fillRoundRect(0, 0, w, h, JBUI.scale(7), JBUI.scale(7));
-
-        g.setPaint(getBackgroundPaint());
-        g.fillRoundRect(JBUI.scale(1), JBUI.scale(1), w - JBUI.scale(2), h - JBUI.scale(2), JBUI.scale(6), JBUI.scale(6));
-        g.setColor(getButtonForeground());
-        g.drawString(getText(), JBUI.scale(8 + 16 + 4), getBaseline(w, h));
-        getIcon().paintIcon(this, g, JBUI.scale(8), (getHeight() - getIcon().getIconHeight()) / 2);
-        config.restore();
-      }
-
-      private Color getButtonForeground() {
-        return UIUtil.getLabelForeground();
-      }
-
-      private Paint getBackgroundPaint() {
-        switch (myActionId) {
-          case INSTALL:
-            return new JBColor(new Color(0x4DA864), new Color(49, 98, 49));
-          case UNINSTALL:
-            return LightColors.RED;
-          case RESTART:
-            break;
-        }
-        return Gray._238;
-      }
-
-      private Paint getBackgroundBorderPaint() {
-        return UIUtil.getBorderColor();
-      }
-
-
-      @Override
-      public String getText() {
-        switch (myActionId) {
-          case INSTALL:
-            return "Install plugin";
-          case UNINSTALL:
-            return "Uninstall plugin";
-          case RESTART:
-            return "Restart " + ApplicationNamesInfo.getInstance().getFullProductName();
-        }
-        return super.getText();
-      }
-
-      @Override
-      public Icon getIcon() {
-        switch (myActionId) {
-          case INSTALL:
-            return TargetAWT.to(AllIcons.General.DownloadPlugin);
-          case UNINSTALL:
-            return TargetAWT.to(AllIcons.Actions.Cancel);
-          case RESTART:
-            return TargetAWT.to(AllIcons.Actions.Restart);
-        }
-        return super.getIcon();
-
-      }
-    };
     myInstallButton.addActionListener(e -> {
       switch (myActionId) {
         case INSTALL:

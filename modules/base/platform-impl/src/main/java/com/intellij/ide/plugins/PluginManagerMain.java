@@ -109,6 +109,7 @@ public abstract class PluginManagerMain implements Disposable {
     myDescriptionTextArea.setEditorKit(UIUtil.getHTMLEditorKit());
     myDescriptionTextArea.setEditable(false);
     myDescriptionTextArea.addHyperlinkListener(new MyHyperlinkListener());
+    myDescriptionTextArea.setBackground(UIUtil.getTextFieldBackground());
 
     myPluginHeaderPanel = new PluginHeaderPanel(this, getPluginTable());
 
@@ -120,8 +121,8 @@ public abstract class PluginManagerMain implements Disposable {
     myPluginHeaderPanel.getPanel().setBorder(JBUI.Borders.empty(5));
 
     headerPanel.add(myPluginHeaderPanel.getPanel(), BorderLayout.NORTH);
-    headerPanel.add(myDescriptionTextArea, BorderLayout.CENTER);
-    splitter.setSecondComponent(ScrollPaneFactory.createScrollPane(headerPanel, true));
+    headerPanel.add(ScrollPaneFactory.createScrollPane(myDescriptionTextArea, true), BorderLayout.CENTER);
+    splitter.setSecondComponent(headerPanel);
 
     myTablePanel = new JPanel(new BorderLayout());
     splitter.setFirstComponent(myTablePanel);
