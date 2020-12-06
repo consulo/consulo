@@ -15,13 +15,14 @@
   - limitations under the License.
   -->
 <module>
-  <inherits name="com.vaadin.DefaultWidgetSet" />
+  <inherits name="com.vaadin.DefaultWidgetSet"/>
   <inherits name="org.gwt.advanced.Grid"/>
+  <inherits name="consulo.internal.arquill.editor.Editor"/>
 
   <source path="client"/>
   <source path="shared"/>
 
-  <super-source path="override" />
+  <super-source path="override"/>
 
   <replace-with class="consulo.web.gwt.client.ui.contextmenu.VMenuItem">
     <when-type-is class="com.vaadin.client.ui.VMenuBar.CustomMenuItem"/>

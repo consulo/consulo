@@ -35,12 +35,11 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.disposer.Disposable;
+import consulo.internal.arquill.editor.server.ArquillEditor;
 import consulo.ui.Component;
+import consulo.ui.web.internal.base.ComponentHolder;
+import consulo.ui.web.internal.base.FromVaadinComponentWrapper;
 import consulo.ui.web.internal.base.UIComponentWithVaadinComponent;
-import consulo.ui.web.internal.base.VaadinComponent;
-import consulo.web.gwt.shared.ui.ex.state.editor.EditorClientRpc;
-import consulo.web.gwt.shared.ui.ex.state.editor.EditorServerRpc;
-import consulo.web.gwt.shared.ui.ex.state.editor.EditorState;
 import kava.beans.PropertyChangeListener;
 import org.intellij.lang.annotations.MagicConstant;
 
@@ -55,24 +54,22 @@ import java.util.function.IntFunction;
  * @since 2019-02-18
  */
 public class WebEditorImpl extends UIComponentWithVaadinComponent<WebEditorImpl.Vaadin> implements Component, EditorEx {
-  public static class Vaadin extends VaadinComponent {
-    public Vaadin() {
-      registerRpc(new EditorServerRpc() {
-        @Override
-        public void onShow() {
-          getRpcProxy(EditorClientRpc.class).setText(getEditor().myDocument.getText());
-        }
-      }, EditorServerRpc.class);
+  public static class Vaadin extends ArquillEditor implements ComponentHolder, FromVaadinComponentWrapper {
+    private Component myComponent;
+
+    public Vaadin(String text) {
+      super(text);
+    }
+
+    @Nullable
+    @Override
+    public Component toUIComponent() {
+      return myComponent;
     }
 
     @Override
-    public EditorState getState() {
-      return (EditorState)super.getState();
-    }
-
-    @Nonnull
-    private WebEditorImpl getEditor() {
-      return (WebEditorImpl)toUIComponent();
+    public void setComponent(Component component) {
+      myComponent = component;
     }
   }
 
@@ -96,12 +93,17 @@ public class WebEditorImpl extends UIComponentWithVaadinComponent<WebEditorImpl.
 
     myEditorColorsScheme = EditorColorsManager.getInstance().getGlobalScheme();
     mySettings = new SettingsImpl(this, project, EditorKind.MAIN_EDITOR);
+
+    Vaadin vaadin = toVaadinComponent();
+    vaadin.setWidth("100%");
+    vaadin.setHeight("100%");
+    vaadin.setText(myDocument.getText());
   }
 
   @Override
   @Nonnull
   public Vaadin createVaadinComponent() {
-    return new Vaadin();
+    return new Vaadin("");
   }
 
   @Nonnull
