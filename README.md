@@ -74,4 +74,4 @@ If you want run Consulo from repository
 * [Donate](https://github.com/consulo/consulo/wiki/Donation)
 * [Issues](https://github.com/consulo/consulo/issues)
 * [Forum](https://discuss.consulo.io/)
-* [Discord Channel)(https://discord.gg/Ab3Ka5gTFv)
+* [Discord Channel](https://discord.gg/Ab3Ka5gTFv)
