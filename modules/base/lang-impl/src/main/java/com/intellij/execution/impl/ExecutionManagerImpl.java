@@ -48,6 +48,7 @@ import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.Trinity;
 import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.ui.AppUIUtil;
 import com.intellij.ui.docking.DockManager;
 import com.intellij.util.Alarm;
@@ -62,6 +63,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.dataholder.Key;
 import jakarta.inject.Inject;
+import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
@@ -82,6 +84,8 @@ public class ExecutionManagerImpl extends ExecutionManager implements Disposable
 
   private final Application myApplication;
   private final Project myProject;
+  @Nonnull
+  private final Provider<ToolWindowManager> myToolWindowManager;
 
   private RunContentManagerImpl myContentManager;
   private final Alarm awaitingTerminationAlarm = new Alarm(Alarm.ThreadToUse.SWING_THREAD);
@@ -94,9 +98,10 @@ public class ExecutionManagerImpl extends ExecutionManager implements Disposable
   }
 
   @Inject
-  ExecutionManagerImpl(@Nonnull Application application, @Nonnull Project project) {
+  ExecutionManagerImpl(@Nonnull Application application, @Nonnull Project project, @Nonnull Provider<ToolWindowManager> toolWindowManager) {
     myApplication = application;
     myProject = project;
+    myToolWindowManager = toolWindowManager;
   }
 
   public static void stopProcess(@Nullable RunContentDescriptor descriptor) {
@@ -139,7 +144,7 @@ public class ExecutionManagerImpl extends ExecutionManager implements Disposable
   @Override
   public RunContentManager getContentManager() {
     if (myContentManager == null) {
-      myContentManager = new RunContentManagerImpl(myProject, DockManager.getInstance(myProject));
+      myContentManager = new RunContentManagerImpl(myProject, myToolWindowManager, DockManager.getInstance(myProject));
       Disposer.register(myProject, myContentManager);
     }
     return myContentManager;

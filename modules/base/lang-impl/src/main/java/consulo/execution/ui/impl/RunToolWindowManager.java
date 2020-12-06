@@ -40,7 +40,9 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.dataholder.Key;
+import consulo.util.lang.ThreeState;
 import gnu.trove.THashSet;
+import jakarta.inject.Provider;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -62,10 +64,12 @@ public class RunToolWindowManager {
   private final LinkedList<String> myToolwindowIdZBuffer = new LinkedList<>();
   @Nonnull
   private final Project myProject;
+  private final Provider<ToolWindowManager> myToolWindowManager;
   private final Disposable myParentDisposable;
 
-  public RunToolWindowManager(Project project, Disposable parentDisposable) {
+  public RunToolWindowManager(Project project, Provider<ToolWindowManager> toolWindowManager, Disposable parentDisposable) {
     myProject = project;
+    myToolWindowManager = toolWindowManager;
     myParentDisposable = parentDisposable;
     project.getMessageBus().connect().subscribe(ToolWindowManagerListener.TOPIC, new ToolWindowManagerListener() {
       @Override
@@ -74,12 +78,12 @@ public class RunToolWindowManager {
           return;
         }
 
-        ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(project);
+        ToolWindowManager tw = toolWindowManager.get();
         Set<String> currentWindows = new THashSet<>();
-        ContainerUtil.addAll(currentWindows, toolWindowManager.getToolWindowIds());
+        ContainerUtil.addAll(currentWindows, tw.getToolWindowIds());
         myToolwindowIdZBuffer.retainAll(currentWindows);
 
-        final String activeToolWindowId = toolWindowManager.getActiveToolWindowId();
+        final String activeToolWindowId = tw.getActiveToolWindowId();
         if (activeToolWindowId != null) {
           if (myToolwindowIdZBuffer.remove(activeToolWindowId)) {
             myToolwindowIdZBuffer.addFirst(activeToolWindowId);
@@ -101,9 +105,14 @@ public class RunToolWindowManager {
     return myToolwindowIdToContentManagerMap.entrySet();
   }
 
-  @Nonnull
+  @Nullable
   @RequiredUIAccess
   public ContentManager get(@Nonnull String toolWindowId) {
+    // if project started disposing, return null
+    if(myProject.getDisposeState().get() != ThreeState.NO) {
+      return null;
+    }
+    
     UIAccess.assertIsUIThread();
     return myToolwindowIdToContentManagerMap.computeIfAbsent(toolWindowId, this::createToolWindow);
   }
@@ -122,7 +131,7 @@ public class RunToolWindowManager {
 
   @RequiredUIAccess
   private ContentManager registerToolWindow(@Nonnull String toolWindowId, @Nonnull Image toolWindowIcon, @Nullable Executor executor) {
-    ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(myProject);
+    ToolWindowManager toolWindowManager = myToolWindowManager.get();
 
     if (toolWindowManager.getToolWindow(toolWindowId) != null) {
       throw new IllegalArgumentException("Already registered: " + toolWindowId);

@@ -52,6 +52,7 @@ import consulo.ui.UIAccess;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
 import consulo.util.dataholder.Key;
+import jakarta.inject.Provider;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -62,13 +63,17 @@ public class RunContentManagerImpl implements RunContentManager, Disposable {
   private static final Logger LOG = Logger.getInstance(RunContentManagerImpl.class);
   private static final Key<Executor> EXECUTOR_KEY = Key.create("Executor");
 
+  @Nonnull
   private final Project myProject;
+  @Nonnull
+  private final Provider<ToolWindowManager> myToolWindowManager;
 
   private final RunToolWindowManager myRunToolWindowManager;
 
-  public RunContentManagerImpl(@Nonnull Project project, @Nonnull DockManager dockManager) {
+  public RunContentManagerImpl(@Nonnull Project project, @Nonnull Provider<ToolWindowManager> toolWindowManager, @Nonnull DockManager dockManager) {
     myProject = project;
-    myRunToolWindowManager = new RunToolWindowManager(project, this);
+    myToolWindowManager = toolWindowManager;
+    myRunToolWindowManager = new RunToolWindowManager(project, myToolWindowManager, this);
 
     DockableGridContainerFactory containerFactory = new DockableGridContainerFactory();
     dockManager.register(DockableGridContainerFactory.TYPE, containerFactory);
@@ -94,20 +99,20 @@ public class RunContentManagerImpl implements RunContentManager, Disposable {
 
   @Override
   public void toFrontRunContent(final Executor requestor, final RunContentDescriptor descriptor) {
-    ApplicationManager.getApplication().invokeLater(() -> {
+    myProject.getApplication().invokeLater(() -> {
       ContentManager contentManager = getContentManagerForRunner(requestor, descriptor);
       Content content = getRunContentByDescriptor(contentManager, descriptor);
       if (content != null) {
         contentManager.setSelectedContent(content);
-        ToolWindowManager.getInstance(myProject).getToolWindow(getToolWindowIdForRunner(requestor, descriptor)).show(null);
+        myToolWindowManager.get().getToolWindow(getToolWindowIdForRunner(requestor, descriptor)).show(null);
       }
     }, myProject.getDisposed());
   }
 
   @Override
   public void hideRunContent(@Nonnull final Executor executor, final RunContentDescriptor descriptor) {
-    ApplicationManager.getApplication().invokeLater(() -> {
-      ToolWindow toolWindow = ToolWindowManager.getInstance(myProject).getToolWindow(getToolWindowIdForRunner(executor, descriptor));
+    myProject.getApplication().invokeLater(() -> {
+      ToolWindow toolWindow = myToolWindowManager.get().getToolWindow(getToolWindowIdForRunner(executor, descriptor));
       if (toolWindow != null) {
         toolWindow.hide(null);
       }
@@ -161,7 +166,7 @@ public class RunContentManagerImpl implements RunContentManager, Disposable {
   }
 
   private void showRunContent(@Nonnull final Executor executor, @Nonnull final RunContentDescriptor descriptor, final long executionId) {
-    if (ApplicationManager.getApplication().isUnitTestMode()) {
+    if (myProject.getApplication().isUnitTestMode()) {
       return;
     }
 
@@ -187,7 +192,7 @@ public class RunContentManagerImpl implements RunContentManager, Disposable {
     descriptor.setAttachedContent(content);
 
     String toolWindowId = getToolWindowIdForRunner(executor, descriptor);
-    final ToolWindow toolWindow = ToolWindowManager.getInstance(myProject).getToolWindow(toolWindowId);
+    final ToolWindow toolWindow = myToolWindowManager.get().getToolWindow(toolWindowId);
     final ProcessHandler processHandler = descriptor.getProcessHandler();
     if (processHandler != null) {
       final ProcessAdapter processAdapter = new ProcessAdapter() {
