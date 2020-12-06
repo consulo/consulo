@@ -134,7 +134,8 @@
     <action id="QuickDocCopy" class="com.intellij.codeInsight.documentation.actions.CopyQuickDocAction" use-shortcut-of="$Copy"/>
     <action id="EditSourceInNewWindow" class="com.intellij.ide.actions.EditSourceInNewWindowAction"/>
     <action id="SearchEverywhere" class="com.intellij.ide.actions.SearchEverywhereAction" icon="consulo.platform.base.PlatformIconGroup@actions.find"/>
-    <action id="RunAnything" icon="consulo.platform.base.PlatformIconGroup@actions.run_anything" class="com.intellij.ide.actions.runAnything.RunAnythingAction" text="Run anything" description="Allows to execute any command"/>
+    <action id="RunAnything" icon="consulo.platform.base.PlatformIconGroup@actions.run_anything" class="com.intellij.ide.actions.runAnything.RunAnythingAction" text="Run anything"
+            description="Allows to execute any command"/>
 
     <group id="TemplateParametersNavigation">
       <action id="NextTemplateParameter" class="com.intellij.codeInsight.completion.NextPrevParameterAction$Next" text="Next Parameter">
@@ -532,6 +533,7 @@
         <action id="OnlineDocAction" class="com.intellij.ide.actions.OnlineDocAction"/>
         <action id="Help.KeymapReference" class="com.intellij.ide.actions.RefCardAction" icon="consulo.platform.base.PlatformIconGroup@general.defaultkeymap"/>
         <action id="Help.Youtube" class="com.intellij.openapi.wm.impl.welcomeScreen.OpenYoutubeAction"/>
+        <action id="Help.JoinDiscordChannel" class="consulo.wm.impl.welcomeScreen.JoinDiscordChannelAction" icon="consulo.platform.base.PlatformIconGroup@providers.discord"/>
         <separator/>
         <action id="CheckForUpdate" class="com.intellij.openapi.updateSettings.impl.CheckForUpdateAction"/>
         <action id="About" class="com.intellij.ide.actions.AboutAction"/>
@@ -617,6 +619,7 @@
 
       <action id="WelcomeScreen.Youtube" class="com.intellij.openapi.wm.impl.welcomeScreen.OpenYoutubeAction"
               icon="consulo.platform.base.PlatformIconGroup@general.youtube"/>
+      <reference id="Help.JoinDiscordChannel"/>
       <action id="WelcomeScreen.DevelopPlugins" class="com.intellij.openapi.wm.impl.welcomeScreen.DevelopPluginsAction"
               icon="consulo.platform.base.PlatformIconGroup@general.pluginmanager"/>
     </group>
@@ -633,8 +636,8 @@
       <action id="WelcomeScreen.Configure.DesktopEntry" class="com.intellij.ide.actions.CreateDesktopEntryAction"
               icon="consulo.platform.base.PlatformIconGroup@welcome.createdesktopentry"/>
       <action id="WelcomeScreen.Update" class="com.intellij.openapi.updateSettings.impl.CheckForUpdateAction" text="Check for Update"/>
-      <reference id="ShowLog" />
-      <reference id="About" />
+      <reference id="ShowLog"/>
+      <reference id="About"/>
     </group>
 
     <group id="EditorGutterPopupMenu">

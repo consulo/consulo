@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2010 JetBrains s.r.o.
+ * Copyright 2013-2020 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.wm.impl.welcomeScreen;
+package consulo.wm.impl.welcomeScreen;
 
 import com.intellij.ide.BrowserUtil;
 import com.intellij.openapi.actionSystem.AnActionEvent;
@@ -22,10 +22,14 @@ import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
 
-public class OpenYoutubeAction extends DumbAwareAction {
+/**
+ * @author VISTALL
+ * @since 06/12/2020
+ */
+public class JoinDiscordChannelAction extends DumbAwareAction {
   @RequiredUIAccess
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
-    BrowserUtil.browse("http://www.youtube.com/user/ConsuloIDE");
+    BrowserUtil.browse("https://discord.gg/Ab3Ka5gTFv");
   }
 }

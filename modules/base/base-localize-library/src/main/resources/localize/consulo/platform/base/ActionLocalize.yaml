@@ -2626,3 +2626,5 @@ action.Scratch.ChangeLanguage.description:
   text: Change File Language
 show.log.in.action.text:
   text: Show Log in {0}
+action.Help.JoinDiscordChannel.text:
+  text: Join Discord Channel
