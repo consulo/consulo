@@ -17,7 +17,6 @@ package com.intellij.ui;
 
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.util.Alarm;
-import org.jetbrains.annotations.NonNls;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -36,23 +35,20 @@ public abstract class FilterComponent extends JPanel {
   private final Alarm myUpdateAlarm = new Alarm();
   private final boolean myOnTheFly;
 
-  public FilterComponent(@NonNls String propertyName, int historySize) {
+  public FilterComponent(String propertyName, int historySize) {
     this(propertyName, historySize, true);
   }
 
-  public FilterComponent(@NonNls String propertyName, int historySize, boolean onTheFlyUpdate) {
+  public FilterComponent(String propertyName, int historySize, boolean onTheFlyUpdate) {
     super(new BorderLayout());
     myOnTheFly = onTheFlyUpdate;
     myFilter = new SearchTextFieldWithStoredHistory(propertyName) {
       @Override
       protected Runnable createItemChosenCallback(JList list) {
         final Runnable callback = super.createItemChosenCallback(list);
-        return new Runnable() {
-          @Override
-          public void run() {
-            callback.run();
-            filter();
-          }
+        return () -> {
+          callback.run();
+          filter();
         };
       }
 

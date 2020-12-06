@@ -23,7 +23,9 @@ import com.intellij.ide.plugins.sorters.SortByStatusAction;
 import com.intellij.ide.ui.search.SearchUtil;
 import com.intellij.ide.ui.search.SearchableOptionsRegistrar;
 import com.intellij.notification.*;
-import com.intellij.openapi.actionSystem.*;
+import com.intellij.openapi.actionSystem.ActionGroup;
+import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.actionSystem.DefaultActionGroup;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationNamesInfo;
 import com.intellij.openapi.application.ex.ApplicationEx;
@@ -146,8 +148,10 @@ public abstract class PluginManagerMain implements Disposable {
     JPanel rightHelpPanel = new JPanel(new HorizontalLayout(JBUI.scale(5)));
     rightHelpPanel.add(sortLabel);
     addCustomFilters(rightHelpPanel::add);
-    
-    header.add(new BorderLayoutPanel().addToRight(rightHelpPanel), BorderLayout.SOUTH);
+
+    BorderLayoutPanel botton = new BorderLayoutPanel();
+    botton.setBorder(new CustomLineBorder(JBUI.scale(1), 0, 0, 0));
+    header.add(botton.addToRight(rightHelpPanel), BorderLayout.SOUTH);
 
     myTablePanel.add(header, BorderLayout.NORTH);
 
@@ -218,8 +222,7 @@ public abstract class PluginManagerMain implements Disposable {
   @RequiredUIAccess
   public void refresh() {
     final PluginDescriptor[] descriptors = myPluginTable.getSelectedObjects();
-    pluginInfoUpdate(descriptors != null && descriptors.length == 1 ? descriptors[0] : null, myFilter.getFilter(), myDescriptionTextArea, myPluginHeaderPanel,
-                     this);
+    pluginInfoUpdate(descriptors != null && descriptors.length == 1 ? descriptors[0] : null, myFilter.getFilter(), myDescriptionTextArea, myPluginHeaderPanel, this);
     //myActionToolbar.updateActionsImmediately();
     //final JComponent parent = (JComponent)myHeader.getParent();
     //parent.revalidate();
@@ -295,9 +298,8 @@ public abstract class PluginManagerMain implements Disposable {
           propagateUpdates(list);
         }
         if (!errorMessages.isEmpty()) {
-          if (Messages.showOkCancelDialog(IdeBundle.message("error.list.of.plugins.was.not.loaded", StringUtil.join(errorMessages, ", ")),
-                                          IdeBundle.message("title.plugins"), CommonBundle.message("button.retry"), CommonBundle.getCancelButtonText(),
-                                          Messages.getErrorIcon()) == Messages.OK) {
+          if (Messages.showOkCancelDialog(IdeBundle.message("error.list.of.plugins.was.not.loaded", StringUtil.join(errorMessages, ", ")), IdeBundle.message("title.plugins"),
+                                          CommonBundle.message("button.retry"), CommonBundle.getCancelButtonText(), Messages.getErrorIcon()) == Messages.OK) {
             loadPluginsFromHostInBackground();
           }
         }
@@ -324,11 +326,7 @@ public abstract class PluginManagerMain implements Disposable {
     requireShutdown = false;
   }
 
-  public static void pluginInfoUpdate(PluginDescriptor plugin,
-                                      @Nullable String filter,
-                                      @Nonnull JEditorPane descriptionTextArea,
-                                      @Nonnull PluginHeaderPanel header,
-                                      PluginManagerMain manager) {
+  public static void pluginInfoUpdate(PluginDescriptor plugin, @Nullable String filter, @Nonnull JEditorPane descriptionTextArea, @Nonnull PluginHeaderPanel header, PluginManagerMain manager) {
 
     if (plugin == null) {
       setTextValue(null, filter, descriptionTextArea);
@@ -560,6 +558,7 @@ public abstract class PluginManagerMain implements Disposable {
 
     public MyPluginsFilter() {
       super("PLUGIN_FILTER", 5);
+      getTextEditor().setBorder(JBUI.Borders.empty(2));
     }
 
     @Override

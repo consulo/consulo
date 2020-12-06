@@ -21,14 +21,13 @@ package com.intellij.ui;
 
 import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.openapi.util.text.StringUtil;
-import org.jetbrains.annotations.NonNls;
 
 import java.util.ArrayList;
 
 public class SearchTextFieldWithStoredHistory extends SearchTextField {
   private final String myPropertyName;
 
-  public SearchTextFieldWithStoredHistory(@NonNls final String propertyName) {
+  public SearchTextFieldWithStoredHistory(final String propertyName) {
     myPropertyName = propertyName;
     reset();
   }
