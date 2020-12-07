@@ -173,7 +173,7 @@ public class TestUIInternal extends UIInternal {
   }
 
   @Override
-  public Image _Image_fromBytes(byte[] bytes, int width, int height) throws IOException {
+  public Image _Image_fromBytes(Image.ImageType imageType, byte[] bytes, int width, int height) throws IOException {
     return ourDummyRef;
   }
 
