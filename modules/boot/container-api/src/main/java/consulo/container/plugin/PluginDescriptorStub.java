@@ -152,7 +152,7 @@ public abstract class PluginDescriptorStub implements PluginDescriptor {
     return null;
   }
 
-  @Nullable
+  @Nonnull
   @Override
   public byte[] getIconBytes() {
     return ArrayUtilRt.EMPTY_BYTE_ARRAY;

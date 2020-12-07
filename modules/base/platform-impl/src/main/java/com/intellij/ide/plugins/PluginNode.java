@@ -15,17 +15,17 @@
  */
 package com.intellij.ide.plugins;
 
-import consulo.container.plugin.PluginId;
 import consulo.container.plugin.PluginDescriptorStub;
-import consulo.ide.plugins.PluginJsonNode;
+import consulo.container.plugin.PluginId;
 import consulo.container.plugin.SimpleExtension;
+import consulo.ide.plugins.PluginJsonNode;
+import consulo.logging.Logger;
+import consulo.util.collection.ArrayUtil;
+import consulo.util.lang.StringUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author stathik
@@ -65,6 +65,8 @@ public class PluginNode extends PluginDescriptorStub {
   private String myRating;
   private boolean myExperimental;
 
+  private byte[] myIconBytes = ArrayUtil.EMPTY_BYTE_ARRAY;
+
   private List<SimpleExtension> mySimpleExtensions = Collections.emptyList();
 
   public PluginNode() {
@@ -84,23 +86,39 @@ public class PluginNode extends PluginDescriptorStub {
     setPlatformVersion(jsonPlugin.platformVersion);
     setDownloads(String.valueOf(jsonPlugin.downloads));
     setCategory(jsonPlugin.category);
+    myIconBytes = decodeIconBytes(jsonPlugin.iconBytes);
 
-    if(jsonPlugin.dependencies != null) {
+    if (jsonPlugin.dependencies != null) {
       addDependency(Arrays.stream(jsonPlugin.dependencies).map(PluginId::getId).toArray(PluginId[]::new));
     }
 
-    if(jsonPlugin.optionalDependencies != null) {
+    if (jsonPlugin.optionalDependencies != null) {
       addOptionalDependency(Arrays.stream(jsonPlugin.optionalDependencies).map(PluginId::getId).toArray(PluginId[]::new));
     }
 
     myExperimental = jsonPlugin.experimental;
     PluginJsonNode.Extension[] extensions = jsonPlugin.extensionsV2;
-    if(extensions != null) {
+    if (extensions != null) {
       mySimpleExtensions = new ArrayList<>(extensions.length);
       for (PluginJsonNode.Extension extension : extensions) {
         mySimpleExtensions.add(new SimpleExtension(extension.key, extension.values));
       }
     }
+  }
+
+  private static byte[] decodeIconBytes(String iconBytes) {
+    if (StringUtil.isEmptyOrSpaces(iconBytes)) {
+      return ArrayUtil.EMPTY_BYTE_ARRAY;
+    }
+    else {
+      try {
+        return Base64.getDecoder().decode(iconBytes);
+      }
+      catch (Exception e) {
+        Logger.getInstance(PluginNode.class).warn(e);
+      }
+    }
+    return ArrayUtil.EMPTY_BYTE_ARRAY;
   }
 
   @Override
@@ -170,6 +188,12 @@ public class PluginNode extends PluginDescriptorStub {
   @Override
   public String getDescription() {
     return description;
+  }
+
+  @Nonnull
+  @Override
+  public byte[] getIconBytes() {
+    return myIconBytes;
   }
 
   public void setDescription(String description) {
@@ -266,7 +290,7 @@ public class PluginNode extends PluginDescriptorStub {
   }
 
   public void addDependency(PluginId... depends) {
-    if(myDependencies.isEmpty()) {
+    if (myDependencies.isEmpty()) {
       myDependencies = new ArrayList<PluginId>();
     }
 
@@ -280,6 +304,7 @@ public class PluginNode extends PluginDescriptorStub {
 
     Collections.addAll(myOptionalDependencies, depends);
   }
+
   /**
    * Methods below implement PluginDescriptor and IdeaPluginDescriptor interface
    */

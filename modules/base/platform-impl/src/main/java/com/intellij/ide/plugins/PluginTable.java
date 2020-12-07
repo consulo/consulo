@@ -43,7 +43,7 @@ public class PluginTable extends JBTable {
       TableColumn column = getColumnModel().getColumn(i);
       final ColumnInfo columnInfo = model.getColumnInfos()[i];
       column.setCellEditor(columnInfo.getEditor(null));
-      if (columnInfo.getColumnClass() == Boolean.class) {
+      if (columnInfo.getColumnClass() == Boolean.class) {                              
         TableUtil.setupCheckboxColumn(column);
       }
     }

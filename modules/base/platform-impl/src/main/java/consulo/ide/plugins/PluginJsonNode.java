@@ -38,6 +38,7 @@ public class PluginJsonNode {
   public Long date;
   public Integer rating;
   public String version;
+  public String iconBytes;
   public String platformVersion;
   public String[] dependencies;
   public String[] optionalDependencies;
