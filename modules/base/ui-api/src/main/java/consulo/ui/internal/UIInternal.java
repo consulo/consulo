@@ -148,7 +148,9 @@ public abstract class UIInternal {
 
   public abstract Image _Image_fromUrl(URL url) throws IOException;
 
-  public abstract Image _Image_fromBytes(byte[] bytes, int width, int height) throws IOException;
+  public Image _Image_fromBytes(Image.ImageType imageType, byte[] bytes, int width, int height) throws IOException {
+    throw new UnsupportedOperationException();
+  }
 
   public abstract Image _Image_lazy(Supplier<Image> imageSupplier);
 

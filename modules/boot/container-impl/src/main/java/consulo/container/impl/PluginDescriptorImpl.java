@@ -51,6 +51,7 @@ public class PluginDescriptorImpl extends PluginDescriptorStub {
   private String myCategory;
   private String url;
   private final File myPath;
+  private final byte[] myIconBytes;
   private final boolean myIsPreInstalled;
   private PluginId[] myDependencies = PluginId.EMPTY_ARRAY;
   private PluginId[] myOptionalDependencies = PluginId.EMPTY_ARRAY;
@@ -79,8 +80,9 @@ public class PluginDescriptorImpl extends PluginDescriptorStub {
   private Boolean mySkipped;
   private boolean myExperimental;
 
-  public PluginDescriptorImpl(@Nonnull File pluginPath, boolean isPreInstalled) {
+  public PluginDescriptorImpl(@Nonnull File pluginPath, @Nonnull byte[] iconBytes, boolean isPreInstalled) {
     myPath = pluginPath;
+    myIconBytes = iconBytes;
     myIsPreInstalled = isPreInstalled;
   }
 
@@ -283,6 +285,12 @@ public class PluginDescriptorImpl extends PluginDescriptorStub {
   @Override
   public String getChangeNotes() {
     return myChangeNotes;
+  }
+
+  @Nonnull
+  @Override
+  public byte[] getIconBytes() {
+    return myIconBytes;
   }
 
   @Override

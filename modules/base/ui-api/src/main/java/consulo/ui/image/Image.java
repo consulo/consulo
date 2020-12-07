@@ -32,6 +32,11 @@ public interface Image {
 
   int DEFAULT_ICON_SIZE = 16;
 
+  enum ImageType {
+    PNG,
+    SVG
+  }
+
   @Nonnull
   @Deprecated
   static Image create(@Nonnull URL url) throws IOException {
@@ -47,8 +52,14 @@ public interface Image {
    * Return image from bytes. JPG, PNG only
    */
   @Nonnull
+  @Deprecated
   static Image fromBytes(@Nonnull byte[] bytes, int width, int height) throws IOException {
-    return UIInternal.get()._Image_fromBytes(bytes, width, height);
+    return fromBytes(ImageType.PNG, bytes, width, height);
+  }
+
+  @Nonnull
+  static Image fromBytes(@Nonnull ImageType imageType, @Nonnull byte[] bytes, int width, int height) throws IOException {
+    return UIInternal.get()._Image_fromBytes(imageType, bytes, width, height);
   }
 
   @Nonnull

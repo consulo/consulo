@@ -33,10 +33,7 @@ import consulo.ui.*;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
 import consulo.ui.desktop.internal.image.*;
-import consulo.ui.desktop.internal.image.libraryImage.DesktopAWTImageImpl;
-import consulo.ui.desktop.internal.image.libraryImage.DesktopImageKeyImpl;
-import consulo.ui.desktop.internal.image.libraryImage.DesktopSvgImageImpl;
-import consulo.ui.desktop.internal.image.libraryImage.ThreadLocalSVGUniverse;
+import consulo.ui.desktop.internal.image.libraryImage.*;
 import consulo.ui.desktop.internal.layout.*;
 import consulo.ui.desktop.internal.style.DesktopStyleManagerImpl;
 import consulo.ui.desktop.internal.textBox.*;
@@ -63,6 +60,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Collection;
@@ -101,9 +99,22 @@ public class DesktopUIInternalImpl extends UIInternal {
   }
 
   @Override
-  public Image _Image_fromBytes(byte[] bytes, int width, int height) throws IOException {
-    BufferedImage image = ImageIO.read(new UnsyncByteArrayInputStream(bytes));
-    return new DesktopAWTImageImpl(new DesktopAWTImageImpl.ImageBytes(null, image), null, width, height, null);
+  public Image _Image_fromBytes(Image.ImageType imageType, byte[] bytes, int width, int height) throws IOException {
+    switch (imageType) {
+      case SVG:
+        ThreadLocalSVGUniverse svgUniverse = new ThreadLocalSVGUniverse();
+
+        URI uri = svgUniverse.loadSVG(new UnsyncByteArrayInputStream(bytes), "dummy" + System.currentTimeMillis() + ".svg");
+
+        SVGDiagram diagram = svgUniverse.getDiagram(uri, false);
+        if(diagram == null) {
+          throw new IOException("Wrong svg bytes");
+        }
+        return new DesktopSvgImageImpl(diagram, null, width, height, null);
+      default:
+        BufferedImage image = ImageIO.read(new UnsyncByteArrayInputStream(bytes));
+        return new DesktopAWTImageImpl(new DesktopAWTImageImpl.ImageBytes(null, image), null, width, height, null);
+    }
   }
 
   @Override
@@ -112,7 +123,7 @@ public class DesktopUIInternalImpl extends UIInternal {
   }
 
   @Override
-  public Image _ImageEffects_layered(Image[] images) {
+  public Image _ImageEffects_layered(@Nonnull Image[] images) {
     return new DesktopLayeredImageImpl(images);
   }
 
@@ -162,8 +173,12 @@ public class DesktopUIInternalImpl extends UIInternal {
 
   @Override
   public Image _ImageEffects_resize(Image original, float scale) {
-    if(original instanceof DesktopImage) {
+    if (original instanceof DesktopImage) {
       return ((DesktopImage)original).copyWithScale(scale);
+    }
+
+    if(original instanceof DesktopLibraryInnerImage) {
+      return ((DesktopLibraryInnerImage)original).copyWithScale(scale);
     }
     return original;
   }

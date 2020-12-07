@@ -108,6 +108,9 @@ public interface PluginDescriptor {
   @Nullable
   Object getModuleLayer();
 
+  @Nonnull
+  byte[] getIconBytes();
+
   @Deprecated
   @DeprecationInfo("This method is obsolete now. Bundled plugin is always platform modules - it can't load plugins")
   boolean isBundled();

@@ -28,7 +28,7 @@ import com.intellij.util.ui.UIUtil;
 import consulo.awt.TargetAWT;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginIds;
-import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.ide.plugins.PluginIconHolder;
 
 import javax.annotation.Nullable;
 import javax.swing.*;
@@ -138,7 +138,7 @@ public class PluginHeaderPanel {
     }
 
     myIconLabel.setOpaque(false);
-    myIconLabel.setIcon(TargetAWT.to(PlatformIconGroup.nodesPlugin()));
+    myIconLabel.setIcon(TargetAWT.to(PluginIconHolder.get(plugin)));
 
     switch (myActionId) {
       case INSTALL:

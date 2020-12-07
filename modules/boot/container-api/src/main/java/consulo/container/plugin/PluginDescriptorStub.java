@@ -15,13 +15,12 @@
  */
 package consulo.container.plugin;
 
+import consulo.util.nodep.ArrayUtilRt;
 import consulo.util.nodep.xml.node.SimpleXmlElement;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.File;
-import java.lang.Override;
-import java.lang.UnsupportedOperationException;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -99,13 +98,14 @@ public abstract class PluginDescriptorStub implements PluginDescriptor {
     return null;
   }
 
+  @Nonnull
   @Override
   public String getCategory() {
     return normalizeCategory(null);
   }
 
   protected static String normalizeCategory(String cagetory) {
-    if(cagetory == null || cagetory.trim().length() == 0) {
+    if (cagetory == null || cagetory.trim().length() == 0) {
       return "Uncategorized";
     }
     return cagetory;
@@ -150,6 +150,12 @@ public abstract class PluginDescriptorStub implements PluginDescriptor {
   @Override
   public Object getModuleLayer() {
     return null;
+  }
+
+  @Nullable
+  @Override
+  public byte[] getIconBytes() {
+    return ArrayUtilRt.EMPTY_BYTE_ARRAY;
   }
 
   @Override

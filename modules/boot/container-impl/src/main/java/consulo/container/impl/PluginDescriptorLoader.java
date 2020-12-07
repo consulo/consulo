@@ -16,6 +16,7 @@
 package consulo.container.impl;
 
 import consulo.container.plugin.PluginId;
+import consulo.util.nodep.ArrayUtilRt;
 import consulo.util.nodep.Comparing;
 import consulo.util.nodep.io.FileUtilRt;
 import consulo.util.nodep.text.StringUtilRt;
@@ -60,7 +61,7 @@ public class PluginDescriptorLoader {
         }
       });
 
-      if(markerFiles != null && markerFiles.length == 1) {
+      if (markerFiles != null && markerFiles.length == 1) {
         String simpleJarFile = markerFiles[0].getName().replace(".jar.marker", ".jar");
         File jarFile = new File(libDir, simpleJarFile);
         return loadDescriptorFromJar(jarFile, pluginPath, fileName, isHeadlessMode, isPreInstalledPath, containerLogger);
@@ -155,9 +156,15 @@ public class PluginDescriptorLoader {
       try {
         ZipEntry entry = zipFile.getEntry("META-INF/" + fileName);
         if (entry != null) {
+          byte[] iconBytes = ArrayUtilRt.EMPTY_BYTE_ARRAY;
+          ZipEntry pluginIconSvg = zipFile.getEntry("META-INF/pluginIcon.svg");
+          if (pluginIconSvg != null) {
+            iconBytes = loadFromStream(zipFile.getInputStream(pluginIconSvg));
+          }
+
           InputStream inputStream = zipFile.getInputStream(entry);
 
-          PluginDescriptorImpl descriptor = new PluginDescriptorImpl(pluginPath, isPreInstalledPath);
+          PluginDescriptorImpl descriptor = new PluginDescriptorImpl(pluginPath, iconBytes, isPreInstalledPath);
           descriptor.readExternal(inputStream, zipFile);
           return descriptor;
         }
@@ -175,5 +182,27 @@ public class PluginDescriptorLoader {
     }
 
     return null;
+  }
+
+  private static byte[] loadFromStream(InputStream inputStream) throws IOException {
+    final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+    try {
+      copyStreamContent(inputStream, outputStream);
+    }
+    finally {
+      inputStream.close();
+    }
+    return outputStream.toByteArray();
+  }
+
+  private static int copyStreamContent(InputStream inputStream, OutputStream outputStream) throws IOException {
+    final byte[] buffer = new byte[10 * 1024];
+    int count;
+    int total = 0;
+    while ((count = inputStream.read(buffer)) > 0) {
+      outputStream.write(buffer, 0, count);
+      total += count;
+    }
+    return total;
   }
 }

@@ -15,12 +15,9 @@
  */
 package com.intellij.ide.plugins;
 
-import com.intellij.icons.AllIcons;
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.ui.UISettings;
 import com.intellij.openapi.application.ApplicationNamesInfo;
-import consulo.awt.TargetAWT;
-import consulo.container.plugin.PluginId;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vcs.FileStatus;
@@ -29,7 +26,10 @@ import com.intellij.ui.JBColor;
 import com.intellij.util.text.DateFormatUtil;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
+import consulo.awt.TargetAWT;
 import consulo.container.plugin.PluginDescriptor;
+import consulo.container.plugin.PluginId;
+import consulo.ide.plugins.PluginIconHolder;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;
@@ -93,7 +93,7 @@ public class PluginsTableRenderer extends DefaultTableCellRenderer {
     final Color grayedFg = isSelected ? fg : new JBColor(Gray._130, Gray._120);
     myName.setForeground(fg);
     myStatus.setForeground(grayedFg);
-    myStatus.setIcon(TargetAWT.to(AllIcons.Nodes.Plugin));
+    myStatus.setIcon(TargetAWT.to(PluginIconHolder.get(myPluginDescriptor)));
     String category = myPluginDescriptor.getCategory();
     myCategory.setForeground(grayedFg);
     myCategory.setText(category.toUpperCase() + " ");
@@ -135,7 +135,7 @@ public class PluginsTableRenderer extends DefaultTableCellRenderer {
         if (!isSelected) {
           myName.setForeground(TargetAWT.to(FileStatus.MODIFIED.getColor()));
         }
-        myStatus.setIcon(TargetAWT.to(AllIcons.Nodes.Pluginobsolete));
+        //myStatus.setIcon(TargetAWT.to(AllIcons.Nodes.Pluginobsolete));
       }
     }
 
