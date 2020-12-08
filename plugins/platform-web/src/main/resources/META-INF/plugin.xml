@@ -17,6 +17,13 @@
   <id>consulo.platform.web</id>
   <name>Platform: web</name>
 
+  <application-components>
+    <component>
+      <interface-class>com.intellij.openapi.editor.EditorFactory</interface-class>
+      <implementation-class>consulo.web.editor.impl.WebEditorFactoryImpl</implementation-class>
+    </component>
+  </application-components>
+
   <project-components>
     <component>
       <interface-class>com.intellij.openapi.vcs.changes.ChangesViewI</interface-class>
@@ -73,5 +80,7 @@
     <projectService serviceInterface="com.intellij.openapi.wm.ToolWindowManager" serviceImplementation="consulo.web.wm.impl.WebToolWindowManagerImpl" lazy="false"/>
     <projectService serviceInterface="consulo.wm.ProjectIdeFocusManager" serviceImplementation="consulo.web.wm.impl.WebProjectIdeFocusManagerImpl" lazy="false"/>
     <projectService serviceInterface="com.intellij.ui.docking.DockManager" serviceImplementation="consulo.web.ui.docking.impl.WebDockManagerImpl"/>
+
+    <projectService serviceInterface="com.intellij.codeInsight.daemon.impl.EditorTracker" serviceImplementation="consulo.codeInsight.daemon.impl.UnifiedEditorTrackerImpl"/>
   </extensions>
 </consulo-plugin>

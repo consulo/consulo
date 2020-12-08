@@ -46,6 +46,8 @@ import com.intellij.refactoring.util.TextOccurrencesUtil;
 import com.intellij.usageView.UsageInfo;
 import com.intellij.util.PairProcessor;
 import com.intellij.util.containers.MultiMap;
+import consulo.editor.internal.EditorInternal;
+
 import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
@@ -284,7 +286,7 @@ public class VariableInplaceRenamer extends InplaceRefactoring {
     }
     finally {
       try {
-        ((DesktopEditorImpl)InjectedLanguageUtil.getTopLevelEditor(myEditor)).stopDumbLater();
+        ((EditorInternal)InjectedLanguageUtil.getTopLevelEditor(myEditor)).stopDumbLater();
       }
       finally {
         FinishMarkAction.finish(myProject, myEditor, markAction);
@@ -335,7 +337,7 @@ public class VariableInplaceRenamer extends InplaceRefactoring {
       revertStateOnFinish();
     }
     else {
-      ((DesktopEditorImpl)InjectedLanguageUtil.getTopLevelEditor(myEditor)).stopDumbLater();
+      ((EditorInternal)InjectedLanguageUtil.getTopLevelEditor(myEditor)).stopDumbLater();
     }
   }
 

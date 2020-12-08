@@ -66,6 +66,7 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.*;
 import com.intellij.util.ui.update.Activatable;
 import com.intellij.util.ui.update.UiNotifyConnector;
+import consulo.annotation.DeprecationInfo;
 import consulo.application.TransactionGuardEx;
 import consulo.awt.TargetAWT;
 import consulo.desktop.editor.impl.DesktopEditorLayeredPanel;
@@ -74,6 +75,7 @@ import consulo.desktop.util.awt.migration.AWTComponentProviderUtil;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.disposer.TraceableDisposable;
+import consulo.editor.internal.EditorInternal;
 import consulo.fileEditor.impl.EditorsSplitters;
 import consulo.logging.Logger;
 import consulo.ui.color.ColorValue;
@@ -120,7 +122,9 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.IntFunction;
 
-public final class DesktopEditorImpl extends UserDataHolderBase implements EditorEx, HighlighterClient, Queryable, Dumpable/*, CodeStyleSettingsListener*/ {
+@Deprecated
+@DeprecationInfo("Desktop only")
+public final class DesktopEditorImpl extends UserDataHolderBase implements EditorInternal, HighlighterClient, Queryable, Dumpable/*, CodeStyleSettingsListener*/ {
   public static final int TEXT_ALIGNMENT_LEFT = 0;
   public static final int TEXT_ALIGNMENT_RIGHT = 1;
 
@@ -129,12 +133,9 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
   private static final Key DND_COMMAND_KEY = Key.create("DndCommand");
 
   private static final Key<JComponent> PERMANENT_HEADER = Key.create("PERMANENT_HEADER");
-  public static final Key<Boolean> DO_DOCUMENT_UPDATE_TEST = Key.create("DoDocumentUpdateTest");
-  public static final Key<Boolean> FORCED_SOFT_WRAPS = Key.create("forced.soft.wraps");
-  public static final Key<Boolean> SOFT_WRAPS_EXIST = Key.create("soft.wraps.exist");
+
   @SuppressWarnings("WeakerAccess")
   public static final Key<Boolean> DISABLE_CARET_POSITION_KEEPING = Key.create("editor.disable.caret.position.keeping");
-  static final Key<Boolean> DISABLE_CARET_SHIFT_ON_WHITESPACE_INSERTION = Key.create("editor.disable.caret.shift.on.whitespace.insertion");
   private static final boolean HONOR_CAMEL_HUMPS_ON_TRIPLE_CLICK = Boolean.parseBoolean(System.getProperty("idea.honor.camel.humps.on.triple.click"));
   private static final Key<BufferedImage> BUFFER = Key.create("buffer");
   @Nonnull
@@ -227,7 +228,7 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
   @Nonnull
   private final FoldingModelImpl myFoldingModel;
   @Nonnull
-  private final ScrollingModelImpl myScrollingModel;
+  private final DesktopScrollingModelImpl myScrollingModel;
   @Nonnull
   private final DesktopCaretModelImpl myCaretModel;
   @Nonnull
@@ -365,7 +366,7 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
 
   private StatusComponentContainer myStatusComponentContainer = new StatusComponentContainer();
 
-  DesktopEditorImpl(@Nonnull Document document, boolean viewer, @Nullable Project project, @Nonnull EditorKind kind) {
+  public DesktopEditorImpl(@Nonnull Document document, boolean viewer, @Nullable Project project, @Nonnull EditorKind kind) {
     assertIsDispatchThread();
     myProject = project;
     myDocument = (DocumentEx)document;
@@ -386,7 +387,7 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
     myDocumentMarkupModel = new EditorFilteringMarkupModelEx(this, documentMarkup);
     myFoldingModel = new FoldingModelImpl(this);
     myCaretModel = new DesktopCaretModelImpl(this);
-    myScrollingModel = new ScrollingModelImpl(this);
+    myScrollingModel = new DesktopScrollingModelImpl(this);
     myInlayModel = new InlayModelImpl(this);
     Disposer.register(myCaretModel, myInlayModel);
     mySoftWrapModel = new SoftWrapModelImpl(this);
@@ -998,7 +999,7 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
   /**
    * To be called when editor was not disposed while it should
    */
-  void throwEditorNotDisposedError(@Nonnull final String msg) {
+  public void throwEditorNotDisposedError(@Nonnull final String msg) {
     myTraceableDisposable.throwObjectNotDisposedError(msg);
   }
 
@@ -1010,7 +1011,7 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
   }
 
   // EditorFactory.releaseEditor should be used to release editor
-  void release() {
+  public void release() {
     assertIsDispatchThread();
     if (isReleased) {
       throwDisposalError("Double release of editor:");
@@ -3327,7 +3328,7 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
     return myLastTypedActionTimestamp != -1;
   }
 
-  void beforeModalityStateChanged() {
+  public void beforeModalityStateChanged() {
     myScrollingModel.beforeModalityStateChanged();
   }
 
@@ -3353,7 +3354,7 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
     }
   }
 
-  boolean isHighlighterAvailable(@Nonnull RangeHighlighter highlighter) {
+  public boolean isHighlighterAvailable(@Nonnull RangeHighlighter highlighter) {
     return myHighlightingFilter == null || myHighlightingFilter.value(highlighter);
   }
 

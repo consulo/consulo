@@ -17,6 +17,7 @@ import com.intellij.openapi.editor.event.CaretEvent;
 import com.intellij.openapi.editor.event.DocumentEvent;
 import com.intellij.openapi.editor.event.SelectionEvent;
 import com.intellij.openapi.editor.ex.DocumentEx;
+import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.editor.ex.EditorGutterComponentEx;
 import com.intellij.openapi.editor.ex.FoldingModelEx;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
@@ -1580,7 +1581,7 @@ public class DesktopCaretImpl extends UserDataHolderBase implements Caret, Dumpa
         // postponed formatting (after PSI modifications), this is hard to implement, so a heuristic below is used.
         if (e.getOldLength() == 0 &&
             oldOffset == e.getOffset() &&
-            !Boolean.TRUE.equals(myEditor.getUserData(DesktopEditorImpl.DISABLE_CARET_SHIFT_ON_WHITESPACE_INSERTION)) &&
+            !Boolean.TRUE.equals(myEditor.getUserData(EditorEx.DISABLE_CARET_SHIFT_ON_WHITESPACE_INSERTION)) &&
             needToShiftWhiteSpaces(e)) {
           int afterInserted = e.getOffset() + e.getNewLength();
           setIntervalStart(afterInserted);

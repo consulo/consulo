@@ -62,6 +62,7 @@ import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
 import consulo.module.extension.ModuleExtension;
+import consulo.platform.Platform;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolderEx;
 import jakarta.inject.Singleton;
@@ -178,19 +179,21 @@ public final class DaemonListeners implements Disposable {
     editorFactory.addEditorFactoryListener(new EditorFactoryListener() {
       @Override
       public void editorCreated(@Nonnull EditorFactoryEvent event) {
-        Editor editor = event.getEditor();
-        Document document = editor.getDocument();
-        Project editorProject = editor.getProject();
-        // worthBothering() checks for getCachedPsiFile, so call getPsiFile here
-        PsiFile file = editorProject == null ? null : PsiDocumentManager.getInstance(editorProject).getPsiFile(document);
-        boolean showing = editor.getComponent().isShowing();
-        boolean worthBothering = worthBothering(document, editorProject);
-        if (!showing || !worthBothering) {
-          LOG.debug("Not worth bothering about editor created for : " + file + " because editor isShowing(): " + showing + "; project is open and file is mine: " + worthBothering);
-          return;
-        }
+        Platform.runIfDesktopPlatform(() -> {
+          Editor editor = event.getEditor();
+          Document document = editor.getDocument();
+          Project editorProject = editor.getProject();
+          // worthBothering() checks for getCachedPsiFile, so call getPsiFile here
+          PsiFile file = editorProject == null ? null : PsiDocumentManager.getInstance(editorProject).getPsiFile(document);
+          boolean showing = editor.getComponent().isShowing();
+          boolean worthBothering = worthBothering(document, editorProject);
+          if (!showing || !worthBothering) {
+            LOG.debug("Not worth bothering about editor created for : " + file + " because editor isShowing(): " + showing + "; project is open and file is mine: " + worthBothering);
+            return;
+          }
 
-        ErrorStripeUpdateManager.getInstance(myProject).repaintErrorStripePanel(editor);
+          ErrorStripeUpdateManager.getInstance(myProject).repaintErrorStripePanel(editor);
+        });
       }
 
       @Override
@@ -233,7 +236,7 @@ public final class DaemonListeners implements Disposable {
     connection.subscribe(CommandListener.TOPIC, new MyCommandListener());
     connection.subscribe(ProfileChangeAdapter.TOPIC, new MyProfileChangeListener());
 
-    ApplicationManager.getApplication().addApplicationListener(new MyApplicationListener(), this);
+    project.getApplication().addApplicationListener(new MyApplicationListener(), this);
 
     connection.subscribe(TodoConfiguration.PROPERTY_CHANGE, new MyTodoListener());
 

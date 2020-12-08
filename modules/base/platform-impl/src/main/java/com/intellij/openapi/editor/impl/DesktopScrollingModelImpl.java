@@ -41,6 +41,7 @@ import com.intellij.ui.components.Interpolable;
 import com.intellij.util.SystemProperties;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.Animator;
+import consulo.annotation.DeprecationInfo;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
 
@@ -53,8 +54,10 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ScrollingModelImpl implements ScrollingModelEx {
-  private static final Logger LOG = Logger.getInstance(ScrollingModelImpl.class);
+@Deprecated
+@DeprecationInfo("Desktop onlu")
+public class DesktopScrollingModelImpl implements ScrollingModelEx {
+  private static final Logger LOG = Logger.getInstance(DesktopScrollingModelImpl.class);
 
   private final DesktopEditorImpl myEditor;
   private final List<VisibleAreaListener> myVisibleAreaListeners = ContainerUtil.createLockFreeCopyOnWriteList();
@@ -96,7 +99,7 @@ public class ScrollingModelImpl implements ScrollingModelEx {
     }
   };
 
-  public ScrollingModelImpl(DesktopEditorImpl editor) {
+  public DesktopScrollingModelImpl(DesktopEditorImpl editor) {
     myEditor = editor;
     myEditor.getScrollPane().getViewport().addChangeListener(myViewportChangeListener);
     myEditor.getDocument().addDocumentListener(myDocumentListener);

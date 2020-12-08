@@ -48,6 +48,8 @@ import java.util.Collection;
 import java.util.function.IntFunction;
 
 public interface EditorEx extends Editor {
+  Key<Boolean> DISABLE_CARET_SHIFT_ON_WHITESPACE_INSERTION = Key.create("editor.disable.caret.shift.on.whitespace.insertion");
+
   @NonNls
   String PROP_INSERT_MODE = "insertMode";
   @NonNls

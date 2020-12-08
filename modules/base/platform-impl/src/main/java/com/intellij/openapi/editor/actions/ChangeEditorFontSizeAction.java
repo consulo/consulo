@@ -23,6 +23,9 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.EditorBundle;
 import com.intellij.openapi.editor.impl.DesktopEditorImpl;
 import com.intellij.openapi.project.DumbAware;
+import consulo.editor.internal.EditorInternal;
+import consulo.ui.annotation.RequiredUIAccess;
+
 import javax.annotation.Nullable;
 
 /**
@@ -36,9 +39,10 @@ public abstract class ChangeEditorFontSizeAction extends AnAction implements Dum
     myStep = increaseStep;
   }
 
+  @RequiredUIAccess
   @Override
   public void actionPerformed(AnActionEvent e) {
-    final DesktopEditorImpl editor = getEditor(e);
+    final EditorInternal editor = getEditor(e);
     if (editor != null) {
       final int size = editor.getFontSize() + myStep;
       if (size >= 8 && size <= EditorFontsConstants.getMaxEditorFontSize()) {
@@ -48,14 +52,15 @@ public abstract class ChangeEditorFontSizeAction extends AnAction implements Dum
   }
 
   @Nullable
-  private static DesktopEditorImpl getEditor(AnActionEvent e) {
+  private static EditorInternal getEditor(AnActionEvent e) {
     final Editor editor = e.getData(CommonDataKeys.EDITOR);
-    if (editor instanceof DesktopEditorImpl) {
-      return (DesktopEditorImpl)editor;
+    if (editor instanceof EditorInternal) {
+      return (EditorInternal)editor;
     }
     return null;
   }
 
+  @RequiredUIAccess
   @Override
   public void update(AnActionEvent e) {
     e.getPresentation().setEnabled(getEditor(e) != null);

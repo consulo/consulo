@@ -27,14 +27,18 @@ import com.intellij.openapi.editor.event.EditorMouseListener;
 import com.intellij.openapi.editor.event.EditorMouseMotionListener;
 import com.intellij.openapi.editor.ex.*;
 import com.intellij.openapi.editor.highlighter.EditorHighlighter;
+import com.intellij.openapi.editor.impl.EditorFilteringMarkupModelEx;
 import com.intellij.openapi.editor.impl.SettingsImpl;
 import com.intellij.openapi.editor.impl.TextDrawingCallback;
+import com.intellij.openapi.editor.markup.RangeHighlighter;
 import com.intellij.openapi.editor.markup.TextAttributes;
-import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.vfs.VirtualFile;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
+import consulo.editor.internal.EditorInternal;
 import consulo.internal.arquill.editor.server.ArquillEditor;
 import consulo.ui.Component;
 import consulo.ui.web.internal.base.ComponentHolder;
@@ -53,7 +57,7 @@ import java.util.function.IntFunction;
  * @author VISTALL
  * @since 2019-02-18
  */
-public class WebEditorImpl extends UIComponentWithVaadinComponent<WebEditorImpl.Vaadin> implements Component, EditorEx {
+public class WebEditorImpl extends UIComponentWithVaadinComponent<WebEditorImpl.Vaadin> implements Component, EditorInternal {
   public static class Vaadin extends ArquillEditor implements ComponentHolder, FromVaadinComponentWrapper {
     private Component myComponent;
 
@@ -75,29 +79,90 @@ public class WebEditorImpl extends UIComponentWithVaadinComponent<WebEditorImpl.
 
   private final DocumentEx myDocument;
   private final Project myProject;
+  @Nonnull
+  private final EditorKind myKind;
 
   private final WebFoldingModelImpl myFoldingModel = new WebFoldingModelImpl();
   private final WebSelectionModelImpl mySelectionModel = new WebSelectionModelImpl();
   private final WebCaretModelImpl myCaretModel = new WebCaretModelImpl(this);
+  private final WebScrollingModelImpl myScrollingModel = new WebScrollingModelImpl();
+  private final WebEditorMarkupModelImpl myEditorMarkupModel;
+  private final EditorFilteringMarkupModelEx myFilteringMarkupModel;
 
   private EditorColorsScheme myEditorColorsScheme;
 
+  private volatile EditorHighlighter myHighlighter; // updated in EDT, but can be accessed from other threads (under read action)
+
   private EditorSettings mySettings;
 
-  @RequiredReadAction
-  public WebEditorImpl(Project project, VirtualFile file) {
-    myProject = project;
-    myDocument = (DocumentEx)FileDocumentManager.getInstance().getDocument(file);
+  private Disposable myDisposable = Disposable.newDisposable();
 
-    assert myDocument != null;
+  @RequiredReadAction
+  public WebEditorImpl(@Nonnull Document document, boolean viewer, @Nullable Project project, @Nonnull EditorKind kind) {
+    myProject = project;
+    myKind = kind;
+    myDocument = (DocumentEx)document;
 
     myEditorColorsScheme = EditorColorsManager.getInstance().getGlobalScheme();
-    mySettings = new SettingsImpl(this, project, EditorKind.MAIN_EDITOR);
+    mySettings = new SettingsImpl(this, project, kind);
+    myEditorMarkupModel = new WebEditorMarkupModelImpl(myDocument, this);
+    myFilteringMarkupModel = new EditorFilteringMarkupModelEx(this, myEditorMarkupModel);
 
     Vaadin vaadin = toVaadinComponent();
     vaadin.setWidth("100%");
     vaadin.setHeight("100%");
     vaadin.setText(myDocument.getText());
+  }
+
+  @Override
+  public void throwEditorNotDisposedError(@Nonnull String msg) {
+
+  }
+
+  @Override
+  public void release() {
+    Disposer.dispose(myDisposable);
+  }
+
+  @Nonnull
+  @Override
+  public Disposable getDisposable() {
+    return myDisposable;
+  }
+
+  @Override
+  public boolean isHighlighterAvailable(@Nonnull RangeHighlighter highlighter) {
+    return true;
+  }
+
+  @Override
+  public boolean isScrollToCaret() {
+    return false;
+  }
+
+  @Override
+  public boolean shouldSoftWrapsBeForced() {
+    return false;
+  }
+
+  @Override
+  public void setHighlightingFilter(@Nullable Condition<RangeHighlighter> filter) {
+
+  }
+
+  @Override
+  public int getFontSize() {
+    return 0;
+  }
+
+  @Override
+  public void startDumb() {
+
+  }
+
+  @Override
+  public void stopDumbLater() {
+
   }
 
   @Override
@@ -132,13 +197,13 @@ public class WebEditorImpl extends UIComponentWithVaadinComponent<WebEditorImpl.
   @Nonnull
   @Override
   public MarkupModelEx getMarkupModel() {
-    return null;
+    return myEditorMarkupModel;
   }
 
   @Nonnull
   @Override
   public MarkupModelEx getFilteredDocumentMarkupModel() {
-    return null;
+    return myFilteringMarkupModel;
   }
 
   @Nonnull
@@ -150,7 +215,7 @@ public class WebEditorImpl extends UIComponentWithVaadinComponent<WebEditorImpl.
   @Nonnull
   @Override
   public EditorHighlighter getHighlighter() {
-    return null;
+    return myHighlighter;
   }
 
   @Override
@@ -160,12 +225,12 @@ public class WebEditorImpl extends UIComponentWithVaadinComponent<WebEditorImpl.
 
   @Override
   public void setHighlighter(@Nonnull EditorHighlighter highlighter) {
-
+    myHighlighter = highlighter;
   }
 
   @Override
   public void setColorsScheme(@Nonnull EditorColorsScheme scheme) {
-
+    myEditorColorsScheme = scheme;
   }
 
   @Override
@@ -329,7 +394,7 @@ public class WebEditorImpl extends UIComponentWithVaadinComponent<WebEditorImpl.
   @Nonnull
   @Override
   public ScrollingModelEx getScrollingModel() {
-    return null;
+    return myScrollingModel;
   }
 
   @Nonnull
@@ -505,7 +570,7 @@ public class WebEditorImpl extends UIComponentWithVaadinComponent<WebEditorImpl.
 
   @Override
   public boolean isDisposed() {
-    return false;
+    return Disposer.isDisposed(myDisposable);
   }
 
   @Nullable
@@ -556,6 +621,6 @@ public class WebEditorImpl extends UIComponentWithVaadinComponent<WebEditorImpl.
   @Nonnull
   @Override
   public EditorKind getEditorKind() {
-    return null;
+    return myKind;
   }
 }

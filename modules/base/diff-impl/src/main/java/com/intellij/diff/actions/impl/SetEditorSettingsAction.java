@@ -27,6 +27,8 @@ import com.intellij.openapi.editor.ex.EditorGutterComponentEx;
 import com.intellij.openapi.editor.impl.DesktopEditorImpl;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.editor.internal.EditorInternal;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -143,7 +145,7 @@ public class SetEditorSettingsAction extends ActionGroup implements DumbAware {
               public void applyDefaults(@Nonnull List<? extends Editor> editors) {
                 if (!myTextSettings.isUseSoftWraps()) {
                   for (Editor editor : editors) {
-                    myForcedSoftWrap = myForcedSoftWrap || ((DesktopEditorImpl)editor).shouldSoftWrapsBeForced();
+                    myForcedSoftWrap = myForcedSoftWrap || ((EditorInternal)editor).shouldSoftWrapsBeForced();
                   }
                 }
                 super.applyDefaults(editors);
@@ -225,7 +227,7 @@ public class SetEditorSettingsAction extends ActionGroup implements DumbAware {
 
     private void apply(@Nonnull HighlightingLevel layer) {
       for (Editor editor : myEditors) {
-        ((DesktopEditorImpl)editor).setHighlightingFilter(layer.getCondition());
+        ((EditorInternal)editor).setHighlightingFilter(layer.getCondition());
       }
     }
 

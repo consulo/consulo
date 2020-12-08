@@ -23,7 +23,6 @@ import com.intellij.openapi.editor.ex.*;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
 import com.intellij.openapi.editor.highlighter.EditorHighlighter;
 import com.intellij.openapi.editor.highlighter.LightHighlighterClient;
-import com.intellij.openapi.editor.impl.DesktopEditorImpl;
 import com.intellij.openapi.editor.impl.TextDrawingCallback;
 import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.openapi.fileTypes.SyntaxHighlighter;
@@ -36,6 +35,7 @@ import com.intellij.util.Consumer;
 import com.intellij.util.containers.UnsafeWeakList;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
+import consulo.editor.internal.EditorInternal;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
 import kava.beans.PropertyChangeListener;
@@ -54,7 +54,7 @@ import java.util.function.IntFunction;
 
 class EditorWindowImpl extends com.intellij.injected.editor.EditorWindowImpl implements EditorWindow, EditorEx {
   private final DocumentWindowImpl myDocumentWindow;
-  private final DesktopEditorImpl myDelegate;
+  private final EditorInternal myDelegate;
   private volatile PsiFile myInjectedFile;
   private final boolean myOneLine;
   private final CaretModelWindow myCaretModelDelegate;
@@ -68,7 +68,7 @@ class EditorWindowImpl extends com.intellij.injected.editor.EditorWindowImpl imp
   private final InlayModelWindow myInlayModel;
 
   @Nonnull
-  static Editor create(@Nonnull final DocumentWindowImpl documentRange, @Nonnull final DesktopEditorImpl editor, @Nonnull final PsiFile injectedFile) {
+  static Editor create(@Nonnull final DocumentWindowImpl documentRange, @Nonnull final EditorInternal editor, @Nonnull final PsiFile injectedFile) {
     assert documentRange.isValid();
     assert injectedFile.isValid();
     EditorWindowImpl window;
@@ -88,7 +88,7 @@ class EditorWindowImpl extends com.intellij.injected.editor.EditorWindowImpl imp
     return window;
   }
 
-  private EditorWindowImpl(@Nonnull DocumentWindowImpl documentWindow, @Nonnull final DesktopEditorImpl delegate, @Nonnull PsiFile injectedFile, boolean oneLine) {
+  private EditorWindowImpl(@Nonnull DocumentWindowImpl documentWindow, @Nonnull final EditorInternal delegate, @Nonnull PsiFile injectedFile, boolean oneLine) {
     myDocumentWindow = documentWindow;
     myDelegate = delegate;
     myInjectedFile = injectedFile;

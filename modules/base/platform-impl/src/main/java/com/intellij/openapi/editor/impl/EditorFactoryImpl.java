@@ -4,9 +4,6 @@ package com.intellij.openapi.editor.impl;
 import com.intellij.injected.editor.DocumentWindow;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.application.Application;
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.ModalityStateListener;
-import com.intellij.openapi.application.impl.LaterInvocator;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.EditorFactory;
@@ -35,22 +32,23 @@ import com.intellij.util.messages.MessageBusConnection;
 import com.intellij.util.text.CharArrayCharSequence;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
+import consulo.editor.internal.EditorInternal;
 import consulo.logging.Logger;
 import consulo.ui.UIAccess;
-import org.jetbrains.annotations.NonNls;
+import jakarta.inject.Inject;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import jakarta.inject.Inject;
 import java.util.List;
 
-public class EditorFactoryImpl extends EditorFactory {
+public abstract class EditorFactoryImpl extends EditorFactory {
+  private static final Logger LOG = Logger.getInstance(EditorFactoryImpl.class);
+
   private static final ExtensionPointName<EditorFactoryListener> EP = ExtensionPointName.create("com.intellij.editorFactoryListener");
 
-  private static final Logger LOG = Logger.getInstance(EditorFactoryImpl.class);
   private final EditorEventMulticasterImpl myEditorEventMulticaster = new EditorEventMulticasterImpl();
   private final EventDispatcher<EditorFactoryListener> myEditorFactoryEventDispatcher = EventDispatcher.create(EditorFactoryListener.class);
-  private final List<Editor> myEditors = ContainerUtil.createLockFreeCopyOnWriteList();
+  protected final List<Editor> myEditors = ContainerUtil.createLockFreeCopyOnWriteList();
 
   @Inject
   public EditorFactoryImpl(Application application) {
@@ -63,20 +61,31 @@ public class EditorFactoryImpl extends EditorFactory {
           Project[] openProjects = ProjectManager.getInstance().getOpenProjects();
           boolean isLastProjectClosed = openProjects.length == 0;
           // EditorTextField.releaseEditorLater defer releasing its editor; invokeLater to avoid false positives about such editors.
-          ApplicationManager.getApplication().invokeLater(() -> validateEditorsAreReleased(project, isLastProjectClosed));
+          application.invokeLater(() -> validateEditorsAreReleased(project, isLastProjectClosed));
         });
       }
     });
     busConnection.subscribe(EditorColorsManager.TOPIC, scheme -> refreshAllEditors());
+  }
 
-    LaterInvocator.addModalityStateListener(new ModalityStateListener() {
-      @Override
-      public void beforeModalityStateChanged(boolean entering) {
-        for (Editor editor : myEditors) {
-          ((DesktopEditorImpl)editor).beforeModalityStateChanged();
-        }
-      }
-    }, ApplicationManager.getApplication());
+  @Nonnull
+  protected abstract EditorInternal createEditorImpl(@Nonnull Document document, boolean isViewer, Project project, @Nonnull EditorKind kind);
+
+  protected final Editor createEditor(@Nonnull Document document, boolean isViewer, Project project, @Nonnull EditorKind kind) {
+    Document hostDocument = document instanceof DocumentWindow ? ((DocumentWindow)document).getDelegate() : document;
+    EditorInternal editor = createEditorImpl(hostDocument, isViewer, project, kind);
+    myEditors.add(editor);
+    myEditorEventMulticaster.registerEditor(editor);
+
+    EditorFactoryEvent event = new EditorFactoryEvent(this, editor);
+    myEditorFactoryEventDispatcher.getMulticaster().editorCreated(event);
+    EP.forEachExtensionSafe(it -> it.editorCreated(event));
+
+    if (LOG.isDebugEnabled()) {
+      LOG.debug("number of Editors after create: " + myEditors.size());
+    }
+
+    return editor;
   }
 
   public void validateEditorsAreReleased(Project project, boolean isLastProjectClosed) {
@@ -92,10 +101,9 @@ public class EditorFactoryImpl extends EditorFactory {
     }
   }
 
-  @NonNls
   public static void throwNotReleasedError(@Nonnull Editor editor) {
-    if (editor instanceof DesktopEditorImpl) {
-      ((DesktopEditorImpl)editor).throwEditorNotDisposedError("Editor of " + editor.getClass() + " hasn't been released:");
+    if (editor instanceof EditorInternal) {
+      ((EditorInternal)editor).throwEditorNotDisposedError("Editor of " + editor.getClass() + " hasn't been released:");
     }
     else {
       throw new RuntimeException("Editor of " + editor.getClass() + " and the following text hasn't been released:\n" + editor.getDocument().getText());
@@ -188,22 +196,7 @@ public class EditorFactoryImpl extends EditorFactory {
     return editor;
   }
 
-  private Editor createEditor(@Nonnull Document document, boolean isViewer, Project project, @Nonnull EditorKind kind) {
-    Document hostDocument = document instanceof DocumentWindow ? ((DocumentWindow)document).getDelegate() : document;
-    DesktopEditorImpl editor = new DesktopEditorImpl(hostDocument, isViewer, project, kind);
-    myEditors.add(editor);
-    myEditorEventMulticaster.registerEditor(editor);
 
-    EditorFactoryEvent event = new EditorFactoryEvent(this, editor);
-    myEditorFactoryEventDispatcher.getMulticaster().editorCreated(event);
-    EP.forEachExtensionSafe(it -> it.editorCreated(event));
-
-    if (LOG.isDebugEnabled()) {
-      LOG.debug("number of Editors after create: " + myEditors.size());
-    }
-
-    return editor;
-  }
 
   @Override
   public void releaseEditor(@Nonnull Editor editor) {
@@ -214,7 +207,7 @@ public class EditorFactoryImpl extends EditorFactory {
     }
     finally {
       try {
-        ((DesktopEditorImpl)editor).release();
+        ((EditorInternal)editor).release();
       }
       finally {
         myEditors.remove(editor);
@@ -277,12 +270,12 @@ public class EditorFactoryImpl extends EditorFactory {
 
     @Override
     public void execute(@Nonnull Editor editor, char charTyped, @Nonnull DataContext dataContext) {
-      editor.putUserData(DesktopEditorImpl.DISABLE_CARET_SHIFT_ON_WHITESPACE_INSERTION, Boolean.TRUE);
+      editor.putUserData(EditorEx.DISABLE_CARET_SHIFT_ON_WHITESPACE_INSERTION, Boolean.TRUE);
       try {
         myDelegate.execute(editor, charTyped, dataContext);
       }
       finally {
-        editor.putUserData(DesktopEditorImpl.DISABLE_CARET_SHIFT_ON_WHITESPACE_INSERTION, null);
+        editor.putUserData(EditorEx.DISABLE_CARET_SHIFT_ON_WHITESPACE_INSERTION, null);
       }
     }
 

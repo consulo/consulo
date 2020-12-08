@@ -15,18 +15,17 @@
  */
 package consulo.web.fileEditor.impl.text;
 
+import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.fileEditor.FileEditorLocation;
-import com.intellij.openapi.fileEditor.FileEditorState;
-import com.intellij.openapi.fileEditor.FileEditorStateLevel;
-import com.intellij.openapi.fileEditor.TextEditor;
+import com.intellij.openapi.editor.EditorFactory;
+import com.intellij.openapi.editor.ex.EditorEx;
+import com.intellij.openapi.fileEditor.*;
 import com.intellij.openapi.project.Project;
-import consulo.util.dataholder.UserDataHolderBase;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.pom.Navigatable;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.web.internal.ex.WebEditorImpl;
+import consulo.util.dataholder.UserDataHolderBase;
 import kava.beans.PropertyChangeListener;
 
 import javax.annotation.Nonnull;
@@ -37,11 +36,13 @@ import javax.annotation.Nullable;
  * @since 2018-05-10
  */
 public class WebTextEditor extends UserDataHolderBase implements TextEditor {
-  private WebEditorImpl myEditor;
+  private EditorEx myEditor;
 
   @RequiredUIAccess
   public WebTextEditor(Project project, VirtualFile file) {
-    myEditor = new WebEditorImpl(project, file);
+    Document document = FileDocumentManager.getInstance().getDocument(file);
+    assert document != null;
+    myEditor = (EditorEx)EditorFactory.getInstance().createEditor(document, project);
   }
 
   @Nullable

@@ -4,11 +4,12 @@ package com.intellij.openapi.editor.impl.event;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.event.*;
 import com.intellij.openapi.editor.ex.*;
-import com.intellij.openapi.editor.impl.DesktopEditorImpl;
 import com.intellij.openapi.editor.impl.EditorDocumentPriorities;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.util.EventDispatcher;
 import consulo.disposer.Disposable;
+import consulo.editor.internal.EditorInternal;
+import consulo.ui.annotation.RequiredUIAccess;
 import kava.beans.PropertyChangeListener;
 import org.jetbrains.annotations.TestOnly;
 
@@ -92,18 +93,20 @@ public class EditorEventMulticasterImpl implements EditorEventMulticasterEx {
 
     editor.addEditorMouseMotionListener(myEditorMouseMotionMulticaster.getMulticaster());
     editor.addEditorMouseMotionListener(new EditorMouseMotionListener() {
+      @RequiredUIAccess
       @Override
       public void mouseMoved(@Nonnull EditorMouseEvent event) {
         MOUSE_MOTION_EP.forEachExtensionSafe(it -> it.mouseMoved(event));
       }
 
+      @RequiredUIAccess
       @Override
       public void mouseDragged(@Nonnull EditorMouseEvent event) {
         MOUSE_MOTION_EP.forEachExtensionSafe(it -> it.mouseDragged(event));
       }
     });
 
-    ((EditorMarkupModel)editor.getMarkupModel()).addErrorMarkerListener(myErrorStripeMulticaster.getMulticaster(), ((DesktopEditorImpl)editor).getDisposable());
+    ((EditorMarkupModel)editor.getMarkupModel()).addErrorMarkerListener(myErrorStripeMulticaster.getMulticaster(), ((EditorInternal)editor).getDisposable());
     editor.getCaretModel().addCaretListener(myCaretMulticaster.getMulticaster());
     editor.getSelectionModel().addSelectionListener(mySelectionMulticaster.getMulticaster());
     editor.getScrollingModel().addVisibleAreaListener(myVisibleAreaMulticaster.getMulticaster());

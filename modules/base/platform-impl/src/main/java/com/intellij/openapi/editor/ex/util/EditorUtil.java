@@ -35,7 +35,7 @@ import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.editor.impl.ComplementaryFontsRegistry;
 import com.intellij.openapi.editor.impl.DesktopEditorImpl;
 import com.intellij.openapi.editor.impl.FontInfo;
-import com.intellij.openapi.editor.impl.ScrollingModelImpl;
+import com.intellij.openapi.editor.impl.DesktopScrollingModelImpl;
 import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.openapi.editor.textarea.TextComponentEditor;
 import com.intellij.openapi.fileEditor.FileEditor;
@@ -787,11 +787,11 @@ public final class EditorUtil {
 
   public static void runWithAnimationDisabled(@Nonnull Editor editor, @Nonnull Runnable taskWithScrolling) {
     ScrollingModel scrollingModel = editor.getScrollingModel();
-    if (!(scrollingModel instanceof ScrollingModelImpl)) {
+    if (!(scrollingModel instanceof DesktopScrollingModelImpl)) {
       taskWithScrolling.run();
     }
     else {
-      boolean animationWasEnabled = ((ScrollingModelImpl)scrollingModel).isAnimationEnabled();
+      boolean animationWasEnabled = ((DesktopScrollingModelImpl)scrollingModel).isAnimationEnabled();
       scrollingModel.disableAnimation();
       try {
         taskWithScrolling.run();

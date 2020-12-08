@@ -2702,8 +2702,6 @@
 
     <applicationService serviceInterface="com.intellij.openapi.editor.actionSystem.TypedAction" serviceImplementation="com.intellij.openapi.editor.impl.TypedActionImpl"/>
 
-    <projectService serviceImplementation="com.intellij.codeInsight.daemon.impl.EditorTracker"/>
-
     <editorFactoryListener implementation="com.intellij.codeInsight.daemon.impl.EditorTracker$MyAppLevelEditorFactoryListener"/>
 
     <projectService serviceImplementation="com.intellij.openapi.vcs.changes.committed.OutdatedVersionNotifier" lazy="false"/>

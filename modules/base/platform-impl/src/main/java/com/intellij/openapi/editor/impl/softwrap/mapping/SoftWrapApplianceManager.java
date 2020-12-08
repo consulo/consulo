@@ -16,7 +16,6 @@ import com.intellij.openapi.editor.impl.softwrap.SoftWrapsStorage;
 import com.intellij.openapi.editor.impl.view.IterationState;
 import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.openapi.project.Project;
-import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.Segment;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
@@ -24,12 +23,14 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.EditorNotifications;
 import com.intellij.util.DocumentUtil;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.editor.internal.EditorInternal;
 import consulo.logging.Logger;
+import consulo.util.dataholder.Key;
 import org.intellij.lang.annotations.JdkConstants;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.util.Arrays;
@@ -244,12 +245,12 @@ public class SoftWrapApplianceManager implements Dumpable {
 
     Project project = myEditor.getProject();
     VirtualFile file = myEditor.getVirtualFile();
-    if (project != null && file != null && myEditor.getUserData(DesktopEditorImpl.FORCED_SOFT_WRAPS) != null) {
+    if (project != null && file != null && myEditor.getUserData(EditorInternal.FORCED_SOFT_WRAPS) != null) {
       if (myStorage.isEmpty()) {
-        myEditor.putUserData(DesktopEditorImpl.SOFT_WRAPS_EXIST, null);
+        myEditor.putUserData(EditorInternal.SOFT_WRAPS_EXIST, null);
       }
-      else if (myEditor.getUserData(DesktopEditorImpl.SOFT_WRAPS_EXIST) == null) {
-        myEditor.putUserData(DesktopEditorImpl.SOFT_WRAPS_EXIST, Boolean.TRUE);
+      else if (myEditor.getUserData(EditorInternal.SOFT_WRAPS_EXIST) == null) {
+        myEditor.putUserData(EditorInternal.SOFT_WRAPS_EXIST, Boolean.TRUE);
         EditorNotifications.getInstance(project).updateNotifications(file);
       }
     }

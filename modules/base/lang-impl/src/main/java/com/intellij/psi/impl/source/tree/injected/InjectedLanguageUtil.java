@@ -10,12 +10,10 @@ import com.intellij.lang.ASTNode;
 import com.intellij.lang.Language;
 import com.intellij.lang.injection.InjectedLanguageManager;
 import com.intellij.lang.injection.MultiHostRegistrar;
-import consulo.logging.Logger;
 import com.intellij.openapi.editor.Caret;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.ex.DocumentEx;
-import com.intellij.openapi.editor.impl.DesktopEditorImpl;
 import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.OpenFileDescriptor;
@@ -38,8 +36,10 @@ import com.intellij.testFramework.LightVirtualFile;
 import com.intellij.util.ObjectUtil;
 import com.intellij.util.containers.ConcurrentList;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.editor.internal.EditorInternal;
 import consulo.lang.LanguageVersion;
 import consulo.lang.util.LanguageVersionUtil;
+import consulo.logging.Logger;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolderEx;
 import consulo.util.lang.DeprecatedMethodException;
@@ -283,7 +283,7 @@ public class InjectedLanguageUtil {
     if (!documentWindow.isValid()) {
       return hostEditor; // since the moment we got hold of injectedFile and this moment call, document may have been dirtied
     }
-    return EditorWindowImpl.create(documentWindow, (DesktopEditorImpl)hostEditor, injectedFile);
+    return EditorWindowImpl.create(documentWindow, (EditorInternal)hostEditor, injectedFile);
   }
 
   /**
@@ -551,7 +551,7 @@ public class InjectedLanguageUtil {
     Editor editor = FileEditorManager.getInstance(project).openTextEditor(new OpenFileDescriptor(project, virtualFile, -1), false);
     if (editor == null || editor instanceof EditorWindow || editor.isDisposed()) return editor;
     if (document instanceof DocumentWindowImpl) {
-      return EditorWindowImpl.create((DocumentWindowImpl)document, (DesktopEditorImpl)editor, file);
+      return EditorWindowImpl.create((DocumentWindowImpl)document, (EditorInternal)editor, file);
     }
     return editor;
   }

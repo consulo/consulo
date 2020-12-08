@@ -5,7 +5,6 @@ import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.application.NonBlockingReadAction;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.event.VisibleAreaListener;
-import com.intellij.openapi.editor.impl.DesktopEditorImpl;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.LoadingDecorator;
 import com.intellij.openapi.ui.popup.ComponentPopupBuilder;
@@ -22,6 +21,7 @@ import com.intellij.util.ui.AsyncProcessIcon;
 import com.intellij.util.ui.UIUtil;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
+import consulo.editor.internal.EditorInternal;
 import consulo.ui.image.Image;
 import org.jetbrains.concurrency.CancellablePromise;
 
@@ -57,7 +57,7 @@ class ParameterInfoTaskRunnerUtil {
       if (promise != null && promise.isSucceeded() && Objects.equals(focusOwner, getFocusOwner(project))) {
         continuationConsumer.accept(continuation);
       }
-    }).expireWith(editor instanceof DesktopEditorImpl ? ((DesktopEditorImpl)editor).getDisposable() : project).submit(AppExecutorUtil.getAppExecutorService()).onProcessed(ignore -> {
+    }).expireWith(editor instanceof EditorInternal ? ((EditorInternal)editor).getDisposable() : project).submit(AppExecutorUtil.getAppExecutorService()).onProcessed(ignore -> {
       stopAction.accept(false);
       editor.getScrollingModel().removeVisibleAreaListener(visibleAreaListener);
     }));

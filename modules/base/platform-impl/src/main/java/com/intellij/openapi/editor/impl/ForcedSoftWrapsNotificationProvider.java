@@ -8,12 +8,14 @@ import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.fileEditor.TextEditor;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
-import consulo.util.dataholder.Key;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.EditorNotificationPanel;
 import com.intellij.ui.EditorNotifications;
 import consulo.annotation.access.RequiredReadAction;
+import consulo.editor.internal.EditorInternal;
 import consulo.editor.notifications.EditorNotificationProvider;
+import consulo.util.dataholder.Key;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -39,8 +41,8 @@ public final class ForcedSoftWrapsNotificationProvider implements EditorNotifica
   public EditorNotificationPanel createNotificationPanel(@Nonnull final VirtualFile file, @Nonnull final FileEditor fileEditor) {
     if (!(fileEditor instanceof TextEditor)) return null;
     final Editor editor = ((TextEditor)fileEditor).getEditor();
-    if (!Boolean.TRUE.equals(editor.getUserData(DesktopEditorImpl.FORCED_SOFT_WRAPS)) ||
-        !Boolean.TRUE.equals(editor.getUserData(DesktopEditorImpl.SOFT_WRAPS_EXIST)) ||
+    if (!Boolean.TRUE.equals(editor.getUserData(EditorInternal.FORCED_SOFT_WRAPS)) ||
+        !Boolean.TRUE.equals(editor.getUserData(EditorInternal.SOFT_WRAPS_EXIST)) ||
         PropertiesComponent.getInstance().isTrueValue(DISABLED_NOTIFICATION_KEY)) {
       return null;
     }
@@ -48,7 +50,7 @@ public final class ForcedSoftWrapsNotificationProvider implements EditorNotifica
     final EditorNotificationPanel panel = new EditorNotificationPanel();
     panel.setText(EditorBundle.message("forced.soft.wrap.message"));
     panel.createActionLabel(EditorBundle.message("forced.soft.wrap.hide.message"), () -> {
-      editor.putUserData(DesktopEditorImpl.FORCED_SOFT_WRAPS, null);
+      editor.putUserData(EditorInternal.FORCED_SOFT_WRAPS, null);
       EditorNotifications.getInstance(myProject).updateNotifications(file);
     });
     panel.createActionLabel(EditorBundle.message("forced.soft.wrap.dont.show.again.message"), () -> {

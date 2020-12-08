@@ -188,7 +188,7 @@ public class FoldingModelImpl extends InlayModel.SimpleAdapter implements Foldin
     myDoNotCollapseCaret |= dontCollapseCaret;
     boolean oldBatchFlag = myIsBatchFoldingProcessing;
     if (!oldBatchFlag) {
-      ((ScrollingModelImpl)myEditor.getScrollingModel()).finishAnimation();
+      ((DesktopScrollingModelImpl)myEditor.getScrollingModel()).finishAnimation();
       myScrollingPositionKeeper.savePosition();
       myDisableScrollingPositionAdjustment = false;
     }

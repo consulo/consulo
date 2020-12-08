@@ -24,26 +24,27 @@ import com.intellij.openapi.editor.markup.HighlighterTargetArea;
 import com.intellij.openapi.editor.markup.RangeHighlighter;
 import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.openapi.util.Condition;
-import consulo.disposer.Disposable;
-import consulo.util.dataholder.Key;
 import com.intellij.util.Consumer;
 import com.intellij.util.FilteringProcessor;
 import com.intellij.util.Processor;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.disposer.Disposable;
+import consulo.editor.internal.EditorInternal;
+import consulo.util.dataholder.Key;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.List;
 
 public class EditorFilteringMarkupModelEx implements MarkupModelEx {
   @Nonnull
-  private final DesktopEditorImpl myEditor;
+  private final EditorInternal myEditor;
   @Nonnull
   private final MarkupModelEx myDelegate;
 
   private final Condition<RangeHighlighter> IS_AVAILABLE = this::isAvailable;
 
-  EditorFilteringMarkupModelEx(@Nonnull DesktopEditorImpl editor, @Nonnull MarkupModelEx delegate) {
+  public EditorFilteringMarkupModelEx(@Nonnull EditorInternal editor, @Nonnull MarkupModelEx delegate) {
     myEditor = editor;
     myDelegate = delegate;
   }

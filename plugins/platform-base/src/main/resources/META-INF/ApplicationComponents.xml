@@ -46,11 +46,6 @@
     </component>
 
     <component>
-      <interface-class>com.intellij.openapi.editor.EditorFactory</interface-class>
-      <implementation-class>com.intellij.openapi.editor.impl.EditorFactoryImpl</implementation-class>
-    </component>
-
-    <component>
       <interface-class>com.intellij.history.LocalHistory</interface-class>
       <implementation-class>com.intellij.history.integration.LocalHistoryImpl</implementation-class>
     </component>
@@ -114,9 +109,6 @@
     </component>
     <component>
       <implementation-class>com.intellij.openapi.actionSystem.ex.QuickListsManager</implementation-class>
-    </component>
-    <component>
-      <implementation-class>com.intellij.openapi.editor.impl.VisibleEditorsTracker</implementation-class>
     </component>
     <component>
       <implementation-class>com.intellij.openapi.keymap.impl.ModifierKeyDoubleClickHandler</implementation-class>

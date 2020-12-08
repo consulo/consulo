@@ -47,7 +47,7 @@ public class MarkupModelImpl extends UserDataHolderBase implements MarkupModelEx
   private final RangeHighlighterTree myHighlighterTree;          // this tree holds regular highlighters with target = HighlighterTargetArea.EXACT_RANGE
   private final RangeHighlighterTree myHighlighterTreeForLines;  // this tree holds line range highlighters with target = HighlighterTargetArea.LINES_IN_RANGE
 
-  MarkupModelImpl(@Nonnull DocumentEx document) {
+  public MarkupModelImpl(@Nonnull DocumentEx document) {
     myDocument = document;
     myHighlighterTree = new RangeHighlighterTree(document, this);
     myHighlighterTreeForLines = new RangeHighlighterTree(document, this);

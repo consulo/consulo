@@ -136,6 +136,15 @@
       <implementation-class>com.intellij.ide.ui.laf.LafManagerImpl</implementation-class>
       <headless-implementation-class>com.intellij.ide.ui.laf.HeadlessLafManagerImpl</headless-implementation-class>
     </component>
+
+    <component>
+      <interface-class>com.intellij.openapi.editor.EditorFactory</interface-class>
+      <implementation-class>consulo.desktop.editor.impl.DesktopEditorFactoryImpl</implementation-class>
+    </component>
+
+    <component>
+      <implementation-class>com.intellij.openapi.editor.impl.VisibleEditorsTracker</implementation-class>
+    </component>
   </application-components>
 
   <project-components>
@@ -223,6 +232,8 @@
     <projectService serviceInterface="consulo.wm.ProjectIdeFocusManager" serviceImplementation="com.intellij.openapi.wm.impl.DesktopIdeFocusManagerImpl" lazy="false"/>
 
     <projectService serviceInterface="com.intellij.ui.docking.DockManager" serviceImplementation="com.intellij.ui.docking.impl.DesktopDockManagerImpl"/>
+
+    <projectService serviceInterface="com.intellij.codeInsight.daemon.impl.EditorTracker" serviceImplementation="consulo.desktop.codeInsight.daemon.impl.DesktopEditorTrackerImpl"/>
 
     <backgroundPostStartupActivity implementation="com.intellij.diagnostic.WindowsDefenderCheckerActivity"/>
     <applicationService serviceImplementation="com.intellij.diagnostic.WindowsDefenderChecker"/>

@@ -57,7 +57,7 @@ public class VisibleEditorsTracker implements CommandListener {
         myEditorsVisibleOnCommandStart.add(editor);
       }
 
-      ((ScrollingModelImpl)editor.getScrollingModel()).finishAnimation();
+      ((DesktopScrollingModelImpl)editor.getScrollingModel()).finishAnimation();
       myCurrentCommandStart = System.currentTimeMillis();
     }
   }

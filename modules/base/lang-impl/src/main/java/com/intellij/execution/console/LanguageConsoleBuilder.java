@@ -31,7 +31,6 @@ import com.intellij.openapi.editor.ex.DocumentEx;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.editor.ex.RangeHighlighterEx;
 import com.intellij.openapi.editor.impl.EditorComponentImpl;
-import com.intellij.openapi.editor.impl.DesktopEditorImpl;
 import com.intellij.openapi.editor.impl.SoftWrapModelImpl;
 import com.intellij.openapi.editor.impl.event.MarkupModelListener;
 import com.intellij.openapi.editor.impl.softwrap.mapping.SoftWrapApplianceManager;
@@ -49,10 +48,10 @@ import com.intellij.testFramework.LightVirtualFile;
 import com.intellij.util.Consumer;
 import com.intellij.util.PairFunction;
 import consulo.awt.TargetAWT;
+import consulo.editor.internal.EditorInternal;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.awt.*;
 
@@ -341,7 +340,7 @@ public final class LanguageConsoleBuilder {
           Rectangle clip = g.getClipBounds();
           int lineHeight = editor.getLineHeight();
           int startLine = clip.y / lineHeight;
-          int endLine = Math.min(((clip.y + clip.height) / lineHeight) + 1, ((DesktopEditorImpl)editor).getVisibleLineCount());
+          int endLine = Math.min(((clip.y + clip.height) / lineHeight) + 1, ((EditorInternal)editor).getVisibleLineCount());
           if (startLine >= endLine) {
             return;
           }
