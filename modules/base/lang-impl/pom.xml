@@ -56,11 +56,13 @@
       <groupId>${project.groupId}</groupId>
       <artifactId>consulo-compiler-impl</artifactId>
       <version>${project.version}</version>
+      <optional>true</optional>
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>consulo-usage-view</artifactId>
       <version>${project.version}</version>
+      <optional>true</optional>
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>

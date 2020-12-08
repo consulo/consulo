@@ -22,7 +22,6 @@ import com.intellij.packaging.artifacts.ArtifactType;
 import com.intellij.packaging.elements.CompositePackagingElement;
 import com.intellij.packaging.elements.PackagingElementFactory;
 import com.intellij.packaging.elements.PackagingElementOutputKind;
-import com.intellij.packaging.impl.artifacts.PlainArtifactType;
 import com.intellij.packaging.impl.elements.ArtifactRootElementImpl;
 import consulo.sandboxPlugin.ide.module.extension.SandModuleExtension;
 import consulo.ui.image.Image;
@@ -38,8 +37,8 @@ public class SandArtifactType extends ArtifactType {
   @NonNls
   public static final String ID = "sand";
 
-  public static PlainArtifactType getInstance() {
-    return EP_NAME.findExtension(PlainArtifactType.class);
+  public static SandArtifactType getInstance() {
+    return EP_NAME.findExtension(SandArtifactType.class);
   }
 
   public SandArtifactType() {
