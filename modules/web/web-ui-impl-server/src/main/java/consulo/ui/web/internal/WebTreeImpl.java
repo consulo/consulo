@@ -16,7 +16,10 @@
 package consulo.ui.web.internal;
 
 import com.vaadin.ui.UI;
-import consulo.ui.*;
+import consulo.ui.ContextHandler;
+import consulo.ui.Tree;
+import consulo.ui.TreeModel;
+import consulo.ui.TreeNode;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.web.internal.base.UIComponentWithVaadinComponent;
 import consulo.ui.web.internal.base.VaadinComponent;
@@ -27,8 +30,6 @@ import consulo.web.gwt.shared.ui.state.tree.TreeState;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
 
 /**
  * @author VISTALL
@@ -84,7 +85,6 @@ public class WebTreeImpl<NODE> extends UIComponentWithVaadinComponent<WebTreeImp
       }
     };
 
-    private final Executor myUpdater = Executors.newSingleThreadExecutor();  //TODO [VISTALL] very bad idea without dispose
     private final List<TreeState.TreeChange> myChanges = new ArrayList<>();
     private final Map<String, WebTreeNodeImpl<E>> myNodeMap = new LinkedHashMap<>();
 
