@@ -30,11 +30,12 @@ import com.intellij.openapi.ui.VerticalFlowLayout;
 import com.intellij.ui.DocumentAdapter;
 import com.intellij.ui.FontComboBox;
 import com.intellij.ui.FontInfoRenderer;
-import com.intellij.ui.IdeBorderFactory;
+import com.intellij.ui.JBColor;
 import com.intellij.ui.components.JBCheckBox;
 import com.intellij.ui.components.labels.LinkLabel;
 import com.intellij.ui.components.labels.LinkListener;
 import com.intellij.ui.components.panels.HorizontalLayout;
+import com.intellij.ui.components.panels.Wrapper;
 import com.intellij.util.EventDispatcher;
 import com.intellij.util.ui.JBUI;
 import consulo.awt.TargetAWT;
@@ -44,14 +45,13 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
-import java.awt.*;
 import java.awt.event.*;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
-public class FontOptions extends JPanel implements OptionsPanel{
+public class FontOptions implements OptionsPanel {
   private static final FontInfoRenderer RENDERER = new FontInfoRenderer() {
     @Override
     protected boolean isEditorFont() {
@@ -68,7 +68,7 @@ public class FontOptions extends JPanel implements OptionsPanel{
   @Nonnull
   private final JTextField myEditorFontSizeField = new JTextField(4);
   @Nonnull
-  private final JTextField myLineSpacingField    = new JTextField(4);
+  private final JTextField myLineSpacingField = new JTextField(4);
   private final FontComboBox myPrimaryCombo = new FontComboBox();
   private final JCheckBox myUseSecondaryFontCheckbox = new JCheckBox(ApplicationBundle.message("secondary.font"));
   private final JCheckBox myEnableLigaturesCheckbox = new JCheckBox(ApplicationBundle.message("use.ligatures"));
@@ -76,27 +76,26 @@ public class FontOptions extends JPanel implements OptionsPanel{
   private final FontComboBox mySecondaryCombo = new FontComboBox();
 
   @Nonnull
-  private final JBCheckBox myOnlyMonospacedCheckBox =
-          new JBCheckBox(ApplicationBundle.message("checkbox.show.only.monospaced.fonts"));
+  private final JBCheckBox myOnlyMonospacedCheckBox = new JBCheckBox(ApplicationBundle.message("checkbox.show.only.monospaced.fonts"));
 
   private boolean myIsInSchemeChange;
 
+  private final JPanel myRootPanel;
 
   public FontOptions(ColorAndFontOptions options) {
     this(options, ApplicationBundle.message("group.editor.font"));
   }
 
   protected FontOptions(@Nonnull ColorAndFontOptions options, final String title) {
-    super(new VerticalFlowLayout(VerticalFlowLayout.TOP, true, false));
-    Insets borderInsets =
-            JBUI.insets(IdeBorderFactory.TITLED_BORDER_TOP_INSET, IdeBorderFactory.TITLED_BORDER_LEFT_INSET, 0, IdeBorderFactory.TITLED_BORDER_RIGHT_INSET);
-    setBorder(IdeBorderFactory.createTitledBorder(title, false, borderInsets));
+    JPanel mainPanel = new JPanel(new VerticalFlowLayout(VerticalFlowLayout.TOP, true, false));
+    mainPanel.setBorder(JBUI.Borders.empty(5));
+
     myOptions = options;
-    add(myOnlyMonospacedCheckBox);
+    mainPanel.add(myOnlyMonospacedCheckBox);
 
     JPanel primaryFontPanel = new JPanel(new HorizontalLayout(JBUI.scale(5)));
     primaryFontPanel.setBorder(JBUI.Borders.emptyLeft(20));
-    add(primaryFontPanel);
+    mainPanel.add(primaryFontPanel);
 
     primaryFontPanel.add(LabeledComponent.left(myPrimaryCombo, ApplicationBundle.message("primary.font")));
     primaryFontPanel.add(LabeledComponent.left(myEditorFontSizeField, ApplicationBundle.message("editbox.font.size")));
@@ -105,10 +104,10 @@ public class FontOptions extends JPanel implements OptionsPanel{
     JLabel infoLabel = new JLabel(ApplicationBundle.message("label.fallback.fonts.list.description"));
     infoLabel.setFont(JBUI.Fonts.smallFont());
     infoLabel.setForeground(TargetAWT.to(StandardColors.GRAY));
-    add(infoLabel);
+    mainPanel.add(infoLabel);
 
     JPanel secondFontPanel = new JPanel(new HorizontalLayout(JBUI.scale(5)));
-    add(secondFontPanel);
+    mainPanel.add(secondFontPanel);
 
     secondFontPanel.add(myUseSecondaryFontCheckbox);
     secondFontPanel.add(mySecondaryCombo);
@@ -125,7 +124,7 @@ public class FontOptions extends JPanel implements OptionsPanel{
     });
     myLigaturesInfoLinkLabel.setBorder(JBUI.Borders.emptyLeft(5));
     ligaturesPanel.add(myLigaturesInfoLinkLabel);
-    add(ligaturesPanel);
+    mainPanel.add(ligaturesPanel);
 
     myOnlyMonospacedCheckBox.setBorder(null);
     myUseSecondaryFontCheckbox.setBorder(null);
@@ -233,12 +232,15 @@ public class FontOptions extends JPanel implements OptionsPanel{
         FontOptions.this.getFontPreferences().setUseLigatures(myEnableLigaturesCheckbox.isSelected());
       }
     });
+
+    Wrapper wrapper = new Wrapper(mainPanel);
+    wrapper.setBorder(JBUI.Borders.customLine(JBColor.border(), 1, 0, 0, 0));
+    myRootPanel = wrapper;
   }
 
   private int getFontSizeFromField() {
     try {
-      return Math.min(OptionsConstants.MAX_EDITOR_FONT_SIZE,
-                      Math.max(OptionsConstants.MIN_EDITOR_FONT_SIZE, Integer.parseInt(myEditorFontSizeField.getText())));
+      return Math.min(OptionsConstants.MAX_EDITOR_FONT_SIZE, Math.max(OptionsConstants.MIN_EDITOR_FONT_SIZE, Integer.parseInt(myEditorFontSizeField.getText())));
     }
     catch (NumberFormatException e) {
       return OptionsConstants.DEFAULT_EDITOR_FONT_SIZE;
@@ -248,7 +250,8 @@ public class FontOptions extends JPanel implements OptionsPanel{
   private float getLineSpacingFromField() {
     try {
       return Math.min(OptionsConstants.MAX_EDITOR_LINE_SPACING, Math.max(OptionsConstants.MIN_EDITOR_LINE_SPACING, Float.parseFloat(myLineSpacingField.getText())));
-    } catch (NumberFormatException e){
+    }
+    catch (NumberFormatException e) {
       return OptionsConstants.DEFAULT_EDITOR_LINE_SPACING;
     }
   }
@@ -262,14 +265,14 @@ public class FontOptions extends JPanel implements OptionsPanel{
     String primaryFontFamily = myPrimaryCombo.getFontName();
     String secondaryFontFamily = mySecondaryCombo.isEnabled() ? mySecondaryCombo.getFontName() : null;
     int fontSize = getFontSizeFromField();
-    if (primaryFontFamily != null ) {
+    if (primaryFontFamily != null) {
       if (!FontPreferences.DEFAULT_FONT_NAME.equals(primaryFontFamily)) {
         fontPreferences.addFontFamily(primaryFontFamily);
       }
       fontPreferences.register(primaryFontFamily, JBUI.scale(fontSize));
     }
     if (secondaryFontFamily != null) {
-      if (!FontPreferences.DEFAULT_FONT_NAME.equals(secondaryFontFamily)){
+      if (!FontPreferences.DEFAULT_FONT_NAME.equals(secondaryFontFamily)) {
         fontPreferences.addFontFamily(secondaryFontFamily);
       }
       fontPreferences.register(secondaryFontFamily, JBUI.scale(fontSize));
@@ -280,20 +283,12 @@ public class FontOptions extends JPanel implements OptionsPanel{
 
   public static void showReadOnlyMessage(JComponent parent, final boolean sharedScheme) {
     if (!sharedScheme) {
-      Messages.showMessageDialog(
-              parent,
-              ApplicationBundle.message("error.readonly.scheme.cannot.be.modified"),
-              ApplicationBundle.message("title.cannot.modify.readonly.scheme"),
-              Messages.getInformationIcon()
-      );
+      Messages.showMessageDialog(parent, ApplicationBundle.message("error.readonly.scheme.cannot.be.modified"), ApplicationBundle.message("title.cannot.modify.readonly.scheme"),
+                                 Messages.getInformationIcon());
     }
     else {
-      Messages.showMessageDialog(
-              parent,
-              ApplicationBundle.message("error.shared.scheme.cannot.be.modified"),
-              ApplicationBundle.message("title.cannot.modify.readonly.scheme"),
-              Messages.getInformationIcon()
-      );
+      Messages.showMessageDialog(parent, ApplicationBundle.message("error.shared.scheme.cannot.be.modified"), ApplicationBundle.message("title.cannot.modify.readonly.scheme"),
+                                 Messages.getInformationIcon());
     }
   }
 
@@ -375,11 +370,11 @@ public class FontOptions extends JPanel implements OptionsPanel{
 
   @Override
   public JPanel getPanel() {
-    return this;
+    return myRootPanel;
   }
 
   @Override
   public Set<String> processListOptions() {
-    return new HashSet<String>();
+    return new HashSet<>();
   }
 }

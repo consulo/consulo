@@ -63,7 +63,6 @@ import consulo.ui.image.Image;
 import gnu.trove.THashSet;
 import gnu.trove.TObjectHashingStrategy;
 import org.jetbrains.annotations.Nls;
-import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -73,7 +72,7 @@ import java.util.List;
 import java.util.*;
 import java.util.function.Function;
 
-public class ColorAndFontOptions extends SearchableConfigurable.Parent.Abstract {
+public class ColorAndFontOptions extends SearchableConfigurable.Parent.Abstract implements Configurable.NoMargin {
   /**
    * Shows a requested page to edit a color settings.
    * If current data context represents a setting dialog that can open a requested page,
@@ -1141,7 +1140,7 @@ public class ColorAndFontOptions extends SearchableConfigurable.Parent.Abstract 
     return child == null ? null : child.createPanel();
   }
 
-  private class InnerSearchableConfigurable implements SearchableConfigurable, OptionsContainingConfigurable, NoScroll, Weighted {
+  private class InnerSearchableConfigurable implements SearchableConfigurable, OptionsContainingConfigurable, NoScroll, Weighted, NoMargin {
     private NewColorAndFontPanel mySubPanel;
     private boolean mySubInitInvoked = false;
     @Nonnull
@@ -1279,7 +1278,6 @@ public class ColorAndFontOptions extends SearchableConfigurable.Parent.Abstract 
     }
 
     @Nonnull
-    @NonNls
     @Override
     public String toString() {
       return "Color And Fonts for " + getDisplayName();

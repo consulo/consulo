@@ -31,6 +31,8 @@ import consulo.ui.ComboBox;
 import consulo.ui.Component;
 import consulo.ui.Label;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.border.BorderPosition;
+import consulo.ui.border.BorderStyle;
 import consulo.ui.layout.DockLayout;
 import consulo.ui.layout.HorizontalLayout;
 import consulo.ui.model.MutableListModel;
@@ -55,6 +57,9 @@ public class SchemesPanel implements SkipSelfSearchComponent {
   @RequiredUIAccess
   public SchemesPanel(ColorAndFontOptions options) {
     myLayout = DockLayout.create();
+    myLayout.addBorder(BorderPosition.BOTTOM, BorderStyle.EMPTY, 5);
+    myLayout.addBorder(BorderPosition.RIGHT, BorderStyle.EMPTY, 5);
+    myLayout.addBorder(BorderPosition.LEFT, BorderStyle.EMPTY, 5);
 
     myOptions = options;
 

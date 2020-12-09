@@ -23,13 +23,13 @@ import com.intellij.openapi.options.colors.AttributesDescriptor;
 import com.intellij.openapi.options.colors.ColorSettingsPage;
 import com.intellij.openapi.ui.ComboBox;
 import com.intellij.openapi.ui.Messages;
-import com.intellij.openapi.ui.VerticalFlowLayout;
 import com.intellij.openapi.util.Pair;
 import com.intellij.ui.CollectionComboBoxModel;
 import com.intellij.ui.ColoredListCellRenderer;
 import com.intellij.ui.HyperlinkAdapter;
 import com.intellij.ui.components.JBCheckBox;
 import com.intellij.ui.components.panels.HorizontalLayout;
+import com.intellij.ui.components.panels.VerticalLayout;
 import com.intellij.util.EventDispatcher;
 import com.intellij.util.FontUtil;
 import com.intellij.util.containers.ContainerUtil;
@@ -93,7 +93,7 @@ public class ColorAndFontDescriptionPanel implements OptionsPanelImpl.ColorDescr
   private JBCheckBox myInheritAttributesBox;
 
   public ColorAndFontDescriptionPanel() {
-    myPanel = new JPanel(new VerticalFlowLayout());
+    myPanel = new JPanel(new VerticalLayout(5));
 
     myCbBold = new JBCheckBox(ApplicationBundle.message("checkbox.font.bold"));
     myCbItalic = new JBCheckBox(ApplicationBundle.message("checkbox.font.italic"));

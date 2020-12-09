@@ -24,12 +24,12 @@ import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.editor.ex.EditorMarkupModel;
 import com.intellij.openapi.editor.markup.ErrorStripeRenderer;
 import com.intellij.util.EventDispatcher;
+import com.intellij.util.ui.JBUI;
 import consulo.awt.TargetAWT;
 import consulo.ui.image.Image;
 import org.jetbrains.annotations.Nls;
 
 import javax.annotation.Nonnull;
-import javax.swing.*;
 import java.awt.*;
 
 public class FontEditorPreview implements PreviewPanel{
@@ -105,6 +105,7 @@ public class FontEditorPreview implements PreviewPanel{
       editor.getSelectionModel().setSelection(editorDocument.getLineStartOffset(selectedLine),
                                               editorDocument.getLineEndOffset(selectedLine));
     }
+    editor.setBorder(JBUI.Borders.empty());
 
     return editor;
   }

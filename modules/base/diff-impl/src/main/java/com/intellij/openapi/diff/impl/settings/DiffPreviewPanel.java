@@ -27,15 +27,15 @@ import com.intellij.openapi.editor.event.EditorMouseMotionListener;
 import com.intellij.openapi.editor.ex.DocumentEx;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Disposer;
 import com.intellij.ui.IdeBorderFactory;
 import com.intellij.util.EventDispatcher;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.ui.JBUI;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import consulo.disposer.Disposer;
 import org.jetbrains.annotations.TestOnly;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.util.Arrays;
@@ -65,7 +65,7 @@ class DiffPreviewPanel implements PreviewPanel {
       editor.getCaretModel().addCaretListener(clickListener);
     }
 
-    myPanel = JBUI.Panels.simplePanel(myViewer.getComponent()).withBorder(IdeBorderFactory.createBorder());
+    myPanel = JBUI.Panels.simplePanel(myViewer.getComponent());
   }
 
   @Override

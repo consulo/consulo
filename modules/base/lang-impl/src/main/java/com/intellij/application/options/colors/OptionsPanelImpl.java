@@ -21,8 +21,11 @@ import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.openapi.editor.colors.EditorColorsScheme;
 import com.intellij.openapi.options.SearchableConfigurable;
 import com.intellij.openapi.options.ex.Settings;
+import com.intellij.ui.JBColor;
 import com.intellij.ui.ScrollPaneFactory;
+import com.intellij.ui.components.panels.Wrapper;
 import com.intellij.util.EventDispatcher;
+import com.intellij.util.ui.JBUI;
 import consulo.util.concurrent.AsyncResult;
 
 import javax.annotation.Nonnull;
@@ -35,7 +38,7 @@ import java.util.EventListener;
 import java.util.HashSet;
 import java.util.Set;
 
-public class OptionsPanelImpl extends JPanel implements OptionsPanel {
+public class OptionsPanelImpl implements OptionsPanel {
   public static final String SELECTED_COLOR_OPTION_PROPERTY = "selected.color.option.type";
 
   public interface ColorDescriptionPanel {
@@ -68,13 +71,15 @@ public class OptionsPanelImpl extends JPanel implements OptionsPanel {
 
   private final EventDispatcher<ColorAndFontSettingsListener> myDispatcher = EventDispatcher.create(ColorAndFontSettingsListener.class);
 
+  private final JPanel myPanel;
 
   public OptionsPanelImpl(ColorAndFontOptions options, SchemesPanel schemesProvider, String categoryName) {
     this(options, schemesProvider, categoryName, new ColorAndFontDescriptionPanel());
   }
 
   public OptionsPanelImpl(ColorAndFontOptions options, SchemesPanel schemesProvider, String categoryName, ColorDescriptionPanel optionsPanel) {
-    super(new BorderLayout());
+    myPanel = new JPanel(new BorderLayout());
+
     myOptions = options;
     mySchemesProvider = schemesProvider;
     myCategoryName = categoryName;
@@ -90,7 +95,7 @@ public class OptionsPanelImpl extends JPanel implements OptionsPanel {
       @Override
       public void onHyperLinkClicked(@Nonnull HyperlinkEvent e) {
         if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
-          Settings settings = DataManager.getInstance().getDataContext(OptionsPanelImpl.this).getData(Settings.KEY);
+          Settings settings = DataManager.getInstance().getDataContext(myPanel).getData(Settings.KEY);
           String pageName = e.getDescription();
           Element element = e.getSourceElement();
           String attrName;
@@ -117,9 +122,16 @@ public class OptionsPanelImpl extends JPanel implements OptionsPanel {
       processListValueChanged();
     });
 
-    JScrollPane scrollPane = ScrollPaneFactory.createScrollPane(myOptionsTree);
-    add(scrollPane, BorderLayout.CENTER);
-    add(myOptionsPanel.getPanel(), BorderLayout.EAST);
+    JScrollPane scrollPane = ScrollPaneFactory.createScrollPane(myOptionsTree, true);
+    myPanel.add(scrollPane, BorderLayout.CENTER);
+    JComponent panel = myOptionsPanel.getPanel();
+    panel.setBorder(JBUI.Borders.empty(5));
+
+    Wrapper wrapper = new Wrapper(panel);
+    wrapper.setBorder(JBUI.Borders.customLine(JBColor.border(), 0, 1, 0, 0));
+    myPanel.add(wrapper, BorderLayout.EAST);
+
+    myPanel.setBorder(JBUI.Borders.customLine(JBColor.border(), 1, 0, 0, 0));
   }
 
   @Override
@@ -155,7 +167,7 @@ public class OptionsPanelImpl extends JPanel implements OptionsPanel {
 
   @Override
   public JPanel getPanel() {
-    return this;
+    return myPanel;
   }
 
   @Override
