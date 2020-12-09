@@ -27,7 +27,6 @@ import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationGroup;
 import com.intellij.notification.NotificationListener;
 import com.intellij.notification.NotificationType;
-import com.intellij.openapi.actionSystem.LangDataKeys;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.MessageType;
@@ -35,6 +34,7 @@ import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.ui.content.Content;
 import com.intellij.util.ui.UIUtil;
+import consulo.execution.ExecutionDataKeys;
 import consulo.logging.Logger;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
@@ -149,7 +149,7 @@ public class ExecutionUtil {
 
   private static void restart(@Nullable JComponent component) {
     if (component != null) {
-      ExecutionEnvironment environment = DataManager.getInstance().getDataContext(component).getData(LangDataKeys.EXECUTION_ENVIRONMENT);
+      ExecutionEnvironment environment = DataManager.getInstance().getDataContext(component).getData(ExecutionDataKeys.EXECUTION_ENVIRONMENT);
       if (environment != null) {
         restart(environment);
       }

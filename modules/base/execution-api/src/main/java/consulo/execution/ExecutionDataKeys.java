@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2008 JetBrains s.r.o.
+ * Copyright 2013-2020 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,25 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package consulo.execution;
 
-package com.intellij.execution.configurations;
-
-import com.intellij.execution.ExecutionException;
-import com.intellij.execution.process.OSProcessHandler;
+import com.intellij.execution.configurations.RunProfile;
 import com.intellij.execution.runners.ExecutionEnvironment;
-import javax.annotation.Nonnull;
+import com.intellij.execution.ui.RunContentDescriptor;
+import consulo.util.dataholder.Key;
 
 /**
- * @author oleg
+ * @author VISTALL
+ * @since 09/12/2020
  */
-
-public class MockCommandLineState extends CommandLineState {
-  public MockCommandLineState(@Nonnull final ExecutionEnvironment env) {
-    super(env);
-  }
-
-  @Override
-  protected OSProcessHandler startProcess() throws ExecutionException {
-    return null;
-  }
+public interface ExecutionDataKeys {
+  Key<RunProfile> RUN_PROFILE = Key.create("runProfile");
+  Key<ExecutionEnvironment> EXECUTION_ENVIRONMENT = Key.create("executionEnvironment");
+  Key<RunContentDescriptor> RUN_CONTENT_DESCRIPTOR = Key.create("RUN_CONTENT_DESCRIPTOR");
 }

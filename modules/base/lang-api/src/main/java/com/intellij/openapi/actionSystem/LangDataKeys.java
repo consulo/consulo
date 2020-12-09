@@ -27,6 +27,8 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.ui.popup.JBPopup;
 import com.intellij.openapi.util.Condition;
+import consulo.annotation.DeprecationInfo;
+import consulo.execution.ExecutionDataKeys;
 import consulo.util.dataholder.Key;
 import com.intellij.psi.PsiElement;
 
@@ -44,7 +46,7 @@ public interface LangDataKeys extends PlatformDataKeys {
 
   Key<Language> LANGUAGE = Key.create("Language");
   Key<Language[]> CONTEXT_LANGUAGES = Key.create("context.Languages");
-  Key<PsiElement[]> PSI_ELEMENT_ARRAY = Key.create("psi.Element.array");
+  Key<PsiElement[]> PSI_ELEMENT_ARRAY = CommonDataKeys.PSI_ELEMENT_ARRAY;
 
   /**
    * Returns {@link com.intellij.ide.IdeView} (one of project, packages, commander or favorites view).
@@ -65,7 +67,13 @@ public interface LangDataKeys extends PlatformDataKeys {
 
   Key<Library> LIBRARY = Key.create("project.model.library");
 
-  Key<RunProfile> RUN_PROFILE = Key.create("runProfile");
-  Key<ExecutionEnvironment> EXECUTION_ENVIRONMENT = Key.create("executionEnvironment");
-  Key<RunContentDescriptor> RUN_CONTENT_DESCRIPTOR = Key.create("RUN_CONTENT_DESCRIPTOR");
+  @Deprecated
+  @DeprecationInfo("Use ExecutionDataKeys")
+  Key<RunProfile> RUN_PROFILE = ExecutionDataKeys.RUN_PROFILE;
+  @Deprecated
+  @DeprecationInfo("Use ExecutionDataKeys")
+  Key<ExecutionEnvironment> EXECUTION_ENVIRONMENT = ExecutionDataKeys.EXECUTION_ENVIRONMENT;
+  @Deprecated
+  @DeprecationInfo("Use ExecutionDataKeys")
+  Key<RunContentDescriptor> RUN_CONTENT_DESCRIPTOR = ExecutionDataKeys.RUN_CONTENT_DESCRIPTOR;
 }

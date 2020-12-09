@@ -23,7 +23,6 @@ import javax.annotation.Nonnull;
 public class DefaultExecutionTarget extends ExecutionTarget {
   public static final ExecutionTarget INSTANCE = new DefaultExecutionTarget();
 
-
   @Nonnull
   @Override
   public String getId() {

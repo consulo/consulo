@@ -103,7 +103,7 @@ public class PsiLocation<E extends PsiElement> extends Location<E> {
   private static <ElementClass extends PsiElement> ElementClass findNext(final PsiElement psiElement, final Class<ElementClass> ancestorClass) {
     PsiElement element = psiElement;
     while ((element = element.getParent()) != null && !(element instanceof PsiFile)) {
-      final ElementClass ancestor = safeCast(element, ancestorClass);
+      final ElementClass ancestor = Location.safeCast(element, ancestorClass);
       if (ancestor != null) return ancestor;
     }
     return null;

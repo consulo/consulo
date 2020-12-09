@@ -18,6 +18,7 @@ package com.intellij.execution.filters;
 import com.intellij.execution.ui.ConsoleView;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.search.GlobalSearchScope;
+
 import javax.annotation.Nonnull;
 
 public abstract class ConsoleDependentFilterProvider implements ConsoleFilterProvider {

@@ -21,22 +21,22 @@ import com.intellij.execution.configurations.RunProfile;
 import com.intellij.execution.configurations.RunProfileState;
 import com.intellij.execution.configurations.RunnerSettings;
 import com.intellij.execution.ui.RunContentDescriptor;
-import consulo.disposer.Disposable;
+import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataContext;
+import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.project.Project;
+import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolderBase;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
-
-import static com.intellij.openapi.actionSystem.LangDataKeys.*;
 
 public class ExecutionEnvironment extends UserDataHolderBase implements Disposable {
   private static final AtomicLong myIdHolder = new AtomicLong(1L);
@@ -248,7 +248,7 @@ public class ExecutionEnvironment extends UserDataHolderBase implements Disposab
   }
 
   private static class CachingDataContext implements DataContext {
-    private static final Key[] keys = {PROJECT, PROJECT_FILE_DIRECTORY, EDITOR, VIRTUAL_FILE, MODULE, PSI_FILE};
+    private static final Key[] keys = {CommonDataKeys.PROJECT, PlatformDataKeys.PROJECT_FILE_DIRECTORY, CommonDataKeys.EDITOR, CommonDataKeys.VIRTUAL_FILE, CommonDataKeys.MODULE, CommonDataKeys.PSI_FILE};
     private final Map<Key, Object> values = new HashMap<>();
 
     @Nonnull

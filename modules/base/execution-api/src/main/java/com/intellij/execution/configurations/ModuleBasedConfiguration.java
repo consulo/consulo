@@ -16,18 +16,18 @@
 
 package com.intellij.execution.configurations;
 
-import consulo.logging.Logger;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
-import com.intellij.openapi.module.ModuleUtil;
+import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.openapi.util.ThrowableComputable;
 import com.intellij.openapi.util.WriteExternalException;
 import consulo.application.AccessRule;
+import consulo.logging.Logger;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
@@ -135,7 +135,7 @@ public abstract class ModuleBasedConfiguration<ConfigurationModule extends RunCo
     final Module[] classModules = getModules();
     final Set<Module> modules = new HashSet<Module>();
     for (Module classModule : classModules) {
-      ModuleUtil.collectModulesDependsOn(classModule, modules);
+      ModuleUtilCore.collectModulesDependsOn(classModule, modules);
     }
     if (modules.contains(originalModule)) setModule(originalModule);
   }

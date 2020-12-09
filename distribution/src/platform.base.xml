@@ -48,6 +48,7 @@
         <include>consulo:consulo-external-system-impl</include>
         <include>consulo:consulo-external-tools-api</include>
         <include>consulo:consulo-external-tools-impl</include>
+        <include>consulo:consulo-execution-api</include>
         <include>consulo:consulo-graph-api</include>
         <include>consulo:consulo-graph-impl</include>
         <include>consulo:consulo-indexing-api</include>

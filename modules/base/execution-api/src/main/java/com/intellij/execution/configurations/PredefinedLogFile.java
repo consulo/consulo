@@ -16,12 +16,13 @@
 
 package com.intellij.execution.configurations;
 
-import com.intellij.openapi.util.JDOMExternalizable;
 import com.intellij.openapi.util.InvalidDataException;
+import com.intellij.openapi.util.JDOMExternalizable;
 import com.intellij.openapi.util.WriteExternalException;
-import javax.annotation.Nonnull;
-import org.jetbrains.annotations.NonNls;
 import org.jdom.Element;
+import org.jetbrains.annotations.NonNls;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author nik

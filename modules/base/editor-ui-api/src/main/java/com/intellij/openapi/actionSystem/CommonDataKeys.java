@@ -47,6 +47,7 @@ public interface CommonDataKeys {
   Key<VirtualFile[]> VIRTUAL_FILE_ARRAY = Key.create("virtualFileArray");
 
   Key<PsiElement> PSI_ELEMENT = Key.create("psi.Element");
+  Key<PsiElement[]> PSI_ELEMENT_ARRAY = Key.create("psi.Element.array");
   Key<PsiFile> PSI_FILE = Key.create("psi.File");
   /**
    * This key can be used to check if the current context relates to a virtual space in editor.

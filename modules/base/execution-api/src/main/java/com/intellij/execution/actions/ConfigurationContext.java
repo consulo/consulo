@@ -26,16 +26,13 @@ import com.intellij.execution.configurations.RunConfiguration;
 import com.intellij.ide.DataManager;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataContext;
-import com.intellij.openapi.actionSystem.LangDataKeys;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
-import consulo.logging.Logger;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Comparing;
-import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiDocumentManager;
@@ -43,12 +40,13 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
 import consulo.annotation.UsedInPlugin;
-import consulo.ui.annotation.RequiredUIAccess;
 import consulo.annotation.access.RequiredReadAction;
+import consulo.logging.Logger;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.util.dataholder.Key;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.awt.*;
 import java.util.List;
 
@@ -92,7 +90,7 @@ public class ConfigurationContext {
   private ConfigurationContext(final DataContext dataContext) {
     myRuntimeConfiguration = dataContext.getData(RunConfiguration.DATA_KEY);
     myContextComponent = dataContext.getData(PlatformDataKeys.CONTEXT_COMPONENT);
-    myModule = dataContext.getData(LangDataKeys.MODULE);
+    myModule = dataContext.getData(CommonDataKeys.MODULE);
     @SuppressWarnings({"unchecked"}) final Location<PsiElement> location = (Location<PsiElement>)dataContext.getData(Location.DATA_KEY);
     if (location != null) {
       myLocation = location;
@@ -111,7 +109,7 @@ public class ConfigurationContext {
       return;
     }
     myLocation = new PsiLocation<>(project, myModule, element);
-    final PsiElement[] elements = dataContext.getData(LangDataKeys.PSI_ELEMENT_ARRAY);
+    final PsiElement[] elements = dataContext.getData(CommonDataKeys.PSI_ELEMENT_ARRAY);
     if (elements != null) {
       myMultipleSelection = elements.length > 1;
     }
@@ -248,7 +246,7 @@ public class ConfigurationContext {
       }
     }
     if (element == null) {
-      final PsiElement[] elements = dataContext.getData(LangDataKeys.PSI_ELEMENT_ARRAY);
+      final PsiElement[] elements = dataContext.getData(CommonDataKeys.PSI_ELEMENT_ARRAY);
       element = elements != null && elements.length > 0 ? elements[0] : null;
     }
     if (element == null) {

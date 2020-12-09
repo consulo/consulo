@@ -17,16 +17,18 @@
 package com.intellij.execution.ui.layout;
 
 import com.intellij.execution.ui.RunnerLayoutUi;
-import consulo.disposer.Disposable;
 import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.ActionCallback;
 import com.intellij.openapi.util.ActiveRunnable;
-import consulo.util.dataholder.Key;
 import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentManager;
+import consulo.disposer.Disposable;
+import consulo.util.dataholder.Key;
+
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public interface ViewContext extends Disposable {
   Key<Content[]> CONTENT_KEY = Key.create("runnerContents");
@@ -40,7 +42,7 @@ public interface ViewContext extends Disposable {
 
   CellTransform.Facade getCellTransform();
 
-  @javax.annotation.Nullable
+  @Nullable
   Tab getTabFor(final Grid grid);
 
   View getStateFor(@Nonnull Content content);
