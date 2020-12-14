@@ -42,7 +42,6 @@ import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.ui.popup.util.PopupUtil;
 import com.intellij.openapi.util.DimensionService;
 import com.intellij.openapi.util.InvalidDataException;
-import com.intellij.openapi.util.NotWorkingIconLoader;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -78,6 +77,7 @@ import consulo.logging.Logger;
 import consulo.roots.OrderEntryWithTracking;
 import consulo.ui.color.RGBColor;
 import consulo.ui.ex.util.LightDarkColorValue;
+import consulo.ui.image.ImageKey;
 import consulo.util.dataholder.Key;
 import org.jetbrains.annotations.NonNls;
 
@@ -102,6 +102,7 @@ import java.awt.image.RenderedImage;
 import java.awt.image.renderable.RenderContext;
 import java.awt.image.renderable.RenderableImage;
 import java.awt.image.renderable.RenderableImageProducer;
+import java.io.IOException;
 import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
 import java.net.MalformedURLException;
@@ -287,10 +288,21 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
           public View create(Element elem) {
             AttributeSet attrs = elem.getAttributes();
             if ("icon".equals(elem.getName())) {
-              Object src = attrs.getAttribute(HTML.Attribute.SRC);
-              Icon icon = src != null ? NotWorkingIconLoader.findIcon((String)src, false) : null;
-              if (icon != null) {
-                return new MyIconView(elem, icon);
+              String src = (String)attrs.getAttribute(HTML.Attribute.SRC);
+              if(src != null) {
+                if(src.contains("@")) {
+                  ImageKey imageKey = ImageKey.fromString(src, consulo.ui.image.Image.DEFAULT_ICON_SIZE, consulo.ui.image.Image.DEFAULT_ICON_SIZE);
+                  return new MyIconView(elem, imageKey);
+                }
+                else {
+                  try {
+                    consulo.ui.image.Image image = consulo.ui.image.Image.fromUrl(new URL(src));
+                    return new MyIconView(elem, image);
+                  }
+                  catch (IOException e) {
+                    LOG.warn(e);
+                  }
+                }
               }
             }
             View view = super.create(elem);
@@ -1014,7 +1026,7 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
       if (link != null) return link;
     }
 
-    return "<a href='external_doc'>External documentation" + (title == null ? "" : (" for `" + title + "`")) + "<icon src='AllIcons.Ide.External_link_arrow'></a></div>";
+    return "<a href='external_doc'>External documentation" + (title == null ? "" : (" for `" + title + "`")) + "<icon src='consulo.platform.base.PlatformIconGroup@ide.external_link_arrow'></a></div>";
   }
 
   private static String getLink(String title, String url) {
@@ -1077,7 +1089,7 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
   }
 
   private static String addExternalLinksIcon(String text) {
-    return text.replaceAll("(<a\\s*href=[\"']http[^>]*>)([^>]*)(</a>)", "$1$2<icon src='AllIcons.Ide.External_link_arrow'>$3");
+    return text.replaceAll("(<a\\s*href=[\"']http[^>]*>)([^>]*)(</a>)", "$1$2<icon src='consulo.platform.base.PlatformIconGroup@ide.external_link_arrow'>$3");
   }
 
   private String getLocationText() {
@@ -1093,13 +1105,13 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
 
       if (module != null) {
         if (ModuleManager.getInstance(element.getProject()).getModules().length == 1) return null;
-        return "<icon src='/actions/module.png'>&nbsp;" + module.getName().replace("<", "&lt;");
+        return "<icon src='consulo.platform.base.PlatformIconGroup@actions.module'>&nbsp;" + module.getName().replace("<", "&lt;");
       }
       else {
         List<OrderEntry> entries = fileIndex.getOrderEntriesForFile(vfile);
         for (OrderEntry order : entries) {
           if (order instanceof OrderEntryWithTracking) {
-            return "<icon src='AllIcons.Nodes.PpLibFolder" + "'>&nbsp;" + order.getPresentableName().replace("<", "&lt;");
+            return "<icon src='consulo.platform.base.PlatformIconGroup@nodes.pplib" + "'>&nbsp;" + order.getPresentableName().replace("<", "&lt;");
           }
         }
       }
@@ -1843,9 +1855,9 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
   }
 
   private static class MyIconView extends View {
-    private final Icon myViewIcon;
+    private final consulo.ui.image.Image myViewIcon;
 
-    private MyIconView(Element elem, Icon viewIcon) {
+    private MyIconView(Element elem, consulo.ui.image.Image viewIcon) {
       super(elem);
       myViewIcon = viewIcon;
     }
@@ -1854,9 +1866,9 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
     public float getPreferredSpan(int axis) {
       switch (axis) {
         case View.X_AXIS:
-          return myViewIcon.getIconWidth();
+          return myViewIcon.getWidth();
         case View.Y_AXIS:
-          return myViewIcon.getIconHeight();
+          return myViewIcon.getHeight();
         default:
           throw new IllegalArgumentException("Invalid axis: " + axis);
       }
@@ -1869,7 +1881,7 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
 
     @Override
     public void paint(Graphics g, Shape allocation) {
-      myViewIcon.paintIcon(null, g, allocation.getBounds().x, allocation.getBounds().y - 4);
+      TargetAWT.to(myViewIcon).paintIcon(null, g, allocation.getBounds().x, allocation.getBounds().y - 4);
     }
 
     @Override
