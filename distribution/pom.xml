@@ -242,8 +242,27 @@
       <version>${project.version}</version>
     </dependency>
 
-    <!--copied from consulo-bundle module-->
-
+    <dependency>
+      <groupId>consulo.internal.sound</groupId>
+      <artifactId>jogg</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>consulo.internal.sound</groupId>
+      <artifactId>jvorbis</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>consulo.internal.sound</groupId>
+      <artifactId>javazoom.jlayer</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>consulo.internal.sound</groupId>
+      <artifactId>javazoom.mp3</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    
     <!--optional dependency-->
     <dependency>
       <groupId>org.apache.xmlrpc</groupId>

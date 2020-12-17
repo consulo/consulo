@@ -29,6 +29,18 @@ class PluginClassLoaderImpl extends UrlClassLoader implements PluginClassLoader 
   private final String myPluginVersion;
   private final List<String> myLibDirectories;
 
+  /**
+   * Constructor for main platform plugins, it will set parent for ClassLoader - it's need for correct parent resolving for ServiceLoader
+   */
+  public PluginClassLoaderImpl(@Nonnull List<URL> urls, @Nonnull ClassLoader parent, PluginId pluginId, String version, File pluginRoot) {
+    super(pluginId.getIdString(), build().urls(urls).parent(parent).urlsWithProtectionDomain(new HashSet<URL>(urls)).allowLock().useCache());
+    myParents = new ClassLoader[] {parent};
+    myPluginId = pluginId;
+    myPluginVersion = version;
+    File libDir = new File(pluginRoot, "lib");
+    myLibDirectories = libDir.exists() ? Collections.singletonList(libDir.getAbsolutePath()) : Collections.<String>emptyList();
+  }
+
   public PluginClassLoaderImpl(@Nonnull List<URL> urls, @Nonnull ClassLoader[] parents, PluginId pluginId, String version, File pluginRoot) {
     super(pluginId.getIdString(), build().urls(urls).urlsWithProtectionDomain(new HashSet<URL>(urls)).allowLock().useCache());
     myParents = parents;

@@ -65,9 +65,9 @@ public class BootstrapClassLoaderUtil {
         continue;
       }
 
-      ClassLoader[] parentClassLoaders = {base.getPluginClassLoader()};
+      ClassLoader basePluginClassLoader = base.getPluginClassLoader();
 
-      ClassLoader loader = PluginClassLoaderFactory.create(filesToUrls(descriptor.getClassPath()), parentClassLoaders, descriptor.getPluginId(), null, moduleDirectory);
+      ClassLoader loader = PluginClassLoaderFactory.create(filesToUrls(descriptor.getClassPath()), basePluginClassLoader, descriptor.getPluginId(), null, moduleDirectory);
 
       if (SystemInfoRt.IS_AT_LEAST_JAVA9) {
         descriptor.setModuleLayer(Java9ModuleInitializer.initializeEtcModules(Collections.singletonList(base.getModuleLayer()), descriptor.getClassPath(), loader));
@@ -112,9 +112,9 @@ public class BootstrapClassLoaderUtil {
       throw new StartupError("No base module. Broken installation");
     }
 
-    ClassLoader[] parentClassLoaders = getParentClassLoaders();
+    ClassLoader parent = BootstrapClassLoaderUtil.class.getClassLoader();
 
-    ClassLoader loader = PluginClassLoaderFactory.create(filesToUrls(platformBasePlugin.getClassPath()), parentClassLoaders, platformBasePlugin.getPluginId(), null, platformBaseDirectory);
+    ClassLoader loader = PluginClassLoaderFactory.create(filesToUrls(platformBasePlugin.getClassPath()), parent, platformBasePlugin.getPluginId(), null, platformBaseDirectory);
 
     if (SystemInfoRt.IS_AT_LEAST_JAVA9) {
       platformBasePlugin.setModuleLayer(Java9ModuleInitializer.initializeBaseModules(platformBasePlugin.getClassPath(), loader, containerLogger));
@@ -135,29 +135,6 @@ public class BootstrapClassLoaderUtil {
     }
     return urls;
   }
-
-  @Nonnull
-  public static ClassLoader[] getParentClassLoaders() {
-    // in ideal world we don't need this (after migration to java9 also)
-    // tools jar we don't use in java plugin
-    // without this code, it will throw access error to java.sql module
-    // in java 9 we need add requires to java.sql and we can remove this hack
-    if (SystemInfoRt.IS_AT_LEAST_JAVA9) {
-      // on Java 8, 'tools.jar' is on a classpath; on Java 9, its classes are available via the platform loader
-      try {
-        ClassLoader platformCl = (ClassLoader)ClassLoader.class.getMethod("getPlatformClassLoader").invoke(null);
-        return new ClassLoader[]{platformCl, BootstrapClassLoaderUtil.class.getClassLoader()};
-      }
-      catch (Exception e) {
-        throw new StartupError(e);
-      }
-    }
-    else {
-      ClassLoader classLoader = BootstrapClassLoaderUtil.class.getClassLoader();
-      return new ClassLoader[]{classLoader};
-    }
-  }
-
 
   @Nonnull
   public static File getModulesDirectory() throws Exception {

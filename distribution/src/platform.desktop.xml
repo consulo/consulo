@@ -51,5 +51,18 @@
         <include>consulo:consulo-util-nodep</include>
       </includes>
     </dependencySet>
+
+    <dependencySet>
+      <outputDirectory>Consulo/platform/buildSNAPSHOT/boot/spi</outputDirectory>
+      <unpack>false</unpack>
+      <scope>runtime</scope>
+      <outputFileNameMapping>${artifact.artifactId}.${artifact.extension}</outputFileNameMapping>
+      <includes>
+        <include>consulo.internal.sound:jogg</include>
+        <include>consulo.internal.sound:jvorbis</include>
+        <include>consulo.internal.sound:javazoom.jlayer</include>
+        <include>consulo.internal.sound:javazoom.mp3</include>
+      </includes>
+    </dependencySet>
   </dependencySets>
 </component>
