@@ -412,7 +412,7 @@ void AddClassPathOptions(std::vector<std::string>& vmOptionLines)
 void AddModulePathOptions(std::vector<std::string>& vmOptionLines)
 {
     std::wstring bootDir = GetAdjacentDirW(L"boot");
-    vmOptionLines.push_back("--module-path=" + EncodeWideACP(bootDir));
+    vmOptionLines.push_back("--module-path=" + EncodeWideACP(bootDir) + ";" + EncodeWideACP(bootDir) + "/spi");
     vmOptionLines.push_back("-Djdk.module.main=consulo.desktop.bootstrap");
     vmOptionLines.push_back("-Dconsulo.module.path.boot=true");
 }
