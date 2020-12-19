@@ -84,7 +84,7 @@ NSString* getOSXVersion() {
 void showWarning(NSString* messageText) {
     NSAlert* alert = [[NSAlert alloc] init];
     [alert addButtonWithTitle:@"OK"];
-    NSString* message_description = [NSString stringWithFormat:@"Java 1.8 or later is required."];
+    NSString* message_description = [NSString stringWithFormat:@"Java 11 or later is required."];
     NSString* informativeText = [NSString stringWithFormat:@"%@", message_description];
     [alert setMessageText:messageText];
     [alert setInformativeText:informativeText];
@@ -257,7 +257,7 @@ NSArray* parseVMOptions(NSString* vmOptionsFile) {
     NSMutableArray* args_array = [NSMutableArray array];
 
     //[args_array addObject:[NSString stringWithFormat:@"-Djava.class.path=%@", ourBootclasspath]];
-    [args_array addObject:[NSString stringWithFormat:@"--module-path=%@/boot", myWorkingDirectory]];
+    [args_array addObject:[NSString stringWithFormat:@"--module-path=%@/boot:%@/boot/spi", myWorkingDirectory, myWorkingDirectory]];
     [args_array addObject:@"-Djdk.module.main=consulo.desktop.bootstrap"];
     [args_array addObject:@"-Dconsulo.module.path.boot=true"];
 
