@@ -45,16 +45,16 @@ public class CustomizeUIThemeStepPanel extends AbstractCustomizeWizardStep {
     setLayout(new BorderLayout(10, 10));
 
     if (SystemInfo.isMac) {
-      myLafNames.put(INTELLIJ, AWTIconLoader.INSTANCE.getIcon("/icon/consulo/platform/base/PlatformIconGroup/lafs/OSXAqua.png", PlatformIconGroup.class));
-      myLafNames.put(DARCULA, AWTIconLoader.INSTANCE.getIcon("/icon/consulo/platform/base/PlatformIconGroup/lafs/OSXDarcula.png", PlatformIconGroup.class));
+      myLafNames.put(INTELLIJ, AWTIconLoader.INSTANCE.getIcon("/icon/_light/consulo.platform.base.PlatformIconGroup/lafs/OSXAqua.png", PlatformIconGroup.class));
+      myLafNames.put(DARCULA, AWTIconLoader.INSTANCE.getIcon("/icon/_light/consulo.platform.base.PlatformIconGroup/lafs/OSXDarcula.png", PlatformIconGroup.class));
     }
     else if (SystemInfo.isWindows) {
-      myLafNames.put(INTELLIJ, AWTIconLoader.INSTANCE.getIcon("/icon/consulo/platform/base/PlatformIconGroup/lafs/WindowsIntelliJ.png", PlatformIconGroup.class));
-      myLafNames.put(DARCULA, AWTIconLoader.INSTANCE.getIcon("/icon/consulo/platform/base/PlatformIconGroup/lafs/WindowsDarcula.png", PlatformIconGroup.class));
+      myLafNames.put(INTELLIJ, AWTIconLoader.INSTANCE.getIcon("/icon/_light/consulo.platform.base.PlatformIconGroup/lafs/WindowsIntelliJ.png", PlatformIconGroup.class));
+      myLafNames.put(DARCULA, AWTIconLoader.INSTANCE.getIcon("/icon/_light/consulo.platform.base.PlatformIconGroup/lafs/WindowsDarcula.png", PlatformIconGroup.class));
     }
     else {
-      myLafNames.put(INTELLIJ, AWTIconLoader.INSTANCE.getIcon("/icon/consulo/platform/base/PlatformIconGroup/lafs/LinuxIntelliJ.png"));
-      myLafNames.put(DARCULA, AWTIconLoader.INSTANCE.getIcon("/icon/consulo/platform/base/PlatformIconGroup/lafs/LinuxDarcula.png", PlatformIconGroup.class));
+      myLafNames.put(INTELLIJ, AWTIconLoader.INSTANCE.getIcon("/icon/_light/consulo.platform.base.PlatformIconGroup/lafs/LinuxIntelliJ.png", PlatformIconGroup.class));
+      myLafNames.put(DARCULA, AWTIconLoader.INSTANCE.getIcon("/icon/_light/consulo.platform.base.PlatformIconGroup/lafs/LinuxDarcula.png", PlatformIconGroup.class));
     }
     myColumnMode = myLafNames.size() > 2;
     JPanel buttonsPanel = new JPanel(new GridLayout(myColumnMode ? myLafNames.size() : 1, myColumnMode ? 1 : myLafNames.size(), 5, 5));
