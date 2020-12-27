@@ -169,7 +169,7 @@
 
     <applicationConfigurable displayName="Notifications" parentId="general" instance="com.intellij.notification.impl.NotificationsConfigurable"/>
 
-    <applicationConfigurable parentId="general" instance="consulo.ide.plugins.PluginsConfigurable"
+    <applicationConfigurable instance="consulo.ide.plugins.PluginsConfigurable"
                              id="preferences.pluginManager"
                              bundle="messages.IdeBundle"
                              key="title.plugins"/>
