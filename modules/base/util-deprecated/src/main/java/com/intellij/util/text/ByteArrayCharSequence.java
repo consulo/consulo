@@ -22,6 +22,7 @@ import consulo.annotation.DeprecationInfo;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 
 //@ReviseWhenPortedToJDK("9")
@@ -69,7 +70,7 @@ public class ByteArrayCharSequence implements CharSequenceWithStringHash {
   @Override
   @Nonnull
   public String toString() {
-    return new String(myChars, myStart, length(), CharsetToolkit.ISO_8859_1_CHARSET);
+    return new String(myChars, myStart, length(), StandardCharsets.ISO_8859_1);
   }
 
   /**

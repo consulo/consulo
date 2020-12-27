@@ -22,25 +22,22 @@ import com.intellij.openapi.fileTypes.FileTypeManager;
 import com.intellij.openapi.fileTypes.impl.FileTypeAssocTable;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.util.Function;
 import gnu.trove.THashMap;
-import org.jdom.Element;
-import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nullable;
 import jakarta.inject.Singleton;
+import org.jdom.Element;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
 /**
  * @author peter
  */
 @Singleton
-@State(
-    name = "TemplateDataLanguagePatterns",
-    storages = @Storage(file = StoragePathMacros.APP_CONFIG + "/templateLanguages.xml") )
+@State(name = "TemplateDataLanguagePatterns", storages = @Storage("templateLanguages.xml"))
 public class TemplateDataLanguagePatterns implements PersistentStateComponent<Element> {
   private FileTypeAssocTable<Language> myAssocTable = new FileTypeAssocTable<Language>();
-  @NonNls private static final String SEPARATOR = ";";
+
+  private static final String SEPARATOR = ";";
 
   public static TemplateDataLanguagePatterns getInstance() {
     return ServiceManager.getService(TemplateDataLanguagePatterns.class);
@@ -89,12 +86,7 @@ public class TemplateDataLanguagePatterns implements PersistentStateComponent<El
       if (!matchers.isEmpty()) {
         final Element child = new Element("pattern");
         state.addContent(child);
-        child.setAttribute("value", StringUtil.join(matchers, new Function<FileNameMatcher, String>() {
-          @Override
-          public String fun(FileNameMatcher fileNameMatcher) {
-            return fileNameMatcher.getPresentableString();
-          }
-        }, SEPARATOR));
+        child.setAttribute("value", StringUtil.join(matchers, FileNameMatcher::getPresentableString, SEPARATOR));
         child.setAttribute("lang", language.getID());
       }
     }

@@ -1,16 +1,13 @@
-// Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+// Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.util.concurrency;
 
 import com.intellij.openapi.diagnostic.ControlFlowException;
-import consulo.disposer.Disposable;
-import consulo.disposer.Disposer;
-import consulo.logging.Logger;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.util.ConcurrencyUtil;
-import com.intellij.util.ExceptionUtil;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.ReflectionUtil;
 import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.Nls;
+import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
@@ -27,22 +24,26 @@ import java.util.concurrent.atomic.AtomicReference;
  * @see AppExecutorUtil#createBoundedApplicationPoolExecutor(String, Executor, int) instead
  */
 public final class BoundedTaskExecutor extends AbstractExecutorService {
-  private static final Logger LOG = Logger.getInstance(BoundedTaskExecutor.class);
-
   private volatile boolean myShutdown;
-  private final
   @Nonnull
-  String myName;
+  private final String myName;
   private final Executor myBackendExecutor;
   private final int myMaxThreads;
   // low  32 bits: number of tasks running (or trying to run)
   // high 32 bits: myTaskQueue modification stamp
   private final AtomicLong myStatus = new AtomicLong();
-  private final BlockingQueue<Runnable> myTaskQueue = new LinkedBlockingQueue<>();
+  private final BlockingQueue<Runnable> myTaskQueue;
 
   private final boolean myChangeThreadName;
 
-  BoundedTaskExecutor(@Nonnull @Nls(capitalization = Nls.Capitalization.Title) String name, @Nonnull Executor backendExecutor, int maxThreads, boolean changeThreadName) {
+  BoundedTaskExecutor(@Nonnull @NonNls String name, @Nonnull Executor backendExecutor, int maxThreads, boolean changeThreadName) {
+    this(name, backendExecutor, maxThreads, changeThreadName, new LinkedBlockingQueue<>());
+    if (name.isEmpty() || !Character.isUpperCase(name.charAt(0))) {
+      Logger.getInstance(getClass()).warn("Pool name must be capitalized but got: '" + name + "'", new IllegalArgumentException());
+    }
+  }
+
+  BoundedTaskExecutor(@Nonnull @NonNls String name, @Nonnull Executor backendExecutor, int maxThreads, boolean changeThreadName, @Nonnull BlockingQueue<Runnable> queue) {
     myName = name;
     myBackendExecutor = backendExecutor;
     if (maxThreads < 1) {
@@ -53,22 +54,7 @@ public final class BoundedTaskExecutor extends AbstractExecutorService {
     }
     myMaxThreads = maxThreads;
     myChangeThreadName = changeThreadName;
-  }
-
-  /**
-   * @deprecated use {@link AppExecutorUtil#createBoundedApplicationPoolExecutor(String, Executor, int)} instead
-   */
-  @Deprecated
-  public BoundedTaskExecutor(@Nonnull Executor backendExecutor, int maxSimultaneousTasks) {
-    this(ExceptionUtil.getThrowableText(new Throwable("Creation point:")), backendExecutor, maxSimultaneousTasks, true);
-  }
-
-  /**
-   * Constructor which automatically shuts down this executor when {@code parent} is disposed.
-   */
-  BoundedTaskExecutor(@Nonnull @Nls(capitalization = Nls.Capitalization.Title) String name, @Nonnull Executor backendExecutor, int maxSimultaneousTasks, @Nonnull Disposable parent) {
-    this(name, backendExecutor, maxSimultaneousTasks, true);
-    Disposer.register(parent, () -> shutdownNow());
+    myTaskQueue = queue;
   }
 
   // for diagnostics
@@ -228,7 +214,7 @@ public final class BoundedTaskExecutor extends AbstractExecutorService {
       // do not lose queued tasks because of this exception
       if (!(e instanceof ControlFlowException)) {
         try {
-          LOG.error(e);
+          Logger.getInstance(BoundedTaskExecutor.class).error(e);
         }
         catch (Throwable ignored) {
         }
@@ -236,16 +222,24 @@ public final class BoundedTaskExecutor extends AbstractExecutorService {
     }
   }
 
-  public void waitAllTasksExecuted(long timeout, @Nonnull TimeUnit unit) throws ExecutionException, InterruptedException, TimeoutException {
+  public synchronized void waitAllTasksExecuted(long timeout, @Nonnull TimeUnit unit) throws ExecutionException, InterruptedException, TimeoutException {
     CountDownLatch started = new CountDownLatch(myMaxThreads);
     CountDownLatch readyToFinish = new CountDownLatch(1);
-    Runnable runnable = () -> {
-      try {
-        started.countDown();
-        readyToFinish.await();
+    Runnable runnable = new Runnable() {
+      @Override
+      public void run() {
+        try {
+          started.countDown();
+          readyToFinish.await();
+        }
+        catch (InterruptedException e) {
+          throw new RuntimeException(e);
+        }
       }
-      catch (InterruptedException e) {
-        throw new RuntimeException(e);
+
+      @Override
+      public String toString() {
+        return "LastTask to waitAllTasksExecuted for " + timeout + " " + unit + " (" + System.identityHashCode(this) + ")";
       }
     };
     // Submit 'myMaxTasks' runnables and wait for them all to start.
@@ -270,6 +264,14 @@ public final class BoundedTaskExecutor extends AbstractExecutorService {
     for (Future<?> future : futures) {
       future.get(timeout, unit);
     }
+  }
+
+  public boolean isEmpty() {
+    return (int)myStatus.get() == 0;
+  }
+
+  public int getQueueSize() {
+    return myTaskQueue.size();
   }
 
   @Nonnull

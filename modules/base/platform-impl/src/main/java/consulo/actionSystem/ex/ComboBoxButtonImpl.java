@@ -315,7 +315,7 @@ public final class ComboBoxButtonImpl extends JComboBox<Object> implements Combo
   }
 
   private JBPopup createPopup(Runnable onDispose) {
-    return myComboBoxAction.createPopup(this, getDataContext(), onDispose);
+    return myComboBoxAction.createPopup(this, getDataContext(), myPresentation, onDispose);
   }
 
   protected void updateSize() {
@@ -328,6 +328,15 @@ public final class ComboBoxButtonImpl extends JComboBox<Object> implements Combo
 
   protected DataContext getDataContext() {
     return DataManager.getInstance().getDataContext(this);
+  }
+
+  @Override
+  public String getToolTipText() {
+    String text = myComboBoxAction.getTooltipText(this);
+    if(text != null) {
+      return text;
+    }
+    return super.getToolTipText();
   }
 
   @Override

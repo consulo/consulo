@@ -25,6 +25,7 @@ import consulo.annotation.DeprecationInfo;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.disposer.Disposable;
+import consulo.localize.LocalizeValue;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
@@ -441,6 +442,11 @@ public interface Application extends ComponentManager {
    */
   @Nonnull
   Image getIcon();
+
+  @Nonnull
+  default LocalizeValue getName() {
+    return LocalizeValue.localizeTODO("Consulo");
+  }
 
   /**
    * @return last UIAccess for application

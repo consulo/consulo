@@ -161,7 +161,7 @@ public final class LoadTextUtil {
 
   // private fake charsets for files which have one-byte-for-ascii-characters encoding but contain seven bits characters only. used for optimization since we don't have to encode-decode bytes here.
   private static final Charset INTERNAL_SEVEN_BIT_UTF8 = new SevenBitCharset(StandardCharsets.UTF_8);
-  private static final Charset INTERNAL_SEVEN_BIT_ISO_8859_1 = new SevenBitCharset(CharsetToolkit.ISO_8859_1_CHARSET);
+  private static final Charset INTERNAL_SEVEN_BIT_ISO_8859_1 = new SevenBitCharset(StandardCharsets.ISO_8859_1);
   private static final Charset INTERNAL_SEVEN_BIT_WIN_1251 = new SevenBitCharset(CharsetToolkit.WIN_1251_CHARSET);
 
   private static class SevenBitCharset extends Charset {
@@ -255,7 +255,7 @@ public final class LoadTextUtil {
       if (charset == StandardCharsets.UTF_8) {
         result = INTERNAL_SEVEN_BIT_UTF8;
       }
-      else if (charset == CharsetToolkit.ISO_8859_1_CHARSET) {
+      else if (charset == StandardCharsets.ISO_8859_1) {
         result = INTERNAL_SEVEN_BIT_ISO_8859_1;
       }
       else if (charset == CharsetToolkit.WIN_1251_CHARSET) {

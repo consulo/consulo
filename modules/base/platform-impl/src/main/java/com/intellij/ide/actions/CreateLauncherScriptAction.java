@@ -152,8 +152,7 @@ public class CreateLauncherScriptAction extends DumbAwareAction {
   }
 
   public static String defaultScriptName() {
-    String scriptName = ApplicationNamesInfo.getInstance().getScriptName();
-    return StringUtil.isEmptyOrSpaces(scriptName) ? "idea" : scriptName;
+    return "consulo";
   }
 
   public static class CreateLauncherScriptDialog extends DialogWrapper {

@@ -758,6 +758,8 @@
                     interface="com.intellij.execution.BeforeRunTaskProvider"
                     area="PROJECT"/>
 
+    <extensionPoint name="utf8BomOptionProvider" interface="com.intellij.openapi.vfs.encoding.Utf8BomOptionProvider"/>
+
     <extensionPoint name="consoleFilterProvider" interface="com.intellij.execution.filters.ConsoleFilterProvider"/>
     <extensionPoint name="consoleInputFilterProvider" interface="com.intellij.execution.filters.ConsoleInputFilterProvider"/>
     <extensionPoint name="consoleActionsPostProcessor" interface="com.intellij.execution.actions.ConsoleActionsPostProcessor"/>
@@ -1481,7 +1483,7 @@
     <virtualFileSystem implementation="com.intellij.openapi.vfs.ex.temp.TempFileSystem"/>
 
     <toolWindow id="Event Log" anchor="bottom" secondary="true"
-                icon="consulo.platform.base.PlatformIconGroup@ide.notification.noEvents"
+                icon="consulo.platform.base.PlatformIconGroup@ide.notification.noevents"
                 factoryClass="com.intellij.notification.EventLogToolWindowFactory"/>
 
     <projectService serviceImplementation="com.intellij.notification.EventLog$ProjectTracker" lazy="false"/>
@@ -2165,10 +2167,9 @@
     <usageFilteringRuleProvider implementation="com.intellij.usages.impl.UsageFilteringRuleProviderImpl"/>
     <usageGroupingRuleProvider implementation="com.intellij.usages.impl.UsageGroupingRuleProviderImpl"/>
 
-    <projectService serviceInterface="com.intellij.psi.templateLanguages.TemplateDataLanguageMappings"
-                    serviceImplementation="com.intellij.psi.templateLanguages.TemplateDataLanguageMappings"/>
-    <applicationService serviceInterface="com.intellij.psi.templateLanguages.TemplateDataLanguagePatterns"
-                        serviceImplementation="com.intellij.psi.templateLanguages.TemplateDataLanguagePatterns"/>
+    <projectService serviceImplementation="com.intellij.psi.templateLanguages.TemplateDataLanguageMappings"/>
+    <applicationService serviceImplementation="com.intellij.psi.templateLanguages.TemplateDataLanguagePatterns"/>
+    <filePropertyPusher implementation="com.intellij.psi.templateLanguages.TemplateDataLanguagePusher"/>
 
     <!-- execution -->
     <executor implementation="com.intellij.execution.executors.DefaultRunExecutor" order="first" id="run"/>
@@ -2215,6 +2216,8 @@
                              displayName="General"
                              instance="com.intellij.application.options.editor.GeneralCodeFoldingConfigurable"/>
 
+    <projectService serviceInterface="com.intellij.openapi.vfs.encoding.EncodingProjectManager" serviceImplementation="com.intellij.openapi.vfs.encoding.EncodingProjectManagerImpl"/>
+    <postStartupActivity implementation="com.intellij.openapi.vfs.encoding.EncodingProjectManagerImpl$EncodingProjectManagerStartUpActivity"/>
 
     <editorTabColorProvider implementation="com.intellij.ui.tabs.EditorTabColorProviderImpl"/>
 
@@ -2313,16 +2316,16 @@
 
     <toolWindow id="Project"
                 anchor="left"
-                icon="consulo.platform.base.PlatformIconGroup@toolwindows.toolWindowProject"
+                icon="consulo.platform.base.PlatformIconGroup@toolwindows.toolwindowproject"
                 dispayName="consulo.platform.base.IdeLocalize@title.project"
                 factoryClass="com.intellij.ide.projectView.impl.ProjectViewToolWindowFactory"/>
-    <toolWindow id="TODO" anchor="bottom" icon="consulo.platform.base.PlatformIconGroup@toolwindows.toolWindowTodo"
+    <toolWindow id="TODO" anchor="bottom" icon="consulo.platform.base.PlatformIconGroup@toolwindows.toolwindowtodo"
                 factoryClass="com.intellij.ide.todo.TodoToolWindowFactory" canCloseContents="true"/>
-    <toolWindow id="Structure" anchor="left" icon="consulo.platform.base.PlatformIconGroup@toolwindows.toolWindowStructure" secondary="true"
+    <toolWindow id="Structure" anchor="left" icon="consulo.platform.base.PlatformIconGroup@toolwindows.toolwindowstructure" secondary="true"
                 factoryClass="com.intellij.ide.structureView.impl.StructureViewToolWindowFactory"/>
-    <toolWindow id="Favorites" anchor="left" icon="consulo.platform.base.PlatformIconGroup@toolwindows.toolWindowFavorites" secondary="true"
+    <toolWindow id="Favorites" anchor="left" icon="consulo.platform.base.PlatformIconGroup@toolwindows.toolwindowfavorites" secondary="true"
                 factoryClass="com.intellij.ide.projectView.impl.FavoritesViewToolWindowFactory"/>
-    <toolWindow id="Run Dashboard" anchor="bottom" icon="consulo.platform.base.PlatformIconGroup@toolwindows.toolWindowRun"
+    <toolWindow id="Run Dashboard" anchor="bottom" icon="consulo.platform.base.PlatformIconGroup@toolwindows.toolwindowrun"
                 factoryClass="com.intellij.execution.dashboard.RunDashboardToolWindowFactory"
                 conditionClass="com.intellij.execution.dashboard.RunDashboardToolWindowFactory"/>
 

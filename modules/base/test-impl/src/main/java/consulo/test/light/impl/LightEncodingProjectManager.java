@@ -15,19 +15,16 @@
  */
 package consulo.test.light.impl;
 
-import consulo.disposer.Disposable;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.vfs.CharsetToolkit;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.encoding.EncodingProjectManager;
-import kava.beans.PropertyChangeListener;
-
 import javax.annotation.Nonnull;
+
 import javax.annotation.Nullable;
 import java.nio.charset.Charset;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Map;
 
 /**
  * @author VISTALL
@@ -48,11 +45,6 @@ public class LightEncodingProjectManager extends EncodingProjectManager {
   @Override
   public Charset getEncoding(@Nullable VirtualFile virtualFile, boolean useParentDefaults) {
     return getDefaultCharset();
-  }
-
-  @Override
-  public boolean isUseUTFGuessing(VirtualFile virtualFile) {
-    return true;
   }
 
   @Override
@@ -92,26 +84,16 @@ public class LightEncodingProjectManager extends EncodingProjectManager {
 
   }
 
+  @Nonnull
   @Override
-  public void addPropertyChangeListener(@Nonnull PropertyChangeListener listener, @Nonnull Disposable parentDisposable) {
-
+  public Charset getDefaultConsoleEncoding() {
+    return Charset.defaultCharset();
   }
 
   @Nullable
   @Override
   public Charset getCachedCharsetFromContent(@Nonnull Document document) {
     return null;
-  }
-
-  @Nonnull
-  @Override
-  public Map<VirtualFile, Charset> getAllMappings() {
-    return Collections.emptyMap();
-  }
-
-  @Override
-  public void setMapping(@Nonnull Map<VirtualFile, Charset> result) {
-
   }
 
   @Override

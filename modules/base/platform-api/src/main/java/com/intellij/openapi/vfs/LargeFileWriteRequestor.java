@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2015 JetBrains s.r.o.
+ * Copyright 2000-2017 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,19 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-package com.intellij.lang;
-
-import com.intellij.openapi.vfs.VirtualFile;
-import javax.annotation.Nullable;
+package com.intellij.openapi.vfs;
 
 /**
- * @author Dmitry Avdeev
+ * A marker interface for {@link VirtualFile#getOutputStream(Object)} to not assert file content size.
+ *
+ * @see com.intellij.openapi.util.io.FileUtilRt#isTooLarge
  */
-public interface PerFileMappings<T> {
-
-  void setMapping(@Nullable VirtualFile file, @Nullable T value);
-
-  @Nullable
-  T getMapping(@Nullable VirtualFile file);
+public interface LargeFileWriteRequestor {
 }

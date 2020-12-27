@@ -43,7 +43,7 @@ public abstract class Invoker implements Disposable {
   private volatile boolean disposed;
 
   private Invoker(@Nonnull String prefix, @Nonnull Disposable parent, @Nonnull ThreeState useReadAction) {
-    StringBuilder sb = new StringBuilder().append(UID.getAndIncrement()).append(".Invoker.").append(prefix);
+    StringBuilder sb = new StringBuilder("Invoker.").append(UID.getAndIncrement()).append(".Invoker.").append(prefix);
     if (useReadAction != ThreeState.UNSURE) {
       sb.append(".ReadAction=").append(useReadAction);
     }

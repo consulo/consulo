@@ -16,6 +16,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.*;
 import com.intellij.openapi.vfs.encoding.EncodingManager;
 import com.intellij.openapi.vfs.encoding.EncodingProjectManager;
+import com.intellij.openapi.vfs.encoding.Utf8BomOptionProvider;
 import com.intellij.openapi.vfs.ex.temp.TempFileSystem;
 import com.intellij.openapi.vfs.newvfs.*;
 import com.intellij.openapi.vfs.newvfs.events.*;
@@ -34,9 +35,9 @@ import gnu.trove.THashSet;
 import gnu.trove.TIntArrayList;
 import gnu.trove.TIntHashSet;
 import org.jetbrains.annotations.NonNls;
+import javax.annotation.Nonnull;
 import org.jetbrains.annotations.TestOnly;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -451,14 +452,22 @@ public final class PersistentFSImpl extends PersistentFS implements Disposable {
     if (child == null) {
       throw new IOException("Cannot create child file '" + file + "' at " + parent.getPath());
     }
-    if (child.getCharset().equals(StandardCharsets.UTF_8)) {
-      Project project = ProjectLocator.getInstance().guessProjectForFile(child);
-      EncodingManager encodingManager = project == null ? EncodingManager.getInstance() : EncodingProjectManager.getInstance(project);
-      if (encodingManager.shouldAddBOMForNewUtf8File()) {
-        child.setBOM(CharsetToolkit.UTF8_BOM);
-      }
+
+    if (child.getCharset().equals(StandardCharsets.UTF_8) && isUtf8BomRequired(child)) {
+      child.setBOM(CharsetToolkit.UTF8_BOM);
     }
     return child;
+  }
+
+  private static boolean isUtf8BomRequired(@Nonnull VirtualFile file) {
+    for (Utf8BomOptionProvider encodingProvider : Utf8BomOptionProvider.EP_NAME.getExtensionList()) {
+      if (encodingProvider.shouldAddBOMForNewUtf8File(file)) {
+        return true;
+      }
+    }
+    Project project = ProjectLocator.getInstance().guessProjectForFile(file);
+    EncodingManager encodingManager = project == null ? EncodingManager.getInstance() : EncodingProjectManager.getInstance(project);
+    return encodingManager.shouldAddBOMForNewUtf8File();
   }
 
   @Override

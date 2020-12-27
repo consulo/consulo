@@ -2,7 +2,9 @@
 package com.intellij.util.concurrency;
 
 import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
 import org.jetbrains.annotations.Nls;
+import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 
 import java.util.concurrent.*;
@@ -73,14 +75,14 @@ public final class AppExecutorUtil {
   }
 
   /**
+   * @param name is used to generate thread name which will be shown in thread dumps, so it should be human readable and use title capitalization
    * @return the bounded executor (executor which runs no more than {@code maxThreads} tasks simultaneously) backed by the {@code backendExecutor}
    * which will shutdown itself when {@code parentDisposable} gets disposed.
    */
   @Nonnull
-  public static ExecutorService createBoundedApplicationPoolExecutor(@Nonnull @Nls(capitalization = Nls.Capitalization.Title) String name,
-                                                                     @Nonnull Executor backendExecutor,
-                                                                     int maxThreads,
-                                                                     @Nonnull Disposable parentDisposable) {
-    return new BoundedTaskExecutor(name, backendExecutor, maxThreads, parentDisposable);
+  public static ExecutorService createBoundedApplicationPoolExecutor(@Nonnull @NonNls String name, @Nonnull Executor backendExecutor, int maxThreads, @Nonnull Disposable parentDisposable) {
+    BoundedTaskExecutor executor = new BoundedTaskExecutor(name, backendExecutor, maxThreads, true);
+    Disposer.register(parentDisposable, () -> executor.shutdownNow());
+    return executor;
   }
 }

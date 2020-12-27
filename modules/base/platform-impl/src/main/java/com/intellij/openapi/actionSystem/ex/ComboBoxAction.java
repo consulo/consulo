@@ -27,6 +27,7 @@ import consulo.actionSystem.ex.ComboBoxButtonImpl;
 import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 
@@ -63,6 +64,11 @@ public abstract class ComboBoxAction extends AnAction implements CustomComponent
   }
 
   @Nonnull
+  public JBPopup createPopup(@Nonnull JComponent component, @Nonnull DataContext context, @Nonnull Presentation presentation, @Nonnull Runnable onDispose) {
+    return createPopup(component, context, onDispose);
+  }
+
+  @Nonnull
   public JBPopup createPopup(@Nonnull JComponent component, @Nonnull DataContext context, @Nonnull Runnable onDispose) {
     ActionGroup group = createPopupActionGroup(component, context);
 
@@ -74,6 +80,11 @@ public abstract class ComboBoxAction extends AnAction implements CustomComponent
   @Nonnull
   protected ComboBoxButton createComboBoxButton(Presentation presentation) {
     return new ComboBoxButtonImpl(this, presentation);
+  }
+
+  @Nullable
+  public String getTooltipText(@Nonnull ComboBoxButton button) {
+    return null;
   }
 
   public void setPopupTitle(String popupTitle) {

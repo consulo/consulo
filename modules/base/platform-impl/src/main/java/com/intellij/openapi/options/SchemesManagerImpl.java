@@ -21,11 +21,6 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ex.DecodeDefaultsUtil;
 import com.intellij.openapi.components.RoamingType;
 import com.intellij.openapi.components.ServiceManager;
-import consulo.components.impl.stores.storage.VfsDirectoryBasedStorage;
-import consulo.components.impl.stores.storage.DirectoryStorageData;
-import consulo.components.impl.stores.StorageUtil;
-import consulo.components.impl.stores.StreamProvider;
-import consulo.logging.Logger;
 import com.intellij.openapi.extensions.AbstractExtensionPointBean;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.Comparing;
@@ -41,6 +36,12 @@ import com.intellij.util.ThrowableConvertor;
 import com.intellij.util.containers.ContainerUtilRt;
 import com.intellij.util.io.URLUtil;
 import com.intellij.util.text.UniqueNameGenerator;
+import consulo.components.impl.stores.StorageUtil;
+import consulo.components.impl.stores.StreamProvider;
+import consulo.components.impl.stores.storage.DirectoryStorageData;
+import consulo.components.impl.stores.storage.VfsDirectoryBasedStorage;
+import consulo.logging.Logger;
+import consulo.util.collection.ContainerUtil;
 import consulo.util.pointers.Named;
 import gnu.trove.THashSet;
 import org.jdom.Document;
@@ -501,7 +502,7 @@ public class SchemesManagerImpl<T extends Named, E extends ExternalizableScheme>
     Parent parent = myProcessor.writeScheme(scheme);
     Element element = parent == null || parent instanceof Element ? (Element)parent : ((Document)parent).detachRootElement();
     if (JDOMUtil.isEmpty(element)) {
-      ContainerUtilRt.addIfNotNull(myFilesToDelete, currentFileNameWithoutExtension);
+      ContainerUtil.addIfNotNull(myFilesToDelete, currentFileNameWithoutExtension);
       return;
     }
 
@@ -520,7 +521,7 @@ public class SchemesManagerImpl<T extends Named, E extends ExternalizableScheme>
     myFilesToDelete.remove(fileNameWithoutExtension);
 
     // stream provider always use LF separator
-    final byte[] byteOut = StorageUtil.writeToBytes(element, "\n");
+    final byte[] byteOut = StorageUtil.writeToBytes(element);
 
     // if another new scheme uses old name of this scheme, so, we must not delete it (as part of rename operation)
     boolean renamed = currentFileNameWithoutExtension != null && fileNameWithoutExtension != currentFileNameWithoutExtension && nameGenerator.value(currentFileNameWithoutExtension);

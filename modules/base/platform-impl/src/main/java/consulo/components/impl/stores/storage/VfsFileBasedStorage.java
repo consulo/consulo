@@ -38,8 +38,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
-import java.nio.ByteBuffer;
-import java.nio.CharBuffer;
 import java.util.Set;
 
 /**
@@ -50,7 +48,7 @@ public final class VfsFileBasedStorage extends XmlElementStorage {
   private final boolean myUseXmlProlog;
   private final File myFile;
   private volatile VirtualFile myCachedVirtualFile;
-  private LineSeparator myLineSeparator;
+  private final LineSeparator myLineSeparator = LineSeparator.LF;
 
   public VfsFileBasedStorage(@Nonnull String filePath,
                              @Nonnull String fileSpec,
@@ -97,10 +95,6 @@ public final class VfsFileBasedStorage extends XmlElementStorage {
     return myUseXmlProlog;
   }
 
-  protected boolean isUseLfLineSeparatorByDefault() {
-    return isUseXmlProlog();
-  }
-
   @Override
   protected XmlElementStorageSaveSession createSaveSession(@Nonnull StorageData storageData) {
     return new FileSaveSession(storageData);
@@ -120,11 +114,7 @@ public final class VfsFileBasedStorage extends XmlElementStorage {
 
     @Override
     protected void doSave(@Nullable Element element) throws IOException {
-      if (myLineSeparator == null) {
-        myLineSeparator = isUseLfLineSeparatorByDefault() ? LineSeparator.LF : LineSeparator.getSystemLineSeparator();
-      }
-
-      byte[] content = element == null ? null : StorageUtil.writeToBytes(element, myLineSeparator.getSeparatorString());
+      byte[] content = element == null ? null : StorageUtil.writeToBytes(element);
       try {
         if (myStreamProvider != null && myStreamProvider.isEnabled()) {
           // stream provider always use LF separator
@@ -191,9 +181,7 @@ public final class VfsFileBasedStorage extends XmlElementStorage {
         return processReadException(null);
       }
 
-      CharBuffer charBuffer = CharsetToolkit.UTF8_CHARSET.decode(ByteBuffer.wrap(file.contentsToByteArray()));
-      myLineSeparator = StorageUtil.detectLineSeparators(charBuffer, isUseLfLineSeparatorByDefault() ? null : LineSeparator.LF);
-      return JDOMUtil.loadDocument(charBuffer).getRootElement();
+      return JDOMUtil.load(file.getInputStream());
     }
     catch (JDOMException e) {
       return processReadException(e);

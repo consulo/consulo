@@ -60,13 +60,15 @@ import com.intellij.util.indexing.LightDirectoryIndex;
 import com.intellij.util.messages.MessageBus;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.container.boot.ContainerPathManager;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
 import consulo.ide.IconDescriptor;
 import consulo.ide.IconDescriptorUpdater;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
-
 import javax.annotation.Nonnull;
+
 import javax.annotation.Nullable;
 import java.io.IOException;
 import java.util.Collection;
@@ -78,7 +80,7 @@ import java.util.concurrent.ConcurrentMap;
 
 @Singleton
 @State(name = "ScratchFileService", storages = {@Storage("scratches.xml")})
-public class ScratchFileServiceImpl extends ScratchFileService implements PersistentStateComponent<Element> {
+public class ScratchFileServiceImpl extends ScratchFileService implements PersistentStateComponent<Element>, Disposable {
 
   private static final RootType NULL_TYPE = new RootType("", null) {
   };
@@ -88,6 +90,8 @@ public class ScratchFileServiceImpl extends ScratchFileService implements Persis
 
   @Inject
   protected ScratchFileServiceImpl(Application application) {
+    Disposer.register(this, myScratchMapping);
+
     myIndex = new LightDirectoryIndex<>(application, NULL_TYPE, index -> {
       LocalFileSystem fileSystem = LocalFileSystem.getInstance();
       for (RootType r : RootType.getAllRootTypes()) {
@@ -160,7 +164,18 @@ public class ScratchFileServiceImpl extends ScratchFileService implements Persis
   @Nonnull
   @Override
   public PerFileMappings<Language> getScratchesMapping() {
-    return myScratchMapping;
+    return new PerFileMappings<Language>() {
+      @Override
+      public void setMapping(@Nullable VirtualFile file, @Nullable Language value) {
+        myScratchMapping.setMapping(file, value == null ? null : value.getID());
+      }
+
+      @Nullable
+      @Override
+      public Language getMapping(@Nullable VirtualFile file) {
+        return Language.findLanguageByID(myScratchMapping.getMapping(file));
+      }
+    };
   }
 
   @Nullable
@@ -174,22 +189,27 @@ public class ScratchFileServiceImpl extends ScratchFileService implements Persis
     myScratchMapping.loadState(state);
   }
 
-  private static class MyLanguages extends PerFileMappingsBase<Language> {
+  @Override
+  public void dispose() {
+  }
+
+  private static class MyLanguages extends PerFileMappingsBase<String> {
     @Override
-    protected List<Language> getAvailableValues() {
-      return LanguageUtil.getFileLanguages();
+    @Nonnull
+    public List<String> getAvailableValues() {
+      return ContainerUtil.map(LanguageUtil.getFileLanguages(), Language::getID);
     }
 
     @Nullable
     @Override
-    protected String serialize(Language language) {
-      return language.getID();
+    protected String serialize(String languageID) {
+      return languageID;
     }
 
     @Nullable
     @Override
-    protected Language handleUnknownMapping(VirtualFile file, String value) {
-      return PlainTextLanguage.INSTANCE;
+    protected String handleUnknownMapping(VirtualFile file, String value) {
+      return PlainTextLanguage.INSTANCE.getID();
     }
   }
 

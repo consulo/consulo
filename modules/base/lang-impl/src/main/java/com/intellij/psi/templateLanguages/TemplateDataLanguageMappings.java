@@ -19,27 +19,26 @@ import com.intellij.lang.DependentLanguage;
 import com.intellij.lang.InjectableLanguage;
 import com.intellij.lang.Language;
 import com.intellij.lang.LanguagePerFileMappings;
-import com.intellij.openapi.components.*;
+import com.intellij.openapi.components.ServiceManager;
+import com.intellij.openapi.components.State;
+import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.roots.impl.FilePropertyPusher;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.containers.ContainerUtil;
-
-import javax.annotation.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
 /**
  * @author peter
  */
 @Singleton
-@State(
-    name = "TemplateDataLanguageMappings",
-    storages = {
-        @Storage( file = StoragePathMacros.PROJECT_CONFIG_DIR + "/templateLanguages.xml")
-})
+@State(name = "TemplateDataLanguageMappings", storages = {@Storage("templateLanguages.xml")})
 public class TemplateDataLanguageMappings extends LanguagePerFileMappings<Language> {
 
   public static TemplateDataLanguageMappings getInstance(final Project project) {
@@ -57,15 +56,29 @@ public class TemplateDataLanguageMappings extends LanguagePerFileMappings<Langua
   }
 
   @Override
+  @Nonnull
   public List<Language> getAvailableValues() {
     return getTemplateableLanguages();
   }
 
+  @Nullable
   @Override
-  public Language getDefaultMapping(@Nullable VirtualFile file) {
-    return file == null? null : TemplateDataLanguagePatterns.getInstance().getTemplateDataLanguageByFileName(file);
+  public Language getMapping(@Nullable VirtualFile file) {
+    Language t = getConfiguredMapping(file);
+    return t == null || t == Language.ANY ? getDefaultMapping(file) : t;
   }
 
+  @Override
+  public Language getDefaultMapping(@Nullable VirtualFile file) {
+    return getDefaultMappingForFile(file);
+  }
+
+  @Nullable
+  public static Language getDefaultMappingForFile(@Nullable VirtualFile file) {
+    return file == null ? null : TemplateDataLanguagePatterns.getInstance().getTemplateDataLanguageByFileName(file);
+  }
+
+  @Nonnull
   public static List<Language> getTemplateableLanguages() {
     return ContainerUtil.findAll(Language.getRegisteredLanguages(), new Condition<Language>() {
       @Override
@@ -78,4 +91,11 @@ public class TemplateDataLanguageMappings extends LanguagePerFileMappings<Langua
     });
   }
 
+  private final FilePropertyPusher<Language> myPropertyPusher = new TemplateDataLanguagePusher();
+
+  @Nonnull
+  @Override
+  protected FilePropertyPusher<Language> getFilePropertyPusher() {
+    return myPropertyPusher;
+  }
 }

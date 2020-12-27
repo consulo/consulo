@@ -28,12 +28,13 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.openapi.project.ex.ProjectEx;
 import com.intellij.openapi.util.JDOMUtil;
-import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.*;
+import com.intellij.openapi.vfs.LocalFileSystem;
+import com.intellij.openapi.vfs.VfsUtil;
+import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.openapi.vfs.VirtualFileEvent;
 import com.intellij.util.LineSeparator;
-import com.intellij.util.SystemProperties;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.io.UnsyncByteArrayOutputStream;
 import com.intellij.util.ui.UIUtil;
@@ -47,7 +48,7 @@ import org.jdom.Parent;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.*;
-import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
 import java.util.LinkedHashSet;
 import java.util.List;
 
@@ -57,10 +58,7 @@ import java.util.List;
 public class StorageUtil {
   private static final Logger LOG = Logger.getInstance(StorageUtil.class);
 
-  private static final byte[] XML_PROLOG = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>".getBytes(CharsetToolkit.UTF8_CHARSET);
-
-  @SuppressWarnings("SpellCheckingInspection")
-  private static final Pair<byte[], String> NON_EXISTENT_FILE_DATA = Pair.create(null, SystemProperties.getLineSeparator());
+  private static final byte[] XML_PROLOG = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>".getBytes(StandardCharsets.UTF_8);
 
   private StorageUtil() {
   }
@@ -233,9 +231,15 @@ public class StorageUtil {
   }
 
   @Nonnull
+  @Deprecated
   public static byte[] writeToBytes(@Nonnull Parent element, @Nonnull String lineSeparator) throws IOException {
+    return writeToBytes(element);
+  }
+
+  @Nonnull
+  public static byte[] writeToBytes(@Nonnull Parent element) throws IOException {
     UnsyncByteArrayOutputStream out = new UnsyncByteArrayOutputStream(256);
-    JDOMUtil.writeParent(element, out, lineSeparator);
+    JDOMUtil.writeParent(element, out, "\n");
     return out.toByteArray();
   }
 
@@ -252,23 +256,6 @@ public class StorageUtil {
       virtualFile = parentVirtualFile.createChildData(requestor, ioFile.getName());
     }
     return virtualFile;
-  }
-
-  /**
-   * @return pair.first - file contents (null if file does not exist), pair.second - file line separators
-   */
-  @Nonnull
-  public static Pair<byte[], String> loadFile(@Nullable final VirtualFile file) throws IOException {
-    if (file == null || !file.exists()) {
-      return NON_EXISTENT_FILE_DATA;
-    }
-
-    byte[] bytes = file.contentsToByteArray();
-    String lineSeparator = file.getDetectedLineSeparator();
-    if (lineSeparator == null) {
-      lineSeparator = detectLineSeparators(CharsetToolkit.UTF8_CHARSET.decode(ByteBuffer.wrap(bytes)), null).getSeparatorString();
-    }
-    return Pair.create(bytes, lineSeparator);
   }
 
   @Nonnull
@@ -288,7 +275,7 @@ public class StorageUtil {
 
   @Nonnull
   public static byte[] elementToBytes(@Nonnull Parent element, boolean useSystemLineSeparator) throws IOException {
-    return writeToBytes(element, useSystemLineSeparator ? SystemProperties.getLineSeparator() : "\n");
+    return writeToBytes(element);
   }
 
   public static void sendContent(@Nonnull StreamProvider provider, @Nonnull String fileSpec, @Nonnull Parent element, @Nonnull RoamingType type) {

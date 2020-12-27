@@ -1,26 +1,12 @@
-/*
- * Copyright 2000-2014 JetBrains s.r.o.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.openapi.vfs.encoding;
 
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.ThrowableComputable;
 import com.intellij.openapi.vfs.VirtualFile;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
 import java.nio.charset.Charset;
 
 /**
@@ -47,32 +33,29 @@ public abstract class EncodingRegistry {
   @Nullable
   public abstract Charset getEncoding(@Nullable VirtualFile virtualFile, boolean useParentDefaults);
 
-  @Deprecated // return true always
-  public boolean isUseUTFGuessing(VirtualFile virtualFile) {
-    return true;
-  }
-
   /**
    * @param virtualFileOrDir null means project
-   * @param charset          null means remove mapping
+   * @param charset null means remove mapping
    */
   public abstract void setEncoding(@Nullable VirtualFile virtualFileOrDir, @Nullable Charset charset);
 
-  /**
-   * @param virtualFile
-   * @return null means 'use system-default'
-   */
+  // "null means 'use system-default'"
   @Nullable
   public Charset getDefaultCharsetForPropertiesFiles(@Nullable VirtualFile virtualFile) {
     return null;
   }
 
+  /**
+   * @return encoding used by default in {@link com.intellij.execution.configurations.GeneralCommandLine}
+   */
+  @Nonnull
+  public abstract Charset getDefaultConsoleEncoding();
+
   public static EncodingRegistry getInstance() {
     return EncodingManager.getInstance();
   }
 
-
-  public static <E extends Throwable> VirtualFile doActionAndRestoreEncoding(@Nonnull VirtualFile fileBefore, @Nonnull ThrowableComputable<VirtualFile, E> action) throws E {
+  public static <E extends Throwable> VirtualFile doActionAndRestoreEncoding(@Nonnull VirtualFile fileBefore, @Nonnull ThrowableComputable<? extends VirtualFile, E> action) throws E {
     EncodingRegistry registry = getInstance();
     Charset charsetBefore = registry.getEncoding(fileBefore, true);
     VirtualFile fileAfter = null;

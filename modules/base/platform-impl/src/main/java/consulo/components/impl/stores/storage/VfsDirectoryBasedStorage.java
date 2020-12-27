@@ -25,7 +25,6 @@ import com.intellij.openapi.util.WriteExternalException;
 import com.intellij.openapi.util.text.StringUtilRt;
 import com.intellij.openapi.vfs.*;
 import com.intellij.openapi.vfs.tracker.VirtualFileTracker;
-import com.intellij.util.SystemProperties;
 import com.intellij.util.containers.SmartHashSet;
 import com.intellij.util.containers.StringInterner;
 import consulo.application.options.PathMacrosService;
@@ -346,10 +345,10 @@ public final class VfsDirectoryBasedStorage extends StateStorageBase<DirectorySt
               byte[] byteOut;
               VirtualFile file = getFile(fileName, dir, MySaveSession.this);
               if (file.exists()) {
-                byteOut = StorageUtil.writeToBytes(storeElement, StorageUtil.loadFile(file).second);
+                byteOut = StorageUtil.writeToBytes(storeElement);
               }
               else {
-                byteOut = StorageUtil.writeToBytes(storeElement, SystemProperties.getLineSeparator());
+                byteOut = StorageUtil.writeToBytes(storeElement);
               }
               StorageUtil.writeFile(null, MySaveSession.this, file, byteOut, null);
             }

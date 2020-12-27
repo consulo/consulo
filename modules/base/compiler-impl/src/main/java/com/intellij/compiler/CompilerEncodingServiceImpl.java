@@ -65,10 +65,10 @@ public class CompilerEncodingServiceImpl extends CompilerEncodingService {
 
   private Map<Module, Set<Charset>> computeModuleCharsetMap() {
     final Map<Module, Set<Charset>> map = new THashMap<Module, Set<Charset>>();
-    final Map<VirtualFile, Charset> mappings = EncodingProjectManager.getInstance(myProject).getAllMappings();
+    final Map<? extends VirtualFile, ? extends Charset> mappings = ((EncodingProjectManagerImpl) EncodingProjectManager.getInstance(myProject)).getAllMappings();
     ProjectFileIndex index = ProjectRootManager.getInstance(myProject).getFileIndex();
     final CompilerManager compilerManager = CompilerManager.getInstance(myProject);
-    for (Map.Entry<VirtualFile, Charset> entry : mappings.entrySet()) {
+    for (Map.Entry<? extends VirtualFile, ? extends Charset> entry : mappings.entrySet()) {
       final VirtualFile file = entry.getKey();
       final Charset charset = entry.getValue();
       if (file == null || charset == null || (!file.isDirectory() && !compilerManager.isCompilableFileType(file.getFileType()))
