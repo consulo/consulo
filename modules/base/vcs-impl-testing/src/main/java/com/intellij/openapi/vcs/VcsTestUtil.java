@@ -21,15 +21,15 @@ import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.CharsetToolkit;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.testFramework.PlatformTestUtil;
 import com.intellij.util.containers.ContainerUtil;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -45,7 +45,7 @@ public class VcsTestUtil {
       protected void run(@Nonnull Result<VirtualFile> result) throws Throwable {
         VirtualFile file = parent.createChildData(this, name);
         if (content != null) {
-          file.setBinaryContent(CharsetToolkit.getUtf8Bytes(content));
+          file.setBinaryContent(content.getBytes(StandardCharsets.UTF_8));
         }
         result.setResult(file);
       }

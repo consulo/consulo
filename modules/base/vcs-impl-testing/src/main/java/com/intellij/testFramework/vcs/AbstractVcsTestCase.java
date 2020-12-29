@@ -26,7 +26,6 @@ import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vcs.*;
 import com.intellij.openapi.vcs.changes.*;
-import com.intellij.openapi.vfs.CharsetToolkit;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.testFramework.UsefulTestCase;
@@ -35,11 +34,12 @@ import com.intellij.testFramework.fixtures.IdeaProjectTestFixture;
 import com.intellij.testFramework.fixtures.IdeaTestFixtureFactory;
 import com.intellij.testFramework.fixtures.TestFixtureBuilder;
 import com.intellij.util.Processor;
-import javax.annotation.Nullable;
 import org.junit.Assert;
 
+import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -151,7 +151,7 @@ public abstract class AbstractVcsTestCase {
         try {
           VirtualFile file = parent.createChildData(this, name);
           if (content != null) {
-            file.setBinaryContent(CharsetToolkit.getUtf8Bytes(content));
+            file.setBinaryContent(content.getBytes(StandardCharsets.UTF_8));
           }
           result.set(file);
         }
