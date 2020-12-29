@@ -17,13 +17,17 @@ package com.intellij.ide.actions;
 
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.Presentation;
 import com.intellij.openapi.project.DumbAware;
-import com.intellij.openapi.ui.DialogWrapper;
+import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vcs.AbstractVcs;
 import com.intellij.openapi.vcs.ProjectLevelVcsManager;
 import com.intellij.openapi.vcs.VcsBundle;
+import com.intellij.openapi.vcs.impl.ProjectLevelVcsManagerImpl;
 import consulo.ui.annotation.RequiredUIAccess;
+
+import javax.annotation.Nullable;
 
 public class StartUseVcsAction extends AnAction implements DumbAware {
   public StartUseVcsAction() {
@@ -33,37 +37,31 @@ public class StartUseVcsAction extends AnAction implements DumbAware {
   @Override
   @RequiredUIAccess
   public void update(final AnActionEvent e) {
-    final VcsDataWrapper data = new VcsDataWrapper(e);
-    final boolean enabled = data.enabled();
+    Project project = e.getData(CommonDataKeys.PROJECT);
+    boolean enabled = isEnabled(project);
 
     final Presentation presentation = e.getPresentation();
-    presentation.setEnabled(enabled);
-    presentation.setVisible(enabled);
-    if (enabled) {
-      presentation.setText(VcsBundle.message("action.enable.version.control.integration.text"));
-    }
+    presentation.setEnabledAndVisible(enabled);
   }
 
   @Override
   @RequiredUIAccess
   public void actionPerformed(final AnActionEvent e) {
-    final VcsDataWrapper data = new VcsDataWrapper(e);
-    final boolean enabled = data.enabled();
-    if (! enabled) {
+    Project project = e.getRequiredData(CommonDataKeys.PROJECT);
+    if (!isEnabled(project)) {
       return;
     }
 
-    final StartUseVcsDialog dialog = new StartUseVcsDialog(data);
-    dialog.show();
-    if (dialog.getExitCode() == DialogWrapper.OK_EXIT_CODE) {
-      final String vcsName = dialog.getVcs();
-      if (vcsName.length() > 0) {
-        final ProjectLevelVcsManager manager = data.getManager();
-        AbstractVcs vcs = manager.findVcsByName(vcsName);
-        assert vcs != null : "No vcs found for name " + vcsName;
-        vcs.enableIntegration();
-      }
+    final StartUseVcsDialog dialog = new StartUseVcsDialog(project);
+    if (dialog.showAndGet()) {
+      AbstractVcs vcs = dialog.getSelectedVcs();
+      vcs.enableIntegration();
     }
   }
 
+  private static boolean isEnabled(@Nullable Project project) {
+    if (project == null) return false;
+    ProjectLevelVcsManagerImpl manager = (ProjectLevelVcsManagerImpl)ProjectLevelVcsManager.getInstance(project);
+    return manager.haveVcses() && !manager.hasAnyMappings();
+  }
 }

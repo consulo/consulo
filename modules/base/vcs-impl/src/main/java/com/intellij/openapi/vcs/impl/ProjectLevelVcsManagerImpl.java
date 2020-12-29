@@ -66,6 +66,7 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.messages.MessageBusConnection;
 import com.intellij.util.text.DateFormatUtil;
 import com.intellij.vcs.ViewUpdateInfoNotification;
+import consulo.annotation.DeprecationInfo;
 import consulo.application.AccessRule;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
@@ -102,7 +103,8 @@ public class ProjectLevelVcsManagerImpl extends ProjectLevelVcsManagerEx impleme
   }
 
   private static final Logger LOG = Logger.getInstance(ProjectLevelVcsManagerImpl.class);
-  @NonNls private static final String SETTINGS_EDITED_MANUALLY = "settingsEditedManually";
+  @NonNls
+  private static final String SETTINGS_EDITED_MANUALLY = "settingsEditedManually";
 
   private final ProjectLevelVcsManagerSerialization mySerialization;
   private final OptionsAndConfirmations myOptionsAndConfirmations;
@@ -123,12 +125,18 @@ public class ProjectLevelVcsManagerImpl extends ProjectLevelVcsManagerEx impleme
     }
   };
 
-  @NonNls private static final String ELEMENT_MAPPING = "mapping";
-  @NonNls private static final String ATTRIBUTE_DIRECTORY = "directory";
-  @NonNls private static final String ATTRIBUTE_VCS = "vcs";
-  @NonNls private static final String ATTRIBUTE_DEFAULT_PROJECT = "defaultProject";
-  @NonNls private static final String ELEMENT_ROOT_SETTINGS = "rootSettings";
-  @NonNls private static final String ATTRIBUTE_CLASS = "class";
+  @NonNls
+  private static final String ELEMENT_MAPPING = "mapping";
+  @NonNls
+  private static final String ATTRIBUTE_DIRECTORY = "directory";
+  @NonNls
+  private static final String ATTRIBUTE_VCS = "vcs";
+  @NonNls
+  private static final String ATTRIBUTE_DEFAULT_PROJECT = "defaultProject";
+  @NonNls
+  private static final String ELEMENT_ROOT_SETTINGS = "rootSettings";
+  @NonNls
+  private static final String ATTRIBUTE_CLASS = "class";
 
   private boolean myMappingsLoaded;
   private boolean myHaveLegacyVcsConfiguration;
@@ -182,8 +190,18 @@ public class ProjectLevelVcsManagerImpl extends ProjectLevelVcsManagerEx impleme
     myOptionsAndConfirmations.init(mySerialization::getInitOptionValue);
   }
 
+  @Deprecated
+  @DeprecationInfo("Use own AllVcsesI impl, or use extension extender")
   public void registerVcs(AbstractVcs vcs) {
-    AllVcses.getInstance(myProject).registerManually(vcs);
+    // FIXME [VISTALL] nothing since this impl used only for tests
+    throw new UnsupportedOperationException();
+  }
+
+  @Deprecated
+  @DeprecationInfo("Use own AllVcsesI impl, or use extension extender")
+  public void unregisterVcs(@Nonnull AbstractVcs vcs) {
+    // FIXME [VISTALL] nothing since this impl used only for tests
+    throw new UnsupportedOperationException();
   }
 
   @Override
@@ -320,15 +338,6 @@ public class ProjectLevelVcsManagerImpl extends ProjectLevelVcsManagerEx impleme
     return null;
   }
 
-  public void unregisterVcs(@Nonnull AbstractVcs vcs) {
-    if (!ApplicationManager.getApplication().isUnitTestMode() && myMappings.haveActiveVcs(vcs.getName())) {
-      // unlikely
-      LOG.warn("Active vcs '" + vcs.getName() + "' is being unregistered. Remove from mappings first.");
-    }
-    myMappings.beingUnregistered(vcs.getName());
-    AllVcses.getInstance(myProject).unregisterManually(vcs);
-  }
-
   @Nullable
   @Override
   public ContentManager getContentManager() {
@@ -404,8 +413,7 @@ public class ProjectLevelVcsManagerImpl extends ProjectLevelVcsManagerEx impleme
       JPanel panel = new JPanel(new BorderLayout());
       panel.add(myConsole.getComponent(), BorderLayout.CENTER);
 
-      ActionToolbar toolbar = ActionManager.getInstance()
-              .createActionToolbar("VcsManager", new DefaultActionGroup(myConsole.createConsoleActions()), false);
+      ActionToolbar toolbar = ActionManager.getInstance().createActionToolbar("VcsManager", new DefaultActionGroup(myConsole.createConsoleActions()), false);
       panel.add(toolbar.getComponent(), BorderLayout.WEST);
 
       content = ContentFactory.getInstance().createContent(panel, displayName, true);
@@ -535,9 +543,7 @@ public class ProjectLevelVcsManagerImpl extends ProjectLevelVcsManagerEx impleme
   }
 
   @Override
-  public void iterateVcsRoot(VirtualFile root,
-                             Processor<FilePath> iterator,
-                             @Nullable VirtualFileFilter directoryFilter) {
+  public void iterateVcsRoot(VirtualFile root, Processor<FilePath> iterator, @Nullable VirtualFileFilter directoryFilter) {
     VcsRootIterator.iterateVcsRoot(myProject, root, iterator, directoryFilter);
   }
 
@@ -567,8 +573,7 @@ public class ProjectLevelVcsManagerImpl extends ProjectLevelVcsManagerEx impleme
 
   @Override
   @Nonnull
-  public VcsShowConfirmationOption getStandardConfirmation(@Nonnull VcsConfiguration.StandardConfirmation option,
-                                                           AbstractVcs vcs) {
+  public VcsShowConfirmationOption getStandardConfirmation(@Nonnull VcsConfiguration.StandardConfirmation option, AbstractVcs vcs) {
     final VcsShowConfirmationOptionImpl result = getConfirmation(option);
     if (vcs != null) {
       result.addApplicableVcs(vcs);
@@ -814,11 +819,14 @@ public class ProjectLevelVcsManagerImpl extends ProjectLevelVcsManagerEx impleme
 
   @Override
   public boolean isFileInContent(@Nullable final VirtualFile vf) {
-    ThrowableComputable<Boolean,RuntimeException> action = () ->
-                                      vf != null && (myExcludedIndex.isInContent(vf) || isFileInBaseDir(vf) || vf.equals(myProject.getBaseDir()) ||
-                                                     hasExplicitMapping(vf) || isInDirectoryBasedRoot(vf)
-                                                     || !Registry.is("ide.hide.excluded.files") && myExcludedIndex.isExcludedFile(vf))
-                                      && !isIgnored(vf);
+    ThrowableComputable<Boolean, RuntimeException> action = () -> vf != null &&
+                                                                  (myExcludedIndex.isInContent(vf) ||
+                                                                   isFileInBaseDir(vf) ||
+                                                                   vf.equals(myProject.getBaseDir()) ||
+                                                                   hasExplicitMapping(vf) ||
+                                                                   isInDirectoryBasedRoot(vf) ||
+                                                                   !Registry.is("ide.hide.excluded.files") && myExcludedIndex.isExcludedFile(vf)) &&
+                                                                  !isIgnored(vf);
     return AccessRule.read(action);
   }
 

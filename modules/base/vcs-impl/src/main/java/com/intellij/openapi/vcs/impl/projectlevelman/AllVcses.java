@@ -15,22 +15,21 @@
  */
 package com.intellij.openapi.vcs.impl.projectlevelman;
 
-import consulo.disposer.Disposable;
 import com.intellij.openapi.components.ServiceManager;
-import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vcs.AbstractVcs;
 import com.intellij.openapi.vcs.VcsException;
 import com.intellij.openapi.vcs.impl.VcsDescriptor;
 import com.intellij.openapi.vcs.impl.VcsEP;
+import consulo.disposer.Disposable;
 import consulo.logging.Logger;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Singleton
 public class AllVcses implements AllVcsesI, Disposable {
@@ -47,7 +46,7 @@ public class AllVcses implements AllVcsesI, Disposable {
     myVcses = new HashMap<>();
     myLock = new Object();
 
-    final VcsEP[] vcsEPs = Extensions.getExtensions(VcsEP.EP_NAME, myProject);
+    final List<VcsEP> vcsEPs = VcsEP.EP_NAME.getExtensionList(myProject);
     final HashMap<String, VcsEP> map = new HashMap<>();
     for (VcsEP vcsEP : vcsEPs) {
       map.put(vcsEP.name, vcsEP);
@@ -73,23 +72,6 @@ public class AllVcses implements AllVcsesI, Disposable {
       LOG.debug(e);
     }
     vcs.getProvidedStatuses();
-  }
-
-  @Override
-  public void registerManually(@Nonnull final AbstractVcs vcs) {
-    synchronized (myLock) {
-      if (myVcses.containsKey(vcs.getName())) return;
-      addVcs(vcs);
-    }
-  }
-
-  @Override
-  public void unregisterManually(@Nonnull final AbstractVcs vcs) {
-    synchronized (myLock) {
-      if (! myVcses.containsKey(vcs.getName())) return;
-      unregisterVcs(vcs);
-      myVcses.remove(vcs.getName());
-    }
   }
 
   @Override
@@ -158,5 +140,15 @@ public class AllVcses implements AllVcsesI, Disposable {
     }
     Collections.sort(result);
     return result.toArray(new VcsDescriptor[result.size()]);
+  }
+
+  @Nonnull
+  @Override
+  public Collection<AbstractVcs> getSupportedVcses() {
+    ArrayList<String> names;
+    synchronized (myLock) {
+      names = new ArrayList<>(myVcses.keySet());
+    }
+    return names.stream().map(this::getByName).filter(Objects::nonNull).collect(Collectors.toList());
   }
 }

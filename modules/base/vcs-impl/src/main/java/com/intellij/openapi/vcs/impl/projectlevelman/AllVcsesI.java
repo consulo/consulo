@@ -17,18 +17,25 @@ package com.intellij.openapi.vcs.impl.projectlevelman;
 
 import com.intellij.openapi.vcs.AbstractVcs;
 import com.intellij.openapi.vcs.impl.VcsDescriptor;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Collection;
 
 /**
  * @author Irina.Chernushina
  */
 public interface AllVcsesI {
-  void registerManually(@Nonnull AbstractVcs vcs);
-  void unregisterManually(@Nonnull AbstractVcs vcs);
+  @Nullable
   AbstractVcs getByName(String name);
+
   @Nullable
   VcsDescriptor getDescriptor(final String name);
+
   VcsDescriptor[] getAll();
+
+  @Nonnull
+  Collection<AbstractVcs> getSupportedVcses();
+
   boolean isEmpty();
 }
