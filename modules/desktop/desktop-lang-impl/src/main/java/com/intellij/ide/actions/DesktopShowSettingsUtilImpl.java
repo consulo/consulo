@@ -75,6 +75,7 @@ public class DesktopShowSettingsUtilImpl extends BaseShowSettingsUtil implements
   @Nonnull
   @Override
   public SettingsSdksModel getSdksModel() {
+    mySdksModel.initializeIfNeed();
     return mySdksModel;
   }
 

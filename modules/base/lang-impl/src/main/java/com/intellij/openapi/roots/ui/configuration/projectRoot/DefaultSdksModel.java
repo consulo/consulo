@@ -74,6 +74,12 @@ public class DefaultSdksModel implements SdkModel, SettingsSdksModel {
     mySdkTableProvider = sdkTableProvider;
   }
 
+  public void initializeIfNeed() {
+    if(!myInitialized) {
+      reset();
+    }
+  }
+
   @Override
   public Listener getMulticaster() {
     return mySdkEventsDispatcher.getMulticaster();
