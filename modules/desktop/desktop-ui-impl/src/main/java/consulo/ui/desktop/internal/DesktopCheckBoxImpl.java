@@ -30,7 +30,7 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 09-Jun-16
  */
-class DesktopCheckBoxImpl extends SwingComponentDelegate<DesktopCheckBoxImpl.MyJBCheckBox> implements CheckBox {
+public class DesktopCheckBoxImpl extends SwingComponentDelegate<DesktopCheckBoxImpl.MyJBCheckBox> implements CheckBox {
   class MyJBCheckBox extends JBCheckBox implements FromSwingComponentWrapper {
     private LocalizeValue myLabelText = LocalizeValue.empty();
 

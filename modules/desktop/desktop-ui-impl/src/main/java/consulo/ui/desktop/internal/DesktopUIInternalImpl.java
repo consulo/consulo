@@ -32,6 +32,7 @@ import consulo.ui.Window;
 import consulo.ui.*;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
+import consulo.ui.desktop.internal.alert.DesktopAlertFactory;
 import consulo.ui.desktop.internal.image.*;
 import consulo.ui.desktop.internal.image.libraryImage.*;
 import consulo.ui.desktop.internal.layout.*;
@@ -242,7 +243,7 @@ public class DesktopUIInternalImpl extends UIInternal {
 
   @Override
   public <T> Alert<T> _Alerts_create() {
-    return new DesktopAlertImpl<>();
+    return DesktopAlertFactory.create();
   }
 
   @Override

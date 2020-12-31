@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui.desktop.internal;
+package consulo.ui.desktop.internal.alert;
 
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.ui.BrowserHyperlinkListener;
@@ -26,6 +26,7 @@ import com.intellij.util.ui.UIUtil;
 import consulo.localize.LocalizeValue;
 import consulo.ui.Window;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.desktop.internal.DesktopCheckBoxImpl;
 import consulo.ui.image.Image;
 import consulo.ui.impl.BaseAlert;
 import consulo.util.concurrent.AsyncResult;
@@ -42,7 +43,7 @@ import java.awt.event.ActionEvent;
  * @author VISTALL
  * @since 2019-01-12
  */
-class DesktopAlertImpl<V> extends BaseAlert<V> {
+public class DesktopPlainAlertImpl<V> extends BaseAlert<V> {
   class DialogImpl extends DialogWrapper {
     private V mySelectedValue;
 

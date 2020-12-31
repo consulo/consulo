@@ -51,6 +51,7 @@ public class UITester {
       });
       tabbedLayout.addTab("Components", components());
       tabbedLayout.addTab("Components > Table", table());
+      tabbedLayout.addTab("Alerts", alerts());
 
       return tabbedLayout;
     }
@@ -105,7 +106,7 @@ public class UITester {
 
       CheckBox checkBox = CheckBox.create("Check box");
       checkBox.addValueListener(event -> Alerts.okInfo("checkBox").showAsync());
-      
+
       layout.add(HorizontalLayout.create().add(Label.create("Toggle Switch")).add(toggleSwitch).add(checkBox));
 
       IntSlider intSlider = IntSlider.create(3);
@@ -130,6 +131,21 @@ public class UITester {
 
       layout.center(ScrollableLayout.create(Table.create(columns, model)));
 
+      return layout;
+    }
+
+    @RequiredUIAccess
+    private Component alerts() {
+      VerticalLayout layout = VerticalLayout.create();
+      layout.add(Button.create(LocalizeValue.localizeTODO("Info"), event -> {
+        Alerts.okInfo(LocalizeValue.localizeTODO("This is INFO")).showAsync();
+      }));
+      layout.add(Button.create(LocalizeValue.localizeTODO("Warning"), event -> {
+        Alerts.okInfo(LocalizeValue.localizeTODO("This is WARN")).showAsync();
+      }));
+      layout.add(Button.create(LocalizeValue.localizeTODO("Error"), event -> {
+        Alerts.okInfo(LocalizeValue.localizeTODO("This is ERROR")).showAsync();
+      }));
       return layout;
     }
 
