@@ -158,11 +158,6 @@ public class ApplicationInfo {
   }
 
   @Nonnull
-  public final String getWebHelpUrl() {
-    return "https://github.com/consulo/consulo/wiki";
-  }
-
-  @Nonnull
   public final String getWhatsNewUrl() {
     // TODO [VISTALL] change log url?
     return "https://github.com/consulo/consulo";
@@ -179,39 +174,8 @@ public class ApplicationInfo {
   }
 
   @Nonnull
-  public final String getKeymapUrl() {
-    return "https://github.com/consulo/consulo/wiki/Default-Keymap";
-  }
-
-  @Nonnull
-  public final String getCompanyURL() {
-    return "https://consulo.io";
-  }
-
-  @Nonnull
-  public final String getDocumentationUrl() {
-    return "https://github.com/consulo/consulo/wiki";
-  }
-
-  // FIXME [VISTALL] we need this?
-  @Nonnull
-  public final String getReleaseFeedbackUrl() {
-    return getSupportUrl();
-  }
-
-  @Nonnull
   public final String getSupportUrl() {
     return "https://discuss.consulo.io";
-  }
-
-  public final boolean hasHelp() {
-    // TODO [VISTALL] impl it?
-    return false;
-  }
-
-  public final boolean hasContextHelp() {
-    // TODO [VISTALL] impl it?
-    return false;
   }
 
   public String getFullVersion() {
@@ -246,7 +210,9 @@ public class ApplicationInfo {
     return (ApplicationProperties.isInSandbox() ? prefix + "-sandbox" : prefix) + ".png";
   }
 
+  @Deprecated
+  @DeprecationInfo("Always true")
   public static boolean contextHelpAvailable() {
-    return ApplicationManager.getApplication() != null && getInstance().hasContextHelp();
+    return true;
   }
 }

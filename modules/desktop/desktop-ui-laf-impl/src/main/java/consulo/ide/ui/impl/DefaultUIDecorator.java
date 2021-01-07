@@ -82,11 +82,6 @@ public class DefaultUIDecorator implements SwingUIDecorator {
     return true;
   }
 
-  @Override
-  public boolean decorateHelpButton() {
-    return SystemInfo.isMac;
-  }
-
   public static void decorateTree0(JTree tree, Color color) {
     TreeUI treeUI = tree.getUI();
     if (treeUI instanceof BasicTreeUI) {

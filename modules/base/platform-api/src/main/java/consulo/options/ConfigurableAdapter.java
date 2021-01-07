@@ -34,12 +34,6 @@ public class ConfigurableAdapter implements Configurable {
     return null;
   }
 
-  @Nullable
-  @Override
-  public String getHelpTopic() {
-    return null;
-  }
-
   @RequiredUIAccess
   @Nullable
   @Override

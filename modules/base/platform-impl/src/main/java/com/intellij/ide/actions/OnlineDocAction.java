@@ -16,20 +16,20 @@
 package com.intellij.ide.actions;
 
 import com.intellij.ide.BrowserUtil;
-import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.application.impl.ApplicationInfoImpl;
-import com.intellij.openapi.project.DumbAware;
+import com.intellij.openapi.help.HelpManager;
+import com.intellij.openapi.project.DumbAwareAction;
+import consulo.ui.annotation.RequiredUIAccess;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author Vladimir Kondratyev
  */
-public class OnlineDocAction extends AnAction implements DumbAware {
-  public void actionPerformed(AnActionEvent e) {
-    BrowserUtil.launchBrowser(ApplicationInfoImpl.getShadowInstance().getDocumentationUrl());
-  }
-
-  public void update(final AnActionEvent e) {
-    e.getPresentation().setVisible(ApplicationInfoImpl.getShadowInstance().getDocumentationUrl() != null);
+public class OnlineDocAction extends DumbAwareAction {
+  @RequiredUIAccess
+  @Override
+  public void actionPerformed(@Nonnull AnActionEvent e) {
+    BrowserUtil.browse(HelpManager.DEFAULT_HELP_URL);
   }
 }

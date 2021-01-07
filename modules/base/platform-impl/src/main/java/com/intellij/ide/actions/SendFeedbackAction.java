@@ -40,7 +40,7 @@ public class SendFeedbackAction extends AnAction implements DumbAware {
 
   public static void launchBrowser() {
     final ApplicationInfo appInfo = ApplicationInfo.getInstance();
-    String urlTemplate = appInfo.getReleaseFeedbackUrl();
+    String urlTemplate = appInfo.getSupportUrl();
     urlTemplate = urlTemplate
       .replace("$BUILD", appInfo.getBuild().asString())
       .replace("$TIMEZONE", System.getProperty("user.timezone"))

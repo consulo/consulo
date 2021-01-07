@@ -15,13 +15,11 @@
  */
 package com.intellij.ide.actions;
 
-import com.intellij.icons.AllIcons;
-import com.intellij.ide.BrowserUtil;
-import com.intellij.openapi.actionSystem.ActionPlaces;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.application.ApplicationInfo;
+import com.intellij.openapi.help.HelpManager;
 import com.intellij.openapi.project.DumbAware;
+import consulo.platform.Platform;
 import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
@@ -33,14 +31,15 @@ public class RefCardAction extends AnAction implements DumbAware {
   @RequiredUIAccess
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
-    BrowserUtil.browse(ApplicationInfo.getInstance().getKeymapUrl());
-  }
+    String helpId;
 
-  @RequiredUIAccess
-  @Override
-  public void update(AnActionEvent e) {
-    super.update(e);
-    boolean atWelcome = ActionPlaces.WELCOME_SCREEN.equals(e.getPlace());
-    e.getPresentation().setIcon(atWelcome ? AllIcons.General.DefaultKeymap : null);
+    if(Platform.current().os().isMac()) {
+      helpId = "platform/keymap/mac/";
+    }
+    else {
+      helpId = "platform/keymap/windows_linux/";
+    }
+
+    HelpManager.getInstance().invokeHelp(helpId);
   }
 }

@@ -215,15 +215,13 @@ public class SdksConfigurable extends MasterDetailsComponent {
 
   @Override
   @Nullable
-  @NonNls
   public String getHelpTopic() {
     return null;
   }
 
   @Override
-  protected
   @Nullable
-  String getEmptySelectionString() {
+  protected String getEmptySelectionString() {
     return "Select an SDK to view or edit its details here";
   }
 }

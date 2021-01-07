@@ -1627,7 +1627,7 @@ action.WhatsNewAction.text:
 action.WhatsNewAction.description:
   text: Find out about the new features in this version of the IDE
 action.Help.KeymapReference.text:
-  text: Default _Keymap Reference
+  text: _Keymap Reference
 action.Help.KeymapReference.description:
   text: Open PDF file with the default keymap reference card.
 action.Help.Youtube.text:

@@ -16,15 +16,17 @@
 package com.intellij.openapi.help;
 
 import com.intellij.openapi.components.ServiceManager;
-import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public abstract class HelpManager {
+  public static final String DEFAULT_HELP_URL = "https://consulo.help/";
+
   @Nonnull
   public static HelpManager getInstance() {
     return ServiceManager.getService(HelpManager.class);
   }
 
-  public abstract void invokeHelp(@Nullable @NonNls String id);
+  public abstract void invokeHelp(@Nullable String id);
 }

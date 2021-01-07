@@ -531,7 +531,7 @@
         <action id="ShowLog" class="com.intellij.ide.actions.ShowLogAction"/>
         <separator/>
         <action id="OnlineDocAction" class="com.intellij.ide.actions.OnlineDocAction"/>
-        <action id="Help.KeymapReference" class="com.intellij.ide.actions.RefCardAction" icon="consulo.platform.base.PlatformIconGroup@general.defaultkeymap"/>
+        <action id="Help.KeymapReference" class="com.intellij.ide.actions.RefCardAction"/>
         <action id="Help.Youtube" class="com.intellij.openapi.wm.impl.welcomeScreen.OpenYoutubeAction"/>
         <action id="Help.JoinDiscordChannel" class="consulo.wm.impl.welcomeScreen.JoinDiscordChannelAction" icon="consulo.platform.base.PlatformIconGroup@providers.discord"/>
         <separator/>

@@ -37,7 +37,9 @@ import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.border.CompoundBorder;
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * @author VISTALL
@@ -107,7 +109,7 @@ public class EarlyAccessProgramConfigurable implements Configurable, Configurabl
   @Nullable
   @Override
   public String getHelpTopic() {
-    return null;
+    return "platform/preferences/eap";
   }
 
   @RequiredUIAccess
@@ -117,8 +119,8 @@ public class EarlyAccessProgramConfigurable implements Configurable, Configurabl
     myList = new CheckBoxList<>();
     myList.setBorder(null);
 
-    EarlyAccessProgramDescriptor[] extensions = EarlyAccessProgramDescriptor.EP_NAME.getExtensions();
-    Arrays.sort(extensions, (o1, o2) -> {
+    List<EarlyAccessProgramDescriptor> extensions = new ArrayList<>(EarlyAccessProgramDescriptor.EP_NAME.getExtensionList());
+    extensions.sort((o1, o2) -> {
       if (o1.isAvailable() && !o2.isAvailable()) {
         return -1;
       }
@@ -127,7 +129,7 @@ public class EarlyAccessProgramConfigurable implements Configurable, Configurabl
       }
       return o1.getName().compareToIgnoreCase(o2.getName());
     });
-    myList.setItems(Arrays.asList(extensions), EarlyAccessProgramDescriptor::getName, desc -> EarlyAccessProgramManager.is(desc.getClass()));
+    myList.setItems(extensions, EarlyAccessProgramDescriptor::getName, desc -> EarlyAccessProgramManager.is(desc.getClass()));
     myList.setCellRenderer(new EarlyAccessCellRender());
 
     return JBUI.Panels.simplePanel().addToTop(createWarningPanel()).addToCenter(ScrollPaneFactory.createScrollPane(myList, true));

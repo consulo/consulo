@@ -39,10 +39,10 @@ import com.intellij.util.ui.JBUI;
 import consulo.disposer.Disposer;
 import consulo.ui.annotation.RequiredUIAccess;
 import gnu.trove.THashMap;
+import jakarta.inject.Inject;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import jakarta.inject.Inject;
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -371,7 +371,7 @@ public class FileTypeConfigurable implements SearchableConfigurable, Configurabl
 
   @Override
   public String getHelpTopic() {
-    return "preferences.fileTypes";
+    return "platform/preferences/editor/fileTypes";
   }
 
   public static class RecognizedFileTypes extends JPanel {

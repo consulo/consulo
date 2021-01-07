@@ -15,11 +15,13 @@
  */
 package consulo.ide.ui.laf.modern;
 
+import com.intellij.icons.AllIcons;
 import com.intellij.openapi.ui.GraphicsConfig;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.ui.ColorUtil;
-import com.intellij.util.ui.GraphicsUtil;
-import com.intellij.util.ui.JBUI;
+import com.intellij.ui.scale.JBUIScale;
+import com.intellij.util.ui.*;
+import consulo.awt.TargetAWT;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -36,6 +38,8 @@ import java.awt.*;
  * Based on {@link com.intellij.ide.ui.laf.darcula.ui.DarculaButtonUI}
  */
 public class ModernButtonUI extends BasicButtonUI {
+  protected static JBValue HELP_BUTTON_DIAMETER = new JBValue.Float(22);
+
   public static ComponentUI createUI(JComponent c) {
     return new ModernButtonUI(c);
   }
@@ -68,6 +72,18 @@ public class ModernButtonUI extends BasicButtonUI {
 
   @Override
   public void paint(Graphics g, JComponent c) {
+    if(UIUtil.isHelpButton(c)) {
+      Rectangle r = new Rectangle(c.getSize());
+      JBInsets.removeFrom(r, JBUI.insets(1));
+
+      int diam = HELP_BUTTON_DIAMETER.get();
+      int x = r.x + (r.width - diam) / 2;
+      int y = r.x + (r.height - diam) / 2;
+
+      TargetAWT.to(AllIcons.Actions.Help).paintIcon(c, g, x + JBUIScale.scale(3), y + JBUIScale.scale(3));
+      return;
+    }
+
     final Border border = c.getBorder();
     if (border != null) {
       final GraphicsConfig config = GraphicsUtil.setupAAPainting(g);

@@ -914,7 +914,7 @@ public class KeymapPanel implements SearchableConfigurable, Configurable.NoScrol
 
   @Override
   public String getHelpTopic() {
-    return "preferences.keymap";
+    return "platform/preferences/general/keymap/";
   }
 
   @RequiredUIAccess

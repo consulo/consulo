@@ -18,34 +18,35 @@ package com.intellij.help.impl;
 import com.intellij.CommonBundle;
 import com.intellij.ide.BrowserUtil;
 import com.intellij.ide.IdeBundle;
-import consulo.container.plugin.HelpSetPath;
-import com.intellij.ide.plugins.PluginManagerCore;
 import com.intellij.openapi.application.ApplicationInfo;
 import com.intellij.openapi.help.HelpManager;
 import com.intellij.openapi.ui.Messages;
+import consulo.container.plugin.HelpSetPath;
 import consulo.container.plugin.PluginDescriptor;
+import consulo.container.plugin.PluginManager;
 import consulo.logging.Logger;
-import org.jetbrains.annotations.NonNls;
+import consulo.util.lang.StringUtil;
+import jakarta.inject.Singleton;
 
 import javax.annotation.Nullable;
 import javax.help.BadIDException;
 import javax.help.HelpSet;
-import jakarta.inject.Singleton;
 import java.awt.*;
 import java.net.URL;
 import java.util.Collection;
+import java.util.List;
 
 @Singleton
 public class DesktopHelpManagerImpl extends HelpManager {
   private static final Logger LOG = Logger.getInstance(DesktopHelpManagerImpl.class);
 
-  @NonNls private static final String HELP_HS = "Help.hs";
+  private static final String HELP_HS = "Help.hs";
 
   private HelpSet myHelpSet = null;
   private IdeaHelpBroker myBroker = null;
 
   @Override
-  public void invokeHelp(@javax.annotation.Nullable String id) {
+  public void invokeHelp(@Nullable String id) {
     if (MacHelpUtil.isApplicable()) {
       if (MacHelpUtil.invokeHelp(id)) return;
     }
@@ -54,7 +55,7 @@ public class DesktopHelpManagerImpl extends HelpManager {
     }
 
     if (myHelpSet == null) {
-      BrowserUtil.browse(ApplicationInfo.getInstance().getWebHelpUrl() + id);
+      BrowserUtil.browse(DEFAULT_HELP_URL + StringUtil.notNullize(id));
       return;
     }
 
@@ -84,7 +85,7 @@ public class DesktopHelpManagerImpl extends HelpManager {
     if (mainHelpSet == null) return null;
 
     // merge plugins help sets
-    PluginDescriptor[] pluginDescriptors = PluginManagerCore.getPlugins();
+    List<PluginDescriptor> pluginDescriptors = PluginManager.getPlugins();
     for (PluginDescriptor pluginDescriptor : pluginDescriptors) {
       Collection<HelpSetPath> sets = pluginDescriptor.getHelpSets();
       for (HelpSetPath hsPath : sets) {

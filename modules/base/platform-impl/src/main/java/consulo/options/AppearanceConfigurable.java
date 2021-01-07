@@ -41,6 +41,7 @@ import consulo.util.lang.Comparing;
 import consulo.util.lang.ObjectUtil;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.*;
 
 /**
@@ -288,6 +289,12 @@ public class AppearanceConfigurable extends SimpleConfigurable<AppearanceConfigu
     component.myDisableMnemonicInControlsCheckBox.setValue(settings.DISABLE_MNEMONICS_IN_CONTROLS);
     component.mySmoothScrollingBox.setValue(settings.SMOOTH_SCROLLING);
     component.myIconThemeComboBox.setValue(getActiveIconLibraryOrNull());
+  }
+
+  @Nullable
+  @Override
+  public String getHelpTopic() {
+    return "platform/preferences/general/appearance/";
   }
 
   @RequiredUIAccess

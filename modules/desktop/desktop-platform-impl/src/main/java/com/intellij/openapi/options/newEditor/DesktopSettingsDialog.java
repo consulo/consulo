@@ -297,9 +297,7 @@ public class DesktopSettingsDialog extends WholeWestDialogWrapper implements Dat
   @Override
   protected void doHelpAction() {
     final String topic = myEditor.getHelpTopic();
-    if (topic != null) {
-      HelpManager.getInstance().invokeHelp(topic);
-    }
+    HelpManager.getInstance().invokeHelp(topic);
   }
 
   @RequiredUIAccess
@@ -309,7 +307,7 @@ public class DesktopSettingsDialog extends WholeWestDialogWrapper implements Dat
   }
 
   @Override
-  public Object getData(@Nonnull @NonNls Key<?> dataId) {
+  public Object getData(@Nonnull Key<?> dataId) {
     if (Settings.KEY == dataId) {
       return myEditor;
     }

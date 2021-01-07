@@ -61,6 +61,6 @@ public interface SwingUIDecorator extends UIDecorator {
   }
 
   default boolean decorateHelpButton() {
-    return false;
+    return true;
   }
 }

@@ -22,6 +22,7 @@ import com.intellij.openapi.options.SearchableConfigurable;
 import com.intellij.openapi.project.Project;
 import consulo.disposer.Disposer;
 import com.intellij.ui.FileColorManager;
+import consulo.ui.annotation.RequiredUIAccess;
 import jakarta.inject.Inject;
 import org.jetbrains.annotations.Nls;
 import javax.annotation.Nonnull;
@@ -48,9 +49,10 @@ public class FileColorsConfigurable implements SearchableConfigurable, Configura
 
   @Override
   public String getHelpTopic() {
-    return "reference.settings.ide.settings.file-colors";
+    return "platform/preferences/editor/fileColors";
   }
 
+  @RequiredUIAccess
   @Override
   public JComponent createComponent() {
     if (myPanel == null) {
@@ -60,21 +62,25 @@ public class FileColorsConfigurable implements SearchableConfigurable, Configura
     return myPanel;
   }
 
+  @RequiredUIAccess
   @Override
   public boolean isModified() {
     return myPanel != null && myPanel.isModified();
   }
 
+  @RequiredUIAccess
   @Override
   public void apply() throws ConfigurationException {
     if (myPanel != null) myPanel.apply();
   }
 
+  @RequiredUIAccess
   @Override
   public void reset() {
     if (myPanel != null) myPanel.reset();
   }
 
+  @RequiredUIAccess
   @Override
   public void disposeUIResources() {
     if (myPanel !=  null) {
@@ -87,10 +93,5 @@ public class FileColorsConfigurable implements SearchableConfigurable, Configura
   @Override
   public String getId() {
     return getHelpTopic();
-  }
-
-  @Override
-  public Runnable enableSearch(String option) {
-    return null;
   }
 }

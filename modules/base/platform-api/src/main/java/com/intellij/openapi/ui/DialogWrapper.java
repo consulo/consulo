@@ -23,7 +23,6 @@ import com.intellij.idea.ActionsBundle;
 import com.intellij.openapi.MnemonicHelper;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.ActionUtil;
-import com.intellij.openapi.application.ApplicationInfo;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.help.HelpManager;
@@ -477,7 +476,7 @@ public abstract class DialogWrapper {
    */
   @Nullable
   protected JComponent createSouthPanel() {
-    Action[] actions = filter(createActions());
+    Action[] actions = createActions();
     Action[] leftSideActions = createLeftSideActions();
     Map<Action, JButton> buttonMap = new LinkedHashMap<>();
 
@@ -552,10 +551,8 @@ public abstract class DialogWrapper {
 
     if (hasHelpToMoveToLeftSide) {
       JButton helpButton = new JButton(getHelpAction());
-      if (!UIUtil.isUnderDarcula()) {
-        helpButton.putClientProperty("JButton.buttonType", "help");
-        helpButton.setText("");
-      }
+      helpButton.putClientProperty("JButton.buttonType", "help");
+      helpButton.setText("");
       helpButton.setMargin(insets);
       helpButton.setToolTipText(ActionsBundle.actionDescription("HelpTopics"));
       panel.add(helpButton, BorderLayout.WEST);
@@ -592,7 +589,7 @@ public abstract class DialogWrapper {
   private Action[] filter(@Nonnull Action[] actions) {
     ArrayList<Action> answer = new ArrayList<>();
     for (Action action : actions) {
-      if (action != null && (ApplicationInfo.contextHelpAvailable() || action != getHelpAction())) {
+      if (action != null && (action != getHelpAction())) {
         answer.add(action);
       }
     }
@@ -1727,17 +1724,15 @@ public abstract class DialogWrapper {
     }
     registerForEveryKeyboardShortcut(cancelKeyboardAction, CommonShortcuts.getCloseActiveWindow());
 
-    if (ApplicationInfo.contextHelpAvailable()) {
-      ActionListener helpAction = new ActionListener() {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-          doHelpAction();
-        }
-      };
+    ActionListener helpAction = new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        doHelpAction();
+      }
+    };
 
-      registerForEveryKeyboardShortcut(helpAction, CommonShortcuts.getContextHelp());
-      rootPane.registerKeyboardAction(helpAction, KeyStroke.getKeyStroke(KeyEvent.VK_HELP, 0), JComponent.WHEN_IN_FOCUSED_WINDOW);
-    }
+    registerForEveryKeyboardShortcut(helpAction, CommonShortcuts.getContextHelp());
+    rootPane.registerKeyboardAction(helpAction, KeyStroke.getKeyStroke(KeyEvent.VK_HELP, 0), JComponent.WHEN_IN_FOCUSED_WINDOW);
 
     if (myButtonMap != null) {
       rootPane.registerKeyboardAction(new AbstractAction() {

@@ -17,6 +17,7 @@ package consulo.ide.ui.laf.modern;
 
 import com.intellij.ide.ui.laf.darcula.ui.DarculaButtonUI;
 import com.intellij.util.ui.JBUI;
+import com.intellij.util.ui.UIUtil;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -32,7 +33,7 @@ import java.awt.*;
 public class ModernButtonBorderPainter implements Border, UIResource {
   @Override
   public void paintBorder(Component c, Graphics g, int x, int y, int width, int height) {
-    if (isDefaultButton(c)) {
+    if (isDefaultButton(c) || UIUtil.isHelpButton(c)) {
       return;
     }
 

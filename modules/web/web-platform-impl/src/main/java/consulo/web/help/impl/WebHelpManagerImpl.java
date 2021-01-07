@@ -16,9 +16,9 @@
 package consulo.web.help.impl;
 
 import com.intellij.openapi.help.HelpManager;
-import org.jetbrains.annotations.NonNls;
-
 import jakarta.inject.Singleton;
+
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
@@ -27,7 +27,7 @@ import jakarta.inject.Singleton;
 @Singleton
 public class WebHelpManagerImpl extends HelpManager {
   @Override
-  public void invokeHelp(@javax.annotation.Nullable @NonNls String id) {
+  public void invokeHelp(@Nullable String id) {
     // TODO [VISTALL] stub
   }
 }

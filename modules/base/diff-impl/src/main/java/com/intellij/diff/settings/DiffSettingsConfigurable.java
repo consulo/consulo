@@ -48,7 +48,7 @@ public class DiffSettingsConfigurable implements SearchableConfigurable {
   @Nonnull
   @Override
   public String getHelpTopic() {
-    return "diff.base";
+    return "platform/preferences/diff/";
   }
 
   @RequiredUIAccess

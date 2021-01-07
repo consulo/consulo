@@ -13,13 +13,14 @@ import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.ui.JBCardLayout;
 import com.intellij.ui.components.panels.OpaquePanel;
+import com.intellij.ui.mac.TouchbarDataKeys;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.update.UiNotifyConnector;
 import consulo.logging.Logger;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -110,22 +111,20 @@ public abstract class AbstractWizard<T extends Step> extends DialogWrapper {
 
       int index = 0;
       JPanel leftPanel = new JPanel();
-      if (ApplicationInfo.contextHelpAvailable()) {
-        leftPanel.add(myHelpButton);
-        //TouchbarDataKeys.putDialogButtonDescriptor(myHelpButton, index++);
-      }
+      leftPanel.add(myHelpButton);
+      TouchbarDataKeys.putDialogButtonDescriptor(myHelpButton, index++);
       leftPanel.add(myCancelButton);
-      //TouchbarDataKeys.putDialogButtonDescriptor(myCancelButton, index++);
+      TouchbarDataKeys.putDialogButtonDescriptor(myCancelButton, index++);
       panel.add(leftPanel, BorderLayout.WEST);
 
       if (mySteps.size() > 1) {
         buttonPanel.add(Box.createHorizontalStrut(5));
         buttonPanel.add(myPreviousButton);
-        //TouchbarDataKeys.putDialogButtonDescriptor(myPreviousButton, index++).setMainGroup(true);
+        TouchbarDataKeys.putDialogButtonDescriptor(myPreviousButton, index++).setMainGroup(true);
       }
       buttonPanel.add(Box.createHorizontalStrut(5));
       buttonPanel.add(myNextButton);
-      //TouchbarDataKeys.putDialogButtonDescriptor(myNextButton, index++).setMainGroup(true).setDefault(true);
+      TouchbarDataKeys.putDialogButtonDescriptor(myNextButton, index++).setMainGroup(true).setDefault(true);
     }
     else {
       panel.add(buttonPanel, BorderLayout.CENTER);
@@ -136,16 +135,13 @@ public abstract class AbstractWizard<T extends Step> extends DialogWrapper {
       final GroupLayout.SequentialGroup hGroup = layout.createSequentialGroup();
       final GroupLayout.ParallelGroup vGroup = layout.createParallelGroup();
       final Collection<Component> buttons = new ArrayList<>(5);
-      final boolean helpAvailable = ApplicationInfo.contextHelpAvailable();
 
       add(hGroup, vGroup, null, Box.createHorizontalGlue());
       if (mySteps.size() > 1) {
         add(hGroup, vGroup, buttons, myPreviousButton);
       }
       add(hGroup, vGroup, buttons, myNextButton, myCancelButton);
-      if (helpAvailable) {
-        add(hGroup, vGroup, buttons, myHelpButton);
-      }
+      add(hGroup, vGroup, buttons, myHelpButton);
 
       layout.setHorizontalGroup(hGroup);
       layout.setVerticalGroup(vGroup);

@@ -18,10 +18,9 @@ package com.intellij.ide.actions;
 import com.intellij.CommonBundle;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.actionSystem.*;
-import com.intellij.openapi.application.ApplicationInfo;
 import com.intellij.openapi.help.HelpManager;
 import com.intellij.openapi.project.DumbAware;
-import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nullable;
 
 public class ContextHelpAction extends AnAction implements DumbAware {
@@ -31,7 +30,7 @@ public class ContextHelpAction extends AnAction implements DumbAware {
     this(null);
   }
 
-  public ContextHelpAction(@NonNls @Nullable String helpID) {
+  public ContextHelpAction(@Nullable String helpID) {
     myHelpID = helpID;
   }
 
@@ -50,10 +49,6 @@ public class ContextHelpAction extends AnAction implements DumbAware {
 
   public void update(AnActionEvent event){
     Presentation presentation = event.getPresentation();
-    if (!ApplicationInfo.contextHelpAvailable()) {
-      presentation.setVisible(false);
-      return;
-    }
 
     if (ActionPlaces.MAIN_MENU.equals(event.getPlace())) {
       DataContext dataContext = event.getDataContext();
