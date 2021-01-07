@@ -1854,7 +1854,14 @@
       <action id="LocalHistory.PutLabel" class="com.intellij.history.integration.ui.actions.PutLabelAction"/>
 
       <add-to-group group-id="VersionControlsGroup" anchor="first"/>
-      <add-to-group group-id="VcsGroups" anchor="first"/>
+    </group>
+
+
+    <group id="LocalHistory.MainMenuGroup">
+      <separator/>
+      <reference ref="LocalHistory"/>
+      <separator/>
+      <add-to-group group-id="FileMenu" relative-to-action="SaveAll" anchor="before"/>
     </group>
 
     <group id="TestTreePopupMenu">
