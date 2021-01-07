@@ -16,6 +16,7 @@
 package com.intellij.openapi.options;
 
 import consulo.disposer.Disposer;
+import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.swing.*;
 
@@ -28,33 +29,32 @@ public abstract class SettingsEditorConfigurable<Settings> extends BaseConfigura
   public SettingsEditorConfigurable(SettingsEditor<Settings> editor, Settings settings) {
     myEditor = editor;
     mySettings = settings;
-    myListener = new SettingsEditorListener<Settings>() {
-      @Override
-      public void stateChanged(SettingsEditor<Settings> settingsEditor) {
-        setModified(true);
-      }
-    };
+    myListener = settingsEditor -> setModified(true);
     myEditor.addSettingsEditorListener(myListener);
     myComponent = myEditor.getComponent();
   }
 
+  @RequiredUIAccess
   @Override
   public JComponent createComponent() {
     return myComponent;
   }
 
+  @RequiredUIAccess
   @Override
   public void apply() throws ConfigurationException {
     myEditor.applyTo(mySettings);
     setModified(false);
   }
 
+  @RequiredUIAccess
   @Override
   public void reset() {
     myEditor.resetFrom(mySettings);
     setModified(false);
   }
 
+  @RequiredUIAccess
   @Override
   public void disposeUIResources() {
     if (myEditor != null) {

@@ -28,6 +28,9 @@ import com.intellij.openapi.actionSystem.TypeSafeDataProvider;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.options.SettingsEditor;
 import com.intellij.ui.HideableDecorator;
+import com.intellij.ui.ScrollPaneFactory;
+import com.intellij.ui.components.panels.VerticalLayout;
+import com.intellij.util.ui.JBUI;
 import consulo.disposer.Disposer;
 import consulo.util.dataholder.Key;
 
@@ -76,7 +79,7 @@ public class ConfigurationSettingsEditorWrapper extends SettingsEditor<RunnerAnd
       }
     };
     myDecorator.setOn(PropertiesComponent.getInstance().getBoolean(EXPAND_PROPERTY_KEY, true));
-    myDecorator.setContentComponent(myBeforeRunStepsPanel);
+    myDecorator.setContentComponent(myBeforeRunStepsPanel.getPanel());
     doReset(settings);
   }
 
@@ -89,13 +92,13 @@ public class ConfigurationSettingsEditorWrapper extends SettingsEditor<RunnerAnd
   @Override
   @Nonnull
   protected JComponent createEditor() {
-    JPanel wholePanel = new JPanel(new BorderLayout());
+    JPanel wholePanel = new JPanel(new VerticalLayout(JBUI.scale(5)));
 
-    wholePanel.add(myEditor.getComponent(), BorderLayout.NORTH);
-    wholePanel.add(myBeforeLaunchContainer, BorderLayout.SOUTH);
+    wholePanel.add(myEditor.getComponent());
+    wholePanel.add(myBeforeLaunchContainer);
 
     DataManager.registerDataProvider(wholePanel, new TypeSafeDataProviderAdapter(new MyDataProvider()));
-    return wholePanel;
+    return ScrollPaneFactory.createScrollPane(wholePanel, true);
   }
 
   @Override

@@ -21,6 +21,7 @@ import com.intellij.execution.ExecutionBundle;
 import com.intellij.execution.RunnerAndConfigurationSettings;
 import com.intellij.execution.configurations.RunConfiguration;
 import com.intellij.execution.configurations.UnknownRunConfiguration;
+import com.intellij.openapi.actionSystem.ActionToolbarPosition;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.DefaultActionGroup;
@@ -29,8 +30,10 @@ import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.ui.popup.ListPopup;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.Pair;
-import com.intellij.openapi.util.SystemInfo;
-import com.intellij.ui.*;
+import com.intellij.ui.AnActionButton;
+import com.intellij.ui.CollectionListModel;
+import com.intellij.ui.ColoredListCellRenderer;
+import com.intellij.ui.ToolbarDecorator;
 import com.intellij.ui.components.JBList;
 import com.intellij.util.containers.hash.HashSet;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -42,29 +45,28 @@ import javax.swing.*;
 import javax.swing.event.ListDataEvent;
 import javax.swing.event.ListDataListener;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.List;
 import java.util.*;
 
 /**
  * @author Vassiliy Kudryashov
  */
-class BeforeRunStepsPanel extends JPanel {
-
+class BeforeRunStepsPanel {
+  private final JPanel myPanel;
   private final JCheckBox myShowSettingsBeforeRunCheckBox;
-  private final JBList myList;
+  private final JBList<BeforeRunTask> myList;
   private final CollectionListModel<BeforeRunTask> myModel;
   private RunConfiguration myRunConfiguration;
 
   private final List<BeforeRunTask> originalTasks = new ArrayList<>();
   private StepsBeforeRunListener myListener;
-  private final JPanel myPanel;
+  private final JPanel myListContainer;
 
   BeforeRunStepsPanel(StepsBeforeRunListener listener) {
     myListener = listener;
     myModel = new CollectionListModel<>();
-    myList = new JBList(myModel);
+    myPanel = new JPanel(new BorderLayout());
+    myList = new JBList<>(myModel);
     myList.getEmptyText().setText(ExecutionBundle.message("before.launch.panel.empty"));
     myList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
     myList.setCellRenderer(new MyListCellRenderer());
@@ -92,57 +94,33 @@ class BeforeRunStepsPanel extends JPanel {
     });
 
     ToolbarDecorator decorator = ToolbarDecorator.createDecorator(myList);
-    if (!SystemInfo.isMac) {
-      decorator.setAsUsualTopToolbar();
-    }
-    decorator.setEditAction(new AnActionButtonRunnable() {
-      @Override
-      public void run(AnActionButton button) {
-        int index = myList.getSelectedIndex();
-        if (index == -1) return;
-        Pair<BeforeRunTask, BeforeRunTaskProvider<BeforeRunTask>> selection = getSelection();
-        if (selection == null) return;
-        BeforeRunTask task = selection.getFirst();
-        BeforeRunTaskProvider<BeforeRunTask> provider = selection.getSecond();
-        provider.configureTask(myRunConfiguration, task).doWhenDone(() -> {
-          myModel.setElementAt(task, index);
-          updateText();
-        });
-      }
+    decorator.setToolbarPosition(ActionToolbarPosition.RIGHT);
+    decorator.setEditAction(button -> {
+      int index = myList.getSelectedIndex();
+      if (index == -1) return;
+      Pair<BeforeRunTask, BeforeRunTaskProvider<BeforeRunTask>> selection = getSelection();
+      if (selection == null) return;
+      BeforeRunTask task = selection.getFirst();
+      BeforeRunTaskProvider<BeforeRunTask> provider = selection.getSecond();
+      provider.configureTask(myRunConfiguration, task).doWhenDone(() -> {
+        myModel.setElementAt(task, index);
+        updateText();
+      });
     });
-    decorator.setEditActionUpdater(new AnActionButtonUpdater() {
-      @Override
-      public boolean isEnabled(AnActionEvent e) {
-        Pair<BeforeRunTask, BeforeRunTaskProvider<BeforeRunTask>> selection = getSelection();
-        return selection != null && selection.getSecond().isConfigurable();
-      }
+    decorator.setEditActionUpdater(e -> {
+      Pair<BeforeRunTask, BeforeRunTaskProvider<BeforeRunTask>> selection = getSelection();
+      return selection != null && selection.getSecond().isConfigurable();
     });
-    decorator.setAddAction(new AnActionButtonRunnable() {
-      @Override
-      public void run(AnActionButton button) {
-        doAddAction(button);
-      }
-    });
-    decorator.setAddActionUpdater(new AnActionButtonUpdater() {
-      @Override
-      public boolean isEnabled(AnActionEvent e) {
-        return checkBeforeRunTasksAbility(true);
-      }
-    });
+    decorator.setAddAction(button -> doAddAction(button));
+    decorator.setAddActionUpdater(e -> checkBeforeRunTasksAbility(true));
 
     myShowSettingsBeforeRunCheckBox = new JCheckBox(ExecutionBundle.message("configuration.edit.before.run"));
-    myShowSettingsBeforeRunCheckBox.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        updateText();
-      }
-    });
+    myShowSettingsBeforeRunCheckBox.addActionListener(e -> updateText());
 
-    myPanel = decorator.createPanel();
+    myListContainer = decorator.createPanel();
 
-    setLayout(new BorderLayout());
-    add(myPanel, BorderLayout.CENTER);
-    add(myShowSettingsBeforeRunCheckBox, BorderLayout.SOUTH);
+    myPanel.add(myListContainer, BorderLayout.CENTER);
+    myPanel.add(myShowSettingsBeforeRunCheckBox, BorderLayout.SOUTH);
   }
 
   @Nullable
@@ -164,7 +142,7 @@ class BeforeRunStepsPanel extends JPanel {
     myModel.replaceAll(originalTasks);
     myShowSettingsBeforeRunCheckBox.setSelected(settings.isEditBeforeRun());
     myShowSettingsBeforeRunCheckBox.setEnabled(!(isUnknown()));
-    myPanel.setVisible(checkBeforeRunTasksAbility(false));
+    myListContainer.setVisible(checkBeforeRunTasksAbility(false));
     updateText();
   }
 
@@ -278,7 +256,7 @@ class BeforeRunStepsPanel extends JPanel {
             Set<RunConfiguration> configurationSet = new HashSet<>();
             getAllRunBeforeRuns(task, configurationSet);
             if (configurationSet.contains(myRunConfiguration)) {
-              JOptionPane.showMessageDialog(BeforeRunStepsPanel.this,
+              JOptionPane.showMessageDialog(myPanel,
                                             ExecutionBundle.message("before.launch.panel.cyclic_dependency_warning", myRunConfiguration.getName(), provider.getDescription(task)),
                                             ExecutionBundle.message("warning.common.title"), JOptionPane.WARNING_MESSAGE);
               return;
@@ -294,6 +272,10 @@ class BeforeRunStepsPanel extends JPanel {
             .createActionGroupPopup(ExecutionBundle.message("add.new.run.configuration.acrtion.name"), actionGroup, SimpleDataContext.getProjectContext(myRunConfiguration.getProject()), false, false,
                                     false, null, -1, Condition.TRUE);
     popup.show(button.getPreferredPopupPoint());
+  }
+
+  public JPanel getPanel() {
+    return myPanel;
   }
 
   public void addTask(BeforeRunTask task) {

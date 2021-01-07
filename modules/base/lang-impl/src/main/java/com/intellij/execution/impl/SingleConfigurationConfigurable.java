@@ -23,15 +23,15 @@ import com.intellij.icons.AllIcons;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.options.SettingsEditor;
 import com.intellij.openapi.options.SettingsEditorConfigurable;
-import com.intellij.openapi.options.SettingsEditorListener;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.ui.DocumentAdapter;
 import com.intellij.ui.components.JBCheckBox;
 import consulo.awt.TargetAWT;
 import consulo.logging.Logger;
-import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nullable;
+import consulo.ui.annotation.RequiredUIAccess;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
@@ -39,7 +39,6 @@ import javax.swing.event.DocumentListener;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.PlainDocument;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public final class SingleConfigurationConfigurable<Config extends RunConfiguration>
@@ -85,12 +84,7 @@ public final class SingleConfigurationConfigurable<Config extends RunConfigurati
       }
     });
 
-    getEditor().addSettingsEditorListener(new SettingsEditorListener<RunnerAndConfigurationSettings>() {
-      @Override
-      public void stateChanged(SettingsEditor<RunnerAndConfigurationSettings> settingsEditor) {
-        myValidationResultValid = false;
-      }
-    });
+    getEditor().addSettingsEditorListener(settingsEditor -> myValidationResultValid = false);
   }
 
   public static <Config extends RunConfiguration> SingleConfigurationConfigurable<Config> editSettings(RunnerAndConfigurationSettings settings,
@@ -100,6 +94,7 @@ public final class SingleConfigurationConfigurable<Config extends RunConfigurati
     return configurable;
   }
 
+  @RequiredUIAccess
   @Override
   public void apply() throws ConfigurationException {
     RunnerAndConfigurationSettings settings = getSettings();
@@ -113,6 +108,7 @@ public final class SingleConfigurationConfigurable<Config extends RunConfigurati
     RunManagerImpl.getInstanceImpl(getConfiguration().getProject()).fireRunConfigurationChanged(settings);
   }
 
+  @RequiredUIAccess
   @Override
   public void reset() {
     RunnerAndConfigurationSettings configuration = getSettings();
@@ -124,6 +120,7 @@ public final class SingleConfigurationConfigurable<Config extends RunConfigurati
     myComponent.doReset(configuration);
   }
 
+  @RequiredUIAccess
   @Override
   public final JComponent createComponent() {
     myComponent.myNameText.setEnabled(!myBrokenConfiguration);
@@ -186,6 +183,7 @@ public final class SingleConfigurationConfigurable<Config extends RunConfigurati
     }
   }
 
+  @RequiredUIAccess
   @Override
   public final void disposeUIResources() {
     super.disposeUIResources();
@@ -289,40 +287,26 @@ public final class SingleConfigurationConfigurable<Config extends RunConfigurati
       myNameLabel.setLabelFor(myNameText);
       myNameText.setDocument(myNameDocument);
 
-      getEditor().addSettingsEditorListener(new SettingsEditorListener() {
-        @Override
-        public void stateChanged(SettingsEditor settingsEditor) {
-          updateWarning();
-        }
-      });
+      getEditor().addSettingsEditorListener(settingsEditor -> updateWarning());
 
       myWarningLabel.setIcon(TargetAWT.to(AllIcons.RunConfigurations.ConfigurationWarning));
 
-      myComponentPlace.setLayout(new GridBagLayout());
-      myComponentPlace.add(getEditorComponent(),
-                           new GridBagConstraints(0, 0, 1, 1, 1.0, 1.0, GridBagConstraints.NORTHWEST, GridBagConstraints.BOTH,
-                                                  new Insets(0, 0, 0, 0), 0, 0));
-      myComponentPlace.doLayout();
+      myComponentPlace.add(getEditorComponent(), BorderLayout.CENTER);
+      
       myFixButton.setIcon(TargetAWT.to(AllIcons.Actions.QuickfixBulb));
       updateWarning();
-      myFixButton.addActionListener(new ActionListener() {
-        @Override
-        public void actionPerformed(final ActionEvent e) {
-          if (myQuickFix == null) {
-            return;
-          }
-          myQuickFix.run();
-          myValidationResultValid = false;
-          updateWarning();
+      myFixButton.addActionListener(e -> {
+        if (myQuickFix == null) {
+          return;
         }
+        myQuickFix.run();
+        myValidationResultValid = false;
+        updateWarning();
       });
-      ActionListener actionListener = new ActionListener() {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-          setModified(true);
-          myStoreProjectConfiguration = myCbStoreProjectConfiguration.isSelected();
-          mySingleton = myCbSingleton.isSelected();
-        }
+      ActionListener actionListener = e -> {
+        setModified(true);
+        myStoreProjectConfiguration = myCbStoreProjectConfiguration.isSelected();
+        mySingleton = myCbSingleton.isSelected();
       };
       myCbStoreProjectConfiguration.addActionListener(actionListener);
       myCbSingleton.addActionListener(actionListener);
@@ -385,7 +369,7 @@ public final class SingleConfigurationConfigurable<Config extends RunConfigurati
       }
     }
 
-    @NonNls
+    @Nonnull
     private String generateWarningLabelText(final ValidationResult configurationException) {
       return "<html><body><b>" + configurationException.getTitle() + ": </b>" + configurationException.getMessage() + "</body></html>";
     }
