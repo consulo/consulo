@@ -56,4 +56,13 @@ public interface TextBox extends ValueComponent<String>, ValidableComponent<Stri
   }
 
   void selectAll();
+
+  void setEditable(boolean editable);
+
+  boolean isEditable();
+
+  default TextBox withEditable(boolean editable) {
+    setEditable(editable);
+    return this;
+  }
 }

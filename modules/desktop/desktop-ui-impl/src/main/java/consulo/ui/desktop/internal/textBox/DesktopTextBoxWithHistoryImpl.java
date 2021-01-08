@@ -59,6 +59,16 @@ public class DesktopTextBoxWithHistoryImpl extends SwingValidableComponent<Strin
   }
 
   @Override
+  public void setEditable(boolean editable) {
+    toAWTComponent().setEditable(editable);
+  }
+
+  @Override
+  public boolean isEditable() {
+    return toAWTComponent().isEditable();
+  }
+
+  @Override
   public String getValue() {
     return toAWTComponent().getText();
   }

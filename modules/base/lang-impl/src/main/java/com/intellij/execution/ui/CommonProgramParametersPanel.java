@@ -100,8 +100,6 @@ public class CommonProgramParametersPanel extends JPanel implements PanelWithAnc
 
     addComponents();
 
-    setPreferredSize(new Dimension(10, 10));
-
     copyDialogCaption(myProgramParametersComponent);
   }
 

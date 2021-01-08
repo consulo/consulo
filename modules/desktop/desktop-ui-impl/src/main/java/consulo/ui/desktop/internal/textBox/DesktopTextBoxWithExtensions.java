@@ -128,6 +128,16 @@ public class DesktopTextBoxWithExtensions {
     public void selectAll() {
       toAWTComponent().selectAll();
     }
+
+    @Override
+    public void setEditable(boolean editable) {
+      toAWTComponent().setEditable(editable);
+    }
+
+    @Override
+    public boolean isEditable() {
+      return toAWTComponent().isEditable();
+    }
   }
 
   private static class Unsupported extends DocumentSwingValidator<String, JPanel> implements TextBoxWithExtensions, TextBoxWithTextField {
@@ -239,6 +249,16 @@ public class DesktopTextBoxWithExtensions {
     @Override
     public void selectAll() {
       myTextField.selectAll();
+    }
+
+    @Override
+    public void setEditable(boolean editable) {
+      myTextField.setEditable(editable);
+    }
+
+    @Override
+    public boolean isEditable() {
+      return myTextField.isEditable();
     }
 
     @Nullable

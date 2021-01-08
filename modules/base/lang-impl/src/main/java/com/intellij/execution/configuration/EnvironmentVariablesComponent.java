@@ -26,19 +26,18 @@ import com.intellij.openapi.ui.TextFieldWithBrowseButton;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.ui.UserActivityProviderComponent;
 import org.jdom.Element;
-import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.swing.event.ChangeListener;
 import java.util.Map;
 
 public class EnvironmentVariablesComponent extends LabeledComponent<TextFieldWithBrowseButton> implements UserActivityProviderComponent {
-  @NonNls private static final String ENVS = "envs";
-  @NonNls public static final String ENV = "env";
-  @NonNls public static final String NAME = "name";
-  @NonNls public static final String VALUE = "value";
-  @NonNls private static final String OPTION = "option";
-  @NonNls private static final String ENV_VARIABLES = "ENV_VARIABLES";
+  private static final String ENVS = "envs";
+  public static final String ENV = "env";
+  public static final String NAME = "name";
+  public static final String VALUE = "value";
+  private static final String OPTION = "option";
+  private static final String ENV_VARIABLES = "ENV_VARIABLES";
 
   private final EnvironmentVariablesTextFieldWithBrowseButton myEnvVars;
 
@@ -89,10 +88,11 @@ public class EnvironmentVariablesComponent extends LabeledComponent<TextFieldWit
           envs.put(envName, envValue);
         }
       }
-    } else { //compatibility with prev version
-      for (Object o : element.getChildren(OPTION)) {
-        if (Comparing.strEqual(((Element)o).getAttributeValue(NAME), ENV_VARIABLES)) {
-          splitVars(envs, ((Element)o).getAttributeValue(VALUE));
+    }
+    else {
+      for (Element o : element.getChildren(OPTION)) {
+        if (Comparing.strEqual(o.getAttributeValue(NAME), ENV_VARIABLES)) {
+          splitVars(envs, o.getAttributeValue(VALUE));
           break;
         }
       }

@@ -60,6 +60,16 @@ public class WebTextBoxImpl extends UIComponentWithVaadinComponent<WebTextBoxImp
 
   }
 
+  @Override
+  public void setEditable(boolean editable) {
+
+  }
+
+  @Override
+  public boolean isEditable() {
+    return true;
+  }
+
   @Nonnull
   @Override
   public Disposable addValidator(@Nonnull Validator<String> validator) {

@@ -106,6 +106,16 @@ public class DesktopTextBoxWithExpandAction {
     public void selectAll() {
       toAWTComponent().selectAll();
     }
+
+    @Override
+    public void setEditable(boolean editable) {
+      toAWTComponent().setEditable(editable);
+    }
+
+    @Override
+    public boolean isEditable() {
+      return toAWTComponent().isEditable();
+    }
   }
 
   private static class FallbackTextBoxWithExpandAction extends DocumentSwingValidator<String, ComponentWithBrowseButton<JComponent>> implements TextBoxWithTextField, TextBoxWithExpandAction {
@@ -184,6 +194,16 @@ public class DesktopTextBoxWithExpandAction {
     @Override
     public void selectAll() {
       myTextBox.selectAll();
+    }
+
+    @Override
+    public void setEditable(boolean editable) {
+      myTextBox.setEditable(editable);
+    }
+
+    @Override
+    public boolean isEditable() {
+      return myTextBox.isEditable();
     }
   }
 }

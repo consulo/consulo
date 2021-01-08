@@ -19,9 +19,8 @@ import com.google.common.collect.ImmutableMap;
 import com.intellij.execution.configurations.GeneralCommandLine;
 import com.intellij.util.containers.ContainerUtil;
 import org.jdom.Element;
-import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -34,13 +33,13 @@ import java.util.Map;
  * Instances of this class are immutable objects, so it can be safely passed across threads.
  */
 public class EnvironmentVariablesData {
-
   public static final EnvironmentVariablesData DEFAULT = new EnvironmentVariablesData(ImmutableMap.of(), true);
-  @NonNls private static final String ENVS = "envs";
-  @NonNls private static final String PASS_PARENT_ENVS = "pass-parent-envs";
-  @NonNls private static final String ENV = EnvironmentVariablesComponent.ENV;
-  @NonNls private static final String NAME = EnvironmentVariablesComponent.NAME;
-  @NonNls private static final String VALUE = EnvironmentVariablesComponent.VALUE;
+
+  public static final String ENVS = "envs";
+  public static final String PASS_PARENT_ENVS = "pass-parent-envs";
+  public static final String ENV = EnvironmentVariablesComponent.ENV;
+  public static final String NAME = EnvironmentVariablesComponent.NAME;
+  public static final String VALUE = EnvironmentVariablesComponent.VALUE;
 
   private final ImmutableMap<String, String> myEnvs;
   private final boolean myPassParentEnvs;
@@ -122,8 +121,7 @@ public class EnvironmentVariablesData {
 
   public void configureCommandLine(@Nonnull GeneralCommandLine commandLine, boolean consoleParentEnvs) {
     if (myPassParentEnvs) {
-      commandLine.withParentEnvironmentType(consoleParentEnvs ? GeneralCommandLine.ParentEnvironmentType.CONSOLE
-                                                              : GeneralCommandLine.ParentEnvironmentType.SYSTEM);
+      commandLine.withParentEnvironmentType(consoleParentEnvs ? GeneralCommandLine.ParentEnvironmentType.CONSOLE : GeneralCommandLine.ParentEnvironmentType.SYSTEM);
     }
     else {
       commandLine.withParentEnvironmentType(GeneralCommandLine.ParentEnvironmentType.NONE);
@@ -132,8 +130,8 @@ public class EnvironmentVariablesData {
   }
 
   /**
-   * @param envs Map instance containing user-defined environment variables
-   *             (iteration order should be reliable user-specified, like {@link LinkedHashMap} or {@link ImmutableMap})
+   * @param envs           Map instance containing user-defined environment variables
+   *                       (iteration order should be reliable user-specified, like {@link LinkedHashMap} or {@link ImmutableMap})
    * @param passParentEnvs true if system environment should be passed
    */
   @Nonnull

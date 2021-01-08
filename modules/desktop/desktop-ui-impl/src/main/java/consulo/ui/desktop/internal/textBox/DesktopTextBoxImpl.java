@@ -90,6 +90,16 @@ public class DesktopTextBoxImpl extends DocumentSwingValidator<String, JBTextFie
     toAWTComponent().selectAll();
   }
 
+  @Override
+  public void setEditable(boolean editable) {
+    toAWTComponent().setEditable(editable);
+  }
+
+  @Override
+  public boolean isEditable() {
+    return toAWTComponent().isEditable();
+  }
+
   @SuppressWarnings("unchecked")
   @RequiredUIAccess
   private void valueChanged() {

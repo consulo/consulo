@@ -24,5 +24,6 @@ import java.util.EventListener;
 public interface UserActivityProviderComponent extends EventListener {
 
   void addChangeListener(final ChangeListener changeListener);
+
   void removeChangeListener(final ChangeListener changeListener);
 }
