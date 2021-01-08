@@ -27,7 +27,7 @@ public class NativeLibraryLoader {
   }
 
   @Nonnull
-  private static String mapLibraryName(@Nonnull String libName) {
+  public static String mapLibraryName(@Nonnull String libName) {
     String baseName = libName;
     if (SystemInfo.is64Bit) {
       baseName = baseName.replace("32", "") + "64";

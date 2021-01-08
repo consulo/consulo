@@ -18,14 +18,13 @@ package com.intellij.ui.win;
 import com.intellij.ide.RecentProjectsManager;
 import com.intellij.ide.ReopenProjectAction;
 import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.application.ApplicationNamesInfo;
-import com.intellij.openapi.util.SystemInfo;
+import com.intellij.openapi.application.Application;
 import consulo.application.ApplicationProperties;
 import consulo.container.boot.ContainerPathManager;
+import consulo.platform.Platform;
 import consulo.wm.impl.DesktopSystemDockImpl;
 
 import java.io.File;
-import java.util.Locale;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -34,6 +33,12 @@ import java.util.concurrent.Executors;
  */
 public class WinDockDelegate implements DesktopSystemDockImpl.Delegate {
   private ExecutorService myExecutorService = Executors.newSingleThreadExecutor(r -> new Thread(r, "Windows JumpList Updater"));
+  
+  private final Application myApplication;
+
+  public WinDockDelegate(Application application) {
+    myApplication = application;
+  }
 
   @Override
   public void updateRecentProjectsMenu() {
@@ -43,21 +48,28 @@ public class WinDockDelegate implements DesktopSystemDockImpl.Delegate {
 
     // we need invoke it in own thread, due we don't want it call inside UI thread, or Write thread (if it separate)
     myExecutorService.execute(() -> {
+      RecentTasks.clear(myApplication);
+
       final AnAction[] recentProjectActions = RecentProjectsManager.getInstance().getRecentProjectsActions(false);
-      RecentTasks.clear();
-      String name = ApplicationNamesInfo.getInstance().getProductName().toLowerCase(Locale.US);
-      File exePath = new File(ContainerPathManager.get().getAppHomeDirectory(), name + (SystemInfo.is64Bit ? "64" : "") + ".exe");
+
+      if (recentProjectActions.length == 0) {
+        return;
+      }
+
+      String executable = Platform.current().mapWindowsExecutable(myApplication.getName().toLowerCase().get(), "exe");
+      File exePath = new File(ContainerPathManager.get().getAppHomeDirectory(), executable);
       if (!exePath.exists()) {
         throw new IllegalArgumentException("Executable is not exists. Path: " + exePath.getPath());
       }
-      String launcher = RecentTasks.getShortenPath(exePath.getPath());
+
+      String launcher = RecentTasks.getShortenPath(myApplication, exePath.getPath());
       Task[] tasks = new Task[recentProjectActions.length];
       for (int i = 0; i < recentProjectActions.length; i++) {
         ReopenProjectAction rpa = (ReopenProjectAction)recentProjectActions[i];
-        tasks[i] = new Task(launcher, RecentTasks.getShortenPath(rpa.getProjectPath()), rpa.getTemplatePresentation().getText());
+        tasks[i] = new Task(launcher, RecentTasks.getShortenPath(myApplication, rpa.getProjectPath()), rpa.getTemplatePresentation().getText());
       }
 
-      RecentTasks.addTasks(tasks);
+      RecentTasks.addTasks(myApplication, "Recent", tasks);
     });
   }
 

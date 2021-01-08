@@ -34,6 +34,8 @@ import java.util.Properties;
 public abstract class PlatformBase implements Platform {
   private static final String OS_NAME = System.getProperty("os.name");
   private static final String OS_VERSION = System.getProperty("os.version").toLowerCase();
+  private static final String OS_ARCH = System.getProperty("os.arch");
+  private static final String ARCH_DATA_MODEL = System.getProperty("sun.arch.data.model");
 
   private static final String _OS_NAME = OS_NAME.toLowerCase();
   private static final boolean isWindows = _OS_NAME.startsWith("windows");
@@ -52,6 +54,11 @@ public abstract class PlatformBase implements Platform {
 
   private static final boolean isFileSystemCaseSensitive = isUnix && !isMac || "true".equalsIgnoreCase(System.getProperty("idea.case.sensitive.fs"));
   private static final boolean areSymLinksSupported = isUnix || isWinVistaOrNewer;
+
+  public static final boolean is32Bit = ARCH_DATA_MODEL == null || ARCH_DATA_MODEL.equals("32");
+  public static final boolean is64Bit = !is32Bit;
+  public static final boolean isIntel64 = "x86_64".equals(OS_ARCH) || "amd64".equals(OS_ARCH);
+  public static final boolean isArm64 = "aarch64".equals(OS_ARCH);
 
   public static boolean isOsVersionAtLeast(@Nonnull String version) {
     return StringUtil.compareVersionNumbers(OS_VERSION, version) >= 0;
@@ -172,6 +179,16 @@ public abstract class PlatformBase implements Platform {
         map.put(String.valueOf(entry.getKey()), String.valueOf(entry.getValue()));
       }
       return map;
+    }
+
+    @Override
+    public boolean isArm64() {
+      return isArm64;
+    }
+
+    @Override
+    public boolean isAmd64() {
+      return isIntel64;
     }
   }
 

@@ -15,11 +15,13 @@
  */
 package consulo.wm.impl;
 
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.wm.impl.SystemDock;
 import com.intellij.ui.win.WinDockDelegate;
 import consulo.disposer.Disposable;
 import consulo.platform.Platform;
 import consulo.ui.taskbar.Java9DockDelegateImpl;
+import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
@@ -41,12 +43,13 @@ public class DesktopSystemDockImpl extends SystemDock implements Disposable {
   @Nonnull
   private final Delegate myDelegate;
 
-  public DesktopSystemDockImpl() {
+  @Inject
+  public DesktopSystemDockImpl(@Nonnull Application application) {
     if (Taskbar.isTaskbarSupported() && Taskbar.getTaskbar().isSupported(Taskbar.Feature.MENU)) {
       myDelegate = new Java9DockDelegateImpl();
     }
     else if (Platform.current().os().isWindows7OrNewer()) {
-      myDelegate = new WinDockDelegate();
+      myDelegate = new WinDockDelegate(application);
     }
     else {
       myDelegate = () -> {

@@ -20,6 +20,7 @@ import com.intellij.execution.configurations.GeneralCommandLine;
 import com.intellij.openapi.util.SystemInfo;
 import consulo.container.boot.ContainerPathManager;
 import consulo.logging.Logger;
+import consulo.platform.Platform;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -39,9 +40,8 @@ public class RunnerMediator {
   private static final char IAC = (char)5;
   private static final char BRK = (char)3;
   private static final char C = (char)5;
-  private static final String RUNNERW = "runnerw.exe";
-  private static final String RUNNERW64 = "runnerw64.exe";
-  private static final String IDEA_RUNNERW = "IDEA_RUNNERW";
+  private static final String RUNNERW_BASENAME = "runnerw";
+  private static final String CONSULO_RUNNERW = "CONSULO_RUNNERW";
 
   /**
    * Creates default runner mediator
@@ -83,21 +83,21 @@ public class RunnerMediator {
 
   @Nullable
   private static String getRunnerPath() {
-    if (!SystemInfo.isWindows) {
+    if (!Platform.current().os().isWindows()) {
       throw new IllegalStateException("There is no need of runner under unix based OS");
     }
-    final String path = System.getenv(IDEA_RUNNERW);
+    final String path = System.getenv(CONSULO_RUNNERW);
     if (path != null) {
       if (new File(path).exists()) {
         return path;
       }
-      LOG.warn("Cannot locate " + RUNNERW + " by " + IDEA_RUNNERW + " environment variable (" + path + ")");
+      LOG.warn("Cannot locate " + RUNNERW_BASENAME + " by " + CONSULO_RUNNERW + " environment variable (" + path + ")");
     }
-    File runnerw = new File(ContainerPathManager.get().getBinPath(), SystemInfo.is64Bit ? RUNNERW64 : RUNNERW);
+    File runnerw = new File(ContainerPathManager.get().getBinPath(), Platform.current().mapWindowsExecutable(RUNNERW_BASENAME, "exe"));
     if (runnerw.exists()) {
       return runnerw.getPath();
     }
-    LOG.warn("Cannot locate " + RUNNERW + " by default path (" + runnerw.getAbsolutePath() + ")");
+    LOG.warn("Cannot locate " + RUNNERW_BASENAME + " by default path (" + runnerw.getAbsolutePath() + ")");
     return null;
   }
 

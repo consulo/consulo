@@ -9,16 +9,17 @@ import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
-import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.impl.local.NativeFileWatcherImpl;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.UIUtil;
 import consulo.container.boot.ContainerPathManager;
 import consulo.logging.Logger;
+import consulo.platform.Platform;
 import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
@@ -125,12 +126,7 @@ public class WindowsDefenderChecker {
    */
   @Nonnull
   private static String getExecutableOnWindows() {
-    if (SystemInfo.is64Bit) {
-      return "consulo64.exe";
-    }
-    else {
-      return "consulo.exe";
-    }
+    return Platform.current().mapWindowsExecutable(Application.get().getName().toLowerCase().get(), "exe");
   }
 
   private static Boolean isWindowsDefenderActive() {
