@@ -16,8 +16,10 @@
 package consulo.ide.wizard.newModule;
 
 import com.intellij.ide.IdeBundle;
+import com.intellij.openapi.project.Project;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
@@ -44,5 +46,12 @@ public interface NewModuleWizardContext {
   /**
    * @return true if its called from NewProject action
    */
-  boolean isNewProject();
+  default boolean isNewProject() {
+    return getProject() == null;
+  }
+
+  @Nullable
+  default Project getProject() {
+    return null;
+  }
 }

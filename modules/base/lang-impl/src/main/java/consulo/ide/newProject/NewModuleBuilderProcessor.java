@@ -18,8 +18,8 @@ package consulo.ide.newProject;
 import com.intellij.openapi.roots.ContentEntry;
 import com.intellij.openapi.roots.ModifiableRootModel;
 import consulo.annotation.access.RequiredReadAction;
+import consulo.ide.newProject.ui.UnifiedProjectOrModuleNameStep;
 import consulo.ide.wizard.newModule.NewModuleWizardContext;
-import consulo.ide.newProject.ui.ProjectOrModuleNameStep;
 import consulo.ui.wizard.WizardStep;
 
 import javax.annotation.Nonnull;
@@ -34,7 +34,7 @@ public interface NewModuleBuilderProcessor<C extends NewModuleWizardContext> {
   C createContext(boolean isNewProject);
 
   default void buildSteps(@Nonnull Consumer<WizardStep<C>> consumer, @Nonnull C context) {
-    consumer.accept(new ProjectOrModuleNameStep<>(context));
+    consumer.accept(new UnifiedProjectOrModuleNameStep<>(context));
   }
 
   @RequiredReadAction

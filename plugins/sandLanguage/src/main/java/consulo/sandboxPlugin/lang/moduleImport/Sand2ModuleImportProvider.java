@@ -20,14 +20,19 @@ import com.intellij.openapi.module.ModifiableModuleModel;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import consulo.annotation.access.RequiredReadAction;
-import consulo.ide.newProject.ui.ProjectOrModuleNameStep;
+import consulo.ide.newProject.ui.UnifiedProjectOrModuleNameStep;
+import consulo.localize.LocalizeValue;
 import consulo.moduleImport.ModuleImportContext;
 import consulo.moduleImport.ModuleImportProvider;
+import consulo.ui.ColorBox;
 import consulo.ui.Component;
-import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ListBox;
 import consulo.ui.TextBox;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import consulo.ui.layout.LabeledLayout;
+import consulo.ui.style.StandardColors;
+import consulo.ui.util.FormBuilder;
 import consulo.ui.wizard.WizardStep;
 
 import javax.annotation.Nonnull;
@@ -63,7 +68,15 @@ public class Sand2ModuleImportProvider implements ModuleImportProvider<ModuleImp
 
   @Override
   public void buildSteps(@Nonnull Consumer<WizardStep<ModuleImportContext>> consumer, @Nonnull ModuleImportContext context) {
-    consumer.accept(new ProjectOrModuleNameStep<>(context));
+    consumer.accept(new UnifiedProjectOrModuleNameStep<ModuleImportContext>(context) {
+      @RequiredUIAccess
+      @Override
+      protected void extend(@Nonnull FormBuilder builder) {
+        builder.addLabeled(LocalizeValue.localizeTODO("Test"), ColorBox.create(StandardColors.RED));
+
+        builder.addBottom(ListBox.create("Test1", "Test2"));
+      }
+    });
 
     consumer.accept(new WizardStep<ModuleImportContext>() {
       @RequiredUIAccess

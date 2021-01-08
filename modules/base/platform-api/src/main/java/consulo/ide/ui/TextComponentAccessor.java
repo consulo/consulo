@@ -33,14 +33,14 @@ public interface TextComponentAccessor<T extends Component> {
   TextComponentAccessor<TextBox> TEXT_BOX_WHOLE_TEXT = new TextComponentAccessor<TextBox>() {
     @RequiredUIAccess
     @Override
-    public String getValue(TextBox textField) {
-      return textField.getValueOrError();
+    public String getValue(TextBox textBox) {
+      return textBox.getValueOrError();
     }
 
     @RequiredUIAccess
     @Override
-    public void setValue(TextBox textField, String text) {
-      textField.setValue(text);
+    public void setValue(TextBox textBox, String text, boolean fireListeners) {
+      textBox.setValue(text, fireListeners);
     }
   };
 
@@ -60,5 +60,17 @@ public interface TextComponentAccessor<T extends Component> {
    * @param text      the text to set
    */
   @RequiredUIAccess
-  void setValue(T component, String text);
+  default void setValue(T component, String text) {
+    setValue(component, text, true);
+  }
+
+  /**
+   * Set text to the component
+   *
+   * @param component the component
+   * @param text      the text to set
+   * @param fireListeners fire listeners
+   */
+  @RequiredUIAccess
+  void setValue(T component, String text, boolean fireListeners);
 }

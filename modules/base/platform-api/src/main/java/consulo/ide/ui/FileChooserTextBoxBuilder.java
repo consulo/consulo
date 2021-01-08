@@ -91,6 +91,11 @@ public final class FileChooserTextBoxBuilder {
     }
 
     @RequiredUIAccess
+    public void setValue(@Nonnull String text, boolean fireListeners) {
+      myAccessor.setValue(myTextBox, text, fireListeners);
+    }
+
+    @RequiredUIAccess
     public void setValue(@Nonnull VirtualFile value) {
       setValue(value.getPresentableUrl());
     }

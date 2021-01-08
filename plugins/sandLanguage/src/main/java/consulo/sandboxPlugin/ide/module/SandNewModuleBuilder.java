@@ -24,15 +24,20 @@ import consulo.ide.newProject.NewModuleBuilder;
 import consulo.ide.newProject.NewModuleBuilderProcessor;
 import consulo.ide.newProject.NewModuleContext;
 import consulo.ide.newProject.node.NewModuleContextGroup;
+import consulo.ide.newProject.ui.UnifiedProjectOrModuleNameStep;
 import consulo.ide.wizard.newModule.NewModuleWizardContext;
 import consulo.ide.wizard.newModule.NewModuleWizardContextBase;
 import consulo.localize.LocalizeValue;
 import consulo.roots.impl.ProductionContentFolderTypeProvider;
 import consulo.sandboxPlugin.ide.module.extension.SandMutableModuleExtension;
+import consulo.ui.ColorBox;
 import consulo.ui.Component;
 import consulo.ui.Label;
+import consulo.ui.ListBox;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.DockLayout;
+import consulo.ui.style.StandardColors;
+import consulo.ui.util.FormBuilder;
 import consulo.ui.wizard.WizardStep;
 
 import javax.annotation.Nonnull;
@@ -94,7 +99,15 @@ public class SandNewModuleBuilder implements NewModuleBuilder {
 
       @Override
       public void buildSteps(@Nonnull Consumer<WizardStep<NewModuleWizardContext>> consumer, @Nonnull NewModuleWizardContext context) {
-        NewModuleBuilderProcessor.super.buildSteps(consumer, context);
+        consumer.accept(new UnifiedProjectOrModuleNameStep<NewModuleWizardContext>(context) {
+          @RequiredUIAccess
+          @Override
+          protected void extend(@Nonnull FormBuilder builder) {
+            builder.addLabeled(LocalizeValue.localizeTODO("Test"), ColorBox.create(StandardColors.LIGHT_RED));
+
+            builder.addBottom(ListBox.create("Test1", "Test2"));
+          }
+        });
 
         consumer.accept(new WizardStep<NewModuleWizardContext>() {
           @RequiredUIAccess

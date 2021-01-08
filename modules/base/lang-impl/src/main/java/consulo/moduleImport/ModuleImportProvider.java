@@ -21,7 +21,7 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import consulo.annotation.access.RequiredReadAction;
-import consulo.ide.newProject.ui.ProjectOrModuleNameStep;
+import consulo.ide.newProject.ui.UnifiedProjectOrModuleNameStep;
 import consulo.ui.image.Image;
 import consulo.ui.wizard.WizardStep;
 import org.intellij.lang.annotations.Language;
@@ -71,7 +71,7 @@ public interface ModuleImportProvider<C extends ModuleImportContext> {
   }
 
   default void buildSteps(@Nonnull Consumer<WizardStep<C>> consumer, @Nonnull C context) {
-    consumer.accept(new ProjectOrModuleNameStep<>(context));
+    consumer.accept(new UnifiedProjectOrModuleNameStep<>(context));
   }
 
   @Nonnull

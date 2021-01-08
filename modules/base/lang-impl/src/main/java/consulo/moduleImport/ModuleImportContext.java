@@ -46,6 +46,7 @@ public class ModuleImportContext implements NewModuleWizardContext, Disposable {
     return myFileToImport;
   }
 
+  @Override
   @Nullable
   public Project getProject() {
     return myProject;

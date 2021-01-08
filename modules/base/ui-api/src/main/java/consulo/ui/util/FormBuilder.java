@@ -15,14 +15,18 @@
  */
 package consulo.ui.util;
 
+import consulo.localize.LocalizeValue;
 import consulo.ui.Component;
 import consulo.ui.Label;
 import consulo.ui.StaticPosition;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.TableLayout;
+import consulo.ui.layout.VerticalLayout;
 import consulo.util.lang.StringUtil;
 
 import javax.annotation.Nonnull;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author VISTALL
@@ -36,10 +40,19 @@ public class FormBuilder {
 
   private int myLineCount;
   private TableLayout myLayout = TableLayout.create(StaticPosition.TOP);
+  private List<Component> myBottomComponents = new ArrayList<>();
+
+  private FormBuilder() {
+  }
 
   @Nonnull
   @RequiredUIAccess
+  @Deprecated
   public FormBuilder addLabeled(@Nonnull final String labelText, @Nonnull Component component) {
+    if (!myBottomComponents.isEmpty()) {
+      throw new IllegalArgumentException("Can't add labeled, after adding bottom components");
+    }
+
     String newLabelText = labelText;
     if (!StringUtil.endsWithChar(newLabelText, ':')) {
       newLabelText += ": ";
@@ -54,8 +67,12 @@ public class FormBuilder {
 
   @Nonnull
   @RequiredUIAccess
-  public FormBuilder addLabeled(@Nonnull final Component label, @Nonnull Component component) {
-    myLayout.add(label, TableLayout.cell(myLineCount, 0));
+  public FormBuilder addLabeled(@Nonnull final LocalizeValue labelText, @Nonnull Component component) {
+    if(!myBottomComponents.isEmpty()) {
+      throw new IllegalArgumentException("Can't add labeled, after adding bottom components");
+    }
+    
+    myLayout.add(Label.create(labelText), TableLayout.cell(myLineCount, 0));
     myLayout.add(component, TableLayout.cell(myLineCount, 1).fill());
 
     myLineCount++;
@@ -63,7 +80,35 @@ public class FormBuilder {
   }
 
   @Nonnull
+  @RequiredUIAccess
+  public FormBuilder addLabeled(@Nonnull final Component label, @Nonnull Component component) {
+    if (!myBottomComponents.isEmpty()) {
+      throw new IllegalArgumentException("Can't add labeled, after adding bottom components");
+    }
+
+    myLayout.add(label, TableLayout.cell(myLineCount, 0));
+    myLayout.add(component, TableLayout.cell(myLineCount, 1).fill());
+
+    myLineCount++;
+    return this;
+  }
+
+  public void addBottom(@Nonnull Component component) {
+    myBottomComponents.add(component);
+  }
+
+  @Nonnull
+  @RequiredUIAccess
   public Component build() {
-    return myLayout;
+    if(myBottomComponents.isEmpty()) {
+      return myLayout;
+    }
+
+    VerticalLayout composite = VerticalLayout.create();
+    composite.add(myLayout);
+    for (Component bottomComponent : myBottomComponents) {
+      composite.add(bottomComponent);
+    }
+    return composite;
   }
 }
