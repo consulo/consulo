@@ -37,11 +37,14 @@ import consulo.container.boot.ContainerPathManager;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginId;
 import consulo.container.plugin.PluginIds;
+import consulo.container.plugin.PluginManager;
 import consulo.ide.plugins.InstalledPluginsState;
+import consulo.ide.plugins.PluginIconHolder;
 import consulo.ide.plugins.pluginsAdvertisement.PluginsAdvertiserHolder;
 import consulo.ide.updateSettings.UpdateChannel;
 import consulo.ide.updateSettings.UpdateSettings;
 import consulo.logging.Logger;
+import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -153,6 +156,7 @@ public class PlatformOrPluginUpdateChecker {
     }
   }
 
+  @RequiredUIAccess
   private static void showUpdateResult(@Nullable Project project, final PlatformOrPluginUpdateResult targetsForUpdate, final boolean showResults) {
     PlatformOrPluginUpdateResult.Type type = targetsForUpdate.getType();
     switch (type) {
@@ -167,14 +171,15 @@ public class PlatformOrPluginUpdateChecker {
       case PLUGIN_UPDATE:
       case PLATFORM_UPDATE:
         if (showResults) {
-          new PlatformOrPluginDialog(project, targetsForUpdate, null, null).show();
+          new PlatformOrPluginDialog(project, targetsForUpdate, null, null).showAsync();
         }
         else {
           Notification notification = ourGroup.createNotification(IdeBundle.message("update.available.group"), IdeBundle.message("update.available"), NotificationType.INFORMATION, null);
           notification.addAction(new NotificationAction(IdeBundle.message("update.view.updates")) {
+            @RequiredUIAccess
             @Override
             public void actionPerformed(@Nonnull AnActionEvent e, @Nonnull Notification notification) {
-              new PlatformOrPluginDialog(project, targetsForUpdate, null, null).show();
+              new PlatformOrPluginDialog(project, targetsForUpdate, null, null).showAsync();
             }
           });
           notification.notify(project);
@@ -247,6 +252,10 @@ public class PlatformOrPluginUpdateChecker {
       thisPlatform.setVersion(appInfo.getBuild().asString());
       thisPlatform.setName(newPlatformPlugin.getName());
 
+      if(newPlatformPlugin instanceof PluginNode) {
+        ((PluginNode)newPlatformPlugin).setInitializedIcon(PluginIconHolder.decorateIcon(Application.get().getIcon()));
+      }
+
       targets.add(new PlatformOrPluginNode(platformPluginId, thisPlatform, newPlatformPlugin));
 
       // load new plugins with new app build
@@ -257,13 +266,13 @@ public class PlatformOrPluginUpdateChecker {
         return PlatformOrPluginUpdateResult.CANCELED;
       }
       catch (Exception e) {
-        LOG.info(e);
+        LOG.warn(e);
       }
     }
 
     final Map<PluginId, PluginDescriptor> ourPlugins = new HashMap<>();
-    final List<PluginDescriptor> installedPlugins = consulo.container.plugin.PluginManager.getPlugins();
-    final List<String> disabledPlugins = PluginManagerCore.getDisabledPlugins();
+    final List<PluginDescriptor> installedPlugins = PluginManager.getPlugins();
+    final List<String> disabledPlugins = PluginManager.getDisabledPlugins();
     for (PluginDescriptor installedPlugin : installedPlugins) {
       if (PluginIds.isPlatformPlugin(installedPlugin.getPluginId())) {
         continue;
@@ -325,7 +334,7 @@ public class PlatformOrPluginUpdateChecker {
   private static void processDependencies(@Nonnull PluginDescriptor target, List<PlatformOrPluginNode> targets, List<PluginDescriptor> remotePlugins) {
     PluginId[] dependentPluginIds = target.getDependentPluginIds();
     for (PluginId pluginId : dependentPluginIds) {
-      PluginDescriptor depPlugin = PluginManager.getPlugin(pluginId);
+      PluginDescriptor depPlugin = PluginManager.findPlugin(pluginId);
       // if plugin is not installed
       if (depPlugin == null) {
         PluginDescriptor filtered = ContainerUtil.find(remotePlugins, it -> pluginId.equals(it.getPluginId()));

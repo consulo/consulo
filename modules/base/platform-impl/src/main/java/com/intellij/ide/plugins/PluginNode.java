@@ -20,6 +20,7 @@ import consulo.container.plugin.PluginId;
 import consulo.container.plugin.SimpleExtension;
 import consulo.ide.plugins.PluginJsonNode;
 import consulo.logging.Logger;
+import consulo.ui.image.Image;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.lang.StringUtil;
 
@@ -66,6 +67,8 @@ public class PluginNode extends PluginDescriptorStub {
   private boolean myExperimental;
 
   private byte[] myIconBytes = ArrayUtil.EMPTY_BYTE_ARRAY;
+
+  private Image myInitializedIcon;
 
   private List<SimpleExtension> mySimpleExtensions = Collections.emptyList();
 
@@ -194,6 +197,15 @@ public class PluginNode extends PluginDescriptorStub {
   @Override
   public byte[] getIconBytes() {
     return myIconBytes;
+  }
+
+  @Nullable
+  public Image getInitializedIcon() {
+    return myInitializedIcon;
+  }
+
+  public void setInitializedIcon(@Nullable Image initializedIcon) {
+    myInitializedIcon = initializedIcon;
   }
 
   public void setDescription(String description) {

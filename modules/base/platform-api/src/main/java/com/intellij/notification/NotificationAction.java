@@ -36,5 +36,6 @@ public abstract class NotificationAction extends DumbAwareAction {
     actionPerformed(e, Notification.get(e));
   }
 
+  @RequiredUIAccess
   public abstract void actionPerformed(@Nonnull AnActionEvent e, @Nonnull Notification notification);
 }
