@@ -6,11 +6,14 @@ import com.intellij.openapi.project.Project;
 import consulo.util.dataholder.UserDataHolderBase;
 import com.intellij.openapi.vfs.VirtualFile;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class IndexedFileImpl extends UserDataHolderBase implements IndexedFile {
   protected final VirtualFile myFile;
   protected final String myFileName;
   protected final FileType myFileType;
+
+  protected Project myProject;
 
   public IndexedFileImpl(@Nonnull VirtualFile file, @Nonnull FileType type) {
     myFile = file;
@@ -38,6 +41,10 @@ public class IndexedFileImpl extends UserDataHolderBase implements IndexedFile {
 
   @Override
   public Project getProject() {
-    return getUserData(IndexingDataKeys.PROJECT);
+    return myProject;
+  }
+
+  public void setProject(@Nullable Project project) {
+    myProject = project;
   }
 }

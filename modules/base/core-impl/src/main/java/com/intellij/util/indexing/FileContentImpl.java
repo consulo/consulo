@@ -13,7 +13,6 @@ import com.intellij.openapi.fileTypes.FileTypeRegistry;
 import com.intellij.openapi.fileTypes.LanguageFileType;
 import com.intellij.openapi.project.DefaultProjectFactory;
 import com.intellij.openapi.project.Project;
-import consulo.util.dataholder.Key;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.LanguageSubstitutors;
 import com.intellij.psi.PsiDocumentManager;
@@ -22,10 +21,11 @@ import com.intellij.psi.PsiFileFactory;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.lang.LanguageVersion;
 import consulo.lang.LanguageVersionResolvers;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import consulo.util.dataholder.Key;
 import org.jetbrains.annotations.TestOnly;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.io.IOException;
 import java.nio.charset.Charset;
 
@@ -115,7 +115,9 @@ public class FileContentImpl extends IndexedFileImpl implements PsiDependentFile
     }
     FileType fileType = getFileTypeWithoutSubstitution();
     if (!(fileType instanceof LanguageFileType)) {
-      throw new AssertionError("PSI can be created only for a file with LanguageFileType but actual is " + fileType.getClass() + "." +
+      throw new AssertionError("PSI can be created only for a file with LanguageFileType but actual is " +
+                               fileType.getClass() +
+                               "." +
                                "\nPlease use a proper FileBasedIndexExtension#getInputFilter() implementation for the caller index");
     }
     return createFileFromText(project, text, (LanguageFileType)fileType, myFile, myFileName);
@@ -153,6 +155,20 @@ public class FileContentImpl extends IndexedFileImpl implements PsiDependentFile
     catch (IOException e) {
       throw new RuntimeException(e);
     }
+  }
+
+  @Nonnull
+  public static FileContent createByContent(@Nonnull VirtualFile file, @Nonnull byte[] content) {
+    return new FileContentImpl(file, content);
+  }
+
+  @Nonnull
+  public static FileContent createByFile(@Nonnull VirtualFile file, @Nullable Project project) throws IOException {
+    FileContentImpl content = (FileContentImpl)createByContent(file, file.contentsToByteArray(false));
+    if (project != null) {
+      content.setProject(project);
+    }
+    return content;
   }
 
   private FileType getFileTypeWithoutSubstitution() {

@@ -16,18 +16,19 @@
 package com.intellij.util.indexing;
 
 import com.intellij.lang.LighterAST;
-import com.intellij.openapi.project.Project;
-import consulo.util.dataholder.Key;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiFile;
+import consulo.util.dataholder.Key;
 
 /**
  * @author yole
  */
 public interface IndexingDataKeys {
   Key<VirtualFile> VIRTUAL_FILE = Key.create("Context virtual file");
-  Key<Project> PROJECT = Key.create("Context project");
+
   Key<PsiFile> PSI_FILE = Key.create("PSI for stubs");
+
   Key<CharSequence> FILE_TEXT_CONTENT_KEY = Key.create("file text content cached by stub indexer");
+
   Key<LighterAST> LIGHTER_AST_NODE_KEY = Key.create("lighter.ast.node");
 }

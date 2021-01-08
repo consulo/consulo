@@ -22,6 +22,7 @@ import consulo.util.dataholder.UserDataHolder;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiFile;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author Eugene Zhuravlev
@@ -42,6 +43,7 @@ public interface FileContent extends UserDataHolder {
   @Nonnull
   CharSequence getContentAsText();
 
+  @Nullable
   Project getProject();
 
   @Nonnull

@@ -1649,7 +1649,7 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
       fc.putUserData(IndexingDataKeys.PSI_FILE, psiFile);
     }
 
-    fc.putUserData(IndexingDataKeys.PROJECT, project);
+    fc.setProject(project);
   }
 
   private boolean updateSingleIndex(@Nonnull ID<?, ?> indexId, @Nullable VirtualFile file, int inputId, @Nullable FileContent currentFC) {

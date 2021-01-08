@@ -26,12 +26,11 @@ import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.testFramework.LightVirtualFile;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.indexing.FileContentImpl;
-import com.intellij.util.indexing.IndexingDataKeys;
 import consulo.logging.attachment.Attachment;
 import consulo.logging.attachment.AttachmentFactory;
 import consulo.logging.attachment.ExceptionWithAttachments;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -103,7 +102,7 @@ public class StubTextInconsistencyException extends RuntimeException implements 
   @Nonnull
   private static List<PsiFileStub> restoreStubsFromText(FileViewProvider viewProvider) {
     FileContentImpl fc = new FileContentImpl(viewProvider.getVirtualFile(), viewProvider.getContents(), 0);
-    fc.putUserData(IndexingDataKeys.PROJECT, viewProvider.getManager().getProject());
+    fc.setProject(viewProvider.getManager().getProject());
     PsiFileStubImpl copyTree = (PsiFileStubImpl)StubTreeBuilder.buildStubTree(fc);
     return copyTree == null ? Collections.emptyList() : Arrays.asList(copyTree.getStubRoots());
   }

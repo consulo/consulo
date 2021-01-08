@@ -17,8 +17,13 @@
 package com.intellij.psi.impl.cache.impl.todo;
 
 import com.intellij.openapi.fileTypes.FileTypeExtension;
+import com.intellij.openapi.project.Project;
+import com.intellij.openapi.roots.ProjectFileIndex;
+import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.indexing.DataIndexer;
 import com.intellij.util.indexing.FileContent;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author yole
@@ -28,5 +33,17 @@ public class TodoIndexers extends FileTypeExtension<DataIndexer<TodoIndexEntry, 
 
   private TodoIndexers() {
     super("com.intellij.todoIndexer");
+  }
+
+  public static boolean belongsToProject(@Nonnull Project project, @Nonnull VirtualFile file) {
+    //for (ExtraPlaceChecker checker : EP_NAME.getExtensionList()) {
+    //  if (checker.accept(project, file)) {
+    //    return true;
+    //  }
+    //}
+    if (!ProjectFileIndex.getInstance(project).isInContent(file)) {
+      return false;
+    }
+    return true;
   }
 }

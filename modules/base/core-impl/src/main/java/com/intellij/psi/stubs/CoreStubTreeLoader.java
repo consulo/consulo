@@ -25,12 +25,10 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.tree.IFileElementType;
 import com.intellij.psi.tree.IStubFileElementType;
-import com.intellij.util.indexing.FileContent;
 import com.intellij.util.indexing.FileContentImpl;
-import com.intellij.util.indexing.IndexingDataKeys;
 import consulo.annotation.access.RequiredReadAction;
-import javax.annotation.Nullable;
 
+import javax.annotation.Nullable;
 import java.io.IOException;
 
 /**
@@ -44,8 +42,8 @@ public class CoreStubTreeLoader extends StubTreeLoader {
     }
 
     try {
-      final FileContent fc = new FileContentImpl(vFile, vFile.contentsToByteArray());
-      fc.putUserData(IndexingDataKeys.PROJECT, project);
+      final FileContentImpl fc = new FileContentImpl(vFile, vFile.contentsToByteArray());
+      fc.setProject(project);
       final Stub element = StubTreeBuilder.buildStubTree(fc);
       if (element instanceof PsiFileStub) {
         return new StubTree((PsiFileStub)element);
