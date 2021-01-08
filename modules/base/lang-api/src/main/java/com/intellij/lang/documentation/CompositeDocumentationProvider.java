@@ -24,6 +24,7 @@ import com.intellij.psi.PsiManager;
 import com.intellij.util.containers.ContainerUtil;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -122,6 +123,17 @@ public class CompositeDocumentationProvider extends DocumentationProviderEx impl
   public List<String> getUrlFor(PsiElement element, PsiElement originalElement) {
     for (DocumentationProvider provider : getAllProviders()) {
       List<String> result = provider.getUrlFor(element, originalElement);
+      if (result != null) {
+        return result;
+      }
+    }
+    return null;
+  }
+
+  @Override
+  public String generateHoverDoc(@Nonnull PsiElement element, @Nullable PsiElement originalElement) {
+    for (DocumentationProvider provider : getAllProviders()) {
+      String result = provider.generateHoverDoc(element, originalElement);
       if (result != null) {
         return result;
       }

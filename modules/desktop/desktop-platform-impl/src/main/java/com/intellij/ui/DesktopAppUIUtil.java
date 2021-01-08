@@ -35,6 +35,7 @@ public class DesktopAppUIUtil extends AppUIUtil {
     registerFont("/fonts/FiraCode-Medium.ttf");
     registerFont("/fonts/FiraCode-Regular.ttf");
     registerFont("/fonts/FiraCode-Retina.ttf");
+    registerFont("/fonts/FiraCode-SemiBold.ttf");
   }
 
   private static void registerFont(String name) {
