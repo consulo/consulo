@@ -52,6 +52,10 @@ import com.intellij.openapi.wm.IdeGlassPaneUtil;
 import com.intellij.openapi.wm.ToolWindowAnchor;
 import com.intellij.openapi.wm.ex.ToolWindowManagerEx;
 import com.intellij.psi.PsiDocumentManager;
+import com.intellij.psi.PsiFile;
+import com.intellij.psi.codeStyle.CodeStyleSettingsChangeEvent;
+import com.intellij.psi.codeStyle.CodeStyleSettingsListener;
+import com.intellij.psi.codeStyle.CodeStyleSettingsManager;
 import com.intellij.ui.*;
 import com.intellij.ui.components.JBScrollBar;
 import com.intellij.ui.components.JBScrollPane;
@@ -124,7 +128,7 @@ import java.util.function.IntFunction;
 
 @Deprecated
 @DeprecationInfo("Desktop only")
-public final class DesktopEditorImpl extends UserDataHolderBase implements EditorInternal, HighlighterClient, Queryable, Dumpable/*, CodeStyleSettingsListener*/ {
+public final class DesktopEditorImpl extends UserDataHolderBase implements EditorInternal, HighlighterClient, Queryable, Dumpable, CodeStyleSettingsListener {
   public static final int TEXT_ALIGNMENT_LEFT = 0;
   public static final int TEXT_ALIGNMENT_RIGHT = 1;
 
@@ -559,7 +563,7 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
     myDocument.addPropertyChangeListener(propertyChangeListener);
     Disposer.register(myDisposable, () -> myDocument.removePropertyChangeListener(propertyChangeListener));
 
-    //CodeStyleSettingsManager.getInstance(myProject).addListener(this);
+    CodeStyleSettingsManager.getInstance(myProject).addListener(this);
 
     myFocusModeModel = new FocusModeModel(this);
     Disposer.register(myDisposable, myFocusModeModel);
@@ -1011,6 +1015,7 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
   }
 
   // EditorFactory.releaseEditor should be used to release editor
+  @Override
   public void release() {
     assertIsDispatchThread();
     if (isReleased) {
@@ -1044,7 +1049,7 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
     myEditorComponent.removeMouseMotionListener(myMouseMotionListener);
     myGutterComponent.removeMouseMotionListener(myMouseMotionListener);
 
-    //CodeStyleSettingsManager.removeListener(myProject, this);
+    CodeStyleSettingsManager.removeListener(myProject, this);
 
     Disposer.dispose(myDisposable);
     myVerticalScrollBar.setUI(null); // clear error panel's cached image
@@ -4615,16 +4620,25 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
     }
   }
 
-  //@Override
-  //public void codeStyleSettingsChanged(@Nonnull CodeStyleSettingsChangeEvent event) {
-  //  if (myProject != null) {
-  //    if (event.getPsiFile() != null) {
-  //      PsiFile editorFile = PsiDocumentManager.getInstance(myProject).getCachedPsiFile(getDocument());
-  //      if (editorFile != event.getPsiFile()) return;
-  //    }
-  //    reinitSettings(false);
-  //  }
-  //}
+  @Override
+  public void codeStyleSettingsChanged(@Nonnull CodeStyleSettingsChangeEvent event) {
+    if (myProject != null) {
+      if (event.getPsiFile() != null) {
+        PsiFile editorFile = PsiDocumentManager.getInstance(myProject).getCachedPsiFile(getDocument());
+        if (editorFile != event.getPsiFile()) return;
+      }
+      int oldTabSize = EditorUtil.getTabSize(this);
+      mySettings.reinitSettings();
+      int newTabSize = EditorUtil.getTabSize(this);
+      if (oldTabSize != newTabSize) {
+        reinitSettings(false);
+      }
+      else {
+        // cover the case of right margin update
+        myEditorComponent.repaint();
+      }
+    }
+  }
 
   @TestOnly
   void validateState() {

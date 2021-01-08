@@ -365,7 +365,7 @@ public class SettingsImpl implements EditorSettings {
     final PsiFile file = psiManager.getPsiFile(document);
     if (file == null) return;
 
-    CodeStyleSettingsManager.updateDocumentIndentOptions(project, document);
+    CodeStyle.updateDocumentIndentOptions(project, document);
   }
 
   @Override
