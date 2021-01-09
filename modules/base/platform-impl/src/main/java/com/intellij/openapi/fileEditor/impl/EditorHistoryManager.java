@@ -17,7 +17,6 @@ package com.intellij.openapi.fileEditor.impl;
 
 import com.intellij.ide.ui.UISettings;
 import com.intellij.ide.ui.UISettingsListener;
-import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.components.StoragePathMacros;
@@ -35,7 +34,6 @@ import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.psi.PsiDocumentManager;
-import com.intellij.util.ArrayUtilRt;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.messages.MessageBusConnection;
 import consulo.annotation.access.RequiredWriteAction;
@@ -43,11 +41,12 @@ import consulo.component.PersistentStateComponentWithUIState;
 import consulo.disposer.Disposable;
 import consulo.logging.Logger;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.util.collection.ArrayUtil;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -76,12 +75,7 @@ public final class EditorHistoryManager implements PersistentStateComponentWithU
 
     MessageBusConnection connection = project.getMessageBus().connect();
 
-    connection.subscribe(UISettingsListener.TOPIC, new UISettingsListener() {
-      @Override
-      public void uiSettingsChanged(UISettings uiSettings) {
-        trimToSize();
-      }
-    });
+    connection.subscribe(UISettingsListener.TOPIC, uiSettings -> trimToSize());
 
     connection.subscribe(FileEditorManagerListener.Before.FILE_EDITOR_MANAGER, new FileEditorManagerListener.Before.Adapter() {
       @Override
@@ -109,8 +103,9 @@ public final class EditorHistoryManager implements PersistentStateComponentWithU
   /**
    * Makes file most recent one
    */
+  @RequiredUIAccess
   private void fileOpenedImpl(@Nonnull final VirtualFile file, @Nullable final FileEditor fallbackEditor, @Nullable FileEditorProvider fallbackProvider) {
-    ApplicationManager.getApplication().assertIsDispatchThread();
+    myProject.getApplication().assertIsDispatchThread();
     // don't add files that cannot be found via VFM (light & etc.)
     if (VirtualFileManager.getInstance().findFileByUrl(file.getUrl()) == null) return;
 
@@ -133,7 +128,7 @@ public final class EditorHistoryManager implements PersistentStateComponentWithU
       selectedEditor = fallbackEditor;
     }
     LOG.assertTrue(selectedEditor != null);
-    final int selectedProviderIndex = ArrayUtilRt.find(editors, selectedEditor);
+    final int selectedProviderIndex = ArrayUtil.find(editors, selectedEditor);
     LOG.assertTrue(selectedProviderIndex != -1, "Can't find " + selectedEditor + " among " + Arrays.asList(editors));
 
     final HistoryEntry entry = getEntry(file);
@@ -161,6 +156,7 @@ public final class EditorHistoryManager implements PersistentStateComponentWithU
     updateHistoryEntry(file, null, null, changeEntryOrderOnly);
   }
 
+  @RequiredUIAccess
   private void updateHistoryEntry(@Nullable final VirtualFile file, @Nullable final FileEditor fallbackEditor, @Nullable FileEditorProvider fallbackProvider, final boolean changeEntryOrderOnly) {
     if (file == null) {
       return;
@@ -322,25 +318,19 @@ public final class EditorHistoryManager implements PersistentStateComponentWithU
     // which is done via corresponding EditorProviders, those are not accessible before their
     // is initComponent() called
     final Element state = element.clone();
-    StartupManager.getInstance(myProject).runWhenProjectIsInitialized(new DumbAwareRunnable() {
-      @Override
-      public void run() {
-        for (Element e : state.getChildren(HistoryEntry.TAG)) {
-          try {
-            addEntry(HistoryEntry.createHeavy(myProject, e));
-          }
-          catch (InvalidDataException e1) {
-            // OK here
-          }
-          catch (ProcessCanceledException e1) {
-            // OK here
-          }
-          catch (Exception anyException) {
-            LOG.error(anyException);
-          }
+    StartupManager.getInstance(myProject).runWhenProjectIsInitialized((DumbAwareRunnable)() -> {
+      for (Element e : state.getChildren(HistoryEntry.TAG)) {
+        try {
+          addEntry(HistoryEntry.createHeavy(myProject, e));
         }
-        trimToSize();
+        catch (InvalidDataException | ProcessCanceledException e1) {
+          // OK here
+        }
+        catch (Exception anyException) {
+          LOG.error(anyException);
+        }
       }
+      trimToSize();
     });
   }
 
