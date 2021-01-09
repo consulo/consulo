@@ -36,8 +36,6 @@ import javax.swing.*;
  * @since 21.03.14
  */
 public class SdkEditor extends BaseSdkEditor {
-  public static final Logger LOGGER = Logger.getInstance(SdkEditor.class);
-
   private static final String SDK_TAB = "sdkTab";
   @Nonnull
   private final History myHistory;
