@@ -46,7 +46,7 @@ public class CompositePrintable extends UserDataHolderBase implements Printable,
   private int myCurrentSize = 0;
   private String myOutputFile = null;
   private String myFrameworkOutputFile;
-  private static final ExecutorService ourTestExecutorService = AppExecutorUtil.createBoundedApplicationPoolExecutor("tests", 1);
+  private static final ExecutorService ourTestExecutorService = AppExecutorUtil.createBoundedApplicationPoolExecutor("Tests", 1);
 
   public void flush() {
     synchronized (myNestedPrintables) {

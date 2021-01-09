@@ -26,7 +26,12 @@ public class JarMemoryLoader {
 
   @Nullable
   public Resource getResource(String entryName) {
-    return myResources.remove(entryName);
+    return myResources.get(entryName);
+  }
+
+  @Nonnull
+  public Map<String, Resource> getResources() {
+    return myResources;
   }
 
   @Nonnull

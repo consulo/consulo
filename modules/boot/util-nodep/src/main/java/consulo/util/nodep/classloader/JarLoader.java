@@ -35,13 +35,13 @@ class JarLoader extends Loader {
   private final String myFilePath;
   private final ClassPath myConfiguration;
   private final URL myUrl;
-  private SoftReference<JarMemoryLoader> myMemoryLoader;
   private volatile SoftReference<ZipFile> myZipFileSoftReference; // Used only when myConfiguration.myCanLockJars==true
   private volatile Map<Resource.Attribute, String> myAttributes;
   private volatile String myClassPathManifestAttribute;
   private static final String NULL_STRING = "<null>";
 
   private volatile Map<String, String> myRemapMultiVersions;
+  private JarMemoryLoader myMemoryLoader;
 
   JarLoader(URL url, int index, ClassPath configuration) throws IOException {
     super(new URL("jar", "", -1, url + "!/"), index);
@@ -54,10 +54,9 @@ class JarLoader extends Loader {
       ZipFile zipFile = getZipFile(); // IOException from opening is propagated to caller if zip file isn't valid,
       try {
         if (configuration.myPreloadJarContents) {
-          JarMemoryLoader loader = JarMemoryLoader.load(zipFile, getBaseURL(), this);
-          myMemoryLoader = new SoftReference<JarMemoryLoader>(loader);
+          myMemoryLoader = JarMemoryLoader.load(zipFile, getBaseURL(), this);
           // if data preloaded - preload multiversion files
-          myRemapMultiVersions = buildRemapMultiVersions(zipFile);
+          myRemapMultiVersions = buildRemapMultiVersions(myMemoryLoader.getResources().keySet().iterator());
         }
       }
       finally {
@@ -170,30 +169,36 @@ class JarLoader extends Loader {
   @Nonnull
   @Override
   public ClasspathCache.LoaderData buildData() throws IOException {
+    if (myMemoryLoader != null) {
+      return buildDataImpl(myMemoryLoader.getResources().keySet().iterator());
+    }
+
     ZipFile zipFile = getZipFile();
     try {
-      ClasspathCache.LoaderDataBuilder loaderDataBuilder = new ClasspathCache.LoaderDataBuilder();
-      Enumeration<? extends ZipEntry> entries = zipFile.entries();
-
-      while (entries.hasMoreElements()) {
-        ZipEntry entry = entries.nextElement();
-        String name = entry.getName();
-
-        if (name.endsWith(UrlClassLoader.CLASS_EXTENSION)) {
-          loaderDataBuilder.addClassPackageFromName(name);
-        }
-        else {
-          loaderDataBuilder.addResourcePackageFromName(name);
-        }
-
-        loaderDataBuilder.addPossiblyDuplicateNameEntry(name);
-      }
-
-      return loaderDataBuilder.build();
+      return buildDataImpl(new ZipEntryNameIterator(zipFile));
     }
     finally {
       releaseZipFile(zipFile);
     }
+  }
+
+  private ClasspathCache.LoaderData buildDataImpl(Iterator<String> zipEntryNameIterator) {
+    ClasspathCache.LoaderDataBuilder loaderDataBuilder = new ClasspathCache.LoaderDataBuilder();
+
+    while (zipEntryNameIterator.hasNext()) {
+      String name = zipEntryNameIterator.next();
+
+      if (name.endsWith(UrlClassLoader.CLASS_EXTENSION)) {
+        loaderDataBuilder.addClassPackageFromName(name);
+      }
+      else {
+        loaderDataBuilder.addResourcePackageFromName(name);
+      }
+
+      loaderDataBuilder.addPossiblyDuplicateNameEntry(name);
+    }
+
+    return loaderDataBuilder.build();
   }
 
   private final AtomicInteger myNumberOfRequests = new AtomicInteger();
@@ -239,7 +244,7 @@ class JarLoader extends Loader {
       }
     }
 
-    JarMemoryLoader loader = myMemoryLoader != null ? myMemoryLoader.get() : null;
+    JarMemoryLoader loader = myMemoryLoader;
     if (loader != null) {
       // remap always not null
       String remappedUrl = myRemapMultiVersions.get(name);
@@ -249,6 +254,9 @@ class JarLoader extends Loader {
 
       Resource resource = loader.getResource(name);
       if (resource != null) return resource;
+
+      // if memory preloader exists - do not try search inside file
+      return null;
     }
 
     try {
@@ -256,7 +264,7 @@ class JarLoader extends Loader {
 
       Map<String, String> remapMultiVersions = myRemapMultiVersions;
       if (remapMultiVersions == null) {
-        remapMultiVersions = myRemapMultiVersions = buildRemapMultiVersions(zipFile);
+        remapMultiVersions = myRemapMultiVersions = buildRemapMultiVersions(new ZipEntryNameIterator(zipFile));
       }
 
       String remappedUrl = remapMultiVersions.get(name);
@@ -282,15 +290,11 @@ class JarLoader extends Loader {
   }
 
   @Nonnull
-  private Map<String, String> buildRemapMultiVersions(ZipFile zipFile) {
-    Enumeration<? extends ZipEntry> entries = zipFile.entries();
-
+  private Map<String, String> buildRemapMultiVersions(Iterator<String> zipNameIterator) {
     SimpleMultiMap<Integer, String> byVersions = SimpleMultiMap.newHashMap();
 
-    while (entries.hasMoreElements()) {
-      ZipEntry zipEntry = entries.nextElement();
-
-      String name = zipEntry.getName();
+    while (zipNameIterator.hasNext()) {
+      String name = zipNameIterator.next();
 
       String prefix = "META-INF/versions/";
       if (name.startsWith(prefix)) {
