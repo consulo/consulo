@@ -33,8 +33,8 @@ public interface Logger {
   }
 
   @Nonnull
-  public static Logger getInstance(@Nonnull Class cl) {
-    return getInstance(cl.getName());
+  public static Logger getInstance(@Nonnull Class clazz) {
+    return LoggerFactoryInitializer.getFactory().getLoggerInstance(clazz);
   }
 
   default boolean isTraceEnabled() {

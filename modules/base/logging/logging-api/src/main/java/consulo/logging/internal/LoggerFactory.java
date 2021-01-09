@@ -29,7 +29,10 @@ public interface LoggerFactory {
   static int DISABLE_PRIORITY = -100;
 
   @Nonnull
-  Logger getLoggerInstance(String category);
+  Logger getLoggerInstance(@Nonnull String category);
+
+  @Nonnull
+  Logger getLoggerInstance(@Nonnull Class<?> clazz);
 
   int getPriority();
 

@@ -45,20 +45,25 @@ public class Log4J2Logger implements Logger {
   private static Supplier<String> ourApplicationInfoProvider = getInfoProvider();
 
   private final LoggerContext myLoggerContext;
-  private final String myName;
+  private final Supplier<String> myName;
 
   @Nullable
   private org.apache.logging.log4j.Logger myLogger;
 
   Log4J2Logger(LoggerContext loggerContext, String name) {
     myLoggerContext = loggerContext;
-    myName = name;
+    myName = () -> name;
+  }
+
+  Log4J2Logger(LoggerContext loggerContext, Class<?> clazz) {
+    myLoggerContext = loggerContext;
+    myName = clazz::getName;
   }
 
   @Nonnull
   private org.apache.logging.log4j.Logger logger() {
     if(myLogger == null) {
-      org.apache.logging.log4j.core.Logger logger = myLoggerContext.getLogger(myName);
+      org.apache.logging.log4j.core.Logger logger = myLoggerContext.getLogger(myName.get());
       myLogger = logger;
       return logger;
     }
@@ -175,7 +180,7 @@ public class Log4J2Logger implements Logger {
       throw new IllegalAccessException("Plugin is not platform: " + plugin);
     }
 
-    org.apache.logging.log4j.core.Logger logger = myLoggerContext.getLogger(myName);
+    org.apache.logging.log4j.core.Logger logger = myLoggerContext.getLogger(myName.get());
 
     Level newLevel;
     switch (level) {

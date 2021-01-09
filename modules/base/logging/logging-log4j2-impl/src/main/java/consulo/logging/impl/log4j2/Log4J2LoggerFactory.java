@@ -53,8 +53,14 @@ public class Log4J2LoggerFactory implements LoggerFactory {
 
   @Nonnull
   @Override
-  public Logger getLoggerInstance(String name) {
+  public Logger getLoggerInstance(@Nonnull String name) {
     return new Log4J2Logger(myLoggerContext, name);
+  }
+
+  @Nonnull
+  @Override
+  public Logger getLoggerInstance(@Nonnull Class<?> clazz) {
+    return new Log4J2Logger(myLoggerContext, clazz);
   }
 
   @Override

@@ -26,8 +26,14 @@ import javax.annotation.Nonnull;
 public class DefaultLoggerFactoryImpl implements LoggerFactory {
   @Nonnull
   @Override
-  public Logger getLoggerInstance(String category) {
+  public Logger getLoggerInstance(@Nonnull String category) {
     return new DefaultLogger(category);
+  }
+
+  @Nonnull
+  @Override
+  public Logger getLoggerInstance(@Nonnull Class<?> clazz) {
+    return getLoggerInstance(clazz.getName());
   }
 
   @Override
