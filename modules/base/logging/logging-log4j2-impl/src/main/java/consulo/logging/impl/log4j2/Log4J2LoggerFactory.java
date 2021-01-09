@@ -64,11 +64,6 @@ public class Log4J2LoggerFactory implements LoggerFactory {
   }
 
   @Override
-  public int getPriority() {
-    return DEFAULT_PRIORITY;
-  }
-
-  @Override
   public void shutdown() {
     if (myLoggerContext != null) {
       myLoggerContext.stop();

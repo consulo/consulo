@@ -29,20 +29,4 @@ public class DefaultLoggerFactoryImpl implements LoggerFactory {
   public Logger getLoggerInstance(@Nonnull String category) {
     return new DefaultLogger(category);
   }
-
-  @Nonnull
-  @Override
-  public Logger getLoggerInstance(@Nonnull Class<?> clazz) {
-    return getLoggerInstance(clazz.getName());
-  }
-
-  @Override
-  public int getPriority() {
-    return DEFAULT_PRIORITY;
-  }
-
-  @Override
-  public void shutdown() {
-
-  }
 }

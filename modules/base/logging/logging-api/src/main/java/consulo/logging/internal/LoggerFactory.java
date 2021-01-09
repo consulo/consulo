@@ -32,9 +32,14 @@ public interface LoggerFactory {
   Logger getLoggerInstance(@Nonnull String category);
 
   @Nonnull
-  Logger getLoggerInstance(@Nonnull Class<?> clazz);
+  default Logger getLoggerInstance(@Nonnull Class<?> clazz) {
+    return getLoggerInstance(clazz.getName());
+  }
 
-  int getPriority();
+  default int getPriority() {
+    return DEFAULT_PRIORITY;
+  }
 
-  void shutdown();
+  default void shutdown() {
+  }
 }
