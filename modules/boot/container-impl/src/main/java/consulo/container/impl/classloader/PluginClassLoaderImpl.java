@@ -42,7 +42,7 @@ class PluginClassLoaderImpl extends UrlClassLoader implements PluginClassLoader 
   }
 
   public PluginClassLoaderImpl(@Nonnull List<URL> urls, @Nonnull ClassLoader[] parents, PluginId pluginId, String version, File pluginRoot) {
-    super(pluginId.getIdString(), build().urls(urls).urlsWithProtectionDomain(new HashSet<URL>(urls)).allowLock().useCache());
+    super(pluginId.getIdString(), build().urls(urls).urlsWithProtectionDomain(new HashSet<URL>(urls)).allowLock().useCache().noPreload());
     myParents = parents;
     myPluginId = pluginId;
     myPluginVersion = version;

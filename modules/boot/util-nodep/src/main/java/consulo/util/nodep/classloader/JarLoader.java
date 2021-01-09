@@ -54,9 +54,9 @@ class JarLoader extends Loader {
       try {
         if (configuration.myPreloadJarContents) {
           JarMemoryLoader loader = JarMemoryLoader.load(zipFile, getBaseURL(), this);
-          if (loader != null) {
-            myMemoryLoader = new SoftReference<JarMemoryLoader>(loader);
-          }
+          myMemoryLoader = new SoftReference<JarMemoryLoader>(loader);
+          // if data preloaded - preload multiversion files
+          myRemapMultiVersions = buildRemapMultiVersions(zipFile);
         }
       }
       finally {
@@ -222,6 +222,12 @@ class JarLoader extends Loader {
 
     JarMemoryLoader loader = myMemoryLoader != null ? myMemoryLoader.get() : null;
     if (loader != null) {
+      // remap always not null
+      String remappedUrl = myRemapMultiVersions.get(name);
+      if(remappedUrl != null) {
+        name = remappedUrl;
+      }
+
       Resource resource = loader.getResource(name);
       if (resource != null) return resource;
     }
@@ -256,6 +262,7 @@ class JarLoader extends Loader {
     return null;
   }
 
+  @Nonnull
   private Map<String, String> buildRemapMultiVersions(ZipFile zipFile) {
     Enumeration<? extends ZipEntry> entries = zipFile.entries();
 

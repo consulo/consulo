@@ -1,8 +1,7 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.util.nodep.classloader;
 
-import consulo.util.nodep.io.FileUtilRt;
-
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.IOException;
 import java.net.URL;
@@ -15,41 +14,34 @@ import java.util.zip.ZipFile;
 
 /**
  * @author Dmitry Avdeev
- *
- * See https://github.com/consulo/consulo-maven-plugin/blob/master/src/main/java/consulo/maven/util/ReorderJarsMain.java
  */
 public class JarMemoryLoader {
-  /**
-   * Special entry to keep the number of reordered classes in jar.
-   */
-  public static final String SIZE_ENTRY = "META-INF/jb/$$size$$";
+  private static final JarMemoryLoader EMPTY = new JarMemoryLoader(Collections.<String, Resource>emptyMap());
 
-  private final Map<String, Resource> myResources = Collections.synchronizedMap(new HashMap<String, Resource>()); // todo do we need it ?
+  private final Map<String, Resource> myResources;
 
-  private JarMemoryLoader() {
+  private JarMemoryLoader(Map<String, Resource> resources) {
+    myResources = resources;
   }
 
+  @Nullable
   public Resource getResource(String entryName) {
     return myResources.remove(entryName);
   }
 
-  @Nullable
+  @Nonnull
   static JarMemoryLoader load(ZipFile zipFile, URL baseUrl, @Nullable JarLoader attributesProvider) throws IOException {
     Enumeration<? extends ZipEntry> entries = zipFile.entries();
-    if (!entries.hasMoreElements()) return null;
+    if (!entries.hasMoreElements()) return EMPTY;
 
-    ZipEntry sizeEntry = entries.nextElement();
-    if (sizeEntry == null || !sizeEntry.getName().equals(SIZE_ENTRY)) return null;
-
-    byte[] bytes = FileUtilRt.loadBytes(zipFile.getInputStream(sizeEntry), 2);
-    int size = ((bytes[1] & 0xFF) << 8) + (bytes[0] & 0xFF);
-
-    JarMemoryLoader loader = new JarMemoryLoader();
-    for (int i = 0; i < size && entries.hasMoreElements(); i++) {
+    Map<String, Resource> resources = new HashMap<String, Resource>();
+    while (entries.hasMoreElements()) {
       ZipEntry entry = entries.nextElement();
+
       MemoryResource resource = MemoryResource.load(baseUrl, zipFile, entry, attributesProvider != null ? attributesProvider.getAttributes() : null);
-      loader.myResources.put(entry.getName(), resource);
+
+      resources.put(entry.getName(), resource);
     }
-    return loader;
+    return new JarMemoryLoader(resources);
   }
 }

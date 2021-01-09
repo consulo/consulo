@@ -30,8 +30,8 @@ import java.util.List;
 public class PluginClassLoaderFactory {
   @SuppressWarnings("unchecked")
   @Nonnull
-  public static <C extends ClassLoader & PluginClassLoader> C create(@Nonnull List<URL> urls, @Nonnull ClassLoader parents, PluginId pluginId, String version, File pluginRoot) {
-    return (C)new PluginClassLoaderImpl(urls, parents, pluginId, version, pluginRoot);
+  public static <C extends ClassLoader & PluginClassLoader> C create(@Nonnull List<URL> urls, @Nonnull ClassLoader parent, PluginId pluginId, String version, File pluginRoot) {
+    return (C)new PluginClassLoaderImpl(urls, parent, pluginId, version, pluginRoot);
   }
 
   @SuppressWarnings("unchecked")
