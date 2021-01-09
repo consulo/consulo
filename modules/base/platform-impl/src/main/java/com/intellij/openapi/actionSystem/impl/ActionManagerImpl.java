@@ -52,10 +52,10 @@ import consulo.util.collection.ArrayUtil;
 import consulo.util.nodep.xml.node.SimpleXmlElement;
 import gnu.trove.THashMap;
 import gnu.trove.TObjectIntHashMap;
+import jakarta.inject.Inject;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import jakarta.inject.Inject;
 import javax.swing.Timer;
 import javax.swing.*;
 import java.awt.*;
@@ -132,7 +132,6 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
   private boolean myTransparentOnlyUpdate;
   private final Map<OverridingAction, AnAction> myBaseActions = new HashMap<>();
   private int myAnonymousGroupIdCounter;
-  private boolean myPreloadComplete;
 
   private ActionToolbarFactory myToolbarFactory;
 
@@ -317,8 +316,6 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
   }
 
   private void assertActionIsGroupOrStub(final AnAction action) {
-    if (myPreloadComplete) return;
-
     if (!(action instanceof ActionGroup || action instanceof ActionStub)) {
       LOG.error("Action : " + action + "; class: " + action.getClass());
     }
@@ -1275,21 +1272,18 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
   }
 
   public void preloadActions(@Nonnull ProgressIndicator indicator) {
-    Application application = ApplicationManager.getApplication();
-
-    for (String id : getActionIds()) {
+    List<String> ids;
+    synchronized (myLock) {
+      ids = new ArrayList<>(myId2Action.keySet());
+    }
+    for (String id : ids) {
       indicator.checkCanceled();
-      if (application.isDisposeInProgress() || application.isDisposed()) return;
-
-      AnAction action = getAction(id);
-      if (action instanceof PreloadableAction) {
-        ((PreloadableAction)action).preload();
-      }
+      
+      getActionImpl(id, false);
       // don't preload ActionGroup.getChildren() because that would un-stub child actions
       // and make it impossible to replace the corresponding actions later
       // (via unregisterAction+registerAction, as some app components do)
     }
-    myPreloadComplete = true;
   }
 
   @Nonnull
