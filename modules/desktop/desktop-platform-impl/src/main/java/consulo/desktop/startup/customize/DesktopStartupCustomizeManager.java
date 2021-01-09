@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2016 consulo.io
+ * Copyright 2013-2021 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,23 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.internal.actions;
+package consulo.desktop.startup.customize;
 
+import consulo.startup.customize.StartupCustomizeManager;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.desktop.startup.customize.FirstStartCustomizeUtil;
-import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.actionSystem.AnActionEvent;
-
-import javax.annotation.Nonnull;
+import jakarta.inject.Singleton;
 
 /**
  * @author VISTALL
- * @since 10.05.14
+ * @since 09/01/2021
  */
-public class ShowStartupManagerAction extends AnAction {
+@Singleton
+public class DesktopStartupCustomizeManager implements StartupCustomizeManager {
   @RequiredUIAccess
   @Override
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-    FirstStartCustomizeUtil.showDialog(false);
+  public void showAsync(boolean firstShow) {
+    FirstStartCustomizeUtil.showDialog(firstShow);
   }
 }

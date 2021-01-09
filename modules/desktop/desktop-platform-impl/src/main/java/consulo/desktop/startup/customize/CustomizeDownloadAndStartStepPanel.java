@@ -19,7 +19,7 @@ import com.intellij.ide.customize.AbstractCustomizeWizardStep;
 import com.intellij.ide.customize.CustomizeIDEWizardDialog;
 import com.intellij.ide.customize.CustomizePluginsStepPanel;
 import com.intellij.mock.MockProgressIndicator;
-import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationNamesInfo;
 import com.intellij.openapi.application.ex.ApplicationManagerEx;
 import com.intellij.openapi.progress.ProgressIndicator;
@@ -35,8 +35,6 @@ import consulo.logging.Logger;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.Collections;
 import java.util.Set;
 
@@ -45,7 +43,7 @@ import java.util.Set;
  * @since 29.11.14
  */
 public class CustomizeDownloadAndStartStepPanel extends AbstractCustomizeWizardStep {
-  public static final Logger LOGGER = Logger.getInstance(CustomizeDownloadAndStartStepPanel.class);
+  private static final Logger LOGGER = Logger.getInstance(CustomizeDownloadAndStartStepPanel.class);
 
   private static class MyProgressIndicator extends MockProgressIndicator {
     private final JBLabel myLabel;
@@ -68,22 +66,12 @@ public class CustomizeDownloadAndStartStepPanel extends AbstractCustomizeWizardS
 
     @Override
     public void setFraction(final double fraction) {
-      UIUtil.invokeLaterIfNeeded(new Runnable() {
-        @Override
-        public void run() {
-          myProgressBar.setValue((int)(fraction * 100d));
-        }
-      });
+      UIUtil.invokeLaterIfNeeded(() -> myProgressBar.setValue((int)(fraction * 100d)));
     }
 
     @Override
     public void setIndeterminate(final boolean indeterminate) {
-      UIUtil.invokeLaterIfNeeded(new Runnable() {
-        @Override
-        public void run() {
-          myProgressBar.setIndeterminate(indeterminate);
-        }
-      });
+      UIUtil.invokeLaterIfNeeded(() -> myProgressBar.setIndeterminate(indeterminate));
     }
   }
 
@@ -100,12 +88,9 @@ public class CustomizeDownloadAndStartStepPanel extends AbstractCustomizeWizardS
 
   private JButton createStartButton() {
     JButton button = new JButton(getStartName());
-    button.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        myCustomizeIDEWizardDialog.close(DialogWrapper.CLOSE_EXIT_CODE);
-        ApplicationManagerEx.getApplicationEx().restart(true);
-      }
+    button.addActionListener(e -> {
+      myCustomizeIDEWizardDialog.close(DialogWrapper.CLOSE_EXIT_CODE);
+      ApplicationManagerEx.getApplicationEx().restart(true);
     });
     return button;
   }
@@ -125,23 +110,20 @@ public class CustomizeDownloadAndStartStepPanel extends AbstractCustomizeWizardS
       add(panel);
 
       final ProgressIndicator indicator = new MyProgressIndicator(infoLabel, progressBar);
-      ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
-        @Override
-        public void run() {
-          for (PluginDescriptor ideaPluginDescriptor : pluginsForDownload) {
-            try {
-              PluginDownloader downloader = PluginDownloader.createDownloader(ideaPluginDescriptor, false);
-              downloader.prepareToInstall(indicator);
-              downloader.install(true);
-            }
-            catch (Exception e) {
-              CustomizeDownloadAndStartStepPanel.LOGGER.warn(e);
-            }
+      Application.get().executeOnPooledThread((Runnable)() -> {
+        for (PluginDescriptor pluginDescriptor : pluginsForDownload) {
+          try {
+            PluginDownloader downloader = PluginDownloader.createDownloader(pluginDescriptor, false);
+            downloader.prepareToInstall(indicator);
+            downloader.install(true);
           }
-
-          myDone = true;
-          UIUtil.invokeLaterIfNeeded(() -> placeStartButton());
+          catch (Exception e) {
+            LOGGER.warn(e);
+          }
         }
+
+        myDone = true;
+        UIUtil.invokeLaterIfNeeded(() -> placeStartButton());
       });
     }
 
@@ -178,7 +160,7 @@ public class CustomizeDownloadAndStartStepPanel extends AbstractCustomizeWizardS
       return "Start using " + ApplicationNamesInfo.getInstance().getFullProductName();
     }
     else {
-      return "Manual start " + ApplicationNamesInfo.getInstance().getFullProductName();
+      return "Manual restart " + ApplicationNamesInfo.getInstance().getFullProductName();
     }
   }
 }

@@ -15,13 +15,14 @@
  */
 package com.intellij.ide.customize;
 
-import consulo.container.plugin.PluginId;
 import com.intellij.ui.CheckboxTree;
 import com.intellij.ui.CheckedTreeNode;
 import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.util.containers.MultiMap;
 import com.intellij.util.ui.tree.TreeUtil;
 import consulo.container.plugin.PluginDescriptor;
+import consulo.container.plugin.PluginId;
+import consulo.container.plugin.PluginManager;
 import consulo.desktop.startup.customize.CustomizePluginTemplatesStepPanel;
 import gnu.trove.THashSet;
 
@@ -30,10 +31,7 @@ import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import java.awt.*;
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class CustomizePluginsStepPanel extends AbstractCustomizeWizardStep {
 
@@ -52,10 +50,16 @@ public class CustomizePluginsStepPanel extends AbstractCustomizeWizardStep {
       Collection<PluginDescriptor> value = entry.getValue();
 
       DefaultMutableTreeNode groupNode = new DefaultMutableTreeNode(key);
-      for (PluginDescriptor ideaPluginDescriptor : value) {
-        CheckedTreeNode newChild = new CheckedTreeNode(ideaPluginDescriptor);
+      for (PluginDescriptor descriptor : value) {
+        CheckedTreeNode newChild = new CheckedTreeNode(descriptor);
         newChild.setChecked(false);
         groupNode.add(newChild);
+
+        PluginDescriptor plugin = PluginManager.findPlugin(descriptor.getPluginId());
+        if (plugin != null) {
+          newChild.setChecked(true);
+          newChild.setEnabled(false);
+        }
       }
       myRoot.add(groupNode);
     }
@@ -74,7 +78,7 @@ public class CustomizePluginsStepPanel extends AbstractCustomizeWizardStep {
         boolean state = node.isChecked();
 
         Object userObject = node.getUserObject();
-        if(userObject instanceof PluginDescriptor) {
+        if (userObject instanceof PluginDescriptor) {
           Set<String> deepDependencies = new THashSet<String>();
           collectDeepDependencies(deepDependencies, (PluginDescriptor)userObject);
           setupChecked(myRoot, deepDependencies, state);
@@ -104,7 +108,7 @@ public class CustomizePluginsStepPanel extends AbstractCustomizeWizardStep {
       deepDependencies.add(idString);
 
       for (PluginDescriptor pluginDescriptor : myPluginDescriptors.values()) {
-        if(pluginDescriptor.getPluginId().equals(depPluginId)) {
+        if (pluginDescriptor.getPluginId().equals(depPluginId)) {
           collectDeepDependencies(deepDependencies, pluginDescriptor);
         }
       }
@@ -146,10 +150,10 @@ public class CustomizePluginsStepPanel extends AbstractCustomizeWizardStep {
     if (userObject instanceof PluginDescriptor) {
       String id = ((PluginDescriptor)userObject).getPluginId().getIdString();
       boolean contains = set.contains(id);
-      if(state == null) {
+      if (state == null) {
         ((CheckedTreeNode)treeNode).setChecked(contains);
       }
-      else if(contains) {
+      else if (contains) {
         ((CheckedTreeNode)treeNode).setChecked(state);
       }
     }
@@ -163,7 +167,7 @@ public class CustomizePluginsStepPanel extends AbstractCustomizeWizardStep {
 
   @Nonnull
   public Set<PluginDescriptor> getPluginsForDownload() {
-    Set<PluginDescriptor> set = new THashSet<PluginDescriptor>();
+    Set<PluginDescriptor> set = new HashSet<>();
     collect(myRoot, set);
     return set;
   }
@@ -173,7 +177,12 @@ public class CustomizePluginsStepPanel extends AbstractCustomizeWizardStep {
     if (userObject instanceof PluginDescriptor) {
       CheckedTreeNode checkedTreeNode = (CheckedTreeNode)treeNode;
       if (checkedTreeNode.isChecked()) {
-        set.add(((PluginDescriptor)userObject));
+        PluginDescriptor pluginDescriptor = (PluginDescriptor)userObject;
+
+        PluginDescriptor idePlugin = PluginManager.findPlugin(pluginDescriptor.getPluginId());
+        if (idePlugin == null) {
+          set.add(pluginDescriptor);
+        }
       }
     }
 
@@ -191,7 +200,7 @@ public class CustomizePluginsStepPanel extends AbstractCustomizeWizardStep {
 
   @Override
   public String getHTMLHeader() {
-    return "<html><body><h2>Select plugins ford download</h2></body></html>";
+    return "<html><body><h2>Select plugins for download</h2></body></html>";
   }
 
   @Override

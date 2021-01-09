@@ -113,10 +113,6 @@
       <add-to-group group-id="Internal" anchor="last"/>
     </group>
 
-    <action internal="true" id="ShowStartupManagerAction" class="consulo.internal.actions.ShowStartupManagerAction" text="Show Startup Manager">
-      <add-to-group group-id="Internal" anchor="after" relative-to-action="RestartInfo"/>
-    </action>
-
     <group popup="false">
       <separator/>
       <action class="com.intellij.ide.ManageRecentProjectsAction" id="ManageRecentProjects"/>
@@ -220,6 +216,7 @@
 
     <applicationService serviceInterface="com.intellij.openapi.wm.impl.SystemDock" serviceImplementation="consulo.wm.impl.DesktopSystemDockImpl"/>
 
+    <applicationService serviceInterface="consulo.startup.customize.StartupCustomizeManager" serviceImplementation="consulo.desktop.startup.customize.DesktopStartupCustomizeManager"/>
     <applicationService serviceInterface="com.intellij.ide.RemoteDesktopService" serviceImplementation="com.intellij.ide.DesktopRemoteDesktopDetector"/>
     <applicationService serviceInterface="consulo.wm.ApplicationIdeFocusManager" serviceImplementation="com.intellij.openapi.wm.impl.FocusManagerImpl" lazy="false"/>
     <applicationService serviceInterface="com.intellij.openapi.wm.WindowManager" serviceImplementation="com.intellij.openapi.wm.impl.DesktopWindowManagerImpl" lazy="false"/>
