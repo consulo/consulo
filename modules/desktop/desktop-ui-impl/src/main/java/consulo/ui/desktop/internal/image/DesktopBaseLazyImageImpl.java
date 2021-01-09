@@ -57,6 +57,7 @@ public abstract class DesktopBaseLazyImageImpl extends JBUI.RasterJBIcon impleme
 
     if (myModificationCount != modificationCount) {
       myModificationCount = modificationCount;
+      myIcon = null;
     }
 
     Icon icon = myIcon;
