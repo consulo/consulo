@@ -26,6 +26,7 @@ import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.List;
 
 public class CustomizeKeyboardSchemeStepPanel extends AbstractCustomizeWizardStep {
   private boolean myInitial = true;
@@ -88,7 +89,7 @@ public class CustomizeKeyboardSchemeStepPanel extends AbstractCustomizeWizardSte
 
     KeymapManagerEx keymapManager = KeymapManagerEx.getInstanceEx();
     DefaultKeymap defaultKeymap = DefaultKeymap.getInstance();
-    Keymap[] keymaps = defaultKeymap.getKeymaps();
+    List<Keymap> keymaps = defaultKeymap.getKeymaps();
     for (Keymap keymap : keymaps) {
       if (keymapName.equals(keymap.getName())) {
         keymapManager.setActiveKeymap(keymap);

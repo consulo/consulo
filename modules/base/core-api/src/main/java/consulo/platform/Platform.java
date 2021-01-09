@@ -80,6 +80,10 @@ public interface Platform {
       return isUnix() && !isMac();
     }
 
+    boolean isKDE();
+
+    boolean isGNOME();
+
     @Nonnull
     default LineSeparator getLineSeparator() {
       if (isWindows()) {
@@ -175,7 +179,7 @@ public interface Platform {
       return baseName + "64" + "." + extension;
     }
 
-    if(jvm().isArm64()) {
+    if (jvm().isArm64()) {
       return baseName + "-arm64" + "." + extension;
     }
 

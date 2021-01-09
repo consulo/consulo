@@ -16,18 +16,16 @@
 package com.intellij.openapi.keymap.impl;
 
 import com.intellij.openapi.components.ServiceManager;
-import consulo.logging.Logger;
 import com.intellij.openapi.keymap.Keymap;
 import com.intellij.openapi.keymap.KeymapManager;
 import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.openapi.util.JDOMUtil;
-import com.intellij.openapi.util.SystemInfo;
-import org.jdom.Document;
-import org.jdom.Element;
-import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
+import consulo.logging.Logger;
+import consulo.platform.Platform;
 import jakarta.inject.Singleton;
+import org.jdom.Element;
 
+import javax.annotation.Nonnull;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -39,59 +37,68 @@ import java.util.List;
 public class DefaultKeymap {
   private static final Logger LOG = Logger.getInstance(DefaultKeymap.class);
 
-  @NonNls
   private static final String KEY_MAP = "keymap";
-  @NonNls
   private static final String NAME_ATTRIBUTE = "name";
 
-  private final ArrayList<Keymap> myKeymaps = new ArrayList<Keymap>();
+  private final List<Keymap> myKeymaps = new ArrayList<>();
 
   public static DefaultKeymap getInstance() {
     return ServiceManager.getService(DefaultKeymap.class);
   }
 
   public DefaultKeymap() {
-    for(BundledKeymapEP bundledKeymapEP : BundledKeymapEP.EP_NAME.getExtensions()) {
-        try {
-          InputStream inputStream = bundledKeymapEP.getLoaderForClass().getResourceAsStream(bundledKeymapEP.file + ".xml");
-          if(inputStream == null) {
-            LOG.warn("Keymap: " + bundledKeymapEP.file + " not found in " + bundledKeymapEP.getPluginDescriptor().getPluginId().getIdString());
-            continue;
-          }
-          Document document = JDOMUtil.loadDocument(inputStream);
+    for (BundledKeymapEP bundledKeymapEP : BundledKeymapEP.EP_NAME.getExtensionList()) {
+      try {
+        String file = bundledKeymapEP.file;
+        if (!file.endsWith(".xml")) {
+          file += ".xml";
+        }
 
-          loadKeymapsFromElement(document.getRootElement());
+        InputStream inputStream = bundledKeymapEP.getLoaderForClass().getResourceAsStream(file);
+        if (inputStream == null) {
+          LOG.warn("Keymap: " + file + " not found in " + bundledKeymapEP.getPluginDescriptor().getPluginId().getIdString());
+          continue;
         }
-        catch (Exception e) {
-          LOG.error(e);
-        }
+
+        loadKeymapsFromElement(JDOMUtil.load(inputStream));
+      }
+      catch (Exception e) {
+        LOG.error(e);
+      }
     }
   }
 
 
   private void loadKeymapsFromElement(final Element element) throws InvalidDataException {
-    final List<Element> children = element.getChildren();
-    for (Element child : children) {
-      if (KEY_MAP.equals(child.getName())) {
-        String keymapName = child.getAttributeValue(NAME_ATTRIBUTE);
-        DefaultKeymapImpl keymap = keymapName.startsWith(KeymapManager.MAC_OS_X_KEYMAP) ? new MacOSDefaultKeymap() : new DefaultKeymapImpl();
-        keymap.readExternal(child, myKeymaps.toArray(new Keymap[myKeymaps.size()]));
-        keymap.setName(keymapName);
-        myKeymaps.add(keymap);
-      }
+    if(!element.getName().equals(KEY_MAP)) {
+      throw new IllegalArgumentException("Expecting tag: " + KEY_MAP);
     }
+
+    String keymapName = element.getAttributeValue(NAME_ATTRIBUTE);
+    DefaultKeymapImpl keymap = keymapName.startsWith(KeymapManager.MAC_OS_X_KEYMAP) ? new MacOSDefaultKeymap() : new DefaultKeymapImpl();
+    keymap.readExternal(element, myKeymaps.toArray(new Keymap[myKeymaps.size()]));
+    keymap.setName(keymapName);
+    myKeymaps.add(keymap);
   }
 
-  public Keymap[] getKeymaps() {
-    return myKeymaps.toArray(new Keymap[myKeymaps.size()]);
+  public List<Keymap> getKeymaps() {
+    return myKeymaps;
   }
 
   @Nonnull
   public String getDefaultKeymapName() {
-    if (SystemInfo.isMac) {
-      return KeymapManager.MAC_OS_X_KEYMAP;
+    Platform.OperatingSystem os = Platform.current().os();
+
+    if (os.isMac()) {
+      return KeymapManager.MAC_OS_X_10_5_PLUS_KEYMAP;
     }
-    else if (SystemInfo.isXWindow) {
+    else if (os.isGNOME()) {
+      return KeymapManager.GNOME_KEYMAP;
+    }
+    else if (os.isKDE()) {
+      return KeymapManager.KDE_KEYMAP;
+    }
+    else if (os.isXWindow()) {
       return KeymapManager.X_WINDOW_KEYMAP;
     }
     else {

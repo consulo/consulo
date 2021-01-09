@@ -297,6 +297,10 @@ public class KeymapUtil {
    * @throws InvalidDataException if <code>keystrokeString</code> doesn't represent valid <code>MouseShortcut</code>.
    */
   public static MouseShortcut parseMouseShortcut(String keystrokeString) throws InvalidDataException {
+    if (keystrokeString.startsWith("Force touch")) {
+      return new PressureShortcut(2);
+    }
+
     int button = -1;
     int modifiers = 0;
     int clickCount = 1;

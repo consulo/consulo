@@ -26,6 +26,8 @@ public abstract class KeymapManager {
   public static final String DEFAULT_IDEA_KEYMAP = "$default";
   public static final String MAC_OS_X_KEYMAP = "Mac OS X";
   public static final String X_WINDOW_KEYMAP = "Default for XWin";
+  public static final String KDE_KEYMAP = "Default for KDE";
+  public static final String GNOME_KEYMAP = "Default for GNOME";
   public static final String MAC_OS_X_10_5_PLUS_KEYMAP = "Mac OS X 10.5+";
 
   private static final Supplier<KeymapManager> ourInstance = PerApplicationInstance.of(KeymapManager.class);

@@ -20,10 +20,7 @@ import consulo.util.lang.StringUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Properties;
+import java.util.*;
 
 /**
  * @author VISTALL
@@ -33,16 +30,24 @@ import java.util.Properties;
  */
 public abstract class PlatformBase implements Platform {
   private static final String OS_NAME = System.getProperty("os.name");
-  private static final String OS_VERSION = System.getProperty("os.version").toLowerCase();
+  private static final String OS_VERSION = System.getProperty("os.version").toLowerCase(Locale.ROOT);
   private static final String OS_ARCH = System.getProperty("os.arch");
   private static final String ARCH_DATA_MODEL = System.getProperty("sun.arch.data.model");
 
-  private static final String _OS_NAME = OS_NAME.toLowerCase();
+  private static final String _OS_NAME = OS_NAME.toLowerCase(Locale.ROOT);
   private static final boolean isWindows = _OS_NAME.startsWith("windows");
   private static final boolean isOS2 = _OS_NAME.startsWith("os/2") || _OS_NAME.startsWith("os2");
   private static final boolean isMac = _OS_NAME.startsWith("mac");
   private static final boolean isLinux = _OS_NAME.startsWith("linux");
   private static final boolean isUnix = !isWindows && !isOS2;
+
+  public static final boolean isXWindow = isUnix && !isMac;
+  /* http://askubuntu.com/questions/72549/how-to-determine-which-window-manager-is-running/227669#227669 */
+  public static final boolean isGNOME = isXWindow &&
+                                        (StringUtil.notNullize(System.getenv("GDMSESSION")).startsWith("gnome") ||
+                                         StringUtil.notNullize(System.getenv("XDG_CURRENT_DESKTOP")).toLowerCase(Locale.ROOT).endsWith("gnome"));
+  /* https://userbase.kde.org/KDE_System_Administration/Environment_Variables#KDE_FULL_SESSION */
+  public static final boolean isKDE = isXWindow && !StringUtil.isEmpty(System.getenv("KDE_FULL_SESSION"));
 
   // version numbers from http://msdn.microsoft.com/en-us/library/windows/desktop/ms724832.aspx
   private static final boolean isWin2kOrNewer = isWindows && isOsVersionAtLeast("5.0");
@@ -111,6 +116,16 @@ public abstract class PlatformBase implements Platform {
     @Override
     public boolean isLinux() {
       return isLinux;
+    }
+
+    @Override
+    public boolean isKDE() {
+      return isKDE;
+    }
+
+    @Override
+    public boolean isGNOME() {
+      return isGNOME;
     }
 
     @Nonnull

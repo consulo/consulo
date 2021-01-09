@@ -27,14 +27,12 @@ import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
+import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
-import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import jakarta.inject.Inject;
-
 import java.util.*;
 
 @State(name = "KeymapManager", storages = @Storage(file = StoragePathMacros.APP_CONFIG +
@@ -45,11 +43,9 @@ public class KeymapManagerImpl extends KeymapManagerEx implements PersistentStat
 
   private final List<KeymapManagerListener> myListeners = ContainerUtil.createLockFreeCopyOnWriteList();
   private String myActiveKeymapName;
-  private final Map<String, String> myBoundShortcuts = new HashMap<String, String>();
+  private final Map<String, String> myBoundShortcuts = new HashMap<>();
 
-  @NonNls
   private static final String ACTIVE_KEYMAP = "active_keymap";
-  @NonNls
   private static final String NAME_ATTRIBUTE = "name";
   private final SchemesManager<Keymap, KeymapImpl> mySchemesManager;
 
@@ -78,7 +74,7 @@ public class KeymapManagerImpl extends KeymapManagerEx implements PersistentStat
       }
     }, RoamingType.PER_USER);
 
-    Keymap[] keymaps = defaultKeymap.getKeymaps();
+    List<Keymap> keymaps = defaultKeymap.getKeymaps();
     for (Keymap keymap : keymaps) {
       addKeymap(keymap);
       String systemDefaultKeymap = defaultKeymap.getDefaultKeymapName();
@@ -94,7 +90,7 @@ public class KeymapManagerImpl extends KeymapManagerEx implements PersistentStat
 
   @Override
   public Keymap[] getAllKeymaps() {
-    List<Keymap> answer = new ArrayList<Keymap>();
+    List<Keymap> answer = new ArrayList<>();
     for (Keymap keymap : mySchemesManager.getAllSchemes()) {
       if (!keymap.getPresentableName().startsWith("$")) {
         answer.add(keymap);

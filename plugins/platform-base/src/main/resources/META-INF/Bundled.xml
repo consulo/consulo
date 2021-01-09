@@ -23,18 +23,18 @@
   </extensionPoints>
 
   <extensions defaultExtensionNs="com.intellij">
-    <bundledKeymap file="/keymap/Keymap_Default"/>
-    <bundledKeymap file="/keymap/Keymap_Mac"/>
-    <bundledKeymap file="/keymap/Keymap_MacClassic"/>
-    <bundledKeymap file="/keymap/Keymap_Emacs"/>
-    <bundledKeymap file="/keymap/Keymap_VisualStudio"/>
-    <bundledKeymap file="/keymap/Keymap_XWin"/>
-    <bundledKeymap file="/keymap/Keymap_GNOME"/>
-    <bundledKeymap file="/keymap/Keymap_KDE"/>
-    <bundledKeymap file="/keymap/Keymap_Eclipse"/>
-    <bundledKeymap file="/keymap/Keymap_EclipseMac"/>
-    <bundledKeymap file="/keymap/Keymap_Netbeans"/>
-    <bundledKeymap file="/keymap/JBuilderKeymap"/>
+    <bundledKeymap file="/keymap/Keymap_Default.xml"/>
+    <bundledKeymap file="/keymap/Keymap_DefaultXWin.xml"/>
+    <bundledKeymap file="/keymap/Keymap_DefaultGNOME.xml"/>
+    <bundledKeymap file="/keymap/Keymap_DefaultKDE.xml"/>
+    <bundledKeymap file="/keymap/Keymap_DefaultMac.xml"/>
+    <bundledKeymap file="/keymap/Keymap_MacClassic.xml"/>
+    <bundledKeymap file="/keymap/Keymap_Emacs.xml"/>
+    <bundledKeymap file="/keymap/Keymap_VisualStudio.xml"/>
+    <bundledKeymap file="/keymap/Keymap_VisualStudioForMac.xml"/>
+    <bundledKeymap file="/keymap/Keymap_Eclipse.xml"/>
+    <bundledKeymap file="/keymap/Keymap_EclipseMac.xml"/>
+    <bundledKeymap file="/keymap/Keymap_Netbeans.xml"/>
 
     <bundledColorScheme path="/colorSchemes/Default.xml"/>
     <bundledColorScheme path="/colorSchemes/IDEA.xml"/>
