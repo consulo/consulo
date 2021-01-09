@@ -1,16 +1,17 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.util.nodep.classloader;
 
+import consulo.util.nodep.ArrayUtilRt;
 import consulo.util.nodep.JavaVersion;
 import consulo.util.nodep.LoggerRt;
 import consulo.util.nodep.Pair;
 import consulo.util.nodep.io.FileUtilRt;
+import consulo.util.nodep.io.UnsyncByteArrayInputStream;
 import consulo.util.nodep.map.SimpleMultiMap;
 import consulo.util.nodep.reference.SoftReference;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -63,6 +64,24 @@ class JarLoader extends Loader {
         releaseZipFile(zipFile);
       }
     }
+  }
+
+  protected MemoryResource createMemoryResource(URL baseUrl, @Nonnull ZipFile zipFile, @Nonnull ZipEntry entry, @Nullable Map<Resource.Attribute, String> attributes) throws IOException {
+    String name = entry.getName();
+    URL url = new URL(baseUrl, name);
+
+    byte[] content = ArrayUtilRt.EMPTY_BYTE_ARRAY;
+    InputStream stream = zipFile.getInputStream(entry);
+    if (stream != null) {
+      try {
+        content = FileUtilRt.loadBytes(stream, (int)entry.getSize());
+      }
+      finally {
+        stream.close();
+      }
+    }
+
+    return new MemoryResource(url, content, attributes);
   }
 
   Map<Resource.Attribute, String> getAttributes() {
@@ -224,7 +243,7 @@ class JarLoader extends Loader {
     if (loader != null) {
       // remap always not null
       String remappedUrl = myRemapMultiVersions.get(name);
-      if(remappedUrl != null) {
+      if (remappedUrl != null) {
         name = remappedUrl;
       }
 
@@ -241,7 +260,7 @@ class JarLoader extends Loader {
       }
 
       String remappedUrl = remapMultiVersions.get(name);
-      if(remappedUrl != null) {
+      if (remappedUrl != null) {
         name = remappedUrl;
       }
 
@@ -345,7 +364,7 @@ class JarLoader extends Loader {
 
     @Override
     public InputStream getInputStream() throws IOException {
-      return new ByteArrayInputStream(getBytes());
+      return new UnsyncByteArrayInputStream(getBytes());
     }
 
     @Override

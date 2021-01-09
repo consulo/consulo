@@ -15,11 +15,11 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
 class MemoryResource extends Resource {
-  private final URL myUrl;
+  protected final URL myUrl;
   private final byte[] myContent;
   private final Map<Resource.Attribute, String> myAttributes;
 
-  private MemoryResource(URL url, byte[] content, Map<Resource.Attribute, String> attributes) {
+   MemoryResource(URL url, byte[] content, Map<Resource.Attribute, String> attributes) {
     myUrl = url;
     myContent = content;
     myAttributes = attributes;

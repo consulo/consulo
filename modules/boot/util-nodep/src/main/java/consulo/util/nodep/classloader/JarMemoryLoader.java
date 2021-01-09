@@ -30,16 +30,14 @@ public class JarMemoryLoader {
   }
 
   @Nonnull
-  static JarMemoryLoader load(ZipFile zipFile, URL baseUrl, @Nullable JarLoader attributesProvider) throws IOException {
+  static JarMemoryLoader load(ZipFile zipFile, URL baseUrl, @Nonnull JarLoader attributesProvider) throws IOException {
     Enumeration<? extends ZipEntry> entries = zipFile.entries();
     if (!entries.hasMoreElements()) return EMPTY;
 
     Map<String, Resource> resources = new HashMap<String, Resource>();
     while (entries.hasMoreElements()) {
       ZipEntry entry = entries.nextElement();
-
-      MemoryResource resource = MemoryResource.load(baseUrl, zipFile, entry, attributesProvider != null ? attributesProvider.getAttributes() : null);
-
+      MemoryResource resource = attributesProvider.createMemoryResource(baseUrl, zipFile, entry, attributesProvider.getAttributes());
       resources.put(entry.getName(), resource);
     }
     return new JarMemoryLoader(resources);

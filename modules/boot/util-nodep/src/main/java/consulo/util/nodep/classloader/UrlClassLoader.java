@@ -355,6 +355,11 @@ public class UrlClassLoader extends ClassLoader {
     return null;
   }
 
+  // java 9 module method. we can't use override annotation here
+  protected URL findResource(String moduleName, String name) throws IOException {
+    return findResource(name);
+  }
+
   @Nullable
   protected final Class _findClass(@Nonnull String name) {
     Resource res = getClassPath().getResource(name.replace('.', '/') + CLASS_EXTENSION);

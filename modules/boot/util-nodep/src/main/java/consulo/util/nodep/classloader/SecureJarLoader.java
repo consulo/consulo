@@ -1,6 +1,7 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.util.nodep.classloader;
 
+import consulo.util.nodep.ArrayUtilRt;
 import consulo.util.nodep.io.FileUtilRt;
 
 import javax.annotation.Nonnull;
@@ -8,9 +9,11 @@ import javax.annotation.Nullable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.security.CodeSigner;
 import java.security.CodeSource;
 import java.security.Permissions;
 import java.security.ProtectionDomain;
+import java.util.Map;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.zip.ZipEntry;
@@ -26,6 +29,28 @@ class SecureJarLoader extends JarLoader {
   }
 
   @Override
+  protected MemoryResource createMemoryResource(URL baseUrl, @Nonnull ZipFile zipFile, @Nonnull ZipEntry entry, @Nullable Map<Resource.Attribute, String> attributes) throws IOException {
+    String name = entry.getName();
+    URL url = new URL(baseUrl, name);
+
+    byte[] content = ArrayUtilRt.EMPTY_BYTE_ARRAY;
+    InputStream stream = zipFile.getInputStream(entry);
+    if (stream != null) {
+      try {
+        content = FileUtilRt.loadBytes(stream, (int)entry.getSize());
+      }
+      finally {
+        stream.close();
+      }
+    }
+
+    JarEntry jarEntry = (JarEntry)entry;
+
+    CodeSigner[] codeSigners = jarEntry.getCodeSigners();
+    return new MySecureMemoryResource(url, content, attributes, codeSigners);
+  }
+
+  @Override
   protected Resource instantiateResource(URL url, ZipEntry entry) throws IOException {
     return new MySecureResource(url, (JarEntry)entry);
   }
@@ -34,6 +59,28 @@ class SecureJarLoader extends JarLoader {
   @Override
   protected ZipFile createZipFile(String path) throws IOException {
     return new JarFile(path);
+  }
+
+  private class MySecureMemoryResource extends MemoryResource {
+    private final CodeSigner[] myCodeSigners;
+
+    MySecureMemoryResource(URL url, byte[] content, Map<Attribute, String> attributes, CodeSigner[] codeSigners) {
+      super(url, content, attributes);
+      myCodeSigners = codeSigners;
+    }
+
+    @Nullable
+    @Override
+    public ProtectionDomain getProtectionDomain() {
+      synchronized (myProtectionDomainMonitor) {
+        if (myProtectionDomain == null) {
+          CodeSource codeSource = new CodeSource(myUrl, myCodeSigners);
+          myProtectionDomain = new ProtectionDomain(codeSource, new Permissions());
+        }
+
+        return myProtectionDomain;
+      }
+    }
   }
 
   private class MySecureResource extends JarLoader.MyResource {
