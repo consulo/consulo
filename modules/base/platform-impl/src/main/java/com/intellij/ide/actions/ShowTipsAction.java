@@ -35,6 +35,6 @@ public class ShowTipsAction extends AnAction implements DumbAware {
   @RequiredUIAccess
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
-    myManager.show();
+    myManager.showAsync();
   }
 }

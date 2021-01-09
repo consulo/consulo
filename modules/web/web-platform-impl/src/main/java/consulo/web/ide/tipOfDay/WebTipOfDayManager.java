@@ -36,7 +36,7 @@ public class WebTipOfDayManager implements TipOfDayManager {
 
   @RequiredUIAccess
   @Override
-  public void show() {
+  public void showAsync() {
     
   }
 }

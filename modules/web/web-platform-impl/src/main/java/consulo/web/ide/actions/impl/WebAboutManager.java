@@ -18,6 +18,7 @@ package consulo.web.ide.actions.impl;
 import consulo.ide.actions.AboutManager;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.Window;
+import jakarta.inject.Singleton;
 
 import javax.annotation.Nullable;
 
@@ -25,9 +26,10 @@ import javax.annotation.Nullable;
  * @author VISTALL
  * @since 2019-05-09
  */
+@Singleton
 public class WebAboutManager implements AboutManager {
   @RequiredUIAccess
   @Override
-  public void showAbout(@Nullable Window parentWindow) {
+  public void showAsync(@Nullable Window parentWindow) {
   }
 }

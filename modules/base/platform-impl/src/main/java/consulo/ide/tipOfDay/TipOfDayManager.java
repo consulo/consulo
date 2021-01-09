@@ -35,5 +35,5 @@ public interface TipOfDayManager {
    * Force show tip dialog without any checks
    */
   @RequiredUIAccess
-  void show();
+  void showAsync();
 }

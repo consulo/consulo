@@ -52,7 +52,7 @@ public class TopMenuInitializer {
 
         AboutManager aboutManager = application.getComponent(AboutManager.class);
         
-        aboutManager.showAbout(window);
+        aboutManager.showAsync(window);
       });
     }
 

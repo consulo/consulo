@@ -24,7 +24,6 @@ import com.intellij.openapi.roots.ui.OrderRootTypeUIFactory;
 import com.intellij.ui.TabbedPaneWrapper;
 import com.intellij.ui.navigation.History;
 import com.intellij.ui.navigation.Place;
-import consulo.logging.Logger;
 import consulo.util.concurrent.AsyncResult;
 
 import javax.annotation.Nonnull;

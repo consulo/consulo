@@ -26,5 +26,5 @@ import javax.annotation.Nullable;
  */
 public interface AboutManager {
   @RequiredUIAccess
-  void showAbout(@Nullable Window parentWindow);
+  void showAsync(@Nullable Window parentWindow);
 }

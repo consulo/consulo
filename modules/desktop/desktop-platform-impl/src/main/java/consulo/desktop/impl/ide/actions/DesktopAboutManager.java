@@ -31,7 +31,7 @@ import javax.annotation.Nullable;
 public class DesktopAboutManager implements AboutManager {
   @RequiredUIAccess
   @Override
-  public void showAbout(@Nullable Window parentWindow) {
+  public void showAsync(@Nullable Window parentWindow) {
     new AboutNewDialog().showAsync();
   }
 }
