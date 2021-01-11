@@ -31,6 +31,10 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 abstract class BaseShowDiffAction extends AnAction implements DumbAware {
+  BaseShowDiffAction() {
+    setEnabledInModalContext(true);
+  }
+
   @RequiredUIAccess
   @Override
   public void update(@Nonnull AnActionEvent e) {

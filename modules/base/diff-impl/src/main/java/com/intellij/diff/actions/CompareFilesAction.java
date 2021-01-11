@@ -23,14 +23,17 @@ import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.fileChooser.FileChooser;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.project.Project;
-import consulo.util.dataholder.Key;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
-import consulo.ui.annotation.RequiredUIAccess;
+import com.intellij.util.containers.ContainerUtil;
 import consulo.fileTypes.ArchiveFileType;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.util.dataholder.Key;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Arrays;
+import java.util.Set;
 
 public class CompareFilesAction extends BaseShowDiffAction {
   public static final Key<DiffRequest> DIFF_REQUEST = Key.create("CompareFilesAction.DiffRequest");
@@ -85,15 +88,16 @@ public class CompareFilesAction extends BaseShowDiffAction {
       return false;
     }
 
-    if (files.length == 1) {
-      return hasContent(files[0]);
+    if (files.length == 0 || files.length > 3) return false;
+    boolean hasContent = ContainerUtil.all(Arrays.asList(files), BaseShowDiffAction::hasContent);
+    if (!hasContent) return false;
+
+    if (files.length == 3) {
+      Set<Type> types = ContainerUtil.map2Set(files, CompareFilesAction::getType);
+      if (types.contains(Type.DIRECTORY) || types.contains(Type.ARCHIVE)) return false;
     }
-    else if (files.length == 2) {
-      return hasContent(files[0]) && hasContent(files[1]);
-    }
-    else {
-      return false;
-    }
+
+    return true;
   }
 
   @Nullable
