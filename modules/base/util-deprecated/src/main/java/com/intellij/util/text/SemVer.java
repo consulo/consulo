@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 JetBrains s.r.o.
+ * Copyright 2000-2019 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,25 +15,41 @@
  */
 package com.intellij.util.text;
 
+import com.intellij.openapi.util.text.StringUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import java.util.regex.Pattern;
+import java.util.Objects;
+
+import static com.intellij.openapi.util.text.StringUtil.isNotNegativeNumber;
 
 /**
- * See http://semver.org
- *
- * @author Sergey Simonchik
+ * Holds <a href="http://semver.org">Semantic Version</a>.
  */
-public class SemVer {
+public final class SemVer implements Comparable<SemVer> {
+
+  private final String myRawVersion;
   private final int myMajor;
   private final int myMinor;
   private final int myPatch;
+  @Nullable
+  private final String myPreRelease;
 
-  public SemVer(int major, int minor, int patch) {
+  public SemVer(@Nonnull String rawVersion, int major, int minor, int patch) {
+    this(rawVersion, major, minor, patch, null);
+  }
+
+  public SemVer(@Nonnull String rawVersion, int major, int minor, int patch, @Nullable String preRelease) {
+    myRawVersion = rawVersion;
     myMajor = major;
     myMinor = minor;
     myPatch = patch;
+    myPreRelease = preRelease;
+  }
+
+  @Nonnull
+  public String getRawVersion() {
+    return myRawVersion;
   }
 
   public int getMajor() {
@@ -48,18 +64,47 @@ public class SemVer {
     return myPatch;
   }
 
+  @Nullable
+  public String getPreRelease() {
+    return myPreRelease;
+  }
+
+  @Nonnull
+  public String getParsedVersion() {
+    return myMajor + "." + myMinor + "." + myPatch + (myPreRelease != null ? "-" + myPreRelease : "");
+  }
+
+  @Override
+  public int compareTo(SemVer other) {
+    int diff = myMajor - other.myMajor;
+    if (diff != 0) return diff;
+
+    diff = myMinor - other.myMinor;
+    if (diff != 0) return diff;
+
+    diff = myPatch - other.myPatch;
+    if (diff != 0) return diff;
+
+    return comparePrerelease(myPreRelease, other.myPreRelease);
+  }
+
+  public boolean isGreaterOrEqualThan(int major, int minor, int patch) {
+    if (myMajor != major) return myMajor > major;
+    if (myMinor != minor) return myMinor > minor;
+    return myPatch >= patch;
+  }
+
+  public boolean isGreaterOrEqualThan(@Nonnull SemVer version) {
+    return compareTo(version) >= 0;
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
 
     SemVer semVer = (SemVer)o;
-
-    if (myMajor != semVer.myMajor) return false;
-    if (myMinor != semVer.myMinor) return false;
-    if (myPatch != semVer.myPatch) return false;
-
-    return true;
+    return myMajor == semVer.myMajor && myMinor == semVer.myMinor && myPatch == semVer.myPatch && Objects.equals(myPreRelease, semVer.myPreRelease);
   }
 
   @Override
@@ -67,31 +112,100 @@ public class SemVer {
     int result = myMajor;
     result = 31 * result + myMinor;
     result = 31 * result + myPatch;
+    if (myPreRelease != null) {
+      result = 31 * result + myPreRelease.hashCode();
+    }
     return result;
   }
 
+  @Override
+  public String toString() {
+    return myRawVersion;
+  }
+
+  private static int comparePrerelease(@Nullable String pre1, @Nullable String pre2) {
+    if (pre1 == null) {
+      return pre2 == null ? 0 : 1;
+    }
+    else if (pre2 == null) {
+      return -1;
+    }
+    int length1 = pre1.length();
+    int length2 = pre2.length();
+
+    if (length1 == length2 && pre1.equals(pre2)) return 0;
+
+    int start1 = 0;
+    int start2 = 0;
+    int diff;
+
+    // compare each segment separately
+    do {
+      int end1 = pre1.indexOf('.', start1);
+      int end2 = pre2.indexOf('.', start2);
+
+      if (end1 < 0) end1 = length1;
+      if (end2 < 0) end2 = length2;
+
+
+      CharSequence segment1 = new CharSequenceSubSequence(pre1, start1, end1);
+      CharSequence segment2 = new CharSequenceSubSequence(pre2, start2, end2);
+      if (isNotNegativeNumber(segment1)) {
+        if (!isNotNegativeNumber(segment2)) {
+          // According to SemVer specification numeric segments has lower precedence
+          // than non-numeric segments
+          return -1;
+        }
+        diff = compareNumeric(segment1, segment2);
+      }
+      else if (isNotNegativeNumber(segment2)) {
+        return 1;
+      }
+      else {
+        diff = StringUtil.compare(segment1, segment2, false);
+      }
+      start1 = end1 + 1;
+      start2 = end2 + 1;
+    }
+    while (diff == 0 && start1 < length1 && start2 < length2);
+
+    if (diff != 0) return diff;
+
+    return start1 < length1 ? 1 : -1;
+  }
+
+  private static int compareNumeric(CharSequence segment1, CharSequence segment2) {
+    int length1 = segment1.length();
+    int length2 = segment2.length();
+    int diff = Integer.compare(length1, length2);
+    for (int i = 0; i < length1 && diff == 0; i++) {
+      diff = segment1.charAt(i) - segment2.charAt(i);
+    }
+    return diff;
+  }
+
   @Nullable
-  public static SemVer parseFromText(@Nonnull String text) {
-    String[] comps = text.split(Pattern.quote("."), 3);
-    if (comps.length != 3) {
-      return null;
+  public static SemVer parseFromText(@Nullable String text) {
+    if (text != null) {
+      int majorEndIdx = text.indexOf('.');
+      if (majorEndIdx >= 0) {
+        int minorEndIdx = text.indexOf('.', majorEndIdx + 1);
+        if (minorEndIdx >= 0) {
+          int preReleaseIdx = text.indexOf('-', minorEndIdx + 1);
+          int patchEndIdx = preReleaseIdx >= 0 ? preReleaseIdx : text.length();
+
+          int major = StringUtil.parseInt(text.substring(0, majorEndIdx), -1);
+          int minor = StringUtil.parseInt(text.substring(majorEndIdx + 1, minorEndIdx), -1);
+          int patch = StringUtil.parseInt(text.substring(minorEndIdx + 1, patchEndIdx), -1);
+          String preRelease = preReleaseIdx >= 0 ? text.substring(preReleaseIdx + 1) : null;
+
+          if (major >= 0 && minor >= 0 && patch >= 0) {
+            return new SemVer(text, major, minor, patch, preRelease);
+          }
+        }
+      }
     }
-    Integer major = toInteger(comps[0]);
-    Integer minor = toInteger(comps[1]);
-    Integer patch = toInteger(comps[2]);
-    if (major != null && minor != null && patch != null) {
-      return new SemVer(major, minor, patch);
-    }
+
     return null;
   }
-
-  private static Integer toInteger(@Nonnull String str) {
-    try {
-      return Integer.parseInt(str);
-    }
-    catch (NumberFormatException e) {
-      return null;
-    }
-  }
-
 }
