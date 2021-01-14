@@ -57,7 +57,7 @@ import java.util.function.Predicate;
  * @since 07-Nov-16
  */
 public class PlatformOrPluginDialog extends DialogWrapper {
-  private static final Logger LOGGER = Logger.getInstance(PlatformOrPluginDialog.class);
+  private static final Logger LOG = Logger.getInstance(PlatformOrPluginDialog.class);
 
   private class OurPluginColumnInfo extends PluginManagerColumnInfo {
     public OurPluginColumnInfo(PluginTableModel model) {
@@ -250,7 +250,7 @@ public class PlatformOrPluginDialog extends DialogWrapper {
           throw e;
         }
         catch (Exception e) {
-          LOGGER.error(e);
+          LOG.error(e);
         }
       }
 

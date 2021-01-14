@@ -239,10 +239,6 @@ public class PluginManagerColumnInfo extends ColumnInfo<PluginDescriptor, String
     }
   }
 
-  protected static Font getNameFont() {
-    return UIUtil.getLabelFont();
-  }
-
   @Override
   public TableCellRenderer getRenderer(PluginDescriptor o) {
     if (columnIdx == COLUMN_RATE) {

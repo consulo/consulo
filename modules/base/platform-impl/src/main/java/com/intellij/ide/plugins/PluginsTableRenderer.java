@@ -16,16 +16,19 @@
 package com.intellij.ide.plugins;
 
 import com.intellij.ide.IdeBundle;
-import com.intellij.ide.ui.UISettings;
 import com.intellij.openapi.application.ApplicationNamesInfo;
-import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vcs.FileStatus;
 import com.intellij.ui.Gray;
 import com.intellij.ui.JBColor;
+import com.intellij.ui.SimpleColoredComponent;
+import com.intellij.ui.components.JBLabel;
+import com.intellij.ui.components.panels.HorizontalLayout;
+import com.intellij.ui.components.panels.VerticalLayout;
 import com.intellij.util.text.DateFormatUtil;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
+import com.intellij.util.ui.components.BorderLayoutPanel;
 import consulo.awt.TargetAWT;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginId;
@@ -43,41 +46,71 @@ import java.util.Set;
  * @author Konstantin Bulenkov
  */
 public class PluginsTableRenderer extends DefaultTableCellRenderer {
-  protected JLabel myName;
-  private JLabel myStatus;
+  protected SimpleColoredComponent myName;
+  private JBLabel myStatus;
   protected RatesPanel myRating;
   protected JLabel myDownloads;
   private JLabel myLastUpdated;
-  private JPanel myPanel;
+  private BorderLayoutPanel myPanel;
 
   protected JLabel myCategory;
-  private JPanel myRightPanel;
-  private JPanel myBottomPanel;
-  private JPanel myInfoPanel;
   private final PluginDescriptor myPluginDescriptor;
 
   public PluginsTableRenderer(PluginDescriptor pluginDescriptor, boolean availableRender) {
     myPluginDescriptor = pluginDescriptor;
 
-    final Font smallFont;
-    if (SystemInfo.isMac) {
-      smallFont = UIUtil.getLabelFont(UIUtil.FontSize.MINI);
-    }
-    else {
-      smallFont = UIUtil.getLabelFont().deriveFont(Math.max(UISettings.getInstance().getFontSize() - JBUI.scale(3), JBUI.scaleFontSize(10)));
-    }
-    myName.setFont(UIUtil.getLabelFont().deriveFont(UISettings.getInstance().getFontSize()));
-    myStatus.setFont(smallFont);
+    myPanel = new BorderLayoutPanel();
+
+    myStatus = new JBLabel();
+    myStatus.setOpaque(false);
+
+    myPanel.addToLeft(myStatus);
+
+    JPanel nameAndCategory = new JPanel(new VerticalLayout(JBUI.scale(5)));
+    nameAndCategory.setBorder(JBUI.Borders.empty(0, 5));
+    nameAndCategory.setOpaque(false);
+    nameAndCategory.add(myName = new SimpleColoredComponent());
+    nameAndCategory.add(myCategory = new JBLabel());
+
+    myName.setOpaque(false);
+    myCategory.setOpaque(false);
+
+    myPanel.addToCenter(nameAndCategory);
+
+    BorderLayoutPanel rightPanel = new BorderLayoutPanel();
+    rightPanel.setOpaque(false);
+    myPanel.addToRight(rightPanel);
+
+    myLastUpdated = new JBLabel();
+    myLastUpdated.setOpaque(false);
+
+    myDownloads = new JBLabel();
+    myRating = new RatesPanel();
+
+    rightPanel.addToTop(myRating);
+
+    myName.setFont(UIUtil.getLabelFont(UIUtil.FontSize.BIGGER));
+    myName.setIpad(JBUI.emptyInsets());
+    myName.setMyBorder(null);
+
+    JPanel rightBottom = new JPanel(new HorizontalLayout(JBUI.scale(5)));
+    rightBottom.setOpaque(false);
+    rightPanel.addToBottom(rightBottom);
+
+    rightBottom.add(myLastUpdated);
+    rightBottom.add(myDownloads);
+
+    final Font smallFont = UIUtil.getLabelFont(UIUtil.FontSize.MINI);
     myCategory.setFont(smallFont);
     myDownloads.setFont(smallFont);
     myStatus.setText("");
     myCategory.setText("");
     myLastUpdated.setFont(smallFont);
     if (!availableRender || !(pluginDescriptor instanceof PluginNode)) {
-      myPanel.remove(myRightPanel);
+      myPanel.remove(rightPanel);
     }
 
-    myPanel.setBorder(UIUtil.isJreHiDPI(myPanel) ? JBUI.Borders.empty(4, 3) : JBUI.Borders.empty(2, 3));
+    myPanel.setBorder(JBUI.Borders.empty(5));
   }
 
   @Override
@@ -86,14 +119,14 @@ public class PluginsTableRenderer extends DefaultTableCellRenderer {
       return myPanel;
     }
 
-    myName.setText(myPluginDescriptor.getName() + "  ");
+    myName.append(myPluginDescriptor.getName() + "  ");
 
     final Color fg = UIUtil.getTableForeground(isSelected);
     final Color bg = UIUtil.getTableBackground(isSelected);
     final Color grayedFg = isSelected ? fg : new JBColor(Gray._130, Gray._120);
     myName.setForeground(fg);
     myStatus.setForeground(grayedFg);
-    myStatus.setIcon(TargetAWT.to(PluginIconHolder.get(myPluginDescriptor)));
+    myStatus.setIcon(PluginIconHolder.get(myPluginDescriptor));
     String category = myPluginDescriptor.getCategory();
     myCategory.setForeground(grayedFg);
     myCategory.setText(category.toUpperCase() + " ");

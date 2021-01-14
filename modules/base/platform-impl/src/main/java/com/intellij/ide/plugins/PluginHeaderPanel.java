@@ -17,14 +17,18 @@ package com.intellij.ide.plugins;
 
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.ApplicationNamesInfo;
 import com.intellij.openapi.application.ex.ApplicationEx;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.ui.Gray;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.components.JBLabel;
+import com.intellij.ui.components.JBTextArea;
+import com.intellij.ui.components.panels.HorizontalLayout;
+import com.intellij.ui.components.panels.VerticalLayout;
 import com.intellij.util.text.DateFormatUtil;
+import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
+import com.intellij.util.ui.components.BorderLayoutPanel;
 import consulo.awt.TargetAWT;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginIds;
@@ -42,9 +46,8 @@ public class PluginHeaderPanel {
 
   @Nullable
   private final PluginManagerMain myManager;
-  private final JTable myPluginTable;
   private JBLabel myCategory;
-  private JBLabel myName;
+  private JTextArea myName;
   private JBLabel myDownloads;
   private RatesPanel myRating;
   private JBLabel myUpdated;
@@ -65,21 +68,9 @@ public class PluginHeaderPanel {
   private ACTION_ID myActionId = ACTION_ID.INSTALL;
 
   public PluginHeaderPanel(@Nullable PluginManagerMain manager, JTable pluginTable) {
+    initComponents();
+    
     myManager = manager;
-    myPluginTable = pluginTable;
-    final Font font = myName.getFont();
-    myName.setFont(new Font(font.getFontName(), font.getStyle(), font.getSize() + 2));
-    final JBColor greyed = new JBColor(Gray._130, Gray._200);
-    myCategory.setForeground(greyed);
-    myDownloads.setForeground(greyed);
-    myUpdated.setForeground(greyed);
-    myVersion.setForeground(greyed);
-    final Font smallFont = new Font(font.getFontName(), font.getStyle(), font.getSize() - 1);
-    myCategory.setFont(smallFont);
-    myVersion.setFont(smallFont);
-    myDownloads.setFont(smallFont);
-    myUpdated.setFont(smallFont);
-    myRoot.setVisible(false);
   }
 
   public void setPlugin(PluginDescriptor plugin) {
@@ -154,13 +145,13 @@ public class PluginHeaderPanel {
 
     switch (myActionId) {
       case INSTALL:
-        myInstallButton.setText("Install plugin");
+        myInstallButton.setText("Install");
         break;
       case UNINSTALL:
-        myInstallButton.setText("Uninstall plugin");
+        myInstallButton.setText("Uninstall");
         break;
       case RESTART:
-        myInstallButton.setText("Restart " + ApplicationNamesInfo.getInstance().getFullProductName());
+        myInstallButton.setText("Restart");
         break;
     }
 
@@ -178,8 +169,47 @@ public class PluginHeaderPanel {
     }
   }
 
-  private void createUIComponents() {
+  private void initComponents() {
+    myRoot = new JPanel(new VerticalLayout(JBUI.scale(5)));
+    myRoot.setOpaque(false);
+    
+    myIconLabel = new JBLabel();
+    myName = new JBTextArea();
+    myName.setBorder(JBUI.Borders.empty());
+    myName.setOpaque(false);
+    myName.setLineWrap(true);
+    myName.setWrapStyleWord(true);
+    myName.setEditable(false);
+    myName.setBorder(JBUI.Borders.empty(0, 5));
+    myName.setFont(UIUtil.getLabelFont(UIUtil.FontSize.BIGGER));
+
     myInstallButton = new JButton();
+    myInstallButton.setOpaque(false);
+
+    JPanel buttonPanel = new JPanel(new VerticalLayout(JBUI.scale(5)));
+    buttonPanel.setOpaque(false);
+    buttonPanel.add(myInstallButton);
+
+    myRoot.add(new BorderLayoutPanel().addToLeft(myIconLabel).addToCenter(myName).addToRight(buttonPanel).andTransparent());
+
+    myCategory = new JBLabel();
+    myExperimentalLabel = new JBLabel();
+    myRoot.add(new BorderLayoutPanel().addToLeft(myCategory).addToRight(myExperimentalLabel).andTransparent());
+
+    myDownloadsPanel = new JPanel(new HorizontalLayout(JBUI.scale(5)));
+    myDownloadsPanel.setOpaque(false);
+    myDownloadsPanel.add(myRating = new RatesPanel());
+    myDownloadsPanel.add(myDownloads = new JBLabel());
+    myRoot.add(myDownloadsPanel);
+
+    myUpdated = new JBLabel();
+    myVersion = new JBLabel();
+    
+    myVersionInfoPanel = new JPanel(new HorizontalLayout(JBUI.scale(5)));
+    myVersionInfoPanel.setOpaque(false);
+    myVersionInfoPanel.add(myUpdated);
+    myVersionInfoPanel.add(myVersion);
+    myRoot.add(myVersionInfoPanel);
 
     myInstallButton.addActionListener(e -> {
       switch (myActionId) {
@@ -203,13 +233,25 @@ public class PluginHeaderPanel {
       }
       setPlugin(myPlugin);
     });
+
+    final JBColor greyed = new JBColor(Gray._130, Gray._200);
+    myCategory.setForeground(greyed);
+    myDownloads.setForeground(greyed);
+    myUpdated.setForeground(greyed);
+    myVersion.setForeground(greyed);
+    final Font smallFont = UIUtil.getLabelFont(UIUtil.FontSize.SMALL);
+    myCategory.setFont(smallFont);
+    myVersion.setFont(smallFont);
+    myDownloads.setFont(smallFont);
+    myUpdated.setFont(smallFont);
+    myRoot.setVisible(false);
   }
 
   public JBLabel getCategory() {
     return myCategory;
   }
 
-  public JBLabel getName() {
+  public JTextArea getName() {
     return myName;
   }
 
