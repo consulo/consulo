@@ -20,6 +20,7 @@ import com.intellij.idea.StartupUtil;
 import com.intellij.openapi.application.ApplicationNamesInfo;
 import com.intellij.openapi.extensions.impl.PluginExtensionInitializationException;
 import com.intellij.openapi.progress.ProcessCanceledException;
+import consulo.annotation.DeprecationInfo;
 import consulo.annotation.UsedInPlugin;
 import consulo.application.ApplicationProperties;
 import consulo.container.ExitCodes;
@@ -40,6 +41,8 @@ import java.io.StringWriter;
 /**
  * @author mike
  */
+@Deprecated
+@DeprecationInfo("Use consulo.container.plugin.PluginManager")
 public class PluginManager extends PluginManagerCore {
   private static class LoggerHolder {
     private static final Logger ourLogger = Logger.getInstance(PluginManagerCore.class);

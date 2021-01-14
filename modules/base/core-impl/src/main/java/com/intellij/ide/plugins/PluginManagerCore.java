@@ -34,6 +34,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+@Deprecated
+@DeprecationInfo("Use consulo.container.plugin.PluginManager")
 public class PluginManagerCore {
   public static final String CORE_PLUGIN_ID = "com.intellij";
   public static final PluginId CORE_PLUGIN = PluginIds.CONSULO_PLATFORM_BASE;
