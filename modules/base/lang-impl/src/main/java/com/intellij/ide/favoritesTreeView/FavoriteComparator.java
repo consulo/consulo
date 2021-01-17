@@ -5,16 +5,15 @@
  */
 package com.intellij.ide.favoritesTreeView;
 
-import com.intellij.ide.projectView.ProjectView;
 import com.intellij.ide.projectView.impl.GroupByTypeComparator;
 import com.intellij.ide.util.treeView.NodeDescriptor;
 
 /**
  * @author Konstantin Bulenkov
  */
-public class FavoritesComparator extends GroupByTypeComparator {
-  public FavoritesComparator(ProjectView view, String id) {
-    super(view, id);
+final class FavoriteComparator extends GroupByTypeComparator {
+  public FavoriteComparator() {
+    super(null, FavoritesViewTreeBuilder.ID);
   }
 
   @Override

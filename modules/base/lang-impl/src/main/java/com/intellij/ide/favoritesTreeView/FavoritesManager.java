@@ -22,101 +22,89 @@ import com.intellij.ide.projectView.impl.*;
 import com.intellij.ide.projectView.impl.nodes.LibraryGroupElement;
 import com.intellij.ide.projectView.impl.nodes.NamedLibraryElement;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.components.ProjectComponent;
-import com.intellij.openapi.extensions.Extensions;
+import com.intellij.openapi.components.PersistentStateComponent;
+import com.intellij.openapi.components.State;
+import com.intellij.openapi.components.Storage;
+import com.intellij.openapi.components.StoragePathMacros;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtil;
-import com.intellij.openapi.project.DumbAwareRunnable;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ContentIterator;
 import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.roots.ProjectFileIndex;
 import com.intellij.openapi.roots.ProjectRootManager;
-import com.intellij.openapi.startup.StartupManager;
 import com.intellij.openapi.ui.InputValidator;
 import com.intellij.openapi.ui.Messages;
-import com.intellij.openapi.util.*;
+import com.intellij.openapi.util.DefaultJDOMExternalizer;
+import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.*;
 import com.intellij.psi.util.PsiUtilBase;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.Consumer;
-import com.intellij.util.Function;
+import com.intellij.util.EventDispatcher;
 import com.intellij.util.TreeItem;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.Convertor;
 import consulo.disposer.Disposable;
-import consulo.disposer.Disposer;
 import consulo.roots.types.BinariesOrderRootType;
-import org.jdom.Element;
-import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
-
-import javax.annotation.Nullable;
+import consulo.ui.annotation.RequiredUIAccess;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
+import org.jdom.Element;
+import org.jetbrains.annotations.NonNls;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.*;
 
-import static com.intellij.ide.favoritesTreeView.FavoritesListProvider.EP_NAME;
-
 @Singleton
-public class FavoritesManager implements ProjectComponent, JDOMExternalizable {
-  private final ArrayList<String> myListOrder = new ArrayList<String>();
+@State(name = "FavoritesManager", storages = @Storage(StoragePathMacros.WORKSPACE_FILE))
+public class FavoritesManager implements PersistentStateComponent<Element> {
+  private final ArrayList<String> myListOrder = new ArrayList<>();
   // fav list name -> list of (root: root url, root class)
-  private final Map<String, List<TreeItem<Pair<AbstractUrl, String>>>> myName2FavoritesRoots =
-          new TreeMap<String, List<TreeItem<Pair<AbstractUrl, String>>>>(new Comparator<String>() {
-            @Override
-            public int compare(String o1, String o2) {
-              return myListOrder.indexOf(o1) - myListOrder.indexOf(o2);
-            }
-          });
-  private final Map<String, String> myDescriptions = new HashMap<String, String>();
+  private final Map<String, List<TreeItem<Pair<AbstractUrl, String>>>> myName2FavoritesRoots = new TreeMap<>((o1, o2) -> myListOrder.indexOf(o1) - myListOrder.indexOf(o2));
+  private final Map<String, String> myDescriptions = new HashMap<>();
   private final Project myProject;
-  private final List<FavoritesListener> myListeners = ContainerUtil.createLockFreeCopyOnWriteList();
+  private final EventDispatcher<FavoritesListener> myListeners = EventDispatcher.create(FavoritesListener.class);
   private final FavoritesViewSettings myViewSettings = new FavoritesViewSettings();
-  private final Map<String, FavoritesListProvider> myProviders = new HashMap<String, FavoritesListProvider>();
+
+  @Nullable
+  private Map<String, FavoritesListProvider> myProviders;
 
   private void rootsChanged() {
-    for (FavoritesListener listener : myListeners) {
-      listener.rootsChanged();
-    }
+    myListeners.getMulticaster().rootsChanged();
   }
 
   private void listAdded(String listName) {
-    for (FavoritesListener listener : myListeners) {
-      listener.listAdded(listName);
-    }
+    myListeners.getMulticaster().listAdded(listName);
   }
 
   private void listRemoved(String listName) {
-    for (FavoritesListener listener : myListeners) {
-      listener.listRemoved(listName);
-    }
+    myListeners.getMulticaster().listRemoved(listName);
   }
 
   public void renameList(final Project project, @Nonnull String listName) {
-    final String newName = Messages.showInputDialog(project, IdeBundle.message("prompt.input.favorites.list.new.name", listName),
-                                                    IdeBundle.message("title.rename.favorites.list"), Messages.getInformationIcon(), listName,
-                                                    new InputValidator() {
-                                                      @Override
-                                                      public boolean checkInput(String inputString) {
-                                                        return inputString != null && inputString.trim().length() > 0;
-                                                      }
+    final String newName =
+            Messages.showInputDialog(project, IdeBundle.message("prompt.input.favorites.list.new.name", listName), IdeBundle.message("title.rename.favorites.list"), Messages.getInformationIcon(),
+                                     listName, new InputValidator() {
+                      @RequiredUIAccess
+                      @Override
+                      public boolean checkInput(String inputString) {
+                        return inputString != null && inputString.trim().length() > 0;
+                      }
 
-                                                      @Override
-                                                      public boolean canClose(String inputString) {
-                                                        inputString = inputString.trim();
-                                                        if (myName2FavoritesRoots.keySet().contains(inputString) ||
-                                                            myProviders.keySet().contains(inputString)) {
-                                                          Messages.showErrorDialog(project,
-                                                                                   IdeBundle.message("error.favorites.list.already.exists", inputString.trim()),
-                                                                                   IdeBundle.message("title.unable.to.add.favorites.list"));
-                                                          return false;
-                                                        }
-                                                        return !inputString.isEmpty();
-                                                      }
-                                                    });
+                      @RequiredUIAccess
+                      @Override
+                      public boolean canClose(String inputString) {
+                        inputString = inputString.trim();
+                        if (myName2FavoritesRoots.keySet().contains(inputString) || getProviders().keySet().contains(inputString)) {
+                          Messages.showErrorDialog(project, IdeBundle.message("error.favorites.list.already.exists", inputString.trim()), IdeBundle.message("title.unable.to.add.favorites.list"));
+                          return false;
+                        }
+                        return !inputString.isEmpty();
+                      }
+                    });
 
     if (newName != null && renameFavoritesList(listName, newName)) {
       rootsChanged();
@@ -125,31 +113,26 @@ public class FavoritesManager implements ProjectComponent, JDOMExternalizable {
 
   @Deprecated
   public void addFavoritesListener(FavoritesListener listener) {
-    myListeners.add(listener);
+    myListeners.addListener(listener);
     listener.rootsChanged();
   }
 
   public void addFavoritesListener(final FavoritesListener listener, @Nonnull Disposable parent) {
-    myListeners.add(listener);
+    myListeners.addListener(listener, parent);
     listener.rootsChanged();
-    Disposer.register(parent, new Disposable() {
-      @Override
-      public void dispose() {
-        myListeners.remove(listener);
-      }
-    });
   }
 
+  @Deprecated
   public void removeFavoritesListener(FavoritesListener listener) {
-    myListeners.remove(listener);
+    myListeners.removeListener(listener);
   }
 
   List<AbstractTreeNode> createRootNodes() {
-    List<AbstractTreeNode> result = new ArrayList<AbstractTreeNode>();
+    List<AbstractTreeNode> result = new ArrayList<>();
     for (String listName : myName2FavoritesRoots.keySet()) {
       result.add(new FavoritesListNode(myProject, listName, myDescriptions.get(listName)));
     }
-    ArrayList<FavoritesListProvider> providers = new ArrayList<FavoritesListProvider>(myProviders.values());
+    ArrayList<FavoritesListProvider> providers = new ArrayList<>(getProviders().values());
     Collections.sort(providers);
     for (FavoritesListProvider provider : providers) {
       result.add(provider.createFavoriteListNode(myProject));
@@ -167,13 +150,33 @@ public class FavoritesManager implements ProjectComponent, JDOMExternalizable {
   }
 
   @Nonnull
+  private Map<String, FavoritesListProvider> getProviders() {
+    if (myProviders != null) {
+      return myProviders;
+    }
+
+    myProviders = new HashMap<>();
+    for (FavoritesListProvider provider : FavoritesListProvider.EP_NAME.getExtensionList(myProject)) {
+      myProviders.put(provider.getListName(myProject), provider);
+    }
+    final MyRootsChangeAdapter myPsiTreeChangeAdapter = new MyRootsChangeAdapter();
+
+    PsiManager.getInstance(myProject).addPsiTreeChangeListener(myPsiTreeChangeAdapter, myProject);
+    if (myName2FavoritesRoots.isEmpty()) {
+      myDescriptions.put(myProject.getName(), "auto-added");
+      createNewList(myProject.getName());
+    }
+    return myProviders;
+  }
+
+  @Nonnull
   public List<String> getAvailableFavoritesListNames() {
-    return new ArrayList<String>(myName2FavoritesRoots.keySet());
+    return new ArrayList<>(myName2FavoritesRoots.keySet());
   }
 
   public synchronized void createNewList(@Nonnull String listName) {
     myListOrder.add(listName);
-    myName2FavoritesRoots.put(listName, new ArrayList<TreeItem<Pair<AbstractUrl, String>>>());
+    myName2FavoritesRoots.put(listName, new ArrayList<>());
     listAdded(listName);
   }
 
@@ -196,7 +199,7 @@ public class FavoritesManager implements ProjectComponent, JDOMExternalizable {
   @Nonnull
   public List<TreeItem<Pair<AbstractUrl, String>>> getFavoritesListRootUrls(@Nonnull String name) {
     final List<TreeItem<Pair<AbstractUrl, String>>> pairs = myName2FavoritesRoots.get(name);
-    return pairs == null ? new ArrayList<TreeItem<Pair<AbstractUrl, String>>>() : pairs;
+    return pairs == null ? new ArrayList<>() : pairs;
   }
 
   public synchronized boolean addRoots(@Nonnull String name, Module moduleContext, @Nonnull Object elements) {
@@ -205,7 +208,7 @@ public class FavoritesManager implements ProjectComponent, JDOMExternalizable {
   }
 
   public synchronized Comparator<FavoritesTreeNodeDescriptor> getCustomComparator(@Nonnull final String name) {
-    return myProviders.get(name);
+    return getProviders().get(name);
   }
 
   private Pair<AbstractUrl, String> createPairForNode(AbstractTreeNode node) {
@@ -219,17 +222,12 @@ public class FavoritesManager implements ProjectComponent, JDOMExternalizable {
   public boolean addRoots(final String name, final Collection<AbstractTreeNode> nodes) {
     final Collection<TreeItem<Pair<AbstractUrl, String>>> list = getFavoritesListRootUrls(name);
 
-    final HashSet<AbstractUrl> set = new HashSet<AbstractUrl>(ContainerUtil.map(list, new Function<TreeItem<Pair<AbstractUrl, String>>, AbstractUrl>() {
-      @Override
-      public AbstractUrl fun(TreeItem<Pair<AbstractUrl, String>> item) {
-        return item.getData().getFirst();
-      }
-    }));
+    final HashSet<AbstractUrl> set = new HashSet<>(ContainerUtil.map(list, item -> item.getData().getFirst()));
     for (AbstractTreeNode node : nodes) {
       final Pair<AbstractUrl, String> pair = createPairForNode(node);
       if (pair != null) {
         if (set.contains(pair.getFirst())) continue;
-        final TreeItem<Pair<AbstractUrl, String>> treeItem = new TreeItem<Pair<AbstractUrl, String>>(pair);
+        final TreeItem<Pair<AbstractUrl, String>> treeItem = new TreeItem<>(pair);
         list.add(treeItem);
         set.add(pair.getFirst());
         appendChildNodes(node, treeItem);
@@ -242,21 +240,18 @@ public class FavoritesManager implements ProjectComponent, JDOMExternalizable {
   private void appendChildNodes(AbstractTreeNode node, TreeItem<Pair<AbstractUrl, String>> treeItem) {
     final Collection<? extends AbstractTreeNode> children = node.getChildren();
     for (AbstractTreeNode child : children) {
-      final TreeItem<Pair<AbstractUrl, String>> childTreeItem = new TreeItem<Pair<AbstractUrl, String>>(createPairForNode(child));
+      final TreeItem<Pair<AbstractUrl, String>> childTreeItem = new TreeItem<>(createPairForNode(child));
       treeItem.addChild(childTreeItem);
       appendChildNodes(child, childTreeItem);
     }
   }
 
-  public synchronized boolean addRoot(@Nonnull String name,
-                                      @Nonnull List<AbstractTreeNode> parentElements,
-                                      final AbstractTreeNode newElement,
-                                      @Nullable AbstractTreeNode sibling) {
+  public synchronized boolean addRoot(@Nonnull String name, @Nonnull List<AbstractTreeNode> parentElements, final AbstractTreeNode newElement, @Nullable AbstractTreeNode sibling) {
     final List<TreeItem<Pair<AbstractUrl, String>>> items = myName2FavoritesRoots.get(name);
     if (items == null) return false;
     AbstractUrl url = createUrlByElement(newElement.getValue(), myProject);
     if (url == null) return false;
-    final TreeItem<Pair<AbstractUrl, String>> newItem = new TreeItem<Pair<AbstractUrl, String>>(Pair.create(url, newElement.getClass().getName()));
+    final TreeItem<Pair<AbstractUrl, String>> newItem = new TreeItem<>(Pair.create(url, newElement.getClass().getName()));
 
     if (parentElements.isEmpty()) {
       // directly to list
@@ -349,12 +344,7 @@ public class FavoritesManager implements ProjectComponent, JDOMExternalizable {
   }
 
   public synchronized boolean removeRoot(@Nonnull String name, @Nonnull List<AbstractTreeNode> elements) {
-    final Convertor<AbstractTreeNode, AbstractUrl> convertor = new Convertor<AbstractTreeNode, AbstractUrl>() {
-      @Override
-      public AbstractUrl convert(AbstractTreeNode obj) {
-        return createUrlByElement(obj.getValue(), myProject);
-      }
-    };
+    final Convertor<AbstractTreeNode, AbstractUrl> convertor = obj -> createUrlByElement(obj.getValue(), myProject);
     boolean result = true;
     for (AbstractTreeNode element : elements) {
       final List<AbstractTreeNode> path = TaskDefaultFavoriteListProvider.getPathToUsualNode(element);
@@ -391,41 +381,13 @@ public class FavoritesManager implements ProjectComponent, JDOMExternalizable {
     return false;
   }
 
-  @Override
-  public void projectOpened() {
-    if (!ApplicationManager.getApplication().isUnitTestMode()) {
-      StartupManager.getInstance(myProject).registerPostStartupActivity(new DumbAwareRunnable() {
-        @Override
-        public void run() {
-          final FavoritesListProvider[] providers = Extensions.getExtensions(EP_NAME, myProject);
-          for (FavoritesListProvider provider : providers) {
-            myProviders.put(provider.getListName(myProject), provider);
-          }
-          final MyRootsChangeAdapter myPsiTreeChangeAdapter = new MyRootsChangeAdapter();
-
-          PsiManager.getInstance(myProject).addPsiTreeChangeListener(myPsiTreeChangeAdapter, myProject);
-          if (myName2FavoritesRoots.isEmpty()) {
-            myDescriptions.put(myProject.getName(), "auto-added");
-            createNewList(myProject.getName());
-          }
-        }
-      });
-    }
-  }
-
-  @Override
-  @Nonnull
-  public String getComponentName() {
-    return "FavoritesManager";
-  }
-
   @Nullable
   public FavoritesListProvider getListProvider(@Nullable String name) {
-    return myProviders.get(name);
+    return getProviders().get(name);
   }
 
   @Override
-  public void readExternal(Element element) throws InvalidDataException {
+  public void loadState(Element element) {
     myName2FavoritesRoots.clear();
     for (Object list : element.getChildren(ELEMENT_FAVORITES_LIST)) {
       final String name = ((Element)list).getAttributeValue(ATTRIBUTE_NAME);
@@ -436,13 +398,14 @@ public class FavoritesManager implements ProjectComponent, JDOMExternalizable {
     DefaultJDOMExternalizer.readExternal(this, element);
   }
 
-  @NonNls private static final String CLASS_NAME = "klass";
-  @NonNls private static final String FAVORITES_ROOT = "favorite_root";
-  @NonNls private static final String ELEMENT_FAVORITES_LIST = "favorites_list";
-  @NonNls private static final String ATTRIBUTE_NAME = "name";
+  @NonNls
+  private static final String CLASS_NAME = "klass";
+  private static final String FAVORITES_ROOT = "favorite_root";
+  private static final String ELEMENT_FAVORITES_LIST = "favorites_list";
+  private static final String ATTRIBUTE_NAME = "name";
 
   private static List<TreeItem<Pair<AbstractUrl, String>>> readRoots(final Element list, Project project) {
-    List<TreeItem<Pair<AbstractUrl, String>>> result = new ArrayList<TreeItem<Pair<AbstractUrl, String>>>();
+    List<TreeItem<Pair<AbstractUrl, String>>> result = new ArrayList<>();
     readFavoritesOneLevel(list, project, result);
     return result;
   }
@@ -456,14 +419,14 @@ public class FavoritesManager implements ProjectComponent, JDOMExternalizable {
       final String className = favoriteElement.getAttributeValue(CLASS_NAME);
       final AbstractUrl abstractUrl = readUrlFromElement(favoriteElement, project);
       if (abstractUrl != null) {
-        final TreeItem<Pair<AbstractUrl, String>> treeItem = new TreeItem<Pair<AbstractUrl, String>>(Pair.create(abstractUrl, className));
+        final TreeItem<Pair<AbstractUrl, String>> treeItem = new TreeItem<>(Pair.create(abstractUrl, className));
         result.add(treeItem);
         readFavoritesOneLevel(favoriteElement, project, treeItem.getChildren());
       }
     }
   }
 
-  private static final ArrayList<AbstractUrl> ourAbstractUrlProviders = new ArrayList<AbstractUrl>();
+  private static final ArrayList<AbstractUrl> ourAbstractUrlProviders = new ArrayList<>();
 
   static {
     ourAbstractUrlProviders.add(new ModuleUrl(null, null));
@@ -476,9 +439,9 @@ public class FavoritesManager implements ProjectComponent, JDOMExternalizable {
     ourAbstractUrlProviders.add(new NamedLibraryUrl(null, null));
   }
 
-  @NonNls private static final String ATTRIBUTE_TYPE = "type";
-  @NonNls private static final String ATTRIBUTE_URL = "url";
-  @NonNls private static final String ATTRIBUTE_MODULE = "module";
+  private static final String ATTRIBUTE_TYPE = "type";
+  private static final String ATTRIBUTE_URL = "url";
+  private static final String ATTRIBUTE_MODULE = "module";
 
   @Nullable
   private static AbstractUrl readUrlFromElement(Element element, Project project) {
@@ -486,7 +449,7 @@ public class FavoritesManager implements ProjectComponent, JDOMExternalizable {
     final String urlValue = element.getAttributeValue(ATTRIBUTE_URL);
     final String moduleName = element.getAttributeValue(ATTRIBUTE_MODULE);
 
-    for (FavoriteNodeProvider nodeProvider : Extensions.getExtensions(FavoriteNodeProvider.EP_NAME, project)) {
+    for (FavoriteNodeProvider nodeProvider : FavoriteNodeProvider.EP_NAME.getExtensionList(project)) {
       if (nodeProvider.getFavoriteTypeId().equals(type)) {
         return new AbstractUrlFavoriteAdapter(urlValue, moduleName, nodeProvider);
       }
@@ -499,23 +462,25 @@ public class FavoritesManager implements ProjectComponent, JDOMExternalizable {
     return null;
   }
 
-
+  @Nullable
   @Override
-  public void writeExternal(Element element) throws WriteExternalException {
+  public Element getState() {
+    Element state = new Element("state");
     for (final String name : myName2FavoritesRoots.keySet()) {
       Element list = new Element(ELEMENT_FAVORITES_LIST);
       list.setAttribute(ATTRIBUTE_NAME, name);
       writeRoots(list, myName2FavoritesRoots.get(name));
-      element.addContent(list);
+      state.addContent(list);
     }
-    DefaultJDOMExternalizer.writeExternal(this, element);
+    DefaultJDOMExternalizer.writeExternal(this, state);
+    return state;
   }
 
   @Nullable
   public static AbstractUrl createUrlByElement(Object element, final Project project) {
     if (element instanceof SmartPsiElementPointer) element = ((SmartPsiElementPointer)element).getElement();
 
-    for (FavoriteNodeProvider nodeProvider : Extensions.getExtensions(FavoriteNodeProvider.EP_NAME, project)) {
+    for (FavoriteNodeProvider nodeProvider : FavoriteNodeProvider.EP_NAME.getExtensionList(project)) {
       String url = nodeProvider.getElementUrl(element);
       if (url != null) {
         return new AbstractUrlFavoriteAdapter(url, nodeProvider.getElementModuleName(element), nodeProvider);
@@ -559,7 +524,7 @@ public class FavoritesManager implements ProjectComponent, JDOMExternalizable {
   // currently only one level here..
   public boolean contains(@Nonnull String name, @Nonnull final VirtualFile vFile) {
     final ProjectFileIndex projectFileIndex = ProjectRootManager.getInstance(myProject).getFileIndex();
-    final Set<Boolean> find = new HashSet<Boolean>();
+    final Set<Boolean> find = new HashSet<>();
     final ContentIterator contentIterator = new ContentIterator() {
       @Override
       public boolean processFile(VirtualFile fileOrDir) {
@@ -608,8 +573,7 @@ public class FavoritesManager implements ProjectComponent, JDOMExternalizable {
         ModuleRootManager.getInstance((Module)element).getFileIndex().iterateContent(contentIterator);
       }
       if (element instanceof LibraryGroupElement) {
-        final boolean inLibrary = ModuleRootManager.getInstance(((LibraryGroupElement)element).getModule()).getFileIndex().isInContent(vFile) &&
-                                  projectFileIndex.isInLibraryClasses(vFile);
+        final boolean inLibrary = ModuleRootManager.getInstance(((LibraryGroupElement)element).getModule()).getFileIndex().isInContent(vFile) && projectFileIndex.isInLibraryClasses(vFile);
         if (inLibrary) {
           return true;
         }
@@ -617,7 +581,7 @@ public class FavoritesManager implements ProjectComponent, JDOMExternalizable {
       if (element instanceof NamedLibraryElement) {
         NamedLibraryElement namedLibraryElement = (NamedLibraryElement)element;
         final VirtualFile[] files = namedLibraryElement.getOrderEntry().getFiles(BinariesOrderRootType.getInstance());
-        if (files != null && ArrayUtil.find(files, vFile) > -1) {
+        if (ArrayUtil.find(files, vFile) > -1) {
           return true;
         }
       }
@@ -630,7 +594,7 @@ public class FavoritesManager implements ProjectComponent, JDOMExternalizable {
       }
 
 
-      for (FavoriteNodeProvider provider : Extensions.getExtensions(FavoriteNodeProvider.EP_NAME, myProject)) {
+      for (FavoriteNodeProvider provider : FavoriteNodeProvider.EP_NAME.getExtensionList(myProject)) {
         if (provider.elementContainsFile(element, vFile)) {
           return true;
         }
@@ -644,7 +608,7 @@ public class FavoritesManager implements ProjectComponent, JDOMExternalizable {
   }
 
   private static void iterateTreeItems(final Collection<TreeItem<Pair<AbstractUrl, String>>> coll, Consumer<TreeItem<Pair<AbstractUrl, String>>> consumer) {
-    final ArrayDeque<TreeItem<Pair<AbstractUrl, String>>> queue = new ArrayDeque<TreeItem<Pair<AbstractUrl, String>>>();
+    final ArrayDeque<TreeItem<Pair<AbstractUrl, String>>> queue = new ArrayDeque<>();
     queue.addAll(coll);
     while (!queue.isEmpty()) {
       final TreeItem<Pair<AbstractUrl, String>> item = queue.removeFirst();
@@ -711,21 +675,18 @@ public class FavoritesManager implements ProjectComponent, JDOMExternalizable {
 
           for (String listName : myName2FavoritesRoots.keySet()) {
             final List<TreeItem<Pair<AbstractUrl, String>>> roots = myName2FavoritesRoots.get(listName);
-            iterateTreeItems(roots, new Consumer<TreeItem<Pair<AbstractUrl, String>>>() {
-              @Override
-              public void consume(TreeItem<Pair<AbstractUrl, String>> item) {
-                final Pair<AbstractUrl, String> root = item.getData();
-                final Object[] path = root.first.createPath(myProject);
-                if (path == null || path.length < 1 || path[0] == null) {
-                  return;
-                }
-                final Object element = path[path.length - 1];
-                if (element == psiElement && psiElement instanceof PsiFile) {
-                  item.setData(Pair.create(childUrl, root.second));
-                }
-                else {
-                  item.setData(root);
-                }
+            iterateTreeItems(roots, item -> {
+              final Pair<AbstractUrl, String> root = item.getData();
+              final Object[] path = root.first.createPath(myProject);
+              if (path == null || path.length < 1 || path[0] == null) {
+                return;
+              }
+              final Object element = path[path.length - 1];
+              if (element == psiElement && psiElement instanceof PsiFile) {
+                item.setData(Pair.create(childUrl, root.second));
+              }
+              else {
+                item.setData(root);
               }
             });
           }

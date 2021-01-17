@@ -4,7 +4,6 @@ package com.intellij.ide.favoritesTreeView;
 import com.intellij.ProjectTopics;
 import com.intellij.ide.CopyPasteUtil;
 import com.intellij.ide.projectView.BaseProjectTreeBuilder;
-import com.intellij.ide.projectView.ProjectView;
 import com.intellij.ide.projectView.ProjectViewPsiTreeChangeListener;
 import com.intellij.ide.projectView.impl.ProjectAbstractTreeStructureBase;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
@@ -24,11 +23,11 @@ import com.intellij.psi.*;
 import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.util.messages.MessageBusConnection;
 import com.intellij.util.ui.tree.TreeUtil;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import org.jetbrains.concurrency.Promise;
 import org.jetbrains.concurrency.Promises;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
@@ -37,9 +36,10 @@ import javax.swing.tree.DefaultTreeModel;
  * @author Konstantin Bulenkov
  */
 public class FavoritesViewTreeBuilder extends BaseProjectTreeBuilder {
+  public static final String ID = "Favorites";
 
   public FavoritesViewTreeBuilder(@Nonnull Project project, JTree tree, DefaultTreeModel treeModel, ProjectAbstractTreeStructureBase treeStructure) {
-    super(project, tree, treeModel, treeStructure, new FavoritesComparator(ProjectView.getInstance(project), FavoritesProjectViewPane.ID));
+    super(project, tree, treeModel, treeStructure, new FavoriteComparator());
     final MessageBusConnection bus = myProject.getMessageBus().connect(this);
     ProjectViewPsiTreeChangeListener psiTreeChangeListener = new ProjectViewPsiTreeChangeListener(myProject) {
       @Override

@@ -39,7 +39,7 @@ import java.util.List;
  */
 public class FavoritesTreeStructure extends ProjectTreeStructure {
   public FavoritesTreeStructure(Project project) {
-    super(project, FavoritesProjectViewPane.ID);
+    super(project, FavoritesViewTreeBuilder.ID);
   }
 
   @Override

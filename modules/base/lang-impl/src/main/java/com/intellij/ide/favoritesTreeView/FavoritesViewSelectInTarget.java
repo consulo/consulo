@@ -98,7 +98,7 @@ public class FavoritesViewSelectInTarget extends SelectInTargetPsiWrapper {
 
   @Override
   public String getMinorViewId() {
-    return FavoritesProjectViewPane.ID;
+    return FavoritesViewTreeBuilder.ID;
   }
 
   @Override

@@ -15,11 +15,14 @@
  */
 package com.intellij.ide.favoritesTreeView;
 
+import java.util.EventListener;
+
 /**
  * @author Konstantin Bulenkov
  */
-public interface FavoritesListener {
-  void rootsChanged();
+public interface FavoritesListener extends EventListener {
+  default void rootsChanged() {
+  }
 
   void listAdded(String listName);
 
