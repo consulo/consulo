@@ -15,7 +15,6 @@
  */
 package com.intellij.openapi.startup;
 
-import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.project.Project;
 import consulo.annotation.DeprecationInfo;
 import consulo.ui.UIAccess;
@@ -30,30 +29,22 @@ import javax.annotation.Nonnull;
  *
  * @author Dmitry Avdeev
  */
-public interface StartupActivity {
-  ExtensionPointName<StartupActivity> POST_STARTUP_ACTIVITY = ExtensionPointName.create("com.intellij.postStartupActivity");
-
-  /**
-   * <p>Executed some time after startup on a background thread with no visible progress indicator. Such activities may produce
-   * notifications but should not be used for any work that needs to be otherwise visible to users (including work that consumes
-   * CPU over a noticeable period).</p>
-   *
-   * <p>Such activities are run regardless of the current indexing mode and should not be used for any work that requires access
-   * to indices. The current project may get disposed while the activity is running, and the activity may not be interrupted
-   * immediately when this happens, so if you need to access other components, you're responsible for doing this in a
-   * thread-safe way (e.g. by taking a read action to collect all the state you need).</p>
-   */
-  ExtensionPointName<StartupActivity.Background> BACKGROUND_POST_STARTUP_ACTIVITY = ExtensionPointName.create("com.intellij.backgroundPostStartupActivity");
-
-
+@Deprecated
+@DeprecationInfo("Use consulo.project.startup.StartupActivity")
+public interface StartupActivity extends consulo.project.startup.StartupActivity {
   interface DumbAware extends StartupActivity, com.intellij.openapi.project.DumbAware {
   }
 
-  interface Background extends StartupActivity {
+  interface Background extends StartupActivity, consulo.project.startup.StartupActivity.Background {
   }
 
   default void runActivity(@Nonnull UIAccess uiAccess, @Nonnull Project project) {
     runActivity(project);
+  }
+
+  @Override
+  default void runActivity(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
+    runActivity(uiAccess, project);
   }
 
   @Deprecated
