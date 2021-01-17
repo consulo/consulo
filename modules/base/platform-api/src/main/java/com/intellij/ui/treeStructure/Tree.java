@@ -22,9 +22,9 @@ import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.Conditions;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.ui.*;
+import com.intellij.ui.tree.TreePathBackgroundSupplier;
 import com.intellij.util.ui.*;
 import com.intellij.util.ui.tree.TreeUtil;
-import com.intellij.util.ui.tree.WideSelectionTreeUI;
 import consulo.annotation.DeprecationInfo;
 import consulo.disposer.Disposer;
 
@@ -44,7 +44,7 @@ import java.util.ArrayList;
 import java.util.Map;
 
 public class Tree extends JTree implements ComponentWithEmptyText, ComponentWithExpandableItems<Integer>, Autoscroll, Queryable,
-                                           ComponentWithFileColors {
+                                           ComponentWithFileColors, TreePathBackgroundSupplier {
   private final StatusText myEmptyText;
   private final ExpandableItemsHandler<Integer> myExpandableItemsHandler;
 
@@ -82,22 +82,6 @@ public class Tree extends JTree implements ComponentWithEmptyText, ComponentWith
 
     setSelectionModel(mySelectionModel);
     setOpaque(false);
-  }
-
-  @Override
-  public void setUI(final TreeUI ui) {
-    TreeUI actualUI = ui;
-    if (!isCustomUI()) {
-      if (!(ui instanceof WideSelectionTreeUI) && isWideSelection() && !UIUtil.isUnderGTKLookAndFeel()) {
-        actualUI = new WideSelectionTreeUI(isWideSelection(), getWideSelectionBackgroundCondition());
-      }
-    }
-    super.setUI(actualUI);
-  }
-
-  @Override
-  protected Graphics getComponentGraphics(Graphics graphics) {
-    return JBSwingUtilities.runGlobalCGTransform(this, super.getComponentGraphics(graphics));
   }
 
   public boolean isEmpty() {
@@ -348,6 +332,12 @@ public class Tree extends JTree implements ComponentWithEmptyText, ComponentWith
       }
     }
     config.restore();
+  }
+
+  @Override
+  @Nullable
+  public Color getPathBackground(@Nonnull TreePath path, int row) {
+    return isFileColorsEnabled() ? getFileColorForPath(path) : null;
   }
 
   @Nullable

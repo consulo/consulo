@@ -57,7 +57,7 @@ import static java.util.stream.Collectors.toList;
  * @author Sergey.Malenkov
  */
 public final class FileTreeModel extends AbstractTreeModel implements Identifiable, InvokerSupplier {
-  private final Invoker invoker = new Invoker.BackgroundThread(this);
+  private final Invoker invoker = Invoker.forBackgroundThreadWithReadAction(this);
   private final State state;
   private volatile List<Root> roots;
 
@@ -71,13 +71,13 @@ public final class FileTreeModel extends AbstractTreeModel implements Identifiab
     getApplication().getMessageBus().connect(this).subscribe(VFS_CHANGES, new BulkFileListener() {
       @Override
       public void after(@Nonnull List<? extends VFileEvent> events) {
-        invoker.runOrInvokeLater(() -> process(events));
+        invoker.invoke(() -> process(events));
       }
     });
   }
 
   public void invalidate() {
-    invoker.runOrInvokeLater(() -> {
+    invoker.invoke(() -> {
       if (roots != null) {
         for (Root root : roots) {
           root.tree.invalidate();

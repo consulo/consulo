@@ -176,6 +176,17 @@ public interface ToolWindow extends BusyObject {
   @RequiredUIAccess
   void setAvailable(boolean available, @Nullable Runnable runnable);
 
+  /**
+   * Sets whether the tool window available or not. Term "available" means that tool window
+   * can be shown and it has button on tool window bar.
+   *
+   * @throws IllegalStateException if tool window isn't installed.
+   */
+  @RequiredUIAccess
+  default void setAvailable(boolean available) {
+    setAvailable(available, null);
+  }
+
   @RequiredUIAccess
   void setContentUiType(@Nonnull ToolWindowContentUiType type, @Nullable Runnable runnable);
 

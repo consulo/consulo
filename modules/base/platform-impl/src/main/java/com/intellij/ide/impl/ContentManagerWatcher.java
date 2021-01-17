@@ -16,46 +16,38 @@
 package com.intellij.ide.impl;
 
 import com.intellij.openapi.wm.ToolWindow;
-import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentManager;
-import com.intellij.ui.content.ContentManagerAdapter;
 import com.intellij.ui.content.ContentManagerEvent;
-
+import com.intellij.ui.content.ContentManagerListener;
+import consulo.annotation.DeprecationInfo;
+import consulo.ui.annotation.RequiredUIAccess;
 import kava.beans.PropertyChangeListener;
 
+import javax.annotation.Nonnull;
+
 public class ContentManagerWatcher {
-  private final ToolWindow myToolWindow;
-  private final ContentManager myContentManager;
-  private final PropertyChangeListener myPropertyChangeListener;
+  @RequiredUIAccess
+  public static void watchContentManager(@Nonnull ToolWindow toolWindow, @Nonnull ContentManager contentManager) {
+    toolWindow.setAvailable(contentManager.getContentCount() > 0);
 
-  public ContentManagerWatcher(ToolWindow toolWindow, ContentManager contentManager) {
-    myToolWindow = toolWindow;
-    myContentManager = contentManager;
-    myToolWindow.setAvailable(contentManager.getContentCount() > 0, null);
-
-    myPropertyChangeListener = e -> {
-    };
-
-    contentManager.addContentManagerListener(new ContentManagerAdapter() {
+    contentManager.addContentManagerListener(new ContentManagerListener() {
+      @RequiredUIAccess
       @Override
-      public void contentAdded(ContentManagerEvent e) {
-        e.getContent().addPropertyChangeListener(myPropertyChangeListener);
-        myToolWindow.setAvailable(true, null);
+      public void contentAdded(@Nonnull ContentManagerEvent e) {
+        toolWindow.setAvailable(true);
       }
 
+      @RequiredUIAccess
       @Override
-      public void contentRemoved(ContentManagerEvent e) {
-        e.getContent().removePropertyChangeListener(myPropertyChangeListener);
-        myToolWindow.setAvailable(myContentManager.getContentCount() > 0, null);
+      public void contentRemoved(@Nonnull ContentManagerEvent e) {
+        toolWindow.setAvailable(contentManager.getContentCount() > 0);
       }
     });
-
-    // Synchonize title with current state of manager
-
-    for (int i = 0; i < myContentManager.getContentCount(); i++) {
-      Content content = myContentManager.getContent(i);
-      content.addPropertyChangeListener(myPropertyChangeListener);
-    }
   }
 
+  @Deprecated
+  @DeprecationInfo("Use #watchContentManager ")
+  public ContentManagerWatcher(ToolWindow toolWindow, ContentManager contentManager) {
+    watchContentManager(toolWindow, contentManager);
+  }
 }

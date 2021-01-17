@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2013-2021 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,30 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.ui.content;
+package consulo.util.collection;
 
-import consulo.ui.annotation.RequiredUIAccess;
+import org.jetbrains.annotations.Contract;
 
-import java.util.EventListener;
+import javax.annotation.Nonnull;
+import java.util.Set;
 
-public interface ContentManagerListener extends EventListener {
-  @RequiredUIAccess
-  default void contentAdded(ContentManagerEvent event) {
-
-  }
-
-  @RequiredUIAccess
-  default void contentRemoved(ContentManagerEvent event) {
-
-  }
-
-  @RequiredUIAccess
-  default void contentRemoveQuery(ContentManagerEvent event) {
-
-  }
-
-  @RequiredUIAccess
-  default void selectionChanged(ContentManagerEvent event) {
-
+/**
+ * @author VISTALL
+ * @since 16/01/2021
+ */
+public class Sets {
+  @Contract(value = " -> new", pure = true)
+  @Nonnull
+  public static <T> Set<T> newWeakSet() {
+    return new WeakHashSet<>();
   }
 }

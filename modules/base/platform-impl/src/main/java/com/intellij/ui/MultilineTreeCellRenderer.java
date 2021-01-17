@@ -132,7 +132,7 @@ public abstract class MultilineTreeCellRenderer extends JComponent implements Tr
     }
 
     // fill background
-    if (!(myTree.getUI() instanceof WideSelectionTreeUI) || !((WideSelectionTreeUI)myTree.getUI()).isWideSelection()) {
+    if (!WideSelectionTreeUI.isWideSelection(myTree)) {
       g.setColor(bgColor);
       g.fillRect(borderX, borderY, borderW, borderH);
 

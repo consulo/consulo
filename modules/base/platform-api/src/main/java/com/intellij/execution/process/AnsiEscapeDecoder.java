@@ -15,14 +15,14 @@
  */
 package com.intellij.execution.process;
 
-import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.LineSeparator;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.util.dataholder.Key;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -195,8 +195,13 @@ public class AnsiEscapeDecoder {
     }
   }
 
+  /**
+   * @deprecated use {@link ColoredTextAcceptor} instead
+   */
+  @Deprecated
+  //@ApiStatus.ScheduledForRemoval(inVersion = "2020.1")
   public interface ColoredChunksAcceptor extends ColoredTextAcceptor {
-    void coloredChunksAvailable(List<Pair<String, Key>> chunks);
+    void coloredChunksAvailable(@Nonnull List<Pair<String, Key>> chunks);
   }
 
   public interface ColoredTextAcceptor {

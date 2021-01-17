@@ -25,7 +25,6 @@ import javax.swing.event.TreeModelEvent;
 import javax.swing.event.TreeModelListener;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
-import javax.swing.plaf.TreeUI;
 import javax.swing.tree.TreeCellRenderer;
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
@@ -135,14 +134,12 @@ public class TreeExpandableItemsHandler extends AbstractExpandableItemsHandler<I
 
   @Override
   protected Dimension getImageSize(int width, int height) {
-    final TreeUI ui = myComponent.getUI();
-    return new Dimension(width, ui instanceof WideSelectionTreeUI && ((WideSelectionTreeUI)ui).isWideSelection() ? height - 1 : height);
+    return new Dimension(width, WideSelectionTreeUI.isWideSelection(myComponent) ? height - 1 : height);
   }
 
   @Override
   protected void doFillBackground(final int height, final int width, final Graphics2D g) {
-    final TreeUI ui = myComponent.getUI();
-    super.doFillBackground(ui instanceof WideSelectionTreeUI && ((WideSelectionTreeUI)ui).isWideSelection() ? height - 1 : height, width, g);
+    super.doFillBackground(WideSelectionTreeUI.isWideSelection(myComponent) ? height - 1 : height, width, g);
   }
 
   @Override

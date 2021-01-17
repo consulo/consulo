@@ -19,14 +19,15 @@ import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.psi.codeStyle.MinusculeMatcher;
+import com.intellij.ui.ColoredTreeCellRenderer;
 import com.intellij.ui.SimpleColoredComponent;
 import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.util.Processor;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.text.Matcher;
 import com.intellij.util.ui.UIUtil;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
@@ -154,6 +155,13 @@ public final class SpeedSearchUtil {
 
     if (lastOffset[0] < text.length()) {
       simpleColoredComponent.append(text.substring(lastOffset[0]), plain);
+    }
+  }
+
+  public static void applySpeedSearchHighlightingFiltered(JTree tree, Object value, ColoredTreeCellRenderer coloredTreeCellRenderer, boolean b, boolean selected) {
+    SpeedSearchSupply speedSearch = SpeedSearchSupply.getSupply(tree);
+    if (speedSearch != null && !speedSearch.isObjectFilteredOut(value)) {
+      applySpeedSearchHighlighting(tree, coloredTreeCellRenderer, b, selected);
     }
   }
 }

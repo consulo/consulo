@@ -43,38 +43,20 @@ public class StructureTreeModel<Structure extends AbstractTreeStructure> extends
   private final Structure structure;
   private volatile Comparator<? super Node> comparator;
 
-  private StructureTreeModel(@Nonnull Structure structure, boolean background, @Nonnull Disposable parentDisposable) {
+  public StructureTreeModel(@Nonnull Structure structure, @Nonnull Disposable parent) {
+    this(structure, null, parent);
+  }
+
+  public StructureTreeModel(@Nonnull Structure structure, @Nullable Comparator<? super NodeDescriptor> comparator, @Nonnull Disposable parent) {
+    this(structure, comparator, Invoker.forBackgroundThreadWithReadAction(parent), parent);
+  }
+
+  public StructureTreeModel(@Nonnull Structure structure, @Nullable Comparator<? super NodeDescriptor> comparator, @Nonnull Invoker invoker, @Nonnull Disposable parent) {
     this.structure = structure;
-    description = format(structure.toString());
-    invoker = background ? new Invoker.Background(this) : new Invoker.EDT(this);
-    Disposer.register(parentDisposable, this);
-  }
-
-  /**
-   * @deprecated Please use {@link #StructureTreeModel(AbstractTreeStructure, Disposable)}
-   */
-  @Deprecated
-  //@ApiStatus.ScheduledForRemoval(inVersion = "2019.3")
-  public StructureTreeModel(@Nonnull Structure structure) {
-    this(structure, Disposable.newDisposable());
-  }
-
-  /**
-   * @deprecated Please use {@link #StructureTreeModel(AbstractTreeStructure, Comparator, Disposable)}
-   */
-  @Deprecated
-  //@ApiStatus.ScheduledForRemoval(inVersion = "2019.3")
-  public StructureTreeModel(@Nonnull Structure structure, @Nonnull Comparator<? super NodeDescriptor> comparator) {
-    this(structure, comparator, Disposable.newDisposable());
-  }
-
-  public StructureTreeModel(@Nonnull Structure structure, @Nonnull Disposable parentDisposable) {
-    this(structure, true, parentDisposable);
-  }
-
-  public StructureTreeModel(@Nonnull Structure structure, @Nonnull Comparator<? super NodeDescriptor> comparator, @Nonnull Disposable parentDisposable) {
-    this(structure, parentDisposable);
-    this.comparator = wrapToNodeComparator(comparator);
+    this.description = format(structure.toString());
+    this.invoker = invoker;
+    this.comparator = comparator == null ? null : wrapToNodeComparator(comparator);
+    Disposer.register(parent, this);
   }
 
   @Nonnull

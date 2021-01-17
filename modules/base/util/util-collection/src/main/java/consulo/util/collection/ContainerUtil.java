@@ -97,7 +97,7 @@ public class ContainerUtil {
       }
     }
   }
-  
+
   /**
    * Soft keys hard values hash map.
    * Null keys are NOT allowed
@@ -441,6 +441,78 @@ public class ContainerUtil {
       @Override
       public int size() {
         return size;
+      }
+    };
+  }
+
+  /**
+   * @return iterator with elements from the original {@param iterator} which are valid according to {@param filter} predicate.
+   */
+  @Contract(pure = true)
+  @Nonnull
+  public static <T> Iterator<T> filterIterator(final @Nonnull Iterator<? extends T> iterator, final @Nonnull Predicate<? super T> filter) {
+    return new Iterator<T>() {
+      T next;
+      boolean hasNext;
+
+      {
+        findNext();
+      }
+
+      @Override
+      public boolean hasNext() {
+        return hasNext;
+      }
+
+      private void findNext() {
+        hasNext = false;
+        while (iterator.hasNext()) {
+          T t = iterator.next();
+          if (filter.test(t)) {
+            next = t;
+            hasNext = true;
+            break;
+          }
+        }
+      }
+
+      @Override
+      public T next() {
+        T result;
+        if (hasNext) {
+          result = next;
+          findNext();
+        }
+        else {
+          throw new NoSuchElementException();
+        }
+        return result;
+      }
+
+      @Override
+      public void remove() {
+        iterator.remove();
+      }
+    };
+  }
+
+  @Contract(pure = true)
+  @Nonnull
+  public static <T, U> Iterator<U> mapIterator(final @Nonnull Iterator<? extends T> iterator, final @Nonnull Function<? super T, ? extends U> mapper) {
+    return new Iterator<U>() {
+      @Override
+      public boolean hasNext() {
+        return iterator.hasNext();
+      }
+
+      @Override
+      public U next() {
+        return mapper.apply(iterator.next());
+      }
+
+      @Override
+      public void remove() {
+        iterator.remove();
       }
     };
   }

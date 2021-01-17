@@ -51,6 +51,7 @@ import com.intellij.ui.ScreenUtil;
 import com.intellij.ui.content.Content;
 import com.intellij.ui.plaf.beg.BegMenuItemUI;
 import com.intellij.ui.plaf.beg.IdeaMenuUI;
+import com.intellij.ui.tree.ui.DefaultTreeUI;
 import com.intellij.util.EventDispatcher;
 import com.intellij.util.IJSwingUtilities;
 import com.intellij.util.ReflectionUtil;
@@ -516,6 +517,10 @@ public final class LafManagerImpl extends LafManager implements Disposable, Pers
 
     patchFileChooserStrings(uiDefaults);
 
+    patchListUI(uiDefaults);
+    
+    patchTreeUI(uiDefaults);
+
     patchLafFonts(uiDefaults);
 
     patchHiDPI(uiDefaults);
@@ -531,6 +536,30 @@ public final class LafManagerImpl extends LafManager implements Disposable, Pers
       updateUI(frame);
     }
     fireLookAndFeelChanged();
+  }
+
+  private static void patchTreeUI(UIDefaults defaults) {
+    patchBorder(defaults, "Tree.border");
+    defaults.put("TreeUI", DefaultTreeUI.class.getName());
+    defaults.put("Tree.repaintWholeRow", true);
+    //if (isUnsupported(defaults.getIcon("Tree.collapsedIcon"))) {
+    //  defaults.put("Tree.collapsedIcon", LafIconLookup.getIcon("treeCollapsed"));
+    //  defaults.put("Tree.collapsedSelectedIcon", LafIconLookup.getSelectedIcon("treeCollapsed"));
+    //}
+    //if (isUnsupported(defaults.getIcon("Tree.expandedIcon"))) {
+    //  defaults.put("Tree.expandedIcon", LafIconLookup.getIcon("treeExpanded"));
+    //  defaults.put("Tree.expandedSelectedIcon", LafIconLookup.getSelectedIcon("treeExpanded"));
+    //}
+  }
+
+  private static void patchListUI(UIDefaults defaults) {
+    patchBorder(defaults, "List.border");
+  }
+
+  private static void patchBorder(UIDefaults defaults, String key) {
+    if (defaults.getBorder(key) == null) {
+      defaults.put(key, JBUI.Borders.empty(1, 0).asUIResource());
+    }
   }
 
   public static void updateToolWindows() {

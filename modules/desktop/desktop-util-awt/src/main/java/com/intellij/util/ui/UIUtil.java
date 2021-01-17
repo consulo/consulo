@@ -42,6 +42,7 @@ import consulo.util.dataholder.Key;
 import org.intellij.lang.annotations.JdkConstants;
 import org.intellij.lang.annotations.Language;
 import org.jetbrains.annotations.NonNls;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;
@@ -70,7 +71,10 @@ import java.awt.font.FontRenderContext;
 import java.awt.font.GlyphVector;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.GeneralPath;
-import java.awt.image.*;
+import java.awt.image.BufferedImage;
+import java.awt.image.BufferedImageOp;
+import java.awt.image.ImageObserver;
+import java.awt.image.PixelGrabber;
 import java.beans.PropertyChangeListener;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -967,8 +971,37 @@ public class UIUtil {
     return UIManager.getFont("List.font");
   }
 
+  /**
+   * @see RenderingUtil#getForeground(JTree, boolean)
+   */
+  @NotNull
+  public static Color getTreeForeground(boolean selected, boolean focused) {
+    return !selected ? getTreeForeground() : getTreeSelectionForeground(focused);
+  }
+
+  /**
+   * @deprecated use {@link #getTreeSelectionForeground(boolean)}
+   */
+  @Deprecated
+  @Nonnull
   public static Color getTreeSelectionForeground() {
-    return UIManager.getColor("Tree.selectionForeground");
+    return getTreeSelectionForeground(true);
+  }
+
+  /**
+   * @see RenderingUtil#getForeground(JTree)
+   */
+  @NotNull
+  public static Color getTreeForeground() {
+    return JBUI.CurrentTheme.Tree.FOREGROUND;
+  }
+
+  /**
+   * @see RenderingUtil#getSelectionForeground(JTree)
+   */
+  @NotNull
+  public static Color getTreeSelectionForeground(boolean focused) {
+    return JBUI.CurrentTheme.Tree.Selection.foreground(focused);
   }
 
   /**
@@ -1107,10 +1140,6 @@ public class UIUtil {
 
   public static Color getTreeBackground() {
     return UIManager.getColor("Tree.background");
-  }
-
-  public static Color getTreeForeground() {
-    return UIManager.getColor("Tree.foreground");
   }
 
   public static Color getTableFocusCellBackground() {
@@ -1315,7 +1344,7 @@ public class UIUtil {
 
   private static consulo.ui.image.Image wrapToImageIfNeed(String id) {
     Icon icon = UIManager.getIcon("OptionPane.warningIcon");
-    if(icon instanceof consulo.ui.image.Image) {
+    if (icon instanceof consulo.ui.image.Image) {
       return (consulo.ui.image.Image)icon;
     }
 
@@ -1361,14 +1390,15 @@ public class UIUtil {
 
   public static Icon getTreeNodeIcon(boolean expanded, boolean selected, boolean focused) {
     boolean selectedAndFocused = selected && focused;
-    
+
     Icon selectedIcon = getTreeSelectedExpandedIcon();
     Icon notSelectedIcon = getTreeExpandedIcon();
 
     int width = Math.max(selectedIcon.getIconWidth(), notSelectedIcon.getIconWidth());
     int height = Math.max(selectedIcon.getIconWidth(), notSelectedIcon.getIconWidth());
 
-    return new CenteredIcon(expanded ? (selectedAndFocused ? getTreeSelectedExpandedIcon() : getTreeExpandedIcon()) : (selectedAndFocused ? getTreeSelectedCollapsedIcon() : getTreeCollapsedIcon()), width, height, false);
+    return new CenteredIcon(expanded ? (selectedAndFocused ? getTreeSelectedExpandedIcon() : getTreeExpandedIcon()) : (selectedAndFocused ? getTreeSelectedCollapsedIcon() : getTreeCollapsedIcon()),
+                            width, height, false);
   }
 
   public static Icon getTreeCollapsedIcon() {
@@ -1384,13 +1414,13 @@ public class UIUtil {
   }
 
   private static final ImageKey selectedCollapsedIcon = ImageKey.fromString("consulo.platform.desktop.laf.LookAndFeelIconGroup@components.treeCollapsedSelected", 9, 11);
-  
+
   public static Icon getTreeSelectedCollapsedIcon() {
     Icon icon = UIManager.getIcon("Tree.selectedCollapsedIcon");
     if (icon != null) {
       return icon;
     }
-    return isUnderAquaBasedLookAndFeel() || isUnderGTKLookAndFeel() || isUnderBuildInLaF() ? (Icon)selectedCollapsedIcon: getTreeCollapsedIcon();
+    return isUnderAquaBasedLookAndFeel() || isUnderGTKLookAndFeel() || isUnderBuildInLaF() ? (Icon)selectedCollapsedIcon : getTreeCollapsedIcon();
   }
 
   private static final ImageKey selectedExpandedIcon = ImageKey.fromString("consulo.platform.desktop.laf.LookAndFeelIconGroup@components.treeExpandedSelected", 11, 9);
@@ -1535,7 +1565,7 @@ public class UIUtil {
   }
 
   public static boolean isFullRowSelectionLAF() {
-    return isUnderGTKLookAndFeel();
+    return false;
   }
 
   public static boolean isUnderNativeMacLookAndFeel() {

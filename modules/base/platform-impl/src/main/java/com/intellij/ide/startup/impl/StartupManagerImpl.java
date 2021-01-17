@@ -6,14 +6,12 @@ import com.intellij.diagnostic.ActivityCategory;
 import com.intellij.diagnostic.PerformanceWatcher;
 import com.intellij.diagnostic.StartUpMeasurer;
 import com.intellij.diagnostic.StartUpMeasurer.Phases;
-import com.intellij.ide.plugins.PluginManagerCore;
 import com.intellij.ide.startup.ServiceNotReadyException;
 import com.intellij.ide.startup.StartupManagerEx;
 import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationListener;
 import com.intellij.notification.NotificationType;
 import com.intellij.notification.Notifications;
-import consulo.disposer.Disposable;
 import com.intellij.openapi.application.*;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.progress.ProgressIndicator;
@@ -23,7 +21,6 @@ import com.intellij.openapi.progress.util.BackgroundTaskUtil;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ProjectRootManager;
-import com.intellij.openapi.startup.StartupActivity;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.registry.Registry;
@@ -38,15 +35,18 @@ import com.intellij.util.concurrency.AppExecutorUtil;
 import com.intellij.util.io.storage.HeavyProcessLatch;
 import consulo.container.boot.ContainerPathManager;
 import consulo.container.plugin.PluginDescriptor;
+import consulo.container.plugin.PluginId;
+import consulo.container.plugin.PluginIds;
 import consulo.container.plugin.PluginManager;
+import consulo.disposer.Disposable;
 import consulo.logging.Logger;
+import consulo.project.startup.StartupActivity;
 import consulo.ui.UIAccess;
 import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;
-
-import jakarta.inject.Singleton;
 import java.io.FileNotFoundException;
 import java.util.*;
 import java.util.concurrent.ScheduledFuture;
@@ -54,7 +54,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
-import java.util.function.Consumer;
 
 @Singleton
 public class StartupManagerImpl extends StartupManagerEx implements Disposable {
@@ -63,11 +62,11 @@ public class StartupManagerImpl extends StartupManagerEx implements Disposable {
 
   private final Object myLock = new Object();
 
-  private final Deque<Consumer<UIAccess>> myPreStartupActivities = new ArrayDeque<>();
-  private final Deque<Consumer<UIAccess>> myStartupActivities = new ArrayDeque<>();
+  private final Deque<StartupActivity> myPreStartupActivities = new ArrayDeque<>();
+  private final Deque<StartupActivity> myStartupActivities = new ArrayDeque<>();
 
-  private final Deque<Consumer<UIAccess>> myDumbAwarePostStartupActivities = new ArrayDeque<>();
-  private final Deque<Consumer<UIAccess>> myNotDumbAwarePostStartupActivities = new ArrayDeque<>();
+  private final Deque<StartupActivity> myDumbAwarePostStartupActivities = new ArrayDeque<>();
+  private final Deque<StartupActivity> myNotDumbAwarePostStartupActivities = new ArrayDeque<>();
   // guarded by this
   private boolean myPostStartupActivitiesPassed;
 
@@ -90,7 +89,7 @@ public class StartupManagerImpl extends StartupManagerEx implements Disposable {
   }
 
   @Override
-  public void registerPreStartupActivity(@Nonnull Consumer<UIAccess> runnable) {
+  public void registerPreStartupActivity(@Nonnull StartupActivity runnable) {
     checkNonDefaultProject();
     LOG.assertTrue(!myPreStartupActivitiesPassed, "Registering pre startup activity that will never be run");
     synchronized (myLock) {
@@ -99,7 +98,7 @@ public class StartupManagerImpl extends StartupManagerEx implements Disposable {
   }
 
   @Override
-  public void registerStartupActivity(@Nonnull Consumer<UIAccess> runnable) {
+  public void registerStartupActivity(@Nonnull StartupActivity runnable) {
     checkNonDefaultProject();
     LOG.assertTrue(!myStartupActivitiesPassed, "Registering startup activity that will never be run");
     synchronized (myLock) {
@@ -108,15 +107,15 @@ public class StartupManagerImpl extends StartupManagerEx implements Disposable {
   }
 
   @Override
-  public synchronized void registerPostStartupActivity(@Nonnull Consumer<UIAccess> runnable) {
+  public synchronized void registerPostStartupActivity(@Nonnull StartupActivity consumer) {
     checkNonDefaultProject();
     if (myPostStartupActivitiesPassed) {
       LOG.error("Registering post-startup activity that will never be run:" + " disposed=" + myProject.isDisposed() + "; open=" + myProject.isOpen() + "; passed=" + myStartupActivitiesPassed);
     }
 
-    Deque<Consumer<UIAccess>> list = DumbService.isDumbAware(runnable) ? myDumbAwarePostStartupActivities : myNotDumbAwarePostStartupActivities;
+    Deque<StartupActivity> list = DumbService.isDumbAware(consumer) ? myDumbAwarePostStartupActivities : myNotDumbAwarePostStartupActivities;
     synchronized (myLock) {
-      list.add(runnable);
+      list.add(consumer);
     }
   }
 
@@ -216,7 +215,7 @@ public class StartupManagerImpl extends StartupManagerEx implements Disposable {
     if (indicator != null) indicator.pushState();
     long startTime = StartUpMeasurer.getCurrentTime();
     try {
-      extension.runActivity(uiAccess, myProject);
+      extension.runActivity(myProject, uiAccess);
     }
     catch (ServiceNotReadyException e) {
       LOG.error(new Exception(e));
@@ -271,13 +270,13 @@ public class StartupManagerImpl extends StartupManagerEx implements Disposable {
         runActivities(uiAccess, myDumbAwarePostStartupActivities, Phases.PROJECT_DUMB_POST_STARTUP);
 
         while (true) {
-          List<Consumer<UIAccess>> dumbUnaware = takeDumbUnawareStartupActivities();
+          List<StartupActivity> dumbUnaware = takeDumbUnawareStartupActivities();
           if (dumbUnaware.isEmpty()) {
             break;
           }
 
           // queue each activity in smart mode separately so that if one of them starts the dumb mode, the next ones just wait for it to finish
-          for (Consumer<UIAccess> activity : dumbUnaware) {
+          for (StartupActivity activity : dumbUnaware) {
             dumbService.runWhenSmart(() -> runActivity(uiAccess, activity));
           }
         }
@@ -297,13 +296,13 @@ public class StartupManagerImpl extends StartupManagerEx implements Disposable {
   }
 
   @Nonnull
-  private List<Consumer<UIAccess>> takeDumbUnawareStartupActivities() {
+  private List<StartupActivity> takeDumbUnawareStartupActivities() {
     synchronized (myLock) {
       if (myNotDumbAwarePostStartupActivities.isEmpty()) {
-        return Collections.emptyList();
+        return List.of();
       }
 
-      List<Consumer<UIAccess>> result = new ArrayList<>(myNotDumbAwarePostStartupActivities);
+      List<StartupActivity> result = new ArrayList<>(myNotDumbAwarePostStartupActivities);
       myNotDumbAwarePostStartupActivities.clear();
       return result;
     }
@@ -379,27 +378,27 @@ public class StartupManagerImpl extends StartupManagerEx implements Disposable {
     });
   }
 
-  private void runActivities(@Nonnull UIAccess uiAccess, @Nonnull Deque<? extends Consumer<UIAccess>> activities, @Nonnull String phaseName) {
+  private void runActivities(@Nonnull UIAccess uiAccess, @Nonnull Deque<StartupActivity> activities, @Nonnull String phaseName) {
     Activity activity = StartUpMeasurer.startMainActivity(phaseName);
 
     while (true) {
-      Consumer<UIAccess> runnable;
+      StartupActivity startupActivity;
       synchronized (myLock) {
-        runnable = activities.pollFirst();
+        startupActivity = activities.pollFirst();
       }
 
-      if (runnable == null) {
+      if (startupActivity == null) {
         break;
       }
 
       long startTime = StartUpMeasurer.getCurrentTime();
 
-      PluginDescriptor plugin = PluginManager.getPlugin(runnable.getClass());
-      String pluginId = plugin != null ? plugin.getPluginId().getIdString() : PluginManagerCore.CORE_PLUGIN_ID;
+      PluginDescriptor plugin = PluginManager.getPlugin(startupActivity.getClass());
+      PluginId pluginId = plugin != null ? plugin.getPluginId() : PluginIds.CONSULO_PLATFORM_BASE;
 
-      runActivity(uiAccess, runnable);
+      runActivity(uiAccess, startupActivity);
 
-      StartUpMeasurer.addCompletedActivity(startTime, runnable.getClass(), ActivityCategory.POST_STARTUP_ACTIVITY, pluginId, StartUpMeasurer.MEASURE_THRESHOLD);
+      StartUpMeasurer.addCompletedActivity(startTime, startupActivity.getClass(), ActivityCategory.POST_STARTUP_ACTIVITY, pluginId.toString(), StartUpMeasurer.MEASURE_THRESHOLD);
     }
 
     activity.end();
@@ -431,7 +430,7 @@ public class StartupManagerImpl extends StartupManagerEx implements Disposable {
             return;
           }
 
-          activity.runActivity(uiAccess, myProject);
+          activity.runActivity(myProject, uiAccess);
         }
       });
     }, Registry.intValue("ide.background.post.startup.activity.delay"), TimeUnit.MILLISECONDS);
@@ -444,10 +443,10 @@ public class StartupManagerImpl extends StartupManagerEx implements Disposable {
     }
   }
 
-  public static void runActivity(@Nonnull UIAccess uiAccess, @Nonnull Consumer<UIAccess> runnable) {
+  public void runActivity(@Nonnull UIAccess uiAccess, @Nonnull StartupActivity startupActivity) {
     ProgressManager.checkCanceled();
     try {
-      runnable.accept(uiAccess);
+      startupActivity.runActivity(myProject, uiAccess);
     }
     catch (ServiceNotReadyException e) {
       LOG.error(new Exception(e));
@@ -481,6 +480,22 @@ public class StartupManagerImpl extends StartupManagerEx implements Disposable {
 
       action.run();
     }, ModalityState.defaultModalityState());
+  }
+
+  @Override
+  public void runAfterOpened(@Nonnull Runnable runnable) {
+    checkNonDefaultProject();
+
+    if (!myPostStartupActivitiesPassed) {
+      synchronized (myLock) {
+        if (!myPostStartupActivitiesPassed) {
+          myDumbAwarePostStartupActivities.add((project, uiAccess) -> runnable.run());
+          return;
+        }
+      }
+    }
+
+    runnable.run();
   }
 
   @TestOnly

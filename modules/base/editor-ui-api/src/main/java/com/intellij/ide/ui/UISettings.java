@@ -188,6 +188,8 @@ public class UISettings extends SimpleModificationTracker implements PersistentS
   public boolean SHOW_MEMBERS_IN_NAVIGATION_BAR = true;
   public boolean DND_WITH_PRESSED_ALT_ONLY = false;
   public boolean DEFAULT_AUTOSCROLL_TO_SOURCE = false;
+  public boolean COMPACT_TREE_INDENTS = false;
+  public boolean SHOW_TREE_INDENT_GUIDES = false;
   @Transient
   public boolean PRESENTATION_MODE = false;
   public int PRESENTATION_MODE_FONT_SIZE = 24;
@@ -588,13 +590,21 @@ public class UISettings extends SimpleModificationTracker implements PersistentS
     return SHOW_MEMBERS_IN_NAVIGATION_BAR;
   }
 
+  public boolean getCompactTreeIndents() {
+    return COMPACT_TREE_INDENTS;
+  }
+
+  public boolean getShowTreeIndentGuides() {
+    return SHOW_TREE_INDENT_GUIDES;
+  }
+
   public boolean getAnimatedScrolling() {
     return !SystemInfo.isMac || !SystemInfo.isJetBrainsJvm;
   }
 
   public int getAnimatedScrollingDuration() {
-    if(SystemInfo.isWindows) return 200;
-    if(SystemInfo.isMac) return 50;
+    if (SystemInfo.isWindows) return 200;
+    if (SystemInfo.isMac) return 50;
     return 150;
   }
 
