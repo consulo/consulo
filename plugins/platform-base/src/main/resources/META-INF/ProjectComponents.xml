@@ -205,11 +205,6 @@
       <implementation-class>com.intellij.execution.impl.ExecutionManagerImpl</implementation-class>
     </component>
 
-    <component>
-      <implementation-class>com.intellij.ide.favoritesTreeView.FavoritesManager</implementation-class>
-      <option name="workspace" value="true"/>
-      <skipForDefaultProject/>
-    </component>
    <component>
       <interface-class>com.intellij.compiler.impl.CompilerCacheManager</interface-class>
       <implementation-class>com.intellij.compiler.impl.CompilerCacheManager</implementation-class>
