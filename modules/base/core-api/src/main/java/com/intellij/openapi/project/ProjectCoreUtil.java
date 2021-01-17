@@ -26,12 +26,6 @@ import javax.annotation.Nullable;
  * @author dmitrylomov
  */
 public class ProjectCoreUtil {
-  /**
-   * @deprecated use {@link Project#DIRECTORY_STORE_FOLDER} (to be removed in IDEA 17)
-   */
-  @SuppressWarnings("unused")
-  public static final String DIRECTORY_BASED_PROJECT_DIR = Project.DIRECTORY_STORE_FOLDER;
-
   public static boolean isProjectOrWorkspaceFile(@Nonnull VirtualFile file) {
     return isProjectOrWorkspaceFile(file, file.getFileType());
   }
