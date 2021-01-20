@@ -27,13 +27,9 @@ import javax.annotation.Nonnull;
  * @author yole
  */
 public class DevelopPluginsAction extends AnAction implements DumbAware {
-  @NonNls
-  private static final String PLUGIN_WEBSITE = "https://github.com/consulo/consulo/wiki/Plugin-Development-Starter-Guide";
-
   @RequiredUIAccess
   @Override
   public void actionPerformed(@Nonnull final AnActionEvent e) {
-    BrowserUtil.browse(PLUGIN_WEBSITE);
-
+    BrowserUtil.browse("https://consulo.dev");
   }
 }
