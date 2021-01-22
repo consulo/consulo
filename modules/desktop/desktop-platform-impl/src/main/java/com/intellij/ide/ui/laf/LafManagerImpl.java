@@ -558,7 +558,7 @@ public final class LafManagerImpl extends LafManager implements Disposable, Pers
 
   private static void patchBorder(UIDefaults defaults, String key) {
     if (defaults.getBorder(key) == null) {
-      defaults.put(key, JBUI.Borders.empty(1, 0).asUIResource());
+      defaults.put(key, JBUI.Borders.empty(0, 0).asUIResource());
     }
   }
 
