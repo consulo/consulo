@@ -20,6 +20,7 @@ import com.intellij.ide.startup.StartupManagerEx;
 import com.intellij.openapi.actionSystem.IdeActions;
 import com.intellij.openapi.actionSystem.ex.ActionManagerEx;
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.EditorFactory;
@@ -35,7 +36,6 @@ import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.TextEditor;
-import com.intellij.openapi.project.DumbAwareRunnable;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.startup.StartupManager;
 import com.intellij.openapi.util.AsyncResult;
@@ -120,18 +120,11 @@ public class XLineBreakpointManager {
   public void updateBreakpointsUI() {
     if (myProject.isDefault()) return;
 
-    DumbAwareRunnable runnable = () -> {
-      for (XLineBreakpointImpl breakpoint : myBreakpoints.keySet()) {
-        breakpoint.updateUI();
+    myStartupManager.runAfterOpened((project, uiAccess) -> {
+      for (XLineBreakpointImpl<?> breakpoint : myBreakpoints.keySet()) {
+        project.getApplication().invokeLater(breakpoint::updateUI, ModalityState.NON_MODAL, project.getDisposed());
       }
-    };
-
-    if (ApplicationManager.getApplication().isUnitTestMode() || myStartupManager.startupActivityPassed()) {
-      runnable.run();
-    }
-    else {
-      myStartupManager.registerPostStartupActivity(runnable);
-    }
+    });
   }
 
   public void registerBreakpoint(XLineBreakpointImpl breakpoint, final boolean initUI) {
