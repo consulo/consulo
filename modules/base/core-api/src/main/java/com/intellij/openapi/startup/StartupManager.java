@@ -18,6 +18,7 @@ package com.intellij.openapi.startup;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
+import consulo.annotation.DeprecationInfo;
 import consulo.project.startup.StartupActivity;
 import consulo.ui.UIAccess;
 
@@ -35,6 +36,7 @@ public abstract class StartupManager {
    * @return the startup manager instance.
    */
   @Deprecated
+  @DeprecationInfo("Use contructor injecting")
   public static StartupManager getInstance(@Nonnull Project project) {
     return ServiceManager.getService(project, StartupManager.class);
   }
@@ -66,7 +68,7 @@ public abstract class StartupManager {
    *
    * @see StartupActivity#POST_STARTUP_ACTIVITY
    */
-  public abstract void runAfterOpened(@Nonnull Runnable runnable);
+  public abstract void runAfterOpened(@Nonnull StartupActivity activity);
 
   /**
    * Executes the specified runnable immediately if the initialization of the current project
@@ -74,7 +76,7 @@ public abstract class StartupManager {
    *
    * @param runnable the activity to execute.
    */
-  public abstract void runWhenProjectIsInitialized(@Nonnull Runnable runnable);
+  public abstract void runWhenProjectIsInitialized(@Nonnull StartupActivity startupActivity);
 
   public abstract boolean postStartupActivityPassed();
 
@@ -149,6 +151,32 @@ public abstract class StartupManager {
     }
     else {
       registerStartupActivity((StartupActivity)(project, uiAccess) -> consumer.accept(uiAccess));
+    }
+  }
+
+  /**
+   * Executes the specified runnable immediately if the initialization of the current project
+   * is complete, or registers it as a post-startup activity if the project is being initialized.
+   *
+   * @param runnable the activity to execute.
+   */
+  @Deprecated
+  public void runWhenProjectIsInitialized(@Nonnull Runnable runnable) {
+    if (runnable instanceof DumbAware) {
+      runWhenProjectIsInitialized((StartupActivity.DumbAware)(project, uiAccess) -> runnable.run());
+    }
+    else {
+      runWhenProjectIsInitialized((StartupActivity)(project, uiAccess) -> runnable.run());
+    }
+  }
+
+  @Deprecated
+  public  void runAfterOpened(@Nonnull Runnable runnable) {
+    if (runnable instanceof DumbAware) {
+      runAfterOpened((StartupActivity.DumbAware)(project, uiAccess) -> runnable.run());
+    }
+    else {
+      runAfterOpened((StartupActivity)(project, uiAccess) -> runnable.run());
     }
   }
   // endregion

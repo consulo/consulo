@@ -48,11 +48,7 @@ public interface StatusBar extends StatusBarInfo, Disposable {
       if (project != null) {
         if (project.isDisposed()) return;
         if (!project.isInitialized()) {
-          StartupManager.getInstance(project).runWhenProjectIsInitialized(new Runnable() {
-            public void run() {
-              project.getMessageBus().syncPublisher(TOPIC).setInfo(text, requestor);
-            }
-          });
+          StartupManager.getInstance(project).runWhenProjectIsInitialized((p, ui) -> p.getMessageBus().syncPublisher(TOPIC).setInfo(text, requestor));
           return;
         }
       }

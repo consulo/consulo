@@ -443,7 +443,7 @@ public class StartupManagerImpl extends StartupManagerEx implements Disposable {
     }
   }
 
-  public void runActivity(@Nonnull UIAccess uiAccess, @Nonnull StartupActivity startupActivity) {
+  private void runActivity(@Nonnull UIAccess uiAccess, @Nonnull StartupActivity startupActivity) {
     ProgressManager.checkCanceled();
     try {
       startupActivity.runActivity(myProject, uiAccess);
@@ -460,7 +460,7 @@ public class StartupManagerImpl extends StartupManagerEx implements Disposable {
   }
 
   @Override
-  public void runWhenProjectIsInitialized(@Nonnull final Runnable action) {
+  public void runWhenProjectIsInitialized(@Nonnull StartupActivity startupActivity) {
     final Application application = ApplicationManager.getApplication();
     if (application == null) return;
 
@@ -473,29 +473,29 @@ public class StartupManagerImpl extends StartupManagerEx implements Disposable {
         // then we should act as if the project was initialized
         boolean initialized = myProject.isInitialized() || myProject.isDefault() || (myPostStartupActivitiesPassed && application.isUnitTestMode());
         if (!initialized) {
-          registerPostStartupActivity(uiAccess -> action.run());
+          registerPostStartupActivity(startupActivity);
           return;
         }
       }
 
-      action.run();
+      startupActivity.runActivity(myProject, UIAccess.current());
     }, ModalityState.defaultModalityState());
   }
 
   @Override
-  public void runAfterOpened(@Nonnull Runnable runnable) {
+  public void runAfterOpened(@Nonnull StartupActivity startupActivity) {
     checkNonDefaultProject();
 
     if (!myPostStartupActivitiesPassed) {
       synchronized (myLock) {
         if (!myPostStartupActivitiesPassed) {
-          myDumbAwarePostStartupActivities.add((project, uiAccess) -> runnable.run());
+          registerPostStartupActivity(startupActivity);
           return;
         }
       }
     }
 
-    runnable.run();
+    startupActivity.runActivity(myProject, myApplication.getLastUIAccess());
   }
 
   @TestOnly

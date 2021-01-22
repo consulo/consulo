@@ -15,6 +15,7 @@
  */
 package com.intellij.ui;
 
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.fileChooser.FileChooser;
@@ -34,6 +35,7 @@ import com.intellij.util.ArrayUtil;
 import com.intellij.util.Consumer;
 import com.intellij.util.ui.UIUtil;
 import consulo.annotation.DeprecationInfo;
+import consulo.ui.annotation.RequiredUIAccess;
 import org.intellij.lang.annotations.JdkConstants;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
@@ -344,23 +346,25 @@ public class GuiUtils {
     return s;
   }
 
-  public static void runOrInvokeAndWait(@Nonnull Runnable runnable) throws InvocationTargetException, InterruptedException {
+  public static void runOrInvokeAndWait(@Nonnull @RequiredUIAccess Runnable runnable) throws InvocationTargetException, InterruptedException {
     ApplicationManager.getApplication().invokeAndWait(runnable);
   }
 
-  public static void invokeLaterIfNeeded(@Nonnull Runnable runnable, @Nonnull ModalityState modalityState) {
-    if (ApplicationManager.getApplication().isDispatchThread()) {
+  public static void invokeLaterIfNeeded(@Nonnull @RequiredUIAccess Runnable runnable, @Nonnull ModalityState modalityState) {
+    Application application = Application.get();
+    if (application.isDispatchThread()) {
       runnable.run();
     } else {
-      ApplicationManager.getApplication().invokeLater(runnable, modalityState);
+      application.invokeLater(runnable, modalityState);
     }
   }
 
-  public static void invokeLaterIfNeeded(@Nonnull Runnable runnable, @Nonnull ModalityState modalityState, @Nonnull Condition expired) {
-    if (ApplicationManager.getApplication().isDispatchThread()) {
+  public static void invokeLaterIfNeeded(@Nonnull @RequiredUIAccess Runnable runnable, @Nonnull ModalityState modalityState, @Nonnull Condition expired) {
+    Application application = Application.get();
+    if (application.isDispatchThread()) {
       runnable.run();
     } else {
-      ApplicationManager.getApplication().invokeLater(runnable, modalityState, expired);
+      application.invokeLater(runnable, modalityState, expired);
     }
   }
 

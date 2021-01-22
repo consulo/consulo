@@ -75,8 +75,8 @@
     <extensionPoint name="testSourcesFilter" interface="com.intellij.openapi.roots.TestSourcesFilter"/>
     <extensionPoint name="defaultLibraryRootDetector" interface="com.intellij.openapi.roots.libraries.ui.RootDetector"/>
 
-    <extensionPoint name="postStartupActivity" interface="com.intellij.openapi.startup.StartupActivity"/>
-    <extensionPoint name="backgroundPostStartupActivity" interface="com.intellij.openapi.startup.StartupActivity$Background"/>
+    <extensionPoint name="postStartupActivity" interface="consulo.project.startup.StartupActivity"/>
+    <extensionPoint name="backgroundPostStartupActivity" interface="consulo.project.startup.StartupActivity$Background"/>
 
     <extensionPoint name="projectConfigurable"
                     beanClass="consulo.options.ProjectConfigurableEP"

@@ -44,7 +44,6 @@ public interface StartupActivity {
    */
   ExtensionPointName<StartupActivity.Background> BACKGROUND_POST_STARTUP_ACTIVITY = ExtensionPointName.create("com.intellij.backgroundPostStartupActivity");
 
-
   interface DumbAware extends StartupActivity, com.intellij.openapi.project.DumbAware {
   }
 
