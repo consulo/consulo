@@ -16,8 +16,8 @@
 package com.intellij.ui;
 
 import com.intellij.ide.AppLifecycleListener;
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.ApplicationNamesInfo;
 import com.intellij.util.messages.MessageBusConnection;
 import com.sun.jna.Library;
 import com.sun.jna.Native;
@@ -53,9 +53,9 @@ class LibNotifyWrapper implements SystemNotificationsImpl.Notifier {
   private boolean myDisposed = false;
 
   private LibNotifyWrapper() {
-    myLibNotify = (LibNotify)Native.loadLibrary("libnotify.so.4", LibNotify.class);
+    myLibNotify = Native.load("libnotify.so.4", LibNotify.class);
 
-    String appName = ApplicationNamesInfo.getInstance().getProductName();
+    String appName = Application.get().getName().getValue();
     if (myLibNotify.notify_init(appName) == 0) {
       throw new IllegalStateException("notify_init failed");
     }

@@ -43,7 +43,7 @@ class MountainLionNotifications implements SystemNotificationsImpl.Notifier {
 
   private MountainLionNotifications() {
     final MessageBusConnection connection = ApplicationManager.getApplication().getMessageBus().connect();
-    connection.subscribe(ApplicationActivationListener.TOPIC, new ApplicationActivationListener.Adapter() {
+    connection.subscribe(ApplicationActivationListener.TOPIC, new ApplicationActivationListener() {
       @Override
       public void applicationActivated(IdeFrame ideFrame) {
         cleanupDeliveredNotifications();

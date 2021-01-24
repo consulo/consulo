@@ -35,7 +35,9 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.image.BaseMultiResolutionImage;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -62,6 +64,25 @@ public class AppUIUtil {
     }
 
     window.setIconImages(images);
+  }
+
+  @SuppressWarnings("deprecation")
+  @Nonnull
+  public static Image loadWindowIcon(boolean isDark) {
+    ApplicationInfo appInfo = ApplicationInfoImpl.getInstance();
+    List<Image> images = new ArrayList<>();
+
+    images.add(ImageLoader.loadFromResource(appInfo.getIconUrl(), AppUIUtil.class, isDark));
+    images.add(ImageLoader.loadFromResource(appInfo.getSmallIconUrl(), AppUIUtil.class, isDark));
+
+    for (int i = 0; i < images.size(); i++) {
+      Image image = images.get(i);
+      if (image instanceof JBHiDPIScaledImage) {
+        images.set(i, ((JBHiDPIScaledImage)image).getDelegate());
+      }
+    }
+
+    return new BaseMultiResolutionImage(images.toArray(Image[]::new));
   }
 
   public static void invokeLaterIfProjectAlive(@Nonnull final Project project, @Nonnull final Runnable runnable) {

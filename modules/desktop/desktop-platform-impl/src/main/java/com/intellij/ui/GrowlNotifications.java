@@ -15,12 +15,12 @@
  */
 package com.intellij.ui;
 
-import com.intellij.openapi.application.ApplicationNamesInfo;
-import consulo.logging.Logger;
+import com.intellij.openapi.application.Application;
 import com.intellij.ui.mac.growl.Growl;
 import com.intellij.util.ArrayUtil;
-import javax.annotation.Nonnull;
+import consulo.logging.Logger;
 
+import javax.annotation.Nonnull;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -43,8 +43,8 @@ class GrowlNotifications implements SystemNotificationsImpl.Notifier {
   private final Set<String> myNotifications;
 
   private GrowlNotifications() {
-    myGrowl = new Growl(ApplicationNamesInfo.getInstance().getFullProductName());
-    myNotifications = new TreeSet<String>();
+    myGrowl = new Growl(Application.get().getName().getValue());
+    myNotifications = new TreeSet<>();
     register();
   }
 

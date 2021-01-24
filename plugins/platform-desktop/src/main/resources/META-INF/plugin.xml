@@ -198,6 +198,9 @@
     <applicationService serviceInterface="com.intellij.ide.DataManager"
                         serviceImplementation="com.intellij.ide.impl.DesktopDataManagerImpl"/>
 
+    <applicationService serviceInterface="com.intellij.ui.SystemNotifications"
+                        serviceImplementation="com.intellij.ui.SystemNotificationsImpl"/>
+
     <applicationService serviceInterface="com.intellij.openapi.ui.FrameWrapperPeerFactory" serviceImplementation="consulo.desktop.impl.ui.FrameWrapperPeerFactoryImpl"/>
     <applicationService serviceInterface="consulo.ide.actions.AboutManager" serviceImplementation="consulo.desktop.impl.ide.actions.DesktopAboutManager"/>
     <applicationService serviceInterface="consulo.ide.tipOfDay.TipOfDayManager" serviceImplementation="consulo.desktop.ide.tipOfDay.DesktopTipOfDayManager"/>

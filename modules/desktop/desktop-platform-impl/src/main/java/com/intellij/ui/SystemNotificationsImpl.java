@@ -74,7 +74,7 @@ public class SystemNotificationsImpl extends SystemNotifications {
         return LibNotifyWrapper.getInstance();
       }
       else if (SystemInfo.isWin10OrNewer) {
-        return SystemTrayNotifications.getWin10Instance();
+        return JTrayNotificationImpl.getWin10Instance();
       }
     }
     catch (Throwable t) {
@@ -83,7 +83,7 @@ public class SystemNotificationsImpl extends SystemNotifications {
         logger.debug(t);
       }
       else {
-        logger.info(t.getMessage());
+        logger.info(t.getMessage(), t);
       }
     }
 

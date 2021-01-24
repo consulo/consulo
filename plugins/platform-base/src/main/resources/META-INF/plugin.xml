@@ -1268,8 +1268,6 @@
                         serviceImplementation="com.intellij.ui.TreeUIHelperImpl"/>
     <applicationService serviceInterface="com.intellij.ui.ExpandableItemsHandlerFactory"
                         serviceImplementation="com.intellij.ui.ExpandTipHandlerFactoryImpl"/>
-    <applicationService serviceInterface="com.intellij.ui.SystemNotifications"
-                        serviceImplementation="com.intellij.ui.SystemNotificationsImpl"/>
     <applicationService serviceInterface="com.intellij.openapi.keymap.KeymapGroupFactory"
                         serviceImplementation="com.intellij.openapi.keymap.impl.KeymapGroupFactoryImpl"/>
     <applicationService serviceInterface="com.intellij.openapi.editor.highlighter.EditorHighlighterFactory"

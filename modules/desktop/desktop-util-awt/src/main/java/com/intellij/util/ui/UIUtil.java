@@ -3791,6 +3791,21 @@ public class UIUtil {
     return c instanceof Window ? (Window)c : SwingUtilities.getWindowAncestor(c);
   }
 
+  /**
+   * Places the specified window at the top of the stacking order and shows it in front of any other windows.
+   * If the window is iconified it will be shown anyway.
+   *
+   * @param window the window to activate
+   */
+  public static void toFront(@Nullable Window window) {
+    if (window instanceof Frame) {
+      ((Frame)window).setState(Frame.NORMAL);
+    }
+    if (window != null) {
+      window.toFront();
+    }
+  }
+
   @Nonnull
   public static Logger getLogger() {
     return Logger.getInstance(UIUtil.class);

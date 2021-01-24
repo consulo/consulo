@@ -111,7 +111,7 @@ public class ProgressManagerImpl extends CoreProgressManager implements Disposab
   @Override
   void notifyTaskFinished(@Nonnull Task.Backgroundable task, long elapsed) {
     final Task.NotificationInfo notificationInfo = task.notifyFinished();
-    if (notificationInfo != null && elapsed > 5000) { // snow notification if process took more than 5 secs
+    if (notificationInfo != null) { // snow notification if process took more than 5 secs
       final Component window = KeyboardFocusManager.getCurrentKeyboardFocusManager().getActiveWindow();
       if (window == null || notificationInfo.isShowWhenFocused()) {
         systemNotify(notificationInfo);
