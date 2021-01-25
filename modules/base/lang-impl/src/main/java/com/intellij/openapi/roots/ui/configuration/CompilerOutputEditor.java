@@ -32,10 +32,10 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 
-public class OutputEditor extends ModuleElementsEditor {
+public class CompilerOutputEditor extends ModuleElementsEditor {
   private final BuildElementsEditor myCompilerOutputEditor;
 
-  protected OutputEditor(final ModuleConfigurationState state) {
+  protected CompilerOutputEditor(final ModuleConfigurationState state) {
     super(state);
     myCompilerOutputEditor = new BuildElementsEditor(state);
   }
