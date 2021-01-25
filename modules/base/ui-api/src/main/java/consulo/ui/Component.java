@@ -145,6 +145,20 @@ public interface Component extends Disposable, UserDataHolder {
     return this;
   }
 
+  @Nullable
+  default ColorValue getForegroundColor() {
+    throw new IllegalArgumentException("Not supported");
+  }
+
+  default void setForegroundColor(@Nullable ColorValue foreground) {
+    throw new IllegalArgumentException("Not supported");
+  }
+
+  default Component withForegroundColor(@Nullable ColorValue foreground) {
+    setForegroundColor(foreground);
+    return this;
+  }
+
   /**
    * @return runner for unregister listener
    */

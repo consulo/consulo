@@ -16,11 +16,10 @@
 package consulo.ui.web.internal;
 
 import consulo.localize.LocalizeValue;
+import consulo.ui.HorizontalAlignment;
 import consulo.ui.Label;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
-import consulo.ui.color.ColorValue;
-import consulo.ui.HorizontalAlignment;
 import consulo.ui.web.internal.base.UIComponentWithVaadinComponent;
 
 import javax.annotation.Nonnull;
@@ -72,12 +71,6 @@ public abstract class WebLabelBase<V extends VaadinLabelComponentBase> extends U
   @Override
   public HorizontalAlignment getHorizontalAlignment() {
     return getVaadinComponent().getHorizontalAlignment();
-  }
-
-  @Nonnull
-  @Override
-  public Label setForeground(@Nonnull ColorValue colorValue) {
-    return this;
   }
 
   @Nonnull

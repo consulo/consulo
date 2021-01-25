@@ -75,9 +75,6 @@ public interface Label extends Component, Mnemonicable {
   HorizontalAlignment getHorizontalAlignment();
 
   @Nonnull
-  Label setForeground(@Nonnull ColorValue colorValue);
-
-  @Nonnull
   Label setImage(@Nullable Image icon);
 
   @Nullable

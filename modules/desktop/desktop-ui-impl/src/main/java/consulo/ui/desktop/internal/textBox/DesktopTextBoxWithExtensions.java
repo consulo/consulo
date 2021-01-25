@@ -22,9 +22,11 @@ import com.intellij.ui.components.fields.ExtendableTextField;
 import com.intellij.ui.roots.ScalableIconComponent;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
+import consulo.awt.TargetAWT;
 import consulo.disposer.Disposable;
 import consulo.ui.TextBoxWithExtensions;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.color.ColorValue;
 import consulo.ui.desktop.internal.util.AWTFocusAdapterAsFocusListener;
 import consulo.ui.desktop.internal.util.AWTKeyAdapterAsKeyListener;
 import consulo.ui.desktop.internal.validableComponent.DocumentSwingValidator;
@@ -48,9 +50,39 @@ import java.util.List;
  * @since 2019-10-31
  */
 public class DesktopTextBoxWithExtensions {
-  private static class Supported extends DocumentSwingValidator<String, ExtendableTextField> implements TextBoxWithExtensions, TextBoxWithTextField {
+  private static class Supported extends DocumentSwingValidator<String, Supported.MyExtendableTextField> implements TextBoxWithExtensions, TextBoxWithTextField {
+    public class MyExtendableTextField extends ExtendableTextField {
+      private ColorValue myForegroundColor;
+
+      public MyExtendableTextField(String text) {
+        super(text);
+      }
+
+      public void setForegroundColor(ColorValue foregroundColor) {
+        myForegroundColor = foregroundColor;
+
+        updateForegroudColor();
+      }
+
+      @Override
+      public void updateUI() {
+        super.updateUI();
+
+        updateForegroudColor();
+      }
+
+      private void updateForegroudColor() {
+        if (myForegroundColor == null) {
+          setForeground(null);
+        }
+        else {
+          setForeground(TargetAWT.to(myForegroundColor));
+        }
+      }
+    }
+
     public Supported(String text) {
-      initialize(new ExtendableTextField(text));
+      initialize(new MyExtendableTextField(text));
       TextFieldPlaceholderFunction.install(toAWTComponent());
 
       addDocumentListenerForValidator(toAWTComponent().getDocument());
@@ -81,6 +113,17 @@ public class DesktopTextBoxWithExtensions {
     @Override
     public void setValue(String value, boolean fireListeners) {
       toAWTComponent().setText(value);
+    }
+
+    @Override
+    public void setForegroundColor(@Nullable ColorValue foreground) {
+      toAWTComponent().setForegroundColor(foreground);
+    }
+
+    @Nullable
+    @Override
+    public ColorValue getForegroundColor() {
+      return toAWTComponent().myForegroundColor;
     }
 
     @Nonnull
@@ -140,8 +183,38 @@ public class DesktopTextBoxWithExtensions {
     }
   }
 
+  private static class UnsupportedTextField extends JBTextField {
+    private ColorValue myForegroundColor;
+
+    public UnsupportedTextField(String text) {
+      super(text);
+    }
+
+    @Override
+    public void updateUI() {
+      super.updateUI();
+
+      updateForegroudColor();
+    }
+
+    public void setForegroundColor(@Nullable ColorValue color) {
+      myForegroundColor = color;
+
+      updateForegroudColor();
+    }
+
+    private void updateForegroudColor() {
+      if (myForegroundColor == null) {
+        setForeground(null);
+      }
+      else {
+        setForeground(TargetAWT.to(myForegroundColor));
+      }
+    }
+  }
+
   private static class Unsupported extends DocumentSwingValidator<String, JPanel> implements TextBoxWithExtensions, TextBoxWithTextField {
-    private JBTextField myTextField;
+    private UnsupportedTextField myTextField;
 
     private Unsupported(String text) {
       initialize(new JPanel(new BorderLayout()) {
@@ -156,7 +229,7 @@ public class DesktopTextBoxWithExtensions {
         }
       });
 
-      myTextField = new JBTextField(text);
+      myTextField = new UnsupportedTextField(text);
       TextFieldPlaceholderFunction.install(myTextField);
 
       myTextField.getDocument().addDocumentListener(new DocumentAdapter() {
@@ -183,6 +256,17 @@ public class DesktopTextBoxWithExtensions {
     @Override
     public JBTextField getTextField() {
       return myTextField;
+    }
+
+    @Override
+    public void setForegroundColor(@Nullable ColorValue foreground) {
+      myTextField.setForegroundColor(foreground);
+    }
+
+    @Nullable
+    @Override
+    public ColorValue getForegroundColor() {
+      return myTextField.myForegroundColor;
     }
 
     @Nonnull

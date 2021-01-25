@@ -56,12 +56,10 @@ import java.util.Set;
 public class PathEditor {
   private static final Logger LOG = Logger.getInstance(PathEditor.class);
 
-  public static final Color INVALID_COLOR = new JBColor(new Color(210, 0, 0), JBColor.RED);
-
   protected JComponent myComponent;
   private JBList myList;
   private final DefaultListModel myModel;
-  private final Set<VirtualFile> myAllFiles = new HashSet<VirtualFile>();
+  private final Set<VirtualFile> myAllFiles = new HashSet<>();
   private boolean myModified = false;
   protected boolean myEnabled = false;
   private final FileChooserDescriptor myDescriptor;
@@ -193,7 +191,7 @@ public class PathEditor {
     }
     VirtualFile[] files = FileChooser.chooseFiles(myDescriptor, myComponent, project, baseDir);
     files = adjustAddedFileSet(myComponent, files);
-    List<VirtualFile> added = new ArrayList<VirtualFile>(files.length);
+    List<VirtualFile> added = new ArrayList<>(files.length);
     for (VirtualFile vFile : files) {
       if (addElement(vFile)) {
         added.add(vFile);
@@ -245,7 +243,7 @@ public class PathEditor {
   }
 
   public void removePaths(VirtualFile... paths) {
-    final Set<VirtualFile> pathsSet = new java.util.HashSet<VirtualFile>(Arrays.asList(paths));
+    final Set<VirtualFile> pathsSet = new java.util.HashSet<>(Arrays.asList(paths));
     int size = getRowCount();
     final TIntArrayList indicesToRemove = new TIntArrayList(paths.length);
     for (int idx = 0; idx < size; idx++) {
@@ -283,7 +281,7 @@ public class PathEditor {
   }
 
   protected void setSelectedRoots(Object[] roots) {
-    ArrayList<Object> rootsList = new ArrayList<Object>(roots.length);
+    ArrayList<Object> rootsList = new ArrayList<>(roots.length);
     for (Object root : roots) {
       if (root != null) {
         rootsList.add(root);
@@ -406,7 +404,7 @@ public class PathEditor {
         if (value instanceof VirtualFile) {
           VirtualFile file = (VirtualFile)value;
           if (!file.isValid()) {
-            setForeground(INVALID_COLOR);
+            setForeground(JBColor.RED);
           }
         }
       }

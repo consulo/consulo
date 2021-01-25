@@ -18,11 +18,13 @@ package consulo.ui.desktop.internal.textBox;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.DocumentAdapter;
 import com.intellij.ui.components.JBTextField;
+import consulo.awt.TargetAWT;
 import consulo.awt.impl.FromSwingComponentWrapper;
 import consulo.disposer.Disposable;
 import consulo.ui.Component;
-import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.TextBox;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.color.ColorValue;
 import consulo.ui.desktop.internal.validableComponent.DocumentSwingValidator;
 
 import javax.annotation.Nonnull;
@@ -34,7 +36,7 @@ import javax.swing.event.DocumentEvent;
  * @author VISTALL
  * @since 19-Nov-16.
  */
-public class DesktopTextBoxImpl extends DocumentSwingValidator<String, JBTextField> implements TextBox, TextBoxWithTextField {
+public class DesktopTextBoxImpl extends DocumentSwingValidator<String, DesktopTextBoxImpl.MyJBTextField> implements TextBox, TextBoxWithTextField {
   private static class Listener extends DocumentAdapter {
     private DesktopTextBoxImpl myTextField;
 
@@ -50,6 +52,29 @@ public class DesktopTextBoxImpl extends DocumentSwingValidator<String, JBTextFie
   }
 
   class MyJBTextField extends JBTextField implements FromSwingComponentWrapper {
+    private ColorValue myForegroundColor;
+
+    @Override
+    public void updateUI() {
+      super.updateUI();
+
+      updateForegroudColor();
+    }
+
+    public void setForegroundColor(@Nullable ColorValue color) {
+      myForegroundColor = color;
+
+      updateForegroudColor();
+    }
+
+    private void updateForegroudColor() {
+      if (myForegroundColor == null) {
+        setForeground(null);
+      }
+      else {
+        setForeground(TargetAWT.to(myForegroundColor));
+      }
+    }
 
     @Nonnull
     @Override
@@ -67,6 +92,17 @@ public class DesktopTextBoxImpl extends DocumentSwingValidator<String, JBTextFie
 
     field.getDocument().addDocumentListener(new Listener(this));
     setValue(text);
+  }
+
+  @Override
+  public void setForegroundColor(@Nullable ColorValue foreground) {
+    toAWTComponent().setForegroundColor(foreground);
+  }
+
+  @Nullable
+  @Override
+  public ColorValue getForegroundColor() {
+    return toAWTComponent().myForegroundColor;
   }
 
   @Nonnull

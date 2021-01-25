@@ -18,15 +18,14 @@ package consulo.ui.desktop.internal;
 import com.intellij.ui.components.JBLabel;
 import consulo.awt.TargetAWT;
 import consulo.awt.impl.FromSwingComponentWrapper;
-import consulo.desktop.util.awt.MorphColor;
 import consulo.localize.LocalizeValue;
 import consulo.ui.Component;
+import consulo.ui.HorizontalAlignment;
 import consulo.ui.Label;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.color.ColorValue;
 import consulo.ui.desktop.internal.base.SwingComponentDelegate;
 import consulo.ui.image.Image;
-import consulo.ui.color.ColorValue;
-import consulo.ui.HorizontalAlignment;
 import consulo.ui.util.MnemonicInfo;
 
 import javax.annotation.Nonnull;
@@ -42,6 +41,8 @@ class DesktopLabelImpl extends SwingComponentDelegate<DesktopLabelImpl.MyJLabel>
     private LocalizeValue myTextValue;
 
     private HorizontalAlignment myHorizontalAlignment2 = HorizontalAlignment.LEFT;
+
+    private ColorValue myForegroudColor;
 
     MyJLabel(@Nonnull LocalizeValue text) {
       super("");
@@ -67,7 +68,9 @@ class DesktopLabelImpl extends SwingComponentDelegate<DesktopLabelImpl.MyJLabel>
     }
 
     public void setForegroundColor(ColorValue foregroundColor) {
-      setForeground(MorphColor.ofWithoutCache(() -> TargetAWT.to(foregroundColor)));
+      myForegroudColor = foregroundColor;
+      
+      updateForegroundColor();
     }
 
     public void setHorizontalAlignment2(@Nonnull HorizontalAlignment horizontalAlignment) {
@@ -98,17 +101,26 @@ class DesktopLabelImpl extends SwingComponentDelegate<DesktopLabelImpl.MyJLabel>
       myTextValue = textValue;
     }
 
+    private void updateForegroundColor() {
+      if(myForegroudColor == null) {
+        setForeground(null);
+      }
+      else {
+        setForeground(TargetAWT.to(myForegroudColor));
+      }
+    }
+
     private void updateText() {
-      if(myTextValue == null) {
+      if (myTextValue == null) {
         return;
       }
 
       String text = myTextValue.getValue();
       MnemonicInfo mnemonicInfo = MnemonicInfo.parse(text);
-      if(mnemonicInfo == null) {
-         setText(text);
-         setDisplayedMnemonicIndex(-1);
-         setDisplayedMnemonic(0);
+      if (mnemonicInfo == null) {
+        setText(text);
+        setDisplayedMnemonicIndex(-1);
+        setDisplayedMnemonic(0);
       }
       else {
         setText(mnemonicInfo.getText());
@@ -165,7 +177,7 @@ class DesktopLabelImpl extends SwingComponentDelegate<DesktopLabelImpl.MyJLabel>
   @Nonnull
   @Override
   public Label setHorizontalAlignment(@Nonnull HorizontalAlignment horizontalAlignment) {
-   toAWTComponent().setHorizontalAlignment2(horizontalAlignment);
+    toAWTComponent().setHorizontalAlignment2(horizontalAlignment);
     return this;
   }
 
@@ -175,10 +187,14 @@ class DesktopLabelImpl extends SwingComponentDelegate<DesktopLabelImpl.MyJLabel>
     return toAWTComponent().getHorizontalAlignment2();
   }
 
-  @Nonnull
   @Override
-  public Label setForeground(@Nonnull ColorValue colorValue) {
+  public void setForegroundColor(ColorValue colorValue) {
     toAWTComponent().setForegroundColor(colorValue);
-    return this;
+  }
+
+  @Nullable
+  @Override
+  public ColorValue getForegroundColor() {
+    return toAWTComponent().myForegroudColor;
   }
 }
