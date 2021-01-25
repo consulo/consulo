@@ -134,11 +134,9 @@ class DesktopLabelImpl extends SwingComponentDelegate<DesktopLabelImpl.MyJLabel>
     initialize(new MyJLabel(text));
   }
 
-  @Nonnull
   @Override
-  public Label setImage(@Nullable Image icon) {
+  public void setImage(@Nullable Image icon) {
     toAWTComponent().setIcon(TargetAWT.to(icon));
-    return this;
   }
 
   @Nullable
@@ -148,11 +146,9 @@ class DesktopLabelImpl extends SwingComponentDelegate<DesktopLabelImpl.MyJLabel>
   }
 
   @RequiredUIAccess
-  @Nonnull
   @Override
-  public Label setText(@Nonnull LocalizeValue text) {
+  public void setText(@Nonnull LocalizeValue text) {
     toAWTComponent().setTextValue(text);
-    return this;
   }
 
   @Nonnull
@@ -167,18 +163,16 @@ class DesktopLabelImpl extends SwingComponentDelegate<DesktopLabelImpl.MyJLabel>
     return toAWTComponent().getToolTipText();
   }
 
-  @Nonnull
   @Override
-  public Label setToolTipText(@Nullable String text) {
+  @RequiredUIAccess
+  public void setToolTipText(@Nullable String text) {
     toAWTComponent().setToolTipText(text);
-    return this;
   }
 
-  @Nonnull
   @Override
-  public Label setHorizontalAlignment(@Nonnull HorizontalAlignment horizontalAlignment) {
+  @RequiredUIAccess
+  public void setHorizontalAlignment(@Nonnull HorizontalAlignment horizontalAlignment) {
     toAWTComponent().setHorizontalAlignment2(horizontalAlignment);
-    return this;
   }
 
   @Nonnull

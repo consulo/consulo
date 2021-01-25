@@ -19,7 +19,6 @@ import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import consulo.ui.internal.UIInternal;
-import consulo.ui.color.ColorValue;
 import consulo.util.lang.StringUtil;
 
 import javax.annotation.Nonnull;
@@ -52,30 +51,25 @@ public interface Label extends Component, Mnemonicable {
   LocalizeValue getText();
 
   @RequiredUIAccess
-  @Nonnull
   @Deprecated
-  default Label setText(@Nonnull String text) {
-    return setText(LocalizeValue.of(text));
+  default void setText(@Nonnull String text) {
+    setText(LocalizeValue.of(text));
   }
 
   @RequiredUIAccess
-  @Nonnull
-  Label setText(@Nonnull LocalizeValue text);
+  void setText(@Nonnull LocalizeValue text);
 
   @Nullable
   String getTooltipText();
 
-  @Nonnull
-  Label setToolTipText(@Nullable String text);
+  void setToolTipText(@Nullable String text);
 
-  @Nonnull
-  Label setHorizontalAlignment(@Nonnull HorizontalAlignment horizontalAlignment);
+  void setHorizontalAlignment(@Nonnull HorizontalAlignment horizontalAlignment);
 
   @Nonnull
   HorizontalAlignment getHorizontalAlignment();
 
-  @Nonnull
-  Label setImage(@Nullable Image icon);
+  void setImage(@Nullable Image icon);
 
   @Nullable
   Image getImage();

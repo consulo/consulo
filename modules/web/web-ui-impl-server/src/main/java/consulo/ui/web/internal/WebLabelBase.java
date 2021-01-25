@@ -41,11 +41,9 @@ public abstract class WebLabelBase<V extends VaadinLabelComponentBase> extends U
   }
 
   @RequiredUIAccess
-  @Nonnull
   @Override
-  public Label setText(@Nonnull LocalizeValue text) {
+  public void setText(@Nonnull LocalizeValue text) {
     getVaadinComponent().setTextValue(text);
-    return this;
   }
 
   @Nullable
@@ -54,17 +52,13 @@ public abstract class WebLabelBase<V extends VaadinLabelComponentBase> extends U
     return null;
   }
 
-  @Nonnull
   @Override
-  public Label setToolTipText(@Nullable String text) {
-    return this;
+  public void setToolTipText(@Nullable String text) {
   }
 
-  @Nonnull
   @Override
-  public Label setHorizontalAlignment(@Nonnull HorizontalAlignment horizontalAlignment) {
+  public void setHorizontalAlignment(@Nonnull HorizontalAlignment horizontalAlignment) {
     getVaadinComponent().setHorizontalAlignment(horizontalAlignment);
-    return this;
   }
 
   @Nonnull
@@ -73,11 +67,9 @@ public abstract class WebLabelBase<V extends VaadinLabelComponentBase> extends U
     return getVaadinComponent().getHorizontalAlignment();
   }
 
-  @Nonnull
   @Override
-  public Label setImage(@Nullable Image icon) {
+  public void setImage(@Nullable Image icon) {
     toVaadinComponent().setImage(icon);
-    return this;
   }
 
   @Override
