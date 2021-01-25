@@ -22,6 +22,7 @@ import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.openapi.projectRoots.*;
 import com.intellij.openapi.projectRoots.impl.SdkConfigurationUtil;
 import com.intellij.openapi.projectRoots.impl.SdkImpl;
+import com.intellij.openapi.projectRoots.impl.UnknownSdkType;
 import com.intellij.openapi.roots.OrderRootType;
 import com.intellij.openapi.roots.ui.OrderRootTypeUIFactory;
 import com.intellij.openapi.ui.Messages;
@@ -130,7 +131,7 @@ public abstract class BaseSdkEditor implements UnnamedConfigurable, Place.Naviga
     myHomeComponent = createHomeComponent();
     myHomeComponent.withEditable(false);
 
-    boolean changePathSupported = !mySdk.isPredefined() && ((SdkType)mySdk.getSdkType()).supportsUserAdd();
+    boolean changePathSupported = !mySdk.isPredefined() && ((SdkType)mySdk.getSdkType()).supportsUserAdd() && !(mySdk.getSdkType() instanceof UnknownSdkType);
     if (changePathSupported) {
       myHomeComponent.setExtensions(new TextBoxWithExtensions.Extension(false, PlatformIconGroup.nodesFolderOpened(), null, e -> doSelectHomePath()));
     }
