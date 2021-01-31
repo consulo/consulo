@@ -22,6 +22,7 @@ import com.intellij.util.SystemProperties;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.MouseEventAdapter;
 import com.intellij.util.ui.UIUtil;
+import consulo.annotation.DeprecationInfo;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -40,6 +41,8 @@ import java.awt.event.MouseListener;
 /**
  * @author Konstantin Bulenkov
  */
+@Deprecated
+@DeprecationInfo("Use DefaultTreeUI")
 public class WideSelectionTreeUI extends BasicTreeUI {
   public static final String TREE_TABLE_TREE_KEY = "TreeTableTree";
 
