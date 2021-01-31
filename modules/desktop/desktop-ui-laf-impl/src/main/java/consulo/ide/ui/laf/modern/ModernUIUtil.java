@@ -65,11 +65,11 @@ class ModernUIUtil {
 
   @Nonnull
   public static Color getActiveBorderColor() {
-    return UIManager.getColor("Color.ActiveBorder");
+    return UIManager.getColor("ActiveBorder.Color");
   }
 
   @Nonnull
   public static Color getDisabledBorderColor() {
-    return UIManager.getColor("Color.DisabledBorder");
+    return UIManager.getColor("DisabledBorder.Color");
   }
 }

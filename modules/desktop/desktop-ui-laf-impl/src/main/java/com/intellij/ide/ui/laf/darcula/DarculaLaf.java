@@ -23,6 +23,7 @@ import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.ColorUtil;
 import com.intellij.util.containers.hash.HashMap;
+import com.intellij.util.ui.JBInsets;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import consulo.awt.TargetAWT;
@@ -34,13 +35,12 @@ import consulo.ui.desktop.laf.extend.textBox.SupportTextBoxWithExpandActionExten
 import consulo.ui.desktop.laf.extend.textBox.SupportTextBoxWithExtensionsExtender;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageKey;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;
-import javax.swing.plaf.ColorUIResource;
-import javax.swing.plaf.FontUIResource;
-import javax.swing.plaf.IconUIResource;
-import javax.swing.plaf.InsetsUIResource;
+import javax.swing.border.Border;
+import javax.swing.plaf.*;
 import javax.swing.plaf.basic.BasicLookAndFeel;
 import javax.swing.plaf.metal.DefaultMetalTheme;
 import javax.swing.plaf.metal.MetalLookAndFeel;
@@ -48,6 +48,7 @@ import javax.swing.text.html.StyleSheet;
 import java.awt.*;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Constructor;
 import java.net.URL;
 import java.util.List;
 import java.util.Locale;
@@ -231,9 +232,19 @@ public class DarculaLaf extends BaseLookAndFeel {
       final List<String> numbers = StringUtil.split(value, ",");
       return new InsetsUIResource(Integer.parseInt(numbers.get(0)), Integer.parseInt(numbers.get(1)), Integer.parseInt(numbers.get(2)), Integer.parseInt(numbers.get(3)));
     }
-    else if (key.endsWith(".border")) {
+    else if (key.endsWith("Border") || key.endsWith("border")) {
       try {
-        return Class.forName(value).newInstance();
+        List<String> ints = StringUtil.split(value, ",");
+        if (ints.size() == 4) {
+          return new BorderUIResource.EmptyBorderUIResource(parseInsets(value));
+        }
+        else if (ints.size() == 5) {
+          return asUIResource(JBUI.Borders.customLine(ColorUtil.fromHex(ints.get(4)), Integer.parseInt(ints.get(0)), Integer.parseInt(ints.get(1)), Integer.parseInt(ints.get(2)), Integer.parseInt(ints.get(3))));
+        }
+        Class<?> aClass = Class.forName(value, true, DarculaLaf.class.getClassLoader());
+        Constructor<?> constructor = aClass.getDeclaredConstructor();
+        constructor.setAccessible(true);
+        return constructor.newInstance();
       }
       catch (Exception e) {
         log(e);
@@ -268,6 +279,16 @@ public class DarculaLaf extends BaseLookAndFeel {
       }
     }
     return value;
+  }
+
+  public static Border asUIResource(@Nonnull Border border) {
+    if (border instanceof UIResource) return border;
+    return new BorderUIResource(border);
+  }
+
+  private static Insets parseInsets(String value) {
+    List<String> numbers = StringUtil.split(value, ",");
+    return new JBInsets(Integer.parseInt(numbers.get(0)), Integer.parseInt(numbers.get(1)), Integer.parseInt(numbers.get(2)), Integer.parseInt(numbers.get(3))).asUIResource();
   }
 
   private static ImageKey parseImageKey(@Nonnull String groupId, @Nonnull String imageIdWithSize) {
