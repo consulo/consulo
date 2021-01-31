@@ -18,13 +18,13 @@ package consulo.platform;
 import com.intellij.util.LineSeparator;
 import com.intellij.util.ObjectUtil;
 import consulo.annotation.DeprecationInfo;
-import consulo.container.plugin.PluginId;
 import consulo.platform.internal.PlatformInternal;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.File;
+import java.nio.file.Path;
 import java.util.Map;
 
 /**
@@ -143,6 +143,16 @@ public interface Platform {
     }
   }
 
+  interface User {
+    boolean isSuperUser();
+
+    @Nonnull
+    String getName();
+
+    @Nonnull
+    Path getHomePath();
+  }
+
   @Nonnull
   static Platform current() {
     return PlatformInternal.current();
@@ -158,16 +168,11 @@ public interface Platform {
   Jvm jvm();
 
   @Nonnull
-  PluginId getPluginId();
+  User user();
 
   boolean isDesktop();
 
   boolean isWebService();
-
-  /**
-   * @return is has administrative rights
-   */
-  boolean isUnderRoot();
 
   @Nonnull
   default String mapWindowsExecutable(@Nonnull String baseName, @Nonnull String extension) {

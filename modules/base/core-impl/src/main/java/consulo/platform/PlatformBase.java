@@ -20,6 +20,8 @@ import consulo.util.lang.StringUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 
 /**
@@ -207,18 +209,35 @@ public abstract class PlatformBase implements Platform {
     }
   }
 
-  private final PluginId myPluginId;
+  protected static class UserImpl implements User {
+    @Override
+    public boolean isSuperUser() {
+      return false;
+    }
+
+    @Nonnull
+    @Override
+    public String getName() {
+      return System.getProperty("user.name");
+    }
+
+    @Nonnull
+    @Override
+    public Path getHomePath() {
+      return Path.of(System.getProperty("user.home"));
+    }
+  }
 
   private final FileSystem myFileSystem;
   private final OperatingSystem myOperatingSystem;
   private final Jvm myJvm;
+  private final User myUser;
 
-  protected PlatformBase(@Nonnull String pluginId) {
-    myPluginId = PluginId.getId(pluginId);
-
+  protected PlatformBase() {
     myFileSystem = createFS();
     myOperatingSystem = createOS();
     myJvm = createJVM();
+    myUser = createUser();
   }
 
   @Nonnull
@@ -234,6 +253,11 @@ public abstract class PlatformBase implements Platform {
   @Nonnull
   protected Jvm createJVM() {
     return new JvmImpl();
+  }
+
+  @Nonnull
+  protected User createUser() {
+    return new UserImpl();
   }
 
   @Nonnull
@@ -256,13 +280,8 @@ public abstract class PlatformBase implements Platform {
 
   @Nonnull
   @Override
-  public PluginId getPluginId() {
-    return myPluginId;
-  }
-
-  @Override
-  public boolean isUnderRoot() {
-    return false;
+  public User user() {
+    return myUser;
   }
 
   @Override

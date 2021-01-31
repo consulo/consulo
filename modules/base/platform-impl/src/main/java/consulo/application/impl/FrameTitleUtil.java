@@ -46,7 +46,7 @@ public class FrameTitleUtil {
       builder.append(StringUtil.capitalize(channel.name()));
     }
 
-    if (Platform.current().isUnderRoot()) {
+    if (Platform.current().user().isSuperUser()) {
       builder.append(" (Administrator)");
     }
 

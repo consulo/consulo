@@ -183,7 +183,7 @@ public class ExecUtil {
 
   @Nonnull
   private static GeneralCommandLine sudoCommand(@Nonnull GeneralCommandLine commandLine, @Nonnull String prompt) throws ExecutionException, IOException {
-    if(Platform.current().isUnderRoot()) {
+    if(Platform.current().user().isSuperUser()) {
       return commandLine;
     }
 
