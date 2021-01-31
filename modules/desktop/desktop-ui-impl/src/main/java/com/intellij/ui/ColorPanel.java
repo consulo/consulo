@@ -34,8 +34,6 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import static java.beans.EventHandler.create;
 import static java.util.Locale.ENGLISH;
 
-@Deprecated
-@DeprecationInfo("Desktop only implementation. Use consulo.ui.ColorBox")
 public class ColorPanel extends JComponent {
   private static final RelativeFont MONOSPACED_FONT = RelativeFont.SMALL.family(Font.MONOSPACED);
   private final List<ActionListener> myListeners = new CopyOnWriteArrayList<ActionListener>();
