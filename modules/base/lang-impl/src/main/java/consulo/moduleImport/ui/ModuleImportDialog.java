@@ -117,6 +117,8 @@ public class ModuleImportDialog<C extends ModuleImportContext> extends DialogWra
       myBackRunnable.run();
     }
     else {
+      myWizardSession.finish();
+
       super.doCancelAction();
     }
   }
