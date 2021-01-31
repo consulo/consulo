@@ -204,48 +204,4 @@ public interface Platform {
     }
     return fileName;
   }
-
-  @Nullable
-  @Deprecated
-  @DeprecationInfo("Use jvm().getRuntimeProperty()")
-  default String getRuntimeProperty(@Nonnull String key) {
-    return jvm().getRuntimeProperty(key);
-  }
-
-  @Nullable
-  @Deprecated
-  @DeprecationInfo("Use jvm().getRuntimeProperty()")
-  @SuppressWarnings("deprecation")
-  default String getRuntimeProperty(@Nonnull String key, @Nonnull String defaultValue) {
-    return ObjectUtil.notNull(getRuntimeProperty(key), defaultValue);
-  }
-
-  @Nonnull
-  @Deprecated
-  @DeprecationInfo("Use jvm().getRuntimeProperty()")
-  default Map<String, String> getRuntimeProperties() {
-    return jvm().getRuntimeProperties();
-  }
-
-  @Nonnull
-  @Deprecated
-  @DeprecationInfo("Use os().getEnvironmentVariables()")
-  default Map<String, String> getEnvironmentVariables() {
-    return os().getEnvironmentVariables();
-  }
-
-  @Nullable
-  @Deprecated
-  @DeprecationInfo("Use os().getEnvironmentVariables()")
-  default String getEnvironmentVariable(@Nonnull String key) {
-    return os().getEnvironmentVariable(key);
-  }
-
-  @Nullable
-  @Deprecated
-  @DeprecationInfo("Use os().getEnvironmentVariables()")
-  @SuppressWarnings("deprecation")
-  default String getEnvironmentVariable(@Nonnull String key, @Nonnull String defaultValue) {
-    return ObjectUtil.notNull(getEnvironmentVariable(key), defaultValue);
-  }
 }
