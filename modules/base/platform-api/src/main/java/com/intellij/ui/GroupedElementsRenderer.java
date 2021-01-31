@@ -105,12 +105,12 @@ public abstract class GroupedElementsRenderer {
 
     @Override
     protected final Color getSelectionBackground() {
-      return UIUtil.getListSelectionBackground();
+      return UIUtil.getListSelectionBackground(true);
     }
 
     @Override
     protected final Color getSelectionForeground() {
-      return UIUtil.getListSelectionForeground();
+      return UIUtil.getListSelectionForeground(true);
     }
 
     @Override

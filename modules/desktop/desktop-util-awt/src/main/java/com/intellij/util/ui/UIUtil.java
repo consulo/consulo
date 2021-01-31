@@ -1569,15 +1569,15 @@ public class UIUtil {
   }
 
   public static boolean isUnderNativeMacLookAndFeel() {
-    return isUnderAquaLookAndFeel() || isUnderDarkBuildInLaf();
+    return SystemInfo.isMac;
   }
 
   public static int getListCellHPadding() {
-    return isUnderNativeMacLookAndFeel() ? 7 : 2;
+    return 5;
   }
 
   public static int getListCellVPadding() {
-    return 1;
+    return 3;
   }
 
   public static Insets getListCellPadding() {
@@ -1585,7 +1585,7 @@ public class UIUtil {
   }
 
   public static Insets getListViewportPadding() {
-    return isUnderNativeMacLookAndFeel() ? JBInsets.create(1, 0) : JBUI.emptyInsets();
+    return JBUI.emptyInsets();
   }
 
   public static boolean isToUseDottedCellBorder() {
