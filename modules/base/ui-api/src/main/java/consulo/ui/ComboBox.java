@@ -122,6 +122,15 @@ public interface ComboBox<E> extends ValueComponent<E> {
   @Nonnull
   ListModel<E> getListModel();
 
+  @RequiredUIAccess
+  default void selectFirst() {
+    ListModel<E> listModel = getListModel();
+
+    if(listModel.getSize() > 0) {
+      setValue(listModel.get(0));
+    }
+  }
+
   void setRender(@Nonnull TextItemRender<E> render);
 
   default void setTextRender(@Nonnull Function<E, String> stringFuc) {
