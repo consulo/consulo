@@ -177,7 +177,7 @@ public final class BundleBoxBuilder {
 
           MutableListModel<BundleBox.BundleBoxItem> listModel = (MutableListModel<BundleBox.BundleBoxItem>)component.getListModel();
 
-          BundleBox.BundleBoxItem bundleBoxItem = component.getValueOrError();
+          BundleBox.BundleBoxItem bundleBoxItem = component.getValue();
 
           List<BundleBox.BundleBoxItem> newItems = BundleBox.buildItems(sdkModel, mySdkFilter, myWithNoneItem);
 
@@ -190,7 +190,7 @@ public final class BundleBoxBuilder {
 
           boolean selected = false;
           for (BundleBox.BundleBoxItem newItem : newItems) {
-            if (bundleBoxItem.equals(newItem)) {
+            if (newItem.equals(bundleBoxItem)) {
               component.setValue(newItem);
               selected = true;
               break;
@@ -198,7 +198,7 @@ public final class BundleBoxBuilder {
           }
 
           if (!selected) {
-            if(bundleBoxItem instanceof BundleBox.NullBundleBoxItem) {
+            if(bundleBoxItem == null || bundleBoxItem instanceof BundleBox.NullBundleBoxItem) {
               box.setSelectedNoneBundle();
             }
             else {
