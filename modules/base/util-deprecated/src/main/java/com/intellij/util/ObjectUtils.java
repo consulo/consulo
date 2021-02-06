@@ -17,10 +17,11 @@ package com.intellij.util;
 
 import com.intellij.openapi.util.Condition;
 import com.intellij.util.containers.Convertor;
+import consulo.annotation.DeprecationInfo;
 import org.jetbrains.annotations.Contract;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import consulo.annotation.DeprecationInfo;
 
 /**
  * @author peter
@@ -31,7 +32,7 @@ public class ObjectUtils {
   private ObjectUtils() {
   }
 
-  public static final Object NULL = new Object();
+  public static final Object NULL = ObjectUtil.NULL;
 
   @Nonnull
   public static <T> T assertNotNull(@Nullable T t) {

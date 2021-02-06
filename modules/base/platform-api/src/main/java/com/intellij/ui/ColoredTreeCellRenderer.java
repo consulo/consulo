@@ -5,14 +5,12 @@ import com.intellij.ide.util.treeView.AbstractTreeUi;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.ui.render.RenderingUtil;
-import com.intellij.ui.scale.JBUIScale;
 import com.intellij.ui.speedSearch.SpeedSearchUtil;
-import com.intellij.util.ui.EmptyIcon;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.tree.WideSelectionTreeUI;
 import consulo.ui.image.Image;
 import org.jetbrains.annotations.Nls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.accessibility.AccessibleContext;
 import javax.swing.*;
@@ -157,7 +155,7 @@ public abstract class ColoredTreeCellRenderer extends SimpleColoredComponent imp
    * It guaranties readability of selected text in any LAF.
    */
   @Override
-  public void append(@NotNull @Nls String fragment, @NotNull SimpleTextAttributes attributes, boolean isMainText) {
+  public void append(@Nonnull @Nls String fragment, @Nonnull SimpleTextAttributes attributes, boolean isMainText) {
     if (mySelected && isFocused()) {
       super.append(fragment, new SimpleTextAttributes(attributes.getStyle(), UIUtil.getTreeSelectionForeground(true)), isMainText);
     }
@@ -175,7 +173,7 @@ public abstract class ColoredTreeCellRenderer extends SimpleColoredComponent imp
    * This method is invoked only for customization of component.
    * All component attributes are cleared when this method is being invoked.
    */
-  public abstract void customizeCellRenderer(@NotNull JTree tree, Object value, boolean selected, boolean expanded, boolean leaf, int row, boolean hasFocus);
+  public abstract void customizeCellRenderer(@Nonnull JTree tree, Object value, boolean selected, boolean expanded, boolean leaf, int row, boolean hasFocus);
 
   @Override
   public AccessibleContext getAccessibleContext() {

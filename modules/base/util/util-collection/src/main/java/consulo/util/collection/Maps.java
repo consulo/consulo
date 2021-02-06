@@ -149,6 +149,12 @@ public final class Maps {
     return new ConcurrentWeakHashMap<>(0.75f);
   }
 
+  @Contract(value = " -> new", pure = true)
+  @Nonnull
+  public static <K, V> ConcurrentMap<K, V> newConcurrentWeakIdentityMap() {
+    return new ConcurrentWeakHashMap<>(ContainerUtil.<K>identityStrategy());
+  }
+
   @Nonnull
   @Contract(pure = true)
   public static <K, V> ConcurrentMap<K, V> newConcurrentWeakKeyWeakValueHashMap() {

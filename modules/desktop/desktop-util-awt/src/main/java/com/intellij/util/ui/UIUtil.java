@@ -42,10 +42,9 @@ import consulo.util.dataholder.Key;
 import org.intellij.lang.annotations.JdkConstants;
 import org.intellij.lang.annotations.Language;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import org.jetbrains.annotations.TestOnly;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.Timer;
 import javax.swing.*;
@@ -974,7 +973,7 @@ public class UIUtil {
   /**
    * @see RenderingUtil#getForeground(JTree, boolean)
    */
-  @NotNull
+  @Nonnull
   public static Color getTreeForeground(boolean selected, boolean focused) {
     return !selected ? getTreeForeground() : getTreeSelectionForeground(focused);
   }
@@ -991,7 +990,7 @@ public class UIUtil {
   /**
    * @see RenderingUtil#getForeground(JTree)
    */
-  @NotNull
+  @Nonnull
   public static Color getTreeForeground() {
     return JBUI.CurrentTheme.Tree.FOREGROUND;
   }
@@ -999,7 +998,7 @@ public class UIUtil {
   /**
    * @see RenderingUtil#getSelectionForeground(JTree)
    */
-  @NotNull
+  @Nonnull
   public static Color getTreeSelectionForeground(boolean focused) {
     return JBUI.CurrentTheme.Tree.Selection.foreground(focused);
   }
