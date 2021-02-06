@@ -21,6 +21,7 @@ import com.intellij.ui.LightColors;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.RegionPainter;
 import com.intellij.util.ui.UIUtil;
+import consulo.annotation.DeprecationInfo;
 import consulo.ui.plaf.ScrollBarUIConstants;
 
 import javax.swing.*;
@@ -39,6 +40,8 @@ import java.util.function.Supplier;
  * @author Konstantin Bulenkov
  * @author VISTALL
  */
+@Deprecated
+@DeprecationInfo("Prefer consulo.ide.ui.laf.mac.MacButtonlessScrollbarUI")
 public class ModernButtonlessScrollBarUI extends BasicScrollBarUI {
   public static ComponentUI createUI(JComponent c) {
     return new ModernButtonlessScrollBarUI();

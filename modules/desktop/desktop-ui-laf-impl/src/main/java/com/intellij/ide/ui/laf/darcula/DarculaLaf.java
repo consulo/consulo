@@ -35,9 +35,8 @@ import consulo.ui.desktop.laf.extend.textBox.SupportTextBoxWithExpandActionExten
 import consulo.ui.desktop.laf.extend.textBox.SupportTextBoxWithExtensionsExtender;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageKey;
-import org.jetbrains.annotations.NotNull;
-
 import javax.annotation.Nonnull;
+
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.plaf.*;
