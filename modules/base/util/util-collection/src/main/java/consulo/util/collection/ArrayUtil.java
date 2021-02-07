@@ -16,7 +16,6 @@
 package consulo.util.collection;
 
 import consulo.util.lang.Comparing;
-import gnu.trove.Equality;
 import org.jetbrains.annotations.Contract;
 
 import javax.annotation.Nonnull;
@@ -622,26 +621,6 @@ public class ArrayUtil {
   }
 
   @Contract(pure = true)
-  public static <T> boolean equals(@Nonnull T[] a1, @Nonnull T[] a2, @Nonnull Equality<? super T> comparator) {
-    //noinspection ArrayEquality
-    if (a1 == a2) {
-      return true;
-    }
-
-    int length = a2.length;
-    if (a1.length != length) {
-      return false;
-    }
-
-    for (int i = 0; i < length; i++) {
-      if (!comparator.equals(a1[i], a2[i])) {
-        return false;
-      }
-    }
-    return true;
-  }
-
-  @Contract(pure = true)
   public static <T> boolean equals(@Nonnull T[] a1, @Nonnull T[] a2, @Nonnull Comparator<? super T> comparator) {
     //noinspection ArrayEquality
     if (a1 == a2) {
@@ -774,25 +753,9 @@ public class ArrayUtil {
   }
 
   @Contract(pure = true)
-  public static <T> int indexOf(@Nonnull List<T> objects, T object, @Nonnull Equality<T> comparator) {
-    for (int i = 0; i < objects.size(); i++) {
-      if (comparator.equals(objects.get(i), object)) return i;
-    }
-    return -1;
-  }
-
-  @Contract(pure = true)
   public static <T> int indexOf(@Nonnull List<T> objects, T object, @Nonnull Comparator<T> comparator) {
     for (int i = 0; i < objects.size(); i++) {
       if (comparator.compare(objects.get(i), object) == 0) return i;
-    }
-    return -1;
-  }
-
-  @Contract(pure = true)
-  public static <T> int indexOf(@Nonnull T[] objects, T object, @Nonnull Equality<T> comparator) {
-    for (int i = 0; i < objects.length; i++) {
-      if (comparator.equals(objects[i], object)) return i;
     }
     return -1;
   }
@@ -847,28 +810,6 @@ public class ArrayUtil {
     for (int i = src.length - 1; i >= 0; i--) {
       final int o = src[i];
       if (o == obj) {
-        return i;
-      }
-    }
-    return -1;
-  }
-
-  @Contract(pure = true)
-  public static <T> int lastIndexOf(@Nonnull final T[] src, final T obj, @Nonnull Equality<? super T> comparator) {
-    for (int i = src.length - 1; i >= 0; i--) {
-      final T o = src[i];
-      if (comparator.equals(obj, o)) {
-        return i;
-      }
-    }
-    return -1;
-  }
-
-  @Contract(pure = true)
-  public static <T> int lastIndexOf(@Nonnull List<T> src, final T obj, @Nonnull Equality<? super T> comparator) {
-    for (int i = src.size() - 1; i >= 0; i--) {
-      final T o = src.get(i);
-      if (comparator.equals(obj, o)) {
         return i;
       }
     }

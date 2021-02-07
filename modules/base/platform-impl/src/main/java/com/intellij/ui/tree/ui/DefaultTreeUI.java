@@ -48,7 +48,7 @@ public final class DefaultTreeUI extends BasicTreeUI {
   //@ApiStatus.Internal
   public static final Key<Boolean> AUTO_EXPAND_ALLOWED = Key.create("allows to expand a single child node automatically in tests");
   private static final Logger LOG = Logger.getInstance(DefaultTreeUI.class);
-  private static final Collection<Class<?>> SUSPICIOUS = Sets.newWeakSet();
+  private static final Collection<Class<?>> SUSPICIOUS = Sets.newWeakHashSet();
 
   @Nonnull
   private static Control.Painter getPainter(@Nonnull JTree tree) {

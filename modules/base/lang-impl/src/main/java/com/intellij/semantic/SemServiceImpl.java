@@ -31,14 +31,14 @@ import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.MultiMap;
 import com.intellij.util.messages.MessageBusConnection;
-import consulo.util.collection.ConcurrentIntObjectMap;
+import consulo.util.collection.primitive.ints.ConcurrentIntObjectMap;
+import consulo.util.collection.primitive.ints.IntMaps;
 import gnu.trove.THashMap;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.*;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -263,7 +263,7 @@ public class SemServiceImpl extends SemService {
   }
 
   private static class SemCacheChunk {
-    private final ConcurrentIntObjectMap<List<SemElement>> map = ContainerUtil.createConcurrentIntObjectMap();
+    private final ConcurrentIntObjectMap<List<SemElement>> map = IntMaps.newConcurrentIntObjectHashMap();
 
     public List<SemElement> getSemElements(SemKey<?> key) {
       return map.get(key.getUniqueId());

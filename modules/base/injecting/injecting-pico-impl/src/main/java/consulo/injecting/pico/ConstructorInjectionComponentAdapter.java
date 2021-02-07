@@ -17,14 +17,13 @@ package consulo.injecting.pico;
 
 import consulo.injecting.InjectingContainer;
 import consulo.logging.Logger;
-import consulo.util.collection.ContainerUtil;
+import consulo.util.collection.Sets;
 import consulo.util.lang.ExceptionUtil;
 import consulo.util.lang.reflect.ReflectionUtil;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.lang.reflect.*;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -69,7 +68,7 @@ class ConstructorInjectionComponentAdapter<T> implements ComponentAdapter<T> {
   private T instantiateGuarded(DefaultPicoContainer container, Class stackFrame) {
     Set<ConstructorInjectionComponentAdapter> currentStack = ourGuard.get();
     if (currentStack == null) {
-      ourGuard.set(currentStack = ContainerUtil.newIdentityTroveSet());
+      ourGuard.set(currentStack = Sets.newIdentityHashSet());
     }
 
     if (currentStack.contains(this)) {

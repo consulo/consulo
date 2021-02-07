@@ -29,15 +29,16 @@ import com.intellij.util.io.ReplicatorInputStream;
 import com.intellij.util.text.CharSequenceHashingStrategy;
 import consulo.disposer.Disposable;
 import consulo.logging.Logger;
-import consulo.util.collection.ConcurrentIntObjectMap;
+import consulo.util.collection.primitive.ints.ConcurrentIntObjectMap;
+import consulo.util.collection.primitive.ints.IntMaps;
 import gnu.trove.THashMap;
 import gnu.trove.THashSet;
 import gnu.trove.TIntArrayList;
 import gnu.trove.TIntHashSet;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 import org.jetbrains.annotations.TestOnly;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -55,7 +56,7 @@ public final class PersistentFSImpl extends PersistentFS implements Disposable {
   private final Map<String, VirtualFileSystemEntry> myRoots = ConcurrentCollectionFactory.createMap(10, 0.4f, JobSchedulerImpl.getCPUCoresCount(), FileUtil.PATH_HASHING_STRATEGY);
 
   // FS roots must be in this map too. findFileById() relies on this.
-  private final ConcurrentIntObjectMap<VirtualFileSystemEntry> myIdToDirCache = ContainerUtil.createConcurrentIntObjectSoftValueMap();
+  private final ConcurrentIntObjectMap<VirtualFileSystemEntry> myIdToDirCache = IntMaps.newConcurrentIntObjectSoftValueHashMap();
   private final Object myInputLock = new Object();
 
   private final AtomicBoolean myShutDown = new AtomicBoolean(false);

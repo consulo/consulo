@@ -15,8 +15,9 @@
  */
 package consulo.util.dataholder.internal;
 
+import consulo.util.collection.primitive.ints.ConcurrentIntObjectMap;
+import consulo.util.collection.primitive.ints.IntMaps;
 import consulo.util.dataholder.Key;
-import consulo.util.collection.ConcurrentIntObjectMap;
 import consulo.util.collection.IntObjectMap;
 import consulo.util.collection.Maps;
 
@@ -30,7 +31,7 @@ import java.util.function.Function;
 public class KeyRegistry {
   public static final KeyRegistry ourInstance = new KeyRegistry();
 
-  private final ConcurrentIntObjectMap<Key> myAllKeys = Maps.newConcurrentIntObjectWeakValueHashMap();
+  private final ConcurrentIntObjectMap<Key> myAllKeys = IntMaps.newConcurrentIntObjectWeakValueHashMap();
   private final AtomicInteger myKeyCounter = new AtomicInteger();
 
   private KeyRegistry() {

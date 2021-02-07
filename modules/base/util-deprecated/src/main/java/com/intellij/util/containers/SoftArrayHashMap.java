@@ -16,6 +16,7 @@
 package com.intellij.util.containers;
 
 import com.intellij.util.PairProcessor;
+import consulo.util.collection.HashingStrategy;
 import gnu.trove.TObjectHashingStrategy;
 import javax.annotation.Nonnull;
 
@@ -28,13 +29,13 @@ public class SoftArrayHashMap<T, V> implements Cloneable {
   private Map<T, SoftArrayHashMap<T, V>> myContinuationMap;
   private Map<T, V> myValuesMap;
   private V myEmptyValue;
-  private final TObjectHashingStrategy<T> myStrategy;
+  private final HashingStrategy<T> myStrategy;
 
   public SoftArrayHashMap() {
-    this(ContainerUtil.canonicalStrategy());
+    this(HashingStrategy.canonical());
   }
 
-  public SoftArrayHashMap(@Nonnull TObjectHashingStrategy<T> strategy) {
+  public SoftArrayHashMap(@Nonnull HashingStrategy<T> strategy) {
     myStrategy = strategy;
   }
 

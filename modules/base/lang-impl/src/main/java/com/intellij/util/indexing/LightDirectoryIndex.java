@@ -25,10 +25,10 @@ import com.intellij.openapi.vfs.VirtualFileWithId;
 import com.intellij.openapi.vfs.newvfs.BulkFileListener;
 import com.intellij.openapi.vfs.newvfs.events.VFileEvent;
 import com.intellij.util.Consumer;
-import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.messages.MessageBusConnection;
 import consulo.disposer.Disposable;
-import consulo.util.collection.ConcurrentIntObjectMap;
+import consulo.util.collection.primitive.ints.ConcurrentIntObjectMap;
+import consulo.util.collection.primitive.ints.IntMaps;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -40,7 +40,7 @@ import java.util.List;
  * @author gregsh
  */
 public final class LightDirectoryIndex<T> {
-  private final ConcurrentIntObjectMap<T> myInfoCache = ContainerUtil.createConcurrentIntObjectMap();
+  private final ConcurrentIntObjectMap<T> myInfoCache = IntMaps.newConcurrentIntObjectHashMap();
   private final T myDefValue;
   private final Consumer<LightDirectoryIndex<T>> myInitializer;
 

@@ -15,12 +15,13 @@ import com.intellij.util.ObjectUtil;
 import com.intellij.util.concurrency.AtomicFieldUpdater;
 import com.intellij.util.containers.ConcurrentBitSet;
 import com.intellij.util.containers.ContainerUtil;
-import consulo.util.dataholder.keyFMap.KeyFMap;
 import com.intellij.util.text.ByteArrayCharSequence;
 import com.intellij.util.text.CharSequenceHashingStrategy;
 import consulo.logging.Logger;
-import consulo.util.collection.ConcurrentIntObjectMap;
 import consulo.util.collection.IntObjectMap;
+import consulo.util.collection.primitive.ints.ConcurrentIntObjectMap;
+import consulo.util.collection.primitive.ints.IntMaps;
+import consulo.util.dataholder.keyFMap.KeyFMap;
 import gnu.trove.THashSet;
 import gnu.trove.TIntHashSet;
 import org.jetbrains.annotations.Contract;
@@ -71,7 +72,7 @@ public class VfsData {
 
   private final Object myDeadMarker = ObjectUtil.sentinel("dead file");
 
-  private final ConcurrentIntObjectMap<Segment> mySegments = ContainerUtil.createConcurrentIntObjectMap();
+  private final ConcurrentIntObjectMap<Segment> mySegments = IntMaps.newConcurrentIntObjectHashMap();
   private final ConcurrentBitSet myInvalidatedIds = new ConcurrentBitSet();
   private TIntHashSet myDyingIds = new TIntHashSet();
 

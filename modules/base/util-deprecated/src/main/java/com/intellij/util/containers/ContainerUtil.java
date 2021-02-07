@@ -16,10 +16,10 @@
 package com.intellij.util.containers;
 
 import com.intellij.openapi.util.*;
+import com.intellij.util.ArrayFactory;
+import com.intellij.util.ArrayUtil;
 import com.intellij.util.*;
-import consulo.util.collection.ConcurrentIntObjectMap;
-import consulo.util.collection.ConcurrentLongObjectMap;
-import consulo.util.collection.Maps;
+import consulo.util.collection.*;
 import gnu.trove.*;
 import org.jetbrains.annotations.Contract;
 
@@ -130,7 +130,7 @@ public class ContainerUtil extends ContainerUtilRt {
   @Contract(pure = true)
   @Deprecated
   public static <T> TObjectHashingStrategy<T> canonicalStrategy() {
-    return consulo.util.collection.ContainerUtil.canonicalStrategy();
+    return TObjectHashingStrategy.CANONICAL;
   }
 
   @SuppressWarnings("unchecked")
@@ -138,7 +138,7 @@ public class ContainerUtil extends ContainerUtilRt {
   @Contract(pure = true)
   @Deprecated
   public static <T> TObjectHashingStrategy<T> identityStrategy() {
-    return consulo.util.collection.ContainerUtil.identityStrategy();
+    return TObjectHashingStrategy.IDENTITY;
   }
 
   @Nonnull
@@ -396,25 +396,25 @@ public class ContainerUtil extends ContainerUtilRt {
   @Contract(pure = true)
   @Deprecated
   public static <T> Set<T> newConcurrentSet() {
-    return consulo.util.collection.ContainerUtil.newConcurrentSet();
+    return Sets.newConcurrentSet();
   }
 
   @Nonnull
   @Contract(pure = true)
   @Deprecated
   public static <K, V> ConcurrentMap<K, V> newConcurrentMap() {
-    return consulo.util.collection.ContainerUtil.newConcurrentMap();
+    return Maps.newConcurrentHashMap();
   }
 
   @Contract(pure = true)
   @Deprecated
   public static <K, V> ConcurrentMap<K, V> newConcurrentMap(int initialCapacity) {
-    return consulo.util.collection.ContainerUtil.newConcurrentMap(initialCapacity);
+    return Maps.newConcurrentHashMap(initialCapacity);
   }
 
   @Contract(pure = true)
   public static <K, V> ConcurrentMap<K, V> newConcurrentMap(int initialCapacity, float loadFactor, int concurrencyLevel) {
-    return consulo.util.collection.ContainerUtil.newConcurrentMap(initialCapacity, loadFactor, concurrencyLevel);
+    return Maps.newConcurrentHashMap(initialCapacity, loadFactor, concurrencyLevel);
   }
 
   @Nonnull
@@ -2936,13 +2936,13 @@ public class ContainerUtil extends ContainerUtilRt {
   @Nonnull
   @Deprecated
   public static <K, V> Map<K, V> createSoftMap() {
-    return consulo.util.collection.ContainerUtil.createSoftMap();
+    return Maps.newSoftMap();
   }
 
   @Contract(value = "_ -> new", pure = true)
   @Nonnull
   @Deprecated
-  public static <K, V> Map<K, V> createSoftMap(@Nonnull TObjectHashingStrategy<? super K> strategy) {
+  public static <K, V> Map<K, V> createSoftMap(@Nonnull HashingStrategy<? super K> strategy) {
     return consulo.util.collection.ContainerUtil.createSoftMap(strategy);
   }
 

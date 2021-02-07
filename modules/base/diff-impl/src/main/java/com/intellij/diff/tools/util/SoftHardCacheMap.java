@@ -16,7 +16,7 @@
 package com.intellij.diff.tools.util;
 
 import com.intellij.util.containers.SLRUMap;
-import consulo.util.collection.ContainerUtil;
+import consulo.util.collection.Maps;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -30,7 +30,7 @@ public class SoftHardCacheMap<K, V> {
 
   public SoftHardCacheMap(final int protectedQueueSize, final int probationalQueueSize) {
     mySLRUMap = new SLRUMap<K, V>(protectedQueueSize, probationalQueueSize);
-    mySoftLinkMap = ContainerUtil.createSoftValueMap();
+    mySoftLinkMap = Maps.newSoftValueHashMap();
   }
 
   @Nullable

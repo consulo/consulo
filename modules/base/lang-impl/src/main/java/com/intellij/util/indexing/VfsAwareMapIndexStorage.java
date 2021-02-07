@@ -25,13 +25,13 @@ import com.intellij.psi.search.ProjectScopeImpl;
 import com.intellij.util.Processor;
 import com.intellij.util.SystemProperties;
 import com.intellij.util.ThrowableRunnable;
-import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.indexing.impl.MapIndexStorage;
 import com.intellij.util.io.DataOutputStream;
 import com.intellij.util.io.*;
 import consulo.container.boot.ContainerPathManager;
 import consulo.logging.Logger;
-import consulo.util.collection.ConcurrentIntObjectMap;
+import consulo.util.collection.primitive.ints.ConcurrentIntObjectMap;
+import consulo.util.collection.primitive.ints.IntMaps;
 import gnu.trove.TIntHashSet;
 import org.jetbrains.annotations.TestOnly;
 
@@ -49,7 +49,7 @@ public final class VfsAwareMapIndexStorage<Key, Value> extends MapIndexStorage<K
   private AppendableStorageBackedByResizableMappedFile myKeyHashToVirtualFileMapping;
   private volatile int myLastScannedId;
 
-  private static final ConcurrentIntObjectMap<Boolean> ourInvalidatedSessionIds = ContainerUtil.createConcurrentIntObjectMap();
+  private static final ConcurrentIntObjectMap<Boolean> ourInvalidatedSessionIds = IntMaps.newConcurrentIntObjectHashMap();
 
   @TestOnly
   public VfsAwareMapIndexStorage(@Nonnull File storageFile, @Nonnull KeyDescriptor<Key> keyDescriptor, @Nonnull DataExternalizer<Value> valueExternalizer, final int cacheSize, final boolean readOnly)

@@ -16,8 +16,8 @@
 package com.intellij.openapi.util;
 
 import consulo.ui.image.Image;
-import consulo.util.collection.ConcurrentIntObjectMap;
-import consulo.util.collection.Maps;
+import consulo.util.collection.primitive.ints.IntMaps;
+import consulo.util.collection.primitive.ints.IntObjectMap;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolder;
 import consulo.util.dataholder.UserDataHolderEx;
@@ -38,16 +38,16 @@ public interface Iconable {
   Image getIcon(@IconFlags int flags);
 
   class LastComputedIcon {
-    private static final Key<ConcurrentIntObjectMap<Image>> LAST_COMPUTED_ICON = Key.create("lastComputedIcon");
+    private static final Key<IntObjectMap<Image>> LAST_COMPUTED_ICON = Key.create("lastComputedIcon");
 
     @Nullable
     public static Image get(@Nonnull UserDataHolder holder, int flags) {
-      ConcurrentIntObjectMap<Image> map = holder.getUserData(LAST_COMPUTED_ICON);
+      IntObjectMap<Image> map = holder.getUserData(LAST_COMPUTED_ICON);
       return map == null ? null : map.get(flags);
     }
 
     public static void put(@Nonnull UserDataHolder holder, Image icon, int flags) {
-      ConcurrentIntObjectMap<Image> map = holder.getUserData(LAST_COMPUTED_ICON);
+      IntObjectMap<Image> map = holder.getUserData(LAST_COMPUTED_ICON);
       if (icon == null) {
         if (map != null) {
           map.remove(flags);
@@ -55,9 +55,9 @@ public interface Iconable {
       }
       else {
         if (map == null) {
-          map = ((UserDataHolderEx)holder).putUserDataIfAbsent(LAST_COMPUTED_ICON, Maps.newConcurrentIntObjectHashMap());
+          map = ((UserDataHolderEx)holder).putUserDataIfAbsent(LAST_COMPUTED_ICON, IntMaps.newConcurrentIntObjectHashMap());
         }
-        map.put(flags, icon);
+        map.putIfAbsent(flags, icon);
       }
     }
   }

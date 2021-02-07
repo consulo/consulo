@@ -58,6 +58,12 @@
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
+      <artifactId>consulo-util-collection-primitive</artifactId>
+      <version>${project.version}</version>
+      <optional>true</optional>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
       <artifactId>consulo-vcs-log-graph-impl-testing</artifactId>
       <version>${project.version}</version>
       <scope>test</scope>

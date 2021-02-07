@@ -18,8 +18,8 @@ package com.intellij.util.indexing;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.util.containers.ContainerUtil;
-import consulo.util.collection.ConcurrentIntObjectMap;
+import consulo.util.collection.primitive.ints.ConcurrentIntObjectMap;
+import consulo.util.collection.primitive.ints.IntMaps;
 import org.intellij.lang.annotations.MagicConstant;
 
 import javax.annotation.Nonnull;
@@ -114,7 +114,7 @@ class VfsEventsMerger {
     return myChangeInfos.values().stream().map(ChangeInfo::getFile);
   }
 
-  private final ConcurrentIntObjectMap<ChangeInfo> myChangeInfos = ContainerUtil.createConcurrentIntObjectMap();
+  private final ConcurrentIntObjectMap<ChangeInfo> myChangeInfos = IntMaps.newConcurrentIntObjectHashMap();
 
   private static final short FILE_ADDED = 1;
   private static final short FILE_REMOVED = 2;

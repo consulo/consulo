@@ -16,7 +16,8 @@
 package com.intellij.util.xmlb;
 
 import com.intellij.util.xmlb.annotations.*;
-import consulo.util.collection.ContainerUtil;
+import consulo.util.collection.Lists;
+import consulo.util.collection.Maps;
 import consulo.util.jdom.JDOMUtil;
 import consulo.util.lang.Couple;
 import consulo.util.lang.Pair;
@@ -37,7 +38,7 @@ import java.lang.reflect.Type;
 import java.util.*;
 
 class BeanBinding extends Binding implements MainBinding {
-  private static final Map<Class, List<MutableAccessor>> ourAccessorCache = ContainerUtil.createConcurrentSoftValueMap();
+  private static final Map<Class, List<MutableAccessor>> ourAccessorCache = Maps.newConcurrentSoftValueMap();
 
   private final String myTagName;
   @SuppressWarnings("FieldAccessedSynchronizedAndUnsynchronized")
@@ -259,7 +260,7 @@ class BeanBinding extends Binding implements MainBinding {
       return accessors;
     }
 
-    accessors = ContainerUtil.newArrayList();
+    accessors = Lists.newArrayList();
 
     if (!AWTHacks.isRectangle(aClass)) {   // special case for Rectangle.class to avoid infinite recursion during serialization due to bounds() method
       collectPropertyAccessors(aClass, accessors);

@@ -31,13 +31,13 @@ import com.intellij.openapi.vfs.newvfs.BulkFileListener;
 import com.intellij.openapi.vfs.newvfs.NewVirtualFile;
 import com.intellij.openapi.vfs.newvfs.events.VFileEvent;
 import com.intellij.util.Query;
-import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.messages.MessageBusConnection;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
 import consulo.roots.ContentFolderTypeProvider;
-import consulo.util.collection.ConcurrentIntObjectMap;
+import consulo.util.collection.primitive.ints.ConcurrentIntObjectMap;
+import consulo.util.collection.primitive.ints.IntMaps;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -134,7 +134,7 @@ public class DirectoryIndexImpl extends DirectoryIndex {
   protected RootIndex.InfoCache createRootInfoCache() {
     return new RootIndex.InfoCache() {
       // Upsource can't use int-mapping because different files may have the same id there
-      private final ConcurrentIntObjectMap<DirectoryInfo> myInfoCache = ContainerUtil.createConcurrentIntObjectMap();
+      private final ConcurrentIntObjectMap<DirectoryInfo> myInfoCache = IntMaps.newConcurrentIntObjectHashMap();
 
       @Override
       public void cacheInfo(@Nonnull VirtualFile dir, @Nonnull DirectoryInfo info) {

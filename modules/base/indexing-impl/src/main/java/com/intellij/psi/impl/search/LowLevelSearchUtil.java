@@ -36,8 +36,8 @@ import com.intellij.util.ConcurrencyUtil;
 import com.intellij.util.text.StringSearcher;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.logging.Logger;
+import consulo.util.collection.HashingStrategy;
 import consulo.util.collection.Maps;
-import consulo.util.collection.ObjectHashingStrategies;
 import gnu.trove.TIntArrayList;
 import gnu.trove.TIntProcedure;
 
@@ -271,7 +271,7 @@ public class LowLevelSearchUtil {
 
   // map (text to be scanned -> list of cached pairs of (searcher used to scan text, occurrences found))
   // occurrences found is an int array of (startOffset used, endOffset used, occurrence 1 offset, occurrence 2 offset,...)
-  private static final ConcurrentMap<CharSequence, Map<StringSearcher, int[]>> cache = Maps.newConcurrentWeakHashMap(ObjectHashingStrategies.identityStrategy());
+  private static final ConcurrentMap<CharSequence, Map<StringSearcher, int[]>> cache = Maps.newConcurrentWeakHashMap(HashingStrategy.identity());
 
   public static boolean processTextOccurrences(@Nonnull CharSequence text,
                                                int startOffset,

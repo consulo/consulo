@@ -23,7 +23,7 @@ import com.intellij.util.io.*;
 import com.intellij.util.io.storage.*;
 import consulo.container.boot.ContainerPathManager;
 import consulo.logging.Logger;
-import consulo.util.collection.ConcurrentIntObjectMap;
+import consulo.util.collection.primitive.ints.ConcurrentIntObjectMap;
 import gnu.trove.TIntArrayList;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.TestOnly;

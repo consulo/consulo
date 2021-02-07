@@ -24,7 +24,7 @@ public class CglibAdvancedProxyFacade implements AdvancedProxyFacade {
   public static final Method HASHCODE_METHOD = ObjectMethods.HASHCODE_METHOD;
   public static final Method TOSTRING_METHOD = ObjectMethods.TOSTRING_METHOD;
 
-  private static final Map<ProxyDescription, Factory> ourFactories = Maps.newConcurrentWeakValueMap();
+  private static final Map<ProxyDescription, Factory> ourFactories = Maps.newConcurrentWeakValueHashMap();
   private static final CallbackFilter NO_OBJECT_METHODS_FILTER = new CallbackFilter() {
     public int accept(Method method) {
       if (CglibAdvancedProxyFacade.FINALIZE_METHOD.equals(method)) {

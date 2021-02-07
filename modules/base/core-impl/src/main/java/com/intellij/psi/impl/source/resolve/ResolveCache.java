@@ -29,8 +29,8 @@ import com.intellij.psi.impl.AnyPsiChangeListener;
 import com.intellij.psi.impl.PsiManagerImpl;
 import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.util.ObjectUtil;
-import consulo.util.collection.ConcurrentWeakKeySoftValueHashMap;
-import consulo.util.collection.ContainerUtil;
+import consulo.util.collection.impl.map.ConcurrentWeakKeySoftValueHashMap;
+import consulo.util.collection.HashingStrategy;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -93,7 +93,7 @@ public class ResolveCache {
 
   @Nonnull
   private static <K, V> Map<K, V> createWeakMap() {
-    return new ConcurrentWeakKeySoftValueHashMap<K, V>(100, 0.75f, Runtime.getRuntime().availableProcessors(), ContainerUtil.canonicalStrategy()) {
+    return new ConcurrentWeakKeySoftValueHashMap<K, V>(100, 0.75f, Runtime.getRuntime().availableProcessors(), HashingStrategy.canonical()) {
       @Nonnull
       @Override
       protected ValueReference<K, V> createValueReference(@Nonnull V value, @Nonnull ReferenceQueue<? super V> queue) {

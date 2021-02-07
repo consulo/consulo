@@ -25,6 +25,7 @@ import com.intellij.util.ThreeState;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
+import consulo.util.collection.HashingStrategy;
 import gnu.trove.THashSet;
 import gnu.trove.TObjectHashingStrategy;
 import javax.annotation.Nonnull;
@@ -115,9 +116,9 @@ public class CachedIntentions {
     return res;
   }
 
-  private static final TObjectHashingStrategy<IntentionActionWithTextCaching> ACTION_TEXT_AND_CLASS_EQUALS = new TObjectHashingStrategy<IntentionActionWithTextCaching>() {
+  private static final HashingStrategy<IntentionActionWithTextCaching> ACTION_TEXT_AND_CLASS_EQUALS = new HashingStrategy<IntentionActionWithTextCaching>() {
     @Override
-    public int computeHashCode(final IntentionActionWithTextCaching object) {
+    public int hashCode(final IntentionActionWithTextCaching object) {
       return object.getText().hashCode();
     }
 

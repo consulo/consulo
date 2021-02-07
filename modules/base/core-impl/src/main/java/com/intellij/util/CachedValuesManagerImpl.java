@@ -7,15 +7,15 @@ import com.intellij.openapi.util.Getter;
 import com.intellij.psi.FileViewProvider;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.util.*;
-import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.Maps;
+import consulo.util.collection.Sets;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolder;
 import consulo.util.dataholder.UserDataHolderEx;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Set;
 import java.util.concurrent.ConcurrentMap;
@@ -28,7 +28,7 @@ public final class CachedValuesManagerImpl extends CachedValuesManager {
   private static final Object NULL = new Object();
 
   private ConcurrentMap<UserDataHolder, Object> myCacheHolders = Maps.newConcurrentWeakIdentityMap();
-  private Set<Key<?>> myKeys = ContainerUtil.newConcurrentSet();
+  private Set<Key<?>> myKeys = Sets.newConcurrentSet();
 
   private final Project myProject;
   private final CachedValuesFactory myFactory;
@@ -115,6 +115,6 @@ public final class CachedValuesManagerImpl extends CachedValuesManager {
     }
     CachedValueStabilityChecker.cleanupFieldCache();
     myCacheHolders = Maps.newConcurrentWeakIdentityMap();
-    myKeys = ContainerUtil.newConcurrentSet();
+    myKeys = Sets.newConcurrentSet();
   }
 }
