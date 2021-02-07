@@ -19,16 +19,19 @@ import com.intellij.lang.LighterAST;
 import com.intellij.lang.LighterASTNode;
 import com.intellij.lang.LighterASTTokenNode;
 import com.intellij.lang.LighterLazyParseableNode;
-import consulo.logging.Logger;
+import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.TokenSet;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.logging.Logger;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.BiConsumer;
 
 @SuppressWarnings("ForLoopReplaceableByForEach")
 public class LightTreeUtil {
@@ -171,5 +174,45 @@ public class LightTreeUtil {
 
   private static boolean containsOffset(LighterASTNode node, int offset) {
     return node.getStartOffset() <= offset && node.getEndOffset() > offset;
+  }
+
+  public static void processLeavesAtOffsets(int[] offsets, @Nonnull LighterAST tree, @Nonnull BiConsumer<? super LighterASTTokenNode, ? super Integer> consumer) {
+    if (offsets.length == 0) return;
+
+    int[] sortedOffsets = offsets.clone();
+    Arrays.sort(sortedOffsets);
+    new RecursiveLighterASTNodeWalkingVisitor(tree) {
+      int nextIndex = 0;
+      int nextOffset = sortedOffsets[0];
+
+      @Override
+      public void visitNode(@Nonnull LighterASTNode element) {
+        if (containsNextOffset(element)) {
+          super.visitNode(element);
+        }
+      }
+
+      @Override
+      public void visitTokenNode(@Nonnull LighterASTTokenNode node) {
+        if (containsNextOffset(node)) {
+          consumer.accept(node, nextOffset);
+          while (containsNextOffset(node)) {
+            advanceOffset();
+          }
+        }
+      }
+
+      private boolean containsNextOffset(@Nonnull LighterASTNode element) {
+        ProgressManager.checkCanceled();
+        return nextIndex < sortedOffsets.length && element.getStartOffset() <= nextOffset && nextOffset < element.getEndOffset();
+      }
+
+      private void advanceOffset() {
+        nextIndex++;
+        if (nextIndex < sortedOffsets.length) {
+          nextOffset = sortedOffsets[nextIndex];
+        }
+      }
+    }.visitNode(tree.getRoot());
   }
 }

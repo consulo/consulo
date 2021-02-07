@@ -19,8 +19,12 @@
  */
 package com.intellij.util;
 
+import consulo.annotation.DeprecationInfo;
+
 import javax.annotation.Nonnull;
 
+@Deprecated
+@DeprecationInfo("Use consulo.util.lang.ThreeState")
 public enum ThreeState {
   YES, NO, UNSURE;
 
