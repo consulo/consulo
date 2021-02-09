@@ -62,7 +62,6 @@
         <configuration>
           <execution>
             <buildDirectory>${project.build.directory}/consulo-sandbox-desktop-${project.version}-main</buildDirectory>
-            <newBootLoader>true</newBootLoader>
           </execution>
         </configuration>
       </plugin>
