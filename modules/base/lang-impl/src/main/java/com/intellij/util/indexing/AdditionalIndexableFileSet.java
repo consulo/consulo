@@ -19,7 +19,7 @@ import com.intellij.openapi.roots.ContentIterator;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileVisitor;
-import gnu.trove.THashSet;
+import java.util.HashSet;
 
 import javax.annotation.Nonnull;
 import java.util.Arrays;
@@ -46,9 +46,9 @@ public class AdditionalIndexableFileSet implements IndexableFileSet {
     return directories;
   }
 
-  private THashSet<VirtualFile> collectFilesAndDirectories() {
-    THashSet<VirtualFile> files = new THashSet<>();
-    THashSet<VirtualFile> directories = new THashSet<>();
+  private HashSet<VirtualFile> collectFilesAndDirectories() {
+    HashSet<VirtualFile> files = new HashSet<>();
+    HashSet<VirtualFile> directories = new HashSet<>();
     if (myExtensions == null) {
       myExtensions = IndexableSetContributor.EP_NAME.getExtensionList();
     }

@@ -30,7 +30,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.util.CommonProcessors;
 import com.intellij.util.containers.ContainerUtil;
-import gnu.trove.THashSet;
+import java.util.HashSet;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import org.jetbrains.annotations.TestOnly;
@@ -50,9 +50,9 @@ public class LibraryRuntimeClasspathScope extends GlobalSearchScope {
   public LibraryRuntimeClasspathScope(final Project project, final List<Module> modules) {
     super(project);
     myIndex = ProjectRootManager.getInstance(project).getFileIndex();
-    final Set<Sdk> processedSdk = new THashSet<Sdk>();
-    final Set<Library> processedLibraries = new THashSet<Library>();
-    final Set<Module> processedModules = new THashSet<Module>();
+    final Set<Sdk> processedSdk = new HashSet<Sdk>();
+    final Set<Library> processedLibraries = new HashSet<Library>();
+    final Set<Module> processedModules = new HashSet<Module>();
     final Condition<OrderEntry> condition = new Condition<OrderEntry>() {
       @Override
       public boolean value(OrderEntry orderEntry) {

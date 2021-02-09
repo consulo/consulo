@@ -22,7 +22,7 @@ import com.intellij.testFramework.PlatformTestUtil;
 import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.ui.treeStructure.Tree;
 import com.intellij.util.WaitFor;
-import com.intellij.util.containers.HashMap;
+import java.util.HashMap;
 import junit.framework.Assert;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

@@ -17,7 +17,7 @@ import com.intellij.util.CatchingConsumer;
 import com.intellij.util.IconUtil;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.containers.HashSet;
+import java.util.HashSet;
 import com.intellij.util.ui.StatusText;
 import com.intellij.util.ui.UIUtil;
 import consulo.awt.TargetAWT;

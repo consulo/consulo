@@ -27,8 +27,8 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.Stack;
 import com.intellij.util.io.PersistentEnumerator;
 import com.intellij.util.ui.UIUtil;
-import gnu.trove.THashMap;
-import gnu.trove.THashSet;
+import java.util.HashMap;
+import java.util.HashSet;
 import javax.annotation.Nonnull;
 
 import org.jetbrains.annotations.TestOnly;
@@ -36,16 +36,13 @@ import org.jetbrains.annotations.TestOnly;
 import javax.swing.*;
 import java.lang.ref.Reference;
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * User: cdr
  */
 public class LeakHunter {
-  private static final Map<Class, Field[]> allFields = new THashMap<Class, Field[]>();
+  private static final Map<Class, Field[]> allFields = new HashMap<Class, Field[]>();
   private static final Field[] EMPTY_FIELD_ARRAY = new Field[0];
 
   private static Field[] getAllFields(@Nonnull Class aClass) {
@@ -147,7 +144,7 @@ public class LeakHunter {
     return !(value instanceof UserDataHolder) || ((UserDataHolder)value).getUserData(IS_NOT_A_LEAK) == null;
   }
 
-  private static final Set<String> noFollowClasses = new THashSet<String>();
+  private static final Set<String> noFollowClasses = new HashSet<String>();
   static {
     noFollowClasses.add("java.lang.Boolean");
     noFollowClasses.add("java.lang.Byte");
@@ -218,7 +215,7 @@ public class LeakHunter {
     }
     finally {
       visited.clear();
-      ((THashSet)visited).compact();
+      ((HashSet)visited).compact();
       toVisit.clear();
       toVisit.trimToSize();
     }

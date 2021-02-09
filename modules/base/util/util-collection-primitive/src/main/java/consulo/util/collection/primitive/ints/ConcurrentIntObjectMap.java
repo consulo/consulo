@@ -16,6 +16,7 @@
 package consulo.util.collection.primitive.ints;
 
 import javax.annotation.Nonnull;
+import java.util.Set;
 
 /**
  * @author VISTALL

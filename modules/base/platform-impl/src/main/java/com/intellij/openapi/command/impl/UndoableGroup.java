@@ -32,7 +32,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.util.containers.ContainerUtil;
-import gnu.trove.THashSet;
+import java.util.HashSet;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -122,7 +122,7 @@ class UndoableGroup {
     // if multiple consecutive actions share a document, then set the bulk flag only once
     final UnexpectedUndoException[] exception = {null};
     ApplicationManager.getApplication().runWriteAction(() -> {
-      final Set<DocumentEx> bulkDocuments = new THashSet<>();
+      final Set<DocumentEx> bulkDocuments = new HashSet<>();
       try {
         for (final UndoableAction action : isUndo ? ContainerUtil.iterateBackward(myActions) : myActions) {
           if (wrapInBulkUpdate) {
@@ -280,7 +280,7 @@ class UndoableGroup {
 
   @Nonnull
   public Collection<DocumentReference> getAffectedDocuments() {
-    Set<DocumentReference> result = new THashSet<>();
+    Set<DocumentReference> result = new HashSet<>();
     for (UndoableAction action : myActions) {
       DocumentReference[] refs = action.getAffectedDocuments();
       if (refs != null) Collections.addAll(result, refs);

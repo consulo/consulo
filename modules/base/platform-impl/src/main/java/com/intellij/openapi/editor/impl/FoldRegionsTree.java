@@ -11,10 +11,10 @@ import com.intellij.util.ArrayUtil;
 import com.intellij.util.CommonProcessors;
 import com.intellij.util.Consumer;
 import com.intellij.util.ObjectUtil;
-import gnu.trove.TObjectHashingStrategy;
+import consulo.util.collection.HashingStrategy;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.*;
 
 abstract class FoldRegionsTree {
@@ -25,9 +25,9 @@ abstract class FoldRegionsTree {
   private static final Comparator<FoldRegion> BY_END_OFFSET = Comparator.comparingInt(RangeMarker::getEndOffset);
   private static final Comparator<? super FoldRegion> BY_END_OFFSET_REVERSE = Collections.reverseOrder(BY_END_OFFSET);
 
-  static final TObjectHashingStrategy<FoldRegion> OFFSET_BASED_HASHING_STRATEGY = new TObjectHashingStrategy<FoldRegion>() {
+  static final HashingStrategy<FoldRegion> OFFSET_BASED_HASHING_STRATEGY = new HashingStrategy<FoldRegion>() {
     @Override
-    public int computeHashCode(FoldRegion o) {
+    public int hashCode(FoldRegion o) {
       return o.getStartOffset() * 31 + o.getEndOffset();
     }
 

@@ -28,7 +28,7 @@ import consulo.disposer.Disposer;
 import consulo.disposer.TraceableDisposable;
 import consulo.logging.Logger;
 import consulo.roots.impl.ModuleRootLayerImpl;
-import gnu.trove.THashSet;
+import java.util.HashSet;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 
@@ -633,7 +633,7 @@ public class LibraryImpl implements LibraryEx.ModifiableModelEx, LibraryEx, Root
   }
 
   private void disposeMyPointers() {
-    for (VirtualFilePointerContainer container : new THashSet<>(myRoots.values())) {
+    for (VirtualFilePointerContainer container : new HashSet<>(myRoots.values())) {
       container.killAll();
     }
     if (myExcludedRoots != null) {

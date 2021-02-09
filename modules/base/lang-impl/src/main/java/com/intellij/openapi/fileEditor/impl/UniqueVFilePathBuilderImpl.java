@@ -31,7 +31,7 @@ import com.intellij.psi.util.CachedValuesManager;
 import com.intellij.psi.util.PsiModificationTracker;
 import com.intellij.util.ConcurrencyUtil;
 import com.intellij.util.containers.ContainerUtil;
-import gnu.trove.THashSet;
+import java.util.HashSet;
 import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
@@ -126,7 +126,7 @@ public class UniqueVFilePathBuilderImpl extends UniqueVFilePathBuilder {
     Collection<VirtualFile> filesWithSameName = skipNonOpenedFiles ? Collections.emptySet() :
                                                 FilenameIndex.getVirtualFilesByName(project, fileName,
                                                                                     scope);
-    THashSet<VirtualFile> setOfFilesWithTheSameName = new THashSet<>(filesWithSameName);
+    HashSet<VirtualFile> setOfFilesWithTheSameName = new HashSet<>(filesWithSameName);
     // add open files out of project scope
     for(VirtualFile openFile: FileEditorManager.getInstance(project).getOpenFiles()) {
       if (openFile.getName().equals(fileName)) {

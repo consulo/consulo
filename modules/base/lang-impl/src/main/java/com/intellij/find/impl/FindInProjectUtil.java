@@ -55,7 +55,7 @@ import com.intellij.util.Processor;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.ui.image.Image;
 import consulo.util.dataholder.Key;
-import gnu.trove.THashSet;
+import java.util.HashSet;
 import javax.annotation.Nonnull;
 import org.jetbrains.annotations.PropertyKey;
 
@@ -581,7 +581,7 @@ public class FindInProjectUtil {
     String relativePath = VfsUtilCore.getRelativePath(directory, classRoot);
     if (relativePath == null) return;
 
-    Collection<VirtualFile> otherSourceRoots = new THashSet<>();
+    Collection<VirtualFile> otherSourceRoots = new HashSet<>();
 
     // if we are in the library sources, return (to search in this directory only)
     // otherwise, if we outside sources or in a jar directory, add directories from other source roots

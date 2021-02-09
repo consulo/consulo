@@ -17,7 +17,7 @@ package com.intellij.util.xmlb;
 
 import consulo.util.jdom.JDOMUtil;
 import consulo.util.lang.reflect.ReflectionUtil;
-import gnu.trove.THashMap;
+import java.util.HashMap;
 import org.jdom.Element;
 
 import javax.annotation.Nonnull;
@@ -26,7 +26,7 @@ import java.util.Map;
 import java.util.Objects;
 
 public class SkipDefaultValuesSerializationFilters extends SerializationFilterBase {
-  private final Map<Class<?>, Object> myDefaultBeans = new THashMap<Class<?>, Object>();
+  private final Map<Class<?>, Object> myDefaultBeans = new HashMap<Class<?>, Object>();
 
   @Override
   protected boolean accepts(@Nonnull Accessor accessor, @Nonnull Object bean, @Nullable Object beanValue) {

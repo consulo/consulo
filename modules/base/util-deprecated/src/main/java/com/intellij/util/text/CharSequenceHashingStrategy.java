@@ -17,27 +17,23 @@ package com.intellij.util.text;
 
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.text.StringUtil;
-import gnu.trove.TObjectHashingStrategy;
+import consulo.util.collection.HashingStrategy;
 
 /**
  * @author max
  */
-public final class CharSequenceHashingStrategy implements TObjectHashingStrategy<CharSequence> {
+public final class CharSequenceHashingStrategy implements HashingStrategy<CharSequence> {
   public static final CharSequenceHashingStrategy CASE_SENSITIVE = new CharSequenceHashingStrategy(true);
   public static final CharSequenceHashingStrategy CASE_INSENSITIVE = new CharSequenceHashingStrategy(false);
   private final boolean myCaseSensitive;
 
-  @Deprecated
-  public CharSequenceHashingStrategy() {
-    this(true);
-  }
 
   private CharSequenceHashingStrategy(boolean caseSensitive) {
     myCaseSensitive = caseSensitive;
   }
 
   @Override
-  public int computeHashCode(final CharSequence chars) {
+  public int hashCode(final CharSequence chars) {
     return myCaseSensitive ? StringUtil.stringHashCode(chars) : StringUtil.stringHashCodeInsensitive(chars);
   }
 

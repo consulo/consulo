@@ -18,7 +18,7 @@ package com.intellij.openapi.components;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.SystemProperties;
-import com.intellij.util.containers.HashMap;
+import java.util.HashMap;
 import consulo.container.boot.ContainerPathManager;
 
 import javax.annotation.Nullable;

@@ -15,7 +15,7 @@
  */
 package com.intellij.vcs.log.graph.impl.print;
 
-import com.intellij.util.containers.SLRUMap;
+import consulo.util.collection.SLRUMap;
 import com.intellij.vcs.log.graph.api.EdgeFilter;
 import com.intellij.vcs.log.graph.api.LinearGraph;
 import com.intellij.vcs.log.graph.api.elements.GraphEdge;

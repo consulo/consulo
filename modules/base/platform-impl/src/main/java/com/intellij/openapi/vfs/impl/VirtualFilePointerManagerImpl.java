@@ -37,8 +37,8 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.MultiMap;
 import com.intellij.util.io.URLUtil;
 import consulo.fileTypes.ArchiveFileType;
-import gnu.trove.THashMap;
-import gnu.trove.THashSet;
+import java.util.HashMap;
+import java.util.HashSet;
 import gnu.trove.TObjectIntHashMap;
 import org.jetbrains.annotations.TestOnly;
 
@@ -256,7 +256,7 @@ public final class VirtualFilePointerManagerImpl extends VirtualFilePointerManag
     return getOrCreate(file, path, url, recursive, parentDisposable, listener, (NewVirtualFileSystem)fileSystem);
   }
 
-  private final Map<String, IdentityVirtualFilePointer> myUrlToIdentity = new THashMap<>(); // guarded by this
+  private final Map<String, IdentityVirtualFilePointer> myUrlToIdentity = new HashMap<>(); // guarded by this
 
   @Nonnull
   private synchronized IdentityVirtualFilePointer getOrCreateIdentity(@Nonnull String url, @Nullable VirtualFile found, boolean recursive, @Nonnull Disposable parentDisposable) {
@@ -358,7 +358,7 @@ public final class VirtualFilePointerManagerImpl extends VirtualFilePointerManag
                                                           @Nullable VirtualFilePointerListener listener,
                                                           @Nonnull NewVirtualFileSystem fs) {
     VirtualFilePointerListener nl = ObjectUtils.notNull(listener, NULL_LISTENER);
-    Map<VirtualFilePointerListener, FilePointerPartNode> myPointers = myRoots.computeIfAbsent(fs, __ -> new THashMap<>());
+    Map<VirtualFilePointerListener, FilePointerPartNode> myPointers = myRoots.computeIfAbsent(fs, __ -> new HashMap<>());
     FilePointerPartNode root = myPointers.computeIfAbsent(nl, __ -> FilePointerPartNode.createFakeRoot());
 
     FilePointerPartNode node = file == null ? FilePointerPartNode.findOrCreateNodeByPath(root, path, fs) : root.findOrCreateNodeByFile(file, fs);
@@ -800,7 +800,7 @@ public final class VirtualFilePointerManagerImpl extends VirtualFilePointerManag
 
   @Nonnull
   synchronized Collection<VirtualFilePointer> dumpAllPointers() {
-    Collection<VirtualFilePointer> result = new THashSet<>();
+    Collection<VirtualFilePointer> result = new HashSet<>();
     for (Map<VirtualFilePointerListener, FilePointerPartNode> myPointers : myRoots.values()) {
       for (FilePointerPartNode node : myPointers.values()) {
         dumpPointersRecursivelyTo(node, result);

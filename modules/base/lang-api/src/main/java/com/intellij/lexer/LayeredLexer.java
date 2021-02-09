@@ -17,7 +17,7 @@ package com.intellij.lexer;
 
 import consulo.logging.Logger;
 import com.intellij.psi.tree.IElementType;
-import com.intellij.util.containers.HashMap;
+import java.util.HashMap;
 import javax.annotation.Nonnull;
 
 import java.util.HashSet;

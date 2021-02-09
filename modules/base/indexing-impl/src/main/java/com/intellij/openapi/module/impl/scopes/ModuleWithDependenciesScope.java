@@ -27,7 +27,7 @@ import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.util.NotNullFunction;
 import com.intellij.util.Processor;
 import com.intellij.util.containers.ContainerUtil;
-import gnu.trove.THashSet;
+import java.util.HashSet;
 import gnu.trove.TObjectIntHashMap;
 import org.intellij.lang.annotations.MagicConstant;
 import javax.annotation.Nonnull;
@@ -96,7 +96,7 @@ public class ModuleWithDependenciesScope extends GlobalSearchScope {
       }
     });
 
-    myModules = new THashSet<Module>(modules);
+    myModules = new HashSet<Module>(modules);
 
     final LinkedHashSet<VirtualFile> roots = ContainerUtil.newLinkedHashSet();
 

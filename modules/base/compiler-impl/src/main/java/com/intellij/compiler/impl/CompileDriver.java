@@ -75,7 +75,7 @@ import com.intellij.util.Function;
 import com.intellij.util.StringBuilderSpinAllocator;
 import com.intellij.util.concurrency.Semaphore;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.containers.HashMap;
+import java.util.HashMap;
 import com.intellij.util.containers.MultiMap;
 import com.intellij.util.containers.OrderedSet;
 import consulo.annotation.access.RequiredReadAction;
@@ -91,8 +91,8 @@ import consulo.compiler.roots.CompilerPathsImpl;
 import consulo.roots.ContentFolderScopes;
 import consulo.roots.ContentFolderTypeProvider;
 import consulo.util.dataholder.Key;
-import gnu.trove.THashMap;
-import gnu.trove.THashSet;
+
+import java.util.HashSet;
 import gnu.trove.TIntHashSet;
 import org.jetbrains.annotations.NonNls;
 
@@ -119,7 +119,7 @@ public class CompileDriver {
   private final String myCachesDirectoryPath;
   private boolean myShouldClearOutputDirectory;
 
-  private final Map<ContentFolderTypeProvider, Map<Module, String>> myOutputs = new THashMap<>(4);
+  private final Map<ContentFolderTypeProvider, Map<Module, String>> myOutputs = new HashMap<>(4);
 
   @NonNls
   private static final String VERSION_FILE_NAME = "version.dat";
@@ -553,7 +553,7 @@ public class CompileDriver {
         indicator.setText("");
       }
 
-      final Set<File> genSourceRoots = new THashSet<>(FileUtil.FILE_HASHING_STRATEGY);
+      final Set<File> genSourceRoots = new HashSet<>(FileUtil.FILE_HASHING_STRATEGY);
       for (AdditionalOutputDirectoriesProvider additionalOutputDirectoriesProvider : AdditionalOutputDirectoriesProvider.EP_NAME.getExtensionList()) {
         for (Module module : affectedModules) {
           for (String path : additionalOutputDirectoriesProvider.getOutputDirectories(myProject, module)) {
@@ -1761,7 +1761,7 @@ CompilerManagerImpl.addDeletedPath(outputPath.getPath());
     }
     final CompileScope scope = context.getCompileScope();
     final List<FileProcessingCompiler.ProcessingItem> toProcess = new ArrayList<>();
-    final Set<File> allFiles = new THashSet<>(FileUtil.FILE_HASHING_STRATEGY);
+    final Set<File> allFiles = new HashSet<>(FileUtil.FILE_HASHING_STRATEGY);
     final IOException[] ex = {null};
     DumbService.getInstance(myProject).runReadActionInSmartMode(() -> {
       try {
@@ -2147,7 +2147,7 @@ CompilerManagerImpl.addDeletedPath(outputPath.getPath());
   }
 
   private static class CacheDeferredUpdater {
-    private final Map<File, List<Pair<FileProcessingCompilerStateCache, FileProcessingCompiler.ProcessingItem>>> myData = new THashMap<>(FileUtil.FILE_HASHING_STRATEGY);
+    private final Map<File, List<Pair<FileProcessingCompilerStateCache, FileProcessingCompiler.ProcessingItem>>> myData = new HashMap<>(FileUtil.FILE_HASHING_STRATEGY);
 
     public void addFileForUpdate(final FileProcessingCompiler.ProcessingItem item, FileProcessingCompilerStateCache cache) {
       final File file = item.getFile();

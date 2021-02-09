@@ -42,8 +42,8 @@ import consulo.container.plugin.PluginDescriptor;
 import consulo.psi.injection.LanguageInjectionSupport;
 import consulo.psi.injection.impl.ApplicationInjectionConfiguration;
 import consulo.psi.injection.impl.ProjectInjectionConfiguration;
-import gnu.trove.THashMap;
-import gnu.trove.THashSet;
+import java.util.HashMap;
+import java.util.HashSet;
 import org.intellij.plugins.intelliLang.inject.InjectorUtils;
 import org.intellij.plugins.intelliLang.inject.LanguageInjectionConfigBean;
 import org.intellij.plugins.intelliLang.inject.config.BaseInjection;
@@ -153,7 +153,7 @@ public class Configuration implements PersistentStateComponent<Element>, Modific
   @Override
   public void loadState(final Element element) {
     myInjections.clear();
-    final THashMap<String, LanguageInjectionSupport> supports = new THashMap<>();
+    final HashMap<String, LanguageInjectionSupport> supports = new HashMap<>();
     for (LanguageInjectionSupport support : InjectorUtils.getActiveInjectionSupports()) {
       supports.put(support.getId(), support);
     }
@@ -192,7 +192,7 @@ public class Configuration implements PersistentStateComponent<Element>, Modific
 
   public static List<BaseInjection> loadDefaultInjections() {
     final ArrayList<Configuration> cfgList = new ArrayList<>();
-    final THashSet<Object> visited = new THashSet<>();
+    final HashSet<Object> visited = new HashSet<>();
     for (LanguageInjectionConfigBean configBean : LanguageInjectionSupport.CONFIG_EP_NAME.getExtensionList()) {
       PluginDescriptor descriptor = configBean.getPluginDescriptor();
       final ClassLoader loader = descriptor.getPluginClassLoader();

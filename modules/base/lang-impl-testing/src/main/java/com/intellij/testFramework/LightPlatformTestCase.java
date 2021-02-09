@@ -98,7 +98,7 @@ import consulo.roots.impl.ProductionContentFolderTypeProvider;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.UIAccess;
 import consulo.util.dataholder.Key;
-import gnu.trove.THashMap;
+import java.util.HashMap;
 import junit.framework.TestCase;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.TestOnly;
@@ -128,7 +128,7 @@ public abstract class LightPlatformTestCase extends UsefulTestCase implements Da
   public static Thread ourTestThread;
   private static TestModuleDescriptor ourProjectDescriptor;
   @NonNls private static final String LIGHT_PROJECT_MARK = "Light project: ";
-  private final Map<String, InspectionToolWrapper> myAvailableInspectionTools = new THashMap<String, InspectionToolWrapper>();
+  private final Map<String, InspectionToolWrapper> myAvailableInspectionTools = new HashMap<String, InspectionToolWrapper>();
   private static boolean ourHaveShutdownHook;
   private static List<Sdk> ourRegisteredSdks = new ArrayList<Sdk>();
   private ThreadTracker myThreadTracker;

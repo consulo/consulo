@@ -20,8 +20,8 @@ import com.intellij.internal.statistic.StatisticsUploadAssistant;
 import com.intellij.internal.statistic.beans.PatchedUsage;
 import com.intellij.internal.statistic.beans.UsageDescriptor;
 import com.intellij.openapi.util.Pair;
-import com.intellij.util.containers.HashSet;
-import com.intellij.util.containers.hash.HashMap;
+import java.util.HashSet;
+import java.util.HashMap;
 
 import javax.annotation.Nonnull;
 import java.util.Map;

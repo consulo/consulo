@@ -20,7 +20,7 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.io.DataExternalizer;
 import com.intellij.util.io.DataInputOutputUtil;
 import com.intellij.util.io.KeyDescriptor;
-import gnu.trove.THashMap;
+import java.util.HashMap;
 import javax.annotation.Nonnull;
 
 import java.io.*;
@@ -123,7 +123,7 @@ public class VfsDependentEnum<T> {
         int savedVersion = DataInputOutputUtil.readINT(input);
         if (savedVersion == myVersion) {
           List<T> elements = new ArrayList<>();
-          Map<T, Integer> elementToIdMap = new THashMap<>();
+          Map<T, Integer> elementToIdMap = new HashMap<>();
           while (input.available() > 0) {
             T instance = myKeyDescriptor.read(input);
             assert instance != null;

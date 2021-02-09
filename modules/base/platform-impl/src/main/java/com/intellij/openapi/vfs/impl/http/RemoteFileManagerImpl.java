@@ -21,7 +21,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.ex.http.HttpVirtualFileListener;
 import com.intellij.util.EventDispatcher;
 import consulo.disposer.Disposer;
-import gnu.trove.THashMap;
+import java.util.HashMap;
 import javax.annotation.Nonnull;
 import jakarta.inject.Singleton;
 
@@ -43,7 +43,7 @@ public class RemoteFileManagerImpl extends RemoteFileManager implements Disposab
 
   public RemoteFileManagerImpl() {
     myStorage = new LocalFileStorage();
-    myRemoteFiles = new THashMap<Pair<Boolean, String>, VirtualFileImpl>();
+    myRemoteFiles = new HashMap<Pair<Boolean, String>, VirtualFileImpl>();
     myDefaultRemoteContentProvider = new DefaultRemoteContentProvider();
   }
 

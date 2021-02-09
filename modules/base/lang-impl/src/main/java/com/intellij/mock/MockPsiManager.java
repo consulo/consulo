@@ -30,7 +30,7 @@ import com.intellij.psi.impl.PsiTreeChangeEventImpl;
 import com.intellij.psi.impl.file.impl.FileManager;
 import com.intellij.psi.util.PsiModificationTracker;
 import consulo.ui.annotation.RequiredUIAccess;
-import gnu.trove.THashMap;
+import java.util.HashMap;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -38,7 +38,7 @@ import java.util.Map;
 
 public class MockPsiManager extends PsiManagerEx {
   private final Project myProject;
-  private final Map<VirtualFile,PsiDirectory> myDirectories = new THashMap<VirtualFile, PsiDirectory>();
+  private final Map<VirtualFile,PsiDirectory> myDirectories = new HashMap<VirtualFile, PsiDirectory>();
   private MockFileManager myMockFileManager;
   private PsiModificationTrackerImpl myPsiModificationTracker;
 

@@ -12,7 +12,7 @@ import com.intellij.mock.MockPsiFile;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.testFramework.fixtures.LightPlatformCodeInsightFixtureTestCase;
-import gnu.trove.THashMap;
+import java.util.HashMap;
 import gnu.trove.TObjectIntHashMap;
 
 import java.util.Arrays;
@@ -32,7 +32,7 @@ public abstract class IElementTypeTest extends LightPlatformCodeInsightFixtureTe
     List<LanguageExtensionPoint> extensions = ExtensionPointName.<LanguageExtensionPoint>create("com.intellij.lang.parserDefinition").getExtensionList();
     System.out.println("ParserDefinitions: " + extensions.size());
 
-    THashMap<Language, String> languageMap = new THashMap<Language, String>();
+    HashMap<Language, String> languageMap = new HashMap<Language, String>();
     languageMap.put(Language.ANY, "platform");
     final TObjectIntHashMap<String> map = new TObjectIntHashMap<String>();
     for (LanguageExtensionPoint e : extensions) {

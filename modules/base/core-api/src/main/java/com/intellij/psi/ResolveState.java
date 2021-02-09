@@ -21,7 +21,7 @@ package com.intellij.psi;
 
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.KeyWithDefaultValue;
-import gnu.trove.THashMap;
+import java.util.HashMap;
 
 import java.util.Map;
 
@@ -119,7 +119,7 @@ public class ResolveState {
 
   private static class ManyElementResolveState extends ResolveState {
 
-    private final Map<Object, Object> myValues = new THashMap<Object, Object>();
+    private final Map<Object, Object> myValues = new HashMap<Object, Object>();
 
     ManyElementResolveState(ManyElementResolveState parent, Key key, Object value) {
       myValues.putAll(parent.myValues);

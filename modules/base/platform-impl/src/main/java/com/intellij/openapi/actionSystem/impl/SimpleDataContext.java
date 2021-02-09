@@ -21,8 +21,8 @@ import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.project.Project;
 import consulo.util.dataholder.Key;
 import com.intellij.openapi.wm.IdeFocusManager;
-import com.intellij.util.containers.HashMap;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public class SimpleDataContext implements DataContext {

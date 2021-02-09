@@ -17,13 +17,13 @@ import com.intellij.openapi.vfs.newvfs.impl.VirtualDirectoryImpl;
 import com.intellij.util.concurrency.AppExecutorUtil;
 import com.intellij.util.containers.Queue;
 import com.intellij.util.text.FilePathHashingStrategy;
-import gnu.trove.THashMap;
-import gnu.trove.THashSet;
-import gnu.trove.TObjectHashingStrategy;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import consulo.util.collection.HashingStrategy;
+import consulo.util.collection.Maps;
+import consulo.util.collection.Sets;
 import org.jetbrains.annotations.TestOnly;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.io.IOException;
 import java.nio.file.*;
 import java.nio.file.attribute.*;
@@ -78,7 +78,7 @@ class LocalFileSystemRefreshWorker {
   }
 
   @Nonnull
-  private RefreshContext createRefreshContext(@Nonnull NewVirtualFileSystem fs, @Nonnull PersistentFS persistentFS, @Nonnull TObjectHashingStrategy<String> strategy) {
+  private RefreshContext createRefreshContext(@Nonnull NewVirtualFileSystem fs, @Nonnull PersistentFS persistentFS, @Nonnull HashingStrategy<String> strategy) {
     int parallelism = Registry.intValue("vfs.use.nio-based.local.refresh.worker.parallelism", Runtime.getRuntime().availableProcessors() - 1);
 
     if (myIsRecursive && parallelism > 0 && !ApplicationManager.getApplication().isDispatchThread()) {
@@ -117,10 +117,10 @@ class LocalFileSystemRefreshWorker {
   private abstract static class RefreshContext {
     final NewVirtualFileSystem fs;
     final PersistentFS persistence;
-    final TObjectHashingStrategy<String> strategy;
+    final HashingStrategy<String> strategy;
     final BlockingQueue<NewVirtualFile> filesToBecomeDirty = new LinkedBlockingQueue<>();
 
-    RefreshContext(@Nonnull NewVirtualFileSystem fs, @Nonnull PersistentFS persistence, @Nonnull TObjectHashingStrategy<String> strategy) {
+    RefreshContext(@Nonnull NewVirtualFileSystem fs, @Nonnull PersistentFS persistence, @Nonnull HashingStrategy<String> strategy) {
       this.fs = fs;
       this.persistence = persistence;
       this.strategy = strategy;
@@ -252,7 +252,7 @@ class LocalFileSystemRefreshWorker {
   private static class SequentialRefreshContext extends RefreshContext {
     private final Queue<Runnable> myRefreshRequests = new Queue<>(100);
 
-    SequentialRefreshContext(@Nonnull NewVirtualFileSystem fs, @Nonnull PersistentFS persistentFS, @Nonnull TObjectHashingStrategy<String> strategy) {
+    SequentialRefreshContext(@Nonnull NewVirtualFileSystem fs, @Nonnull PersistentFS persistentFS, @Nonnull HashingStrategy<String> strategy) {
       super(fs, persistentFS, strategy);
     }
 
@@ -274,7 +274,7 @@ class LocalFileSystemRefreshWorker {
     private final AtomicInteger tasksScheduled = new AtomicInteger();
     private final CountDownLatch refreshFinishedLatch = new CountDownLatch(1);
 
-    ConcurrentRefreshContext(@Nonnull NewVirtualFileSystem fs, @Nonnull PersistentFS persistentFS, @Nonnull TObjectHashingStrategy<String> strategy, int parallelism) {
+    ConcurrentRefreshContext(@Nonnull NewVirtualFileSystem fs, @Nonnull PersistentFS persistentFS, @Nonnull HashingStrategy<String> strategy, int parallelism) {
       super(fs, persistentFS, strategy);
       service = AppExecutorUtil.createBoundedApplicationPoolExecutor("Refresh Worker", parallelism);
     }
@@ -317,7 +317,7 @@ class LocalFileSystemRefreshWorker {
     /**
      * @param fileOrDir
      * @param refreshContext
-     * @param childrenToRefresh  null means all
+     * @param childrenToRefresh          null means all
      * @param existingPersistentChildren
      */
     RefreshingFileVisitor(@Nonnull NewVirtualFile fileOrDir,
@@ -326,8 +326,8 @@ class LocalFileSystemRefreshWorker {
                           @Nonnull Collection<? extends VirtualFile> existingPersistentChildren) {
       myFileOrDir = fileOrDir;
       myRefreshContext = refreshContext;
-      myPersistentChildren = new THashMap<>(existingPersistentChildren.size(), refreshContext.strategy);
-      myChildrenWeAreInterested = childrenToRefresh == null ? null : new THashSet<>(childrenToRefresh, refreshContext.strategy);
+      myPersistentChildren = Maps.<String, VirtualFile>newHashMap(existingPersistentChildren.size(), refreshContext.strategy);
+      myChildrenWeAreInterested = childrenToRefresh == null ? null : Sets.newHashSet(childrenToRefresh, refreshContext.strategy);
 
       for (VirtualFile child : existingPersistentChildren) {
         String name = child.getName();

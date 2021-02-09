@@ -19,15 +19,15 @@ package com.intellij.codeInspection.ex;
 import com.intellij.codeInsight.daemon.HighlightDisplayKey;
 import com.intellij.codeInspection.InspectionProfile;
 import com.intellij.codeInspection.InspectionProfileEntry;
-import consulo.logging.Logger;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.project.Project;
-import consulo.util.dataholder.Key;
 import com.intellij.psi.PsiElement;
 import com.intellij.util.Function;
-import gnu.trove.THashSet;
-import javax.annotation.Nonnull;
+import consulo.logging.Logger;
+import consulo.util.dataholder.Key;
 
+import javax.annotation.Nonnull;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -62,7 +62,7 @@ public class InspectionProfileWrapper {
   public static void checkInspectionsDuplicates(@Nonnull InspectionToolWrapper[] toolWrappers) {
     if (alreadyChecked) return;
     alreadyChecked = true;
-    Set<InspectionProfileEntry> uniqTools = new THashSet<InspectionProfileEntry>(toolWrappers.length);
+    Set<InspectionProfileEntry> uniqTools = new HashSet<>(toolWrappers.length);
     for (InspectionToolWrapper toolWrapper : toolWrappers) {
       ProgressManager.checkCanceled();
       if (!uniqTools.add(toolWrapper.getTool())) {

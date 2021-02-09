@@ -69,7 +69,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolderEx;
-import gnu.trove.THashSet;
+import java.util.HashSet;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -417,7 +417,7 @@ public class ProjectManagerImpl extends ProjectManagerEx implements Disposable {
       if (myChangedProjectFiles.isEmpty()) {
         return;
       }
-      projects = new THashSet<>(myChangedProjectFiles.keySet());
+      projects = new HashSet<>(myChangedProjectFiles.keySet());
     }
 
     List<Project> projectsToReload = new SmartList<>();

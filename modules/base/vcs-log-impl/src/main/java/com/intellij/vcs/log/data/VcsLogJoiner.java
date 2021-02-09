@@ -18,7 +18,7 @@ package com.intellij.vcs.log.data;
 import com.intellij.openapi.util.Pair;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.vcs.log.graph.GraphCommit;
-import gnu.trove.THashSet;
+import java.util.HashSet;
 import javax.annotation.Nonnull;
 
 import java.util.*;
@@ -74,7 +74,7 @@ public class VcsLogJoiner<CommitId, Commit extends GraphCommit<CommitId>> {
                                                                      @Nonnull Collection<CommitId> previousRefs,
                                                                      @Nonnull List<? extends Commit> firstBlock,
                                                                      @Nonnull Collection<CommitId> newRefs) {
-    Set<CommitId> allUnresolvedLinkedHashes = new THashSet<>(newRefs);
+    Set<CommitId> allUnresolvedLinkedHashes = new HashSet<>(newRefs);
     allUnresolvedLinkedHashes.removeAll(previousRefs);
     // at this moment allUnresolvedLinkedHashes contains only NEW refs
     for (Commit commit : firstBlock) {
@@ -126,9 +126,9 @@ public class VcsLogJoiner<CommitId, Commit extends GraphCommit<CommitId>> {
                                                                      @Nonnull Collection<CommitId> previousRefs,
                                                                      @Nonnull List<? extends Commit> firstBlock,
                                                                      @Nonnull Collection<CommitId> newRefs) {
-    Set<CommitId> startRedCommits = new THashSet<>(previousRefs);
+    Set<CommitId> startRedCommits = new HashSet<>(previousRefs);
     startRedCommits.removeAll(newRefs);
-    Set<CommitId> startGreenNodes = new THashSet<>(newRefs);
+    Set<CommitId> startGreenNodes = new HashSet<>(newRefs);
     for (Commit commit : firstBlock) {
       startGreenNodes.add(commit.getId());
       startGreenNodes.addAll(commit.getParents());
@@ -142,7 +142,7 @@ public class VcsLogJoiner<CommitId, Commit extends GraphCommit<CommitId>> {
   private static class RedGreenSorter<CommitId, Commit extends GraphCommit<CommitId>> {
     private final Set<CommitId> currentRed;
     private final Set<CommitId> currentGreen;
-    private final Set<CommitId> allRedCommit = new THashSet<>();
+    private final Set<CommitId> allRedCommit = new HashSet<>();
 
     private final List<? extends Commit> savedLog;
 
@@ -220,7 +220,7 @@ public class VcsLogJoiner<CommitId, Commit extends GraphCommit<CommitId>> {
           }
 
           int insertIndex;
-          Set<CommitId> parents = new THashSet<>(currentCommit.getParents());
+          Set<CommitId> parents = new HashSet<>(currentCommit.getParents());
           for (insertIndex = 0; insertIndex < list.size(); insertIndex++) {
             Commit someCommit = list.get(insertIndex);
             if (parents.contains(someCommit.getId())) {

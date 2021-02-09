@@ -38,7 +38,7 @@ import java.lang.reflect.Type;
 import java.util.*;
 
 class BeanBinding extends Binding implements MainBinding {
-  private static final Map<Class, List<MutableAccessor>> ourAccessorCache = Maps.newConcurrentSoftValueMap();
+  private static final Map<Class, List<MutableAccessor>> ourAccessorCache = Maps.newConcurrentSoftValueHashMap();
 
   private final String myTagName;
   @SuppressWarnings("FieldAccessedSynchronizedAndUnsynchronized")

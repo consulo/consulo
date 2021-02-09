@@ -16,14 +16,11 @@
 package com.intellij.util.treeWithCheckedNodes;
 
 import com.intellij.util.Processor;
-import com.intellij.util.containers.SLRUMap;
-import com.intellij.util.containers.hash.HashSet;
+import consulo.util.collection.SLRUMap;
+
 import javax.annotation.Nonnull;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author irengrig

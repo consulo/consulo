@@ -20,14 +20,11 @@
 package com.intellij.util.io;
 
 import com.intellij.util.SystemProperties;
-import com.intellij.util.containers.hash.LinkedHashMap;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import java.util.Iterator;
-import java.util.Map;
-import java.util.SortedMap;
-import java.util.TreeMap;
+import java.util.*;
 
 
 @SuppressWarnings({"AssignmentToStaticFieldFromInstanceMethod"})

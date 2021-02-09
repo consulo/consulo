@@ -29,7 +29,7 @@ import com.intellij.rt.coverage.data.LineData;
 import com.intellij.ui.popup.NotLookupOrSearchCondition;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.Processor;
-import com.intellij.util.containers.HashSet;
+import java.util.HashSet;
 
 import javax.swing.*;
 import java.io.DataInputStream;

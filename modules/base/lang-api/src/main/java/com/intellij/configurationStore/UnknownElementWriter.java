@@ -16,8 +16,8 @@
 package com.intellij.configurationStore;
 
 import com.intellij.util.ArrayUtil;
-import gnu.trove.THashMap;
-import gnu.trove.THashSet;
+import java.util.HashMap;
+import java.util.HashSet;
 import org.jdom.Element;
 
 import java.util.*;
@@ -37,7 +37,7 @@ public class UnknownElementWriter {
   }
 
   public <T> void write(Element outElement, Collection<T> items, Function<T, String> itemToTagName, Consumer<T> writer) {
-    Map<String, T> knownNameToWriter = new THashMap<>(items.size());
+    Map<String, T> knownNameToWriter = new HashMap<>(items.size());
     for (T item : items) {
       knownNameToWriter.put(itemToTagName.apply(item), item);
     }
@@ -50,7 +50,7 @@ public class UnknownElementWriter {
       names = knownNameToWriter.keySet();
     }
     else {
-      names = new THashSet<>(myUnknownElements.size());
+      names = new HashSet<>(myUnknownElements.size());
       names.addAll(knownNameToWriter.keySet());
     }
 

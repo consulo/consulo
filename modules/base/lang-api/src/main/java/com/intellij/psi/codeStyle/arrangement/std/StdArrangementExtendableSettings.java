@@ -27,8 +27,8 @@ import com.intellij.psi.codeStyle.arrangement.model.ArrangementCompositeMatchCon
 import com.intellij.psi.codeStyle.arrangement.model.ArrangementMatchCondition;
 import com.intellij.psi.codeStyle.arrangement.model.ArrangementMatchConditionVisitor;
 import com.intellij.util.containers.ContainerUtil;
-import gnu.trove.THashMap;
-import gnu.trove.THashSet;
+import java.util.HashMap;
+import java.util.HashSet;
 import javax.annotation.Nonnull;
 
 import java.util.*;
@@ -38,7 +38,7 @@ import java.util.*;
  */
 public class StdArrangementExtendableSettings extends StdArrangementSettings implements ArrangementExtendableSettings {
   @Nonnull
-  private final Set<StdArrangementRuleAliasToken> myRulesAliases = new THashSet<StdArrangementRuleAliasToken>();
+  private final Set<StdArrangementRuleAliasToken> myRulesAliases = new HashSet<StdArrangementRuleAliasToken>();
 
   // cached values
   @Nonnull
@@ -71,7 +71,7 @@ public class StdArrangementExtendableSettings extends StdArrangementSettings imp
   }
 
   private Set<StdArrangementRuleAliasToken> cloneTokenDefinitions() {
-    final Set<StdArrangementRuleAliasToken> definitions = new THashSet<StdArrangementRuleAliasToken>();
+    final Set<StdArrangementRuleAliasToken> definitions = new HashSet<StdArrangementRuleAliasToken>();
     for (StdArrangementRuleAliasToken definition : myRulesAliases) {
       definitions.add(definition.clone());
     }
@@ -82,7 +82,7 @@ public class StdArrangementExtendableSettings extends StdArrangementSettings imp
   public List<ArrangementSectionRule> getExtendedSectionRules() {
     synchronized (myExtendedSectionRules) {
       if (myExtendedSectionRules.isEmpty()) {
-        final Map<String, StdArrangementRuleAliasToken> tokenIdToDefinition = new THashMap<String, StdArrangementRuleAliasToken>(myRulesAliases.size());
+        final Map<String, StdArrangementRuleAliasToken> tokenIdToDefinition = new HashMap<String, StdArrangementRuleAliasToken>(myRulesAliases.size());
         for (StdArrangementRuleAliasToken alias : myRulesAliases) {
           final String id = alias.getId();
           tokenIdToDefinition.put(id, alias);

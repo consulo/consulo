@@ -20,7 +20,7 @@ import com.intellij.ide.structureView.impl.StructureViewElementWrapper;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
 import com.intellij.openapi.project.Project;
 import com.intellij.pom.Navigatable;
-import gnu.trove.THashMap;
+import java.util.HashMap;
 import javax.annotation.Nonnull;
 
 import java.util.*;
@@ -178,7 +178,7 @@ public abstract class CachingChildrenTreeNode <Value> extends AbstractTreeNode<V
   }
 
   private Map<Group, GroupWrapper> createGroupNodes(Collection<Group> groups) {
-    Map<Group, GroupWrapper> result = new THashMap<Group, GroupWrapper>();
+    Map<Group, GroupWrapper> result = new HashMap<Group, GroupWrapper>();
     for (Group group : groups) {
       result.put(group, createGroupWrapper(getProject(), group, myTreeModel));
     }

@@ -17,7 +17,7 @@ import com.intellij.util.Processor;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.indexing.impl.*;
 import com.intellij.util.indexing.impl.forward.*;
-import gnu.trove.THashSet;
+import java.util.HashSet;
 import gnu.trove.TIntObjectHashMap;
 import org.jetbrains.annotations.TestOnly;
 
@@ -25,10 +25,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
@@ -190,7 +187,7 @@ public class VfsAwareMapReduceIndex<Key, Value, Input> extends MapReduceIndex<Ke
           }
         }
         else {
-          Set<Key> diskKeySet = new THashSet<>();
+          Set<Key> diskKeySet = new HashSet<>();
 
           builder.differentiate(Collections.emptyMap(), (key, value, inputId1) -> {
           }, (key, value, inputId1) -> {

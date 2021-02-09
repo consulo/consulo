@@ -2,6 +2,7 @@
 package consulo.util.collection.impl.map;
 
 import consulo.util.collection.HashingStrategy;
+import consulo.util.collection.Maps;
 import consulo.util.lang.IncorrectOperationException;
 import consulo.util.lang.ref.SoftReference;
 
@@ -31,11 +32,11 @@ public abstract class RefValueHashMap<K, V> implements Map<K, V> {
   }
 
   RefValueHashMap() {
-    myMap = new THashMap<>();
+    myMap = Maps.newHashMap(HashingStrategy.canonical());
   }
 
   RefValueHashMap(@Nonnull HashingStrategy<K> strategy) {
-    myMap = new THashMap<>(strategy);
+    myMap = Maps.newHashMap(strategy);
   }
 
   protected abstract MyReference<K, V> createReference(@Nonnull K key, V value, @Nonnull ReferenceQueue<? super V> queue);

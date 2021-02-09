@@ -15,7 +15,9 @@
  */
 package com.intellij.util.io;
 
-import com.intellij.util.containers.SLRUMap;
+import consulo.util.collection.SLRUMap;
+import consulo.util.collection.HashingStrategy;
+
 import javax.annotation.Nonnull;
 
 import java.io.IOException;
@@ -23,7 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public abstract class FileAccessorCache<K, T> implements com.intellij.util.containers.hash.EqualityPolicy<K> {
+public abstract class FileAccessorCache<K, T> implements HashingStrategy<K> {
   /*@GuardedBy("myCacheLock")*/ private final SLRUMap<K, Handle<T>> myCache;
   /*@GuardedBy("myCacheLock")*/ private final List<T> myElementsToBeDisposed = new ArrayList<T>();
   private final Object myCacheLock = new Object();
@@ -146,12 +148,12 @@ public abstract class FileAccessorCache<K, T> implements com.intellij.util.conta
   }
 
   @Override
-  public int getHashCode(K value) {
+  public int hashCode(K value) {
     return value.hashCode();
   }
 
   @Override
-  public boolean isEqual(K val1, K val2) {
+  public boolean equals(K val1, K val2) {
     return val1.equals(val2);
   }
 

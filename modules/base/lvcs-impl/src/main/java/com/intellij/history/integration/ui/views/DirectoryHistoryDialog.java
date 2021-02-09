@@ -36,7 +36,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.*;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.ui.image.Image;
-import gnu.trove.THashSet;
+import java.util.HashSet;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;
@@ -44,10 +44,8 @@ import javax.swing.border.Border;
 import javax.swing.event.DocumentEvent;
 import javax.swing.tree.DefaultTreeModel;
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.Collections;
+import java.util.*;
 import java.util.List;
-import java.util.Set;
 
 import static com.intellij.history.integration.LocalHistoryBundle.message;
 
@@ -193,7 +191,7 @@ public class DirectoryHistoryDialog extends HistoryDialog<DirectoryHistoryDialog
 
     @Override
     protected void doPerform(DirectoryHistoryDialogModel model, List<DirectoryChange> selected) {
-      final Set<DirectoryChange> selectedSet = new THashSet<>(selected);
+      final Set<DirectoryChange> selectedSet = new HashSet<>(selected);
 
       int index = 0;
       List<Change> changes = new ArrayList<>();

@@ -17,6 +17,7 @@ package com.intellij.util.containers;
 
 import consulo.logging.Logger;
 import com.intellij.util.ArrayUtil;
+import consulo.util.collection.HashingStrategy;
 import gnu.trove.TObjectHashingStrategy;
 import gnu.trove.TObjectIntHashMap;
 import gnu.trove.TObjectIntIterator;
@@ -29,7 +30,7 @@ public class Enumerator<T> {
   private final TObjectIntHashMap<T> myNumbers;
   private int myNextNumber = 1;
 
-  public Enumerator(int expectNumber, TObjectHashingStrategy<T> strategy) {
+  public Enumerator(int expectNumber, HashingStrategy<T> strategy) {
     myNumbers = new TObjectIntHashMap<T>(expectNumber, strategy);
   }
 

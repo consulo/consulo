@@ -23,7 +23,7 @@ import com.intellij.openapi.util.JDOMUtil;
 import com.intellij.openapi.util.WriteExternalException;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.components.impl.stores.*;
-import gnu.trove.THashMap;
+import java.util.HashMap;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 
@@ -177,7 +177,7 @@ public abstract class XmlElementStorage extends StateStorageBase<StorageData> {
     private final StorageData myOriginalStorageData;
     private StorageData myCopiedStorageData;
 
-    private final Map<String, Element> myNewLiveStates = new THashMap<String, Element>();
+    private final Map<String, Element> myNewLiveStates = new HashMap<String, Element>();
 
     public XmlElementStorageSaveSession(@Nonnull StorageData storageData) {
       myOriginalStorageData = storageData;

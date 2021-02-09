@@ -24,7 +24,7 @@ import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.encoding.EncodingManager;
 import com.intellij.util.io.BaseOutputReader;
 import consulo.annotation.DeprecationInfo;
-import gnu.trove.THashSet;
+import java.util.HashSet;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -198,7 +198,7 @@ public class OSProcessHandler extends BaseOSProcessHandler {
   public static void deleteFileOnTermination(@Nonnull GeneralCommandLine commandLine, @Nonnull File fileToDelete) {
     Set<File> set = commandLine.getUserData(DELETE_FILES_ON_TERMINATION);
     if (set == null) {
-      commandLine.putUserData(DELETE_FILES_ON_TERMINATION, set = new THashSet<>());
+      commandLine.putUserData(DELETE_FILES_ON_TERMINATION, set = new HashSet<>());
     }
     set.add(fileToDelete);
   }

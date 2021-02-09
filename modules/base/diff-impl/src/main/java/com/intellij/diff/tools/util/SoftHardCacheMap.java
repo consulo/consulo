@@ -15,7 +15,7 @@
  */
 package com.intellij.diff.tools.util;
 
-import com.intellij.util.containers.SLRUMap;
+import consulo.util.collection.SLRUMap;
 import consulo.util.collection.Maps;
 
 import javax.annotation.Nonnull;

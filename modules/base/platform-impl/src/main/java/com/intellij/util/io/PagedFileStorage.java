@@ -4,7 +4,7 @@ package com.intellij.util.io;
 import com.intellij.openapi.Forceable;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.util.SystemProperties;
-import com.intellij.util.containers.hash.LinkedHashMap;
+import java.util.LinkedHashMap;
 import consulo.logging.Logger;
 import consulo.util.collection.primitive.ints.ConcurrentIntObjectMap;
 import consulo.util.collection.primitive.ints.IntMaps;

@@ -28,7 +28,7 @@ import com.intellij.util.containers.ContainerUtil;
 import consulo.util.dataholder.keyFMap.KeyFMap;
 import com.intellij.util.text.CharSequenceHashingStrategy;
 import consulo.logging.Logger;
-import gnu.trove.THashSet;
+import java.util.HashSet;
 import gnu.trove.TIntArrayList;
 import gnu.trove.TIntHashSet;
 
@@ -620,7 +620,7 @@ public class VirtualDirectoryImpl extends VirtualFileSystemEntry {
     boolean caseSensitive = getFileSystem().isCaseSensitive();
 
     CharSequenceHashingStrategy strategy = caseSensitive ? CharSequenceHashingStrategy.CASE_SENSITIVE : CharSequenceHashingStrategy.CASE_INSENSITIVE;
-    Set<CharSequence> existingNames = new THashSet<>(myData.myChildrenIds.length, strategy);
+    Set<CharSequence> existingNames = new HashSet<>(myData.myChildrenIds.length, strategy);
     for (int id : myData.myChildrenIds) {
       existingNames.add(mySegment.vfsData.getNameByFileId(id));
     }

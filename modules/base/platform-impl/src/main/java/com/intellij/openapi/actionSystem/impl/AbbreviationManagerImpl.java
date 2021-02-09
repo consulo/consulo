@@ -20,7 +20,7 @@ import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.RoamingType;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
-import gnu.trove.THashMap;
+import java.util.HashMap;
 import org.jdom.Element;
 import javax.annotation.Nonnull;
 
@@ -34,9 +34,9 @@ import java.util.*;
 @Singleton
 @State(name = "AbbreviationManager", storages = @Storage(value = "abbreviations.xml", roamingType = RoamingType.PER_PLATFORM))
 public class AbbreviationManagerImpl extends AbbreviationManager implements PersistentStateComponent<Element> {
-  private final Map<String, List<String>> myAbbreviation2ActionId = new THashMap<>();
-  private final Map<String, LinkedHashSet<String>> myActionId2Abbreviations = new THashMap<>();
-  private final Map<String, LinkedHashSet<String>> myPluginsActionId2Abbreviations = new THashMap<>();
+  private final Map<String, List<String>> myAbbreviation2ActionId = new HashMap<>();
+  private final Map<String, LinkedHashSet<String>> myActionId2Abbreviations = new HashMap<>();
+  private final Map<String, LinkedHashSet<String>> myPluginsActionId2Abbreviations = new HashMap<>();
 
   @Nullable
   @Override

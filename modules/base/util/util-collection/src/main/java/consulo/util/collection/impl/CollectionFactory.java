@@ -17,6 +17,10 @@ package consulo.util.collection.impl;
 
 import consulo.util.collection.HashingStrategy;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.Collection;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -24,7 +28,18 @@ import java.util.Set;
  * @since 07/02/2021
  */
 public interface CollectionFactory {
+  static CollectionFactory get() {
+    // TODO impl it!
+    throw new UnsupportedOperationException("TODO ");
+  }
+
   int UNKNOWN_CAPACITY = -1;
 
-  <T> Set<T> newHashSetWithStrategy(int capacity, HashingStrategy<T> strategy);
+  <T> Set<T> newHashSetWithStrategy(int capacity, @Nullable Collection<? extends T> inner, HashingStrategy<T> strategy);
+
+  <K, V> Map<K, V> newHashMapWithStrategy(@Nullable Map<? extends K, ? extends V> inner, @Nonnull HashingStrategy<K> hashingStrategy);
+
+  <K, V> Map<K, V> newWeakHashMap(int initialCapacity, float loadFactor, @Nonnull HashingStrategy<? super K> strategy);
+
+  <K, V> Map<K, V> newSoftHashMap(@Nonnull HashingStrategy<? super K> strategy);
 }

@@ -7,7 +7,10 @@ import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.io.FileAttributes;
 import com.intellij.openapi.util.registry.Registry;
-import com.intellij.openapi.vfs.*;
+import com.intellij.openapi.vfs.InvalidVirtualFileAccessException;
+import com.intellij.openapi.vfs.VFileProperty;
+import com.intellij.openapi.vfs.VfsUtil;
+import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.ex.temp.TempFileSystem;
 import com.intellij.openapi.vfs.impl.local.DirectoryAccessChecker;
 import com.intellij.openapi.vfs.impl.local.LocalFileSystemBase;
@@ -23,11 +26,11 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.OpenTHashSet;
 import com.intellij.util.containers.Queue;
 import com.intellij.util.text.FilePathHashingStrategy;
-import gnu.trove.TObjectHashingStrategy;
-import javax.annotation.Nonnull;
-
+import consulo.util.collection.HashingStrategy;
+import consulo.util.collection.Sets;
 import org.jetbrains.annotations.TestOnly;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -37,7 +40,6 @@ import java.util.function.Consumer;
 
 import static com.intellij.openapi.util.Pair.pair;
 import static com.intellij.openapi.vfs.newvfs.persistent.VfsEventGenerationHelper.LOG;
-import static com.intellij.util.containers.ContainerUtil.newTroveSet;
 
 /**
  * @author max
@@ -116,7 +118,7 @@ public class RefreshWorker {
   }
 
   private void processQueue(@Nonnull NewVirtualFileSystem fs, @Nonnull PersistentFS persistence) throws RefreshCancelledException {
-    TObjectHashingStrategy<String> strategy = FilePathHashingStrategy.create(fs.isCaseSensitive());
+    HashingStrategy<String> strategy = FilePathHashingStrategy.create(fs.isCaseSensitive());
 
     next:
     while (!myRefreshQueue.isEmpty()) {
@@ -143,14 +145,14 @@ public class RefreshWorker {
     }
   }
 
-  private boolean fullDirRefresh(@Nonnull NewVirtualFileSystem fs, @Nonnull PersistentFS persistence, @Nonnull TObjectHashingStrategy<String> strategy, @Nonnull VirtualDirectoryImpl dir) {
+  private boolean fullDirRefresh(@Nonnull NewVirtualFileSystem fs, @Nonnull PersistentFS persistence, @Nonnull HashingStrategy<String> strategy, @Nonnull VirtualDirectoryImpl dir) {
     Pair<String[], VirtualFile[]> snapshot = LocalFileSystemRefreshWorker.getDirectorySnapshot(persistence, dir);
     if (snapshot == null) return false;
     String[] persistedNames = snapshot.getFirst();
     VirtualFile[] children = snapshot.getSecond();
 
     String[] upToDateNames = VfsUtil.filterNames(fs.list(dir));
-    Set<String> newNames = newTroveSet(strategy, upToDateNames);
+    Set<String> newNames = Sets.newHashSet(Set.of(upToDateNames), strategy);
     if (dir.allChildrenLoaded() && children.length < upToDateNames.length) {
       for (VirtualFile child : children) {
         newNames.remove(child.getName());
@@ -160,7 +162,7 @@ public class RefreshWorker {
       ContainerUtil.removeAll(newNames, persistedNames);
     }
 
-    Set<String> deletedNames = newTroveSet(strategy, persistedNames);
+    Set<String> deletedNames = Sets.newHashSet(Set.of(persistedNames), strategy);
     ContainerUtil.removeAll(deletedNames, upToDateNames);
 
     OpenTHashSet<String> actualNames = fs.isCaseSensitive() ? null : new OpenTHashSet<>(strategy, upToDateNames);
@@ -225,7 +227,7 @@ public class RefreshWorker {
     });
   }
 
-  private boolean partialDirRefresh(@Nonnull NewVirtualFileSystem fs, @Nonnull PersistentFS persistence, @Nonnull TObjectHashingStrategy<String> strategy, @Nonnull VirtualDirectoryImpl dir) {
+  private boolean partialDirRefresh(@Nonnull NewVirtualFileSystem fs, @Nonnull PersistentFS persistence, @Nonnull HashingStrategy<String> strategy, @Nonnull VirtualDirectoryImpl dir) {
     Pair<List<VirtualFile>, List<String>> snapshot = ReadAction.compute(() -> {
       checkCancelled(dir);
       return pair(dir.getCachedChildren(), dir.getSuspiciousNames());

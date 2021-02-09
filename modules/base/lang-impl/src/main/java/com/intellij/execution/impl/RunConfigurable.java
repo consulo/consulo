@@ -46,7 +46,7 @@ import com.intellij.util.IconUtil;
 import com.intellij.util.config.StorageAccessors;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.Convertor;
-import com.intellij.util.containers.HashMap;
+import java.util.HashMap;
 import com.intellij.util.ui.EditableModel;
 import com.intellij.util.ui.GridBag;
 import com.intellij.util.ui.JBUI;
@@ -59,7 +59,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
 import consulo.util.dataholder.Key;
-import gnu.trove.THashSet;
+import java.util.HashSet;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
@@ -812,7 +812,7 @@ class RunConfigurable extends BaseConfigurable {
     }
 
     // if apply succeeded, update the list of configurations in RunManager
-    Set<RunnerAndConfigurationSettings> toDeleteSettings = new THashSet<RunnerAndConfigurationSettings>();
+    Set<RunnerAndConfigurationSettings> toDeleteSettings = new HashSet<RunnerAndConfigurationSettings>();
     for (RunConfiguration each : manager.getConfigurationsList(type)) {
       ContainerUtil.addIfNotNull(toDeleteSettings, manager.getSettings(each));
     }

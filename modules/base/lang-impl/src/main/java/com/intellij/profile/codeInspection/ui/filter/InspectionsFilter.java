@@ -21,11 +21,12 @@ import com.intellij.codeInspection.ex.ScopeToolState;
 import com.intellij.codeInspection.ex.Tools;
 import com.intellij.lang.Language;
 import com.intellij.lang.annotation.HighlightSeverity;
-import com.intellij.util.containers.HashSet;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Set;
 
 /**

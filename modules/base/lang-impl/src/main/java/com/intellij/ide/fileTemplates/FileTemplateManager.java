@@ -21,7 +21,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import consulo.util.dataholder.Key;
 import consulo.annotation.DeprecationInfo;
-import gnu.trove.THashMap;
+import java.util.HashMap;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 
@@ -109,7 +109,7 @@ public abstract class FileTemplateManager{
 
   @Nonnull
   public Map<String, Object> getDefaultVariables() {
-    Map<String, Object> map = new THashMap<>();
+    Map<String, Object> map = new HashMap<>();
     fillDefaultVariables(map);
     return map;
   }

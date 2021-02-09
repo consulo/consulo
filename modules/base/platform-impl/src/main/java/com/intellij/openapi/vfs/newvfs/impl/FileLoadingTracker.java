@@ -15,14 +15,14 @@
  */
 package com.intellij.openapi.vfs.newvfs.impl;
 
-import consulo.logging.Logger;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.text.FilePathHashingStrategy;
-import gnu.trove.THashSet;
+import consulo.logging.Logger;
+import consulo.util.collection.Sets;
 import gnu.trove.TIntHashSet;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.util.Collections;
 import java.util.List;
 import java.util.MissingResourceException;
@@ -33,7 +33,7 @@ import java.util.Set;
  */
 class FileLoadingTracker {
   private static final Logger LOG = Logger.getInstance(FileLoadingTracker.class);
-  private static final Set<String> ourPaths = new THashSet<>(getPathsToTrack(), FilePathHashingStrategy.create());
+  private static final Set<String> ourPaths = Sets.newHashSet(getPathsToTrack(), FilePathHashingStrategy.create());
   private static final TIntHashSet ourLeafNameIds = new TIntHashSet(ourPaths.stream().mapToInt(path -> FileNameCache.storeName(StringUtil.getShortName(path, '/'))).toArray());
 
   @Nonnull

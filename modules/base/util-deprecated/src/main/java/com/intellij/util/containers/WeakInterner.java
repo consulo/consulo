@@ -2,10 +2,10 @@
 package com.intellij.util.containers;
 
 import com.intellij.util.ConcurrencyUtil;
-import gnu.trove.THashSet;
-import gnu.trove.TObjectHashingStrategy;
-import javax.annotation.Nonnull;
+import consulo.util.collection.HashingStrategy;
 
+import javax.annotation.Nonnull;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.ConcurrentMap;
 
@@ -22,7 +22,7 @@ public class WeakInterner<T> extends Interner<T> {
     myMap = ContainerUtil.createConcurrentWeakKeyWeakValueMap();
   }
 
-  public WeakInterner(@Nonnull TObjectHashingStrategy<T> strategy) {
+  public WeakInterner(@Nonnull HashingStrategy<T> strategy) {
     myMap = ContainerUtil.createConcurrentWeakKeyWeakValueMap(strategy);
   }
 
@@ -40,6 +40,6 @@ public class WeakInterner<T> extends Interner<T> {
   @Override
   @Nonnull
   public Set<T> getValues() {
-    return new THashSet<>(myMap.values());
+    return new HashSet<>(myMap.values());
   }
 }

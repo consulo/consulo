@@ -24,7 +24,7 @@ import consulo.util.dataholder.Key;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiFile;
 import com.intellij.testFramework.fixtures.CodeInsightFixtureTestCase;
-import gnu.trove.THashMap;
+import java.util.HashMap;
 
 import java.io.File;
 import java.util.Map;
@@ -38,7 +38,7 @@ public abstract class MacroManagerTest extends CodeInsightFixtureTestCase {
 
   public DataContext getContext(VirtualFile file) {
     Project project = myFixture.getProject();
-    Map<Key, Object> dataId2data = new THashMap<>();
+    Map<Key, Object> dataId2data = new HashMap<>();
     dataId2data.put(CommonDataKeys.PROJECT, project);
     dataId2data.put(PlatformDataKeys.VIRTUAL_FILE, file);
     dataId2data.put(PlatformDataKeys.PROJECT_FILE_DIRECTORY, project.getBaseDir());

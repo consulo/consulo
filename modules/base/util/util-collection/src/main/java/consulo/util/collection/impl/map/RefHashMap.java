@@ -17,7 +17,6 @@ package consulo.util.collection.impl.map;
 
 import consulo.util.collection.HashingStrategy;
 import consulo.util.lang.Comparing;
-import gnu.trove.THashMap;
 
 import javax.annotation.Nonnull;
 import java.lang.ref.ReferenceQueue;
@@ -29,7 +28,11 @@ import java.util.*;
  * Null values are allowed
  */
 public abstract class RefHashMap<K, V> extends AbstractMap<K, V> implements Map<K, V> {
-  private final MyMap myMap;
+  public interface SubMap<K1, V1> extends Map<Key<K1>, V1> {
+    void compactIfNecessary();
+  }
+
+  private final SubMap<K, V> myMap;
   private final ReferenceQueue<K> myReferenceQueue = new ReferenceQueue<>();
   private final HardKey myHardKeyInstance = new HardKey(); // "singleton"
   @Nonnull
@@ -39,8 +42,10 @@ public abstract class RefHashMap<K, V> extends AbstractMap<K, V> implements Map<
 
   public RefHashMap(int initialCapacity, float loadFactor, @Nonnull final HashingStrategy<? super K> strategy) {
     myStrategy = strategy;
-    myMap = new MyMap(initialCapacity, loadFactor);
+    myMap = createSubMap(initialCapacity, loadFactor, strategy);
   }
+
+  protected abstract SubMap<K, V> createSubMap(int initialCapacity, float loadFactor, HashingStrategy<? super K> strategy);
 
   public RefHashMap(int initialCapacity, float loadFactor) {
     this(initialCapacity, loadFactor, HashingStrategy.canonical());
@@ -63,71 +68,15 @@ public abstract class RefHashMap<K, V> extends AbstractMap<K, V> implements Map<
     this(4, 0.8f, hashingStrategy);
   }
 
-  static <K> boolean keyEqual(K k1, K k2, HashingStrategy<? super K> strategy) {
+  public boolean isProcessingQueue() {
+    return processingQueue;
+  }
+
+  public static <K> boolean keyEqual(K k1, K k2, HashingStrategy<? super K> strategy) {
     return k1 == k2 || strategy.equals(k1, k2);
   }
 
-  private class MyMap extends THashMap<Key<K>, V> {
-    private MyMap(int initialCapacity, float loadFactor) {
-      super(initialCapacity, loadFactor, new TObjectHashingStrategy<Key<K>>() {
-        @Override
-        public int computeHashCode(final Key<K> key) {
-          return key.hashCode(); // use stored hashCode
-        }
-
-        @Override
-        public boolean equals(final Key<K> o1, final Key<K> o2) {
-          return o1 == o2 || keyEqual(o1.get(), o2.get(), myStrategy);
-        }
-      });
-    }
-
-    @Override
-    public void compact() {
-      // do not compact the map during many gced references removal because it's bad for performance
-      if (!processingQueue) {
-        super.compact();
-      }
-    }
-
-    private void compactIfNecessary() {
-      if (_deadkeys > _size && capacity() > 42) {
-        // Compact if more than 50% of all keys are dead. Also, don't trash small maps
-        compact();
-      }
-    }
-
-    @Override
-    protected void rehash(int newCapacity) {
-      // rehash should discard gced keys
-      // because otherwise there is a remote probability of
-      // having two (Weak|Soft)Keys with accidentally equal hashCodes and different but gced key values
-      int oldCapacity = _set.length;
-      Object[] oldKeys = _set;
-      V[] oldVals = _values;
-
-      _set = new Object[newCapacity];
-      _values = (V[])new Object[newCapacity];
-
-      for (int i = oldCapacity; i-- > 0; ) {
-        Object o = oldKeys[i];
-        if (o == null || o == REMOVED) continue;
-        Key<K> k = (Key<K>)o;
-        K key = k.get();
-        if (key == null) continue;
-        int index = insertionIndex(k);
-        if (index < 0) {
-          throwObjectContractViolation(_set[-index - 1], o);
-          // make 'key' alive till this point to not allow 'o.referent' to be gced
-          if (key == _set) throw new AssertionError();
-        }
-        _set[index] = o;
-        _values[index] = oldVals[i];
-      }
-    }
-  }
-
-  interface Key<T> {
+  public interface Key<T> {
     T get();
   }
 
@@ -263,9 +212,9 @@ public abstract class RefHashMap<K, V> extends AbstractMap<K, V> implements Map<
     private final K key; // Strong reference to key, so that the GC will leave it alone as long as this Entry exists
     private final int myKeyHashCode;
     @Nonnull
-    private final TObjectHashingStrategy<? super K> myStrategy;
+    private final HashingStrategy<? super K> myStrategy;
 
-    private MyEntry(@Nonnull Entry<?, V> ent, @Nonnull K key, int keyHashCode, @Nonnull TObjectHashingStrategy<? super K> strategy) {
+    private MyEntry(@Nonnull Entry<?, V> ent, @Nonnull K key, int keyHashCode, @Nonnull HashingStrategy<? super K> strategy) {
       this.ent = ent;
       this.key = key;
       myKeyHashCode = keyHashCode;

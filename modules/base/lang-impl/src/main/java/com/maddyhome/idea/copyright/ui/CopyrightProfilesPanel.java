@@ -38,7 +38,7 @@ import com.intellij.openapi.util.Conditions;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.IconUtil;
-import com.intellij.util.containers.HashMap;
+import java.util.HashMap;
 import com.maddyhome.idea.copyright.CopyrightManager;
 import com.maddyhome.idea.copyright.CopyrightProfile;
 import com.maddyhome.idea.copyright.options.ExternalOptionHelper;

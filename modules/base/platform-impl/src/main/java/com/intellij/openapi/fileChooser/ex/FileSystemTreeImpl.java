@@ -38,7 +38,7 @@ import com.intellij.util.containers.Convertor;
 import com.intellij.util.ui.tree.TreeUtil;
 import consulo.vfs.ArchiveFileSystem;
 import consulo.vfs.util.ArchiveVfsUtil;
-import gnu.trove.THashSet;
+import java.util.HashSet;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -53,10 +53,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Stream;
 
 public class FileSystemTreeImpl implements FileSystemTree {
@@ -72,7 +69,7 @@ public class FileSystemTreeImpl implements FileSystemTree {
   private final List<Listener> myListeners = ContainerUtil.createLockFreeCopyOnWriteList();
   private final MyExpansionListener myExpansionListener = new MyExpansionListener();
 
-  private final Set<VirtualFile> myEverExpanded = new THashSet<>();
+  private final Set<VirtualFile> myEverExpanded = new HashSet<>();
 
   public FileSystemTreeImpl(@Nullable final Project project, final FileChooserDescriptor descriptor) {
     this(project, descriptor, new Tree(), null, null, null);

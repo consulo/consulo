@@ -17,11 +17,10 @@
 package consulo.util.collection.primitive.ints.impl.map;
 
 import consulo.util.collection.ContainerUtil;
-import consulo.util.collection.SimpleEntry;
 import consulo.util.collection.impl.map.RefValueHashMap;
 import consulo.util.collection.primitive.ints.ConcurrentIntObjectMap;
+import consulo.util.collection.primitive.ints.IntSet;
 import consulo.util.lang.ref.SoftReference;
-import gnu.trove.THashSet;
 
 import javax.annotation.Nonnull;
 import java.lang.ref.ReferenceQueue;
@@ -112,7 +111,7 @@ public abstract class ConcurrentIntKeyRefValueHashMap<V> implements ConcurrentIn
   }
 
   @Override
-  public boolean containsValue(@Nonnull V value) {
+  public boolean containsValue(@Nonnull Object value) {
     throw RefValueHashMap.pointlessContainsValue();
   }
 
@@ -130,14 +129,21 @@ public abstract class ConcurrentIntKeyRefValueHashMap<V> implements ConcurrentIn
 
   @Nonnull
   @Override
-  public Set<Entry<V>> entrySet() {
+  public Set<IntObjectEntry<V>> entrySet() {
     return new MyEntrySetView();
   }
 
-  private class MyEntrySetView extends AbstractSet<Entry<V>> {
+  @Nonnull
+  @Override
+  public IntSet keySet() {
+    // todo [vistall] todo
+    throw new UnsupportedOperationException("todo");
+  }
+
+  private class MyEntrySetView extends AbstractSet<IntObjectEntry<V>> {
     @Nonnull
     @Override
-    public Iterator<Entry<V>> iterator() {
+    public Iterator<IntObjectEntry<V>> iterator() {
       return entriesIterator();
     }
 
@@ -148,12 +154,12 @@ public abstract class ConcurrentIntKeyRefValueHashMap<V> implements ConcurrentIn
   }
 
   @Nonnull
-  private Iterator<Entry<V>> entriesIterator() {
-    final Iterator<Entry<IntReference<V>>> entryIterator = ((Iterable<Entry<IntReference<V>>>)myMap.entrySet()).iterator();
-    return new Iterator<Entry<V>>() {
-      private Entry<V> nextVEntry;
-      private Entry<IntReference<V>> nextReferenceEntry;
-      private Entry<IntReference<V>> lastReturned;
+  private Iterator<IntObjectEntry<V>> entriesIterator() {
+    final Iterator<IntObjectEntry<IntReference<V>>> entryIterator = myMap.entrySet().iterator();
+    return new Iterator<>() {
+      private IntObjectEntry<V> nextVEntry;
+      private IntObjectEntry<IntReference<V>> nextReferenceEntry;
+      private IntObjectEntry<IntReference<V>> lastReturned;
 
       {
         nextAliveEntry();
@@ -165,9 +171,9 @@ public abstract class ConcurrentIntKeyRefValueHashMap<V> implements ConcurrentIn
       }
 
       @Override
-      public Entry<V> next() {
+      public IntObjectEntry<V> next() {
         if (!hasNext()) throw new NoSuchElementException();
-        Entry<V> result = nextVEntry;
+        IntObjectEntry<V> result = nextVEntry;
         lastReturned = nextReferenceEntry;
         nextAliveEntry();
         return result;
@@ -175,13 +181,13 @@ public abstract class ConcurrentIntKeyRefValueHashMap<V> implements ConcurrentIn
 
       private void nextAliveEntry() {
         while (entryIterator.hasNext()) {
-          Entry<IntReference<V>> entry = entryIterator.next();
+          IntObjectEntry<IntReference<V>> entry = entryIterator.next();
           final V v = entry.getValue().get();
           if (v == null) {
             continue;
           }
           final int key = entry.getKey();
-          nextVEntry = new SimpleEntry<>(key, v);
+          nextVEntry = new SimpleIntObjectEntry<>(key, v);
           nextReferenceEntry = entry;
           return;
         }
@@ -190,7 +196,7 @@ public abstract class ConcurrentIntKeyRefValueHashMap<V> implements ConcurrentIn
 
       @Override
       public void remove() {
-        Entry<IntReference<V>> last = lastReturned;
+        IntObjectEntry<IntReference<V>> last = lastReturned;
         if (last == null) throw new NoSuchElementException();
         myMap.replaceNode(last.getKey(), null, last.getValue());
       }
@@ -209,14 +215,13 @@ public abstract class ConcurrentIntKeyRefValueHashMap<V> implements ConcurrentIn
     return myMap.isEmpty();
   }
 
-  @Override
   @Nonnull
-  public Enumeration<V> elements() {
-    final Enumeration<IntReference<V>> elementRefs = myMap.elements();
-    return new Enumeration<V>() {
+  public Iterator<V> elementsIterator() {
+    final Iterator<IntReference<V>> elementRefs = myMap.values().iterator();
+    return new Iterator<V>() {
       private V findNextRef() {
-        while (elementRefs.hasMoreElements()) {
-          IntReference<V> result = elementRefs.nextElement();
+        while (elementRefs.hasNext()) {
+          IntReference<V> result = elementRefs.next();
           V v = result.get();
           if (v != null) return v;
         }
@@ -226,12 +231,12 @@ public abstract class ConcurrentIntKeyRefValueHashMap<V> implements ConcurrentIn
       private V next = findNextRef();
 
       @Override
-      public boolean hasMoreElements() {
+      public boolean hasNext() {
         return next != null;
       }
 
       @Override
-      public V nextElement() {
+      public V next() {
         if (next == null) throw new NoSuchElementException();
         V v = next;
         next = findNextRef();
@@ -261,8 +266,8 @@ public abstract class ConcurrentIntKeyRefValueHashMap<V> implements ConcurrentIn
   @Nonnull
   @Override
   public Collection<V> values() {
-    Set<V> result = new THashSet<>();
-    ContainerUtil.addAll(result, elements());
+    Set<V> result = new HashSet<>();
+    ContainerUtil.addAll(result, elementsIterator());
     return result;
   }
 }

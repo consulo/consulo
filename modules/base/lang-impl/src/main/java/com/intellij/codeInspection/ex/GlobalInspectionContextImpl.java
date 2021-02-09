@@ -70,12 +70,11 @@ import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.ui.content.*;
 import com.intellij.util.*;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.containers.HashMap;
 import com.intellij.util.ui.UIUtil;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
-import gnu.trove.THashSet;
+import java.util.HashSet;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 
@@ -378,7 +377,7 @@ public class GlobalInspectionContextImpl extends GlobalInspectionContextBase imp
 
     if (runGlobalToolsOnly) return;
 
-    final Set<VirtualFile> localScopeFiles = scope.toSearchScope() instanceof LocalSearchScope ? new THashSet<VirtualFile>() : null;
+    final Set<VirtualFile> localScopeFiles = scope.toSearchScope() instanceof LocalSearchScope ? new HashSet<VirtualFile>() : null;
     for (Tools tools : globalSimpleTools) {
       GlobalInspectionToolWrapper toolWrapper = (GlobalInspectionToolWrapper)tools.getTool();
       GlobalSimpleInspectionTool tool = (GlobalSimpleInspectionTool)toolWrapper.getTool();

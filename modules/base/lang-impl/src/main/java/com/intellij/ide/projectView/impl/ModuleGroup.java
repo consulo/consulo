@@ -26,7 +26,7 @@ import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.Project;
 import consulo.util.dataholder.Key;
 import com.intellij.util.ArrayUtil;
-import gnu.trove.THashSet;
+import java.util.HashSet;
 import javax.annotation.Nonnull;
 
 import java.util.*;
@@ -89,7 +89,7 @@ public class ModuleGroup {
       allModules = ModuleManager.getInstance(project).getModules();
     }
 
-    Set<ModuleGroup> result = new THashSet<ModuleGroup>();
+    Set<ModuleGroup> result = new HashSet<ModuleGroup>();
     for (Module module : allModules) {
       String[] group;
       if ( model != null ) {

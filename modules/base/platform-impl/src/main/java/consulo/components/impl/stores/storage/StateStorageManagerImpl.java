@@ -31,7 +31,7 @@ import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.messages.MessageBus;
 import consulo.components.impl.stores.StreamProvider;
-import gnu.trove.THashMap;
+import java.util.HashMap;
 import org.jdom.Element;
 
 import javax.annotation.Nonnull;
@@ -55,7 +55,7 @@ public abstract class StateStorageManagerImpl implements StateStorageManager, Di
 
   private final Map<String, String> myMacros = new LinkedHashMap<>();
   private final Lock myStorageLock = new ReentrantLock();
-  private final Map<String, StateStorage> myStorages = new THashMap<>();
+  private final Map<String, StateStorage> myStorages = new HashMap<>();
   private final TrackingPathMacroSubstitutor myPathMacroSubstitutor;
   @Nonnull
   private final StateStorageFacade myStateStorageFacade;

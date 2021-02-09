@@ -55,7 +55,7 @@ import com.intellij.util.CommonProcessors;
 import com.intellij.util.Processor;
 import com.intellij.util.ui.UIUtil;
 import consulo.disposer.Disposer;
-import gnu.trove.THashMap;
+import java.util.HashMap;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -78,7 +78,7 @@ public abstract class ChooseLibrariesDialogBase extends DialogWrapper {
   private final SimpleTree myTree = new SimpleTree();
   private AbstractTreeBuilder myBuilder;
   private List<Library> myResult;
-  private final Map<Object, Object> myParentsMap = new THashMap<Object, Object>();
+  private final Map<Object, Object> myParentsMap = new HashMap<Object, Object>();
 
   protected ChooseLibrariesDialogBase(final JComponent parentComponent, final String title) {
     super(parentComponent, false);

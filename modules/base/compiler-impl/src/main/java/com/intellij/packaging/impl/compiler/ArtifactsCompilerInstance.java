@@ -48,7 +48,7 @@ import consulo.application.AccessRule;
 import consulo.logging.Logger;
 import consulo.packaging.impl.util.DeploymentUtilImpl;
 import consulo.vfs.ArchiveFileSystem;
-import gnu.trove.THashSet;
+import java.util.HashSet;
 
 import javax.annotation.Nonnull;
 import java.io.*;
@@ -154,7 +154,7 @@ public class ArtifactsCompilerInstance extends GenericCompilerInstance<ArtifactB
     final boolean testMode = ApplicationManager.getApplication().isUnitTestMode();
 
     final FileFilter fileFilter = new IgnoredFileFilter();
-    final Set<ArchivePackageInfo> changedJars = new THashSet<ArchivePackageInfo>();
+    final Set<ArchivePackageInfo> changedJars = new HashSet<ArchivePackageInfo>();
     for (String deletedJar : deletedJars) {
       ContainerUtil.addIfNotNull(changedJars, myBuilderContext.getJarInfo(deletedJar));
     }
@@ -270,8 +270,8 @@ public class ArtifactsCompilerInstance extends GenericCompilerInstance<ArtifactB
     }
   }
 
-  private static THashSet<String> createPathsHashSet() {
-    return new THashSet<String>(FileUtil.PATH_HASHING_STRATEGY);
+  private static HashSet<String> createPathsHashSet() {
+    return new HashSet<String>(FileUtil.PATH_HASHING_STRATEGY);
   }
 
   @Override
@@ -280,7 +280,7 @@ public class ArtifactsCompilerInstance extends GenericCompilerInstance<ArtifactB
                            @Nonnull List<GenericCompilerCacheState<String, VirtualFilePersistentState, ArtifactPackagingItemOutputState>> obsoleteItems,
                            @Nonnull OutputConsumer<ArtifactCompilerCompileItem> consumer) {
 
-    final THashSet<String> deletedJars = deleteFiles(obsoleteItems, changedItems);
+    final HashSet<String> deletedJars = deleteFiles(obsoleteItems, changedItems);
 
     final Set<String> writtenPaths = createPathsHashSet();
     final Ref<Boolean> built = Ref.create(false);
@@ -307,18 +307,18 @@ public class ArtifactsCompilerInstance extends GenericCompilerInstance<ArtifactB
     ArtifactsCompiler.addChangedArtifact(myContext, target.getArtifact());
   }
 
-  private THashSet<String> deleteFiles(List<GenericCompilerCacheState<String, VirtualFilePersistentState, ArtifactPackagingItemOutputState>> obsoleteItems,
-                                       List<GenericCompilerProcessingItem<ArtifactCompilerCompileItem, VirtualFilePersistentState, ArtifactPackagingItemOutputState>> changedItems) {
+  private HashSet<String> deleteFiles(List<GenericCompilerCacheState<String, VirtualFilePersistentState, ArtifactPackagingItemOutputState>> obsoleteItems,
+                                      List<GenericCompilerProcessingItem<ArtifactCompilerCompileItem, VirtualFilePersistentState, ArtifactPackagingItemOutputState>> changedItems) {
     myContext.getProgressIndicator().setText(CompilerBundle.message("packaging.compiler.message.deleting.outdated.files"));
 
     final boolean testMode = ApplicationManager.getApplication().isUnitTestMode();
-    final THashSet<String> deletedJars = new THashSet<String>();
-    final THashSet<String> notDeletedJars = new THashSet<String>();
+    final HashSet<String> deletedJars = new HashSet<String>();
+    final HashSet<String> notDeletedJars = new HashSet<String>();
     if (LOG.isDebugEnabled()) {
       LOG.debug("Deleting outdated files...");
     }
 
-    Set<String> pathToDelete = new THashSet<String>();
+    Set<String> pathToDelete = new HashSet<String>();
     for (GenericCompilerProcessingItem<ArtifactCompilerCompileItem, VirtualFilePersistentState, ArtifactPackagingItemOutputState> item : changedItems) {
       final ArtifactPackagingItemOutputState cached = item.getCachedOutputState();
       if (cached != null) {

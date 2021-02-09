@@ -18,7 +18,7 @@ package com.intellij.codeInspection;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.SingletonSet;
-import gnu.trove.THashMap;
+import java.util.HashMap;
 import gnu.trove.TObjectFunction;
 import gnu.trove.TObjectObjectProcedure;
 import gnu.trove.TObjectProcedure;
@@ -34,7 +34,7 @@ import java.util.Set;
  * For other sizes it delegates to THashSet.
  * Null keys are NOT PERMITTED.
  */
-public class SmartHashMap<K,V> extends THashMap<K,V> {
+public class SmartHashMap<K,V> extends HashMap<K,V> {
   private K theKey;   // contains the only element if size() == 1
   private V theValue;
 
@@ -175,7 +175,7 @@ public class SmartHashMap<K,V> extends THashMap<K,V> {
   }
 
   @Override
-  public THashMap<K, V> clone() {
+  public HashMap<K, V> clone() {
     throw new IncorrectOperationException();
   }
 

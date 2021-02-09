@@ -22,7 +22,9 @@ import com.intellij.openapi.util.io.win32.IdeaWin32;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileWithId;
 import com.intellij.util.ArrayUtil;
-import gnu.trove.THashMap;
+import java.util.HashMap;
+
+import consulo.util.collection.Maps;
 import gnu.trove.TIntObjectHashMap;
 import gnu.trove.TObjectHashingStrategy;
 import javax.annotation.Nonnull;
@@ -36,18 +38,18 @@ import java.lang.ref.SoftReference;
  */
 class Win32FsCache {
   private final IdeaWin32 myKernel = IdeaWin32.getInstance();
-  private Reference<TIntObjectHashMap<THashMap<String, FileAttributes>>> myCache;
+  private Reference<TIntObjectHashMap<HashMap<String, FileAttributes>>> myCache;
 
   void clearCache() {
     myCache = null;
   }
 
   @Nonnull
-  private TIntObjectHashMap<THashMap<String, FileAttributes>> getMap() {
-    TIntObjectHashMap<THashMap<String, FileAttributes>> map = com.intellij.reference.SoftReference.dereference(myCache);
+  private TIntObjectHashMap<HashMap<String, FileAttributes>> getMap() {
+    TIntObjectHashMap<HashMap<String, FileAttributes>> map = com.intellij.reference.SoftReference.dereference(myCache);
     if (map == null) {
-      map = new TIntObjectHashMap<THashMap<String, FileAttributes>>();
-      myCache = new SoftReference<TIntObjectHashMap<THashMap<String, FileAttributes>>>(map);
+      map = new TIntObjectHashMap<HashMap<String, FileAttributes>>();
+      myCache = new SoftReference<TIntObjectHashMap<HashMap<String, FileAttributes>>>(map);
     }
     return map;
   }
@@ -61,11 +63,11 @@ class Win32FsCache {
     }
 
     String[] names = new String[fileInfo.length];
-    TIntObjectHashMap<THashMap<String, FileAttributes>> map = getMap();
+    TIntObjectHashMap<HashMap<String, FileAttributes>> map = getMap();
     int parentId = ((VirtualFileWithId)file).getId();
-    THashMap<String, FileAttributes> nestedMap = map.get(parentId);
+    HashMap<String, FileAttributes> nestedMap = map.get(parentId);
     if (nestedMap == null) {
-      nestedMap = new THashMap<String, FileAttributes>(fileInfo.length, FileUtil.PATH_HASHING_STRATEGY);
+      nestedMap = Maps.newHashMap(fileInfo.length, FileUtil.PATH_HASHING_STRATEGY);
       map.put(parentId, nestedMap);
     }
     for (int i = 0, length = fileInfo.length; i < length; i++) {
@@ -81,8 +83,8 @@ class Win32FsCache {
   FileAttributes getAttributes(@Nonnull VirtualFile file) {
     VirtualFile parent = file.getParent();
     int parentId = parent instanceof VirtualFileWithId ? ((VirtualFileWithId)parent).getId() : -((VirtualFileWithId)file).getId();
-    TIntObjectHashMap<THashMap<String, FileAttributes>> map = getMap();
-    THashMap<String, FileAttributes> nestedMap = map.get(parentId);
+    TIntObjectHashMap<HashMap<String, FileAttributes>> map = getMap();
+    HashMap<String, FileAttributes> nestedMap = map.get(parentId);
     String name = file.getName();
     FileAttributes attributes = nestedMap != null ? nestedMap.get(name) : null;
 
@@ -104,7 +106,7 @@ class Win32FsCache {
     return attributes;
   }
 
-  private static class IncompleteChildrenMap<K, V> extends THashMap<K,V> {
+  private static class IncompleteChildrenMap<K, V> extends HashMap<K,V> {
     IncompleteChildrenMap(TObjectHashingStrategy<K> strategy) {
       super(strategy);
     }

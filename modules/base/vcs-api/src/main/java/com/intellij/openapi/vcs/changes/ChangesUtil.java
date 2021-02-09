@@ -20,7 +20,6 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.project.Project;
-import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.ThrowableComputable;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
@@ -36,17 +35,17 @@ import com.intellij.util.ObjectUtils;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.vcsUtil.VcsUtil;
 import consulo.application.AccessRule;
-import gnu.trove.THashSet;
-import gnu.trove.TObjectHashingStrategy;
+import consulo.util.collection.HashingStrategy;
+import consulo.util.collection.Sets;
+import consulo.util.dataholder.Key;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.io.File;
 import java.util.*;
 import java.util.stream.Stream;
 
 import static com.intellij.util.containers.ContainerUtil.newArrayList;
-import static com.intellij.util.containers.ContainerUtil.newTroveSet;
 import static java.util.stream.Collectors.toCollection;
 import static java.util.stream.Collectors.toList;
 
@@ -56,9 +55,9 @@ import static java.util.stream.Collectors.toList;
 public class ChangesUtil {
   private static final Key<Boolean> INTERNAL_OPERATION_KEY = Key.create("internal vcs operation");
 
-  public static final TObjectHashingStrategy<FilePath> FILE_PATH_BY_PATH_ONLY_HASHING_STRATEGY = new TObjectHashingStrategy<FilePath>() {
+  public static final HashingStrategy<FilePath> FILE_PATH_BY_PATH_ONLY_HASHING_STRATEGY = new HashingStrategy<FilePath>() {
     @Override
-    public int computeHashCode(@Nonnull FilePath path) {
+    public int hashCode(@Nonnull FilePath path) {
       return path.getPath().hashCode();
     }
 
@@ -68,7 +67,8 @@ public class ChangesUtil {
     }
   };
 
-  private ChangesUtil() {}
+  private ChangesUtil() {
+  }
 
   @Nonnull
   public static FilePath getFilePath(@Nonnull Change change) {
@@ -117,24 +117,18 @@ public class ChangesUtil {
 
   @Nonnull
   public static List<FilePath> getPaths(@Nonnull Collection<Change> changes) {
-    THashSet<FilePath> distinctPaths = getAllPaths(changes.stream())
-            .collect(toCollection(() -> newTroveSet(FILE_PATH_BY_PATH_ONLY_HASHING_STRATEGY)));
+    HashSet<FilePath> distinctPaths = getAllPaths(changes.stream()).collect(toCollection(() -> Sets.newHashSet(FILE_PATH_BY_PATH_ONLY_HASHING_STRATEGY)));
     return newArrayList(distinctPaths);
   }
 
   @Nonnull
   public static List<File> getIoFilesFromChanges(@Nonnull Collection<Change> changes) {
-    return getAllPaths(changes.stream())
-            .map(FilePath::getIOFile)
-            .distinct()
-            .collect(toList());
+    return getAllPaths(changes.stream()).map(FilePath::getIOFile).distinct().collect(toList());
   }
 
   @Nonnull
   public static Stream<FilePath> getAllPaths(@Nonnull Stream<Change> changes) {
-    return changes
-            .flatMap(change -> Stream.of(getBeforePath(change), getAfterPath(change)))
-            .filter(Objects::nonNull);
+    return changes.flatMap(change -> Stream.of(getBeforePath(change), getAfterPath(change))).filter(Objects::nonNull);
   }
 
   /**
@@ -156,13 +150,8 @@ public class ChangesUtil {
   public static Stream<VirtualFile> getAfterRevisionsFiles(@Nonnull Stream<Change> changes, boolean refresh) {
     LocalFileSystem fileSystem = LocalFileSystem.getInstance();
 
-    return changes
-            .map(Change::getAfterRevision)
-            .filter(Objects::nonNull)
-            .map(ContentRevision::getFile)
-            .map(path -> refresh ? fileSystem.refreshAndFindFileByPath(path.getPath()) : path.getVirtualFile())
-            .filter(Objects::nonNull)
-            .filter(VirtualFile::isValid);
+    return changes.map(Change::getAfterRevision).filter(Objects::nonNull).map(ContentRevision::getFile)
+            .map(path -> refresh ? fileSystem.refreshAndFindFileByPath(path.getPath()) : path.getVirtualFile()).filter(Objects::nonNull).filter(VirtualFile::isValid);
   }
 
   @Nonnull
@@ -172,10 +161,7 @@ public class ChangesUtil {
 
   @Nonnull
   public static Navigatable[] getNavigatableArray(@Nonnull Project project, @Nonnull Stream<VirtualFile> files) {
-    return files
-            .filter(file -> !file.isDirectory())
-            .map(file -> new OpenFileDescriptor(project, file))
-            .toArray(Navigatable[]::new);
+    return files.filter(file -> !file.isDirectory()).map(file -> new OpenFileDescriptor(project, file)).toArray(Navigatable[]::new);
   }
 
   @javax.annotation.Nullable
@@ -192,8 +178,7 @@ public class ChangesUtil {
     if (change != null) {
       ContentRevision beforeRevision = change.getBeforeRevision();
       ContentRevision afterRevision = change.getAfterRevision();
-      if (beforeRevision != null && afterRevision != null && !beforeRevision.getFile().equals(afterRevision.getFile()) &&
-          afterRevision.getFile().equals(filePath)) {
+      if (beforeRevision != null && afterRevision != null && !beforeRevision.getFile().equals(afterRevision.getFile()) && afterRevision.getFile().equals(filePath)) {
         filePath = beforeRevision.getFile();
       }
     }
@@ -210,8 +195,7 @@ public class ChangesUtil {
     if (change != null) {
       ContentRevision beforeRevision = change.getBeforeRevision();
       ContentRevision afterRevision = change.getAfterRevision();
-      if (beforeRevision != null && afterRevision != null && !beforeRevision.getFile().equals(afterRevision.getFile()) &&
-          beforeRevision.getFile().equals(filePath)) {
+      if (beforeRevision != null && afterRevision != null && !beforeRevision.getFile().equals(afterRevision.getFile()) && beforeRevision.getFile().equals(filePath)) {
         return afterRevision.getFile();
       }
     }
@@ -240,7 +224,7 @@ public class ChangesUtil {
 
   @javax.annotation.Nullable
   private static VirtualFile getValidParentUnderReadAction(@Nonnull FilePath filePath) {
-    ThrowableComputable<VirtualFile,RuntimeException> action = () -> {
+    ThrowableComputable<VirtualFile, RuntimeException> action = () -> {
       VirtualFile result = null;
       FilePath parent = filePath;
       LocalFileSystem lfs = LocalFileSystem.getInstance();
@@ -289,9 +273,7 @@ public class ChangesUtil {
     AbstractVcs getVcsFor(@Nonnull T item);
   }
 
-  public static <T> void processItemsByVcs(@Nonnull Collection<T> items,
-                                           @Nonnull VcsSeparator<T> separator,
-                                           @Nonnull PerVcsProcessor<T> processor) {
+  public static <T> void processItemsByVcs(@Nonnull Collection<T> items, @Nonnull VcsSeparator<T> separator, @Nonnull PerVcsProcessor<T> processor) {
     final Map<AbstractVcs, List<T>> changesByVcs = new HashMap<>();
 
     for (T item : items) {
@@ -311,35 +293,25 @@ public class ChangesUtil {
     }
   }
 
-  public static void processChangesByVcs(@Nonnull Project project,
-                                         @Nonnull Collection<Change> changes,
-                                         @Nonnull PerVcsProcessor<Change> processor) {
+  public static void processChangesByVcs(@Nonnull Project project, @Nonnull Collection<Change> changes, @Nonnull PerVcsProcessor<Change> processor) {
     processItemsByVcs(changes, change -> getVcsForChange(change, project), processor);
   }
 
-  public static void processVirtualFilesByVcs(@Nonnull Project project,
-                                              @Nonnull Collection<VirtualFile> files,
-                                              @Nonnull PerVcsProcessor<VirtualFile> processor) {
+  public static void processVirtualFilesByVcs(@Nonnull Project project, @Nonnull Collection<VirtualFile> files, @Nonnull PerVcsProcessor<VirtualFile> processor) {
     processItemsByVcs(files, file -> getVcsForFile(file, project), processor);
   }
 
-  public static void processFilePathsByVcs(@Nonnull Project project,
-                                           @Nonnull Collection<FilePath> files,
-                                           @Nonnull PerVcsProcessor<FilePath> processor) {
+  public static void processFilePathsByVcs(@Nonnull Project project, @Nonnull Collection<FilePath> files, @Nonnull PerVcsProcessor<FilePath> processor) {
     processItemsByVcs(files, filePath -> getVcsForFile(filePath.getIOFile(), project), processor);
   }
 
   @Nonnull
   public static List<File> filePathsToFiles(@Nonnull Collection<FilePath> filePaths) {
-    return filePaths.stream()
-            .map(FilePath::getIOFile)
-            .collect(toList());
+    return filePaths.stream().map(FilePath::getIOFile).collect(toList());
   }
 
   public static boolean hasFileChanges(@Nonnull Collection<Change> changes) {
-    return changes.stream()
-            .map(ChangesUtil::getFilePath)
-            .anyMatch(path -> !path.isDirectory());
+    return changes.stream().map(ChangesUtil::getFilePath).anyMatch(path -> !path.isDirectory());
   }
 
   public static void markInternalOperation(@Nonnull Iterable<Change> changes, boolean set) {
@@ -383,8 +355,6 @@ public class ChangesUtil {
   private static File getCommonBeforeAfterAncestor(@Nonnull Change change) {
     FilePath before = getBeforePath(change);
     FilePath after = getAfterPath(change);
-    return before == null
-           ? ObjectUtils.assertNotNull(after).getIOFile()
-           : after == null ? before.getIOFile() : FileUtil.findAncestor(before.getIOFile(), after.getIOFile());
+    return before == null ? ObjectUtils.assertNotNull(after).getIOFile() : after == null ? before.getIOFile() : FileUtil.findAncestor(before.getIOFile(), after.getIOFile());
   }
 }

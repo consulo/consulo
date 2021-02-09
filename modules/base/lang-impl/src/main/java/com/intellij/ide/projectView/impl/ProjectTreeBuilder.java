@@ -40,7 +40,7 @@ import com.intellij.psi.PsiManager;
 import com.intellij.util.Alarm;
 import com.intellij.util.SmartList;
 import com.intellij.util.messages.MessageBusConnection;
-import gnu.trove.THashSet;
+import java.util.HashSet;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -158,7 +158,7 @@ public class ProjectTreeBuilder extends BaseProjectTreeBuilder {
 
   private class MyProblemListener implements ProblemListener {
     private final Alarm myUpdateProblemAlarm = new Alarm();
-    private final Collection<VirtualFile> myFilesToRefresh = new THashSet<>();
+    private final Collection<VirtualFile> myFilesToRefresh = new HashSet<>();
 
     @Override
     public void problemsAppeared(@Nonnull VirtualFile file) {
@@ -178,7 +178,7 @@ public class ProjectTreeBuilder extends BaseProjectTreeBuilder {
             if (!myProject.isOpen()) return;
             Set<VirtualFile> filesToRefresh;
             synchronized (myFilesToRefresh) {
-              filesToRefresh = new THashSet<>(myFilesToRefresh);
+              filesToRefresh = new HashSet<>(myFilesToRefresh);
             }
             final DefaultMutableTreeNode rootNode = getRootNode();
             if (rootNode != null) {

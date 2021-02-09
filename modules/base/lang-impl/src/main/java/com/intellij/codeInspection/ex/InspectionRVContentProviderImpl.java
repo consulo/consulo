@@ -27,11 +27,12 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.vcs.FileStatus;
 import com.intellij.util.Function;
-import com.intellij.util.containers.HashSet;
+
 import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;
 import javax.swing.tree.DefaultTreeModel;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;

@@ -15,8 +15,6 @@
  */
 package com.intellij.vcs.log.data.index;
 
-import consulo.disposer.Disposable;
-import consulo.logging.Logger;
 import com.intellij.openapi.util.Couple;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.io.FileUtil;
@@ -34,19 +32,21 @@ import com.intellij.vcs.log.VcsFullCommitDetails;
 import com.intellij.vcs.log.impl.FatalErrorHandler;
 import com.intellij.vcs.log.impl.VcsChangesLazilyParsedDetails;
 import com.intellij.vcs.log.util.PersistentUtil;
-import gnu.trove.THashMap;
+import consulo.disposer.Disposable;
+import consulo.logging.Logger;
+import consulo.util.collection.Sets;
 import gnu.trove.TIntHashSet;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import static com.intellij.util.containers.ContainerUtil.newTroveSet;
 import static com.intellij.vcs.log.data.index.VcsLogPersistentIndex.getVersion;
 
 public class VcsLogPathsIndex extends VcsLogFullDetailsIndex<Integer> {
@@ -136,7 +136,7 @@ public class VcsLogPathsIndex extends VcsLogFullDetailsIndex<Integer> {
 
     private PathsIndexer(@Nonnull PersistentEnumeratorBase<String> enumerator, @Nonnull Set<VirtualFile> roots) {
       myPathsEnumerator = enumerator;
-      myRoots = newTroveSet(FileUtil.PATH_HASHING_STRATEGY);
+      myRoots = Sets.newHashSet(FileUtil.PATH_HASHING_STRATEGY);
       for (VirtualFile root : roots) {
         myRoots.add(root.getPath());
       }
@@ -149,7 +149,7 @@ public class VcsLogPathsIndex extends VcsLogFullDetailsIndex<Integer> {
     @Nonnull
     @Override
     public Map<Integer, Integer> map(@Nonnull VcsFullCommitDetails inputData) {
-      Map<Integer, Integer> result = new THashMap<>();
+      Map<Integer, Integer> result = new HashMap<>();
 
 
       Collection<Couple<String>> moves;

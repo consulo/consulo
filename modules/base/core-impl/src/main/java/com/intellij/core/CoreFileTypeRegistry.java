@@ -21,7 +21,7 @@ import com.intellij.openapi.fileTypes.UnknownFileType;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.io.FileUtilRt;
 import com.intellij.openapi.vfs.VirtualFile;
-import gnu.trove.THashMap;
+import java.util.HashMap;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 
@@ -35,7 +35,7 @@ import java.util.Map;
  */
 @Deprecated
 public class CoreFileTypeRegistry extends FileTypeRegistry {
-  private final Map<String, FileType> myExtensionsMap = new THashMap<String, FileType>(FileUtil.PATH_HASHING_STRATEGY);
+  private final Map<String, FileType> myExtensionsMap = new HashMap<String, FileType>(FileUtil.PATH_HASHING_STRATEGY);
   private final List<FileType> myAllFileTypes = new ArrayList<FileType>();
 
   public CoreFileTypeRegistry() {

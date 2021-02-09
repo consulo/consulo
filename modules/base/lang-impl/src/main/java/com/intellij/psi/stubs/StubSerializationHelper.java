@@ -16,7 +16,7 @@ import consulo.logging.Logger;
 import consulo.util.collection.Maps;
 import consulo.util.collection.primitive.ints.ConcurrentIntObjectMap;
 import consulo.util.collection.primitive.ints.IntMaps;
-import gnu.trove.THashMap;
+import java.util.HashMap;
 import gnu.trove.TIntObjectHashMap;
 import gnu.trove.TObjectIntHashMap;
 
@@ -38,7 +38,7 @@ class StubSerializationHelper {
 
   private final TIntObjectHashMap<String> myIdToName = new TIntObjectHashMap<>();
   private final TObjectIntHashMap<String> myNameToId = new TObjectIntHashMap<>();
-  private final THashMap<String, Computable<ObjectStubSerializer>> myNameToLazySerializer = new THashMap<>();
+  private final HashMap<String, Computable<ObjectStubSerializer>> myNameToLazySerializer = new HashMap<>();
 
   private final ConcurrentIntObjectMap<ObjectStubSerializer> myIdToSerializer = IntMaps.newConcurrentIntObjectHashMap();
   private final Map<ObjectStubSerializer, Integer> mySerializerToId = Maps.newConcurrentHashMap();

@@ -21,7 +21,7 @@ import consulo.util.dataholder.Key;
 import com.intellij.util.BitUtil;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.containers.ContainerUtil;
-import gnu.trove.THashMap;
+import java.util.HashMap;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -113,7 +113,7 @@ public abstract class RefEntityImpl implements RefEntity, WritableRefEntity {
       Map<Key, Object> userMap = myUserMap;
       if (userMap == null) {
         if (value == null) return;
-        myUserMap = userMap = new THashMap<>();
+        myUserMap = userMap = new HashMap<>();
       }
       if (value != null) {
         userMap.put(key, value);

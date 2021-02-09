@@ -53,8 +53,8 @@ public final class StubIndexImpl extends StubIndex implements PersistentStateCom
   private static final Logger LOG = Logger.getInstance(StubIndexImpl.class);
 
   private static class AsyncState {
-    private final Map<StubIndexKey<?, ?>, UpdatableIndex<?, Void, FileContent>> myIndices = new THashMap<>();
-    private final Map<StubIndexKey<?, ?>, TObjectHashingStrategy<?>> myKeyHashingStrategies = new THashMap<>();
+    private final Map<StubIndexKey<?, ?>, UpdatableIndex<?, Void, FileContent>> myIndices = new HashMap<>();
+    private final Map<StubIndexKey<?, ?>, TObjectHashingStrategy<?>> myKeyHashingStrategies = new HashMap<>();
     private final TObjectIntHashMap<ID<?, ?>> myIndexIdToVersionMap = new TObjectIntHashMap<>();
   }
 
@@ -326,7 +326,7 @@ public final class StubIndexImpl extends StubIndex implements PersistentStateCom
     UnsyncByteArrayInputStream indexIs = new UnsyncByteArrayInputStream(buffer);
     DataInputStream indexDis = new DataInputStream(indexIs);
     TObjectHashingStrategy<K> hashingStrategy = getKeyHashingStrategy(stubIndexKey);
-    Map<K, StubIdList> result = new THashMap<>(hashingStrategy);
+    Map<K, StubIdList> result = new HashMap<>(hashingStrategy);
     while (indexDis.available() > 0) {
       K key = keyDescriptor.read(indexDis);
       StubIdList read = StubIdExternalizer.INSTANCE.read(indexDis);
@@ -420,7 +420,7 @@ public final class StubIndexImpl extends StubIndex implements PersistentStateCom
         boolean locked = stubUpdatingIndex.getWriteLock().tryLock();
         if (!locked) return; // nested indices invocation, can not cleanup without deadlock
         try {
-          Map<Key, StubIdList> artificialOldValues = new THashMap<>();
+          Map<Key, StubIdList> artificialOldValues = new HashMap<>();
           artificialOldValues.put(key, new StubIdList());
 
           for (VirtualFile file : filesWithProblems) {
@@ -446,7 +446,7 @@ public final class StubIndexImpl extends StubIndex implements PersistentStateCom
   @Override
   @Nonnull
   public <K> Collection<K> getAllKeys(@Nonnull StubIndexKey<K, ?> indexKey, @Nonnull Project project) {
-    Set<K> allKeys = new THashSet<>();
+    Set<K> allKeys = new HashSet<>();
     processAllKeys(indexKey, project, Processors.cancelableCollectProcessor(allKeys));
     return allKeys;
   }

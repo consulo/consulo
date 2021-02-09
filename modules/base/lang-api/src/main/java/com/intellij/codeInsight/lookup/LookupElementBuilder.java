@@ -28,7 +28,7 @@ import com.intellij.psi.util.PsiUtilCore;
 import consulo.ide.IconDescriptorUpdaters;
 import consulo.ui.color.ColorValue;
 import consulo.ui.image.Image;
-import gnu.trove.THashSet;
+import java.util.HashSet;
 import org.jetbrains.annotations.Contract;
 
 import javax.annotation.Nonnull;
@@ -176,7 +176,7 @@ public final class LookupElementBuilder extends LookupElement {
 
   @Contract(value = "", pure = true)
   public LookupElementBuilder withLookupString(@Nonnull String another) {
-    final THashSet<String> set = new THashSet<>(myAllLookupStrings);
+    final HashSet<String> set = new HashSet<>(myAllLookupStrings);
     set.add(another);
     return new LookupElementBuilder(myLookupString, myObject, myInsertHandler, myRenderer, myHardcodedPresentation, Collections.unmodifiableSet(set), myCaseSensitive);
   }

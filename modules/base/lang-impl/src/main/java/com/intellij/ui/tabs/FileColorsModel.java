@@ -15,7 +15,7 @@ import com.intellij.psi.search.scope.packageSet.PackageSet;
 import com.intellij.psi.search.scope.packageSet.PackageSetBase;
 import com.intellij.ui.ColorUtil;
 import com.intellij.util.containers.ContainerUtil;
-import gnu.trove.THashMap;
+import java.util.HashMap;
 import org.jdom.Element;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -34,8 +34,8 @@ public final class FileColorsModel implements Cloneable {
 
   private final List<FileColorConfiguration> myApplicationLevelConfigurations = new ArrayList<>();
   private final List<FileColorConfiguration> myProjectLevelConfigurations = new ArrayList<>();
-  private final Map<String, String> myPredefinedScopeNameToPropertyKey = new THashMap<>();
-  private final Map<String, String> myPredefinedScopeNameToColor = new THashMap<>();
+  private final Map<String, String> myPredefinedScopeNameToPropertyKey = new HashMap<>();
+  private final Map<String, String> myPredefinedScopeNameToColor = new HashMap<>();
 
   @Nonnull
   private final Project myProject;
@@ -126,7 +126,7 @@ public final class FileColorsModel implements Cloneable {
 
     configurations.clear();
 
-    Map<String, String> predefinedScopeNameToPropertyKey = new THashMap<>(myPredefinedScopeNameToPropertyKey);
+    Map<String, String> predefinedScopeNameToPropertyKey = new HashMap<>(myPredefinedScopeNameToPropertyKey);
     for (Element child : e.getChildren(FILE_COLOR)) {
       FileColorConfiguration configuration = FileColorConfiguration.load(child);
       if (configuration != null) {
@@ -258,7 +258,7 @@ public final class FileColorsModel implements Cloneable {
     }
     else {
       myApplicationLevelConfigurations.clear();
-      Map<String, String> predefinedScopeNameToPropertyKey = new THashMap<>(myPredefinedScopeNameToPropertyKey);
+      Map<String, String> predefinedScopeNameToPropertyKey = new HashMap<>(myPredefinedScopeNameToPropertyKey);
       PropertiesComponent propertiesComponent = PropertiesComponent.getInstance();
       for (FileColorConfiguration configuration : configurations) {
         myApplicationLevelConfigurations.add(configuration);

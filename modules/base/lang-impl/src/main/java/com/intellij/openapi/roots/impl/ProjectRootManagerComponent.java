@@ -42,8 +42,6 @@ import com.intellij.openapi.vfs.ex.VirtualFileManagerAdapter;
 import com.intellij.openapi.vfs.newvfs.NewVirtualFile;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointer;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointerListener;
-import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.containers.HashSet;
 import com.intellij.util.indexing.FileBasedIndex;
 import com.intellij.util.indexing.FileBasedIndexImpl;
 import com.intellij.util.indexing.FileBasedIndexProjectHandler;
@@ -54,16 +52,16 @@ import consulo.components.impl.stores.BatchUpdateListener;
 import consulo.logging.Logger;
 import consulo.roots.ContentFolderScopes;
 import consulo.roots.OrderEntryWithTracking;
+import consulo.util.collection.Sets;
 import consulo.vfs.ArchiveFileSystem;
-import gnu.trove.THashSet;
 import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import jakarta.inject.Singleton;
 import java.io.File;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -79,7 +77,7 @@ public class ProjectRootManagerComponent extends ProjectRootManagerImpl implemen
   private final BatchUpdateListener myHandler;
   private final MessageBusConnection myConnection;
 
-  private Set<LocalFileSystem.WatchRequest> myRootsToWatch = new THashSet<LocalFileSystem.WatchRequest>();
+  private Set<LocalFileSystem.WatchRequest> myRootsToWatch = new HashSet<LocalFileSystem.WatchRequest>();
   private final boolean myDoLogCachesUpdate;
 
   @Inject
@@ -303,7 +301,7 @@ public class ProjectRootManagerComponent extends ProjectRootManagerImpl implemen
 
   @Override
   public void markRootsForRefresh() {
-    Set<String> paths = ContainerUtil.newTroveSet(FileUtil.PATH_HASHING_STRATEGY);
+    Set<String> paths = Sets.newHashSet(FileUtil.PATH_HASHING_STRATEGY);
     addRootsFromModules(false, paths, paths);
 
     LocalFileSystem fs = LocalFileSystem.getInstance();

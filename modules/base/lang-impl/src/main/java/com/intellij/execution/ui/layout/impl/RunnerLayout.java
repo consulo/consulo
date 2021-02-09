@@ -24,7 +24,7 @@ import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.content.Content;
-import com.intellij.util.containers.hash.LinkedHashMap;
+import java.util.LinkedHashMap;
 import com.intellij.util.xmlb.SkipDefaultValuesSerializationFilters;
 import com.intellij.util.xmlb.XmlSerializer;
 import consulo.ui.image.Image;

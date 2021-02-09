@@ -39,9 +39,8 @@ import com.intellij.psi.PsiFile;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.containers.HashSet;
 import com.intellij.util.ui.UIUtil;
-import gnu.trove.THashMap;
+import java.util.HashMap;
 import org.jdom.Element;
 import org.jdom.IllegalDataException;
 import org.jetbrains.annotations.NonNls;
@@ -526,7 +525,7 @@ public class DefaultInspectionToolPresentation implements ProblemDescriptionsPro
 
   @Override
   public void updateContent() {
-    myContents = new com.intellij.util.containers.HashMap<String, Set<RefEntity>>();
+    myContents = new HashMap<String, Set<RefEntity>>();
     myModulesProblems = new HashSet<RefModule>();
     final Set<RefEntity> elements = getProblemElements().keySet();
     for (RefEntity element : elements) {
@@ -554,8 +553,8 @@ public class DefaultInspectionToolPresentation implements ProblemDescriptionsPro
   @Override
   public Map<String, Set<RefEntity>> getOldContent() {
     if (myOldProblemElements == null) return null;
-    final com.intellij.util.containers.HashMap<String, Set<RefEntity>>
-            oldContents = new com.intellij.util.containers.HashMap<String, Set<RefEntity>>();
+    final HashMap<String, Set<RefEntity>>
+            oldContents = new HashMap<String, Set<RefEntity>>();
     final Set<RefEntity> elements = myOldProblemElements.keySet();
     for (RefEntity element : elements) {
       String groupName = element instanceof RefElement ? element.getRefManager().getGroupName((RefElement)element) : element.getName();
@@ -588,7 +587,7 @@ public class DefaultInspectionToolPresentation implements ProblemDescriptionsPro
   @Override
   @Nullable
   public QuickFixAction[] extractActiveFixes(@Nonnull RefEntity[] refElements, @Nonnull Map<RefEntity, Set<QuickFix>> actions) {
-    Map<Class, QuickFixAction> result = new com.intellij.util.containers.HashMap<Class, QuickFixAction>();
+    Map<Class, QuickFixAction> result = new HashMap<Class, QuickFixAction>();
     for (RefEntity refElement : refElements) {
       final Set<QuickFix> localQuickFixes = actions.get(refElement);
       if (localQuickFixes == null) continue;
@@ -722,7 +721,7 @@ public class DefaultInspectionToolPresentation implements ProblemDescriptionsPro
   public Map<RefEntity, CommonProblemDescriptor[]> getProblemElements() {
     synchronized (lock) {
       if (myProblemElements == null) {
-        myProblemElements = Collections.synchronizedMap(new THashMap<RefEntity, CommonProblemDescriptor[]>());
+        myProblemElements = Collections.synchronizedMap(new HashMap<RefEntity, CommonProblemDescriptor[]>());
       }
       return myProblemElements;
     }
@@ -738,7 +737,7 @@ public class DefaultInspectionToolPresentation implements ProblemDescriptionsPro
   private Map<CommonProblemDescriptor, RefEntity> getProblemToElements() {
     synchronized (lock) {
       if (myProblemToElements == null) {
-        myProblemToElements = Collections.synchronizedMap(new THashMap<CommonProblemDescriptor, RefEntity>());
+        myProblemToElements = Collections.synchronizedMap(new HashMap<CommonProblemDescriptor, RefEntity>());
       }
       return myProblemToElements;
     }
@@ -748,7 +747,7 @@ public class DefaultInspectionToolPresentation implements ProblemDescriptionsPro
   private Map<RefEntity, Set<QuickFix>> getQuickFixActions() {
     synchronized (lock) {
       if (myQuickFixActions == null) {
-        myQuickFixActions = Collections.synchronizedMap(new com.intellij.util.containers.HashMap<RefEntity, Set<QuickFix>>());
+        myQuickFixActions = Collections.synchronizedMap(new HashMap<RefEntity, Set<QuickFix>>());
       }
       return myQuickFixActions;
     }
@@ -758,7 +757,7 @@ public class DefaultInspectionToolPresentation implements ProblemDescriptionsPro
   private Map<RefEntity, CommonProblemDescriptor[]> getIgnoredElements() {
     synchronized (lock) {
       if (myIgnoredElements == null) {
-        myIgnoredElements = Collections.synchronizedMap(new com.intellij.util.containers.HashMap<RefEntity, CommonProblemDescriptor[]>());
+        myIgnoredElements = Collections.synchronizedMap(new HashMap<RefEntity, CommonProblemDescriptor[]>());
       }
       return myIgnoredElements;
     }

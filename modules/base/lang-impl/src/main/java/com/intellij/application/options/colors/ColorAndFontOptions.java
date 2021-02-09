@@ -52,7 +52,6 @@ import com.intellij.psi.search.scope.packageSet.NamedScope;
 import com.intellij.psi.search.scope.packageSet.NamedScopesHolder;
 import com.intellij.psi.search.scope.packageSet.PackageSet;
 import com.intellij.util.ArrayUtil;
-import com.intellij.util.containers.HashMap;
 import com.intellij.util.ui.UIUtil;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
@@ -60,8 +59,8 @@ import consulo.logging.Logger;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
 import consulo.ui.image.Image;
-import gnu.trove.THashSet;
-import gnu.trove.TObjectHashingStrategy;
+import consulo.util.collection.HashingStrategy;
+import consulo.util.collection.Sets;
 import org.jetbrains.annotations.Nls;
 
 import javax.annotation.Nonnull;
@@ -558,9 +557,9 @@ public class ColorAndFontOptions extends SearchableConfigurable.Parent.Abstract 
   }
 
   private static void initScopesDescriptors(@Nonnull List<EditorSchemeAttributeDescriptor> descriptions, @Nonnull MyColorScheme scheme) {
-    Set<Pair<NamedScope, NamedScopesHolder>> namedScopes = new THashSet<>(new TObjectHashingStrategy<Pair<NamedScope, NamedScopesHolder>>() {
+    Set<Pair<NamedScope, NamedScopesHolder>> namedScopes = Sets.newHashSet(new HashingStrategy<Pair<NamedScope, NamedScopesHolder>>() {
       @Override
-      public int computeHashCode(@Nonnull final Pair<NamedScope, NamedScopesHolder> object) {
+      public int hashCode(@Nonnull final Pair<NamedScope, NamedScopesHolder> object) {
         return object.getFirst().getName().hashCode();
       }
 

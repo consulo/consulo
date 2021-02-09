@@ -23,7 +23,7 @@ import com.intellij.psi.util.ParameterizedCachedValueProvider;
 import com.intellij.util.Processor;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.MultiMap;
-import gnu.trove.THashSet;
+import java.util.HashSet;
 import jakarta.inject.Inject;
 
 import javax.annotation.Nonnull;
@@ -45,7 +45,7 @@ public final class FileIncludeManagerImpl extends FileIncludeManager {
   private final IncludeCacheHolder myIncludedHolder = new IncludeCacheHolder("compile time includes", "runtime includes") {
     @Override
     protected VirtualFile[] computeFiles(final PsiFile file, final boolean compileTimeOnly) {
-      final Set<VirtualFile> files = new THashSet<>();
+      final Set<VirtualFile> files = new HashSet<>();
       processIncludes(file, info -> {
         if (compileTimeOnly != info.runtimeOnly) {
           PsiFileSystemItem item = resolveFileInclude(info, file);
@@ -72,7 +72,7 @@ public final class FileIncludeManagerImpl extends FileIncludeManager {
   private final IncludeCacheHolder myIncludingHolder = new IncludeCacheHolder("compile time contexts", "runtime contexts") {
     @Override
     protected VirtualFile[] computeFiles(PsiFile context, boolean compileTimeOnly) {
-      final Set<VirtualFile> files = new THashSet<>();
+      final Set<VirtualFile> files = new HashSet<>();
       processIncludingFiles(context, virtualFileFileIncludeInfoPair -> {
         files.add(virtualFileFileIncludeInfoPair.first);
         return true;
@@ -110,7 +110,7 @@ public final class FileIncludeManagerImpl extends FileIncludeManager {
 
   @Nonnull
   private static Collection<String> getPossibleIncludeNames(@Nonnull PsiFile context, @Nonnull String originalName) {
-    Collection<String> names = new THashSet<>();
+    Collection<String> names = new HashSet<>();
     names.add(originalName);
     for (FileIncludeProvider provider : FileIncludeProvider.EP_NAME.getExtensions()) {
       String newName = provider.getIncludeName(context, originalName);

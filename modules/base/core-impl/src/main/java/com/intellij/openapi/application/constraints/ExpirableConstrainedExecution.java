@@ -4,10 +4,10 @@ package com.intellij.openapi.application.constraints;
 import consulo.disposer.Disposable;
 import com.intellij.openapi.util.NullableLazyValue;
 import com.intellij.util.ArrayUtil;
-import com.intellij.util.containers.HashSet;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.BooleanSupplier;

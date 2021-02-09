@@ -17,7 +17,7 @@ package com.intellij.testFramework;
 
 import com.intellij.openapi.project.DefaultProjectFactory;
 import com.intellij.openapi.project.impl.DefaultProjectFactoryImpl;
-import gnu.trove.THashSet;
+import java.util.HashSet;
 import junit.framework.Assert;
 
 import java.util.Collection;
@@ -41,7 +41,7 @@ public class ThreadTracker {
     return Collections.emptyList(); //Thread.getAllStackTraces().keySet();
   }
 
-  private static final Set<String> wellKnownOffenders = new THashSet<String>(){{
+  private static final Set<String> wellKnownOffenders = new HashSet<String>(){{
     add("Alarm pool(own)");
     add("Alarm pool(shared)");
     add("ApplicationImpl pooled thread");
@@ -78,7 +78,7 @@ public class ThreadTracker {
     try {
       if (myDefaultProjectInitialized != ((DefaultProjectFactoryImpl)DefaultProjectFactory.getInstance()).isDefaultProjectInitialized()) return;
 
-      Collection<Thread> after = new THashSet<Thread>(getThreads());
+      Collection<Thread> after = new HashSet<Thread>(getThreads());
       after.removeAll(before);
 
       for (Thread thread : after) {

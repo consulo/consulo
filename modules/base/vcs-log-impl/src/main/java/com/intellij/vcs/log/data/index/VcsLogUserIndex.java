@@ -15,8 +15,6 @@
  */
 package com.intellij.vcs.log.data.index;
 
-import consulo.disposer.Disposable;
-import consulo.logging.Logger;
 import com.intellij.util.Consumer;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.indexing.DataIndexer;
@@ -26,11 +24,13 @@ import com.intellij.vcs.log.VcsFullCommitDetails;
 import com.intellij.vcs.log.VcsUser;
 import com.intellij.vcs.log.data.VcsUserRegistryImpl;
 import com.intellij.vcs.log.impl.FatalErrorHandler;
-import gnu.trove.THashMap;
+import consulo.disposer.Disposable;
+import consulo.logging.Logger;
 import gnu.trove.TIntHashSet;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -73,7 +73,7 @@ public class VcsLogUserIndex extends VcsLogFullDetailsIndex<Void> {
     @Nonnull
     @Override
     public Map<Integer, Void> map(@Nonnull VcsFullCommitDetails inputData) {
-      Map<Integer, Void> result = new THashMap<>();
+      Map<Integer, Void> result = new HashMap<>();
 
       try {
         result.put(myRegistry.getUserId(inputData.getAuthor()), null);

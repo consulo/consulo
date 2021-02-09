@@ -15,7 +15,7 @@
  */
 package com.intellij.util.containers;
 
-import gnu.trove.THashSet;
+import java.util.HashSet;
 import gnu.trove.TObjectHashingStrategy;
 import javax.annotation.Nullable;
 
@@ -28,7 +28,7 @@ import java.util.Collection;
  *
  * @author gregsh
  */
-public class OpenTHashSet<T> extends THashSet<T> {
+public class OpenTHashSet<T> extends HashSet<T> {
   public OpenTHashSet() {
     super();
   }

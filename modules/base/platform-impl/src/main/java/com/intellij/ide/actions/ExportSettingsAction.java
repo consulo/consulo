@@ -47,7 +47,7 @@ import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginIds;
 import consulo.injecting.key.InjectingKey;
 import consulo.ui.annotation.RequiredUIAccess;
-import gnu.trove.THashSet;
+import java.util.HashSet;
 import jakarta.inject.Inject;
 
 import javax.annotation.Nonnull;
@@ -58,7 +58,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.ResourceBundle;
 import java.util.Set;
@@ -91,7 +90,7 @@ public class ExportSettingsAction extends AnAction implements DumbAware {
       return;
     }
 
-    Set<File> exportFiles = new THashSet<>(FileUtil.FILE_HASHING_STRATEGY);
+    Set<File> exportFiles = new HashSet<>(FileUtil.FILE_HASHING_STRATEGY);
     for (ExportableItem markedComponent : markedComponents) {
       ContainerUtil.addAll(exportFiles, markedComponent.getExportFiles());
     }

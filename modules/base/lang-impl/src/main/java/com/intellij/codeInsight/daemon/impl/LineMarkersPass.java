@@ -38,7 +38,7 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.NotNullList;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.ui.image.Image;
-import gnu.trove.THashSet;
+import java.util.HashSet;
 import gnu.trove.TIntObjectHashMap;
 import javax.annotation.Nonnull;
 
@@ -155,7 +155,7 @@ public class LineMarkersPass extends TextEditorHighlightingPass {
                                      @Nonnull List<? extends LineMarkerProvider> providers,
                                      @Nonnull PairConsumer<? super PsiElement, ? super LineMarkerInfo<PsiElement>> consumer) {
     ApplicationManager.getApplication().assertReadAccessAllowed();
-    Set<PsiFile> visitedInjectedFiles = new THashSet<>();
+    Set<PsiFile> visitedInjectedFiles = new HashSet<>();
     //noinspection ForLoopReplaceableByForEach
     for (int i = 0; i < elements.size(); i++) {
       PsiElement element = elements.get(i);

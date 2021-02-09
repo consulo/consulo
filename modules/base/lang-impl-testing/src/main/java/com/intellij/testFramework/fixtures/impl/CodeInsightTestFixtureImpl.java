@@ -110,7 +110,7 @@ import consulo.codeInsight.TargetElementUtilEx;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ui.UIAccess;
-import gnu.trove.THashMap;
+import java.util.HashMap;
 import junit.framework.Assert;
 import junit.framework.ComparisonFailure;
 import org.jetbrains.annotations.NonNls;
@@ -144,7 +144,7 @@ public class CodeInsightTestFixtureImpl extends BaseFixture implements CodeInsig
   private boolean myEmptyLookup;
 
   private InspectionProfileEntry[] myInspections;
-  private final Map<String, InspectionToolWrapper> myAvailableTools = new THashMap<String, InspectionToolWrapper>();
+  private final Map<String, InspectionToolWrapper> myAvailableTools = new HashMap<String, InspectionToolWrapper>();
 
   private final TempDirTestFixture myTempDirFixture;
   protected final IdeaProjectTestFixture myProjectFixture;

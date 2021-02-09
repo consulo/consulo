@@ -31,7 +31,6 @@ import com.intellij.openapi.editor.event.DocumentListener;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.psi.FileViewProvider;
 import com.intellij.psi.PsiFile;
-import com.intellij.util.containers.HashMap;
 import com.intellij.util.ui.update.Update;
 import javax.annotation.Nonnull;
 import consulo.annotation.access.RequiredReadAction;

@@ -37,7 +37,7 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
 import com.intellij.psi.search.scope.packageSet.NamedScope;
 import com.intellij.psi.search.scope.packageSet.PackageSet;
-import com.intellij.util.containers.HashMap;
+import java.util.HashMap;
 import com.maddyhome.idea.copyright.actions.UpdateCopyrightProcessor;
 import com.maddyhome.idea.copyright.util.NewFileTracker;
 import consulo.copyright.config.CopyrightFileConfig;

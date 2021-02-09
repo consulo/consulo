@@ -20,7 +20,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileAdapter;
 import com.intellij.openapi.vfs.VirtualFileEvent;
 import com.intellij.openapi.vfs.VirtualFileManager;
-import gnu.trove.THashSet;
+import java.util.HashSet;
 import javax.annotation.Nonnull;
 
 import java.util.Collections;
@@ -46,7 +46,7 @@ public class NewFileTracker {
     });
   }
 
-  private final Set<VirtualFile> newFiles = Collections.synchronizedSet(new THashSet<VirtualFile>());
+  private final Set<VirtualFile> newFiles = Collections.synchronizedSet(new HashSet<VirtualFile>());
   private static final NewFileTracker instance = new NewFileTracker();
 
   public void clear() {

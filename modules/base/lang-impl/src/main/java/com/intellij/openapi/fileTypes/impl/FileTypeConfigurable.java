@@ -38,7 +38,7 @@ import com.intellij.util.PairConvertor;
 import com.intellij.util.ui.JBUI;
 import consulo.disposer.Disposer;
 import consulo.ui.annotation.RequiredUIAccess;
-import gnu.trove.THashMap;
+import java.util.HashMap;
 import jakarta.inject.Inject;
 
 import javax.annotation.Nonnull;
@@ -61,7 +61,7 @@ public class FileTypeConfigurable implements SearchableConfigurable, Configurabl
   private HashSet<FileType> myTempFileTypes;
   private final FileTypeManagerImpl myManager;
   private FileTypeAssocTable<FileType> myTempPatternsTable;
-  private final Map<FileNameMatcher, FileType> myReassigned = new THashMap<FileNameMatcher, FileType>();
+  private final Map<FileNameMatcher, FileType> myReassigned = new HashMap<FileNameMatcher, FileType>();
   private FileTypeAssocTable<Language> myTempTemplateDataLanguages;
   private final Map<UserFileType, UserFileType> myOriginalToEditedMap = new HashMap<UserFileType, UserFileType>();
 

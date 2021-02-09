@@ -21,20 +21,17 @@ import com.intellij.openapi.util.Factory;
 import com.intellij.openapi.util.JDOMExternalizable;
 import com.intellij.openapi.util.JDOMUtil;
 import com.intellij.util.SmartList;
-import gnu.trove.THashMap;
+import java.util.HashMap;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class ExternalizablePropertyContainer extends AbstractProperty.AbstractPropertyContainer {
   private static final Logger LOG = Logger.getInstance(ExternalizablePropertyContainer.class);
-  private final Map<AbstractProperty, Object> myValues = new THashMap<AbstractProperty, Object>();
-  private final Map<AbstractProperty, Externalizer> myExternalizers = new THashMap<AbstractProperty, Externalizer>();
+  private final Map<AbstractProperty, Object> myValues = new HashMap<AbstractProperty, Object>();
+  private final Map<AbstractProperty, Externalizer> myExternalizers = new HashMap<AbstractProperty, Externalizer>();
 
   public <T> void registerProperty(AbstractProperty<T> property, Externalizer<T> externalizer) {
     String name = property.getName();
@@ -79,7 +76,7 @@ public class ExternalizablePropertyContainer extends AbstractProperty.AbstractPr
   }
 
   public void readExternal(@Nonnull Element element) {
-    Map<String, AbstractProperty> propertyByName = new THashMap<String, AbstractProperty>();
+    Map<String, AbstractProperty> propertyByName = new HashMap<String, AbstractProperty>();
     for (AbstractProperty abstractProperty : myExternalizers.keySet()) {
       propertyByName.put(abstractProperty.getName(), abstractProperty);
     }

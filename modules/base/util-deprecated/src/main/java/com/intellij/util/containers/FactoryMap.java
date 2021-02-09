@@ -20,7 +20,7 @@ import com.intellij.openapi.util.RecursionManager;
 import consulo.util.lang.DeprecatedMethodException;
 import com.intellij.util.Function;
 import com.intellij.util.ObjectUtils;
-import gnu.trove.THashMap;
+import java.util.HashMap;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -50,7 +50,7 @@ public abstract class FactoryMap<K, V> implements Map<K, V> {
 
   @Nonnull
   protected Map<K, V> createMap() {
-    return new THashMap<>();
+    return new HashMap<>();
   }
 
   @Nullable

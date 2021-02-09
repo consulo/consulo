@@ -29,7 +29,7 @@ import com.intellij.ui.content.ContentManagerAdapter;
 import com.intellij.ui.content.ContentManagerEvent;
 import com.intellij.util.ArrayUtil;
 import consulo.ui.image.Image;
-import gnu.trove.THashMap;
+import java.util.HashMap;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -39,7 +39,7 @@ import java.util.Map;
 
 public abstract class LogConsoleManagerBase implements LogConsoleManager, Disposable {
   private final Project myProject;
-  private final Map<AdditionalTabComponent, Content> myAdditionalContent = new THashMap<AdditionalTabComponent, Content>();
+  private final Map<AdditionalTabComponent, Content> myAdditionalContent = new HashMap<AdditionalTabComponent, Content>();
   private final GlobalSearchScope mySearchScope;
 
   protected LogConsoleManagerBase(@Nonnull Project project, @Nonnull GlobalSearchScope searchScope) {

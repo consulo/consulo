@@ -6,7 +6,7 @@ import com.intellij.testFramework.PlatformTestUtil;
 import com.intellij.util.ThrowableRunnable;
 import com.intellij.util.containers.IntObjectCache;
 import com.intellij.util.io.storage.Storage;
-import gnu.trove.THashSet;
+import java.util.HashSet;
 import junit.framework.TestCase;
 
 import java.io.*;
@@ -431,7 +431,7 @@ public abstract class PersistentMapTest extends TestCase {
       }
 
       public Collection<String> read(DataInput in) throws IOException {
-        final Set<String> result = new THashSet<String>(FileUtil.PATH_HASHING_STRATEGY);
+        final Set<String> result = new HashSet<String>(FileUtil.PATH_HASHING_STRATEGY);
         final DataInputStream stream = (DataInputStream)in;
         while (stream.available() > 0) {
           final String str = IOUtil.readString(stream);

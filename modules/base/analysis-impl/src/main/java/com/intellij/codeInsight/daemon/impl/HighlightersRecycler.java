@@ -20,7 +20,7 @@ import com.intellij.openapi.util.ProperTextRange;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.MultiMap;
-import gnu.trove.THashMap;
+import java.util.HashMap;
 import javax.annotation.Nonnull;
 
 import java.util.Collection;
@@ -30,7 +30,7 @@ class HighlightersRecycler {
   private final MultiMap<TextRange, RangeHighlighter> incinerator = new MultiMap<TextRange, RangeHighlighter>(){
     @Override
     protected Map<TextRange, Collection<RangeHighlighter>> createMap() {
-      return new THashMap<TextRange, Collection<RangeHighlighter>>();
+      return new HashMap<TextRange, Collection<RangeHighlighter>>();
     }
 
     @Override

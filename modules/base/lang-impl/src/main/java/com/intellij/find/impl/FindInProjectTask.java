@@ -43,7 +43,7 @@ import com.intellij.usages.impl.UsageViewManagerImpl;
 import com.intellij.util.Processor;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.UIUtil;
-import gnu.trove.THashSet;
+import java.util.HashSet;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -74,7 +74,7 @@ class FindInProjectTask {
   private final ProgressIndicator myProgress;
   @Nullable
   private final Module myModule;
-  private final Set<VirtualFile> myLargeFiles = Collections.synchronizedSet(new THashSet<>());
+  private final Set<VirtualFile> myLargeFiles = Collections.synchronizedSet(new HashSet<>());
   private final Set<? extends VirtualFile> myFilesToScanInitially;
   private final AtomicLong myTotalFilesSize = new AtomicLong();
   private final

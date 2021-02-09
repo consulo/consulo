@@ -4,12 +4,12 @@ package com.intellij.util;
 
 import com.intellij.concurrency.AsyncFuture;
 import com.intellij.openapi.progress.ProgressManager;
-import com.intellij.util.containers.ContainerUtil;
-import gnu.trove.THashSet;
-import gnu.trove.TObjectHashingStrategy;
-import javax.annotation.Nonnull;
+import consulo.util.collection.HashingStrategy;
+import consulo.util.collection.Sets;
 
-import java.util.*;
+import javax.annotation.Nonnull;
+import java.util.Collections;
+import java.util.Set;
 
 /**
  * @author max
@@ -18,19 +18,19 @@ public class UniqueResultsQuery<T, M> extends AbstractQuery<T> {
   @Nonnull
   private final Query<? extends T> myOriginal;
   @Nonnull
-  private final TObjectHashingStrategy<? super M> myHashingStrategy;
+  private final HashingStrategy<? super M> myHashingStrategy;
   @Nonnull
   private final Function<? super T, ? extends M> myMapper;
 
   public UniqueResultsQuery(@Nonnull Query<? extends T> original) {
-    this(original, ContainerUtil.canonicalStrategy(), Functions.identity());
+    this(original, HashingStrategy.canonical(), Functions.identity());
   }
 
-  public UniqueResultsQuery(@Nonnull Query<? extends T> original, @Nonnull TObjectHashingStrategy<? super M> hashingStrategy) {
+  public UniqueResultsQuery(@Nonnull Query<? extends T> original, @Nonnull HashingStrategy<? super M> hashingStrategy) {
     this(original, hashingStrategy, Functions.identity());
   }
 
-  public UniqueResultsQuery(@Nonnull Query<? extends T> original, @Nonnull TObjectHashingStrategy<? super M> hashingStrategy, @Nonnull Function<? super T, ? extends M> mapper) {
+  public UniqueResultsQuery(@Nonnull Query<? extends T> original, @Nonnull HashingStrategy<? super M> hashingStrategy, @Nonnull Function<? super T, ? extends M> mapper) {
     myOriginal = original;
     myHashingStrategy = hashingStrategy;
     myMapper = mapper;
@@ -38,13 +38,13 @@ public class UniqueResultsQuery<T, M> extends AbstractQuery<T> {
 
   @Override
   protected boolean processResults(@Nonnull Processor<? super T> consumer) {
-    return delegateProcessResults(myOriginal, new MyProcessor(Collections.synchronizedSet(new THashSet<>(myHashingStrategy)), consumer));
+    return delegateProcessResults(myOriginal, new MyProcessor(Collections.synchronizedSet(Sets.newHashSet(myHashingStrategy)), consumer));
   }
 
   @Nonnull
   @Override
   public AsyncFuture<Boolean> forEachAsync(@Nonnull Processor<? super T> consumer) {
-    return myOriginal.forEachAsync(new MyProcessor(Collections.synchronizedSet(new THashSet<>(myHashingStrategy)), consumer));
+    return myOriginal.forEachAsync(new MyProcessor(Collections.synchronizedSet(Sets.newHashSet(myHashingStrategy)), consumer));
   }
 
   private class MyProcessor implements Processor<T> {

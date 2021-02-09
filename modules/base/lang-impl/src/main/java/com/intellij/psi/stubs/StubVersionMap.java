@@ -22,8 +22,8 @@ import com.intellij.util.indexing.IndexInfrastructure;
 import com.intellij.util.indexing.IndexingStamp;
 import com.intellij.util.io.DataInputOutputUtil;
 import consulo.logging.Logger;
-import gnu.trove.THashMap;
-import gnu.trove.THashSet;
+import java.util.HashMap;
+import java.util.HashSet;
 import gnu.trove.TLongObjectHashMap;
 import gnu.trove.TObjectLongHashMap;
 import javax.annotation.Nonnull;
@@ -35,10 +35,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 class StubVersionMap {
   private static final String INDEXED_FILETYPES = "indexed_filetypes";
@@ -46,7 +43,7 @@ class StubVersionMap {
   private static final String LINE_SEPARATOR = "\n";
   private static final Charset ourEncoding = StandardCharsets.UTF_8;
   private static final Logger LOG = Logger.getInstance(StubVersionMap.class);
-  private final Map<FileType, Object> fileTypeToVersionOwner = new THashMap<>();
+  private final Map<FileType, Object> fileTypeToVersionOwner = new HashMap<>();
   private final TObjectLongHashMap<FileType> fileTypeToVersion = new TObjectLongHashMap<>();
   private final TLongObjectHashMap<FileType> versionToFileType = new TLongObjectHashMap<>();
   private long myStubIndexStamp;
@@ -73,7 +70,7 @@ class StubVersionMap {
 
     boolean canUsePreviousMappings = allIndexedFiles.exists();
     FileTypeRegistry fileTypeRegistry = FileTypeRegistry.getInstance();
-    Set<FileType> loadedFileTypes = new THashSet<>();
+    Set<FileType> loadedFileTypes = new HashSet<>();
 
     if (canUsePreviousMappings) {
       List<String> stringList = StringUtil.split(FileUtil.loadFile(allIndexedFiles, ourEncoding), LINE_SEPARATOR);

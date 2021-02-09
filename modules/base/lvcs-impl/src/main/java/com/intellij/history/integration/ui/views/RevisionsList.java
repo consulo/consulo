@@ -32,8 +32,8 @@ import com.intellij.ui.table.JBTable;
 import com.intellij.util.text.DateFormatUtil;
 import com.intellij.util.ui.AbstractLayoutManager;
 import com.intellij.util.ui.UIUtil;
-import gnu.trove.THashMap;
-import gnu.trove.THashSet;
+import java.util.HashMap;
+import java.util.HashSet;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -93,7 +93,7 @@ public class RevisionsList {
   }
 
   public void updateData(HistoryDialogModel model) {
-    Set<Long> sel = new THashSet<Long>();
+    Set<Long> sel = new HashSet<Long>();
     MyModel m = (MyModel)table.getModel();
     for (int i : table.getSelectedRows()) {
       if (i >= m.getRowCount()) continue;
@@ -104,7 +104,7 @@ public class RevisionsList {
 
     Date today = new Date();
 
-    Map<RevisionItem, Period> periods = new THashMap<RevisionItem, Period>();
+    Map<RevisionItem, Period> periods = new HashMap<RevisionItem, Period>();
     for (int i = 0; i < newRevs.size(); i++) {
       RevisionItem each = newRevs.get(i);
       boolean recent = today.getTime() - each.revision.getTimestamp() < 1000 * 60 * 60 * RECENT_PERIOD;

@@ -29,7 +29,7 @@ import com.intellij.util.io.BaseOutputReader;
 import com.intellij.util.text.CaseInsensitiveStringHashingStrategy;
 import consulo.container.boot.ContainerPathManager;
 import consulo.logging.Logger;
-import gnu.trove.THashMap;
+import java.util.HashMap;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;
@@ -84,7 +84,7 @@ public class EnvironmentUtil {
 
   private static Map<String, String> getSystemEnv() {
     if (SystemInfo.isWindows) {
-      return unmodifiableMap(new THashMap<String, String>(System.getenv(), CaseInsensitiveStringHashingStrategy.INSTANCE));
+      return unmodifiableMap(new HashMap<String, String>(System.getenv(), CaseInsensitiveStringHashingStrategy.INSTANCE));
     }
     else {
       return System.getenv();

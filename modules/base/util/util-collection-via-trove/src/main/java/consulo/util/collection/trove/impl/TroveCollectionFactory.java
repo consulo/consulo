@@ -17,9 +17,16 @@ package consulo.util.collection.trove.impl;
 
 import consulo.util.collection.HashingStrategy;
 import consulo.util.collection.impl.CollectionFactory;
+import consulo.util.collection.trove.impl.ints.TSoftHashMap;
+import consulo.util.collection.trove.impl.ints.TWeakHashMap;
+import gnu.trove.THashMap;
 import gnu.trove.THashSet;
 import gnu.trove.TObjectHashingStrategy;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.Collection;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -28,14 +35,36 @@ import java.util.Set;
  */
 public class TroveCollectionFactory implements CollectionFactory {
   @Override
-  public <T> Set<T> newHashSetWithStrategy(int capacity, HashingStrategy<T> strategy) {
-    if (capacity == UNKNOWN_CAPACITY) {
-
+  public <T> Set<T> newHashSetWithStrategy(int capacity, @Nullable Collection<? extends T> inner, HashingStrategy<T> strategy) {
+    if(inner != null) {
+      return new THashSet<T>(inner, mapStrategy(strategy));
+    }
+    else if (capacity == UNKNOWN_CAPACITY) {
       return new THashSet<>(mapStrategy(strategy));
     }
     else {
       return new THashSet<T>(capacity, mapStrategy(strategy));
     }
+  }
+
+  @Override
+  @SuppressWarnings("unchecked")
+  public <K, V> Map<K, V> newHashMapWithStrategy(@Nullable Map<? extends K, ? extends V> inner, @Nonnull HashingStrategy<K> hashingStrategy) {
+    if(inner != null) {
+      Map parameterTypeFix = inner;
+      return new THashMap<>(parameterTypeFix, mapStrategy(hashingStrategy));
+    }
+    return new THashMap<>(mapStrategy(hashingStrategy));
+  }
+
+  @Override
+  public <K, V> Map<K, V> newWeakHashMap(int initialCapacity, float loadFactor, @Nonnull HashingStrategy<? super K> strategy) {
+    return new TWeakHashMap<K, V>(initialCapacity, loadFactor, strategy);
+  }
+
+  @Override
+  public <K, V> Map<K, V> newSoftHashMap(@Nonnull HashingStrategy<? super K> strategy) {
+    return new TSoftHashMap<K, V>(strategy);
   }
 
   private <K> TObjectHashingStrategy<K> mapStrategy(HashingStrategy<K> hashingStrategy) {

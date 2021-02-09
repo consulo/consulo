@@ -23,8 +23,9 @@ import com.intellij.util.containers.ContainerUtil;
 import consulo.container.boot.ContainerPathManager;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
+import consulo.util.collection.Sets;
 import consulo.vfs.ArchiveFileSystem;
-import gnu.trove.THashSet;
+import java.util.HashSet;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;
@@ -41,7 +42,7 @@ public class VfsRootAccess {
   private static final boolean SHOULD_PERFORM_ACCESS_CHECK = System.getenv("NO_FS_ROOTS_ACCESS_CHECK") == null && System.getProperty("NO_FS_ROOTS_ACCESS_CHECK") == null;
 
   // we don't want test subclasses to accidentally remove allowed files, added by base classes
-  private static final Set<String> ourAdditionalRoots = new THashSet<>(FileUtil.PATH_HASHING_STRATEGY);
+  private static final Set<String> ourAdditionalRoots = Sets.newHashSet(FileUtil.PATH_HASHING_STRATEGY);
   private static boolean insideGettingRoots;
 
   @TestOnly
@@ -95,7 +96,7 @@ public class VfsRootAccess {
     Project[] openProjects = ProjectManager.getInstance().getOpenProjects();
     if (openProjects.length == 0) return null;
 
-    final Set<String> allowed = new THashSet<>(FileUtil.PATH_HASHING_STRATEGY);
+    final Set<String> allowed = new HashSet<>(FileUtil.PATH_HASHING_STRATEGY);
     allowed.add(FileUtil.toSystemIndependentName(ContainerPathManager.get().getHomePath()));
 
     // In plugin development environment PathManager.getHomePath() returns path like "~/.IntelliJIdea/system/plugins-sandbox/test" when running tests
@@ -165,7 +166,7 @@ public class VfsRootAccess {
   @Nonnull
   private static Collection<String> getAllRootUrls(@Nonnull Project project) {
     insideGettingRoots = true;
-    final Set<String> roots = new THashSet<>();
+    final Set<String> roots = new HashSet<>();
 
     OrderEnumerator enumerator = ProjectRootManager.getInstance(project).orderEntries().using(new DefaultModulesProvider(project));
     ContainerUtil.addAll(roots, enumerator.classes().getUrls());

@@ -20,7 +20,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import consulo.builtInServer.http.HttpRequestHandler;
 import consulo.builtInServer.http.Responses;
 import consulo.builtInServer.xml.XmlRpcServer;
-import gnu.trove.THashMap;
+import java.util.HashMap;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufInputStream;
 import io.netty.buffer.Unpooled;
@@ -63,7 +63,7 @@ public class XmlRpcServerImpl implements XmlRpcServer {
 
   private static final Logger LOG = Logger.getInstance(XmlRpcServerImpl.class);
 
-  private final Map<String, Object> handlerMapping = new THashMap<>();
+  private final Map<String, Object> handlerMapping = new HashMap<>();
 
   private final XmlRpcHttpRequestConfigImpl myXmlRpcConfig = new XmlRpcHttpRequestConfigImpl();
 

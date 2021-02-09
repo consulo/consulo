@@ -9,7 +9,7 @@ import com.intellij.psi.PsiFile;
 import com.intellij.util.exception.FrequentErrorLogger;
 import consulo.logging.Logger;
 import consulo.logging.attachment.AttachmentFactory;
-import gnu.trove.THashSet;
+import java.util.HashSet;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -73,7 +73,7 @@ public class AstLoadingFilter {
    */
   private static final ThreadLocal<Supplier<String>> myDisallowedInfo = new ThreadLocal<>();
   @SuppressWarnings("SSBasedInspection")
-  private static final ThreadLocal<Set<VirtualFile>> myForcedAllowedFiles = ThreadLocal.withInitial(() -> new THashSet<>());
+  private static final ThreadLocal<Set<VirtualFile>> myForcedAllowedFiles = ThreadLocal.withInitial(() -> new HashSet<>());
 
   private AstLoadingFilter() {
   }

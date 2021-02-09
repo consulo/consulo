@@ -20,6 +20,7 @@ import consulo.util.collection.impl.set.WeakHashSet;
 import org.jetbrains.annotations.Contract;
 
 import javax.annotation.Nonnull;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Set;
 
@@ -28,8 +29,7 @@ import java.util.Set;
  * @since 16/01/2021
  */
 public class Sets {
-  // todo
-  private static CollectionFactory ourFactory;
+  private static CollectionFactory ourFactory = CollectionFactory.get();
 
   @Contract(value = " -> new", pure = true)
   @Nonnull
@@ -39,14 +39,21 @@ public class Sets {
 
   @Nonnull
   @Contract(pure = true)
-  public static <K> Set<K> newHashSet(@Nonnull HashingStrategy<K> hashingStrategy) {
+  public static <T> Set<T> newHashSet(@Nonnull HashingStrategy<T> hashingStrategy) {
     return newHashSet(CollectionFactory.UNKNOWN_CAPACITY, hashingStrategy);
+  }
+
+
+  @Nonnull
+  @Contract(pure = true)
+  public static <T> Set<T> newHashSet(@Nonnull Collection<? extends T> items, @Nonnull HashingStrategy<T> hashingStrategy) {
+    return ourFactory.newHashSetWithStrategy(CollectionFactory.UNKNOWN_CAPACITY, items, hashingStrategy);
   }
 
   @Nonnull
   @Contract(pure = true)
   public static <K> Set<K> newHashSet(int initialCapacity, @Nonnull HashingStrategy<K> hashingStrategy) {
-    return ourFactory.newHashSetWithStrategy(initialCapacity, hashingStrategy);
+    return ourFactory.newHashSetWithStrategy(initialCapacity, null, hashingStrategy);
   }
 
   @Nonnull

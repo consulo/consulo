@@ -19,11 +19,9 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
 import com.intellij.openapi.components.*;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.util.containers.ContainerUtil;
 import jakarta.inject.Singleton;
 
 import javax.annotation.Nullable;
-
 import java.util.*;
 
 /**
@@ -75,8 +73,8 @@ public class ConsoleFoldingSettings implements PersistentStateComponent<ConsoleF
   }
 
   private void writeDiff(List<String> added, List<String> removed, boolean negated) {
-    Set<String> baseline = ContainerUtil.newTroveSet();
-    for (CustomizableConsoleFoldingBean regexp : CustomizableConsoleFoldingBean.EP_NAME.getExtensions()) {
+    Set<String> baseline = new HashSet<>();
+    for (CustomizableConsoleFoldingBean regexp : CustomizableConsoleFoldingBean.EP_NAME.getExtensionList()) {
       if (regexp.negate == negated) {
         baseline.add(regexp.substring);
       }

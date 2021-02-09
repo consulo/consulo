@@ -18,7 +18,7 @@ package com.intellij.codeInsight.daemon;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Computable;
 import consulo.logging.Logger;
-import gnu.trove.THashMap;
+import java.util.HashMap;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -27,10 +27,10 @@ import java.util.Map;
 public class HighlightDisplayKey {
   private static final Logger LOG = Logger.getInstance(HighlightDisplayKey.class);
 
-  private static final Map<String, HighlightDisplayKey> ourNameToKeyMap = new THashMap<>();
-  private static final Map<String, HighlightDisplayKey> ourIdToKeyMap = new THashMap<>();
-  private static final Map<HighlightDisplayKey, Computable<String>> ourKeyToDisplayNameMap = new THashMap<>();
-  private static final Map<HighlightDisplayKey, String> ourKeyToAlternativeIDMap = new THashMap<>();
+  private static final Map<String, HighlightDisplayKey> ourNameToKeyMap = new HashMap<>();
+  private static final Map<String, HighlightDisplayKey> ourIdToKeyMap = new HashMap<>();
+  private static final Map<HighlightDisplayKey, Computable<String>> ourKeyToDisplayNameMap = new HashMap<>();
+  private static final Map<HighlightDisplayKey, String> ourKeyToAlternativeIDMap = new HashMap<>();
 
   private final String myName;
   private final String myID;

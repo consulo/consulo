@@ -23,7 +23,7 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.SmartPointerManager;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.containers.MultiMap;
-import gnu.trove.THashMap;
+import java.util.HashMap;
 import javax.annotation.Nonnull;
 
 import java.util.*;
@@ -85,12 +85,12 @@ class UpdateFoldRegionsOperation implements Runnable {
   public void run() {
     EditorFoldingInfo info = EditorFoldingInfo.get(myEditor);
     FoldingModelEx foldingModel = (FoldingModelEx)myEditor.getFoldingModel();
-    Map<TextRange, Boolean> rangeToExpandStatusMap = new THashMap<>();
+    Map<TextRange, Boolean> rangeToExpandStatusMap = new HashMap<>();
 
     removeInvalidRegions(info, foldingModel, rangeToExpandStatusMap);
 
-    Map<FoldRegion, Boolean> shouldExpand = new THashMap<>();
-    Map<FoldingGroup, Boolean> groupExpand = new THashMap<>();
+    Map<FoldRegion, Boolean> shouldExpand = new HashMap<>();
+    Map<FoldingGroup, Boolean> groupExpand = new HashMap<>();
     List<FoldRegion> newRegions = addNewRegions(info, foldingModel, rangeToExpandStatusMap, shouldExpand, groupExpand);
 
     applyExpandStatus(newRegions, shouldExpand, groupExpand);

@@ -40,7 +40,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiReference;
 import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil;
-import com.intellij.util.containers.HashMap;
+import java.util.HashMap;
 import consulo.ui.color.ColorValue;
 import consulo.ui.util.ColorValueUtil;
 import consulo.util.dataholder.Key;

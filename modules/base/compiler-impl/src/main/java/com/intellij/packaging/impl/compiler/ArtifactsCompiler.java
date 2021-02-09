@@ -22,14 +22,14 @@ import com.intellij.openapi.compiler.generic.GenericCompiler;
 import com.intellij.openapi.compiler.generic.GenericCompilerInstance;
 import com.intellij.openapi.compiler.generic.VirtualFilePersistentState;
 import com.intellij.openapi.project.Project;
-import consulo.util.dataholder.Key;
 import com.intellij.packaging.artifacts.Artifact;
 import com.intellij.util.io.DataExternalizer;
 import com.intellij.util.io.KeyDescriptor;
-import gnu.trove.THashSet;
+import consulo.util.dataholder.Key;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -52,7 +52,7 @@ public class ArtifactsCompiler extends GenericCompiler<String, VirtualFilePersis
   public static void addChangedArtifact(final CompileContext context, Artifact artifact) {
     Set<Artifact> artifacts = context.getUserData(CHANGED_ARTIFACTS);
     if (artifacts == null) {
-      artifacts = new THashSet<Artifact>();
+      artifacts = new HashSet<Artifact>();
       context.putUserData(CHANGED_ARTIFACTS, artifacts);
     }
     artifacts.add(artifact);
@@ -61,7 +61,7 @@ public class ArtifactsCompiler extends GenericCompiler<String, VirtualFilePersis
   public static void addWrittenPaths(final CompileContext context, Set<String> writtenPaths) {
     Set<String> paths = context.getUserData(WRITTEN_PATHS_KEY);
     if (paths == null) {
-      paths = new THashSet<String>();
+      paths = new HashSet<String>();
       context.putUserData(WRITTEN_PATHS_KEY, paths);
     }
     paths.addAll(writtenPaths);

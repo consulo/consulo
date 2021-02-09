@@ -44,7 +44,7 @@ import com.intellij.util.LineSeparator;
 import com.intellij.util.PathUtil;
 import com.intellij.util.TimeoutUtil;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.containers.hash.HashMap;
+import java.util.HashMap;
 import com.intellij.util.execution.ParametersListUtil;
 import consulo.application.AccessRule;
 

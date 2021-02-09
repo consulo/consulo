@@ -29,7 +29,7 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.vcsUtil.RollbackUtil;
-import gnu.trove.THashSet;
+import java.util.HashSet;
 import javax.annotation.Nonnull;
 
 import javax.swing.*;
@@ -70,7 +70,7 @@ public class RollbackChangesDialog extends DialogWrapper {
     }
 
     final ArrayList<Change> validChanges = new ArrayList<>();
-    final Set<LocalChangeList> lists = new THashSet<>();
+    final Set<LocalChangeList> lists = new HashSet<>();
     lists.addAll(manager.getInvolvedListsFilterChanges(changes, validChanges));
 
     new RollbackChangesDialog(project, ContainerUtil.newArrayList(lists), validChanges, refreshSynchronously, afterVcsRefreshInAwt).show();

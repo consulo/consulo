@@ -23,11 +23,12 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.*;
 import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.containers.HashSet;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import java.io.File;
+import java.util.HashSet;
 import java.util.Set;
 
 import static com.intellij.openapi.util.io.IoTestUtil.*;

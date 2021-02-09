@@ -40,7 +40,7 @@ import com.intellij.openapi.vfs.VirtualFileFilter;
 import com.intellij.util.Alarm;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.ThrowableRunnable;
-import com.intellij.util.containers.HashMap;
+import java.util.HashMap;
 import com.intellij.util.io.ZipUtil;
 import com.intellij.util.ui.UIUtil;
 import consulo.container.boot.ContainerPathManager;

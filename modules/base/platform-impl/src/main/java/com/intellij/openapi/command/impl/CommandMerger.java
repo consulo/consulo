@@ -24,7 +24,7 @@ import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.testFramework.LightVirtualFile;
 import com.intellij.util.ArrayUtil;
-import gnu.trove.THashSet;
+import java.util.HashSet;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -38,8 +38,8 @@ public class CommandMerger {
   private String myCommandName;
   private boolean myValid = true;
   private List<UndoableAction> myCurrentActions = new ArrayList<>();
-  private Set<DocumentReference> myAllAffectedDocuments = new THashSet<>();
-  private Set<DocumentReference> myAdditionalAffectedDocuments = new THashSet<>();
+  private Set<DocumentReference> myAllAffectedDocuments = new HashSet<>();
+  private Set<DocumentReference> myAdditionalAffectedDocuments = new HashSet<>();
   private EditorAndState myStateBefore;
   private EditorAndState myStateAfter;
   private UndoConfirmationPolicy myUndoConfirmationPolicy = UndoConfirmationPolicy.DEFAULT;
@@ -156,8 +156,8 @@ public class CommandMerger {
 
   private void reset() {
     myCurrentActions = new ArrayList<>();
-    myAllAffectedDocuments = new THashSet<>();
-    myAdditionalAffectedDocuments = new THashSet<>();
+    myAllAffectedDocuments = new HashSet<>();
+    myAdditionalAffectedDocuments = new HashSet<>();
     myLastGroupId = null;
     myForcedGlobal = false;
     myTransparent = false;

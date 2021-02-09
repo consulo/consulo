@@ -26,11 +26,7 @@ import java.lang.ref.ReferenceQueue;
  * Null keys are NOT allowed
  * Null values are allowed
  */
-public final class SoftHashMap<K, V> extends RefHashMap<K, V> {
-  public SoftHashMap(int initialCapacity) {
-    super(initialCapacity);
-  }
-
+public abstract class SoftHashMap<K, V> extends RefHashMap<K, V> {
   public SoftHashMap(@Nonnull HashingStrategy<? super K> hashingStrategy) {
     super(hashingStrategy);
   }

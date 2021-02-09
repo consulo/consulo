@@ -58,7 +58,7 @@ import consulo.desktop.editor.impl.DesktopEditorErrorPanel;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ui.annotation.RequiredUIAccess;
-import gnu.trove.THashSet;
+import java.util.HashSet;
 import gnu.trove.TIntIntHashMap;
 
 import javax.annotation.Nonnull;
@@ -146,7 +146,7 @@ public class DesktopEditorMarkupModelImpl extends MarkupModelImpl implements Edi
 
     TooltipRenderer bigRenderer;
     if (IJSwingUtilities.findParentByInterface(myEditor.getComponent(), EditorWindowHolder.class) == null || isVisible || !UISettings.getInstance().SHOW_EDITOR_TOOLTIP) {
-      final Set<RangeHighlighter> highlighters = new THashSet<>();
+      final Set<RangeHighlighter> highlighters = new HashSet<>();
       getNearestHighlighters(this, me.getY(), highlighters);
       getNearestHighlighters((MarkupModelEx)DocumentMarkupModel.forDocument(myEditor.getDocument(), getEditor().getProject(), true), me.getY(), highlighters);
       if (highlighters.isEmpty()) return false;
@@ -441,7 +441,7 @@ public class DesktopEditorMarkupModelImpl extends MarkupModelImpl implements Edi
         if (text == null) continue;
 
         if (tooltips == null) {
-          tooltips = new THashSet<>();
+          tooltips = new HashSet<>();
         }
         if (tooltips.add(text)) {
           if (bigRenderer == null) {

@@ -25,7 +25,7 @@ import com.intellij.util.Processor;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.JBIterable;
 import com.intellij.util.text.Matcher;
-import gnu.trove.THashSet;
+import java.util.HashSet;
 import javax.annotation.Nonnull;
 
 import java.util.*;
@@ -143,7 +143,7 @@ public class GotoActionItemProvider implements ChooseByNameItemProvider {
     }
     if (!StringUtil.isEmptyOrSpaces(pattern)) {
       Matcher matcher = buildMatcher(pattern);
-      if (optionDescriptions == null) optionDescriptions = new THashSet<>();
+      if (optionDescriptions == null) optionDescriptions = new HashSet<>();
       for (Map.Entry<String, String> entry : map.entrySet()) {
         if (matcher.matches(entry.getValue())) {
           optionDescriptions.add(new OptionDescription(null, entry.getKey(), entry.getValue(), null, entry.getValue()));

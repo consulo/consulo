@@ -15,7 +15,7 @@
  */
 package com.intellij.vcs.log.data;
 
-import com.intellij.util.containers.SLRUMap;
+import consulo.util.collection.SLRUMap;
 import com.intellij.vcs.log.VcsShortCommitDetails;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

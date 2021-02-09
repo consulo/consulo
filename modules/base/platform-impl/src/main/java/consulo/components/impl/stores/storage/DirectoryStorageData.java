@@ -18,7 +18,7 @@ package consulo.components.impl.stores.storage;
 import com.intellij.openapi.components.StateSplitterEx;
 import com.intellij.openapi.util.JDOMUtil;
 import consulo.logging.Logger;
-import gnu.trove.THashMap;
+import java.util.HashMap;
 import gnu.trove.TObjectObjectProcedure;
 import org.jdom.Element;
 
@@ -38,7 +38,7 @@ public class DirectoryStorageData extends StorageDataBase {
   private final Map<String, StateMap> myStates;
 
   public DirectoryStorageData() {
-    this(new THashMap<>());
+    this(new HashMap<>());
   }
 
   private DirectoryStorageData(@Nonnull Map<String, StateMap> states) {
@@ -172,7 +172,7 @@ public class DirectoryStorageData extends StorageDataBase {
 
   @Override
   protected DirectoryStorageData clone() {
-    return new DirectoryStorageData(new THashMap<>(myStates));
+    return new DirectoryStorageData(new HashMap<>(myStates));
   }
 
   public void clear() {

@@ -19,9 +19,8 @@ import com.intellij.openapi.command.undo.DocumentReference;
 import com.intellij.openapi.command.undo.DocumentReferenceManager;
 import com.intellij.openapi.editor.Document;
 import consulo.util.dataholder.Key;
-import com.intellij.util.containers.HashMap;
 import com.intellij.util.containers.WeakList;
-import gnu.trove.THashSet;
+import java.util.HashSet;
 import javax.annotation.Nonnull;
 
 import java.util.*;
@@ -104,7 +103,7 @@ class UndoRedoStacksHolder {
 
   @Nonnull
   public Set<DocumentReference> collectClashingActions(@Nonnull UndoableGroup group) {
-    Set<DocumentReference> result = new THashSet<DocumentReference>();
+    Set<DocumentReference> result = new HashSet<DocumentReference>();
 
     for (DocumentReference each : group.getAffectedDocuments()) {
       UndoableGroup last = getStack(each).getLast();
@@ -152,7 +151,7 @@ class UndoRedoStacksHolder {
       }
     }
 
-    Set<DocumentReference> stacksToDrop = new THashSet<DocumentReference>();
+    Set<DocumentReference> stacksToDrop = new HashSet<DocumentReference>();
     for (Map.Entry<DocumentReference, LinkedList<UndoableGroup>> each : myDocumentStacks.entrySet()) {
       if (each.getValue().isEmpty()) stacksToDrop.add(each.getKey());
     }
@@ -161,7 +160,7 @@ class UndoRedoStacksHolder {
     }
 
 
-    Set<Document> docsToDrop = new THashSet<Document>();
+    Set<Document> docsToDrop = new HashSet<Document>();
     for (Document each : myDocumentsWithStacks) {
       LinkedList<UndoableGroup> stack = each.getUserData(STACK_IN_DOCUMENT_KEY);
       if (stack != null && stack.isEmpty()) {
@@ -221,7 +220,7 @@ class UndoRedoStacksHolder {
 
   @Nonnull
   private Set<DocumentReference> getAffectedDocuments() {
-    Set<DocumentReference> result = new THashSet<DocumentReference>();
+    Set<DocumentReference> result = new HashSet<DocumentReference>();
     collectAllAffectedDocuments(result);
     return result;
   }

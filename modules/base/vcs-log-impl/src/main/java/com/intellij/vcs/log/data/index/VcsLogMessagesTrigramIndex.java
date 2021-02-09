@@ -22,7 +22,7 @@ import com.intellij.util.io.VoidDataExternalizer;
 import com.intellij.vcs.log.VcsFullCommitDetails;
 import com.intellij.vcs.log.impl.FatalErrorHandler;
 import consulo.disposer.Disposable;
-import gnu.trove.THashMap;
+import java.util.HashMap;
 import gnu.trove.TIntHashSet;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -68,7 +68,7 @@ public class VcsLogMessagesTrigramIndex extends VcsLogFullDetailsIndex<Void> {
 
     @Override
     public boolean consumeTrigramsCount(int count) {
-      map = new THashMap<>(count);
+      map = new HashMap<>(count);
       return true;
     }
 

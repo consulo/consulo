@@ -52,10 +52,10 @@ import com.intellij.usages.rules.PsiElementUsage;
 import com.intellij.util.TreeItem;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.application.AccessRule;
+import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import jakarta.inject.Singleton;
 import javax.swing.*;
 import java.util.*;
 
@@ -158,7 +158,7 @@ public class PredefinedSearchScopeProviderImpl extends PredefinedSearchScopeProv
       addHierarchyScope(project, result);
       UsageView selectedUsageView = UsageViewManager.getInstance(project).getSelectedUsageView();
       if (selectedUsageView != null && !selectedUsageView.isSearchInProgress()) {
-        final Set<Usage> usages = ContainerUtil.newTroveSet(selectedUsageView.getUsages());
+        final Set<Usage> usages = Set.copyOf(selectedUsageView.getUsages());
         usages.removeAll(selectedUsageView.getExcludedUsages());
 
         if (prevSearchFiles) {

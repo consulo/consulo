@@ -67,7 +67,7 @@ import consulo.logging.Logger;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.dataholder.Key;
-import gnu.trove.THashSet;
+import java.util.HashSet;
 import org.jdom.Element;
 
 import javax.annotation.Nonnull;
@@ -396,7 +396,7 @@ public class DesktopEditorsSplitters implements Disposable, EditorsSplitters {
   @Override
   @Nonnull
   public FileEditor[] getSelectedEditors() {
-    Set<DesktopEditorWindow> windows = new THashSet<>(myWindows);
+    Set<DesktopEditorWindow> windows = new HashSet<>(myWindows);
     final EditorWindow currentWindow = getCurrentWindow();
     if (currentWindow != null) {
       windows.add((DesktopEditorWindow)currentWindow);

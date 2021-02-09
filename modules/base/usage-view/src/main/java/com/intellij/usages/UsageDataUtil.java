@@ -20,7 +20,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.usages.rules.UsageInFile;
 import com.intellij.usages.rules.UsageInFiles;
 import com.intellij.util.containers.ContainerUtil;
-import gnu.trove.THashSet;
+import java.util.HashSet;
 import javax.annotation.Nullable;
 
 import java.util.Set;
@@ -35,7 +35,7 @@ public class UsageDataUtil {
       return null;
     }
 
-    final Set<VirtualFile> result = new THashSet<VirtualFile>();
+    final Set<VirtualFile> result = new HashSet<VirtualFile>();
 
     if (usages != null) {
       for (Usage usage : usages) {

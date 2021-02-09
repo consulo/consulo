@@ -31,7 +31,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.messages.MessageBusConnection;
 import consulo.roots.ContentFolderScopes;
-import gnu.trove.THashMap;
+import java.util.HashMap;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -89,7 +89,7 @@ public class LogicalRootsManagerImpl extends LogicalRootsManager {
 
   private synchronized  Map<Module, MultiValuesMap<LogicalRootType, LogicalRoot>> getRoots(final ModuleManager moduleManager) {
     if (myRoots == null) {
-      myRoots = new THashMap<Module, MultiValuesMap<LogicalRootType, LogicalRoot>>();
+      myRoots = new HashMap<Module, MultiValuesMap<LogicalRootType, LogicalRoot>>();
 
       final Module[] modules = moduleManager.getModules();
       for (Module module : modules) {

@@ -28,7 +28,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiNamedElement;
 import com.intellij.psi.PsiReference;
-import com.intellij.util.containers.HashMap;
+import java.util.HashMap;
 import consulo.codeInsight.TargetElementUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

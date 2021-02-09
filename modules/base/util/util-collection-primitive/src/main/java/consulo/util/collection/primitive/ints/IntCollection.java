@@ -15,11 +15,26 @@
  */
 package consulo.util.collection.primitive.ints;
 
+import javax.annotation.Nonnull;
 import java.util.Collection;
 
 /**
  * @author VISTALL
  * @since 07/02/2021
  */
-public interface IntCollection extends Collection<Integer> {
+public interface IntCollection {
+  @Nonnull
+  IntIterator iterator();
+
+  boolean add(int value);
+
+  boolean remove(int value);
+
+  boolean contains(int value);
+
+  int[] toArray();
+
+  int size();
+
+  void clear();
 }

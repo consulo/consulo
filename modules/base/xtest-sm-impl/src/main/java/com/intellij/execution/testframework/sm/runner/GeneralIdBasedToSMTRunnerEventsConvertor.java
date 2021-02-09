@@ -23,10 +23,11 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
 import consulo.util.dataholder.Key;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.containers.hash.HashMap;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import java.util.HashMap;
 import java.util.Set;
 
 public class GeneralIdBasedToSMTRunnerEventsConvertor extends GeneralTestEventsProcessor {

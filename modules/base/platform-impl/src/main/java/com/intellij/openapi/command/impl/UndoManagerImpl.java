@@ -45,11 +45,10 @@ import com.intellij.openapi.wm.ex.WindowManagerEx;
 import com.intellij.psi.ExternalChangeAction;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.util.ObjectUtils;
-import com.intellij.util.containers.HashSet;
+import java.util.HashSet;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.fileEditor.impl.text.TextEditorProvider;
 import consulo.logging.Logger;
-import gnu.trove.THashSet;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;
@@ -438,7 +437,7 @@ public class UndoManagerImpl implements UndoManager, Disposable {
 
   @Nonnull
   static Set<DocumentReference> getDocumentReferences(@Nonnull FileEditor editor) {
-    Set<DocumentReference> result = new THashSet<>();
+    Set<DocumentReference> result = new HashSet<>();
 
     if (editor instanceof DocumentReferenceProvider) {
       result.addAll(((DocumentReferenceProvider)editor).getDocumentReferences());
@@ -569,7 +568,7 @@ public class UndoManagerImpl implements UndoManager, Disposable {
 
   @Nonnull
   private Collection<DocumentReference> collectReferencesWithoutMergers() {
-    Set<DocumentReference> result = new THashSet<>();
+    Set<DocumentReference> result = new HashSet<>();
     myUndoStacksHolder.collectAllAffectedDocuments(result);
     myRedoStacksHolder.collectAllAffectedDocuments(result);
     return result;

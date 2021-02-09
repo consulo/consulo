@@ -54,7 +54,7 @@ import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.UIUtil;
 import consulo.disposer.Disposer;
-import gnu.trove.THashSet;
+import java.util.HashSet;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -432,7 +432,7 @@ public final class TreeFileChooserDialog extends DialogWrapper implements TreeFi
       else {
         fileNames = FilenameIndex.getAllFilenames(myProject);
       }
-      final Set<String> array = new THashSet<String>();
+      final Set<String> array = new HashSet<String>();
       for (String fileName : fileNames) {
         if (!array.contains(fileName)) {
           array.add(fileName);

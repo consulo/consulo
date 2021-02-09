@@ -37,7 +37,6 @@ import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiFileSystemItem;
-import com.intellij.util.containers.HashSet;
 import com.intellij.util.ui.tree.TreeUtil;
 import consulo.logging.Logger;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -51,6 +50,7 @@ import javax.swing.tree.MutableTreeNode;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 

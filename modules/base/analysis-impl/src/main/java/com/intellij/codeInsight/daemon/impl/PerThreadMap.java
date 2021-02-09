@@ -19,13 +19,10 @@ import com.intellij.openapi.application.Application;
 import com.intellij.openapi.util.Pair;
 import consulo.util.dataholder.UserDataHolder;
 import consulo.injecting.InjectingContainer;
-import gnu.trove.THashMap;
+import java.util.HashMap;
 
 import javax.annotation.Nonnull;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * User: cdr
@@ -39,7 +36,7 @@ public abstract class PerThreadMap<T, KeyT extends UserDataHolder> {
   private final ThreadLocal<Pair<Integer, Map<KeyT,List<T>>>> CACHE = new ThreadLocal<Pair<Integer, Map<KeyT,List<T>>>>(){
     @Override
     protected Pair<Integer, Map<KeyT,List<T>>> initialValue() {
-      return Pair.<Integer, Map<KeyT,List<T>>>create(version, new THashMap<KeyT, List<T>>());
+      return Pair.<Integer, Map<KeyT,List<T>>>create(version, new HashMap<KeyT, List<T>>());
     }
   };
 

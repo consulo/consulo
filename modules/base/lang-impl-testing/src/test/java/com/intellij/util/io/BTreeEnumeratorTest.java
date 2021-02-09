@@ -7,7 +7,7 @@ import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.testFramework.PlatformTestUtil;
 import com.intellij.util.ThrowableRunnable;
 import com.intellij.util.containers.IntObjectCache;
-import gnu.trove.THashMap;
+import java.util.HashMap;
 import junit.framework.TestCase;
 
 import java.io.File;
@@ -57,7 +57,7 @@ public class BTreeEnumeratorTest extends TestCase {
   }
 
   public void testAddEqualStringsAndMuchGarbage() throws IOException {
-    final Map<Integer,String> strings = new THashMap<Integer, String>(10001);
+    final Map<Integer,String> strings = new HashMap<Integer, String>(10001);
     String s = "IntelliJ IDEA";
     final int index = myEnumerator.enumerate(s);
     strings.put(index, s);

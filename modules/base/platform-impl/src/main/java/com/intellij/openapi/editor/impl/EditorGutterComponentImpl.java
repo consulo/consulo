@@ -1829,7 +1829,7 @@ class EditorGutterComponentImpl extends EditorGutterComponentEx implements Mouse
   public void closeTextAnnotations(@Nonnull Collection<? extends TextAnnotationGutterProvider> annotations) {
     if (!myCanCloseAnnotations) return;
 
-    THashSet<TextAnnotationGutterProvider> toClose = new THashSet<>(annotations, ContainerUtil.identityStrategy());
+    HashSet<TextAnnotationGutterProvider> toClose = new HashSet<>(annotations, ContainerUtil.identityStrategy());
     for (int i = myTextAnnotationGutters.size() - 1; i >= 0; i--) {
       TextAnnotationGutterProvider provider = myTextAnnotationGutters.get(i);
       if (toClose.contains(provider)) {

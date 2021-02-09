@@ -2,7 +2,7 @@ package com.intellij.util;
 
 import consulo.util.dataholder.Key;
 import com.intellij.util.containers.ContainerUtil;
-import gnu.trove.THashMap;
+import java.util.HashMap;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -45,7 +45,7 @@ public class SharedProcessingContext {
   public <T> void put(@Nonnull Key<T> key, Object element, T value) {
     Map map = (Map)myMap.get(key);
     if (map == null) {
-      map = new THashMap();
+      map = new HashMap();
       myMap.put(key, map);
     }
     map.put(element, value);

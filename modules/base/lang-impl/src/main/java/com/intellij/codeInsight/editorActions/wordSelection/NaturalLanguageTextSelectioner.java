@@ -22,19 +22,18 @@ import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiComment;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiPlainText;
-import com.intellij.util.containers.ContainerUtil;
-import javax.annotation.Nullable;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
 public class NaturalLanguageTextSelectioner extends ExtendWordSelectionHandlerBase {
-  private static final Set<Character> NATURAL = ContainerUtil.newTroveSet(
+  private static final Set<Character> NATURAL = Set.of(
     '(', ')', '.', ',', ':', ';', '!', '?', '$', '@', '%', '\"', '\'', '<', '>', '[', ']', '_'
   );
-  private static final Set<Character> SENTENCE_END = ContainerUtil.newTroveSet('.', '!', '?');
+  private static final Set<Character> SENTENCE_END = Set.of('.', '!', '?');
 
   @Override
   public boolean canSelect(PsiElement e) {

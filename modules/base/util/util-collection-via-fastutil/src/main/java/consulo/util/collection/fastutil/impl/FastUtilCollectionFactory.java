@@ -18,8 +18,13 @@ package consulo.util.collection.fastutil.impl;
 import consulo.util.collection.HashingStrategy;
 import consulo.util.collection.impl.CollectionFactory;
 import it.unimi.dsi.fastutil.Hash;
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenCustomHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectOpenCustomHashSet;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.Collection;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -28,13 +33,36 @@ import java.util.Set;
  */
 public class FastUtilCollectionFactory implements CollectionFactory {
   @Override
-  public <T> Set<T> newHashSetWithStrategy(int capacity, HashingStrategy<T> strategy) {
-    if (capacity == UNKNOWN_CAPACITY) {
+  public <T> Set<T> newHashSetWithStrategy(int capacity, @Nullable Collection<? extends T> inner, HashingStrategy<T> strategy) {
+    if (inner != null) {
+      return new ObjectOpenCustomHashSet<>(inner, mapStrategy(strategy));
+    }
+    else if (capacity == UNKNOWN_CAPACITY) {
       return new ObjectOpenCustomHashSet<T>(mapStrategy(strategy));
     }
     else {
       return new ObjectOpenCustomHashSet<>(capacity, mapStrategy(strategy));
     }
+  }
+
+  @Override
+  public <K, V> Map<K, V> newHashMapWithStrategy(@Nullable Map<? extends K, ? extends V> inner, @Nonnull HashingStrategy<K> hashingStrategy) {
+    if(inner != null) {
+      return new Object2ObjectOpenCustomHashMap<>(inner, mapStrategy(hashingStrategy));
+    }
+    return new Object2ObjectOpenCustomHashMap<>(mapStrategy(hashingStrategy));
+  }
+
+  @Override
+  public <K, V> Map<K, V> newWeakHashMap(int initialCapacity, float loadFactor, @Nonnull HashingStrategy<? super K> strategy) {
+    // todo [VISTALL] not implemented
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public <K, V> Map<K, V> newSoftHashMap(@Nonnull HashingStrategy<? super K> strategy) {
+    // todo [VISTALL] not implemented
+    throw new UnsupportedOperationException();
   }
 
   private <K> Hash.Strategy<K> mapStrategy(HashingStrategy<K> hashingStrategy) {

@@ -17,7 +17,8 @@
 package com.intellij.refactoring.classMembers;
 
 import com.intellij.psi.PsiElement;
-import com.intellij.util.containers.HashMap;
+
+import java.util.HashMap;
 
 /**
  * @author dsl

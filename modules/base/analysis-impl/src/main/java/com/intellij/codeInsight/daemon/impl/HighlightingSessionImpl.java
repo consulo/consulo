@@ -30,7 +30,7 @@ import com.intellij.psi.PsiFile;
 import com.intellij.util.ConcurrencyUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.TransferToEDTQueue;
-import gnu.trove.THashMap;
+import java.util.HashMap;
 import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;
@@ -46,7 +46,7 @@ public class HighlightingSessionImpl implements HighlightingSession {
   @Nonnull
   private final Project myProject;
   private final Document myDocument;
-  private final Map<TextRange, RangeMarker> myRanges2markersCache = new THashMap<>();
+  private final Map<TextRange, RangeMarker> myRanges2markersCache = new HashMap<>();
   private final TransferToEDTQueue<Runnable> myEDTQueue;
 
   private HighlightingSessionImpl(@Nonnull PsiFile psiFile, @Nonnull DaemonProgressIndicator progressIndicator, EditorColorsScheme editorColorsScheme) {

@@ -17,8 +17,8 @@
 package com.intellij.util.indexing;
 
 import consulo.container.boot.ContainerPathManager;
-import consulo.util.collection.IntObjectMap;
-import consulo.util.collection.Maps;
+import consulo.util.collection.primitive.ints.IntMaps;
+import consulo.util.collection.primitive.ints.IntObjectMap;
 import gnu.trove.TObjectIntHashMap;
 
 import javax.annotation.Nonnull;
@@ -29,7 +29,7 @@ import java.io.*;
  * @author Eugene Zhuravlev
  */
 public class ID<K, V> extends IndexId<K, V> {
-  private static final IntObjectMap<ID> ourRegistry = Maps.newConcurrentIntObjectHashMap();
+  private static final IntObjectMap<ID> ourRegistry = IntMaps.newConcurrentIntObjectHashMap();
   private static final TObjectIntHashMap<String> ourNameToIdRegistry = new TObjectIntHashMap<>();
   static final int MAX_NUMBER_OF_INDICES = Short.MAX_VALUE;
 

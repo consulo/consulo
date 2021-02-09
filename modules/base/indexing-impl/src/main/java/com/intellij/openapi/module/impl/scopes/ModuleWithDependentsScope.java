@@ -26,7 +26,7 @@ import com.intellij.psi.util.CachedValueProvider;
 import com.intellij.psi.util.CachedValuesManager;
 import com.intellij.util.containers.MultiMap;
 import com.intellij.util.containers.Queue;
-import gnu.trove.THashSet;
+import java.util.HashSet;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -54,10 +54,10 @@ class ModuleWithDependentsScope extends GlobalSearchScope {
   }
 
   private static Set<Module> buildDependents(Module module) {
-    Set<Module> result = new THashSet<Module>();
+    Set<Module> result = new HashSet<Module>();
     result.add(module);
 
-    Set<Module> processedExporting = new THashSet<Module>();
+    Set<Module> processedExporting = new HashSet<Module>();
 
     ModuleIndex index = getModuleIndex(module.getProject());
 

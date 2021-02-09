@@ -30,7 +30,7 @@ import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileManager;
-import com.intellij.util.containers.HashSet;
+import java.util.HashSet;
 import consulo.roots.ContentFolderScopes;
 import javax.annotation.Nonnull;
 

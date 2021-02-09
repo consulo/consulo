@@ -7,7 +7,7 @@ import consulo.logging.Logger;
 import com.intellij.reference.SoftReference;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
-import gnu.trove.THashSet;
+import java.util.HashSet;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -108,7 +108,7 @@ public class RecursionManager {
         final int sizeBefore = stack.progressMap.size();
         stack.beforeComputation(realKey);
         final int sizeAfter = stack.progressMap.size();
-        Set<MyKey> preventionsBefore = memoize ? new THashSet<>(stack.preventions) : Collections.emptySet();
+        Set<MyKey> preventionsBefore = memoize ? new HashSet<>(stack.preventions) : Collections.emptySet();
 
         try {
           T result = computation.compute();

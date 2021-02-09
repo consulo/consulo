@@ -34,7 +34,7 @@ import com.intellij.psi.*;
 import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.ui.annotation.RequiredUIAccess;
-import gnu.trove.THashSet;
+import java.util.HashSet;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -120,7 +120,7 @@ public class GotoTypeDeclarationAction extends BaseCodeInsightAction implements 
     final PsiReference psiReference = TargetElementUtil.findReference(editor, offset);
     if (psiReference instanceof PsiPolyVariantReference) {
       final ResolveResult[] results = ((PsiPolyVariantReference)psiReference).multiResolve(false);
-      Set<PsiElement> types = new THashSet<PsiElement>();
+      Set<PsiElement> types = new HashSet<PsiElement>();
 
       for (ResolveResult r : results) {
         final PsiElement[] declarations = getSymbolTypeDeclarations(r.getElement(), editor, offset);

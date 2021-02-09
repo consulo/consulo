@@ -2,7 +2,7 @@ package com.intellij.openapi.externalSystem.model.project;
 
 import com.intellij.openapi.externalSystem.model.ProjectSystemId;
 import com.intellij.openapi.externalSystem.util.ExternalSystemApiUtil;
-import com.intellij.util.containers.HashMap;
+import java.util.HashMap;
 import javax.annotation.Nonnull;
 
 import java.util.Collections;

@@ -25,7 +25,6 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiFileSystemItem;
 import com.intellij.util.Processor;
-import com.intellij.util.containers.HashSet;
 import com.intellij.util.graph.Graph;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.AccessRule;

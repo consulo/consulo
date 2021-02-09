@@ -9,7 +9,7 @@ import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiFile;
 import com.intellij.util.containers.ContainerUtil;
-import gnu.trove.THashSet;
+import java.util.HashSet;
 import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;
@@ -207,7 +207,7 @@ public abstract class LanguageCodeStyleSettingsProvider extends CodeStyleSetting
   }
 
   private final class SupportedFieldCollector implements CodeStyleSettingsCustomizable {
-    private final Set<String> myCollectedFields = new THashSet<>();
+    private final Set<String> myCollectedFields = new HashSet<>();
     private SettingsType myCurrSettingsType;
 
     public Set<String> collectFields() {

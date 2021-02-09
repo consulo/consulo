@@ -20,11 +20,11 @@ import com.intellij.openapi.util.WriteExternalException;
 import com.intellij.openapi.vcs.VcsShowConfirmationOption;
 import com.intellij.openapi.vcs.VcsShowConfirmationOptionImpl;
 import com.intellij.openapi.vcs.VcsShowOptionsSettingImpl;
-import com.intellij.util.containers.HashMap;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public class ProjectLevelVcsManagerSerialization {

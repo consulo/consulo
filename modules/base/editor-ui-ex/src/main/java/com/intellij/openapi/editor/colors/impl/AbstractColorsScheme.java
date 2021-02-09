@@ -28,7 +28,7 @@ import com.intellij.openapi.options.FontSize;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.WriteExternalException;
-import com.intellij.util.containers.HashMap;
+import java.util.HashMap;
 import com.intellij.util.ui.JBUI;
 import consulo.ui.color.ColorValue;
 import consulo.ui.color.RGBColor;

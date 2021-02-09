@@ -20,7 +20,7 @@ import consulo.roots.ModuleRootLayer;
 import com.intellij.openapi.roots.ModuleRootModel;
 import com.intellij.openapi.roots.OrderEntry;
 import com.intellij.util.Processor;
-import gnu.trove.THashSet;
+import java.util.HashSet;
 import javax.annotation.Nonnull;
 
 /**
@@ -41,7 +41,7 @@ public class ModuleOrderEnumerator extends OrderEnumeratorBase {
 
   @Override
   public void forEach(@Nonnull Processor<OrderEntry> processor) {
-    processEntries(myRootModel, processor, myRecursively ? new THashSet<Module>() : null, true);
+    processEntries(myRootModel, processor, myRecursively ? new HashSet<Module>() : null, true);
   }
 
   @Override

@@ -3,7 +3,6 @@
 package com.intellij.openapi.editor.impl;
 
 import com.intellij.diagnostic.Dumpable;
-import consulo.disposer.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.editor.*;
 import com.intellij.openapi.editor.colors.EditorColors;
@@ -15,15 +14,16 @@ import com.intellij.openapi.editor.ex.PrioritizedInternalDocumentListener;
 import com.intellij.openapi.editor.ex.util.EditorScrollingPositionKeeper;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
 import com.intellij.openapi.editor.markup.TextAttributes;
-import consulo.disposer.Disposer;
 import com.intellij.openapi.util.Getter;
-import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.ModificationTracker;
 import com.intellij.util.DocumentUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.MultiMap;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
 import consulo.logging.Logger;
-import gnu.trove.THashSet;
+import consulo.util.collection.Sets;
+import consulo.util.dataholder.Key;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;
@@ -634,7 +634,7 @@ public class FoldingModelImpl extends InlayModel.SimpleAdapter implements Foldin
         if (!r2.isExpanded() && r2s <= r1s && r2e >= r1e) invisibleRegions[i] = true;
       }
     }
-    Set<FoldRegion> visibleRegions = new THashSet<>(FoldRegionsTree.OFFSET_BASED_HASHING_STRATEGY);
+    Set<FoldRegion> visibleRegions = Sets.newHashSet(FoldRegionsTree.OFFSET_BASED_HASHING_STRATEGY);
     List<FoldRegion> topLevelRegions = new ArrayList<>();
     for (int i = 0; i < allFoldRegions.length; i++) {
       if (!invisibleRegions[i]) {

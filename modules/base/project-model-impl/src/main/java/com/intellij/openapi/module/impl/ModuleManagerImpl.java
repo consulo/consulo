@@ -56,9 +56,9 @@ import consulo.disposer.Disposer;
 import consulo.logging.Logger;
 import consulo.module.ModuleDirIsNotExistsException;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.util.collection.HashingStrategy;
+import consulo.util.collection.Maps;
 import consulo.util.dataholder.Key;
-import gnu.trove.THashMap;
-import gnu.trove.TObjectHashingStrategy;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 
@@ -117,9 +117,9 @@ public abstract class ModuleManagerImpl extends ModuleManager implements Persist
 
   private static class ModuleGroupInterner {
     private final StringInterner groups = new StringInterner();
-    private final Map<String[], String[]> paths = new THashMap<>(new TObjectHashingStrategy<String[]>() {
+    private final Map<String[], String[]> paths = Maps.newHashMap(new HashingStrategy<String[]>() {
       @Override
-      public int computeHashCode(String[] object) {
+      public int hashCode(String[] object) {
         return Arrays.hashCode(object);
       }
 
@@ -593,7 +593,7 @@ public abstract class ModuleManagerImpl extends ModuleManager implements Persist
       myModules.addAll(that.myModules);
       final Map<Module, String[]> groupPath = that.myModuleGroupPath;
       if (groupPath != null) {
-        myModuleGroupPath = new THashMap<>();
+        myModuleGroupPath = new HashMap<>();
         myModuleGroupPath.putAll(that.myModuleGroupPath);
       }
       myIsWritable = true;
@@ -882,7 +882,7 @@ public abstract class ModuleManagerImpl extends ModuleManager implements Persist
     @Override
     public void setModuleGroupPath(Module module, String[] groupPath) {
       if (myModuleGroupPath == null) {
-        myModuleGroupPath = new THashMap<>();
+        myModuleGroupPath = new HashMap<>();
       }
       if (groupPath == null) {
         myModuleGroupPath.remove(module);

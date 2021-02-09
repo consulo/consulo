@@ -7,7 +7,7 @@ import com.intellij.ide.util.treeView.smartTree.Grouper;
 import com.intellij.ide.util.treeView.smartTree.TreeElement;
 import com.intellij.navigation.ItemPresentation;
 import com.intellij.util.containers.ContainerUtil;
-import gnu.trove.THashSet;
+import java.util.HashSet;
 import javax.annotation.Nonnull;
 
 import java.util.*;
@@ -88,7 +88,7 @@ public class TestGrouper implements Grouper {
     Collection<TreeElement> elements = new LinkedHashSet<TreeElement>(children);
     for (String subString : mySubStrings) {
       if (parentGroupUsedStrings.contains(subString)) continue;
-      Set<String> childrenStrings = new THashSet<String>(parentGroupUsedStrings);
+      Set<String> childrenStrings = new HashSet<String>(parentGroupUsedStrings);
       ContainerUtil.addAll(childrenStrings, mySubStrings);
       StringGroup group = new StringGroup(subString, elements, childrenStrings);
       Collection<TreeElement> groupChildren = group.getChildren();

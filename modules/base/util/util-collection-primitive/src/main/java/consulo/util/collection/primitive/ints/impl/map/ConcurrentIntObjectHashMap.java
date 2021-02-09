@@ -17,9 +17,10 @@
 package consulo.util.collection.primitive.ints.impl.map;
 
 import consulo.util.collection.ContainerUtil;
-import consulo.util.collection.IntObjectMap;
 import consulo.util.collection.impl.ThreadLocalRandom;
 import consulo.util.collection.primitive.ints.ConcurrentIntObjectMap;
+import consulo.util.collection.primitive.ints.IntObjectMap;
+import consulo.util.collection.primitive.ints.IntSet;
 import consulo.util.lang.reflect.unsafe.UnsafeDelegate;
 
 import javax.annotation.Nonnull;
@@ -37,7 +38,7 @@ import java.util.concurrent.locks.LockSupport;
  *            Use {@link ContainerUtil#createConcurrentIntObjectMap()} to create this map
  * @author Doug Lea
  */
-public class ConcurrentIntObjectHashMap<V> implements consulo.util.collection.primitive.ints.ConcurrentIntObjectMap<V> {
+public class ConcurrentIntObjectHashMap<V> implements ConcurrentIntObjectMap<V> {
   /**
    * The largest possible table capacity.  This value must be
    * exactly 1<<30 to stay within Java array allocation and indexing
@@ -134,7 +135,7 @@ public class ConcurrentIntObjectHashMap<V> implements consulo.util.collection.pr
    * are special, and contain null keys and values (but are never
    * exported).  Otherwise, keys and vals are never null.
    */
-  static class Node<V> implements Entry<V> {
+  static class Node<V> implements IntObjectEntry<V> {
     final int hash;
     final int key;
     volatile V val;
@@ -172,8 +173,8 @@ public class ConcurrentIntObjectHashMap<V> implements consulo.util.collection.pr
     public final boolean equals(Object o) {
       Object v;
       Object u;
-      Entry<?> e;
-      return ((o instanceof Entry) && (e = (Entry<?>)o).getKey() == key && (v = e.getValue()) != null && (v == (u = val) || v.equals(u)));
+      IntObjectEntry<?> e;
+      return ((o instanceof IntObjectEntry) && (e = (IntObjectEntry<?>)o).getKey() == key && (v = e.getValue()) != null && (v == (u = val) || v.equals(u)));
     }
 
     /**
@@ -311,7 +312,7 @@ public class ConcurrentIntObjectHashMap<V> implements consulo.util.collection.pr
     volatile long p4;
     volatile long p5;
     volatile long p6;
-    volatile long value;
+    public volatile long value;
     volatile long q0;
     volatile long q1;
     volatile long q2;
@@ -754,7 +755,7 @@ public class ConcurrentIntObjectHashMap<V> implements consulo.util.collection.pr
    */
   @Override
   @Nonnull
-  public Set<Entry<V>> entrySet() {
+  public Set<IntObjectEntry<V>> entrySet() {
     EntrySetView<V> es;
     return (es = entrySet) != null ? es : (entrySet = new EntrySetView<>(this));
   }
@@ -841,7 +842,7 @@ public class ConcurrentIntObjectHashMap<V> implements consulo.util.collection.pr
           return false;
         }
       }
-      for (Entry e : m.entrySet()) {
+      for (IntObjectEntry e : m.entrySet()) {
         int mk = e.getKey();
         Object mv;
         Object v;
@@ -931,6 +932,13 @@ public class ConcurrentIntObjectHashMap<V> implements consulo.util.collection.pr
     return containsValue(value);
   }
 
+  @Nonnull
+  @Override
+  public IntSet keySet() {
+    // todo [vistall] impl
+    throw new UnsupportedOperationException("todo");
+  }
+
   /**
    * Returns an enumeration of the keys in this table.
    *
@@ -942,24 +950,10 @@ public class ConcurrentIntObjectHashMap<V> implements consulo.util.collection.pr
     Object[] entries = new EntrySetView<>(this).toArray();
     int[] result = new int[entries.length];
     for (int i = 0; i < entries.length; i++) {
-      Entry<V> entry = (Entry<V>)entries[i];
+      IntObjectEntry<V> entry = (IntObjectEntry<V>)entries[i];
       result[i] = entry.getKey();
     }
     return result;
-  }
-
-  /**
-   * Returns an enumeration of the values in this table.
-   *
-   * @return an enumeration of the values in this table
-   * @see #values()
-   */
-  @Nonnull
-  @Override
-  public Enumeration<V> elements() {
-    Node<V>[] t;
-    int f = (t = table) == null ? 0 : t.length;
-    return new ValueIterator<>(t, f, 0, f, this);
   }
 
   // ConcurrentHashMap-only methods
@@ -2329,13 +2323,13 @@ public class ConcurrentIntObjectHashMap<V> implements consulo.util.collection.pr
     }
   }
 
-  static final class EntryIterator<V> extends BaseIterator<V> implements Iterator<Entry<V>> {
+  static final class EntryIterator<V> extends BaseIterator<V> implements Iterator<IntObjectEntry<V>> {
     EntryIterator(Node<V>[] tab, int index, int size, int limit, ConcurrentIntObjectHashMap<V> map) {
       super(tab, index, size, limit, map);
     }
 
     @Override
-    public final Entry<V> next() {
+    public final IntObjectEntry<V> next() {
       Node<V> p;
       if ((p = next) == null) {
         throw new NoSuchElementException();
@@ -2344,7 +2338,7 @@ public class ConcurrentIntObjectHashMap<V> implements consulo.util.collection.pr
       final V v = p.val;
       lastReturned = p;
       advance();
-      return new SimpleEntry<>(k, v);
+      return new SimpleIntObjectEntry<>(k, v);
     }
   }
 
@@ -2595,7 +2589,7 @@ public class ConcurrentIntObjectHashMap<V> implements consulo.util.collection.pr
    * entries.  This class cannot be directly instantiated. See
    * {@link #entrySet()}.
    */
-  static final class EntrySetView<V> extends CollectionView<V, Entry<V>> implements Set<Entry<V>> {
+  static final class EntrySetView<V> extends CollectionView<V, IntObjectEntry<V>> implements Set<IntObjectEntry<V>> {
 
     EntrySetView(ConcurrentIntObjectHashMap<V> map) {
       super(map);
@@ -2605,15 +2599,15 @@ public class ConcurrentIntObjectHashMap<V> implements consulo.util.collection.pr
     public boolean contains(Object o) {
       Object v;
       Object r;
-      Entry<?> e;
-      return ((o instanceof IntObjectMap.Entry) && (r = map.get((e = (Entry)o).getKey())) != null && (v = e.getValue()) != null && (v == r || v.equals(r)));
+      IntObjectEntry<?> e;
+      return ((o instanceof IntObjectMap.IntObjectEntry) && (r = map.get((e = (IntObjectEntry)o).getKey())) != null && (v = e.getValue()) != null && (v == r || v.equals(r)));
     }
 
     @Override
     public boolean remove(Object o) {
       Object v;
-      Entry<?> e;
-      return ((o instanceof Map.Entry) && (e = (Entry<?>)o) != null && (v = e.getValue()) != null && map.remove(e.getKey(), v));
+      IntObjectEntry<?> e;
+      return ((o instanceof IntObjectEntry) && (e = (IntObjectEntry<?>)o) != null && (v = e.getValue()) != null && map.remove(e.getKey(), v));
     }
 
     /**
@@ -2621,7 +2615,7 @@ public class ConcurrentIntObjectHashMap<V> implements consulo.util.collection.pr
      */
     @Nonnull
     @Override
-    public Iterator<Entry<V>> iterator() {
+    public Iterator<IntObjectEntry<V>> iterator() {
       ConcurrentIntObjectHashMap<V> m = map;
       Node<V>[] t;
       int f = (t = m.table) == null ? 0 : t.length;
@@ -2629,14 +2623,14 @@ public class ConcurrentIntObjectHashMap<V> implements consulo.util.collection.pr
     }
 
     @Override
-    public boolean add(Entry<V> e) {
+    public boolean add(IntObjectEntry<V> e) {
       return map.putVal(e.getKey(), e.getValue(), false) == null;
     }
 
     @Override
-    public boolean addAll(Collection<? extends Entry<V>> c) {
+    public boolean addAll(Collection<? extends IntObjectEntry<V>> c) {
       boolean added = false;
-      for (Entry<V> e : c) {
+      for (IntObjectEntry<V> e : c) {
         if (add(e)) {
           added = true;
         }

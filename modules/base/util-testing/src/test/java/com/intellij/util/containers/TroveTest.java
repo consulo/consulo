@@ -17,7 +17,7 @@
 package com.intellij.util.containers;
 
 
-import gnu.trove.THashMap;
+import java.util.HashMap;
 import gnu.trove.TObjectIntHashMap;
 import junit.framework.Assert;
 import junit.framework.TestCase;
@@ -42,7 +42,7 @@ public class TroveTest extends TestCase {
   }
 
   public void testTHashMap_Entry() {
-    Map<Object, Object> map = new THashMap<Object, Object>();
+    Map<Object, Object> map = new HashMap<Object, Object>();
     map.put("1", "2");
 
     Map.Entry<Object, Object> entry = map.entrySet().iterator().next();

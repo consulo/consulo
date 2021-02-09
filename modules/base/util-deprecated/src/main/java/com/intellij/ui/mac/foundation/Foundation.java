@@ -16,7 +16,6 @@
 package com.intellij.ui.mac.foundation;
 
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.util.containers.HashMap;
 import com.sun.jna.*;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -24,6 +23,7 @@ import javax.annotation.Nullable;
 import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 

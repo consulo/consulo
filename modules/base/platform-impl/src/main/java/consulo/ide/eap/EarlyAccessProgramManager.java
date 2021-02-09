@@ -20,13 +20,13 @@ import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
 import consulo.logging.Logger;
-import com.intellij.util.containers.HashMap;
-import com.intellij.util.containers.hash.LinkedHashMap;
 import org.jdom.Element;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import jakarta.inject.Singleton;
 
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**

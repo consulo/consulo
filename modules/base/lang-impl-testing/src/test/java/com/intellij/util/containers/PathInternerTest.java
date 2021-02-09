@@ -18,7 +18,7 @@ package com.intellij.util.containers;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.util.Processor;
 import consulo.container.boot.ContainerPathManager;
-import gnu.trove.THashSet;
+import java.util.HashSet;
 import junit.framework.TestCase;
 
 import java.io.BufferedReader;
@@ -76,7 +76,7 @@ public class PathInternerTest extends TestCase {
         return true;
       }
     });
-    THashSet<String> thm = new THashSet<String>();
+    HashSet<String> thm = new HashSet<String>();
     PathInterner.PathEnumerator interner = new PathInterner.PathEnumerator();
     for (String s : hs) {
       thm.add(s);
@@ -119,7 +119,7 @@ public class PathInternerTest extends TestCase {
     }
   }
 
-  private static void checkTrove(HashSet<String> hs, THashSet<String> thm) {
+  private static void checkTrove(HashSet<String> hs, HashSet<String> thm) {
     for (String s : hs) {
       if (!thm.contains(new String(s))) {
         throw new AssertionError();

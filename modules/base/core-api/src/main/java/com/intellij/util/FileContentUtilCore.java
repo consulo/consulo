@@ -24,7 +24,7 @@ import com.intellij.openapi.vfs.newvfs.BulkFileListener;
 import com.intellij.openapi.vfs.newvfs.events.VFileEvent;
 import com.intellij.openapi.vfs.newvfs.events.VFilePropertyChangeEvent;
 import consulo.ui.annotation.RequiredUIAccess;
-import gnu.trove.THashSet;
+import java.util.HashSet;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 
@@ -49,7 +49,7 @@ public class FileContentUtilCore {
       @Override
       public void run() {
         // files must be processed under one write action to prevent firing event for invalid files.
-        final Set<VFilePropertyChangeEvent> events = new THashSet<VFilePropertyChangeEvent>();
+        final Set<VFilePropertyChangeEvent> events = new HashSet<VFilePropertyChangeEvent>();
         for (VirtualFile file : files) {
           saveOrReload(file, events);
         }

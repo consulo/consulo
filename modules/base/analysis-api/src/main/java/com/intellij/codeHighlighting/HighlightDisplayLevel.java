@@ -22,7 +22,6 @@ import com.intellij.openapi.editor.colors.EditorColorsManager;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.openapi.util.Comparing;
-import com.intellij.util.containers.HashMap;
 import com.intellij.util.ui.JBUI;
 import consulo.ui.color.ColorValue;
 import consulo.ui.image.Image;
@@ -30,6 +29,7 @@ import consulo.ui.image.ImageEffects;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.HashMap;
 import java.util.Map;
 
 public class HighlightDisplayLevel {

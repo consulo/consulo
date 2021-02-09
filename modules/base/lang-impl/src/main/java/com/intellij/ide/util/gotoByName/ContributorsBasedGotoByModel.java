@@ -28,7 +28,7 @@ import com.intellij.util.indexing.FindSymbolParameters;
 import com.intellij.util.indexing.IdFilter;
 import consulo.logging.Logger;
 import consulo.util.PluginExceptionUtil;
-import gnu.trove.THashSet;
+import java.util.HashSet;
 import gnu.trove.TIntHashSet;
 import javax.annotation.Nonnull;
 
@@ -139,7 +139,7 @@ public abstract class ContributorsBasedGotoByModel implements ChooseByNameModelE
   @Nonnull
   @Override
   public String[] getNames(final boolean checkBoxState) {
-    final THashSet<String> allNames = new THashSet<>();
+    final HashSet<String> allNames = new HashSet<>();
 
     Collection<String> result = Collections.synchronizedCollection(allNames);
     processNames(Processors.cancelableCollectProcessor(result), FindSymbolParameters.simple(myProject, checkBoxState));

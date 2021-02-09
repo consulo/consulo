@@ -2,12 +2,13 @@
 package com.intellij.util.containers;
 
 import com.intellij.util.ArrayUtil;
-import gnu.trove.THashMap;
+import consulo.util.collection.HashingStrategy;
+import consulo.util.collection.Maps;
 import gnu.trove.TObjectHashingStrategy;
 import org.jetbrains.annotations.Contract;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
@@ -25,7 +26,7 @@ import java.util.function.Consumer;
 public final class UnmodifiableHashMap<K, V> implements Map<K, V> {
   private final
   @Nonnull
-  TObjectHashingStrategy<K> strategy;
+  HashingStrategy<K> strategy;
   @Nonnull
   private final Object[] data;
   private final K k1;
@@ -62,7 +63,7 @@ public final class UnmodifiableHashMap<K, V> implements Map<K, V> {
    */
   public static
   @Nonnull
-  <K, V> UnmodifiableHashMap<K, V> empty(TObjectHashingStrategy<K> strategy) {
+  <K, V> UnmodifiableHashMap<K, V> empty(HashingStrategy<K> strategy) {
     return new UnmodifiableHashMap<>(strategy, ArrayUtil.EMPTY_OBJECT_ARRAY, null, null, null, null, null, null);
   }
 
@@ -94,7 +95,7 @@ public final class UnmodifiableHashMap<K, V> implements Map<K, V> {
    */
   public static
   @Nonnull
-  <K, V> UnmodifiableHashMap<K, V> fromMap(@Nonnull TObjectHashingStrategy<K> strategy, @Nonnull Map<? extends K, ? extends V> map) {
+  <K, V> UnmodifiableHashMap<K, V> fromMap(@Nonnull HashingStrategy<K> strategy, @Nonnull Map<? extends K, ? extends V> map) {
     //noinspection unchecked
     if (map instanceof UnmodifiableHashMap && ((UnmodifiableHashMap<K, V>)map).strategy == strategy) {
       //noinspection unchecked
@@ -131,7 +132,7 @@ public final class UnmodifiableHashMap<K, V> implements Map<K, V> {
     return new UnmodifiableHashMap<>(strategy, newData, null, null, null, null, null, null);
   }
 
-  private UnmodifiableHashMap(@Nonnull TObjectHashingStrategy<K> strategy, @Nonnull Object[] data, @Nullable K k1, @Nullable V v1, @Nullable K k2, @Nullable V v2, @Nullable K k3, @Nullable V v3) {
+  private UnmodifiableHashMap(@Nonnull HashingStrategy<K> strategy, @Nonnull Object[] data, @Nullable K k1, @Nullable V v1, @Nullable K k2, @Nullable V v2, @Nullable K k3, @Nullable V v3) {
     this.strategy = strategy;
     this.data = data;
     this.k1 = k1;
@@ -264,7 +265,7 @@ public final class UnmodifiableHashMap<K, V> implements Map<K, V> {
       return with(entry.getKey(), entry.getValue());
     }
     // Could be optimized further for map.size() == 2 or 3.
-    THashMap<K, V> newMap = new THashMap<>(this, strategy);
+    Map<K, V> newMap = Maps.newHashMap(this, strategy);
     newMap.putAll(map);
     return fromMap(strategy, newMap);
   }

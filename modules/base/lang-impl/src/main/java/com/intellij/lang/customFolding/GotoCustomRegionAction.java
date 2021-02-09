@@ -32,7 +32,7 @@ import consulo.disposer.Disposer;
 import com.intellij.psi.FileViewProvider;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;
-import com.intellij.util.containers.HashSet;
+import java.util.HashSet;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.annotation.access.RequiredReadAction;
 

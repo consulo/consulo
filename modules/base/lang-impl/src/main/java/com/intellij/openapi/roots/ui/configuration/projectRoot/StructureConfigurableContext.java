@@ -30,7 +30,7 @@ import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStr
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.EventDispatcher;
 import consulo.disposer.Disposer;
-import gnu.trove.THashMap;
+import java.util.HashMap;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -39,7 +39,7 @@ import java.util.Map;
 public class StructureConfigurableContext implements Disposable, LibraryEditorListener {
   private final ProjectStructureDaemonAnalyzer myDaemonAnalyzer;
   public final ModulesConfigurator myModulesConfigurator;
-  public final Map<String, LibrariesModifiableModel> myLevel2Providers = new THashMap<String, LibrariesModifiableModel>();
+  public final Map<String, LibrariesModifiableModel> myLevel2Providers = new HashMap<String, LibrariesModifiableModel>();
   private final EventDispatcher<LibraryEditorListener> myLibraryEditorListeners = EventDispatcher.create(LibraryEditorListener.class);
   private final Project myProject;
 

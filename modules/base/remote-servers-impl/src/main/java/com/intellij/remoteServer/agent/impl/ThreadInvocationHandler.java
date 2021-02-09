@@ -7,7 +7,7 @@ import com.intellij.remoteServer.agent.annotation.FinalCall;
 import com.intellij.remoteServer.agent.annotation.ImmediateCall;
 import com.intellij.remoteServer.agent.impl.util.FinalTask;
 import com.intellij.remoteServer.agent.impl.util.SequentialTaskExecutor;
-import com.intellij.util.containers.HashMap;
+import java.util.HashMap;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;

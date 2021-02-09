@@ -61,7 +61,6 @@ import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
 import consulo.util.dataholder.Key;
-import gnu.trove.THashSet;
 import gnu.trove.TIntArrayList;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.TestOnly;
@@ -465,7 +464,7 @@ public class UsageViewImpl implements UsageViewEx {
     }
     for (Map.Entry<Node, Collection<Node>> entry : changed) {
       Node parentNode = entry.getKey();
-      Set<Node> childrenToUpdate = new THashSet<>(entry.getValue());
+      Set<Node> childrenToUpdate = new HashSet<>(entry.getValue());
 
       for (int i = 0; i < parentNode.getChildCount(); i++) {
         Node childNode = (Node)parentNode.getChildAt(i);
@@ -1584,7 +1583,7 @@ public class UsageViewImpl implements UsageViewEx {
 
   @Nonnull
   private Set<Usage> getReadOnlyUsages() {
-    final Set<Usage> result = new THashSet<>();
+    final Set<Usage> result = new HashSet<>();
     final Set<Map.Entry<Usage, UsageNode>> usages = myUsageNodes.entrySet();
     for (Map.Entry<Usage, UsageNode> entry : usages) {
       Usage usage = entry.getKey();
@@ -1599,7 +1598,7 @@ public class UsageViewImpl implements UsageViewEx {
   @Nonnull
   private Set<VirtualFile> getReadOnlyUsagesFiles() {
     Set<Usage> usages = getReadOnlyUsages();
-    Set<VirtualFile> result = new THashSet<>();
+    Set<VirtualFile> result = new HashSet<>();
     for (Usage usage : usages) {
       if (usage instanceof UsageInFile) {
         UsageInFile usageInFile = (UsageInFile)usage;
@@ -1623,7 +1622,7 @@ public class UsageViewImpl implements UsageViewEx {
   @Override
   @Nonnull
   public Set<Usage> getExcludedUsages() {
-    Set<Usage> result = new THashSet<>();
+    Set<Usage> result = new HashSet<>();
     for (Map.Entry<Usage, UsageNode> entry : myUsageNodes.entrySet()) {
       UsageNode node = entry.getValue();
       Usage usage = entry.getKey();
@@ -1675,7 +1674,7 @@ public class UsageViewImpl implements UsageViewEx {
       return Collections.emptySet();
     }
 
-    Set<Usage> usages = new THashSet<>();
+    Set<Usage> usages = new HashSet<>();
     for (TreePath selectionPath : selectionPaths) {
       DefaultMutableTreeNode node = (DefaultMutableTreeNode)selectionPath.getLastPathComponent();
       collectUsages(node, usages);
@@ -1730,7 +1729,7 @@ public class UsageViewImpl implements UsageViewEx {
     TreePath[] selectionPaths = myTree.getSelectionPaths();
     if (selectionPaths == null) return null;
 
-    Set<UsageTarget> targets = new THashSet<>();
+    Set<UsageTarget> targets = new HashSet<>();
     for (TreePath selectionPath : selectionPaths) {
       Object lastPathComponent = selectionPath.getLastPathComponent();
       if (lastPathComponent instanceof UsageTargetNode) {

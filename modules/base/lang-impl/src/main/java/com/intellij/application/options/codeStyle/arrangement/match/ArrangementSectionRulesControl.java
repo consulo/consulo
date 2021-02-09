@@ -32,14 +32,11 @@ import com.intellij.psi.codeStyle.arrangement.model.ArrangementMatchConditionVis
 import com.intellij.psi.codeStyle.arrangement.std.ArrangementStandardSettingsManager;
 import com.intellij.psi.codeStyle.arrangement.std.StdArrangementRuleAliasToken;
 import com.intellij.util.containers.ContainerUtil;
-import gnu.trove.THashSet;
+import java.util.HashSet;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import static com.intellij.application.options.codeStyle.arrangement.match.ArrangementSectionRuleManager.ArrangementSectionRuleData;
 
@@ -190,7 +187,7 @@ public class ArrangementSectionRulesControl extends ArrangementMatchingRulesCont
 
   @Nonnull
   public ArrangementRuleAliasDialog createRuleAliasEditDialog() {
-    final Set<String> tokenIds = new THashSet<String>();
+    final Set<String> tokenIds = new HashSet<String>();
     final List<ArrangementSectionRule> sections = getSections();
     for (ArrangementSectionRule section : sections) {
       for (StdArrangementMatchRule rule : section.getMatchRules()) {

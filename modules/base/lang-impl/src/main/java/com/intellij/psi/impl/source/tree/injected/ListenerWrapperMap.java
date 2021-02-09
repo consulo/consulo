@@ -2,15 +2,14 @@
 
 package com.intellij.psi.impl.source.tree.injected;
 
-import gnu.trove.THashMap;
+import java.util.HashMap;
 
 import java.util.Collection;
 import java.util.EventListener;
-import java.util.HashMap;
 import java.util.Map;
 
 class ListenerWrapperMap<T extends EventListener> {
-  private final Map<T, T> myListener2WrapperMap = new THashMap<>();
+  private final Map<T, T> myListener2WrapperMap = new HashMap<>();
 
   void registerWrapper(T listener, T wrapper) {
     myListener2WrapperMap.put(listener, wrapper);

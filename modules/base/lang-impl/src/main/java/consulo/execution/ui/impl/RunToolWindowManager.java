@@ -41,7 +41,7 @@ import consulo.ui.image.Image;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.ThreeState;
-import gnu.trove.THashSet;
+import java.util.HashSet;
 import jakarta.inject.Provider;
 
 import javax.annotation.Nonnull;
@@ -79,7 +79,7 @@ public class RunToolWindowManager {
         }
 
         ToolWindowManager tw = toolWindowManager.get();
-        Set<String> currentWindows = new THashSet<>();
+        Set<String> currentWindows = new HashSet<>();
         ContainerUtil.addAll(currentWindows, tw.getToolWindowIds());
         myToolwindowIdZBuffer.retainAll(currentWindows);
 

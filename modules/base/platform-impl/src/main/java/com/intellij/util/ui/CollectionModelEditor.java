@@ -20,7 +20,7 @@ import com.intellij.util.ReflectionUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.OrderedSet;
 import consulo.logging.Logger;
-import gnu.trove.THashMap;
+import java.util.HashMap;
 import gnu.trove.TObjectObjectProcedure;
 import javax.annotation.Nonnull;
 
@@ -96,8 +96,8 @@ public abstract class CollectionModelEditor<T, E extends CollectionItemEditor<T>
   protected class ModelHelper {
     final OrderedSet<T> originalItems = new OrderedSet<>(ContainerUtil.<T>identityStrategy());
 
-    private final THashMap<T, T> modifiedToOriginal = new THashMap<>(ContainerUtil.<T>identityStrategy());
-    private final THashMap<T, T> originalToModified = new THashMap<>(ContainerUtil.<T>identityStrategy());
+    private final HashMap<T, T> modifiedToOriginal = new HashMap<>(ContainerUtil.<T>identityStrategy());
+    private final HashMap<T, T> originalToModified = new HashMap<>(ContainerUtil.<T>identityStrategy());
 
     public void reset(@Nullable List<T> newOriginalItems) {
       if (newOriginalItems != null) {

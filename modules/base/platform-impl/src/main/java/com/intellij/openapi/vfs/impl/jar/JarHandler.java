@@ -29,14 +29,12 @@ import com.intellij.openapi.vfs.impl.ZipHandler;
 import com.intellij.openapi.vfs.newvfs.persistent.FSRecords;
 import com.intellij.openapi.vfs.newvfs.persistent.FlushingDaemon;
 import com.intellij.util.CommonProcessors;
-import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.MultiMap;
 import com.intellij.util.io.*;
 import consulo.container.boot.ContainerPathManager;
 import consulo.logging.Logger;
 import consulo.vfs.impl.archive.ArchiveFile;
 import consulo.vfs.impl.archive.ArchiveFileSystemBase;
-import gnu.trove.THashSet;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -288,8 +286,8 @@ public class JarHandler extends ZipHandler {
       PersistentHashMap<String, CacheLibraryInfo> info = null;
       for (int i = 0; i < 2; ++i) {
         try {
-          info = new PersistentHashMap<String, CacheLibraryInfo>(snapshotInfoFile, EnumeratorStringDescriptor.INSTANCE,
-                                                                 new DataExternalizer<CacheLibraryInfo>() {
+          info = new PersistentHashMap<>(snapshotInfoFile, EnumeratorStringDescriptor.INSTANCE,
+                                         new DataExternalizer<CacheLibraryInfo>() {
 
                                                                    @Override
                                                                    public void save(@Nonnull DataOutput out, CacheLibraryInfo value) throws IOException {
@@ -339,7 +337,7 @@ public class JarHandler extends ZipHandler {
       // - Collect librarySnapshot -> projectLibraryPaths and existing projectLibraryPath -> librarySnapshot
       // - Remove all projectLibraryPaths that doesn't exist from persistent mapping
       // - Remove jar library snapshots that have no projectLibraryPath
-      Set<String> availableLibrarySnapshots = new THashSet<String>(Arrays.<String>asList(snapshotInfoFile.getParentFile().list(new FilenameFilter() {
+      Set<String> availableLibrarySnapshots = new HashSet<>(Arrays.<String>asList(snapshotInfoFile.getParentFile().list(new FilenameFilter() {
         @Override
         public boolean accept(File dir, String name) {
           int lastDotPosition = name.lastIndexOf('.');
@@ -357,12 +355,12 @@ public class JarHandler extends ZipHandler {
         }
       })));
 
-      final List<String> invalidLibraryFilePaths = ContainerUtil.newArrayList();
-      final List<String> allLibraryFilePaths = ContainerUtil.newArrayList();
-      MultiMap<String, String> jarSnapshotFileToLibraryFilePaths = new MultiMap<String, String>();
-      Set<String> validLibraryFilePathToJarSnapshotFilePaths = ContainerUtil.newTroveSet();
+      final List<String> invalidLibraryFilePaths = new ArrayList<>();
+      final List<String> allLibraryFilePaths = new ArrayList<>();
+      MultiMap<String, String> jarSnapshotFileToLibraryFilePaths = new MultiMap<>();
+      Set<String> validLibraryFilePathToJarSnapshotFilePaths = new HashSet<>();
 
-      info.processKeys(new CommonProcessors.CollectProcessor<String>(allLibraryFilePaths));
+      info.processKeys(new CommonProcessors.CollectProcessor<>(allLibraryFilePaths));
       for (String filePath : allLibraryFilePaths) {
         CacheLibraryInfo libraryInfo = info.get(filePath);
         if (libraryInfo == null) continue;

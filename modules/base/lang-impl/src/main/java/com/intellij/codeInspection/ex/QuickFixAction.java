@@ -44,7 +44,7 @@ import com.intellij.psi.presentation.java.SymbolPresentationUtil;
 import com.intellij.util.SequentialModalProgressTask;
 import com.intellij.util.SequentialTask;
 import consulo.ui.image.Image;
-import gnu.trove.THashSet;
+import java.util.HashSet;
 import javax.annotation.Nonnull;
 
 import javax.swing.*;
@@ -129,7 +129,7 @@ public class QuickFixAction extends AnAction {
   private void doApplyFix(@Nonnull final Project project,
                           @Nonnull final CommonProblemDescriptor[] descriptors,
                           @Nonnull final GlobalInspectionContextImpl context) {
-    final Set<VirtualFile> readOnlyFiles = new THashSet<VirtualFile>();
+    final Set<VirtualFile> readOnlyFiles = new HashSet<VirtualFile>();
     for (CommonProblemDescriptor descriptor : descriptors) {
       final PsiElement psiElement = descriptor instanceof ProblemDescriptor ? ((ProblemDescriptor)descriptor).getPsiElement() : null;
       if (psiElement != null && !psiElement.isWritable()) {
@@ -215,7 +215,7 @@ public class QuickFixAction extends AnAction {
   }
 
   private static Set<VirtualFile> getReadOnlyFiles(@Nonnull RefEntity[] refElements) {
-    Set<VirtualFile> readOnlyFiles = new THashSet<VirtualFile>();
+    Set<VirtualFile> readOnlyFiles = new HashSet<VirtualFile>();
     for (RefEntity refElement : refElements) {
       PsiElement psiElement = refElement instanceof RefElement ? ((RefElement)refElement).getPsiElement() : null;
       if (psiElement == null || psiElement.getContainingFile() == null) continue;

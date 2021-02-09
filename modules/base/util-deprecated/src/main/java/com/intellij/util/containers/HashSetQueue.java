@@ -17,9 +17,7 @@ package com.intellij.util.containers;
 
 import javax.annotation.Nonnull;
 
-import java.util.AbstractCollection;
-import java.util.Iterator;
-import java.util.NoSuchElementException;
+import java.util.*;
 import java.util.Queue;
 
 /**
@@ -29,7 +27,7 @@ import java.util.Queue;
  * <li>The {@link #contains(Object)} method is O(1)</li>
  * <li>The {@link #remove(Object)} method is O(1)</li>
  * </ul>
- * Implementation is backed by {@link gnu.trove.THashSet} containing double-linked QueueEntry nodes holding elements themselves.
+ * Implementation is backed by {@link HashSet} containing double-linked QueueEntry nodes holding elements themselves.
  */
 public class HashSetQueue<T> extends AbstractCollection<T> implements Queue<T> {
   private final OpenTHashSet<QueueEntry<T>> set = new OpenTHashSet<QueueEntry<T>>();

@@ -39,17 +39,14 @@ import consulo.roots.ContentFolderTypeProvider;
 import consulo.roots.ModuleRootLayer;
 import consulo.roots.types.BinariesOrderRootType;
 import consulo.roots.types.SourcesOrderRootType;
-import gnu.trove.THashMap;
+import java.util.HashMap;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 @Singleton
 public class ModuleRootManagerImpl extends ModuleRootManager implements Disposable {
@@ -60,7 +57,7 @@ public class ModuleRootManagerImpl extends ModuleRootManager implements Disposab
   private boolean myIsDisposed;
   private boolean isModuleAdded;
   private final OrderRootsCache myOrderRootsCache;
-  private final Map<RootModelImpl, Throwable> myModelCreations = new THashMap<>();
+  private final Map<RootModelImpl, Throwable> myModelCreations = new HashMap<>();
 
   @Inject
   public ModuleRootManagerImpl(Module module) {

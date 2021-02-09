@@ -20,7 +20,7 @@ import com.intellij.openapi.editor.impl.event.EditorEventMulticasterImpl;
 import com.intellij.openapi.project.DefaultProjectFactory;
 import com.intellij.openapi.project.impl.DefaultProjectFactoryImpl;
 import com.intellij.openapi.vfs.encoding.EncodingManager;
-import com.intellij.util.containers.hash.LinkedHashMap;
+import java.util.LinkedHashMap;
 import junit.framework.Assert;
 
 import java.util.EventListener;

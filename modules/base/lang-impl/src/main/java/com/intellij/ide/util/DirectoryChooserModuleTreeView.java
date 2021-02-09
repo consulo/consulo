@@ -34,7 +34,7 @@ import com.intellij.ui.treeStructure.Tree;
 import com.intellij.util.Consumer;
 import com.intellij.util.Function;
 import com.intellij.util.containers.Convertor;
-import com.intellij.util.containers.HashMap;
+import java.util.HashMap;
 import consulo.logging.Logger;
 import consulo.ui.annotation.RequiredUIAccess;
 

@@ -45,7 +45,7 @@ import consulo.module.extension.ModuleExtension;
 import consulo.module.extension.ModuleExtensionProviderEP;
 import consulo.module.extension.impl.ModuleExtensionProviders;
 import consulo.ui.UIAccess;
-import gnu.trove.THashSet;
+import java.util.HashSet;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -252,7 +252,7 @@ public class RecentProjectsManagerBase extends RecentProjectsManager implements 
       metaInfoMap = ContainerUtil.newHashMap(myState.additionalInfo);
     }
 
-    Set<String> openedPaths = new THashSet<>();
+    Set<String> openedPaths = new HashSet<>();
     for (Project openProject : ProjectManager.getInstance().getOpenProjects()) {
       ContainerUtil.addIfNotNull(openedPaths, getProjectPath(openProject));
     }

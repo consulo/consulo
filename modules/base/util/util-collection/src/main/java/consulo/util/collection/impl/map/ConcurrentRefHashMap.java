@@ -16,9 +16,8 @@
 
 package consulo.util.collection.impl.map;
 
-import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.HashingStrategy;
-import consulo.util.collection.impl.map.RefValueHashMap;
+import consulo.util.collection.Maps;
 import consulo.util.lang.Comparing;
 
 import javax.annotation.Nonnull;
@@ -120,7 +119,7 @@ public abstract class ConcurrentRefHashMap<K, V> extends AbstractMap<K, V> imple
 
   public ConcurrentRefHashMap(int initialCapacity, float loadFactor, int concurrencyLevel, @Nonnull HashingStrategy<? super K> hashingStrategy) {
     myHashingStrategy = hashingStrategy == THIS ? this : hashingStrategy;
-    myMap = ContainerUtil.newConcurrentMap(initialCapacity, loadFactor, concurrencyLevel);
+    myMap = Maps.newConcurrentHashMap(initialCapacity, loadFactor, concurrencyLevel);
   }
 
   @Override

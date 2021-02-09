@@ -16,18 +16,22 @@
 package com.intellij.util.containers;
 
 import com.intellij.openapi.util.*;
-import com.intellij.util.ArrayFactory;
-import com.intellij.util.ArrayUtil;
 import com.intellij.util.*;
-import consulo.util.collection.*;
-import gnu.trove.*;
+import consulo.util.collection.HashingStrategy;
+import consulo.util.collection.Maps;
+import consulo.util.collection.Sets;
+import consulo.util.collection.primitive.longs.ConcurrentLongObjectMap;
+import consulo.util.collection.primitive.longs.LongMaps;
+import gnu.trove.TIntArrayList;
+import gnu.trove.TIntIterator;
+import gnu.trove.TIntProcedure;
+import gnu.trove.TObjectHashingStrategy;
 import org.jetbrains.annotations.Contract;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.lang.reflect.Array;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.*;
@@ -36,7 +40,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.BiPredicate;
 import java.util.function.IntFunction;
 
-@SuppressWarnings({"UtilityClassWithoutPrivateConstructor", "MethodOverridesStaticMethodOfSuperclass"})
+@SuppressWarnings({"ALL"})
 public class ContainerUtil extends ContainerUtilRt {
   private static final int INSERTION_SORT_THRESHOLD = 10;
   private static final int DEFAULT_CONCURRENCY_LEVEL = Math.min(16, Runtime.getRuntime().availableProcessors());
@@ -109,14 +113,16 @@ public class ContainerUtil extends ContainerUtilRt {
 
   @Nonnull
   @Contract(pure = true)
-  public static <K, V> THashMap<K, V> newTroveMap() {
-    return new THashMap<K, V>();
+  @Deprecated
+  public static <K, V> Map<K, V> newTroveMap() {
+    return new HashMap<K, V>();
   }
 
   @Nonnull
   @Contract(pure = true)
-  public static <K, V> THashMap<K, V> newTroveMap(@Nonnull TObjectHashingStrategy<K> strategy) {
-    return new THashMap<K, V>(strategy);
+  @Deprecated
+  public static <K, V> Map<K, V> newTroveMap(@Nonnull HashingStrategy<K> strategy) {
+    return Maps.newHashMap(strategy);
   }
 
   @Nonnull
@@ -129,16 +135,16 @@ public class ContainerUtil extends ContainerUtilRt {
   @Nonnull
   @Contract(pure = true)
   @Deprecated
-  public static <T> TObjectHashingStrategy<T> canonicalStrategy() {
-    return TObjectHashingStrategy.CANONICAL;
+  public static <T> HashingStrategy<T> canonicalStrategy() {
+    return HashingStrategy.canonical();
   }
 
   @SuppressWarnings("unchecked")
   @Nonnull
   @Contract(pure = true)
   @Deprecated
-  public static <T> TObjectHashingStrategy<T> identityStrategy() {
-    return TObjectHashingStrategy.IDENTITY;
+  public static <T> HashingStrategy<T> identityStrategy() {
+    return HashingStrategy.identity();
   }
 
   @Nonnull
@@ -310,86 +316,58 @@ public class ContainerUtil extends ContainerUtilRt {
 
   @Nonnull
   @Contract(pure = true)
-  public static <T> THashSet<T> newTroveSet() {
-    return new THashSet<T>();
+  @Deprecated
+  public static <K> Set<K> newIdentityTroveSet() {
+    return Sets.<K>newHashSet(ContainerUtil.<K>identityStrategy());
   }
 
   @Nonnull
   @Contract(pure = true)
-  public static <T> THashSet<T> newTroveSet(@Nonnull TObjectHashingStrategy<T> strategy) {
-    return new THashSet<T>(strategy);
+  @Deprecated
+  public static <K> Set<K> newIdentityTroveSet(int initialCapacity) {
+    return Sets.newHashSet(initialCapacity, ContainerUtil.<K>identityStrategy());
   }
 
   @Nonnull
   @Contract(pure = true)
-  public static <T> THashSet<T> newTroveSet(@Nonnull T... elements) {
-    return newTroveSet(Arrays.asList(elements));
+  @Deprecated
+  public static <K> Set<K> newIdentityTroveSet(@Nonnull Collection<K> collection) {
+    return Sets.newHashSet(collection, ContainerUtil.<K>identityStrategy());
   }
 
   @Nonnull
   @Contract(pure = true)
-  public static <T> THashSet<T> newTroveSet(@Nonnull TObjectHashingStrategy<T> strategy, @Nonnull T... elements) {
-    return new THashSet<T>(Arrays.asList(elements), strategy);
-  }
-
-  @Nonnull
-  @Contract(pure = true)
-  public static <T> THashSet<T> newTroveSet(@Nonnull TObjectHashingStrategy<T> strategy, @Nonnull Collection<T> elements) {
-    return new THashSet<T>(elements, strategy);
-  }
-
-  @Nonnull
-  @Contract(pure = true)
-  public static <T> THashSet<T> newTroveSet(@Nonnull Collection<T> elements) {
-    return new THashSet<T>(elements);
-  }
-
-  @Nonnull
-  @Contract(pure = true)
-  public static <K> THashSet<K> newIdentityTroveSet() {
-    return new THashSet<K>(ContainerUtil.<K>identityStrategy());
-  }
-
-  @Nonnull
-  @Contract(pure = true)
-  public static <K> THashSet<K> newIdentityTroveSet(int initialCapacity) {
-    return new THashSet<K>(initialCapacity, ContainerUtil.<K>identityStrategy());
-  }
-
-  @Nonnull
-  @Contract(pure = true)
-  public static <K> THashSet<K> newIdentityTroveSet(@Nonnull Collection<K> collection) {
-    return new THashSet<K>(collection, ContainerUtil.<K>identityStrategy());
-  }
-
-  @Nonnull
-  @Contract(pure = true)
-  public static <K, V> THashMap<K, V> newIdentityTroveMap() {
-    return new THashMap<K, V>(ContainerUtil.<K>identityStrategy());
+  public static <K, V> Map<K, V> newIdentityTroveMap() {
+    return new IdentityHashMap<K, V>();
   }
 
   @Nonnull
   @Contract(pure = true)
   public static <T> TreeSet<T> newTreeSet() {
-    return ContainerUtilRt.newTreeSet();
+    return new TreeSet<T>();
   }
 
   @Nonnull
   @Contract(pure = true)
   public static <T> TreeSet<T> newTreeSet(@Nonnull Iterable<? extends T> elements) {
-    return ContainerUtilRt.newTreeSet(elements);
+    if(elements instanceof Collection) {
+      return new TreeSet<T>((Collection<? extends T>)elements);
+    }
+    TreeSet<T> set = new TreeSet<T>();
+    elements.forEach(set::add);
+    return set;
   }
 
   @Nonnull
   @Contract(pure = true)
   public static <T> TreeSet<T> newTreeSet(@Nonnull T... elements) {
-    return ContainerUtilRt.newTreeSet(elements);
+    return new TreeSet<T>(Set.of(elements));
   }
 
   @Nonnull
   @Contract(pure = true)
   public static <T> TreeSet<T> newTreeSet(@Nullable Comparator<? super T> comparator) {
-    return ContainerUtilRt.newTreeSet(comparator);
+    return new TreeSet<T>(comparator);
   }
 
   @Nonnull
@@ -440,7 +418,7 @@ public class ContainerUtil extends ContainerUtilRt {
   @Nonnull
   @Contract(pure = true)
   public static <K, V> Map<K, V> union(@Nonnull Map<? extends K, ? extends V> map, @Nonnull Map<? extends K, ? extends V> map2) {
-    Map<K, V> result = new THashMap<K, V>(map.size() + map2.size());
+    Map<K, V> result = new HashMap<K, V>(map.size() + map2.size());
     result.putAll(map);
     result.putAll(map2);
     return result;
@@ -449,7 +427,7 @@ public class ContainerUtil extends ContainerUtilRt {
   @Nonnull
   @Contract(pure = true)
   public static <T> Set<T> union(@Nonnull Set<T> set, @Nonnull Set<T> set2) {
-    Set<T> result = new THashSet<T>(set.size() + set2.size());
+    Set<T> result = new HashSet<T>(set.size() + set2.size());
     result.addAll(set);
     result.addAll(set2);
     return result;
@@ -464,7 +442,7 @@ public class ContainerUtil extends ContainerUtilRt {
       case 1:
         return Collections.singleton(elements[0]);
       default:
-        return Collections.unmodifiableSet(new THashSet<E>(Arrays.asList(elements)));
+        return Collections.unmodifiableSet(new HashSet<E>(Arrays.asList(elements)));
     }
   }
 
@@ -509,7 +487,7 @@ public class ContainerUtil extends ContainerUtilRt {
   }
 
   public static class ImmutableMapBuilder<K, V> {
-    private final Map<K, V> myMap = new THashMap<K, V>();
+    private final Map<K, V> myMap = new HashMap<K, V>();
 
     public ImmutableMapBuilder<K, V> put(K key, V value) {
       myMap.put(key, value);
@@ -890,7 +868,7 @@ public class ContainerUtil extends ContainerUtilRt {
   @Nonnull
   @Contract(pure = true)
   public static <T, KEY, VALUE> Map<KEY, VALUE> map2Map(@Nonnull Collection<? extends T> collection, @Nonnull Function<T, Pair<KEY, VALUE>> mapper) {
-    final Map<KEY, VALUE> set = new THashMap<KEY, VALUE>(collection.size());
+    final Map<KEY, VALUE> set = new HashMap<KEY, VALUE>(collection.size());
     for (T t : collection) {
       Pair<KEY, VALUE> pair = mapper.fun(t);
       set.put(pair.first, pair.second);
@@ -907,7 +885,7 @@ public class ContainerUtil extends ContainerUtilRt {
   @Nonnull
   @Contract(pure = true)
   public static <T, KEY, VALUE> Map<KEY, VALUE> map2MapNotNull(@Nonnull Collection<? extends T> collection, @Nonnull Function<T, Pair<KEY, VALUE>> mapper) {
-    final Map<KEY, VALUE> set = new THashMap<KEY, VALUE>(collection.size());
+    final Map<KEY, VALUE> set = new HashMap<KEY, VALUE>(collection.size());
     for (T t : collection) {
       Pair<KEY, VALUE> pair = mapper.fun(t);
       if (pair != null) {
@@ -920,7 +898,7 @@ public class ContainerUtil extends ContainerUtilRt {
   @Nonnull
   @Contract(pure = true)
   public static <KEY, VALUE> Map<KEY, VALUE> map2Map(@Nonnull Collection<Pair<KEY, VALUE>> collection) {
-    final Map<KEY, VALUE> result = new THashMap<KEY, VALUE>(collection.size());
+    final Map<KEY, VALUE> result = new HashMap<KEY, VALUE>(collection.size());
     for (Pair<KEY, VALUE> pair : collection) {
       result.put(pair.first, pair.second);
     }
@@ -2545,67 +2523,39 @@ public class ContainerUtil extends ContainerUtilRt {
 
   @Nonnull
   @Contract(pure = true)
-  @Deprecated
-  public static <V> ConcurrentIntObjectMap<V> createConcurrentIntObjectMap() {
-    return Maps.newConcurrentIntObjectHashMap();
-  }
-
-  @Nonnull
-  @Contract(pure = true)
-  @Deprecated
-  public static <V> ConcurrentIntObjectMap<V> createConcurrentIntObjectMap(int initialCapacity, float loadFactor, int concurrencyLevel) {
-    return Maps.newConcurrentIntObjectHashMap(initialCapacity, loadFactor, concurrencyLevel);
-  }
-
-  @Nonnull
-  @Contract(pure = true)
-  public static <V> ConcurrentIntObjectMap<V> createConcurrentIntObjectSoftValueMap() {
-    return consulo.util.collection.ContainerUtil.createConcurrentIntObjectSoftValueMap();
-  }
-
-  @Nonnull
-  @Contract(pure = true)
   public static <V> ConcurrentLongObjectMap<V> createConcurrentLongObjectMap() {
-    //noinspection deprecation
-    return consulo.util.collection.ContainerUtil.createConcurrentLongObjectMap();
+    return LongMaps.newConcurrentLongObjectHashMap();
   }
 
   @Nonnull
   @Contract(pure = true)
   public static <V> ConcurrentLongObjectMap<V> createConcurrentLongObjectMap(int initialCapacity) {
-    //noinspection deprecation
-    return consulo.util.collection.ContainerUtil.createConcurrentLongObjectMap(initialCapacity);
+    return LongMaps.newConcurrentLongObjectHashMap(initialCapacity);
   }
 
   @Nonnull
   @Contract(pure = true)
   public static <K, V> ConcurrentMap<K, V> createConcurrentWeakValueMap() {
-    return consulo.util.collection.ContainerUtil.createConcurrentWeakValueMap();
+    return Maps.newConcurrentWeakValueHashMap();
   }
 
   @Nonnull
   @Contract(pure = true)
-  public static <V> ConcurrentIntObjectMap<V> createConcurrentIntObjectWeakValueMap() {
-    return Maps.newConcurrentIntObjectWeakValueHashMap();
-  }
-
-  @Nonnull
-  @Contract(pure = true)
-  public static <K, V> ConcurrentMap<K, V> createConcurrentWeakKeySoftValueMap(int initialCapacity, float loadFactor, int concurrencyLevel, @Nonnull final TObjectHashingStrategy<K> hashingStrategy) {
+  public static <K, V> ConcurrentMap<K, V> createConcurrentWeakKeySoftValueMap(int initialCapacity, float loadFactor, int concurrencyLevel, @Nonnull final HashingStrategy<K> hashingStrategy) {
     //noinspection deprecation
-    return consulo.util.collection.ContainerUtil.createConcurrentWeakKeySoftValueMap(initialCapacity, loadFactor, concurrencyLevel, hashingStrategy);
+    return Maps.newConcurrentWeakKeySoftValueHashMap(initialCapacity, loadFactor, concurrencyLevel, hashingStrategy);
   }
 
   @Nonnull
   @Contract(value = " -> new", pure = true)
   public static <K, V> ConcurrentMap<K, V> createConcurrentSoftKeySoftValueMap() {
-    return consulo.util.collection.ContainerUtil.createConcurrentSoftKeySoftValueMap();
+    return Maps.newConcurrentSoftKeySoftValueHashMap();
   }
 
   @Nonnull
   @Contract(pure = true)
-  public static <K, V> ConcurrentMap<K, V> createConcurrentSoftKeySoftValueMap(int initialCapacity, float loadFactor, int concurrencyLevel, @Nonnull final TObjectHashingStrategy<K> hashingStrategy) {
-    return consulo.util.collection.ContainerUtil.createConcurrentSoftKeySoftValueMap(initialCapacity, loadFactor, concurrencyLevel, hashingStrategy);
+  public static <K, V> ConcurrentMap<K, V> createConcurrentSoftKeySoftValueMap(int initialCapacity, float loadFactor, int concurrencyLevel, @Nonnull final HashingStrategy<K> hashingStrategy) {
+    return Maps.<K, V>newConcurrentSoftKeySoftValueHashMap(initialCapacity, loadFactor, concurrencyLevel, hashingStrategy);
   }
 
   @Nonnull
@@ -2617,52 +2567,50 @@ public class ContainerUtil extends ContainerUtilRt {
   @Nonnull
   @Contract(pure = true)
   public static <K, V> ConcurrentMap<K, V> createConcurrentWeakKeyWeakValueMap() {
-    return consulo.util.collection.ContainerUtil.createConcurrentWeakKeyWeakValueMap();
+    return Maps.newConcurrentWeakKeyWeakValueHashMap();
   }
 
   @Nonnull
   @Contract(pure = true)
-  public static <K, V> ConcurrentMap<K, V> createConcurrentWeakKeyWeakValueMap(@Nonnull TObjectHashingStrategy<K> strategy) {
-    return consulo.util.collection.ContainerUtil.createConcurrentWeakKeyWeakValueMap(strategy);
+  public static <K, V> ConcurrentMap<K, V> createConcurrentWeakKeyWeakValueMap(@Nonnull HashingStrategy<K> strategy) {
+    return Maps.newConcurrentWeakKeyWeakValueHashMap(strategy);
   }
 
   @Nonnull
   @Contract(pure = true)
   public static <K, V> ConcurrentMap<K, V> createConcurrentSoftValueMap() {
-    return consulo.util.collection.ContainerUtil.createConcurrentSoftValueMap();
+    return Maps.newConcurrentSoftValueHashMap();
   }
 
   @Nonnull
   @Contract(pure = true)
   @Deprecated
   public static <K, V> ConcurrentMap<K, V> createConcurrentSoftMap() {
-    return consulo.util.collection.ContainerUtil.createConcurrentSoftMap();
+    return Maps.newConcurrentSoftHashMap();
   }
 
   @Nonnull
   @Contract(value = " -> new", pure = true)
   public static <K, V> ConcurrentMap<K, V> createConcurrentWeakMap() {
-    return consulo.util.collection.ContainerUtil.createConcurrentWeakMap();
+    return Maps.newConcurrentWeakHashMap();
   }
 
   @Nonnull
   @Contract(pure = true)
-  public static <K, V> ConcurrentMap<K, V> createConcurrentSoftMap(int initialCapacity, float loadFactor, int concurrencyLevel, @Nonnull TObjectHashingStrategy<K> hashingStrategy) {
-    //noinspection deprecation
-    return consulo.util.collection.ContainerUtil.createConcurrentSoftMap(initialCapacity, loadFactor, concurrencyLevel, hashingStrategy);
+  public static <K, V> ConcurrentMap<K, V> createConcurrentSoftMap(int initialCapacity, float loadFactor, int concurrencyLevel, @Nonnull HashingStrategy<K> hashingStrategy) {
+    return Maps.newConcurrentSoftHashMap(initialCapacity, loadFactor, concurrencyLevel, hashingStrategy);
   }
 
   @Nonnull
   @Contract(pure = true)
-  public static <K, V> ConcurrentMap<K, V> createConcurrentWeakMap(int initialCapacity, float loadFactor, int concurrencyLevel, @Nonnull TObjectHashingStrategy<K> hashingStrategy) {
-    //noinspection deprecation
-    return consulo.util.collection.ContainerUtil.createConcurrentWeakMap(initialCapacity, loadFactor, concurrencyLevel, hashingStrategy);
+  public static <K, V> ConcurrentMap<K, V> createConcurrentWeakMap(int initialCapacity, float loadFactor, int concurrencyLevel, @Nonnull HashingStrategy<K> hashingStrategy) {
+    return Maps.newConcurrentWeakHashMap(initialCapacity, loadFactor, concurrencyLevel, hashingStrategy);
   }
 
   @Nonnull
   @Contract(pure = true)
   @Deprecated
-  public static <K, V> ConcurrentMap<K, V> createConcurrentWeakMap(@Nonnull TObjectHashingStrategy<K> hashingStrategy) {
+  public static <K, V> ConcurrentMap<K, V> createConcurrentWeakMap(@Nonnull HashingStrategy<K> hashingStrategy) {
     //noinspection deprecation
     return Maps.newConcurrentWeakHashMap(hashingStrategy);
   }
@@ -2904,7 +2852,7 @@ public class ContainerUtil extends ContainerUtilRt {
 
   @Nonnull
   public static <K, V> Map<K, V> createWeakKeySoftValueMap() {
-    return consulo.util.collection.ContainerUtil.createWeakKeySoftValueMap();
+    return Maps.newWeakKeySoftValueHashMap();
   }
 
   public static <T> void weightSort(List<T> list, final Function<T, Integer> weighterFunc) {
@@ -2924,7 +2872,7 @@ public class ContainerUtil extends ContainerUtilRt {
   @Contract(value = " -> new", pure = true)
   @Nonnull
   public static <K, V> Map<K, V> createWeakValueMap() {
-    return consulo.util.collection.ContainerUtil.createWeakValueMap();
+    return Maps.newWeakValueHashMap();
   }
 
   /**
@@ -2936,14 +2884,14 @@ public class ContainerUtil extends ContainerUtilRt {
   @Nonnull
   @Deprecated
   public static <K, V> Map<K, V> createSoftMap() {
-    return Maps.newSoftMap();
+    return Maps.newSoftHashMap();
   }
 
   @Contract(value = "_ -> new", pure = true)
   @Nonnull
   @Deprecated
   public static <K, V> Map<K, V> createSoftMap(@Nonnull HashingStrategy<? super K> strategy) {
-    return consulo.util.collection.ContainerUtil.createSoftMap(strategy);
+    return Maps.<K, V>newSoftHashMap(strategy);
   }
 
   /**
@@ -2955,7 +2903,7 @@ public class ContainerUtil extends ContainerUtilRt {
   @Nonnull
   public static <K, V> Map<K, V> createSoftValueMap() {
     //noinspection deprecation
-    return consulo.util.collection.ContainerUtil.createSoftValueMap();
+    return Maps.newSoftValueHashMap();
   }
 
   /**
@@ -2978,15 +2926,15 @@ public class ContainerUtil extends ContainerUtilRt {
   @Contract(value = "_, _, _ -> new", pure = true)
   @Nonnull
   @Deprecated
-  public static <K, V> Map<K, V> createWeakMap(int initialCapacity, float loadFactor, @Nonnull TObjectHashingStrategy<? super K> strategy) {
-    return consulo.util.collection.ContainerUtil.<K, V>createWeakMap(initialCapacity, loadFactor, strategy);
+  public static <K, V> Map<K, V> createWeakMap(int initialCapacity, float loadFactor, @Nonnull HashingStrategy<? super K> strategy) {
+    return Maps.<K, V>newWeakHashMap(initialCapacity, loadFactor, strategy);
   }
 
   @Contract(value = " -> new", pure = true)
   @Nonnull
   @Deprecated
   public static <K, V> Map<K, V> createWeakKeyWeakValueMap() {
-    return consulo.util.collection.ContainerUtil.createWeakKeyWeakValueMap();
+    return Maps.newWeakKeyWeakValueHashMap();
   }
 
   public static <T> boolean all(@Nonnull T[] collection, @Nonnull Condition<? super T> condition) {

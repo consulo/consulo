@@ -24,7 +24,7 @@ import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.SmartPsiElementPointer;
-import gnu.trove.THashMap;
+import java.util.HashMap;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -38,7 +38,7 @@ import java.util.Map;
 public class EditorFoldingInfo {
   private static final Key<EditorFoldingInfo> KEY = Key.create("EditorFoldingInfo.KEY");
 
-  private final Map<FoldRegion, SmartPsiElementPointer<?>> myFoldRegionToSmartPointerMap = new THashMap<>();
+  private final Map<FoldRegion, SmartPsiElementPointer<?>> myFoldRegionToSmartPointerMap = new HashMap<>();
 
   @Nonnull
   public static EditorFoldingInfo get(@Nonnull Editor editor) {

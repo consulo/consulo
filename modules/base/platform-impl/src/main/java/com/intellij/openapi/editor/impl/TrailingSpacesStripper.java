@@ -33,15 +33,13 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.text.CharArrayUtil;
-import gnu.trove.THashSet;
+import java.util.HashSet;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.Collections;
+import java.util.*;
 import java.util.List;
-import java.util.Set;
 
 public final class TrailingSpacesStripper extends FileDocumentManagerAdapter {
   public static final Key<String> OVERRIDE_STRIP_TRAILING_SPACES_KEY = Key.create("OVERRIDE_TRIM_TRAILING_SPACES_KEY");
@@ -49,11 +47,11 @@ public final class TrailingSpacesStripper extends FileDocumentManagerAdapter {
 
   private static final Key<Boolean> DISABLE_FOR_FILE_KEY = Key.create("DISABLE_TRAILING_SPACE_STRIPPER_FOR_FILE_KEY");
 
-  private final Set<Document> myDocumentsToStripLater = new THashSet<>();
+  private final Set<Document> myDocumentsToStripLater = new HashSet<>();
 
   @Override
   public void beforeAllDocumentsSaving() {
-    Set<Document> documentsToStrip = new THashSet<>(myDocumentsToStripLater);
+    Set<Document> documentsToStrip = new HashSet<>(myDocumentsToStripLater);
     myDocumentsToStripLater.clear();
     for (Document document : documentsToStrip) {
       strip(document);

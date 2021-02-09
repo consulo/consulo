@@ -48,7 +48,7 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.UIUtil;
 import consulo.container.boot.ContainerPathManager;
 import consulo.util.dataholder.Key;
-import gnu.trove.THashSet;
+import java.util.HashSet;
 import junit.framework.AssertionFailedError;
 import junit.framework.Test;
 import junit.framework.TestCase;
@@ -361,8 +361,8 @@ public abstract class UsefulTestCase extends TestCase {
 
     final StringBuilder builder = new StringBuilder();
     for (final Object o : collection) {
-      if (o instanceof THashSet) {
-        builder.append(new TreeSet<Object>((THashSet)o));
+      if (o instanceof HashSet) {
+        builder.append(new TreeSet<Object>((HashSet)o));
       }
       else {
         builder.append(o);

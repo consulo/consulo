@@ -28,7 +28,7 @@ import com.intellij.util.ArrayUtil;
 import com.intellij.util.xmlb.XmlSerializer;
 import com.intellij.util.xmlb.annotations.OptionTag;
 import consulo.logging.Logger;
-import gnu.trove.THashMap;
+import java.util.HashMap;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 
@@ -67,7 +67,7 @@ public abstract class DefaultProjectProfileManager extends ProjectProfileManager
 
   private final ApplicationProfileManager myApplicationProfileManager;
 
-  private final Map<String, Profile> myProfiles = new THashMap<String, Profile>();
+  private final Map<String, Profile> myProfiles = new HashMap<String, Profile>();
   protected final DependencyValidationManager myHolder;
 
   private final ProfileChangeAdapter myListenerPublisher;

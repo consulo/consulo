@@ -48,7 +48,7 @@ import com.intellij.util.containers.MultiMap;
 import com.intellij.util.ui.OptionsDialog;
 import com.intellij.vcs.ViewUpdateInfoNotification;
 import com.intellij.vcsUtil.VcsUtil;
-import gnu.trove.THashMap;
+import java.util.HashMap;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 
@@ -191,7 +191,7 @@ public abstract class AbstractCommonUpdateAction extends AbstractVcsAction imple
       }
     }
 
-    final Map<AbstractVcs, Collection<FilePath>> result = new THashMap<>();
+    final Map<AbstractVcs, Collection<FilePath>> result = new HashMap<>();
     for (Map.Entry<AbstractVcs, Collection<FilePath>> entry : resultPrep.entrySet()) {
       AbstractVcs<?> vcs = entry.getKey();
       result.put(vcs, vcs.filterUniqueRoots(new ArrayList<>(entry.getValue()), FilePath::getVirtualFile));

@@ -10,7 +10,7 @@ import com.intellij.psi.codeStyle.CommonCodeStyleSettings;
 import com.intellij.util.containers.LinkedMultiMap;
 import com.intellij.util.containers.MultiMap;
 import com.intellij.util.containers.Stack;
-import gnu.trove.THashMap;
+import java.util.HashMap;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -31,7 +31,7 @@ public class InitialInfoBuilder {
   private static final RangesAssert ASSERT = new RangesAssert();
   private static final boolean INLINE_TABS_ENABLED = "true".equalsIgnoreCase(System.getProperty("inline.tabs.enabled"));
 
-  private final Map<AbstractBlockWrapper, Block> myResult = new THashMap<>();
+  private final Map<AbstractBlockWrapper, Block> myResult = new HashMap<>();
   private final MultiMap<ExpandableIndent, AbstractBlockWrapper> myBlocksToForceChildrenIndent = new LinkedMultiMap<>();
   private final MultiMap<Alignment, Block> myBlocksToAlign = new MultiMap<>();
   private final Set<Alignment> myAlignmentsInsideRangeToModify = new HashSet<>();

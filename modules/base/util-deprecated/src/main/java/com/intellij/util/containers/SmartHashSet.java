@@ -15,7 +15,7 @@
  */
 package com.intellij.util.containers;
 
-import gnu.trove.THashSet;
+import java.util.HashSet;
 import gnu.trove.TObjectHashingStrategy;
 import gnu.trove.TObjectProcedure;
 import javax.annotation.Nonnull;
@@ -31,7 +31,7 @@ import java.util.Set;
  * For other sizes it delegates to THashSet.
  * Null keys are NOT PERMITTED.
  */
-public class SmartHashSet<T> extends THashSet<T> {
+public class SmartHashSet<T> extends HashSet<T> {
   private T theElement; // contains the only element if size() == 1
 
   public SmartHashSet() {

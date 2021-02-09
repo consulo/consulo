@@ -26,8 +26,7 @@ import com.intellij.util.containers.ContainerUtil;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
 import consulo.util.collection.HashingStrategy;
-import gnu.trove.THashSet;
-import gnu.trove.TObjectHashingStrategy;
+import java.util.HashSet;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -210,7 +209,7 @@ public class CachedIntentions {
       }
     }
 
-    Set<IntentionActionWithTextCaching> wrappedNew = new THashSet<>(newDescriptors.size(), ACTION_TEXT_AND_CLASS_EQUALS);
+    Set<IntentionActionWithTextCaching> wrappedNew = new HashSet<>(newDescriptors.size(), ACTION_TEXT_AND_CLASS_EQUALS);
     for (HighlightInfo.IntentionActionDescriptor descriptor : newDescriptors) {
       final IntentionAction action = descriptor.getAction();
       if (element != null && element != hostElement && (!shouldCallIsAvailable || ShowIntentionActionsHandler.availableFor(injectedFile, injectedEditor, action))) {

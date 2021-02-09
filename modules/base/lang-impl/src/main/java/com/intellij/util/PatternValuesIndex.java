@@ -16,7 +16,7 @@
 package com.intellij.util;
 
 import com.intellij.patterns.*;
-import gnu.trove.THashSet;
+import java.util.HashSet;
 
 import java.util.Collection;
 import java.util.LinkedList;
@@ -28,7 +28,7 @@ import java.util.Set;
 public class PatternValuesIndex {
 
   public static Set<String> buildStringIndex(Collection<ElementPattern<?>> patterns) {
-    final THashSet<String> result = new THashSet<String>();
+    final HashSet<String> result = new HashSet<String>();
     processStringValues(patterns, new PairProcessor<ElementPattern<?>, Collection<Object>>() {
       @Override
       public boolean process(ElementPattern<?> elementPattern, Collection<Object> value) {

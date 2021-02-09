@@ -15,9 +15,9 @@
  */
 package com.intellij.util.concurrency;
 
-import com.intellij.util.containers.HashSet;
 import javax.annotation.Nonnull;
 
+import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;

@@ -13,7 +13,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.*;
 import com.intellij.util.IconUtil;
 import com.intellij.util.containers.Convertor;
-import com.intellij.util.containers.HashMap;
+import java.util.HashMap;
 import com.intellij.util.text.DateFormatUtil;
 import com.intellij.util.ui.tree.TreeUtil;
 import consulo.ui.annotation.RequiredUIAccess;

@@ -20,7 +20,7 @@ import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.io.URLUtil;
 import consulo.logging.Logger;
-import gnu.trove.TObjectHashingStrategy;
+import consulo.util.collection.HashingStrategy;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -71,8 +71,7 @@ public final class Urls {
   @Nonnull
   /**
    * Url will not be normalized (see {@link VfsUtilCore#toIdeaUrl(String)}), parsed as is
-   */
-  public static Url newFromIdea(@Nonnull String url) {
+   */ public static Url newFromIdea(@Nonnull String url) {
     Url result = parseFromIdea(url);
     LOG.assertTrue(result != null, url);
     return result;
@@ -165,7 +164,7 @@ public final class Urls {
   }
 
   public static boolean equals(@Nullable Url url1, @Nullable Url url2, boolean caseSensitive, boolean ignoreParameters) {
-    if (url1 == null || url2 == null){
+    if (url1 == null || url2 == null) {
       return url1 == url2;
     }
 
@@ -189,15 +188,15 @@ public final class Urls {
     }
   }
 
-  public static TObjectHashingStrategy<Url> getCaseInsensitiveUrlHashingStrategy() {
+  public static HashingStrategy<Url> getCaseInsensitiveUrlHashingStrategy() {
     return CaseInsensitiveUrlHashingStrategy.INSTANCE;
   }
 
-  private static final class CaseInsensitiveUrlHashingStrategy implements TObjectHashingStrategy<Url> {
-    private static final TObjectHashingStrategy<Url> INSTANCE = new CaseInsensitiveUrlHashingStrategy();
+  private static final class CaseInsensitiveUrlHashingStrategy implements HashingStrategy<Url> {
+    private static final HashingStrategy<Url> INSTANCE = new CaseInsensitiveUrlHashingStrategy();
 
     @Override
-    public int computeHashCode(Url url) {
+    public int hashCode(Url url) {
       return url == null ? 0 : url.hashCodeCaseInsensitive();
     }
 

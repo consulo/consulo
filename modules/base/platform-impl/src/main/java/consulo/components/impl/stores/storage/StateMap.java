@@ -24,7 +24,7 @@ import com.intellij.util.ArrayUtil;
 import com.intellij.util.SystemProperties;
 import com.intellij.util.io.UnsyncByteArrayInputStream;
 import consulo.logging.Logger;
-import gnu.trove.THashMap;
+import java.util.HashMap;
 import gnu.trove.TObjectObjectProcedure;
 import net.jpountz.lz4.LZ4BlockInputStream;
 import net.jpountz.lz4.LZ4BlockOutputStream;
@@ -52,14 +52,14 @@ final class StateMap {
           setOmitEncoding(true).
           setOmitDeclaration(true);
 
-  private final THashMap<String, Object> states;
+  private final HashMap<String, Object> states;
 
   public StateMap() {
-    states = new THashMap<String, Object>();
+    states = new HashMap<String, Object>();
   }
 
   public StateMap(StateMap stateMap) {
-    states = new THashMap<String, Object>((Map<String, Object>)stateMap.states);
+    states = new HashMap<String, Object>((Map<String, Object>)stateMap.states);
   }
 
   @Nonnull

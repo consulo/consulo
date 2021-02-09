@@ -55,7 +55,6 @@ import com.intellij.util.IconUtil;
 import com.intellij.util.PathUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.FilteringIterator;
-import com.intellij.util.containers.HashSet;
 import consulo.ui.image.Image;
 import consulo.vfs.ArchiveFileSystem;
 import javax.annotation.Nonnull;

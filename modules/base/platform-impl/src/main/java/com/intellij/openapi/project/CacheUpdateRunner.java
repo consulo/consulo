@@ -22,7 +22,7 @@ import com.intellij.util.Consumer;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
 import consulo.util.dataholder.Key;
-import gnu.trove.THashSet;
+import java.util.HashSet;
 
 import javax.annotation.Nonnull;
 import java.util.Collection;
@@ -46,7 +46,7 @@ public class CacheUpdateRunner {
     indicator.setIndeterminate(false);
 
     ProgressUpdater progressUpdater = new ProgressUpdater() {
-      final Set<VirtualFile> myFilesBeingProcessed = new THashSet<>();
+      final Set<VirtualFile> myFilesBeingProcessed = new HashSet<>();
       final AtomicInteger myNumberOfFilesProcessed = new AtomicInteger();
 
       @Override

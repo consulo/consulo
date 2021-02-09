@@ -9,7 +9,7 @@ import com.intellij.codeInspection.ex.InspectionToolWrapper;
 import com.intellij.openapi.util.Condition;
 import com.intellij.psi.PsiElement;
 import com.intellij.util.containers.ContainerUtil;
-import gnu.trove.THashSet;
+import java.util.HashSet;
 import javax.annotation.Nonnull;
 
 import java.util.Set;
@@ -19,7 +19,7 @@ import java.util.Set;
  */
 public class MockInspectionProfile extends InspectionProfileImpl {
   private InspectionToolWrapper[] myInspectionTools = new InspectionToolWrapper[0];
-  private final Set<InspectionToolWrapper> myDisabledTools = new THashSet<InspectionToolWrapper>();
+  private final Set<InspectionToolWrapper> myDisabledTools = new HashSet<InspectionToolWrapper>();
 
   public MockInspectionProfile() {
     super("a");

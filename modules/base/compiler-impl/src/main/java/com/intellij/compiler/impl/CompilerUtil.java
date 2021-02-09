@@ -39,7 +39,7 @@ import com.intellij.openapi.vfs.newvfs.RefreshQueue;
 import com.intellij.util.ThrowableRunnable;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.roots.ContentFolderScopes;
-import gnu.trove.THashMap;
+import java.util.HashMap;
 
 import javax.annotation.Nonnull;
 import java.io.File;
@@ -79,7 +79,7 @@ public class CompilerUtil {
 
   public static Map<Module, List<VirtualFile>> buildModuleToFilesMap(final CompileContext context, final List<VirtualFile> files) {
     //assertion: all files are different
-    final Map<Module, List<VirtualFile>> map = new THashMap<Module, List<VirtualFile>>();
+    final Map<Module, List<VirtualFile>> map = new HashMap<Module, List<VirtualFile>>();
     ApplicationManager.getApplication().runReadAction(new Runnable() {
       public void run() {
         for (VirtualFile file : files) {

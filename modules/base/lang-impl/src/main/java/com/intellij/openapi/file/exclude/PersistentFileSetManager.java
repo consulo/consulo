@@ -19,7 +19,7 @@ import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileManager;
-import com.intellij.util.containers.HashSet;
+import java.util.HashSet;
 import org.jdom.Attribute;
 import org.jdom.Element;
 import javax.annotation.Nonnull;

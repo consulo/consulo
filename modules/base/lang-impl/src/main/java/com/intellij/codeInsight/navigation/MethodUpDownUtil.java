@@ -25,7 +25,7 @@ import com.intellij.lang.LanguageStructureViewBuilder;
 import com.intellij.openapi.extensions.Extensions;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
-import gnu.trove.THashSet;
+import java.util.HashSet;
 import gnu.trove.TIntArrayList;
 import javax.annotation.Nonnull;
 
@@ -43,7 +43,7 @@ public class MethodUpDownUtil {
       }
     }
 
-    Collection<PsiElement> array = new THashSet<PsiElement>();
+    Collection<PsiElement> array = new HashSet<PsiElement>();
     addNavigationElements(array, file);
     return offsetsFromElements(array);
   }

@@ -27,6 +27,7 @@ import com.intellij.util.io.URLUtil;
 import com.intellij.util.text.FilePathHashingStrategy;
 import com.intellij.util.text.StringFactory;
 import consulo.logging.Logger;
+import consulo.util.collection.HashingStrategy;
 import gnu.trove.TObjectHashingStrategy;
 import org.intellij.lang.annotations.RegExp;
 import org.jetbrains.annotations.Contract;
@@ -49,8 +50,8 @@ public class FileUtil extends FileUtilRt {
 
   public static final int REGEX_PATTERN_FLAGS = SystemInfo.isFileSystemCaseSensitive ? 0 : Pattern.CASE_INSENSITIVE;
 
-  public static final TObjectHashingStrategy<String> PATH_HASHING_STRATEGY = FilePathHashingStrategy.create();
-  public static final TObjectHashingStrategy<CharSequence> PATH_CHAR_SEQUENCE_HASHING_STRATEGY = FilePathHashingStrategy.createForCharSequence();
+  public static final HashingStrategy<String> PATH_HASHING_STRATEGY = FilePathHashingStrategy.create();
+  public static final HashingStrategy<CharSequence> PATH_CHAR_SEQUENCE_HASHING_STRATEGY = FilePathHashingStrategy.createForCharSequence();
 
   public static final TObjectHashingStrategy<File> FILE_HASHING_STRATEGY = SystemInfo.isFileSystemCaseSensitive ? ContainerUtil.<File>canonicalStrategy() : new TObjectHashingStrategy<File>() {
     @Override

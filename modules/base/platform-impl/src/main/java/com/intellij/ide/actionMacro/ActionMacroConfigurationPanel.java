@@ -25,7 +25,7 @@ import com.intellij.openapi.ui.Splitter;
 import com.intellij.openapi.util.Pair;
 import com.intellij.ui.*;
 import com.intellij.ui.components.JBList;
-import com.intellij.util.containers.HashSet;
+import java.util.HashSet;
 import consulo.disposer.Disposable;
 
 import javax.swing.*;

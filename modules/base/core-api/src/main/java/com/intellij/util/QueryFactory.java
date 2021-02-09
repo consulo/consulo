@@ -16,9 +16,9 @@
 package com.intellij.util;
 
 import com.intellij.util.containers.ContainerUtil;
-import gnu.trove.TObjectHashingStrategy;
-import javax.annotation.Nonnull;
+import consulo.util.collection.HashingStrategy;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 /**
@@ -66,8 +66,7 @@ public class QueryFactory<Result, Parameters> {
    * @param hashingStrategy strategy to factor results
    * @return query to perform the search. Obtained results are automatically filtered wrt. equals() relation.
    */
-  public final Query<Result> createUniqueResultsQuery(@Nonnull Parameters parameters,
-                                                      @Nonnull TObjectHashingStrategy<Result> hashingStrategy) {
+  public final Query<Result> createUniqueResultsQuery(@Nonnull Parameters parameters, @Nonnull HashingStrategy<Result> hashingStrategy) {
     return new UniqueResultsQuery<Result, Result>(createQuery(parameters), hashingStrategy);
   }
 
@@ -76,11 +75,9 @@ public class QueryFactory<Result, Parameters> {
    * @param hashingStrategy strategy to factor results
    * @param mapper          function that maps results to their mapping counterparts.
    * @return query to perform the search. Obtained results are mapped to whatever objects that are automatically filtered wrt. equals()
-   *         relation. Storing mapped objects instead of original elements may be wise wrt to memory consumption.
+   * relation. Storing mapped objects instead of original elements may be wise wrt to memory consumption.
    */
-  public final <T> Query<Result> createUniqueResultsQuery(@Nonnull Parameters parameters,
-                                                          @Nonnull TObjectHashingStrategy<T> hashingStrategy,
-                                                          @Nonnull Function<Result, T> mapper) {
+  public final <T> Query<Result> createUniqueResultsQuery(@Nonnull Parameters parameters, @Nonnull HashingStrategy<T> hashingStrategy, @Nonnull Function<Result, T> mapper) {
     return new UniqueResultsQuery<Result, T>(createQuery(parameters), hashingStrategy, mapper);
   }
 }

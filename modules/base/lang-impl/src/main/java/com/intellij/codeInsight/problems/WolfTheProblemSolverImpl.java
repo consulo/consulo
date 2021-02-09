@@ -36,8 +36,8 @@ import com.intellij.problems.WolfTheProblemSolver;
 import com.intellij.psi.*;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.disposer.Disposable;
-import gnu.trove.THashMap;
-import gnu.trove.THashSet;
+import java.util.HashMap;
+import java.util.HashSet;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -52,8 +52,8 @@ import java.util.concurrent.atomic.AtomicReference;
  */
 @Singleton
 public class WolfTheProblemSolverImpl extends WolfTheProblemSolver {
-  private final Map<VirtualFile, ProblemFileInfo> myProblems = new THashMap<>(); // guarded by myProblems
-  private final Collection<VirtualFile> myCheckingQueue = new THashSet<>(10);
+  private final Map<VirtualFile, ProblemFileInfo> myProblems = new HashMap<>(); // guarded by myProblems
+  private final Collection<VirtualFile> myCheckingQueue = new HashSet<>(10);
 
   private final Project myProject;
   private final List<Condition<VirtualFile>> myFilters = ContainerUtil.createLockFreeCopyOnWriteList();
@@ -74,7 +74,7 @@ public class WolfTheProblemSolverImpl extends WolfTheProblemSolver {
   }
 
   private static class ProblemFileInfo {
-    private final Collection<Problem> problems = new THashSet<>();
+    private final Collection<Problem> problems = new HashSet<>();
     private boolean hasSyntaxErrors;
 
     @Override
@@ -137,7 +137,7 @@ public class WolfTheProblemSolverImpl extends WolfTheProblemSolver {
       @Override
       public void after(@Nonnull List<? extends VFileEvent> events) {
         boolean dirChanged = false;
-        Set<VirtualFile> toRemove = new THashSet<>();
+        Set<VirtualFile> toRemove = new HashSet<>();
         for (VFileEvent event : events) {
           if (event instanceof VFileDeleteEvent || event instanceof VFileMoveEvent) {
             VirtualFile file = event.getFile();

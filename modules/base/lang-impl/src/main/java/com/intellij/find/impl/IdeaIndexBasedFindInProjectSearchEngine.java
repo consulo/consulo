@@ -18,7 +18,7 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.indexing.DumbModeAccessType;
 import com.intellij.util.indexing.FileBasedIndex;
 import com.intellij.util.indexing.FileBasedIndexImpl;
-import gnu.trove.THashSet;
+import java.util.HashSet;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -78,7 +78,7 @@ public class IdeaIndexBasedFindInProjectSearchEngine implements FindInProjectSea
 
       final GlobalSearchScope scope = GlobalSearchScopeUtil.toGlobalSearchScope(FindInProjectUtil.getScopeFromModel(myProject, myFindModel), myProject);
 
-      final Set<Integer> keys = new THashSet<>();
+      final Set<Integer> keys = new HashSet<>();
       TrigramBuilder.processTrigrams(stringToFind, new TrigramBuilder.TrigramProcessor() {
         @Override
         public boolean execute(int value) {
@@ -96,7 +96,7 @@ public class IdeaIndexBasedFindInProjectSearchEngine implements FindInProjectSea
         return Collections.unmodifiableCollection(hits);
       }
 
-      final Set<VirtualFile> resultFiles = new THashSet<>();
+      final Set<VirtualFile> resultFiles = new HashSet<>();
 
       PsiSearchHelper helper = PsiSearchHelper.getInstance(myProject);
       helper.processCandidateFilesForText(scope, UsageSearchContext.ANY, myFindModel.isCaseSensitive(), stringToFind, file -> {

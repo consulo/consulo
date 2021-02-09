@@ -19,6 +19,9 @@ package com.intellij.util.containers;
 import junit.framework.Assert;
 import junit.framework.TestCase;
 
+import java.util.HashMap;
+import java.util.HashSet;
+
 /**
  * @author lvo
  */

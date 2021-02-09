@@ -19,6 +19,7 @@ import consulo.util.collection.primitive.ints.IntObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectSet;
 
+import javax.annotation.Nonnull;
 import java.util.Map;
 
 /**
@@ -26,18 +27,10 @@ import java.util.Map;
  * @since 07/02/2021
  */
 public class FHashIntObjectMap<V> extends Int2ObjectOpenHashMap<V> implements IntObjectMap<V> {
+  @Nonnull
   @Override
-  public ObjectSet<Map.Entry<Integer, V>> entrySet() {
-    throw new UnsupportedOperationException();
+  public int[] keys() {
+    return new int[0];
   }
 
-  @Override
-  public V put(Integer key, V value) {
-    return super.put(key, value);
-  }
-
-  @Override
-  public boolean containsKey(Object key) {
-    return super.containsKey(key);
-  }
 }

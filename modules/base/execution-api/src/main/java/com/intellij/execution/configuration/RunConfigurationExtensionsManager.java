@@ -30,7 +30,7 @@ import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.WriteExternalException;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
-import gnu.trove.THashMap;
+import java.util.HashMap;
 import org.jdom.Element;
 
 import javax.annotation.Nonnull;
@@ -53,7 +53,7 @@ public class RunConfigurationExtensionsManager<U extends RunConfigurationBase, T
   }
 
   public void readExternal(@Nonnull U configuration, @Nonnull Element parentNode) throws InvalidDataException {
-    Map<String, T> extensions = new THashMap<>();
+    Map<String, T> extensions = new HashMap<>();
     for (T extension : getApplicableExtensions(configuration)) {
       extensions.put(extension.getSerializationId(), extension);
     }

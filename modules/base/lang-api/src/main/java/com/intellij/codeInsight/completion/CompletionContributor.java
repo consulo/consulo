@@ -36,7 +36,7 @@ import com.intellij.util.ProcessingContext;
 import com.intellij.util.containers.MultiMap;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.codeInsight.completion.CompletionProvider;
-import gnu.trove.THashSet;
+import java.util.HashSet;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
@@ -265,7 +265,7 @@ public abstract class CompletionContributor {
 
     @Override
     protected List<CompletionContributor> buildExtensions(String stringKey, Language key) {
-      final THashSet<String> allowed = new THashSet<String>();
+      final HashSet<String> allowed = new HashSet<String>();
       while (key != null) {
         allowed.add(keyToString(key));
         key = key.getBaseLanguage();

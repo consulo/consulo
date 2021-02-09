@@ -24,7 +24,7 @@ import com.intellij.openapi.util.Pair;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.application.AccessRule;
-import gnu.trove.THashSet;
+import java.util.HashSet;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
@@ -70,7 +70,7 @@ public class ProjectRunConfigurationManager implements PersistentStateComponent<
       myUnloadedElements.clear();
     }
 
-    Set<String> existing = new THashSet<String>();
+    Set<String> existing = new HashSet<String>();
     for (Iterator<Element> iterator = state.getChildren().iterator(); iterator.hasNext(); ) {
       Element child = iterator.next();
       RunnerAndConfigurationSettings configuration = myManager.loadConfiguration(child, true);

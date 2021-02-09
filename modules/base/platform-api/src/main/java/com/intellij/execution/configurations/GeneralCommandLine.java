@@ -31,7 +31,7 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.text.CaseInsensitiveStringHashingStrategy;
 import consulo.annotation.DeprecationInfo;
 import consulo.logging.Logger;
-import gnu.trove.THashMap;
+import java.util.HashMap;
 import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;
@@ -405,7 +405,7 @@ public class GeneralCommandLine implements UserDataHolder {
 
     if (!myEnvParams.isEmpty()) {
       if (SystemInfo.isWindows) {
-        THashMap<String, String> envVars = new THashMap<>(CaseInsensitiveStringHashingStrategy.INSTANCE);
+        HashMap<String, String> envVars = new HashMap<>(CaseInsensitiveStringHashingStrategy.INSTANCE);
         envVars.putAll(environment);
         envVars.putAll(myEnvParams);
         environment.clear();
@@ -451,7 +451,7 @@ public class GeneralCommandLine implements UserDataHolder {
     myUserData.put(key, value);
   }
 
-  private static class MyTHashMap extends THashMap<String, String> {
+  private static class MyTHashMap extends HashMap<String, String> {
     public MyTHashMap() {
       super(SystemInfo.isWindows ? CaseInsensitiveStringHashingStrategy.INSTANCE : ContainerUtil.<String>canonicalStrategy());
     }

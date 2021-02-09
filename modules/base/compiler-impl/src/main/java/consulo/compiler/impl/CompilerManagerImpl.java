@@ -43,7 +43,7 @@ import com.intellij.util.graph.InboundSemiGraph;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.compiler.CompilerConfiguration;
 import consulo.compiler.CompilerConfigurationImpl;
-import gnu.trove.THashSet;
+import java.util.HashSet;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
 
@@ -88,7 +88,7 @@ public class CompilerManagerImpl extends CompilerManager implements PersistentSt
   private Set<LocalFileSystem.WatchRequest> myWatchRoots;
   private final Semaphore myCompilationSemaphore = new Semaphore(1, true);
 
-  private final Set<FileType> myCompilableFileTypes = new THashSet<>();
+  private final Set<FileType> myCompilableFileTypes = new HashSet<>();
   private Compiler[] myAllCompilers;
 
   @Inject

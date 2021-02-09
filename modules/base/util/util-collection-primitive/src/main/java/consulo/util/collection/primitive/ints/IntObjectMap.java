@@ -15,16 +15,27 @@
  */
 package consulo.util.collection.primitive.ints;
 
-import consulo.annotation.DeprecationInfo;
-
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author VISTALL
  * @since 07/02/2021
  */
-public interface IntObjectMap<V> extends Map<Integer, V> {
+public interface IntObjectMap<V> {
+  interface IntObjectEntry<V1> {
+    int getKey();
+
+    V1 getValue();
+  }
+
+  @Nonnull
+  IntSet keySet();
+
+  @Nonnull
+  int[] keys();
+
   /**
    * @return old value by key
    */
@@ -36,6 +47,39 @@ public interface IntObjectMap<V> extends Map<Integer, V> {
 
   boolean containsKey(int key);
 
+  boolean containsValue(V value);
+
+  V remove(int key);
+
+  @Nonnull
+  Set<IntObjectEntry<V>> entrySet();
+
+  @Nonnull
+  Collection<V> values();
+
+  int size();
+
+  boolean isEmpty();
+
+  void clear();
+
+  default void forEach(IntObjConsumer<? super V> action) {
+    Objects.requireNonNull(action);
+    for (IntObjectEntry<V> entry : entrySet()) {
+      int k;
+      V v;
+      try {
+        k = entry.getKey();
+        v = entry.getValue();
+      }
+      catch (IllegalStateException ise) {
+        // this usually means the entry is no longer in the map.
+        throw new ConcurrentModificationException(ise);
+      }
+      action.accept(k, v);
+    }
+  }
+
   default V putIfAbsent(int key, V value) {
     V v = get(key);
     if (v == null) {
@@ -43,19 +87,5 @@ public interface IntObjectMap<V> extends Map<Integer, V> {
     }
 
     return v;
-  }
-
-  @Override
-  @Deprecated
-  @DeprecationInfo("Use unboxed version of #containsKey")
-  default V put(Integer key, V value) {
-    return put(((Integer)key).intValue(), value);
-  }
-
-  @Override
-  @Deprecated
-  @DeprecationInfo("Use unboxed version of #containsKey")
-  default boolean containsKey(Object key) {
-    return containsKey(((Integer)key).intValue());
   }
 }

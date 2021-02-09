@@ -17,7 +17,7 @@ package com.intellij.psi.statistics.impl;
 
 import com.intellij.psi.statistics.StatisticsManager;
 import com.intellij.util.ArrayUtil;
-import gnu.trove.THashMap;
+import java.util.HashMap;
 
 import java.io.*;
 import java.util.*;
@@ -27,7 +27,7 @@ class StatisticsUnit {
 
   private final int myNumber;
 
-  private final THashMap<String, LinkedList<String>> myDataMap = new THashMap<String, LinkedList<String>>();
+  private final HashMap<String, LinkedList<String>> myDataMap = new HashMap<String, LinkedList<String>>();
 
   public StatisticsUnit(int number) {
     myNumber = number;

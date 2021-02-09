@@ -21,11 +21,11 @@ import com.intellij.openapi.externalSystem.model.task.ExternalSystemTaskNotifica
 import com.intellij.openapi.externalSystem.model.task.ExternalSystemTaskType;
 import com.intellij.openapi.externalSystem.service.RemoteExternalSystemService;
 import com.intellij.util.Producer;
-import com.intellij.util.containers.HashSet;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.rmi.RemoteException;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;

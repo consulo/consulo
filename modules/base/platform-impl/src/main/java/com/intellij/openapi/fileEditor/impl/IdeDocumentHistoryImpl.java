@@ -53,7 +53,7 @@ import com.intellij.util.text.DateFormatUtil;
 import consulo.fileEditor.impl.EditorWindow;
 import consulo.fileEditor.impl.text.TextEditorProvider;
 import consulo.logging.Logger;
-import gnu.trove.THashSet;
+import java.util.HashSet;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -88,7 +88,7 @@ public class IdeDocumentHistoryImpl extends IdeDocumentHistory implements Dispos
   private PlaceInfo myCommandStartPlace;
   private boolean myCurrentCommandIsNavigation;
   private boolean myCurrentCommandHasChanges;
-  private final Set<VirtualFile> myChangedFilesInCurrentCommand = new THashSet<>();
+  private final Set<VirtualFile> myChangedFilesInCurrentCommand = new HashSet<>();
   private boolean myCurrentCommandHasMoves;
 
   private final PersistentHashMap<String, Long> myRecentFilesTimestampsMap;

@@ -50,7 +50,7 @@ import com.intellij.util.xmlb.annotations.Tag;
 import com.intellij.util.xmlb.annotations.Transient;
 import consulo.logging.Logger;
 import consulo.util.dataholder.Key;
-import gnu.trove.THashMap;
+import java.util.HashMap;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.TestOnly;
@@ -78,7 +78,7 @@ public class InspectionProfileImpl extends ProfileEx implements ModifiableModel,
   private final Map<String, Element> myUninstalledInspectionsSettings;
   private final ExternalInfo myExternalInfo = new ExternalInfo();
   protected InspectionProfileImpl mySource;
-  private Map<String, ToolsImpl> myTools = new THashMap<String, ToolsImpl>();
+  private Map<String, ToolsImpl> myTools = new HashMap<String, ToolsImpl>();
   private Map<String, Boolean> myDisplayLevelMap;
   @Attribute("is_locked")
   private boolean myLockedProfile;

@@ -16,7 +16,7 @@
 package com.intellij.util.containers.hash;
 
 
-import gnu.trove.THashMap;
+import java.util.HashMap;
 
 import org.junit.Assert;
 
@@ -228,7 +228,7 @@ public class HashMapTest {
     System.out.println("100 000 000 lookups in java.util.HashMap took " + (System.currentTimeMillis() - started));
 
 
-    final Map<Integer, String> troveMap = new THashMap<Integer, String>();
+    final Map<Integer, String> troveMap = new HashMap<Integer, String>();
 
     for (int i = 0; i < 100000; ++i) {
 
@@ -297,7 +297,7 @@ public class HashMapTest {
     System.out.println("100 000 000 lookups in java.util.HashMap took " + (System.currentTimeMillis() - started));
 
 
-    final Map<Integer, String> troveMap = new THashMap<Integer, String>();
+    final Map<Integer, String> troveMap = new HashMap<Integer, String>();
 
     for (int i = 0; i < 100000; ++i) {
 

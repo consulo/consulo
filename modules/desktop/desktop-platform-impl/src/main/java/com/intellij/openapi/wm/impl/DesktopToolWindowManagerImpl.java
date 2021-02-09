@@ -53,7 +53,7 @@ import com.intellij.util.Alarm;
 import com.intellij.util.IJSwingUtilities;
 import com.intellij.util.ObjectUtil;
 import com.intellij.util.SystemProperties;
-import com.intellij.util.containers.HashMap;
+import java.util.HashMap;
 import com.intellij.util.messages.MessageBusConnection;
 import com.intellij.util.ui.PositionTracker;
 import com.intellij.util.ui.UIUtil;
@@ -75,7 +75,7 @@ import consulo.ui.ex.ToolWindowStripeButton;
 import consulo.ui.image.Image;
 import consulo.wm.impl.DesktopCommandProcessorImpl;
 import consulo.wm.impl.ToolWindowManagerBase;
-import gnu.trove.THashSet;
+import java.util.HashSet;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
@@ -391,7 +391,7 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
 
   @Nonnull
   private static Set<Integer> getModifiersVKs(int mask) {
-    Set<Integer> codes = new THashSet<>();
+    Set<Integer> codes = new HashSet<>();
     if ((mask & InputEvent.SHIFT_MASK) > 0) {
       codes.add(KeyEvent.VK_SHIFT);
     }

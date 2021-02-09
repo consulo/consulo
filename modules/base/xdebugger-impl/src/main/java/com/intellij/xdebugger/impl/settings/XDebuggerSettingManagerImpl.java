@@ -26,7 +26,7 @@ import com.intellij.util.xmlb.annotations.Property;
 import com.intellij.util.xmlb.annotations.Tag;
 import com.intellij.xdebugger.settings.XDebuggerSettings;
 import com.intellij.xdebugger.settings.XDebuggerSettingsManager;
-import gnu.trove.THashMap;
+import java.util.HashMap;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
 
@@ -109,7 +109,7 @@ public class XDebuggerSettingManagerImpl extends XDebuggerSettingsManager implem
     if (mySettingsById == null) {
       List<XDebuggerSettings> extensions = XDebuggerSettings.EXTENSION_POINT.getExtensionList();
       mySettingsById = new TreeMap<>();
-      mySettingsByClass = new THashMap<>(extensions.size());
+      mySettingsByClass = new HashMap<>(extensions.size());
       for (XDebuggerSettings settings : extensions) {
         mySettingsById.put(settings.getId(), settings);
         mySettingsByClass.put(settings.getClass(), settings);

@@ -165,24 +165,24 @@ public class ContainerUtilRt {
 
   @Nonnull
   public static <T> HashSet<T> newHashSet() {
-    return new consulo.util.nodep.collection.HashSet<T>();
+    return new HashSet<T>();
   }
 
   @Nonnull
   public static <T> HashSet<T> newHashSet(int initialCapacity) {
-    return new consulo.util.nodep.collection.HashSet<T>(initialCapacity);
+    return new HashSet<T>(initialCapacity);
   }
 
   @Nonnull
   public static <T> HashSet<T> newHashSet(@Nonnull T... elements) {
-    return new consulo.util.nodep.collection.HashSet<T>(Arrays.asList(elements));
+    return new HashSet<T>(Arrays.asList(elements));
   }
 
   @Nonnull
   public static <T> HashSet<T> newHashSet(@Nonnull Iterable<? extends T> elements) {
     if (elements instanceof Collection) {
       @SuppressWarnings("unchecked") Collection<? extends T> collection = (Collection<? extends T>)elements;
-      return new consulo.util.nodep.collection.HashSet<T>(collection);
+      return new HashSet<T>(collection);
     }
     return newHashSet(elements.iterator());
   }

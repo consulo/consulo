@@ -25,7 +25,7 @@ import com.intellij.psi.impl.cache.impl.todo.TodoIndexEntry;
 import com.intellij.psi.search.IndexPattern;
 import com.intellij.util.indexing.FileContent;
 import com.intellij.util.indexing.IdDataConsumer;
-import gnu.trove.THashMap;
+import java.util.HashMap;
 
 import java.util.Collections;
 import java.util.Map;
@@ -55,7 +55,7 @@ public class BaseFilterLexerUtil {
       for (IndexPattern indexPattern : IndexPatternUtil.getIndexPatterns()) {
           final int count = todoOccurrenceConsumer.getOccurrenceCount(indexPattern);
           if (count > 0) {
-            if (todoMap == null) todoMap = new THashMap<TodoIndexEntry, Integer>();
+            if (todoMap == null) todoMap = new HashMap<TodoIndexEntry, Integer>();
             todoMap.put(new TodoIndexEntry(indexPattern.getPatternString(), indexPattern.isCaseSensitive()), count);
           }
         }

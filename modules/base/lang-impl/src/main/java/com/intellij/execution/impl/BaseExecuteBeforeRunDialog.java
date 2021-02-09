@@ -28,7 +28,7 @@ import com.intellij.ui.treeStructure.Tree;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.tree.TreeUtil;
 import consulo.awt.TargetAWT;
-import gnu.trove.THashSet;
+import java.util.HashSet;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -152,7 +152,7 @@ public abstract class BaseExecuteBeforeRunDialog<T extends BeforeRunTask> extend
       final Icon icon = TargetAWT.to(type.getIcon());
       DefaultMutableTreeNode typeNode = new DefaultMutableTreeNode(new ConfigurationTypeDescriptor(type, icon, isConfigurationAssigned(type)));
       root.add(typeNode);
-      final Set<String> addedNames = new THashSet<>();
+      final Set<String> addedNames = new HashSet<>();
       RunConfiguration[] configurations = runManager.getConfigurations(type);
       for (final RunConfiguration configuration : configurations) {
         final String configurationName = configuration.getName();

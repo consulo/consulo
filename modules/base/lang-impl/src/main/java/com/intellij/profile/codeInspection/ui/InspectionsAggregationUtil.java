@@ -19,7 +19,7 @@ import com.intellij.codeInsight.daemon.HighlightDisplayKey;
 import com.intellij.profile.codeInspection.ui.inspectionsTree.InspectionConfigTreeNode;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.Queue;
-import gnu.trove.THashSet;
+import java.util.HashSet;
 
 import javax.swing.tree.TreePath;
 import java.util.ArrayList;
@@ -51,7 +51,7 @@ public class InspectionsAggregationUtil {
   }
 
   private static List<InspectionConfigTreeNode> getInspectionsNodes(final Queue<InspectionConfigTreeNode> queue) {
-    final Set<InspectionConfigTreeNode> nodes = new THashSet<InspectionConfigTreeNode>();
+    final Set<InspectionConfigTreeNode> nodes = new HashSet<InspectionConfigTreeNode>();
     while (!queue.isEmpty()) {
       final InspectionConfigTreeNode node = queue.pullFirst();
       if (node.getDescriptors() == null) {

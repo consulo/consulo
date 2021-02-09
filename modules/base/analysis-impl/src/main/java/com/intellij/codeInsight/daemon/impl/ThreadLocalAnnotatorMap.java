@@ -17,7 +17,7 @@ package com.intellij.codeInsight.daemon.impl;
 
 import com.intellij.openapi.application.ApplicationManager;
 import consulo.injecting.InjectingContainer;
-import gnu.trove.THashMap;
+import java.util.HashMap;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -32,7 +32,7 @@ abstract class ThreadLocalAnnotatorMap<K, V> {
   @Nonnull
   public abstract Collection<V> initialValue(@Nonnull K key);
 
-  private static class VersionedMap<K, V> extends THashMap<K, List<V>> {
+  private static class VersionedMap<K, V> extends HashMap<K, List<V>> {
     private final int version;
 
     private VersionedMap(int version) {

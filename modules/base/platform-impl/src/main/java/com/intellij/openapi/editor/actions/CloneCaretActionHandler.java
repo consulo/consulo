@@ -25,7 +25,7 @@ import com.intellij.openapi.editor.ScrollType;
 import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
 import com.intellij.openapi.keymap.impl.ModifierKeyDoubleClickHandler;
 import consulo.util.dataholder.Key;
-import com.intellij.util.containers.HashSet;
+import java.util.HashSet;
 import javax.annotation.Nullable;
 
 import java.util.ArrayList;

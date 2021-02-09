@@ -35,7 +35,7 @@ import com.intellij.util.containers.MultiMap;
 import consulo.disposer.Disposable;
 import consulo.logging.Logger;
 import consulo.util.dataholder.Key;
-import gnu.trove.THashMap;
+import java.util.HashMap;
 import gnu.trove.TIntObjectHashMap;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.TestOnly;
@@ -146,7 +146,7 @@ final class PassExecutorService implements Disposable {
     List<ScheduledPass> freePasses = new ArrayList<>(documentToEditors.size() * 5);
     List<ScheduledPass> dependentPasses = new ArrayList<>(documentToEditors.size() * 10);
     // (fileEditor, passId) -> created pass
-    Map<Pair<FileEditor, Integer>, ScheduledPass> toBeSubmitted = new THashMap<>(passesMap.size());
+    Map<Pair<FileEditor, Integer>, ScheduledPass> toBeSubmitted = new HashMap<>(passesMap.size());
 
     final AtomicInteger threadsToStartCountdown = new AtomicInteger(0);
     for (Map.Entry<Document, Collection<FileEditor>> entry : documentToEditors.entrySet()) {

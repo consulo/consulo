@@ -15,6 +15,8 @@
  */
 package consulo.util.collection.primitive.ints;
 
+import consulo.util.collection.impl.CollectionFactory;
+import consulo.util.collection.primitive.ints.impl.IntCollectionFactory;
 import consulo.util.collection.primitive.ints.impl.map.ConcurrentIntKeySoftValueHashMap;
 import consulo.util.collection.primitive.ints.impl.map.ConcurrentIntKeyWeakValueHashMap;
 import consulo.util.collection.primitive.ints.impl.map.ConcurrentIntObjectHashMap;
@@ -27,6 +29,18 @@ import javax.annotation.Nonnull;
  * @since 07/02/2021
  */
 public final class IntMaps {
+  private static IntCollectionFactory ourFactory = (IntCollectionFactory)CollectionFactory.get();
+
+  @Nonnull
+  public static <V> IntObjectMap<V> newIntObjectHashMap() {
+    return newIntObjectHashMap(CollectionFactory.UNKNOWN_CAPACITY);
+  }
+
+  @Nonnull
+  public static <V> IntObjectMap<V> newIntObjectHashMap(int capacity) {
+    return ourFactory.newIntObjectHashMap(capacity);
+  }
+
   @Nonnull
   @Contract(pure = true)
   public static <V> ConcurrentIntObjectMap<V> newConcurrentIntObjectWeakValueHashMap() {

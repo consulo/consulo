@@ -32,7 +32,7 @@ import com.intellij.util.io.URLUtil;
 import consulo.fileTypes.ArchiveFileType;
 import consulo.logging.Logger;
 import consulo.vfs.ArchiveFileSystem;
-import gnu.trove.THashSet;
+import java.util.HashSet;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
@@ -149,7 +149,7 @@ public class VfsUtil extends VfsUtilCore {
         filesSet = map.get(firstPart);
       }
       else {
-        filesSet = new THashSet<VirtualFile>();
+        filesSet = new HashSet<VirtualFile>();
         map.put(firstPart, filesSet);
       }
       filesSet.add(directory);

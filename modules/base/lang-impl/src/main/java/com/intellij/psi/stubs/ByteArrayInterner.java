@@ -2,16 +2,16 @@
 package com.intellij.psi.stubs;
 
 import com.intellij.openapi.util.io.BufferExposingByteArrayOutputStream;
-import gnu.trove.TObjectHashingStrategy;
+import consulo.util.collection.HashingStrategy;
 import gnu.trove.TObjectIntHashMap;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.util.Arrays;
 
 class ByteArrayInterner {
-  private static final TObjectHashingStrategy<byte[]> BYTE_ARRAY_STRATEGY = new TObjectHashingStrategy<byte[]>() {
+  private static final HashingStrategy<byte[]> BYTE_ARRAY_STRATEGY = new HashingStrategy<byte[]>() {
     @Override
-    public int computeHashCode(byte[] object) {
+    public int hashCode(byte[] object) {
       return Arrays.hashCode(object);
     }
 

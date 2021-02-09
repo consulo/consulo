@@ -24,7 +24,7 @@ import com.intellij.execution.testframework.sm.runner.SMTestProxy;
 import com.intellij.execution.testframework.ui.TestsProgressAnimator;
 import com.intellij.icons.AllIcons;
 import com.intellij.ui.SimpleTextAttributes;
-import com.intellij.util.containers.HashSet;
+import java.util.HashSet;
 import consulo.ui.image.Image;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NonNls;

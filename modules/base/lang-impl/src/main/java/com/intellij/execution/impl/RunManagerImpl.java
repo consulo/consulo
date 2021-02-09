@@ -40,15 +40,15 @@ import com.intellij.openapi.util.registry.Registry;
 import com.intellij.ui.IconDeferrer;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.containers.HashMap;
+import java.util.HashMap;
 import consulo.disposer.Disposable;
 import consulo.execution.impl.ConfigurationTypeCache;
 import consulo.logging.Logger;
 import consulo.ui.image.Image;
 import consulo.util.ProjectPropertiesComponent;
 import consulo.util.dataholder.Key;
-import gnu.trove.THashMap;
-import gnu.trove.THashSet;
+
+import java.util.HashSet;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
 
@@ -74,7 +74,7 @@ public class RunManagerImpl extends RunManagerEx implements PersistentStateCompo
 
   private final Map<String, RunnerAndConfigurationSettings> myTemplateConfigurationsMap = new TreeMap<>();
   private final Map<String, RunnerAndConfigurationSettings> myConfigurations = new LinkedHashMap<>(); // template configurations are not included here
-  private final Map<String, Boolean> mySharedConfigurations = new THashMap<>();
+  private final Map<String, Boolean> mySharedConfigurations = new HashMap<>();
   private final Map<RunConfiguration, List<BeforeRunTask>> myConfigurationToBeforeTasksMap = ContainerUtil.createWeakMap();
 
   // When readExternal not all configuration may be loaded, so we need to remember the selected configuration
@@ -635,7 +635,7 @@ public class RunManagerImpl extends RunManagerEx implements PersistentStateCompo
     }
 
     List<BeforeRunTask> tasks = new ArrayList<>(getBeforeRunTasks(settings.getConfiguration()));
-    Map<Key<BeforeRunTask>, BeforeRunTask> templateTasks = new THashMap<>();
+    Map<Key<BeforeRunTask>, BeforeRunTask> templateTasks = new HashMap<>();
     List<BeforeRunTask> beforeRunTasks =
             settings.isTemplate() ? getHardcodedBeforeRunTasks(settings.getConfiguration()) : getBeforeRunTasks(getConfigurationTemplate(settings.getFactory()).getConfiguration());
     for (BeforeRunTask templateTask : beforeRunTasks) {
@@ -1165,7 +1165,7 @@ public class RunManagerImpl extends RunManagerEx implements PersistentStateCompo
     List<BeforeRunTask> result = new SmartList<>(tasks);
     if (addEnabledTemplateTasksIfAbsent) {
       List<BeforeRunTask> templates = getTemplateBeforeRunTasks(runConfiguration);
-      Set<Key<BeforeRunTask>> idsToSet = new THashSet<>();
+      Set<Key<BeforeRunTask>> idsToSet = new HashSet<>();
       for (BeforeRunTask task : tasks) {
         idsToSet.add(task.getProviderId());
       }

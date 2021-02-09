@@ -26,13 +26,10 @@ import com.intellij.history.integration.IdeaGateway;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.containers.ContainerUtil;
-import gnu.trove.THashSet;
+import java.util.HashSet;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class DifferenceReverter extends Reverter {
   private final IdeaGateway myGateway;
@@ -72,7 +69,7 @@ public class DifferenceReverter extends Reverter {
   }
 
   public void doRevert(boolean revertContentChanges) throws IOException {
-    Set<String> vetoedFiles = new THashSet<String>();
+    Set<String> vetoedFiles = new HashSet<String>();
 
     for (Difference each : ContainerUtil.iterateBackward(myDiffs)) {
       Entry l = each.getLeft();

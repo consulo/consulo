@@ -21,7 +21,7 @@ import com.intellij.psi.codeStyle.arrangement.match.*;
 import com.intellij.psi.codeStyle.arrangement.std.*;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.logging.Logger;
-import gnu.trove.THashSet;
+import java.util.HashSet;
 import org.jdom.Attribute;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
@@ -176,7 +176,7 @@ public class DefaultArrangementSettingsSerializer implements ArrangementSettings
       return ((ArrangementExtendableSettings)myDefaultSettings).getRuleAliases();
     }
 
-    final Set<StdArrangementRuleAliasToken> tokenDefinitions = new THashSet<StdArrangementRuleAliasToken>();
+    final Set<StdArrangementRuleAliasToken> tokenDefinitions = new HashSet<StdArrangementRuleAliasToken>();
     final List<Element> tokens = tokensRoot.getChildren(TOKEN_ELEMENT_NAME);
     for (Element token : tokens) {
       final Attribute id = token.getAttribute(TOKEN_ID);

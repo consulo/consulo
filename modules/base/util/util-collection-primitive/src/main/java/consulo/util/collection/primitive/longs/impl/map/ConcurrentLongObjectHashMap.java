@@ -2,10 +2,10 @@
 
 package consulo.util.collection.primitive.longs.impl.map;
 
-import consulo.util.collection.ConcurrentLongObjectMap;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.impl.ThreadLocalRandom;
 import consulo.util.collection.primitive.ints.impl.map.ConcurrentIntObjectHashMap;
+import consulo.util.collection.primitive.longs.ConcurrentLongObjectMap;
 import consulo.util.lang.reflect.unsafe.UnsafeDelegate;
 
 import javax.annotation.Nonnull;
@@ -23,7 +23,7 @@ import java.util.concurrent.locks.LockSupport;
  *            Use {@link ContainerUtil#createConcurrentLongObjectMap()} to create this map
  * @author Doug Lea
  */
-class ConcurrentLongObjectHashMap<V> implements ConcurrentLongObjectMap<V> {
+public class ConcurrentLongObjectHashMap<V> implements ConcurrentLongObjectMap<V> {
 
   /* ---------------- Constants -------------- */
 
@@ -303,7 +303,7 @@ class ConcurrentLongObjectHashMap<V> implements ConcurrentLongObjectMap<V> {
   /**
    * Creates a new, empty map with the default initial table size (16).
    */
-  ConcurrentLongObjectHashMap() {
+  public ConcurrentLongObjectHashMap() {
   }
 
   /**
@@ -316,7 +316,7 @@ class ConcurrentLongObjectHashMap<V> implements ConcurrentLongObjectMap<V> {
    * @throws IllegalArgumentException if the initial capacity of
    *                                  elements is negative
    */
-  ConcurrentLongObjectHashMap(int initialCapacity) {
+  public ConcurrentLongObjectHashMap(int initialCapacity) {
     if (initialCapacity < 0) {
       throw new IllegalArgumentException();
     }

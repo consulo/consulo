@@ -33,7 +33,7 @@ import com.intellij.util.containers.MultiMap;
 import com.intellij.util.messages.MessageBusConnection;
 import consulo.util.collection.primitive.ints.ConcurrentIntObjectMap;
 import consulo.util.collection.primitive.ints.IntMaps;
-import gnu.trove.THashMap;
+import java.util.HashMap;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -147,7 +147,7 @@ public class SemServiceImpl extends SemService {
     RecursionGuard.StackStamp stamp = RecursionManager.createGuard("semService").markStack();
 
     LinkedHashSet<T> result = new LinkedHashSet<>();
-    final Map<SemKey, List<SemElement>> map = new THashMap<>();
+    final Map<SemKey, List<SemElement>> map = new HashMap<>();
     for (final SemKey each : key.getInheritors()) {
       List<SemElement> list = createSemElements(each, psi);
       map.put(each, list);

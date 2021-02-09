@@ -16,7 +16,6 @@
 package com.intellij.openapi.vfs.newvfs.impl;
 
 import com.intellij.reference.SoftReference;
-import com.intellij.util.containers.hash.LinkedHashMap;
 import consulo.util.dataholder.keyFMap.ArrayBackedFMap;
 import consulo.util.dataholder.keyFMap.KeyFMap;
 import consulo.util.dataholder.keyFMap.OneElementFMap;
@@ -25,6 +24,7 @@ import javax.annotation.Nonnull;
 
 import java.lang.ref.WeakReference;
 import java.util.Arrays;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**

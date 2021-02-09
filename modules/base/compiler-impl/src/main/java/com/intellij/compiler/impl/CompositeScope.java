@@ -29,7 +29,7 @@ import consulo.util.dataholder.Key;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.containers.ContainerUtil;
-import gnu.trove.THashSet;
+import java.util.HashSet;
 import javax.annotation.Nonnull;
 
 import java.util.*;
@@ -73,7 +73,7 @@ public class CompositeScope extends ExportableUserDataHolderBase implements Comp
 
   @Nonnull
   public VirtualFile[] getFiles(FileType fileType, boolean inSourceOnly) {
-    Set<VirtualFile> allFiles = new THashSet<VirtualFile>();
+    Set<VirtualFile> allFiles = new HashSet<VirtualFile>();
     for (CompileScope scope : myScopes) {
       final VirtualFile[] files = scope.getFiles(fileType, inSourceOnly);
       if (files.length > 0) {

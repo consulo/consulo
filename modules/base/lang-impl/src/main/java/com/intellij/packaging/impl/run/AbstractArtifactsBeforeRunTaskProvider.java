@@ -27,7 +27,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.dataholder.Key;
-import gnu.trove.THashSet;
+import java.util.HashSet;
 
 import javax.annotation.Nonnull;
 import java.awt.*;
@@ -98,7 +98,7 @@ public abstract class AbstractArtifactsBeforeRunTaskProvider<T extends AbstractA
   @Override
   public AsyncResult<Void> configureTask(RunConfiguration runConfiguration, T task) {
     final Artifact[] artifacts = ArtifactManager.getInstance(myProject).getArtifacts();
-    Set<ArtifactPointer> pointers = new THashSet<>();
+    Set<ArtifactPointer> pointers = new HashSet<>();
     for (Artifact artifact : artifacts) {
       pointers.add(ArtifactPointerManager.getInstance(myProject).create(artifact));
     }

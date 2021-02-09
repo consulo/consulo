@@ -15,11 +15,10 @@
  */
 package consulo.util.collection.primitive.ints;
 
-import java.util.List;
-
 /**
  * @author VISTALL
  * @since 07/02/2021
  */
-public interface IntList extends List<Integer>, IntCollection {
+public interface IntList extends IntCollection {
+  int get(int index);
 }

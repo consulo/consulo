@@ -23,7 +23,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.Function;
 import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.Processor;
-import gnu.trove.THashMap;
+import java.util.HashMap;
 import javax.annotation.Nonnull;
 
 import java.io.Serializable;
@@ -40,7 +40,7 @@ public class MostlySingularMultiMap<K, V> implements Serializable {
 
   @Nonnull
   protected Map<K, Object> createMap() {
-    return new THashMap<K, Object>();
+    return new HashMap<K, Object>();
   }
 
   public void add(@Nonnull K key, @Nonnull V value) {
@@ -152,7 +152,7 @@ public class MostlySingularMultiMap<K, V> implements Serializable {
   }
 
   public void compact() {
-    ((THashMap)myMap).compact();
+    ((HashMap)myMap).compact();
     for (Object eachValue : myMap.values()) {
       if (eachValue instanceof MostlySingularMultiMap.ValueList) {
         ((ValueList)eachValue).trimToSize();

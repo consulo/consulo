@@ -39,7 +39,7 @@ import com.intellij.util.ArrayUtil;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.annotation.DeprecationInfo;
 import consulo.ui.image.Image;
-import gnu.trove.THashMap;
+import java.util.HashMap;
 import gnu.trove.TIntObjectHashMap;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.exception.VelocityException;
@@ -297,7 +297,7 @@ public class FileTemplateUtil {
                                               @Nullable ClassLoader classLoader) throws Exception {
     final Project project = directory.getProject();
 
-    Map<String, Object> properties = new THashMap<>();
+    Map<String, Object> properties = new HashMap<>();
     FileTemplateManager.getInstance(project).fillDefaultVariables(properties);
 
     if(additionalProperties != null) {

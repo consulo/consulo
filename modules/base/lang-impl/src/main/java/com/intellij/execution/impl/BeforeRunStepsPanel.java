@@ -35,7 +35,7 @@ import com.intellij.ui.CollectionListModel;
 import com.intellij.ui.ColoredListCellRenderer;
 import com.intellij.ui.ToolbarDecorator;
 import com.intellij.ui.components.JBList;
-import com.intellij.util.containers.hash.HashSet;
+import java.util.HashSet;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.dataholder.Key;
 

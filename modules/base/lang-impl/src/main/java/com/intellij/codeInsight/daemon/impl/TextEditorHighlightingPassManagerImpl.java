@@ -34,6 +34,7 @@ import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 
 /**
@@ -178,7 +179,7 @@ public class TextEditorHighlightingPassManagerImpl extends TextEditorHighlightin
   @Nonnull
   @Override
   public List<TextEditorHighlightingPass> instantiateMainPasses(@Nonnull final PsiFile psiFile, @Nonnull final Document document, @Nonnull final HighlightInfoProcessor highlightInfoProcessor) {
-    final THashSet<TextEditorHighlightingPass> ids = new THashSet<>();
+    final HashSet<TextEditorHighlightingPass> ids = new HashSet<>();
     myRegisteredPassFactories.forEachKey(new TIntProcedure() {
       @Override
       public boolean execute(int passId) {

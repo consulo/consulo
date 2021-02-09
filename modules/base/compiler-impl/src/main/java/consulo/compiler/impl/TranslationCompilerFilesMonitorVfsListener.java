@@ -36,7 +36,7 @@ import com.intellij.openapi.vfs.newvfs.NewVirtualFile;
 import com.intellij.openapi.vfs.newvfs.events.*;
 import consulo.compiler.server.BuildManager;
 import consulo.logging.Logger;
-import gnu.trove.THashSet;
+import java.util.HashSet;
 import gnu.trove.TIntArrayList;
 import gnu.trove.TIntHashSet;
 import gnu.trove.TIntProcedure;
@@ -142,7 +142,7 @@ public class TranslationCompilerFilesMonitorVfsListener implements AsyncFileList
       if (parent != null) {
         final String oldName = (String)event.getOldValue();
         final String root = parent.getPath() + "/" + oldName;
-        final Set<File> toMark = new THashSet<>(FileUtil.FILE_HASHING_STRATEGY);
+        final Set<File> toMark = new HashSet<>(FileUtil.FILE_HASHING_STRATEGY);
         if (eventFile.isDirectory()) {
           VfsUtilCore.visitChildrenRecursively(eventFile, new VirtualFileVisitor() {
             private StringBuilder filePath = new StringBuilder(root);
@@ -195,7 +195,7 @@ public class TranslationCompilerFilesMonitorVfsListener implements AsyncFileList
       }
     }
 
-    final Set<File> pathsToMark = new THashSet<>(FileUtil.FILE_HASHING_STRATEGY);
+    final Set<File> pathsToMark = new HashSet<>(FileUtil.FILE_HASHING_STRATEGY);
 
     TranslatingCompilerFilesMonitorImpl monitor = getMonitor();
 
@@ -288,7 +288,7 @@ public class TranslationCompilerFilesMonitorVfsListener implements AsyncFileList
   private void markDirtyIfSource(final VirtualFile file, final boolean fromMove) {
     TranslatingCompilerFilesMonitorImpl monitor = getMonitor();
 
-    final Set<File> pathsToMark = new THashSet<>(FileUtil.FILE_HASHING_STRATEGY);
+    final Set<File> pathsToMark = new HashSet<>(FileUtil.FILE_HASHING_STRATEGY);
     processRecursively(file, false, file1 -> {
       pathsToMark.add(new File(file1.getPath()));
       final TranslationSourceFileInfo srcInfo = file1.isValid() ? TranslationSourceFileInfo.loadSourceInfo(file1) : null;
@@ -375,7 +375,7 @@ public class TranslationCompilerFilesMonitorVfsListener implements AsyncFileList
       }
     });
     if (notifyServer && !monitor.isIgnoredOrUnderIgnoredDirectory(projectManager, file)) {
-      final Set<File> pathsToMark = new THashSet<>(FileUtil.FILE_HASHING_STRATEGY);
+      final Set<File> pathsToMark = new HashSet<>(FileUtil.FILE_HASHING_STRATEGY);
       boolean dbOnly = !isInContent.get();
       processRecursively(file, dbOnly, new Consumer<VirtualFile>() {
         @Override

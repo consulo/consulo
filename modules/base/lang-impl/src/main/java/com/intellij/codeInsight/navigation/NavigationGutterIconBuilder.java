@@ -35,7 +35,7 @@ import com.intellij.util.NotNullFunction;
 import com.intellij.util.NullableFunction;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.ui.image.Image;
-import gnu.trove.THashSet;
+import java.util.HashSet;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
@@ -224,7 +224,7 @@ public class NavigationGutterIconBuilder<T> {
       @Override
       @Nonnull
       public List<SmartPsiElementPointer> compute() {
-        Set<PsiElement> elements = new THashSet<PsiElement>();
+        Set<PsiElement> elements = new HashSet<PsiElement>();
         Collection<? extends T> targets = myTargets.getValue();
         final List<SmartPsiElementPointer> list = new ArrayList<SmartPsiElementPointer>(targets.size());
         for (final T target : targets) {
@@ -274,7 +274,7 @@ public class NavigationGutterIconBuilder<T> {
       return false;
     }
 
-    Set<PsiElement> elements = new THashSet<PsiElement>();
+    Set<PsiElement> elements = new HashSet<PsiElement>();
     Collection<? extends T> targets = myTargets.getValue();
     for (final T target : targets) {
       for (final PsiElement psiElement : myConverter.fun(target)) {

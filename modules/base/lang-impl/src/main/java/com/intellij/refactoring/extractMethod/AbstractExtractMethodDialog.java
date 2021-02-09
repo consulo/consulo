@@ -25,15 +25,12 @@ import com.intellij.refactoring.RefactoringBundle;
 import com.intellij.refactoring.ui.MethodSignatureComponent;
 import com.intellij.refactoring.util.SimpleParameterTablePanel;
 import com.intellij.ui.DocumentAdapter;
-import com.intellij.util.containers.HashMap;
+
 import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class AbstractExtractMethodDialog extends DialogWrapper implements ExtractMethodSettings {
   private JPanel myContentPane;

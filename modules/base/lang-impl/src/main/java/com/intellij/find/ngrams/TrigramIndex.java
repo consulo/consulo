@@ -29,7 +29,7 @@ import com.intellij.util.io.DataExternalizer;
 import com.intellij.util.io.DataInputOutputUtil;
 import com.intellij.util.io.EnumeratorIntegerDescriptor;
 import com.intellij.util.io.KeyDescriptor;
-import gnu.trove.THashMap;
+import java.util.HashMap;
 import javax.annotation.Nonnull;
 
 import java.io.DataInput;
@@ -145,7 +145,7 @@ public class TrigramIndex extends ScalarIndexExtension<Integer> implements Custo
 
     @Override
     public boolean consumeTrigramsCount(int count) {
-      map = new THashMap<>(count);
+      map = new HashMap<>(count);
       return true;
     }
 

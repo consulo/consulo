@@ -20,13 +20,10 @@ import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.RangeMarker;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.util.containers.ContainerUtil;
-import gnu.trove.THashMap;
-import gnu.trove.THashSet;
+import java.util.HashMap;
+import java.util.*;
 import javax.annotation.Nonnull;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 import java.util.function.Function;
 
 /**
@@ -34,8 +31,8 @@ import java.util.function.Function;
  */
 public class OffsetMap implements Disposable {
   private final Document myDocument;
-  private final Map<OffsetKey, RangeMarker> myMap = new THashMap<>();
-  private final Set<OffsetKey> myModified = new THashSet<>();
+  private final Map<OffsetKey, RangeMarker> myMap = new HashMap<>();
+  private final Set<OffsetKey> myModified = new HashSet<>();
   private volatile boolean myDisposed;
 
   public OffsetMap(final Document document) {

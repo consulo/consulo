@@ -10,7 +10,6 @@ import com.intellij.openapi.wm.WindowManager;
 import com.intellij.ui.ScreenUtil;
 import com.intellij.ui.scale.JBUIScale;
 import com.intellij.util.containers.ObjectIntHashMap;
-import com.intellij.util.containers.hash.LinkedHashMap;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import consulo.awt.TargetAWT;
@@ -23,6 +22,7 @@ import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**

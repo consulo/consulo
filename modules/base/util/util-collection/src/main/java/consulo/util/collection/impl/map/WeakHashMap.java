@@ -16,7 +16,6 @@
 package consulo.util.collection.impl.map;
 
 import consulo.util.collection.HashingStrategy;
-import consulo.util.collection.impl.map.RefHashMap;
 
 import javax.annotation.Nonnull;
 import java.lang.ref.ReferenceQueue;
@@ -32,7 +31,7 @@ import java.lang.ref.WeakReference;
  * Do not use this class if you have null keys (shame on you).
  * Otherwise it's the same as java.util.WeakHashMap, you are free to use either.
  */
-public final class WeakHashMap<K, V> extends RefHashMap<K, V> {
+public abstract class WeakHashMap<K, V> extends RefHashMap<K, V> {
   public WeakHashMap(int initialCapacity) {
     super(initialCapacity);
   }

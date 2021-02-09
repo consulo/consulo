@@ -20,7 +20,7 @@ import com.intellij.internal.statistic.persistence.ApplicationStatisticsPersiste
 import com.intellij.internal.statistic.persistence.ApplicationStatisticsPersistenceComponent;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.containers.hash.HashMap;
+import java.util.HashMap;
 import consulo.logging.Logger;
 
 import javax.annotation.Nonnull;

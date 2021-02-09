@@ -28,23 +28,23 @@ import com.intellij.util.CommonProcessors;
 import com.intellij.util.FilteringProcessor;
 import consulo.ide.IconDescriptorUpdaters;
 import consulo.ui.image.Image;
-import gnu.trove.THashSet;
-import gnu.trove.TObjectHashingStrategy;
+import consulo.util.collection.HashingStrategy;
+import consulo.util.collection.Sets;
 import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author yole
  */
 @Singleton
 public class FileReferenceCompletionImpl extends FileReferenceCompletion {
-  private static final TObjectHashingStrategy<PsiElement> VARIANTS_HASHING_STRATEGY = new TObjectHashingStrategy<PsiElement>() {
+  private static final HashingStrategy<PsiElement> VARIANTS_HASHING_STRATEGY = new HashingStrategy<PsiElement>() {
     @Override
-
-    public int computeHashCode(final PsiElement object) {
+    public int hashCode(final PsiElement object) {
       if (object instanceof PsiNamedElement) {
         final String name = ((PsiNamedElement)object).getName();
         if (name != null) {
@@ -86,7 +86,7 @@ public class FileReferenceCompletionImpl extends FileReferenceCompletion {
         }
       }
     }
-    final THashSet<PsiElement> set = new THashSet<PsiElement>(collector.getResults(), VARIANTS_HASHING_STRATEGY);
+    final Set<PsiElement> set = Sets.newHashSet(collector.getResults(), VARIANTS_HASHING_STRATEGY);
     final PsiElement[] candidates = PsiUtilCore.toPsiElementArray(set);
 
     final Object[] variants = new Object[candidates.length];

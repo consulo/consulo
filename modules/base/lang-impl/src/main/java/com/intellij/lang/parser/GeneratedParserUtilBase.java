@@ -21,9 +21,7 @@ import com.intellij.lang.*;
 import com.intellij.lang.impl.PsiBuilderAdapter;
 import com.intellij.lang.impl.PsiBuilderImpl;
 import com.intellij.lexer.Lexer;
-import consulo.logging.Logger;
 import com.intellij.openapi.util.Comparing;
-import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.text.StringHash;
 import com.intellij.psi.PsiFile;
@@ -36,16 +34,14 @@ import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.TokenSet;
 import com.intellij.util.Function;
 import com.intellij.util.PairProcessor;
-import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.LimitedPool;
+import consulo.logging.Logger;
+import consulo.util.dataholder.Key;
 import org.jetbrains.annotations.Contract;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.LinkedList;
+import java.util.*;
 
 import static com.intellij.openapi.util.text.StringUtil.*;
 
@@ -831,7 +827,7 @@ public class GeneratedParserUtilBase {
 
   public static class CompletionState implements Function<Object, String> {
     public final int offset;
-    public final Collection<String> items = ContainerUtil.newTroveSet();
+    public final Collection<String> items = new HashSet<>();
 
     public CompletionState(int offset_) {
       offset = offset_;

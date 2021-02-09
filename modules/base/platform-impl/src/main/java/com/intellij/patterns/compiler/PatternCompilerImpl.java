@@ -30,8 +30,8 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.Stack;
 import com.intellij.util.containers.StringInterner;
 import consulo.logging.Logger;
-import gnu.trove.THashMap;
-import gnu.trove.THashSet;
+import java.util.HashMap;
+import java.util.HashSet;
 import javax.annotation.Nullable;
 
 import java.lang.reflect.*;
@@ -95,7 +95,7 @@ public class PatternCompilerImpl<T> implements PatternCompiler<T> {
   }
 
   private static Set<Method> getStaticMethods(List<Class> patternClasses) {
-    return new THashSet<Method>(ContainerUtil.concat(patternClasses, new Function<Class, Collection<? extends Method>>() {
+    return new HashSet<Method>(ContainerUtil.concat(patternClasses, new Function<Class, Collection<? extends Method>>() {
       public Collection<Method> fun(final Class aClass) {
         return ContainerUtil.findAll(aClass.getMethods(), new Condition<Method>() {
           public boolean value(final Method method) {
@@ -367,8 +367,8 @@ public class PatternCompilerImpl<T> implements PatternCompiler<T> {
   @Override
   public String dumpContextDeclarations() {
     final StringBuilder sb = new StringBuilder();
-    final THashMap<Class, Collection<Class>> classes = new THashMap<Class, Collection<Class>>();
-    final THashSet<Class> missingClasses = new THashSet<Class>();
+    final HashMap<Class, Collection<Class>> classes = new HashMap<Class, Collection<Class>>();
+    final HashSet<Class> missingClasses = new HashSet<Class>();
     classes.put(Object.class, missingClasses);
     for (Method method : myStaticMethods) {
       for (Class<?> type = method.getReturnType(); type != null && ElementPattern.class.isAssignableFrom(type); type = type.getSuperclass()) {
@@ -376,7 +376,7 @@ public class PatternCompilerImpl<T> implements PatternCompiler<T> {
         if (enclosingClass != null) {
           Collection<Class> list = classes.get(enclosingClass);
           if (list == null) {
-            list = new THashSet<Class>();
+            list = new HashSet<Class>();
             classes.put(enclosingClass, list);
           }
           list.add(type);

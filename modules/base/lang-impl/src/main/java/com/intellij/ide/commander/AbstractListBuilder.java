@@ -26,8 +26,8 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.ui.ScrollingUtil;
 import com.intellij.util.concurrency.AppExecutorUtil;
-import com.intellij.util.containers.HashMap;
-import gnu.trove.THashSet;
+import java.util.HashMap;
+import java.util.HashSet;
 
 import javax.swing.*;
 import java.awt.*;
@@ -244,7 +244,7 @@ public abstract class AbstractListBuilder {
       return nodes.get(0);
     }
     else {
-      return performDeepSearch(nodes.toArray(), element, new THashSet<AbstractTreeNode>());
+      return performDeepSearch(nodes.toArray(), element, new HashSet<AbstractTreeNode>());
     }
   }
 

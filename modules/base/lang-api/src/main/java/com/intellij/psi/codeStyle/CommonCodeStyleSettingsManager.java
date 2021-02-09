@@ -22,7 +22,7 @@ import com.intellij.util.ArrayUtil;
 import com.intellij.util.ObjectUtil;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.logging.Logger;
-import gnu.trove.THashMap;
+import java.util.HashMap;
 import org.jdom.Content;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
@@ -215,7 +215,7 @@ class CommonCodeStyleSettingsManager {
         return;
       }
 
-      final Map<String, Language> idToLang = new THashMap<>();
+      final Map<String, Language> idToLang = new HashMap<>();
       for (Language language : myCommonSettingsMap.keySet()) {
         idToLang.put(language.getID(), language);
       }

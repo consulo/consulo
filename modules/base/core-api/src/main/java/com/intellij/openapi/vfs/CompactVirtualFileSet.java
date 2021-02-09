@@ -3,7 +3,7 @@ package com.intellij.openapi.vfs;
 
 import com.intellij.util.Processor;
 import com.intellij.util.containers.ContainerUtil;
-import gnu.trove.THashSet;
+import java.util.HashSet;
 import gnu.trove.TIntHashSet;
 import javax.annotation.Nonnull;
 
@@ -15,7 +15,7 @@ import java.util.*;
  */
 public class CompactVirtualFileSet extends AbstractSet<VirtualFile> {
   // all non-VirtualFileWithId files and first several files are stored here
-  private final Set<VirtualFile> weirdFiles = new THashSet<>();
+  private final Set<VirtualFile> weirdFiles = new HashSet<>();
   // when file set become large, they stored as id-set here
   private TIntHashSet idSet;
   // when file set become very big (e.g. whole project files AnalysisScope) the bit-mask of their ids are stored here

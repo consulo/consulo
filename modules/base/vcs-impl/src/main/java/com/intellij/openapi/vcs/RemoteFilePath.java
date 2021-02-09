@@ -25,16 +25,16 @@ import com.intellij.openapi.vfs.encoding.EncodingManager;
 import com.intellij.openapi.vfs.encoding.EncodingProjectManager;
 import com.intellij.util.PathUtil;
 import com.intellij.util.text.FilePathHashingStrategy;
-import gnu.trove.TObjectHashingStrategy;
+import consulo.util.collection.HashingStrategy;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.io.File;
 import java.nio.charset.Charset;
 
 public class RemoteFilePath implements FilePath {
 
-  private static final TObjectHashingStrategy<String> CASE_SENSITIVE_STRATEGY = FilePathHashingStrategy.create(true);
+  private static final HashingStrategy<String> CASE_SENSITIVE_STRATEGY = FilePathHashingStrategy.create(true);
 
   @Nonnull
   private final String myPath;
@@ -45,7 +45,7 @@ public class RemoteFilePath implements FilePath {
     myIsDirectory = isDirectory;
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   @Override
   public VirtualFile getVirtualFile() {
     return null;
@@ -151,7 +151,7 @@ public class RemoteFilePath implements FilePath {
 
   @Override
   public int hashCode() {
-    int result = CASE_SENSITIVE_STRATEGY.computeHashCode(myPath);
+    int result = CASE_SENSITIVE_STRATEGY.hashCode(myPath);
     result = 31 * result + (myIsDirectory ? 1 : 0);
     return result;
   }

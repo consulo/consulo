@@ -68,7 +68,7 @@ import com.intellij.util.text.CharArrayUtil;
 import com.intellij.util.text.ImmutableCharSequence;
 import com.intellij.util.text.StringSearcher;
 import consulo.lang.LanguageVersion;
-import gnu.trove.THashSet;
+import java.util.HashSet;
 import jakarta.inject.Inject;
 
 import javax.annotation.Nonnull;
@@ -562,7 +562,7 @@ public class FindManagerImpl extends FindManager {
           relevantLanguages = ApplicationManager.getApplication().runReadAction(new Computable<Set<Language>>() {
             @Override
             public Set<Language> compute() {
-              THashSet<Language> result = new THashSet<>();
+              HashSet<Language> result = new HashSet<>();
 
               FileViewProvider viewProvider = PsiManager.getInstance(myProject).findViewProvider(file);
               if (viewProvider != null) {

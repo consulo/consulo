@@ -17,7 +17,7 @@ package com.intellij.openapi.externalSystem.service.notification;
 
 import com.intellij.openapi.externalSystem.model.ProjectSystemId;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.containers.hash.HashMap;
+import java.util.HashMap;
 import gnu.trove.TObjectIntHashMap;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

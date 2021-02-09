@@ -72,7 +72,7 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import consulo.xdebugger.breakpoints.XLineBreakpointResolverTypeExtension;
-import gnu.trove.THashMap;
+import java.util.HashMap;
 import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
@@ -284,7 +284,7 @@ public class XDebuggerUtilImpl extends XDebuggerUtil {
   @Override
   public <B extends XBreakpoint<?>> XBreakpointType<B, ?> findBreakpointType(@Nonnull Class<? extends XBreakpointType<B, ?>> typeClass) {
     if (myBreakpointTypeByClass == null) {
-      myBreakpointTypeByClass = new THashMap<Class<? extends XBreakpointType>, XBreakpointType<?, ?>>();
+      myBreakpointTypeByClass = new HashMap<Class<? extends XBreakpointType>, XBreakpointType<?, ?>>();
       for (XBreakpointType<?, ?> breakpointType : XBreakpointUtil.getBreakpointTypes()) {
         myBreakpointTypeByClass.put(breakpointType.getClass(), breakpointType);
       }

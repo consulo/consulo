@@ -17,7 +17,7 @@ package com.intellij.execution.testframework.sm.runner;
 
 import com.intellij.execution.process.ProcessOutputTypes;
 import consulo.util.dataholder.Key;
-import gnu.trove.THashMap;
+import java.util.HashMap;
 import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
@@ -30,7 +30,7 @@ public abstract class OutputLineSplitter {
 
   private final boolean myStdinSupportEnabled;
 
-  private final Map<Key, StringBuilder> myBuffers = new THashMap<Key, StringBuilder>();
+  private final Map<Key, StringBuilder> myBuffers = new HashMap<Key, StringBuilder>();
   private final List<OutputChunk> myStdOutChunks = new ArrayList<OutputChunk>();
 
   public OutputLineSplitter(boolean stdinEnabled) {

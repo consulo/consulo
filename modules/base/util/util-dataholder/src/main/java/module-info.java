@@ -7,8 +7,7 @@ module consulo.util.dataholder {
   requires consulo.util.concurrent;
   requires consulo.util.lang;
   requires consulo.util.collection;
-
-  requires gnu.trove;
+  requires consulo.util.collection.primitive;
 
   exports consulo.util.dataholder;
   exports consulo.util.dataholder.keyFMap;

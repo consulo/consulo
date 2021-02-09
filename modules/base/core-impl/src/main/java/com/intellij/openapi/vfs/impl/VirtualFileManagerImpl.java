@@ -29,15 +29,13 @@ import com.intellij.util.containers.ContainerUtil;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
 import consulo.vfs.RefreshableFileSystem;
-import gnu.trove.THashMap;
+import java.util.HashMap;
 import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;
 import jakarta.inject.Inject;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+
+import java.util.*;
 
 public class VirtualFileManagerImpl extends VirtualFileManagerEx {
   private static final Logger LOG = Logger.getInstance(VirtualFileManagerImpl.class);
@@ -45,7 +43,7 @@ public class VirtualFileManagerImpl extends VirtualFileManagerEx {
   private final EventDispatcher<VirtualFileListener> myVirtualFileListenerMulticaster = EventDispatcher.create(VirtualFileListener.class);
   private final List<VirtualFileManagerListener> myVirtualFileManagerListeners = ContainerUtil.createLockFreeCopyOnWriteList();
 
-  private final Map<String, VirtualFileSystem> myVirtualFileSystems = new THashMap<>();
+  private final Map<String, VirtualFileSystem> myVirtualFileSystems = new HashMap<>();
   private final List<VirtualFileSystem> myRefreshableFileSystems = new ArrayList<>();
   private final List<AsyncFileListener> myAsyncFileListeners = ContainerUtil.createLockFreeCopyOnWriteList();
   private int myRefreshCount = 0;

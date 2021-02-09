@@ -16,11 +16,11 @@
 package consulo.util.collection.trove.impl.ints;
 
 import consulo.util.collection.primitive.ints.IntObjectMap;
+import consulo.util.collection.primitive.ints.IntSet;
 import gnu.trove.TIntObjectHashMap;
 
 import javax.annotation.Nonnull;
 import java.util.Collection;
-import java.util.Map;
 import java.util.Set;
 
 /**
@@ -33,29 +33,9 @@ public class THashIntObjectMap<V> extends TIntObjectHashMap<V> implements IntObj
     return super.put(key, value);
   }
 
-  @Override
-  public boolean containsValue(Object value) {
-    return super.containsValue((V)value);
-  }
-
-  @Override
-  public V get(Object key) {
-    return super.get((Integer)key);
-  }
-
-  @Override
-  public V remove(Object key) {
-    return super.remove((Integer)key);
-  }
-
-  @Override
-  public void putAll(@Nonnull Map<? extends Integer, ? extends V> m) {
-    throw new UnsupportedOperationException();
-  }
-
   @Nonnull
   @Override
-  public Set<Integer> keySet() {
+  public Set<IntObjectEntry<V>> entrySet() {
     throw new UnsupportedOperationException();
   }
 
@@ -67,7 +47,7 @@ public class THashIntObjectMap<V> extends TIntObjectHashMap<V> implements IntObj
 
   @Nonnull
   @Override
-  public Set<Entry<Integer, V>> entrySet() {
+  public IntSet keySet() {
     throw new UnsupportedOperationException();
   }
 }

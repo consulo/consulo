@@ -30,7 +30,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.ui.LightweightHint;
-import gnu.trove.THashSet;
+import java.util.HashSet;
 import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;
@@ -78,7 +78,7 @@ public class CodeInsightUtilBase extends CodeInsightUtilCore {
   @Override
   public boolean preparePsiElementsForWrite(@Nonnull Collection<? extends PsiElement> elements) {
     if (elements.isEmpty()) return true;
-    Set<VirtualFile> files = new THashSet<VirtualFile>();
+    Set<VirtualFile> files = new HashSet<VirtualFile>();
     Project project = null;
     for (PsiElement element : elements) {
       if (element == null) continue;

@@ -24,7 +24,7 @@ import com.intellij.openapi.vcs.CalledInAny;
 import com.intellij.openapi.vcs.VcsException;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.containers.SLRUMap;
+import consulo.util.collection.SLRUMap;
 import com.intellij.vcs.log.*;
 import com.intellij.vcs.log.graph.PermanentGraph;
 import com.intellij.vcs.log.util.SequentialLimitedLifoExecutor;

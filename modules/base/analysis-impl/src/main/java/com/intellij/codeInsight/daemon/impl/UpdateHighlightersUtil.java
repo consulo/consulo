@@ -28,8 +28,7 @@ import com.intellij.util.Processor;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.ui.color.ColorValue;
 import consulo.util.dataholder.Key;
-import gnu.trove.THashMap;
-import gnu.trove.THashSet;
+import java.util.HashMap;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -160,7 +159,7 @@ public class UpdateHighlightersUtil {
     final SeverityRegistrar severityRegistrar = SeverityRegistrar.getSeverityRegistrar(project);
     final HighlightersRecycler infosToRemove = new HighlightersRecycler();
     ContainerUtil.quickSort(infos, BY_START_OFFSET_NODUPS);
-    Set<HighlightInfo> infoSet = new THashSet<>(infos);
+    Set<HighlightInfo> infoSet = new HashSet<>(infos);
 
     Processor<HighlightInfo> processor = info -> {
       if (info.getGroup() == group) {
@@ -182,7 +181,7 @@ public class UpdateHighlightersUtil {
     };
     DaemonCodeAnalyzerEx.processHighlightsOverlappingOutside(document, project, null, priorityRange.getStartOffset(), priorityRange.getEndOffset(), processor);
 
-    final Map<TextRange, RangeMarker> ranges2markersCache = new THashMap<>(10);
+    final Map<TextRange, RangeMarker> ranges2markersCache = new HashMap<>(10);
     final boolean[] changed = {false};
     SweepProcessor.Generator<HighlightInfo> generator = proc -> ContainerUtil.process(infos, proc);
     SweepProcessor.sweep(generator, (offset, info, atStart, overlappingIntervals) -> {
@@ -242,7 +241,7 @@ public class UpdateHighlightersUtil {
     });
 
     ContainerUtil.quickSort(infos, BY_START_OFFSET_NODUPS);
-    final Map<TextRange, RangeMarker> ranges2markersCache = new THashMap<>(10);
+    final Map<TextRange, RangeMarker> ranges2markersCache = new HashMap<>(10);
     final PsiFile psiFile = PsiDocumentManager.getInstance(project).getPsiFile(document);
     final DaemonCodeAnalyzerEx codeAnalyzer = DaemonCodeAnalyzerEx.getInstanceEx(project);
     final boolean[] changed = {false};

@@ -17,7 +17,6 @@ package com.intellij.concurrency;
 
 import consulo.util.collection.HashingStrategy;
 import consulo.util.collection.Maps;
-import gnu.trove.TObjectHashingStrategy;
 import org.jetbrains.annotations.Contract;
 
 import javax.annotation.Nonnull;
@@ -26,7 +25,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentMap;
 
 /**
- * Creates various concurrent collections (e.g maps, sets) which can be customized with {@link TObjectHashingStrategy}
+ * Creates various concurrent collections (e.g maps, sets) which can be customized with {@link HashingStrategy}
  */
 @Deprecated
 public class ConcurrentCollectionFactory {

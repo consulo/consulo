@@ -26,7 +26,7 @@ import com.intellij.usageView.UsageViewBundle;
 import com.intellij.usageView.UsageViewDescriptor;
 import com.intellij.usageView.UsageViewUtil;
 import com.intellij.util.ArrayUtil;
-import gnu.trove.THashSet;
+import java.util.HashSet;
 import javax.annotation.Nonnull;
 
 import java.util.LinkedHashMap;
@@ -42,8 +42,8 @@ public class RenameViewDescriptor implements UsageViewDescriptor{
 
     myElements = PsiUtilBase.toPsiElementArray(renamesMap.keySet());
 
-    Set<String> processedElementsHeaders = new THashSet<String>();
-    Set<String> codeReferences = new THashSet<String>();
+    Set<String> processedElementsHeaders = new HashSet<String>();
+    Set<String> codeReferences = new HashSet<String>();
 
     for (final PsiElement element : myElements) {
       LOG.assertTrue(element.isValid(), "Invalid element: " + element.toString());

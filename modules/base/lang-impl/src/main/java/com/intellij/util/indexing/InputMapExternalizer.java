@@ -5,7 +5,7 @@ import com.intellij.util.SmartList;
 import com.intellij.util.indexing.impl.InputIndexDataExternalizer;
 import com.intellij.util.io.DataExternalizer;
 import com.intellij.util.io.DataInputOutputUtil;
-import gnu.trove.THashMap;
+import java.util.HashMap;
 import javax.annotation.Nonnull;
 
 import java.io.DataInput;
@@ -40,7 +40,7 @@ public class InputMapExternalizer<Key, Value> implements DataExternalizer<Map<Ke
     DataInputOutputUtil.writeINT(stream, size);
 
     if (size > 0) {
-      THashMap<Value, List<Key>> values = new THashMap<>();
+      HashMap<Value, List<Key>> values = new HashMap<>();
       List<Key> keysForNullValue = null;
       for (Map.Entry<Key, Value> e : data.entrySet()) {
         Value value = e.getValue();
@@ -69,7 +69,7 @@ public class InputMapExternalizer<Key, Value> implements DataExternalizer<Map<Ke
   public Map<Key, Value> read(@Nonnull DataInput in) throws IOException {
     int pairs = DataInputOutputUtil.readINT(in);
     if (pairs == 0) return Collections.emptyMap();
-    Map<Key, Value> result = new THashMap<>(pairs);
+    Map<Key, Value> result = new HashMap<>(pairs);
     while (((InputStream)in).available() > 0) {
       Value value = myValueExternalizer.read(in);
       Collection<Key> keys = mySnapshotIndexExternalizer.read(in);

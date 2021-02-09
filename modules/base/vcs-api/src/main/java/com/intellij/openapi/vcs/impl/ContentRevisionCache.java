@@ -31,8 +31,7 @@ import com.intellij.openapi.vfs.CharsetToolkit;
 import com.intellij.openapi.vfs.encoding.EncodingRegistry;
 import com.intellij.reference.SoftReference;
 import com.intellij.util.Consumer;
-import com.intellij.util.containers.HashSet;
-import com.intellij.util.containers.SLRUMap;
+import consulo.util.collection.SLRUMap;
 import com.intellij.vcsUtil.VcsUtil;
 import org.jetbrains.annotations.Contract;
 import javax.annotation.Nonnull;
@@ -43,6 +42,7 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 import java.nio.charset.Charset;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 

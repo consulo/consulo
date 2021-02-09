@@ -16,7 +16,7 @@ import com.intellij.openapi.vfs.impl.local.LocalFileSystemBase;
 import com.intellij.util.ArrayUtilRt;
 import com.intellij.util.Consumer;
 import com.intellij.util.SystemProperties;
-import gnu.trove.THashMap;
+import java.util.HashMap;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -170,7 +170,7 @@ public class WSLDistribution {
    */
   @Nonnull
   public <T extends GeneralCommandLine> T patchCommandLine(@Nonnull T commandLine, @Nullable Project project, @Nullable String remoteWorkingDir, boolean askForSudo) {
-    Map<String, String> additionalEnvs = new THashMap<>(commandLine.getEnvironment());
+    Map<String, String> additionalEnvs = new HashMap<>(commandLine.getEnvironment());
     commandLine.getEnvironment().clear();
 
     LOG.debug("[" + getId() + "] " +
@@ -301,7 +301,7 @@ public class WSLDistribution {
   public Map<String, String> getEnvironment() {
     try {
       ProcessOutput processOutput = executeOnWsl(5000, "env");
-      Map<String, String> result = new THashMap<>();
+      Map<String, String> result = new HashMap<>();
       for (String string : processOutput.getStdoutLines()) {
         int assignIndex = string.indexOf('=');
         if (assignIndex == -1) {

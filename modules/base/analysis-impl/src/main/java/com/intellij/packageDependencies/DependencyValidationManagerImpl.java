@@ -30,7 +30,7 @@ import com.intellij.psi.search.scope.packageSet.*;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.UIUtil;
 import consulo.ui.image.Image;
-import gnu.trove.THashMap;
+import java.util.HashMap;
 import jakarta.inject.Inject;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
@@ -69,7 +69,7 @@ public class DependencyValidationManagerImpl extends DependencyValidationManager
   @NonNls
   private static final String VALUE = "value";
 
-  private final Map<String, PackageSet> myUnnamedScopes = new THashMap<String, PackageSet>();
+  private final Map<String, PackageSet> myUnnamedScopes = new HashMap<String, PackageSet>();
 
   @Inject
   public DependencyValidationManagerImpl(final Project project, NamedScopeManager namedScopeManager) {

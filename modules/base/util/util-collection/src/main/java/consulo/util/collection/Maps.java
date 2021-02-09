@@ -15,6 +15,7 @@
  */
 package consulo.util.collection;
 
+import consulo.util.collection.impl.CollectionFactory;
 import consulo.util.collection.impl.map.*;
 import org.jetbrains.annotations.Contract;
 
@@ -27,10 +28,30 @@ import java.util.concurrent.ConcurrentMap;
  * @since 2019-12-01
  */
 public final class Maps {
+  private static CollectionFactory ourFactory = CollectionFactory.get();
+
+  @Nonnull
+  @Contract(pure = true)
+  public static <K, V> Map<K, V> newHashMap(@Nonnull Map<? extends K, ? extends V> map, @Nonnull HashingStrategy<K> hashingStrategy) {
+    return ourFactory.newHashMapWithStrategy(map, hashingStrategy);
+  }
+
+  @Nonnull
+  @Contract(pure = true)
+  public static <K, V> Map<K, V> newHashMap(@Nonnull HashingStrategy<K> hashingStrategy) {
+    return ourFactory.newHashMapWithStrategy(null, hashingStrategy);
+  }
+
+  @Nonnull
+  @Contract(pure = true)
+  public static <K, V> Map<K, V> newLinkedHashMap(@Nonnull HashingStrategy<K> hashingStrategy) {
+    return new LinkedHashMap<>(hashingStrategy);
+  }
+
   @Nonnull
   @Contract(pure = true)
   public static <K, V> ConcurrentMap<K, V> newConcurrentHashMap() {
-    return new ConcurrentHashMap<>();
+    return new java.util.concurrent.ConcurrentHashMap<K, V>();
   }
 
   @Nonnull
@@ -41,7 +62,7 @@ public final class Maps {
 
   @Nonnull
   @Contract(pure = true)
-  public static <K, V> ConcurrentMap<K, V> newConcurrentSoftValueMap() {
+  public static <K, V> ConcurrentMap<K, V> newConcurrentSoftValueHashMap() {
     return new ConcurrentSoftValueHashMap<>();
   }
 
@@ -82,7 +103,7 @@ public final class Maps {
   @Contract(value = "_, _, _ -> new", pure = true)
   @Nonnull
   public static <K, V> Map<K, V> newWeakHashMap(int initialCapacity, float loadFactor, @Nonnull HashingStrategy<? super K> strategy) {
-    return new WeakHashMap<K, V>(initialCapacity, loadFactor, strategy);
+    return ourFactory.<K, V>newWeakHashMap(initialCapacity, loadFactor, strategy);
   }
 
   @Contract(value = " -> new", pure = true)
@@ -179,6 +200,18 @@ public final class Maps {
     return new ConcurrentHashMap<>(hashStrategy);
   }
 
+  @Nonnull
+  @Contract(pure = true)
+  public static <K, V> ConcurrentMap<K, V> newConcurrentSoftKeySoftValueHashMap() {
+    return new ConcurrentSoftKeySoftValueHashMap<>(100, 0.75f, Runtime.getRuntime().availableProcessors(), HashingStrategy.canonical());
+  }
+
+  @Nonnull
+  @Contract(pure = true)
+  public static <K, V> ConcurrentMap<K, V> newConcurrentSoftKeySoftValueHashMap(int initialCapacity, float loadFactor, int concurrencyLevel, @Nonnull final HashingStrategy<K> hashingStrategy) {
+    return new ConcurrentSoftKeySoftValueHashMap<>(initialCapacity, loadFactor, concurrencyLevel, hashingStrategy);
+  }
+
   /**
    * Soft keys hard values hash map.
    * Null keys are NOT allowed
@@ -187,13 +220,13 @@ public final class Maps {
   @Contract(value = " -> new", pure = true)
   @Nonnull
   public static <K, V> Map<K, V> newSoftHashMap() {
-    return new SoftHashMap<>(4);
+    return newSoftHashMap(HashingStrategy.canonical());
   }
 
   @Contract(value = "_ -> new", pure = true)
   @Nonnull
   public static <K, V> Map<K, V> newSoftHashMap(@Nonnull HashingStrategy<? super K> strategy) {
-    return new SoftHashMap<K, V>(strategy);
+    return ourFactory.<K, V>newSoftHashMap(strategy);
   }
 
 }

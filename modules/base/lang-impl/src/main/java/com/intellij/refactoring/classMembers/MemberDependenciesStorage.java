@@ -19,9 +19,9 @@ package com.intellij.refactoring.classMembers;
 import com.intellij.lang.LanguageDependentMembersRefactoringSupport;
 import com.intellij.psi.NavigatablePsiElement;
 import com.intellij.psi.PsiElement;
-import com.intellij.util.containers.HashMap;
 
 import javax.annotation.Nullable;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 

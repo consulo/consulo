@@ -16,7 +16,10 @@
 package com.intellij.util.containers;
 
 import com.intellij.util.io.IOUtil;
-import gnu.trove.THashMap;
+import java.util.HashMap;
+
+import consulo.util.collection.HashingStrategy;
+import consulo.util.collection.Maps;
 import gnu.trove.TObjectHashingStrategy;
 import gnu.trove.TObjectIntHashMap;
 import javax.annotation.Nonnull;
@@ -28,9 +31,9 @@ import java.util.*;
  * @author peter
  */
 public class PathInterner {
-  private static final TObjectHashingStrategy<SubstringWrapper[]> HASHING_STRATEGY = new TObjectHashingStrategy<SubstringWrapper[]>() {
+  private static final HashingStrategy<SubstringWrapper[]> HASHING_STRATEGY = new HashingStrategy<SubstringWrapper[]>() {
     @Override
-    public int computeHashCode(SubstringWrapper[] object) {
+    public int hashCode(SubstringWrapper[] object) {
       return Arrays.hashCode(object);
     }
 
@@ -163,8 +166,7 @@ public class PathInterner {
   }
 
   public static class PathEnumerator {
-    private final TObjectIntHashMap<SubstringWrapper[]> mySeqToIdx = new TObjectIntHashMap<SubstringWrapper[]>(
-      PathInterner.HASHING_STRATEGY);
+    private final TObjectIntHashMap<SubstringWrapper[]> mySeqToIdx = new TObjectIntHashMap<SubstringWrapper[]>(PathInterner.HASHING_STRATEGY);
     private final List<SubstringWrapper[]> myIdxToSeq = new ArrayList<SubstringWrapper[]>();
     private final PathInterner myInterner = new PathInterner();
 
@@ -211,7 +213,7 @@ public class PathInterner {
   }
 
   public static class PathMap<T> {
-    private final THashMap<SubstringWrapper[], T> myMap = new THashMap<SubstringWrapper[], T>(PathInterner.HASHING_STRATEGY);
+    private final Map<SubstringWrapper[], T> myMap = Maps.newHashMap(PathInterner.HASHING_STRATEGY);
     private final PathInterner myInterner = new PathInterner();
 
     @Nullable

@@ -16,14 +16,12 @@
 package com.intellij.util.containers.hash;
 
 
-import gnu.trove.THashSet;
+import java.util.HashSet;
 
 import org.junit.Assert;
 
 import org.junit.Test;
 
-
-import java.util.HashSet;
 
 import java.util.Iterator;
 
@@ -209,7 +207,7 @@ public class HashSetTest {
     System.out.println("100 000 000 lookups in java.util.HashSet took " + (System.currentTimeMillis() - started));
 
 
-    final Set<Integer> troveSet = new THashSet<Integer>();
+    final Set<Integer> troveSet = new HashSet<Integer>();
 
     for (int i = 0; i < 100000; ++i) {
 
@@ -288,7 +286,7 @@ public class HashSetTest {
     System.out.println("100 000 000 lookups in java.util.HashSet took " + (System.currentTimeMillis() - started));
 
 
-    final Set<Integer> troveSet = new THashSet<Integer>();
+    final Set<Integer> troveSet = new HashSet<Integer>();
 
     for (int i = 0; i < 100000; ++i) {
 

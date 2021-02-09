@@ -22,7 +22,7 @@ import com.intellij.openapi.fileTypes.FileTypeManager;
 import com.intellij.openapi.fileTypes.impl.FileTypeAssocTable;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
-import gnu.trove.THashMap;
+import java.util.HashMap;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
 
@@ -60,7 +60,7 @@ public class TemplateDataLanguagePatterns implements PersistentStateComponent<El
   public void loadState(Element state) {
     myAssocTable = new FileTypeAssocTable<Language>();
 
-    final THashMap<String, Language> dialectMap = new THashMap<String, Language>();
+    final HashMap<String, Language> dialectMap = new HashMap<String, Language>();
     for (Language dialect : TemplateDataLanguageMappings.getTemplateableLanguages()) {
       dialectMap.put(dialect.getID(), dialect);
     }

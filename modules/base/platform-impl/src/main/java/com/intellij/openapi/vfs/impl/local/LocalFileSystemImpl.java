@@ -32,11 +32,10 @@ import com.intellij.openapi.vfs.newvfs.VfsImplUtil;
 import com.intellij.openapi.vfs.newvfs.persistent.PersistentFS;
 import com.intellij.util.Consumer;
 import com.intellij.util.ObjectUtil;
-import com.intellij.util.containers.HashSet;
 import com.intellij.util.io.URLUtil;
 import consulo.vfs.RefreshableFileSystem;
-import gnu.trove.THashMap;
-import gnu.trove.THashSet;
+import java.util.HashMap;
+import java.util.HashSet;
 import jakarta.inject.Inject;
 import org.jetbrains.annotations.TestOnly;
 
@@ -54,7 +53,7 @@ public final class LocalFileSystemImpl extends LocalFileSystemBase implements Re
   private final FileWatcher myWatcher;
 
   private final Object myLock = new Object();
-  private final Set<WatchRequestImpl> myRootsToWatch = new THashSet<>();
+  private final Set<WatchRequestImpl> myRootsToWatch = new HashSet<>();
   private TreeNode myNormalizedTree;
 
   private static class WatchRequestImpl implements WatchRequest {
@@ -86,7 +85,7 @@ public final class LocalFileSystemImpl extends LocalFileSystemBase implements Re
 
   private static class TreeNode {
     private WatchRequestImpl watchRequest;
-    private final Map<String, TreeNode> nodes = new THashMap<>(1, FileUtil.PATH_HASHING_STRATEGY);
+    private final Map<String, TreeNode> nodes = new HashMap<>(1, FileUtil.PATH_HASHING_STRATEGY);
   }
 
   @Inject

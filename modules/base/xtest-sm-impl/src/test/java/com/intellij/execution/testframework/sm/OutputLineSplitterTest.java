@@ -21,7 +21,7 @@ import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.testFramework.UsefulTestCase;
 import com.intellij.util.concurrency.FutureResult;
-import gnu.trove.THashMap;
+import java.util.HashMap;
 import javax.annotation.Nonnull;
 
 import java.util.*;
@@ -37,7 +37,7 @@ public abstract class OutputLineSplitterTest extends UsefulTestCase {
   private static final List<Key> ALL_COLORS = Arrays.asList(RED, GREEN, BLUE);
 
   private OutputLineSplitter mySplitter;
-  final Map<Key, List<String>> myOutput = new THashMap<Key, List<String>>();
+  final Map<Key, List<String>> myOutput = new HashMap<Key, List<String>>();
 
 
   @Override

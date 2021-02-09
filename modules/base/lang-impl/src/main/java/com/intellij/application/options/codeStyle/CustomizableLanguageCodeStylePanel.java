@@ -37,16 +37,14 @@ import com.intellij.util.Function;
 import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.MultiMap;
-import gnu.trove.THashSet;
+import java.util.HashSet;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.Collection;
+import java.util.*;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Base class for code style settings panels supporting multiple programming languages.
@@ -151,7 +149,7 @@ public abstract class CustomizableLanguageCodeStylePanel extends CodeStyleAbstra
   }
 
   protected <T extends OrderedOption> List<T> sortOptions(Collection<T> options) {
-    Set<String> names = new THashSet<>(ContainerUtil.map(options, (Function<OrderedOption, String>)option -> option.getOptionName()));
+    Set<String> names = new HashSet<>(ContainerUtil.map(options, (Function<OrderedOption, String>)option -> option.getOptionName()));
 
     List<T> order = new ArrayList<>(options.size());
     MultiMap<String, T> afters = new MultiMap<>();

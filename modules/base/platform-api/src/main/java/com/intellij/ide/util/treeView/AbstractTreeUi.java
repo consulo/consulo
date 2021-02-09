@@ -26,7 +26,7 @@ import com.intellij.util.ui.tree.TreeUtil;
 import com.intellij.util.ui.update.Activatable;
 import com.intellij.util.ui.update.UiNotifyConnector;
 import consulo.annotation.access.RequiredReadAction;
-import gnu.trove.THashSet;
+import java.util.HashSet;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.concurrency.AsyncPromise;
 import org.jetbrains.concurrency.Promise;
@@ -115,7 +115,7 @@ public class AbstractTreeUi {
   private UpdaterTreeState myUpdaterState;
   private AbstractTreeBuilder myBuilder;
 
-  private final Set<DefaultMutableTreeNode> myUpdatingChildren = new THashSet<>();
+  private final Set<DefaultMutableTreeNode> myUpdatingChildren = new HashSet<>();
 
   private boolean myCanYield;
 
@@ -3690,7 +3690,7 @@ public class AbstractTreeUi {
           }
 
           clearSelection();
-          Set<Object> toSelect = new THashSet<>();
+          Set<Object> toSelect = new HashSet<>();
           ContainerUtil.addAllNotNull(toSelect, elements);
           if (addToSelection) {
             ContainerUtil.addAllNotNull(toSelect, currentElements);

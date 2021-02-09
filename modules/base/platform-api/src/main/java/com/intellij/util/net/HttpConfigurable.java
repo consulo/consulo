@@ -42,8 +42,8 @@ import com.intellij.util.xmlb.annotations.Transient;
 import consulo.container.boot.ContainerPathManager;
 import consulo.disposer.Disposable;
 import consulo.logging.Logger;
-import gnu.trove.THashMap;
-import gnu.trove.THashSet;
+import java.util.HashMap;
+import java.util.HashSet;
 import gnu.trove.TObjectObjectProcedure;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
@@ -79,8 +79,8 @@ public class HttpConfigurable implements PersistentStateComponent<HttpConfigurab
   public boolean KEEP_PROXY_PASSWORD;
   public transient String LAST_ERROR;
 
-  private final THashMap<CommonProxy.HostInfo, ProxyInfo> myGenericPasswords = new THashMap<>();
-  private final Set<CommonProxy.HostInfo> myGenericCancelled = new THashSet<>();
+  private final HashMap<CommonProxy.HostInfo, ProxyInfo> myGenericPasswords = new HashMap<>();
+  private final Set<CommonProxy.HostInfo> myGenericCancelled = new HashSet<>();
 
   public String PROXY_EXCEPTIONS;
   public boolean USE_PAC_URL;
