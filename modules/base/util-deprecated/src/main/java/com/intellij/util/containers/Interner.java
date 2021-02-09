@@ -15,49 +15,67 @@
  */
 package com.intellij.util.containers;
 
-import gnu.trove.TObjectHashingStrategy;
-import javax.annotation.Nonnull;
+import consulo.util.collection.HashingStrategy;
+import consulo.util.collection.Maps;
+import consulo.util.containers.MapBasedInterner;
 
+import javax.annotation.Nonnull;
 import java.util.Set;
 
-/**
- * Allow to reuse structurally equal objects to avoid memory being wasted on them. Note: objects are cached inside
- * and on hard references, so even the ones that are not used anymore will be still present in the memory.
- *
- * @see WeakInterner
- * @author peter
- */
-
-public class Interner<T> {
-  private final OpenTHashSet<T> mySet;
-
-  public Interner() {
-    mySet = new OpenTHashSet<T>();
+public interface Interner<T> {
+  /**
+   * Allow to reuse structurally equal objects to avoid memory being wasted on them. Objects are cached on weak references
+   * and garbage-collected when not needed anymore.
+   */
+  @Nonnull
+  public static <T> Interner<T> createWeakInterner() {
+    return new MapBasedInterner<T>(ContainerUtil.createConcurrentWeakKeyWeakValueMap());
   }
-  public Interner(@Nonnull TObjectHashingStrategy<T> strategy) {
-    mySet = new OpenTHashSet<T>(strategy);
+
+  /**
+   * Allow to reuse structurally equal objects to avoid memory being wasted on them. Objects are cached on weak references
+   * and garbage-collected when not needed anymore.
+   */
+  @Nonnull
+  public static <T> Interner<T> createWeakInterner(@Nonnull HashingStrategy<T> strategy) {
+    return new MapBasedInterner<T>(ContainerUtil.createConcurrentWeakKeyWeakValueMap(strategy));
+  }
+
+  /**
+   * Allow to reuse structurally equal objects to avoid memory being wasted on them. Note: objects are cached inside
+   * and on hard references, so even the ones that are not used anymore will be still present in the memory.
+   *
+   * @author peter
+   */
+  @Nonnull
+  public static <T> Interner<T> createHashInterner() {
+    return new MapBasedInterner<>(Maps.newConcurrentHashMap());
+  }
+
+  /**
+   * Allow to reuse structurally equal objects to avoid memory being wasted on them. Note: objects are cached inside
+   * and on hard references, so even the ones that are not used anymore will be still present in the memory.
+   *
+   * @author peter
+   */
+  @Nonnull
+  public static <T> Interner<T> createHashInterner(@Nonnull HashingStrategy<T> strategy) {
+    return new MapBasedInterner<>(Maps.newConcurrentHashMap(strategy));
+  }
+
+  /**
+   * Default interner for strings
+   */
+  @Nonnull
+  public static Interner<String> createStringInterner() {
+    return createHashInterner();
   }
 
   @Nonnull
-  public T intern(@Nonnull T name) {
-    T interned = mySet.get(name);
-    if (interned != null) {
-      return interned;
-    }
+  T intern(@Nonnull T name);
 
-    boolean added = mySet.add(name);
-    assert added;
-
-    return name;
-  }
-
-  public void clear() {
-    mySet.clear();
-  }
+  void clear();
 
   @Nonnull
-  public Set<T> getValues() {
-    return mySet;
-  }
-
+  Set<T> getValues();
 }

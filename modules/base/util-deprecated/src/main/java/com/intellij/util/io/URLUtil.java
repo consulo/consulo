@@ -19,7 +19,6 @@ import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.SystemInfoRt;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.CharsetToolkit;
-import com.intellij.util.Base64;
 import com.intellij.util.ThreeState;
 import consulo.annotation.DeprecationInfo;
 import consulo.logging.Logger;
@@ -32,6 +31,7 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.util.Base64;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.zip.ZipFile;
@@ -215,7 +215,7 @@ public class URLUtil {
     if (matcher.matches()) {
       try {
         String content = matcher.group(4);
-        return ";base64".equalsIgnoreCase(matcher.group(3)) ? Base64.decode(content) : content.getBytes(CharsetToolkit.UTF8_CHARSET);
+        return ";base64".equalsIgnoreCase(matcher.group(3)) ? Base64.getDecoder().decode(content) : content.getBytes(CharsetToolkit.UTF8_CHARSET);
       }
       catch (IllegalArgumentException e) {
         return null;

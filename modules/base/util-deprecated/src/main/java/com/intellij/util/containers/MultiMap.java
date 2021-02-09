@@ -26,6 +26,7 @@ import javax.annotation.Nullable;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.*;
+import java.util.LinkedHashSet;
 
 /**
  * Consider to use factory methods {@link #createLinked()}, {@link #createSet()}, {@link #createSmart()}, {@link #create(TObjectHashingStrategy)} instead of override.
@@ -297,7 +298,7 @@ public class MultiMap<K, V> implements Serializable {
       @Nonnull
       @Override
       protected Collection<V> createCollection() {
-        return new OrderedSet<>();
+        return new LinkedHashSet<V>();
       }
     };
   }

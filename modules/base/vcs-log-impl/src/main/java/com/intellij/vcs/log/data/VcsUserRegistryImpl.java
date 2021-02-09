@@ -25,11 +25,11 @@ import com.intellij.vcs.log.impl.VcsUserImpl;
 import consulo.container.boot.ContainerPathManager;
 import consulo.disposer.Disposable;
 import consulo.logging.Logger;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import jakarta.inject.Inject;
-import jakarta.inject.Singleton;
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.File;
@@ -57,7 +57,7 @@ public class VcsUserRegistryImpl implements Disposable, VcsUserRegistry {
   VcsUserRegistryImpl(@Nonnull Project project) {
     final File mapFile = new File(USER_CACHE_APP_DIR, project.getLocationHash() + "." + STORAGE_VERSION);
     myPersistentEnumerator = initEnumerator(mapFile);
-    myInterner = new Interner<>();
+    myInterner = Interner.createHashInterner();
   }
 
   @Nullable

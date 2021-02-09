@@ -18,15 +18,17 @@ package com.intellij.util.ui;
 import com.intellij.util.PairProcessor;
 import com.intellij.util.ReflectionUtil;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.containers.OrderedSet;
 import consulo.logging.Logger;
-import java.util.HashMap;
+import consulo.util.collection.Sets;
 import gnu.trove.TObjectObjectProcedure;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
+import java.util.IdentityHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public abstract class CollectionModelEditor<T, E extends CollectionItemEditor<T>> implements ElementProducer<T> {
   protected static final Logger LOG = Logger.getInstance(CollectionModelEditor.class);
@@ -60,7 +62,7 @@ public abstract class CollectionModelEditor<T, E extends CollectionItemEditor<T>
 
   public final boolean isModified() {
     List<T> items = getItems();
-    OrderedSet<T> oldItems = helper.originalItems;
+    Set<T> oldItems = helper.originalItems;
     if (items.size() != oldItems.size()) {
       return true;
     }
@@ -94,10 +96,10 @@ public abstract class CollectionModelEditor<T, E extends CollectionItemEditor<T>
   }
 
   protected class ModelHelper {
-    final OrderedSet<T> originalItems = new OrderedSet<>(ContainerUtil.<T>identityStrategy());
+    final Set<T> originalItems = Sets.newLinkedHashSet(ContainerUtil.<T>identityStrategy());
 
-    private final HashMap<T, T> modifiedToOriginal = new HashMap<>(ContainerUtil.<T>identityStrategy());
-    private final HashMap<T, T> originalToModified = new HashMap<>(ContainerUtil.<T>identityStrategy());
+    private final Map<T, T> modifiedToOriginal = new IdentityHashMap<>();
+    private final Map<T, T> originalToModified = new IdentityHashMap<T, T>();
 
     public void reset(@Nullable List<T> newOriginalItems) {
       if (newOriginalItems != null) {

@@ -17,13 +17,13 @@ package consulo.components.impl.stores.storage;
 
 import com.intellij.openapi.components.PathMacroSubstitutor;
 import com.intellij.openapi.components.TrackingPathMacroSubstitutor;
-import consulo.logging.Logger;
 import com.intellij.openapi.util.JDOMUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.ArrayUtil;
+import com.intellij.util.containers.Interner;
 import com.intellij.util.containers.SmartHashSet;
-import com.intellij.util.containers.StringInterner;
 import consulo.application.options.PathMacrosService;
+import consulo.logging.Logger;
 import org.jdom.Attribute;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
@@ -64,7 +64,7 @@ public class StorageData extends StorageDataBase {
       pathMacroSubstitutor.expandPaths(rootElement);
     }
 
-    StringInterner interner = intern ? new StringInterner() : null;
+    Interner<String> interner = intern ? Interner.createStringInterner() : null;
     for (Iterator<Element> iterator = rootElement.getChildren(COMPONENT).iterator(); iterator.hasNext(); ) {
       Element element = iterator.next();
       String name = getComponentNameIfValid(element);

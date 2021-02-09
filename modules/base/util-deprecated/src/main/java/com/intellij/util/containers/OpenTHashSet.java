@@ -15,12 +15,9 @@
  */
 package com.intellij.util.containers;
 
-import java.util.HashSet;
-import gnu.trove.TObjectHashingStrategy;
-import javax.annotation.Nullable;
+import gnu.trove.THashSet;
 
-import java.util.Arrays;
-import java.util.Collection;
+import javax.annotation.Nullable;
 
 /**
  * Makes some THashSet methods open to the public.
@@ -28,42 +25,7 @@ import java.util.Collection;
  *
  * @author gregsh
  */
-public class OpenTHashSet<T> extends HashSet<T> {
-  public OpenTHashSet() {
-    super();
-  }
-
-  public OpenTHashSet(final TObjectHashingStrategy<T> strategy) {
-    super(strategy);
-  }
-
-  public OpenTHashSet(final int initialCapacity) {
-    super(initialCapacity);
-  }
-
-  public OpenTHashSet(final int initialCapacity, final TObjectHashingStrategy<T> strategy) {
-    super(initialCapacity, strategy);
-  }
-
-  public OpenTHashSet(final int initialCapacity, final float loadFactor) {
-    super(initialCapacity, loadFactor);
-  }
-
-  public OpenTHashSet(final int initialCapacity, final float loadFactor, final TObjectHashingStrategy<T> strategy) {
-    super(initialCapacity, loadFactor, strategy);
-  }
-
-  public OpenTHashSet(final Collection<? extends T> ts) {
-    super(ts);
-  }
-
-  public OpenTHashSet(final Collection<? extends T> ts, final TObjectHashingStrategy<T> strategy) {
-    super(ts, strategy);
-  }
-
-  public OpenTHashSet(final TObjectHashingStrategy<T> strategy, final T... ts) {
-    super(Arrays.asList(ts), strategy);
-  }
+public class OpenTHashSet<T> extends THashSet<T> {
 
   @Override
   public int index(final T obj) {

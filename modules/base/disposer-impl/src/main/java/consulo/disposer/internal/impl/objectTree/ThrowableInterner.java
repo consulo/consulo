@@ -4,7 +4,7 @@ package consulo.disposer.internal.impl.objectTree;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.FilteringIterator;
-import com.intellij.util.containers.WeakInterner;
+import com.intellij.util.containers.Interner;
 import consulo.hacking.java.base.ThrowableHacking;
 import consulo.util.collection.HashingStrategy;
 
@@ -14,17 +14,17 @@ import java.util.function.Function;
 
 /**
  * Please don't look, there's nothing interesting here.
- *
- *
- *
- *
+ * <p>
+ * <p>
+ * <p>
+ * <p>
  * If you insist, JVM stores stacktrace information in compact form in Throwable.backtrace field.
  * This class uses this field for comparing Throwables.
  * The available method Throwable.getStackTrace() unfortunately can't be used for that because it's
  * 1) too slow and 2) explodes Throwable retained size by polluting Throwable.stackTrace fields.
  */
 public class ThrowableInterner {
-  private static final WeakInterner<Throwable> ourTraceInterner = new WeakInterner<>(new HashingStrategy<Throwable>() {
+  private static final Interner<Throwable> ourTraceInterner = Interner.createWeakInterner(new HashingStrategy<Throwable>() {
     @Override
     public int hashCode(Throwable throwable) {
       String message = throwable.getMessage();

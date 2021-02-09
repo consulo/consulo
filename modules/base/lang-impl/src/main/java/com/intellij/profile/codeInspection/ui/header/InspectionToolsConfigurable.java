@@ -24,7 +24,6 @@ package com.intellij.profile.codeInspection.ui.header;
 
 import com.intellij.codeInsight.daemon.impl.HighlightInfoType;
 import com.intellij.codeInsight.daemon.impl.SeverityRegistrar;
-import com.intellij.codeInsight.daemon.impl.SmartHashSet;
 import com.intellij.codeInspection.InspectionManager;
 import com.intellij.codeInspection.ModifiableModel;
 import com.intellij.codeInspection.ex.InspectionManagerEx;
@@ -45,7 +44,10 @@ import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.options.SearchableConfigurable;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
-import com.intellij.openapi.util.*;
+import com.intellij.openapi.util.Comparing;
+import com.intellij.openapi.util.InvalidDataException;
+import com.intellij.openapi.util.JDOMUtil;
+import com.intellij.openapi.util.WriteExternalException;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VfsUtilCore;
@@ -60,7 +62,7 @@ import com.intellij.ui.ListCellRendererWrapper;
 import com.intellij.util.Alarm;
 import com.intellij.util.Consumer;
 import com.intellij.util.SystemProperties;
-import java.util.HashMap;
+import com.intellij.util.containers.SmartHashSet;
 import consulo.awt.TargetAWT;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
@@ -68,15 +70,15 @@ import consulo.ui.annotation.RequiredUIAccess;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 public abstract class InspectionToolsConfigurable implements ErrorsConfigurable, SearchableConfigurable, Configurable.HoldPreferredFocusedComponent, Configurable.NoScroll {
   private static final Logger LOG = Logger.getInstance(InspectionToolsConfigurable.class);

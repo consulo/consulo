@@ -16,7 +16,7 @@
 package com.intellij.openapi.util;
 
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.util.containers.StringInterner;
+import com.intellij.util.containers.Interner;
 import com.intellij.util.text.CharArrayUtil;
 import consulo.annotation.internal.MigratedExtensionsTo;
 import consulo.logging.Logger;
@@ -146,7 +146,7 @@ public class JDOMUtil {
    * Replace all strings in JDOM {@code element} with their interned variants with the help of {@code interner} to reduce memory.
    * It's better to use {@link #internElement(Element)} though because the latter will intern the Element instances too.
    */
-  public static void internStringsInElement(@Nonnull Element element, @Nonnull StringInterner interner) {
+  public static void internStringsInElement(@Nonnull Element element, @Nonnull Interner<String> interner) {
     element.setName(intern(interner, element.getName()));
 
     for (Attribute attr : element.getAttributes()) {
@@ -174,7 +174,7 @@ public class JDOMUtil {
   }
 
   @Nonnull
-  private static String intern(@Nonnull final StringInterner interner, @Nonnull final String s) {
+  private static String intern(@Nonnull final Interner<String> interner, @Nonnull final String s) {
     return interner.intern(s);
   }
 

@@ -25,7 +25,6 @@ import com.intellij.compiler.make.CacheCorruptedException;
 import com.intellij.compiler.make.CacheUtils;
 import com.intellij.compiler.progress.CompilerTask;
 import com.intellij.diagnostic.IdeErrorsDialog;
-import consulo.container.PluginException;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.application.WriteAction;
@@ -34,8 +33,6 @@ import com.intellij.openapi.compiler.*;
 import com.intellij.openapi.compiler.ex.CompileContextEx;
 import com.intellij.openapi.compiler.ex.CompilerPathsEx;
 import com.intellij.openapi.compiler.generic.GenericCompiler;
-import consulo.logging.Logger;
-import consulo.container.plugin.PluginId;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.module.Module;
@@ -75,9 +72,7 @@ import com.intellij.util.Function;
 import com.intellij.util.StringBuilderSpinAllocator;
 import com.intellij.util.concurrency.Semaphore;
 import com.intellij.util.containers.ContainerUtil;
-import java.util.HashMap;
 import com.intellij.util.containers.MultiMap;
-import com.intellij.util.containers.OrderedSet;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.AccessRule;
 import consulo.compiler.CompilerConfiguration;
@@ -88,11 +83,12 @@ import consulo.compiler.impl.TranslatingCompilerFilesMonitor;
 import consulo.compiler.make.DependencyCache;
 import consulo.compiler.make.impl.CompositeDependencyCache;
 import consulo.compiler.roots.CompilerPathsImpl;
+import consulo.container.PluginException;
+import consulo.container.plugin.PluginId;
+import consulo.logging.Logger;
 import consulo.roots.ContentFolderScopes;
 import consulo.roots.ContentFolderTypeProvider;
 import consulo.util.dataholder.Key;
-
-import java.util.HashSet;
 import gnu.trove.TIntHashSet;
 import org.jetbrains.annotations.NonNls;
 
@@ -1380,7 +1376,7 @@ public class CompileDriver {
   }
 
   private Set<File> getAllOutputDirectories(CompileContext context) {
-    final Set<File> outputDirs = new OrderedSet<>();
+    final Set<File> outputDirs = new LinkedHashSet<>();
     final Module[] modules = ModuleManager.getInstance(myProject).getModules();
     for (final String path : CompilerPathsImpl.getOutputPaths(modules)) {
       outputDirs.add(new File(path));

@@ -24,7 +24,6 @@ import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.util.ArrayUtil;
-import com.intellij.util.containers.OrderedSet;
 import consulo.compiler.ModuleCompilerPathsManager;
 import consulo.logging.Logger;
 import consulo.roots.ContentFolderScopes;
@@ -33,6 +32,7 @@ import consulo.roots.impl.ProductionContentFolderTypeProvider;
 import consulo.roots.impl.TestContentFolderTypeProvider;
 
 import java.io.File;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 /**
@@ -129,7 +129,7 @@ public class CompilerPathsImpl extends CompilerPathsEx {
       return ArrayUtil.EMPTY_STRING_ARRAY;
     }
 
-    final Set<String> outputPaths = new OrderedSet<String>();
+    final Set<String> outputPaths = new LinkedHashSet<>();
     for (Module module : modules) {
       for (ContentFolderTypeProvider contentFolderType : ContentFolderTypeProvider.filter(ContentFolderScopes.productionAndTest())) {
         String outputPathUrl = ModuleCompilerPathsManager.getInstance(module).getCompilerOutputUrl(contentFolderType);
@@ -147,7 +147,7 @@ public class CompilerPathsImpl extends CompilerPathsEx {
       return VirtualFile.EMPTY_ARRAY;
     }
 
-    final Set<VirtualFile> dirs = new OrderedSet<VirtualFile>();
+    final Set<VirtualFile> dirs = new LinkedHashSet<>();
     for (Module module : modules) {
       for (ContentFolderTypeProvider contentFolderType : ContentFolderTypeProvider.filter(ContentFolderScopes.productionAndTest())) {
         VirtualFile virtualFile = ModuleCompilerPathsManager.getInstance(module).getCompilerOutput(contentFolderType);

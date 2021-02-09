@@ -30,13 +30,13 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.ResourceUtil;
 import com.intellij.util.SingletonSet;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.containers.StringInterner;
+import com.intellij.util.containers.Interner;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginManager;
 import consulo.ide.plugins.PluginsConfigurable;
 import consulo.logging.Logger;
-import java.util.HashMap;
-import java.util.HashSet;
+import consulo.util.collection.Maps;
+import consulo.util.containers.MapBasedInterner;
 import jakarta.inject.Singleton;
 import org.jdom.Document;
 import org.jdom.Element;
@@ -62,8 +62,7 @@ public class SearchableOptionsRegistrarImpl extends SearchableOptionsRegistrar {
   private final Map<Pair<String, String>, Set<String>> myHighlightOption2Synonym = Collections.synchronizedMap(new HashMap<Pair<String, String>, Set<String>>());
   private volatile boolean allTheseHugeFilesAreLoaded;
 
-  @SuppressWarnings({"MismatchedQueryAndUpdateOfCollection"})
-  private final StringInterner myIdentifierTable = new StringInterner() {
+  private final Interner<String> myIdentifierTable = new MapBasedInterner<String>(Maps.newConcurrentHashMap()) {
     @Override
     @Nonnull
     public synchronized String intern(@Nonnull final String name) {

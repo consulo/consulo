@@ -45,7 +45,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.util.ExceptionUtil;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.containers.StringInterner;
+import com.intellij.util.containers.Interner;
 import com.intellij.util.graph.*;
 import com.intellij.util.messages.MessageBus;
 import consulo.annotation.access.RequiredReadAction;
@@ -116,7 +116,7 @@ public abstract class ModuleManagerImpl extends ModuleManager implements Persist
   }
 
   private static class ModuleGroupInterner {
-    private final StringInterner groups = new StringInterner();
+    private final Interner<String> groups = Interner.createStringInterner();
     private final Map<String[], String[]> paths = Maps.newHashMap(new HashingStrategy<String[]>() {
       @Override
       public int hashCode(String[] object) {

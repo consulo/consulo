@@ -40,13 +40,13 @@ public class ContainerUtilRt {
   private static final int ARRAY_COPY_THRESHOLD = 20;
 
   @Nonnull
-  public static <K, V> HashMap<K, V> newHashMap() {
-    return new consulo.util.nodep.collection.HashMap<K, V>();
+  public static <K, V> Map<K, V> newHashMap() {
+    return new HashMap<K, V>();
   }
 
   @Nonnull
-  public static <K, V> HashMap<K, V> newHashMap(@Nonnull Map<? extends K, ? extends V> map) {
-    return new consulo.util.nodep.collection.HashMap<K, V>(map);
+  public static <K, V> Map<K, V> newHashMap(@Nonnull Map<? extends K, ? extends V> map) {
+    return new HashMap<K, V>(map);
   }
 
   @Nonnull
@@ -74,7 +74,7 @@ public class ContainerUtilRt {
 
   @Nonnull
   public static <K, V> Map<K, V> newHashMap(int initialCapacity) {
-    return new consulo.util.nodep.collection.HashMap<K, V>(initialCapacity);
+    return new HashMap<K, V>(initialCapacity);
   }
 
   @Nonnull
@@ -89,17 +89,17 @@ public class ContainerUtilRt {
 
   @Nonnull
   public static <K, V> LinkedHashMap<K, V> newLinkedHashMap() {
-    return new consulo.util.nodep.collection.LinkedHashMap<K, V>();
+    return new LinkedHashMap<K, V>();
   }
 
   @Nonnull
   public static <K, V> LinkedHashMap<K, V> newLinkedHashMap(int capacity) {
-    return new consulo.util.nodep.collection.LinkedHashMap<K, V>(capacity);
+    return new LinkedHashMap<K, V>(capacity);
   }
 
   @Nonnull
   public static <K, V> LinkedHashMap<K, V> newLinkedHashMap(@Nonnull Map<K, V> map) {
-    return new consulo.util.nodep.collection.LinkedHashMap<K, V>(map);
+    return new LinkedHashMap<K, V>(map);
   }
 
   @Nonnull
@@ -196,7 +196,7 @@ public class ContainerUtilRt {
 
   @Nonnull
   public static <T> LinkedHashSet<T> newLinkedHashSet() {
-    return new consulo.util.nodep.collection.LinkedHashSet<T>();
+    return new LinkedHashSet<T>();
   }
 
   @Nonnull
@@ -208,7 +208,7 @@ public class ContainerUtilRt {
   public static <T> LinkedHashSet<T> newLinkedHashSet(@Nonnull Iterable<? extends T> elements) {
     if (elements instanceof Collection) {
       @SuppressWarnings("unchecked") Collection<? extends T> collection = (Collection<? extends T>)elements;
-      return new consulo.util.nodep.collection.LinkedHashSet<T>(collection);
+      return new LinkedHashSet<T>(collection);
     }
     return copy(ContainerUtilRt.<T>newLinkedHashSet(), elements);
   }

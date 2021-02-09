@@ -33,10 +33,8 @@ import com.intellij.util.Chunk;
 import com.intellij.util.PathsList;
 import com.intellij.util.StringBuilderSpinAllocator;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.containers.OrderedSet;
-import java.util.HashMap;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.io.File;
 import java.util.*;
 
@@ -186,19 +184,19 @@ public class ModuleChunk extends Chunk<Module> {
   }
 
   public String getCompilationClasspath(SdkType sdkType) {
-    final OrderedSet<VirtualFile> cpFiles = getCompilationClasspathFiles(sdkType);
+    final Set<VirtualFile> cpFiles = getCompilationClasspathFiles(sdkType);
     return convertToStringPath(cpFiles);
 
   }
 
-  public OrderedSet<VirtualFile> getCompilationClasspathFiles(SdkType sdkType) {
+  public Set<VirtualFile> getCompilationClasspathFiles(SdkType sdkType) {
     return getCompilationClasspathFiles(sdkType, true);
   }
 
-  public OrderedSet<VirtualFile> getCompilationClasspathFiles(SdkType sdkType, final boolean exportedOnly) {
+  public Set<VirtualFile> getCompilationClasspathFiles(SdkType sdkType, final boolean exportedOnly) {
     final Set<Module> modules = getNodes();
 
-    OrderedSet<VirtualFile> cpFiles = new OrderedSet<VirtualFile>();
+    Set<VirtualFile> cpFiles = new LinkedHashSet<>();
     for (final Module module : modules) {
       Collections.addAll(cpFiles, orderEnumerator(module, exportedOnly, new AfterSdkOrderEntryCondition(sdkType)).getClassesRoots());
     }
@@ -218,14 +216,14 @@ public class ModuleChunk extends Chunk<Module> {
     return convertToStringPath(getCompilationBootClasspathFiles(sdkType));
   }
 
-  public OrderedSet<VirtualFile> getCompilationBootClasspathFiles(SdkType sdkType) {
+  public Set<VirtualFile> getCompilationBootClasspathFiles(SdkType sdkType) {
     return getCompilationBootClasspathFiles(sdkType, true);
   }
 
-  public OrderedSet<VirtualFile> getCompilationBootClasspathFiles(SdkType sdkType, final boolean exportedOnly) {
+  public Set<VirtualFile> getCompilationBootClasspathFiles(SdkType sdkType, final boolean exportedOnly) {
     final Set<Module> modules = getNodes();
-    final OrderedSet<VirtualFile> cpFiles = new OrderedSet<VirtualFile>();
-    final OrderedSet<VirtualFile> jdkFiles = new OrderedSet<VirtualFile>();
+    final Set<VirtualFile> cpFiles = new LinkedHashSet<>();
+    final Set<VirtualFile> jdkFiles = new LinkedHashSet<>();
     for (final Module module : modules) {
       Collections.addAll(cpFiles, orderEnumerator(module, exportedOnly, new BeforeSdkOrderEntryCondition(sdkType, module)).getClassesRoots());
       Collections.addAll(jdkFiles, OrderEnumerator.orderEntries(module).sdkOnly().getClassesRoots());
@@ -234,7 +232,7 @@ public class ModuleChunk extends Chunk<Module> {
     return cpFiles;
   }
 
-  private static String convertToStringPath(final OrderedSet<VirtualFile> cpFiles) {
+  private static String convertToStringPath(final Set<VirtualFile> cpFiles) {
     PathsList classpath = new PathsList();
     classpath.addVirtualFiles(cpFiles);
     return classpath.getPathsString();

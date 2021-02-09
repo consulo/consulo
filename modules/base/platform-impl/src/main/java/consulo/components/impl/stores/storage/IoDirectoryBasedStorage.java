@@ -24,8 +24,8 @@ import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.WriteExternalException;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtilRt;
+import com.intellij.util.containers.Interner;
 import com.intellij.util.containers.SmartHashSet;
-import com.intellij.util.containers.StringInterner;
 import consulo.application.options.PathMacrosService;
 import consulo.components.impl.stores.DefaultStateSerializer;
 import consulo.components.impl.stores.StorageUtil;
@@ -94,7 +94,7 @@ public class IoDirectoryBasedStorage extends StateStorageBase<DirectoryStorageDa
       return;
     }
 
-    StringInterner interner = new StringInterner();
+    Interner<String> interner = Interner.createStringInterner();
     File[] files = dir.listFiles();
     if (files == null) {
       return;

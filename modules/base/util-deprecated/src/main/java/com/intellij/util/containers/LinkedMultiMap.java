@@ -24,13 +24,13 @@ import java.util.Map;
  * @author Evgeny Gerashchenko
  */
 public class LinkedMultiMap<K, V> extends MultiMap<K, V> {
-    @Override
-    protected Map<K, Collection<V>> createMap() {
-        return new LinkedHashMap<K, Collection<V>>();
-    }
+  @Override
+  protected Map<K, Collection<V>> createMap() {
+    return new LinkedHashMap<>();
+  }
 
-    @Override
-    protected Map<K, Collection<V>> createMap(int initialCapacity, float loadFactor) {
-        return new LinkedHashMap<K, Collection<V>>(initialCapacity, loadFactor);
-    }
+  @Override
+  protected Map<K, Collection<V>> createMap(int initialCapacity, float loadFactor) {
+    return new LinkedHashMap<K, Collection<V>>(initialCapacity, loadFactor);
+  }
 }

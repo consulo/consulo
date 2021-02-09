@@ -218,7 +218,7 @@ public class ContainerUtilRt {
   @Nonnull
   @Contract(pure=true)
   public static <T> LinkedHashSet<T> newLinkedHashSet() {
-    return new com.intellij.util.containers.LinkedHashSet<T>();
+    return new LinkedHashSet<T>();
   }
 
   @Nonnull
@@ -232,7 +232,7 @@ public class ContainerUtilRt {
   public static <T> LinkedHashSet<T> newLinkedHashSet(@Nonnull Iterable<? extends T> elements) {
     if (elements instanceof Collection) {
       @SuppressWarnings("unchecked") Collection<? extends T> collection = (Collection<? extends T>)elements;
-      return new com.intellij.util.containers.LinkedHashSet<T>(collection);
+      return new LinkedHashSet<T>(collection);
     }
     return copy(ContainerUtilRt.<T>newLinkedHashSet(), elements);
   }

@@ -4,7 +4,6 @@ package com.intellij.util.containers;
 import com.intellij.util.ArrayUtil;
 import consulo.util.collection.HashingStrategy;
 import consulo.util.collection.Maps;
-import gnu.trove.TObjectHashingStrategy;
 import org.jetbrains.annotations.Contract;
 
 import javax.annotation.Nonnull;
@@ -45,7 +44,7 @@ public final class UnmodifiableHashMap<K, V> implements Map<K, V> {
    * @param <K> type of map keys
    * @param <V> type of map values
    * @return an empty {@code UnmodifiableHashMap}.
-   * @see TObjectHashingStrategy#CANONICAL
+   * @see HashingStrategy#canonical()
    */
   public static
   @Nonnull
@@ -270,7 +269,7 @@ public final class UnmodifiableHashMap<K, V> implements Map<K, V> {
     return fromMap(strategy, newMap);
   }
 
-  private static <K> void insert(TObjectHashingStrategy<K> strategy, Object[] data, K k, Object v) {
+  private static <K> void insert(HashingStrategy<K> strategy, Object[] data, K k, Object v) {
     int insertPos = tablePos(strategy, data, k);
     insertPos = ~insertPos;
     assert insertPos >= 0;
@@ -352,8 +351,8 @@ public final class UnmodifiableHashMap<K, V> implements Map<K, V> {
     return v;
   }
 
-  private static <K> int tablePos(TObjectHashingStrategy<K> strategy, Object[] data, K key) {
-    int pos = Math.floorMod(strategy.computeHashCode(key), data.length / 2) * 2;
+  private static <K> int tablePos(HashingStrategy<K> strategy, Object[] data, K key) {
+    int pos = Math.floorMod(strategy.hashCode(key), data.length / 2) * 2;
     while (true) {
       @SuppressWarnings("unchecked") K candidate = (K)data[pos];
       if (candidate == null) {
@@ -373,18 +372,18 @@ public final class UnmodifiableHashMap<K, V> implements Map<K, V> {
   public int hashCode() {
     int h = 0;
     if (k1 != null) {
-      h += strategy.computeHashCode(k1) ^ Objects.hashCode(v1);
+      h += strategy.hashCode(k1) ^ Objects.hashCode(v1);
       if (k2 != null) {
-        h += strategy.computeHashCode(k2) ^ Objects.hashCode(v2);
+        h += strategy.hashCode(k2) ^ Objects.hashCode(v2);
         if (k3 != null) {
-          h += strategy.computeHashCode(k3) ^ Objects.hashCode(v3);
+          h += strategy.hashCode(k3) ^ Objects.hashCode(v3);
         }
       }
     }
     for (int i = 0; i < data.length; i += 2) {
       @SuppressWarnings("unchecked") K key = (K)data[i];
       if (key != null) {
-        h += strategy.computeHashCode(key) ^ Objects.hashCode(data[i + 1]);
+        h += strategy.hashCode(key) ^ Objects.hashCode(data[i + 1]);
       }
     }
     return h;

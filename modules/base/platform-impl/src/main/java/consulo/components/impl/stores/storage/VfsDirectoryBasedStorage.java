@@ -25,8 +25,8 @@ import com.intellij.openapi.util.WriteExternalException;
 import com.intellij.openapi.util.text.StringUtilRt;
 import com.intellij.openapi.vfs.*;
 import com.intellij.openapi.vfs.tracker.VirtualFileTracker;
+import com.intellij.util.containers.Interner;
 import com.intellij.util.containers.SmartHashSet;
-import com.intellij.util.containers.StringInterner;
 import consulo.application.options.PathMacrosService;
 import consulo.components.impl.stores.DefaultStateSerializer;
 import consulo.components.impl.stores.ReadOnlyModificationException;
@@ -128,7 +128,7 @@ public final class VfsDirectoryBasedStorage extends StateStorageBase<DirectorySt
       return;
     }
 
-    StringInterner interner = new StringInterner();
+    Interner<String> interner = Interner.createStringInterner();
     for (VirtualFile file : dir.getChildren()) {
       if (!isStorageFile(file)) {
         continue;

@@ -27,13 +27,11 @@ import com.intellij.util.ArrayUtil;
 import com.intellij.util.Function;
 import com.intellij.util.ProcessingContext;
 import com.intellij.util.containers.ContainerUtil;
+import com.intellij.util.containers.Interner;
 import com.intellij.util.containers.Stack;
-import com.intellij.util.containers.StringInterner;
 import consulo.logging.Logger;
-import java.util.HashMap;
-import java.util.HashSet;
-import javax.annotation.Nullable;
 
+import javax.annotation.Nullable;
 import java.lang.reflect.*;
 import java.util.*;
 
@@ -45,7 +43,7 @@ public class PatternCompilerImpl<T> implements PatternCompiler<T> {
   private static final Logger LOG = Logger.getInstance(PatternCompilerImpl.class);
 
   private final Set<Method> myStaticMethods;
-  private final StringInterner myStringInterner = new StringInterner();
+  private final Interner<String> myStringInterner = Interner.createStringInterner();
 
   public PatternCompilerImpl(final List<Class> patternClasses) {
     myStaticMethods = getStaticMethods(patternClasses);

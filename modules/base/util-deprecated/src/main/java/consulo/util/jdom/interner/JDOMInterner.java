@@ -14,8 +14,8 @@
 package consulo.util.jdom.interner;
 
 import com.intellij.openapi.util.Comparing;
+import com.intellij.util.containers.Interner;
 import com.intellij.util.containers.OpenTHashSet;
-import com.intellij.util.containers.StringInterner;
 import gnu.trove.TObjectHashingStrategy;
 import org.jdom.*;
 
@@ -23,7 +23,7 @@ import javax.annotation.Nonnull;
 import java.util.List;
 
 public class JDOMInterner {
-  private final StringInterner myStrings = new StringInterner();
+  private final Interner<String> myStrings = Interner.createStringInterner();
   private final OpenTHashSet<Element> myElements = new OpenTHashSet<Element>(new TObjectHashingStrategy<Element>() {
     @Override
     public int computeHashCode(Element e) {

@@ -15,16 +15,17 @@
  */
 package com.intellij.util.containers;
 
+import consulo.util.collection.HashingStrategy;
 import gnu.trove.TIntObjectHashMap;
-import gnu.trove.TObjectHashingStrategy;
 import gnu.trove.TObjectProcedure;
+
 import javax.annotation.Nonnull;
 
 public class BiDirectionalEnumerator<T> extends Enumerator<T> {
   @Nonnull
   private final TIntObjectHashMap<T> myIntToObjectMap;
 
-  public BiDirectionalEnumerator(int expectNumber, @Nonnull TObjectHashingStrategy<T> strategy) {
+  public BiDirectionalEnumerator(int expectNumber, @Nonnull HashingStrategy<T> strategy) {
     super(expectNumber, strategy);
 
     myIntToObjectMap = new TIntObjectHashMap<T>(expectNumber);

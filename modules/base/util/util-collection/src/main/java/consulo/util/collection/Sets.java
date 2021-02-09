@@ -16,6 +16,7 @@
 package consulo.util.collection;
 
 import consulo.util.collection.impl.CollectionFactory;
+import consulo.util.collection.impl.map.ConcurrentHashMap;
 import consulo.util.collection.impl.set.WeakHashSet;
 import org.jetbrains.annotations.Contract;
 
@@ -43,7 +44,6 @@ public class Sets {
     return newHashSet(CollectionFactory.UNKNOWN_CAPACITY, hashingStrategy);
   }
 
-
   @Nonnull
   @Contract(pure = true)
   public static <T> Set<T> newHashSet(@Nonnull Collection<? extends T> items, @Nonnull HashingStrategy<T> hashingStrategy) {
@@ -54,6 +54,12 @@ public class Sets {
   @Contract(pure = true)
   public static <K> Set<K> newHashSet(int initialCapacity, @Nonnull HashingStrategy<K> hashingStrategy) {
     return ourFactory.newHashSetWithStrategy(initialCapacity, null, hashingStrategy);
+  }
+
+  @Nonnull
+  @Contract(pure = true)
+  public static <T> Set<T> newLinkedHashSet(@Nonnull HashingStrategy<T> hashingStrategy) {
+    return Collections.newSetFromMap(Maps.newLinkedHashMap(hashingStrategy));
   }
 
   @Nonnull
@@ -71,6 +77,6 @@ public class Sets {
   @Nonnull
   @Contract(pure = true)
   public static <T> Set<T> newConcurrentSet() {
-    return Collections.newSetFromMap(Maps.newConcurrentHashMap());
+    return ConcurrentHashMap.newKeySet();
   }
 }

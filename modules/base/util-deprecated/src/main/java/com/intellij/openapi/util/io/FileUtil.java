@@ -53,9 +53,9 @@ public class FileUtil extends FileUtilRt {
   public static final HashingStrategy<String> PATH_HASHING_STRATEGY = FilePathHashingStrategy.create();
   public static final HashingStrategy<CharSequence> PATH_CHAR_SEQUENCE_HASHING_STRATEGY = FilePathHashingStrategy.createForCharSequence();
 
-  public static final TObjectHashingStrategy<File> FILE_HASHING_STRATEGY = SystemInfo.isFileSystemCaseSensitive ? ContainerUtil.<File>canonicalStrategy() : new TObjectHashingStrategy<File>() {
+  public static final HashingStrategy<File> FILE_HASHING_STRATEGY = SystemInfo.isFileSystemCaseSensitive ? HashingStrategy.canonical() : new HashingStrategy<File>() {
     @Override
-    public int computeHashCode(File object) {
+    public int hashCode(File object) {
       return fileHashCode(object);
     }
 
@@ -833,7 +833,7 @@ public class FileUtil extends FileUtilRt {
   }
 
   public static int pathHashCode(@Nullable String path) {
-    return StringUtil.isEmpty(path) ? 0 : PATH_HASHING_STRATEGY.computeHashCode(toCanonicalPath(path));
+    return StringUtil.isEmpty(path) ? 0 : PATH_HASHING_STRATEGY.hashCode(toCanonicalPath(path));
   }
 
   /**

@@ -14,12 +14,10 @@ import com.intellij.psi.tree.IFileElementType;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.util.containers.Interner;
-import com.intellij.util.containers.WeakInterner;
 import consulo.logging.Logger;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.Objects;
 
 /**
@@ -27,8 +25,8 @@ import java.util.Objects;
  */
 public abstract class Identikit {
   private static final Logger LOG = Logger.getInstance(Identikit.class);
-  private static final Interner<ByType> ourPlainInterner = new WeakInterner<>();
-  private static final Interner<ByAnchor> ourAnchorInterner = new WeakInterner<>();
+  private static final Interner<ByType> ourPlainInterner = Interner.createWeakInterner();
+  private static final Interner<ByAnchor> ourAnchorInterner = Interner.createWeakInterner();
 
   @Nullable
   public abstract PsiElement findPsiElement(@Nonnull PsiFile file, int startOffset, int endOffset);
