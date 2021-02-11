@@ -1,56 +1,46 @@
-/*
- * Copyright 2000-2015 JetBrains s.r.o.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
 package com.intellij.codeInsight.lookup;
 
-import com.intellij.codeInsight.completion.CompletionResultSet;
 import com.intellij.codeInsight.completion.InsertHandler;
 import com.intellij.codeInsight.completion.InsertionContext;
-import com.intellij.codeInsight.completion.PrioritizedLookupElement;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiNamedElement;
 import com.intellij.psi.SmartPointerManager;
+import com.intellij.psi.SmartPsiElementPointer;
 import com.intellij.psi.util.PsiUtilCore;
 import consulo.ide.IconDescriptorUpdaters;
 import consulo.ui.color.ColorValue;
 import consulo.ui.image.Image;
-import gnu.trove.THashSet;
 import org.jetbrains.annotations.Contract;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Set;
 
 /**
  * @author peter
  * @see LookupElementDecorator
- * @see PrioritizedLookupElement
+ * @see com.intellij.codeInsight.completion.PrioritizedLookupElement
  */
 public final class LookupElementBuilder extends LookupElement {
   @Nonnull
   private final String myLookupString;
   @Nonnull
   private final Object myObject;
+  @Nullable
+  private final SmartPsiElementPointer<?> myPsiElement;
   private final boolean myCaseSensitive;
   @Nullable
   private final InsertHandler<LookupElement> myInsertHandler;
   @Nullable
   private final LookupElementRenderer<LookupElement> myRenderer;
+  @Nullable
+  private final LookupElementRenderer<LookupElement> myExpensiveRenderer;
   @Nullable
   private final LookupElementPresentation myHardcodedPresentation;
   @Nonnull
@@ -60,20 +50,24 @@ public final class LookupElementBuilder extends LookupElement {
                                @Nonnull Object object,
                                @Nullable InsertHandler<LookupElement> insertHandler,
                                @Nullable LookupElementRenderer<LookupElement> renderer,
+                               @Nullable LookupElementRenderer<LookupElement> expensiveRenderer,
                                @Nullable LookupElementPresentation hardcodedPresentation,
+                               @Nullable SmartPsiElementPointer<?> psiElement,
                                @Nonnull Set<String> allLookupStrings,
                                boolean caseSensitive) {
     myLookupString = lookupString;
     myObject = object;
     myInsertHandler = insertHandler;
     myRenderer = renderer;
+    myExpensiveRenderer = expensiveRenderer;
     myHardcodedPresentation = hardcodedPresentation;
+    myPsiElement = psiElement;
     myAllLookupStrings = Collections.unmodifiableSet(allLookupStrings);
     myCaseSensitive = caseSensitive;
   }
 
   private LookupElementBuilder(@Nonnull String lookupString, @Nonnull Object object) {
-    this(lookupString, object, null, null, null, Collections.singleton(lookupString), true);
+    this(lookupString, object, null, null, null, null, null, Collections.singleton(lookupString), true);
   }
 
   @Nonnull
@@ -81,25 +75,30 @@ public final class LookupElementBuilder extends LookupElement {
     return new LookupElementBuilder(lookupString, lookupString);
   }
 
+  @Nonnull
   public static LookupElementBuilder create(@Nonnull Object object) {
     return new LookupElementBuilder(object.toString(), object);
   }
 
+  @Nonnull
   public static LookupElementBuilder createWithSmartPointer(@Nonnull String lookupString, @Nonnull PsiElement element) {
     PsiUtilCore.ensureValid(element);
     return new LookupElementBuilder(lookupString, SmartPointerManager.getInstance(element.getProject()).createSmartPsiElementPointer(element));
   }
 
+  @Nonnull
   public static LookupElementBuilder create(@Nonnull PsiNamedElement element) {
     PsiUtilCore.ensureValid(element);
     return new LookupElementBuilder(StringUtil.notNullize(element.getName()), element);
   }
 
+  @Nonnull
   public static LookupElementBuilder createWithIcon(@Nonnull PsiNamedElement element) {
     PsiUtilCore.ensureValid(element);
     return create(element).withIcon(IconDescriptorUpdaters.getIcon(element, 0));
   }
 
+  @Nonnull
   public static LookupElementBuilder create(@Nonnull Object lookupObject, @Nonnull String lookupString) {
     if (lookupObject instanceof PsiElement) {
       PsiUtilCore.ensureValid((PsiElement)lookupObject);
@@ -107,30 +106,59 @@ public final class LookupElementBuilder extends LookupElement {
     return new LookupElementBuilder(lookupString, lookupObject);
   }
 
+  @Nonnull
+  private LookupElementBuilder cloneWithUserData(@Nonnull String lookupString,
+                                                 @Nonnull Object object,
+                                                 @Nullable InsertHandler<LookupElement> insertHandler,
+                                                 @Nullable LookupElementRenderer<LookupElement> renderer,
+                                                 @Nullable LookupElementRenderer<LookupElement> expensiveRenderer,
+                                                 @Nullable LookupElementPresentation hardcodedPresentation,
+                                                 @Nullable SmartPsiElementPointer<?> psiElement,
+                                                 @Nonnull Set<String> allLookupStrings,
+                                                 boolean caseSensitive) {
+    LookupElementBuilder result = new LookupElementBuilder(lookupString, object, insertHandler, renderer, expensiveRenderer, hardcodedPresentation, psiElement, allLookupStrings, caseSensitive);
+    copyUserDataTo(result);
+    return result;
+  }
+
   /**
    * @deprecated use {@link #withInsertHandler(InsertHandler)}
    */
-  @Contract(value = "", pure = true)
+  @Deprecated
+  @Contract(pure = true)
+  @Nonnull
   public LookupElementBuilder setInsertHandler(@Nullable InsertHandler<LookupElement> insertHandler) {
     return withInsertHandler(insertHandler);
   }
 
-  @Contract(value = "", pure = true)
+  @Contract(pure = true)
+  @Nonnull
   public LookupElementBuilder withInsertHandler(@Nullable InsertHandler<LookupElement> insertHandler) {
-    return new LookupElementBuilder(myLookupString, myObject, insertHandler, myRenderer, myHardcodedPresentation, myAllLookupStrings, myCaseSensitive);
+    return cloneWithUserData(myLookupString, myObject, insertHandler, myRenderer, myExpensiveRenderer, myHardcodedPresentation, myPsiElement, myAllLookupStrings, myCaseSensitive);
   }
 
   /**
    * @deprecated use {@link #withRenderer(LookupElementRenderer)}
    */
-  @Contract(value = "", pure = true)
+  @Deprecated
+  @Contract(pure = true)
+  @Nonnull
   public LookupElementBuilder setRenderer(@Nullable LookupElementRenderer<LookupElement> renderer) {
     return withRenderer(renderer);
   }
 
-  @Contract(value = "", pure = true)
-  public LookupElementBuilder withRenderer(@Nullable LookupElementRenderer<LookupElement> renderer) {
-    return new LookupElementBuilder(myLookupString, myObject, myInsertHandler, renderer, myHardcodedPresentation, myAllLookupStrings, myCaseSensitive);
+  @Contract(pure = true)
+  public
+  @Nonnull
+  LookupElementBuilder withRenderer(@Nullable LookupElementRenderer<LookupElement> renderer) {
+    return cloneWithUserData(myLookupString, myObject, myInsertHandler, renderer, myExpensiveRenderer, myHardcodedPresentation, myPsiElement, myAllLookupStrings, myCaseSensitive);
+  }
+
+  @Contract(pure = true)
+  public
+  @Nonnull
+  LookupElementBuilder withExpensiveRenderer(@Nullable LookupElementRenderer<LookupElement> expensiveRenderer) {
+    return cloneWithUserData(myLookupString, myObject, myInsertHandler, myRenderer, expensiveRenderer, myHardcodedPresentation, myPsiElement, myAllLookupStrings, myCaseSensitive);
   }
 
   @Override
@@ -142,16 +170,19 @@ public final class LookupElementBuilder extends LookupElement {
   /**
    * @deprecated use {@link #withIcon(Icon)}
    */
-  @Contract(value = "", pure = true)
+  @Deprecated
+  @Contract(pure = true)
+  @Nonnull
   public LookupElementBuilder setIcon(@Nullable Image icon) {
     return withIcon(icon);
   }
 
-  @Contract(value = "", pure = true)
+  @Contract(pure = true)
+  @Nonnull
   public LookupElementBuilder withIcon(@Nullable Image icon) {
     final LookupElementPresentation presentation = copyPresentation();
     presentation.setIcon(icon);
-    return new LookupElementBuilder(myLookupString, myObject, myInsertHandler, null, presentation, myAllLookupStrings, myCaseSensitive);
+    return cloneWithUserData(myLookupString, myObject, myInsertHandler, null, myExpensiveRenderer, presentation, myPsiElement, myAllLookupStrings, myCaseSensitive);
   }
 
   @Nonnull
@@ -169,16 +200,28 @@ public final class LookupElementBuilder extends LookupElement {
   /**
    * @deprecated use {@link #withLookupString(String)}
    */
-  @Contract(value = "", pure = true)
+  @Deprecated
+  @Contract(pure = true)
+  @Nonnull
   public LookupElementBuilder addLookupString(@Nonnull String another) {
     return withLookupString(another);
   }
 
-  @Contract(value = "", pure = true)
+  @Contract(pure = true)
+  @Nonnull
   public LookupElementBuilder withLookupString(@Nonnull String another) {
-    final THashSet<String> set = new THashSet<>(myAllLookupStrings);
+    final Set<String> set = new HashSet<>(myAllLookupStrings);
     set.add(another);
-    return new LookupElementBuilder(myLookupString, myObject, myInsertHandler, myRenderer, myHardcodedPresentation, Collections.unmodifiableSet(set), myCaseSensitive);
+    return cloneWithUserData(myLookupString, myObject, myInsertHandler, myRenderer, myExpensiveRenderer, myHardcodedPresentation, myPsiElement, Collections.unmodifiableSet(set), myCaseSensitive);
+  }
+
+  @Contract(pure = true)
+  @Nonnull
+  public LookupElementBuilder withLookupStrings(@Nonnull Collection<String> another) {
+    Set<String> set = new HashSet<>(myAllLookupStrings.size() + another.size());
+    set.addAll(myAllLookupStrings);
+    set.addAll(another);
+    return cloneWithUserData(myLookupString, myObject, myInsertHandler, myRenderer, myExpensiveRenderer, myHardcodedPresentation, myPsiElement, Collections.unmodifiableSet(set), myCaseSensitive);
   }
 
   @Override
@@ -189,7 +232,9 @@ public final class LookupElementBuilder extends LookupElement {
   /**
    * @deprecated use {@link #withCaseSensitivity(boolean)}
    */
-  @Contract(value = "", pure = true)
+  @Deprecated
+  @Contract(pure = true)
+  @Nonnull
   public LookupElementBuilder setCaseSensitive(boolean caseSensitive) {
     return withCaseSensitivity(caseSensitive);
   }
@@ -197,52 +242,84 @@ public final class LookupElementBuilder extends LookupElement {
   /**
    * @param caseSensitive if this lookup item should be completed in the same letter case as prefix
    * @return modified builder
-   * @see CompletionResultSet#caseInsensitive()
+   * @see com.intellij.codeInsight.completion.CompletionResultSet#caseInsensitive()
    */
-  @Contract(value = "", pure = true)
+  @Contract(pure = true)
+  @Nonnull
   public LookupElementBuilder withCaseSensitivity(boolean caseSensitive) {
-    return new LookupElementBuilder(myLookupString, myObject, myInsertHandler, myRenderer, myHardcodedPresentation, myAllLookupStrings, caseSensitive);
+    return cloneWithUserData(myLookupString, myObject, myInsertHandler, myRenderer, myExpensiveRenderer, myHardcodedPresentation, myPsiElement, myAllLookupStrings, caseSensitive);
   }
 
   /**
-   * @deprecated use {@link #withItemTextForeground(ColorValue)}
+   * Allows to pass custom PSI that will be returned from {@link #getPsiElement()}.
    */
-  @Contract(value = "", pure = true)
+  @Contract(pure = true)
+  public
+  @Nonnull
+  LookupElementBuilder withPsiElement(@Nullable PsiElement psi) {
+    return cloneWithUserData(myLookupString, myObject, myInsertHandler, myRenderer, myExpensiveRenderer, myHardcodedPresentation, psi == null ? null : SmartPointerManager.createPointer(psi),
+                             myAllLookupStrings, myCaseSensitive);
+  }
+
+  /**
+   * @deprecated use {@link #withItemTextForeground(Color)}
+   */
+  @Deprecated
+  @Contract(pure = true)
+  @Nonnull
   public LookupElementBuilder setItemTextForeground(@Nonnull ColorValue itemTextForeground) {
     return withItemTextForeground(itemTextForeground);
   }
 
-  @Contract(value = "", pure = true)
+  @Contract(pure = true)
+  @Nonnull
   public LookupElementBuilder withItemTextForeground(@Nonnull ColorValue itemTextForeground) {
     final LookupElementPresentation presentation = copyPresentation();
     presentation.setItemTextForeground(itemTextForeground);
-    return new LookupElementBuilder(myLookupString, myObject, myInsertHandler, null, presentation, myAllLookupStrings, myCaseSensitive);
+    return cloneWithUserData(myLookupString, myObject, myInsertHandler, null, myExpensiveRenderer, presentation, myPsiElement, myAllLookupStrings, myCaseSensitive);
   }
 
   /**
    * @deprecated use {@link #withItemTextUnderlined(boolean)}
    */
-  @Contract(value = "", pure = true)
-  public LookupElementBuilder setItemTextUnderlined(boolean underlined) {
+  @Deprecated
+  @Contract(pure = true)
+  public
+  @Nonnull
+  LookupElementBuilder setItemTextUnderlined(boolean underlined) {
     return withItemTextUnderlined(underlined);
   }
 
-  @Contract(value = "", pure = true)
-  public LookupElementBuilder withItemTextUnderlined(boolean underlined) {
+  @Contract(pure = true)
+  public
+  @Nonnull
+  LookupElementBuilder withItemTextUnderlined(boolean underlined) {
     final LookupElementPresentation presentation = copyPresentation();
     presentation.setItemTextUnderlined(underlined);
-    return new LookupElementBuilder(myLookupString, myObject, myInsertHandler, null, presentation, myAllLookupStrings, myCaseSensitive);
+    return cloneWithUserData(myLookupString, myObject, myInsertHandler, null, myExpensiveRenderer, presentation, myPsiElement, myAllLookupStrings, myCaseSensitive);
+  }
+
+  @Contract(pure = true)
+  public
+  @Nonnull
+  LookupElementBuilder withItemTextItalic(boolean italic) {
+    final LookupElementPresentation presentation = copyPresentation();
+    presentation.setItemTextItalic(italic);
+    return cloneWithUserData(myLookupString, myObject, myInsertHandler, null, myExpensiveRenderer, presentation, myPsiElement, myAllLookupStrings, myCaseSensitive);
   }
 
   /**
    * @deprecated use {@link #withTypeText(String)}
    */
-  @Contract(value = "", pure = true)
+  @Deprecated
+  @Contract(pure = true)
+  @Nonnull
   public LookupElementBuilder setTypeText(@Nullable String typeText) {
     return withTypeText(typeText);
   }
 
-  @Contract(value = "", pure = true)
+  @Contract(pure = true)
+  @Nonnull
   public LookupElementBuilder withTypeText(@Nullable String typeText) {
     return withTypeText(typeText, false);
   }
@@ -250,48 +327,66 @@ public final class LookupElementBuilder extends LookupElement {
   /**
    * @deprecated use {@link #withTypeText(String, boolean)}
    */
-  @Contract(value = "", pure = true)
+  @Deprecated
+  @Contract(pure = true)
+  @Nonnull
   public LookupElementBuilder setTypeText(@Nullable String typeText, boolean grayed) {
     return withTypeText(typeText, grayed);
   }
 
-  @Contract(value = "", pure = true)
+  @Contract(pure = true)
+  @Nonnull
   public LookupElementBuilder withTypeText(@Nullable String typeText, boolean grayed) {
     return withTypeText(typeText, null, grayed);
   }
 
-  @Contract(value = "", pure = true)
+  @Contract(pure = true)
+  @Nonnull
   public LookupElementBuilder withTypeText(@Nullable String typeText, @Nullable Image typeIcon, boolean grayed) {
     final LookupElementPresentation presentation = copyPresentation();
     presentation.setTypeText(typeText, typeIcon);
     presentation.setTypeGrayed(grayed);
-    return new LookupElementBuilder(myLookupString, myObject, myInsertHandler, null, presentation, myAllLookupStrings, myCaseSensitive);
+    return cloneWithUserData(myLookupString, myObject, myInsertHandler, null, myExpensiveRenderer, presentation, myPsiElement, myAllLookupStrings, myCaseSensitive);
+  }
+
+  @Nonnull
+  public LookupElementBuilder withTypeIconRightAligned(boolean typeIconRightAligned) {
+    final LookupElementPresentation presentation = copyPresentation();
+    presentation.setTypeIconRightAligned(typeIconRightAligned);
+    return cloneWithUserData(myLookupString, myObject, myInsertHandler, null, myExpensiveRenderer, presentation, myPsiElement, myAllLookupStrings, myCaseSensitive);
   }
 
   /**
    * @deprecated use {@link #withPresentableText(String)}
    */
-  @Contract(value = "", pure = true)
-  public LookupElementBuilder setPresentableText(@Nonnull String presentableText) {
+  @Deprecated
+  @Contract(pure = true)
+  public
+  @Nonnull
+  LookupElementBuilder setPresentableText(@Nonnull String presentableText) {
     return withPresentableText(presentableText);
   }
 
-  @Contract(value = "", pure = true)
+  @Contract(pure = true)
+  @Nonnull
   public LookupElementBuilder withPresentableText(@Nonnull String presentableText) {
     final LookupElementPresentation presentation = copyPresentation();
     presentation.setItemText(presentableText);
-    return new LookupElementBuilder(myLookupString, myObject, myInsertHandler, null, presentation, myAllLookupStrings, myCaseSensitive);
+    return cloneWithUserData(myLookupString, myObject, myInsertHandler, null, myExpensiveRenderer, presentation, myPsiElement, myAllLookupStrings, myCaseSensitive);
   }
 
   /**
    * @deprecated use {@link #bold()}
    */
-  @Contract(value = "", pure = true)
+  @Deprecated
+  @Contract(pure = true)
+  @Nonnull
   public LookupElementBuilder setBold() {
     return bold();
   }
 
-  @Contract(value = "", pure = true)
+  @Contract(pure = true)
+  @Nonnull
   public LookupElementBuilder bold() {
     return withBoldness(true);
   }
@@ -299,27 +394,33 @@ public final class LookupElementBuilder extends LookupElement {
   /**
    * @deprecated use {@link #withBoldness(boolean)}
    */
-  @Contract(value = "", pure = true)
+  @Deprecated
+  @Contract(pure = true)
+  @Nonnull
   public LookupElementBuilder setBold(boolean bold) {
     return withBoldness(bold);
   }
 
-  @Contract(value = "", pure = true)
+  @Contract(pure = true)
+  @Nonnull
   public LookupElementBuilder withBoldness(boolean bold) {
     final LookupElementPresentation presentation = copyPresentation();
     presentation.setItemTextBold(bold);
-    return new LookupElementBuilder(myLookupString, myObject, myInsertHandler, null, presentation, myAllLookupStrings, myCaseSensitive);
+    return cloneWithUserData(myLookupString, myObject, myInsertHandler, null, myExpensiveRenderer, presentation, myPsiElement, myAllLookupStrings, myCaseSensitive);
   }
 
   /**
    * @deprecated use {@link #strikeout()}
    */
-  @Contract(value = "", pure = true)
+  @Deprecated
+  @Contract(pure = true)
+  @Nonnull
   public LookupElementBuilder setStrikeout() {
     return strikeout();
   }
 
-  @Contract(value = "", pure = true)
+  @Contract(pure = true)
+  @Nonnull
   public LookupElementBuilder strikeout() {
     return withStrikeoutness(true);
   }
@@ -327,27 +428,33 @@ public final class LookupElementBuilder extends LookupElement {
   /**
    * @deprecated use {@link #withStrikeoutness(boolean)}
    */
-  @Contract(value = "", pure = true)
+  @Deprecated
+  @Contract(pure = true)
+  @Nonnull
   public LookupElementBuilder setStrikeout(boolean strikeout) {
     return withStrikeoutness(strikeout);
   }
 
-  @Contract(value = "", pure = true)
+  @Contract(pure = true)
+  @Nonnull
   public LookupElementBuilder withStrikeoutness(boolean strikeout) {
     final LookupElementPresentation presentation = copyPresentation();
     presentation.setStrikeout(strikeout);
-    return new LookupElementBuilder(myLookupString, myObject, myInsertHandler, null, presentation, myAllLookupStrings, myCaseSensitive);
+    return cloneWithUserData(myLookupString, myObject, myInsertHandler, null, myExpensiveRenderer, presentation, myPsiElement, myAllLookupStrings, myCaseSensitive);
   }
 
   /**
    * @deprecated use {@link #withTailText(String)}
    */
-  @Contract(value = "", pure = true)
+  @Deprecated
+  @Contract(pure = true)
+  @Nonnull
   public LookupElementBuilder setTailText(@Nullable String tailText) {
     return withTailText(tailText);
   }
 
-  @Contract(value = "", pure = true)
+  @Contract(pure = true)
+  @Nonnull
   public LookupElementBuilder withTailText(@Nullable String tailText) {
     return withTailText(tailText, false);
   }
@@ -355,26 +462,30 @@ public final class LookupElementBuilder extends LookupElement {
   /**
    * @deprecated use {@link #withTailText(String, boolean)}
    */
-  @Contract(value = "", pure = true)
+  @Deprecated
+  @Contract(pure = true)
+  @Nonnull
   public LookupElementBuilder setTailText(@Nullable String tailText, boolean grayed) {
     return withTailText(tailText, grayed);
   }
 
-  @Contract(value = "", pure = true)
+  @Contract(pure = true)
+  @Nonnull
   public LookupElementBuilder withTailText(@Nullable String tailText, boolean grayed) {
     final LookupElementPresentation presentation = copyPresentation();
     presentation.setTailText(tailText, grayed);
-    return new LookupElementBuilder(myLookupString, myObject, myInsertHandler, null, presentation, myAllLookupStrings, myCaseSensitive);
+    return cloneWithUserData(myLookupString, myObject, myInsertHandler, null, myExpensiveRenderer, presentation, myPsiElement, myAllLookupStrings, myCaseSensitive);
   }
 
-  @Contract(value = "", pure = true)
+  @Contract(pure = true)
+  @Nonnull
   public LookupElementBuilder appendTailText(@Nonnull String tailText, boolean grayed) {
     final LookupElementPresentation presentation = copyPresentation();
     presentation.appendTailText(tailText, grayed);
-    return new LookupElementBuilder(myLookupString, myObject, myInsertHandler, null, presentation, myAllLookupStrings, myCaseSensitive);
+    return cloneWithUserData(myLookupString, myObject, myInsertHandler, null, myExpensiveRenderer, presentation, myPsiElement, myAllLookupStrings, myCaseSensitive);
   }
 
-  @Contract(value = "", pure = true)
+  @Contract(pure = true)
   public LookupElement withAutoCompletionPolicy(AutoCompletionPolicy policy) {
     return policy.applyPolicy(this);
   }
@@ -390,14 +501,32 @@ public final class LookupElementBuilder extends LookupElement {
     return myInsertHandler;
   }
 
+  @Nullable
+  public LookupElementRenderer<LookupElement> getRenderer() {
+    return myRenderer;
+  }
+
+  @Override
+  @Nullable
+  public LookupElementRenderer<? extends LookupElement> getExpensiveRenderer() {
+    return myExpensiveRenderer;
+  }
+
   @Nonnull
   @Override
   public Object getObject() {
     return myObject;
   }
 
+  @Nullable
   @Override
-  public void handleInsert(InsertionContext context) {
+  public PsiElement getPsiElement() {
+    if (myPsiElement != null) return myPsiElement.getElement();
+    return super.getPsiElement();
+  }
+
+  @Override
+  public void handleInsert(@Nonnull InsertionContext context) {
     if (myInsertHandler != null) {
       myInsertHandler.handleInsert(context, this);
     }
@@ -424,9 +553,7 @@ public final class LookupElementBuilder extends LookupElement {
     LookupElementBuilder that = (LookupElementBuilder)o;
 
     final InsertHandler<LookupElement> insertHandler = that.myInsertHandler;
-    if (myInsertHandler != null && insertHandler != null ? !myInsertHandler.getClass().equals(insertHandler.getClass()) : myInsertHandler != insertHandler) {
-      return false;
-    }
+    if (myInsertHandler != null && insertHandler != null ? !myInsertHandler.getClass().equals(insertHandler.getClass()) : myInsertHandler != insertHandler) return false;
     if (!myLookupString.equals(that.myLookupString)) return false;
     if (!myObject.equals(that.myObject)) return false;
 

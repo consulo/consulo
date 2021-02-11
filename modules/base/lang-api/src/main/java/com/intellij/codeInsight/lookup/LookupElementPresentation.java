@@ -32,12 +32,14 @@ import java.util.List;
 public class LookupElementPresentation {
   private Image myIcon;
   private Image myTypeIcon;
+  private boolean myTypeIconRightAligned;
   private String myItemText;
   private String myTypeText;
   private boolean myStrikeout;
   private ColorValue myItemTextForeground = ComponentColors.TEXT_FOREGROUND;
   private boolean myItemTextBold;
   private boolean myItemTextUnderlined;
+  private boolean myItemTextItalic;
   private boolean myTypeGrayed;
   @Nullable
   private List<TextFragment> myTail;
@@ -104,6 +106,10 @@ public class LookupElementPresentation {
     myTypeIcon = icon;
   }
 
+  public void setItemTextItalic(boolean itemTextItalic) {
+    myItemTextItalic = itemTextItalic;
+  }
+
   /**
    * Is equivalent to instanceof {@link RealLookupElementPresentation} check.
    *
@@ -168,6 +174,10 @@ public class LookupElementPresentation {
     return myItemTextUnderlined;
   }
 
+  public boolean isItemTextItalic() {
+    return myItemTextItalic;
+  }
+
   public void setItemTextUnderlined(boolean itemTextUnderlined) {
     myItemTextUnderlined = itemTextUnderlined;
   }
@@ -191,10 +201,20 @@ public class LookupElementPresentation {
 
     myTypeText = presentation.myTypeText;
     myStrikeout = presentation.myStrikeout;
+    myItemTextItalic = presentation.myItemTextItalic;
     myItemTextBold = presentation.myItemTextBold;
     myTypeGrayed = presentation.myTypeGrayed;
+    myTypeIconRightAligned = presentation.myTypeIconRightAligned;
     myItemTextUnderlined = presentation.myItemTextUnderlined;
     myItemTextForeground = presentation.myItemTextForeground;
+  }
+
+  public boolean isTypeIconRightAligned() {
+    return myTypeIconRightAligned;
+  }
+
+  public void setTypeIconRightAligned(boolean typeIconRightAligned) {
+    myTypeIconRightAligned = typeIconRightAligned;
   }
 
   public boolean isTypeGrayed() {

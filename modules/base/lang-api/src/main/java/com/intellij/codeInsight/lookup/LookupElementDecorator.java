@@ -97,6 +97,19 @@ public abstract class LookupElementDecorator<T extends LookupElement> extends Lo
     return myDelegate.hashCode();
   }
 
+  @Override
+  public LookupElementRenderer<? extends LookupElement> getExpensiveRenderer() {
+    //noinspection rawtypes
+    LookupElementRenderer renderer = myDelegate.getExpensiveRenderer();
+    return renderer == null ? null : new LookupElementRenderer<LookupElementDecorator<?>>() {
+      @Override
+      public void renderElement(LookupElementDecorator<?> element, LookupElementPresentation presentation) {
+        //noinspection unchecked
+        renderer.renderElement(element.myDelegate, presentation);
+      }
+    };
+  }
+
   @Nonnull
   public static <T extends LookupElement> LookupElementDecorator<T> withInsertHandler(@Nonnull T element,
                                                                                       @Nonnull final InsertHandler<? super LookupElementDecorator<T>> insertHandler) {

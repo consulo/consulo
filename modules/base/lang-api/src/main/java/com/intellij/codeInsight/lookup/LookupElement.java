@@ -4,13 +4,13 @@ package com.intellij.codeInsight.lookup;
 import com.intellij.codeInsight.completion.InsertionContext;
 import com.intellij.navigation.PsiElementNavigationItem;
 import com.intellij.openapi.util.ClassConditionKey;
-import consulo.util.dataholder.UserDataHolderBase;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.ResolveResult;
 import com.intellij.psi.SmartPsiElementPointer;
+import consulo.util.dataholder.UserDataHolderBase;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.Collections;
 import java.util.Set;
 
@@ -98,6 +98,17 @@ public abstract class LookupElement extends UserDataHolderBase {
   public <T> T as(ClassConditionKey<T> conditionKey) {
     //noinspection unchecked
     return conditionKey.isInstance(this) ? (T)this : null;
+  }
+
+  /**
+   * @return a renderer (if any) that performs potentially expensive computations on this lookup element.
+   * It's called on a background thread, not blocking this element from being shown to the user.
+   * It may return this lookup element's presentation appended with more details than {@link #renderElement} has given.
+   * If the {@link Lookup} is already shown, it will be repainted/resized to accommodate the changes.
+   */
+  @Nullable
+  public LookupElementRenderer<? extends LookupElement> getExpensiveRenderer() {
+    return null;
   }
 
   /**
