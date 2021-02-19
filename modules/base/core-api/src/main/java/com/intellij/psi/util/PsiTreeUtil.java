@@ -17,7 +17,6 @@ package com.intellij.psi.util;
 
 import com.intellij.lang.Language;
 import com.intellij.openapi.util.Condition;
-import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.*;
@@ -30,13 +29,16 @@ import com.intellij.util.ArrayUtil;
 import com.intellij.util.PairProcessor;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.lang.LanguageVersion;
 import consulo.lang.LanguageVersionResolver;
 import consulo.lang.LanguageVersionResolvers;
 import consulo.logging.Logger;
+import consulo.util.dataholder.Key;
+import gnu.trove.TIntArrayList;
 import org.jetbrains.annotations.Contract;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
 import java.util.function.Predicate;
@@ -1123,5 +1125,52 @@ public class PsiTreeUtil {
         throw new UnsupportedOperationException();
       }
     };
+  }
+
+  /**
+   * Returns the same element in the file copy.
+   *
+   * @param element an element to find
+   * @param copy    file that must be a copy of {@code element.getContainingFile()}
+   * @return found element; null if input element is null
+   * @throws IllegalStateException if it's detected that the supplied file is not exact copy of original file.
+   *                               The exception is thrown on a best-effort basis, so you cannot rely on it.
+   */
+  @Contract("null, _ -> null; !null, _ -> !null")
+  @RequiredReadAction
+  public static <T extends PsiElement> T findSameElementInCopy(@Nullable T element, @Nonnull PsiFile copy) throws IllegalStateException {
+    if (element == null) return null;
+    TIntArrayList offsets = new TIntArrayList();
+    PsiElement cur = element;
+    while (!cur.getClass().equals(copy.getClass())) {
+      int pos = 0;
+      for (PsiElement sibling = cur.getPrevSibling(); sibling != null; sibling = sibling.getPrevSibling()) {
+        pos++;
+      }
+      offsets.add(pos);
+      cur = cur.getParent();
+      if (cur == null) {
+        throw new IllegalStateException("Cannot find parent file; element class: " + element.getClass());
+      }
+    }
+    cur = copy;
+    for (int level = offsets.size() - 1; level >= 0; level--) {
+      int pos = offsets.get(level);
+      cur = cur.getFirstChild();
+      if (cur == null) {
+        throw new IllegalStateException("File structure differs: no child");
+      }
+      for (int i = 0; i < pos; i++) {
+        cur = cur.getNextSibling();
+        if (cur == null) {
+          throw new IllegalStateException("File structure differs: number of siblings is less than " + pos);
+        }
+      }
+    }
+    if (!cur.getClass().equals(element.getClass())) {
+      throw new IllegalStateException("File structure differs: " + cur.getClass() + " != " + element.getClass());
+    }
+    //noinspection unchecked
+    return (T)cur;
   }
 }
