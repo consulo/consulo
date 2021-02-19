@@ -24,10 +24,9 @@ import com.intellij.psi.search.ProjectScope;
 import com.intellij.psi.search.SearchRequestCollector;
 import com.intellij.psi.search.SearchScope;
 import consulo.annotation.access.RequiredReadAction;
-import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.List;
 
 public class FindUsagesOptions implements Cloneable {
@@ -101,7 +100,6 @@ public class FindUsagesOptions implements Cloneable {
     return result;
   }
 
-  @NonNls
   @Override
   public String toString() {
     return getClass().getSimpleName() + "{" +

@@ -20,6 +20,7 @@ import com.intellij.find.FindSettings;
 import com.intellij.ide.util.scopeChooser.ScopeChooserCombo;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
+import com.intellij.util.ui.JBUI;
 import consulo.disposer.Disposer;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.ui.IdeBorderFactory;
@@ -75,13 +76,11 @@ public abstract class AbstractFindUsagesDialog extends DialogWrapper {
     myIsShowInNewTabVisible = !isSingleFile;
     mySearchForTextOccurrencesAvailable = searchForTextOccurrencesAvailable;
     mySearchInLibrariesAvailable = searchInLibrariesAvailable;
-
-    myUpdateAction = new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent event) {
-        update();
-      }
-    };
+    if (myFindUsagesOptions instanceof PersistentFindUsagesOptions) {
+      ((PersistentFindUsagesOptions)myFindUsagesOptions).setDefaults(myProject);
+    }
+    
+    myUpdateAction = event -> update();
 
     setOKButtonText(FindBundle.message("find.dialog.find.button"));
     setTitle(isSingleFile ? FindBundle.message("find.usages.in.file.dialog.title") : FindBundle.message("find.usages.dialog.title"));
@@ -108,7 +107,7 @@ public abstract class AbstractFindUsagesDialog extends DialogWrapper {
     gbConstraints.weighty = 1;
     gbConstraints.anchor = GridBagConstraints.WEST;
     final SimpleColoredComponent coloredComponent = new SimpleColoredComponent();
-    coloredComponent.setIpad(new Insets(0,0,0,0));
+    coloredComponent.setIpad(JBUI.emptyInsets());
     coloredComponent.setMyBorder(null);
     configureLabelComponent(coloredComponent);
     panel.add(coloredComponent, gbConstraints);
@@ -123,8 +122,7 @@ public abstract class AbstractFindUsagesDialog extends DialogWrapper {
     JPanel panel = new JPanel(new GridBagLayout());
 
     JPanel _panel = new JPanel(new BorderLayout());
-    panel.add(_panel, new GridBagConstraints(0, 1, 1, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
-                                             new Insets(0, 0, 0, 0), 0, 0));
+    panel.add(_panel, new GridBagConstraints(0, 1, 1, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, JBUI.emptyInsets(), 0, 0));
 
     if (myIsShowInNewTabVisible) {
       myCbToOpenInNewTab = new JCheckBox(FindBundle.message("find.open.in.new.tab.checkbox"));
@@ -135,14 +133,16 @@ public abstract class AbstractFindUsagesDialog extends DialogWrapper {
 
     JPanel allOptionsPanel = createAllOptionsPanel();
     if (allOptionsPanel != null) {
-      panel.add(allOptionsPanel, new GridBagConstraints(0, 0, 1, 1, 1.0, 1.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-                                                        new Insets(0, 0, 0, 0), 0, 0));
+      panel.add(allOptionsPanel, new GridBagConstraints(0, 0, 1, 1, 1.0, 1.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, JBUI.emptyInsets(), 0, 0));
     }
     return panel;
   }
 
   public final FindUsagesOptions calcFindUsagesOptions() {
     calcFindUsagesOptions(myFindUsagesOptions);
+    if (myFindUsagesOptions instanceof PersistentFindUsagesOptions) {
+      ((PersistentFindUsagesOptions)myFindUsagesOptions).storeDefaults(myProject);
+    }
     return myFindUsagesOptions;
   }
 
