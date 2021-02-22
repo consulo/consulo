@@ -1,18 +1,20 @@
-// Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+// Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.util;
 
 import com.intellij.concurrency.AsyncFuture;
+import com.intellij.concurrency.AsyncUtil;
 import org.jetbrains.annotations.Contract;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.function.Function;
 import java.util.function.Predicate;
 
-/**
- * @author max
- */
 public interface Query<Result> extends Iterable<Result> {
+
   /**
    * Get all of the results in the {@link Collection}
    *
@@ -42,10 +44,14 @@ public interface Query<Result> extends Iterable<Result> {
   boolean forEach(@Nonnull Processor<? super Result> consumer);
 
   @Nonnull
-  AsyncFuture<Boolean> forEachAsync(@Nonnull Processor<? super Result> consumer);
+  default AsyncFuture<Boolean> forEachAsync(@Nonnull Processor<? super Result> consumer) {
+    return AsyncUtil.wrapBoolean(forEach(consumer));
+  }
 
   @Nonnull
-  Result[] toArray(@Nonnull Result[] a);
+  default Result[] toArray(@Nonnull Result[] a) {
+    return findAll().toArray(a);
+  }
 
   /**
    * Checks whether predicate is satisfied for every result of this query.
@@ -75,11 +81,49 @@ public interface Query<Result> extends Iterable<Result> {
   }
 
   /**
-   * @return an equivalent query whose {@link #forEach} accepts non-thread-safe consumers, so it may call the consumer in parallel.
+   * @param transformation pure function
+   */
+  @Nonnull
+  default <R> Query<R> transforming(@Nonnull Function<? super Result, ? extends Collection<? extends R>> transformation) {
+    return Queries.getInstance().transforming(this, transformation);
+  }
+
+  /**
+   * @param mapper pure function
+   */
+  @Nonnull
+  default <R> Query<R> mapping(@Nonnull Function<? super Result, ? extends R> mapper) {
+    return transforming(value -> Collections.singletonList(mapper.apply(value)));
+  }
+
+  /**
+   * @param predicate pure function
+   */
+  @Nonnull
+  default Query<Result> filtering(@Nonnull Predicate<? super Result> predicate) {
+    return transforming(value -> predicate.test(value) ? Collections.singletonList(value) : Collections.emptyList());
+  }
+
+  /**
+   * @param mapper pure function
+   */
+  @Nonnull
+  default <R> Query<R> flatMapping(@Nonnull Function<? super Result, ? extends Query<? extends R>> mapper) {
+    return Queries.getInstance().flatMapping(this, mapper);
+  }
+
+  /**
+   * @return an equivalent query whose {@link #forEach} accepts thread-safe consumers, so it may call the consumer in parallel.
    */
   @Nonnull
   @Contract(pure = true)
   default Query<Result> allowParallelProcessing() {
     return this;
+  }
+
+  @Override
+  @Nonnull
+  default Iterator<Result> iterator() {
+    return findAll().iterator();
   }
 }

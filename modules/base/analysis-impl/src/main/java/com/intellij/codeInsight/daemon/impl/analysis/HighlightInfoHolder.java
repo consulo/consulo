@@ -19,27 +19,24 @@ import com.intellij.codeInsight.daemon.impl.HighlightInfo;
 import com.intellij.codeInsight.daemon.impl.HighlightInfoFilter;
 import com.intellij.lang.annotation.AnnotationSession;
 import com.intellij.lang.annotation.HighlightSeverity;
-import consulo.logging.Logger;
 import com.intellij.openapi.editor.colors.TextAttributesScheme;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiFile;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
 public class HighlightInfoHolder {
-  private static final Logger LOG = Logger.getInstance(HighlightInfoHolder.class);
-
   private final PsiFile myContextFile;
   private final HighlightInfoFilter[] myFilters;
   private final AnnotationSession myAnnotationSession;
   private int myErrorCount;
   private final List<HighlightInfo> myInfos = new ArrayList<>(5);
 
-  public HighlightInfoHolder(@Nonnull PsiFile contextFile, @Nonnull HighlightInfoFilter... filters) {
+  public HighlightInfoHolder(@Nonnull PsiFile contextFile, @Nonnull HighlightInfoFilter ... filters) {
     myContextFile = contextFile;
     myAnnotationSession = new AnnotationSession(contextFile);
     myFilters = filters;
@@ -71,9 +68,8 @@ public class HighlightInfoHolder {
   }
 
   public boolean addAll(@Nonnull Collection<? extends HighlightInfo> highlightInfos) {
-    LOG.assertTrue(highlightInfos != this);
     boolean added = false;
-    for (final HighlightInfo highlightInfo : highlightInfos) {
+    for (HighlightInfo highlightInfo : highlightInfos) {
       added |= add(highlightInfo);
     }
     return added;
@@ -84,7 +80,7 @@ public class HighlightInfoHolder {
   }
 
   @Nonnull
-  public HighlightInfo get(final int i) {
+  public HighlightInfo get(int i) {
     return myInfos.get(i);
   }
 
@@ -108,5 +104,12 @@ public class HighlightInfoHolder {
   @Nonnull
   public TextAttributesScheme getColorsScheme() {
     return key -> key.getDefaultAttributes();
+  }
+
+  // internal optimization method to reduce latency between creating HighlightInfo and showing it on screen
+  // (Do not) call this method to
+  // 1. state that all HighlightInfos in this holder are final (no further HighlightInfo.setXXX() or .registerFix() are following) and
+  // 2. queue them all for converting to RangeHighlighters in EDT
+  public void queueToUpdateIncrementally() {
   }
 }

@@ -17,6 +17,7 @@ import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.colors.EditorColorsManager;
 import com.intellij.openapi.editor.colors.EditorColorsScheme;
+import com.intellij.openapi.editor.colors.TextAttributesScheme;
 import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.progress.ProgressIndicator;
@@ -49,9 +50,9 @@ import consulo.logging.Logger;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolderEx;
 import gnu.trove.THashSet;
+import javax.annotation.Nonnull;
 import org.jetbrains.annotations.TestOnly;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -412,7 +413,7 @@ public class GeneralHighlightingPass extends ProgressableTextEditorHighlightingP
     return element.getStartOffsetInParent() == 0 && element.getTextLength() == parent.getTextLength();
   }
 
-  private static final int POST_UPDATE_ALL = 5;
+  public static final int POST_UPDATE_ALL = 5;
 
   private static final AtomicInteger RESTART_REQUESTS = new AtomicInteger();
 
@@ -446,9 +447,39 @@ public class GeneralHighlightingPass extends ProgressableTextEditorHighlightingP
     return forceHighlightParents;
   }
 
+  @Nonnull
   protected HighlightInfoHolder createInfoHolder(@Nonnull PsiFile file) {
-    final HighlightInfoFilter[] filters = HighlightInfoFilter.EXTENSION_POINT_NAME.getExtensions();
-    return new CustomHighlightInfoHolder(file, getColorsScheme(), filters);
+    HighlightInfoFilter[] filters = HighlightInfoFilter.EXTENSION_POINT_NAME.getExtensions();
+    EditorColorsScheme actualScheme = getColorsScheme() == null ? EditorColorsManager.getInstance().getGlobalScheme() : getColorsScheme();
+    return new HighlightInfoHolder(file, filters) {
+      int queued;
+
+      @Override
+      @Nonnull
+      public TextAttributesScheme getColorsScheme() {
+        return actualScheme;
+      }
+
+      @Override
+      public void queueToUpdateIncrementally() {
+        for (int i = queued; i < size(); i++) {
+          HighlightInfo info = get(i);
+          queueInfoToUpdateIncrementally(info);
+        }
+        queued = size();
+      }
+
+      @Override
+      public void clear() {
+        super.clear();
+        queued = 0;
+      }
+    };
+  }
+
+  protected void queueInfoToUpdateIncrementally(@Nonnull HighlightInfo info) {
+    int group = info.getGroup() == 0 ? Pass.UPDATE_ALL : info.getGroup();
+    myHighlightInfoProcessor.infoIsAvailable(myHighlightingSession, info, myPriorityRange, myRestrictRange, group);
   }
 
   static void highlightTodos(@Nonnull PsiFile file,
@@ -492,7 +523,9 @@ public class GeneralHighlightingPass extends ProgressableTextEditorHighlightingP
                                   @Nonnull Collection<? super HighlightInfo> insideResult,
                                   @Nonnull Collection<? super HighlightInfo> outsideResult,
                                   @Nonnull TextAttributes attributes,
-                                  @Nonnull String description, @Nonnull String tooltip, @Nonnull TextRange range) {
+                                  @Nonnull String description,
+                                  @Nonnull String tooltip,
+                                  @Nonnull TextRange range) {
     if (range.getStartOffset() >= restrictEndOffset || range.getEndOffset() <= restrictStartOffset) return;
     HighlightInfo info = HighlightInfo.newHighlightInfo(HighlightInfoType.TODO).range(range).textAttributes(attributes).description(description).escapedToolTip(tooltip).createUnconditionally();
     Collection<? super HighlightInfo> result = priorityRange.containsRange(info.getStartOffset(), info.getEndOffset()) ? insideResult : outsideResult;

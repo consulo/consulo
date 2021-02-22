@@ -48,8 +48,8 @@ import com.intellij.util.Processors;
 import com.intellij.util.containers.ContainerUtil;
 import gnu.trove.THashSet;
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
+import javax.annotation.Nullable;
 import java.util.*;
 
 public class InjectedGeneralHighlightingPass extends GeneralHighlightingPass {
@@ -238,7 +238,7 @@ public class InjectedGeneralHighlightingPass extends GeneralHighlightingPass {
       else {
         HighlightInfo patched =
                 new HighlightInfo(info.forcedTextAttributes, info.forcedTextAttributesKey, info.type, fixedTextRange.getStartOffset(), fixedTextRange.getEndOffset(), info.getDescription(), info.getToolTip(), info.type.getSeverity(null),
-                                  info.isAfterEndOfLine(), null, false, 0, info.getProblemGroup(), info.getInspectionToolId(), info.getGutterIconRenderer());
+                                  info.isAfterEndOfLine(), null, false, 0, info.getProblemGroup(), info.getInspectionToolId(), info.getGutterIconRenderer(), info.getGroup());
         patched.setFromInjection(true);
         outInfos.add(patched);
       }
@@ -253,6 +253,12 @@ public class InjectedGeneralHighlightingPass extends GeneralHighlightingPass {
     }
     advanceProgress(1);
     return true;
+  }
+
+  @Override
+  protected void queueInfoToUpdateIncrementally(@Nonnull HighlightInfo info) {
+    // do not send info to highlight immediately - we need to convert its offsets first
+    // see addPatchedInfos()
   }
 
   /**
@@ -304,7 +310,7 @@ public class InjectedGeneralHighlightingPass extends GeneralHighlightingPass {
 
       HighlightInfo patched =
               new HighlightInfo(info.forcedTextAttributes, info.forcedTextAttributesKey, info.type, hostRange.getStartOffset(), hostRange.getEndOffset(), info.getDescription(), info.getToolTip(), info.type.getSeverity(null), isAfterEndOfLine, null,
-                                false, 0, info.getProblemGroup(), info.getInspectionToolId(), info.getGutterIconRenderer());
+                                false, 0, info.getProblemGroup(), info.getInspectionToolId(), info.getGutterIconRenderer(), info.getGroup());
       patched.setHint(info.hasHint());
 
       if (info.quickFixActionRanges != null) {

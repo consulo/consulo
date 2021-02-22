@@ -26,7 +26,7 @@ public class ReferencesSearch extends ExtensibleQueryFactory<PsiReference, Refer
   private ReferencesSearch() {
   }
 
-  public static class SearchParameters implements DumbAwareSearchParameters {
+  public static class SearchParameters implements DumbAwareSearchParameters, com.intellij.model.search.SearchParameters<PsiReference> {
     private final PsiElement myElementToSearch;
     private final SearchScope myScope;
     private volatile SearchScope myEffectiveScope;
@@ -46,6 +46,11 @@ public class ReferencesSearch extends ExtensibleQueryFactory<PsiReference, Refer
 
     public SearchParameters(@Nonnull PsiElement elementToSearch, @Nonnull SearchScope scope, final boolean ignoreAccessScope) {
       this(elementToSearch, scope, ignoreAccessScope, null);
+    }
+
+    @Override
+    public final boolean areValid() {
+      return isQueryValid();
     }
 
     @Override

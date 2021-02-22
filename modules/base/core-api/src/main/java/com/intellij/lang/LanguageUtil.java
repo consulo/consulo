@@ -30,27 +30,21 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.templateLanguages.TemplateLanguage;
 import com.intellij.testFramework.LightVirtualFile;
 import com.intellij.util.containers.ContainerUtil;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
+import com.intellij.util.containers.JBIterable;
 import consulo.annotation.access.RequiredReadAction;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 
 public final class LanguageUtil {
+  public static final Comparator<Language> LANGUAGE_COMPARATOR = (o1, o2) -> StringUtil.naturalCompare(o1.getDisplayName(), o2.getDisplayName());
+
   private LanguageUtil() {
   }
-
-  public static final Comparator<Language> LANGUAGE_COMPARATOR = new Comparator<Language>() {
-    @Override
-    public int compare(Language o1, Language o2) {
-      return StringUtil.naturalCompare(o1.getDisplayName(), o2.getDisplayName());
-    }
-  };
-
 
   @Nullable
   public static Language getLanguageForPsi(@Nonnull Project project, @Nullable VirtualFile file) {
@@ -165,5 +159,10 @@ public final class LanguageUtil {
       }
     }
     return provider.getBaseLanguage();
+  }
+
+  @Nonnull
+  static JBIterable<Language> hierarchy(@Nonnull Language language) {
+    return JBIterable.generate(language, Language::getBaseLanguage);
   }
 }

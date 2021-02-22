@@ -546,6 +546,8 @@
       <with attribute="implementationClass" implements="com.intellij.lang.ParserDefinition"/>
     </extensionPoint>
 
+    <extensionPoint name="metaLanguage" interface="com.intellij.lang.MetaLanguage"/>
+
     <extensionPoint name="lang.versionResolver" beanClass="com.intellij.lang.LanguageExtensionPoint">
       <with attribute="implementationClass" implements="consulo.lang.LanguageVersionResolver"/>
     </extensionPoint>
@@ -1745,6 +1747,8 @@
                         serviceImplementation="com.intellij.codeEditor.printing.PrintSettings"/>
     <applicationService serviceInterface="com.intellij.codeInsight.daemon.DaemonCodeAnalyzerSettings"
                         serviceImplementation="com.intellij.codeInsight.daemon.DaemonCodeAnalyzerSettingsImpl"/>
+
+    <applicationService serviceInterface="com.intellij.util.Queries" serviceImplementation="com.intellij.util.QueriesImpl"/>
 
     <projectService serviceInterface="com.intellij.pom.references.PomService"
                     serviceImplementation="com.intellij.pom.references.PomServiceImpl"/>

@@ -7,15 +7,13 @@ import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.xml.util.XmlStringUtil;
-import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.ArrayList;
 import java.util.List;
 
 class HighlightInfoComposite extends HighlightInfo {
-  @NonNls
   private static final String LINE_BREAK = "<hr size=1 noshade>";
 
   static HighlightInfoComposite create(@Nonnull List<? extends HighlightInfo> infos) {
@@ -27,7 +25,7 @@ class HighlightInfoComposite extends HighlightInfo {
 
   private HighlightInfoComposite(@Nonnull List<? extends HighlightInfo> infos, @Nonnull HighlightInfo anchorInfo) {
     super(null, null, anchorInfo.type, anchorInfo.startOffset, anchorInfo.endOffset, createCompositeDescription(infos), createCompositeTooltip(infos), anchorInfo.type.getSeverity(null), false, null,
-          false, 0, anchorInfo.getProblemGroup(), null, anchorInfo.getGutterIconRenderer());
+          false, 0, anchorInfo.getProblemGroup(), null, anchorInfo.getGutterIconRenderer(), anchorInfo.getGroup());
     highlighter = anchorInfo.getHighlighter();
     setGroup(anchorInfo.getGroup());
     List<Pair<IntentionActionDescriptor, RangeMarker>> markers = ContainerUtil.emptyList();
