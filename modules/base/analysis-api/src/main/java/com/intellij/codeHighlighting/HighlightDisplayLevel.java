@@ -15,7 +15,6 @@
  */
 package com.intellij.codeHighlighting;
 
-import com.intellij.icons.AllIcons;
 import com.intellij.lang.annotation.HighlightSeverity;
 import com.intellij.openapi.editor.colors.CodeInsightColors;
 import com.intellij.openapi.editor.colors.EditorColorsManager;
@@ -24,6 +23,7 @@ import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.util.containers.HashMap;
 import com.intellij.util.ui.JBUI;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.color.ColorValue;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
@@ -40,7 +40,7 @@ public class HighlightDisplayLevel {
 
   public static final HighlightDisplayLevel ERROR = new HighlightDisplayLevel(HighlightSeverity.ERROR, createErrorIcon(CodeInsightColors.ERRORS_ATTRIBUTES));
 
-  public static final HighlightDisplayLevel WARNING = new HighlightDisplayLevel(HighlightSeverity.WARNING, createErrorIcon(CodeInsightColors.WARNINGS_ATTRIBUTES));
+  public static final HighlightDisplayLevel WARNING = new HighlightDisplayLevel(HighlightSeverity.WARNING, createWarningIcon(CodeInsightColors.WARNINGS_ATTRIBUTES));
 
   private static final Image DO_NOT_SHOW_KEY = createBoxIcon(TextAttributesKey.createTextAttributesKey("DO_NOT_SHOW"));
   public static final HighlightDisplayLevel DO_NOT_SHOW = new HighlightDisplayLevel(HighlightSeverity.INFORMATION, DO_NOT_SHOW_KEY);
@@ -49,7 +49,8 @@ public class HighlightDisplayLevel {
    */
   @Deprecated
   public static final HighlightDisplayLevel INFO = new HighlightDisplayLevel(HighlightSeverity.INFO, DO_NOT_SHOW.getIcon());
-  public static final HighlightDisplayLevel WEAK_WARNING = new HighlightDisplayLevel(HighlightSeverity.WEAK_WARNING, createErrorIcon(CodeInsightColors.WEAK_WARNING_ATTRIBUTES));
+  
+  public static final HighlightDisplayLevel WEAK_WARNING = new HighlightDisplayLevel(HighlightSeverity.WEAK_WARNING, createWarningIcon(CodeInsightColors.WEAK_WARNING_ATTRIBUTES));
 
   public static final HighlightDisplayLevel NON_SWITCHABLE_ERROR = new HighlightDisplayLevel(HighlightSeverity.ERROR);
 
@@ -136,7 +137,12 @@ public class HighlightDisplayLevel {
 
   @Nonnull
   private static Image createErrorIcon(@Nonnull TextAttributesKey textAttributesKey) {
-    return ImageEffects.colorize(AllIcons.General.InspectionsError, buildColorValue(textAttributesKey));
+    return ImageEffects.colorize(PlatformIconGroup.generalInspectionsError(), buildColorValue(textAttributesKey));
+  }
+
+  @Nonnull
+  private static Image createWarningIcon(@Nonnull TextAttributesKey textAttributesKey) {
+    return ImageEffects.colorize(PlatformIconGroup.generalInspectionsWarning(), buildColorValue(textAttributesKey));
   }
 
   @Nonnull
