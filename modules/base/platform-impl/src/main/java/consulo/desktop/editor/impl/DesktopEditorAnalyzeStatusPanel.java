@@ -64,6 +64,7 @@ import com.intellij.util.ui.update.Update;
 import com.intellij.xml.util.XmlStringUtil;
 import consulo.actionSystem.impl.ActionButtonUI;
 import consulo.awt.TargetAWT;
+import consulo.desktop.editor.DesktopEditorFloatPanel;
 import consulo.disposer.Disposable;
 import consulo.ui.Size;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -897,9 +898,13 @@ public class DesktopEditorAnalyzeStatusPanel implements Disposable {
     JComponent toolbar = statusToolbar.getComponent();
     toolbar.setLayout(new StatusComponentLayout());
     toolbar.addComponentListener(toolbarComponentListener);
-    toolbar.setBorder(JBUI.Borders.empty(2));
 
-    JPanel statusPanel = new NonOpaquePanel();
+    DesktopEditorFloatPanel statusPanel = new DesktopEditorFloatPanel() {
+      @Override
+      public Color getBackground() {
+        return TargetAWT.to(myEditor.getBackgroundColor());
+      }
+    };
     statusPanel.setVisible(!myEditor.isOneLineMode());
     statusPanel.setLayout(new BoxLayout(statusPanel, BoxLayout.X_AXIS));
     statusPanel.add(statusToolbar.getComponent());

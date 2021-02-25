@@ -9,8 +9,11 @@ import com.intellij.openapi.editor.event.EditorMouseMotionListener;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.ui.TimerUtil;
+import consulo.desktop.editor.DesktopEditorFloatPanel;
 import consulo.desktop.editor.impl.DesktopEditorPanelLayer;
 import consulo.disposer.Disposable;
+import consulo.ui.Size;
+import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -49,6 +52,7 @@ public final class ContextMenuImpl extends JPanel implements Disposable, Desktop
     });
 
     editor.addEditorMouseMotionListener(new EditorMouseMotionListener() {
+      @RequiredUIAccess
       @Override
       public void mouseMoved(@Nonnull final EditorMouseEvent e) {
         toggleContextToolbar(isInsideActivationArea(container, e.getMouseEvent().getPoint()));
@@ -196,11 +200,10 @@ public final class ContextMenuImpl extends JPanel implements Disposable, Desktop
   private JComponent createComponent() {
     myActionToolbar = ActionManager.getInstance().createActionToolbar(ActionPlaces.CONTEXT_TOOLBAR, myActionGroup, true);
     myActionToolbar.setTargetComponent(myEditor.getContentComponent());
-    myActionToolbar.setMinimumButtonSize(new Dimension(22, 22));
+    myActionToolbar.setMinimumButtonSize(new Size(22, 22));
     myActionToolbar.setReservePlaceAutoPopupIcon(false);
 
     ContextMenuPanel contextMenuPanel = new ContextMenuPanel(this);
-    contextMenuPanel.setLayout(new BorderLayout(0, 0));
     JComponent toolbarComponent = myActionToolbar.getComponent();
     toolbarComponent.setOpaque(false);
     contextMenuPanel.add(toolbarComponent);
@@ -213,46 +216,21 @@ public final class ContextMenuImpl extends JPanel implements Disposable, Desktop
     return 50;
   }
 
-  private static class ContextMenuPanel extends JPanel {
+  private static class ContextMenuPanel extends DesktopEditorFloatPanel {
     private final ContextMenuImpl myContextMenu;
 
     private ContextMenuPanel(final ContextMenuImpl contextMenu) {
       myContextMenu = contextMenu;
-      setBorder(BorderFactory.createEmptyBorder(1, 2, 1, 2));
-      setOpaque(false);
     }
 
     @Override
-    protected void paintChildren(final Graphics g) {
-      Graphics2D graphics = (Graphics2D)g.create();
-      try {
-        graphics.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_ATOP, myContextMenu.myCurrentOpacity / 100.0f));
-        super.paintChildren(graphics);
-      }
-      finally {
-        graphics.dispose();
-      }
+    protected float getChildrenOpacity() {
+      return myContextMenu.myCurrentOpacity / 100f;
     }
 
     @Override
-    public void paint(Graphics g) {
-      paintComponent(g);
-      super.paint(g);
-    }
-
-    @Override
-    public void paintComponent(final Graphics g) {
-      Rectangle r = getBounds();
-      Graphics2D graphics = (Graphics2D)g.create();
-      try {
-        graphics.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, myContextMenu.myCurrentOpacity / 600.0f));
-        graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        graphics.setColor(Color.GRAY);
-        graphics.fillRoundRect(0, 0, r.width - 1, r.height - 1, 6, 6);
-      }
-      finally {
-        graphics.dispose();
-      }
+    protected float getBackgroundOpacity() {
+      return myContextMenu.myCurrentOpacity / 600f;
     }
   }
 }
