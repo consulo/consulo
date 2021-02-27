@@ -306,9 +306,16 @@ public abstract class ToolWindowBase implements ToolWindowEx {
     return myAvailable;
   }
 
+  @Nonnull
   @Override
   public ContentManager getContentManager() {
     ensureContentInitialized();
+    return myContentManager;
+  }
+
+  @Nullable
+  @Override
+  public ContentManager getContentManagerIfCreated() {
     return myContentManager;
   }
 

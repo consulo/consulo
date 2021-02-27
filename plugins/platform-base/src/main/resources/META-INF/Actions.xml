@@ -244,8 +244,8 @@
       <add-to-group group-id="Diff.KeymapGroup" anchor="last"/>
     </group>
 
-    <action id="ExpandAll" class="com.intellij.ide.actions.ExpandAllAction" icon="consulo.platform.base.PlatformIconGroup@actions.expandall"/>
-    <action id="CollapseAll" class="com.intellij.ide.actions.CollapseAllAction" icon="consulo.platform.base.PlatformIconGroup@actions.collapseall"/>
+    <action id="ExpandAll" class="com.intellij.ide.actions.ExpandAllAction" icon="consulo.platform.base.PlatformIconGroup@general.expandall"/>
+    <action id="CollapseAll" class="com.intellij.ide.actions.CollapseAllAction" icon="consulo.platform.base.PlatformIconGroup@general.collapseall"/>
     <action id="ExportToTextFile" class="com.intellij.ide.actions.ExportToTextFileAction" icon="consulo.platform.base.PlatformIconGroup@actions.export"/>
     <action id="ExpandTreeNode" class="com.intellij.ide.actions.tree.ExpandTreeNodeAction"/>
     <action id="CollapseTreeNode" class="com.intellij.ide.actions.tree.CollapseTreeNodeAction"/>
@@ -2346,5 +2346,12 @@
     <action id="ShowFilterPopup" class="com.intellij.find.editorHeaderActions.ShowMoreOptions" text="Show Filter Popup"/>
     <action id="ShowSearchHistory" class="com.intellij.find.actions.ShowSearchHistoryAction" text="Show Search History"/>
 
+    <action id="SelectInProjectView" icon="consulo.platform.base.PlatformIconGroup@general.locate" class="com.intellij.ide.projectView.impl.SelectFileAction" />
+
+    <group id="ProjectViewToolbar">
+      <reference ref="SelectInProjectView"/>
+      <reference ref="ExpandAll"/>
+      <reference ref="CollapseAll"/>
+    </group>
   </actions>
 </consulo-plugin>

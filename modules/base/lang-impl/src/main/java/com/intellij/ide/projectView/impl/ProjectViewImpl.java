@@ -81,7 +81,6 @@ import com.intellij.ui.switcher.QuickActionProvider;
 import com.intellij.ui.tree.TreeVisitor;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.IJSwingUtilities;
-import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.io.URLUtil;
 import com.intellij.util.messages.MessageBusConnection;
 import com.intellij.util.ui.UIUtil;
@@ -89,7 +88,6 @@ import com.intellij.util.ui.tree.TreeUtil;
 import consulo.disposer.Disposable;
 import consulo.ide.projectView.ProjectViewEx;
 import consulo.logging.Logger;
-import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.psi.PsiPackageSupportProviders;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
@@ -621,7 +619,6 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
 
   private void createToolbarActions() {
     if (myActionGroup == null) return;
-    List<AnAction> titleActions = ContainerUtil.newSmartList();
     myActionGroup.removeAll();
     myActionGroup.addAction(new PaneOptionAction(myFlattenPackages, IdeBundle.message("action.flatten.packages"), IdeBundle.message("action.flatten.packages"),
                                                  AllIcons.ObjectBrowser.FlattenPackages, ourFlattenPackagesDefaults) {
@@ -738,44 +735,21 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
     myActionGroup.addAction(new SortByTypeAction()).setAsSecondary(true);
     myActionGroup.addAction(new FoldersAlwaysOnTopAction()).setAsSecondary(true);
 
-    if (!myAutoScrollFromSourceHandler.isAutoScrollEnabled()) {
-      titleActions.add(new ScrollFromSourceAction());
-    }
-    AnAction collapseAllAction = CommonActionsManager.getInstance().createCollapseAllAction(new TreeExpander() {
-      @Override
-      public void expandAll() {
-
-      }
-
-      @Override
-      public boolean canExpand() {
-        return false;
-      }
-
-      @Override
-      public void collapseAll() {
-        AbstractProjectViewPane pane = getCurrentProjectViewPane();
-        JTree tree = pane.myTree;
-        if (tree != null) {
-          TreeUtil.collapseAll(tree, 0);
-        }
-      }
-
-      @Override
-      public boolean canCollapse() {
-        return true;
-      }
-    }, getComponent());
-
-    collapseAllAction.getTemplatePresentation().setIcon(AllIcons.General.CollapseAll);
-    titleActions.add(collapseAllAction);
-
     getCurrentProjectViewPane().addToolbarActionsImpl(myActionGroup);
 
-    ToolWindowEx window = (ToolWindowEx)ToolWindowManager.getInstance(myProject).getToolWindow(ToolWindowId.PROJECT_VIEW);
-    if (window != null) {
-      window.setTitleActions(titleActions.toArray(new AnAction[titleActions.size()]));
+    List<AnAction> titleActions = new ArrayList<>();
+    createTitleActions(titleActions);
+    if (!titleActions.isEmpty()) {
+      ToolWindow window = ToolWindowManager.getInstance(myProject).getToolWindow(ToolWindowId.PROJECT_VIEW);
+      if (window != null) {
+        window.setTitleActions(titleActions.toArray(AnAction[]::new));
+      }
     }
+  }
+
+  protected void createTitleActions(@Nonnull List<? super AnAction> titleActions) {
+    AnAction action = ActionManager.getInstance().getAction("ProjectViewToolbar");
+    if (action != null) titleActions.add(action);
   }
 
   protected boolean isShowMembersOptionSupported() {
@@ -2032,16 +2006,8 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
     }
   }
 
-  private class ScrollFromSourceAction extends AnAction implements DumbAware {
-    private ScrollFromSourceAction() {
-      super("Scroll from Source", "Select the file open in the active editor", PlatformIconGroup.generalLocate());
-    }
-
-    @RequiredUIAccess
-    @Override
-    public void actionPerformed(@Nonnull AnActionEvent e) {
-      myAutoScrollFromSourceHandler.scrollFromSource();
-    }
+  public void scrollFromSource() {
+    myAutoScrollFromSourceHandler.scrollFromSource();
   }
 
   @Nonnull

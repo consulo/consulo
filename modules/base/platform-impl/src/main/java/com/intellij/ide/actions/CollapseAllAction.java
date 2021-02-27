@@ -20,6 +20,7 @@ import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 
 public class CollapseAllAction extends TreeCollapseAllActionBase {
+  @Override
   protected TreeExpander getExpander(DataContext dataContext) {
     return dataContext.getData(PlatformDataKeys.TREE_EXPANDER);
   }

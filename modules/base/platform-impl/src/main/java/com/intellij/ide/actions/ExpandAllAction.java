@@ -20,6 +20,7 @@ import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 
 public class ExpandAllAction extends TreeExpandAllActionBase {
+  @Override
   protected TreeExpander getExpander(DataContext dataContext) {
     return dataContext.getData(PlatformDataKeys.TREE_EXPANDER);
   }

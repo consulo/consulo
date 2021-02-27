@@ -17,7 +17,18 @@ package com.intellij.ide;
 
 public interface TreeExpander {
   void expandAll();
+
   boolean canExpand();
+
+  default boolean isExpandAllVisible() {
+    return true;
+  }
+
   void collapseAll();
+
   boolean canCollapse();
+
+  default boolean isCollapseAllVisible() {
+    return true;
+  }
 }

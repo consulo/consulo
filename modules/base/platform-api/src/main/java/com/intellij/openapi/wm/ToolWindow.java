@@ -15,15 +15,16 @@
  */
 package com.intellij.openapi.wm;
 
+import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.util.BusyObject;
+import com.intellij.ui.content.ContentManager;
 import consulo.annotation.DeprecationInfo;
 import consulo.localize.LocalizeValue;
-import consulo.util.dataholder.Key;
-import com.intellij.ui.content.ContentManager;
 import consulo.ui.Component;
+import consulo.ui.Rectangle2D;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
-import consulo.ui.Rectangle2D;
+import consulo.util.dataholder.Key;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -198,7 +199,13 @@ public interface ToolWindow extends BusyObject {
 
   void installWatcher(@Nonnull ContentManager contentManager);
 
+  @Nonnull
   ContentManager getContentManager();
+
+  @Nullable
+  default ContentManager getContentManagerIfCreated() {
+    return getContentManager();
+  }
 
   void setDefaultState(@Nullable ToolWindowAnchor anchor, @Nullable ToolWindowType type, @Nullable Rectangle2D floatingBounds);
 
@@ -214,6 +221,15 @@ public interface ToolWindow extends BusyObject {
   boolean isShowStripeButton();
 
   boolean isDisposed();
+
+  default void setTitleActions(@Nonnull AnAction... actions) {
+  }
+
+  default void setTabActions(@Nonnull AnAction... actions) {
+  }
+
+  default void setTabDoubleClickActions(@Nonnull AnAction... actions) {
+  }
 
   @Nonnull
   default Component getUIComponent() {

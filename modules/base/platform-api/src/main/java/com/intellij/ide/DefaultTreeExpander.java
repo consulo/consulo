@@ -17,42 +17,62 @@
 package com.intellij.ide;
 
 import com.intellij.util.ui.tree.TreeUtil;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
+import java.util.function.Supplier;
 
 /**
  * @author yole
-*/
+ */
 public class DefaultTreeExpander implements TreeExpander {
-  private final JTree myTree;
+  private final Supplier<? extends JTree> myTreeSupplier;
 
-  public DefaultTreeExpander(@Nonnull final JTree tree) {
-    myTree = tree;
+  public DefaultTreeExpander(@Nonnull JTree tree) {
+    this(() -> tree);
   }
 
+  public DefaultTreeExpander(@Nonnull Supplier<? extends JTree> treeSupplier) {
+    myTreeSupplier = treeSupplier;
+  }
+
+  @Override
   public void expandAll() {
-    TreeUtil.expandAll(myTree);
-    showSelectionCentered();
+    JTree tree = myTreeSupplier.get();
+    TreeUtil.expandAll(tree);
+    showSelectionCentered(tree);
   }
 
+  @Override
   public boolean canExpand() {
-    return myTree.isShowing();
+    return myTreeSupplier.get().isShowing();
   }
 
+  @Override
   public void collapseAll() {
-    TreeUtil.collapseAll(myTree, 1);
-    showSelectionCentered();
+    JTree tree = myTreeSupplier.get();
+
+    collapseAll(tree, 1);
   }
 
-  private void showSelectionCentered() {
-    final int[] rowz = myTree.getSelectionRows();
+  protected void collapseAll(JTree tree, int keepSelectionLevel) {
+    collapseAll(tree, true, keepSelectionLevel);
+  }
+
+  protected void collapseAll(JTree tree, boolean strict, int keepSelectionLevel) {
+    TreeUtil.collapseAll(tree, strict, keepSelectionLevel);
+    showSelectionCentered(tree);
+  }
+
+  private void showSelectionCentered(JTree tree) {
+    final int[] rowz = tree.getSelectionRows();
     if (rowz != null && rowz.length > 0) {
-      TreeUtil.showRowCentered(myTree, rowz[0], false);
+      TreeUtil.showRowCentered(tree, rowz[0], false);
     }
   }
 
+  @Override
   public boolean canCollapse() {
-    return myTree.isShowing();
+    return myTreeSupplier.get().isShowing();
   }
 }

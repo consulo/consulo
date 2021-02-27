@@ -440,7 +440,6 @@ public class AllIcons {
     public static final Image ExpandComponent = PlatformIconGroup.generalExpandComponent();
     public static final Image ExpandComponentHover = PlatformIconGroup.generalExpandComponentHover();
     public static final Image ExpandAll = PlatformIconGroup.generalExpandAll(); // 11x16
-    public static final Image ExpandAllHover = PlatformIconGroup.generalExpandAllHover(); // 11x16
     public static final Image ExportSettings = PlatformIconGroup.generalExportSettings(); // 32x32
     public static final Image ExternalTools = PlatformIconGroup.generalExternalTools(); // 32x32
     public static final Image ExternalToolsSmall = PlatformIconGroup.generalExternalToolsSmall(); // 16x16

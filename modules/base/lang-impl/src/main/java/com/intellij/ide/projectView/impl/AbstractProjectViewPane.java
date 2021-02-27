@@ -2,10 +2,7 @@
 
 package com.intellij.ide.projectView.impl;
 
-import com.intellij.ide.DataManager;
-import com.intellij.ide.IdeBundle;
-import com.intellij.ide.PsiCopyPasteManager;
-import com.intellij.ide.SelectInTarget;
+import com.intellij.ide.*;
 import com.intellij.ide.dnd.*;
 import com.intellij.ide.dnd.aware.DnDAwareTree;
 import com.intellij.ide.projectView.BaseProjectTreeBuilder;
@@ -18,11 +15,7 @@ import com.intellij.ide.projectView.impl.nodes.ModuleGroupNode;
 import com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode;
 import com.intellij.ide.util.treeView.*;
 import com.intellij.injected.editor.VirtualFileWindow;
-import consulo.disposer.Disposable;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
-import com.intellij.openapi.actionSystem.DataContext;
-import com.intellij.openapi.actionSystem.DataProvider;
-import com.intellij.openapi.actionSystem.DefaultActionGroup;
+import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.module.Module;
@@ -40,16 +33,19 @@ import com.intellij.problems.ProblemListener;
 import com.intellij.psi.*;
 import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.refactoring.move.MoveHandler;
+import com.intellij.ui.tree.AsyncTreeModel;
 import com.intellij.ui.tree.TreePathUtil;
 import com.intellij.ui.tree.TreeVisitor;
 import com.intellij.ui.tree.project.ProjectFileNode;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.ObjectUtils;
+import com.intellij.util.concurrency.InvokerSupplier;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.JBIterable;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.tree.TreeUtil;
 import consulo.annotation.DeprecationInfo;
+import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ide.projectView.impl.ProjectViewPaneOptionProvider;
 import consulo.logging.Logger;
@@ -57,15 +53,15 @@ import consulo.util.dataholder.Key;
 import consulo.util.dataholder.KeyWithDefaultValue;
 import consulo.util.dataholder.UserDataHolderBase;
 import org.jdom.Element;
-import org.jetbrains.annotations.NonNls;
+import javax.annotation.Nonnull;
 import org.jetbrains.annotations.TestOnly;
 import org.jetbrains.concurrency.Promise;
 import org.jetbrains.concurrency.Promises;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 import java.awt.*;
@@ -87,13 +83,13 @@ public abstract class AbstractProjectViewPane extends UserDataHolderBase impleme
   protected DnDAwareTree myTree;
   protected AbstractTreeStructure myTreeStructure;
   private AbstractTreeBuilder myTreeBuilder;
+  private TreeExpander myTreeExpander;
+
   // subId->Tree state; key may be null
   private final Map<String, TreeState> myReadTreeState = new HashMap<>();
   private final AtomicBoolean myTreeStateRestored = new AtomicBoolean();
   private String mySubId;
-  @NonNls
   private static final String ELEMENT_SUB_PANE = "subPane";
-  @NonNls
   private static final String ATTRIBUTE_SUB_ID = "subId";
 
   private DnDTarget myDropTarget;
@@ -195,6 +191,42 @@ public abstract class AbstractProjectViewPane extends UserDataHolderBase impleme
 
   public JComponent getComponentToFocus() {
     return myTree;
+  }
+
+  @Nonnull
+  private TreeExpander getTreeExpander() {
+    TreeExpander expander = myTreeExpander;
+    if (expander == null) {
+      expander = createTreeExpander();
+      myTreeExpander = expander;
+    }
+    return expander;
+  }
+
+  @Nonnull
+  protected TreeExpander createTreeExpander() {
+    return new DefaultTreeExpander(this::getTree) {
+      private boolean isExpandAllAllowed() {
+        JTree tree = getTree();
+        TreeModel model = tree == null ? null : tree.getModel();
+        return model == null || model instanceof AsyncTreeModel || model instanceof InvokerSupplier;
+      }
+
+      @Override
+      public boolean isExpandAllVisible() {
+        return isExpandAllAllowed();// && Registry.is("ide.project.view.expand.all.action.visible", true);
+      }
+
+      @Override
+      public boolean canExpand() {
+        return isExpandAllAllowed() && super.canExpand();
+      }
+
+      @Override
+      protected void collapseAll(@Nonnull JTree tree, boolean strict, int keepSelectionLevel) {
+        super.collapseAll(tree, false, keepSelectionLevel);
+      }
+    };
   }
 
   public void expand(@Nullable final Object[] path, final boolean requestFocus) {
@@ -308,6 +340,8 @@ public abstract class AbstractProjectViewPane extends UserDataHolderBase impleme
 
   @Override
   public Object getData(@Nonnull Key<?> dataId) {
+    if (PlatformDataKeys.TREE_EXPANDER == dataId) return getTreeExpander();
+
     Object data = myTreeStructure instanceof AbstractTreeStructureBase ? ((AbstractTreeStructureBase)myTreeStructure).getDataFromProviders(getSelectedNodes(AbstractTreeNode.class), dataId) : null;
     if (data != null) {
       return data;
@@ -326,7 +360,7 @@ public abstract class AbstractProjectViewPane extends UserDataHolderBase impleme
           navigatables.add((Navigatable)node);
         }
       }
-      return navigatables.isEmpty() ? null : navigatables.toArray(new Navigatable[0]);
+      return navigatables.isEmpty() ? null : navigatables.toArray(Navigatable[]::new);
     }
     return null;
   }

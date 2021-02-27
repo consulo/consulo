@@ -3,6 +3,7 @@ package com.intellij.util.ui.tree;
 
 import com.intellij.ide.ui.UISettings;
 import com.intellij.ide.util.treeView.AbstractTreeBuilder;
+import com.intellij.ide.util.treeView.AbstractTreeNode;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
@@ -801,27 +802,87 @@ public final class TreeUtil {
     }
   }
 
+  /**
+   * @param tree               a tree, which nodes should be collapsed
+   * @param keepSelectionLevel a minimal path count of a lead selection path or {@code -1} to restore old selection
+   */
   public static void collapseAll(@Nonnull JTree tree, final int keepSelectionLevel) {
-    final TreePath leadSelectionPath = tree.getLeadSelectionPath();
-    // Collapse all
-    int row = tree.getRowCount() - 1;
-    while (row >= 0) {
-      tree.collapseRow(row);
-      row--;
-    }
-    Object root = tree.getModel().getRoot();
-    if (root != null && !tree.isRootVisible()) {
-      tree.expandPath(new TreePath(root));
-    }
-    if (leadSelectionPath != null) {
-      final Object[] path = leadSelectionPath.getPath();
-      final Object[] pathToSelect = new Object[path.length > keepSelectionLevel && keepSelectionLevel >= 0 ? keepSelectionLevel : path.length];
-      System.arraycopy(path, 0, pathToSelect, 0, pathToSelect.length);
-      if (pathToSelect.length == 0) return;
-      selectPath(tree, new TreePath(pathToSelect));
-    }
+    collapseAll(tree, false, keepSelectionLevel);
   }
 
+  /**
+   * @param tree               a tree, which nodes should be collapsed
+   * @param strict             use {@code false} if a single top level node should not be collapsed
+   * @param keepSelectionLevel a minimal path count of a lead selection path or {@code -1} to restore old selection
+   */
+  public static void collapseAll(@Nonnull JTree tree, boolean strict, int keepSelectionLevel) {
+    assert EventQueue.isDispatchThread();
+    int row = tree.getRowCount();
+    if (row <= 1) return; // nothing to collapse
+
+    final TreePath leadSelectionPath = tree.getLeadSelectionPath();
+
+    int minCount = 1; // allowed path count to collapse
+    if (!tree.isRootVisible()) minCount++;
+    if (!tree.getShowsRootHandles()) {
+      minCount++;
+      strict = true;
+    }
+
+    // use the parent path of the normalized selection path to prohibit its collapsing
+    TreePath prohibited = leadSelectionPath == null ? null : normalize(leadSelectionPath, minCount, keepSelectionLevel).getParentPath();
+    // Collapse all
+    while (0 < row--) {
+      if (!strict && row == 0) break;
+      TreePath path = tree.getPathForRow(row);
+      assert path != null : "path is not found at row " + row;
+      int pathCount = path.getPathCount();
+      if (pathCount < minCount) continue;
+      if (pathCount == minCount && row > 0) strict = true;
+      if (!isAlwaysExpand(path) && !path.isDescendant(prohibited)) tree.collapsePath(path);
+    }
+    if (leadSelectionPath == null) return; // no selection to restore
+    if (!strict) minCount++; // top level node is not collapsed
+    internalSelect(tree, normalize(leadSelectionPath, minCount, keepSelectionLevel));
+  }
+
+  private static void internalSelect(@Nonnull JTree tree, @Nonnull TreePath ... paths) {
+    assert EventQueue.isDispatchThread();
+    if (paths.length == 0) return;
+    tree.setSelectionPaths(paths);
+    for (TreePath path : paths) {
+      if (scrollToVisible(tree, path, true)) {
+        break;
+      }
+    }
+  }
+  
+  /**
+   * @param path a path to expand (or to collapse)
+   * @return {@code true} if node should be expanded (or should not be collapsed) automatically
+   * @see AbstractTreeNode#isAlwaysExpand
+   */
+  private static boolean isAlwaysExpand(@Nonnull TreePath path) {
+    AbstractTreeNode<?> node = getLastUserObject(AbstractTreeNode.class, path);
+    return node != null && node.isAlwaysExpand();
+  }
+
+  /**
+   * @param path               a path to normalize
+   * @param minCount           a minimal number of elements in the resulting path
+   * @param keepSelectionLevel a maximal number of elements in the selection path or negative value to preserve the given path
+   * @return a parent path with the specified number of elements, or the given {@code path} if it does not have enough elements
+   */
+  @Nonnull
+  private static TreePath normalize(@Nonnull TreePath path, int minCount, int keepSelectionLevel) {
+    if (keepSelectionLevel < 0) return path;
+    if (keepSelectionLevel > minCount) minCount = keepSelectionLevel;
+    int pathCount = path.getPathCount();
+    while (minCount < pathCount--) path = path.getParentPath();
+    assert path != null : "unexpected minCount: " + minCount;
+    return path;
+  }
+  
   public static void selectNode(@Nonnull final JTree tree, final TreeNode node) {
     selectPath(tree, getPathFromRoot(node));
   }

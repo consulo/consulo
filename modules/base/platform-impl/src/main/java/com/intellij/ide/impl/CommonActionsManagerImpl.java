@@ -52,7 +52,6 @@ public class CommonActionsManagerImpl extends CommonActionsManager {
   public AnAction createExpandAllHeaderAction(JTree tree) {
     AnAction action = createExpandAllAction(new DefaultTreeExpander(tree), tree);
     action.getTemplatePresentation().setIcon(AllIcons.General.ExpandAll);
-    action.getTemplatePresentation().setHoveredIcon(AllIcons.General.ExpandAllHover);
     return action;
   }
 
