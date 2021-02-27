@@ -274,6 +274,18 @@
             <action id="TemplateProjectStructure" class="com.intellij.ide.actions.TemplateProjectStructureAction"/>
             <group id="FileSettingsGroup"/>
           </group>
+          <group id="FilePropertiesGroup" popup="true">
+            <action id="ChangeFileEncodingAction" class="com.intellij.openapi.vfs.encoding.ChangeFileEncodingAction"/>
+            <action id="AssociateWithFileType" class="com.intellij.ide.actions.AssociateFileTypeAction"/>
+            <action id="ToggleReadOnlyAttribute" class="com.intellij.ide.actions.ToggleReadOnlyAttributeAction"/>
+
+            <group id="ChangeLineSeparators" popup="true" class="com.intellij.ide.actions.NonTrivialActionGroup">
+              <action id="ConvertToWindowsLineSeparators" class="com.intellij.codeStyle.ConvertToWindowsLineSeparatorsAction"/>
+              <action id="ConvertToUnixLineSeparators" class="com.intellij.codeStyle.ConvertToUnixLineSeparatorsAction"/>
+              <action id="ConvertToMacLineSeparators" class="com.intellij.codeStyle.ConvertToMacLineSeparatorsAction"/>
+            </group>
+
+          </group>
           <separator/>
           <group id="ExportImportGroup">
             <action id="ImportSettings" class="com.intellij.ide.actions.ImportSettingsAction"/>
@@ -308,9 +320,11 @@
           <action id="$Cut" class="com.intellij.ide.actions.CutAction" icon="consulo.platform.base.PlatformIconGroup@actions.menu_cut"/>
           <action id="$Copy" class="com.intellij.ide.actions.CopyAction" icon="consulo.platform.base.PlatformIconGroup@actions.copy"/>
           <action id="CopyPaths" class="com.intellij.ide.actions.CopyPathsAction"/>
-          <action id="$Paste" class="com.intellij.ide.actions.PasteAction" icon="consulo.platform.base.PlatformIconGroup@actions.menu_paste"/>
-          <action id="PasteMultiple" class="com.intellij.openapi.editor.actions.MultiplePasteAction"/>
-          <reference ref="EditorPasteSimple"/>
+          <group id="PasteGroup" popup="true" class="com.intellij.ide.actions.PopupInMainMenuActionGroup">
+            <action id="$Paste" class="com.intellij.ide.actions.PasteAction" icon="consulo.platform.base.PlatformIconGroup@actions.menu_paste"/>
+            <action id="PasteMultiple" class="com.intellij.openapi.editor.actions.MultiplePasteAction"/>
+            <reference ref="EditorPasteSimple"/>
+          </group>
         </group>
         <group id="EditCreateDeleteGroup">
           <action id="$Delete" class="com.intellij.ide.actions.DeleteAction"/>
@@ -571,8 +585,10 @@
       <reference ref="$Cut"/>
       <reference ref="$Copy"/>
       <reference ref="$Paste"/>
-      <reference ref="PasteMultiple"/>
-      <reference ref="EditorPasteSimple"/>
+      <group id="Copy.Paste.Special" popup="true">
+        <reference ref="EditorPasteSimple"/>
+        <reference ref="PasteMultiple"/>
+      </group>
       <reference ref="EditorToggleColumnMode"/>
       <action id="$SearchWeb" class="com.intellij.ide.actions.SearchWebAction"/>
       <separator/>
@@ -1025,7 +1041,9 @@
 
     <group id="RunContextGroup" popup="false">
       <action id="CreateRunConfiguration" class="com.intellij.execution.actions.CreateAction"/>
+      <separator/>
     </group>
+    
     <group id="RunContextPopupGroup" popup="false">
       <reference ref="RunContextGroup"/>
     </group>
@@ -1102,11 +1120,33 @@
       <add-to-group group-id="FileMenu" anchor="after" relative-to-action="ToggleReadOnlyAttribute"/>
     </group>
 
-    <!-- Edit -->
-    <action id="CopyReference" class="com.intellij.ide.actions.CopyReferenceAction">
+    <action id="CopyAbsolutePath" class="com.intellij.ide.actions.CopyAbsolutePathProvider" use-shortcut-of="CopyPaths"/>
+    <action id="CopyFileName" class="com.intellij.ide.actions.CopyFileNameProvider"/>
+    <action id="CopyPathWithLineNumber" class="com.intellij.ide.actions.CopyFileWithLineNumberPathProvider"/>
+    <action id="CopyContentRootPath" class="com.intellij.ide.actions.CopyContentRootPathProvider"/>
+    <action id="CopySourceRootPath" class="com.intellij.ide.actions.CopySourceRootPathProvider"/>
+
+    <group id="CopyReferencePopupGroup" class="com.intellij.ide.actions.CopyReferencePopup" popup="true">
+      <group id="CopyFileReference">
+        <reference ref="CopyAbsolutePath"/>
+        <reference ref="CopyFileName"/>
+        <separator/>
+        <reference ref="CopyPathWithLineNumber"/>
+        <reference ref="CopyContentRootPath"/>
+        <reference ref="CopySourceRootPath"/>
+      </group>
+      <separator/>
+      <group id="CopyExternalReferenceGroup">
+      </group>
       <add-to-group group-id="CutCopyPasteGroup" anchor="after" relative-to-action="CopyPaths"/>
       <add-to-group group-id="EditorTabPopupMenu" anchor="after" relative-to-action="CopyPaths"/>
-      <add-to-group group-id="EditorPopupMenu" anchor="after" relative-to-action="$Copy"/>
+    </group>
+
+    <!-- Edit -->
+    <action id="CopyReference" class="com.intellij.ide.actions.CopyReferenceAction">
+      <add-to-group group-id="CopyReferencePopupGroup" anchor="after" relative-to-action="CopyExternalReferenceGroup"/>
+      <add-to-group group-id="EditorTabPopupMenu" anchor="after" relative-to-action="CopyPaths"/>
+      <add-to-group group-id="Copy.Paste.Special" anchor="first"/>
     </action>
 
     <group id="EditSelectWordGroup">
@@ -1455,7 +1495,7 @@
 
     <group id="ProjectViewPopupMenu">
       <reference ref="WeighingNewGroup"/>
-      <action id="AssociateWithFileType" class="com.intellij.ide.actions.AssociateFileType"/>
+      <reference ref="AssociateWithFileType"/>
       <separator/>
       <reference ref="CutCopyPasteGroup"/>
       <reference ref="EditSource"/>
@@ -1476,18 +1516,31 @@
       <reference ref="VersionControlsGroup"/>
       <action id="SynchronizeCurrentFile" class="com.intellij.ide.actions.SynchronizeCurrentFileAction" icon="consulo.platform.base.PlatformIconGroup@actions.refresh"/>
       <separator/>
-      <action id="RevealIn" class="com.intellij.ide.actions.RevealFileAction"/>
-      <reference ref="ShowFilePath"/>
       <action id="GoToLinkTarget" class="com.intellij.ide.actions.GoToLinkTargetAction"/>
+      <separator/>
+      <reference ref="CompareTwoFiles"/>
+      <reference ref="CompareFileWithEditor"/>
       <separator/>
       <reference ref="ExternalToolsGroup"/>
       <separator/>
       <reference ref="ProjectViewPopupMenuSettingsGroup"/>
       <group id="RemoveBom.Group">
         <action id="RemoveBom" class="com.intellij.openapi.editor.actions.RemoveBomAction"/>
-        <!--<add-to-group group-id="FilePropertiesGroup" anchor="after" relative-to-action="ChangeFileEncodingAction"/>-->
+        <add-to-group group-id="FilePropertiesGroup" anchor="after" relative-to-action="ChangeFileEncodingAction"/>
         <add-to-group group-id="EditorPopupMenu" anchor="after" relative-to-action="ChangeFileEncodingAction"/>
       </group>
+      <group id="AddBom.Group">
+        <action id="AddBom" class="com.intellij.openapi.editor.actions.AddBomAction"/>
+        <add-to-group group-id="FilePropertiesGroup" anchor="after" relative-to-action="RemoveBom"/>
+        <add-to-group group-id="EditorPopupMenu" anchor="after" relative-to-action="RemoveBom"/>
+      </group>
+    </group>
+
+    <group id="RevealGroup" popup="true">
+      <action id="RevealIn" class="com.intellij.ide.actions.RevealFileAction"/>
+      <reference ref="ShowFilePath"/>
+
+      <add-to-group group-id="RunContextPopupGroup" anchor="last"/>
     </group>
 
     <group id="NavbarPopupMenu">

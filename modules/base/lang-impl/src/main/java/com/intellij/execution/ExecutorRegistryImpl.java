@@ -39,13 +39,12 @@ import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
+import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import jakarta.inject.Inject;
-
 import java.util.*;
 
 @Singleton
@@ -132,7 +131,7 @@ public class ExecutorRegistryImpl extends ExecutorRegistry implements Disposable
       action = anAction;
     }
 
-    ((DefaultActionGroup)myActionManager.getAction(groupId)).add(action, myActionManager);
+    ((DefaultActionGroup)myActionManager.getAction(groupId)).add(action, Constraints.FIRST, myActionManager);
   }
 
   synchronized void deinitExecutor(@Nonnull final Executor executor) {

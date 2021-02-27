@@ -17,7 +17,7 @@
 package com.intellij.refactoring.rename;
 
 import com.intellij.codeInsight.CodeInsightUtilBase;
-import consulo.ide.actions.QualifiedNameProviders;
+import com.intellij.ide.actions.CopyReferenceAction;
 import com.intellij.lang.Language;
 import com.intellij.lang.LanguageNamesValidation;
 import com.intellij.openapi.application.ApplicationManager;
@@ -45,11 +45,11 @@ import com.intellij.usageView.UsageInfoFactory;
 import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.containers.HashMap;
 import com.intellij.util.containers.MultiMap;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.logging.Logger;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.*;
 
 public class RenameUtil {
@@ -170,7 +170,7 @@ public class RenameUtil {
   public static void doRename(final PsiElement element, String newName, UsageInfo[] usages, final Project project,
                               @Nullable final RefactoringElementListener listener) throws IncorrectOperationException{
     final RenamePsiElementProcessor processor = RenamePsiElementProcessor.forElement(element);
-    final String fqn = element instanceof PsiFile ? ((PsiFile)element).getVirtualFile().getPath() : QualifiedNameProviders.elementToFqn(element);
+    final String fqn = element instanceof PsiFile ? ((PsiFile)element).getVirtualFile().getPath() : CopyReferenceAction.elementToFqn(element);
     if (fqn != null) {
       UndoableAction action = new BasicUndoableAction() {
         @Override

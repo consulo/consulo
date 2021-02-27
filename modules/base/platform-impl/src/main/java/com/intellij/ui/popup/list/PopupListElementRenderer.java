@@ -18,6 +18,7 @@ import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import consulo.awt.TargetAWT;
 import consulo.ui.image.Image;
+
 import javax.annotation.Nullable;
 
 import javax.accessibility.AccessibleContext;

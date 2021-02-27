@@ -43,7 +43,6 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.indexing.FindSymbolParameters;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
-import consulo.ide.actions.QualifiedNameProviders;
 import consulo.util.dataholder.Key;
 
 import javax.annotation.Nonnull;
@@ -323,7 +322,7 @@ public abstract class AbstractGotoSEContributor implements WeightedSearchEverywh
     }
 
     if (SearchEverywhereDataKeys.ITEM_STRING_DESCRIPTION == dataId && element instanceof PsiElement) {
-      return QualifiedNameProviders.elementToFqn((PsiElement)element);
+      return com.intellij.ide.actions.QualifiedNameProviderUtil.getQualifiedName((PsiElement)element);
     }
 
     return null;

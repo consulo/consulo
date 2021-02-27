@@ -2628,3 +2628,22 @@ show.log.in.action.text:
   text: Show Log in {0}
 action.Help.JoinDiscordChannel.text:
   text: Join Discord Channel
+group.Copy.Paste.Special.text:
+  text: Copy / Paste Special
+group.Copy.Paste.Special.description:
+  text: Copy / Paste Special Editor Actions
+action.CopyAbsolutePath.text:
+  text: Absolute Path
+action.CopyPathWithLineNumber.text:
+  text: Path With Line Number
+action.CopyContentRootPath.text:
+  text: Path From Content Root
+action.CopySourceRootPath.text:
+  text: Path From Source Root
+action.CopyFileName.text:
+  text: File Name
+group.CopyReferencePopupGroup.text:
+  text: Copy Path...
+group.RevealGroup.text:
+  text: Open In
+

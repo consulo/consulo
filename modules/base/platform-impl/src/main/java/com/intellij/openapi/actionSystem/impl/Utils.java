@@ -59,7 +59,7 @@ public class Utils {
                                                  @Nonnull DataContext context,
                                                  String place,
                                                  ActionGroupVisitor visitor) {
-    return new ActionUpdater(isInModalContext, presentationFactory, context, place, false, false, false, visitor).expandActionGroup(group, group instanceof CompactActionGroup);
+    return new ActionUpdater(isInModalContext, presentationFactory, context, place, false, false, visitor).expandActionGroup(group, group instanceof CompactActionGroup);
   }
 
   public static CancellablePromise<List<AnAction>> expandActionGroupAsync(boolean isInModalContext,
@@ -69,7 +69,7 @@ public class Utils {
                                                                           String place,
                                                                           @Nullable Utils.ActionGroupVisitor visitor) {
     if (!(context instanceof AsyncDataContext)) context = DataManager.getInstance().createAsyncDataContext(context);
-    return new ActionUpdater(isInModalContext, presentationFactory, context, place, false, false, false, visitor).expandActionGroupAsync(group, group instanceof CompactActionGroup);
+    return new ActionUpdater(isInModalContext, presentationFactory, context, place, false, false, visitor).expandActionGroupAsync(group, group instanceof CompactActionGroup);
   }
 
   public static List<AnAction> expandActionGroupWithTimeout(boolean isInModalContext,
@@ -79,7 +79,7 @@ public class Utils {
                                                             String place,
                                                             ActionGroupVisitor visitor,
                                                             int timeoutMs) {
-    return new ActionUpdater(isInModalContext, presentationFactory, context, place, false, false, false, visitor).expandActionGroupWithTimeout(group, group instanceof CompactActionGroup, timeoutMs);
+    return new ActionUpdater(isInModalContext, presentationFactory, context, place, false, false, visitor).expandActionGroupWithTimeout(group, group instanceof CompactActionGroup, timeoutMs);
   }
 
   private static final boolean DO_FULL_EXPAND = Boolean.getBoolean("actionSystem.use.full.group.expand"); // for tests and debug
@@ -95,7 +95,7 @@ public class Utils {
                        boolean useDarkIcons) {
     final boolean checked = group instanceof CheckedActionGroup;
 
-    ActionUpdater updater = new ActionUpdater(isInModalContext, presentationFactory, context, place, true, false, false);
+    ActionUpdater updater = new ActionUpdater(isInModalContext, presentationFactory, context, place, true, false);
     List<AnAction> list = DO_FULL_EXPAND ? updater.expandActionGroupFull(group, group instanceof CompactActionGroup) : updater.expandActionGroupWithTimeout(group, group instanceof CompactActionGroup);
 
     final boolean fixMacScreenMenu = TopApplicationMenuUtil.isMacSystemMenu && isWindowMenu && Registry.is("actionSystem.mac.screenMenuNotUpdatedFix");
@@ -150,7 +150,7 @@ public class Utils {
           children.add(separator);
         }
       }
-      else if (action instanceof ActionGroup && !(updater.canBePerformedCached((ActionGroup)action) && !updater.hasVisibleChildren((ActionGroup)action))) {
+      else if (action instanceof ActionGroup && !Boolean.TRUE.equals(presentation.getClientProperty("actionGroup.perform.only"))) {
         ActionMenu menu = new ActionMenu(context, place, (ActionGroup)action, presentationFactory, enableMnemonics, useDarkIcons);
         component.add(menu);
         children.add(menu);
