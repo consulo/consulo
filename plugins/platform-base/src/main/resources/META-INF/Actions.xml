@@ -1040,7 +1040,8 @@
             description="Choose and debug configuration" icon="consulo.platform.base.PlatformIconGroup@actions.startdebugger"/>
 
     <group id="RunContextGroup" popup="false">
-      <action id="CreateRunConfiguration" class="com.intellij.execution.actions.CreateAction"/>
+      <!-- A dynamic group filled with executor actions -->
+      <group id="RunContextGroupInner"/>
       <separator/>
     </group>
     

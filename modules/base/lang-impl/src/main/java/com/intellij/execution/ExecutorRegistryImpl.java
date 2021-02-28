@@ -41,7 +41,6 @@ import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
-import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -51,8 +50,8 @@ import java.util.*;
 public class ExecutorRegistryImpl extends ExecutorRegistry implements Disposable {
   private static final Logger LOG = Logger.getInstance(ExecutorRegistryImpl.class);
 
-  @NonNls public static final String RUNNERS_GROUP = "RunnerActions";
-  @NonNls public static final String RUN_CONTEXT_GROUP = "RunContextGroup";
+  public static final String RUNNERS_GROUP = "RunnerActions";
+  public static final String RUN_CONTEXT_GROUP = "RunContextGroupInner";
 
   private List<Executor> myExecutors = new ArrayList<>();
   private ActionManager myActionManager;
@@ -131,7 +130,7 @@ public class ExecutorRegistryImpl extends ExecutorRegistry implements Disposable
       action = anAction;
     }
 
-    ((DefaultActionGroup)myActionManager.getAction(groupId)).add(action, Constraints.FIRST, myActionManager);
+    ((DefaultActionGroup)myActionManager.getAction(groupId)).add(action, Constraints.LAST, myActionManager);
   }
 
   synchronized void deinitExecutor(@Nonnull final Executor executor) {
