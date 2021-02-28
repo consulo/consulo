@@ -2646,4 +2646,21 @@ group.CopyReferencePopupGroup.text:
   text: Copy Path...
 group.RevealGroup.text:
   text: Open In
-
+group.FilePropertiesGroup.text:
+  text: File Properties
+group.PasteGroup.text:
+  text: Paste
+group.ViewToolbarNewGroup.text:
+  text: Main Toolbar
+group.ViewStatusBarWidgetsGroup.text:
+  text: Status Bar _Widgets
+group.ViewStatusBarWidgetsGroup.description:
+  text: Show/hide status bar widgets
+action.StopBackgroundProcesses.text:
+  text: Stop Background Processes...
+action.StopBackgroundProcesses.description:
+  text: Stop Background processes
+action.IdeScriptingConsole.text:
+  text: IDE Scripting Console
+action.IdeScriptingConsole.description:
+  text: Open IDE scripting console
