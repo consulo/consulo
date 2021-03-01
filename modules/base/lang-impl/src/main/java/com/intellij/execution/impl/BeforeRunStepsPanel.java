@@ -21,21 +21,18 @@ import com.intellij.execution.ExecutionBundle;
 import com.intellij.execution.RunnerAndConfigurationSettings;
 import com.intellij.execution.configurations.RunConfiguration;
 import com.intellij.execution.configurations.UnknownRunConfiguration;
-import com.intellij.openapi.actionSystem.ActionToolbarPosition;
-import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.actionSystem.DefaultActionGroup;
+import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.impl.SimpleDataContext;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.ui.popup.ListPopup;
-import com.intellij.openapi.util.Condition;
+import com.intellij.openapi.util.Conditions;
 import com.intellij.openapi.util.Pair;
 import com.intellij.ui.AnActionButton;
 import com.intellij.ui.CollectionListModel;
 import com.intellij.ui.ColoredListCellRenderer;
 import com.intellij.ui.ToolbarDecorator;
 import com.intellij.ui.components.JBList;
-import com.intellij.util.containers.hash.HashSet;
+import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.dataholder.Key;
 
@@ -236,11 +233,11 @@ class BeforeRunStepsPanel {
     final List<BeforeRunTaskProvider<BeforeRunTask>> providers = BeforeRunTaskProvider.EP_NAME.getExtensionList(myRunConfiguration.getProject());
     Set<Key> activeProviderKeys = getActiveProviderKeys();
 
-    DefaultActionGroup actionGroup = new DefaultActionGroup(null, false);
+    ActionGroup.Builder actionGroup = ActionGroup.newImmutableBuilder();
     for (final BeforeRunTaskProvider<BeforeRunTask> provider : providers) {
       if (provider.createTask(myRunConfiguration) == null) continue;
       if (activeProviderKeys.contains(provider.getId()) && provider.isSingleton()) continue;
-      AnAction providerAction = new AnAction(provider.getName(), null, provider.getIcon()) {
+      AnAction providerAction = new AnAction(LocalizeValue.of(provider.getName()), LocalizeValue.empty(), provider.getIcon()) {
         @RequiredUIAccess
         @Override
         public void actionPerformed(@Nonnull AnActionEvent e) {
@@ -268,9 +265,13 @@ class BeforeRunStepsPanel {
       };
       actionGroup.add(providerAction);
     }
-    final ListPopup popup = popupFactory
-            .createActionGroupPopup(ExecutionBundle.message("add.new.run.configuration.acrtion.name"), actionGroup, SimpleDataContext.getProjectContext(myRunConfiguration.getProject()), false, false,
-                                    false, null, -1, Condition.TRUE);
+
+    DataContext dataContext = SimpleDataContext.builder()
+            .add(CommonDataKeys.PROJECT, myRunConfiguration.getProject())
+            .add(PlatformDataKeys.CONTEXT_COMPONENT, myPanel)
+            .build();
+
+    final ListPopup popup = popupFactory .createActionGroupPopup(ExecutionBundle.message("add.new.run.configuration.acrtion.name"), actionGroup.build(), dataContext, false, false, false, null, -1, Conditions.alwaysTrue());
     popup.show(button.getPreferredPopupPoint());
   }
 
