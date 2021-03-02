@@ -48,7 +48,4 @@ public abstract class TextFieldAction extends LinkLabel implements LinkListener 
     setVisible(true);
     setText(PropertiesComponent.getInstance().getBoolean(FileChooserDialogImpl.FILE_CHOOSER_SHOW_PATH_PROPERTY, true) ? IdeBundle.message("file.chooser.hide.path") : IdeBundle.message("file.chooser.show.path"));
   }
-
-
-
 }

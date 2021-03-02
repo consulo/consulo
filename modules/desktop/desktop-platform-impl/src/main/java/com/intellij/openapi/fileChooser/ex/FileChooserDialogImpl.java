@@ -97,8 +97,6 @@ public class FileChooserDialogImpl extends DialogWrapper implements FileChooserD
   private MergingUpdateQueue myUiUpdater;
   private boolean myTreeIsUpdating;
 
-  public static Key<PathField> PATH_FIELD = Key.create("PathField");
-
   public FileChooserDialogImpl(@Nonnull final FileChooserDescriptor descriptor, @Nullable Project project) {
     super(project, true);
     myChooserDescriptor = descriptor;
@@ -612,7 +610,7 @@ public class FileChooserDialogImpl extends DialogWrapper implements FileChooserD
       if (CommonDataKeys.VIRTUAL_FILE_ARRAY == dataId) {
         return myFileSystemTree.getSelectedFiles();
       }
-      else if (PATH_FIELD == dataId) {
+      else if (PathField.PATH_FIELD == dataId) {
         return (PathField)() -> toggleShowTextField();
       }
       else if (FileSystemTree.DATA_KEY == dataId) {

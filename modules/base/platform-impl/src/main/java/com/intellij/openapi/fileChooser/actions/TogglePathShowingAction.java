@@ -18,7 +18,6 @@ package com.intellij.openapi.fileChooser.actions;
 import com.intellij.ide.IdeBundle;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.fileChooser.ex.FileChooserDialogImpl;
 import com.intellij.openapi.fileChooser.ex.PathField;
 import com.intellij.openapi.project.DumbAware;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -32,13 +31,13 @@ public class TogglePathShowingAction extends AnAction implements DumbAware {
   @Override
   public void update(final AnActionEvent e) {
     e.getPresentation().setText(IdeBundle.message("file.chooser.hide.path.tooltip.text"));
-    e.getPresentation().setEnabled(e.getDataContext().getData(FileChooserDialogImpl.PATH_FIELD) != null);
+    e.getPresentation().setEnabled(e.getDataContext().getData(PathField.PATH_FIELD) != null);
   }
 
   @RequiredUIAccess
   @Override
   public void actionPerformed(final AnActionEvent e) {
-    PathField f = e.getDataContext().getData(FileChooserDialogImpl.PATH_FIELD);
+    PathField f = e.getDataContext().getData(PathField.PATH_FIELD);
     if (f != null) {
       f.toggleVisible();
     }

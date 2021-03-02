@@ -15,6 +15,10 @@
  */
 package com.intellij.openapi.fileChooser.ex;
 
+import consulo.util.dataholder.Key;
+
 public interface PathField {
+  Key<PathField> PATH_FIELD = Key.create("PathField");
+
   void toggleVisible();
 }
