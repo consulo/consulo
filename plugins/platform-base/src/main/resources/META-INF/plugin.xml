@@ -2050,6 +2050,9 @@
     <customScopesProvider implementation="com.intellij.packageDependencies.ChangeListsScopesProvider" order="last"/>
     <refactoring.elementListenerProvider implementation="com.intellij.packageDependencies.ui.RefactoringScopeElementListenerProvider"/>
 
+    <searchScopesProvider implementation="com.intellij.psi.search.DefaultSearchScopeProviders$Favorites"/>
+    <searchScopesProvider implementation="com.intellij.psi.search.DefaultSearchScopeProviders$CustomNamed" order="last"/>
+
     <highlightVisitor implementation="com.intellij.codeInsight.daemon.impl.DefaultHighlightVisitor"/>
     <projectService serviceImplementation="com.intellij.codeInsight.daemon.impl.CachedAnnotators"/>
     <daemon.changeLocalityDetector implementation="com.intellij.codeInsight.daemon.impl.DefaultChangeLocalityDetector"/>
