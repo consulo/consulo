@@ -40,6 +40,7 @@ import com.intellij.psi.PsiManager;
 import com.intellij.util.Alarm;
 import com.intellij.util.SmartList;
 import com.intellij.util.messages.MessageBusConnection;
+import consulo.annotation.access.RequiredReadAction;
 import gnu.trove.THashSet;
 
 import javax.annotation.Nonnull;
@@ -150,6 +151,7 @@ public class ProjectTreeBuilder extends BaseProjectTreeBuilder {
     }
   }
 
+  @RequiredReadAction
   private PsiElement findPsi(@Nonnull VirtualFile vFile) {
     if (!vFile.isValid()) return null;
     PsiManager psiManager = PsiManager.getInstance(myProject);

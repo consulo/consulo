@@ -37,10 +37,6 @@
     </component>
 
     <component>
-      <implementation-class>com.intellij.ide.bookmarks.BookmarkManager</implementation-class>
-    </component>
-
-    <component>
       <implementation-class>com.intellij.openapi.fileEditor.impl.EditorHistoryManager</implementation-class>
     </component>
     <component>

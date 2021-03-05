@@ -40,23 +40,22 @@ import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Comparing;
-import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.pom.Navigatable;
-import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
-import com.intellij.ui.JBColor;
-import com.intellij.util.Processor;
-import consulo.awt.TargetAWT;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.ui.color.ColorValue;
+import consulo.ui.color.RGBColor;
+import consulo.ui.ex.util.LightDarkColorValue;
 import consulo.ui.font.FontManager;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
 import consulo.ui.image.canvas.Canvas2D;
 import consulo.ui.style.ComponentColors;
 import consulo.ui.style.StandardColors;
+import consulo.util.lang.ref.SimpleReference;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -91,8 +90,7 @@ public class Bookmark implements Navigatable {
     int height = AllIcons.Actions.Checked.getHeight();
 
     return ImageEffects.canvas(width, height, c -> {
-      // FIXME [VISTALL] make constant ??
-      c.setFillStyle(TargetAWT.from(new JBColor(new Color(0xffffcc), new Color(0x675133))));
+      c.setFillStyle(new LightDarkColorValue(new RGBColor(255, 255, 204), new RGBColor(103, 81, 51)));
       c.fillRect(0, 0, width, height);
 
       c.setStrokeStyle(StandardColors.GRAY);
@@ -117,14 +115,16 @@ public class Bookmark implements Navigatable {
   private char myMnemonic = 0;
   public static final Font MNEMONIC_FONT = new Font("Monospaced", 0, 11);
 
-  public Bookmark(@Nonnull Project project, @Nonnull VirtualFile file, int line, @Nonnull String description) {
+  public Bookmark(@Nonnull Project project, @Nonnull VirtualFile file, int line, @Nonnull String description, boolean addHighlighter) {
     myFile = file;
     myProject = project;
     myDescription = description;
 
     myTarget = new OpenFileDescriptor(project, file, line, -1, true);
 
-    addHighlighter();
+    if (addHighlighter) {
+      addHighlighter();
+    }
   }
 
   public void updateHighlighter() {
@@ -132,7 +132,7 @@ public class Bookmark implements Navigatable {
     addHighlighter();
   }
 
-  private void addHighlighter() {
+  void addHighlighter() {
     Document document = FileDocumentManager.getInstance().getCachedDocument(getFile());
     if (document != null) {
       createHighlighter((MarkupModelEx)DocumentMarkupModel.forDocument(document, myProject, true));
@@ -185,17 +185,14 @@ public class Bookmark implements Navigatable {
     final int startOffset = markupDocument.getLineStartOffset(line);
     final int endOffset = markupDocument.getLineEndOffset(line);
 
-    final Ref<RangeHighlighterEx> found = new Ref<RangeHighlighterEx>();
-    markup.processRangeHighlightersOverlappingWith(startOffset, endOffset, new Processor<RangeHighlighterEx>() {
-      @Override
-      public boolean process(RangeHighlighterEx highlighter) {
-        GutterMark renderer = highlighter.getGutterIconRenderer();
-        if (renderer instanceof MyGutterIconRenderer && ((MyGutterIconRenderer)renderer).myBookmark == Bookmark.this) {
-          found.set(highlighter);
-          return false;
-        }
-        return true;
+    final SimpleReference<RangeHighlighterEx> found = new SimpleReference<>();
+    markup.processRangeHighlightersOverlappingWith(startOffset, endOffset, highlighter -> {
+      GutterMark renderer = highlighter.getGutterIconRenderer();
+      if (renderer instanceof MyGutterIconRenderer && ((MyGutterIconRenderer)renderer).myBookmark == Bookmark.this) {
+        found.set(highlighter);
+        return false;
       }
+      return true;
     });
     if (!found.isNull()) found.get().dispose();
   }
@@ -279,11 +276,12 @@ public class Bookmark implements Navigatable {
     return result.toString();
   }
 
+  @RequiredReadAction
+  @Nonnull
   public String getQualifiedName() {
     String presentableUrl = myFile.getPresentableUrl();
     if (myFile.isDirectory()) return presentableUrl;
 
-    PsiDocumentManager.getInstance(myProject).commitAllDocuments();
     final PsiFile psiFile = PsiManager.getInstance(myProject).findFile(myFile);
 
     if (psiFile == null) return presentableUrl;

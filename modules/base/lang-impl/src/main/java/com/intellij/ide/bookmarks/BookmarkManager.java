@@ -17,7 +17,9 @@
 package com.intellij.ide.bookmarks;
 
 import com.intellij.ide.IdeBundle;
-import com.intellij.openapi.components.*;
+import com.intellij.openapi.components.PersistentStateComponent;
+import com.intellij.openapi.components.State;
+import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.components.StoragePathMacros;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
@@ -26,93 +28,91 @@ import com.intellij.openapi.editor.event.*;
 import com.intellij.openapi.editor.ex.MarkupModelEx;
 import com.intellij.openapi.editor.impl.DocumentMarkupModel;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
-import com.intellij.openapi.project.DumbAwareRunnable;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.startup.StartupManager;
-import com.intellij.openapi.ui.InputValidator;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileManager;
+import com.intellij.psi.PsiDocumentListener;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;
 import com.intellij.util.messages.MessageBus;
 import com.intellij.util.ui.UIUtil;
-import org.jdom.Element;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import consulo.project.startup.StartupActivity;
+import consulo.ui.UIAccess;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
+import org.jdom.Element;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.InputEvent;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 
-@State(name = "BookmarkManager", storages = {@Storage( file = StoragePathMacros.WORKSPACE_FILE)})
+@State(name = "BookmarkManager", storages = @Storage(file = StoragePathMacros.WORKSPACE_FILE))
 @Singleton
 public class BookmarkManager implements PersistentStateComponent<Element> {
+  public static class MyStartupActivity implements StartupActivity.DumbAware {
+    @Override
+    public void runActivity(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
+      project.getMessageBus().connect().subscribe(PsiDocumentListener.TOPIC, BookmarkManager::documentCreated);
+
+      // init
+      BookmarkManager.getInstance(project);
+    }
+  }
+
   private static final int MAX_AUTO_DESCRIPTION_SIZE = 50;
 
+  @Nonnull
   public static BookmarkManager getInstance(Project project) {
-    return project.getComponent(BookmarkManager.class);
+    return project.getInstance(BookmarkManager.class);
   }
 
   private final List<Bookmark> myBookmarks = new ArrayList<>();
 
   private final MessageBus myBus;
 
-  private Project myProject;
+  private final Project myProject;
+
+  private AtomicReference<List<Bookmark>> myPendingBookmarks = new AtomicReference<>();
 
   @Inject
-  public BookmarkManager(Project project, PsiDocumentManager documentManager) {
+  public BookmarkManager(Project project, EditorFactory editorFactory) {
     myBus = project.getMessageBus();
     myProject = project;
-    EditorEventMulticaster multicaster = EditorFactory.getInstance().getEventMulticaster();
+    EditorEventMulticaster multicaster = editorFactory.getEventMulticaster();
     multicaster.addDocumentListener(new MyDocumentListener(), myProject);
     multicaster.addEditorMouseListener(new MyEditorMouseListener(), myProject);
+  }
 
-    documentManager.addListener(new PsiDocumentManager.Listener() {
-      @Override
-      public void documentCreated(@Nonnull final Document document, PsiFile psiFile) {
-        final VirtualFile file = FileDocumentManager.getInstance().getFile(document);
-        if (file == null) return;
-        for (final Bookmark bookmark : myBookmarks) {
-          if (Comparing.equal(bookmark.getFile(), file)) {
-            UIUtil.invokeLaterIfNeeded(new Runnable() {
-              @Override
-              public void run() {
-                if (myProject.isDisposed()) return;
-                bookmark.createHighlighter((MarkupModelEx)DocumentMarkupModel.forDocument(document, myProject, true));
-              }
-            });
-          }
-        }
-      }
+  private static void documentCreated(@Nonnull final Document document, PsiFile ignored, Project project) {
+    BookmarkManager bookmarkManager = BookmarkManager.getInstance(project);
 
-      @Override
-      public void fileCreated(@Nonnull PsiFile file, @Nonnull Document document) {
+    final VirtualFile file = FileDocumentManager.getInstance().getFile(document);
+    if (file == null) return;
+    for (final Bookmark bookmark : bookmarkManager.myBookmarks) {
+      if (Comparing.equal(bookmark.getFile(), file)) {
+        UIUtil.invokeLaterIfNeeded(() -> {
+          if (project.isDisposed()) return;
+          bookmark.createHighlighter((MarkupModelEx)DocumentMarkupModel.forDocument(document, project, true));
+        });
       }
-    });
+    }
   }
 
   public void editDescription(@Nonnull Bookmark bookmark) {
-    String description = Messages
-            .showInputDialog(myProject, IdeBundle.message("action.bookmark.edit.description.dialog.message"),
-                             IdeBundle.message("action.bookmark.edit.description.dialog.title"), Messages.getQuestionIcon(),
-                             bookmark.getDescription(), new InputValidator() {
-              @Override
-              public boolean checkInput(String inputString) {
-                return true;
-              }
-
-              @Override
-              public boolean canClose(String inputString) {
-                return true;
-              }
-            });
+    String description = Messages.showInputDialog(myProject, IdeBundle.message("action.bookmark.edit.description.dialog.message"), IdeBundle.message("action.bookmark.edit.description.dialog.title"),
+                                                  Messages.getQuestionIcon(), bookmark.getDescription(), null);
     if (description != null) {
       setDescription(bookmark, description);
     }
@@ -130,7 +130,7 @@ public class BookmarkManager implements PersistentStateComponent<Element> {
   }
 
   public Bookmark addTextBookmark(VirtualFile file, int lineIndex, String description) {
-    Bookmark b = new Bookmark(myProject, file, lineIndex, description);
+    Bookmark b = new Bookmark(myProject, file, lineIndex, description, true);
     myBookmarks.add(0, b);
     myBus.syncPublisher(BookmarksListener.TOPIC).bookmarkAdded(b);
     return b;
@@ -138,13 +138,12 @@ public class BookmarkManager implements PersistentStateComponent<Element> {
 
   public static String getAutoDescription(final Editor editor, final int lineIndex) {
     String autoDescription = editor.getSelectionModel().getSelectedText();
-    if ( autoDescription == null ) {
+    if (autoDescription == null) {
       Document document = editor.getDocument();
-      autoDescription = document.getCharsSequence()
-              .subSequence(document.getLineStartOffset(lineIndex), document.getLineEndOffset(lineIndex)).toString().trim();
+      autoDescription = document.getCharsSequence().subSequence(document.getLineStartOffset(lineIndex), document.getLineEndOffset(lineIndex)).toString().trim();
     }
-    if ( autoDescription.length () > MAX_AUTO_DESCRIPTION_SIZE) {
-      return autoDescription.substring(0, MAX_AUTO_DESCRIPTION_SIZE)+"...";
+    if (autoDescription.length() > MAX_AUTO_DESCRIPTION_SIZE) {
+      return autoDescription.substring(0, MAX_AUTO_DESCRIPTION_SIZE) + "...";
     }
     return autoDescription;
   }
@@ -154,7 +153,7 @@ public class BookmarkManager implements PersistentStateComponent<Element> {
     if (file == null) return null;
     if (findFileBookmark(file) != null) return null;
 
-    Bookmark b = new Bookmark(myProject, file, -1, description);
+    Bookmark b = new Bookmark(myProject, file, -1, description, true);
     myBookmarks.add(0, b);
     myBus.syncPublisher(BookmarksListener.TOPIC).bookmarkAdded(b);
     return b;
@@ -163,7 +162,7 @@ public class BookmarkManager implements PersistentStateComponent<Element> {
 
   @Nonnull
   public List<Bookmark> getValidBookmarks() {
-    List<Bookmark> answer = new ArrayList<Bookmark>();
+    List<Bookmark> answer = new ArrayList<>();
     for (Bookmark bookmark : myBookmarks) {
       if (bookmark.isValid()) answer.add(bookmark);
     }
@@ -223,25 +222,39 @@ public class BookmarkManager implements PersistentStateComponent<Element> {
 
   @Override
   public void loadState(final Element state) {
-    StartupManager.getInstance(myProject).runWhenProjectIsInitialized(new DumbAwareRunnable() {
-      @Override
-      public void run() {
-        BookmarksListener publisher = myBus.syncPublisher(BookmarksListener.TOPIC);
-        for (Bookmark bookmark : myBookmarks) {
-          bookmark.release();
-          publisher.bookmarkRemoved(bookmark);
-        }
-        myBookmarks.clear();
+    List<Bookmark> bookmarks = readExternal(state);
 
-        readExternal(state);
-      }
+    myPendingBookmarks.set(bookmarks);
+
+    StartupManager.getInstance(myProject).runAfterOpened((StartupActivity.DumbAware)(project, uiAccess) -> {
+      uiAccess.give(() -> registerAll(myPendingBookmarks.getAndSet(null)));
     });
   }
 
-  private void readExternal(Element element) {
-    for (final Object o : element.getChildren()) {
-      Element bookmarkElement = (Element)o;
+  private void registerAll(@Nullable List<Bookmark> bookmarksForUpdate) {
+    BookmarksListener publisher = myBus.syncPublisher(BookmarksListener.TOPIC);
+    for (Bookmark bookmark : myBookmarks) {
+      bookmark.release();
+      publisher.bookmarkRemoved(bookmark);
+    }
+    myBookmarks.clear();
 
+    if (bookmarksForUpdate != null) {
+      for (Bookmark bookmark : bookmarksForUpdate) {
+        myBookmarks.add(bookmark);
+
+        publisher.bookmarkAdded(bookmark);
+
+        bookmark.addHighlighter();
+      }
+    }
+  }
+
+  @Nonnull
+  private List<Bookmark> readExternal(Element element) {
+    List<Bookmark> bookmarks = new ArrayList<>();
+
+    for (final Element bookmarkElement : element.getChildren()) {
       if ("bookmark".equals(bookmarkElement.getName())) {
         String url = bookmarkElement.getAttributeValue("url");
         String line = bookmarkElement.getAttributeValue("line");
@@ -254,26 +267,32 @@ public class BookmarkManager implements PersistentStateComponent<Element> {
           if (line != null) {
             try {
               int lineIndex = Integer.parseInt(line);
-              b = addTextBookmark(file, lineIndex, description);
+              b = new Bookmark(myProject, file, lineIndex, description, false);
             }
             catch (NumberFormatException e) {
               // Ignore. Will miss bookmark if line number cannot be parsed
             }
           }
           else {
-            b = addFileBookmark(file, description);
+            b = new Bookmark(myProject, file, -1, description, false);
           }
         }
 
         if (b != null && mnemonic != null && mnemonic.length() == 1) {
-          setMnemonic(b, mnemonic.charAt(0));
+          b.setMnemonic(mnemonic.charAt(0));
+        }
+
+        if(b != null) {
+          bookmarks.add(b);
         }
       }
     }
+
+    return bookmarks;
   }
 
   private void writeExternal(Element element) {
-    List<Bookmark> reversed = new ArrayList<Bookmark>(myBookmarks);
+    List<Bookmark> reversed = new ArrayList<>(myBookmarks);
     Collections.reverse(reversed);
 
     for (Bookmark bookmark : reversed) {
@@ -311,12 +330,9 @@ public class BookmarkManager implements PersistentStateComponent<Element> {
     final int index = myBookmarks.indexOf(bookmark);
     if (index > 0) {
       Collections.swap(myBookmarks, index, index - 1);
-      EventQueue.invokeLater(new Runnable() {
-        @Override
-        public void run() {
-          myBus.syncPublisher(BookmarksListener.TOPIC).bookmarkChanged(myBookmarks.get(index));
-          myBus.syncPublisher(BookmarksListener.TOPIC).bookmarkChanged(myBookmarks.get(index - 1));
-        }
+      SwingUtilities.invokeLater(() -> {
+        myBus.syncPublisher(BookmarksListener.TOPIC).bookmarkChanged(myBookmarks.get(index));
+        myBus.syncPublisher(BookmarksListener.TOPIC).bookmarkChanged(myBookmarks.get(index - 1));
       });
     }
     return myBookmarks;
@@ -333,12 +349,9 @@ public class BookmarkManager implements PersistentStateComponent<Element> {
     final int index = myBookmarks.indexOf(bookmark);
     if (index < myBookmarks.size() - 1) {
       Collections.swap(myBookmarks, index, index + 1);
-      EventQueue.invokeLater(new Runnable() {
-        @Override
-        public void run() {
-          myBus.syncPublisher(BookmarksListener.TOPIC).bookmarkChanged(myBookmarks.get(index));
-          myBus.syncPublisher(BookmarksListener.TOPIC).bookmarkChanged(myBookmarks.get(index + 1));
-        }
+      SwingUtilities.invokeLater(() -> {
+        myBus.syncPublisher(BookmarksListener.TOPIC).bookmarkChanged(myBookmarks.get(index));
+        myBus.syncPublisher(BookmarksListener.TOPIC).bookmarkChanged(myBookmarks.get(index + 1));
       });
     }
 
@@ -374,7 +387,7 @@ public class BookmarkManager implements PersistentStateComponent<Element> {
 
   @Nonnull
   private Bookmark[] getBookmarksForDocument(@Nonnull Document document) {
-    ArrayList<Bookmark> answer = new ArrayList<Bookmark>();
+    ArrayList<Bookmark> answer = new ArrayList<>();
     for (Bookmark bookmark : getValidBookmarks()) {
       if (document.equals(bookmark.getDocument())) {
         answer.add(bookmark);
@@ -382,12 +395,7 @@ public class BookmarkManager implements PersistentStateComponent<Element> {
     }
 
     Bookmark[] bookmarks = answer.toArray(new Bookmark[answer.size()]);
-    Arrays.sort(bookmarks, new Comparator<Bookmark>() {
-      @Override
-      public int compare(final Bookmark o1, final Bookmark o2) {
-        return o1.getLine() - o2.getLine();
-      }
-    });
+    Arrays.sort(bookmarks, (o1, o2) -> o1.getLine() - o2.getLine());
     return bookmarks;
   }
 
@@ -411,7 +419,7 @@ public class BookmarkManager implements PersistentStateComponent<Element> {
   }
 
 
-  private class MyEditorMouseListener extends EditorMouseAdapter {
+  private class MyEditorMouseListener implements EditorMouseListener {
     @Override
     public void mouseClicked(final EditorMouseEvent e) {
       if (e.getArea() != EditorMouseEventArea.LINE_MARKERS_AREA) return;
@@ -442,7 +450,7 @@ public class BookmarkManager implements PersistentStateComponent<Element> {
       for (Bookmark bookmark : myBookmarks) {
         if (!bookmark.isValid()) {
           if (bookmarksToRemove == null) {
-            bookmarksToRemove = new ArrayList<Bookmark>();
+            bookmarksToRemove = new ArrayList<>();
           }
           bookmarksToRemove.add(bookmark);
         }
