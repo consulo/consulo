@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.copyright;
+package consulo.copyright.impl;
 
 import consulo.logging.Logger;
 import com.intellij.openapi.extensions.AbstractExtensionPointBean;
@@ -31,7 +31,7 @@ import java.io.InputStream;
  * @since 16.02.2015
  */
 public class PredefinedCopyrightTextEP extends AbstractExtensionPointBean {
-  public static final Logger LOGGER = Logger.getInstance(PredefinedCopyrightTextEP.class);
+  private static final Logger LOG = Logger.getInstance(PredefinedCopyrightTextEP.class);
 
   public static final ExtensionPointName<PredefinedCopyrightTextEP> EP_NAME = ExtensionPointName.create("com.intellij.predefinedCopyright");
   @Attribute("name")
@@ -43,13 +43,13 @@ public class PredefinedCopyrightTextEP extends AbstractExtensionPointBean {
     try {
       InputStream resourceAsStream = getLoaderForClass().getResourceAsStream(file);
       if (resourceAsStream == null) {
-        LOGGER.error("Copyright file " + file + " not found");
+        LOG.error("Copyright file " + file + " not found");
         return "not find file: " + file;
       }
       return FileUtil.loadTextAndClose(resourceAsStream, true);
     }
     catch (IOException e) {
-      LOGGER.error(e);
+      LOG.error(e);
       return "not loaded file: " + file;
     }
   });

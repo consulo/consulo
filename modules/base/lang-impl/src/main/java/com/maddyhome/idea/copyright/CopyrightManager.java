@@ -16,41 +16,24 @@
 
 package com.maddyhome.idea.copyright;
 
-import com.intellij.openapi.application.Application;
-import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.components.*;
-import com.intellij.openapi.editor.Document;
-import com.intellij.openapi.editor.EditorFactory;
-import com.intellij.openapi.editor.event.DocumentAdapter;
-import com.intellij.openapi.editor.event.DocumentEvent;
-import com.intellij.openapi.editor.event.DocumentListener;
-import com.intellij.openapi.fileEditor.FileDocumentManager;
-import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.ProjectRootManager;
-import com.intellij.openapi.startup.StartupManager;
 import com.intellij.openapi.util.Comparing;
-import consulo.disposer.Disposer;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.packageDependencies.DependencyValidationManager;
 import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiManager;
 import com.intellij.psi.search.scope.packageSet.NamedScope;
 import com.intellij.psi.search.scope.packageSet.PackageSet;
 import com.intellij.util.containers.HashMap;
-import com.maddyhome.idea.copyright.actions.UpdateCopyrightProcessor;
-import com.maddyhome.idea.copyright.util.NewFileTracker;
 import consulo.copyright.config.CopyrightFileConfig;
 import consulo.copyright.config.CopyrightFileConfigManager;
 import consulo.logging.Logger;
+import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
-import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import jakarta.inject.Inject;
-
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -60,18 +43,14 @@ import java.util.Map;
 @Singleton
 public class CopyrightManager implements PersistentStateComponent<Element> {
   private static final Logger LOG = Logger.getInstance(CopyrightManager.class);
-  @NonNls
   private static final String COPYRIGHT = "copyright";
-  @NonNls
   private static final String MODULE2COPYRIGHT = "module2copyright";
-  @NonNls
   private static final String ELEMENT = "element";
-  @NonNls
   private static final String MODULE = "module";
-  @NonNls
   private static final String DEFAULT = "default";
-  private final LinkedHashMap<String, String> myModule2Copyrights = new LinkedHashMap<String, String>();
-  private final Map<String, CopyrightProfile> myCopyrights = new HashMap<String, CopyrightProfile>();
+
+  private final LinkedHashMap<String, String> myModule2Copyrights = new LinkedHashMap<>();
+  private final Map<String, CopyrightProfile> myCopyrights = new HashMap<>();
   private final CopyrightFileConfigManager myCopyrightFileConfigManager = new CopyrightFileConfigManager();
   @Nullable
   private CopyrightProfile myDefaultCopyright = null;
@@ -79,52 +58,8 @@ public class CopyrightManager implements PersistentStateComponent<Element> {
   private Project myProject;
 
   @Inject
-  public CopyrightManager(@Nonnull Project project,
-                          @Nonnull final EditorFactory editorFactory,
-                          @Nonnull final Application application,
-                          @Nonnull final FileDocumentManager fileDocumentManager,
-                          @Nonnull final ProjectRootManager projectRootManager,
-                          @Nonnull final PsiManager psiManager,
-                          @Nonnull StartupManager startupManager) {
+  public CopyrightManager(@Nonnull Project project) {
     myProject = project;
-    if (myProject.isDefault()) {
-      return;
-    }
-
-    final NewFileTracker newFileTracker = NewFileTracker.getInstance();
-    Disposer.register(myProject, newFileTracker::clear);
-    startupManager.runWhenProjectIsInitialized(new Runnable() {
-      @Override
-      public void run() {
-        DocumentListener listener = new DocumentAdapter() {
-          @Override
-          public void documentChanged(DocumentEvent e) {
-            final Document document = e.getDocument();
-            final VirtualFile virtualFile = fileDocumentManager.getFile(document);
-            if (virtualFile == null) return;
-            if (!newFileTracker.poll(virtualFile)) return;
-            if (!CopyrightUpdaters.hasExtension(virtualFile)) return;
-            final Module module = projectRootManager.getFileIndex().getModuleForFile(virtualFile);
-            if (module == null) return;
-            final PsiFile file = psiManager.findFile(virtualFile);
-            if (file == null) return;
-            application.invokeLater(new Runnable() {
-              @Override
-              public void run() {
-                if (myProject.isDisposed()) return;
-                if (file.isValid() && file.isWritable()) {
-                  final CopyrightProfile opts = getCopyrightOptions(file);
-                  if (opts != null) {
-                    new UpdateCopyrightProcessor(myProject, module, file).run();
-                  }
-                }
-              }
-            }, ModalityState.NON_MODAL, myProject.getDisposed());
-          }
-        };
-        editorFactory.getEventMulticaster().addDocumentListener(listener, myProject);
-      }
-    });
   }
 
   public static CopyrightManager getInstance(Project project) {

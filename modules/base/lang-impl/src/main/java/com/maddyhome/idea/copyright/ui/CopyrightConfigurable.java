@@ -37,7 +37,7 @@ import com.maddyhome.idea.copyright.CopyrightProfile;
 import com.maddyhome.idea.copyright.pattern.EntityUtil;
 import com.maddyhome.idea.copyright.pattern.VelocityHelper;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.copyright.PredefinedCopyrightTextEP;
+import consulo.copyright.impl.PredefinedCopyrightTextEP;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;

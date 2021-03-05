@@ -25,22 +25,21 @@
     <projectService serviceInterface="com.maddyhome.idea.copyright.actions.UpdateCopyrightCheckinHandlerState"
                     serviceImplementation="com.maddyhome.idea.copyright.actions.UpdateCopyrightCheckinHandlerState"/>
 
-    <predefinedCopyright name="Apache 2" file="/copyright/Apache2.txt" />
-    <predefinedCopyright name="MIT" file="/copyright/MIT.txt" />
+    <predefinedCopyright name="Apache 2" file="/copyright/Apache2.txt"/>
+    <predefinedCopyright name="MIT" file="/copyright/MIT.txt"/>
+
+    <projectService serviceImplementation="com.maddyhome.idea.copyright.CopyrightManager"/>
   </extensions>
 
-  <project-components>
-    <component>
-      <implementation-class>com.maddyhome.idea.copyright.CopyrightManager</implementation-class>
-      <loadForDefaultProject/>
-    </component>
-  </project-components>
+  <applicationListeners>
+    <listener class="consulo.copyright.impl.CopyrightBulkFileListener" topic="com.intellij.openapi.vfs.newvfs.BulkFileListener"/>
+  </applicationListeners>
 
   <extensionPoints>
     <extensionPoint name="copyright.updater" beanClass="com.intellij.openapi.fileTypes.FileTypeExtensionPoint">
       <with attribute="implementationClass" implements="com.maddyhome.idea.copyright.psi.UpdateCopyrightsProvider"/>
     </extensionPoint>
-    <extensionPoint name="predefinedCopyright" beanClass="consulo.copyright.PredefinedCopyrightTextEP"/>
+    <extensionPoint name="predefinedCopyright" beanClass="consulo.copyright.impl.PredefinedCopyrightTextEP"/>
   </extensionPoints>
 
   <actions>
