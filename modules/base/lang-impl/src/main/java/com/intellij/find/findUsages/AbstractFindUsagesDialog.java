@@ -20,21 +20,20 @@ import com.intellij.find.FindSettings;
 import com.intellij.ide.util.scopeChooser.ScopeChooserCombo;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
-import com.intellij.util.ui.JBUI;
-import consulo.disposer.Disposer;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.ui.IdeBorderFactory;
 import com.intellij.ui.SeparatorFactory;
 import com.intellij.ui.SimpleColoredComponent;
 import com.intellij.ui.StateRestoringCheckBox;
 import com.intellij.usageView.UsageViewContentManager;
+import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
+import consulo.disposer.Disposer;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 /**
@@ -248,15 +247,13 @@ public abstract class AbstractFindUsagesDialog extends DialogWrapper {
 
   protected void addUsagesOptions(JPanel optionsPanel) {
     if (mySearchForTextOccurrencesAvailable) {
-      myCbToSearchForTextOccurrences = addCheckboxToPanel(FindBundle.message("find.options.search.for.text.occurences.checkbox"),
+      myCbToSearchForTextOccurrences = addCheckboxToPanel(FindBundle.message("find.options.search.for.text.occurrences.checkbox"),
                                                          myFindUsagesOptions.isSearchForTextOccurrences, optionsPanel, false);
-
     }
 
     if (myIsShowInNewTabVisible) {
       myCbToSkipResultsWhenOneUsage = addCheckboxToPanel(FindBundle.message("find.options.skip.results.tab.with.one.usage.checkbox"),
                                                          FindSettings.getInstance().isSkipResultsWithOneUsage(), optionsPanel, false);
-
     }
   }
 

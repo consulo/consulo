@@ -203,8 +203,8 @@ public class ComboBox<E> extends ComboBoxWithWidePopup<E> implements AWTEventLis
     return mySwingPopup;
   }
 
+  @Deprecated
   public void setSwingPopup(boolean swingPopup) {
-    mySwingPopup = swingPopup;
   }
 
   public void setMinimumAndPreferredWidth(final int minimumAndPreferredWidth) {

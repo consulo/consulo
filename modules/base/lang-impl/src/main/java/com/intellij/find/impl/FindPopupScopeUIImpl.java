@@ -74,7 +74,6 @@ class FindPopupScopeUIImpl implements FindPopupScopeUI {
 
     Arrays.sort(names, String.CASE_INSENSITIVE_ORDER);
     myModuleComboBox = new ComboBox<>(names);
-    myModuleComboBox.setSwingPopup(false);
     myModuleComboBox.setMinimumAndPreferredWidth(JBUIScale.scale(300)); // as ScopeChooser
     myModuleComboBox.setRenderer(SimpleListCellRenderer.create("", Functions.id()));
 
