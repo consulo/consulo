@@ -47,6 +47,7 @@ import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.module.extension.ModuleExtension;
 import consulo.module.extension.condition.ModuleExtensionCondition;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.Rectangle2D;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -1364,6 +1365,56 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
   @Override
   public void clearSideStack() {
     mySideStack.clear();
+  }
+
+  @Nonnull
+  @Override
+  public Image getLocationIcon(@Nonnull String toolWindowId, @Nonnull Image fallbackImage) {
+    WindowInfoImpl info = myLayout.getInfo(toolWindowId, false);
+    if (info == null) {
+      return fallbackImage;
+    }
+
+    ToolWindowType type = info.getType();
+    if(type == ToolWindowType.FLOATING || type == ToolWindowType.WINDOWED) {
+      return PlatformIconGroup.actionsMoveToWindow();
+    }
+
+    ToolWindowAnchor anchor = info.getAnchor();
+    boolean splitMode = info.isSplit();
+    if(anchor == ToolWindowAnchor.BOTTOM) {
+      if(splitMode) {
+        return PlatformIconGroup.actionsMoveToBottomRight();
+      }
+      else {
+        return PlatformIconGroup.actionsMoveToBottomLeft();
+      }
+    }
+    else if(anchor == ToolWindowAnchor.LEFT) {
+      if(splitMode) {
+        return PlatformIconGroup.actionsMoveToLeftBottom();
+      }
+      else {
+        return PlatformIconGroup.actionsMoveToLeftTop();
+      }
+    }
+    else if(anchor == ToolWindowAnchor.RIGHT) {
+      if(splitMode) {
+        return PlatformIconGroup.actionsMoveToRightBottom();
+      }
+      else {
+        return PlatformIconGroup.actionsMoveToRightTop();
+      }
+    }
+    else if(anchor == ToolWindowAnchor.TOP) {
+      if(splitMode) {
+        return PlatformIconGroup.actionsMoveToTopRight();
+      }
+      else {
+        return PlatformIconGroup.actionsMoveToTopLeft();
+      }
+    }
+    return super.getLocationIcon(toolWindowId, fallbackImage);
   }
 
   @Override
