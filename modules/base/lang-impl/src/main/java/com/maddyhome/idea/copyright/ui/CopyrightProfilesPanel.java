@@ -55,7 +55,7 @@ import java.awt.event.KeyEvent;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class CopyrightProfilesPanel extends MasterDetailsComponent implements SearchableConfigurable, Configurable.NoScroll {
+public class CopyrightProfilesPanel extends MasterDetailsComponent implements SearchableConfigurable, Configurable.NoScroll, Configurable.NoMargin {
 
   private final Project myProject;
   private final CopyrightManager myManager;

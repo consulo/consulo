@@ -36,6 +36,7 @@ import com.maddyhome.idea.copyright.CopyrightManager;
 import com.maddyhome.idea.copyright.CopyrightProfile;
 import com.maddyhome.idea.copyright.pattern.EntityUtil;
 import com.maddyhome.idea.copyright.pattern.VelocityHelper;
+import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.copyright.impl.PredefinedCopyrightTextEP;
 import org.jetbrains.annotations.Nls;
@@ -131,15 +132,14 @@ public class CopyrightConfigurable extends NamedConfigurable<CopyrightProfile> i
         }
       }
     });
-    PredefinedCopyrightTextEP[] extensions = PredefinedCopyrightTextEP.EP_NAME.getExtensions();
-    if (extensions.length > 0) {
+    if (PredefinedCopyrightTextEP.EP_NAME.hasAnyExtensions()) {
       group.add(new AnAction("Reset To", null, AllIcons.Actions.Reset) {
         @RequiredUIAccess
         @Override
         public void actionPerformed(@Nonnull AnActionEvent e) {
-          DefaultActionGroup actionGroup = new DefaultActionGroup();
-          for (PredefinedCopyrightTextEP extension : extensions) {
-            actionGroup.add(new AnAction(extension.name) {
+          ActionGroup.Builder actionGroup = ActionGroup.newImmutableBuilder();
+          for (PredefinedCopyrightTextEP extension : PredefinedCopyrightTextEP.EP_NAME.getExtensionList()) {
+            actionGroup.add(new AnAction(LocalizeValue.of(extension.name)) {
               @RequiredUIAccess
               @Override
               public void actionPerformed(@Nonnull AnActionEvent e) {
@@ -148,7 +148,7 @@ public class CopyrightConfigurable extends NamedConfigurable<CopyrightProfile> i
               }
             });
           }
-          ActionPopupMenu popupMenu = ActionManager.getInstance().createActionPopupMenu(ActionPlaces.UNKNOWN, actionGroup);
+          ActionPopupMenu popupMenu = ActionManager.getInstance().createActionPopupMenu(ActionPlaces.UNKNOWN, actionGroup.build());
 
           popupMenu.getComponent().show(e.getInputEvent().getComponent(), e.getInputEvent().getComponent().getWidth(), 0);
         }
@@ -162,11 +162,11 @@ public class CopyrightConfigurable extends NamedConfigurable<CopyrightProfile> i
     toolBarPanel.add(actionToolbar.getComponent(), BorderLayout.WEST);
     JLabel label = new JBLabel("Velocity Template");
     label.setForeground(JBColor.GRAY);
+    label.setBorder(JBUI.Borders.emptyRight(10));
     toolBarPanel.add(label, BorderLayout.EAST);
 
     result.add(toolBarPanel, BorderLayout.NORTH);
     result.add(editorComponent, BorderLayout.CENTER);
-    result.setPreferredSize(JBUI.size(-1, 400));
 
     myWholePanel.add(result);
 
