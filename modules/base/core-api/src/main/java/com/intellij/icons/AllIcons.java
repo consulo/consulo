@@ -397,8 +397,6 @@ public class AllIcons {
     public static final Image AddFavoritesList = PlatformIconGroup.generalAddFavoritesList(); // 16x16
     public static final Image AddJdk = PlatformIconGroup.generalAddJdk(); // 16x16
     public static final Image ArrowDown = PlatformIconGroup.generalArrowDown(); // 7x6
-    public static final Image AutohideOff = PlatformIconGroup.generalAutohideOff(); // 14x14
-    public static final Image AutohideOffInactive = PlatformIconGroup.generalAutohideOffInactive(); // 14x14
     public static final Image AutoscrollFromSource = PlatformIconGroup.generalAutoscrollFromSource(); // 16x16
     public static final Image AutoscrollToSource = PlatformIconGroup.generalAutoscrollToSource(); // 16x16
     public static final Image Balloon = PlatformIconGroup.generalBalloon(); // 16x16
