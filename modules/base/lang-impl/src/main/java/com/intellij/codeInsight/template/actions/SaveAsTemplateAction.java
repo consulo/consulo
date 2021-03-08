@@ -46,7 +46,7 @@ import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.*;
 import com.intellij.psi.util.PsiElementFilter;
 import com.intellij.psi.util.PsiTreeUtil;
-import com.intellij.util.containers.HashMap;
+import java.util.HashMap;
 import consulo.lang.LanguagePointerUtil;
 import consulo.util.pointers.NamedPointer;
 

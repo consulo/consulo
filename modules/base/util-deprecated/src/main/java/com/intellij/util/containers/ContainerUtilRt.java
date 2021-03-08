@@ -40,13 +40,13 @@ public class ContainerUtilRt {
   @Nonnull
   @Contract(pure=true)
   public static <K, V> HashMap<K, V> newHashMap() {
-    return new com.intellij.util.containers.HashMap<K, V>();
+    return new HashMap<K, V>();
   }
 
   @Nonnull
   @Contract(pure=true)
   public static <K, V> HashMap<K, V> newHashMap(@Nonnull Map<? extends K, ? extends V> map) {
-    return new com.intellij.util.containers.HashMap<K, V>(map);
+    return new HashMap<K, V>(map);
   }
 
   @Nonnull
@@ -77,7 +77,7 @@ public class ContainerUtilRt {
   @Nonnull
   @Contract(pure=true)
   public static <K, V> Map<K, V> newHashMap(int initialCapacity) {
-    return new com.intellij.util.containers.HashMap<K, V>(initialCapacity);
+    return new HashMap<K, V>(initialCapacity);
   }
 
   @Nonnull
@@ -95,19 +95,19 @@ public class ContainerUtilRt {
   @Nonnull
   @Contract(pure=true)
   public static <K, V> LinkedHashMap<K, V> newLinkedHashMap() {
-    return new com.intellij.util.containers.LinkedHashMap<K, V>();
+    return new LinkedHashMap<K, V>();
   }
 
   @Nonnull
   @Contract(pure=true)
   public static <K, V> LinkedHashMap<K, V> newLinkedHashMap(int capacity) {
-    return new com.intellij.util.containers.LinkedHashMap<K, V>(capacity);
+    return new LinkedHashMap<K, V>(capacity);
   }
 
   @Nonnull
   @Contract(pure=true)
   public static <K, V> LinkedHashMap<K, V> newLinkedHashMap(@Nonnull Map<K, V> map) {
-    return new com.intellij.util.containers.LinkedHashMap<K, V>(map);
+    return new LinkedHashMap<K, V>(map);
   }
 
   @Nonnull
@@ -182,19 +182,19 @@ public class ContainerUtilRt {
   @Nonnull
   @Contract(pure=true)
   public static <T> HashSet<T> newHashSet() {
-    return new com.intellij.util.containers.HashSet<T>();
+    return new HashSet<T>();
   }
 
   @Nonnull
   @Contract(pure=true)
   public static <T> HashSet<T> newHashSet(int initialCapacity) {
-    return new com.intellij.util.containers.HashSet<T>(initialCapacity);
+    return new HashSet<T>(initialCapacity);
   }
 
   @Nonnull
   @Contract(pure=true)
   public static <T> HashSet<T> newHashSet(@Nonnull T... elements) {
-    return new com.intellij.util.containers.HashSet<T>(Arrays.asList(elements));
+    return new HashSet<T>(Arrays.asList(elements));
   }
 
   @Nonnull
@@ -202,7 +202,7 @@ public class ContainerUtilRt {
   public static <T> HashSet<T> newHashSet(@Nonnull Iterable<? extends T> elements) {
     if (elements instanceof Collection) {
       @SuppressWarnings("unchecked") Collection<? extends T> collection = (Collection<? extends T>)elements;
-      return new com.intellij.util.containers.HashSet<T>(collection);
+      return new HashSet<T>(collection);
     }
     return newHashSet(elements.iterator());
   }
@@ -218,7 +218,7 @@ public class ContainerUtilRt {
   @Nonnull
   @Contract(pure=true)
   public static <T> LinkedHashSet<T> newLinkedHashSet() {
-    return new com.intellij.util.containers.LinkedHashSet<T>();
+    return new LinkedHashSet<T>();
   }
 
   @Nonnull
@@ -232,9 +232,9 @@ public class ContainerUtilRt {
   public static <T> LinkedHashSet<T> newLinkedHashSet(@Nonnull Iterable<? extends T> elements) {
     if (elements instanceof Collection) {
       @SuppressWarnings("unchecked") Collection<? extends T> collection = (Collection<? extends T>)elements;
-      return new com.intellij.util.containers.LinkedHashSet<T>(collection);
+      return new LinkedHashSet<T>(collection);
     }
-    return copy(ContainerUtilRt.<T>newLinkedHashSet(), elements);
+    return copy(new LinkedHashSet<T>(), elements);
   }
 
   @Nonnull

@@ -60,7 +60,6 @@ import com.intellij.ui.ListCellRendererWrapper;
 import com.intellij.util.Alarm;
 import com.intellij.util.Consumer;
 import com.intellij.util.SystemProperties;
-import com.intellij.util.containers.HashMap;
 import consulo.awt.TargetAWT;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;

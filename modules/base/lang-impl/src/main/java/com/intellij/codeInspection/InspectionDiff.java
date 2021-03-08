@@ -26,7 +26,6 @@ package com.intellij.codeInspection;
 
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.JDOMUtil;
-import com.intellij.util.containers.HashMap;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
@@ -34,6 +33,7 @@ import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nullable;
 import java.io.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class InspectionDiff {

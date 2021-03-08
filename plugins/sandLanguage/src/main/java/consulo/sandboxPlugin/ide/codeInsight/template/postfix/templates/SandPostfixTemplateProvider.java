@@ -19,7 +19,7 @@ import com.intellij.codeInsight.template.postfix.templates.PostfixTemplate;
 import com.intellij.codeInsight.template.postfix.templates.PostfixTemplateProvider;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.PsiFile;
-import com.intellij.util.containers.HashSet;
+import java.util.HashSet;
 import javax.annotation.Nonnull;
 
 import java.util.Set;

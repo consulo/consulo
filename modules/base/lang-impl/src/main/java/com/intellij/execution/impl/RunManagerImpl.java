@@ -40,7 +40,7 @@ import com.intellij.openapi.util.registry.Registry;
 import com.intellij.ui.IconDeferrer;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.containers.HashMap;
+import java.util.HashMap;
 import consulo.disposer.Disposable;
 import consulo.execution.impl.ConfigurationTypeCache;
 import consulo.logging.Logger;

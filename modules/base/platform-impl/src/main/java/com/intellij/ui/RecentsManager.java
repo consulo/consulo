@@ -18,7 +18,7 @@ package com.intellij.ui;
 import com.intellij.openapi.components.*;
 import com.intellij.openapi.components.StoragePathMacros;
 import com.intellij.openapi.project.Project;
-import com.intellij.util.containers.HashMap;
+import java.util.HashMap;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;

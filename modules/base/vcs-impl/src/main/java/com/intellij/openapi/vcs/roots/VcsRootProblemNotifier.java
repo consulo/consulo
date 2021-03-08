@@ -31,13 +31,13 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.Function;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.containers.HashSet;
 import com.intellij.vcsUtil.VcsUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import javax.swing.event.HyperlinkEvent;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 

@@ -18,7 +18,7 @@ package com.intellij.codeEditor.printing;
 
 import consulo.logging.Logger;
 import com.intellij.openapi.util.JDOMUtil;
-import com.intellij.util.containers.HashMap;
+import java.util.HashMap;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;

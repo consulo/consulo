@@ -40,7 +40,7 @@ import com.intellij.openapi.vfs.VFileProperty;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.ThreeState;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.containers.HashMap;
+import java.util.HashMap;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ui.color.ColorValue;
@@ -48,7 +48,6 @@ import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
-import java.awt.*;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;

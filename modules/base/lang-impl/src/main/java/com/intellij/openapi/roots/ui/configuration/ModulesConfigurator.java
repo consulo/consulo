@@ -40,7 +40,7 @@ import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.packaging.artifacts.Artifact;
-import com.intellij.util.containers.HashMap;
+import java.util.HashMap;
 import com.intellij.util.graph.GraphGenerator;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;

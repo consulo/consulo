@@ -2,9 +2,9 @@ package com.intellij.internal.statistic.persistence;
 
 import com.intellij.internal.statistic.beans.UsageDescriptor;
 import com.intellij.openapi.project.Project;
-import com.intellij.util.containers.HashMap;
 
 import javax.annotation.Nonnull;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 

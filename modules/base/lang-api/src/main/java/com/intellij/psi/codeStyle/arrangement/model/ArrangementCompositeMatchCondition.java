@@ -16,10 +16,11 @@
 package com.intellij.psi.codeStyle.arrangement.model;
 
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.util.containers.HashSet;
+
 import javax.annotation.Nonnull;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Set;
 
 /**

@@ -15,7 +15,7 @@
  */
 package com.intellij.util.graph;
 
-import com.intellij.util.containers.HashMap;
+import java.util.HashMap;
 import junit.framework.TestCase;
 
 import java.util.*;

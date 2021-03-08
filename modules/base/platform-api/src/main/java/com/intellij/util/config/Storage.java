@@ -18,9 +18,9 @@ package com.intellij.util.config;
 import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.openapi.application.ApplicationManager;
 import consulo.logging.Logger;
-import com.intellij.util.containers.HashMap;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 

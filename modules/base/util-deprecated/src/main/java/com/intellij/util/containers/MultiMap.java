@@ -24,6 +24,7 @@ import javax.annotation.Nullable;
 
 import java.io.Serializable;
 import java.util.*;
+import java.util.HashMap;
 
 /**
  * Consider to use factory methods {@link #createLinked()}, {@link #createSet()}, {@link #createSmart()}, {@link #create(TObjectHashingStrategy)} instead of override.

@@ -70,7 +70,7 @@ import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.ui.content.*;
 import com.intellij.util.*;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.containers.HashMap;
+import java.util.HashMap;
 import com.intellij.util.ui.UIUtil;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;

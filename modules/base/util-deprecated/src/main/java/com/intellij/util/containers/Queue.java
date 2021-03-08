@@ -9,6 +9,10 @@ import javax.annotation.Nonnull;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * @deprecated use {@link java.util.ArrayDeque} instead
+ */
+@Deprecated
 public class Queue<T> {
   private Object[] myArray;
   private int myFirst;

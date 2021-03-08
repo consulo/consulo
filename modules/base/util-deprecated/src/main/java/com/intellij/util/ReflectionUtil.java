@@ -471,7 +471,7 @@ public class ReflectionUtil {
   }
 
   public static boolean copyFields(@Nonnull Field[] fields, @Nonnull Object from, @Nonnull Object to, @Nullable DifferenceFilter diffFilter) {
-    Set<Field> sourceFields = new com.intellij.util.containers.HashSet<Field>(Arrays.asList(from.getClass().getFields()));
+    Set<Field> sourceFields = new HashSet<Field>(Arrays.asList(from.getClass().getFields()));
     boolean valuesChanged = false;
     for (Field field : fields) {
       if (sourceFields.contains(field)) {

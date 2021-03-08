@@ -48,7 +48,6 @@ import com.intellij.ui.popup.HintUpdateSupply;
 import com.intellij.usages.UsageView;
 import com.intellij.util.Alarm;
 import com.intellij.util.ArrayUtil;
-import com.intellij.util.containers.HashSet;
 import consulo.logging.Logger;
 import consulo.ui.image.Image;
 import org.jetbrains.annotations.NonNls;

@@ -27,7 +27,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointer;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointerManager;
-import com.intellij.util.containers.HashSet;
+import java.util.HashSet;
 import com.intellij.util.io.URLUtil;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.AccessRule;

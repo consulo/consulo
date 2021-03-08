@@ -20,6 +20,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import java.util.*;
+import java.util.HashMap;
 
 public class BidirectionalMap<K, V> implements Map<K, V> {
   private final Map<K, V> myKeyToValueMap = new THashMap<K, V>();

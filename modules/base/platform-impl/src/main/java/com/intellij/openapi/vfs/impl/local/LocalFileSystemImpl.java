@@ -32,7 +32,6 @@ import com.intellij.openapi.vfs.newvfs.VfsImplUtil;
 import com.intellij.openapi.vfs.newvfs.persistent.PersistentFS;
 import com.intellij.util.Consumer;
 import com.intellij.util.ObjectUtil;
-import com.intellij.util.containers.HashSet;
 import com.intellij.util.io.URLUtil;
 import consulo.vfs.RefreshableFileSystem;
 import gnu.trove.THashMap;

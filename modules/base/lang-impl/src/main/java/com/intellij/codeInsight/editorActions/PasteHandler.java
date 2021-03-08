@@ -47,7 +47,6 @@ import com.intellij.psi.codeStyle.CodeStyleManager;
 import com.intellij.util.DocumentUtil;
 import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.Producer;
-import com.intellij.util.containers.HashMap;
 import com.intellij.util.text.CharArrayUtil;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
@@ -55,10 +54,7 @@ import javax.annotation.Nullable;
 
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class PasteHandler extends EditorActionHandler implements EditorTextInsertHandler {
   private static final Logger LOG = Logger.getInstance(PasteHandler.class);

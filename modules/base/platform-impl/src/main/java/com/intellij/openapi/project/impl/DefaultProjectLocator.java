@@ -23,12 +23,13 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectLocator;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.util.containers.HashSet;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashSet;
 
 public class DefaultProjectLocator extends ProjectLocator {
   @Nullable

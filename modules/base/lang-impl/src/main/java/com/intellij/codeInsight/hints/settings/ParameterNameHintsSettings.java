@@ -19,7 +19,7 @@ import com.intellij.lang.Language;
 import com.intellij.openapi.components.*;
 import com.intellij.openapi.util.JDOMUtil;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.containers.HashMap;
+import java.util.HashMap;
 import jakarta.inject.Singleton;
 import org.jdom.Attribute;
 import org.jdom.Element;

@@ -45,7 +45,6 @@ import com.intellij.openapi.wm.ex.WindowManagerEx;
 import com.intellij.psi.ExternalChangeAction;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.util.ObjectUtils;
-import com.intellij.util.containers.HashSet;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.fileEditor.impl.text.TextEditorProvider;
 import consulo.logging.Logger;

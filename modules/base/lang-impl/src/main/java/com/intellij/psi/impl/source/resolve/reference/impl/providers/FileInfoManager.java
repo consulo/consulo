@@ -26,13 +26,13 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.file.FileLookupInfoProvider;
-import com.intellij.util.containers.HashMap;
 import consulo.ui.image.Image;
 import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**

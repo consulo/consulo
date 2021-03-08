@@ -16,7 +16,7 @@
 package com.intellij.ui.mac.foundation;
 
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.util.containers.HashMap;
+import java.util.HashMap;
 import com.sun.jna.*;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

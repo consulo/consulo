@@ -46,7 +46,7 @@ import com.intellij.util.IconUtil;
 import com.intellij.util.config.StorageAccessors;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.Convertor;
-import com.intellij.util.containers.HashMap;
+import java.util.HashMap;
 import com.intellij.util.ui.EditableModel;
 import com.intellij.util.ui.GridBag;
 import com.intellij.util.ui.JBUI;

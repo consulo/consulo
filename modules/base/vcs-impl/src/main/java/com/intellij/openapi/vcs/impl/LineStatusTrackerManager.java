@@ -53,7 +53,6 @@ import com.intellij.testFramework.LightVirtualFile;
 import com.intellij.util.Consumer;
 import com.intellij.util.concurrency.QueueProcessorRemovePartner;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.containers.HashMap;
 import com.intellij.util.messages.MessageBusConnection;
 import jakarta.inject.Singleton;
 import org.jetbrains.annotations.NonNls;
@@ -62,6 +61,7 @@ import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 
 import java.nio.charset.Charset;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 

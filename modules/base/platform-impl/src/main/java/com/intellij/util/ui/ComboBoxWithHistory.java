@@ -3,7 +3,7 @@ package com.intellij.util.ui;
 import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.ArrayUtil;
-import com.intellij.util.containers.HashMap;
+import java.util.HashMap;
 import javax.annotation.Nonnull;
 
 import org.w3c.dom.Document;

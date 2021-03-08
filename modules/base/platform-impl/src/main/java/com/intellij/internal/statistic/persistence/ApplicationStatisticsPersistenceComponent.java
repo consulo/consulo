@@ -20,11 +20,11 @@ import com.intellij.internal.statistic.beans.UsageDescriptor;
 import com.intellij.openapi.components.*;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.Function;
-import com.intellij.util.containers.HashSet;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
 
 import javax.annotation.Nonnull;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;

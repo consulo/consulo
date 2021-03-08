@@ -15,7 +15,7 @@
  */
 package consulo.diagram.builder.impl;
 
-import com.intellij.util.containers.HashMap;
+import java.util.HashMap;
 import com.mxgraph.model.mxCell;
 import com.mxgraph.swing.mxGraphComponent;
 import com.mxgraph.util.mxConstants;

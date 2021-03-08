@@ -63,7 +63,7 @@ import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.PairProcessor;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.containers.HashMap;
+import java.util.HashMap;
 import com.intellij.util.containers.IntArrayList;
 import kava.beans.PropertyChangeEvent;
 import kava.beans.PropertyChangeListener;

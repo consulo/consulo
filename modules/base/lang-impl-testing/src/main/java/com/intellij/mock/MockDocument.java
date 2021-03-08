@@ -26,11 +26,12 @@ import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.util.LocalTimeCounter;
 import com.intellij.util.Processor;
-import com.intellij.util.containers.HashMap;
+
 import javax.annotation.Nonnull;
 
 import kava.beans.PropertyChangeListener;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 

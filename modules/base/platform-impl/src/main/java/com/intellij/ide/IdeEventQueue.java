@@ -42,7 +42,7 @@ import com.intellij.ui.mac.touchbar.TouchBarsManager;
 import com.intellij.util.Alarm;
 import com.intellij.util.ReflectionUtil;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.containers.HashMap;
+import java.util.HashMap;
 import com.intellij.util.ui.EDT;
 import com.intellij.util.ui.UIUtil;
 import consulo.application.TransactionGuardEx;

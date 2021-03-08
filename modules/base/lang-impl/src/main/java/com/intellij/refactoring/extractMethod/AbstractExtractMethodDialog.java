@@ -25,7 +25,7 @@ import com.intellij.refactoring.RefactoringBundle;
 import com.intellij.refactoring.ui.MethodSignatureComponent;
 import com.intellij.refactoring.util.SimpleParameterTablePanel;
 import com.intellij.ui.DocumentAdapter;
-import com.intellij.util.containers.HashMap;
+import java.util.HashMap;
 import javax.annotation.Nonnull;
 
 import javax.swing.*;

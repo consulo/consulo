@@ -25,6 +25,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import java.util.*;
+import java.util.HashSet;
 
 /**
  * An in-house and immutable version of {@code com.google.common.collect.FluentIterable}

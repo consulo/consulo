@@ -20,7 +20,7 @@ import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.search.GlobalSearchScope;
-import com.intellij.util.containers.HashMap;
+import java.util.HashMap;
 import com.intellij.util.graph.Graph;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -45,7 +45,7 @@ public abstract class SourceScope {
   }
 
   private static void buildDependenciesForModule(final Module module, final Graph<Module> graph, Map<Module, Collection<Module>> map) {
-    final Set<Module> deps = new com.intellij.util.containers.HashSet<Module>();
+    final Set<Module> deps = new HashSet<Module>();
     map.put(module, deps);
 
     new Object() {

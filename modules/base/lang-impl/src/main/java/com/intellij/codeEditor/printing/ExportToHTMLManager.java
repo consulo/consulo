@@ -36,7 +36,7 @@ import com.intellij.openapi.vfs.CharsetToolkit;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.*;
 import com.intellij.psi.impl.file.PsiPackageHelper;
-import com.intellij.util.containers.HashMap;
+
 import javax.annotation.Nonnull;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.annotation.access.RequiredReadAction;
@@ -44,6 +44,7 @@ import consulo.annotation.access.RequiredReadAction;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.TreeMap;
 
 class ExportToHTMLManager {
@@ -137,7 +138,7 @@ class ExportToHTMLManager {
   }
 
   private static boolean exportPsiFile(final PsiFile psiFile, final String outputDirectoryName, final Project project, final HashMap<PsiFile,
-          PsiFile> filesMap) {
+            PsiFile> filesMap) {
     try {
       return ApplicationManager.getApplication().runReadAction(new ThrowableComputable<Boolean, FileNotFoundException>() {
         @Override
