@@ -6,7 +6,6 @@ import consulo.container.plugin.PluginId;
 import consulo.container.classloader.PluginClassLoader;
 import consulo.util.nodep.classloader.UrlClassLoader;
 import consulo.util.nodep.collection.ContainerUtilRt;
-import consulo.util.nodep.collection.HashSet;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

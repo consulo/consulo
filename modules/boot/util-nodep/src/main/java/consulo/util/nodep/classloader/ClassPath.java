@@ -16,7 +16,6 @@
 package consulo.util.nodep.classloader;
 
 import consulo.util.nodep.LoggerRt;
-import consulo.util.nodep.collection.Stack;
 
 import javax.annotation.Nullable;
 import java.io.File;
@@ -34,7 +33,7 @@ public class ClassPath {
   private static final LoaderCollector ourLoaderCollector = new LoaderCollector();
   public static final String CLASSPATH_JAR_FILE_NAME_PREFIX = "classpath";
 
-  private final Stack<URL> myUrls = new Stack<URL>();
+  private final Deque<URL> myUrls = new ArrayDeque<URL>();
   private final List<Loader> myLoaders = new ArrayList<Loader>();
 
   private volatile boolean myAllUrlsWereProcessed;
@@ -153,7 +152,7 @@ public class ClassPath {
     while (myLoaders.size() < i + 1) {
       URL url;
       synchronized (myUrls) {
-        if (myUrls.empty()) {
+        if (myUrls.isEmpty()) {
           if (myCanUseCache) {
             myAllUrlsWereProcessed = true;
           }

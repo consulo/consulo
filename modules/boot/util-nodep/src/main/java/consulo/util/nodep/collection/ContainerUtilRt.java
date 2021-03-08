@@ -15,17 +15,14 @@
  */
 package consulo.util.nodep.collection;
 
-import consulo.util.nodep.Pair;
 import consulo.util.nodep.ArrayUtilRt;
+import consulo.util.nodep.Pair;
 import consulo.util.nodep.function.Function;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.io.Serializable;
 import java.util.*;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -40,13 +37,13 @@ public class ContainerUtilRt {
   private static final int ARRAY_COPY_THRESHOLD = 20;
 
   @Nonnull
-  public static <K, V> HashMap<K, V> newHashMap() {
-    return new consulo.util.nodep.collection.HashMap<K, V>();
+  public static <K, V> Map<K, V> newHashMap() {
+    return new HashMap<K, V>();
   }
 
   @Nonnull
-  public static <K, V> HashMap<K, V> newHashMap(@Nonnull Map<? extends K, ? extends V> map) {
-    return new consulo.util.nodep.collection.HashMap<K, V>(map);
+  public static <K, V> Map<K, V> newHashMap(@Nonnull Map<? extends K, ? extends V> map) {
+    return new HashMap<K, V>(map);
   }
 
   @Nonnull
@@ -74,7 +71,7 @@ public class ContainerUtilRt {
 
   @Nonnull
   public static <K, V> Map<K, V> newHashMap(int initialCapacity) {
-    return new consulo.util.nodep.collection.HashMap<K, V>(initialCapacity);
+    return new HashMap<K, V>(initialCapacity);
   }
 
   @Nonnull
@@ -88,23 +85,23 @@ public class ContainerUtilRt {
   }
 
   @Nonnull
-  public static <K, V> LinkedHashMap<K, V> newLinkedHashMap() {
-    return new consulo.util.nodep.collection.LinkedHashMap<K, V>();
+  public static <K, V> Map<K, V> newLinkedHashMap() {
+    return new LinkedHashMap<K, V>();
   }
 
   @Nonnull
-  public static <K, V> LinkedHashMap<K, V> newLinkedHashMap(int capacity) {
-    return new consulo.util.nodep.collection.LinkedHashMap<K, V>(capacity);
+  public static <K, V> Map<K, V> newLinkedHashMap(int capacity) {
+    return new LinkedHashMap<K, V>(capacity);
   }
 
   @Nonnull
-  public static <K, V> LinkedHashMap<K, V> newLinkedHashMap(@Nonnull Map<K, V> map) {
-    return new consulo.util.nodep.collection.LinkedHashMap<K, V>(map);
+  public static <K, V> Map<K, V> newLinkedHashMap(@Nonnull Map<K, V> map) {
+    return new LinkedHashMap<K, V>(map);
   }
 
   @Nonnull
-  public static <K, V> LinkedHashMap<K,V> newLinkedHashMap(@Nonnull Pair<K, V> first, @Nonnull Pair<K, V>[] entries) {
-    LinkedHashMap<K, V> map = newLinkedHashMap();
+  public static <K, V> Map<K,V> newLinkedHashMap(@Nonnull Pair<K, V> first, @Nonnull Pair<K, V>[] entries) {
+    Map<K, V> map = newLinkedHashMap();
     map.put(first.getFirst(), first.getSecond());
     for (Pair<K, V> entry : entries) {
       map.put(entry.getFirst(), entry.getSecond());
@@ -165,24 +162,24 @@ public class ContainerUtilRt {
 
   @Nonnull
   public static <T> HashSet<T> newHashSet() {
-    return new consulo.util.nodep.collection.HashSet<T>();
+    return new HashSet<T>();
   }
 
   @Nonnull
   public static <T> HashSet<T> newHashSet(int initialCapacity) {
-    return new consulo.util.nodep.collection.HashSet<T>(initialCapacity);
+    return new HashSet<T>(initialCapacity);
   }
 
   @Nonnull
   public static <T> HashSet<T> newHashSet(@Nonnull T... elements) {
-    return new consulo.util.nodep.collection.HashSet<T>(Arrays.asList(elements));
+    return new HashSet<T>(Arrays.asList(elements));
   }
 
   @Nonnull
   public static <T> HashSet<T> newHashSet(@Nonnull Iterable<? extends T> elements) {
     if (elements instanceof Collection) {
       @SuppressWarnings("unchecked") Collection<? extends T> collection = (Collection<? extends T>)elements;
-      return new consulo.util.nodep.collection.HashSet<T>(collection);
+      return new HashSet<T>(collection);
     }
     return newHashSet(elements.iterator());
   }
@@ -195,20 +192,20 @@ public class ContainerUtilRt {
   }
 
   @Nonnull
-  public static <T> LinkedHashSet<T> newLinkedHashSet() {
-    return new consulo.util.nodep.collection.LinkedHashSet<T>();
+  public static <T> Set<T> newLinkedHashSet() {
+    return new LinkedHashSet<T>();
   }
 
   @Nonnull
-  public static <T> LinkedHashSet<T> newLinkedHashSet(@Nonnull T... elements) {
+  public static <T> Set<T> newLinkedHashSet(@Nonnull T... elements) {
     return newLinkedHashSet(Arrays.asList(elements));
   }
 
   @Nonnull
-  public static <T> LinkedHashSet<T> newLinkedHashSet(@Nonnull Iterable<? extends T> elements) {
+  public static <T> Set<T> newLinkedHashSet(@Nonnull Iterable<? extends T> elements) {
     if (elements instanceof Collection) {
       @SuppressWarnings("unchecked") Collection<? extends T> collection = (Collection<? extends T>)elements;
-      return new consulo.util.nodep.collection.LinkedHashSet<T>(collection);
+      return new LinkedHashSet<T>(collection);
     }
     return copy(ContainerUtilRt.<T>newLinkedHashSet(), elements);
   }
@@ -233,21 +230,6 @@ public class ContainerUtilRt {
   @Nonnull
   public static <T> TreeSet<T> newTreeSet(@Nullable Comparator<? super T> comparator) {
     return new TreeSet<T>(comparator);
-  }
-
-  @Nonnull
-  public static <T> Stack<T> newStack() {
-    return new Stack<T>();
-  }
-
-  @Nonnull
-  public static <T> Stack<T> newStack(@Nonnull Collection<T> elements) {
-    return new Stack<T>(elements);
-  }
-
-  @Nonnull
-  public static <T> Stack<T> newStack(@Nonnull T... initial) {
-    return new Stack<T>(Arrays.asList(initial));
   }
 
   /**

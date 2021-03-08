@@ -17,7 +17,6 @@ package consulo.logging.internal;
 
 import consulo.annotation.ReviewAfterMigrationToJRE;
 import consulo.logging.attachment.AttachmentFactory;
-import consulo.util.nodep.ServiceLoaderUtil;
 
 import javax.annotation.Nonnull;
 import java.util.Iterator;
