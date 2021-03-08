@@ -739,7 +739,7 @@ public class RunAnythingPopupUI extends BigPopupUI {
 
         installScrollingActions();
 
-        updateViewType(myListModel.size() == 0 ? ViewType.SHORT : ViewType.FULL);
+        updateViewType(myListModel.getSize() == 0 ? ViewType.SHORT : ViewType.FULL);
       });
     }
 
@@ -759,7 +759,7 @@ public class RunAnythingPopupUI extends BigPopupUI {
               int shift = 0;
               int i = index + 1;
               for (Object o : result) {
-                myListModel.insertElementAt(o, i);
+                myListModel.add(i, o);
                 shift++;
                 i++;
               }
@@ -887,7 +887,7 @@ public class RunAnythingPopupUI extends BigPopupUI {
 
       model.remove(index);
       model.shiftIndexes(index, -1);
-      if (model.size() > 0) ScrollingUtil.selectItem(myResultsList, index < model.size() ? index : index - 1);
+      if (model.getSize() > 0) ScrollingUtil.selectItem(myResultsList, index < model.getSize() ? index : index - 1);
 
       Application.get().invokeLater(() -> {
         if (myCalcThread != null) {

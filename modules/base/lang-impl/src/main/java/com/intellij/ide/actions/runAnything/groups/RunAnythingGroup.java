@@ -5,6 +5,7 @@ import com.intellij.ide.actions.runAnything.items.RunAnythingItem;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.psi.codeStyle.NameUtil;
+import com.intellij.ui.CollectionListModel;
 import com.intellij.util.Function;
 import gnu.trove.TIntArrayList;
 import javax.annotation.Nonnull;
@@ -63,7 +64,7 @@ public abstract class RunAnythingGroup {
    * @param isInsertionMode     if true gets {@link #getMaxItemsToInsert()} group items, else limits to {@link #getMaxInitialItems()}
    * @param cancellationChecker checks 'load more' calculation process to be cancelled
    */
-  public abstract SearchResult getItems(@Nonnull DataContext dataContext, @Nonnull DefaultListModel model, @Nonnull String pattern, boolean isInsertionMode, @Nonnull Runnable cancellationChecker);
+  public abstract SearchResult getItems(@Nonnull DataContext dataContext, @Nonnull CollectionListModel<Object> model, @Nonnull String pattern, boolean isInsertionMode, @Nonnull Runnable cancellationChecker);
 
   /**
    * Resets current group 'load more..' {@link #myMoreIndex} index.
@@ -194,7 +195,7 @@ public abstract class RunAnythingGroup {
    * @param pattern             input search string
    * @param cancellationChecker runnable that should throw a {@code ProcessCancelledException} if 'load more' process was cancelled
    */
-  public final synchronized void collectItems(@Nonnull DataContext dataContext, @Nonnull DefaultListModel model, @Nonnull String pattern, @Nonnull Runnable cancellationChecker) {
+  public final synchronized void collectItems(@Nonnull DataContext dataContext, @Nonnull CollectionListModel<Object> model, @Nonnull String pattern, @Nonnull Runnable cancellationChecker) {
     SearchResult result = getItems(dataContext, model, pattern, false, cancellationChecker);
 
     cancellationChecker.run();
@@ -202,8 +203,8 @@ public abstract class RunAnythingGroup {
       ApplicationManager.getApplication().invokeLater(() -> {
         cancellationChecker.run();
 
-        myTitleIndex = model.size();
-        result.forEach(model::addElement);
+        myTitleIndex = model.getSize();
+        result.forEach(model::add);
         myMoreIndex = result.myNeedMore ? model.getSize() - 1 : -1;
       });
     }

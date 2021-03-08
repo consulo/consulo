@@ -34,7 +34,7 @@ import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.Conditions;
-import com.intellij.ui.ColoredListCellRendererWrapper;
+import com.intellij.ui.ColoredListCellRenderer;
 import com.intellij.ui.ScreenUtil;
 import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.util.Consumer;
@@ -110,9 +110,9 @@ public class SdkComboBox extends ComboBoxWithWidePopup {
     super(new SdkComboBoxModel(sdksModel, getSdkFilter(filter), nullItemName));
     myFilter = filter;
     myCreationFilter = creationFilter;
-    setRenderer(new ColoredListCellRendererWrapper<SdkComboBoxItem>() {
+    setRenderer(new ColoredListCellRenderer<SdkComboBoxItem>() {
       @Override
-      public void doCustomize(JList list, SdkComboBoxItem value, int index, boolean selected, boolean hasFocus) {
+      public void customizeCellRenderer(@Nonnull JList list, SdkComboBoxItem value, int index, boolean selected, boolean hasFocus) {
         setIcon(Image.empty(16));    // to fix vertical size
         if (value instanceof InvalidSdkComboBoxItem) {
           setIcon(AllIcons.Toolbar.Unknown);

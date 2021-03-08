@@ -42,11 +42,10 @@ import com.intellij.psi.impl.PsiModificationTrackerImpl;
 import com.intellij.psi.injection.Injectable;
 import com.intellij.psi.injection.ReferenceInjector;
 import com.intellij.psi.util.PsiTreeUtil;
-import com.intellij.ui.ColoredListCellRendererWrapper;
+import com.intellij.ui.ColoredListCellRenderer;
 import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.ui.components.JBList;
 import com.intellij.util.FileContentUtil;
-import com.intellij.util.Function;
 import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.Processor;
 import com.intellij.util.containers.ContainerUtil;
@@ -177,13 +176,13 @@ public class InjectLanguageAction implements IntentionAction {
   private static boolean doChooseLanguageToInject(Editor editor, final Processor<Injectable> onChosen) {
     final List<Injectable> injectables = getAllInjectables();
 
-    final JList list = new JBList(injectables);
-    list.setCellRenderer(new ColoredListCellRendererWrapper<Injectable>() {
+    final JList<Injectable> list = new JBList<>(injectables);
+    list.setCellRenderer(new ColoredListCellRenderer<Injectable > () {
       @Override
-      protected void doCustomize(JList list, Injectable language, int index, boolean selected, boolean hasFocus) {
-        setIcon(language.getIcon());
-        append(language.getDisplayName());
-        String description = language.getAdditionalDescription();
+      protected void customizeCellRenderer(@Nonnull JList<? extends Injectable> list, Injectable value, int index, boolean selected, boolean hasFocus) {
+        setIcon(value.getIcon());
+        append(value.getDisplayName());
+        String description = value.getAdditionalDescription();
         if (description != null) {
           append(description, SimpleTextAttributes.GRAYED_ATTRIBUTES);
         }
@@ -197,12 +196,7 @@ public class InjectLanguageAction implements IntentionAction {
           PropertiesComponent.getInstance().setValue(LAST_INJECTED_LANGUAGE, value.getId());
         }
       }
-    }).setFilteringEnabled(new Function<Object, String>() {
-      @Override
-      public String fun(Object language) {
-        return ((Injectable)language).getDisplayName();
-      }
-    }).createPopup();
+    }).setFilteringEnabled(language -> ((Injectable)language).getDisplayName()).createPopup();
     final String lastInjected = PropertiesComponent.getInstance().getValue(LAST_INJECTED_LANGUAGE);
     if (lastInjected != null) {
       Injectable injectable = ContainerUtil.find(injectables, new Condition<Injectable>() {

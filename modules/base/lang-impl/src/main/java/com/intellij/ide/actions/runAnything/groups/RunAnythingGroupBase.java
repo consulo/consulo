@@ -3,12 +3,13 @@ package com.intellij.ide.actions.runAnything.groups;
 
 import com.intellij.ide.actions.runAnything.items.RunAnythingItem;
 import com.intellij.openapi.actionSystem.DataContext;
+import com.intellij.ui.CollectionListModel;
 import com.intellij.util.text.Matcher;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.swing.*;
 import java.util.Collection;
+import java.util.List;
 
 public abstract class RunAnythingGroupBase extends RunAnythingGroup {
   @Nonnull
@@ -20,7 +21,7 @@ public abstract class RunAnythingGroupBase extends RunAnythingGroup {
   }
 
   @Override
-  public SearchResult getItems(@Nonnull DataContext dataContext, @Nonnull DefaultListModel model, @Nonnull String pattern, boolean isInsertionMode, @Nonnull Runnable cancellationChecker) {
+  public SearchResult getItems(@Nonnull DataContext dataContext, @Nonnull CollectionListModel<Object> model, @Nonnull String pattern, boolean isInsertionMode, @Nonnull Runnable cancellationChecker) {
     cancellationChecker.run();
     SearchResult result = new SearchResult();
     for (RunAnythingItem runConfigurationItem : getGroupItems(dataContext, pattern)) {
@@ -45,7 +46,7 @@ public abstract class RunAnythingGroupBase extends RunAnythingGroup {
    * @param matcher         uses for group items filtering
    * @return true if limit exceeded
    */
-  private boolean addToList(@Nonnull DefaultListModel model,
+  private boolean addToList(@Nonnull CollectionListModel<Object> model,
                             @Nonnull SearchResult result,
                             @Nonnull String textToMatch,
                             boolean isInsertionMode,

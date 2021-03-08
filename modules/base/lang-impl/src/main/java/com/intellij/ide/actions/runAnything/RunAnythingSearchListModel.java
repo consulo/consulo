@@ -6,23 +6,18 @@ import com.intellij.ide.actions.runAnything.groups.RunAnythingCompletionGroup;
 import com.intellij.ide.actions.runAnything.groups.RunAnythingGroup;
 import com.intellij.ide.actions.runAnything.groups.RunAnythingHelpGroup;
 import com.intellij.ide.actions.runAnything.groups.RunAnythingRecentGroup;
-import com.intellij.util.ReflectionUtil;
+import com.intellij.ui.CollectionListModel;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.MultiMap;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.swing.*;
 import java.util.*;
 
 @SuppressWarnings("unchecked")
-public abstract class RunAnythingSearchListModel extends DefaultListModel<Object> {
-  @SuppressWarnings("UseOfObsoleteCollectionType")
-  Vector myDelegate;
-
+public abstract class RunAnythingSearchListModel extends CollectionListModel<Object> {
   protected RunAnythingSearchListModel() {
     super();
-    myDelegate = ReflectionUtil.getField(DefaultListModel.class, this, Vector.class, "delegate");
     clearIndexes();
   }
 
@@ -79,11 +74,6 @@ public abstract class RunAnythingSearchListModel extends DefaultListModel<Object
     return all[all.length - 1];
   }
 
-  @Override
-  public void addElement(Object obj) {
-    myDelegate.add(obj);
-  }
-
   public void update() {
     fireContentsChanged(this, 0, getSize() - 1);
   }
@@ -107,13 +97,6 @@ public abstract class RunAnythingSearchListModel extends DefaultListModel<Object
     protected List<RunAnythingGroup> getGroups() {
       if (myHelpGroups == null) {
         myHelpGroups = new ArrayList<>();
-        for (RunAnythingProvider provider : RunAnythingProvider.EP_NAME.getExtensionList()) {
-          String helpGroupTitle = provider.getHelpGroupTitle();
-          if(helpGroupTitle != null) {
-
-          }
-        }
-
         MultiMap<String, RunAnythingProvider> groupBy = ContainerUtil.groupBy(RunAnythingProvider.EP_NAME.getExtensionList(), RunAnythingProvider::getHelpGroupTitle);
 
         for (Map.Entry<String, Collection<RunAnythingProvider>> entry : groupBy.entrySet()) {

@@ -34,14 +34,14 @@ import com.intellij.openapi.vcs.changes.actions.MoveChangesToAnotherListAction;
 import com.intellij.openapi.vcs.changes.actions.RollbackDialogAction;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.IdeFocusManager;
-import com.intellij.ui.ColoredListCellRendererWrapper;
+import com.intellij.ui.ColoredListCellRenderer;
 import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.util.EventDispatcher;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.containers.ContainerUtil;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeNode;
@@ -49,8 +49,8 @@ import javax.swing.tree.TreePath;
 import java.awt.*;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 import static java.util.stream.Collectors.toList;
 
@@ -390,10 +390,9 @@ public class MultipleChangeListBrowser extends ChangesBrowserBase<Object> {
     public ChangeListChooser() {
       super(new BorderLayout(4, 2));
       myChooser = new ComboBox();
-      //noinspection unchecked
-      myChooser.setRenderer(new ColoredListCellRendererWrapper<LocalChangeList>() {
+      myChooser.setRenderer(new ColoredListCellRenderer<LocalChangeList>() {
         @Override
-        protected void doCustomize(JList list, LocalChangeList value, int index, boolean selected, boolean hasFocus) {
+        protected void customizeCellRenderer(@Nonnull JList<? extends LocalChangeList> list, LocalChangeList value, int index, boolean selected, boolean hasFocus) {
           if (value != null) {
             String name = StringUtil.shortenTextWithEllipsis(value.getName().trim(), MAX_LEN, 0);
 
