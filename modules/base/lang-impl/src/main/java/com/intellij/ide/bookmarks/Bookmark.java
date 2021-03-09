@@ -29,6 +29,7 @@ import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.RangeMarker;
 import com.intellij.openapi.editor.colors.CodeInsightColors;
 import com.intellij.openapi.editor.colors.EditorColorsManager;
+import com.intellij.openapi.editor.colors.EditorColorsScheme;
 import com.intellij.openapi.editor.ex.MarkupModelEx;
 import com.intellij.openapi.editor.ex.RangeHighlighterEx;
 import com.intellij.openapi.editor.impl.DocumentMarkupModel;
@@ -98,11 +99,12 @@ public class Bookmark implements Navigatable {
       c.stroke();
 
       c.setFillStyle(ComponentColors.TEXT);
-      c.setFont(FontManager.get().createFont("Monospaced", 11, consulo.ui.font.Font.STYLE_BOLD));
+      EditorColorsScheme scheme = EditorColorsManager.getInstance().getGlobalScheme();
+      c.setFont(FontManager.get().createFont(scheme.getEditorFontName(), 11, consulo.ui.font.Font.STYLE_PLAIN));
       c.setTextAlign(Canvas2D.TextAlign.center);
       c.setTextBaseline(Canvas2D.TextBaseline.middle);
 
-      c.fillText(Character.toString(cha), width / 2, height / 2 - 2);
+      c.fillText(Character.toString(cha), width / 2, height / 2 - 1);
     });
   }
 
