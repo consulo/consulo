@@ -14,12 +14,12 @@ import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
-class MemoryResource extends Resource {
+public class MemoryResource extends Resource {
   protected final URL myUrl;
   private final byte[] myContent;
   private final Map<Resource.Attribute, String> myAttributes;
 
-   MemoryResource(URL url, byte[] content, Map<Resource.Attribute, String> attributes) {
+   public MemoryResource(URL url, byte[] content, Map<Resource.Attribute, String> attributes) {
     myUrl = url;
     myContent = content;
     myAttributes = attributes;

@@ -15,6 +15,7 @@
  */
 package consulo.util.advandedProxy.internal.impl;
 
+import consulo.container.classloader.PluginClassLoader;
 import consulo.util.advandedProxy.ProxyHelper;
 import consulo.util.advandedProxy.internal.AdvancedProxyFacade;
 import consulo.util.collection.ArrayUtil;
@@ -22,7 +23,6 @@ import net.bytebuddy.ByteBuddy;
 import net.bytebuddy.ClassFileVersion;
 import net.bytebuddy.description.method.MethodDescription;
 import net.bytebuddy.dynamic.DynamicType;
-import net.bytebuddy.dynamic.loading.ClassLoadingStrategy;
 import net.bytebuddy.dynamic.scaffold.TypeValidation;
 import net.bytebuddy.implementation.InvocationHandlerAdapter;
 import net.bytebuddy.matcher.ElementMatcher;
@@ -81,7 +81,11 @@ public class ByteBuddyAdvancedProxyFacade implements AdvancedProxyFacade {
 
       ClassLoader classLoader = ProxyHelper.preferClassLoader(superClass, interfaces);
 
-      DynamicType.Loaded<T> type = make.load(classLoader, ClassLoadingStrategy.Default.INJECTION);
+      if(!(classLoader instanceof PluginClassLoader)) {
+        throw new IllegalArgumentException("Must be PluginClassLoader: " + classLoader.getClass().getName());
+      }
+
+      DynamicType.Loaded<T> type = make.load(classLoader, new UrlClassLoaderStrategy(classLoader));
 
       Class<? extends T> loaded = type.getLoaded();
 

@@ -26,6 +26,4 @@ public class SecureMemoryResource extends MemoryResource {
   SecureMemoryResource(URL url, byte[] content, Map<Attribute, String> attributes) {
     super(url, content, attributes);
   }
-
-
 }

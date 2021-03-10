@@ -375,7 +375,7 @@ public class UrlClassLoader extends ClassLoader {
     }
   }
 
-  private Class defineClass(String name, Resource res) throws IOException {
+  public Class defineClass(String name, Resource res) throws IOException {
     int i = name.lastIndexOf('.');
     if (i != -1) {
       String pkgName = name.substring(0, i);
