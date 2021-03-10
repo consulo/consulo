@@ -18,11 +18,13 @@ package com.intellij.openapi.ui;
 import com.intellij.openapi.actionSystem.ActionToolbar;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.DataProvider;
-import consulo.util.dataholder.Key;
+import com.intellij.ui.JBColor;
+import com.intellij.ui.paint.LinePainter2D;
 import com.intellij.ui.switcher.QuickActionProvider;
 import com.intellij.util.containers.JBIterable;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
+import consulo.util.dataholder.Key;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -135,13 +137,14 @@ public class SimpleToolWindowPanel extends JPanel implements QuickActionProvider
     super.paintComponent(g);
 
     if (myToolbar != null && myToolbar.getParent() == this && myContent != null && myContent.getParent() == this) {
-      g.setColor(UIUtil.getBorderColor());
+      g.setColor(JBColor.border());
       if (myVertical) {
-        final int y = (int)myToolbar.getBounds().getMaxY();
-        g.drawLine(0, y, getWidth(), y);
-      } else {
+        int y = (int)myToolbar.getBounds().getMaxY();
+        LinePainter2D.paint((Graphics2D)g, 0, y, getWidth(), y);
+      }
+      else {
         int x = (int)myToolbar.getBounds().getMaxX();
-        g.drawLine(x, 0, x, getHeight());
+        LinePainter2D.paint((Graphics2D)g, x, 0, x, getHeight());
       }
     }
   }
