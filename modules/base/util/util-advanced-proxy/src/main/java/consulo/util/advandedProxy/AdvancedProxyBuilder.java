@@ -16,7 +16,7 @@
 package consulo.util.advandedProxy;
 
 import consulo.util.advandedProxy.internal.AdvancedProxyFacade;
-import consulo.util.advandedProxy.internal.impl.ByteBuddyAdvancedProxyFacade;
+import consulo.util.advandedProxy.internal.impl.bytebuddy.ByteBuddyAdvancedProxyFacade;
 import consulo.util.collection.ArrayUtil;
 import net.sf.cglib.proxy.CglibAdvancedProxyFacade;
 
@@ -34,11 +34,11 @@ public class AdvancedProxyBuilder<T> {
   private static final AdvancedProxyFacade ourAdvancedProxyFacade;
 
   static {
-    if(Boolean.getBoolean("consulo.enable.byte.buddy.proxy")) {
-      ourAdvancedProxyFacade = new ByteBuddyAdvancedProxyFacade();
+    if (Boolean.getBoolean("consulo.enable.cglib.proxy")) {
+      ourAdvancedProxyFacade = new CglibAdvancedProxyFacade();
     }
     else {
-      ourAdvancedProxyFacade = new CglibAdvancedProxyFacade();
+      ourAdvancedProxyFacade = new ByteBuddyAdvancedProxyFacade();
     }
   }
 

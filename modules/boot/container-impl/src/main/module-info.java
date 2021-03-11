@@ -9,6 +9,8 @@ module consulo.container.impl {
 
   exports consulo.container.impl;
   exports consulo.container.impl.classloader;
+  // TODO [VISTALL] must be exported only to advanced proxy moduke
+  exports consulo.container.impl.classloader.proxy;
   exports consulo.container.impl.parser;
 
   uses consulo.container.boot.ContainerStartup;

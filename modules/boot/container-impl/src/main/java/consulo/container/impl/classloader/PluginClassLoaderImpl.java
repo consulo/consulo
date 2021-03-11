@@ -2,6 +2,9 @@
 package consulo.container.impl.classloader;
 
 import consulo.container.PluginException;
+import consulo.container.impl.classloader.proxy.ProxyDescription;
+import consulo.container.impl.classloader.proxy.ProxyFactory;
+import consulo.container.impl.classloader.proxy.ProxyHolderClassLoader;
 import consulo.container.plugin.PluginId;
 import consulo.container.classloader.PluginClassLoader;
 import consulo.util.nodep.classloader.UrlClassLoader;
@@ -14,11 +17,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+import java.util.function.Function;
 
 /**
  * @author Eugene Zhuravlev
  */
-class PluginClassLoaderImpl extends UrlClassLoader implements PluginClassLoader {
+class PluginClassLoaderImpl extends UrlClassLoader implements PluginClassLoader, ProxyHolderClassLoader {
   static {
     if (registerAsParallelCapable()) markParallelCapable(PluginClassLoaderImpl.class);
   }
@@ -27,6 +33,8 @@ class PluginClassLoaderImpl extends UrlClassLoader implements PluginClassLoader 
   private final PluginId myPluginId;
   private final String myPluginVersion;
   private final List<String> myLibDirectories;
+
+  private ConcurrentMap<ProxyDescription, ProxyFactory> myProxyFactories = new ConcurrentHashMap<ProxyDescription, ProxyFactory>();
 
   /**
    * Constructor for main platform plugins, it will set parent for ClassLoader - it's need for correct parent resolving for ServiceLoader
@@ -309,6 +317,12 @@ class PluginClassLoaderImpl extends UrlClassLoader implements PluginClassLoader 
   @Override
   public String toString() {
     return "PluginClassLoader[" + myPluginId + ", " + myPluginVersion + "] " + super.toString();
+  }
+
+  @Nonnull
+  @Override
+  public ProxyFactory registerOrGetProxy(@Nonnull final ProxyDescription description, @Nonnull final Function<ProxyDescription, ProxyFactory> proxyFactoryFunction) {
+    return myProxyFactories.computeIfAbsent(description, proxyFactoryFunction);
   }
 
   private static class DeepEnumeration implements Enumeration<URL> {
