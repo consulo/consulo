@@ -30,19 +30,18 @@ import com.intellij.execution.testframework.sm.runner.ui.SMTestRunnerResultsForm
 import com.intellij.execution.testframework.sm.runner.ui.statistics.StatisticsPanel;
 import com.intellij.execution.testframework.ui.BaseTestsOutputConsoleView;
 import com.intellij.openapi.application.ApplicationManager;
-import consulo.disposer.Disposer;
-import consulo.util.dataholder.Key;
 import com.intellij.testIntegration.TestLocationProvider;
+import consulo.disposer.Disposer;
+import consulo.net.util.NetUtil;
+import consulo.util.dataholder.Key;
 import org.apache.thrift.server.TServer;
 import org.apache.thrift.server.TSimpleServer;
 import org.apache.thrift.transport.TServerSocket;
 import org.apache.thrift.transport.TTransportException;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import java.io.IOException;
 import java.net.InetSocketAddress;
-import java.net.ServerSocket;
 
 /**
  * @author VISTALL
@@ -164,35 +163,12 @@ public class ThriftTestExecutionUtil {
     TestInterface.Processor<TestInterface.Iface> processor = new TestInterface.Processor<TestInterface.Iface>(iface);
 
     TSimpleServer server = new TSimpleServer(new TServer.Args(localhost).processor(processor));
-    ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
-      @Override
-      public void run() {
-        server.serve();
-      }
-    });
+    ApplicationManager.getApplication().executeOnPooledThread((Runnable)server::serve);
 
     return server;
   }
 
   public static int getFreePort() {
-    ServerSocket serverSocket = null;
-    try {
-      serverSocket = new ServerSocket(0);
-      return serverSocket.getLocalPort();
-    }
-    catch (IOException e) {
-      e.printStackTrace();
-    }
-    finally {
-      if (serverSocket != null) {
-        try {
-          serverSocket.close();
-        }
-        catch (IOException e) {
-          //
-        }
-      }
-    }
-    throw new IllegalArgumentException("Cant get free port");
+    return NetUtil.tryToFindAvailableSocketPort();
   }
 }
