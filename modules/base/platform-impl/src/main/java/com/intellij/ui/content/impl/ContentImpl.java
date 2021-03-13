@@ -17,24 +17,24 @@
 package com.intellij.ui.content.impl;
 
 import com.intellij.icons.AllIcons;
-import consulo.disposer.Disposable;
 import com.intellij.openapi.actionSystem.ActionGroup;
 import com.intellij.openapi.util.BusyObject;
 import com.intellij.openapi.util.Computable;
-import consulo.disposer.Disposer;
-import consulo.util.dataholder.UserDataHolderBase;
 import com.intellij.ui.content.AlertIcon;
 import com.intellij.ui.content.ContentManager;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
+import consulo.util.dataholder.UserDataHolderBase;
 import consulo.wm.ContentEx;
+import kava.beans.PropertyChangeListener;
+import kava.beans.PropertyChangeSupport;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
-import kava.beans.PropertyChangeListener;
-import kava.beans.PropertyChangeSupport;
 
 public class ContentImpl extends UserDataHolderBase implements ContentEx {
   private String myDisplayName;
@@ -104,7 +104,12 @@ public class ContentImpl extends UserDataHolderBase implements ContentEx {
   public void setIcon(Image icon) {
     Image oldValue = getIcon();
     myIcon = icon;
-    myLayeredIcon = ImageEffects.layered(myIcon, AllIcons.Nodes.PinToolWindow);
+    if(myIcon == null) {
+      myLayeredIcon = AllIcons.Nodes.PinToolWindow;
+    }
+    else {
+      myLayeredIcon = ImageEffects.layered(myIcon, AllIcons.Nodes.PinToolWindow);
+    }
     myChangeSupport.firePropertyChange(PROP_ICON, oldValue, getIcon());
   }
 
