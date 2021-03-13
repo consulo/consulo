@@ -34,11 +34,11 @@ public class AdvancedProxyBuilder<T> {
   private static final AdvancedProxyFacade ourAdvancedProxyFacade;
 
   static {
-    if (Boolean.getBoolean("consulo.enable.cglib.proxy")) {
-      ourAdvancedProxyFacade = new CglibAdvancedProxyFacade();
+    if (Boolean.getBoolean("consulo.enable.bytebuddy.proxy")) {
+      ourAdvancedProxyFacade = new ByteBuddyAdvancedProxyFacade();
     }
     else {
-      ourAdvancedProxyFacade = new ByteBuddyAdvancedProxyFacade();
+      ourAdvancedProxyFacade = new CglibAdvancedProxyFacade();
     }
   }
 

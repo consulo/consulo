@@ -5,9 +5,9 @@ import consulo.container.impl.classloader.proxy.ProxyHolderClassLoader;
 import consulo.util.advandedProxy.ObjectMethods;
 import consulo.util.advandedProxy.ProxyHelper;
 import consulo.util.advandedProxy.internal.AdvancedProxyFacade;
+import consulo.util.advandedProxy.internal.impl.AdvancedProxyTesting;
 import consulo.util.advandedProxy.internal.impl.cglib.CglibProxyFactory;
 import consulo.util.collection.ArrayUtil;
-import consulo.util.collection.Maps;
 import consulo.util.lang.ControlFlowException;
 import net.sf.cglib.core.CodeGenerationException;
 
@@ -15,7 +15,6 @@ import javax.annotation.Nonnull;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.util.Map;
 
 /**
  * @author peter
@@ -85,14 +84,21 @@ public class CglibAdvancedProxyFacade implements AdvancedProxyFacade {
     try {
       ClassLoader classLoader = ProxyHelper.preferClassLoader(superClass, interfaces);
 
-      if (!(classLoader instanceof ProxyHolderClassLoader)) {
-        throw new IllegalArgumentException("Must be ProxyHolderClassLoader: " + classLoader.getClass().getName());
-      }
-
       final ProxyDescription key = new ProxyDescription(superClass, interfaces, interceptObjectMethods);
 
-      CglibProxyFactory proxyFactory = (CglibProxyFactory)((ProxyHolderClassLoader)classLoader)
-              .registerOrGetProxy(key, description -> createProxyImpl(superClass, interfaces, handler, interceptObjectMethods, constructorArgs));
+      CglibProxyFactory proxyFactory;
+
+      if (AdvancedProxyTesting.isProxyClassLoaderRequired()) {
+        if (!(classLoader instanceof ProxyHolderClassLoader)) {
+          throw new IllegalArgumentException("Must be ProxyHolderClassLoader: " + classLoader.getClass().getName());
+        }
+
+        proxyFactory = (CglibProxyFactory)((ProxyHolderClassLoader)classLoader)
+                .registerOrGetProxy(key, description -> createProxyImpl(superClass, interfaces, handler, interceptObjectMethods, constructorArgs));
+      }
+      else {
+        proxyFactory = createProxyImpl(superClass, interfaces, handler, interceptObjectMethods, constructorArgs);
+      }
 
       final Callback[] callbacks = new Callback[]{handler, NoOp.INSTANCE};
 
@@ -134,8 +140,10 @@ public class CglibAdvancedProxyFacade implements AdvancedProxyFacade {
     try {
       ClassLoader classLoader = ProxyHelper.preferClassLoader(superClass, interfaces);
 
-      if (!(classLoader instanceof ProxyHolderClassLoader)) {
-        throw new IllegalArgumentException("Must be ProxyHolderClassLoader: " + classLoader.getClass().getName());
+      if(AdvancedProxyTesting.isProxyClassLoaderRequired()) {
+        if (!(classLoader instanceof ProxyHolderClassLoader)) {
+          throw new IllegalArgumentException("Must be ProxyHolderClassLoader: " + classLoader.getClass().getName());
+        }
       }
 
       final Callback[] callbacks = new Callback[]{handler, NoOp.INSTANCE};

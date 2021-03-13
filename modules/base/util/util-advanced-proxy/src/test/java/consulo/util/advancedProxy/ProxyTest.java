@@ -16,9 +16,8 @@
 package consulo.util.advancedProxy;
 
 import consulo.util.advandedProxy.AdvancedProxyBuilder;
-import org.junit.Assert;
-import org.junit.Ignore;
-import org.junit.Test;
+import consulo.util.advandedProxy.internal.impl.AdvancedProxyTesting;
+import org.junit.*;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
@@ -30,8 +29,17 @@ import java.util.List;
  * @author peter
  */
 public class ProxyTest extends Assert {
+  @Before
+  public void before() {
+    AdvancedProxyTesting.IS_INSIDE_TEST = true;
+  }
+
+  @After
+  public void after() {
+    AdvancedProxyTesting.IS_INSIDE_TEST = false;
+  }
+
   @Test
-  @Ignore
   // disable test since it will can provide SOFE due getField will override in impl class
   public void testExtendClass() throws Throwable {
     final List<String> invocations = new ArrayList<>();

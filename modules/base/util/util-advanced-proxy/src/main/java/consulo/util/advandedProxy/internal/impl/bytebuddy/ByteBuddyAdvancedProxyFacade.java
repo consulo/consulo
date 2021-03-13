@@ -19,11 +19,13 @@ import consulo.container.impl.classloader.proxy.ProxyDescription;
 import consulo.container.impl.classloader.proxy.ProxyHolderClassLoader;
 import consulo.util.advandedProxy.ProxyHelper;
 import consulo.util.advandedProxy.internal.AdvancedProxyFacade;
+import consulo.util.advandedProxy.internal.impl.AdvancedProxyTesting;
 import consulo.util.collection.ArrayUtil;
 import net.bytebuddy.ByteBuddy;
 import net.bytebuddy.ClassFileVersion;
 import net.bytebuddy.description.method.MethodDescription;
 import net.bytebuddy.dynamic.DynamicType;
+import net.bytebuddy.dynamic.loading.ClassLoadingStrategy;
 import net.bytebuddy.dynamic.scaffold.TypeValidation;
 import net.bytebuddy.implementation.InvocationHandlerAdapter;
 import net.bytebuddy.matcher.ElementMatcher;
@@ -54,8 +56,10 @@ public class ByteBuddyAdvancedProxyFacade implements AdvancedProxyFacade {
     try {
       ClassLoader classLoader = ProxyHelper.preferClassLoader(superClass, interfaces);
 
-      if (!(classLoader instanceof ProxyHolderClassLoader)) {
-        throw new IllegalArgumentException("Must be ProxyHolderClassLoader: " + classLoader.getClass().getName());
+      if (AdvancedProxyTesting.isProxyClassLoaderRequired()) {
+        if (!(classLoader instanceof ProxyHolderClassLoader)) {
+          throw new IllegalArgumentException("Must be ProxyHolderClassLoader: " + classLoader.getClass().getName());
+        }
       }
 
       Class[] params = ArrayUtil.EMPTY_CLASS_ARRAY;
@@ -65,8 +69,14 @@ public class ByteBuddyAdvancedProxyFacade implements AdvancedProxyFacade {
 
       ProxyDescription key = new ProxyDescription(superClass, interfaces, interceptObjectMethods);
 
-      ByteBuddyProxyFactory proxyFactory =
-              (ByteBuddyProxyFactory)((ProxyHolderClassLoader)classLoader).registerOrGetProxy(key, it -> buildProxyClass(it.getSuperClass(), it.getInterfaces(), it.isInterceptObjectMethods()));
+      ByteBuddyProxyFactory proxyFactory;
+      if (AdvancedProxyTesting.isProxyClassLoaderRequired()) {
+        proxyFactory =
+                (ByteBuddyProxyFactory)((ProxyHolderClassLoader)classLoader).registerOrGetProxy(key, it -> buildProxyClass(it.getSuperClass(), it.getInterfaces(), it.isInterceptObjectMethods()));
+      }
+      else {
+        proxyFactory = buildProxyClass(key.getSuperClass(), key.getInterfaces(), key.isInterceptObjectMethods());
+      }
 
       Class<?> proxyClass = proxyFactory.getProxyClass();
       Field handlerField = proxyFactory.getInvocationHandlerField();
@@ -110,11 +120,18 @@ public class ByteBuddyAdvancedProxyFacade implements AdvancedProxyFacade {
 
     ClassLoader classLoader = ProxyHelper.preferClassLoader(superClass, interfaces);
 
-    if (!(classLoader instanceof ProxyHolderClassLoader)) {
-      throw new IllegalArgumentException("Must be ProxyHolderClassLoader: " + classLoader.getClass().getName());
-    }
+    DynamicType.Loaded<? extends T> type;
 
-    DynamicType.Loaded<? extends T> type = make.load(classLoader, new UrlClassLoaderStrategy(classLoader));
+    if (AdvancedProxyTesting.isProxyClassLoaderRequired()) {
+      if (!(classLoader instanceof ProxyHolderClassLoader)) {
+        throw new IllegalArgumentException("Must be ProxyHolderClassLoader: " + classLoader.getClass().getName());
+      }
+
+      type = make.load(classLoader, new UrlClassLoaderStrategy(classLoader));
+    }
+    else {
+      type = make.load(classLoader, new ClassLoadingStrategy.ForUnsafeInjection());
+    }
 
     Class<? extends T> loaded = type.getLoaded();
     Field handlerField = null;
