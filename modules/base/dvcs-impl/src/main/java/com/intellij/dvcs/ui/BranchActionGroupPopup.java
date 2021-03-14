@@ -18,6 +18,7 @@ import com.intellij.openapi.util.WindowStateService;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vcs.ui.FlatSpeedSearchPopup;
 import com.intellij.openapi.vcs.ui.PopupListElementRendererWithIcon;
+import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.ui.*;
 import com.intellij.ui.components.panels.OpaquePanel;
 import com.intellij.ui.popup.KeepingPopupOpenAction;
@@ -31,8 +32,8 @@ import consulo.awt.TargetAWT;
 import consulo.ui.image.Image;
 import consulo.util.dataholder.Key;
 import icons.DvcsImplIcons;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
@@ -64,7 +65,12 @@ public class BranchActionGroupPopup extends FlatSpeedSearchPopup {
   private final List<AnAction> myToolbarActions = new ArrayList<>();
 
   public BranchActionGroupPopup(@Nonnull String title, @Nonnull Project project, @Nonnull Condition<AnAction> preselectActionCondition, @Nonnull ActionGroup actions, @Nullable String dimensionKey) {
-    super(title, createBranchSpeedSearchActionGroup(actions), SimpleDataContext.getProjectContext(project), preselectActionCondition, true);
+    super(title, createBranchSpeedSearchActionGroup(actions),
+          SimpleDataContext.builder()
+                  .add(CommonDataKeys.PROJECT, project)
+                  .add(PlatformDataKeys.CONTEXT_COMPONENT, IdeFocusManager.getInstance(project).getFocusOwner())
+                  .build(),
+          preselectActionCondition, true);
     myProject = project;
     DataManager.registerDataProvider(getList(), dataId -> POPUP_MODEL == dataId ? getListModel() : null);
     myKey = dimensionKey;
@@ -85,7 +91,7 @@ public class BranchActionGroupPopup extends FlatSpeedSearchPopup {
     ActionGroup actionGroup = new LightActionGroup() {
       @Override
       @Nonnull
-      public AnAction [] getChildren(@Nullable AnActionEvent e) {
+      public AnAction[] getChildren(@Nullable AnActionEvent e) {
         return myToolbarActions.toArray(AnAction.EMPTY_ARRAY);
       }
     };
