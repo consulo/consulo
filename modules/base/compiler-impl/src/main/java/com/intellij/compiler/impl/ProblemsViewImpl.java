@@ -20,7 +20,6 @@ import com.intellij.ide.errorTreeView.impl.ErrorTreeViewConfiguration;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.EmptyRunnable;
-import consulo.util.dataholder.Key;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.pom.Navigatable;
 import com.intellij.ui.content.Content;
@@ -32,12 +31,12 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.UIUtil;
 import consulo.logging.Logger;
 import consulo.ui.annotation.RequiredUIAccess;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import consulo.util.dataholder.Key;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ExecutorService;
@@ -137,7 +136,7 @@ public class ProblemsViewImpl extends ProblemsView {
   @RequiredUIAccess
   @Override
   public void showOrHide(final boolean hide) {
-    ToolWindow toolWindow = MessageView.SERVICE.getInstance(myProject).getToolWindow();
+    ToolWindow toolWindow = MessageView.getInstance(myProject).getToolWindow();
     // dont try hide if toolwindow closed
     if (hide && !toolWindow.isVisible()) {
       return;

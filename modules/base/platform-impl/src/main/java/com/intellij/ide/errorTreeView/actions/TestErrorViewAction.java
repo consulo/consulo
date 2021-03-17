@@ -105,7 +105,7 @@ public abstract class TestErrorViewAction extends AnAction{
   protected abstract String getContentName();
 
   protected void openView(Project project, JComponent component) {
-    final MessageView messageView = MessageView.SERVICE.getInstance(project);
+    final MessageView messageView = MessageView.getInstance(project);
     final Content content = ContentFactory.getInstance().createContent(component, getContentName(), true);
     messageView.getContentManager().addContent(content);
     messageView.getContentManager().setSelectedContent(content);

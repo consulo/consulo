@@ -22,6 +22,11 @@ import javax.annotation.Nonnull;
 
 public interface MessageView {
   @Nonnull
+  public static MessageView getInstance(Project project) {
+    return ServiceManager.getService(project, MessageView.class);
+  }
+
+  @Nonnull
   ToolWindow getToolWindow();
 
   @Nonnull
@@ -29,10 +34,12 @@ public interface MessageView {
 
   void runWhenInitialized(@Nonnull Runnable runnable);
 
+  @Deprecated
   class SERVICE {
     private SERVICE() {
     }
 
+    @Deprecated
     public static MessageView getInstance(Project project) {
       return ServiceManager.getService(project, MessageView.class);
     }

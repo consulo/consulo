@@ -25,7 +25,6 @@ import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.command.CommandProcessor;
-import consulo.logging.Logger;
 import com.intellij.openapi.diff.DiffContent;
 import com.intellij.openapi.diff.DocumentContent;
 import com.intellij.openapi.diff.SimpleContent;
@@ -40,7 +39,6 @@ import com.intellij.openapi.progress.impl.CoreProgressManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
-import consulo.disposer.Disposer;
 import com.intellij.openapi.util.Getter;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.text.StringUtil;
@@ -83,20 +81,21 @@ import com.intellij.util.ui.MessageCategory;
 import com.intellij.vcs.history.VcsHistoryProviderEx;
 import com.intellij.vcsUtil.VcsUtil;
 import consulo.awt.TargetAWT;
+import consulo.disposer.Disposer;
+import consulo.logging.Logger;
 import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import jakarta.inject.Singleton;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.text.MessageFormat;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 import static com.intellij.openapi.ui.Messages.getQuestionIcon;
 import static com.intellij.util.ui.ConfirmationDialog.requestForConfirmation;
@@ -118,7 +117,7 @@ public class AbstractVcsHelperImpl extends AbstractVcsHelper {
     commandProcessor.executeCommand(myProject, new Runnable() {
       @Override
       public void run() {
-        final MessageView messageView = MessageView.SERVICE.getInstance(myProject);
+        final MessageView messageView = MessageView.getInstance(myProject);
         messageView.runWhenInitialized(new Runnable() {
           @Override
           public void run() {
@@ -362,7 +361,7 @@ public class AbstractVcsHelperImpl extends AbstractVcsHelper {
   }
 
   protected void removeContents(Content notToRemove, final String tabDisplayName) {
-    MessageView messageView = MessageView.SERVICE.getInstance(myProject);
+    MessageView messageView = MessageView.getInstance(myProject);
     Content[] contents = messageView.getContentManager().getContents();
     for (Content content : contents) {
       LOG.assertTrue(content != null);
