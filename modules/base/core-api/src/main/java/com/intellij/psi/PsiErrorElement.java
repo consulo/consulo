@@ -15,6 +15,12 @@
  */
 package com.intellij.psi;
 
+import consulo.annotation.DeprecationInfo;
+import consulo.localize.LocalizeValue;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 /**
  * Represents a syntax error (for example, invalid token) in Java or custom language code.
  */
@@ -24,5 +30,19 @@ public interface PsiErrorElement extends PsiElement {
    *
    * @return the error description.
    */
-  String getErrorDescription();
+  @Nullable
+  @Deprecated
+  @DeprecationInfo("Use #getErrorDescriptionValue()")
+  default String getErrorDescription() {
+    LocalizeValue errorDescriptionValue = getErrorDescriptionValue();
+    return errorDescriptionValue == LocalizeValue.empty() ? null : errorDescriptionValue.toString();
+  }
+
+  /**
+   * Returns the description of the error.
+   *
+   * @return the error description.
+   */
+  @Nonnull
+  LocalizeValue getErrorDescriptionValue();
 }

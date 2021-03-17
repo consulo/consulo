@@ -31,6 +31,8 @@ import com.intellij.psi.FileViewProvider;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiErrorElement;
 import com.intellij.psi.PsiFile;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.localize.LocalizeValue;
 import jakarta.inject.Inject;
 
 import javax.annotation.Nonnull;
@@ -140,6 +142,7 @@ class DefaultHighlightVisitor implements HighlightVisitor, DumbAware {
     }
   }
 
+  @RequiredReadAction
   private void visitErrorElement(final PsiErrorElement element) {
     for(HighlightErrorFilter errorFilter: myErrorFilters) {
       if (!errorFilter.shouldHighlightErrorElement(element)) {
@@ -150,12 +153,13 @@ class DefaultHighlightVisitor implements HighlightVisitor, DumbAware {
     myHolder.add(info);
   }
 
+  @RequiredReadAction
   private static HighlightInfo createErrorElementInfo(@Nonnull PsiErrorElement element) {
     TextRange range = element.getTextRange();
-    String errorDescription = element.getErrorDescription();
+    LocalizeValue errorDescription = element.getErrorDescriptionValue();
     if (!range.isEmpty()) {
       HighlightInfo.Builder builder = HighlightInfo.newHighlightInfo(HighlightInfoType.ERROR).range(range);
-      if (errorDescription != null) {
+      if (errorDescription != LocalizeValue.empty()) {
         builder.descriptionAndTooltip(errorDescription);
       }
       final HighlightInfo info = builder.create();
@@ -175,7 +179,7 @@ class DefaultHighlightVisitor implements HighlightVisitor, DumbAware {
     HighlightInfo info;
     if (offset < fileLength && text != null && !StringUtil.startsWithChar(text, '\n') && !StringUtil.startsWithChar(text, '\r')) {
       HighlightInfo.Builder builder = HighlightInfo.newHighlightInfo(HighlightInfoType.ERROR).range(offset, offset + 1);
-      if (errorDescription != null) {
+      if (errorDescription != LocalizeValue.empty()) {
         builder.descriptionAndTooltip(errorDescription);
       }
       info = builder.create();
@@ -192,7 +196,7 @@ class DefaultHighlightVisitor implements HighlightVisitor, DumbAware {
         end = offset < fileLength ? offset + 1 : offset;
       }
       HighlightInfo.Builder builder = HighlightInfo.newHighlightInfo(HighlightInfoType.ERROR).range(element, start, end);
-      if (errorDescription != null) {
+      if (errorDescription != LocalizeValue.empty()) {
         builder.descriptionAndTooltip(errorDescription);
       }
       builder.endOfLine();

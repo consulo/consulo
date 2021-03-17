@@ -223,7 +223,7 @@ public class DebugUtil {
     StringUtil.repeatSymbol(buffer, ' ', indent);
     try {
       if (tokenType == TokenType.ERROR_ELEMENT) {
-        buffer.append("PsiErrorElement:").append(PsiBuilderImpl.getErrorMessage(node));
+        buffer.append("PsiErrorElement:").append(PsiBuilderImpl.getErrorMessage(node).get());
       }
       else if (tokenType == TokenType.WHITE_SPACE) {
         buffer.append("PsiWhiteSpace");

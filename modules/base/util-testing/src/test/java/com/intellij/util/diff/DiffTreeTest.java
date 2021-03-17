@@ -19,7 +19,7 @@ import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.Function;
-import com.intellij.util.ThreeState;
+import consulo.util.lang.ThreeState;
 import junit.framework.TestCase;
 import javax.annotation.Nonnull;
 

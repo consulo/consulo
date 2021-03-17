@@ -17,11 +17,11 @@ package com.intellij.lang.impl;
 
 import com.intellij.lang.*;
 import com.intellij.openapi.project.Project;
-import consulo.util.dataholder.Key;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.TokenSet;
 import com.intellij.util.diff.FlyweightCapableTreeStructure;
-import org.jetbrains.annotations.NonNls;
+import consulo.localize.LocalizeValue;
+import consulo.util.dataholder.Key;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -42,6 +42,7 @@ public class PsiBuilderAdapter implements PsiBuilder {
     return myDelegate.getProject();
   }
 
+  @Nonnull
   @Override
   public CharSequence getOriginalText() {
     return myDelegate.getOriginalText();
@@ -95,7 +96,6 @@ public class PsiBuilderAdapter implements PsiBuilder {
 
   @Override
   @Nullable
-  @NonNls
   public String getTokenText() {
     return myDelegate.getTokenText();
   }
@@ -117,7 +117,7 @@ public class PsiBuilderAdapter implements PsiBuilder {
   }
 
   @Override
-  public void error(final String messageText) {
+  public void error(@Nonnull LocalizeValue messageText) {
     myDelegate.error(messageText);
   }
 
@@ -126,11 +126,13 @@ public class PsiBuilderAdapter implements PsiBuilder {
     return myDelegate.eof();
   }
 
+  @Nonnull
   @Override
   public ASTNode getTreeBuilt() {
     return myDelegate.getTreeBuilt();
   }
 
+  @Nonnull
   @Override
   public FlyweightCapableTreeStructure<LighterASTNode> getLightTree() {
     return myDelegate.getLightTree();

@@ -16,12 +16,14 @@
 package com.intellij.lang;
 
 import com.intellij.openapi.project.Project;
-import consulo.util.dataholder.UserDataHolder;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.TokenSet;
 import com.intellij.util.diff.FlyweightCapableTreeStructure;
-import org.jetbrains.annotations.NonNls;
+import consulo.annotation.DeprecationInfo;
+import consulo.localize.LocalizeValue;
+import consulo.util.dataholder.UserDataHolder;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
@@ -34,8 +36,10 @@ import javax.annotation.Nullable;
 public interface PsiBuilder extends UserDataHolder {
   /**
    * Returns a project for which PSI builder was created (see {@link PsiBuilderFactory}).
+   *
    * @return project.
    */
+  @Nullable
   Project getProject();
 
   /**
@@ -43,6 +47,7 @@ public interface PsiBuilder extends UserDataHolder {
    *
    * @return the text being parsed
    */
+  @Nonnull
   CharSequence getOriginalText();
 
   /**
@@ -69,18 +74,21 @@ public interface PsiBuilder extends UserDataHolder {
 
   /**
    * Slightly easier way to what {@link ITokenTypeRemapper} does (i.e. it just remaps current token to a given type).
+   *
    * @param type new type for the current token.
    */
   void remapCurrentToken(IElementType type);
 
   /**
    * Subscribe for notification on default whitespace and comments skipped events.
+   *
    * @param callback an implementation for the callback
    */
   void setWhitespaceSkippedCallback(@Nullable WhitespaceSkippedCallback callback);
 
   /**
    * See what token type is in <code>steps</code> ahead
+   *
    * @param steps 0 is current token (i.e. the same {@link PsiBuilder#getTokenType()} returns)
    * @return type element which getTokenType() will return if we call advance <code>steps</code> times in a row
    */
@@ -89,6 +97,7 @@ public interface PsiBuilder extends UserDataHolder {
 
   /**
    * See what token type is in <code>steps</code> ahead / behind
+   *
    * @param steps 0 is current token (i.e. the same {@link PsiBuilder#getTokenType()} returns)
    * @return type element ahead or behind, including whitespace / comment tokens
    */
@@ -97,6 +106,7 @@ public interface PsiBuilder extends UserDataHolder {
 
   /**
    * See what token type is in <code>steps</code> ahead / behind current position
+   *
    * @param steps 0 is current token (i.e. the same {@link PsiBuilder#getTokenType()} returns)
    * @return offset type element ahead or behind, including whitespace / comment tokens, -1 if first token,
    * getOriginalText().getLength() at end
@@ -115,7 +125,6 @@ public interface PsiBuilder extends UserDataHolder {
    *
    * @return the token text, or null when the token stream is over.
    */
-  @NonNls
   @Nullable
   String getTokenText();
 
@@ -124,7 +133,6 @@ public interface PsiBuilder extends UserDataHolder {
    *
    * @return the token char sequencr, or null when the token stream is over.
    */
-  @NonNls
   @Nullable
   default CharSequence getTokenSequence() {
     return getTokenText();
@@ -198,7 +206,21 @@ public interface PsiBuilder extends UserDataHolder {
      * @param before       marker to complete this one before.
      * @param errorMessage for error element.
      */
-    void doneBefore(IElementType type, Marker before, String errorMessage);
+    @Deprecated
+    @DeprecationInfo("Use #doneBefore(IElementType, Marker, @Nonnull LocalizeValue)")
+    default void doneBefore(IElementType type, Marker before, String errorMessage) {
+      doneBefore(type, before, LocalizeValue.of(errorMessage));
+    }
+
+    /**
+     * Like {@linkplain #doneBefore(IElementType, Marker)}, but in addition an error element with given text
+     * is inserted right before this marker's end.
+     *
+     * @param type         the type of the node in the AST tree.
+     * @param before       marker to complete this one before.
+     * @param errorMessage for error element.
+     */
+    void doneBefore(IElementType type, Marker before, @Nonnull LocalizeValue errorMessage);
 
     /**
      * Completes this marker and labels it as error element with specified message. Before calling this method,
@@ -206,7 +228,19 @@ public interface PsiBuilder extends UserDataHolder {
      *
      * @param message for error element.
      */
-    void error(String message);
+    @Deprecated
+    @DeprecationInfo("Use #error(LocalizeValue)")
+    default void error(String message) {
+      error(LocalizeValue.of(message));
+    }
+
+    /**
+     * Completes this marker and labels it as error element with specified message. Before calling this method,
+     * all markers added after the beginning of this marker must be either dropped or completed.
+     *
+     * @param message for error element.
+     */
+    void error(@Nonnull LocalizeValue message);
 
     /**
      * Like {@linkplain #error(String)}, but the marker is completed before specified one.
@@ -214,7 +248,19 @@ public interface PsiBuilder extends UserDataHolder {
      * @param message for error element.
      * @param before  marker to complete this one before.
      */
-    void errorBefore(String message, Marker before);
+    @Deprecated
+    @DeprecationInfo("Use #errorBefore(LocalizeValue, Marker)")
+    default void errorBefore(String message, Marker before) {
+      errorBefore(LocalizeValue.of(message), before);
+    }
+
+    /**
+     * Like {@linkplain #error(String)}, but the marker is completed before specified one.
+     *
+     * @param message for error element.
+     * @param before  marker to complete this one before.
+     */
+    void errorBefore(@Nonnull LocalizeValue message, Marker before);
 
     /**
      * Allows to define custom edge token binders instead of default ones. If any of parameters is null
@@ -240,7 +286,19 @@ public interface PsiBuilder extends UserDataHolder {
    *
    * @param messageText the text of the error message displayed to the user.
    */
-  void error(String messageText);
+  void error(@Nonnull LocalizeValue messageText);
+
+  /**
+   * Adds an error marker with the specified message text at the current position in the tree.
+   * <br><b>Note</b>: from series of subsequent errors messages only first will be part of resulting tree.
+   *
+   * @param messageText the text of the error message displayed to the user.
+   */
+  @Deprecated
+  @DeprecationInfo("Use #error(LocalizeValue")
+  default void error(@Nonnull String messageText) {
+    error(LocalizeValue.of(messageText));
+  }
 
   /**
    * Checks if the lexer has reached the end of file.
@@ -254,6 +312,7 @@ public interface PsiBuilder extends UserDataHolder {
    *
    * @return the built tree.
    */
+  @Nonnull
   ASTNode getTreeBuilt();
 
   /**
@@ -263,6 +322,7 @@ public interface PsiBuilder extends UserDataHolder {
    *
    * @return the light tree built.
    */
+  @Nonnull
   FlyweightCapableTreeStructure<LighterASTNode> getLightTree();
 
   /**

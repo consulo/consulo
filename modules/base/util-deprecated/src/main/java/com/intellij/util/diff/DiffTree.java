@@ -16,8 +16,9 @@
 package com.intellij.util.diff;
 
 import com.intellij.openapi.util.Ref;
-import com.intellij.util.ThreeState;
 import com.intellij.util.text.CharArrayUtil;
+import consulo.util.lang.ThreeState;
+
 import javax.annotation.Nonnull;
 
 import java.util.ArrayList;

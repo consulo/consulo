@@ -26,7 +26,6 @@ import com.intellij.psi.TokenType;
 import com.intellij.psi.impl.DebugUtil;
 import com.intellij.psi.impl.source.tree.ASTStructure;
 import com.intellij.psi.tree.*;
-import com.intellij.util.ThreeState;
 import com.intellij.util.diff.DiffTree;
 import com.intellij.util.diff.DiffTreeChangeBuilder;
 import com.intellij.util.diff.FlyweightCapableTreeStructure;
@@ -34,6 +33,7 @@ import com.intellij.util.diff.ShallowNodeComparator;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.lang.LanguageVersion;
 import consulo.testFramework.MockApplicationTestCase;
+import consulo.util.lang.ThreeState;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;

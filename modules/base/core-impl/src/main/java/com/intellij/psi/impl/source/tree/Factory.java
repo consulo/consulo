@@ -24,6 +24,8 @@ import com.intellij.psi.impl.source.DummyHolderFactory;
 import com.intellij.psi.impl.source.codeStyle.CodeEditUtil;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.util.CharTable;
+import consulo.localize.LocalizeValue;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -65,7 +67,7 @@ public class Factory  {
   }
 
   @Nonnull
-  public static CompositeElement createErrorElement(String description) {
+  public static CompositeElement createErrorElement(@Nonnull LocalizeValue description) {
     return new PsiErrorElementImpl(description);
   }
 

@@ -44,17 +44,20 @@ import com.intellij.util.diff.FlyweightCapableTreeStructure;
 import com.intellij.util.diff.ShallowNodeComparator;
 import com.intellij.util.text.CharArrayUtil;
 import consulo.lang.LanguageVersion;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UnprotectedUserDataHolder;
 import gnu.trove.TIntObjectHashMap;
 import org.jetbrains.annotations.NonNls;
+import consulo.util.lang.ThreeState;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author max
@@ -472,20 +475,20 @@ public class PsiBuilderImpl extends UnprotectedUserDataHolder implements PsiBuil
     }
 
     @Override
-    public void doneBefore(@Nonnull final IElementType type, @Nonnull final Marker before, final String errorMessage) {
+    public void doneBefore(@Nonnull final IElementType type, @Nonnull final Marker before, @Nonnull final LocalizeValue errorMessage) {
       StartMarker marker = (StartMarker)before;
       myBuilder.myProduction.add(myBuilder.myProduction.lastIndexOf(marker), new ErrorItem(myBuilder, errorMessage, marker.myLexemeIndex));
       doneBefore(type, before);
     }
 
     @Override
-    public void error(String message) {
+    public void error(@Nonnull LocalizeValue message) {
       myType = TokenType.ERROR_ELEMENT;
       myBuilder.error(this, message);
     }
 
     @Override
-    public void errorBefore(final String message, @Nonnull final Marker before) {
+    public void errorBefore(@Nonnull final LocalizeValue message, @Nonnull final Marker before) {
       myType = TokenType.ERROR_ELEMENT;
       myBuilder.errorBefore(this, message, before);
     }
@@ -706,35 +709,23 @@ public class PsiBuilderImpl extends UnprotectedUserDataHolder implements PsiBuil
   }
 
   private static class DoneWithErrorMarker extends DoneMarker {
-    private String myMessage;
+    private final LocalizeValue myMessage;
 
-    private DoneWithErrorMarker(@Nonnull StartMarker marker, final int currentLexeme, final String message) {
+    private DoneWithErrorMarker(@Nonnull StartMarker marker, final int currentLexeme, @Nonnull LocalizeValue message) {
       super(marker, currentLexeme);
       myMessage = message;
-    }
-
-    @Override
-    public void clean() {
-      super.clean();
-      myMessage = null;
     }
   }
 
   private static class ErrorItem extends ProductionMarker {
     private final PsiBuilderImpl myBuilder;
-    private String myMessage;
+    private final LocalizeValue myMessage;
 
-    ErrorItem(final PsiBuilderImpl builder, final String message, final int idx) {
+    ErrorItem(final PsiBuilderImpl builder, final LocalizeValue message, final int idx) {
       myBuilder = builder;
       myMessage = message;
       myLexemeIndex = idx;
       myEdgeTokenBinder = WhitespacesBinders.DEFAULT_RIGHT_BINDER;
-    }
-
-    @Override
-    public void clean() {
-      super.clean();
-      myMessage = null;
     }
 
     @Override
@@ -759,6 +750,7 @@ public class PsiBuilderImpl extends UnprotectedUserDataHolder implements PsiBuil
     }
   }
 
+  @Nonnull
   @Override
   public CharSequence getOriginalText() {
     return myText;
@@ -994,7 +986,7 @@ public class PsiBuilderImpl extends UnprotectedUserDataHolder implements PsiBuil
     START_MARKERS.recycle((StartMarker)marker);
   }
 
-  public void error(@Nonnull Marker marker, String message) {
+  public void error(@Nonnull Marker marker, LocalizeValue message) {
     doValidityChecks(marker, null);
 
     DoneWithErrorMarker doneMarker = new DoneWithErrorMarker((StartMarker)marker, myCurrentLexeme, message);
@@ -1005,7 +997,7 @@ public class PsiBuilderImpl extends UnprotectedUserDataHolder implements PsiBuil
     myProduction.add(doneMarker);
   }
 
-  private void errorBefore(@Nonnull Marker marker, String message, @Nonnull Marker before) {
+  private void errorBefore(@Nonnull Marker marker, @Nonnull LocalizeValue message, @Nonnull Marker before) {
     doValidityChecks(marker, before);
 
     @SuppressWarnings("SuspiciousMethodCalls") int beforeIndex = myProduction.lastIndexOf(before);
@@ -1104,7 +1096,7 @@ public class PsiBuilderImpl extends UnprotectedUserDataHolder implements PsiBuil
   }
 
   @Override
-  public void error(String messageText) {
+  public void error(@Nonnull LocalizeValue messageText) {
     final ProductionMarker lastMarker = myProduction.get(myProduction.size() - 1);
     if (lastMarker instanceof ErrorItem && lastMarker.myLexemeIndex == myCurrentLexeme) {
       return;
@@ -1462,8 +1454,8 @@ public class PsiBuilderImpl extends UnprotectedUserDataHolder implements PsiBuil
   private static CompositeElement createComposite(@Nonnull StartMarker marker) {
     final IElementType type = marker.myType;
     if (type == TokenType.ERROR_ELEMENT) {
-      String message = marker.myDoneMarker instanceof DoneWithErrorMarker ? ((DoneWithErrorMarker)marker.myDoneMarker).myMessage : null;
-      return Factory.createErrorElement(message);
+      LocalizeValue message = marker.myDoneMarker instanceof DoneWithErrorMarker ? ((DoneWithErrorMarker)marker.myDoneMarker).myMessage : null;
+      return Factory.createErrorElement(message == null ? LocalizeValue.empty() : message);
     }
 
     if (type == null) {
@@ -1473,8 +1465,8 @@ public class PsiBuilderImpl extends UnprotectedUserDataHolder implements PsiBuil
     return ASTFactory.composite(type);
   }
 
-  @Nullable
-  public static String getErrorMessage(@Nonnull LighterASTNode node) {
+  @Nonnull
+  public static LocalizeValue getErrorMessage(@Nonnull LighterASTNode node) {
     if (node instanceof ErrorItem) return ((ErrorItem)node).myMessage;
     if (node instanceof StartMarker) {
       final StartMarker marker = (StartMarker)node;
@@ -1483,7 +1475,7 @@ public class PsiBuilderImpl extends UnprotectedUserDataHolder implements PsiBuil
       }
     }
 
-    return null;
+    return LocalizeValue.empty();
   }
 
   private static class MyComparator implements ShallowNodeComparator<ASTNode, LighterASTNode> {
@@ -1506,7 +1498,7 @@ public class PsiBuilderImpl extends UnprotectedUserDataHolder implements PsiBuil
       if (oldIsErrorElement != newIsErrorElement) return ThreeState.NO;
       if (oldIsErrorElement) {
         final PsiErrorElement e1 = (PsiErrorElement)oldNode;
-        return Comparing.equal(e1.getErrorDescription(), getErrorMessage(newNode)) ? ThreeState.UNSURE : ThreeState.NO;
+        return Objects.equals(e1.getErrorDescriptionValue(), getErrorMessage(newNode)) ? ThreeState.UNSURE : ThreeState.NO;
       }
 
       if (custom != null) {
@@ -1590,7 +1582,7 @@ public class PsiBuilderImpl extends UnprotectedUserDataHolder implements PsiBuil
 
       if (n1 instanceof PsiErrorElement && n2.getTokenType() == TokenType.ERROR_ELEMENT) {
         final PsiErrorElement e1 = (PsiErrorElement)n1;
-        if (!Comparing.equal(e1.getErrorDescription(), getErrorMessage(n2))) return false;
+        if (!Objects.equals(e1.getErrorDescriptionValue(), getErrorMessage(n2))) return false;
       }
 
       return ((TreeElement)n1).hc() == ((Node)n2).hc();

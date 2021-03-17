@@ -20,32 +20,38 @@ package com.intellij.psi.impl.source.tree;
 import com.intellij.lang.Language;
 import com.intellij.psi.*;
 import com.intellij.psi.templateLanguages.OuterLanguageElement;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.localize.LocalizeValue;
+
 import javax.annotation.Nonnull;
 
-public class PsiErrorElementImpl extends CompositePsiElement implements PsiErrorElement{
-  private final String myErrorDescription;
+public class PsiErrorElementImpl extends CompositePsiElement implements PsiErrorElement {
+  private final LocalizeValue myErrorDescription;
 
-  public PsiErrorElementImpl(String errorDescription) {
+  public PsiErrorElementImpl(@Nonnull LocalizeValue errorDescription) {
     super(TokenType.ERROR_ELEMENT);
     myErrorDescription = errorDescription;
   }
 
+  @Nonnull
   @Override
-  public String getErrorDescription() {
+  public LocalizeValue getErrorDescriptionValue() {
     return myErrorDescription;
   }
 
   @Override
-  public void accept(@Nonnull PsiElementVisitor visitor){
+  public void accept(@Nonnull PsiElementVisitor visitor) {
     visitor.visitErrorElement(this);
   }
 
-  public String toString(){
-    return "PsiErrorElement:" + getErrorDescription();
+  @Override
+  public String toString() {
+    return "PsiErrorElement:" + getErrorDescriptionValue();
   }
 
   @Override
   @Nonnull
+  @RequiredReadAction
   public Language getLanguage() {
     PsiElement master = this;
     while (true) {

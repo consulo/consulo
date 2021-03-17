@@ -32,6 +32,7 @@ import com.intellij.util.ArrayUtil;
 import com.intellij.util.BitUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.xml.util.XmlStringUtil;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.ui.color.ColorValue;
 import org.intellij.lang.annotations.MagicConstant;
@@ -422,6 +423,11 @@ public class HighlightInfo implements Segment {
 
     @Nonnull
     Builder descriptionAndTooltip(@Nonnull String description);
+
+    @Nonnull
+    default Builder descriptionAndTooltip(@Nonnull LocalizeValue description) {
+      return descriptionAndTooltip(description.get());
+    }
 
     // only one allowed
     @Nonnull
