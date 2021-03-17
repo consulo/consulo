@@ -2778,6 +2778,15 @@
 
     <projectService serviceImplementation="com.intellij.ide.favoritesTreeView.FavoritesManager"/>
     <applicationService serviceInterface="com.intellij.openapi.application.PathMacros" serviceImplementation="com.intellij.application.options.PathMacrosImpl"/>
+
+    <projectService serviceInterface="com.intellij.build.BuildContentManager"
+                    serviceImplementation="com.intellij.build.BuildContentManagerImpl"/>
+    <projectService serviceInterface="com.intellij.build.BuildViewManager"
+                    serviceImplementation="com.intellij.build.BuildViewManager"/>
+    <projectService serviceInterface="com.intellij.build.SyncViewManager"
+                    serviceImplementation="com.intellij.build.SyncViewManager"/>
+    <projectService serviceInterface="com.intellij.build.BuildWorkspaceConfiguration"
+                    serviceImplementation="com.intellij.build.BuildWorkspaceConfigurationImpl"/>
   </extensions>
 
   <applicationListeners>

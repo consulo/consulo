@@ -20,15 +20,16 @@ import com.intellij.openapi.ui.ComponentContainer;
 import com.intellij.openapi.util.BusyObject;
 import com.intellij.openapi.util.Computable;
 import consulo.disposer.Disposable;
-import consulo.util.dataholder.Key;
-import consulo.util.dataholder.UserDataHolder;
 import consulo.ui.Component;
 import consulo.ui.image.Image;
+import consulo.util.dataholder.Key;
+import consulo.util.dataholder.UserDataHolder;
 import kava.beans.PropertyChangeListener;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nullable;
 import javax.swing.*;
+import java.awt.*;
 
 /**
  * Represents a tab or pane displayed in a toolwindow or in another content manager.
@@ -36,19 +37,16 @@ import javax.swing.*;
  * @see ContentFactory#createUIContent(Component, String, boolean)
  */
 public interface Content extends UserDataHolder, ComponentContainer {
-  @NonNls
   String PROP_DISPLAY_NAME = "displayName";
-  @NonNls
   String PROP_ICON = "icon";
   String PROP_ACTIONS = "actions";
-  @NonNls
   String PROP_DESCRIPTION = "description";
-  @NonNls
   String PROP_COMPONENT = "component";
   String IS_CLOSABLE = "isClosable";
 
   Key<Boolean> TABBED_CONTENT_KEY = Key.create("tabbedContent");
   Key<String> TAB_GROUP_NAME_KEY = Key.create("tabbedGroupName");
+  Key<ComponentOrientation> TAB_LABEL_ORIENTATION_KEY = Key.create("tabLabelComponentOrientation");
 
   String PROP_ALERT = "alerting";
 

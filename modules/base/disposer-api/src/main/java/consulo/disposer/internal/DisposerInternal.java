@@ -51,6 +51,9 @@ public abstract class DisposerInternal {
 
   public abstract boolean setDebugMode(boolean debugMode);
 
+  @Nullable
+  public abstract <T extends Disposable> T findRegisteredObject(@Nonnull Disposable parentDisposable, @Nonnull T object);
+
   @Nonnull
   @ReviewAfterMigrationToJRE(value = 9, description = "Use consulo.util.ServiceLoaderUtil")
   private static <T> T loadSingleOrError(@Nonnull Class<T> clazz) {

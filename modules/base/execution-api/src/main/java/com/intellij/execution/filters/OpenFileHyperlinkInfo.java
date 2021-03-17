@@ -15,37 +15,18 @@
  */
 package com.intellij.execution.filters;
 
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.editor.Document;
-import com.intellij.openapi.fileEditor.FileDocumentManager;
-import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.vfs.VirtualFile;
+
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-public final class OpenFileHyperlinkInfo implements FileHyperlinkInfo {
-
-  private static final int UNDEFINED_OFFSET = -1;
-
-  private final Project myProject;
-  private final VirtualFile myFile;
-  private final boolean myIncludeInOccurenceNavigation;
-  private final int myDocumentLine;
-  private final int myDocumentColumn;
+public final class OpenFileHyperlinkInfo extends FileHyperlinkInfoBase {
+  private final VirtualFile myVirtualFile;
 
   public OpenFileHyperlinkInfo(@Nonnull OpenFileDescriptor descriptor) {
     this(descriptor.getProject(), descriptor.getFile(), descriptor.getLine(), descriptor.getColumn());
-  }
-
-  public OpenFileHyperlinkInfo(@Nonnull Project project, @Nonnull VirtualFile file, boolean includeInOccurenceNavigation,
-                               int documentLine, int documentColumn) {
-    myProject = project;
-    myFile = file;
-    myIncludeInOccurenceNavigation = includeInOccurenceNavigation;
-    myDocumentLine = documentLine;
-    myDocumentColumn = documentColumn;
   }
 
   public OpenFileHyperlinkInfo(@Nonnull Project project, @Nonnull final VirtualFile file, final int line) {
@@ -56,71 +37,14 @@ public final class OpenFileHyperlinkInfo implements FileHyperlinkInfo {
     this(project, file, true, line, column);
   }
 
-  @Override
-  public OpenFileDescriptor getDescriptor() {
-    if (!myFile.isValid()) {
-      return null;
-    }
-
-    int line = myDocumentLine;
-    FileDocumentManager.getInstance().getDocument(myFile); // need to load decompiler text
-    LineNumbersMapping mapping = myFile.getUserData(LineNumbersMapping.LINE_NUMBERS_MAPPING_KEY);
-    if (mapping != null) {
-      line = mapping.bytecodeToSource(myDocumentLine + 1) - 1;
-      if (line < 0) {
-        line = myDocumentLine;
-      }
-    }
-
-    int offset = calculateOffset(myFile, line, myDocumentColumn);
-    if (offset != UNDEFINED_OFFSET) {
-      return new OpenFileDescriptor(myProject, myFile, offset);
-    }
-    // although document position != logical position, it seems better than returning 'null'
-    return new OpenFileDescriptor(myProject, myFile, line, myDocumentColumn);
+  public OpenFileHyperlinkInfo(@Nonnull Project project, @Nonnull VirtualFile file, boolean includeInOccurenceNavigation, int documentLine, int documentColumn) {
+    super(project, includeInOccurenceNavigation, documentLine, documentColumn);
+    myVirtualFile = file;
   }
 
+  @Nullable
   @Override
-  public void navigate(final Project project) {
-    ApplicationManager.getApplication().runReadAction(() -> {
-      OpenFileDescriptor descriptor = getDescriptor();
-      if (descriptor != null) {
-        FileEditorManager.getInstance(project).openTextEditor(descriptor, true);
-      }
-    });
-  }
-
-  @Override
-  public boolean includeInOccurenceNavigation() {
-    return myIncludeInOccurenceNavigation;
-  }
-
-  /**
-   * Calculates an offset, that matches given line and column of the document.
-   *
-   * @param file           VirtualFile instance
-   * @param documentLine   zero-based line of the document
-   * @param documentColumn zero-based column of the document
-   * @return calculated offset or UNDEFINED_OFFSET if it's impossible to calculate
-   */
-  private static int calculateOffset(@Nonnull final VirtualFile file,
-                                     final int documentLine, final int documentColumn) {
-    return ApplicationManager.getApplication().runReadAction(new Computable<Integer>() {
-
-      @Override
-      public Integer compute() {
-        Document document = FileDocumentManager.getInstance().getDocument(file);
-        if (document != null) {
-          int lineCount = document.getLineCount();
-          if (0 <= documentLine && documentLine < lineCount) {
-            int lineStartOffset = document.getLineStartOffset(documentLine);
-            int lineEndOffset = document.getLineEndOffset(documentLine);
-            int fixedColumn = Math.min(Math.max(documentColumn, 0), lineEndOffset - lineStartOffset);
-            return lineStartOffset + fixedColumn;
-          }
-        }
-        return UNDEFINED_OFFSET;
-      }
-    });
+  protected VirtualFile getVirtualFile() {
+    return myVirtualFile;
   }
 }

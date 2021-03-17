@@ -19,6 +19,9 @@ package com.intellij.lang;
 import com.intellij.AbstractBundle;
 import org.jetbrains.annotations.PropertyKey;
 
+import javax.annotation.Nonnull;
+import java.util.function.Supplier;
+
 /**
  * @author yole
  */
@@ -35,5 +38,10 @@ public class LangBundle extends AbstractBundle{
 
   public static String message(@PropertyKey(resourceBundle = "messages.LangBundle") String key, Object... params) {
     return ourInstance.getMessage(key, params);
+  }
+
+  @Nonnull
+  public static Supplier<String> messagePointer(@Nonnull String key) {
+    return () -> message(key);
   }
 }

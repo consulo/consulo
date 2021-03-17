@@ -32,13 +32,12 @@ import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.project.ProjectManager;
-import com.intellij.openapi.project.ProjectManagerListener;
-import com.intellij.openapi.project.ex.ProjectManagerEx;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowManager;
-import com.intellij.ui.content.*;
+import com.intellij.ui.content.Content;
+import com.intellij.ui.content.ContentFactory;
+import com.intellij.ui.content.ContentManager;
 import com.intellij.ui.docking.DockManager;
 import com.intellij.util.SmartList;
 import com.intellij.util.concurrency.Semaphore;
@@ -48,7 +47,6 @@ import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.execution.ui.impl.RunToolWindowManager;
 import consulo.logging.Logger;
-import consulo.ui.UIAccess;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
 import consulo.util.dataholder.Key;
@@ -242,7 +240,7 @@ public class RunContentManagerImpl implements RunContentManager, Disposable {
 
     if (oldDescriptor == null) {
       contentManager.addContent(content);
-      new CloseListener(content, executor);
+      new CloseListener(myProject, content, executor);
     }
     content.getManager().setSelectedContent(content);
 
@@ -433,7 +431,7 @@ public class RunContentManagerImpl implements RunContentManager, Disposable {
   @Nonnull
   public List<RunContentDescriptor> getAllDescriptors() {
     Set<Map.Entry<String, ContentManager>> entries = myRunToolWindowManager.entrySet();
-    if(entries.isEmpty()) {
+    if (entries.isEmpty()) {
       return List.of();
     }
 
@@ -499,45 +497,18 @@ public class RunContentManagerImpl implements RunContentManager, Disposable {
     return null;
   }
 
-  private class CloseListener extends ContentManagerAdapter implements ProjectManagerListener {
+  private class CloseListener extends BaseContentCloseListener {
     private Content myContent;
     private final Executor myExecutor;
 
-    private final Disposable myCloseRegisterVetoRemover;
-
-    private CloseListener(@Nonnull final Content content, @Nonnull Executor executor) {
+    private CloseListener(@Nonnull Project project, @Nonnull final Content content, @Nonnull Executor executor) {
+      super(content, project);
       myContent = content;
-      content.getManager().addContentManagerListener(this);
-      ProjectManager projectManager = ProjectManager.getInstance();
       myExecutor = executor;
-
-      projectManager.addProjectManagerListener(this);
-      myCloseRegisterVetoRemover = ((ProjectManagerEx)projectManager).registerCloseProjectVeto(project -> {
-        if (project != myProject) return true;
-
-        if (myContent == null) return true;
-
-        final boolean canClose = closeQuery(true);
-        if (canClose) {
-          myContent.getManager().removeContent(myContent, true);
-          myContent = null;
-        }
-        return canClose;
-      });
     }
 
     @Override
-    public void contentRemoved(final ContentManagerEvent event) {
-      final Content content = event.getContent();
-      if (content == myContent) {
-        dispose();
-      }
-    }
-
-    private void dispose() {
-      if (myContent == null) return;
-
-      final Content content = myContent;
+    protected void disposeContent(@Nonnull Content content) {
       try {
         RunContentDescriptor descriptor = getRunContentDescriptorByContent(content);
         getSyncPublisher().contentRemoved(descriptor, myExecutor);
@@ -546,33 +517,12 @@ public class RunContentManagerImpl implements RunContentManager, Disposable {
         }
       }
       finally {
-        content.getManager().removeContentManagerListener(this);
-        ProjectManager.getInstance().removeProjectManagerListener(this);
-        myCloseRegisterVetoRemover.dispose();
-        content.release(); // don't invoke myContent.release() because myContent becomes null after destroyProcess()
-        myContent = null;
+        content.release();
       }
     }
 
     @Override
-    public void contentRemoveQuery(final ContentManagerEvent event) {
-      if (event.getContent() == myContent) {
-        final boolean canClose = closeQuery(false);
-        if (!canClose) {
-          event.consume();
-        }
-      }
-    }
-
-    @Override
-    public void projectClosed(final Project project, UIAccess uiAccess) {
-      if (myContent != null && project == myProject) {
-        myContent.getManager().removeContent(myContent, true);
-        dispose(); // Dispose content even if content manager refused to.
-      }
-    }
-
-    private boolean closeQuery(boolean modal) {
+    protected boolean closeQuery(@Nonnull Content content, boolean modal) {
       final RunContentDescriptor descriptor = getRunContentDescriptorByContent(myContent);
       if (descriptor == null) {
         return true;

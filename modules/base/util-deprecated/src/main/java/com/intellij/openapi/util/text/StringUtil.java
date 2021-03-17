@@ -1607,6 +1607,12 @@ public class StringUtil extends StringUtilRt {
 
   @Nonnull
   @Contract(pure = true)
+  public static String formatDurationApproximate(long duration) {
+    return formatDuration(duration, null);
+  }
+
+  @Nonnull
+  @Contract(pure = true)
   public static String formatDuration(long duration) {
     return formatDuration(duration, null);
   }

@@ -151,6 +151,7 @@ public class DisposerInternalImpl extends DisposerInternal {
   /**
    * @return object registered on parentDisposable which is equal to object, or null if not found
    */
+  @Override
   @Nullable
   public <T extends Disposable> T findRegisteredObject(@Nonnull Disposable parentDisposable, @Nonnull T object) {
     return myTree.findRegisteredObject(parentDisposable, object);
