@@ -15,35 +15,53 @@
  */
 package com.intellij.ide.actions;
 
+import com.intellij.idea.ActionsBundle;
+import com.intellij.openapi.actionSystem.ActionPlaces;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.Presentation;
 import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.vfs.VirtualFile;
-import javax.annotation.Nonnull;
+import consulo.ui.annotation.RequiredUIAccess;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.io.File;
 
 public class RevealFileAction extends DumbAwareAction {
+  public RevealFileAction() {
+    getTemplatePresentation().setText(getActionName(null));
+  }
+
+  @RequiredUIAccess
   @Override
   public void update(AnActionEvent e) {
     VirtualFile file = ShowFilePathAction.findLocalFile(e.getData(CommonDataKeys.VIRTUAL_FILE));
     Presentation presentation = e.getPresentation();
-    presentation.setText(getActionName());
+    presentation.setText(getActionName(e.getPlace()));
     presentation.setEnabled(file != null);
   }
 
-  @Nonnull
-  public static String getActionName() {
-    return SystemInfo.isMac ? "Reveal in Finder" : "Show in " + ShowFilePathAction.getFileManagerName();
-  }
-
+  @RequiredUIAccess
   @Override
   public void actionPerformed(AnActionEvent e) {
     VirtualFile file = ShowFilePathAction.findLocalFile(e.getData(CommonDataKeys.VIRTUAL_FILE));
     if (file != null) {
       ShowFilePathAction.openFile(new File(file.getPresentableUrl()));
     }
+  }
+
+  @Nonnull
+  public static String getActionName() {
+    return getActionName(null);
+  }
+
+  @Nonnull
+  public static String getActionName(@Nullable String place) {
+    if (ActionPlaces.EDITOR_TAB_POPUP.equals(place) || ActionPlaces.EDITOR_POPUP.equals(place) || ActionPlaces.PROJECT_VIEW_POPUP.equals(place)) {
+      return ShowFilePathAction.getFileManagerName();
+    }
+    return SystemInfo.isMac ? ActionsBundle.message("action.RevealIn.name.mac") : ActionsBundle.message("action.RevealIn.name.other", ShowFilePathAction.getFileManagerName());
   }
 }
