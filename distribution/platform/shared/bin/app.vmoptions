@@ -1,4 +1,5 @@
 --add-opens=java.desktop/sun.awt=consulo.container.impl
+--add-opens=java.desktop/sun.swing=consulo.container.impl
 --add-opens=java.desktop/sun.awt.image=consulo.container.impl
 --add-opens=java.desktop/sun.java2d=consulo.container.impl
 --add-opens=java.desktop/sun.font=consulo.container.impl

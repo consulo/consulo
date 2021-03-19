@@ -35,6 +35,23 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
 
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <compilerArgs>
+            <compilerArg>--add-exports=java.desktop/sun.font=ALL-UNNAMED</compilerArg>
+            <compilerArg>--add-exports=java.desktop/sun.awt=ALL-UNNAMED</compilerArg>
+            <compilerArg>--add-exports=java.desktop/sun.awt.datatransfer=ALL-UNNAMED</compilerArg>
+            <compilerArg>--add-exports=java.desktop/java.awt.peer=ALL-UNNAMED</compilerArg>
+          </compilerArgs>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+
   <dependencies>
     <!--TODO [VISTALL] this desktop only dependency. remove later -->
     <dependency>

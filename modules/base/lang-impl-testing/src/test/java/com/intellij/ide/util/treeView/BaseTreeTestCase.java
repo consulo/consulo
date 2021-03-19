@@ -264,7 +264,7 @@ abstract class BaseTreeTestCase<StructureElement> extends MockApplicationTestCas
   AbstractTreeUi _createUi() {
     return new AbstractTreeUi() {
       @Override
-      protected void yield(Runnable runnable) {
+      protected void yieldToEDT(Runnable runnable) {
         SimpleTimer.getInstance().setUp(runnable, 100);
       }
 

@@ -21,8 +21,8 @@ import com.intellij.ui.Gray;
 import com.intellij.util.FieldAccessor;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
+import consulo.awt.hacking.DefaultLookupHacking;
 import consulo.ide.ui.laf.DPIAwareArrowButton;
-import sun.swing.DefaultLookup;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -239,7 +239,7 @@ public class DarculaComboBoxUI extends BasicComboBoxUI implements Border {
     }
     c.setFont(comboBox.getFont());
     if (hasFocus && !isPopupVisible(comboBox)) {
-      c.setForeground(DefaultLookup.getColor(comboBox, this, "ComboBox.selectionForeground", listBox.getSelectionForeground()));
+      c.setForeground(DefaultLookupHacking.getColor(comboBox, this, "ComboBox.selectionForeground", listBox.getSelectionForeground()));
       c.setBackground(comboBox.getBackground());
     }
     else {
@@ -248,8 +248,8 @@ public class DarculaComboBoxUI extends BasicComboBoxUI implements Border {
         c.setBackground(comboBox.getBackground());
       }
       else {
-        c.setForeground(DefaultLookup.getColor(comboBox, this, "ComboBox.disabledForeground", null));
-        c.setBackground(DefaultLookup.getColor(comboBox, this, "ComboBox.disabledBackground", null));
+        c.setForeground(DefaultLookupHacking.getColor(comboBox, this, "ComboBox.disabledForeground", null));
+        c.setBackground(DefaultLookupHacking.getColor(comboBox, this, "ComboBox.disabledBackground", null));
       }
     }
 

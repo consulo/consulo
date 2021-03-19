@@ -570,7 +570,7 @@
         </property>
       </activation>
       <properties>
-        <java.level>1.8</java.level>
+        <java.level>11</java.level>
       </properties>
     </profile>
   </profiles>
@@ -604,13 +604,19 @@
         <artifactId>maven-compiler-plugin</artifactId>
         <version>${maven.compile.plugin}</version>
         <configuration>
-          <source>${java.level}</source>
+          <source>16</source>
           <target>${java.level}</target>
           <showDeprecation>true</showDeprecation>
           <showWarnings>true</showWarnings>
-          <meminitial>2048</meminitial>
-          <maxmem>4096</maxmem>
+          <compilerId>javi</compilerId>
         </configuration>
+        <dependencies>
+          <dependency>
+            <groupId>consulo.internal</groupId>
+            <artifactId>plexus-compiler-javi</artifactId>
+            <version>16.0.6-SNAPSHOT</version>
+          </dependency>
+        </dependencies>
       </plugin>
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
@@ -642,7 +648,7 @@
       <plugin>
         <groupId>consulo.maven</groupId>
         <artifactId>ui-designer-maven-plugin</artifactId>
-        <version>2.0-SNAPSHOT</version>
+        <version>2.2-SNAPSHOT</version>
         <configuration>
           <useJBScaling>true</useJBScaling>
         </configuration>
@@ -659,7 +665,7 @@
       <plugin>
         <groupId>consulo.maven</groupId>
         <artifactId>notnull-maven-plugin</artifactId>
-        <version>2.1-SNAPSHOT</version>
+        <version>2.2-SNAPSHOT</version>
         <executions>
           <execution>
             <id>production</id>

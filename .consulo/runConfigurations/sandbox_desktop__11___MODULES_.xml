@@ -1,6 +1,6 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="sandbox-desktop [11] [MODULES]" type="#org.jetbrains.idea.devkit.run.PluginConfigurationType" factoryName="Consulo In Sandbox" singleton="true">
-    <option name="VM_PARAMETERS" value="-Dconsulo.maven.console.log=true -Dconsulo.log4j2.enabled=true -Dconsulo.enable.byte.buddy.proxy=true -ea -Dconsulo.synchronize.api=http://localhost:8080/api/storage/ -Dconsulo.statistics.api=http://localhost:8080/api/statistics/ -Dconsulo.module.path.boot=true -Didea.ProcessCanceledException=disabled --add-opens java.desktop/sun.awt=consulo.container.impl --add-opens java.desktop/sun.java2d=consulo.container.impl --add-opens java.desktop/sun.font=consulo.container.impl --add-opens java.desktop/java.awt=consulo.container.impl --add-opens java.desktop/javax.swing=consulo.container.impl --add-opens java.desktop/javax.swing.plaf.basic=consulo.container.impl --add-opens java.base/java.lang=consulo.container.impl --add-opens java.desktop/javax.swing.text.html=consulo.container.impl --add-opens java.desktop/sun.awt.image=consulo.container.impl --add-opens java.desktop/java.awt.peer=consulo.container.impl" />
+    <option name="VM_PARAMETERS" value="-Dconsulo.maven.console.log=true -Dconsulo.log4j2.enabled=true -Dconsulo.enable.byte.buddy.proxy=true -ea -Dconsulo.synchronize.api=http://localhost:8080/api/storage/ -Dconsulo.statistics.api=http://localhost:8080/api/statistics/ -Dconsulo.module.path.boot=true -Didea.ProcessCanceledException=disabled --add-opens java.desktop/sun.awt=consulo.container.impl --add-opens java.desktop/sun.swing=consulo.container.impl --add-opens java.desktop/sun.java2d=consulo.container.impl --add-opens java.desktop/sun.font=consulo.container.impl --add-opens java.desktop/java.awt=consulo.container.impl --add-opens java.desktop/javax.swing=consulo.container.impl --add-opens java.desktop/javax.swing.plaf.basic=consulo.container.impl --add-opens java.base/java.lang=consulo.container.impl --add-opens java.desktop/javax.swing.text.html=consulo.container.impl --add-opens java.desktop/sun.awt.image=consulo.container.impl --add-opens java.desktop/java.awt.peer=consulo.container.impl" />
     <option name="ENABLED_JAVA9_MODULES" value="true" />
     <option name="PROGRAM_PARAMETERS" value="" />
     <option name="PLUGINS_HOME_PATH" value="$PROJECT_DIR$/sandbox/desktop/target/consulo-sandbox-desktop-2-SNAPSHOT-main/Consulo/platform/buildSNAPSHOT/plugins" />
@@ -13,7 +13,7 @@
     <ConfigurationWrapper RunnerId="Run" />
     <method>
       <option name="Make" enabled="false" />
-      <option name="Maven.BeforeRunTask" enabled="true" file="$PROJECT_DIR$/pom.xml" goal=" -T 1C -Dmaven.test.skip=true package -pl :consulo-sandbox-desktop -am" />
+      <option name="Maven.BeforeRunTask" enabled="true" file="$PROJECT_DIR$/pom.xml" goal="-T 1C -Dmaven.test.skip=true package -pl :consulo-sandbox-desktop -am" />
     </method>
   </configuration>
 </component>

@@ -5,7 +5,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.components.JBLabel;
 import com.intellij.util.Function;
 import com.intellij.util.ui.JBUI;
-import sun.swing.DefaultLookup;
+import consulo.awt.hacking.DefaultLookupHacking;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;
@@ -47,8 +47,8 @@ public abstract class SimpleListCellRenderer<T> extends JBLabel implements ListC
     Color bg, fg;
     JList.DropLocation dropLocation = list.getDropLocation();
     if (dropLocation != null && !dropLocation.isInsert() && dropLocation.getIndex() == index) {
-      bg = DefaultLookup.getColor(this, ui, "List.dropCellBackground");
-      fg = DefaultLookup.getColor(this, ui, "List.dropCellForeground");
+      bg = DefaultLookupHacking.getColor(this, ui, "List.dropCellBackground");
+      fg = DefaultLookupHacking.getColor(this, ui, "List.dropCellForeground");
       isSelected = true;
     }
     else {

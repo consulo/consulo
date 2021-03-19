@@ -122,8 +122,8 @@ public class TemplateDataElementType extends IFileElementType implements ITempla
                                        final TemplateLanguageFileViewProvider viewProvider,
                                        @Nonnull TemplateDataElementType.RangeCollector rangeCollector) {
     CharSequence templateSourceCode = createTemplateText(sourceCode, createBaseLexer(psiFile, viewProvider), rangeCollector);
-    if (rangeCollector instanceof RangeCollectorImpl) {
-      ((RangeCollectorImpl)rangeCollector).prepareFileForParsing(templateLanguage, sourceCode, templateSourceCode);
+    if (rangeCollector instanceof RangeCollectorImpl rc) {
+      rc.prepareFileForParsing(templateLanguage, sourceCode, templateSourceCode);
     }
     return createPsiFileFromSource(templateLanguage, templateSourceCode, psiFile.getManager());
   }

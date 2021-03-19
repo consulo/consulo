@@ -1,24 +1,21 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.ui.mac.foundation;
 
-import consulo.disposer.Disposable;
-import consulo.logging.Logger;
 import com.intellij.openapi.util.Comparing;
-import consulo.disposer.Disposer;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.registry.Registry;
 import com.sun.jna.Pointer;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
+import consulo.logging.Logger;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import sun.awt.AWTAccessor;
-
 import javax.swing.*;
 import javax.swing.text.JTextComponent;
 import java.awt.*;
 import java.awt.event.AWTEventListener;
 import java.awt.event.KeyEvent;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -117,8 +114,13 @@ public class MacUtil {
     final AWTEventListener listener = new AWTEventListener() {
       @Override
       public void eventDispatched(AWTEvent event) {
-        if (event instanceof KeyEvent && ((KeyEvent)event).getKeyCode() == KeyEvent.VK_TAB && (!(event.getSource() instanceof JTextComponent)) && (!(event.getSource() instanceof JList)) && !isFullKeyboardAccessEnabled())
+        if (event instanceof KeyEvent &&
+            ((KeyEvent)event).getKeyCode() == KeyEvent.VK_TAB &&
+            (!(event.getSource() instanceof JTextComponent)) &&
+            (!(event.getSource() instanceof JList)) &&
+            !isFullKeyboardAccessEnabled()) {
           ((KeyEvent)event).consume();
+        }
       }
     };
     Disposer.register(disposable, new Disposable() {
@@ -130,27 +132,28 @@ public class MacUtil {
     Toolkit.getDefaultToolkit().addAWTEventListener(listener, AWTEvent.KEY_EVENT_MASK);
   }
 
-  public static ID findWindowFromJavaWindow(final Window w) {
-    ID windowId = null;
-    if (Registry.is("skip.untitled.windows.for.mac.messages")) {
-      try {
-        Class<?> cWindowPeerClass = AWTAccessor.getComponentAccessor().getPeer(w).getClass();
-        Method getPlatformWindowMethod = cWindowPeerClass.getDeclaredMethod("getPlatformWindow");
-        Object cPlatformWindow = getPlatformWindowMethod.invoke(AWTAccessor.getComponentAccessor().getPeer(w));
-        Class<?> cPlatformWindowClass = cPlatformWindow.getClass();
-        Method getNSWindowPtrMethod = cPlatformWindowClass.getDeclaredMethod("getNSWindowPtr");
-        windowId = new ID((Long)getNSWindowPtrMethod.invoke(cPlatformWindow));
-      }
-      catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
-        LOG.debug(e);
-      }
-    }
-    else {
-      String foremostWindowTitle = getWindowTitle(w);
-      windowId = findWindowForTitle(foremostWindowTitle);
-    }
-    return windowId;
-  }
+  // unused - commented due sun.awt usage
+  //public static ID findWindowFromJavaWindow(final Window w) {
+  //  ID windowId = null;
+  //  if (Registry.is("skip.untitled.windows.for.mac.messages")) {
+  //    try {
+  //      Class<?> cWindowPeerClass = AWTAccessor.getComponentAccessor().getPeer(w).getClass();
+  //      Method getPlatformWindowMethod = cWindowPeerClass.getDeclaredMethod("getPlatformWindow");
+  //      Object cPlatformWindow = getPlatformWindowMethod.invoke(AWTAccessor.getComponentAccessor().getPeer(w));
+  //      Class<?> cPlatformWindowClass = cPlatformWindow.getClass();
+  //      Method getNSWindowPtrMethod = cPlatformWindowClass.getDeclaredMethod("getNSWindowPtr");
+  //      windowId = new ID((Long)getNSWindowPtrMethod.invoke(cPlatformWindow));
+  //    }
+  //    catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+  //      LOG.debug(e);
+  //    }
+  //  }
+  //  else {
+  //    String foremostWindowTitle = getWindowTitle(w);
+  //    windowId = findWindowForTitle(foremostWindowTitle);
+  //  }
+  //  return windowId;
+  //}
 
   @Nullable
   public static String getWindowTitle(Window documentRoot) {

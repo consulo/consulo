@@ -1934,7 +1934,7 @@ public class AbstractTreeUi {
   private boolean yieldAndRun(@Nonnull final Runnable runnable, @Nonnull final TreeUpdatePass pass) {
     myYieldingPasses.add(pass);
     myYieldingNow = true;
-    yield(new TreeRunnable("AbstractTreeUi.yieldAndRun") {
+    yieldToEDT(new TreeRunnable("AbstractTreeUi.yieldAndRun") {
       @Override
       public void perform() {
         if (isReleased()) return;
@@ -2129,8 +2129,8 @@ public class AbstractTreeUi {
     getBuilder().runOnYieldingDone(onDone);
   }
 
-  protected void yield(Runnable runnable) {
-    getBuilder().yield(runnable);
+  protected void yieldToEDT(Runnable runnable) {
+    getBuilder().yieldToEDT(runnable);
   }
 
   @Nonnull
