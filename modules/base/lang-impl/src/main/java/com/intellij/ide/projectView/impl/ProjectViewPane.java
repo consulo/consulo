@@ -21,12 +21,12 @@ import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiDirectory;
+import consulo.ui.image.Image;
 import consulo.util.dataholder.KeyWithDefaultValue;
 import consulo.util.lang.Comparing;
 import consulo.vfs.ArchiveFileSystem;
 import consulo.vfs.util.ArchiveVfsUtil;
 import jakarta.inject.Inject;
-import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.swing.plaf.FontUIResource;
@@ -34,7 +34,6 @@ import javax.swing.tree.DefaultTreeModel;
 import java.awt.*;
 
 public class ProjectViewPane extends AbstractProjectViewPSIPane {
-  @NonNls
   public static final String ID = "ProjectPane";
 
   @Inject
@@ -56,7 +55,7 @@ public class ProjectViewPane extends AbstractProjectViewPSIPane {
 
   @Nonnull
   @Override
-  public consulo.ui.image.Image getIcon() {
+  public Image getIcon() {
     return AllIcons.General.ProjectTab;
   }
 

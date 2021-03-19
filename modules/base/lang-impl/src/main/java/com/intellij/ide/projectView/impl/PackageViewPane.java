@@ -42,7 +42,6 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.OrderEntry;
 import com.intellij.openapi.roots.ProjectFileIndex;
 import com.intellij.openapi.roots.ProjectRootManager;
-import consulo.util.dataholder.Key;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiElement;
@@ -52,8 +51,9 @@ import com.intellij.util.containers.ContainerUtil;
 import consulo.ide.projectView.impl.nodes.PackageElement;
 import consulo.psi.PsiPackage;
 import consulo.psi.PsiPackageManager;
+import consulo.ui.image.Image;
+import consulo.util.dataholder.Key;
 import jakarta.inject.Inject;
-import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -62,7 +62,6 @@ import javax.swing.tree.DefaultTreeModel;
 import java.util.*;
 
 public final class PackageViewPane extends AbstractProjectViewPSIPane {
-  @NonNls
   public static final String ID = "PackagesPane";
   private final MyDeletePSIElementProvider myDeletePSIElementProvider = new MyDeletePSIElementProvider();
 
@@ -71,14 +70,16 @@ public final class PackageViewPane extends AbstractProjectViewPSIPane {
     super(project);
   }
 
+  @Nonnull
   @Override
   public String getTitle() {
     return IdeBundle.message("title.packages");
   }
 
+  @Nonnull
   @Override
-  public consulo.ui.image.Image getIcon() {
-    return AllIcons.General.PackagesTab;
+  public Image getIcon() {
+    return AllIcons.Nodes.CopyOfFolder;
   }
 
   @Override
@@ -150,6 +151,7 @@ public final class PackageViewPane extends AbstractProjectViewPSIPane {
     return result;
   }
 
+  @Nonnull
   @Override
   public PsiDirectory[] getSelectedDirectories() {
     final PackageElement packageElement = getSelectedPackageElement();
@@ -169,18 +171,18 @@ public final class PackageViewPane extends AbstractProjectViewPSIPane {
     }
 
     @Override
-    public boolean isSelected(AnActionEvent event) {
+    public boolean isSelected(@Nonnull AnActionEvent event) {
       return ProjectView.getInstance(myProject).isShowLibraryContents(getId());
     }
 
     @Override
-    public void setSelected(AnActionEvent event, boolean flag) {
+    public void setSelected(@Nonnull AnActionEvent event, boolean flag) {
       final ProjectViewImpl projectView = (ProjectViewImpl)ProjectView.getInstance(myProject);
       projectView.setShowLibraryContents(flag, getId());
     }
 
     @Override
-    public void update(AnActionEvent e) {
+    public void update(@Nonnull AnActionEvent e) {
       super.update(e);
       final Presentation presentation = e.getPresentation();
       final ProjectViewImpl projectView = (ProjectViewImpl)ProjectView.getInstance(myProject);
@@ -200,7 +202,7 @@ public final class PackageViewPane extends AbstractProjectViewPSIPane {
   }
 
   @Override
-  protected AbstractTreeUpdater createTreeUpdater(AbstractTreeBuilder treeBuilder) {
+  protected AbstractTreeUpdater createTreeUpdater(@Nonnull AbstractTreeBuilder treeBuilder) {
     return new PackageViewTreeUpdater(treeBuilder);
   }
 
@@ -220,7 +222,7 @@ public final class PackageViewPane extends AbstractProjectViewPSIPane {
   }
 
   @Override
-  protected ProjectViewTree createTree(DefaultTreeModel treeModel) {
+  protected ProjectViewTree createTree(@Nonnull DefaultTreeModel treeModel) {
     return new ProjectViewTree(myProject, treeModel) {
       @Override
       public String toString() {
@@ -245,7 +247,7 @@ public final class PackageViewPane extends AbstractProjectViewPSIPane {
     }
 
     @Override
-    public boolean addSubtreeToUpdateByElement(Object element) {
+    public boolean addSubtreeToUpdateByElement(@Nonnull Object element) {
       // should convert PsiDirectories into PackageElements
       if (element instanceof PsiDirectory) {
         PsiDirectory dir = (PsiDirectory)element;
