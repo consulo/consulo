@@ -16,10 +16,13 @@
 package com.intellij.vcs.log.impl;
 
 import com.intellij.ide.caches.CachesInvalidator;
-import consulo.logging.Logger;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.util.ArrayUtil;
 import com.intellij.vcs.log.util.PersistentUtil;
+import consulo.localize.LocalizeValue;
+import consulo.logging.Logger;
+
+import javax.annotation.Nonnull;
 
 public class VcsLogCachesInvalidator extends CachesInvalidator {
   private static final Logger LOG = Logger.getInstance(VcsLogCachesInvalidator.class);
@@ -37,6 +40,12 @@ public class VcsLogCachesInvalidator extends CachesInvalidator {
       return deleted;
     }
     return true;
+  }
+
+  @Nonnull
+  @Override
+  public LocalizeValue getDescription() {
+    return LocalizeValue.localizeTODO("Invalidate vcs log");
   }
 
   @Override

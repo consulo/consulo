@@ -18,7 +18,6 @@ package com.intellij.compiler.impl;
 import com.intellij.ProjectTopics;
 import com.intellij.compiler.CompilerIOUtil;
 import com.intellij.ide.caches.CachesInvalidator;
-import consulo.disposer.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.application.ReadAction;
@@ -52,7 +51,9 @@ import consulo.compiler.impl.TranslatingCompilerFilesMonitorHelper;
 import consulo.compiler.impl.TranslationCompilerFilesMonitorVfsListener;
 import consulo.compiler.impl.TranslationCompilerProjectMonitor;
 import consulo.compiler.make.DependencyCache;
+import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.module.extension.ModuleExtension;
 import consulo.roots.ContentFolderScopes;
@@ -62,12 +63,12 @@ import consulo.util.lang.ref.SimpleReference;
 import gnu.trove.TIntHashSet;
 import gnu.trove.TIntIntHashMap;
 import gnu.trove.TIntObjectHashMap;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.io.*;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -227,6 +228,12 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
     @Inject
     MonitorCachesInvalidator(Provider<TranslatingCompilerFilesMonitor> translatingCompilerFilesMonitorProvider) {
       myTranslatingCompilerFilesMonitorProvider = translatingCompilerFilesMonitorProvider;
+    }
+
+    @Nonnull
+    @Override
+    public LocalizeValue getDescription() {
+      return LocalizeValue.localizeTODO("Invalidate compiler cache");
     }
 
     @Override
