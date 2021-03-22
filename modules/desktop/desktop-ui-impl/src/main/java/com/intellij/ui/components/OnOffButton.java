@@ -36,9 +36,9 @@ public class OnOffButton extends JToggleButton {
   private String myOffText;
 
   public OnOffButton() {
-    setUI(OnOffButtonUI.createUI(this));
     setOpaque(false);
     setBorder(null);
+    updateUI();
   }
 
   @Override

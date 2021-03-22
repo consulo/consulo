@@ -259,4 +259,9 @@ public abstract class UIInternal {
   public ToggleSwitch _Components_toggleSwitch(boolean selected) {
     throw new UnsupportedOperationException();
   }
+
+  @Nonnull
+  public PasswordBox _Components_passwordBox(@Nullable String passwordText) {
+    throw new UnsupportedOperationException();
+  }
 }

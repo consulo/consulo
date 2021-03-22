@@ -461,4 +461,10 @@ public class DesktopUIInternalImpl extends UIInternal {
   public ToggleSwitch _Components_toggleSwitch(boolean selected) {
     return new DesktopToggleSwitchImpl(selected);
   }
+
+  @Nonnull
+  @Override
+  public PasswordBox _Components_passwordBox(@Nullable String passwordText) {
+    return new DesktopPasswordBoxImpl(passwordText);
+  }
 }

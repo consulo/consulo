@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2013-2021 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,12 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.ui;
+package consulo.ui;
 
-import javax.swing.*;
+import consulo.ui.internal.UIInternal;
 
-public class PasswordFieldPanel extends FieldPanel {
-  public PasswordFieldPanel() {
-    super(new JPasswordField(30));
+import javax.annotation.Nonnull;
+
+/**
+ * @author VISTALL
+ * @since 22/03/2021
+ */
+public interface PasswordBox extends ValueComponent<String>, ValidableComponent<String>, FocusableComponent {
+  @Nonnull
+  static PasswordBox create() {
+    return UIInternal.get()._Components_passwordBox(null);
+  }
+
+  @Nonnull
+  static PasswordBox create(@Nonnull String password) {
+    return UIInternal.get()._Components_passwordBox(password);
   }
 }

@@ -18,6 +18,7 @@ package com.intellij.ide.ui.laf;
 import com.intellij.ide.ui.BasicEditorTextFieldUI;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.wm.impl.status.BasicStatusBarUI;
+import com.intellij.ui.components.OnOffButton;
 import consulo.desktop.ui.laf.ui.basic.BasicCaptionPanelUI;
 import consulo.ide.ui.laf.darcula.DarculaEditorTabsUI;
 import consulo.ide.ui.laf.intellij.ActionButtonUI;
@@ -94,6 +95,10 @@ public class LafManagerImplUtil {
 
     if(uiDefaults.get("CaptionPanelUI") == null) {
       uiDefaults.put("CaptionPanelUI", BasicCaptionPanelUI.class.getName());
+    }
+
+    if (uiDefaults.get("OnOffButtonUI") == null) {
+      uiDefaults.put("OnOffButtonUI", OnOffButton.OnOffButtonUI.class.getName());
     }
   }
 

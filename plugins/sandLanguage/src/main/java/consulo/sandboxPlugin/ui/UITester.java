@@ -109,6 +109,8 @@ public class UITester {
 
       layout.add(HorizontalLayout.create().add(Label.create("Toggle Switch")).add(toggleSwitch).add(checkBox));
 
+      layout.add(HorizontalLayout.create().add(Label.create("Password")).add(PasswordBox.create()));
+      
       IntSlider intSlider = IntSlider.create(3);
       intSlider.addValueListener(event -> Alerts.okInfo("intSlider " + event.getValue()).showAsync());
       layout.add(HorizontalLayout.create().add(Label.create("IntSlider")).add(intSlider));
