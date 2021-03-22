@@ -15,9 +15,9 @@
  */
 package com.intellij.ui.components;
 
-import com.intellij.ui.Gray;
 import com.intellij.ui.JBColor;
 import com.intellij.util.ui.GraphicsUtil;
+import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 
 import javax.swing.*;
@@ -36,8 +36,8 @@ public class OnOffButton extends JToggleButton {
   private String myOffText;
 
   public OnOffButton() {
+    setBorder(JBUI.Borders.empty());
     setOpaque(false);
-    setBorder(null);
     updateUI();
   }
 
@@ -104,6 +104,9 @@ public class OnOffButton extends JToggleButton {
       if (h % 2 == 1) {
         h--;
       }
+
+      int ovalSize = h - JBUI.scale(4);
+
       Graphics2D g = ((Graphics2D)gr);
       GraphicsUtil.setupAAPainting(g);
       g.translate(1, 1);
@@ -117,10 +120,12 @@ public class OnOffButton extends JToggleButton {
         g.fillRoundRect(0, 0, w, h, h, h);
         g.setColor(UIUtil.getBorderColor());
         g.drawRoundRect(0, 0, w, h, h, h);
-        g.setColor(new JBColor(Gray._220, Gray._128));
-        g.fillOval(w - h + 1, 1, h - 1, h - 1);
+
         g.setColor(UIUtil.getListForeground(true));
         g.drawString(button.getOnText(), h / 2, h - 4);
+        
+        g.setColor(UIUtil.getBorderColor());
+        g.fillOval(w - h + JBUI.scale(1), JBUI.scale(2), ovalSize, ovalSize);
       }
       else {
         g.setColor(UIUtil.getPanelBackground());
@@ -129,11 +134,9 @@ public class OnOffButton extends JToggleButton {
         g.drawRoundRect(0, 0, w, h, h, h);
         g.setColor(UIUtil.getLabelDisabledForeground());
         g.drawString(button.getOffText(), h + 4, h - 4);
+        
         g.setColor(UIUtil.getBorderColor());
-        g.setPaint(new GradientPaint(h, 0, Gray._178, 0, h, Gray._240));
-        g.fillOval(0, 0, h, h);
-        g.setColor(UIUtil.getBorderColor());
-        g.drawOval(0, 0, h, h);
+        g.fillOval(JBUI.scale(2), JBUI.scale(2), ovalSize, ovalSize);
       }
       g.translate(-1, -1);
     }
