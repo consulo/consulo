@@ -15,13 +15,11 @@
  */
 package consulo.platform;
 
-import consulo.container.plugin.PluginId;
 import consulo.util.lang.StringUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.*;
 
 /**
@@ -211,19 +209,19 @@ public abstract class PlatformBase implements Platform {
 
   protected static class UserImpl implements User {
     @Override
-    public boolean isSuperUser() {
+    public boolean superUser() {
       return false;
     }
 
     @Nonnull
     @Override
-    public String getName() {
+    public String name() {
       return System.getProperty("user.name");
     }
 
     @Nonnull
     @Override
-    public Path getHomePath() {
+    public Path homePath() {
       return Path.of(System.getProperty("user.home"));
     }
   }

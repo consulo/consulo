@@ -144,13 +144,30 @@ public interface Platform {
   }
 
   interface User {
-    boolean isSuperUser();
+    boolean superUser();
 
     @Nonnull
-    String getName();
+    String name();
 
     @Nonnull
-    Path getHomePath();
+    Path homePath();
+
+    @Deprecated
+    default boolean isSuperUser() {
+      return superUser();
+    }
+
+    @Nonnull
+    @Deprecated
+    default String getName() {
+      return name();
+    }
+
+    @Nonnull
+    @Deprecated
+    default Path getHomePath() {
+      return homePath();
+    }
   }
 
   @Nonnull

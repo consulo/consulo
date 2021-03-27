@@ -15,10 +15,11 @@
  */
 package com.intellij.util;
 
+import consulo.annotation.DeprecationInfo;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 import org.jetbrains.annotations.TestOnly;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
@@ -27,6 +28,8 @@ import javax.annotation.Nullable;
  * @author yole
  */
 @SuppressWarnings({"HardCodedStringLiteral"})
+@Deprecated
+@DeprecationInfo("Use Platform#user()")
 public class SystemProperties {
   private static String ourTestUserName;
 
