@@ -15,9 +15,12 @@
  */
 package com.intellij.psi.scope;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.util.dataholder.Key;
 import javax.annotation.Nonnull;
 
+@Deprecated
+@DeprecationInfo("Use PsiScopeProcessor directly")
 public abstract class BaseScopeProcessor implements PsiScopeProcessor {
   @Override
   public <T> T getHint(@Nonnull Key<T> hintKey) {

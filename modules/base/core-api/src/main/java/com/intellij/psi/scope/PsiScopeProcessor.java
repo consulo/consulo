@@ -15,26 +15,31 @@
  */
 package com.intellij.psi.scope;
 
-import consulo.util.dataholder.Key;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.ResolveState;
+import consulo.util.dataholder.Key;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public interface PsiScopeProcessor {
   interface Event {
-    Event SET_DECLARATION_HOLDER = new Event() { };
+    Event SET_DECLARATION_HOLDER = new Event() {
+    };
   }
 
   /**
-   * @param element  candidate element.
-   * @param state    current state of resolver.
+   * @param element candidate element.
+   * @param state   current state of resolver.
    * @return false to stop processing.
    */
   boolean execute(@Nonnull PsiElement element, ResolveState state);
 
   @Nullable
-  <T> T getHint(@Nonnull Key<T> hintKey);
+  default <T> T getHint(@Nonnull Key<T> hintKey) {
+    return null;
+  }
 
-  void handleEvent(Event event, @Nullable Object associated);
+  default void handleEvent(Event event, @Nullable Object associated) {
+  }
 }
