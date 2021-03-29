@@ -1105,7 +1105,7 @@
     <group id="PrintExportGroup">
       <separator/>
       <action id="ExportToHTML" class="com.intellij.codeEditor.printing.ExportToHTMLAction"/>
-      <action id="Print" class="com.intellij.codeEditor.printing.PrintAction" icon="consulo.platform.base.PlatformIconGroup@graph.print"/>
+      <action id="Print" class="com.intellij.codeEditor.printing.PrintAction" icon="consulo.platform.base.PlatformIconGroup@general.print"/>
       <reference ref="AddToFavorites"/>
 
       <add-to-group group-id="FileMenu" anchor="after" relative-to-action="InvalidateCaches"/>

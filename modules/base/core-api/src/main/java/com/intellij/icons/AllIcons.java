@@ -543,7 +543,7 @@ public class AllIcons {
     public static final Image FitContent = PlatformIconGroup.graphFitContent(); // 16x16
     public static final Image Grid = PlatformIconGroup.graphGrid(); // 16x16
     public static final Image Layout = PlatformIconGroup.graphLayout(); // 16x16
-    public static final Image NodeSelectionMode = PlatformIconGroup.graphNodeSelectionMode(); // 16x16
+    public static final Image NodeSelectionMode = PlatformIconGroup.generalPrint(); // 16x16
     public static final Image Print = PlatformIconGroup.graphPrint(); // 16x16
     public static final Image PrintPreview = PlatformIconGroup.graphPrintPreview(); // 16x16
     public static final Image SnapToGrid = PlatformIconGroup.graphSnapToGrid(); // 16x16

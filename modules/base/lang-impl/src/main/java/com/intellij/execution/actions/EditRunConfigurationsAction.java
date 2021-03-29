@@ -17,7 +17,6 @@
 package com.intellij.execution.actions;
 
 import com.intellij.execution.impl.EditConfigurationsDialog;
-import com.intellij.icons.AllIcons;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
@@ -26,10 +25,6 @@ import consulo.platform.base.localize.ExecutionLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 
 public class EditRunConfigurationsAction extends AnAction {
-  public EditRunConfigurationsAction() {
-    getTemplatePresentation().setIcon(AllIcons.Actions.EditSource);
-  }
-
   @RequiredUIAccess
   @Override
   public void actionPerformed(final AnActionEvent e) {
