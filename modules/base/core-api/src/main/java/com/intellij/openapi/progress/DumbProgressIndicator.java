@@ -1,6 +1,8 @@
 package com.intellij.openapi.progress;
 
 import com.intellij.openapi.application.ModalityState;
+import consulo.localize.LocalizeValue;
+
 import javax.annotation.Nonnull;
 
 public class DumbProgressIndicator implements StandardProgressIndicator {
@@ -33,21 +35,21 @@ public class DumbProgressIndicator implements StandardProgressIndicator {
   }
 
   @Override
-  public void setText(String text) {
+  public void setTextValue(LocalizeValue text) {
   }
 
   @Override
-  public String getText() {
-    return null;
+  public LocalizeValue getTextValue() {
+    return LocalizeValue.empty();
   }
 
   @Override
-  public void setText2(String text) {
+  public void setText2Value(LocalizeValue text) {
   }
 
   @Override
-  public String getText2() {
-    return null;
+  public LocalizeValue getText2Value() {
+    return LocalizeValue.empty();
   }
 
   @Override

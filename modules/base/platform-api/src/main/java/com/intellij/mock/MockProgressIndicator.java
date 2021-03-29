@@ -17,85 +17,107 @@ package com.intellij.mock;
 
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.progress.ProgressIndicator;
+import consulo.localize.LocalizeValue;
+
 import javax.annotation.Nonnull;
 
 public class MockProgressIndicator implements ProgressIndicator {
   private boolean myIsRunning = false;
   private boolean myIsCanceled = false;
 
+  @Override
   public void start() {
     myIsRunning = true;
     myIsCanceled = false;
   }
 
+  @Override
   public void stop() {
     myIsRunning = false;
   }
 
+  @Override
   public boolean isRunning() {
     return myIsRunning;
   }
 
+  @Override
   public void cancel() {
     myIsCanceled = true;
   }
 
+  @Override
   public boolean isCanceled() {
     return myIsCanceled;
   }
 
-  public void setText(String text) {
+  @Override
+  public void setTextValue(LocalizeValue text) {
   }
 
-  public String getText() {
-    return "";
+  @Override
+  public LocalizeValue getTextValue() {
+    return LocalizeValue.empty();
   }
 
-  public void setText2(String text) {
+  public void setText2Value(LocalizeValue text) {
   }
 
-  public String getText2() {
-    return "";
+  @Override
+  public LocalizeValue getText2Value() {
+    return LocalizeValue.empty();
   }
 
+  @Override
   public double getFraction() {
     return 1;
   }
 
+  @Override
   public void setFraction(double fraction) {
   }
 
+  @Override
   public void pushState() {
   }
 
+  @Override
   public void popState() {
   }
 
+  @Override
   public void startNonCancelableSection() {
   }
 
+  @Override
   public void finishNonCancelableSection() {
   }
 
+  @Override
   public boolean isModal() {
     return false;
   }
 
+  @Override
   @Nonnull
   public ModalityState getModalityState() {
     return ModalityState.NON_MODAL;
   }
 
+  @Override
   public void setModalityProgress(ProgressIndicator modalityProgress) {
   }
 
+  @Override
   public boolean isIndeterminate() {
     return false;
   }
 
+  @Override
   public void setIndeterminate(boolean indeterminate) {
   }
 
+  @Override
   public void checkCanceled() {
   }
 

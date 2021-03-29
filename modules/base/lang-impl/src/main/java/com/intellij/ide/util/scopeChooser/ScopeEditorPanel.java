@@ -42,13 +42,16 @@ import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.tree.TreeUtil;
 import com.intellij.util.ui.update.Activatable;
 import com.intellij.util.ui.update.UiNotifyConnector;
+import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
-import javax.swing.event.*;
+import javax.swing.event.TreeExpansionEvent;
+import javax.swing.event.TreeSelectionEvent;
+import javax.swing.event.TreeSelectionListener;
+import javax.swing.event.TreeWillExpandListener;
 import javax.swing.tree.ExpandVetoException;
 import javax.swing.tree.TreePath;
 import java.awt.*;
@@ -739,12 +742,7 @@ public class ScopeEditorPanel {
     private final boolean myRequestFocus;
 
     public MyPanelProgressIndicator(final boolean requestFocus) {
-      super(new Consumer<JComponent>() {
-        @Override
-        public void consume(final JComponent component) {
-          setToComponent(component, requestFocus);
-        }
-      });
+      super(component -> setToComponent(component, requestFocus));
       myRequestFocus = requestFocus;
     }
 
@@ -755,13 +753,13 @@ public class ScopeEditorPanel {
     }
 
     @Override
-    public String getText() { //just show non-blocking progress
-      return null;
+    public LocalizeValue getTextValue() { //just show non-blocking progress
+      return LocalizeValue.empty();
     }
 
     @Override
-    public String getText2() {
-      return null;
+    public LocalizeValue getText2Value() {
+      return LocalizeValue.empty();
     }
   }
 }

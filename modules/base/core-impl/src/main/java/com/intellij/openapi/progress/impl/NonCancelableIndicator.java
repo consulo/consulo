@@ -20,6 +20,8 @@ import com.intellij.openapi.progress.NonCancelableSection;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.progress.StandardProgressIndicator;
+import consulo.localize.LocalizeValue;
+
 import javax.annotation.Nonnull;
 
 class NonCancelableIndicator implements NonCancelableSection, StandardProgressIndicator {
@@ -72,23 +74,25 @@ class NonCancelableIndicator implements NonCancelableSection, StandardProgressIn
   }
 
   @Override
-  public void setText(String text) {
+  public void setTextValue(@Nonnull LocalizeValue text) {
 
   }
 
+  @Nonnull
   @Override
-  public String getText() {
-    return null;
+  public LocalizeValue getTextValue() {
+    return LocalizeValue.empty();
   }
 
   @Override
-  public void setText2(String text) {
+  public void setText2Value(LocalizeValue text) {
 
   }
 
+  @Nonnull
   @Override
-  public String getText2() {
-    return null;
+  public LocalizeValue getText2Value() {
+    return LocalizeValue.empty();
   }
 
   @Override

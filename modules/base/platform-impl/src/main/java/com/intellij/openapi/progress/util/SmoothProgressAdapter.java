@@ -15,7 +15,6 @@
  */
 package com.intellij.openapi.progress.util;
 
-import consulo.disposer.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.StandardProgressIndicator;
@@ -24,10 +23,11 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.util.concurrency.AppExecutorUtil;
 import com.intellij.util.concurrency.Semaphore;
+import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
+import consulo.localize.LocalizeValue;
 
 import javax.annotation.Nonnull;
-
 import javax.swing.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
@@ -174,10 +174,10 @@ public class SmoothProgressAdapter extends AbstractProgressIndicatorExBase imple
   }
 
   @Override
-  public synchronized void setText(String text) {
-    super.setText(text);
+  public synchronized void setTextValue(@Nonnull LocalizeValue text) {
+    super.setTextValue(text);
     if (myOriginal.isRunning()) {
-      myOriginal.setText(text);
+      myOriginal.setTextValue(text);
     }
   }
 
@@ -190,10 +190,10 @@ public class SmoothProgressAdapter extends AbstractProgressIndicatorExBase imple
   }
 
   @Override
-  public synchronized void setText2(String text) {
-    super.setText2(text);
+  public synchronized void setText2Value(LocalizeValue text) {
+    super.setText2Value(text);
     if (myOriginal.isRunning()) {
-      myOriginal.setText2(text);
+      myOriginal.setText2Value(text);
     }
   }
 

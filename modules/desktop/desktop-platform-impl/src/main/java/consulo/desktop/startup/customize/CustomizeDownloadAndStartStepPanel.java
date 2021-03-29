@@ -30,6 +30,7 @@ import com.intellij.ui.components.JBLabel;
 import com.intellij.util.Restarter;
 import com.intellij.util.ui.UIUtil;
 import consulo.container.plugin.PluginDescriptor;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 
 import javax.annotation.Nonnull;
@@ -55,13 +56,8 @@ public class CustomizeDownloadAndStartStepPanel extends AbstractCustomizeWizardS
     }
 
     @Override
-    public void setText2(final String text) {
-      UIUtil.invokeLaterIfNeeded(new Runnable() {
-        @Override
-        public void run() {
-          myLabel.setText(text);
-        }
-      });
+    public void setText2Value(final LocalizeValue text) {
+      UIUtil.invokeLaterIfNeeded(() -> myLabel.setText(text.get()));
     }
 
     @Override

@@ -17,6 +17,8 @@ package com.intellij.ide.util;
 
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.progress.*;
+import consulo.localize.LocalizeValue;
+
 import javax.annotation.Nonnull;
 
 /**
@@ -61,23 +63,23 @@ public class DelegatingProgressIndicator implements WrappedProgressIndicator, St
   }
 
   @Override
-  public void setText(final String text) {
-    myIndicator.setText(text);
+  public void setTextValue(final LocalizeValue text) {
+    myIndicator.setTextValue(text);
   }
 
   @Override
-  public String getText() {
-    return myIndicator.getText();
+  public LocalizeValue getTextValue() {
+    return myIndicator.getTextValue();
   }
 
   @Override
-  public void setText2(final String text) {
-    myIndicator.setText2(text);
+  public void setText2Value(final LocalizeValue text) {
+    myIndicator.setText2Value(text);
   }
 
   @Override
-  public String getText2() {
-    return myIndicator.getText2();
+  public LocalizeValue getText2Value() {
+    return myIndicator.getText2Value();
   }
 
   @Override

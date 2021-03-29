@@ -1,7 +1,6 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.openapi.progress.util;
 
-import consulo.disposer.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.application.TransactionGuard;
@@ -10,30 +9,31 @@ import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.progress.impl.CoreProgressManager;
-import consulo.disposer.Disposer;
-import consulo.util.dataholder.UserDataHolderBase;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.ui.mac.foundation.MacUtil;
 import com.intellij.util.ObjectUtil;
-import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.Stack;
 import consulo.application.TransactionGuardEx;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
+import consulo.util.dataholder.UserDataHolderBase;
 import gnu.trove.TDoubleArrayList;
-import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.Arrays;
 import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class AbstractProgressIndicatorBase extends UserDataHolderBase implements ProgressIndicator {
   private static final Logger LOG = Logger.getInstance(AbstractProgressIndicatorBase.class);
 
-  private volatile String myText;
+  private volatile LocalizeValue myText = LocalizeValue.empty();
   private volatile double myFraction;
-  private volatile String myText2;
+  private volatile LocalizeValue myText2 = LocalizeValue.empty();
 
   private volatile boolean myCanceled;
   private volatile boolean myRunning;
@@ -43,9 +43,9 @@ public class AbstractProgressIndicatorBase extends UserDataHolderBase implements
   private volatile MacUtil.Activity myMacActivity;
   private volatile boolean myShouldStartActivity = true;
 
-  private Stack<String> myTextStack; // guarded by this
+  private Stack<LocalizeValue> myTextStack; // guarded by this
   private TDoubleArrayList myFractionStack; // guarded by this
-  private Stack<String> myText2Stack; // guarded by this
+  private Stack<LocalizeValue> myText2Stack; // guarded by this
 
   private ProgressIndicator myModalityProgress;
   private volatile ModalityState myModalityState = ModalityState.NON_MODAL;
@@ -66,15 +66,15 @@ public class AbstractProgressIndicatorBase extends UserDataHolderBase implements
         myFinished = false;
       }
 
-      myText = "";
+      myText = LocalizeValue.empty();
       myFraction = 0;
-      myText2 = "";
+      myText2 = LocalizeValue.empty();
       startSystemActivity();
       myRunning = true;
     }
   }
 
-  private static final Set<Class> ourReportedReuseExceptions = ContainerUtil.newConcurrentSet();
+  private static final Set<Class> ourReportedReuseExceptions = ConcurrentHashMap.newKeySet();
 
   protected boolean isReuseable() {
     return false;
@@ -145,22 +145,22 @@ public class AbstractProgressIndicatorBase extends UserDataHolderBase implements
   }
 
   @Override
-  public void setText(final String text) {
+  public void setTextValue(final LocalizeValue text) {
     myText = text;
   }
 
   @Override
-  public String getText() {
+  public LocalizeValue getTextValue() {
     return myText;
   }
 
   @Override
-  public void setText2(final String text) {
+  public void setText2Value(final LocalizeValue text) {
     myText2 = text;
   }
 
   @Override
-  public String getText2() {
+  public LocalizeValue getText2Value() {
     return myText2;
   }
 
@@ -197,10 +197,10 @@ public class AbstractProgressIndicatorBase extends UserDataHolderBase implements
   public void popState() {
     synchronized (getLock()) {
       LOG.assertTrue(!myTextStack.isEmpty());
-      String oldText = myTextStack.pop();
-      String oldText2 = myText2Stack.pop();
-      setText(oldText);
-      setText2(oldText2);
+      LocalizeValue oldText = myTextStack.pop();
+      LocalizeValue oldText2 = myText2Stack.pop();
+      setTextValue(oldText);
+      setText2Value(oldText2);
 
       double oldFraction = myFractionStack.remove(myFractionStack.size() - 1);
       if (!isIndeterminate()) {
@@ -267,8 +267,6 @@ public class AbstractProgressIndicatorBase extends UserDataHolderBase implements
     myIndeterminate = indeterminate;
   }
 
-
-  @NonNls
   @Override
   public String toString() {
     return "ProgressIndicator " + System.identityHashCode(this) + ": running=" + isRunning() + "; canceled=" + isCanceled();
@@ -290,9 +288,8 @@ public class AbstractProgressIndicatorBase extends UserDataHolderBase implements
       myCanceled = indicator.isCanceled();
       myFraction = indicator.getFraction();
       myIndeterminate = indicator.isIndeterminate();
-      myText = indicator.getText();
-
-      myText2 = indicator.getText2();
+      myText = indicator.getTextValue();
+      myText2 = indicator.getText2Value();
 
       myFraction = indicator.getFraction();
 
@@ -314,8 +311,8 @@ public class AbstractProgressIndicatorBase extends UserDataHolderBase implements
   }
 
   @Nonnull
-  private Stack<String> getTextStack() {
-    Stack<String> stack = myTextStack;
+  private Stack<LocalizeValue> getTextStack() {
+    Stack<LocalizeValue> stack = myTextStack;
     if (stack == null) myTextStack = stack = new Stack<>(2);
     return stack;
   }
@@ -328,8 +325,8 @@ public class AbstractProgressIndicatorBase extends UserDataHolderBase implements
   }
 
   @Nonnull
-  private Stack<String> getText2Stack() {
-    Stack<String> stack = myText2Stack;
+  private Stack<LocalizeValue> getText2Stack() {
+    Stack<LocalizeValue> stack = myText2Stack;
     if (stack == null) myText2Stack = stack = new Stack<>(2);
     return stack;
   }

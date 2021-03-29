@@ -20,8 +20,9 @@ import com.intellij.openapi.progress.TaskInfo;
 import com.intellij.openapi.wm.ex.ProgressIndicatorEx;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.containers.WeakList;
-import javax.annotation.Nonnull;
+import consulo.localize.LocalizeValue;
 
+import javax.annotation.Nonnull;
 import java.util.Collection;
 
 public class AbstractProgressIndicatorExBase extends AbstractProgressIndicatorBase implements ProgressIndicatorEx {
@@ -103,17 +104,17 @@ public class AbstractProgressIndicatorExBase extends AbstractProgressIndicatorBa
   }
 
   @Override
-  public void setText(final String text) {
-    super.setText(text);
+  public void setTextValue(final LocalizeValue text) {
+    super.setTextValue(text);
 
-    delegateProgressChange(each -> each.setText(text));
+    delegateProgressChange(each -> each.setTextValue(text));
   }
 
   @Override
-  public void setText2(final String text) {
-    super.setText2(text);
+  public void setText2Value(final LocalizeValue text) {
+    super.setText2Value(text);
 
-    delegateProgressChange(each -> each.setText2(text));
+    delegateProgressChange(each -> each.setText2Value(text));
   }
 
   @Override

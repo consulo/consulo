@@ -27,7 +27,9 @@ import com.intellij.openapi.wm.StatusBarWidget;
 import com.intellij.openapi.wm.ex.ProgressIndicatorEx;
 import com.intellij.reference.SoftReference;
 import com.intellij.ui.AnimatedIcon;
-import com.intellij.ui.*;
+import com.intellij.ui.Gray;
+import com.intellij.ui.InplaceButton;
+import com.intellij.ui.TabbedPaneWrapper;
 import com.intellij.ui.awt.RelativePoint;
 import com.intellij.ui.components.labels.LinkLabel;
 import com.intellij.ui.components.panels.Wrapper;
@@ -44,9 +46,10 @@ import consulo.desktop.util.awt.migration.AWTComponentProviderUtil;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.fileEditor.impl.EditorsSplitters;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
-import consulo.ui.impl.BalloonLayoutEx;
 import consulo.ui.image.Image;
+import consulo.ui.impl.BalloonLayoutEx;
 import consulo.ui.impl.ToolWindowPanelImplEx;
 
 import javax.annotation.Nonnull;
@@ -718,11 +721,12 @@ public class InfoAndProgressPanel extends JPanel implements CustomStatusBarWidge
       runOnProgressRelatedChange(this::queueProgressUpdate, this);
     }
 
+    @Nonnull
     @Override
-    public String getText() {
-      String text = StringUtil.notNullize(super.getText());
+    public LocalizeValue getTextValue() {
+      LocalizeValue textValue = super.getTextValue();
       ProgressSuspender suspender = getSuspender();
-      return suspender != null && suspender.isSuspended() ? suspender.getSuspendedText() : text;
+      return suspender != null && suspender.isSuspended() ? LocalizeValue.of(suspender.getSuspendedText()) : textValue;
     }
 
     @Override

@@ -17,6 +17,7 @@
 package com.intellij.openapi.progress;
 
 import com.intellij.openapi.application.ModalityState;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 
 import javax.annotation.Nonnull;
@@ -75,21 +76,21 @@ public class EmptyProgressIndicator implements StandardProgressIndicator {
   }
 
   @Override
-  public void setText(String text) {
+  public void setTextValue(LocalizeValue text) {
   }
 
   @Override
-  public String getText() {
-    return "";
+  public LocalizeValue getTextValue() {
+    return LocalizeValue.empty();
   }
 
   @Override
-  public void setText2(String text) {
+  public void setText2Value(LocalizeValue text) {
   }
 
   @Override
-  public String getText2() {
-    return "";
+  public LocalizeValue getText2Value() {
+    return LocalizeValue.empty();
   }
 
   @Override

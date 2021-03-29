@@ -19,6 +19,7 @@ import com.intellij.ide.IdeEventQueue;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.SystemInfo;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 
 public class DispatchThreadProgressWindow extends ProgressWindow{
@@ -33,8 +34,8 @@ public class DispatchThreadProgressWindow extends ProgressWindow{
   }
 
   @Override
-  public void setText(String text) {
-    super.setText(text);
+  public void setTextValue(LocalizeValue text) {
+    super.setText2Value(text);
     pumpEvents();
   }
 
@@ -45,8 +46,8 @@ public class DispatchThreadProgressWindow extends ProgressWindow{
   }
 
   @Override
-  public void setText2(String text) {
-    super.setText2(text);
+  public void setText2Value(LocalizeValue text) {
+    super.setText2Value(text);
     pumpEvents();
   }
 

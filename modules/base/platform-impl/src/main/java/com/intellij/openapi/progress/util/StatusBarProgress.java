@@ -7,6 +7,7 @@ import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.wm.StatusBar;
 import com.intellij.openapi.wm.WindowManager;
+import consulo.localize.LocalizeValue;
 import consulo.util.lang.ObjectUtil;
 
 import javax.swing.*;
@@ -47,8 +48,8 @@ public class StatusBarProgress extends ProgressIndicatorBase {
   }
 
   @Override
-  public void setText(String text) {
-    super.setText(text);
+  public void setTextValue(LocalizeValue text) {
+    super.setTextValue(text);
     update();
   }
 

@@ -15,7 +15,6 @@
  */
 package com.intellij.openapi.progress.util;
 
-import consulo.disposer.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.application.impl.LaterInvocator;
@@ -24,13 +23,15 @@ import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.progress.TaskInfo;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Comparing;
-import consulo.disposer.Disposer;
 import com.intellij.openapi.util.EmptyRunnable;
 import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.openapi.wm.ex.ProgressIndicatorEx;
 import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.messages.Topic;
 import com.intellij.util.ui.UIUtil;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.progress.util.ProgressDialog;
 import consulo.progress.util.ProgressDialogFactory;
@@ -262,9 +263,9 @@ public class ProgressWindow extends ProgressIndicatorBase implements BlockingPro
   }
 
   @Override
-  public void setText(String text) {
-    if (!Comparing.equal(text, getText())) {
-      super.setText(text);
+  public void setTextValue(LocalizeValue text) {
+    if (!Comparing.equal(text, getTextValue())) {
+      super.setTextValue(text);
       update();
     }
   }
@@ -278,9 +279,9 @@ public class ProgressWindow extends ProgressIndicatorBase implements BlockingPro
   }
 
   @Override
-  public void setText2(String text) {
-    if (!Comparing.equal(text, getText2())) {
-      super.setText2(text);
+  public void setText2Value(LocalizeValue text) {
+    if (!Comparing.equal(text, getText2Value())) {
+      super.setText2Value(text);
       update();
     }
   }

@@ -20,6 +20,7 @@ import com.intellij.analysis.AnalysisScopeBundle;
 import com.intellij.openapi.progress.util.ProgressIndicatorBase;
 import com.intellij.util.Consumer;
 import com.intellij.util.concurrency.EdtExecutorService;
+import consulo.localize.LocalizeValue;
 
 import javax.swing.*;
 import java.util.concurrent.CompletableFuture;
@@ -61,9 +62,9 @@ public class PanelProgressIndicator extends ProgressIndicatorBase {
   }
 
   @Override
-  public void setText(String text) {
-    if (!text.equals(getText())) {
-      super.setText(text);
+  public void setTextValue(LocalizeValue text) {
+    if (!text.equals(getTextValue())) {
+      super.setTextValue(text);
     }
   }
 

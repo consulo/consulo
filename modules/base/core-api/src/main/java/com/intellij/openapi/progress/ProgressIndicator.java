@@ -16,6 +16,9 @@
 package com.intellij.openapi.progress;
 
 import com.intellij.openapi.application.ModalityState;
+import consulo.localize.LocalizeValue;
+import consulo.util.lang.StringUtil;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -87,12 +90,32 @@ public interface ProgressIndicator {
    * @param text Text to set
    * @see #setText2(String)
    */
-  void setText(String text);
+  default void setText(String text) {
+    setTextValue(StringUtil.isEmpty(text) ? LocalizeValue.empty() : LocalizeValue.of(text));
+  }
+
+  /**
+   * Sets text above the progress bar
+   *
+   * @param text Text to set
+   * @see #setTextValue2(LocalizeValue)
+   */
+  void setTextValue(@Nonnull LocalizeValue textValue);
 
   /**
    * @return text above the progress bar, set by {@link #setText(String)}
    */
-  String getText();
+  @Nullable
+  default String getText() {
+    LocalizeValue value = getTextValue();
+    if(value == LocalizeValue.empty()) {
+      return null;
+    }
+    return value.get();
+  }
+
+  @Nonnull
+  LocalizeValue getTextValue();
 
   /**
    * Sets text under the progress bar
@@ -100,12 +123,32 @@ public interface ProgressIndicator {
    * @param text Text to set
    * @see #setText(String)
    */
-  void setText2(String text);
+  default void setText2(String text) {
+    setText2Value(StringUtil.isEmpty(text) ? LocalizeValue.empty() : LocalizeValue.of(text));
+  }
+
+  /**
+   * Sets text under the progress bar
+   *
+   * @param text Text to set
+   * @see #setText(String)
+   */
+  void setText2Value(@Nonnull LocalizeValue text);
 
   /**
    * @return text under the progress bar, set by {@link #setText2(String)}
    */
-  String getText2();
+  @Nullable
+  default String getText2() {
+    LocalizeValue value = getText2Value();
+    if (value == LocalizeValue.empty()) {
+      return null;
+    }
+    return value.get();
+  }
+
+  @Nonnull
+  LocalizeValue getText2Value();
 
   /**
    * @return current fraction, set by {@link #setFraction(double)}

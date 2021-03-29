@@ -18,7 +18,9 @@ package com.intellij.util.indexing;
 import com.intellij.ide.util.DelegatingProgressIndicator;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
+import consulo.localize.LocalizeValue;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
@@ -38,20 +40,22 @@ class SilentProgressIndicator extends DelegatingProgressIndicator {
   }
 
   @Override
-  public void setText(String text) {
+  public void setTextValue(LocalizeValue text) {
+  }
+
+  @Nonnull
+  @Override
+  public LocalizeValue getTextValue() {
+    return LocalizeValue.empty();
   }
 
   @Override
-  public String getText() {
-    return "";
+  public void setText2Value(LocalizeValue text) {
   }
 
+  @Nonnull
   @Override
-  public void setText2(String text) {
-  }
-
-  @Override
-  public String getText2() {
-    return "";
+  public LocalizeValue getText2Value() {
+    return LocalizeValue.empty();
   }
 }
