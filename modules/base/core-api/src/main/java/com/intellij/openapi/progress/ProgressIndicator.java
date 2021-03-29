@@ -16,6 +16,7 @@
 package com.intellij.openapi.progress;
 
 import com.intellij.openapi.application.ModalityState;
+import consulo.annotation.DeprecationInfo;
 import consulo.localize.LocalizeValue;
 import consulo.util.lang.StringUtil;
 
@@ -90,6 +91,8 @@ public interface ProgressIndicator {
    * @param text Text to set
    * @see #setText2(String)
    */
+  @Deprecated
+  @DeprecationInfo("Use setTextValue(LocalizeValue) instead")
   default void setText(String text) {
     setTextValue(StringUtil.isEmpty(text) ? LocalizeValue.empty() : LocalizeValue.of(text));
   }
@@ -123,6 +126,8 @@ public interface ProgressIndicator {
    * @param text Text to set
    * @see #setText(String)
    */
+  @Deprecated
+  @DeprecationInfo("Use setText2Value(LocalizeValue) instead")
   default void setText2(String text) {
     setText2Value(StringUtil.isEmpty(text) ? LocalizeValue.empty() : LocalizeValue.of(text));
   }
