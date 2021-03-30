@@ -17,14 +17,18 @@
 package com.intellij.execution.actions;
 
 import com.intellij.execution.impl.EditConfigurationsDialog;
-import com.intellij.openapi.actionSystem.*;
+import com.intellij.openapi.actionSystem.ActionPlaces;
+import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.actionSystem.CommonDataKeys;
+import com.intellij.openapi.actionSystem.Presentation;
+import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.localize.ExecutionLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 
-public class EditRunConfigurationsAction extends AnAction {
+public class EditRunConfigurationsAction extends DumbAwareAction {
   @RequiredUIAccess
   @Override
   public void actionPerformed(final AnActionEvent e) {
