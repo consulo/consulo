@@ -292,7 +292,7 @@
             <action id="ImportSettings" class="com.intellij.ide.actions.ImportSettingsAction"/>
             <action id="ExportSettings" class="com.intellij.ide.actions.ExportSettingsAction"/>
           </group>
-          <action id="ShowStartupManagerAction" class="consulo.ide.actions.ShowStartupManagerAction" text="Customize Manager" />
+          <action id="ShowStartupManagerAction" class="consulo.ide.actions.ShowStartupManagerAction" text="Customize Manager"/>
         </group>
         <separator/>
         <action id="SaveAll" class="com.intellij.ide.actions.SaveAllAction" icon="consulo.platform.base.PlatformIconGroup@actions.menu_saveall"/>
@@ -1045,7 +1045,7 @@
       <group id="RunContextGroupInner"/>
       <separator/>
     </group>
-    
+
     <group id="RunContextPopupGroup" popup="false">
       <reference ref="RunContextGroup"/>
     </group>
@@ -1430,7 +1430,7 @@
     </group>
 
     <group id="NavBarToolBarOthers"/>
-    
+
     <group id="NavBarToolBar">
       <reference ref="ToolbarRunGroup"/>
       <separator/>
@@ -2402,7 +2402,7 @@
     <action id="ShowFilterPopup" class="com.intellij.find.editorHeaderActions.ShowMoreOptions" text="Show Filter Popup"/>
     <action id="ShowSearchHistory" class="com.intellij.find.actions.ShowSearchHistoryAction" text="Show Search History"/>
 
-    <action id="SelectInProjectView" icon="consulo.platform.base.PlatformIconGroup@general.locate" class="com.intellij.ide.projectView.impl.SelectFileAction" />
+    <action id="SelectInProjectView" icon="consulo.platform.base.PlatformIconGroup@general.locate" class="com.intellij.ide.projectView.impl.SelectFileAction"/>
 
     <group id="ProjectViewToolbar">
       <reference ref="SelectInProjectView"/>

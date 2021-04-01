@@ -24,13 +24,15 @@ import com.intellij.openapi.wm.impl.status.widget.StatusBarWidgetsManager;
 import com.intellij.ui.AnActionButton;
 import com.intellij.util.Consumer;
 import com.intellij.util.concurrency.AppExecutorUtil;
+import consulo.ide.updateSettings.UpdateSettings;
+import consulo.ide.updateSettings.impl.PlatformOrPluginUpdateResult;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.UIAccess;
 import consulo.ui.image.Image;
 import org.jetbrains.annotations.Nls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.util.Collection;
@@ -44,7 +46,7 @@ public final class SettingsEntryPointAction extends DumbAwareAction implements R
 
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
-    resetActionIcon();
+    // why? resetActionIcon();
 
     if (myShowPopup) {
       myShowPopup = false;
@@ -58,7 +60,9 @@ public final class SettingsEntryPointAction extends DumbAwareAction implements R
     Presentation presentation = e.getPresentation();
     presentation.setText("");
     presentation.setDescription(getActionTooltip());
-    presentation.setIcon(getActionIcon());
+    presentation.setIcon(getActionIcon(ourIconState));
+
+    updateState(UpdateSettings.getInstance());
 
     for (AnAction child : getTemplateActions()) {
       child.update(AnActionEvent.createFromAnAction(this, e.getInputEvent(), e.getPlace(), e.getDataContext()));
@@ -80,11 +84,9 @@ public final class SettingsEntryPointAction extends DumbAwareAction implements R
       if (!actions.isEmpty()) {
         for (AnAction action : actions) {
           Presentation presentation = action.getTemplatePresentation();
-          if (presentation.getClientProperty(ActionProvider.ICON_KEY) == IconState.ApplicationUpdate) {
-            presentation.setIcon(PlatformIconGroup.ideNotificationIdeUpdate());
-          }
-          else {
-            presentation.setIcon(PlatformIconGroup.ideNotificationPluginUpdate());
+          IconState iconState = (IconState)presentation.getClientProperty(ActionProvider.ICON_KEY);
+          if (iconState != null) {
+            presentation.setIcon(getActionIcon(iconState));
           }
           group.add(action);
         }
@@ -129,16 +131,30 @@ public final class SettingsEntryPointAction extends DumbAwareAction implements R
     }, -1);
   }
 
-  private static boolean myShowPlatformUpdateIcon;
-  private static boolean myShowPluginsUpdateIcon;
+  private static IconState ourIconState = IconState.Default;
+
+  public static void updateState(UpdateSettings updateSettings) {
+    PlatformOrPluginUpdateResult.Type lastCheckResult = updateSettings.getLastCheckResult();
+
+    switch (lastCheckResult) {
+      case PLATFORM_UPDATE:
+        updateState(IconState.ApplicationUpdate);
+        break;
+      case RESTART_REQUIRED:
+        updateState(IconState.RestartRequired);
+        break;
+      case PLUGIN_UPDATE:
+        updateState(IconState.ApplicationComponentUpdate);
+        break;
+      default:
+        resetActionIcon();
+        break;
+    }
+  }
 
   public static void updateState(IconState state) {
-    if (state == IconState.ApplicationUpdate) {
-      myShowPlatformUpdateIcon = true;
-    }
-    else if (state == IconState.ApplicationComponentUpdate) {
-      myShowPluginsUpdateIcon = true;
-    }
+    ourIconState = state;
+
     if (isAvailableInStatusBar()) {
       updateWidgets();
     }
@@ -151,16 +167,18 @@ public final class SettingsEntryPointAction extends DumbAwareAction implements R
   }
 
   private static void resetActionIcon() {
-    myShowPlatformUpdateIcon = myShowPluginsUpdateIcon = false;
+    ourIconState = IconState.Default;
   }
 
   @Nonnull
-  private static Image getActionIcon() {
-    if (myShowPlatformUpdateIcon) {
-      return PlatformIconGroup.ideNotificationIdeUpdate();
-    }
-    if (myShowPluginsUpdateIcon) {
-      return PlatformIconGroup.ideNotificationPluginUpdate();
+  private static Image getActionIcon(IconState iconState) {
+    switch (iconState) {
+      case ApplicationUpdate:
+        return PlatformIconGroup.ideNotificationIdeUpdate();
+      case ApplicationComponentUpdate:
+        return PlatformIconGroup.ideNotificationPluginUpdate();
+      case RestartRequired:
+        return PlatformIconGroup.ideNotificationRestartRequiredUpdate();
     }
     return AllIcons.General.GearPlain;
   }
@@ -264,7 +282,7 @@ public final class SettingsEntryPointAction extends DumbAwareAction implements R
     @Nullable
     public Consumer<MouseEvent> getClickConsumer() {
       return event -> {
-        resetActionIcon();
+        // why? resetActionIcon();
         myStatusBar.updateWidget(WIDGET_ID);
 
         if (!myShowPopup) {
@@ -289,7 +307,7 @@ public final class SettingsEntryPointAction extends DumbAwareAction implements R
     @Override
     @Nullable
     public Image getIcon() {
-      return getActionIcon();
+      return getActionIcon(ourIconState);
     }
 
     @Override
@@ -298,9 +316,10 @@ public final class SettingsEntryPointAction extends DumbAwareAction implements R
   }
 
   public enum IconState {
-    Current,
+    Default,
     ApplicationUpdate,
-    ApplicationComponentUpdate
+    ApplicationComponentUpdate,
+    RestartRequired
   }
 
   public interface ActionProvider {

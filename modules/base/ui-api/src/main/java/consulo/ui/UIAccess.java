@@ -61,6 +61,12 @@ public interface UIAccess {
     }
   }
 
+  static void assetIsNotUIThread() {
+    if(isUIThread()) {
+      throw new IllegalArgumentException("Call must be wrapped outside UI thread. Current thread: " + Thread.currentThread().getName());
+    }
+  }
+
   boolean isValid();
 
   @Nonnull

@@ -29,7 +29,6 @@ import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.ui.border.CustomLineBorder;
 import com.intellij.ui.components.JBLabel;
 import com.intellij.util.containers.ContainerUtil;
-import java.util.HashSet;
 import com.intellij.util.ui.ColumnInfo;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
@@ -37,7 +36,9 @@ import com.intellij.util.ui.components.BorderLayoutPanel;
 import consulo.awt.TargetAWT;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginId;
+import consulo.container.plugin.PluginManager;
 import consulo.ide.plugins.InstalledPluginsState;
+import consulo.ide.updateSettings.UpdateSettings;
 import consulo.logging.Logger;
 
 import javax.annotation.Nonnull;
@@ -160,7 +161,7 @@ public class PlatformOrPluginDialog extends DialogWrapper {
     }
     else {
       myGreenStrategy = pluginId -> {
-        PluginDescriptor plugin = PluginManager.getPlugin(pluginId);
+        PluginDescriptor plugin = PluginManager.findPlugin(pluginId);
         boolean platform = PlatformOrPluginUpdateChecker.isPlatform(pluginId);
         return plugin == null && !platform;
       };
@@ -228,7 +229,6 @@ public class PlatformOrPluginDialog extends DialogWrapper {
         PluginDescriptor pluginDescriptor = platformOrPluginNode.getFutureDescriptor();
         // update list contains broken plugins
         if (pluginDescriptor == null) {
-
           continue;
         }
 
@@ -262,6 +262,9 @@ public class PlatformOrPluginDialog extends DialogWrapper {
       if (myType != PlatformOrPluginUpdateResult.Type.PLUGIN_INSTALL) {
         if (PluginInstallUtil.showRestartIDEADialog() == Messages.YES) {
           ApplicationManagerEx.getApplicationEx().restart(true);
+        }
+        else {
+          UpdateSettings.getInstance().setLastCheckResult(PlatformOrPluginUpdateResult.Type.RESTART_REQUIRED);
         }
       }
     });

@@ -49,6 +49,8 @@ import consulo.ide.webService.WebServiceApi;
 import consulo.ide.webService.WebServiceException;
 import consulo.logging.Logger;
 import consulo.platform.impl.action.LastActionTracker;
+import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
@@ -172,9 +174,10 @@ public class ITNReporter extends ErrorReportSubmitter {
         notification.setTitle(ReportMessages.ERROR_REPORT);
         notification.setImportant(false);
         notification.addAction(new NotificationAction(ActionsBundle.actionText("CheckForUpdate")) {
+          @RequiredUIAccess
           @Override
           public void actionPerformed(@Nonnull AnActionEvent e, @Nonnull Notification notification) {
-            CheckForUpdateAction.actionPerformed(e.getData(CommonDataKeys.PROJECT), UpdateSettings.getInstance());
+            CheckForUpdateAction.actionPerformed(e.getData(CommonDataKeys.PROJECT), UpdateSettings.getInstance(), UIAccess.current());
           }
         });
         notification.notify(project);

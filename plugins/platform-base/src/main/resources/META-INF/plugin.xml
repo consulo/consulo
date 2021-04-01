@@ -2791,6 +2791,8 @@
                     serviceImplementation="com.intellij.build.SyncViewManager"/>
     <projectService serviceInterface="com.intellij.build.BuildWorkspaceConfiguration"
                     serviceImplementation="com.intellij.build.BuildWorkspaceConfigurationImpl"/>
+
+    <settingsEntryPointActionProvider implementation="com.intellij.openapi.updateSettings.impl.UpdateSettingsEntryPointActionProvider"/>
   </extensions>
 
   <applicationListeners>

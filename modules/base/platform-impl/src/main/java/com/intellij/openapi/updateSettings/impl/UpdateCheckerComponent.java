@@ -15,11 +15,13 @@
  */
 package com.intellij.openapi.updateSettings.impl;
 
+import com.intellij.ide.actions.SettingsEntryPointAction;
 import com.intellij.util.concurrency.AppExecutorUtil;
 import com.intellij.util.text.DateFormatUtil;
 import consulo.disposer.Disposable;
 import consulo.ide.updateSettings.UpdateSettings;
 import consulo.ide.updateSettings.impl.PlatformOrPluginUpdateChecker;
+import consulo.ide.updateSettings.impl.PlatformOrPluginUpdateResult;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -51,6 +53,13 @@ public class UpdateCheckerComponent implements Disposable {
 
     final long interval = myUpdateSettings.getLastTimeCheck() + ourCheckInterval - System.currentTimeMillis();
     queueNextUpdateCheck(PlatformOrPluginUpdateChecker.checkNeeded() ? ourCheckInterval : Math.max(interval, DateFormatUtil.MINUTE));
+
+    // reset on restart
+    PlatformOrPluginUpdateResult.Type lastCheckResult = updateSettings.getLastCheckResult();
+    if(lastCheckResult == PlatformOrPluginUpdateResult.Type.RESTART_REQUIRED) {
+      updateSettings.setLastCheckResult(PlatformOrPluginUpdateResult.Type.NO_UPDATE);
+      SettingsEntryPointAction.updateState(updateSettings);
+    }
   }
 
   private void queueNextUpdateCheck(long interval) {

@@ -16,7 +16,10 @@
 package consulo.ide.updateSettings.impl;
 
 import com.intellij.ide.IdeBundle;
-import com.intellij.ide.plugins.*;
+import com.intellij.ide.actions.SettingsEntryPointAction;
+import com.intellij.ide.plugins.PluginManagerMain;
+import com.intellij.ide.plugins.PluginNode;
+import com.intellij.ide.plugins.RepositoryHelper;
 import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.notification.*;
 import com.intellij.openapi.actionSystem.AnActionEvent;
@@ -26,7 +29,6 @@ import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
-import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.ArrayUtil;
@@ -44,7 +46,9 @@ import consulo.ide.plugins.pluginsAdvertisement.PluginsAdvertiserHolder;
 import consulo.ide.updateSettings.UpdateChannel;
 import consulo.ide.updateSettings.UpdateSettings;
 import consulo.logging.Logger;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.util.concurrent.AsyncResult;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -135,15 +139,21 @@ public class PlatformOrPluginUpdateChecker {
   }
 
   @Nonnull
-  public static AsyncResult<Void> updateAndShowResult() {
-    final AsyncResult<Void> result = AsyncResult.undefined();
+  public static AsyncResult<PlatformOrPluginUpdateResult.Type> updateAndShowResult() {
+    final AsyncResult<PlatformOrPluginUpdateResult.Type> result = AsyncResult.undefined();
     final Application app = Application.get();
+
+    UIAccess lastUIAccess = app.getLastUIAccess();
+
     final UpdateSettings updateSettings = UpdateSettings.getInstance();
-    if (!updateSettings.isEnable()) {
-      result.setDone();
-      return result;
+    if (updateSettings.isEnable()) {
+      app.executeOnPooledThread(() -> checkAndNotifyForUpdates(null, false, null, lastUIAccess, result));
     }
-    app.executeOnPooledThread(() -> checkAndNotifyForUpdates(null, false, null).notify(result));
+    else {
+      registerSettingsGroupUpdate(result);
+
+      result.setDone(PlatformOrPluginUpdateResult.Type.NO_UPDATE);
+    }
     return result;
   }
 
@@ -165,7 +175,7 @@ public class PlatformOrPluginUpdateChecker {
           ourGroup.createNotification(IdeBundle.message("update.available.group"), IdeBundle.message("update.there.are.no.updates"), NotificationType.INFORMATION, null).notify(project);
         }
         break;
-      case UPDATE_RESTART:
+      case RESTART_REQUIRED:
         PluginManagerMain.notifyPluginsWereInstalled(Collections.emptyList(), null);
         break;
       case PLUGIN_UPDATE:
@@ -188,20 +198,36 @@ public class PlatformOrPluginUpdateChecker {
     }
   }
 
-  public static AsyncResult<Void> checkAndNotifyForUpdates(@Nullable Project project, boolean showResults, @Nullable ProgressIndicator indicator) {
-    AsyncResult<Void> actionCallback = AsyncResult.undefined();
+  private static void registerSettingsGroupUpdate(@Nonnull AsyncResult<PlatformOrPluginUpdateResult.Type> result) {
+    result.doWhenDone(type -> {
+      UIAccess lastUIAccess = Application.get().getLastUIAccess();
+
+      UpdateSettings updateSettings = UpdateSettings.getInstance();
+      updateSettings.setLastCheckResult(type);
+      lastUIAccess.give(() -> SettingsEntryPointAction.updateState(updateSettings));
+    });
+  }
+
+  public static void checkAndNotifyForUpdates(@Nullable Project project,
+                                              boolean showResults,
+                                              @Nullable ProgressIndicator indicator,
+                                              @Nonnull UIAccess uiAccess,
+                                              @Nonnull AsyncResult<PlatformOrPluginUpdateResult.Type> result) {
+    UIAccess.assetIsNotUIThread();
+
+    registerSettingsGroupUpdate(result);
+
     PlatformOrPluginUpdateResult updateResult = checkForUpdates(showResults, indicator);
     if (updateResult == PlatformOrPluginUpdateResult.CANCELED) {
-      actionCallback.setDone();
-      return actionCallback;
+      result.setDone(PlatformOrPluginUpdateResult.Type.CANCELED);
+      return;
     }
 
-    UIUtil.invokeLaterIfNeeded(() -> {
-      actionCallback.setDone();
+    uiAccess.give(() -> {
+      result.setDone(updateResult.getType());
 
       showUpdateResult(project, updateResult, showResults);
     });
-    return actionCallback;
   }
 
   @Nonnull
@@ -252,7 +278,7 @@ public class PlatformOrPluginUpdateChecker {
       thisPlatform.setVersion(appInfo.getBuild().asString());
       thisPlatform.setName(newPlatformPlugin.getName());
 
-      if(newPlatformPlugin instanceof PluginNode) {
+      if (newPlatformPlugin instanceof PluginNode) {
         ((PluginNode)newPlatformPlugin).setInitializedIcon(PluginIconHolder.decorateIcon(Application.get().getIcon()));
       }
 
@@ -326,7 +352,7 @@ public class PlatformOrPluginUpdateChecker {
     }
 
     if (alreadyVisited && targets.isEmpty()) {
-      return PlatformOrPluginUpdateResult.UPDATE_RESTART;
+      return PlatformOrPluginUpdateResult.RESTART_REQUIRED;
     }
     return targets.isEmpty() ? PlatformOrPluginUpdateResult.NO_UPDATE : new PlatformOrPluginUpdateResult(PlatformOrPluginUpdateResult.Type.PLUGIN_UPDATE, targets);
   }

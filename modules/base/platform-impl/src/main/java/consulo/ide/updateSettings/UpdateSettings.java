@@ -18,6 +18,8 @@ package consulo.ide.updateSettings;
 import com.intellij.openapi.components.*;
 import consulo.application.ApplicationProperties;
 import consulo.container.boot.ContainerPathManager;
+import consulo.ide.updateSettings.impl.PlatformOrPluginUpdateResult;
+import consulo.util.lang.ObjectUtil;
 import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
@@ -28,9 +30,7 @@ import java.io.File;
  * @since 02-Sep-16
  */
 @Singleton
-@State(
-        name = "UpdateSettings",
-        storages = {@Storage(file = StoragePathMacros.APP_CONFIG + "/updates.xml", roamingType = RoamingType.DISABLED)})
+@State(name = "UpdateSettings", storages = {@Storage(file = "updates.xml", roamingType = RoamingType.DISABLED)})
 public class UpdateSettings implements PersistentStateComponent<UpdateSettings.State> {
   @Nonnull
   public static UpdateSettings getInstance() {
@@ -41,13 +41,14 @@ public class UpdateSettings implements PersistentStateComponent<UpdateSettings.S
     public boolean enable = true;
     public long lastTimeCheck = 0;
     public UpdateChannel channel;
+    public PlatformOrPluginUpdateResult.Type lastCheckResult = PlatformOrPluginUpdateResult.Type.NO_UPDATE;
   }
 
   private State myState = new State();
 
   @Nonnull
   private static UpdateChannel findDefaultChannel() {
-    if(ApplicationProperties.isInSandbox()) {
+    if (ApplicationProperties.isInSandbox()) {
       return UpdateChannel.nightly;
     }
 
@@ -68,6 +69,14 @@ public class UpdateSettings implements PersistentStateComponent<UpdateSettings.S
       myState.channel = channel = findDefaultChannel();
     }
     return channel;
+  }
+
+  public void setLastCheckResult(PlatformOrPluginUpdateResult.Type type) {
+    myState.lastCheckResult = type;
+  }
+
+  public PlatformOrPluginUpdateResult.Type getLastCheckResult() {
+    return ObjectUtil.notNull(myState.lastCheckResult, PlatformOrPluginUpdateResult.Type.NO_UPDATE);
   }
 
   public void setChannel(@Nonnull UpdateChannel channel) {

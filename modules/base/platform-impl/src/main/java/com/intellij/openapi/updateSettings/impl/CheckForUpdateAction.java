@@ -16,26 +16,36 @@
 package com.intellij.openapi.updateSettings.impl;
 
 import com.intellij.openapi.actionSystem.ActionPlaces;
-import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
-import com.intellij.openapi.progress.ProgressIndicator;
-import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.progress.Task;
-import com.intellij.openapi.project.DumbAware;
+import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.openapi.project.Project;
 import consulo.actionSystem.ex.TopApplicationMenuUtil;
+import consulo.ide.updateSettings.UpdateSettings;
 import consulo.ide.updateSettings.impl.PlatformOrPluginUpdateChecker;
+import consulo.ide.updateSettings.impl.PlatformOrPluginUpdateResult;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.util.concurrent.AsyncResult;
+import jakarta.inject.Inject;
+import jakarta.inject.Provider;
 
 import javax.annotation.Nonnull;
 
-public class CheckForUpdateAction extends AnAction implements DumbAware {
+public class CheckForUpdateAction extends DumbAwareAction {
+  private final Provider<UpdateSettings> myUpdateSettingsProvider;
+
+  @Inject
+  public CheckForUpdateAction(Provider<UpdateSettings> updateSettingsProvider) {
+    myUpdateSettingsProvider = updateSettingsProvider;
+  }
+
   @RequiredUIAccess
   @Override
   public void update(@Nonnull AnActionEvent e) {
     String place = e.getPlace();
-    if (ActionPlaces.WELCOME_SCREEN.equals(place)) {
+    if (ActionPlaces.WELCOME_SCREEN.equals(place) || "SettingsEntryPointGroup".equals(place)) {
       e.getPresentation().setEnabledAndVisible(true);
     }
     else {
@@ -48,18 +58,17 @@ public class CheckForUpdateAction extends AnAction implements DumbAware {
   public void actionPerformed(@Nonnull AnActionEvent e) {
     Project project = e.getData(CommonDataKeys.PROJECT);
 
-    actionPerformed(project, consulo.ide.updateSettings.UpdateSettings.getInstance());
+    actionPerformed(project, myUpdateSettingsProvider.get(), UIAccess.current());
   }
 
-  public static void actionPerformed(Project project, final consulo.ide.updateSettings.UpdateSettings updateSettings) {
-    ProgressManager.getInstance().run(new Task.Backgroundable(project, "Checking for updates", true) {
-      @Override
-      public void run(@Nonnull ProgressIndicator indicator) {
-        indicator.setIndeterminate(true);
+  public static void actionPerformed(Project project, UpdateSettings updateSettings, UIAccess uiAccess) {
+    Task.Backgroundable.queue(project, "Checking for updates", true, indicator -> {
+      indicator.setIndeterminate(true);
 
-        PlatformOrPluginUpdateChecker.checkAndNotifyForUpdates(project, true, indicator)
-                .doWhenDone(() -> updateSettings.setLastTimeCheck(System.currentTimeMillis()));
-      }
+      AsyncResult<PlatformOrPluginUpdateResult.Type> result = AsyncResult.undefined();
+      result.doWhenDone(() -> updateSettings.setLastTimeCheck(System.currentTimeMillis()));
+
+      PlatformOrPluginUpdateChecker.checkAndNotifyForUpdates(project, true, indicator, uiAccess, result);
     });
   }
 }
