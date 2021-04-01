@@ -62,6 +62,7 @@
     <action id="SearchEverywhere" class="com.intellij.ide.actions.SearchEverywhereAction" icon="consulo.platform.base.PlatformIconGroup@actions.find"/>
     <action id="RunAnything" icon="consulo.platform.base.PlatformIconGroup@actions.run_anything" class="com.intellij.ide.actions.runAnything.RunAnythingAction" text="Run anything"
             description="Allows to execute any command"/>
+    <action id="SettingsEntryPoint" class="com.intellij.ide.actions.SettingsEntryPointAction" icon="consulo.platform.base.PlatformIconGroup@general.gearplain"/>
 
     <group id="TemplateParametersNavigation">
       <action id="NextTemplateParameter" class="com.intellij.codeInsight.completion.NextPrevParameterAction$Next" text="Next Parameter">
@@ -643,7 +644,7 @@
 
     <group id="WelcomeScreen.Configure">
       <action id="WelcomeScreen.Settings" class="com.intellij.ide.actions.ShowSettingsAction" icon="consulo.platform.base.PlatformIconGroup@general.configure"/>
-      <action id="WelcomeScreen.Plugins" class="com.intellij.ide.actions.ShowPluginManagerAction" icon="consulo.platform.base.PlatformIconGroup@general.pluginmanager"/>
+      <action id="WelcomeScreen.Plugins" class="com.intellij.ide.actions.ShowPluginManagerAction"/>
 
       <action id="WelcomeScreen.Configure.Import" class="com.intellij.ide.actions.ImportSettingsAction"
               icon="consulo.platform.base.PlatformIconGroup@general.importsettings"/>
@@ -1429,6 +1430,7 @@
     </group>
 
     <group id="NavBarToolBarOthers"/>
+    
     <group id="NavBarToolBar">
       <reference ref="ToolbarRunGroup"/>
       <separator/>
@@ -1438,8 +1440,8 @@
       <separator/>
       <reference ref="ShowProjectStructureSettings"/>
       <separator/>
-      <reference ref="RunAnything"/>
       <reference ref="SearchEverywhere"/>
+      <reference ref="SettingsEntryPoint"/>
       <reference ref="Login"/>
     </group>
 
@@ -2406,6 +2408,17 @@
       <reference ref="SelectInProjectView"/>
       <reference ref="ExpandAll"/>
       <reference ref="CollapseAll"/>
+    </group>
+
+    <group id="SettingsEntryPointGroup">
+      <reference id="RunAnything"/>
+      <separator/>
+      <reference id="ShowProjectStructureSettings"/>
+      <reference id="ShowSettings"/>
+      <reference id="WelcomeScreen.Plugins"/>
+      <separator/>
+      <reference id="ChangeLaf"/>
+      <reference id="ChangeKeymap"/>
     </group>
   </actions>
 </consulo-plugin>

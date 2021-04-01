@@ -826,7 +826,7 @@ public class AllIcons {
     public static final Image PpLib = PlatformIconGroup.nodesPpLib(); // 16x16
     public static final Image PpLibFolder = PlatformIconGroup.nodesPpLibFolder(); // 16x16
     public static final Image PpWeb = PlatformIconGroup.nodesPpWeb(); // 16x16
-    public static final Image ProjectTab = PlatformIconGroup.nodesProjectTab(); // 16x16
+    public static final Image Project = PlatformIconGroup.nodesProject(); // 16x16
     public static final Image Property = PlatformIconGroup.nodesProperty(); // 16x16
     public static final Image PropertyRead = PlatformIconGroup.nodesPropertyRead(); // 16x16
     public static final Image PropertyReadStatic = PlatformIconGroup.nodesPropertyReadStatic(); // 16x16

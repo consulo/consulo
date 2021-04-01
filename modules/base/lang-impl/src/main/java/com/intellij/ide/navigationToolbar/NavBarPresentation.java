@@ -66,7 +66,7 @@ public class NavBarPresentation {
   @Nullable
   public Image getIcon(final Object object) {
     if (!NavBarModel.isValid(object)) return null;
-    if (object instanceof Project) return AllIcons.Nodes.ProjectTab;
+    if (object instanceof Project) return AllIcons.Nodes.Project;
     if (object instanceof Module) return AllIcons.Nodes.Module;
     try {
       if (object instanceof PsiElement) {

@@ -16,11 +16,13 @@
 package com.intellij.ui;
 
 import com.intellij.openapi.actionSystem.*;
+import com.intellij.openapi.ui.popup.JBPopup;
 import com.intellij.ui.awt.RelativePoint;
 import com.intellij.util.ui.UIUtil;
 import consulo.annotation.DeprecationInfo;
 import consulo.localize.LocalizeValue;
 import consulo.ui.image.Image;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -35,6 +37,68 @@ import java.util.Set;
 @Deprecated
 @DeprecationInfo("Be carefull while using this class. In most cases AnAction will be enought")
 public abstract class AnActionButton extends AnAction implements ShortcutProvider {
+  public static class AnActionButtonWrapper extends AnActionButton implements ActionWithDelegate<AnAction> {
+    private final AnAction myAction;
+
+    public AnActionButtonWrapper(Presentation presentation, @NotNull AnAction action) {
+      super(presentation.getText(), presentation.getDescription(), presentation.getIcon());
+      myAction = action;
+    }
+
+    @Override
+    public void actionPerformed(@NotNull AnActionEvent e) {
+      myAction.actionPerformed(new AnActionEventWrapper(e, this));
+    }
+
+    @Override
+    public void updateButton(@NotNull AnActionEvent e) {
+      myAction.update(e);
+      final boolean enabled = e.getPresentation().isEnabled();
+      final boolean visible = e.getPresentation().isVisible();
+      if (enabled && visible) {
+        super.updateButton(e);
+      }
+    }
+
+    @Override
+    public boolean isDumbAware() {
+      return myAction.isDumbAware();
+    }
+
+    @NotNull
+    @Override
+    public AnAction getDelegate() {
+      return myAction;
+    }
+  }
+
+
+  public static class CheckedAnActionButton extends AnActionButtonWrapper implements CheckedActionGroup {
+    private final AnAction myDelegate;
+
+    public CheckedAnActionButton(Presentation presentation, AnAction action) {
+      super(presentation, action);
+      myDelegate = action;
+    }
+
+    public AnAction getDelegate() {
+      return myDelegate;
+    }
+  }
+
+  public static final class AnActionEventWrapper extends AnActionEvent {
+    private final AnActionButton myPeer;
+
+    private AnActionEventWrapper(AnActionEvent e, AnActionButton peer) {
+      super(e.getInputEvent(), e.getDataContext(), e.getPlace(), e.getPresentation(), e.getActionManager(), e.getModifiers());
+      myPeer = peer;
+    }
+
+    public void showPopup(JBPopup popup) {
+      popup.show(myPeer.getPreferredPopupPoint());
+    }
+  }
+
   private boolean myEnabled = true;
   private boolean myVisible = true;
   private ShortcutSet myShortcut;
@@ -169,43 +233,5 @@ public abstract class AnActionButton extends AnAction implements ShortcutProvide
       }
     }
     return null;
-  }
-
-  public static class CheckedAnActionButton extends AnActionButtonWrapper implements CheckedActionGroup {
-    private final AnAction myDelegate;
-
-    public CheckedAnActionButton(Presentation presentation, AnAction action) {
-      super(presentation, action);
-      myDelegate = action;
-    }
-
-    public AnAction getDelegate() {
-      return myDelegate;
-    }
-  }
-
-  private static class AnActionButtonWrapper extends AnActionButton {
-
-    private final AnAction myAction;
-
-    public AnActionButtonWrapper(Presentation presentation, AnAction action) {
-      super(presentation.getText(), presentation.getDescription(), presentation.getIcon());
-      myAction = action;
-    }
-
-    @Override
-    public void actionPerformed(AnActionEvent e) {
-      myAction.actionPerformed(e);
-    }
-
-    @Override
-    public void updateButton(AnActionEvent e) {
-      myAction.update(e);
-      final boolean enabled = e.getPresentation().isEnabled();
-      final boolean visible = e.getPresentation().isVisible();
-      if (enabled && visible) {
-        super.updateButton(e);
-      }
-    }
   }
 }

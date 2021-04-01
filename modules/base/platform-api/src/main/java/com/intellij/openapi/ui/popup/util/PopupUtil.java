@@ -15,6 +15,8 @@
  */
 package com.intellij.openapi.ui.popup.util;
 
+import com.intellij.openapi.actionSystem.ActionButtonComponent;
+import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
@@ -29,6 +31,7 @@ import com.intellij.util.ui.UIUtil;
 import consulo.awt.hacking.PopupFactoryHacking;
 import consulo.disposer.Disposable;
 import consulo.logging.Logger;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -36,6 +39,7 @@ import javax.swing.*;
 import javax.swing.plaf.basic.ComboPopup;
 import java.awt.*;
 import java.awt.event.ComponentEvent;
+import java.awt.event.InputEvent;
 
 public class PopupUtil {
   private static final Logger LOG = Logger.getInstance(PopupUtil.class);
@@ -202,6 +206,22 @@ public class PopupUtil {
         return false;
       }
       return true;
+    }
+  }
+
+  public static void showForActionButtonEvent(@NotNull JBPopup popup, @NotNull AnActionEvent e) {
+    InputEvent inputEvent = e.getInputEvent();
+    if (inputEvent == null) {
+      popup.showInFocusCenter();
+    }
+    else {
+      Component component = inputEvent.getComponent();
+      if (component instanceof ActionButtonComponent) {
+        popup.showUnderneathOf(component);
+      }
+      else {
+        popup.showInCenterOf(component);
+      }
     }
   }
 }

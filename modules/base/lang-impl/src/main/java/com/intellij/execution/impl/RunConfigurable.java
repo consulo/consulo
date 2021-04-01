@@ -46,7 +46,6 @@ import com.intellij.util.IconUtil;
 import com.intellij.util.config.StorageAccessors;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.Convertor;
-import java.util.HashMap;
 import com.intellij.util.ui.EditableModel;
 import com.intellij.util.ui.GridBag;
 import com.intellij.util.ui.JBUI;
@@ -54,8 +53,8 @@ import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.tree.TreeUtil;
 import consulo.logging.Logger;
 import consulo.platform.base.icon.PlatformIconGroup;
-import consulo.ui.decorator.SwingUIDecorator;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.decorator.SwingUIDecorator;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
 import consulo.util.dataholder.Key;
@@ -238,7 +237,7 @@ class RunConfigurable extends BaseConfigurable {
             consulo.ui.image.Image icon = getIcon();
 
             if(shared) {
-              setIcon(ImageEffects.layered(icon, AllIcons.Nodes.Symlink));
+              setIcon(ImageEffects.layered(icon, PlatformIconGroup.nodesShared()));
             }
             else {
               setIcon(icon);

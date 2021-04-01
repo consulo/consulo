@@ -90,7 +90,7 @@ public class SandNewModuleBuilder implements NewModuleBuilder {
 
     NewModuleContextGroup subGroup = group.addGroup("sand-sub", LocalizeValue.of("Sand Inner"), AllIcons.Nodes.UnknownJdk);
 
-    subGroup.add(LocalizeValue.of("Sand Hello"), AllIcons.Nodes.ProjectTab, new NewModuleBuilderProcessor<NewModuleWizardContext>() {
+    subGroup.add(LocalizeValue.of("Sand Hello"), AllIcons.Nodes.Project, new NewModuleBuilderProcessor<NewModuleWizardContext>() {
       @Nonnull
       @Override
       public NewModuleWizardContext createContext(boolean isNewProject) {
