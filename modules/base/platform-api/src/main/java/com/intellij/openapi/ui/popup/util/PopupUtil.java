@@ -31,9 +31,8 @@ import com.intellij.util.ui.UIUtil;
 import consulo.awt.hacking.PopupFactoryHacking;
 import consulo.disposer.Disposable;
 import consulo.logging.Logger;
-import org.jetbrains.annotations.NotNull;
-
 import javax.annotation.Nonnull;
+
 import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.plaf.basic.ComboPopup;
@@ -209,7 +208,7 @@ public class PopupUtil {
     }
   }
 
-  public static void showForActionButtonEvent(@NotNull JBPopup popup, @NotNull AnActionEvent e) {
+  public static void showForActionButtonEvent(@Nonnull JBPopup popup, @Nonnull AnActionEvent e) {
     InputEvent inputEvent = e.getInputEvent();
     if (inputEvent == null) {
       popup.showInFocusCenter();

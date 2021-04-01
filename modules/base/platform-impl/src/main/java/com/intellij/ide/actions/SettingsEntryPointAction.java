@@ -28,8 +28,8 @@ import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.UIAccess;
 import consulo.ui.image.Image;
 import org.jetbrains.annotations.Nls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -43,7 +43,7 @@ public final class SettingsEntryPointAction extends DumbAwareAction implements R
   private boolean myShowPopup = true;
 
   @Override
-  public void actionPerformed(@NotNull AnActionEvent e) {
+  public void actionPerformed(@Nonnull AnActionEvent e) {
     resetActionIcon();
 
     if (myShowPopup) {
@@ -54,7 +54,7 @@ public final class SettingsEntryPointAction extends DumbAwareAction implements R
   }
 
   @Override
-  public void update(@NotNull AnActionEvent e) {
+  public void update(@Nonnull AnActionEvent e) {
     Presentation presentation = e.getPresentation();
     presentation.setText("");
     presentation.setDescription(getActionTooltip());
@@ -65,14 +65,14 @@ public final class SettingsEntryPointAction extends DumbAwareAction implements R
     }
   }
 
-  @NotNull
+  @Nonnull
   private static AnAction[] getTemplateActions() {
     ActionGroup templateGroup = (ActionGroup)ActionManager.getInstance().getAction("SettingsEntryPointGroup");
     return templateGroup == null ? EMPTY_ARRAY : templateGroup.getChildren(null);
   }
 
-  @NotNull
-  private static ListPopup createMainPopup(@NotNull DataContext context, @NotNull Runnable disposeCallback) {
+  @Nonnull
+  private static ListPopup createMainPopup(@Nonnull DataContext context, @Nonnull Runnable disposeCallback) {
     DefaultActionGroup group = new DefaultActionGroup();
 
     for (ActionProvider provider : ActionProvider.EP_NAME.getExtensionList()) {
@@ -105,13 +105,13 @@ public final class SettingsEntryPointAction extends DumbAwareAction implements R
         if (text != null && !text.endsWith("...")) {
           AnActionButton button = new AnActionButton.AnActionButtonWrapper(child.getTemplatePresentation(), child) {
             @Override
-            public void updateButton(@NotNull AnActionEvent e) {
+            public void updateButton(@Nonnull AnActionEvent e) {
               getDelegate().update(e);
               e.getPresentation().setText(e.getPresentation().getText() + "...");
             }
 
             @Override
-            public void actionPerformed(@NotNull AnActionEvent e) {
+            public void actionPerformed(@Nonnull AnActionEvent e) {
               super.actionPerformed(new AnActionEvent(e.getInputEvent(), e.getDataContext(), e.getPlace(), getDelegate().getTemplatePresentation(), e.getActionManager(), e.getModifiers()));
             }
           };
@@ -144,7 +144,7 @@ public final class SettingsEntryPointAction extends DumbAwareAction implements R
     }
   }
 
-  @NotNull
+  @Nonnull
   @Nls
   private static String getActionTooltip() {
     return IdeBundle.message("settings.entry.point.tooltip");
@@ -154,7 +154,7 @@ public final class SettingsEntryPointAction extends DumbAwareAction implements R
     myShowPlatformUpdateIcon = myShowPluginsUpdateIcon = false;
   }
 
-  @NotNull
+  @Nonnull
   private static Image getActionIcon() {
     if (myShowPlatformUpdateIcon) {
       return PlatformIconGroup.ideNotificationIdeUpdate();
@@ -198,36 +198,36 @@ public final class SettingsEntryPointAction extends DumbAwareAction implements R
   public static class StatusBarManager implements StatusBarWidgetFactory {
     @Override
     public
-    @NotNull
+    @Nonnull
     String getId() {
       return WIDGET_ID;
     }
 
     @Override
     @Nls
-    @NotNull
+    @Nonnull
     public String getDisplayName() {
       return IdeBundle.message("settings.entry.point.widget.name");
     }
 
     @Override
-    public boolean isAvailable(@NotNull Project project) {
+    public boolean isAvailable(@Nonnull Project project) {
       return isAvailableInStatusBar();
     }
 
     @Override
-    @NotNull
-    public StatusBarWidget createWidget(@NotNull Project project) {
+    @Nonnull
+    public StatusBarWidget createWidget(@Nonnull Project project) {
       return new MyStatusBarWidget();
     }
 
     @Override
-    public void disposeWidget(@NotNull StatusBarWidget widget) {
+    public void disposeWidget(@Nonnull StatusBarWidget widget) {
       Disposer.dispose(widget);
     }
 
     @Override
-    public boolean canBeEnabledOn(@NotNull StatusBar statusBar) {
+    public boolean canBeEnabledOn(@Nonnull StatusBar statusBar) {
       return isAvailableInStatusBar();
     }
   }
@@ -238,13 +238,13 @@ public final class SettingsEntryPointAction extends DumbAwareAction implements R
 
     @Override
     public
-    @NotNull
+    @Nonnull
     String ID() {
       return WIDGET_ID;
     }
 
     @Override
-    public void install(@NotNull StatusBar statusBar) {
+    public void install(@Nonnull StatusBar statusBar) {
       myStatusBar = statusBar;
     }
 
@@ -276,7 +276,7 @@ public final class SettingsEntryPointAction extends DumbAwareAction implements R
         ListPopup popup = createMainPopup(DataManager.getInstance().getDataContext(component), () -> myShowPopup = true);
         popup.addListener(new JBPopupListener() {
           @Override
-          public void beforeShown(@NotNull LightweightWindowEvent event) {
+          public void beforeShown(@Nonnull LightweightWindowEvent event) {
             Point location = component.getLocationOnScreen();
             Dimension size = popup.getSize();
             popup.setLocation(new Point(location.x + component.getWidth() - size.width, location.y - size.height));
@@ -308,7 +308,7 @@ public final class SettingsEntryPointAction extends DumbAwareAction implements R
 
     String ICON_KEY = "Update_Type_Icon_Key";
 
-    @NotNull
-    Collection<AnAction> getUpdateActions(@NotNull DataContext context);
+    @Nonnull
+    Collection<AnAction> getUpdateActions(@Nonnull DataContext context);
   }
 }

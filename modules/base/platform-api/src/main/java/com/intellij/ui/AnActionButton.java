@@ -22,9 +22,8 @@ import com.intellij.util.ui.UIUtil;
 import consulo.annotation.DeprecationInfo;
 import consulo.localize.LocalizeValue;
 import consulo.ui.image.Image;
-import org.jetbrains.annotations.NotNull;
-
 import javax.annotation.Nonnull;
+
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
@@ -40,18 +39,18 @@ public abstract class AnActionButton extends AnAction implements ShortcutProvide
   public static class AnActionButtonWrapper extends AnActionButton implements ActionWithDelegate<AnAction> {
     private final AnAction myAction;
 
-    public AnActionButtonWrapper(Presentation presentation, @NotNull AnAction action) {
+    public AnActionButtonWrapper(Presentation presentation, @Nonnull AnAction action) {
       super(presentation.getText(), presentation.getDescription(), presentation.getIcon());
       myAction = action;
     }
 
     @Override
-    public void actionPerformed(@NotNull AnActionEvent e) {
+    public void actionPerformed(@Nonnull AnActionEvent e) {
       myAction.actionPerformed(new AnActionEventWrapper(e, this));
     }
 
     @Override
-    public void updateButton(@NotNull AnActionEvent e) {
+    public void updateButton(@Nonnull AnActionEvent e) {
       myAction.update(e);
       final boolean enabled = e.getPresentation().isEnabled();
       final boolean visible = e.getPresentation().isVisible();
@@ -65,7 +64,7 @@ public abstract class AnActionButton extends AnAction implements ShortcutProvide
       return myAction.isDumbAware();
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public AnAction getDelegate() {
       return myAction;
