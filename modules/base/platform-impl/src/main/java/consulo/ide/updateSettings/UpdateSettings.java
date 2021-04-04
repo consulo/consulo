@@ -30,7 +30,7 @@ import java.io.File;
  * @since 02-Sep-16
  */
 @Singleton
-@State(name = "UpdateSettings", storages = {@Storage(file = "updates.xml", roamingType = RoamingType.DISABLED)})
+@State(name = "UpdateSettings", storages = @Storage(value = "updates.xml", roamingType = RoamingType.DISABLED))
 public class UpdateSettings implements PersistentStateComponent<UpdateSettings.State> {
   @Nonnull
   public static UpdateSettings getInstance() {
