@@ -771,44 +771,21 @@
       <add-to-group group-id="GoToMenu" anchor="last"/>
     </group>
 
-    <!-- Main menu | Version Control -->
-    <group id="VcsGroups" popup="true">
-      <action id="Start.Use.Vcs" class="com.intellij.ide.actions.StartUseVcsAction"/>
-      <separator/>
-      <group class="com.intellij.openapi.vcs.actions.VcsActionGroup" id="VcsGlobalGroup">
+    <action id="Vcs.UpdateProject" class="com.intellij.openapi.vcs.update.CommonUpdateProjectAction" icon="consulo.platform.base.PlatformIconGroup@actions.checkout">
+      <keyboard-shortcut first-keystroke="control T" keymap="$default"/>
+    </action>
 
-        <action id="Vcs.QuickListPopupAction"
-                class="com.intellij.openapi.vcs.actions.VcsQuickListPopupAction"
-                text="VCS Operations Popup..." description="Context aware popup with list of commonly used VCS actions"/>
-        <action id="Vcs.ChangesView" class="com.intellij.openapi.vcs.changes.ShowChangesViewAction"/>
-        <reference ref="CheckinProject"/>
-        <action id="Vcs.UpdateProject" class="com.intellij.openapi.vcs.update.CommonUpdateProjectAction" icon="consulo.platform.base.PlatformIconGroup@actions.checkout">
-          <keyboard-shortcut first-keystroke="control T" keymap="$default"/>
-        </action>
-        <action id="Vcs.IntegrateProject" class="com.intellij.openapi.vcs.update.CommonIntegrateProjectAction"/>
-        <action id="Vcs.RefreshStatuses" class="com.intellij.openapi.vcs.actions.RefreshStatuses"/>
-        <separator/>
-        <group id="Vcs.Specific" class="com.intellij.ide.actions.NonEmptyActionGroup"/>
-        <separator/>
-        <action id="ChangesView.CreatePatch" class="com.intellij.openapi.vcs.changes.actions.CreatePatchAction"/>
-        <action id="ChangesView.ApplyPatch" class="com.intellij.openapi.vcs.changes.patch.ApplyPatchAction"/>
-        <action id="ChangesView.Shelve" class="com.intellij.openapi.vcs.changes.shelf.ShelveChangesAction"/>
-      </group>
+    <action id="Vcs.IntegrateProject" class="com.intellij.openapi.vcs.update.CommonIntegrateProjectAction"/>
 
-      <separator/>
-      <group id="Vcs.Checkout" class="com.intellij.openapi.vcs.checkout.CheckoutActionGroup" popup="true"/>
-      <group id="Vcs.Import" class="com.intellij.ide.actions.NonEmptyActionGroup" popup="true"/>
-      <group id="Vcs.Browse" class="com.intellij.ide.actions.NonEmptyActionGroup" popup="true"/>
-
-      <add-to-group group-id="MainMenu" anchor="after" relative-to-action="ToolsMenu"/>
-    </group>
-
+    <action id="Vcs.RefreshStatuses" class="com.intellij.openapi.vcs.actions.RefreshStatuses"/>
+    <action id="ChangesView.Refresh" class="com.intellij.openapi.vcs.changes.actions.RefreshAction" icon="consulo.platform.base.PlatformIconGroup@actions.refresh"/>
+    <action id="ChangesView.CreatePatch" class="com.intellij.openapi.vcs.changes.actions.CreatePatchAction" icon="consulo.platform.base.PlatformIconGroup@actions.createpatch"/>
     <action id="ChangesView.Revert" class="com.intellij.openapi.vcs.changes.actions.RollbackAction"
             icon="consulo.platform.base.PlatformIconGroup@actions.rollback" text="_Revert..." description="Revert selected changes"/>
+    <action id="ChangesView.Shelve" class="com.intellij.openapi.vcs.changes.shelf.ShelveChangesAction" icon="consulo.platform.base.PlatformIconGroup@vcs.shelvesilent"/>
 
     <group id="ChangesViewToolbar">
-      <action id="ChangesView.Refresh" class="com.intellij.openapi.vcs.changes.actions.RefreshAction"
-              icon="consulo.platform.base.PlatformIconGroup@actions.refresh"/>
+      <reference ref="ChangesView.Refresh"/>
       <action id="ChangesView.Commit" class="com.intellij.openapi.vcs.actions.CommonCheckinProjectAction"
               icon="consulo.platform.base.PlatformIconGroup@actions.commit"/>
       <action id="ChangesView.Rollback" class="com.intellij.openapi.vcs.changes.actions.RollbackAction"
@@ -1501,8 +1478,7 @@
       <reference ref="AssociateWithFileType"/>
       <separator/>
       <reference ref="CutCopyPasteGroup"/>
-      <reference ref="EditSource"/>
-      <reference ref="ChangesView.ApplyPatch"/>
+      <action id="ProjectViewEditSource" use-shortcut-of="EditSource" class="com.intellij.ide.actions.ProjectViewEditSourceAction"/>
       <separator/>
       <reference ref="FindUsages"/>
       <reference ref="FindInPath"/>
@@ -1552,7 +1528,6 @@
       <separator/>
       <reference ref="CutCopyPasteGroup"/>
       <reference ref="EditSource"/>
-      <reference ref="ChangesView.ApplyPatch"/>
       <separator/>
       <reference ref="FindUsages"/>
       <reference ref="FindInPath"/>
@@ -1580,7 +1555,6 @@
       <separator/>
       <reference ref="CutCopyPasteGroup"/>
       <reference ref="EditSource"/>
-      <reference ref="ChangesView.ApplyPatch"/>
       <separator/>
       <reference ref="FindUsages"/>
       <reference ref="FindInPath"/>
@@ -2419,6 +2393,44 @@
       <separator/>
       <reference id="ChangeLaf"/>
       <reference id="ChangeKeymap"/>
+    </group>
+
+    <action id="ChangesView.ApplyPatch" class="com.intellij.openapi.vcs.changes.patch.ApplyPatchAction">
+      <add-to-group group-id="ProjectViewPopupMenu" relative-to-action="ProjectViewEditSource" anchor="after"/>
+      <add-to-group group-id="NavbarPopupMenu" relative-to-action="EditSource" anchor="after"/>
+      <add-to-group group-id="FavoritesViewPopupMenu" relative-to-action="EditSource" anchor="after"/>
+    </action>
+
+    <!-- Main menu | Version Control -->
+    <group id="VcsGroups" class="com.intellij.openapi.vcs.actions.VcsGroupsActionGroup" popup="true">
+      <group id="Vcs.MainMenu" class="com.intellij.openapi.vcs.actions.VcsMainMenuActionGroup">
+        <action id="Start.Use.Vcs" class="com.intellij.ide.actions.StartUseVcsAction"/>
+        <separator/>
+        <group class="com.intellij.openapi.vcs.actions.VcsActionGroup" id="VcsGlobalGroup">
+
+          <action id="Vcs.QuickListPopupAction"
+                  class="com.intellij.openapi.vcs.actions.VcsQuickListPopupAction"/>
+          <reference ref="CheckinProject"/>
+          <reference ref="Vcs.UpdateProject"/>
+          <action id="Vcs.IntegrateProject" class="com.intellij.openapi.vcs.update.CommonIntegrateProjectAction"/>
+          <reference ref="ChangesView.Refresh"/>
+          <separator/>
+          <group id="Vcs.Specific" class="com.intellij.ide.actions.NonEmptyActionGroup"/>
+          <separator/>
+          <reference ref="ChangesView.CreatePatch"/>
+          <reference ref="ChangesView.ApplyPatch"/>
+          <action id="ChangesView.ApplyPatchFromClipboard" class="com.intellij.openapi.vcs.changes.patch.ApplyPatchFromClipboardAction"/>
+          <reference ref="ChangesView.Shelve"/>
+        </group>
+
+        <separator/>
+        <group id="Vcs.Checkout" class="com.intellij.openapi.vcs.checkout.CheckoutActionGroup" popup="true"/>
+        <group id="Vcs.Browse" class="com.intellij.ide.actions.NonEmptyActionGroup" popup="true"/>
+        <separator/>
+        <group id="Vcs.Import" class="com.intellij.ide.actions.NonEmptyActionGroup"/>
+      </group>
+
+      <add-to-group group-id="MainMenu" anchor="after" relative-to-action="ToolsMenu"/>
     </group>
   </actions>
 </consulo-plugin>

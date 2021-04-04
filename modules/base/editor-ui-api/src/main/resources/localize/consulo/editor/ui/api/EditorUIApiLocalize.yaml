@@ -1,0 +1,34 @@
+file.status.name.up.to.date:
+  text: Up to date
+file.status.name.deleted:
+  text: Deleted
+file.status.name.modified:
+  text: Modified
+file.status.name.added:
+  text: Added
+file.status.name.merged:
+  text: Merged
+file.status.name.unknown:
+  text: Unknown
+file.status.name.ignored:
+  text: Ignored
+file.status.name.hijacked:
+  text: Hijacked
+file.status.name.switched:
+  text: Switched
+file.status.name.obsolete:
+  text: Obsolete
+file.status.name.suppressed:
+  text: Suppressed
+file.status.name.merged.with.conflicts:
+  text: Merged with conflicts
+file.status.name.merged.with.both.conflicts:
+  text: Merged with text and property conflicts
+file.status.name.merged.with.property.conflicts:
+  text: Merged with property conflicts
+file.status.name.deleted.from.file.system:
+  text: Deleted from file system
+file.status.name.up.to.date.immediate.children:
+  text: Have immediate changed children
+file.status.name.up.to.date.recursive.children:
+  text: Have changed descendants

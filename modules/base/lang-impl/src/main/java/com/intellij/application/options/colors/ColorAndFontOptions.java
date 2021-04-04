@@ -55,7 +55,9 @@ import com.intellij.util.ArrayUtil;
 import com.intellij.util.ui.UIUtil;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
+import consulo.platform.base.localize.ApplicationLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
 import consulo.ui.image.Image;
@@ -532,17 +534,18 @@ public class ColorAndFontOptions extends SearchableConfigurable.Parent.Abstract 
   }
 
   private static void initDescriptions(@Nonnull ColorAndFontDescriptorsProvider provider, @Nonnull List<EditorSchemeAttributeDescriptor> descriptions, @Nonnull MyColorScheme scheme) {
-    String group = provider.getDisplayName();
+    LocalizeValue group = LocalizeValue.of(provider.getDisplayName());
+    
     List<AttributesDescriptor> attributeDescriptors = ColorSettingsUtil.getAllAttributeDescriptors(provider);
     for (AttributesDescriptor descriptor : attributeDescriptors) {
-      addSchemedDescription(descriptions, descriptor.getDisplayName(), group, descriptor.getKey(), scheme, null, null);
+      addSchemedDescription(descriptions, LocalizeValue.of(descriptor.getDisplayName()), group, descriptor.getKey(), scheme, null, null);
     }
 
     ColorDescriptor[] colorDescriptors = provider.getColorDescriptors();
     for (ColorDescriptor descriptor : colorDescriptors) {
       EditorColorKey back = descriptor.getKind() == ColorDescriptor.Kind.BACKGROUND ? descriptor.getKey() : null;
       EditorColorKey fore = descriptor.getKind() == ColorDescriptor.Kind.FOREGROUND ? descriptor.getKey() : null;
-      addEditorSettingDescription(descriptions, descriptor.getDisplayName().getValue(), group, back, fore, scheme);
+      addEditorSettingDescription(descriptions, descriptor.getDisplayName(), group, back, fore, scheme);
     }
   }
 
@@ -551,7 +554,7 @@ public class ColorAndFontOptions extends SearchableConfigurable.Parent.Abstract 
     FileStatus[] statuses = FileStatusFactory.getInstance().getAllFileStatuses();
 
     for (FileStatus fileStatus : statuses) {
-      addEditorSettingDescription(descriptions, fileStatus.getText(), FILE_STATUS_GROUP, null, fileStatus.getColorKey(), scheme);
+      addEditorSettingDescription(descriptions, fileStatus.getText(), ApplicationLocalize.titleFileStatus(), null, fileStatus.getColorKey(), scheme);
 
     }
   }
@@ -585,8 +588,8 @@ public class ColorAndFontOptions extends SearchableConfigurable.Parent.Abstract 
     });
     for (Pair<NamedScope, NamedScopesHolder> pair : list) {
       NamedScope namedScope = pair.getFirst();
-      String name = namedScope.getName();
-      TextAttributesKey textAttributesKey = ScopeAttributesUtil.getScopeTextAttributeKey(name);
+      LocalizeValue name = namedScope.getPresentableName();
+      TextAttributesKey textAttributesKey = ScopeAttributesUtil.getScopeTextAttributeKey(namedScope.getScopeId());
       if (scheme.getAttributes(textAttributesKey) == null) {
         scheme.setAttributes(textAttributesKey, new TextAttributes());
       }
@@ -594,7 +597,7 @@ public class ColorAndFontOptions extends SearchableConfigurable.Parent.Abstract 
 
       PackageSet value = namedScope.getValue();
       String toolTip = holder.getDisplayName() + (value == null ? "" : ": " + value.getText());
-      addSchemedDescription(descriptions, name, SCOPES_GROUP, textAttributesKey, scheme, holder.getIcon(), toolTip);
+      addSchemedDescription(descriptions, name, ApplicationLocalize.titleScopeBased(), textAttributesKey, scheme, holder.getIcon(), toolTip);
     }
   }
 
@@ -610,8 +613,8 @@ public class ColorAndFontOptions extends SearchableConfigurable.Parent.Abstract 
   }
 
   private static void addEditorSettingDescription(@Nonnull List<EditorSchemeAttributeDescriptor> list,
-                                                  String name,
-                                                  String group,
+                                                  LocalizeValue name,
+                                                  LocalizeValue group,
                                                   @Nullable EditorColorKey backgroundKey,
                                                   @Nullable EditorColorKey foregroundKey,
                                                   @Nonnull EditorColorsScheme scheme) {
@@ -619,8 +622,8 @@ public class ColorAndFontOptions extends SearchableConfigurable.Parent.Abstract 
   }
 
   private static void addSchemedDescription(@Nonnull List<EditorSchemeAttributeDescriptor> list,
-                                            String name,
-                                            String group,
+                                            LocalizeValue name,
+                                            LocalizeValue group,
                                             @Nonnull TextAttributesKey key,
                                             @Nonnull MyColorScheme scheme,
                                             Image icon,
@@ -749,7 +752,6 @@ public class ColorAndFontOptions extends SearchableConfigurable.Parent.Abstract 
     return false;
   }
 
-
   private static class SchemeTextAttributesDescription extends TextAttributesDescription {
     @Nonnull
     private final TextAttributes myAttributesToApply;
@@ -759,7 +761,7 @@ public class ColorAndFontOptions extends SearchableConfigurable.Parent.Abstract 
     private Pair<ColorSettingsPage, AttributesDescriptor> myBaseAttributeDescriptor;
     private boolean myIsInheritedInitial = false;
 
-    private SchemeTextAttributesDescription(String name, String group, @Nonnull TextAttributesKey key, @Nonnull MyColorScheme scheme, Image icon, String toolTip) {
+    private SchemeTextAttributesDescription(LocalizeValue name, LocalizeValue group, @Nonnull TextAttributesKey key, @Nonnull MyColorScheme scheme, Image icon, String toolTip) {
       super(name, group, getInitialAttributes(scheme, key).clone(), key, scheme, icon, toolTip);
       this.key = key;
       myAttributesToApply = getInitialAttributes(scheme, key);
@@ -866,7 +868,7 @@ public class ColorAndFontOptions extends SearchableConfigurable.Parent.Abstract 
     private GetSetColor myGetSetForeground;
     private GetSetColor myGetSetBackground;
 
-    private EditorSettingColorDescription(String name, String group, EditorColorKey backgroundKey, EditorColorKey foregroundKey, String type, EditorColorsScheme scheme) {
+    private EditorSettingColorDescription(LocalizeValue name, LocalizeValue group, EditorColorKey backgroundKey, EditorColorKey foregroundKey, String type, EditorColorsScheme scheme) {
       super(name, group, type, scheme, null, null);
       if (backgroundKey != null) {
         myGetSetBackground = new GetSetColor(backgroundKey, scheme);

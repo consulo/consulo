@@ -8,17 +8,16 @@ import com.intellij.openapi.actionSystem.Presentation;
 import com.intellij.openapi.actionSystem.ex.CustomComponentAction;
 import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vcs.AbstractVcs;
 import com.intellij.openapi.vcs.ProjectLevelVcsManager;
 import com.intellij.ui.components.JBLabel;
 import com.intellij.util.ui.JBUI;
+import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.vcs.api.localize.VcsApiLocalize;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.swing.*;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
 
 public class VcsToolbarLabelAction extends DumbAwareAction implements CustomComponentAction {
 
@@ -40,7 +39,7 @@ public class VcsToolbarLabelAction extends DumbAwareAction implements CustomComp
 
   @Nonnull
   @Override
-  public JComponent createCustomComponent(Presentation presentation) {
+  public JComponent createCustomComponent(Presentation presentation, String place) {
     return new VcsToolbarLabel();
   }
 
@@ -54,18 +53,14 @@ public class VcsToolbarLabelAction extends DumbAwareAction implements CustomComp
     @Override
     public String getText() {
       Project project = DataManager.getInstance().getDataContext(this).getData(CommonDataKeys.PROJECT);
-      return getConsolidatedVcsName(project);
+      return getConsolidatedVcsName(project).get();
     }
   }
 
-  private static String getConsolidatedVcsName(Project project) {
-    String name = DEFAULT_LABEL;
+  private static LocalizeValue getConsolidatedVcsName(@Nullable Project project) {
+    LocalizeValue name = VcsApiLocalize.vcsCommonLabelsVcs();
     if (project != null) {
-      AbstractVcs[] vcss = ProjectLevelVcsManager.getInstance(project).getAllActiveVcss();
-      List<String> ids = Arrays.stream(vcss).map(vcs -> vcs.getShortName()).distinct().collect(Collectors.toList());
-      if (ids.size() == 1) {
-        name = ids.get(0) + ":";
-      }
+      name = ProjectLevelVcsManager.getInstance(project).getConsolidatedVcsName().map(Presentation.NO_MNEMONIC).map((l, s) -> s + ":");
     }
     return name;
   }

@@ -161,8 +161,12 @@ public final class Presentation implements Cloneable {
     return StringUtil.nullize(myTextValue.getValue());
   }
 
-  public void setTextValue(@Nonnull LocalizeValue textValue) {
-    myTextValue = textValue;
+  public void setTextValue(@Nonnull LocalizeValue newTextValue) {
+    LocalizeValue oldValue = myTextValue;
+    myTextValue = newTextValue;
+    if(oldValue != newTextValue) {
+      fireObjectPropertyChange(PROP_TEXT, oldValue, newTextValue);
+    }
   }
 
   @Nonnull
@@ -228,10 +232,12 @@ public final class Presentation implements Cloneable {
     setDescriptionValue(value);
   }
 
-  public void setDescriptionValue(@Nonnull LocalizeValue descriptionValue) {
+  public void setDescriptionValue(@Nonnull LocalizeValue newDescriptionValue) {
     LocalizeValue oldDescription = myDescriptionValue;
-    myDescriptionValue = descriptionValue;
-    fireObjectPropertyChange(PROP_DESCRIPTION, oldDescription, myDescriptionValue);
+    myDescriptionValue = newDescriptionValue;
+    if(oldDescription != newDescriptionValue) {
+      fireObjectPropertyChange(PROP_DESCRIPTION, oldDescription, myDescriptionValue);
+    }
   }
 
   @Nullable

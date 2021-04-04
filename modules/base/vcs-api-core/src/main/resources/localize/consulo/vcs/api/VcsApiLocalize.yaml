@@ -1,0 +1,1162 @@
+file.status.name.up.to.date:
+  text: Up to date
+file.status.name.deleted:
+  text: Deleted
+file.status.name.modified:
+  text: Modified
+file.status.name.added:
+  text: Added
+file.status.name.merged:
+  text: Merged
+file.status.name.unknown:
+  text: Unknown
+file.status.name.ignored:
+  text: Ignored
+file.status.name.hijacked:
+  text: Hijacked
+file.status.name.switched:
+  text: Switched
+file.status.name.obsolete:
+  text: Obsolete
+file.status.name.suppressed:
+  text: Suppressed
+file.status.name.merged.with.conflicts:
+  text: Merged with conflicts
+file.status.name.merged.with.both.conflicts:
+  text: Merged with text and property conflicts
+file.status.name.merged.with.property.conflicts:
+  text: Merged with property conflicts
+file.status.name.deleted.from.file.system:
+  text: Deleted from file system
+none.vcs.presentation:
+  text: <none>
+vcs.command.name.add:
+  text: Add
+vcs.command.name.remove:
+  text: Remove
+vcs.command.name.checkin:
+  text: Check_in
+vcs.command.name.checkin.no.mnemonics:
+  text: Checkin
+vcs.command.name.edit:
+  text: Edit
+vcs.command.name.checkout:
+  text: Checkout
+vcs.command.name.status:
+  text: Status
+vcs.command.name.update:
+  text: Update
+history.empty:
+  text: History is empty
+exception.text.unknown.error:
+  text: Unknown error
+exception.text.internal.error.method.should.not.be.called:
+  text: Should not be called
+vcs.revision.name.current:
+  text: Current
+message.text.could.not.load.file.content:
+  text: Could Not Load File Content
+confirmation.text.check.in.with.empty.comment:
+  text: Check in with empty comment?
+confirmation.title.check.in.with.empty.comment:
+  text: Comment Is Empty
+label.commit.comment:
+  text: '&Commit Message'
+dialog.title.choose.commit.message.from.history:
+  text: Commit Message History
+border.standard.checkin.options.group:
+  text: Before {0}
+border.standard.after.checkin.options.group:
+  text: After {0}
+checkbox.checkin.options.check.files.up.to.date:
+  text: Check remote status
+checkbox.checkin.options.optimize.imports:
+  text: '&Optimize imports'
+checkbox.checkin.options.reformat.code:
+  text: '&Reformat code'
+checkbox.checkin.options.rearrange.code:
+  text: Rearra&nge code
+progress.text.searching.for.modified.files:
+  text: Searching for modified files
+button.text.overwrite.modified.file:
+  text: '&Overwrite Modified File'
+button.text.overwrite.modified.files:
+  text: '&Overwrite Modified Files'
+message.text.file.locally.modified:
+  text: File {0} has been locally modified.
+message.text.several.files.locally.modified:
+  text: Some files were locally modified.
+update.group.name.updated.from.server:
+  text: Updated from server
+update.group.name.updated:
+  text: Updated
+update.group.name.created:
+  text: Created
+update.group.name.deleted:
+  text: Deleted
+update.group.name.restored:
+  text: Restored
+update.group.name.modified:
+  text: Modified
+update.group.name.skipped:
+  text: Skipped
+update.group.name.merged.with.property.conflicts:
+  text: Merged with property conflicts
+update.group.name.merged.with.tree.conflicts:
+  text: Merged with tree conflicts
+update.group.name.merged.with.conflicts:
+  text: Merged with conflicts
+update.group.name.merged:
+  text: Merged
+update.group.name.not.in.repository:
+  text: Not in repository
+update.group.name.locally.added:
+  text: Locally added
+update.group.name.locally.removed:
+  text: Locally removed
+update.group.name.switched:
+  text: Switched
+status.group.name.changed.on.server:
+  text: Changed on server
+status.group.name.changed:
+  text: Changed
+status.group.name.created:
+  text: Created
+status.group.name.deleted:
+  text: Deleted
+status.group.name.modified:
+  text: Modified
+status.group.name.skipped:
+  text: Skipped
+status.group.name.will.be.restored:
+  text: Will be restored
+status.group.name.will.be.merged.with.property.conflicts:
+  text: Will be merged with property conflicts
+status.group.name.will.be.merged.with.tree.conflicts:
+  text: Will be merged with tree conflicts
+status.group.name.will.be.merged.with.conflicts:
+  text: Will be merged with conflicts
+status.group.name.will.be.merged:
+  text: Will be merged
+status.group.name.not.in.repository:
+  text: Not in repository
+status.group.name.locally.added:
+  text: Locally added
+status.group.name.locally.removed:
+  text: Locally removed
+status.group.name.switched:
+  text: Switched
+border.changes.filter.change.number.filter:
+  text: Change
+border.changes.filter.date.filter:
+  text: Date
+checkbox.show.changes.after.num:
+  text: '&From'
+checkbox.show.changes.before.num:
+  text: '&To:'
+checkbox.show.changes.before.date:
+  text: '&Before'
+checkbox.show.changes.after.date:
+  text: '&After'
+exception.text.internal.errror.could.not.implement.method:
+  text: Could not implement
+message.text.could.not.load.virtual.file.content:
+  text: 'Could not load content for file {0}: {1}'
+message.title.could.not.load.content:
+  text: Could Not Load Content
+message.text.commit.failed.with.errors.and.warnings:
+  text: Commit failed with errors and warnings
+message.title.commit:
+  text: Commit
+message.text.commit.failed.with.errors:
+  text: Commit failed with errors
+message.text.commit.finished.with.warnings:
+  text: Commit finished with warnings
+message.text.binary.versions.are.identical:
+  text: Binary versions are identical
+message.title.diff:
+  text: Diff
+message.text.binary.versions.are.different:
+  text: Binary versions are different
+diff.title.local:
+  text: Local
+diff.title.local.with.number:
+  text: Local ({0})
+message.title.annotate:
+  text: Annotate
+action.name.checkin.directory:
+  text: '{0} Directory'
+action.name.checkin.file:
+  text: '{0} File'
+action.name.checkin.directories:
+  text: '{0} Directories'
+action.name.checkin.files:
+  text: '{0} Files'
+action.name.commit.project:
+  text: Comm&it Changes
+column.name.revision.list.author:
+  text: Author
+column.name.revisions.list.filter:
+  text: Date
+column.name.revisions.list.branch:
+  text: Branch
+column.name.revision.list.revision:
+  text: Revision
+lookup.title.vcs.file.revisions:
+  text: File Revisions
+border.selected.revision.commit.message:
+  text: Commit message
+loading.file.history.progress:
+  text: Loading file history
+message.title.could.not.load.file.history:
+  text: Problems while loading file history
+diff.content.title.repository.version:
+  text: '{0} ( Repository Version )'
+action.name.file.history:
+  text: File {0} History
+action.name.file.history.dir:
+  text: Folder {0} History
+group.name.version.control:
+  text: '&VCS'
+message.text.cannot.open.editor:
+  text: Cannot open text editor for file {0}
+message.title.cannot.open.editor:
+  text: Cannot Open Editor
+column.info.configure.vcses.directory:
+  text: Directory
+column.name.configure.vcses.vcs:
+  text: VCS
+dialog.title.version.control.configurations:
+  text: Version Control Configurations
+message.text.unable.to.save.settings:
+  text: Unable to save settings. {0}
+message.title.unable.to.save.settings:
+  text: Unable To Save Settings
+label.configure.vcses.available.vcses:
+  text: 'Configure available version controls:'
+border.display.dialog.when.commands.invoked:
+  text: Display options dialog when these commands are invoked
+border.display.dialog.for.files.creation.deletion:
+  text: Files Creation/Deletion
+checkbox.show.clear.read.only.status.dialog:
+  text: Show "&Clear Read-only Status" Dialog
+radio.after.deletion.do.not.remove:
+  text: Do &not remove
+radio.after.deletion.show.options:
+  text: <html>Show &options before removing<br>from version control</html>
+radio.after.deletion.remove.silently:
+  text: Re&move silently
+label.after.deletion.group:
+  text: 'When files are deleted with IDEA:'
+radio.after.creation.do.not.add:
+  text: '&Do not add'
+radio.after.creation.add.silently:
+  text: '&Add silently'
+radio.after.creation.show.options:
+  text: <html>Show options before adding<br>to version control</html>
+label.after.creation.:
+  text: 'When files are created with IDEA:'
+checkbox.force.non.empty.messages:
+  text: Force non-&empty checkin comments
+tooltip.text.action.applicable.to.vcses:
+  text: 'Applicable to: {0}'
+version.control.main.configurable.name:
+  text: VCS
+configuration.tab.name.general.settings:
+  text: General Settings
+configuration.commit.message.margin.title:
+  text: Commit message right margin
+configuration.commit.message.margin.prompt:
+  text: 'Commit message right margin (columns):'
+button.configure:
+  text: '&Configure VCS...'
+action.name.rollback:
+  text: Rollback
+command.name.rollback.change:
+  text: Rollback Change
+action.name.show.difference:
+  text: Show Difference
+tooltip.text.line.before.deleted:
+  text: Line before {0} deleted
+tooltip.text.lines.before.deleted:
+  text: '{1} lines before {0} deleted'
+tooltip.text.line.changed:
+  text: Line {0} changed
+tooltip.text.lines.changed:
+  text: Lines {0}-{1} changed
+dialog.title.diff.for.range:
+  text: Diff for Range
+diff.content.title.up.to.date:
+  text: Base revision
+diff.content.title.current.range:
+  text: Current
+settings.filter.update.project.info.by.scope:
+  text: Filter Update Project information by scope
+action.name.show.files.as.tree:
+  text: Show as Tree
+label.selected.revision.commit.message:
+  text: Commit Message
+column.name.revision.version:
+  text: Version
+column.name.revision.date:
+  text: Date
+action.name.compare:
+  text: Compare
+action.description.compare:
+  text: Compare versions
+message.text.cannot.show.differences:
+  text: 'Cannot show differences: {0}'
+message.title.show.differences:
+  text: Show Differences
+action.name.refresh:
+  text: Refresh
+action.desctiption.refresh:
+  text: Refresh file history
+message.text.cannot.refresh.file.history:
+  text: 'Cannot refresh: {0}'
+message.title.refresh.file.history:
+  text: Refresh
+action.name.compare.with.local:
+  text: Compare with Local
+action.description.compare.with.local:
+  text: Compare with local version
+action.name.get.file.content.from.repository:
+  text: Get
+action.description.get.file.content.from.repository:
+  text: Get version from repository
+acton.name.get.revision:
+  text: Get Revision
+action.name.create.patch.for.selected.revisions:
+  text: Create Patch...
+action.description.create.patch.for.selected.revisions:
+  text: Creates Patch for selected revision(s)
+message.text.cannot.load.version:
+  text: 'Cannot load version: {0}'
+message.title.get.version:
+  text: Get Version
+message.text.cannot.load.revision:
+  text: 'Cannot load revision: {0}'
+message.text.cannot.save.content:
+  text: 'Cannot save content: {0}'
+message.title.get.revision.content:
+  text: Get Revision Content
+action.name.for.file.get.version:
+  text: '{0}: Get Version {1}'
+column.name.revision.list.message:
+  text: Message
+column.name.revision.list.date:
+  text: Date
+checkbox.show.changed.revisions.only:
+  text: Changes only
+dialog.title.history.for.file:
+  text: History for File {0}
+progress.text2.loading.revision:
+  text: Loading revision {0}
+message.text.cannot.load.version.because.of.error:
+  text: Cannot load version {0}:{1}
+message.title.load.version:
+  text: Load Version
+progress.title.loading.contents:
+  text: Loading Contents
+diff.content.title.revision.number:
+  text: Revision {0}
+command.name.open.error.message.view:
+  text: Open message view
+message.text.versions.are.identical:
+  text: Versions are identical
+message.text.binary.versions.differ:
+  text: Binary versions differ
+message.text.cannot.edit.file:
+  text: 'Cannot edit file(s): {0}'
+message.title.edit.files:
+  text: Edit Files
+diff.type.name.modified:
+  text: Modified
+diff.type.name.deleted:
+  text: Deleted
+diff.type.name.added:
+  text: Added
+label.text.when.files.created.with.idea:
+  text: 'When files are created with {0}:'
+label.text.when.files.are.deleted.with.idea:
+  text: 'When files are deleted with {0}:'
+vcs.console.toolwindow.display.name:
+  text: Console
+merge.version.title.local.changes:
+  text: Local Changes
+merge.version.title.merge.result:
+  text: Merge Result
+merge.version.title.last.version:
+  text: Changes from Server
+merge.version.title.last.version.number:
+  text: Changes from Server (revision {0})
+dialog.title.clear.read.only.file.status:
+  text: Clear Read-Only Status
+handle.ro.file.status.type.using.file.system:
+  text: using file system
+handle.ro.file.status.type.using.vcs:
+  text: using {0}
+message.text.file.is.up.to.date:
+  text: File is up-to-date
+message.text.all.files.are.up.to.date:
+  text: All files are up-to-date
+progress.text.synchronizing.files:
+  text: Synchronizing files...
+progress.text.updating.done:
+  text: Updating done
+progress.text.updating.canceled:
+  text: Update canceled
+message.title.vcs.update.errors:
+  text: '{0} Errors'
+toolwindow.title.update.action.info:
+  text: '{0} Info'
+toolwindow.title.update.action.canceled.info:
+  text: '{0} Info (Canceled)'
+update.tree.node.size.statistics:
+  text: '{0,choice, 0#no items|1#1 item|2#{0, number} items}'
+toolwindow.title.update.project:
+  text: Update Project ({0})
+action.name.group.by.packages:
+  text: Group by Packages
+messge.text.cannot.save.settings:
+  text: 'Cannot perform operation: {0}'
+action.name.check.status:
+  text: Chec_k Status
+action.name.check.scope.status:
+  text: Chec_k {0} Status
+action.display.name.check.scope.status:
+  text: Check {0} Status
+action.name.update:
+  text: _Update
+action.display.name.update:
+  text: Update
+action.name.update.scope:
+  text: _Update {0}
+action.display.name.update.scope:
+  text: Update {0}
+action.name.integrate:
+  text: Inte_grate
+action.name.integrate.scope:
+  text: Inte_grate {0}
+action.display.name.integrate.scope:
+  text: Integrate {0}
+update.files.scope.name:
+  text: Files
+update.directory.scope.name:
+  text: Directory
+update.file.scope.name:
+  text: File
+update.directories.scope.name:
+  text: Directories
+update.project.scope.name:
+  text: Project
+dialog.title.changes.browser:
+  text: Changes Browser
+code.smells.error.messages.tab.name:
+  text: Code Analysis
+searching.for.code.smells.processing.file.progress.text:
+  text: Processing {0}
+checking.code.smells.progress.title:
+  text: Performing Code Analysis
+before.commit.files.contain.code.smells.edit.them.confirm.text:
+  text: |-
+    Some files contain problems.
+    {0,choice, 0#No errors|1#One error|2#{0} errors} and {1,choice, 0#no warnings|1#one warning|2#{1} warnings} found.
+    Would you like to review them?
+code.smells.review.button:
+  text: '&Review'
+todo.in.new.review.button:
+  text: '&Review'
+before.checkin.standard.options.check.smells:
+  text: Perform code analy&sis
+before.checkin.new.todo.check:
+  text: Check TODO ({0})
+before.checkin.new.todo.check.title:
+  text: Check TODO
+before.checkin.cleanup.code:
+  text: C&leanup
+history.copy.revision.number:
+  text: Copy Revision Number
+changes.nodetitle.unversioned.files:
+  text: Unversioned Files
+changes.nodetitle.locally.deleted.files:
+  text: Locally Deleted Files
+changes.nodetitle.modified.without.editing:
+  text: Modified without Checkout
+changes.nodetitle.ignored.files:
+  text: Ignored Files
+changes.nodetitle.locked.folders:
+  text: Locked working copy folders
+changes.nodetitle.locked.folders.tooltip:
+  text: Some folders are locked; VCS operations are not allowed for them. Cleanup should be performed.
+changes.nodetitle.logicallt.locked.folders:
+  text: Explicitly locked files
+changes.nodetitle.switched.files:
+  text: Switched Files
+changes.nodetitle.switched.roots:
+  text: Roots Switches
+changes.nodetitle.updating:
+  text: (updating...)
+changes.nodetitle.have.outdated.files:
+  text: Some files are changed on server
+change.nodetitle.change.is.outdated:
+  text: File is changed on server
+changes.nodetitle.changecount:
+  text: ({0,choice, 0#No files|1#1 file|2#{0} files})
+changes.nodetitle.directory.changecount:
+  text: ({0,choice, 0#No directories|1#1 directory|2#{0} directories})
+changes.nodetitle.directory.file.changecount:
+  text: ({0,choice, 0#No directories|1#1 directory|2#{0} directories} and {1,choice, 0#no files|1#1 file|2#{1} files})
+changes.toolwindow.name:
+  text: Changes
+changes.default.changelist.name:
+  text: Default
+changes.update.progress.message:
+  text: 'Updating: {0}'
+changes.action.show.directories.text:
+  text: Group by Directory
+changes.action.show.directories.description:
+  text: Group changes by directories and modules
+changes.action.show.ignored.text:
+  text: Show Ignored Files
+changes.action.show.ignored.description:
+  text: Show ignored files
+changes.dialog.newchangelist.title:
+  text: New Changelist
+changes.dialog.editchangelist.title:
+  text: Edit Changelist
+changes.removechangelist.warning.text:
+  text: |-
+    Are you sure want to remove changelist ''{0}''?
+    All changes will be moved to the active changelist.
+changes.removechangelist.multiple.warning.text:
+  text: |-
+    Are you sure want to remove {0} changelists?
+    All changes will be moved to the active changelist.
+changes.removechangelist.warning.title:
+  text: Delete Changelist
+changes.changelist.chooser.existing.changelist:
+  text: E&xisting Changelist
+changes.changelist.chooser.new.changelist:
+  text: Ne&w Changelist
+changes.changelist.chooser.title:
+  text: Choose Changelist
+changes.newchangelist.warning.already.exists.text:
+  text: Changelist ''{0}'' already exists.
+changes.newchangelist.warning.already.exists.title:
+  text: Wrong Changelist Name
+commit.dialog.no.changes.detected.text:
+  text: No changes detected
+commit.dialog.no.changes.detected.title:
+  text: Nothing to Commit
+commit.dialog.title:
+  text: Commit Changes
+commit.dialog.default.commit.operation.name:
+  text: Comm&it
+commit.dialog.include.action.name:
+  text: Include into commit
+commit.dialog.failed.commit.template:
+  text: 'Failed commit: {0}'
+commit.dialog.completed.successfully:
+  text: Completed successfully
+commit.dialog.refresh.files:
+  text: Synchronizing files...
+commit.dialog.rejected.commit.template:
+  text: 'Rejected commit: {0}'
+commit.dialog.changelist.label:
+  text: 'Change lis&t:'
+commit.dialog.changed.files.label:
+  text: Changed &Files
+commit.wait.util.synced.message:
+  text: Please wait until VCS synchronization is finished.
+commit.wait.util.synced.title:
+  text: Finishing VCS refresh
+change.list.manager.wait.lists.synchronization:
+  text: '{0}: Local Changes Refresh'
+commit.wait.util.synched.text:
+  text: Performing VCS refresh...
+edit.changelist.name:
+  text: '&Name:'
+edit.changelist.description:
+  text: '&Comment:'
+changes.commit.partial.offer.to.move.text:
+  text: |-
+    You have excluded some files from the active changelist when committing.
+    Would you like remaining changes to be moved to another changelist?
+changes.commit.partial.offer.to.move.title:
+  text: Partial Commit of Active Changelist
+checkbox.changelist.move.offer:
+  text: Suggest to move uncommitted changes &to another changelist
+commit.legend.modified:
+  text: 'Modified:'
+commit.legend.new:
+  text: 'New:'
+commit.legend.deleted:
+  text: 'Deleted:'
+commit.legend.unversioned:
+  text: 'Unversioned:'
+changes.view.dnd.label:
+  text: '{0} file(s)'
+error.executing.commit:
+  text: 'Error executing ''''{0}'''': {1}'
+changes.action.rollback.title:
+  text: '{0} Changes'
+changes.action.rollback.custom.title:
+  text: '{0} Changes'
+changes.action.rollback.nothing:
+  text: Nothing to {0}
+changes.dialog.editchangelist.error.already.exists:
+  text: A changelist named ''{0}'' already exists
+error.adding.files.prompt:
+  text: 'The following problems have occurred when adding the files:'
+error.adding.files.title:
+  text: Error adding files
+column.name.revision.list.committer:
+  text: User
+column.name.revision.list.number:
+  text: Number
+column.name.revision.list.description:
+  text: Description
+diff.unknown.file.type.prompt:
+  text: The file ''{0}'' is not of a known file type. Would you like to associate it with a file type?
+diff.unknown.file.type.title:
+  text: Cannot Show Diff
+diff.unknown.file.type.associate:
+  text: Associate
+browse.changes.nothing.found:
+  text: No changes matching criteria found
+browse.changes.nothing.found.title:
+  text: No Changes Found
+browse.changes.progress.title:
+  text: Searching for changes
+browse.changes.error.title:
+  text: Can't Show Changes
+browse.changes.error.message:
+  text: 'Problem accessing VCS: {0}'
+button.search.again:
+  text: Search Again
+browse.changes.filter.title:
+  text: Specify Search Criteria
+changes.checkbox.delete.locally.added.files:
+  text: '&Delete local copies of added files'
+perform.update.from.vcs.in.background:
+  text: Perform &update from VCS in background
+perform.commit.in.bacground:
+  text: '&Perform commit to VCS in background'
+changes.action.rollback.text:
+  text: Rollback
+changes.action.rollback.description:
+  text: Rollback changes
+changes.action.setdefaultchangelist.text:
+  text: Set Active Changelist
+changes.action.setdefaultchangelist.description:
+  text: Set changelist to which new changes are placed by default
+patch.apply.file.name.field:
+  text: '&Patch file name:'
+create.patch.commit.action.title:
+  text: Create Patch
+create.patch.error.title:
+  text: 'Error creating patch: {0}'
+patch.apply.dialog.title:
+  text: Apply Patch
+patch.file.type.description:
+  text: Patch files
+patch.summary.changed.files:
+  text: '{0} changed {0,choice,1#file|2#files}'
+patch.summary.new.files:
+  text: '{0} new {0,choice,1#file|2#files}'
+patch.summary.deleted.files:
+  text: '{0} deleted {0,choice,1#file|2#files}'
+patch.load.progress:
+  text: Loading...
+patch.apply.base.directory.field:
+  text: '&Base directory:'
+patch.apply.strip.leading.directories.field:
+  text: '&Strip leading directories'
+patch.apply.no.patches.found:
+  text: Failed to find any patches in the specified file
+patch.apply.load.error:
+  text: 'Error loading patch file: {0}'
+patch.apply.load.error.line:
+  text: 'Error loading patch file: {0} at line {1}'
+patch.apply.open.error:
+  text: 'Error opening patch file: {0}'
+patch.apply.conflict.title:
+  text: Patch Conflict for {0}
+patch.apply.conflict.local.version:
+  text: Local Version
+patch.apply.conflict.merged.version:
+  text: Merge Result
+patch.apply.conflict.patched.version:
+  text: Patched Version
+patch.apply.select.title:
+  text: Select Patch File
+patch.apply.select.base.directory.title:
+  text: Select Base Directory
+shelve.changes.action:
+  text: Shelve Changes
+patch.apply.already.applied:
+  text: All of the changes in the specified patch are already contained in the code
+patch.apply.partially.applied:
+  text: Some of the changes in the specified patch were skipped because they are already contained in the code
+patch.apply.success.applied.text:
+  text: Patch successfully applied
+patch.apply.command:
+  text: apply patch
+shelve.changes.delete.confirm:
+  text: Are you sure you want to delete the shelved changelist named ''{0}''? You will not be able to undo this operation.
+shelve.changes.delete.multiple.confirm:
+  text: Are you sure you want to delete {0} shelved changelists? You will not be able to undo this operation.
+shelve.changes.delete.files.from.list:
+  text: You are going to remove {0} file(s) from shelved changelist. Are you sure?
+shelve.changes.delete.files.from.list.title:
+  text: Remove Files from Shelved Changelist
+shelvedChanges.delete.title:
+  text: Delete Shelved Changelist
+create.patch.success.confirmation:
+  text: Successfully created patch {0}
+create.patch.partial.success.confirmation:
+  text: Successfully created patch {0}. {1} of the selected files {1,choice,1#is|2#are} binary and {1,choice,1#was|2#were} not included in the patch.
+patch.apply.error:
+  text: 'Failed to apply patch for file {0}: {1}'
+patch.load.base.revision.error:
+  text: 'Failed to load patch base revision for file {0}: {1}'
+shelve.changes.only.directories:
+  text: The selected changes affect only directories and no files, so they cannot be shelved
+edit.errors:
+  text: Edit Errors
+rollback.modified.without.editing.confirm.single:
+  text: Would you like to {0} the changes to {1}?
+rollback.modified.without.editing.confirm.multiple:
+  text: Would you like to {0} the changes to {1} selected files?
+error.updating.changes:
+  text: 'Error updating changes: {0}'
+ignored.configure.title:
+  text: Configure Ignored Files
+ignored.configure.item.directory:
+  text: 'Directory: {0}'
+ignored.configure.item.file:
+  text: 'File: {0}'
+ignored.configure.item.mask:
+  text: 'Mask: {0}'
+no.ignored.files:
+  text: No ignored files
+ignored.edit.title:
+  text: Ignore Unversioned Files
+ignored.edit.multiple.files:
+  text: Selected {0} files
+ignored.edit.radio.file:
+  text: Ignore specified &file
+ignored.edit.radio.directory:
+  text: Ignore all files &under
+ignored.edit.radio.mask:
+  text: Ignore all files &matching
+browse.changes.content.title:
+  text: Changes under {0}
+browse.changes.no.filter.prompt:
+  text: You have not specified any filtering criteria. Are you sure you would like to view the entire history of the project?
+browse.changes.title:
+  text: Browse Changes
+browse.changes.show.all.button:
+  text: Show All Changes
+browse.changes.show.recent.button:
+  text: Show Recent Changes
+diff.unknown.path.title:
+  text: Unknown diff
+new.changelist.make.active.checkbox:
+  text: Make this changelist &active
+composite.change.provider.include.vcs.checkbox:
+  text: Include changes from {0}
+shelf.tab:
+  text: Shelf
+directory.mapping.remove.title:
+  text: Edit VCS Directory Mapping
+button.configure.ignored.files:
+  text: Configure &Ignored Files...
+directory.mapping.add.title:
+  text: Add VCS Directory Mapping
+unshelve.changelist.chooser.title:
+  text: Unshelve Changes to Changelist
+retrieving.annotations:
+  text: Loading Annotations
+create.patch.all.binary:
+  text: All of the selected files are binary. Binary files cannot be included in patches. No patch has been created.
+multiple.file.merge.title:
+  text: Files Merged with Conflicts
+multiple.file.merge.properties.title:
+  text: Files Merged with Property Conflicts
+multiple.file.merge.accept.yours:
+  text: Accept &Yours
+multiple.file.merge.accept.theirs:
+  text: Accept &Theirs
+multiple.file.merge.merge:
+  text: '&Merge'
+multiple.file.merge.column.name:
+  text: Name
+multiple.file.merge.request.title:
+  text: Merge Revisions for {0}
+multiple.file.merge.column.type:
+  text: Type
+multiple.file.merge.type.binary:
+  text: Binary
+multiple.file.merge.type.text:
+  text: Text
+multiple.file.merge.loading.progress.title:
+  text: Loading merge revisions...
+unknown.vcs.presentation:
+  text: <Unknown VCS> ({0})
+show.diff.progress.title:
+  text: Loading content...
+show.diff.progress.title.detailed:
+  text: Loading content for {0}
+checkout.open.project.prompt:
+  text: |-
+    You have checked out known to Consulo project file:
+    {0}
+    Would you like to open it?
+checkout.title:
+  text: Checkout From Version Control
+checkout.create.project.prompt:
+  text: Would you like to create project for the sources you have checked out to {0}?
+checkout.open.directory.prompt:
+  text: Would you like to open the directory {0}?
+new.changelist.duplicate.name.error:
+  text: A changelist with that name already exists
+perform.edit.in.background:
+  text: Perform Edit/Checkout in background
+browse.changes.action:
+  text: Browse Changes
+browse.changes.scope:
+  text: Changes affecting {0}
+rollback.modified.without.checkout.error.tab:
+  text: '{0} Modified without Checkout'
+annotate.action.name:
+  text: Annotate
+annotate.action.description:
+  text: Annotate file
+operation.name.annotate:
+  text: Annotate
+perform.add.remove.in.background:
+  text: Perform Add/Remove in background
+shelve.changes.rename.prompt:
+  text: 'Please enter a name for the changelist:'
+shelve.changes.rename.title:
+  text: Rename Shelved Changelist
+changes.remove.active.prompt:
+  text: 'Select the changelist to which the changes should be moved:'
+changes.remove.active.empty.prompt:
+  text: 'Select the changelist to make active:'
+changes.remove.active.title:
+  text: Delete Active Changelist
+create.patch.loading.content.progress:
+  text: Loading content revisions
+create.patch.reverse.checkbox:
+  text: '&Reverse patch'
+create.patch.base.revision:
+  text: '&Include base revision text(s) into patch file'
+create.patch.file.path:
+  text: '&Patch file:'
+create.patch.encoding:
+  text: 'Encoding:'
+committed.changes.refresh.progress:
+  text: Refreshing VCS history
+cache.settings.dialog.title:
+  text: VCS History Cache Settings
+diff.commit.message.title:
+  text: Commit Message
+button.configure.history.cache:
+  text: Configure &History Cache...
+background.operations.title:
+  text: Background Operations
+changes.browser.details.marker:
+  text: more...
+changelist.details.title:
+  text: Changelist Details
+date.group.title:
+  text: Date
+date.group.today:
+  text: Today
+date.group.last.week:
+  text: Last Week
+user.group.title:
+  text: User
+filter.structure.name:
+  text: Structure
+get.committed.changes.intersecting.prompt:
+  text: |-
+    The files in the selected {1, choice, 1#changelist|2#changelists} are also modified in {0} other {0,choice, 1#changelist|2#changelists}.
+    Changes to selected files in these changelists will also be downloaded.
+get.committed.changes.title:
+  text: Get Changelist
+issue.link.issue.column:
+  text: Issue
+issue.link.link.column:
+  text: Link
+issue.link.add.title:
+  text: Add Issue Navigation Link
+issue.link.edit.title:
+  text: Edit Issue Navigation Link
+issue.link.delete.prompt:
+  text: Delete selected navigation link?
+issue.link.delete.title:
+  text: Delete Issue Navigation Link
+issue.link.no.patterns:
+  text: No patterns configured
+committed.changes.empty.comment:
+  text: <no comment>
+committed.changes.filter.all:
+  text: All
+committed.changes.filter.none:
+  text: <none>
+committed.changes.partial.list:
+  text: '[partial]'
+update.info.loading.changelists:
+  text: Loading changelists...
+update.info.group.by.changelist:
+  text: Group by Changelist
+incoming.changes.loading.progress:
+  text: Loading incoming changes
+incoming.changes.refresh.progress:
+  text: Refreshing incoming changes
+outdated.version.show.diff.action:
+  text: Show Diff
+outdated.version.update.project.action:
+  text: Update Project
+outdated.version.text:
+  text: 'Outdated version. Modified by {0} on {1}: {2}'
+outdated.version.pretty.date.text:
+  text: 'Outdated version. Modified by {0} {1}: {2}'
+outdated.version.text.deleted:
+  text: 'Outdated version. Deleted by {0} {1}: {2}'
+current.version.text:
+  text: '{4}<br/><br/>Current version is {3}.<br/>Modified by {0}<br/>{1}<br/>{2}'
+committed.changes.filter.title:
+  text: Filter by
+committed.changes.group.title:
+  text: Group by
+committed.changes.regex.title:
+  text: Regex
+changelist.details.committed.format:
+  text: Committed by {0} {1}
+incoming.changes.indicator.tooltip:
+  text: '{0} incoming changelists available'
+column.name.type:
+  text: Type
+change.type.new:
+  text: New
+change.type.deleted:
+  text: Deleted
+change.type.modified:
+  text: Modified
+apply.patch.create.dirs.prompt.header:
+  text: "The patch contains files in the following non-existing directories:\r\n"
+apply.patch.create.dirs.prompt.footer:
+  text: Would you like to create the directories?
+apply.patch.progress.verifying:
+  text: Verifying...
+apply.patch.summary.title:
+  text: 'Summary:'
+committed.changes.incorrect.regex.message:
+  text: Regular expression used in the filter is invalid
+committed.changes.empty.message:
+  text: There are no committed changes in the repository
+committed.changes.not.loaded.message:
+  text: Press Refresh button to load repository changes
+incoming.changes.not.loaded.message:
+  text: Press Refresh button to load incoming changes
+incoming.changes.empty.message:
+  text: There are no incoming changes
+show.history.action.name.template:
+  text: Show History _for {0}
+show.history.dialog.title.template:
+  text: History for {0}
+action.name.show.history.for.selection:
+  text: Selection
+action.name.show.history.for.class:
+  text: Class
+action.name.show.history.for.field:
+  text: Field
+action.name.show.history.for.method:
+  text: Method
+action.name.show.history.for.function:
+  text: Function
+action.name.show.history.for.tag:
+  text: Tag
+action.name.show.history.for.text:
+  text: Text
+action.name.show.history.for.code.block:
+  text: Code Block
+action.name.show.history.for.statement:
+  text: Statement
+exception.text.file.should.be.directory:
+  text: '{0} isn''t a directory'
+vcs.root.remove.prompt:
+  text: Would you like to remove the VCS root ''{0}'' for the removed module ''{1}''?
+vcs.root.remove.title:
+  text: Remove VCS Root
+open.repository.version.text:
+  text: Open Repository Version
+open.repository.version.description:
+  text: Open editor with selected revision of the file
+local.history.update.from.vcs:
+  text: Update from VCS
+action.name.copy.old.text:
+  text: Copy Old Text
+create.changelist.on.failed.commit:
+  text: 'Create changelist on failed commit:'
+commit.failed.confirm.prompt:
+  text: Would you like to move the files that failed to commit to a separate changelist?
+commit.failed.confirm.title:
+  text: Commit Failed
+progress.loading.diff.revisions:
+  text: Getting revisions content
+show.diff.with.local.action.text:
+  text: Show Diff with Local
+show.diff.with.local.action.description:
+  text: Compare selected revision with the local version of the file
+unshelve.changes.dialog.title:
+  text: Unshelve Changes
+ignored.edit.multiple.directories:
+  text: Selected {0} directories
+close.tab.action.name:
+  text: Close
+revert.changes.title:
+  text: Revert Changes
+action.revert.selected.changes.text:
+  text: Revert Selected Changes
+revert.changes.default.name:
+  text: 'Revert: {0}'
+shelved.version.name:
+  text: Shelved version
+local.version.title:
+  text: Local version
+change.file.renamed.from.text:
+  text: '- renamed from {0}'
+change.file.moved.from.text:
+  text: '- moved from {0}'
+change.file.copied.from.text:
+  text: '- copied from {0}'
+change.file.replaced.text:
+  text: '- replaced'
+change.file.renamed.to.text:
+  text: '- renamed to {0}'
+change.file.moved.to.text:
+  text: '- moved to {0}'
+cannot.find.file.to.patch:
+  text: 'Cannot find file to patch: {0}'
+cannot.apply.file.already.exists:
+  text: 'Cannot apply patch to file {0}: it already exists.'
+change.lists.manager.add.unversioned:
+  text: Add unversioned files
+change.lists.manager.move.changes.to.list:
+  text: Move Changes to List
+vcs.shelf.action.restore.text:
+  text: Restore
+vcs.shelf.action.restore.description:
+  text: Makes selected already unshelved changelist(s) available for unshelve again
+delete.all.already.unshelved:
+  text: Delete All Already Unshelved
+delete.all.already.unshelved.confirmation:
+  text: |-
+    Do you want to delete all already unshelved changelists?
+    This operation cannot be undone.
+highlight.annotation.before.not.selected.text:
+  text: Show before...
+highlight.annotation.before.selected.text:
+  text: Show before ({0})
+highlight.annotation.after.not.selected.text:
+  text: Show after...
+highlight.annotation.after.selected.text:
+  text: Show after ({0})
+highlight.annotation.before.description:
+  text: Highlights revisions before or equal to selected
+highlight.annotation.after.description:
+  text: Highlights revisions after or equal to selected
+action.enable.version.control.integration.text:
+  text: _Enable Version Control Integration...
+dialog.enable.version.control.integration.title:
+  text: Enable Version Control Integration
+dialog.enable.version.control.integration.select.vcs.label.text:
+  text: |-
+    Please select version control system
+    to make your <Project Root> be under:
+dialog.enable.version.control.integration.hint.text:
+  text: 'Version Control configuration is available at: ''Settings | Version Control'''
+confirmation.text.add.file:
+  text: |-
+    Do you want to schedule the following file for addition to VCS?
+    {0}
+confirmation.title.add.file:
+  text: Schedule for Addition
+confirmation.title.add.multiple.files:
+  text: Select Files to Add to VCS
+waiting.changelists.update.for.show.commit.dialog.message:
+  text: Commit dialog
+add.confirmation.label.text:
+  text: 'When files are created with {0}:'
+remove.confirmation.label.text:
+  text: 'When files are deleted with {0}:'
+rolling.back.file:
+  text: Rolling back {0}
+perform.rollback.in.background.option:
+  text: Perform revert in background
+annotation.original.revision.text:
+  text: 'Revision: {0}'
+annotation.switch.to.original.text:
+  text: Hide merge sources
+annotation.switch.to.merged.text:
+  text: Show merge sources
+all.vcs.init.message.text:
+  text: Initializing VCS...
+switch.to.changelist:
+  text: Switch &to changelist (''{0}'')
+move.to.changelist:
+  text: '&Move changes to active changelist (''''{0}'''')'
+vcs.config.track.changed.on.server:
+  text: Check every
+vcs.quicklist.popup.title:
+  text: VCS Operations
+vcs.quicklist.pupup.section.local.history:
+  text: Local History
+options.background.processes.title:
+  text: Background processes
+options.background.processes.enable:
+  text: Enable background processes
+options.check.changed.on.server.title:
+  text: '"Changed on server" conflicts'
+revision.changes.not.supported:
+  text: Current VCS does not support viewing changes by revision
+line.annotation.aspect.author:
+  text: Author
+line.annotation.aspect.date:
+  text: Date
+line.annotation.aspect.revision:
+  text: Revision
+annotation.commit.number:
+  text: Commit number
+annotation.wrong.line.number.notification.text:
+  text: <html>Number of lines annotated by {0} is not equal to number of lines in the file. Check file encoding and line separators.</html>
+todo.handler.only.skipped:
+  text: |-
+    <html><body>TODO check has skipped {0,choice, 0#|1#one file|2#{0} files}.<br/>
+    No new, edited, or located in changed fragments TODO items found.</body></html>
+todo.handler.only.added:
+  text: <html><body><b>There {0,choice, 0#|1#was one|2#were {0}} added or edited TODO {0,choice, 0#|1#item|2#items} found.</b><br/>{1,choice, 0#|1#One file was skipped.|2#{1} files were skipped.}Would you like to review {0,choice,1#it|2#them}?</body></html>
+todo.handler.only.in.changed:
+  text: <html><body>There {0,choice, 1#was one|2#were {0}} located in changed {0,choice, 1#fragment|2#fragments} TODO {0,choice, 1#item|2#items} found.<br/>{1,choice, 0#|1#One file was skipped.|2#{1} files were skipped.}Would you like to review {0,choice,1#it|2#them}?</body></html>
+todo.handler.only.both:
+  text: <html><body><b>There were {0, choice, 1#one|2#{0}} added or edited,</b><br/>and {1, choice, 1#one|2#{1}} located in changed {1,choice, 1#fragment|2#fragments} TODO items found.<br/>{2,choice, 0#|1#One file was skipped.|2#{2} files were skipped.}Would you like to review them?</body></html>
+paths.affected.in.revision:
+  text: Paths Affected in Revision {0}
+refresh.failed.message:
+  text: 'Refresh failed: {0}'
+file.status.name.up.to.date.immediate.children:
+  text: Have immediate changed children
+file.status.name.up.to.date.recursive.children:
+  text: Have changed descendants
+impl.vcs.initialization:
+  text: VCS Initialization
+vcs.common.labels.vcs:
+  text: 'VCS:'
+vcs.generic.name.with.mnemonic:
+  text: VC_S

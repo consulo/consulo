@@ -70,7 +70,9 @@ import consulo.annotation.DeprecationInfo;
 import consulo.application.AccessRule;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
+import consulo.vcs.api.localize.VcsApiLocalize;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Attribute;
@@ -361,6 +363,13 @@ public class ProjectLevelVcsManagerImpl extends ProjectLevelVcsManagerEx impleme
   @Override
   public AbstractVcs[] getAllActiveVcss() {
     return myMappings.getActiveVcses();
+  }
+
+  @Override
+  @Nullable
+  public AbstractVcs getSingleVCS() {
+    AbstractVcs[] vcses = getAllActiveVcss();
+    return vcses.length == 1 ? vcses[0] : null;
   }
 
   @Override
@@ -667,9 +676,11 @@ public class ProjectLevelVcsManagerImpl extends ProjectLevelVcsManagerEx impleme
     return vcsRoots.toArray(new VcsRoot[vcsRoots.size()]);
   }
 
+  @Nonnull
   @Override
-  public void updateActiveVcss() {
-    // not needed
+  public LocalizeValue getConsolidatedVcsName() {
+    AbstractVcs singleVcs = getSingleVCS();
+    return singleVcs != null ? singleVcs.getShortNameWithMnemonic() : VcsApiLocalize.vcsGenericNameWithMnemonic();
   }
 
   @Override

@@ -22,14 +22,16 @@ import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.openapi.options.colors.AttributesDescriptor;
 import com.intellij.openapi.options.colors.ColorSettingsPage;
 import com.intellij.openapi.util.Pair;
+import consulo.localize.LocalizeValue;
 import consulo.ui.color.ColorValue;
 import consulo.ui.image.Image;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public abstract class ColorAndFontDescription extends TextAttributes implements EditorSchemeAttributeDescriptor {
-  private final String myName;
-  private final String myGroup;
+  private final LocalizeValue myName;
+  private final LocalizeValue myGroup;
   private final String myType;
   private final Image myIcon;
   private final String myToolTip;
@@ -40,7 +42,7 @@ public abstract class ColorAndFontDescription extends TextAttributes implements 
   private boolean isErrorStripeChecked;
   private boolean isInherited;
 
-  public ColorAndFontDescription(String name, String group, String type, EditorColorsScheme scheme, final Image icon, final String toolTip) {
+  public ColorAndFontDescription(LocalizeValue name, LocalizeValue group, String type, EditorColorsScheme scheme, final Image icon, final String toolTip) {
     myName = name;
     myGroup = group;
     myType = type;
@@ -49,12 +51,19 @@ public abstract class ColorAndFontDescription extends TextAttributes implements 
     myToolTip = toolTip;
   }
 
+  @Override
   public String toString() {
+    return myName.get();
+  }
+
+  @Nonnull
+  public LocalizeValue getName() {
     return myName;
   }
 
+  @Nonnull
   @Override
-  public String getGroup() {
+  public LocalizeValue getGroup() {
     return myGroup;
   }
 

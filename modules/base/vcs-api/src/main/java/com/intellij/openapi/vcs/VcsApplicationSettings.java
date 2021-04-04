@@ -15,7 +15,10 @@
  */
 package com.intellij.openapi.vcs;
 
-import com.intellij.openapi.components.*;
+import com.intellij.openapi.components.PersistentStateComponent;
+import com.intellij.openapi.components.ServiceManager;
+import com.intellij.openapi.components.State;
+import com.intellij.openapi.components.Storage;
 import com.intellij.util.xmlb.XmlSerializerUtil;
 import jakarta.inject.Singleton;
 
@@ -23,15 +26,13 @@ import jakarta.inject.Singleton;
  * We don't use roaming type PER_OS - path macros is enough ($USER_HOME$/Dropbox for example)
  */
 @Singleton
-@State(
-        name = "VcsApplicationSettings",
-        storages = @Storage(file = StoragePathMacros.APP_CONFIG + "/vcs.xml")
-)
+@State(name = "VcsApplicationSettings", storages = @Storage("vcs.xml"))
 public class VcsApplicationSettings implements PersistentStateComponent<VcsApplicationSettings> {
   public String PATCH_STORAGE_LOCATION = null;
   public boolean SHOW_WHITESPACES_IN_LST = false;
   public boolean SHOW_LST_GUTTER_MARKERS = true;
   public boolean SHOW_LST_WORD_DIFFERENCES = true;
+  public boolean DETECT_PATCH_ON_THE_FLY = false;
 
   public static VcsApplicationSettings getInstance() {
     return ServiceManager.getService(VcsApplicationSettings.class);

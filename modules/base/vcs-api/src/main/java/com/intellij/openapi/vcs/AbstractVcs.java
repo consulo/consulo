@@ -37,8 +37,10 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.ThreeState;
 import com.intellij.util.ThrowableRunnable;
 import com.intellij.util.ui.VcsSynchronousProgressWrapper;
+import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.image.Image;
+import consulo.vcs.api.localize.VcsApiLocalize;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
@@ -114,6 +116,36 @@ public abstract class AbstractVcs<ComList extends CommittedChangeList> extends S
   @Nonnull
   public String getShortName() {
     return getDisplayName();
+  }
+
+  /**
+   * Returns the short or abbreviated name of this VCS, with mnemonic, which name can be used in menus and action names.
+   * (e.g. it can be "_SVN" for Subversion or "_Hg" for Mercurial).<br/><br/>
+   * Returns generic "VC_S" by default.
+   */
+  @Nonnull
+  public LocalizeValue getShortNameWithMnemonic() {
+    return VcsApiLocalize.vcsGenericNameWithMnemonic();
+  }
+
+  /**
+   * Allows to hide 'VCS' action group in 'Main Menu'.
+   * Takes effect for projects that have configured mappings for this VCS only.
+   *
+   * @return true if 'VCS' group should be hidden.
+   */
+  public boolean isWithCustomMenu() {
+    return false;
+  }
+
+  /**
+   * Allows to hide 'Local Changes' toolwindow tab, as well as disable changelists.
+   * Takes effect for projects that have configured mappings for this VCS only.
+   *
+   * @return true if 'Local Changes' tab should be hidden.
+   */
+  public boolean isWithCustomLocalChanges() {
+    return false;
   }
 
   public abstract Configurable getConfigurable();

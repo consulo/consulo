@@ -47,7 +47,7 @@ public abstract class FileStatusManager {
    * @deprecated Use getStatus(file).getText()} instead
    */
   public String getStatusText(VirtualFile file) {
-    return getStatus(file).getText();
+    return getStatus(file).getText().get();
   }
 
   /**

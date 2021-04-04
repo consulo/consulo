@@ -15,11 +15,11 @@
  */
 package com.intellij.openapi.vcs.readOnlyHandler;
 
+import com.intellij.ide.IdeBundle;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vcs.VcsBundle;
 import com.intellij.openapi.vfs.ReadonlyStatusHandler;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.CollectionComboBoxModel;
@@ -28,8 +28,8 @@ import com.intellij.ui.JBColor;
 import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.util.ui.OptionsDialog;
 import com.intellij.util.ui.UIUtil;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -43,10 +43,8 @@ import java.util.List;
  * @author yole
  */
 public class ReadOnlyStatusDialog extends OptionsDialog {
-  private static final SimpleTextAttributes BOLD_ATTRIBUTES =
-          new SimpleTextAttributes(SimpleTextAttributes.STYLE_BOLD, JBColor.foreground());
-  private static final SimpleTextAttributes SELECTED_BOLD_ATTRIBUTES =
-          new SimpleTextAttributes(SimpleTextAttributes.STYLE_BOLD, new JBColor(UIUtil::getListSelectionForeground));
+  private static final SimpleTextAttributes BOLD_ATTRIBUTES = new SimpleTextAttributes(SimpleTextAttributes.STYLE_BOLD, JBColor.foreground());
+  private static final SimpleTextAttributes SELECTED_BOLD_ATTRIBUTES = new SimpleTextAttributes(SimpleTextAttributes.STYLE_BOLD, new JBColor(UIUtil::getListSelectionForeground));
 
   private JPanel myTopPanel;
   private JList myFileList;
@@ -57,7 +55,7 @@ public class ReadOnlyStatusDialog extends OptionsDialog {
 
   public ReadOnlyStatusDialog(Project project, final FileInfo[] files) {
     super(project);
-    setTitle(VcsBundle.message("dialog.title.clear.read.only.file.status"));
+    setTitle(IdeBundle.message("dialog.title.clear.read.only.file.status"));
     myFiles = files;
     myFileList.setPreferredSize(getDialogPreferredSize());
     initFileList();
@@ -181,8 +179,8 @@ public class ReadOnlyStatusDialog extends OptionsDialog {
     }
     else {
       String list = StringUtil.join(files, info -> info.getFile().getPresentableUrl(), "<br>");
-      String message = VcsBundle.message("handle.ro.file.status.failed", list);
-      Messages.showErrorDialog(getRootPane(), message, VcsBundle.message("dialog.title.clear.read.only.file.status"));
+      String message = IdeBundle.message("handle.ro.file.status.failed", list);
+      Messages.showErrorDialog(getRootPane(), message, IdeBundle.message("dialog.title.clear.read.only.file.status"));
       myFiles = files.toArray(new FileInfo[files.size()]);
       initFileList();
     }

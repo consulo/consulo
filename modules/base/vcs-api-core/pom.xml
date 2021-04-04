@@ -35,6 +35,24 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
 
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>consulo.maven</groupId>
+        <artifactId>consulo-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>gen</id>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>generate-localize</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+
   <dependencies>
     <dependency>
       <groupId>${project.groupId}</groupId>

@@ -17,15 +17,20 @@
 package com.intellij.application.options.colors;
 
 import com.intellij.openapi.editor.colors.EditorColorsScheme;
+import consulo.localize.LocalizeValue;
+
+import javax.annotation.Nonnull;
 
 public interface EditorSchemeAttributeDescriptor {
-  String getGroup();
+  @Nonnull
+  LocalizeValue getGroup();
 
   String getType();
 
   EditorColorsScheme getScheme();
 
-  void apply(EditorColorsScheme scheme);
+  default void apply(EditorColorsScheme scheme) {
+  }
 
   boolean isModified();
 }

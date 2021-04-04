@@ -29,6 +29,7 @@ import com.intellij.openapi.vcs.update.UpdatedFiles;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.Processor;
 import com.intellij.util.messages.Topic;
+import consulo.localize.LocalizeValue;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
@@ -167,6 +168,12 @@ public abstract class ProjectLevelVcsManager {
    */
   public abstract AbstractVcs[] getAllActiveVcss();
 
+  /**
+   * @return VCS configured for the project, if there's only a single one. Return 'null' otherwise.
+   */
+  @Nullable
+  public abstract AbstractVcs getSingleVCS();
+
   public abstract boolean hasActiveVcss();
 
   public abstract boolean hasAnyMappings();
@@ -242,7 +249,15 @@ public abstract class ProjectLevelVcsManager {
   @Nonnull
   public abstract VcsRoot[] getAllVcsRoots();
 
-  public abstract void updateActiveVcss();
+  @Nonnull
+  public abstract LocalizeValue getConsolidatedVcsName();
+
+  /**
+   * @deprecated Use just {@link #setDirectoryMappings(List)}.
+   */
+  @Deprecated(forRemoval = true)
+  public void updateActiveVcss() {
+  }
 
   public abstract List<VcsDirectoryMapping> getDirectoryMappings();
 

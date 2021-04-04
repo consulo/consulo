@@ -44,7 +44,9 @@ public class NewColorAndFontPanel extends JPanel {
   public NewColorAndFontPanel(final SchemesPanel schemesPanel,
                               final OptionsPanel optionsPanel,
                               final PreviewPanel previewPanel,
-                              final String category, final Collection<String> optionList, final ColorSettingsPage page) {
+                              final String category,
+                              final Collection<String> optionList,
+                              final ColorSettingsPage page) {
     super(new BorderLayout(0, 10));
     mySchemesPanel = schemesPanel;
     myOptionsPanel = optionsPanel;
@@ -128,8 +130,7 @@ public class NewColorAndFontPanel extends JPanel {
 
   }
 
-  public static NewColorAndFontPanel create(final PreviewPanel previewPanel, String category, final ColorAndFontOptions options,
-                                            Collection<String> optionList, ColorSettingsPage page) {
+  public static NewColorAndFontPanel create(final PreviewPanel previewPanel, String category, final ColorAndFontOptions options, Collection<String> optionList, ColorSettingsPage page) {
     final SchemesPanel schemesPanel = new SchemesPanel(options);
 
     final OptionsPanel optionsPanel = new OptionsPanelImpl(options, schemesPanel, category);

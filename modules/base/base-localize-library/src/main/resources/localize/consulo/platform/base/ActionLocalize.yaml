@@ -2664,3 +2664,11 @@ action.IdeScriptingConsole.text:
   text: IDE Scripting Console
 action.IdeScriptingConsole.description:
   text: Open IDE scripting console
+action.Vcs.QuickListPopupAction.text:
+  text: VCS Operations Popup...
+action.Vcs.QuickListPopupAction.description:
+  text: Context aware popup with list of commonly used VCS actions
+action.ChangesView.ApplyPatchFromClipboard.text:
+  text: Apply Patch from Clipboard...
+action.ChangesView.ApplyPatchFromClipboard.description:
+  text: Apply a patch to the sources of the project

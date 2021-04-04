@@ -24,6 +24,7 @@ import com.intellij.openapi.vcs.changes.ChangeListManagerImpl;
 import com.intellij.openapi.vcs.impl.FileStatusProvider;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.ThreeState;
+import consulo.localize.LocalizeValue;
 import jakarta.inject.Inject;
 
 import javax.annotation.Nonnull;
@@ -34,9 +35,9 @@ import javax.annotation.Nullable;
  */
 public class ChangelistConflictFileStatusProvider implements FileStatusProvider {
 
-  private static final FileStatus MODIFIED_OUTSIDE = FileStatusFactory.getInstance().createFileStatus("modifiedOutside", "Modified in not active changelist", null);
-  private static final FileStatus ADDED_OUTSIDE = FileStatusFactory.getInstance().createFileStatus("addedOutside", "Added in not active changelist", null);
-  private static final FileStatus CHANGELIST_CONFLICT = FileStatusFactory.getInstance().createFileStatus("changelistConflict", "Changelist conflict", null);
+  private static final FileStatus MODIFIED_OUTSIDE = FileStatusFactory.getInstance().createFileStatus("modifiedOutside", LocalizeValue.localizeTODO("Modified in not active changelist"), null);
+  private static final FileStatus ADDED_OUTSIDE = FileStatusFactory.getInstance().createFileStatus("addedOutside", LocalizeValue.localizeTODO("Added in not active changelist"), null);
+  private static final FileStatus CHANGELIST_CONFLICT = FileStatusFactory.getInstance().createFileStatus("changelistConflict", LocalizeValue.localizeTODO("Changelist conflict"), null);
 
   private final ChangelistConflictTracker myConflictTracker;
   private final ChangeListManager myChangeListManager;

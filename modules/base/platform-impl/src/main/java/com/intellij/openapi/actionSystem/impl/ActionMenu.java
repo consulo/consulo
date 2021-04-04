@@ -20,7 +20,6 @@ import com.intellij.ide.ui.UISettings;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.impl.actionholder.ActionRef;
 import com.intellij.openapi.application.impl.LaterInvocator;
-import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.text.TextWithMnemonic;
 import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.openapi.wm.IdeFrame;
@@ -56,6 +55,8 @@ public final class ActionMenu extends JMenu {
   private final boolean myTopLevel;
 
   private Component[] myMenuComponents;
+  // protector for update inside setMnemonic
+  private boolean myMnemonicUpdate;
 
   private LocalizeValue myTextValue = LocalizeValue.empty();
 
@@ -165,7 +166,14 @@ public final class ActionMenu extends JMenu {
 
     setText(textWithMnemonic.getText());
     setDisplayedMnemonicIndex(textWithMnemonic.getMnemonicIndex());
-    setMnemonic(textWithMnemonic.getMnemonic());
+
+    myMnemonicUpdate = true;
+    try {
+      setMnemonic(textWithMnemonic.getMnemonic());
+    }
+    finally {
+      myMnemonicUpdate = false;
+    }
   }
 
   @Override
@@ -264,11 +272,19 @@ public final class ActionMenu extends JMenu {
 
     @Override
     public void menuDeselected(MenuEvent e) {
+      if (myMnemonicUpdate) {
+        return;
+      }
+
       menuCanceled(e);
     }
 
     @Override
     public void menuSelected(MenuEvent e) {
+      if(myMnemonicUpdate) {
+        return;
+      }
+
       if (isTopMenuBarAfterOpenJDKMemLeakFix()) {
         myMenuComponents = null;
       }
@@ -307,16 +323,8 @@ public final class ActionMenu extends JMenu {
 
   private boolean isTopMenuBarAfterOpenJDKMemLeakFix() {
     if (isTopMenuBar()) {
-      // looks like openjdk backport fix from jdk 10
-      // 181 - when bug from jdk 10 reported. maybe build lower
-      if (SystemInfo.isJavaVersionAtLeast(8, 0, 181)) {
-        return true;
-      }
-
       // jdk 10 have initial change in screen menu
-      if (SystemInfo.isJavaVersionAtLeast(10, 0, 0)) {
-        return true;
-      }
+      return true;
     }
     return false;
   }

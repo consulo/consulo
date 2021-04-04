@@ -16,12 +16,15 @@
 package com.intellij.openapi.vcs;
 
 import com.intellij.AbstractBundle;
+import consulo.annotation.DeprecationInfo;
 import org.jetbrains.annotations.PropertyKey;
 
 /**
  * @author lesya
  */
-public class VcsBundle extends AbstractBundle{
+@Deprecated(forRemoval = true)
+@DeprecationInfo("Use VcsApiLocalize")
+public class VcsBundle extends AbstractBundle {
   private static final VcsBundle ourInstance = new VcsBundle();
 
   private VcsBundle() {

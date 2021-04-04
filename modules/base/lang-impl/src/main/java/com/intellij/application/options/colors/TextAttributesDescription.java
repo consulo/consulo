@@ -23,13 +23,14 @@ import com.intellij.openapi.editor.colors.EditorColorsScheme;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.openapi.editor.markup.EffectType;
 import com.intellij.openapi.editor.markup.TextAttributes;
+import consulo.localize.LocalizeValue;
 import consulo.ui.color.ColorValue;
 import consulo.ui.image.Image;
 
 public abstract class TextAttributesDescription extends ColorAndFontDescription {
   private final TextAttributes myAttributes;
 
-  public TextAttributesDescription(String name, String group, TextAttributes attributes, TextAttributesKey type, EditorColorsScheme scheme, Image icon, final String toolTip) {
+  public TextAttributesDescription(LocalizeValue name, LocalizeValue group, TextAttributes attributes, TextAttributesKey type, EditorColorsScheme scheme, Image icon, final String toolTip) {
     super(name, group, type == null ? null : type.getExternalName(), scheme, icon, toolTip);
     myAttributes = attributes;
     initCheckedStatus();

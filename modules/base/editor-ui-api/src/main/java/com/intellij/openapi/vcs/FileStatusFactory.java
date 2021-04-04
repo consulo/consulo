@@ -17,6 +17,7 @@ package com.intellij.openapi.vcs;
 
 import com.intellij.openapi.editor.colors.EditorColorKey;
 import com.intellij.openapi.editor.colors.EditorColorsManager;
+import consulo.localize.LocalizeValue;
 import consulo.ui.color.ColorValue;
 
 import javax.annotation.Nonnull;
@@ -31,11 +32,11 @@ public class FileStatusFactory {
   private FileStatusFactory() {
   }
 
-  public synchronized FileStatus createFileStatus(@Nonnull String id, @Nonnull String description) {
+  public synchronized FileStatus createFileStatus(@Nonnull String id, @Nonnull LocalizeValue description) {
     return createFileStatus(id, description, null);
   }
 
-  public synchronized FileStatus createFileStatus(@Nonnull String id, @Nonnull String description, @Nullable ColorValue color) {
+  public synchronized FileStatus createFileStatus(@Nonnull String id, @Nonnull LocalizeValue description, @Nullable ColorValue color) {
     FileStatusImpl result = new FileStatusImpl(id, EditorColorKey.createColorKey("FILESTATUS_" + id, color), description);
     myStatuses.add(result);
     return result;
@@ -55,20 +56,22 @@ public class FileStatusFactory {
   private static class FileStatusImpl implements FileStatus {
     private final String myStatus;
     private final EditorColorKey myColorKey;
-    private final String myText;
+    private final LocalizeValue myText;
 
-    public FileStatusImpl(@Nonnull String status, @Nonnull EditorColorKey key, String text) {
+    public FileStatusImpl(@Nonnull String status, @Nonnull EditorColorKey key, LocalizeValue text) {
       myStatus = status;
       myColorKey = key;
       myText = text;
     }
 
+    @Nonnull
     public String toString() {
       return myStatus;
     }
 
+    @Nonnull
     @Override
-    public String getText() {
+    public LocalizeValue getText() {
       return myText;
     }
 
