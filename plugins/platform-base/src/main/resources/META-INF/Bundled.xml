@@ -35,6 +35,8 @@
     <bundledKeymap file="/keymap/Keymap_Eclipse.xml"/>
     <bundledKeymap file="/keymap/Keymap_EclipseMac.xml"/>
     <bundledKeymap file="/keymap/Keymap_Netbeans.xml"/>
+    <bundledKeymap file="/keymap/Keymap_VSCode.xml"/>
+    <bundledKeymap file="/keymap/Keymap_VSCode_OSX.xml"/>
 
     <bundledColorScheme path="/colorSchemes/Default.xml"/>
     <bundledColorScheme path="/colorSchemes/IDEA.xml"/>
