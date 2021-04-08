@@ -279,11 +279,6 @@ public class LightApplication extends ComponentManagerImpl implements Applicatio
   }
 
   @Override
-  public void restart() {
-
-  }
-
-  @Override
   public boolean isActive() {
     return true;
   }

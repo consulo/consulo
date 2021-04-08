@@ -16,8 +16,9 @@
 package consulo.ide.updateSettings.impl;
 
 import com.intellij.ide.IdeBundle;
+import com.intellij.ide.actions.SettingsEntryPointAction;
 import com.intellij.ide.plugins.*;
-import com.intellij.openapi.application.ex.ApplicationManagerEx;
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.Project;
@@ -260,11 +261,15 @@ public class PlatformOrPluginDialog extends DialogWrapper {
 
     }, () -> {
       if (myType != PlatformOrPluginUpdateResult.Type.PLUGIN_INSTALL) {
+        Application.get().invokeLater(() -> {
+          UpdateSettings updateSettings = UpdateSettings.getInstance();
+          updateSettings.setLastCheckResult(PlatformOrPluginUpdateResult.Type.RESTART_REQUIRED);
+
+          SettingsEntryPointAction.updateState(updateSettings);
+        });
+
         if (PluginInstallUtil.showRestartIDEADialog() == Messages.YES) {
-          ApplicationManagerEx.getApplicationEx().restart(true);
-        }
-        else {
-          UpdateSettings.getInstance().setLastCheckResult(PlatformOrPluginUpdateResult.Type.RESTART_REQUIRED);
+          Application.get().restart(true);
         }
       }
     });

@@ -125,6 +125,7 @@ public interface Application extends ComponentManager {
    * @return {@code true} if the action is running, or {@code false} if no action of the specified class is currently executing.
    */
   boolean hasWriteAction(@Nonnull Class<?> actionClass);
+
   /**
    * Asserts whether the read access is allowed.
    */
@@ -420,14 +421,26 @@ public interface Application extends ComponentManager {
    * @return true if IDE can restart itself, false otherwise.
    * @since 8.1
    */
-  boolean isRestartCapable();
+  default boolean isRestartCapable() {
+    return false;
+  }
 
   /**
    * Exits and restarts IDE. If the current platform is not restart capable, only exits.
-   *
-   * @since 8.1
    */
-  void restart();
+  default void restart() {
+    restart(false);
+  }
+
+  /**
+   * @param exitConfirmed if true, suppresses any shutdown confirmation. However, if there are any background processes or tasks running,
+   *                      a corresponding confirmation will be shown with the possibility to cancel the operation
+   */
+  default void restart(boolean exitConfirmed) {
+    if(isRestartCapable()) {
+      throw new UnsupportedOperationException("#isRestartCapable() return true, but there no implementation of #restart(boolean)");
+    }
+  }
 
   /**
    * Checks if the application is active

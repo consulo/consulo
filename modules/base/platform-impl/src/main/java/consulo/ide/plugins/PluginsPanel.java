@@ -22,7 +22,6 @@ import com.intellij.ide.plugins.PluginInstallUtil;
 import com.intellij.ide.plugins.PluginManagerMain;
 import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.application.Application;
-import com.intellij.openapi.application.ex.ApplicationEx;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.wm.IdeFocusManager;
@@ -145,7 +144,7 @@ public class PluginsPanel implements Disposable {
     }
 
     if (myInstalledPluginsPanel.isRequireShutdown()) {
-      final ApplicationEx app = (ApplicationEx)Application.get();
+      final Application app = Application.get();
 
       int response = app.isRestartCapable() ? PluginInstallUtil.showRestartIDEADialog() : PluginInstallUtil.showShutDownIDEADialog();
       if (response == Messages.YES) {

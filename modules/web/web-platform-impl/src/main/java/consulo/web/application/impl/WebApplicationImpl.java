@@ -176,11 +176,6 @@ public class WebApplicationImpl extends BaseApplication implements WebApplicatio
   }
 
   @Override
-  public void restart() {
-
-  }
-
-  @Override
   public boolean isActive() {
     return true;
   }

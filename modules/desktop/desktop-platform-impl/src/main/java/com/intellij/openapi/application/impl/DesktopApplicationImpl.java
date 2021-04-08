@@ -361,11 +361,6 @@ public class DesktopApplicationImpl extends BaseApplication {
   }
 
   @Override
-  public void restart() {
-    restart(false);
-  }
-
-  @Override
   public void restart(final boolean exitConfirmed) {
     exit(false, exitConfirmed, true, true);
   }
