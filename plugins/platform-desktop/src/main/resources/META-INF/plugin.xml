@@ -174,8 +174,7 @@
     <applicationService serviceInterface="com.intellij.ui.content.ContentFactory"
                         serviceImplementation="com.intellij.ui.content.ContentFactoryImpl"/>
 
-    <applicationService serviceInterface="com.intellij.openapi.help.HelpManager"
-                        serviceImplementation="com.intellij.help.impl.DesktopHelpManagerImpl"/>
+    <applicationService serviceInterface="com.intellij.openapi.help.HelpManager" serviceImplementation="com.intellij.openapi.help.HelpManager"/>
 
     <projectService serviceInterface="com.intellij.ide.projectView.ProjectView"
                     serviceImplementation="com.intellij.ide.projectView.impl.ProjectViewImpl"/>

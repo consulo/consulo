@@ -112,11 +112,6 @@
     </dependency>
     <!-- external dependencies -->
     <dependency>
-      <groupId>javax.help</groupId>
-      <artifactId>javahelp</artifactId>
-      <optional>true</optional>
-    </dependency>
-    <dependency>
       <groupId>io.netty</groupId>
       <artifactId>netty-common</artifactId>
       <optional>true</optional>

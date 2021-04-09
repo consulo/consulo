@@ -33,8 +33,6 @@
 
         <!--TODO [VISTALL] this dependency must be moved from base plugin-->
         <!--<include>consulo:consulo-desktop-util-awt</include>-->
-
-        <include>javax.help:javahelp</include>
       </includes>
     </dependencySet>
 

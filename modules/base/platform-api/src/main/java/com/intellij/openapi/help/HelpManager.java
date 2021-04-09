@@ -15,12 +15,15 @@
  */
 package com.intellij.openapi.help;
 
+import com.intellij.ide.BrowserUtil;
 import com.intellij.openapi.components.ServiceManager;
+import consulo.util.lang.StringUtil;
+import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public abstract class HelpManager {
+public class HelpManager {
   public static final String DEFAULT_HELP_URL = "https://consulo.help/";
 
   @Nonnull
@@ -28,5 +31,7 @@ public abstract class HelpManager {
     return ServiceManager.getService(HelpManager.class);
   }
 
-  public abstract void invokeHelp(@Nullable String id);
+  public void invokeHelp(@Nullable String id) {
+    BrowserUtil.browse(DEFAULT_HELP_URL + StringUtil.notNullize(id));
+  }
 }

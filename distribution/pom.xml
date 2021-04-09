@@ -323,10 +323,6 @@
       <artifactId>lz4-java</artifactId>
     </dependency>
     <dependency>
-      <groupId>javax.help</groupId>
-      <artifactId>javahelp</artifactId>
-    </dependency>
-    <dependency>
       <groupId>org.apache.thrift</groupId>
       <artifactId>libthrift</artifactId>
     </dependency>
