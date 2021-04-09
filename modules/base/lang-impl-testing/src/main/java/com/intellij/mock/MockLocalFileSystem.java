@@ -40,18 +40,6 @@ public class MockLocalFileSystem extends LocalFileSystem {
   private final MockVirtualFileSystem myDelegate = new MockVirtualFileSystem();
 
   @Override
-  @javax.annotation.Nullable
-  public VirtualFile findFileByIoFile(@Nonnull final File file) {
-    return myDelegate.findFileByPath(FileUtil.toSystemIndependentName(file.getPath()));
-  }
-
-  @Override
-  @Nullable
-  public VirtualFile refreshAndFindFileByIoFile(@Nonnull final File file) {
-    return findFileByIoFile(file);
-  }
-
-  @Override
   public void refreshIoFiles(@Nonnull Iterable<? extends File> files) {
 
   }

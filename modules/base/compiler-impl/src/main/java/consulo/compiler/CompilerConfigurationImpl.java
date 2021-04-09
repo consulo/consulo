@@ -20,27 +20,27 @@ import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.WatchedRootsProvider;
 import com.intellij.openapi.roots.impl.ProjectRootManagerImpl;
-import com.intellij.openapi.roots.ui.LightFilePointer;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileManager;
+import com.intellij.openapi.vfs.impl.LightFilePointer;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointer;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointerManager;
-import java.util.HashSet;
 import com.intellij.util.io.URLUtil;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.AccessRule;
 import consulo.compiler.impl.ModuleCompilerPathsManagerImpl;
 import consulo.roots.ContentFolderScopes;
 import consulo.roots.ContentFolderTypeProvider;
-import org.jdom.Element;
-import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
+import org.jdom.Element;
+import org.jetbrains.annotations.NonNls;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.HashSet;
 import java.util.Set;
 
 /**

@@ -9,7 +9,6 @@ import consulo.logging.Logger;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.fileTypes.FileTypeManager;
 import com.intellij.openapi.progress.ProgressManager;
-import com.intellij.openapi.roots.ui.LightFilePointer;
 import com.intellij.openapi.util.Comparing;
 import consulo.disposer.Disposer;
 import com.intellij.openapi.util.Pair;

@@ -15,23 +15,23 @@
  */
 package consulo.compiler.impl;
 
-import consulo.disposer.Disposable;
 import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.roots.ui.LightFilePointer;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.openapi.vfs.impl.LightFilePointer;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointer;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointerManager;
 import consulo.compiler.CompilerConfiguration;
 import consulo.compiler.ModuleCompilerPathsManager;
+import consulo.disposer.Disposable;
 import consulo.roots.ContentFolderTypeProvider;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import jakarta.inject.Inject;
-import jakarta.inject.Singleton;
 import java.util.LinkedHashMap;
 import java.util.Map;
 

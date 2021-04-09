@@ -21,10 +21,10 @@ import com.intellij.util.io.URLUtil;
 import com.intellij.util.messages.Topic;
 import consulo.application.internal.PerApplicationInstance;
 import consulo.disposer.Disposable;
-import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.nio.file.Path;
 import java.util.function.Supplier;
 
 /**
@@ -89,7 +89,21 @@ public abstract class VirtualFileManager implements ModificationTracker {
    * @see #refreshAndFindFileByUrl
    */
   @Nullable
-  public abstract VirtualFile findFileByUrl(@NonNls @Nonnull String url);
+  public abstract VirtualFile findFileByUrl(@Nonnull String url);
+
+
+  /**
+   * Looks for a related {@link VirtualFile} for a given {@link Path}
+   *
+   * @return <code>{@link VirtualFile}</code> if the file was found, {@code null} otherwise
+   * @see VirtualFile#getUrl
+   * @see VirtualFileSystem#findFileByPath
+   * @see #refreshAndFindFileByUrl
+   */
+  @Nullable
+  public VirtualFile findFileByNioPath(@Nonnull Path path) {
+    return null;
+  }
 
   /**
    * Refreshes only the part of the file system needed for searching the file by the given URL and finds file
@@ -108,6 +122,24 @@ public abstract class VirtualFileManager implements ModificationTracker {
    */
   @Nullable
   public abstract VirtualFile refreshAndFindFileByUrl(@Nonnull String url);
+
+  /**
+   * <p>Refreshes only the part of the file system needed for searching the file by the given URL and finds file
+   * by the given URL.</p>
+   *
+   * <p>This method is useful when the file was created externally and you need to find <code>{@link VirtualFile}</code>
+   * corresponding to it.</p>
+   *
+   * <p>If this method is invoked not from Swing event dispatch thread, then it must not happen inside a read action.</p>
+   *
+   * @return <code>{@link VirtualFile}</code> if the file was found, {@code null} otherwise
+   * @see VirtualFileSystem#findFileByPath
+   * @see VirtualFileSystem#refreshAndFindFileByPath
+   **/
+  @Nullable
+  public VirtualFile refreshAndFindFileByNioPath(@Nonnull Path path) {
+    return null;
+  }
 
   /**
    * Adds listener to the file system.

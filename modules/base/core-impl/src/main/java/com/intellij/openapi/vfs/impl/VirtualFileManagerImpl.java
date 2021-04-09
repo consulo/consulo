@@ -15,7 +15,6 @@
  */
 package com.intellij.openapi.vfs.impl;
 
-import consulo.disposer.Disposable;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
@@ -26,14 +25,17 @@ import com.intellij.openapi.vfs.newvfs.CachingVirtualFileSystem;
 import com.intellij.openapi.vfs.newvfs.events.VFilePropertyChangeEvent;
 import com.intellij.util.EventDispatcher;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
 import consulo.vfs.RefreshableFileSystem;
 import gnu.trove.THashMap;
-import javax.annotation.Nonnull;
-
-import javax.annotation.Nullable;
 import jakarta.inject.Inject;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.nio.file.FileSystems;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -76,7 +78,7 @@ public class VirtualFileManagerImpl extends VirtualFileManagerEx {
       fileSystem.addVirtualFileListener(myVirtualFileListenerMulticaster.getMulticaster());
     }
 
-    if(fileSystem instanceof RefreshableFileSystem) {
+    if (fileSystem instanceof RefreshableFileSystem) {
       myRefreshableFileSystems.add(fileSystem);
     }
     myVirtualFileSystems.put(fileSystem.getProtocol(), fileSystem);
@@ -341,5 +343,26 @@ public class VirtualFileManagerImpl extends VirtualFileManagerEx {
   @Override
   public CharSequence getVFileName(int nameId) {
     throw new AbstractMethodError();
+  }
+
+  @Override
+  @Nullable
+  public VirtualFile findFileByNioPath(@Nonnull Path path) {
+    return findByNioPath(path, false);
+  }
+
+  @Override
+  @Nullable
+  public VirtualFile refreshAndFindFileByNioPath(@Nonnull Path path) {
+    return findByNioPath(path, true);
+  }
+
+  @Nullable
+  private VirtualFile findByNioPath(@Nonnull Path nioPath, boolean refresh) {
+    if (!FileSystems.getDefault().equals(nioPath.getFileSystem())) return null;
+    VirtualFileSystem fileSystem = getFileSystem(StandardFileSystems.FILE_PROTOCOL);
+    if (fileSystem == null) return null;
+    String path = nioPath.toString();
+    return refresh ? fileSystem.refreshAndFindFileByPath(path) : fileSystem.findFileByPath(path);
   }
 }

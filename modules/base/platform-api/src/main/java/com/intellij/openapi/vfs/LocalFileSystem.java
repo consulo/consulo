@@ -7,6 +7,7 @@ import org.jetbrains.annotations.SystemIndependent;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.File;
+import java.nio.file.Path;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Set;
@@ -31,10 +32,24 @@ public abstract class LocalFileSystem extends NewVirtualFileSystem {
   }
 
   @Nullable
-  public abstract VirtualFile findFileByIoFile(@Nonnull File file);
+  public VirtualFile findFileByIoFile(@Nonnull File file) {
+    return findFileByPath(file.getAbsolutePath());
+  }
 
   @Nullable
-  public abstract VirtualFile refreshAndFindFileByIoFile(@Nonnull File file);
+  public VirtualFile refreshAndFindFileByIoFile(@Nonnull File file) {
+    return refreshAndFindFileByPath(file.getAbsolutePath());
+  }
+
+  @Nullable
+  public VirtualFile findFileByNioFile(@Nonnull Path file) {
+    return findFileByPath(file.toAbsolutePath().toString());
+  }
+
+  @Nullable
+  public VirtualFile refreshAndFindFileByNioFile(@Nonnull Path file) {
+    return refreshAndFindFileByPath(file.toAbsolutePath().toString());
+  }
 
   /**
    * Performs a non-recursive synchronous refresh of specified files.

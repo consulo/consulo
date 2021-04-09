@@ -55,11 +55,6 @@ public abstract class LocalFileSystemBase extends LocalFileSystem {
     return VfsImplUtil.refreshAndFindFileByPath(this, path);
   }
 
-  @Override
-  public VirtualFile findFileByIoFile(@Nonnull File file) {
-    return findFileByPath(FileUtil.toSystemIndependentName(file.getAbsolutePath()));
-  }
-
   @Nonnull
   private static File convertToIOFile(@Nonnull VirtualFile file) {
     String path = file.getPath();
@@ -182,12 +177,6 @@ public abstract class LocalFileSystemBase extends LocalFileSystem {
       return true;
     }
     return file.isAbsolute();
-  }
-
-  @Override
-  public VirtualFile refreshAndFindFileByIoFile(@Nonnull File file) {
-    String path = FileUtil.toSystemIndependentName(file.getAbsolutePath());
-    return refreshAndFindFileByPath(path);
   }
 
   @Override
