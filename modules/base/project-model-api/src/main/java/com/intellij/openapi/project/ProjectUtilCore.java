@@ -16,52 +16,67 @@
 package com.intellij.openapi.project;
 
 import com.intellij.openapi.module.Module;
+import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.roots.ModuleExtensionWithSdkOrderEntry;
 import com.intellij.openapi.roots.OrderEntry;
 import com.intellij.openapi.roots.libraries.LibraryUtil;
-import com.intellij.openapi.util.SystemInfo;
+import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.LocalFileProvider;
 import com.intellij.openapi.vfs.VirtualFile;
+import consulo.annotation.access.RequiredReadAction;
+
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class ProjectUtilCore {
-  public static String displayUrlRelativeToProject(@Nonnull VirtualFile file,
-                                                   @Nonnull String url,
-                                                   @Nonnull Project project,
-                                                   boolean includeFilePath,
-                                                   boolean keepModuleAlwaysOnTheLeft) {
-    final VirtualFile baseDir = project.getBaseDir();
-    if (baseDir != null && includeFilePath) {
+  @Nonnull
+  @RequiredReadAction
+  public static String appendModuleName(@Nonnull VirtualFile file, @Nonnull Project project, @Nonnull String result, boolean moduleOnTheLeft) {
+    Module module = ModuleUtilCore.findModuleForFile(file, project);
+    if (module == null || ModuleManager.getInstance(project).getModules().length == 1) {
+      return result;
+    }
+
+    if (moduleOnTheLeft) {
+      return "[" + module.getName() + "] " + result;
+    }
+    return result + " [" + module.getName() + "]";
+  }
+
+  @Nullable
+  public static String decorateWithLibraryName(@Nonnull VirtualFile file, @Nonnull Project project, @Nonnull String result) {
+    if (file.getFileSystem() instanceof LocalFileProvider localFileProvider) {
+      VirtualFile localFile = localFileProvider.getLocalVirtualFileFor(file);
+      if (localFile != null) {
+        OrderEntry libraryEntry = LibraryUtil.findLibraryEntry(file, project);
+        if (libraryEntry instanceof ModuleExtensionWithSdkOrderEntry sdkOrderEntry) {
+          return result + " [" + sdkOrderEntry.getSdkName() + "]";
+        }
+        else if (libraryEntry != null) {
+          return result + " [" + libraryEntry.getPresentableName() + "]";
+        }
+      }
+    }
+
+    return null;
+  }
+
+  @RequiredReadAction
+  public static String displayUrlRelativeToProject(@Nonnull VirtualFile file, @Nonnull String result, @Nonnull Project project, boolean includeFilePath, boolean moduleOnTheLeft) {
+    if (includeFilePath) {
       //noinspection ConstantConditions
-      final String projectHomeUrl = baseDir.getPresentableUrl();
-      if (url.startsWith(projectHomeUrl)) {
-        url = "..." + url.substring(projectHomeUrl.length());
+      final String projectHomeUrl = FileUtil.toSystemDependentName(project.getBasePath());
+      if (result.startsWith(projectHomeUrl)) {
+        result = "..." + result.substring(projectHomeUrl.length());
       }
     }
 
-    if (SystemInfo.isMac && file.getFileSystem() instanceof LocalFileProvider) {
-      final VirtualFile fileForJar = ((LocalFileProvider)file.getFileSystem()).getLocalVirtualFileFor(file);
-      if (fileForJar != null) {
-        final OrderEntry libraryEntry = LibraryUtil.findLibraryEntry(file, project);
-        if (libraryEntry != null) {
-          if (libraryEntry instanceof ModuleExtensionWithSdkOrderEntry) {
-            url = url + " - [" + ((ModuleExtensionWithSdkOrderEntry)libraryEntry).getSdkName() + "]";
-          }
-          else {
-            url = url + " - [" + libraryEntry.getPresentableName() + "]";
-          }
-        }
-        else {
-          url = url + " - [" + fileForJar.getName() + "]";
-        }
-      }
+    String urlWithLibraryName = decorateWithLibraryName(file, project, result);
+    if (urlWithLibraryName != null) {
+      return urlWithLibraryName;
     }
 
-    final Module module = ModuleUtilCore.findModuleForFile(file, project);
-    if (module == null) return url;
-    return !keepModuleAlwaysOnTheLeft && SystemInfo.isMac ?
-           url + " - [" + module.getName() + "]" :
-           "[" + module.getName() + "] - " + url;
+    return appendModuleName(file, project, result, moduleOnTheLeft);
   }
 }

@@ -16,8 +16,10 @@
 package com.intellij.openapi.wm.impl;
 
 import com.intellij.openapi.components.ServiceManager;
-import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.vfs.VirtualFile;
+import consulo.annotation.access.RequiredReadAction;
+
 import javax.annotation.Nonnull;
 
 /**
@@ -28,7 +30,11 @@ public abstract class FrameTitleBuilder {
     return ServiceManager.getService(FrameTitleBuilder.class);
   }
 
+  @Nonnull
+  @RequiredReadAction
   public abstract String getProjectTitle(@Nonnull final Project project);
 
+  @Nonnull
+  @RequiredReadAction
   public abstract String getFileTitle(@Nonnull final Project project, @Nonnull final VirtualFile file);
 }

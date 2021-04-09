@@ -15,53 +15,81 @@
  */
 package com.intellij.openapi.wm.impl;
 
-import com.intellij.openapi.fileEditor.UniqueVFilePathBuilder;
+import com.intellij.ide.ui.UISettings;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.SystemInfo;
+import com.intellij.openapi.project.ProjectManager;
+import com.intellij.openapi.project.ProjectUtilCore;
+import com.intellij.openapi.roots.ProjectFileIndex;
+import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.vfs.VirtualFilePathWrapper;
+import com.intellij.openapi.vfs.newvfs.VfsPresentationUtil;
+import com.intellij.util.containers.ContainerUtil;
+import consulo.annotation.access.RequiredReadAction;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
+
 import javax.annotation.Nonnull;
+import java.util.Arrays;
 
 /**
  * @author yole
  */
+@Singleton
 public class PlatformFrameTitleBuilder extends FrameTitleBuilder {
+  private final UISettings myUISettings;
+  private final ProjectManager myProjectManager;
+
+  @Inject
+  public PlatformFrameTitleBuilder(UISettings uiSettings, ProjectManager projectManager) {
+    myUISettings = uiSettings;
+    myProjectManager = projectManager;
+  }
+
+  @Nonnull
+  @RequiredReadAction
   @Override
   public String getProjectTitle(@Nonnull final Project project) {
-    final String basePath = project.getBasePath();
+    String basePath = project.getBasePath();
     if (basePath == null) return project.getName();
 
-    if (basePath.equals(project.getName())) {
+    Project[] projects = myProjectManager.getOpenProjects();
+    int sameNamedProjects = ContainerUtil.count(Arrays.asList(projects), (it) -> it.getName().equals(project.getName()));
+    if (sameNamedProjects == 1 && !myUISettings.getFullPathsInWindowHeader()) {
+      return project.getName();
+    }
+
+    basePath = FileUtil.toSystemDependentName(basePath);
+    if (basePath.equals(project.getName()) && !myUISettings.getFullPathsInWindowHeader()) {
       return "[" + FileUtil.getLocationRelativeToUserHome(basePath) + "]";
     }
     else {
-      return project.getName() + " - [" + FileUtil.getLocationRelativeToUserHome(basePath) + "]";
+      return project.getName() + " [" + FileUtil.getLocationRelativeToUserHome(basePath) + "]";
     }
   }
 
+  @Nonnull
+  @RequiredReadAction
   @Override
   public String getFileTitle(@Nonnull final Project project, @Nonnull final VirtualFile file) {
-    if (SystemInfo.isMac) {
-      return UniqueVFilePathBuilder.getInstance().getUniqueVirtualFilePath(project, file);
+    String fileTitle = VfsPresentationUtil.getPresentableNameForUI(project, file);
+    if (!fileTitle.endsWith(file.getPresentableName()) || file.getParent() == null) {
+      return fileTitle;
     }
 
-    if (file instanceof VirtualFilePathWrapper) {
-      return ((VirtualFilePathWrapper)file).getPresentablePath();
+    if (myUISettings.getFullPathsInWindowHeader()) {
+      return ProjectUtilCore.displayUrlRelativeToProject(file, file.getPresentableUrl(), project, true, false);
     }
 
-    String url = FileUtil.getLocationRelativeToUserHome(file.getPresentableUrl());
-    if (url == null) url = file.getPresentableUrl();
-
-    VirtualFile baseDir = project.getBaseDir();
-
-    if (baseDir != null) {
-      final String projectHomeUrl = FileUtil.getLocationRelativeToUserHome(baseDir.getPresentableUrl());
-      if (projectHomeUrl != null && url.startsWith(projectHomeUrl)) {
-        url = "..." + url.substring(projectHomeUrl.length());
+    ProjectFileIndex fileIndex = ProjectRootManager.getInstance(project).getFileIndex();
+    if (!fileIndex.isInContent(file)) {
+      String pathWithLibrary = ProjectUtilCore.decorateWithLibraryName(file, project, file.getPresentableName());
+      if (pathWithLibrary != null) {
+        return pathWithLibrary;
       }
+      return FileUtil.getLocationRelativeToUserHome(file.getPresentableUrl());
     }
 
-    return url;
+    return ProjectUtilCore.appendModuleName(file, project, fileTitle, false);
   }
 }

@@ -202,6 +202,8 @@ public class UISettings extends SimpleModificationTracker implements PersistentS
 
   public int RECENT_LOCATIONS_LIMIT = 25;
 
+  public boolean FULL_PATHS_IN_WINDOW_HEADER;
+
   private final ComponentTreeEventDispatcher<UISettingsListener> myDispatcher = ComponentTreeEventDispatcher.create(UISettingsListener.class);
 
   public UISettings() {
@@ -600,6 +602,10 @@ public class UISettings extends SimpleModificationTracker implements PersistentS
 
   public boolean getAnimatedScrolling() {
     return !SystemInfo.isMac || !SystemInfo.isJetBrainsJvm;
+  }
+
+  public boolean getFullPathsInWindowHeader() {
+    return FULL_PATHS_IN_WINDOW_HEADER;
   }
 
   public int getAnimatedScrollingDuration() {
