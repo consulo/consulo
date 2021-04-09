@@ -18,15 +18,19 @@ package consulo.application.impl;
 import com.intellij.openapi.application.ApplicationInfo;
 import com.intellij.openapi.util.BuildNumber;
 import com.intellij.openapi.util.text.StringUtil;
+import consulo.application.ApplicationProperties;
 import consulo.ide.updateSettings.UpdateChannel;
 import consulo.ide.updateSettings.UpdateSettings;
 import consulo.platform.Platform;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 04-Sep-16
  */
 public class FrameTitleUtil {
+  @Nonnull
   public static String buildTitle() {
     ApplicationInfo applicationInfo = ApplicationInfo.getInstance();
 
@@ -50,9 +54,11 @@ public class FrameTitleUtil {
       builder.append(" (Administrator)");
     }
 
-    String jdkModuleMain = Platform.current().jvm().getRuntimeProperty("jdk.module.main");
-    if(!StringUtil.isEmptyOrSpaces(jdkModuleMain)) {
-      builder.append(" [Jigsaw]");
+    if(ApplicationProperties.isInSandbox()) {
+      String jdkModuleMain = Platform.current().jvm().getRuntimeProperty("jdk.module.main");
+      if (!StringUtil.isEmptyOrSpaces(jdkModuleMain)) {
+        builder.append(" [Jigsaw]");
+      }
     }
 
     return builder.toString();
