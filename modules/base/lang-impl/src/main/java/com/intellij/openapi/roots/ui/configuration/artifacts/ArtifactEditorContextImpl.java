@@ -17,6 +17,7 @@ package com.intellij.openapi.roots.ui.configuration.artifacts;
 
 import com.intellij.openapi.module.ModifiableModuleModel;
 import com.intellij.openapi.module.Module;
+import com.intellij.openapi.options.ShowSettingsUtil;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ModifiableRootModel;
 import com.intellij.openapi.roots.ModuleRootModel;
@@ -27,7 +28,6 @@ import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.roots.libraries.LibraryTable;
 import com.intellij.openapi.roots.ui.configuration.ChooseModulesDialog;
 import com.intellij.openapi.roots.ui.configuration.ModulesProvider;
-import com.intellij.openapi.roots.ui.configuration.ProjectStructureConfigurable;
 import com.intellij.packaging.artifacts.Artifact;
 import com.intellij.packaging.artifacts.ArtifactModel;
 import com.intellij.packaging.artifacts.ArtifactType;
@@ -37,8 +37,9 @@ import com.intellij.packaging.impl.ui.ChooseArtifactsDialog;
 import com.intellij.packaging.ui.ArtifactEditor;
 import com.intellij.packaging.ui.ArtifactEditorContext;
 import com.intellij.util.ui.classpath.ChooseLibrariesFromTablesDialog;
-import javax.annotation.Nonnull;
+import consulo.ui.annotation.RequiredUIAccess;
 
+import javax.annotation.Nonnull;
 import java.util.Collections;
 import java.util.List;
 
@@ -98,20 +99,29 @@ public class ArtifactEditorContextImpl implements ArtifactEditorContext {
   }
 
   @Override
+  @RequiredUIAccess
   public void selectArtifact(@Nonnull Artifact artifact) {
-    ProjectStructureConfigurable.getInstance(getProject()).select(artifact, true);
+    ShowSettingsUtil.getInstance().showProjectStructureDialog(myParent.getProject(), projectStructureSelector -> {
+      projectStructureSelector.select(artifact, true);
+    });
   }
 
   @Override
+  @RequiredUIAccess
   public void selectModule(@Nonnull Module module) {
-    ProjectStructureConfigurable.getInstance(getProject()).select(module.getName(), null, true);
+    ShowSettingsUtil.getInstance().showProjectStructureDialog(myParent.getProject(), projectStructureSelector -> {
+      projectStructureSelector.select(module.getName(), null, true);
+    });
   }
 
   @Override
+  @RequiredUIAccess
   public void selectLibrary(@Nonnull Library library) {
     final LibraryTable table = library.getTable();
     if (table != null) {
-      ProjectStructureConfigurable.getInstance(getProject()).selectProjectOrGlobalLibrary(library, true);
+      ShowSettingsUtil.getInstance().showProjectStructureDialog(myParent.getProject(), projectStructureSelector -> {
+        projectStructureSelector.selectProjectOrGlobalLibrary(library, true);
+      });
     }
     else {
       final Module module = ((LibraryImpl)library).getModule();
@@ -123,7 +133,9 @@ public class ArtifactEditorContextImpl implements ArtifactEditorContext {
             final ModuleLibraryOrderEntryImpl libraryEntry = (ModuleLibraryOrderEntryImpl)entry;
             if (libraryName != null && libraryName.equals(libraryEntry.getLibraryName())
                || libraryName == null && library.equals(libraryEntry.getLibrary())) {
-              ProjectStructureConfigurable.getInstance(getProject()).selectOrderEntry(module, libraryEntry);
+              ShowSettingsUtil.getInstance().showProjectStructureDialog(myParent.getProject(), projectStructureSelector -> {
+                projectStructureSelector.selectOrderEntry(module, libraryEntry);
+              });
               return;
             }
           }

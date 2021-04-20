@@ -19,14 +19,14 @@ import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
-import consulo.logging.Logger;
-import java.util.HashMap;
 import com.intellij.util.containers.hash.LinkedHashMap;
+import consulo.logging.Logger;
+import jakarta.inject.Singleton;
 import org.jdom.Element;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import jakarta.inject.Singleton;
-
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -106,7 +106,7 @@ public class EarlyAccessProgramManager implements PersistentStateComponent<Eleme
 
   private static Map<String, EarlyAccessProgramDescriptor> descriptorToMap() {
     Map<String, EarlyAccessProgramDescriptor> map = new HashMap<>();
-    for (EarlyAccessProgramDescriptor descriptor : EarlyAccessProgramDescriptor.EP_NAME.getExtensions()) {
+    for (EarlyAccessProgramDescriptor descriptor : EarlyAccessProgramDescriptor.EP_NAME.getExtensionList()) {
       map.put(descriptor.getClass().getName(), descriptor);
     }
     return map;

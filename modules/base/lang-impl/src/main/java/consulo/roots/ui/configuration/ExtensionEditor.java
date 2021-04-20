@@ -65,7 +65,7 @@ public class ExtensionEditor extends ModuleElementsEditor {
   private static final Logger LOG = Logger.getInstance(ExtensionEditor.class);
 
   private final ModuleConfigurationState myState;
-  private final CompilerOutputEditor myCompilerOutputEditor;
+  private final CompilerOutputsEditor myCompilerOutputEditor;
   private final ClasspathEditor myClasspathEditor;
   private final ContentEntriesEditor myContentEntriesEditor;
   private CheckboxTreeNoPolicy myTree;
@@ -75,7 +75,7 @@ public class ExtensionEditor extends ModuleElementsEditor {
 
   private final Map<JComponent, Disposable> myExtensionDisposables = new HashMap<>();
 
-  public ExtensionEditor(ModuleConfigurationState state, CompilerOutputEditor compilerOutputEditor, ClasspathEditor classpathEditor, ContentEntriesEditor contentEntriesEditor) {
+  public ExtensionEditor(ModuleConfigurationState state, CompilerOutputsEditor compilerOutputEditor, ClasspathEditor classpathEditor, ContentEntriesEditor contentEntriesEditor) {
     super(state);
     myState = state;
     myCompilerOutputEditor = compilerOutputEditor;

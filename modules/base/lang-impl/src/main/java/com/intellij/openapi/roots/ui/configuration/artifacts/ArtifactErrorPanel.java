@@ -16,6 +16,7 @@
 package com.intellij.openapi.roots.ui.configuration.artifacts;
 
 import com.intellij.icons.AllIcons;
+import com.intellij.ide.DataManager;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.ConfigurationErrorQuickFix;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.ui.popup.PopupStep;
@@ -27,10 +28,7 @@ import com.intellij.xml.util.XmlStringUtil;
 import consulo.awt.TargetAWT;
 
 import javax.annotation.Nonnull;
-
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.List;
 
 /**
@@ -54,36 +52,33 @@ public class ArtifactErrorPanel {
         }
       }
     });
-    myFixButton.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        if (!myCurrentQuickFixes.isEmpty()) {
-          if (myCurrentQuickFixes.size() == 1) {
-            performFix(ContainerUtil.getFirstItem(myCurrentQuickFixes, null), artifactEditor);
-          }
-          else {
-            JBPopupFactory.getInstance().createListPopup(new BaseListPopupStep<ConfigurationErrorQuickFix>(null, myCurrentQuickFixes) {
-              @Nonnull
-              @Override
-              public String getTextFor(ConfigurationErrorQuickFix value) {
-                return value.getActionName();
-              }
+    myFixButton.addActionListener(e -> {
+      if (!myCurrentQuickFixes.isEmpty()) {
+        if (myCurrentQuickFixes.size() == 1) {
+          performFix(ContainerUtil.getFirstItem(myCurrentQuickFixes, null), artifactEditor);
+        }
+        else {
+          JBPopupFactory.getInstance().createListPopup(new BaseListPopupStep<ConfigurationErrorQuickFix>(null, myCurrentQuickFixes) {
+            @Nonnull
+            @Override
+            public String getTextFor(ConfigurationErrorQuickFix value) {
+              return value.getActionName();
+            }
 
-              @Override
-              public PopupStep onChosen(ConfigurationErrorQuickFix selectedValue, boolean finalChoice) {
-                performFix(selectedValue, artifactEditor);
-                return FINAL_CHOICE;
-              }
-            }).showUnderneathOf(myFixButton);
-          }
+            @Override
+            public PopupStep onChosen(ConfigurationErrorQuickFix selectedValue, boolean finalChoice) {
+              performFix(selectedValue, artifactEditor);
+              return FINAL_CHOICE;
+            }
+          }).showUnderneathOf(myFixButton);
         }
       }
     });
     clearError();
   }
 
-  private static void performFix(ConfigurationErrorQuickFix quickFix, ArtifactEditorImpl artifactEditor) {
-    quickFix.performFix();
+  private void performFix(ConfigurationErrorQuickFix quickFix, ArtifactEditorImpl artifactEditor) {
+    quickFix.performFix(DataManager.getInstance().getDataContext(myFixButton));
     artifactEditor.queueValidation();
   }
 

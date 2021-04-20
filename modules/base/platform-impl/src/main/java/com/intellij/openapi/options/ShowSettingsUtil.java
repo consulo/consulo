@@ -53,12 +53,11 @@ public abstract class ShowSettingsUtil {
 
   @RequiredUIAccess
   public void showProjectStructureDialog(@Nonnull Project project) {
-    showProjectStructureDialog(project, projectStructureSelector -> {
-    });
+    showProjectStructureDialog(project, projectStructureSelector -> projectStructureSelector.select(null, null, true));
   }
 
   @RequiredUIAccess
-  public abstract void showProjectStructureDialog(@Nonnull Project project, @Nonnull Consumer<ProjectStructureSelector> consumer);
+  public abstract AsyncResult<Void> showProjectStructureDialog(@Nonnull Project project, @RequiredUIAccess @Nonnull Consumer<ProjectStructureSelector> consumer);
 
   @RequiredUIAccess
   public AsyncResult<Void> editConfigurable(Project project, Configurable configurable) {

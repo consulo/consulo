@@ -20,16 +20,18 @@ import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.options.MasterDetails;
+import com.intellij.openapi.options.UnnamedConfigurable;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.ui.popup.ListPopup;
 import com.intellij.openapi.ui.popup.ListPopupStep;
-import com.intellij.openapi.util.*;
+import com.intellij.openapi.util.ActionCallback;
+import com.intellij.openapi.util.Comparing;
+import com.intellij.openapi.util.Condition;
+import com.intellij.openapi.util.Conditions;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.ui.*;
-import com.intellij.ui.navigation.History;
-import com.intellij.ui.navigation.Place;
 import com.intellij.ui.treeStructure.Tree;
 import com.intellij.util.Function;
 import com.intellij.util.IconUtil;
@@ -37,6 +39,8 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.tree.TreeUtil;
 import com.intellij.util.xmlb.XmlSerializerUtil;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
 import consulo.logging.Logger;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
@@ -48,8 +52,8 @@ import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.tree.*;
 import java.awt.*;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 /**
  * @author anna
@@ -61,30 +65,7 @@ public abstract class MasterDetailsComponent implements Configurable, MasterDeta
   protected NamedConfigurable myCurrentConfigurable;
   protected final JBSplitter mySplitter;
 
-  @NonNls public static final String TREE_OBJECT = "treeObject";
-  @NonNls public static final String TREE_NAME = "treeName";
-
-  protected History myHistory = new History(new Place.Navigator() {
-    @Override
-    public void setHistory(final History history) {
-      myHistory = history;
-    }
-
-    @Override
-    @Nullable
-    public AsyncResult<Void> navigateTo(@Nullable final Place place, final boolean requestFocus) {
-      return null;
-    }
-
-    @Override
-    public void queryPlace(@Nonnull final Place place) {
-    }
-  });
   private JScrollPane myMaster;
-
-  public void setHistory(final History history) {
-    myHistory = history;
-  }
 
   protected final MasterDetailsState myState;
 
@@ -103,7 +84,7 @@ public abstract class MasterDetailsComponent implements Configurable, MasterDeta
         myState.setLastEditedConfigurable(getNodePathString(node)); //survive after rename;
         myDetails.setText(node.getConfigurable().getBannerSlogan());
         ((DefaultTreeModel)myTree.getModel()).reload(node);
-        fireItemsChangedExternally();
+        fireItemsChangedExternally(MasterDetailsComponent.this);
       }
     };
   }
@@ -123,6 +104,8 @@ public abstract class MasterDetailsComponent implements Configurable, MasterDeta
   protected AutoScrollToSourceHandler myAutoScrollHandler;
 
   private boolean myToReInitWholePanel = true;
+
+  private Disposable myDisposable;
 
   protected MasterDetailsComponent() {
     this(new MasterDetailsState());
@@ -238,7 +221,8 @@ public abstract class MasterDetailsComponent implements Configurable, MasterDeta
       if (!(lastPathComp instanceof MyNode)) return;
       final MyNode node = (MyNode)lastPathComp;
       setSelectedNode(node);
-    } else {
+    }
+    else {
       setSelectedNode(null);
     }
   }
@@ -252,7 +236,7 @@ public abstract class MasterDetailsComponent implements Configurable, MasterDeta
   }
 
   protected boolean isAutoScrollEnabled() {
-    return myHistory == null || !myHistory.isNavigatingNow();
+    return true;
   }
 
   private void initToolbar() {
@@ -282,6 +266,8 @@ public abstract class MasterDetailsComponent implements Configurable, MasterDeta
 
   @Override
   public JComponent createComponent() {
+    myDisposable = Disposable.newDisposable();
+
     reInitWholePanelIfNeeded();
 
     updateSelectionFromTree();
@@ -445,21 +431,22 @@ public abstract class MasterDetailsComponent implements Configurable, MasterDeta
       stateService.setComponentState(key, getState());
     }
     myCurrentConfigurable = null;
+
+    if (myDisposable != null) {
+      Disposer.dispose(myDisposable);
+    }
   }
 
   protected void clearChildren() {
-    TreeUtil.traverseDepth(myRoot, new TreeUtil.Traverse() {
-      @Override
-      public boolean accept(Object node) {
-        if (node instanceof MyNode) {
-          final MyNode treeNode = ((MyNode)node);
-          treeNode.getConfigurable().disposeUIResources();
-          if (!(treeNode instanceof MyRootNode)) {
-            treeNode.setUserObject(null);
-          }
+    TreeUtil.traverseDepth(myRoot, node -> {
+      if (node instanceof MyNode) {
+        final MyNode treeNode = ((MyNode)node);
+        treeNode.getConfigurable().disposeUIResources();
+        if (!(treeNode instanceof MyRootNode)) {
+          treeNode.setUserObject(null);
         }
-        return true;
       }
+      return true;
     });
     myRoot.removeAllChildren();
   }
@@ -478,13 +465,7 @@ public abstract class MasterDetailsComponent implements Configurable, MasterDeta
     TreeUtil.installActions(myTree);
     myTree.setCellRenderer(new ColoredTreeCellRenderer() {
       @Override
-      public void customizeCellRenderer(JTree tree,
-                                        Object value,
-                                        boolean selected,
-                                        boolean expanded,
-                                        boolean leaf,
-                                        int row,
-                                        boolean hasFocus) {
+      public void customizeCellRenderer(JTree tree, Object value, boolean selected, boolean expanded, boolean leaf, int row, boolean hasFocus) {
         if (value instanceof MyNode) {
           final MyNode node = ((MyNode)value);
           setIcon(node.getIcon(expanded));
@@ -495,8 +476,7 @@ public abstract class MasterDetailsComponent implements Configurable, MasterDeta
           else {
             setFont(font.deriveFont(Font.PLAIN));
           }
-          append(node.getDisplayName(),
-                 node.isDisplayInBold() ? SimpleTextAttributes.REGULAR_BOLD_ATTRIBUTES : SimpleTextAttributes.REGULAR_ATTRIBUTES);
+          append(node.getDisplayName(), node.isDisplayInBold() ? SimpleTextAttributes.REGULAR_BOLD_ATTRIBUTES : SimpleTextAttributes.REGULAR_ATTRIBUTES);
         }
       }
     });
@@ -514,8 +494,7 @@ public abstract class MasterDetailsComponent implements Configurable, MasterDeta
           group.add(action);
         }
       }
-      PopupHandler
-        .installPopupHandler(myTree, group, ActionPlaces.UNKNOWN, ActionManager.getInstance()); //popup should follow the selection
+      PopupHandler.installPopupHandler(myTree, group, ActionPlaces.UNKNOWN, ActionManager.getInstance()); //popup should follow the selection
     }
   }
 
@@ -530,33 +509,14 @@ public abstract class MasterDetailsComponent implements Configurable, MasterDeta
     }
   }
 
-  private void fireItemsChangedExternally() {
+  private void fireItemsChangedExternally(UnnamedConfigurable configurable) {
     for (ItemsChangeListener listener : myListeners) {
-      listener.itemsExternallyChanged();
+      listener.itemsExternallyChanged(configurable);
     }
   }
 
   private void createUIComponents() {
-    myTree = new Tree() {
-      @Override
-      public Dimension getPreferredScrollableViewportSize() {
-        Dimension size = super.getPreferredScrollableViewportSize();
-        size = new Dimension(size.width + 20, size.height);
-        return size;
-      }
-
-      @Override
-      @SuppressWarnings({"NonStaticInitializer"})
-      public JToolTip createToolTip() {
-        final JToolTip toolTip = new JToolTip() {
-          {
-            setUI(new MultiLineTooltipUI());
-          }
-        };
-        toolTip.setComponent(this);
-        return toolTip;
-      }
-    };
+    myTree = new Tree();
   }
 
   protected void addNode(MyNode nodeToAdd, MyNode parent) {
@@ -566,12 +526,7 @@ public abstract class MasterDetailsComponent implements Configurable, MasterDeta
   }
 
   protected Comparator<MyNode> getNodeComparator() {
-    return new Comparator<MyNode>() {
-      @Override
-      public int compare(final MyNode o1, final MyNode o2) {
-        return o1.getDisplayName().compareToIgnoreCase(o2.getDisplayName());
-      }
-    };
+    return (o1, o2) -> o1.getDisplayName().compareToIgnoreCase(o2.getDisplayName());
   }
 
   public ActionCallback selectNodeInTree(final DefaultMutableTreeNode nodeToSelect) {
@@ -618,48 +573,50 @@ public abstract class MasterDetailsComponent implements Configurable, MasterDeta
     return null;
   }
 
-  public void selectNodeInTree(String displayName) {
+  public AsyncResult<TreeNode> selectNodeInTree(String displayName) {
     final MyNode nodeByName = findNodeByName(myRoot, displayName);
-    selectNodeInTree(nodeByName, true);
+    if (nodeByName == null) {
+      return AsyncResult.rejected();
+    }
+    AsyncResult<TreeNode> result = AsyncResult.rejected();
+    selectNodeInTree(nodeByName, true).doWhenDone(() -> {
+      result.setDone(nodeByName);
+    });
+    return result;
   }
 
-  public void selectNodeInTree(final Object object) {
-    selectNodeInTree(findNodeByObject(myRoot, object), true);
+  public AsyncResult<TreeNode> selectNodeInTree(final Object object) {
+    final MyNode nodeByName = findNodeByObject(myRoot, object);
+    if (nodeByName == null) {
+      return AsyncResult.rejected();
+    }
+    AsyncResult<TreeNode> result = AsyncResult.rejected();
+    selectNodeInTree(nodeByName, true).doWhenDone(() -> {
+      result.setDone(nodeByName);
+    });
+    return result;
   }
 
   @Nullable
   protected static MyNode findNodeByName(final TreeNode root, final String profileName) {
     if (profileName == null) return null; //do not suggest root node
-    return findNodeByCondition(root, new Condition<NamedConfigurable>() {
-      @Override
-      public boolean value(final NamedConfigurable configurable) {
-        return Comparing.strEqual(profileName, configurable.getDisplayName());
-      }
-    });
+    return findNodeByCondition(root, configurable -> Comparing.strEqual(profileName, configurable.getDisplayName()));
   }
 
   @Nullable
   public static MyNode findNodeByObject(final TreeNode root, final Object editableObject) {
     if (editableObject == null) return null; //do not suggest root node
-    return findNodeByCondition(root, new Condition<NamedConfigurable>() {
-      @Override
-      public boolean value(final NamedConfigurable configurable) {
-        return Comparing.equal(editableObject, configurable.getEditableObject());
-      }
-    });
+    return findNodeByCondition(root, configurable -> Comparing.equal(editableObject, configurable.getEditableObject()));
   }
 
   protected static MyNode findNodeByCondition(final TreeNode root, final Condition<NamedConfigurable> condition) {
     final MyNode[] nodeToSelect = new MyNode[1];
-    TreeUtil.traverseDepth(root, new TreeUtil.Traverse() {
-      @Override
-      public boolean accept(Object node) {
-        if (condition.value(((MyNode)node).getConfigurable())) {
-          nodeToSelect[0] = (MyNode)node;
-          return false;
-        }
-        return true;
+    TreeUtil.traverseDepth(root, node -> {
+      if (condition.value(((MyNode)node).getConfigurable())) {
+        nodeToSelect[0] = (MyNode)node;
+        return false;
       }
+      return true;
     });
     return nodeToSelect[0];
   }
@@ -681,18 +638,20 @@ public abstract class MasterDetailsComponent implements Configurable, MasterDeta
       if (comp == null) {
         setEmpty();
         LOG.error("createComponent() returned null. configurable=" + configurable);
-      } else {
+      }
+      else {
         myDetails.setContent(comp);
         ensureInitialized(configurable);
-        myHistory.pushPlaceForElement(TREE_OBJECT, configurable.getEditableObject());
       }
-    } else {
+    }
+    else {
       setEmpty();
     }
   }
 
   public void ensureInitialized(NamedConfigurable configurable) {
     if (!isInitialized(configurable)) {
+      configurable.initialize();
       configurable.reset();
       initializeConfigurable(configurable);
     }
@@ -711,7 +670,8 @@ public abstract class MasterDetailsComponent implements Configurable, MasterDeta
     return null;
   }
 
-  protected @Nullable String getEmptySelectionString() {
+  @Nullable
+  protected String getEmptySelectionString() {
     return null;
   }
 
@@ -766,19 +726,23 @@ public abstract class MasterDetailsComponent implements Configurable, MasterDeta
       if (parentNode != null && idx != -1) {
         DefaultMutableTreeNode toSelect = null;
         if (idx < parentNode.getChildCount()) {
-          toSelect = (DefaultMutableTreeNode) parentNode.getChildAt(idx);
-        } else {
+          toSelect = (DefaultMutableTreeNode)parentNode.getChildAt(idx);
+        }
+        else {
           if (idx > 0 && parentNode.getChildCount() > 0) {
             if (idx - 1 < parentNode.getChildCount()) {
-              toSelect = (DefaultMutableTreeNode) parentNode.getChildAt(idx - 1);
-            } else {
-              toSelect = (DefaultMutableTreeNode) parentNode.getFirstChild();
+              toSelect = (DefaultMutableTreeNode)parentNode.getChildAt(idx - 1);
             }
-          } else {
+            else {
+              toSelect = (DefaultMutableTreeNode)parentNode.getFirstChild();
+            }
+          }
+          else {
             if (parentNode.isRoot() && myTree.isRootVisible()) {
               toSelect = parentNode;
-            } else if (parentNode.getChildCount() > 0) {
-              toSelect = (DefaultMutableTreeNode) parentNode.getFirstChild();
+            }
+            else if (parentNode.getChildCount() > 0) {
+              toSelect = (DefaultMutableTreeNode)parentNode.getFirstChild();
             }
           }
         }
@@ -945,7 +909,8 @@ public abstract class MasterDetailsComponent implements Configurable, MasterDeta
   protected interface ItemsChangeListener {
     void itemChanged(@Nullable Object deletedItem);
 
-    void itemsExternallyChanged();
+    default void itemsExternallyChanged(UnnamedConfigurable configurable) {
+    }
   }
 
   public interface ActionGroupWithPreselection {
@@ -964,8 +929,7 @@ public abstract class MasterDetailsComponent implements Configurable, MasterDeta
     }
 
     public MyActionGroupWrapper(final ActionGroup actionGroup) {
-      super(actionGroup.getTemplatePresentation().getText(), actionGroup.getTemplatePresentation().getDescription(),
-            actionGroup.getTemplatePresentation().getIcon());
+      super(actionGroup.getTemplatePresentation().getText(), actionGroup.getTemplatePresentation().getDescription(), actionGroup.getTemplatePresentation().getIcon());
       myActionGroup = actionGroup;
       registerCustomShortcutSet(actionGroup.getShortcutSet(), myTree);
     }
@@ -973,8 +937,7 @@ public abstract class MasterDetailsComponent implements Configurable, MasterDeta
     @Override
     public void actionPerformed(AnActionEvent e) {
       final JBPopupFactory popupFactory = JBPopupFactory.getInstance();
-      final ListPopupStep step = popupFactory.createActionsStep(myActionGroup, e.getDataContext(), false, false,
-                                                                myActionGroup.getTemplatePresentation().getText(), myTree, true,
+      final ListPopupStep step = popupFactory.createActionsStep(myActionGroup, e.getDataContext(), false, false, myActionGroup.getTemplatePresentation().getText(), myTree, true,
                                                                 myPreselection != null ? myPreselection.getDefaultIndex() : 0, true);
       final ListPopup listPopup = popupFactory.createListPopup(step);
       listPopup.setHandleAutoSelectionBeforeShow(true);

@@ -18,8 +18,7 @@ package consulo.web.options;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.project.DefaultProjectFactory;
 import com.intellij.openapi.project.Project;
-import consulo.ide.base.BaseShowSettingsUtil;
-import consulo.ide.settings.impl.ShowSdksSettingsUtil;
+import consulo.options.BaseProjectStructureShowSettingsUtil;
 import consulo.options.ProjectStructureSelector;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.app.impl.settings.UnifiedSettingsDialog;
@@ -37,7 +36,7 @@ import java.util.function.Consumer;
  * @since 2019-02-02
  */
 @Singleton
-public class WebShowSettingsUtil extends BaseShowSettingsUtil implements ShowSdksSettingsUtil {
+public class WebShowSettingsUtil extends BaseProjectStructureShowSettingsUtil {
   private DefaultProjectFactory myDefaultProjectFactory;
 
   @Inject
@@ -80,8 +79,8 @@ public class WebShowSettingsUtil extends BaseShowSettingsUtil implements ShowSdk
 
   @RequiredUIAccess
   @Override
-  public void showProjectStructureDialog(@Nonnull Project project, @Nonnull Consumer<ProjectStructureSelector> consumer) {
-
+  public AsyncResult<Void> showProjectStructureDialog(@Nonnull Project project, @Nonnull Consumer<ProjectStructureSelector> consumer) {
+    return AsyncResult.rejected();
   }
 
   @RequiredUIAccess

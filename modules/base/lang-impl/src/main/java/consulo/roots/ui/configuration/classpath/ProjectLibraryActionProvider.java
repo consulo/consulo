@@ -17,12 +17,14 @@ package consulo.roots.ui.configuration.classpath;
 
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.util.ChooseElementsDialog;
+import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.roots.ui.configuration.classpath.ClasspathPanel;
 import com.intellij.openapi.roots.ui.configuration.libraries.LibraryPresentationManager;
-import com.intellij.openapi.roots.ui.configuration.projectRoot.StructureConfigurableContext;
 import consulo.localize.LocalizeValue;
 import consulo.roots.ModuleRootLayer;
+import consulo.roots.ui.configuration.LibrariesConfigurator;
+import consulo.roots.ui.configuration.ModulesConfigurator;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import consulo.util.concurrent.AsyncResult;
@@ -37,11 +39,11 @@ import java.util.List;
  */
 public class ProjectLibraryActionProvider implements AddModuleDependencyActionProvider<List<Library>, ProjectLibraryContext> {
   private static class ChooseLibrariesDialogImpl extends ChooseElementsDialog<Library> {
-    private final StructureConfigurableContext myContext;
+    private final LibrariesConfigurator myLibrariesConfigurator;
 
-    protected ChooseLibrariesDialogImpl(StructureConfigurableContext context, List<Library> libraries) {
-      super(context.getProject(), libraries, "Add Library Dependency", "Choose libraries for adding as dependency");
-      myContext = context;
+    protected ChooseLibrariesDialogImpl(Project project, LibrariesConfigurator librariesConfigurator, List<Library> libraries) {
+      super(project, libraries, "Add Library Dependency", "Choose libraries for adding as dependency");
+      myLibrariesConfigurator = librariesConfigurator;
     }
 
     @Override
@@ -52,7 +54,7 @@ public class ProjectLibraryActionProvider implements AddModuleDependencyActionPr
     @Nullable
     @Override
     protected Image getItemIcon(Library item) {
-      Image customIcon = LibraryPresentationManager.getInstance().getCustomIcon(item, myContext);
+      Image customIcon = LibraryPresentationManager.getInstance().getCustomIcon(item, myLibrariesConfigurator);
       if(customIcon != null) {
         return customIcon;
       }
@@ -74,14 +76,14 @@ public class ProjectLibraryActionProvider implements AddModuleDependencyActionPr
   }
 
   @Override
-  public ProjectLibraryContext createContext(@Nonnull ClasspathPanel classpathPanel, @Nonnull StructureConfigurableContext context) {
-    return new ProjectLibraryContext(classpathPanel, context);
+  public ProjectLibraryContext createContext(@Nonnull ClasspathPanel classpathPanel, @Nonnull ModulesConfigurator modulesConfigurator, @Nonnull LibrariesConfigurator librariesConfigurator) {
+    return new ProjectLibraryContext(classpathPanel, modulesConfigurator, librariesConfigurator);
   }
 
   @RequiredUIAccess
   @Nonnull
   @Override
   public AsyncResult<List<Library>> invoke(@Nonnull ProjectLibraryContext context) {
-    return new ChooseLibrariesDialogImpl(context.getStructureContext(), context.getItems()).showAsync2();
+    return new ChooseLibrariesDialogImpl(context.getProject(), context.getLibrariesConfigurator(), context.getItems()).showAsync2();
   }
 }

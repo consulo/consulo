@@ -21,11 +21,11 @@ import com.intellij.openapi.roots.impl.libraries.LibraryEx;
 import com.intellij.openapi.roots.libraries.*;
 import com.intellij.openapi.roots.ui.configuration.libraries.LibraryPresentationManager;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.LibrariesContainer;
-import com.intellij.openapi.roots.ui.configuration.projectRoot.StructureConfigurableContext;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.roots.types.BinariesOrderRootType;
+import consulo.roots.ui.configuration.LibrariesConfigurator;
 import consulo.ui.image.Image;
 import jakarta.inject.Singleton;
 
@@ -40,30 +40,30 @@ import java.util.*;
 public class LibraryPresentationManagerImpl extends LibraryPresentationManager {
   private Map<LibraryKind, LibraryPresentationProvider<?>> myPresentationProviders;
 
+  @SuppressWarnings("unchecked")
   private <P extends LibraryProperties> LibraryPresentationProvider<P> getPresentationProvider(LibraryKind kind) {
     if (myPresentationProviders == null) {
       final Map<LibraryKind, LibraryPresentationProvider<?>> providers = new HashMap<>();
-      for (LibraryType<?> type : LibraryType.EP_NAME.getExtensions()) {
+      for (LibraryType<?> type : LibraryType.EP_NAME.getExtensionList()) {
         providers.put(type.getKind(), type);
       }
-      for (LibraryPresentationProvider provider : LibraryPresentationProvider.EP_NAME.getExtensions()) {
+      for (LibraryPresentationProvider provider : LibraryPresentationProvider.EP_NAME.getExtensionList()) {
         providers.put(provider.getKind(), provider);
       }
       myPresentationProviders = providers;
     }
-    //noinspection unchecked
     return (LibraryPresentationProvider<P>)myPresentationProviders.get(kind);
   }
 
   @Nonnull
   @Override
-  public Image getNamedLibraryIcon(@Nonnull Library library, @Nullable StructureConfigurableContext context) {
+  public Image getNamedLibraryIcon(@Nonnull Library library, @Nullable LibrariesConfigurator context) {
     final Image icon = getCustomIcon(library, context);
     return icon != null ? icon : AllIcons.Nodes.PpLib;
   }
 
   @Override
-  public Image getCustomIcon(@Nonnull Library library, StructureConfigurableContext context) {
+  public Image getCustomIcon(@Nonnull Library library, LibrariesConfigurator context) {
     final LibraryKind kind = ((LibraryEx)library).getKind();
     if (kind != null) {
       return LibraryType.findByKind(kind).getIcon();
@@ -77,7 +77,7 @@ public class LibraryPresentationManagerImpl extends LibraryPresentationManager {
 
   @Nonnull
   @Override
-  public List<Image> getCustomIcons(@Nonnull Library library, StructureConfigurableContext context) {
+  public List<Image> getCustomIcons(@Nonnull Library library, LibrariesConfigurator context) {
     final VirtualFile[] files = getLibraryFiles(library, context);
     final List<Image> icons = new SmartList<>();
     LibraryDetectionManager.getInstance().processProperties(Arrays.asList(files), new LibraryDetectionManager.LibraryPropertiesProcessor() {
@@ -119,7 +119,7 @@ public class LibraryPresentationManagerImpl extends LibraryPresentationManager {
     });
   }
 
-  public static List<LibraryKind> getLibraryKinds(@Nonnull Library library, @Nullable StructureConfigurableContext context) {
+  public static List<LibraryKind> getLibraryKinds(@Nonnull Library library, @Nullable LibrariesConfigurator context) {
     final List<LibraryKind> result = new SmartList<>();
     final LibraryKind kind = ((LibraryEx)library).getKind();
     if (kind != null) {
@@ -138,13 +138,13 @@ public class LibraryPresentationManagerImpl extends LibraryPresentationManager {
 
   @Nonnull
   @Override
-  public List<String> getDescriptions(@Nonnull Library library, StructureConfigurableContext context) {
+  public List<String> getDescriptions(@Nonnull Library library, LibrariesConfigurator context) {
     final VirtualFile[] files = getLibraryFiles(library, context);
     return getDescriptions(files, Collections.<LibraryKind>emptySet());
   }
 
   @Nonnull
-  private static VirtualFile[] getLibraryFiles(@Nonnull Library library, @Nullable StructureConfigurableContext context) {
+  private static VirtualFile[] getLibraryFiles(@Nonnull Library library, @Nullable LibrariesConfigurator context) {
     if (((LibraryEx)library).isDisposed()) {
       return VirtualFile.EMPTY_ARRAY;
     }
@@ -171,16 +171,14 @@ public class LibraryPresentationManagerImpl extends LibraryPresentationManager {
   }
 
   @Override
-  public List<Library> getLibraries(@Nonnull Set<LibraryKind> kinds, @Nonnull Project project, @Nullable StructureConfigurableContext context) {
+  public List<Library> getLibraries(@Nonnull Set<LibraryKind> kinds, @Nonnull Project project, @Nullable LibrariesConfigurator context) {
     List<Library> libraries = new ArrayList<>();
     if (context != null) {
       Collections.addAll(libraries, context.getProjectLibrariesProvider().getModifiableModel().getLibraries());
-      Collections.addAll(libraries, context.getGlobalLibrariesProvider().getModifiableModel().getLibraries());
     }
     else {
       final LibraryTablesRegistrar registrar = LibraryTablesRegistrar.getInstance();
       Collections.addAll(libraries, registrar.getLibraryTable(project).getLibraries());
-      Collections.addAll(libraries, registrar.getLibraryTable().getLibraries());
     }
 
     final Iterator<Library> iterator = libraries.iterator();

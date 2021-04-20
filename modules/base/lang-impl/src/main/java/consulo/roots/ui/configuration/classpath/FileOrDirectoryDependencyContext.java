@@ -32,12 +32,13 @@ import com.intellij.openapi.roots.libraries.ui.impl.RootDetectionUtil;
 import com.intellij.openapi.roots.ui.configuration.classpath.ClasspathPanel;
 import com.intellij.openapi.roots.ui.configuration.libraries.LibraryEditingUtil;
 import com.intellij.openapi.roots.ui.configuration.libraryEditor.DefaultLibraryRootsComponentDescriptor;
-import com.intellij.openapi.roots.ui.configuration.projectRoot.StructureConfigurableContext;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.ArrayUtil;
 import consulo.roots.ModifiableModuleRootLayer;
 import consulo.roots.types.BinariesOrderRootType;
+import consulo.roots.ui.configuration.LibrariesConfigurator;
+import consulo.roots.ui.configuration.ModulesConfigurator;
 import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
@@ -54,8 +55,8 @@ public class FileOrDirectoryDependencyContext extends AddModuleDependencyContext
   private final HashMap<LibraryRootsComponentDescriptor, LibraryType> myLibraryTypes;
   private final DefaultLibraryRootsComponentDescriptor myDefaultDescriptor;
 
-  public FileOrDirectoryDependencyContext(ClasspathPanel panel, StructureConfigurableContext context) {
-    super(panel, context);
+  public FileOrDirectoryDependencyContext(ClasspathPanel panel, ModulesConfigurator modulesConfigurator, LibrariesConfigurator librariesConfigurator) {
+    super(panel, modulesConfigurator, librariesConfigurator);
 
     myLibraryTypes = new HashMap<>();
     myDefaultDescriptor = new DefaultLibraryRootsComponentDescriptor();
@@ -78,8 +79,7 @@ public class FileOrDirectoryDependencyContext extends AddModuleDependencyContext
 
   private FileChooserDescriptor createFileChooserDescriptor() {
     final FileChooserDescriptor chooserDescriptor;
-    final List<Pair<LibraryRootsComponentDescriptor, FileChooserDescriptor>> descriptors =
-            new ArrayList<Pair<LibraryRootsComponentDescriptor, FileChooserDescriptor>>();
+    final List<Pair<LibraryRootsComponentDescriptor, FileChooserDescriptor>> descriptors = new ArrayList<Pair<LibraryRootsComponentDescriptor, FileChooserDescriptor>>();
     for (LibraryRootsComponentDescriptor componentDescriptor : myLibraryTypes.keySet()) {
       descriptors.add(Pair.create(componentDescriptor, componentDescriptor.createAttachFilesChooserDescriptor(null)));
     }

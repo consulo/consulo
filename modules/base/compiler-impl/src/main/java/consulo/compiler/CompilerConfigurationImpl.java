@@ -64,9 +64,7 @@ public class CompilerConfigurationImpl extends CompilerConfiguration {
     }
   }
 
-  @NonNls
   private static final String DEFAULT_OUTPUT_URL = "out";
-  @NonNls
   private static final String URL = "url";
 
   private final Project myProject;

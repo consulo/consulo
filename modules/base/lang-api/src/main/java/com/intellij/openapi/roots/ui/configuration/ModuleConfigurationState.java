@@ -17,10 +17,20 @@ package com.intellij.openapi.roots.ui.configuration;
 
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ModifiableRootModel;
+import consulo.roots.ui.configuration.LibrariesConfigurator;
+import consulo.roots.ui.configuration.ModulesConfigurator;
 import consulo.util.dataholder.UserDataHolder;
 
+import javax.annotation.Nonnull;
+
 public interface ModuleConfigurationState extends UserDataHolder {
-  ModulesProvider getModulesProvider();
+  @Nonnull
+  ModulesConfigurator getModulesConfigurator();
+
+  @Nonnull
+  LibrariesConfigurator getLibrariesConfigurator();
+
   ModifiableRootModel getRootModel();
+
   Project getProject();
 }

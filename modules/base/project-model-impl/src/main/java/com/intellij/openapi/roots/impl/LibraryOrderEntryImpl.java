@@ -33,7 +33,7 @@ import javax.annotation.Nullable;
  * @author dsl
  */
 public class LibraryOrderEntryImpl extends LibraryOrderEntryBaseImpl implements LibraryOrderEntry, ClonableOrderEntry {
-  public static final Logger LOGGER = Logger.getInstance(LibraryOrderEntryImpl.class);
+  private static final Logger LOG = Logger.getInstance(LibraryOrderEntryImpl.class);
 
   private Library myLibrary;
   @Nullable
@@ -47,7 +47,7 @@ public class LibraryOrderEntryImpl extends LibraryOrderEntryBaseImpl implements 
 
   public LibraryOrderEntryImpl(@Nonnull Library library, @Nonnull ModuleRootLayerImpl rootLayer) {
     super(LibraryOrderEntryType.getInstance(), rootLayer, ProjectRootManagerImpl.getInstanceImpl(rootLayer.getProject()));
-    LOGGER.assertTrue(library.getTable() != null);
+    LOG.assertTrue(library.getTable() != null);
     myLibrary = library;
     addListeners();
     init();

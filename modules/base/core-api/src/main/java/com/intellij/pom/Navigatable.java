@@ -27,11 +27,15 @@ public interface Navigatable {
   /**
    * @return <code>false</code> if navigation is not possible for any reason.
    */
-  boolean canNavigate();
+  default boolean canNavigate() {
+    return true;
+  }
 
   /**
    * @return <code>false</code> if navigation to source is not possible for any reason.
    * Source means some kind of editor
    */
-  boolean canNavigateToSource();
+  default boolean canNavigateToSource() {
+    return canNavigate();
+  }
 }

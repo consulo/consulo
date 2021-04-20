@@ -23,6 +23,7 @@ import com.intellij.openapi.actionSystem.LangDataKeys;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
+import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
 
@@ -30,9 +31,11 @@ import javax.annotation.Nonnull;
  * @author Konstantin Bulenkov
  */
 public class OpenModuleSettingsAction extends EditSourceAction {
+  @RequiredUIAccess
   @Override
-  public void update(AnActionEvent event) {
+  public void update(@Nonnull AnActionEvent event) {
     super.update(event);
+
     if (!isModuleInProjectViewPopup(event)) {
       event.getPresentation().setEnabledAndVisible(false);
     }

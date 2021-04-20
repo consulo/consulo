@@ -15,6 +15,7 @@
  */
 package com.intellij.openapi.roots.ui.configuration.projectRoot.daemon;
 
+import com.intellij.openapi.project.Project;
 import consulo.util.concurrent.AsyncResult;
 
 import javax.annotation.Nonnull;
@@ -31,5 +32,5 @@ public abstract class PlaceInProjectStructure {
   public abstract String getPlacePath();
 
   @Nonnull
-  public abstract AsyncResult<Void> navigate();
+  public abstract AsyncResult<Void> navigate(@Nonnull Project project);
 }

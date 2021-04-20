@@ -12,6 +12,10 @@
  */
 package com.intellij.openapi.roots.ui.configuration.projectRoot.daemon;
 
+import com.intellij.openapi.actionSystem.DataContext;
+
+import javax.annotation.Nonnull;
+
 /**
  * @author nik
  */
@@ -26,5 +30,5 @@ public abstract class ConfigurationErrorQuickFix {
     return myActionName;
   }
 
-  public abstract void performFix();
+  public abstract void performFix(@Nonnull DataContext dataContext);
 }

@@ -15,6 +15,7 @@
  */
 package com.intellij.openapi.roots.ui.configuration.classpath;
 
+import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ModifiableRootModel;
 import com.intellij.openapi.roots.OrderEntry;
@@ -40,7 +41,7 @@ public interface ClasspathPanel {
 
   ModuleConfigurationState getModuleConfigurationState();
 
-  void navigate(boolean openLibraryEditor);
+  void navigate(AnActionEvent fromInputEvent, boolean openLibraryEditor);
 
   @Nullable
   OrderEntry getSelectedEntry();

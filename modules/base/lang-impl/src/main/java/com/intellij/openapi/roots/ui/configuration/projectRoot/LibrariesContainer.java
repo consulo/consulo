@@ -23,6 +23,7 @@ import com.intellij.openapi.roots.ui.configuration.libraryEditor.ExistingLibrary
 import com.intellij.openapi.roots.ui.configuration.libraryEditor.NewLibraryEditor;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
+import consulo.annotation.DeprecationInfo;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -38,7 +39,7 @@ public interface LibrariesContainer {
   @Nullable
   Project getProject();
 
-  enum LibraryLevel {GLOBAL, PROJECT, MODULE;
+  enum LibraryLevel {@Deprecated(forRemoval = true) @DeprecationInfo("Unused") GLOBAL, PROJECT, MODULE;
     public String toString() {
       return StringUtil.capitalize(name().toLowerCase());
     }

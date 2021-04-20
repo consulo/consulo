@@ -16,7 +16,9 @@
 package consulo.ui.app.impl.settings;
 
 import com.intellij.openapi.options.Configurable;
-import com.intellij.openapi.util.Weighted;
+import com.intellij.openapi.options.UnnamedConfigurable;
+import com.intellij.openapi.options.ex.ConfigurableWrapper;
+import consulo.preferences.internal.ConfigurableWeight;
 import consulo.ui.TreeNode;
 
 import java.util.Comparator;
@@ -41,10 +43,16 @@ public class UnifiedConfigurableComparator implements Comparator<TreeNode<Config
     return getConfigurableDisplayName(o1.getValue()).compareToIgnoreCase(getConfigurableDisplayName(o2.getValue()));
   }
 
-  private static double getWeight(TreeNode<Configurable> node) {
+  private static int getWeight(TreeNode<Configurable> node) {
     Configurable configurable = node.getValue();
-    if (configurable instanceof Weighted) {
-      return ((Weighted)configurable).getWeight();
+    if (configurable instanceof ConfigurableWeight) {
+      return ((ConfigurableWeight)configurable).getConfigurableWeight();
+    }
+    else if(configurable instanceof ConfigurableWrapper) {
+      UnnamedConfigurable wrapped = ((ConfigurableWrapper)configurable).getConfigurable();
+      if(wrapped instanceof ConfigurableWeight) {
+        return ((ConfigurableWeight)wrapped).getConfigurableWeight();
+      }
     }
     return 0;
   }

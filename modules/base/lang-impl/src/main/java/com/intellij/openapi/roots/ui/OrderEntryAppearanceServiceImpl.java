@@ -17,6 +17,7 @@ package com.intellij.openapi.roots.ui;
 
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.module.Module;
+import com.intellij.openapi.options.ShowSettingsUtil;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.openapi.projectRoots.Sdk;
@@ -24,9 +25,7 @@ import com.intellij.openapi.projectRoots.SdkType;
 import com.intellij.openapi.roots.ContentFolder;
 import com.intellij.openapi.roots.OrderEntry;
 import com.intellij.openapi.roots.libraries.Library;
-import com.intellij.openapi.roots.ui.configuration.ProjectStructureConfigurable;
 import com.intellij.openapi.roots.ui.configuration.libraries.LibraryPresentationManager;
-import com.intellij.openapi.roots.ui.configuration.projectRoot.StructureConfigurableContext;
 import com.intellij.openapi.roots.ui.util.CompositeAppearance;
 import com.intellij.openapi.roots.ui.util.SimpleTextCellAppearance;
 import com.intellij.openapi.util.SystemInfo;
@@ -34,14 +33,17 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileManager;
+import com.intellij.openapi.vfs.impl.LightFilePointer;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.util.PathUtil;
 import com.intellij.util.io.URLUtil;
 import consulo.bundle.SdkUtil;
+import consulo.ide.settings.impl.ProjectStructureSettingsUtil;
 import consulo.roots.orderEntry.OrderEntryType;
 import consulo.roots.orderEntry.OrderEntryTypeEditor;
 import consulo.roots.types.BinariesOrderRootType;
+import consulo.roots.ui.configuration.LibrariesConfigurator;
 import consulo.ui.image.Image;
 import jakarta.inject.Singleton;
 
@@ -68,7 +70,8 @@ public class OrderEntryAppearanceServiceImpl extends OrderEntryAppearanceService
   @Nonnull
   @Override
   public CellAppearanceEx forLibrary(Project project, @Nonnull final Library library, final boolean hasInvalidRoots) {
-    final StructureConfigurableContext context = ProjectStructureConfigurable.getInstance(project).getContext();
+    final LibrariesConfigurator context = ((ProjectStructureSettingsUtil)ShowSettingsUtil.getInstance()).getLibrariesModel(project);
+
     final Image icon = LibraryPresentationManager.getInstance().getCustomIcon(library, context);
 
     final String name = library.getName();

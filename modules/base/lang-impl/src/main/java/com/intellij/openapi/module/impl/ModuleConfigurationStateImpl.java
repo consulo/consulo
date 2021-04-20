@@ -18,30 +18,47 @@ package com.intellij.openapi.module.impl;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ModifiableRootModel;
 import com.intellij.openapi.roots.ui.configuration.ModuleConfigurationState;
-import com.intellij.openapi.roots.ui.configuration.ModulesProvider;
+import consulo.roots.ui.configuration.LibrariesConfigurator;
+import consulo.roots.ui.configuration.ModulesConfigurator;
 import consulo.util.dataholder.UserDataHolderBase;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.function.Supplier;
 
 public class ModuleConfigurationStateImpl extends UserDataHolderBase implements ModuleConfigurationState {
-  private final ModulesProvider myProvider;
+  private final ModulesConfigurator myProvider;
+  private final LibrariesConfigurator myLibrariesConfigurator;
   private final Project myProject;
+  @Nonnull
+  private final Supplier<? extends ModifiableRootModel> myModifiableRootModelValue;
 
-  public ModuleConfigurationStateImpl(@Nonnull Project project, @Nonnull ModulesProvider provider) {
+  public ModuleConfigurationStateImpl(@Nonnull Project project,
+                                      @Nonnull ModulesConfigurator provider,
+                                      @Nonnull LibrariesConfigurator librariesConfigurator,
+                                      @Nonnull Supplier<? extends ModifiableRootModel> modifiableRootModelValue) {
     myProvider = provider;
+    myLibrariesConfigurator = librariesConfigurator;
     myProject = project;
+    myModifiableRootModelValue = modifiableRootModelValue;
   }
 
+  @Nonnull
   @Override
-  public ModulesProvider getModulesProvider() {
+  public ModulesConfigurator getModulesConfigurator() {
     return myProvider;
   }
 
+  @Nonnull
+  @Override
+  public LibrariesConfigurator getLibrariesConfigurator() {
+    return myLibrariesConfigurator;
+  }
 
   @Override
   @Nullable
   public ModifiableRootModel getRootModel() {
-    return null;
+    return myModifiableRootModelValue.get();
   }
 
   @Override

@@ -20,7 +20,6 @@ import com.intellij.openapi.module.ModuleConfigurationEditor;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ModifiableRootModel;
-import com.intellij.ui.navigation.History;
 import consulo.disposer.CompositeDisposable;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
@@ -39,16 +38,11 @@ public abstract class ModuleElementsEditor implements ModuleConfigurationEditor 
   protected JComponent myComponent;
   private final CompositeDisposable myDisposables = new CompositeDisposable();
 
-  protected History myHistory;
   private final ModuleConfigurationState myState;
 
   protected ModuleElementsEditor(ModuleConfigurationState state) {
     myProject = state.getProject();
     myState = state;
-  }
-
-  public void setHistory(final History history) {
-    myHistory = history;
   }
 
   @RequiredUIAccess

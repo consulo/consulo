@@ -17,21 +17,14 @@ package com.intellij.openapi.roots.impl.libraries;
 
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.libraries.LibraryTable;
-import com.intellij.openapi.roots.libraries.LibraryTablePresentation;
 import com.intellij.openapi.roots.libraries.LibraryTablesRegistrar;
-import com.intellij.util.SmartList;
 import consulo.disposer.Disposable;
 import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 @Singleton
 public class LibraryTablesRegistrarImpl extends LibraryTablesRegistrar implements Disposable {
-  private static final Map<String, LibraryTable> myLibraryTables = new HashMap<String, LibraryTable>();
-
   @Override
   @Nonnull
   public LibraryTable getLibraryTable() {
@@ -48,64 +41,10 @@ public class LibraryTablesRegistrarImpl extends LibraryTablesRegistrar implement
   public LibraryTable getLibraryTableByLevel(String level, @Nonnull Project project) {
     if (LibraryTablesRegistrar.PROJECT_LEVEL.equals(level)) return getLibraryTable(project);
     if (LibraryTablesRegistrar.APPLICATION_LEVEL.equals(level)) return getLibraryTable();
-    return myLibraryTables.get(level);
-  }
-
-  @Override
-  public void registerLibraryTable(@Nonnull LibraryTable libraryTable) {
-    String tableLevel = libraryTable.getTableLevel();
-    final LibraryTable oldTable = myLibraryTables.put(tableLevel, libraryTable);
-    if (oldTable != null) {
-      throw new IllegalArgumentException("Library table '" + tableLevel + "' already registered.");
-    }
-  }
-
-  @Override
-  @Nonnull
-  public LibraryTable registerLibraryTable(final String customLevel) {
-    LibraryTable table = new LibraryTableBase() {
-      @Override
-      public String getTableLevel() {
-        return customLevel;
-      }
-
-      @Override
-      public LibraryTablePresentation getPresentation() {
-        return new LibraryTablePresentation() {
-          @Override
-          public String getDisplayName(boolean plural) {
-            return customLevel;
-          }
-
-          @Override
-          public String getDescription() {
-            throw new UnsupportedOperationException("Method getDescription is not yet implemented in " + getClass().getName());
-          }
-
-          @Override
-          public String getLibraryTableEditorTitle() {
-            throw new UnsupportedOperationException("Method getLibraryTableEditorTitle is not yet implemented in " + getClass().getName());
-          }
-        };
-      }
-
-      @Override
-      public boolean isEditable() {
-        return false;
-      }
-    };
-
-    registerLibraryTable(table);
-    return table;
-  }
-
-  @Override
-  public List<LibraryTable> getCustomLibraryTables() {
-    return new SmartList<LibraryTable>(myLibraryTables.values());
+    return null;
   }
 
   @Override
   public void dispose() {
-    myLibraryTables.clear();
   }
 }

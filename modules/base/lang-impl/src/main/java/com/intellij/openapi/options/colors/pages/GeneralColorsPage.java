@@ -30,15 +30,15 @@ import com.intellij.openapi.options.OptionsBundle;
 import com.intellij.openapi.options.colors.AttributesDescriptor;
 import com.intellij.openapi.options.colors.ColorDescriptor;
 import com.intellij.openapi.options.colors.ColorSettingsPage;
-import com.intellij.openapi.util.Weighted;
 import com.intellij.openapi.util.io.FileUtil;
+import consulo.preferences.internal.ConfigurableWeight;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-public class GeneralColorsPage implements ColorSettingsPage, InspectionColorSettingsPage, Weighted {
+public class GeneralColorsPage implements ColorSettingsPage, InspectionColorSettingsPage, ConfigurableWeight {
   private static final String ADDITIONAL_DEMO_TEXT = "\n" +
                                                      "<todo>//TODO: Visit Consulo Web resources:</todo>\n" +
                                                      "Consulo Home Page: <hyperlink_f>https://consulo.io</hyperlink_f>\n" +
@@ -200,7 +200,7 @@ public class GeneralColorsPage implements ColorSettingsPage, InspectionColorSett
   }
 
   @Override
-  public double getWeight() {
+  public int getConfigurableWeight() {
     return Integer.MAX_VALUE;
   }
 

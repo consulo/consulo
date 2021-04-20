@@ -16,16 +16,17 @@
 package com.intellij.openapi.roots.ui.configuration;
 
 import com.intellij.compiler.ModuleCompilerUtil;
+import com.intellij.openapi.options.ShowSettingsUtil;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.openapi.roots.ModuleRootModel;
-import com.intellij.openapi.roots.ui.configuration.projectRoot.StructureConfigurableContext;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.*;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.Chunk;
 import com.intellij.util.graph.Graph;
+import consulo.ide.settings.impl.ProjectStructureSettingsUtil;
+import consulo.util.concurrent.AsyncResult;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 
 import java.util.*;
 
@@ -33,10 +34,6 @@ import java.util.*;
  * @author nik
  */
 public class GeneralProjectSettingsElement extends ProjectStructureElement {
-  public GeneralProjectSettingsElement(@Nonnull StructureConfigurableContext context) {
-    super(context);
-  }
-
   @Override
   public String getPresentableName() {
     return "Project";
@@ -48,13 +45,17 @@ public class GeneralProjectSettingsElement extends ProjectStructureElement {
   }
 
   @Override
-  public void check(ProjectStructureProblemsHolder problemsHolder) {
-    final Graph<Chunk<ModuleRootModel>> graph = ModuleCompilerUtil.toChunkGraph(myContext.getModulesConfigurator().createGraphGenerator());
+  public void check(Project project, ProjectStructureProblemsHolder problemsHolder) {
+    ProjectStructureSettingsUtil util = (ProjectStructureSettingsUtil)ShowSettingsUtil.getInstance();
+
+    ModulesConfiguratorImpl modulesConfigurator = (ModulesConfiguratorImpl)util.getModulesModel(project);
+
+    final Graph<Chunk<ModuleRootModel>> graph = ModuleCompilerUtil.toChunkGraph(modulesConfigurator.createGraphGenerator());
     final Collection<Chunk<ModuleRootModel>> chunks = graph.getNodes();
-    List<String> cycles = new ArrayList<String>();
+    List<String> cycles = new ArrayList<>();
     for (Chunk<ModuleRootModel> chunk : chunks) {
       final Set<ModuleRootModel> modules = chunk.getNodes();
-      List<String> names = new ArrayList<String>();
+      List<String> names = new ArrayList<>();
       for (ModuleRootModel model : modules) {
         names.add(model.getModule().getName());
       }
@@ -63,8 +64,7 @@ public class GeneralProjectSettingsElement extends ProjectStructureElement {
       }
     }
     if (!cycles.isEmpty()) {
-      final Project project = myContext.getProject();
-      final PlaceInProjectStructureBase place = new PlaceInProjectStructureBase(project, ProjectStructureConfigurable.getInstance(project).createModulesPlace(), this);
+      final PlaceInProjectStructureBase place = new PlaceInProjectStructureBase(GeneralProjectSettingsElement::navigateToModules, this);
       final String message;
       final String description;
       if (cycles.size() > 1) {
@@ -80,10 +80,15 @@ public class GeneralProjectSettingsElement extends ProjectStructureElement {
         message = ProjectBundle.message("module.circular.dependency.warning.short", cycles.get(0));
         description = null;
       }
-      problemsHolder.registerProblem(new ProjectStructureProblemDescription(message, description, place,
-                                                                            ProjectStructureProblemType.warning("module-circular-dependency"),
+      problemsHolder.registerProblem(new ProjectStructureProblemDescription(message, description, place, ProjectStructureProblemType.warning("module-circular-dependency"),
                                                                             Collections.<ConfigurationErrorQuickFix>emptyList()));
     }
+  }
+
+  private static AsyncResult<Void> navigateToModules(Project project) {
+    return ShowSettingsUtil.getInstance().showProjectStructureDialog(project, projectStructureSelector -> {
+      projectStructureSelector.select(null, null, true);
+    });
   }
 
   @Override

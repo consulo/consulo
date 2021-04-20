@@ -1,7 +1,8 @@
 package com.intellij.openapi.roots.ui.configuration.projectRoot.daemon;
 
-import com.intellij.openapi.roots.ui.configuration.projectRoot.StructureConfigurableContext;
+import com.intellij.openapi.project.Project;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 
@@ -9,12 +10,6 @@ import java.util.List;
  * @author nik
  */
 public abstract class ProjectStructureElement {
-  protected final StructureConfigurableContext myContext;
-
-  protected ProjectStructureElement(@Nullable StructureConfigurableContext context) {
-    myContext = context;
-  }
-
   public abstract String getPresentableName();
 
   @Nullable
@@ -26,7 +21,7 @@ public abstract class ProjectStructureElement {
 
   public abstract String getId();
 
-  public abstract void check(ProjectStructureProblemsHolder problemsHolder);
+  public abstract void check(@Nonnull Project project, ProjectStructureProblemsHolder problemsHolder);
 
   public abstract List<ProjectStructureElementUsage> getUsagesInElement();
 
@@ -36,10 +31,9 @@ public abstract class ProjectStructureElement {
   }
 
   @Nullable
-  public ProjectStructureProblemDescription createUnusedElementWarning() {
+  public ProjectStructureProblemDescription createUnusedElementWarning(@Nonnull Project project) {
     return null;
   }
-
 
   @Override
   public abstract boolean equals(Object obj);

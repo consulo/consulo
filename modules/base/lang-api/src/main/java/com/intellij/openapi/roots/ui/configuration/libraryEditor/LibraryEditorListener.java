@@ -16,13 +16,16 @@
 package com.intellij.openapi.roots.ui.configuration.libraryEditor;
 
 import com.intellij.openapi.roots.libraries.Library;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.util.EventListener;
 
 /**
  * @author nik
  */
 public interface LibraryEditorListener extends EventListener {
+  default void libraryCreated(@Nonnull Library library) {
+  }
+
   void libraryRenamed(@Nonnull Library library, String oldName, String newName);
 }

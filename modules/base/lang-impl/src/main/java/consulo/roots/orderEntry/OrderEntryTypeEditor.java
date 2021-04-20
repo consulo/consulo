@@ -23,10 +23,12 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.OrderEntry;
 import com.intellij.openapi.roots.ui.CellAppearanceEx;
 import com.intellij.openapi.roots.ui.configuration.classpath.ClasspathTableItem;
-import com.intellij.openapi.roots.ui.configuration.projectRoot.StructureConfigurableContext;
 import com.intellij.openapi.roots.ui.util.SimpleTextCellAppearance;
 import com.intellij.openapi.util.KeyedExtensionFactory;
 import com.intellij.ui.SimpleTextAttributes;
+import consulo.roots.ui.configuration.LibrariesConfigurator;
+import consulo.roots.ui.configuration.ModulesConfigurator;
+import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
 
@@ -59,10 +61,14 @@ public abstract interface OrderEntryTypeEditor<T extends OrderEntry> {
   }
 
   @Nonnull
-  default ClasspathTableItem<T> createTableItem(@Nonnull T orderEntry, @Nonnull StructureConfigurableContext context) {
+  default ClasspathTableItem<T> createTableItem(@Nonnull T orderEntry,
+                                                @Nonnull Project project,
+                                                @Nonnull ModulesConfigurator modulesConfigurator,
+                                                @Nonnull LibrariesConfigurator librariesConfigurator) {
     return new ClasspathTableItem<>(orderEntry);
   }
 
+  @RequiredUIAccess
   default void navigate(@Nonnull final T orderEntry) {
     Project project = orderEntry.getOwnerModule().getProject();
     ShowSettingsUtil.getInstance().showProjectStructureDialog(project, config -> config.selectOrderEntry(orderEntry.getOwnerModule(), orderEntry));

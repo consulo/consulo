@@ -15,12 +15,15 @@
  */
 package com.intellij.openapi.roots.ui.configuration.classpath;
 
+import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.DependencyScope;
 import com.intellij.openapi.roots.ExportableOrderEntry;
 import com.intellij.openapi.roots.OrderEntry;
-import com.intellij.openapi.roots.ui.configuration.projectRoot.StructureConfigurableContext;
 import consulo.roots.orderEntry.OrderEntryType;
 import consulo.roots.orderEntry.OrderEntryTypeEditor;
+import consulo.roots.ui.configuration.LibrariesConfigurator;
+import consulo.roots.ui.configuration.ModulesConfigurator;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -30,14 +33,17 @@ import javax.annotation.Nullable;
 public class ClasspathTableItem<T extends OrderEntry> {
   @Nonnull
   @SuppressWarnings("unchecked")
-  public static ClasspathTableItem<?> createItem(OrderEntry orderEntry, StructureConfigurableContext context) {
+  public static ClasspathTableItem<?> createItem(@Nonnull OrderEntry orderEntry,
+                                                 @Nonnull Project project,
+                                                 @Nonnull ModulesConfigurator modulesConfigurator,
+                                                 @Nonnull LibrariesConfigurator librariesConfigurator) {
     OrderEntryType<?> type = orderEntry.getType();
 
     OrderEntryTypeEditor editor = OrderEntryTypeEditor.FACTORY.getByKey(type);
-    if(editor != null) {
-      return editor.createTableItem(orderEntry, context);
+    if (editor != null) {
+      return editor.createTableItem(orderEntry, project, modulesConfigurator, librariesConfigurator);
     }
-    return new ClasspathTableItem<OrderEntry>(orderEntry);
+    return new ClasspathTableItem<>(orderEntry);
   }
 
   @Nonnull

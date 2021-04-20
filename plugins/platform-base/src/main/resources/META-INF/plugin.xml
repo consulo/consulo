@@ -1624,15 +1624,6 @@
 
     <daemon.highlightInfoFilter implementation="com.intellij.codeInsight.daemon.impl.HighlightInfoFilterImpl"/>
 
-
-    <!-- Project Configurables -->
-    <projectService serviceImplementation="com.intellij.openapi.roots.ui.configuration.projectRoot.ModuleStructureConfigurable"/>
-    <projectService serviceImplementation="com.intellij.openapi.roots.ui.configuration.artifacts.ArtifactsStructureConfigurable"/>
-    <projectService serviceImplementation="com.intellij.openapi.roots.ui.configuration.projectRoot.ProjectLibrariesConfigurable"/>
-    <projectService serviceImplementation="com.intellij.openapi.roots.ui.configuration.projectRoot.SdkListConfigurable"/>
-
-    <applicationConfigurable bundle="messages.ProjectBundle" key="global.bundles.display.name" instance="consulo.roots.ui.configuration.SdkListConfigurable" id="sdks.list"/>
-
     <!-- Compiler -->
     <projectConfigurable instance="com.intellij.compiler.options.CompilerConfigurable" id="project.propCompiler"
                          key="compiler.configurable.display.name" bundle="messages.CompilerBundle" order="after project"/>
@@ -2468,8 +2459,6 @@
 
     <projectService serviceInterface="com.intellij.refactoring.RefactoringFactory"
                     serviceImplementation="com.intellij.refactoring.openapi.impl.RefactoringFactoryImpl"/>
-
-    <projectService serviceImplementation="com.intellij.openapi.roots.ui.configuration.ProjectStructureConfigurable"/>
 
     <projectService serviceInterface="com.intellij.lang.injection.InjectedLanguageManager"
                     serviceImplementation="com.intellij.psi.impl.source.tree.injected.InjectedLanguageManagerImpl"/>

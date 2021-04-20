@@ -46,7 +46,7 @@ public class AddLibraryToModuleDependenciesAction extends DumbAwareAction {
     boolean visible = false;
     if (element instanceof LibraryProjectStructureElement) {
       final LibraryEx library = (LibraryEx)((LibraryProjectStructureElement)element).getLibrary();
-      visible = !LibraryEditingUtil.getSuitableModules(ModuleStructureConfigurable.getInstance(myProject), library.getKind(), library).isEmpty();
+      visible = !LibraryEditingUtil.getSuitableModules(myProject, library.getKind(), library).isEmpty();
     }
     e.getPresentation().setVisible(visible);
   }

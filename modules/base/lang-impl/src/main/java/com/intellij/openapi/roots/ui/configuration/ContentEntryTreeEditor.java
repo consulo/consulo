@@ -21,8 +21,10 @@ import com.intellij.ide.util.treeView.AbstractTreeBuilder;
 import com.intellij.ide.util.treeView.AbstractTreeStructure;
 import com.intellij.ide.util.treeView.NodeDescriptor;
 import com.intellij.idea.ActionsBundle;
+import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.DataProvider;
 import com.intellij.openapi.actionSystem.DefaultActionGroup;
+import com.intellij.openapi.actionSystem.ex.ToolbarLabelAction;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
 import com.intellij.openapi.fileChooser.FileSystemTree;
@@ -34,7 +36,6 @@ import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.openapi.roots.ContentEntry;
 import com.intellij.openapi.roots.ContentFolder;
 import com.intellij.openapi.roots.ui.configuration.actions.ToggleFolderStateAction;
-import consulo.disposer.Disposer;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -44,10 +45,12 @@ import com.intellij.ui.TreeSpeedSearch;
 import com.intellij.ui.treeStructure.Tree;
 import com.intellij.util.containers.ComparatorUtil;
 import com.intellij.util.ui.tree.TreeUtil;
+import consulo.disposer.Disposer;
+import consulo.localize.LocalizeValue;
 import consulo.roots.ContentFolderTypeProvider;
 import consulo.roots.ContentFoldersSupportUtil;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.dataholder.Key;
-import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -99,6 +102,14 @@ public class ContentEntryTreeEditor {
   protected void updateMarkActions() {
     myEditingActionsGroup.removeAll();
 
+    myEditingActionsGroup.add(new ToolbarLabelAction() {
+      @RequiredUIAccess
+      @Override
+      public void update(@Nonnull AnActionEvent e) {
+        super.update(e);
+       e.getPresentation().setTextValue(LocalizeValue.localizeTODO("Mark as:"));
+      }
+    });
     Set<ContentFolderTypeProvider> folders = ContentFoldersSupportUtil.getSupportedFolders(myState.getRootModel());
     ContentFolderTypeProvider[] supportedFolders = folders.toArray(new ContentFolderTypeProvider[folders.size()]);
     Arrays.sort(supportedFolders, (o1, o2) -> ComparatorUtil.compareInt(o1.getWeight(), o2.getWeight()));
@@ -149,13 +160,9 @@ public class ContentEntryTreeEditor {
       myDescriptor.setTitle(FileUtil.toSystemDependentName(path));
     }
 
-    final Runnable init = new Runnable() {
-      @Override
-      public void run() {
-        //noinspection ConstantConditions
-        myFileSystemTree.updateTree();
-        myFileSystemTree.select(file, null);
-      }
+    final Runnable init = () -> {
+      myFileSystemTree.updateTree();
+      myFileSystemTree.select(file, null);
     };
 
     myFileSystemTree = new FileSystemTreeImpl(myProject, myDescriptor, myTree, getContentEntryCellRenderer(), init, null) {
@@ -258,7 +265,7 @@ public class ContentEntryTreeEditor {
 
     @Override
     @Nullable
-    public Object getData(@Nonnull @NonNls final Key<?> dataId) {
+    public Object getData(@Nonnull final Key<?> dataId) {
       if (FileSystemTree.DATA_KEY == dataId) {
         return myFileSystemTree;
       }

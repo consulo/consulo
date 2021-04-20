@@ -25,17 +25,18 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.bundle.SdkPointerManager;
 import consulo.util.pointers.NamedPointer;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author yole
  */
 public class RootConfigurationAccessor {
-  @javax.annotation.Nullable
+  @Nullable
   public Library getLibrary(final Library library, final String libraryName, final String libraryLevel) {
     return library;
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   public Sdk getSdk(final Sdk sdk, final String sdkName) {
     return sdk;
   }

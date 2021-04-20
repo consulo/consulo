@@ -22,6 +22,7 @@ import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.ComboBoxAction;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.options.ConfigurationException;
+import com.intellij.openapi.options.ShowSettingsUtil;
 import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.openapi.roots.ModuleRootAdapter;
 import com.intellij.openapi.roots.ModuleRootEvent;
@@ -29,13 +30,14 @@ import com.intellij.openapi.roots.ModuleSourceOrderEntry;
 import com.intellij.openapi.roots.OrderEntry;
 import com.intellij.openapi.roots.ui.CellAppearanceEx;
 import com.intellij.openapi.roots.ui.OrderEntryAppearanceService;
-import com.intellij.openapi.roots.ui.configuration.ProjectStructureConfigurable;
 import com.intellij.openapi.ui.MasterDetailsComponent;
 import com.intellij.openapi.ui.NamedConfigurable;
-import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.ui.*;
+import com.intellij.ui.ColoredTreeCellRenderer;
+import com.intellij.ui.PopupHandler;
+import com.intellij.ui.SimpleColoredComponent;
+import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.ui.treeStructure.Tree;
 import com.intellij.util.PathUtil;
@@ -44,6 +46,7 @@ import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.tree.TreeUtil;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
+import consulo.util.dataholder.Key;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NonNls;
 
@@ -252,6 +255,7 @@ public class AnalyzeDependenciesComponent extends MasterDetailsComponent {
     /**
      * {@inheritDoc}
      */
+    @RequiredUIAccess
     @Override
     public void actionPerformed(AnActionEvent e) {
       final Module module = e.getData(LangDataKeys.MODULE);
@@ -263,7 +267,10 @@ public class AnalyzeDependenciesComponent extends MasterDetailsComponent {
         final ModuleDependenciesAnalyzer.OrderEntryPathElement o = (ModuleDependenciesAnalyzer.OrderEntryPathElement)element;
         final OrderEntry entry = o.entry();
         final Module m = entry.getOwnerModule();
-        ProjectStructureConfigurable.getInstance(module.getProject()).selectOrderEntry(m, entry);
+
+        ShowSettingsUtil.getInstance().showProjectStructureDialog(m.getProject(), projectStructureSelector -> {
+          projectStructureSelector.selectOrderEntry(m, entry);
+        });
       }
     }
   }

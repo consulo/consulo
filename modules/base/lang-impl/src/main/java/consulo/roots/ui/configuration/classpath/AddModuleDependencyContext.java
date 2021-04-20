@@ -19,8 +19,9 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.OrderEntry;
 import com.intellij.openapi.roots.ui.configuration.classpath.ClasspathPanel;
 import com.intellij.openapi.roots.ui.configuration.classpath.ClasspathTableItem;
-import com.intellij.openapi.roots.ui.configuration.projectRoot.StructureConfigurableContext;
 import consulo.roots.ModifiableModuleRootLayer;
+import consulo.roots.ui.configuration.LibrariesConfigurator;
+import consulo.roots.ui.configuration.ModulesConfigurator;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -32,11 +33,13 @@ import java.util.List;
  */
 public abstract class AddModuleDependencyContext<T> {
   protected final ClasspathPanel myClasspathPanel;
-  protected final StructureConfigurableContext myContext;
+  protected final ModulesConfigurator myModulesConfigurator;
+  protected final LibrariesConfigurator myLibrariesConfigurator;
 
-  protected AddModuleDependencyContext(ClasspathPanel classpathPanel, StructureConfigurableContext context) {
+  protected AddModuleDependencyContext(ClasspathPanel classpathPanel, ModulesConfigurator modulesConfigurator, LibrariesConfigurator librariesConfigurator) {
     myClasspathPanel = classpathPanel;
-    myContext = context;
+    myModulesConfigurator = modulesConfigurator;
+    myLibrariesConfigurator = librariesConfigurator;
   }
 
   public boolean isEmpty() {
@@ -49,8 +52,13 @@ public abstract class AddModuleDependencyContext<T> {
   }
 
   @Nonnull
-  public StructureConfigurableContext getStructureContext() {
-    return myContext;
+  public ModulesConfigurator getModulesConfigurator() {
+    return myModulesConfigurator;
+  }
+
+  @Nonnull
+  public LibrariesConfigurator getLibrariesConfigurator() {
+    return myLibrariesConfigurator;
   }
 
   @Nonnull
@@ -66,9 +74,9 @@ public abstract class AddModuleDependencyContext<T> {
       return;
     }
 
-    List<ClasspathTableItem<?>> items = new ArrayList<ClasspathTableItem<?>>(orderEntries.size());
+    List<ClasspathTableItem<?>> items = new ArrayList<>(orderEntries.size());
     for (OrderEntry orderEntry : orderEntries) {
-      ClasspathTableItem<?> item = ClasspathTableItem.createItem(orderEntry, myContext);
+      ClasspathTableItem<?> item = ClasspathTableItem.createItem(orderEntry, myClasspathPanel.getProject(), myModulesConfigurator, myLibrariesConfigurator);
       items.add(item);
     }
     myClasspathPanel.addItems(items);

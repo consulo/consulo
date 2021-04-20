@@ -18,7 +18,6 @@ package com.intellij.ide.actions;
 import com.intellij.CommonBundle;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.SearchableConfigurable;
-import com.intellij.openapi.options.ShowSettingsUtil;
 import com.intellij.openapi.options.ex.Settings;
 import com.intellij.openapi.options.ex.SingleConfigurableEditor;
 import com.intellij.openapi.options.newEditor.DesktopSettingsDialog;
@@ -27,18 +26,17 @@ import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.DefaultProjectFactory;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.projectRoots.SdkTable;
-import com.intellij.openapi.roots.ui.configuration.ProjectStructureConfigurable;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.DefaultSdksModel;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.util.Function;
 import com.intellij.util.ui.update.Activatable;
 import com.intellij.util.ui.update.UiNotifyConnector;
+import consulo.disposer.Disposer;
 import consulo.ide.base.BaseShowSettingsUtil;
 import consulo.ide.settings.impl.SettingsSdksModel;
-import consulo.ide.settings.impl.ShowSdksSettingsUtil;
 import consulo.logging.Logger;
+import consulo.options.BaseProjectStructureShowSettingsUtil;
 import consulo.options.ProjectStructureSelector;
-import consulo.roots.ui.configuration.DesktopProjectStructureDialog;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.impl.ModalityPerProjectEAPDescriptor;
@@ -57,7 +55,7 @@ import java.util.function.Consumer;
  * @author max
  */
 @Singleton
-public class DesktopShowSettingsUtilImpl extends BaseShowSettingsUtil implements ShowSdksSettingsUtil {
+public class DesktopShowSettingsUtilImpl extends BaseProjectStructureShowSettingsUtil  {
   private static final Logger LOG = Logger.getInstance(DesktopShowSettingsUtilImpl.class);
 
   private final AtomicBoolean myShown = new AtomicBoolean(false);
@@ -110,6 +108,8 @@ public class DesktopShowSettingsUtilImpl extends BaseShowSettingsUtil implements
           else {
             dialog = new DesktopSettingsDialog(actualProject, myConfigurables, toSelect);
           }
+
+          Disposer.register(dialog.getDisposable(), () -> clearCaches());
 
           new UiNotifyConnector.Once(dialog.getContentPane(), new Activatable() {
             @Override
@@ -208,31 +208,17 @@ public class DesktopShowSettingsUtilImpl extends BaseShowSettingsUtil implements
 
   @RequiredUIAccess
   @Override
-  public void showProjectStructureDialog(@Nonnull Project project, @Nonnull Consumer<ProjectStructureSelector> consumer) {
-    new Task.Backgroundable(project, "Opening Project Structure...") {
-      private ProjectStructureConfigurable myConfigurable;
+  public AsyncResult<Void> showProjectStructureDialog(@Nonnull Project project, @Nonnull Consumer<ProjectStructureSelector> consumer) {
+    Configurable[] configurables = buildConfigurables(project);
 
-      @Override
-      public void run(@Nonnull ProgressIndicator indicator) {
-        myConfigurable = ProjectStructureConfigurable.getInstance(project);
-      }
-
-      @RequiredUIAccess
-      @Override
-      public void onFinished() {
-        UIAccess uiAccess = UIAccess.current();
-        uiAccess.give(() -> {
-          DesktopProjectStructureDialog dialog = new DesktopProjectStructureDialog(project, myConfigurable, ShowSettingsUtil.DIMENSION_KEY, myConfigurable);
-          new UiNotifyConnector.Once(dialog.getContentPane(), new Activatable() {
-            @Override
-            public void showNotify() {
-              consumer.accept(myConfigurable);
-            }
-          });
-          dialog.showAsync();
-        });
-      }
-    }.queue();
+    AsyncResult<Void> result = AsyncResult.rejected();
+    showSettingsImpl(project, it -> configurables, SKIP_SELECTION_CONFIGURATION, dialog -> {
+      final ProjectStructureSelector editor = dialog.getDataUnchecked(ProjectStructureSelector.KEY);
+      assert editor != null;
+      consumer.accept(editor);
+      result.setDone();
+    });
+    return result;
   }
 
   @RequiredUIAccess

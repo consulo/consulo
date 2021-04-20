@@ -25,8 +25,10 @@ import com.intellij.openapi.roots.ui.FileAppearanceService;
 import com.intellij.openapi.roots.ui.OrderEntryAppearanceService;
 import com.intellij.openapi.roots.ui.configuration.classpath.ClasspathTableItem;
 import com.intellij.openapi.roots.ui.configuration.classpath.LibraryClasspathTableItem;
-import com.intellij.openapi.roots.ui.configuration.projectRoot.StructureConfigurableContext;
 import consulo.roots.types.BinariesOrderRootType;
+import consulo.roots.ui.configuration.LibrariesConfigurator;
+import consulo.roots.ui.configuration.ModulesConfigurator;
+import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
 
@@ -35,6 +37,7 @@ import javax.annotation.Nonnull;
  * @since 06-Jun-16
  */
 public class LibraryOrderEntryTypeEditor implements OrderEntryTypeEditor<LibraryOrderEntryImpl> {
+  @RequiredUIAccess
   @Override
   public void navigate(@Nonnull final LibraryOrderEntryImpl orderEntry) {
     Project project = orderEntry.getModuleRootLayer().getProject();
@@ -55,7 +58,10 @@ public class LibraryOrderEntryTypeEditor implements OrderEntryTypeEditor<Library
 
   @Nonnull
   @Override
-  public ClasspathTableItem<LibraryOrderEntryImpl> createTableItem(@Nonnull LibraryOrderEntryImpl orderEntry, @Nonnull StructureConfigurableContext context) {
-    return new LibraryClasspathTableItem<>(orderEntry, context);
+  public ClasspathTableItem<LibraryOrderEntryImpl> createTableItem(@Nonnull LibraryOrderEntryImpl orderEntry,
+                                                                   @Nonnull Project project,
+                                                                   @Nonnull ModulesConfigurator modulesConfigurator,
+                                                                   @Nonnull LibrariesConfigurator librariesConfigurator) {
+    return new LibraryClasspathTableItem<>(orderEntry, project, modulesConfigurator, librariesConfigurator);
   }
 }

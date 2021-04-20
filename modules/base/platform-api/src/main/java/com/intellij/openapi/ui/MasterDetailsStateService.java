@@ -21,7 +21,6 @@
 package com.intellij.openapi.ui;
 
 import com.intellij.openapi.components.*;
-import com.intellij.openapi.components.StoragePathMacros;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.xmlb.SkipDefaultValuesSerializationFilters;
 import com.intellij.util.xmlb.XmlSerializer;
@@ -31,31 +30,19 @@ import com.intellij.util.xmlb.annotations.Tag;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.*;
 
 @Singleton
-@State(
-  name="masterDetails",
-  storages= {
-    @Storage(
-      file = StoragePathMacros.WORKSPACE_FILE
-    )}
-)
-public class MasterDetailsStateService implements PersistentStateComponent<MasterDetailsStateService.States>{
+@State(name = "masterDetails", storages = {@Storage(file = StoragePathMacros.WORKSPACE_FILE)})
+public class MasterDetailsStateService implements PersistentStateComponent<MasterDetailsStateService.States> {
   private final SkipDefaultValuesSerializationFilters mySerializationFilter = new SkipDefaultValuesSerializationFilters();
   private final Map<String, ComponentState> myStates = new HashMap<String, ComponentState>();
 
   public static MasterDetailsStateService getInstance(@Nonnull Project project) {
     return ServiceManager.getService(project, MasterDetailsStateService.class);
-  }
-
-  /**
-   * @deprecated override {@link MasterDetailsComponent#getComponentStateKey()} and {@link MasterDetailsComponent#getStateService()} instead
-   */
-  public void register(String key, MasterDetailsComponent component) {
   }
 
   @Nullable
@@ -82,12 +69,7 @@ public class MasterDetailsStateService implements PersistentStateComponent<Maste
   public States getState() {
     States states = new States();
     states.myStates.addAll(myStates.values());
-    Collections.sort(states.getStates(), new Comparator<ComponentState>() {
-      @Override
-      public int compare(ComponentState o1, ComponentState o2) {
-        return o1.myKey.compareTo(o2.myKey);
-      }
-    });
+    Collections.sort(states.getStates(), (o1, o2) -> o1.myKey.compareTo(o2.myKey));
     return states;
   }
 

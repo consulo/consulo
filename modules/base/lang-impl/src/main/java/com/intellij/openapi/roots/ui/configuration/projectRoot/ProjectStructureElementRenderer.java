@@ -28,23 +28,24 @@ import com.intellij.util.ui.UIUtil;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 
 /**
-* @author nik
-*/
+ * @author nik
+ */
 public class ProjectStructureElementRenderer extends ColoredTreeCellRenderer {
-  private StructureConfigurableContext myContext;
+  private ProjectStructureDaemonAnalyzer myProjectStructureDaemonAnalyzer;
 
-  public ProjectStructureElementRenderer(@Nullable StructureConfigurableContext context) {
-    myContext = context;
+  public ProjectStructureElementRenderer(@Nullable ProjectStructureDaemonAnalyzer projectStructureDaemonAnalyzer) {
+    myProjectStructureDaemonAnalyzer = projectStructureDaemonAnalyzer;
   }
 
   @RequiredUIAccess
   @Override
-  public void customizeCellRenderer(JTree tree, Object value, boolean selected, boolean expanded, boolean leaf, int row, boolean hasFocus) {
+  public void customizeCellRenderer(@Nonnull JTree tree, Object value, boolean selected, boolean expanded, boolean leaf, int row, boolean hasFocus) {
     if (value instanceof MasterDetailsComponent.MyNode) {
       final MasterDetailsComponent.MyNode node = (MasterDetailsComponent.MyNode)value;
 
@@ -64,10 +65,9 @@ public class ProjectStructureElementRenderer extends ColoredTreeCellRenderer {
         textAttributes = SimpleTextAttributes.REGULAR_BOLD_ATTRIBUTES;
       }
       else if (namedConfigurable instanceof ProjectStructureElementConfigurable) {
-        final ProjectStructureElement projectStructureElement =
-          ((ProjectStructureElementConfigurable)namedConfigurable).getProjectStructureElement();
+        final ProjectStructureElement projectStructureElement = ((ProjectStructureElementConfigurable)namedConfigurable).getProjectStructureElement();
         if (projectStructureElement != null) {
-          final ProjectStructureDaemonAnalyzer daemonAnalyzer = myContext == null ? null : myContext.getDaemonAnalyzer();
+          final ProjectStructureDaemonAnalyzer daemonAnalyzer = myProjectStructureDaemonAnalyzer;
           final ProjectStructureProblemsHolderImpl problemsHolder = daemonAnalyzer == null ? null : daemonAnalyzer.getProblemsHolder(projectStructureElement);
           if (problemsHolder != null && problemsHolder.containsProblems()) {
             final boolean isUnused = problemsHolder.containsProblems(ProjectStructureProblemType.Severity.UNUSED);

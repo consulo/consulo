@@ -17,6 +17,7 @@ package consulo.ide.eap;
 
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.IdeBundle;
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.ui.VerticalFlowLayout;
@@ -29,16 +30,16 @@ import com.intellij.ui.border.CustomLineBorder;
 import com.intellij.ui.components.JBLabel;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
-import consulo.ui.annotation.RequiredUIAccess;
 import consulo.desktop.util.awt.component.VerticalLayoutPanel;
+import consulo.roots.ui.configuration.session.ConfigurableSession;
+import consulo.ui.annotation.RequiredUIAccess;
 import org.jetbrains.annotations.Nls;
-import javax.annotation.Nullable;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.border.CompoundBorder;
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -100,6 +101,12 @@ public class EarlyAccessProgramConfigurable implements Configurable, Configurabl
 
   private CheckBoxList<EarlyAccessProgramDescriptor> myList;
 
+  private final Application myApplication;
+
+  public EarlyAccessProgramConfigurable(Application application) {
+    myApplication = application;
+  }
+
   @Nls
   @Override
   public String getDisplayName() {
@@ -129,9 +136,15 @@ public class EarlyAccessProgramConfigurable implements Configurable, Configurabl
       }
       return o1.getName().compareToIgnoreCase(o2.getName());
     });
-    myList.setItems(extensions, EarlyAccessProgramDescriptor::getName, desc -> EarlyAccessProgramManager.is(desc.getClass()));
-    myList.setCellRenderer(new EarlyAccessCellRender());
 
+    EarlyAccessProgramManager manager = ConfigurableSession.get().getOrCopy(myApplication, EarlyAccessProgramManager.class);
+
+    myList.setItems(extensions, EarlyAccessProgramDescriptor::getName, desc -> manager.getState(desc.getClass()));
+    myList.setCellRenderer(new EarlyAccessCellRender());
+    myList.setCheckBoxListListener((index, value) -> {
+      EarlyAccessProgramDescriptor descriptor = extensions.get(index);
+      manager.setState(descriptor.getClass(), value);
+    });
     return JBUI.Panels.simplePanel().addToTop(createWarningPanel()).addToCenter(ScrollPaneFactory.createScrollPane(myList, true));
   }
 
@@ -154,10 +167,16 @@ public class EarlyAccessProgramConfigurable implements Configurable, Configurabl
 
   @RequiredUIAccess
   @Override
-  public boolean isModified() {
-    EarlyAccessProgramManager manager = EarlyAccessProgramManager.getInstance();
+  public void disposeUIResources() {
+    myList = null;
+  }
 
-    for (EarlyAccessProgramDescriptor descriptor : EarlyAccessProgramDescriptor.EP_NAME.getExtensions()) {
+  @RequiredUIAccess
+  @Override
+  public boolean isModified() {
+    EarlyAccessProgramManager manager = ConfigurableSession.get().getOrCopy(myApplication, EarlyAccessProgramManager.class);
+
+    for (EarlyAccessProgramDescriptor descriptor : EarlyAccessProgramDescriptor.EP_NAME.getExtensionList()) {
       if (myList.isItemSelected(descriptor) != manager.getState(descriptor.getClass())) {
         return true;
       }
@@ -168,9 +187,9 @@ public class EarlyAccessProgramConfigurable implements Configurable, Configurabl
   @RequiredUIAccess
   @Override
   public void apply() throws ConfigurationException {
-    EarlyAccessProgramManager manager = EarlyAccessProgramManager.getInstance();
+    EarlyAccessProgramManager manager = ConfigurableSession.get().getOrCopy(myApplication, EarlyAccessProgramManager.class);
 
-    for (EarlyAccessProgramDescriptor descriptor : EarlyAccessProgramDescriptor.EP_NAME.getExtensions()) {
+    for (EarlyAccessProgramDescriptor descriptor : EarlyAccessProgramDescriptor.EP_NAME.getExtensionList()) {
       manager.setState(descriptor.getClass(), myList.isItemSelected(descriptor));
     }
   }
@@ -178,9 +197,9 @@ public class EarlyAccessProgramConfigurable implements Configurable, Configurabl
   @RequiredUIAccess
   @Override
   public void reset() {
-    EarlyAccessProgramManager manager = EarlyAccessProgramManager.getInstance();
+    EarlyAccessProgramManager manager = ConfigurableSession.get().getOrCopy(myApplication, EarlyAccessProgramManager.class);
 
-    for (EarlyAccessProgramDescriptor descriptor : EarlyAccessProgramDescriptor.EP_NAME.getExtensions()) {
+    for (EarlyAccessProgramDescriptor descriptor : EarlyAccessProgramDescriptor.EP_NAME.getExtensionList()) {
       myList.setItemSelected(descriptor, manager.getState(descriptor.getClass()));
     }
   }

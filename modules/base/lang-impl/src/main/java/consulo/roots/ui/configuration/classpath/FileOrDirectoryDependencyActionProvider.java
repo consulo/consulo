@@ -18,10 +18,11 @@ package consulo.roots.ui.configuration.classpath;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.roots.ui.configuration.classpath.ClasspathPanel;
-import com.intellij.openapi.roots.ui.configuration.projectRoot.StructureConfigurableContext;
 import com.intellij.openapi.vfs.VirtualFile;
 import consulo.localize.LocalizeValue;
 import consulo.roots.ModuleRootLayer;
+import consulo.roots.ui.configuration.LibrariesConfigurator;
+import consulo.roots.ui.configuration.ModulesConfigurator;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.fileChooser.FileChooser;
 import consulo.ui.image.Image;
@@ -40,8 +41,10 @@ public class FileOrDirectoryDependencyActionProvider implements AddModuleDepende
   }
 
   @Override
-  public FileOrDirectoryDependencyContext createContext(@Nonnull ClasspathPanel classpathPanel, @Nonnull StructureConfigurableContext context) {
-    return new FileOrDirectoryDependencyContext(classpathPanel, context);
+  public FileOrDirectoryDependencyContext createContext(@Nonnull ClasspathPanel classpathPanel,
+                                                        @Nonnull ModulesConfigurator modulesConfigurator,
+                                                        @Nonnull LibrariesConfigurator librariesConfigurator) {
+    return new FileOrDirectoryDependencyContext(classpathPanel, modulesConfigurator, librariesConfigurator);
   }
 
   @Nonnull

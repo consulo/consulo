@@ -21,34 +21,24 @@ import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.keymap.Keymap;
 import com.intellij.openapi.keymap.KeymapManager;
 import com.intellij.openapi.module.Module;
+import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.options.SearchableConfigurable;
-import com.intellij.openapi.project.Project;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.roots.libraries.LibraryTable;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureElement;
 import com.intellij.openapi.ui.MasterDetailsComponent;
 import com.intellij.openapi.ui.MasterDetailsState;
-import com.intellij.openapi.ui.MasterDetailsStateService;
 import com.intellij.openapi.ui.NamedConfigurable;
-import com.intellij.openapi.util.Condition;
-import com.intellij.openapi.util.Couple;
 import com.intellij.packaging.artifacts.Artifact;
 import com.intellij.ui.TreeSpeedSearch;
 import com.intellij.ui.awt.RelativePoint;
-import com.intellij.ui.navigation.Place;
-import com.intellij.util.Function;
 import com.intellij.util.IconUtil;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.containers.Convertor;
 import com.intellij.util.ui.tree.TreeUtil;
-import consulo.disposer.Disposable;
-import consulo.disposer.Disposer;
-import consulo.roots.ui.configuration.WholeWestConfigurable;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
-import consulo.util.concurrent.AsyncResult;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -58,98 +48,18 @@ import java.awt.*;
 import java.util.List;
 import java.util.*;
 
-public abstract class BaseStructureConfigurable extends MasterDetailsComponent
-        implements SearchableConfigurable, Disposable, Place.Navigator, WholeWestConfigurable {
-
-  protected StructureConfigurableContext myContext;
-
-  protected final Project myProject;
-
+public abstract class BaseStructureConfigurable extends MasterDetailsComponent implements SearchableConfigurable, Configurable.NoMargin, Configurable.NoScroll {
   protected boolean myUiDisposed = true;
 
   private boolean myWasTreeInitialized;
 
   protected boolean myAutoScrollEnabled = true;
 
-  protected BaseStructureConfigurable(Project project, MasterDetailsState state) {
+  protected BaseStructureConfigurable(MasterDetailsState state) {
     super(state);
-    myProject = project;
   }
 
-  protected BaseStructureConfigurable(final Project project) {
-    myProject = project;
-  }
-
-  public void init(StructureConfigurableContext context) {
-    myContext = context;
-    myContext.getDaemonAnalyzer().addListener(element -> {
-      if (!myTree.isShowing()) return;
-
-      myTree.revalidate();
-      myTree.repaint();
-    });
-  }
-
-  @Nonnull
-  @Override
-  public Couple<JComponent> createSplitterComponents() {
-    reInitWholePanelIfNeeded();
-
-    updateSelectionFromTree();
-
-    return Couple.of(mySplitter.getFirstComponent(), mySplitter.getSecondComponent());
-  }
-
-  @Override
-  protected MasterDetailsStateService getStateService() {
-    return MasterDetailsStateService.getInstance(myProject);
-  }
-
-  @Override
-  public AsyncResult<Void> navigateTo(@Nullable final Place place, final boolean requestFocus) {
-    if (place == null) return AsyncResult.resolved();
-
-    final Object object = place.getPath(TREE_OBJECT);
-    final String byName = (String)place.getPath(TREE_NAME);
-
-    if (object == null && byName == null) return AsyncResult.resolved();
-
-    final MyNode node = object == null ? null : findNodeByObject(myRoot, object);
-    final MyNode nodeByName = byName == null ? null : findNodeByName(myRoot, byName);
-
-    if (node == null && nodeByName == null) return AsyncResult.resolved();
-
-    final NamedConfigurable config;
-    if (node != null) {
-      config = node.getConfigurable();
-    }
-    else {
-      config = nodeByName.getConfigurable();
-    }
-
-    AsyncResult<Void> result = AsyncResult.<Void>undefined().doWhenDone(() -> myAutoScrollEnabled = true);
-
-    myAutoScrollEnabled = false;
-    myAutoScrollHandler.cancelAllRequests();
-    final MyNode nodeToSelect = node != null ? node : nodeByName;
-    selectNodeInTree(nodeToSelect, requestFocus).doWhenDone(new Runnable() {
-      @Override
-      public void run() {
-        setSelectedNode(nodeToSelect);
-        Place.goFurther(config, place, requestFocus).notifyWhenDone(result);
-      }
-    });
-
-    return result;
-  }
-
-
-  @Override
-  public void queryPlace(@Nonnull final Place place) {
-    if (myCurrentConfigurable != null) {
-      place.putPath(TREE_OBJECT, myCurrentConfigurable.getEditableObject());
-      Place.queryFurther(myCurrentConfigurable, place);
-    }
+  protected BaseStructureConfigurable() {
   }
 
   @Override
@@ -158,14 +68,9 @@ public abstract class BaseStructureConfigurable extends MasterDetailsComponent
     myWasTreeInitialized = true;
 
     super.initTree();
-    new TreeSpeedSearch(myTree, new Convertor<TreePath, String>() {
-      @Override
-      public String convert(final TreePath treePath) {
-        return ((MyNode)treePath.getLastPathComponent()).getDisplayName();
-      }
-    }, true);
+    new TreeSpeedSearch(myTree, treePath -> ((MyNode)treePath.getLastPathComponent()).getDisplayName(), true);
     ToolTipManager.sharedInstance().registerComponent(myTree);
-    myTree.setCellRenderer(new ProjectStructureElementRenderer(myContext));
+    myTree.setCellRenderer(new ProjectStructureElementRenderer(null));
   }
 
   @Override
@@ -179,9 +84,7 @@ public abstract class BaseStructureConfigurable extends MasterDetailsComponent
 
     myAutoScrollHandler.cancelAllRequests();
 
-    myContext.getDaemonAnalyzer().clear();
-
-    Disposer.dispose(this);
+    ///myContext.getDaemonAnalyzer().clear();
   }
 
   public void checkCanApply() throws ConfigurationException {
@@ -230,7 +133,7 @@ public abstract class BaseStructureConfigurable extends MasterDetailsComponent
   private class MyFindUsagesAction extends FindUsagesInProjectStructureActionBase {
 
     public MyFindUsagesAction(JComponent parentComponent) {
-      super(parentComponent, myProject);
+      super(parentComponent);
     }
 
     @Override
@@ -243,11 +146,6 @@ public abstract class BaseStructureConfigurable extends MasterDetailsComponent
       else {
         return false;
       }
-    }
-
-    @Override
-    protected StructureConfigurableContext getContext() {
-      return myContext;
     }
 
     @Override
@@ -265,9 +163,11 @@ public abstract class BaseStructureConfigurable extends MasterDetailsComponent
     }
   }
 
-
+  @RequiredUIAccess
   @Override
   public void reset() {
+    //myContext.reset();
+
     myUiDisposed = false;
 
     if (!myWasTreeInitialized) {
@@ -280,9 +180,9 @@ public abstract class BaseStructureConfigurable extends MasterDetailsComponent
       myTree.setShowsRootHandles(false);
       loadTree();
     }
-    for (ProjectStructureElement element : getProjectStructureElements()) {
-      myContext.getDaemonAnalyzer().queueUpdate(element);
-    }
+    //for (ProjectStructureElement element : getProjectStructureElements()) {
+    //  myContext.getDaemonAnalyzer().queueUpdate(element);
+    //}
 
     super.reset();
   }
@@ -331,23 +231,17 @@ public abstract class BaseStructureConfigurable extends MasterDetailsComponent
 
   protected class MyRemoveAction extends MyDeleteAction {
     public MyRemoveAction() {
-      super(new Condition<Object[]>() {
-        @Override
-        public boolean value(final Object[] objects) {
-          Object[] editableObjects = ContainerUtil.mapNotNull(objects, new Function<Object, Object>() {
-            @Override
-            public Object fun(Object object) {
-              if (object instanceof MyNode) {
-                final NamedConfigurable namedConfigurable = ((MyNode)object).getConfigurable();
-                if (namedConfigurable != null) {
-                  return namedConfigurable.getEditableObject();
-                }
-              }
-              return null;
+      super(objects -> {
+        Object[] editableObjects = ContainerUtil.mapNotNull(objects, object -> {
+          if (object instanceof MyNode) {
+            final NamedConfigurable namedConfigurable = ((MyNode)object).getConfigurable();
+            if (namedConfigurable != null) {
+              return namedConfigurable.getEditableObject();
             }
-          }, new Object[0]);
-          return editableObjects.length == objects.length && canBeRemoved(editableObjects);
-        }
+          }
+          return null;
+        }, new Object[0]);
+        return editableObjects.length == objects.length && canBeRemoved(editableObjects);
       });
     }
 
@@ -387,9 +281,7 @@ public abstract class BaseStructureConfigurable extends MasterDetailsComponent
   }
 
   private static boolean canObjectBeRemoved(Object editableObject) {
-    if (editableObject instanceof Sdk ||
-        editableObject instanceof Module ||
-        editableObject instanceof Artifact) {
+    if (editableObject instanceof Sdk || editableObject instanceof Module || editableObject instanceof Artifact) {
       return true;
     }
     if (editableObject instanceof Library) {

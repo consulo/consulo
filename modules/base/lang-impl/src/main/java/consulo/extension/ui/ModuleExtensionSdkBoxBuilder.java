@@ -16,12 +16,12 @@
 package consulo.extension.ui;
 
 import com.intellij.openapi.module.Module;
+import com.intellij.openapi.options.ShowSettingsUtil;
 import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.SdkModel;
 import com.intellij.openapi.projectRoots.SdkType;
 import com.intellij.openapi.projectRoots.SdkTypeId;
-import com.intellij.openapi.roots.ui.configuration.ProjectStructureConfigurable;
 import com.intellij.openapi.ui.LabeledComponent;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.Conditions;
@@ -29,6 +29,7 @@ import com.intellij.util.NullableFunction;
 import com.intellij.util.PairConsumer;
 import consulo.annotation.UsedInPlugin;
 import consulo.annotation.access.RequiredReadAction;
+import consulo.ide.settings.impl.ProjectStructureSettingsUtil;
 import consulo.module.extension.MutableModuleExtension;
 import consulo.module.extension.MutableModuleExtensionWithSdk;
 import consulo.module.extension.MutableModuleInheritableNamedPointer;
@@ -140,7 +141,9 @@ public class ModuleExtensionSdkBoxBuilder<T extends MutableModuleExtension<?>> {
   @Nonnull
   @RequiredReadAction
   public JComponent build() {
-    final SdkModel projectSdksModel = ProjectStructureConfigurable.getInstance(myMutableModuleExtension.getProject()).getProjectSdksModel();
+    ProjectStructureSettingsUtil util = (ProjectStructureSettingsUtil)ShowSettingsUtil.getInstance();
+
+    final SdkModel projectSdksModel = util.getSdksModel();
 
     final SdkComboBox comboBox = new SdkComboBox(projectSdksModel, mySdkFilter, null, myNullItemName, myNullItemIcon);
 

@@ -28,7 +28,7 @@ import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ProjectRootManager;
-import com.intellij.openapi.roots.ui.configuration.ModulesConfigurator;
+import com.intellij.openapi.roots.ui.configuration.ModulesConfiguratorImpl;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.ui.popup.ListSeparator;
@@ -107,7 +107,7 @@ public class BuildArtifactAction extends DumbAwareAction {
         public void actionPerformed(ActionEvent e) {
           Object[] values = popup.getSelectedValues();
           popup.cancel();
-          ModulesConfigurator.showArtifactSettings(project, values.length > 0 ? ((ArtifactPopupItem)values[0]).getArtifact() : null);
+          ModulesConfiguratorImpl.showArtifactSettings(project, values.length > 0 ? ((ArtifactPopupItem)values[0]).getArtifact() : null);
         }
       });
     }
@@ -237,7 +237,7 @@ public class BuildArtifactAction extends DumbAwareAction {
 
     @Override
     public void run() {
-      ModulesConfigurator.showArtifactSettings(myProject, myArtifactPopupItems.get(0).getArtifact());
+      ModulesConfiguratorImpl.showArtifactSettings(myProject, myArtifactPopupItems.get(0).getArtifact());
     }
   }
 

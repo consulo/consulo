@@ -18,6 +18,7 @@ package com.intellij.ui.components;
 import com.intellij.ui.AnchorableComponent;
 import com.intellij.ui.ColorUtil;
 import com.intellij.util.SystemProperties;
+import com.intellij.util.ui.JBFont;
 import com.intellij.util.ui.UIUtil;
 import consulo.awt.TargetAWT;
 import consulo.desktop.util.awt.StringHtmlUtil;
@@ -27,6 +28,7 @@ import org.intellij.lang.annotations.JdkConstants;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
+import javax.swing.border.Border;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.EditorKit;
 import javax.swing.text.html.HTMLEditorKit;
@@ -210,6 +212,16 @@ public class JBLabel extends JLabel implements AnchorableComponent {
       setCopyable(false);
       setCopyable(true);
     }
+  }
+
+  public JBLabel withBorder(Border border) {
+    setBorder(border);
+    return this;
+  }
+
+  public JBLabel withFont(JBFont font) {
+    setFont(font);
+    return this;
   }
 
   /**

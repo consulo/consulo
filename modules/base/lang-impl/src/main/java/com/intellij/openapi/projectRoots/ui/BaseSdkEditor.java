@@ -29,8 +29,6 @@ import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.ui.navigation.History;
-import com.intellij.ui.navigation.Place;
 import consulo.awt.TargetAWT;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
@@ -40,7 +38,6 @@ import consulo.ui.TextBoxWithExtensions;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
 import consulo.ui.style.StandardColors;
-import consulo.util.concurrent.AsyncResult;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -56,7 +53,7 @@ import java.util.Set;
  * @author MYakovlev
  * @since Aug 15, 2002
  */
-public abstract class BaseSdkEditor implements UnnamedConfigurable, Place.Navigator {
+public abstract class BaseSdkEditor implements UnnamedConfigurable {
   private static final Logger LOG = Logger.getInstance(BaseSdkEditor.class);
 
   @Nonnull
@@ -438,18 +435,5 @@ public abstract class BaseSdkEditor implements UnnamedConfigurable, Place.Naviga
     public boolean isWritable() {
       return true;
     }
-  }
-
-  @Override
-  public AsyncResult<Void> navigateTo(@Nullable final Place place, final boolean requestFocus) {
-    return AsyncResult.resolved();
-  }
-
-  @Override
-  public void queryPlace(@Nonnull final Place place) {
-  }
-
-  @Override
-  public void setHistory(@Nonnull final History history) {
   }
 }

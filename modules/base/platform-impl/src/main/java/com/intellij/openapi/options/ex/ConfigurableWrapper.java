@@ -165,6 +165,12 @@ public class ConfigurableWrapper implements SearchableConfigurable {
 
   @RequiredUIAccess
   @Override
+  public void initialize() {
+    getConfigurable().initialize();
+  }
+
+  @RequiredUIAccess
+  @Override
   public void reset() {
     getConfigurable().reset();
   }

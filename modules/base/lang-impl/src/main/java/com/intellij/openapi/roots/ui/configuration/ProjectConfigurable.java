@@ -22,14 +22,13 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
 import com.intellij.openapi.fileChooser.FileChooserFactory;
+import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.ConfigurationException;
+import com.intellij.openapi.options.ShowSettingsUtil;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.openapi.project.ex.ProjectEx;
-import com.intellij.openapi.roots.ModifiableRootModel;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.ProjectStructureElementConfigurable;
-import com.intellij.openapi.roots.ui.configuration.projectRoot.StructureConfigurableContext;
-import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureDaemonAnalyzer;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureElement;
 import com.intellij.openapi.ui.DetailsComponent;
 import com.intellij.openapi.ui.VerticalFlowLayout;
@@ -42,12 +41,13 @@ import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.ui.DocumentAdapter;
 import com.intellij.ui.FieldPanel;
 import com.intellij.ui.InsertPathAction;
-import com.intellij.ui.ScrollPaneFactory;
-import consulo.ui.annotation.RequiredUIAccess;
 import consulo.compiler.CompilerConfiguration;
+import consulo.ide.settings.impl.ProjectStructureSettingsUtil;
+import consulo.preferences.internal.ConfigurableWeight;
+import consulo.roots.ui.configuration.ModulesConfigurator;
 import consulo.roots.ui.configuration.WholeWestConfigurable;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
-import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -60,7 +60,8 @@ import java.io.IOException;
  * @author Eugene Zhuravlev
  *         Date: Dec 15, 2003
  */
-public class ProjectConfigurable extends ProjectStructureElementConfigurable<Project> implements WholeWestConfigurable {
+public class ProjectConfigurable extends ProjectStructureElementConfigurable<Project> implements WholeWestConfigurable, ConfigurableWeight, Configurable.NoMargin {
+  public static final String ID = "project";
 
   private final Project myProject;
 
@@ -70,29 +71,15 @@ public class ProjectConfigurable extends ProjectStructureElementConfigurable<Pro
 
   private JPanel myPanel;
 
-  private final StructureConfigurableContext myContext;
-  private final ModulesConfigurator myModulesConfigurator;
-
   private boolean myFreeze = false;
   private DetailsComponent myDetailsComponent;
   private final GeneralProjectSettingsElement mySettingsElement;
 
-  private final ConfigurationErrorsComponent myErrorsComponent;
-
-  public ProjectConfigurable(Project project, final StructureConfigurableContext context, ModulesConfigurator configurator) {
+  public ProjectConfigurable(Project project) {
     myProject = project;
-    myContext = context;
-    myErrorsComponent = new ConfigurationErrorsComponent(project);
-    myModulesConfigurator = configurator;
-    mySettingsElement = new GeneralProjectSettingsElement(context);
-    final ProjectStructureDaemonAnalyzer daemonAnalyzer = context.getDaemonAnalyzer();
-    myModulesConfigurator.addAllModuleChangeListener(new ModuleEditor.ChangeListener() {
-      @Override
-      public void moduleStateChanged(ModifiableRootModel moduleRootModel) {
-        daemonAnalyzer.queueUpdate(mySettingsElement);
-      }
-    });
-    init();
+    mySettingsElement = new GeneralProjectSettingsElement();
+    // todo final ProjectStructureDaemonAnalyzer daemonAnalyzer = context.getDaemonAnalyzer();
+    // todo myModulesConfigurator.addAllModuleChangeListener(moduleRootModel -> daemonAnalyzer.queueUpdate(mySettingsElement));
   }
 
   @Override
@@ -102,6 +89,8 @@ public class ProjectConfigurable extends ProjectStructureElementConfigurable<Pro
 
   @Override
   public JComponent createOptionsPanel() {
+    init();
+    
     myDetailsComponent = new DetailsComponent(false, false);
     myDetailsComponent.setContent(myPanel);
     myDetailsComponent.setText(getBannerSlogan());
@@ -143,17 +132,23 @@ public class ProjectConfigurable extends ProjectStructureElementConfigurable<Pro
       @Override
       protected void textChanged(DocumentEvent e) {
         if (myFreeze) return;
-        myModulesConfigurator.processModuleCompilerOutputChanged(getCompilerOutputUrl());
+        getModulesConfigurator().processModuleCompilerOutputChanged(getCompilerOutputUrl());
       }
     });
 
     myPanel.add(myProjectCompilerOutput);
-    myPanel.add(ScrollPaneFactory.createScrollPane(myErrorsComponent, true));
+  }
+
+  private ModulesConfigurator getModulesConfigurator() {
+    ProjectStructureSettingsUtil util = (ProjectStructureSettingsUtil)ShowSettingsUtil.getInstance();
+    return util.getModulesModel(myProject);
   }
 
   @RequiredUIAccess
   @Override
   public void disposeUIResources() {
+    myPanel = null;
+    myDetailsComponent = null;
   }
 
   @RequiredUIAccess
@@ -174,7 +169,7 @@ public class ProjectConfigurable extends ProjectStructureElementConfigurable<Pro
       myFreeze = false;
     }
 
-    myContext.getDaemonAnalyzer().queueUpdate(mySettingsElement);
+    // todo myContext.getDaemonAnalyzer().queueUpdate(mySettingsElement);
   }
 
 
@@ -242,7 +237,6 @@ public class ProjectConfigurable extends ProjectStructureElementConfigurable<Pro
 
   @Override
   @Nullable
-  @NonNls
   public String getHelpTopic() {
     return "reference.settingsdialog.project.structure.general";
   }
@@ -271,5 +265,10 @@ public class ProjectConfigurable extends ProjectStructureElementConfigurable<Pro
   @Override
   public Couple<JComponent> createSplitterComponents() {
     return Couple.of(new JPanel(), createComponent());
+  }
+
+  @Override
+  public int getConfigurableWeight() {
+    return Integer.MAX_VALUE - 1;
   }
 }

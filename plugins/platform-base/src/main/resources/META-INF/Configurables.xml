@@ -173,7 +173,7 @@
                              id="preferences.pluginManager"
                              bundle="messages.IdeBundle"
                              key="title.plugins"/>
-    
+
     <applicationConfigurable parentId="preferences.pluginManager"
                              instance="consulo.ide.webService.WebServicesConfigurable"
                              bundle="messages.IdeBundle"
@@ -210,11 +210,24 @@
 
     <!--Version Control-->
     <applicationConfigurable id="diff.base"
-                         displayName="Diff &amp; Merge"
-                         parentId="vcs"
-                         instance="com.intellij.diff.settings.DiffSettingsConfigurable">
+                             displayName="Diff &amp; Merge"
+                             parentId="vcs"
+                             instance="com.intellij.diff.settings.DiffSettingsConfigurable">
       <configurable id="diff.external" displayName="External Diff Tools"
                     instance="consulo.diff.preferences.impl.ExternalDiffSettingsConfigurable"/>
     </applicationConfigurable>
+
+    <applicationConfigurable id="sdks.list" bundle="messages.ProjectBundle" key="global.bundles.display.name" instance="com.intellij.openapi.roots.ui.configuration.projectRoot.SdkListConfigurable"/>
+
+    <projectConfigurable id="project" nonDefaultProject="true" displayName="Project" instance="com.intellij.openapi.roots.ui.configuration.ProjectConfigurable"/>
+
+    <projectConfigurable id="project.modules" parentId="project" nonDefaultProject="true" displayName="Modules"
+                         instance="com.intellij.openapi.roots.ui.configuration.projectRoot.ModuleStructureConfigurable"/>
+
+    <projectConfigurable id="project.libraries" parentId="project" nonDefaultProject="true" displayName="Libraries"
+                         instance="com.intellij.openapi.roots.ui.configuration.projectRoot.ProjectLibrariesConfigurable"/>
+
+    <projectConfigurable id="project.artifacts" parentId="project" nonDefaultProject="true" displayName="Artifacts"
+                         instance="com.intellij.openapi.roots.ui.configuration.artifacts.ArtifactsStructureConfigurable"/>
   </extensions>
 </consulo-plugin>

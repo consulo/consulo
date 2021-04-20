@@ -18,6 +18,7 @@ package com.intellij.openapi.roots.ui.configuration.classpath;
 import com.intellij.CommonBundle;
 import com.intellij.analysis.AnalysisScope;
 import com.intellij.find.FindBundle;
+import com.intellij.ide.DataManager;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.ActionUtil;
 import com.intellij.openapi.module.Module;
@@ -34,10 +35,8 @@ import com.intellij.openapi.roots.ui.CellAppearanceEx;
 import com.intellij.openapi.roots.ui.OrderEntryAppearanceService;
 import com.intellij.openapi.roots.ui.configuration.LibraryTableModifiableModelProvider;
 import com.intellij.openapi.roots.ui.configuration.ModuleConfigurationState;
-import com.intellij.openapi.roots.ui.configuration.ProjectStructureConfigurable;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.FindUsagesInProjectStructureActionBase;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.ModuleStructureConfigurable;
-import com.intellij.openapi.roots.ui.configuration.projectRoot.StructureConfigurableContext;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.LibraryProjectStructureElement;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.ModuleProjectStructureElement;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureElement;
@@ -61,6 +60,7 @@ import com.intellij.util.IconUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.JBUI;
 import consulo.logging.Logger;
+import consulo.options.ProjectStructureSelector;
 import consulo.roots.ui.configuration.classpath.AddModuleDependencyActionProvider;
 import consulo.roots.ui.configuration.classpath.AddModuleDependencyContext;
 import consulo.roots.ui.configuration.classpath.AddModuleDependencyListPopupStep;
@@ -69,7 +69,6 @@ import consulo.ui.annotation.RequiredUIAccess;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
-import javax.swing.border.Border;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import java.awt.*;
@@ -91,13 +90,13 @@ public class ClasspathPanelImpl extends JPanel implements ClasspathPanel {
     super(new BorderLayout());
 
     myState = state;
-    myModel = new ClasspathTableModel(state, getStructureConfigurableContext());
+    myModel = new ClasspathTableModel(state);
     myEntryTable = new JBTable(myModel);
     myEntryTable.setShowGrid(false);
     myEntryTable.setDragEnabled(false);
     myEntryTable.setIntercellSpacing(new Dimension(0, 0));
 
-    myEntryTable.setDefaultRenderer(ClasspathTableItem.class, new TableItemRenderer(getStructureConfigurableContext()));
+    myEntryTable.setDefaultRenderer(ClasspathTableItem.class, new TableItemRenderer());
     myEntryTable.setDefaultRenderer(Boolean.class, new ExportFlagRenderer(myEntryTable.getDefaultRenderer(Boolean.class)));
 
     JComboBox<DependencyScope> scopeEditor = new ComboBox<>(new EnumComboBoxModel<>(DependencyScope.class));
@@ -122,6 +121,7 @@ public class ClasspathPanelImpl extends JPanel implements ClasspathPanel {
         return myEntryTable.convertRowIndexToModel(viewIndex);
       }
 
+      @Nonnull
       @Override
       public Object[] getAllElements() {
         final int count = myModel.getRowCount();
@@ -134,7 +134,7 @@ public class ClasspathPanelImpl extends JPanel implements ClasspathPanel {
 
       @Override
       public String getElementText(Object element) {
-        return getCellAppearance((ClasspathTableItem<?>)element, getStructureConfigurableContext(), false).getText();
+        return getCellAppearance((ClasspathTableItem<?>)element, false).getText();
       }
 
       @Override
@@ -197,16 +197,17 @@ public class ClasspathPanelImpl extends JPanel implements ClasspathPanel {
     new DoubleClickListener() {
       @Override
       protected boolean onDoubleClick(MouseEvent e) {
-        navigate(true);
+        navigate(AnActionEvent.createFromInputEvent(e, ActionPlaces.UNKNOWN, null, DataManager.getInstance().getDataContext(myEntryTable)), true);
         return true;
       }
     }.installOn(myEntryTable);
 
     ActionGroup.Builder actionGroup = ActionGroup.newImmutableBuilder();
     final AnAction navigateAction = new AnAction(ProjectBundle.message("classpath.panel.navigate.action.text")) {
+      @RequiredUIAccess
       @Override
-      public void actionPerformed(AnActionEvent e) {
-        navigate(false);
+      public void actionPerformed(@Nonnull AnActionEvent e) {
+        navigate(e, false);
       }
 
       @Override
@@ -223,7 +224,7 @@ public class ClasspathPanelImpl extends JPanel implements ClasspathPanel {
     };
     navigateAction.registerCustomShortcutSet(ActionManager.getInstance().getAction(IdeActions.ACTION_EDIT_SOURCE).getShortcutSet(), myEntryTable);
     actionGroup.add(myEditButton);
-    actionGroup.add(new DumbAwareAction(CommonBundle.message("button.remove"), null,IconUtil.getRemoveIcon()) {
+    actionGroup.add(new DumbAwareAction(CommonBundle.message("button.remove"), null, IconUtil.getRemoveIcon()) {
       @RequiredUIAccess
       @Override
       public void actionPerformed(@Nonnull AnActionEvent e) {
@@ -257,27 +258,28 @@ public class ClasspathPanelImpl extends JPanel implements ClasspathPanel {
   }
 
   @Override
-  public void navigate(boolean openLibraryEditor) {
+  public void navigate(AnActionEvent e, boolean openLibraryEditor) {
     final OrderEntry entry = getSelectedEntry();
-    final ProjectStructureConfigurable rootConfigurable = ProjectStructureConfigurable.getInstance(myState.getProject());
+    ProjectStructureSelector selector = e.getData(ProjectStructureSelector.KEY);
+
     if (entry instanceof ModuleOrderEntry) {
       Module module = ((ModuleOrderEntry)entry).getModule();
       if (module != null) {
-        rootConfigurable.select(module.getName(), null, true);
+        selector.select(module.getName(), null, true);
       }
     }
     else if (entry instanceof LibraryOrderEntry) {
       if (!openLibraryEditor) {
-        rootConfigurable.select((LibraryOrderEntry)entry, true);
+        selector.select((LibraryOrderEntry)entry, true);
       }
       else {
         myEditButton.actionPerformed(ActionUtil.createEmptyEvent());
       }
     }
     else if (entry instanceof ModuleExtensionWithSdkOrderEntry) {
-      Sdk jdk = ((ModuleExtensionWithSdkOrderEntry)entry).getSdk();
-      if (jdk != null) {
-        rootConfigurable.select(jdk, true);
+      Sdk sdk = ((ModuleExtensionWithSdkOrderEntry)entry).getSdk();
+      if (sdk != null) {
+        selector.select(sdk, true);
       }
     }
   }
@@ -296,18 +298,19 @@ public class ClasspathPanelImpl extends JPanel implements ClasspathPanel {
   }
 
   @SuppressWarnings("unchecked")
+  @RequiredUIAccess
   private void showAddPopup(@Nonnull AnActionButton button) {
     Map<AddModuleDependencyActionProvider, AddModuleDependencyContext> contexts = new LinkedHashMap<>();
 
     AddModuleDependencyActionProvider.EP_NAME.forEachExtensionSafe(getProject().getApplication(), it -> {
-      AddModuleDependencyContext context = it.createContext(this, getStructureConfigurableContext());
-      if(it.isAvailable(context)) {
+      AddModuleDependencyContext context = it.createContext(this, myState.getModulesConfigurator(), myState.getLibrariesConfigurator());
+      if (it.isAvailable(context)) {
         contexts.put(it, context);
       }
     });
 
     // can't be empty - file adding avaliable always
-    if(contexts.size() == 1) {
+    if (contexts.size() == 1) {
       Map.Entry<AddModuleDependencyActionProvider, AddModuleDependencyContext> entry = ContainerUtil.getFirstItem(contexts.entrySet());
 
       AddModuleDependencyListPopupStep.providerSelected(entry);
@@ -342,7 +345,6 @@ public class ClasspathPanelImpl extends JPanel implements ClasspathPanel {
     ClasspathTableItem<?> itemAt = myModel.getItemAt(myEntryTable.getSelectedRow());
     itemAt.doEdit(this);
     myEntryTable.repaint();
-    ModuleStructureConfigurable.getInstance(myState.getProject()).getTree().repaint();
   }
 
   private void removeSelectedItems(final List removedRows) {
@@ -358,8 +360,8 @@ public class ClasspathPanelImpl extends JPanel implements ClasspathPanel {
     final int[] selectedRows = myEntryTable.getSelectedRows();
     myModel.fireTableDataChanged();
     TableUtil.selectRows(myEntryTable, selectedRows);
-    final StructureConfigurableContext context = ModuleStructureConfigurable.getInstance(myState.getProject()).getContext();
-    context.getDaemonAnalyzer().queueUpdate(new ModuleProjectStructureElement(context, getRootModel().getModule()));
+
+    // TODO [VISTALL] context.getDaemonAnalyzer().queueUpdate(new ModuleProjectStructureElement(myState.getModulesConfigurator(), getRootModel().getModule()));
   }
 
   @Override
@@ -370,7 +372,7 @@ public class ClasspathPanelImpl extends JPanel implements ClasspathPanel {
       return moduleLibraryTable::getModifiableModel;
     }
     else {
-      return getStructureConfigurableContext().createModifiableModelProvider(tableLevel);
+      return myState.getLibrariesConfigurator().createModifiableModelProvider(tableLevel);
     }
   }
 
@@ -384,8 +386,7 @@ public class ClasspathPanelImpl extends JPanel implements ClasspathPanel {
     selectionModel.setSelectionInterval(myModel.getRowCount() - toAdd.size(), myModel.getRowCount() - 1);
     TableUtil.scrollSelectionToVisible(myEntryTable);
 
-    final StructureConfigurableContext context = ModuleStructureConfigurable.getInstance(myState.getProject()).getContext();
-    context.getDaemonAnalyzer().queueUpdate(new ModuleProjectStructureElement(context, getRootModel().getModule()));
+    // TODO [VISTALL] context.getDaemonAnalyzer().queueUpdate(new ModuleProjectStructureElement(myState.getModulesConfigurator(), getRootModel().getModule()));
   }
 
   @Override
@@ -411,11 +412,6 @@ public class ClasspathPanelImpl extends JPanel implements ClasspathPanel {
   public void rootsChanged() {
     forceInitFromModel();
   }
-
-  private StructureConfigurableContext getStructureConfigurableContext() {
-    return ProjectStructureConfigurable.getInstance(myState.getProject()).getContext();
-  }
-
 
   private void enableModelUpdate() {
     myInsideChange--;
@@ -498,28 +494,21 @@ public class ClasspathPanelImpl extends JPanel implements ClasspathPanel {
     TableUtil.selectRows(myEntryTable, selection);
   }
 
-  private static CellAppearanceEx getCellAppearance(final ClasspathTableItem<?> item, final StructureConfigurableContext context, final boolean selected) {
+  private static CellAppearanceEx getCellAppearance(final ClasspathTableItem<?> item, final boolean selected) {
     final OrderEntryAppearanceService service = OrderEntryAppearanceService.getInstance();
     final OrderEntry entry = item.getEntry();
     return service.forOrderEntry(entry);
   }
 
   private static class TableItemRenderer extends ColoredTableCellRenderer {
-    private final Border NO_FOCUS_BORDER = BorderFactory.createEmptyBorder(1, 1, 1, 1);
-    private StructureConfigurableContext myContext;
-
-    public TableItemRenderer(StructureConfigurableContext context) {
-      myContext = context;
-    }
-
     @Override
     protected void customizeCellRenderer(JTable table, Object value, boolean selected, boolean hasFocus, int row, int column) {
       setPaintFocusBorder(false);
       setFocusBorderAroundIcon(true);
-      setBorder(NO_FOCUS_BORDER);
+      setBorder(JBUI.Borders.empty(1));
       if (value instanceof ClasspathTableItem<?>) {
         final ClasspathTableItem<?> tableItem = (ClasspathTableItem<?>)value;
-        getCellAppearance(tableItem, myContext, selected).customize(this);
+        getCellAppearance(tableItem, selected).customize(this);
         setToolTipText(tableItem.getTooltipText());
       }
     }
@@ -546,7 +535,7 @@ public class ClasspathPanelImpl extends JPanel implements ClasspathPanel {
 
   private class MyFindUsagesAction extends FindUsagesInProjectStructureActionBase {
     private MyFindUsagesAction() {
-      super(myEntryTable, myState.getProject());
+      super(myEntryTable);
     }
 
     @Override
@@ -560,19 +549,19 @@ public class ClasspathPanelImpl extends JPanel implements ClasspathPanel {
       if (entry instanceof LibraryOrderEntry) {
         final Library library = ((LibraryOrderEntry)entry).getLibrary();
         if (library != null) {
-          return new LibraryProjectStructureElement(getContext(), library);
+          return new LibraryProjectStructureElement(library);
         }
       }
       else if (entry instanceof ModuleOrderEntry) {
         final Module module = ((ModuleOrderEntry)entry).getModule();
         if (module != null) {
-          return new ModuleProjectStructureElement(getContext(), module);
+          return new ModuleProjectStructureElement(myState.getModulesConfigurator(), module);
         }
       }
       else if (entry instanceof ModuleExtensionWithSdkOrderEntry) {
         final Sdk sdk = ((ModuleExtensionWithSdkOrderEntry)entry).getSdk();
         if (sdk != null) {
-          return new SdkProjectStructureElement(getContext(), sdk);
+          return new SdkProjectStructureElement(sdk);
         }
       }
       return null;
@@ -592,8 +581,9 @@ public class ClasspathPanelImpl extends JPanel implements ClasspathPanel {
       super("Analyze This Dependency");
     }
 
+    @RequiredUIAccess
     @Override
-    public void actionPerformed(AnActionEvent e) {
+    public void actionPerformed(@Nonnull AnActionEvent e) {
       final OrderEntry selectedEntry = getSelectedEntry();
       GlobalSearchScope targetScope;
       if (selectedEntry instanceof ModuleOrderEntry) {
@@ -617,15 +607,14 @@ public class ClasspathPanelImpl extends JPanel implements ClasspathPanel {
           for (DependenciesBuilder builder : builders) {
             for (Set<PsiFile> files : builder.getDependencies().values()) {
               if (!files.isEmpty()) {
-                Messages.showInfoMessage(myEntryTable, "Dependencies were successfully collected in \"" +
-                                                       ToolWindowId.DEPENDENCIES + "\" toolwindow",
+                Messages.showInfoMessage(myEntryTable, "Dependencies were successfully collected in \"" + ToolWindowId.DEPENDENCIES + "\" toolwindow",
                                          FindBundle.message("find.pointcut.applications.not.found.title"));
                 return true;
               }
             }
           }
-          if (Messages.showOkCancelDialog(myEntryTable, "No code dependencies were found. Would you like to remove the dependency?",
-                                          CommonBundle.getWarningTitle(), Messages.getWarningIcon()) == DialogWrapper.OK_EXIT_CODE) {
+          if (Messages.showOkCancelDialog(myEntryTable, "No code dependencies were found. Would you like to remove the dependency?", CommonBundle.getWarningTitle(), Messages.getWarningIcon()) ==
+              DialogWrapper.OK_EXIT_CODE) {
             removeSelectedItems(TableUtil.removeSelectedItems(myEntryTable));
           }
           return false;
@@ -636,8 +625,8 @@ public class ClasspathPanelImpl extends JPanel implements ClasspathPanel {
     @Override
     public void update(AnActionEvent e) {
       final OrderEntry entry = getSelectedEntry();
-      e.getPresentation().setVisible(entry instanceof ModuleOrderEntry && ((ModuleOrderEntry)entry).getModule() != null ||
-                                     entry instanceof LibraryOrderEntry && ((LibraryOrderEntry)entry).getLibrary() != null);
+      e.getPresentation()
+              .setVisible(entry instanceof ModuleOrderEntry && ((ModuleOrderEntry)entry).getModule() != null || entry instanceof LibraryOrderEntry && ((LibraryOrderEntry)entry).getLibrary() != null);
     }
   }
 }

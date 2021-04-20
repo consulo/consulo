@@ -24,8 +24,8 @@ import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.roots.ui.configuration.ChooseModulesDialog;
 import com.intellij.openapi.roots.ui.configuration.libraries.LibraryEditingUtil;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.ModuleStructureConfigurable;
-import javax.annotation.Nullable;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
 /**
@@ -33,11 +33,10 @@ import java.util.List;
  */
 public abstract class ProjectStructureValidator {
 
-  private static final ExtensionPointName<ProjectStructureValidator> EP_NAME =
-    ExtensionPointName.create("com.intellij.projectStructureValidator");
+  private static final ExtensionPointName<ProjectStructureValidator> EP_NAME = ExtensionPointName.create("com.intellij.projectStructureValidator");
 
   public static List<ProjectStructureElementUsage> getUsagesInElement(final ProjectStructureElement element) {
-    for (ProjectStructureValidator validator : EP_NAME.getExtensions()) {
+    for (ProjectStructureValidator validator : EP_NAME.getExtensionList()) {
       List<ProjectStructureElementUsage> usages = validator.getUsagesIn(element);
       if (usages != null) {
         return usages;
@@ -46,34 +45,31 @@ public abstract class ProjectStructureValidator {
     return element.getUsagesInElement();
   }
 
-  public static void check(ProjectStructureElement element, ProjectStructureProblemsHolder problemsHolder) {
-    for (ProjectStructureValidator validator : EP_NAME.getExtensions()) {
+  public static void check(Project project, ProjectStructureElement element, ProjectStructureProblemsHolder problemsHolder) {
+    for (ProjectStructureValidator validator : EP_NAME.getExtensionList()) {
       if (validator.checkElement(element, problemsHolder)) {
         return;
       }
     }
-    element.check(problemsHolder);
+    element.check(project, problemsHolder);
   }
 
   public static void showDialogAndAddLibraryToDependencies(final Library library, final Project project, boolean allowEmptySelection) {
-    for (ProjectStructureValidator validator : EP_NAME.getExtensions()) {
+    for (ProjectStructureValidator validator : EP_NAME.getExtensionList()) {
       if (validator.addLibraryToDependencies(library, project, allowEmptySelection)) {
         return;
       }
     }
 
-    final ModuleStructureConfigurable moduleStructureConfigurable = ModuleStructureConfigurable.getInstance(project);
-    final List<Module> modules = LibraryEditingUtil.getSuitableModules(moduleStructureConfigurable, ((LibraryEx)library).getKind(), library);
+    final List<Module> modules = LibraryEditingUtil.getSuitableModules(project, ((LibraryEx)library).getKind(), library);
     if (modules.isEmpty()) return;
-    final ChooseModulesDialog
-      dlg = new ChooseModulesDialog(moduleStructureConfigurable.getProject(), modules, ProjectBundle.message("choose.modules.dialog.title"),
-                                    ProjectBundle
-                                      .message("choose.modules.dialog.description", library.getName()));
+    final ChooseModulesDialog dlg =
+            new ChooseModulesDialog(project, modules, ProjectBundle.message("choose.modules.dialog.title"), ProjectBundle.message("choose.modules.dialog.description", library.getName()));
     dlg.show();
     if (dlg.isOK()) {
       final List<Module> chosenModules = dlg.getChosenElements();
       for (Module module : chosenModules) {
-        moduleStructureConfigurable.addLibraryOrderEntry(module, library);
+        ModuleStructureConfigurable.addLibraryOrderEntry(module, library);
       }
     }
   }

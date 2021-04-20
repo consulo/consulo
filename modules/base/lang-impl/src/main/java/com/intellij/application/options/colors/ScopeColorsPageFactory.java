@@ -25,14 +25,14 @@ import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.ex.Settings;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
-import com.intellij.openapi.util.Weighted;
+import consulo.preferences.internal.ConfigurableWeight;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-class ScopeColorsPageFactory implements ColorAndFontPanelFactory, Weighted {
+class ScopeColorsPageFactory implements ColorAndFontPanelFactory, ConfigurableWeight {
   @Override
   public NewColorAndFontPanel createPanel(ColorAndFontOptions options) {
     final JPanel scopePanel = createChooseScopePanel();
@@ -91,7 +91,7 @@ class ScopeColorsPageFactory implements ColorAndFontPanelFactory, Weighted {
   }
 
   @Override
-  public double getWeight() {
+  public int getConfigurableWeight() {
     return Integer.MAX_VALUE - 1;
   }
 }

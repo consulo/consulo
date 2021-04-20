@@ -22,16 +22,14 @@ import com.intellij.openapi.roots.impl.libraries.LibraryTableBase;
 import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.roots.libraries.LibraryTable;
 import com.intellij.openapi.roots.libraries.PersistentLibraryKind;
-import com.intellij.openapi.roots.ui.configuration.ProjectStructureConfigurable;
 import com.intellij.openapi.roots.ui.configuration.libraryEditor.ExistingLibraryEditor;
 import com.intellij.openapi.roots.ui.configuration.libraryEditor.LibraryEditor;
 import com.intellij.openapi.roots.ui.configuration.libraryEditor.LibraryEditorListener;
-import consulo.disposer.Disposer;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.disposer.Disposer;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.*;
 
 /**
@@ -41,8 +39,7 @@ import java.util.*;
 
 public class LibrariesModifiableModel implements LibraryTableBase.ModifiableModelEx {
   //todo[nik] remove LibraryImpl#equals method instead of using identity maps
-  private final Map<Library, ExistingLibraryEditor> myLibrary2EditorMap =
-    ContainerUtil.<Library, ExistingLibraryEditor>newIdentityTroveMap();
+  private final Map<Library, ExistingLibraryEditor> myLibrary2EditorMap = ContainerUtil.<Library, ExistingLibraryEditor>newIdentityTroveMap();
   private final Set<Library> myRemovedLibraries = ContainerUtil.<Library>newIdentityTroveSet();
 
   private LibraryTable.ModifiableModel myLibrariesModifiableModel;
@@ -64,9 +61,8 @@ public class LibrariesModifiableModel implements LibraryTableBase.ModifiableMode
   @Override
   public Library createLibrary(String name, @Nullable PersistentLibraryKind type) {
     final Library library = ((LibraryTableBase.ModifiableModelEx)getLibrariesModifiableModel()).createLibrary(name, type);
-    //createLibraryEditor(library);                     \
-    final BaseLibrariesConfigurable configurable = ProjectStructureConfigurable.getInstance(myProject).getConfigurableFor(library);
-    configurable.createLibraryNode(library);
+    //createLibraryEditor(library);
+    myLibraryEditorListener.libraryCreated(library);
     return library;
   }
 
@@ -79,7 +75,8 @@ public class LibrariesModifiableModel implements LibraryTableBase.ModifiableMode
     getLibrariesModifiableModel().removeLibrary(library);
     if (existingLibrary == library) {
       myRemovedLibraries.add(library);
-    } else {
+    }
+    else {
       // dispose uncommitted library
       Disposer.dispose(library);
     }
@@ -115,7 +112,7 @@ public class LibrariesModifiableModel implements LibraryTableBase.ModifiableMode
     return getLibrariesModifiableModel().isChanged();
   }
 
-  public void deferredCommit(){
+  public void deferredCommit() {
     final List<ExistingLibraryEditor> libraryEditors = new ArrayList<ExistingLibraryEditor>(myLibrary2EditorMap.values());
     myLibrary2EditorMap.clear();
     for (ExistingLibraryEditor libraryEditor : libraryEditors) {
@@ -129,21 +126,21 @@ public class LibrariesModifiableModel implements LibraryTableBase.ModifiableMode
     myRemovedLibraries.clear();
   }
 
-  public boolean wasLibraryRemoved(Library library){
+  public boolean wasLibraryRemoved(Library library) {
     return myRemovedLibraries.contains(library);
   }
 
-  public boolean hasLibraryEditor(Library library){
+  public boolean hasLibraryEditor(Library library) {
     return myLibrary2EditorMap.containsKey(library);
   }
 
-  public ExistingLibraryEditor getLibraryEditor(Library library){
+  public ExistingLibraryEditor getLibraryEditor(Library library) {
     final Library source = ((LibraryImpl)library).getSource();
     if (source != null) {
       return getLibraryEditor(source);
     }
     ExistingLibraryEditor libraryEditor = myLibrary2EditorMap.get(library);
-    if (libraryEditor == null){
+    if (libraryEditor == null) {
       libraryEditor = createLibraryEditor(library);
     }
     return libraryEditor;

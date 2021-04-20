@@ -3,12 +3,9 @@ package com.intellij.openapi.roots.ui.configuration.projectRoot.daemon;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.roots.DependencyScope;
-import com.intellij.openapi.roots.ModifiableRootModel;
-import com.intellij.openapi.roots.impl.OrderEntryUtil;
-import com.intellij.openapi.roots.ui.configuration.ModuleEditor;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.ModuleStructureConfigurable;
-import com.intellij.openapi.roots.ui.configuration.projectRoot.StructureConfigurableContext;
 import com.intellij.openapi.util.text.StringUtil;
+import consulo.roots.ui.configuration.ModulesConfigurator;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
@@ -18,18 +15,18 @@ import javax.annotation.Nullable;
  * @author nik
  */
 public class UsageInModuleClasspath extends ProjectStructureElementUsage {
-  private final StructureConfigurableContext myContext;
+  private final ModulesConfigurator myModulesConfigurator;
   private final ModuleProjectStructureElement myContainingElement;
   @Nullable
   private final DependencyScope myScope;
   private final ProjectStructureElement mySourceElement;
   private final Module myModule;
 
-  public UsageInModuleClasspath(@Nonnull StructureConfigurableContext context,
+  public UsageInModuleClasspath(@Nonnull ModulesConfigurator modulesConfigurator,
                                 @Nonnull ModuleProjectStructureElement containingElement,
                                 ProjectStructureElement sourceElement,
                                 @Nullable DependencyScope scope) {
-    myContext = context;
+    myModulesConfigurator = modulesConfigurator;
     myContainingElement = containingElement;
     myScope = scope;
     myModule = containingElement.getModule();
@@ -58,7 +55,7 @@ public class UsageInModuleClasspath extends ProjectStructureElementUsage {
 
   @Override
   public PlaceInProjectStructure getPlace() {
-    return new PlaceInModuleClasspath(myContext, myModule, myContainingElement, mySourceElement);
+    return new PlaceInModuleClasspath(myModulesConfigurator, myModule, myContainingElement, mySourceElement);
   }
 
   @Override
@@ -89,16 +86,5 @@ public class UsageInModuleClasspath extends ProjectStructureElementUsage {
   @Override
   public String getPresentableLocationInElement() {
     return myScope != null && myScope != DependencyScope.COMPILE ? "[" + StringUtil.decapitalize(myScope.getDisplayName()) + "]" : null;
-  }
-
-  @Override
-  public void replaceElement(final ProjectStructureElement newElement) {
-    final ModuleEditor editor = myContext.getModulesConfigurator().getModuleEditor(myModule);
-    if (editor != null) {
-      final ModifiableRootModel rootModel = editor.getModifiableRootModelProxy();
-      OrderEntryUtil.replaceLibrary(rootModel, ((LibraryProjectStructureElement)mySourceElement).getLibrary(),
-                                    ((LibraryProjectStructureElement)newElement).getLibrary());
-      myContext.getDaemonAnalyzer().queueUpdate(new ModuleProjectStructureElement(myContext, myModule));
-    }
   }
 }

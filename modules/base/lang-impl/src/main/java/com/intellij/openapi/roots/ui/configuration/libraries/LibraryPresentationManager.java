@@ -20,8 +20,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.roots.libraries.LibraryKind;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.LibrariesContainer;
-import com.intellij.openapi.roots.ui.configuration.projectRoot.StructureConfigurableContext;
 import com.intellij.openapi.vfs.VirtualFile;
+import consulo.roots.ui.configuration.LibrariesConfigurator;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
@@ -38,24 +38,23 @@ public abstract class LibraryPresentationManager {
   }
 
   @Nonnull
-  public abstract Image getNamedLibraryIcon(@Nonnull Library library, @Nullable StructureConfigurableContext context);
+  public abstract Image getNamedLibraryIcon(@Nonnull Library library, @Nullable LibrariesConfigurator context);
 
   @Nullable
-  public abstract Image getCustomIcon(@Nonnull Library library, @Nullable StructureConfigurableContext context);
+  public abstract Image getCustomIcon(@Nonnull Library library, @Nullable LibrariesConfigurator context);
 
   @Nonnull
-  public abstract List<Image> getCustomIcons(@Nonnull Library library, @Nullable StructureConfigurableContext context);
+  public abstract List<Image> getCustomIcons(@Nonnull Library library, @Nullable LibrariesConfigurator context);
 
   @Nonnull
-  public abstract List<String> getDescriptions(@Nonnull Library library, StructureConfigurableContext context);
+  public abstract List<String> getDescriptions(@Nonnull Library library, LibrariesConfigurator context);
 
   @Nonnull
   public abstract List<String> getDescriptions(@Nonnull VirtualFile[] classRoots, Set<LibraryKind> excludedKinds);
 
-  public abstract List<Library> getLibraries(@Nonnull Set<LibraryKind> kinds, @Nonnull Project project, @Nullable StructureConfigurableContext context);
+  public abstract List<Library> getLibraries(@Nonnull Set<LibraryKind> kinds, @Nonnull Project project, @Nullable LibrariesConfigurator context);
 
   public abstract boolean isLibraryOfKind(@Nonnull List<VirtualFile> files, @Nonnull LibraryKind kind);
 
-  public abstract boolean isLibraryOfKind(@Nonnull Library library, @Nonnull LibrariesContainer librariesContainer,
-                                          @Nonnull Set<? extends LibraryKind> acceptedKinds);
+  public abstract boolean isLibraryOfKind(@Nonnull Library library, @Nonnull LibrariesContainer librariesContainer, @Nonnull Set<? extends LibraryKind> acceptedKinds);
 }

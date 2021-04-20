@@ -30,6 +30,7 @@ import com.intellij.util.io.UnsyncByteArrayInputStream;
 import com.intellij.util.ui.UIUtil;
 import consulo.container.boot.ContainerPathManager;
 import consulo.container.plugin.PluginDescriptor;
+import consulo.ide.eap.EarlyAccessProgramManager;
 import consulo.ide.updateSettings.UpdateSettings;
 import consulo.logging.Logger;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -89,7 +90,7 @@ public class FirstStartCustomizeUtil {
       MultiMap<String, PluginDescriptor> pluginDescriptors = new MultiMap<>();
       Map<String, PluginTemplate> predefinedTemplateSets = new TreeMap<>();
       try {
-        List<PluginDescriptor> ideaPluginDescriptors = RepositoryHelper.loadOnlyPluginsFromRepository(null, UpdateSettings.getInstance().getChannel());
+        List<PluginDescriptor> ideaPluginDescriptors = RepositoryHelper.loadOnlyPluginsFromRepository(null, UpdateSettings.getInstance().getChannel(), EarlyAccessProgramManager.getInstance());
         for (PluginDescriptor pluginDescriptor : ideaPluginDescriptors) {
           String category = pluginDescriptor.getCategory();
           pluginDescriptors.putValue(category, pluginDescriptor);

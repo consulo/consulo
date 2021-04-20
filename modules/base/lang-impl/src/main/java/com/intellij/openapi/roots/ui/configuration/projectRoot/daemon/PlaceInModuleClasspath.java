@@ -16,11 +16,12 @@
 package com.intellij.openapi.roots.ui.configuration.projectRoot.daemon;
 
 import com.intellij.openapi.module.Module;
+import com.intellij.openapi.options.ShowSettingsUtil;
+import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ModuleRootModel;
 import com.intellij.openapi.roots.OrderEntry;
 import com.intellij.openapi.roots.impl.OrderEntryUtil;
-import com.intellij.openapi.roots.ui.configuration.ProjectStructureConfigurable;
-import com.intellij.openapi.roots.ui.configuration.projectRoot.StructureConfigurableContext;
+import consulo.roots.ui.configuration.ModulesConfigurator;
 import consulo.util.concurrent.AsyncResult;
 
 import javax.annotation.Nonnull;
@@ -29,23 +30,23 @@ import javax.annotation.Nonnull;
  * @author nik
  */
 public class PlaceInModuleClasspath extends PlaceInProjectStructure {
-  private final StructureConfigurableContext myContext;
   private final Module myModule;
   private final ProjectStructureElement myElement;
   private final OrderEntry myOrderEntry;
+  private final ModulesConfigurator myModulesConfigurator;
 
-  public PlaceInModuleClasspath(StructureConfigurableContext context, Module module, ProjectStructureElement element, OrderEntry orderEntry) {
-    myContext = context;
+  public PlaceInModuleClasspath(ModulesConfigurator modulesConfigurator, Module module, ProjectStructureElement element, OrderEntry orderEntry) {
+    myModulesConfigurator = modulesConfigurator;
     myModule = module;
     myElement = element;
     myOrderEntry = orderEntry;
   }
 
-  public PlaceInModuleClasspath(@Nonnull StructureConfigurableContext context, @Nonnull Module module, ProjectStructureElement element, @Nonnull ProjectStructureElement elementInClasspath) {
-    myContext = context;
+  public PlaceInModuleClasspath(@Nonnull ModulesConfigurator configurator, @Nonnull Module module, ProjectStructureElement element, @Nonnull ProjectStructureElement elementInClasspath) {
+    myModulesConfigurator = configurator;
     myModule = module;
     myElement = element;
-    ModuleRootModel rootModel = myContext.getModulesConfigurator().getRootModel(myModule);
+    ModuleRootModel rootModel = myModulesConfigurator.getRootModel(myModule);
     if (elementInClasspath instanceof LibraryProjectStructureElement) {
       myOrderEntry = OrderEntryUtil.findLibraryOrderEntry(rootModel, ((LibraryProjectStructureElement)elementInClasspath).getLibrary());
     }
@@ -73,7 +74,10 @@ public class PlaceInModuleClasspath extends PlaceInProjectStructure {
 
   @Nonnull
   @Override
-  public AsyncResult<Void> navigate() {
-    return ProjectStructureConfigurable.getInstance(myContext.getProject()).selectOrderEntry(myModule, myOrderEntry);
+  public AsyncResult<Void> navigate(@Nonnull Project project) {
+    ShowSettingsUtil showSettingsUtil = ShowSettingsUtil.getInstance();
+    return showSettingsUtil.showProjectStructureDialog(project, projectStructureSelector -> {
+      projectStructureSelector.selectOrderEntry(myModule, myOrderEntry);
+    });
   }
 }

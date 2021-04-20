@@ -17,7 +17,6 @@
 package com.intellij.openapi.roots.ui.configuration;
 
 import com.intellij.icons.AllIcons;
-import consulo.disposer.Disposable;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.fileChooser.ex.FileChooserKeys;
@@ -64,13 +63,11 @@ import java.util.Map;
  */
 public class ContentEntriesEditor extends ModuleElementsEditor {
   private static final Logger LOG = Logger.getInstance(ContentEntriesEditor.class);
-  public static final String NAME = ProjectBundle.message("module.paths.title");
-  private static final Color BACKGROUND_COLOR = UIUtil.getListBackground();
 
   protected ContentEntryTreeEditor myRootTreeEditor;
   private MyContentEntryEditorListener myContentEntryEditorListener;
   protected JPanel myEditorsPanel;
-  private final Map<ContentEntry, ContentEntryEditor> myEntryToEditorMap = new HashMap<ContentEntry, ContentEntryEditor>();
+  private final Map<ContentEntry, ContentEntryEditor> myEntryToEditorMap = new HashMap<>();
   private ContentEntry mySelectedEntry;
 
   private VirtualFile myLastSelectedDir = null;
@@ -82,7 +79,7 @@ public class ContentEntriesEditor extends ModuleElementsEditor {
     super(state);
     myState = state;
     myModuleName = moduleName;
-    myModulesProvider = state.getModulesProvider();
+    myModulesProvider = state.getModulesConfigurator();
     final VirtualFileManagerAdapter fileManagerListener = new VirtualFileManagerAdapter() {
       @Override
       public void afterRefreshFinish(boolean asynchronous) {
@@ -98,12 +95,7 @@ public class ContentEntriesEditor extends ModuleElementsEditor {
     };
     final VirtualFileManager fileManager = VirtualFileManager.getInstance();
     fileManager.addVirtualFileManagerListener(fileManagerListener);
-    registerDisposable(new Disposable() {
-      @Override
-      public void dispose() {
-        fileManager.removeVirtualFileManagerListener(fileManagerListener);
-      }
-    });
+    registerDisposable(() -> fileManager.removeVirtualFileManagerListener(fileManagerListener));
   }
 
   @Override
@@ -118,7 +110,7 @@ public class ContentEntriesEditor extends ModuleElementsEditor {
 
   @Override
   public String getDisplayName() {
-    return NAME;
+    return ProjectBundle.message("module.paths.title");
   }
 
   @RequiredUIAccess
@@ -144,15 +136,14 @@ public class ContentEntriesEditor extends ModuleElementsEditor {
 
     final JPanel entriesPanel = new JPanel(new BorderLayout());
 
-    final DefaultActionGroup group = new DefaultActionGroup();
     final AddContentEntryAction action = new AddContentEntryAction();
     action.registerCustomShortcutSet(KeyEvent.VK_C, InputEvent.ALT_DOWN_MASK, mainPanel);
-    group.add(action);
 
     myEditorsPanel = new ScrollablePanel(new VerticalStackLayout());
-    myEditorsPanel.setBackground(BACKGROUND_COLOR);
-    JScrollPane myScrollPane = ScrollPaneFactory.createScrollPane(myEditorsPanel, true);
-    entriesPanel.add(new ToolbarPanel(myScrollPane, group), BorderLayout.CENTER);
+    myEditorsPanel.setBackground(UIUtil.getListBackground());
+
+    JScrollPane scrollPane = ScrollPaneFactory.createScrollPane(myEditorsPanel, true);
+    entriesPanel.add(new ToolbarPanel(scrollPane, ActionGroup.newImmutableBuilder().add(action).build()), BorderLayout.CENTER);
 
     final JBSplitter splitter = new OnePixelSplitter(false);
     splitter.setProportion(0.6f);
@@ -167,9 +158,6 @@ public class ContentEntriesEditor extends ModuleElementsEditor {
     JPanel contentPanel = new JPanel(new GridBagLayout());
 
     final ActionToolbar actionToolbar = ActionManager.getInstance().createActionToolbar(ActionPlaces.UNKNOWN, myRootTreeEditor.getEditingActionsGroup(), true);
-    contentPanel.add(new JLabel("Mark as:"),
-                     new GridBagConstraints(0, 0, 1, 1, 0, 0, GridBagConstraints.WEST, 0, new JBInsets(0, 5, 0, 5), 0,
-                                            0));
     contentPanel.add(actionToolbar.getComponent(),
                      new GridBagConstraints(1, 0, 1, 1, 1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL,
                                             new JBInsets(0, 0, 0, 0), 0, 0));
@@ -201,12 +189,7 @@ public class ContentEntriesEditor extends ModuleElementsEditor {
     final ContentEntryEditor contentEntryEditor = createContentEntryEditor(contentEntry);
     contentEntryEditor.initUI();
     contentEntryEditor.addContentEntryEditorListener(myContentEntryEditorListener);
-    registerDisposable(new Disposable() {
-      @Override
-      public void dispose() {
-        contentEntryEditor.removeContentEntryEditorListener(myContentEntryEditorListener);
-      }
-    });
+    registerDisposable(() -> contentEntryEditor.removeContentEntryEditorListener(myContentEntryEditorListener));
     myEntryToEditorMap.put(contentEntry, contentEntryEditor);
     final JComponent component = contentEntryEditor.getComponent();
 
@@ -304,7 +287,7 @@ public class ContentEntriesEditor extends ModuleElementsEditor {
   }
 
   protected List<ContentEntry> addContentEntries(final VirtualFile[] files) {
-    List<ContentEntry> contentEntries = new ArrayList<ContentEntry>();
+    List<ContentEntry> contentEntries = new ArrayList<>();
     for (final VirtualFile file : files) {
       if (isAlreadyAdded(file)) {
         continue;

@@ -23,7 +23,7 @@ import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.SdkModel;
 import com.intellij.openapi.projectRoots.SdkType;
 import com.intellij.openapi.projectRoots.SdkTypeId;
-import consulo.ide.settings.impl.ShowSdksSettingsUtil;
+import consulo.ide.settings.impl.ProjectStructureSettingsUtil;
 import consulo.ui.ComboBox;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -125,7 +125,7 @@ public final class BundleBoxBuilder {
   @Nonnull
   private static SdkModel effectiveModel(@Nullable SdkModel sdkModel) {
     if (sdkModel == null) {
-      ShowSdksSettingsUtil sdksSettingsUtil = (ShowSdksSettingsUtil)ShowSettingsUtil.getInstance();
+      ProjectStructureSettingsUtil sdksSettingsUtil = (ProjectStructureSettingsUtil)ShowSettingsUtil.getInstance();
 
       return sdksSettingsUtil.getSdksModel();
     }

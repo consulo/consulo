@@ -32,7 +32,6 @@ import com.intellij.openapi.application.ex.ApplicationEx;
 import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
-import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.*;
 import com.intellij.ui.border.CustomLineBorder;
@@ -46,9 +45,12 @@ import com.intellij.xml.util.XmlStringUtil;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginIds;
 import consulo.disposer.Disposable;
+import consulo.ide.eap.EarlyAccessProgramManager;
 import consulo.ide.updateSettings.UpdateSettings;
 import consulo.logging.Logger;
+import consulo.roots.ui.configuration.session.ConfigurableSession;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.util.lang.ref.SimpleReference;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -274,16 +276,17 @@ public abstract class PluginManagerMain implements Disposable {
   /**
    * Start a new thread which downloads new list of plugins from the site in
    * the background and updates a list of plugins in the table.
+   * @param earlyAccessProgramManager
    */
-  protected void loadPluginsFromHostInBackground() {
+  protected void loadPluginsFromHostInBackground(EarlyAccessProgramManager earlyAccessProgramManager) {
     setDownloadStatus(true);
 
     Application.get().executeOnPooledThread(() -> {
-      Ref<List<PluginDescriptor>> ref = Ref.create();
+      SimpleReference<List<PluginDescriptor>> ref = SimpleReference.create();
       List<String> errorMessages = new ArrayList<>();
 
       try {
-        ref.set(RepositoryHelper.loadOnlyPluginsFromRepository(null, UpdateSettings.getInstance().getChannel()));
+        ref.set(RepositoryHelper.loadOnlyPluginsFromRepository(null, UpdateSettings.getInstance().getChannel(), earlyAccessProgramManager));
       }
       catch (Throwable e) {
         LOG.info(e);
@@ -301,7 +304,7 @@ public abstract class PluginManagerMain implements Disposable {
         if (!errorMessages.isEmpty()) {
           if (Messages.showOkCancelDialog(IdeBundle.message("error.list.of.plugins.was.not.loaded", StringUtil.join(errorMessages, ", ")), IdeBundle.message("title.plugins"),
                                           CommonBundle.message("button.retry"), CommonBundle.getCancelButtonText(), Messages.getErrorIcon()) == Messages.OK) {
-            loadPluginsFromHostInBackground();
+            loadPluginsFromHostInBackground(earlyAccessProgramManager);
           }
         }
       });
@@ -315,8 +318,11 @@ public abstract class PluginManagerMain implements Disposable {
     myBusy = status;
   }
 
+  @RequiredUIAccess
   protected void loadAvailablePlugins() {
-    loadPluginsFromHostInBackground();
+    EarlyAccessProgramManager earlyAccessProgramManager = ConfigurableSession.get().getOrCopy(Application.get(), EarlyAccessProgramManager.class);
+
+    loadPluginsFromHostInBackground(earlyAccessProgramManager);
   }
 
   public boolean isRequireShutdown() {

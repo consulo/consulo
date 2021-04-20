@@ -21,6 +21,7 @@ import com.intellij.openapi.application.Application;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.container.plugin.PluginDescriptor;
+import consulo.ide.eap.EarlyAccessProgramManager;
 import consulo.ide.plugins.InstalledPluginsState;
 import consulo.ide.updateSettings.UpdateSettings;
 
@@ -77,7 +78,7 @@ public class PluginsAdvertiserHolder {
     Application.get().executeOnPooledThread(() -> {
       List<PluginDescriptor> pluginDescriptors = Collections.emptyList();
       try {
-        pluginDescriptors = RepositoryHelper.loadOnlyPluginsFromRepository(null, updateSettings.getChannel());
+        pluginDescriptors = RepositoryHelper.loadOnlyPluginsFromRepository(null, updateSettings.getChannel(), EarlyAccessProgramManager.getInstance());
       }
       catch (Exception ignored) {
       }

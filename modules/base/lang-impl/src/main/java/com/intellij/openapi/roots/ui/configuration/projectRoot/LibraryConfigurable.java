@@ -20,17 +20,18 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.roots.libraries.LibraryTable;
+import com.intellij.openapi.roots.ui.configuration.LibraryTableModifiableModelProvider;
 import com.intellij.openapi.roots.ui.configuration.libraries.LibraryPresentationManager;
 import com.intellij.openapi.roots.ui.configuration.libraryEditor.LibraryEditor;
 import com.intellij.openapi.roots.ui.configuration.libraryEditor.LibraryRootsComponent;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.LibraryProjectStructureElement;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureElement;
-import com.intellij.openapi.util.Computable;
 import consulo.disposer.Disposer;
+import consulo.roots.ui.configuration.LibrariesConfigurator;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
-
 import javax.swing.*;
 
 /**
@@ -40,43 +41,33 @@ import javax.swing.*;
 public class LibraryConfigurable extends ProjectStructureElementConfigurable<Library> {
   private LibraryRootsComponent myLibraryEditorComponent;
   private final Library myLibrary;
-  private final StructureLibraryTableModifiableModelProvider myModel;
-  private final StructureConfigurableContext myContext;
+  private final LibraryTableModifiableModelProvider myModel;
+  private final LibrariesConfigurator myLibrariesConfigurator;
   private final Project myProject;
   private final LibraryProjectStructureElement myProjectStructureElement;
   private boolean myUpdatingName;
   private boolean myPropertiesLoaded;
 
-  protected LibraryConfigurable(final StructureLibraryTableModifiableModelProvider modelProvider,
-                                final Library library,
-                                final StructureConfigurableContext context,
-                                final Runnable updateTree) {
+  protected LibraryConfigurable(Project project, LibraryTableModifiableModelProvider modelProvider, Library library, LibrariesConfigurator librariesConfigurator, Runnable updateTree) {
     super(true, updateTree);
     myModel = modelProvider;
-    myContext = context;
-    myProject = context.getProject();
+    myLibrariesConfigurator = librariesConfigurator;
+    myProject = project;
     myLibrary = library;
-    myProjectStructureElement = new LibraryProjectStructureElement(context, myLibrary);
+    myProjectStructureElement = new LibraryProjectStructureElement(myLibrary);
   }
 
   @Override
   public JComponent createOptionsPanel() {
-    myLibraryEditorComponent = new LibraryRootsComponent(myProject, new Computable<LibraryEditor>() {
-      @Override
-      public LibraryEditor compute() {
-        return getLibraryEditor();
-      }
-    });
-    myLibraryEditorComponent.addListener(new Runnable() {
-      @Override
-      public void run() {
-        myContext.getDaemonAnalyzer().queueUpdate(myProjectStructureElement);
-        updateName();
-      }
+    myLibraryEditorComponent = new LibraryRootsComponent(myProject, this::getLibraryEditor);
+    myLibraryEditorComponent.addListener(() -> {
+      //todo myLibrariesConfigurator.getDaemonAnalyzer().queueUpdate(myProjectStructureElement);
+      updateName();
     });
     return myLibraryEditorComponent.getComponent();
   }
 
+  @RequiredUIAccess
   @Override
   public boolean isModified() {
     return myLibraryEditorComponent != null && myLibraryEditorComponent.hasChanges();
@@ -88,16 +79,19 @@ public class LibraryConfigurable extends ProjectStructureElementConfigurable<Lib
     return myProjectStructureElement;
   }
 
+  @RequiredUIAccess
   @Override
   public void apply() {
     applyProperties();
   }
 
+  @RequiredUIAccess
   @Override
   public void reset() {
     resetProperties();
   }
 
+  @RequiredUIAccess
   @Override
   public void disposeUIResources() {
     if (myLibraryEditorComponent != null) {
@@ -110,12 +104,12 @@ public class LibraryConfigurable extends ProjectStructureElementConfigurable<Lib
   public void setDisplayName(final String name) {
     if (!myUpdatingName) {
       getLibraryEditor().setName(name);
-      myContext.getDaemonAnalyzer().queueUpdateForAllElementsWithErrors();
+      // todo myLibrariesConfigurator.getDaemonAnalyzer().queueUpdateForAllElementsWithErrors();
     }
   }
 
   protected LibraryEditor getLibraryEditor() {
-    return myModel.getModifiableModel().getLibraryEditor(myLibrary);
+    return ((LibrariesModifiableModel)myModel.getModifiableModel()).getLibraryEditor(myLibrary);
   }
 
   @Override
@@ -138,15 +132,13 @@ public class LibraryConfigurable extends ProjectStructureElementConfigurable<Lib
   @Override
   public String getBannerSlogan() {
     final LibraryTable libraryTable = myLibrary.getTable();
-    String libraryType = libraryTable == null
-                         ? ProjectBundle.message("module.library.display.name", 1)
-                         : libraryTable.getPresentation().getDisplayName(false);
+    String libraryType = libraryTable == null ? ProjectBundle.message("module.library.display.name", 1) : libraryTable.getPresentation().getDisplayName(false);
     return ProjectBundle.message("project.roots.library.banner.text", getDisplayName(), libraryType);
   }
 
   @Override
   public String getDisplayName() {
-    if (myModel.getModifiableModel().hasLibraryEditor(myLibrary)) {
+    if (((LibrariesModifiableModel)myModel.getModifiableModel()).hasLibraryEditor(myLibrary)) {
       return getLibraryEditor().getName();
     }
 
@@ -178,7 +170,7 @@ public class LibraryConfigurable extends ProjectStructureElementConfigurable<Lib
 
   @Override
   public Image getIcon(boolean open) {
-    return LibraryPresentationManager.getInstance().getNamedLibraryIcon(myLibrary, myContext);
+    return LibraryPresentationManager.getInstance().getNamedLibraryIcon(myLibrary, myLibrariesConfigurator);
   }
 
   public void updateComponent() {

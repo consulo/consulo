@@ -27,20 +27,16 @@ import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.options.ShowSettingsUtil;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectBundle;
-import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.ContentEntry;
 import com.intellij.openapi.roots.ModifiableRootModel;
 import com.intellij.openapi.roots.ModuleRootModel;
 import com.intellij.openapi.roots.impl.ModifiableModelCommitter;
 import com.intellij.openapi.roots.ui.configuration.actions.ModuleDeleteProvider;
-import com.intellij.openapi.roots.ui.configuration.projectRoot.StructureConfigurableContext;
-import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.ModuleProjectStructureElement;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.packaging.artifacts.Artifact;
-import java.util.HashMap;
 import com.intellij.util.graph.GraphGenerator;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
@@ -51,6 +47,8 @@ import consulo.moduleImport.ModuleImportContext;
 import consulo.moduleImport.ModuleImportProvider;
 import consulo.moduleImport.ui.ModuleImportProcessor;
 import consulo.roots.ContentFolderScopes;
+import consulo.roots.ui.configuration.LibrariesConfigurator;
+import consulo.roots.ui.configuration.ModulesConfigurator;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.fileChooser.FileChooser;
 import consulo.util.concurrent.AsyncResult;
@@ -62,57 +60,44 @@ import org.jetbrains.concurrency.Promises;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
+import java.util.function.Supplier;
 
 /**
  * @author Eugene Zhuravlev
  * Date: Dec 15, 2003
  */
-public class ModulesConfigurator implements ModulesProvider, ModuleEditor.ChangeListener {
-  private static final Logger LOG = Logger.getInstance(ModulesConfigurator.class);
+public class ModulesConfiguratorImpl implements ModulesConfigurator, ModuleEditor.ChangeListener, Disposable {
+  private static final Logger LOG = Logger.getInstance(ModulesConfiguratorImpl.class);
 
   private final Project myProject;
   private final List<ModuleEditor> myModuleEditors = new ArrayList<>();
-  private final Comparator<ModuleEditor> myModuleEditorComparator = new Comparator<ModuleEditor>() {
-    @Override
-    public int compare(ModuleEditor editor1, ModuleEditor editor2) {
-      return ModulesAlphaComparator.INSTANCE.compare(editor1.getModule(), editor2.getModule());
-    }
-
-    @SuppressWarnings({"EqualsWhichDoesntCheckParameterClass"})
-    public boolean equals(Object o) {
-      return false;
-    }
-  };
+  private final Comparator<ModuleEditor> myModuleEditorComparator = (editor1, editor2) -> ModulesAlphaComparator.INSTANCE.compare(editor1.getModule(), editor2.getModule());
   private boolean myModified = false;
   private ModifiableModuleModel myModuleModel;
   private boolean myModuleModelCommitted = false;
 
-
-  private StructureConfigurableContext myContext;
   private final List<ModuleEditor.ChangeListener> myAllModulesChangeListeners = new ArrayList<>();
 
-  public ModulesConfigurator(Project project) {
+  private final Supplier<LibrariesConfigurator> myLibrariesConfiguratorSupplier;
+
+  public ModulesConfiguratorImpl(Project project, Supplier<LibrariesConfigurator> librariesConfiguratorSupplier) {
     myProject = project;
+    myLibrariesConfiguratorSupplier = librariesConfiguratorSupplier;
   }
 
-  public void setContext(final StructureConfigurableContext context) {
-    myContext = context;
-  }
-
+  @Override
   @RequiredUIAccess
-  public void disposeUIResources() {
-    ApplicationManager.getApplication().runWriteAction(new Runnable() {
-      @Override
-      public void run() {
-        for (final ModuleEditor moduleEditor : myModuleEditors) {
-          Disposer.dispose(moduleEditor);
-        }
-        myModuleEditors.clear();
+  public void dispose() {
+    ApplicationManager.getApplication().runWriteAction(() -> {
+      for (final ModuleEditor moduleEditor : myModuleEditors) {
+        Disposer.dispose(moduleEditor);
+      }
+      myModuleEditors.clear();
 
+      if (myModuleModel != null) {
         myModuleModel.dispose();
       }
     });
-
   }
 
   @Override
@@ -156,22 +141,17 @@ public class ModulesConfigurator implements ModulesProvider, ModuleEditor.Change
   }
 
   private ModuleEditor doCreateModuleEditor(final Module module) {
-    final ModuleEditor moduleEditor = new HeaderHidingTabbedModuleEditor(myProject, this, module);
+    final ModuleEditor moduleEditor = new TabbedModuleEditor(myProject, this, myLibrariesConfiguratorSupplier.get(), module);
 
     myModuleEditors.add(moduleEditor);
 
     moduleEditor.addChangeListener(this);
-    Disposer.register(moduleEditor, new Disposable() {
-      @Override
-      public void dispose() {
-        moduleEditor.removeChangeListener(ModulesConfigurator.this);
-      }
-    });
+    Disposer.register(moduleEditor, () -> moduleEditor.removeChangeListener(ModulesConfiguratorImpl.this));
     return moduleEditor;
   }
 
   @RequiredUIAccess
-  public void resetModuleEditors() {
+  public void reset() {
     myModuleModel = ModuleManager.getInstance(myProject).getModifiableModel();
 
     ApplicationManager.getApplication().runWriteAction(new Runnable() {
@@ -198,7 +178,8 @@ public class ModulesConfigurator implements ModulesProvider, ModuleEditor.Change
     for (ModuleEditor.ChangeListener listener : myAllModulesChangeListeners) {
       listener.moduleStateChanged(moduleRootModel);
     }
-    myContext.getDaemonAnalyzer().queueUpdate(new ModuleProjectStructureElement(myContext, moduleRootModel.getModule()));
+
+    // todo context.getDaemonAnalyzer().queueUpdate(new ModuleProjectStructureElement(context, moduleRootModel.getModule()));
   }
 
   public void addAllModuleChangeListener(ModuleEditor.ChangeListener listener) {
@@ -304,8 +285,26 @@ public class ModulesConfigurator implements ModulesProvider, ModuleEditor.Change
     return myModuleModel;
   }
 
+  @Override
+  public String getRealName(final Module module) {
+    final ModifiableModuleModel moduleModel = getModuleModel();
+    String newName = moduleModel.getNewName(module);
+    return newName != null ? newName : module.getName();
+  }
+
+  @Override
   public boolean isModuleModelCommitted() {
     return myModuleModelCommitted;
+  }
+
+  @Nullable
+  @Override
+  public ModifiableRootModel getModuleEditorModelProxy(Module module) {
+    ModuleEditor moduleEditor = getModuleEditor(module);
+    if (moduleEditor != null) {
+      return moduleEditor.getModifiableRootModelProxy();
+    }
+    return null;
   }
 
   public boolean deleteModule(final Module module) {
@@ -462,28 +461,15 @@ public class ModulesConfigurator implements ModulesProvider, ModuleEditor.Change
     ShowSettingsUtil.getInstance().showProjectStructureDialog(project, config -> config.select(artifact, true));
   }
 
-  @RequiredUIAccess
-  public static void showSdkSettings(@Nonnull Project project, @Nonnull final Sdk sdk) {
-    ShowSettingsUtil.getInstance().showProjectStructureDialog(project, config -> config.select(sdk, true));
-  }
-
-  @RequiredUIAccess
-  public static void showDialog(Project project, @Nullable final String moduleToSelect, @Nullable final String editorNameToSelect) {
-    ShowSettingsUtil.getInstance().showProjectStructureDialog(project, config -> config.select(moduleToSelect, editorNameToSelect, true));
-  }
-
   public void moduleRenamed(Module module, final String oldName, final String name) {
+
     for (ModuleEditor moduleEditor : myModuleEditors) {
       if (module == moduleEditor.getModule() && Comparing.strEqual(moduleEditor.getName(), oldName)) {
         moduleEditor.setModuleName(name);
         moduleEditor.updateCompilerOutputPathChanged(ProjectStructureConfigurable.getInstance(myProject).getProjectConfigurable().getCompilerOutputUrl(), name);
-        myContext.getDaemonAnalyzer().queueUpdate(new ModuleProjectStructureElement(myContext, module));
+        // todo context.getDaemonAnalyzer().queueUpdate(new ModuleProjectStructureElement(this, module));
         return;
       }
     }
-  }
-
-  public StructureConfigurableContext getContext() {
-    return myContext;
   }
 }

@@ -27,14 +27,13 @@ import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.roots.libraries.LibraryType;
 import com.intellij.openapi.roots.libraries.LibraryTypeService;
 import com.intellij.openapi.roots.libraries.NewLibraryConfiguration;
-import com.intellij.openapi.roots.ui.configuration.ProjectStructureConfigurable;
 import com.intellij.openapi.roots.ui.configuration.libraries.LibraryEditingUtil;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.BaseLibrariesConfigurable;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.LibrariesModifiableModel;
-import com.intellij.openapi.roots.ui.configuration.projectRoot.ModuleStructureConfigurable;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.ProjectLibrariesConfigurable;
 import com.intellij.openapi.ui.MasterDetailsComponent;
 import com.intellij.openapi.vfs.VirtualFile;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
@@ -43,37 +42,32 @@ import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeNode;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
  * @author nik
  */
 public class CreateNewLibraryAction extends DumbAwareAction {
-  private final @Nullable LibraryType myType;
+  @Nullable
+  private final LibraryType myType;
   private final BaseLibrariesConfigurable myLibrariesConfigurable;
   private final Project myProject;
 
-  private CreateNewLibraryAction(@Nonnull String text,
-                                 @Nullable Image icon,
-                                 @Nullable LibraryType type,
-                                 @Nonnull BaseLibrariesConfigurable librariesConfigurable,
-                                 final @Nonnull Project project) {
+  private CreateNewLibraryAction(@Nonnull String text, @Nullable Image icon, @Nullable LibraryType type, @Nonnull BaseLibrariesConfigurable librariesConfigurable, final @Nonnull Project project) {
     super(text, null, icon);
     myType = type;
     myLibrariesConfigurable = librariesConfigurable;
     myProject = project;
   }
 
+  @RequiredUIAccess
   @Override
-  public void actionPerformed(AnActionEvent e) {
-    Library library =
-      createLibrary(myType, myLibrariesConfigurable.getTree(), myProject, myLibrariesConfigurable.getModelProvider().getModifiableModel());
+  public void actionPerformed(@Nonnull AnActionEvent e) {
+    Library library = createLibrary(myType, myLibrariesConfigurable.getTree(), myProject, (LibrariesModifiableModel)myLibrariesConfigurable.getModelProvider().getModifiableModel());
     if (library == null) return;
 
-    final BaseLibrariesConfigurable rootConfigurable = ProjectStructureConfigurable.getInstance(myProject).getConfigurableFor(library);
-    final DefaultMutableTreeNode libraryNode =
-      MasterDetailsComponent.findNodeByObject((TreeNode)rootConfigurable.getTree().getModel().getRoot(), library);
+    final BaseLibrariesConfigurable rootConfigurable = myLibrariesConfigurable;
+    final DefaultMutableTreeNode libraryNode = MasterDetailsComponent.findNodeByObject((TreeNode)rootConfigurable.getTree().getModel().getRoot(), library);
     rootConfigurable.selectNodeInTree(libraryNode);
     LibraryEditingUtil.showDialogAndAddLibraryToDependencies(library, myProject, true);
   }
@@ -87,9 +81,8 @@ public class CreateNewLibraryAction extends DumbAwareAction {
     final NewLibraryConfiguration configuration = createNewLibraryConfiguration(type, parentComponent, project);
     if (configuration == null) return null;
     final LibraryType<?> libraryType = configuration.getLibraryType();
-    final Library library = modifiableModel
-      .createLibrary(LibraryEditingUtil.suggestNewLibraryName(modifiableModel, configuration.getDefaultLibraryName()),
-                     libraryType != null ? libraryType.getKind() : null);
+    final Library library =
+            modifiableModel.createLibrary(LibraryEditingUtil.suggestNewLibraryName(modifiableModel, configuration.getDefaultLibraryName()), libraryType != null ? libraryType.getKind() : null);
 
     final NewLibraryEditor editor = new NewLibraryEditor(libraryType, configuration.getProperties());
     configuration.addRoots(editor);
@@ -100,45 +93,38 @@ public class CreateNewLibraryAction extends DumbAwareAction {
   }
 
   @Nullable
-  public static NewLibraryConfiguration createNewLibraryConfiguration(@Nullable LibraryType type,
-                                                                      @Nonnull JComponent parentComponent,
-                                                                      @Nonnull Project project) {
+  public static NewLibraryConfiguration createNewLibraryConfiguration(@Nullable LibraryType type, @Nonnull JComponent parentComponent, @Nonnull Project project) {
     final NewLibraryConfiguration configuration;
     final VirtualFile baseDir = project.getBaseDir();
     if (type != null) {
       configuration = type.createNewLibrary(parentComponent, baseDir, project);
     }
     else {
-      configuration = LibraryTypeService.getInstance()
-        .createLibraryFromFiles(new DefaultLibraryRootsComponentDescriptor(), parentComponent, baseDir, null, project);
+      configuration = LibraryTypeService.getInstance().createLibraryFromFiles(new DefaultLibraryRootsComponentDescriptor(), parentComponent, baseDir, null, project);
     }
     if (configuration == null) return null;
     return configuration;
   }
 
-  public static AnAction[] createActionOrGroup(@Nonnull String text,
-                                               @Nonnull BaseLibrariesConfigurable librariesConfigurable,
-                                               final @Nonnull Project project) {
-    final LibraryType<?>[] extensions = LibraryType.EP_NAME.getExtensions();
-    List<LibraryType<?>> suitableTypes = new ArrayList<LibraryType<?>>();
+  public static AnAction[] createActionOrGroup(@Nonnull String text, @Nonnull BaseLibrariesConfigurable librariesConfigurable, final @Nonnull Project project) {
+    final List<LibraryType<?>> extensions = LibraryType.EP_NAME.getExtensionList();
+    List<LibraryType<?>> suitableTypes = new ArrayList<>();
     if (librariesConfigurable instanceof ProjectLibrariesConfigurable) {
-      final ModuleStructureConfigurable configurable = ModuleStructureConfigurable.getInstance(project);
       for (LibraryType<?> extension : extensions) {
-        if (!LibraryEditingUtil.getSuitableModules(configurable, extension.getKind(), null).isEmpty()) {
+        if (!LibraryEditingUtil.getSuitableModules(project, extension.getKind(), null).isEmpty()) {
           suitableTypes.add(extension);
         }
       }
     }
     else {
-      Collections.addAll(suitableTypes, extensions);
+      suitableTypes.addAll(extensions);
     }
 
     if (suitableTypes.isEmpty()) {
       return new AnAction[]{new CreateNewLibraryAction(text, AllIcons.Nodes.PpLib, null, librariesConfigurable, project)};
     }
-    List<AnAction> actions = new ArrayList<AnAction>();
-    actions.add(new CreateNewLibraryAction(IdeBundle.message("create.default.library.type.action.name"), AllIcons.Nodes.PpLib, null,
-                                           librariesConfigurable, project));
+    List<AnAction> actions = new ArrayList<>();
+    actions.add(new CreateNewLibraryAction(IdeBundle.message("create.default.library.type.action.name"), AllIcons.Nodes.PpLib, null, librariesConfigurable, project));
     for (LibraryType<?> type : suitableTypes) {
       final String actionName = type.getCreateActionName();
       if (actionName != null) {

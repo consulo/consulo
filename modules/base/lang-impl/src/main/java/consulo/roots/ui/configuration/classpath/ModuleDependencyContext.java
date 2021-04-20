@@ -19,17 +19,14 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.roots.ModifiableRootModel;
 import com.intellij.openapi.roots.OrderEntry;
 import com.intellij.openapi.roots.ui.configuration.classpath.ClasspathPanel;
-import com.intellij.openapi.roots.ui.configuration.projectRoot.StructureConfigurableContext;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.containers.ContainerUtil;
-import java.util.HashSet;
 import consulo.roots.ModifiableModuleRootLayer;
+import consulo.roots.ui.configuration.LibrariesConfigurator;
+import consulo.roots.ui.configuration.ModulesConfigurator;
 
 import javax.annotation.Nonnull;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author VISTALL
@@ -38,8 +35,8 @@ import java.util.Set;
 public class ModuleDependencyContext extends AddModuleDependencyContext<List<Module>> {
   private final List<Module> myNotAddedModules;
 
-  public ModuleDependencyContext(ClasspathPanel panel, StructureConfigurableContext context) {
-    super(panel, context);
+  public ModuleDependencyContext(ClasspathPanel panel, ModulesConfigurator modulesConfigurator, LibrariesConfigurator librariesConfigurator) {
+    super(panel, modulesConfigurator, librariesConfigurator);
     myNotAddedModules = calcNotAddedModules();
   }
 
@@ -48,8 +45,8 @@ public class ModuleDependencyContext extends AddModuleDependencyContext<List<Mod
     Set<Module> addedModules = new HashSet<>(Arrays.asList(rootModel.getModuleDependencies(true)));
     addedModules.add(rootModel.getModule());
 
-    final Module[] modules = myClasspathPanel.getModuleConfigurationState().getModulesProvider().getModules();
-    final List<Module> elements = new ArrayList<Module>();
+    final Module[] modules = myClasspathPanel.getModuleConfigurationState().getModulesConfigurator().getModules();
+    final List<Module> elements = new ArrayList<>();
     for (final Module module : modules) {
       if (!addedModules.contains(module)) {
         elements.add(module);

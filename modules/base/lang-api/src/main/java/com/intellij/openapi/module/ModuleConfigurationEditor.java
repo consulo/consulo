@@ -19,6 +19,8 @@ import com.intellij.openapi.options.Configurable;
 
 public interface ModuleConfigurationEditor extends Configurable {
   void saveData();
+
   void moduleStateChanged();
+
   ModuleConfigurationEditor[] EMPTY = new ModuleConfigurationEditor[0];
 }

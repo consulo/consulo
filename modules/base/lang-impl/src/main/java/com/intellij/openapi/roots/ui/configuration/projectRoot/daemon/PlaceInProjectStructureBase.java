@@ -16,23 +16,21 @@
 package com.intellij.openapi.roots.ui.configuration.projectRoot.daemon;
 
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.ui.configuration.ProjectStructureConfigurable;
-import com.intellij.ui.navigation.Place;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.concurrent.AsyncResult;
 
 import javax.annotation.Nonnull;
+import java.util.function.Function;
 
 /**
  * @author nik
  */
 public class PlaceInProjectStructureBase extends PlaceInProjectStructure {
-  private final Project myProject;
-  private final Place myPlace;
+  private final Function<Project,AsyncResult<Void>> myNavigator;
   private final ProjectStructureElement myElement;
 
-  public PlaceInProjectStructureBase(Project project, Place place, ProjectStructureElement element) {
-    myProject = project;
-    myPlace = place;
+  public PlaceInProjectStructureBase(@RequiredUIAccess Function<Project, AsyncResult<Void>> navigator, ProjectStructureElement element) {
+    myNavigator = navigator;
     myElement = element;
   }
 
@@ -49,7 +47,7 @@ public class PlaceInProjectStructureBase extends PlaceInProjectStructure {
 
   @Nonnull
   @Override
-  public AsyncResult<Void> navigate() {
-    return ProjectStructureConfigurable.getInstance(myProject).navigateTo(myPlace, true);
+  public AsyncResult<Void> navigate(@Nonnull Project project) {
+    return myNavigator.apply(project);
   }
 }

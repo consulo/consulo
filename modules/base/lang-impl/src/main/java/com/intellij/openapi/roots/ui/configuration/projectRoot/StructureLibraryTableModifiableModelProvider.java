@@ -16,23 +16,25 @@
 package com.intellij.openapi.roots.ui.configuration.projectRoot;
 
 import com.intellij.openapi.roots.ui.configuration.LibraryTableModifiableModelProvider;
+import consulo.roots.ui.configuration.impl.DefaultLibrariesConfigurator;
+
+import javax.annotation.Nonnull;
 
 /**
-* @author nik
-*/
+ * @author nik
+ */
 public class StructureLibraryTableModifiableModelProvider implements LibraryTableModifiableModelProvider {
   private final String myLevel;
-  private final StructureConfigurableContext myContext;
+  private final DefaultLibrariesConfigurator myConfigurator;
 
-  public StructureLibraryTableModifiableModelProvider(String level,
-                                                      final StructureConfigurableContext context) {
+  public StructureLibraryTableModifiableModelProvider(String level, final DefaultLibrariesConfigurator configurator) {
     myLevel = level;
-    myContext = context;
+    myConfigurator = configurator;
   }
 
+  @Nonnull
   @Override
   public LibrariesModifiableModel getModifiableModel() {
-    return myContext.myLevel2Providers.get(myLevel);
+    return myConfigurator.getLibrariesModifiableModel(myLevel);
   }
-
 }

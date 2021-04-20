@@ -16,14 +16,16 @@
 package com.intellij.openapi.roots.ui.configuration;
 
 import com.intellij.openapi.module.Module;
+import com.intellij.openapi.options.ShowSettingsUtil;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.SdkModel;
 import com.intellij.openapi.roots.impl.RootConfigurationAccessor;
 import com.intellij.openapi.roots.libraries.Library;
-import com.intellij.openapi.roots.ui.configuration.projectRoot.ModuleStructureConfigurable;
-import com.intellij.openapi.roots.ui.configuration.projectRoot.StructureConfigurableContext;
 import consulo.annotation.access.RequiredReadAction;
+import consulo.ide.settings.impl.ProjectStructureSettingsUtil;
+import consulo.roots.ui.configuration.LibrariesConfigurator;
+import consulo.roots.ui.configuration.ModulesConfigurator;
 import consulo.util.pointers.NamedPointer;
 
 import javax.annotation.Nonnull;
@@ -33,27 +35,28 @@ import javax.annotation.Nullable;
  * @author yole
  */
 public class UIRootConfigurationAccessor extends RootConfigurationAccessor {
-  private final Project myProject;
+  private final ModulesConfigurator myModulesConfigurator;
+  private final LibrariesConfigurator myLibrariesConfigurator;
 
-  public UIRootConfigurationAccessor(final Project project) {
-    myProject = project;
+  public UIRootConfigurationAccessor(ModulesConfigurator modulesConfigurator, LibrariesConfigurator librariesConfigurator) {
+    myModulesConfigurator = modulesConfigurator;
+    myLibrariesConfigurator = librariesConfigurator;
   }
 
   @Override
   @Nullable
   public Library getLibrary(Library library, final String libraryName, final String libraryLevel) {
-    final StructureConfigurableContext context = ProjectStructureConfigurable.getInstance(myProject).getContext();
     if (library == null) {
       if (libraryName != null) {
-        library = context.getLibrary(libraryName, libraryLevel);
+        library = myLibrariesConfigurator.getLibrary(libraryName, libraryLevel);
       }
     }
     else {
-      final Library model = context.getLibraryModel(library);
+      final Library model = myLibrariesConfigurator.getLibraryModel(library);
       if (model != null) {
         library = model;
       }
-      library = context.getLibrary(library.getName(), library.getTable().getTableLevel());
+      library = myLibrariesConfigurator.getLibrary(library.getName(), library.getTable().getTableLevel());
     }
     return library;
   }
@@ -61,18 +64,18 @@ public class UIRootConfigurationAccessor extends RootConfigurationAccessor {
   @Override
   @Nullable
   public Sdk getSdk(final Sdk sdk, final String sdkName) {
-    final SdkModel model = ProjectStructureConfigurable.getInstance(myProject).getSdkConfigurable().getSdksModel();
+    final SdkModel model = ((ProjectStructureSettingsUtil)ShowSettingsUtil.getInstance()).getSdksModel();
     return sdkName != null ? model.findSdk(sdkName) : sdk;
   }
 
   @Nonnull
   @Override
   public NamedPointer<Sdk> getSdkPointer(String sdkName) {
-    return new NamedPointer<Sdk>() {
+    return new NamedPointer<>() {
       @Nullable
       @Override
       public Sdk get() {
-        return ProjectStructureConfigurable.getInstance(myProject).getSdkConfigurable().getSdksModel().findSdk(sdkName);
+        return ((ProjectStructureSettingsUtil)ShowSettingsUtil.getInstance()).getSdksModel().findSdk(sdkName);
       }
 
       @Nonnull
@@ -86,7 +89,7 @@ public class UIRootConfigurationAccessor extends RootConfigurationAccessor {
   @Override
   public Module getModule(final Module module, final String moduleName) {
     if (module == null) {
-      return ModuleStructureConfigurable.getInstance(myProject).getModule(moduleName);
+      return myModulesConfigurator.getModule(moduleName);
     }
     return module;
   }
@@ -95,11 +98,11 @@ public class UIRootConfigurationAccessor extends RootConfigurationAccessor {
   @Nonnull
   @Override
   public NamedPointer<Module> getModulePointer(Project project, String name) {
-    return new NamedPointer<Module>() {
+    return new NamedPointer<>() {
       @Nullable
       @Override
       public Module get() {
-        return ModuleStructureConfigurable.getInstance(myProject).getModule(name);
+        return myModulesConfigurator.getModule(name);
       }
 
       @Nonnull

@@ -27,8 +27,9 @@ import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.module.ModifiableModuleModel;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.impl.ModuleManagerImpl;
+import com.intellij.openapi.options.ex.Settings;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.ui.configuration.ProjectSettingsService;
+import com.intellij.openapi.roots.ui.configuration.projectRoot.ModuleStructureConfigurable;
 
 import javax.annotation.Nullable;
 
@@ -79,7 +80,19 @@ public class MoveModulesToGroupAction extends AnAction {
       pane.updateFromRoot(true);
     }
 
-    if (!ProjectSettingsService.getInstance(project).processModulesMoved(modules, group) && pane != null) {
+    boolean processedInsideSettings = false;
+
+    if (dataContext != null) {
+      Settings settings = dataContext.getData(Settings.KEY);
+      if(settings != null) {
+        ModuleStructureConfigurable configurable = settings.findConfigurable(ModuleStructureConfigurable.class);
+        if(configurable != null) {
+          processedInsideSettings = ModuleStructureConfigurable.processModulesMoved(configurable, modules, group);
+        }
+      }
+    }
+
+    if (!processedInsideSettings && pane != null) {
       if (group != null) {
         pane.selectModuleGroup(group, true);
       }

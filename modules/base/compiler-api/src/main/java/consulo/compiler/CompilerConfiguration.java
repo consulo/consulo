@@ -40,5 +40,5 @@ public abstract class CompilerConfiguration {
 
   public abstract VirtualFilePointer getCompilerOutputPointer();
 
-  public abstract void setCompilerOutputUrl(@javax.annotation.Nullable String compilerOutputUrl);
+  public abstract void setCompilerOutputUrl(@Nullable String compilerOutputUrl);
 }

@@ -20,6 +20,7 @@ import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.roots.ui.configuration.ModulesProvider;
 import com.intellij.packaging.artifacts.ArtifactModel;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author nik
@@ -34,6 +35,6 @@ public interface PackagingElementResolvingContext {
   @Nonnull
   ModulesProvider getModulesProvider();
 
-  @javax.annotation.Nullable
+  @Nullable
   Library findLibrary(@Nonnull String level, @Nonnull String libraryName);
 }

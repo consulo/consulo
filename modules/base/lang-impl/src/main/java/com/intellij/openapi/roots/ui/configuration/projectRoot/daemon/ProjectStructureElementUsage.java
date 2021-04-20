@@ -30,6 +30,4 @@ public abstract class ProjectStructureElementUsage {
   public abstract Image getIcon();
 
   public abstract void removeSourceElement();
-
-  public abstract void replaceElement(ProjectStructureElement newElement);
 }

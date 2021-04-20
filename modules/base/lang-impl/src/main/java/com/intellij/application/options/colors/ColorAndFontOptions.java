@@ -42,7 +42,6 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Pair;
-import com.intellij.openapi.util.Weighted;
 import com.intellij.openapi.vcs.FileStatus;
 import com.intellij.openapi.vcs.FileStatusFactory;
 import com.intellij.openapi.vcs.FileStatusManager;
@@ -58,6 +57,7 @@ import consulo.disposer.Disposer;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.platform.base.localize.ApplicationLocalize;
+import consulo.preferences.internal.ConfigurableWeight;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
 import consulo.ui.image.Image;
@@ -416,8 +416,8 @@ public class ColorAndFontOptions extends SearchableConfigurable.Parent.Abstract 
       extensions.add(new ColorAndFontPanelFactoryEx() {
         @Override
         public double getWeight() {
-          if (page instanceof Weighted) {
-            return ((Weighted)page).getWeight();
+          if (page instanceof ConfigurableWeight) {
+            return ((ConfigurableWeight)page).getConfigurableWeight();
           }
           return 0;
         }
@@ -444,7 +444,7 @@ public class ColorAndFontOptions extends SearchableConfigurable.Parent.Abstract 
     return result;
   }
 
-  private static class FontConfigurableFactory implements ColorAndFontPanelFactory, Weighted {
+  private static class FontConfigurableFactory implements ColorAndFontPanelFactory, ConfigurableWeight {
     @Override
     @Nonnull
     public NewColorAndFontPanel createPanel(@Nonnull ColorAndFontOptions options) {
@@ -464,12 +464,12 @@ public class ColorAndFontOptions extends SearchableConfigurable.Parent.Abstract 
     }
 
     @Override
-    public double getWeight() {
+    public int getConfigurableWeight() {
       return Integer.MAX_VALUE - 1;
     }
   }
 
-  private static class ConsoleFontConfigurableFactory implements ColorAndFontPanelFactoryEx {
+  private static class ConsoleFontConfigurableFactory implements ColorAndFontPanelFactory, ConfigurableWeight {
     @Override
     @Nonnull
     public NewColorAndFontPanel createPanel(@Nonnull ColorAndFontOptions options) {
@@ -494,7 +494,7 @@ public class ColorAndFontOptions extends SearchableConfigurable.Parent.Abstract 
     }
 
     @Override
-    public double getWeight() {
+    public int getConfigurableWeight() {
       return Integer.MAX_VALUE - 1;
     }
   }
@@ -1141,7 +1141,7 @@ public class ColorAndFontOptions extends SearchableConfigurable.Parent.Abstract 
     return child == null ? null : child.createPanel();
   }
 
-  private class InnerSearchableConfigurable implements SearchableConfigurable, OptionsContainingConfigurable, NoScroll, Weighted, NoMargin {
+  private class InnerSearchableConfigurable implements SearchableConfigurable, OptionsContainingConfigurable, NoScroll, ConfigurableWeight, NoMargin {
     private NewColorAndFontPanel mySubPanel;
     private boolean mySubInitInvoked = false;
     @Nonnull
@@ -1193,9 +1193,9 @@ public class ColorAndFontOptions extends SearchableConfigurable.Parent.Abstract 
     }
 
     @Override
-    public double getWeight() {
-      if (myFactory instanceof Weighted) {
-        return ((Weighted)myFactory).getWeight();
+    public int getConfigurableWeight() {
+      if (myFactory instanceof ConfigurableWeight) {
+        return ((ConfigurableWeight)myFactory).getConfigurableWeight();
       }
       return 0;
     }

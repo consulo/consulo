@@ -17,9 +17,11 @@ package com.intellij.ide.actions;
 
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.module.Module;
+import com.intellij.openapi.options.ShowSettingsUtil;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.ui.configuration.ModulesConfigurator;
 import consulo.ui.annotation.RequiredUIAccess;
+import jakarta.inject.Inject;
+import jakarta.inject.Provider;
 
 import javax.annotation.Nonnull;
 
@@ -28,29 +30,33 @@ import javax.annotation.Nonnull;
  *         Date: Feb 8, 2004
  */
 public class ShowModulePropertiesAction extends AnAction{
+  private final Provider<ShowSettingsUtil> myShowSettingsUtilProvider;
+
+  @Inject
+  public ShowModulePropertiesAction(Provider<ShowSettingsUtil> showSettingsUtilProvider) {
+    myShowSettingsUtilProvider = showSettingsUtilProvider;
+  }
 
   @RequiredUIAccess
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
-    final DataContext dataContext = e.getDataContext();
-    final Project project = dataContext.getData(CommonDataKeys.PROJECT);
+    final Project project = e.getData(CommonDataKeys.PROJECT);
     if (project == null) {
       return;
     }
-    final Module module = dataContext.getData(LangDataKeys.MODULE_CONTEXT);
+    final Module module = e.getData(LangDataKeys.MODULE_CONTEXT);
     if (module == null) {
       return;
     }
-    ModulesConfigurator.showDialog(project, module.getName(), null);
+
+    myShowSettingsUtilProvider.get().showProjectStructureDialog(project, it -> it.select(module.getName(), null, true));
   }
 
   @RequiredUIAccess
   @Override
   public void update(@Nonnull AnActionEvent e) {
-    super.update(e);
-    final DataContext dataContext = e.getDataContext();
-    final Project project = dataContext.getData(CommonDataKeys.PROJECT);
-    final Module module = dataContext.getData(LangDataKeys.MODULE_CONTEXT);
+    final Project project = e.getData(CommonDataKeys.PROJECT);
+    final Module module = e.getData(LangDataKeys.MODULE_CONTEXT);
     e.getPresentation().setVisible(project != null && module != null);
   }
 }

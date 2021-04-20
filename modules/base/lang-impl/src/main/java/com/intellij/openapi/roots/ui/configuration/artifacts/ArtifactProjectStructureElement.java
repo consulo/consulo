@@ -16,8 +16,8 @@
 package com.intellij.openapi.roots.ui.configuration.artifacts;
 
 import com.intellij.openapi.module.Module;
+import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.libraries.Library;
-import com.intellij.openapi.roots.ui.configuration.projectRoot.StructureConfigurableContext;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.*;
 import com.intellij.packaging.artifacts.Artifact;
 import com.intellij.packaging.elements.CompositePackagingElement;
@@ -28,9 +28,10 @@ import com.intellij.packaging.impl.artifacts.PackagingElementProcessor;
 import com.intellij.packaging.impl.elements.ArtifactPackagingElement;
 import com.intellij.packaging.impl.elements.LibraryPackagingElement;
 import com.intellij.packaging.impl.elements.ModuleOutputPackagingElement;
+import consulo.roots.ui.configuration.ModulesConfigurator;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,15 +42,13 @@ public class ArtifactProjectStructureElement extends ProjectStructureElement {
   private final ArtifactsStructureConfigurableContext myArtifactsStructureContext;
   private final Artifact myOriginalArtifact;
 
-  ArtifactProjectStructureElement(StructureConfigurableContext context,
-                                  ArtifactsStructureConfigurableContext artifactsStructureContext, Artifact artifact) {
-    super(context);
+  ArtifactProjectStructureElement(ArtifactsStructureConfigurableContext artifactsStructureContext, Artifact artifact) {
     myArtifactsStructureContext = artifactsStructureContext;
     myOriginalArtifact = artifactsStructureContext.getOriginalArtifact(artifact);
   }
 
   @Override
-  public void check(final ProjectStructureProblemsHolder problemsHolder) {
+  public void check(Project project, final ProjectStructureProblemsHolder problemsHolder) {
     final Artifact artifact = myArtifactsStructureContext.getArtifactModel().getArtifactByOriginal(myOriginalArtifact);
     final ArtifactProblemsHolderImpl artifactProblemsHolder = new ArtifactProblemsHolderImpl(myArtifactsStructureContext, myOriginalArtifact, problemsHolder);
     artifact.getArtifactType().checkRootElement(myArtifactsStructureContext.getRootElement(myOriginalArtifact), artifact, artifactProblemsHolder);
@@ -64,11 +63,10 @@ public class ArtifactProjectStructureElement extends ProjectStructureElement {
     final Artifact artifact = myArtifactsStructureContext.getArtifactModel().getArtifactByOriginal(myOriginalArtifact);
     final List<ProjectStructureElementUsage> usages = new ArrayList<ProjectStructureElementUsage>();
     final CompositePackagingElement<?> rootElement = myArtifactsStructureContext.getRootElement(artifact);
-    ArtifactUtil.processPackagingElements(rootElement, null, new PackagingElementProcessor<PackagingElement<?>>() {
+    ArtifactUtil.processPackagingElements(rootElement, null, new PackagingElementProcessor<>() {
       @Override
       public boolean process(@Nonnull PackagingElement<?> packagingElement, @Nonnull PackagingElementPath path) {
-        ProjectStructureElement element = getProjectStructureElementFor(packagingElement, ArtifactProjectStructureElement.this.myContext,
-                                                                        ArtifactProjectStructureElement.this.myArtifactsStructureContext);
+        ProjectStructureElement element = getProjectStructureElementFor(packagingElement, ArtifactProjectStructureElement.this.myArtifactsStructureContext);
         if (element != null) {
           usages.add(createUsage(packagingElement, element, path.getPathStringFrom("/", rootElement)));
         }
@@ -79,19 +77,17 @@ public class ArtifactProjectStructureElement extends ProjectStructureElement {
   }
 
   @Nullable
-  public static ProjectStructureElement getProjectStructureElementFor(PackagingElement<?> packagingElement,
-                                                                       final StructureConfigurableContext context,
-                                                                       final ArtifactsStructureConfigurableContext artifactsStructureContext) {
+  public static ProjectStructureElement getProjectStructureElementFor(PackagingElement<?> packagingElement, final ArtifactsStructureConfigurableContext artifactsStructureContext) {
     if (packagingElement instanceof ModuleOutputPackagingElement) {
       final Module module = ((ModuleOutputPackagingElement)packagingElement).findModule(artifactsStructureContext);
       if (module != null) {
-        return new ModuleProjectStructureElement(context, module);
+        return new ModuleProjectStructureElement((ModulesConfigurator)artifactsStructureContext.getModulesProvider(), module);
       }
     }
     else if (packagingElement instanceof LibraryPackagingElement) {
       final Library library = ((LibraryPackagingElement)packagingElement).findLibrary(artifactsStructureContext);
       if (library != null) {
-        return new LibraryProjectStructureElement(context, library);
+        return new LibraryProjectStructureElement(library);
       }
     }
     else if (packagingElement instanceof ArtifactPackagingElement) {

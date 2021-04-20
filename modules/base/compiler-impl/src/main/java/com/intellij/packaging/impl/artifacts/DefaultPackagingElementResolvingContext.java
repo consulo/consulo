@@ -39,12 +39,12 @@ public class DefaultPackagingElementResolvingContext implements PackagingElement
 
   private final Project myProject;
   private final ArtifactManager myArtifactManager;
-  private final DefaultModulesProvider myModulesProvider;
+  private final ModulesProvider myModulesProvider;
 
   public DefaultPackagingElementResolvingContext(Project project, ArtifactManager artifactManager) {
     myProject = project;
     myArtifactManager = artifactManager;
-    myModulesProvider = new DefaultModulesProvider(myProject);
+    myModulesProvider = DefaultModulesProvider.of(myProject);
   }
 
   @Override

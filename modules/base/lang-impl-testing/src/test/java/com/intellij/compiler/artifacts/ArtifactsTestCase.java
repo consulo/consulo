@@ -159,7 +159,7 @@ public abstract class ArtifactsTestCase extends IdeaTestCase {
     @Override
     @Nonnull
     public ModulesProvider getModulesProvider() {
-      return new DefaultModulesProvider(myProject);
+      return DefaultModulesProvider.of(myProject);
     }
 
     @Override

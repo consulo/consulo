@@ -34,7 +34,6 @@ import com.intellij.openapi.ui.AbstractPainter;
 import com.intellij.openapi.ui.DetailsComponent;
 import com.intellij.openapi.ui.LoadingDecorator;
 import com.intellij.openapi.ui.NullableComponent;
-import com.intellij.openapi.util.ActionCallback;
 import com.intellij.openapi.util.Conditions;
 import com.intellij.openapi.util.EdtRunnable;
 import com.intellij.openapi.util.text.StringUtil;
@@ -45,8 +44,6 @@ import com.intellij.ui.LightColors;
 import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.ui.SearchTextField;
 import com.intellij.ui.components.panels.NonOpaquePanel;
-import com.intellij.ui.navigation.History;
-import com.intellij.ui.navigation.Place;
 import com.intellij.ui.speedSearch.ElementFilter;
 import com.intellij.ui.treeStructure.SimpleNode;
 import com.intellij.util.ReflectionUtil;
@@ -59,16 +56,19 @@ import com.intellij.util.ui.update.Update;
 import consulo.application.ApplicationProperties;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
+import consulo.ide.base.BaseShowSettingsUtil;
 import consulo.logging.Logger;
 import consulo.options.ConfigurableUIMigrationUtil;
 import consulo.options.ProjectConfigurableEP;
+import consulo.options.ProjectStructureSelector;
+import consulo.options.ProjectStructureSelectorOverSettings;
+import consulo.roots.ui.configuration.session.internal.ConfigurableSessionImpl;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.decorator.SwingUIDecorator;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.dataholder.Key;
 import org.jetbrains.annotations.Nls;
-import org.jetbrains.annotations.NonNls;
 import org.jetbrains.concurrency.Promise;
 import org.jetbrains.concurrency.Promises;
 
@@ -84,7 +84,7 @@ import java.util.List;
 import java.util.*;
 import java.util.function.Consumer;
 
-public class OptionsEditor implements DataProvider, Place.Navigator, Disposable, AWTEventListener, UISettingsListener, Settings {
+public class OptionsEditor implements DataProvider, Disposable, AWTEventListener, UISettingsListener, Settings {
   private static class SearchableWrapper implements SearchableConfigurable {
     private final Configurable myConfigurable;
 
@@ -529,10 +529,8 @@ public class OptionsEditor implements DataProvider, Place.Navigator, Disposable,
 
   private static final Logger LOG = Logger.getInstance(OptionsEditor.class);
 
-  @NonNls
   public static final String MAIN_SPLITTER_PROPORTION = "options.splitter.main.proportions";
 
-  @NonNls
   private static final String NOT_A_NEW_COMPONENT = "component.was.already.instantiated";
 
   private final Project myProject;
@@ -564,10 +562,14 @@ public class OptionsEditor implements DataProvider, Place.Navigator, Disposable,
   private Window myWindow;
   private volatile boolean myDisposed;
 
+  private ConfigurableSessionImpl myConfigurableSession;
+
   public OptionsEditor(Project project, Configurable[] configurables, Configurable preselectedConfigurable, final JPanel rootPanel) {
     myProject = project;
     myConfigurables = configurables;
     myRootPanel = rootPanel;
+
+    myConfigurableSession = new ConfigurableSessionImpl(project);
 
     myFilter = new Filter();
     myContext = new OptionsEditorContext(myFilter);
@@ -631,11 +633,13 @@ public class OptionsEditor implements DataProvider, Place.Navigator, Disposable,
 
     mySpotlightUpdate = new MergingUpdateQueue("OptionsSpotlight", 200, false, rootPanel, this, rootPanel);
 
-    if (preselectedConfigurable != null) {
-      myTree.select(preselectedConfigurable);
-    }
-    else {
-      myTree.selectFirst();
+    if(preselectedConfigurable != BaseShowSettingsUtil.SKIP_SELECTION_CONFIGURATION) {
+      if (preselectedConfigurable != null) {
+        myTree.select(preselectedConfigurable);
+      }
+      else {
+        myTree.selectFirst();
+      }
     }
 
     Toolkit.getDefaultToolkit().addAWTEventListener(this, AWTEvent.MOUSE_EVENT_MASK | AWTEvent.KEY_EVENT_MASK | AWTEvent.MOUSE_MOTION_EVENT_MASK);
@@ -759,7 +763,7 @@ public class OptionsEditor implements DataProvider, Place.Navigator, Disposable,
 
           myOwnDetails.setContent(myContentWrapper);
           myOwnDetails.setText(getBannerText(configurable));
-          if(isProjectConfigurable(configurable)) {
+          if (isProjectConfigurable(configurable)) {
             myOwnDetails.forProject(myProject);
           }
           else {
@@ -829,18 +833,19 @@ public class OptionsEditor implements DataProvider, Place.Navigator, Disposable,
   @RequiredUIAccess
   private void initConfigurable(@Nonnull final Configurable configurable, AsyncResult<Void> result) {
     UIAccess.assertIsUIThread();
-    
+
     if (myDisposed) {
       result.setRejected();
       return;
     }
 
     try {
-      final ConfigurableContext content = new ConfigurableContext(configurable);
-      if (!myConfigurable2Content.containsKey(configurable)) {
-        configurable.reset();
-      }
-      myConfigurable2Content.put(configurable, content);
+      myConfigurable2Content.computeIfAbsent(configurable, it -> {
+        final ConfigurableContext content = new ConfigurableContext(it);
+        it.initialize();
+        it.reset();
+        return content;
+      });
       result.setDone();
     }
     catch (Throwable e) {
@@ -1002,6 +1007,7 @@ public class OptionsEditor implements DataProvider, Place.Navigator, Disposable,
     }
   }
 
+  @RequiredUIAccess
   public void apply() {
     Map<Configurable, ConfigurationException> errors = new LinkedHashMap<>();
     final Set<Configurable> modified = getContext().getModified();
@@ -1023,6 +1029,8 @@ public class OptionsEditor implements DataProvider, Place.Navigator, Disposable,
     if (!errors.isEmpty()) {
       myTree.select(errors.keySet().iterator().next());
     }
+
+    myConfigurableSession.commit();
   }
 
 
@@ -1031,34 +1039,14 @@ public class OptionsEditor implements DataProvider, Place.Navigator, Disposable,
     if (Settings.KEY == dataId) {
       return this;
     }
+    else if (ProjectStructureSelector.KEY == dataId) {
+      return new ProjectStructureSelectorOverSettings(this);
+    }
     return null;
   }
 
   public JTree getPreferredFocusedComponent() {
     return myTree.getTree();
-  }
-
-  @Override
-  public AsyncResult<Void> navigateTo(@Nullable final Place place, final boolean requestFocus) {
-    final Configurable config = (Configurable)place.getPath("configurable");
-    final String filter = (String)place.getPath("filter");
-
-    final AsyncResult<Void> result = AsyncResult.undefined();
-
-    myFilter.refilterFor(filter, false, true).onSuccess((c) -> myTree.select(config).notifyWhenDone(result));
-
-    return result;
-  }
-
-  @Override
-  public void queryPlace(@Nonnull final Place place) {
-    final Configurable current = getContext().getCurrentConfigurable();
-    place.putPath("configurable", current);
-    place.putPath("filter", getFilterText());
-
-    if (current instanceof Place.Navigator) {
-      ((Place.Navigator)current).queryPlace(place);
-    }
   }
 
   @Override
@@ -1070,6 +1058,9 @@ public class OptionsEditor implements DataProvider, Place.Navigator, Disposable,
     }
 
     myDisposed = true;
+
+    myConfigurableSession.drop();
+    myConfigurableSession = null;
 
     Toolkit.getDefaultToolkit().removeAWTEventListener(this);
 
@@ -1154,9 +1145,5 @@ public class OptionsEditor implements DataProvider, Place.Navigator, Disposable,
 
   public void clearFilter() {
     mySearch.setText("");
-  }
-
-  @Override
-  public void setHistory(final History history) {
   }
 }

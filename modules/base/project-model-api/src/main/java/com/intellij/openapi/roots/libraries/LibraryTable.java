@@ -15,15 +15,17 @@
  */
 package com.intellij.openapi.roots.libraries;
 
+import com.intellij.openapi.project.Project;
 import consulo.disposer.Disposable;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.EventListener;
 import java.util.Iterator;
 
 /**
- * @see com.intellij.openapi.roots.libraries.LibraryTablesRegistrar#getLibraryTable(com.intellij.openapi.project.Project)
+ * @see LibraryTablesRegistrar#getLibraryTable(Project)
  * @author dsl
  */
 public interface LibraryTable {
@@ -39,7 +41,7 @@ public interface LibraryTable {
   @Nonnull
   Iterator<Library> getLibraryIterator();
 
-  @javax.annotation.Nullable
+  @Nullable
   Library getLibraryByName(@Nonnull String name);
 
   String getTableLevel();
@@ -66,7 +68,7 @@ public interface LibraryTable {
     @Nonnull
     Iterator<Library> getLibraryIterator();
 
-    @javax.annotation.Nullable
+    @Nullable
     Library getLibraryByName(@Nonnull String name);
 
     @Nonnull

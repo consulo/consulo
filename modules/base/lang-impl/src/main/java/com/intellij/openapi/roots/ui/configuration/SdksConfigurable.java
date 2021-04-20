@@ -42,7 +42,7 @@ import com.intellij.ui.TreeSpeedSearch;
 import com.intellij.util.IconUtil;
 import com.intellij.util.containers.Convertor;
 import consulo.ide.settings.impl.SettingsSdksModel;
-import consulo.ide.settings.impl.ShowSdksSettingsUtil;
+import consulo.ide.settings.impl.ProjectStructureSettingsUtil;
 import consulo.ui.annotation.RequiredUIAccess;
 import org.jetbrains.annotations.NonNls;
 
@@ -60,7 +60,7 @@ public class SdksConfigurable extends MasterDetailsComponent {
   private static final String SPLITTER_PROPORTION = "project.jdk.splitter";
 
   public SdksConfigurable(Project project) {
-    this(project, ((ShowSdksSettingsUtil)ShowSettingsUtil.getInstance()).getSdksModel());
+    this(project, ((ProjectStructureSettingsUtil)ShowSettingsUtil.getInstance()).getSdksModel());
   }
 
   public SdksConfigurable(Project project, SettingsSdksModel sdksModel) {
@@ -101,7 +101,7 @@ public class SdksConfigurable extends MasterDetailsComponent {
     myRoot.removeAllChildren();
     final Map<Sdk, Sdk> sdks = mySdksModel.getModifiedSdksMap();
     for (Sdk sdk : sdks.keySet()) {
-      final SdkConfigurable configurable = new SdkConfigurable((SdkImpl)sdks.get(sdk), mySdksModel, TREE_UPDATER, myHistory, myProject);
+      final SdkConfigurable configurable = new SdkConfigurable((SdkImpl)sdks.get(sdk), mySdksModel, TREE_UPDATER);
       addNode(new MyNode(configurable), myRoot);
     }
 
@@ -168,7 +168,7 @@ public class SdksConfigurable extends MasterDetailsComponent {
     DefaultActionGroup group = new DefaultActionGroup(ProjectBundle.message("add.action.name"), true);
     group.getTemplatePresentation().setIcon(IconUtil.getAddIcon());
     mySdksModel.createAddActions(group, myTree, projectJdk -> {
-      addNode(new MyNode(new SdkConfigurable(((SdkImpl)projectJdk), mySdksModel, TREE_UPDATER, myHistory, myProject), false), myRoot);
+      addNode(new MyNode(new SdkConfigurable(((SdkImpl)projectJdk), mySdksModel, TREE_UPDATER), false), myRoot);
       selectNodeInTree(findNodeByObject(myRoot, projectJdk));
     }, SdkListConfigurable.ADD_SDK_FILTER);
     actions.add(new MyActionGroupWrapper(group));

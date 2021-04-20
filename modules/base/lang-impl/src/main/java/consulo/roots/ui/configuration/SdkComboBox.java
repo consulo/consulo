@@ -21,14 +21,13 @@ import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.module.ModuleUtilCore;
+import com.intellij.openapi.options.ShowSettingsUtil;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.SdkModel;
 import com.intellij.openapi.projectRoots.SdkTypeId;
-import com.intellij.openapi.roots.ui.configuration.ProjectStructureConfigurable;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.DefaultSdksModel;
-import com.intellij.openapi.roots.ui.configuration.projectRoot.SdkListConfigurable;
 import com.intellij.openapi.ui.ComboBoxWithWidePopup;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.util.Computable;
@@ -46,6 +45,7 @@ import consulo.annotation.UsedInPlugin;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.bundle.BundleHolder;
 import consulo.bundle.SdkUtil;
+import consulo.ide.settings.impl.ProjectStructureSettingsUtil;
 import consulo.module.extension.ModuleExtension;
 import consulo.module.extension.MutableModuleExtension;
 import consulo.module.extension.MutableModuleInheritableNamedPointer;
@@ -58,8 +58,10 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
-import java.util.*;
 
 /**
  * @author Eugene Zhuravlev
@@ -214,10 +216,10 @@ public class SdkComboBox extends ComboBoxWithWidePopup {
         ((DefaultSdksModel)sdksModel).createAddActions(group, SdkComboBox.this, new Consumer<Sdk>() {
           @Override
           public void consume(final Sdk sdk) {
-            if (project != null) {
-              final SdkListConfigurable configurable = SdkListConfigurable.getInstance(project);
-              configurable.addSdkNode(sdk, false);
-            }
+            //if (project != null) {
+            //  final SdkListConfigurable configurable = SdkListConfigurable.getInstance(project);
+            //  configurable.addSdkNode(sdk, false);
+            //}
             reloadModel(new SdkComboBoxItem(sdk), project);
             setSelectedSdk(sdk); //restore selection
             if (additionalSetup != null) {
@@ -243,23 +245,17 @@ public class SdkComboBox extends ComboBoxWithWidePopup {
   }
 
   public void setEditButton(final JButton editButton, final Project project, @Nonnull final Computable<Sdk> retrieveSdk) {
-    editButton.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        final Sdk sdk = retrieveSdk.compute();
-        if (sdk != null) {
-          ProjectStructureConfigurable.getInstance(project).select(sdk, true);
-        }
+    editButton.addActionListener(e -> {
+      final Sdk sdk = retrieveSdk.compute();
+      if (sdk != null) {
+        ShowSettingsUtil.getInstance().showProjectStructureDialog(project, projectStructureSelector -> projectStructureSelector.select(sdk, true));
       }
     });
-    addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        final SdkComboBoxItem selectedItem = getSelectedItem();
-        editButton.setEnabled(!(selectedItem instanceof InvalidSdkComboBoxItem) &&
-                              selectedItem != null &&
-                              selectedItem.getSdk() != null);
-      }
+    addActionListener(e -> {
+      final SdkComboBoxItem selectedItem = getSelectedItem();
+      editButton.setEnabled(!(selectedItem instanceof InvalidSdkComboBoxItem) &&
+                            selectedItem != null &&
+                            selectedItem.getSdk() != null);
     });
   }
 
@@ -458,17 +454,13 @@ public class SdkComboBox extends ComboBoxWithWidePopup {
     }
     model.removeAllElements();
     model.addElement(firstItem);
-    final DefaultSdksModel projectSdksModel = ProjectStructureConfigurable.getInstance(project).getProjectSdksModel();
-    List<Sdk> sdks = new ArrayList<Sdk>(projectSdksModel.getProjectSdks().values());
+    ProjectStructureSettingsUtil util = (ProjectStructureSettingsUtil)ShowSettingsUtil.getInstance();
+    final SdkModel projectSdksModel = util.getSdksModel();
+    List<Sdk> sdks = new ArrayList<>(List.of(projectSdksModel.getSdks()));
     if (myFilter != null) {
       sdks = ContainerUtil.filter(sdks, getSdkFilter(myFilter));
     }
-    Collections.sort(sdks, new Comparator<Sdk>() {
-      @Override
-      public int compare(final Sdk o1, final Sdk o2) {
-        return o1.getName().compareToIgnoreCase(o2.getName());
-      }
-    });
+    Collections.sort(sdks, (o1, o2) -> o1.getName().compareToIgnoreCase(o2.getName()));
     for (Sdk sdk : sdks) {
       model.addElement(new SdkComboBoxItem(sdk));
     }

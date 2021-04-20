@@ -21,15 +21,16 @@ import com.intellij.openapi.roots.LibraryDependencyScopeSuggester;
 import com.intellij.openapi.roots.LibraryOrderEntry;
 import com.intellij.openapi.roots.OrderEntry;
 import com.intellij.openapi.roots.libraries.Library;
+import com.intellij.openapi.roots.ui.configuration.LibraryTableModifiableModelProvider;
 import com.intellij.openapi.roots.ui.configuration.classpath.ClasspathPanel;
 import com.intellij.openapi.roots.ui.configuration.libraries.LibraryEditingUtil;
-import com.intellij.openapi.roots.ui.configuration.projectRoot.StructureConfigurableContext;
-import com.intellij.openapi.roots.ui.configuration.projectRoot.StructureLibraryTableModifiableModelProvider;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.roots.ModifiableModuleRootLayer;
+import consulo.roots.ui.configuration.LibrariesConfigurator;
+import consulo.roots.ui.configuration.ModulesConfigurator;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -44,10 +45,10 @@ import java.util.List;
 public class ProjectLibraryContext extends AddModuleDependencyContext<List<Library>> {
   private List<Library> myItems;
 
-  public ProjectLibraryContext(final ClasspathPanel classpathPanel, StructureConfigurableContext context) {
-    super(classpathPanel, context);
+  public ProjectLibraryContext(final ClasspathPanel classpathPanel, ModulesConfigurator modulesConfigurator, LibrariesConfigurator librariesConfigurator) {
+    super(classpathPanel, modulesConfigurator, librariesConfigurator);
 
-    StructureLibraryTableModifiableModelProvider projectLibrariesProvider = context.getProjectLibrariesProvider();
+    LibraryTableModifiableModelProvider projectLibrariesProvider = librariesConfigurator.getProjectLibrariesProvider();
     Library[] libraries = projectLibrariesProvider.getModifiableModel().getLibraries();
     final Condition<Library> condition = LibraryEditingUtil.getNotAddedLibrariesCondition(myClasspathPanel.getRootModel());
 

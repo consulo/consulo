@@ -22,10 +22,9 @@ import com.intellij.openapi.options.OptionsBundle;
 import com.intellij.openapi.options.colors.AttributesDescriptor;
 import com.intellij.openapi.options.colors.ColorDescriptor;
 import com.intellij.openapi.options.colors.ColorSettingsPage;
-import com.intellij.openapi.util.Weighted;
 import com.intellij.xdebugger.XDebuggerBundle;
 import com.intellij.xdebugger.ui.DebuggerColors;
-import org.jetbrains.annotations.NonNls;
+import consulo.preferences.internal.ConfigurableWeight;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -34,7 +33,7 @@ import java.util.Map;
 /**
  * @author max
  */
-public class DebuggerColorsPage implements ColorSettingsPage, Weighted {
+public class DebuggerColorsPage implements ColorSettingsPage, ConfigurableWeight {
   @Override
   @Nonnull
   public String getDisplayName() {
@@ -69,7 +68,6 @@ public class DebuggerColorsPage implements ColorSettingsPage, Weighted {
   }
 
   @Override
-  @NonNls
   @Nonnull
   public String getDemoText() {
     return " ";
@@ -82,7 +80,7 @@ public class DebuggerColorsPage implements ColorSettingsPage, Weighted {
   }
 
   @Override
-  public double getWeight() {
+  public int getConfigurableWeight() {
     return Integer.MAX_VALUE - 1;
   }
 }

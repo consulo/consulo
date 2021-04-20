@@ -43,7 +43,6 @@ import java.util.EventListener;
  * @author Eugene Zhuravlev
  * @since Oct 8, 2003
  */
-@SuppressWarnings("UnusedDeclaration")
 public abstract class ContentEntryEditor implements ContentRootPanel.ActionCallback {
   private boolean myIsSelected;
   private ContentRootPanel myContentRootPanel;

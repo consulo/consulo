@@ -1,41 +1,44 @@
 package com.intellij.openapi.roots.ui.configuration.projectRoot.daemon;
 
-import consulo.disposer.Disposable;
-import consulo.disposer.Disposer;
-import consulo.logging.Logger;
-import com.intellij.openapi.roots.ui.configuration.projectRoot.StructureConfigurableContext;
+import com.intellij.openapi.application.Application;
+import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.MultiValuesMap;
 import com.intellij.openapi.util.ThrowableComputable;
 import com.intellij.util.EventDispatcher;
 import com.intellij.util.ui.update.MergingUpdateQueue;
 import com.intellij.util.ui.update.Update;
 import consulo.application.AccessRule;
+import consulo.disposer.Disposable;
+import consulo.logging.Logger;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.swing.*;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Function;
 
 /**
  * @author nik
  */
 public class ProjectStructureDaemonAnalyzer implements Disposable {
+  public static final Function<Project, ProjectStructureDaemonAnalyzer> FACTORY = ProjectStructureDaemonAnalyzer::new;
+
   private static final Logger LOG = Logger.getInstance(ProjectStructureDaemonAnalyzer.class);
-  private final Map<ProjectStructureElement, ProjectStructureProblemsHolderImpl> myProblemHolders = new HashMap<ProjectStructureElement, ProjectStructureProblemsHolderImpl>();
-  private final MultiValuesMap<ProjectStructureElement, ProjectStructureElementUsage> mySourceElement2Usages = new MultiValuesMap<ProjectStructureElement, ProjectStructureElementUsage>();
-  private final MultiValuesMap<ProjectStructureElement, ProjectStructureElementUsage> myContainingElement2Usages = new MultiValuesMap<ProjectStructureElement, ProjectStructureElementUsage>();
-  private final Set<ProjectStructureElement> myElementWithNotCalculatedUsages = new HashSet<ProjectStructureElement>();
-  private final Set<ProjectStructureElement> myElementsToShowWarningIfUnused = new HashSet<ProjectStructureElement>();
-  private final Map<ProjectStructureElement, ProjectStructureProblemDescription> myWarningsAboutUnused = new HashMap<ProjectStructureElement, ProjectStructureProblemDescription>();
+  private final Map<ProjectStructureElement, ProjectStructureProblemsHolderImpl> myProblemHolders = new HashMap<>();
+  private final MultiValuesMap<ProjectStructureElement, ProjectStructureElementUsage> mySourceElement2Usages = new MultiValuesMap<>();
+  private final MultiValuesMap<ProjectStructureElement, ProjectStructureElementUsage> myContainingElement2Usages = new MultiValuesMap<>();
+  private final Set<ProjectStructureElement> myElementWithNotCalculatedUsages = new HashSet<>();
+  private final Set<ProjectStructureElement> myElementsToShowWarningIfUnused = new HashSet<>();
+  private final Map<ProjectStructureElement, ProjectStructureProblemDescription> myWarningsAboutUnused = new HashMap<>();
   private final MergingUpdateQueue myAnalyzerQueue;
   private final EventDispatcher<ProjectStructureDaemonAnalyzerListener> myDispatcher = EventDispatcher.create(ProjectStructureDaemonAnalyzerListener.class);
   private final AtomicBoolean myStopped = new AtomicBoolean(false);
   private final ProjectConfigurationProblems myProjectConfigurationProblems;
+  private final Project myProject;
 
-  public ProjectStructureDaemonAnalyzer(StructureConfigurableContext context) {
-    Disposer.register(context, this);
-    myProjectConfigurationProblems = new ProjectConfigurationProblems(this, context);
+  public ProjectStructureDaemonAnalyzer(Project project) {
+    myProject = project;
+    myProjectConfigurationProblems = new ProjectConfigurationProblems(this, project);
     myAnalyzerQueue = new MergingUpdateQueue("Project Structure Daemon Analyzer", 300, false, null, this, null, false);
   }
 
@@ -58,22 +61,19 @@ public class ProjectStructureDaemonAnalyzer implements Disposable {
       if (LOG.isDebugEnabled()) {
         LOG.debug("checking " + element);
       }
-      ProjectStructureValidator.check(element, problemsHolder);
+      ProjectStructureValidator.check(myProject, element, problemsHolder);
     });
 
-    invokeLater(new Runnable() {
-      @Override
-      public void run() {
-        if (myStopped.get()) return;
+    invokeLater(() -> {
+      if (myStopped.get()) return;
 
-        if (LOG.isDebugEnabled()) {
-          LOG.debug("updating problems for " + element);
-        }
-        final ProjectStructureProblemDescription warning = myWarningsAboutUnused.get(element);
-        if (warning != null) problemsHolder.registerProblem(warning);
-        myProblemHolders.put(element, problemsHolder);
-        myDispatcher.getMulticaster().problemsChanged(element);
+      if (LOG.isDebugEnabled()) {
+        LOG.debug("updating problems for " + element);
       }
+      final ProjectStructureProblemDescription warning = myWarningsAboutUnused.get(element);
+      if (warning != null) problemsHolder.registerProblem(warning);
+      myProblemHolders.put(element, problemsHolder);
+      myDispatcher.getMulticaster().problemsChanged(element);
     });
   }
 
@@ -88,16 +88,13 @@ public class ProjectStructureDaemonAnalyzer implements Disposable {
     };
     final List<ProjectStructureElementUsage> usages = AccessRule.read(action);
 
-    invokeLater(new Runnable() {
-      @Override
-      public void run() {
-        if (myStopped.get() || usages == null) return;
+    invokeLater(() -> {
+      if (myStopped.get() || usages == null) return;
 
-        if (LOG.isDebugEnabled()) {
-          LOG.debug("updating usages for " + element);
-        }
-        updateUsages(element, usages);
+      if (LOG.isDebugEnabled()) {
+        LOG.debug("updating usages for " + element);
       }
+      updateUsages(element, usages);
     });
   }
 
@@ -115,7 +112,7 @@ public class ProjectStructureDaemonAnalyzer implements Disposable {
   }
 
   private static void invokeLater(Runnable runnable) {
-    SwingUtilities.invokeLater(runnable);
+    Application.get().getLastUIAccess().give(runnable);
   }
 
   public void queueUpdate(@Nonnull final ProjectStructureElement element) {
@@ -158,7 +155,7 @@ public class ProjectStructureDaemonAnalyzer implements Disposable {
       final ProjectStructureProblemDescription warning;
       final Collection<ProjectStructureElementUsage> usages = mySourceElement2Usages.get(element);
       if (usages == null || usages.isEmpty()) {
-        warning = element.createUnusedElementWarning();
+        warning = element.createUnusedElementWarning(myProject);
       }
       else {
         warning = null;
@@ -210,7 +207,7 @@ public class ProjectStructureDaemonAnalyzer implements Disposable {
   }
 
   public void queueUpdateForAllElementsWithErrors() {
-    List<ProjectStructureElement> toUpdate = new ArrayList<ProjectStructureElement>();
+    List<ProjectStructureElement> toUpdate = new ArrayList<>();
     for (Map.Entry<ProjectStructureElement, ProjectStructureProblemsHolderImpl> entry : myProblemHolders.entrySet()) {
       if (entry.getValue().containsProblems()) {
         toUpdate.add(entry.getKey());

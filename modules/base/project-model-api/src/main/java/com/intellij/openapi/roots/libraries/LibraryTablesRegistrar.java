@@ -17,13 +17,15 @@ package com.intellij.openapi.roots.libraries;
 
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
-import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
-
 import consulo.annotation.DeprecationInfo;
+import org.jetbrains.annotations.NonNls;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.List;
 
+@Deprecated(forRemoval = true)
+@DeprecationInfo("Just use ProjectLibraryTable")
 public abstract class LibraryTablesRegistrar {
   @NonNls
   public static final String PROJECT_LEVEL = "project";
@@ -43,14 +45,11 @@ public abstract class LibraryTablesRegistrar {
   @Nonnull
   public abstract LibraryTable getLibraryTable(@Nonnull Project project);
 
-  @javax.annotation.Nullable
-  public abstract LibraryTable getLibraryTableByLevel(@NonNls String level, @Nonnull Project project);
+  @Nullable
+  public abstract LibraryTable getLibraryTableByLevel(String level, @Nonnull Project project);
 
-  public abstract void registerLibraryTable(@Nonnull LibraryTable libraryTable);
-
-  @Deprecated
   @Nonnull
-  public abstract LibraryTable registerLibraryTable(@NonNls String customLevel);
-
-  public abstract List<LibraryTable> getCustomLibraryTables();
+  public List<LibraryTable> getCustomLibraryTables() {
+    return List.of();
+  }
 }

@@ -15,16 +15,12 @@
  */
 package com.intellij.openapi.roots.ui.configuration.artifacts.sourceItems.actions;
 
-import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ui.configuration.artifacts.ArtifactsStructureConfigurableContext;
 import com.intellij.openapi.roots.ui.configuration.artifacts.actions.ArtifactEditorFindUsagesActionBase;
 import com.intellij.openapi.roots.ui.configuration.artifacts.nodes.ArtifactsTreeNode;
-import com.intellij.openapi.roots.ui.configuration.artifacts.sourceItems.*;
-import com.intellij.openapi.roots.ui.configuration.projectRoot.StructureConfigurableContext;
-import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.LibraryProjectStructureElement;
-import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.ModuleProjectStructureElement;
+import com.intellij.openapi.roots.ui.configuration.artifacts.sourceItems.SourceItemNode;
+import com.intellij.openapi.roots.ui.configuration.artifacts.sourceItems.SourceItemsTree;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureElement;
-import com.intellij.packaging.ui.PackagingSourceItem;
 
 import java.util.List;
 
@@ -34,8 +30,8 @@ import java.util.List;
 public class SourceItemFindUsagesAction extends ArtifactEditorFindUsagesActionBase {
   private final SourceItemsTree myTree;
 
-  public SourceItemFindUsagesAction(SourceItemsTree tree, Project project, ArtifactsStructureConfigurableContext artifactContext) {
-    super(tree, project, artifactContext);
+  public SourceItemFindUsagesAction(SourceItemsTree tree, ArtifactsStructureConfigurableContext artifactContext) {
+    super(tree, artifactContext);
     myTree = tree;
   }
 
@@ -48,19 +44,19 @@ public class SourceItemFindUsagesAction extends ArtifactEditorFindUsagesActionBa
       return null;
     }
 
-    PackagingSourceItem sourceItem = ((SourceItemNode)node).getSourceItem();
-    if (sourceItem == null) return null;
-
-    final StructureConfigurableContext context = getContext();
-    if (sourceItem instanceof ModuleOutputSourceItem) {
-      return new ModuleProjectStructureElement(context, ((ModuleOutputSourceItem)sourceItem).getModule());
-    }
-    else if (sourceItem instanceof LibrarySourceItem) {
-      return new LibraryProjectStructureElement(context, ((LibrarySourceItem)sourceItem).getLibrary());
-    }
-    else if (sourceItem instanceof ArtifactSourceItem) {
-      return myArtifactContext.getOrCreateArtifactElement(((ArtifactSourceItem)sourceItem).getArtifact());
-    }
+    //PackagingSourceItem sourceItem = ((SourceItemNode)node).getSourceItem();
+    //if (sourceItem == null) return null;
+    //
+    //final StructureConfigurableContext context = getContext();
+    //if (sourceItem instanceof ModuleOutputSourceItem) {
+    //  return new ModuleProjectStructureElement(context, ((ModuleOutputSourceItem)sourceItem).getModule());
+    //}
+    //else if (sourceItem instanceof LibrarySourceItem) {
+    //  return new LibraryProjectStructureElement(((LibrarySourceItem)sourceItem).getLibrary());
+    //}
+    //else if (sourceItem instanceof ArtifactSourceItem) {
+    //  return myArtifactContext.getOrCreateArtifactElement(((ArtifactSourceItem)sourceItem).getArtifact());
+    //}
     return null;
   }
 }

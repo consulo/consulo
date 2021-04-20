@@ -17,6 +17,7 @@ package consulo.ide.base;
 
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.ConfigurableEP;
+import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.options.ShowSettingsUtil;
 import com.intellij.openapi.options.ex.ConfigurableExtensionPointUtil;
 import com.intellij.openapi.options.ex.ConfigurableWrapper;
@@ -24,6 +25,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -35,6 +37,20 @@ import java.util.List;
  * @since 2019-01-06
  */
 public abstract class BaseShowSettingsUtil extends ShowSettingsUtil {
+  public static Configurable SKIP_SELECTION_CONFIGURATION = new Configurable() {
+    @RequiredUIAccess
+    @Override
+    public boolean isModified() {
+      return false;
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void apply() throws ConfigurationException {
+
+    }
+  };
+
   public static String createDimensionKey(@Nonnull Configurable configurable) {
     String displayName = configurable.getDisplayName();
     if (displayName == null) {

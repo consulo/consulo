@@ -12,9 +12,9 @@
  */
 package com.intellij.openapi.roots.ui.configuration.projectRoot.daemon;
 
+import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ui.configuration.ConfigurationError;
 import com.intellij.openapi.roots.ui.configuration.ConfigurationErrors;
-import com.intellij.openapi.roots.ui.configuration.projectRoot.StructureConfigurableContext;
 import com.intellij.openapi.util.MultiValuesMap;
 
 import javax.annotation.Nullable;
@@ -25,14 +25,14 @@ import java.util.List;
  * @author nik
  */
 public class ProjectConfigurationProblems {
-  private final MultiValuesMap<ProjectStructureElement, ConfigurationError> myErrors = new MultiValuesMap<ProjectStructureElement, ConfigurationError>();
+  private final MultiValuesMap<ProjectStructureElement, ConfigurationError> myErrors = new MultiValuesMap<>();
   private final ProjectStructureDaemonAnalyzer myAnalyzer;
-  private final StructureConfigurableContext myContext;
+  private final Project myProject;
 
-  public ProjectConfigurationProblems(ProjectStructureDaemonAnalyzer analyzer, StructureConfigurableContext context) {
+  public ProjectConfigurationProblems(ProjectStructureDaemonAnalyzer analyzer, Project project) {
     myAnalyzer = analyzer;
-    myContext = context;
-    analyzer.addListener(element -> updateErrors(element));
+    myProject = project;
+    analyzer.addListener(this::updateErrors);
   }
 
   public void clearProblems() {
@@ -47,9 +47,9 @@ public class ProjectConfigurationProblems {
       final List<ProjectStructureProblemDescription> descriptions = problemsHolder.getProblemDescriptions();
       if (descriptions != null) {
         for (ProjectStructureProblemDescription description : descriptions) {
-          final ProjectConfigurationProblem error = new ProjectConfigurationProblem(description, myContext.getProject());
+          final ProjectConfigurationProblem error = new ProjectConfigurationProblem(description, myProject);
           myErrors.put(element, error);
-          ConfigurationErrors.Bus.addError(error, myContext.getProject());
+          ConfigurationErrors.Bus.addError(error, myProject);
         }
       }
     }
@@ -58,7 +58,7 @@ public class ProjectConfigurationProblems {
   private void removeErrors(@Nullable Collection<ConfigurationError> errors) {
     if (errors == null) return;
     for (ConfigurationError error : errors) {
-      ConfigurationErrors.Bus.removeError(error, myContext.getProject());
+      ConfigurationErrors.Bus.removeError(error, myProject);
     }
   }
 }

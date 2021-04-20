@@ -19,10 +19,8 @@ import com.intellij.CommonBundle;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.DefaultActionGroup;
-import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.options.ShowSettingsUtil;
-import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.SdkModel;
@@ -40,43 +38,46 @@ import com.intellij.openapi.ui.NonEmptyInputValidator;
 import com.intellij.openapi.util.Condition;
 import com.intellij.util.Consumer;
 import com.intellij.util.ui.tree.TreeUtil;
+import consulo.ide.settings.impl.ProjectStructureSettingsUtil;
 import consulo.ide.settings.impl.SettingsSdksModel;
-import consulo.ide.settings.impl.ShowSdksSettingsUtil;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.annotation.RequiredUIAccess;
+import jakarta.inject.Inject;
 import org.jetbrains.annotations.Nls;
-import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import jakarta.inject.Inject;
-import jakarta.inject.Singleton;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.MutableTreeNode;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 import java.util.*;
 
-@Singleton
 public class SdkListConfigurable extends BaseStructureConfigurable {
+  public static final String ID = "sdks.list";
+
   public static final Condition<SdkTypeId> ADD_SDK_FILTER = sdkTypeId -> sdkTypeId instanceof SdkType && ((SdkType)sdkTypeId).supportsUserAdd();
 
   private static final UnknownSdkType ourUnknownSdkType = UnknownSdkType.getInstance("UNKNOWN_BUNDLE");
   private final SettingsSdksModel mySdksModel;
   private final SdkModel.Listener myListener = new SdkModel.Listener() {
+    @RequiredUIAccess
     @Override
     public void sdkAdded(Sdk sdk) {
     }
 
+    @RequiredUIAccess
     @Override
     public void sdkRemove(Sdk sdk) {
     }
 
+    @RequiredUIAccess
     @Override
     public void sdkChanged(Sdk sdk, String previousName) {
       updateName();
     }
 
+    @RequiredUIAccess
     @Override
     public void sdkHomeSelected(Sdk sdk, String newSdkHome) {
       updateName();
@@ -135,10 +136,8 @@ public class SdkListConfigurable extends BaseStructureConfigurable {
   }
 
   @Inject
-  public SdkListConfigurable(final Project project, ShowSettingsUtil showSettingsUtil) {
-    super(project);
-
-    ShowSdksSettingsUtil sdksSettingsUtil = (ShowSdksSettingsUtil)showSettingsUtil;
+  public SdkListConfigurable(ShowSettingsUtil showSettingsUtil) {
+    ProjectStructureSettingsUtil sdksSettingsUtil = (ProjectStructureSettingsUtil)showSettingsUtil;
 
     mySdksModel = sdksSettingsUtil.getSdksModel();
     mySdksModel.addListener(myListener);
@@ -166,22 +165,14 @@ public class SdkListConfigurable extends BaseStructureConfigurable {
 
   @Override
   @Nullable
-  @NonNls
   public String getHelpTopic() {
     return myCurrentConfigurable != null ? myCurrentConfigurable.getHelpTopic() : "reference.settingsdialog.project.structure.jdk";
   }
 
   @Override
   @Nonnull
-  @NonNls
   public String getId() {
-    return "jdk.list";
-  }
-
-  @Override
-  @Nullable
-  public Runnable enableSearch(final String option) {
-    return null;
+    return ID;
   }
 
   @Override
@@ -211,7 +202,7 @@ public class SdkListConfigurable extends BaseStructureConfigurable {
       addNode(groupNode, myRoot);
 
       for (Sdk sdk : value) {
-        final SdkConfigurable configurable = new SdkConfigurable((SdkImpl)sdk, mySdksModel, TREE_UPDATER, myHistory, myProject);
+        final SdkConfigurable configurable = new SdkConfigurable((SdkImpl)sdk, mySdksModel, TREE_UPDATER);
 
         addNode(new MyNode(configurable), groupNode);
       }
@@ -234,16 +225,16 @@ public class SdkListConfigurable extends BaseStructureConfigurable {
   protected Collection<? extends ProjectStructureElement> getProjectStructureElements() {
     final List<ProjectStructureElement> result = new ArrayList<>();
     for (Sdk sdk : mySdksModel.getModifiedSdksMap().values()) {
-      result.add(new SdkProjectStructureElement(myContext, sdk));
+      result.add(new SdkProjectStructureElement(sdk));
     }
     return result;
   }
 
   public boolean addSdkNode(final Sdk sdk, final boolean selectInTree) {
     if (!myUiDisposed) {
-      myContext.getDaemonAnalyzer().queueUpdate(new SdkProjectStructureElement(myContext, sdk));
+      // todo myContext.getDaemonAnalyzer().queueUpdate(new SdkProjectStructureElement(sdk));
 
-      MyNode newSdkNode = new MyNode(new SdkConfigurable((SdkImpl)sdk, mySdksModel, TREE_UPDATER, myHistory, myProject));
+      MyNode newSdkNode = new MyNode(new SdkConfigurable((SdkImpl)sdk, mySdksModel, TREE_UPDATER));
 
       final MyNode groupNode = MasterDetailsComponent.findNodeByObject(myRoot, sdk.getSdkType());
       if (groupNode != null) {
@@ -287,16 +278,16 @@ public class SdkListConfigurable extends BaseStructureConfigurable {
     }
   }
 
+  @RequiredUIAccess
   @Override
-  public void dispose() {
+  public void disposeUIResources() {
+    super.disposeUIResources();
+
     mySdksModel.removeListener(myListener);
     mySdksModel.disposeUIResources();
   }
 
-  public SettingsSdksModel getSdksModel() {
-    return mySdksModel;
-  }
-
+  @RequiredUIAccess
   @Override
   public void reset() {
     super.reset();
@@ -328,10 +319,6 @@ public class SdkListConfigurable extends BaseStructureConfigurable {
     return super.isModified() || mySdksModel.isModified();
   }
 
-  public static SdkListConfigurable getInstance(Project project) {
-    return ServiceManager.getService(project, SdkListConfigurable.class);
-  }
-
   @Nonnull
   @Override
   protected List<? extends AnAction> createCopyActions(boolean fromPopup) {
@@ -359,7 +346,7 @@ public class SdkListConfigurable extends BaseStructureConfigurable {
   @Override
   protected void removeSdk(final Sdk jdk) {
     mySdksModel.removeSdk(jdk);
-    myContext.getDaemonAnalyzer().removeElement(new SdkProjectStructureElement(myContext, jdk));
+    // todo myContext.getDaemonAnalyzer().removeElement(new SdkProjectStructureElement(jdk));
   }
 
   @Override

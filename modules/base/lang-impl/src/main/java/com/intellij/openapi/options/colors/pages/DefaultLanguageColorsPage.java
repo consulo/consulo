@@ -19,19 +19,16 @@ import com.intellij.openapi.editor.DefaultLanguageHighlighterColors;
 import com.intellij.openapi.editor.HighlighterColors;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.openapi.fileTypes.PlainSyntaxHighlighter;
-import com.intellij.openapi.fileTypes.PlainTextFileType;
 import com.intellij.openapi.fileTypes.SyntaxHighlighter;
 import com.intellij.openapi.options.OptionsBundle;
 import com.intellij.openapi.options.colors.AttributesDescriptor;
 import com.intellij.openapi.options.colors.ColorDescriptor;
 import com.intellij.openapi.options.colors.ColorSettingsPage;
-import com.intellij.openapi.util.Weighted;
 import com.intellij.util.ArrayUtil;
-import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
+import consulo.preferences.internal.ConfigurableWeight;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.swing.*;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -40,9 +37,9 @@ import java.util.Map;
  *
  * @author Rustam Vishnyakov
  */
-public class DefaultLanguageColorsPage implements ColorSettingsPage, Weighted {
+public class DefaultLanguageColorsPage implements ColorSettingsPage, ConfigurableWeight {
 
-  @NonNls private static final Map<String, TextAttributesKey> TAG_HIGHLIGHTING_MAP = new HashMap<String, TextAttributesKey>();
+  private static final Map<String, TextAttributesKey> TAG_HIGHLIGHTING_MAP = new HashMap<>();
 
   private final static TextAttributesKey FAKE_BAD_CHAR =
     TextAttributesKey.createTextAttributesKey("FAKE_BAD_CHAR", HighlighterColors.BAD_CHARACTER);
@@ -257,7 +254,7 @@ public class DefaultLanguageColorsPage implements ColorSettingsPage, Weighted {
   }
 
   @Override
-  public double getWeight() {
+  public int getConfigurableWeight() {
     return Integer.MAX_VALUE - 1;
   }
 }

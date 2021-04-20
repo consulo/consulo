@@ -19,9 +19,10 @@ import com.intellij.icons.AllIcons;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.roots.ui.configuration.ChooseModulesDialog;
 import com.intellij.openapi.roots.ui.configuration.classpath.ClasspathPanel;
-import com.intellij.openapi.roots.ui.configuration.projectRoot.StructureConfigurableContext;
 import consulo.localize.LocalizeValue;
 import consulo.roots.ModuleRootLayer;
+import consulo.roots.ui.configuration.LibrariesConfigurator;
+import consulo.roots.ui.configuration.ModulesConfigurator;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import consulo.util.concurrent.AsyncResult;
@@ -47,8 +48,8 @@ public class ModuleDependencyActionProvider implements AddModuleDependencyAction
   }
 
   @Override
-  public ModuleDependencyContext createContext(@Nonnull ClasspathPanel classpathPanel, @Nonnull StructureConfigurableContext context) {
-    return new ModuleDependencyContext(classpathPanel, context);
+  public ModuleDependencyContext createContext(@Nonnull ClasspathPanel classpathPanel, @Nonnull ModulesConfigurator modulesConfigurator, @Nonnull LibrariesConfigurator librariesConfigurator) {
+    return new ModuleDependencyContext(classpathPanel, modulesConfigurator, librariesConfigurator);
   }
 
   @RequiredUIAccess

@@ -16,15 +16,16 @@
 package com.intellij.openapi.roots.ui.configuration.libraryEditor;
 
 import com.intellij.openapi.application.WriteAction;
+import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.impl.libraries.LibraryEx;
 import com.intellij.openapi.roots.impl.libraries.LibraryTableBase;
 import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.roots.libraries.LibraryTable;
 import com.intellij.openapi.roots.libraries.LibraryType;
-import com.intellij.openapi.roots.ui.configuration.projectRoot.StructureConfigurableContext;
 import com.intellij.openapi.ui.ComboBox;
 import com.intellij.ui.ListCellRendererWrapper;
 import com.intellij.util.ui.FormBuilder;
+import consulo.roots.ui.configuration.LibrariesConfigurator;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;
@@ -34,14 +35,18 @@ import java.util.List;
  * @author nik
  */
 public class CreateNewLibraryDialog extends LibraryEditorDialogBase {
-  private final StructureConfigurableContext myContext;
+  private final LibrariesConfigurator myLibrariesConfigurator;
   private final NewLibraryEditor myLibraryEditor;
   private final ComboBox myLibraryLevelCombobox;
 
-  public CreateNewLibraryDialog(@Nonnull JComponent parent, @Nonnull StructureConfigurableContext context, @Nonnull NewLibraryEditor libraryEditor,
-                                @Nonnull List<LibraryTable> libraryTables, int selectedTable) {
-    super(parent, new LibraryRootsComponent(context.getProject(), libraryEditor));
-    myContext = context;
+  public CreateNewLibraryDialog(@Nonnull Project project,
+                                @Nonnull JComponent parent,
+                                @Nonnull LibrariesConfigurator librariesConfigurator,
+                                @Nonnull NewLibraryEditor libraryEditor,
+                                @Nonnull List<LibraryTable> libraryTables,
+                                int selectedTable) {
+    super(parent, new LibraryRootsComponent(project, libraryEditor));
+    myLibrariesConfigurator = librariesConfigurator;
     myLibraryEditor = libraryEditor;
     final DefaultComboBoxModel model = new DefaultComboBoxModel();
     for (LibraryTable table : libraryTables) {
@@ -64,7 +69,7 @@ public class CreateNewLibraryDialog extends LibraryEditorDialogBase {
   @Override
   protected LibraryTable.ModifiableModel getTableModifiableModel() {
     final LibraryTable selectedTable = (LibraryTable)myLibraryLevelCombobox.getSelectedItem();
-    return myContext.getModifiableLibraryTable(selectedTable);
+    return myLibrariesConfigurator.getModifiableLibraryTable(selectedTable);
   }
 
   @Nonnull

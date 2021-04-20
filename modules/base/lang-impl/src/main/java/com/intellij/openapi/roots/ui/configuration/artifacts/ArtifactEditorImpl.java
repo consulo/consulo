@@ -321,7 +321,7 @@ public class ArtifactEditorImpl implements ArtifactEditorEx {
     popupActionGroup.add(AnSeparator.getInstance());
     popupActionGroup.add(new HideContentAction(this));
     popupActionGroup.add(new LayoutTreeNavigateAction(myLayoutTreeComponent));
-    popupActionGroup.add(new LayoutTreeFindUsagesAction(myLayoutTreeComponent, myProject, myContext.getParent()));
+    popupActionGroup.add(new LayoutTreeFindUsagesAction(myLayoutTreeComponent, myContext.getParent()));
 
     popupActionGroup.add(AnSeparator.getInstance());
     CommonActionsManager actionsManager = CommonActionsManager.getInstance();

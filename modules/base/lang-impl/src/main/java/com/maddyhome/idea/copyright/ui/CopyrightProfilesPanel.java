@@ -26,6 +26,7 @@ import com.intellij.openapi.fileChooser.FileChooser;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.options.SearchableConfigurable;
+import com.intellij.openapi.options.UnnamedConfigurable;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.InputValidator;
 import com.intellij.openapi.ui.MasterDetailsComponent;
@@ -38,7 +39,6 @@ import com.intellij.openapi.util.Conditions;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.IconUtil;
-import java.util.HashMap;
 import com.maddyhome.idea.copyright.CopyrightManager;
 import com.maddyhome.idea.copyright.CopyrightProfile;
 import com.maddyhome.idea.copyright.options.ExternalOptionHelper;
@@ -309,7 +309,7 @@ public class CopyrightProfilesPanel extends MasterDetailsComponent implements Se
         SwingUtilities.invokeLater(runnable);
       }
 
-      public void itemsExternallyChanged() {
+      public void itemsExternallyChanged(UnnamedConfigurable configurable) {
         SwingUtilities.invokeLater(runnable);
       }
     });

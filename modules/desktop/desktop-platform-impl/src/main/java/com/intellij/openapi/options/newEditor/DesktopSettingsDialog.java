@@ -33,11 +33,12 @@ import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.components.BorderLayoutPanel;
 import consulo.application.ui.WholeWestDialogWrapper;
 import consulo.disposer.Disposer;
+import consulo.options.ProjectStructureSelector;
+import consulo.options.ProjectStructureSelectorOverSettings;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.dataholder.Key;
-import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -59,7 +60,6 @@ public class DesktopSettingsDialog extends WholeWestDialogWrapper implements Dat
 
   private ApplyAction myApplyAction;
   public static final String DIMENSION_KEY = "OptionsEditor";
-  @NonNls
   static final String LAST_SELECTED_CONFIGURABLE = "options.lastSelected";
 
   /**
@@ -310,6 +310,9 @@ public class DesktopSettingsDialog extends WholeWestDialogWrapper implements Dat
   public Object getData(@Nonnull Key<?> dataId) {
     if (Settings.KEY == dataId) {
       return myEditor;
+    }
+    else if(ProjectStructureSelector.KEY == dataId) {
+      return new ProjectStructureSelectorOverSettings(myEditor);
     }
     return null;
   }

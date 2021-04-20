@@ -18,8 +18,8 @@ package consulo.compiler.impl;
 import com.intellij.compiler.ModuleCompilerUtil;
 import com.intellij.compiler.impl.*;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.compiler.*;
 import com.intellij.openapi.compiler.Compiler;
+import com.intellij.openapi.compiler.*;
 import com.intellij.openapi.compiler.options.ExcludedEntriesConfiguration;
 import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.State;
@@ -30,8 +30,6 @@ import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.Conditions;
-import consulo.disposer.Disposable;
-import consulo.disposer.Disposer;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -43,14 +41,15 @@ import com.intellij.util.graph.InboundSemiGraph;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.compiler.CompilerConfiguration;
 import consulo.compiler.CompilerConfigurationImpl;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
 import gnu.trove.THashSet;
+import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import jakarta.inject.Inject;
-
 import java.io.File;
 import java.lang.reflect.Array;
 import java.util.*;
@@ -371,7 +370,7 @@ public class CompilerManagerImpl extends CompilerManager implements PersistentSt
     return true;
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   @Override
   public Element getState() {
     final Element state = new Element("state");

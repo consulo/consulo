@@ -15,6 +15,7 @@
  */
 package com.intellij.openapi.roots.ui.configuration.artifacts;
 
+import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.ConfigurationErrorQuickFix;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureProblemType;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureProblemsHolder;
@@ -84,7 +85,7 @@ public class ArtifactProblemsHolderImpl extends ArtifactProblemsHolderBase {
     for (final ArtifactProblemQuickFix fix : quickFixes) {
       result.add(new ConfigurationErrorQuickFix(fix.getActionName()) {
         @Override
-        public void performFix() {
+        public void performFix(DataContext dataContext) {
           final ArtifactEditor editor = myContext.getOrCreateEditor(myOriginalArtifact);
           fix.performFix(((ArtifactEditorEx)editor).getContext());
         }

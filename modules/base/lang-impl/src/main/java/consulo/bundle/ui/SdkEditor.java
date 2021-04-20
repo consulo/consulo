@@ -22,12 +22,8 @@ import com.intellij.openapi.projectRoots.ui.SdkPathEditor;
 import com.intellij.openapi.roots.OrderRootType;
 import com.intellij.openapi.roots.ui.OrderRootTypeUIFactory;
 import com.intellij.ui.TabbedPaneWrapper;
-import com.intellij.ui.navigation.History;
-import com.intellij.ui.navigation.Place;
-import consulo.util.concurrent.AsyncResult;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.swing.*;
 
 /**
@@ -35,15 +31,10 @@ import javax.swing.*;
  * @since 21.03.14
  */
 public class SdkEditor extends BaseSdkEditor {
-  private static final String SDK_TAB = "sdkTab";
-  @Nonnull
-  private final History myHistory;
-
   private TabbedPaneWrapper myTabbedPane;
 
-  public SdkEditor(@Nonnull SdkModel sdkModel, @Nonnull History history, @Nonnull SdkImpl sdk) {
+  public SdkEditor(@Nonnull SdkModel sdkModel, @Nonnull SdkImpl sdk) {
     super(sdkModel, sdk);
-    myHistory = history;
   }
 
   @Nonnull
@@ -63,19 +54,6 @@ public class SdkEditor extends BaseSdkEditor {
       }
     }
 
-    myTabbedPane.addChangeListener(e -> myHistory.pushQueryPlace());
     return myTabbedPane.getComponent();
-  }
-
-  @Override
-  public AsyncResult<Void> navigateTo(@Nullable final Place place, final boolean requestFocus) {
-    if (place == null) return AsyncResult.resolved();
-    myTabbedPane.setSelectedTitle((String)place.getPath(SDK_TAB));
-    return AsyncResult.resolved();
-  }
-
-  @Override
-  public void queryPlace(@Nonnull final Place place) {
-    place.putPath(SDK_TAB, myTabbedPane.getSelectedTitle());
   }
 }

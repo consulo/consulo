@@ -28,7 +28,7 @@ import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.openapi.roots.ModifiableRootModel;
 import com.intellij.openapi.roots.ui.configuration.ModuleEditor;
-import com.intellij.openapi.roots.ui.configuration.ModulesConfigurator;
+import com.intellij.openapi.roots.ui.configuration.ModulesConfiguratorImpl;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.ModuleProjectStructureElement;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureElement;
 import com.intellij.openapi.ui.ComboBox;
@@ -36,14 +36,13 @@ import com.intellij.openapi.ui.LabeledComponent;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.MutableCollectionComboBoxModel;
-import com.intellij.ui.navigation.History;
-import com.intellij.ui.navigation.Place;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.components.BorderLayoutPanel;
+import consulo.roots.ui.configuration.ModulesConfigurator;
 import consulo.roots.ui.configuration.projectRoot.moduleLayerActions.DeleteLayerAction;
 import consulo.roots.ui.configuration.projectRoot.moduleLayerActions.NewLayerAction;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
-import consulo.util.concurrent.AsyncResult;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
@@ -57,22 +56,18 @@ import java.util.ArrayList;
  * User: anna
  * Date: 04-Jun-2006
  */
-public class ModuleConfigurable extends ProjectStructureElementConfigurable<Module> implements Place.Navigator {
+public class ModuleConfigurable extends ProjectStructureElementConfigurable<Module> {
   private final Module myModule;
-  private final ModulesConfigurator myConfigurator;
+  private final ModulesConfiguratorImpl myConfigurator;
   private String myModuleName;
   private final ModuleProjectStructureElement myProjectStructureElement;
-  private final StructureConfigurableContext myContext;
 
-  public ModuleConfigurable(ModulesConfigurator modulesConfigurator,
-                            Module module,
-                            final Runnable updateTree) {
+  public ModuleConfigurable(ModulesConfigurator modulesConfigurator, Module module, Runnable updateTree) {
     super(true, updateTree);
     myModule = module;
     myModuleName = myModule.getName();
-    myConfigurator = modulesConfigurator;
-    myContext = ModuleStructureConfigurable.getInstance(myModule.getProject()).getContext();
-    myProjectStructureElement = new ModuleProjectStructureElement(myContext, myModule);
+    myConfigurator = (ModulesConfiguratorImpl)modulesConfigurator;
+    myProjectStructureElement = new ModuleProjectStructureElement(modulesConfigurator, myModule);
   }
 
   @Override
@@ -89,7 +84,8 @@ public class ModuleConfigurable extends ProjectStructureElementConfigurable<Modu
     myConfigurator.moduleRenamed(myModule, myModuleName, name);
     myModuleName = name;
     myConfigurator.setModified(!Comparing.strEqual(myModuleName, myModule.getName()));
-    myContext.getDaemonAnalyzer().queueUpdateForAllElementsWithErrors();
+    
+    // TODO [VISTALL] myContext.getDaemonAnalyzer().queueUpdateForAllElementsWithErrors();
   }
 
   @Nullable
@@ -104,8 +100,7 @@ public class ModuleConfigurable extends ProjectStructureElementConfigurable<Modu
 
     ModifiableRootModel moduleRootModel = moduleEditor.getModifiableRootModelProxy();
 
-    final MutableCollectionComboBoxModel<String> model =
-            new MutableCollectionComboBoxModel<String>(new ArrayList<String>(moduleRootModel.getLayers().keySet()), moduleRootModel.getCurrentLayerName());
+    final MutableCollectionComboBoxModel<String> model = new MutableCollectionComboBoxModel<String>(new ArrayList<String>(moduleRootModel.getLayers().keySet()), moduleRootModel.getCurrentLayerName());
 
     final ComboBox comboBox = new ComboBox(model);
     comboBox.setEnabled(model.getSize() > 1);
@@ -186,21 +181,25 @@ public class ModuleConfigurable extends ProjectStructureElementConfigurable<Modu
     return getModuleEditor().getPanel();
   }
 
+  @RequiredUIAccess
   @Override
   public boolean isModified() {
     return false;
   }
 
+  @RequiredUIAccess
   @Override
   public void apply() throws ConfigurationException {
     //do nothing
   }
 
+  @RequiredUIAccess
   @Override
   public void reset() {
     //do nothing
   }
 
+  @RequiredUIAccess
   @Override
   public void disposeUIResources() {
     //do nothing
@@ -208,22 +207,5 @@ public class ModuleConfigurable extends ProjectStructureElementConfigurable<Modu
 
   public ModuleEditor getModuleEditor() {
     return myConfigurator.getModuleEditor(myModule);
-  }
-
-  @Override
-  public AsyncResult<Void> navigateTo(@Nullable final Place place, final boolean requestFocus) {
-    return getModuleEditor().navigateTo(place, requestFocus);
-  }
-
-  @Override
-  public void queryPlace(@Nonnull final Place place) {
-    final ModuleEditor editor = getModuleEditor();
-    if (editor != null) {
-      editor.queryPlace(place);
-    }
-  }
-
-  @Override
-  public void setHistory(final History history) {
   }
 }

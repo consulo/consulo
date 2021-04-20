@@ -16,25 +16,23 @@
 
 package com.intellij.openapi.roots.ui.configuration;
 
-import com.intellij.ide.projectView.impl.ModuleGroup;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.options.ShowSettingsUtil;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.openapi.roots.OrderEntry;
 import com.intellij.openapi.roots.libraries.Library;
-import com.intellij.openapi.roots.ui.configuration.projectRoot.ModuleStructureConfigurable;
 import com.intellij.packaging.artifacts.Artifact;
 import consulo.annotation.DeprecationInfo;
 import consulo.roots.orderEntry.OrderEntryType;
 import consulo.roots.orderEntry.OrderEntryTypeEditor;
 import consulo.ui.annotation.RequiredUIAccess;
 import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import jakarta.inject.Singleton;
 
 /**
  * @author yole
@@ -66,7 +64,8 @@ public final class ProjectSettingsService {
 
   @RequiredUIAccess
   public void openModuleSettings(final Module module) {
-    ModulesConfigurator.showDialog(myProject, module.getName(), null);
+    Project project = module.getProject();
+    ShowSettingsUtil.getInstance().showProjectStructureDialog(project, config -> config.select(module.getName(), null, true));
   }
 
   public final boolean canOpenModuleSettings() {
@@ -75,7 +74,7 @@ public final class ProjectSettingsService {
 
   @RequiredUIAccess
   public void openModuleLibrarySettings(final Module module) {
-    ModulesConfigurator.showDialog(myProject, module.getName(), ClasspathEditor.NAME);
+    ShowSettingsUtil.getInstance().showProjectStructureDialog(module.getProject(), config -> config.select(module.getName(), ProjectBundle.message("modules.classpath.title"), true));
   }
 
   public final boolean canOpenModuleLibrarySettings() {
@@ -84,7 +83,7 @@ public final class ProjectSettingsService {
 
   @RequiredUIAccess
   public void openContentEntriesSettings(final Module module) {
-    ModulesConfigurator.showDialog(myProject, module.getName(), ContentEntriesEditor.NAME);
+    ShowSettingsUtil.getInstance().showProjectStructureDialog(module.getProject(), config -> config.select(module.getName(), ProjectBundle.message("module.paths.title"), true));
   }
 
   public final boolean canOpenContentEntriesSettings() {
@@ -111,27 +110,13 @@ public final class ProjectSettingsService {
     }
   }
 
-  public boolean processModulesMoved(final Module[] modules, @Nullable final ModuleGroup targetGroup) {
-    final ModuleStructureConfigurable rootConfigurable = ModuleStructureConfigurable.getInstance(myProject);
-    if (rootConfigurable.updateProjectTree(modules, targetGroup)) { //inside project root editor
-      if (targetGroup != null) {
-        rootConfigurable.selectNodeInTree(targetGroup.toString());
-      }
-      else {
-        rootConfigurable.selectNodeInTree(modules[0].getName());
-      }
-      return true;
-    }
-    return false;
-  }
-
   @RequiredUIAccess
   public void showModuleConfigurationDialog(@Nullable String moduleToSelect, @Nullable String editorNameToSelect) {
-    ModulesConfigurator.showDialog(myProject, moduleToSelect, editorNameToSelect);
+    ShowSettingsUtil.getInstance().showProjectStructureDialog(myProject, config -> config.select(moduleToSelect, editorNameToSelect, true));
   }
 
   @RequiredUIAccess
   public void openArtifactSettings(@Nullable Artifact artifact) {
-    ModulesConfigurator.showArtifactSettings(myProject, artifact);
+    ShowSettingsUtil.getInstance().showProjectStructureDialog(myProject, config -> config.select(artifact, true));
   }
 }

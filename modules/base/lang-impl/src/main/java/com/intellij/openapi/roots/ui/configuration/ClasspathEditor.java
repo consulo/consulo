@@ -16,16 +16,14 @@
 package com.intellij.openapi.roots.ui.configuration;
 
 import com.intellij.ProjectTopics;
-import consulo.disposer.Disposable;
 import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.openapi.roots.ModuleRootEvent;
 import com.intellij.openapi.roots.ModuleRootListener;
 import com.intellij.openapi.roots.OrderEntry;
 import com.intellij.openapi.roots.ui.configuration.classpath.ClasspathPanelImpl;
-import consulo.disposer.Disposer;
+import consulo.disposer.Disposable;
 
 import javax.annotation.Nonnull;
-
 import javax.swing.*;
 
 /**
@@ -34,8 +32,6 @@ import javax.swing.*;
  *         Time: 6:54:57 PM
  */
 public class ClasspathEditor extends ModuleElementsEditor implements ModuleRootListener {
-  public static final String NAME = ProjectBundle.message("modules.classpath.title");
-
   private ClasspathPanelImpl myPanel;
 
   public ClasspathEditor(final ModuleConfigurationState state) {
@@ -54,7 +50,7 @@ public class ClasspathEditor extends ModuleElementsEditor implements ModuleRootL
 
   @Override
   public String getDisplayName() {
-    return NAME;
+    return ProjectBundle.message("modules.classpath.title");
   }
 
   @Override
@@ -77,10 +73,6 @@ public class ClasspathEditor extends ModuleElementsEditor implements ModuleRootL
     if (myPanel != null) {
       myPanel.initFromModel();
     }
-  }
-
-  @Override
-  public void beforeRootsChange(ModuleRootEvent event) {
   }
 
   @Override

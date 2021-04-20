@@ -20,15 +20,19 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.openapi.roots.libraries.LibraryTablePresentation;
 import com.intellij.openapi.roots.libraries.LibraryTablesRegistrar;
+import com.intellij.openapi.roots.ui.configuration.LibraryTableModifiableModelProvider;
+import consulo.preferences.internal.ConfigurableWeight;
+import consulo.roots.ui.configuration.ProjectConfigurableWeights;
 import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import org.jetbrains.annotations.Nls;
-import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 
-import jakarta.inject.Singleton;
-
 @Singleton
-public class ProjectLibrariesConfigurable extends BaseLibrariesConfigurable {
+public class ProjectLibrariesConfigurable extends BaseLibrariesConfigurable implements ConfigurableWeight {
+  public static final String ID = "project.libraries";
+
   @Inject
   public ProjectLibrariesConfigurable(final Project project) {
     super(project);
@@ -48,15 +52,13 @@ public class ProjectLibrariesConfigurable extends BaseLibrariesConfigurable {
 
   @Override
   @Nonnull
-  @NonNls
   public String getId() {
-    return "project.libraries";
+    return ID;
   }
 
-
   @Override
-  public StructureLibraryTableModifiableModelProvider getModelProvider() {
-    return myContext.getProjectLibrariesProvider();
+  public LibraryTableModifiableModelProvider getModelProvider() {
+    return getLibrariesConfigurator().getProjectLibrariesProvider();
   }
 
   public static ProjectLibrariesConfigurable getInstance(final Project project) {
@@ -71,5 +73,10 @@ public class ProjectLibrariesConfigurable extends BaseLibrariesConfigurable {
   @Override
   protected String getAddText() {
     return ProjectBundle.message("add.new.project.library.text");
+  }
+
+  @Override
+  public int getConfigurableWeight() {
+    return ProjectConfigurableWeights.LIBRARIES;
   }
 }

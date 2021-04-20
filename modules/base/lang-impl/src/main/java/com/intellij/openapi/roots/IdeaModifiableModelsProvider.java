@@ -1,18 +1,18 @@
 package com.intellij.openapi.roots;
 
 import com.intellij.openapi.module.Module;
+import com.intellij.openapi.options.ShowSettingsUtil;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.roots.libraries.LibraryTable;
 import com.intellij.openapi.roots.libraries.LibraryTablesRegistrar;
 import com.intellij.openapi.roots.ui.configuration.LibraryTableModifiableModelProvider;
-import com.intellij.openapi.roots.ui.configuration.ModuleEditor;
-import com.intellij.openapi.roots.ui.configuration.ModulesConfigurator;
-import com.intellij.openapi.roots.ui.configuration.ProjectStructureConfigurable;
-import com.intellij.openapi.roots.ui.configuration.projectRoot.StructureConfigurableContext;
-import javax.annotation.Nullable;
+import consulo.ide.settings.impl.ProjectStructureSettingsUtil;
+import consulo.roots.ui.configuration.LibrariesConfigurator;
+import consulo.roots.ui.configuration.ModulesConfigurator;
 import jakarta.inject.Singleton;
 
+import javax.annotation.Nullable;
 import java.lang.reflect.Proxy;
 
 /**
@@ -27,9 +27,9 @@ public class IdeaModifiableModelsProvider implements ModifiableModelsProvider {
     final ModulesConfigurator configurator = getModulesConfigurator(project);
     if (configurator != null) {
       if (!configurator.isModuleModelCommitted()) {
-        final ModuleEditor moduleEditor = configurator.getModuleEditor(module);
-        if (moduleEditor != null) {
-          return moduleEditor.getModifiableRootModelProxy();
+        final ModifiableRootModel modelProxy = configurator.getModuleEditorModelProxy(module);
+        if (modelProxy != null) {
+          return modelProxy;
         }
       }
     }
@@ -38,8 +38,8 @@ public class IdeaModifiableModelsProvider implements ModifiableModelsProvider {
 
   @Nullable
   private static ModulesConfigurator getModulesConfigurator(Project project) {
-    StructureConfigurableContext context = getProjectStructureContext(project);
-    return context != null ? context.getModulesConfigurator() : null;
+    ProjectStructureSettingsUtil util = (ProjectStructureSettingsUtil)ShowSettingsUtil.getInstance();
+    return util.getModulesModel(project);
   }
 
   @Override
@@ -65,7 +65,7 @@ public class IdeaModifiableModelsProvider implements ModifiableModelsProvider {
       if (!project.isInitialized()) {
         continue;
       }
-      StructureConfigurableContext context = getProjectStructureContext(project);
+      LibrariesConfigurator context = getLibrariesConfigurator(project);
       LibraryTableModifiableModelProvider provider = context != null ? context.createModifiableModelProvider(LibraryTablesRegistrar.APPLICATION_LEVEL) : null;
       final LibraryTable.ModifiableModel modifiableModel = provider != null ? provider.getModifiableModel() : null;
       if (modifiableModel != null) {
@@ -77,7 +77,7 @@ public class IdeaModifiableModelsProvider implements ModifiableModelsProvider {
 
   @Override
   public LibraryTable.ModifiableModel getLibraryTableModifiableModel(Project project) {
-    StructureConfigurableContext context = getProjectStructureContext(project);
+    LibrariesConfigurator context = getLibrariesConfigurator(project);
     if (context != null) {
       LibraryTableModifiableModelProvider provider = context.createModifiableModelProvider(LibraryTablesRegistrar.PROJECT_LEVEL);
       return provider.getModifiableModel();
@@ -86,8 +86,8 @@ public class IdeaModifiableModelsProvider implements ModifiableModelsProvider {
   }
 
   @Nullable
-  private static StructureConfigurableContext getProjectStructureContext(Project project) {
-    final ProjectStructureConfigurable structureConfigurable = ProjectStructureConfigurable.getInstance(project);
-    return structureConfigurable.getContext() ;
+  private static LibrariesConfigurator getLibrariesConfigurator(Project project) {
+    ProjectStructureSettingsUtil util = (ProjectStructureSettingsUtil)ShowSettingsUtil.getInstance();
+    return util.getLibrariesModel(project);
   }
 }

@@ -15,11 +15,13 @@
  */
 package com.intellij.openapi.roots.ui.configuration.artifacts;
 
-import com.intellij.openapi.roots.ui.configuration.ProjectStructureConfigurable;
+import com.intellij.openapi.options.ShowSettingsUtil;
+import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.PlaceInProjectStructure;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureElement;
 import com.intellij.packaging.artifacts.Artifact;
 import com.intellij.packaging.elements.PackagingElement;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.concurrent.AsyncResult;
 
 import javax.annotation.Nonnull;
@@ -59,16 +61,16 @@ public class PlaceInArtifact extends PlaceInProjectStructure {
 
   @Nonnull
   @Override
-  public AsyncResult<Void> navigate() {
+  @RequiredUIAccess
+  public AsyncResult<Void> navigate(@Nonnull Project project) {
     final Artifact artifact = myContext.getArtifactModel().getArtifactByOriginal(myArtifact);
-    return ProjectStructureConfigurable.getInstance(myContext.getProject()).select(myArtifact, true).doWhenDone(new Runnable() {
-      @Override
-      public void run() {
+    return ShowSettingsUtil.getInstance().showProjectStructureDialog(project, projectStructureSelector -> {
+      projectStructureSelector.select(artifact, true).doWhenDone(() -> {
         final ArtifactEditorEx artifactEditor = (ArtifactEditorEx)myContext.getOrCreateEditor(artifact);
         if (myParentPath != null && myPackagingElement != null) {
           artifactEditor.getLayoutTreeComponent().selectNode(myParentPath, myPackagingElement);
         }
-      }
+      });
     });
   }
 }

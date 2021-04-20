@@ -2,18 +2,21 @@ package com.intellij.openapi.roots.ui.configuration.projectRoot.daemon;
 
 import com.intellij.openapi.module.ModifiableModuleModel;
 import com.intellij.openapi.module.Module;
+import com.intellij.openapi.options.ShowSettingsUtil;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.*;
 import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.roots.ui.configuration.ModuleEditor;
-import com.intellij.openapi.roots.ui.configuration.ProjectStructureConfigurable;
-import com.intellij.openapi.roots.ui.configuration.projectRoot.StructureConfigurableContext;
+import com.intellij.openapi.roots.ui.configuration.ModulesConfiguratorImpl;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.ArrayUtil;
-import javax.annotation.Nonnull;
+import consulo.roots.ui.configuration.ModulesConfigurator;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.util.concurrent.AsyncResult;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,51 +24,52 @@ import java.util.List;
  * @author nik
  */
 public class ModuleProjectStructureElement extends ProjectStructureElement {
+  @Nonnull
+  private final ModulesConfigurator myModulesConfigurator;
+  @Nonnull
   private final Module myModule;
 
-  public ModuleProjectStructureElement(@Nonnull StructureConfigurableContext context, @Nonnull Module module) {
-    super(context);
+  public ModuleProjectStructureElement(@Nonnull ModulesConfigurator modulesConfigurator, @Nonnull Module module) {
+    myModulesConfigurator = modulesConfigurator;
     myModule = module;
   }
 
+  @Nonnull
   public Module getModule() {
     return myModule;
   }
 
-  public void checkModulesNames(ProjectStructureProblemsHolder problemsHolder) {
-    final ModifiableModuleModel moduleModel = myContext.getModulesConfigurator().getModuleModel();
+  public void checkModulesNames(Project project, ProjectStructureProblemsHolder problemsHolder) {
+    final ModifiableModuleModel moduleModel = myModulesConfigurator.getModuleModel();
     final Module[] all = moduleModel.getModules();
     if (!ArrayUtil.contains(myModule, all)) {
       return;//module has been deleted
     }
 
     for (Module each : all) {
-      if (each != myModule && myContext.getRealName(each).equals(myContext.getRealName(myModule))) {
-        problemsHolder.registerProblem(ProjectBundle.message("project.roots.module.duplicate.name.message"), null,
-                                       ProjectStructureProblemType.error("duplicate-module-name"), createPlace(),
-                                       null);
+      if (each != myModule && myModulesConfigurator.getRealName(each).equals(myModulesConfigurator.getRealName(myModule))) {
+        problemsHolder.registerProblem(ProjectBundle.message("project.roots.module.duplicate.name.message"), null, ProjectStructureProblemType.error("duplicate-module-name"), createPlace(), null);
         break;
       }
     }
   }
 
   @Override
-  public void check(ProjectStructureProblemsHolder problemsHolder) {
-    checkModulesNames(problemsHolder);
+  public void check(Project project, ProjectStructureProblemsHolder problemsHolder) {
+    checkModulesNames(project, problemsHolder);
 
-    final ModuleRootModel rootModel = myContext.getModulesConfigurator().getRootModel(myModule);
+    final ModuleRootModel rootModel = myModulesConfigurator.getRootModel(myModule);
     if (rootModel == null) return; //already disposed
     final OrderEntry[] entries = rootModel.getOrderEntries();
     for (OrderEntry entry : entries) {
-      if (!entry.isValid()){
+      if (!entry.isValid()) {
         if (entry instanceof ModuleExtensionWithSdkOrderEntry && ((ModuleExtensionWithSdkOrderEntry)entry).getSdkName() == null) {
-          problemsHolder.registerProblem(ProjectBundle.message("project.roots.module.jdk.problem.message"), null, ProjectStructureProblemType.error("module-sdk-not-defined"), createPlace(entry),
-                                         null);
+          problemsHolder
+                  .registerProblem(ProjectBundle.message("project.roots.module.jdk.problem.message"), null, ProjectStructureProblemType.error("module-sdk-not-defined"), createPlace(entry), null);
         }
         else {
           problemsHolder.registerProblem(ProjectBundle.message("project.roots.library.problem.message", StringUtil.escapeXml(entry.getPresentableName())), null,
-                                         ProjectStructureProblemType.error("invalid-module-dependency"), createPlace(entry),
-                                         null);
+                                         ProjectStructureProblemType.error("invalid-module-dependency"), createPlace(entry), null);
         }
       }
       //todo[nik] highlight libraries with invalid paths in ClasspathEditor
@@ -84,39 +88,44 @@ public class ModuleProjectStructureElement extends ProjectStructureElement {
   }
 
   private PlaceInProjectStructure createPlace() {
-    final Project project = myContext.getProject();
-    return new PlaceInProjectStructureBase(project, ProjectStructureConfigurable.getInstance(project).createModulePlace(myModule), this);
+    return new PlaceInProjectStructureBase(this::modulesNavigator, this);
+  }
+
+  @RequiredUIAccess
+  private  AsyncResult<Void> modulesNavigator(Project project) {
+    return ShowSettingsUtil.getInstance().showProjectStructureDialog(project, projectStructureSelector -> {
+      projectStructureSelector.select(myModule.getName(), null, true);
+    });
   }
 
   private PlaceInProjectStructure createPlace(OrderEntry entry) {
-    return new PlaceInModuleClasspath(myContext, myModule, this, entry);
+    return new PlaceInModuleClasspath(myModulesConfigurator, myModule, this, entry);
   }
 
   @Override
   public List<ProjectStructureElementUsage> getUsagesInElement() {
-    final List<ProjectStructureElementUsage> usages = new ArrayList<ProjectStructureElementUsage>();
-    final ModuleEditor moduleEditor = myContext.getModulesConfigurator().getModuleEditor(myModule);
+    final List<ProjectStructureElementUsage> usages = new ArrayList<>();
+    final ModuleEditor moduleEditor = ((ModulesConfiguratorImpl)myModulesConfigurator).getModuleEditor(myModule);
     if (moduleEditor != null) {
       for (OrderEntry entry : moduleEditor.getOrderEntries()) {
         if (entry instanceof ModuleOrderEntry) {
           ModuleOrderEntry moduleOrderEntry = (ModuleOrderEntry)entry;
           final Module module = moduleOrderEntry.getModule();
           if (module != null) {
-            usages.add(new UsageInModuleClasspath(myContext, this, new ModuleProjectStructureElement(myContext, module), moduleOrderEntry.getScope()));
+            usages.add(new UsageInModuleClasspath(myModulesConfigurator, this, new ModuleProjectStructureElement(myModulesConfigurator, module), moduleOrderEntry.getScope()));
           }
         }
         else if (entry instanceof LibraryOrderEntry) {
           LibraryOrderEntry libraryOrderEntry = (LibraryOrderEntry)entry;
           final Library library = libraryOrderEntry.getLibrary();
           if (library != null) {
-            usages.add(new UsageInModuleClasspath(myContext, this, new LibraryProjectStructureElement(myContext, library),
-                                                  libraryOrderEntry.getScope()));
+            usages.add(new UsageInModuleClasspath(myModulesConfigurator, this, new LibraryProjectStructureElement(library), libraryOrderEntry.getScope()));
           }
         }
         else if (entry instanceof ModuleExtensionWithSdkOrderEntry) {
           final Sdk jdk = ((ModuleExtensionWithSdkOrderEntry)entry).getSdk();
           if (jdk != null) {
-            usages.add(new UsageInModuleClasspath(myContext, this, new SdkProjectStructureElement(myContext, jdk), null));
+            usages.add(new UsageInModuleClasspath(myModulesConfigurator, this, new SdkProjectStructureElement(jdk), null));
           }
         }
       }

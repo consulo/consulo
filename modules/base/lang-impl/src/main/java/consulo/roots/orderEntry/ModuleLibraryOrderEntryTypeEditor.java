@@ -25,8 +25,10 @@ import com.intellij.openapi.roots.ui.FileAppearanceService;
 import com.intellij.openapi.roots.ui.OrderEntryAppearanceService;
 import com.intellij.openapi.roots.ui.configuration.classpath.ClasspathTableItem;
 import com.intellij.openapi.roots.ui.configuration.classpath.LibraryClasspathTableItem;
-import com.intellij.openapi.roots.ui.configuration.projectRoot.StructureConfigurableContext;
 import consulo.roots.types.BinariesOrderRootType;
+import consulo.roots.ui.configuration.LibrariesConfigurator;
+import consulo.roots.ui.configuration.ModulesConfigurator;
+import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
 
@@ -35,6 +37,7 @@ import javax.annotation.Nonnull;
  * @since 06-Jun-16
  */
 public class ModuleLibraryOrderEntryTypeEditor implements OrderEntryTypeEditor<ModuleLibraryOrderEntryImpl> {
+  @RequiredUIAccess
   @Override
   public void navigate(@Nonnull final ModuleLibraryOrderEntryImpl orderEntry) {
     Project project = orderEntry.getModuleRootLayer().getProject();
@@ -43,8 +46,11 @@ public class ModuleLibraryOrderEntryTypeEditor implements OrderEntryTypeEditor<M
 
   @Nonnull
   @Override
-  public ClasspathTableItem<ModuleLibraryOrderEntryImpl> createTableItem(@Nonnull ModuleLibraryOrderEntryImpl orderEntry, @Nonnull StructureConfigurableContext context) {
-    return new LibraryClasspathTableItem<ModuleLibraryOrderEntryImpl>(orderEntry, context);
+  public ClasspathTableItem<ModuleLibraryOrderEntryImpl> createTableItem(@Nonnull ModuleLibraryOrderEntryImpl orderEntry,
+                                                                         @Nonnull Project project,
+                                                                         @Nonnull ModulesConfigurator modulesConfigurator,
+                                                                         @Nonnull LibrariesConfigurator librariesConfigurator) {
+    return new LibraryClasspathTableItem<>(orderEntry, project, modulesConfigurator, librariesConfigurator);
   }
 
   @Nonnull
@@ -55,7 +61,7 @@ public class ModuleLibraryOrderEntryTypeEditor implements OrderEntryTypeEditor<M
     }
     Library library = orderEntry.getLibrary();
     assert library != null : orderEntry;
-    return OrderEntryAppearanceService.getInstance().forLibrary(orderEntry.getModuleRootLayer().getProject(), library,
-                                                                !((LibraryEx)library).getInvalidRootUrls(BinariesOrderRootType.getInstance()).isEmpty());
+    return OrderEntryAppearanceService.getInstance()
+            .forLibrary(orderEntry.getModuleRootLayer().getProject(), library, !((LibraryEx)library).getInvalidRootUrls(BinariesOrderRootType.getInstance()).isEmpty());
   }
 }

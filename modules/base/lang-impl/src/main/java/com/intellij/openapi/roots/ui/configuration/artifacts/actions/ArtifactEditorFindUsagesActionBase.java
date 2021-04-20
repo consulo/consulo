@@ -15,7 +15,6 @@
  */
 package com.intellij.openapi.roots.ui.configuration.artifacts.actions;
 
-import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ui.configuration.artifacts.ArtifactsStructureConfigurableContext;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.FindUsagesInProjectStructureActionBase;
 import com.intellij.ui.awt.RelativePoint;
@@ -30,8 +29,8 @@ public abstract class ArtifactEditorFindUsagesActionBase extends FindUsagesInPro
   private final Tree myTree;
   protected final ArtifactsStructureConfigurableContext myArtifactContext;
 
-  public ArtifactEditorFindUsagesActionBase(Tree tree, Project project, ArtifactsStructureConfigurableContext artifactContext) {
-    super(tree, project);
+  public ArtifactEditorFindUsagesActionBase(Tree tree, ArtifactsStructureConfigurableContext artifactContext) {
+    super(tree);
     myTree = tree;
     myArtifactContext = artifactContext;
   }

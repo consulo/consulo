@@ -22,19 +22,17 @@ import com.intellij.openapi.application.WriteAction;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.options.ConfigurationException;
+import com.intellij.openapi.options.ShowSettingsUtil;
 import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.openapi.roots.impl.libraries.LibraryTableImplUtil;
 import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.roots.libraries.LibraryTable;
-import com.intellij.openapi.roots.ui.configuration.libraryEditor.LibraryEditorListener;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.BaseStructureConfigurable;
-import com.intellij.openapi.roots.ui.configuration.projectRoot.ModuleStructureConfigurable;
-import com.intellij.openapi.roots.ui.configuration.projectRoot.ProjectLibrariesConfigurable;
-import com.intellij.openapi.roots.ui.configuration.projectRoot.StructureConfigurableContext;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureElement;
 import com.intellij.openapi.ui.MasterDetailsState;
+import com.intellij.openapi.ui.MasterDetailsStateService;
 import com.intellij.openapi.ui.NamedConfigurable;
 import com.intellij.packaging.artifacts.*;
 import com.intellij.packaging.elements.PackagingElementFactory;
@@ -44,14 +42,17 @@ import com.intellij.packaging.impl.artifacts.PackagingElementPath;
 import com.intellij.packaging.impl.artifacts.PackagingElementProcessor;
 import com.intellij.packaging.impl.elements.LibraryElementType;
 import com.intellij.packaging.impl.elements.LibraryPackagingElement;
+import consulo.ide.settings.impl.ProjectStructureSettingsUtil;
+import consulo.preferences.internal.ConfigurableWeight;
+import consulo.roots.ui.configuration.LibrariesConfigurator;
+import consulo.roots.ui.configuration.ModulesConfigurator;
+import consulo.roots.ui.configuration.ProjectConfigurableWeights;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import org.jetbrains.annotations.Nls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import jakarta.inject.Inject;
-import jakarta.inject.Singleton;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -59,28 +60,38 @@ import java.util.List;
 /**
  * @author nik
  */
-@Singleton
-public class ArtifactsStructureConfigurable extends BaseStructureConfigurable {
+public class ArtifactsStructureConfigurable extends BaseStructureConfigurable implements ConfigurableWeight {
   @Nonnull
   public static ArtifactsStructureConfigurable getInstance(@Nonnull Project project) {
     return ServiceManager.getService(project, ArtifactsStructureConfigurable.class);
   }
 
   @Nonnull
+  private final Project myProject;
+  @Nonnull
   private final ArtifactManager myArtifactManager;
   @Nonnull
   private final ArtifactPointerManager myArtifactPointerManager;
   @Nonnull
+  private final ShowSettingsUtil myShowSettingsUtil;
+  @Nullable
   private ArtifactsStructureConfigurableContextImpl myPackagingEditorContext;
   @Nonnull
   private final ArtifactEditorSettings myDefaultSettings;
 
-  @Inject
-  public ArtifactsStructureConfigurable(@Nonnull Project project, @Nonnull ArtifactManager artifactManager, @Nonnull ArtifactPointerManager artifactPointerManager) {
-    super(project, new ArtifactStructureConfigurableState());
+  public ArtifactsStructureConfigurable(@Nonnull Project project, @Nonnull ArtifactManager artifactManager, @Nonnull ArtifactPointerManager artifactPointerManager, ShowSettingsUtil showSettingsUtil) {
+    super(new ArtifactStructureConfigurableState());
+    myProject = project;
     myArtifactManager = artifactManager;
     myArtifactPointerManager = artifactPointerManager;
+    myShowSettingsUtil = showSettingsUtil;
     myDefaultSettings = new ArtifactEditorSettings(project);
+  }
+
+  @Nullable
+  @Override
+  protected MasterDetailsStateService getStateService() {
+    return MasterDetailsStateService.getInstance(myProject);
   }
 
   @Override
@@ -88,48 +99,43 @@ public class ArtifactsStructureConfigurable extends BaseStructureConfigurable {
     return "ArtifactsStructureConfigurable.UI";
   }
 
-  public void init(StructureConfigurableContext context, ModuleStructureConfigurable moduleStructureConfigurable, ProjectLibrariesConfigurable projectLibrariesConfig) {
-    super.init(context);
+  @RequiredUIAccess
+  @Override
+  public void initialize() {
+    ProjectStructureSettingsUtil showSettingsUtil = (ProjectStructureSettingsUtil)myShowSettingsUtil;
 
-    myPackagingEditorContext = new ArtifactsStructureConfigurableContextImpl(myContext, myProject, myArtifactManager, myArtifactPointerManager, myDefaultSettings, new ArtifactListener() {
-      @Override
-      public void artifactAdded(@Nonnull Artifact artifact) {
-        final MyNode node = addArtifactNode(artifact);
-        selectNodeInTree(node);
-        myContext.getDaemonAnalyzer().queueUpdate(myPackagingEditorContext.getOrCreateArtifactElement(artifact));
-      }
-    });
+    ModulesConfigurator modulesModel = showSettingsUtil.getModulesModel(myProject);
+    LibrariesConfigurator librariesModel = showSettingsUtil.getLibrariesModel(myProject);
 
-    context.getModulesConfigurator().addAllModuleChangeListener(moduleRootModel -> {
-      for (ProjectStructureElement element : getProjectStructureElements()) {
-        myContext.getDaemonAnalyzer().queueUpdate(element);
-      }
-    });
+    myPackagingEditorContext =
+            new ArtifactsStructureConfigurableContextImpl(modulesModel, librariesModel, myProject, myArtifactManager, myArtifactPointerManager, myDefaultSettings, new ArtifactListener() {
+              @Override
+              public void artifactAdded(@Nonnull Artifact artifact) {
+                final MyNode node = addArtifactNode(artifact);
+                selectNodeInTree(node);
+                // todo myContext.getDaemonAnalyzer().queueUpdate(myPackagingEditorContext.getOrCreateArtifactElement(artifact));
+              }
+            });
 
-    final ItemsChangeListener listener = new ItemsChangeListener() {
-      @Override
-      public void itemChanged(@Nullable Object deletedItem) {
-        if (deletedItem instanceof Library || deletedItem instanceof Module) {
-          onElementDeleted();
-        }
-      }
+    //modulesModel.addAllModuleChangeListener(moduleRootModel -> {
+    //  for (ProjectStructureElement element : getProjectStructureElements()) {
+    //    // todo myContext.getDaemonAnalyzer().queueUpdate(element);
+    //  }
+    //});
 
-      @Override
-      public void itemsExternallyChanged() {
+    final ItemsChangeListener listener = deletedItem -> {
+      if (deletedItem instanceof Library || deletedItem instanceof Module) {
+        onElementDeleted();
       }
     };
-    moduleStructureConfigurable.addItemsChangeListener(listener);
-    projectLibrariesConfig.addItemsChangeListener(listener);
+    // todo moduleStructureConfigurable.addItemsChangeListener(listener);
+    // todo projectLibrariesConfig.addItemsChangeListener(listener);
 
-    context.addLibraryEditorListener(new LibraryEditorListener() {
-      @Override
-      public void libraryRenamed(@Nonnull Library library, String oldName, String newName) {
-        final Artifact[] artifacts = myPackagingEditorContext.getArtifactModel().getArtifacts();
-        for (Artifact artifact : artifacts) {
-          updateLibraryElements(artifact, library, oldName, newName);
-        }
+    librariesModel.addLibraryEditorListener((library, oldName, newName) -> {
+      final Artifact[] artifacts = myPackagingEditorContext.getArtifactModel().getArtifacts();
+      for (Artifact artifact : artifacts) {
+        updateLibraryElements(artifact, library, oldName, newName);
       }
-
     });
   }
 
@@ -262,10 +268,15 @@ public class ArtifactsStructureConfigurable extends BaseStructureConfigurable {
       @Nonnull
       @Override
       public AnAction[] getChildren(@Nullable AnActionEvent e) {
-        final ArtifactType[] types = ArtifactType.EP_NAME.getExtensions();
-        List<AnAction> list = new ArrayList<AnAction>(types.length);
+        final List<ArtifactType> types = ArtifactType.EP_NAME.getExtensionList();
+
+        ProjectStructureSettingsUtil showSettingsUtil = (ProjectStructureSettingsUtil)ShowSettingsUtil.getInstance();
+
+        ModulesConfigurator modulesModel = showSettingsUtil.getModulesModel(myProject);
+
+        List<AnAction> list = new ArrayList<>(types.size());
         for (ArtifactType type : types) {
-          if (type.isAvailableForAdd(myContext.getModulesConfigurator())) {
+          if (type.isAvailableForAdd(modulesModel)) {
             list.add(createAddArtifactAction(type));
           }
         }
@@ -342,9 +353,9 @@ public class ArtifactsStructureConfigurable extends BaseStructureConfigurable {
   @RequiredUIAccess
   @Override
   public void disposeUIResources() {
-    myPackagingEditorContext.saveEditorSettings();
+    if (myPackagingEditorContext != null) myPackagingEditorContext.saveEditorSettings();
     super.disposeUIResources();
-    myPackagingEditorContext.disposeUIResources();
+    if (myPackagingEditorContext != null) myPackagingEditorContext.disposeUIResources();
   }
 
   @Override
@@ -356,7 +367,7 @@ public class ArtifactsStructureConfigurable extends BaseStructureConfigurable {
   @Override
   protected void removeArtifact(Artifact artifact) {
     myPackagingEditorContext.getOrCreateModifiableArtifactModel().removeArtifact(artifact);
-    myContext.getDaemonAnalyzer().removeElement(myPackagingEditorContext.getOrCreateArtifactElement(artifact));
+    /// todo myContext.getDaemonAnalyzer().removeElement(myPackagingEditorContext.getOrCreateArtifactElement(artifact));
   }
 
   @Override
@@ -380,7 +391,8 @@ public class ArtifactsStructureConfigurable extends BaseStructureConfigurable {
   }
 
   @Override
-  public void dispose() {
+  public int getConfigurableWeight() {
+    return ProjectConfigurableWeights.ARTIFACTS;
   }
 
   private class AddArtifactAction extends DumbAwareAction {

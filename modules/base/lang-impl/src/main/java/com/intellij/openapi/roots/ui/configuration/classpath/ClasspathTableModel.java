@@ -21,7 +21,6 @@ import com.intellij.openapi.roots.DependencyScope;
 import com.intellij.openapi.roots.ModifiableRootModel;
 import com.intellij.openapi.roots.OrderEntry;
 import com.intellij.openapi.roots.ui.configuration.ModuleConfigurationState;
-import com.intellij.openapi.roots.ui.configuration.projectRoot.StructureConfigurableContext;
 import com.intellij.util.ui.ItemRemovable;
 import javax.annotation.Nonnull;
 
@@ -41,11 +40,9 @@ class ClasspathTableModel extends AbstractTableModel implements ItemRemovable {
   public static final int SCOPE_COLUMN = 2;
   private final List<ClasspathTableItem<?>> myItems = new ArrayList<ClasspathTableItem<?>>();
   private final ModuleConfigurationState myState;
-  private StructureConfigurableContext myContext;
 
-  public ClasspathTableModel(final ModuleConfigurationState state, StructureConfigurableContext context) {
+  public ClasspathTableModel(final ModuleConfigurationState state) {
     myState = state;
-    myContext = context;
     init();
   }
 
@@ -55,7 +52,7 @@ class ClasspathTableModel extends AbstractTableModel implements ItemRemovable {
 
   public void init() {
     for (final OrderEntry orderEntry : getModel().getOrderEntries()) {
-      addItem(ClasspathTableItem.createItem(orderEntry, myContext));
+      addItem(ClasspathTableItem.createItem(orderEntry, myState.getProject(), myState.getModulesConfigurator(), myState.getLibrariesConfigurator()));
     }
   }
 

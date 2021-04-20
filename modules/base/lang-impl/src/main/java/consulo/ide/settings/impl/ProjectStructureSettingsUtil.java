@@ -15,9 +15,13 @@
  */
 package consulo.ide.settings.impl;
 
+import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.DefaultSdksModel;
+import consulo.roots.ui.configuration.LibrariesConfigurator;
+import consulo.roots.ui.configuration.ModulesConfigurator;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
@@ -25,11 +29,21 @@ import javax.annotation.Nonnull;
  * <p>
  * Marker for {@link com.intellij.openapi.options.ShowSettingsUtil} with return current {@link com.intellij.openapi.projectRoots.SdkModel} for dialog, or for SdkTable
  */
-public interface ShowSdksSettingsUtil {
+public interface ProjectStructureSettingsUtil {
   @Nonnull
   default SettingsSdksModel getSdksModel() {
     DefaultSdksModel model = new DefaultSdksModel();
     model.reset();
     return model;
+  }
+
+  @Nullable
+  default ModulesConfigurator getModulesModel(@Nonnull Project project) {
+    return null;
+  }
+
+  @Nullable
+  default LibrariesConfigurator getLibrariesModel(@Nonnull Project project) {
+    return null;
   }
 }

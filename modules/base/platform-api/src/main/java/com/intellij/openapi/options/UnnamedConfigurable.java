@@ -68,6 +68,13 @@ public interface UnnamedConfigurable {
   }
 
   /**
+   * Initializing method for configurable. Called one time, after configurable opened, and before #reset(). But #reset() can be called more than one time
+   */
+  @RequiredUIAccess
+  default void initialize() {
+  }
+
+  /**
    * Disposes the Swing components used for displaying the configuration.
    */
   @RequiredUIAccess

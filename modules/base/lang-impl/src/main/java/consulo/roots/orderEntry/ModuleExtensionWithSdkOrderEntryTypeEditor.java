@@ -23,6 +23,7 @@ import com.intellij.openapi.roots.ui.CellAppearanceEx;
 import com.intellij.openapi.roots.ui.util.SimpleTextCellAppearance;
 import com.intellij.ui.SimpleTextAttributes;
 import consulo.bundle.SdkUtil;
+import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
 
@@ -31,6 +32,7 @@ import javax.annotation.Nonnull;
  * @since 06-Jun-16
  */
 public class ModuleExtensionWithSdkOrderEntryTypeEditor implements OrderEntryTypeEditor<ModuleExtensionWithSdkOrderEntryImpl> {
+  @RequiredUIAccess
   @Override
   public void navigate(@Nonnull final ModuleExtensionWithSdkOrderEntryImpl orderEntry) {
     final Sdk sdk = orderEntry.getSdk();

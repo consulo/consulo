@@ -253,7 +253,7 @@ public abstract class LibraryTableBase implements PersistentStateComponent<Eleme
     }
 
     @Override
-    public Library createLibrary(String name, @javax.annotation.Nullable PersistentLibraryKind kind) {
+    public Library createLibrary(String name, @Nullable PersistentLibraryKind kind) {
       assertWritable();
       final LibraryImpl library = new LibraryImpl(name, kind, LibraryTableBase.this, null);
       myLibraries.add(library);

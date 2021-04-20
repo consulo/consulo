@@ -15,6 +15,9 @@
  */
 package com.intellij.openapi.roots.ui.configuration.projectRoot.daemon;
 
+import com.intellij.openapi.actionSystem.DataContext;
+import com.intellij.openapi.options.ShowSettingsUtil;
+import com.intellij.openapi.options.ex.Settings;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.openapi.roots.OrderRootType;
@@ -24,20 +27,22 @@ import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.roots.libraries.LibraryTable;
 import com.intellij.openapi.roots.libraries.LibraryTablesRegistrar;
 import com.intellij.openapi.roots.ui.configuration.ModuleEditor;
-import com.intellij.openapi.roots.ui.configuration.ProjectStructureConfigurable;
 import com.intellij.openapi.roots.ui.configuration.libraries.LibraryEditingUtil;
 import com.intellij.openapi.roots.ui.configuration.libraryEditor.ExistingLibraryEditor;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.BaseLibrariesConfigurable;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.LibrariesModifiableModel;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.LibraryConfigurable;
-import com.intellij.openapi.roots.ui.configuration.projectRoot.StructureConfigurableContext;
+import com.intellij.openapi.roots.ui.configuration.projectRoot.ProjectLibrariesConfigurable;
 import com.intellij.openapi.ui.NamedConfigurable;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.PathUtil;
 import com.intellij.xml.util.XmlStringUtil;
+import consulo.ide.settings.impl.ProjectStructureSettingsUtil;
 import consulo.roots.types.BinariesOrderRootType;
 import consulo.roots.types.DocumentationOrderRootType;
 import consulo.roots.types.SourcesOrderRootType;
+import consulo.roots.ui.configuration.LibrariesConfigurator;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.concurrent.AsyncResult;
 
 import javax.annotation.Nonnull;
@@ -46,6 +51,7 @@ import java.lang.reflect.Proxy;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author nik
@@ -53,8 +59,7 @@ import java.util.List;
 public class LibraryProjectStructureElement extends ProjectStructureElement {
   private final Library myLibrary;
 
-  public LibraryProjectStructureElement(@Nonnull StructureConfigurableContext context, @Nonnull Library library) {
-    super(context);
+  public LibraryProjectStructureElement(@Nonnull Library library) {
     myLibrary = library;
   }
 
@@ -63,40 +68,46 @@ public class LibraryProjectStructureElement extends ProjectStructureElement {
   }
 
   @Override
-  public void check(ProjectStructureProblemsHolder problemsHolder) {
+  public void check(@Nonnull Project project, ProjectStructureProblemsHolder problemsHolder) {
     if (((LibraryEx)myLibrary).isDisposed()) return;
-    final LibraryEx library = (LibraryEx)myContext.getLibraryModel(myLibrary);
+
+    ProjectStructureSettingsUtil util = (ProjectStructureSettingsUtil)ShowSettingsUtil.getInstance();
+
+    LibrariesConfigurator librariesConfigurator = util.getLibrariesModel(project);
+
+    final LibraryEx library = (LibraryEx)librariesConfigurator.getLibraryModel(myLibrary);
     if (library == null || library.isDisposed()) return;
 
-    reportInvalidRoots(problemsHolder, library, BinariesOrderRootType.getInstance(), "classes", ProjectStructureProblemType.error("library-invalid-classes-path"));
+    reportInvalidRoots(project, problemsHolder, library, BinariesOrderRootType.getInstance(), "classes", ProjectStructureProblemType.error("library-invalid-classes-path"));
     final String libraryName = library.getName();
     if (libraryName == null || !libraryName.startsWith("Maven: ")) {
-      reportInvalidRoots(problemsHolder, library, SourcesOrderRootType.getInstance(), "sources",
-                         ProjectStructureProblemType.warning("library-invalid-source-javadoc-path"));
-      reportInvalidRoots(problemsHolder, library, DocumentationOrderRootType.getInstance(), "javadoc",
-                         ProjectStructureProblemType.warning("library-invalid-source-javadoc-path"));
+      reportInvalidRoots(project, problemsHolder, library, SourcesOrderRootType.getInstance(), "sources", ProjectStructureProblemType.warning("library-invalid-source-javadoc-path"));
+      reportInvalidRoots(project, problemsHolder, library, DocumentationOrderRootType.getInstance(), "javadoc", ProjectStructureProblemType.warning("library-invalid-source-javadoc-path"));
     }
   }
 
-  private void reportInvalidRoots(ProjectStructureProblemsHolder problemsHolder, LibraryEx library,
-                                  final OrderRootType type, String rootName, final ProjectStructureProblemType problemType) {
+  private void reportInvalidRoots(Project project,
+                                  ProjectStructureProblemsHolder problemsHolder,
+                                  LibraryEx library,
+                                  final OrderRootType type,
+                                  String rootName,
+                                  final ProjectStructureProblemType problemType) {
     final List<String> invalidUrls = library.getInvalidRootUrls(type);
     if (!invalidUrls.isEmpty()) {
       final String description = createInvalidRootsDescription(invalidUrls, rootName, library.getName());
       final PlaceInProjectStructure place = createPlace();
       final String message = ProjectBundle.message("project.roots.error.message.invalid.roots", rootName, invalidUrls.size());
       ProjectStructureProblemDescription.ProblemLevel level = library.getTable().getTableLevel().equals(LibraryTablesRegistrar.PROJECT_LEVEL)
-                                                              ? ProjectStructureProblemDescription.ProblemLevel.PROJECT : ProjectStructureProblemDescription.ProblemLevel.GLOBAL;
-      problemsHolder.registerProblem(new ProjectStructureProblemDescription(message, description, place,
-                                                                            problemType, level,
-                                                                            Collections.singletonList(new RemoveInvalidRootsQuickFix(library, type, invalidUrls)),
-                                                                            true));
+                                                              ? ProjectStructureProblemDescription.ProblemLevel.PROJECT
+                                                              : ProjectStructureProblemDescription.ProblemLevel.GLOBAL;
+      problemsHolder.registerProblem(
+              new ProjectStructureProblemDescription(message, description, place, problemType, level, List.of(new RemoveInvalidRootsQuickFix(project, library, type, invalidUrls)), true));
     }
   }
 
   private static String createInvalidRootsDescription(List<String> invalidClasses, String rootName, String libraryName) {
     StringBuilder buffer = new StringBuilder();
-    buffer.append("Library '").append(StringUtil.escapeXml(libraryName)).append("' has broken " + rootName + " " + StringUtil.pluralize("path", invalidClasses.size()) + ":");
+    buffer.append("Library '").append(StringUtil.escapeXml(libraryName)).append("' has broken ").append(rootName).append(" ").append(StringUtil.pluralize("path", invalidClasses.size())).append(":");
     for (String url : invalidClasses) {
       buffer.append("<br>&nbsp;&nbsp;");
       buffer.append(PathUtil.toPresentableUrl(url));
@@ -106,8 +117,14 @@ public class LibraryProjectStructureElement extends ProjectStructureElement {
 
   @Nonnull
   private PlaceInProjectStructure createPlace() {
-    final Project project = myContext.getProject();
-    return new PlaceInProjectStructureBase(project, ProjectStructureConfigurable.getInstance(project).createProjectOrGlobalLibraryPlace(myLibrary), this);
+    return new PlaceInProjectStructureBase(this::librariesNavigator, this);
+  }
+
+  @RequiredUIAccess
+  private AsyncResult<Void> librariesNavigator(Project project) {
+    return ShowSettingsUtil.getInstance().showProjectStructureDialog(project, projectStructureSelector -> {
+      projectStructureSelector.selectProjectOrGlobalLibrary(myLibrary, true);
+    });
   }
 
   @Override
@@ -123,16 +140,15 @@ public class LibraryProjectStructureElement extends ProjectStructureElement {
     return getSourceOrThis() == (((LibraryProjectStructureElement)o).getSourceOrThis());
   }
 
-  public AsyncResult<Void> navigate() {
-    return createPlace().navigate();
+  public AsyncResult<Void> navigate(Project project) {
+    return createPlace().navigate(project);
   }
 
   @Nonnull
   private Library getSourceOrThis() {
     final InvocationHandler invocationHandler = Proxy.isProxyClass(myLibrary.getClass()) ? Proxy.getInvocationHandler(myLibrary) : null;
-    final Library realLibrary = invocationHandler instanceof ModuleEditor.ProxyDelegateAccessor ?
-                                (Library)((ModuleEditor.ProxyDelegateAccessor)invocationHandler).getDelegate() : myLibrary;
-    final Library source = realLibrary instanceof LibraryImpl? ((LibraryImpl)realLibrary).getSource() : null;
+    final Library realLibrary = invocationHandler instanceof ModuleEditor.ProxyDelegateAccessor ? (Library)((ModuleEditor.ProxyDelegateAccessor)invocationHandler).getDelegate() : myLibrary;
+    final Library source = realLibrary instanceof LibraryImpl ? ((LibraryImpl)realLibrary).getSource() : null;
     return source != null ? source : myLibrary;
   }
 
@@ -149,11 +165,10 @@ public class LibraryProjectStructureElement extends ProjectStructureElement {
   }
 
   @Override
-  public ProjectStructureProblemDescription createUnusedElementWarning() {
-    final List<ConfigurationErrorQuickFix> fixes = Arrays.asList(new AddLibraryToDependenciesFix(), new RemoveLibraryFix());
+  public ProjectStructureProblemDescription createUnusedElementWarning(@Nonnull Project project) {
+    final List<ConfigurationErrorQuickFix> fixes = Arrays.asList(new AddLibraryToDependenciesFix(project), new RemoveLibraryFix(project));
     return new ProjectStructureProblemDescription("Library '" + StringUtil.escapeXml(myLibrary.getName()) + "'" + " is not used", null, createPlace(),
-                                                  ProjectStructureProblemType.unused("unused-library"), ProjectStructureProblemDescription.ProblemLevel.PROJECT,
-                                                  fixes, false);
+                                                  ProjectStructureProblemType.unused("unused-library"), ProjectStructureProblemDescription.ProblemLevel.PROJECT, fixes, false);
   }
 
   @Override
@@ -172,34 +187,40 @@ public class LibraryProjectStructureElement extends ProjectStructureElement {
   }
 
   private class RemoveInvalidRootsQuickFix extends ConfigurationErrorQuickFix {
+    private final Project myProject;
     private final Library myLibrary;
     private final OrderRootType myType;
     private final List<String> myInvalidUrls;
 
-    public RemoveInvalidRootsQuickFix(Library library, OrderRootType type, List<String> invalidUrls) {
+    public RemoveInvalidRootsQuickFix(Project project, Library library, OrderRootType type, List<String> invalidUrls) {
       super("Remove invalid " + StringUtil.pluralize("root", invalidUrls.size()));
+      myProject = project;
       myLibrary = library;
       myType = type;
       myInvalidUrls = invalidUrls;
     }
 
     @Override
-    public void performFix() {
-      final LibraryTable.ModifiableModel libraryTable = myContext.getModifiableLibraryTable(myLibrary.getTable());
+    public void performFix(@Nonnull DataContext dataContext) {
+      ProjectStructureSettingsUtil util = (ProjectStructureSettingsUtil)ShowSettingsUtil.getInstance();
+
+      LibrariesConfigurator librariesConfigurator = util.getLibrariesModel(myProject);
+
+      final LibraryTable.ModifiableModel libraryTable = librariesConfigurator.getModifiableLibraryTable(myLibrary.getTable());
       if (libraryTable instanceof LibrariesModifiableModel) {
         for (String invalidRoot : myInvalidUrls) {
           final ExistingLibraryEditor libraryEditor = ((LibrariesModifiableModel)libraryTable).getLibraryEditor(myLibrary);
           libraryEditor.removeRoot(invalidRoot, myType);
         }
-        myContext.getDaemonAnalyzer().queueUpdate(LibraryProjectStructureElement.this);
-        final ProjectStructureConfigurable structureConfigurable = ProjectStructureConfigurable.getInstance(myContext.getProject());
-        navigate().doWhenDone(new Runnable() {
-          @Override
-          public void run() {
-            final NamedConfigurable configurable = structureConfigurable.getConfigurableFor(myLibrary).getSelectedConfigurable();
-            if (configurable instanceof LibraryConfigurable) {
-              ((LibraryConfigurable)configurable).updateComponent();
-            }
+        // todo context.getDaemonAnalyzer().queueUpdate(LibraryProjectStructureElement.this);
+
+        Settings settings = Objects.requireNonNull(dataContext.getData(Settings.KEY));
+        ProjectLibrariesConfigurable librariesConfigurable = settings.findConfigurable(ProjectLibrariesConfigurable.class);
+
+        navigate(myProject).doWhenDone(() -> {
+          final NamedConfigurable configurable = librariesConfigurable.getSelectedConfigurable();
+          if (configurable instanceof LibraryConfigurable) {
+            ((LibraryConfigurable)configurable).updateComponent();
           }
         });
       }
@@ -207,24 +228,30 @@ public class LibraryProjectStructureElement extends ProjectStructureElement {
   }
 
   private class AddLibraryToDependenciesFix extends ConfigurationErrorQuickFix {
-    private AddLibraryToDependenciesFix() {
+    private final Project myProject;
+
+    private AddLibraryToDependenciesFix(Project project) {
       super("Add to Dependencies...");
+      myProject = project;
     }
 
     @Override
-    public void performFix() {
-      LibraryEditingUtil.showDialogAndAddLibraryToDependencies(myLibrary, myContext.getProject(), false);
+    public void performFix(DataContext dataContext) {
+      LibraryEditingUtil.showDialogAndAddLibraryToDependencies(myLibrary, myProject, false);
     }
   }
 
   private class RemoveLibraryFix extends ConfigurationErrorQuickFix {
-    private RemoveLibraryFix() {
+    private final Project myProject;
+
+    private RemoveLibraryFix(Project project) {
       super("Remove Library");
+      myProject = project;
     }
 
     @Override
-    public void performFix() {
-      BaseLibrariesConfigurable.getInstance(myContext.getProject(), myLibrary.getTable().getTableLevel()).removeLibrary(LibraryProjectStructureElement.this);
+    public void performFix(DataContext dataContext) {
+      BaseLibrariesConfigurable.getInstance(myProject, myLibrary.getTable().getTableLevel()).removeLibrary(LibraryProjectStructureElement.this);
     }
   }
 }

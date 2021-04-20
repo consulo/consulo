@@ -17,7 +17,6 @@
 package com.intellij.openapi.roots.ui.configuration.projectRoot;
 
 import com.intellij.openapi.options.ConfigurationException;
-import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.SdkModel;
@@ -26,12 +25,10 @@ import com.intellij.openapi.projectRoots.impl.SdkImpl;
 import com.intellij.openapi.projectRoots.ui.BaseSdkEditor;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureElement;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.SdkProjectStructureElement;
-import com.intellij.ui.navigation.History;
-import com.intellij.ui.navigation.Place;
 import consulo.bundle.SdkUtil;
 import consulo.bundle.ui.SdkEditor;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
-import consulo.util.concurrent.AsyncResult;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
@@ -42,32 +39,20 @@ import javax.swing.*;
  * User: anna
  * Date: 05-Jun-2006
  */
-public class SdkConfigurable extends ProjectStructureElementConfigurable<Sdk> implements Place.Navigator {
+public class SdkConfigurable extends ProjectStructureElementConfigurable<Sdk> {
   private final SdkImpl mySdk;
   private final BaseSdkEditor mySdkEditor;
   private final SdkProjectStructureElement myProjectStructureElement;
 
-  public SdkConfigurable(@Nonnull final SdkImpl sdk,
-                         final SdkModel sdksModel,
-                         final Runnable updateTree,
-                         @Nonnull History history,
-                         Project project) {
+  public SdkConfigurable(@Nonnull final SdkImpl sdk, final SdkModel sdksModel, final Runnable updateTree) {
     super(!sdk.isPredefined(), updateTree);
     mySdk = sdk;
-    mySdkEditor = createSdkEditor(sdksModel, history, mySdk);
-    final StructureConfigurableContext context = ModuleStructureConfigurable.getInstance(project).getContext();
-    myProjectStructureElement = new SdkProjectStructureElement(context, mySdk);
+    mySdkEditor = createSdkEditor(sdksModel, mySdk);
+    myProjectStructureElement = new SdkProjectStructureElement(mySdk);
   }
 
-  public SdkConfigurable(@Nonnull final SdkImpl sdk, final SdkModel sdksModel, final Runnable updateTree, @Nonnull History history, boolean noContext) {
-    super(!sdk.isPredefined(), updateTree);
-    mySdk = sdk;
-    mySdkEditor = createSdkEditor(sdksModel, history, mySdk);
-    myProjectStructureElement = new SdkProjectStructureElement(null, sdk);
-  }
-
-  protected BaseSdkEditor createSdkEditor(SdkModel sdksModel, History history, SdkImpl projectJdk) {
-    return new SdkEditor(sdksModel, history, projectJdk);
+  protected BaseSdkEditor createSdkEditor(SdkModel sdksModel, SdkImpl projectJdk) {
+    return new SdkEditor(sdksModel, projectJdk);
   }
 
   @Override
@@ -104,7 +89,7 @@ public class SdkConfigurable extends ProjectStructureElementConfigurable<Sdk> im
   @Nullable
   @NonNls
   public String getHelpTopic() {
-    return ((SdkType) mySdk.getSdkType()).getHelpTopic();
+    return ((SdkType)mySdk.getSdkType()).getHelpTopic();
   }
 
   @Override
@@ -112,38 +97,28 @@ public class SdkConfigurable extends ProjectStructureElementConfigurable<Sdk> im
     return mySdkEditor.createComponent();
   }
 
+  @RequiredUIAccess
   @Override
   public boolean isModified() {
     return mySdkEditor.isModified();
   }
 
+  @RequiredUIAccess
   @Override
   public void apply() throws ConfigurationException {
     mySdkEditor.apply();
   }
 
+  @RequiredUIAccess
   @Override
   public void reset() {
     mySdkEditor.reset();
   }
 
+  @RequiredUIAccess
   @Override
   public void disposeUIResources() {
     mySdkEditor.disposeUIResources();
-  }
-
-  @Override
-  public void setHistory(final History history) {
-  }
-
-  @Override
-  public AsyncResult<Void> navigateTo(@Nullable final Place place, final boolean requestFocus) {
-    return mySdkEditor.navigateTo(place, requestFocus);
-  }
-
-  @Override
-  public void queryPlace(@Nonnull final Place place) {
-    mySdkEditor.queryPlace(place);
   }
 
   public Sdk getSdk() {

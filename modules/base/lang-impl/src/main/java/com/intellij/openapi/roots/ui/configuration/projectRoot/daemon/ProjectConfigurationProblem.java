@@ -12,6 +12,7 @@
  */
 package com.intellij.openapi.roots.ui.configuration.projectRoot.daemon;
 
+import com.intellij.ide.DataManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ui.configuration.ConfigurationError;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
@@ -62,7 +63,7 @@ class ProjectConfigurationProblem extends ConfigurationError {
 
   @Override
   public void navigate() {
-    myDescription.getPlace().navigate();
+    myDescription.getPlace().navigate(myProject);
   }
 
   @Override
@@ -81,12 +82,7 @@ class ProjectConfigurationProblem extends ConfigurationError {
 
       @Override
       public PopupStep onChosen(final ConfigurationErrorQuickFix selectedValue, boolean finalChoice) {
-        return doFinalStep(new Runnable() {
-          @Override
-          public void run() {
-            selectedValue.performFix();
-          }
-        });
+        return doFinalStep(() -> selectedValue.performFix(DataManager.getInstance().getDataContext(contextComponent)));
       }
     }).show(relativePoint);
   }

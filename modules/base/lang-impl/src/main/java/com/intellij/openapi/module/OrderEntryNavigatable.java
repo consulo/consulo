@@ -35,14 +35,4 @@ public class OrderEntryNavigatable implements Navigatable {
   public void navigate(boolean requestFocus) {
     ProjectSettingsService.getInstance(myModule.getProject()).openModuleDependenciesSettings(myModule, myOrderEntry);
   }
-
-  @Override
-  public boolean canNavigate() {
-    return ProjectSettingsService.getInstance(myModule.getProject()).canOpenModuleDependenciesSettings();
-  }
-
-  @Override
-  public boolean canNavigateToSource() {
-    return false;
-  }
 }

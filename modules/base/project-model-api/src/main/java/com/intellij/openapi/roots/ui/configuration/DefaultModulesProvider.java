@@ -28,8 +28,8 @@ import javax.annotation.Nullable;
  * @author nik
  */
 public class DefaultModulesProvider implements ModulesProvider {
-
-  public static ModulesProvider createForProject(@Nullable Project project) {
+  @Nonnull
+  public static ModulesProvider of(@Nullable Project project) {
     return project == null ? EMPTY_MODULES_PROVIDER : new DefaultModulesProvider(project);
   }
 

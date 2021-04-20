@@ -89,10 +89,6 @@ public class PicoInjectingContainer implements InjectingContainer {
   @Override
   @SuppressWarnings("unchecked")
   public <T> T getUnbindedInstance(@Nonnull Class<T> clazz) {
-    Object componentInstance = myContainer.getComponentInstance(clazz);
-    if (componentInstance != null) {
-      return (T)componentInstance;
-    }
     ConstructorInjectionComponentAdapter adapter = new ConstructorInjectionComponentAdapter(clazz.getName(), clazz);
     return (T)adapter.getComponentInstance(myContainer);
   }

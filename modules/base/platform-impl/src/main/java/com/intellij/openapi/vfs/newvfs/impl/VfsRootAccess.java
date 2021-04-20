@@ -167,7 +167,7 @@ public class VfsRootAccess {
     insideGettingRoots = true;
     final Set<String> roots = new THashSet<>();
 
-    OrderEnumerator enumerator = ProjectRootManager.getInstance(project).orderEntries().using(new DefaultModulesProvider(project));
+    OrderEnumerator enumerator = ProjectRootManager.getInstance(project).orderEntries().using(DefaultModulesProvider.of(project));
     ContainerUtil.addAll(roots, enumerator.classes().getUrls());
     ContainerUtil.addAll(roots, enumerator.sources().getUrls());
 
