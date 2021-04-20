@@ -38,7 +38,6 @@ import com.intellij.openapi.wm.impl.X11UiUtil;
 import com.intellij.ui.AppUIUtil;
 import com.intellij.ui.DesktopAppUIUtil;
 import consulo.application.ApplicationProperties;
-import consulo.awt.TargetAWT;
 import consulo.builtInServer.http.HttpRequestHandler;
 import consulo.builtInServer.json.JsonBaseRequestHandler;
 import consulo.builtInServer.json.JsonGetRequestHandler;
@@ -282,7 +281,7 @@ public class DesktopApplicationStarter extends ApplicationStarter {
             String description = event.getDescription();
             if (PluginsInitializeInfo.EDIT.equals(description)) {
               IdeFrame ideFrame = WindowManagerEx.getInstanceEx().findFrameFor(null);
-              ShowSettingsUtil.getInstance().editConfigurable(ideFrame == null ? null : TargetAWT.to(ideFrame.getWindow()), new PluginsConfigurable());
+              ShowSettingsUtil.getInstance().showSettingsDialog(ideFrame == null ? null : ideFrame.getProject(), PluginsConfigurable.ID, null);
               return;
             }
 

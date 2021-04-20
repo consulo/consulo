@@ -19,21 +19,25 @@
  */
 package com.intellij.ide.actions;
 
-import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.options.ShowSettingsUtil;
-import com.intellij.openapi.project.DumbAware;
+import com.intellij.openapi.project.DumbAwareAction;
 import consulo.ide.plugins.PluginsConfigurable;
 import consulo.ui.annotation.RequiredUIAccess;
+import jakarta.inject.Inject;
+import jakarta.inject.Provider;
 
-import java.awt.*;
+public class ShowPluginManagerAction extends DumbAwareAction {
+  private final Provider<ShowSettingsUtil> myShowSettingsUtilProvider;
 
-public class ShowPluginManagerAction extends AnAction implements DumbAware {
+  @Inject
+  public ShowPluginManagerAction(Provider<ShowSettingsUtil> showSettingsUtilProvider) {
+    myShowSettingsUtilProvider = showSettingsUtilProvider;
+  }
+
   @RequiredUIAccess
   @Override
   public void actionPerformed(AnActionEvent e) {
-    Component component = e.getData(PlatformDataKeys.CONTEXT_COMPONENT);
-    ShowSettingsUtil.getInstance().editConfigurable(component, new PluginsConfigurable());
+    myShowSettingsUtilProvider.get().showSettingsDialog(e.getProject(), PluginsConfigurable.ID, null);
   }
 }
