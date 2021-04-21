@@ -54,7 +54,7 @@ public class DefaultLibraryRootsComponentDescriptor extends LibraryRootsComponen
   @Nonnull
   @Override
   public List<? extends RootDetector> getRootDetectors() {
-    return Arrays.asList(EP_NAME.getExtensions());
+    return EP_NAME.getExtensionList();
   }
 
   public static OrderRootTypePresentation getDefaultPresentation(OrderRootType type) {
