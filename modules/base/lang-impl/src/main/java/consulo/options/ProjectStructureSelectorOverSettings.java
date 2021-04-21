@@ -25,8 +25,10 @@ import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.LibraryOrderEntry;
 import com.intellij.openapi.roots.OrderEntry;
 import com.intellij.openapi.roots.libraries.Library;
+import com.intellij.openapi.roots.ui.configuration.ClasspathEditor;
 import com.intellij.openapi.roots.ui.configuration.ModuleEditor;
 import com.intellij.openapi.roots.ui.configuration.ProjectConfigurable;
+import com.intellij.openapi.roots.ui.configuration.artifacts.ArtifactsStructureConfigurable;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.ModuleConfigurable;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.ModuleStructureConfigurable;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.ProjectLibrariesConfigurable;
@@ -56,7 +58,10 @@ public class ProjectStructureSelectorOverSettings implements ProjectStructureSel
   @Nonnull
   @Override
   public AsyncResult<Void> select(@Nullable Artifact artifact, boolean requestFocus) {
-    return AsyncResult.resolved(); // todo
+    return selectAsync(ArtifactsStructureConfigurable.ID, ArtifactsStructureConfigurable.class, (artifactsStructureConfigurable, runnable) -> {
+      artifactsStructureConfigurable.selectNodeInTree(artifact);
+      runnable.run();
+    });
   }
 
   @RequiredUIAccess
@@ -109,7 +114,21 @@ public class ProjectStructureSelectorOverSettings implements ProjectStructureSel
   @Nonnull
   @Override
   public AsyncResult<Void> selectOrderEntry(@Nonnull Module module, @Nullable OrderEntry orderEntry) {
-    return AsyncResult.resolved(); // todo
+    return selectAsync(ModuleStructureConfigurable.ID, ModuleStructureConfigurable.class, (moduleStructureConfigurable, runnable) -> {
+      moduleStructureConfigurable.selectNodeInTree(module).doWhenDone((node) -> {
+        ModuleEditor moduleEditor = ((ModuleConfigurable)((MasterDetailsComponent.MyNode)node).getConfigurable()).getModuleEditor();
+
+        moduleEditor.selectEditor(ProjectBundle.message("module.dependencies.title"));
+
+        ClasspathEditor editor = (ClasspathEditor)moduleEditor.getEditor(ProjectBundle.message("module.dependencies.title"));
+
+        if (orderEntry != null) {
+          editor.selectOrderEntry(orderEntry);
+        }
+        
+        runnable.run();
+      });
+    });
   }
 
   @RequiredUIAccess

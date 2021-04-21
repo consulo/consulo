@@ -19,7 +19,6 @@ import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.DefaultActionGroup;
 import com.intellij.openapi.application.WriteAction;
-import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.options.ShowSettingsUtil;
@@ -61,6 +60,8 @@ import java.util.List;
  * @author nik
  */
 public class ArtifactsStructureConfigurable extends BaseStructureConfigurable implements ConfigurableWeight {
+  public static final String ID = "project.artifacts";
+
   @Nonnull
   private final Project myProject;
   @Nonnull
@@ -377,12 +378,7 @@ public class ArtifactsStructureConfigurable extends BaseStructureConfigurable im
   @Override
   @Nonnull
   public String getId() {
-    return "project.artifacts";
-  }
-
-  @Override
-  public Runnable enableSearch(String option) {
-    return null;
+    return ID;
   }
 
   @Override
