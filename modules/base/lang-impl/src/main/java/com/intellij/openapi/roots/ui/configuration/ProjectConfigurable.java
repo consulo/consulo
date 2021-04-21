@@ -33,7 +33,6 @@ import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStr
 import com.intellij.openapi.ui.DetailsComponent;
 import com.intellij.openapi.ui.VerticalFlowLayout;
 import com.intellij.openapi.util.Comparing;
-import com.intellij.openapi.util.Couple;
 import com.intellij.openapi.util.EmptyRunnable;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
@@ -45,11 +44,9 @@ import consulo.compiler.CompilerConfiguration;
 import consulo.ide.settings.impl.ProjectStructureSettingsUtil;
 import consulo.preferences.internal.ConfigurableWeight;
 import consulo.roots.ui.configuration.ModulesConfigurator;
-import consulo.roots.ui.configuration.WholeWestConfigurable;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -60,7 +57,7 @@ import java.io.IOException;
  * @author Eugene Zhuravlev
  *         Date: Dec 15, 2003
  */
-public class ProjectConfigurable extends ProjectStructureElementConfigurable<Project> implements WholeWestConfigurable, ConfigurableWeight, Configurable.NoMargin {
+public class ProjectConfigurable extends ProjectStructureElementConfigurable<Project> implements Configurable, ConfigurableWeight, Configurable.NoMargin {
   public static final String ID = "project";
 
   private final Project myProject;
@@ -157,7 +154,7 @@ public class ProjectConfigurable extends ProjectStructureElementConfigurable<Pro
     myFreeze = true;
     try {
 
-      final String compilerOutput = CompilerConfiguration.getInstance(myProject).getCompilerOutputUrl();
+      final String compilerOutput = getModulesConfigurator().getCompilerOutputUrl();
       if (compilerOutput != null) {
         myProjectCompilerOutput.setText(FileUtil.toSystemDependentName(VfsUtil.urlToPath(compilerOutput)));
       }
@@ -176,35 +173,34 @@ public class ProjectConfigurable extends ProjectStructureElementConfigurable<Pro
   @RequiredUIAccess
   @Override
   public void apply() throws ConfigurationException {
-    final CompilerConfiguration compilerProjectExtension = CompilerConfiguration.getInstance(myProject);
+    final CompilerConfiguration configuration = CompilerConfiguration.getInstance(myProject);
 
     if (myProjectName != null && StringUtil.isEmptyOrSpaces(myProjectName.getText())) {
       throw new ConfigurationException("Please, specify project name!");
     }
 
-    ApplicationManager.getApplication().runWriteAction(new Runnable() {
-      @Override
-      public void run() {
-        // set the output path first so that handlers of RootsChanged event sent after JDK is set
-        // would see the updated path
-        String canonicalPath = myProjectCompilerOutput.getText();
-        if (canonicalPath != null && canonicalPath.length() > 0) {
-          try {
-            canonicalPath = FileUtil.resolveShortWindowsName(canonicalPath);
-          }
-          catch (IOException e) {
-            //file doesn't exist yet
-          }
-          canonicalPath = FileUtil.toSystemIndependentName(canonicalPath);
-          compilerProjectExtension.setCompilerOutputUrl(VfsUtil.pathToUrl(canonicalPath));
+    getModulesConfigurator().setCompilerOutputUrl(getCompilerOutputUrl());
+
+    ApplicationManager.getApplication().runWriteAction(() -> {
+      // set the output path first so that handlers of RootsChanged event sent after JDK is set
+      // would see the updated path
+      String canonicalPath = myProjectCompilerOutput.getText();
+      if (canonicalPath != null && canonicalPath.length() > 0) {
+        try {
+          canonicalPath = FileUtil.resolveShortWindowsName(canonicalPath);
         }
-        else {
-          compilerProjectExtension.setCompilerOutputUrl(null);
+        catch (IOException e) {
+          //file doesn't exist yet
         }
-        if (myProjectName != null) {
-          ((ProjectEx)myProject).setProjectName(myProjectName.getText().trim());
-          if (myDetailsComponent != null) myDetailsComponent.setText(getBannerSlogan());
-        }
+        canonicalPath = FileUtil.toSystemIndependentName(canonicalPath);
+        configuration.setCompilerOutputUrl(VfsUtil.pathToUrl(canonicalPath));
+      }
+      else {
+        configuration.setCompilerOutputUrl(null);
+      }
+      if (myProjectName != null) {
+        ((ProjectEx)myProject).setProjectName(myProjectName.getText().trim());
+        if (myDetailsComponent != null) myDetailsComponent.setText(getBannerSlogan());
       }
     });
   }
@@ -259,12 +255,6 @@ public class ProjectConfigurable extends ProjectStructureElementConfigurable<Pro
 
   public String getCompilerOutputUrl() {
     return VfsUtil.pathToUrl(myProjectCompilerOutput.getText().trim());
-  }
-
-  @Nonnull
-  @Override
-  public Couple<JComponent> createSplitterComponents() {
-    return Couple.of(new JPanel(), createComponent());
   }
 
   @Override

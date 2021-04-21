@@ -23,6 +23,7 @@ import consulo.roots.ContentFolderTypeProvider;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Locale;
 
 /**
  * @author VISTALL
@@ -52,4 +53,14 @@ public abstract class ModuleCompilerPathsManager {
 
   @Nonnull
   public abstract VirtualFilePointer getCompilerOutputPointer(@Nonnull ContentFolderTypeProvider contentFolderType);
+
+  @Nonnull
+  public static String getRelativePathForProvider(@Nonnull ContentFolderTypeProvider contentFolderType, @Nonnull Module module) {
+    return getRelativePathForProvider(contentFolderType, module.getName());
+  }
+
+  @Nonnull
+  public static String getRelativePathForProvider(@Nonnull ContentFolderTypeProvider contentFolderType, @Nonnull String moduleName) {
+    return contentFolderType.getId().toLowerCase(Locale.ROOT) + "/" + moduleName;
+  }
 }

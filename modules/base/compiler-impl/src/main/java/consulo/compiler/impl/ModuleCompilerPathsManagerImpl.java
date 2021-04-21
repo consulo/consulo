@@ -111,13 +111,13 @@ public class ModuleCompilerPathsManagerImpl extends ModuleCompilerPathsManager i
       }
     }
 
-    String backUrl = myCompilerConfiguration.getCompilerOutputUrl() + "/" + contentFolderType.getId().toLowerCase() + "/" + myModule.getName();
+    String backUrl = myCompilerConfiguration.getCompilerOutputUrl() + "/" + getRelativePathForProvider(contentFolderType, myModule);
 
     VirtualFile compilerOutput = myCompilerConfiguration.getCompilerOutput();
     if (compilerOutput == null) {
       return backUrl;
     }
-    VirtualFile outDir = compilerOutput.findFileByRelativePath(contentFolderType.getId().toLowerCase() + "/" + myModule.getName());
+    VirtualFile outDir = compilerOutput.findFileByRelativePath(getRelativePathForProvider(contentFolderType, myModule));
     return outDir != null ? outDir.getUrl() : backUrl;
   }
 
@@ -135,8 +135,7 @@ public class ModuleCompilerPathsManagerImpl extends ModuleCompilerPathsManager i
     if (compilerOutput == null) {
       return null;
     }
-    VirtualFile outDir = compilerOutput.findFileByRelativePath(contentFolderType.getId().toLowerCase() + "/" + myModule.getName());
-    return outDir != null ? outDir : null;
+    return compilerOutput.findFileByRelativePath(getRelativePathForProvider(contentFolderType, myModule));
   }
 
   @Nonnull

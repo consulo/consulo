@@ -43,7 +43,8 @@ import consulo.roots.impl.ProductionContentFolderTypeProvider;
 import consulo.roots.impl.ProductionResourceContentFolderTypeProvider;
 import consulo.roots.impl.TestContentFolderTypeProvider;
 import consulo.roots.impl.TestResourceContentFolderTypeProvider;
-import org.jetbrains.annotations.NonNls;
+import consulo.roots.ui.configuration.ModulesConfigurator;
+import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -52,6 +53,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.util.function.Consumer;
 
 public class CompilerOutputsEditor extends ModuleElementsEditor {
   private JRadioButton myInheritCompilerOutput;
@@ -113,12 +115,7 @@ public class CompilerOutputsEditor extends ModuleElementsEditor {
     });
 
     myCbExcludeOutput = new JCheckBox(ProjectBundle.message("module.paths.exclude.output.checkbox"), moduleCompilerPathsManager.isExcludeOutput());
-    myCbExcludeOutput.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(final ActionEvent e) {
-        moduleCompilerPathsManager.setExcludeOutput(myCbExcludeOutput.isSelected());
-      }
-    });
+    myCbExcludeOutput.addActionListener(e -> moduleCompilerPathsManager.setExcludeOutput(myCbExcludeOutput.isSelected()));
 
     final JPanel outputPathsPanel = new JPanel(new GridBagLayout());
 
@@ -170,7 +167,8 @@ public class CompilerOutputsEditor extends ModuleElementsEditor {
   private void updateOutputPathPresentation() {
     ModuleCompilerPathsManager moduleCompilerPathsManager = ModuleCompilerPathsManager.getInstance(getModule());
     if (moduleCompilerPathsManager.isInheritedCompilerOutput()) {
-      final String baseUrl = ProjectStructureConfigurable.getInstance(myProject).getProjectConfigurable().getCompilerOutputUrl();
+      final String baseUrl = getState().getModulesConfigurator().getCompilerOutputUrl();
+
       moduleCompileOutputChanged(baseUrl, getModule().getName());
     }
     else {
@@ -211,7 +209,7 @@ public class CompilerOutputsEditor extends ModuleElementsEditor {
     updateOutputPathPresentation();
   }
 
-  private CommitableFieldPanel createOutputPathPanel(final String title, final CommitPathRunnable commitPathRunnable) {
+  private CommitableFieldPanel createOutputPathPanel(final String title, final Consumer<String> commitPathRunnable) {
     final JTextField textField = new JTextField();
     final FileChooserDescriptor outputPathsChooserDescriptor = FileChooserDescriptorFactory.createSingleFolderDescriptor();
     outputPathsChooserDescriptor.setHideIgnored(false);
@@ -226,12 +224,13 @@ public class CompilerOutputsEditor extends ModuleElementsEditor {
           return;
         }
         String url = commitableFieldPanel.getUrl();
-        commitPathRunnable.saveUrl(url);
+        commitPathRunnable.accept(url);
       }
     };
     return commitableFieldPanel;
   }
 
+  @RequiredUIAccess
   @Override
   public boolean isModified() {
     ModuleCompilerPathsManager moduleCompilerPathsManager = ModuleCompilerPathsManager.getInstance(getModule());
@@ -281,7 +280,6 @@ public class CompilerOutputsEditor extends ModuleElementsEditor {
 
   @Override
   @Nullable
-  @NonNls
   public String getHelpTopic() {
     return "project.structureModulesPage.outputJavadoc";
   }
@@ -295,15 +293,12 @@ public class CompilerOutputsEditor extends ModuleElementsEditor {
 
   @Override
   public void moduleCompileOutputChanged(final String baseUrl, final String moduleName) {
-    ModuleCompilerPathsManager moduleCompilerPathsManager = ModuleCompilerPathsManager.getInstance(getModule());
-    if (moduleCompilerPathsManager.isInheritedCompilerOutput()) {
+    if (myInheritCompilerOutput.isSelected()) {
       if (baseUrl != null) {
-        myOutputPathPanel.setText(FileUtil.toSystemDependentName(VfsUtilCore.urlToPath(moduleCompilerPathsManager.getCompilerOutputUrl(ProductionContentFolderTypeProvider.getInstance()))));
-        myTestsOutputPathPanel.setText(FileUtil.toSystemDependentName(VfsUtilCore.urlToPath(moduleCompilerPathsManager.getCompilerOutputUrl(TestContentFolderTypeProvider.getInstance()))));
-        myResourcesOutputPathPanel
-                .setText(FileUtil.toSystemDependentName(VfsUtilCore.urlToPath(moduleCompilerPathsManager.getCompilerOutputUrl(ProductionResourceContentFolderTypeProvider.getInstance()))));
-        myTestResourcesOutputPathPanel
-                .setText(FileUtil.toSystemDependentName(VfsUtilCore.urlToPath(moduleCompilerPathsManager.getCompilerOutputUrl(TestResourceContentFolderTypeProvider.getInstance()))));
+        myOutputPathPanel.setText(buildOutputUrl(ProductionContentFolderTypeProvider.getInstance()));
+        myTestsOutputPathPanel.setText(buildOutputUrl(TestContentFolderTypeProvider.getInstance()));
+        myResourcesOutputPathPanel.setText(buildOutputUrl(ProductionResourceContentFolderTypeProvider.getInstance()));
+        myTestResourcesOutputPathPanel.setText(buildOutputUrl(TestResourceContentFolderTypeProvider.getInstance()));
       }
       else {
         myOutputPathPanel.setText(null);
@@ -314,8 +309,11 @@ public class CompilerOutputsEditor extends ModuleElementsEditor {
     }
   }
 
-  private interface CommitPathRunnable {
-    void saveUrl(String url);
+  @Nonnull
+  private String buildOutputUrl(@Nonnull ContentFolderTypeProvider provider) {
+    ModulesConfigurator modulesConfigurator = getState().getModulesConfigurator();
+    String relativePathForProvider = modulesConfigurator.getCompilerOutputUrl() + "/" + ModuleCompilerPathsManager.getRelativePathForProvider(provider, getModule());
+    return FileUtil.toSystemDependentName(VfsUtilCore.urlToPath(relativePathForProvider));
   }
 
   private static class CommitableFieldPanel extends FieldPanel {

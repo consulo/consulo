@@ -36,7 +36,12 @@ public interface ModulesConfigurator extends ModulesProvider {
   @Nullable
   ModifiableRootModel getModuleEditorModelProxy(Module module);
 
-  void processModuleCompilerOutputChanged(String baseUrl);
-
   ModifiableModuleModel getModuleModel();
+
+  @Nonnull
+  String getCompilerOutputUrl();
+
+  void setCompilerOutputUrl(@Nullable String compilerOutputUrl);
+
+  void processModuleCompilerOutputChanged(String baseUrl);
 }

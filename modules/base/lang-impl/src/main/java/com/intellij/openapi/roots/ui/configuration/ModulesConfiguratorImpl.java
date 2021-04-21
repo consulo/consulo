@@ -38,6 +38,7 @@ import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.packaging.artifacts.Artifact;
 import com.intellij.util.graph.GraphGenerator;
+import consulo.compiler.CompilerConfiguration;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ide.newProject.ui.NewProjectDialog;
@@ -79,6 +80,8 @@ public class ModulesConfiguratorImpl implements ModulesConfigurator, ModuleEdito
   private final List<ModuleEditor.ChangeListener> myAllModulesChangeListeners = new ArrayList<>();
 
   private final Supplier<LibrariesConfigurator> myLibrariesConfiguratorSupplier;
+
+  private String myCompilerOutputUrl;
 
   public ModulesConfiguratorImpl(Project project, Supplier<LibrariesConfigurator> librariesConfiguratorSupplier) {
     myProject = project;
@@ -152,6 +155,8 @@ public class ModulesConfiguratorImpl implements ModulesConfigurator, ModuleEdito
 
   @RequiredUIAccess
   public void reset() {
+    myCompilerOutputUrl = CompilerConfiguration.getInstance(myProject).getCompilerOutputUrl();
+    
     myModuleModel = ModuleManager.getInstance(myProject).getModifiableModel();
 
     ApplicationManager.getApplication().runWriteAction(new Runnable() {
@@ -196,6 +201,8 @@ public class ModulesConfiguratorImpl implements ModulesConfigurator, ModuleEdito
 
   @RequiredUIAccess
   public void apply() throws ConfigurationException {
+    CompilerConfiguration.getInstance(myProject).setCompilerOutputUrl(myCompilerOutputUrl);
+    
     // validate content and source roots 
     final Map<VirtualFile, String> contentRootToModuleNameMap = new HashMap<>();
     final Map<VirtualFile, VirtualFile> srcRootsToContentRootMap = new HashMap<>();
@@ -438,13 +445,32 @@ public class ModulesConfiguratorImpl implements ModulesConfigurator, ModuleEdito
     }
   }
 
+  @Nonnull
+  @Override
+  public String getCompilerOutputUrl() {
+    return myCompilerOutputUrl;
+  }
+
+  @Override
+  public void setCompilerOutputUrl(String compilerOutputUrl) {
+    myCompilerOutputUrl = compilerOutputUrl;
+  }
+
+  @Override
   public void processModuleCompilerOutputChanged(String baseUrl) {
+    setCompilerOutputUrl(baseUrl);
+    
     for (ModuleEditor moduleEditor : myModuleEditors) {
       moduleEditor.updateCompilerOutputPathChanged(baseUrl, moduleEditor.getName());
     }
   }
 
   public boolean isModified() {
+    String compilerOutputUrl = CompilerConfiguration.getInstance(myProject).getCompilerOutputUrl();
+    if(!Objects.equals(myCompilerOutputUrl, compilerOutputUrl)) {
+      return true;
+    }
+    
     if (myModuleModel.isChanged()) {
       return true;
     }
@@ -466,7 +492,7 @@ public class ModulesConfiguratorImpl implements ModulesConfigurator, ModuleEdito
     for (ModuleEditor moduleEditor : myModuleEditors) {
       if (module == moduleEditor.getModule() && Comparing.strEqual(moduleEditor.getName(), oldName)) {
         moduleEditor.setModuleName(name);
-        moduleEditor.updateCompilerOutputPathChanged(ProjectStructureConfigurable.getInstance(myProject).getProjectConfigurable().getCompilerOutputUrl(), name);
+        moduleEditor.updateCompilerOutputPathChanged(getCompilerOutputUrl(), name);
         // todo context.getDaemonAnalyzer().queueUpdate(new ModuleProjectStructureElement(this, module));
         return;
       }
