@@ -115,7 +115,9 @@ public abstract class NamedConfigurable<T> implements Configurable {
 
   public abstract T getEditableObject();
 
-  public abstract String getBannerSlogan();
+  public String getBannerSlogan() {
+    return null;
+  }
 
   @RequiredUIAccess
   @Override

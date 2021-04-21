@@ -16,61 +16,57 @@
 
 package com.intellij.openapi.roots.ui.configuration;
 
-import com.intellij.icons.AllIcons;
-import com.intellij.ide.util.BrowseFilesListener;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
-import com.intellij.openapi.fileChooser.FileChooserFactory;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.options.ShowSettingsUtil;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.openapi.project.ex.ProjectEx;
-import com.intellij.openapi.roots.ui.configuration.projectRoot.ProjectStructureElementConfigurable;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureElement;
-import com.intellij.openapi.ui.DetailsComponent;
-import com.intellij.openapi.ui.VerticalFlowLayout;
 import com.intellij.openapi.util.Comparing;
-import com.intellij.openapi.util.EmptyRunnable;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VfsUtil;
-import com.intellij.ui.DocumentAdapter;
-import com.intellij.ui.FieldPanel;
-import com.intellij.ui.InsertPathAction;
 import consulo.compiler.CompilerConfiguration;
+import consulo.disposer.Disposable;
 import consulo.ide.settings.impl.ProjectStructureSettingsUtil;
+import consulo.ide.ui.FileChooserTextBoxBuilder;
+import consulo.localize.LocalizeValue;
 import consulo.preferences.internal.ConfigurableWeight;
 import consulo.roots.ui.configuration.ModulesConfigurator;
+import consulo.roots.ui.configuration.ProjectStructureElementConfigurable;
+import consulo.ui.Component;
+import consulo.ui.HtmlLabel;
+import consulo.ui.TextBox;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.image.Image;
+import consulo.ui.layout.DockLayout;
+import consulo.ui.layout.VerticalLayout;
 
 import javax.annotation.Nullable;
-import javax.swing.*;
-import javax.swing.event.DocumentEvent;
-import java.awt.*;
 import java.io.IOException;
 
 /**
  * @author Eugene Zhuravlev
- *         Date: Dec 15, 2003
+ * Date: Dec 15, 2003
  */
-public class ProjectConfigurable extends ProjectStructureElementConfigurable<Project> implements Configurable, ConfigurableWeight, Configurable.NoMargin {
+public class ProjectConfigurable extends ProjectStructureElementConfigurable<Project> implements Configurable, ConfigurableWeight {
   public static final String ID = "project";
 
   private final Project myProject;
 
-  private FieldPanel myProjectCompilerOutput;
+  private TextBox myProjectName;
 
-  private JTextField myProjectName;
-
-  private JPanel myPanel;
+  private VerticalLayout myLayout;
 
   private boolean myFreeze = false;
-  private DetailsComponent myDetailsComponent;
+
   private final GeneralProjectSettingsElement mySettingsElement;
+
+  private Disposable myDisposable;
+
+  private FileChooserTextBoxBuilder.Controller myCompilerPathController;
 
   public ProjectConfigurable(Project project) {
     myProject = project;
@@ -85,55 +81,35 @@ public class ProjectConfigurable extends ProjectStructureElementConfigurable<Pro
   }
 
   @Override
-  public JComponent createOptionsPanel() {
+  public Component createOptionsPanel() {
     init();
-    
-    myDetailsComponent = new DetailsComponent(false, false);
-    myDetailsComponent.setContent(myPanel);
-    myDetailsComponent.setText(getBannerSlogan());
-    return myDetailsComponent.getComponent();
+    return myLayout;
   }
 
+  @RequiredUIAccess
   private void init() {
-    myPanel = new JPanel(new VerticalFlowLayout(true, false));
+    myDisposable = Disposable.newDisposable();
 
-    final JPanel namePanel = new JPanel(new BorderLayout());
-    final JLabel label = new JLabel("<html><body><b>Project name:</b></body></html>", SwingConstants.LEFT);
-    namePanel.add(label, BorderLayout.NORTH);
+    myLayout = VerticalLayout.create();
 
-    myProjectName = new JTextField();
-    myProjectName.setColumns(40);
+    myLayout.add(HtmlLabel.create("<html><body><b>Project name:</b></body></html>"));
 
-    final JPanel nameFieldPanel = new JPanel();
-    nameFieldPanel.setLayout(new BoxLayout(nameFieldPanel, BoxLayout.X_AXIS));
-    nameFieldPanel.add(Box.createHorizontalStrut(4));
-    nameFieldPanel.add(myProjectName);
+    myProjectName = TextBox.create().withVisibleLength(40);
 
-    namePanel.add(nameFieldPanel, BorderLayout.CENTER);
-    final JPanel wrapper = new JPanel(new FlowLayout(FlowLayout.LEFT));
-    wrapper.add(namePanel);
-    wrapper.setAlignmentX(0);
-    myPanel.add(wrapper);
+    myLayout.add(DockLayout.create().left(myProjectName));
 
-    myPanel.add(new JLabel(ProjectBundle.message("project.compiler.output")));
+    FileChooserTextBoxBuilder builder = FileChooserTextBoxBuilder.create(myProject);
+    builder.uiDisposable(myDisposable);
+    builder.fileChooserDescriptor(FileChooserDescriptorFactory.createSingleFolderDescriptor());
 
-    final JTextField textField = new JTextField();
-    final FileChooserDescriptor outputPathsChooserDescriptor = FileChooserDescriptorFactory.createSingleFolderDescriptor();
-    InsertPathAction.addTo(textField, outputPathsChooserDescriptor);
-    outputPathsChooserDescriptor.setHideIgnored(false);
-    BrowseFilesListener listener = new BrowseFilesListener(textField, "", ProjectBundle.message("project.compiler.output"), outputPathsChooserDescriptor);
-    myProjectCompilerOutput = new FieldPanel(textField, null, null, listener, EmptyRunnable.getInstance());
-    FileChooserFactory.getInstance().installFileCompletion(myProjectCompilerOutput.getTextField(), outputPathsChooserDescriptor, true, null);
-
-    myProjectCompilerOutput.getTextField().getDocument().addDocumentListener(new DocumentAdapter() {
-      @Override
-      protected void textChanged(DocumentEvent e) {
-        if (myFreeze) return;
-        getModulesConfigurator().processModuleCompilerOutputChanged(getCompilerOutputUrl());
-      }
+    myCompilerPathController = builder.build();
+    myCompilerPathController.getComponent().addValueListener(event -> {
+      if (myFreeze) return;
+      getModulesConfigurator().processModuleCompilerOutputChanged(getCompilerOutputUrl());
     });
 
-    myPanel.add(myProjectCompilerOutput);
+    myLayout.add(HtmlLabel.create(LocalizeValue.localizeTODO(ProjectBundle.message("project.compiler.output"))));
+    myLayout.add(myCompilerPathController);
   }
 
   private ModulesConfigurator getModulesConfigurator() {
@@ -144,8 +120,12 @@ public class ProjectConfigurable extends ProjectStructureElementConfigurable<Pro
   @RequiredUIAccess
   @Override
   public void disposeUIResources() {
-    myPanel = null;
-    myDetailsComponent = null;
+    if (myDisposable != null) {
+      myDisposable.disposeWithTree();
+      myDisposable = null;
+    }
+
+    myLayout = null;
   }
 
   @RequiredUIAccess
@@ -156,10 +136,10 @@ public class ProjectConfigurable extends ProjectStructureElementConfigurable<Pro
 
       final String compilerOutput = getModulesConfigurator().getCompilerOutputUrl();
       if (compilerOutput != null) {
-        myProjectCompilerOutput.setText(FileUtil.toSystemDependentName(VfsUtil.urlToPath(compilerOutput)));
+        myCompilerPathController.setValue(FileUtil.toSystemDependentName(VfsUtil.urlToPath(compilerOutput)));
       }
       if (myProjectName != null) {
-        myProjectName.setText(myProject.getName());
+        myProjectName.setValue(myProject.getName(), false);
       }
     }
     finally {
@@ -175,7 +155,7 @@ public class ProjectConfigurable extends ProjectStructureElementConfigurable<Pro
   public void apply() throws ConfigurationException {
     final CompilerConfiguration configuration = CompilerConfiguration.getInstance(myProject);
 
-    if (myProjectName != null && StringUtil.isEmptyOrSpaces(myProjectName.getText())) {
+    if (myProjectName != null && StringUtil.isEmptyOrSpaces(myProjectName.getValue())) {
       throw new ConfigurationException("Please, specify project name!");
     }
 
@@ -184,7 +164,7 @@ public class ProjectConfigurable extends ProjectStructureElementConfigurable<Pro
     ApplicationManager.getApplication().runWriteAction(() -> {
       // set the output path first so that handlers of RootsChanged event sent after JDK is set
       // would see the updated path
-      String canonicalPath = myProjectCompilerOutput.getText();
+      String canonicalPath = myCompilerPathController.getValue();
       if (canonicalPath != null && canonicalPath.length() > 0) {
         try {
           canonicalPath = FileUtil.resolveShortWindowsName(canonicalPath);
@@ -199,8 +179,7 @@ public class ProjectConfigurable extends ProjectStructureElementConfigurable<Pro
         configuration.setCompilerOutputUrl(null);
       }
       if (myProjectName != null) {
-        ((ProjectEx)myProject).setProjectName(myProjectName.getText().trim());
-        if (myDetailsComponent != null) myDetailsComponent.setText(getBannerSlogan());
+        ((ProjectEx)myProject).setProjectName(consulo.util.lang.StringUtil.notNullize(myProjectName.getValue()));
       }
     });
   }
@@ -217,18 +196,8 @@ public class ProjectConfigurable extends ProjectStructureElementConfigurable<Pro
   }
 
   @Override
-  public String getBannerSlogan() {
-    return ProjectBundle.message("project.roots.project.banner.text", myProject.getName());
-  }
-
-  @Override
   public String getDisplayName() {
     return ProjectBundle.message("project.roots.project.display.name");
-  }
-
-  @Override
-  public Image getIcon(boolean open) {
-    return AllIcons.Nodes.Project;
   }
 
   @Override
@@ -242,19 +211,18 @@ public class ProjectConfigurable extends ProjectStructureElementConfigurable<Pro
   @SuppressWarnings({"SimplifiableIfStatement"})
   public boolean isModified() {
     final String compilerOutput = CompilerConfiguration.getInstance(myProject).getCompilerOutputUrl();
-    if (!Comparing.strEqual(FileUtil.toSystemIndependentName(VfsUtil.urlToPath(compilerOutput)),
-                            FileUtil.toSystemIndependentName(myProjectCompilerOutput.getText()))) {
+    if (!Comparing.strEqual(FileUtil.toSystemIndependentName(VfsUtil.urlToPath(compilerOutput)), FileUtil.toSystemIndependentName(myCompilerPathController.getValue()))) {
       return true;
     }
     if (myProjectName != null) {
-      if (!myProjectName.getText().trim().equals(myProject.getName())) return true;
+      if (!myProjectName.getValueOrError().trim().equals(myProject.getName())) return true;
     }
 
     return false;
   }
 
   public String getCompilerOutputUrl() {
-    return VfsUtil.pathToUrl(myProjectCompilerOutput.getText().trim());
+    return VfsUtil.pathToUrl(myCompilerPathController.getValue().trim());
   }
 
   @Override
