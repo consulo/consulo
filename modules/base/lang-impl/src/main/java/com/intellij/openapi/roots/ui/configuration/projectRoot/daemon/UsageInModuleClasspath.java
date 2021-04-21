@@ -3,7 +3,6 @@ package com.intellij.openapi.roots.ui.configuration.projectRoot.daemon;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.roots.DependencyScope;
-import com.intellij.openapi.roots.ui.configuration.projectRoot.ModuleStructureConfigurable;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.roots.ui.configuration.ModulesConfigurator;
 import consulo.ui.image.Image;
@@ -77,8 +76,8 @@ public class UsageInModuleClasspath extends ProjectStructureElementUsage {
   @Override
   public void removeSourceElement() {
     if (mySourceElement instanceof LibraryProjectStructureElement) {
-      ModuleStructureConfigurable.getInstance(myModule.getProject())
-        .removeLibraryOrderEntry(myModule, ((LibraryProjectStructureElement)mySourceElement).getLibrary());
+      //ModuleStructureConfigurable.getInstance(myModule.getProject())
+      //  .removeLibraryOrderEntry(myModule, ((LibraryProjectStructureElement)mySourceElement).getLibrary());
     }
   }
 

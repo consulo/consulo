@@ -62,11 +62,6 @@ import java.util.List;
  */
 public class ArtifactsStructureConfigurable extends BaseStructureConfigurable implements ConfigurableWeight {
   @Nonnull
-  public static ArtifactsStructureConfigurable getInstance(@Nonnull Project project) {
-    return ServiceManager.getService(project, ArtifactsStructureConfigurable.class);
-  }
-
-  @Nonnull
   private final Project myProject;
   @Nonnull
   private final ArtifactManager myArtifactManager;

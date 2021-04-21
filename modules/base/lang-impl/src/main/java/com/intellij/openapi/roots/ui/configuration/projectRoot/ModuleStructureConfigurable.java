@@ -308,11 +308,6 @@ public class ModuleStructureConfigurable extends BaseStructureConfigurable imple
     return "reference.settingsdialog.project.structure.module";
   }
 
-  @Deprecated
-  public static ModuleStructureConfigurable getInstance(final Project project) {
-    throw new UnsupportedOperationException("deprecated");
-  }
-
   public Project getProject() {
     return myProject;
   }
