@@ -61,10 +61,6 @@ public class ProjectLibrariesConfigurable extends BaseLibrariesConfigurable impl
     return getLibrariesConfigurator().getProjectLibrariesProvider();
   }
 
-  public static ProjectLibrariesConfigurable getInstance(final Project project) {
-    return ServiceManager.getService(project, ProjectLibrariesConfigurable.class);
-  }
-
   @Override
   public LibraryTablePresentation getLibraryTablePresentation() {
     return LibraryTablesRegistrar.getInstance().getLibraryTable(myProject).getPresentation();

@@ -77,15 +77,6 @@ public abstract class BaseLibrariesConfigurable extends BaseStructureConfigurabl
     });
   }
 
-  public static BaseLibrariesConfigurable getInstance(@Nonnull Project project, @Nonnull String tableLevel) {
-    if (tableLevel.equals(LibraryTablesRegistrar.PROJECT_LEVEL)) {
-      return ProjectLibrariesConfigurable.getInstance(project);
-    }
-    else {
-      return null;
-    }
-  }
-
   @Nullable
   @Override
   protected MasterDetailsStateService getStateService() {

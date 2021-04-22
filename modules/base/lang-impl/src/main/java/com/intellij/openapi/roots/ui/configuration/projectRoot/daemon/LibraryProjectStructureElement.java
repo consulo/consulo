@@ -29,7 +29,6 @@ import com.intellij.openapi.roots.libraries.LibraryTablesRegistrar;
 import com.intellij.openapi.roots.ui.configuration.ModuleEditor;
 import com.intellij.openapi.roots.ui.configuration.libraries.LibraryEditingUtil;
 import com.intellij.openapi.roots.ui.configuration.libraryEditor.ExistingLibraryEditor;
-import com.intellij.openapi.roots.ui.configuration.projectRoot.BaseLibrariesConfigurable;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.LibrariesModifiableModel;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.LibraryConfigurable;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.ProjectLibrariesConfigurable;
@@ -242,16 +241,21 @@ public class LibraryProjectStructureElement extends ProjectStructureElement {
   }
 
   private class RemoveLibraryFix extends ConfigurationErrorQuickFix {
-    private final Project myProject;
-
     private RemoveLibraryFix(Project project) {
       super("Remove Library");
-      myProject = project;
     }
 
     @Override
-    public void performFix(DataContext dataContext) {
-      BaseLibrariesConfigurable.getInstance(myProject, myLibrary.getTable().getTableLevel()).removeLibrary(LibraryProjectStructureElement.this);
+    public void performFix(@Nonnull DataContext dataContext) {
+      Settings settings = dataContext.getData(Settings.KEY);
+      if (settings == null) {
+        return;
+      }
+
+      ProjectLibrariesConfigurable configurable = settings.findConfigurable(ProjectLibrariesConfigurable.class);
+      if (configurable != null) {
+        configurable.removeLibrary(LibraryProjectStructureElement.this);
+      }
     }
   }
 }
