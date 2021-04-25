@@ -2464,9 +2464,6 @@
                     serviceImplementation="com.intellij.psi.impl.source.tree.injected.InjectedLanguageManagerImpl"/>
     <projectService serviceInterface="com.intellij.openapi.vcs.changes.patch.PatchBaseDirectoryDetector"
                     serviceImplementation="com.intellij.openapi.vcs.changes.patch.PsiPatchBaseDirectoryDetector"/>
-    <applicationService serviceInterface="com.intellij.openapi.roots.ModifiableModelsProvider"
-                        serviceImplementation="com.intellij.openapi.roots.IdeaModifiableModelsProvider"/>
-
 
     <refactoring.copyHandler implementation="com.intellij.refactoring.copy.CopyFilesOrDirectoriesHandler"/>
     <refactoring.moveHandler implementation="com.intellij.refactoring.move.moveFilesOrDirectories.MoveFilesOrDirectoriesHandler"
