@@ -261,12 +261,10 @@ public class PlatformOrPluginDialog extends DialogWrapper {
 
     }, () -> {
       if (myType != PlatformOrPluginUpdateResult.Type.PLUGIN_INSTALL) {
-        Application.get().invokeLater(() -> {
-          UpdateSettings updateSettings = UpdateSettings.getInstance();
-          updateSettings.setLastCheckResult(PlatformOrPluginUpdateResult.Type.RESTART_REQUIRED);
+        UpdateSettings updateSettings = UpdateSettings.getInstance();
+        updateSettings.setLastCheckResult(PlatformOrPluginUpdateResult.Type.RESTART_REQUIRED);
 
-          SettingsEntryPointAction.updateState(updateSettings);
-        });
+        SettingsEntryPointAction.updateState(updateSettings);
 
         if (PluginInstallUtil.showRestartIDEADialog() == Messages.YES) {
           Application.get().restart(true);

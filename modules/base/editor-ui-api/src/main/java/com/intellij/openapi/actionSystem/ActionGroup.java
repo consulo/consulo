@@ -54,6 +54,10 @@ public abstract class ActionGroup extends AnAction {
       return myActions.size();
     }
 
+    public boolean isEmpty() {
+      return myActions.isEmpty();
+    }
+
     @Nonnull
     public abstract ActionGroup build();
   }

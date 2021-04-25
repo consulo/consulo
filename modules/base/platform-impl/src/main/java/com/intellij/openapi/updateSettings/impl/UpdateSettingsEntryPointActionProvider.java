@@ -57,8 +57,11 @@ public class UpdateSettingsEntryPointActionProvider implements SettingsEntryPoin
   }
 
   private static class RestartConsuloAction extends DumbAwareAction {
-    private RestartConsuloAction() {
+    private final UpdateSettings myUpdateSettings;
+
+    private RestartConsuloAction(UpdateSettings updateSettings) {
       super(LocalizeValue.localizeTODO("Restart " + Application.get().getName()), LocalizeValue.empty(), PlatformIconGroup.ideNotificationRestartRequiredUpdate());
+      myUpdateSettings = updateSettings;
     }
 
     @RequiredUIAccess
@@ -66,6 +69,7 @@ public class UpdateSettingsEntryPointActionProvider implements SettingsEntryPoin
     public void actionPerformed(@Nonnull AnActionEvent e) {
       Application application = Application.get();
       application.restart();
+      myUpdateSettings.setLastCheckResult(PlatformOrPluginUpdateResult.Type.RESTART_REQUIRED);
     }
   }
 
@@ -88,7 +92,7 @@ public class UpdateSettingsEntryPointActionProvider implements SettingsEntryPoin
       case NO_UPDATE:
         return List.of(myActionManagerProvider.get().getAction("CheckForUpdate"));
       case RESTART_REQUIRED:
-        return List.of(new RestartConsuloAction());
+        return List.of(new RestartConsuloAction(updateSettings));
       case PLATFORM_UPDATE:
       case PLUGIN_UPDATE:
         return List.of(new IconifiedCheckForUpdateAction(myUpdateSettingsProvider, type == PlatformOrPluginUpdateResult.Type.PLATFORM_UPDATE));

@@ -18,12 +18,12 @@ import com.intellij.openapi.ui.popup.JBPopupListener;
 import com.intellij.openapi.ui.popup.LightweightWindowEvent;
 import com.intellij.openapi.ui.popup.ListPopup;
 import com.intellij.openapi.ui.popup.util.PopupUtil;
-import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.wm.*;
 import com.intellij.openapi.wm.impl.status.widget.StatusBarWidgetsManager;
 import com.intellij.ui.AnActionButton;
 import com.intellij.util.Consumer;
 import com.intellij.util.concurrency.AppExecutorUtil;
+import consulo.disposer.Disposer;
 import consulo.ide.updateSettings.UpdateSettings;
 import consulo.ide.updateSettings.impl.PlatformOrPluginUpdateResult;
 import consulo.platform.base.icon.PlatformIconGroup;
@@ -77,7 +77,7 @@ public final class SettingsEntryPointAction extends DumbAwareAction implements R
 
   @Nonnull
   private static ListPopup createMainPopup(@Nonnull DataContext context, @Nonnull Runnable disposeCallback) {
-    DefaultActionGroup group = new DefaultActionGroup();
+    ActionGroup.Builder group = ActionGroup.newImmutableBuilder();
 
     for (ActionProvider provider : ActionProvider.EP_NAME.getExtensionList()) {
       Collection<AnAction> actions = provider.getUpdateActions(context);
@@ -94,7 +94,7 @@ public final class SettingsEntryPointAction extends DumbAwareAction implements R
       }
     }
 
-    if (group.getChildrenCount() == 0) {
+    if (group.isEmpty()) {
       resetActionIcon();
     }
 
@@ -126,7 +126,7 @@ public final class SettingsEntryPointAction extends DumbAwareAction implements R
       }
     }
 
-    return JBPopupFactory.getInstance().createActionGroupPopup(null, group, context, JBPopupFactory.ActionSelectionAid.MNEMONICS, true, () -> {
+    return JBPopupFactory.getInstance().createActionGroupPopup(null, group.build(), context, JBPopupFactory.ActionSelectionAid.MNEMONICS, true, () -> {
       AppExecutorUtil.getAppScheduledExecutorService().schedule(() -> ApplicationManager.getApplication().invokeLater(disposeCallback, ModalityState.any()), 250, TimeUnit.MILLISECONDS);
     }, -1);
   }
