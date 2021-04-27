@@ -16,18 +16,18 @@
 package consulo.ui.app.impl.settings;
 
 import com.intellij.openapi.options.Configurable;
-import com.intellij.openapi.options.ex.ConfigurableWrapper;
 import com.intellij.openapi.util.Couple;
 import consulo.ui.*;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.app.WholeLeftWindowWrapper;
 import consulo.ui.layout.DockLayout;
 import consulo.ui.layout.ScrollableLayout;
-import consulo.ui.Size;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Comparator;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 
 /**
@@ -35,6 +35,8 @@ import java.util.function.Function;
  * @since 25-Oct-17
  */
 public class UnifiedSettingsDialog extends WholeLeftWindowWrapper {
+  private final Map<Configurable, UnifiedConfigurableContext> myContexts = new ConcurrentHashMap<>();
+
   private Configurable[] myConfigurables;
 
   public UnifiedSettingsDialog(Configurable[] configurables) {
@@ -52,7 +54,7 @@ public class UnifiedSettingsDialog extends WholeLeftWindowWrapper {
   @Nonnull
   @Override
   protected Couple<Component> createComponents() {
-    TreeModel<Configurable> configurableTreeModel = new TreeModel<Configurable>() {
+    TreeModel<Configurable> configurableTreeModel = new TreeModel<>() {
       @Override
       public void fetchChildren(@Nonnull Function<Configurable, TreeNode<Configurable>> nodeFactory, @Nullable Configurable parentValue) {
         if (parentValue != null) {
@@ -91,20 +93,15 @@ public class UnifiedSettingsDialog extends WholeLeftWindowWrapper {
     component.addSelectListener(node -> {
       Configurable configurable = node.getValue();
 
-      Component uiComponent = configurable.createUIComponent();
-      if (uiComponent != null) {
-        configurable.reset();
+      UnifiedConfigurableContext context = myContexts.computeIfAbsent(configurable, c -> {
+        UnifiedConfigurableContext co = new UnifiedConfigurableContext(c);
+        c.initialize();
+        c.reset();
+        return co;
+      });
 
-        if(ConfigurableWrapper.isNoScroll(configurable)) {
-          rightPart.center(uiComponent);
-        }
-        else {
-          rightPart.center(ScrollableLayout.create(uiComponent));
-        }
-      }
-      else {
-        rightPart.center(Label.create("Not supported UI"));
-      }
+      Component uiComponent = context.getComponent();
+      rightPart.center(uiComponent);
     });
 
     return Couple.of(ScrollableLayout.create(component), rightPart);

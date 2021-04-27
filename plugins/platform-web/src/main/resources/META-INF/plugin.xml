@@ -74,6 +74,7 @@
     <applicationService serviceInterface="com.intellij.ide.DataManager" serviceImplementation="consulo.web.ide.impl.WebDataManagerImpl"/>
     <applicationService serviceInterface="consulo.ide.actions.AboutManager" serviceImplementation="consulo.web.ide.actions.impl.WebAboutManager"/>
     <applicationService serviceInterface="consulo.ide.tipOfDay.TipOfDayManager" serviceImplementation="consulo.web.ide.tipOfDay.WebTipOfDayManager"/>
+    <applicationService serviceInterface="consulo.startup.customize.StartupCustomizeManager" serviceImplementation="consulo.web.startup.customize.WebStartupCustomizeManager"/>
 
     <projectService serviceInterface="com.intellij.openapi.fileEditor.FileEditorManager" serviceImplementation="consulo.web.fileEditor.impl.WebPsiAwareFileEditorManagerImpl" lazy="false"/>
     <projectService serviceInterface="com.intellij.openapi.wm.ToolWindowManager" serviceImplementation="consulo.web.wm.impl.WebToolWindowManagerImpl" lazy="false"/>

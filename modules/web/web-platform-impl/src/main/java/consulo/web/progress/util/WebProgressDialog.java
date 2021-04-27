@@ -16,12 +16,14 @@
 package consulo.web.progress.util;
 
 import com.intellij.openapi.progress.util.ProgressWindow;
+import consulo.localize.LocalizeValue;
 import consulo.progress.util.ProgressDialog;
 import consulo.ui.Label;
 import consulo.ui.ProgressBar;
 import consulo.ui.Window;
 import consulo.ui.layout.VerticalLayout;
 import consulo.ui.Size;
+import consulo.util.lang.StringUtil;
 import consulo.web.application.WebApplication;
 
 /**
@@ -60,8 +62,8 @@ public class WebProgressDialog implements ProgressDialog {
     if (myWindow != null) {
       WebApplication.invokeOnCurrentSession(() -> {
         System.out.println("update " + myProgressWindow.getText() + " " + myProgressWindow.getText2() + " " + myProgressWindow.getFraction());
-        myTextLabel.setText(myProgressWindow.getText());
-        myTextLabel2.setText(myProgressWindow.getText2());
+        myTextLabel.setText(LocalizeValue.of(StringUtil.notNullize(myProgressWindow.getText())));
+        myTextLabel2.setText(LocalizeValue.of(StringUtil.notNullize(myProgressWindow.getText2())));
         myProgressBar.setValue((int)myProgressWindow.getFraction() * 100);
       });
     }
