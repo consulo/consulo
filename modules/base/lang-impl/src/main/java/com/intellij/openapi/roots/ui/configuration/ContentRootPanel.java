@@ -35,6 +35,7 @@ import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.util.containers.MultiMap;
 import com.intellij.util.ui.UIUtil;
+import consulo.awt.TargetAWT;
 import consulo.roots.ContentFolderScopes;
 import consulo.roots.ContentFolderTypeProvider;
 import consulo.roots.impl.ExcludedContentFolderTypeProvider;
@@ -119,7 +120,7 @@ public abstract class ContentRootPanel extends JPanel {
       ContentFolderTypeProvider contentFolderTypeProvider = entry.getKey();
 
       ContentFolder[] foldersArray = folders.toArray(new ContentFolder[folders.size()]);
-      final JComponent sourcesComponent = createFolderGroupComponent(contentFolderTypeProvider.getName(), foldersArray, contentFolderTypeProvider.getGroupColor(), contentFolderTypeProvider);
+      final JComponent sourcesComponent = createFolderGroupComponent(contentFolderTypeProvider.getName(), foldersArray, TargetAWT.to(contentFolderTypeProvider.getGroupColor()), contentFolderTypeProvider);
       add(sourcesComponent, constraints);
     }
   }

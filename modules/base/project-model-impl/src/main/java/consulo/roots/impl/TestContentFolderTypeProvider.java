@@ -17,19 +17,20 @@ package consulo.roots.impl;
 
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.project.ProjectBundle;
-import com.intellij.ui.JBColor;
 import consulo.roots.ContentFolderTypeProvider;
+import consulo.ui.color.ColorValue;
+import consulo.ui.color.RGBColor;
+import consulo.ui.ex.util.LightDarkColorValue;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
-import java.awt.*;
 
 /**
  * @author VISTALL
  * @since 22:44/31.10.13
  */
 public class TestContentFolderTypeProvider extends ContentFolderTypeProvider {
-  private static final Color TESTS_COLOR = new JBColor(new Color(0x008C2E), new Color(73, 140, 101));
+  private static final ColorValue TESTS_COLOR = new LightDarkColorValue(new RGBColor(0, 140, 46), new RGBColor(73, 140, 101));
 
   @Nonnull
   public static TestContentFolderTypeProvider getInstance() {
@@ -64,7 +65,7 @@ public class TestContentFolderTypeProvider extends ContentFolderTypeProvider {
 
   @Nonnull
   @Override
-  public Color getGroupColor() {
+  public ColorValue getGroupColor() {
     return TESTS_COLOR;
   }
 }

@@ -18,10 +18,11 @@ package consulo.roots.impl;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.project.ProjectBundle;
 import consulo.roots.ContentFolderTypeProvider;
+import consulo.ui.color.ColorValue;
+import consulo.ui.color.RGBColor;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
-import java.awt.*;
 
 /**
  * @author VISTALL
@@ -30,7 +31,7 @@ import java.awt.*;
 public class ProductionResourceContentFolderTypeProvider extends ContentFolderTypeProvider {
   @Nonnull
   public static ProductionResourceContentFolderTypeProvider getInstance() {
-    return EP_NAME.findExtension(ProductionResourceContentFolderTypeProvider.class);
+    return EP_NAME.findExtensionOrFail(ProductionResourceContentFolderTypeProvider.class);
   }
 
   public ProductionResourceContentFolderTypeProvider() {
@@ -56,7 +57,7 @@ public class ProductionResourceContentFolderTypeProvider extends ContentFolderTy
 
   @Nonnull
   @Override
-  public Color getGroupColor() {
-    return new Color(0x812DF3);
+  public ColorValue getGroupColor() {
+    return new RGBColor(129, 45, 243);
   }
 }

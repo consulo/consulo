@@ -85,6 +85,9 @@ public class DesktopStyleImpl extends StyleImpl {
     else if (colorValue == StandardColors.LIGHT_GRAY) {
       return TargetAWT.from(JBColor.LIGHT_GRAY);
     }
+    else if (colorValue == StandardColors.DARK_GRAY) {
+      return TargetAWT.from(JBColor.DARK_GRAY);
+    }
     else if (colorValue == StandardColors.LIGHT_YELLOW) {
       return TargetAWT.from(LightColors.YELLOW);
     }

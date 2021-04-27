@@ -19,13 +19,14 @@ import com.google.common.base.Predicate;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.util.Comparing;
-import consulo.util.dataholder.Key;
 import com.intellij.psi.PsiDirectory;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.ide.IconDescriptor;
 import consulo.psi.PsiPackage;
 import consulo.psi.PsiPackageManager;
+import consulo.ui.color.ColorValue;
 import consulo.ui.image.Image;
+import consulo.util.dataholder.Key;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -130,7 +131,7 @@ public abstract class ContentFolderTypeProvider {
   public abstract String getName();
 
   @Nonnull
-  public abstract java.awt.Color getGroupColor();
+  public abstract ColorValue getGroupColor();
 
   @Override
   public boolean equals(Object o) {

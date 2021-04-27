@@ -61,7 +61,7 @@ public class WebResourcesFolderTypeProvider extends ContentFolderTypeProvider {
 
   @Nonnull
   @Override
-  public java.awt.Color getGroupColor() {
+  public consulo.ui.color.ColorValue getGroupColor() {
     return ProductionResourceContentFolderTypeProvider.getInstance().getGroupColor();
   }
 }

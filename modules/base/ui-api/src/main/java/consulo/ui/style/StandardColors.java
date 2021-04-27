@@ -40,7 +40,8 @@ public enum StandardColors implements StyleColorValue {
   BLUE(new RGBColor(0, 0, 255)),
 
   GRAY(new RGBColor(128, 128, 128)),
-  LIGHT_GRAY(new RGBColor(192, 192, 192));
+  LIGHT_GRAY(new RGBColor(192, 192, 192)),
+  DARK_GRAY(new RGBColor(64, 64, 64));
 
   private final ColorValue myStaticValue;
 

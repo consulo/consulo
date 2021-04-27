@@ -16,12 +16,12 @@
 package consulo.roots.impl;
 
 import com.intellij.icons.AllIcons;
-import com.intellij.ui.JBColor;
 import consulo.roots.ContentFolderTypeProvider;
+import consulo.ui.color.ColorValue;
 import consulo.ui.image.Image;
+import consulo.ui.style.StandardColors;
 
 import javax.annotation.Nonnull;
-import java.awt.*;
 
 /**
  * @author VISTALL
@@ -46,7 +46,7 @@ public class UnknownContentFolderTypeProvider extends ContentFolderTypeProvider 
 
   @Nonnull
   @Override
-  public Color getGroupColor() {
-    return JBColor.DARK_GRAY;
+  public ColorValue getGroupColor() {
+    return StandardColors.DARK_GRAY;
   }
 }

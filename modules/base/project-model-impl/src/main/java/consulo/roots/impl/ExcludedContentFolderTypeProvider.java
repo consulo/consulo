@@ -17,10 +17,12 @@ package consulo.roots.impl;
 
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.project.ProjectBundle;
-import com.intellij.ui.DarculaColors;
-import com.intellij.ui.JBColor;
 import consulo.roots.ContentFolderTypeProvider;
+import consulo.ui.color.ColorValue;
+import consulo.ui.color.RGBColor;
+import consulo.ui.ex.util.LightDarkColorValue;
 import consulo.ui.image.Image;
+import consulo.ui.style.StandardColors;
 
 import javax.annotation.Nonnull;
 
@@ -29,11 +31,11 @@ import javax.annotation.Nonnull;
  * @since 22:46/31.10.13
  */
 public class ExcludedContentFolderTypeProvider extends ContentFolderTypeProvider {
-  private static final java.awt.Color EXCLUDED_COLOR = new JBColor(new java.awt.Color(0x992E00), DarculaColors.RED);
+  private static final ColorValue EXCLUDED_COLOR = new LightDarkColorValue(new RGBColor(153, 46, 0), StandardColors.RED);
 
   @Nonnull
   public static ExcludedContentFolderTypeProvider getInstance() {
-    return EP_NAME.findExtension(ExcludedContentFolderTypeProvider.class);
+    return EP_NAME.findExtensionOrFail(ExcludedContentFolderTypeProvider.class);
   }
 
   public ExcludedContentFolderTypeProvider() {
@@ -59,7 +61,7 @@ public class ExcludedContentFolderTypeProvider extends ContentFolderTypeProvider
 
   @Nonnull
   @Override
-  public java.awt.Color getGroupColor() {
+  public ColorValue getGroupColor() {
     return EXCLUDED_COLOR;
   }
 }
