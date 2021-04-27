@@ -41,10 +41,10 @@ import com.intellij.openapi.ui.MasterDetailsStateService;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.ui.NamedConfigurable;
 import com.intellij.openapi.util.Comparing;
-import com.intellij.openapi.util.Couple;
 import com.intellij.openapi.wm.WindowManager;
 import com.intellij.util.ui.tree.TreeUtil;
 import consulo.awt.TargetAWT;
+import consulo.disposer.Disposable;
 import consulo.ide.settings.impl.ProjectStructureSettingsUtil;
 import consulo.moduleImport.ModuleImportProviders;
 import consulo.preferences.internal.ConfigurableWeight;
@@ -283,8 +283,8 @@ public class ModuleStructureConfigurable extends BaseStructureConfigurable imple
   }
 
   @Override
-  public JComponent createComponent() {
-    return new MyDataProviderWrapper(super.createComponent());
+  public JComponent createComponent(Disposable parentUIDisposable) {
+    return new MyDataProviderWrapper(super.createComponent(parentUIDisposable));
   }
 
   @Override

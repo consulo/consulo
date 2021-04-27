@@ -159,20 +159,17 @@ public class ModulesConfiguratorImpl implements ModulesConfigurator, ModuleEdito
     
     myModuleModel = ModuleManager.getInstance(myProject).getModifiableModel();
 
-    ApplicationManager.getApplication().runWriteAction(new Runnable() {
-      @Override
-      public void run() {
-        if (!myModuleEditors.isEmpty()) {
-          LOG.error("module editors was not disposed");
-          myModuleEditors.clear();
+    ApplicationManager.getApplication().runWriteAction(() -> {
+      if (!myModuleEditors.isEmpty()) {
+        LOG.error("module editors was not disposed");
+        myModuleEditors.clear();
+      }
+      final Module[] modules = myModuleModel.getModules();
+      if (modules.length > 0) {
+        for (Module module : modules) {
+          getOrCreateModuleEditor(module);
         }
-        final Module[] modules = myModuleModel.getModules();
-        if (modules.length > 0) {
-          for (Module module : modules) {
-            getOrCreateModuleEditor(module);
-          }
-          Collections.sort(myModuleEditors, myModuleEditorComparator);
-        }
+        Collections.sort(myModuleEditors, myModuleEditorComparator);
       }
     });
     myModified = false;

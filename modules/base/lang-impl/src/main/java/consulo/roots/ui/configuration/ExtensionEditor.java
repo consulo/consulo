@@ -101,7 +101,7 @@ public class ExtensionEditor extends ModuleElementsEditor {
   @RequiredUIAccess
   @Nonnull
   @Override
-  protected JComponent createComponentImpl() {
+  protected JComponent createComponentImpl(@Nonnull Disposable parentUIDisposable) {
     JPanel rootPane = new JPanel(new BorderLayout());
 
     mySplitter = new OnePixelSplitter();

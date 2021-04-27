@@ -38,18 +38,17 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.MutableCollectionComboBoxModel;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.components.BorderLayoutPanel;
+import consulo.disposer.Disposable;
 import consulo.roots.ui.configuration.ModulesConfigurator;
 import consulo.roots.ui.configuration.projectRoot.moduleLayerActions.DeleteLayerAction;
 import consulo.roots.ui.configuration.projectRoot.moduleLayerActions.NewLayerAction;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
-import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 import java.util.ArrayList;
 
 /**
@@ -105,23 +104,17 @@ public class ModuleConfigurable extends ProjectStructureElementConfigurable<Modu
     final ComboBox comboBox = new ComboBox(model);
     comboBox.setEnabled(model.getSize() > 1);
 
-    moduleEditor.addChangeListener(new ModuleEditor.ChangeListener() {
-      @Override
-      public void moduleStateChanged(ModifiableRootModel moduleRootModel) {
-        model.update(new ArrayList<String>(moduleRootModel.getLayers().keySet()));
-        model.setSelectedItem(moduleRootModel.getCurrentLayerName());
-        model.update();
+    moduleEditor.addChangeListener(moduleRootModel1 -> {
+      model.update(new ArrayList<String>(moduleRootModel1.getLayers().keySet()));
+      model.setSelectedItem(moduleRootModel1.getCurrentLayerName());
+      model.update();
 
-        comboBox.setEnabled(comboBox.getItemCount() > 1);
-      }
+      comboBox.setEnabled(comboBox.getItemCount() > 1);
     });
 
-    comboBox.addItemListener(new ItemListener() {
-      @Override
-      public void itemStateChanged(ItemEvent e) {
-        if (e.getStateChange() == ItemEvent.SELECTED) {
-          moduleEditor.getModifiableRootModelProxy().setCurrentLayer((String)comboBox.getSelectedItem());
-        }
+    comboBox.addItemListener(e -> {
+      if (e.getStateChange() == ItemEvent.SELECTED) {
+        moduleEditor.getModifiableRootModelProxy().setCurrentLayer((String)comboBox.getSelectedItem());
       }
     });
 
@@ -169,16 +162,14 @@ public class ModuleConfigurable extends ProjectStructureElementConfigurable<Modu
 
   @Override
   @Nullable
-  @NonNls
   public String getHelpTopic() {
     final ModuleEditor moduleEditor = getModuleEditor();
     return moduleEditor != null ? moduleEditor.getHelpTopic() : null;
   }
 
-
   @Override
-  public JComponent createOptionsPanel() {
-    return getModuleEditor().getPanel();
+  public JComponent createOptionsPanel(@Nonnull Disposable parentUIDisposable) {
+    return getModuleEditor().getPanel(parentUIDisposable);
   }
 
   @RequiredUIAccess
@@ -190,19 +181,6 @@ public class ModuleConfigurable extends ProjectStructureElementConfigurable<Modu
   @RequiredUIAccess
   @Override
   public void apply() throws ConfigurationException {
-    //do nothing
-  }
-
-  @RequiredUIAccess
-  @Override
-  public void reset() {
-    //do nothing
-  }
-
-  @RequiredUIAccess
-  @Override
-  public void disposeUIResources() {
-    //do nothing
   }
 
   public ModuleEditor getModuleEditor() {

@@ -7,6 +7,7 @@ import com.intellij.openapi.ui.VerticalFlowLayout;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.IdeBorderFactory;
 import com.intellij.ui.TitledSeparator;
+import consulo.disposer.Disposable;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.options.ConfigurableUIMigrationUtil;
 import consulo.platform.Platform;
@@ -95,7 +96,7 @@ class MergedCompositeConfigurable implements SearchableConfigurable {
   @RequiredUIAccess
   @Nullable
   @Override
-  public JComponent createComponent() {
+  public JComponent createComponent(@Nonnull Disposable parentDisposable) {
     if (Platform.current().isWebService()) {
       return null;
     }
@@ -103,12 +104,12 @@ class MergedCompositeConfigurable implements SearchableConfigurable {
     if (myRootPanel == null) {
       Configurable firstConfigurable = children[0];
       if (children.length == 1) {
-        myRootPanel = ConfigurableUIMigrationUtil.createComponent(firstConfigurable);
+        myRootPanel = ConfigurableUIMigrationUtil.createComponent(firstConfigurable, parentDisposable);
       }
       else {
         JPanel panel = createPanel(true);
         for (Configurable configurable : children) {
-          JComponent component = ConfigurableUIMigrationUtil.createComponent(configurable);
+          JComponent component = ConfigurableUIMigrationUtil.createComponent(configurable, parentDisposable);
           assert component != null;
           String displayName = configurable.getDisplayName();
           if (StringUtil.isEmpty(displayName)) {

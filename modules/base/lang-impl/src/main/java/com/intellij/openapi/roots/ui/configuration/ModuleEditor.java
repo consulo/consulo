@@ -82,7 +82,7 @@ public abstract class ModuleEditor implements Disposable {
     myName = module.getName();
   }
 
-  protected abstract JComponent createCenterPanel();
+  protected abstract JComponent createCenterPanel(Disposable parentUIDisposable);
 
   @Nullable
   public abstract ModuleConfigurationEditor getSelectedEditor();
@@ -180,7 +180,7 @@ public abstract class ModuleEditor implements Disposable {
     return new ModuleConfigurationStateImpl(myProject, myModulesConfigurator, myLibrariesConfigurator, this::getModifiableRootModelProxy);
   }
 
-  private JPanel createPanel() {
+  private JPanel createPanel(@Nonnull Disposable parentUIDisposable) {
     getModifiableRootModel(); //initialize model if needed
     getModifiableRootModelProxy();
 
@@ -192,14 +192,14 @@ public abstract class ModuleEditor implements Disposable {
 
     myGenericSettingsPanel.add(northPanel, BorderLayout.NORTH);
 
-    final JComponent component = createCenterPanel();
+    final JComponent component = createCenterPanel(parentUIDisposable);
     myGenericSettingsPanel.add(component, BorderLayout.CENTER);
     return myGenericSettingsPanel;
   }
 
-  public JPanel getPanel() {
+  public JPanel getPanel(Disposable parentUIDisposable) {
     if (myGenericSettingsPanel == null) {
-      myGenericSettingsPanel = createPanel();
+      myGenericSettingsPanel = createPanel(parentUIDisposable);
     }
 
     return myGenericSettingsPanel;
@@ -207,7 +207,7 @@ public abstract class ModuleEditor implements Disposable {
 
   public void fireModuleStateChanged() {
     if (getModule() != null) { //module with attached module libraries was deleted
-      getPanel();  //init editor if needed
+      //getPanel(parentUIDisposable);  //init editor if needed
       for (final ModuleConfigurationEditor myEditor : myEditors) {
         myEditor.moduleStateChanged();
       }

@@ -15,9 +15,12 @@
  */
 package com.intellij.openapi.options;
 
+import consulo.annotation.DeprecationInfo;
+import consulo.disposer.Disposable;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 
@@ -31,16 +34,46 @@ public interface UnnamedConfigurable {
   /**
    * Returns the user interface component for editing the configuration.
    *
+   * @param parentDisposable disposable parameter, per ui page, dispose on ui close
    * @return the component instance.
    */
   @Nullable
   @RequiredUIAccess
+  @SuppressWarnings("deprecation")
+  default JComponent createComponent(@Nonnull Disposable parentDisposable) {
+    return createComponent();
+  }
+
+  /**
+   * Returns the user interface component for editing the configuration.
+   *
+   * @return the component instance.
+   */
+  @Nullable
+  @RequiredUIAccess
+  @Deprecated(forRemoval = true)
+  @DeprecationInfo("Use with Disposable parameter")
   default JComponent createComponent() {
     return null;
   }
 
+  /**
+   * Returns the user interface component for editing the configuration.
+   *
+   * @param parentDisposable disposable parameter, per ui page, dispose on ui close
+   * @return the component instance.
+   */
   @Nullable
   @RequiredUIAccess
+  @SuppressWarnings("deprecation")
+  default Component createUIComponent(@Nonnull Disposable parentDisposable) {
+    return createUIComponent();
+  }
+
+  @Nullable
+  @RequiredUIAccess
+  @Deprecated(forRemoval = true)
+  @DeprecationInfo("Use with Disposable parameter")
   default Component createUIComponent() {
     return null;
   }

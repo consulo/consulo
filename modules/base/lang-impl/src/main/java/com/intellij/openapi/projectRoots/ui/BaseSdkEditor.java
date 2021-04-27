@@ -32,7 +32,6 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.ui.JBUI;
 import consulo.awt.TargetAWT;
 import consulo.disposer.Disposable;
-import consulo.disposer.Disposer;
 import consulo.logging.Logger;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.TextBoxWithExtensions;
@@ -78,8 +77,6 @@ public abstract class BaseSdkEditor implements UnnamedConfigurable {
   private String myInitialName;
   private String myInitialPath;
 
-  protected final Disposable myDisposable = Disposable.newDisposable();
-
   public BaseSdkEditor(@Nonnull SdkModel sdkModel, @Nonnull SdkImpl sdk) {
     mySdkModel = sdkModel;
     mySdk = sdk;
@@ -101,15 +98,15 @@ public abstract class BaseSdkEditor implements UnnamedConfigurable {
 
   @RequiredUIAccess
   @Override
-  public JComponent createComponent() {
-    if(myMainPanel == null) {
-      createMainPanel();
+  public JComponent createComponent(@Nonnull Disposable parentUIDisposable) {
+    if (myMainPanel == null) {
+      createMainPanel(parentUIDisposable);
     }
     return myMainPanel;
   }
 
-  private void createMainPanel() {
-    if(myMainPanel != null) {
+  private void createMainPanel(Disposable parentUIDisposable) {
+    if (myMainPanel != null) {
       throw new IllegalArgumentException();
     }
 
@@ -130,7 +127,7 @@ public abstract class BaseSdkEditor implements UnnamedConfigurable {
       }
     }
 
-    JComponent centerComponent = createCenterComponent();
+    JComponent centerComponent = createCenterComponent(parentUIDisposable);
 
     myHomeComponent = TextBoxWithExtensions.create();
     myHomeComponent.withEditable(false);
@@ -152,7 +149,7 @@ public abstract class BaseSdkEditor implements UnnamedConfigurable {
   }
 
   @Nonnull
-  protected abstract JComponent createCenterComponent();
+  protected abstract JComponent createCenterComponent(Disposable parentUIDisposable);
 
   protected boolean showTabForType(OrderRootType type) {
     return ((SdkType)mySdk.getSdkType()).isRootTypeApplicable(type);
@@ -237,8 +234,6 @@ public abstract class BaseSdkEditor implements UnnamedConfigurable {
     myMainPanel = null;
     myAdditionalDataConfigurables.clear();
     myAdditionalDataComponents.clear();
-
-    Disposer.dispose(myDisposable);
   }
 
   private String getHomeValue() {

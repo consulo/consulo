@@ -70,7 +70,7 @@ public class CompilerOutputsEditor extends ModuleElementsEditor {
   @RequiredUIAccess
   @Nonnull
   @Override
-  public Component createUIComponentImpl() {
+  public Component createUIComponentImpl(@Nonnull Disposable parentUIDisposable) {
     ModuleCompilerPathsManager moduleCompilerPathsManager = ModuleCompilerPathsManager.getInstance(getModule());
     myInheritCompilerOutput = RadioButton.create(ProjectBundle.message("project.inherit.compile.output.path"));
     myPerModuleCompilerOutput = RadioButton.create(ProjectBundle.message("project.module.compile.output.path"));
@@ -83,7 +83,7 @@ public class CompilerOutputsEditor extends ModuleElementsEditor {
     myPerModuleCompilerOutput.addValueListener(listener);
 
     for (ContentFolderTypeProvider provider : ContentFolderTypeProvider.filter(myFilter)) {
-      CommitableFieldPanel panel = createOutputPathPanel("Select " + provider.getName() + " Output", provider, url -> {
+      CommitableFieldPanel panel = createOutputPathPanel("Select " + provider.getName() + " Output", provider, parentUIDisposable, url -> {
         if (moduleCompilerPathsManager.isInheritedCompilerOutput()) {
           return;
         }
@@ -170,13 +170,11 @@ public class CompilerOutputsEditor extends ModuleElementsEditor {
   }
 
   @RequiredUIAccess
-  private CommitableFieldPanel createOutputPathPanel(String title, ContentFolderTypeProvider provider, Consumer<String> commitPathRunnable) {
+  private CommitableFieldPanel createOutputPathPanel(String title, ContentFolderTypeProvider provider, Disposable parentUIDisposable, Consumer<String> commitPathRunnable) {
     FileChooserTextBoxBuilder builder = FileChooserTextBoxBuilder.create(myProject);
     builder.dialogTitle(title);
     builder.fileChooserDescriptor(FileChooserDescriptorFactory.createSingleFolderDescriptor());
-    Disposable disposable = Disposable.newDisposable();
-    builder.uiDisposable(disposable);
-    registerDisposable(disposable);
+    builder.uiDisposable(parentUIDisposable);
 
     FileChooserTextBoxBuilder.Controller controller = builder.build();
 

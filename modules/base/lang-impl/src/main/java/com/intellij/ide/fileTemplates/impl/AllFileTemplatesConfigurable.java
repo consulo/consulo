@@ -38,15 +38,14 @@ import com.intellij.util.ArrayUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.JBUI;
 import consulo.disposer.Disposable;
-import consulo.disposer.Disposer;
 import consulo.logging.Logger;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.annotation.RequiredUIAccess;
+import jakarta.inject.Inject;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import jakarta.inject.Inject;
 import javax.swing.*;
 import java.awt.*;
 import java.net.URL;
@@ -86,7 +85,6 @@ public class AllFileTemplatesConfigurable implements SearchableConfigurable, Con
   private JComponent myEditorComponent;
   private JPanel myLeftPanel;
   private FileTemplateTab[] myTabs;
-  private Disposable myUIDisposable;
   private final Set<String> myInternalTemplateNames;
 
   private FileTemplatesScheme myScheme;
@@ -180,9 +178,7 @@ public class AllFileTemplatesConfigurable implements SearchableConfigurable, Con
 
   @RequiredUIAccess
   @Override
-  public JComponent createComponent() {
-    myUIDisposable = Disposable.newDisposable();
-
+  public JComponent createComponent(@Nonnull Disposable parentUIDisposable) {
     myTemplatesList = new FileTemplateTabAsList(TEMPLATES_TITLE) {
       @Override
       public void onTemplateSelected() {
@@ -235,7 +231,7 @@ public class AllFileTemplatesConfigurable implements SearchableConfigurable, Con
     myEditorComponent.setBorder(JBUI.Borders.empty(10, 0, 10, 10));
 
     myTabs = allTabs.toArray(new FileTemplateTab[allTabs.size()]);
-    myTabbedPane = new TabbedPaneWrapper(myUIDisposable);
+    myTabbedPane = new TabbedPaneWrapper(parentUIDisposable);
     myTabbedPane.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
     myLeftPanel = new JPanel(new CardLayout());
     myLeftPanel.setBorder(JBUI.Borders.empty(10, 10, 10, 0));
@@ -621,10 +617,6 @@ public class AllFileTemplatesConfigurable implements SearchableConfigurable, Con
       myEditorComponent = null;
     }
     myMainPanel = null;
-    if (myUIDisposable != null) {
-      Disposer.dispose(myUIDisposable);
-      myUIDisposable = null;
-    }
     myTabbedPane = null;
     myToolBar = null;
     myTabs = null;

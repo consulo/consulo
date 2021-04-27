@@ -16,12 +16,15 @@
 
 package com.intellij.openapi.ui;
 
-import consulo.logging.Logger;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.ui.DocumentAdapter;
 import com.intellij.util.ui.JBUI;
+import consulo.disposer.Disposable;
+import consulo.logging.Logger;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -52,7 +55,7 @@ public abstract class NamedConfigurable<T> implements Configurable {
         @Override
         protected void textChanged(DocumentEvent e) {
           setDisplayName(myNameField.getText());
-          if (updateTree != null){
+          if (updateTree != null) {
             updateTree.run();
           }
         }
@@ -74,13 +77,16 @@ public abstract class NamedConfigurable<T> implements Configurable {
   }
 
   public abstract void setDisplayName(String name);
+
   public abstract T getEditableObject();
+
   public abstract String getBannerSlogan();
 
+  @RequiredUIAccess
   @Override
-  public final JComponent createComponent() {
-    if (myOptionsComponent == null){
-      myOptionsComponent = createOptionsPanel();
+  public final JComponent createComponent(@Nonnull Disposable parentDisposable) {
+    if (myOptionsComponent == null) {
+      myOptionsComponent = createOptionsPanel(parentDisposable);
       final JComponent component = createTopRightComponent(myNameField);
       if (component == null) {
         myTopRightPanel.setVisible(false);
@@ -93,7 +99,7 @@ public abstract class NamedConfigurable<T> implements Configurable {
       myOptionsPanel.add(myOptionsComponent, BorderLayout.CENTER);
     }
     else {
-      Logger.getInstance(getClass()).error("Options component is null for "+getClass());
+      Logger.getInstance(getClass()).error("Options component is null for " + getClass());
     }
     updateName();
     return myWholePanel;
@@ -113,7 +119,13 @@ public abstract class NamedConfigurable<T> implements Configurable {
     myNameField.setText(getDisplayName());
   }
 
-  public abstract JComponent createOptionsPanel();
+  public JComponent createOptionsPanel(@Nonnull Disposable parentDisposable) {
+    return createOptionsPanel();
+  }
+
+  public JComponent createOptionsPanel() {
+    throw new AbstractMethodError();
+  }
 
   @Nullable
   public Image getIcon(boolean expanded) {

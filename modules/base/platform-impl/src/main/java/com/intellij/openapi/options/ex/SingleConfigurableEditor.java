@@ -292,7 +292,7 @@ public class SingleConfigurableEditor extends DialogWrapper {
   @Override
   @RequiredUIAccess
   protected JComponent createCenterPanel() {
-    myCenterPanel = ConfigurableUIMigrationUtil.createComponent(myConfigurable);
+    myCenterPanel = ConfigurableUIMigrationUtil.createComponent(myConfigurable, getDisposable());
     return myCenterPanel;
   }
 

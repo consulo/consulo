@@ -42,6 +42,7 @@ import com.intellij.util.xmlb.XmlSerializerUtil;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
+import consulo.options.ConfigurableUIMigrationUtil;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import consulo.util.concurrent.AsyncResult;
@@ -110,7 +111,6 @@ public abstract class MasterDetailsComponent implements Configurable, MasterDeta
   protected MasterDetailsComponent() {
     this(new MasterDetailsState());
   }
-
 
   protected MasterDetailsComponent(MasterDetailsState state) {
     myState = state;
@@ -264,8 +264,9 @@ public abstract class MasterDetailsComponent implements Configurable, MasterDeta
     return new Dimension(800, 600);
   }
 
+  @RequiredUIAccess
   @Override
-  public JComponent createComponent() {
+  public JComponent createComponent(@Nonnull Disposable parentUIDisposable) {
     myDisposable = Disposable.newDisposable();
 
     reInitWholePanelIfNeeded();
@@ -286,18 +287,15 @@ public abstract class MasterDetailsComponent implements Configurable, MasterDeta
   public boolean isModified() {
     if (myHasDeletedItems) return true;
     final boolean[] modified = new boolean[1];
-    TreeUtil.traverseDepth(myRoot, new TreeUtil.Traverse() {
-      @Override
-      public boolean accept(Object node) {
-        if (node instanceof MyNode) {
-          final NamedConfigurable configurable = ((MyNode)node).getConfigurable();
-          if (isInitialized(configurable) && configurable.isModified()) {
-            modified[0] = true;
-            return false;
-          }
+    TreeUtil.traverseDepth(myRoot, node -> {
+      if (node instanceof MyNode) {
+        final NamedConfigurable configurable = ((MyNode)node).getConfigurable();
+        if (isInitialized(configurable) && configurable.isModified()) {
+          modified[0] = true;
+          return false;
         }
-        return true;
       }
+      return true;
     });
     return modified[0];
   }
@@ -311,23 +309,20 @@ public abstract class MasterDetailsComponent implements Configurable, MasterDeta
   public void apply() throws ConfigurationException {
     processRemovedItems();
     final ConfigurationException[] ex = new ConfigurationException[1];
-    TreeUtil.traverse(myRoot, new TreeUtil.Traverse() {
-      @Override
-      public boolean accept(Object node) {
-        if (node instanceof MyNode) {
-          try {
-            final NamedConfigurable configurable = ((MyNode)node).getConfigurable();
-            if (isInitialized(configurable) && configurable.isModified()) {
-              configurable.apply();
-            }
-          }
-          catch (ConfigurationException e) {
-            ex[0] = e;
-            return false;
+    TreeUtil.traverse(myRoot, node -> {
+      if (node instanceof MyNode) {
+        try {
+          final NamedConfigurable configurable = ((MyNode)node).getConfigurable();
+          if (isInitialized(configurable) && configurable.isModified()) {
+            configurable.apply();
           }
         }
-        return true;
+        catch (ConfigurationException e) {
+          ex[0] = e;
+          return false;
+        }
       }
+      return true;
     });
     if (ex[0] != null) {
       throw ex[0];
@@ -418,6 +413,7 @@ public abstract class MasterDetailsComponent implements Configurable, MasterDeta
     XmlSerializerUtil.copyBean(object, myState);
   }
 
+  @RequiredUIAccess
   @Override
   public void disposeUIResources() {
     myState.getProportions().saveSplitterProportions(myWholePanel);
@@ -434,6 +430,7 @@ public abstract class MasterDetailsComponent implements Configurable, MasterDeta
 
     if (myDisposable != null) {
       Disposer.dispose(myDisposable);
+      myDisposable = null;
     }
   }
 
@@ -634,7 +631,7 @@ public abstract class MasterDetailsComponent implements Configurable, MasterDeta
     myCurrentConfigurable = configurable;
 
     if (configurable != null) {
-      final JComponent comp = configurable.createComponent();
+      final JComponent comp = ConfigurableUIMigrationUtil.createComponent(configurable, myDisposable);
       if (comp == null) {
         setEmpty();
         LOG.error("createComponent() returned null. configurable=" + configurable);

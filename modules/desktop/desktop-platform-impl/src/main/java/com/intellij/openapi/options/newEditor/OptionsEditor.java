@@ -111,8 +111,15 @@ public class OptionsEditor implements DataProvider, Disposable, AWTEventListener
 
     @RequiredUIAccess
     @Override
-    public JComponent createComponent() {
-      return myConfigurable.createComponent();
+    public JComponent createComponent(Disposable parent) {
+      return myConfigurable.createComponent(parent);
+    }
+
+    @RequiredUIAccess
+    @Nullable
+    @Override
+    public consulo.ui.Component createUIComponent(@Nonnull Disposable parentDisposable) {
+      return myConfigurable.createUIComponent(parentDisposable);
     }
 
     @RequiredUIAccess
@@ -199,14 +206,14 @@ public class OptionsEditor implements DataProvider, Disposable, AWTEventListener
     }
   }
 
-  private class ConfigurableContext {
+  private class ConfigurableContext implements Disposable {
     JComponent myComponent;
     Configurable myConfigurable;
 
     @RequiredUIAccess
     ConfigurableContext(final Configurable configurable) {
       myConfigurable = configurable;
-      myComponent = ConfigurableUIMigrationUtil.createComponent(configurable);
+      myComponent = ConfigurableUIMigrationUtil.createComponent(configurable, this);
 
       if (myComponent != null) {
         final Object clientProperty = myComponent.getClientProperty(NOT_A_NEW_COMPONENT);
@@ -227,6 +234,11 @@ public class OptionsEditor implements DataProvider, Disposable, AWTEventListener
 
     boolean isShowing() {
       return myComponent != null && myComponent.isShowing();
+    }
+
+    @Override
+    public void dispose() {
+
     }
   }
 
@@ -1075,7 +1087,15 @@ public class OptionsEditor implements DataProvider, Disposable, AWTEventListener
       else {
         each.disposeUIResources();
       }
+
+      ConfigurableContext context = myConfigurable2Content.get(each);
+      if(context != null) {
+        context.disposeWithTree();
+      }
     });
+    
+    myConfigurable2Content.clear();
+    myConfigurable2LoadCallback.clear();
 
     ReflectionUtil.clearOwnFields(this, Conditions.<Field>alwaysTrue());
   }

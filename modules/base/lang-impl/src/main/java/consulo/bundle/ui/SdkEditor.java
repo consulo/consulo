@@ -22,6 +22,7 @@ import com.intellij.openapi.projectRoots.ui.SdkPathEditor;
 import com.intellij.openapi.roots.OrderRootType;
 import com.intellij.openapi.roots.ui.OrderRootTypeUIFactory;
 import com.intellij.ui.TabbedPaneWrapper;
+import consulo.disposer.Disposable;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;
@@ -31,16 +32,14 @@ import javax.swing.*;
  * @since 21.03.14
  */
 public class SdkEditor extends BaseSdkEditor {
-  private TabbedPaneWrapper myTabbedPane;
-
   public SdkEditor(@Nonnull SdkModel sdkModel, @Nonnull SdkImpl sdk) {
     super(sdkModel, sdk);
   }
 
   @Nonnull
   @Override
-  protected JComponent createCenterComponent() {
-    myTabbedPane = new TabbedPaneWrapper(myDisposable);
+  protected JComponent createCenterComponent(Disposable parentUIDisposable) {
+    TabbedPaneWrapper tabbedPane = new TabbedPaneWrapper(parentUIDisposable);
     for (OrderRootType type : OrderRootType.getAllTypes()) {
       if (showTabForType(type)) {
         final OrderRootTypeUIFactory factory = OrderRootTypeUIFactory.FACTORY.getByKey(type);
@@ -50,10 +49,10 @@ public class SdkEditor extends BaseSdkEditor {
 
         SdkPathEditor pathEditor = getPathEditor(type);
 
-        myTabbedPane.addTab(pathEditor.getDisplayName(), pathEditor.createComponent());
+        tabbedPane.addTab(pathEditor.getDisplayName(), pathEditor.createComponent());
       }
     }
 
-    return myTabbedPane.getComponent();
+    return tabbedPane.getComponent();
   }
 }

@@ -23,13 +23,13 @@ import com.intellij.util.SmartList;
 import com.intellij.xdebugger.XDebuggerBundle;
 import com.intellij.xdebugger.breakpoints.XBreakpointType;
 import com.intellij.xdebugger.settings.DebuggerSettingsCategory;
-import consulo.ui.annotation.RequiredUIAccess;
+import consulo.disposer.Disposable;
 import consulo.options.ConfigurableUIMigrationUtil;
 import consulo.ui.Component;
-import org.jetbrains.annotations.NonNls;
+import consulo.ui.annotation.RequiredUIAccess;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.util.Arrays;
 import java.util.Collection;
@@ -154,17 +154,17 @@ public class DebuggerConfigurable implements SearchableConfigurable.Parent {
 
   @RequiredUIAccess
   @Override
-  public JComponent createComponent() {
+  public JComponent createComponent(@Nonnull Disposable parent) {
     compute();
-    return myRootConfigurable != null ? ConfigurableUIMigrationUtil.createComponent(myRootConfigurable) : null;
+    return myRootConfigurable != null ? ConfigurableUIMigrationUtil.createComponent(myRootConfigurable, parent) : null;
   }
 
   @RequiredUIAccess
   @Nullable
   @Override
-  public Component createUIComponent() {
+  public Component createUIComponent(@Nonnull Disposable parent) {
     compute();
-    return myRootConfigurable != null ? myRootConfigurable.createUIComponent() : null;
+    return myRootConfigurable != null ? myRootConfigurable.createUIComponent(parent) : null;
   }
 
   @RequiredUIAccess
@@ -191,7 +191,6 @@ public class DebuggerConfigurable implements SearchableConfigurable.Parent {
 
   @Override
   @Nonnull
-  @NonNls
   public String getId() {
     return "project.propDebugger";
   }

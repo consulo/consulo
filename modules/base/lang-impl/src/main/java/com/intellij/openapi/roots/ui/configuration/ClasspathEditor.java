@@ -62,7 +62,7 @@ public class ClasspathEditor extends ModuleElementsEditor implements ModuleRootL
   @RequiredUIAccess
   @Nonnull
   @Override
-  public JComponent createComponentImpl() {
+  public JComponent createComponentImpl(Disposable parentUIDisposable) {
     return myPanel = new ClasspathPanelImpl(getState());
   }
 

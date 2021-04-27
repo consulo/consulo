@@ -64,8 +64,6 @@ public class ProjectConfigurable extends ProjectStructureElementConfigurable<Pro
 
   private final GeneralProjectSettingsElement mySettingsElement;
 
-  private Disposable myDisposable;
-
   private FileChooserTextBoxBuilder.Controller myCompilerPathController;
 
   public ProjectConfigurable(Project project) {
@@ -80,16 +78,15 @@ public class ProjectConfigurable extends ProjectStructureElementConfigurable<Pro
     return mySettingsElement;
   }
 
+  @RequiredUIAccess
   @Override
-  public Component createOptionsPanel() {
-    init();
+  public Component createOptionsPanel(Disposable parentUIDisposable) {
+    init(parentUIDisposable);
     return myLayout;
   }
 
   @RequiredUIAccess
-  private void init() {
-    myDisposable = Disposable.newDisposable();
-
+  private void init(Disposable parentUIDisposable) {
     myLayout = VerticalLayout.create();
 
     myLayout.add(HtmlLabel.create("<html><body><b>Project name:</b></body></html>"));
@@ -99,7 +96,7 @@ public class ProjectConfigurable extends ProjectStructureElementConfigurable<Pro
     myLayout.add(DockLayout.create().left(myProjectName));
 
     FileChooserTextBoxBuilder builder = FileChooserTextBoxBuilder.create(myProject);
-    builder.uiDisposable(myDisposable);
+    builder.uiDisposable(parentUIDisposable);
     builder.fileChooserDescriptor(FileChooserDescriptorFactory.createSingleFolderDescriptor());
 
     myCompilerPathController = builder.build();
@@ -120,11 +117,6 @@ public class ProjectConfigurable extends ProjectStructureElementConfigurable<Pro
   @RequiredUIAccess
   @Override
   public void disposeUIResources() {
-    if (myDisposable != null) {
-      myDisposable.disposeWithTree();
-      myDisposable = null;
-    }
-
     myLayout = null;
   }
 

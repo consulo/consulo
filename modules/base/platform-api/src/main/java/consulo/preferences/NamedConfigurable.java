@@ -17,6 +17,7 @@
 package consulo.preferences;
 
 import com.intellij.openapi.options.Configurable;
+import consulo.disposer.Disposable;
 import consulo.logging.Logger;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.ui.Component;
@@ -121,7 +122,7 @@ public abstract class NamedConfigurable<T> implements Configurable {
 
   @RequiredUIAccess
   @Override
-  public final Component createUIComponent() {
+  public final Component createUIComponent(@Nonnull Disposable parentUIDisposable) {
     if (myUIPanel != null) {
       return myUIPanel.myWholePanel;
     }
@@ -137,8 +138,8 @@ public abstract class NamedConfigurable<T> implements Configurable {
     myUIPanel.myNameField.setVisible(myNameVisible);
 
     if (myOptionsComponent == null) {
-      myOptionsComponent = createOptionsPanel();
-      final Component component = createTopRightComponent(myUIPanel.myNameField);
+      myOptionsComponent = createOptionsPanel(parentUIDisposable);
+      final Component component = createTopRightComponent(myUIPanel.myNameField, parentUIDisposable);
       if (component == null) {
         myUIPanel.myTopRightPanel.setVisible(false);
       }
@@ -165,7 +166,7 @@ public abstract class NamedConfigurable<T> implements Configurable {
 
   @Nullable
   @RequiredUIAccess
-  protected Component createTopRightComponent(TextBox textBox) {
+  protected Component createTopRightComponent(@Nonnull TextBox textBox, @Nonnull Disposable parentUIDisposable) {
     return null;
   }
 
@@ -178,5 +179,7 @@ public abstract class NamedConfigurable<T> implements Configurable {
     myUIPanel.myNameField.setValue(getDisplayName());
   }
 
-  public abstract Component createOptionsPanel();
+  @RequiredUIAccess
+  @Nonnull
+  public abstract Component createOptionsPanel(@Nonnull Disposable parentUIDisposable);
 }

@@ -41,6 +41,7 @@ import com.intellij.ui.roots.ToolbarPanel;
 import com.intellij.util.ui.JBInsets;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
+import consulo.disposer.Disposable;
 import consulo.logging.Logger;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.fileChooser.FileChooser;
@@ -127,7 +128,7 @@ public class ContentEntriesEditor extends ModuleElementsEditor {
   @RequiredUIAccess
   @Nonnull
   @Override
-  public JPanel createComponentImpl() {
+  public JPanel createComponentImpl(Disposable parentUIDisposable) {
     final Module module = getModule();
     final Project project = module.getProject();
 

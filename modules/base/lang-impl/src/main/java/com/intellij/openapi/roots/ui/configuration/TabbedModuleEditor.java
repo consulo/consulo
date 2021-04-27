@@ -4,6 +4,8 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleConfigurationEditor;
 import com.intellij.openapi.project.Project;
 import com.intellij.ui.TabbedPaneWrapper;
+import consulo.disposer.Disposable;
+import consulo.options.ConfigurableUIMigrationUtil;
 import consulo.roots.ui.configuration.LibrariesConfigurator;
 import consulo.roots.ui.configuration.ModulesConfigurator;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -24,11 +26,12 @@ public class TabbedModuleEditor extends ModuleEditor {
 
   @Override
   @RequiredUIAccess
-  protected JComponent createCenterPanel() {
+  protected JComponent createCenterPanel(Disposable parentUIDisposable) {
     myTabbedPane = new TabbedPaneWrapper(this);
 
     for (ModuleConfigurationEditor editor : myEditors) {
-      myTabbedPane.addTab(editor.getDisplayName(), editor.createComponent());
+      myTabbedPane.addTab(editor.getDisplayName(), ConfigurableUIMigrationUtil.createComponent(editor, parentUIDisposable));
+      editor.initialize();
       editor.reset();
     }
     restoreSelectedEditor();
@@ -49,7 +52,7 @@ public class TabbedModuleEditor extends ModuleEditor {
   @Override
   public void selectEditor(@Nullable String name) {
     if (name != null) {
-      getPanel();
+      //getPanel(parentUIDisposable);
       final int editorTabIndex = getEditorTabIndex(name);
       if (editorTabIndex >= 0 && editorTabIndex < myTabbedPane.getTabCount()) {
         myTabbedPane.setSelectedIndex(editorTabIndex);

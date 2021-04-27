@@ -91,9 +91,9 @@ public abstract class ModuleElementsEditor implements ModuleConfigurationEditor 
   // caching
   @RequiredUIAccess
   @Override
-  public final JComponent createComponent() {
+  public final JComponent createComponent(@Nonnull Disposable parentUIDisposable) {
     if (myComponent == null) {
-      myComponent = createComponentImpl();
+      myComponent = createComponentImpl(parentUIDisposable);
     }
     return myComponent;
   }
@@ -104,13 +104,13 @@ public abstract class ModuleElementsEditor implements ModuleConfigurationEditor 
 
   @Nonnull
   @RequiredUIAccess
-  protected JComponent createComponentImpl() {
-    return (JComponent)TargetAWT.to(createUIComponentImpl());
+  protected JComponent createComponentImpl(@Nonnull Disposable parentUIDisposable) {
+    return (JComponent)TargetAWT.to(createUIComponentImpl(parentUIDisposable));
   }
 
   @Nullable
   @RequiredUIAccess
-  protected Component createUIComponentImpl() {
+  protected Component createUIComponentImpl(@Nonnull Disposable parentUIDisposable) {
     throw new UnsupportedOperationException();
   }
 }

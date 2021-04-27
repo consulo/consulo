@@ -22,6 +22,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.NullableFunction;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.disposer.Disposable;
 import consulo.logging.Logger;
 import consulo.options.ProjectConfigurableEP;
 import consulo.ui.Component;
@@ -140,15 +141,15 @@ public class ConfigurableWrapper implements SearchableConfigurable {
   @RequiredUIAccess
   @Nullable
   @Override
-  public JComponent createComponent() {
-    return getConfigurable().createComponent();
+  public JComponent createComponent(@Nonnull Disposable parentUIDisposable) {
+    return getConfigurable().createComponent(parentUIDisposable);
   }
 
   @RequiredUIAccess
   @Nullable
   @Override
-  public Component createUIComponent() {
-    return getConfigurable().createUIComponent();
+  public Component createUIComponent(@Nonnull Disposable parentUIDisposable) {
+    return getConfigurable().createUIComponent(parentUIDisposable);
   }
 
   @RequiredUIAccess

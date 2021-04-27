@@ -18,6 +18,7 @@ package consulo.options;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.UnnamedConfigurable;
 import consulo.awt.TargetAWT;
+import consulo.disposer.Disposable;
 import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
@@ -31,13 +32,13 @@ import javax.swing.*;
 public class ConfigurableUIMigrationUtil {
 
   @RequiredUIAccess
-  public static JComponent createComponent(@Nonnull UnnamedConfigurable configurable) {
-    JComponent component = configurable.createComponent();
+  public static JComponent createComponent(@Nonnull UnnamedConfigurable configurable, @Nonnull Disposable parentUIDisposable) {
+    JComponent component = configurable.createComponent(parentUIDisposable);
     if (component != null) {
       return component;
     }
 
-    consulo.ui.Component uiComponent = configurable.createUIComponent();
+    consulo.ui.Component uiComponent = configurable.createUIComponent(parentUIDisposable);
     if (uiComponent != null) {
       return (JComponent)TargetAWT.to(uiComponent);
     }
