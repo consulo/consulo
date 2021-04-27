@@ -21,9 +21,7 @@
 
     <module>sandbox/desktop</module>
     <module>sandbox/web</module>
-
-    <module>plugins/platform-base</module>
-    <module>plugins/sandLanguage</module>
+    <module>sandbox/sand-language-plugin</module>
 
     <module>modules/desktop/desktop-awt-hacking</module>
     <module>modules/desktop/desktop-bootstrap</module>
@@ -34,7 +32,7 @@
     <module>modules/desktop/desktop-graph-impl</module>
     <module>modules/desktop/desktop-util-awt</module>
     <module>modules/desktop/desktop-base-laf-icon-library</module>
-    <module>plugins/platform-desktop</module>
+    <module>modules/desktop/desktop-plugin</module>
 
     <module>modules/web/web-bootstrap</module>
     <module>modules/web/web-ui-impl-client</module>
@@ -43,7 +41,7 @@
     <module>modules/web/web-platform-api</module>
     <module>modules/web/web-platform-impl</module>
     <module>modules/web/web-lang-impl</module>
-    <module>plugins/platform-web</module>
+    <module>modules/web/web-plugin</module>
 
     <module>modules/boot/bootstrap</module>
     <module>modules/boot/container-api</module>
@@ -134,6 +132,7 @@
     <module>modules/base/xdebugger-impl</module>
     <module>modules/base/xtest-impl</module>
     <module>modules/base/xtest-sm-impl</module>
+    <module>modules/base/base-plugin</module>
 
     <module>modules/base/injecting/injecting-api</module>
     <module>modules/base/injecting/injecting-pico-impl</module>
