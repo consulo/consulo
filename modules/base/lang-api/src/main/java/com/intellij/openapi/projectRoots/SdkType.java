@@ -23,6 +23,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.Consumer;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
+import consulo.ui.image.ImageEffects;
 import org.jdom.Element;
 
 import javax.annotation.Nonnull;
@@ -120,12 +121,12 @@ public abstract class SdkType implements SdkTypeId {
   @Nonnull
   public abstract String getPresentableName();
 
-  @Nullable
+  @Nonnull
   public abstract Image getIcon();
 
   @Nullable
   public Image getGroupIcon() {
-    return getIcon();
+    return ImageEffects.transparent(getIcon(), 0.5f);
   }
 
   @Nonnull

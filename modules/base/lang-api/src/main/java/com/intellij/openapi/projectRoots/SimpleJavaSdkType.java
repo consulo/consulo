@@ -23,7 +23,6 @@ import consulo.ui.image.Image;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.io.File;
 
 /**
@@ -54,10 +53,10 @@ public class SimpleJavaSdkType extends SdkType implements JavaSdkType {
     return ProjectBundle.message("sdk.java.name");
   }
 
-  @Nullable
+  @Nonnull
   @Override
   public Image getIcon() {
-    return null;
+    return Image.empty(Image.DEFAULT_ICON_SIZE);
   }
 
   @Override
