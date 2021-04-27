@@ -29,7 +29,6 @@ import consulo.bundle.SdkUtil;
 import consulo.bundle.ui.SdkEditor;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
-import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -87,7 +86,6 @@ public class SdkConfigurable extends ProjectStructureElementConfigurable<Sdk> {
 
   @Override
   @Nullable
-  @NonNls
   public String getHelpTopic() {
     return ((SdkType)mySdk.getSdkType()).getHelpTopic();
   }

@@ -29,6 +29,7 @@ import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.util.ui.JBUI;
 import consulo.awt.TargetAWT;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
@@ -82,7 +83,6 @@ public abstract class BaseSdkEditor implements UnnamedConfigurable {
   public BaseSdkEditor(@Nonnull SdkModel sdkModel, @Nonnull SdkImpl sdk) {
     mySdkModel = sdkModel;
     mySdk = sdk;
-    createMainPanel();
     initSdk(sdk);
   }
 
@@ -102,10 +102,17 @@ public abstract class BaseSdkEditor implements UnnamedConfigurable {
   @RequiredUIAccess
   @Override
   public JComponent createComponent() {
+    if(myMainPanel == null) {
+      createMainPanel();
+    }
     return myMainPanel;
   }
 
   private void createMainPanel() {
+    if(myMainPanel != null) {
+      throw new IllegalArgumentException();
+    }
+
     myMainPanel = new JPanel(new GridBagLayout());
 
     for (OrderRootType type : OrderRootType.getAllTypes()) {
@@ -125,7 +132,7 @@ public abstract class BaseSdkEditor implements UnnamedConfigurable {
 
     JComponent centerComponent = createCenterComponent();
 
-    myHomeComponent = createHomeComponent();
+    myHomeComponent = TextBoxWithExtensions.create();
     myHomeComponent.withEditable(false);
 
     boolean changePathSupported = !mySdk.isPredefined() && ((SdkType)mySdk.getSdkType()).supportsUserAdd() && !(mySdk.getSdkType() instanceof UnknownSdkType);
@@ -133,31 +140,22 @@ public abstract class BaseSdkEditor implements UnnamedConfigurable {
       myHomeComponent.setExtensions(new TextBoxWithExtensions.Extension(false, PlatformIconGroup.nodesFolderOpened(), null, e -> doSelectHomePath()));
     }
 
-    myHomeFieldLabel = new JLabel(getHomeFieldLabelValue());
-    myMainPanel.add(myHomeFieldLabel, new GridBagConstraints(0, GridBagConstraints.RELATIVE, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(2, 10, 2, 2), 0, 0));
+    myHomeFieldLabel = new JLabel(ProjectBundle.message("sdk.configure.type.home.path"));
+    myMainPanel.add(myHomeFieldLabel, new GridBagConstraints(0, GridBagConstraints.RELATIVE, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, JBUI.insets(2, 10, 2, 2), 0, 0));
     myMainPanel.add(TargetAWT.to(myHomeComponent),
-                    new GridBagConstraints(1, GridBagConstraints.RELATIVE, 1, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(2, 2, 2, 10), 0, 0));
+                    new GridBagConstraints(1, GridBagConstraints.RELATIVE, 1, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, JBUI.insets(2, 2, 2, 10), 0, 0));
 
     myAdditionalDataPanel = new JPanel(new BorderLayout());
-    myMainPanel.add(myAdditionalDataPanel, new GridBagConstraints(0, GridBagConstraints.RELATIVE, 2, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(2, 0, 0, 0), 0, 0));
+    myMainPanel.add(myAdditionalDataPanel, new GridBagConstraints(0, GridBagConstraints.RELATIVE, 2, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, JBUI.insetsTop(2), 0, 0));
 
-    myMainPanel.add(centerComponent, new GridBagConstraints(0, GridBagConstraints.RELATIVE, 2, 1, 1.0, 1.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(2, 0, 0, 0), 0, 0));
+    myMainPanel.add(centerComponent, new GridBagConstraints(0, GridBagConstraints.RELATIVE, 2, 1, 1.0, 1.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, JBUI.insetsTop(2), 0, 0));
   }
 
   @Nonnull
   protected abstract JComponent createCenterComponent();
 
-  @Nonnull
-  protected TextBoxWithExtensions createHomeComponent() {
-    return TextBoxWithExtensions.create();
-  }
-
   protected boolean showTabForType(OrderRootType type) {
     return ((SdkType)mySdk.getSdkType()).isRootTypeApplicable(type);
-  }
-
-  private String getHomeFieldLabelValue() {
-    return ProjectBundle.message("sdk.configure.type.home.path", ((SdkType)mySdk.getSdkType()).getPresentableName());
   }
 
   @Nonnull
@@ -221,7 +219,7 @@ public abstract class BaseSdkEditor implements UnnamedConfigurable {
     sdkModificator.commitChanges();
     setHomePathValue(mySdk.getHomePath().replace('/', File.separatorChar));
     myVersionString = null;
-    myHomeFieldLabel.setText(getHomeFieldLabelValue());
+    myHomeFieldLabel.setText(ProjectBundle.message("sdk.configure.type.home.path"));
     updateAdditionalDataComponent();
     final AdditionalDataConfigurable configurable = getAdditionalDataConfigurable();
     if (configurable != null) {
@@ -236,6 +234,7 @@ public abstract class BaseSdkEditor implements UnnamedConfigurable {
       final AdditionalDataConfigurable configurable = myAdditionalDataConfigurables.get(sdkType);
       configurable.disposeUIResources();
     }
+    myMainPanel = null;
     myAdditionalDataConfigurables.clear();
     myAdditionalDataComponents.clear();
 
