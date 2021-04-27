@@ -20,12 +20,15 @@ import com.intellij.openapi.module.ModuleConfigurationEditor;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ModifiableRootModel;
+import consulo.awt.TargetAWT;
 import consulo.disposer.CompositeDisposable;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
+import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.swing.*;
 
 /**
@@ -95,15 +98,19 @@ public abstract class ModuleElementsEditor implements ModuleConfigurationEditor 
     return myComponent;
   }
 
-
-  public JComponent getComponent() {
-    return createComponent();
-  }
-
   protected void registerDisposable(Disposable disposable) {
     myDisposables.add(disposable);
   }
 
   @Nonnull
-  protected abstract JComponent createComponentImpl();
+  @RequiredUIAccess
+  protected JComponent createComponentImpl() {
+    return (JComponent)TargetAWT.to(createUIComponentImpl());
+  }
+
+  @Nullable
+  @RequiredUIAccess
+  protected Component createUIComponentImpl() {
+    throw new UnsupportedOperationException();
+  }
 }

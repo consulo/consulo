@@ -22,6 +22,7 @@ import com.intellij.openapi.roots.ModuleRootListener;
 import com.intellij.openapi.roots.OrderEntry;
 import com.intellij.openapi.roots.ui.configuration.classpath.ClasspathPanelImpl;
 import consulo.disposer.Disposable;
+import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;
@@ -58,6 +59,7 @@ public class ClasspathEditor extends ModuleElementsEditor implements ModuleRootL
     myPanel.stopEditing();
   }
 
+  @RequiredUIAccess
   @Nonnull
   @Override
   public JComponent createComponentImpl() {

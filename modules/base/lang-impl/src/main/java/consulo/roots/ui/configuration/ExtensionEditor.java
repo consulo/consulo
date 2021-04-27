@@ -98,6 +98,7 @@ public class ExtensionEditor extends ModuleElementsEditor {
     TreeUtil.expandAll(myTree);
   }
 
+  @RequiredUIAccess
   @Nonnull
   @Override
   protected JComponent createComponentImpl() {

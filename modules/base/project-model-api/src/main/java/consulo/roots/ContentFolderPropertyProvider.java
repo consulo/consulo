@@ -44,7 +44,7 @@ public abstract class ContentFolderPropertyProvider<T> {
 
   @Nullable
   public static ContentFolderPropertyProvider<?> findProvider(@Nonnull String key) {
-    for (ContentFolderPropertyProvider provider : EP_NAME.getExtensions()) {
+    for (ContentFolderPropertyProvider provider : EP_NAME.getExtensionList()) {
       if (key.equals(provider.getKey().toString())) {
         return provider;
       }

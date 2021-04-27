@@ -124,6 +124,7 @@ public class ContentEntriesEditor extends ModuleElementsEditor {
     super.disposeUIResources();
   }
 
+  @RequiredUIAccess
   @Nonnull
   @Override
   public JPanel createComponentImpl() {
