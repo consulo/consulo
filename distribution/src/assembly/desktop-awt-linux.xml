@@ -36,14 +36,14 @@
       <outputDirectory>${file.separator}Consulo${file.separator}</outputDirectory>
     </fileSet>
     <fileSet>
-      <directory>${project.basedir}/platform/shared/</directory>
+      <directory>${project.basedir}/platform/desktop-awt/shared/</directory>
       <includes>
         <include>*/**</include>
       </includes>
       <outputDirectory>${file.separator}Consulo${file.separator}platform${file.separator}buildSNAPSHOT${file.separator}</outputDirectory>
     </fileSet>
     <fileSet>
-      <directory>${project.basedir}/platform/linux</directory>
+      <directory>${project.basedir}/platform/desktop-awt/linux</directory>
       <includes>
         <include>*/**</include>
       </includes>

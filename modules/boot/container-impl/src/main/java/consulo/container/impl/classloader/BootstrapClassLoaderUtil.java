@@ -38,13 +38,13 @@ public class BootstrapClassLoaderUtil {
   private static final String CONSULO_PLATFORM_BASE = "consulo.platform.base";
 
   @Nonnull
-  public static ContainerStartup buildContainerStartup(Map<String, Object> args, File modulesDirectory, ContainerLogger containerLogger) throws Exception {
+  public static ContainerStartup buildContainerStartup(Map<String, Object> args, File modulesDirectory, ContainerLogger containerLogger, Java9ModuleProcessor processor) throws Exception {
     StatCollector stat = (StatCollector)args.get(ContainerStartup.STAT_COLLECTOR);
 
     Runnable bootInitialize = stat.mark("boot.classloader.initialize");
 
-    Runnable mark = stat.mark(CONSULO_PLATFORM_BASE + ".initalize");
-    PluginDescriptorImpl base = initializePlatformBase(modulesDirectory, containerLogger);
+    Runnable mark = stat.mark(CONSULO_PLATFORM_BASE + ".initialize");
+    PluginDescriptorImpl base = initializePlatformBase(modulesDirectory, containerLogger, processor);
     mark.run();
 
     List<PluginDescriptorImpl> descriptors = new ArrayList<PluginDescriptorImpl>();
@@ -103,7 +103,7 @@ public class BootstrapClassLoaderUtil {
   }
 
   @Nonnull
-  private static PluginDescriptorImpl initializePlatformBase(File modulesDirectory, ContainerLogger containerLogger) throws Exception {
+  private static PluginDescriptorImpl initializePlatformBase(File modulesDirectory, ContainerLogger containerLogger, Java9ModuleProcessor processor) throws Exception {
     File platformBaseDirectory = new File(modulesDirectory, CONSULO_PLATFORM_BASE);
 
     PluginDescriptorImpl platformBasePlugin = PluginDescriptorLoader.loadDescriptor(platformBaseDirectory, false, true, containerLogger);
@@ -117,7 +117,7 @@ public class BootstrapClassLoaderUtil {
     ClassLoader loader = PluginClassLoaderFactory.create(filesToUrls(platformBasePlugin.getClassPath()), parent, platformBasePlugin.getPluginId(), null, platformBaseDirectory);
 
     if (SystemInfoRt.IS_AT_LEAST_JAVA9) {
-      platformBasePlugin.setModuleLayer(Java9ModuleInitializer.initializeBaseModules(platformBasePlugin.getClassPath(), loader, containerLogger));
+      platformBasePlugin.setModuleLayer(Java9ModuleInitializer.initializeBaseModules(platformBasePlugin.getClassPath(), loader, containerLogger, processor));
     }
 
     platformBasePlugin.setLoader(loader);

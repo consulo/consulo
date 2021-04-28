@@ -1,4 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+  - Copyright 2013-2017 consulo.io
+  -
+  - Licensed under the Apache License, Version 2.0 (the "License");
+  - you may not use this file except in compliance with the License.
+  - You may obtain a copy of the License at
+  -
+  - http://www.apache.org/licenses/LICENSE-2.0
+  -
+  - Unless required by applicable law or agreed to in writing, software
+  - distributed under the License is distributed on an "AS IS" BASIS,
+  - WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  - See the License for the specific language governing permissions and
+  - limitations under the License.
+  -->
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
@@ -7,12 +22,13 @@
     <groupId>consulo</groupId>
     <artifactId>arch.ide</artifactId>
     <version>2-SNAPSHOT</version>
-    <relativePath>../arch/ide/pom.xml</relativePath>
+    <relativePath>../../arch/ide/pom.xml</relativePath>
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
-  <artifactId>consulo-bundle</artifactId>
+  <artifactId>consulo-sandbox-desktop-swt</artifactId>
   <version>2-SNAPSHOT</version>
+  <packaging>pom</packaging>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -25,15 +41,12 @@
         <version>${maven.assembly.plugin}</version>
         <executions>
           <execution>
-            <id>create-archive</id>
+            <id>create-sandbox</id>
             <configuration>
               <descriptors>
-                <descriptor>${project.basedir}/src/assembly/desktop-awt-win.xml</descriptor>
-                <descriptor>${project.basedir}/src/assembly/desktop-awt-linux.xml</descriptor>
-                <descriptor>${project.basedir}/src/assembly/desktop-awt-mac.xml</descriptor>
-                
-                <descriptor>${project.basedir}/src/assembly/web.xml</descriptor>
+                <descriptor>src/assembly/sandbox.xml</descriptor>
               </descriptors>
+              <attach>false</attach>
             </configuration>
             <phase>package</phase>
             <goals>
@@ -41,6 +54,16 @@
             </goals>
           </execution>
         </executions>
+      </plugin>
+      <plugin>
+        <groupId>consulo.maven</groupId>
+        <artifactId>consulo-maven-plugin</artifactId>
+        <version>2-SNAPSHOT</version>
+        <configuration>
+          <execution>
+            <buildDirectory>${project.build.directory}/consulo-sandbox-desktop-swt-${project.version}-main</buildDirectory>
+          </execution>
+        </configuration>
       </plugin>
     </plugins>
   </build>
@@ -79,7 +102,7 @@
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>consulo-platform-desktop-plugin</artifactId>
+      <artifactId>consulo-platform-desktop-swt-plugin</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
@@ -89,32 +112,7 @@
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>consulo-desktop-platform-impl</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>consulo-desktop-awt-hacking</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>consulo-desktop-lang-impl</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>consulo-desktop-ui-impl</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>consulo-desktop-graph-impl</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>consulo-desktop-ui-laf-impl</artifactId>
+      <artifactId>consulo-desktop-swt-bootstrap</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
@@ -164,12 +162,12 @@
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>consulo-util-collection</artifactId>
+      <artifactId>consulo-util-concurrent</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>consulo-util-concurrent</artifactId>
+      <artifactId>consulo-util-collection</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
@@ -189,52 +187,12 @@
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>consulo-web-bootstrap</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>consulo-web-ui-impl-client</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>consulo-web-ui-impl-server</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>consulo-web-lang-impl</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>consulo-web-platform-api</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>consulo-web-platform-impl</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>consulo-platform-web-plugin</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>consulo-external-tools-api</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>${project.groupId}</groupId>
       <artifactId>consulo-external-tools-impl</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>consulo-desktop-base-laf-icon-library</artifactId>
+      <artifactId>consulo-external-tools-api</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
@@ -250,6 +208,11 @@
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>consulo-build-ui-impl</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>consulo-desktop-swt-platform-impl</artifactId>
       <version>${project.version}</version>
     </dependency>
 
@@ -273,7 +236,7 @@
       <artifactId>javazoom.mp3</artifactId>
       <version>${project.version}</version>
     </dependency>
-    
+
     <!--optional dependency-->
     <dependency>
       <groupId>org.apache.xmlrpc</groupId>
@@ -284,12 +247,12 @@
       <artifactId>xmlrpc-server</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.apache.xmlrpc</groupId>
-      <artifactId>xmlrpc-client</artifactId>
-    </dependency>
-    <dependency>
       <groupId>org.apache.ws.commons</groupId>
       <artifactId>ws-commons-util</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.xmlrpc</groupId>
+      <artifactId>xmlrpc-client</artifactId>
     </dependency>
     <dependency>
       <groupId>io.netty</groupId>
@@ -380,61 +343,12 @@
       <artifactId>snakeyaml</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.eclipse.jetty</groupId>
-      <artifactId>jetty-server</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.eclipse.jetty</groupId>
-      <artifactId>jetty-servlet</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.eclipse.jetty</groupId>
-      <artifactId>jetty-util</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.eclipse.jetty</groupId>
-      <artifactId>jetty-http</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.eclipse.jetty</groupId>
-      <artifactId>jetty-io</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.eclipse.jetty</groupId>
-      <artifactId>jetty-continuation</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.eclipse.jetty.websocket</groupId>
-      <artifactId>websocket-server</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.eclipse.jetty.websocket</groupId>
-      <artifactId>websocket-api</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.eclipse.jetty.websocket</groupId>
-      <artifactId>websocket-servlet</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.eclipse.jetty.websocket</groupId>
-      <artifactId>websocket-common</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>javax.servlet</groupId>
-      <artifactId>javax.servlet-api</artifactId>
-      <scope>compile</scope>
-    </dependency>
-    <dependency>
-      <groupId>ar.com.hjg</groupId>
-      <artifactId>pngj</artifactId>
+      <groupId>org.jdom</groupId>
+      <artifactId>jdom-xpath-jaxen</artifactId>
     </dependency>
     <dependency>
       <groupId>org.jvnet.winp</groupId>
       <artifactId>winp</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.jdom</groupId>
-      <artifactId>jdom-xpath-jaxen</artifactId>
     </dependency>
   </dependencies>
 </project>

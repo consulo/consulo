@@ -36,14 +36,14 @@
       <outputDirectory>${file.separator}Consulo.app${file.separator}</outputDirectory>
     </fileSet>
     <fileSet>
-      <directory>${project.basedir}/platform/shared/</directory>
+      <directory>${project.basedir}/platform/desktop-awt/shared/</directory>
       <includes>
         <include>*/**</include>
       </includes>
       <outputDirectory>${file.separator}Consulo.app${file.separator}Contents${file.separator}platform${file.separator}buildSNAPSHOT${file.separator}</outputDirectory>
     </fileSet>
     <fileSet>
-      <directory>${project.basedir}/platform/mac</directory>
+      <directory>${project.basedir}/platform/desktop-awt/mac</directory>
       <includes>
         <include>*/**</include>
       </includes>

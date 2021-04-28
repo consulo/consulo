@@ -77,7 +77,7 @@ public class Main {
     map.put(ContainerStartup.ARGS, args);
     map.put(ContainerStartup.STAT_COLLECTOR, stat);
 
-    ContainerStartup containerStartup = BootstrapClassLoaderUtil.buildContainerStartup(map, modulesDirectory, SystemContainerLogger.INSTANCE);
+    ContainerStartup containerStartup = BootstrapClassLoaderUtil.buildContainerStartup(map, modulesDirectory, SystemContainerLogger.INSTANCE, DesktopAwtJava9Processor.INSTANCE);
 
     containerStartup.run(map);
   }

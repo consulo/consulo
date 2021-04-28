@@ -20,6 +20,7 @@
     <module>distribution</module>
 
     <module>sandbox/desktop</module>
+    <module>sandbox/desktop-swt</module>
     <module>sandbox/web</module>
     <module>sandbox/sand-language-plugin</module>
 
@@ -33,6 +34,10 @@
     <module>modules/desktop/desktop-util-awt</module>
     <module>modules/desktop/desktop-base-laf-icon-library</module>
     <module>modules/desktop/desktop-plugin</module>
+
+    <module>modules/desktop-swt/desktop-swt-bootstrap</module>
+    <module>modules/desktop-swt/desktop-swt-plugin</module>
+    <module>modules/desktop-swt/desktop-swt-platform-impl</module>
 
     <module>modules/web/web-bootstrap</module>
     <module>modules/web/web-ui-impl-client</module>
