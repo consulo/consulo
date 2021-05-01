@@ -22,20 +22,19 @@ import com.intellij.openapi.ui.NullableComponent;
 import com.intellij.openapi.ui.Splitter;
 import com.intellij.openapi.ui.ThreeComponentsSplitter;
 import com.intellij.openapi.util.ActionCallback;
-import consulo.disposer.Disposable;
-import consulo.disposer.Disposer;
-import consulo.util.dataholder.Key;
 import com.intellij.ui.components.panels.Wrapper;
 import com.intellij.ui.content.Content;
 import com.intellij.ui.tabs.JBTabsPresentation;
-import org.jetbrains.annotations.NonNls;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
+import consulo.util.dataholder.Key;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 public class GridImpl extends Wrapper implements Grid, Disposable, DataProvider {
   private final ThreeComponentsSplitter myTopSplit = new ThreeComponentsSplitter(false, true);
@@ -235,15 +234,12 @@ public class GridImpl extends Wrapper implements Grid, Disposable, DataProvider 
         getParent().repaint();
       }
 
-      return new CellTransform.Restore() {
-        @Override
-        public ActionCallback restoreInGrid() {
-          if (myContent != null) {
-            setContent(myContent);
-            myContent = null;
-          }
-          return ActionCallback.DONE;
+      return () -> {
+        if (myContent != null) {
+          setContent(myContent);
+          myContent = null;
         }
+        return ActionCallback.DONE;
       };
     }
 
@@ -360,17 +356,12 @@ public class GridImpl extends Wrapper implements Grid, Disposable, DataProvider 
   }
 
   public void minimize(final Content content, final CellTransform.Restore restore) {
-    myViewContext.getCellTransform().minimize(content, new CellTransform.Restore() {
-      @Override
-      public ActionCallback restoreInGrid() {
-        return restore.restoreInGrid();
-      }
-    });
+    myViewContext.getCellTransform().minimize(content, restore::restoreInGrid);
   }
 
   @Override
   @Nullable
-  public Object getData(@Nonnull @NonNls final Key<?> dataId) {
+  public Object getData(@Nonnull final Key<?> dataId) {
     if (ViewContext.CONTEXT_KEY == dataId) {
       return myViewContext;
     }

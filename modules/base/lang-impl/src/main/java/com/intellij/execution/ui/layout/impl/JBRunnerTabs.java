@@ -47,16 +47,6 @@ public class JBRunnerTabs extends JBEditorTabs {
     return true;
   }
 
-  @Override
-  public boolean hasUnderline() {
-    return true;
-  }
-
-  @Override
-  public int getToolbarInset() {
-    return 0;
-  }
-
   public boolean shouldAddToGlobal(Point point) {
     final TabLabel label = getSelectedLabel();
     if (label == null || point == null) {
@@ -64,15 +54,6 @@ public class JBRunnerTabs extends JBEditorTabs {
     }
     final Rectangle bounds = label.getBounds();
     return point.y <= bounds.y + bounds.height;
-  }
-
-  @Override
-  public Rectangle layout(JComponent c, Rectangle bounds) {
-    if (c instanceof Toolbar) {
-      bounds.height -= JBUI.scale(5);
-      return super.layout(c, bounds);
-    }
-    return super.layout(c, bounds);
   }
 
   @Override
@@ -101,13 +82,12 @@ public class JBRunnerTabs extends JBEditorTabs {
 
     @Override
     public void apply(UiDecorator.UiDecoration decoration) {
-      setBorder(JBUI.Borders.empty(5, 5, 7, 5));
+      super.apply(decoration);
     }
 
     @Override
     public void setTabActionsAutoHide(boolean autoHide) {
       super.setTabActionsAutoHide(autoHide);
-      apply(null);
     }
 
     @Override

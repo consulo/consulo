@@ -18,15 +18,12 @@ package consulo.ide.ui.laf.intellij;
 import com.intellij.openapi.ui.GraphicsConfig;
 import com.intellij.ui.ColorUtil;
 import com.intellij.ui.Gray;
-import com.intellij.ui.JBColor;
 import com.intellij.ui.tabs.JBTabsPosition;
 import com.intellij.ui.tabs.TabInfo;
 import com.intellij.ui.tabs.impl.JBTabsImpl;
 import com.intellij.ui.tabs.impl.ShapeTransform;
 import com.intellij.ui.tabs.impl.TabLabel;
-import com.intellij.ui.tabs.impl.table.TableLayout;
 import com.intellij.util.Function;
-import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import consulo.ide.ui.laf.JBEditorTabsUI;
 
@@ -328,24 +325,6 @@ public class IntelliJEditorTabsUI extends JBEditorTabsUI {
     int _width = effectiveBounds.width - insets.left - insets.right + (t.getTabsPosition() == JBTabsPosition.right ? 1 : 0);
     int _height = effectiveBounds.height - insets.top - insets.bottom;
 
-
-    if ((!t.isSingleRow() /* for multiline */) || (t.isSingleRow() && t.isHorizontalTabs())) {
-      if (t.isSingleRow() && t.getPosition() == JBTabsPosition.bottom) {
-        _y += t.getActiveTabUnderlineHeight();
-      }
-      else {
-        if (t.isSingleRow()) {
-          _height -= t.getActiveTabUnderlineHeight();
-        }
-        else {
-          TabInfo info = label.getInfo();
-          if (((TableLayout)t.getEffectiveLayout()).isLastRow(info)) {
-            _height -= t.getActiveTabUnderlineHeight();
-          }
-        }
-      }
-    }
-
     final boolean vertical = t.getTabsPosition() == JBTabsPosition.left || t.getTabsPosition() == JBTabsPosition.right;
     final Color tabColor = label.getInfo().getTabColor();
     doPaintInactive(g2d, effectiveBounds, _x, _y, _width, _height, tabColor, row, column, vertical);
@@ -428,47 +407,15 @@ public class IntelliJEditorTabsUI extends JBEditorTabsUI {
       int y = r2.y + insets.top;
       int height = maxLength - insets.top - insets.bottom;
       if (tabs.getTabsPosition() == JBTabsPosition.bottom) {
-        y = r2.height - height - insets.top + tabs.getActiveTabUnderlineHeight();
+        y = r2.height - height - insets.top;
       }
       else {
-        height -= tabs.getActiveTabUnderlineHeight();
       }
 
       rectangle = new Rectangle(maxOffset, y, r2.width - maxOffset - insets.left - insets.right, height);
     }
 
     doPaintBackground(g2d, clip, vertical, rectangle);
-
-    doPaintAdditionalBackgroundIfFirstOffsetSet(tabs, g2d, clip);
-  }
-
-  protected void doPaintAdditionalBackgroundIfFirstOffsetSet(JBTabsImpl tabs, Graphics2D g2d, Rectangle clip) {
-    if (tabs.getTabsPosition() == JBTabsPosition.top && tabs.isSingleRow() && tabs.getFirstTabOffset() > 0) {
-      int maxOffset = 0;
-      int maxLength = 0;
-
-      for (int i = tabs.getVisibleInfos().size() - 1; i >= 0; i--) {
-        TabInfo visibleInfo = tabs.getVisibleInfos().get(i);
-        TabLabel tabLabel = tabs.myInfo2Label.get(visibleInfo);
-        Rectangle r = tabLabel.getBounds();
-        if (r.width == 0 || r.height == 0) continue;
-        maxOffset = r.x + r.width;
-        maxLength = r.height;
-        break;
-      }
-
-      maxOffset++;
-      g2d.setPaint(UIUtil.getPanelBackground());
-      if (tabs.getFirstTabOffset() > 0) {
-        g2d.fillRect(clip.x, clip.y, clip.x + JBUI.scale(tabs.getFirstTabOffset() - 1), clip.y + maxLength - tabs.getActiveTabUnderlineHeight());
-      }
-      g2d.fillRect(clip.x + maxOffset, clip.y, clip.width - maxOffset, clip.y + maxLength - tabs.getActiveTabUnderlineHeight());
-      g2d.setPaint(new JBColor(Gray._181, UIUtil.getPanelBackground()));
-      g2d.drawLine(clip.x + maxOffset, clip.y + maxLength - tabs.getActiveTabUnderlineHeight(), clip.x + clip.width,
-                   clip.y + maxLength - tabs.getActiveTabUnderlineHeight());
-      g2d.setPaint(UIUtil.getPanelBackground());
-      g2d.drawLine(clip.x, clip.y + maxLength, clip.width, clip.y + maxLength);
-    }
   }
 
   public void doPaintBackground(Graphics2D g, Rectangle clip, boolean vertical, Rectangle rectangle) {

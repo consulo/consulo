@@ -59,16 +59,6 @@ public class MacEditorTabsUI extends IntelliJEditorTabsUI {
 
     g2d.setColor(Gray._150.withAlpha(100));
     g2d.fillRect(x, y, w, h);
-
-    // Push top row under the navbar or toolbar and have a blink over previous row shadow for 2nd and subsequent rows.
-    if (row == 0) {
-      g2d.setColor(Gray._200.withAlpha(200));
-    }
-    else {
-      g2d.setColor(Gray._255.withAlpha(100));
-    }
-
-    g2d.drawLine(x, y, x + w - 1, y);
   }
 
   @Override
@@ -109,7 +99,7 @@ public class MacEditorTabsUI extends IntelliJEditorTabsUI {
     shape.insets = shape.path.transformInsets(tabs.getLayoutInsets());
     shape.labelPath = shape.path.createTransform(tabs.getSelectedLabel().getBounds());
 
-    shape.labelBottomY = shape.labelPath.getMaxY() - shape.labelPath.deltaY(tabs.getActiveTabUnderlineHeight() - 1);
+    shape.labelBottomY = shape.labelPath.getMaxY();
     shape.labelTopY = shape.labelPath.getY() + (tabs.getPosition() == JBTabsPosition.top || tabs.getPosition() == JBTabsPosition.bottom ? shape.labelPath.deltaY(1) : 0);
     shape.labelLeftX = shape.labelPath.getX() + (tabs.getPosition() == JBTabsPosition.top || tabs.getPosition() == JBTabsPosition.bottom ? 0 : shape.labelPath.deltaX(1));
     shape.labelRightX = shape.labelPath.getMaxX();
@@ -125,8 +115,8 @@ public class MacEditorTabsUI extends IntelliJEditorTabsUI {
     int lastX = shape.path.getWidth() - shape.path.deltaX(shape.insets.right);
 
     shape.path.lineTo(lastX, shape.labelBottomY);
-    shape.path.lineTo(lastX, shape.labelBottomY + shape.labelPath.deltaY(tabs.getActiveTabUnderlineHeight() - 1));
-    shape.path.lineTo(leftX, shape.labelBottomY + shape.labelPath.deltaY(tabs.getActiveTabUnderlineHeight() - 1));
+    shape.path.lineTo(lastX, shape.labelBottomY);
+    shape.path.lineTo(leftX, shape.labelBottomY );
 
     shape.path.closePath();
     shape.fillPath = shape.path.copy();

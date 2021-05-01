@@ -23,11 +23,13 @@ import com.intellij.execution.ui.layout.actions.MinimizeViewAction;
 import com.intellij.execution.ui.layout.actions.RestoreViewAction;
 import com.intellij.ide.DataManager;
 import com.intellij.ide.actions.CloseAction;
-import consulo.disposer.Disposable;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.AbstractPainter;
-import com.intellij.openapi.util.*;
+import com.intellij.openapi.util.ActionCallback;
+import com.intellij.openapi.util.ActiveRunnable;
+import com.intellij.openapi.util.AsyncResult;
+import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.openapi.wm.IdeFrame;
@@ -57,6 +59,7 @@ import com.intellij.util.ui.GraphicsUtil;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import consulo.awt.TargetAWT;
+import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ui.docking.BaseDockManager;
 import consulo.util.dataholder.Key;
@@ -218,8 +221,7 @@ public class RunnerContentUi implements ContentUI, Disposable, CellTransform.Fac
         }
         return null;
       }
-    }).setTabLabelActionsAutoHide(false).setInnerInsets(JBUI.emptyInsets()).setToDrawBorderIfTabsHidden(false).setTabDraggingEnabled(isMoveToGridActionEnabled())
-            .setUiDecorator(null).getJBTabs();
+    }).setTabLabelActionsAutoHide(false).setInnerInsets(JBUI.emptyInsets()).setToDrawBorderIfTabsHidden(false).setTabDraggingEnabled(isMoveToGridActionEnabled()).setUiDecorator(null).getJBTabs();
     rebuildTabPopup();
 
     myTabs.getPresentation().setPaintBorder(0, 0, 0, 0).setPaintFocus(false).setRequestFocusOnLastFocusedComponent(true);
@@ -1368,12 +1370,6 @@ public class RunnerContentUi implements ContentUI, Disposable, CellTransform.Fac
     }
   }
 
-  static class MyBorder extends EmptyBorder {
-    public MyBorder(boolean top, boolean left, boolean right, boolean bottom) {
-      super(top ? 2 : 0, left ? 2 : 0, right ? 2 : 0, bottom ? 2 : 0);
-    }
-  }
-
   private class MyComponent extends NonOpaquePanel implements DataProvider, QuickActionProvider {
     private boolean myWasEverAdded;
 
@@ -1381,7 +1377,6 @@ public class RunnerContentUi implements ContentUI, Disposable, CellTransform.Fac
       super(layout);
       setOpaque(true);
       setFocusCycleRoot(true);
-      setBorder(new MyBorder(false, false, false, false));
     }
 
     @Override
@@ -1393,12 +1388,7 @@ public class RunnerContentUi implements ContentUI, Disposable, CellTransform.Fac
       else if (CloseAction.CloseTarget.KEY == dataId) {
         Content content = getContentManager().getSelectedContent();
         if (content != null && content.getManager().canCloseContents() && content.isCloseable()) {
-          return new CloseAction.CloseTarget() {
-            @Override
-            public void close() {
-              content.getManager().removeContent(content, true, true, true);
-            }
-          };
+          return (CloseAction.CloseTarget)() -> content.getManager().removeContent(content, true, true, true);
         }
       }
 

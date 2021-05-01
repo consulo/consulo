@@ -27,7 +27,6 @@ import com.intellij.ui.tabs.JBTabsPosition;
 import com.intellij.ui.tabs.TabInfo;
 import com.intellij.ui.tabs.TabsUtil;
 import com.intellij.ui.tabs.UiDecorator;
-import com.intellij.ui.tabs.impl.table.TableLayout;
 import com.intellij.util.PairConsumer;
 import com.intellij.util.ui.Centerizer;
 import com.intellij.util.ui.JBUI;
@@ -291,9 +290,6 @@ public class TabLabel extends JPanel {
   }
 
   protected int getNonSelectedOffset() {
-    if (myTabs.isEditorTabs() && (myTabs.isSingleRow() || ((TableLayout)myTabs.getEffectiveLayout()).isLastRow(getInfo()))) {
-      return -myTabs.getActiveTabUnderlineHeight() / 2 + 1;
-    }
     return 1;
   }
 

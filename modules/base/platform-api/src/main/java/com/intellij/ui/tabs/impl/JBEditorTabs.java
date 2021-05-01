@@ -65,21 +65,6 @@ public class JBEditorTabs extends JBTabsImpl {
   }
 
   @Override
-  public boolean useBoldLabels() {
-    return false;
-  }
-
-  @Override
-  public boolean hasUnderline() {
-    return true;
-  }
-
-  @Override
-  public int getActiveTabUnderlineHeight() {
-    return hasUnderline() ? super.getActiveTabUnderlineHeight() : 1;
-  }
-
-  @Override
   public boolean isAlphabeticalMode() {
     return Registry.is(TABS_ALPHABETICAL_KEY);
   }

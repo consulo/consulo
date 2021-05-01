@@ -24,7 +24,6 @@ import com.intellij.openapi.actionSystem.DataProvider;
 import com.intellij.openapi.ui.popup.JBPopup;
 import com.intellij.openapi.util.ActionCallback;
 import com.intellij.openapi.util.DimensionService;
-import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.MutualMap;
 import com.intellij.ui.awt.RelativePoint;
 import com.intellij.ui.components.panels.NonOpaquePanel;
@@ -33,14 +32,12 @@ import com.intellij.ui.content.ContentManager;
 import com.intellij.ui.tabs.JBTabs;
 import com.intellij.ui.tabs.TabInfo;
 import com.intellij.ui.tabs.TabsListener;
-import com.intellij.ui.tabs.UiDecorator;
 import com.intellij.ui.tabs.impl.JBEditorTabs;
 import com.intellij.ui.tabs.impl.TabLabel;
 import com.intellij.ui.tabs.impl.singleRow.ScrollableSingleRowLayout;
 import com.intellij.ui.tabs.impl.singleRow.SingleRowLayout;
-import java.util.HashSet;
 import com.intellij.util.ui.UIUtil;
-import org.jetbrains.annotations.NonNls;
+import consulo.util.dataholder.Key;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -48,6 +45,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.HashSet;
 import java.util.Set;
 
 public class GridCellImpl implements GridCell {
@@ -71,25 +69,8 @@ public class GridCellImpl implements GridCell {
     myPlaceholder = placeholder;
     myTabs = new JBEditorTabs(myContext.getProject(), myContext.getActionManager(), myContext.getFocusManager(), container) {
       @Override
-      public boolean useSmallLabels() {
-        return true;
-      }
-
-      @Override
       protected SingleRowLayout createSingleRowLayout() {
         return new ScrollableSingleRowLayout(this);
-      }
-
-      @Override
-      public void updateUI() {
-        super.updateUI();
-
-        getUIInternal().setModifyTabColor(UIManager.getColor("runner.grid.tabs.color"));
-      }
-
-      @Override
-      public int tabMSize() {
-        return 12;
       }
 
       @Override
@@ -119,7 +100,7 @@ public class GridCellImpl implements GridCell {
     }.setDataProvider(new DataProvider() {
       @Override
       @Nullable
-      public Object getData(@Nonnull @NonNls final Key dataId) {
+      public Object getData(@Nonnull final Key dataId) {
         if (ViewContext.CONTENT_KEY == dataId) {
           TabInfo target = myTabs.getTargetInfo();
           if (target != null) {
@@ -133,13 +114,7 @@ public class GridCellImpl implements GridCell {
         return null;
       }
     });
-    myTabs.getPresentation().setUiDecorator(new UiDecorator() {
-      @Override
-      @Nonnull
-      public UiDecoration getDecoration() {
-        return new UiDecoration(null, new Insets(1, -1, 1, -1));
-      }
-    }).setSideComponentVertical(!context.getLayoutSettings().isToolbarHorizontal()).setStealthTabMode(true).setFocusCycle(false).setPaintFocus(true).setTabDraggingEnabled(true)
+    myTabs.getPresentation().setSideComponentVertical(!context.getLayoutSettings().isToolbarHorizontal()).setStealthTabMode(true).setFocusCycle(false).setPaintFocus(true).setTabDraggingEnabled(true)
             .setSideComponentOnTabs(false);
 
     myTabs.addTabMouseListener(new MouseAdapter() {
@@ -303,7 +278,7 @@ public class GridCellImpl implements GridCell {
 
     @Override
     @Nullable
-    public Object getData(@Nonnull @NonNls final Key dataId) {
+    public Object getData(@Nonnull final Key dataId) {
       if (ViewContext.CONTENT_KEY == dataId) {
         return new Content[]{myContent};
       }
@@ -432,12 +407,7 @@ public class GridCellImpl implements GridCell {
       remove(each);
       boolean isShowing = myTabs.getComponent().getRootPane() != null;
       updateSelection(isShowing);
-      myContainer.minimize(each, new CellTransform.Restore() {
-        @Override
-        public ActionCallback restoreInGrid() {
-          return restore(each);
-        }
-      });
+      myContainer.minimize(each, () -> restore(each));
     }
   }
 

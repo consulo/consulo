@@ -2193,7 +2193,7 @@ public abstract class JBTabsImpl extends JComponent
   }
 
   public boolean hasUnderline() {
-    return false;
+    return true;
   }
 
   @Deprecated
@@ -2349,9 +2349,6 @@ public abstract class JBTabsImpl extends JComponent
 
   public Rectangle layout(JComponent c, Rectangle bounds) {
     final Rectangle now = c.getBounds();
-    if (c instanceof Toolbar) {
-      bounds.height -= JBUI.scale(5);
-    }
 
     if (!bounds.equals(now)) {
       c.setBounds(bounds);
