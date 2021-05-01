@@ -34,7 +34,7 @@
 
   <extensions defaultExtensionNs="com.intellij">
     <applicationService serviceInterface="consulo.start.WelcomeFrameManager"
-                        serviceImplementation="consulo.web.start.WebWelcomeFrameManager"/>
+                        serviceImplementation="consulo.start.UnifiedWelcomeFrameManager"/>
 
     <applicationService serviceInterface="consulo.progress.util.ProgressDialogFactory"
                         serviceImplementation="consulo.web.progress.util.WebProgressDialogFactory"/>
@@ -54,7 +54,7 @@
                         serviceImplementation="consulo.vfs.newvfs.AsyncRefreshQueueImpl"/>
 
     <applicationService serviceInterface="com.intellij.openapi.options.ShowSettingsUtil"
-                        serviceImplementation="consulo.web.options.WebShowSettingsUtil"/>
+                        serviceImplementation="consulo.preferences.UnifiedShowSettingsUtil"/>
 
     <applicationService serviceInterface="consulo.actionSystem.ActionToolbarFactory"
                         serviceImplementation="consulo.actionSystem.impl.UnifiedActionToolbarFactoryImpl"/>
@@ -71,9 +71,9 @@
 
     <applicationService serviceInterface="consulo.wm.ApplicationIdeFocusManager" serviceImplementation="consulo.web.wm.impl.WebApplicationIdeFocusManagerImpl" lazy="false"/>
     <applicationService serviceInterface="com.intellij.openapi.wm.WindowManager" serviceImplementation="consulo.web.wm.impl.WebWindowManagerImpl"/>
-    <applicationService serviceInterface="com.intellij.ide.DataManager" serviceImplementation="consulo.web.ide.impl.WebDataManagerImpl"/>
-    <applicationService serviceInterface="consulo.ide.actions.AboutManager" serviceImplementation="consulo.web.ide.actions.impl.WebAboutManager"/>
-    <applicationService serviceInterface="consulo.ide.tipOfDay.TipOfDayManager" serviceImplementation="consulo.web.ide.tipOfDay.WebTipOfDayManager"/>
+    <applicationService serviceInterface="com.intellij.ide.DataManager" serviceImplementation="consulo.ide.impl.UnifiedDataManagerImpl"/>
+    <applicationService serviceInterface="consulo.ide.actions.AboutManager" serviceImplementation="consulo.ide.actions.impl.UnifiedAboutManager"/>
+    <applicationService serviceInterface="consulo.ide.tipOfDay.TipOfDayManager" serviceImplementation="consulo.ide.tipOfDay.UnifiedTipOfDayManager"/>
     <applicationService serviceInterface="consulo.startup.customize.StartupCustomizeManager" serviceImplementation="consulo.web.startup.customize.WebStartupCustomizeManager"/>
 
     <projectService serviceInterface="com.intellij.openapi.fileEditor.FileEditorManager" serviceImplementation="consulo.web.fileEditor.impl.WebPsiAwareFileEditorManagerImpl" lazy="false"/>

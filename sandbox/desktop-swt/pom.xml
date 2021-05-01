@@ -215,6 +215,11 @@
       <artifactId>consulo-desktop-swt-platform-impl</artifactId>
       <version>${project.version}</version>
     </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>consulo-desktop-swt-ui-impl</artifactId>
+      <version>${project.version}</version>
+    </dependency>
 
     <dependency>
       <groupId>consulo.internal.sound</groupId>
@@ -236,8 +241,19 @@
       <artifactId>javazoom.mp3</artifactId>
       <version>${project.version}</version>
     </dependency>
-
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>consulo-desktop-awt-hacking</artifactId>
+      <version>${project.version}</version>
+      <optional>true</optional>
+    </dependency>
+    
     <!--optional dependency-->
+    <dependency>
+      <groupId>org.eclipse.platform</groupId>
+      <artifactId>org.eclipse.swt.win32.win32.x86_64</artifactId>
+      <version>3.116.0</version>
+    </dependency>
     <dependency>
       <groupId>org.apache.xmlrpc</groupId>
       <artifactId>xmlrpc-common</artifactId>

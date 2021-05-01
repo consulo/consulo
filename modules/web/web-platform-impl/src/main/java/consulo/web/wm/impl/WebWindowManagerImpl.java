@@ -15,7 +15,10 @@
  */
 package consulo.web.wm.impl;
 
-import com.intellij.openapi.components.*;
+import com.intellij.openapi.components.PersistentStateComponent;
+import com.intellij.openapi.components.RoamingType;
+import com.intellij.openapi.components.State;
+import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.openapi.wm.StatusBar;
@@ -24,13 +27,15 @@ import com.intellij.openapi.wm.ex.IdeFrameEx;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
 import com.intellij.openapi.wm.impl.CommandProcessorBase;
 import com.intellij.openapi.wm.impl.ToolWindowLayout;
-import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.wm.impl.UnifiedWelcomeIdeFrame;
+import consulo.wm.impl.UnifiedWindowManagerImpl;
+import jakarta.inject.Singleton;
 import org.jdom.Element;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import jakarta.inject.Singleton;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ComponentEvent;
@@ -43,7 +48,7 @@ import java.util.Map;
  */
 @Singleton
 @State(name = WindowManagerEx.ID, storages = @Storage(value = "window.manager.xml", roamingType = RoamingType.DISABLED), defaultStateFilePath = "/defaultState/WindowManager.xml")
-public class WebWindowManagerImpl extends WindowManagerEx implements PersistentStateComponent<Element> {
+public class WebWindowManagerImpl extends UnifiedWindowManagerImpl implements PersistentStateComponent<Element> {
   private final Map<Project, WebIdeFrameImpl> myProject2Frame = new HashMap<>();
 
   @Override

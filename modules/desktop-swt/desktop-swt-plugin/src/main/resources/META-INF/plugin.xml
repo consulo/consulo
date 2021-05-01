@@ -18,5 +18,28 @@
   <name>Platform: desktop swt</name>
 
   <extensions defaultExtensionNs="com.intellij">
+    <applicationService serviceInterface="consulo.actionSystem.ActionToolbarFactory" serviceImplementation="consulo.actionSystem.impl.UnifiedActionToolbarFactoryImpl"/>
+
+    <applicationService serviceInterface="com.intellij.ide.RemoteDesktopService" serviceImplementation="consulo.desktop.swt.ide.DesktopSwtRemoteDesktopService"/>
+
+    <applicationService serviceInterface="com.intellij.openapi.editor.EditorFactory" serviceImplementation="consulo.desktop.swt.editor.impl.DesktopSwtEditorFactoryImpl"/>
+
+    <projectService serviceInterface="com.intellij.openapi.fileEditor.FileEditorManager" serviceImplementation="consulo.desktop.swt.fileEditor.impl.DesktopSwtPsiAwareFileEditorManagerImpl"/>
+
+    <applicationService serviceInterface="com.intellij.openapi.options.ShowSettingsUtil" serviceImplementation="consulo.preferences.UnifiedShowSettingsUtil"/>
+
+    <projectService serviceInterface="com.intellij.openapi.wm.ToolWindowManager" serviceImplementation="consulo.desktop.swt.wm.impl.DesktopSwtToolWindowManagerImpl"/>
+
+    <applicationService serviceInterface="consulo.ide.actions.AboutManager" serviceImplementation="consulo.ide.actions.impl.UnifiedAboutManager"/>
+
+    <applicationService serviceInterface="com.intellij.openapi.wm.WindowManager" serviceImplementation="consulo.desktop.swt.wm.impl.DesktopSwtWindowManagerImpl"/>
+
+    <applicationService serviceInterface="consulo.ide.tipOfDay.TipOfDayManager" serviceImplementation="consulo.ide.tipOfDay.UnifiedTipOfDayManager"/>
+
+    <applicationService serviceInterface="consulo.start.WelcomeFrameManager" serviceImplementation="consulo.start.UnifiedWelcomeFrameManager"/>
+
+    <applicationService serviceInterface="com.intellij.ide.DataManager" serviceImplementation="consulo.ide.impl.UnifiedDataManagerImpl"/>
+
+    <applicationService serviceInterface="consulo.startup.customize.StartupCustomizeManager" serviceImplementation="consulo.desktop.swt.startup.customize.DesktopSwtStartupCustomizeManager"/>
   </extensions>
 </consulo-plugin>
