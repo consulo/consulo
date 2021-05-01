@@ -105,6 +105,10 @@ public class HelpTooltip {
   private static final String PARAGRAPH_SPLITTER = "<p/?>";
   private static final String TOOLTIP_PROPERTY = "JComponent.helpTooltip";
 
+  private int myInitialDelay = Registry.intValue("ide.tooltip.initialReshowDelay");
+  private int myHideDelay = Registry.intValue("ide.tooltip.initialDelay.highlighter");
+  private boolean initialShowScheduled;
+
   private String title;
   private String shortcut;
   private String description;
@@ -273,17 +277,18 @@ public class HelpTooltip {
         if (myPopup != null && !myPopup.isDisposed()) {
           myPopup.cancel();
         }
-        scheduleShow(e, Registry.intValue("ide.tooltip.initialReshowDelay"));
+        initialShowScheduled = true;
+        scheduleShow(e, myInitialDelay);
       }
 
       @Override
       public void mouseExited(MouseEvent e) {
-        scheduleHide(link == null, Registry.intValue("ide.tooltip.initialDelay.highlighter"));
+        scheduleHide(link == null, myHideDelay);
       }
 
       @Override
       public void mouseMoved(MouseEvent e) {
-        if (myPopup == null || myPopup.isDisposed()) {
+        if (!initialShowScheduled) {
           scheduleShow(e, Registry.intValue("ide.tooltip.reshowDelay"));
         }
       }
@@ -295,7 +300,7 @@ public class HelpTooltip {
     myPopupSize = tipPanel.getPreferredSize();
     myPopupBuilder = JBPopupFactory.getInstance().
             createComponentPopupBuilder(tipPanel, null).
-            setShowBorder(UIManager.getBoolean("ToolTip.paintBorder")).
+            setShowBorder(true).
             setBorderColor(BORDER_COLOR).setShowShadow(true);
   }
 
@@ -303,6 +308,7 @@ public class HelpTooltip {
     instance.initPopupBuilder();
     myPopupSize = instance.myPopupSize;
     myPopupBuilder = instance.myPopupBuilder;
+    initialShowScheduled = false;
   }
 
   private JPanel createTipPanel() {
@@ -428,7 +434,6 @@ public class HelpTooltip {
    * @param owner     possible owner
    * @param condition a {@code BooleanSupplier} for open condition
    */
-  //@ApiStatus.Experimental
   public static void setMasterPopupOpenCondition(@Nonnull Component owner, @Nullable BooleanSupplier condition) {
     if (owner instanceof JComponent) {
       HelpTooltip instance = (HelpTooltip)((JComponent)owner).getClientProperty(TOOLTIP_PROPERTY);
@@ -441,6 +446,8 @@ public class HelpTooltip {
   private void scheduleShow(MouseEvent e, int delay) {
     popupAlarm.cancelAllRequests();
     popupAlarm.addRequest(() -> {
+      initialShowScheduled = false;
+
       if (masterPopupOpenCondition == null || masterPopupOpenCondition.getAsBoolean()) {
         myPopup = myPopupBuilder.createPopup();
 
@@ -459,6 +466,7 @@ public class HelpTooltip {
   }
 
   protected void hidePopup(boolean force) {
+    initialShowScheduled = false;
     popupAlarm.cancelAllRequests();
     if (myPopup != null && myPopup.isVisible() && (!isOverPopup || force)) {
       myPopup.cancel();

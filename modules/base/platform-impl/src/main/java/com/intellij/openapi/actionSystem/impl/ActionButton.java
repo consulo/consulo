@@ -21,10 +21,10 @@ import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.ActionManagerEx;
 import com.intellij.openapi.actionSystem.ex.ActionUtil;
 import com.intellij.openapi.actionSystem.ex.CustomComponentAction;
+import com.intellij.openapi.actionSystem.ex.TooltipDescriptionProvider;
 import com.intellij.openapi.application.impl.LaterInvocator;
 import com.intellij.openapi.keymap.KeymapUtil;
 import com.intellij.openapi.util.registry.Registry;
-import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.util.text.TextWithMnemonic;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
@@ -45,7 +45,6 @@ import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.Collections;
 import java.util.Set;
 
 import static java.awt.event.KeyEvent.VK_SPACE;
@@ -60,7 +59,7 @@ public class ActionButton extends JComponent implements ActionButtonComponent, A
 
   public static final Key<Boolean> HIDE_DROPDOWN_ICON = Key.create("HIDE_DROPDOWN_ICON");
   // Contains actions IDs which descriptions are permitted for displaying in the ActionButton tooltip
-  private static final Set<String> WHITE_LIST = Collections.emptySet();
+  private static final Set<String> WHITE_LIST = Set.of();
 
   private Size myMinimumButtonSize;
   private PropertyChangeListener myPresentationListener;
@@ -288,22 +287,22 @@ public class ActionButton extends JComponent implements ActionButtonComponent, A
   }
 
   protected void updateToolTipText() {
-    String text = myPresentation.getText();
-    String description = myPresentation.getDescription();
+    LocalizeValue textValue = myPresentation.getTextValue();
+    LocalizeValue descriptionValue = myPresentation.getDescriptionValue();
     if (Registry.is("ide.helptooltip.enabled")) {
       HelpTooltip.dispose(this);
-      if (StringUtil.isNotEmpty(text) || StringUtil.isNotEmpty(description)) {
-        HelpTooltip ht = new HelpTooltip().setTitle(text).setShortcut(getShortcutText());
+      if (textValue != LocalizeValue.of() || descriptionValue != LocalizeValue.of()) {
+        HelpTooltip ht = new HelpTooltip().setTitle(textValue.map(Presentation.NO_MNEMONIC).getValue()).setShortcut(getShortcutText());
 
         String id = ActionManager.getInstance().getId(myAction);
-        if (!StringUtil.equals(text, description) && WHITE_LIST.contains(id)) {
-          ht.setDescription(description);
+        if (!textValue.equals(descriptionValue) && (id != null && WHITE_LIST.contains(id) || myAction instanceof TooltipDescriptionProvider)) {
+          ht.setDescription(descriptionValue.getValue());
         }
         ht.installOn(this);
       }
     }
     else {
-      setToolTipText(text == null ? description : text);
+      setToolTipText(textValue == LocalizeValue.of() ? descriptionValue.get() : textValue.get());
     }
   }
 

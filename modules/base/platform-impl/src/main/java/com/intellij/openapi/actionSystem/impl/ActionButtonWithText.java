@@ -15,8 +15,11 @@
  */
 package com.intellij.openapi.actionSystem.impl;
 
+import com.intellij.ide.HelpTooltip;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.Presentation;
+import com.intellij.openapi.util.registry.Registry;
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.ui.EmptyIcon;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
@@ -40,6 +43,20 @@ public class ActionButtonWithText extends ActionButton {
     super(action, presentation, place, minimumSize);
     setFont(UIUtil.getLabelFont());
     setForeground(UIUtil.getLabelForeground());
+  }
+
+  @Override
+  protected void updateToolTipText() {
+    String description = myPresentation.getDescription();
+    if (Registry.is("ide.helptooltip.enabled")) {
+      HelpTooltip.dispose(this);
+      if (StringUtil.isNotEmpty(description)) {
+        new HelpTooltip().setDescription(description).installOn(this);
+      }
+    }
+    else {
+      setToolTipText(description);
+    }
   }
 
   @Override

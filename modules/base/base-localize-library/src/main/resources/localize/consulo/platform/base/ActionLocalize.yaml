@@ -2672,3 +2672,5 @@ action.ChangesView.ApplyPatchFromClipboard.text:
   text: Apply Patch from Clipboard...
 action.ChangesView.ApplyPatchFromClipboard.description:
   text: Apply a patch to the sources of the project
+action.SearchEverywhere.text:
+  text: Search Everywhere

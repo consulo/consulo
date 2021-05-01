@@ -26,6 +26,7 @@ import com.intellij.util.concurrency.AppExecutorUtil;
 import consulo.disposer.Disposer;
 import consulo.ide.updateSettings.UpdateSettings;
 import consulo.ide.updateSettings.impl.PlatformOrPluginUpdateResult;
+import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.UIAccess;
 import consulo.ui.image.Image;
@@ -58,7 +59,7 @@ public final class SettingsEntryPointAction extends DumbAwareAction implements R
   @Override
   public void update(@Nonnull AnActionEvent e) {
     Presentation presentation = e.getPresentation();
-    presentation.setText("");
+    presentation.setTextValue(LocalizeValue.of());
     presentation.setDescription(getActionTooltip());
     presentation.setIcon(getActionIcon(ourIconState));
 

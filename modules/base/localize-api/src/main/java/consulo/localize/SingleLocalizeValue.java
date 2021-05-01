@@ -16,6 +16,7 @@
 package consulo.localize;
 
 import javax.annotation.Nonnull;
+import java.util.Objects;
 
 /**
  * @author VISTALL
@@ -44,5 +45,18 @@ class SingleLocalizeValue implements LocalizeValue {
   @Override
   public String toString() {
     return getValue();
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    SingleLocalizeValue that = (SingleLocalizeValue)o;
+    return Objects.equals(myValue, that.myValue);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(myValue);
   }
 }
