@@ -18,7 +18,6 @@ package com.intellij.openapi.wm.impl.content;
 import com.intellij.icons.AllIcons;
 import consulo.awt.TargetAWT;
 import consulo.ui.image.Image;
-import consulo.ui.image.ImageEffects;
 import consulo.ui.image.ImageState;
 
 import java.awt.*;
@@ -29,7 +28,7 @@ public abstract class ComboIcon {
   private final Image myImage;
 
   public ComboIcon() {
-    myImage = Image.stated(myState, active -> active ? AllIcons.General.Combo2 : ImageEffects.grayed(AllIcons.General.Combo2));
+    myImage = AllIcons.General.ArrowDown;
   }
 
   public void paintIcon(final Component c, final Graphics g) {
