@@ -24,6 +24,7 @@ import com.intellij.ui.tabs.impl.JBTabsImpl;
 import com.intellij.ui.tabs.impl.ShapeTransform;
 import com.intellij.ui.tabs.impl.TabLabel;
 import com.intellij.util.Function;
+import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import consulo.ide.ui.laf.JBEditorTabsUI;
 
@@ -416,6 +417,30 @@ public class IntelliJEditorTabsUI extends JBEditorTabsUI {
     }
 
     doPaintBackground(g2d, clip, vertical, rectangle);
+
+    doPaintAdditionalBackgroundIfFirstOffsetSet(tabs, g2d, clip);
+  }
+
+  protected void doPaintAdditionalBackgroundIfFirstOffsetSet(JBTabsImpl tabs, Graphics2D g2d, Rectangle clip) {
+    int firstTabOffset = tabs.getFirstTabOffset();
+    if (tabs.getTabsPosition() == JBTabsPosition.top && tabs.isSingleRow() && firstTabOffset > 0) {
+      int maxLength = 0;
+
+      for (int i = tabs.getVisibleInfos().size() - 1; i >= 0; i--) {
+        TabInfo visibleInfo = tabs.getVisibleInfos().get(i);
+        TabLabel tabLabel = tabs.myInfo2Label.get(visibleInfo);
+        Rectangle r = tabLabel.getBounds();
+        if (r.width == 0 || r.height == 0) continue;
+        maxLength = r.height;
+        break;
+      }
+
+      g2d.setPaint(UIUtil.getPanelBackground());
+
+      if (firstTabOffset > 0) {
+        g2d.fillRect(clip.x, clip.y, clip.x + JBUI.scale(firstTabOffset - 1), clip.y + maxLength);
+      }
+    }
   }
 
   public void doPaintBackground(Graphics2D g, Rectangle clip, boolean vertical, Rectangle rectangle) {
