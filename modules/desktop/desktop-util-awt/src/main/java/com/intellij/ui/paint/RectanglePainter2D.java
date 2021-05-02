@@ -122,13 +122,7 @@ public enum RectanglePainter2D implements RegionPainter2D<Double> {
           path.append(new Rectangle2D.Double(x_out, y_out, w_out, h_out), false);
           path.append(new Rectangle2D.Double(x_out + sw, y_out + sw, w_out - dsw, h_out - dsw), false);
         }
-        PaintUtil.paintWithAA(g, arc != null ? valueAA : RenderingHints.VALUE_ANTIALIAS_DEFAULT,
-                              new Runnable() {
-                                @Override
-                                public void run() {
-                                  g.fill(path);
-                                }
-                              });
+        PaintUtil.paintWithAA(g, arc != null ? valueAA : RenderingHints.VALUE_ANTIALIAS_DEFAULT, () -> g.fill(path));
       }
       else {
         FILL.paint(g, x, y, width, height, arc, strokeType, strokeWidth, valueAA);
@@ -223,13 +217,7 @@ public enum RectanglePainter2D implements RegionPainter2D<Double> {
                          new RoundRectangle2D.Double(x_out, y_out, w_out, h_out, arc + dsw, arc + dsw) :
                          new Rectangle2D.Double(x_out, y_out, w_out, h_out);
 
-      PaintUtil.paintWithAA(g, arc != null ? valueAA : RenderingHints.VALUE_ANTIALIAS_DEFAULT,
-                            new Runnable() {
-                              @Override
-                              public void run() {
-                                g.fill(rect);
-                              }
-                            });
+      PaintUtil.paintWithAA(g, arc != null ? valueAA : RenderingHints.VALUE_ANTIALIAS_DEFAULT, () -> g.fill(rect));
     }
   };
 

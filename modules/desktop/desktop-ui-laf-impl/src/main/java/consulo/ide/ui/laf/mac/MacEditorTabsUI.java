@@ -18,8 +18,10 @@ package consulo.ide.ui.laf.mac;
 import com.intellij.ui.ColorUtil;
 import com.intellij.ui.Gray;
 import com.intellij.ui.JBColor;
+import com.intellij.ui.paint.RectanglePainter2D;
 import com.intellij.ui.tabs.JBTabsPosition;
 import com.intellij.ui.tabs.impl.JBTabsImpl;
+import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import consulo.ide.ui.laf.JBEditorTabsUI;
 import consulo.ide.ui.laf.intellij.IntelliJEditorTabsUI;
@@ -89,6 +91,12 @@ public class MacEditorTabsUI extends IntelliJEditorTabsUI {
                                           boolean horizontalTabs) {
     g2d.setColor(prepareColorForTab(tabColor));
     g2d.fill(selectedShape.fillPath.getShape());
+
+    if(horizontalTabs) {
+      g2d.setColor(prepareColorForTab(tabColor));
+      
+      RectanglePainter2D.FILL.paint(g2d, rect.x, rect.y + rect.height, rect.getWidth(), JBUI.scale(1));
+    }
   }
 
   @Override
