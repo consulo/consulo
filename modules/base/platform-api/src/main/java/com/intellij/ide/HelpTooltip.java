@@ -1,6 +1,8 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.ide;
 
+import com.intellij.openapi.actionSystem.Shortcut;
+import com.intellij.openapi.keymap.KeymapUtil;
 import com.intellij.openapi.ui.popup.ComponentPopupBuilder;
 import com.intellij.openapi.ui.popup.JBPopup;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
@@ -18,9 +20,9 @@ import com.intellij.util.ui.JBEmptyBorder;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.JBValue;
 import com.intellij.util.ui.UIUtil;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.plaf.basic.BasicHTML;
@@ -199,6 +201,11 @@ public class HelpTooltip {
    */
   public HelpTooltip setShortcut(@Nullable String shortcut) {
     this.shortcut = shortcut;
+    return this;
+  }
+
+  public HelpTooltip setShortcut(@Nullable Shortcut shortcut) {
+    this.shortcut = shortcut == null ? null : KeymapUtil.getShortcutText(shortcut);
     return this;
   }
 

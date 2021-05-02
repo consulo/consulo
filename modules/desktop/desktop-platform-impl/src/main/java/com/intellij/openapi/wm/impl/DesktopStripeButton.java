@@ -16,6 +16,7 @@
 package com.intellij.openapi.wm.impl;
 
 import com.intellij.featureStatistics.FeatureUsageTracker;
+import com.intellij.ide.HelpTooltip;
 import com.intellij.ide.actions.ActivateToolWindowAction;
 import com.intellij.ide.ui.UISettings;
 import com.intellij.openapi.actionSystem.ActionGroup;
@@ -43,7 +44,6 @@ import consulo.ui.image.ImageEffects;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
-import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
@@ -77,7 +77,39 @@ public final class DesktopStripeButton extends AnchoredButton implements ActionL
     myKeymapListener = new MyKeymapListener();
     myPane = pane;
 
-    init();
+    setFocusable(false);
+    setBackground(ourBackgroundColor);
+    setBorder(JBUI.Borders.empty(5, 5, 0, 5));
+    updatePresentation();
+    apply(myDecorator.getWindowInfo());
+    addActionListener(this);
+    addMouseListener(new MyPopupHandler());
+    setRolloverEnabled(true);
+    setOpaque(false);
+
+    enableEvents(AWTEvent.MOUSE_EVENT_MASK);
+
+    addMouseMotionListener(new MouseMotionAdapter() {
+      @Override
+      public void mouseDragged(final MouseEvent e) {
+        processDrag(e);
+      }
+    });
+    KeymapManager.getInstance().addKeymapManagerListener(myKeymapListener, this);
+
+    updateHelpTooltip();
+  }
+
+  private void updateHelpTooltip() {
+    DesktopToolWindowImpl toolWindow = myDecorator.getToolWindow();
+
+    HelpTooltip.dispose(this);
+
+    HelpTooltip tooltip = new HelpTooltip();
+    tooltip.setTitle(toolWindow.getDisplayName().getValue());
+    String activateActionId = ActivateToolWindowAction.getActionIdForToolWindow(toolWindow.getId());
+    tooltip.setShortcut(ActionManager.getInstance().getKeyboardShortcut(activateActionId));
+    tooltip.installOn(this);
   }
 
   /**
@@ -92,6 +124,7 @@ public final class DesktopStripeButton extends AnchoredButton implements ActionL
 
   private void setMnemonic2(final int mnemonic) {
     myMnemonic = mnemonic;
+    updateHelpTooltip();
     revalidate();
     repaint();
   }
@@ -111,30 +144,6 @@ public final class DesktopStripeButton extends AnchoredButton implements ActionL
   public WindowInfoImpl getWindowInfo() {
     return myDecorator.getWindowInfo();
   }
-
-  private void init() {
-    setFocusable(false);
-    setBackground(ourBackgroundColor);
-    final Border border = JBUI.Borders.empty(5, 5, 0, 5);
-    setBorder(border);
-    updatePresentation();
-    apply(myDecorator.getWindowInfo());
-    addActionListener(this);
-    addMouseListener(new MyPopupHandler());
-    setRolloverEnabled(true);
-    setOpaque(false);
-
-    enableEvents(AWTEvent.MOUSE_EVENT_MASK);
-
-    addMouseMotionListener(new MouseMotionAdapter() {
-      @Override
-      public void mouseDragged(final MouseEvent e) {
-        processDrag(e);
-      }
-    });
-    KeymapManager.getInstance().addKeymapManagerListener(myKeymapListener, this);
-  }
-
 
   public boolean isFirst() {
     return is(true);
@@ -367,6 +376,7 @@ public final class DesktopStripeButton extends AnchoredButton implements ActionL
       }
     }
     setText(text);
+    updateHelpTooltip();
   }
 
   private void updateState() {
