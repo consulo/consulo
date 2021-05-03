@@ -39,7 +39,7 @@ public abstract class BaseWelcomeScreenPanel extends JPanel {
 
     JPanel leftPanel = new JPanel(new BorderLayout());
     leftPanel.setBorder(new CustomLineBorder(UIUtil.getBorderColor(), JBUI.insetsRight(1)));
-    leftPanel.setPreferredSize(JBUI.size(300, 460));
+    leftPanel.setPreferredSize(JBUI.size(400, 460));
     leftPanel.add(myLeftComponent, BorderLayout.CENTER);
 
     add(leftPanel, BorderLayout.WEST);

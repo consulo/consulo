@@ -51,6 +51,7 @@ import consulo.awt.TargetAWT;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 
@@ -330,11 +331,10 @@ public class RecentProjectPanel {
     return new RecentProjectItemRenderer(pathShortener);
   }
 
-  private static class MyList extends JBList<AnAction> {
+  protected static class MyList extends JBList<AnAction> {
     private final Dimension mySize;
-    private Point myMousePoint;
 
-    private MyList(Dimension size, @Nonnull AnAction... listData) {
+    protected MyList(Dimension size, @Nonnull AnAction... listData) {
       super(listData);
       mySize = size;
       setEmptyText("  No Project Open Yet  ");
@@ -347,21 +347,22 @@ public class RecentProjectPanel {
 
     public Rectangle getCloseIconRect(int index) {
       final Rectangle bounds = getCellBounds(index, index);
-      Image icon = AllIcons.Welcome.Project.Remove;
-      return new Rectangle(bounds.width - icon.getWidth() - 10, bounds.y + 10, icon.getWidth(), icon.getHeight());
+      Image icon = PlatformIconGroup.actionsMore();
+      return new Rectangle(bounds.width - icon.getWidth() * 2, bounds.y, icon.getWidth() * 2, (int)bounds.getHeight());
     }
 
     @Override
     public void paint(Graphics g) {
       super.paint(g);
-      if (myMousePoint != null) {
-        final int index = locationToIndex(myMousePoint);
-        if (index != -1) {
-          final Rectangle iconRect = getCloseIconRect(index);
-          Image icon = iconRect.contains(myMousePoint) ? AllIcons.Welcome.Project.Remove_hover : AllIcons.Welcome.Project.Remove;
-          TargetAWT.to(icon).paintIcon(this, g, iconRect.x, iconRect.y);
-        }
-      }
+
+      // this is debug for getCloseIconRect()
+      //int i = getSelectedIndex();
+      //if(i == -1) {
+      //  return;
+      //}
+      //g.setColor(Color.RED);
+      //Rectangle closeIconRect = getCloseIconRect(i);
+      //g.fillRect(closeIconRect.x, closeIconRect.y, closeIconRect.width, closeIconRect.height);
     }
 
     @Override
@@ -376,21 +377,6 @@ public class RecentProjectPanel {
 
     class MouseHandler extends MouseAdapter {
       @Override
-      public void mouseEntered(MouseEvent e) {
-        myMousePoint = e.getPoint();
-      }
-
-      @Override
-      public void mouseExited(MouseEvent e) {
-        myMousePoint = null;
-      }
-
-      @Override
-      public void mouseMoved(MouseEvent e) {
-        myMousePoint = e.getPoint();
-      }
-
-      @Override
       public void mouseReleased(MouseEvent e) {
         final Point point = e.getPoint();
         final MyList list = MyList.this;
@@ -398,12 +384,17 @@ public class RecentProjectPanel {
         if (index != -1) {
           if (getCloseIconRect(index).contains(point)) {
             e.consume();
-            final Object element = getModel().getElementAt(index);
-            removeRecentProjectElement(element);
-            ListUtil.removeSelectedItems(MyList.this);
+            
+            onActionClick(index, e);
           }
         }
       }
+    }
+
+    protected void onActionClick(int index, MouseEvent e) {
+      final Object element = getModel().getElementAt(index);
+      removeRecentProjectElement(element);
+      ListUtil.removeSelectedItems(MyList.this);
     }
   }
 

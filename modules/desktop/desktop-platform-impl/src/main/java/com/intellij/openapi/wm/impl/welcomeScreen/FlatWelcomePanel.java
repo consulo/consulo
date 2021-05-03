@@ -22,16 +22,13 @@ import com.intellij.internal.statistic.UsageTrigger;
 import com.intellij.notification.NotificationType;
 import com.intellij.notification.impl.IdeNotificationArea;
 import com.intellij.openapi.actionSystem.*;
-import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.util.Computable;
-import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.ui.ClickListener;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.components.JBLabel;
 import com.intellij.ui.components.labels.ActionLink;
 import com.intellij.ui.components.panels.NonOpaquePanel;
-import com.intellij.ui.popup.PopupFactoryImpl;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.MouseEventAdapter;
 import com.intellij.util.ui.UIUtil;
@@ -46,6 +43,7 @@ import consulo.ide.welcomeScreen.WelcomeScreenConstants;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import consulo.ui.style.StyleManager;
+import consulo.util.lang.ref.SimpleReference;
 
 import javax.accessibility.AccessibleContext;
 import javax.accessibility.AccessibleRole;
@@ -85,7 +83,7 @@ public abstract class FlatWelcomePanel extends BaseWelcomeScreenPanel {
   protected JComponent createRightComponent() {
     JPanel panel = new JPanel(new BorderLayout());
     JPanel logoPanel = new JPanel(new BorderLayout());
-    logoPanel.setBorder(JBUI.Borders.empty(53, 66, 45, 0));
+    logoPanel.setBorder(JBUI.Borders.empty(53, 22, 45, 0));
     AnimatedLogoLabel animatedLogoLabel = new AnimatedLogoLabel(8, false, true);
     animatedLogoLabel.setForeground(MorphColor.ofWithoutCache(() -> {
       if (ApplicationProperties.isInSandbox()) {
@@ -124,7 +122,7 @@ public abstract class FlatWelcomePanel extends BaseWelcomeScreenPanel {
   }
 
   private JComponent createEventsLink() {
-    final Ref<ActionLink> actionLinkRef = new Ref<>();
+    final SimpleReference<ActionLink> actionLinkRef = new SimpleReference<>();
     final JComponent panel = createActionLink("Events", AllIcons.Ide.Notification.NoEvents, actionLinkRef, new AnAction() {
       @RequiredUIAccess
       @Override
@@ -159,15 +157,15 @@ public abstract class FlatWelcomePanel extends BaseWelcomeScreenPanel {
   }
 
   private JComponent createActionLink(final String text, final String groupId, Image icon, boolean focusListOnLeft) {
-    final Ref<ActionLink> ref = new Ref<>(null);
+    final SimpleReference<ActionLink> ref = new SimpleReference<>(null);
     AnAction action = new AnAction() {
       @RequiredUIAccess
       @Override
       public void actionPerformed(@Nonnull AnActionEvent e) {
+        MouseEvent inputEvent = (MouseEvent)e.getInputEvent();
         ActionGroup configureGroup = (ActionGroup)ActionManager.getInstance().getAction(groupId);
-        final PopupFactoryImpl.ActionGroupPopup popup = (PopupFactoryImpl.ActionGroupPopup)JBPopupFactory.getInstance()
-                .createActionGroupPopup(null, new IconsFreeActionGroup(configureGroup), e.getDataContext(), JBPopupFactory.ActionSelectionAid.SPEEDSEARCH, false, ActionPlaces.WELCOME_SCREEN);
-        popup.showUnderneathOfLabel(ref.get());
+        ActionPopupMenu menu = ActionManager.getInstance().createActionPopupMenu("WelcomeActions", configureGroup);
+        menu.getComponent().show(ref.get(), inputEvent.getX(), inputEvent.getY() + ref.get().getHeight());
         UsageTrigger.trigger("welcome.screen." + groupId);
       }
     };
@@ -176,7 +174,7 @@ public abstract class FlatWelcomePanel extends BaseWelcomeScreenPanel {
     return panel;
   }
 
-  private JComponent createActionLink(String text, Image icon, Ref<ActionLink> ref, AnAction action) {
+  private JComponent createActionLink(String text, Image icon, SimpleReference<ActionLink> ref, AnAction action) {
     ActionLink link = new ActionLink(text, icon, action);
     ref.set(link);
     // Don't allow focus, as the containing panel is going to focusable.
@@ -315,59 +313,6 @@ public abstract class FlatWelcomePanel extends BaseWelcomeScreenPanel {
       if (next != null) {
         IdeFocusManager.getGlobalInstance().doWhenFocusSettlesDown(() -> IdeFocusManager.getGlobalInstance().requestFocus(next, true));
       }
-    }
-  }
-
-  private class IconsFreeActionGroup extends ActionGroup {
-    private final ActionGroup myGroup;
-
-    public IconsFreeActionGroup(ActionGroup group) {
-      super(group.getTemplatePresentation().getText(), group.getTemplatePresentation().getDescription(), null);
-      myGroup = group;
-    }
-
-    @Override
-    public boolean isPopup() {
-      return myGroup.isPopup();
-    }
-
-    @Nonnull
-    @Override
-    public AnAction[] getChildren(@javax.annotation.Nullable AnActionEvent e) {
-      AnAction[] children = myGroup.getChildren(e);
-      AnAction[] patched = new AnAction[children.length];
-      for (int i = 0; i < children.length; i++) {
-        patched[i] = patch(children[i]);
-      }
-      return patched;
-    }
-
-    private AnAction patch(final AnAction child) {
-      if (child instanceof ActionGroup) {
-        return new IconsFreeActionGroup((ActionGroup)child);
-      }
-
-      Presentation presentation = child.getTemplatePresentation();
-      return new AnAction(presentation.getText(), presentation.getDescription(), null) {
-        @RequiredUIAccess
-        @Override
-        public void actionPerformed(@Nonnull AnActionEvent e) {
-          child.actionPerformed(e);
-          UsageTrigger.trigger("welcome.screen." + e.getActionManager().getId(child));
-        }
-
-        @RequiredUIAccess
-        @Override
-        public void update(@Nonnull AnActionEvent e) {
-          child.update(e);
-          e.getPresentation().setIcon(null);
-        }
-
-        @Override
-        public boolean isDumbAware() {
-          return child.isDumbAware();
-        }
-      };
     }
   }
 }

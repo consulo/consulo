@@ -643,17 +643,15 @@
     </group>
 
     <group id="WelcomeScreen.Configure">
-      <action id="WelcomeScreen.Settings" class="com.intellij.ide.actions.ShowSettingsAction" icon="consulo.platform.base.PlatformIconGroup@general.configure"/>
+      <action id="WelcomeScreen.Settings" class="com.intellij.ide.actions.ShowSettingsAction"/>
       <action id="WelcomeScreen.Plugins" class="com.intellij.ide.actions.ShowPluginManagerAction"/>
 
-      <action id="WelcomeScreen.Configure.Import" class="com.intellij.ide.actions.ImportSettingsAction"
-              icon="consulo.platform.base.PlatformIconGroup@general.importsettings"/>
-      <action id="WelcomeScreen.Configure.Export" class="com.intellij.ide.actions.ExportSettingsAction"
-              icon="consulo.platform.base.PlatformIconGroup@general.exportsettings"/>
+      <action id="WelcomeScreen.Configure.Import" class="com.intellij.ide.actions.ImportSettingsAction"/>
+      <action id="WelcomeScreen.Configure.Export" class="com.intellij.ide.actions.ExportSettingsAction"/>
 
-      <action id="WelcomeScreen.Configure.DesktopEntry" class="com.intellij.ide.actions.CreateDesktopEntryAction"
-              icon="consulo.platform.base.PlatformIconGroup@welcome.createdesktopentry"/>
-      <action id="WelcomeScreen.Update" class="com.intellij.openapi.updateSettings.impl.CheckForUpdateAction" text="Check for Update"/>
+      <action id="WelcomeScreen.Configure.DesktopEntry" class="com.intellij.ide.actions.CreateDesktopEntryAction"/>
+
+      <reference id="CheckForUpdate"/>
       <reference id="ShowLog"/>
       <reference id="About"/>
     </group>
@@ -2269,11 +2267,6 @@
     <!-- ****************************************************************** -->
 
 
-    <group id="WelcomeScreen.Configure.IDEA">
-      <action class="com.intellij.ide.actions.TemplateProjectSettingsGroup"/>
-      <add-to-group group-id="WelcomeScreen.Configure" anchor="last"/>
-    </group>
-
     <group id="DiffPanel.Toolbar.IDEA">
       <reference ref="Find"/>
       <add-to-group group-id="DiffPanel.Toolbar" anchor="after" relative-to-action="$Copy"/>
@@ -2345,15 +2338,16 @@
 
     <group id="WelcomeScreenRecentProjectActionGroup">
       <action id="WelcomeScreen.OpenSelected" class="com.intellij.openapi.wm.impl.welcomeScreen.OpenSelectedProjectsAction"
-              text="Open Selected"/>
+              text="Open"/>
+      <action id="WelcomeScreen.RemoveSelected" class="com.intellij.openapi.wm.impl.welcomeScreen.RemoveSelectedProjectsAction"
+              text="Remove" icon="consulo.platform.base.PlatformIconGroup@general.remove"/>
+      <action id="WelcomeScreen.RevealRecentProjectDirectory" class="consulo.wm.impl.welcomeScreen.RevealRecentProjectDirectoryAction"/>
+      <separator/>
       <action id="WelcomeScreen.NewGroup" class="com.intellij.openapi.wm.impl.welcomeScreen.CreateNewProjectGroupAction"
-              text="New Project Group"/>
+              text="New Group" icon="consulo.platform.base.PlatformIconGroup@nodes.folder"/>
       <action id="WelcomeScreen.EditGroup" class="com.intellij.openapi.wm.impl.welcomeScreen.EditProjectGroupAction" text="Edit..."/>
       <group id="WelcomeScreen.MoveToGroup" class="com.intellij.openapi.wm.impl.welcomeScreen.MoveProjectToGroupActionGroup"
              text="Move To Group" popup="true"/>
-      <separator/>
-      <action id="WelcomeScreen.RemoveSelected" class="com.intellij.openapi.wm.impl.welcomeScreen.RemoveSelectedProjectsAction"
-              text="Remove Selected from Welcome Screen"/>
     </group>
 
     <group id="SearchEverywhereActions" text="Search Everywhere">

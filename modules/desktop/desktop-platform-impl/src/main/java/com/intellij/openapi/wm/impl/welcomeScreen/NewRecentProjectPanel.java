@@ -28,23 +28,29 @@ import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.ui.ColorUtil;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.PopupHandler;
+import com.intellij.ui.components.JBLabel;
 import com.intellij.ui.components.JBList;
 import com.intellij.ui.components.panels.NonOpaquePanel;
 import com.intellij.ui.speedSearch.NameFilteringListModel;
-import com.intellij.util.IconUtil;
 import com.intellij.util.ui.JBDimension;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.accessibility.AccessibleContextUtil;
 import consulo.awt.TargetAWT;
 import consulo.disposer.Disposable;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.decorator.SwingUIDecorator;
+import consulo.ui.image.IconLibraryManager;
 import consulo.ui.image.Image;
+import consulo.ui.image.ImageEffects;
+import consulo.ui.style.Style;
+import consulo.ui.style.StyleManager;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
 import java.util.Arrays;
 import java.util.List;
 
@@ -52,6 +58,8 @@ import java.util.List;
  * @author Konstantin Bulenkov
  */
 public class NewRecentProjectPanel extends RecentProjectPanel {
+  private static final String WELCOME_SCREEN_RECENT_PROJECT_ACTION_GROUP = "WelcomeScreenRecentProjectActionGroup";
+
   public NewRecentProjectPanel(Disposable parentDisposable, boolean welcomeScreen) {
     super(parentDisposable);
 
@@ -64,7 +72,7 @@ public class NewRecentProjectPanel extends RecentProjectPanel {
       myTargetComponent.setOpaque(false);
       myList.setOpaque(false);
 
-      JBDimension size = JBUI.size(300, 460);
+      JBDimension size = JBUI.size(400, 460);
       myScrollPane.setSize(size);
       myScrollPane.setMinimumSize(size);
       myScrollPane.setPreferredSize(size);
@@ -78,7 +86,16 @@ public class NewRecentProjectPanel extends RecentProjectPanel {
 
   @Override
   protected JBList<AnAction> createList(AnAction[] recentProjectActions, Dimension size) {
-    final JBList<AnAction> list = super.createList(recentProjectActions, size);
+    final JBList<AnAction> list = new MyList(size, recentProjectActions) {
+      @Override
+      protected void onActionClick(int index, MouseEvent e) {
+        final ActionGroup group = (ActionGroup)ActionManager.getInstance().getAction(WELCOME_SCREEN_RECENT_PROJECT_ACTION_GROUP);
+        if (group != null) {
+          ActionManager.getInstance().createActionPopupMenu(ActionPlaces.WELCOME_SCREEN, group).getComponent().show(this, e.getX(), e.getY());
+        }
+      }
+    };
+    
     list.addKeyListener(new KeyAdapter() {
       @Override
       public void keyPressed(KeyEvent e) {
@@ -133,7 +150,7 @@ public class NewRecentProjectPanel extends RecentProjectPanel {
         if (index != -1 && Arrays.binarySearch(list.getSelectedIndices(), index) < 0) {
           list.setSelectedIndex(index);
         }
-        final ActionGroup group = (ActionGroup)ActionManager.getInstance().getAction("WelcomeScreenRecentProjectActionGroup");
+        final ActionGroup group = (ActionGroup)ActionManager.getInstance().getAction(WELCOME_SCREEN_RECENT_PROJECT_ACTION_GROUP);
         if (group != null) {
           ActionManager.getInstance().createActionPopupMenu(ActionPlaces.WELCOME_SCREEN, group).getComponent().show(comp, x, y);
         }
@@ -149,7 +166,7 @@ public class NewRecentProjectPanel extends RecentProjectPanel {
 
   @Override
   protected ListCellRenderer<AnAction> createRenderer(UniqueNameBuilder<ReopenProjectAction> pathShortener) {
-    return new ListCellRenderer<AnAction> () {
+    return new ListCellRenderer<> () {
 
       JComponent spacer = new NonOpaquePanel() {
         @Override
@@ -186,6 +203,23 @@ public class NewRecentProjectPanel extends RecentProjectPanel {
               }
             }
 
+            Image moreImage;
+            if (isSelected) {
+              Style style = StyleManager.get().getCurrentStyle();
+              if (style.isDark()) {
+                moreImage = PlatformIconGroup.actionsMore();
+              }
+              else {
+                moreImage = IconLibraryManager.get().forceChangeLibrary(IconLibraryManager.DARK_LIBRARY_ID, PlatformIconGroup.actionsMore());
+              }
+            }
+            else {
+              moreImage = ImageEffects.transparent(PlatformIconGroup.actionsMore(), 0.5f);
+            }
+            
+            JLabel moreActionLabel = new JBLabel(moreImage);
+            //moreActionLabel.setBorder(JBUI.Borders.customLine(UIUtil.getBorderColor(), 0, 1, 0, 0));
+
             setBorder(JBUI.Borders.empty(5, 7));
             if (isInsideGroup) {
               add(spacer, BorderLayout.WEST);
@@ -193,9 +227,11 @@ public class NewRecentProjectPanel extends RecentProjectPanel {
             if (isGroup) {
               final ProjectGroup group = ((ProjectGroupActionGroup)value).getGroup();
               name.setText(" " + group.getName());
-              name.setIcon(IconUtil.toSize(group.isExpanded() ? UIUtil.getTreeExpandedIcon() : UIUtil.getTreeCollapsedIcon(), JBUI.scale(16), JBUI.scale(16)));
+              name.setIcon(TargetAWT.to(group.isExpanded() ? PlatformIconGroup.nodesFolderOpened() : PlatformIconGroup.nodesFolder()));
               name.setFont(name.getFont().deriveFont(Font.BOLD));
               add(name);
+
+              add(moreActionLabel, BorderLayout.EAST);
             }
             else if (value instanceof ReopenProjectAction) {
               final NonOpaquePanel p = new NonOpaquePanel(new BorderLayout());
@@ -221,6 +257,9 @@ public class NewRecentProjectPanel extends RecentProjectPanel {
               final NonOpaquePanel panel = new NonOpaquePanel(new BorderLayout());
               panel.add(p);
               panel.add(projectIcon, BorderLayout.WEST);
+
+              panel.add(moreActionLabel, BorderLayout.EAST);
+              
               add(panel);
             }
             AccessibleContextUtil.setCombinedName(this, name, " - ", path);

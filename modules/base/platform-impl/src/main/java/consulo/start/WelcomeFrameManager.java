@@ -48,7 +48,7 @@ public abstract class WelcomeFrameManager {
 
   @Nonnull
   public static Size getDefaultWindowSize() {
-    return new Size(777, 460);
+    return new Size(800, 460);
   }
 
   public static boolean isFromWelcomeFrame(@Nonnull AnActionEvent e) {

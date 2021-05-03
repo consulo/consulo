@@ -68,10 +68,10 @@ public class OpenSelectedProjectsAction extends RecentProjectsWelcomeScreenActio
     if (ActionPlaces.WELCOME_SCREEN.equals(e.getPlace())) {
       presentation.setEnabledAndVisible(true);
       if (selectedElements.size() == 1 && selectedElements.get(0) instanceof ProjectGroupActionGroup) {
-        presentation.setText("Open All Projects in Group");
+        presentation.setText("Open All");
       }
       else {
-        presentation.setText("Open Selected");
+        presentation.setText("Open");
       }
     }
     else {
