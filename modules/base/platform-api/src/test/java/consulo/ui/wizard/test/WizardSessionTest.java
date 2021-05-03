@@ -16,6 +16,7 @@
 package consulo.ui.wizard.test;
 
 import com.intellij.util.ObjectUtil;
+import consulo.disposer.Disposable;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.wizard.WizardSession;
@@ -61,7 +62,7 @@ public class WizardSessionTest extends Assert {
     @RequiredUIAccess
     @Nonnull
     @Override
-    public Component getComponent() {
+    public Component getComponent(Disposable uiDisposable) {
       throw new UnsupportedOperationException();
     }
 
@@ -164,7 +165,7 @@ public class WizardSessionTest extends Assert {
     @RequiredUIAccess
     @Nonnull
     @Override
-    public Component getComponent() {
+    public Component getComponent(Disposable uiDisposable) {
       throw new UnsupportedOperationException();
     }
 
@@ -181,7 +182,7 @@ public class WizardSessionTest extends Assert {
       @RequiredUIAccess
       @Nonnull
       @Override
-      public Component getComponent() {
+      public Component getComponent(Disposable uiDisposable) {
         throw new UnsupportedOperationException();
       }
 
@@ -195,7 +196,7 @@ public class WizardSessionTest extends Assert {
       @RequiredUIAccess
       @Nonnull
       @Override
-      public Component getComponent() {
+      public Component getComponent(Disposable uiDisposable) {
         throw new UnsupportedOperationException();
       }
 

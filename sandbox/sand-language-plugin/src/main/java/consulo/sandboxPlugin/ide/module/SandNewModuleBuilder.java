@@ -19,6 +19,7 @@ import com.intellij.icons.AllIcons;
 import com.intellij.openapi.roots.ContentEntry;
 import com.intellij.openapi.roots.ModifiableRootModel;
 import consulo.annotation.access.RequiredReadAction;
+import consulo.disposer.Disposable;
 import consulo.ide.impl.UnzipNewModuleBuilderProcessor;
 import consulo.ide.newProject.NewModuleBuilder;
 import consulo.ide.newProject.NewModuleBuilderProcessor;
@@ -113,7 +114,7 @@ public class SandNewModuleBuilder implements NewModuleBuilder {
           @RequiredUIAccess
           @Nonnull
           @Override
-          public Component getComponent() {
+          public Component getComponent(Disposable uiDisposable) {
             return DockLayout.create().top(Label.create("Hello world from sand plugin"));
           }
         });

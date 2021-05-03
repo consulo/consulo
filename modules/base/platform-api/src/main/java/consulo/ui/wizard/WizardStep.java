@@ -17,6 +17,7 @@ package consulo.ui.wizard;
 
 import consulo.annotation.DeprecationInfo;
 import consulo.awt.TargetAWT;
+import consulo.disposer.Disposable;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 
@@ -30,7 +31,7 @@ import javax.annotation.Nullable;
 public interface WizardStep<CONTEXT> {
   @Nonnull
   @RequiredUIAccess
-  Component getComponent();
+  Component getComponent(@Nonnull Disposable uiDisposable);
 
   @Nullable
   default Component getPreferredFocusedComponent() {
@@ -39,15 +40,15 @@ public interface WizardStep<CONTEXT> {
 
   @Nonnull
   @Deprecated
-  @DeprecationInfo("Temp UI version")
+  @DeprecationInfo("Desktop UI version")
   @RequiredUIAccess
-  default java.awt.Component getSwingComponent() {
-    return TargetAWT.to(getComponent());
+  default java.awt.Component getSwingComponent(@Nonnull Disposable uiDisposable) {
+    return TargetAWT.to(getComponent(uiDisposable));
   }
 
   @Nullable
   @Deprecated
-  @DeprecationInfo("Temp UI version")
+  @DeprecationInfo("Desktop UI version")
   default java.awt.Component getSwingPreferredFocusedComponent() {
     return TargetAWT.to(getPreferredFocusedComponent());
   }
@@ -61,17 +62,7 @@ public interface WizardStep<CONTEXT> {
   default void validateStep(@Nonnull CONTEXT context) throws WizardStepValidationException {
   }
 
-  default void disposeUIResources() {
-  }
-
-  @SuppressWarnings("deprecation")
   default boolean isVisible(@Nonnull CONTEXT context) {
-    return isVisible();
-  }
-
-  @Deprecated
-  @DeprecationInfo("Use isVisible(CONTEXT)")
-  default boolean isVisible() {
     return true;
   }
 }

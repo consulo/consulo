@@ -20,6 +20,7 @@ import com.intellij.openapi.module.ModifiableModuleModel;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import consulo.annotation.access.RequiredReadAction;
+import consulo.disposer.Disposable;
 import consulo.ide.newProject.ui.UnifiedProjectOrModuleNameStep;
 import consulo.localize.LocalizeValue;
 import consulo.moduleImport.ModuleImportContext;
@@ -82,7 +83,7 @@ public class Sand2ModuleImportProvider implements ModuleImportProvider<ModuleImp
       @RequiredUIAccess
       @Nonnull
       @Override
-      public Component getComponent() {
+      public Component getComponent(Disposable uiDisposable) {
         return LabeledLayout.create("Some Text", TextBox.create("Test Value"));
       }
     });

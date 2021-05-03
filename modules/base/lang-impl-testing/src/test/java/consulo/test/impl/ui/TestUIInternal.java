@@ -112,7 +112,7 @@ public class TestUIInternal extends UIInternal {
   }
 
   @Override
-  public Label _Components_label(LocalizeValue text) {
+  public Label _Components_label(LocalizeValue text, HorizontalAlignment horizontalAlignment) {
     return null;
   }
 
@@ -261,7 +261,7 @@ public class TestUIInternal extends UIInternal {
 
   @Nonnull
   @Override
-  public Window _Window_modalWindow(String title) {
+  public Window _Window_create(String title, WindowOptions options) {
     return null;
   }
 

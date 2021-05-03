@@ -197,7 +197,7 @@ public abstract class NewProjectPanel extends BaseWelcomeScreenPanel implements 
           if (myWizardSession.hasNext()) {
             WizardStep<NewModuleWizardContext> step = myWizardSession.next();
 
-            toShow = step.getSwingComponent();
+            toShow = step.getSwingComponent(this);
           }
           else {
             LOG.error("There no visible steps for " + selectedValue);
@@ -279,7 +279,7 @@ public abstract class NewProjectPanel extends BaseWelcomeScreenPanel implements 
 
   @RequiredUIAccess
   private void gotoStep(JPanel rightContentPanel, WizardStep<NewModuleWizardContext> step) {
-    Component swingComponent = step.getSwingComponent();
+    Component swingComponent = step.getSwingComponent(this);
 
     String id = "step-" + myWizardSession.getCurrentStepIndex();
 

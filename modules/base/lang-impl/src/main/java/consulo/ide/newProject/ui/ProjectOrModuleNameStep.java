@@ -23,6 +23,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.ui.JBUI;
+import consulo.disposer.Disposable;
 import consulo.ide.wizard.newModule.NewModuleWizardContext;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -117,9 +118,10 @@ public class ProjectOrModuleNameStep<C extends NewModuleWizardContext> implement
     return myNamePathComponent.getNameValue();
   }
 
+  @RequiredUIAccess
   @Nonnull
   @Override
-  public java.awt.Component getSwingComponent() {
+  public java.awt.Component getSwingComponent(Disposable uiDisposable) {
     return myPanel;
   }
 
@@ -132,7 +134,7 @@ public class ProjectOrModuleNameStep<C extends NewModuleWizardContext> implement
   @RequiredUIAccess
   @Nonnull
   @Override
-  public Component getComponent() {
+  public Component getComponent(Disposable uiDisposable) {
     throw new UnsupportedOperationException();
   }
 

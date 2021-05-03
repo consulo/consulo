@@ -17,6 +17,7 @@ package consulo.externalSystem.service.module.wizard;
 
 import com.intellij.openapi.externalSystem.service.settings.AbstractImportFromExternalSystemControl;
 import com.intellij.openapi.options.ConfigurationException;
+import consulo.disposer.Disposable;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.wizard.WizardStep;
@@ -51,14 +52,14 @@ public class SelectExternalProjectStep<C extends AbstractImportFromExternalSyste
   @RequiredUIAccess
   @Nonnull
   @Override
-  public Component getComponent() {
+  public Component getComponent(Disposable uiDisposable) {
     throw new UnsupportedOperationException("desktop only");
   }
 
   @RequiredUIAccess
   @Nonnull
   @Override
-  public JComponent getSwingComponent() {
+  public JComponent getSwingComponent(Disposable uiDisposable) {
     return myComponent;
   }
 

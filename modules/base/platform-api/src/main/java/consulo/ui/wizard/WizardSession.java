@@ -143,10 +143,6 @@ public final class WizardSession<CONTEXT> {
       LOG.error("Wizard is not finished, but want to be dispose");
     }
 
-    for (WizardStep<CONTEXT> step : mySteps) {
-      step.disposeUIResources();
-    }
-
     mySteps.clear();
   }
 

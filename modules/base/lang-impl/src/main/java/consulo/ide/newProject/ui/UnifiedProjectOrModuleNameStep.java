@@ -45,7 +45,6 @@ public class UnifiedProjectOrModuleNameStep<C extends NewModuleWizardContext> im
   private FileChooserTextBoxBuilder.Controller myFileChooserController;
   private boolean myUserPathEntered;
   private boolean myUserNameEntered;
-  private Disposable myUiDisposable;
 
   public UnifiedProjectOrModuleNameStep(C context) {
     myContext = context;
@@ -54,20 +53,18 @@ public class UnifiedProjectOrModuleNameStep<C extends NewModuleWizardContext> im
   @RequiredUIAccess
   @Nonnull
   @Override
-  public Component getComponent() {
+  public Component getComponent(@Nonnull Disposable uiDisposable) {
     if (myRootPanel == null) {
-      myRootPanel = buildComponent();
+      myRootPanel = buildComponent(uiDisposable);
     }
     return myRootPanel;
   }
 
   @Nonnull
   @RequiredUIAccess
-  private Component buildComponent() {
+  private Component buildComponent(Disposable uiDisposable) {
     myUserNameEntered = false;
     myUserPathEntered = false;
-
-    myUiDisposable = Disposable.newDisposable("wizard disposable");
 
     FormBuilder formBuilder = FormBuilder.create();
 
@@ -76,7 +73,7 @@ public class UnifiedProjectOrModuleNameStep<C extends NewModuleWizardContext> im
     formBuilder.addLabeled(myContext.isNewProject() ? IdeLocalize.labelProjectName() : IdeLocalize.labelModuleName(), myNameTextBox);
 
     FileChooserTextBoxBuilder builder = FileChooserTextBoxBuilder.create(myContext.getProject());
-    builder.uiDisposable(myUiDisposable);
+    builder.uiDisposable(uiDisposable);
     builder.textBoxAccessor(new TextComponentAccessor<TextBox>() {
       @RequiredUIAccess
       @Override
@@ -165,17 +162,5 @@ public class UnifiedProjectOrModuleNameStep<C extends NewModuleWizardContext> im
   @Override
   public Component getPreferredFocusedComponent() {
     return myNameTextBox;
-  }
-
-  @Override
-  public void disposeUIResources() {
-    if (myUiDisposable != null) {
-      myUiDisposable.disposeWithTree();
-      myUiDisposable = null;
-    }
-
-    myRootPanel = null;
-    myNameTextBox = null;
-    myFileChooserController = null;
   }
 }
