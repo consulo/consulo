@@ -131,13 +131,13 @@ public class UnifiedProjectOrModuleNameStep<C extends NewModuleWizardContext> im
     });
 
 
-    extend(formBuilder);
+    extend(formBuilder, uiDisposable);
 
     return formBuilder.build();
   }
 
   @RequiredUIAccess
-  protected void extend(@Nonnull FormBuilder builder) {
+  protected void extend(@Nonnull FormBuilder builder, Disposable uiDisposable) {
     // for plugins
   }
 

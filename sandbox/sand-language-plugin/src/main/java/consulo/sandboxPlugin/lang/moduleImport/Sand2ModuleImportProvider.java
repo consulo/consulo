@@ -72,7 +72,7 @@ public class Sand2ModuleImportProvider implements ModuleImportProvider<ModuleImp
     consumer.accept(new UnifiedProjectOrModuleNameStep<ModuleImportContext>(context) {
       @RequiredUIAccess
       @Override
-      protected void extend(@Nonnull FormBuilder builder) {
+      protected void extend(@Nonnull FormBuilder builder, Disposable uiDisposable) {
         builder.addLabeled(LocalizeValue.localizeTODO("Test"), ColorBox.create(StandardColors.RED));
 
         builder.addBottom(ListBox.create("Test1", "Test2"));

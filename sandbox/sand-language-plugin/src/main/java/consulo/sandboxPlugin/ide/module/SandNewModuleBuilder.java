@@ -103,7 +103,7 @@ public class SandNewModuleBuilder implements NewModuleBuilder {
         consumer.accept(new UnifiedProjectOrModuleNameStep<NewModuleWizardContext>(context) {
           @RequiredUIAccess
           @Override
-          protected void extend(@Nonnull FormBuilder builder) {
+          protected void extend(@Nonnull FormBuilder builder, Disposable uiDisposable) {
             builder.addLabeled(LocalizeValue.localizeTODO("Test"), ColorBox.create(StandardColors.LIGHT_RED));
 
             builder.addBottom(ListBox.create("Test1", "Test2"));
