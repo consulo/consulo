@@ -107,9 +107,9 @@ public abstract class UIInternal {
 
   public abstract HorizontalLayout _Layouts_horizontal(int gapInPixesl);
 
-  public abstract Label _Components_label(LocalizeValue text);
+  public abstract Label _Components_label(LocalizeValue text, LabelOptions options);
 
-  public abstract HtmlLabel _Components_htmlLabel(LocalizeValue html);
+  public abstract HtmlLabel _Components_htmlLabel(LocalizeValue html, LabelOptions labelOptions);
 
   public abstract <E> ComboBox<E> _Components_comboBox(ListModel<E> model);
 
@@ -199,7 +199,7 @@ public abstract class UIInternal {
   public abstract FontManager _FontManager_get();
 
   @Nonnull
-  public abstract Window _Window_modalWindow(String title);
+  public abstract Window _Window_create(String title, WindowOptions options);
 
   @Nullable
   public abstract Window _Window_getActiveWindow();

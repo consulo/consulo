@@ -33,6 +33,11 @@ public interface HtmlLabel extends Label {
 
   @Nonnull
   static HtmlLabel create(@Nonnull LocalizeValue html) {
-    return UIInternal.get()._Components_htmlLabel(html);
+    return create(html, LabelOptions.builder().build());
+  }
+
+  @Nonnull
+  static HtmlLabel create(@Nonnull LocalizeValue html, @Nonnull LabelOptions labelOptions) {
+    return UIInternal.get()._Components_htmlLabel(html, labelOptions);
   }
 }

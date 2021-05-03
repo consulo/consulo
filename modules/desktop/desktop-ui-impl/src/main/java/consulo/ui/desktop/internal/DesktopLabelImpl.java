@@ -22,6 +22,7 @@ import consulo.localize.LocalizeValue;
 import consulo.ui.Component;
 import consulo.ui.HorizontalAlignment;
 import consulo.ui.Label;
+import consulo.ui.LabelOptions;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
 import consulo.ui.desktop.internal.base.SwingComponentDelegate;
@@ -44,10 +45,10 @@ class DesktopLabelImpl extends SwingComponentDelegate<DesktopLabelImpl.MyJLabel>
 
     private ColorValue myForegroudColor;
 
-    MyJLabel(@Nonnull LocalizeValue text) {
+    MyJLabel(@Nonnull LocalizeValue text, LabelOptions options) {
       super("");
 
-      setHorizontalAlignment2(HorizontalAlignment.LEFT);
+      setHorizontalAlignment2(options.getHorizontalAlignment());
 
       myTextValue = text;
 
@@ -73,7 +74,7 @@ class DesktopLabelImpl extends SwingComponentDelegate<DesktopLabelImpl.MyJLabel>
       updateForegroundColor();
     }
 
-    public void setHorizontalAlignment2(@Nonnull HorizontalAlignment horizontalAlignment) {
+    private void setHorizontalAlignment2(@Nonnull HorizontalAlignment horizontalAlignment) {
       myHorizontalAlignment2 = horizontalAlignment;
       switch (horizontalAlignment) {
         case LEFT:
@@ -130,8 +131,8 @@ class DesktopLabelImpl extends SwingComponentDelegate<DesktopLabelImpl.MyJLabel>
     }
   }
 
-  public DesktopLabelImpl(LocalizeValue text) {
-    initialize(new MyJLabel(text));
+  public DesktopLabelImpl(LocalizeValue text, LabelOptions options) {
+    initialize(new MyJLabel(text, options));
   }
 
   @Override
@@ -167,18 +168,6 @@ class DesktopLabelImpl extends SwingComponentDelegate<DesktopLabelImpl.MyJLabel>
   @RequiredUIAccess
   public void setToolTipText(@Nullable String text) {
     toAWTComponent().setToolTipText(text);
-  }
-
-  @Override
-  @RequiredUIAccess
-  public void setHorizontalAlignment(@Nonnull HorizontalAlignment horizontalAlignment) {
-    toAWTComponent().setHorizontalAlignment2(horizontalAlignment);
-  }
-
-  @Nonnull
-  @Override
-  public HorizontalAlignment getHorizontalAlignment() {
-    return toAWTComponent().getHorizontalAlignment2();
   }
 
   @Override

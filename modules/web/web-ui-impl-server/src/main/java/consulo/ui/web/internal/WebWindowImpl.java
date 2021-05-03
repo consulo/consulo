@@ -16,10 +16,7 @@
 package consulo.ui.web.internal;
 
 import consulo.disposer.Disposer;
-import consulo.ui.Component;
-import consulo.ui.MenuBar;
-import consulo.ui.UIAccess;
-import consulo.ui.Window;
+import consulo.ui.*;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.web.internal.base.ComponentHolder;
 import consulo.ui.web.internal.base.FromVaadinComponentWrapper;
@@ -51,10 +48,12 @@ public class WebWindowImpl extends UIComponentWithVaadinComponent<WebWindowImpl.
   private boolean myDisposed;
   private WebRootPaneImpl myRootPanel = new WebRootPaneImpl();
 
-  public WebWindowImpl(boolean modal) {
+  public WebWindowImpl(boolean modal, WindowOptions options) {
     Vaadin vaadinComponent = getVaadinComponent();
 
     vaadinComponent.setModal(modal);
+    vaadinComponent.setResizable(options.isResizable());
+    vaadinComponent.setClosable(options.isClosable());
     vaadinComponent.setContent(TargetVaddin.to(myRootPanel.getComponent()));
     vaadinComponent.addCloseListener(closeEvent -> getListenerDispatcher(Window.CloseListener.class).onClose());
 
@@ -105,16 +104,6 @@ public class WebWindowImpl extends UIComponentWithVaadinComponent<WebWindowImpl.
   @Override
   public void setMenuBar(@Nullable MenuBar menuBar) {
     myRootPanel.setMenuBar(menuBar);
-  }
-
-  @Override
-  public void setResizable(boolean value) {
-    getVaadinComponent().setResizable(value);
-  }
-
-  @Override
-  public void setClosable(boolean value) {
-    getVaadinComponent().setClosable(value);
   }
 
   @Nullable

@@ -92,16 +92,6 @@ public abstract class WindowOverAWTWindow implements Window, ToSwingWindowWrappe
     throw new UnsupportedOperationException();
   }
 
-  @Override
-  public void setResizable(boolean value) {
-
-  }
-
-  @Override
-  public void setClosable(boolean value) {
-    throw new UnsupportedOperationException();
-  }
-
   @RequiredUIAccess
   @Override
   public void addBorder(@Nonnull BorderPosition borderPosition, @Nonnull BorderStyle borderStyle, ColorValue colorValue, int width) {

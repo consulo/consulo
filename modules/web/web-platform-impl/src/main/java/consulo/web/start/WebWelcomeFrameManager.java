@@ -62,11 +62,8 @@ public class WebWelcomeFrameManager extends WelcomeFrameManager {
   @Nonnull
   @Override
   public IdeFrame createFrame() {
-    Window welcomeFrame = Window.createModal(FrameTitleUtil.buildTitle());
+    Window welcomeFrame = Window.create(FrameTitleUtil.buildTitle(), WindowOptions.builder().disableResize().disableClose().build());
     welcomeFrame.addListener(Window.CloseListener.class, () -> frameClosed());
-
-    welcomeFrame.setResizable(false);
-    welcomeFrame.setClosable(false);
     welcomeFrame.setSize(WelcomeFrameManager.getDefaultWindowSize());
     welcomeFrame.setContent(Label.create("Loading..."));
 

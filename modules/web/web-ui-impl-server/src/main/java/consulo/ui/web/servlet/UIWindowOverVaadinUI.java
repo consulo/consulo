@@ -165,16 +165,6 @@ class UIWindowOverVaadinUI implements Window {
     myRootPanel.setMenuBar(menuBar);
   }
 
-  @Override
-  public void setResizable(boolean value) {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public void setClosable(boolean value) {
-    throw new UnsupportedOperationException();
-  }
-
   @RequiredUIAccess
   @Override
   public void show() {

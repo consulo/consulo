@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2019 consulo.io
+ * Copyright 2013-2021 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,29 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui.web.internal;
-
-import consulo.localize.LocalizeValue;
-import consulo.ui.LabelOptions;
-
-import javax.annotation.Nonnull;
+package consulo.ui;
 
 /**
  * @author VISTALL
- * @since 2019-02-19
+ * @since 03/05/2021
  */
-public class WebLabelImpl extends WebLabelBase<WebLabelImpl.Vaadin> {
-  public static class Vaadin extends VaadinLabelComponentBase {
+public abstract class ComponentOptions {
+  private final boolean myBackgroundPaint;
 
+  protected ComponentOptions(boolean backgroundPaint) {
+    myBackgroundPaint = backgroundPaint;
   }
 
-  public WebLabelImpl(LocalizeValue text, LabelOptions options) {
-    super(text, options);
-  }
-
-  @Nonnull
-  @Override
-  public Vaadin createVaadinComponent() {
-    return new Vaadin();
+  public boolean isBackgroundPaint() {
+    return myBackgroundPaint;
   }
 }

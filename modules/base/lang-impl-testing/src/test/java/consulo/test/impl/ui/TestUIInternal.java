@@ -112,12 +112,12 @@ public class TestUIInternal extends UIInternal {
   }
 
   @Override
-  public Label _Components_label(LocalizeValue text, HorizontalAlignment horizontalAlignment) {
+  public Label _Components_label(LocalizeValue text, LabelOptions options) {
     return null;
   }
 
   @Override
-  public HtmlLabel _Components_htmlLabel(LocalizeValue html) {
+  public HtmlLabel _Components_htmlLabel(LocalizeValue html, LabelOptions labelOptions) {
     return null;
   }
 

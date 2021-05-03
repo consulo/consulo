@@ -33,8 +33,8 @@ public interface Window extends Component {
   }
 
   @Nonnull
-  static Window createModal(@Nonnull String title) {
-    return UIInternal.get()._Window_modalWindow(title);
+  static Window create(@Nonnull String title, @Nonnull WindowOptions options) {
+    return UIInternal.get()._Window_create(title, options);
   }
 
   @Nullable
@@ -59,10 +59,6 @@ public interface Window extends Component {
 
   @RequiredUIAccess
   void setMenuBar(@Nullable MenuBar menuBar);
-
-  void setResizable(boolean value);
-
-  void setClosable(boolean value);
 
   /**
    * not block current thread

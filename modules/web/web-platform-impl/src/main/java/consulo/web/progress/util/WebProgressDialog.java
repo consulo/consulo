@@ -18,11 +18,8 @@ package consulo.web.progress.util;
 import com.intellij.openapi.progress.util.ProgressWindow;
 import consulo.localize.LocalizeValue;
 import consulo.progress.util.ProgressDialog;
-import consulo.ui.Label;
-import consulo.ui.ProgressBar;
-import consulo.ui.Window;
+import consulo.ui.*;
 import consulo.ui.layout.VerticalLayout;
-import consulo.ui.Size;
 import consulo.util.lang.StringUtil;
 import consulo.web.application.WebApplication;
 
@@ -78,9 +75,7 @@ public class WebProgressDialog implements ProgressDialog {
       verticalLayout.add(myProgressBar = ProgressBar.create());
       verticalLayout.add(myTextLabel2 = Label.create());
 
-      myWindow = Window.createModal("Consulo");
-      myWindow.setClosable(false);
-      myWindow.setResizable(false);
+      myWindow = Window.create("Consulo", WindowOptions.builder().disableClose().disableResize().build());
       myWindow.setSize(new Size(288, 123));
       myWindow.setContent(verticalLayout);
       myWindow.show();

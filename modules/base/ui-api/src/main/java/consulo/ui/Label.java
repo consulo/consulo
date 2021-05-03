@@ -42,9 +42,12 @@ public interface Label extends Component, Mnemonicable {
 
   @Nonnull
   static Label create(@Nonnull LocalizeValue value) {
-    Label label = UIInternal.get()._Components_label(value);
-    label.setHorizontalAlignment(HorizontalAlignment.LEFT);
-    return label;
+    return create(value, LabelOptions.builder().build());
+  }
+
+  @Nonnull
+  static Label create(@Nonnull LocalizeValue value, @Nonnull LabelOptions options) {
+    return UIInternal.get()._Components_label(value, options);
   }
 
   @Nonnull
@@ -63,11 +66,6 @@ public interface Label extends Component, Mnemonicable {
   String getTooltipText();
 
   void setToolTipText(@Nullable String text);
-
-  void setHorizontalAlignment(@Nonnull HorizontalAlignment horizontalAlignment);
-
-  @Nonnull
-  HorizontalAlignment getHorizontalAlignment();
 
   void setImage(@Nullable Image icon);
 

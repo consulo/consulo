@@ -16,8 +16,8 @@
 package consulo.ui.web.internal;
 
 import consulo.localize.LocalizeValue;
-import consulo.ui.HorizontalAlignment;
 import consulo.ui.Label;
+import consulo.ui.LabelOptions;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import consulo.ui.web.internal.base.UIComponentWithVaadinComponent;
@@ -30,8 +30,9 @@ import javax.annotation.Nullable;
  * @since 2019-02-19
  */
 public abstract class WebLabelBase<V extends VaadinLabelComponentBase> extends UIComponentWithVaadinComponent<V> implements Label {
-  public WebLabelBase(LocalizeValue text) {
+  public WebLabelBase(LocalizeValue text, LabelOptions options) {
     setText(text);
+    getVaadinComponent().setHorizontalAlignment(options.getHorizontalAlignment());
   }
 
   @Nonnull
@@ -54,17 +55,6 @@ public abstract class WebLabelBase<V extends VaadinLabelComponentBase> extends U
 
   @Override
   public void setToolTipText(@Nullable String text) {
-  }
-
-  @Override
-  public void setHorizontalAlignment(@Nonnull HorizontalAlignment horizontalAlignment) {
-    getVaadinComponent().setHorizontalAlignment(horizontalAlignment);
-  }
-
-  @Nonnull
-  @Override
-  public HorizontalAlignment getHorizontalAlignment() {
-    return getVaadinComponent().getHorizontalAlignment();
   }
 
   @Override

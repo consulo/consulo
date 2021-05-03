@@ -28,6 +28,7 @@ import consulo.disposer.Disposer;
 import consulo.ui.Rectangle2D;
 import consulo.ui.UIAccess;
 import consulo.ui.Window;
+import consulo.ui.WindowOptions;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.web.internal.TargetVaddin;
 import consulo.ui.web.internal.WebFocusManagerImpl;
@@ -56,7 +57,7 @@ public class WebIdeFrameImpl implements IdeFrameEx, Disposable {
 
   @RequiredUIAccess
   public void show() {
-    myWindow = Window.createModal(myProject.getName());
+    myWindow = Window.create(myProject.getName(), WindowOptions.builder().disableResize().build());
 
     myStatusBar = new WebStatusBarImpl(myProject.getApplication(), null);
     Disposer.register(this, myStatusBar);
@@ -70,7 +71,6 @@ public class WebIdeFrameImpl implements IdeFrameEx, Disposable {
     WebFocusManagerImpl.register(vaadinWindow);
     vaadinWindow.setWindowMode(WindowMode.MAXIMIZED);
 
-    myWindow.setResizable(false);
     myWindow.addListener(Window.CloseListener.class, () -> {
       myWindow.close();
 

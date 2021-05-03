@@ -112,13 +112,13 @@ public class WebUIInternalImpl extends UIInternal {
   }
 
   @Override
-  public Label _Components_label(LocalizeValue text) {
-    return new WebLabelImpl(text);
+  public Label _Components_label(LocalizeValue text, LabelOptions options) {
+    return new WebLabelImpl(text, options);
   }
 
   @Override
-  public HtmlLabel _Components_htmlLabel(LocalizeValue html) {
-    return new WebHtmlLabelImpl(html);
+  public HtmlLabel _Components_htmlLabel(LocalizeValue html, LabelOptions labelOptions) {
+    return new WebHtmlLabelImpl(html, labelOptions);
   }
 
   @Override
@@ -295,8 +295,8 @@ public class WebUIInternalImpl extends UIInternal {
 
   @Nonnull
   @Override
-  public Window _Window_modalWindow(String title) {
-    WebWindowImpl window = new WebWindowImpl(true);
+  public Window _Window_create(String title, WindowOptions options) {
+    WebWindowImpl window = new WebWindowImpl(true, options);
     window.setTitle(title);
     return window;
   }

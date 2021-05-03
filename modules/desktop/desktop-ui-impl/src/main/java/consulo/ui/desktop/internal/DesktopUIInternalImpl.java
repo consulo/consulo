@@ -223,8 +223,8 @@ public class DesktopUIInternalImpl extends UIInternal {
 
   @Nonnull
   @Override
-  public Window _Window_modalWindow(String title) {
-    return new DesktopWindowWrapper(title);
+  public Window _Window_create(String title, WindowOptions options) {
+    return new DesktopWindowWrapper(title, options);
   }
 
   @Nullable
@@ -312,13 +312,13 @@ public class DesktopUIInternalImpl extends UIInternal {
   }
 
   @Override
-  public Label _Components_label(LocalizeValue text) {
-    return new DesktopLabelImpl(text);
+  public Label _Components_label(LocalizeValue text, LabelOptions options) {
+    return new DesktopLabelImpl(text, options);
   }
 
   @Override
-  public HtmlLabel _Components_htmlLabel(LocalizeValue html) {
-    return new DesktopHtmlLabelImpl(html);
+  public HtmlLabel _Components_htmlLabel(LocalizeValue html, LabelOptions options) {
+    return new DesktopHtmlLabelImpl(html, options);
   }
 
   @Override
