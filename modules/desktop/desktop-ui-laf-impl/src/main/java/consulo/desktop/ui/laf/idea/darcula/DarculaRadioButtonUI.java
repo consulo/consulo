@@ -121,7 +121,8 @@ public class DarculaRadioButtonUI extends MetalRadioButtonUI {
 
   @Override
   public Dimension getPreferredSize(JComponent c) {
-    return updatePreferredSize(c, super.getPreferredSize(c));
+    Dimension dimension = computeOurPreferredSize(c);
+    return dimension != null ? dimension : super.getPreferredSize(c);
   }
 
   @Override
@@ -129,11 +130,8 @@ public class DarculaRadioButtonUI extends MetalRadioButtonUI {
     return getPreferredSize(c);
   }
 
-  protected Dimension updatePreferredSize(JComponent c, Dimension size) {
-    if (c.getBorder() instanceof DarculaRadioButtonBorder) {
-      JBInsets.removeFrom(size, c.getInsets());
-    }
-    return size;
+  protected Dimension computeOurPreferredSize(JComponent c) {
+    return DarculaCheckBoxUI.computeCheckboxPreferredSize(c, getDefaultIcon());
   }
 
   @Override

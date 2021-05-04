@@ -19,6 +19,8 @@ import com.intellij.ide.ui.laf.darcula.DarculaUIUtil;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
+import consulo.annotation.DeprecationInfo;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -33,6 +35,8 @@ import java.awt.event.*;
 /**
  * @author Konstantin Bulenkov
  */
+@Deprecated(forRemoval = true)
+@DeprecationInfo("Old version of consulo.desktop.ui.laf.idea.darcula.TextFieldWithPopupHandlerUI")
 public abstract class TextFieldWithPopupHandlerUI extends BasicTextFieldUI implements Condition {
   protected final JTextField myTextField;
   private MyMouseMotionAdapter myMyMouseMotionAdapter;
@@ -71,8 +75,7 @@ public abstract class TextFieldWithPopupHandlerUI extends BasicTextFieldUI imple
   }
 
   @Override
-  public int getNextVisualPositionFrom(JTextComponent t, int pos, Position.Bias b, int direction, Position.Bias[] biasRet)
-          throws BadLocationException {
+  public int getNextVisualPositionFrom(JTextComponent t, int pos, Position.Bias b, int direction, Position.Bias[] biasRet) throws BadLocationException {
     int position = DarculaUIUtil.getPatchedNextVisualPositionFrom(t, pos, direction);
     return position != -1 ? position : super.getNextVisualPositionFrom(t, pos, b, direction, biasRet);
   }
@@ -102,19 +105,23 @@ public abstract class TextFieldWithPopupHandlerUI extends BasicTextFieldUI imple
 
   @Nullable
   public static AbstractAction getNewLineAction(Component c) {
-    if ( !isSearchField(c) || !Registry.is("ide.find.show.add.newline.hint")) return null;
+    if (!isSearchField(c) || !Registry.is("ide.find.show.add.newline.hint")) return null;
     Object action = ((JTextField)c).getClientProperty("JTextField.Search.NewLineAction");
     return action instanceof AbstractAction ? (AbstractAction)action : null;
   }
 
   public enum SearchAction {
-    POPUP, CLEAR, NEWLINE
+    POPUP,
+    CLEAR,
+    NEWLINE
   }
 
   private class MyMouseMotionAdapter extends MouseMotionAdapter {
     private final TextFieldWithPopupHandlerUI myUi;
 
-    public MyMouseMotionAdapter(TextFieldWithPopupHandlerUI ui) {myUi = ui;}
+    public MyMouseMotionAdapter(TextFieldWithPopupHandlerUI ui) {
+      myUi = ui;
+    }
 
     @Override
     public void mouseMoved(MouseEvent e) {
@@ -125,7 +132,8 @@ public abstract class TextFieldWithPopupHandlerUI extends BasicTextFieldUI imple
         }
         if (action != null) {
           myTextField.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        } else {
+        }
+        else {
           myTextField.setCursor(Cursor.getPredefinedCursor(Cursor.TEXT_CURSOR));
         }
       }
@@ -135,7 +143,9 @@ public abstract class TextFieldWithPopupHandlerUI extends BasicTextFieldUI imple
   private class MyMouseAdapter extends MouseAdapter {
     private final TextFieldWithPopupHandlerUI myUi;
 
-    public MyMouseAdapter(TextFieldWithPopupHandlerUI ui) {myUi = ui;}
+    public MyMouseAdapter(TextFieldWithPopupHandlerUI ui) {
+      myUi = ui;
+    }
 
     @Override
     public void mouseClicked(MouseEvent e) {

@@ -35,8 +35,8 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class CustomizeUIThemeStepPanel extends AbstractCustomizeWizardStep {
-  private static final String DARCULA = "Darcula";
-  private static final String INTELLIJ = "IntelliJ";
+  private static final String INTELLIJ = "Light";
+  private static final String DARCULA = "Dark";
   private boolean myColumnMode;
   private JLabel myPreviewLabel;
   private Map<String, Image> myLafNames = new LinkedHashMap<>();

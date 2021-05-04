@@ -355,7 +355,7 @@ public class EditorComboBox extends JComboBox implements DocumentListener {
     }
 
     //final int cbHeight = new JComboBox().getPreferredSize().height; // should be used actually
-    return new Dimension(100, UIUtil.fixComboBoxHeight(20));
+    return new Dimension(100, 20);
   }
 
   @Override

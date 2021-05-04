@@ -20,6 +20,7 @@ import com.intellij.openapi.ui.GraphicsConfig;
 import com.intellij.ui.Gray;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
+import consulo.annotation.DeprecationInfo;
 
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
@@ -33,6 +34,8 @@ import java.awt.*;
 /**
  * @author Konstantin Bulenkov
  */
+@Deprecated(forRemoval = true)
+@DeprecationInfo("Old version of consulo.desktop.ui.laf.idea.darcula.DarculaCheckBoxUI")
 public class DarculaCheckBoxUI extends MetalCheckBoxUI {
   @SuppressWarnings("MethodOverridesStaticMethodOfSuperclass")
   public static ComponentUI createUI(JComponent c) {
@@ -64,8 +67,8 @@ public class DarculaCheckBoxUI extends MetalCheckBoxUI {
     viewRect.height -= (i.bottom + viewRect.y);
 
     String text = SwingUtilities
-            .layoutCompoundLabel(c, fm, b.getText(), getDefaultIcon(), b.getVerticalAlignment(), b.getHorizontalAlignment(), b.getVerticalTextPosition(),
-                                 b.getHorizontalTextPosition(), viewRect, iconRect, textRect, b.getIconTextGap());
+            .layoutCompoundLabel(c, fm, b.getText(), getDefaultIcon(), b.getVerticalAlignment(), b.getHorizontalAlignment(), b.getVerticalTextPosition(), b.getHorizontalTextPosition(), viewRect,
+                                 iconRect, textRect, b.getIconTextGap());
 
     //background
     if (c.isOpaque()) {

@@ -15,19 +15,18 @@
  */
 package com.intellij.ide.ui.laf.darcula.ui;
 
-import com.intellij.ide.ui.laf.darcula.DarculaUIUtil;
-import com.intellij.openapi.ui.GraphicsConfig;
-import com.intellij.ui.Gray;
 import com.intellij.util.ui.JBUI;
+import consulo.annotation.DeprecationInfo;
 
 import javax.swing.border.Border;
 import javax.swing.plaf.UIResource;
-import javax.swing.text.JTextComponent;
 import java.awt.*;
 
 /**
  * @author Konstantin Bulenkov
  */
+@Deprecated(forRemoval = true)
+@DeprecationInfo("Old version, see consulo.desktop.ui.laf.idea.darcula.DarculaTextBorder")
 public class DarculaTextBorder implements Border, UIResource {
   @Override
   public Insets getBorderInsets(Component c) {

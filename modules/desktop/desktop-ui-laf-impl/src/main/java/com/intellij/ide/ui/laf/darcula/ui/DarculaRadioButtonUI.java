@@ -23,6 +23,7 @@ import com.intellij.util.ui.EmptyIcon;
 import com.intellij.util.ui.GraphicsUtil;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
+import consulo.annotation.DeprecationInfo;
 
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
@@ -35,6 +36,8 @@ import java.awt.*;
 /**
  * @author Konstantin Bulenkov
  */
+@Deprecated
+@DeprecationInfo("Old version of consulo.desktop.ui.laf.idea.darcula.DarculaRadioButtonUI")
 public class DarculaRadioButtonUI extends MetalRadioButtonUI {
   @SuppressWarnings("MethodOverridesStaticMethodOfSuperclass")
   public static ComponentUI createUI(JComponent c) {

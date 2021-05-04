@@ -21,6 +21,7 @@ import com.intellij.ui.Gray;
 import com.intellij.util.FieldAccessor;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
+import consulo.annotation.DeprecationInfo;
 import consulo.awt.hacking.DefaultLookupHacking;
 import consulo.ide.ui.laf.DPIAwareArrowButton;
 
@@ -37,6 +38,8 @@ import java.awt.geom.Path2D;
  * @author Konstantin Bulenkov
  */
 @SuppressWarnings("GtkPreferredJComboBoxRenderer")
+@Deprecated(forRemoval = true)
+@DeprecationInfo("Old version of consulo.desktop.ui.laf.idea.darcula.DarculaComboBoxUI")
 public class DarculaComboBoxUI extends BasicComboBoxUI implements Border {
   private static final FieldAccessor<BasicComboBoxUI, Boolean> isDisplaySizeDirty = new FieldAccessor<>(BasicComboBoxUI.class, "isDisplaySizeDirty");
 

@@ -21,6 +21,7 @@ import com.intellij.util.ObjectUtil;
 import com.intellij.util.ui.GraphicsUtil;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
+import consulo.annotation.DeprecationInfo;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;
@@ -35,6 +36,8 @@ import java.awt.*;
 /**
  * @author Konstantin Bulenkov
  */
+@Deprecated
+@DeprecationInfo("Old idea darcula impl. See consulo.desktop.ui.laf.idea.darcula.DarculaButtonUI for new versions")
 public class DarculaButtonUI extends BasicButtonUI {
   @SuppressWarnings("MethodOverridesStaticMethodOfSuperclass")
   public static ComponentUI createUI(JComponent c) {

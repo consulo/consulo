@@ -18,6 +18,7 @@ package com.intellij.ide.ui.laf.darcula.ui;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
+import consulo.annotation.DeprecationInfo;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -27,6 +28,8 @@ import java.awt.*;
 /**
  * @author Konstantin Bulenkov
  */
+@Deprecated(forRemoval = true)
+@DeprecationInfo("Old version of consulo.desktop.ui.laf.idea.darcula.DarculaCheckBoxBorder")
 public class DarculaCheckBoxBorder implements Border, UIResource {
   @Override
   public void paintBorder(Component c, Graphics g, int x, int y, int width, int height) {

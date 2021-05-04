@@ -20,6 +20,7 @@ import com.intellij.ui.ColorUtil;
 import com.intellij.ui.JBColor;
 import com.intellij.util.ui.MacUIUtil;
 import com.intellij.util.ui.UIUtil;
+import consulo.annotation.DeprecationInfo;
 
 import javax.swing.*;
 import javax.swing.text.JTextComponent;
@@ -29,6 +30,8 @@ import java.awt.event.KeyEvent;
 /**
  * @author Konstantin Bulenkov
  */
+@Deprecated
+@DeprecationInfo("Use new version of DarculaUIUtil. See consulo.desktop.ui.laf.idea.darcula.DarculaUIUtil")
 public class DarculaUIUtil implements SwingConstants {
   public static final Color GLOW_COLOR = new JBColor(new Color(96, 132, 212), new Color(96, 175, 255));
 

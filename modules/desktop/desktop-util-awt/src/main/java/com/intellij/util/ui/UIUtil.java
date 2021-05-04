@@ -42,9 +42,9 @@ import consulo.util.dataholder.Key;
 import org.intellij.lang.annotations.JdkConstants;
 import org.intellij.lang.annotations.Language;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 import org.jetbrains.annotations.TestOnly;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.Timer;
 import javax.swing.*;
@@ -184,6 +184,10 @@ public class UIUtil {
       }
     }
   };
+
+
+  public static final String CHECKBOX_ROLLOVER_PROPERTY = "JCheckBox.rollOver.rectangle";
+  public static final String CHECKBOX_PRESSED_PROPERTY = "JCheckBox.pressed.rectangle";
 
   /**
    * Alt+click does copy text from tooltip or balloon to clipboard.
@@ -1415,7 +1419,7 @@ public class UIUtil {
   private static final ImageKey selectedCollapsedIcon = ImageKey.fromString("consulo.platform.desktop.laf.LookAndFeelIconGroup@components.treeCollapsedSelected", 9, 11);
 
   public static Icon getTreeSelectedCollapsedIcon() {
-    Icon icon = UIManager.getIcon("Tree.selectedCollapsedIcon");
+    Icon icon = UIManager.getIcon("Tree.collapsedSelectedIcon");
     if (icon != null) {
       return icon;
     }
@@ -1425,7 +1429,7 @@ public class UIUtil {
   private static final ImageKey selectedExpandedIcon = ImageKey.fromString("consulo.platform.desktop.laf.LookAndFeelIconGroup@components.treeExpandedSelected", 11, 9);
 
   public static Icon getTreeSelectedExpandedIcon() {
-    Icon icon = UIManager.getIcon("Tree.selectedExpandedIcon");
+    Icon icon = UIManager.getIcon("Tree.expandedSelectedIcon");
     if (icon != null) {
       return icon;
     }
@@ -2864,8 +2868,9 @@ public class UIUtil {
     return JBUI.scale(LIST_FIXED_CELL_HEIGHT);
   }
 
+  @Deprecated
   public static int fixComboBoxHeight(final int height) {
-    return SystemInfo.isMac && isUnderAquaLookAndFeel() ? 28 : height;
+    return height;
   }
 
   /**
