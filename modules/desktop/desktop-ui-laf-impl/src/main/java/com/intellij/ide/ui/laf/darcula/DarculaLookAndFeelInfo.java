@@ -44,7 +44,7 @@ public class DarculaLookAndFeelInfo extends LookAndFeelInfoWithClassLoader imple
   @Nonnull
   @Override
   public String getColorSchemeName() {
-    return getName();
+    return "Darcula";
   }
 
   @Nonnull
