@@ -82,6 +82,11 @@ public abstract class NewProjectPanel extends BaseWelcomeScreenPanel implements 
     setCancelText(CommonBundle.message("button.cancel"));
   }
 
+  @Override
+  protected int getLeftComponentWidth() {
+    return 300;
+  }
+
   @Nullable
   public NewModuleBuilderProcessor<NewModuleWizardContext> getProcessor() {
     return myProcessor;
