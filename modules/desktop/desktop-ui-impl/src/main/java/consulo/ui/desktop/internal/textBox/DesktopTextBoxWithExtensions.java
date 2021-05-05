@@ -36,6 +36,7 @@ import consulo.ui.event.ClickListener;
 import consulo.ui.event.FocusListener;
 import consulo.ui.event.KeyListener;
 import consulo.ui.image.Image;
+import consulo.util.collection.ArrayUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -126,32 +127,46 @@ public class DesktopTextBoxWithExtensions {
       return toAWTComponent().myForegroundColor;
     }
 
+    private ExtendableTextComponent.Extension convert(Extension extension) {
+      return new ExtendableTextComponent.Extension() {
+        @Override
+        public Image getIcon(boolean hovered) {
+          return hovered ? extension.getHoveredIcon() : extension.getIcon();
+        }
+
+        @Override
+        public boolean isIconBeforeText() {
+          return extension.isLeft();
+        }
+
+        @Override
+        public Runnable getActionOnClick() {
+          ClickListener clickListener = extension.getClickListener();
+          return clickListener == null ? null : () -> clickListener.clicked(new ClickEvent(Supported.this));
+        }
+      };
+    }
+
     @Nonnull
     @Override
     public TextBoxWithExtensions setExtensions(@Nonnull Extension... extensions) {
       List<ExtendableTextComponent.Extension> awtExtensions = new ArrayList<>(extensions.length);
 
       for (Extension extension : extensions) {
-        ExtendableTextComponent.Extension ex = new ExtendableTextComponent.Extension() {
-          @Override
-          public Image getIcon(boolean hovered) {
-            return hovered ? extension.getHoveredIcon() : extension.getIcon();
-          }
-
-          @Override
-          public boolean isIconBeforeText() {
-            return extension.isLeft();
-          }
-
-          @Override
-          public Runnable getActionOnClick() {
-            ClickListener clickListener = extension.getClickListener();
-            return clickListener == null ? null : () -> clickListener.clicked(new ClickEvent(Supported.this));
-          }
-        };
-
-        awtExtensions.add(ex);
+        awtExtensions.add(convert(extension));
       }
+
+      toAWTComponent().setExtensions(awtExtensions);
+      toAWTComponent().repaint();
+      return this;
+    }
+
+    @Nonnull
+    @Override
+    public TextBoxWithExtensions addExtension(@Nonnull Extension extension) {
+      List<ExtendableTextComponent.Extension> awtExtensions = new ArrayList<>(toAWTComponent().getExtensions());
+      awtExtensions.add(convert(extension));
+
       toAWTComponent().setExtensions(awtExtensions);
       toAWTComponent().repaint();
       return this;
@@ -216,6 +231,8 @@ public class DesktopTextBoxWithExtensions {
   private static class Unsupported extends DocumentSwingValidator<String, JPanel> implements TextBoxWithExtensions, TextBoxWithTextField {
     private UnsupportedTextField myTextField;
 
+    private Extension[] myExtensions = new Extension[0];
+
     private Unsupported(String text) {
       initialize(new JPanel(new BorderLayout()) {
         @Override
@@ -272,6 +289,8 @@ public class DesktopTextBoxWithExtensions {
     @Nonnull
     @Override
     public TextBoxWithExtensions setExtensions(@Nonnull Extension... extensions) {
+      myExtensions = extensions;
+      
       JPanel panel = toAWTComponent();
 
       List<Component> toRemove = new ArrayList<>();
@@ -297,6 +316,13 @@ public class DesktopTextBoxWithExtensions {
         icon.revalidate();
       }
 
+      return this;
+    }
+
+    @Nonnull
+    @Override
+    public TextBoxWithExtensions addExtension(@Nonnull Extension extension) {
+      setExtensions(ArrayUtil.append(myExtensions, extension));
       return this;
     }
 

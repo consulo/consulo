@@ -79,4 +79,7 @@ public interface TextBoxWithExtensions extends TextBox {
 
   @Nonnull
   TextBoxWithExtensions setExtensions(@Nonnull Extension... extensions);
+
+  @Nonnull
+  TextBoxWithExtensions addExtension(@Nonnull Extension extension);
 }

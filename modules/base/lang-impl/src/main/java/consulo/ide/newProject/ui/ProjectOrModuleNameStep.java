@@ -23,6 +23,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.ui.JBUI;
+import consulo.annotation.DeprecationInfo;
 import consulo.disposer.Disposable;
 import consulo.ide.wizard.newModule.NewModuleWizardContext;
 import consulo.ui.Component;
@@ -40,6 +41,8 @@ import java.io.File;
  * @author VISTALL
  * @since 2019-08-20
  */
+@Deprecated(forRemoval = true)
+@DeprecationInfo("Desktop variant of UnifiedProjectOrModuleNameStep. Use UnifiedProjectOrModuleNameStep")
 public class ProjectOrModuleNameStep<C extends NewModuleWizardContext> implements WizardStep<C> {
   private final JPanel myPanel;
   protected final JPanel myAdditionalContentPanel;
