@@ -1,0 +1,38 @@
+<assembly xmlns="http://maven.apache.org/ASSEMBLY/2.0.0"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://maven.apache.org/ASSEMBLY/2.0.0 http://maven.apache.org/xsd/assembly-2.0.0.xsd">
+  <id>win</id>
+  <formats>
+    <format>zip</format>
+  </formats>
+  <includeBaseDirectory>false</includeBaseDirectory>
+
+  <componentDescriptors>
+    <componentDescriptor>${project.basedir}/src/platform.base.xml</componentDescriptor>
+    <componentDescriptor>${project.basedir}/src/platform.desktop.xml</componentDescriptor>
+  </componentDescriptors>
+
+  <fileSets>
+    <fileSet>
+      <directory>${project.basedir}/boot/win/</directory>
+      <includes>
+        <include>*</include>
+      </includes>
+      <outputDirectory>${file.separator}Consulo${file.separator}</outputDirectory>
+    </fileSet>
+    <fileSet>
+      <directory>${project.basedir}/platform/desktop-awt/shared/</directory>
+      <includes>
+        <include>*/**</include>
+      </includes>
+      <outputDirectory>${file.separator}Consulo${file.separator}platform${file.separator}buildSNAPSHOT${file.separator}</outputDirectory>
+    </fileSet>
+    <fileSet>
+      <directory>${project.basedir}/platform/desktop-awt/win</directory>
+      <includes>
+        <include>*/**</include>
+      </includes>
+      <outputDirectory>${file.separator}Consulo${file.separator}platform${file.separator}buildSNAPSHOT${file.separator}</outputDirectory>
+    </fileSet>
+  </fileSets>
+</assembly>

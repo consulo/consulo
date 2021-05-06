@@ -30,9 +30,11 @@ public final class PluginIds {
 
   public static final PluginId CONSULO_PLATFORM_DESKTOP = PluginId.getId("consulo.platform.desktop");
 
+  public static final PluginId CONSULO_PLATFORM_DESKTOP_SWT = PluginId.getId("consulo.platform.desktop.swt");
+
   public static final PluginId CONSULO_PLATFORM_WEB = PluginId.getId("consulo.platform.web");
 
-  private static final Set<PluginId> ourPlatformIds = new HashSet<PluginId>(Arrays.asList(CONSULO_PLATFORM_DESKTOP, CONSULO_PLATFORM_WEB));
+  private static final Set<PluginId> ourPlatformIds = new HashSet<PluginId>(Arrays.asList(CONSULO_PLATFORM_DESKTOP, CONSULO_PLATFORM_DESKTOP_SWT, CONSULO_PLATFORM_WEB));
 
   public static boolean isPlatformImplementationPlugin(@Nonnull PluginId pluginId) {
     return ourPlatformIds.contains(pluginId);

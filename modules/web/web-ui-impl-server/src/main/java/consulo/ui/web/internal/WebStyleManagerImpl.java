@@ -47,6 +47,6 @@ public class WebStyleManagerImpl extends StyleManagerImpl {
   public void setCurrentStyle(@Nonnull Style style) {
     Style oldStyle = myCurrentStyle;
     myCurrentStyle = style;
-    fireStyleChanged(style, style);
+    fireStyleChanged(oldStyle, style);
   }
 }

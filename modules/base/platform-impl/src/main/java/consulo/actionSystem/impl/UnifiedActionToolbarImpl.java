@@ -20,11 +20,11 @@ import com.intellij.openapi.actionSystem.ActionToolbar;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.DataContext;
 import consulo.ui.Component;
+import consulo.ui.Size;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.HorizontalLayout;
 import consulo.ui.layout.Layout;
 import consulo.ui.layout.VerticalLayout;
-import consulo.ui.Size;
 import org.intellij.lang.annotations.MagicConstant;
 
 import javax.annotation.Nonnull;
@@ -57,6 +57,9 @@ public class UnifiedActionToolbarImpl implements ActionToolbar {
 
   private void rebuildUI() {
     myComponent = myOrientation == HORIZONTAL_ORIENTATION ? HorizontalLayout.create() : VerticalLayout.create();
+  }
+
+  public void setTargetComponent(final javax.swing.JComponent component) {
   }
 
   @Nonnull

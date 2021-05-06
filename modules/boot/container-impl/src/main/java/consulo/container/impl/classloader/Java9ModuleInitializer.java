@@ -31,31 +31,31 @@ import java.util.*;
 public class Java9ModuleInitializer {
   private static final Method java_io_File_toPath = findMethod(File.class, "toPath");
 
-  private static final Class java_nio_file_Path = findClass("java.nio.file.Path");
-  private static final Class java_lang_Module = findClass("java.lang.Module");
-  private static final Class java_lang_module_ModuleFinder = findClass("java.lang.module.ModuleFinder");
-  private static final Class java_lang_module_ModuleReference = findClass("java.lang.module.ModuleReference");
-  private static final Class java_lang_module_Configuration = findClass("java.lang.module.Configuration");
-  private static final Class java_lang_module_ModuleDescriptor = findClass("java.lang.module.ModuleDescriptor");
-  private static final Class java_lang_ModuleLayer = findClass("java.lang.ModuleLayer");
-  private static final Class java_lang_ModuleLayer$Controller = findClass("java.lang.ModuleLayer$Controller");
-  private static final Class java_util_function_Function = findClass("java.util.function.Function");
-  private static final Class java_util_Optional = findClass("java.util.Optional");
+  public static final Class java_nio_file_Path = findClass("java.nio.file.Path");
+  public static final Class java_lang_Module = findClass("java.lang.Module");
+  public static final Class java_lang_module_ModuleFinder = findClass("java.lang.module.ModuleFinder");
+  public static final Class java_lang_module_ModuleReference = findClass("java.lang.module.ModuleReference");
+  public static final Class java_lang_module_Configuration = findClass("java.lang.module.Configuration");
+  public static final Class java_lang_module_ModuleDescriptor = findClass("java.lang.module.ModuleDescriptor");
+  public static final Class java_lang_ModuleLayer = findClass("java.lang.ModuleLayer");
+  public static final Class java_lang_ModuleLayer$Controller = findClass("java.lang.ModuleLayer$Controller");
+  public static final Class java_util_function_Function = findClass("java.util.function.Function");
+  public static final Class java_util_Optional = findClass("java.util.Optional");
 
-  private static final Method java_lang_ModuleLayer_boot = findMethod(java_lang_ModuleLayer, "boot");
-  private static final Method java_lang_ModuleLayer_findModule = findMethod(java_lang_ModuleLayer, "findModule", String.class);
-  private static final Method java_lang_ModuleLayer_configuration = findMethod(java_lang_ModuleLayer, "configuration");
-  private static final Method java_lang_ModuleLayer_defineModules = findMethod(java_lang_ModuleLayer, "defineModules", java_lang_module_Configuration, List.class, java_util_function_Function);
-  private static final Method java_lang_ModuleLayer$Controller_layout = findMethod(java_lang_ModuleLayer$Controller, "layer");
+  public static final Method java_lang_ModuleLayer_boot = findMethod(java_lang_ModuleLayer, "boot");
+  public static final Method java_lang_ModuleLayer_findModule = findMethod(java_lang_ModuleLayer, "findModule", String.class);
+  public static final Method java_lang_ModuleLayer_configuration = findMethod(java_lang_ModuleLayer, "configuration");
+  public static final Method java_lang_ModuleLayer_defineModules = findMethod(java_lang_ModuleLayer, "defineModules", java_lang_module_Configuration, List.class, java_util_function_Function);
+  public static final Method java_lang_ModuleLayer$Controller_layout = findMethod(java_lang_ModuleLayer$Controller, "layer");
 
-  private static final Method java_lang_Module_addOpens = findMethod(java_lang_Module, "addOpens", String.class, java_lang_Module);
+  public static final Method java_lang_Module_addOpens = findMethod(java_lang_Module, "addOpens", String.class, java_lang_Module);
 
-  private static final Method java_util_Optional_get = findMethod(java_util_Optional, "get");
-  private static final Method java_lang_module_ModuleFinder_of = findMethod(java_lang_module_ModuleFinder, "of", Array.newInstance(java_nio_file_Path, 0).getClass());
-  private static final Method java_lang_module_ModuleFinder_findAll = findMethod(java_lang_module_ModuleFinder, "findAll");
-  private static final Method java_lang_module_ModuleReference_descriptor = findMethod(java_lang_module_ModuleReference, "descriptor");
-  private static final Method java_lang_module_ModuleDescriptor_name = findMethod(java_lang_module_ModuleDescriptor, "name");
-  private static final Method java_lang_module_Configuration_resolve =
+  public static final Method java_util_Optional_get = findMethod(java_util_Optional, "get");
+  public static final Method java_lang_module_ModuleFinder_of = findMethod(java_lang_module_ModuleFinder, "of", Array.newInstance(java_nio_file_Path, 0).getClass());
+  public static final Method java_lang_module_ModuleFinder_findAll = findMethod(java_lang_module_ModuleFinder, "findAll");
+  public static final Method java_lang_module_ModuleReference_descriptor = findMethod(java_lang_module_ModuleReference, "descriptor");
+  public static final Method java_lang_module_ModuleDescriptor_name = findMethod(java_lang_module_ModuleDescriptor, "name");
+  public static final Method java_lang_module_Configuration_resolve =
           findMethod(java_lang_module_Configuration, "resolve", java_lang_module_ModuleFinder, List.class, java_lang_module_ModuleFinder, Collection.class);
 
   private static final Object empyArray_java_nio_file_Path = Array.newInstance(java_nio_file_Path, 0);
@@ -88,7 +88,7 @@ public class Java9ModuleInitializer {
   /**
    * @return ModuleLayer
    */
-  public static Object initializeBaseModules(List<File> files, final ClassLoader targetClassLoader, ContainerLogger containerLogger) {
+  public static Object initializeBaseModules(List<File> files, final ClassLoader targetClassLoader, ContainerLogger containerLogger, Java9ModuleProcessor processor) {
     Object moduleFinder = moduleFinderOf(files);
 
     List<String> toResolve = new ArrayList<String>();
@@ -119,9 +119,6 @@ public class Java9ModuleInitializer {
 
       toResolve.add("consulo.hacking.java.base");
 
-      // TODO [VISTALL] this module must be moved to desktop impl
-      toResolve.add("consulo.desktop.awt.hacking");
-
       toResolve.add("consulo.util.lang");
       toResolve.add("consulo.util.collection");
       toResolve.add("consulo.util.concurrent");
@@ -140,6 +137,8 @@ public class Java9ModuleInitializer {
 
       toResolve.add("consulo.ui.api");
       //toResolve.add("svg.salamander");
+
+      processor.addBaseResolveModules(toResolve);
 
       Set findAll = instanceInvoke(java_lang_module_ModuleFinder_findAll, moduleFinder);
 
@@ -166,8 +165,7 @@ public class Java9ModuleInitializer {
     Object controller = staticInvoke(java_lang_ModuleLayer_defineModules, configuration, Collections.singletonList(bootModuleLayer), functionLambda);
 
     if (ourConsuloModulePathBoot) {
-      alohomora(bootModuleLayer, controller);
-      aberto(bootModuleLayer, controller);
+      processor.process(bootModuleLayer, controller);
     }
 
     return instanceInvoke(java_lang_ModuleLayer$Controller_layout, controller);
@@ -195,43 +193,14 @@ public class Java9ModuleInitializer {
     return instanceInvoke(java_lang_ModuleLayer$Controller_layout, controller);
   }
 
-  private static void aberto(Object bootModuleLayer, Object controller) {
-    Object javaBaseModule = findModuleUnwrap(bootModuleLayer, "java.base");
-
-    Object plaformModuleLayer = instanceInvoke(java_lang_ModuleLayer$Controller_layout, controller);
-
-    Object hackingJavaBaseModule = findModuleUnwrap(plaformModuleLayer, "consulo.hacking.java.base");
-
-    instanceInvoke(java_lang_Module_addOpens, javaBaseModule, "java.lang", hackingJavaBaseModule);
-  }
-
-  private static void alohomora(Object bootModuleLayer, Object controller) {
-    Object javaDesktopModule = findModuleUnwrap(bootModuleLayer, "java.desktop");
-
-    Object plaformModuleLayer = instanceInvoke(java_lang_ModuleLayer$Controller_layout, controller);
-
-    Object desktopHackingModule = findModuleUnwrap(plaformModuleLayer, "consulo.desktop.awt.hacking");
-
-    instanceInvoke(java_lang_Module_addOpens, javaDesktopModule, "sun.awt", desktopHackingModule);
-    instanceInvoke(java_lang_Module_addOpens, javaDesktopModule, "sun.swing", desktopHackingModule);
-    instanceInvoke(java_lang_Module_addOpens, javaDesktopModule, "sun.awt.image", desktopHackingModule);
-    instanceInvoke(java_lang_Module_addOpens, javaDesktopModule, "sun.java2d", desktopHackingModule);
-    instanceInvoke(java_lang_Module_addOpens, javaDesktopModule, "sun.font", desktopHackingModule);
-    instanceInvoke(java_lang_Module_addOpens, javaDesktopModule, "java.awt", desktopHackingModule);
-    instanceInvoke(java_lang_Module_addOpens, javaDesktopModule, "javax.swing", desktopHackingModule);
-    instanceInvoke(java_lang_Module_addOpens, javaDesktopModule, "javax.swing.plaf.basic", desktopHackingModule);
-    instanceInvoke(java_lang_Module_addOpens, javaDesktopModule, "javax.swing.text.html", desktopHackingModule);
-    instanceInvoke(java_lang_Module_addOpens, javaDesktopModule, "java.awt.peer", desktopHackingModule);
-  }
-
-  private static <T> T findModuleUnwrap(Object moduleLayer, String moduleName) {
+  public static <T> T findModuleUnwrap(Object moduleLayer, String moduleName) {
     Object optionalValue = instanceInvoke(java_lang_ModuleLayer_findModule, moduleLayer, moduleName);
 
     return instanceInvoke(java_util_Optional_get, optionalValue);
   }
 
   @SuppressWarnings("unchecked")
-  private static <T> T instanceInvoke(Method method, Object instance, Object... args) {
+  public static <T> T instanceInvoke(Method method, Object instance, Object... args) {
     try {
       return (T)method.invoke(instance, args);
     }
@@ -241,7 +210,7 @@ public class Java9ModuleInitializer {
   }
 
   @SuppressWarnings("unchecked")
-  private static <T> T staticInvoke(Method method, Object... args) {
+  public static <T> T staticInvoke(Method method, Object... args) {
     try {
       return (T)method.invoke(null, args);
     }

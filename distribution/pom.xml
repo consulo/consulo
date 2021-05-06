@@ -28,9 +28,10 @@
             <id>create-archive</id>
             <configuration>
               <descriptors>
-                <descriptor>${project.basedir}/src/assembly/win.xml</descriptor>
-                <descriptor>${project.basedir}/src/assembly/linux.xml</descriptor>
-                <descriptor>${project.basedir}/src/assembly/mac.xml</descriptor>
+                <descriptor>${project.basedir}/src/assembly/desktop-awt-win.xml</descriptor>
+                <descriptor>${project.basedir}/src/assembly/desktop-awt-linux.xml</descriptor>
+                <descriptor>${project.basedir}/src/assembly/desktop-awt-mac.xml</descriptor>
+                
                 <descriptor>${project.basedir}/src/assembly/web.xml</descriptor>
               </descriptors>
             </configuration>

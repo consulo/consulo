@@ -82,7 +82,7 @@ public abstract class ApplicationStarter {
   @Nonnull
   protected abstract Application createApplication(boolean isHeadlessMode, SimpleReference<StartupProgress> splashRef, CommandLineArgs args);
 
-  protected abstract void main(StatCollector stat, Runnable appInitalizeMark, ApplicationEx app, boolean newConfigFolder, @Nonnull CommandLineArgs args);
+  protected abstract void main(StatCollector stat, Runnable appInitializeMark, ApplicationEx app, boolean newConfigFolder, @Nonnull CommandLineArgs args);
 
   public boolean needStartInTransaction() {
     return false;
