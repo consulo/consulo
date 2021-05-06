@@ -22,7 +22,6 @@ import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.ui.VerticalFlowLayout;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.ui.CheckBoxList;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.LightColors;
 import com.intellij.ui.ScrollPaneFactory;
@@ -40,66 +39,16 @@ import javax.swing.*;
 import javax.swing.border.CompoundBorder;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author VISTALL
  * @since 16:30/15.10.13
  */
 public class EarlyAccessProgramConfigurable implements Configurable, Configurable.NoScroll {
-  public static class EarlyAccessCellRender implements ListCellRenderer {
-    @Override
-    public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-      CheckBoxList checkBoxList = (CheckBoxList)list;
-      EarlyAccessProgramDescriptor earlyAccessProgramDescriptor = (EarlyAccessProgramDescriptor)checkBoxList.getItemAt(index);
-
-      JCheckBox checkbox = (JCheckBox)value;
-
-      checkbox.setEnabled(list.isEnabled());
-      checkbox.setFocusPainted(false);
-      checkbox.setBorderPainted(true);
-
-      if (earlyAccessProgramDescriptor == null) {
-        return checkbox;
-      }
-      else {
-        checkbox.setEnabled(earlyAccessProgramDescriptor.isAvailable());
-
-        JPanel panel = new JPanel(new VerticalFlowLayout(VerticalFlowLayout.TOP, true, true)) {
-          @Override
-          public Dimension getPreferredSize() {
-            Dimension size = super.getPreferredSize();
-            return new Dimension(Math.min(size.width, 200), size.height);
-          }
-        };
-        panel.setEnabled(earlyAccessProgramDescriptor.isAvailable());
-
-        JPanel topPanel = new JPanel(new BorderLayout());
-        topPanel.add(checkbox, BorderLayout.WEST);
-
-        if (earlyAccessProgramDescriptor.isRestartRequired()) {
-          JBLabel comp = new JBLabel("Restart required");
-          comp.setForeground(JBColor.GRAY);
-          topPanel.add(comp, BorderLayout.EAST);
-        }
-
-        panel.add(topPanel);
-        panel.setBorder(new CustomLineBorder(0, 0, 1, 0));
-
-        String description = StringUtil.notNullizeIfEmpty(earlyAccessProgramDescriptor.getDescription(), "Description is not available");
-        JTextPane textPane = new JTextPane();
-        textPane.setText(description);
-        textPane.setEditable(false);
-        if (!earlyAccessProgramDescriptor.isAvailable()) {
-          textPane.setForeground(JBColor.GRAY);
-        }
-        panel.add(textPane);
-        return panel;
-      }
-    }
-  }
-
-  private CheckBoxList<EarlyAccessProgramDescriptor> myList;
+  private Map<EarlyAccessProgramDescriptor, JCheckBox> myCheckBoxes;
 
   private final Application myApplication;
 
@@ -123,10 +72,11 @@ public class EarlyAccessProgramConfigurable implements Configurable, Configurabl
   @Nullable
   @Override
   public JComponent createComponent() {
-    myList = new CheckBoxList<>();
-    myList.setBorder(null);
+    myCheckBoxes = new LinkedHashMap<>();
 
-    List<EarlyAccessProgramDescriptor> extensions = new ArrayList<>(EarlyAccessProgramDescriptor.EP_NAME.getExtensionList());
+    JPanel panel = new JPanel(new VerticalFlowLayout());
+
+    List<EarlyAccessProgramDescriptor> extensions = new ArrayList<>(EarlyAccessProgramDescriptor.EP_NAME.getExtensionList(myApplication));
     extensions.sort((o1, o2) -> {
       if (o1.isAvailable() && !o2.isAvailable()) {
         return -1;
@@ -139,13 +89,48 @@ public class EarlyAccessProgramConfigurable implements Configurable, Configurabl
 
     EarlyAccessProgramManager manager = ConfigurableSession.get().getOrCopy(myApplication, EarlyAccessProgramManager.class);
 
-    myList.setItems(extensions, EarlyAccessProgramDescriptor::getName, desc -> manager.getState(desc.getClass()));
-    myList.setCellRenderer(new EarlyAccessCellRender());
-    myList.setCheckBoxListListener((index, value) -> {
-      EarlyAccessProgramDescriptor descriptor = extensions.get(index);
-      manager.setState(descriptor.getClass(), value);
-    });
-    return JBUI.Panels.simplePanel().addToTop(createWarningPanel()).addToCenter(ScrollPaneFactory.createScrollPane(myList, true));
+    for (EarlyAccessProgramDescriptor descriptor : extensions) {
+      JPanel eapPanel = new JPanel(new VerticalFlowLayout(VerticalFlowLayout.TOP, true, true)) {
+        @Override
+        public Dimension getPreferredSize() {
+          Dimension size = super.getPreferredSize();
+          return new Dimension(Math.min(size.width, 200), size.height);
+        }
+      };
+      eapPanel.setEnabled(descriptor.isAvailable());
+
+      JPanel topPanel = new JPanel(new BorderLayout());
+      JCheckBox checkBox = new JCheckBox(descriptor.getName());
+      checkBox.setEnabled(descriptor.isAvailable());
+      checkBox.addItemListener(e -> manager.setState(descriptor.getClass(), checkBox.isSelected()));
+      myCheckBoxes.put(descriptor, checkBox);
+      
+      checkBox.setSelected(manager.getState(descriptor.getClass()));
+      topPanel.add(checkBox, BorderLayout.WEST);
+
+      if (descriptor.isRestartRequired()) {
+        JBLabel comp = new JBLabel("Restart required");
+        comp.setForeground(JBColor.GRAY);
+        topPanel.add(comp, BorderLayout.EAST);
+      }
+
+      eapPanel.add(topPanel);
+      eapPanel.setBorder(new CustomLineBorder(0, 0, 1, 0));
+
+      String description = StringUtil.notNullizeIfEmpty(descriptor.getDescription(), "Description is not available");
+      JTextPane textPane = new JTextPane();
+      textPane.setText(description);
+      textPane.setEditable(false);
+      if (!descriptor.isAvailable()) {
+        textPane.setForeground(JBColor.GRAY);
+      }
+      eapPanel.add(textPane);
+
+
+      panel.add(eapPanel);
+    }
+
+    return JBUI.Panels.simplePanel().addToTop(createWarningPanel()).addToCenter(ScrollPaneFactory.createScrollPane(panel, true));
   }
 
   private static JComponent createWarningPanel() {
@@ -168,16 +153,18 @@ public class EarlyAccessProgramConfigurable implements Configurable, Configurabl
   @RequiredUIAccess
   @Override
   public void disposeUIResources() {
-    myList = null;
+    myCheckBoxes = null;
   }
 
   @RequiredUIAccess
   @Override
   public boolean isModified() {
-    EarlyAccessProgramManager manager = ConfigurableSession.get().getOrCopy(myApplication, EarlyAccessProgramManager.class);
+    EarlyAccessProgramManager manager = EarlyAccessProgramManager.getInstance();
 
     for (EarlyAccessProgramDescriptor descriptor : EarlyAccessProgramDescriptor.EP_NAME.getExtensionList()) {
-      if (myList.isItemSelected(descriptor) != manager.getState(descriptor.getClass())) {
+      JCheckBox box = myCheckBoxes.get(descriptor);
+
+      if (box.isSelected() != manager.getState(descriptor.getClass())) {
         return true;
       }
     }
@@ -187,20 +174,18 @@ public class EarlyAccessProgramConfigurable implements Configurable, Configurabl
   @RequiredUIAccess
   @Override
   public void apply() throws ConfigurationException {
-    EarlyAccessProgramManager manager = ConfigurableSession.get().getOrCopy(myApplication, EarlyAccessProgramManager.class);
-
-    for (EarlyAccessProgramDescriptor descriptor : EarlyAccessProgramDescriptor.EP_NAME.getExtensionList()) {
-      manager.setState(descriptor.getClass(), myList.isItemSelected(descriptor));
-    }
+    // not need apply - because we already set it via listener, and session will copy it to manager
   }
 
   @RequiredUIAccess
   @Override
   public void reset() {
-    EarlyAccessProgramManager manager = ConfigurableSession.get().getOrCopy(myApplication, EarlyAccessProgramManager.class);
+    EarlyAccessProgramManager manager = EarlyAccessProgramManager.getInstance();
 
     for (EarlyAccessProgramDescriptor descriptor : EarlyAccessProgramDescriptor.EP_NAME.getExtensionList()) {
-      myList.setItemSelected(descriptor, manager.getState(descriptor.getClass()));
+      JCheckBox box = myCheckBoxes.get(descriptor);
+
+      box.setSelected(manager.getState(descriptor.getClass()));
     }
   }
 }

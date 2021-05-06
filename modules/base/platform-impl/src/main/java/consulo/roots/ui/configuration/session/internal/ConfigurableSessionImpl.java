@@ -63,11 +63,7 @@ public final class ConfigurableSessionImpl implements Disposable, ConfigurableSe
 
   @RequiredUIAccess
   public void commit() {
-    ourCurrentSession = null;
-
     commitImpl();
-
-    disposeWithTree();
   }
 
   @RequiredUIAccess
@@ -93,7 +89,7 @@ public final class ConfigurableSessionImpl implements Disposable, ConfigurableSe
 
       PersistentStateComponent copyInstance = componentManager.getInjectingContainer().getUnbindedInstance(key.serviceKey());
       copyInstance.loadState(originalState);
-      return originalInstance;
+      return copyInstance;
     });
   }
 

@@ -19,8 +19,8 @@ import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
-import com.intellij.util.containers.hash.LinkedHashMap;
 import consulo.logging.Logger;
+import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
 
@@ -28,6 +28,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author VISTALL
@@ -45,26 +46,32 @@ public class EarlyAccessProgramManager implements PersistentStateComponent<Eleme
     return getInstance().getState(key);
   }
 
-  private static final Logger LOGGER = Logger.getInstance(EarlyAccessProgramManager.class);
-  private Map<Class<? extends EarlyAccessProgramDescriptor>, Boolean> myStates = new LinkedHashMap<>();
+  private static final Logger LOG = Logger.getInstance(EarlyAccessProgramManager.class);
 
+  private final Map<Class<? extends EarlyAccessProgramDescriptor>, Boolean> myStates = new ConcurrentHashMap<>();
+
+  @Inject
   public EarlyAccessProgramManager() {
-    for (EarlyAccessProgramDescriptor descriptor : EarlyAccessProgramDescriptor.EP_NAME.getExtensionList()) {
-      myStates.put(descriptor.getClass(), descriptor.getDefaultState());
-    }
   }
 
   public boolean getState(@Nonnull Class<? extends EarlyAccessProgramDescriptor> key) {
     Boolean value = myStates.get(key);
     if (value == null) {
-      LOGGER.error("Descriptor is not registered: " + key.getName());
-      return false;
+      EarlyAccessProgramDescriptor extension = EarlyAccessProgramDescriptor.EP_NAME.findExtensionOrFail(key);
+      return extension.getDefaultState();
     }
     return value;
   }
 
   public void setState(Class<? extends EarlyAccessProgramDescriptor> key, boolean itemSelected) {
-    myStates.put(key, itemSelected);
+    EarlyAccessProgramDescriptor extension = EarlyAccessProgramDescriptor.EP_NAME.findExtensionOrFail(key);
+
+    if(extension.getDefaultState() == itemSelected) {
+      myStates.remove(key);
+    }
+    else {
+      myStates.put(key, itemSelected);
+    }
   }
 
   @Nullable
@@ -88,6 +95,8 @@ public class EarlyAccessProgramManager implements PersistentStateComponent<Eleme
 
   @Override
   public void loadState(Element state) {
+    myStates.clear();
+    
     Map<String, EarlyAccessProgramDescriptor> map = descriptorToMap();
 
     for (Element element : state.getChildren()) {
