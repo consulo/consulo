@@ -19,21 +19,21 @@
 
     <module>distribution</module>
 
-    <module>sandbox/desktop</module>
+    <module>sandbox/desktop-awt</module>
     <module>sandbox/desktop-swt</module>
     <module>sandbox/web</module>
     <module>sandbox/sand-language-plugin</module>
 
-    <module>modules/desktop/desktop-awt-hacking</module>
-    <module>modules/desktop/desktop-bootstrap</module>
-    <module>modules/desktop/desktop-ui-impl</module>
-    <module>modules/desktop/desktop-platform-impl</module>
-    <module>modules/desktop/desktop-lang-impl</module>
-    <module>modules/desktop/desktop-ui-laf-impl</module>
-    <module>modules/desktop/desktop-graph-impl</module>
-    <module>modules/desktop/desktop-util-awt</module>
-    <module>modules/desktop/desktop-base-laf-icon-library</module>
-    <module>modules/desktop/desktop-plugin</module>
+    <module>modules/desktop-awt/desktop-awt-hacking</module>
+    <module>modules/desktop-awt/desktop-bootstrap</module>
+    <module>modules/desktop-awt/desktop-ui-impl</module>
+    <module>modules/desktop-awt/desktop-platform-impl</module>
+    <module>modules/desktop-awt/desktop-lang-impl</module>
+    <module>modules/desktop-awt/desktop-ui-laf-impl</module>
+    <module>modules/desktop-awt/desktop-graph-impl</module>
+    <module>modules/desktop-awt/desktop-util-awt</module>
+    <module>modules/desktop-awt/desktop-base-laf-icon-library</module>
+    <module>modules/desktop-awt/desktop-plugin</module>
 
     <module>modules/desktop-swt/desktop-swt-bootstrap</module>
     <module>modules/desktop-swt/desktop-swt-plugin</module>

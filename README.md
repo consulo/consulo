@@ -65,7 +65,9 @@ If you want run Consulo from repository
 ## Sandbox Projects
 
  * Profiler API [link](https://github.com/consulo/profiler-sandbox)
- * Diagram support [link](https://github.com/consulo/consulo/tree/master/modules/independent/graph-api)
+ * Diagram support [link](https://github.com/consulo/consulo/tree/master/modules/base/graph-api)
+ * Web IDE [link](https://github.com/consulo/consulo/tree/master/modules/web)
+ * SWT UI [link](https://github.com/consulo/consulo/tree/master/modules/desktop-swt)
 
 ## Links
 
