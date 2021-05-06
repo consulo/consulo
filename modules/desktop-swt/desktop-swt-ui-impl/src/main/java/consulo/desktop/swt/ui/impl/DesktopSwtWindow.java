@@ -15,11 +15,9 @@
  */
 package consulo.desktop.swt.ui.impl;
 
-import consulo.ui.Component;
-import consulo.ui.MenuBar;
-import consulo.ui.Size;
-import consulo.ui.Window;
+import consulo.ui.*;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.util.lang.BitUtil;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -35,8 +33,13 @@ import javax.annotation.Nullable;
 public class DesktopSwtWindow extends DesktopSwtComponent<Shell> implements Window {
   private DesktopSwtComponent myContent;
 
-  public DesktopSwtWindow(String title) {
-    myComponent = new Shell();
+  public DesktopSwtWindow(String title, WindowOptions options) {
+    int flags = SWT.SHELL_TRIM;
+    flags = BitUtil.set(flags, SWT.CLOSE, options.isClosable());
+    flags = BitUtil.set(flags, SWT.RESIZE, options.isResizable());
+    flags = BitUtil.set(flags, SWT.MAX, options.isResizable());
+
+    myComponent = new Shell(flags);
     myComponent.setText(title);
     FillLayout layout = new FillLayout();
     layout.type = SWT.VERTICAL;
@@ -80,15 +83,6 @@ public class DesktopSwtWindow extends DesktopSwtComponent<Shell> implements Wind
   @RequiredUIAccess
   @Override
   public void setMenuBar(@Nullable MenuBar menuBar) {
-
-  }
-
-  @Override
-  public void setResizable(boolean value) {
-  }
-
-  @Override
-  public void setClosable(boolean value) {
 
   }
 

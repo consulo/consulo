@@ -62,7 +62,7 @@ public class UnifiedWelcomeFrameManager extends WelcomeFrameManager {
   @Nonnull
   @Override
   public IdeFrame createFrame() {
-    Window welcomeFrame = Window.create(FrameTitleUtil.buildTitle(), WindowOptions.builder().disableResize().disableClose().build());
+    Window welcomeFrame = Window.create(FrameTitleUtil.buildTitle(), WindowOptions.builder().disableResize().build());
     welcomeFrame.addListener(Window.CloseListener.class, () -> frameClosed());
     welcomeFrame.setSize(WelcomeFrameManager.getDefaultWindowSize());
     welcomeFrame.setContent(Label.create("Loading..."));

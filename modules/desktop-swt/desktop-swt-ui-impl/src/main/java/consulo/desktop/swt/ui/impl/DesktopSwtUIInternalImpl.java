@@ -116,12 +116,12 @@ public class DesktopSwtUIInternalImpl extends UIInternal {
   }
 
   @Override
-  public Label _Components_label(LocalizeValue text) {
+  public Label _Components_label(LocalizeValue text, LabelOptions options) {
     return new DesktopSwtLabelImpl(text);
   }
 
   @Override
-  public HtmlLabel _Components_htmlLabel(LocalizeValue html) {
+  public HtmlLabel _Components_htmlLabel(LocalizeValue html, LabelOptions options) {
     return null;
   }
 
@@ -265,8 +265,8 @@ public class DesktopSwtUIInternalImpl extends UIInternal {
 
   @Nonnull
   @Override
-  public Window _Window_modalWindow(String title) {
-    return new DesktopSwtWindow(title);
+  public Window _Window_create(String title, WindowOptions options) {
+    return new DesktopSwtWindow(title, options);
   }
 
   @Nullable

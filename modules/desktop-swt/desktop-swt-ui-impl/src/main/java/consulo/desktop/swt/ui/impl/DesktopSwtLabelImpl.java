@@ -71,17 +71,6 @@ public class DesktopSwtLabelImpl extends DesktopSwtComponent<org.eclipse.swt.wid
   }
 
   @Override
-  public void setHorizontalAlignment(@Nonnull HorizontalAlignment horizontalAlignment) {
-
-  }
-
-  @Nonnull
-  @Override
-  public HorizontalAlignment getHorizontalAlignment() {
-    return null;
-  }
-
-  @Override
   public void setImage(@Nullable Image icon) {
 
   }

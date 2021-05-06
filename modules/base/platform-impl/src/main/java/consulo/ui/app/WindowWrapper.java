@@ -65,7 +65,7 @@ public abstract class WindowWrapper {
       throw new IllegalArgumentException();
     }
 
-    myWindow = Window.create(myTitle, WindowOptions.builder().disableClose().build());
+    myWindow = Window.create(myTitle, WindowOptions.builder().build());
     Size defaultSize = getDefaultSize();
     if (defaultSize != null) {
       myWindow.setSize(defaultSize);
