@@ -36,7 +36,7 @@ import com.intellij.ui.GuiUtils;
 import com.intellij.util.Processor;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.disposer.Disposable;
-import gnu.trove.TObjectHashingStrategy;
+import consulo.util.collection.HashingStrategy;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
@@ -61,11 +61,11 @@ public final class EncodingProjectManagerImpl extends EncodingProjectManager imp
   private Charset myDefaultConsoleCharset;
   private final SimpleModificationTracker myModificationTracker = new SimpleModificationTracker();
   private BOMForNewUTF8Files myBomForNewUtf8Files = BOMForNewUTF8Files.NEVER;
-  private final Map<VirtualFilePointer, Charset> myMapping = ConcurrentCollectionFactory.createMap(new TObjectHashingStrategy<VirtualFilePointer>() {
+  private final Map<VirtualFilePointer, Charset> myMapping = ConcurrentCollectionFactory.createMap(new HashingStrategy<VirtualFilePointer>() {
     @Override
-    public int computeHashCode(VirtualFilePointer pointer) {
+    public int hashCode(VirtualFilePointer pointer) {
       // TODO !! hashCode is unstable - VirtualFilePointer URL can change
-      return FileUtil.PATH_HASHING_STRATEGY.computeHashCode(pointer.getUrl());
+      return FileUtil.PATH_HASHING_STRATEGY.hashCode(pointer.getUrl());
     }
 
     @Override

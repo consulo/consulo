@@ -1,7 +1,6 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.psi.stubs;
 
-import consulo.disposer.Disposable;
 import com.intellij.openapi.diagnostic.LogUtil;
 import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.util.io.BufferExposingByteArrayOutputStream;
@@ -13,19 +12,16 @@ import com.intellij.util.containers.RecentStringInterner;
 import com.intellij.util.io.AbstractStringEnumerator;
 import com.intellij.util.io.DataEnumeratorEx;
 import com.intellij.util.io.DataInputOutputUtil;
+import consulo.disposer.Disposable;
 import consulo.logging.Logger;
-import consulo.util.collection.ConcurrentIntObjectMap;
-import gnu.trove.THashMap;
+import consulo.util.collection.primitive.ints.ConcurrentIntObjectMap;
 import gnu.trove.TIntObjectHashMap;
 import gnu.trove.TObjectIntHashMap;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.*;
-import java.util.ArrayList;
-import java.util.BitSet;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Author: dmitrylomov
@@ -37,7 +33,7 @@ class StubSerializationHelper {
 
   private final TIntObjectHashMap<String> myIdToName = new TIntObjectHashMap<>();
   private final TObjectIntHashMap<String> myNameToId = new TObjectIntHashMap<>();
-  private final THashMap<String, Computable<ObjectStubSerializer>> myNameToLazySerializer = new THashMap<>();
+  private final Map<String, Computable<ObjectStubSerializer>> myNameToLazySerializer = new HashMap<>();
 
   private final ConcurrentIntObjectMap<ObjectStubSerializer> myIdToSerializer = ContainerUtil.createConcurrentIntObjectMap();
   private final Map<ObjectStubSerializer, Integer> mySerializerToId = ContainerUtil.newConcurrentMap();

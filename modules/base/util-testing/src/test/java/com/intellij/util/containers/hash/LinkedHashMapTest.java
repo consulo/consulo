@@ -15,15 +15,14 @@
  */
 package com.intellij.util.containers.hash;
 
+import consulo.util.collection.impl.map.LinkedHashMap;
 import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.Iterator;
 import java.util.Map;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.*;
 
 public class LinkedHashMapTest {
 

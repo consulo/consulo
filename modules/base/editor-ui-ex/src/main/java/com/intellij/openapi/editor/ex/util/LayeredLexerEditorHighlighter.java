@@ -2,7 +2,6 @@
 package com.intellij.openapi.editor.ex.util;
 
 import com.intellij.openapi.diagnostic.Attachment;
-import consulo.logging.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.RangeMarker;
 import com.intellij.openapi.editor.colors.EditorColorsScheme;
@@ -24,7 +23,9 @@ import com.intellij.util.ArrayUtil;
 import com.intellij.util.containers.FactoryMap;
 import com.intellij.util.containers.IntArrayList;
 import com.intellij.util.text.MergingCharSequence;
-import gnu.trove.TIntIntHashMap;
+import consulo.logging.Logger;
+import consulo.util.collection.primitive.ints.IntIntMap;
+import consulo.util.collection.primitive.ints.IntMaps;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
@@ -69,7 +70,7 @@ public class LayeredLexerEditorHighlighter extends LexerEditorHighlighter {
     final StringBuilder text = new StringBuilder();
     final IntArrayList lengths = new IntArrayList();
     final List<IElementType> tokenTypes = new ArrayList<>();
-    final TIntIntHashMap index2Global = new TIntIntHashMap();
+    final IntIntMap index2Global = IntMaps.newIntIntHashMap();
     private final String mySeparator;
     final int insertOffset;
 
@@ -80,7 +81,7 @@ public class LayeredLexerEditorHighlighter extends LexerEditorHighlighter {
     }
 
     void addToken(@Nonnull CharSequence tokenText, @Nonnull IElementType tokenType, int globalIndex) {
-      index2Global.put(tokenTypes.size(), globalIndex);
+      index2Global.putInt(tokenTypes.size(), globalIndex);
       text.append(mySeparator).append(tokenText);
       lengths.add(tokenText.length());
       tokenTypes.add(tokenType);
@@ -95,7 +96,7 @@ public class LayeredLexerEditorHighlighter extends LexerEditorHighlighter {
         IElementType type = tokenTypes.get(i);
         final int len = lengths.get(i);
         start += mySeparator.length();
-        final int globalIndex = index2Global.get(i);
+        final int globalIndex = index2Global.getInt(i);
         MappedRange[] ranges = getSegments().myRanges;
         checkNull(type, ranges[globalIndex]);
         ranges[globalIndex] = new MappedRange(mapper, document.createRangeMarker(start, start + len), type);

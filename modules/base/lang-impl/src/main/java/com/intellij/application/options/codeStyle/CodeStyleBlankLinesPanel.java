@@ -31,15 +31,14 @@ import com.intellij.util.containers.MultiMap;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import consulo.logging.Logger;
-import gnu.trove.THashMap;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.awt.*;
 import java.lang.reflect.Field;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 public class CodeStyleBlankLinesPanel extends CustomizableLanguageCodeStylePanel {
 
@@ -49,7 +48,7 @@ public class CodeStyleBlankLinesPanel extends CustomizableLanguageCodeStylePanel
   private final Set<String> myAllowedOptions = new HashSet<>();
   private boolean myAllOptionsAllowed = false;
   private boolean myIsFirstUpdate = true;
-  private final Map<String, String> myRenamedFields = new THashMap<>();
+  private final Map<String, String> myRenamedFields = new HashMap<>();
 
   private final MultiMap<String, Trinity<Class<? extends CustomCodeStyleSettings>, String, String>> myCustomOptions = new MultiMap<>();
 

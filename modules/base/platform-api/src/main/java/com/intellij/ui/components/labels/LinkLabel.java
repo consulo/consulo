@@ -13,7 +13,6 @@ import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.accessibility.ScreenReader;
 import consulo.awt.TargetAWT;
 import consulo.ui.image.Image;
-import gnu.trove.THashSet;
 
 import javax.accessibility.AccessibleAction;
 import javax.accessibility.AccessibleContext;
@@ -23,6 +22,7 @@ import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -34,7 +34,7 @@ public class LinkLabel<T> extends JLabel {
   private LinkListener<T> myLinkListener;
   private T myLinkData;
 
-  private static final Set<String> ourVisitedLinks = new THashSet<>();
+  private static final Set<String> ourVisitedLinks = new HashSet<>();
 
   private boolean myIsLinkActive;
 

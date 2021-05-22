@@ -27,15 +27,6 @@ import java.io.IOException;
  */
 public class EnumeratorStringDescriptor implements KeyDescriptor<String> {
   public static final EnumeratorStringDescriptor INSTANCE = new EnumeratorStringDescriptor();
-  @Override
-  public int getHashCode(final String value) {
-    return value.hashCode();
-  }
-
-  @Override
-  public boolean isEqual(final String val1, final String val2) {
-    return val1.equals(val2);
-  }
 
   @Override
   public void save(@Nonnull final DataOutput storage, @Nonnull final String value) throws IOException {

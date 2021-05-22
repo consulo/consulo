@@ -143,7 +143,7 @@ public class GotoActionItemProvider implements ChooseByNameItemProvider {
     }
     if (!StringUtil.isEmptyOrSpaces(pattern)) {
       Matcher matcher = buildMatcher(pattern);
-      if (optionDescriptions == null) optionDescriptions = new THashSet<>();
+      if (optionDescriptions == null) optionDescriptions = new HashSet<>();
       for (Map.Entry<String, String> entry : map.entrySet()) {
         if (matcher.matches(entry.getValue())) {
           optionDescriptions.add(new OptionDescription(null, entry.getKey(), entry.getValue(), null, entry.getValue()));
@@ -160,7 +160,7 @@ public class GotoActionItemProvider implements ChooseByNameItemProvider {
         }
       }
       for (OptionDescription description : optionDescriptions) {
-        for (ActionFromOptionDescriptorProvider converter : ActionFromOptionDescriptorProvider.EP.getExtensions()) {
+        for (ActionFromOptionDescriptorProvider converter : ActionFromOptionDescriptorProvider.EP.getExtensionList()) {
           AnAction action = converter.provide(description);
           if (action != null) options.add(new ActionWrapper(action, null, MatchMode.NAME, dataContext, myModel));
           options.add(description);

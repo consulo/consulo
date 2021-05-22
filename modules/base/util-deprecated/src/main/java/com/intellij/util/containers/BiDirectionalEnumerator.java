@@ -15,19 +15,21 @@
  */
 package com.intellij.util.containers;
 
-import gnu.trove.TIntObjectHashMap;
-import gnu.trove.TObjectHashingStrategy;
-import gnu.trove.TObjectProcedure;
+import consulo.util.collection.HashingStrategy;
+import consulo.util.collection.primitive.ints.IntMaps;
+import consulo.util.collection.primitive.ints.IntObjectMap;
+
 import javax.annotation.Nonnull;
+import java.util.function.Consumer;
 
 public class BiDirectionalEnumerator<T> extends Enumerator<T> {
   @Nonnull
-  private final TIntObjectHashMap<T> myIntToObjectMap;
+  private final IntObjectMap<T> myIntToObjectMap;
 
-  public BiDirectionalEnumerator(int expectNumber, @Nonnull TObjectHashingStrategy<T> strategy) {
+  public BiDirectionalEnumerator(int expectNumber, @Nonnull HashingStrategy<T> strategy) {
     super(expectNumber, strategy);
 
-    myIntToObjectMap = new TIntObjectHashMap<T>(expectNumber);
+    myIntToObjectMap = IntMaps.newIntObjectHashMap(expectNumber);
   }
 
   @Override
@@ -52,7 +54,7 @@ public class BiDirectionalEnumerator<T> extends Enumerator<T> {
     return hash;
   }
 
-  public void forEachValue(@Nonnull TObjectProcedure<T> procedure) {
-    myIntToObjectMap.forEachValue(procedure);
+  public void forEachValue(@Nonnull Consumer<T> procedure) {
+    myIntToObjectMap.values().forEach(procedure);
   }
 }

@@ -41,7 +41,7 @@ import com.intellij.util.ArrayUtil;
 import com.intellij.util.Consumer;
 import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.containers.StringInterner;
+import com.intellij.util.containers.Interner;
 import com.intellij.util.graph.CachingSemiGraph;
 import com.intellij.util.graph.DFSTBuilder;
 import com.intellij.util.graph.GraphGenerator;
@@ -50,7 +50,6 @@ import com.intellij.util.xmlb.annotations.Tag;
 import com.intellij.util.xmlb.annotations.Transient;
 import consulo.logging.Logger;
 import consulo.util.dataholder.Key;
-import gnu.trove.THashMap;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.TestOnly;
@@ -78,7 +77,7 @@ public class InspectionProfileImpl extends ProfileEx implements ModifiableModel,
   private final Map<String, Element> myUninstalledInspectionsSettings;
   private final ExternalInfo myExternalInfo = new ExternalInfo();
   protected InspectionProfileImpl mySource;
-  private Map<String, ToolsImpl> myTools = new THashMap<String, ToolsImpl>();
+  private Map<String, ToolsImpl> myTools = new HashMap<String, ToolsImpl>();
   private Map<String, Boolean> myDisplayLevelMap;
   @Attribute("is_locked")
   private boolean myLockedProfile;
@@ -267,7 +266,7 @@ public class InspectionProfileImpl extends ProfileEx implements ModifiableModel,
       ((SeverityProvider)getProfileManager()).getOwnSeverityRegistrar().readExternal(highlightElement);
     }
 
-    StringInterner interner = new StringInterner();
+    Interner<String> interner = Interner.createStringInterner();
     for (Element toolElement : element.getChildren(INSPECTION_TOOL_TAG)) {
       // make clone to avoid retaining memory via o.parent pointers
       toolElement = toolElement.clone();

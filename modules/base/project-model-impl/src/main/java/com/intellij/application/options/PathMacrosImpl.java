@@ -20,7 +20,6 @@ import com.intellij.openapi.components.*;
 import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.logging.Logger;
-import gnu.trove.THashSet;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
@@ -78,7 +77,7 @@ public class PathMacrosImpl extends PathMacros implements PersistentStateCompone
   public Set<String> getUserMacroNames() {
     myLock.readLock().lock();
     try {
-      return new THashSet<>(myMacros.keySet()); // keyset should not escape the lock
+      return new HashSet<>(myMacros.keySet()); // keyset should not escape the lock
     }
     finally {
       myLock.readLock().unlock();
@@ -158,7 +157,7 @@ public class PathMacrosImpl extends PathMacros implements PersistentStateCompone
   public Collection<String> getLegacyMacroNames() {
     try {
       myLock.readLock().lock();
-      return new THashSet<>(myLegacyMacros.keySet()); // keyset should not escape the lock
+      return new HashSet<>(myLegacyMacros.keySet()); // keyset should not escape the lock
     }
     finally {
       myLock.readLock().unlock();

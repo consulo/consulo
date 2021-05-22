@@ -28,17 +28,13 @@ import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.ArrayUtil;
 import consulo.logging.Logger;
-import gnu.trove.THashMap;
 import gnu.trove.THashSet;
 import gnu.trove.TObjectIntHashMap;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class OfflineViewParseUtil {
   private static final Logger LOGGER = Logger.getInstance(OfflineViewParseUtil.class);
@@ -59,7 +55,7 @@ public class OfflineViewParseUtil {
 
   public static Map<String, Set<OfflineProblemDescriptor>> parse(VirtualFile file) {
     final TObjectIntHashMap<String> fqName2IdxMap = new TObjectIntHashMap<>();
-    final Map<String, Set<OfflineProblemDescriptor>> package2Result = new THashMap<>();
+    final Map<String, Set<OfflineProblemDescriptor>> package2Result = new HashMap<>();
     try {
       Element rootElement = JDOMUtil.load(VfsUtil.virtualToIoFile(file));
       for (Element problemElement : rootElement.getChildren()) {
@@ -141,7 +137,7 @@ public class OfflineViewParseUtil {
   private static void appendDescriptor(final Map<String, Set<OfflineProblemDescriptor>> package2Result, final String packageName, final OfflineProblemDescriptor descriptor) {
     Set<OfflineProblemDescriptor> descriptors = package2Result.get(packageName);
     if (descriptors == null) {
-      descriptors = new THashSet<>();
+      descriptors = new HashSet<>();
       package2Result.put(packageName, descriptors);
     }
     descriptors.add(descriptor);

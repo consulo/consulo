@@ -19,5 +19,18 @@
  */
 package com.intellij.util.io;
 
-public interface KeyDescriptor<T> extends EqualityPolicy<T>, DataExternalizer<T> {
+import consulo.util.collection.HashingStrategy;
+
+import java.util.Objects;
+
+public interface KeyDescriptor<T> extends HashingStrategy<T>, DataExternalizer<T> {
+  @Override
+  default boolean equals(T o1, T o2) {
+    return Objects.equals(o1, o2);
+  }
+
+  @Override
+  default int hashCode(T object) {
+    return object.hashCode();
+  }
 }

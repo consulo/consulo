@@ -35,7 +35,7 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.MultiMap;
 import consulo.application.AccessRule;
 import consulo.logging.Logger;
-import gnu.trove.THashMap;
+import consulo.util.collection.Maps;
 
 import javax.annotation.Nonnull;
 import java.io.BufferedInputStream;
@@ -125,7 +125,7 @@ public class ArtifactCompilerUtil {
       @Nonnull
       @Override
       protected Map<String, Collection<Artifact>> createMap() {
-        return new THashMap<String, Collection<Artifact>>(FileUtil.PATH_HASHING_STRATEGY);
+        return Maps.newHashMap(FileUtil.PATH_HASHING_STRATEGY);
       }
     };
     AccessRule.read(() -> {

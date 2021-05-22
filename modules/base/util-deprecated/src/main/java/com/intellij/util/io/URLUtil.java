@@ -23,15 +23,20 @@ import com.intellij.util.Base64;
 import com.intellij.util.ThreeState;
 import consulo.annotation.DeprecationInfo;
 import consulo.logging.Logger;
-import gnu.trove.TIntArrayList;
+import consulo.util.collection.primitive.ints.IntList;
+import consulo.util.collection.primitive.ints.IntLists;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.zip.ZipFile;
@@ -145,7 +150,7 @@ public class URLUtil {
     while (i < len) {
       char c = s.charAt(i);
       if (c == '%') {
-        TIntArrayList bytes = new TIntArrayList();
+        IntList bytes = IntLists.newArrayList();
         while (i + 2 < len && s.charAt(i) == '%') {
           final int d1 = decode(s.charAt(i + 1));
           final int d2 = decode(s.charAt(i + 2));
@@ -160,9 +165,9 @@ public class URLUtil {
         if (!bytes.isEmpty()) {
           final byte[] bytesArray = new byte[bytes.size()];
           for (int j = 0; j < bytes.size(); j++) {
-            bytesArray[j] = (byte)bytes.getQuick(j);
+            bytesArray[j] = (byte)bytes.get(j);
           }
-          decoded.append(new String(bytesArray, CharsetToolkit.UTF8_CHARSET));
+          decoded.append(new String(bytesArray, StandardCharsets.UTF_8));
           continue;
         }
       }

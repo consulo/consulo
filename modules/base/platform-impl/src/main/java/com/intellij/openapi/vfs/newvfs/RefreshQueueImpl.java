@@ -2,7 +2,6 @@
 package com.intellij.openapi.vfs.newvfs;
 
 import com.intellij.concurrency.SensitiveProgressWrapper;
-import consulo.disposer.Disposable;
 import com.intellij.openapi.application.*;
 import com.intellij.openapi.application.ex.ApplicationEx;
 import com.intellij.openapi.diagnostic.FrequentEventDetector;
@@ -18,17 +17,18 @@ import com.intellij.util.concurrency.AppExecutorUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.io.storage.HeavyProcessLatch;
 import consulo.application.TransactionGuardEx;
+import consulo.disposer.Disposable;
 import consulo.logging.Logger;
-import gnu.trove.TLongObjectHashMap;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jetbrains.ide.PooledThreadExecutor;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Executor;
 import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.atomic.AtomicLong;
@@ -46,7 +46,7 @@ public class RefreshQueueImpl extends RefreshQueue implements Disposable {
   private final ProgressIndicator myRefreshIndicator = RefreshProgress.create(VfsBundle.message("file.synchronize.progress"));
 
   private int myBusyThreads;
-  private final TLongObjectHashMap<RefreshSession> mySessions = new TLongObjectHashMap<>();
+  private final Map<Long, RefreshSession> mySessions = new HashMap<>();
   private final FrequentEventDetector myEventCounter = new FrequentEventDetector(100, 100, FrequentEventDetector.Level.WARN);
   private final AtomicLong myWriteActionCounter = new AtomicLong();
 
@@ -220,10 +220,7 @@ public class RefreshQueueImpl extends RefreshQueue implements Disposable {
   @Override
   public void dispose() {
     synchronized (mySessions) {
-      mySessions.forEachValue(session -> {
-        ((RefreshSessionImpl)session).cancel();
-        return true;
-      });
+      mySessions.values().forEach(session -> ((RefreshSessionImpl)session).cancel());
     }
   }
 }

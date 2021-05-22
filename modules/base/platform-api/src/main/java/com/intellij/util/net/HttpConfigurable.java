@@ -42,9 +42,6 @@ import com.intellij.util.xmlb.annotations.Transient;
 import consulo.container.boot.ContainerPathManager;
 import consulo.disposer.Disposable;
 import consulo.logging.Logger;
-import gnu.trove.THashMap;
-import gnu.trove.THashSet;
-import gnu.trove.TObjectObjectProcedure;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
 
@@ -79,8 +76,8 @@ public class HttpConfigurable implements PersistentStateComponent<HttpConfigurab
   public boolean KEEP_PROXY_PASSWORD;
   public transient String LAST_ERROR;
 
-  private final THashMap<CommonProxy.HostInfo, ProxyInfo> myGenericPasswords = new THashMap<>();
-  private final Set<CommonProxy.HostInfo> myGenericCancelled = new THashSet<>();
+  private final Map<CommonProxy.HostInfo, ProxyInfo> myGenericPasswords = new HashMap<>();
+  private final Set<CommonProxy.HostInfo> myGenericCancelled = new HashSet<>();
 
   public String PROXY_EXCEPTIONS;
   public boolean USE_PAC_URL;
@@ -172,12 +169,14 @@ public class HttpConfigurable implements PersistentStateComponent<HttpConfigurab
 
   private void correctPasswords(@Nonnull HttpConfigurable to) {
     synchronized (myLock) {
-      to.myGenericPasswords.retainEntries(new TObjectObjectProcedure<CommonProxy.HostInfo, ProxyInfo>() {
-        @Override
-        public boolean execute(CommonProxy.HostInfo hostInfo, ProxyInfo proxyInfo) {
-          return proxyInfo.isStore();
+      Iterator<ProxyInfo> iterator = to.myGenericPasswords.values().iterator();
+      while (iterator.hasNext()) {
+        ProxyInfo next = iterator.next();
+
+        if(!next.isStore()) {
+          iterator.remove();
         }
-      });
+      }
     }
   }
 

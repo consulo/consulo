@@ -7,7 +7,6 @@ import com.intellij.ide.plugins.PluginManager;
 import com.intellij.ide.plugins.PluginManagerCore;
 import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.lang.Language;
-import consulo.disposer.Disposable;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
@@ -58,12 +57,12 @@ import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.MessageBusConnection;
 import consulo.container.PluginException;
 import consulo.container.plugin.PluginId;
+import consulo.disposer.Disposable;
 import consulo.logging.Logger;
 import consulo.util.ApplicationPropertiesComponent;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.DeprecatedMethodException;
-import gnu.trove.THashMap;
-import gnu.trove.THashSet;
+import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
@@ -72,8 +71,6 @@ import org.jetbrains.ide.PooledThreadExecutor;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import jakarta.inject.Inject;
-
 import java.io.*;
 import java.lang.reflect.Field;
 import java.net.URL;
@@ -104,7 +101,7 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements Persistent
   static final String DEFAULT_IGNORED = "*.hprof;*.pyc;*.pyo;*.rbc;*.yarb;*~;.DS_Store;.git;.hg;.svn;CVS;__pycache__;_svn;vssver.scc;vssver2.scc;";
 
   private static boolean RE_DETECT_ASYNC = !ApplicationManager.getApplication().isUnitTestMode();
-  private final Set<FileType> myDefaultTypes = new THashSet<>();
+  private final Set<FileType> myDefaultTypes = new HashSet<>();
   private FileTypeIdentifiableByVirtualFile[] mySpecialFileTypes = FileTypeIdentifiableByVirtualFile.EMPTY_ARRAY;
 
   private FileTypeAssocTable<FileType> myPatternsTable = new FileTypeAssocTable<>();
@@ -112,7 +109,7 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements Persistent
   private final IgnoredFileCache myIgnoredFileCache = new IgnoredFileCache(myIgnoredPatterns);
 
   private final FileTypeAssocTable<FileType> myInitialAssociations = new FileTypeAssocTable<>();
-  private final Map<FileNameMatcher, String> myUnresolvedMappings = new THashMap<>();
+  private final Map<FileNameMatcher, String> myUnresolvedMappings = new HashMap<>();
   private final RemovedMappingTracker myRemovedMappingTracker = new RemovedMappingTracker();
   private final Map<String, FileTypeBean> myPendingFileTypes = new HashMap<>();
   private final FileTypeAssocTable<FileTypeBean> myPendingAssociations = new FileTypeAssocTable<>();
@@ -1271,7 +1268,7 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements Persistent
 
   @Override
   public boolean isIgnoredFilesListEqualToCurrent(@Nonnull String list) {
-    Set<String> tempSet = new THashSet<>();
+    Set<String> tempSet = new HashSet<>();
     StringTokenizer tokenizer = new StringTokenizer(list, ";");
     while (tokenizer.hasMoreTokens()) {
       tempSet.add(tokenizer.nextToken());
@@ -1567,7 +1564,7 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements Persistent
 
   private void writeExtensionsMap(@Nonnull Element map, @Nonnull FileType type, boolean specifyTypeName) {
     List<FileNameMatcher> associations = myPatternsTable.getAssociations(type);
-    Set<FileNameMatcher> defaultAssociations = new THashSet<>(myInitialAssociations.getAssociations(type));
+    Set<FileNameMatcher> defaultAssociations = new HashSet<>(myInitialAssociations.getAssociations(type));
 
     for (FileNameMatcher matcher : associations) {
       boolean isDefaultAssociationContains = defaultAssociations.remove(matcher);
@@ -1631,7 +1628,7 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements Persistent
   }
 
   private void bindUnresolvedMappings(@Nonnull FileType fileType) {
-    for (FileNameMatcher matcher : new THashSet<>(myUnresolvedMappings.keySet())) {
+    for (FileNameMatcher matcher : new HashSet<>(myUnresolvedMappings.keySet())) {
       String name = myUnresolvedMappings.get(matcher);
       if (Comparing.equal(name, fileType.getName())) {
         myPatternsTable.addAssociation(matcher, fileType);

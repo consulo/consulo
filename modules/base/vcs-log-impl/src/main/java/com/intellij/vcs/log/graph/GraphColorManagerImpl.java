@@ -18,7 +18,6 @@ package com.intellij.vcs.log.graph;
 import consulo.logging.Logger;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.Function;
-import com.intellij.util.containers.hash.LinkedHashMap;
 import com.intellij.vcs.log.Hash;
 import com.intellij.vcs.log.VcsLogRefManager;
 import com.intellij.vcs.log.VcsRef;
@@ -26,6 +25,7 @@ import com.intellij.vcs.log.data.RefsModel;
 import javax.annotation.Nonnull;
 
 import java.util.Comparator;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class GraphColorManagerImpl implements GraphColorManager<Integer> {
@@ -75,7 +75,7 @@ public class GraphColorManagerImpl implements GraphColorManager<Integer> {
     private final Function<Integer, Hash> myHashGetter;
 
     @Nonnull
-    private final LinkedHashMap<Integer, Integer> myErrorWasReported = new LinkedHashMap<Integer, Integer>(10) {
+    private final LinkedHashMap<Integer, Integer> myErrorWasReported = new LinkedHashMap<>(10) {
       @Override
       protected boolean removeEldestEntry(Map.Entry<Integer, Integer> eldest) {
         return size() > 100;

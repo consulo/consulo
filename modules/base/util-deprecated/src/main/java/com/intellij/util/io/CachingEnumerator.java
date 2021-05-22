@@ -55,7 +55,7 @@ public class CachingEnumerator<Data> implements DataEnumerator<Data> {
     int stripe = -1;
 
     if (value != null) {
-      valueHashCode = myDataDescriptor.getHashCode(value);
+      valueHashCode = myDataDescriptor.hashCode(value);
       stripe = Math.abs(valueHashCode) & STRIPE_MASK;
 
       myStripeLocks[stripe].lock();
@@ -72,7 +72,7 @@ public class CachingEnumerator<Data> implements DataEnumerator<Data> {
         myStripeLocks[stripe2].lock();
         try {
           Data s = myIdToStringCache[stripe2].get(cachedId);
-          if (s != null && myDataDescriptor.isEqual(value, s)) return cachedId.intValue();
+          if (s != null && myDataDescriptor.equals(value, s)) return cachedId.intValue();
         }
         finally {
           myStripeLocks[stripe2].unlock();

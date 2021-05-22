@@ -12,11 +12,12 @@ import com.intellij.util.SmartList;
 import com.intellij.util.WalkingState;
 import com.intellij.util.concurrency.AtomicFieldUpdater;
 import consulo.logging.Logger;
-import gnu.trove.TLongHashSet;
+import consulo.util.collection.primitive.longs.LongSet;
+import consulo.util.collection.primitive.longs.LongSets;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.lang.ref.ReferenceQueue;
 import java.lang.ref.WeakReference;
 import java.util.Comparator;
@@ -799,7 +800,7 @@ abstract class IntervalTreeImpl<T> extends RedBlackTree<T> implements IntervalTr
       AtomicBoolean allValid = new AtomicBoolean(true);
       int[] keyCounter = new int[1];
       int[] nodeCounter = new int[1];
-      TLongHashSet ids = new TLongHashSet(keySize);
+      LongSet ids = LongSets.newHashSet(keySize);
       checkMax(getRoot(), 0, assertInvalid, allValid, keyCounter, nodeCounter, ids, true);
       if (assertInvalid) {
         assert nodeSize() == nodeCounter[0] : "node size: " + nodeSize() + "; actual: " + nodeCounter[0];
@@ -832,7 +833,7 @@ abstract class IntervalTreeImpl<T> extends RedBlackTree<T> implements IntervalTr
                               @Nonnull AtomicBoolean allValid,
                               @Nonnull int[] keyCounter,
                               @Nonnull int[] nodeCounter,
-                              @Nonnull TLongHashSet ids,
+                              @Nonnull LongSet ids,
                               boolean allDeltasUpAreNull) {
     if (root == null) return new IntTrinity(Integer.MAX_VALUE, Integer.MIN_VALUE, Integer.MIN_VALUE);
     long packedOffsets = root.cachedDeltaUpToRoot;
@@ -1053,15 +1054,23 @@ abstract class IntervalTreeImpl<T> extends RedBlackTree<T> implements IntervalTr
     IntervalNode<T> p2 = n2.getParent();
 
     if (p1 != null) {
-      if (p1.getLeft() == n1) p1.setLeft(n2);
-      else p1.setRight(n2);
+      if (p1.getLeft() == n1) {
+        p1.setLeft(n2);
+      }
+      else {
+        p1.setRight(n2);
+      }
     }
     else {
       root = n2;
     }
     if (p2 != null) {
-      if (p2.getLeft() == n2) p2.setLeft(p2 == n1 ? l2 : n1);
-      else p2.setRight(p2 == n1 ? r2 : n1);
+      if (p2.getLeft() == n2) {
+        p2.setLeft(p2 == n1 ? l2 : n1);
+      }
+      else {
+        p2.setRight(p2 == n1 ? r2 : n1);
+      }
     }
     else {
       root = n1;

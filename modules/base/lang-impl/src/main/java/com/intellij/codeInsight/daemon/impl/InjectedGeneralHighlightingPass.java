@@ -87,7 +87,7 @@ public class InjectedGeneralHighlightingPass extends GeneralHighlightingPass {
     Set<PsiFile> injected = getInjectedPsiFiles(allInsideElements, allOutsideElements, progress);
     setProgressLimit(injected.size());
 
-    Set<HighlightInfo> injectedResult = new THashSet<>();
+    Set<HighlightInfo> injectedResult = new HashSet<>();
     if (!addInjectedPsiHighlights(injected, progress, Collections.synchronizedSet(injectedResult))) {
       throw new ProcessCanceledException();
     }
@@ -97,7 +97,7 @@ public class InjectedGeneralHighlightingPass extends GeneralHighlightingPass {
       // sync here because all writes happened in another thread
       result = injectedResult;
     }
-    final Set<HighlightInfo> gotHighlights = new THashSet<>(100);
+    final Set<HighlightInfo> gotHighlights = new HashSet<>(100);
     final List<HighlightInfo> injectionsOutside = new ArrayList<>(gotHighlights.size());
     for (HighlightInfo info : result) {
       if (myRestrictRange.contains(info)) {
@@ -143,7 +143,7 @@ public class InjectedGeneralHighlightingPass extends GeneralHighlightingPass {
     ApplicationManager.getApplication().assertReadAccessAllowed();
 
     List<DocumentWindow> injected = InjectedLanguageManager.getInstance(myProject).getCachedInjectedDocumentsInRange(myFile, myFile.getTextRange());
-    final Collection<PsiElement> hosts = new THashSet<>(elements1.size() + elements2.size() + injected.size());
+    final Collection<PsiElement> hosts = new HashSet<>(elements1.size() + elements2.size() + injected.size());
 
     //rehighlight all injected PSI regardless the range,
     //since change in one place can lead to invalidation of injected PSI in (completely) other place.
@@ -162,7 +162,7 @@ public class InjectedGeneralHighlightingPass extends GeneralHighlightingPass {
     injectedLanguageManager.processInjectableElements(elements1, collectInjectableProcessor);
     injectedLanguageManager.processInjectableElements(elements2, collectInjectableProcessor);
 
-    final Set<PsiFile> outInjected = new THashSet<>();
+    final Set<PsiFile> outInjected = new HashSet<>();
     final PsiLanguageInjectionHost.InjectedPsiVisitor visitor = (injectedPsi, places) -> {
       synchronized (outInjected) {
         outInjected.add(injectedPsi);

@@ -48,7 +48,6 @@ import consulo.psi.PsiPackage;
 import consulo.psi.PsiPackageManager;
 import consulo.vfs.ArchiveFileSystem;
 import consulo.vfs.util.ArchiveVfsUtil;
-import gnu.trove.THashSet;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -204,7 +203,7 @@ public class BaseProjectViewDirectoryHelper {
     }
 
     PsiManager manager = psiDirectory.getManager();
-    Set<PsiElement> directoriesOnTheWayToContentRoots = new THashSet<>();
+    Set<PsiElement> directoriesOnTheWayToContentRoots = new HashSet<>();
     for (VirtualFile root : getTopLevelRoots(psiDirectory.getProject())) {
       VirtualFile current = root;
       while (current != null) {

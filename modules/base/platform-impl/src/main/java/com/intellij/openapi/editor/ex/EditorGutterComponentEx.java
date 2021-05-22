@@ -9,13 +9,13 @@ import com.intellij.openapi.editor.FoldRegion;
 import com.intellij.openapi.editor.TextAnnotationGutterProvider;
 import com.intellij.openapi.editor.markup.GutterIconRenderer;
 import consulo.util.dataholder.Key;
-import gnu.trove.TIntFunction;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;
+import java.util.function.IntUnaryOperator;
 
 public abstract class EditorGutterComponentEx extends JComponent implements EditorGutter {
   /**
@@ -57,9 +57,9 @@ public abstract class EditorGutterComponentEx extends JComponent implements Edit
   @Nullable
   public abstract Point getCenterPoint(GutterIconRenderer renderer);
 
-  public abstract void setLineNumberConvertor(@Nullable TIntFunction lineNumberConvertor);
+  public abstract void setLineNumberConvertor(@Nullable IntUnaryOperator lineNumberConvertor);
 
-  public abstract void setLineNumberConvertor(@Nullable TIntFunction lineNumberConvertor1, @Nullable TIntFunction lineNumberConvertor2);
+  public abstract void setLineNumberConvertor(@Nullable IntUnaryOperator lineNumberConvertor1, @Nullable IntUnaryOperator lineNumberConvertor2);
 
   public abstract void setShowDefaultGutterPopup(boolean show);
 

@@ -33,12 +33,9 @@ import com.intellij.diff.tools.util.base.TextDiffViewerUtil;
 import com.intellij.diff.tools.util.side.TwosideContentPanel;
 import com.intellij.diff.util.*;
 import com.intellij.icons.AllIcons;
-import consulo.awt.TargetAWT;
-import consulo.disposer.Disposable;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.ActionUtil;
 import com.intellij.openapi.command.UndoConfirmationPolicy;
-import consulo.logging.Logger;
 import com.intellij.openapi.diff.DiffBundle;
 import com.intellij.openapi.editor.*;
 import com.intellij.openapi.editor.event.VisibleAreaListener;
@@ -48,19 +45,22 @@ import com.intellij.openapi.editor.impl.DocumentImpl;
 import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.BooleanGetter;
-import consulo.disposer.Disposer;
-import consulo.ui.color.ColorValue;
-import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.vcs.CalledInAwt;
 import com.intellij.openapi.vcs.changes.patch.AppliedTextPatch;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.annotation.access.RequiredWriteAction;
-import gnu.trove.TIntArrayList;
+import consulo.awt.TargetAWT;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
+import consulo.logging.Logger;
+import consulo.ui.color.ColorValue;
+import consulo.util.collection.primitive.ints.IntList;
+import consulo.util.dataholder.Key;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
@@ -326,7 +326,7 @@ class ApplyPatchViewer implements DataProvider, Disposable {
     LineNumberConvertor convertor = builder.getLineConvertor();
     myPatchEditor.getGutterComponentEx().setLineNumberConvertor(convertor.createConvertor1(), convertor.createConvertor2());
 
-    TIntArrayList lines = builder.getSeparatorLines();
+    IntList lines = builder.getSeparatorLines();
     for (int i = 0; i < lines.size(); i++) {
       int offset = patchDocument.getLineStartOffset(lines.get(i));
       DiffDrawUtil.createLineSeparatorHighlighter(myPatchEditor, offset, offset, BooleanGetter.TRUE);

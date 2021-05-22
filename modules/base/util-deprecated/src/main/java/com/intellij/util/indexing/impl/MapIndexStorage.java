@@ -15,23 +15,23 @@
  */
 package com.intellij.util.indexing.impl;
 
-import consulo.logging.Logger;
 import com.intellij.util.IncorrectOperationException;
-import com.intellij.util.IntIntFunction;
 import com.intellij.util.Processor;
 import com.intellij.util.containers.SLRUCache;
 import com.intellij.util.indexing.StorageException;
 import com.intellij.util.indexing.ValueContainer;
 import com.intellij.util.io.*;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import consulo.logging.Logger;
 import org.jetbrains.annotations.TestOnly;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.function.IntUnaryOperator;
 
 public abstract class MapIndexStorage<Key, Value> implements IndexStorage<Key, Value> {
   private static final Logger LOG = Logger.getInstance(MapIndexStorage.class);
@@ -46,7 +46,7 @@ public abstract class MapIndexStorage<Key, Value> implements IndexStorage<Key, V
   private final boolean myKeyIsUniqueForIndexedFile;
   private final boolean myReadOnly;
   @Nonnull
-  private final IntIntFunction myInputRemapping;
+  private final IntUnaryOperator myInputRemapping;
 
   protected MapIndexStorage(@Nonnull File storageFile,
                             @Nonnull KeyDescriptor<Key> keyDescriptor,
@@ -63,7 +63,7 @@ public abstract class MapIndexStorage<Key, Value> implements IndexStorage<Key, V
                             boolean keyIsUniqueForIndexedFile,
                             boolean initialize,
                             boolean readOnly,
-                            @Nullable IntIntFunction inputRemapping) throws IOException {
+                            @Nullable IntUnaryOperator inputRemapping) throws IOException {
     myBaseStorageFile = storageFile;
     myKeyDescriptor = keyDescriptor;
     myCacheSize = cacheSize;
@@ -74,7 +74,7 @@ public abstract class MapIndexStorage<Key, Value> implements IndexStorage<Key, V
       LOG.assertTrue(myReadOnly, "input remapping allowed only for read-only storage");
     }
     else {
-      inputRemapping = IntIntFunction.IDENTITY;
+      inputRemapping = operand -> operand;
     }
     myInputRemapping = inputRemapping;
     if (initialize) initMapAndCache();

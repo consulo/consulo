@@ -38,14 +38,15 @@ import com.intellij.util.ui.UIUtil;
 import consulo.awt.TargetAWT;
 import consulo.fileTypes.ArchiveFileType;
 import consulo.logging.Logger;
-import gnu.trove.TIntArrayList;
+import consulo.util.collection.primitive.ints.IntList;
+import consulo.util.collection.primitive.ints.IntLists;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 /**
  * @author MYakovlev
@@ -242,14 +243,14 @@ public class PathEditor {
   public void removePaths(VirtualFile... paths) {
     final Set<VirtualFile> pathsSet = new java.util.HashSet<>(Arrays.asList(paths));
     int size = getRowCount();
-    final TIntArrayList indicesToRemove = new TIntArrayList(paths.length);
+    final IntList indicesToRemove = IntLists.newArrayList(paths.length);
     for (int idx = 0; idx < size; idx++) {
       VirtualFile path = getValueAt(idx);
       if (pathsSet.contains(path)) {
         indicesToRemove.add(idx);
       }
     }
-    final List list = ListUtil.removeIndices(myList, indicesToRemove.toNativeArray());
+    final List list = ListUtil.removeIndices(myList, indicesToRemove.toArray());
     itemsRemoved(list);
   }
 

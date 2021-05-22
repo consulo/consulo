@@ -17,7 +17,6 @@ package com.intellij.execution;
 
 import com.intellij.AppTopics;
 import com.intellij.execution.testframework.autotest.AutoTestWatcher;
-import consulo.disposer.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.editor.Document;
@@ -30,16 +29,18 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectCoreUtil;
 import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.util.Condition;
-import consulo.disposer.Disposer;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.Alarm;
 import com.intellij.util.Consumer;
 import com.intellij.util.PsiErrorElementUtil;
 import com.intellij.util.messages.MessageBusConnection;
-import gnu.trove.THashSet;
-import javax.annotation.Nonnull;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Set;
 
 public class DelayedDocumentWatcher implements AutoTestWatcher {
@@ -53,7 +54,7 @@ public class DelayedDocumentWatcher implements AutoTestWatcher {
   private final MyDocumentAdapter myListener;
   private final Runnable myAlarmRunnable;
 
-  private final Set<VirtualFile> myChangedFiles = new THashSet<>();
+  private final Set<VirtualFile> myChangedFiles = new HashSet<>();
   private boolean myDocumentSavingInProgress = false;
   private MessageBusConnection myConnection;
   private int myModificationStamp = 0;
@@ -62,7 +63,7 @@ public class DelayedDocumentWatcher implements AutoTestWatcher {
   public DelayedDocumentWatcher(@Nonnull Project project,
                                 int delayMillis,
                                 @Nonnull Consumer<Integer> modificationStampConsumer,
-                                @javax.annotation.Nullable Condition<VirtualFile> changedFileFilter) {
+                                @Nullable Condition<VirtualFile> changedFileFilter) {
     myProject = project;
     myAlarm = new Alarm(Alarm.ThreadToUse.SWING_THREAD, project);
     myDelayMillis = delayMillis;

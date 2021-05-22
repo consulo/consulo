@@ -20,7 +20,8 @@
 package com.intellij.util.io;
 
 import com.intellij.util.SystemProperties;
-import com.intellij.util.containers.hash.LinkedHashMap;
+import consulo.util.collection.impl.map.LinkedHashMap;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -46,7 +47,7 @@ public class PagePool {
   private PoolPageKey lastFinalizedKey = null;
 
   public PagePool(final int protectedPagesLimit, final int probationalPagesLimit) {
-    myProbationalQueue = new LinkedHashMap<PoolPageKey,Page>(probationalPagesLimit * 2, 1, true) {
+    myProbationalQueue = new LinkedHashMap<>(probationalPagesLimit * 2, 1, true) {
       @Override
       protected boolean removeEldestEntry(final Map.Entry<PoolPageKey, Page> eldest) {
         if (size() > probationalPagesLimit) {
@@ -57,7 +58,7 @@ public class PagePool {
       }
     };
 
-    myProtectedQueue = new LinkedHashMap<PoolPageKey, Page>(protectedPagesLimit, 1, true) {
+    myProtectedQueue = new LinkedHashMap<>(protectedPagesLimit, 1, true) {
       @Override
       protected boolean removeEldestEntry(final Map.Entry<PoolPageKey, Page> eldest) {
         if (size() > protectedPagesLimit) {

@@ -1,10 +1,11 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.ui;
 
-import gnu.trove.TObjectIntHashMap;
+import consulo.util.collection.primitive.objects.ObjectIntMap;
+import consulo.util.collection.primitive.objects.ObjectMaps;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;
@@ -15,10 +16,10 @@ import java.util.List;
 public class ListFocusTraversalPolicy extends LayoutFocusTraversalPolicy {
 
   private final Component[] myComponents;
-  private final TObjectIntHashMap<Component> myComponentToIndex;
+  private final ObjectIntMap<Component> myComponentToIndex;
 
   public ListFocusTraversalPolicy(@Nonnull List<? extends Component> components) {
-    myComponents = components.toArray(new Component[0]);
+    myComponents = components.toArray(Component[]::new);
     myComponentToIndex = indexMap(myComponents);
   }
 
@@ -42,7 +43,7 @@ public class ListFocusTraversalPolicy extends LayoutFocusTraversalPolicy {
     if (!myComponentToIndex.containsKey(aComponent)) {
       return null;
     }
-    return getNextComponent(myComponentToIndex.get(aComponent) + 1);
+    return getNextComponent(myComponentToIndex.getInt(aComponent) + 1);
   }
 
   @Override
@@ -50,7 +51,7 @@ public class ListFocusTraversalPolicy extends LayoutFocusTraversalPolicy {
     if (!myComponentToIndex.containsKey(aComponent)) {
       return null;
     }
-    return getPreviousComponent(myComponentToIndex.get(aComponent) - 1);
+    return getPreviousComponent(myComponentToIndex.getInt(aComponent) - 1);
   }
 
   @Nullable
@@ -88,14 +89,15 @@ public class ListFocusTraversalPolicy extends LayoutFocusTraversalPolicy {
   }
 
   @Nonnull
-  private static <X> TObjectIntHashMap<X> indexMap(@Nonnull X[] array) {
-    TObjectIntHashMap<X> map = new TObjectIntHashMap<>(array.length);
+  private static <X> ObjectIntMap<X> indexMap(@Nonnull X[] array) {
+    ObjectIntMap<X> map = ObjectMaps.newObjectIntHashMap(array.length);
     for (X x : array) {
-      if (!map.contains(x)) {
-        map.put(x, map.size());
+      if (!map.containsKey(x)) {
+        map.putInt(x, map.size());
       }
     }
-    map.compact();
+
+    ObjectMaps.trimToSize(map);
     return map;
   }
 }

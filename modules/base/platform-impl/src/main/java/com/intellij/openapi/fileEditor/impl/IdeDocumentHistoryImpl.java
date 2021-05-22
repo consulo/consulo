@@ -88,7 +88,7 @@ public class IdeDocumentHistoryImpl extends IdeDocumentHistory implements Dispos
   private PlaceInfo myCommandStartPlace;
   private boolean myCurrentCommandIsNavigation;
   private boolean myCurrentCommandHasChanges;
-  private final Set<VirtualFile> myChangedFilesInCurrentCommand = new THashSet<>();
+  private final Set<VirtualFile> myChangedFilesInCurrentCommand = new HashSet<>();
   private boolean myCurrentCommandHasMoves;
 
   private final PersistentHashMap<String, Long> myRecentFilesTimestampsMap;

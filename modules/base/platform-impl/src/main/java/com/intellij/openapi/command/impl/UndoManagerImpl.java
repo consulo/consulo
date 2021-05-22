@@ -18,7 +18,6 @@ package com.intellij.openapi.command.impl;
 import com.intellij.CommonBundle;
 import com.intellij.ide.DataManager;
 import com.intellij.idea.ActionsBundle;
-import consulo.disposer.Disposable;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
@@ -35,7 +34,6 @@ import com.intellij.openapi.ide.CopyPasteManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ex.ProjectEx;
 import com.intellij.openapi.util.Comparing;
-import consulo.disposer.Disposer;
 import com.intellij.openapi.util.EmptyRunnable;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.registry.Registry;
@@ -46,14 +44,15 @@ import com.intellij.psi.ExternalChangeAction;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.util.ObjectUtils;
 import consulo.annotation.access.RequiredWriteAction;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
 import consulo.fileEditor.impl.text.TextEditorProvider;
 import consulo.logging.Logger;
-import gnu.trove.THashSet;
+import jakarta.inject.Inject;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import jakarta.inject.Inject;
 import java.awt.*;
 import java.util.List;
 import java.util.*;
@@ -437,7 +436,7 @@ public class UndoManagerImpl implements UndoManager, Disposable {
 
   @Nonnull
   static Set<DocumentReference> getDocumentReferences(@Nonnull FileEditor editor) {
-    Set<DocumentReference> result = new THashSet<>();
+    Set<DocumentReference> result = new HashSet<>();
 
     if (editor instanceof DocumentReferenceProvider) {
       result.addAll(((DocumentReferenceProvider)editor).getDocumentReferences());
@@ -568,7 +567,7 @@ public class UndoManagerImpl implements UndoManager, Disposable {
 
   @Nonnull
   private Collection<DocumentReference> collectReferencesWithoutMergers() {
-    Set<DocumentReference> result = new THashSet<>();
+    Set<DocumentReference> result = new HashSet<>();
     myUndoStacksHolder.collectAllAffectedDocuments(result);
     myRedoStacksHolder.collectAllAffectedDocuments(result);
     return result;

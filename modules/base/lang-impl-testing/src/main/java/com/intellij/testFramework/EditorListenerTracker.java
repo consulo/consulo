@@ -20,10 +20,10 @@ import com.intellij.openapi.editor.impl.event.EditorEventMulticasterImpl;
 import com.intellij.openapi.project.DefaultProjectFactory;
 import com.intellij.openapi.project.impl.DefaultProjectFactoryImpl;
 import com.intellij.openapi.vfs.encoding.EncodingManager;
-import com.intellij.util.containers.hash.LinkedHashMap;
 import junit.framework.Assert;
 
 import java.util.EventListener;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -48,7 +48,7 @@ public class EditorListenerTracker {
 
       EditorEventMulticasterImpl multicaster = (EditorEventMulticasterImpl)EditorFactory.getInstance().getEventMulticaster();
       Map<Class<? extends EventListener>, List<? extends EventListener>> after = multicaster.getListeners();
-      Map<Class, List> leaked = new LinkedHashMap<Class, List>();
+      Map<Class, List> leaked = new LinkedHashMap<>();
       for (Map.Entry<Class<? extends EventListener>, List<? extends EventListener>> entry : after.entrySet()) {
         Class aClass = entry.getKey();
         List beforeList = before.get(aClass);

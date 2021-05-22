@@ -55,7 +55,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Deprecated
-@DeprecationInfo("Desktop onlu")
+@DeprecationInfo("Desktop implementation")
 public class DesktopScrollingModelImpl implements ScrollingModelEx {
   private static final Logger LOG = Logger.getInstance(DesktopScrollingModelImpl.class);
 

@@ -16,12 +16,12 @@
 package consulo.ide.util;
 
 import com.intellij.util.ImageLoader;
-import gnu.trove.THashMap;
 
 import java.awt.*;
 import java.net.URL;
 import java.util.Dictionary;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -29,7 +29,7 @@ import java.util.Map;
  * @since 6/7/17
  */
 public class URLDictionatyLoader extends Dictionary<URL, Image> {
-  private Map<URL, Image> myImages = new THashMap<>();
+  private Map<URL, Image> myImages = new HashMap<>();
 
   @Override
   public int size() {

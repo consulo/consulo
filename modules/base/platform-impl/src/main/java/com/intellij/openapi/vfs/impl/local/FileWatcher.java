@@ -16,7 +16,6 @@ import com.intellij.util.ConcurrencyUtil;
 import com.intellij.util.concurrency.AppExecutorUtil;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.logging.Logger;
-import gnu.trove.THashSet;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;
@@ -45,9 +44,9 @@ public class FileWatcher {
   };
 
   static class DirtyPaths {
-    final Set<String> dirtyPaths = new THashSet<>();
-    final Set<String> dirtyPathsRecursive = new THashSet<>();
-    final Set<String> dirtyDirectories = new THashSet<>();
+    final Set<String> dirtyPaths = new HashSet<>();
+    final Set<String> dirtyPathsRecursive = new HashSet<>();
+    final Set<String> dirtyDirectories = new HashSet<>();
 
     static final DirtyPaths EMPTY = new DirtyPaths();
 

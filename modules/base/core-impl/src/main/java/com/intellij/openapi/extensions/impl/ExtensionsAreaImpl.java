@@ -24,10 +24,10 @@ import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginId;
 import consulo.logging.Logger;
 import consulo.util.nodep.xml.node.SimpleXmlElement;
-import gnu.trove.THashMap;
 import org.jdom.Element;
 
 import javax.annotation.Nonnull;
+import java.util.HashMap;
 import java.util.Map;
 
 public class ExtensionsAreaImpl {
@@ -37,9 +37,9 @@ public class ExtensionsAreaImpl {
 
   private final Throwable myCreationTrace;
 
-  private final Map<String, Throwable> myEPTraces = DEBUG_REGISTRATION ? new THashMap<>() : null;
+  private final Map<String, Throwable> myEPTraces = DEBUG_REGISTRATION ? new HashMap<>() : null;
 
-  private final Map<String, ExtensionPointImpl> myExtensionPoints = new THashMap<>();
+  private final Map<String, ExtensionPointImpl> myExtensionPoints = new HashMap<>();
 
   private final ComponentManager myComponentManager;
 

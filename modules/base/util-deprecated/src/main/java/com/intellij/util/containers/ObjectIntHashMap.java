@@ -23,6 +23,7 @@ import javax.annotation.Nonnull;
 /**
  * return -1 instead of 0 if no such mapping exists
  */
+@Deprecated
 public class ObjectIntHashMap<K> extends TObjectIntHashMap<K> {
   public ObjectIntHashMap(int initialCapacity) {
     super(initialCapacity);

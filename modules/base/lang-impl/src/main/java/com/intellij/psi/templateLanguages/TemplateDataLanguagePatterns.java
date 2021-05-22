@@ -16,18 +16,22 @@
 package com.intellij.psi.templateLanguages;
 
 import com.intellij.lang.Language;
-import com.intellij.openapi.components.*;
+import com.intellij.openapi.components.PersistentStateComponent;
+import com.intellij.openapi.components.ServiceManager;
+import com.intellij.openapi.components.State;
+import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.fileTypes.FileNameMatcher;
 import com.intellij.openapi.fileTypes.FileTypeManager;
 import com.intellij.openapi.fileTypes.impl.FileTypeAssocTable;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
-import gnu.trove.THashMap;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
 
 import javax.annotation.Nullable;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author peter
@@ -60,7 +64,7 @@ public class TemplateDataLanguagePatterns implements PersistentStateComponent<El
   public void loadState(Element state) {
     myAssocTable = new FileTypeAssocTable<Language>();
 
-    final THashMap<String, Language> dialectMap = new THashMap<String, Language>();
+    final Map<String, Language> dialectMap = new HashMap<String, Language>();
     for (Language dialect : TemplateDataLanguageMappings.getTemplateableLanguages()) {
       dialectMap.put(dialect.getID(), dialect);
     }

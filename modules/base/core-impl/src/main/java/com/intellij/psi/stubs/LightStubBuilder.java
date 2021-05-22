@@ -17,7 +17,6 @@ package com.intellij.psi.stubs;
 
 import com.intellij.lang.*;
 import com.intellij.openapi.diagnostic.LogUtil;
-import consulo.logging.Logger;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.fileTypes.LanguageFileType;
 import com.intellij.openapi.progress.ProgressManager;
@@ -27,11 +26,12 @@ import com.intellij.psi.impl.source.PsiFileImpl;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.ILightStubFileElementType;
 import com.intellij.util.containers.BooleanStack;
+import com.intellij.util.containers.IntStack;
 import com.intellij.util.containers.Stack;
 import consulo.annotation.access.RequiredReadAction;
-import gnu.trove.TIntStack;
-import javax.annotation.Nonnull;
+import consulo.logging.Logger;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 public class LightStubBuilder implements StubBuilder {
@@ -77,7 +77,7 @@ public class LightStubBuilder implements StubBuilder {
 
   protected void buildStubTree(@Nonnull LighterAST tree, @Nonnull LighterASTNode root, @Nonnull StubElement rootStub) {
     final Stack<LighterASTNode> parents = new Stack<>();
-    final TIntStack childNumbers = new TIntStack();
+    final IntStack childNumbers = new IntStack();
     final BooleanStack parentsStubbed = new BooleanStack();
     final Stack<List<LighterASTNode>> kinderGarden = new Stack<>();
     final Stack<StubElement> parentStubs = new Stack<>();

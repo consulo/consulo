@@ -23,11 +23,11 @@ import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.formatter.common.AbstractBlock;
 import com.intellij.psi.templateLanguages.OuterLanguageElement;
-import com.intellij.util.containers.ContainerUtil;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -86,7 +86,7 @@ public class DataLanguageBlockWrapper implements ASTBlock, BlockEx, BlockWithPar
         Spacing spacing = ((TemplateLanguageBlock)block1).getRightNeighborSpacing(block2, this, i - 1);
         if (spacing != null) {
           if (myChildDataBorderSpacings == null) {
-            myChildDataBorderSpacings = ContainerUtil.newTroveMap();
+            myChildDataBorderSpacings = new HashMap<>();
           }
           myChildDataBorderSpacings.put(Pair.create(block1, block2), spacing);
         }

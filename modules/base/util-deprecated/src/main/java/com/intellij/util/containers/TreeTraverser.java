@@ -19,10 +19,10 @@ import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.Pair;
 import com.intellij.util.Function;
 import com.intellij.util.Functions;
+import consulo.util.collection.Maps;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.ArrayDeque;
 import java.util.Iterator;
 import java.util.Map;
@@ -334,7 +334,7 @@ public class TreeTraverser<T> {
 
   private final class TracingBfsIt extends TracingIt<T> {
     final ArrayDeque<T> queue = new ArrayDeque<T>();
-    final Map<T, T> paths = ContainerUtil.newTroveMap(ContainerUtil.<T>identityStrategy());
+    final Map<T, T> paths = Maps.newHashMap(ContainerUtil.<T>identityStrategy());
     T cur;
 
     TracingBfsIt(@Nonnull Iterable<? extends T> roots) {

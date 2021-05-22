@@ -409,7 +409,7 @@ public abstract class PersistentEnumeratorBase<Data> implements DataEnumeratorEx
 
     if (myKeyStorage.checkBytesAreTheSame(addr, value, myDataDescriptor)) return true;
     if (myAssumeDifferentSerializedBytesMeansObjectsInequality) return false;
-    return myDataDescriptor.isEqual(valueOf(idx), value);
+    return myDataDescriptor.equals(valueOf(idx), value);
   }
 
   protected int writeData(final Data value, int hashCode) {

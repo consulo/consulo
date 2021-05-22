@@ -28,15 +28,12 @@ import com.intellij.openapi.util.JDOMUtil;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.ResourceUtil;
-import com.intellij.util.SingletonSet;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.containers.StringInterner;
+import com.intellij.util.containers.Interner;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginManager;
 import consulo.ide.plugins.PluginsConfigurable;
 import consulo.logging.Logger;
-import gnu.trove.THashMap;
-import gnu.trove.THashSet;
 import jakarta.inject.Singleton;
 import org.jdom.Document;
 import org.jdom.Element;
@@ -55,21 +52,14 @@ import java.util.regex.Pattern;
  */
 @Singleton
 public class SearchableOptionsRegistrarImpl extends SearchableOptionsRegistrar {
-  private final Map<String, Set<OptionDescription>> myStorage = Collections.synchronizedMap(new THashMap<String, Set<OptionDescription>>(20, 0.9f));
-  private final Map<String, String> myId2Name = Collections.synchronizedMap(new THashMap<String, String>(20, 0.9f));
+  private final Map<String, Set<OptionDescription>> myStorage = Collections.synchronizedMap(new HashMap<String, Set<OptionDescription>>(20, 0.9f));
+  private final Map<String, String> myId2Name = Collections.synchronizedMap(new HashMap<String, String>(20, 0.9f));
 
   private final Set<String> myStopWords = Collections.synchronizedSet(new HashSet<String>());
-  private final Map<Pair<String, String>, Set<String>> myHighlightOption2Synonym = Collections.synchronizedMap(new THashMap<Pair<String, String>, Set<String>>());
+  private final Map<Pair<String, String>, Set<String>> myHighlightOption2Synonym = Collections.synchronizedMap(new HashMap<Pair<String, String>, Set<String>>());
   private volatile boolean allTheseHugeFilesAreLoaded;
 
-  @SuppressWarnings({"MismatchedQueryAndUpdateOfCollection"})
-  private final StringInterner myIdentifierTable = new StringInterner() {
-    @Override
-    @Nonnull
-    public synchronized String intern(@Nonnull final String name) {
-      return super.intern(name);
-    }
-  };
+  private final Interner<String> myIdentifierTable = Interner.createStringInterner();
 
   private static final Logger LOG = Logger.getInstance(SearchableOptionsRegistrarImpl.class);
   public static final int LOAD_FACTOR = 20;
@@ -153,7 +143,7 @@ public class SearchableOptionsRegistrarImpl extends SearchableOptionsRegistrar {
               final Pair<String, String> key = Pair.create(option, id);
               Set<String> foundSynonyms = myHighlightOption2Synonym.get(key);
               if (foundSynonyms == null) {
-                foundSynonyms = new THashSet<>();
+                foundSynonyms = new HashSet<>();
                 myHighlightOption2Synonym.put(key, foundSynonyms);
               }
               foundSynonyms.add(synonym);
@@ -210,12 +200,7 @@ public class SearchableOptionsRegistrarImpl extends SearchableOptionsRegistrar {
             new OptionDescription(null, myIdentifierTable.intern(id).trim(), hit != null ? myIdentifierTable.intern(hit).trim() : null, path != null ? myIdentifierTable.intern(path).trim() : null);
     Set<OptionDescription> configs = myStorage.get(option);
     if (configs == null) {
-      configs = new SingletonSet<>(description);
-      myStorage.put(new String(option), configs);
-    }
-    else if (configs instanceof SingletonSet) {
-      configs = new THashSet<>(configs);
-      configs.add(description);
+      configs = new HashSet<>(Set.of(description));
       myStorage.put(new String(option), configs);
     }
     else {
@@ -323,7 +308,7 @@ public class SearchableOptionsRegistrarImpl extends SearchableOptionsRegistrar {
           }
         }
         if (result == null) {
-          result = new THashSet<>();
+          result = new HashSet<>();
         }
         result.addAll(descriptions);
       }
@@ -388,7 +373,7 @@ public class SearchableOptionsRegistrarImpl extends SearchableOptionsRegistrar {
   public Map<String, Set<String>> findPossibleExtension(@Nonnull String prefix, final Project project) {
     loadHugeFilesIfNecessary();
     final boolean perProject = CodeStyle.usesOwnSettings(project);
-    final Map<String, Set<String>> result = new THashMap<>();
+    final Map<String, Set<String>> result = new HashMap<>();
     int count = 0;
     final Set<String> prefixes = getProcessedWordsWithoutStemming(prefix);
     for (String opt : prefixes) {
@@ -408,7 +393,7 @@ public class SearchableOptionsRegistrarImpl extends SearchableOptionsRegistrar {
         }
         Set<String> foundHits = result.get(groupName);
         if (foundHits == null) {
-          foundHits = new THashSet<>();
+          foundHits = new HashSet<>();
           result.put(groupName, foundHits);
         }
         foundHits.add(description.getHit());

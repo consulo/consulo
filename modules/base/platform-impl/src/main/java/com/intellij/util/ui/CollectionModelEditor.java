@@ -20,13 +20,15 @@ import com.intellij.util.ReflectionUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.OrderedSet;
 import consulo.logging.Logger;
-import gnu.trove.THashMap;
-import gnu.trove.TObjectObjectProcedure;
-import javax.annotation.Nonnull;
+import consulo.util.collection.Maps;
+import gnu.trove.TObjectHashingStrategy;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.util.List;
+import java.util.Map;
+import java.util.function.BiConsumer;
 
 public abstract class CollectionModelEditor<T, E extends CollectionItemEditor<T>> implements ElementProducer<T> {
   protected static final Logger LOG = Logger.getInstance(CollectionModelEditor.class);
@@ -76,12 +78,7 @@ public abstract class CollectionModelEditor<T, E extends CollectionItemEditor<T>
 
   public void processModifiedItems(@Nonnull final PairProcessor<T, T> processor) {
     // don't want to expose TObjectObjectProcedure - avoid implementation details
-    helper.process(new TObjectObjectProcedure<T, T>() {
-      @Override
-      public boolean execute(T newItem, T oldItem) {
-        return processor.process(newItem, oldItem);
-      }
-    });
+    helper.process((newItem, oldItem) -> processor.process(newItem, oldItem));
   }
 
   @Nonnull
@@ -94,10 +91,10 @@ public abstract class CollectionModelEditor<T, E extends CollectionItemEditor<T>
   }
 
   protected class ModelHelper {
-    final OrderedSet<T> originalItems = new OrderedSet<>(ContainerUtil.<T>identityStrategy());
+    final OrderedSet<T> originalItems = new OrderedSet<>(TObjectHashingStrategy.IDENTITY);
 
-    private final THashMap<T, T> modifiedToOriginal = new THashMap<>(ContainerUtil.<T>identityStrategy());
-    private final THashMap<T, T> originalToModified = new THashMap<>(ContainerUtil.<T>identityStrategy());
+    private final Map<T, T> modifiedToOriginal = Maps.newHashMap(ContainerUtil.<T>identityStrategy());
+    private final Map<T, T> originalToModified = Maps.newHashMap(ContainerUtil.<T>identityStrategy());
 
     public void reset(@Nullable List<T> newOriginalItems) {
       if (newOriginalItems != null) {
@@ -140,8 +137,8 @@ public abstract class CollectionModelEditor<T, E extends CollectionItemEditor<T>
       return !modifiedToOriginal.isEmpty();
     }
 
-    public void process(@Nonnull TObjectObjectProcedure<T, T> procedure) {
-      modifiedToOriginal.forEachEntry(procedure);
+    public void process(@Nonnull BiConsumer<T, T> procedure) {
+      modifiedToOriginal.forEach(procedure);
     }
   }
 

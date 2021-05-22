@@ -23,10 +23,11 @@ import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.vcs.log.VcsRef;
 import com.intellij.vcs.log.util.TroveUtil;
-import gnu.trove.TIntArrayList;
+import consulo.util.collection.primitive.ints.IntList;
+import consulo.util.collection.primitive.ints.IntLists;
 import gnu.trove.TIntObjectHashMap;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -37,7 +38,7 @@ public class CompressedRefs {
 
   // maps each commit id to the list of tag ids on this commit
   @Nonnull
-  private final TIntObjectHashMap<TIntArrayList> myTags = new TIntObjectHashMap<>();
+  private final TIntObjectHashMap<IntList> myTags = new TIntObjectHashMap<>();
   // maps each commit id to the list of branches on this commit
   @Nonnull
   private final TIntObjectHashMap<List<VcsRef>> myBranches = new TIntObjectHashMap<>();
@@ -59,7 +60,7 @@ public class CompressedRefs {
       }
     });
     myTags.forEachValue(list -> {
-      list.trimToSize();
+      IntLists.trimToSize(list);
       return true;
     });
     myHashMap.flush();
@@ -69,11 +70,10 @@ public class CompressedRefs {
   SmartList<VcsRef> refsToCommit(int index) {
     SmartList<VcsRef> result = new SmartList<>();
     if (myBranches.containsKey(index)) result.addAll(myBranches.get(index));
-    TIntArrayList tags = myTags.get(index);
+    IntList tags = myTags.get(index);
     if (tags != null) {
       tags.forEach(value -> {
         result.add(myHashMap.getVcsRef(value));
-        return true;
       });
     }
     return result;
@@ -128,10 +128,10 @@ public class CompressedRefs {
     list.add(ref);
   }
 
-  private static void putRefIndex(@Nonnull TIntObjectHashMap<TIntArrayList> map, @Nonnull VcsRef ref, @Nonnull VcsLogStorage hashMap) {
+  private static void putRefIndex(@Nonnull TIntObjectHashMap<IntList> map, @Nonnull VcsRef ref, @Nonnull VcsLogStorage hashMap) {
     int index = hashMap.getCommitIndex(ref.getCommitHash(), ref.getRoot());
-    TIntArrayList list = map.get(index);
-    if (list == null) map.put(index, list = new TIntArrayList());
+    IntList list = map.get(index);
+    if (list == null) map.put(index, list = IntLists.newArrayList());
     list.add(hashMap.getRefIndex(ref));
   }
 }

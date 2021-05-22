@@ -47,6 +47,7 @@ import consulo.awt.TargetAWT;
 import consulo.disposer.Disposable;
 import consulo.logging.Logger;
 import consulo.ui.image.Image;
+import consulo.util.collection.primitive.ints.IntLists;
 import consulo.util.lang.DeprecatedMethodException;
 import gnu.trove.TIntArrayList;
 
@@ -173,7 +174,7 @@ public class TrafficLightRenderer implements ErrorStripeRenderer, Disposable {
       for (ProgressableTextEditorHighlightingPass passStatus : passes) {
         s.append(String.format("(%s %2.0f%% %b)", passStatus.getPresentableName(), passStatus.getProgress() * 100, passStatus.isFinished()));
       }
-      s.append("; error count: ").append(errorCount.length).append(": ").append(new TIntArrayList(errorCount));
+      s.append("; error count: ").append(errorCount.length).append(": ").append(IntLists.newArrayList(errorCount));
       return s.toString();
     }
   }

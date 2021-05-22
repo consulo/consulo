@@ -26,21 +26,23 @@ import com.intellij.codeInspection.reference.RefManagerImpl;
 import com.intellij.codeInspection.reference.RefVisitor;
 import com.intellij.concurrency.JobLauncher;
 import com.intellij.lang.Language;
-import consulo.logging.Logger;
 import com.intellij.openapi.progress.EmptyProgressIndicator;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.util.Conditions;
 import com.intellij.openapi.util.TextRange;
-import com.intellij.psi.*;
+import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiElementVisitor;
+import com.intellij.psi.PsiFile;
+import com.intellij.psi.PsiRecursiveVisitor;
 import com.intellij.util.CommonProcessors;
 import com.intellij.util.Processor;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.SmartHashSet;
-import gnu.trove.THashMap;
+import consulo.logging.Logger;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.*;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
@@ -277,7 +279,7 @@ public class InspectionEngine {
   // returns map tool -> set of languages and dialects for that tool specified in plugin.xml
   @Nonnull
   public static Map<LocalInspectionToolWrapper, Set<String>> getToolsToSpecifiedLanguages(@Nonnull List<LocalInspectionToolWrapper> toolWrappers) {
-    Map<LocalInspectionToolWrapper, Set<String>> toolToLanguages = new THashMap<>();
+    Map<LocalInspectionToolWrapper, Set<String>> toolToLanguages = new HashMap<>();
     for (LocalInspectionToolWrapper wrapper : toolWrappers) {
       ProgressManager.checkCanceled();
       Set<String> specifiedLangIds = getDialectIdsSpecifiedForTool(wrapper);

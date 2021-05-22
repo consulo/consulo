@@ -31,7 +31,6 @@ import com.intellij.util.containers.ContainerUtil;
 import consulo.ide.impl.DataValidators;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolder;
-import gnu.trove.THashSet;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 import org.jetbrains.annotations.NonNls;
@@ -43,6 +42,7 @@ import javax.annotation.Nullable;
 import java.awt.*;
 import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -254,7 +254,7 @@ public abstract class BaseDataManager extends DataManager {
 
       GetDataRule<T> dataRule = getDataRule(dataId);
       if (dataRule != null) {
-        final Set<Key> ids = alreadyComputedIds == null ? new THashSet<>() : alreadyComputedIds;
+        final Set<Key> ids = alreadyComputedIds == null ? new HashSet<>() : alreadyComputedIds;
         ids.add(dataId);
         data = dataRule.getData(id -> getDataFromProvider(provider, id, ids));
 

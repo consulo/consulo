@@ -48,7 +48,6 @@ import consulo.ui.ToggleSwitch;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
-import gnu.trove.THashMap;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
@@ -84,7 +83,7 @@ public class GotoActionModel implements ChooseByNameModel, Comparator<Object>, D
   private final NotNullLazyValue<Map<String, String>> myConfigurablesNames = VolatileNotNullLazyValue.createValue(() -> {
     if (SwingUtilities.isEventDispatchThread()) LOG.error("Configurable names must not be loaded on EDT");
 
-    Map<String, String> map = new THashMap<>();
+    Map<String, String> map = new HashMap<>();
     for (Configurable configurable : BaseShowSettingsUtil.buildConfigurables(getProject())) {
       if (configurable instanceof SearchableConfigurable) {
         map.put(((SearchableConfigurable)configurable).getId(), configurable.getDisplayName());

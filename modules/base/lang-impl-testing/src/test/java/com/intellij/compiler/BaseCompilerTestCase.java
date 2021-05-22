@@ -256,7 +256,7 @@ public abstract class BaseCompilerTestCase extends ModuleTestCase {
   }
 
   private Set<String> getRelativePaths(String[] paths) {
-    final Set<String> set = new THashSet<String>();
+    final Set<String> set = new HashSet<String>();
     final String basePath = myProject.getBaseDir().getPath();
     for (String path : paths) {
       set.add(StringUtil.trimStart(StringUtil.trimStart(FileUtil.toSystemIndependentName(path), basePath), "/"));

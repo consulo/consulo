@@ -15,12 +15,11 @@
  */
 package consulo.builtInServer.impl.net.xml;
 
-import consulo.logging.Logger;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.builtInServer.http.HttpRequestHandler;
 import consulo.builtInServer.http.Responses;
 import consulo.builtInServer.xml.XmlRpcServer;
-import gnu.trove.THashMap;
+import consulo.logging.Logger;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufInputStream;
 import io.netty.buffer.Unpooled;
@@ -29,6 +28,7 @@ import io.netty.handler.codec.http.FullHttpRequest;
 import io.netty.handler.codec.http.HttpMethod;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import io.netty.handler.codec.http.QueryStringDecoder;
+import jakarta.inject.Singleton;
 import org.apache.xmlrpc.XmlRpcException;
 import org.apache.xmlrpc.XmlRpcHandler;
 import org.apache.xmlrpc.XmlRpcRequest;
@@ -39,12 +39,12 @@ import org.xml.sax.SAXParseException;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import jakarta.inject.Singleton;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Method;
+import java.util.HashMap;
 import java.util.Map;
 
 @Singleton
@@ -63,7 +63,7 @@ public class XmlRpcServerImpl implements XmlRpcServer {
 
   private static final Logger LOG = Logger.getInstance(XmlRpcServerImpl.class);
 
-  private final Map<String, Object> handlerMapping = new THashMap<>();
+  private final Map<String, Object> handlerMapping = new HashMap<>();
 
   private final XmlRpcHttpRequestConfigImpl myXmlRpcConfig = new XmlRpcHttpRequestConfigImpl();
 

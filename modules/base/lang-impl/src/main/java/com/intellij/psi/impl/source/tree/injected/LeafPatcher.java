@@ -19,7 +19,6 @@ package com.intellij.psi.impl.source.tree.injected;
 import com.intellij.lang.ASTNode;
 import com.intellij.openapi.diagnostic.Attachment;
 import com.intellij.openapi.util.Comparing;
-import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.LiteralTextEscaper;
@@ -27,9 +26,10 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.impl.DebugUtil;
 import com.intellij.psi.impl.source.tree.*;
 import consulo.logging.Logger;
-import gnu.trove.THashMap;
-import javax.annotation.Nonnull;
+import consulo.util.dataholder.Key;
 
+import javax.annotation.Nonnull;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -42,7 +42,7 @@ class LeafPatcher extends RecursiveTreeElementWalkingVisitor {
   private String hostText;
   private LiteralTextEscaper currentTextEscaper;
   private TextRange rangeInHost;
-  private final Map<LeafElement, String> newTexts = new THashMap<>();
+  private final Map<LeafElement, String> newTexts = new HashMap<>();
   @Nonnull
   private final List<? extends PlaceInfo> myPlaceInfos;
   private final StringBuilder catLeafs;

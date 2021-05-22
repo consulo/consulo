@@ -3,8 +3,6 @@
 package com.intellij.openapi.editor.impl;
 
 import com.intellij.openapi.application.ApplicationManager;
-import consulo.awt.TargetAWT;
-import consulo.logging.Logger;
 import com.intellij.openapi.editor.*;
 import com.intellij.openapi.editor.colors.EditorColors;
 import com.intellij.openapi.editor.colors.EditorColorsScheme;
@@ -15,12 +13,16 @@ import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.annotation.DeprecationInfo;
+import consulo.logging.Logger;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.Collection;
 import java.util.List;
 
+@Deprecated
+@DeprecationInfo("Desktop implementation")
 public class DesktopSelectionModelImpl implements SelectionModel {
   private static final Logger LOG = Logger.getInstance(DesktopSelectionModelImpl.class);
 

@@ -26,13 +26,9 @@ import consulo.container.plugin.PluginManager;
 import consulo.logging.Logger;
 import consulo.util.nodep.map.SimpleMultiMap;
 import consulo.util.nodep.xml.node.SimpleXmlElement;
-import gnu.trove.THashSet;
 
 import javax.annotation.Nonnull;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author VISTALL
@@ -59,7 +55,7 @@ public class PluginExtensionRegistrator {
     }
 
     ExtensionPoint[] extensionPoints = area.getExtensionPoints();
-    Set<String> epNames = new THashSet<>(extensionPoints.length);
+    Set<String> epNames = new HashSet<>(extensionPoints.length);
     for (ExtensionPoint point : extensionPoints) {
       epNames.add(point.getName());
     }

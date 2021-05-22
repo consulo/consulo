@@ -18,7 +18,8 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.EmptyClipboardOwner;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import gnu.trove.TIntArrayList;
+import consulo.util.collection.primitive.ints.IntList;
+import consulo.util.collection.primitive.ints.IntLists;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;
@@ -476,10 +477,10 @@ public class DesktopCaretModelImpl implements CaretModel, PrioritizedDocumentLis
       int index = 0;
       int oldCaretCount = myCarets.size();
       Iterator<DesktopCaretImpl> caretIterator = myCarets.iterator();
-      TIntArrayList selectionStartsBefore = null;
-      TIntArrayList selectionStartsAfter = null;
-      TIntArrayList selectionEndsBefore = null;
-      TIntArrayList selectionEndsAfter = null;
+      IntList selectionStartsBefore = null;
+      IntList selectionStartsAfter = null;
+      IntList selectionEndsBefore = null;
+      IntList selectionEndsAfter = null;
       for (CaretState caretState : caretStates) {
         DesktopCaretImpl caret;
         if (index++ < oldCaretCount) {
@@ -506,10 +507,10 @@ public class DesktopCaretModelImpl implements CaretModel, PrioritizedDocumentLis
         if (caretState != null && caretState.getSelectionStart() != null && caretState.getSelectionEnd() != null) {
           if (selectionStartsBefore == null) {
             int capacity = caretStates.size();
-            selectionStartsBefore = new TIntArrayList(capacity);
-            selectionStartsAfter = new TIntArrayList(capacity);
-            selectionEndsBefore = new TIntArrayList(capacity);
-            selectionEndsAfter = new TIntArrayList(capacity);
+            selectionStartsBefore = IntLists.newArrayList(capacity);
+            selectionStartsAfter = IntLists.newArrayList(capacity);
+            selectionEndsBefore = IntLists.newArrayList(capacity);
+            selectionEndsAfter = IntLists.newArrayList(capacity);
           }
           selectionStartsBefore.add(caret.getSelectionStart());
           selectionEndsBefore.add(caret.getSelectionEnd());
@@ -534,7 +535,7 @@ public class DesktopCaretModelImpl implements CaretModel, PrioritizedDocumentLis
       }
       if (selectionStartsBefore != null) {
         SelectionEvent event =
-                new SelectionEvent(myEditor, selectionStartsBefore.toNativeArray(), selectionEndsBefore.toNativeArray(), selectionStartsAfter.toNativeArray(), selectionEndsAfter.toNativeArray());
+                new SelectionEvent(myEditor, selectionStartsBefore.toArray(), selectionEndsBefore.toArray(), selectionStartsAfter.toArray(), selectionEndsAfter.toArray());
         myEditor.getSelectionModel().fireSelectionChanged(event);
       }
     });

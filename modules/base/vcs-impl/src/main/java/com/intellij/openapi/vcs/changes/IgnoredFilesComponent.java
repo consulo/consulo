@@ -24,10 +24,8 @@ import com.intellij.openapi.vfs.newvfs.BulkFileListener;
 import com.intellij.openapi.vfs.newvfs.events.VFileContentChangeEvent;
 import com.intellij.openapi.vfs.newvfs.events.VFileEvent;
 import com.intellij.util.containers.ContainerUtil;
-import gnu.trove.THashMap;
-import gnu.trove.THashSet;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.util.*;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
@@ -45,7 +43,7 @@ public class IgnoredFilesComponent {
   public IgnoredFilesComponent(@Nonnull Project project, final boolean registerListener) {
     myProject = project;
     myFilesToIgnore = new LinkedHashSet<>();
-    myFilesMap = new THashMap<>();
+    myFilesMap = new HashMap<>();
 
     if (registerListener) {
       project.getMessageBus().connect(project).subscribe(VirtualFileManager.VFS_CHANGES, new BulkFileListener.Adapter() {
@@ -61,7 +59,7 @@ public class IgnoredFilesComponent {
         }
       });
     }
-    myDirectoriesManuallyRemovedFromIgnored = new THashSet<>();
+    myDirectoriesManuallyRemovedFromIgnored = new HashSet<>();
   }
 
   public IgnoredFilesComponent(@Nonnull IgnoredFilesComponent other) {

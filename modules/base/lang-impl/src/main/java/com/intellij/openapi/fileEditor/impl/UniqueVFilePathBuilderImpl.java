@@ -18,7 +18,6 @@ package com.intellij.openapi.fileEditor.impl;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.UniqueVFilePathBuilder;
 import com.intellij.openapi.project.Project;
-import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.io.UniqueNameBuilder;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -31,16 +30,13 @@ import com.intellij.psi.util.CachedValuesManager;
 import com.intellij.psi.util.PsiModificationTracker;
 import com.intellij.util.ConcurrencyUtil;
 import com.intellij.util.containers.ContainerUtil;
-import gnu.trove.THashSet;
+import consulo.util.dataholder.Key;
 import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.io.File;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -126,7 +122,7 @@ public class UniqueVFilePathBuilderImpl extends UniqueVFilePathBuilder {
     Collection<VirtualFile> filesWithSameName = skipNonOpenedFiles ? Collections.emptySet() :
                                                 FilenameIndex.getVirtualFilesByName(project, fileName,
                                                                                     scope);
-    THashSet<VirtualFile> setOfFilesWithTheSameName = new THashSet<>(filesWithSameName);
+    Set<VirtualFile> setOfFilesWithTheSameName = new HashSet<>(filesWithSameName);
     // add open files out of project scope
     for(VirtualFile openFile: FileEditorManager.getInstance(project).getOpenFiles()) {
       if (openFile.getName().equals(fileName)) {

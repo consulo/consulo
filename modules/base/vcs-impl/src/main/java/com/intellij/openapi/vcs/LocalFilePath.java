@@ -58,7 +58,7 @@ public class LocalFilePath implements FilePath {
 
   @Override
   public int hashCode() {
-    int result = FileUtil.PATH_HASHING_STRATEGY.computeHashCode(myPath);
+    int result = FileUtil.PATH_HASHING_STRATEGY.hashCode(myPath);
     result = 31 * result + (myIsDirectory ? 1 : 0);
     return result;
   }

@@ -32,12 +32,13 @@ import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil;
 import com.intellij.util.FileContentUtil;
 import com.intellij.util.IncorrectOperationException;
 import consulo.psi.injection.LanguageInjectionSupport;
-import gnu.trove.THashSet;
 import org.intellij.plugins.intelliLang.Configuration;
 
 import javax.annotation.Nonnull;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author Dmitry Avdeev
@@ -95,7 +96,7 @@ public class UnInjectLanguageAction implements IntentionAction, LowPriorityActio
   }
 
   private static boolean defaultFunctionalityWorked(final PsiLanguageInjectionHost host) {
-    final THashSet<String> languages = new THashSet<String>();
+    final Set<String> languages = new HashSet<String>();
     final List<Pair<PsiElement, TextRange>> files = InjectedLanguageManager.getInstance(host.getProject()).getInjectedPsiFiles(host);
     if (files == null) return false;
     for (Pair<PsiElement, TextRange> pair : files) {

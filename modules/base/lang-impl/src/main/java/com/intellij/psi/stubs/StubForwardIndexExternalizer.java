@@ -5,14 +5,14 @@ import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.util.indexing.ID;
 import com.intellij.util.io.DataExternalizer;
 import com.intellij.util.io.DataInputOutputUtil;
-import gnu.trove.THashMap;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -58,7 +58,7 @@ public abstract class StubForwardIndexExternalizer<StubKeySerializationState> im
     }
     int stubIndicesValueMapSize = DataInputOutputUtil.readINT(in);
     if (stubIndicesValueMapSize > 0) {
-      THashMap<StubIndexKey, Map<Object, StubIdList>> stubIndicesValueMap = requestedIndex != null ? null : new THashMap<>(stubIndicesValueMapSize);
+      Map<StubIndexKey, Map<Object, StubIdList>> stubIndicesValueMap = requestedIndex != null ? null : new HashMap<>(stubIndicesValueMapSize);
       StubIndexImpl stubIndex = (StubIndexImpl)StubIndex.getInstance();
       StubKeySerializationState stubKeySerializationState = createStubIndexKeySerializationState(in, stubIndicesValueMapSize);
       for (int i = 0; i < stubIndicesValueMapSize; ++i) {

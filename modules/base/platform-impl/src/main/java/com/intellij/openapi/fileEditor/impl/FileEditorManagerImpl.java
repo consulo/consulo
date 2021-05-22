@@ -87,7 +87,6 @@ import consulo.ui.UIAccess;
 import consulo.ui.color.ColorValue;
 import consulo.ui.docking.BaseDockManager;
 import consulo.util.dataholder.Key;
-import gnu.trove.THashSet;
 import kava.beans.PropertyChangeEvent;
 import kava.beans.PropertyChangeListener;
 import org.jdom.Element;
@@ -1172,7 +1171,7 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
   @Override
   @Nonnull
   public VirtualFile[] getOpenFiles() {
-    Set<VirtualFile> openFiles = new THashSet<>();
+    Set<VirtualFile> openFiles = new HashSet<>();
     for (EditorsSplitters each : getAllSplitters()) {
       openFiles.addAll(Arrays.asList(each.getOpenFiles()));
     }

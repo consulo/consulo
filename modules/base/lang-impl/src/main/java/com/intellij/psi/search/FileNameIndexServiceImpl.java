@@ -7,13 +7,12 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.Processor;
 import com.intellij.util.indexing.FileBasedIndex;
 import com.intellij.util.indexing.IdFilter;
-import gnu.trove.THashSet;
 import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
-
-import jakarta.inject.Singleton;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Set;
 
 @Singleton
@@ -28,7 +27,7 @@ public final class FileNameIndexServiceImpl implements FileNameIndexService {
   @Nonnull
   @Override
   public Collection<VirtualFile> getVirtualFilesByName(Project project, @Nonnull String name, @Nonnull GlobalSearchScope scope, IdFilter filter) {
-    Set<VirtualFile> files = new THashSet<>();
+    Set<VirtualFile> files = new HashSet<>();
     myIndex.processValues(FilenameIndexImpl.NAME, name, null, (file, value) -> {
       files.add(file);
       return true;

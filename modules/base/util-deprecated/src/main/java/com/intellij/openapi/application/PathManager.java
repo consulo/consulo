@@ -21,7 +21,6 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.io.URLUtil;
 import com.sun.jna.TypeMapper;
 import com.sun.jna.platform.FileUtils;
-import gnu.trove.THashSet;
 import org.jdom.Document;
 import org.jetbrains.annotations.NonNls;
 
@@ -122,7 +121,6 @@ public class PathManager {
             Nonnull.class,                // module 'annotations'
             SystemInfoRt.class,           // module 'util-rt'
             Document.class,               // jDOM
-            THashSet.class,               // trove4j
             TypeMapper.class,             // JNA
             FileUtils.class,              // JNA (jna-platform)
     };

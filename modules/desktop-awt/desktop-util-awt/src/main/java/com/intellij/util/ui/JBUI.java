@@ -13,10 +13,9 @@ import com.intellij.ui.scale.JBUIScale;
 import com.intellij.util.Function;
 import com.intellij.util.ui.components.BorderLayoutPanel;
 import consulo.desktop.util.awt.component.VerticalLayoutPanel;
-import gnu.trove.TDoubleObjectHashMap;
 import kava.beans.PropertyChangeListener;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -25,9 +24,8 @@ import javax.swing.plaf.UIResource;
 import java.awt.*;
 import java.awt.image.ImageObserver;
 import java.lang.ref.WeakReference;
-import java.util.ArrayList;
-import java.util.EnumMap;
 import java.util.List;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static com.intellij.util.ui.JBUI.ScaleType.*;
@@ -655,7 +653,8 @@ public class JBUI {
     @Nonnull
     public Scale of(double value) {
       return Scale.create(value, this);
-    }}
+    }
+  }
 
   /**
    * A scale factor of a particular type.
@@ -665,19 +664,14 @@ public class JBUI {
     private final ScaleType type;
 
     // The cache radically reduces potentially thousands of equal Scale instances.
-    private static final ThreadLocal<EnumMap<ScaleType, TDoubleObjectHashMap<Scale>>> cache = new ThreadLocal<EnumMap<ScaleType, TDoubleObjectHashMap<Scale>>>() {
-      @Override
-      protected EnumMap<ScaleType, TDoubleObjectHashMap<Scale>> initialValue() {
-        return new EnumMap<ScaleType, TDoubleObjectHashMap<Scale>>(ScaleType.class);
-      }
-    };
+    private static final ThreadLocal<EnumMap<ScaleType, Map<Double, Scale>>> cache = ThreadLocal.withInitial(() -> new EnumMap<>(ScaleType.class));
 
     @Nonnull
     public static Scale create(double value, @Nonnull ScaleType type) {
-      EnumMap<ScaleType, TDoubleObjectHashMap<Scale>> emap = cache.get();
-      TDoubleObjectHashMap<Scale> map = emap.get(type);
+      EnumMap<ScaleType, Map<Double, Scale>> emap = cache.get();
+      Map<Double, Scale> map = emap.get(type);
       if (map == null) {
-        emap.put(type, map = new TDoubleObjectHashMap<Scale>());
+        emap.put(type, map = new HashMap<>());
       }
       Scale scale = map.get(value);
       if (scale != null) return scale;

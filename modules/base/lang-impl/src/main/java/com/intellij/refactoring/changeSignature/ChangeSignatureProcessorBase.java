@@ -20,7 +20,6 @@ import com.intellij.lang.findUsages.DescriptiveNameUtil;
 import com.intellij.openapi.command.undo.BasicUndoableAction;
 import com.intellij.openapi.command.undo.UndoManager;
 import com.intellij.openapi.command.undo.UndoableAction;
-import consulo.logging.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiManager;
@@ -36,15 +35,11 @@ import com.intellij.refactoring.util.MoveRenameUsageInfo;
 import com.intellij.usageView.UsageInfo;
 import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.containers.hash.HashMap;
-import com.intellij.util.containers.hash.HashSet;
+import consulo.logging.Logger;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author Maxim.Medvedev
@@ -73,8 +68,7 @@ public abstract class ChangeSignatureProcessorBase extends BaseRefactoringProces
   protected UsageInfo[] findUsages() {
     List<UsageInfo> infos = new ArrayList<UsageInfo>();
 
-    final ChangeSignatureUsageProcessor[] processors = ChangeSignatureUsageProcessor.EP_NAME.getExtensions();
-    for (ChangeSignatureUsageProcessor processor : processors) {
+    for (ChangeSignatureUsageProcessor processor : ChangeSignatureUsageProcessor.EP_NAME.getExtensionList()) {
       ContainerUtil.addAll(infos, processor.findUsages(myChangeInfo));
     }
     infos = filterUsages(infos);
@@ -82,7 +76,7 @@ public abstract class ChangeSignatureProcessorBase extends BaseRefactoringProces
   }
 
   protected List<UsageInfo> filterUsages(List<UsageInfo> infos) {
-    Map<PsiElement, MoveRenameUsageInfo> moveRenameInfos = new HashMap<PsiElement, MoveRenameUsageInfo>();
+    Map<PsiElement, MoveRenameUsageInfo> moveRenameInfos = new HashMap<>();
     Set<PsiElement> usedElements = new HashSet<PsiElement>();
 
     List<UsageInfo> result = new ArrayList<UsageInfo>(infos.size() / 2);

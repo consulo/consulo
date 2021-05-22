@@ -26,10 +26,9 @@ import com.intellij.util.messages.Topic;
 import com.intellij.util.ui.UIUtil;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import gnu.trove.THashMap;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.*;
 
 /**
@@ -42,7 +41,7 @@ public class LogModel implements Disposable {
   private final Map<Notification, Long> myStamps = Collections.synchronizedMap(new WeakHashMap<Notification, Long>());
   private Trinity<Notification, String, Long> myStatusMessage;
   private final Project myProject;
-  final Map<Notification, Runnable> removeHandlers = new THashMap<Notification, Runnable>();
+  final Map<Notification, Runnable> removeHandlers = new HashMap<Notification, Runnable>();
 
   LogModel(@Nullable Project project, @Nonnull Disposable parentDisposable) {
     myProject = project;

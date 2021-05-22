@@ -34,7 +34,6 @@ import com.intellij.util.PathUtil;
 import com.intellij.util.ReflectionUtil;
 import consulo.logging.Logger;
 import consulo.vfs.util.ArchiveVfsUtil;
-import gnu.trove.THashMap;
 
 import javax.annotation.Nonnull;
 import java.io.*;
@@ -215,7 +214,7 @@ public class JdkUtil {
             assert urlClassLoader != null;
             if (urlClassLoader.getName().equals(vmParametersList.getPropertyValue("java.system.class.loader"))) {
               classpath += File.pathSeparator + PathUtil.getJarPathForClass(urlClassLoader);
-              classpath += File.pathSeparator + PathUtil.getJarPathForClass(THashMap.class);
+              //classpath += File.pathSeparator + PathUtil.getJarPathForClass(THashMap.class);
             }
 
             commandLine.addParameter("-classpath");

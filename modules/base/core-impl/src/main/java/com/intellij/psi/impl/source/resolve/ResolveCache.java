@@ -29,8 +29,8 @@ import com.intellij.psi.impl.AnyPsiChangeListener;
 import com.intellij.psi.impl.PsiManagerImpl;
 import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.util.ObjectUtil;
-import consulo.util.collection.ConcurrentWeakKeySoftValueHashMap;
-import consulo.util.collection.ContainerUtil;
+import consulo.util.collection.HashingStrategy;
+import consulo.util.collection.impl.map.ConcurrentWeakKeySoftValueHashMap;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -93,7 +93,7 @@ public class ResolveCache {
 
   @Nonnull
   private static <K, V> Map<K, V> createWeakMap() {
-    return new ConcurrentWeakKeySoftValueHashMap<K, V>(100, 0.75f, Runtime.getRuntime().availableProcessors(), ContainerUtil.canonicalStrategy()) {
+    return new ConcurrentWeakKeySoftValueHashMap<K, V>(100, 0.75f, Runtime.getRuntime().availableProcessors(), HashingStrategy.canonical()) {
       @Nonnull
       @Override
       protected ValueReference<K, V> createValueReference(@Nonnull V value, @Nonnull ReferenceQueue<? super V> queue) {
@@ -279,7 +279,7 @@ public class ResolveCache {
   private static final StrongValueReference NULL_VALUE_REFERENCE = new StrongValueReference<>(NULL_RESULT);
   private static final StrongValueReference EMPTY_RESOLVE_RESULT = new StrongValueReference<>(ResolveResult.EMPTY_ARRAY);
 
-  private static class StrongValueReference<K, V> implements ConcurrentWeakKeySoftValueHashMap.ValueReference<K, V> {
+  private static class StrongValueReference<K, V> implements consulo.util.collection.impl.map.ConcurrentWeakKeySoftValueHashMap.ValueReference<K, V> {
     private final V myValue;
 
     StrongValueReference(@Nonnull V value) {
@@ -288,7 +288,7 @@ public class ResolveCache {
 
     @Nonnull
     @Override
-    public ConcurrentWeakKeySoftValueHashMap.KeyReference<K, V> getKeyReference() {
+    public consulo.util.collection.impl.map.ConcurrentWeakKeySoftValueHashMap.KeyReference<K, V> getKeyReference() {
       throw new UnsupportedOperationException(); // will never GC so this method will never be called so no implementation is necessary
     }
 

@@ -25,13 +25,12 @@ import com.intellij.openapi.compiler.CompileScope;
 import com.intellij.openapi.compiler.ExportableUserDataHolderBase;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.module.Module;
-import consulo.util.dataholder.Key;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.containers.ContainerUtil;
-import gnu.trove.THashSet;
-import javax.annotation.Nonnull;
+import consulo.util.dataholder.Key;
 
+import javax.annotation.Nonnull;
 import java.util.*;
 
 public class CompositeScope extends ExportableUserDataHolderBase implements CompileScope{
@@ -73,7 +72,7 @@ public class CompositeScope extends ExportableUserDataHolderBase implements Comp
 
   @Nonnull
   public VirtualFile[] getFiles(FileType fileType, boolean inSourceOnly) {
-    Set<VirtualFile> allFiles = new THashSet<VirtualFile>();
+    Set<VirtualFile> allFiles = new HashSet<VirtualFile>();
     for (CompileScope scope : myScopes) {
       final VirtualFile[] files = scope.getFiles(fileType, inSourceOnly);
       if (files.length > 0) {

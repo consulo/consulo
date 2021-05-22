@@ -34,6 +34,8 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.MultiMap;
 import consulo.disposer.Disposable;
 import consulo.logging.Logger;
+import consulo.util.collection.primitive.ints.IntMaps;
+import consulo.util.collection.primitive.ints.IntObjectMap;
 import consulo.util.dataholder.Key;
 import gnu.trove.THashMap;
 import gnu.trove.TIntObjectHashMap;
@@ -146,7 +148,7 @@ final class PassExecutorService implements Disposable {
     List<ScheduledPass> freePasses = new ArrayList<>(documentToEditors.size() * 5);
     List<ScheduledPass> dependentPasses = new ArrayList<>(documentToEditors.size() * 10);
     // (fileEditor, passId) -> created pass
-    Map<Pair<FileEditor, Integer>, ScheduledPass> toBeSubmitted = new THashMap<>(passesMap.size());
+    Map<Pair<FileEditor, Integer>, ScheduledPass> toBeSubmitted = new HashMap<>(passesMap.size());
 
     final AtomicInteger threadsToStartCountdown = new AtomicInteger(0);
     for (Map.Entry<Document, Collection<FileEditor>> entry : documentToEditors.entrySet()) {
@@ -197,7 +199,7 @@ final class PassExecutorService implements Disposable {
 
   private void assertConsistency(List<? extends ScheduledPass> freePasses, Map<Pair<FileEditor, Integer>, ScheduledPass> toBeSubmitted, AtomicInteger threadsToStartCountdown) {
     assert threadsToStartCountdown.get() == toBeSubmitted.size();
-    TIntObjectHashMap<Pair<ScheduledPass, Integer>> id2Visits = new TIntObjectHashMap<>();
+    IntObjectMap<Pair<ScheduledPass, Integer>> id2Visits = IntMaps.newIntObjectHashMap();
     for (ScheduledPass freePass : freePasses) {
       id2Visits.put(freePass.myPass.getId(), Pair.create(freePass, 0));
       checkConsistency(freePass, id2Visits);
@@ -210,7 +212,7 @@ final class PassExecutorService implements Disposable {
     assert id2Visits.size() == threadsToStartCountdown.get();
   }
 
-  private void checkConsistency(ScheduledPass pass, TIntObjectHashMap<Pair<ScheduledPass, Integer>> id2Visits) {
+  private void checkConsistency(ScheduledPass pass, IntObjectMap<Pair<ScheduledPass, Integer>> id2Visits) {
     for (ScheduledPass succ : ContainerUtil.concat(pass.mySuccessorsOnCompletion, pass.mySuccessorsOnSubmit)) {
       int succId = succ.myPass.getId();
       Pair<ScheduledPass, Integer> succPair = id2Visits.get(succId);

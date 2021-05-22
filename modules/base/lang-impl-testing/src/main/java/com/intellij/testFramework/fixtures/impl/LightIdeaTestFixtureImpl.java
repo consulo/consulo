@@ -29,7 +29,8 @@ import com.intellij.psi.impl.source.tree.injected.InjectedLanguageManagerImpl;
 import com.intellij.testFramework.LightPlatformTestCase;
 import com.intellij.testFramework.TestModuleDescriptor;
 import com.intellij.testFramework.fixtures.LightIdeaTestFixture;
-import gnu.trove.THashMap;
+
+import java.util.HashMap;
 
 /**
  * @author mike
@@ -47,7 +48,7 @@ public class LightIdeaTestFixtureImpl extends BaseFixture implements LightIdeaTe
     super.setUp();
 
     ApplicationStarter application = LightPlatformTestCase.initApplication();
-    LightPlatformTestCase.doSetup(myProjectDescriptor, LocalInspectionTool.EMPTY_ARRAY, new THashMap<String, InspectionToolWrapper>());
+    LightPlatformTestCase.doSetup(myProjectDescriptor, LocalInspectionTool.EMPTY_ARRAY, new HashMap<String, InspectionToolWrapper>());
     InjectedLanguageManagerImpl.pushInjectors(getProject());
 
    // application.setDataProvider(new TestDataProvider(getProject()));

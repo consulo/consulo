@@ -18,15 +18,15 @@ package consulo.components.impl.stores.storage;
 import com.intellij.openapi.components.StateSplitterEx;
 import com.intellij.openapi.util.JDOMUtil;
 import consulo.logging.Logger;
-import gnu.trove.THashMap;
-import gnu.trove.TObjectObjectProcedure;
 import org.jdom.Element;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.BiConsumer;
 
 import static consulo.components.impl.stores.storage.StateMap.getNewByteIfDiffers;
 
@@ -38,7 +38,7 @@ public class DirectoryStorageData extends StorageDataBase {
   private final Map<String, StateMap> myStates;
 
   public DirectoryStorageData() {
-    this(new THashMap<>());
+    this(new HashMap<>());
   }
 
   private DirectoryStorageData(@Nonnull Map<String, StateMap> states) {
@@ -163,7 +163,7 @@ public class DirectoryStorageData extends StorageDataBase {
     fileToState.put(fileName, state);
   }
 
-  public void processComponent(@Nonnull String componentName, @Nonnull TObjectObjectProcedure<String, Object> consumer) {
+  public void processComponent(@Nonnull String componentName, @Nonnull BiConsumer<String, Object> consumer) {
     StateMap map = myStates.get(componentName);
     if (map != null) {
       map.forEachEntry(consumer);
@@ -172,7 +172,7 @@ public class DirectoryStorageData extends StorageDataBase {
 
   @Override
   protected DirectoryStorageData clone() {
-    return new DirectoryStorageData(new THashMap<>(myStates));
+    return new DirectoryStorageData(new HashMap<>(myStates));
   }
 
   public void clear() {

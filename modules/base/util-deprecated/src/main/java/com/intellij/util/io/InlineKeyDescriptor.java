@@ -33,12 +33,12 @@ public abstract class InlineKeyDescriptor<T> implements KeyDescriptor<T> {
   }
 
   @Override
-  public final int getHashCode(T value) {
+  public final int hashCode(T value) {
     return toInt(value);
   }
 
   @Override
-  public final boolean isEqual(T val1, T val2) {
+  public final boolean equals(T val1, T val2) {
     return toInt(val1) == toInt(val2);
   }
 

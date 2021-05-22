@@ -17,10 +17,11 @@ package com.intellij.util.text;
 
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.logging.Logger;
-import gnu.trove.TIntArrayList;
+import consulo.util.collection.primitive.ints.IntList;
+import consulo.util.collection.primitive.ints.IntLists;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.Arrays;
 import java.util.Locale;
 
@@ -107,14 +108,14 @@ public class StringSearcher {
   @Nonnull
   public int[] findAllOccurrences(@Nonnull CharSequence text) {
     int end = text.length();
-    TIntArrayList result = new TIntArrayList();
+    IntList result = IntLists.newArrayList();
     for (int index = 0; index < end; index++) {
       //noinspection AssignmentToForLoopParameter
       index = scan(text, index, end);
       if (index < 0) break;
       result.add(index);
     }
-    return result.toNativeArray();
+    return result.toArray();
   }
 
   public int scan(@Nonnull CharSequence text, @Nullable char[] textArray, int _start, int _end) {

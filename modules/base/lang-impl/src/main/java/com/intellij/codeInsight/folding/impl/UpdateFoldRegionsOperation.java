@@ -4,7 +4,6 @@ package com.intellij.codeInsight.folding.impl;
 
 import com.intellij.lang.folding.FoldingDescriptor;
 import com.intellij.lang.injection.InjectedLanguageManager;
-import consulo.logging.Logger;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.FoldRegion;
 import com.intellij.openapi.editor.FoldingGroup;
@@ -15,7 +14,6 @@ import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.project.IndexNotReadyException;
 import com.intellij.openapi.project.Project;
-import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
@@ -23,9 +21,10 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.SmartPointerManager;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.containers.MultiMap;
-import gnu.trove.THashMap;
-import javax.annotation.Nonnull;
+import consulo.logging.Logger;
+import consulo.util.dataholder.Key;
 
+import javax.annotation.Nonnull;
 import java.util.*;
 
 /**
@@ -85,12 +84,12 @@ class UpdateFoldRegionsOperation implements Runnable {
   public void run() {
     EditorFoldingInfo info = EditorFoldingInfo.get(myEditor);
     FoldingModelEx foldingModel = (FoldingModelEx)myEditor.getFoldingModel();
-    Map<TextRange, Boolean> rangeToExpandStatusMap = new THashMap<>();
+    Map<TextRange, Boolean> rangeToExpandStatusMap = new HashMap<>();
 
     removeInvalidRegions(info, foldingModel, rangeToExpandStatusMap);
 
-    Map<FoldRegion, Boolean> shouldExpand = new THashMap<>();
-    Map<FoldingGroup, Boolean> groupExpand = new THashMap<>();
+    Map<FoldRegion, Boolean> shouldExpand = new HashMap<>();
+    Map<FoldingGroup, Boolean> groupExpand = new HashMap<>();
     List<FoldRegion> newRegions = addNewRegions(info, foldingModel, rangeToExpandStatusMap, shouldExpand, groupExpand);
 
     applyExpandStatus(newRegions, shouldExpand, groupExpand);

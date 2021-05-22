@@ -16,7 +16,6 @@
 
 package com.intellij.refactoring.rename;
 
-import consulo.logging.Logger;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiElement;
@@ -26,9 +25,10 @@ import com.intellij.usageView.UsageViewBundle;
 import com.intellij.usageView.UsageViewDescriptor;
 import com.intellij.usageView.UsageViewUtil;
 import com.intellij.util.ArrayUtil;
-import gnu.trove.THashSet;
-import javax.annotation.Nonnull;
+import consulo.logging.Logger;
 
+import javax.annotation.Nonnull;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Set;
 
@@ -42,8 +42,8 @@ public class RenameViewDescriptor implements UsageViewDescriptor{
 
     myElements = PsiUtilBase.toPsiElementArray(renamesMap.keySet());
 
-    Set<String> processedElementsHeaders = new THashSet<String>();
-    Set<String> codeReferences = new THashSet<String>();
+    Set<String> processedElementsHeaders = new HashSet<String>();
+    Set<String> codeReferences = new HashSet<String>();
 
     for (final PsiElement element : myElements) {
       LOG.assertTrue(element.isValid(), "Invalid element: " + element.toString());

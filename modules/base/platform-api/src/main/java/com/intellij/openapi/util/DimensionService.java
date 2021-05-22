@@ -9,20 +9,21 @@ import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.openapi.wm.WindowManager;
 import com.intellij.ui.ScreenUtil;
 import com.intellij.ui.scale.JBUIScale;
-import com.intellij.util.containers.ObjectIntHashMap;
-import com.intellij.util.containers.hash.LinkedHashMap;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import consulo.awt.TargetAWT;
 import consulo.logging.Logger;
+import consulo.util.collection.primitive.objects.ObjectIntMap;
+import consulo.util.collection.primitive.objects.ObjectMaps;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.awt.*;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -36,7 +37,7 @@ public class DimensionService extends SimpleModificationTracker implements Persi
 
   private final Map<String, Point> myKey2Location = new LinkedHashMap<>();
   private final Map<String, Dimension> myKey2Size = new LinkedHashMap<>();
-  private final ObjectIntHashMap<String> myKey2ExtendedState = new ObjectIntHashMap<>();
+  private final ObjectIntMap<String> myKey2ExtendedState = ObjectMaps.newObjectIntHashMap();
   @NonNls
   private static final String EXTENDED_STATE = "extendedState";
   @NonNls
@@ -197,13 +198,12 @@ public class DimensionService extends SimpleModificationTracker implements Persi
     }
 
     // Save extended states
-    for (Object stateKey : myKey2ExtendedState.keys()) {
-      String key = (String)stateKey;
+    myKey2ExtendedState.forEach((key, stateValue) -> {
       Element e = new Element(EXTENDED_STATE);
       e.setAttribute(KEY, key);
-      e.setAttribute(STATE, String.valueOf(myKey2ExtendedState.get(key)));
+      e.setAttribute(STATE, String.valueOf(stateValue));
       element.addContent(e);
-    }
+    });
     return element;
   }
 
@@ -230,7 +230,7 @@ public class DimensionService extends SimpleModificationTracker implements Persi
       }
       else if (EXTENDED_STATE.equals(e.getName())) {
         try {
-          myKey2ExtendedState.put(e.getAttributeValue(KEY), Integer.parseInt(e.getAttributeValue(STATE)));
+          myKey2ExtendedState.putInt(e.getAttributeValue(KEY), Integer.parseInt(e.getAttributeValue(STATE)));
         }
         catch (NumberFormatException ignored) {
         }

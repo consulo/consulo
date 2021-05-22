@@ -28,6 +28,7 @@ import java.util.Collection;
  *
  * @author gregsh
  */
+@Deprecated
 public class OpenTHashSet<T> extends THashSet<T> {
   public OpenTHashSet() {
     super();

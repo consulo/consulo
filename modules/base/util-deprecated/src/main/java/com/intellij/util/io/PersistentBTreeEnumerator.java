@@ -361,7 +361,7 @@ public class PersistentBTreeEnumerator<Data> extends PersistentEnumeratorBase<Da
     try {
       lockStorage();
       if (IntToIntBtree.doDump) System.out.println(value);
-      final int valueHC = myDataDescriptor.getHashCode(value);
+      final int valueHC = myDataDescriptor.hashCode(value);
 
       final boolean hasMapping = myBTree.get(valueHC, myResultBuf);
       if (!hasMapping && onlyCheckForExisting) {
@@ -453,7 +453,7 @@ public class PersistentBTreeEnumerator<Data> extends PersistentEnumeratorBase<Da
       if (IntToIntBtree.doSanityCheck) {
         if (!myInlineKeysNoMapping) {
           Data data = valueOf(newValueId);
-          IntToIntBtree.myAssert(myDataDescriptor.isEqual(value, data));
+          IntToIntBtree.myAssert(myDataDescriptor.equals(value, data));
         }
       }
       return newValueId;

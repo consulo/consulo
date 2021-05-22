@@ -18,7 +18,6 @@ package com.intellij.openapi.keymap.impl;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.ActionManagerEx;
 import com.intellij.openapi.application.ApplicationManager;
-import consulo.logging.Logger;
 import com.intellij.openapi.keymap.Keymap;
 import com.intellij.openapi.keymap.KeymapUtil;
 import com.intellij.openapi.keymap.ex.KeymapManagerEx;
@@ -31,11 +30,11 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.KeyStrokeAdapter;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.containers.ContainerUtil;
-import gnu.trove.THashMap;
+import consulo.logging.Logger;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.event.MouseEvent;
 import java.util.*;
@@ -75,7 +74,7 @@ public class KeymapImpl implements Keymap, ExternalizableScheme {
   private KeymapImpl myParent;
   private boolean myCanModify = true;
 
-  private final Map<String, LinkedHashSet<Shortcut>> myActionId2ListOfShortcuts = new THashMap<String, LinkedHashSet<Shortcut>>();
+  private final Map<String, LinkedHashSet<Shortcut>> myActionId2ListOfShortcuts = new HashMap<String, LinkedHashSet<Shortcut>>();
 
   /**
    * Don't use this field directly! Use it only through <code>getKeystroke2ListOfIds</code>.
@@ -252,7 +251,7 @@ public class KeymapImpl implements Keymap, ExternalizableScheme {
   private Map<KeyStroke, List<String>> getKeystroke2ListOfIds() {
     if (myKeystroke2ListOfIds != null) return myKeystroke2ListOfIds;
 
-    myKeystroke2ListOfIds = new THashMap<KeyStroke, List<String>>();
+    myKeystroke2ListOfIds = new HashMap<KeyStroke, List<String>>();
     for (String id : ContainerUtil.concat(myActionId2ListOfShortcuts.keySet(), getKeymapManager().getBoundActions())) {
       addKeystrokesMap(id, myKeystroke2ListOfIds);
     }
@@ -261,7 +260,7 @@ public class KeymapImpl implements Keymap, ExternalizableScheme {
 
   private Map<KeyboardModifierGestureShortcut, List<String>> getGesture2ListOfIds() {
     if (myGesture2ListOfIds == null) {
-      myGesture2ListOfIds = new THashMap<KeyboardModifierGestureShortcut, List<String>>();
+      myGesture2ListOfIds = new HashMap<KeyboardModifierGestureShortcut, List<String>>();
       fillShortcut2ListOfIds(myGesture2ListOfIds, KeyboardModifierGestureShortcut.class);
     }
     return myGesture2ListOfIds;
@@ -275,7 +274,7 @@ public class KeymapImpl implements Keymap, ExternalizableScheme {
 
   private Map<MouseShortcut, List<String>> getMouseShortcut2ListOfIds() {
     if (myMouseShortcut2ListOfIds == null) {
-      myMouseShortcut2ListOfIds = new THashMap<MouseShortcut, List<String>>();
+      myMouseShortcut2ListOfIds = new HashMap<MouseShortcut, List<String>>();
 
       fillShortcut2ListOfIds(myMouseShortcut2ListOfIds, MouseShortcut.class);
     }

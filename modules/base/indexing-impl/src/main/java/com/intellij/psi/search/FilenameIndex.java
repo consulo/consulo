@@ -9,17 +9,16 @@ import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiFileSystemItem;
 import com.intellij.psi.PsiManager;
-import com.intellij.util.ArrayUtilRt;
 import com.intellij.util.Processor;
 import com.intellij.util.Processors;
 import com.intellij.util.SmartList;
 import com.intellij.util.indexing.ID;
 import com.intellij.util.indexing.IdFilter;
-import gnu.trove.THashSet;
+import consulo.util.collection.ArrayUtil;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.*;
 
 /**
@@ -36,12 +35,12 @@ public class FilenameIndex {
 
   @Nonnull
   public static String[] getAllFilenames(@Nullable Project project) {
-    Set<String> names = new THashSet<>();
+    Set<String> names = new HashSet<>();
     getService().processAllFileNames((String s) -> {
       names.add(s);
       return true;
     }, project == null ? new EverythingGlobalScope() : GlobalSearchScope.allScope(project), null);
-    return ArrayUtilRt.toStringArray(names);
+    return ArrayUtil.toStringArray(names);
   }
 
   public static void processAllFileNames(@Nonnull Processor<? super String> processor, @Nonnull GlobalSearchScope scope, @Nullable IdFilter filter) {
@@ -115,7 +114,7 @@ public class FilenameIndex {
 
   @Nonnull
   private static Set<VirtualFile> getVirtualFilesByNameIgnoringCase(@Nonnull final String name, @Nonnull final GlobalSearchScope scope, @Nonnull Project project, @Nullable final IdFilter idFilter) {
-    final Set<String> keys = new THashSet<>();
+    final Set<String> keys = new HashSet<>();
     FileNameIndexService fileNameIndexService = getService();
     fileNameIndexService.processAllFileNames(value -> {
       if (name.equalsIgnoreCase(value)) {
@@ -125,7 +124,7 @@ public class FilenameIndex {
     }, scope, idFilter);
 
     // values accessed outside of processAllKeys
-    final Set<VirtualFile> files = new THashSet<>();
+    final Set<VirtualFile> files = new HashSet<>();
     for (String each : keys) {
       files.addAll(fileNameIndexService.getVirtualFilesByName(project, each, scope, idFilter));
     }

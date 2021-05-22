@@ -50,7 +50,6 @@ import consulo.ui.image.ImageKey;
 import consulo.ui.style.StandardColors;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.nodep.xml.node.SimpleXmlElement;
-import gnu.trove.THashMap;
 import gnu.trove.TObjectIntHashMap;
 import jakarta.inject.Inject;
 
@@ -115,10 +114,10 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
   private static final int UPDATE_DELAY_AFTER_TYPING = 500;
 
   private final Object myLock = new Object();
-  private final Map<String, AnAction> myId2Action = new THashMap<>();
+  private final Map<String, AnAction> myId2Action = new HashMap<>();
   private final MultiMap<PluginId, String> myPlugin2Id = new MultiMap<>();
   private final TObjectIntHashMap<String> myId2Index = new TObjectIntHashMap<>();
-  private final Map<Object, String> myAction2Id = new THashMap<>();
+  private final Map<Object, String> myAction2Id = new HashMap<>();
   private final MultiMap<String, String> myId2GroupId = new MultiMap<>();
   private final List<String> myNotRegisteredInternalActionIds = new ArrayList<>();
   private final List<AnActionListener> myActionListeners = ContainerUtil.createLockFreeCopyOnWriteList();

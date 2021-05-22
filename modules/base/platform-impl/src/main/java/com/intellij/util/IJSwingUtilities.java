@@ -22,13 +22,13 @@ import com.intellij.openapi.wm.ex.WindowManagerEx;
 import com.intellij.ui.EditorTextField;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.FilteringIterator;
+import com.intellij.util.containers.IntStack;
 import com.intellij.util.ui.JBSwingUtilities;
 import com.intellij.util.ui.UIUtil;
 import consulo.awt.TargetAWT;
-import gnu.trove.TIntStack;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
 import java.awt.*;
@@ -143,7 +143,7 @@ public class IJSwingUtilities extends JBSwingUtilities {
   public static Iterator<Component> getChildren(final Container component) {
     return new Iterator<Component>() {
       private Container myCurrentParent = component;
-      private final TIntStack myState = new TIntStack();
+      private final IntStack myState = new IntStack();
       private int myCurrentIndex = 0;
 
       public boolean hasNext() {

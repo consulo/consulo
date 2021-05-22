@@ -16,8 +16,8 @@
 package com.intellij.openapi.util.io;
 
 import com.intellij.openapi.util.text.StringUtil;
-import gnu.trove.THashMap;
 
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -27,7 +27,7 @@ import java.util.NoSuchElementException;
  */
 public class UniqueNameBuilder<T> {
   private static final String VFS_SEPARATOR = "/";
-  private final Map<T, String> myPaths = new THashMap<T, String>();
+  private final Map<T, String> myPaths = new HashMap<T, String>();
   private final String mySeparator;
   private final int myMaxLength;
   private final String myRoot;
@@ -44,14 +44,14 @@ public class UniqueNameBuilder<T> {
 
   private static class Node {
     final String myText;
-    final THashMap<String, Node> myChildren;
+    final Map<String, Node> myChildren;
     final Node myParentNode;
     int myNestedChildrenCount;
 
     Node(String text, Node parentNode) {
       myText = text;
       myParentNode = parentNode;
-      myChildren = new THashMap<String, Node>(1);
+      myChildren = new HashMap<String, Node>(1);
     }
 
     Node findOrAddChild(String word) {

@@ -7,6 +7,8 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.psi.codeStyle.NameUtil;
 import com.intellij.ui.CollectionListModel;
 import com.intellij.util.Function;
+import consulo.util.collection.primitive.ints.IntList;
+import consulo.util.collection.primitive.ints.IntLists;
 import gnu.trove.TIntArrayList;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -145,7 +147,7 @@ public abstract class RunAnythingGroup {
    * Joins {@link #myTitleIndex} and {@link #myMoreIndex} of all groups; using for navigating by 'TAB' between groups.
    */
   public static int[] getAllIndexes(@Nonnull Collection<? extends RunAnythingGroup> groups) {
-    TIntArrayList list = new TIntArrayList();
+    IntList list = IntLists.newArrayList();
     for (RunAnythingGroup runAnythingGroup : groups) {
       list.add(runAnythingGroup.myTitleIndex);
     }
@@ -153,7 +155,7 @@ public abstract class RunAnythingGroup {
       list.add(runAnythingGroup.myMoreIndex);
     }
 
-    return list.toNativeArray();
+    return list.toArray();
   }
 
   /**

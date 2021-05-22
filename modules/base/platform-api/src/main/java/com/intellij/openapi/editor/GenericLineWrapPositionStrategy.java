@@ -16,10 +16,11 @@
 package com.intellij.openapi.editor;
 
 import com.intellij.openapi.project.Project;
-import gnu.trove.TIntObjectHashMap;
+import consulo.util.collection.primitive.ints.IntMaps;
+import consulo.util.collection.primitive.ints.IntObjectMap;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.Arrays;
 
 /**
@@ -39,7 +40,7 @@ public class GenericLineWrapPositionStrategy implements LineWrapPositionStrategy
   private static final int NON_ID_WEIGHT = (Rule.DEFAULT_WEIGHT - 1) / 2;
 
   /** Holds symbols wrap rules by symbol. */
-  private final TIntObjectHashMap<Rule> myRules = new TIntObjectHashMap<Rule>();
+  private final IntObjectMap<Rule> myRules = IntMaps.newIntObjectHashMap();
   private final Storage myOffset2weight = new Storage();
 
   @Override
@@ -96,7 +97,7 @@ public class GenericLineWrapPositionStrategy implements LineWrapPositionStrategy
 
       // Don't wrap on a non-id symbol followed by non-id symbol, e.g. don't wrap between two pluses at i++.
       // Also don't wrap before non-id symbol preceded by a space - wrap on space instead;
-      if (!isIdSymbol(c) && i > startOffset + 1 && isIdSymbol(text.charAt(i - 1)) && !myRules.contains(text.charAt(i - 1))) {
+      if (!isIdSymbol(c) && i > startOffset + 1 && isIdSymbol(text.charAt(i - 1)) && !myRules.containsKey(text.charAt(i - 1))) {
         myOffset2weight.store(i, NON_ID_WEIGHT);
       }
     }

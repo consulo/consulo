@@ -1,13 +1,14 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.util.ui;
 
-import gnu.trove.TIntDoubleHashMap;
-import gnu.trove.TIntIntHashMap;
-import gnu.trove.TIntObjectHashMap;
-import javax.annotation.Nonnull;
+import consulo.util.collection.primitive.ints.IntMaps;
+import consulo.util.collection.primitive.ints.IntObjectMap;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.awt.*;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Usage:
@@ -43,30 +44,30 @@ import java.awt.*;
 public final class GridBag extends GridBagConstraints {
   private int myDefaultAnchor = anchor;
   @Nonnull
-  private final TIntIntHashMap myDefaultColumnAnchors = new TIntIntHashMap();
+  private final Map<Integer, Integer> myDefaultColumnAnchors = new HashMap<>();
 
   private int myDefaultFill = fill;
   @Nonnull
-  private final TIntIntHashMap myDefaultColumnFills = new TIntIntHashMap();
+  private final Map<Integer, Integer> myDefaultColumnFills = new HashMap<>();
 
   private double myDefaultWeightX = weightx;
   @Nonnull
-  private final TIntDoubleHashMap myDefaultColumnWeightsX = new TIntDoubleHashMap();
+  private final Map<Integer, Double> myDefaultColumnWeightsX = new HashMap<>();
   private double myDefaultWeightY = weighty;
   @Nonnull
-  private final TIntDoubleHashMap myDefaultColumnWeightsY = new TIntDoubleHashMap();
+  private final Map<Integer, Double> myDefaultColumnWeightsY = new HashMap<>();
 
   private int myDefaultPaddingX = ipadx;
   @Nonnull
-  private final TIntIntHashMap myDefaultColumnPaddingsX = new TIntIntHashMap();
+  private final Map<Integer, Integer> myDefaultColumnPaddingsX = new HashMap<>();
   private int myDefaultPaddingY = ipady;
   @Nonnull
-  private final TIntIntHashMap myDefaultColumnPaddingsY = new TIntIntHashMap();
+  private final Map<Integer, Integer> myDefaultColumnPaddingsY = new HashMap<>();
 
   @Nullable
   private Insets myDefaultInsets = insets;
   @Nonnull
-  private final TIntObjectHashMap<Insets> myDefaultColumnInsets = new TIntObjectHashMap<>();
+  private final IntObjectMap<Insets> myDefaultColumnInsets = IntMaps.newIntObjectHashMap();
 
   public GridBag() {
     gridx = gridy = -1;

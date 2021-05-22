@@ -30,7 +30,8 @@ import com.intellij.openapi.vfs.newvfs.ManagingFS;
 import com.intellij.util.Consumer;
 import com.intellij.util.io.storage.AbstractStorage;
 import consulo.container.boot.ContainerPathManager;
-import gnu.trove.TIntHashSet;
+import consulo.util.collection.primitive.ints.IntSet;
+import consulo.util.collection.primitive.ints.IntSets;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -157,7 +158,7 @@ public class ChangeListStorageImpl implements ChangeListStorage {
   }
 
   @Nullable
-  public synchronized ChangeSetHolder readPrevious(int id, TIntHashSet recursionGuard) {
+  public synchronized ChangeSetHolder readPrevious(int id, IntSet recursionGuard) {
     if (isCompletelyBroken) return null;
 
     int prevId = 0;
@@ -239,7 +240,7 @@ public class ChangeListStorageImpl implements ChangeListStorage {
   public synchronized void purge(long period, int intervalBetweenActivities, Consumer<ChangeSet> processor) {
     if (isCompletelyBroken) return;
 
-    TIntHashSet recursionGuard = new TIntHashSet(1000);
+    IntSet recursionGuard = IntSets.newHashSet(1000);
 
     try {
       int firstObsoleteId = findFirstObsoleteBlock(period, intervalBetweenActivities, recursionGuard);
@@ -259,7 +260,7 @@ public class ChangeListStorageImpl implements ChangeListStorage {
     }
   }
 
-  private int findFirstObsoleteBlock(long period, int intervalBetweenActivities, TIntHashSet recursionGuard) throws IOException {
+  private int findFirstObsoleteBlock(long period, int intervalBetweenActivities, IntSet recursionGuard) throws IOException {
     long prevTimestamp = 0;
     long length = 0;
 
@@ -282,7 +283,7 @@ public class ChangeListStorageImpl implements ChangeListStorage {
     return 0;
   }
 
-  private int doReadPrevSafely(int id, TIntHashSet recursionGuard) throws IOException {
+  private int doReadPrevSafely(int id, IntSet recursionGuard) throws IOException {
     recursionGuard.add(id);
     int prev = myStorage.getPrevRecord(id);
     if (!recursionGuard.add(prev)) throw new IOException("Recursive records found");

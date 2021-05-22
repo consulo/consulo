@@ -52,9 +52,7 @@ public class InMemoryStorage implements VcsLogStorage {
     myCommitIdEnumerator.forEachValue(commitId -> {
       if (condition.value(commitId)) {
         result[0] = commitId;
-        return false;
       }
-      return true;
     });
     return result[0];
   }

@@ -36,7 +36,6 @@ import consulo.container.boot.ContainerPathManager;
 import consulo.logging.Logger;
 import consulo.vfs.impl.archive.ArchiveFile;
 import consulo.vfs.impl.archive.ArchiveFileSystemBase;
-import gnu.trove.THashSet;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -339,7 +338,7 @@ public class JarHandler extends ZipHandler {
       // - Collect librarySnapshot -> projectLibraryPaths and existing projectLibraryPath -> librarySnapshot
       // - Remove all projectLibraryPaths that doesn't exist from persistent mapping
       // - Remove jar library snapshots that have no projectLibraryPath
-      Set<String> availableLibrarySnapshots = new THashSet<String>(Arrays.<String>asList(snapshotInfoFile.getParentFile().list(new FilenameFilter() {
+      Set<String> availableLibrarySnapshots = new HashSet<String>(Arrays.<String>asList(snapshotInfoFile.getParentFile().list(new FilenameFilter() {
         @Override
         public boolean accept(File dir, String name) {
           int lastDotPosition = name.lastIndexOf('.');

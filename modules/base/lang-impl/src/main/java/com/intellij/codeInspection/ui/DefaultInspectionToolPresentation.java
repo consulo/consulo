@@ -25,7 +25,6 @@ import com.intellij.codeInspection.ex.*;
 import com.intellij.codeInspection.reference.*;
 import com.intellij.lang.annotation.HighlightSeverity;
 import com.intellij.openapi.components.PathMacroManager;
-import consulo.logging.Logger;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Comparing;
@@ -40,12 +39,12 @@ import com.intellij.util.ArrayUtil;
 import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.UIUtil;
-import gnu.trove.THashMap;
+import consulo.logging.Logger;
 import org.jdom.Element;
 import org.jdom.IllegalDataException;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.tree.DefaultTreeModel;
 import java.io.*;
@@ -721,7 +720,7 @@ public class DefaultInspectionToolPresentation implements ProblemDescriptionsPro
   public Map<RefEntity, CommonProblemDescriptor[]> getProblemElements() {
     synchronized (lock) {
       if (myProblemElements == null) {
-        myProblemElements = Collections.synchronizedMap(new THashMap<RefEntity, CommonProblemDescriptor[]>());
+        myProblemElements = Collections.synchronizedMap(new HashMap<RefEntity, CommonProblemDescriptor[]>());
       }
       return myProblemElements;
     }
@@ -737,7 +736,7 @@ public class DefaultInspectionToolPresentation implements ProblemDescriptionsPro
   private Map<CommonProblemDescriptor, RefEntity> getProblemToElements() {
     synchronized (lock) {
       if (myProblemToElements == null) {
-        myProblemToElements = Collections.synchronizedMap(new THashMap<CommonProblemDescriptor, RefEntity>());
+        myProblemToElements = Collections.synchronizedMap(new HashMap<CommonProblemDescriptor, RefEntity>());
       }
       return myProblemToElements;
     }

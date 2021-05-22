@@ -22,12 +22,12 @@ import com.intellij.util.io.VoidDataExternalizer;
 import com.intellij.vcs.log.VcsFullCommitDetails;
 import com.intellij.vcs.log.impl.FatalErrorHandler;
 import consulo.disposer.Disposable;
-import gnu.trove.THashMap;
-import gnu.trove.TIntHashSet;
+import consulo.util.collection.primitive.ints.IntSet;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
 
 import static com.intellij.vcs.log.data.index.VcsLogPersistentIndex.getVersion;
@@ -43,7 +43,7 @@ public class VcsLogMessagesTrigramIndex extends VcsLogFullDetailsIndex<Void> {
   }
 
   @Nullable
-  public TIntHashSet getCommitsForSubstring(@Nonnull String string) throws StorageException {
+  public IntSet getCommitsForSubstring(@Nonnull String string) throws StorageException {
     MyTrigramProcessor trigramProcessor = new MyTrigramProcessor();
     TrigramBuilder.processTrigrams(string, trigramProcessor);
 
@@ -68,12 +68,12 @@ public class VcsLogMessagesTrigramIndex extends VcsLogFullDetailsIndex<Void> {
 
     @Override
     public boolean consumeTrigramsCount(int count) {
-      map = new THashMap<>(count);
+      map = new HashMap<>(count);
       return true;
     }
 
     @Override
-    public boolean execute(int value) {
+    public boolean test(int value) {
       map.put(value, null);
       return true;
     }

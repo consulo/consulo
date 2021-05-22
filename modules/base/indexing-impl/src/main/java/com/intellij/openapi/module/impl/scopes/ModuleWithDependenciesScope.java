@@ -17,9 +17,6 @@ package com.intellij.openapi.module.impl.scopes;
 
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.roots.*;
-import consulo.roots.impl.ModuleRootsProcessor;
-import consulo.roots.types.BinariesOrderRootType;
-import consulo.roots.types.SourcesOrderRootType;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiBundle;
@@ -27,13 +24,16 @@ import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.util.NotNullFunction;
 import com.intellij.util.Processor;
 import com.intellij.util.containers.ContainerUtil;
-import gnu.trove.THashSet;
-import gnu.trove.TObjectIntHashMap;
+import consulo.roots.impl.ModuleRootsProcessor;
+import consulo.roots.types.BinariesOrderRootType;
+import consulo.roots.types.SourcesOrderRootType;
+import consulo.util.collection.primitive.objects.ObjectIntMap;
+import consulo.util.collection.primitive.objects.ObjectMaps;
 import org.intellij.lang.annotations.MagicConstant;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.*;
 
 public class ModuleWithDependenciesScope extends GlobalSearchScope {
@@ -54,7 +54,7 @@ public class ModuleWithDependenciesScope extends GlobalSearchScope {
   private final ProjectFileIndex myProjectFileIndex;
 
   private final Set<Module> myModules;
-  private final TObjectIntHashMap<VirtualFile> myRoots = new TObjectIntHashMap<VirtualFile>();
+  private final ObjectIntMap<VirtualFile> myRoots = ObjectMaps.newObjectIntHashMap();
 
   private ModuleRootsProcessor myRootsProcessor;
   private ModuleRootManager myModuleRootManager;
@@ -96,7 +96,7 @@ public class ModuleWithDependenciesScope extends GlobalSearchScope {
       }
     });
 
-    myModules = new THashSet<Module>(modules);
+    myModules = new HashSet<Module>(modules);
 
     final LinkedHashSet<VirtualFile> roots = ContainerUtil.newLinkedHashSet();
 
@@ -108,7 +108,7 @@ public class ModuleWithDependenciesScope extends GlobalSearchScope {
       }
     }
     else {
-      Collections.addAll(roots, en.roots(new NotNullFunction<OrderEntry, OrderRootType>() {
+      Collections.addAll(roots, en.roots(new NotNullFunction<>() {
         @Nonnull
         @Override
         public OrderRootType fun(OrderEntry entry) {
@@ -122,7 +122,7 @@ public class ModuleWithDependenciesScope extends GlobalSearchScope {
 
     int i = 1;
     for (VirtualFile root : roots) {
-      myRoots.put(root, i++);
+      myRoots.putInt(root, i++);
     }
   }
 
@@ -160,7 +160,7 @@ public class ModuleWithDependenciesScope extends GlobalSearchScope {
   @Override
   public boolean contains(@Nonnull VirtualFile file) {
     if (hasOption(CONTENT)) {
-      return myRoots.contains(myProjectFileIndex.getContentRootForFile(file));
+      return myRoots.containsKey(myProjectFileIndex.getContentRootForFile(file));
     }
     if(myProjectFileIndex.isInContent(file)) {
       if(myRootsProcessor != null) {
@@ -168,11 +168,11 @@ public class ModuleWithDependenciesScope extends GlobalSearchScope {
           return true;
         }
       }
-      if(myRoots.contains(myProjectFileIndex.getSourceRootForFile(file))) {
+      if(myRoots.containsKey(myProjectFileIndex.getSourceRootForFile(file))) {
         return true;
       }
     }
-    return myRoots.contains(myProjectFileIndex.getClassRootForFile(file));
+    return myRoots.containsKey(myProjectFileIndex.getClassRootForFile(file));
   }
 
   @Override
@@ -184,8 +184,8 @@ public class ModuleWithDependenciesScope extends GlobalSearchScope {
     if (r1 == null) return -1;
     if (r2 == null) return 1;
 
-    int i1 = myRoots.get(r1);
-    int i2 = myRoots.get(r2);
+    int i1 = myRoots.getInt(r1);
+    int i2 = myRoots.getInt(r2);
     if (i1 == 0 && i2 == 0) return 0;
     if (i1 > 0 && i2 > 0) return i2 - i1;
     return i1 > 0 ? 1 : -1;
@@ -202,13 +202,9 @@ public class ModuleWithDependenciesScope extends GlobalSearchScope {
   @TestOnly
   public Collection<VirtualFile> getRoots() {
     //noinspection unchecked
-    List<VirtualFile> result = (List)ContainerUtil.newArrayList(myRoots.keys());
-    Collections.sort(result, new Comparator<VirtualFile>() {
-      @Override
-      public int compare(VirtualFile o1, VirtualFile o2) {
-        return myRoots.get(o1) - myRoots.get(o2);
-      }
-    });
+    List<VirtualFile> result = new ArrayList<>(myRoots.size());
+    myRoots.forEach((virtualFile, value) -> result.add(virtualFile));
+    Collections.sort(result, (o1, o2) -> myRoots.getInt(o1) - myRoots.getInt(o2));
     return result;
   }
 

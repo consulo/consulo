@@ -17,7 +17,6 @@
 package com.intellij.execution.configurations;
 
 import com.intellij.util.EnvironmentUtil;
-import gnu.trove.THashMap;
 
 import java.io.File;
 import java.util.HashMap;
@@ -51,7 +50,7 @@ public class SimpleProgramParameters {
 
   public String addEnv(String name, String value) {
     if (myEnv == null) {
-      myEnv = new THashMap<>();
+      myEnv = new HashMap<>();
     }
 
     return myEnv.put(name, value);

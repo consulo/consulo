@@ -21,7 +21,6 @@ import com.intellij.openapi.components.MainConfigurationStateSplitter;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.components.StoragePathMacros;
-import consulo.logging.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Pair;
@@ -29,20 +28,16 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.search.scope.packageSet.*;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.UIUtil;
+import consulo.logging.Logger;
 import consulo.ui.image.Image;
-import gnu.trove.THashMap;
 import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import jakarta.inject.Singleton;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Singleton
 @State(name = "DependencyValidationManager", storages = {
@@ -69,7 +64,7 @@ public class DependencyValidationManagerImpl extends DependencyValidationManager
   @NonNls
   private static final String VALUE = "value";
 
-  private final Map<String, PackageSet> myUnnamedScopes = new THashMap<String, PackageSet>();
+  private final Map<String, PackageSet> myUnnamedScopes = new HashMap<String, PackageSet>();
 
   @Inject
   public DependencyValidationManagerImpl(final Project project, NamedScopeManager namedScopeManager) {

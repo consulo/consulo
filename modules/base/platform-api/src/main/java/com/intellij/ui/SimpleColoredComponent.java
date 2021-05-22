@@ -19,24 +19,25 @@ import com.intellij.ide.BrowserUtil;
 import com.intellij.ide.ui.UISettings;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
-import consulo.awt.TargetAWT;
-import consulo.logging.Logger;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.ui.JBInsets;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
+import consulo.awt.TargetAWT;
+import consulo.logging.Logger;
 import consulo.ui.image.Image;
-import gnu.trove.TIntIntHashMap;
+import consulo.util.collection.primitive.ints.IntIntMap;
+import consulo.util.collection.primitive.ints.IntMaps;
 import org.intellij.lang.annotations.JdkConstants;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 import javax.accessibility.Accessible;
 import javax.accessibility.AccessibleContext;
 import javax.accessibility.AccessibleRole;
 import javax.accessibility.AccessibleStateSet;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.tree.TreeCellRenderer;
@@ -70,7 +71,7 @@ public class SimpleColoredComponent extends JComponent implements Accessible, Co
   private final List<String> myFragments;
   private final List<SimpleTextAttributes> myAttributes;
   private List<Object> myFragmentTags = null;
-  private TIntIntHashMap myFragmentAlignment;
+  private IntIntMap myFragmentAlignment;
 
   /**
    * Component's icon. It can be <code>null</code>.
@@ -108,9 +109,10 @@ public class SimpleColoredComponent extends JComponent implements Accessible, Co
 
   private int myMainTextLastIndex = -1;
 
-  private final TIntIntHashMap myFragmentPadding;
+  private final IntIntMap myFragmentPadding;
 
-  @JdkConstants.HorizontalAlignment private int myTextAlign = SwingConstants.LEFT;
+  @JdkConstants.HorizontalAlignment
+  private int myTextAlign = SwingConstants.LEFT;
 
   private boolean myIconOpaque = false;
 
@@ -127,8 +129,8 @@ public class SimpleColoredComponent extends JComponent implements Accessible, Co
     myIpad = new JBInsets(1, 2, 1, 2);
     myIconTextGap = JBUI.scale(2);
     myBorder = new MyBorder();
-    myFragmentPadding = new TIntIntHashMap(10);
-    myFragmentAlignment = new TIntIntHashMap(10);
+    myFragmentPadding = IntMaps.newIntIntHashMap(10);
+    myFragmentAlignment = IntMaps.newIntIntHashMap(10);
     setOpaque(true);
 
     updateUI();
@@ -179,10 +181,7 @@ public class SimpleColoredComponent extends JComponent implements Accessible, Co
    * @param padding    end offset of the text
    * @param align      alignment between current offset and padding
    */
-  public final void append(@Nonnull final String fragment,
-                           @Nonnull final SimpleTextAttributes attributes,
-                           int padding,
-                           @JdkConstants.HorizontalAlignment int align) {
+  public final void append(@Nonnull final String fragment, @Nonnull final SimpleTextAttributes attributes, int padding, @JdkConstants.HorizontalAlignment int align) {
     append(fragment, attributes, myMainTextLastIndex < 0);
     appendTextPadding(padding, align);
   }
@@ -237,8 +236,7 @@ public class SimpleColoredComponent extends JComponent implements Accessible, Co
   /**
    * fragment width isn't a right name, it is actually a padding
    * @deprecated remove in IDEA 16
-   */
-  public synchronized void appendFixedTextFragmentWidth(int width) {
+   */ public synchronized void appendFixedTextFragmentWidth(int width) {
     appendTextPadding(width);
   }
 
@@ -254,8 +252,8 @@ public class SimpleColoredComponent extends JComponent implements Accessible, Co
    */
   public synchronized void appendTextPadding(int padding, @JdkConstants.HorizontalAlignment int align) {
     final int alignIndex = myFragments.size() - 1;
-    myFragmentPadding.put(alignIndex, padding);
-    myFragmentAlignment.put(alignIndex, align);
+    myFragmentPadding.putInt(alignIndex, padding);
+    myFragmentAlignment.putInt(alignIndex, align);
   }
 
   public void setTextAlign(@JdkConstants.HorizontalAlignment int align) {
@@ -462,7 +460,7 @@ public class SimpleColoredComponent extends JComponent implements Accessible, Co
 
       result += computeStringWidth(myFragments.get(i), font);
 
-      final int fixedWidth = myFragmentPadding.get(i);
+      final int fixedWidth = myFragmentPadding.getInt(i);
       if (fixedWidth > 0 && result < fixedWidth) {
         result = fixedWidth;
       }
@@ -527,9 +525,7 @@ public class SimpleColoredComponent extends JComponent implements Accessible, Co
   }
 
   private boolean needFontFallback(Font font, String text) {
-    return mySupportFontFallback &&
-           font.canDisplayUpTo(text) != -1 &&
-           text.indexOf(CharacterIterator.DONE) == -1; // see IDEA-137517, TextLayout does not support this character
+    return mySupportFontFallback && font.canDisplayUpTo(text) != -1 && text.indexOf(CharacterIterator.DONE) == -1; // see IDEA-137517, TextLayout does not support this character
   }
 
   /**
@@ -575,7 +571,7 @@ public class SimpleColoredComponent extends JComponent implements Accessible, Co
         return i;
       }
       curX += curWidth;
-      final int fragmentPadding = myFragmentPadding.get(i);
+      final int fragmentPadding = myFragmentPadding.getInt(i);
       if (fragmentPadding > 0 && curX < fragmentPadding) {
         curX = fragmentPadding;
       }
@@ -771,7 +767,7 @@ public class SimpleColoredComponent extends JComponent implements Accessible, Co
       final String fragment = myFragments.get(i);
       final int fragmentWidth = computeStringWidth(fragment, font);
 
-      final int fragmentPadding = myFragmentPadding.get(i);
+      final int fragmentPadding = myFragmentPadding.getInt(i);
 
       final Color bgColor = attributes.isSearchMatch() ? null : attributes.getBgColor();
       if ((attributes.isOpaque() || isOpaque()) && bgColor != null) {
@@ -790,7 +786,7 @@ public class SimpleColoredComponent extends JComponent implements Accessible, Co
 
       final int textBaseline = getTextBaseLine(metrics, getHeight());
 
-      final int fragmentAlignment = myFragmentAlignment.get(i);
+      final int fragmentAlignment = myFragmentAlignment.getInt(i);
 
       final int endOffset;
       if (fragmentPadding > 0 && fragmentPadding > fragmentWidth) {
@@ -1002,9 +998,7 @@ public class SimpleColoredComponent extends JComponent implements Accessible, Co
 
   @Nonnull
   public CharSequence getCharSequence(boolean mainOnly) {
-    List<String> fragments = mainOnly && myMainTextLastIndex > -1 && myMainTextLastIndex + 1 < myFragments.size()
-                             ? myFragments.subList(0, myMainTextLastIndex + 1)
-                             : myFragments;
+    List<String> fragments = mainOnly && myMainTextLastIndex > -1 && myMainTextLastIndex + 1 < myFragments.size() ? myFragments.subList(0, myMainTextLastIndex + 1) : myFragments;
     return StringUtil.join(fragments, "");
   }
 

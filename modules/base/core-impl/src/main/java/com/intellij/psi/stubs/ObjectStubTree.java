@@ -15,19 +15,20 @@
  */
 package com.intellij.psi.stubs;
 
-import consulo.util.dataholder.Key;
 import com.intellij.util.ArrayUtil;
-import com.intellij.util.Function;
-import gnu.trove.THashMap;
-import gnu.trove.TObjectHashingStrategy;
-import gnu.trove.TObjectObjectProcedure;
-import gnu.trove.TObjectProcedure;
+import consulo.util.collection.HashingStrategy;
+import consulo.util.collection.Maps;
+import consulo.util.dataholder.Key;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
+import java.util.function.Function;
 
 /**
  * @author Dmitry Avdeev
@@ -64,11 +65,12 @@ public class ObjectStubTree<T extends Stub> {
   @Deprecated
   @Nonnull
   public Map<StubIndexKey, Map<Object, int[]>> indexStubTree() {
-    return indexStubTree(key -> TObjectHashingStrategy.CANONICAL);
+    return indexStubTree(key -> HashingStrategy.canonical());
   }
 
   @Nonnull
-  public Map<StubIndexKey, Map<Object, int[]>> indexStubTree(@Nonnull Function<StubIndexKey<?, ?>, TObjectHashingStrategy<?>> keyHashingStrategyFunction) {
+  @SuppressWarnings("unchecked")
+  public Map<StubIndexKey, Map<Object, int[]>> indexStubTree(@Nonnull Function<StubIndexKey<?, ?>, HashingStrategy<?>> keyHashingStrategyFunction) {
     StubIndexSink sink = new StubIndexSink(keyHashingStrategyFunction);
     final List<T> plainList = getPlainListFromAllRoots();
     for (int i = 0, plainListSize = plainList.size(); i < plainListSize; i++) {
@@ -122,21 +124,22 @@ public class ObjectStubTree<T extends Stub> {
     return getClass().getSimpleName() + "{myDebugInfo='" + myDebugInfo + '\'' + ", myRoot=" + myRoot + '}' + hashCode();
   }
 
-  private static class StubIndexSink implements IndexSink, TObjectProcedure<Map<Object, int[]>>, TObjectObjectProcedure<Object, int[]> {
-    private final THashMap<StubIndexKey, Map<Object, int[]>> myResult = new THashMap<>();
-    private final Function<StubIndexKey<?, ?>, TObjectHashingStrategy<?>> myHashingStrategyFunction;
+  private static class StubIndexSink implements IndexSink, Consumer<Map<Object, int[]>>, BiConsumer<Object, int[]> {
+    private final Map<StubIndexKey, Map<Object, int[]>> myResult = new HashMap<>();
+    private final Function<StubIndexKey<?, ?>, HashingStrategy<?>> myHashingStrategyFunction;
     private int myStubIdx;
     private Map<Object, int[]> myProcessingMap;
 
-    private StubIndexSink(@Nonnull Function<StubIndexKey<?, ?>, TObjectHashingStrategy<?>> hashingStrategyFunction) {
+    private StubIndexSink(@Nonnull Function<StubIndexKey<?, ?>, HashingStrategy<?>> hashingStrategyFunction) {
       myHashingStrategyFunction = hashingStrategyFunction;
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public void occurrence(@Nonnull final StubIndexKey indexKey, @Nonnull final Object value) {
       Map<Object, int[]> map = myResult.get(indexKey);
       if (map == null) {
-        map = new THashMap<>((TObjectHashingStrategy<Object>)myHashingStrategyFunction.fun(indexKey));
+        map = Maps.newHashMap((HashingStrategy<Object>)myHashingStrategyFunction.apply(indexKey));
         myResult.put(indexKey, map);
       }
 
@@ -162,26 +165,25 @@ public class ObjectStubTree<T extends Stub> {
 
     @Nonnull
     public Map<StubIndexKey, Map<Object, int[]>> getResult() {
-      myResult.forEachValue(this);
+      myResult.values().forEach(this);
       return myResult;
     }
 
     @Override
-    public boolean execute(Map<Object, int[]> object) {
+    public void accept(Map<Object, int[]> object) {
       myProcessingMap = object;
-      ((THashMap<Object, int[]>)object).forEachEntry(this);
-      return true;
+      object.forEach(this);
     }
 
     @Override
-    public boolean execute(Object a, int[] b) {
-      if (b.length == 1) return true;
+    public void accept(Object a, int[] b) {
+      if (b.length == 1) return;
+
       int firstZero = ArrayUtil.indexOf(b, 0);
       if (firstZero != -1) {
         int[] shorterList = ArrayUtil.realloc(b, firstZero);
         myProcessingMap.put(a, shorterList);
       }
-      return true;
     }
   }
 }

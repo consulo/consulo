@@ -26,7 +26,7 @@ public class OrderedSet<T> extends ArrayList<T> implements Set<T>, RandomAccess 
   private final OpenTHashSet<T> myHashSet;
 
   public OrderedSet() {
-    this(ContainerUtil.<T>canonicalStrategy());
+    this(TObjectHashingStrategy.CANONICAL);
   }
 
   public OrderedSet(@Nonnull Collection<T> set) {
@@ -46,7 +46,7 @@ public class OrderedSet<T> extends ArrayList<T> implements Set<T>, RandomAccess 
   }
 
   public OrderedSet(int capacity) {
-    this(ContainerUtil.<T>canonicalStrategy(), capacity);
+    this(TObjectHashingStrategy.CANONICAL, capacity);
   }
 
   @Override

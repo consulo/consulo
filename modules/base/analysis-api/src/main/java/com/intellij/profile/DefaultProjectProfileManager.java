@@ -15,7 +15,6 @@
  */
 package com.intellij.profile;
 
-import consulo.disposer.Disposable;
 import com.intellij.openapi.components.MainConfigurationStateSplitter;
 import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.project.Project;
@@ -27,8 +26,8 @@ import com.intellij.psi.search.scope.packageSet.NamedScopesHolder;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.xmlb.XmlSerializer;
 import com.intellij.util.xmlb.annotations.OptionTag;
+import consulo.disposer.Disposable;
 import consulo.logging.Logger;
-import gnu.trove.THashMap;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 
@@ -36,6 +35,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -67,7 +67,7 @@ public abstract class DefaultProjectProfileManager extends ProjectProfileManager
 
   private final ApplicationProfileManager myApplicationProfileManager;
 
-  private final Map<String, Profile> myProfiles = new THashMap<String, Profile>();
+  private final Map<String, Profile> myProfiles = new HashMap<String, Profile>();
   protected final DependencyValidationManager myHolder;
 
   private final ProfileChangeAdapter myListenerPublisher;

@@ -39,14 +39,13 @@ import com.intellij.ui.awt.RelativePoint;
 import com.intellij.ui.content.Content;
 import com.intellij.util.*;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.containers.hash.LinkedHashMap;
 import com.intellij.util.text.CharArrayUtil;
 import consulo.disposer.Disposable;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import jakarta.inject.Inject;
-import jakarta.inject.Singleton;
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
 import java.util.*;
@@ -134,7 +133,7 @@ public class EventLog {
   public static LogEntry formatForLog(@Nonnull final Notification notification, final String indent) {
     DocumentImpl logDoc = new DocumentImpl("", true);
     AtomicBoolean showMore = new AtomicBoolean(false);
-    Map<RangeMarker, HyperlinkInfo> links = new LinkedHashMap<RangeMarker, HyperlinkInfo>();
+    Map<RangeMarker, HyperlinkInfo> links = new LinkedHashMap<>();
     List<RangeMarker> lineSeparators = new ArrayList<RangeMarker>();
 
     String title = notification.getTitle();

@@ -25,14 +25,13 @@ import com.intellij.openapi.util.WriteExternalException;
 import com.intellij.openapi.util.text.StringUtilRt;
 import com.intellij.openapi.vfs.*;
 import com.intellij.openapi.vfs.tracker.VirtualFileTracker;
+import com.intellij.util.containers.Interner;
 import com.intellij.util.containers.SmartHashSet;
-import com.intellij.util.containers.StringInterner;
 import consulo.application.options.PathMacrosService;
 import consulo.components.impl.stores.DefaultStateSerializer;
 import consulo.components.impl.stores.ReadOnlyModificationException;
 import consulo.components.impl.stores.StorageUtil;
 import consulo.disposer.Disposable;
-import gnu.trove.TObjectObjectProcedure;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 
@@ -128,7 +127,7 @@ public final class VfsDirectoryBasedStorage extends StateStorageBase<DirectorySt
       return;
     }
 
-    StringInterner interner = new StringInterner();
+    Interner<String> interner = Interner.createStringInterner();
     for (VirtualFile file : dir.getChildren()) {
       if (!isStorageFile(file)) {
         continue;
@@ -326,39 +325,35 @@ public final class VfsDirectoryBasedStorage extends StateStorageBase<DirectorySt
       final Element storeElement = new Element(StorageData.COMPONENT);
 
       for (final String componentName : copiedStorageData.getComponentNames()) {
-        copiedStorageData.processComponent(componentName, new TObjectObjectProcedure<String, Object>() {
-          @Override
-          public boolean execute(String fileName, Object state) {
-            if (!dirtyFileNames.contains(fileName)) {
-              return true;
-            }
+        copiedStorageData.processComponent(componentName, (fileName, state) -> {
+          if (!dirtyFileNames.contains(fileName)) {
+            return;
+          }
 
-            Element element = copiedStorageData.stateToElement(fileName, state);
-            if (storage.myPathMacroSubstitutor != null) {
-              storage.myPathMacroSubstitutor.collapsePaths(element);
-            }
+          Element element = copiedStorageData.stateToElement(fileName, state);
+          if (storage.myPathMacroSubstitutor != null) {
+            storage.myPathMacroSubstitutor.collapsePaths(element);
+          }
 
-            try {
-              storeElement.setAttribute(StorageData.NAME, componentName);
-              storeElement.addContent(element);
+          try {
+            storeElement.setAttribute(StorageData.NAME, componentName);
+            storeElement.addContent(element);
 
-              byte[] byteOut;
-              VirtualFile file = getFile(fileName, dir, MySaveSession.this);
-              if (file.exists()) {
-                byteOut = StorageUtil.writeToBytes(storeElement);
-              }
-              else {
-                byteOut = StorageUtil.writeToBytes(storeElement);
-              }
-              StorageUtil.writeFile(null, MySaveSession.this, file, byteOut, null);
+            byte[] byteOut;
+            VirtualFile file = getFile(fileName, dir, MySaveSession.this);
+            if (file.exists()) {
+              byteOut = StorageUtil.writeToBytes(storeElement);
             }
-            catch (IOException e) {
-              LOG.error(e);
+            else {
+              byteOut = StorageUtil.writeToBytes(storeElement);
             }
-            finally {
-              element.detach();
-            }
-            return true;
+            StorageUtil.writeFile(null, MySaveSession.this, file, byteOut, null);
+          }
+          catch (IOException e) {
+            LOG.error(e);
+          }
+          finally {
+            element.detach();
           }
         });
       }

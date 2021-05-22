@@ -25,7 +25,6 @@ import com.intellij.compiler.make.CacheCorruptedException;
 import com.intellij.compiler.make.CacheUtils;
 import com.intellij.compiler.progress.CompilerTask;
 import com.intellij.diagnostic.IdeErrorsDialog;
-import consulo.container.PluginException;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.application.WriteAction;
@@ -34,8 +33,6 @@ import com.intellij.openapi.compiler.*;
 import com.intellij.openapi.compiler.ex.CompileContextEx;
 import com.intellij.openapi.compiler.ex.CompilerPathsEx;
 import com.intellij.openapi.compiler.generic.GenericCompiler;
-import consulo.logging.Logger;
-import consulo.container.plugin.PluginId;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.module.Module;
@@ -75,7 +72,6 @@ import com.intellij.util.Function;
 import com.intellij.util.StringBuilderSpinAllocator;
 import com.intellij.util.concurrency.Semaphore;
 import com.intellij.util.containers.ContainerUtil;
-import java.util.HashMap;
 import com.intellij.util.containers.MultiMap;
 import com.intellij.util.containers.OrderedSet;
 import consulo.annotation.access.RequiredReadAction;
@@ -88,11 +84,16 @@ import consulo.compiler.impl.TranslatingCompilerFilesMonitor;
 import consulo.compiler.make.DependencyCache;
 import consulo.compiler.make.impl.CompositeDependencyCache;
 import consulo.compiler.roots.CompilerPathsImpl;
+import consulo.container.PluginException;
+import consulo.container.plugin.PluginId;
+import consulo.logging.Logger;
 import consulo.roots.ContentFolderScopes;
 import consulo.roots.ContentFolderTypeProvider;
+import consulo.util.collection.Maps;
+import consulo.util.collection.Sets;
+import consulo.util.collection.primitive.ints.IntSet;
+import consulo.util.collection.primitive.ints.IntSets;
 import consulo.util.dataholder.Key;
-import gnu.trove.THashMap;
-import gnu.trove.THashSet;
 import gnu.trove.TIntHashSet;
 import org.jetbrains.annotations.NonNls;
 
@@ -119,7 +120,7 @@ public class CompileDriver {
   private final String myCachesDirectoryPath;
   private boolean myShouldClearOutputDirectory;
 
-  private final Map<ContentFolderTypeProvider, Map<Module, String>> myOutputs = new THashMap<>(4);
+  private final Map<ContentFolderTypeProvider, Map<Module, String>> myOutputs = new HashMap<>(4);
 
   @NonNls
   private static final String VERSION_FILE_NAME = "version.dat";
@@ -553,7 +554,7 @@ public class CompileDriver {
         indicator.setText("");
       }
 
-      final Set<File> genSourceRoots = new THashSet<>(FileUtil.FILE_HASHING_STRATEGY);
+      final Set<File> genSourceRoots = Sets.newHashSet(FileUtil.FILE_HASHING_STRATEGY);
       for (AdditionalOutputDirectoriesProvider additionalOutputDirectoriesProvider : AdditionalOutputDirectoriesProvider.EP_NAME.getExtensionList()) {
         for (Module module : affectedModules) {
           for (String path : additionalOutputDirectoriesProvider.getOutputDirectories(myProject, module)) {
@@ -1761,7 +1762,7 @@ CompilerManagerImpl.addDeletedPath(outputPath.getPath());
     }
     final CompileScope scope = context.getCompileScope();
     final List<FileProcessingCompiler.ProcessingItem> toProcess = new ArrayList<>();
-    final Set<File> allFiles = new THashSet<>(FileUtil.FILE_HASHING_STRATEGY);
+    final Set<File> allFiles = Sets.newHashSet(FileUtil.FILE_HASHING_STRATEGY);
     final IOException[] ex = {null};
     DumbService.getInstance(myProject).runReadActionInSmartMode(() -> {
       try {
@@ -2147,7 +2148,7 @@ CompilerManagerImpl.addDeletedPath(outputPath.getPath());
   }
 
   private static class CacheDeferredUpdater {
-    private final Map<File, List<Pair<FileProcessingCompilerStateCache, FileProcessingCompiler.ProcessingItem>>> myData = new THashMap<>(FileUtil.FILE_HASHING_STRATEGY);
+    private final Map<File, List<Pair<FileProcessingCompilerStateCache, FileProcessingCompiler.ProcessingItem>>> myData = Maps.newHashMap(FileUtil.FILE_HASHING_STRATEGY);
 
     public void addFileForUpdate(final FileProcessingCompiler.ProcessingItem item, FileProcessingCompilerStateCache cache) {
       final File file = item.getFile();
@@ -2317,12 +2318,12 @@ CompilerManagerImpl.addDeletedPath(outputPath.getPath());
 
   private static class DependentClassesCumulativeFilter implements Function<Pair<int[], Set<VirtualFile>>, Pair<int[], Set<VirtualFile>>> {
 
-    private final TIntHashSet myProcessedNames = new TIntHashSet();
+    private final IntSet myProcessedNames = IntSets.newHashSet();
     private final Set<VirtualFile> myProcessedFiles = new HashSet<>();
 
     @Override
     public Pair<int[], Set<VirtualFile>> fun(Pair<int[], Set<VirtualFile>> deps) {
-      final TIntHashSet currentDeps = new TIntHashSet(deps.getFirst());
+      final IntSet currentDeps = IntSets.newHashSet(deps.getFirst());
       currentDeps.removeAll(myProcessedNames.toArray());
       myProcessedNames.addAll(deps.getFirst());
 

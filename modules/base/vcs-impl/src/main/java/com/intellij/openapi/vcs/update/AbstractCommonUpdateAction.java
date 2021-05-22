@@ -24,7 +24,6 @@ import com.intellij.notification.NotificationType;
 import com.intellij.openapi.actionSystem.Presentation;
 import com.intellij.openapi.actionSystem.UpdateInBackground;
 import com.intellij.openapi.application.ApplicationManager;
-import consulo.logging.Logger;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.progress.*;
 import com.intellij.openapi.project.Project;
@@ -48,10 +47,10 @@ import com.intellij.util.containers.MultiMap;
 import com.intellij.util.ui.OptionsDialog;
 import com.intellij.vcs.ViewUpdateInfoNotification;
 import com.intellij.vcsUtil.VcsUtil;
-import gnu.trove.THashMap;
+import consulo.logging.Logger;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.io.File;
 import java.util.*;
 
@@ -191,7 +190,7 @@ public abstract class AbstractCommonUpdateAction extends AbstractVcsAction imple
       }
     }
 
-    final Map<AbstractVcs, Collection<FilePath>> result = new THashMap<>();
+    final Map<AbstractVcs, Collection<FilePath>> result = new HashMap<>();
     for (Map.Entry<AbstractVcs, Collection<FilePath>> entry : resultPrep.entrySet()) {
       AbstractVcs<?> vcs = entry.getKey();
       result.put(vcs, vcs.filterUniqueRoots(new ArrayList<>(entry.getValue()), FilePath::getVirtualFile));

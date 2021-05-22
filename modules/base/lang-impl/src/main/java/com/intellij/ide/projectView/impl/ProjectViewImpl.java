@@ -93,8 +93,6 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import consulo.util.dataholder.Key;
 import consulo.wm.impl.ToolWindowContentUI;
-import gnu.trove.THashMap;
-import gnu.trove.THashSet;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Attribute;
@@ -127,24 +125,24 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
   private final ProjectViewSharedSettings myProjectViewSharedSettings;
 
   // + options
-  private final Map<String, Boolean> myFlattenPackages = new THashMap<>();
+  private final Map<String, Boolean> myFlattenPackages = new HashMap<>();
   private static final boolean ourFlattenPackagesDefaults = false;
-  private final Map<String, Boolean> myShowMembers = new THashMap<>();
+  private final Map<String, Boolean> myShowMembers = new HashMap<>();
   private static final boolean ourShowMembersDefaults = false;
-  private final Map<String, Boolean> myManualOrder = new THashMap<>();
+  private final Map<String, Boolean> myManualOrder = new HashMap<>();
   private static final boolean ourManualOrderDefaults = false;
-  private final Map<String, Boolean> mySortByType = new THashMap<>();
+  private final Map<String, Boolean> mySortByType = new HashMap<>();
   private static final boolean ourSortByTypeDefaults = false;
-  private final Map<String, Boolean> myShowModules = new THashMap<>();
+  private final Map<String, Boolean> myShowModules = new HashMap<>();
   private static final boolean ourShowModulesDefaults = true;
-  private final Map<String, Boolean> myShowLibraryContents = new THashMap<>();
+  private final Map<String, Boolean> myShowLibraryContents = new HashMap<>();
   private static final boolean ourShowLibraryContentsDefaults = true;
-  private final Map<String, Boolean> myHideEmptyPackages = new THashMap<>();
+  private final Map<String, Boolean> myHideEmptyPackages = new HashMap<>();
   private static final boolean ourHideEmptyPackagesDefaults = true;
-  private final Map<String, Boolean> myAbbreviatePackageNames = new THashMap<>();
+  private final Map<String, Boolean> myAbbreviatePackageNames = new HashMap<>();
   private static final boolean ourAbbreviatePackagesDefaults = false;
-  private final Map<String, Boolean> myAutoscrollToSource = new THashMap<>();
-  private final Map<String, Boolean> myAutoscrollFromSource = new THashMap<>();
+  private final Map<String, Boolean> myAutoscrollToSource = new HashMap<>();
+  private final Map<String, Boolean> myAutoscrollFromSource = new HashMap<>();
   private static final boolean ourAutoscrollFromSourceDefaults = false;
 
   private boolean myFoldersAlwaysOnTop = true;
@@ -162,7 +160,7 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
 
   private SimpleToolWindowPanel myPanel;
   private final Map<String, AbstractProjectViewPane> myId2Pane = new LinkedHashMap<>();
-  private final Collection<AbstractProjectViewPane> myUninitializedPanes = new THashSet<>();
+  private final Collection<AbstractProjectViewPane> myUninitializedPanes = new HashSet<>();
 
   static final Key<ProjectViewImpl> DATA_KEY = Key.create("com.intellij.ide.projectView.impl.ProjectViewImpl");
 

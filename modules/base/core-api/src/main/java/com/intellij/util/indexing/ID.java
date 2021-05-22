@@ -17,9 +17,10 @@
 package com.intellij.util.indexing;
 
 import consulo.container.boot.ContainerPathManager;
-import consulo.util.collection.IntObjectMap;
-import consulo.util.collection.Maps;
-import gnu.trove.TObjectIntHashMap;
+import consulo.util.collection.primitive.ints.IntMaps;
+import consulo.util.collection.primitive.ints.IntObjectMap;
+import consulo.util.collection.primitive.objects.ObjectIntMap;
+import consulo.util.collection.primitive.objects.ObjectMaps;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -29,8 +30,8 @@ import java.io.*;
  * @author Eugene Zhuravlev
  */
 public class ID<K, V> extends IndexId<K, V> {
-  private static final IntObjectMap<ID> ourRegistry = Maps.newConcurrentIntObjectHashMap();
-  private static final TObjectIntHashMap<String> ourNameToIdRegistry = new TObjectIntHashMap<>();
+  private static final IntObjectMap<ID> ourRegistry = IntMaps.newConcurrentIntObjectHashMap();
+  private static final ObjectIntMap<String> ourNameToIdRegistry = ObjectMaps.newObjectIntHashMap();
   static final int MAX_NUMBER_OF_INDICES = Short.MAX_VALUE;
 
   private final short myUniqueId;
@@ -38,21 +39,17 @@ public class ID<K, V> extends IndexId<K, V> {
   static {
     final File indices = getEnumFile();
     try {
-      TObjectIntHashMap<String> nameToIdRegistry = new TObjectIntHashMap<>();
+      ObjectIntMap<String> nameToIdRegistry = ObjectMaps.newObjectIntHashMap();
       try (BufferedReader reader = new BufferedReader(new FileReader(indices))) {
         for (int cnt = 1; ; cnt++) {
           final String name = reader.readLine();
           if (name == null) break;
-          nameToIdRegistry.put(name, cnt);
+          nameToIdRegistry.putInt(name, cnt);
         }
       }
 
       synchronized (ourNameToIdRegistry) {
-        ourNameToIdRegistry.ensureCapacity(nameToIdRegistry.size());
-        nameToIdRegistry.forEachEntry((name, index) -> {
-          ourNameToIdRegistry.put(name, index);
-          return true;
-        });
+        ourNameToIdRegistry.putAll(nameToIdRegistry);
       }
     }
     catch (IOException e) {
@@ -80,13 +77,13 @@ public class ID<K, V> extends IndexId<K, V> {
   private static short stringToId(@Nonnull String name) {
     synchronized (ourNameToIdRegistry) {
       if (ourNameToIdRegistry.containsKey(name)) {
-        return (short)ourNameToIdRegistry.get(name);
+        return (short)ourNameToIdRegistry.getInt(name);
       }
 
       int n = ourNameToIdRegistry.size() + 1;
       assert n <= MAX_NUMBER_OF_INDICES : "Number of indices exceeded: " + n;
 
-      ourNameToIdRegistry.put(name, n);
+      ourNameToIdRegistry.putInt(name, n);
       writeEnumFile();
       return (short)n;
     }
@@ -104,10 +101,7 @@ public class ID<K, V> extends IndexId<K, V> {
       try (BufferedWriter w = new BufferedWriter(new FileWriter(f))) {
         final String[] names = new String[ourNameToIdRegistry.size()];
 
-        ourNameToIdRegistry.forEachEntry((key, value) -> {
-          names[value - 1] = key;
-          return true;
-        });
+        ourNameToIdRegistry.forEach((key, value) -> names[value - 1] = key);
 
         for (String name : names) {
           w.write(name);

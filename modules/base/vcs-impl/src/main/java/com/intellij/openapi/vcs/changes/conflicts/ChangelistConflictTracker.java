@@ -36,7 +36,6 @@ import com.intellij.ui.EditorNotifications;
 import com.intellij.util.Alarm;
 import com.intellij.util.NullableFunction;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.containers.hash.HashSet;
 import com.intellij.util.xmlb.XmlSerializer;
 import org.jdom.Element;
 import javax.annotation.Nonnull;

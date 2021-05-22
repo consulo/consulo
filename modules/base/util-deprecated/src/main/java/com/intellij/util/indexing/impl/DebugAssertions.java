@@ -27,9 +27,7 @@ public class DebugAssertions {
   @SuppressWarnings("StaticNonFinalField")
   public static volatile boolean DEBUG = SystemProperties.getBooleanProperty("intellij.idea.indices.debug", false);
 
-  public static final boolean EXTRA_SANITY_CHECKS =
-          SystemProperties.getBooleanProperty("intellij.idea.indices.debug.extra.sanity", false //DEBUG // todo https://youtrack.jetbrains.com/issue/IDEA-134916
-          );
+  public static final boolean EXTRA_SANITY_CHECKS = false;
 
   public static void assertTrue(boolean value) {
     if (!value) {

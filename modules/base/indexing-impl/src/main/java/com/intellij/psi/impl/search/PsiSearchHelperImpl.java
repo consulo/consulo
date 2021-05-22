@@ -55,13 +55,10 @@ import consulo.application.AccessRule;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
-import gnu.trove.THashMap;
-import gnu.trove.THashSet;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
-
 import javax.annotation.Nullable;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -81,7 +78,7 @@ public class PsiSearchHelperImpl implements PsiSearchHelper {
   @Nonnull
   public SearchScope getUseScope(@Nonnull PsiElement element) {
     SearchScope scope = element.getUseScope();
-    for (UseScopeEnlarger enlarger : UseScopeEnlarger.EP_NAME.getExtensions()) {
+    for (UseScopeEnlarger enlarger : UseScopeEnlarger.EP_NAME.getExtensionList()) {
       final SearchScope additionalScope = enlarger.getAdditionalUseScope(element);
       if (additionalScope != null) {
         scope = scope.union(additionalScope);
@@ -278,7 +275,7 @@ public class PsiSearchHelperImpl implements PsiSearchHelper {
       progress.setText(PsiBundle.message("psi.scanning.files.progress"));
 
       String text = searcher.getPattern();
-      Set<VirtualFile> fileSet = new THashSet<>();
+      Set<VirtualFile> fileSet = new HashSet<>();
       getFilesWithText(scope, searchContext, caseSensitively, text, fileSet);
 
       progress.setText(PsiBundle.message("psi.search.for.word.progress", text));
@@ -440,7 +437,7 @@ public class PsiSearchHelperImpl implements PsiSearchHelper {
       // we failed to run read action in job launcher thread
       // run read action in our thread instead to wait for a write action to complete and resume parallel processing
       DumbService.getInstance(project).runReadActionInSmartMode(EmptyRunnable.getInstance());
-      Set<VirtualFile> t = new THashSet<>(files);
+      Set<VirtualFile> t = new HashSet<>(files);
       synchronized (processedFiles) {
         t.removeAll(processedFiles);
       }
@@ -458,7 +455,7 @@ public class PsiSearchHelperImpl implements PsiSearchHelper {
         if (DumbService.isDumb(project)) throw ApplicationUtil.CannotRunReadActionException.create();
 
         List<PsiFile> psiRoots = file.getViewProvider().getAllFiles();
-        Set<PsiFile> processed = new THashSet<>(psiRoots.size() * 2, (float)0.5);
+        Set<PsiFile> processed = new HashSet<>(psiRoots.size() * 2, (float)0.5);
         for (final PsiFile psiRoot : psiRoots) {
           ProgressManager.checkCanceled();
           assert psiRoot != null : "One of the roots of file " + file + " is null. All roots: " + psiRoots + "; ViewProvider: " +
@@ -655,7 +652,7 @@ public class PsiSearchHelperImpl implements PsiSearchHelper {
       MultiMap<Set<IdIndexEntry>, RequestWithProcessor> globals = new MultiMap<>();
       final List<Computable<Boolean>> customs = ContainerUtil.newArrayList();
       final Set<RequestWithProcessor> locals = ContainerUtil.newLinkedHashSet();
-      Map<RequestWithProcessor, Processor<PsiElement>> localProcessors = new THashMap<>();
+      Map<RequestWithProcessor, Processor<PsiElement>> localProcessors = new HashMap<>();
       distributePrimitives(collectors, locals, globals, customs, localProcessors, progress);
       result = processGlobalRequestsOptimized(globals, progress, localProcessors);
       if (result) {
@@ -901,7 +898,7 @@ public class PsiSearchHelperImpl implements PsiSearchHelper {
 
     final short finalSearchContext = searchContext;
     Condition<Integer> contextMatches = context -> (context.intValue() & finalSearchContext) != 0;
-    Set<VirtualFile> containerFiles = new THashSet<>();
+    Set<VirtualFile> containerFiles = new HashSet<>();
     Processor<VirtualFile> processor = Processors.cancelableCollectProcessor(containerFiles);
     processFilesContainingAllKeys(myManager.getProject(), commonScope, contextMatches, entries, processor);
 

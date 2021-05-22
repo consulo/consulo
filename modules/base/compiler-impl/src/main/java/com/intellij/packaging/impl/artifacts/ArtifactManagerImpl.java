@@ -20,8 +20,6 @@ import com.intellij.openapi.application.WriteAction;
 import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
-import consulo.disposer.Disposable;
-import consulo.logging.Logger;
 import com.intellij.openapi.module.ProjectLoadingErrorsNotifier;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ex.ProjectRootManagerEx;
@@ -39,7 +37,8 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.xmlb.SkipDefaultValuesSerializationFilters;
 import com.intellij.util.xmlb.XmlSerializer;
 import consulo.annotation.access.RequiredWriteAction;
-import gnu.trove.THashSet;
+import consulo.disposer.Disposable;
+import consulo.logging.Logger;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
@@ -331,7 +330,7 @@ public class ArtifactManagerImpl extends ArtifactManager implements Disposable, 
 
       final List<ArtifactImpl> allArtifacts = artifactModel.getOriginalArtifacts();
 
-      final Set<ArtifactImpl> removed = new THashSet<>(myModel.myArtifactsList);
+      final Set<ArtifactImpl> removed = new HashSet<>(myModel.myArtifactsList);
       final List<ArtifactImpl> added = new ArrayList<>();
       final List<Pair<ArtifactImpl, String>> changed = new ArrayList<>();
 

@@ -64,6 +64,8 @@ import consulo.application.AccessRule;
 import consulo.disposer.Disposer;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
+import consulo.util.collection.primitive.ints.IntList;
+import consulo.util.collection.primitive.ints.IntLists;
 import gnu.trove.TIntArrayList;
 
 import javax.annotation.Nonnull;
@@ -672,9 +674,9 @@ public class TextMergeViewer implements MergeTool.MergeViewer {
                                     @Nonnull Runnable task) {
       myContentModified = true;
 
-      TIntArrayList affectedIndexes = null;
+      IntList affectedIndexes = null;
       if (affected != null) {
-        affectedIndexes = new TIntArrayList(affected.size());
+        affectedIndexes = IntLists.newArrayList(affected.size());
         for (TextMergeChange change : affected) {
           affectedIndexes.add(change.getIndex());
         }

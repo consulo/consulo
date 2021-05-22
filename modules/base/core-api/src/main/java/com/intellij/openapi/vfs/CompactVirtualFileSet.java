@@ -3,10 +3,10 @@ package com.intellij.openapi.vfs;
 
 import com.intellij.util.Processor;
 import com.intellij.util.containers.ContainerUtil;
-import gnu.trove.THashSet;
-import gnu.trove.TIntHashSet;
-import javax.annotation.Nonnull;
+import consulo.util.collection.primitive.ints.IntSet;
+import consulo.util.collection.primitive.ints.IntSets;
 
+import javax.annotation.Nonnull;
 import java.util.*;
 
 /**
@@ -15,9 +15,9 @@ import java.util.*;
  */
 public class CompactVirtualFileSet extends AbstractSet<VirtualFile> {
   // all non-VirtualFileWithId files and first several files are stored here
-  private final Set<VirtualFile> weirdFiles = new THashSet<>();
+  private final Set<VirtualFile> weirdFiles = new HashSet<>();
   // when file set become large, they stored as id-set here
-  private TIntHashSet idSet;
+  private IntSet idSet;
   // when file set become very big (e.g. whole project files AnalysisScope) the bit-mask of their ids are stored here
   private BitSet fileIds;
   private boolean frozen;
@@ -37,7 +37,7 @@ public class CompactVirtualFileSet extends AbstractSet<VirtualFile> {
       if (ids != null) {
         return ids.get(id);
       }
-      TIntHashSet idSet = this.idSet;
+      IntSet idSet = this.idSet;
       if (idSet != null) {
         return idSet.contains(id);
       }
@@ -54,7 +54,7 @@ public class CompactVirtualFileSet extends AbstractSet<VirtualFile> {
     if (file instanceof VirtualFileWithId) {
       int id = ((VirtualFileWithId)file).getId();
       BitSet ids = fileIds;
-      TIntHashSet idSet = this.idSet;
+      IntSet idSet = this.idSet;
       if (ids != null) {
         added = !ids.get(id);
         ids.set(id);
@@ -63,17 +63,14 @@ public class CompactVirtualFileSet extends AbstractSet<VirtualFile> {
         added = idSet.add(id);
         if (idSet.size() > 1000) {
           fileIds = new BitSet();
-          idSet.forEach(i -> {
-            fileIds.set(i);
-            return true;
-          });
+          idSet.forEach(i -> fileIds.set(i));
           this.idSet = null;
         }
       }
       else {
         added = weirdFiles.add(file);
         if (weirdFiles.size() > 10) {
-          this.idSet = idSet = new TIntHashSet(weirdFiles.size());
+          this.idSet = idSet = IntSets.newHashSet(weirdFiles.size());
           for (Iterator<VirtualFile> iterator = weirdFiles.iterator(); iterator.hasNext(); ) {
             VirtualFile wf = iterator.next();
             if (wf instanceof VirtualFileWithId) {
@@ -119,21 +116,26 @@ public class CompactVirtualFileSet extends AbstractSet<VirtualFile> {
         if (file != null && !processor.process(file)) return false;
       }
     }
-    TIntHashSet idSet = this.idSet;
-    if (idSet != null && !idSet.forEach(id -> {
-      VirtualFile file = virtualFileManager.findFileById(id);
-      return file == null || processor.process(file);
-    })) {
-      return false;
-    }
+    IntSet idSet = this.idSet;
+    if (idSet != null) {
+      PrimitiveIterator.OfInt iterator = idSet.iterator();
 
+      while (iterator.hasNext()) {
+        int id = iterator.nextInt();
+        VirtualFile file = virtualFileManager.findFileById(id);
+
+        if(file != null && !processor.process(file)) {
+          return false;
+        }
+      }
+    }
     return ContainerUtil.process(weirdFiles, processor);
   }
 
   @Override
   public int size() {
     BitSet ids = fileIds;
-    TIntHashSet idSet = this.idSet;
+    IntSet idSet = this.idSet;
     return (ids == null ? 0 : ids.cardinality()) + (idSet == null ? 0 : idSet.size()) + weirdFiles.size();
   }
 
@@ -141,10 +143,10 @@ public class CompactVirtualFileSet extends AbstractSet<VirtualFile> {
   @Override
   public Iterator<VirtualFile> iterator() {
     BitSet ids = fileIds;
-    TIntHashSet idSet = this.idSet;
+    IntSet idSet = this.idSet;
     VirtualFileManager virtualFileManager = VirtualFileManager.getInstance();
-    Iterator<VirtualFile> idsIterator = ids == null ? Collections.emptyIterator() : ContainerUtil.mapIterator(ids.stream().iterator(), id -> virtualFileManager.findFileById(id));
-    Iterator<VirtualFile> idSetIterator = idSet == null ? Collections.emptyIterator() : ContainerUtil.mapIterator(idSet.iterator(), id -> virtualFileManager.findFileById(id));
+    Iterator<VirtualFile> idsIterator = ids == null ? Collections.emptyIterator() : ContainerUtil.<VirtualFile>mapIterator(ids.stream().iterator(), virtualFileManager::findFileById);
+    Iterator<VirtualFile> idSetIterator = idSet == null ? Collections.emptyIterator() : ContainerUtil.<VirtualFile>mapIterator(idSet.iterator(), virtualFileManager::findFileById);
     Iterator<VirtualFile> weirdFileIterator = weirdFiles.iterator();
     return ContainerUtil.filterIterator(ContainerUtil.concatIterators(idsIterator, idSetIterator, weirdFileIterator), Objects::nonNull);
   }

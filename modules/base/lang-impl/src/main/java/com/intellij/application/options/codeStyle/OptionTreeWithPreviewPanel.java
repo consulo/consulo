@@ -15,7 +15,6 @@
  */
 package com.intellij.application.options.codeStyle;
 
-import consulo.logging.Logger;
 import com.intellij.psi.codeStyle.CodeStyleSettings;
 import com.intellij.psi.codeStyle.CommonCodeStyleSettings;
 import com.intellij.psi.codeStyle.CustomCodeStyleSettings;
@@ -28,7 +27,7 @@ import com.intellij.util.containers.MultiMap;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.tree.TreeUtil;
-import gnu.trove.THashMap;
+import consulo.logging.Logger;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
@@ -40,8 +39,8 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.lang.reflect.Field;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 /**
  * @author max
@@ -56,8 +55,8 @@ public abstract class OptionTreeWithPreviewPanel extends CustomizableLanguageCod
   private final Set<String> myAllowedOptions = new HashSet<>();
   protected MultiMap<String, CustomBooleanOptionInfo> myCustomOptions = new MultiMap<>();
   protected boolean isFirstUpdate = true;
-  private final Map<String, String> myRenamedFields = new THashMap<>();
-  private final Map<String, String> myRemappedGroups = new THashMap<>();
+  private final Map<String, String> myRenamedFields = new HashMap<>();
+  private final Map<String, String> myRemappedGroups = new HashMap<>();
 
 
   public OptionTreeWithPreviewPanel(CodeStyleSettings settings) {

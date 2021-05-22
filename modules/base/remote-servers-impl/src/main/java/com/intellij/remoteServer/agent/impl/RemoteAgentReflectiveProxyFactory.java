@@ -1,13 +1,13 @@
 package com.intellij.remoteServer.agent.impl;
 
 import consulo.logging.Logger;
-import com.intellij.util.containers.hash.HashSet;
-import javax.annotation.Nullable;
 
+import javax.annotation.Nullable;
 import java.lang.reflect.*;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Set;
 
 /**

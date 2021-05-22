@@ -23,11 +23,13 @@ import com.intellij.vcs.log.graph.api.elements.GraphNode;
 import com.intellij.vcs.log.graph.utils.UnsignedBitSet;
 import com.intellij.vcs.log.graph.utils.UpdatableIntToIntMap;
 import com.intellij.vcs.log.graph.utils.impl.ListIntToIntMap;
-import gnu.trove.TIntHashSet;
-import gnu.trove.TIntIterator;
-import javax.annotation.Nonnull;
+import consulo.util.collection.primitive.ints.IntSet;
+import consulo.util.collection.primitive.ints.IntSets;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.List;
+import java.util.PrimitiveIterator;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class CollapsedGraph {
@@ -119,9 +121,9 @@ public class CollapsedGraph {
     @Nonnull
     private final EdgeStorageWrapper myEdgesToRemove = EdgeStorageWrapper.createSimpleEdgeStorage();
     @Nonnull
-    private final TIntHashSet myNodesToHide = new TIntHashSet();
+    private final IntSet myNodesToHide = IntSets.newHashSet();
     @Nonnull
-    private final TIntHashSet myNodesToShow = new TIntHashSet();
+    private final IntSet myNodesToShow = IntSets.newHashSet();
     private boolean myClearEdges = false;
     private boolean myClearVisibility = false;
 
@@ -213,11 +215,11 @@ public class CollapsedGraph {
         myEdgeStorage.removeAll();
       }
 
-      TIntIterator toShow = myNodesToShow.iterator();
+      PrimitiveIterator.OfInt toShow = myNodesToShow.iterator();
       while (toShow.hasNext()) {
         myDelegateNodesVisibility.show(toShow.next());
       }
-      TIntIterator toHide = myNodesToHide.iterator();
+      PrimitiveIterator.OfInt toHide = myNodesToHide.iterator();
       while (toHide.hasNext()) {
         myDelegateNodesVisibility.hide(toHide.next());
       }
@@ -261,12 +263,12 @@ public class CollapsedGraph {
     }
 
     @Nonnull
-    private GraphEdge createEdge(@Nonnull GraphEdge delegateEdge, @javax.annotation.Nullable Integer upNodeIndex, @javax.annotation.Nullable Integer downNodeIndex) {
+    private GraphEdge createEdge(@Nonnull GraphEdge delegateEdge, @Nullable Integer upNodeIndex, @Nullable Integer downNodeIndex) {
       return new GraphEdge(upNodeIndex, downNodeIndex, delegateEdge.getTargetId(), delegateEdge.getType());
     }
 
-    @javax.annotation.Nullable
-    private Integer compiledNodeIndex(@javax.annotation.Nullable Integer delegateNodeIndex) {
+    @Nullable
+    private Integer compiledNodeIndex(@Nullable Integer delegateNodeIndex) {
       if (delegateNodeIndex == null) return null;
       if (myDelegateNodesVisibility.isVisible(delegateNodeIndex)) {
         return myNodesMap.getShortIndex(delegateNodeIndex);
@@ -276,7 +278,7 @@ public class CollapsedGraph {
       }
     }
 
-    private boolean isVisibleEdge(@javax.annotation.Nullable Integer compiledUpNode, @javax.annotation.Nullable Integer compiledDownNode) {
+    private boolean isVisibleEdge(@Nullable Integer compiledUpNode, @Nullable Integer compiledDownNode) {
       if (compiledUpNode != null && compiledUpNode == -1) return false;
       if (compiledDownNode != null && compiledDownNode == -1) return false;
       return true;
@@ -318,7 +320,7 @@ public class CollapsedGraph {
     }
 
     @Override
-    @javax.annotation.Nullable
+    @Nullable
     public Integer getNodeIndex(int nodeId) {
       assertNotUnderModification();
       Integer delegateIndex = myDelegatedGraph.getNodeIndex(nodeId);

@@ -10,8 +10,9 @@ import com.intellij.codeInsight.lookup.impl.LookupImpl;
 import com.intellij.codeInsight.template.impl.LiveTemplateLookupElement;
 import com.intellij.ide.ui.UISettings;
 import com.intellij.openapi.application.ApplicationManager;
-import consulo.logging.Logger;
-import com.intellij.openapi.util.*;
+import com.intellij.openapi.util.Comparing;
+import com.intellij.openapi.util.Condition;
+import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.patterns.StandardPatterns;
 import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil;
@@ -19,12 +20,13 @@ import com.intellij.util.ProcessingContext;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.MultiMap;
-import com.intellij.util.containers.hash.EqualityPolicy;
+import consulo.logging.Logger;
+import consulo.util.collection.HashingStrategy;
+import consulo.util.collection.Maps;
 import consulo.util.dataholder.Key;
-import gnu.trove.THashSet;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.*;
 
 public class CompletionLookupArrangerImpl extends LookupArranger implements CompletionLookupArranger {
@@ -90,7 +92,7 @@ public class CompletionLookupArrangerImpl extends LookupArranger implements Comp
       ProcessingContext context = createContext();
       Classifier<LookupElement> classifier = myClassifiers.get(sorter);
       while (classifier != null) {
-        final THashSet<LookupElement> itemSet = ContainerUtil.newIdentityTroveSet(thisSorterItems);
+        final Set<LookupElement> itemSet = ContainerUtil.newIdentityTroveSet(thisSorterItems);
         List<LookupElement> unsortedItems = ContainerUtil.filter(myItems, lookupElement -> itemSet.contains(lookupElement));
         List<Pair<LookupElement, Object>> pairs = classifier.getSortingWeights(unsortedItems, context);
         if (!hideSingleValued || !haveSameWeights(pairs)) {
@@ -103,7 +105,7 @@ public class CompletionLookupArrangerImpl extends LookupArranger implements Comp
     }
 
     //noinspection unchecked
-    Map<LookupElement, List<Pair<String, Object>>> result = new com.intellij.util.containers.hash.LinkedHashMap(EqualityPolicy.IDENTITY);
+    Map<LookupElement, List<Pair<String, Object>>> result = Maps.newLinkedHashMap(HashingStrategy.identity());
     Map<LookupElement, List<Pair<String, Object>>> additional = myFinalSorter.getRelevanceObjects(items);
     for (LookupElement item : items) {
       List<Pair<String, Object>> mainRelevance = map.get(item);

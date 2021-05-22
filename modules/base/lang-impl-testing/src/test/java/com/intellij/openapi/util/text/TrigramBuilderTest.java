@@ -16,13 +16,16 @@
 package com.intellij.openapi.util.text;
 
 import com.intellij.openapi.util.Ref;
-import gnu.trove.TIntArrayList;
+import consulo.util.collection.primitive.ints.IntList;
+import consulo.util.collection.primitive.ints.IntLists;
 import junit.framework.TestCase;
+
+import java.util.Arrays;
 
 public class TrigramBuilderTest extends TestCase {
   public void testBuilder() {
     final Ref<Integer> trigramCountRef = new Ref<Integer>();
-    final TIntArrayList list = new TIntArrayList();
+    final IntList list = IntLists.newArrayList();
 
     TrigramBuilder.processTrigrams("String$CharData", new TrigramBuilder.TrigramProcessor() {
       @Override
@@ -38,7 +41,12 @@ public class TrigramBuilderTest extends TestCase {
       }
     });
 
-    list.sort();
+    int[] ints = list.toArray();
+    Arrays.sort(ints);
+
+    list.clear();
+    list.addAll(ints);
+
     Integer trigramCount = trigramCountRef.get();
     assertNotNull(trigramCount);
 
@@ -47,7 +55,7 @@ public class TrigramBuilderTest extends TestCase {
     assertEquals(expectedTrigramCount, list.size());
 
     int[] expected = {buildTrigram("$Ch"), buildTrigram("arD"), buildTrigram("ata"), 6514785, 6578548, 6759523, 6840690, 6909543, 7235364, 7496801, 7498094, 7566450, 7631465, };
-    for(int i = 0; i < expectedTrigramCount; ++i) assertEquals(expected[i], list.getQuick(i));
+    for(int i = 0; i < expectedTrigramCount; ++i) assertEquals(expected[i], list.get(i));
   }
 
   private static int buildTrigram(String s) {

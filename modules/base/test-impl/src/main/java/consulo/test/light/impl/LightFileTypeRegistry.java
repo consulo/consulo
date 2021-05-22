@@ -21,10 +21,10 @@ import com.intellij.openapi.fileTypes.UnknownFileType;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.io.FileUtilRt;
 import com.intellij.openapi.vfs.VirtualFile;
-import gnu.trove.THashMap;
+import consulo.util.collection.Maps;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +35,7 @@ import java.util.Map;
  * @since 2018-08-25
  */
 public class LightFileTypeRegistry extends FileTypeRegistry {
-  private final Map<String, FileType> myExtensionsMap = new THashMap<>(FileUtil.PATH_HASHING_STRATEGY);
+  private final Map<String, FileType> myExtensionsMap = Maps.newHashMap(FileUtil.PATH_HASHING_STRATEGY);
   private final List<FileType> myAllFileTypes = new ArrayList<>();
 
   public LightFileTypeRegistry() {

@@ -32,11 +32,10 @@ import com.intellij.util.containers.Convertor;
 import consulo.ide.macro.ModuleProductionOutputDirPathMacro;
 import consulo.ide.macro.ModuleProfileNameMacro;
 import consulo.ide.macro.ModuleTestOutputDirPathMacro;
-import gnu.trove.THashMap;
+import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import jakarta.inject.Singleton;
 import java.io.File;
 import java.util.*;
 
@@ -178,7 +177,7 @@ public final class MacroManager {
           int j = str.indexOf(macroNameWithParamEnd, i + macroNameWithParamStart.length());
           if(j > i) {
             String param = str.substring(i + macroNameWithParamStart.length(), j);
-            if(toReplace == null) toReplace = new THashMap<>();
+            if(toReplace == null) toReplace = new HashMap<>();
             String expanded = macro.expand(dataContext, param);
             if (expanded == null) {
               expanded = "";

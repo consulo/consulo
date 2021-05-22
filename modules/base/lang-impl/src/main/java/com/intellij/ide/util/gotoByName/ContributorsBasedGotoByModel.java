@@ -20,7 +20,6 @@ import com.intellij.pom.PomTargetPsiElement;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.util.ArrayUtil;
-import com.intellij.util.ArrayUtilRt;
 import com.intellij.util.Processor;
 import com.intellij.util.Processors;
 import com.intellij.util.containers.ContainerUtil;
@@ -28,10 +27,9 @@ import com.intellij.util.indexing.FindSymbolParameters;
 import com.intellij.util.indexing.IdFilter;
 import consulo.logging.Logger;
 import consulo.util.PluginExceptionUtil;
-import gnu.trove.THashSet;
 import gnu.trove.TIntHashSet;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import java.util.*;
 import java.util.concurrent.ConcurrentMap;
@@ -139,14 +137,14 @@ public abstract class ContributorsBasedGotoByModel implements ChooseByNameModelE
   @Nonnull
   @Override
   public String[] getNames(final boolean checkBoxState) {
-    final THashSet<String> allNames = new THashSet<>();
+    final Set<String> allNames = new HashSet<>();
 
     Collection<String> result = Collections.synchronizedCollection(allNames);
     processNames(Processors.cancelableCollectProcessor(result), FindSymbolParameters.simple(myProject, checkBoxState));
     if (LOG.isDebugEnabled()) {
       LOG.debug("getNames(): (got " + allNames.size() + " elements)");
     }
-    return ArrayUtilRt.toStringArray(allNames);
+    return ArrayUtil.toStringArray(allNames);
   }
 
   private List<ChooseByNameContributor> filterDumb(List<ChooseByNameContributor> contributors) {

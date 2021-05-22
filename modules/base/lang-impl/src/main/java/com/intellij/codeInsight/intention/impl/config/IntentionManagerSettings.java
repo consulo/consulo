@@ -36,12 +36,12 @@ import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.util.containers.StringInterner;
+import com.intellij.util.containers.Interner;
 import consulo.logging.Logger;
+import jakarta.inject.Singleton;
 import org.jdom.Element;
 
 import javax.annotation.Nonnull;
-import jakarta.inject.Singleton;
 import java.io.IOException;
 import java.util.*;
 import java.util.regex.Pattern;
@@ -50,7 +50,7 @@ import java.util.regex.Pattern;
 @State(name = "IntentionManagerSettings", storages = @Storage("intentionSettings.xml"))
 public class IntentionManagerSettings implements PersistentStateComponent<Element> {
   private static final Logger LOG = Logger.getInstance(IntentionManagerSettings.class);
-  private static final StringInterner ourStringInterner = new StringInterner();
+  private static final Interner<String> ourStringInterner = Interner.createStringInterner();
 
   private static class MetaDataKey extends Pair<String, String> {
     private MetaDataKey(@Nonnull String[] categoryNames, @Nonnull final String familyName) {

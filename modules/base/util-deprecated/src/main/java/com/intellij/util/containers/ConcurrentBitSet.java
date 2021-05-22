@@ -15,12 +15,11 @@
  */
 package com.intellij.util.containers;
 
-import gnu.trove.TLongFunction;
 import javax.annotation.Nonnull;
-
 import java.io.*;
 import java.util.concurrent.atomic.AtomicLongArray;
 import java.util.concurrent.atomic.AtomicReferenceArray;
+import java.util.function.LongUnaryOperator;
 
 /**
  * This class is a thread-safe version of the
@@ -80,12 +79,7 @@ public class ConcurrentBitSet {
    * @throws IndexOutOfBoundsException if the specified index is negative
    */
   public boolean flip(final int bitIndex) {
-    long prevWord = changeWord(bitIndex, new TLongFunction() {
-      @Override
-      public long execute(long word) {
-        return word ^ (1L << bitIndex);
-      }
-    });
+    long prevWord = changeWord(bitIndex, word -> word ^ (1L << bitIndex));
     return (prevWord & (1L << bitIndex)) == 0;
   }
 
@@ -97,16 +91,11 @@ public class ConcurrentBitSet {
    * @throws IndexOutOfBoundsException if the specified index is negative
    */
   public boolean set(final int bitIndex) {
-    long prevWord = changeWord(bitIndex, new TLongFunction() {
-      @Override
-      public long execute(long word) {
-        return word | (1L << bitIndex);
-      }
-    });
+    long prevWord = changeWord(bitIndex, word -> word | (1L << bitIndex));
     return (prevWord & (1L << bitIndex)) != 0;
   }
 
-  long changeWord(int bitIndex, @Nonnull TLongFunction change) {
+  long changeWord(int bitIndex, @Nonnull LongUnaryOperator change) {
     if (bitIndex < 0) {
       throw new IndexOutOfBoundsException("bitIndex < 0: " + bitIndex);
     }
@@ -118,7 +107,7 @@ public class ConcurrentBitSet {
     long newWord;
     do {
       word = array.get(wordIndexInArray);
-      newWord = change.execute(word);
+      newWord = change.applyAsLong(word);
     }
     while (!array.compareAndSet(wordIndexInArray, word, newWord));
     return word;
@@ -148,12 +137,7 @@ public class ConcurrentBitSet {
    * @return previous value
    */
   public boolean clear(final int bitIndex) {
-    long prevWord = changeWord(bitIndex, new TLongFunction() {
-      @Override
-      public long execute(long word) {
-        return word & ~(1L << bitIndex);
-      }
-    });
+    long prevWord = changeWord(bitIndex, word -> word & ~(1L << bitIndex));
     return (prevWord & (1L << bitIndex)) != 0;
   }
 

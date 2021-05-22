@@ -1,9 +1,7 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.diagnostic;
 
-import com.intellij.util.containers.ObjectLongHashMap;
 import javax.annotation.Nonnull;
-
 import javax.annotation.Nullable;
 import java.util.*;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -56,7 +54,7 @@ public final class StartUpMeasurer {
   }
 
   // @ApiStatus.Internal
-  public static final Map<String, ObjectLongHashMap<String>> pluginCostMap = new HashMap<>();
+  public static final Map<String, Map<String, Long>> pluginCostMap = new HashMap<>();
 
   public static long getCurrentTime() {
     return System.nanoTime();
@@ -240,16 +238,14 @@ public final class StartUpMeasurer {
   }
 
   //@ApiStatus.Internal
-  public static void doAddPluginCost(@Nonnull String pluginId, @Nonnull String phase, long time, @Nonnull Map<String, ObjectLongHashMap<String>> pluginCostMap) {
-    ObjectLongHashMap<String> costPerPhaseMap = pluginCostMap.get(pluginId);
+  public static void doAddPluginCost(@Nonnull String pluginId, @Nonnull String phase, long time, @Nonnull Map<String, Map<String, Long>> pluginCostMap) {
+    Map<String, Long> costPerPhaseMap = pluginCostMap.get(pluginId);
     if (costPerPhaseMap == null) {
-      costPerPhaseMap = new ObjectLongHashMap<>();
+      costPerPhaseMap = new HashMap<>();
       pluginCostMap.put(pluginId, costPerPhaseMap);
     }
-    long oldCost = costPerPhaseMap.get(phase);
-    if (oldCost == -1) {
-      oldCost = 0L;
-    }
+    Long oldCost = costPerPhaseMap.getOrDefault(phase, 0L);
+
     costPerPhaseMap.put(phase, oldCost + time);
   }
 }

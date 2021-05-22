@@ -21,25 +21,25 @@ import com.intellij.execution.process.ProcessHandler;
 import com.intellij.execution.ui.RunnerLayoutUi;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.ComponentWithActions;
-import consulo.disposer.Disposable;
-import consulo.disposer.Disposer;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentManagerAdapter;
 import com.intellij.ui.content.ContentManagerEvent;
 import com.intellij.util.ArrayUtil;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
 import consulo.ui.image.Image;
-import gnu.trove.THashMap;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.File;
 import java.nio.charset.Charset;
+import java.util.HashMap;
 import java.util.Map;
 
 public abstract class LogConsoleManagerBase implements LogConsoleManager, Disposable {
   private final Project myProject;
-  private final Map<AdditionalTabComponent, Content> myAdditionalContent = new THashMap<AdditionalTabComponent, Content>();
+  private final Map<AdditionalTabComponent, Content> myAdditionalContent = new HashMap<AdditionalTabComponent, Content>();
   private final GlobalSearchScope mySearchScope;
 
   protected LogConsoleManagerBase(@Nonnull Project project, @Nonnull GlobalSearchScope searchScope) {

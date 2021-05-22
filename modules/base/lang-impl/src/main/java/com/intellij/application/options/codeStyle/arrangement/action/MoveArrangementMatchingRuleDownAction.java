@@ -17,9 +17,9 @@ package com.intellij.application.options.codeStyle.arrangement.action;
 
 import com.intellij.application.options.codeStyle.arrangement.match.ArrangementMatchingRulesControl;
 import com.intellij.openapi.application.ApplicationBundle;
-import gnu.trove.TIntArrayList;
-import javax.annotation.Nonnull;
+import consulo.util.collection.primitive.ints.IntList;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 /**
@@ -35,7 +35,7 @@ public class MoveArrangementMatchingRuleDownAction extends AbstractMoveArrangeme
 
   @Override
   protected void fillMappings(@Nonnull ArrangementMatchingRulesControl control, @Nonnull List<int[]> mappings) {
-    TIntArrayList rows = control.getSelectedModelRows();
+    IntList rows = control.getSelectedModelRows();
     int bottom = control.getModel().getSize();
     for (int i = 0; i < rows.size(); i++) {
       int row = rows.get(i);

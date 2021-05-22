@@ -54,7 +54,7 @@ public final class FileTypeIndexImpl extends ScalarIndexExtension<FileType> impl
     FileType[] types = FileTypeRegistry.getInstance().getRegisteredFileTypes();
     int version = 2;
     for (FileType type : types) {
-      version += type.getName().hashCode();
+      version += type.getId().hashCode();
     }
 
     version *= 31;
@@ -71,7 +71,7 @@ public final class FileTypeIndexImpl extends ScalarIndexExtension<FileType> impl
 
   @Override
   public void save(@Nonnull DataOutput out, FileType value) throws IOException {
-    EnumeratorStringDescriptor.INSTANCE.save(out, value.getName());
+    EnumeratorStringDescriptor.INSTANCE.save(out, value.getId());
   }
 
   @Override
@@ -81,12 +81,12 @@ public final class FileTypeIndexImpl extends ScalarIndexExtension<FileType> impl
   }
 
   @Override
-  public int getHashCode(FileType value) {
-    return value.getName().hashCode();
+  public int hashCode(FileType value) {
+    return value.getId().hashCode();
   }
 
   @Override
-  public boolean isEqual(FileType val1, FileType val2) {
+  public boolean equals(FileType val1, FileType val2) {
     if (val1 instanceof SubstitutedFileType) val1 = ((SubstitutedFileType)val1).getOriginalFileType();
     if (val2 instanceof SubstitutedFileType) val2 = ((SubstitutedFileType)val2).getOriginalFileType();
     return Comparing.equal(val1, val2);

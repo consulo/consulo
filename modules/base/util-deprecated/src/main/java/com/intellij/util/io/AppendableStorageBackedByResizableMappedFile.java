@@ -73,13 +73,13 @@ public class AppendableStorageBackedByResizableMappedFile extends ResizeableMapp
 
     if (myFileLength <= addr) {
       Data data = descriptor.read(new DataInputStream(new UnsyncByteArrayInputStream(myAppendBuffer, addr - myFileLength, myBufferPosition)));
-      assert tempData == null || descriptor.isEqual(data, tempData);
+      assert tempData == null || descriptor.equals(data, tempData);
       return data;
     }
     // we do not need to flushKeyBuffer since we store complete records
     myReadStream.setup(addr, myFileLength);
     Data data = descriptor.read(myReadStream);
-    assert tempData == null || descriptor.isEqual(data, tempData);
+    assert tempData == null || descriptor.equals(data, tempData);
     return data;
   }
 
@@ -119,7 +119,7 @@ public class AppendableStorageBackedByResizableMappedFile extends ResizeableMapp
           Data key = descriptor.read(keysStream);
           if (keysStream2 != null) {
             Data tempKey = descriptor.read(keysStream2);
-            assert descriptor.isEqual(key, tempKey);
+            assert descriptor.equals(key, tempKey);
           }
           if (!processor.process(key)) return false;
         }

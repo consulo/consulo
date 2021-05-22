@@ -40,7 +40,7 @@ public class MostlySingularMultiMap<K, V> implements Serializable {
 
   @Nonnull
   protected Map<K, Object> createMap() {
-    return new THashMap<K, Object>();
+    return new HashMap<K, Object>();
   }
 
   public void add(@Nonnull K key, @Nonnull V value) {

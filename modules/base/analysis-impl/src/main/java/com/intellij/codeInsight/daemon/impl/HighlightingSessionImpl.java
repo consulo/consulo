@@ -23,17 +23,17 @@ import com.intellij.openapi.editor.colors.EditorColorsScheme;
 import com.intellij.openapi.editor.ex.RangeHighlighterEx;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.project.Project;
-import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;
 import com.intellij.util.ConcurrencyUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.TransferToEDTQueue;
-import gnu.trove.THashMap;
-import javax.annotation.Nonnull;
+import consulo.util.dataholder.Key;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentMap;
 
@@ -46,7 +46,7 @@ public class HighlightingSessionImpl implements HighlightingSession {
   @Nonnull
   private final Project myProject;
   private final Document myDocument;
-  private final Map<TextRange, RangeMarker> myRanges2markersCache = new THashMap<>();
+  private final Map<TextRange, RangeMarker> myRanges2markersCache = new HashMap<>();
   private final TransferToEDTQueue<Runnable> myEDTQueue;
 
   private HighlightingSessionImpl(@Nonnull PsiFile psiFile, @Nonnull DaemonProgressIndicator progressIndicator, EditorColorsScheme editorColorsScheme) {

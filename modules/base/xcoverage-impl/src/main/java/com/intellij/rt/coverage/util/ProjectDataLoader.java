@@ -34,7 +34,7 @@ public class ProjectDataLoader {
     DataInputStream in = null;
     try {
       in = new DataInputStream(new BufferedInputStream(new FileInputStream(sessionDataFile)));
-      final TIntObjectHashMap dict = new TIntObjectHashMap(1000, 0.99f);
+      final IntObjectMap dict = new TIntObjectHashMap(1000, 0.99f);
       final int classCount = CoverageIOUtil.readINT(in);
       for (int c = 0; c < classCount; c++) {
         final ClassData classInfo = projectInfo.getOrCreateClassData(StringsPool.getFromPool(CoverageIOUtil.readUTFFast(in)));

@@ -28,10 +28,12 @@ import com.intellij.util.ObjectUtils;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.ObjectIntHashMap;
+import consulo.util.collection.primitive.objects.ObjectIntMap;
+import consulo.util.collection.primitive.objects.ObjectMaps;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.MutableTreeNode;
@@ -204,11 +206,11 @@ public class GroupNode extends Node implements Navigatable, Comparable<GroupNode
     if (count == 0) {
       return;
     }
-    ObjectIntHashMap<MutableTreeNode> ordering = new ObjectIntHashMap<>(count);
+    ObjectIntMap<MutableTreeNode> ordering = ObjectMaps.newObjectIntHashMap(count);
     for (MutableTreeNode node : nodes) {
-      ordering.put(node, parent.getIndex(node));
+      ordering.putInt(node, parent.getIndex(node));
     }
-    Collections.sort(nodes, Comparator.comparingInt(ordering::get)); // need ascending order
+    Collections.sort(nodes, Comparator.comparingInt(ordering::getInt)); // need ascending order
     int[] indices = ordering.getValues();
     Arrays.sort(indices);
     for (int i = count - 1; i >= 0; i--) {

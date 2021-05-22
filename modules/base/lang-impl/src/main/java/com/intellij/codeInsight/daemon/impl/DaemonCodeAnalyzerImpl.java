@@ -52,8 +52,6 @@ import consulo.disposer.Disposer;
 import consulo.fileEditor.impl.text.TextEditorProvider;
 import consulo.logging.Logger;
 import consulo.util.dataholder.Key;
-import gnu.trove.THashMap;
-import gnu.trove.THashSet;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
@@ -87,8 +85,8 @@ public class DaemonCodeAnalyzerImpl extends DaemonCodeAnalyzerEx implements Pers
   @Nonnull
   private volatile Future<?> myUpdateRunnableFuture = CompletableFuture.completedFuture(null);
   private boolean myUpdateByTimerEnabled = true; // guarded by this
-  private final Collection<VirtualFile> myDisabledHintsFiles = new THashSet<>();
-  private final Collection<VirtualFile> myDisabledHighlightingFiles = new THashSet<>();
+  private final Collection<VirtualFile> myDisabledHintsFiles = new HashSet<>();
+  private final Collection<VirtualFile> myDisabledHighlightingFiles = new HashSet<>();
 
   private final FileStatusMap myFileStatusMap;
   private DaemonCodeAnalyzerSettings myLastSettings;
@@ -756,7 +754,7 @@ public class DaemonCodeAnalyzerImpl extends DaemonCodeAnalyzerEx implements Pers
         // (or else it will blink like crazy since unused symbols calculation depends on resolve service)
       }
 
-      Map<FileEditor, HighlightingPass[]> passes = new THashMap<>(activeEditors.size());
+      Map<FileEditor, HighlightingPass[]> passes = new HashMap<>(activeEditors.size());
       for (FileEditor fileEditor : activeEditors) {
         BackgroundEditorHighlighter highlighter = fileEditor.getBackgroundHighlighter();
         if (highlighter != null) {
@@ -850,7 +848,7 @@ public class DaemonCodeAnalyzerImpl extends DaemonCodeAnalyzerEx implements Pers
       activeTextEditors = Collections.emptyList();
     }
     else {
-      activeTextEditors = new THashSet<>(editors.size());
+      activeTextEditors = new HashSet<>(editors.size());
       for (Editor editor : editors) {
         if (editor.isDisposed()) continue;
         TextEditor textEditor = TextEditorProvider.getInstance().getTextEditor(editor);
@@ -862,8 +860,8 @@ public class DaemonCodeAnalyzerImpl extends DaemonCodeAnalyzerEx implements Pers
       return activeTextEditors;
     }
 
-    Collection<FileEditor> result = new THashSet<>();
-    Collection<VirtualFile> files = new THashSet<>(activeTextEditors.size());
+    Collection<FileEditor> result = new HashSet<>();
+    Collection<VirtualFile> files = new HashSet<>(activeTextEditors.size());
     if (!app.isUnitTestMode()) {
       // editors in tabs
       FileEditorManagerEx fileEditorManager = FileEditorManagerEx.getInstanceEx(myProject);

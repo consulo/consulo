@@ -16,8 +16,8 @@
 package com.intellij.util.text;
 
 import com.intellij.openapi.util.SystemInfo;
-import com.intellij.util.containers.ContainerUtil;
-import gnu.trove.TObjectHashingStrategy;
+import consulo.util.collection.HashingStrategy;
+
 import javax.annotation.Nonnull;
 
 /**
@@ -28,17 +28,17 @@ public class FilePathHashingStrategy {
   }
 
   @Nonnull
-  public static TObjectHashingStrategy<String> create() {
+  public static HashingStrategy<String> create() {
     return create(SystemInfo.isFileSystemCaseSensitive);
   }
 
   @Nonnull
-  public static TObjectHashingStrategy<CharSequence> createForCharSequence() {
+  public static HashingStrategy<CharSequence> createForCharSequence() {
     return SystemInfo.isFileSystemCaseSensitive ? CharSequenceHashingStrategy.CASE_SENSITIVE : CharSequenceHashingStrategy.CASE_INSENSITIVE;
   }
 
   @Nonnull
-  public static TObjectHashingStrategy<String> create(boolean caseSensitive) {
-    return caseSensitive ? ContainerUtil.canonicalStrategy() : CaseInsensitiveStringHashingStrategy.INSTANCE;
+  public static HashingStrategy<String> create(boolean caseSensitive) {
+    return caseSensitive ? HashingStrategy.canonical() : CaseInsensitiveStringHashingStrategy.INSTANCE;
   }
 }

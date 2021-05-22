@@ -78,6 +78,10 @@ public class UnsafeDelegate {
     return myUnsafe.getObjectVolatile(o, offset);
   }
 
+  public final int getAndAddInt(Object o, long offset, int delta) {
+    return myUnsafe.getAndAddInt(o, offset, delta);
+  }
+
   public final boolean compareAndSwapObject(Object o, long offset, Object expected, Object x) {
     return myUnsafe.compareAndSwapObject(o, offset, expected, x);
   }

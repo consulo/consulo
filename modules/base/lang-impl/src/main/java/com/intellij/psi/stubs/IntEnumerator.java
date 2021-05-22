@@ -2,17 +2,19 @@
 package com.intellij.psi.stubs;
 
 import com.intellij.util.io.DataInputOutputUtil;
-import gnu.trove.TIntArrayList;
+import consulo.util.collection.primitive.ints.IntList;
+import consulo.util.collection.primitive.ints.IntLists;
 import gnu.trove.TIntIntHashMap;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.util.PrimitiveIterator;
 import java.util.function.IntUnaryOperator;
 
 class IntEnumerator {
   private final TIntIntHashMap myEnumerates;
-  private final TIntArrayList myIds;
+  private final IntList myIds;
   private int myNext;
 
   IntEnumerator() {
@@ -21,7 +23,7 @@ class IntEnumerator {
 
   private IntEnumerator(boolean forSavingStub) {
     myEnumerates = forSavingStub ? new TIntIntHashMap(1) : null;
-    myIds = new TIntArrayList();
+    myIds = IntLists.newArrayList();
   }
 
   int enumerate(int number) {
@@ -45,24 +47,14 @@ class IntEnumerator {
 
   void dump(DataOutputStream stream, IntUnaryOperator idRemapping) throws IOException {
     DataInputOutputUtil.writeINT(stream, myIds.size());
-    IOException[] exception = new IOException[1];
-    myIds.forEach(id -> {
-      try {
-        int remapped = idRemapping.applyAsInt(id);
-        if (remapped == 0) {
-          exception[0] = new IOException("remapping is not found for " + id);
-          return false;
-        }
-        DataInputOutputUtil.writeINT(stream, remapped);
+    PrimitiveIterator.OfInt iterator = myIds.iterator();
+    while (iterator.hasNext()) {
+      int id = iterator.nextInt();
+      int remapped = idRemapping.applyAsInt(id);
+      if (remapped == 0) {
+        throw new IOException("remapping is not found for " + id);
       }
-      catch (IOException e) {
-        exception[0] = e;
-        return false;
-      }
-      return true;
-    });
-    if (exception[0] != null) {
-      throw exception[0];
+      DataInputOutputUtil.writeINT(stream, remapped);
     }
   }
 

@@ -21,7 +21,7 @@ import com.intellij.openapi.actionSystem.Toggleable;
 import com.intellij.openapi.application.ApplicationBundle;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.util.IconUtil;
-import gnu.trove.TIntArrayList;
+import consulo.util.collection.primitive.ints.IntList;
 
 /**
  * @author Denis Zhdanov
@@ -47,7 +47,7 @@ public class EditArrangementRuleAction extends AbstractArrangementRuleAction imp
     if (control == null) {
       return;
     }
-    TIntArrayList rows = control.getSelectedModelRows();
+    IntList rows = control.getSelectedModelRows();
     if (rows.size() != 1) {
       return;
     }

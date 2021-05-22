@@ -15,14 +15,11 @@
  */
 package consulo.components.impl.stores.storage;
 
-import consulo.disposer.Disposable;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.*;
 import com.intellij.openapi.components.StateStorage.SaveSession;
-import consulo.logging.Logger;
 import com.intellij.openapi.util.Couple;
-import consulo.disposer.Disposer;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.PathUtilRt;
@@ -31,7 +28,9 @@ import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.messages.MessageBus;
 import consulo.components.impl.stores.StreamProvider;
-import gnu.trove.THashMap;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
+import consulo.logging.Logger;
 import org.jdom.Element;
 
 import javax.annotation.Nonnull;
@@ -55,7 +54,7 @@ public abstract class StateStorageManagerImpl implements StateStorageManager, Di
 
   private final Map<String, String> myMacros = new LinkedHashMap<>();
   private final Lock myStorageLock = new ReentrantLock();
-  private final Map<String, StateStorage> myStorages = new THashMap<>();
+  private final Map<String, StateStorage> myStorages = new HashMap<>();
   private final TrackingPathMacroSubstitutor myPathMacroSubstitutor;
   @Nonnull
   private final StateStorageFacade myStateStorageFacade;

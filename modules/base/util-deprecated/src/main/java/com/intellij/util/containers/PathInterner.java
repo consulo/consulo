@@ -16,21 +16,22 @@
 package com.intellij.util.containers;
 
 import com.intellij.util.io.IOUtil;
-import gnu.trove.THashMap;
-import gnu.trove.TObjectHashingStrategy;
-import gnu.trove.TObjectIntHashMap;
+import consulo.util.collection.HashingStrategy;
+import consulo.util.collection.Maps;
+import consulo.util.collection.primitive.objects.ObjectIntMap;
+import consulo.util.collection.primitive.objects.ObjectMaps;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.*;
 
 /**
  * @author peter
  */
 public class PathInterner {
-  private static final TObjectHashingStrategy<SubstringWrapper[]> HASHING_STRATEGY = new TObjectHashingStrategy<SubstringWrapper[]>() {
+  private static final HashingStrategy<SubstringWrapper[]> HASHING_STRATEGY = new HashingStrategy<>() {
     @Override
-    public int computeHashCode(SubstringWrapper[] object) {
+    public int hashCode(SubstringWrapper[] object) {
       return Arrays.hashCode(object);
     }
 
@@ -39,7 +40,7 @@ public class PathInterner {
       return Arrays.equals(o1, o2);
     }
   };
-  private final OpenTHashSet<SubstringWrapper> myInternMap = new OpenTHashSet<SubstringWrapper>();
+  private final Map<SubstringWrapper, SubstringWrapper> myInternMap = new HashMap<>();
 
   @Nullable
   protected SubstringWrapper[] internParts(String path, boolean forAddition) {
@@ -54,7 +55,8 @@ public class PathInterner {
         if (!forAddition) {
           return null;
         }
-        myInternMap.add(interned = flyweightKey.createPersistentCopy(asBytes));
+        interned = flyweightKey.createPersistentCopy(asBytes);
+        myInternMap.put(interned, interned);
       }
       key.add(interned);
       start += flyweightKey.len;
@@ -163,8 +165,7 @@ public class PathInterner {
   }
 
   public static class PathEnumerator {
-    private final TObjectIntHashMap<SubstringWrapper[]> mySeqToIdx = new TObjectIntHashMap<SubstringWrapper[]>(
-      PathInterner.HASHING_STRATEGY);
+    private final ObjectIntMap<SubstringWrapper[]> mySeqToIdx = ObjectMaps.newObjectIntHashMap(PathInterner.HASHING_STRATEGY);
     private final List<SubstringWrapper[]> myIdxToSeq = new ArrayList<SubstringWrapper[]>();
     private final PathInterner myInterner = new PathInterner();
 
@@ -185,10 +186,10 @@ public class PathInterner {
     public int addPath(String path) {
       PathInterner.SubstringWrapper[] seq = myInterner.internParts(path, true);
       if (!mySeqToIdx.containsKey(seq)) {
-        mySeqToIdx.put(seq, myIdxToSeq.size());
+        mySeqToIdx.putInt(seq, myIdxToSeq.size());
         myIdxToSeq.add(seq);
       }
-      return mySeqToIdx.get(seq);
+      return mySeqToIdx.getInt(seq);
     }
 
     public String retrievePath(int idx) {
@@ -202,7 +203,7 @@ public class PathInterner {
 
     public int getExistingPathIndex(String path) {
       PathInterner.SubstringWrapper[] key = myInterner.internParts(path, false);
-      return key != null && mySeqToIdx.containsKey(key) ? mySeqToIdx.get(key) : 0;
+      return key != null && mySeqToIdx.containsKey(key) ? mySeqToIdx.getInt(key) : 0;
     }
     public boolean containsPath(String path) {
       PathInterner.SubstringWrapper[] key = myInterner.internParts(path, false);
@@ -211,7 +212,7 @@ public class PathInterner {
   }
 
   public static class PathMap<T> {
-    private final THashMap<SubstringWrapper[], T> myMap = new THashMap<SubstringWrapper[], T>(PathInterner.HASHING_STRATEGY);
+    private final Map<SubstringWrapper[], T> myMap = Maps.newHashMap(PathInterner.HASHING_STRATEGY);
     private final PathInterner myInterner = new PathInterner();
 
     @Nullable

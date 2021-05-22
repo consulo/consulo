@@ -20,10 +20,11 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ModuleRootModel;
 import com.intellij.openapi.roots.OrderEntry;
 import com.intellij.util.Processor;
-import gnu.trove.THashSet;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author nik
@@ -47,7 +48,7 @@ public class ModulesOrderEnumerator extends OrderEnumeratorBase {
   public void forEach(@Nonnull Processor<OrderEntry> processor) {
     myRecursivelyExportedOnly = false;
 
-    final THashSet<Module> processed = new THashSet<Module>();
+    final Set<Module> processed = new HashSet<Module>();
     for (Module module : myModules) {
       processEntries(getRootModel(module), processor, processed, true);
     }

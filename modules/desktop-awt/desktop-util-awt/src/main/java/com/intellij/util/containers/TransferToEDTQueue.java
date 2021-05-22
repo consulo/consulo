@@ -19,7 +19,7 @@ import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.Conditions;
 import com.intellij.util.Processor;
 import com.intellij.util.concurrency.Semaphore;
-import gnu.trove.Equality;
+import consulo.util.collection.HashingStrategy;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.TestOnly;
 
@@ -145,14 +145,9 @@ public class TransferToEDTQueue<T> {
     return offerIfAbsent(thing, ContainerUtil.<T>canonicalStrategy());
   }
 
-  public boolean offerIfAbsent(@Nonnull final T thing, @Nonnull final Equality<T> equality) {
+  public boolean offerIfAbsent(@Nonnull final T thing, @Nonnull final HashingStrategy<T> equality) {
     synchronized (myQueue) {
-      boolean absent = myQueue.process(new Processor<T>() {
-        @Override
-        public boolean process(T t) {
-          return !equality.equals(t, thing);
-        }
-      });
+      boolean absent = myQueue.process(t -> !equality.equals(t, thing));
       if (absent) {
         myQueue.addLast(thing);
         scheduleUpdate();

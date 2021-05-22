@@ -29,16 +29,14 @@ import com.intellij.ui.awt.RelativePoint;
 import com.intellij.util.CommonProcessors;
 import com.intellij.util.Consumer;
 import com.intellij.util.FilteringProcessor;
-import com.intellij.util.containers.hash.LinkedHashMap;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
-import java.util.ArrayList;
-import java.util.Collection;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author peter
@@ -124,7 +122,7 @@ public class EditorHyperlinkSupport {
    */
   @Deprecated
   public Map<RangeHighlighter, HyperlinkInfo> getHyperlinks() {
-    LinkedHashMap<RangeHighlighter, HyperlinkInfo> result = new LinkedHashMap<>();
+    Map<RangeHighlighter, HyperlinkInfo> result = new LinkedHashMap<>();
     for (RangeHighlighter highlighter : getHyperlinks(0, myEditor.getDocument().getTextLength(), myEditor)) {
       HyperlinkInfo info = getHyperlinkInfo(highlighter);
       if (info != null) {

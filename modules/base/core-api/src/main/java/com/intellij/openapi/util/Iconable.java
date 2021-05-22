@@ -16,11 +16,10 @@
 package com.intellij.openapi.util;
 
 import consulo.ui.image.Image;
-import consulo.util.collection.ConcurrentIntObjectMap;
-import consulo.util.collection.Maps;
+import consulo.util.collection.primitive.ints.ConcurrentIntObjectMap;
+import consulo.util.collection.primitive.ints.IntMaps;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolder;
-import consulo.util.dataholder.UserDataHolderEx;
 import org.intellij.lang.annotations.MagicConstant;
 
 import javax.annotation.Nonnull;
@@ -55,7 +54,7 @@ public interface Iconable {
       }
       else {
         if (map == null) {
-          map = ((UserDataHolderEx)holder).putUserDataIfAbsent(LAST_COMPUTED_ICON, Maps.newConcurrentIntObjectHashMap());
+          map = holder.putUserDataIfAbsent(LAST_COMPUTED_ICON, IntMaps.newConcurrentIntObjectHashMap());
         }
         map.put(flags, icon);
       }

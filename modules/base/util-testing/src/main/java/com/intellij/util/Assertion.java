@@ -17,7 +17,7 @@
 package com.intellij.util;
 
 import com.intellij.openapi.util.Comparing;
-import gnu.trove.Equality;
+import consulo.util.collection.HashingStrategy;
 import junit.framework.Assert;
 import junit.framework.AssertionFailedError;
 
@@ -28,7 +28,7 @@ import java.util.*;
 
 public class Assertion extends Assert {
   private StringConvertion myStringConvertion;
-  private Equality myEquality = Equality.CANONICAL;
+  private HashingStrategy myEquality = HashingStrategy.canonical();
 
   public Assertion() {
     this(StringConvertion.DEFAULT);
@@ -44,7 +44,7 @@ public class Assertion extends Assert {
 
   public StringConvertion getStringConvertion() { return myStringConvertion; }
 
-  public Equality getEquality() { return myEquality; }
+  public HashingStrategy getEquality() { return myEquality; }
 
   public void compareAll(Object[] expected, Object[] actual) {
     checkNotNulls(expected, actual);
@@ -219,7 +219,7 @@ public class Assertion extends Assert {
     return result;
   }
 
-  public void setEquality(Equality equality) {
+  public void setEquality(HashingStrategy equality) {
     myEquality = equality;
   }
 

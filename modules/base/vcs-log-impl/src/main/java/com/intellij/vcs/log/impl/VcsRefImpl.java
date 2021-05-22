@@ -1,17 +1,18 @@
 package com.intellij.vcs.log.impl;
 
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.util.containers.WeakStringInterner;
+import com.intellij.util.containers.Interner;
 import com.intellij.vcs.log.Hash;
 import com.intellij.vcs.log.VcsRef;
 import com.intellij.vcs.log.VcsRefType;
+
 import javax.annotation.Nonnull;
 
 /**
  * @author erokhins
  */
 public final class VcsRefImpl implements VcsRef {
-  private static final WeakStringInterner ourNames = new WeakStringInterner();
+  private static final Interner<String> ourNames = Interner.createStringInterner();
   @Nonnull
   private final Hash myCommitHash;
   @Nonnull

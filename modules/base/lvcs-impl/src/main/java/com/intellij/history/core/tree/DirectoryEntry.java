@@ -22,16 +22,17 @@ import com.intellij.history.core.revisions.Difference;
 import com.intellij.history.utils.LocalHistoryLog;
 import com.intellij.util.io.DataInputOutputUtil;
 import com.intellij.util.text.CaseInsensitiveStringHashingStrategy;
-import gnu.trove.THashMap;
+import consulo.util.collection.Maps;
 import gnu.trove.TIntObjectHashMap;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 public class DirectoryEntry extends Entry {
   private final ArrayList<Entry> myChildren;
@@ -186,7 +187,7 @@ public class DirectoryEntry extends Entry {
     }
 
     if (!Paths.isCaseSensitive()  && uniqueNameIdToMyChildEntries.size() > 0 && uniqueNameIdToRightChildEntries.size() > 0) {
-      THashMap<String, Entry> nameToEntryMap = new THashMap<>(uniqueNameIdToMyChildEntries.size(), CaseInsensitiveStringHashingStrategy.INSTANCE);
+      Map<String, Entry> nameToEntryMap = Maps.newHashMap(uniqueNameIdToMyChildEntries.size(), CaseInsensitiveStringHashingStrategy.INSTANCE);
 
       uniqueNameIdToMyChildEntries.forEachValue(myChildEntry -> {
         nameToEntryMap.put(myChildEntry.getName(), myChildEntry);

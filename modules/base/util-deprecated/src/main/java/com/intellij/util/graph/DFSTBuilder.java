@@ -20,10 +20,12 @@ import com.intellij.util.ArrayUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.IntStack;
 import com.intellij.util.containers.Stack;
+import consulo.util.collection.primitive.ints.IntList;
+import consulo.util.collection.primitive.ints.IntLists;
 import gnu.trove.TIntArrayList;
 import gnu.trove.TObjectIntHashMap;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.util.*;
 
 /**
@@ -36,7 +38,7 @@ public class DFSTBuilder<Node> {
   private Couple<Node> myBackEdge;
 
   private Comparator<Node> myComparator;
-  private final TIntArrayList mySCCs = new TIntArrayList(); // strongly connected component sizes
+  private final IntList mySCCs = IntLists.newArrayList(); // strongly connected component sizes
   private final TObjectIntHashMap<Node> myNodeToTNumber = new TObjectIntHashMap<Node>(); // node -> number in scc topological order. Independent scc are in reversed loading order
 
   private final Node[] myInvT; // number in (enumerate all nodes scc by scc) order -> node
@@ -149,7 +151,7 @@ public class DFSTBuilder<Node> {
         myNodeToNNumber.put(node, index.length - 1 - i);
         myInvN[index.length - 1 - i] = node;
       }
-      mySCCs.reverse(); // have to place SCCs in topological order too
+      IntLists.reverse(mySCCs);  // have to place SCCs in topological order too
     }
 
     private void strongConnect(@Nonnull List<List<Node>> sccs) {
@@ -245,14 +247,14 @@ public class DFSTBuilder<Node> {
    * Respective nodes could be obtained via {@link #getNodeByTNumber(int)}.
    */
   @Nonnull
-  public TIntArrayList getSCCs() {
+  public IntList getSCCs() {
     return mySCCs;
   }
 
   @Nonnull
   public Collection<Collection<Node>> getComponents() {
-    final TIntArrayList componentSizes = getSCCs();
-    if (componentSizes.isEmpty()) return Collections.emptyList();
+    final IntList componentSizes = getSCCs();
+    if (componentSizes.isEmpty()) return List.of();
 
     return new MyCollection<Collection<Node>>(componentSizes.size()) {
       @Nonnull
@@ -265,7 +267,7 @@ public class DFSTBuilder<Node> {
           protected Collection<Node> get(int i) {
             final int cSize = componentSizes.get(i);
             final int cOffset = offset;
-            if (cSize == 0) return Collections.emptyList();
+            if (cSize == 0) return List.of();
             offset += cSize;
             return new MyCollection<Node>(cSize) {
               @Nonnull

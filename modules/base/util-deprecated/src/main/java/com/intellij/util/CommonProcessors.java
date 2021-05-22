@@ -17,8 +17,8 @@ package com.intellij.util;
 
 import com.intellij.util.containers.ContainerUtil;
 import consulo.annotation.DeprecationInfo;
-import gnu.trove.THashSet;
-import gnu.trove.TObjectHashingStrategy;
+import consulo.util.collection.HashingStrategy;
+import consulo.util.collection.Sets;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -120,9 +120,9 @@ public class CommonProcessors {
     public UniqueProcessor(Processor<T> delegate) {
       this(delegate, ContainerUtil.<T>canonicalStrategy());
     }
-    public UniqueProcessor(Processor<T> delegate, TObjectHashingStrategy<T> strategy) {
+    public UniqueProcessor(Processor<T> delegate, HashingStrategy<T> strategy) {
       myDelegate = delegate;
-      processed = new THashSet<T>(strategy);
+      processed = Sets.newHashSet(strategy);
     }
 
     @Override

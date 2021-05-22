@@ -32,17 +32,17 @@ import com.intellij.util.io.DataExternalizer;
 import com.intellij.util.io.DataInputOutputUtil;
 import com.intellij.util.io.EnumeratorIntegerDescriptor;
 import com.intellij.util.io.KeyDescriptor;
-import gnu.trove.THashMap;
 import gnu.trove.TIntArrayList;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -125,7 +125,7 @@ public class DuplicatesIndex extends FileBasedIndexExtension<Integer, TIntArrayL
         PsiDependentFileContent fileContent = (PsiDependentFileContent)inputData;
 
         if (profile instanceof LightDuplicateProfile && ourEnabledLightProfiles) {
-          final THashMap<Integer, TIntArrayList> result = new THashMap<>();
+          final Map<Integer, TIntArrayList> result = new HashMap<>();
           LighterAST ast = fileContent.getLighterAST();
 
           ((LightDuplicateProfile)profile).process(ast, new LightDuplicateProfile.Callback() {
@@ -207,7 +207,7 @@ public class DuplicatesIndex extends FileBasedIndexExtension<Integer, TIntArrayL
   private static final TracingData myTracingData = null;
 
   private static class MyFragmentsCollector implements FragmentsCollector {
-    private final THashMap<Integer, TIntArrayList> myMap = new THashMap<>();
+    private final Map<Integer, TIntArrayList> myMap = new HashMap<>();
     private final DuplicatesProfile myProfile;
     private final DuplocatorState myDuplocatorState;
 
@@ -230,7 +230,7 @@ public class DuplicatesIndex extends FileBasedIndexExtension<Integer, TIntArrayL
       list.add(0);
     }
 
-    public THashMap<Integer,TIntArrayList> getMap() {
+    public Map<Integer,TIntArrayList> getMap() {
       return myMap;
     }
   }

@@ -18,6 +18,7 @@ package com.intellij.util.containers;
 import com.intellij.openapi.util.Condition;
 import com.intellij.util.Function;
 import com.intellij.util.Functions;
+import consulo.util.collection.Maps;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -560,7 +561,7 @@ public abstract class TreeTraversal {
   private final static class TracingBfsIt<T> extends TracingIt<T> {
 
     final ArrayDeque<T> queue = new ArrayDeque<T>();
-    final Map<T, T> paths = ContainerUtil.newTroveMap(ContainerUtil.<T>identityStrategy());
+    final Map<T, T> paths = Maps.newHashMap(ContainerUtil.<T>identityStrategy());
     P1<T> top;
 
     TracingBfsIt(@Nonnull Iterable<? extends T> roots, Function<T, ? extends Iterable<? extends T>> tree) {

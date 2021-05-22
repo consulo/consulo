@@ -29,7 +29,9 @@ import com.intellij.util.io.ReplicatorInputStream;
 import com.intellij.util.text.CharSequenceHashingStrategy;
 import consulo.disposer.Disposable;
 import consulo.logging.Logger;
-import consulo.util.collection.ConcurrentIntObjectMap;
+import consulo.util.collection.Maps;
+import consulo.util.collection.Sets;
+import consulo.util.collection.primitive.ints.ConcurrentIntObjectMap;
 import gnu.trove.THashMap;
 import gnu.trove.THashSet;
 import gnu.trove.TIntArrayList;
@@ -160,7 +162,7 @@ public final class PersistentFSImpl extends PersistentFS implements Disposable {
       return current;
     }
 
-    Set<String> toAdd = new THashSet<>(Arrays.asList(delegateNames), FileUtil.PATH_HASHING_STRATEGY);
+    Set<String> toAdd = Sets.newHashSet(List.of(delegateNames), FileUtil.PATH_HASHING_STRATEGY);
     for (FSRecords.NameId nameId : current) {
       toAdd.remove(nameId.name.toString());
     }
@@ -825,8 +827,8 @@ public final class PersistentFSImpl extends PersistentFS implements Disposable {
                                @Nonnull List<? super VFileEvent> outValidatedEvents,
                                @Nonnull MostlySingularMultiMap<String, VFileEvent> filesInvolved,
                                @Nonnull Set<? super String> middleDirsInvolved) {
-    Set<VFileEvent> toIgnore = new THashSet<>(ContainerUtil.identityStrategy()); // VFileEvents override equals()
-    int endIndex = groupByPath(events, startIndex, filesInvolved, middleDirsInvolved, new THashSet<>(FileUtil.PATH_HASHING_STRATEGY), new THashSet<>(FileUtil.PATH_HASHING_STRATEGY), toIgnore);
+    Set<VFileEvent> toIgnore = Sets.newHashSet(ContainerUtil.identityStrategy()); // VFileEvents override equals()
+    int endIndex = groupByPath(events, startIndex, filesInvolved, middleDirsInvolved, Sets.newHashSet(FileUtil.PATH_HASHING_STRATEGY), Sets.newHashSet(FileUtil.PATH_HASHING_STRATEGY), toIgnore);
     assert endIndex > startIndex : events.get(startIndex) + "; files: " + filesInvolved + "; middleDirs: " + middleDirsInvolved;
     // since all events in the group events[startIndex..endIndex) are mutually non-conflicting, we can re-arrange creations/deletions together
     groupCreations(events, startIndex, endIndex, outValidatedEvents, outApplyEvents, toIgnore);
@@ -856,7 +858,7 @@ public final class PersistentFSImpl extends PersistentFS implements Disposable {
           @Nonnull
           @Override
           protected Map<VirtualDirectoryImpl, Collection<VFileCreateEvent>> createMap() {
-            return new THashMap<>(end - start);
+            return new HashMap<>(end - start);
           }
         };
       }
@@ -943,14 +945,14 @@ public final class PersistentFSImpl extends PersistentFS implements Disposable {
     int startIndex = 0;
     int cappedInitialSize = Math.min(events.size(), INNER_ARRAYS_THRESHOLD);
     List<Runnable> applyEvents = new ArrayList<>(cappedInitialSize);
-    MostlySingularMultiMap<String, VFileEvent> files = new MostlySingularMultiMap<String, VFileEvent>() {
+    MostlySingularMultiMap<String, VFileEvent> files = new MostlySingularMultiMap<>() {
       @Nonnull
       @Override
       protected Map<String, Object> createMap() {
-        return new THashMap<>(cappedInitialSize, FileUtil.PATH_HASHING_STRATEGY);
+        return Maps.newHashMap(cappedInitialSize, FileUtil.PATH_HASHING_STRATEGY);
       }
     };
-    Set<String> middleDirs = new THashSet<>(cappedInitialSize, FileUtil.PATH_HASHING_STRATEGY);
+    Set<String> middleDirs = Sets.newHashSet(cappedInitialSize, FileUtil.PATH_HASHING_STRATEGY);
     List<VFileEvent> validated = new ArrayList<>(cappedInitialSize);
     BulkFileListener publisher = getPublisher();
     while (startIndex != events.size()) {
@@ -1089,7 +1091,7 @@ public final class PersistentFSImpl extends PersistentFS implements Disposable {
     FSRecords.NameId[] oldNameIds = FSRecords.listAll(parentId);
     int[] oldIds = new int[oldNameIds.length];
     CharSequenceHashingStrategy strategy = delegate.isCaseSensitive() ? CharSequenceHashingStrategy.CASE_SENSITIVE : CharSequenceHashingStrategy.CASE_INSENSITIVE;
-    Set<CharSequence> persistedNames = new THashSet<>(oldNameIds.length, strategy);
+    Set<CharSequence> persistedNames = Sets.newHashSet(oldNameIds.length, strategy);
     for (int i = 0; i < oldNameIds.length; i++) {
       FSRecords.NameId nameId = oldNameIds[i];
       parentChildrenIds.add(nameId.id);

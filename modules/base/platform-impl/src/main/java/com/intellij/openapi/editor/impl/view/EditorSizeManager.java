@@ -18,6 +18,8 @@ import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.util.DocumentUtil;
+import consulo.util.collection.primitive.ints.IntList;
+import consulo.util.collection.primitive.ints.IntLists;
 import gnu.trove.TIntArrayList;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -41,7 +43,7 @@ class EditorSizeManager implements PrioritizedDocumentListener, Disposable, Fold
   private final DesktopEditorImpl myEditor;
   private final DocumentEx myDocument;
 
-  private final TIntArrayList myLineWidths = new TIntArrayList(); // cached widths of visual lines (in pixels)
+  private final IntList myLineWidths = IntLists.newArrayList(); // cached widths of visual lines (in pixels)
   // negative value means an estimated (not precise) width
   // UNKNOWN_WIDTH(Integer.MAX_VALUE) means no value
   private boolean myWidthIsValid = true;
@@ -454,10 +456,10 @@ class EditorSizeManager implements PrioritizedDocumentListener, Disposable, Fold
     invalidateWidth(lineDiff == 0 && startVisualLine == endVisualLine, startVisualLine);
     if (lineDiff > 0) {
       int[] newEntries = new int[lineDiff];
-      myLineWidths.insert(startVisualLine, newEntries);
+      myLineWidths.addAll(startVisualLine, newEntries);
     }
     else if (lineDiff < 0) {
-      myLineWidths.remove(startVisualLine, -lineDiff);
+      myLineWidths.removeRange(startVisualLine, startVisualLine + lineDiff);
     }
     for (int i = startVisualLine; i <= endVisualLine && i < myLineWidths.size(); i++) {
       myLineWidths.set(i, UNKNOWN_WIDTH);
@@ -553,8 +555,8 @@ class EditorSizeManager implements PrioritizedDocumentListener, Disposable, Fold
     if (myDirty) {
       int visibleLineCount = myEditor.getVisibleLineCount();
       int lineDiff = visibleLineCount - myLineWidths.size();
-      if (lineDiff > 0) myLineWidths.add(new int[lineDiff]);
-      else if (lineDiff < 0) myLineWidths.remove(visibleLineCount, -lineDiff);
+      if (lineDiff > 0) myLineWidths.addAll(new int[lineDiff]);
+      else if (lineDiff < 0) myLineWidths.removeRange(visibleLineCount, visibleLineCount + lineDiff);
       for (int i = 0; i < visibleLineCount; i++) {
         myLineWidths.set(i, UNKNOWN_WIDTH);
       }

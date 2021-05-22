@@ -31,7 +31,6 @@
 
     <jna.version>5.6.0</jna.version>
     <jdom.version>3.0-SNAPSHOT</jdom.version>
-    <trove4j.version>2.2</trove4j.version>
     <log4j2.version>2.13.3</log4j2.version>
     <guava.version>29.0-jre</guava.version>
     <!--please exclude common logging library from dependency-->
@@ -160,10 +159,11 @@
         <artifactId>log4j-core</artifactId>
         <version>${log4j2.version}</version>
       </dependency>
+      <!--obsolete dependency-->
       <dependency>
         <groupId>consulo.internal</groupId>
         <artifactId>trove4j</artifactId>
-        <version>${trove4j.version}</version>
+        <version>2.2</version>
       </dependency>
       <dependency>
         <groupId>consulo</groupId>

@@ -31,22 +31,17 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.*;
 import com.intellij.openapi.roots.libraries.Library;
-import consulo.roots.OrderEntryWithTracking;
-import consulo.roots.types.BinariesOrderRootType;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiManager;
 import com.intellij.util.PathUtil;
-import consulo.ui.annotation.RequiredUIAccess;
-import gnu.trove.THashSet;
-import javax.annotation.Nonnull;
-
 import consulo.annotation.access.RequiredReadAction;
+import consulo.roots.OrderEntryWithTracking;
+import consulo.roots.types.BinariesOrderRootType;
+import consulo.ui.annotation.RequiredUIAccess;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
+import javax.annotation.Nonnull;
+import java.util.*;
 
 public class ExternalLibrariesNode extends ProjectViewNode<String> {
   public ExternalLibrariesNode(Project project, ViewSettings viewSettings) {
@@ -68,9 +63,9 @@ public class ExternalLibrariesNode extends ProjectViewNode<String> {
     final List<AbstractTreeNode> children = new ArrayList<AbstractTreeNode>();
     ProjectFileIndex fileIndex = ProjectRootManager.getInstance(getProject()).getFileIndex();
     Module[] modules = ModuleManager.getInstance(getProject()).getModules();
-    Set<Library> processedLibraries = new THashSet<Library>();
-    Set<Sdk> processedSdk = new THashSet<Sdk>();
-    Set<OrderEntry> processedCustomOrderEntries = new THashSet<OrderEntry>();
+    Set<Library> processedLibraries = new HashSet<Library>();
+    Set<Sdk> processedSdk = new HashSet<Sdk>();
+    Set<OrderEntry> processedCustomOrderEntries = new HashSet<OrderEntry>();
 
     for (Module module : modules) {
       final ModuleRootManager moduleRootManager = ModuleRootManager.getInstance(module);

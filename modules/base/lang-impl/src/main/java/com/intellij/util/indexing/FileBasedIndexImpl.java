@@ -74,10 +74,12 @@ import consulo.container.boot.ContainerPathManager;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
-import consulo.util.collection.IntObjectMap;
+import consulo.util.collection.primitive.ints.IntList;
+import consulo.util.collection.primitive.ints.IntLists;
+import consulo.util.collection.primitive.ints.IntObjectMap;
+import consulo.util.collection.primitive.ints.IntSet;
 import consulo.util.dataholder.Key;
 import gnu.trove.THashMap;
-import gnu.trove.THashSet;
 import gnu.trove.TIntArrayList;
 import gnu.trove.TIntHashSet;
 import javax.annotation.Nonnull;
@@ -114,10 +116,10 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
 
   private final Map<ID<?, ?>, DocumentUpdateTask> myUnsavedDataUpdateTasks = new ConcurrentHashMap<>();
 
-  private final Set<ID<?, ?>> myNotRequiringContentIndices = new THashSet<>();
-  private final Set<ID<?, ?>> myRequiringContentIndices = new THashSet<>();
-  private final Set<ID<?, ?>> myPsiDependentIndices = new THashSet<>();
-  private final Set<FileType> myNoLimitCheckTypes = new THashSet<>();
+  private final Set<ID<?, ?>> myNotRequiringContentIndices = new HashSet<>();
+  private final Set<ID<?, ?>> myRequiringContentIndices = new HashSet<>();
+  private final Set<ID<?, ?>> myPsiDependentIndices = new HashSet<>();
+  private final Set<FileType> myNoLimitCheckTypes = new HashSet<>();
 
   private volatile boolean myExtensionsRelatedDataWasLoaded;
 
@@ -129,7 +131,7 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
   });
 
   private final List<IndexableFileSet> myIndexableSets = ContainerUtil.createLockFreeCopyOnWriteList();
-  private final Map<IndexableFileSet, Project> myIndexableSetToProjectMap = new THashMap<>();
+  private final Map<IndexableFileSet, Project> myIndexableSetToProjectMap = new HashMap<>();
 
   private final MessageBusConnection myConnection;
   private final FileDocumentManager myFileDocumentManager;
@@ -195,7 +197,7 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
       @Override
       public void beforeFileTypesChanged(@Nonnull final FileTypeEvent event) {
         cleanupProcessedFlag();
-        myTypeToExtensionMap = new THashMap<>();
+        myTypeToExtensionMap = new HashMap<>();
         FileTypeManager fileTypeManager = FileTypeManager.getInstance();
         for (FileType type : fileTypeManager.getRegisteredFileTypes()) {
           myTypeToExtensionMap.put(type, getExtensions(type, fileTypeManager));
@@ -217,7 +219,7 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
           return;
         }
 
-        final Map<FileType, Set<String>> newTypeToExtensionsMap = new THashMap<>();
+        final Map<FileType, Set<String>> newTypeToExtensionsMap = new HashMap<>();
         FileTypeManager fileTypeManager = FileTypeManager.getInstance();
         for (FileType type : fileTypeManager.getRegisteredFileTypes()) {
           newTypeToExtensionsMap.put(type, getExtensions(type, fileTypeManager));
@@ -243,7 +245,7 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
 
       @Nonnull
       private Set<String> getExtensions(@Nonnull FileType type, @Nonnull FileTypeManager fileTypeManager) {
-        final Set<String> set = new THashSet<>();
+        final Set<String> set = new HashSet<>();
         for (FileNameMatcher matcher : fileTypeManager.getAssociations(type)) {
           set.add(matcher.getPresentableString());
         }
@@ -391,7 +393,7 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
 
         final Set<FileType> addedTypes;
         if (inputFilter instanceof FileBasedIndex.FileTypeSpecificInputFilter) {
-          addedTypes = new THashSet<>();
+          addedTypes = new HashSet<>();
           ((FileBasedIndex.FileTypeSpecificInputFilter)inputFilter).registerFileTypesUsedForIndexing(type -> {
             if (type != null) addedTypes.add(type);
           });
@@ -436,7 +438,7 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
       return;
     }
     final File registeredIndicesFile = new File(ContainerPathManager.get().getIndexRoot(), "registered");
-    final Set<String> indicesToDrop = new THashSet<>();
+    final Set<String> indicesToDrop = new HashSet<>();
     boolean exceptionThrown = false;
     if (registeredIndicesFile.exists()) {
       try (DataInputStream in = new DataInputStream(new BufferedInputStream(new FileInputStream(registeredIndicesFile)))) {
@@ -625,7 +627,7 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
   @Override
   @Nonnull
   public <K> Collection<K> getAllKeys(@Nonnull final ID<K, ?> indexId, @Nonnull Project project) {
-    Set<K> allKeys = new THashSet<>();
+    Set<K> allKeys = new HashSet<>();
     processAllKeys(indexId, Processors.cancelableCollectProcessor(allKeys), project);
     return allKeys;
   }
@@ -808,7 +810,7 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
   @Override
   @Nonnull
   public <K, V> Collection<VirtualFile> getContainingFiles(@Nonnull final ID<K, V> indexId, @Nonnull K dataKey, @Nonnull final GlobalSearchScope filter) {
-    final Set<VirtualFile> files = new THashSet<>();
+    final Set<VirtualFile> files = new HashSet<>();
     processValuesInScope(indexId, dataKey, false, filter, null, (file, value) -> {
       files.add(file);
       return true;
@@ -974,7 +976,7 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
                                                       @Nullable Condition<? super V> valueChecker,
                                                       @Nonnull final Processor<? super VirtualFile> processor) {
     ProjectIndexableFilesFilter filesSet = projectIndexableFiles(filter.getProject());
-    final TIntHashSet set = collectFileIdsContainingAllKeys(indexId, dataKeys, filter, valueChecker, filesSet);
+    final IntSet set = collectFileIdsContainingAllKeys(indexId, dataKeys, filter, valueChecker, filesSet);
     return set != null && processVirtualFiles(set, filter, processor);
   }
 
@@ -1006,7 +1008,7 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
     private final int myMinId;
     private final int myMaxId;
 
-    private ProjectIndexableFilesFilter(@Nonnull TIntArrayList set, int modificationCount) {
+    private ProjectIndexableFilesFilter(@Nonnull IntList set, int modificationCount) {
       myModificationCount = modificationCount;
       final int[] minMax = new int[2];
       if (!set.isEmpty()) {
@@ -1015,7 +1017,6 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
       set.forEach(value -> {
         minMax[0] = Math.min(minMax[0], value);
         minMax[1] = Math.max(minMax[1], value);
-        return true;
       });
       myMaxId = minMax[1];
       myMinId = minMax[0];
@@ -1023,7 +1024,6 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
       set.forEach(value -> {
         value -= myMinId;
         myBitMask[value >> SHIFT] |= (1L << (value & MASK));
-        return true;
       });
     }
 
@@ -1069,7 +1069,7 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
 
         long start = System.currentTimeMillis();
 
-        final TIntArrayList filesSet = new TIntArrayList();
+        final IntList filesSet = IntLists.newArrayList();
         iterateIndexableFiles(fileOrDir -> {
           ProgressManager.checkCanceled();
           if (fileOrDir instanceof VirtualFileWithId) {
@@ -1093,12 +1093,12 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
   }
 
   @Nullable
-  private <K, V> TIntHashSet collectFileIdsContainingAllKeys(@Nonnull final ID<K, V> indexId,
+  private <K, V> IntSet collectFileIdsContainingAllKeys(@Nonnull final ID<K, V> indexId,
                                                              @Nonnull final Collection<? extends K> dataKeys,
                                                              @Nonnull final GlobalSearchScope filter,
                                                              @Nullable final Condition<? super V> valueChecker,
                                                              @Nullable final ProjectIndexableFilesFilter projectFilesFilter) {
-    ThrowableConvertor<UpdatableIndex<K, V, FileContent>, TIntHashSet, StorageException> convertor = index -> InvertedIndexUtil.collectInputIdsContainingAllKeys(index, dataKeys, __ -> {
+    ThrowableConvertor<UpdatableIndex<K, V, FileContent>, IntSet, StorageException> convertor = index -> InvertedIndexUtil.collectInputIdsContainingAllKeys(index, dataKeys, __ -> {
       ProgressManager.checkCanceled();
       return true;
     }, valueChecker, projectFilesFilter == null ? null : projectFilesFilter::containsFileId);
@@ -1106,7 +1106,7 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
     return processExceptions(indexId, null, filter, convertor);
   }
 
-  private static boolean processVirtualFiles(@Nonnull TIntHashSet ids, @Nonnull final GlobalSearchScope filter, @Nonnull final Processor<? super VirtualFile> processor) {
+  private static boolean processVirtualFiles(@Nonnull IntSet ids, @Nonnull final GlobalSearchScope filter, @Nonnull final Processor<? super VirtualFile> processor) {
     final PersistentFS fs = (PersistentFS)ManagingFS.getInstance();
     return ids.forEach(id -> {
       ProgressManager.checkCanceled();
@@ -1186,7 +1186,7 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
     Document[] documents = myFileDocumentManager.getUnsavedDocuments();
     if (documents.length == 0) return Collections.emptySet();
     if (documents.length == 1) return Collections.singleton(documents[0]);
-    return new THashSet<>(Arrays.asList(documents));
+    return new HashSet<>(Arrays.asList(documents));
   }
 
   @Nonnull
@@ -1207,7 +1207,7 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
         documents = transactedDocuments;
       }
       else if (!transactedDocuments.isEmpty()) {
-        documents = new THashSet<>(documents);
+        documents = new HashSet<>(documents);
         documents.addAll(transactedDocuments);
       }
       Document[] uncommittedDocuments = project != null ? PsiDocumentManager.getInstance(project).getUncommittedDocuments() : Document.EMPTY_ARRAY;
@@ -1217,7 +1217,7 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
           documents = uncommittedDocumentsCollection;
         }
         else {
-          if (!(documents instanceof THashSet)) documents = new THashSet<>(documents);
+          if (!(documents instanceof HashSet)) documents = new HashSet<>(documents);
 
           documents.addAll(uncommittedDocumentsCollection);
         }
@@ -1561,7 +1561,7 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
       PsiFile psiFile = null;
       FileContentImpl fc = null;
       int inputId = Math.abs(getFileId(file));
-      Set<ID<?, ?>> currentIndexedStates = new THashSet<>(IndexingStamp.getNontrivialFileIndexedStates(inputId));
+      Set<ID<?, ?>> currentIndexedStates = new HashSet<>(IndexingStamp.getNontrivialFileIndexedStates(inputId));
 
       final List<ID<?, ?>> affectedIndexCandidates = getAffectedIndexCandidates(file);
       //noinspection ForLoopReplaceableByForEach

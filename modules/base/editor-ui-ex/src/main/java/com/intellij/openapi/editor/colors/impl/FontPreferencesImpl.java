@@ -19,11 +19,12 @@ import com.intellij.application.options.EditorFontsConstants;
 import com.intellij.openapi.editor.colors.EditorColorsScheme;
 import com.intellij.openapi.editor.colors.FontPreferences;
 import com.intellij.openapi.editor.colors.ModifiableFontPreferences;
-import com.intellij.util.containers.ContainerUtilRt;
-import gnu.trove.TObjectIntHashMap;
+import consulo.util.collection.primitive.objects.ObjectIntMap;
+import consulo.util.collection.primitive.objects.ObjectMaps;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -39,16 +40,16 @@ import java.util.List;
 public class FontPreferencesImpl implements ModifiableFontPreferences {
 
   @Nonnull
-  private final TObjectIntHashMap<String> myFontSizes    = new TObjectIntHashMap<>();
+  private final ObjectIntMap<String> myFontSizes = ObjectMaps.newObjectIntHashMap();
   @Nonnull
-  private final List<String> myEffectiveFontFamilies = ContainerUtilRt.newArrayList();
+  private final List<String> myEffectiveFontFamilies = new ArrayList<>();
   @Nonnull
-  private final List<String> myRealFontFamilies = ContainerUtilRt.newArrayList();
+  private final List<String> myRealFontFamilies = new ArrayList<>();
 
   private boolean myUseLigatures;
   private float myLineSpacing = DEFAULT_LINE_SPACING;
 
-  @javax.annotation.Nullable
+  @Nullable
   private Runnable myChangeListener;
 
   /**
@@ -60,7 +61,7 @@ public class FontPreferencesImpl implements ModifiableFontPreferences {
     myChangeListener = changeListener;
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   public Runnable getChangeListener() {
     return myChangeListener;
   }
@@ -100,7 +101,7 @@ public class FontPreferencesImpl implements ModifiableFontPreferences {
   }
 
   public int getSize(@Nonnull String fontFamily) {
-    int result = myFontSizes.get(fontFamily);
+    int result = myFontSizes.getInt(fontFamily);
     if (result <= 0) {
       result = myTemplateFontSize;
     }
@@ -108,7 +109,7 @@ public class FontPreferencesImpl implements ModifiableFontPreferences {
   }
 
   public void setSize(@Nonnull String fontFamily, int size) {
-    myFontSizes.put(fontFamily, size);
+    myFontSizes.putInt(fontFamily, size);
     myTemplateFontSize = size;
     if (myChangeListener != null) {
       myChangeListener.run();
@@ -123,7 +124,7 @@ public class FontPreferencesImpl implements ModifiableFontPreferences {
    * Effective fonts will hold fallback values for such font families then (exposed by the current method), 'real fonts' will
    * be available via {@link #getRealFontFamilies()}.
    *
-   * @return    effective font families to use
+   * @return effective font families to use
    */
   @Override
   @Nonnull
@@ -132,7 +133,7 @@ public class FontPreferencesImpl implements ModifiableFontPreferences {
   }
 
   /**
-   * @return    'real' font families
+   * @return 'real' font families
    * @see #getEffectiveFontFamilies()
    */
   @Override
@@ -156,7 +157,7 @@ public class FontPreferencesImpl implements ModifiableFontPreferences {
 
   /**
    * @return first element of the {@link #getEffectiveFontFamilies() registered font families} (if any);
-   *         {@link #DEFAULT_FONT_NAME} otherwise
+   * {@link #DEFAULT_FONT_NAME} otherwise
    */
   @Override
   @Nonnull
@@ -189,7 +190,7 @@ public class FontPreferencesImpl implements ModifiableFontPreferences {
       modifiablePreferences.resetFontSizes();
       for (String fontFamily : myRealFontFamilies) {
         if (myFontSizes.containsKey(fontFamily)) {
-          modifiablePreferences.setFontSize(fontFamily, myFontSizes.get(fontFamily));
+          modifiablePreferences.setFontSize(fontFamily, myFontSizes.getInt(fontFamily));
         }
       }
       modifiablePreferences.setUseLigatures(myUseLigatures);
@@ -204,7 +205,7 @@ public class FontPreferencesImpl implements ModifiableFontPreferences {
 
   @Override
   public void setFontSize(@Nonnull String fontFamily, int size) {
-    myFontSizes.put(fontFamily, size);
+    myFontSizes.putInt(fontFamily, size);
   }
 
   @Override
@@ -238,7 +239,7 @@ public class FontPreferencesImpl implements ModifiableFontPreferences {
 
     if (!myRealFontFamilies.equals(that.myRealFontFamilies)) return false;
     for (String fontFamily : myRealFontFamilies) {
-      if (myFontSizes.get(fontFamily) != that.myFontSizes.get(fontFamily)) {
+      if (myFontSizes.getInt(fontFamily) != that.myFontSizes.getInt(fontFamily)) {
         return false;
       }
     }

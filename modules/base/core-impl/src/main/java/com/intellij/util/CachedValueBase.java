@@ -44,7 +44,7 @@ public abstract class CachedValueBase<T> {
       tracker = null;
     }
     if (result == null) {
-      return new Data<>(null, ArrayUtilRt.EMPTY_OBJECT_ARRAY, ArrayUtil.EMPTY_LONG_ARRAY, null);
+      return new Data<>(null, ArrayUtil.EMPTY_OBJECT_ARRAY, ArrayUtil.EMPTY_LONG_ARRAY, null);
     }
     T value = result.getValue();
     Object[] inferredDependencies = normalizeDependencies(result);

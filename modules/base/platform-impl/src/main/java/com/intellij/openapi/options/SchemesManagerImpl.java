@@ -43,7 +43,6 @@ import consulo.components.impl.stores.storage.VfsDirectoryBasedStorage;
 import consulo.logging.Logger;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.pointers.Named;
-import gnu.trove.THashSet;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
@@ -72,7 +71,7 @@ public class SchemesManagerImpl<T extends Named, E extends ExternalizableScheme>
   private String mySchemeExtension = DirectoryStorageData.DEFAULT_EXT;
   private boolean myUpdateExtension;
 
-  private final Set<String> myFilesToDelete = new THashSet<String>();
+  private final Set<String> myFilesToDelete = new HashSet<String>();
 
   public SchemesManagerImpl(@Nonnull String fileSpec,
                             @Nonnull SchemeProcessor<E> processor,
@@ -296,7 +295,7 @@ public class SchemesManagerImpl<T extends Named, E extends ExternalizableScheme>
 
   @Nonnull
   private Collection<String> collectAllFileNames() {
-    Set<String> result = new THashSet<String>();
+    Set<String> result = new HashSet<String>();
     for (T scheme : mySchemes) {
       if (scheme instanceof ExternalizableScheme) {
         ExternalInfo externalInfo = ((ExternalizableScheme)scheme).getExternalInfo();

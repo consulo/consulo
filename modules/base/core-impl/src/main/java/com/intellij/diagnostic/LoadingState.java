@@ -3,10 +3,10 @@ package com.intellij.diagnostic;
 
 import com.intellij.openapi.util.Comparing;
 import consulo.logging.Logger;
-import gnu.trove.THashSet;
-import gnu.trove.TObjectHashingStrategy;
-import javax.annotation.Nonnull;
+import consulo.util.collection.HashingStrategy;
+import consulo.util.collection.Sets;
 
+import javax.annotation.Nonnull;
 import java.util.Arrays;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -39,9 +39,9 @@ public enum LoadingState {
     CHECK_LOADING_PHASE = true;
   }
 
-  private final static Set<Throwable> stackTraces = new THashSet<>(new TObjectHashingStrategy<Throwable>() {
+  private final static Set<Throwable> stackTraces = Sets.newHashSet(new HashingStrategy<Throwable>() {
     @Override
-    public int computeHashCode(Throwable throwable) {
+    public int hashCode(Throwable throwable) {
       return getCollect(throwable).hashCode();
     }
 

@@ -92,7 +92,7 @@ public class ContentHashesUtil {
     }
 
     @Override
-    public int getHashCode(byte[] value) {
+    public int hashCode(byte[] value) {
       int hash = 0; // take first 4 bytes, this should be good enough hash given we reference git revisions with 7-8 hex digits
       for (int i = 0; i < 4; ++i) {
         hash = (hash << 8) + (value[i] & 0xFF);
@@ -101,7 +101,7 @@ public class ContentHashesUtil {
     }
 
     @Override
-    public boolean isEqual(byte[] val1, byte[] val2) {
+    public boolean equals(byte[] val1, byte[] val2) {
       return Arrays.equals(val1, val2);
     }
   }

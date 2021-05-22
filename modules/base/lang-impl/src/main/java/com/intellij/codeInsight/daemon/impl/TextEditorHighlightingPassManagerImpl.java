@@ -17,7 +17,6 @@
 package com.intellij.codeInsight.daemon.impl;
 
 import com.intellij.codeHighlighting.*;
-import consulo.logging.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
@@ -26,15 +25,15 @@ import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.util.ArrayUtil;
-import gnu.trove.*;
+import consulo.logging.Logger;
+import consulo.util.collection.primitive.ints.IntList;
+import consulo.util.collection.primitive.ints.IntLists;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import jakarta.inject.Inject;
-import jakarta.inject.Singleton;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 /**
  * User: anna
@@ -127,7 +126,7 @@ public class TextEditorHighlightingPassManagerImpl extends TextEditorHighlightin
                                             PsiUtilCore.getVirtualFile(psiFile);
     }
     final TIntObjectHashMap<TextEditorHighlightingPass> id2Pass = new TIntObjectHashMap<>();
-    final TIntArrayList passesRefusedToCreate = new TIntArrayList();
+    final IntList passesRefusedToCreate = IntLists.newArrayList();
     myRegisteredPassFactories.forEachKey(new TIntProcedure() {
       @Override
       public boolean execute(int passId) {
@@ -145,16 +144,16 @@ public class TextEditorHighlightingPassManagerImpl extends TextEditorHighlightin
           // init with editor's colors scheme
           pass.setColorsScheme(editor.getColorsScheme());
 
-          TIntArrayList ids = new TIntArrayList(passConfig.completionPredecessorIds.length);
+          IntList ids = IntLists.newArrayList(passConfig.completionPredecessorIds.length);
           for (int id : passConfig.completionPredecessorIds) {
             if (myRegisteredPassFactories.containsKey(id)) ids.add(id);
           }
-          pass.setCompletionPredecessorIds(ids.isEmpty() ? ArrayUtil.EMPTY_INT_ARRAY : ids.toNativeArray());
-          ids = new TIntArrayList(passConfig.startingPredecessorIds.length);
+          pass.setCompletionPredecessorIds(ids.isEmpty() ? ArrayUtil.EMPTY_INT_ARRAY : ids.toArray());
+          ids = IntLists.newArrayList(passConfig.startingPredecessorIds.length);
           for (int id : passConfig.startingPredecessorIds) {
             if (myRegisteredPassFactories.containsKey(id)) ids.add(id);
           }
-          pass.setStartingPredecessorIds(ids.isEmpty() ? ArrayUtil.EMPTY_INT_ARRAY : ids.toNativeArray());
+          pass.setStartingPredecessorIds(ids.isEmpty() ? ArrayUtil.EMPTY_INT_ARRAY : ids.toArray());
           pass.setId(passId);
           id2Pass.put(passId, pass);
         }
@@ -164,13 +163,7 @@ public class TextEditorHighlightingPassManagerImpl extends TextEditorHighlightin
 
     DaemonCodeAnalyzerEx daemonCodeAnalyzer = DaemonCodeAnalyzerEx.getInstanceEx(myProject);
     final FileStatusMap statusMap = daemonCodeAnalyzer.getFileStatusMap();
-    passesRefusedToCreate.forEach(new TIntProcedure() {
-      @Override
-      public boolean execute(int passId) {
-        statusMap.markFileUpToDate(document, passId);
-        return true;
-      }
-    });
+    passesRefusedToCreate.forEach(passId -> statusMap.markFileUpToDate(document, passId));
 
     return (List)Arrays.asList(id2Pass.getValues());
   }
@@ -178,7 +171,7 @@ public class TextEditorHighlightingPassManagerImpl extends TextEditorHighlightin
   @Nonnull
   @Override
   public List<TextEditorHighlightingPass> instantiateMainPasses(@Nonnull final PsiFile psiFile, @Nonnull final Document document, @Nonnull final HighlightInfoProcessor highlightInfoProcessor) {
-    final THashSet<TextEditorHighlightingPass> ids = new THashSet<>();
+    final Set<TextEditorHighlightingPass> ids = new HashSet<>();
     myRegisteredPassFactories.forEachKey(new TIntProcedure() {
       @Override
       public boolean execute(int passId) {

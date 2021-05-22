@@ -17,14 +17,12 @@ package com.intellij.util.containers;
 
 import com.intellij.openapi.util.RecursionGuard;
 import com.intellij.openapi.util.RecursionManager;
-import consulo.util.lang.DeprecatedMethodException;
 import com.intellij.util.Function;
 import com.intellij.util.ObjectUtils;
-import gnu.trove.THashMap;
+import consulo.util.lang.DeprecatedMethodException;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import java.util.HashSet;
 import java.util.*;
 import java.util.function.Supplier;
 
@@ -50,7 +48,7 @@ public abstract class FactoryMap<K, V> implements Map<K, V> {
 
   @Nonnull
   protected Map<K, V> createMap() {
-    return new THashMap<>();
+    return new HashMap<>();
   }
 
   @Nullable

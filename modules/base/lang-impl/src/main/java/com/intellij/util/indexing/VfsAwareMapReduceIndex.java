@@ -6,7 +6,6 @@ import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.TransactionGuard;
 import com.intellij.openapi.application.impl.ApplicationInfoImpl;
-import consulo.logging.Logger;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.util.io.ByteArraySequence;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -17,18 +16,16 @@ import com.intellij.util.Processor;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.indexing.impl.*;
 import com.intellij.util.indexing.impl.forward.*;
-import gnu.trove.THashSet;
-import gnu.trove.TIntObjectHashMap;
+import consulo.logging.Logger;
+import consulo.util.collection.primitive.ints.IntMaps;
+import consulo.util.collection.primitive.ints.IntObjectMap;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
@@ -47,7 +44,7 @@ public class VfsAwareMapReduceIndex<Key, Value, Input> extends MapReduceIndex<Ke
   }
 
   private final AtomicBoolean myInMemoryMode = new AtomicBoolean();
-  private final TIntObjectHashMap<Map<Key, Value>> myInMemoryKeysAndValues = new TIntObjectHashMap<>();
+  private final IntObjectMap<Map<Key, Value>> myInMemoryKeysAndValues = IntMaps.newIntObjectHashMap();
 
   private final SnapshotInputMappingIndex<Key, Value, Input> mySnapshotInputMappings;
   private final boolean myUpdateMappings;
@@ -190,7 +187,7 @@ public class VfsAwareMapReduceIndex<Key, Value, Input> extends MapReduceIndex<Ke
           }
         }
         else {
-          Set<Key> diskKeySet = new THashSet<>();
+          Set<Key> diskKeySet = new HashSet<>();
 
           builder.differentiate(Collections.emptyMap(), (key, value, inputId1) -> {
           }, (key, value, inputId1) -> {

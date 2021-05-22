@@ -22,9 +22,10 @@ import com.intellij.openapi.actionSystem.IdeActions;
 import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.util.PairFunction;
 import com.intellij.util.containers.Convertor;
-import gnu.trove.TIntArrayList;
-import javax.annotation.Nonnull;
+import consulo.util.collection.primitive.ints.IntList;
+import consulo.util.collection.primitive.ints.IntLists;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import java.util.Arrays;
 import java.util.ListIterator;
@@ -165,8 +166,8 @@ public class TableSpeedSearch extends SpeedSearchBase<JTable> {
   }
 
   @Nonnull
-  private TIntArrayList findAllFilteredRows(String s) {
-    TIntArrayList rows = new TIntArrayList();
+  private IntList findAllFilteredRows(String s) {
+    IntList rows = IntLists.newArrayList();
     String _s = s.trim();
 
     for (int row = 0; row < myComponent.getRowCount(); row++) {
@@ -206,10 +207,10 @@ public class TableSpeedSearch extends SpeedSearchBase<JTable> {
       String query = mySearch.getEnteredPrefix();
       if (query == null) return;
 
-      TIntArrayList filtered = mySearch.findAllFilteredRows(query);
+      IntList filtered = mySearch.findAllFilteredRows(query);
       if (filtered.isEmpty()) return;
 
-      boolean alreadySelected = Arrays.equals(filtered.toNativeArray(), myTable.getSelectedRows());
+      boolean alreadySelected = Arrays.equals(filtered.toArray(), myTable.getSelectedRows());
 
       if (alreadySelected) {
         int anchor = sm.getAnchorSelectionIndex();

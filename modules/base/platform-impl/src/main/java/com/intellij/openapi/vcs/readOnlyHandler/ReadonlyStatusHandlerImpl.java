@@ -30,7 +30,6 @@ import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.WritingAccessProvider;
 import com.intellij.util.containers.ContainerUtil;
-import gnu.trove.THashSet;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -73,7 +72,7 @@ public class ReadonlyStatusHandlerImpl extends ReadonlyStatusHandler implements 
     }
     ApplicationManager.getApplication().assertIsDispatchThread();
 
-    Set<VirtualFile> realFiles = new THashSet<VirtualFile>(files.length);
+    Set<VirtualFile> realFiles = new HashSet<VirtualFile>(files.length);
     for (VirtualFile file : files) {
       if (file instanceof VirtualFileWindow) file = ((VirtualFileWindow)file).getDelegate();
       if (file != null) {

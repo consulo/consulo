@@ -22,14 +22,14 @@ import com.intellij.reference.SoftReference;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.text.ByteArrayCharSequence;
 import consulo.logging.Logger;
-import gnu.trove.THashSet;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.io.File;
 import java.io.IOException;
 import java.lang.ref.Reference;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -90,7 +90,7 @@ public abstract class ArchiveHandler {
     EntryInfo entry = getEntryInfo(relativePath);
     if (entry == null || !entry.isDirectory) return ArrayUtil.EMPTY_STRING_ARRAY;
 
-    Set<String> names = new THashSet<String>();
+    Set<String> names = new HashSet<String>();
     for (EntryInfo info : getEntriesMap().values()) {
       if (info.parent == entry) {
         names.add(info.shortName.toString());

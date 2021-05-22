@@ -23,8 +23,6 @@ import com.intellij.codeInsight.daemon.impl.SeveritiesProvider;
 import com.intellij.lang.annotation.HighlightSeverity;
 import com.intellij.openapi.application.Result;
 import com.intellij.openapi.command.WriteCommandAction;
-import consulo.awt.TargetAWT;
-import consulo.logging.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.HighlighterColors;
 import com.intellij.openapi.editor.RangeMarker;
@@ -42,8 +40,8 @@ import com.intellij.util.FileComparisonFailure;
 import com.intellij.util.Function;
 import com.intellij.util.NullableFunction;
 import com.intellij.util.containers.ContainerUtil;
-import gnu.trove.THashMap;
-import gnu.trove.THashSet;
+import consulo.awt.TargetAWT;
+import consulo.logging.Logger;
 import org.jetbrains.annotations.NonNls;
 import org.junit.Assert;
 
@@ -86,12 +84,12 @@ public class ExpectedHighlightingData {
       this.severity = severity;
       this.endOfLine = endOfLine;
       this.enabled = enabled;
-      infos = new THashSet<HighlightInfo>();
+      infos = new HashSet<HighlightInfo>();
     }
   }
   @SuppressWarnings("WeakerAccess")
   protected final Map<String,ExpectedHighlightingSet> highlightingTypes;
-  private final Map<RangeMarker, LineMarkerInfo> lineMarkerInfos = new THashMap<RangeMarker, LineMarkerInfo>();
+  private final Map<RangeMarker, LineMarkerInfo> lineMarkerInfos = new HashMap<RangeMarker, LineMarkerInfo>();
 
   public void init() {
     new WriteCommandAction(null){

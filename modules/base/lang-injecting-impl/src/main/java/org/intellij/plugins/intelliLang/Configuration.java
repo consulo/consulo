@@ -23,7 +23,6 @@ import com.intellij.openapi.command.undo.UndoManager;
 import com.intellij.openapi.command.undo.UndoableAction;
 import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.ServiceManager;
-import consulo.logging.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.*;
 import com.intellij.psi.PsiCompiledElement;
@@ -39,11 +38,10 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.Convertor;
 import com.intellij.util.containers.MultiMap;
 import consulo.container.plugin.PluginDescriptor;
+import consulo.logging.Logger;
 import consulo.psi.injection.LanguageInjectionSupport;
 import consulo.psi.injection.impl.ApplicationInjectionConfiguration;
 import consulo.psi.injection.impl.ProjectInjectionConfiguration;
-import gnu.trove.THashMap;
-import gnu.trove.THashSet;
 import org.intellij.plugins.intelliLang.inject.InjectorUtils;
 import org.intellij.plugins.intelliLang.inject.LanguageInjectionConfigBean;
 import org.intellij.plugins.intelliLang.inject.config.BaseInjection;
@@ -153,7 +151,7 @@ public class Configuration implements PersistentStateComponent<Element>, Modific
   @Override
   public void loadState(final Element element) {
     myInjections.clear();
-    final THashMap<String, LanguageInjectionSupport> supports = new THashMap<>();
+    final Map<String, LanguageInjectionSupport> supports = new HashMap<>();
     for (LanguageInjectionSupport support : InjectorUtils.getActiveInjectionSupports()) {
       supports.put(support.getId(), support);
     }
@@ -192,7 +190,7 @@ public class Configuration implements PersistentStateComponent<Element>, Modific
 
   public static List<BaseInjection> loadDefaultInjections() {
     final ArrayList<Configuration> cfgList = new ArrayList<>();
-    final THashSet<Object> visited = new THashSet<>();
+    final Set<Object> visited = new HashSet<>();
     for (LanguageInjectionConfigBean configBean : LanguageInjectionSupport.CONFIG_EP_NAME.getExtensionList()) {
       PluginDescriptor descriptor = configBean.getPluginDescriptor();
       final ClassLoader loader = descriptor.getPluginClassLoader();

@@ -18,8 +18,9 @@ import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
+import consulo.util.collection.primitive.doubles.DoubleList;
+import consulo.util.collection.primitive.doubles.DoubleLists;
 import consulo.util.dataholder.UserDataHolderBase;
-import gnu.trove.TDoubleArrayList;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -44,7 +45,7 @@ public class AbstractProgressIndicatorBase extends UserDataHolderBase implements
   private volatile boolean myShouldStartActivity = true;
 
   private Stack<LocalizeValue> myTextStack; // guarded by this
-  private TDoubleArrayList myFractionStack; // guarded by this
+  private DoubleList myFractionStack; // guarded by this
   private Stack<LocalizeValue> myText2Stack; // guarded by this
 
   private ProgressIndicator myModalityProgress;
@@ -202,7 +203,7 @@ public class AbstractProgressIndicatorBase extends UserDataHolderBase implements
       setTextValue(oldText);
       setText2Value(oldText2);
 
-      double oldFraction = myFractionStack.remove(myFractionStack.size() - 1);
+      double oldFraction = myFractionStack.removeByIndex(myFractionStack.size() - 1);
       if (!isIndeterminate()) {
         setFraction(oldFraction);
       }
@@ -300,7 +301,7 @@ public class AbstractProgressIndicatorBase extends UserDataHolderBase implements
 
         myText2Stack = stacked.myText2Stack == null ? null : new Stack<>(stacked.getText2Stack());
 
-        myFractionStack = stacked.myFractionStack == null ? null : new TDoubleArrayList(stacked.getFractionStack().toNativeArray());
+        myFractionStack = stacked.myFractionStack == null ? null : DoubleLists.newArrayList(stacked.getFractionStack().toArray());
       }
       dontStartActivity();
     }
@@ -318,9 +319,9 @@ public class AbstractProgressIndicatorBase extends UserDataHolderBase implements
   }
 
   @Nonnull
-  private TDoubleArrayList getFractionStack() {
-    TDoubleArrayList stack = myFractionStack;
-    if (stack == null) myFractionStack = stack = new TDoubleArrayList(2);
+  private DoubleList getFractionStack() {
+    DoubleList stack = myFractionStack;
+    if (stack == null) myFractionStack = stack = DoubleLists.newArrayList(2);
     return stack;
   }
 

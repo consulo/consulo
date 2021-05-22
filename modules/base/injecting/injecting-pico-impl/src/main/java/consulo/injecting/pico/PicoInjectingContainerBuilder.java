@@ -17,11 +17,11 @@ package consulo.injecting.pico;
 
 import consulo.injecting.InjectingContainer;
 import consulo.injecting.InjectingContainerBuilder;
-import consulo.injecting.key.InjectingKey;
 import consulo.injecting.InjectingPoint;
-import gnu.trove.THashMap;
+import consulo.injecting.key.InjectingKey;
 
 import javax.annotation.Nonnull;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -30,7 +30,7 @@ import java.util.Map;
  */
 class PicoInjectingContainerBuilder implements InjectingContainerBuilder {
   private PicoInjectingContainer myParent;
-  private Map<InjectingKey, PicoInjectingPoint> myPoints = new THashMap<>();
+  private Map<InjectingKey, PicoInjectingPoint> myPoints = new HashMap<>();
 
   public PicoInjectingContainerBuilder(PicoInjectingContainer parent) {
     myParent = parent;

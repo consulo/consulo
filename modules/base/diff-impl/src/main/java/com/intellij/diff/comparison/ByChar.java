@@ -19,9 +19,10 @@ import com.intellij.diff.comparison.iterables.DiffIterable;
 import com.intellij.diff.comparison.iterables.FairDiffIterable;
 import com.intellij.diff.util.Range;
 import com.intellij.openapi.progress.ProgressIndicator;
-import gnu.trove.TIntArrayList;
-import javax.annotation.Nonnull;
+import consulo.util.collection.primitive.ints.IntList;
+import consulo.util.collection.primitive.ints.IntLists;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -198,8 +199,8 @@ public class ByChar {
 
   @Nonnull
   private static CharOffsets getNonSpaceChars(@Nonnull CharSequence text) {
-    TIntArrayList chars = new TIntArrayList(text.length());
-    TIntArrayList offsets = new TIntArrayList(text.length());
+    IntList chars = IntLists.newArrayList(text.length());
+    IntList offsets = IntLists.newArrayList(text.length());
 
     for (int i = 0; i < text.length(); i++) {
       char c = text.charAt(i);
@@ -209,13 +210,13 @@ public class ByChar {
       }
     }
 
-    return new CharOffsets(chars.toNativeArray(), offsets.toNativeArray());
+    return new CharOffsets(chars.toArray(), offsets.toArray());
   }
 
   @Nonnull
   private static CharOffsets getPunctuationChars(@Nonnull CharSequence text) {
-    TIntArrayList chars = new TIntArrayList(text.length());
-    TIntArrayList offsets = new TIntArrayList(text.length());
+    IntList chars = IntLists.newArrayList(text.length());
+    IntList offsets = IntLists.newArrayList(text.length());
 
     for (int i = 0; i < text.length(); i++) {
       char c = text.charAt(i);
@@ -225,7 +226,7 @@ public class ByChar {
       }
     }
 
-    return new CharOffsets(chars.toNativeArray(), offsets.toNativeArray());
+    return new CharOffsets(chars.toArray(), offsets.toArray());
   }
 
   static class CharOffsets {

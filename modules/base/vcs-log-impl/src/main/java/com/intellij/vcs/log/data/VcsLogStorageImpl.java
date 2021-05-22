@@ -32,7 +32,6 @@ import com.intellij.vcs.log.impl.FatalErrorHandler;
 import com.intellij.vcs.log.impl.HashImpl;
 import com.intellij.vcs.log.impl.VcsRefImpl;
 import com.intellij.vcs.log.util.PersistentUtil;
-import gnu.trove.TObjectIntHashMap;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -231,16 +230,6 @@ public class VcsLogStorageImpl implements Disposable, VcsLogStorage {
       if (root == null) return null;
       return new CommitId(hash, root);
     }
-
-    @Override
-    public int getHashCode(CommitId value) {
-      return value.hashCode();
-    }
-
-    @Override
-    public boolean isEqual(CommitId val1, CommitId val2) {
-      return val1.equals(val2);
-    }
   }
 
   private static class EmptyLogStorage implements VcsLogStorage {
@@ -287,16 +276,6 @@ public class VcsLogStorageImpl implements Disposable, VcsLogStorage {
                                @Nonnull KeyDescriptor<CommitId> commitIdKeyDescriptor) {
       myLogProviders = logProviders;
       myCommitIdKeyDescriptor = commitIdKeyDescriptor;
-    }
-
-    @Override
-    public int getHashCode(@Nonnull VcsRef value) {
-      return value.hashCode();
-    }
-
-    @Override
-    public boolean isEqual(@Nonnull VcsRef val1, @Nonnull VcsRef val2) {
-      return val1.equals(val2);
     }
 
     @Override

@@ -15,14 +15,15 @@ import com.intellij.util.ObjectUtil;
 import com.intellij.util.concurrency.AtomicFieldUpdater;
 import com.intellij.util.containers.ConcurrentBitSet;
 import com.intellij.util.containers.ContainerUtil;
-import consulo.util.dataholder.keyFMap.KeyFMap;
 import com.intellij.util.text.ByteArrayCharSequence;
 import com.intellij.util.text.CharSequenceHashingStrategy;
 import consulo.logging.Logger;
-import consulo.util.collection.ConcurrentIntObjectMap;
-import consulo.util.collection.IntObjectMap;
-import gnu.trove.THashSet;
-import gnu.trove.TIntHashSet;
+import consulo.util.collection.Sets;
+import consulo.util.collection.primitive.ints.ConcurrentIntObjectMap;
+import consulo.util.collection.primitive.ints.IntObjectMap;
+import consulo.util.collection.primitive.ints.IntSet;
+import consulo.util.collection.primitive.ints.IntSets;
+import consulo.util.dataholder.keyFMap.KeyFMap;
 import org.jetbrains.annotations.Contract;
 
 import javax.annotation.Nonnull;
@@ -73,7 +74,7 @@ public class VfsData {
 
   private final ConcurrentIntObjectMap<Segment> mySegments = ContainerUtil.createConcurrentIntObjectMap();
   private final ConcurrentBitSet myInvalidatedIds = new ConcurrentBitSet();
-  private TIntHashSet myDyingIds = new TIntHashSet();
+  private IntSet myDyingIds = IntSets.newHashSet();
 
   private boolean myHasChangedParents; // synchronized by read-write lock; clients outside read-action deserve to get outdated result
   private final IntObjectMap<VirtualDirectoryImpl> myChangedParents = ContainerUtil.createConcurrentIntObjectMap();
@@ -99,7 +100,7 @@ public class VfsData {
           segment.myObjectArray.set(getOffset(id), myDeadMarker);
           myChangedParents.remove(id);
         }
-        myDyingIds = new TIntHashSet();
+        myDyingIds = IntSets.newHashSet();
       }
     }
   }
@@ -380,7 +381,7 @@ public class VfsData {
     private Set<CharSequence> getOrCreateAdoptedNames(boolean caseSensitive) {
       Set<CharSequence> adopted = myAdoptedNames;
       if (adopted == null) {
-        myAdoptedNames = adopted = new THashSet<>(0, caseSensitive ? CharSequenceHashingStrategy.CASE_SENSITIVE : CharSequenceHashingStrategy.CASE_INSENSITIVE);
+        myAdoptedNames = adopted = Sets.newHashSet(0, caseSensitive ? CharSequenceHashingStrategy.CASE_SENSITIVE : CharSequenceHashingStrategy.CASE_INSENSITIVE);
       }
       return adopted;
     }

@@ -18,10 +18,11 @@ package com.intellij.util;
 import com.intellij.openapi.util.Condition;
 import com.intellij.util.containers.Convertor;
 import org.jetbrains.annotations.Contract;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.lang.reflect.Proxy;
+import java.util.function.IntUnaryOperator;
 import java.util.function.Supplier;
 
 /**
@@ -124,12 +125,12 @@ public class ObjectUtil {
    * @see java.util.Arrays#binarySearch(Object[], Object, Comparator)
    * @see java.util.Collections#binarySearch(List, Object, Comparator)
    */
-  public static int binarySearch(int fromIndex, int toIndex, @Nonnull IntIntFunction indexComparator) {
+  public static int binarySearch(int fromIndex, int toIndex, @Nonnull IntUnaryOperator indexComparator) {
     int low = fromIndex;
     int high = toIndex - 1;
     while (low <= high) {
       int mid = (low + high) >>> 1;
-      int cmp = indexComparator.fun(mid);
+      int cmp = indexComparator.applyAsInt(mid);
       if (cmp < 0) low = mid + 1;
       else if (cmp > 0) high = mid - 1;
       else return mid;

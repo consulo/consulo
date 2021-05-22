@@ -30,7 +30,9 @@ import com.intellij.openapi.editor.impl.event.DocumentEventImpl;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.*;
+import com.intellij.openapi.util.ProperTextRange;
+import com.intellij.openapi.util.ShutDownTracker;
+import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.reference.SoftReference;
@@ -46,16 +48,17 @@ import consulo.logging.Logger;
 import consulo.logging.attachment.Attachment;
 import consulo.logging.attachment.AttachmentFactory;
 import consulo.logging.attachment.ExceptionWithAttachments;
+import consulo.util.collection.primitive.ints.IntIntMap;
+import consulo.util.collection.primitive.ints.IntMaps;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolderBase;
-import gnu.trove.TIntIntHashMap;
 import kava.beans.PropertyChangeListener;
 import kava.beans.PropertyChangeSupport;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.lang.ref.Reference;
 import java.lang.ref.ReferenceQueue;
 import java.lang.ref.WeakReference;
@@ -312,13 +315,13 @@ public class DocumentImpl extends UserDataHolderBase implements DocumentEx {
       return specialFilter == StripTrailingSpacesFilter.NOT_ALLOWED;
     }
 
-    TIntIntHashMap caretPositions = null;
+    IntIntMap caretPositions = null;
     if (caretOffsets != null) {
-      caretPositions = new TIntIntHashMap(caretOffsets.length);
+      caretPositions = IntMaps.newIntIntHashMap(caretOffsets.length);
       for (int caretOffset : caretOffsets) {
         int line = getLineNumber(caretOffset);
         // need to remember only maximum caret offset on a line
-        caretPositions.put(line, Math.max(caretOffset, caretPositions.get(line)));
+        caretPositions.putInt(line, Math.max(caretOffset, caretPositions.getInt(line)));
       }
     }
 
@@ -345,7 +348,7 @@ public class DocumentImpl extends UserDataHolderBase implements DocumentEx {
       if (whiteSpaceStart == -1) continue;
 
       if (caretPositions != null) {
-        int caretPosition = caretPositions.get(line);
+        int caretPosition = caretPositions.getInt(line);
         if (whiteSpaceStart < caretPosition) {
           markAsNeedsStrippingLater = true;
           continue;

@@ -12,11 +12,11 @@ import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.util.ArrayUtilRt;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.messages.MessageBusConnection;
-import gnu.trove.THashSet;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashSet;
 
 // provides list of all excluded folders across all opened projects, fast.
 final class ExcludeRootsCache {
@@ -57,7 +57,7 @@ final class ExcludeRootsCache {
         urls = cache.myUrls;
       }
       else {
-        Collection<String> excludedUrls = new THashSet<>();
+        Collection<String> excludedUrls = new HashSet<>();
         for (Project project : ProjectManager.getInstance().getOpenProjects()) {
           for (Module module : ModuleManager.getInstance(project).getModules()) {
             urls = ModuleRootManager.getInstance(module).getExcludeRootUrls();

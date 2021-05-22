@@ -31,9 +31,10 @@ import com.intellij.ui.IdeBorderFactory;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.ui.table.JBTable;
 import com.intellij.util.ui.AbstractTableCellEditor;
-import gnu.trove.TIntArrayList;
-import javax.annotation.Nonnull;
+import consulo.util.collection.primitive.ints.IntList;
+import consulo.util.collection.primitive.ints.IntLists;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -56,7 +57,7 @@ public class ArrangementMatchingRulesControl extends JBTable {
   @Nonnull
   protected final IntObjectMap<ArrangementListRowDecorator> myComponents   = new IntObjectMap<ArrangementListRowDecorator>();
   @Nonnull
-  private final TIntArrayList mySelectedRows = new TIntArrayList();
+  private final IntList mySelectedRows = IntLists.newArrayList();
 
   @Nonnull
   private final ArrangementMatchNodeComponentFactory myFactory;
@@ -157,7 +158,7 @@ public class ArrangementMatchingRulesControl extends JBTable {
       return;
     }
 
-    final TIntArrayList rows = getSelectedModelRows();
+    final IntList rows = getSelectedModelRows();
     if (rows.size() != 1) {
       return;
     }
@@ -432,7 +433,7 @@ public class ArrangementMatchingRulesControl extends JBTable {
    * @return    selected model rows sorted in descending order
    */
   @Nonnull
-  public TIntArrayList getSelectedModelRows() {
+  public IntList getSelectedModelRows() {
     mySelectedRows.clear();
     int min = selectionModel.getMinSelectionIndex();
     if (min >= 0) {

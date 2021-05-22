@@ -31,14 +31,12 @@ import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.MultiMap;
 import com.intellij.util.messages.MessageBusConnection;
-import consulo.util.collection.ConcurrentIntObjectMap;
-import gnu.trove.THashMap;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import consulo.util.collection.primitive.ints.ConcurrentIntObjectMap;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.*;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -147,7 +145,7 @@ public class SemServiceImpl extends SemService {
     RecursionGuard.StackStamp stamp = RecursionManager.createGuard("semService").markStack();
 
     LinkedHashSet<T> result = new LinkedHashSet<>();
-    final Map<SemKey, List<SemElement>> map = new THashMap<>();
+    final Map<SemKey, List<SemElement>> map = new HashMap<>();
     for (final SemKey each : key.getInheritors()) {
       List<SemElement> list = createSemElements(each, psi);
       map.put(each, list);
@@ -233,7 +231,7 @@ public class SemServiceImpl extends SemService {
         return singleList;
       }
 
-      return Collections.emptyList();
+      return List.of();
     }
 
     return new ArrayList<>(result);

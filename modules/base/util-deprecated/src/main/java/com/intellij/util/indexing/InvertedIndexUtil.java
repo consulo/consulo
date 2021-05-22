@@ -16,26 +16,26 @@
 package com.intellij.util.indexing;
 
 import com.intellij.openapi.util.Condition;
-import com.intellij.util.containers.EmptyIntHashSet;
-import gnu.trove.TIntHashSet;
+import consulo.util.collection.primitive.ints.IntSet;
+import consulo.util.collection.primitive.ints.IntSets;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.Collection;
 
 public class InvertedIndexUtil {
   @Nonnull
-  public static <K, V, I> TIntHashSet collectInputIdsContainingAllKeys(@Nonnull InvertedIndex<? super K, V, I> index,
-                                                                       @Nonnull Collection<? extends K> dataKeys,
-                                                                       @Nullable Condition<? super K> keyChecker,
-                                                                       @Nullable Condition<? super V> valueChecker,
-                                                                       @Nullable ValueContainer.IntPredicate idChecker) throws StorageException {
-    TIntHashSet mainIntersection = null;
+  public static <K, V, I> IntSet collectInputIdsContainingAllKeys(@Nonnull InvertedIndex<? super K, V, I> index,
+                                                                  @Nonnull Collection<? extends K> dataKeys,
+                                                                  @Nullable Condition<? super K> keyChecker,
+                                                                  @Nullable Condition<? super V> valueChecker,
+                                                                  @Nullable ValueContainer.IntPredicate idChecker) throws StorageException {
+    IntSet mainIntersection = null;
 
     for (K dataKey : dataKeys) {
       if (keyChecker != null && !keyChecker.value(dataKey)) continue;
 
-      final TIntHashSet copy = new TIntHashSet();
+      final IntSet copy = IntSets.newHashSet();
       final ValueContainer<V> container = index.getData(dataKey);
 
       for (ValueContainer.ValueIterator<V> valueIt = container.getValueIterator(); valueIt.hasNext(); ) {
@@ -58,17 +58,16 @@ public class InvertedIndexUtil {
         else {
           mainIntersection.forEach(id -> {
             if (predicate.contains(id)) copy.add(id);
-            return true;
           });
         }
       }
 
       mainIntersection = copy;
       if (mainIntersection.isEmpty()) {
-        return EmptyIntHashSet.INSTANCE;
+        return IntSet.of();
       }
     }
 
-    return mainIntersection == null ? EmptyIntHashSet.INSTANCE : mainIntersection;
+    return mainIntersection == null ? IntSet.of() : mainIntersection;
   }
 }

@@ -29,17 +29,12 @@ import com.intellij.psi.util.CachedValue;
 import com.intellij.psi.util.CachedValueProvider;
 import com.intellij.psi.util.CachedValuesManager;
 import com.intellij.util.containers.ContainerUtil;
-import gnu.trove.THashMap;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
-
 import java.nio.charset.Charset;
-import java.util.Collection;
-import java.util.LinkedHashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author nik
@@ -64,7 +59,7 @@ public class CompilerEncodingServiceImpl extends CompilerEncodingService {
   }
 
   private Map<Module, Set<Charset>> computeModuleCharsetMap() {
-    final Map<Module, Set<Charset>> map = new THashMap<Module, Set<Charset>>();
+    final Map<Module, Set<Charset>> map = new HashMap<Module, Set<Charset>>();
     final Map<? extends VirtualFile, ? extends Charset> mappings = ((EncodingProjectManagerImpl) EncodingProjectManager.getInstance(myProject)).getAllMappings();
     ProjectFileIndex index = ProjectRootManager.getInstance(myProject).getFileIndex();
     final CompilerManager compilerManager = CompilerManager.getInstance(myProject);

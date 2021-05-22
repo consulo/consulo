@@ -6,12 +6,11 @@ package com.intellij.mock;
 import com.intellij.codeInsight.daemon.HighlightDisplayKey;
 import com.intellij.codeInspection.ex.InspectionProfileImpl;
 import com.intellij.codeInspection.ex.InspectionToolWrapper;
-import com.intellij.openapi.util.Condition;
 import com.intellij.psi.PsiElement;
 import com.intellij.util.containers.ContainerUtil;
-import gnu.trove.THashSet;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -19,7 +18,7 @@ import java.util.Set;
  */
 public class MockInspectionProfile extends InspectionProfileImpl {
   private InspectionToolWrapper[] myInspectionTools = new InspectionToolWrapper[0];
-  private final Set<InspectionToolWrapper> myDisabledTools = new THashSet<InspectionToolWrapper>();
+  private final Set<InspectionToolWrapper> myDisabledTools = new HashSet<InspectionToolWrapper>();
 
   public MockInspectionProfile() {
     super("a");
@@ -36,12 +35,7 @@ public class MockInspectionProfile extends InspectionProfileImpl {
 
   @Override
   public boolean isToolEnabled(final HighlightDisplayKey key, PsiElement element) {
-    final InspectionToolWrapper entry = ContainerUtil.find(myInspectionTools, new Condition<InspectionToolWrapper>() {
-      @Override
-      public boolean value(final InspectionToolWrapper inspectionProfileEntry) {
-        return key.equals(HighlightDisplayKey.find(inspectionProfileEntry.getShortName()));
-      }
-    });
+    final InspectionToolWrapper entry = ContainerUtil.find(myInspectionTools, it -> key.equals(HighlightDisplayKey.find(it.getShortName())));
     assert entry != null;
     return !myDisabledTools.contains(entry);
   }

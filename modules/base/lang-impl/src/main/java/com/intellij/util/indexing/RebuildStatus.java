@@ -18,8 +18,8 @@ package com.intellij.util.indexing;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.util.ThrowableRunnable;
 import com.intellij.util.TimeoutUtil;
-import com.intellij.util.containers.ContainerUtil;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -31,7 +31,7 @@ enum RebuildStatus {
   REQUIRES_REBUILD,
   DOING_REBUILD;
 
-  private static final Map<ID<?, ?>, AtomicReference<RebuildStatus>> ourRebuildStatus = ContainerUtil.newTroveMap();
+  private static final Map<ID<?, ?>, AtomicReference<RebuildStatus>> ourRebuildStatus = new HashMap<>();
 
   static void registerIndex(ID<?, ?> indexId) {
     ourRebuildStatus.put(indexId, new AtomicReference<>(OK));

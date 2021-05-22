@@ -29,7 +29,6 @@ import com.intellij.util.EmptyConsumer;
 import com.intellij.util.Processor;
 import com.intellij.util.ThrowableRunnable;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.containers.EmptyIntHashSet;
 import com.intellij.util.indexing.StorageException;
 import com.intellij.util.io.*;
 import com.intellij.vcs.log.*;
@@ -41,6 +40,8 @@ import com.intellij.vcs.log.util.PersistentSetImpl;
 import com.intellij.vcs.log.util.StopWatch;
 import com.intellij.vcs.log.util.TroveUtil;
 import consulo.logging.Logger;
+import consulo.util.collection.primitive.ints.IntSet;
+import consulo.util.collection.primitive.ints.IntSets;
 import gnu.trove.TIntHashSet;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -208,8 +209,8 @@ public class VcsLogPersistentIndex implements VcsLogIndex, Disposable {
   }
 
   @Nonnull
-  private <T> TIntHashSet filter(@Nonnull PersistentMap<Integer, T> map, @Nonnull Condition<T> condition) {
-    TIntHashSet result = new TIntHashSet();
+  private <T> IntSet filter(@Nonnull PersistentMap<Integer, T> map, @Nonnull Condition<T> condition) {
+    IntSet result = IntSets.newHashSet();
     if (myIndexStorage == null) return result;
     try {
       Processor<Integer> processor = integer -> {
@@ -242,7 +243,7 @@ public class VcsLogPersistentIndex implements VcsLogIndex, Disposable {
   }
 
   @Nonnull
-  private TIntHashSet filterUsers(@Nonnull Set<VcsUser> users) {
+  private IntSet filterUsers(@Nonnull Set<VcsUser> users) {
     if (myIndexStorage != null) {
       try {
         return myIndexStorage.users.getCommitsForUsers(users);
@@ -254,7 +255,7 @@ public class VcsLogPersistentIndex implements VcsLogIndex, Disposable {
         processRuntimeException(e);
       }
     }
-    return new TIntHashSet();
+    return IntSets.newHashSet();
   }
 
   @Nonnull
@@ -274,13 +275,13 @@ public class VcsLogPersistentIndex implements VcsLogIndex, Disposable {
   }
 
   @Nonnull
-  public TIntHashSet filterMessages(@Nonnull VcsLogTextFilter filter) {
+  public IntSet filterMessages(@Nonnull VcsLogTextFilter filter) {
     if (myIndexStorage != null) {
       try {
         if (!filter.isRegex()) {
-          TIntHashSet commitsForSearch = myIndexStorage.trigrams.getCommitsForSubstring(filter.getText());
+          IntSet commitsForSearch = myIndexStorage.trigrams.getCommitsForSubstring(filter.getText());
           if (commitsForSearch != null) {
-            TIntHashSet result = new TIntHashSet();
+            IntSet result = IntSets.newHashSet();
             commitsForSearch.forEach(commit -> {
               try {
                 String value = myIndexStorage.messages.get(commit);
@@ -310,7 +311,7 @@ public class VcsLogPersistentIndex implements VcsLogIndex, Disposable {
       return filter(myIndexStorage.messages, message -> VcsLogTextFilterImpl.matches(filter, message));
     }
 
-    return EmptyIntHashSet.INSTANCE;
+    return IntSet.of();
   }
 
   private void processRuntimeException(@Nonnull RuntimeException e) {

@@ -17,6 +17,7 @@ import gnu.trove.TObjectIntHashMap;
 
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -32,7 +33,7 @@ public abstract class IElementTypeTest extends LightPlatformCodeInsightFixtureTe
     List<LanguageExtensionPoint> extensions = ExtensionPointName.<LanguageExtensionPoint>create("com.intellij.lang.parserDefinition").getExtensionList();
     System.out.println("ParserDefinitions: " + extensions.size());
 
-    THashMap<Language, String> languageMap = new THashMap<Language, String>();
+    THashMap<Language, String> languageMap = new HashMap<Language, String>();
     languageMap.put(Language.ANY, "platform");
     final TObjectIntHashMap<String> map = new TObjectIntHashMap<String>();
     for (LanguageExtensionPoint e : extensions) {

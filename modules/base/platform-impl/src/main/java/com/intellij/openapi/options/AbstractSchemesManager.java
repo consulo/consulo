@@ -17,11 +17,10 @@ package com.intellij.openapi.options;
 
 import com.intellij.util.text.UniqueNameGenerator;
 import consulo.logging.Logger;
-import gnu.trove.THashSet;
 import consulo.util.pointers.Named;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.*;
 
 public abstract class AbstractSchemesManager<T extends Named, E extends ExternalizableScheme> extends SchemesManager<T, E> {
@@ -65,7 +64,7 @@ public abstract class AbstractSchemesManager<T extends Named, E extends External
 
   @Nonnull
   private Collection<String> collectExistingNames(@Nonnull Collection<T> schemes) {
-    Set<String> result = new THashSet<String>(schemes.size());
+    Set<String> result = new HashSet<String>(schemes.size());
     for (T scheme : schemes) {
       result.add(scheme.getName());
     }

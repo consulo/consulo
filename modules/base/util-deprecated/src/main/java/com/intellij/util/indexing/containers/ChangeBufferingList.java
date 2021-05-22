@@ -15,13 +15,9 @@
  */
 package com.intellij.util.indexing.containers;
 
-import com.intellij.util.indexing.impl.DebugAssertions;
 import com.intellij.util.indexing.ValueContainer;
-import gnu.trove.TIntProcedure;
 
 import java.util.Arrays;
-
-import static com.intellij.util.indexing.impl.DebugAssertions.EXTRA_SANITY_CHECKS;
 
 /**
  * Class buffers changes in 2 modes:
@@ -41,35 +37,36 @@ public class ChangeBufferingList implements Cloneable {
   private volatile boolean mayHaveDupes;
   private volatile RandomAccessIntContainer randomAccessContainer;
 
-  private IdSet checkSet;
+  public ChangeBufferingList() {
+    this(3);
+  }
 
-  public ChangeBufferingList() { this(3); }
   public ChangeBufferingList(int length) {
     if (length > MAX_FILES) {
       randomAccessContainer = new IdBitSet(length);
-    } else {
+    }
+    else {
       changes = new int[length];
     }
-    checkSet = EXTRA_SANITY_CHECKS ? new IdSet(length) : null;
   }
 
   static int[] calcMinMax(int[] set, int length) {
     int max = Integer.MIN_VALUE;
     int min = Integer.MAX_VALUE;
-    for(int i = 0; i < length; ++i) {
+    for (int i = 0; i < length; ++i) {
       max = Math.max(max, set[i]);
       min = Math.min(min, set[i]);
     }
-    return new int[] {min, max};
+    return new int[]{min, max};
   }
 
   public void add(int value) {
     ensureCapacity(1);
-    if (checkSet != null) checkSet.add(value);
     RandomAccessIntContainer intContainer = randomAccessContainer;
     if (intContainer == null) {
       addChange(value);
-    } else {
+    }
+    else {
       intContainer.add(value);
     }
   }
@@ -77,7 +74,8 @@ public class ChangeBufferingList implements Cloneable {
   private void addChange(int value) {
     if (value < 0) {
       if (!hasRemovals) hasRemovals = true;
-    } else if (!mayHaveDupes && length > 0 && changes[length - 1] >= value) {
+    }
+    else if (!mayHaveDupes && length > 0 && changes[length - 1] >= value) {
       mayHaveDupes = true;
     }
     changes[length++] = value;
@@ -85,7 +83,6 @@ public class ChangeBufferingList implements Cloneable {
 
   public void remove(int value) {
     ensureCapacity(1);
-    if (checkSet != null) checkSet.remove(value);
     RandomAccessIntContainer intContainer = randomAccessContainer;
     if (intContainer == null) {
       addChange(-value);
@@ -104,7 +101,6 @@ public class ChangeBufferingList implements Cloneable {
       if (randomAccessContainer != null) {
         clone.randomAccessContainer = (RandomAccessIntContainer)randomAccessContainer.clone();
       }
-      if (checkSet != null) clone.checkSet = (IdSet)checkSet.clone();
       return clone;
     }
     catch (CloneNotSupportedException e) {
@@ -137,45 +133,35 @@ public class ChangeBufferingList implements Cloneable {
             idSet = new SortedIdSet(currentChanges, length);
 
             copyChanges = false;
-          } else {
+          }
+          else {
             idSet = new SortedIdSet(Math.max(someElementsNumberEstimation, 3));
           }
         }
         else if (!hasRemovals) {
           idSet = new IdBitSet(changes, length, 0);
           copyChanges = false;
-        } else {
+        }
+        else {
           idSet = new IdBitSet(calcMinMax(changes, length), 0);
         }
-      } else if (checkSet != null) {
-        idSet = (RandomAccessIntContainer)randomAccessContainer.clone();
-      } else {
+      }
+      else {
         idSet = randomAccessContainer;
       }
 
       assert idSet != null;
 
       if (copyChanges) {
-        for(int i = 0, len = length; i < len; ++i) {
+        for (int i = 0, len = length; i < len; ++i) {
           int id = currentChanges[i];
           if (id > 0) {
             idSet.add(id);
-          } else {
+          }
+          else {
             idSet.remove(-id);
           }
         }
-      }
-
-      if (checkSet != null) {
-        DebugAssertions.assertTrue(checkSet.size() == idSet.size());
-        final RandomAccessIntContainer finalIdSet = idSet;
-        checkSet.forEach(new TIntProcedure() {
-          @Override
-          public boolean execute(int value) {
-            DebugAssertions.assertTrue(finalIdSet.contains(value));
-            return true;
-          }
-        });
       }
 
       length = 0;
@@ -195,7 +181,7 @@ public class ChangeBufferingList implements Cloneable {
       Arrays.sort(currentChanges, 0, intLength);
       boolean hasDupes = false;
 
-      for(int i = 0, max = intLength - 1; i < max; ++i) {
+      for (int i = 0, max = intLength - 1; i < max; ++i) {
         if (currentChanges[i] == currentChanges[i + 1]) {
           hasDupes = true;
           break;
@@ -204,16 +190,16 @@ public class ChangeBufferingList implements Cloneable {
 
       if (hasDupes) {
         int ptr = 0;
-        for(int i = 1; i < intLength; ++i) {
+        for (int i = 1; i < intLength; ++i) {
           if (currentChanges[i] != currentChanges[ptr]) {
             currentChanges[++ptr] = currentChanges[i];
           }
         }
         length = (short)(ptr + 1);
       }
-    } else {
-      ValueContainer.IntIterator sorted =
-              SortedFileIdSetIterator.getTransientIterator(new ChangesIterator(currentChanges, length, false));
+    }
+    else {
+      ValueContainer.IntIterator sorted = SortedFileIdSetIterator.getTransientIterator(new ChangesIterator(currentChanges, length, false));
       int lastIndex = 0;
       while (sorted.hasNext()) {
         currentChanges[lastIndex++] = sorted.next();
@@ -235,7 +221,8 @@ public class ChangeBufferingList implements Cloneable {
     }
     if (changes == null) {
       changes = new int[Math.max(3, diff)];
-    } else if (length + diff > changes.length) {
+    }
+    else if (length + diff > changes.length) {
       int[] newChanges = new int[calcNextArraySize(changes.length, length + diff)];
       System.arraycopy(changes, 0, newChanges, 0, length);
       changes = newChanges;
@@ -243,21 +230,16 @@ public class ChangeBufferingList implements Cloneable {
   }
 
   static int calcNextArraySize(int currentSize, int wantedSize) {
-    return Math.min(
-            Math.max(currentSize < 1024 ? currentSize << 1 : currentSize + currentSize / 5, wantedSize),
-            MAX_FILES
-    );
+    return Math.min(Math.max(currentSize < 1024 ? currentSize << 1 : currentSize + currentSize / 5, wantedSize), MAX_FILES);
   }
 
   public boolean isEmpty() {
     if (randomAccessContainer == null) {
       if (changes == null) {
-        if (checkSet != null) DebugAssertions.assertTrue(checkSet.isEmpty());
         return true;
       }
       if (!hasRemovals) {
         boolean b = length == 0;
-        if (checkSet != null) DebugAssertions.assertTrue(b == checkSet.isEmpty());
         return b;
       }
     }
@@ -267,18 +249,7 @@ public class ChangeBufferingList implements Cloneable {
   }
 
   public ValueContainer.IntPredicate intPredicate() {
-    final ValueContainer.IntPredicate predicate = getRandomAccessContainer().intPredicate();
-    if (checkSet != null) {
-      return new ValueContainer.IntPredicate() {
-        @Override
-        public boolean contains(int id) {
-          boolean answer = predicate.contains(id);
-          DebugAssertions.assertTrue(answer == checkSet.contains(id));
-          return answer;
-        }
-      };
-    }
-    return predicate;
+    return getRandomAccessContainer().intPredicate();
   }
 
   public IntIdsIterator intIterator() {
@@ -304,10 +275,6 @@ public class ChangeBufferingList implements Cloneable {
       intIterator = SortedFileIdSetIterator.getTransientIterator(intIterator);
     }
     return intIterator;
-  }
-
-  public IdSet getCheckSet() {
-    return checkSet;
   }
 
   private static class ChangesIterator implements IntIdsIterator {

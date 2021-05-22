@@ -20,9 +20,7 @@ import com.intellij.execution.ExecutionException;
 import com.intellij.execution.FilePathSeparator;
 import com.intellij.execution.process.ProcessNotCreatedException;
 import com.intellij.ide.IdeBundle;
-import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.SystemInfo;
-import consulo.util.dataholder.UserDataHolder;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.CharsetToolkit;
@@ -31,9 +29,12 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.text.CaseInsensitiveStringHashingStrategy;
 import consulo.annotation.DeprecationInfo;
 import consulo.logging.Logger;
-import gnu.trove.THashMap;
-import javax.annotation.Nonnull;
+import consulo.util.collection.DelegateMap;
+import consulo.util.collection.Maps;
+import consulo.util.dataholder.Key;
+import consulo.util.dataholder.UserDataHolder;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
@@ -67,7 +68,7 @@ public class GeneralCommandLine implements UserDataHolder {
 
   private String myExePath = null;
   private File myWorkDirectory = null;
-  private final Map<String, String> myEnvParams = new MyTHashMap();
+  private final Map<String, String> myEnvParams = new MyStrictMap();
   private ParentEnvironmentType myParentEnvironmentType = ParentEnvironmentType.CONSOLE;
   private final ParametersList myProgramParams = new ParametersList();
   private Charset myCharset = CharsetToolkit.getDefaultSystemCharset();
@@ -220,7 +221,7 @@ public class GeneralCommandLine implements UserDataHolder {
    */
   @Nonnull
   public Map<String, String> getEffectiveEnvironment() {
-    MyTHashMap env = new MyTHashMap();
+    MyStrictMap env = new MyStrictMap();
     setupEnvironment(env);
     return env;
   }
@@ -405,7 +406,7 @@ public class GeneralCommandLine implements UserDataHolder {
 
     if (!myEnvParams.isEmpty()) {
       if (SystemInfo.isWindows) {
-        THashMap<String, String> envVars = new THashMap<>(CaseInsensitiveStringHashingStrategy.INSTANCE);
+        Map<String, String> envVars = Maps.newHashMap(CaseInsensitiveStringHashingStrategy.INSTANCE);
         envVars.putAll(environment);
         envVars.putAll(myEnvParams);
         environment.clear();
@@ -451,9 +452,9 @@ public class GeneralCommandLine implements UserDataHolder {
     myUserData.put(key, value);
   }
 
-  private static class MyTHashMap extends THashMap<String, String> {
-    public MyTHashMap() {
-      super(SystemInfo.isWindows ? CaseInsensitiveStringHashingStrategy.INSTANCE : ContainerUtil.<String>canonicalStrategy());
+  private static class MyStrictMap extends DelegateMap<String, String> {
+    public MyStrictMap() {
+      super(Maps.newHashMap(SystemInfo.isWindows ? CaseInsensitiveStringHashingStrategy.INSTANCE : ContainerUtil.<String>canonicalStrategy()));
     }
 
     @Override

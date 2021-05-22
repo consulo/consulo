@@ -34,8 +34,9 @@ import consulo.lang.LanguageVersion;
 import consulo.lang.LanguageVersionResolver;
 import consulo.lang.LanguageVersionResolvers;
 import consulo.logging.Logger;
+import consulo.util.collection.primitive.ints.IntList;
+import consulo.util.collection.primitive.ints.IntLists;
 import consulo.util.dataholder.Key;
-import gnu.trove.TIntArrayList;
 import org.jetbrains.annotations.Contract;
 
 import javax.annotation.Nonnull;
@@ -1140,7 +1141,7 @@ public class PsiTreeUtil {
   @RequiredReadAction
   public static <T extends PsiElement> T findSameElementInCopy(@Nullable T element, @Nonnull PsiFile copy) throws IllegalStateException {
     if (element == null) return null;
-    TIntArrayList offsets = new TIntArrayList();
+    IntList offsets = IntLists.newArrayList();
     PsiElement cur = element;
     while (!cur.getClass().equals(copy.getClass())) {
       int pos = 0;

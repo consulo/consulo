@@ -18,12 +18,8 @@ package com.intellij.util.xmlb;
 import com.intellij.util.xmlb.annotations.*;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.jdom.JDOMUtil;
-import consulo.util.lang.Couple;
-import consulo.util.lang.Pair;
-import consulo.util.lang.StringUtil;
-import consulo.util.lang.ThreeState;
+import consulo.util.lang.*;
 import consulo.util.lang.reflect.ReflectionUtil;
-import gnu.trove.TObjectFloatHashMap;
 import org.jdom.Comment;
 import org.jdom.Content;
 import org.jdom.Element;
@@ -133,8 +129,8 @@ class BeanBinding extends Binding implements MainBinding {
   }
 
   @Nonnull
-  public TObjectFloatHashMap<String> computeBindingWeights(@Nonnull LinkedHashSet<String> accessorNameTracker) {
-    TObjectFloatHashMap<String> weights = new TObjectFloatHashMap<String>(accessorNameTracker.size());
+  public Map<String, Float> computeBindingWeights(@Nonnull LinkedHashSet<String> accessorNameTracker) {
+    Map<String, Float> weights = new HashMap<>(accessorNameTracker.size());
     float weight = 0;
     float step = (float)myBindings.length / (float)accessorNameTracker.size();
     for (String name : accessorNameTracker) {
@@ -154,16 +150,13 @@ class BeanBinding extends Binding implements MainBinding {
     return weights;
   }
 
-  public void sortBindings(@Nonnull final TObjectFloatHashMap<String> weights) {
-    Arrays.sort(myBindings, new Comparator<Binding>() {
-      @Override
-      public int compare(@Nonnull Binding o1, @Nonnull Binding o2) {
-        String n1 = o1.getAccessor().getName();
-        String n2 = o2.getAccessor().getName();
-        float w1 = weights.get(n1);
-        float w2 = weights.get(n2);
-        return (int)(w1 - w2);
-      }
+  public void sortBindings(@Nonnull final Map<String, Float> weights) {
+    Arrays.sort(myBindings, (o1, o2) -> {
+      String n1 = o1.getAccessor().getName();
+      String n2 = o2.getAccessor().getName();
+      Float w1 = ObjectUtil.notNull(weights.get(n1), 0f);
+      Float w2 = ObjectUtil.notNull(weights.get(n2), 0f);
+      return (int)(w1 - w2);
     });
   }
 

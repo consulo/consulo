@@ -48,6 +48,11 @@
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
+      <artifactId>consulo-util-collection-primitive</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
       <artifactId>consulo-util-concurrent</artifactId>
       <version>${project.version}</version>
     </dependency>
@@ -85,6 +90,7 @@
     <dependency>
       <groupId>consulo.internal</groupId>
       <artifactId>trove4j</artifactId>
+      <optional>true</optional>
     </dependency>
     <!--external-->
     <dependency>

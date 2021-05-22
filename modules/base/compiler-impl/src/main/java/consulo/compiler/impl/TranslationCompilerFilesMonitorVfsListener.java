@@ -36,15 +36,15 @@ import com.intellij.openapi.vfs.newvfs.NewVirtualFile;
 import com.intellij.openapi.vfs.newvfs.events.*;
 import consulo.compiler.server.BuildManager;
 import consulo.logging.Logger;
-import gnu.trove.THashSet;
-import gnu.trove.TIntArrayList;
+import consulo.util.collection.Sets;
+import consulo.util.collection.primitive.ints.IntList;
+import consulo.util.collection.primitive.ints.IntLists;
 import gnu.trove.TIntHashSet;
-import gnu.trove.TIntProcedure;
 import jakarta.inject.Inject;
+import jakarta.inject.Provider;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import jakarta.inject.Provider;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -142,7 +142,7 @@ public class TranslationCompilerFilesMonitorVfsListener implements AsyncFileList
       if (parent != null) {
         final String oldName = (String)event.getOldValue();
         final String root = parent.getPath() + "/" + oldName;
-        final Set<File> toMark = new THashSet<>(FileUtil.FILE_HASHING_STRATEGY);
+        final Set<File> toMark = Sets.newHashSet(FileUtil.FILE_HASHING_STRATEGY);
         if (eventFile.isDirectory()) {
           VfsUtilCore.visitChildrenRecursively(eventFile, new VirtualFileVisitor() {
             private StringBuilder filePath = new StringBuilder(root);
@@ -195,12 +195,12 @@ public class TranslationCompilerFilesMonitorVfsListener implements AsyncFileList
       }
     }
 
-    final Set<File> pathsToMark = new THashSet<>(FileUtil.FILE_HASHING_STRATEGY);
+    final Set<File> pathsToMark = Sets.newHashSet(FileUtil.FILE_HASHING_STRATEGY);
 
     TranslatingCompilerFilesMonitorImpl monitor = getMonitor();
 
     processRecursively(eventFile, true, new Consumer<VirtualFile>() {
-      private final TIntArrayList myAssociatedProjectIds = new TIntArrayList();
+      private final IntList myAssociatedProjectIds = IntLists.newArrayList();
 
       @Override
       public void accept(final VirtualFile file) {
@@ -271,12 +271,8 @@ public class TranslationCompilerFilesMonitorVfsListener implements AsyncFileList
         finally {
           // it is important that update of myOutputsToDelete is done at the end
           // otherwise the filePath of the file that is about to be deleted may be re-scheduled for deletion in addSourceForRecompilation()
-          myAssociatedProjectIds.forEach(new TIntProcedure() {
-            @Override
-            public boolean execute(int projectId) {
-              monitor.unmarkOutputPathForDeletion(projectId, filePath);
-              return true;
-            }
+          myAssociatedProjectIds.forEach(projectId -> {
+            monitor.unmarkOutputPathForDeletion(projectId, filePath);
           });
         }
       }
@@ -288,7 +284,7 @@ public class TranslationCompilerFilesMonitorVfsListener implements AsyncFileList
   private void markDirtyIfSource(final VirtualFile file, final boolean fromMove) {
     TranslatingCompilerFilesMonitorImpl monitor = getMonitor();
 
-    final Set<File> pathsToMark = new THashSet<>(FileUtil.FILE_HASHING_STRATEGY);
+    final Set<File> pathsToMark = Sets.newHashSet(FileUtil.FILE_HASHING_STRATEGY);
     processRecursively(file, false, file1 -> {
       pathsToMark.add(new File(file1.getPath()));
       final TranslationSourceFileInfo srcInfo = file1.isValid() ? TranslationSourceFileInfo.loadSourceInfo(file1) : null;
@@ -375,14 +371,9 @@ public class TranslationCompilerFilesMonitorVfsListener implements AsyncFileList
       }
     });
     if (notifyServer && !monitor.isIgnoredOrUnderIgnoredDirectory(projectManager, file)) {
-      final Set<File> pathsToMark = new THashSet<>(FileUtil.FILE_HASHING_STRATEGY);
+      final Set<File> pathsToMark = Sets.newHashSet(FileUtil.FILE_HASHING_STRATEGY);
       boolean dbOnly = !isInContent.get();
-      processRecursively(file, dbOnly, new Consumer<VirtualFile>() {
-        @Override
-        public void accept(VirtualFile file) {
-          pathsToMark.add(new File(file.getPath()));
-        }
-      });
+      processRecursively(file, dbOnly, it -> pathsToMark.add(new File(it.getPath())));
       notifyFilesChanged(pathsToMark);
     }
   }

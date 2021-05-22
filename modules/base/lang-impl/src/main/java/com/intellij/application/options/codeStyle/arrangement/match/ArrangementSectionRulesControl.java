@@ -19,8 +19,6 @@ import com.intellij.application.options.codeStyle.arrangement.ArrangementConstan
 import com.intellij.application.options.codeStyle.arrangement.color.ArrangementColorsProvider;
 import com.intellij.application.options.codeStyle.arrangement.match.tokens.ArrangementRuleAliasDialog;
 import com.intellij.lang.Language;
-import consulo.logging.Logger;
-import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.codeStyle.arrangement.ArrangementUtil;
 import com.intellij.psi.codeStyle.arrangement.match.ArrangementSectionRule;
@@ -32,14 +30,12 @@ import com.intellij.psi.codeStyle.arrangement.model.ArrangementMatchConditionVis
 import com.intellij.psi.codeStyle.arrangement.std.ArrangementStandardSettingsManager;
 import com.intellij.psi.codeStyle.arrangement.std.StdArrangementRuleAliasToken;
 import com.intellij.util.containers.ContainerUtil;
-import gnu.trove.THashSet;
+import consulo.logging.Logger;
+import consulo.util.dataholder.Key;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import static com.intellij.application.options.codeStyle.arrangement.match.ArrangementSectionRuleManager.ArrangementSectionRuleData;
 
@@ -190,7 +186,7 @@ public class ArrangementSectionRulesControl extends ArrangementMatchingRulesCont
 
   @Nonnull
   public ArrangementRuleAliasDialog createRuleAliasEditDialog() {
-    final Set<String> tokenIds = new THashSet<String>();
+    final Set<String> tokenIds = new HashSet<String>();
     final List<ArrangementSectionRule> sections = getSections();
     for (ArrangementSectionRule section : sections) {
       for (StdArrangementMatchRule rule : section.getMatchRules()) {

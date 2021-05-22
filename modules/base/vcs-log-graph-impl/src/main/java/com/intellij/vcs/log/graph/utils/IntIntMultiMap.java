@@ -15,16 +15,16 @@
  */
 package com.intellij.vcs.log.graph.utils;
 
-import gnu.trove.TIntObjectHashMap;
-import javax.annotation.Nonnull;
+import consulo.util.collection.primitive.ints.IntMaps;
+import consulo.util.collection.primitive.ints.IntObjectMap;
 
+import javax.annotation.Nonnull;
 import java.util.AbstractList;
 import java.util.Collection;
 
 public class IntIntMultiMap {
-
   private final static int[] EMPTY = new int[0];
-  private final TIntObjectHashMap<int[]> myKeyToArrayMap = new TIntObjectHashMap<>();
+  private final IntObjectMap<int[]> myKeyToArrayMap = IntMaps.newIntObjectHashMap();
 
 
   public void putValue(int key, int value) {

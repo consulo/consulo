@@ -15,7 +15,8 @@
  */
 package com.intellij.util.diff;
 
-import gnu.trove.TIntArrayList;
+import consulo.util.collection.primitive.ints.IntList;
+import consulo.util.collection.primitive.ints.IntLists;
 import org.jetbrains.annotations.TestOnly;
 
 import java.util.Arrays;
@@ -57,8 +58,8 @@ class Reindexer {
   private int[] discard(int[] needed, int[] toDiscard, int arrayIndex) {
     myOriginalLengths[arrayIndex] = toDiscard.length;
     int[] sorted1 = createSorted(needed);
-    TIntArrayList discarded = new TIntArrayList(toDiscard.length);
-    TIntArrayList oldIndecies = new TIntArrayList(toDiscard.length);
+    IntList discarded = IntLists.newArrayList(toDiscard.length);
+    IntList oldIndecies = IntLists.newArrayList(toDiscard.length);
     for (int i = 0; i < toDiscard.length; i++) {
       int index = toDiscard[i];
       if (Arrays.binarySearch(sorted1, index) >= 0) {
@@ -66,9 +67,9 @@ class Reindexer {
         oldIndecies.add(i);
       }
     }
-    myOldIndecies[arrayIndex] = oldIndecies.toNativeArray();
+    myOldIndecies[arrayIndex] = oldIndecies.toArray();
     myDiscardedLengths[arrayIndex] = discarded.size();
-    return discarded.toNativeArray();
+    return discarded.toArray();
   }
 
   private int[] createSorted(int[] ints1) {

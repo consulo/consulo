@@ -21,7 +21,7 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.application.ApplicationBundle;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.util.IconUtil;
-import gnu.trove.TIntArrayList;
+import consulo.util.collection.primitive.ints.IntList;
 
 /**
  * @author Denis Zhdanov
@@ -50,19 +50,16 @@ public class RemoveArrangementRuleAction extends AbstractArrangementRuleAction i
 
     control.hideEditor();
 
-    final TIntArrayList rowsToRemove = control.getSelectedModelRows();
+    final IntList rowsToRemove = control.getSelectedModelRows();
     if (rowsToRemove.isEmpty()) {
       return;
     }
 
     final ArrangementMatchingRulesModel model = control.getModel();
-    control.runOperationIgnoreSelectionChange(new Runnable() {
-      @Override
-      public void run() {
-        for (int i = 0; i < rowsToRemove.size(); i++) {
-          int row = rowsToRemove.get(i);
-          model.removeRow(row);
-        }
+    control.runOperationIgnoreSelectionChange(() -> {
+      for (int i = 0; i < rowsToRemove.size(); i++) {
+        int row = rowsToRemove.get(i);
+        model.removeRow(row);
       }
     });
   }

@@ -121,6 +121,7 @@ public class Java9ModuleInitializer {
 
       toResolve.add("consulo.util.lang");
       toResolve.add("consulo.util.collection");
+      toResolve.add("consulo.util.collection.primitive");
       toResolve.add("consulo.util.concurrent");
       toResolve.add("consulo.util.io");
       toResolve.add("consulo.util.serializer");

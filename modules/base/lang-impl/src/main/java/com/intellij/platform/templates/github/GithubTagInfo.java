@@ -2,7 +2,9 @@ package com.intellij.platform.templates.github;
 
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.ObjectUtil;
-import gnu.trove.TIntArrayList;
+import consulo.util.collection.primitive.ints.IntList;
+import consulo.util.collection.primitive.ints.IntLists;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -55,7 +57,7 @@ public class GithubTagInfo {
     } else if (StringUtil.startsWithChar(tagName, 'v')) {
       tagName = tagName.substring(1);
     }
-    TIntArrayList intComponents = new TIntArrayList();
+    IntList intComponents = IntLists.newArrayList();
     int startInd = 0;
     while (true) {
       int ind = tagName.indexOf('.', startInd);
@@ -118,14 +120,14 @@ public class GithubTagInfo {
   }
 
   public static class Version implements Comparable<Version> {
-    private final TIntArrayList myIntComponents = new TIntArrayList();
+    private final IntList myIntComponents = IntLists.newArrayList();
     private final String myLabel;
     private final int myLabelVersion;
 
-    public Version(@Nonnull TIntArrayList intComponents,
+    public Version(@Nonnull IntList intComponents,
                    @Nonnull String label,
                    int labelVersion) {
-      myIntComponents.add(intComponents.toNativeArray());
+      myIntComponents.addAll(intComponents.toArray());
       myLabel = label;
       myLabelVersion = labelVersion;
     }

@@ -21,8 +21,8 @@ import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.ArrayUtil;
 import consulo.roots.ContentFolderTypeProvider;
-import gnu.trove.TObjectIntHashMap;
-import gnu.trove.TObjectProcedure;
+import consulo.util.collection.primitive.objects.ObjectIntMap;
+
 import javax.annotation.Nonnull;
 
 /**
@@ -32,13 +32,13 @@ import javax.annotation.Nonnull;
 @Deprecated
 public abstract class ModuleRootsProcessorFromModuleDir extends ModuleRootsProcessor {
   @Override
-  public boolean containsFile(@Nonnull TObjectIntHashMap<VirtualFile> roots, @Nonnull final VirtualFile virtualFile) {
-    return !roots.forEachKey(new TObjectProcedure<VirtualFile>() {
-      @Override
-      public boolean execute(VirtualFile object) {
-        return !VfsUtilCore.isAncestor(object, virtualFile, false);
+  public boolean containsFile(@Nonnull ObjectIntMap<VirtualFile> roots, @Nonnull final VirtualFile virtualFile) {
+    for (ObjectIntMap.Entry<VirtualFile> next : roots.entrySet()) {
+      if (VfsUtilCore.isAncestor(next.getKey(), virtualFile, false)) {
+        return true;
       }
-    });
+    }
+    return false;
   }
 
   @Nonnull

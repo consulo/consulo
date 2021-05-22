@@ -2,15 +2,15 @@
 package com.intellij.util.indexing.hash;
 
 import com.intellij.openapi.progress.ProgressManager;
-import com.intellij.util.IntIntFunction;
 import com.intellij.util.indexing.*;
 import com.intellij.util.indexing.impl.IndexStorage;
 import com.intellij.util.indexing.impl.MapIndexStorage;
 import com.intellij.util.indexing.provided.ProvidedIndexExtension;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.io.File;
 import java.io.IOException;
+import java.util.function.IntUnaryOperator;
 
 class HashBasedMapReduceIndex<Key, Value> extends VfsAwareMapReduceIndex<Key, Value, FileContent> {
   @Nonnull
@@ -39,7 +39,7 @@ class HashBasedMapReduceIndex<Key, Value> extends VfsAwareMapReduceIndex<Key, Va
   private static <Key, Value> IndexStorage<Key, Value> createStorage(@Nonnull File baseFile,
                                                                      @Nonnull FileBasedIndexExtension<Key, Value> originalExtension,
                                                                      @Nonnull ProvidedIndexExtension<Key, Value> providedExtension,
-                                                                     @Nonnull IntIntFunction hashToFileId) throws IOException {
+                                                                     @Nonnull IntUnaryOperator hashToFileId) throws IOException {
     return new MapIndexStorage<Key, Value>(new File(baseFile, originalExtension.getName().getName()), providedExtension.createKeyDescriptor(), providedExtension.createValueExternalizer(),
                                            originalExtension.getCacheSize(), originalExtension.keyIsUniqueForIndexedFile(), true, true, hashToFileId) {
       @Override

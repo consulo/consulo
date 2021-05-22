@@ -28,7 +28,6 @@ import com.intellij.util.NullableFunction;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.FactoryMap;
 import com.intellij.util.containers.MultiMap;
-import com.intellij.util.containers.hash.HashSet;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

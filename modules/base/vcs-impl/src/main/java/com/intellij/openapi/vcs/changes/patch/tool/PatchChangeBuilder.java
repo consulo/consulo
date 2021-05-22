@@ -23,9 +23,10 @@ import com.intellij.openapi.vcs.changes.patch.AppliedTextPatch;
 import com.intellij.openapi.vcs.changes.patch.AppliedTextPatch.AppliedSplitPatchHunk;
 import com.intellij.openapi.vcs.changes.patch.AppliedTextPatch.HunkStatus;
 import com.intellij.util.containers.ContainerUtil;
-import gnu.trove.TIntArrayList;
-import javax.annotation.Nonnull;
+import consulo.util.collection.primitive.ints.IntList;
+import consulo.util.collection.primitive.ints.IntLists;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -38,7 +39,7 @@ class PatchChangeBuilder {
   @Nonnull
   private final LineNumberConvertor.Builder myConvertor = new LineNumberConvertor.Builder();
   @Nonnull
-  private final TIntArrayList myChangedLines = new TIntArrayList();
+  private final IntList myChangedLines = IntLists.newArrayList();
 
   private int totalLines = 0;
 
@@ -145,7 +146,7 @@ class PatchChangeBuilder {
   }
 
   @Nonnull
-  public TIntArrayList getSeparatorLines() {
+  public IntList getSeparatorLines() {
     return myChangedLines;
   }
 

@@ -2,15 +2,12 @@
 package com.intellij.openapi.vfs.impl;
 
 import com.intellij.concurrency.ConcurrentCollectionFactory;
-import consulo.disposer.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.impl.ApplicationInfoImpl;
-import consulo.logging.Logger;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.fileTypes.FileTypeManager;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.util.Comparing;
-import consulo.disposer.Disposer;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.io.FileUtil;
@@ -35,10 +32,14 @@ import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.MultiMap;
 import com.intellij.util.io.URLUtil;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
 import consulo.fileTypes.ArchiveFileType;
-import gnu.trove.THashMap;
+import consulo.logging.Logger;
 import gnu.trove.THashSet;
+import gnu.trove.TObjectHashingStrategy;
 import gnu.trove.TObjectIntHashMap;
+import jakarta.inject.Singleton;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;
@@ -47,6 +48,7 @@ import java.util.*;
 import java.util.concurrent.ConcurrentMap;
 import java.util.stream.Collectors;
 
+@Singleton
 public final class VirtualFilePointerManagerImpl extends VirtualFilePointerManager implements Disposable {
   private static final Logger LOG = Logger.getInstance(VirtualFilePointerManagerImpl.class);
   private static final Comparator<String> URL_COMPARATOR = SystemInfo.isFileSystemCaseSensitive ? String::compareTo : String::compareToIgnoreCase;
@@ -255,7 +257,7 @@ public final class VirtualFilePointerManagerImpl extends VirtualFilePointerManag
     return getOrCreate(file, path, url, recursive, parentDisposable, listener, (NewVirtualFileSystem)fileSystem);
   }
 
-  private final Map<String, IdentityVirtualFilePointer> myUrlToIdentity = new THashMap<>(); // guarded by this
+  private final Map<String, IdentityVirtualFilePointer> myUrlToIdentity = new HashMap<>(); // guarded by this
 
   @Nonnull
   private synchronized IdentityVirtualFilePointer getOrCreateIdentity(@Nonnull String url, @Nullable VirtualFile found, boolean recursive, @Nonnull Disposable parentDisposable) {
@@ -357,7 +359,7 @@ public final class VirtualFilePointerManagerImpl extends VirtualFilePointerManag
                                                           @Nullable VirtualFilePointerListener listener,
                                                           @Nonnull NewVirtualFileSystem fs) {
     VirtualFilePointerListener nl = ObjectUtils.notNull(listener, NULL_LISTENER);
-    Map<VirtualFilePointerListener, FilePointerPartNode> myPointers = myRoots.computeIfAbsent(fs, __ -> new THashMap<>());
+    Map<VirtualFilePointerListener, FilePointerPartNode> myPointers = myRoots.computeIfAbsent(fs, __ -> new HashMap<>());
     FilePointerPartNode root = myPointers.computeIfAbsent(nl, __ -> FilePointerPartNode.createFakeRoot());
 
     FilePointerPartNode node = file == null ? FilePointerPartNode.findOrCreateNodeByPath(root, path, fs) : root.findOrCreateNodeByFile(file, fs);
@@ -699,7 +701,7 @@ public final class VirtualFilePointerManagerImpl extends VirtualFilePointerManag
   private static class DelegatingDisposable implements Disposable {
     private static final ConcurrentMap<Disposable, DelegatingDisposable> ourInstances = ConcurrentCollectionFactory.createMap(ContainerUtil.identityStrategy());
 
-    private final TObjectIntHashMap<VirtualFilePointerImpl> myCounts = new TObjectIntHashMap<>(ContainerUtil.identityStrategy()); // guarded by this
+    private final TObjectIntHashMap<VirtualFilePointerImpl> myCounts = new TObjectIntHashMap<>(TObjectHashingStrategy.IDENTITY); // guarded by this
     private final Disposable myParent;
 
     private DelegatingDisposable(@Nonnull Disposable parent, @Nonnull VirtualFilePointerImpl firstPointer) {
@@ -799,7 +801,7 @@ public final class VirtualFilePointerManagerImpl extends VirtualFilePointerManag
 
   @Nonnull
   synchronized Collection<VirtualFilePointer> dumpAllPointers() {
-    Collection<VirtualFilePointer> result = new THashSet<>();
+    Collection<VirtualFilePointer> result = new HashSet<>();
     for (Map<VirtualFilePointerListener, FilePointerPartNode> myPointers : myRoots.values()) {
       for (FilePointerPartNode node : myPointers.values()) {
         dumpPointersRecursivelyTo(node, result);

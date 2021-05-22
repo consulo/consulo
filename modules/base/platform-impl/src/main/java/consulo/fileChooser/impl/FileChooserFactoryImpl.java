@@ -27,11 +27,11 @@ import consulo.ui.fileOperateDialog.FileOperateDialogProvider;
 import consulo.ui.fileOperateDialog.FileSaveDialogProvider;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.ObjectUtil;
-import gnu.trove.THashMap;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.awt.*;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -73,7 +73,7 @@ public class FileChooserFactoryImpl extends FileChooserFactory {
   public static Map<String, String> getMacroMap() {
     final PathMacros macros = PathMacros.getInstance();
     final Set<String> allNames = macros.getAllMacroNames();
-    final Map<String, String> map = new THashMap<>(allNames.size());
+    final Map<String, String> map = new HashMap<>(allNames.size());
     for (String eachMacroName : allNames) {
       map.put("$" + eachMacroName + "$", macros.getValue(eachMacroName));
     }

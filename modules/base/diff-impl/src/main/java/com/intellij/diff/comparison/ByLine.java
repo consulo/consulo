@@ -24,6 +24,8 @@ import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.util.collection.primitive.ints.IntList;
+import consulo.util.collection.primitive.ints.IntLists;
 import gnu.trove.TIntArrayList;
 
 import javax.annotation.Nonnull;
@@ -173,8 +175,8 @@ public class ByLine {
         int start1 = Math.max(last1, builder.getIndex1());
         int start2 = Math.max(last2, builder.getIndex2());
 
-        TIntArrayList subLines1 = new TIntArrayList();
-        TIntArrayList subLines2 = new TIntArrayList();
+        IntList subLines1 = IntLists.newArrayList();
+        IntList subLines2 = IntLists.newArrayList();
         for (int i = start1; i < line1; i++) {
           if (StringUtil.equalsIgnoreWhitespaces(sample, lines1.get(i).getContent())) {
             subLines1.add(i);
@@ -194,7 +196,7 @@ public class ByLine {
         sample = null;
       }
 
-      private void alignExactMatching(TIntArrayList subLines1, TIntArrayList subLines2) {
+      private void alignExactMatching(IntList subLines1, IntList subLines2) {
         int n = Math.max(subLines1.size(), subLines2.size());
         boolean skipAligning = n > 10 || // we use brute-force algorithm (C_n_k). This will limit search space by ~250 cases.
                                subLines1.size() == subLines2.size(); // nothing to do
@@ -238,8 +240,8 @@ public class ByLine {
   }
 
   @Nonnull
-  private static int[] getBestMatchingAlignment(@Nonnull final TIntArrayList subLines1,
-                                                @Nonnull final TIntArrayList subLines2,
+  private static int[] getBestMatchingAlignment(@Nonnull final IntList subLines1,
+                                                @Nonnull final IntList subLines2,
                                                 @Nonnull final List<Line> lines1,
                                                 @Nonnull final List<Line> lines2) {
     assert subLines1.size() < subLines2.size();
@@ -309,17 +311,17 @@ public class ByLine {
     int threshold = Registry.intValue("diff.unimportant.line.char.count");
     if (threshold == 0) return diff(lines1, lines2, indicator);
 
-    Pair<List<Line>, TIntArrayList> bigLines1 = getBigLines(lines1, threshold);
-    Pair<List<Line>, TIntArrayList> bigLines2 = getBigLines(lines2, threshold);
+    Pair<List<Line>, IntList> bigLines1 = getBigLines(lines1, threshold);
+    Pair<List<Line>, IntList> bigLines2 = getBigLines(lines2, threshold);
 
     FairDiffIterable changes = diff(bigLines1.first, bigLines2.first, indicator);
     return new ChangeCorrector.SmartLineChangeCorrector(bigLines1.second, bigLines2.second, lines1, lines2, changes, indicator).build();
   }
 
   @Nonnull
-  private static Pair<List<Line>, TIntArrayList> getBigLines(@Nonnull List<Line> lines, int threshold) {
+  private static Pair<List<Line>, IntList> getBigLines(@Nonnull List<Line> lines, int threshold) {
     List<Line> bigLines = new ArrayList<>(lines.size());
-    TIntArrayList indexes = new TIntArrayList(lines.size());
+    IntList indexes = IntLists.newArrayList(lines.size());
 
     for (int i = 0; i < lines.size(); i++) {
       Line line = lines.get(i);

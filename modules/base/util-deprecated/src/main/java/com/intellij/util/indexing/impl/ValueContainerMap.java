@@ -15,13 +15,13 @@
  */
 package com.intellij.util.indexing.impl;
 
-import com.intellij.util.IntIntFunction;
 import com.intellij.util.io.DataExternalizer;
 import com.intellij.util.io.KeyDescriptor;
 import com.intellij.util.io.PersistentHashMap;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.io.*;
+import java.util.function.IntUnaryOperator;
 
 /**
  * @author Dmitry Avdeev
@@ -35,7 +35,7 @@ class ValueContainerMap<Key, Value> extends PersistentHashMap<Key, UpdatableValu
                     @Nonnull KeyDescriptor<Key> keyKeyDescriptor,
                     @Nonnull DataExternalizer<Value> valueExternalizer,
                     boolean keyIsUniqueForIndexedFile,
-                    @Nonnull IntIntFunction inputRemapping) throws IOException {
+                    @Nonnull IntUnaryOperator inputRemapping) throws IOException {
     super(file, keyKeyDescriptor, new ValueContainerExternalizer<>(valueExternalizer, inputRemapping));
     myValueExternalizer = valueExternalizer;
     myKeyIsUniqueForIndexedFile = keyIsUniqueForIndexedFile;
@@ -73,9 +73,9 @@ class ValueContainerMap<Key, Value> extends PersistentHashMap<Key, UpdatableValu
     @Nonnull
     private final DataExternalizer<T> myValueExternalizer;
     @Nonnull
-    private final IntIntFunction myInputRemapping;
+    private final IntUnaryOperator myInputRemapping;
 
-    private ValueContainerExternalizer(@Nonnull DataExternalizer<T> valueExternalizer, @Nonnull IntIntFunction inputRemapping) {
+    private ValueContainerExternalizer(@Nonnull DataExternalizer<T> valueExternalizer, @Nonnull IntUnaryOperator inputRemapping) {
       myValueExternalizer = valueExternalizer;
       myInputRemapping = inputRemapping;
     }

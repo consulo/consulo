@@ -51,7 +51,6 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.dataholder.UserDataHolderBase;
 import consulo.util.lang.Pair;
 import consulo.util.lang.ThreeState;
-import gnu.trove.THashMap;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;
@@ -66,7 +65,7 @@ import java.util.function.Supplier;
 public abstract class ComponentManagerImpl extends UserDataHolderBase implements ComponentManager, Disposable {
   protected class ComponentsRegistry {
     private final List<ComponentConfig> myComponentConfigs = new ArrayList<>();
-    private final Map<Class, ComponentConfig> myComponentClassToConfig = new THashMap<>();
+    private final Map<Class, ComponentConfig> myComponentClassToConfig = new HashMap<>();
 
     private void loadClasses(List<Class> notLazyServices, InjectingContainerBuilder builder) {
       for (ComponentConfig config : myComponentConfigs) {

@@ -24,8 +24,6 @@ import com.intellij.util.ArrayUtil;
 import com.intellij.util.SystemProperties;
 import com.intellij.util.io.UnsyncByteArrayInputStream;
 import consulo.logging.Logger;
-import gnu.trove.THashMap;
-import gnu.trove.TObjectObjectProcedure;
 import net.jpountz.lz4.LZ4BlockInputStream;
 import net.jpountz.lz4.LZ4BlockOutputStream;
 import org.jdom.Element;
@@ -38,10 +36,8 @@ import javax.annotation.Nullable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
+import java.util.function.BiConsumer;
 
 @SuppressWarnings("IOResourceOpenedButNotSafelyClosed")
 final class StateMap {
@@ -52,14 +48,14 @@ final class StateMap {
           setOmitEncoding(true).
           setOmitDeclaration(true);
 
-  private final THashMap<String, Object> states;
+  private final Map<String, Object> states;
 
   public StateMap() {
-    states = new THashMap<String, Object>();
+    states = new HashMap<String, Object>();
   }
 
   public StateMap(StateMap stateMap) {
-    states = new THashMap<String, Object>((Map<String, Object>)stateMap.states);
+    states = new HashMap<String, Object>((Map<String, Object>)stateMap.states);
   }
 
   @Nonnull
@@ -237,7 +233,7 @@ final class StateMap {
     return states.size();
   }
 
-  public void forEachEntry(@Nonnull TObjectObjectProcedure<String, Object> consumer) {
-    states.forEachEntry(consumer);
+  public void forEachEntry(@Nonnull BiConsumer<String, Object> consumer) {
+    states.forEach(consumer);
   }
 }

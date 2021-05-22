@@ -22,11 +22,11 @@ import com.intellij.psi.codeStyle.arrangement.model.ArrangementMatchCondition;
 import com.intellij.ui.SimpleColoredComponent;
 import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.containers.ContainerUtilRt;
-import gnu.trove.TObjectIntHashMap;
+import consulo.util.collection.primitive.objects.ObjectIntMap;
+import consulo.util.collection.primitive.objects.ObjectMaps;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.*;
 
 /**
@@ -38,28 +38,25 @@ import java.util.*;
 public class ArrangementStandardSettingsManager {
 
   @Nonnull
-  private final TObjectIntHashMap<ArrangementSettingsToken> myWidths  = new TObjectIntHashMap<ArrangementSettingsToken>();
+  private final ObjectIntMap<ArrangementSettingsToken> myWidths  = ObjectMaps.newObjectIntHashMap();
   @Nonnull
-  private final TObjectIntHashMap<ArrangementSettingsToken> myWeights = new TObjectIntHashMap<ArrangementSettingsToken>();
+  private final ObjectIntMap<ArrangementSettingsToken> myWeights = ObjectMaps.newObjectIntHashMap();
 
   @Nonnull
-  private final Comparator<ArrangementSettingsToken> myComparator = new Comparator<ArrangementSettingsToken>() {
-    @Override
-    public int compare(ArrangementSettingsToken t1, ArrangementSettingsToken t2) {
-      if (myWeights.containsKey(t1)) {
-        if (myWeights.containsKey(t2)) {
-          return myWeights.get(t1) - myWeights.get(t2);
-        }
-        else {
-          return -1;
-        }
-      }
-      else if (myWeights.containsKey(t2)) {
-        return 1;
+  private final Comparator<ArrangementSettingsToken> myComparator = (t1, t2) -> {
+    if (myWeights.containsKey(t1)) {
+      if (myWeights.containsKey(t2)) {
+        return myWeights.getInt(t1) - myWeights.getInt(t2);
       }
       else {
-        return t1.compareTo(t2);
+        return -1;
       }
+    }
+    else if (myWeights.containsKey(t2)) {
+      return 1;
+    }
+    else {
+      return t1.compareTo(t2);
     }
   };
 
@@ -71,16 +68,16 @@ public class ArrangementStandardSettingsManager {
   private final Collection<Set<ArrangementSettingsToken>> myMutexes;
 
   @Nullable private final StdArrangementSettings                  myDefaultSettings;
-  @javax.annotation.Nullable
+  @Nullable
   private final List<CompositeArrangementSettingsToken> myGroupingTokens;
-  @javax.annotation.Nullable
+  @Nullable
   private final List<CompositeArrangementSettingsToken> myMatchingTokens;
 
   @Nonnull
   private final Collection<StdArrangementRuleAliasToken> myRuleAliases;
   @Nonnull
   private final Set<ArrangementSettingsToken> myRuleAliasMutex;
-  @javax.annotation.Nullable
+  @Nullable
   private CompositeArrangementSettingsToken myRuleAliasToken;
 
   public ArrangementStandardSettingsManager(@Nonnull ArrangementStandardSettingsAware delegate,
@@ -138,14 +135,14 @@ public class ArrangementStandardSettingsManager {
       width = Math.max(width, parseWidth(compositeToken.getToken(), renderer));
     }
     for (CompositeArrangementSettingsToken compositeToken : compositeTokens) {
-      myWidths.put(compositeToken.getToken(), width);
+      myWidths.putInt(compositeToken.getToken(), width);
       parseWidths(compositeToken.getChildren(), renderer);
     }
   }
 
   private void buildWeights(@Nonnull Collection<CompositeArrangementSettingsToken> compositeTokens) {
     for (CompositeArrangementSettingsToken token : compositeTokens) {
-      myWeights.put(token.getToken(), myWeights.size());
+      myWeights.putInt(token.getToken(), myWeights.size());
       buildWeights(token.getChildren());
     }
   }
@@ -153,7 +150,7 @@ public class ArrangementStandardSettingsManager {
   /**
    * @see ArrangementStandardSettingsAware#getDefaultSettings()
    */
-  @javax.annotation.Nullable
+  @Nullable
   public StdArrangementSettings getDefaultSettings() {
     return myDefaultSettings;
   }
@@ -165,7 +162,7 @@ public class ArrangementStandardSettingsManager {
   /**
    * @see ArrangementStandardSettingsAware#getSupportedGroupingTokens()
    */
-  @javax.annotation.Nullable
+  @Nullable
   public List<CompositeArrangementSettingsToken> getSupportedGroupingTokens() {
     return myGroupingTokens;
   }
@@ -173,7 +170,7 @@ public class ArrangementStandardSettingsManager {
   /**
    * @see ArrangementStandardSettingsAware#getSupportedMatchingTokens()
    */
-  @javax.annotation.Nullable
+  @Nullable
   public List<CompositeArrangementSettingsToken> getSupportedMatchingTokens() {
     if (myMatchingTokens == null || myRuleAliasToken == null) {
       return myMatchingTokens;
@@ -184,7 +181,7 @@ public class ArrangementStandardSettingsManager {
     return allTokens;
   }
 
-  public boolean isEnabled(@Nonnull ArrangementSettingsToken token, @javax.annotation.Nullable ArrangementMatchCondition current) {
+  public boolean isEnabled(@Nonnull ArrangementSettingsToken token, @Nullable ArrangementMatchCondition current) {
     if (myRuleAliasMutex.contains(token)) {
       return true;
     }
@@ -212,7 +209,7 @@ public class ArrangementStandardSettingsManager {
 
   public int getWidth(@Nonnull ArrangementSettingsToken token) {
     if (myWidths.containsKey(token)) {
-      return myWidths.get(token);
+      return myWidths.getInt(token);
     }
     return parseWidth(token, new SimpleColoredComponent());
   }
@@ -237,8 +234,8 @@ public class ArrangementStandardSettingsManager {
   }
 
   public List<ArrangementSettingsToken> sort(@Nonnull Collection<ArrangementSettingsToken> tokens) {
-    List<ArrangementSettingsToken> result = ContainerUtilRt.newArrayList(tokens);
-    Collections.sort(result, myComparator);
+    List<ArrangementSettingsToken> result = new ArrayList<>(tokens);
+    result.sort(myComparator);
     return result;
   }
 }

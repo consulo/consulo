@@ -56,7 +56,8 @@ import com.intellij.xdebugger.breakpoints.XLineBreakpoint;
 import com.intellij.xdebugger.impl.XSourcePositionImpl;
 import com.intellij.xdebugger.impl.ui.DebuggerUIUtil;
 import consulo.disposer.Disposer;
-import gnu.trove.TIntHashSet;
+import consulo.util.collection.primitive.ints.IntSet;
+import consulo.util.collection.primitive.ints.IntSets;
 
 import javax.annotation.Nonnull;
 import java.awt.event.MouseEvent;
@@ -159,7 +160,7 @@ public class XLineBreakpointManager {
       return;
     }
 
-    TIntHashSet lines = new TIntHashSet();
+    IntSet lines = IntSets.newHashSet();
     List<XBreakpoint<?>> toRemove = new SmartList<>();
     for (XLineBreakpointImpl breakpoint : breakpoints) {
       breakpoint.updatePosition();

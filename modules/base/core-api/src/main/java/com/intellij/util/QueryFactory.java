@@ -16,9 +16,9 @@
 package com.intellij.util;
 
 import com.intellij.util.containers.ContainerUtil;
-import gnu.trove.TObjectHashingStrategy;
-import javax.annotation.Nonnull;
+import consulo.util.collection.HashingStrategy;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 /**
@@ -40,7 +40,7 @@ public class QueryFactory<Result, Parameters> {
    */
   @Nonnull
   public final Query<Result> createQuery(@Nonnull Parameters parameters) {
-    return new ExecutorsQuery<Result, Parameters>(parameters, getExecutors());
+    return new ExecutorsQuery<>(parameters, getExecutors());
   }
 
 
@@ -67,8 +67,8 @@ public class QueryFactory<Result, Parameters> {
    * @return query to perform the search. Obtained results are automatically filtered wrt. equals() relation.
    */
   public final Query<Result> createUniqueResultsQuery(@Nonnull Parameters parameters,
-                                                      @Nonnull TObjectHashingStrategy<Result> hashingStrategy) {
-    return new UniqueResultsQuery<Result, Result>(createQuery(parameters), hashingStrategy);
+                                                      @Nonnull HashingStrategy<Result> hashingStrategy) {
+    return new UniqueResultsQuery<>(createQuery(parameters), hashingStrategy);
   }
 
   /**
@@ -79,8 +79,8 @@ public class QueryFactory<Result, Parameters> {
    *         relation. Storing mapped objects instead of original elements may be wise wrt to memory consumption.
    */
   public final <T> Query<Result> createUniqueResultsQuery(@Nonnull Parameters parameters,
-                                                          @Nonnull TObjectHashingStrategy<T> hashingStrategy,
+                                                          @Nonnull HashingStrategy<T> hashingStrategy,
                                                           @Nonnull Function<Result, T> mapper) {
-    return new UniqueResultsQuery<Result, T>(createQuery(parameters), hashingStrategy, mapper);
+    return new UniqueResultsQuery<>(createQuery(parameters), hashingStrategy, mapper);
   }
 }

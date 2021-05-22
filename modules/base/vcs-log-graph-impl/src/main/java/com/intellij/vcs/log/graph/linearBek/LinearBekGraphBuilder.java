@@ -24,15 +24,12 @@ import com.intellij.vcs.log.graph.api.elements.GraphEdgeType;
 import com.intellij.vcs.log.graph.impl.print.PrintElementGeneratorImpl;
 import com.intellij.vcs.log.graph.utils.IntIntMultiMap;
 import com.intellij.vcs.log.graph.utils.LinearGraphUtils;
-import gnu.trove.TIntHashSet;
-import gnu.trove.TIntIterator;
+import consulo.util.collection.primitive.ints.IntSet;
+import consulo.util.collection.primitive.ints.IntSets;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import java.util.Comparator;
-import java.util.List;
-import java.util.PriorityQueue;
-import java.util.Set;
+import java.util.*;
 
 class LinearBekGraphBuilder {
   private static final int MAX_BLOCK_SIZE = 200;
@@ -201,9 +198,9 @@ class LinearBekGraphBuilder {
     @Nonnull
     private final IntIntMultiMap myTailEdges = new IntIntMultiMap();
     @Nonnull
-    private final TIntHashSet myBlockBody = new TIntHashSet();
+    private final IntSet myBlockBody = IntSets.newHashSet();
     @Nonnull
-    private final TIntHashSet myTails = new TIntHashSet();
+    private final IntSet myTails = IntSets.newHashSet();
 
     private MergeFragment(int parent, int leftChild, int rightChild) {
       myParent = parent;
@@ -237,13 +234,13 @@ class LinearBekGraphBuilder {
     }
 
     @Nonnull
-    public TIntHashSet getTails() {
+    public IntSet getTails() {
       return myTails;
     }
 
     public Set<Integer> getTailsAndBody() {
       Set<Integer> nodes = ContainerUtil.newHashSet();
-      TIntIterator it = myBlockBody.iterator();
+      PrimitiveIterator.OfInt it = myBlockBody.iterator();
       while (it.hasNext()) {
         nodes.add(it.next());
       }
@@ -270,7 +267,7 @@ class LinearBekGraphBuilder {
         }
       }
 
-      TIntIterator it = myTails.iterator();
+      PrimitiveIterator.OfInt it = myTails.iterator();
       while (it.hasNext()) {
         int tail = it.next();
         if (!LinearGraphUtils.getDownNodes(graph, tail).contains(myLeftChild)) {

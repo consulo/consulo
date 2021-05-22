@@ -5,9 +5,9 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.indexing.FileBasedIndex;
-import gnu.trove.THashSet;
-import javax.annotation.Nullable;
 
+import javax.annotation.Nullable;
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -19,7 +19,7 @@ public final class StubProcessingHelper extends StubProcessingHelperBase {
   @Override
   protected void onInternalError(final VirtualFile file) {
     Set<VirtualFile> set = myFilesHavingProblems.get();
-    if (set == null) myFilesHavingProblems.set(set = new THashSet<>());
+    if (set == null) myFilesHavingProblems.set(set = new HashSet<>());
     set.add(file);
     // requestReindex() may want to acquire write lock (for indices not requiring content loading)
     // thus, because here we are under read lock, need to use invoke later

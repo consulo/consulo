@@ -19,12 +19,12 @@ import com.intellij.openapi.application.Application;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.util.ThrowableComputable;
-import gnu.trove.THashSet;
 import org.jetbrains.annotations.Nls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
+import java.util.HashSet;
 import java.util.Set;
 
 public abstract class ProgressManager extends ProgressIndicatorProvider {
@@ -215,7 +215,7 @@ public abstract class ProgressManager extends ProgressIndicatorProvider {
   public static void assertNotCircular(@Nonnull ProgressIndicator original) {
     Set<ProgressIndicator> wrappedParents = null;
     for (ProgressIndicator i = original; i instanceof WrappedProgressIndicator; i = ((WrappedProgressIndicator)i).getOriginalProgressIndicator()) {
-      if (wrappedParents == null) wrappedParents = new THashSet<>();
+      if (wrappedParents == null) wrappedParents = new HashSet<>();
       if (!wrappedParents.add(i)) {
         throw new IllegalArgumentException(i + " wraps itself");
       }

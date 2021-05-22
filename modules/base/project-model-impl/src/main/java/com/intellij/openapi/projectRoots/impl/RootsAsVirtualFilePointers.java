@@ -2,7 +2,6 @@
 
 package com.intellij.openapi.projectRoots.impl;
 
-import consulo.disposer.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.roots.OrderRootType;
 import com.intellij.openapi.roots.RootProvider;
@@ -14,12 +13,13 @@ import com.intellij.openapi.vfs.pointers.VirtualFilePointerContainer;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointerListener;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointerManager;
 import com.intellij.util.ArrayUtilRt;
+import consulo.disposer.Disposable;
 import consulo.logging.Logger;
 import consulo.vfs.ArchiveFileSystem;
-import gnu.trove.THashMap;
 import org.jdom.Element;
 
 import javax.annotation.Nonnull;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -29,7 +29,7 @@ import java.util.Map;
 public class RootsAsVirtualFilePointers implements RootProvider {
   private static final Logger LOG = Logger.getInstance(RootsAsVirtualFilePointers.class);
 
-  private final Map<OrderRootType, VirtualFilePointerContainer> myRoots = new THashMap<>();
+  private final Map<OrderRootType, VirtualFilePointerContainer> myRoots = new HashMap<>();
 
   private final boolean myNoCopyJars;
   private final VirtualFilePointerListener myListener;

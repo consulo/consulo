@@ -15,20 +15,16 @@
  */
 package com.intellij.configurationStore;
 
-import gnu.trove.THashMap;
-import gnu.trove.THashSet;
 import org.jdom.Element;
 
 import javax.annotation.Nonnull;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * from kotlin
  */
 public class UnknownElementCollector {
-  private final Set<String> myKnownTagNames = new THashSet<>();
+  private final Set<String> myKnownTagNames = new HashSet<>();
 
   public void addKnownName(String name) {
     myKnownTagNames.add(name);
@@ -42,7 +38,7 @@ public class UnknownElementCollector {
       Element child = iterator.next();
       if (!child.getName().equals("option") && !myKnownTagNames.contains(child.getName())) {
         if (unknownElements == null) {
-          unknownElements = new THashMap<>();
+          unknownElements = new HashMap<>();
         }
 
         unknownElements.put(child.getName(), child);

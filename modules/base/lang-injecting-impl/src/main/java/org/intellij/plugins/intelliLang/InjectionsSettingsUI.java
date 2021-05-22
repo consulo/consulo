@@ -51,9 +51,8 @@ import consulo.psi.injection.AbstractLanguageInjectionSupport;
 import consulo.psi.injection.LanguageInjectionSupport;
 import consulo.psi.injection.impl.ProjectInjectionConfiguration;
 import consulo.ui.image.Image;
-import gnu.trove.THashMap;
-import gnu.trove.THashSet;
-import gnu.trove.TObjectHashingStrategy;
+import consulo.util.collection.HashingStrategy;
+import consulo.util.collection.Sets;
 import jakarta.inject.Inject;
 import org.intellij.plugins.intelliLang.inject.InjectedLanguage;
 import org.intellij.plugins.intelliLang.inject.InjectorUtils;
@@ -85,8 +84,8 @@ public class InjectionsSettingsUI implements SearchableConfigurable.Parent, Conf
 
   private final JPanel myRoot;
   private final InjectionsTable myInjectionsTable;
-  private final Map<String, LanguageInjectionSupport> mySupports = new THashMap<String, LanguageInjectionSupport>();
-  private final Map<String, AnAction> myEditActions = new THashMap<String, AnAction>();
+  private final Map<String, LanguageInjectionSupport> mySupports = new HashMap<String, LanguageInjectionSupport>();
+  private final Map<String, AnAction> myEditActions = new HashMap<String, AnAction>();
   private final List<AnAction> myAddActions = new ArrayList<AnAction>();
   private final ActionToolbar myToolbar;
   private final JLabel myCountLabel;
@@ -927,7 +926,7 @@ public class InjectionsSettingsUI implements SearchableConfigurable.Parent, Conf
     final Configuration cfg;
     final List<BaseInjection> originalInjections;
     final List<InjInfo> injectionInfos = new ArrayList<InjInfo>();
-    final THashSet<BaseInjection> bundledInjections = new THashSet<BaseInjection>(new SameParamsAndPlacesStrategy());
+    final Set<BaseInjection> bundledInjections = Sets.newHashSet(new SameParamsAndPlacesStrategy());
     final String title;
 
     public CfgInfo(Configuration cfg, final String title) {
@@ -993,9 +992,9 @@ public class InjectionsSettingsUI implements SearchableConfigurable.Parent, Conf
 
   }
 
-  private static class SameParamsAndPlacesStrategy implements TObjectHashingStrategy<BaseInjection> {
+  private static class SameParamsAndPlacesStrategy implements HashingStrategy<BaseInjection> {
     @Override
-    public int computeHashCode(final BaseInjection object) {
+    public int hashCode(final BaseInjection object) {
       return object.hashCode();
     }
 

@@ -116,12 +116,12 @@ public class SmallMapSerializer<K,V> implements Forceable {
 
       final KeyWrapper<K> that = (KeyWrapper) o;
 
-      return myDescriptor.isEqual(this.myKey, that.myKey);
+      return myDescriptor.equals(this.myKey, that.myKey);
     }
 
     @Override
     public int hashCode() {
-      return myDescriptor.getHashCode(myKey);
+      return myDescriptor.hashCode(myKey);
     }
   }
 

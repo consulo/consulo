@@ -17,17 +17,17 @@ package com.intellij.ui;
 
 import com.intellij.openapi.util.Pair;
 import com.intellij.util.Function;
-import gnu.trove.THashSet;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.awt.*;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Set;
 
 public class ExcludingTraversalPolicy extends FocusTraversalPolicy {
   private final FocusTraversalPolicy myWrappee;
-  private final Set<Component> myExcludes = new THashSet<Component>();
-  private final Set<String> myRecursionGuard = new THashSet<String>();
+  private final Set<Component> myExcludes = new HashSet<Component>();
+  private final Set<String> myRecursionGuard = new HashSet<String>();
 
   public ExcludingTraversalPolicy(Component... excludes) {
     this(KeyboardFocusManager.getCurrentKeyboardFocusManager().getDefaultFocusTraversalPolicy(), excludes);
@@ -75,7 +75,7 @@ public class ExcludingTraversalPolicy extends FocusTraversalPolicy {
   }
 
   private Component traverse(Container aContainer, Component aComponent, Function<Pair<Container, Component>, Component> func) {
-    Set<Component> loopGuard = new THashSet<Component>();
+    Set<Component> loopGuard = new HashSet<Component>();
     do {
       if (!loopGuard.add(aComponent)) return null;
       aComponent = func.fun(Pair.create(aContainer, aComponent));

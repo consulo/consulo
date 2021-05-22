@@ -21,7 +21,6 @@ import com.intellij.util.FileComparisonFailure;
 import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.util.lang.Comparing;
-import gnu.trove.THashSet;
 import junit.framework.AssertionFailedError;
 import org.jetbrains.annotations.NonNls;
 import org.junit.Assert;
@@ -225,8 +224,8 @@ public class AssertEx extends Assert {
 
     final StringBuilder builder = new StringBuilder();
     for (final Object o : collection) {
-      if (o instanceof THashSet) {
-        builder.append(new TreeSet<Object>((THashSet)o));
+      if (o instanceof HashSet) {
+        builder.append(new TreeSet<Object>((HashSet)o));
       }
       else {
         builder.append(o);

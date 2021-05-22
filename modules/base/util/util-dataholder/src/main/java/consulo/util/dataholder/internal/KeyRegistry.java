@@ -15,10 +15,10 @@
  */
 package consulo.util.dataholder.internal;
 
+import consulo.util.collection.primitive.ints.ConcurrentIntObjectMap;
+import consulo.util.collection.primitive.ints.IntMaps;
+import consulo.util.collection.primitive.ints.IntObjectMap;
 import consulo.util.dataholder.Key;
-import consulo.util.collection.ConcurrentIntObjectMap;
-import consulo.util.collection.IntObjectMap;
-import consulo.util.collection.Maps;
 
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
@@ -30,7 +30,7 @@ import java.util.function.Function;
 public class KeyRegistry {
   public static final KeyRegistry ourInstance = new KeyRegistry();
 
-  private final ConcurrentIntObjectMap<Key> myAllKeys = Maps.newConcurrentIntObjectWeakValueHashMap();
+  private final ConcurrentIntObjectMap<Key> myAllKeys = IntMaps.newConcurrentIntObjectWeakValueHashMap();
   private final AtomicInteger myKeyCounter = new AtomicInteger();
 
   private KeyRegistry() {
@@ -44,7 +44,7 @@ public class KeyRegistry {
   }
 
   public Key<?> findKeyByName(String name, Function<Key<?>, String> nameFunc) {
-    for (IntObjectMap.Entry<Key> key : myAllKeys.entrySet()) {
+    for (IntObjectMap.IntObjectEntry<Key> key : myAllKeys.entrySet()) {
       if (name.equals(nameFunc.apply(key.getValue()))) {
         return key.getValue();
       }

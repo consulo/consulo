@@ -19,10 +19,10 @@
  */
 package com.intellij.openapi.util;
 
-import gnu.trove.THashSet;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nullable;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -38,7 +38,7 @@ public class ClassExtension<T> extends KeyedExtensionCollector<T, Class> {
 
   @Override
   protected List<T> buildExtensions(final String key, final Class classKey) {
-    final Set<String> allSupers = new THashSet<String>();
+    final Set<String> allSupers = new HashSet<String>();
     collectSupers(classKey, allSupers);
     return buildExtensions(allSupers);
   }

@@ -129,13 +129,13 @@ public class GenericCompilerCache<Key, SourceState, OutputState> {
     }
 
     @Override
-    public boolean isEqual(KeyAndTargetData<Key> val1, KeyAndTargetData<Key> val2) {
+    public boolean equals(KeyAndTargetData<Key> val1, KeyAndTargetData<Key> val2) {
       return val1.myTarget == val2.myTarget;
     }
 
     @Override
-    public int getHashCode(KeyAndTargetData<Key> value) {
-      return value.myTarget + 239 * myKeyDescriptor.getHashCode(value.myKey);
+    public int hashCode(KeyAndTargetData<Key> value) {
+      return value.myTarget + 239 * myKeyDescriptor.hashCode(value.myKey);
     }
 
     @Override

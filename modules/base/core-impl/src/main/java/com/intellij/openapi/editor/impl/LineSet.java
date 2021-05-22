@@ -22,10 +22,12 @@ import com.intellij.util.BitUtil;
 import com.intellij.util.containers.IntArrayList;
 import com.intellij.util.text.CharArrayUtil;
 import com.intellij.util.text.MergingCharSequence;
-import gnu.trove.TByteArrayList;
-import gnu.trove.TIntArrayList;
-import javax.annotation.Nonnull;
+import consulo.util.collection.primitive.bytes.ByteList;
+import consulo.util.collection.primitive.bytes.ByteLists;
+import consulo.util.collection.primitive.ints.IntList;
+import consulo.util.collection.primitive.ints.IntLists;
 
+import javax.annotation.Nonnull;
 import java.util.Arrays;
 
 /**
@@ -54,8 +56,8 @@ public class LineSet {
 
   @Nonnull
   private static LineSet createLineSet(@Nonnull CharSequence text, boolean markModified) {
-    TIntArrayList starts = new TIntArrayList();
-    TByteArrayList flags = new TByteArrayList();
+    IntList starts = IntLists.newArrayList();
+    ByteList flags = ByteLists.newArrayList();
 
     LineTokenizer lineTokenizer = new LineTokenizer(text);
     while (!lineTokenizer.atEnd()) {
@@ -63,7 +65,7 @@ public class LineSet {
       flags.add((byte)(lineTokenizer.getLineSeparatorLength() | (markModified ? MODIFIED_MASK : 0)));
       lineTokenizer.advance();
     }
-    return new LineSet(starts.toNativeArray(), flags.toNativeArray(), text.length());
+    return new LineSet(starts.toArray(), flags.toArray(), text.length());
   }
 
   @Nonnull

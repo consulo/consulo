@@ -18,18 +18,18 @@ package com.intellij.execution.process;
 import com.intellij.execution.ExecutionException;
 import com.intellij.execution.configurations.GeneralCommandLine;
 import com.intellij.openapi.application.ApplicationManager;
-import consulo.logging.Logger;
-import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.encoding.EncodingManager;
 import com.intellij.util.io.BaseOutputReader;
 import consulo.annotation.DeprecationInfo;
-import gnu.trove.THashSet;
+import consulo.logging.Logger;
+import consulo.util.dataholder.Key;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.io.File;
 import java.nio.charset.Charset;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.Future;
 
@@ -198,7 +198,7 @@ public class OSProcessHandler extends BaseOSProcessHandler {
   public static void deleteFileOnTermination(@Nonnull GeneralCommandLine commandLine, @Nonnull File fileToDelete) {
     Set<File> set = commandLine.getUserData(DELETE_FILES_ON_TERMINATION);
     if (set == null) {
-      commandLine.putUserData(DELETE_FILES_ON_TERMINATION, set = new THashSet<>());
+      commandLine.putUserData(DELETE_FILES_ON_TERMINATION, set = new HashSet<>());
     }
     set.add(fileToDelete);
   }

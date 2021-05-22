@@ -15,16 +15,13 @@
  */
 package com.intellij.util.containers;
 
-import gnu.trove.THashMap;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.*;
-import java.util.HashMap;
 
 public class BidirectionalMap<K, V> implements Map<K, V> {
-  private final Map<K, V> myKeyToValueMap = new THashMap<K, V>();
-  private final Map<V, List<K>> myValueToKeysMap = new THashMap<V, List<K>>();
+  private final Map<K, V> myKeyToValueMap = new HashMap<K, V>();
+  private final Map<V, List<K>> myValueToKeysMap = new HashMap<V, List<K>>();
 
   @Override
   public V put(K key, V value) {

@@ -19,16 +19,17 @@
  */
 package com.intellij.ide.projectView.impl;
 
-import com.intellij.openapi.actionSystem.*;
+import com.intellij.openapi.actionSystem.CommonDataKeys;
+import com.intellij.openapi.actionSystem.DataContext;
+import com.intellij.openapi.actionSystem.LangDataKeys;
 import com.intellij.openapi.module.ModifiableModuleModel;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.Project;
-import consulo.util.dataholder.Key;
 import com.intellij.util.ArrayUtil;
-import gnu.trove.THashSet;
-import javax.annotation.Nonnull;
+import consulo.util.dataholder.Key;
 
+import javax.annotation.Nonnull;
 import java.util.*;
 
 public class ModuleGroup {
@@ -89,7 +90,7 @@ public class ModuleGroup {
       allModules = ModuleManager.getInstance(project).getModules();
     }
 
-    Set<ModuleGroup> result = new THashSet<ModuleGroup>();
+    Set<ModuleGroup> result = new HashSet<ModuleGroup>();
     for (Module module : allModules) {
       String[] group;
       if ( model != null ) {

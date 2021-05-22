@@ -20,22 +20,21 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.*;
-import consulo.roots.impl.ModuleRootsProcessor;
 import com.intellij.openapi.roots.libraries.Library;
-import consulo.roots.OrderEntryWithTracking;
-import consulo.roots.types.BinariesOrderRootType;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.util.CommonProcessors;
 import com.intellij.util.containers.ContainerUtil;
-import gnu.trove.THashSet;
+import consulo.roots.ContentFolderScopes;
+import consulo.roots.OrderEntryWithTracking;
+import consulo.roots.impl.ModuleRootsProcessor;
+import consulo.roots.types.BinariesOrderRootType;
+import org.jetbrains.annotations.TestOnly;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import org.jetbrains.annotations.TestOnly;
-import consulo.roots.ContentFolderScopes;
-
 import java.util.*;
 
 /**
@@ -50,18 +49,15 @@ public class LibraryRuntimeClasspathScope extends GlobalSearchScope {
   public LibraryRuntimeClasspathScope(final Project project, final List<Module> modules) {
     super(project);
     myIndex = ProjectRootManager.getInstance(project).getFileIndex();
-    final Set<Sdk> processedSdk = new THashSet<Sdk>();
-    final Set<Library> processedLibraries = new THashSet<Library>();
-    final Set<Module> processedModules = new THashSet<Module>();
-    final Condition<OrderEntry> condition = new Condition<OrderEntry>() {
-      @Override
-      public boolean value(OrderEntry orderEntry) {
-        if (orderEntry instanceof ModuleOrderEntry) {
-          final Module module = ((ModuleOrderEntry)orderEntry).getModule();
-          return module != null && !processedModules.contains(module);
-        }
-        return true;
+    final Set<Sdk> processedSdk = new HashSet<Sdk>();
+    final Set<Library> processedLibraries = new HashSet<Library>();
+    final Set<Module> processedModules = new HashSet<Module>();
+    final Condition<OrderEntry> condition = orderEntry -> {
+      if (orderEntry instanceof ModuleOrderEntry) {
+        final Module module = ((ModuleOrderEntry)orderEntry).getModule();
+        return module != null && !processedModules.contains(module);
       }
+      return true;
     };
     for (Module module : modules) {
       buildEntries(module, processedModules, processedLibraries, processedSdk, condition);

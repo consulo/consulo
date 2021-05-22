@@ -297,7 +297,7 @@ public class FileTemplateUtil {
                                               @Nullable ClassLoader classLoader) throws Exception {
     final Project project = directory.getProject();
 
-    Map<String, Object> properties = new THashMap<>();
+    Map<String, Object> properties = new HashMap<>();
     FileTemplateManager.getInstance(project).fillDefaultVariables(properties);
 
     if(additionalProperties != null) {

@@ -20,7 +20,8 @@
 package com.intellij.openapi.util.text;
 
 import com.intellij.util.text.CharArrayUtil;
-import gnu.trove.TIntProcedure;
+
+import java.util.function.IntPredicate;
 
 public class TrigramBuilder {
   private TrigramBuilder() {
@@ -69,7 +70,7 @@ public class TrigramBuilder {
     return consumer.consumeTrigramsCount(set.size()) && set.forEach(consumer);
   }
 
-  public static abstract class TrigramProcessor implements TIntProcedure {
+  public static abstract class TrigramProcessor implements IntPredicate {
     public boolean consumeTrigramsCount(int count) { return true; }
   }
 }
@@ -152,11 +153,11 @@ class AddonlyIntSet {
     return false;
   }
 
-  public boolean forEach(TIntProcedure consumer) {
-    if (hasZeroKey && !consumer.execute(0)) return false;
+  public boolean forEach(IntPredicate consumer) {
+    if (hasZeroKey && !consumer.test(0)) return false;
     for(int o:data) {
       if (o == 0) continue;
-      if(!consumer.execute(o)) return false;
+      if(!consumer.test(o)) return false;
     }
     return true;
   }

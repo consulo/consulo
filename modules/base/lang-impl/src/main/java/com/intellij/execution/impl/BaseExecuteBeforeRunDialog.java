@@ -21,14 +21,13 @@ import com.intellij.execution.configurations.ConfigurationType;
 import com.intellij.execution.configurations.RunConfiguration;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
-import consulo.util.dataholder.Key;
 import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.ui.TreeSpeedSearch;
 import com.intellij.ui.treeStructure.Tree;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.tree.TreeUtil;
 import consulo.awt.TargetAWT;
-import gnu.trove.THashSet;
+import consulo.util.dataholder.Key;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -40,10 +39,8 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 
 public abstract class BaseExecuteBeforeRunDialog<T extends BeforeRunTask> extends DialogWrapper {
@@ -152,7 +149,7 @@ public abstract class BaseExecuteBeforeRunDialog<T extends BeforeRunTask> extend
       final Icon icon = TargetAWT.to(type.getIcon());
       DefaultMutableTreeNode typeNode = new DefaultMutableTreeNode(new ConfigurationTypeDescriptor(type, icon, isConfigurationAssigned(type)));
       root.add(typeNode);
-      final Set<String> addedNames = new THashSet<>();
+      final Set<String> addedNames = new HashSet<>();
       RunConfiguration[] configurations = runManager.getConfigurations(type);
       for (final RunConfiguration configuration : configurations) {
         final String configurationName = configuration.getName();

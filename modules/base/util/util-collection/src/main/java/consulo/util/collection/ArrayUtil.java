@@ -16,7 +16,6 @@
 package consulo.util.collection;
 
 import consulo.util.lang.Comparing;
-import gnu.trove.Equality;
 import org.jetbrains.annotations.Contract;
 
 import javax.annotation.Nonnull;
@@ -622,7 +621,7 @@ public class ArrayUtil {
   }
 
   @Contract(pure = true)
-  public static <T> boolean equals(@Nonnull T[] a1, @Nonnull T[] a2, @Nonnull Equality<? super T> comparator) {
+  public static <T> boolean equals(@Nonnull T[] a1, @Nonnull T[] a2, @Nonnull HashingStrategy<? super T> comparator) {
     //noinspection ArrayEquality
     if (a1 == a2) {
       return true;
@@ -774,7 +773,7 @@ public class ArrayUtil {
   }
 
   @Contract(pure = true)
-  public static <T> int indexOf(@Nonnull List<T> objects, T object, @Nonnull Equality<T> comparator) {
+  public static <T> int indexOf(@Nonnull List<T> objects, T object, @Nonnull HashingStrategy<T> comparator) {
     for (int i = 0; i < objects.size(); i++) {
       if (comparator.equals(objects.get(i), object)) return i;
     }
@@ -790,7 +789,7 @@ public class ArrayUtil {
   }
 
   @Contract(pure = true)
-  public static <T> int indexOf(@Nonnull T[] objects, T object, @Nonnull Equality<T> comparator) {
+  public static <T> int indexOf(@Nonnull T[] objects, T object, @Nonnull HashingStrategy<T> comparator) {
     for (int i = 0; i < objects.length; i++) {
       if (comparator.equals(objects[i], object)) return i;
     }
@@ -854,7 +853,7 @@ public class ArrayUtil {
   }
 
   @Contract(pure = true)
-  public static <T> int lastIndexOf(@Nonnull final T[] src, final T obj, @Nonnull Equality<? super T> comparator) {
+  public static <T> int lastIndexOf(@Nonnull final T[] src, final T obj, @Nonnull HashingStrategy<? super T> comparator) {
     for (int i = src.length - 1; i >= 0; i--) {
       final T o = src[i];
       if (comparator.equals(obj, o)) {
@@ -865,7 +864,7 @@ public class ArrayUtil {
   }
 
   @Contract(pure = true)
-  public static <T> int lastIndexOf(@Nonnull List<T> src, final T obj, @Nonnull Equality<? super T> comparator) {
+  public static <T> int lastIndexOf(@Nonnull List<T> src, final T obj, @Nonnull HashingStrategy<? super T> comparator) {
     for (int i = src.size() - 1; i >= 0; i--) {
       final T o = src.get(i);
       if (comparator.equals(obj, o)) {

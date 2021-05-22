@@ -23,27 +23,25 @@ import com.intellij.codeInspection.lang.InspectionExtensionsFactory;
 import com.intellij.codeInspection.reference.*;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
-import consulo.logging.Logger;
 import com.intellij.openapi.progress.*;
 import com.intellij.openapi.progress.util.ProgressWrapper;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.IndexNotReadyException;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Computable;
-import consulo.util.dataholder.Key;
-import consulo.util.dataholder.UserDataHolderBase;
 import com.intellij.profile.Profile;
 import com.intellij.profile.codeInspection.InspectionProfileManager;
 import com.intellij.profile.codeInspection.InspectionProjectProfileManager;
 import com.intellij.psi.*;
 import com.intellij.psi.search.LocalSearchScope;
 import com.intellij.psi.search.scope.packageSet.NamedScope;
-import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.logging.Logger;
 import consulo.ui.annotation.RequiredUIAccess;
-import gnu.trove.THashMap;
-import gnu.trove.THashSet;
-import gnu.trove.TObjectHashingStrategy;
+import consulo.util.collection.HashingStrategy;
+import consulo.util.collection.Sets;
+import consulo.util.dataholder.Key;
+import consulo.util.dataholder.UserDataHolderBase;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
@@ -52,9 +50,9 @@ import java.util.*;
 
 public class GlobalInspectionContextBase extends UserDataHolderBase implements GlobalInspectionContext {
   private static final Logger LOG = Logger.getInstance(GlobalInspectionContextBase.class);
-  private static final TObjectHashingStrategy<Tools> TOOLS_HASHING_STRATEGY = new TObjectHashingStrategy<Tools>() {
+  private static final HashingStrategy<Tools> TOOLS_HASHING_STRATEGY = new HashingStrategy<Tools>() {
     @Override
-    public int computeHashCode(Tools object) {
+    public int hashCode(Tools object) {
       return object.getShortName().hashCode();
     }
 
@@ -78,7 +76,7 @@ public class GlobalInspectionContextBase extends UserDataHolderBase implements G
 
   protected final Map<Key, GlobalInspectionContextExtension> myExtensions = new HashMap<Key, GlobalInspectionContextExtension>();
 
-  protected final Map<String, Tools> myTools = new THashMap<String, Tools>();
+  protected final Map<String, Tools> myTools = new HashMap<String, Tools>();
 
   @NonNls public static final String LOCAL_TOOL_ATTRIBUTE = "is_local_tool";
 
@@ -346,13 +344,8 @@ public class GlobalInspectionContextBase extends UserDataHolderBase implements G
     if (dependentTools.isEmpty()) {
       return tools;
     }
-    Set<Tools> set = new THashSet<Tools>(tools, TOOLS_HASHING_STRATEGY);
-    set.addAll(ContainerUtil.map(dependentTools, new Function<InspectionToolWrapper, ToolsImpl>() {
-      @Override
-      public ToolsImpl fun(InspectionToolWrapper toolWrapper) {
-        return new ToolsImpl(toolWrapper, toolWrapper.getDefaultLevel(), true, true);
-      }
-    }));
+    Set<Tools> set = Sets.newHashSet(tools, TOOLS_HASHING_STRATEGY);
+    set.addAll(ContainerUtil.map(dependentTools, it -> new ToolsImpl(it, it.getDefaultLevel(), true, true)));
     return new ArrayList<Tools>(set);
   }
 

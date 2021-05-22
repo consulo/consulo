@@ -127,7 +127,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.IntFunction;
 
 @Deprecated
-@DeprecationInfo("Desktop only")
+@DeprecationInfo("Desktop implementation")
 public final class DesktopEditorImpl extends UserDataHolderBase implements EditorInternal, HighlighterClient, Queryable, Dumpable, CodeStyleSettingsListener {
   public static final int TEXT_ALIGNMENT_LEFT = 0;
   public static final int TEXT_ALIGNMENT_RIGHT = 1;

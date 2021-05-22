@@ -30,14 +30,14 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.ui.LightweightHint;
-import gnu.trove.THashSet;
-import javax.annotation.Nonnull;
-
-import javax.annotation.Nullable;
 import jakarta.inject.Singleton;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Set;
 
 @Singleton
@@ -78,7 +78,7 @@ public class CodeInsightUtilBase extends CodeInsightUtilCore {
   @Override
   public boolean preparePsiElementsForWrite(@Nonnull Collection<? extends PsiElement> elements) {
     if (elements.isEmpty()) return true;
-    Set<VirtualFile> files = new THashSet<VirtualFile>();
+    Set<VirtualFile> files = new HashSet<VirtualFile>();
     Project project = null;
     for (PsiElement element : elements) {
       if (element == null) continue;

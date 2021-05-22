@@ -16,7 +16,7 @@
 package com.intellij.openapi.vfs.newvfs.impl;
 
 import com.intellij.reference.SoftReference;
-import com.intellij.util.containers.hash.LinkedHashMap;
+import consulo.util.collection.impl.map.LinkedHashMap;
 import consulo.util.dataholder.keyFMap.ArrayBackedFMap;
 import consulo.util.dataholder.keyFMap.KeyFMap;
 import consulo.util.dataholder.keyFMap.OneElementFMap;
@@ -31,7 +31,7 @@ import java.util.Map;
  * @author peter
  */
 class UserDataInterner {
-  private static final LinkedHashMap<MapReference, MapReference> ourCache = new LinkedHashMap<MapReference, MapReference>(20, true) {
+  private static final Map<MapReference, MapReference> ourCache = new LinkedHashMap<MapReference, MapReference>(20, true) {
     @Override
     protected boolean removeEldestEntry(Map.Entry<MapReference, MapReference> eldest) {
       return size() > 15;

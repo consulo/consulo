@@ -22,10 +22,11 @@ import com.intellij.psi.impl.cache.impl.id.IdTableBuilding;
 import com.intellij.psi.search.IndexPattern;
 import com.intellij.psi.search.UsageSearchContext;
 import com.intellij.util.text.CharArrayUtil;
-import gnu.trove.TIntArrayList;
+import consulo.util.collection.primitive.ints.IntList;
+import consulo.util.collection.primitive.ints.IntLists;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -59,12 +60,12 @@ public abstract class BaseFilterLexer extends DelegateLexer implements IdTableBu
   public static class TodoScanningState {
     final IndexPattern[] myPatterns;
     final Matcher[] myMatchers;
-    TIntArrayList myOccurences;
+    IntList myOccurences;
 
     public TodoScanningState(IndexPattern[] patterns, Matcher[] matchers) {
       myPatterns = patterns;
       myMatchers = matchers;
-      myOccurences = new TIntArrayList(1);
+      myOccurences = IntLists.newArrayList(1);
     }
   }
 
@@ -83,7 +84,7 @@ public abstract class BaseFilterLexer extends DelegateLexer implements IdTableBu
         }
       }
     } else {
-      todoScanningState.myOccurences.resetQuick();
+      todoScanningState.myOccurences.clear();
     }
 
     for (int i = todoScanningState.myMatchers.length - 1; i >= 0; --i) {

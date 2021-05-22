@@ -22,6 +22,7 @@ import javax.annotation.Nonnull;
 /**
  * return -1 instead of 0 if no such mapping exists
  */
+@Deprecated
 public class ObjectLongHashMap<K> extends TObjectLongHashMap<K> {
   public ObjectLongHashMap(int initialCapacity) {
     super(initialCapacity);

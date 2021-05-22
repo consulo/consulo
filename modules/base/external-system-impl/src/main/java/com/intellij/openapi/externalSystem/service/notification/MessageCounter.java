@@ -17,12 +17,12 @@ package com.intellij.openapi.externalSystem.service.notification;
 
 import com.intellij.openapi.externalSystem.model.ProjectSystemId;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.containers.hash.HashMap;
 import gnu.trove.TObjectIntHashMap;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -31,8 +31,7 @@ import java.util.Map;
  */
 public class MessageCounter {
 
-  private final Map<ProjectSystemId, Map<String/* group */, Map<NotificationSource, TObjectIntHashMap<NotificationCategory>>>>
-          map = new HashMap<ProjectSystemId, Map<String, Map<NotificationSource, TObjectIntHashMap<NotificationCategory>>>>();
+  private final Map<ProjectSystemId, Map<String/* group */, Map<NotificationSource, TObjectIntHashMap<NotificationCategory>>>> map = new HashMap<>();
 
   public synchronized void increment(@Nonnull String groupName,
                                      @Nonnull NotificationSource source,

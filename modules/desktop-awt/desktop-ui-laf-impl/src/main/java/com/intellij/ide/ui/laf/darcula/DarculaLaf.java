@@ -22,7 +22,6 @@ import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.ColorUtil;
-import com.intellij.util.containers.hash.HashMap;
 import com.intellij.util.ui.JBInsets;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
@@ -49,9 +48,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Constructor;
 import java.net.URL;
+import java.util.*;
 import java.util.List;
-import java.util.Locale;
-import java.util.Properties;
 
 /**
  * @author Konstantin Bulenkov
@@ -198,7 +196,7 @@ public class DarculaLaf extends BaseLookAndFeel {
         stream.close();
       }
 
-      HashMap<String, Object> darculaGlobalSettings = new HashMap<String, Object>();
+      Map<String, Object> darculaGlobalSettings = new HashMap<String, Object>();
       final String prefix = getPrefix() + ".";
       for (String key : properties.stringPropertyNames()) {
         if (key.startsWith(prefix)) {

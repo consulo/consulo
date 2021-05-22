@@ -27,15 +27,13 @@ import com.intellij.psi.util.CachedValuesManager;
 import com.intellij.util.graph.CachingSemiGraph;
 import com.intellij.util.graph.DFSTBuilder;
 import com.intellij.util.graph.GraphGenerator;
-import gnu.trove.TIntArrayList;
-import gnu.trove.TIntProcedure;
+import consulo.util.collection.primitive.ints.IntList;
 import jakarta.inject.Inject;
-
-import javax.annotation.Nonnull;
-
 import jakarta.inject.Singleton;
 
+import javax.annotation.Nonnull;
 import java.util.*;
+import java.util.function.IntConsumer;
 
 /**
  * @author nik
@@ -102,10 +100,11 @@ public class ArtifactSortingUtilImpl extends ArtifactSortingUtil {
     final DFSTBuilder<String> builder = new DFSTBuilder<String>(graph);
     if (builder.isAcyclic() && result.isEmpty()) return Collections.emptyMap();
 
-    final TIntArrayList sccs = builder.getSCCs();
-    sccs.forEach(new TIntProcedure() {
+    final IntList sccs = builder.getSCCs();
+    sccs.forEach(new IntConsumer() {
       int myTNumber = 0;
-      public boolean execute(int size) {
+      @Override
+      public void accept(int size) {
         if (size > 1) {
           for (int j = 0; j < size; j++) {
             final String artifactName = builder.getNodeByTNumber(myTNumber + j);
@@ -113,7 +112,6 @@ public class ArtifactSortingUtilImpl extends ArtifactSortingUtil {
           }
         }
         myTNumber += size;
-        return true;
       }
     });
 

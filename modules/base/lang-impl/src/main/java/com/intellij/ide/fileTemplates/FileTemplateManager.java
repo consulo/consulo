@@ -19,13 +19,13 @@ package com.intellij.ide.fileTemplates;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
-import consulo.util.dataholder.Key;
 import consulo.annotation.DeprecationInfo;
-import gnu.trove.THashMap;
+import consulo.util.dataholder.Key;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
@@ -109,7 +109,7 @@ public abstract class FileTemplateManager{
 
   @Nonnull
   public Map<String, Object> getDefaultVariables() {
-    Map<String, Object> map = new THashMap<>();
+    Map<String, Object> map = new HashMap<>();
     fillDefaultVariables(map);
     return map;
   }

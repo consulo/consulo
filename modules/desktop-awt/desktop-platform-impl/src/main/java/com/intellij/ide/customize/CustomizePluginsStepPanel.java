@@ -24,7 +24,6 @@ import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginId;
 import consulo.container.plugin.PluginManager;
 import consulo.desktop.startup.customize.CustomizePluginTemplatesStepPanel;
-import gnu.trove.THashSet;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -79,7 +78,7 @@ public class CustomizePluginsStepPanel extends AbstractCustomizeWizardStep {
 
         Object userObject = node.getUserObject();
         if (userObject instanceof PluginDescriptor) {
-          Set<String> deepDependencies = new THashSet<String>();
+          Set<String> deepDependencies = new HashSet<String>();
           collectDeepDependencies(deepDependencies, (PluginDescriptor)userObject);
           setupChecked(myRoot, deepDependencies, state);
         }

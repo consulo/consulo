@@ -54,10 +54,9 @@ import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.UIUtil;
 import consulo.disposer.Disposer;
-import gnu.trove.THashSet;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -71,8 +70,8 @@ import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 /**
  * @author Anton Katilin
@@ -432,7 +431,7 @@ public final class TreeFileChooserDialog extends DialogWrapper implements TreeFi
       else {
         fileNames = FilenameIndex.getAllFilenames(myProject);
       }
-      final Set<String> array = new THashSet<String>();
+      final Set<String> array = new HashSet<String>();
       for (String fileName : fileNames) {
         if (!array.contains(fileName)) {
           array.add(fileName);

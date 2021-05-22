@@ -43,7 +43,6 @@ import consulo.compiler.CompilerConfiguration;
 import consulo.compiler.CompilerConfigurationImpl;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import gnu.trove.THashSet;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
@@ -87,7 +86,7 @@ public class CompilerManagerImpl extends CompilerManager implements PersistentSt
   private Set<LocalFileSystem.WatchRequest> myWatchRoots;
   private final Semaphore myCompilationSemaphore = new Semaphore(1, true);
 
-  private final Set<FileType> myCompilableFileTypes = new THashSet<>();
+  private final Set<FileType> myCompilableFileTypes = new HashSet<>();
   private Compiler[] myAllCompilers;
 
   @Inject

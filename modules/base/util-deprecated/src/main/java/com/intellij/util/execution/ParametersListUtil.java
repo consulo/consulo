@@ -4,9 +4,10 @@ package com.intellij.util.execution;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.ArrayUtilRt;
 import com.intellij.util.Function;
-import gnu.trove.TIntHashSet;
-import javax.annotation.Nonnull;
+import consulo.util.collection.primitive.ints.IntSet;
+import consulo.util.collection.primitive.ints.IntSets;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -130,7 +131,7 @@ public class ParametersListUtil {
     final StringBuilder token = new StringBuilder(128);
     boolean inQuotes = false;
     boolean escapedQuote = false;
-    final TIntHashSet possibleQuoteChars = new TIntHashSet();
+    final IntSet possibleQuoteChars = IntSets.newHashSet();
     possibleQuoteChars.add('"');
     if (supportSingleQuotes) {
       possibleQuoteChars.add('\'');

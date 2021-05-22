@@ -92,7 +92,7 @@ public class PersistentEnumerator<Data> extends PersistentEnumeratorBase<Data> {
     lockStorage();
     try {
       int depth = 0;
-      final int valueHC = myDataDescriptor.getHashCode(value);
+      final int valueHC = myDataDescriptor.hashCode(value);
       int hc = valueHC;
       int vector = FIRST_VECTOR_OFFSET;
       int pos;
@@ -133,7 +133,7 @@ public class PersistentEnumerator<Data> extends PersistentEnumeratorBase<Data> {
           }
 
           Data candidate = valueOf(collision);
-          if (myDataDescriptor.isEqual(value, candidate)) {
+          if (myDataDescriptor.equals(value, candidate)) {
             return collision;
           }
 
@@ -148,7 +148,7 @@ public class PersistentEnumerator<Data> extends PersistentEnumeratorBase<Data> {
         final int newId = writeData(value, valueHC);
 
         if (splitVector) {
-          depth--;
+          depth--;                                                              
           do {
             final int valueHCByte = hcByte(valueHC, depth);
             final int oldHCByte = hcByte(candidateHC, depth);

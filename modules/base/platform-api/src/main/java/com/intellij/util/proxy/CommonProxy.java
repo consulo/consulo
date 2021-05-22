@@ -24,11 +24,9 @@ import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.net.NetUtils;
 import consulo.logging.Logger;
-import gnu.trove.THashMap;
-import gnu.trove.THashSet;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.io.IOException;
 import java.net.*;
 import java.util.*;
@@ -55,10 +53,10 @@ public class CommonProxy extends ProxySelector {
   }
 
   private final Object myLock = new Object();
-  private final Set<Pair<HostInfo, Thread>> myNoProxy = new THashSet<>();
+  private final Set<Pair<HostInfo, Thread>> myNoProxy = new HashSet<>();
 
-  private final Map<String, ProxySelector> myCustom = new THashMap<>();
-  private final Map<String, NonStaticAuthenticator> myCustomAuth = new THashMap<>();
+  private final Map<String, ProxySelector> myCustom = new HashMap<>();
+  private final Map<String, NonStaticAuthenticator> myCustomAuth = new HashMap<>();
 
   public static CommonProxy getInstance() {
     return ourInstance;
@@ -222,7 +220,7 @@ public class CommonProxy extends ProxySelector {
           LOG.debug("CommonProxy.select returns no proxy (in no proxy list) for " + uri.toString());
           return NO_PROXY_LIST;
         }
-        copy = new THashMap<>(myCustom);
+        copy = new HashMap<>(myCustom);
       }
       for (Map.Entry<String, ProxySelector> entry : copy.entrySet()) {
         final List<Proxy> proxies = entry.getValue().select(uri);
@@ -256,7 +254,7 @@ public class CommonProxy extends ProxySelector {
 
     final Map<String, ProxySelector> copy;
     synchronized (myLock) {
-      copy = new THashMap<>(myCustom);
+      copy = new HashMap<>(myCustom);
     }
     for (Map.Entry<String, ProxySelector> entry : copy.entrySet()) {
       entry.getValue().connectFailed(uri, sa, ioe);

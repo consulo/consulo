@@ -18,15 +18,17 @@ package com.intellij.history.core;
 
 import com.intellij.history.core.changes.ChangeSet;
 import com.intellij.util.Consumer;
-import gnu.trove.TIntHashSet;
+import consulo.util.collection.primitive.ints.IntSet;
+
+import javax.annotation.Nullable;
 
 public interface ChangeListStorage {
   void close();
 
   long nextId();
 
-  @javax.annotation.Nullable
-  ChangeSetHolder readPrevious(int id, TIntHashSet recursionGuard);
+  @Nullable
+  ChangeSetHolder readPrevious(int id, IntSet recursionGuard);
 
   void purge(long period, int intervalBetweenActivities, Consumer<ChangeSet> processor);
 

@@ -34,9 +34,6 @@ import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.IdeActions;
 import com.intellij.openapi.application.ApplicationManager;
-import consulo.disposer.Disposable;
-import consulo.disposer.Disposer;
-import consulo.logging.Logger;
 import com.intellij.openapi.editor.*;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.openapi.editor.ex.FoldingModelEx;
@@ -49,7 +46,6 @@ import com.intellij.openapi.keymap.KeymapUtil;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Computable;
-import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.patterns.StringPattern;
@@ -67,18 +63,20 @@ import com.intellij.util.messages.MessageBus;
 import com.intellij.util.text.CharArrayUtil;
 import com.intellij.util.text.ImmutableCharSequence;
 import com.intellij.util.text.StringSearcher;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
 import consulo.lang.LanguageVersion;
-import gnu.trove.THashSet;
+import consulo.logging.Logger;
+import consulo.util.dataholder.Key;
 import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import jakarta.inject.Singleton;
 import javax.swing.*;
 import java.awt.*;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -562,7 +560,7 @@ public class FindManagerImpl extends FindManager {
           relevantLanguages = ApplicationManager.getApplication().runReadAction(new Computable<Set<Language>>() {
             @Override
             public Set<Language> compute() {
-              THashSet<Language> result = new THashSet<>();
+              Set<Language> result = new HashSet<>();
 
               FileViewProvider viewProvider = PsiManager.getInstance(myProject).findViewProvider(file);
               if (viewProvider != null) {

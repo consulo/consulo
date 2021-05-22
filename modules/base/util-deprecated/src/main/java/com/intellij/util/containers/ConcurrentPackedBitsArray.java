@@ -15,8 +15,6 @@
  */
 package com.intellij.util.containers;
 
-import gnu.trove.TLongFunction;
-
 /**
  * Packs the specified number of bits (1..64) into a chunk which stored in array and allows to get and set these bits atomically.
  * Useful for storing related flags together.
@@ -51,12 +49,7 @@ public class ConcurrentPackedBitsArray {
     }
     final int bitIndex = id/chunksPerWord * 64 + (id%chunksPerWord)*bitsPerChunk;
 
-    long prevChunk = bits.changeWord(bitIndex, new TLongFunction() {
-      @Override
-      public long execute(long word) {
-        return word & ~(mask << bitIndex) | (flags << bitIndex);
-      }
-    }) >> bitIndex;
+    long prevChunk = bits.changeWord(bitIndex, word -> word & ~(mask << bitIndex) | (flags << bitIndex)) >> bitIndex;
 
     return prevChunk & mask;
   }

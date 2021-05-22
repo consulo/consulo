@@ -869,7 +869,7 @@ public class SingleInspectionProfilePanel extends JPanel {
       final double severityPanelWeightY;
       final JPanel configPanelAnchor = new JPanel(new GridLayout());
 
-      final Set<String> scopesNames = new THashSet<String>();
+      final Set<String> scopesNames = new HashSet<String>();
       for (final InspectionConfigTreeNode node : nodes) {
         final List<ScopeToolState> nonDefaultTools = mySelectedProfile.getNonDefaultTools(node.getDefaultDescriptor().getKey().toString(), project);
         for (final ScopeToolState tool : nonDefaultTools) {

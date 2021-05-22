@@ -11,7 +11,7 @@ import com.intellij.util.SmartList;
 import com.intellij.util.SystemProperties;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.io.DataInputOutputUtil;
-import consulo.util.collection.IntObjectMap;
+import consulo.util.collection.primitive.ints.IntObjectMap;
 import gnu.trove.TObjectLongHashMap;
 import gnu.trove.TObjectLongProcedure;
 

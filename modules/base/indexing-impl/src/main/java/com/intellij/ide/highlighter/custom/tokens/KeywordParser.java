@@ -21,10 +21,11 @@ import com.intellij.psi.CustomHighlighterTokenType;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.util.containers.CharTrie;
 import consulo.logging.Logger;
-import gnu.trove.THashSet;
-import gnu.trove.TIntHashSet;
+import consulo.util.collection.primitive.ints.IntSet;
+import consulo.util.collection.primitive.ints.IntSets;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -34,9 +35,9 @@ import java.util.Set;
  */
 public class KeywordParser {
   private static final Logger LOG = Logger.getInstance(KeywordParser.class);
-  private final List<Set<String>> myKeywordSets = new ArrayList<Set<String>>();
+  private final List<Set<String>> myKeywordSets = new ArrayList<>();
   private final CharTrie myTrie = new CharTrie();
-  private final TIntHashSet myHashCodes = new TIntHashSet();
+  private final IntSet myHashCodes = IntSets.newHashSet();
   private final boolean myIgnoreCase;
 
   public KeywordParser(List<Set<String>> keywordSets, boolean ignoreCase) {
@@ -53,10 +54,10 @@ public class KeywordParser {
 
   private Set<String> normalizeKeywordSet(Set<String> keywordSet) {
     if (!myIgnoreCase) {
-      return new THashSet<String>(keywordSet);
+      return new HashSet<>(keywordSet);
     }
 
-    final Set<String> result = new THashSet<String>();
+    final Set<String> result = new HashSet<>();
     for (String s : keywordSet) {
       result.add(StringUtil.toUpperCase(s));
     }

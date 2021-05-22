@@ -63,7 +63,6 @@ import com.intellij.util.containers.TransferToEDTQueue;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.xml.util.XmlStringUtil;
 import consulo.logging.Logger;
-import gnu.trove.THashMap;
 import gnu.trove.THashSet;
 import org.jetbrains.annotations.NonNls;
 
@@ -332,7 +331,7 @@ public class LocalInspectionsPass extends ProgressableTextEditorHighlightingPass
                           @Nonnull final InspectionManager iManager,
                           final boolean inVisibleRange,
                           @Nonnull final List<LocalInspectionToolWrapper> wrappers) {
-    final Set<PsiFile> injected = new THashSet<>();
+    final Set<PsiFile> injected = new HashSet<>();
     for (PsiElement element : elements) {
       InjectedLanguageUtil.enumerate(element, getFile(), false, (injectedPsi, places) -> injected.add(injectedPsi));
     }
@@ -370,7 +369,7 @@ public class LocalInspectionsPass extends ProgressableTextEditorHighlightingPass
     return b.create();
   }
 
-  private final Map<TextRange, RangeMarker> ranges2markersCache = new THashMap<>();
+  private final Map<TextRange, RangeMarker> ranges2markersCache = new HashMap<>();
   private final TransferToEDTQueue<Trinity<ProblemDescriptor, LocalInspectionToolWrapper, ProgressIndicator>> myTransferToEDTQueue =
           new TransferToEDTQueue<>("Apply inspection results", new Processor<Trinity<ProblemDescriptor, LocalInspectionToolWrapper, ProgressIndicator>>() {
             private final InspectionProfile inspectionProfile = InspectionProjectProfileManager.getInstance(myProject).getInspectionProfile();
@@ -407,7 +406,7 @@ public class LocalInspectionsPass extends ProgressableTextEditorHighlightingPass
             }
           }, myProject.getDisposed(), 200);
 
-  private final Set<Pair<TextRange, String>> emptyActionRegistered = Collections.synchronizedSet(new THashSet<Pair<TextRange, String>>());
+  private final Set<Pair<TextRange, String>> emptyActionRegistered = Collections.synchronizedSet(new HashSet<Pair<TextRange, String>>());
 
   private void addDescriptorIncrementally(@Nonnull final ProblemDescriptor descriptor,
                                           @Nonnull final LocalInspectionToolWrapper tool,
@@ -458,7 +457,7 @@ public class LocalInspectionsPass extends ProgressableTextEditorHighlightingPass
     InspectionProfile inspectionProfile = InspectionProjectProfileManager.getInstance(myProject).getInspectionProfile();
     PsiDocumentManager documentManager = PsiDocumentManager.getInstance(myProject);
     InjectedLanguageManager ilManager = InjectedLanguageManager.getInstance(myProject);
-    Set<Pair<TextRange, String>> emptyActionRegistered = new THashSet<>();
+    Set<Pair<TextRange, String>> emptyActionRegistered = new HashSet<>();
 
     for (Map.Entry<PsiFile, List<InspectionResult>> entry : result.entrySet()) {
       indicator.checkCanceled();

@@ -79,7 +79,7 @@ public class CompilerUtil {
 
   public static Map<Module, List<VirtualFile>> buildModuleToFilesMap(final CompileContext context, final List<VirtualFile> files) {
     //assertion: all files are different
-    final Map<Module, List<VirtualFile>> map = new THashMap<Module, List<VirtualFile>>();
+    final Map<Module, List<VirtualFile>> map = new HashMap<Module, List<VirtualFile>>();
     ApplicationManager.getApplication().runReadAction(new Runnable() {
       public void run() {
         for (VirtualFile file : files) {

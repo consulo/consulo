@@ -15,9 +15,8 @@
  */
 package com.intellij.util.containers;
 
-import gnu.trove.THashMap;
-
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -27,7 +26,7 @@ public class ClassMap<T> {
   protected final Map<Class, T> myMap;
 
   public ClassMap() {
-    this(new THashMap<Class, T>());
+    this(new HashMap<Class, T>());
   }
   protected ClassMap(Map<Class, T> map) {
     myMap = map; 

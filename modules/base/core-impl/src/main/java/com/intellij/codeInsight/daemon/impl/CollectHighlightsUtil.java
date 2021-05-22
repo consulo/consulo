@@ -23,9 +23,9 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.psi.util.PsiUtilCore;
+import com.intellij.util.containers.IntStack;
 import com.intellij.util.containers.Stack;
 import consulo.logging.Logger;
-import gnu.trove.TIntStack;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -74,7 +74,7 @@ public class CollectHighlightsUtil {
 
     int offset = currentOffset;
 
-    final TIntStack starts = new TIntStack(STARTING_TREE_HEIGHT);
+    final IntStack starts = new IntStack(STARTING_TREE_HEIGHT);
     final Stack<PsiElement> elements = new Stack<PsiElement>(STARTING_TREE_HEIGHT);
     final Stack<PsiElement> children = new Stack<PsiElement>(STARTING_TREE_HEIGHT);
     PsiElement element = commonParent;

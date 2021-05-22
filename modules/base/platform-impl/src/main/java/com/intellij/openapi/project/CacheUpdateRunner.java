@@ -2,7 +2,6 @@
 package com.intellij.openapi.project;
 
 import com.intellij.ide.caches.FileContent;
-import consulo.disposer.Disposable;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationListener;
 import com.intellij.openapi.application.ApplicationManager;
@@ -19,13 +18,14 @@ import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.ConcurrencyUtil;
 import com.intellij.util.Consumer;
+import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
 import consulo.util.dataholder.Key;
-import gnu.trove.THashSet;
 
 import javax.annotation.Nonnull;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -46,7 +46,7 @@ public class CacheUpdateRunner {
     indicator.setIndeterminate(false);
 
     ProgressUpdater progressUpdater = new ProgressUpdater() {
-      final Set<VirtualFile> myFilesBeingProcessed = new THashSet<>();
+      final Set<VirtualFile> myFilesBeingProcessed = new HashSet<>();
       final AtomicInteger myNumberOfFilesProcessed = new AtomicInteger();
 
       @Override

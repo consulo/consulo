@@ -60,17 +60,7 @@ public class TodoIndex extends FileBasedIndexExtension<TodoIndexEntry, Integer> 
     application.getMessageBus().connect().subscribe(IndexPatternProvider.INDEX_PATTERNS_CHANGED, evt -> FileBasedIndex.getInstance().requestRebuild(NAME));
   }
 
-  private final KeyDescriptor<TodoIndexEntry> myKeyDescriptor = new KeyDescriptor<TodoIndexEntry>() {
-    @Override
-    public int getHashCode(final TodoIndexEntry value) {
-      return value.hashCode();
-    }
-
-    @Override
-    public boolean isEqual(final TodoIndexEntry val1, final TodoIndexEntry val2) {
-      return val1.equals(val2);
-    }
-
+  private final KeyDescriptor<TodoIndexEntry> myKeyDescriptor = new KeyDescriptor<>() {
     @Override
     public void save(@Nonnull final DataOutput out, final TodoIndexEntry value) throws IOException {
       out.writeUTF(value.pattern);

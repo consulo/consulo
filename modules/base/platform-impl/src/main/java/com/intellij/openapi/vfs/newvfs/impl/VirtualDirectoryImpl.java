@@ -4,7 +4,6 @@ package com.intellij.openapi.vfs.newvfs.impl;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.impl.ApplicationInfoImpl;
 import com.intellij.openapi.util.Comparing;
-import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.io.FileAttributes;
 import com.intellij.openapi.util.text.StringUtil;
@@ -21,16 +20,18 @@ import com.intellij.openapi.vfs.newvfs.persistent.FSRecords;
 import com.intellij.openapi.vfs.newvfs.persistent.PersistentFS;
 import com.intellij.psi.impl.PsiCachedValue;
 import com.intellij.util.ArrayUtil;
-import com.intellij.util.ArrayUtilRt;
 import com.intellij.util.ObjectUtil;
 import com.intellij.util.PairConsumer;
 import com.intellij.util.containers.ContainerUtil;
-import consulo.util.dataholder.keyFMap.KeyFMap;
 import com.intellij.util.text.CharSequenceHashingStrategy;
 import consulo.logging.Logger;
-import gnu.trove.THashSet;
-import gnu.trove.TIntArrayList;
-import gnu.trove.TIntHashSet;
+import consulo.util.collection.Sets;
+import consulo.util.collection.primitive.ints.IntList;
+import consulo.util.collection.primitive.ints.IntLists;
+import consulo.util.collection.primitive.ints.IntSet;
+import consulo.util.collection.primitive.ints.IntSets;
+import consulo.util.dataholder.Key;
+import consulo.util.dataholder.keyFMap.KeyFMap;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -369,7 +370,7 @@ public class VirtualDirectoryImpl extends VirtualFileSystemEntry {
           }
           return cmp;
         });
-        TIntHashSet prevChildren = new TIntHashSet(myData.myChildrenIds);
+        IntSet prevChildren = IntSets.newHashSet(myData.myChildrenIds);
         for (int i = 0; i < childrenIds.length; i++) {
           FSRecords.NameId child = childrenIds[i];
           result[i] = child.id;
@@ -507,7 +508,7 @@ public class VirtualDirectoryImpl extends VirtualFileSystemEntry {
 
     synchronized (myData) {
       int[] oldIds = myData.myChildrenIds;
-      TIntArrayList mergedIds = new TIntArrayList(oldIds.length + added.size());
+      IntList mergedIds = IntLists.newArrayList(oldIds.length + added.size());
       //noinspection ForLoopReplaceableByForEach
       for (int i = 0; i < added.size(); i++) {
         ChildInfo info = added.get(i);
@@ -532,7 +533,7 @@ public class VirtualDirectoryImpl extends VirtualFileSystemEntry {
         }
       };
       ContainerUtil.processSortedListsInOrder(added, existingChildren, pairComparator, true, nextInfo -> mergedIds.add(nextInfo.getId()));
-      myData.myChildrenIds = mergedIds.toNativeArray();
+      myData.myChildrenIds = mergedIds.toArray();
 
       if (markAllChildrenLoaded) {
         setChildrenLoaded();
@@ -581,7 +582,7 @@ public class VirtualDirectoryImpl extends VirtualFileSystemEntry {
   }
 
   // optimization: faster than forEach(this::removeChild)
-  public void removeChildren(@Nonnull TIntHashSet idsToRemove, @Nonnull List<? extends CharSequence> namesToRemove) {
+  public void removeChildren(@Nonnull IntSet idsToRemove, @Nonnull List<? extends CharSequence> namesToRemove) {
     boolean caseSensitive = getFileSystem().isCaseSensitive();
     synchronized (myData) {
       // remove from array by merging two sorted lists
@@ -594,7 +595,7 @@ public class VirtualDirectoryImpl extends VirtualFileSystemEntry {
         }
       }
       if (o != newIds.length) {
-        newIds = o == 0 ? ArrayUtilRt.EMPTY_INT_ARRAY : Arrays.copyOf(newIds, o);
+        newIds = o == 0 ? ArrayUtil.EMPTY_INT_ARRAY : Arrays.copyOf(newIds, o);
       }
       myData.myChildrenIds = newIds;
 
@@ -620,7 +621,7 @@ public class VirtualDirectoryImpl extends VirtualFileSystemEntry {
     boolean caseSensitive = getFileSystem().isCaseSensitive();
 
     CharSequenceHashingStrategy strategy = caseSensitive ? CharSequenceHashingStrategy.CASE_SENSITIVE : CharSequenceHashingStrategy.CASE_INSENSITIVE;
-    Set<CharSequence> existingNames = new THashSet<>(myData.myChildrenIds.length, strategy);
+    Set<CharSequence> existingNames = Sets.newHashSet(myData.myChildrenIds.length, strategy);
     for (int id : myData.myChildrenIds) {
       existingNames.add(mySegment.vfsData.getNameByFileId(id));
     }

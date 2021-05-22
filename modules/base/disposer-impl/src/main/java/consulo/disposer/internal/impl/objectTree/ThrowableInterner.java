@@ -4,9 +4,9 @@ package consulo.disposer.internal.impl.objectTree;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.FilteringIterator;
-import com.intellij.util.containers.WeakInterner;
+import com.intellij.util.containers.Interner;
 import consulo.hacking.java.base.ThrowableHacking;
-import gnu.trove.TObjectHashingStrategy;
+import consulo.util.collection.HashingStrategy;
 
 import javax.annotation.Nonnull;
 import java.util.Arrays;
@@ -24,9 +24,9 @@ import java.util.function.Function;
  * 1) too slow and 2) explodes Throwable retained size by polluting Throwable.stackTrace fields.
  */
 public class ThrowableInterner {
-  private static final WeakInterner<Throwable> ourTraceInterner = new WeakInterner<>(new TObjectHashingStrategy<Throwable>() {
+  private static final Interner<Throwable> ourTraceInterner = Interner.createWeakInterner(new HashingStrategy<Throwable>() {
     @Override
-    public int computeHashCode(Throwable throwable) {
+    public int hashCode(Throwable throwable) {
       String message = throwable.getMessage();
       if (message != null) {
         return message.hashCode();

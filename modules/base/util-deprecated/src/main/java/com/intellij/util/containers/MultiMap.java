@@ -17,17 +17,16 @@
 package com.intellij.util.containers;
 
 import com.intellij.util.SmartList;
-import gnu.trove.THashMap;
-import gnu.trove.TObjectHashingStrategy;
+import consulo.util.collection.HashingStrategy;
+import consulo.util.collection.Maps;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.io.Serializable;
 import java.util.*;
-import java.util.HashMap;
 
 /**
- * Consider to use factory methods {@link #createLinked()}, {@link #createSet()}, {@link #createSmart()}, {@link #create(TObjectHashingStrategy)} instead of override.
+ * Consider to use factory methods {@link #createLinked()}, {@link #createSet()}, {@link #createSmart()}, {@link #create(consulo.util.collection.HashingStrategy)} instead of override.
  * @see BidirectionalMultiMap
  * @see ConcurrentMultiMap
  * @author Dmitry Avdeev
@@ -264,12 +263,12 @@ public class MultiMap<K, V> implements Serializable {
   }
 
   @Nonnull
-  public static <K, V> MultiMap<K, V> create(@Nonnull final TObjectHashingStrategy<K> strategy) {
+  public static <K, V> MultiMap<K, V> create(@Nonnull final HashingStrategy<K> strategy) {
     return new MultiMap<K, V>() {
       @Nonnull
       @Override
       protected Map<K, Collection<V>> createMap() {
-        return new THashMap<K, Collection<V>>(strategy);
+        return Maps.newHashMap(strategy);
       }
     };
   }
@@ -316,7 +315,7 @@ public class MultiMap<K, V> implements Serializable {
       @Nonnull
       @Override
       protected Map<K, Collection<V>> createMap() {
-        return new THashMap<K, Collection<V>>();
+        return new HashMap<K, Collection<V>>();
       }
     };
   }
@@ -346,11 +345,11 @@ public class MultiMap<K, V> implements Serializable {
 
   @Nonnull
   public static <K, V> MultiMap<K, V> createSet() {
-    return createSet(TObjectHashingStrategy.CANONICAL);
+    return createSet(HashingStrategy.canonical());
   }
 
   @Nonnull
-  public static <K, V> MultiMap<K, V> createSet(final TObjectHashingStrategy strategy) {
+  public static <K, V> MultiMap<K, V> createSet(final HashingStrategy<K> strategy) {
     return new MultiMap<K, V>() {
       @Nonnull
       @Override
@@ -367,7 +366,7 @@ public class MultiMap<K, V> implements Serializable {
       @Nonnull
       @Override
       protected Map<K, Collection<V>> createMap() {
-        return new THashMap<K, Collection<V>>(strategy);
+        return Maps.newHashMap(strategy);
       }
     };
   }

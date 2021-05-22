@@ -36,14 +36,12 @@ import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.tree.TreeUtil;
 import consulo.logging.Logger;
-import gnu.trove.THashMap;
-import gnu.trove.THashSet;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 import javax.accessibility.AccessibleAction;
 import javax.accessibility.AccessibleContext;
 import javax.accessibility.AccessibleRole;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
@@ -54,8 +52,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.lang.reflect.Field;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 import java.util.function.Function;
 
 /**
@@ -72,8 +70,8 @@ public abstract class OptionTableWithPreviewPanel extends CustomizableLanguageCo
 
   private final List<Option> myOptions = new ArrayList<>();
   private final List<Option> myCustomOptions = new ArrayList<>();
-  private final Set<String> myAllowedOptions = new THashSet<>();
-  private final Map<String, String> myRenamedFields = new THashMap<>();
+  private final Set<String> myAllowedOptions = new HashSet<>();
+  private final Map<String, String> myRenamedFields = new HashMap<>();
   private boolean myShowAllStandardOptions;
   protected boolean isFirstUpdate = true;
 
@@ -186,7 +184,7 @@ public abstract class OptionTableWithPreviewPanel extends CustomizableLanguageCo
 
   protected TreeTable createOptionsTree(CodeStyleSettings settings) {
     DefaultMutableTreeNode rootNode = new DefaultMutableTreeNode();
-    Map<String, DefaultMutableTreeNode> groupsMap = new THashMap<>();
+    Map<String, DefaultMutableTreeNode> groupsMap = new HashMap<>();
 
     List<Option> sorted = sortOptions(ContainerUtil.concat(myOptions, myCustomOptions));
     for (Option each : sorted) {

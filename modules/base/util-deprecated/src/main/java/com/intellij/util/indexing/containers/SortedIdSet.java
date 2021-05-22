@@ -16,7 +16,8 @@
 package com.intellij.util.indexing.containers;
 
 import com.intellij.util.indexing.ValueContainer;
-import gnu.trove.TIntProcedure;
+
+import java.util.function.IntPredicate;
 
 /**
  * Created by Maxim.Mossienko on 5/27/2014.
@@ -157,10 +158,10 @@ public class SortedIdSet implements Cloneable, RandomAccessIntContainer {
     return -(low + 1);  // key not found.
   }
 
-  public void forEach(TIntProcedure procedure) {
+  public void forEach(IntPredicate procedure) {
     for(int i = 0; i < mySetLength; ++i) {
       int value = mySet[i];
-      if (value > 0 && !procedure.execute(value)) break;
+      if (value > 0 && !procedure.test(value)) break;
     }
   }
 

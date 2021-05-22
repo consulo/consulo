@@ -17,11 +17,12 @@ package com.intellij.psi.impl.cache.impl;
 
 import com.intellij.psi.search.IndexPattern;
 import com.intellij.util.indexing.IdDataConsumer;
-import gnu.trove.TObjectIntHashMap;
+import consulo.util.collection.primitive.objects.ObjectIntMap;
+import consulo.util.collection.primitive.objects.ObjectMaps;
 
 public final class OccurrenceConsumer {
   private final IdDataConsumer myIndexDataConsumer;
-  private TObjectIntHashMap<IndexPattern> myTodoOccurrences;
+  private ObjectIntMap<IndexPattern> myTodoOccurrences;
   private final boolean myNeedToDo;
 
   public OccurrenceConsumer(final IdDataConsumer indexDataConsumer, boolean needToDo) {
@@ -33,24 +34,27 @@ public final class OccurrenceConsumer {
     if (myIndexDataConsumer == null) return;
     if (charArray != null) {
       myIndexDataConsumer.addOccurrence(charArray, start, end, occurrenceMask);
-    } else {
+    }
+    else {
       myIndexDataConsumer.addOccurrence(charSequence, start, end, occurrenceMask);
     }
   }
 
   public void incTodoOccurrence(final IndexPattern pattern) {
     if (myTodoOccurrences == null) {
-      myTodoOccurrences = new TObjectIntHashMap<IndexPattern>();
+      myTodoOccurrences = ObjectMaps.newObjectIntHashMap();
       for (IndexPattern indexPattern : IndexPatternUtil.getIndexPatterns()) {
-        myTodoOccurrences.put(indexPattern, 0);
+        myTodoOccurrences.putInt(indexPattern, 0);
       }
     }
-    myTodoOccurrences.adjustValue(pattern, 1);
+
+    int value = myTodoOccurrences.getInt(pattern);
+    myTodoOccurrences.putInt(pattern, value + 1);
   }
 
   public int getOccurrenceCount(IndexPattern pattern) {
     if (myTodoOccurrences == null) return 0;
-    return myTodoOccurrences.get(pattern);
+    return myTodoOccurrences.getInt(pattern);
   }
 
   public boolean isNeedToDo() {

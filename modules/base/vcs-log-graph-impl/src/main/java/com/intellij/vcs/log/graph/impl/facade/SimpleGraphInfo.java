@@ -34,9 +34,10 @@ import com.intellij.vcs.log.graph.utils.LinearGraphUtils;
 import com.intellij.vcs.log.graph.utils.TimestampGetter;
 import com.intellij.vcs.log.graph.utils.impl.CompressedIntList;
 import com.intellij.vcs.log.graph.utils.impl.IntTimestampGetter;
-import gnu.trove.TObjectIntHashMap;
-import javax.annotation.Nonnull;
+import consulo.util.collection.primitive.objects.ObjectIntMap;
+import consulo.util.collection.primitive.objects.ObjectMaps;
 
+import javax.annotation.Nonnull;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
@@ -105,10 +106,10 @@ public class SimpleGraphInfo<CommitId> implements PermanentGraphInfo<CommitId> {
     final int[] layoutIndexes = new int[end - start];
     List<Integer> headNodeIndexes = ContainerUtil.newArrayList();
 
-    TObjectIntHashMap<CommitId> commitIdToInteger = reverseCommitIdMap(permanentCommitsInfo, permanentGraphSize);
+    ObjectIntMap<CommitId> commitIdToInteger = reverseCommitIdMap(permanentCommitsInfo, permanentGraphSize);
     for (int row = start; row < end; row++) {
       CommitId commitId = commitsIdMap.get(row - start);
-      int layoutIndex = oldLayout.getLayoutIndex(commitIdToInteger.get(commitId));
+      int layoutIndex = oldLayout.getLayoutIndex(commitIdToInteger.getInt(commitId));
       layoutIndexes[row - start] = layoutIndex;
       if (asLiteLinearGraph(newLinearGraph).getNodes(row - start, LiteLinearGraph.NodeFilter.UP).isEmpty()) {
         headNodeIndexes.add(row - start);
@@ -149,10 +150,10 @@ public class SimpleGraphInfo<CommitId> implements PermanentGraphInfo<CommitId> {
   }
 
   @Nonnull
-  private static <CommitId> TObjectIntHashMap<CommitId> reverseCommitIdMap(PermanentCommitsInfo<CommitId> permanentCommitsInfo, int size) {
-    TObjectIntHashMap<CommitId> result = new TObjectIntHashMap<>();
+  private static <CommitId> ObjectIntMap<CommitId> reverseCommitIdMap(PermanentCommitsInfo<CommitId> permanentCommitsInfo, int size) {
+    ObjectIntMap<CommitId> result = ObjectMaps.newObjectIntHashMap();
     for (int i = 0; i < size; i++) {
-      result.put(permanentCommitsInfo.getCommitId(i), i);
+      result.putInt(permanentCommitsInfo.getCommitId(i), i);
     }
     return result;
   }

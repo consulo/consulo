@@ -17,15 +17,15 @@
 package com.intellij.codeInspection.reference;
 
 import com.intellij.openapi.application.ApplicationManager;
-import consulo.util.dataholder.Key;
 import com.intellij.util.BitUtil;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.containers.ContainerUtil;
-import gnu.trove.THashMap;
+import consulo.util.dataholder.Key;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -113,7 +113,7 @@ public abstract class RefEntityImpl implements RefEntity, WritableRefEntity {
       Map<Key, Object> userMap = myUserMap;
       if (userMap == null) {
         if (value == null) return;
-        myUserMap = userMap = new THashMap<>();
+        myUserMap = userMap = new HashMap<>();
       }
       if (value != null) {
         userMap.put(key, value);

@@ -2,16 +2,16 @@
 package com.intellij.util.indexing.hash;
 
 import com.intellij.openapi.util.Computable;
-import com.intellij.util.IntIntFunction;
 import com.intellij.util.indexing.*;
 import com.intellij.util.indexing.impl.AbstractUpdateData;
 import com.intellij.util.indexing.impl.IndexStorage;
 import com.intellij.util.indexing.impl.forward.MapForwardIndexAccessor;
 import com.intellij.util.indexing.impl.forward.PersistentMapBasedForwardIndex;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.util.Map;
+import java.util.function.IntUnaryOperator;
 
 public class FileContentHashIndex extends VfsAwareMapReduceIndex<Integer, Void, FileContent> {
   FileContentHashIndex(@Nonnull FileContentHashIndexExtension extension, IndexStorage<Integer, Void> storage) throws IOException {
@@ -32,7 +32,7 @@ public class FileContentHashIndex extends VfsAwareMapReduceIndex<Integer, Void, 
   }
 
   @Nonnull
-  IntIntFunction toHashIdToFileIdFunction() {
+  IntUnaryOperator toHashIdToFileIdFunction() {
     return hash -> {
       try {
         ValueContainer<Void> data = getData(hash);

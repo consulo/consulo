@@ -33,14 +33,14 @@ import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.refactoring.RefactoringBundle;
 import com.intellij.usageView.UsageInfo;
 import com.intellij.util.containers.ContainerUtil;
-import gnu.trove.THashSet;
 import org.jetbrains.annotations.Nls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 
 /**
  * @author ven
@@ -136,8 +136,8 @@ public class CommonRefactoringUtil {
                                              @Nonnull Collection<? extends PsiElement> flat,
                                              @Nonnull String messagePrefix,
                                              boolean notifyOnFail) {
-    Collection<VirtualFile> readonly = new THashSet<>();  // not writable, but could be checked out
-    Collection<VirtualFile> failed = new THashSet<>();  // those located in read-only filesystem
+    Collection<VirtualFile> readonly = new HashSet<>();  // not writable, but could be checked out
+    Collection<VirtualFile> failed = new HashSet<>();  // those located in read-only filesystem
 
     boolean seenNonWritablePsiFilesWithoutVirtualFile =
             checkReadOnlyStatus(flat, false, readonly, failed) || checkReadOnlyStatus(recursive, true, readonly, failed);

@@ -26,14 +26,14 @@ import com.intellij.openapi.options.SettingsEditor;
 import com.intellij.openapi.options.SettingsEditorGroup;
 import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.openapi.util.JDOMUtil;
-import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.WriteExternalException;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
-import gnu.trove.THashMap;
+import consulo.util.dataholder.Key;
 import org.jdom.Element;
 
 import javax.annotation.Nonnull;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -53,7 +53,7 @@ public class RunConfigurationExtensionsManager<U extends RunConfigurationBase, T
   }
 
   public void readExternal(@Nonnull U configuration, @Nonnull Element parentNode) throws InvalidDataException {
-    Map<String, T> extensions = new THashMap<>();
+    Map<String, T> extensions = new HashMap<>();
     for (T extension : getApplicableExtensions(configuration)) {
       extensions.put(extension.getSerializationId(), extension);
     }

@@ -86,11 +86,20 @@ public class ConcurrencyUtil {
    * or corresponding value if entry already exists.
    */
   @Nonnull
-  public static <K, V> V cacheOrGet(@Nonnull ConcurrentMap<K, V> map, @Nonnull final K key, @Nonnull final V defaultValue) {
+  public static <K, V> V cacheOrGet(@Nonnull Map<K, V> map, @Nonnull final K key, @Nonnull final V defaultValue) {
     V v = map.get(key);
     if (v != null) return v;
     V prev = map.putIfAbsent(key, defaultValue);
     return prev == null ? defaultValue : prev;
+  }
+
+  /**
+   * @return defaultValue if there is no entry in the map (in that case defaultValue is placed into the map),
+   * or corresponding value if entry already exists.
+   */
+  @Nonnull
+  public static <K, V> V cacheOrGet(@Nonnull ConcurrentMap<K, V> map, @Nonnull final K key, @Nonnull final V defaultValue) {
+    return cacheOrGet((Map<K, V>)map, key, defaultValue);
   }
 
   /**

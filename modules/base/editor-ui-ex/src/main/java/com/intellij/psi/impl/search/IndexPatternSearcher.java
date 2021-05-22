@@ -29,9 +29,10 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.text.CharArrayUtil;
 import com.intellij.util.text.CharSequenceSubSequence;
 import consulo.lang.LanguageVersion;
-import gnu.trove.TIntArrayList;
-import javax.annotation.Nonnull;
+import consulo.util.collection.primitive.ints.IntList;
+import consulo.util.collection.primitive.ints.IntLists;
 
+import javax.annotation.Nonnull;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -68,11 +69,11 @@ public class IndexPatternSearcher extends QueryExecutorBase<IndexPatternOccurren
     final CharSequence chars = file.getViewProvider().getContents();
     boolean multiLine = queryParameters.isMultiLine();
     List<CommentRange> commentRanges = findCommentTokenRanges(file, chars, queryParameters.getRange(), multiLine);
-    TIntArrayList occurrences = new TIntArrayList(1);
+    IntList occurrences = IntLists.newArrayList(1);
     IndexPattern[] patterns = patternProvider != null ? patternProvider.getIndexPatterns() : new IndexPattern[]{queryParameters.getPattern()};
 
     for (int i = 0; i < commentRanges.size(); i++) {
-      occurrences.resetQuick();
+      occurrences.clear();
 
       for (int j = patterns.length - 1; j >= 0; --j) {
         if (!collectPatternMatches(patterns, patterns[j], chars, commentRanges, i, file, queryParameters.getRange(), consumer, occurrences, multiLine)) {
@@ -190,7 +191,7 @@ public class IndexPatternSearcher extends QueryExecutorBase<IndexPatternOccurren
                                                PsiFile file,
                                                TextRange range,
                                                Processor<? super IndexPatternOccurrence> consumer,
-                                               TIntArrayList matches,
+                                               IntList matches,
                                                boolean multiLine) {
     CommentRange commentRange = commentRanges.get(commentNum);
     int commentStart = commentRange.startOffset;
@@ -259,7 +260,8 @@ public class IndexPatternSearcher extends QueryExecutorBase<IndexPatternOccurren
       }
       int commentStartOffset = Math.max(lineStartOffset, commentRange.startOffset);
       int continuationEndOffset = Math.min(lineEndOffset, commentRange.endOffset);
-      if (refOffset < commentStartOffset || commentStartOffset > lineStartOffset + maxCommentStartOffsetInLine ||
+      if (refOffset < commentStartOffset ||
+          commentStartOffset > lineStartOffset + maxCommentStartOffsetInLine ||
           CharArrayUtil.shiftBackward(text, commentStartOffset, refOffset - 1, WHITESPACE + commentRange.allowedContinuationPrefixChars) + 1 != commentStartOffset) {
         break;
       }

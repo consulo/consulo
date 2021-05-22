@@ -17,12 +17,12 @@ package com.intellij.diff.tools.fragmented;
 
 import com.intellij.diff.util.Side;
 import com.intellij.util.SmartList;
-import gnu.trove.TIntFunction;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.function.IntUnaryOperator;
 
 public class LineNumberConvertor {
   // Oneside -> Twoside
@@ -87,12 +87,12 @@ public class LineNumberConvertor {
   //
 
   @Nonnull
-  public TIntFunction createConvertor1() {
+  public IntUnaryOperator createConvertor1() {
     return this::convert1;
   }
 
   @Nonnull
-  public TIntFunction createConvertor2() {
+  public IntUnaryOperator createConvertor2() {
     return this::convert2;
   }
 

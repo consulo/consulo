@@ -34,9 +34,8 @@ import com.intellij.util.PathsList;
 import com.intellij.util.StringBuilderSpinAllocator;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.OrderedSet;
-import gnu.trove.THashMap;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.io.File;
 import java.util.*;
 
@@ -46,8 +45,8 @@ import java.util.*;
  */
 public class ModuleChunk extends Chunk<Module> {
   private final CompileContextEx myContext;
-  private final Map<Module, List<VirtualFile>> myModuleToFilesMap = new THashMap<Module, List<VirtualFile>>();
-  private final Map<VirtualFile, VirtualFile> myTransformedToOriginalMap = new THashMap<VirtualFile, VirtualFile>();
+  private final Map<Module, List<VirtualFile>> myModuleToFilesMap = new HashMap<Module, List<VirtualFile>>();
+  private final Map<VirtualFile, VirtualFile> myTransformedToOriginalMap = new HashMap<VirtualFile, VirtualFile>();
   private int mySourcesFilter = ALL_SOURCES;
 
   public ModuleChunk(CompileContextEx context, Chunk<Module> chunk, Map<Module, List<VirtualFile>> moduleToFilesMap) {

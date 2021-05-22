@@ -20,17 +20,17 @@ import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.fileTypes.InternalStdFileTypes;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileFilter;
-import gnu.trove.THashSet;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Set;
 
 /**
  * @author cdr
  */
 public class FileTreeAccessFilter implements VirtualFileFilter {
-  protected final Set<VirtualFile> myAddedClasses = new THashSet<VirtualFile>();
+  protected final Set<VirtualFile> myAddedClasses = new HashSet<VirtualFile>();
   private boolean myTreeAccessAllowed;
 
   @Override

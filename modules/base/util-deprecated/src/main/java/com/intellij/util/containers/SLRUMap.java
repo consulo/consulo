@@ -20,18 +20,18 @@
 package com.intellij.util.containers;
 
 import com.intellij.util.Consumer;
-import com.intellij.util.containers.hash.EqualityPolicy;
-import com.intellij.util.containers.hash.LinkedHashMap;
+import consulo.util.collection.HashingStrategy;
+import consulo.util.collection.impl.map.LinkedHashMap;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
 public class SLRUMap<K,V> {
-  protected final LinkedHashMap<K,V> myProtectedQueue;
-  protected final LinkedHashMap<K,V> myProbationalQueue;
+  protected final Map<K,V> myProtectedQueue;
+  protected final Map<K,V> myProbationalQueue;
 
   private final int myProtectedQueueSize;
   private final int myProbationalQueueSize;
@@ -42,14 +42,14 @@ public class SLRUMap<K,V> {
   private static final int FACTOR = Integer.getInteger("idea.slru.factor", 1);
 
   public SLRUMap(final int protectedQueueSize, final int probationalQueueSize) {
-    this(protectedQueueSize, probationalQueueSize, (EqualityPolicy)EqualityPolicy.CANONICAL);
+    this(protectedQueueSize, probationalQueueSize, HashingStrategy.canonical());
   }
 
-  public SLRUMap(final int protectedQueueSize, final int probationalQueueSize, EqualityPolicy hashingStrategy) {
+  public SLRUMap(final int protectedQueueSize, final int probationalQueueSize, HashingStrategy<K> hashingStrategy) {
     myProtectedQueueSize = protectedQueueSize * FACTOR;
     myProbationalQueueSize = probationalQueueSize * FACTOR;
 
-    myProtectedQueue = new LinkedHashMap<K,V>(10, 0.6f, hashingStrategy) {
+    myProtectedQueue = new LinkedHashMap<K, V>(10, 0.6f, hashingStrategy) {
       @Override
       protected boolean removeEldestEntry(Map.Entry<K, V> eldest, K key, V value) {
         if (size() > myProtectedQueueSize) {
@@ -61,7 +61,7 @@ public class SLRUMap<K,V> {
       }
     };
 
-    myProbationalQueue = new LinkedHashMap<K,V>(10, 0.6f, hashingStrategy) {
+    myProbationalQueue = new LinkedHashMap<K, V>(10, 0.6f, hashingStrategy) {
       protected boolean removeEldestEntry(final Map.Entry<K, V> eldest, K key, V value) {
         if (size() > myProbationalQueueSize) {
           onDropFromCache(key, value);

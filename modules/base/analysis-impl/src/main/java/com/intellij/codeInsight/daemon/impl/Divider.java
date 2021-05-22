@@ -18,7 +18,6 @@ package com.intellij.codeInsight.daemon.impl;
 import com.intellij.lang.Language;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.util.Condition;
-import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.ProperTextRange;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.FileViewProvider;
@@ -27,8 +26,9 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.reference.SoftReference;
 import com.intellij.util.Processor;
+import com.intellij.util.containers.IntStack;
 import com.intellij.util.containers.Stack;
-import gnu.trove.TIntStack;
+import consulo.util.dataholder.Key;
 
 import javax.annotation.Nonnull;
 import java.lang.ref.Reference;
@@ -115,7 +115,7 @@ public class Divider {
 
     final List<Condition<PsiElement>> filters = CollectHighlightsUtil.EP_NAME.getExtensionList();
 
-    final TIntStack starts = new TIntStack(STARTING_TREE_HEIGHT);
+    final IntStack starts = new IntStack(STARTING_TREE_HEIGHT);
     starts.push(startOffset);
     final Stack<PsiElement> elements = new Stack<>(STARTING_TREE_HEIGHT);
     final Stack<PsiElement> children = new Stack<>(STARTING_TREE_HEIGHT);

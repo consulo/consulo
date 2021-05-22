@@ -18,8 +18,6 @@ package com.intellij.codeInsight.navigation.actions;
 
 import com.intellij.codeInsight.CodeInsightActionHandler;
 import com.intellij.codeInsight.CodeInsightBundle;
-import consulo.codeInsight.TargetElementUtil;
-import consulo.codeInsight.TargetElementUtilEx;
 import com.intellij.codeInsight.actions.BaseCodeInsightAction;
 import com.intellij.codeInsight.navigation.NavigationUtil;
 import com.intellij.openapi.actionSystem.AnActionEvent;
@@ -33,13 +31,14 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.*;
 import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.codeInsight.TargetElementUtil;
+import consulo.codeInsight.TargetElementUtilEx;
 import consulo.ui.annotation.RequiredUIAccess;
-import gnu.trove.THashSet;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import consulo.annotation.access.RequiredReadAction;
-
+import java.util.HashSet;
 import java.util.Set;
 
 public class GotoTypeDeclarationAction extends BaseCodeInsightAction implements CodeInsightActionHandler, DumbAware {
@@ -120,7 +119,7 @@ public class GotoTypeDeclarationAction extends BaseCodeInsightAction implements 
     final PsiReference psiReference = TargetElementUtil.findReference(editor, offset);
     if (psiReference instanceof PsiPolyVariantReference) {
       final ResolveResult[] results = ((PsiPolyVariantReference)psiReference).multiResolve(false);
-      Set<PsiElement> types = new THashSet<PsiElement>();
+      Set<PsiElement> types = new HashSet<PsiElement>();
 
       for (ResolveResult r : results) {
         final PsiElement[] declarations = getSymbolTypeDeclarations(r.getElement(), editor, offset);

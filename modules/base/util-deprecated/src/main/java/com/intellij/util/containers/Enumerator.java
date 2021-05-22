@@ -15,22 +15,22 @@
  */
 package com.intellij.util.containers;
 
-import consulo.logging.Logger;
 import com.intellij.util.ArrayUtil;
-import gnu.trove.TObjectHashingStrategy;
-import gnu.trove.TObjectIntHashMap;
-import gnu.trove.TObjectIntIterator;
+import consulo.logging.Logger;
+import consulo.util.collection.HashingStrategy;
+import consulo.util.collection.primitive.objects.ObjectIntMap;
+import consulo.util.collection.primitive.objects.ObjectMaps;
 
 /**
  * @author dyoma
  */
 public class Enumerator<T> {
   private static final Logger LOG = Logger.getInstance(Enumerator.class);
-  private final TObjectIntHashMap<T> myNumbers;
+  private final ObjectIntMap<T> myNumbers;
   private int myNextNumber = 1;
 
-  public Enumerator(int expectNumber, TObjectHashingStrategy<T> strategy) {
-    myNumbers = new TObjectIntHashMap<T>(expectNumber, strategy);
+  public Enumerator(int expectNumber, HashingStrategy<T> strategy) {
+    myNumbers = ObjectMaps.newObjectIntHashMap(expectNumber, strategy);
   }
 
   public void clear() {
@@ -63,12 +63,12 @@ public class Enumerator<T> {
   }
 
   public int enumerateImpl(T object) {
-    if( object == null ) return 0;
+    if (object == null) return 0;
 
-    int number = myNumbers.get(object);
+    int number = myNumbers.getInt(object);
     if (number == 0) {
       number = myNextNumber++;
-      myNumbers.put(object, number);
+      myNumbers.putInt(object, number);
       return -number;
     }
     return number;
@@ -76,20 +76,18 @@ public class Enumerator<T> {
 
   public int get(T object) {
     if (object == null) return 0;
-    final int res = myNumbers.get(object);
+    final int res = myNumbers.getInt(object);
 
-    if (res == 0)
-      LOG.error( "Object "+ object + " must be already added to enumerator!" );
+    if (res == 0) LOG.error("Object " + object + " must be already added to enumerator!");
 
     return res;
   }
 
   public String toString() {
-    StringBuffer buffer = new StringBuffer();
-    for( TObjectIntIterator<T> iter = myNumbers.iterator(); iter.hasNext(); ) {
-      iter.advance();
-      buffer.append(Integer.toString(iter.value()) + ": " + iter.key().toString() + "\n");
-    }
+    StringBuilder buffer = new StringBuilder();
+    myNumbers.forEach((key, value) -> {
+      buffer.append(Integer.toString(value)).append(": ").append(key.toString()).append("\n");
+    });
     return buffer.toString();
   }
 }

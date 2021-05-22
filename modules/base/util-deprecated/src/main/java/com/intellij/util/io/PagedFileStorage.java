@@ -4,10 +4,10 @@ package com.intellij.util.io;
 import com.intellij.openapi.Forceable;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.util.SystemProperties;
-import consulo.util.collection.ConcurrentIntObjectMap;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.containers.hash.LinkedHashMap;
 import consulo.logging.Logger;
+import consulo.util.collection.impl.map.LinkedHashMap;
+import consulo.util.collection.primitive.ints.ConcurrentIntObjectMap;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -495,7 +495,7 @@ public class PagedFileStorage implements Forceable {
       myDefaultStorageLockContext = new StorageLockContext(this, checkThreadAccess);
 
       mySizeLimit = UPPER_LIMIT;
-      mySegments = new LinkedHashMap<Integer, ByteBufferWrapper>(10, 0.75f, true) {
+      mySegments = new consulo.util.collection.impl.map.LinkedHashMap<Integer, ByteBufferWrapper>(10, 0.75f, true) {
         @Override
         protected boolean removeEldestEntry(Map.Entry<Integer, ByteBufferWrapper> eldest) {
           return mySize > mySizeLimit;

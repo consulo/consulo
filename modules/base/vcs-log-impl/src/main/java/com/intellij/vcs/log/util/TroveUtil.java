@@ -18,6 +18,7 @@ package com.intellij.vcs.log.util;
 import com.intellij.openapi.util.Ref;
 import com.intellij.util.Consumer;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.util.collection.primitive.ints.IntList;
 import gnu.trove.*;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -50,9 +51,8 @@ public class TroveUtil {
   }
 
   @Nonnull
-  public static IntStream stream(@Nonnull TIntArrayList list) {
-    if (list.isEmpty()) return IntStream.empty();
-    return IntStream.range(0, list.size()).map(list::get);
+  public static IntStream stream(@Nonnull IntList list) {
+    return list.stream();
   }
 
   @Nonnull

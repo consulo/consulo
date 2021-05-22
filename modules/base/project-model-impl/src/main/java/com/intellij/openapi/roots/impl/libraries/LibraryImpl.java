@@ -10,7 +10,9 @@ import com.intellij.openapi.roots.OrderRootType;
 import com.intellij.openapi.roots.RootProvider;
 import com.intellij.openapi.roots.impl.ProjectRootManagerImpl;
 import com.intellij.openapi.roots.libraries.*;
-import com.intellij.openapi.util.*;
+import com.intellij.openapi.util.Comparing;
+import com.intellij.openapi.util.InvalidDataException;
+import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.impl.VirtualFilePointerContainerImpl;
@@ -28,7 +30,6 @@ import consulo.disposer.Disposer;
 import consulo.disposer.TraceableDisposable;
 import consulo.logging.Logger;
 import consulo.roots.impl.ModuleRootLayerImpl;
-import gnu.trove.THashSet;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 
@@ -633,7 +634,7 @@ public class LibraryImpl implements LibraryEx.ModifiableModelEx, LibraryEx, Root
   }
 
   private void disposeMyPointers() {
-    for (VirtualFilePointerContainer container : new THashSet<>(myRoots.values())) {
+    for (VirtualFilePointerContainer container : new HashSet<>(myRoots.values())) {
       container.killAll();
     }
     if (myExcludedRoots != null) {

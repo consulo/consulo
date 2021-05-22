@@ -41,17 +41,13 @@ import com.intellij.util.Alarm;
 import com.intellij.util.SmartList;
 import com.intellij.util.messages.MessageBusConnection;
 import consulo.annotation.access.RequiredReadAction;
-import gnu.trove.THashSet;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.Enumeration;
-import java.util.Set;
+import java.util.*;
 
 public class ProjectTreeBuilder extends BaseProjectTreeBuilder {
   public ProjectTreeBuilder(@Nonnull Project project,
@@ -160,7 +156,7 @@ public class ProjectTreeBuilder extends BaseProjectTreeBuilder {
 
   private class MyProblemListener implements ProblemListener {
     private final Alarm myUpdateProblemAlarm = new Alarm();
-    private final Collection<VirtualFile> myFilesToRefresh = new THashSet<>();
+    private final Collection<VirtualFile> myFilesToRefresh = new HashSet<>();
 
     @Override
     public void problemsAppeared(@Nonnull VirtualFile file) {
@@ -180,7 +176,7 @@ public class ProjectTreeBuilder extends BaseProjectTreeBuilder {
             if (!myProject.isOpen()) return;
             Set<VirtualFile> filesToRefresh;
             synchronized (myFilesToRefresh) {
-              filesToRefresh = new THashSet<>(myFilesToRefresh);
+              filesToRefresh = new HashSet<>(myFilesToRefresh);
             }
             final DefaultMutableTreeNode rootNode = getRootNode();
             if (rootNode != null) {

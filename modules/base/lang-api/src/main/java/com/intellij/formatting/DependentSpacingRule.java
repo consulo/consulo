@@ -16,7 +16,9 @@
 package com.intellij.formatting;
 
 import com.intellij.openapi.util.TextRange;
-import gnu.trove.TObjectIntHashMap;
+import consulo.util.collection.primitive.objects.ObjectIntMap;
+import consulo.util.collection.primitive.objects.ObjectMaps;
+
 import javax.annotation.Nonnull;
 
 /**
@@ -40,7 +42,7 @@ public class DependentSpacingRule {
   public static final DependentSpacingRule DEFAULT =
     new DependentSpacingRule(Trigger.HAS_LINE_FEEDS).registerData(Anchor.MIN_LINE_FEEDS, 1);
 
-  private final TObjectIntHashMap<Anchor> myData = new TObjectIntHashMap<Anchor>();
+  private final ObjectIntMap<Anchor> myData = ObjectMaps.newObjectIntHashMap();
 
   @Nonnull
   private final Trigger myTrigger;
@@ -63,7 +65,7 @@ public class DependentSpacingRule {
    * @see #getData(Anchor)
    */
   public DependentSpacingRule registerData(@Nonnull Anchor anchor, int data) {
-    myData.put(anchor, data);
+    myData.putInt(anchor, data);
     return this;
   }
 
@@ -91,6 +93,6 @@ public class DependentSpacingRule {
         "No data is registered for the dependent spacing rule %s. Registered: %s", anchor, myData
       ));
     }
-    return myData.get(anchor);
+    return myData.getInt(anchor);
   }
 }

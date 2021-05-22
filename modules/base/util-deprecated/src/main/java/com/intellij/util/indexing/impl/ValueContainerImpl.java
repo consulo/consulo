@@ -16,25 +16,22 @@
 
 package com.intellij.util.indexing.impl;
 
-import consulo.logging.Logger;
-import com.intellij.util.IntIntFunction;
 import com.intellij.util.SmartList;
 import com.intellij.util.indexing.ValueContainer;
 import com.intellij.util.indexing.containers.ChangeBufferingList;
 import com.intellij.util.indexing.containers.IntIdsIterator;
 import com.intellij.util.io.DataExternalizer;
 import com.intellij.util.io.DataInputOutputUtil;
+import consulo.logging.Logger;
 import gnu.trove.THashMap;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.io.DataInputStream;
 import java.io.DataOutput;
 import java.io.IOException;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.NoSuchElementException;
+import java.util.*;
+import java.util.function.IntUnaryOperator;
 
 /**
  * @author Eugene Zhuravlev
@@ -419,7 +416,7 @@ class ValueContainerImpl<Value> extends UpdatableValueContainer<Value> implement
       Map<Value, Object> mapping = asMapping();
       if (mapping == null) {
         Value oldMapping = asValue();
-        myInputIdMapping = mapping = new THashMap<>(2);
+        myInputIdMapping = mapping = new HashMap<>(2);
         mapping.put(oldMapping, myInputIdMappingValue);
         myInputIdMappingValue = null;
       }
@@ -468,14 +465,14 @@ class ValueContainerImpl<Value> extends UpdatableValueContainer<Value> implement
 
   static final int NUMBER_OF_VALUES_THRESHOLD = 20;
 
-  public void readFrom(@Nonnull DataInputStream stream, @Nonnull DataExternalizer<? extends Value> externalizer, @Nonnull IntIntFunction inputRemapping) throws IOException {
+  public void readFrom(@Nonnull DataInputStream stream, @Nonnull DataExternalizer<? extends Value> externalizer, @Nonnull IntUnaryOperator inputRemapping) throws IOException {
     FileId2ValueMapping<Value> mapping = null;
 
     while (stream.available() > 0) {
       final int valueCount = DataInputOutputUtil.readINT(stream);
       if (valueCount < 0) {
         // ChangeTrackingValueContainer marked inputId as invalidated, see ChangeTrackingValueContainer.saveTo
-        final int inputId = inputRemapping.fun(-valueCount);
+        final int inputId = inputRemapping.applyAsInt(-valueCount);
 
         if (mapping == null && size() > NUMBER_OF_VALUES_THRESHOLD) { // avoid O(NumberOfValues)
           mapping = new FileId2ValueMapping<>(this);
@@ -499,7 +496,7 @@ class ValueContainerImpl<Value> extends UpdatableValueContainer<Value> implement
 
           if (idCountOrSingleValue > 0) {
             addValue(idCountOrSingleValue, value);
-            if (mapping != null) mapping.associateFileIdToValue(inputRemapping.fun(idCountOrSingleValue), value);
+            if (mapping != null) mapping.associateFileIdToValue(inputRemapping.applyAsInt(idCountOrSingleValue), value);
           }
           else {
             idCountOrSingleValue = -idCountOrSingleValue;
@@ -508,7 +505,7 @@ class ValueContainerImpl<Value> extends UpdatableValueContainer<Value> implement
 
             for (int i = 0; i < idCountOrSingleValue; i++) {
               final int id = DataInputOutputUtil.readINT(stream);
-              int remappedInputId = inputRemapping.fun(prev + id);
+              int remappedInputId = inputRemapping.applyAsInt(prev + id);
               if (changeBufferingList != null) changeBufferingList.add(remappedInputId);
               else addValue(remappedInputId, value);
               if (mapping != null) mapping.associateFileIdToValue(remappedInputId, value);

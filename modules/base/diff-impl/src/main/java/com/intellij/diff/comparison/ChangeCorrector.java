@@ -20,9 +20,9 @@ import com.intellij.diff.comparison.iterables.DiffIterableUtil;
 import com.intellij.diff.comparison.iterables.FairDiffIterable;
 import com.intellij.diff.util.Range;
 import com.intellij.openapi.progress.ProgressIndicator;
-import gnu.trove.TIntArrayList;
-import javax.annotation.Nonnull;
+import consulo.util.collection.primitive.ints.IntList;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 import static com.intellij.diff.comparison.TrimUtil.expand;
@@ -147,16 +147,16 @@ abstract class ChangeCorrector {
 
   public static class SmartLineChangeCorrector extends ChangeCorrector {
     @Nonnull
-    private final TIntArrayList myIndexes1;
+    private final IntList myIndexes1;
     @Nonnull
-    private final TIntArrayList myIndexes2;
+    private final IntList myIndexes2;
     @Nonnull
     private final List<Line> myLines1;
     @Nonnull
     private final List<Line> myLines2;
 
-    public SmartLineChangeCorrector(@Nonnull TIntArrayList indexes1,
-                                    @Nonnull TIntArrayList indexes2,
+    public SmartLineChangeCorrector(@Nonnull IntList indexes1,
+                                    @Nonnull IntList indexes2,
                                     @Nonnull List<Line> lines1,
                                     @Nonnull List<Line> lines2,
                                     @Nonnull FairDiffIterable changes,

@@ -22,23 +22,22 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.Condition;
-import consulo.disposer.Disposer;
 import com.intellij.openapi.vcs.VcsBundle;
 import com.intellij.openapi.vcs.changes.*;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.vcsUtil.RollbackUtil;
-import gnu.trove.THashSet;
-import javax.annotation.Nonnull;
+import consulo.disposer.Disposer;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import javax.swing.tree.DefaultTreeModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 /**
  * @author max
@@ -70,7 +69,7 @@ public class RollbackChangesDialog extends DialogWrapper {
     }
 
     final ArrayList<Change> validChanges = new ArrayList<>();
-    final Set<LocalChangeList> lists = new THashSet<>();
+    final Set<LocalChangeList> lists = new HashSet<>();
     lists.addAll(manager.getInvolvedListsFilterChanges(changes, validChanges));
 
     new RollbackChangesDialog(project, ContainerUtil.newArrayList(lists), validChanges, refreshSynchronously, afterVcsRefreshInAwt).show();

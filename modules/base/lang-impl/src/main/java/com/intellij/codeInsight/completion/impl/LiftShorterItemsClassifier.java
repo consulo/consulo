@@ -18,20 +18,20 @@ package com.intellij.codeInsight.completion.impl;
 import com.intellij.codeInsight.completion.CompletionUtil;
 import com.intellij.codeInsight.lookup.Classifier;
 import com.intellij.codeInsight.lookup.LookupElement;
-import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.Pair;
 import com.intellij.util.Function;
 import com.intellij.util.ProcessingContext;
-import com.intellij.util.containers.*;
-import gnu.trove.THashSet;
+import com.intellij.util.containers.ContainerUtil;
+import com.intellij.util.containers.FilteringIterator;
+import com.intellij.util.containers.FlatteningIterator;
+import com.intellij.util.containers.MultiMap;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.*;
 
 import static com.intellij.util.containers.ContainerUtil.newIdentityHashMap;
 import static com.intellij.util.containers.ContainerUtil.newIdentityTroveSet;
-import static com.intellij.util.containers.ContainerUtil.newTroveMap;
 
 /**
  * @author peter
@@ -103,7 +103,7 @@ public class LiftShorterItemsClassifier extends Classifier<LookupElement> {
   }
 
   private Iterable<LookupElement> liftShorterElements(final Iterable<LookupElement> source,
-                                                      @Nullable final THashSet<LookupElement> lifted, final ProcessingContext context) {
+                                                      @Nullable final Set<LookupElement> lifted, final ProcessingContext context) {
     final Set<LookupElement> srcSet = newIdentityTroveSet(source instanceof Collection ? ((Collection)source).size() : myCount);
     ContainerUtil.addAll(srcSet, source);
 
@@ -117,7 +117,7 @@ public class LiftShorterItemsClassifier extends Classifier<LookupElement> {
   @Nonnull
   @Override
   public List<Pair<LookupElement, Object>> getSortingWeights(@Nonnull Iterable<LookupElement> items, @Nonnull ProcessingContext context) {
-    final THashSet<LookupElement> lifted = newIdentityTroveSet();
+    final Set<LookupElement> lifted = newIdentityTroveSet();
     Iterable<LookupElement> iterable = liftShorterElements(ContainerUtil.newArrayList(items), lifted, context);
     return ContainerUtil.map(iterable, new Function<LookupElement, Pair<LookupElement, Object>>() {
       @Override
@@ -163,12 +163,12 @@ public class LiftShorterItemsClassifier extends Classifier<LookupElement> {
     private final Set<LookupElement> mySrcSet;
     private final ProcessingContext myContext;
     private final Iterable<LookupElement> mySource;
-    private final THashSet<LookupElement> myLifted;
+    private final Set<LookupElement> myLifted;
 
     public LiftingIterable(Set<LookupElement> srcSet,
                            ProcessingContext context,
                            Iterable<LookupElement> source,
-                           THashSet<LookupElement> lifted) {
+                           Set<LookupElement> lifted) {
       mySrcSet = srcSet;
       myContext = context;
       mySource = source;
@@ -181,13 +181,8 @@ public class LiftShorterItemsClassifier extends Classifier<LookupElement> {
       final Set<Collection<LookupElement>> arraysProcessed = newIdentityTroveSet();
 
       final Iterable<LookupElement> next = myNext.classify(mySource, myContext);
-      Iterator<LookupElement> base = FilteringIterator.create(next.iterator(), new Condition<LookupElement>() {
-        @Override
-        public boolean value(LookupElement element) {
-          return processed.add(element);
-        }
-      });
-      return new FlatteningIterator<LookupElement, LookupElement>(base) {
+      Iterator<LookupElement> base = FilteringIterator.create(next.iterator(), element -> processed.add(element));
+      return new FlatteningIterator<>(base) {
         @Override
         protected Iterator<LookupElement> createValueIterator(LookupElement element) {
           List<LookupElement> shorter = addShorterElements(myToLift.get(element));
@@ -234,7 +229,7 @@ public class LiftShorterItemsClassifier extends Classifier<LookupElement> {
       @Override
       protected Map<K, Collection<V>> createMap() {
         if (identityKeys) return newIdentityHashMap();
-        return newTroveMap();
+        return new HashMap<K, Collection<V>>();
       }
 
       @Override

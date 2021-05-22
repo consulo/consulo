@@ -18,7 +18,6 @@ package com.intellij.util.xmlb;
 import com.intellij.util.xmlb.annotations.AbstractCollection;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.StringUtil;
-import gnu.trove.THashMap;
 import org.jdom.Content;
 import org.jdom.Element;
 import org.jdom.Text;
@@ -66,7 +65,7 @@ abstract class AbstractCollectionBinding extends Binding implements MultiNodeBin
         itemBindings = binding == null ? Collections.<Class<?>, Binding>emptyMap() : Collections.<Class<?>, Binding>singletonMap(itemType, binding);
       }
       else {
-        itemBindings = new THashMap<Class<?>, Binding>();
+        itemBindings = new HashMap<Class<?>, Binding>();
         if (binding != null) {
           itemBindings.put(itemType, binding);
         }

@@ -10,8 +10,6 @@ module consulo.util.serializer {
 
   requires org.slf4j;
 
-  requires gnu.trove;
-
   exports com.intellij.util.xmlb;
   exports com.intellij.util.xmlb.annotations;
 }

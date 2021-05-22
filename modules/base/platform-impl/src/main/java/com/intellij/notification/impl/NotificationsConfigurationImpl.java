@@ -18,24 +18,20 @@ package com.intellij.notification.impl;
 import com.intellij.notification.NotificationDisplayType;
 import com.intellij.notification.NotificationGroup;
 import com.intellij.notification.NotificationsConfiguration;
-import consulo.disposer.Disposable;
 import com.intellij.openapi.application.Application;
-import com.intellij.openapi.components.*;
+import com.intellij.openapi.components.PersistentStateComponent;
+import com.intellij.openapi.components.State;
+import com.intellij.openapi.components.Storage;
 import com.intellij.util.messages.MessageBus;
+import consulo.disposer.Disposable;
 import consulo.logging.Logger;
-import gnu.trove.THashMap;
-import gnu.trove.THashSet;
+import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import jakarta.inject.Inject;
-
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author spleaner
@@ -55,8 +51,8 @@ public class NotificationsConfigurationImpl extends NotificationsConfiguration i
     }
   };
 
-  private final Map<String, NotificationSettings> myIdToSettingsMap = new THashMap<String, NotificationSettings>();
-  private final Map<String, String> myToolWindowCapable = new THashMap<String, String>();
+  private final Map<String, NotificationSettings> myIdToSettingsMap = new HashMap<String, NotificationSettings>();
+  private final Map<String, String> myToolWindowCapable = new HashMap<String, String>();
   private final MessageBus myMessageBus;
 
   public boolean SHOW_BALLOONS = true;
@@ -82,7 +78,7 @@ public class NotificationsConfigurationImpl extends NotificationsConfiguration i
   }
 
   public synchronized NotificationSettings[] getAllSettings() {
-    Collection<NotificationSettings> settings = new THashSet<NotificationSettings>(myIdToSettingsMap.values());
+    Collection<NotificationSettings> settings = new HashSet<NotificationSettings>(myIdToSettingsMap.values());
     for (NotificationGroup group : NotificationGroup.getAllRegisteredGroups()) {
       settings.add(getSettings(group.getDisplayId()));
     }

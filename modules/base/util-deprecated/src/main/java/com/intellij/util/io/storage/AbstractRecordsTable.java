@@ -19,12 +19,13 @@
  */
 package com.intellij.util.io.storage;
 
-import consulo.disposer.Disposable;
 import com.intellij.openapi.Forceable;
-import consulo.logging.Logger;
 import com.intellij.util.io.PagePool;
 import com.intellij.util.io.RandomAccessDataFile;
-import gnu.trove.TIntArrayList;
+import consulo.disposer.Disposable;
+import consulo.logging.Logger;
+import consulo.util.collection.primitive.ints.IntList;
+import consulo.util.collection.primitive.ints.IntLists;
 import org.jetbrains.annotations.TestOnly;
 
 import java.io.File;
@@ -50,7 +51,7 @@ public abstract class AbstractRecordsTable implements Disposable, Forceable {
 
   protected final RandomAccessDataFile myStorage;
 
-  private TIntArrayList myFreeRecordsList = null;
+  private IntList myFreeRecordsList = null;
   private boolean myIsDirty = false;
 
   public AbstractRecordsTable(final File storageFilePath, final PagePool pool) throws IOException {
@@ -92,7 +93,7 @@ public abstract class AbstractRecordsTable implements Disposable, Forceable {
       return result;
     }
     else {
-      final int result = myFreeRecordsList.remove(myFreeRecordsList.size() - 1);
+      final int result = myFreeRecordsList.removeByIndex(myFreeRecordsList.size() - 1);
       assert getSize(result) == -1;
       setSize(result, 0);
       return result;
@@ -144,8 +145,8 @@ public abstract class AbstractRecordsTable implements Disposable, Forceable {
     }
   }
 
-  private TIntArrayList scanForFreeRecords() throws IOException {
-    final TIntArrayList result = new TIntArrayList();
+  private IntList scanForFreeRecords() throws IOException {
+    final IntList result = IntLists.newArrayList();
     for (int i = 1; i <= getRecordsCount(); i++) {
       if (getSize(i) == -1) {
         result.add(i);

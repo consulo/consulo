@@ -18,10 +18,9 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.indexing.DumbModeAccessType;
 import com.intellij.util.indexing.FileBasedIndex;
 import com.intellij.util.indexing.FileBasedIndexImpl;
-import gnu.trove.THashSet;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.*;
 
 public class IdeaIndexBasedFindInProjectSearchEngine implements FindInProjectSearchEngine {
@@ -52,7 +51,7 @@ public class IdeaIndexBasedFindInProjectSearchEngine implements FindInProjectSea
     MyFindInProjectSearcher(@Nonnull Project project, @Nonnull FindModel findModel) {
       myProject = project;
       myFindModel = findModel;
-      myFileIndex = ProjectFileIndex.SERVICE.getInstance(myProject);
+      myFileIndex = ProjectFileIndex.getInstance(myProject);
       myFileBasedIndex = (FileBasedIndexImpl)FileBasedIndex.getInstance();
       String stringToFind = findModel.getStringToFind();
 
@@ -78,10 +77,10 @@ public class IdeaIndexBasedFindInProjectSearchEngine implements FindInProjectSea
 
       final GlobalSearchScope scope = GlobalSearchScopeUtil.toGlobalSearchScope(FindInProjectUtil.getScopeFromModel(myProject, myFindModel), myProject);
 
-      final Set<Integer> keys = new THashSet<>();
+      final Set<Integer> keys = new HashSet<>();
       TrigramBuilder.processTrigrams(stringToFind, new TrigramBuilder.TrigramProcessor() {
         @Override
-        public boolean execute(int value) {
+        public boolean test(int value) {
           keys.add(value);
           return true;
         }
@@ -96,7 +95,7 @@ public class IdeaIndexBasedFindInProjectSearchEngine implements FindInProjectSea
         return Collections.unmodifiableCollection(hits);
       }
 
-      final Set<VirtualFile> resultFiles = new THashSet<>();
+      final Set<VirtualFile> resultFiles = new HashSet<>();
 
       PsiSearchHelper helper = PsiSearchHelper.getInstance(myProject);
       helper.processCandidateFilesForText(scope, UsageSearchContext.ANY, myFindModel.isCaseSensitive(), stringToFind, file -> {
@@ -137,7 +136,7 @@ public class IdeaIndexBasedFindInProjectSearchEngine implements FindInProjectSea
     private static boolean hasTrigrams(@Nonnull String text) {
       return !TrigramBuilder.processTrigrams(text, new TrigramBuilder.TrigramProcessor() {
         @Override
-        public boolean execute(int value) {
+        public boolean test(int value) {
           return false;
         }
       });

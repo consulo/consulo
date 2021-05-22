@@ -60,9 +60,9 @@ import com.intellij.util.ui.tree.TreeUtil;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
+import consulo.util.collection.primitive.ints.IntList;
+import consulo.util.collection.primitive.ints.IntLists;
 import consulo.util.dataholder.Key;
-import gnu.trove.THashSet;
-import gnu.trove.TIntArrayList;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.TestOnly;
 import org.jetbrains.ide.PooledThreadExecutor;
@@ -423,7 +423,7 @@ public class UsageViewImpl implements UsageViewEx {
     // for each node synchronize its Swing children (javax.swing.tree.DefaultMutableTreeNode.children)
     // and its model children (com.intellij.usages.impl.GroupNode.getChildren())
     // by issuing corresponding javax.swing.tree.DefaultMutableTreeNode.insert() and then calling javax.swing.tree.DefaultTreeModel.nodesWereInserted()
-    TIntArrayList indicesToFire = new TIntArrayList();
+    IntList indicesToFire = IntLists.newArrayList();
     List<Node> nodesToFire = new ArrayList<>();
     for (Node parentNode : insertedUnder) {
       List<Node> swingChildren = ((GroupNode)parentNode).getSwingChildren();
@@ -452,7 +452,7 @@ public class UsageViewImpl implements UsageViewEx {
         }
       }
 
-      myModel.fireTreeNodesInserted(parentNode, myModel.getPathToRoot(parentNode), indicesToFire.toNativeArray(), nodesToFire.toArray(new Node[0]));
+      myModel.fireTreeNodesInserted(parentNode, myModel.getPathToRoot(parentNode), indicesToFire.toArray(), nodesToFire.toArray(new Node[0]));
       nodesToFire.clear();
       indicesToFire.clear();
     }
@@ -465,7 +465,7 @@ public class UsageViewImpl implements UsageViewEx {
     }
     for (Map.Entry<Node, Collection<Node>> entry : changed) {
       Node parentNode = entry.getKey();
-      Set<Node> childrenToUpdate = new THashSet<>(entry.getValue());
+      Set<Node> childrenToUpdate = new HashSet<>(entry.getValue());
 
       for (int i = 0; i < parentNode.getChildCount(); i++) {
         Node childNode = (Node)parentNode.getChildAt(i);
@@ -475,7 +475,7 @@ public class UsageViewImpl implements UsageViewEx {
         }
       }
 
-      myModel.fireTreeNodesChanged(parentNode, myModel.getPathToRoot(parentNode), indicesToFire.toNativeArray(), nodesToFire.toArray(new Node[0]));
+      myModel.fireTreeNodesChanged(parentNode, myModel.getPathToRoot(parentNode), indicesToFire.toArray(), nodesToFire.toArray(new Node[0]));
       nodesToFire.clear();
       indicesToFire.clear();
     }
@@ -1584,7 +1584,7 @@ public class UsageViewImpl implements UsageViewEx {
 
   @Nonnull
   private Set<Usage> getReadOnlyUsages() {
-    final Set<Usage> result = new THashSet<>();
+    final Set<Usage> result = new HashSet<>();
     final Set<Map.Entry<Usage, UsageNode>> usages = myUsageNodes.entrySet();
     for (Map.Entry<Usage, UsageNode> entry : usages) {
       Usage usage = entry.getKey();
@@ -1599,7 +1599,7 @@ public class UsageViewImpl implements UsageViewEx {
   @Nonnull
   private Set<VirtualFile> getReadOnlyUsagesFiles() {
     Set<Usage> usages = getReadOnlyUsages();
-    Set<VirtualFile> result = new THashSet<>();
+    Set<VirtualFile> result = new HashSet<>();
     for (Usage usage : usages) {
       if (usage instanceof UsageInFile) {
         UsageInFile usageInFile = (UsageInFile)usage;
@@ -1623,7 +1623,7 @@ public class UsageViewImpl implements UsageViewEx {
   @Override
   @Nonnull
   public Set<Usage> getExcludedUsages() {
-    Set<Usage> result = new THashSet<>();
+    Set<Usage> result = new HashSet<>();
     for (Map.Entry<Usage, UsageNode> entry : myUsageNodes.entrySet()) {
       UsageNode node = entry.getValue();
       Usage usage = entry.getKey();
@@ -1675,7 +1675,7 @@ public class UsageViewImpl implements UsageViewEx {
       return Collections.emptySet();
     }
 
-    Set<Usage> usages = new THashSet<>();
+    Set<Usage> usages = new HashSet<>();
     for (TreePath selectionPath : selectionPaths) {
       DefaultMutableTreeNode node = (DefaultMutableTreeNode)selectionPath.getLastPathComponent();
       collectUsages(node, usages);
@@ -1730,7 +1730,7 @@ public class UsageViewImpl implements UsageViewEx {
     TreePath[] selectionPaths = myTree.getSelectionPaths();
     if (selectionPaths == null) return null;
 
-    Set<UsageTarget> targets = new THashSet<>();
+    Set<UsageTarget> targets = new HashSet<>();
     for (TreePath selectionPath : selectionPaths) {
       Object lastPathComponent = selectionPath.getLastPathComponent();
       if (lastPathComponent instanceof UsageTargetNode) {

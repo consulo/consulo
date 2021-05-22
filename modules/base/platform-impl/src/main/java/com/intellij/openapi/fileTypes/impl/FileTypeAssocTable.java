@@ -8,11 +8,11 @@ import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.io.FileUtilRt;
 import com.intellij.util.ArrayUtilRt;
 import com.intellij.util.text.CharSequenceHashingStrategy;
-import gnu.trove.THashMap;
+import consulo.util.collection.Maps;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.*;
 
 /**
@@ -28,11 +28,11 @@ public class FileTypeAssocTable<T> {
                              @Nonnull Map<? extends CharSequence, ? extends T> exactFileNameMappings,
                              @Nonnull Map<? extends CharSequence, T> exactFileNameAnyCaseMappings,
                              @Nonnull List<? extends Pair<FileNameMatcher, T>> matchingMappings) {
-    myExtensionMappings = new THashMap<>(Math.max(10, extensionMappings.size()), 0.5f, CharSequenceHashingStrategy.CASE_INSENSITIVE);
+    myExtensionMappings = Maps.newHashMap(Math.max(10, extensionMappings.size()), 0.5f, CharSequenceHashingStrategy.CASE_INSENSITIVE);
     myExtensionMappings.putAll(extensionMappings);
-    myExactFileNameMappings = new THashMap<>(Math.max(10, exactFileNameMappings.size()), 0.5f, CharSequenceHashingStrategy.CASE_SENSITIVE);
+    myExactFileNameMappings = Maps.newHashMap(Math.max(10, exactFileNameMappings.size()), 0.5f, CharSequenceHashingStrategy.CASE_SENSITIVE);
     myExactFileNameMappings.putAll(exactFileNameMappings);
-    myExactFileNameAnyCaseMappings = new THashMap<>(Math.max(10, exactFileNameAnyCaseMappings.size()), 0.5f, CharSequenceHashingStrategy.CASE_INSENSITIVE);
+    myExactFileNameAnyCaseMappings = Maps.newHashMap(Math.max(10, exactFileNameAnyCaseMappings.size()), 0.5f, CharSequenceHashingStrategy.CASE_INSENSITIVE);
     myExactFileNameAnyCaseMappings.putAll(exactFileNameAnyCaseMappings);
     myMatchingMappings = new ArrayList<>(matchingMappings);
   }

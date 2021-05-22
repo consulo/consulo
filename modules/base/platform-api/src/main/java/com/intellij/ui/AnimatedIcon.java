@@ -4,21 +4,18 @@ package com.intellij.ui;
 import com.intellij.icons.AllIcons;
 import com.intellij.util.concurrency.EdtScheduledExecutorService;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.containers.SmartHashSet;
 import com.intellij.util.ui.UIUtil;
 import consulo.awt.TargetAWT;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
 import consulo.util.dataholder.Key;
-import gnu.trove.TObjectIdentityHashingStrategy;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static java.awt.AlphaComposite.SrcAtop;
@@ -156,7 +153,7 @@ public class AnimatedIcon implements Icon, Image {
 
 
   private final Frame[] frames;
-  private final Set<Component> requested = new SmartHashSet<>(new TObjectIdentityHashingStrategy<>());
+  private final Set<Component> requested = Collections.newSetFromMap(new IdentityHashMap<>());
   private long time;
   private int index;
 

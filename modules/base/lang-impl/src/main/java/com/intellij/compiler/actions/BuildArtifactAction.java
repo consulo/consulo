@@ -47,7 +47,8 @@ import com.intellij.packaging.impl.compiler.ArtifactsWorkspaceSettings;
 import com.intellij.ui.popup.list.ListPopupImpl;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.ui.image.Image;
-import gnu.trove.TIntArrayList;
+import consulo.util.collection.primitive.ints.IntList;
+import consulo.util.collection.primitive.ints.IntLists;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -82,7 +83,7 @@ public class BuildArtifactAction extends DumbAwareAction {
       items.add(0, new ArtifactPopupItem(null, "All Artifacts", Image.empty(16)));
     }
     Set<Artifact> selectedArtifacts = new HashSet<Artifact>(ArtifactsWorkspaceSettings.getInstance(project).getArtifactsToBuild());
-    TIntArrayList selectedIndices = new TIntArrayList();
+    IntList selectedIndices = IntLists.newArrayList();
     if (Comparing.haveEqualElements(artifacts, selectedArtifacts) && selectedArtifacts.size() > 1) {
       selectedIndices.add(0);
       selectedArtifacts.clear();
@@ -97,7 +98,7 @@ public class BuildArtifactAction extends DumbAwareAction {
     }
 
     final ChooseArtifactStep step = new ChooseArtifactStep(items, artifacts.get(0), project);
-    step.setDefaultOptionIndices(selectedIndices.toNativeArray());
+    step.setDefaultOptionIndices(selectedIndices.toArray());
 
     final ListPopupImpl popup = (ListPopupImpl)JBPopupFactory.getInstance().createListPopup(step);
     final KeyStroke editKeyStroke = KeymapUtil.getKeyStroke(CommonShortcuts.getEditSource());

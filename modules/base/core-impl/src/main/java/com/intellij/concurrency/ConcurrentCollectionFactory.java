@@ -15,33 +15,35 @@
  */
 package com.intellij.concurrency;
 
-import gnu.trove.TObjectHashingStrategy;
+import consulo.util.collection.HashingStrategy;
+import consulo.util.collection.Maps;
+import consulo.util.collection.Sets;
 import org.jetbrains.annotations.Contract;
-import javax.annotation.Nonnull;
 
-import java.util.Collections;
+import javax.annotation.Nonnull;
 import java.util.Set;
 import java.util.concurrent.ConcurrentMap;
 
 /**
- * Creates various concurrent collections (e.g maps, sets) which can be customized with {@link TObjectHashingStrategy}
+ * Creates various concurrent collections (e.g maps, sets) which can be customized with {@link HashingStrategy}
  */
+@Deprecated
 public class ConcurrentCollectionFactory {
   @Nonnull
   @Contract(pure = true)
-  public static <T, V> ConcurrentMap<T, V> createMap(@Nonnull TObjectHashingStrategy<T> hashStrategy) {
-    return new ConcurrentHashMap<>(hashStrategy);
+  public static <T, V> ConcurrentMap<T, V> createMap(@Nonnull HashingStrategy<T> hashStrategy) {
+    return Maps.newConcurrentHashMap(hashStrategy);
   }
 
   @Nonnull
   @Contract(pure = true)
-  public static <T, V> ConcurrentMap<T, V> createMap(int initialCapacity, float loadFactor, int concurrencyLevel, @Nonnull TObjectHashingStrategy<T> hashStrategy) {
-    return new ConcurrentHashMap<>(initialCapacity, loadFactor, concurrencyLevel, hashStrategy);
+  public static <T, V> ConcurrentMap<T, V> createMap(int initialCapacity, float loadFactor, int concurrencyLevel, @Nonnull HashingStrategy<T> hashStrategy) {
+    return Maps.newConcurrentHashMap(initialCapacity, loadFactor, concurrencyLevel, hashStrategy);
   }
 
   @Nonnull
   @Contract(pure = true)
-  public static <T> Set<T> createConcurrentSet(@Nonnull TObjectHashingStrategy<T> hashStrategy) {
-    return Collections.newSetFromMap(createMap(hashStrategy));
+  public static <T> Set<T> createConcurrentSet(@Nonnull HashingStrategy<T> hashStrategy) {
+    return Sets.newConcurrentHashSet(hashStrategy);
   }
 }

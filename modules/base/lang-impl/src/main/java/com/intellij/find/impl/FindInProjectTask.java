@@ -74,7 +74,7 @@ class FindInProjectTask {
   private final ProgressIndicator myProgress;
   @Nullable
   private final Module myModule;
-  private final Set<VirtualFile> myLargeFiles = Collections.synchronizedSet(new THashSet<>());
+  private final Set<VirtualFile> myLargeFiles = Collections.synchronizedSet(new HashSet<>());
   private final Set<? extends VirtualFile> myFilesToScanInitially;
   private final AtomicLong myTotalFilesSize = new AtomicLong();
   private final

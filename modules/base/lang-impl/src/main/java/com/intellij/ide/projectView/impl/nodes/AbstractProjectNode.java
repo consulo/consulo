@@ -28,7 +28,6 @@ import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import consulo.logging.Logger;
-import gnu.trove.THashMap;
 
 import javax.annotation.Nonnull;
 import java.util.*;
@@ -41,7 +40,7 @@ public abstract class AbstractProjectNode extends ProjectViewNode<Project> {
   }
 
   protected Collection<AbstractTreeNode> modulesAndGroups(Module[] modules) {
-    Map<String, List<Module>> groups = new THashMap<>();
+    Map<String, List<Module>> groups = new HashMap<>();
     List<Module> nonGroupedModules = new ArrayList<>(Arrays.asList(modules));
     for (final Module module : modules) {
       final String[] path = ModuleManager.getInstance(getProject()).getModuleGroupPath(module);

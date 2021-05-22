@@ -13,7 +13,6 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ReadAction;
 import com.intellij.openapi.components.PathMacroManager;
 import com.intellij.openapi.diagnostic.Attachment;
-import consulo.logging.Logger;
 import com.intellij.openapi.diagnostic.RuntimeExceptionWithAttachments;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.module.Module;
@@ -23,7 +22,6 @@ import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.project.IndexNotReadyException;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectUtilCore;
-import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.NullableFactory;
 import com.intellij.openapi.util.Segment;
 import com.intellij.openapi.util.registry.Registry;
@@ -38,12 +36,13 @@ import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.util.ConcurrencyUtil;
 import com.intellij.util.Consumer;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.containers.StringInterner;
-import gnu.trove.THashMap;
+import com.intellij.util.containers.Interner;
+import consulo.logging.Logger;
+import consulo.util.dataholder.Key;
 import org.jdom.Element;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.io.File;
 import java.util.*;
 import java.util.concurrent.ConcurrentMap;
@@ -77,9 +76,9 @@ public class RefManagerImpl extends RefManager {
   private final LinkedHashSet<RefGraphAnnotator> myGraphAnnotators = new LinkedHashSet<>();
   private GlobalInspectionContext myContext;
 
-  private final Map<Key, RefManagerExtension> myExtensions = new THashMap<>();
+  private final Map<Key, RefManagerExtension> myExtensions = new HashMap<>();
   private final Map<Language, RefManagerExtension> myLanguageExtensions = new HashMap<>();
-  private final StringInterner myNameInterner = new StringInterner();
+  private final Interner<String> myNameInterner = Interner.createStringInterner();
 
   public RefManagerImpl(@Nonnull Project project, @Nullable AnalysisScope scope, @Nonnull GlobalInspectionContext context) {
     myProject = project;

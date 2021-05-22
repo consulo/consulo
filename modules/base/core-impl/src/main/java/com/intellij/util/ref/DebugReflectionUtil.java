@@ -5,11 +5,12 @@ import com.intellij.concurrency.ConcurrentCollectionFactory;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.PairProcessor;
 import com.intellij.util.containers.FList;
+import consulo.util.collection.HashingStrategy;
+import consulo.util.collection.primitive.ints.IntSet;
+import consulo.util.collection.primitive.ints.IntSets;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolderEx;
 import consulo.util.lang.reflect.unsafe.UnsafeDelegate;
-import gnu.trove.TIntHashSet;
-import gnu.trove.TObjectHashingStrategy;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -21,10 +22,10 @@ import java.util.*;
 import java.util.function.Predicate;
 
 public final class DebugReflectionUtil {
-  private static final Map<Class<?>, Field[]> allFields = Collections.synchronizedMap(ConcurrentCollectionFactory.createMap(new TObjectHashingStrategy<Class<?>>() {
+  private static final Map<Class<?>, Field[]> allFields = Collections.synchronizedMap(ConcurrentCollectionFactory.createMap(new HashingStrategy<Class<?>>() {
     // default strategy seems to be too slow
     @Override
-    public int computeHashCode(@Nullable Class<?> aClass) {
+    public int hashCode(@Nullable Class<?> aClass) {
       return aClass == null ? 0 : aClass.getName().hashCode();
     }
 
@@ -85,7 +86,7 @@ public final class DebugReflectionUtil {
                                     @Nonnull Class<?> lookFor,
                                     @Nonnull Predicate<Object> shouldExamineValue,
                                     @Nonnull PairProcessor<Object, ? super BackLink> leakProcessor) {
-    TIntHashSet visited = new TIntHashSet(100);
+    IntSet visited = IntSets.newHashSet(100);
     Deque<BackLink> toVisit = new ArrayDeque<>(100);
 
     for (Map.Entry<Object, String> entry : startRoots.entrySet()) {

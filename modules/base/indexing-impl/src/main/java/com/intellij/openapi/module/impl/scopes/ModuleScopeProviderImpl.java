@@ -18,13 +18,12 @@ package com.intellij.openapi.module.impl.scopes;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleScopeProvider;
 import com.intellij.psi.search.GlobalSearchScope;
-import consulo.util.collection.ConcurrentIntObjectMap;
-import consulo.util.collection.Maps;
+import consulo.util.collection.primitive.ints.ConcurrentIntObjectMap;
+import consulo.util.collection.primitive.ints.IntMaps;
 import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
-
-import jakarta.inject.Singleton;
 
 /**
  * Author: dmitrylomov
@@ -32,7 +31,7 @@ import jakarta.inject.Singleton;
 @Singleton
 public class ModuleScopeProviderImpl implements ModuleScopeProvider {
   private final Module myModule;
-  private final ConcurrentIntObjectMap<GlobalSearchScope> myScopeCache = Maps.newConcurrentIntObjectHashMap();
+  private final ConcurrentIntObjectMap<GlobalSearchScope> myScopeCache = IntMaps.newConcurrentIntObjectHashMap();
   private ModuleWithDependentsTestScope myModuleTestsWithDependentsScope;
 
   @Inject

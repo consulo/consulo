@@ -34,12 +34,12 @@ public abstract class StateCache<T> {
     public static final FileKeyDescriptor INSTANCE = new FileKeyDescriptor();
 
     @Override
-    public int getHashCode(File value) {
+    public int hashCode(File value) {
       return FileUtil.fileHashCode(value);
     }
 
     @Override
-    public boolean isEqual(File val1, File val2) {
+    public boolean equals(File val1, File val2) {
       return FileUtil.filesEqual(val1, val2);
     }
 

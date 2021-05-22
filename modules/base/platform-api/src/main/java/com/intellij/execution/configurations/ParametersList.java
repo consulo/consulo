@@ -23,10 +23,9 @@ import com.intellij.util.ArrayUtil;
 import com.intellij.util.EnvironmentUtil;
 import com.intellij.util.execution.ParametersListUtil;
 import consulo.logging.Logger;
-import gnu.trove.THashMap;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
 import java.util.regex.Matcher;
@@ -62,7 +61,7 @@ public class ParametersList implements Cloneable {
 
   @Nonnull
   public Map<String, String> getProperties() {
-    Map<String, String> result = new THashMap<String, String>();
+    Map<String, String> result = new HashMap<String, String>();
     for (String parameter : myParameters) {
       Matcher matcher = PROPERTY_PATTERN.matcher(parameter);
       if (matcher.matches()) {

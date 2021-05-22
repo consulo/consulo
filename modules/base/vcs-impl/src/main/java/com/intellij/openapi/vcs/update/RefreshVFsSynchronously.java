@@ -22,11 +22,11 @@ import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.containers.ContainerUtil;
-import gnu.trove.THashSet;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.io.File;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 
 public class RefreshVFsSynchronously {
@@ -176,8 +176,8 @@ public class RefreshVFsSynchronously {
   }
 
   private static class FilesToRefreshCollector implements UpdateFilesHelper.Callback {
-    private final Collection<File> myToRefresh = new THashSet<File>();
-    private final Collection<File> myToRefreshDeletedOrReplaced = new THashSet<File>();
+    private final Collection<File> myToRefresh = new HashSet<File>();
+    private final Collection<File> myToRefreshDeletedOrReplaced = new HashSet<File>();
 
     @Override
     public void onFile(String filePath, String groupId) {

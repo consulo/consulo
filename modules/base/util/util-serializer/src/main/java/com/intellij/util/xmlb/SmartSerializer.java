@@ -16,15 +16,15 @@
 package com.intellij.util.xmlb;
 
 import consulo.util.lang.ThreeState;
-import gnu.trove.TObjectFloatHashMap;
 import org.jdom.Element;
 
 import javax.annotation.Nonnull;
 import java.util.LinkedHashSet;
+import java.util.Map;
 
 public final class SmartSerializer {
   private LinkedHashSet<String> mySerializedAccessorNameTracker;
-  private TObjectFloatHashMap<String> myOrderedBindings;
+  private Map<String, Float> myOrderedBindings;
   private final SerializationFilter mySerializationFilter;
 
   public SmartSerializer(boolean trackSerializedNames, boolean useSkipEmptySerializationFilter) {

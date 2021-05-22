@@ -15,10 +15,8 @@
  */
 package com.intellij.util;
 
-import gnu.trove.THashMap;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.*;
 
 /**
@@ -46,7 +44,7 @@ public class SmartFMap<K,V> implements Map<K,V> {
 
   private static Object doPlus(Object oldMap, Object key, Object value, boolean inPlace) {
     if (oldMap instanceof Map) {
-      Map newMap = inPlace ? (Map)oldMap : new THashMap((Map)oldMap);
+      Map newMap = inPlace ? (Map)oldMap : new HashMap((Map)oldMap);
       newMap.put(key, value);
       return newMap;
     }
@@ -63,7 +61,7 @@ public class SmartFMap<K,V> implements Map<K,V> {
       }
     }
     if (array.length == 2 * ARRAY_THRESHOLD) {
-      THashMap map = new THashMap();
+      Map map = new HashMap();
       for (int i = 0; i < array.length; i += 2) {
         map.put(array[i], array[i + 1]);
       }
@@ -80,7 +78,7 @@ public class SmartFMap<K,V> implements Map<K,V> {
 
   public SmartFMap<K, V> minus(@Nonnull K key) {
     if (myMap instanceof Map) {
-      THashMap<K, V> newMap = new THashMap<K, V>((Map<K, V>)myMap);
+      Map<K, V> newMap = new HashMap<K, V>((Map<K, V>)myMap);
       newMap.remove(key);
       if (newMap.size() <= ARRAY_THRESHOLD) {
         Object[] newArray = new Object[newMap.size() * 2];

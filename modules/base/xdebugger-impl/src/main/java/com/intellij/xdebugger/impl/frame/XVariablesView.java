@@ -20,7 +20,6 @@ import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataProvider;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.util.Comparing;
-import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.containers.ContainerUtil;
@@ -35,16 +34,13 @@ import com.intellij.xdebugger.impl.ui.DebuggerUIUtil;
 import com.intellij.xdebugger.impl.ui.tree.XDebuggerTree;
 import com.intellij.xdebugger.impl.ui.tree.nodes.XValueContainerNode;
 import com.intellij.xdebugger.impl.ui.tree.nodes.XValueNodeImpl;
-import gnu.trove.THashMap;
+import consulo.util.dataholder.Key;
 import gnu.trove.TObjectLongHashMap;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 
 /**
  * @author nik
@@ -141,7 +137,7 @@ public class XVariablesView extends XVariablesViewBase implements DataProvider {
   }
 
   public static class InlineVariablesInfo {
-    private final Map<Pair<VirtualFile, Integer>, Set<Entry>> myData = new THashMap<>();
+    private final Map<Pair<VirtualFile, Integer>, Set<Entry>> myData = new HashMap<>();
     private final TObjectLongHashMap<VirtualFile> myTimestamps = new ObjectLongHashMap<>();
 
     @Nullable

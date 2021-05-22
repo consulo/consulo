@@ -22,12 +22,12 @@ import com.intellij.openapi.ui.Namer;
 import com.intellij.openapi.util.Cloner;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Factory;
-import com.intellij.psi.codeStyle.arrangement.std.StdArrangementRuleAliasToken;
 import com.intellij.psi.codeStyle.arrangement.std.ArrangementStandardSettingsManager;
-import gnu.trove.Equality;
+import com.intellij.psi.codeStyle.arrangement.std.StdArrangementRuleAliasToken;
+import consulo.util.collection.HashingStrategy;
 import org.jetbrains.annotations.Nls;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.Set;
 
@@ -68,7 +68,7 @@ public class ArrangementRuleAliasesListEditor extends NamedItemsListEditor<StdAr
       return new StdArrangementRuleAliasToken(original.getName(), original.getDefinitionRules());
     }
   };
-  private static final Equality<StdArrangementRuleAliasToken> COMPARER = new Equality<StdArrangementRuleAliasToken>() {
+  private static final HashingStrategy<StdArrangementRuleAliasToken> COMPARER = new HashingStrategy<>() {
     @Override
     public boolean equals(StdArrangementRuleAliasToken o1, StdArrangementRuleAliasToken o2) {
       return Comparing.equal(o1.getId(), o2.getId());

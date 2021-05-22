@@ -16,36 +16,38 @@
 package consulo.util.dataholder.keyFMap;
 
 import consulo.util.collection.ArrayUtil;
+import consulo.util.collection.primitive.ints.IntMaps;
+import consulo.util.collection.primitive.ints.IntObjectMap;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.internal.KeyRegistry;
-import gnu.trove.TIntObjectHashMap;
 
 import javax.annotation.Nonnull;
 
 import static consulo.util.dataholder.keyFMap.ArrayBackedFMap.getKeysByIndices;
 
-class MapBackedFMap extends TIntObjectHashMap<Object> implements KeyFMap {
+class MapBackedFMap implements KeyFMap {
   private static final KeyRegistry ourRegistry = KeyRegistry.ourInstance;
 
+  private final IntObjectMap<Object> myMap;
+
   private MapBackedFMap(@Nonnull MapBackedFMap oldMap, final int exclude) {
-    super(oldMap.size());
-    oldMap.forEachEntry((key, val) -> {
-      if (key != exclude) put(key, val);
+    myMap = IntMaps.newIntObjectHashMap(oldMap.size());
+    oldMap.myMap.forEach((key, val) -> {
+      if (key != exclude) myMap.put(key, val);
       assert key >= 0 : key;
-      return true;
     });
     assert size() > ArrayBackedFMap.ARRAY_THRESHOLD;
   }
 
   MapBackedFMap(@Nonnull int[] keys, int newKey, @Nonnull Object[] values, @Nonnull Object newValue) {
-    super(keys.length + 1);
+    myMap = IntMaps.newIntObjectHashMap(keys.length + 1);
     for (int i = 0; i < keys.length; i++) {
       int key = keys[i];
       Object value = values[i];
-      put(key, value);
+      myMap.put(key, value);
       assert key >= 0 : key;
     }
-    put(newKey, newValue);
+    myMap.put(newKey, newValue);
     assert newKey >= 0 : newKey;
     assert size() > ArrayBackedFMap.ARRAY_THRESHOLD;
   }
@@ -55,11 +57,10 @@ class MapBackedFMap extends TIntObjectHashMap<Object> implements KeyFMap {
   public <V> KeyFMap plus(@Nonnull Key<V> key, @Nonnull V value) {
     int keyCode = key.hashCode();
     assert keyCode >= 0 : key;
-    @SuppressWarnings("unchecked")
-    V oldValue = (V)get(keyCode);
+    @SuppressWarnings("unchecked") V oldValue = (V)myMap.get(keyCode);
     if (value == oldValue) return this;
     MapBackedFMap newMap = new MapBackedFMap(this, -1);
-    newMap.put(keyCode, value);
+    newMap.myMap.put(keyCode, value);
     return newMap;
   }
 
@@ -68,12 +69,12 @@ class MapBackedFMap extends TIntObjectHashMap<Object> implements KeyFMap {
   public KeyFMap minus(@Nonnull Key<?> key) {
     int oldSize = size();
     int keyCode = key.hashCode();
-    if (!containsKey(keyCode)) {
+    if (!myMap.containsKey(keyCode)) {
       return this;
     }
     if (oldSize == ArrayBackedFMap.ARRAY_THRESHOLD + 1) {
-      int[] keys = keys();
-      Object[] values = getValues();
+      int[] keys = myMap.keys();
+      Object[] values = myMap.values().toArray(Object[]::new);
       int i = ArrayUtil.indexOf(keys, keyCode);
       keys = ArrayUtil.remove(keys, i);
       values = ArrayUtil.remove(values, i);
@@ -85,21 +86,29 @@ class MapBackedFMap extends TIntObjectHashMap<Object> implements KeyFMap {
   @Override
   public <V> V get(@Nonnull Key<V> key) {
     //noinspection unchecked
-    return (V)get(key.hashCode());
+    return (V)myMap.get(key.hashCode());
   }
 
   @Nonnull
   @Override
   public Key[] getKeys() {
-    return getKeysByIndices(keys());
+    return getKeysByIndices(myMap.keys());
+  }
+
+  public int size() {
+    return myMap.size();
+  }
+
+  @Override
+  public boolean isEmpty() {
+    return myMap.isEmpty();
   }
 
   @Override
   public String toString() {
     final StringBuilder s = new StringBuilder();
-    forEachEntry((key, value) -> {
+    myMap.forEach((key, value) -> {
       s.append(s.length() == 0 ? "" : ", ").append(ourRegistry.getKeyByIndex(key)).append(" -> ").append(value);
-      return true;
     });
     return "[" + s.toString() + "]";
   }

@@ -22,7 +22,8 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.application.ApplicationBundle;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.util.IconUtil;
-import gnu.trove.TIntArrayList;
+import consulo.util.collection.primitive.ints.IntList;
+
 import javax.annotation.Nonnull;
 
 /**
@@ -45,7 +46,7 @@ public class AddArrangementRuleAction extends AbstractArrangementRuleAction impl
     }
 
     control.hideEditor();
-    TIntArrayList rows = control.getSelectedModelRows();
+    IntList rows = control.getSelectedModelRows();
     ArrangementMatchingRulesModel model = control.getModel();
     int rowToEdit;
     if (rows.size() == 1) {

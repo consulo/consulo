@@ -25,7 +25,6 @@ import com.intellij.ui.paint.PaintUtil;
 import com.intellij.util.ImageLoader;
 import com.intellij.util.ReflectionUtil;
 import com.intellij.util.RetinaImage;
-import com.intellij.util.containers.hash.LinkedHashMap;
 import com.intellij.util.ui.ImageUtil;
 import com.intellij.util.ui.JBImageIcon;
 import com.intellij.util.ui.JBUI;
@@ -34,6 +33,7 @@ import consulo.desktop.util.awt.UIModificationTracker;
 import consulo.logging.Logger;
 import consulo.ui.desktop.internal.image.DesktopLazyImageImpl;
 import consulo.ui.style.StyleManager;
+import consulo.util.collection.impl.map.LinkedHashMap;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.TestOnly;
 
@@ -488,7 +488,7 @@ public class AWTIconLoader {
     private class MyScaledIconsCache {
       private static final int SCALED_ICONS_CACHE_LIMIT = 5;
 
-      private final Map<Couple<Double>, SoftReference<Icon>> scaledIconsCache = Collections.synchronizedMap(new LinkedHashMap<Couple<Double>, SoftReference<Icon>>(SCALED_ICONS_CACHE_LIMIT) {
+      private final Map<Couple<Double>, SoftReference<Icon>> scaledIconsCache = Collections.synchronizedMap(new LinkedHashMap<>(SCALED_ICONS_CACHE_LIMIT) {
         @Override
         public boolean removeEldestEntry(Map.Entry<Couple<Double>, SoftReference<Icon>> entry) {
           return size() > SCALED_ICONS_CACHE_LIMIT;

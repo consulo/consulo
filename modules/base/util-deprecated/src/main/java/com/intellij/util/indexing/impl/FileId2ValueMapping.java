@@ -15,11 +15,12 @@
  */
 package com.intellij.util.indexing.impl;
 
-import com.intellij.util.SmartList;
 import com.intellij.util.indexing.ValueContainer;
-import gnu.trove.TIntArrayList;
+import consulo.util.collection.primitive.ints.IntList;
+import consulo.util.collection.primitive.ints.IntLists;
 import gnu.trove.TIntObjectHashMap;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -34,7 +35,7 @@ class FileId2ValueMapping<Value> {
     id2ValueMap = new TIntObjectHashMap<Value>();
     valueContainer = _valueContainer;
 
-    TIntArrayList removedFileIdList = null;
+    IntList removedFileIdList = null;
     List<Value> removedValueList = null;
 
     for (final ValueContainer.ValueIterator<Value> valueIterator = _valueContainer.getValueIterator(); valueIterator.hasNext();) {
@@ -45,8 +46,8 @@ class FileId2ValueMapping<Value> {
         Value previousValue = id2ValueMap.put(id, value);
         if (previousValue != null) {  // delay removal of duplicated id -> value mapping since it will affect valueIterator we are using
           if (removedFileIdList == null) {
-            removedFileIdList = new TIntArrayList();
-            removedValueList = new SmartList<Value>();
+            removedFileIdList = IntLists.newArrayList();
+            removedValueList = new ArrayList<Value>();
           }
           removedFileIdList.add(id);
           removedValueList.add(previousValue);

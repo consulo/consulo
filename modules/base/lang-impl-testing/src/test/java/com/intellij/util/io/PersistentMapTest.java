@@ -6,7 +6,7 @@ import com.intellij.testFramework.PlatformTestUtil;
 import com.intellij.util.ThrowableRunnable;
 import com.intellij.util.containers.IntObjectCache;
 import com.intellij.util.io.storage.Storage;
-import gnu.trove.THashSet;
+import consulo.util.collection.Sets;
 import junit.framework.TestCase;
 
 import java.io.*;
@@ -431,7 +431,7 @@ public abstract class PersistentMapTest extends TestCase {
       }
 
       public Collection<String> read(DataInput in) throws IOException {
-        final Set<String> result = new THashSet<String>(FileUtil.PATH_HASHING_STRATEGY);
+        final Set<String> result = Sets.newHashSet(FileUtil.PATH_HASHING_STRATEGY);
         final DataInputStream stream = (DataInputStream)in;
         while (stream.available() > 0) {
           final String str = IOUtil.readString(stream);
@@ -446,12 +446,7 @@ public abstract class PersistentMapTest extends TestCase {
     for (int j = 0; j < 7; ++j) {
       for (int i = 0; i < 2000; i++) {
         final int finalJ = j;
-        map.appendData("abc" + i, new PersistentHashMap.ValueDataAppender() {
-          @Override
-          public void append(DataOutput out) throws IOException {
-            IOUtil.writeString(StringUtil.repeat("0123456789", 10000 + finalJ - 3), out);
-          }
-        });
+        map.appendData("abc" + i, out -> IOUtil.writeString(StringUtil.repeat("0123456789", 10000 + finalJ - 3), out));
       }
     }
 

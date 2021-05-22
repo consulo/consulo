@@ -54,7 +54,7 @@ public abstract class ZipHandler extends ArchiveHandler {
     }
 
     @Override
-    public boolean isEqual(ZipHandler val1, ZipHandler val2) {
+    public boolean equals(ZipHandler val1, ZipHandler val2) {
       return val1 == val2; // reference equality to handle different jars for different ZipHandlers on the same path
     }
   };

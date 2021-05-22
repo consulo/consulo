@@ -20,10 +20,11 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.CharTable;
 import com.intellij.util.text.CharArrayUtil;
 import com.intellij.util.text.StringFactory;
-import gnu.trove.TIntObjectHashMap;
+import consulo.util.collection.primitive.ints.IntMaps;
+import consulo.util.collection.primitive.ints.IntObjectMap;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 
@@ -34,14 +35,18 @@ public class CharTableImpl implements CharTable {
   private static final int INTERN_THRESHOLD = 40; // 40 or more characters long tokens won't be interned.
 
   private static final StringHashToCharSequencesMap STATIC_ENTRIES = newStaticSet();
-  private final StringHashToCharSequencesMap entries = new StringHashToCharSequencesMap(10, 0.9f);
+  private final StringHashToCharSequencesMap entries = new StringHashToCharSequencesMap();
 
   @Nonnull
   @Override
   public CharSequence intern(@Nonnull final CharSequence text) {
     CharSequence result;
-    if (text.length() > INTERN_THRESHOLD) result = createSequence(text);
-    else result = doIntern(text);
+    if (text.length() > INTERN_THRESHOLD) {
+      result = createSequence(text);
+    }
+    else {
+      result = doIntern(text);
+    }
 
     return result;
   }
@@ -54,7 +59,7 @@ public class CharTableImpl implements CharTable {
       return interned;
     }
 
-    synchronized(entries) {
+    synchronized (entries) {
       // We need to create separate string just to prevent referencing all character data when original is string or char sequence over string
       return entries.getOrAddSubSequenceWithHashCode(hashCode, text, startOffset, endOffset);
     }
@@ -69,9 +74,15 @@ public class CharTableImpl implements CharTable {
   @Override
   public CharSequence intern(@Nonnull final CharSequence baseText, final int startOffset, final int endOffset) {
     CharSequence result;
-    if (endOffset - startOffset == baseText.length()) result = intern(baseText);
-    else if (endOffset - startOffset > INTERN_THRESHOLD) result = createSequence(baseText, startOffset, endOffset);
-    else result = doIntern(baseText, startOffset, endOffset);
+    if (endOffset - startOffset == baseText.length()) {
+      result = intern(baseText);
+    }
+    else if (endOffset - startOffset > INTERN_THRESHOLD) {
+      result = createSequence(baseText, startOffset, endOffset);
+    }
+    else {
+      result = doIntern(baseText, startOffset, endOffset);
+    }
 
     return result;
   }
@@ -97,85 +108,85 @@ public class CharTableImpl implements CharTable {
   }
 
   public static void staticIntern(@Nonnull String text) {
-    synchronized(STATIC_ENTRIES) {
+    synchronized (STATIC_ENTRIES) {
       STATIC_ENTRIES.add(text);
     }
   }
 
   private static StringHashToCharSequencesMap newStaticSet() {
-    final StringHashToCharSequencesMap r = new StringHashToCharSequencesMap(10, 0.9f);
-    r.add("==" );
-    r.add("!=" );
-    r.add("||" );
-    r.add("++" );
-    r.add("--" );
+    final StringHashToCharSequencesMap r = new StringHashToCharSequencesMap();
+    r.add("==");
+    r.add("!=");
+    r.add("||");
+    r.add("++");
+    r.add("--");
 
-    r.add("<" );
-    r.add("<=" );
-    r.add("<<=" );
-    r.add("<<" );
-    r.add(">" );
-    r.add("&" );
-    r.add("&&" );
+    r.add("<");
+    r.add("<=");
+    r.add("<<=");
+    r.add("<<");
+    r.add(">");
+    r.add("&");
+    r.add("&&");
 
-    r.add("+=" );
-    r.add("-=" );
-    r.add("*=" );
-    r.add("/=" );
-    r.add("&=" );
-    r.add("|=" );
-    r.add("^=" );
-    r.add("%=" );
+    r.add("+=");
+    r.add("-=");
+    r.add("*=");
+    r.add("/=");
+    r.add("&=");
+    r.add("|=");
+    r.add("^=");
+    r.add("%=");
 
-    r.add("("   );
-    r.add(")"   );
-    r.add("{"   );
-    r.add("}"   );
-    r.add("["   );
-    r.add("]"   );
-    r.add(";"   );
-    r.add(","   );
-    r.add("..." );
-    r.add("."   );
+    r.add("(");
+    r.add(")");
+    r.add("{");
+    r.add("}");
+    r.add("[");
+    r.add("]");
+    r.add(";");
+    r.add(",");
+    r.add("...");
+    r.add(".");
 
-    r.add("=" );
-    r.add("!" );
-    r.add("~" );
-    r.add("?" );
-    r.add(":" );
-    r.add("+" );
-    r.add("-" );
-    r.add("*" );
-    r.add("/" );
-    r.add("|" );
-    r.add("^" );
-    r.add("%" );
-    r.add("@" );
+    r.add("=");
+    r.add("!");
+    r.add("~");
+    r.add("?");
+    r.add(":");
+    r.add("+");
+    r.add("-");
+    r.add("*");
+    r.add("/");
+    r.add("|");
+    r.add("^");
+    r.add("%");
+    r.add("@");
 
-    r.add(" " );
-    r.add("  " );
-    r.add("   " );
-    r.add("    " );
-    r.add("     " );
-    r.add("      " );
-    r.add("       " );
-    r.add("        " );
-    r.add("         " );
-    r.add("          " );
-    r.add("           " );
-    r.add("            " );
-    r.add("             " );
-    r.add("              " );
-    r.add("               " );
-    r.add("\n" );
-    r.add("\n  " );
-    r.add("\n    " );
-    r.add("\n      " );
-    r.add("\n        " );
-    r.add("\n          " );
-    r.add("\n            " );
-    r.add("\n              " );
-    r.add("\n                " );
+    r.add(" ");
+    r.add("  ");
+    r.add("   ");
+    r.add("    ");
+    r.add("     ");
+    r.add("      ");
+    r.add("       ");
+    r.add("        ");
+    r.add("         ");
+    r.add("          ");
+    r.add("           ");
+    r.add("            ");
+    r.add("             ");
+    r.add("              ");
+    r.add("               ");
+    r.add("\n");
+    r.add("\n  ");
+    r.add("\n    ");
+    r.add("\n      ");
+    r.add("\n        ");
+    r.add("\n          ");
+    r.add("\n            ");
+    r.add("\n              ");
+    r.add("\n                ");
 
     r.add("<");
     r.add(">");
@@ -217,9 +228,10 @@ public class CharTableImpl implements CharTable {
     }
   }
 
-  private static class StringHashToCharSequencesMap extends TIntObjectHashMap<Object> {
-    StringHashToCharSequencesMap(int capacity, float loadFactor) {
-      super(capacity, loadFactor);
+  private static class StringHashToCharSequencesMap {
+    private final IntObjectMap<Object> myMap = IntMaps.newIntObjectHashMap();
+
+    StringHashToCharSequencesMap() {
     }
 
     CharSequence get(CharSequence sequence, int startOffset, int endOffset) {
@@ -227,21 +239,23 @@ public class CharTableImpl implements CharTable {
     }
 
     CharSequence getSubSequenceWithHashCode(int hashCode, CharSequence sequence, int startOffset, int endOffset) {
-      Object o = get(hashCode);
+      Object o = myMap.get(hashCode);
       if (o == null) return null;
       if (o instanceof CharSequence) {
         if (charSequenceSubSequenceEquals((CharSequence)o, sequence, startOffset, endOffset)) {
           return (CharSequence)o;
         }
         return null;
-      } else if (o instanceof CharSequence[]) {
-        for(CharSequence cs:(CharSequence[])o) {
+      }
+      else if (o instanceof CharSequence[]) {
+        for (CharSequence cs : (CharSequence[])o) {
           if (charSequenceSubSequenceEquals(cs, sequence, startOffset, endOffset)) {
             return cs;
           }
         }
-      } else {
-        assert false:o.getClass();
+      }
+      else {
+        assert false : o.getClass();
       }
       return null;
     }
@@ -249,7 +263,7 @@ public class CharTableImpl implements CharTable {
     private static boolean charSequenceSubSequenceEquals(CharSequence cs, CharSequence baseSequence, int startOffset, int endOffset) {
       if (cs.length() != endOffset - startOffset) return false;
       if (cs == baseSequence && startOffset == 0) return true;
-      for(int i = 0, len = cs.length(); i < len; ++i) {
+      for (int i = 0, len = cs.length(); i < len; ++i) {
         if (cs.charAt(i) != baseSequence.charAt(startOffset + i)) return false;
       }
       return true;
@@ -269,33 +283,33 @@ public class CharTableImpl implements CharTable {
     }
 
     private CharSequence getOrAddSubSequenceWithHashCode(int hashCode, CharSequence sequence, int startOffset, int endOffset) {
-      int index = index(hashCode);
       String addedSequence = null;
 
-      if (index < 0) {
-        put(hashCode, addedSequence = createSequence(sequence, startOffset, endOffset));
-      } else {
-        Object value = _values[index];
-        if (value instanceof CharSequence) {
-          CharSequence existingSequence = (CharSequence)value;
-          if (charSequenceSubSequenceEquals(existingSequence, sequence, startOffset, endOffset)) {
-            return existingSequence;
-          }
-          put(hashCode, new CharSequence[] {existingSequence, addedSequence = createSequence(sequence, startOffset, endOffset)});
-        } else if (value instanceof CharSequence[]) {
-          CharSequence[] existingSequenceArray = (CharSequence[])value;
-          for(CharSequence cs:existingSequenceArray) {
-            if (charSequenceSubSequenceEquals(cs, sequence, startOffset, endOffset)) {
-              return cs;
-            }
-          }
-          CharSequence[] newSequenceArray = new CharSequence[existingSequenceArray.length + 1];
-          System.arraycopy(existingSequenceArray, 0, newSequenceArray, 0, existingSequenceArray.length);
-          newSequenceArray[existingSequenceArray.length] = addedSequence = createSequence(sequence, startOffset, endOffset);
-          put(hashCode, newSequenceArray);
-        } else {
-          assert false:value.getClass();
+      Object value = myMap.get(hashCode);
+      if (value == null) {
+        myMap.put(hashCode, addedSequence = createSequence(sequence, startOffset, endOffset));
+      }
+      else if (value instanceof CharSequence) {
+        CharSequence existingSequence = (CharSequence)value;
+        if (charSequenceSubSequenceEquals(existingSequence, sequence, startOffset, endOffset)) {
+          return existingSequence;
         }
+        myMap.put(hashCode, new CharSequence[]{existingSequence, addedSequence = createSequence(sequence, startOffset, endOffset)});
+      }
+      else if (value instanceof CharSequence[]) {
+        CharSequence[] existingSequenceArray = (CharSequence[])value;
+        for (CharSequence cs : existingSequenceArray) {
+          if (charSequenceSubSequenceEquals(cs, sequence, startOffset, endOffset)) {
+            return cs;
+          }
+        }
+        CharSequence[] newSequenceArray = new CharSequence[existingSequenceArray.length + 1];
+        System.arraycopy(existingSequenceArray, 0, newSequenceArray, 0, existingSequenceArray.length);
+        newSequenceArray[existingSequenceArray.length] = addedSequence = createSequence(sequence, startOffset, endOffset);
+        myMap.put(hashCode, newSequenceArray);
+      }
+      else {
+        assert false : value.getClass();
       }
       return addedSequence;
     }

@@ -49,10 +49,9 @@ import com.intellij.xml.util.XmlStringUtil;
 import consulo.logging.Logger;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolderEx;
-import gnu.trove.THashSet;
-import javax.annotation.Nonnull;
 import org.jetbrains.annotations.TestOnly;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -268,7 +267,7 @@ public class GeneralHighlightingPass extends ProgressableTextEditorHighlightingP
                                     @Nonnull final List<HighlightInfo> insideResult,
                                     @Nonnull final List<? super HighlightInfo> outsideResult,
                                     final boolean forceHighlightParents) {
-    final Set<PsiElement> skipParentsSet = new THashSet<>();
+    final Set<PsiElement> skipParentsSet = new HashSet<>();
 
     // TODO - add color scheme to holder
     final HighlightInfoHolder holder = createInfoHolder(getFile());

@@ -18,10 +18,10 @@ package com.intellij.util.indexing;
 
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.impl.cache.impl.id.IdIndexEntry;
-import gnu.trove.THashMap;
-import gnu.trove.TIntIntHashMap;
-import gnu.trove.TIntIntProcedure;
+import consulo.util.collection.primitive.ints.IntIntMap;
+import consulo.util.collection.primitive.ints.IntMaps;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -29,18 +29,11 @@ import java.util.Map;
  *         Date: Feb 6, 2008
  */
 public class IdDataConsumer {
-  private final TIntIntHashMap myResult = new TIntIntHashMap();
+  private final IntIntMap myResult = IntMaps.newIntIntHashMap();
 
   public Map<IdIndexEntry, Integer> getResult() {
-    final Map<IdIndexEntry, Integer> result = new THashMap<IdIndexEntry, Integer>(myResult.size());
-    myResult.forEachEntry(new TIntIntProcedure() {
-      @Override
-      public boolean execute(final int key, final int value) {
-        result.put(new IdIndexEntry(key), value);
-        return true;
-      }
-    });
-
+    final Map<IdIndexEntry, Integer> result = new HashMap<>(myResult.size());
+    myResult.forEach((key, value) -> result.put(new IdIndexEntry(key), value));
     return result;
   }
   
@@ -65,10 +58,10 @@ public class IdDataConsumer {
 
   private void addOccurrence(int hashcode, int occurrenceMask) {
     if (occurrenceMask != 0) {
-      final int old = myResult.get(hashcode);
+      final int old = myResult.getInt(hashcode);
       int v = old | occurrenceMask;
       if (v != old) {
-        myResult.put(hashcode, v);
+        myResult.putInt(hashcode, v);
       }
     }
   }

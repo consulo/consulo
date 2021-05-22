@@ -32,6 +32,8 @@ import com.intellij.util.io.KeyDescriptor;
 import com.intellij.vcs.log.VcsFullCommitDetails;
 import com.intellij.vcs.log.impl.FatalErrorHandler;
 import com.intellij.vcs.log.util.PersistentUtil;
+import consulo.util.collection.primitive.ints.IntSet;
+import consulo.util.collection.primitive.ints.IntSets;
 import gnu.trove.TIntHashSet;
 
 import javax.annotation.Nonnull;
@@ -90,8 +92,8 @@ public class VcsLogFullDetailsIndex<T> implements Disposable {
   }
 
   @Nonnull
-  public TIntHashSet getCommitsWithAnyKey(@Nonnull Set<Integer> keys) throws StorageException {
-    TIntHashSet result = new TIntHashSet();
+  public IntSet getCommitsWithAnyKey(@Nonnull Set<Integer> keys) throws StorageException {
+    IntSet result = IntSets.newHashSet();
 
     for (Integer key : keys) {
       iterateCommitIds(key, result::add);
@@ -101,7 +103,7 @@ public class VcsLogFullDetailsIndex<T> implements Disposable {
   }
 
   @Nonnull
-  public TIntHashSet getCommitsWithAllKeys(@Nonnull Collection<Integer> keys) throws StorageException {
+  public IntSet getCommitsWithAllKeys(@Nonnull Collection<Integer> keys) throws StorageException {
     return InvertedIndexUtil.collectInputIdsContainingAllKeys(myMapReduceIndex, keys, (k) -> {
       ProgressManager.checkCanceled();
       return true;

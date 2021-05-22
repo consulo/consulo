@@ -31,7 +31,7 @@ import com.intellij.util.io.DataOutputStream;
 import com.intellij.util.io.*;
 import consulo.container.boot.ContainerPathManager;
 import consulo.logging.Logger;
-import consulo.util.collection.ConcurrentIntObjectMap;
+import consulo.util.collection.primitive.ints.ConcurrentIntObjectMap;
 import gnu.trove.TIntHashSet;
 import org.jetbrains.annotations.TestOnly;
 
@@ -197,7 +197,7 @@ public final class VfsAwareMapIndexStorage<Key, Value> extends MapIndexStorage<K
         }
         final TIntHashSet finalHashMaskSet = hashMaskSet;
         return myMap.processKeys(key -> {
-          if (!finalHashMaskSet.contains(myKeyDescriptor.getHashCode(key))) return true;
+          if (!finalHashMaskSet.contains(myKeyDescriptor.hashCode(key))) return true;
           return processor.process(key);
         });
       }
@@ -283,7 +283,7 @@ public final class VfsAwareMapIndexStorage<Key, Value> extends MapIndexStorage<K
   public void addValue(final Key key, final int inputId, final Value value) throws StorageException {
     try {
       if (myKeyHashToVirtualFileMapping != null) {
-        withLock(() -> myKeyHashToVirtualFileMapping.append(new int[]{myKeyDescriptor.getHashCode(key), inputId}, IntPairInArrayKeyDescriptor.INSTANCE));
+        withLock(() -> myKeyHashToVirtualFileMapping.append(new int[]{myKeyDescriptor.hashCode(key), inputId}, IntPairInArrayKeyDescriptor.INSTANCE));
         int lastScannedId = myLastScannedId;
         if (lastScannedId != 0) { // we have write lock
           ourInvalidatedSessionIds.cacheOrGet(lastScannedId, Boolean.TRUE);
@@ -312,12 +312,12 @@ public final class VfsAwareMapIndexStorage<Key, Value> extends MapIndexStorage<K
     }
 
     @Override
-    public int getHashCode(int[] value) {
+    public int hashCode(int[] value) {
       return value[0] * 31 + value[1];
     }
 
     @Override
-    public boolean isEqual(int[] val1, int[] val2) {
+    public boolean equals(int[] val1, int[] val2) {
       return val1[0] == val2[0] && val1[1] == val2[1];
     }
   }

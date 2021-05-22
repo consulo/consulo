@@ -19,18 +19,16 @@ package com.intellij.execution.impl;
 import com.intellij.execution.*;
 import com.intellij.execution.configurations.*;
 import com.intellij.execution.runners.ProgramRunner;
-import consulo.logging.Logger;
 import com.intellij.openapi.extensions.ExtensionException;
 import com.intellij.openapi.util.*;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.SmartList;
-import gnu.trove.THashMap;
-import gnu.trove.THashSet;
+import consulo.logging.Logger;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.*;
 
 /**
@@ -86,12 +84,12 @@ public class RunnerAndConfigurationSettingsImpl implements JDOMExternalizable, C
   private RunConfiguration myConfiguration;
   private boolean myIsTemplate;
 
-  private final Map<ProgramRunner, RunnerSettings> myRunnerSettings = new THashMap<ProgramRunner, RunnerSettings>();
+  private final Map<ProgramRunner, RunnerSettings> myRunnerSettings = new HashMap<ProgramRunner, RunnerSettings>();
   private List<Element> myUnloadedRunnerSettings;
   // to avoid changed files
-  private final Set<String> myLoadedRunnerSettings = new THashSet<String>();
+  private final Set<String> myLoadedRunnerSettings = new HashSet<String>();
 
-  private final Map<ProgramRunner, ConfigurationPerRunnerSettings> myConfigurationPerRunnerSettings = new THashMap<ProgramRunner, ConfigurationPerRunnerSettings>();
+  private final Map<ProgramRunner, ConfigurationPerRunnerSettings> myConfigurationPerRunnerSettings = new HashMap<ProgramRunner, ConfigurationPerRunnerSettings>();
   private List<Element> myUnloadedConfigurationPerRunnerSettings;
 
   private boolean myTemporary;
@@ -384,7 +382,7 @@ public class RunnerAndConfigurationSettingsImpl implements JDOMExternalizable, C
     myConfiguration.checkConfiguration();
     if (myConfiguration instanceof RunConfigurationBase) {
       final RunConfigurationBase runConfigurationBase = (RunConfigurationBase) myConfiguration;
-      Set<ProgramRunner> runners = new THashSet<ProgramRunner>();
+      Set<ProgramRunner> runners = new HashSet<ProgramRunner>();
       runners.addAll(myRunnerSettings.keySet());
       runners.addAll(myConfigurationPerRunnerSettings.keySet());
       for (ProgramRunner runner : runners) {

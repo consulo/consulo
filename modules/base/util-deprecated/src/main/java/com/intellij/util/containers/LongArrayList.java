@@ -15,8 +15,6 @@
  */
 package com.intellij.util.containers;
 
-import consulo.util.lang.DeprecatedMethodException;
-
 @Deprecated // use TLongArrayList instead
 public class LongArrayList implements Cloneable {
   private long[] myData;
@@ -24,7 +22,6 @@ public class LongArrayList implements Cloneable {
 
   public LongArrayList(int initialCapacity) {
     myData = new long[initialCapacity];
-    DeprecatedMethodException.report("Use gnu.trove.TLongArrayList instead");
   }
 
   public LongArrayList() {

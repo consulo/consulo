@@ -18,14 +18,13 @@ package com.intellij.application.options;
 import com.intellij.openapi.components.PathMacroMap;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.ArrayUtil;
-import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.ContainerUtilRt;
-import gnu.trove.TObjectIntHashMap;
+import consulo.util.collection.primitive.objects.ObjectIntMap;
+import consulo.util.collection.primitive.objects.ObjectMaps;
 import org.jetbrains.annotations.NonNls;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
@@ -44,7 +43,7 @@ public class ReplacePathToMacroMap extends PathMacroMap {
   static {
     List<String> protocols = new ArrayList<String>();
     protocols.add("file");
-    for (PathMacroExpendableProtocolBean bean : PathMacroExpendableProtocolBean.EP_NAME.getExtensions()) {
+    for (PathMacroExpendableProtocolBean bean : PathMacroExpendableProtocolBean.EP_NAME.getExtensionList()) {
       protocols.add(bean.protocol);
     }
     PROTOCOLS = ArrayUtil.toStringArray(protocols);
@@ -185,23 +184,13 @@ public class ReplacePathToMacroMap extends PathMacroMap {
     if (myPathsIndex == null || myPathsIndex.size() != myMacroMap.size()) {
       List<Map.Entry<String, String>> entries = new ArrayList<Map.Entry<String, String>>(myMacroMap.entrySet());
 
-      final TObjectIntHashMap<Map.Entry<String, String>> weights = new TObjectIntHashMap<Map.Entry<String, String>>();
+      final ObjectIntMap<Map.Entry<String, String>> weights = ObjectMaps.newObjectIntHashMap();
       for (Map.Entry<String, String> entry : entries) {
-        weights.put(entry, getIndex(entry) * 512 + stripPrefix(entry.getKey()));
+        weights.putInt(entry, getIndex(entry) * 512 + stripPrefix(entry.getKey()));
       }
 
-      ContainerUtil.sort(entries, new Comparator<Map.Entry<String, String>>() {
-        @Override
-        public int compare(final Map.Entry<String, String> o1, final Map.Entry<String, String> o2) {
-          return weights.get(o2) - weights.get(o1);
-        }
-      });
-      myPathsIndex = ContainerUtil.map2List(entries, new Function<Map.Entry<String, String>, String>() {
-        @Override
-        public String fun(Map.Entry<String, String> entry) {
-          return entry.getKey();
-        }
-      });
+      ContainerUtil.sort(entries, (o1, o2) -> weights.getInt(o2) - weights.getInt(o1));
+      myPathsIndex = ContainerUtil.map2List(entries, Map.Entry::getKey);
     }
     return myPathsIndex;
   }

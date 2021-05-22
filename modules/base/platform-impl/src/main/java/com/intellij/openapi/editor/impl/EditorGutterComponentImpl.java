@@ -62,6 +62,11 @@ import consulo.awt.TargetAWT;
 import consulo.ui.color.ColorValue;
 import consulo.ui.image.ImageEffects;
 import consulo.ui.style.StandardColors;
+import consulo.util.collection.Sets;
+import consulo.util.collection.primitive.ints.IntList;
+import consulo.util.collection.primitive.ints.IntLists;
+import consulo.util.collection.primitive.ints.IntMaps;
+import consulo.util.collection.primitive.ints.IntObjectMap;
 import consulo.util.dataholder.Key;
 import gnu.trove.*;
 import org.jetbrains.annotations.NonNls;
@@ -82,6 +87,7 @@ import java.awt.geom.Rectangle2D;
 import java.util.List;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.IntUnaryOperator;
 
 /**
  * Gutter content (left to right):
@@ -127,7 +133,7 @@ class EditorGutterComponentImpl extends EditorGutterComponentEx implements Mouse
   private final DesktopEditorImpl myEditor;
   private final FoldingAnchorsOverlayStrategy myAnchorsDisplayStrategy;
   @Nullable
-  private TIntObjectHashMap<List<GutterMark>> myLineToGutterRenderers;
+  private IntObjectMap<List<GutterMark>> myLineToGutterRenderers;
   private boolean myLineToGutterRenderersCacheForLogicalLines;
   private int myStartIconAreaWidth = START_ICON_AREA_WIDTH.get();
   private int myIconsAreaWidth;
@@ -137,20 +143,20 @@ class EditorGutterComponentImpl extends EditorGutterComponentEx implements Mouse
   private List<FoldRegion> myActiveFoldRegions = Collections.emptyList();
   private int myTextAnnotationGuttersSize;
   private int myTextAnnotationExtraSize;
-  final TIntArrayList myTextAnnotationGutterSizes = new TIntArrayList();
+  final IntList myTextAnnotationGutterSizes = IntLists.newArrayList();
   final ArrayList<TextAnnotationGutterProvider> myTextAnnotationGutters = new ArrayList<>();
   private boolean myGapAfterAnnotations;
   private final Map<TextAnnotationGutterProvider, EditorGutterAction> myProviderToListener = new HashMap<>();
   private String myLastGutterToolTip;
   @Nonnull
-  private TIntFunction myLineNumberConvertor = value -> value;
+  private IntUnaryOperator myLineNumberConvertor = value -> value;
   @Nullable
-  private TIntFunction myAdditionalLineNumberConvertor;
+  private IntUnaryOperator myAdditionalLineNumberConvertor;
   private boolean myShowDefaultGutterPopup = true;
   private boolean myCanCloseAnnotations = true;
   @Nullable
   private ActionGroup myCustomGutterPopupGroup;
-  private final TIntObjectHashMap<ColorValue> myTextFgColors = new TIntObjectHashMap<>();
+  private final IntObjectMap<ColorValue> myTextFgColors = IntMaps.newIntObjectHashMap();
   private boolean myPaintBackground = true;
   private boolean myLeftFreePaintersAreaShown;
   private boolean myRightFreePaintersAreaShown;
@@ -804,7 +810,7 @@ class EditorGutterComponentImpl extends EditorGutterComponentEx implements Mouse
 
   private void buildGutterRenderersCache() {
     myLineToGutterRenderersCacheForLogicalLines = logicalLinesMatchVisualOnes();
-    myLineToGutterRenderers = new TIntObjectHashMap<>();
+    myLineToGutterRenderers = IntMaps.newIntObjectHashMap();
     processRangeHighlighters(0, myEditor.getDocument().getTextLength(), highlighter -> {
       GutterMark renderer = highlighter.getGutterIconRenderer();
       if (renderer == null) {
@@ -1359,9 +1365,9 @@ class EditorGutterComponentImpl extends EditorGutterComponentEx implements Mouse
     }
   }
 
-  private int getMaxLineNumber(@Nonnull TIntFunction convertor) {
+  private int getMaxLineNumber(@Nonnull IntUnaryOperator convertor) {
     for (int i = endLineNumber(); i >= 0; i--) {
-      int number = convertor.execute(i);
+      int number = convertor.applyAsInt(i);
       if (number >= 0) {
         return number;
       }
@@ -1829,7 +1835,7 @@ class EditorGutterComponentImpl extends EditorGutterComponentEx implements Mouse
   public void closeTextAnnotations(@Nonnull Collection<? extends TextAnnotationGutterProvider> annotations) {
     if (!myCanCloseAnnotations) return;
 
-    THashSet<TextAnnotationGutterProvider> toClose = new THashSet<>(annotations, ContainerUtil.identityStrategy());
+    Set<TextAnnotationGutterProvider> toClose = Sets.newHashSet(annotations, ContainerUtil.identityStrategy());
     for (int i = myTextAnnotationGutters.size() - 1; i >= 0; i--) {
       TextAnnotationGutterProvider provider = myTextAnnotationGutters.get(i);
       if (toClose.contains(provider)) {

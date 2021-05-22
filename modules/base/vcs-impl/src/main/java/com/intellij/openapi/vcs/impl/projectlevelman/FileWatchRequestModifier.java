@@ -15,14 +15,17 @@
  */
 package com.intellij.openapi.vcs.impl.projectlevelman;
 
-import consulo.logging.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vcs.VcsDirectoryMapping;
 import com.intellij.openapi.vfs.LocalFileSystem;
-import com.intellij.util.containers.ContainerUtil;
+import consulo.logging.Logger;
+import consulo.util.collection.Maps;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import static com.intellij.util.containers.ContainerUtil.newHashMap;
 import static com.intellij.util.containers.ContainerUtil.newLinkedList;
@@ -56,7 +59,7 @@ public class FileWatchRequestModifier implements Runnable {
     final List<VcsDirectoryMapping> deleted = newLinkedList(myDirectoryMappingWatches.keySet());
     deleted.removeAll(copy);
 
-    final Map<String, VcsDirectoryMapping> toAdd = ContainerUtil.newTroveMap(FileUtil.PATH_HASHING_STRATEGY);
+    final Map<String, VcsDirectoryMapping> toAdd = Maps.newHashMap(FileUtil.PATH_HASHING_STRATEGY);
     for (VcsDirectoryMapping mapping : added) {
       if (!mapping.isDefaultMapping()) {
         toAdd.put(FileUtil.toCanonicalPath(mapping.getDirectory()), mapping);

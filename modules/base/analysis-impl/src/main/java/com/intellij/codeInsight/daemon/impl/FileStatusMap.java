@@ -11,6 +11,8 @@ import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.RangeMarker;
 import com.intellij.openapi.project.Project;
+import consulo.util.collection.primitive.ints.IntMaps;
+import consulo.util.collection.primitive.ints.IntObjectMap;
 import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.util.text.StringUtil;
@@ -87,7 +89,7 @@ public final class FileStatusMap implements Disposable {
     private boolean defensivelyMarked; // file marked dirty without knowledge of specific dirty region. Subsequent markScopeDirty can refine dirty scope, not extend it
     private boolean wolfPassFinished;
     // if contains the special value "WHOLE_FILE_MARKER" then the corresponding range is (0, document length)
-    private final TIntObjectHashMap<RangeMarker> dirtyScopes = new TIntObjectHashMap<>();
+    private final IntObjectMap<RangeMarker> dirtyScopes = IntMaps.newIntObjectHashMap();
     private boolean errorFound;
 
     private FileStatus(@Nonnull Project project) {

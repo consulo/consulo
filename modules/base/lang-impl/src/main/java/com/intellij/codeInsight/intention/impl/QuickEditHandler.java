@@ -63,7 +63,6 @@ import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.Convertor;
-import com.intellij.util.containers.hash.LinkedHashMap;
 import com.intellij.util.text.CharArrayUtil;
 import com.intellij.util.ui.UIUtil;
 import consulo.disposer.Disposer;
@@ -76,6 +75,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -452,7 +452,7 @@ public class QuickEditHandler extends DocumentAdapter implements Disposable {
     final PsiFile origPsiFile = PsiDocumentManager.getInstance(myProject).getPsiFile(myOrigDocument);
     String newText = myNewDocument.getText();
     // prepare guarded blocks
-    LinkedHashMap<String, String> replacementMap = new LinkedHashMap<String, String>();
+    Map<String, String> replacementMap = new LinkedHashMap<>();
     int count = 0;
     for (RangeMarker o : ContainerUtil.reverse(((DocumentEx)myNewDocument).getGuardedBlocks())) {
       String replacement = o.getUserData(REPLACEMENT_KEY);

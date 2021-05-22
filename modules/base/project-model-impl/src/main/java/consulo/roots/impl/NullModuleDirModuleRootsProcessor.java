@@ -20,7 +20,7 @@ import com.intellij.openapi.roots.ModuleRootModel;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.Processor;
 import consulo.roots.ContentFolderTypeProvider;
-import gnu.trove.TObjectIntHashMap;
+import consulo.util.collection.primitive.objects.ObjectIntMap;
 
 import javax.annotation.Nonnull;
 
@@ -35,8 +35,8 @@ public class NullModuleDirModuleRootsProcessor extends ModuleRootsProcessor {
   }
 
   @Override
-  public boolean containsFile(@Nonnull TObjectIntHashMap<VirtualFile> roots, @Nonnull VirtualFile virtualFile) {
-    return roots.contains(virtualFile);
+  public boolean containsFile(@Nonnull ObjectIntMap<VirtualFile> roots, @Nonnull VirtualFile virtualFile) {
+    return roots.containsKey(virtualFile);
   }
 
   @Override

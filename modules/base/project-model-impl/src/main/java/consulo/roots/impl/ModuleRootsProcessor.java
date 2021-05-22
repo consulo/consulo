@@ -24,7 +24,7 @@ import com.intellij.util.Processor;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.annotation.DeprecationInfo;
 import consulo.roots.ContentFolderTypeProvider;
-import gnu.trove.TObjectIntHashMap;
+import consulo.util.collection.primitive.objects.ObjectIntMap;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -48,7 +48,7 @@ public abstract class ModuleRootsProcessor {
 
   public abstract boolean canHandle(@Nonnull ModuleRootModel moduleRootModel);
 
-  public abstract boolean containsFile(@Nonnull TObjectIntHashMap<VirtualFile> roots, @Nonnull VirtualFile virtualFile);
+  public abstract boolean containsFile(@Nonnull ObjectIntMap<VirtualFile> roots, @Nonnull VirtualFile virtualFile);
 
   public void processFiles(@Nonnull ModuleRootModel moduleRootModel, @Nonnull Predicate<ContentFolderTypeProvider> predicate,
                            @Nonnull Processor<VirtualFile> processor) {

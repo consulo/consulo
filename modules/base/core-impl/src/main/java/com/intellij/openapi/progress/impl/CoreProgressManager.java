@@ -24,7 +24,7 @@ import com.intellij.util.concurrency.AppExecutorUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.SmartHashSet;
 import consulo.logging.Logger;
-import consulo.util.collection.ConcurrentLongObjectMap;
+import consulo.util.collection.primitive.longs.ConcurrentLongObjectMap;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.TestOnly;
 

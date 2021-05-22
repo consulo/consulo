@@ -47,7 +47,6 @@ import com.intellij.util.ArrayUtil;
 import com.intellij.util.Function;
 import com.intellij.util.Processor;
 import consulo.logging.Logger;
-import gnu.trove.THashSet;
 import org.intellij.lang.annotations.MagicConstant;
 import javax.annotation.Nonnull;
 
@@ -327,7 +326,7 @@ public class AnalysisScope {
     }
     if (myScope instanceof LocalSearchScope) {
       final PsiElement[] psiElements = ((LocalSearchScope)myScope).getScope();
-      final Set<VirtualFile> files = new THashSet<VirtualFile>();
+      final Set<VirtualFile> files = new HashSet<VirtualFile>();
       for (final PsiElement element : psiElements) {
         VirtualFile file = ApplicationManager.getApplication().runReadAction(new Computable<VirtualFile>() {
           @Override

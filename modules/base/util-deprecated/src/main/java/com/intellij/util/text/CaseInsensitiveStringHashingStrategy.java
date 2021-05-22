@@ -17,15 +17,15 @@
 package com.intellij.util.text;
 
 import com.intellij.openapi.util.text.StringUtil;
-import gnu.trove.TObjectHashingStrategy;
+import consulo.util.collection.HashingStrategy;
 
 /**
  * @author max
  */
-public class CaseInsensitiveStringHashingStrategy implements TObjectHashingStrategy<String> {
+public class CaseInsensitiveStringHashingStrategy implements HashingStrategy<String> {
   public static final CaseInsensitiveStringHashingStrategy INSTANCE = new CaseInsensitiveStringHashingStrategy();
   
-  public int computeHashCode(final String s) {
+  public int hashCode(final String s) {
     return StringUtil.stringHashCodeInsensitive(s);
   }
 

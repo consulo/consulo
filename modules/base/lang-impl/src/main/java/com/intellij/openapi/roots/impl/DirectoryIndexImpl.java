@@ -37,7 +37,7 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
 import consulo.roots.ContentFolderTypeProvider;
-import consulo.util.collection.ConcurrentIntObjectMap;
+import consulo.util.collection.primitive.ints.ConcurrentIntObjectMap;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 

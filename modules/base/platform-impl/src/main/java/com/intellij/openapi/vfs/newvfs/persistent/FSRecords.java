@@ -23,7 +23,9 @@ import com.intellij.util.io.*;
 import com.intellij.util.io.storage.*;
 import consulo.container.boot.ContainerPathManager;
 import consulo.logging.Logger;
-import consulo.util.collection.ConcurrentIntObjectMap;
+import consulo.util.collection.primitive.ints.ConcurrentIntObjectMap;
+import consulo.util.collection.primitive.ints.IntList;
+import consulo.util.collection.primitive.ints.IntLists;
 import gnu.trove.TIntArrayList;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.TestOnly;
@@ -162,7 +164,7 @@ public class FSRecords {
     private static PersistentBTreeEnumerator<byte[]> myContentHashesEnumerator;
     private static File myRootsFile;
     private static final VfsDependentEnum<String> myAttributesList = new VfsDependentEnum<>("attrib", EnumeratorStringDescriptor.INSTANCE, 1);
-    private static final TIntArrayList myFreeRecords = new TIntArrayList();
+    private static final IntList myFreeRecords = IntLists.newArrayList();
 
     private static volatile boolean myDirty;
     /**
@@ -199,7 +201,7 @@ public class FSRecords {
     }
 
     static int getFreeRecord() {
-      return myFreeRecords.isEmpty() ? 0 : myFreeRecords.remove(myFreeRecords.size() - 1);
+      return myFreeRecords.isEmpty() ? 0 : myFreeRecords.removeByIndex(myFreeRecords.size() - 1);
     }
 
     private static void createBrokenMarkerFile(@Nullable Throwable reason) {
@@ -696,7 +698,7 @@ public class FSRecords {
   static int[] listRoots() {
     return readAndHandleErrors(() -> {
       if (ourStoreRootsSeparately) {
-        TIntArrayList result = new TIntArrayList();
+        IntList result = IntLists.newArrayList();
 
         try (@SuppressWarnings("ImplicitDefaultCharsetUsage") LineNumberReader stream = new LineNumberReader(new BufferedReader(new InputStreamReader(new FileInputStream(DbConnection.myRootsFile))))) {
           String str;
@@ -709,11 +711,11 @@ public class FSRecords {
         catch (FileNotFoundException ignored) {
         }
 
-        return result.toNativeArray();
+        return result.toArray();
       }
 
       try (DataInputStream input = readAttribute(ROOT_RECORD_ID, ourChildrenAttr)) {
-        if (input == null) return ArrayUtilRt.EMPTY_INT_ARRAY;
+        if (input == null) return ArrayUtil.EMPTY_INT_ARRAY;
         final int count = DataInputOutputUtil.readINT(input);
         int[] result = ArrayUtil.newIntArray(count);
         int prevId = 0;

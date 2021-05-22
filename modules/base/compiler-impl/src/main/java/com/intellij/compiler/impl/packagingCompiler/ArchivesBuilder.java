@@ -19,7 +19,6 @@ package com.intellij.compiler.impl.packagingCompiler;
 import com.intellij.openapi.compiler.CompileContext;
 import com.intellij.openapi.compiler.CompilerBundle;
 import com.intellij.openapi.compiler.CompilerMessageCategory;
-import consulo.logging.Logger;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
@@ -31,12 +30,12 @@ import com.intellij.util.graph.CachingSemiGraph;
 import com.intellij.util.graph.DFSTBuilder;
 import com.intellij.util.graph.GraphGenerator;
 import consulo.compiler.impl.packagingCompiler.ArchivePackageWriterEx;
+import consulo.logging.Logger;
 import consulo.packaging.elements.ArchivePackageWriter;
 import consulo.packaging.impl.util.DeploymentUtilImpl;
-import gnu.trove.THashSet;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.io.*;
 import java.util.*;
 
@@ -169,7 +168,7 @@ public class ArchivesBuilder {
     }
 
     try {
-      final THashSet<String> writtenPaths = new THashSet<>();
+      final Set<String> writtenPaths = new HashSet<>();
       for (Pair<String, VirtualFile> pair : archive.getPackedFiles()) {
         final VirtualFile sourceFile = pair.getSecond();
         if (sourceFile.isInLocalFileSystem()) {
@@ -203,7 +202,7 @@ public class ArchivesBuilder {
                                               @Nonnull ArchivePackageWriter<T> writer,
                                               VirtualFile sourceFile,
                                               String relativePath,
-                                              THashSet<String> writtenPaths) throws IOException {
+                                              Set<String> writtenPaths) throws IOException {
     relativePath = addParentDirectories(archiveObject, writer, writtenPaths, relativePath);
     myContext.getProgressIndicator().setText2(relativePath);
     if (!writtenPaths.add(relativePath)) return;
@@ -226,7 +225,7 @@ public class ArchivesBuilder {
                                     @Nonnull ArchivePackageWriter<T> writer,
                                     @Nonnull File file,
                                     @Nonnull String relativePath,
-                                    @Nonnull THashSet<String> writtenPaths) throws IOException {
+                                    @Nonnull Set<String> writtenPaths) throws IOException {
     if (!file.exists()) {
       return;
     }
@@ -250,7 +249,7 @@ public class ArchivesBuilder {
 
   private static <T> String addParentDirectories(@Nonnull T archiveObject,
                                                  @Nonnull ArchivePackageWriter<T> writer,
-                                                 THashSet<String> writtenPaths,
+                                                 Set<String> writtenPaths,
                                                  String relativePath) throws IOException {
     while (StringUtil.startsWithChar(relativePath, '/')) {
       relativePath = relativePath.substring(1);

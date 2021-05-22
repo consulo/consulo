@@ -36,16 +36,17 @@ import com.intellij.util.ConcurrencyUtil;
 import com.intellij.util.text.StringSearcher;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.logging.Logger;
+import consulo.util.collection.HashingStrategy;
 import consulo.util.collection.Maps;
-import consulo.util.collection.ObjectHashingStrategies;
-import gnu.trove.TIntArrayList;
-import gnu.trove.TIntProcedure;
+import consulo.util.collection.primitive.ints.IntList;
+import consulo.util.collection.primitive.ints.IntLists;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentMap;
+import java.util.function.IntPredicate;
 
 public class LowLevelSearchUtil {
   private static final Logger LOG = Logger.getInstance(LowLevelSearchUtil.class);
@@ -271,16 +272,16 @@ public class LowLevelSearchUtil {
 
   // map (text to be scanned -> list of cached pairs of (searcher used to scan text, occurrences found))
   // occurrences found is an int array of (startOffset used, endOffset used, occurrence 1 offset, occurrence 2 offset,...)
-  private static final ConcurrentMap<CharSequence, Map<StringSearcher, int[]>> cache = Maps.newConcurrentWeakHashMap(ObjectHashingStrategies.identityStrategy());
+  private static final ConcurrentMap<CharSequence, Map<StringSearcher, int[]>> cache = Maps.newConcurrentWeakHashMap(HashingStrategy.identity());
 
   public static boolean processTextOccurrences(@Nonnull CharSequence text,
                                                int startOffset,
                                                int endOffset,
                                                @Nonnull StringSearcher searcher,
                                                @Nullable ProgressIndicator progress,
-                                               @Nonnull TIntProcedure processor) {
+                                               @Nonnull IntPredicate processor) {
     for (int offset : getTextOccurrences(text, startOffset, endOffset, searcher, progress)) {
-      if (!processor.execute(offset)) {
+      if (!processor.test(offset)) {
         return false;
       }
     }
@@ -299,7 +300,7 @@ public class LowLevelSearchUtil {
     int[] cachedOccurrences = cachedMap == null ? null : cachedMap.get(searcher);
     boolean hasCachedOccurrences = cachedOccurrences != null && cachedOccurrences[0] <= startOffset && cachedOccurrences[1] >= endOffset;
     if (!hasCachedOccurrences) {
-      TIntArrayList occurrences = new TIntArrayList();
+      IntList occurrences = IntLists.newArrayList();
       int newStart = Math.min(startOffset, cachedOccurrences == null ? startOffset : cachedOccurrences[0]);
       int newEnd = Math.max(endOffset, cachedOccurrences == null ? endOffset : cachedOccurrences[1]);
       occurrences.add(newStart);
@@ -313,13 +314,13 @@ public class LowLevelSearchUtil {
           occurrences.add(index);
         }
       }
-      cachedOccurrences = occurrences.toNativeArray();
+      cachedOccurrences = occurrences.toArray();
       if (cachedMap == null) {
         cachedMap = ConcurrencyUtil.cacheOrGet(cache, text, Maps.newConcurrentSoftHashMap());
       }
       cachedMap.put(searcher, cachedOccurrences);
     }
-    TIntArrayList offsets = new TIntArrayList(cachedOccurrences.length - 2);
+    IntList offsets = IntLists.newArrayList(cachedOccurrences.length - 2);
     for (int i = 2; i < cachedOccurrences.length; i++) {
       int occurrence = cachedOccurrences[i];
       if (occurrence > endOffset - searcher.getPatternLength()) break;
@@ -327,7 +328,7 @@ public class LowLevelSearchUtil {
         offsets.add(occurrence);
       }
     }
-    return offsets.toNativeArray();
+    return offsets.toArray();
   }
 
   private static boolean checkJavaIdentifier(@Nonnull CharSequence text, int startOffset, int endOffset, @Nonnull StringSearcher searcher, int index) {

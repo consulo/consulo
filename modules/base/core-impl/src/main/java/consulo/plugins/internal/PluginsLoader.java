@@ -33,8 +33,6 @@ import consulo.container.plugin.*;
 import consulo.container.util.StatCollector;
 import consulo.logging.Logger;
 import consulo.util.lang.StringUtil;
-import gnu.trove.THashMap;
-import gnu.trove.TIntProcedure;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -42,6 +40,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.*;
+import java.util.function.IntConsumer;
 
 public class PluginsLoader {
   private static class LoggerHolder {
@@ -124,7 +123,7 @@ public class PluginsLoader {
     final ClassLoader parentLoader = Application.class.getClassLoader();
 
     final List<PluginDescriptorImpl> result = new ArrayList<>();
-    final Map<String, String> disabledPluginNames = new THashMap<>();
+    final Map<String, String> disabledPluginNames = new HashMap<>();
     List<String> brokenPluginsList = new SmartList<>();
     for (PluginDescriptorImpl descriptor : pluginDescriptors) {
       PluginManager.PluginSkipReason pluginSkipReason = PluginManager.calcPluginSkipReason(descriptor);
@@ -152,7 +151,7 @@ public class PluginsLoader {
       problemsWithPlugins.add(badPluginMessage);
     }
 
-    final Map<PluginId, PluginDescriptorImpl> idToDescriptorMap = new THashMap<>();
+    final Map<PluginId, PluginDescriptorImpl> idToDescriptorMap = new HashMap<>();
     for (PluginDescriptorImpl descriptor : result) {
       idToDescriptorMap.put(descriptor.getPluginId(), descriptor);
     }
@@ -165,11 +164,11 @@ public class PluginsLoader {
       final String cyclePresentation;
       if (ApplicationProperties.isInSandbox()) {
         final List<String> cycles = new ArrayList<>();
-        builder.getSCCs().forEach(new TIntProcedure() {
+        builder.getSCCs().forEach(new IntConsumer() {
           int myTNumber = 0;
 
           @Override
-          public boolean execute(int size) {
+          public void accept(int size) {
             if (size > 1) {
               String cycle = "";
               for (int j = 0; j < size; j++) {
@@ -178,7 +177,6 @@ public class PluginsLoader {
               cycles.add(cycle);
             }
             myTNumber += size;
-            return true;
           }
         });
         cyclePresentation = ": " + StringUtil.join(cycles, ";");
@@ -257,7 +255,7 @@ public class PluginsLoader {
 
     pluginDescriptors.addAll(loadDescriptorsFromPluginsPath(progress, isHeadlessMode, stat));
 
-    final Map<PluginId, PluginDescriptorImpl> idToDescriptorMap = new THashMap<>();
+    final Map<PluginId, PluginDescriptorImpl> idToDescriptorMap = new HashMap<>();
 
     for (PluginDescriptorImpl descriptor : pluginDescriptors) {
       idToDescriptorMap.put(descriptor.getPluginId(), descriptor);
@@ -433,7 +431,7 @@ public class PluginsLoader {
   }
 
   static void mergeOptionalConfigs(Map<PluginId, PluginDescriptorImpl> descriptors) {
-    final Map<PluginId, PluginDescriptorImpl> descriptorsWithModules = new THashMap<>(descriptors);
+    final Map<PluginId, PluginDescriptorImpl> descriptorsWithModules = new HashMap<>(descriptors);
     for (PluginDescriptorImpl descriptor : descriptors.values()) {
       final Map<PluginId, PluginDescriptorImpl> optionalDescriptors = descriptor.getOptionalDescriptors();
       if (optionalDescriptors != null && !optionalDescriptors.isEmpty()) {

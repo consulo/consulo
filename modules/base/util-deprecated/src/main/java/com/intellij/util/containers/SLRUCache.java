@@ -19,7 +19,8 @@
  */
 package com.intellij.util.containers;
 
-import com.intellij.util.containers.hash.EqualityPolicy;
+import consulo.util.collection.HashingStrategy;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -28,7 +29,7 @@ public abstract class SLRUCache<K, V> extends SLRUMap<K,V> {
     super(protectedQueueSize, probationalQueueSize);
   }
 
-  protected SLRUCache(final int protectedQueueSize, final int probationalQueueSize, EqualityPolicy<K> hashingStrategy) {
+  protected SLRUCache(final int protectedQueueSize, final int probationalQueueSize, HashingStrategy<K> hashingStrategy) {
     super(protectedQueueSize, probationalQueueSize, hashingStrategy);
   }
 

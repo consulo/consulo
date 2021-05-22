@@ -811,7 +811,7 @@ class RunConfigurable extends BaseConfigurable {
     }
 
     // if apply succeeded, update the list of configurations in RunManager
-    Set<RunnerAndConfigurationSettings> toDeleteSettings = new THashSet<RunnerAndConfigurationSettings>();
+    Set<RunnerAndConfigurationSettings> toDeleteSettings = new HashSet<RunnerAndConfigurationSettings>();
     for (RunConfiguration each : manager.getConfigurationsList(type)) {
       ContainerUtil.addIfNotNull(toDeleteSettings, manager.getSettings(each));
     }

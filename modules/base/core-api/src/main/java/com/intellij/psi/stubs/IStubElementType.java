@@ -7,13 +7,12 @@ package com.intellij.psi.stubs;
 
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.Language;
-import consulo.logging.Logger;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.tree.IElementType;
-import gnu.trove.THashSet;
+import consulo.logging.Logger;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
 
@@ -55,7 +54,7 @@ public abstract class IStubElementType<StubT extends StubElement, PsiT extends P
       result.addAll(bean.initializeOptimized());
     }
 
-    Set<String> lazyIds = new THashSet<>();
+    Set<String> lazyIds = new HashSet<>();
     for (StubFieldAccessor accessor : result) {
       lazyIds.add(accessor.externalId);
     }

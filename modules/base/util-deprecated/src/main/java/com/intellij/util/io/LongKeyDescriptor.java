@@ -25,12 +25,12 @@ import java.util.Objects;
  */
 public class LongKeyDescriptor implements KeyDescriptor<Long> {
   @Override
-  public int getHashCode(Long value) {
+  public int hashCode(Long value) {
     return value.hashCode();
   }
 
   @Override
-  public boolean isEqual(Long val1, Long val2) {
+  public boolean equals(Long val1, Long val2) {
     return Objects.equals(val1, val2);
   }
 

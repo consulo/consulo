@@ -24,7 +24,6 @@ package com.intellij.profile.codeInspection.ui.header;
 
 import com.intellij.codeInsight.daemon.impl.HighlightInfoType;
 import com.intellij.codeInsight.daemon.impl.SeverityRegistrar;
-import com.intellij.codeInsight.daemon.impl.SmartHashSet;
 import com.intellij.codeInspection.InspectionManager;
 import com.intellij.codeInspection.ModifiableModel;
 import com.intellij.codeInspection.ex.InspectionManagerEx;
@@ -60,6 +59,7 @@ import com.intellij.ui.ListCellRendererWrapper;
 import com.intellij.util.Alarm;
 import com.intellij.util.Consumer;
 import com.intellij.util.SystemProperties;
+import com.intellij.util.containers.SmartHashSet;
 import consulo.awt.TargetAWT;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;

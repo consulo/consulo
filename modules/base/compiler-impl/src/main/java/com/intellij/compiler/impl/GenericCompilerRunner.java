@@ -34,8 +34,8 @@ import com.intellij.util.ThrowableRunnable;
 import com.intellij.util.io.KeyDescriptor;
 import consulo.application.AccessRule;
 import consulo.logging.Logger;
-import gnu.trove.THashSet;
-import gnu.trove.TObjectHashingStrategy;
+import consulo.util.collection.HashingStrategy;
+import consulo.util.collection.Sets;
 
 import javax.annotation.Nonnull;
 import java.io.File;
@@ -173,7 +173,7 @@ public class GenericCompilerRunner {
     checkForErrorsOrCanceled();
 
     final List<GenericCompilerProcessingItem<Item, SourceState, OutputState>> toProcess = new ArrayList<>();
-    final THashSet<Key> keySet = new THashSet<>(new SourceItemHashingStrategy<>(compiler));
+    final Set<Key> keySet = Sets.newHashSet(new SourceItemHashingStrategy<>(compiler));
     final Ref<IOException> exception = Ref.create(null);
     DumbService.getInstance(myProject).waitForSmartMode();
     final Map<Item, SourceState> sourceStates = new HashMap<>();
@@ -311,7 +311,7 @@ public class GenericCompilerRunner {
     return size;
   }
 
-  private class SourceItemHashingStrategy<S> implements TObjectHashingStrategy<S> {
+  private class SourceItemHashingStrategy<S> implements HashingStrategy<S> {
     private KeyDescriptor<S> myKeyDescriptor;
 
     public SourceItemHashingStrategy(GenericCompiler<S, ?, ?> compiler) {
@@ -319,13 +319,13 @@ public class GenericCompilerRunner {
     }
 
     @Override
-    public int computeHashCode(S object) {
-      return myKeyDescriptor.getHashCode(object);
+    public int hashCode(S object) {
+      return myKeyDescriptor.hashCode(object);
     }
 
     @Override
     public boolean equals(S o1, S o2) {
-      return myKeyDescriptor.isEqual(o1, o2);
+      return myKeyDescriptor.equals(o1, o2);
     }
   }
 }

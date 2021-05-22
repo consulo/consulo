@@ -35,7 +35,6 @@ import com.intellij.util.xmlb.SkipDefaultValuesSerializationFilters;
 import com.intellij.util.xmlb.XmlSerializer;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.platform.base.localize.IdeLocalize;
-import gnu.trove.TObjectObjectProcedure;
 import org.jdom.Element;
 
 import javax.annotation.Nonnull;
@@ -292,13 +291,9 @@ public class TableModelEditor<T> extends CollectionModelEditor<T, CollectionItem
     final Ref<T> ref;
     if (helper.hasModifiedItems()) {
       ref = Ref.create();
-      helper.process(new TObjectObjectProcedure<T, T>() {
-        @Override
-        public boolean execute(T modified, T original) {
-          if (item == original) {
-            ref.set(modified);
-          }
-          return ref.isNull();
+      helper.process((modified, original) -> {
+        if (item == original) {
+          ref.setIfNull(modified);
         }
       });
     }
@@ -314,22 +309,18 @@ public class TableModelEditor<T> extends CollectionModelEditor<T, CollectionItem
     if (helper.hasModifiedItems()) {
       @SuppressWarnings("unchecked")
       final ColumnInfo<T, Object>[] columns = model.getColumnInfos();
-      helper.process(new TObjectObjectProcedure<T, T>() {
-        @Override
-        public boolean execute(T newItem, @Nonnull T oldItem) {
-          for (ColumnInfo<T, Object> column : columns) {
-            if (column.isCellEditable(newItem)) {
-              column.setValue(oldItem, column.valueOf(newItem));
-            }
+      helper.process((newItem, oldItem) -> {
+        for (ColumnInfo<T, Object> column : columns) {
+          if (column.isCellEditable(newItem)) {
+            column.setValue(oldItem, column.valueOf(newItem));
           }
-
-          if (itemEditor instanceof DialogItemEditor) {
-            ((DialogItemEditor<T>)itemEditor).applyEdited(oldItem, newItem);
-          }
-
-          model.items.set(ContainerUtil.indexOfIdentity(model.items, newItem), oldItem);
-          return true;
         }
+
+        if (itemEditor instanceof DialogItemEditor) {
+          ((DialogItemEditor<T>)itemEditor).applyEdited(oldItem, newItem);
+        }
+
+        model.items.set(ContainerUtil.indexOfIdentity(model.items, newItem), oldItem);
       });
     }
 

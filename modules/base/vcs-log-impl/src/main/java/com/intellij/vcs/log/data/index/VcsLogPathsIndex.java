@@ -15,8 +15,6 @@
  */
 package com.intellij.vcs.log.data.index;
 
-import consulo.disposer.Disposable;
-import consulo.logging.Logger;
 import com.intellij.openapi.util.Couple;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.io.FileUtil;
@@ -29,20 +27,21 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.indexing.DataIndexer;
 import com.intellij.util.indexing.StorageException;
 import com.intellij.util.io.*;
-import com.intellij.util.text.CaseInsensitiveStringHashingStrategy;
 import com.intellij.vcs.log.VcsFullCommitDetails;
 import com.intellij.vcs.log.impl.FatalErrorHandler;
 import com.intellij.vcs.log.impl.VcsChangesLazilyParsedDetails;
 import com.intellij.vcs.log.util.PersistentUtil;
-import gnu.trove.THashMap;
+import consulo.disposer.Disposable;
+import consulo.logging.Logger;
 import gnu.trove.TIntHashSet;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -149,7 +148,7 @@ public class VcsLogPathsIndex extends VcsLogFullDetailsIndex<Integer> {
     @Nonnull
     @Override
     public Map<Integer, Integer> map(@Nonnull VcsFullCommitDetails inputData) {
-      Map<Integer, Integer> result = new THashMap<>();
+      Map<Integer, Integer> result = new HashMap<>();
 
 
       Collection<Couple<String>> moves;
@@ -237,12 +236,12 @@ public class VcsLogPathsIndex extends VcsLogFullDetailsIndex<Integer> {
 
   private static class ToLowerCaseStringDescriptor implements KeyDescriptor<String> {
     @Override
-    public int getHashCode(String value) {
-      return CaseInsensitiveStringHashingStrategy.INSTANCE.computeHashCode(value);
+    public int hashCode(String value) {
+      return CaseInsensitiveStringHashingStrategy.INSTANCE.hashCode(value);
     }
 
     @Override
-    public boolean isEqual(String val1, String val2) {
+    public boolean equals(String val1, String val2) {
       return CaseInsensitiveStringHashingStrategy.INSTANCE.equals(val1, val2);
     }
 
