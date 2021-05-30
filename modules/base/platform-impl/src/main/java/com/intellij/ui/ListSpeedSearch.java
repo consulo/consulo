@@ -15,31 +15,21 @@
  */
 package com.intellij.ui;
 
-import com.intellij.util.Function;
-import com.intellij.util.containers.Convertor;
-
+import javax.annotation.Nonnull;
 import javax.swing.*;
+import java.util.function.Function;
 
 public class ListSpeedSearch extends SpeedSearchBase<JList> {
-  private final Convertor<Object, String> myToStringConvertor;
+  private final Function<Object, String> myToStringConvertor;
 
   public ListSpeedSearch(JList list) {
     super(list);
     myToStringConvertor = null;
   }
 
-  public ListSpeedSearch(final JList component, final Convertor<Object, String> convertor) {
+  public ListSpeedSearch(final JList component, final Function<Object, String> convertor) {
     super(component);
     myToStringConvertor = convertor;
-  }
-
-  public ListSpeedSearch(final JList component, final Function<Object, String> convertor) {
-    this(component, new Convertor<Object, String>() {
-      @Override
-      public String convert(Object o) {
-        return convertor.fun(o);
-      }
-    });
   }
 
   @Override
@@ -52,6 +42,7 @@ public class ListSpeedSearch extends SpeedSearchBase<JList> {
     return myComponent.getSelectedIndex();
   }
 
+  @Nonnull
   @Override
   protected Object[] getAllElements() {
     return getAllListElements(myComponent);
@@ -59,12 +50,12 @@ public class ListSpeedSearch extends SpeedSearchBase<JList> {
 
   public static Object[] getAllListElements(final JList list) {
     ListModel model = list.getModel();
-    if (model instanceof DefaultListModel){ // optimization
+    if (model instanceof DefaultListModel) { // optimization
       return ((DefaultListModel)model).toArray();
     }
-    else{
+    else {
       Object[] elements = new Object[model.getSize()];
-      for(int i = 0; i < elements.length; i++){
+      for (int i = 0; i < elements.length; i++) {
         elements[i] = model.getElementAt(i);
       }
       return elements;
@@ -74,7 +65,7 @@ public class ListSpeedSearch extends SpeedSearchBase<JList> {
   @Override
   protected String getElementText(Object element) {
     if (myToStringConvertor != null) {
-      return myToStringConvertor.convert(element);
+      return myToStringConvertor.apply(element);
     }
     return element == null ? null : element.toString();
   }

@@ -37,7 +37,6 @@ import com.intellij.ui.speedSearch.SpeedSearchSupply;
 import com.intellij.util.NullableFunction;
 import com.intellij.util.ObjectUtil;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.containers.Convertor;
 import com.intellij.util.containers.MultiMap;
 import com.intellij.util.containers.hash.HashSet;
 import com.intellij.util.ui.DialogUtil;
@@ -131,7 +130,7 @@ public class GutterIconsConfigurable implements SearchableConfigurable, Configur
     };
     myList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
     myList.setBorder(BorderFactory.createEmptyBorder());
-    new ListSpeedSearch(myList, (Convertor<Object, String>)o -> o instanceof JCheckBox ? ((JCheckBox)o).getText() : null);
+    new ListSpeedSearch(myList, o -> o instanceof JCheckBox ? ((JCheckBox)o).getText() : null);
     panel.add(ScrollPaneFactory.createScrollPane(myList), BorderLayout.CENTER);
 
     ExtensionPoint<LanguageExtensionPoint<LineMarkerProvider>> point = Application.get().getExtensionPoint(ExtensionPointName.create(LineMarkerProviders.EP_NAME));

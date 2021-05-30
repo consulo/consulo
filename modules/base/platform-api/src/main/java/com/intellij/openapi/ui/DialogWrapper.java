@@ -2305,6 +2305,10 @@ public abstract class DialogWrapper {
     }
   }
 
+  public boolean isDisposed() {
+    return myDisposed;
+  }
+
   public final Disposable getDisposable() {
     return myDisposable;
   }

@@ -1,27 +1,15 @@
-/*
- * Copyright 2000-2014 JetBrains s.r.o.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.webcore.packaging;
 
+import com.intellij.execution.ExecutionException;
 import com.intellij.icons.AllIcons;
+import com.intellij.ide.IdeBundle;
 import com.intellij.ide.plugins.PluginManagerMain;
+import com.intellij.lang.LangBundle;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
-import consulo.logging.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
@@ -29,13 +17,15 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.ui.*;
 import com.intellij.ui.components.JBList;
+import com.intellij.ui.scale.JBUIScale;
 import com.intellij.util.CatchingConsumer;
-import com.intellij.util.Function;
 import com.intellij.util.ObjectUtils;
-import com.intellij.util.ui.JBUI;
+import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.SwingHelper;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.update.UiNotifyConnector;
+import consulo.logging.Logger;
+import org.jetbrains.annotations.Nls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -48,8 +38,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 /**
  * User: catherine
@@ -66,7 +56,7 @@ public class ManagePackagesDialog extends DialogWrapper {
   private JPanel myFilter;
   private JPanel myMainPanel;
   private JEditorPane myDescriptionTextArea;
-  private JBList myPackages;
+  private final JBList myPackages;
   private JButton myInstallButton;
   private JCheckBox myOptionsCheckBox;
   private JTextField myOptionsField;
@@ -80,27 +70,27 @@ public class ManagePackagesDialog extends DialogWrapper {
   private PackagesModel myPackagesModel;
   private String mySelectedPackageName;
   private final Set<String> myInstalledPackages;
-  @Nullable private final PackageManagementService.Listener myPackageListener;
+  @Nullable
+  private final PackageManagementService.Listener myPackageListener;
 
-  private Set<String> myCurrentlyInstalling = new HashSet<>();
+  private final Set<String> myCurrentlyInstalling = new HashSet<>();
   protected final ListSpeedSearch myListSpeedSearch;
 
-  public ManagePackagesDialog(@Nonnull Project project, final PackageManagementService packageManagementService,
-                              @Nullable final PackageManagementService.Listener packageListener) {
+  public ManagePackagesDialog(@Nonnull Project project, final PackageManagementService packageManagementService, @Nullable final PackageManagementService.Listener packageListener) {
     super(project, true);
     myProject = project;
     myController = packageManagementService;
 
     myPackageListener = packageListener;
     init();
-    setTitle("Available Packages");
+    setTitle(IdeBundle.message("available.packages.dialog.title"));
     myPackages = new JBList();
     myNotificationArea = new PackagesNotificationPanel();
     myNotificationsAreaPlaceholder.add(myNotificationArea.getComponent(), BorderLayout.CENTER);
 
-    final AnActionButton reloadButton = new AnActionButton("Reload List of Packages", AllIcons.Actions.Refresh) {
+    final AnActionButton reloadButton = new AnActionButton(IdeBundle.message("action.AnActionButton.text.reload.list.of.packages"), AllIcons.Actions.Refresh) {
       @Override
-      public void actionPerformed(AnActionEvent e) {
+      public void actionPerformed(@Nonnull AnActionEvent e) {
         myPackages.setPaintBusy(true);
         final Application application = ApplicationManager.getApplication();
         application.executeOnPooledThread(() -> {
@@ -111,32 +101,23 @@ public class ManagePackagesDialog extends DialogWrapper {
           }
           catch (final IOException e1) {
             application.invokeLater(() -> {
-              //noinspection DialogTitleCapitalization
-              Messages.showErrorDialog(myMainPanel, "Error updating package list: " + e1.getMessage(), "Reload List of Packages");
+              Messages.showErrorDialog(myMainPanel, IdeBundle.message("error.updating.package.list", e1.getMessage()), IdeBundle.message("action.AnActionButton.text.reload.list.of.packages"));
+              LOG.info("Error updating list of repository packages", e1);
               myPackages.setPaintBusy(false);
             }, ModalityState.any());
           }
         });
       }
     };
-    myListSpeedSearch = new ListSpeedSearch(myPackages, new Function<Object, String>() {
-      @Override
-      public String fun(Object o) {
-        if (o instanceof RepoPackage)
-          return ((RepoPackage)o).getName();
-        return "";
-      }
+    myListSpeedSearch = new ListSpeedSearch(myPackages, o -> {
+      if (o instanceof RepoPackage) return ((RepoPackage)o).getName();
+      return "";
     });
-    JPanel packagesPanel = ToolbarDecorator.createDecorator(myPackages)
-            .disableAddAction()
-            .disableUpDownActions()
-            .disableRemoveAction()
-            .addExtraAction(reloadButton)
-            .createPanel();
-    packagesPanel.setPreferredSize(new Dimension(JBUI.scale(400), -1));
-    packagesPanel.setMinimumSize(new Dimension(JBUI.scale(100), -1));
+    JPanel packagesPanel = ToolbarDecorator.createDecorator(myPackages).disableAddAction().disableUpDownActions().disableRemoveAction().addExtraAction(reloadButton).createPanel();
+    packagesPanel.setPreferredSize(new Dimension(JBUIScale.scale(400), -1));
+    packagesPanel.setMinimumSize(new Dimension(JBUIScale.scale(100), -1));
     myPackages.setFixedCellWidth(0);
-    myPackages.setFixedCellHeight(JBUI.scale(22));
+    myPackages.setFixedCellHeight(JBUIScale.scale(22));
     myPackages.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
     mySplitPane.setLeftComponent(packagesPanel);
 
@@ -156,7 +137,7 @@ public class ManagePackagesDialog extends DialogWrapper {
       }
     });
 
-    UiNotifyConnector.doWhenFirstShown(myPackages, () -> initModel());
+    UiNotifyConnector.doWhenFirstShown(myPackages, this::initModel);
     myOptionsCheckBox.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent event) {
@@ -179,7 +160,7 @@ public class ManagePackagesDialog extends DialogWrapper {
     else {
       myInstallToUser.setVisible(false);
     }
-    myMainPanel.setPreferredSize(new Dimension(JBUI.scale(900), JBUI.scale(700)));
+    myMainPanel.setPreferredSize(new Dimension(JBUIScale.scale(900), JBUIScale.scale(700)));
   }
 
   public void selectPackage(@Nonnull InstalledPackage pkg) {
@@ -188,7 +169,7 @@ public class ManagePackagesDialog extends DialogWrapper {
   }
 
   private void addManageAction() {
-    if (myController.getAllRepositories() != null) {
+    if (myController.canManageRepositories()) {
       myManageButton.addActionListener(new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent event) {
@@ -217,7 +198,7 @@ public class ManagePackagesDialog extends DialogWrapper {
 
           String version = null;
           if (myVersionCheckBox.isEnabled() && myVersionCheckBox.isSelected()) {
-            version = (String) myVersionComboBox.getSelectedItem();
+            version = (String)myVersionComboBox.getSelectedItem();
           }
 
           final PackageManagementService.Listener listener = new PackageManagementService.Listener() {
@@ -232,8 +213,7 @@ public class ManagePackagesDialog extends DialogWrapper {
             }
 
             @Override
-            public void operationFinished(final String packageName,
-                                          @Nullable final PackageManagementService.ErrorDescription errorDescription) {
+            public void operationFinished(final String packageName, @Nullable final PackageManagementService.ErrorDescription errorDescription) {
               if (!ApplicationManager.getApplication().isDispatchThread()) {
                 ApplicationManager.getApplication().invokeLater(() -> handleInstallationFinished(packageName, errorDescription), ModalityState.stateForComponent(myMainPanel));
               }
@@ -245,11 +225,13 @@ public class ManagePackagesDialog extends DialogWrapper {
           myController.installPackage(repoPackage, version, false, extraOptions, listener, myInstallToUser.isSelected());
           myInstallButton.setEnabled(false);
         }
+        //PackageManagementUsageCollector.triggerInstallPerformed(myProject, myController);
       }
     });
   }
 
   private void handleInstallationStarted(String packageName) {
+    myNotificationArea.hide();
     setDownloadStatus(true);
     myCurrentlyInstalling.add(packageName);
     if (myPackageListener != null) {
@@ -274,16 +256,14 @@ public class ManagePackagesDialog extends DialogWrapper {
   private void updateInstalledPackages() {
     ApplicationManager.getApplication().executeOnPooledThread(() -> {
       try {
-        final Collection<InstalledPackage> installedPackages = myController.getInstalledPackages();
+        List<String> installedPackages = ContainerUtil.map(myController.getInstalledPackagesList(), InstalledPackage::getName);
         UIUtil.invokeLaterIfNeeded(() -> {
           myInstalledPackages.clear();
-          for (InstalledPackage pkg : installedPackages) {
-            myInstalledPackages.add(pkg.getName());
-          }
+          myInstalledPackages.addAll(installedPackages);
         });
       }
-      catch(IOException e) {
-        LOG.info("Error updating list of installed packages:" + e);
+      catch (ExecutionException e) {
+        LOG.info("Error updating list of installed packages", e);
       }
     });
   }
@@ -305,8 +285,9 @@ public class ManagePackagesDialog extends DialogWrapper {
       catch (final IOException e) {
         application.invokeLater(() -> {
           if (myMainPanel.isShowing()) {
-            Messages.showErrorDialog(myMainPanel, "Error loading package list:" + e.getMessage(), "Packages");
+            Messages.showErrorDialog(myMainPanel, IdeBundle.message("error.loading.package.list", e.getMessage()), IdeBundle.message("packages.title"));
           }
+          LOG.info("Error initializing model", e);
           setDownloadStatus(false);
         }, ModalityState.any());
       }
@@ -347,24 +328,26 @@ public class ManagePackagesDialog extends DialogWrapper {
   }
 
   private class MyPackageFilter extends FilterComponent {
-    public MyPackageFilter() {
+    MyPackageFilter() {
       super("PACKAGE_FILTER", 5);
       getTextEditor().addKeyListener(new KeyAdapter() {
+        @Override
         public void keyPressed(final KeyEvent e) {
           if (e.getKeyCode() == KeyEvent.VK_ENTER) {
             e.consume();
             filter();
-            IdeFocusManager.getGlobalInstance().doForceFocusWhenFocusSettlesDown(myPackages);
-          } else if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+            IdeFocusManager.getGlobalInstance().doWhenFocusSettlesDown(() -> IdeFocusManager.getGlobalInstance().requestFocus(myPackages, true));
+          }
+          else if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
             onEscape(e);
           }
         }
       });
     }
 
+    @Override
     public void filter() {
-      if (myPackagesModel != null)
-        myPackagesModel.filter(getFilter());
+      if (myPackagesModel != null) myPackagesModel.filter(getFilter());
     }
   }
 
@@ -372,7 +355,7 @@ public class ManagePackagesDialog extends DialogWrapper {
     protected final List<RepoPackage> myFilteredOut = new ArrayList<>();
     protected List<RepoPackage> myView = new ArrayList<>();
 
-    public PackagesModel(List<RepoPackage> packages) {
+    PackagesModel(List<RepoPackage> packages) {
       super(packages);
       myView = packages;
     }
@@ -403,14 +386,11 @@ public class ManagePackagesDialog extends DialogWrapper {
       filter(filtered, toSelect);
     }
 
-    public void filter(List<RepoPackage> filtered, @Nullable final RepoPackage toSelect){
+    public void filter(List<? extends RepoPackage> filtered, @Nullable final RepoPackage toSelect) {
       myView.clear();
       myPackages.clearSelection();
-      for (RepoPackage repoPackage : filtered) {
-        myView.add(repoPackage);
-      }
-      if (toSelect != null)
-        myPackages.setSelectedValue(toSelect, true);
+      myView.addAll(filtered);
+      if (toSelect != null) myPackages.setSelectedValue(toSelect, true);
       Collections.sort(myView);
       fireContentsChanged(this, 0, myView.size());
     }
@@ -430,9 +410,10 @@ public class ManagePackagesDialog extends DialogWrapper {
     }
   }
 
+  @Override
   @Nullable
   public JComponent getPreferredFocusedComponent() {
-    return myFilter;
+    return ((FilterComponent)myFilter).getTextEditor();
   }
 
   private class MyPackageSelectionListener implements ListSelectionListener {
@@ -444,14 +425,14 @@ public class ManagePackagesDialog extends DialogWrapper {
       myVersionCheckBox.setSelected(false);
       myVersionComboBox.setEnabled(false);
       myOptionsField.setEnabled(false);
-      myDescriptionTextArea.setText("<html><body style='text-align: center;padding-top:20px;'>Loading...</body></html>");
+      myDescriptionTextArea.setText(IdeBundle.message("loading.in.progress"));
       final Object pyPackage = myPackages.getSelectedValue();
       if (pyPackage instanceof RepoPackage) {
         final String packageName = ((RepoPackage)pyPackage).getName();
         mySelectedPackageName = packageName;
         myVersionComboBox.removeAllItems();
         if (myVersionCheckBox.isEnabled()) {
-          myController.fetchPackageVersions(packageName, new CatchingConsumer<List<String>, Exception>() {
+          myController.fetchPackageVersions(packageName, new CatchingConsumer<>() {
             @Override
             public void consume(final List<String> releases) {
               ApplicationManager.getApplication().invokeLater(() -> {
@@ -474,7 +455,7 @@ public class ManagePackagesDialog extends DialogWrapper {
 
         myController.fetchPackageDetails(packageName, new CatchingConsumer<String, Exception>() {
           @Override
-          public void consume(final String details) {
+          public void consume(final @Nls String details) {
             UIUtil.invokeLaterIfNeeded(() -> {
               if (myPackages.getSelectedValue() == pyPackage) {
                 myDescriptionTextArea.setText(details);
@@ -487,7 +468,7 @@ public class ManagePackagesDialog extends DialogWrapper {
 
           @Override
           public void consume(Exception exception) {
-            UIUtil.invokeLaterIfNeeded(() -> myDescriptionTextArea.setText("No information available"));
+            UIUtil.invokeLaterIfNeeded(() -> myDescriptionTextArea.setText(IdeBundle.message("no.information.available")));
             LOG.info("Error retrieving package details", exception);
           }
         });
@@ -499,58 +480,47 @@ public class ManagePackagesDialog extends DialogWrapper {
     }
   }
 
-  @Nonnull
+  @Override
   protected Action[] createActions() {
     return new Action[0];
   }
 
-  private class MyTableRenderer extends DefaultListCellRenderer {
-    private JLabel myNameLabel = new JLabel();
-    private JLabel myRepositoryLabel = new JLabel();
-    private JPanel myPanel = new JPanel(new BorderLayout());
+  private final class MyTableRenderer implements ListCellRenderer<RepoPackage> {
+    private final SimpleColoredComponent myNameComponent = new SimpleColoredComponent();
+    private final SimpleColoredComponent myRepositoryComponent = new SimpleColoredComponent();
+    private final JPanel myPanel = new JPanel(new BorderLayout());
 
     private MyTableRenderer() {
-      myPanel.setBorder(BorderFactory.createEmptyBorder(1, 0, 1, 1));
-      // setting border.left on myPanel doesn't prevent from myRepository being painted on left empty area
-      myNameLabel.setBorder(BorderFactory.createEmptyBorder(0, 2, 0, 0));
-
-      myRepositoryLabel.setFont(UIUtil.getLabelFont(UIUtil.FontSize.SMALL));
-      myPanel.add(myNameLabel, BorderLayout.WEST);
-      myPanel.add(myRepositoryLabel, BorderLayout.EAST);
-      myNameLabel.setOpaque(true);
+      myPanel.add(myNameComponent, BorderLayout.WEST);
+      myPanel.add(myRepositoryComponent, BorderLayout.EAST);
     }
 
     @Override
-    public Component getListCellRendererComponent(JList list,
-                                                  Object value,
-                                                  int index,
-                                                  boolean isSelected,
-                                                  boolean cellHasFocus) {
-      if (value instanceof RepoPackage) {
-        RepoPackage repoPackage = (RepoPackage) value;
-        String name = repoPackage.getName();
-        if (myCurrentlyInstalling.contains(name)) {
-          final String colorCode = UIUtil.isUnderDarcula() ? "589df6" : "0000FF";
-          name = "<html><body>" + repoPackage.getName() + " <font color=\"#" + colorCode + "\">(installing)</font></body></html>";
-        }
-        myNameLabel.setText(name);
-        myRepositoryLabel.setText(repoPackage.getRepoUrl());
-        Component orig = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-        final Color fg = orig.getForeground();
-        myNameLabel.setForeground(myInstalledPackages.contains(name) ? JBColor.BLUE : fg);
-      }
-      myRepositoryLabel.setForeground(JBColor.GRAY);
+    public Component getListCellRendererComponent(JList<? extends RepoPackage> list, RepoPackage repoPackage, int index, boolean isSelected, boolean cellHasFocus) {
 
-      final Color bg;
+      myNameComponent.clear();
+      myRepositoryComponent.clear();
+
+      String packageName = repoPackage.getName();
+      SimpleTextAttributes blueText = new SimpleTextAttributes(SimpleTextAttributes.STYLE_PLAIN, JBColor.BLUE);
+      Color defaultForeground = isSelected ? list.getSelectionForeground() : list.getForeground();
+      SimpleTextAttributes defaultText = new SimpleTextAttributes(SimpleTextAttributes.STYLE_PLAIN, defaultForeground);
+      myNameComponent.append(packageName, myInstalledPackages.contains(packageName) ? blueText : defaultText, true);
+      if (myCurrentlyInstalling.contains(packageName)) {
+        myNameComponent.append(LangBundle.message("package.component.installing.suffix"), blueText, false);
+      }
+      String repoUrl = repoPackage.getRepoUrl();
+      if (StringUtil.isNotEmpty(repoUrl)) {
+        myRepositoryComponent.append(repoUrl, SimpleTextAttributes.GRAYED_SMALL_ATTRIBUTES, false);
+      }
+
       if (isSelected) {
-        bg = UIUtil.getListSelectionBackground();
+        myPanel.setBackground(list.getSelectionBackground());
       }
       else {
-        bg = index % 2 == 1 ? UIUtil.getListBackground() : UIUtil.getDecoratedRowColor();
+        myPanel.setBackground(index % 2 == 1 ? UIUtil.getListBackground() : UIUtil.getDecoratedRowColor());
       }
-      myPanel.setBackground(bg);
-      myNameLabel.setBackground(bg);
-      myRepositoryLabel.setBackground(bg);
+
       return myPanel;
     }
   }

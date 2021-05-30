@@ -15,108 +15,106 @@
  */
 package com.intellij.webcore.packaging;
 
-import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.ide.IdeBundle;
+import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.application.ModalityState;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.InputValidator;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.ui.AnActionButton;
-import com.intellij.ui.AnActionButtonRunnable;
-import com.intellij.ui.AnActionButtonUpdater;
 import com.intellij.ui.ToolbarDecorator;
 import com.intellij.ui.components.JBList;
+import com.intellij.util.CatchingConsumer;
 import com.intellij.util.ui.JBUI;
 
 import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
+import java.util.List;
 
 public class ManageRepoDialog extends DialogWrapper {
   private JPanel myMainPanel;
-  private JBList myList;
+  private final JBList<String> myList;
   private boolean myEnabled;
+  private static final Logger LOG = Logger.getInstance(ManageRepoDialog.class);
 
   public ManageRepoDialog(Project project, final PackageManagementService controller) {
     super(project, false);
     init();
-    setTitle("Manage Repositories");
-    final DefaultListModel repoModel = new DefaultListModel();
-    for(String repoUrl: controller.getAllRepositories()) {
-      repoModel.addElement(repoUrl);
-    }
-    myList = new JBList();
+    setTitle(IdeBundle.message("manage.repositories.dialog.title"));
+    myList = new JBList<>();
+    myList.setPaintBusy(true);
+    final DefaultListModel<String> repoModel = new DefaultListModel<>();
+    controller.fetchAllRepositories(new CatchingConsumer<>() {
+      @Override
+      public void consume(List<String> repoUrls) {
+        ApplicationManager.getApplication().invokeLater(() -> {
+          if (isDisposed()) return;
+          myList.setPaintBusy(false);
+          for (String repoUrl : repoUrls) {
+            repoModel.addElement(repoUrl);
+          }
+        }, ModalityState.any());
+      }
+
+      @Override
+      public void consume(Exception e) {
+        ApplicationManager.getApplication().invokeLater(() -> {
+          if (isDisposed()) return;
+          myList.setPaintBusy(false);
+          LOG.warn(e);
+        });
+      }
+    });
     myList.setModel(repoModel);
     myList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
-    myList.addListSelectionListener(new ListSelectionListener() {
-      @Override
-      public void valueChanged(ListSelectionEvent event) {
-        final Object selected = myList.getSelectedValue();
-        myEnabled = controller.canModifyRepository((String) selected);
-      }
+    myList.addListSelectionListener(event -> {
+      final String selected = myList.getSelectedValue();
+      myEnabled = controller.canModifyRepository(selected);
     });
 
     final ToolbarDecorator decorator = ToolbarDecorator.createDecorator(myList).disableUpDownActions();
-    decorator.setAddActionName("Add repository");
-    decorator.setRemoveActionName("Remove repository from list");
-    decorator.setEditActionName("Edit repository URL");
+    decorator.setAddActionName(IdeBundle.message("action.add.repository"));
+    decorator.setRemoveActionName(IdeBundle.message("action.remove.repository.from.list"));
+    decorator.setEditActionName(IdeBundle.message("action.edit.repository.url"));
 
-    decorator.setAddAction(new AnActionButtonRunnable() {
-      @Override
-      public void run(AnActionButton button) {
-        String url = Messages.showInputDialog("Please input repository URL", "Repository URL", null);
-        if (!repoModel.contains(url) && !StringUtil.isEmptyOrSpaces(url)) {
-          repoModel.addElement(url);
-          controller.addRepository(url);
+    decorator.setAddAction(button -> {
+      String url = Messages.showInputDialog(IdeBundle.message("please.input.repository.url"), IdeBundle.message("repository.url.title"), null);
+      if (!StringUtil.isEmptyOrSpaces(url) && !repoModel.contains(url)) {
+        repoModel.addElement(url);
+        controller.addRepository(url);
+      }
+    });
+    decorator.setEditAction(button -> {
+      final String oldValue = myList.getSelectedValue();
+
+      String url = Messages.showInputDialog(IdeBundle.message("please.edit.repository.url"), IdeBundle.message("repository.url.title"), null, oldValue, new InputValidator() {
+        @Override
+        public boolean checkInput(String inputString) {
+          return !repoModel.contains(inputString);
         }
-      }
-    });
-    decorator.setEditAction(new AnActionButtonRunnable() {
-      @Override
-      public void run(AnActionButton button) {
-        final String oldValue = (String)myList.getSelectedValue();
 
-        String url = Messages.showInputDialog("Please edit repository URL", "Repository URL", null, oldValue, new InputValidator() {
-          @Override
-          public boolean checkInput(String inputString) {
-            return !repoModel.contains(inputString);
-          }
-
-          @Override
-          public boolean canClose(String inputString) {
-            return true;
-          }
-        });
-        if (!StringUtil.isEmptyOrSpaces(url) && !oldValue.equals(url)) {
-          repoModel.addElement(url);
-          repoModel.removeElement(oldValue);
-          controller.removeRepository(oldValue);
-          controller.addRepository(url);
+        @Override
+        public boolean canClose(String inputString) {
+          return true;
         }
+      });
+      if (!StringUtil.isEmptyOrSpaces(url) && !oldValue.equals(url)) {
+        repoModel.addElement(url);
+        repoModel.removeElement(oldValue);
+        controller.removeRepository(oldValue);
+        controller.addRepository(url);
       }
     });
-    decorator.setRemoveAction(new AnActionButtonRunnable() {
-      @Override
-      public void run(AnActionButton button) {
-        String selected = (String)myList.getSelectedValue();
-        controller.removeRepository(selected);
-        repoModel.removeElement(selected);
-        button.setEnabled(false);
-      }
+    decorator.setRemoveAction(button -> {
+      String selected = myList.getSelectedValue();
+      controller.removeRepository(selected);
+      repoModel.removeElement(selected);
+      button.setEnabled(false);
     });
-    decorator.setRemoveActionUpdater(new AnActionButtonUpdater() {
-      @Override
-      public boolean isEnabled(AnActionEvent e) {
-        return myEnabled;
-      }
-    });
-    decorator.setEditActionUpdater(new AnActionButtonUpdater() {
-      @Override
-      public boolean isEnabled(AnActionEvent e) {
-        return myEnabled;
-      }
-    });
+    decorator.setRemoveActionUpdater(e -> myEnabled);
+    decorator.setEditActionUpdater(e -> myEnabled);
 
     final JPanel panel = decorator.createPanel();
     panel.setPreferredSize(JBUI.size(800, 600));

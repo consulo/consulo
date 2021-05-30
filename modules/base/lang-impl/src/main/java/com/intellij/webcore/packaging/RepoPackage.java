@@ -1,12 +1,11 @@
+// Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.webcore.packaging;
 
 import javax.annotation.Nullable;
+
 import java.util.Collection;
 import java.util.Collections;
 
-/**
- * User: catherine
- */
 public class RepoPackage implements Comparable {
   private final String myName;
   @Nullable
@@ -44,12 +43,13 @@ public class RepoPackage implements Comparable {
     return myLatestVersion;
   }
 
-  public Collection<String> getKeywords() { return myKeywords; }
+  public Collection<String> getKeywords() {
+    return myKeywords;
+  }
 
   @Override
   public int compareTo(Object o) {
-    if (o instanceof RepoPackage)
-      return myName.compareTo(((RepoPackage)o).getName());
+    if (o instanceof RepoPackage r) return myName.compareTo(r.getName());
     return 0;
   }
 }

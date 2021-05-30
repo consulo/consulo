@@ -1,17 +1,17 @@
+// Copyright 2000-2021 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.webcore.packaging;
 
+import com.intellij.execution.ExecutionException;
 import com.intellij.util.CatchingConsumer;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 
-/**
- * @author yole
- */
+
 public abstract class PackageManagementService {
   /**
    * Returns the list of URLs for all configured package repositories.
@@ -21,6 +21,20 @@ public abstract class PackageManagementService {
   @Nullable
   public List<String> getAllRepositories() {
     return null;
+  }
+
+  /**
+   * An async version of {@link #getAllRepositories()}.
+   */
+  public void fetchAllRepositories(@Nonnull CatchingConsumer<? super List<String>, ? super Exception> consumer) {
+    consumer.consume(getAllRepositories());
+  }
+
+  /**
+   * Returns true if the service supports managing repositories.
+   */
+  public boolean canManageRepositories() {
+    return getAllRepositories() != null;
   }
 
   /**
@@ -41,8 +55,8 @@ public abstract class PackageManagementService {
 
   /**
    * @return a negative integer, if the first version is older than the second,
-   *         zero, if the versions are equals,
-   *         a positive integer, if the first version is newer than the second.
+   * zero, if the versions are equals,
+   * a positive integer, if the first version is newer than the second.
    */
   public int compareVersions(@Nonnull String version1, @Nonnull String version2) {
     return PackageVersionComparator.VERSION_COMPARATOR.compare(version1, version2);
@@ -55,6 +69,7 @@ public abstract class PackageManagementService {
    * @return the list of all packages in all repositories
    * @throws IOException
    */
+  @Nonnull
   public abstract List<RepoPackage> getAllPackages() throws IOException;
 
   /**
@@ -64,15 +79,19 @@ public abstract class PackageManagementService {
    * @return the list of all packages in all repositories
    * @throws IOException
    */
-  public abstract List<RepoPackage> reloadAllPackages() throws IOException;
+  @Nonnull
+  public List<RepoPackage> reloadAllPackages() throws IOException {
+    return getAllPackages();
+  }
 
   /**
    * Returns the cached list of all packages in all configured repositories, or an empty list if there is no cached information available.
    *
    * @return the list of all packages or an empty list.
    */
+  @Nonnull
   public List<RepoPackage> getAllPackagesCached() {
-    return Collections.emptyList();
+    return List.of();
   }
 
   /**
@@ -109,7 +128,24 @@ public abstract class PackageManagementService {
    *
    * @return the collection of currently installed packages.
    */
-  public abstract Collection<InstalledPackage> getInstalledPackages() throws IOException;
+  @Nonnull
+  public List<? extends InstalledPackage> getInstalledPackagesList() throws ExecutionException {
+    try {
+      return new ArrayList<>(getInstalledPackages());
+    }
+    catch (IOException e) {
+      throw new ExecutionException(e);
+    }
+  }
+
+  /**
+   * @deprecated Please use {@link #getInstalledPackagesList()} instead.
+   */
+  @SuppressWarnings("DeprecatedIsStillUsed")
+  @Deprecated(since = "2020.2", forRemoval = true)
+  public Collection<InstalledPackage> getInstalledPackages() throws IOException {
+    throw new AbstractMethodError("The method is deprecated. Please use `getInstalledPackagesList`.");
+  }
 
   /**
    * Installs the specified package. Called in the event dispatch thread; needs to take care of spawning a background task itself.
@@ -121,8 +157,7 @@ public abstract class PackageManagementService {
    * @param listener      the listener that must be called to publish information about the installation progress
    * @param installToUser the state of the "install to user" checkbox (ignore if not applicable)
    */
-  public abstract void installPackage(RepoPackage repoPackage, @Nullable String version, boolean forceUpgrade,
-                                      @Nullable String extraOptions, Listener listener, boolean installToUser);
+  public abstract void installPackage(RepoPackage repoPackage, @Nullable String version, boolean forceUpgrade, @Nullable String extraOptions, Listener listener, boolean installToUser);
 
   public abstract void uninstallPackages(List<InstalledPackage> installedPackages, Listener listener);
 
@@ -130,9 +165,19 @@ public abstract class PackageManagementService {
 
   public abstract void fetchPackageDetails(String packageName, CatchingConsumer<String, Exception> consumer);
 
+  /**
+   * @return identifier of this service for reported usage data (sent for JetBrains implementations only).
+   * Return null to avoid reporting any usage data.
+   */
+  @Nullable
+  public String getID() {
+    return null;
+  }
+
   public interface Listener {
     /**
      * Fired when the installation of the specified package is started.
+     * Called from the caller thread.
      *
      * @param packageName the name of the package being installed.
      */
@@ -140,7 +185,9 @@ public abstract class PackageManagementService {
 
     /**
      * Fired when the installation of the specified package has been completed (successfully or unsuccessfully).
-     *  @param packageName the name of the installed package.
+     * Called from the caller thread.
+     *
+     * @param packageName      the name of the installed package.
      * @param errorDescription null if the package has been installed successfully, error message otherwise.
      */
     void operationFinished(String packageName, @Nullable ErrorDescription errorDescription);

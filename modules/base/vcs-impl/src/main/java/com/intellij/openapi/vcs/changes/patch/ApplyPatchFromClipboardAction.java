@@ -11,9 +11,9 @@ import com.intellij.openapi.vcs.VcsApplicationSettings;
 import com.intellij.openapi.vcs.VcsBundle;
 import com.intellij.openapi.vcs.changes.ChangeListManager;
 import com.intellij.testFramework.LightVirtualFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.event.KeyEvent;
 import java.util.Collections;
@@ -21,7 +21,7 @@ import java.util.Collections;
 public class ApplyPatchFromClipboardAction extends DumbAwareAction {
 
   @Override
-  public void update(@NotNull AnActionEvent e) {
+  public void update(@Nonnull AnActionEvent e) {
     Project project = e.getData(CommonDataKeys.PROJECT);
     String text = ClipboardUtil.getTextInClipboard();
     // allow to apply from clipboard even if we do not detect it as a patch, because during applying we parse content more precisely
@@ -29,7 +29,7 @@ public class ApplyPatchFromClipboardAction extends DumbAwareAction {
   }
 
   @Override
-  public void actionPerformed(@NotNull AnActionEvent e) {
+  public void actionPerformed(@Nonnull AnActionEvent e) {
     final Project project = e.getRequiredData(CommonDataKeys.PROJECT);
     if (ChangeListManager.getInstance(project).isFreezedWithNotification(VcsBundle.message("patch.apply.cannot.apply.now"))) return;
     FileDocumentManager.getInstance().saveAllDocuments();
@@ -41,7 +41,7 @@ public class ApplyPatchFromClipboardAction extends DumbAwareAction {
 
   public static class MyApplyPatchFromClipboardDialog extends ApplyPatchDifferentiatedDialog {
 
-    public MyApplyPatchFromClipboardDialog(@NotNull Project project, @NotNull String clipboardText) {
+    public MyApplyPatchFromClipboardDialog(@Nonnull Project project, @Nonnull String clipboardText) {
       super(project, new ApplyPatchDefaultExecutor(project), Collections.emptyList(), ApplyPatchMode.APPLY_PATCH_IN_MEMORY, new LightVirtualFile("clipboardPatchFile", clipboardText), null, null,
             //NON-NLS
             null, null, null, false);
@@ -53,7 +53,7 @@ public class ApplyPatchFromClipboardAction extends DumbAwareAction {
       return createAnalyzeOnTheFlyOptionPanel();
     }
 
-    @NotNull
+    @Nonnull
     private static JCheckBox createAnalyzeOnTheFlyOptionPanel() {
       final JCheckBox removeOptionCheckBox = new JCheckBox(VcsBundle.message("patch.apply.analyze.from.clipboard.on.the.fly.checkbox"));
       removeOptionCheckBox.setMnemonic(KeyEvent.VK_L);

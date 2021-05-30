@@ -1,5 +1,7 @@
+// Copyright 2000-2021 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.webcore.packaging;
 
+import com.intellij.ide.IdeBundle;
 import com.intellij.openapi.ui.MessageType;
 import com.intellij.ui.HyperlinkAdapter;
 import com.intellij.util.ui.SwingHelper;
@@ -13,9 +15,7 @@ import java.awt.*;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * @author yole
- */
+
 public class PackagesNotificationPanel {
   private final JEditorPane myHtmlViewer;
   private final Map<String, Runnable> myLinkHandlers = new HashMap<>();
@@ -42,24 +42,24 @@ public class PackagesNotificationPanel {
 
   public static void showError(@Nonnull String title, @Nonnull PackageManagementService.ErrorDescription description) {
     final PackagingErrorDialog dialog = new PackagingErrorDialog(title, description);
-    dialog.show();
+    dialog.showAsync();
   }
 
   public void showResult(String packageName, @Nullable PackageManagementService.ErrorDescription errorDescription) {
     if (errorDescription == null) {
-      String message = "Package installed successfully";
+      String message = IdeBundle.message("package.installed.successfully");
       if (packageName != null) {
-        message = "Package '" + packageName + "' installed successfully";
+        message = IdeBundle.message("package.0.installed.successfully", packageName);
       }
       showSuccess(message);
     }
     else {
-      String title = "Failed to install packages";
+      String title = IdeBundle.message("failed.to.install.packages.dialog.title");
       if (packageName != null) {
-        title = "Failed to install package '" + packageName + "'";
+        title = IdeBundle.message("failed.to.install.package.dialog.title", packageName);
       }
-      String firstLine = "Error occurred when installing package '" + packageName + "'. ";
-      showError(firstLine + "<a href=\"xxx\">Details...</a>", title, errorDescription);
+      String text = IdeBundle.message("install.package.failure", packageName);
+      showError(text, title, errorDescription);
     }
   }
 
@@ -88,7 +88,7 @@ public class PackagesNotificationPanel {
     myErrorDescription = null;
   }
 
-  public void showError(String text, final String detailsTitle, final PackageManagementService.ErrorDescription errorDescription) {
+  public void showError(String text, @Nullable String detailsTitle, PackageManagementService.ErrorDescription errorDescription) {
     showContent(text, MessageType.ERROR.getPopupBackground());
     myErrorTitle = detailsTitle;
     myErrorDescription = errorDescription;

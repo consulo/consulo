@@ -1,23 +1,29 @@
+// Copyright 2000-2021 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.webcore.packaging;
 
-import javax.annotation.Nullable;
+import javax.annotation.Nonnull;
 
-/**
- * @author yole
- */
+import javax.annotation.Nullable;
+import java.util.Objects;
+
+
 public class InstalledPackage {
+  @Nonnull
   private final String myName;
+  @Nullable
   private final String myVersion;
 
-  public InstalledPackage(String name, String version) {
+  public InstalledPackage(@Nonnull String name, @Nullable String version) {
     myName = name;
     myVersion = version;
   }
 
+  @Nonnull
   public String getName() {
     return myName;
   }
 
+  @Nullable
   public String getVersion() {
     return myVersion;
   }
@@ -28,7 +34,9 @@ public class InstalledPackage {
   }
 
   @Override
-  public String toString() {
+  public
+  @Nonnull
+  String toString() {
     return getName();
   }
 
@@ -36,15 +44,14 @@ public class InstalledPackage {
   public boolean equals(Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
+
     InstalledPackage aPackage = (InstalledPackage)o;
-    if (myName != null ? !myName.equals(aPackage.myName) : aPackage.myName != null) return false;
-    if (myVersion != null ? !myVersion.equals(aPackage.myVersion) : aPackage.myVersion != null) return false;
-    return true;
+    return myName.equals(aPackage.myName) && Objects.equals(myVersion, aPackage.myVersion);
   }
 
   @Override
   public int hashCode() {
-    int result = myName != null ? myName.hashCode() : 0;
+    int result = myName.hashCode();
     result = 31 * result + (myVersion != null ? myVersion.hashCode() : 0);
     return result;
   }
