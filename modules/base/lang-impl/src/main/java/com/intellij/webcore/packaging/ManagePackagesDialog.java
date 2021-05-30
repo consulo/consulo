@@ -19,12 +19,14 @@ import com.intellij.ui.*;
 import com.intellij.ui.components.JBList;
 import com.intellij.ui.scale.JBUIScale;
 import com.intellij.util.CatchingConsumer;
-import com.intellij.util.ObjectUtils;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.SwingHelper;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.update.UiNotifyConnector;
 import consulo.logging.Logger;
+import consulo.packagesView.SearchablePackageManagementService;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.util.lang.ObjectUtil;
 import org.jetbrains.annotations.Nls;
 
 import javax.annotation.Nonnull;
@@ -40,6 +42,8 @@ import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.util.List;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Future;
 
 /**
  * User: catherine
@@ -48,6 +52,7 @@ import java.util.*;
  */
 public class ManagePackagesDialog extends DialogWrapper {
   private static final Logger LOG = Logger.getInstance(ManagePackagesDialog.class);
+  private static final RepoPackage MORE = new RepoPackage("more", "more", "more");
 
   @Nonnull
   private final Project myProject;
@@ -74,7 +79,13 @@ public class ManagePackagesDialog extends DialogWrapper {
   private final PackageManagementService.Listener myPackageListener;
 
   private final Set<String> myCurrentlyInstalling = new HashSet<>();
-  protected final ListSpeedSearch myListSpeedSearch;
+
+  private Future<?> myGetPackagesFuture = CompletableFuture.completedFuture(null);
+
+  @Nullable
+  protected ListSpeedSearch myListSpeedSearch;
+
+  private final SearchablePackageManagementService mySearchablePackageManagement;
 
   public ManagePackagesDialog(@Nonnull Project project, final PackageManagementService packageManagementService, @Nullable final PackageManagementService.Listener packageListener) {
     super(project, true);
@@ -88,15 +99,18 @@ public class ManagePackagesDialog extends DialogWrapper {
     myNotificationArea = new PackagesNotificationPanel();
     myNotificationsAreaPlaceholder.add(myNotificationArea.getComponent(), BorderLayout.CENTER);
 
+    mySearchablePackageManagement = ObjectUtil.tryCast(packageManagementService, SearchablePackageManagementService.class);
+
     final AnActionButton reloadButton = new AnActionButton(IdeBundle.message("action.AnActionButton.text.reload.list.of.packages"), AllIcons.Actions.Refresh) {
+      @RequiredUIAccess
       @Override
       public void actionPerformed(@Nonnull AnActionEvent e) {
         myPackages.setPaintBusy(true);
-        final Application application = ApplicationManager.getApplication();
+        final Application application = Application.get();
         application.executeOnPooledThread(() -> {
           try {
             myController.reloadAllPackages();
-            initModel();
+            initModel("");
             myPackages.setPaintBusy(false);
           }
           catch (final IOException e1) {
@@ -109,10 +123,14 @@ public class ManagePackagesDialog extends DialogWrapper {
         });
       }
     };
-    myListSpeedSearch = new ListSpeedSearch(myPackages, o -> {
-      if (o instanceof RepoPackage) return ((RepoPackage)o).getName();
-      return "";
-    });
+
+    if (mySearchablePackageManagement != null) {
+      myListSpeedSearch = new ListSpeedSearch(myPackages, o -> {
+        if (o instanceof RepoPackage) return ((RepoPackage)o).getName();
+        return "";
+      });
+    }
+
     JPanel packagesPanel = ToolbarDecorator.createDecorator(myPackages).disableAddAction().disableUpDownActions().disableRemoveAction().addExtraAction(reloadButton).createPanel();
     packagesPanel.setPreferredSize(new Dimension(JBUIScale.scale(400), -1));
     packagesPanel.setMinimumSize(new Dimension(JBUIScale.scale(100), -1));
@@ -122,28 +140,13 @@ public class ManagePackagesDialog extends DialogWrapper {
     mySplitPane.setLeftComponent(packagesPanel);
 
     myPackages.addListSelectionListener(new MyPackageSelectionListener());
-    myInstallToUser.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent event) {
-        myController.installToUserChanged(myInstallToUser.isSelected());
-      }
-    });
+    myInstallToUser.addActionListener(event -> myController.installToUserChanged(myInstallToUser.isSelected()));
     myOptionsCheckBox.setEnabled(false);
     myVersionCheckBox.setEnabled(false);
-    myVersionCheckBox.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent event) {
-        myVersionComboBox.setEnabled(myVersionCheckBox.isSelected());
-      }
-    });
+    myVersionCheckBox.addActionListener(event -> myVersionComboBox.setEnabled(myVersionCheckBox.isSelected()));
 
-    UiNotifyConnector.doWhenFirstShown(myPackages, this::initModel);
-    myOptionsCheckBox.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent event) {
-        myOptionsField.setEnabled(myOptionsCheckBox.isSelected());
-      }
-    });
+    UiNotifyConnector.doWhenFirstShown(myPackages, () -> initModel(""));
+    myOptionsCheckBox.addActionListener(event -> myOptionsField.setEnabled(myOptionsCheckBox.isSelected()));
     myInstallButton.setEnabled(false);
     myDescriptionTextArea.addHyperlinkListener(new PluginManagerMain.MyHyperlinkListener());
     addInstallAction();
@@ -161,6 +164,8 @@ public class ManagePackagesDialog extends DialogWrapper {
       myInstallToUser.setVisible(false);
     }
     myMainPanel.setPreferredSize(new Dimension(JBUIScale.scale(900), JBUIScale.scale(700)));
+
+    GuiUtils.replaceJSplitPaneWithIDEASplitter(myMainPanel);
   }
 
   public void selectPackage(@Nonnull InstalledPackage pkg) {
@@ -168,14 +173,12 @@ public class ManagePackagesDialog extends DialogWrapper {
     doSelectPackage(mySelectedPackageName);
   }
 
+  @RequiredUIAccess
   private void addManageAction() {
     if (myController.canManageRepositories()) {
-      myManageButton.addActionListener(new ActionListener() {
-        @Override
-        public void actionPerformed(ActionEvent event) {
-          ManageRepoDialog dialog = new ManageRepoDialog(myProject, myController);
-          dialog.show();
-        }
+      myManageButton.addActionListener(event -> {
+        ManageRepoDialog dialog = new ManageRepoDialog(myProject, myController);
+        dialog.showAsync();
       });
     }
     else {
@@ -268,16 +271,34 @@ public class ManagePackagesDialog extends DialogWrapper {
     });
   }
 
-  public void initModel() {
+  public void initModel(@Nonnull String filter) {
+    myGetPackagesFuture.cancel(true);
+    
     setDownloadStatus(true);
-    final Application application = ApplicationManager.getApplication();
-    application.executeOnPooledThread(() -> {
+    final Application application = Application.get();
+    myGetPackagesFuture = application.executeOnPooledThread(() -> {
       try {
-        myPackagesModel = new PackagesModel(myController.getAllPackages());
+
+        List<RepoPackage> allPackages;
+
+        if (mySearchablePackageManagement != null) {
+          allPackages = mySearchablePackageManagement.getPackages(filter, 0, mySearchablePackageManagement.getPageSize());
+        }
+        else {
+          allPackages = myController.getAllPackages();
+        }
+
+        myPackagesModel = new PackagesModel(allPackages);
+
+        //if(mySearchablePackageManagement != null) {
+        //  myPackagesModel.add(MORE);
+        //}
 
         application.invokeLater(() -> {
           myPackages.setModel(myPackagesModel);
-          ((MyPackageFilter)myFilter).filter();
+          if(mySearchablePackageManagement == null) {
+            ((MyPackageFilter)myFilter).filter();
+          }
           doSelectPackage(mySelectedPackageName);
           setDownloadStatus(false);
         }, ModalityState.any());
@@ -295,7 +316,7 @@ public class ManagePackagesDialog extends DialogWrapper {
   }
 
   private void doSelectPackage(@Nullable String packageName) {
-    PackagesModel packagesModel = ObjectUtils.tryCast(myPackages.getModel(), PackagesModel.class);
+    PackagesModel packagesModel = ObjectUtil.tryCast(myPackages.getModel(), PackagesModel.class);
     if (packageName == null || packagesModel == null) {
       return;
     }
@@ -347,7 +368,16 @@ public class ManagePackagesDialog extends DialogWrapper {
 
     @Override
     public void filter() {
-      if (myPackagesModel != null) myPackagesModel.filter(getFilter());
+      if (myPackagesModel == null) {
+        return;
+      }
+
+      if (mySearchablePackageManagement != null) {
+        initModel(getFilter());
+      }
+      else {
+        myPackagesModel.filter(getFilter());
+      }
     }
   }
 
@@ -480,24 +510,24 @@ public class ManagePackagesDialog extends DialogWrapper {
     }
   }
 
+  @Nonnull
   @Override
   protected Action[] createActions() {
     return new Action[0];
   }
 
-  private final class MyTableRenderer implements ListCellRenderer<RepoPackage> {
+  private final class MyTableRenderer extends JPanel implements ListCellRenderer<RepoPackage> {
     private final SimpleColoredComponent myNameComponent = new SimpleColoredComponent();
     private final SimpleColoredComponent myRepositoryComponent = new SimpleColoredComponent();
-    private final JPanel myPanel = new JPanel(new BorderLayout());
 
     private MyTableRenderer() {
-      myPanel.add(myNameComponent, BorderLayout.WEST);
-      myPanel.add(myRepositoryComponent, BorderLayout.EAST);
+      super(new BorderLayout());
+      add(myNameComponent, BorderLayout.WEST);
+      add(myRepositoryComponent, BorderLayout.EAST);
     }
 
     @Override
     public Component getListCellRendererComponent(JList<? extends RepoPackage> list, RepoPackage repoPackage, int index, boolean isSelected, boolean cellHasFocus) {
-
       myNameComponent.clear();
       myRepositoryComponent.clear();
 
@@ -515,13 +545,13 @@ public class ManagePackagesDialog extends DialogWrapper {
       }
 
       if (isSelected) {
-        myPanel.setBackground(list.getSelectionBackground());
+        setBackground(list.getSelectionBackground());
       }
       else {
-        myPanel.setBackground(index % 2 == 1 ? UIUtil.getListBackground() : UIUtil.getDecoratedRowColor());
+        setBackground(index % 2 == 1 ? UIUtil.getListBackground() : UIUtil.getDecoratedRowColor());
       }
 
-      return myPanel;
+      return this;
     }
   }
 }

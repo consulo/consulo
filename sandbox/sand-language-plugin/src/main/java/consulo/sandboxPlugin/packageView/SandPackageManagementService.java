@@ -16,9 +16,11 @@
 package consulo.sandboxPlugin.packageView;
 
 import com.intellij.util.CatchingConsumer;
+import com.intellij.util.containers.MultiMap;
 import com.intellij.webcore.packaging.InstalledPackage;
 import com.intellij.webcore.packaging.PackageManagementServiceEx;
 import com.intellij.webcore.packaging.RepoPackage;
+import consulo.packagesView.SearchablePackageManagementService;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -30,7 +32,19 @@ import java.util.List;
  * @author VISTALL
  * @since 30/05/2021
  */
-public class SandPackageManagementService extends PackageManagementServiceEx {
+public class SandPackageManagementService extends PackageManagementServiceEx implements SearchablePackageManagementService {
+  private MultiMap<String, RepoPackage> myMap = new MultiMap<>();
+
+  public SandPackageManagementService() {
+    for (int i = 0; i < 100; i++) {
+      myMap.putValue("test", new RepoPackage("Test " + i, null, i + "." + i));
+    }
+
+    for (int i = 0; i < 100; i++) {
+      myMap.putValue("my", new RepoPackage("My " + i, null, i + "." + i));
+    }
+  }
+
   @Override
   public void updatePackage(@Nonnull InstalledPackage installedPackage, @Nullable String version, @Nonnull Listener listener) {
 
@@ -44,11 +58,7 @@ public class SandPackageManagementService extends PackageManagementServiceEx {
   @Nonnull
   @Override
   public List<RepoPackage> getAllPackages() throws IOException {
-    List<RepoPackage> list = new ArrayList<>();
-    for (int i = 0; i < 100; i++) {
-      list.add(new RepoPackage("Test " + i, null, i + "." + i));
-    }
-    return list;
+    return List.of();
   }
 
   @Override
@@ -69,5 +79,19 @@ public class SandPackageManagementService extends PackageManagementServiceEx {
   @Override
   public void fetchPackageDetails(String packageName, CatchingConsumer<String, Exception> consumer) {
     consumer.accept("Some Description");
+  }
+
+  @Nonnull
+  @Override
+  public List<RepoPackage> getPackages(@Nonnull String searchQuery, int from, int to) {
+    if(searchQuery.isEmpty()) {
+      return new ArrayList<>(myMap.values());
+    }
+    return new ArrayList<>(myMap.get(searchQuery));
+  }
+
+  @Override
+  public int getPageSize() {
+    return 100;
   }
 }
