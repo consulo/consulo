@@ -18,8 +18,8 @@ package com.intellij.util;
 import com.intellij.openapi.util.Condition;
 import com.intellij.util.containers.Convertor;
 import org.jetbrains.annotations.Contract;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.lang.reflect.Proxy;
 import java.util.function.Supplier;
@@ -151,11 +151,8 @@ public class ObjectUtil {
     return new Sentinel(name);
   }
 
-  /**
-   * They promise in http://mail.openjdk.java.net/pipermail/core-libs-dev/2018-February/051312.html that
-   * the object reference won't be removed by JIT and GC-ed until this call.
-   */
-  public static void reachabilityFence(@SuppressWarnings("unused") Object o) {
+  public static void reachabilityFence(Object o) {
+    consulo.util.lang.ObjectUtil.reachabilityFence(o);
   }
 
   private static class Sentinel {
