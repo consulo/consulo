@@ -8,12 +8,12 @@ module consulo.util.collection.primitive {
 
   requires org.slf4j;
 
+  exports consulo.util.collection.primitive.bytes;
   exports consulo.util.collection.primitive.ints;
   exports consulo.util.collection.primitive.longs;
+  exports consulo.util.collection.primitive.doubles;
   exports consulo.util.collection.primitive.objects;
 
   // TODO export only to impl modules
   exports consulo.util.collection.primitive.impl;
-
-  uses consulo.util.collection.primitive.impl.PrimitiveCollectionFactory;
 }

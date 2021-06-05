@@ -21,6 +21,7 @@ import consulo.util.collection.primitive.ints.IntSet;
 import gnu.trove.TIntHashingStrategy;
 import gnu.trove.TIntObjectHashMap;
 import gnu.trove.TIntObjectIterator;
+import gnu.trove.TObjectHash;
 
 import javax.annotation.Nonnull;
 import java.util.*;
@@ -59,9 +60,13 @@ public class MyIntObjectHashMap<V> extends TIntObjectHashMap<V> implements IntOb
       myIterator.advance();
 
       int key = myIterator.key();
-      V1 value = myIterator.value();
+      Object value = myIterator.value();
+      // why this value here??
+      if(value == TObjectHash.NULL) {
+        value = null;
+      }
 
-      return new IntObjectEntryRecord<>(key, value);
+      return new IntObjectEntryRecord<>(key, (V1)value);
     }
   }
 

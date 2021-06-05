@@ -4,7 +4,10 @@ module consulo.util.collection {
 
   exports consulo.util.collection;
 
-  exports consulo.util.collection.impl.map to consulo.util.collection.primitive;
-  exports consulo.util.collection.impl.set to consulo.util.collection.primitive;
-  exports consulo.util.collection.impl to consulo.util.collection.primitive;
+  // TODO exports only to impl modules
+  exports consulo.util.collection.impl.map;
+  exports consulo.util.collection.impl.set;
+  exports consulo.util.collection.impl;
+
+  uses consulo.util.collection.impl.CollectionFactory;
 }
