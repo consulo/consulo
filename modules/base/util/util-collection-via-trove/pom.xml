@@ -46,6 +46,7 @@
       <groupId>consulo.internal</groupId>
       <artifactId>trove4j</artifactId>
       <version>${trove4j.version}</version>
+      <scope>runtime</scope>
     </dependency>
     <dependency>
       <groupId>org.slf4j</groupId>

@@ -59,6 +59,7 @@
     <dependency>
       <groupId>consulo.internal</groupId>
       <artifactId>trove4j</artifactId>
+      <optional>true</optional>
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
