@@ -17,6 +17,8 @@ package com.intellij.ui;
 
 import com.intellij.util.Assertion;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.util.collection.primitive.ints.IntList;
+import consulo.util.collection.primitive.ints.IntLists;
 import junit.framework.TestCase;
 
 import javax.swing.event.ListDataEvent;
@@ -51,7 +53,7 @@ public class SortedListModelTest extends TestCase {
   public void testRemoveViaIterator() {
     myModel.setAll(new String[]{"1", "2", "3", "4"});
     Iterator iterator = myModel.iterator();
-    final TIntArrayList removed = new TIntArrayList();
+    final IntList removed = IntLists.newArrayList();
     myModel.addListDataListener(new ListDataListener() {
       @Override
       public void contentsChanged(ListDataEvent e) {
