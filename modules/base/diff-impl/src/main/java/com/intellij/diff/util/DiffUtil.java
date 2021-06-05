@@ -117,6 +117,8 @@ import java.awt.*;
 import java.nio.charset.Charset;
 import java.util.List;
 import java.util.*;
+import java.util.function.BiPredicate;
+import java.util.function.BooleanSupplier;
 
 public class DiffUtil {
   private static final Logger LOG = Logger.getInstance(DiffUtil.class);
@@ -987,7 +989,7 @@ public class DiffUtil {
 
   @Nonnull
   public static MergeConflictType getMergeType(@Nonnull Condition<ThreeSide> emptiness,
-                                               @Nonnull Equality<ThreeSide> equality) {
+                                               @Nonnull BiPredicate<ThreeSide, ThreeSide> equality) {
     boolean isLeftEmpty = emptiness.value(ThreeSide.LEFT);
     boolean isBaseEmpty = emptiness.value(ThreeSide.BASE);
     boolean isRightEmpty = emptiness.value(ThreeSide.RIGHT);
@@ -1001,7 +1003,7 @@ public class DiffUtil {
         return new MergeConflictType(TextDiffType.INSERTED, true, false);
       }
       else { // =-=
-        boolean equalModifications = equality.equals(ThreeSide.LEFT, ThreeSide.RIGHT);
+        boolean equalModifications = equality.test(ThreeSide.LEFT, ThreeSide.RIGHT);
         return new MergeConflictType(equalModifications ? TextDiffType.INSERTED : TextDiffType.CONFLICT);
       }
     }
@@ -1010,14 +1012,14 @@ public class DiffUtil {
         return new MergeConflictType(TextDiffType.DELETED);
       }
       else { // -==, ==-, ===
-        boolean unchangedLeft = equality.equals(ThreeSide.BASE, ThreeSide.LEFT);
-        boolean unchangedRight = equality.equals(ThreeSide.BASE, ThreeSide.RIGHT);
+        boolean unchangedLeft = equality.test(ThreeSide.BASE, ThreeSide.LEFT);
+        boolean unchangedRight = equality.test(ThreeSide.BASE, ThreeSide.RIGHT);
         assert !unchangedLeft || !unchangedRight;
 
         if (unchangedLeft) return new MergeConflictType(isRightEmpty ? TextDiffType.DELETED : TextDiffType.MODIFIED, false, true);
         if (unchangedRight) return new MergeConflictType(isLeftEmpty ? TextDiffType.DELETED : TextDiffType.MODIFIED, true, false);
 
-        boolean equalModifications = equality.equals(ThreeSide.LEFT, ThreeSide.RIGHT);
+        boolean equalModifications = equality.test(ThreeSide.LEFT, ThreeSide.RIGHT);
         return new MergeConflictType(equalModifications ? TextDiffType.MODIFIED : TextDiffType.CONFLICT);
       }
     }
