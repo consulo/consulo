@@ -41,13 +41,17 @@
       <artifactId>consulo-lang-impl-testing</artifactId>
       <version>${project.version}</version>
     </dependency>
-    
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>consulo-lvcs-impl</artifactId>
       <version>${project.version}</version>
     </dependency>
-
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>consulo-util-collection-via-trove</artifactId>
+      <version>${project.version}</version>
+      <scope>test</scope>
+    </dependency>
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
