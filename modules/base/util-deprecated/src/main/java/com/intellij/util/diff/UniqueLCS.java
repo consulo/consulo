@@ -15,7 +15,8 @@
  */
 package com.intellij.util.diff;
 
-import gnu.trove.TIntIntHashMap;
+import consulo.util.collection.primitive.ints.IntIntMap;
+import consulo.util.collection.primitive.ints.IntMaps;
 
 class UniqueLCS {
   private final int[] myFirst;
@@ -42,26 +43,26 @@ class UniqueLCS {
   public int[][] execute() {
     // map: key -> (offset1 + 1)
     // match: offset1 -> (offset2 + 1)
-    TIntIntHashMap map = new TIntIntHashMap(myCount1 + myCount2);
+    IntIntMap map = IntMaps.newIntIntHashMap(myCount1 + myCount2);
     int[] match = new int[myCount1];
 
     for (int i = 0; i < myCount1; i++) {
       int index = myStart1 + i;
-      int val = map.get(myFirst[index]);
+      int val = map.getInt(myFirst[index]);
 
       if (val == -1) continue;
       if (val == 0) {
-        map.put(myFirst[index], i + 1);
+        map.putInt(myFirst[index], i + 1);
       }
       else {
-        map.put(myFirst[index], -1);
+        map.putInt(myFirst[index], -1);
       }
     }
 
     int count = 0;
     for (int i = 0; i < myCount2; i++) {
       int index = myStart2 + i;
-      int val = map.get(mySecond[index]);
+      int val = map.getInt(mySecond[index]);
 
       if (val == 0 || val == -1) continue;
       if (match[val - 1] == 0) {
@@ -70,7 +71,7 @@ class UniqueLCS {
       }
       else {
         match[val - 1] = 0;
-        map.put(mySecond[index], -1);
+        map.putInt(mySecond[index], -1);
         count--;
       }
     }

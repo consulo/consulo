@@ -2,16 +2,17 @@
 package com.intellij.psi.stubs;
 
 import com.intellij.openapi.util.io.BufferExposingByteArrayOutputStream;
-import gnu.trove.TObjectHashingStrategy;
-import gnu.trove.TObjectIntHashMap;
-import javax.annotation.Nonnull;
+import consulo.util.collection.HashingStrategy;
+import consulo.util.collection.primitive.objects.ObjectIntMap;
+import consulo.util.collection.primitive.objects.ObjectMaps;
 
+import javax.annotation.Nonnull;
 import java.util.Arrays;
 
 class ByteArrayInterner {
-  private static final TObjectHashingStrategy<byte[]> BYTE_ARRAY_STRATEGY = new TObjectHashingStrategy<byte[]>() {
+  private static final HashingStrategy<byte[]> BYTE_ARRAY_STRATEGY = new HashingStrategy<byte[]>() {
     @Override
-    public int computeHashCode(byte[] object) {
+    public int hashCode(byte[] object) {
       return Arrays.hashCode(object);
     }
 
@@ -20,16 +21,16 @@ class ByteArrayInterner {
       return Arrays.equals(o1, o2);
     }
   };
-  private final TObjectIntHashMap<byte[]> arrayToStart = new TObjectIntHashMap<>(BYTE_ARRAY_STRATEGY);
+  private final ObjectIntMap<byte[]> arrayToStart = ObjectMaps.newObjectIntHashMap(BYTE_ARRAY_STRATEGY);
   final BufferExposingByteArrayOutputStream joinedBuffer = new BufferExposingByteArrayOutputStream();
 
   int internBytes(@Nonnull byte[] bytes) {
     if (bytes.length == 0) return 0;
 
-    int start = arrayToStart.get(bytes);
+    int start = arrayToStart.getInt(bytes);
     if (start == 0) {
       start = joinedBuffer.size() + 1; // should be positive
-      arrayToStart.put(bytes, start);
+      arrayToStart.putInt(bytes, start);
       joinedBuffer.write(bytes, 0, bytes.length);
     }
     return start;

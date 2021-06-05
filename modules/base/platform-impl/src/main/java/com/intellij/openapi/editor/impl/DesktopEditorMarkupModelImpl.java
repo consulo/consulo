@@ -58,8 +58,8 @@ import consulo.desktop.editor.impl.DesktopEditorErrorPanel;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ui.annotation.RequiredUIAccess;
-import gnu.trove.THashSet;
-import gnu.trove.TIntIntHashMap;
+import consulo.util.collection.primitive.ints.IntIntMap;
+import consulo.util.collection.primitive.ints.IntMaps;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -606,7 +606,7 @@ public class DesktopEditorMarkupModelImpl extends MarkupModelImpl implements Edi
               translateInstance.preConcatenate(transform);
               g2d.setTransform(translateInstance);
               UIUtil.drawImage(g2d, myCacheLevel2, -gutterWidth, 0, null);
-              TIntIntHashMap rightEdges = new TIntIntHashMap();
+              IntIntMap rightEdges = IntMaps.newIntIntHashMap();
               int h = myEditor.getLineHeight() - 2;
               for (RangeHighlighterEx ex : myHighlighters) {
                 int hEndOffset = ex.getAffectedAreaEndOffset();
@@ -628,10 +628,10 @@ public class DesktopEditorMarkupModelImpl extends MarkupModelImpl implements Edi
                 g2d.setFont(font.deriveFont(font.getSize() * .8F));
                 int w = g2d.getFontMetrics().stringWidth(s);
 
-                int rightEdge = rightEdges.get(logicalPosition.line);
+                int rightEdge = rightEdges.getInt(logicalPosition.line);
                 placeToShow.x = Math.max(placeToShow.x, rightEdge);
                 rightEdge = Math.max(rightEdge, placeToShow.x + w + 3 * R);
-                rightEdges.put(logicalPosition.line, rightEdge);
+                rightEdges.putInt(logicalPosition.line, rightEdge);
 
                 g2d.setColor(MessageType.WARNING.getPopupBackground());
                 g2d.fillRoundRect(placeToShow.x, placeToShow.y, w + JBUI.scale(2) * R, h, R, R);

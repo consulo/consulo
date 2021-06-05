@@ -17,10 +17,10 @@ package com.intellij.psi.codeStyle.autodetect;
 
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.Stack;
-import gnu.trove.TIntIntHashMap;
-import gnu.trove.TIntIntIterator;
-import javax.annotation.Nonnull;
+import consulo.util.collection.primitive.ints.IntIntMap;
+import consulo.util.collection.primitive.ints.IntMaps;
 
+import javax.annotation.Nonnull;
 import java.util.Comparator;
 import java.util.List;
 
@@ -40,7 +40,7 @@ public class IndentUsageStatisticsImpl implements IndentUsageStatistics {
   private int myTotalLinesWithTabs = 0;
   private int myTotalLinesWithWhiteSpaces = 0;
 
-  private TIntIntHashMap myIndentToUsagesMap = new TIntIntHashMap();
+  private IntIntMap myIndentToUsagesMap = IntMaps.newIntIntHashMap();
   private List<IndentUsageInfo> myIndentUsages = ContainerUtil.newArrayList();
   private Stack<IndentData> myParentIndents = ContainerUtil.newStack(new IndentData(0, 0));
 
@@ -52,13 +52,11 @@ public class IndentUsageStatisticsImpl implements IndentUsageStatistics {
   }
 
   @Nonnull
-  private static List<IndentUsageInfo> toIndentUsageList(@Nonnull TIntIntHashMap indentToUsages) {
+  private static List<IndentUsageInfo> toIndentUsageList(@Nonnull IntIntMap indentToUsages) {
     List<IndentUsageInfo> indentUsageInfos = ContainerUtil.newArrayList();
-    TIntIntIterator it = indentToUsages.iterator();
-    while (it.hasNext()) {
-      it.advance();
-      indentUsageInfos.add(new IndentUsageInfo(it.key(), it.value()));
-    }
+    indentToUsages.forEach((key, value) -> {
+      indentUsageInfos.add(new IndentUsageInfo(key, value));
+    });
     return indentUsageInfos;
   }
 
@@ -111,8 +109,8 @@ public class IndentUsageStatisticsImpl implements IndentUsageStatistics {
   }
 
   private void increaseIndentUsage(int relativeIndent) {
-    int timesUsed = myIndentToUsagesMap.get(relativeIndent);
-    myIndentToUsagesMap.put(relativeIndent, ++timesUsed);
+    int timesUsed = myIndentToUsagesMap.getInt(relativeIndent);
+    myIndentToUsagesMap.putInt(relativeIndent, ++timesUsed);
   }
 
   @Override
@@ -132,7 +130,7 @@ public class IndentUsageStatisticsImpl implements IndentUsageStatistics {
 
   @Override
   public int getTimesIndentUsed(int indent) {
-    return myIndentToUsagesMap.get(indent);
+    return myIndentToUsagesMap.getInt(indent);
   }
 
   @Override

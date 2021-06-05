@@ -4,29 +4,32 @@ package com.intellij.psi.stubs;
 import com.intellij.util.io.AbstractStringEnumerator;
 import com.intellij.util.io.DataInputOutputUtil;
 import com.intellij.util.io.IOUtil;
-import gnu.trove.TObjectIntHashMap;
+import consulo.util.collection.primitive.objects.ObjectIntMap;
+import consulo.util.collection.primitive.objects.ObjectMaps;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import java.io.*;
+import java.io.DataInput;
+import java.io.DataOutput;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.function.UnaryOperator;
 
 class FileLocalStringEnumerator implements AbstractStringEnumerator {
-  private final TObjectIntHashMap<String> myEnumerates;
+  private final ObjectIntMap<String> myEnumerates;
   private final ArrayList<String> myStrings = new ArrayList<>();
 
   FileLocalStringEnumerator(boolean forSavingStub) {
-    myEnumerates = forSavingStub ? new TObjectIntHashMap<>() : null;
+    myEnumerates = forSavingStub ? ObjectMaps.newObjectIntHashMap() : null;
   }
 
   @Override
   public int enumerate(@Nullable String value) {
     if (value == null) return 0;
     assert myEnumerates != null; // enumerate possible only when writing stub
-    int i = myEnumerates.get(value);
+    int i = myEnumerates.getInt(value);
     if (i == 0) {
-      myEnumerates.put(value, i = myStrings.size() + 1);
+      myEnumerates.putInt(value, i = myStrings.size() + 1);
       myStrings.add(value);
     }
     return i;

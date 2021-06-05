@@ -2,9 +2,10 @@
 package com.intellij.psi.stubs;
 
 import com.intellij.util.io.DataInputOutputUtil;
+import consulo.util.collection.primitive.ints.IntIntMap;
 import consulo.util.collection.primitive.ints.IntList;
 import consulo.util.collection.primitive.ints.IntLists;
-import gnu.trove.TIntIntHashMap;
+import consulo.util.collection.primitive.ints.IntMaps;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -13,7 +14,7 @@ import java.util.PrimitiveIterator;
 import java.util.function.IntUnaryOperator;
 
 class IntEnumerator {
-  private final TIntIntHashMap myEnumerates;
+  private final IntIntMap myEnumerates;
   private final IntList myIds;
   private int myNext;
 
@@ -22,16 +23,16 @@ class IntEnumerator {
   }
 
   private IntEnumerator(boolean forSavingStub) {
-    myEnumerates = forSavingStub ? new TIntIntHashMap(1) : null;
+    myEnumerates = forSavingStub ? IntMaps.newIntIntHashMap(1) : null;
     myIds = IntLists.newArrayList();
   }
 
   int enumerate(int number) {
     assert myEnumerates != null;
-    int i = myEnumerates.get(number);
+    int i = myEnumerates.getInt(number);
     if (i == 0) {
       i = myNext;
-      myEnumerates.put(number, myNext++);
+      myEnumerates.putInt(number, myNext++);
       myIds.add(number);
     }
     return i;
