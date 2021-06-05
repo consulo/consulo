@@ -19,12 +19,11 @@ import com.intellij.openapi.components.PathMacroMap;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.containers.ContainerUtilRt;
 import consulo.util.collection.primitive.objects.ObjectIntMap;
 import consulo.util.collection.primitive.objects.ObjectMaps;
-import org.jetbrains.annotations.NonNls;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -37,9 +36,9 @@ import java.util.Map;
  */
 public class ReplacePathToMacroMap extends PathMacroMap {
   private List<String> myPathsIndex = null;
-  private final Map<String, String> myMacroMap = ContainerUtilRt.newLinkedHashMap();
+  private final Map<String, String> myMacroMap = new LinkedHashMap<>();
 
-  @NonNls private static final String[] PROTOCOLS;
+  private static final String[] PROTOCOLS;
   static {
     List<String> protocols = new ArrayList<String>();
     protocols.add("file");

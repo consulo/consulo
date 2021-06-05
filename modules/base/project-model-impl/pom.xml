@@ -51,5 +51,10 @@
       <artifactId>consulo-compiler-api</artifactId>
       <version>${project.version}</version>
     </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>consulo-util-collection-primitive</artifactId>
+      <version>${project.version}</version>
+    </dependency>
   </dependencies>
 </project>
