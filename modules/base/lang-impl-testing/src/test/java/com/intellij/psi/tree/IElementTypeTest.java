@@ -12,13 +12,13 @@ import com.intellij.mock.MockPsiFile;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.testFramework.fixtures.LightPlatformCodeInsightFixtureTestCase;
-import gnu.trove.THashMap;
-import gnu.trove.TObjectIntHashMap;
+import consulo.util.collection.primitive.objects.ObjectIntMap;
+import consulo.util.collection.primitive.objects.ObjectMaps;
 
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author gregsh
@@ -33,9 +33,9 @@ public abstract class IElementTypeTest extends LightPlatformCodeInsightFixtureTe
     List<LanguageExtensionPoint> extensions = ExtensionPointName.<LanguageExtensionPoint>create("com.intellij.lang.parserDefinition").getExtensionList();
     System.out.println("ParserDefinitions: " + extensions.size());
 
-    THashMap<Language, String> languageMap = new HashMap<Language, String>();
+    Map<Language, String> languageMap = new HashMap<Language, String>();
     languageMap.put(Language.ANY, "platform");
-    final TObjectIntHashMap<String> map = new TObjectIntHashMap<String>();
+    final ObjectIntMap<String> map = ObjectMaps.newObjectIntHashMap();
     for (LanguageExtensionPoint e : extensions) {
       String key = e.getPluginDescriptor().getPluginId().getIdString();
       int curCount = IElementType.getAllocatedTypesCount();
@@ -68,22 +68,17 @@ public abstract class IElementTypeTest extends LightPlatformCodeInsightFixtureTe
         key = languageMap.get(cur);
       }
       key = StringUtil.notNullize(key, "unknown");
-      map.put(key, map.get(key) + 1);
+      map.putInt(key, map.getInt(key) + 1);
       //if (key.equals("unknown")) System.out.println(type +"   " + language);
     }
     System.out.println("Total: " + IElementType.getAllocatedTypesCount() +" element types");
 
     // Show per-plugin statistics
-    Object[] keys = map.keys();
-    Arrays.sort(keys, new Comparator<Object>() {
-      @Override
-      public int compare(Object o1, Object o2) {
-        return map.get((String)o2) - map.get((String)o1);
-      }
-    });
+    String[] keys = map.keySet().toArray(String[]::new);
+    Arrays.sort(keys, (o1, o2) -> map.getInt((String)o2) - map.getInt((String)o1));
     int sum = 0;
     for (Object key : keys) {
-      int value = map.get((String)key);
+      int value = map.getInt((String)key);
       if (value == 0) continue;
       sum += value;
       System.out.println("  " + key + ": " + value);

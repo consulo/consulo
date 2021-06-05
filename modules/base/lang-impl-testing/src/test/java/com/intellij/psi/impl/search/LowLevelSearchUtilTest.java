@@ -16,8 +16,9 @@
 package com.intellij.psi.impl.search;
 
 import com.intellij.util.text.StringSearcher;
-import gnu.trove.TIntProcedure;
 import junit.framework.TestCase;
+
+import java.util.function.IntPredicate;
 
 /**
  * @author yole
@@ -46,9 +47,9 @@ public class LowLevelSearchUtilTest extends TestCase {
   private static int doTest(String pattern, String text) {
     StringSearcher searcher = new StringSearcher(pattern, true, true, true);
     final int[] index = {-1};
-    LowLevelSearchUtil.processTextOccurrences(text, 0, text.length(), searcher, null, new TIntProcedure() {
+    LowLevelSearchUtil.processTextOccurrences(text, 0, text.length(), searcher, null, new IntPredicate() {
       @Override
-      public boolean execute(int value) {
+      public boolean test(int value) {
         index[0] = value;
         return false;
       }
