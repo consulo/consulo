@@ -1108,14 +1108,20 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
 
   private static boolean processVirtualFiles(@Nonnull IntSet ids, @Nonnull final GlobalSearchScope filter, @Nonnull final Processor<? super VirtualFile> processor) {
     final PersistentFS fs = (PersistentFS)ManagingFS.getInstance();
-    return ids.forEach(id -> {
+    PrimitiveIterator.OfInt iterator = ids.iterator();
+    while (iterator.hasNext()) {
+      int id = iterator.nextInt();
+
       ProgressManager.checkCanceled();
       VirtualFile file = IndexInfrastructure.findFileByIdIfCached(fs, id);
+
       if (file != null && filter.accept(file)) {
-        return processor.process(file);
+        if(!processor.process(file)) {
+          return false;
+        }
       }
-      return true;
-    });
+    }
+    return true;
   }
 
   @Nullable

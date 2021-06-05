@@ -50,7 +50,7 @@ import com.intellij.psi.tree.TokenSet;
 import com.intellij.ui.paint.LinePainter2D;
 import com.intellij.util.DocumentUtil;
 import com.intellij.util.containers.ContainerUtilRt;
-import com.intellij.util.containers.IntStack;
+import consulo.util.collection.primitive.ints.IntStack;
 import com.intellij.util.text.CharArrayUtil;
 import consulo.awt.TargetAWT;
 import consulo.lang.util.LanguageVersionUtil;
@@ -289,7 +289,7 @@ public class IndentsPass extends TextEditorHighlightingPass implements DumbAware
       ProgressManager.checkCanceled();
       int curIndent = Math.abs(lineIndents[line]);
 
-      while (!indents.empty() && curIndent <= indents.peek()) {
+      while (!indents.isEmpty() && curIndent <= indents.peek()) {
         ProgressManager.checkCanceled();
         final int level = indents.pop();
         int startLine = lines.pop();
@@ -312,7 +312,7 @@ public class IndentsPass extends TextEditorHighlightingPass implements DumbAware
       }
     }
 
-    while (!indents.empty()) {
+    while (!indents.isEmpty()) {
       ProgressManager.checkCanceled();
       final int level = indents.pop();
       int startLine = lines.pop();

@@ -119,10 +119,13 @@ public abstract class NamedConfigurable<T> implements Configurable {
     myNameField.setText(getDisplayName());
   }
 
+  @RequiredUIAccess
+  @SuppressWarnings("deprecation")
   public JComponent createOptionsPanel(@Nonnull Disposable parentDisposable) {
     return createOptionsPanel();
   }
 
+  @Deprecated
   public JComponent createOptionsPanel() {
     throw new AbstractMethodError();
   }

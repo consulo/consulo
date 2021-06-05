@@ -41,6 +41,8 @@ import com.intellij.util.containers.Stack;
 import com.intellij.util.text.CharArrayUtil;
 import consulo.util.collection.primitive.ints.IntList;
 import consulo.util.collection.primitive.ints.IntLists;
+import consulo.util.collection.primitive.objects.ObjectIntMap;
+import consulo.util.collection.primitive.objects.ObjectMaps;
 import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
@@ -352,28 +354,25 @@ public class ArrangementEngine {
     if (entries.size() < 2) {
       return;
     }
-    final TObjectIntHashMap<E> weights = new TObjectIntHashMap<E>();
+    final ObjectIntMap<E> weights = ObjectMaps.newObjectIntHashMap();
     int i = 0;
     for (E e : entries) {
-      weights.put(e, ++i);
+      weights.putInt(e, ++i);
     }
-    ContainerUtil.sort(entries, new Comparator<E>() {
-      @Override
-      public int compare(E e1, E e2) {
-        String name1 = e1 instanceof NameAwareArrangementEntry ? ((NameAwareArrangementEntry)e1).getName() : null;
-        String name2 = e2 instanceof NameAwareArrangementEntry ? ((NameAwareArrangementEntry)e2).getName() : null;
-        if (name1 != null && name2 != null) {
-          return name1.compareTo(name2);
-        }
-        else if (name1 == null && name2 == null) {
-          return weights.get(e1) - weights.get(e2);
-        }
-        else if (name2 == null) {
-          return -1;
-        }
-        else {
-          return 1;
-        }
+    ContainerUtil.sort(entries, (e1, e2) -> {
+      String name1 = e1 instanceof NameAwareArrangementEntry ? ((NameAwareArrangementEntry)e1).getName() : null;
+      String name2 = e2 instanceof NameAwareArrangementEntry ? ((NameAwareArrangementEntry)e2).getName() : null;
+      if (name1 != null && name2 != null) {
+        return name1.compareTo(name2);
+      }
+      else if (name1 == null && name2 == null) {
+        return weights.getInt(e1) - weights.getInt(e2);
+      }
+      else if (name2 == null) {
+        return -1;
+      }
+      else {
+        return 1;
       }
     });
   }

@@ -19,6 +19,8 @@ import com.intellij.openapi.util.Ref;
 import com.intellij.util.Consumer;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.util.collection.primitive.ints.IntList;
+import consulo.util.collection.primitive.ints.IntSet;
+import consulo.util.collection.primitive.ints.IntSets;
 import gnu.trove.*;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -56,15 +58,15 @@ public class TroveUtil {
   }
 
   @Nonnull
-  public static Set<Integer> intersect(@Nonnull TIntHashSet... sets) {
-    TIntHashSet result = null;
+  public static Set<Integer> intersect(@Nonnull IntSet... sets) {
+    IntSet result = null;
 
     Arrays.sort(sets, (set1, set2) -> {
       if (set1 == null) return -1;
       if (set2 == null) return 1;
       return set1.size() - set2.size();
     });
-    for (TIntHashSet set : sets) {
+    for (IntSet set : sets) {
       result = intersect(result, set);
     }
 
@@ -73,18 +75,17 @@ public class TroveUtil {
   }
 
   @Nullable
-  private static TIntHashSet intersect(@Nullable TIntHashSet set1, @Nullable TIntHashSet set2) {
+  private static IntSet intersect(@Nullable IntSet set1, @Nullable IntSet set2) {
     if (set1 == null) return set2;
     if (set2 == null) return set1;
 
-    TIntHashSet result = new TIntHashSet();
+    IntSet result = IntSets.newHashSet();
 
     if (set1.size() < set2.size()) {
       set1.forEach(value -> {
         if (set2.contains(value)) {
           result.add(value);
         }
-        return true;
       });
     }
     else {
@@ -92,7 +93,6 @@ public class TroveUtil {
         if (set1.contains(value)) {
           result.add(value);
         }
-        return true;
       });
     }
 
@@ -100,12 +100,9 @@ public class TroveUtil {
   }
 
   @Nonnull
-  private static Set<Integer> createJavaSet(@Nonnull TIntHashSet set) {
+  private static Set<Integer> createJavaSet(@Nonnull IntSet set) {
     Set<Integer> result = ContainerUtil.newHashSet(set.size());
-    set.forEach(value -> {
-      result.add(value);
-      return true;
-    });
+    set.forEach(result::add);
     return result;
   }
 

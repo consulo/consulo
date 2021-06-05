@@ -21,25 +21,24 @@ import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.ActionManagerEx;
 import com.intellij.openapi.actionSystem.ex.AnActionListener;
 import com.intellij.openapi.application.ApplicationManager;
-import consulo.disposer.Disposable;
-import consulo.logging.Logger;
 import com.intellij.openapi.util.Clock;
 import com.intellij.openapi.util.Couple;
-import consulo.disposer.Disposer;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.wm.IdeFocusManager;
-import com.intellij.util.containers.ContainerUtil;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
+import consulo.logging.Logger;
 import consulo.platform.Platform;
 import gnu.trove.TIntIntHashMap;
 import gnu.trove.TIntIntProcedure;
-
-import javax.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
+import javax.annotation.Nonnull;
 import java.awt.*;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
@@ -65,7 +64,7 @@ public class ModifierKeyDoubleClickHandler implements Disposable {
   }
 
   private final ActionManager myActionManager;
-  private final ConcurrentMap<String, MyDispatcher> myDispatchers = ContainerUtil.newConcurrentMap();
+  private final ConcurrentMap<String, MyDispatcher> myDispatchers = new ConcurrentHashMap<>();
   private boolean myIsRunningAction;
 
   @Inject

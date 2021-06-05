@@ -26,7 +26,6 @@ import consulo.logging.Logger;
 import consulo.util.collection.primitive.ints.ConcurrentIntObjectMap;
 import consulo.util.collection.primitive.ints.IntList;
 import consulo.util.collection.primitive.ints.IntLists;
-import gnu.trove.TIntArrayList;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.TestOnly;
 
@@ -1081,7 +1080,7 @@ public class FSRecords {
   static VirtualFileSystemEntry findFileById(int id, @Nonnull ConcurrentIntObjectMap<VirtualFileSystemEntry> idToDirCache) {
     class ParentFinder implements ThrowableComputable<Void, Throwable> {
       @Nullable
-      private TIntArrayList path;
+      private IntList path;
       private VirtualFileSystemEntry foundParent;
 
       @Override
@@ -1102,7 +1101,7 @@ public class FSRecords {
           }
 
           currentId = parentId;
-          if (path == null) path = new TIntArrayList();
+          if (path == null) path = IntLists.newArrayList();
           path.add(currentId);
         }
         return null;

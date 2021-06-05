@@ -48,10 +48,7 @@ import javax.annotation.Nullable;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.IntStream;
 
@@ -85,7 +82,7 @@ public class VcsLogPersistentIndex implements VcsLogIndex, Disposable {
   private final Map<VirtualFile, AtomicInteger> myNumberOfTasks = ContainerUtil.newHashMap();
 
   @Nonnull
-  private Map<VirtualFile, TIntHashSet> myCommitsToIndex = ContainerUtil.newHashMap();
+  private Map<VirtualFile, TIntHashSet> myCommitsToIndex = new HashMap<>();
 
   public VcsLogPersistentIndex(@Nonnull Project project,
                                @Nonnull VcsLogStorage hashMap,
@@ -259,7 +256,7 @@ public class VcsLogPersistentIndex implements VcsLogIndex, Disposable {
   }
 
   @Nonnull
-  private TIntHashSet filterPaths(@Nonnull Collection<FilePath> paths) {
+  private IntSet filterPaths(@Nonnull Collection<FilePath> paths) {
     if (myIndexStorage != null) {
       try {
         return myIndexStorage.paths.getCommitsForPaths(paths);
@@ -271,7 +268,7 @@ public class VcsLogPersistentIndex implements VcsLogIndex, Disposable {
         processRuntimeException(e);
       }
     }
-    return new TIntHashSet();
+    return IntSets.newHashSet();
   }
 
   @Nonnull
@@ -282,7 +279,11 @@ public class VcsLogPersistentIndex implements VcsLogIndex, Disposable {
           IntSet commitsForSearch = myIndexStorage.trigrams.getCommitsForSubstring(filter.getText());
           if (commitsForSearch != null) {
             IntSet result = IntSets.newHashSet();
-            commitsForSearch.forEach(commit -> {
+
+            PrimitiveIterator.OfInt iterator = commitsForSearch.iterator();
+            while (iterator.hasNext()) {
+              int commit = iterator.nextInt();
+
               try {
                 String value = myIndexStorage.messages.get(commit);
                 if (value != null) {
@@ -293,10 +294,9 @@ public class VcsLogPersistentIndex implements VcsLogIndex, Disposable {
               }
               catch (IOException e) {
                 myFatalErrorsConsumer.consume(this, e);
-                return false;
+                break;
               }
-              return true;
-            });
+            }
             return result;
           }
         }
@@ -345,12 +345,12 @@ public class VcsLogPersistentIndex implements VcsLogIndex, Disposable {
     VcsLogUserFilter userFilter = ContainerUtil.findInstance(detailsFilters, VcsLogUserFilter.class);
     VcsLogStructureFilter pathFilter = ContainerUtil.findInstance(detailsFilters, VcsLogStructureFilter.class);
 
-    TIntHashSet filteredByMessage = null;
+    IntSet filteredByMessage = null;
     if (textFilter != null) {
       filteredByMessage = filterMessages(textFilter);
     }
 
-    TIntHashSet filteredByUser = null;
+    IntSet filteredByUser = null;
     if (userFilter != null) {
       Set<VcsUser> users = ContainerUtil.newHashSet();
       for (VirtualFile root : myRoots) {
@@ -360,7 +360,7 @@ public class VcsLogPersistentIndex implements VcsLogIndex, Disposable {
       filteredByUser = filterUsers(users);
     }
 
-    TIntHashSet filteredByPath = null;
+    IntSet filteredByPath = null;
     if (pathFilter != null) {
       filteredByPath = filterPaths(pathFilter.getFiles());
     }

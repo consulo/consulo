@@ -26,7 +26,6 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.util.collection.primitive.ints.IntList;
 import consulo.util.collection.primitive.ints.IntLists;
-import gnu.trove.TIntArrayList;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;

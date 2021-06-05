@@ -94,7 +94,6 @@ import consulo.util.collection.Sets;
 import consulo.util.collection.primitive.ints.IntSet;
 import consulo.util.collection.primitive.ints.IntSets;
 import consulo.util.dataholder.Key;
-import gnu.trove.TIntHashSet;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;

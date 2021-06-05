@@ -29,7 +29,7 @@ public class PackageTreeExpansionMonitor {
   }
 
   public static TreeExpansionMonitor<PackageDependenciesNode> install(final JTree tree, final Project project) {
-    return new TreeExpansionMonitor<PackageDependenciesNode>(tree) {
+    return new TreeExpansionMonitor<>(tree) {
       @Override
       protected TreePath findPathByNode(final PackageDependenciesNode node) {
          if (node.getPsiElement() == null){

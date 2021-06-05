@@ -15,7 +15,7 @@
  */
 package com.intellij.util;
 
-import com.intellij.util.containers.IntObjectLinkedMap;
+import com.intellij.util.containers.IntObjectLRUMap;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -24,20 +24,20 @@ import javax.annotation.Nullable;
  */
 public class IntSLRUCache<T> {
   private static final boolean ourPrintDebugStatistics = false;
-  private final IntObjectLinkedMap<T> myProtectedQueue;
-  private final IntObjectLinkedMap<T> myProbationalQueue;
+  private final IntObjectLRUMap<T> myProtectedQueue;
+  private final IntObjectLRUMap<T> myProbationalQueue;
   private int probationalHits;
   private int protectedHits;
   private int misses;
 
   public IntSLRUCache(int protectedQueueSize, int probationalQueueSize) {
-    myProtectedQueue = new IntObjectLinkedMap<>(protectedQueueSize);
-    myProbationalQueue = new IntObjectLinkedMap<>(probationalQueueSize);
+    myProtectedQueue = new IntObjectLRUMap<>(protectedQueueSize);
+    myProbationalQueue = new IntObjectLRUMap<>(probationalQueueSize);
   }
 
   @Nonnull
-  public IntObjectLinkedMap.MapEntry<T> cacheEntry(int key, T value) {
-    IntObjectLinkedMap.MapEntry<T> cached = myProtectedQueue.getEntry(key);
+  public IntObjectLRUMap.MapEntry<T> cacheEntry(int key, T value) {
+    IntObjectLRUMap.MapEntry<T> cached = myProtectedQueue.getEntry(key);
     if (cached == null) {
       cached = myProbationalQueue.getEntry(key);
     }
@@ -45,19 +45,19 @@ public class IntSLRUCache<T> {
       return cached;
     }
 
-    IntObjectLinkedMap.MapEntry<T> entry = new IntObjectLinkedMap.MapEntry<>(key, value);
+    IntObjectLRUMap.MapEntry<T> entry = new IntObjectLRUMap.MapEntry<>(key, value);
     myProbationalQueue.putEntry(entry);
     return entry;
   }
 
   @Nullable
-  public IntObjectLinkedMap.MapEntry<T> getCachedEntry(int id) {
+  public IntObjectLRUMap.MapEntry<T> getCachedEntry(int id) {
     return getCachedEntry(id, true);
   }
 
   @Nullable
-  public IntObjectLinkedMap.MapEntry<T> getCachedEntry(int id, boolean allowMutation) {
-    IntObjectLinkedMap.MapEntry<T> entry = myProtectedQueue.getEntry(id);
+  public IntObjectLRUMap.MapEntry<T> getCachedEntry(int id, boolean allowMutation) {
+    IntObjectLRUMap.MapEntry<T> entry = myProtectedQueue.getEntry(id);
     if (entry != null) {
       protectedHits++;
       return entry;
@@ -69,7 +69,7 @@ public class IntSLRUCache<T> {
 
       if (allowMutation) {
         myProbationalQueue.removeEntry(entry.key);
-        IntObjectLinkedMap.MapEntry<T> demoted = myProtectedQueue.putEntry(entry);
+        IntObjectLRUMap.MapEntry<T> demoted = myProtectedQueue.putEntry(entry);
         if (demoted != null) {
           myProbationalQueue.putEntry(demoted);
         }

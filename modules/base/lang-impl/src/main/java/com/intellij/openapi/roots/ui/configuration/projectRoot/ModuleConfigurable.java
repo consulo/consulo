@@ -167,6 +167,7 @@ public class ModuleConfigurable extends ProjectStructureElementConfigurable<Modu
     return moduleEditor != null ? moduleEditor.getHelpTopic() : null;
   }
 
+  @RequiredUIAccess
   @Override
   public JComponent createOptionsPanel(@Nonnull Disposable parentUIDisposable) {
     return getModuleEditor().getPanel(parentUIDisposable);

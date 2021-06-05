@@ -15,20 +15,140 @@
  */
 package consulo.util.collection.trove.impl.ints;
 
+import consulo.util.collection.primitive.ints.AbstractIntSet;
 import consulo.util.collection.primitive.ints.IntObjectMap;
 import consulo.util.collection.primitive.ints.IntSet;
 import gnu.trove.TIntHashingStrategy;
 import gnu.trove.TIntObjectHashMap;
+import gnu.trove.TIntObjectIterator;
 
 import javax.annotation.Nonnull;
-import java.util.Collection;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author VISTALL
  * @since 07/02/2021
  */
 public class MyIntObjectHashMap<V> extends TIntObjectHashMap<V> implements IntObjectMap<V> {
+  private static record IntObjectEntryRecord<V1>(int key, V1 value) implements IntObjectEntry<V1> {
+    @Override
+    public int getKey() {
+      return key();
+    }
+
+    @Override
+    public V1 getValue() {
+      return value();
+    }
+  }
+
+  private static class MyEntryIterator<V1> implements Iterator<IntObjectEntry<V1>>  {
+    private TIntObjectIterator<V1> myIterator;
+
+    private MyEntryIterator(TIntObjectIterator<V1> iterator) {
+      myIterator = iterator;
+    }
+
+    @Override
+    public boolean hasNext() {
+      return myIterator.hasNext();
+    }
+
+    @Override
+    public IntObjectEntry<V1> next() {
+      myIterator.advance();
+
+      int key = myIterator.key();
+      V1 value = myIterator.value();
+
+      return new IntObjectEntryRecord<>(key, value);
+    }
+  }
+
+  private class MyEntrySet extends AbstractSet<IntObjectEntry<V>> {
+
+    @Nonnull
+    @Override
+    public Iterator<IntObjectEntry<V>> iterator() {
+      return new MyEntryIterator<>(MyIntObjectHashMap.this.iterator());
+    }
+
+    @Override
+    public int size() {
+      return MyIntObjectHashMap.this.size();
+    }
+  }
+
+  private static class MyValuesIterator<V1> implements Iterator<V1> {
+    private TIntObjectIterator<V1> myIterator;
+
+    private MyValuesIterator(TIntObjectIterator<V1> iterator) {
+      myIterator = iterator;
+    }
+
+    @Override
+    public boolean hasNext() {
+      return myIterator.hasNext();
+    }
+
+    @Override
+    public V1 next() {
+      myIterator.advance();
+
+      return myIterator.value();
+    }
+  }
+
+  private class MyValues extends AbstractCollection<V> {
+
+    @Nonnull
+    @Override
+    public Iterator<V> iterator() {
+      return new MyValuesIterator<V>(MyIntObjectHashMap.this.iterator());
+    }
+
+    @Override
+    public int size() {
+      return MyIntObjectHashMap.this.size();
+    }
+  }
+
+  private static class MyKeySetIterator implements PrimitiveIterator.OfInt {
+    private TIntObjectIterator<?> myIterator;
+
+    private MyKeySetIterator(TIntObjectIterator<?> iterator) {
+      myIterator = iterator;
+    }
+
+    @Override
+    public boolean hasNext() {
+      return myIterator.hasNext();
+    }
+
+    @Override
+    public int nextInt() {
+      myIterator.advance();
+      return myIterator.key();
+    }
+  }
+
+  private class MyKeySet extends AbstractIntSet {
+    @Nonnull
+    @Override
+    public PrimitiveIterator.OfInt iterator() {
+      return new MyKeySetIterator(MyIntObjectHashMap.this.iterator());
+    }
+
+    @Override
+    public int size() {
+      return MyIntObjectHashMap.this.size();
+    }
+  }
+
+  private Set<IntObjectEntry<V>> myEntrySet;
+  private Collection<V> myValues;
+  private IntSet myKeySet;
+
   public MyIntObjectHashMap() {
   }
 
@@ -60,18 +180,27 @@ public class MyIntObjectHashMap<V> extends TIntObjectHashMap<V> implements IntOb
   @Nonnull
   @Override
   public Set<IntObjectEntry<V>> entrySet() {
-    throw new UnsupportedOperationException();
+    if(myEntrySet == null) {
+      myEntrySet = new MyEntrySet();
+    }
+    return myEntrySet;
   }
 
   @Nonnull
   @Override
   public Collection<V> values() {
-    throw new UnsupportedOperationException();
+    if(myValues == null) {
+      myValues = new MyValues();
+    }
+    return myValues;
   }
 
   @Nonnull
   @Override
   public IntSet keySet() {
-    throw new UnsupportedOperationException();
+    if(myKeySet == null) {
+      myKeySet = new MyKeySet();
+    }
+    return myKeySet;
   }
 }

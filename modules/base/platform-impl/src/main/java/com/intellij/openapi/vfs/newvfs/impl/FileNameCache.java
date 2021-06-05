@@ -19,7 +19,7 @@ import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.newvfs.persistent.FSRecords;
 import com.intellij.util.IntSLRUCache;
-import com.intellij.util.containers.IntObjectLinkedMap;
+import com.intellij.util.containers.IntObjectLRUMap;
 import com.intellij.util.text.ByteArrayCharSequence;
 import javax.annotation.Nonnull;
 
@@ -65,7 +65,7 @@ public class FileNameCache {
   }
 
   @Nonnull
-  private static IntObjectLinkedMap.MapEntry<CharSequence> cacheData(String name, int id, int stripe) {
+  private static IntObjectLRUMap.MapEntry<CharSequence> cacheData(String name, int id, int stripe) {
     if (name == null) {
       FSRecords.handleError(new RuntimeException("VFS name enumerator corrupted"));
     }
@@ -93,7 +93,7 @@ public class FileNameCache {
   private static final boolean ourTrackStats = false;
   private static final int ourLOneSize = 1024;
   @SuppressWarnings("unchecked")
-  private static final IntObjectLinkedMap.MapEntry<CharSequence>[] ourArrayCache = new IntObjectLinkedMap.MapEntry[ourLOneSize];
+  private static final IntObjectLRUMap.MapEntry<CharSequence>[] ourArrayCache = new IntObjectLRUMap.MapEntry[ourLOneSize];
 
   private static final AtomicInteger ourQueries = new AtomicInteger();
   private static final AtomicInteger ourMisses = new AtomicInteger();
@@ -120,7 +120,7 @@ public class FileNameCache {
     }
 
     int l1 = nameId % ourLOneSize;
-    IntObjectLinkedMap.MapEntry<CharSequence> entry = ourArrayCache[l1];
+    IntObjectLRUMap.MapEntry<CharSequence> entry = ourArrayCache[l1];
     if (entry != null && entry.key == nameId) {
       return entry.value;
     }

@@ -105,7 +105,6 @@ import consulo.ui.image.Image;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolder;
 import consulo.util.dataholder.UserDataHolderBase;
-import gnu.trove.Equality;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;

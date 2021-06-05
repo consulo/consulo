@@ -27,6 +27,7 @@ import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStr
 import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.SdkProjectStructureElement;
 import consulo.bundle.SdkUtil;
 import consulo.bundle.ui.SdkEditor;
+import consulo.disposer.Disposable;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 
@@ -90,9 +91,10 @@ public class SdkConfigurable extends ProjectStructureElementConfigurable<Sdk> {
     return ((SdkType)mySdk.getSdkType()).getHelpTopic();
   }
 
+  @RequiredUIAccess
   @Override
-  public JComponent createOptionsPanel() {
-    return mySdkEditor.createComponent();
+  public JComponent createOptionsPanel(@Nonnull Disposable parentDisposable) {
+    return mySdkEditor.createComponent(parentDisposable);
   }
 
   @RequiredUIAccess

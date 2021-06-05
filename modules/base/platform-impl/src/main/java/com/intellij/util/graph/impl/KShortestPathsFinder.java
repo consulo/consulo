@@ -15,15 +15,16 @@
  */
 package com.intellij.util.graph.impl;
 
-import consulo.logging.Logger;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.util.containers.FList;
 import com.intellij.util.containers.MultiMap;
 import com.intellij.util.graph.Graph;
-import gnu.trove.TObjectIntHashMap;
-import javax.annotation.Nonnull;
+import consulo.logging.Logger;
+import consulo.util.collection.primitive.objects.ObjectIntMap;
+import consulo.util.collection.primitive.objects.ObjectMaps;
 
+import javax.annotation.Nonnull;
 import java.util.*;
 
 /**
@@ -55,24 +56,24 @@ public class KShortestPathsFinder<Node> {
     myNonTreeEdges = new MultiMap<Node, GraphEdge<Node>>();
     mySortedNodes = new ArrayList<Node>();
     myNextNodes = new HashMap<Node, Node>();
-    TObjectIntHashMap<Node> distances = new TObjectIntHashMap<Node>();
+    ObjectIntMap<Node> distances = ObjectMaps.newObjectIntHashMap();
     Deque<Node> nodes = new ArrayDeque<Node>();
     nodes.addLast(myFinish);
-    distances.put(myFinish, 0);
+    distances.putInt(myFinish, 0);
     while (!nodes.isEmpty()) {
       myProgressIndicator.checkCanceled();
       Node node = nodes.removeFirst();
       mySortedNodes.add(node);
-      int d = distances.get(node) + 1;
+      int d = distances.getInt(node) + 1;
       Iterator<Node> iterator = myGraph.getIn(node);
       while (iterator.hasNext()) {
         Node prev = iterator.next();
         if (distances.containsKey(prev)) {
-          int dPrev = distances.get(prev);
+          int dPrev = distances.getInt(prev);
           myNonTreeEdges.putValue(prev, new GraphEdge<Node>(prev, node, d - dPrev));
           continue;
         }
-        distances.put(prev, d);
+        distances.putInt(prev, d);
         myNextNodes.put(prev, node);
         nodes.addLast(prev);
       }

@@ -27,6 +27,8 @@ import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.psi.tree.IElementType;
 import consulo.logging.Logger;
 
+import javax.annotation.Nonnull;
+
 public class EmptyEditorHighlighter implements EditorHighlighter, PrioritizedDocumentListener {
   private static final Logger LOG = Logger.getInstance(EmptyEditorHighlighter.class);
 
@@ -71,6 +73,7 @@ public class EmptyEditorHighlighter implements EditorHighlighter, PrioritizedDoc
     return 2;
   }
 
+  @Nonnull
   @Override
   public HighlighterIterator createIterator(int startOffset) {
     return new HighlighterIterator(){

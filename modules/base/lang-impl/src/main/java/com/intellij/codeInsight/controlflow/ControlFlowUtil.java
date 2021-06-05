@@ -20,7 +20,7 @@ import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.psi.PsiElement;
 import com.intellij.util.Function;
 import com.intellij.util.Processor;
-import com.intellij.util.containers.IntStack;
+import consulo.util.collection.primitive.ints.IntStack;
 import javax.annotation.Nonnull;
 
 import java.util.Arrays;
@@ -48,7 +48,7 @@ public class ControlFlowUtil {
         stack.clear();
         stack.push(i);
 
-        while (!stack.empty()) {
+        while (!stack.isEmpty()) {
           final int num = stack.pop();
           result[N++] = num;
           for (Instruction succ : flow[num].allSucc()) {
@@ -88,7 +88,7 @@ public class ControlFlowUtil {
     final IntStack stack = new IntStack(length);
     stack.push(start);
 
-    while (!stack.empty()) {
+    while (!stack.isEmpty()) {
       ProgressManager.checkCanceled();
       final int num = stack.pop();
       final Instruction instruction = flow[num];
@@ -116,7 +116,7 @@ public class ControlFlowUtil {
     final boolean[] visited = new boolean[instructions.length];
 
     stack.push(startInstruction);
-    while (!stack.empty()) {
+    while (!stack.isEmpty()) {
       ProgressManager.checkCanceled();
       final int num = stack.pop();
       final Instruction instr = instructions[num];

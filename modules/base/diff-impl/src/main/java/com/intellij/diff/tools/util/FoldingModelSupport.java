@@ -19,7 +19,6 @@ import com.intellij.diff.util.DiffDividerDrawUtil;
 import com.intellij.diff.util.DiffDrawUtil;
 import com.intellij.diff.util.DiffUtil;
 import com.intellij.diff.util.LineRange;
-import consulo.disposer.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.FoldRegion;
@@ -31,12 +30,12 @@ import com.intellij.openapi.editor.ex.FoldingModelEx;
 import com.intellij.openapi.editor.markup.RangeHighlighter;
 import com.intellij.openapi.util.BooleanGetter;
 import com.intellij.openapi.util.Computable;
-import consulo.util.dataholder.Key;
-import consulo.util.dataholder.UserDataHolder;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
-import gnu.trove.TIntFunction;
+import consulo.disposer.Disposable;
+import consulo.util.dataholder.Key;
+import consulo.util.dataholder.UserDataHolder;
 import org.jetbrains.annotations.Contract;
 
 import javax.annotation.Nonnull;
@@ -44,6 +43,7 @@ import javax.annotation.Nullable;
 import java.awt.*;
 import java.util.List;
 import java.util.*;
+import java.util.function.IntUnaryOperator;
 
 /*
  * This class allows to add custom foldings to hide unchanged regions in diff.
@@ -291,20 +291,17 @@ public class FoldingModelSupport {
   }
 
   @Nonnull
-  protected TIntFunction getLineConvertor(final int index) {
-    return new TIntFunction() {
-      @Override
-      public int execute(int value) {
-        updateLineNumbers(false);
-        for (FoldedBlock folding : getFoldedBlocks()) { // TODO: avoid full scan - it could slowdown painting
-          int line = folding.getLine(index);
-          if (line == -1) continue;
-          if (line > value) break;
-          FoldRegion region = folding.getRegion(index);
-          if (line == value && region != null && !region.isExpanded()) return -1;
-        }
-        return value;
+  protected IntUnaryOperator getLineConvertor(final int index) {
+    return value -> {
+      updateLineNumbers(false);
+      for (FoldedBlock folding : getFoldedBlocks()) { // TODO: avoid full scan - it could slowdown painting
+        int line = folding.getLine(index);
+        if (line == -1) continue;
+        if (line > value) break;
+        FoldRegion region = folding.getRegion(index);
+        if (line == value && region != null && !region.isExpanded()) return -1;
       }
+      return value;
     };
   }
 

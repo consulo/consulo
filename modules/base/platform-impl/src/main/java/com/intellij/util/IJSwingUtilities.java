@@ -22,7 +22,7 @@ import com.intellij.openapi.wm.ex.WindowManagerEx;
 import com.intellij.ui.EditorTextField;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.FilteringIterator;
-import com.intellij.util.containers.IntStack;
+import consulo.util.collection.primitive.ints.IntStack;
 import com.intellij.util.ui.JBSwingUtilities;
 import com.intellij.util.ui.UIUtil;
 import consulo.awt.TargetAWT;

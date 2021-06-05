@@ -21,7 +21,7 @@ import javax.annotation.Nullable;
 /**
  * @author peter
  */
-public class IntObjectLinkedMap<T> {
+public final class IntObjectLRUMap<T> {
   /**
    * The header of the double-linked list, its before = most recently added entry; its after = eldest entry
    */
@@ -30,7 +30,7 @@ public class IntObjectLinkedMap<T> {
   private final int myCapacity;
   private int mySize;
 
-  public IntObjectLinkedMap(int capacity) {
+  public IntObjectLRUMap(int capacity) {
     myCapacity = capacity;
     //noinspection unchecked
     myArray = new MapEntry[capacity * 8 / 5];

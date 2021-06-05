@@ -17,7 +17,6 @@ package com.intellij.ui;
 
 import com.intellij.util.Assertion;
 import com.intellij.util.containers.ContainerUtil;
-import gnu.trove.TIntArrayList;
 import junit.framework.TestCase;
 
 import javax.swing.event.ListDataEvent;

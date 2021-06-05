@@ -21,8 +21,9 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.editor.*;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.project.Project;
-import consulo.ui.annotation.RequiredUIAccess;
 import consulo.annotation.access.RequiredWriteAction;
+import consulo.ui.annotation.RequiredUIAccess;
+import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;
 
@@ -101,5 +102,14 @@ public abstract class EditorWriteActionHandler extends EditorActionHandler {
     finally {
       inExecution = false;
     }
+  }
+
+  public static abstract class ForEachCaret extends EditorWriteActionHandler {
+    protected ForEachCaret() {
+      super(true);
+    }
+
+    @Override
+    public abstract void executeWriteAction(@Nonnull Editor editor, @SuppressWarnings("NullableProblems") @Nonnull Caret caret, DataContext dataContext);
   }
 }

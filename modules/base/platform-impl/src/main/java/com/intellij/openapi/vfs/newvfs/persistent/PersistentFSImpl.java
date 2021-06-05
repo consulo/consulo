@@ -31,15 +31,11 @@ import consulo.disposer.Disposable;
 import consulo.logging.Logger;
 import consulo.util.collection.Maps;
 import consulo.util.collection.Sets;
-import consulo.util.collection.primitive.ints.ConcurrentIntObjectMap;
-import gnu.trove.THashMap;
-import gnu.trove.THashSet;
-import gnu.trove.TIntArrayList;
-import gnu.trove.TIntHashSet;
+import consulo.util.collection.primitive.ints.*;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 import org.jetbrains.annotations.TestOnly;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -167,7 +163,7 @@ public final class PersistentFSImpl extends PersistentFS implements Disposable {
       toAdd.remove(nameId.name.toString());
     }
 
-    final TIntArrayList childrenIds = new TIntArrayList(current.length + toAdd.size());
+    final IntList childrenIds = IntLists.newArrayList(current.length + toAdd.size());
     final List<FSRecords.NameId> nameIds = new ArrayList<>(current.length + toAdd.size());
     for (FSRecords.NameId nameId : current) {
       childrenIds.add(nameId.id);
@@ -184,7 +180,7 @@ public final class PersistentFSImpl extends PersistentFS implements Disposable {
 
     // some clients (e.g. RefreshWorker) expect subsequent list() calls to return equal arrays
     nameIds.sort(Comparator.comparingInt(o -> o.id));
-    FSRecords.updateList(id, childrenIds.toNativeArray());
+    FSRecords.updateList(id, childrenIds.toArray());
     setChildrenCached(id);
 
     return nameIds.toArray(FSRecords.NameId.EMPTY_ARRAY);
@@ -987,10 +983,10 @@ public final class PersistentFSImpl extends PersistentFS implements Disposable {
 
       int parentId = getFileId(parent);
       int[] oldIds = FSRecords.list(parentId);
-      TIntHashSet parentChildrenIds = new TIntHashSet(oldIds);
+      IntSet parentChildrenIds = IntSets.newHashSet(oldIds);
 
       List<CharSequence> childrenNamesDeleted = new ArrayList<>(deleteEvents.size());
-      TIntHashSet childrenIdsDeleted = new TIntHashSet(deleteEvents.size());
+      IntSet childrenIdsDeleted = IntSets.newHashSet(deleteEvents.size());
 
       for (VFileDeleteEvent event : deleteEvents) {
         VirtualFile file = event.getFile();
@@ -1021,7 +1017,7 @@ public final class PersistentFSImpl extends PersistentFS implements Disposable {
     if (!(vf instanceof VirtualDirectoryImpl)) return;
     parent = (VirtualDirectoryImpl)vf;  // retain in myIdToDirCache at least for the duration of this block in order to subsequent findFileById() won't crash
     final NewVirtualFileSystem delegate = replaceWithNativeFS(getDelegate(parent));
-    TIntHashSet parentChildrenIds = new TIntHashSet(createEvents.size());
+    IntSet parentChildrenIds = IntSets.newHashSet(createEvents.size());
 
     List<ChildInfo> childrenAdded = getOrCreateChildInfos(parent, createEvents, VFileCreateEvent::getChildName, parentChildrenIds, delegate, (createEvent, childId) -> {
       createEvent.resetCache();
@@ -1050,7 +1046,7 @@ public final class PersistentFSImpl extends PersistentFS implements Disposable {
         while (!queue.isEmpty()) {
           Pair<VirtualDirectoryImpl, ChildInfo[]> queued = queue.remove();
           VirtualDirectoryImpl directory = queued.first;
-          TIntHashSet childIds = new TIntHashSet();
+          IntSet childIds = IntSets.newHashSet();
           List<ChildInfo> scannedChildren = Arrays.asList(queued.second);
           List<ChildInfo> added = getOrCreateChildInfos(directory, scannedChildren, childInfo -> childInfo.getName(), childIds, delegate, (childInfo, childId) -> {
             // passed children have no ChildInfo.id, have to create new ones
@@ -1084,7 +1080,7 @@ public final class PersistentFSImpl extends PersistentFS implements Disposable {
   private static <T> List<ChildInfo> getOrCreateChildInfos(@Nonnull VirtualDirectoryImpl parent,
                                                            @Nonnull Collection<? extends T> createEvents,
                                                            @Nonnull Function<? super T, ? extends CharSequence> nameExtractor,
-                                                           @Nonnull TIntHashSet parentChildrenIds,
+                                                           @Nonnull IntSet parentChildrenIds,
                                                            @Nonnull NewVirtualFileSystem delegate,
                                                            @Nonnull PairFunction<? super T, ? super Integer, ? extends ChildInfo> convertor) {
     int parentId = parent.getId();

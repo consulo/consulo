@@ -41,5 +41,11 @@
       <artifactId>consulo-platform-impl</artifactId>
       <version>${project.version}</version>
     </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>consulo-util-collection-primitive</artifactId>
+      <version>${project.version}</version>
+      <optional>true</optional>
+    </dependency>
   </dependencies>
 </project>

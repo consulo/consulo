@@ -68,9 +68,9 @@ class ValueContainerImpl<Value> extends UpdatableValueContainer<Value> implement
   }
 
   @Nullable
-  private THashMap<Value, Object> asMapping() {
+  private HashMap<Value, Object> asMapping() {
     //noinspection unchecked
-    return myInputIdMapping instanceof THashMap ? (THashMap<Value, Object>)myInputIdMapping : null;
+    return myInputIdMapping instanceof HashMap ? (HashMap<Value, Object>)myInputIdMapping : null;
   }
 
   private Value asValue() {
@@ -206,11 +206,6 @@ class ValueContainerImpl<Value> extends UpdatableValueContainer<Value> implement
           value = null;
           return next;
         }
-
-        @Override
-        public void remove() {
-          throw new UnsupportedOperationException();
-        }
       };
     }
     else {
@@ -232,11 +227,6 @@ class ValueContainerImpl<Value> extends UpdatableValueContainer<Value> implement
           currentValue = entry.getValue();
           if (next == myNullValue) next = null;
           return next;
-        }
-
-        @Override
-        public void remove() {
-          throw new UnsupportedOperationException();
         }
 
         @Nonnull
@@ -336,15 +326,17 @@ class ValueContainerImpl<Value> extends UpdatableValueContainer<Value> implement
     try {
       //noinspection unchecked
       ValueContainerImpl<Value> clone = (ValueContainerImpl<Value>)super.clone();
-      THashMap<Value, Object> mapping = asMapping();
+      HashMap<Value, Object> mapping = asMapping();
       if (mapping != null) {
-        final THashMap<Value, Object> cloned = mapping.clone();
-        cloned.forEachEntry((key, val) -> {
-          if (val instanceof ChangeBufferingList) {
-            cloned.put(key, ((ChangeBufferingList)val).clone());
+        final HashMap<Value, Object> cloned = (HashMap<Value, Object>)mapping.clone();
+        for (Map.Entry<Value, Object> entry : mapping.entrySet()) {
+          Value key = entry.getKey();
+          Object value = entry.getValue();
+
+          if (value instanceof ChangeBufferingList) {
+            cloned.put(key, ((ChangeBufferingList)value).clone());
           }
-          return true;
-        });
+        }
 
         clone.myInputIdMapping = cloned;
       }

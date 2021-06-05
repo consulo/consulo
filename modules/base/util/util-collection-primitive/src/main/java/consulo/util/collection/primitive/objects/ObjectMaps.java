@@ -48,6 +48,11 @@ public final class ObjectMaps {
     return ourFactory.newObjectIntHashMap(capacity, strategy);
   }
 
+  @Nonnull
+  public static <K> ObjectIntMap<K> unmodified(@Nonnull ObjectIntMap<K> map) {
+    return new UnmodifiedObjectIntMap<>(map);
+  }
+
   public static void trimToSize(ObjectIntMap<?> map) {
   }
 }

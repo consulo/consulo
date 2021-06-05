@@ -25,7 +25,8 @@ import com.intellij.util.ArrayUtil;
 import consulo.util.collection.DelegateMap;
 import consulo.util.collection.HashingStrategy;
 import consulo.util.collection.Maps;
-import gnu.trove.TIntObjectHashMap;
+import consulo.util.collection.primitive.ints.IntMaps;
+import consulo.util.collection.primitive.ints.IntObjectMap;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -38,17 +39,17 @@ import java.util.Map;
  */
 class Win32FsCache {
   private final IdeaWin32 myKernel = IdeaWin32.getInstance();
-  private Reference<TIntObjectHashMap<Map<String, FileAttributes>>> myCache;
+  private Reference<IntObjectMap<Map<String, FileAttributes>>> myCache;
 
   void clearCache() {
     myCache = null;
   }
 
   @Nonnull
-  private TIntObjectHashMap<Map<String, FileAttributes>> getMap() {
-    TIntObjectHashMap<Map<String, FileAttributes>> map = com.intellij.reference.SoftReference.dereference(myCache);
+  private IntObjectMap<Map<String, FileAttributes>> getMap() {
+    IntObjectMap<Map<String, FileAttributes>> map = com.intellij.reference.SoftReference.dereference(myCache);
     if (map == null) {
-      map = new TIntObjectHashMap<>();
+      map = IntMaps.newIntObjectHashMap();
       myCache = new SoftReference<>(map);
     }
     return map;
@@ -63,7 +64,7 @@ class Win32FsCache {
     }
 
     String[] names = new String[fileInfo.length];
-    TIntObjectHashMap<Map<String, FileAttributes>> map = getMap();
+    IntObjectMap<Map<String, FileAttributes>> map = getMap();
     int parentId = ((VirtualFileWithId)file).getId();
     Map<String, FileAttributes> nestedMap = map.get(parentId);
     if (nestedMap == null) {
@@ -83,7 +84,7 @@ class Win32FsCache {
   FileAttributes getAttributes(@Nonnull VirtualFile file) {
     VirtualFile parent = file.getParent();
     int parentId = parent instanceof VirtualFileWithId ? ((VirtualFileWithId)parent).getId() : -((VirtualFileWithId)file).getId();
-    TIntObjectHashMap<Map<String, FileAttributes>> map = getMap();
+    IntObjectMap<Map<String, FileAttributes>> map = getMap();
     Map<String, FileAttributes> nestedMap = map.get(parentId);
     String name = file.getName();
     FileAttributes attributes = nestedMap != null ? nestedMap.get(name) : null;

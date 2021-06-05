@@ -63,12 +63,8 @@ import consulo.ui.color.ColorValue;
 import consulo.ui.image.ImageEffects;
 import consulo.ui.style.StandardColors;
 import consulo.util.collection.Sets;
-import consulo.util.collection.primitive.ints.IntList;
-import consulo.util.collection.primitive.ints.IntLists;
-import consulo.util.collection.primitive.ints.IntMaps;
-import consulo.util.collection.primitive.ints.IntObjectMap;
+import consulo.util.collection.primitive.ints.*;
 import consulo.util.dataholder.Key;
-import gnu.trove.*;
 import org.jetbrains.annotations.NonNls;
 
 import javax.accessibility.Accessible;
@@ -565,7 +561,7 @@ class EditorGutterComponentImpl extends EditorGutterComponentEx implements Mouse
     return FontLayoutService.getInstance().stringWidth(getFontMetrics(getFontForLineNumbers()), Integer.toString(maxLineNumber + 1));
   }
 
-  private void doPaintLineNumbers(Graphics2D g, int startVisualLine, int endVisualLine, int offset, @Nonnull TIntFunction convertor) {
+  private void doPaintLineNumbers(Graphics2D g, int startVisualLine, int endVisualLine, int offset, @Nonnull IntUnaryOperator convertor) {
     int lastLine = myEditor.logicalToVisualPosition(new LogicalPosition(endLineNumber(), 0)).line;
     endVisualLine = Math.min(endVisualLine, lastLine);
     if (startVisualLine > endVisualLine) {
@@ -584,7 +580,7 @@ class EditorGutterComponentImpl extends EditorGutterComponentEx implements Mouse
       while (!visLinesIterator.atEnd() && visLinesIterator.getVisualLine() <= endVisualLine) {
         if (!visLinesIterator.startsWithSoftWrap()) {
           int logicalLine = visLinesIterator.getStartLogicalLine();
-          int lineToDisplay = convertor.execute(logicalLine);
+          int lineToDisplay = convertor.applyAsInt(logicalLine);
           if (lineToDisplay >= 0) {
             int startY = visLinesIterator.getY();
             if (myEditor.isInDistractionFreeMode()) {
@@ -832,17 +828,20 @@ class EditorGutterComponentImpl extends EditorGutterComponentEx implements Mouse
       renderers.add(renderer);
     });
 
-    myLineToGutterRenderers.transformValues(value -> {
+    for (IntObjectMap.IntObjectEntry<List<GutterMark>> entry : new ArrayList<>(myLineToGutterRenderers.entrySet())) {
+      int key = entry.getKey();
+      List<GutterMark> value = entry.getValue();
+
       List<GutterMark> newValue = value;
-      for (GutterMarkPreprocessor preprocessor : GutterMarkPreprocessor.EP_NAME.getExtensions()) {
+      for (GutterMarkPreprocessor preprocessor : GutterMarkPreprocessor.EP_NAME.getExtensionList()) {
         newValue = preprocessor.processMarkers(value);
       }
 
       // Don't allow more than 5 icons per line
       newValue = ContainerUtil.getFirstItems(newValue, 4);
 
-      return newValue;
-    });
+      myLineToGutterRenderers.put(key, newValue);
+    }
   }
 
   private void calcLineMarkerAreaWidth(boolean canShrink) {
@@ -901,11 +900,19 @@ class EditorGutterComponentImpl extends EditorGutterComponentEx implements Mouse
     return marks != null ? marks : Collections.emptyList();
   }
 
-  private void processGutterRenderers(@Nonnull TIntObjectProcedure<List<GutterMark>> processor) {
+  private void processGutterRenderers(@Nonnull IntObjPredicate<List<GutterMark>> processor) {
     if (myLineToGutterRenderers == null || myLineToGutterRenderersCacheForLogicalLines != logicalLinesMatchVisualOnes()) {
       buildGutterRenderersCache();
     }
-    myLineToGutterRenderers.forEachEntry(processor);
+
+    for (IntObjectMap.IntObjectEntry<List<GutterMark>> entry : myLineToGutterRenderers.entrySet()) {
+      int key = entry.getKey();
+      List<GutterMark> value = entry.getValue();
+
+      if (!processor.test(key, value)) {
+        return;
+      }
+    }
   }
 
   private boolean isHighlighterVisible(RangeHighlighter highlighter) {
@@ -1889,12 +1896,12 @@ class EditorGutterComponentImpl extends EditorGutterComponentEx implements Mouse
   }
 
   @Override
-  public void setLineNumberConvertor(@Nullable TIntFunction lineNumberConvertor) {
+  public void setLineNumberConvertor(@Nullable IntUnaryOperator lineNumberConvertor) {
     setLineNumberConvertor(lineNumberConvertor, null);
   }
 
   @Override
-  public void setLineNumberConvertor(@Nullable TIntFunction lineNumberConvertor1, @Nullable TIntFunction lineNumberConvertor2) {
+  public void setLineNumberConvertor(@Nullable IntUnaryOperator lineNumberConvertor1, @Nullable IntUnaryOperator lineNumberConvertor2) {
     myLineNumberConvertor = lineNumberConvertor1 != null ? lineNumberConvertor1 : value -> value;
     myAdditionalLineNumberConvertor = lineNumberConvertor2;
     repaint();

@@ -17,11 +17,13 @@
 /*
  * @author max
  */
-package com.intellij.util.containers;
+package consulo.util.collection.primitive.ints;
 
+import javax.annotation.Nonnull;
 import java.util.EmptyStackException;
+import java.util.PrimitiveIterator;
 
-public class IntStack {
+public class IntStack implements IntCollection {
   private int[] data;
   private int size;
   public IntStack(int initialCapacity) {
@@ -52,8 +54,14 @@ public class IntStack {
     return data[--size];
   }
 
-  public boolean empty() {
+  @Override
+  public boolean isEmpty() {
     return size == 0;
+  }
+
+  @Override
+  public int size() {
+    return size;
   }
 
   @Override
@@ -70,7 +78,35 @@ public class IntStack {
     return false;
   }
 
+  @Override
   public void clear() {
     size = 0;
+  }
+
+  @Override
+  public boolean add(int value) {
+    push(value);
+    return true;
+  }
+
+  @Override
+  public boolean remove(int value) {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public boolean contains(int value) {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public int[] toArray() {
+    throw new UnsupportedOperationException();
+  }
+
+  @Nonnull
+  @Override
+  public PrimitiveIterator.OfInt iterator() {
+    throw new UnsupportedOperationException();
   }
 }

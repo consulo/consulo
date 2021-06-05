@@ -59,6 +59,7 @@ public class RemoteServerConfigurable extends NamedConfigurable<RemoteServer<?>>
     return myServer.getName();
   }
 
+  @RequiredUIAccess
   @Override
   public JComponent createOptionsPanel(Disposable parentDisposable) {
     mySettingsPanel.add(BorderLayout.CENTER, ConfigurableUIMigrationUtil.createComponent(myConfigurable, parentDisposable));

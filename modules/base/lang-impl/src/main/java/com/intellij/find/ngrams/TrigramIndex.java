@@ -146,7 +146,7 @@ public class TrigramIndex extends ScalarIndexExtension<Integer> implements Custo
     }
 
     @Override
-    public boolean execute(int value) {
+    public boolean test(int value) {
       map.put(value, null);
       return true;
     }

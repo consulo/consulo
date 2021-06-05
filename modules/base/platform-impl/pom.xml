@@ -121,6 +121,12 @@
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
+      <artifactId>consulo-util-collection-primitive</artifactId>
+      <version>${project.version}</version>
+      <optional>true</optional>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
       <artifactId>consulo-util-lang</artifactId>
       <version>${project.version}</version>
       <optional>true</optional>
@@ -164,6 +170,12 @@
     <dependency>
       <groupId>com.miglayout</groupId>
       <artifactId>miglayout</artifactId>
+      <optional>true</optional>
+    </dependency>
+
+    <dependency>
+      <groupId>consulo.internal</groupId>
+      <artifactId>trove4j</artifactId>
       <optional>true</optional>
     </dependency>
   </dependencies>

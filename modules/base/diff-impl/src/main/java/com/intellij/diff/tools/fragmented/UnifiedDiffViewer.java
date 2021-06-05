@@ -58,7 +58,6 @@ import consulo.application.AccessRule;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolder;
-import gnu.trove.TIntFunction;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
@@ -68,6 +67,7 @@ import consulo.annotation.access.RequiredWriteAction;
 
 import javax.swing.*;
 import java.util.*;
+import java.util.function.IntUnaryOperator;
 
 import static com.intellij.diff.util.DiffUtil.getLinesContent;
 
@@ -399,7 +399,7 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
         myPanel.addNotification(DiffNotifications.createEqualContents(equalCharsets, equalSeparators));
       }
 
-      TIntFunction separatorLines = myFoldingModel.getLineNumberConvertor();
+      IntUnaryOperator separatorLines = myFoldingModel.getLineNumberConvertor();
       myEditor.getGutterComponentEx().setLineNumberConvertor(mergeConverters(data.getLineConvertor1(), separatorLines),
                                                              mergeConverters(data.getLineConvertor2(), separatorLines));
 
@@ -464,8 +464,8 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
   }
 
   @Contract("!null, _ -> !null")
-  private static TIntFunction mergeConverters(@Nonnull final TIntFunction convertor, @Nonnull final TIntFunction separatorLines) {
-    return value -> convertor.execute(separatorLines.execute(value));
+  private static IntUnaryOperator mergeConverters(@Nonnull final IntUnaryOperator convertor, @Nonnull final IntUnaryOperator separatorLines) {
+    return value -> convertor.applyAsInt(separatorLines.applyAsInt(value));
   }
 
   /*
@@ -1260,16 +1260,16 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
     @Nullable
     private final FileType myFileType;
     @Nonnull
-    private final TIntFunction myLineConvertor1;
+    private final IntUnaryOperator myLineConvertor1;
     @Nonnull
-    private final TIntFunction myLineConvertor2;
+    private final IntUnaryOperator myLineConvertor2;
 
     public CombinedEditorData(@Nonnull CharSequence text,
                               @Nullable EditorHighlighter highlighter,
                               @Nullable UnifiedEditorRangeHighlighter rangeHighlighter,
                               @Nullable FileType fileType,
-                              @Nonnull TIntFunction convertor1,
-                              @Nonnull TIntFunction convertor2) {
+                              @Nonnull IntUnaryOperator convertor1,
+                              @Nonnull IntUnaryOperator convertor2) {
       myText = text;
       myHighlighter = highlighter;
       myRangeHighlighter = rangeHighlighter;
@@ -1299,12 +1299,12 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
     }
 
     @Nonnull
-    public TIntFunction getLineConvertor1() {
+    public IntUnaryOperator getLineConvertor1() {
       return myLineConvertor1;
     }
 
     @Nonnull
-    public TIntFunction getLineConvertor2() {
+    public IntUnaryOperator getLineConvertor2() {
       return myLineConvertor2;
     }
   }
@@ -1431,7 +1431,7 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
     }
 
     @Nonnull
-    public TIntFunction getLineNumberConvertor() {
+    public IntUnaryOperator getLineNumberConvertor() {
       return getLineConvertor(0);
     }
   }

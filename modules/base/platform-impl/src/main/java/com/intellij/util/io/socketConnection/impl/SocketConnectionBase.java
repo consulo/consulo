@@ -15,15 +15,16 @@
  */
 package com.intellij.util.io.socketConnection.impl;
 
-import consulo.disposer.Disposable;
-import consulo.logging.Logger;
-import consulo.disposer.Disposer;
 import com.intellij.util.EventDispatcher;
 import com.intellij.util.io.socketConnection.*;
-import gnu.trove.TIntObjectHashMap;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
+import consulo.logging.Logger;
+import consulo.util.collection.primitive.ints.IntMaps;
+import consulo.util.collection.primitive.ints.IntObjectMap;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -46,7 +47,7 @@ public abstract class SocketConnectionBase<Request extends AbstractRequest, Resp
   private List<Thread> myThreadsToInterrupt = new ArrayList<Thread>();
   private final RequestResponseExternalizerFactory<Request, Response> myExternalizerFactory;
   private final LinkedBlockingQueue<Request> myRequests = new LinkedBlockingQueue<Request>();
-  private final TIntObjectHashMap<TimeoutInfo> myTimeouts = new TIntObjectHashMap<TimeoutInfo>();
+  private final IntObjectMap<TimeoutInfo> myTimeouts = IntMaps.newIntObjectHashMap();
   private final ResponseProcessor<Response> myResponseProcessor;
 
   public SocketConnectionBase(@Nonnull RequestResponseExternalizerFactory<Request, Response> factory) {
@@ -122,10 +123,12 @@ public abstract class SocketConnectionBase<Request extends AbstractRequest, Resp
     }
   }
 
+  @Override
   public void dispose() {
     LOG.debug("Firefox connection disposed");
   }
 
+  @Override
   public int getPort() {
     return myPort;
   }
@@ -137,6 +140,7 @@ public abstract class SocketConnectionBase<Request extends AbstractRequest, Resp
     myDispatcher.getMulticaster().statusChanged(status);
   }
 
+  @Override
   @Nonnull
   public ConnectionState getState() {
     synchronized (myLock) {
@@ -144,6 +148,7 @@ public abstract class SocketConnectionBase<Request extends AbstractRequest, Resp
     }
   }
 
+  @Override
   public void addListener(@Nonnull SocketConnectionListener listener, @Nullable Disposable parentDisposable) {
     if (parentDisposable != null) {
       myDispatcher.addListener(listener, parentDisposable);

@@ -7,7 +7,8 @@ import com.intellij.openapi.util.SystemInfo;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.awt.hacking.FontDesignMetricsHacking;
 import consulo.logging.Logger;
-import gnu.trove.TIntHashSet;
+import consulo.util.collection.primitive.ints.IntSet;
+import consulo.util.collection.primitive.ints.IntSets;
 import org.intellij.lang.annotations.JdkConstants;
 import sun.font.CompositeGlyphMapper;
 
@@ -35,7 +36,7 @@ public class FontInfo {
   @JdkConstants.FontStyle
   private final int myStyle;
   private final boolean myUseLigatures;
-  private final TIntHashSet mySafeCharacters = new TIntHashSet();
+  private final IntSet mySafeCharacters = IntSets.newHashSet();
   private final FontRenderContext myContext;
   private FontMetrics myFontMetrics = null;
 

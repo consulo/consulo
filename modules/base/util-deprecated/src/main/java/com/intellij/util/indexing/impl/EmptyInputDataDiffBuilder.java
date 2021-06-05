@@ -16,10 +16,8 @@
 package com.intellij.util.indexing.impl;
 
 import com.intellij.util.indexing.StorageException;
-import gnu.trove.THashMap;
-import gnu.trove.TObjectObjectProcedure;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.util.Map;
 
 //@ApiStatus.Experimental
@@ -38,31 +36,9 @@ public class EmptyInputDataDiffBuilder<Key, Value> extends InputDataDiffBuilder<
 
   static <Key, Value> boolean processKeys(@Nonnull Map<Key, Value> currentData, @Nonnull final KeyValueUpdateProcessor<? super Key, ? super Value> processor, final int inputId)
           throws StorageException {
-    if (currentData instanceof THashMap) {
-      final StorageException[] exception = new StorageException[]{null};
-      ((THashMap<Key, Value>)currentData).forEachEntry(new TObjectObjectProcedure<Key, Value>() {
-        @Override
-        public boolean execute(Key k, Value v) {
-          try {
-            processor.process(k, v, inputId);
-          }
-          catch (StorageException e) {
-            exception[0] = e;
-            return false;
-          }
-          return true;
-        }
-      });
-      if (exception[0] != null) {
-        throw exception[0];
-      }
+    for (Map.Entry<Key, Value> entry : currentData.entrySet()) {
+      processor.process(entry.getKey(), entry.getValue(), inputId);
     }
-    else {
-      for (Map.Entry<Key, Value> entry : currentData.entrySet()) {
-        processor.process(entry.getKey(), entry.getValue(), inputId);
-      }
-    }
-
     return true;
   }
 }

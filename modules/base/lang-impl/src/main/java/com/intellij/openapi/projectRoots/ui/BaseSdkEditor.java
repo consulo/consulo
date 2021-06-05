@@ -163,6 +163,9 @@ public abstract class BaseSdkEditor implements UnnamedConfigurable {
   @RequiredUIAccess
   @Override
   public boolean isModified() {
+    if(myMainPanel == null) {
+      return false;
+    }
     boolean isModified = !Comparing.equal(mySdk.getName(), myInitialName);
     isModified = isModified || !Comparing.equal(FileUtil.toSystemIndependentName(getHomeValue()), FileUtil.toSystemIndependentName(myInitialPath));
     for (PathEditor pathEditor : myPathEditors.values()) {
@@ -194,12 +197,7 @@ public abstract class BaseSdkEditor implements UnnamedConfigurable {
     for (SdkPathEditor pathEditor : myPathEditors.values()) {
       pathEditor.apply(sdkModificator);
     }
-    ApplicationManager.getApplication().runWriteAction(new Runnable() {
-      @Override
-      public void run() {
-        sdkModificator.commitChanges();
-      }
-    });
+    ApplicationManager.getApplication().runWriteAction(sdkModificator::commitChanges);
     final AdditionalDataConfigurable configurable = getAdditionalDataConfigurable();
     if (configurable != null) {
       configurable.apply();
@@ -247,6 +245,10 @@ public abstract class BaseSdkEditor implements UnnamedConfigurable {
   }
 
   private void setHomePathValue(String absolutePath) {
+    if(myHomeComponent == null) {
+      return;
+    }
+
     myHomeComponent.setValue(absolutePath);
     final ColorValue fg;
     if (absolutePath != null && !absolutePath.isEmpty()) {

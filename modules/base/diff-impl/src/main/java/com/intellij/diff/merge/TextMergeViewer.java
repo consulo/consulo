@@ -66,7 +66,6 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
 import consulo.util.collection.primitive.ints.IntList;
 import consulo.util.collection.primitive.ints.IntLists;
-import gnu.trove.TIntArrayList;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

@@ -57,6 +57,10 @@
       <version>${project.version}</version>
     </dependency>
     <dependency>
+      <groupId>consulo.internal</groupId>
+      <artifactId>trove4j</artifactId>
+    </dependency>
+    <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>consulo-vcs-log-graph-impl-testing</artifactId>
       <version>${project.version}</version>

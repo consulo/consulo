@@ -27,7 +27,6 @@ import com.intellij.util.Consumer;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.containers.ObjectIntHashMap;
 import consulo.util.collection.primitive.objects.ObjectIntMap;
 import consulo.util.collection.primitive.objects.ObjectMaps;
 import org.jetbrains.annotations.NonNls;
@@ -211,7 +210,7 @@ public class GroupNode extends Node implements Navigatable, Comparable<GroupNode
       ordering.putInt(node, parent.getIndex(node));
     }
     Collections.sort(nodes, Comparator.comparingInt(ordering::getInt)); // need ascending order
-    int[] indices = ordering.getValues();
+    int[] indices = ordering.values().toArray();
     Arrays.sort(indices);
     for (int i = count - 1; i >= 0; i--) {
       parent.remove(indices[i]);

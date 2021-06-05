@@ -15,6 +15,8 @@
  */
 package consulo.util.collection.trove.impl.objects;
 
+import consulo.util.collection.primitive.ints.IntCollection;
+import consulo.util.collection.primitive.ints.IntLists;
 import consulo.util.collection.primitive.objects.ObjectIntMap;
 import gnu.trove.TObjectHashingStrategy;
 import gnu.trove.TObjectIntHashMap;
@@ -59,9 +61,9 @@ public class MyObjectIntHashMap<K> extends TObjectIntHashMap<K> implements Objec
 
     @Override
     public Entry<T> next() {
+      myIterator.advance();
       T key = myIterator.key();
       int value = myIterator.value();
-      myIterator.advance();
       return new SimpleEntry<>(key, value);
     }
   }
@@ -121,6 +123,12 @@ public class MyObjectIntHashMap<K> extends TObjectIntHashMap<K> implements Objec
   }
 
   @Override
+  public int getIntOrDefault(K key, int defaultValue) {
+    int index = index(key);
+    return index < 0 ? defaultValue : _values[index];
+  }
+
+  @Override
   public void putInt(K key, int value) {
     put(key, value);
   }
@@ -137,5 +145,17 @@ public class MyObjectIntHashMap<K> extends TObjectIntHashMap<K> implements Objec
       myEntrySet = new MyEntrySet();
     }
     return myEntrySet;
+  }
+
+  @Override
+  public Set<K> keySet() {
+    Set keys = Set.<Object>of(keys());
+    return keys;
+  }
+
+  @Nonnull
+  @Override
+  public IntCollection values() {
+    return IntLists.newArrayList(getValues());
   }
 }

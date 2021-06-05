@@ -44,6 +44,7 @@ import consulo.util.collection.HashingStrategy;
 import consulo.util.collection.Maps;
 import consulo.util.collection.primitive.ints.IntList;
 import consulo.util.collection.primitive.ints.IntLists;
+import gnu.trove.TObjectIntHashMap;
 import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;

@@ -23,9 +23,8 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.Function;
 import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.Processor;
-import gnu.trove.THashMap;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.io.Serializable;
 import java.util.*;
 
@@ -152,7 +151,7 @@ public class MostlySingularMultiMap<K, V> implements Serializable {
   }
 
   public void compact() {
-    ((THashMap)myMap).compact();
+    // FIXME [VISTALL] unsupported ((HashMap)myMap).trimToSize();
     for (Object eachValue : myMap.values()) {
       if (eachValue instanceof MostlySingularMultiMap.ValueList) {
         ((ValueList)eachValue).trimToSize();

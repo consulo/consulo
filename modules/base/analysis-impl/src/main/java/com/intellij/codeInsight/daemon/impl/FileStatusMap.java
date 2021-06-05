@@ -5,28 +5,28 @@ import com.intellij.codeHighlighting.DirtyScopeTrackingHighlightingPassFactory;
 import com.intellij.codeHighlighting.Pass;
 import com.intellij.codeHighlighting.TextEditorHighlightingPassManager;
 import com.intellij.codeInsight.daemon.ProblemHighlightFilter;
-import consulo.disposer.Disposable;
-import consulo.logging.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.RangeMarker;
 import com.intellij.openapi.project.Project;
-import consulo.util.collection.primitive.ints.IntMaps;
-import consulo.util.collection.primitive.ints.IntObjectMap;
-import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;
 import com.intellij.util.ConcurrencyUtil;
 import com.intellij.util.containers.ContainerUtil;
-import gnu.trove.TIntObjectHashMap;
-import org.jetbrains.annotations.NonNls;
+import consulo.disposer.Disposable;
+import consulo.logging.Logger;
+import consulo.util.collection.primitive.ints.IntMaps;
+import consulo.util.collection.primitive.ints.IntObjectMap;
+import consulo.util.dataholder.Key;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentMap;
 
@@ -102,39 +102,46 @@ public final class FileStatusMap implements Disposable {
       setDirtyScope(Pass.LOCAL_INSPECTIONS, WHOLE_FILE_DIRTY_MARKER);
       setDirtyScope(Pass.LINE_MARKERS, WHOLE_FILE_DIRTY_MARKER);
       TextEditorHighlightingPassManager registrar = TextEditorHighlightingPassManager.getInstance(project);
-      for(DirtyScopeTrackingHighlightingPassFactory factory: registrar.getDirtyScopeTrackingFactories()) {
+      for (DirtyScopeTrackingHighlightingPassFactory factory : registrar.getDirtyScopeTrackingFactories()) {
         setDirtyScope(factory.getPassId(), WHOLE_FILE_DIRTY_MARKER);
       }
     }
 
     private boolean allDirtyScopesAreNull() {
-      for (Object o : dirtyScopes.getValues()) {
+      for (Object o : dirtyScopes.values()) {
         if (o != null) return false;
       }
       return true;
     }
 
     private void combineScopesWith(@Nonnull final TextRange scope, final int fileLength, @Nonnull final Document document) {
-      dirtyScopes.transformValues(oldScope -> {
+      List<IntObjectMap.IntObjectEntry<RangeMarker>> rangeMarkers = new ArrayList<>(dirtyScopes.entrySet());
+
+      for (IntObjectMap.IntObjectEntry<RangeMarker> entry : rangeMarkers) {
+        int key = entry.getKey();
+        RangeMarker oldScope = entry.getValue();
+
         RangeMarker newScope = combineScopes(oldScope, scope, fileLength, document);
         if (newScope != oldScope && oldScope != null) {
           oldScope.dispose();
         }
-        return newScope;
-      });
+
+        dirtyScopes.put(key, newScope);
+      }
     }
 
     @Override
     public String toString() {
-      @NonNls final StringBuilder s = new StringBuilder();
+      StringBuilder s = new StringBuilder();
       s.append("defensivelyMarked = ").append(defensivelyMarked);
       s.append("; wolfPassFinfished = ").append(wolfPassFinished);
       s.append("; errorFound = ").append(errorFound);
       s.append("; dirtyScopes: (");
-      dirtyScopes.forEachEntry((passId, rangeMarker) -> {
+      for (IntObjectMap.IntObjectEntry<RangeMarker> entry : dirtyScopes.entrySet()) {
+        int passId = entry.getKey();
+        RangeMarker rangeMarker = entry.getValue();
         s.append(" pass: ").append(passId).append(" -> ").append(rangeMarker == WHOLE_FILE_DIRTY_MARKER ? "Whole file" : rangeMarker).append(";");
-        return true;
-      });
+      }
       s.append(")");
       return s.toString();
     }
@@ -150,7 +157,7 @@ public final class FileStatusMap implements Disposable {
     }
   }
 
-  void markAllFilesDirty(@Nonnull @NonNls Object reason) {
+  void markAllFilesDirty(@Nonnull Object reason) {
     assertAllowModifications();
     synchronized (myDocumentToStatusMap) {
       if (!myDocumentToStatusMap.isEmpty()) {
@@ -204,7 +211,7 @@ public final class FileStatusMap implements Disposable {
     }
   }
 
-  void markFileScopeDirtyDefensively(@Nonnull PsiFile file, @Nonnull @NonNls Object reason) {
+  void markFileScopeDirtyDefensively(@Nonnull PsiFile file, @Nonnull Object reason) {
     assertAllowModifications();
     log("Mark dirty file defensively: ", file.getName(), reason);
     // mark whole file dirty in case no subsequent PSI events will come, but file requires rehighlighting nevertheless
@@ -218,7 +225,7 @@ public final class FileStatusMap implements Disposable {
     }
   }
 
-  void markFileScopeDirty(@Nonnull Document document, @Nonnull TextRange scope, int fileLength, @Nonnull @NonNls Object reason) {
+  void markFileScopeDirty(@Nonnull Document document, @Nonnull TextRange scope, int fileLength, @Nonnull Object reason) {
     assertAllowModifications();
     log("Mark scope dirty: ", scope, reason);
     synchronized (myDocumentToStatusMap) {
@@ -343,7 +350,7 @@ public final class FileStatusMap implements Disposable {
     return ConcurrencyUtil.cacheOrGet(threads, Thread.currentThread(), threads.size());
   }
 
-  public static void log(@NonNls @Nonnull Object... info) {
+  public static void log(@Nonnull Object... info) {
     if (LOG.isDebugEnabled()) {
       String s = StringUtil.repeatSymbol(' ', getThreadNum() * 4) + Arrays.asList(info) + "\n";
       LOG.debug(s);

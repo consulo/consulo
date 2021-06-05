@@ -314,60 +314,70 @@ public class ContainerUtil extends ContainerUtilRt {
 
   @Nonnull
   @Contract(pure = true)
+  @Deprecated
   public static <T> Set<T> newTroveSet() {
     return new HashSet<T>();
   }
 
   @Nonnull
   @Contract(pure = true)
+  @Deprecated
   public static <T> Set<T> newTroveSet(@Nonnull HashingStrategy<T> strategy) {
     return Sets.newHashSet(strategy);
   }
 
   @Nonnull
   @Contract(pure = true)
+  @Deprecated
   public static <T> Set<T> newTroveSet(@Nonnull T... elements) {
     return newTroveSet(Arrays.asList(elements));
   }
 
   @Nonnull
   @Contract(pure = true)
+  @Deprecated
   public static <T> Set<T> newTroveSet(@Nonnull HashingStrategy<T> strategy, @Nonnull T... elements) {
     return Sets.newHashSet(Arrays.asList(elements), strategy);
   }
 
   @Nonnull
   @Contract(pure = true)
+  @Deprecated
   public static <T> Set<T> newTroveSet(@Nonnull HashingStrategy<T> strategy, @Nonnull Collection<T> elements) {
     return Sets.newHashSet(elements, strategy);
   }
 
   @Nonnull
   @Contract(pure = true)
+  @Deprecated
   public static <T> Set<T> newTroveSet(@Nonnull Collection<T> elements) {
     return new HashSet<T>(elements);
   }
 
   @Nonnull
   @Contract(pure = true)
+  @Deprecated
   public static <K> Set<K> newIdentityTroveSet() {
     return Sets.newHashSet(ContainerUtil.<K>identityStrategy());
   }
 
   @Nonnull
   @Contract(pure = true)
+  @Deprecated
   public static <K> Set<K> newIdentityTroveSet(int initialCapacity) {
     return Sets.newHashSet(initialCapacity, ContainerUtil.<K>identityStrategy());
   }
 
   @Nonnull
   @Contract(pure = true)
+  @Deprecated
   public static <K> Set<K> newIdentityTroveSet(@Nonnull Collection<K> collection) {
     return Sets.newHashSet(collection, ContainerUtil.<K>identityStrategy());
   }
 
   @Nonnull
   @Contract(pure = true)
+  @Deprecated
   public static <K, V> Map<K, V> newIdentityTroveMap() {
     return Maps.newHashMap(ContainerUtil.<K>identityStrategy());
   }

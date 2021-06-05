@@ -32,6 +32,9 @@ import com.intellij.vcs.log.impl.FatalErrorHandler;
 import com.intellij.vcs.log.impl.HashImpl;
 import com.intellij.vcs.log.impl.VcsRefImpl;
 import com.intellij.vcs.log.util.PersistentUtil;
+import consulo.util.collection.primitive.objects.ObjectIntMap;
+import consulo.util.collection.primitive.objects.ObjectMaps;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -206,21 +209,21 @@ public class VcsLogStorageImpl implements Disposable, VcsLogStorage {
     @Nonnull
     private final List<VirtualFile> myRoots;
     @Nonnull
-    private final TObjectIntHashMap<VirtualFile> myRootsReversed;
+    private final ObjectIntMap<VirtualFile> myRootsReversed;
 
     public MyCommitIdKeyDescriptor(@Nonnull List<VirtualFile> roots) {
       myRoots = roots;
 
-      myRootsReversed = new TObjectIntHashMap<>();
+      myRootsReversed = ObjectMaps.newObjectIntHashMap();
       for (int i = 0; i < roots.size(); i++) {
-        myRootsReversed.put(roots.get(i), i);
+        myRootsReversed.putInt(roots.get(i), i);
       }
     }
 
     @Override
     public void save(@Nonnull DataOutput out, CommitId value) throws IOException {
       ((HashImpl)value.getHash()).write(out);
-      out.writeInt(myRootsReversed.get(value.getRoot()));
+      out.writeInt(myRootsReversed.getInt(value.getRoot()));
     }
 
     @Override

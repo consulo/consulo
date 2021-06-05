@@ -33,7 +33,8 @@ import com.intellij.vcs.log.impl.VcsChangesLazilyParsedDetails;
 import com.intellij.vcs.log.util.PersistentUtil;
 import consulo.disposer.Disposable;
 import consulo.logging.Logger;
-import gnu.trove.TIntHashSet;
+import consulo.util.collection.primitive.ints.IntSet;
+import consulo.util.collection.primitive.ints.IntSets;
 
 import javax.annotation.Nonnull;
 import java.io.DataInput;
@@ -81,13 +82,13 @@ public class VcsLogPathsIndex extends VcsLogFullDetailsIndex<Integer> {
     myPathsIndexer.getPathsEnumerator().force();
   }
 
-  public TIntHashSet getCommitsForPaths(@Nonnull Collection<FilePath> paths) throws IOException, StorageException {
+  public IntSet getCommitsForPaths(@Nonnull Collection<FilePath> paths) throws IOException, StorageException {
     Set<Integer> allPathIds = ContainerUtil.newHashSet();
     for (FilePath path : paths) {
       allPathIds.add(myPathsIndexer.myPathsEnumerator.enumerate(path.getPath()));
     }
 
-    TIntHashSet result = new TIntHashSet();
+    IntSet result = IntSets.newHashSet();
     Set<Integer> renames = allPathIds;
     while (!renames.isEmpty()) {
       renames = addCommitsAndGetRenames(renames, allPathIds, result);
@@ -100,7 +101,7 @@ public class VcsLogPathsIndex extends VcsLogFullDetailsIndex<Integer> {
   @Nonnull
   public Set<Integer> addCommitsAndGetRenames(@Nonnull Set<Integer> newPathIds,
                                               @Nonnull Set<Integer> allPathIds,
-                                              @Nonnull TIntHashSet commits)
+                                              @Nonnull IntSet commits)
           throws StorageException {
     Set<Integer> renames = ContainerUtil.newHashSet();
     for (Integer key : newPathIds) {

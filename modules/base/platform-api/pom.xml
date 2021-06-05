@@ -69,6 +69,12 @@
       <artifactId>consulo-analysis-api</artifactId>
       <version>${project.version}</version>
     </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>consulo-util-collection-primitive</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    
     <!--internal dependencies-->
     <dependency>
       <groupId>consulo.internal</groupId>

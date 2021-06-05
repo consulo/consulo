@@ -54,7 +54,9 @@ public interface IntCollection extends IntIterable {
 
   int size();
 
-  boolean isEmpty();
+  default boolean isEmpty() {
+    return size() == 0;
+  }
 
   void clear();
 

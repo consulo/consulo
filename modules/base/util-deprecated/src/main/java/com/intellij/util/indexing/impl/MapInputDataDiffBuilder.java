@@ -19,10 +19,8 @@ import com.intellij.openapi.util.Comparing;
 import com.intellij.util.SystemProperties;
 import com.intellij.util.indexing.StorageException;
 import consulo.logging.Logger;
-import gnu.trove.THashMap;
-import gnu.trove.TObjectObjectProcedure;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.Map;
@@ -105,27 +103,8 @@ public class MapInputDataDiffBuilder<Key, Value> extends InputDataDiffBuilder<Ke
   }
 
   private void processAllKeysAsDeleted(final RemovedKeyProcessor<? super Key> removeProcessor) throws StorageException {
-    if (myMap instanceof THashMap) {
-      final StorageException[] exception = new StorageException[]{null};
-      ((THashMap<Key, Value>)myMap).forEachEntry(new TObjectObjectProcedure<Key, Value>() {
-        @Override
-        public boolean execute(Key k, Value v) {
-          try {
-            removeProcessor.process(k, myInputId);
-          }
-          catch (StorageException e) {
-            exception[0] = e;
-            return false;
-          }
-          return true;
-        }
-      });
-      if (exception[0] != null) throw exception[0];
-    }
-    else {
-      for (Key key : myMap.keySet()) {
-        removeProcessor.process(key, myInputId);
-      }
+    for (Key key : myMap.keySet()) {
+      removeProcessor.process(key, myInputId);
     }
   }
 

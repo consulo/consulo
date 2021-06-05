@@ -49,10 +49,10 @@ public class MyIntIntMap extends TIntIntHashMap implements IntIntMap {
     TIntIntIterator iterator = iterator();
 
     while (iterator.hasNext()) {
+      iterator.advance();
+
       int key = iterator.key();
       int value = iterator.value();
-
-      iterator.advance();
 
       consumer.accept(key, value);
     }

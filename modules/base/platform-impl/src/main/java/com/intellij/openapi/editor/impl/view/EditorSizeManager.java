@@ -459,7 +459,7 @@ class EditorSizeManager implements PrioritizedDocumentListener, Disposable, Fold
       myLineWidths.addAll(startVisualLine, newEntries);
     }
     else if (lineDiff < 0) {
-      myLineWidths.removeRange(startVisualLine, startVisualLine + lineDiff);
+      myLineWidths.removeRange(startVisualLine, startVisualLine - lineDiff);
     }
     for (int i = startVisualLine; i <= endVisualLine && i < myLineWidths.size(); i++) {
       myLineWidths.set(i, UNKNOWN_WIDTH);

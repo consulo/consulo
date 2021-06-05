@@ -1,17 +1,17 @@
 package com.intellij.util.io.socketConnection.impl;
 
 import com.intellij.openapi.application.ApplicationManager;
-import consulo.logging.Logger;
 import com.intellij.openapi.util.MultiValuesMap;
 import com.intellij.openapi.util.Ref;
 import com.intellij.util.Alarm;
 import com.intellij.util.SmartList;
 import com.intellij.util.io.socketConnection.*;
+import consulo.logging.Logger;
 import gnu.trove.TIntObjectHashMap;
 import gnu.trove.TIntObjectProcedure;
 import gnu.trove.TObjectProcedure;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;

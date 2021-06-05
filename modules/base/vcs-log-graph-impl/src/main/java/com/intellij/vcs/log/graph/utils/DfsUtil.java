@@ -16,7 +16,7 @@
 
 package com.intellij.vcs.log.graph.utils;
 
-import com.intellij.util.containers.IntStack;
+import consulo.util.collection.primitive.ints.IntStack;
 import javax.annotation.Nonnull;
 
 public class DfsUtil {
@@ -33,7 +33,7 @@ public class DfsUtil {
     IntStack myStack = new IntStack();
     myStack.push(startRowIndex);
 
-    while (!myStack.empty()) {
+    while (!myStack.isEmpty()) {
       int nextNode = nextNodeFun.fun(myStack.peek());
       if (nextNode != NextNode.NODE_NOT_FOUND) {
         myStack.push(nextNode);

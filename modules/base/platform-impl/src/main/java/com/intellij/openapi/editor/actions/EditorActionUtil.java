@@ -38,7 +38,7 @@ import com.intellij.openapi.editor.highlighter.HighlighterIterator;
 import com.intellij.openapi.editor.impl.DesktopEditorImpl;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Comparing;
-import consulo.util.dataholder.Key;
+import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;
@@ -46,8 +46,10 @@ import com.intellij.psi.codeStyle.CodeStyleSettingsManager;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.util.EditorPopupHandler;
 import com.intellij.util.text.CharArrayUtil;
+import consulo.util.dataholder.Key;
 import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.util.List;
@@ -62,21 +64,17 @@ public class EditorActionUtil {
   /**
    * Tries to change given editor's viewport position in vertical dimension by the given number of visual lines.
    *
-   * @param editor     target editor which viewport position should be changed
-   * @param lineShift  defines viewport position's vertical change length
-   * @param columnShift  defines viewport position's horizontal change length
-   * @param moveCaret  flag that identifies whether caret should be moved if its current position becomes off-screen
+   * @param editor      target editor which viewport position should be changed
+   * @param lineShift   defines viewport position's vertical change length
+   * @param columnShift defines viewport position's horizontal change length
+   * @param moveCaret   flag that identifies whether caret should be moved if its current position becomes off-screen
    */
   public static void scrollRelatively(@Nonnull Editor editor, int lineShift, int columnShift, boolean moveCaret) {
     if (lineShift != 0) {
-      editor.getScrollingModel().scrollVertically(
-              editor.getScrollingModel().getVerticalScrollOffset() + lineShift * editor.getLineHeight()
-      );
+      editor.getScrollingModel().scrollVertically(editor.getScrollingModel().getVerticalScrollOffset() + lineShift * editor.getLineHeight());
     }
     if (columnShift != 0) {
-      editor.getScrollingModel().scrollHorizontally(
-              editor.getScrollingModel().getHorizontalScrollOffset() + columnShift * EditorUtil.getSpaceWidth(Font.PLAIN, editor)
-      );
+      editor.getScrollingModel().scrollHorizontally(editor.getScrollingModel().getHorizontalScrollOffset() + columnShift * EditorUtil.getSpaceWidth(Font.PLAIN, editor));
     }
 
     if (!moveCaret) {
@@ -97,10 +95,7 @@ public class EditorActionUtil {
     }
   }
 
-  public static void moveCaretRelativelyAndScroll(@Nonnull Editor editor,
-                                                  int columnShift,
-                                                  int lineShift,
-                                                  boolean withSelection) {
+  public static void moveCaretRelativelyAndScroll(@Nonnull Editor editor, int columnShift, int lineShift, boolean withSelection) {
     Rectangle visibleArea = editor.getScrollingModel().getVisibleArea();
     VisualPosition pos = editor.getCaretModel().getVisualPosition();
     Point caretLocation = editor.visualPositionToXY(pos);
@@ -171,7 +166,7 @@ public class EditorActionUtil {
     if (tabsEnd < 0) tabsEnd = 0;
     if (!shouldUseSmartTabs(project, editor)) tabsEnd = newLength;
     StringBuilder buf = new StringBuilder(newLength);
-    for (int i = 0; i < newLength;) {
+    for (int i = 0; i < newLength; ) {
       if (tabSize > 0 && editorSettings.isUseTabCharacter(project) && i + tabSize <= tabsEnd) {
         buf.append('\t');
         //noinspection AssignmentToForLoopParameter
@@ -255,6 +250,10 @@ public class EditorActionUtil {
     return !Comparing.equal(leftToken, rightToken);
   }
 
+  private static boolean isLexemeBoundary(@Nullable IElementType leftTokenType, @Nullable IElementType rightTokenType) {
+    return leftTokenType != null && rightTokenType != null && LanguageWordBoundaryFilter.INSTANCE.forLanguage(rightTokenType.getLanguage()).isWordBoundary(leftTokenType, rightTokenType);
+  }
+
   public static boolean isWordStart(@Nonnull CharSequence text, int offset, boolean isCamel) {
     char prev = offset > 0 ? text.charAt(offset - 1) : 0;
     char current = text.charAt(offset);
@@ -269,8 +268,7 @@ public class EditorActionUtil {
       return true;
     }
 
-    return (Character.isWhitespace(prev) || firstIsIdentifierPart) &&
-           !Character.isWhitespace(current) && !secondIsIdentifierPart;
+    return (Character.isWhitespace(prev) || firstIsIdentifierPart) && !Character.isWhitespace(current) && !secondIsIdentifierPart;
   }
 
   private static boolean isLowerCaseOrDigit(char c) {
@@ -289,17 +287,15 @@ public class EditorActionUtil {
     }
 
     if (isCamel) {
-      if (firstIsIdentifierPart
-          && (Character.isLowerCase(prev) && Character.isUpperCase(current)
-              || prev != '_' && current == '_'
-              || Character.isUpperCase(prev) && Character.isUpperCase(current) && Character.isLowerCase(next)))
-      {
+      if (firstIsIdentifierPart &&
+          (Character.isLowerCase(prev) && Character.isUpperCase(current) ||
+           prev != '_' && current == '_' ||
+           Character.isUpperCase(prev) && Character.isUpperCase(current) && Character.isLowerCase(next))) {
         return true;
       }
     }
 
-    return !Character.isWhitespace(prev) && !firstIsIdentifierPart &&
-           (Character.isWhitespace(current) || secondIsIdentifierPart);
+    return !Character.isWhitespace(prev) && !firstIsIdentifierPart && (Character.isWhitespace(current) || secondIsIdentifierPart);
   }
 
   /**
@@ -307,7 +303,6 @@ public class EditorActionUtil {
    * or to the first non-whitespace character on it.
    *
    * @param isWithSelection if true - sets selection from old caret position to the new one, if false - clears selection
-   *
    * @see EditorActionUtil#moveCaretToLineStartIgnoringSoftWraps(Editor)
    */
   public static void moveCaretToLineStart(@Nonnull Editor editor, boolean isWithSelection) {
@@ -437,10 +432,10 @@ public class EditorActionUtil {
   /**
    * Tries to find visual column that points to the first non-white space symbol at the visual line at the given editor.
    *
-   * @param editor              target editor
-   * @param visualLineNumber    target visual line
-   * @return                    visual column that points to the first non-white space symbol at the target visual line if the one exists;
-   *                            <code>'-1'</code> otherwise
+   * @param editor           target editor
+   * @param visualLineNumber target visual line
+   * @return visual column that points to the first non-white space symbol at the target visual line if the one exists;
+   * <code>'-1'</code> otherwise
    */
   public static int findFirstNonSpaceColumnOnTheLine(@Nonnull Editor editor, int visualLineNumber) {
     Document document = editor.getDocument();
@@ -456,8 +451,7 @@ public class EditorActionUtil {
     if (!softWrapIntroducedLine) {
       int offset = findFirstNonSpaceOffsetInRange(document.getCharsSequence(), logLineStartOffset, logLineEndOffset);
       if (offset >= 0) {
-        return newRendering ? editor.offsetToVisualPosition(offset).column :
-               EditorUtil.calcColumnNumber(editor, document.getCharsSequence(), logLineStartOffset, offset);
+        return newRendering ? editor.offsetToVisualPosition(offset).column : EditorUtil.calcColumnNumber(editor, document.getCharsSequence(), logLineStartOffset, offset);
       }
       else {
         return -1;
@@ -509,8 +503,7 @@ public class EditorActionUtil {
       }
       int end = findFirstNonSpaceOffsetInRange(document.getCharsSequence(), softWrap.getStart(), logLineEndOffset);
       if (end >= 0) {
-        return newRendering ? editor.offsetToVisualPosition(end).column :
-               EditorUtil.calcColumnNumber(editor, document.getCharsSequence(), softWrap.getStart(), end);
+        return newRendering ? editor.offsetToVisualPosition(end).column : EditorUtil.calcColumnNumber(editor, document.getCharsSequence(), softWrap.getStart(), end);
       }
       else {
         return -1;
@@ -529,11 +522,11 @@ public class EditorActionUtil {
   /**
    * Tries to find non white space symbol at the given range at the given document.
    *
-   * @param text        text to be inspected
-   * @param start       target start offset (inclusive)
-   * @param end         target end offset (exclusive)
-   * @return            index of the first non-white space character at the given document at the given range if the one is found;
-   *                    <code>'-1'</code> otherwise
+   * @param text  text to be inspected
+   * @param start target start offset (inclusive)
+   * @param end   target end offset (exclusive)
+   * @return index of the first non-white space character at the given document at the given range if the one is found;
+   * <code>'-1'</code> otherwise
    */
   public static int findFirstNonSpaceOffsetInRange(@Nonnull CharSequence text, int start, int end) {
     for (; start < end; start++) {
@@ -552,8 +545,8 @@ public class EditorActionUtil {
   /**
    * Moves caret to visual line end.
    *
-   * @param editor target editor
-   * @param isWithSelection whether selection should be set from original caret position to its target position
+   * @param editor                   target editor
+   * @param isWithSelection          whether selection should be set from original caret position to its target position
    * @param ignoreTrailingWhitespace if <code>true</code>, line end will be determined while ignoring trailing whitespace, unless caret is
    *                                 already at so-determined target position, in which case trailing whitespace will be taken into account
    */
@@ -574,8 +567,7 @@ public class EditorActionUtil {
       return;
     }
     VisualPosition currentVisualCaret = editor.getCaretModel().getVisualPosition();
-    VisualPosition visualEndOfLineWithCaret
-            = new VisualPosition(currentVisualCaret.line, EditorUtil.getLastVisualLineColumnNumber(editor, currentVisualCaret.line), true);
+    VisualPosition visualEndOfLineWithCaret = new VisualPosition(currentVisualCaret.line, EditorUtil.getLastVisualLineColumnNumber(editor, currentVisualCaret.line), true);
 
     // There is a possible case that the caret is already located at the visual end of line and the line is soft wrapped.
     // We want to move the caret to the end of the next visual line then.
@@ -688,10 +680,7 @@ public class EditorActionUtil {
     setupSelection(editor, isWithSelection, selectionStart, blockSelectionStart);
   }
 
-  private static void setupSelection(@Nonnull Editor editor,
-                                     boolean isWithSelection,
-                                     int selectionStart,
-                                     @Nonnull LogicalPosition blockSelectionStart) {
+  private static void setupSelection(@Nonnull Editor editor, boolean isWithSelection, int selectionStart, @Nonnull LogicalPosition blockSelectionStart) {
     SelectionModel selectionModel = editor.getSelectionModel();
     CaretModel caretModel = editor.getCaretModel();
     if (isWithSelection) {
@@ -710,6 +699,7 @@ public class EditorActionUtil {
   }
 
   private static final Key<VisualPosition> PREV_POS = Key.create("PREV_POS");
+
   public static void selectNonexpandableFold(@Nonnull Editor editor) {
     final CaretModel caretModel = editor.getCaretModel();
     final VisualPosition pos = caretModel.getVisualPosition();
@@ -793,8 +783,7 @@ public class EditorActionUtil {
     Rectangle visibleArea = editor.getScrollingModel().getVisibleArea();
     int linesIncrement = visibleArea.height / lineHeight;
     int allowedBottom = ((EditorEx)editor).getContentSize().height - visibleArea.height;
-    editor.getScrollingModel().scrollVertically(
-            Math.min(allowedBottom, visibleArea.y - visibleArea.y % lineHeight + linesIncrement * lineHeight));
+    editor.getScrollingModel().scrollVertically(Math.min(allowedBottom, visibleArea.y - visibleArea.y % lineHeight + linesIncrement * lineHeight));
     editor.getCaretModel().moveCaretRelatively(0, linesIncrement, isWithSelection, editor.isColumnMode(), true);
   }
 
@@ -834,7 +823,7 @@ public class EditorActionUtil {
   @Deprecated
   //@ApiStatus.ScheduledForRemoval(inVersion = "2020.2")
   public static EditorPopupHandler createEditorPopupHandler(@Nonnull final ActionGroup group) {
-    return new EditorPopupHandler () {
+    return new EditorPopupHandler() {
       @Override
       public void invokePopup(final EditorMouseEvent event) {
         showEditorPopup(event, group);
@@ -884,7 +873,7 @@ public class EditorActionUtil {
   public static void makePositionVisible(@Nonnull final Editor editor, final int offset) {
     FoldingModel foldingModel = editor.getFoldingModel();
     FoldRegion collapsedRegionAtOffset;
-    while ((collapsedRegionAtOffset  = foldingModel.getCollapsedRegionAtOffset(offset)) != null) {
+    while ((collapsedRegionAtOffset = foldingModel.getCollapsedRegionAtOffset(offset)) != null) {
       final FoldRegion region = collapsedRegionAtOffset;
       foldingModel.runBatchFoldingOperation(new Runnable() {
         @Override
@@ -899,8 +888,8 @@ public class EditorActionUtil {
    * Clones caret in a given direction if it's possible. If there already exists a caret at the given direction, removes the current caret.
    *
    * @param editor editor to perform operation in
-   * @param caret caret to work on
-   * @param above whether to clone the caret above or below
+   * @param caret  caret to work on
+   * @param above  whether to clone the caret above or below
    * @return <code>false</code> if the operation cannot be performed due to current caret being at the edge (top or bottom) of the document,
    * and <code>true</code> otherwise
    */
@@ -915,5 +904,197 @@ public class EditorActionUtil {
       editor.getCaretModel().removeCaret(caret);
     }
     return true;
+  }
+
+  @Nonnull
+  public static TextRange getRangeToWordStart(@Nonnull Editor editor, boolean isCamel, boolean handleQuoted) {
+    int endOffset = editor.getCaretModel().getOffset();
+    int startOffset = getPreviousCaretStopOffset(editor, CaretStopPolicy.WORD_START, isCamel, handleQuoted);
+    return TextRange.create(startOffset, endOffset);
+  }
+
+  @SuppressWarnings("Duplicates")
+  public static int getPreviousCaretStopOffset(@Nonnull Editor editor, @Nonnull CaretStopPolicy caretStopPolicy, boolean isCamel, boolean handleQuoted) {
+    int minOffset = getPreviousLineStopOffset(editor, caretStopPolicy.getLineStop());
+
+    final CaretStop wordStop = caretStopPolicy.getWordStop();
+    if (wordStop.equals(CaretStop.NONE)) return minOffset;
+
+    final int offset = editor.getCaretModel().getOffset();
+    if (offset == minOffset) return minOffset;
+
+    final CharSequence text = editor.getDocument().getCharsSequence();
+    final HighlighterIterator tokenIterator = createHighlighterIteratorAtOffset(editor, offset - 1);
+
+    final int newOffset = getPreviousWordStopOffset(text, wordStop, tokenIterator, offset, minOffset, isCamel);
+    if (newOffset > minOffset && handleQuoted && tokenIterator != null && isTokenEnd(tokenIterator, newOffset + 1) && isQuotedToken(tokenIterator, text)) {
+      // at the start of a closing quote:  "word|" <- "word" |
+      // find the end of an opening quote: "|word" <- "word|"  (must be only a single step away)
+      final int newOffsetAfterQuote = getPreviousWordStopOffset(text, CaretStop.BOTH, tokenIterator, newOffset, minOffset, isCamel);
+      if (isTokenStart(tokenIterator, newOffsetAfterQuote - 1)) {
+        return getPreviousWordStopOffset(text, wordStop, tokenIterator, newOffsetAfterQuote, minOffset, isCamel); // |"word"
+      }
+    }
+    return newOffset;
+  }
+
+  private static int getPreviousWordStopOffset(@Nonnull CharSequence text, @Nonnull CaretStop wordStop, @Nullable HighlighterIterator tokenIterator, int offset, int minOffset, boolean isCamel) {
+    int newOffset = offset - 1;
+    for (; newOffset > minOffset; newOffset--) {
+      final boolean isTokenBoundary = tokenIterator != null && retreatTokenOnBoundary(tokenIterator, text, newOffset);
+      if (isWordStopOffset(text, wordStop, newOffset, isCamel, isTokenBoundary)) break;
+    }
+    return newOffset;
+  }
+
+  private static boolean retreatTokenOnBoundary(@Nonnull HighlighterIterator tokenIterator, @Nonnull CharSequence text, int offset) {
+    if (isTokenStart(tokenIterator, offset)) {
+      final IElementType rightToken = tokenIterator.getTokenType();
+      final boolean wasQuotedToken = isQuotedToken(tokenIterator, text);
+      tokenIterator.retreat();
+      return wasQuotedToken || isQuotedToken(tokenIterator, text) || !isBetweenWhitespaces(text, offset) && isLexemeBoundary(tokenIterator.getTokenType(), rightToken);
+    }
+    return isQuotedTokenInnardsBoundary(tokenIterator, text, offset);
+  }
+
+  public static int getPreviousLineStopOffset(@Nonnull Editor editor, @Nonnull CaretStop lineStop) {
+    final Document document = editor.getDocument();
+    final CaretModel caretModel = editor.getCaretModel();
+
+    final int lineNumber = caretModel.getLogicalPosition().line;
+    final boolean isAtLineStart = (caretModel.getOffset() == document.getLineStartOffset(lineNumber));
+
+    return getPreviousLineStopOffset(document, lineStop, lineNumber, isAtLineStart);
+  }
+
+  private static int getPreviousLineStopOffset(@Nonnull Document document, @Nonnull CaretStop lineStop, int lineNumber, boolean isAtLineStart) {
+    if (lineNumber - 1 < 0) {
+      return 0;
+    }
+    else if (!isAtLineStart) {
+      return lineStop.isAtStart() ? document.getLineStartOffset(lineNumber) : lineStop.isAtEnd() ? document.getLineEndOffset(lineNumber - 1) : 0;
+    }
+    else {
+      return lineStop.isAtEnd() ? document.getLineEndOffset(lineNumber - 1) : lineStop.isAtStart() ? document.getLineStartOffset(lineNumber - 1) : 0;
+    }
+  }
+
+  @Nonnull
+  public static TextRange getRangeToWordEnd(@Nonnull Editor editor, boolean isCamel, boolean handleQuoted) {
+    int startOffset = editor.getCaretModel().getOffset();
+    // IDEA-211756 "Delete to word end" is extremely inconvenient on whitespaces
+    int endOffset = getNextCaretStopOffset(editor, CaretStopPolicy.BOTH, isCamel, handleQuoted);
+    return TextRange.create(startOffset, endOffset);
+  }
+
+  @SuppressWarnings("Duplicates")
+  public static int getNextCaretStopOffset(@Nonnull Editor editor, @Nonnull CaretStopPolicy caretStopPolicy, boolean isCamel, boolean handleQuoted) {
+    int maxOffset = getNextLineStopOffset(editor, caretStopPolicy.getLineStop());
+
+    final CaretStop wordStop = caretStopPolicy.getWordStop();
+    if (wordStop.equals(CaretStop.NONE)) return maxOffset;
+
+    final int offset = editor.getCaretModel().getOffset();
+    if (offset == maxOffset) return maxOffset;
+
+    final CharSequence text = editor.getDocument().getCharsSequence();
+    final HighlighterIterator tokenIterator = createHighlighterIteratorAtOffset(editor, offset);
+
+    final int newOffset = getNextWordStopOffset(text, wordStop, tokenIterator, offset, maxOffset, isCamel);
+    if (newOffset < maxOffset && handleQuoted && tokenIterator != null && isTokenStart(tokenIterator, newOffset - 1) && isQuotedToken(tokenIterator, text)) {
+      // now at the end of an opening quote: | "word" -> "|word"
+      // find the start of a closing quote:   "|word" -> "word|"  (must be only a single step away)
+      final int newOffsetBeforeQuote = getNextWordStopOffset(text, CaretStop.BOTH, tokenIterator, newOffset, maxOffset, isCamel);
+      if (isTokenEnd(tokenIterator, newOffsetBeforeQuote + 1)) {
+        return getNextWordStopOffset(text, wordStop, tokenIterator, newOffsetBeforeQuote, maxOffset, isCamel); // "word"|
+      }
+    }
+    return newOffset;
+  }
+
+  private static int getNextWordStopOffset(@Nonnull CharSequence text, @Nonnull CaretStop wordStop, @Nullable HighlighterIterator tokenIterator, int offset, int maxOffset, boolean isCamel) {
+    int newOffset = offset + 1;
+    for (; newOffset < maxOffset; newOffset++) {
+      final boolean isTokenBoundary = tokenIterator != null && advanceTokenOnBoundary(tokenIterator, text, newOffset);
+      if (isWordStopOffset(text, wordStop, newOffset, isCamel, isTokenBoundary)) break;
+    }
+    return newOffset;
+  }
+
+  private static boolean advanceTokenOnBoundary(@Nonnull HighlighterIterator tokenIterator, @Nonnull CharSequence text, int offset) {
+    if (isTokenEnd(tokenIterator, offset)) {
+      final IElementType leftToken = tokenIterator.getTokenType();
+      final boolean wasQuotedToken = isQuotedToken(tokenIterator, text);
+      tokenIterator.advance();
+      return wasQuotedToken || isQuotedToken(tokenIterator, text) || !isBetweenWhitespaces(text, offset) && isLexemeBoundary(leftToken, tokenIterator.getTokenType());
+    }
+    return isQuotedTokenInnardsBoundary(tokenIterator, text, offset);
+  }
+
+  private static boolean isBetweenWhitespaces(@Nonnull CharSequence text, int offset) {
+    return 0 < offset && offset < text.length() && Character.isWhitespace(text.charAt(offset - 1)) && Character.isWhitespace(text.charAt(offset));
+  }
+
+  private static boolean isWordStopOffset(@Nonnull CharSequence text, @Nonnull CaretStop wordStop, int offset, boolean isCamel, boolean isLexemeBoundary) {
+    if (wordStop.isAtStart() && wordStop.isAtEnd()) {
+      return isLexemeBoundary || isWordStart(text, offset, isCamel) || isWordEnd(text, offset, isCamel);
+    }
+    if (wordStop.isAtStart()) return isLexemeBoundary && !isWordEnd(text, offset, isCamel) || isWordStart(text, offset, isCamel);
+    if (wordStop.isAtEnd()) return isLexemeBoundary && !isWordStart(text, offset, isCamel) || isWordEnd(text, offset, isCamel);
+    return false;
+  }
+
+  private static boolean isQuotedToken(@Nonnull HighlighterIterator tokenIterator, @Nonnull CharSequence text) {
+    final int startOffset = tokenIterator.getStart();
+    final int endOffset = tokenIterator.getEnd();
+    if (endOffset - startOffset < 2) return false;
+    final char openingQuote = getQuoteAt(text, startOffset);
+    final char closingQuote = getQuoteAt(text, endOffset - 1);
+    return openingQuote != 0 && closingQuote == openingQuote;
+  }
+
+  private static char getQuoteAt(@Nonnull CharSequence text, int offset) {
+    if (offset < 0 || offset >= text.length()) return 0;
+    final char ch = text.charAt(offset);
+    return (ch == '\'' || ch == '\"') ? ch : 0;
+  }
+
+  private static boolean isQuotedTokenInnardsBoundary(@Nonnull HighlighterIterator tokenIterator, @Nonnull CharSequence text, int offset) {
+    return (isTokenStart(tokenIterator, offset - 1) || isTokenEnd(tokenIterator, offset + 1)) && isQuotedToken(tokenIterator, text);
+  }
+
+  private static boolean isTokenStart(@Nonnull HighlighterIterator tokenIterator, int offset) {
+    return offset == tokenIterator.getStart();
+  }
+
+  private static boolean isTokenEnd(@Nonnull HighlighterIterator tokenIterator, int offset) {
+    return offset == tokenIterator.getEnd();
+  }
+
+  public static int getNextLineStopOffset(@Nonnull Editor editor, @Nonnull CaretStop lineStop) {
+    final Document document = editor.getDocument();
+    final CaretModel caretModel = editor.getCaretModel();
+
+    final int lineNumber = caretModel.getLogicalPosition().line;
+    final boolean isAtLineEnd = (caretModel.getOffset() == document.getLineEndOffset(lineNumber));
+
+    return getNextLineStopOffset(document, lineStop, lineNumber, isAtLineEnd);
+  }
+
+  private static int getNextLineStopOffset(@Nonnull Document document, @Nonnull CaretStop lineStop, int lineNumber, boolean isAtLineEnd) {
+    if (lineNumber + 1 >= document.getLineCount()) {
+      return document.getTextLength();
+    }
+    else if (!isAtLineEnd) {
+      return lineStop.isAtEnd() ? document.getLineEndOffset(lineNumber) : lineStop.isAtStart() ? document.getLineStartOffset(lineNumber + 1) : document.getTextLength();
+    }
+    else {
+      return lineStop.isAtStart() ? document.getLineStartOffset(lineNumber + 1) : lineStop.isAtEnd() ? document.getLineEndOffset(lineNumber + 1) : document.getTextLength();
+    }
+  }
+
+  @Nullable
+  private static HighlighterIterator createHighlighterIteratorAtOffset(@Nonnull Editor editor, int offset) {
+    return editor.getHighlighter().createIterator(offset);
   }
 }

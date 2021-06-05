@@ -18,7 +18,7 @@ package com.intellij.util.graph;
 import com.intellij.openapi.util.Couple;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.containers.IntStack;
+import consulo.util.collection.primitive.ints.IntStack;
 import com.intellij.util.containers.Stack;
 import consulo.util.collection.primitive.ints.IntList;
 import consulo.util.collection.primitive.ints.IntLists;

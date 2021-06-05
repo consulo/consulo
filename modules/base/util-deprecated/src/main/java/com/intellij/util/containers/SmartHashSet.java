@@ -2,10 +2,9 @@
 package com.intellij.util.containers;
 
 import com.intellij.util.ArrayUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
@@ -29,7 +28,7 @@ public final class SmartHashSet<T> extends HashSet<T> {
     super(initialCapacity, loadFactor);
   }
 
-  public SmartHashSet(@NotNull Collection<? extends T> collection) {
+  public SmartHashSet(@Nonnull Collection<? extends T> collection) {
     super(collection.size() == 1 ? Collections.emptyList() : collection);
     if (collection.size() == 1) {
       T element = collection.iterator().next();
@@ -42,7 +41,7 @@ public final class SmartHashSet<T> extends HashSet<T> {
   }
 
   @Override
-  public boolean contains(@NotNull Object obj) {
+  public boolean contains(@Nonnull Object obj) {
     T theElement = this.theElement;
     if (theElement != null) {
       return Objects.equals(obj, theElement);
@@ -51,7 +50,7 @@ public final class SmartHashSet<T> extends HashSet<T> {
   }
 
   @Override
-  public boolean add(@NotNull T obj) {
+  public boolean add(@Nonnull T obj) {
     T theElement = this.theElement;
     if (theElement != null) {
       if (Objects.equals(obj, theElement)) {
@@ -104,7 +103,7 @@ public final class SmartHashSet<T> extends HashSet<T> {
   }
 
   @Override
-  public boolean remove(@NotNull Object obj) {
+  public boolean remove(@Nonnull Object obj) {
     T theElement = this.theElement;
     if (theElement == null) {
       return super.remove(obj);
@@ -119,7 +118,7 @@ public final class SmartHashSet<T> extends HashSet<T> {
 
   @Override
   public
-  @NotNull
+  @Nonnull
   Iterator<T> iterator() {
     if (theElement == null) {
       return super.iterator();

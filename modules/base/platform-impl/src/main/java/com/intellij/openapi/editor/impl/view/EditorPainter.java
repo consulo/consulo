@@ -36,6 +36,8 @@ import consulo.ui.color.RGBColor;
 import consulo.ui.ex.util.LightDarkColorValue;
 import consulo.ui.style.StandardColors;
 import consulo.ui.util.ColorValueUtil;
+import consulo.util.collection.primitive.ints.IntMaps;
+import consulo.util.collection.primitive.ints.IntObjectMap;
 import gnu.trove.TFloatArrayList;
 import gnu.trove.TIntObjectHashMap;
 import org.jetbrains.annotations.Contract;
@@ -124,8 +126,8 @@ public class EditorPainter implements TextDrawingCallback {
     private final ClipDetector myClipDetector;
     private final IterationState.CaretData myCaretData;
     private final Map<Integer, Couple<Integer>> myVirtualSelectionMap;
-    private final TIntObjectHashMap<List<LineExtensionData>> myExtensionData = new TIntObjectHashMap<>(); // key is visual line
-    private final TIntObjectHashMap<TextAttributes> myBetweenLinesAttributes = new TIntObjectHashMap<>(); // key is bottom visual line
+    private final IntObjectMap<List<LineExtensionData>> myExtensionData = IntMaps.newIntObjectHashMap(); // key is visual line
+    private final IntObjectMap<TextAttributes> myBetweenLinesAttributes = IntMaps.newIntObjectHashMap(); // key is bottom visual line
     private final int myLineHeight;
     private final int myAscent;
     private final int myDescent;

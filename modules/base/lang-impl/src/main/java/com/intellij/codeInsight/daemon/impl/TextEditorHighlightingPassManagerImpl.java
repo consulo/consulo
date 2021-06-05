@@ -28,6 +28,10 @@ import com.intellij.util.ArrayUtil;
 import consulo.logging.Logger;
 import consulo.util.collection.primitive.ints.IntList;
 import consulo.util.collection.primitive.ints.IntLists;
+import gnu.trove.TIntHashSet;
+import gnu.trove.TIntObjectHashMap;
+import gnu.trove.TIntObjectProcedure;
+import gnu.trove.TIntProcedure;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 

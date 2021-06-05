@@ -15,6 +15,8 @@
  */
 package consulo.util.collection.primitive.objects;
 
+import consulo.util.collection.primitive.ints.IntCollection;
+
 import javax.annotation.Nonnull;
 import java.util.Set;
 import java.util.function.ObjIntConsumer;
@@ -32,11 +34,20 @@ public interface ObjectIntMap<K> {
 
   int getInt(K key);
 
+  default int getIntOrDefault(K key, int defaultValue) {
+    int v;
+    return containsKey(key) ? getInt(key) : defaultValue;
+  }
+
   void putInt(K key, int value);
 
   void putAll(@Nonnull ObjectIntMap<? extends K> map);
 
   int size();
+
+  default boolean isEmpty() {
+    return size() == 0;
+  }
 
   void clear();
 
@@ -45,4 +56,9 @@ public interface ObjectIntMap<K> {
   boolean containsKey(K key);
 
   Set<Entry<K>> entrySet();
+
+  Set<K> keySet();
+
+  @Nonnull
+  IntCollection values();
 }

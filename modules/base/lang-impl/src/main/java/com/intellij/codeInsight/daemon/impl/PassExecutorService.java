@@ -204,10 +204,9 @@ final class PassExecutorService implements Disposable {
       id2Visits.put(freePass.myPass.getId(), Pair.create(freePass, 0));
       checkConsistency(freePass, id2Visits);
     }
-    id2Visits.forEachEntry((id, pair) -> {
+    id2Visits.forEach((id, pair) -> {
       int count = pair.second;
       assert count == 0 : id;
-      return true;
     });
     assert id2Visits.size() == threadsToStartCountdown.get();
   }

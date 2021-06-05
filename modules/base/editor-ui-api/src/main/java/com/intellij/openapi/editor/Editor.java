@@ -15,18 +15,19 @@
  */
 package com.intellij.openapi.editor;
 
-import consulo.disposer.Disposable;
 import com.intellij.openapi.actionSystem.DataProvider;
 import com.intellij.openapi.editor.colors.EditorColorsScheme;
 import com.intellij.openapi.editor.colors.EditorFontType;
 import com.intellij.openapi.editor.event.EditorMouseEventArea;
 import com.intellij.openapi.editor.event.EditorMouseListener;
 import com.intellij.openapi.editor.event.EditorMouseMotionListener;
+import com.intellij.openapi.editor.highlighter.EditorHighlighter;
 import com.intellij.openapi.editor.markup.MarkupModel;
 import com.intellij.openapi.project.Project;
+import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.util.dataholder.UserDataHolder;
 import consulo.ui.Component;
+import consulo.util.dataholder.UserDataHolder;
 import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;
@@ -496,6 +497,11 @@ public interface Editor extends UserDataHolder {
 
   @Nonnull
   EditorKind getEditorKind();
+
+  @Nonnull
+  default EditorHighlighter getHighlighter() {
+    return EditorCoreUtil.createEmptyHighlighter(getProject(), getDocument());
+  }
 
   /**
    * Vertical distance, in pixels, between the top of visual line (corresponding coordinate is returned by {@link #visualLineToY(int)},
