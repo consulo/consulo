@@ -29,7 +29,7 @@ public class TrigramBuilderTest extends TestCase {
 
     TrigramBuilder.processTrigrams("String$CharData", new TrigramBuilder.TrigramProcessor() {
       @Override
-      public boolean execute(int value) {
+      public boolean test(int value) {
         list.add(value);
         return true;
       }
