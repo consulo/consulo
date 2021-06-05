@@ -93,7 +93,7 @@ public class LightApplication extends ComponentManagerImpl implements Applicatio
 
   @Override
   public <T> T runReadAction(@Nonnull Computable<T> computation) {
-    throw new UnsupportedOperationException();
+    return computation.compute();
   }
 
   @RequiredUIAccess
@@ -321,6 +321,6 @@ public class LightApplication extends ComponentManagerImpl implements Applicatio
 
   @Override
   public <T, E extends Throwable> T runReadAction(@Nonnull ThrowableComputable<T, E> computation) throws E {
-    throw new UnsupportedOperationException();
+    return computation.compute();
   }
 }

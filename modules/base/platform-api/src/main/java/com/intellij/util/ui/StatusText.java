@@ -10,6 +10,9 @@ import com.intellij.ui.components.JBViewport;
 import com.intellij.ui.scale.JBUIScale;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.localize.LocalizeValue;
+import consulo.platform.base.localize.UILocalize;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -21,6 +24,8 @@ import java.util.List;
 public abstract class StatusText {
   public static final SimpleTextAttributes DEFAULT_ATTRIBUTES = SimpleTextAttributes.GRAYED_ATTRIBUTES;
   public static final String DEFAULT_EMPTY_TEXT = UIBundle.message("message.nothingToShow");
+
+  public static final LocalizeValue DEFAULT_EMPTY_TEXT_VALUE = UILocalize.messageNothingToShow();
 
   private static final int Y_GAP = 2;
 

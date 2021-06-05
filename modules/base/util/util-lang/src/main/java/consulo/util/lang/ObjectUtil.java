@@ -1,10 +1,12 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.util.lang;
 
+import consulo.annotation.ReviewAfterMigrationToJRE;
 import org.jetbrains.annotations.Contract;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import java.lang.ref.Reference;
 import java.lang.reflect.Proxy;
 import java.util.Comparator;
 import java.util.List;
@@ -43,7 +45,9 @@ public class ObjectUtil {
    * They promise in http://mail.openjdk.java.net/pipermail/core-libs-dev/2018-February/051312.html that
    * the object reference won't be removed by JIT and GC-ed until this call.
    */
-  public static void reachabilityFence(@SuppressWarnings("unused") Object o) {
+  @ReviewAfterMigrationToJRE(9)
+  public static void reachabilityFence(Object o) {
+    Reference.reachabilityFence(o);
   }
 
   private static class Sentinel {

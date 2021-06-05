@@ -21,7 +21,6 @@ import com.intellij.ide.fileTemplates.FileTemplateUtil;
 import com.intellij.ui.ColoredListCellRenderer;
 import com.intellij.ui.ListSpeedSearch;
 import com.intellij.ui.components.JBList;
-import com.intellij.util.Function;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
@@ -49,14 +48,11 @@ abstract class FileTemplateTabAsList extends FileTemplateTab {
         onTemplateSelected();
       }
     });
-    new ListSpeedSearch(myList, new Function<Object, String>() {
-      @Override
-      public String fun(final Object o) {
-        if (o instanceof FileTemplate) {
-          return ((FileTemplate)o).getName();
-        }
-        return null;
+    new ListSpeedSearch(myList, o -> {
+      if (o instanceof FileTemplate) {
+        return ((FileTemplate)o).getName();
       }
+      return null;
     });
   }
 

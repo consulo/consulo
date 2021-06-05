@@ -17,6 +17,7 @@
 package com.intellij.ide;
 
 import com.intellij.AbstractBundle;
+import consulo.localize.LocalizeValue;
 import org.jetbrains.annotations.PropertyKey;
 
 /**
@@ -35,5 +36,10 @@ public class IdeBundle extends AbstractBundle {
 
   public static String message(@PropertyKey(resourceBundle = "messages.IdeBundle") String key, Object... params) {
     return ourInstance.getMessage(key, params);
+  }
+
+  @Deprecated
+  public static LocalizeValue messagePointer(@PropertyKey(resourceBundle = "messages.IdeBundle") String key) {
+    return LocalizeValue.of(message(key));
   }
 }
