@@ -126,6 +126,7 @@ public class SerializedStubTree {
 
   <K> StubIdList restoreIndexedStubs(@Nonnull StubForwardIndexExternalizer<?> dataExternalizer, @Nonnull StubIndexKey<K, ?> indexKey, @Nonnull K key) throws IOException {
     Map<StubIndexKey, Map<Object, StubIdList>> incompleteMap = dataExternalizer.doRead(new DataInputStream(new ByteArrayInputStream(myIndexedStubBytes, 0, myIndexedStubByteLength)), indexKey, key);
+    if (incompleteMap == null) return null;
     Map<Object, StubIdList> map = incompleteMap.get(indexKey);
     return map == null ? null : map.get(key);
   }
