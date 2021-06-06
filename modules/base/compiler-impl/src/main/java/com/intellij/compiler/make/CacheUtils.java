@@ -20,16 +20,16 @@ import com.intellij.openapi.compiler.CompilerBundle;
 import com.intellij.openapi.compiler.CompilerMessage;
 import com.intellij.openapi.compiler.CompilerMessageCategory;
 import com.intellij.openapi.compiler.ex.CompileContextEx;
-import consulo.logging.Logger;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.Function;
-import com.intellij.util.StringBuilderSpinAllocator;
 import consulo.compiler.make.DependencyCache;
-import gnu.trove.TIntHashSet;
-import javax.annotation.Nonnull;
+import consulo.logging.Logger;
+import consulo.util.collection.primitive.ints.IntSet;
+import consulo.util.collection.primitive.ints.IntSets;
 
+import javax.annotation.Nonnull;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
@@ -44,15 +44,10 @@ public class CacheUtils {
   private static final Logger LOG = Logger.getInstance(CacheUtils.class);
 
   public static String getMethodSignature(String name, String descriptor) {
-    final StringBuilder builder = StringBuilderSpinAllocator.alloc();
-    try {
-      builder.append(name);
-      builder.append(descriptor.substring(0, descriptor.indexOf(')') + 1));
-      return builder.toString();
-    }
-    finally {
-      StringBuilderSpinAllocator.dispose(builder);
-    }
+    final StringBuilder builder = new StringBuilder();
+    builder.append(name);
+    builder.append(descriptor.substring(0, descriptor.indexOf(')') + 1));
+    return builder.toString();
   }
 
   public static boolean areArraysContentsEqual(int[] exceptions1, int[] exceptions2) {
@@ -60,7 +55,7 @@ public class CacheUtils {
       return false;
     }
     if (exceptions1.length != 0) { // optimization
-      TIntHashSet exceptionsSet = new TIntHashSet(exceptions1);
+      IntSet exceptionsSet = IntSets.newHashSet(exceptions1);
       for (int exception : exceptions2) {
         if (!exceptionsSet.contains(exception)) {
           return false;

@@ -39,7 +39,6 @@ import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.roots.TestSourcesFilter;
 import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.util.Pair;
-import consulo.util.dataholder.UserDataHolderBase;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -57,7 +56,9 @@ import consulo.roots.ContentFolderScopes;
 import consulo.roots.ContentFolderTypeProvider;
 import consulo.roots.impl.ProductionContentFolderTypeProvider;
 import consulo.roots.impl.TestContentFolderTypeProvider;
-import gnu.trove.TIntHashSet;
+import consulo.util.collection.primitive.ints.IntSet;
+import consulo.util.collection.primitive.ints.IntSets;
+import consulo.util.dataholder.UserDataHolderBase;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -84,7 +85,7 @@ public class CompileContextImpl extends UserDataHolderBase implements CompileCon
   private final Set<VirtualFile> myGeneratedTestRoots = new java.util.HashSet<VirtualFile>();
   private VirtualFile[] myOutputDirectories;
   private Set<VirtualFile> myTestOutputDirectories;
-  private final TIntHashSet myGeneratedSources = new TIntHashSet();
+  private final IntSet myGeneratedSources = IntSets.newHashSet();
   private final ProjectFileIndex myProjectFileIndex; // cached for performance reasons
   private final long myStartCompilationStamp;
   private final UUID mySessionId = UUID.randomUUID();

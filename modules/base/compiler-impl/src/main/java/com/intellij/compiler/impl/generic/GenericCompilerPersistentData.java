@@ -15,12 +15,13 @@
  */
 package com.intellij.compiler.impl.generic;
 
-import consulo.logging.Logger;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.util.io.IOUtil;
-import gnu.trove.TIntHashSet;
-import javax.annotation.Nonnull;
+import consulo.logging.Logger;
+import consulo.util.collection.primitive.ints.IntSet;
+import consulo.util.collection.primitive.ints.IntSets;
 
+import javax.annotation.Nonnull;
 import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
@@ -33,8 +34,8 @@ public class GenericCompilerPersistentData {
   private static final Logger LOG = Logger.getInstance(GenericCompilerPersistentData.class);
   private static final int VERSION = 1;
   private File myFile;
-  private Map<String, Integer> myTarget2Id = new HashMap<String, Integer>();
-  private TIntHashSet myUsedIds = new TIntHashSet();
+  private Map<String, Integer> myTarget2Id = new HashMap<>();
+  private IntSet myUsedIds = IntSets.newHashSet();
   private boolean myVersionChanged;
   private final int myCompilerVersion;
 

@@ -39,7 +39,6 @@ import com.intellij.openapi.vfs.newvfs.RefreshQueue;
 import com.intellij.util.ThrowableRunnable;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.roots.ContentFolderScopes;
-import gnu.trove.THashMap;
 
 import javax.annotation.Nonnull;
 import java.io.File;
