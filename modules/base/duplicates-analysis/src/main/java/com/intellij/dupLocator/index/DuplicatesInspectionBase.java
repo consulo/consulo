@@ -43,6 +43,7 @@ import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.tree.ILightStubFileElementType;
 import com.intellij.util.SmartList;
 import com.intellij.util.indexing.FileBasedIndex;
+import consulo.util.collection.primitive.ints.IntList;
 import gnu.trove.TIntArrayList;
 import gnu.trove.TIntIntHashMap;
 import gnu.trove.TIntLongHashMap;
@@ -259,7 +260,7 @@ public class DuplicatesInspectionBase extends LocalInspectionTool {
     }
   }
 
-  abstract static class DuplicatedCodeProcessor<T> implements FileBasedIndex.ValueProcessor<TIntArrayList> {
+  abstract static class DuplicatedCodeProcessor<T> implements FileBasedIndex.ValueProcessor<IntList> {
     final TreeMap<Integer, TextRange> reportedRanges = new TreeMap<>();
     final TIntObjectHashMap<VirtualFile> reportedFiles = new TIntObjectHashMap<>();
     final TIntObjectHashMap<PsiElement> reportedPsi = new TIntObjectHashMap<>();
@@ -292,12 +293,12 @@ public class DuplicatesInspectionBase extends LocalInspectionTool {
     }
 
     @Override
-    public boolean process(@Nonnull VirtualFile file, TIntArrayList list) {
+    public boolean process(@Nonnull VirtualFile file, IntList list) {
       for(int i = 0, len = list.size(); i < len; i+=2) {
         ProgressManager.checkCanceled();
 
-        if (list.getQuick(i + 1) != myHash2) continue;
-        int offset = list.getQuick(i);
+        if (list.get(i + 1) != myHash2) continue;
+        int offset = list.get(i);
 
         if (myFileIndex.isInSourceContent(virtualFile)) {
           if (!myFileIndex.isInSourceContent(file)) return true;
