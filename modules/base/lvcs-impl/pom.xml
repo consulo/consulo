@@ -46,5 +46,10 @@
       <artifactId>consulo-diff-impl</artifactId>
       <version>${project.version}</version>
     </dependency>
+    <dependency>
+      <groupId>consulo.internal</groupId>
+      <artifactId>trove4j</artifactId>
+      <optional>true</optional>
+    </dependency>
   </dependencies>
 </project>

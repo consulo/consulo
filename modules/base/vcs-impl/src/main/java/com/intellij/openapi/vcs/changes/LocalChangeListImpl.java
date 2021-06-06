@@ -1,19 +1,17 @@
 package com.intellij.openapi.vcs.changes;
 
-import com.intellij.openapi.application.ApplicationManager;
-import consulo.logging.Logger;
+import com.intellij.openapi.application.ReadAction;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Comparing;
-import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vcs.ProjectLevelVcsManager;
 import com.intellij.openapi.vcs.history.VcsRevisionNumber;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.util.containers.OpenTHashSet;
+import consulo.logging.Logger;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.*;
 
 /**
@@ -23,7 +21,7 @@ public class LocalChangeListImpl extends LocalChangeList {
   private static final Logger LOG = Logger.getInstance(LocalChangeListImpl.class);
 
   private final Project myProject;
-  private Collection<Change> myChanges = new HashSet<Change>();
+  private Collection<Change> myChanges = new HashSet<>();
   private Collection<Change> myReadChangesCache = null;
   private String myId;
   @Nonnull
@@ -33,7 +31,7 @@ public class LocalChangeListImpl extends LocalChangeList {
 
   private boolean myIsDefault = false;
   private boolean myIsReadOnly = false;
-  private OpenTHashSet<Change> myChangesBeforeUpdate;
+  private Map<Change, Change> myChangesBeforeUpdate;
 
   public static LocalChangeListImpl createEmptyChangeListImpl(Project project, String name) {
     return new LocalChangeListImpl(project, name);
@@ -58,7 +56,7 @@ public class LocalChangeListImpl extends LocalChangeList {
 
   private void createReadChangesCache() {
     if (myReadChangesCache == null) {
-      myReadChangesCache = Collections.unmodifiableCollection(new HashSet<Change>(myChanges));
+      myReadChangesCache = Collections.unmodifiableCollection(new HashSet<>(myChanges));
     }
   }
 
@@ -143,11 +141,13 @@ public class LocalChangeListImpl extends LocalChangeList {
     return null;
   }
 
-  Collection<Change> startProcessingChanges(final Project project, @javax.annotation.Nullable final VcsDirtyScope scope) {
+  Collection<Change> startProcessingChanges(final Project project, @Nullable final VcsDirtyScope scope) {
     createReadChangesCache();
-    final Collection<Change> result = new ArrayList<Change>();
-    myChangesBeforeUpdate = new OpenTHashSet<Change>(myChanges);
-    for (Change oldBoy : myChangesBeforeUpdate) {
+    final Collection<Change> result = new ArrayList<>();
+    myChangesBeforeUpdate = new HashMap<>(myChanges.size());
+    myChanges.forEach(it -> myChangesBeforeUpdate.put(it, it));
+
+    for (Change oldBoy : myChangesBeforeUpdate.values()) {
       final ContentRevision before = oldBoy.getBeforeRevision();
       final ContentRevision after = oldBoy.getAfterRevision();
       if (scope == null || before != null && scope.belongsTo(before.getFile()) || after != null && scope.belongsTo(after.getFile())
@@ -167,15 +167,12 @@ public class LocalChangeListImpl extends LocalChangeList {
   }
 
   private static boolean isIgnoredRevision(final @Nonnull ContentRevision revision, final @Nonnull Project project) {
-    return ApplicationManager.getApplication().runReadAction(new Computable<Boolean>() {
-      @Override
-      public Boolean compute() {
-        if (project.isDisposed()) {
-          return false;
-        }
-        VirtualFile vFile = revision.getFile().getVirtualFile();
-        return vFile != null && ProjectLevelVcsManager.getInstance(project).isIgnored(vFile);
+    return ReadAction.compute(() -> {
+      if (project.isDisposed()) {
+        return false;
       }
+      VirtualFile vFile = revision.getFile().getVirtualFile();
+      return vFile != null && ProjectLevelVcsManager.getInstance(project).isIgnored(vFile);
     });
   }
 
@@ -188,7 +185,7 @@ public class LocalChangeListImpl extends LocalChangeList {
       return true;
     }
 
-    for (Change oldChange : myChangesBeforeUpdate) {
+    for (Change oldChange : myChangesBeforeUpdate.values()) {
       if (Comparing.equal(oldChange, change)) {
         LOG.debug("[process change] adding bacuae equal to old: " + ChangesUtil.getFilePath(oldChange).getPath());
         addChange(change);
@@ -209,7 +206,7 @@ public class LocalChangeListImpl extends LocalChangeList {
       }
     }
     changesDetected |= (! addedChanges.isEmpty());
-    final List<Change> removed = new ArrayList<Change>(myChangesBeforeUpdate);
+    final List<Change> removed = new ArrayList<>(myChangesBeforeUpdate.values());
     // since there are SAME objects...
     removed.removeAll(myChanges);
     removedChanges.addAll(removed);
@@ -219,7 +216,7 @@ public class LocalChangeListImpl extends LocalChangeList {
     return changesDetected;
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   private Change findOldChange(final Change newChange) {
     Change oldChange = myChangesBeforeUpdate.get(newChange);
     if (oldChange != null && sameBeforeRevision(oldChange, newChange) &&
@@ -266,15 +263,15 @@ public class LocalChangeListImpl extends LocalChangeList {
     copy.myData = myData;
 
     if (myChanges != null) {
-      copy.myChanges = new HashSet<Change>(myChanges);
+      copy.myChanges = new HashSet<>(myChanges);
     }
 
     if (myChangesBeforeUpdate != null) {
-      copy.myChangesBeforeUpdate = new OpenTHashSet<Change>((Collection<Change>)myChangesBeforeUpdate);
+      copy.myChangesBeforeUpdate = new HashMap<>(myChangesBeforeUpdate);
     }
 
     if (myReadChangesCache != null) {
-      copy.myReadChangesCache = new HashSet<Change>(myReadChangesCache);
+      copy.myReadChangesCache = new HashSet<>(myReadChangesCache);
     }
 
     return copy;
