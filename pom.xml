@@ -126,6 +126,7 @@
     <module>modules/base/util/util-collection</module>
     <module>modules/base/util/util-collection-primitive</module>
     <module>modules/base/util/util-collection-via-trove</module>
+    <module>modules/base/util/util-collection-runtime</module>
     <module>modules/base/util/util-concurrent</module>
     <module>modules/base/util/util-advanced-proxy</module>
     <module>modules/base/util/util-dataholder</module>
