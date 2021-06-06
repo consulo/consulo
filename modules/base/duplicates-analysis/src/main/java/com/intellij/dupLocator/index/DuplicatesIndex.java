@@ -23,7 +23,6 @@ import com.intellij.dupLocator.treeHash.FragmentsCollector;
 import com.intellij.dupLocator.util.PsiFragment;
 import com.intellij.lang.Language;
 import com.intellij.lang.LighterAST;
-import com.intellij.lang.LighterASTNode;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.fileTypes.LanguageFileType;
 import com.intellij.util.SystemProperties;
@@ -32,7 +31,8 @@ import com.intellij.util.io.DataExternalizer;
 import com.intellij.util.io.DataInputOutputUtil;
 import com.intellij.util.io.EnumeratorIntegerDescriptor;
 import com.intellij.util.io.KeyDescriptor;
-import gnu.trove.TIntArrayList;
+import consulo.util.collection.primitive.ints.IntList;
+import consulo.util.collection.primitive.ints.IntLists;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.TestOnly;
 
@@ -48,13 +48,13 @@ import java.util.Map;
 /**
  * @author Maxim.Mossienko on 12/11/13.
  */
-public class DuplicatesIndex extends FileBasedIndexExtension<Integer, TIntArrayList> {
+public class DuplicatesIndex extends FileBasedIndexExtension<Integer, IntList> {
   static boolean ourEnabled = SystemProperties.getBooleanProperty("idea.enable.duplicates.online.calculation",
                                                                   true);
   static final boolean ourEnabledLightProfiles = true;
   private static boolean ourEnabledOldProfiles = false;
 
-  @NonNls public static final ID<Integer, TIntArrayList> NAME = ID.create("DuplicatesIndex");
+  @NonNls public static final ID<Integer, IntList> NAME = ID.create("DuplicatesIndex");
   private static final int myBaseVersion = 25;
 
   private final FileBasedIndex.InputFilter myInputFilter = (project, file) -> {
@@ -70,36 +70,36 @@ public class DuplicatesIndex extends FileBasedIndexExtension<Integer, TIntArrayL
     return duplicatesProfile != null;
   };
 
-  private final DataExternalizer<TIntArrayList> myValueExternalizer = new DataExternalizer<TIntArrayList>() {
+  private final DataExternalizer<IntList> myValueExternalizer = new DataExternalizer<IntList>() {
     @Override
-    public void save(@Nonnull DataOutput out, TIntArrayList list) throws IOException {
+    public void save(@Nonnull DataOutput out, IntList list) throws IOException {
       if (list.size() == 2) {
-        DataInputOutputUtil.writeINT(out, list.getQuick(0));
-        DataInputOutputUtil.writeINT(out, list.getQuick(1));
+        DataInputOutputUtil.writeINT(out, list.get(0));
+        DataInputOutputUtil.writeINT(out, list.get(1));
       }
       else {
         DataInputOutputUtil.writeINT(out, -list.size());
         int prev = 0;
         for (int i = 0, len = list.size(); i < len; i+=2) {
-          int value = list.getQuick(i);
+          int value = list.get(i);
           DataInputOutputUtil.writeINT(out, value - prev);
           prev = value;
-          DataInputOutputUtil.writeINT(out, list.getQuick(i + 1));
+          DataInputOutputUtil.writeINT(out, list.get(i + 1));
         }
       }
     }
 
     @Override
-    public TIntArrayList read(@Nonnull DataInput in) throws IOException {
+    public IntList read(@Nonnull DataInput in) throws IOException {
       int capacityOrValue = DataInputOutputUtil.readINT(in);
       if (capacityOrValue >= 0) {
-        TIntArrayList list = new TIntArrayList(2);
+        IntList list = IntLists.newArrayList(2);
         list.add(capacityOrValue);
         list.add(DataInputOutputUtil.readINT(in));
         return list;
       }
       capacityOrValue = -capacityOrValue;
-      TIntArrayList list = new TIntArrayList(capacityOrValue);
+      IntList list = IntLists.newArrayList(capacityOrValue);
       int prev = 0;
       while(capacityOrValue > 0) {
         int value = DataInputOutputUtil.readINT(in) + prev;
@@ -112,10 +112,10 @@ public class DuplicatesIndex extends FileBasedIndexExtension<Integer, TIntArrayL
     }
   };
 
-  private final DataIndexer<Integer, TIntArrayList, FileContent> myIndexer = new DataIndexer<Integer, TIntArrayList, FileContent>() {
+  private final DataIndexer<Integer, IntList, FileContent> myIndexer = new DataIndexer<Integer, IntList, FileContent>() {
     @Override
     @Nonnull
-    public Map<Integer, TIntArrayList> map(@Nonnull final FileContent inputData) {
+    public Map<Integer, IntList> map(@Nonnull final FileContent inputData) {
       FileType type = inputData.getFileType();
 
       DuplicatesProfile profile = findDuplicatesProfile(type);
@@ -125,19 +125,16 @@ public class DuplicatesIndex extends FileBasedIndexExtension<Integer, TIntArrayL
         PsiDependentFileContent fileContent = (PsiDependentFileContent)inputData;
 
         if (profile instanceof LightDuplicateProfile && ourEnabledLightProfiles) {
-          final Map<Integer, TIntArrayList> result = new HashMap<>();
+          final Map<Integer, IntList> result = new HashMap<>();
           LighterAST ast = fileContent.getLighterAST();
 
-          ((LightDuplicateProfile)profile).process(ast, new LightDuplicateProfile.Callback() {
-            @Override
-            public void process(int hash, int hash2, @Nonnull LighterAST ast, @Nonnull LighterASTNode... nodes) {
-              TIntArrayList list = result.get(hash);
-              if (list == null) {
-                result.put(hash, list = new TIntArrayList(2));
-              }
-              list.add(nodes[0].getStartOffset());
-              list.add(hash2);
+          ((LightDuplicateProfile)profile).process(ast, (hash, hash2, ast1, nodes) -> {
+            IntList list = result.get(hash);
+            if (list == null) {
+              result.put(hash, list = IntLists.newArrayList(2));
             }
+            list.add(nodes[0].getStartOffset());
+            list.add(hash2);
           });
           return result;
         }
@@ -175,19 +172,19 @@ public class DuplicatesIndex extends FileBasedIndexExtension<Integer, TIntArrayL
 
   @Nonnull
   @Override
-  public ID<Integer,TIntArrayList> getName() {
+  public ID<Integer, IntList> getName() {
     return NAME;
   }
 
   @Nonnull
   @Override
-  public DataIndexer<Integer, TIntArrayList, FileContent> getIndexer() {
+  public DataIndexer<Integer, IntList, FileContent> getIndexer() {
     return myIndexer;
   }
 
   @Nonnull
   @Override
-  public DataExternalizer<TIntArrayList> getValueExternalizer() {
+  public DataExternalizer<IntList> getValueExternalizer() {
     return myValueExternalizer;
   }
 
@@ -207,7 +204,7 @@ public class DuplicatesIndex extends FileBasedIndexExtension<Integer, TIntArrayL
   private static final TracingData myTracingData = null;
 
   private static class MyFragmentsCollector implements FragmentsCollector {
-    private final Map<Integer, TIntArrayList> myMap = new HashMap<>();
+    private final Map<Integer, IntList> myMap = new HashMap<>();
     private final DuplicatesProfile myProfile;
     private final DuplocatorState myDuplocatorState;
 
@@ -224,13 +221,13 @@ public class DuplicatesIndex extends FileBasedIndexExtension<Integer, TIntArrayL
 
       if (myTracingData != null) myTracingData.record(hash, cost, frag);
 
-      TIntArrayList list = myMap.get(hash);
-      if (list == null) { myMap.put(hash, list = new TIntArrayList()); }
+      IntList list = myMap.get(hash);
+      if (list == null) { myMap.put(hash, list = IntLists.newArrayList()); }
       list.add(frag.getStartOffset());
       list.add(0);
     }
 
-    public Map<Integer,TIntArrayList> getMap() {
+    public Map<Integer, IntList> getMap() {
       return myMap;
     }
   }

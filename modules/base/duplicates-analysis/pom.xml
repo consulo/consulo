@@ -41,5 +41,9 @@
       <artifactId>consulo-lang-impl</artifactId>
       <version>${project.version}</version>
     </dependency>
+    <dependency>
+      <groupId>consulo.internal</groupId>
+      <artifactId>trove4j</artifactId>
+    </dependency>
   </dependencies>
 </project>

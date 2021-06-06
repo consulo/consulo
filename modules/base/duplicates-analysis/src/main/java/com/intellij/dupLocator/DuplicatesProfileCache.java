@@ -2,15 +2,16 @@ package com.intellij.dupLocator;
 
 import com.intellij.dupLocator.treeHash.FragmentsCollector;
 import com.intellij.lang.Language;
-import gnu.trove.TIntObjectHashMap;
-import javax.annotation.Nonnull;
+import consulo.util.collection.primitive.ints.IntMaps;
+import consulo.util.collection.primitive.ints.IntObjectMap;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 
 public class DuplicatesProfileCache {
-  private static final Map<DupInfo, TIntObjectHashMap<DuplicatesProfile>> ourProfileCache = new HashMap<>();
+  private static final Map<DupInfo, IntObjectMap<DuplicatesProfile>> ourProfileCache = new HashMap<>();
 
   private DuplicatesProfileCache() {
   }
@@ -21,9 +22,9 @@ public class DuplicatesProfileCache {
 
   @Nullable
   public static DuplicatesProfile getProfile(@Nonnull DupInfo dupInfo, int index) {
-    TIntObjectHashMap<DuplicatesProfile> patternCache = ourProfileCache.get(dupInfo);
+    IntObjectMap<DuplicatesProfile> patternCache = ourProfileCache.get(dupInfo);
     if (patternCache == null) {
-      patternCache = new TIntObjectHashMap<>();
+      patternCache = IntMaps.newIntObjectHashMap();
       ourProfileCache.put(dupInfo, patternCache);
     }
     DuplicatesProfile result = patternCache.get(index);
