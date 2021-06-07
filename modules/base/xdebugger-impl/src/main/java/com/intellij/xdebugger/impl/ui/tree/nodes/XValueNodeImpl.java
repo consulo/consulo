@@ -16,6 +16,7 @@
 package com.intellij.xdebugger.impl.ui.tree.nodes;
 
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.application.ReadAction;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.util.Comparing;
@@ -134,7 +135,7 @@ public class XValueNodeImpl extends XValueContainerNode<XValue>
           if (!Comparing.equal(debuggerPosition.getFile(), file)) {
             return;
           }
-          final Document document = FileDocumentManager.getInstance().getDocument(file);
+          final Document document = ReadAction.compute(() -> FileDocumentManager.getInstance().getDocument(file));
           if (document == null) return;
 
           XVariablesView.InlineVariablesInfo data = myTree.getProject().getUserData(XVariablesView.DEBUG_VARIABLES);
