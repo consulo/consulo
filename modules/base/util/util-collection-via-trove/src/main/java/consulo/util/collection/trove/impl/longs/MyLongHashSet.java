@@ -62,7 +62,7 @@ public class MyLongHashSet implements LongSet {
   }
 
   @Override
-  public boolean remove(int value) {
+  public boolean remove(long value) {
     return mySet.remove(value);
   }
 

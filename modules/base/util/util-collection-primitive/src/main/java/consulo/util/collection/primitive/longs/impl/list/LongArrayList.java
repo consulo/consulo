@@ -13,10 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.util.containers;
+package consulo.util.collection.primitive.longs.impl.list;
 
-@Deprecated // use TLongArrayList instead
-public class LongArrayList implements Cloneable {
+import consulo.util.collection.primitive.longs.LongList;
+
+import javax.annotation.Nonnull;
+import java.util.PrimitiveIterator;
+
+public class LongArrayList implements Cloneable, LongList {
   private long[] myData;
   private int mySize;
 
@@ -28,9 +32,10 @@ public class LongArrayList implements Cloneable {
     this(10);
   }
 
+  @Override
   public void trimToSize() {
     int oldCapacity = myData.length;
-    if (mySize < oldCapacity){
+    if (mySize < oldCapacity) {
       long[] oldData = myData;
       myData = new long[mySize];
       System.arraycopy(oldData, 0, myData, 0, mySize);
@@ -39,10 +44,10 @@ public class LongArrayList implements Cloneable {
 
   public void ensureCapacity(int minCapacity) {
     int oldCapacity = myData.length;
-    if (minCapacity > oldCapacity){
+    if (minCapacity > oldCapacity) {
       long[] oldData = myData;
       int newCapacity = (oldCapacity * 3) / 2 + 1;
-      if (newCapacity < minCapacity){
+      if (newCapacity < minCapacity) {
         newCapacity = minCapacity;
       }
       myData = new long[newCapacity];
@@ -50,45 +55,51 @@ public class LongArrayList implements Cloneable {
     }
   }
 
+  @Override
   public int size() {
     return mySize;
   }
 
+  @Override
   public boolean isEmpty() {
     return mySize == 0;
   }
 
+  @Override
   public boolean contains(long elem) {
     return indexOf(elem) >= 0;
   }
 
+  @Override
   public int indexOf(long elem) {
-    for(int i = 0; i < mySize; i++){
+    for (int i = 0; i < mySize; i++) {
       if (elem == myData[i]) return i;
     }
     return -1;
   }
 
   public int lastIndexOf(long elem) {
-    for(int i = mySize - 1; i >= 0; i--){
+    for (int i = mySize - 1; i >= 0; i--) {
       if (elem == myData[i]) return i;
     }
     return -1;
   }
 
+  @Override
   public Object clone() {
-    try{
+    try {
       LongArrayList v = (LongArrayList)super.clone();
       v.myData = new long[mySize];
       System.arraycopy(myData, 0, v.myData, 0, mySize);
       return v;
     }
-    catch(CloneNotSupportedException e){
+    catch (CloneNotSupportedException e) {
       // this shouldn't happen, since we are Cloneable
       throw new InternalError();
     }
   }
 
+  @Override
   public long[] toArray() {
     long[] result = new long[mySize];
     System.arraycopy(myData, 0, result, 0, mySize);
@@ -96,7 +107,7 @@ public class LongArrayList implements Cloneable {
   }
 
   public long[] toArray(long[] a) {
-    if (a.length < mySize){
+    if (a.length < mySize) {
       a = new long[mySize];
     }
 
@@ -105,6 +116,7 @@ public class LongArrayList implements Cloneable {
     return a;
   }
 
+  @Override
   public long get(int index) {
     checkRange(index);
     return myData[index];
@@ -118,13 +130,26 @@ public class LongArrayList implements Cloneable {
     return oldValue;
   }
 
-  public void add(long o) {
+  @Override
+  public boolean add(long o) {
     ensureCapacity(mySize + 1);
     myData[mySize++] = o;
+    return true;
   }
 
+  @Override
+  public boolean remove(long value) {
+    int i = indexOf(value);
+    if (i != -1) {
+      removeByIndex(i);
+      return true;
+    }
+    return false;
+  }
+
+  @Override
   public void add(int index, long element) {
-    if (index > mySize || index < 0){
+    if (index > mySize || index < 0) {
       throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + mySize);
     }
 
@@ -134,20 +159,22 @@ public class LongArrayList implements Cloneable {
     mySize++;
   }
 
-  public long remove(int index) {
+  @Override
+  public long removeByIndex(int index) {
     checkRange(index);
 
     long oldValue = myData[index];
 
     int numMoved = mySize - index - 1;
-    if (numMoved > 0){
-      System.arraycopy(myData, index + 1, myData, index,numMoved);
+    if (numMoved > 0) {
+      System.arraycopy(myData, index + 1, myData, index, numMoved);
     }
     mySize--;
 
     return oldValue;
   }
 
+  @Override
   public void clear() {
     mySize = 0;
   }
@@ -159,8 +186,26 @@ public class LongArrayList implements Cloneable {
   }
 
   private void checkRange(int index) {
-    if (index >= mySize || index < 0){
+    if (index >= mySize || index < 0) {
       throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + mySize);
     }
+  }
+
+  @Nonnull
+  @Override
+  public PrimitiveIterator.OfLong iterator() {
+    return new PrimitiveIterator.OfLong() {
+      private int myIndex;
+
+      @Override
+      public long nextLong() {
+        return myData[myIndex++];
+      }
+
+      @Override
+      public boolean hasNext() {
+        return myIndex != size();
+      }
+    };
   }
 }

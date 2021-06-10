@@ -44,7 +44,7 @@ public interface LongCollection extends LongIterable {
     return true;
   }
 
-  boolean remove(int value);
+  boolean remove(long value);
 
   default void removeAll(int[] array) {
     for (int value : array) {
