@@ -306,7 +306,7 @@
       <dependency>
         <groupId>org.apache.commons</groupId>
         <artifactId>commons-imaging</artifactId>
-        <version>1.0-SNAPSHOT</version>
+        <version>1.0-alpha2</version>
       </dependency>
       <dependency>
         <groupId>org.jvnet.winp</groupId>
