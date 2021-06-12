@@ -16,6 +16,9 @@
 
 package com.intellij.util.containers;
 
+import consulo.util.collection.primitive.ints.IntList;
+import consulo.util.collection.primitive.ints.IntLists;
+
 import java.util.EventListener;
 import java.util.Iterator;
 
@@ -108,7 +111,7 @@ public class IntObjectCache<T> extends ObjectCacheBase implements Iterable<T> {
   }
 
   public void removeAll() {
-    final IntArrayList keys = new IntArrayList(count());
+    final IntList keys = IntLists.newArrayList(count());
     int current = myTop;
     while (current > 0) {
       if (myCache[current].value != null) {

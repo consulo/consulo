@@ -31,14 +31,15 @@ import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.codeStyle.CodeStyleSettings;
 import com.intellij.psi.codeStyle.CodeStyleSettingsManager;
-import com.intellij.util.containers.IntArrayList;
 import com.intellij.util.ui.UIUtil;
 import consulo.awt.TargetAWT;
 import consulo.ui.color.ColorValue;
 import consulo.ui.style.StandardColors;
+import consulo.util.collection.primitive.ints.IntList;
+import consulo.util.collection.primitive.ints.IntLists;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.awt.*;
 import java.awt.font.FontRenderContext;
 import java.awt.font.GlyphVector;
@@ -506,7 +507,7 @@ public class TextPainter implements Printable {
     if (myPrintSettings.WRAP) {
       double w = getTextSegmentWidth(text, myOffset, length, position.getX(), g);
       if (position.getX() + w > clip.getWidth()) {
-        IntArrayList breakOffsets = calcBreakOffsets(g, text, myOffset, myOffset + length, colNumber, position, clip);
+        IntList breakOffsets = calcBreakOffsets(g, text, myOffset, myOffset + length, colNumber, position, clip);
         int startOffset = myOffset;
         for (int i = 0; i < breakOffsets.size(); i++) {
           int breakOffset = breakOffsets.get(i);
@@ -581,9 +582,9 @@ public class TextPainter implements Printable {
     }
   }
 
-  private IntArrayList calcBreakOffsets(Graphics2D g, char[] text, int offset, int endOffset, int colNumber,
-                                        Point2D position, Rectangle2D clip) {
-    IntArrayList breakOffsets = new IntArrayList();
+  private IntList calcBreakOffsets(Graphics2D g, char[] text, int offset, int endOffset, int colNumber,
+                                   Point2D position, Rectangle2D clip) {
+    IntList breakOffsets = IntLists.newArrayList();
     int nextOffset = offset;
     double x = position.getX();
     while (true) {

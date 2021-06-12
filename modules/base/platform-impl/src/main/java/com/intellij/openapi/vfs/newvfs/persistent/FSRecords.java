@@ -17,7 +17,6 @@ import com.intellij.openapi.vfs.newvfs.impl.VirtualDirectoryImpl;
 import com.intellij.openapi.vfs.newvfs.impl.VirtualFileSystemEntry;
 import com.intellij.util.*;
 import com.intellij.util.concurrency.SequentialTaskExecutor;
-import com.intellij.util.containers.IntArrayList;
 import com.intellij.util.io.DataOutputStream;
 import com.intellij.util.io.*;
 import com.intellij.util.io.storage.*;
@@ -1791,8 +1790,8 @@ public class FSRecords {
       return fileLength / RECORD_SIZE;
     });
 
-    IntArrayList usedAttributeRecordIds = new IntArrayList();
-    IntArrayList validAttributeIds = new IntArrayList();
+    IntList usedAttributeRecordIds = IntLists.newArrayList();
+    IntList validAttributeIds = IntLists.newArrayList();
     for (int id = 2; id < recordCount; id++) {
       int flags = getFlags(id);
       LOG.assertTrue((flags & ~ALL_VALID_FLAGS) == 0, "Invalid flags: 0x" + Integer.toHexString(flags) + ", id: " + id);
@@ -1811,7 +1810,7 @@ public class FSRecords {
     LOG.info("Sanity check took " + t + " ms");
   }
 
-  private static void checkRecordSanity(final int id, final int recordCount, final IntArrayList usedAttributeRecordIds, final IntArrayList validAttributeIds) {
+  private static void checkRecordSanity(final int id, final int recordCount, final IntList usedAttributeRecordIds, final IntList validAttributeIds) {
     int parentId = getParent(id);
     assert parentId >= 0 && parentId < recordCount;
     if (parentId > 0 && getParent(parentId) > 0) {
@@ -1840,7 +1839,7 @@ public class FSRecords {
     }
   }
 
-  private static void checkAttributesStorageSanity(int id, IntArrayList usedAttributeRecordIds, IntArrayList validAttributeIds) {
+  private static void checkAttributesStorageSanity(int id, IntList usedAttributeRecordIds, IntList validAttributeIds) {
     int attributeRecordId = getAttributeRecordId(id);
 
     assert attributeRecordId >= 0;
@@ -1854,7 +1853,7 @@ public class FSRecords {
     }
   }
 
-  private static void checkAttributesSanity(int attributeRecordId, IntArrayList usedAttributeRecordIds, IntArrayList validAttributeIds) throws IOException {
+  private static void checkAttributesSanity(int attributeRecordId, IntList usedAttributeRecordIds, IntList validAttributeIds) throws IOException {
     assert !usedAttributeRecordIds.contains(attributeRecordId);
     usedAttributeRecordIds.add(attributeRecordId);
 

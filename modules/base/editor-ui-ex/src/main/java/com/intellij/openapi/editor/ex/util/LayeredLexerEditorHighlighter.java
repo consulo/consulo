@@ -21,10 +21,11 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.containers.FactoryMap;
-import com.intellij.util.containers.IntArrayList;
 import com.intellij.util.text.MergingCharSequence;
 import consulo.logging.Logger;
 import consulo.util.collection.primitive.ints.IntIntMap;
+import consulo.util.collection.primitive.ints.IntList;
+import consulo.util.collection.primitive.ints.IntLists;
 import consulo.util.collection.primitive.ints.IntMaps;
 import org.jetbrains.annotations.NonNls;
 
@@ -68,7 +69,7 @@ public class LayeredLexerEditorHighlighter extends LexerEditorHighlighter {
   private final class LightMapper {
     final Mapper mapper;
     final StringBuilder text = new StringBuilder();
-    final IntArrayList lengths = new IntArrayList();
+    final IntList lengths = IntLists.newArrayList();
     final List<IElementType> tokenTypes = new ArrayList<>();
     final IntIntMap index2Global = IntMaps.newIntIntHashMap();
     private final String mySeparator;

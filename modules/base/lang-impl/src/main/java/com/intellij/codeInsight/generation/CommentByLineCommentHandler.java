@@ -49,8 +49,9 @@ import com.intellij.psi.impl.source.tree.injected.InjectedCaret;
 import com.intellij.psi.util.PsiUtilBase;
 import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.util.DocumentUtil;
-import com.intellij.util.containers.IntArrayList;
 import com.intellij.util.text.CharArrayUtil;
+import consulo.util.collection.primitive.ints.IntList;
+import consulo.util.collection.primitive.ints.IntLists;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -563,8 +564,8 @@ public class CommentByLineCommentHandler extends MultiCaretCodeInsightActionHand
       return true;
     }
 
-    IntArrayList prefixes = new IntArrayList();
-    IntArrayList suffixes = new IntArrayList();
+    IntList prefixes = IntLists.newArrayList();
+    IntList suffixes = IntLists.newArrayList();
     for (int position = 0; position < text.length(); ) {
       int prefixPos = text.indexOf(prefix, position);
       if (prefixPos == -1) {
@@ -652,8 +653,8 @@ public class CommentByLineCommentHandler extends MultiCaretCodeInsightActionHand
         return true;
       }
       final String text = chars.subSequence(offset, endOffset).toString();
-      final IntArrayList prefixes = new IntArrayList();
-      final IntArrayList suffixes = new IntArrayList();
+      final IntList prefixes = IntLists.newArrayList();
+      final IntList suffixes = IntLists.newArrayList();
       final String commentedSuffix = commenter.getCommentedBlockCommentSuffix();
       final String commentedPrefix = commenter.getCommentedBlockCommentPrefix();
       for (int position = 0; position < text.length(); ) {

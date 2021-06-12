@@ -19,7 +19,6 @@ import com.intellij.openapi.editor.ex.LineIterator;
 import com.intellij.openapi.util.text.LineTokenizer;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.BitUtil;
-import com.intellij.util.containers.IntArrayList;
 import com.intellij.util.text.CharArrayUtil;
 import com.intellij.util.text.MergingCharSequence;
 import consulo.util.collection.primitive.bytes.ByteList;
@@ -216,7 +215,7 @@ public class LineSet {
   }
 
   @Nonnull
-  final LineSet setModified(@Nonnull IntArrayList indices) {
+  final LineSet setModified(@Nonnull IntList indices) {
     if (indices.isEmpty()) {
       return this;
     }

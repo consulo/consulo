@@ -38,7 +38,6 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.reference.SoftReference;
 import com.intellij.util.*;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.containers.IntArrayList;
 import com.intellij.util.text.CharArrayUtil;
 import com.intellij.util.text.ImmutableCharSequence;
 import consulo.application.TransactionGuardEx;
@@ -49,6 +48,8 @@ import consulo.logging.attachment.Attachment;
 import consulo.logging.attachment.AttachmentFactory;
 import consulo.logging.attachment.ExceptionWithAttachments;
 import consulo.util.collection.primitive.ints.IntIntMap;
+import consulo.util.collection.primitive.ints.IntList;
+import consulo.util.collection.primitive.ints.IntLists;
 import consulo.util.collection.primitive.ints.IntMaps;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolderBase;
@@ -754,7 +755,7 @@ public class DocumentImpl extends UserDataHolderBase implements DocumentEx {
   }
 
   void clearLineModificationFlagsExcept(@Nonnull int[] caretLines) {
-    IntArrayList modifiedLines = new IntArrayList(caretLines.length);
+    IntList modifiedLines = IntLists.newArrayList(caretLines.length);
     LineSet lineSet = getLineSet();
     for (int line : caretLines) {
       if (line >= 0 && line < lineSet.getLineCount() && lineSet.isModified(line)) {

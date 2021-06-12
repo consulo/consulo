@@ -48,8 +48,9 @@ import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.psi.util.PsiUtilBase;
 import com.intellij.ui.LightweightHint;
-import com.intellij.util.containers.IntArrayList;
 import com.intellij.util.text.CharArrayUtil;
+import consulo.util.collection.primitive.ints.IntList;
+import consulo.util.collection.primitive.ints.IntLists;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -488,8 +489,8 @@ public class CommentByBlockCommentHandler extends MultiCaretCodeInsightActionHan
 
     String normalizedPrefix = commentPrefix.trim();
     String normalizedSuffix = commentSuffix.trim();
-    IntArrayList nestedCommentPrefixes = new IntArrayList();
-    IntArrayList nestedCommentSuffixes = new IntArrayList();
+    IntList nestedCommentPrefixes = IntLists.newArrayList();
+    IntList nestedCommentSuffixes = IntLists.newArrayList();
     String commentedPrefix = commenter.getCommentedBlockCommentPrefix();
     String commentedSuffix = commenter.getCommentedBlockCommentSuffix();
     CharSequence chars = myDocument.getCharsSequence();
@@ -593,8 +594,8 @@ public class CommentByBlockCommentHandler extends MultiCaretCodeInsightActionHan
 
   static void commentNestedComments(@Nonnull Document document, TextRange range, Commenter commenter) {
     final int offset = range.getStartOffset();
-    final IntArrayList toReplaceWithComments = new IntArrayList();
-    final IntArrayList prefixes = new IntArrayList();
+    final IntList toReplaceWithComments = IntLists.newArrayList();
+    final IntList prefixes = IntLists.newArrayList();
 
     final String text = document.getCharsSequence().subSequence(range.getStartOffset(), range.getEndOffset()).toString();
     final String commentedPrefix = commenter.getCommentedBlockCommentPrefix();

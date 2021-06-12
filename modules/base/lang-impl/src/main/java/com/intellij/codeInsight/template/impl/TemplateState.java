@@ -48,6 +48,8 @@ import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.IndexNotReadyException;
 import com.intellij.openapi.project.Project;
 import consulo.disposer.Disposer;
+import consulo.util.collection.primitive.ints.IntList;
+import consulo.util.collection.primitive.ints.IntLists;
 import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.util.text.StringUtil;
@@ -64,7 +66,7 @@ import com.intellij.util.ObjectUtils;
 import com.intellij.util.PairProcessor;
 import com.intellij.util.containers.ContainerUtil;
 import java.util.HashMap;
-import com.intellij.util.containers.IntArrayList;
+
 import kava.beans.PropertyChangeEvent;
 import kava.beans.PropertyChangeListener;
 import org.jetbrains.annotations.NonNls;
@@ -464,7 +466,7 @@ public class TemplateState implements Disposable {
     }
     final RangeMarker finalRangeMarker = rangeMarker;
     final Runnable action = () -> {
-      IntArrayList indices = initEmptyVariables();
+      IntList indices = initEmptyVariables();
       mySegments.setSegmentsGreedy(false);
       LOG.assertTrue(myTemplateRange.isValid(),
                      "template key: " + myTemplate.getKey() + "; " +
@@ -492,7 +494,7 @@ public class TemplateState implements Disposable {
     ApplicationManager.getApplication().runWriteAction(() -> {
       final PsiFile file = getPsiFile();
       if (file != null) {
-        IntArrayList indices = initEmptyVariables();
+        IntList indices = initEmptyVariables();
         mySegments.setSegmentsGreedy(false);
         for (TemplateOptionalProcessor processor : Extensions.getExtensions(TemplateOptionalProcessor.EP_NAME)) {
           processor.processText(myProject, myTemplate, myDocument, myTemplateRange, myEditor);
@@ -856,7 +858,7 @@ public class TemplateState implements Disposable {
     replaceString(StringUtil.notNullize(result.toString()), start, end, segmentNumber);
 
     if (result instanceof RecalculatableResult) {
-      IntArrayList indices = initEmptyVariables();
+      IntList indices = initEmptyVariables();
       shortenReferences();
       PsiDocumentManager.getInstance(myProject).commitDocument(myDocument);
       ((RecalculatableResult)result)
@@ -1140,11 +1142,11 @@ public class TemplateState implements Disposable {
     return items != null && items.length > 1;
   }
 
-  private IntArrayList initEmptyVariables() {
+  private IntList initEmptyVariables() {
     int endSegmentNumber = myTemplate.getEndSegmentNumber();
     int selStart = myTemplate.getSelectionStartSegmentNumber();
     int selEnd = myTemplate.getSelectionEndSegmentNumber();
-    IntArrayList indices = new IntArrayList();
+    IntList indices = IntLists.newArrayList();
     List<TemplateDocumentChange> changes = ContainerUtil.newArrayList();
     for (int i = 0; i < myTemplate.getSegmentsCount(); i++) {
       int length = mySegments.getSegmentEnd(i) - mySegments.getSegmentStart(i);
@@ -1169,7 +1171,7 @@ public class TemplateState implements Disposable {
     return indices;
   }
 
-  private void restoreEmptyVariables(IntArrayList indices) {
+  private void restoreEmptyVariables(IntList indices) {
     List<TextRange> rangesToRemove = ContainerUtil.newArrayList();
     for (int i = 0; i < indices.size(); i++) {
       int index = indices.get(i);
