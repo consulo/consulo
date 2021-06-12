@@ -20,7 +20,6 @@ import com.intellij.ide.IdeBundle;
 import com.intellij.ide.fileTemplates.impl.CustomFileTemplate;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.command.CommandProcessor;
-import consulo.logging.Logger;
 import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.fileTypes.FileTypeManager;
@@ -36,11 +35,10 @@ import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.codeStyle.CodeStyleSettingsManager;
 import com.intellij.util.ArrayUtil;
-import com.intellij.util.containers.ContainerUtil;
 import consulo.annotation.DeprecationInfo;
+import consulo.logging.Logger;
 import consulo.ui.image.Image;
-import gnu.trove.THashMap;
-import gnu.trove.TIntObjectHashMap;
+import consulo.util.collection.primitive.ints.IntObjectMap;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.exception.VelocityException;
 import org.apache.velocity.runtime.parser.ParseException;
@@ -399,7 +397,7 @@ public class FileTemplateUtil {
     return map;
   }
 
-  public static Pattern getTemplatePattern(@Nonnull FileTemplate template, @Nonnull Project project, @Nonnull TIntObjectHashMap<String> offsetToProperty) {
+  public static Pattern getTemplatePattern(@Nonnull FileTemplate template, @Nonnull Project project, @Nonnull IntObjectMap<String> offsetToProperty) {
     String templateText = template.getText().trim();
     String regex = templateToRegex(templateText, offsetToProperty, project);
     regex = StringUtil.replace(regex, "with", "(?:with|by)");
@@ -407,15 +405,14 @@ public class FileTemplateUtil {
     return Pattern.compile(regex, Pattern.DOTALL);
   }
 
-  private static String templateToRegex(String text, TIntObjectHashMap<String> offsetToProperty, Project project) {
-    List<Object> properties = ContainerUtil.newArrayList(FileTemplateManager.getInstance(project).getDefaultProperties().keySet());
+  private static String templateToRegex(String text, IntObjectMap<String> offsetToProperty, Project project) {
+    List<String> properties = new ArrayList<>(FileTemplateManager.getInstance(project).getDefaultVariables().keySet());
     properties.add(FileTemplate.ATTRIBUTE_PACKAGE_NAME);
 
     String regex = escapeRegexChars(text);
     // first group is a whole file header
     int groupNumber = 1;
-    for (Object property : properties) {
-      String name = property.toString();
+    for (String name : properties) {
       String escaped = escapeRegexChars("${" + name + "}");
       boolean first = true;
       for (int i = regex.indexOf(escaped); i != -1 && i < regex.length(); i = regex.indexOf(escaped, i + 1)) {
