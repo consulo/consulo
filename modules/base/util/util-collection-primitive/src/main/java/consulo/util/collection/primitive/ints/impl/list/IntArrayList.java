@@ -484,6 +484,16 @@ public class IntArrayList implements Cloneable, IntList {
   }
 
   @Override
+  public void sort() {
+    int oldModCount = this.modCount;
+    Arrays.sort(elementData, 0, size);
+    if(oldModCount != this.modCount) {
+      throw new ConcurrentModificationException();
+    }
+    this.modCount ++;
+  }
+
+  @Override
   public String toString() {
     return Arrays.toString(toArray());
   }

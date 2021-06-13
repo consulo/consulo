@@ -43,6 +43,8 @@ public interface IntList extends IntCollection {
 
   int removeByIndex(int index);
 
+  void sort();
+
   PrimitiveListIterator.OfInt listIterator();
 
   PrimitiveListIterator.OfInt listIterator(int index);
