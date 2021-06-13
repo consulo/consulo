@@ -38,6 +38,8 @@ public interface IntIntMap {
 
   int remove(int key);
 
+  boolean containsKey(int key);
+
   default boolean isEmpty() {
     return size() == 0;
   }
