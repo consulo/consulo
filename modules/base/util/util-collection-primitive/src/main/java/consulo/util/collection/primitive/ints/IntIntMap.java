@@ -36,6 +36,8 @@ public interface IntIntMap {
 
   int size();
 
+  int remove(int key);
+
   default boolean isEmpty() {
     return size() == 0;
   }
