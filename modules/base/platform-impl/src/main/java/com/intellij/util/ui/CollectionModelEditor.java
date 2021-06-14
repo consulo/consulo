@@ -20,8 +20,8 @@ import com.intellij.util.ReflectionUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.OrderedSet;
 import consulo.logging.Logger;
+import consulo.util.collection.HashingStrategy;
 import consulo.util.collection.Maps;
-import gnu.trove.TObjectHashingStrategy;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -91,7 +91,7 @@ public abstract class CollectionModelEditor<T, E extends CollectionItemEditor<T>
   }
 
   protected class ModelHelper {
-    final OrderedSet<T> originalItems = new OrderedSet<>(TObjectHashingStrategy.IDENTITY);
+    final OrderedSet<T> originalItems = new OrderedSet<>(HashingStrategy.canonical());
 
     private final Map<T, T> modifiedToOriginal = Maps.newHashMap(ContainerUtil.<T>identityStrategy());
     private final Map<T, T> originalToModified = Maps.newHashMap(ContainerUtil.<T>identityStrategy());

@@ -15,38 +15,38 @@
  */
 package com.intellij.util.containers;
 
-import com.intellij.util.IncorrectOperationException;
-import gnu.trove.TObjectHashingStrategy;
-import javax.annotation.Nonnull;
+import consulo.util.collection.HashingStrategy;
+import consulo.util.collection.Sets;
 
+import javax.annotation.Nonnull;
 import java.util.*;
 
 // have to extend ArrayList because otherwise the spliterator() methods declared in Set and List are in conflict
 public class OrderedSet<T> extends ArrayList<T> implements Set<T>, RandomAccess {
-  private final OpenTHashSet<T> myHashSet;
+  private final Set<T> myHashSet;
 
   public OrderedSet() {
-    this(TObjectHashingStrategy.CANONICAL);
+    this(HashingStrategy.canonical());
   }
 
   public OrderedSet(@Nonnull Collection<T> set) {
     super(set.size());
 
-    myHashSet = new OpenTHashSet<T>(set.size());
+    myHashSet = new HashSet<T>(set.size());
     addAll(set);
   }
 
-  public OrderedSet(@Nonnull TObjectHashingStrategy<T> hashingStrategy) {
+  public OrderedSet(@Nonnull HashingStrategy<T> hashingStrategy) {
     this(hashingStrategy, 4);
   }
 
-  public OrderedSet(@Nonnull TObjectHashingStrategy<T> hashingStrategy, int capacity) {
+  public OrderedSet(@Nonnull HashingStrategy<T> hashingStrategy, int capacity) {
     super(capacity);
-    myHashSet = new OpenTHashSet<T>(capacity, hashingStrategy);
+    myHashSet = Sets.newHashSet(capacity, hashingStrategy);
   }
 
   public OrderedSet(int capacity) {
-    this(TObjectHashingStrategy.CANONICAL, capacity);
+    this(HashingStrategy.canonical(), capacity);
   }
 
   @Override
@@ -73,7 +73,7 @@ public class OrderedSet<T> extends ArrayList<T> implements Set<T>, RandomAccess 
   @Nonnull
   @Override
   public List<T> subList(int fromIndex, int toIndex) {
-    throw new IncorrectOperationException();
+    throw new UnsupportedOperationException();
   }
 
   @Override
@@ -92,7 +92,7 @@ public class OrderedSet<T> extends ArrayList<T> implements Set<T>, RandomAccess 
 
   @Override
   public boolean add(T o) {
-    if (myHashSet.add(o)){
+    if (myHashSet.add(o)) {
       super.add(o);
       return true;
     }
@@ -101,7 +101,7 @@ public class OrderedSet<T> extends ArrayList<T> implements Set<T>, RandomAccess 
 
   @Override
   public boolean remove(Object o) {
-    if (myHashSet.remove(o)){
+    if (myHashSet.remove(o)) {
       super.remove(o);
       return true;
     }
@@ -128,7 +128,7 @@ public class OrderedSet<T> extends ArrayList<T> implements Set<T>, RandomAccess 
 
   @Override
   public void add(final int index, @Nonnull final T element) {
-    if (myHashSet.add(element)){
+    if (myHashSet.add(element)) {
       super.add(index, element);
     }
   }
@@ -142,13 +142,17 @@ public class OrderedSet<T> extends ArrayList<T> implements Set<T>, RandomAccess 
 
   @Override
   public int indexOf(final Object o) {
-    final int index = myHashSet.index((T)o);
-    return index >= 0? super.indexOf(myHashSet.get(index)) : -1;
+    if (myHashSet.contains(o)) {
+      return super.indexOf(o);
+    }
+    return -1;
   }
 
   @Override
   public int lastIndexOf(final Object o) {
-    final int index = myHashSet.index((T)o);
-    return index >= 0 ? super.lastIndexOf(myHashSet.get(index)) : -1;
+    if (myHashSet.contains(o)) {
+      return super.lastIndexOf(o);
+    }
+    return -1;
   }
 }
