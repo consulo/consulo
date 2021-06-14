@@ -44,6 +44,11 @@ public class MyLongHashSet implements LongSet {
     public boolean hasNext() {
       return myIterator.hasNext();
     }
+
+    @Override
+    public void remove() {
+      myIterator.remove();
+    }
   }
 
   private final TLongHashSet mySet;
