@@ -135,6 +135,11 @@ public class MyIntObjectHashMap<V> extends TIntObjectHashMap<V> implements IntOb
       myIterator.advance();
       return myIterator.key();
     }
+
+    @Override
+    public void remove() {
+      myIterator.remove();
+    }
   }
 
   private class MyKeySet extends AbstractIntSet {

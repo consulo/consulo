@@ -475,7 +475,6 @@ public class IntArrayList implements Cloneable, IntList {
     return "Index: " + index + ", Size: " + size;
   }
 
-
   private void checkRange(int index) {
     if (index >= size || index < 0) {
       //noinspection HardCodedStringLiteral

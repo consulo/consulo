@@ -90,6 +90,11 @@ public class MyIntHashSet implements IntSet {
       public boolean hasNext() {
         return iterator.hasNext();
       }
+
+      @Override
+      public void remove() {
+        iterator.remove();
+      }
     };
   }
 }

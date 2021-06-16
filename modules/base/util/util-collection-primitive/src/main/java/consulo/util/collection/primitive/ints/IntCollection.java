@@ -16,6 +16,8 @@
 package consulo.util.collection.primitive.ints;
 
 import javax.annotation.Nonnull;
+import java.util.Objects;
+import java.util.PrimitiveIterator;
 import java.util.Spliterator;
 import java.util.Spliterators;
 import java.util.stream.IntStream;
@@ -50,6 +52,19 @@ public interface IntCollection extends IntIterable {
 
   boolean contains(int value);
 
+  default boolean retainAll(IntCollection otherCollection) {
+    Objects.requireNonNull(otherCollection);
+    boolean modified = false;
+    PrimitiveIterator.OfInt it = iterator();
+    while (it.hasNext()) {
+      if (!otherCollection.contains(it.nextInt())) {
+        it.remove();
+        modified = true;
+      }
+    }
+    return modified;
+  }
+  
   int[] toArray();
 
   int size();
