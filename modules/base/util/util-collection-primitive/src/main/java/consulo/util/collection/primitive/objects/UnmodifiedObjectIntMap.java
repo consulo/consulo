@@ -79,6 +79,11 @@ class UnmodifiedObjectIntMap<K> implements ObjectIntMap<K> {
   }
 
   @Override
+  public int remove(K key) {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
   public Set<Entry<K>> entrySet() {
     return Collections.unmodifiableSet(myDelegate.entrySet());
   }

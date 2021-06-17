@@ -55,6 +55,8 @@ public interface ObjectIntMap<K> {
 
   boolean containsKey(K key);
 
+  int remove(K key);
+
   Set<Entry<K>> entrySet();
 
   Set<K> keySet();
