@@ -15,6 +15,7 @@
  */
 package com.intellij.mock;
 
+import com.intellij.openapi.application.AccessToken;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.progress.EmptyProgressIndicator;
 import com.intellij.openapi.project.DumbModeTask;
@@ -97,9 +98,10 @@ public class MockDumbService extends DumbService {
     return false;
   }
 
+  @Nonnull
   @Override
-  public void suspendIndexingAndRun(@Nonnull String activityName, @Nonnull Runnable activity) {
-
+  public AccessToken startHeavyActivityStarted(@Nonnull String activityName) {
+    return AccessToken.EMPTY_ACCESS_TOKEN;
   }
 
   @Override

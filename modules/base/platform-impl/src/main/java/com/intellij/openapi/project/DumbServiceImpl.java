@@ -146,11 +146,10 @@ public class DumbServiceImpl extends DumbService implements Disposable, Modifica
     return myAlternativeResolution.get() != null;
   }
 
+  @Nonnull
   @Override
-  public void suspendIndexingAndRun(@Nonnull String activityName, @Nonnull Runnable activity) {
-    try (AccessToken ignore = heavyActivityStarted(activityName)) {
-      activity.run();
-    }
+  public AccessToken startHeavyActivityStarted(@Nonnull String activityName) {
+    return heavyActivityStarted(activityName);
   }
 
   @Override

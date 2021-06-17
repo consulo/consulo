@@ -1,11 +1,11 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.openapi.project;
 
-import com.intellij.openapi.components.ComponentManager;
-import consulo.disposer.Disposable;
+import com.intellij.openapi.application.AccessToken;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.application.ReadAction;
+import com.intellij.openapi.components.ComponentManager;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.progress.ProcessCanceledException;
@@ -13,11 +13,11 @@ import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.util.*;
 import com.intellij.util.ThrowableRunnable;
 import com.intellij.util.messages.Topic;
+import consulo.disposer.Disposable;
 import consulo.extensions.StrictExtensionPointName;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -379,7 +379,19 @@ public abstract class DumbService {
    *
    * @param activityName the text (a noun phrase) to display as a reason for the indexing being paused
    */
-  public abstract void suspendIndexingAndRun(@Nonnull String activityName, @Nonnull Runnable activity);
+  public void suspendIndexingAndRun(@Nonnull String activityName, @Nonnull Runnable activity) {
+    try (AccessToken ignore = startHeavyActivityStarted(activityName)) {
+      activity.run();
+    }
+  }
+
+  /**
+   * Suspend indexing. The user still can manually pause and resume the indexing. In that case, indexing won't be resumed automatically after the activity finishes.
+   *
+   * @param activityName the text (a noun phrase) to display as a reason for the indexing being paused
+   */
+  @Nonnull
+  public abstract AccessToken startHeavyActivityStarted(@Nonnull String activityName);
 
   /**
    * Checks whether {@link #isDumb()} is true for the current project and if it's currently suspended by user or a {@link #suspendIndexingAndRun} call.
