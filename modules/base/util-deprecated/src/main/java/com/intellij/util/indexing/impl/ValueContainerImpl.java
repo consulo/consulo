@@ -23,7 +23,6 @@ import com.intellij.util.indexing.containers.IntIdsIterator;
 import com.intellij.util.io.DataExternalizer;
 import com.intellij.util.io.DataInputOutputUtil;
 import consulo.logging.Logger;
-import gnu.trove.THashMap;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -42,7 +41,7 @@ class ValueContainerImpl<Value> extends UpdatableValueContainer<Value> implement
 
   // there is no volatile as we modify under write lock and read under read lock
   // Most often (80%) we store 0 or one mapping, then we store them in two fields: myInputIdMapping, myInputIdMappingValue
-  // when there are several value mapped, myInputIdMapping is THashMap<Value, Data>, myInputIdMappingValue = null
+  // when there are several value mapped, myInputIdMapping is HashMap<Value, Data>, myInputIdMappingValue = null
   private Object myInputIdMapping;
   private Object myInputIdMappingValue;
 
@@ -96,7 +95,7 @@ class ValueContainerImpl<Value> extends UpdatableValueContainer<Value> implement
 
   @Override
   public int size() {
-    return myInputIdMapping != null ? myInputIdMapping instanceof THashMap ? ((THashMap<?, ?>)myInputIdMapping).size() : 1 : 0;
+    return myInputIdMapping != null ? myInputIdMapping instanceof HashMap ? ((HashMap<?, ?>)myInputIdMapping).size() : 1 : 0;
   }
 
   @Override
