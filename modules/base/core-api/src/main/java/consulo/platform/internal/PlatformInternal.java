@@ -24,6 +24,7 @@ import consulo.platform.Platform;
 
 import javax.annotation.Nonnull;
 import java.util.Iterator;
+import java.util.Optional;
 import java.util.ServiceLoader;
 
 /**
@@ -37,6 +38,11 @@ public abstract class PlatformInternal {
   @Nonnull
   @ReviewAfterMigrationToJRE(value = 9, description = "Use consulo.container.plugin.util.PlatformServiceLocator#findImplementation after migration")
   private static <T> T findImplementation(@Nonnull Class<T> interfaceClass) {
+    Optional<T> thisClassloader = ServiceLoader.load(interfaceClass).findFirst();
+    if(thisClassloader.isPresent()) {
+      return thisClassloader.get();
+    }
+
     for (PluginDescriptor descriptor : PluginManager.getPlugins()) {
       if (PluginIds.isPlatformImplementationPlugin(descriptor.getPluginId())) {
         ServiceLoader<T> loader = ServiceLoader.load(interfaceClass, descriptor.getPluginClassLoader());
