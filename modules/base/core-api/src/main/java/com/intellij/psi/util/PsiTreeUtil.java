@@ -366,6 +366,22 @@ public class PsiTreeUtil {
     return result;
   }
 
+  @Nullable
+  public static <T extends PsiElement> T getStubChildOfType(@Nullable PsiElement element, @Nonnull Class<T> aClass) {
+    if (element == null) return null;
+    StubElement<?> stub = element instanceof StubBasedPsiElement ? ((StubBasedPsiElement<?>)element).getStub() : null;
+    if (stub == null) {
+      return getChildOfType(element, aClass);
+    }
+    for (StubElement<?> childStub : stub.getChildrenStubs()) {
+      PsiElement child = childStub.getPsi();
+      if (aClass.isInstance(child)) {
+        return aClass.cast(child);
+      }
+    }
+    return null;
+  }
+
   @Nonnull
   public static <T extends PsiElement> List<T> getStubChildrenOfTypeAsList(@Nullable PsiElement element, @Nonnull Class<T> aClass) {
     if (element == null) return Collections.emptyList();
