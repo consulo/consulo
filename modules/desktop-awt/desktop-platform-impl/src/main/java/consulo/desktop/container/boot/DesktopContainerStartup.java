@@ -115,7 +115,7 @@ public class DesktopContainerStartup implements ContainerStartup {
     // FIXME [VISTALL] see feac1737-76bf-4952-b770-d3f8d1978e59
     // InternalLoggerFactory.setDefaultFactory(ApplicationInternalLoggerFactory.INSTANCE);
 
-    StartupUtil.prepareAndStart(args, DesktopImportantFolderLocker::new, (newConfigFolder, commandLineArgs) -> {
+    StartupUtil.prepareAndStart(args, stat, DesktopImportantFolderLocker::new, (newConfigFolder, commandLineArgs) -> {
       ApplicationStarter app = new DesktopApplicationStarter(commandLineArgs);
 
       AppExecutorUtil.getAppExecutorService().execute(() -> app.run(stat, appInitalizeMark, newConfigFolder));

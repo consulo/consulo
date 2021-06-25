@@ -30,6 +30,7 @@ import com.intellij.util.containers.ContainerUtil;
 import consulo.container.ExitCodes;
 import consulo.container.StartupError;
 import consulo.container.boot.ContainerPathManager;
+import consulo.container.util.StatCollector;
 import consulo.logging.Logger;
 import consulo.logging.internal.LoggerFactory;
 import consulo.logging.internal.LoggerFactoryInitializer;
@@ -48,6 +49,7 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Locale;
 import java.util.ServiceLoader;
+import java.util.concurrent.ForkJoinPool;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
 
@@ -72,7 +74,7 @@ public class StartupUtil {
     return ourFolderLocker;
   }
 
-  public static void prepareAndStart(String[] args, BiFunction<String, String, ImportantFolderLocker> lockFactory, PairConsumer<Boolean, CommandLineArgs> appStarter) {
+  public static void prepareAndStart(String[] args, StatCollector stat, BiFunction<String, String, ImportantFolderLocker> lockFactory, PairConsumer<Boolean, CommandLineArgs> appStarter) {
     boolean newConfigFolder;
     CommandLineArgs commandLineArgs = CommandLineArgs.parse(args);
 
@@ -97,10 +99,12 @@ public class StartupUtil {
       System.exit(ExitCodes.INSTANCE_CHECK_FAILED);
     }
 
+    ForkJoinPool pool = ForkJoinPool.commonPool();
+
     Logger log = Logger.getInstance(StartupUtil.class);
     logStartupInfo(log);
-    loadSystemLibraries(log);
-    fixProcessEnvironment(log);
+    stat.markWith("load.system.libraries", () -> loadSystemLibraries(log));
+    pool.execute(() -> EnvironmentUtil.loadEnvironment(stat.mark("load.console.env")));
 
     appStarter.consume(newConfigFolder, commandLineArgs);
   }
@@ -156,15 +160,6 @@ public class StartupUtil {
     }
 
     return ActivationResult.FAILED;
-  }
-
-  private static void fixProcessEnvironment(Logger log) {
-    System.setProperty("__idea.mac.env.lock", "unlocked");
-
-    boolean envReady = EnvironmentUtil.isEnvironmentReady();  // trigger environment loading
-    if (!envReady) {
-      log.info("initializing environment");
-    }
   }
 
   public static void loadSystemLibraries(final Logger log) {
