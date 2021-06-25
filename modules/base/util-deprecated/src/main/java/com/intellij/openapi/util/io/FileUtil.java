@@ -38,6 +38,7 @@ import java.io.*;
 import java.lang.reflect.Method;
 import java.nio.charset.Charset;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
 import java.util.concurrent.FutureTask;
 import java.util.concurrent.RunnableFuture;
@@ -361,7 +362,7 @@ public class FileUtil extends FileUtilRt {
     if (!tempFiles.isEmpty()) {
       return startDeletionThread(tempFiles.toArray(new File[tempFiles.size()]));
     }
-    return new FixedFuture<>(null);
+    return CompletableFuture.completedFuture(null);
   }
 
   private static Future<Void> startDeletionThread(@Nonnull final File... tempFiles) {

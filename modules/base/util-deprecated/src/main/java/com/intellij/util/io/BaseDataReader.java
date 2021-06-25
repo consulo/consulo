@@ -35,6 +35,14 @@ public abstract class BaseDataReader {
     mySleepingPolicy = sleepingPolicy != null ? sleepingPolicy : SleepingPolicy.NON_BLOCKING;
   }
 
+  protected void startWithoutChangingThreadName() {
+    if (myFinishedFuture == null) {
+      myFinishedFuture = executeOnPooledThread(() -> {
+        doRun();
+      });
+    }
+  }
+
   protected void start(@Nonnull String presentableName) {
     if (StringUtil.isEmptyOrSpaces(presentableName)) {
       LOG.warn(new Throwable("Must provide not-empty presentable name"));
