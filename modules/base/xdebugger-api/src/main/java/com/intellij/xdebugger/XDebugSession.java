@@ -20,10 +20,8 @@ import com.intellij.execution.configurations.RunProfile;
 import com.intellij.execution.ui.ConsoleView;
 import com.intellij.execution.ui.RunContentDescriptor;
 import com.intellij.execution.ui.RunnerLayoutUi;
-import consulo.disposer.Disposable;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.MessageType;
-import consulo.util.dataholder.Key;
 import com.intellij.xdebugger.breakpoints.XBreakpoint;
 import com.intellij.xdebugger.breakpoints.XLineBreakpoint;
 import com.intellij.xdebugger.frame.XExecutionStack;
@@ -31,7 +29,9 @@ import com.intellij.xdebugger.frame.XStackFrame;
 import com.intellij.xdebugger.frame.XSuspendContext;
 import com.intellij.xdebugger.stepping.XSmartStepIntoHandler;
 import com.intellij.xdebugger.stepping.XSmartStepIntoVariant;
+import consulo.disposer.Disposable;
 import consulo.ui.image.Image;
+import consulo.util.dataholder.Key;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -105,6 +105,16 @@ public interface XDebugSession extends AbstractDebuggerSession {
    * @param errorMessage an error message if breakpoint isn't successfully registered
    */
   void updateBreakpointPresentation(@Nonnull XLineBreakpoint<?> breakpoint, @Nullable Image icon, @Nullable String errorMessage);
+
+  /**
+   * Marks the provide breakpoint as verified in the current session
+   */
+  void setBreakpointVerified(@Nonnull XLineBreakpoint<?> breakpoint);
+
+  /**
+   * Marks the provide breakpoint as invalid in the current session
+   */
+  void setBreakpointInvalid(@Nonnull XLineBreakpoint<?> breakpoint, @Nullable String errorMessage);
 
   /**
    * Call this method when a breakpoint is reached if its condition ({@link XBreakpoint#getCondition()}) evaluates to {@code true}.

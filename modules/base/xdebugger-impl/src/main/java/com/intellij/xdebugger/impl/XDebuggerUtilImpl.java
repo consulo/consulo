@@ -15,6 +15,7 @@
  */
 package com.intellij.xdebugger.impl;
 
+import com.intellij.icons.AllIcons;
 import com.intellij.lang.Language;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataContext;
@@ -69,6 +70,7 @@ import com.intellij.xdebugger.impl.ui.tree.actions.XDebuggerTreeActionBase;
 import com.intellij.xdebugger.settings.XDebuggerSettings;
 import com.intellij.xdebugger.ui.DebuggerColors;
 import consulo.annotation.access.RequiredReadAction;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import consulo.xdebugger.breakpoints.XLineBreakpointResolverTypeExtension;
@@ -576,5 +578,9 @@ public class XDebuggerUtilImpl extends XDebuggerUtil {
 
   public static boolean isEmptyExpression(@Nullable XExpression expression) {
     return expression == null || StringUtil.isEmptyOrSpaces(expression.getExpression());
+  }
+
+  public static Image getVerifiedIcon(@Nonnull XBreakpoint breakpoint) {
+    return breakpoint.getSuspendPolicy() == SuspendPolicy.NONE ? PlatformIconGroup.debuggerDb_verified_no_suspend_breakpoint() : AllIcons.Debugger.Db_verified_breakpoint;
   }
 }
