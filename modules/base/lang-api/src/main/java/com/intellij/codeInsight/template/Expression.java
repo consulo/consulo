@@ -21,18 +21,28 @@ import javax.annotation.Nullable;
 
 public abstract class Expression {
 
-  @javax.annotation.Nullable
+  @Nullable
   public abstract Result calculateResult(ExpressionContext context);
 
   @Nullable
-  public abstract Result calculateQuickResult(ExpressionContext context);
-
+  public Result calculateQuickResult(ExpressionContext context) {
+    return calculateResult(context);
+  }
+  
   @Nullable
   public abstract LookupElement[] calculateLookupItems(ExpressionContext context);
 
   @Nullable
   public String getAdvertisingText() {
     return null;
+  }
+
+  /**
+   * @return true if {@link Expression#calculateResult} or {@link Expression#calculateQuickResult}
+   * require committed PSI for their calculation or false otherwise
+   */
+  public boolean requiresCommittedPSI() {
+    return true;
   }
 }
 
