@@ -15,8 +15,6 @@
  */
 package consulo.util.concurrent;
 
-import consulo.annotation.DeprecationInfo;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.LinkedHashSet;
@@ -67,6 +65,10 @@ class ActionCallback {
   }
 
   public void setDone() {
+    if(isProcessed()) {
+      throw new IllegalArgumentException("can't change state after set state");
+    }
+
     if (myDone.setExecuted()) {
       myRejected.clear();
       freeResources();
@@ -86,6 +88,10 @@ class ActionCallback {
   }
 
   public void setRejected() {
+    if (isProcessed()) {
+      throw new IllegalArgumentException("can't change state after set state");
+    }
+
     if (myRejected.setExecuted()) {
       myDone.clear();
       freeResources();

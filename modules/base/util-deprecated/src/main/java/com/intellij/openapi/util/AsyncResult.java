@@ -15,6 +15,7 @@
  */
 package com.intellij.openapi.util;
 
+import consulo.annotation.DeprecationInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,6 +28,8 @@ import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
+@Deprecated
+@DeprecationInfo("Use consulo.util.concurrent.AsyncResult")
 public class AsyncResult<T> extends ActionCallback {
   private static final Logger LOG = LoggerFactory.getLogger(AsyncResult.class);
 
