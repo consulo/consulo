@@ -2435,34 +2435,7 @@ public class UIUtil {
   public static void disposeProgress(final JProgressBar progress) {
     if (!isUnderNativeMacLookAndFeel()) return;
 
-    SwingUtilities.invokeLater(new Runnable() {
-      @Override
-      public void run() {
-        if (isToDispose(progress)) {
-          progress.getUI().uninstallUI(progress);
-          progress.putClientProperty("isDisposed", Boolean.TRUE);
-        }
-      }
-    });
-  }
-
-  private static boolean isToDispose(final JProgressBar progress) {
-    final ProgressBarUI ui = progress.getUI();
-
-    if (ui == null) return false;
-    if (Boolean.TYPE.equals(progress.getClientProperty("isDisposed"))) return false;
-
-    try {
-      final Field progressBarField = ReflectionUtil.findField(ui.getClass(), JProgressBar.class, "progressBar");
-      progressBarField.setAccessible(true);
-      return progressBarField.get(ui) != null;
-    }
-    catch (NoSuchFieldException e) {
-      return true;
-    }
-    catch (IllegalAccessException e) {
-      return true;
-    }
+    SwingUtilities.invokeLater(() -> progress.setUI(null));
   }
 
   @Nullable
