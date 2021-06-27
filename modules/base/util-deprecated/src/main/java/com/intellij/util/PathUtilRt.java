@@ -21,6 +21,7 @@ import com.intellij.util.containers.ContainerUtil;
 import consulo.logging.Logger;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.nio.charset.Charset;
 import java.util.Locale;
 import java.util.Set;
@@ -123,7 +124,7 @@ public class PathUtilRt {
    * @param strict prohibits names containing any of characters {@code <>:"/\|?*;} and control characters (range 0..31).
    * @param cs     prohibits names which cannot be encoded by this charset (optional).
    */
-  public static boolean isValidFileName(@Nonnull String name, @Nonnull Platform os, boolean strict, @javax.annotation.Nullable Charset cs) {
+  public static boolean isValidFileName(@Nonnull String name, @Nonnull Platform os, boolean strict, @Nullable Charset cs) {
     if (name.length() == 0 || name.equals(".") || name.equals("..")) {
       return false;
     }

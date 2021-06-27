@@ -17,11 +17,11 @@ package com.intellij.util;
 
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.CharsetToolkit;
 import consulo.logging.Logger;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.nio.charset.StandardCharsets;
 
 /**
  * <p>Identifies a line separator:
@@ -42,7 +42,7 @@ public enum LineSeparator {
 
   LineSeparator(@Nonnull String separatorString) {
     mySeparatorString = separatorString;
-    myBytes = separatorString.getBytes(CharsetToolkit.UTF8_CHARSET);
+    myBytes = separatorString.getBytes(StandardCharsets.UTF_8);
   }
 
   @Nonnull
