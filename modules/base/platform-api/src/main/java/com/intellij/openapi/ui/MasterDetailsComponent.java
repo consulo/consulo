@@ -575,10 +575,8 @@ public abstract class MasterDetailsComponent implements Configurable, MasterDeta
     if (nodeByName == null) {
       return AsyncResult.rejected();
     }
-    AsyncResult<TreeNode> result = AsyncResult.rejected();
-    selectNodeInTree(nodeByName, true).doWhenDone(() -> {
-      result.setDone(nodeByName);
-    });
+    AsyncResult<TreeNode> result = AsyncResult.undefined();
+    selectNodeInTree(nodeByName, true).doWhenDone(() -> result.setDone(nodeByName)).doWhenRejected((Runnable)result::setRejected);
     return result;
   }
 
