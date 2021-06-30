@@ -17,6 +17,7 @@ package consulo.util.collection.primitive.ints.impl.list;
 
 import consulo.util.collection.primitive.PrimitiveListIterator;
 import consulo.util.collection.primitive.ints.IntList;
+import consulo.util.collection.primitive.ints.impl.IntCollectionImpls;
 
 import javax.annotation.Nonnull;
 import java.util.*;
@@ -511,5 +512,10 @@ public class IntArrayList implements Cloneable, IntList {
   @Override
   public PrimitiveListIterator.OfInt listIterator(int index) {
     return new ListItr(index);
+  }
+
+  @Override
+  public int hashCode() {
+    return IntCollectionImpls.hashCode(this);
   }
 }

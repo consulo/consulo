@@ -17,6 +17,7 @@ package consulo.util.collection.primitive.ints.impl.set;
 
 import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.primitive.ints.IntSet;
+import consulo.util.collection.primitive.ints.impl.IntCollectionImpls;
 
 import javax.annotation.Nonnull;
 import java.util.PrimitiveIterator;
@@ -77,5 +78,10 @@ public class EmptyIntSet implements IntSet {
         return false;
       }
     };
+  }
+
+  @Override
+  public int hashCode() {
+    return IntCollectionImpls.hashCode(this);
   }
 }
