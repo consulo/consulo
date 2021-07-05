@@ -15,8 +15,8 @@
  */
 package consulo.util.collection.trove.impl.objects;
 
+import consulo.util.collection.primitive.ints.AbstractIntCollection;
 import consulo.util.collection.primitive.ints.IntCollection;
-import consulo.util.collection.primitive.ints.IntLists;
 import consulo.util.collection.primitive.objects.ObjectIntMap;
 import gnu.trove.TObjectHashingStrategy;
 import gnu.trove.TObjectIntHashMap;
@@ -25,6 +25,7 @@ import gnu.trove.TObjectIntIterator;
 import javax.annotation.Nonnull;
 import java.util.AbstractSet;
 import java.util.Iterator;
+import java.util.PrimitiveIterator;
 import java.util.Set;
 import java.util.function.ObjIntConsumer;
 
@@ -37,13 +38,77 @@ public class MyObjectIntHashMap<K> extends TObjectIntHashMap<K> implements Objec
     @Nonnull
     @Override
     public Iterator<Entry<K>> iterator() {
-      TObjectIntIterator<K> iterator = MyObjectIntHashMap.this.iterator();
-      return new EntryIter<>(iterator);
+      return new EntryIter<>(MyObjectIntHashMap.this.iterator());
     }
 
     @Override
     public int size() {
       return MyObjectIntHashMap.this.size();
+    }
+  }
+
+  private class MyKeySet extends AbstractSet<K> {
+    @Nonnull
+    @Override
+    public Iterator<K> iterator() {
+      return new KeyIter<>(MyObjectIntHashMap.this.iterator());
+    }
+
+    @Override
+    public int size() {
+      return MyObjectIntHashMap.this.size();
+    }
+  }
+
+  private class MyValueCollection extends AbstractIntCollection {
+
+    @Nonnull
+    @Override
+    public PrimitiveIterator.OfInt iterator() {
+      return new ValueIter<>(MyObjectIntHashMap.this.iterator());
+    }
+
+    @Override
+    public int size() {
+      return MyObjectIntHashMap.this.size();
+    }
+  }
+
+  private class ValueIter<T> implements PrimitiveIterator.OfInt {
+    private TObjectIntIterator<T> myIterator;
+
+    private ValueIter(TObjectIntIterator<T> iterator) {
+      myIterator = iterator;
+    }
+
+    @Override
+    public boolean hasNext() {
+      return myIterator.hasNext();
+    }
+
+    @Override
+    public int nextInt() {
+      myIterator.advance();
+      return myIterator.value();
+    }
+  }
+
+  private class KeyIter<T> implements Iterator<T> {
+    private TObjectIntIterator<T> myIterator;
+
+    private KeyIter(TObjectIntIterator<T> iterator) {
+      myIterator = iterator;
+    }
+
+    @Override
+    public boolean hasNext() {
+      return myIterator.hasNext();
+    }
+
+    @Override
+    public T next() {
+      myIterator.advance();
+      return myIterator.key();
     }
   }
 
@@ -81,6 +146,8 @@ public class MyObjectIntHashMap<K> extends TObjectIntHashMap<K> implements Objec
   }
 
   private MyEntrySet myEntrySet;
+  private MyKeySet myKeySet;
+  private MyValueCollection myValueCollection;
 
   public MyObjectIntHashMap() {
   }
@@ -149,13 +216,18 @@ public class MyObjectIntHashMap<K> extends TObjectIntHashMap<K> implements Objec
 
   @Override
   public Set<K> keySet() {
-    Set keys = Set.<Object>of(keys());
-    return keys;
+    if(myKeySet == null) {
+      myKeySet = new MyKeySet();
+    }
+    return myKeySet;
   }
 
   @Nonnull
   @Override
   public IntCollection values() {
-    return IntLists.newArrayList(getValues());
+    if(myValueCollection == null) {
+      myValueCollection = new MyValueCollection();
+    }
+    return myValueCollection;
   }
 }
