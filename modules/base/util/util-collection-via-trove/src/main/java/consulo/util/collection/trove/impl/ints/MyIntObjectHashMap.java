@@ -61,12 +61,7 @@ public class MyIntObjectHashMap<V> extends TIntObjectHashMap<V> implements IntOb
 
       int key = myIterator.key();
       Object value = myIterator.value();
-      // why this value here??
-      if(value == TObjectHash.NULL) {
-        value = null;
-      }
-
-      return new IntObjectEntryRecord<>(key, (V1)value);
+      return new IntObjectEntryRecord<>(key, nullize(value));
     }
   }
 
@@ -100,7 +95,7 @@ public class MyIntObjectHashMap<V> extends TIntObjectHashMap<V> implements IntOb
     public V1 next() {
       myIterator.advance();
 
-      return myIterator.value();
+      return nullize(myIterator.value());
     }
   }
 
@@ -109,7 +104,7 @@ public class MyIntObjectHashMap<V> extends TIntObjectHashMap<V> implements IntOb
     @Nonnull
     @Override
     public Iterator<V> iterator() {
-      return new MyValuesIterator<V>(MyIntObjectHashMap.this.iterator());
+      return new MyValuesIterator<>(MyIntObjectHashMap.this.iterator());
     }
 
     @Override
@@ -153,6 +148,14 @@ public class MyIntObjectHashMap<V> extends TIntObjectHashMap<V> implements IntOb
     public int size() {
       return MyIntObjectHashMap.this.size();
     }
+  }
+
+  @SuppressWarnings("unchecked")
+  private static <T> T nullize(Object value) {
+    if(value == TObjectHash.NULL) {
+      return null;
+    }
+    return (T)value;
   }
 
   private Set<IntObjectEntry<V>> myEntrySet;
