@@ -15,6 +15,8 @@
  */
 package consulo.util.collection.primitive.ints;
 
+import consulo.util.collection.primitive.ints.impl.IntCollectionImpls;
+
 import java.util.PrimitiveIterator;
 
 /**
@@ -69,5 +71,10 @@ public abstract class AbstractIntCollection implements IntCollection {
     }
 
     return ints;
+  }
+
+  @Override
+  public int hashCode() {
+    return IntCollectionImpls.hashCode(this);
   }
 }

@@ -17,23 +17,15 @@ package com.intellij.ui.messages;
 
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
-import com.intellij.openapi.util.SystemInfo;
-import com.intellij.openapi.util.registry.Registry;
-import com.intellij.openapi.wm.IdeFocusManager;
-import com.intellij.openapi.wm.WindowManager;
-import com.intellij.openapi.wm.impl.ModalityHelper;
-import com.intellij.ui.mac.MacMessageException;
 import com.intellij.ui.mac.MacMessages;
-import com.intellij.ui.mac.foundation.MacUtil;
 import com.intellij.util.ui.UIUtil;
-import consulo.awt.TargetAWT;
 import consulo.ui.image.Image;
 import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.swing.*;
-import java.awt.*;
+
+import static com.intellij.ui.messages.SheetMessageUtil.getForemostWindow;
 
 /**
  * Created by Denis Fokin
@@ -105,62 +97,6 @@ public class JBMacMessages extends MacMessages {
   public void showOkMessageDialog(@Nonnull String title, String message, @Nonnull String okText) {
     final consulo.ui.Window foremostWindow = getForemostWindow(null);
     new SheetMessage(foremostWindow, title, message, UIUtil.getInformationIcon(), new String [] {okText},null, null, okText);
-  }
-
-  private static consulo.ui.Window getForemostWindow(final Window window) {
-    Window _window = null;
-    IdeFocusManager ideFocusManager = IdeFocusManager.getGlobalInstance();
-
-    Component focusOwner = IdeFocusManager.findInstance().getFocusOwner();
-    // Let's ask for a focused component first
-    if (focusOwner != null) {
-      _window = SwingUtilities.getWindowAncestor(focusOwner);
-    }
-
-    if (_window == null) {
-      // Looks like ide lost focus, let's ask about the last focused component
-      focusOwner = ideFocusManager.getLastFocusedFor(ideFocusManager.getLastFocusedFrame());
-      if (focusOwner != null) {
-        _window = SwingUtilities.getWindowAncestor(focusOwner);
-      }
-    }
-
-    if (_window == null) {
-      _window = WindowManager.getInstance().findVisibleFrame();
-    }
-
-    if (_window == null && window != null) {
-      // It might be we just has not opened a frame yet.
-      // So let's ask AWT
-      focusOwner = window.getMostRecentFocusOwner();
-      if (focusOwner != null) {
-        _window = SwingUtilities.getWindowAncestor(focusOwner);
-      }
-    }
-
-    if (_window != null) {
-      // We have successfully found the window
-      // Let's check that we have not missed a blocker
-      if (ModalityHelper.isModalBlocked(_window)) {
-        _window = ModalityHelper.getModalBlockerFor(_window);
-      }
-    }
-
-    if (SystemInfo.isAppleJvm && MacUtil.getWindowTitle(_window) == null) {
-      // With Apple JDK we cannot find a window if it does not have a title
-      // Let's show a dialog instead of the message.
-      throw new MacMessageException("MacMessage parent does not have a title.");
-    }
-    while (_window != null && MacUtil.getWindowTitle(_window) == null) {
-      _window = _window.getOwner();
-      //At least our frame should have a title
-    }
-
-    while (Registry.is("skip.untitled.windows.for.mac.messages") && _window != null && _window instanceof JDialog && !((JDialog)_window).isModal()) {
-      _window = _window.getOwner();
-    }
-
-    return TargetAWT.from(_window);
   }
 
   @Override

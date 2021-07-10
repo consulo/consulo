@@ -205,7 +205,9 @@ public abstract class UIInternal {
   public abstract Window _Window_getActiveWindow();
 
   @Nullable
-  public abstract Window _Window_getFocusedWindow();
+  public Window _Window_getFocusedWindow() {
+    return _Window_getActiveWindow();
+  }
 
   public abstract <T> Alert<T> _Alerts_create();
 

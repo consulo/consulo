@@ -16,12 +16,16 @@
 package consulo.desktop.swt.ui.impl.image;
 
 import consulo.ui.image.Image;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.GC;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 29/04/2021
  */
-public class DesktopSwtLayeredImageImpl implements Image {
+public class DesktopSwtLayeredImageImpl implements Image, DesktopSwtImage{
   private final Image[] myImages;
 
   public DesktopSwtLayeredImageImpl(Image... images) {
@@ -36,5 +40,26 @@ public class DesktopSwtLayeredImageImpl implements Image {
   @Override
   public int getWidth() {
     return myImages[0].getWidth();
+  }
+
+  @Nonnull
+  @Override
+  public org.eclipse.swt.graphics.Image toSWTImage() {
+    org.eclipse.swt.graphics.Image swtImage = new org.eclipse.swt.graphics.Image(null, getWidth(), getHeight());
+
+    GC gc = new GC(swtImage);
+    gc.setBackground(new Color(0, 0, 0, 0));
+    gc.setAlpha(0);
+    gc.fillRectangle(0, 0, getWidth(), getHeight());
+
+    for (Image image : myImages) {
+      DesktopSwtImage desktopSwtImage = (DesktopSwtImage)image;
+
+      org.eclipse.swt.graphics.Image copySWTImage = desktopSwtImage.toSWTImage();
+      gc.drawImage(copySWTImage, 0, 0);
+    }
+
+    gc.dispose();
+    return swtImage;
   }
 }

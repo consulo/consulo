@@ -13,13 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.desktop.swt.ui.impl;
+package consulo.desktop.swt.ui.impl.layout;
 
+import consulo.localize.LocalizeValue;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.layout.VerticalLayout;
+import consulo.ui.layout.LabeledLayout;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.RowLayout;
+import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Layout;
 
 import javax.annotation.Nonnull;
@@ -28,25 +31,34 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 29/04/2021
  */
-public class DesktopSwtVerticalLayoutImpl extends DesktopSwtLayoutComponent implements VerticalLayout {
-  private final int myVGap;
+public class DesktopSwtLabeledLayoutImpl extends DesktopSwtLayoutComponent implements LabeledLayout {
+  private final LocalizeValue myLabel;
 
-  public DesktopSwtVerticalLayoutImpl(int vGap) {
-    myVGap = vGap;
+  public DesktopSwtLabeledLayoutImpl(LocalizeValue label) {
+    myLabel = label;
+  }
+
+  @Override
+  protected void initialize(Composite component) {
+    super.initialize(component);
+
+    ((Group) component).setText(myLabel.get());
+  }
+
+  @Override
+  protected Composite createSWT(Composite parent) {
+    return new Group(parent, SWT.SHADOW_NONE);
   }
 
   @Override
   protected Layout createLayout() {
-    RowLayout layout = new RowLayout(SWT.VERTICAL);
-    layout.spacing = myVGap;
-    layout.fill = true;
-    return layout;
+    return new FillLayout();
   }
 
   @RequiredUIAccess
   @Nonnull
   @Override
-  public VerticalLayout add(@Nonnull Component component) {
+  public LabeledLayout set(@Nonnull Component component) {
     add(component, null);
     return this;
   }

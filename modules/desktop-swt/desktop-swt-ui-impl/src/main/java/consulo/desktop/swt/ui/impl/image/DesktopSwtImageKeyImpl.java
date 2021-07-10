@@ -15,15 +15,21 @@
  */
 package consulo.desktop.swt.ui.impl.image;
 
+import consulo.ui.image.IconLibraryManager;
+import consulo.ui.image.Image;
 import consulo.ui.image.ImageKey;
+import consulo.ui.impl.image.BaseIconLibraryManager;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
  * @since 29/04/2021
  */
-public class DesktopSwtImageKeyImpl implements ImageKey {
+public class DesktopSwtImageKeyImpl implements ImageKey, DesktopSwtImage {
+  private static final BaseIconLibraryManager ourLibraryManager = (BaseIconLibraryManager)IconLibraryManager.get();
+
   private final String myGroupId;
   private final String myImageId;
   private final int myWidth;
@@ -34,6 +40,11 @@ public class DesktopSwtImageKeyImpl implements ImageKey {
     myImageId = imageId;
     myWidth = width;
     myHeight = height;
+  }
+
+  @Nullable
+  private Image resolveImage() {
+    return ourLibraryManager.getIcon(null, myGroupId, myImageId, myWidth, myHeight);
   }
 
   @Nonnull
@@ -56,5 +67,15 @@ public class DesktopSwtImageKeyImpl implements ImageKey {
   @Override
   public int getWidth() {
     return myWidth;
+  }
+
+  @Nonnull
+  @Override
+  public org.eclipse.swt.graphics.Image toSWTImage() {
+    Image image = resolveImage();
+    if(image == null) {
+      image = Image.empty(myWidth, myHeight);
+    }
+    return ((DesktopSwtImage)image).toSWTImage();
   }
 }

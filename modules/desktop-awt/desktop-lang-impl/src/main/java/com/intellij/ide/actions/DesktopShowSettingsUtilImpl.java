@@ -211,7 +211,7 @@ public class DesktopShowSettingsUtilImpl extends BaseProjectStructureShowSetting
   public AsyncResult<Void> showProjectStructureDialog(@Nonnull Project project, @Nonnull Consumer<ProjectStructureSelector> consumer) {
     Configurable[] configurables = buildConfigurables(project);
 
-    AsyncResult<Void> result = AsyncResult.rejected();
+    AsyncResult<Void> result = AsyncResult.undefined();
     showSettingsImpl(project, it -> configurables, SKIP_SELECTION_CONFIGURATION, dialog -> {
       final ProjectStructureSelector editor = dialog.getDataUnchecked(ProjectStructureSelector.KEY);
       assert editor != null;

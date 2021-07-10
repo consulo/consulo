@@ -16,6 +16,7 @@
 package consulo.util.collection.trove.impl.longs;
 
 import consulo.util.collection.primitive.longs.LongSet;
+import consulo.util.collection.primitive.longs.impl.LongCollectionImpls;
 import gnu.trove.TLongHashSet;
 import gnu.trove.TLongIterator;
 
@@ -95,5 +96,10 @@ public class MyLongHashSet implements LongSet {
   @Override
   public PrimitiveIterator.OfLong iterator() {
     return new Iter(mySet.iterator());
+  }
+
+  @Override
+  public int hashCode() {
+    return LongCollectionImpls.hashCode(this);
   }
 }

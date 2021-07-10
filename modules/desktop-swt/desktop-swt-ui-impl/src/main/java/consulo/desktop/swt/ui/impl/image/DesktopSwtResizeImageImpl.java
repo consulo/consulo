@@ -13,14 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.desktop.swt.ui.impl;
+package consulo.desktop.swt.ui.impl.image;
 
-import consulo.ui.Component;
-import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.layout.HorizontalLayout;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.RowLayout;
-import org.eclipse.swt.widgets.Layout;
+import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
 
@@ -28,22 +23,30 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 29/04/2021
  */
-public class DesktopSwtHorizontalLayoutImpl extends DesktopSwtLayoutComponent implements HorizontalLayout {
-  public DesktopSwtHorizontalLayoutImpl(int gapInPixesl) {
+public class DesktopSwtResizeImageImpl implements Image, DesktopSwtImage {
+  private final Image myOriginal;
+  private final int myWidth;
+  private final int myHeight;
+
+  public DesktopSwtResizeImageImpl(Image original, int width, int height) {
+    myOriginal = original;
+    myWidth = width;
+    myHeight = height;
   }
 
   @Override
-  protected Layout createLayout() {
-    RowLayout layout = new RowLayout(SWT.HORIZONTAL);
-    layout.center = true;
-    return layout;
+  public int getHeight() {
+    return myHeight;
   }
 
-  @RequiredUIAccess
+  @Override
+  public int getWidth() {
+    return myWidth;
+  }
+
   @Nonnull
   @Override
-  public HorizontalLayout add(@Nonnull Component component) {
-    add(component, null);
-    return this;
+  public org.eclipse.swt.graphics.Image toSWTImage() {
+    return ((DesktopSwtImage)myOriginal).toSWTImage();
   }
 }

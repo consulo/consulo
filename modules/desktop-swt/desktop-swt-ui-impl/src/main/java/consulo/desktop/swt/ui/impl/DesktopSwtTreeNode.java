@@ -15,8 +15,14 @@
  */
 package consulo.desktop.swt.ui.impl;
 
+import consulo.desktop.swt.ui.impl.image.DesktopSwtImage;
+import consulo.desktop.swt.ui.impl.image.DesktopSwtImageKeyImpl;
+import consulo.desktop.swt.ui.impl.image.DesktopSwtSvgLibraryImageImpl;
 import consulo.ui.TextItemPresentation;
 import consulo.ui.TreeNode;
+import org.eclipse.nebula.cwt.svg.SvgDocument;
+import org.eclipse.swt.graphics.GC;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.TreeItem;
 
 import javax.annotation.Nonnull;
@@ -61,6 +67,11 @@ public class DesktopSwtTreeNode<E> implements TreeNode<E> {
     DesktopSwtTextItemPresentation presentation = new DesktopSwtTextItemPresentation();
     myRender.accept(myValue, presentation);
     myTreeItem.setText(presentation.toString());
+
+    consulo.ui.image.Image uiImage = presentation.getImage();
+    if(uiImage != null) {
+      myTreeItem.setImage(DesktopSwtImage.toSWTImage(uiImage));
+    }
   }
 
   @Override

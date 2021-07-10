@@ -77,6 +77,6 @@ public class DesktopSwtIntBoxImpl extends DesktopSwtComponent<Text> implements I
 
   @Override
   protected Text createSWT(Composite parent) {
-    return new Text(parent, SWT.NONE);
+    return new Text(parent, SWT.BORDER);
   }
 }

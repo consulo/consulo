@@ -15,7 +15,9 @@
  */
 package consulo.desktop.swt.ui.impl;
 
+import consulo.desktop.swt.ui.impl.font.DesktopSwtFontManagerImpl;
 import consulo.desktop.swt.ui.impl.image.*;
+import consulo.desktop.swt.ui.impl.layout.*;
 import consulo.localize.LocalizeValue;
 import consulo.ui.*;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -33,6 +35,7 @@ import consulo.ui.model.ListModel;
 import consulo.ui.model.MutableListModel;
 import consulo.ui.style.StyleManager;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -106,6 +109,11 @@ public class DesktopSwtUIInternalImpl extends UIInternal {
   }
 
   @Override
+  public TableLayout _Layouts_table(StaticPosition fillOption) {
+    return new DesktopSwtTableLayoutImpl(fillOption);
+  }
+
+  @Override
   public ScrollableLayout _ScrollLayout_create(Component component) {
     return new DesktopSwtScrollableLayoutImpl(component);
   }
@@ -132,7 +140,12 @@ public class DesktopSwtUIInternalImpl extends UIInternal {
 
   @Override
   public TextBox _Components_textBox(String text) {
-    return null;
+    return new DesktopSwtTextBoxImpl(text);
+  }
+
+  @Override
+  public TextBoxWithHistory _Components_textBoxWithHistory(String text) {
+    return new DesktopSwtTextBoxWithHistoryImpl(text);
   }
 
   @Override
@@ -193,7 +206,7 @@ public class DesktopSwtUIInternalImpl extends UIInternal {
 
   @Override
   public Image _ImageEffects_transparent(@Nonnull Image original, float alpha) {
-    return null;
+    return new DesktopSwtTransparentImageImpl(original, alpha);
   }
 
   @Override
@@ -223,7 +236,7 @@ public class DesktopSwtUIInternalImpl extends UIInternal {
 
   @Override
   public Image _ImageEffects_resize(Image original, int width, int height) {
-    return new DesktopResizeImageImpl(original, width, height);
+    return new DesktopSwtResizeImageImpl(original, width, height);
   }
 
   @Override
@@ -260,7 +273,7 @@ public class DesktopSwtUIInternalImpl extends UIInternal {
   @Nonnull
   @Override
   public FontManager _FontManager_get() {
-    return null;
+    return DesktopSwtFontManagerImpl.INSTANCE;
   }
 
   @Nonnull
@@ -272,12 +285,16 @@ public class DesktopSwtUIInternalImpl extends UIInternal {
   @Nullable
   @Override
   public Window _Window_getActiveWindow() {
-    return null;
-  }
+    Display display = DesktopSwtUIAccess.INSTANCE.getDisplay();
 
-  @Nullable
-  @Override
-  public Window _Window_getFocusedWindow() {
+    Shell activeShell = display.getActiveShell();
+
+    if(activeShell != null) {
+      Object data = activeShell.getData(DesktopSwtComponent.UI_COMPONENT_KEY);
+      if(data != null) {
+        return (Window)data;
+      }
+    }
     return null;
   }
 

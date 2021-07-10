@@ -76,6 +76,24 @@ public class MyIntHashSet implements IntSet {
     myDelegate.clear();
   }
 
+  @Override
+  public boolean equals(Object obj) {
+    if(obj instanceof MyIntHashSet my) {
+      return my.myDelegate.equals(myDelegate);
+    }
+    return super.equals(obj);
+  }
+
+  @Override
+  public String toString() {
+    return myDelegate.toString();
+  }
+
+  @Override
+  public int hashCode() {
+    return myDelegate.hashCode();
+  }
+
   @Nonnull
   @Override
   public PrimitiveIterator.OfInt iterator() {

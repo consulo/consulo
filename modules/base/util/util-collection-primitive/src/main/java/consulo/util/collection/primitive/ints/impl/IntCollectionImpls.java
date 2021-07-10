@@ -13,32 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.desktop.swt.ui.impl.image;
+package consulo.util.collection.primitive.ints.impl;
 
-import consulo.ui.image.Image;
+import consulo.util.collection.primitive.ints.IntCollection;
+
+import java.util.PrimitiveIterator;
 
 /**
  * @author VISTALL
- * @since 29/04/2021
+ * @since 30/06/2021
  */
-public class DesktopResizeImageImpl implements Image {
-  private final Image myOriginal;
-  private final int myWidth;
-  private final int myHeight;
+public class IntCollectionImpls {
+  // see Arrays.hashCode
+  public static int hashCode(IntCollection collection) {
+    PrimitiveIterator.OfInt iterator = collection.iterator();
 
-  public DesktopResizeImageImpl(Image original, int width, int height) {
-    myOriginal = original;
-    myWidth = width;
-    myHeight = height;
-  }
-
-  @Override
-  public int getHeight() {
-    return myHeight;
-  }
-
-  @Override
-  public int getWidth() {
-    return myWidth;
+    int result = 1;
+    while (iterator.hasNext()) {
+      result = 31 * result + iterator.nextInt();
+    }
+    return result;
   }
 }

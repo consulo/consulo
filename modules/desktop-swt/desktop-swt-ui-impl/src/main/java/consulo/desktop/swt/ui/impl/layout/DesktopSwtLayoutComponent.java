@@ -13,9 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.desktop.swt.ui.impl;
+package consulo.desktop.swt.ui.impl.layout;
 
 import com.intellij.util.containers.MultiMap;
+import consulo.desktop.swt.ui.impl.DesktopSwtComponent;
 import consulo.ui.Component;
 import consulo.ui.layout.Layout;
 import consulo.util.lang.Pair;
@@ -74,7 +75,7 @@ public abstract class DesktopSwtLayoutComponent extends DesktopSwtComponent<Comp
   }
 
   @Override
-  protected void disposeSWT() {
+  public void disposeSWT() {
     super.disposeSWT();
 
     myComponents.addAll(myMappedComponents.values());

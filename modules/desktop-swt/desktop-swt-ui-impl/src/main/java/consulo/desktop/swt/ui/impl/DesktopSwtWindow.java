@@ -39,7 +39,16 @@ public class DesktopSwtWindow extends DesktopSwtComponent<Shell> implements Wind
     flags = BitUtil.set(flags, SWT.RESIZE, options.isResizable());
     flags = BitUtil.set(flags, SWT.MAX, options.isResizable());
 
-    myComponent = new Shell(flags);
+    Shell parent = null;
+    Window owner = options.getOwner();
+    if(owner instanceof DesktopSwtWindow swtWindow) {
+      parent = swtWindow.toSWTComponent();
+      flags = BitUtil.set(flags, SWT.APPLICATION_MODAL, true);
+    }
+
+    myComponent = new Shell(parent, flags);
+    myComponent.setData(UI_COMPONENT_KEY, this);
+
     myComponent.setText(title);
     FillLayout layout = new FillLayout();
     layout.type = SWT.VERTICAL;

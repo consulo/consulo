@@ -18,9 +18,11 @@ package consulo.desktop.swt.ui.impl;
 import consulo.localize.LocalizeValue;
 import consulo.ui.TextAttribute;
 import consulo.ui.TextItemPresentation;
+import consulo.ui.image.Image;
 import consulo.util.lang.StringUtil;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,6 +32,18 @@ import java.util.List;
  */
 public class DesktopSwtTextItemPresentation implements TextItemPresentation {
   private List<LocalizeValue> myValues = new ArrayList<>();
+  private Image myImage;
+
+  public Image getImage() {
+    return myImage;
+  }
+
+  @Nonnull
+  @Override
+  public TextItemPresentation withIcon(@Nullable Image image) {
+    myImage = image;
+    return this;
+  }
 
   @Override
   public void clearText() {

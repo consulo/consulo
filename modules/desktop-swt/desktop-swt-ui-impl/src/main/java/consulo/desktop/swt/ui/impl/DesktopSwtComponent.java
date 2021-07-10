@@ -39,17 +39,28 @@ import java.util.function.Function;
  * @since 29/04/2021
  */
 public abstract class DesktopSwtComponent<SWT extends Control> implements Component {
+  public static final String UI_COMPONENT_KEY = "UI_COMPONENT_KEY";
+
   protected Size mySize;
 
   protected UIDataObject myDataObject = new UIDataObject();
 
   protected SWT myComponent;
 
+  private boolean myEnabled = true;
+
   public final void bind(Composite parent, Object layoutData) {
     myComponent = createSWT(parent);
     myComponent.setLayoutData(layoutData);
 
+    myComponent.setEnabled(myEnabled);
+    myComponent.setData(UI_COMPONENT_KEY, this);
+    
     initialize(myComponent);
+  }
+
+  public SWT toSWTComponent() {
+    return myComponent;
   }
 
   protected abstract SWT createSWT(Composite parent);
@@ -57,7 +68,7 @@ public abstract class DesktopSwtComponent<SWT extends Control> implements Compon
   protected void initialize(SWT component) {
   }
 
-  protected final Composite getComposite() {
+  public final Composite getComposite() {
     if (myComponent instanceof Composite) {
       return (Composite)myComponent;
     }
@@ -74,7 +85,7 @@ public abstract class DesktopSwtComponent<SWT extends Control> implements Compon
     disposeSWT();
   }
 
-  protected void disposeSWT() {
+  public void disposeSWT() {
     if (myComponent != null) {
       myComponent.dispose();
       myComponent = null;
@@ -106,13 +117,17 @@ public abstract class DesktopSwtComponent<SWT extends Control> implements Compon
 
   @Override
   public boolean isEnabled() {
-    return true;
+    return myEnabled;
   }
 
   @RequiredUIAccess
   @Override
   public void setEnabled(boolean value) {
+    myEnabled = value;
 
+    if(myComponent != null) {
+      myComponent.setEnabled(value);
+    }
   }
 
   @Nullable

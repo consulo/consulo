@@ -15,9 +15,11 @@
  */
 package consulo.desktop.swt.ui.impl.image;
 
+import com.intellij.util.io.UnsyncByteArrayInputStream;
 import consulo.ui.image.Image;
 import consulo.ui.impl.image.BaseIconLibraryImpl;
 import consulo.ui.impl.image.BaseIconLibraryManager;
+import org.eclipse.nebula.cwt.svg.SvgDocument;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -34,6 +36,17 @@ public class DesktopSwtIconLibraryImpl extends BaseIconLibraryImpl {
   @Nullable
   @Override
   protected Image createImage(@Nonnull byte[] _1xData, @Nullable byte[] _2xdata, boolean isSVG, int width, int height, String groupId, String imageId) {
-    return new DesktopSwtLibraryImageImpl(width, height);
+    if(isSVG) {
+      SvgDocument svgDocument;
+      if(_2xdata != null) {
+        svgDocument = SvgDocument.load(new UnsyncByteArrayInputStream(_1xData));
+      }
+      else {
+        svgDocument = SvgDocument.load(new UnsyncByteArrayInputStream(_1xData));
+      }
+
+      return new DesktopSwtSvgLibraryImageImpl(width, height, svgDocument);
+    }
+    return new DesktopSwtEmptyImageImpl(width, height);
   }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2018 consulo.io
+ * Copyright 2013-2021 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,13 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.web.fileChooser.impl;
+package consulo.fileChooser.impl;
 
-import com.intellij.openapi.fileChooser.FileChooserDescriptor;
-import com.intellij.openapi.fileChooser.FileChooserDialog;
-import com.intellij.openapi.fileChooser.PathChooserDialog;
+import com.intellij.openapi.fileChooser.FileSaverDescriptor;
+import com.intellij.openapi.fileChooser.FileSaverDialog;
 import com.intellij.openapi.project.Project;
-import consulo.ui.fileOperateDialog.FileChooseDialogProvider;
+import consulo.ui.fileOperateDialog.FileSaveDialogProvider;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -27,19 +26,13 @@ import java.awt.*;
 
 /**
  * @author VISTALL
- * @since 2018-06-28
+ * @since 10/07/2021
  */
-public class WebFileChooseDialogProvider implements FileChooseDialogProvider {
+public class UnifiedFileSaveDialogProvider implements FileSaveDialogProvider {
   @Nonnull
   @Override
-  public FileChooserDialog createFileChooser(@Nonnull FileChooserDescriptor descriptor, @Nullable Project project, @Nullable Component parent) {
-    return new WebPathChooserDialog(project, descriptor);
-  }
-
-  @Nonnull
-  @Override
-  public PathChooserDialog createPathChooser(@Nonnull FileChooserDescriptor descriptor, @Nullable Project project, @Nullable Component parent) {
-    return new WebPathChooserDialog(project, descriptor);
+  public FileSaverDialog createSaveFileDialog(@Nonnull FileSaverDescriptor descriptor, @Nullable Project project, @Nullable Component parent) {
+    throw new UnsupportedOperationException();
   }
 
   @Nonnull

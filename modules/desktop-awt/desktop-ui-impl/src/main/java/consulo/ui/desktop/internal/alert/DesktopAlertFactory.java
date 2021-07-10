@@ -15,6 +15,7 @@
  */
 package consulo.ui.desktop.internal.alert;
 
+import consulo.platform.Platform;
 import consulo.ui.Alert;
 
 /**
@@ -23,6 +24,9 @@ import consulo.ui.Alert;
  */
 public class DesktopAlertFactory {
   public static <V> Alert<V> create() {
-    return new DesktopPlainAlertImpl<V>();
+    if(Platform.current().os().isMac()) {
+      return new DesktopMacAlertImpl<>();
+    }
+    return new DesktopPlainAlertImpl<>();
   }
 }
