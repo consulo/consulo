@@ -39,6 +39,8 @@ import java.util.function.Function;
  * @since 29/04/2021
  */
 public abstract class DesktopSwtComponent<SWT extends Control> implements Component {
+  public static final String UI_COMPONENT_KEY = "UI_COMPONENT_KEY";
+
   protected Size mySize;
 
   protected UIDataObject myDataObject = new UIDataObject();
@@ -52,6 +54,7 @@ public abstract class DesktopSwtComponent<SWT extends Control> implements Compon
     myComponent.setLayoutData(layoutData);
 
     myComponent.setEnabled(myEnabled);
+    myComponent.setData(UI_COMPONENT_KEY, this);
     
     initialize(myComponent);
   }

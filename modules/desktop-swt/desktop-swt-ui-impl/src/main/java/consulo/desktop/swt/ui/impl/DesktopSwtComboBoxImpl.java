@@ -21,6 +21,8 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.model.ListModel;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Composite;
 
 import javax.annotation.Nonnull;
@@ -72,6 +74,13 @@ public class DesktopSwtComboBoxImpl<E> extends DesktopSwtComponent<CCombo> imple
     component.setItems(items.toArray(String[]::new));
 
     component.select(mySelectedIndex);
+
+    component.addSelectionListener(new SelectionAdapter() {
+      @Override
+      public void widgetSelected(SelectionEvent e) {
+        mySelectedIndex = component.getSelectionIndex();
+      }
+    });
   }
 
   @Nonnull

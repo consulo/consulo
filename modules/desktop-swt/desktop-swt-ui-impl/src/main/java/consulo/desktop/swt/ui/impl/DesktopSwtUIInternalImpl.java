@@ -35,6 +35,7 @@ import consulo.ui.model.ListModel;
 import consulo.ui.model.MutableListModel;
 import consulo.ui.style.StyleManager;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -284,12 +285,16 @@ public class DesktopSwtUIInternalImpl extends UIInternal {
   @Nullable
   @Override
   public Window _Window_getActiveWindow() {
-    return null;
-  }
+    Display display = DesktopSwtUIAccess.INSTANCE.getDisplay();
 
-  @Nullable
-  @Override
-  public Window _Window_getFocusedWindow() {
+    Shell activeShell = display.getActiveShell();
+
+    if(activeShell != null) {
+      Object data = activeShell.getData(DesktopSwtComponent.UI_COMPONENT_KEY);
+      if(data != null) {
+        return (Window)data;
+      }
+    }
     return null;
   }
 

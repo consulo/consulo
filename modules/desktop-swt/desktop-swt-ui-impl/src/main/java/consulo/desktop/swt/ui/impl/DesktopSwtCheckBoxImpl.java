@@ -31,10 +31,13 @@ import javax.annotation.Nonnull;
 public class DesktopSwtCheckBoxImpl extends DesktopSwtComponent<Button> implements CheckBox {
   private LocalizeValue myText = LocalizeValue.empty();
 
+  private boolean myValue;
+
   @Override
   protected void initialize(Button component) {
     super.initialize(component);
 
+    component.setSelection(myValue);
     component.setText(myText.get());
   }
 
@@ -46,13 +49,17 @@ public class DesktopSwtCheckBoxImpl extends DesktopSwtComponent<Button> implemen
   @Nonnull
   @Override
   public Boolean getValue() {
-    return null;
+    return myValue;
   }
 
   @RequiredUIAccess
   @Override
   public void setValue(@Nonnull Boolean value, boolean fireListeners) {
-
+    myValue = value;
+    
+    if(myComponent != null) {
+      myComponent.setSelection(myValue);
+    }
   }
 
   @Nonnull

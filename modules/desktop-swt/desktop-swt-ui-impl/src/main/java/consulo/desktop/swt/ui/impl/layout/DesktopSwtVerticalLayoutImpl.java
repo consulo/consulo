@@ -39,6 +39,7 @@ public class DesktopSwtVerticalLayoutImpl extends DesktopSwtLayoutComponent impl
   protected Layout createLayout() {
     RowLayout layout = new RowLayout(SWT.VERTICAL);
     layout.spacing = myVGap;
+    layout.wrap = false;
     layout.fill = true;
     return layout;
   }

@@ -51,6 +51,29 @@ public class UnifiedSettingsDialog extends WholeLeftWindowWrapper {
   }
 
   @RequiredUIAccess
+  @Override
+  public void doOKAction() {
+    super.doOKAction();
+
+    for (Map.Entry<Configurable, UnifiedConfigurableContext> entry : myContexts.entrySet()) {
+      Configurable configurable = entry.getKey();
+      UnifiedConfigurableContext context = entry.getValue();
+
+      try {
+        configurable.apply();
+      }
+      catch (Exception e) {
+        e.printStackTrace();
+      }
+      finally {
+        configurable.disposeUIResources();
+      }
+    }
+
+    myContexts.clear();
+  }
+
+  @RequiredUIAccess
   @Nonnull
   @Override
   protected Couple<Component> createComponents() {

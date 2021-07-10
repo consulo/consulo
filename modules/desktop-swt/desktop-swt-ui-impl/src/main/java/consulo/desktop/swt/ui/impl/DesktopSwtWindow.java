@@ -47,6 +47,8 @@ public class DesktopSwtWindow extends DesktopSwtComponent<Shell> implements Wind
     }
 
     myComponent = new Shell(parent, flags);
+    myComponent.setData(UI_COMPONENT_KEY, this);
+
     myComponent.setText(title);
     FillLayout layout = new FillLayout();
     layout.type = SWT.VERTICAL;

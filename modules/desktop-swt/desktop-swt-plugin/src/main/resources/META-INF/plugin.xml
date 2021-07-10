@@ -42,6 +42,9 @@
 
     <applicationService serviceInterface="consulo.startup.customize.StartupCustomizeManager" serviceImplementation="consulo.desktop.swt.startup.customize.DesktopSwtStartupCustomizeManager"/>
 
+    <fileChooseDialogProvider implementation="consulo.desktop.swt.fileChooser.impl.system.DesktopSwtSystemFileChooseDialogProvider"/>
+    
+    <fileSaveDialogProvider implementation="consulo.fileChooser.impl.UnifiedFileSaveDialogProvider" order="last"/>
     <fileChooseDialogProvider implementation="consulo.fileChooser.impl.UnifiedFileChooseDialogProvider" order="last"/>
 
     <applicationService serviceInterface="com.intellij.ui.IconDeferrer" serviceImplementation="com.intellij.ui.DummyIconDeferrer"/>
