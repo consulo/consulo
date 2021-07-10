@@ -17,16 +17,18 @@ package consulo.desktop.swt.ui.impl.image;
 
 import consulo.ui.image.Image;
 
+import javax.annotation.Nonnull;
+
 /**
  * @author VISTALL
  * @since 29/04/2021
  */
-public class DesktopResizeImageImpl implements Image {
+public class DesktopSwtResizeImageImpl implements Image, DesktopSwtImage {
   private final Image myOriginal;
   private final int myWidth;
   private final int myHeight;
 
-  public DesktopResizeImageImpl(Image original, int width, int height) {
+  public DesktopSwtResizeImageImpl(Image original, int width, int height) {
     myOriginal = original;
     myWidth = width;
     myHeight = height;
@@ -40,5 +42,11 @@ public class DesktopResizeImageImpl implements Image {
   @Override
   public int getWidth() {
     return myWidth;
+  }
+
+  @Nonnull
+  @Override
+  public org.eclipse.swt.graphics.Image toSWTImage() {
+    return ((DesktopSwtImage)myOriginal).toSWTImage();
   }
 }

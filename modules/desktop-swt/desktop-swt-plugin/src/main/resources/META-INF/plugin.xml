@@ -41,5 +41,11 @@
     <applicationService serviceInterface="com.intellij.ide.DataManager" serviceImplementation="consulo.ide.impl.UnifiedDataManagerImpl"/>
 
     <applicationService serviceInterface="consulo.startup.customize.StartupCustomizeManager" serviceImplementation="consulo.desktop.swt.startup.customize.DesktopSwtStartupCustomizeManager"/>
+
+    <fileChooseDialogProvider implementation="consulo.fileChooser.impl.UnifiedFileChooseDialogProvider" order="last"/>
+
+    <applicationService serviceInterface="com.intellij.ui.IconDeferrer" serviceImplementation="com.intellij.ui.DummyIconDeferrer"/>
+
+    <applicationService serviceInterface="com.intellij.openapi.fileChooser.FileChooserFactory" serviceImplementation="consulo.fileChooser.impl.FileChooserFactoryImpl"/>
   </extensions>
 </consulo-plugin>

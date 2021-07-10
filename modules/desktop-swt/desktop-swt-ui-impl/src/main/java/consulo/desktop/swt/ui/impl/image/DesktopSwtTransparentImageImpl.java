@@ -16,35 +16,43 @@
 package consulo.desktop.swt.ui.impl.image;
 
 import consulo.ui.image.Image;
+import org.eclipse.swt.graphics.GC;
 
 import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
- * @since 29/04/2021
+ * @since 10/07/2021
  */
-public class DesktopSwtEmptyImageImpl implements Image, DesktopSwtImage {
-  private final int myWidth;
-  private final int myHeight;
+public class DesktopSwtTransparentImageImpl implements Image, DesktopSwtImage {
+  private final Image myOriginal;
+  private final float myAlpha;
 
-  public DesktopSwtEmptyImageImpl(int width, int height) {
-    myWidth = width;
-    myHeight = height;
+  public DesktopSwtTransparentImageImpl(Image original, float alpha) {
+    myOriginal = original;
+    myAlpha = alpha;
   }
 
   @Override
   public int getHeight() {
-    return myHeight;
+    return myOriginal.getHeight();
   }
 
   @Override
   public int getWidth() {
-    return myWidth;
+    return myOriginal.getWidth();
   }
 
   @Nonnull
   @Override
   public org.eclipse.swt.graphics.Image toSWTImage() {
-    return new org.eclipse.swt.graphics.Image(null, getWidth(), getHeight());
+    org.eclipse.swt.graphics.Image swtImage = new org.eclipse.swt.graphics.Image(null, getWidth(), getHeight());
+
+    GC gc = new GC(swtImage);
+    gc.setAlpha((int)(myAlpha * 255));
+    gc.drawImage(((DesktopSwtImage)myOriginal).toSWTImage(), 0, 0);
+    gc.dispose();
+
+    return swtImage;
   }
 }

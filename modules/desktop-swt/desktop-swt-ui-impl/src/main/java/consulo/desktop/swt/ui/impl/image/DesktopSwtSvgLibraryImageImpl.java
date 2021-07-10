@@ -15,48 +15,30 @@
  */
 package consulo.desktop.swt.ui.impl.image;
 
-import consulo.ui.image.IconLibraryManager;
 import consulo.ui.image.Image;
-import consulo.ui.image.ImageKey;
-import consulo.ui.impl.image.BaseIconLibraryManager;
+import org.eclipse.nebula.cwt.svg.SvgDocument;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.GC;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
- * @since 29/04/2021
+ * @since 10/07/2021
  */
-public class DesktopSwtImageKeyImpl implements ImageKey, DesktopSwtImage {
-  private static final BaseIconLibraryManager ourLibraryManager = (BaseIconLibraryManager)IconLibraryManager.get();
-
-  private final String myGroupId;
-  private final String myImageId;
+public class DesktopSwtSvgLibraryImageImpl implements Image, DesktopSwtImage {
   private final int myWidth;
   private final int myHeight;
+  private final SvgDocument mySvgDocument;
 
-  public DesktopSwtImageKeyImpl(String groupId, String imageId, int width, int height) {
-    myGroupId = groupId;
-    myImageId = imageId;
+  public DesktopSwtSvgLibraryImageImpl(int width, int height, SvgDocument svgDocument) {
     myWidth = width;
     myHeight = height;
+    mySvgDocument = svgDocument;
   }
 
-  @Nullable
-  private Image resolveImage() {
-    return ourLibraryManager.getIcon(null, myGroupId, myImageId, myWidth, myHeight);
-  }
-
-  @Nonnull
-  @Override
-  public String getGroupId() {
-    return myGroupId;
-  }
-
-  @Nonnull
-  @Override
-  public String getImageId() {
-    return myImageId;
+  public SvgDocument getSvgDocument() {
+    return mySvgDocument;
   }
 
   @Override
@@ -72,10 +54,15 @@ public class DesktopSwtImageKeyImpl implements ImageKey, DesktopSwtImage {
   @Nonnull
   @Override
   public org.eclipse.swt.graphics.Image toSWTImage() {
-    Image image = resolveImage();
-    if(image == null) {
-      image = Image.empty(myWidth, myHeight);
-    }
-    return ((DesktopSwtImage)image).toSWTImage();
+    org.eclipse.swt.graphics.Image swtImage = new org.eclipse.swt.graphics.Image(null, myWidth, myHeight);
+
+    GC gc = new GC(swtImage);
+    gc.setBackground(new Color(0, 0, 0, 0));
+    gc.setAlpha(0);
+    gc.fillRectangle(0, 0, myWidth, myHeight);
+
+    mySvgDocument.apply(gc, swtImage.getBounds());
+    gc.dispose();
+    return swtImage;
   }
 }

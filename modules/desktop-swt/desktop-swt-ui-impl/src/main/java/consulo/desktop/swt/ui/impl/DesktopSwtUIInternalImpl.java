@@ -205,7 +205,7 @@ public class DesktopSwtUIInternalImpl extends UIInternal {
 
   @Override
   public Image _ImageEffects_transparent(@Nonnull Image original, float alpha) {
-    return null;
+    return new DesktopSwtTransparentImageImpl(original, alpha);
   }
 
   @Override
@@ -235,7 +235,7 @@ public class DesktopSwtUIInternalImpl extends UIInternal {
 
   @Override
   public Image _ImageEffects_resize(Image original, int width, int height) {
-    return new DesktopResizeImageImpl(original, width, height);
+    return new DesktopSwtResizeImageImpl(original, width, height);
   }
 
   @Override

@@ -15,28 +15,20 @@
  */
 package consulo.desktop.swt.ui.impl.image;
 
-import consulo.ui.image.Image;
+import org.eclipse.swt.graphics.Image;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
- * @since 29/04/2021
+ * @since 10/07/2021
  */
-public class DesktopSwtLibraryImageImpl implements Image {
-  private final int myWidth;
-  private final int myHeight;
-
-  public DesktopSwtLibraryImageImpl(int width, int height) {
-    myWidth = width;
-    myHeight = height;
+public interface DesktopSwtImage {
+  @Nonnull
+  static Image toSWTImage(consulo.ui.image.Image image) {
+    return ((DesktopSwtImage)image).toSWTImage();
   }
 
-  @Override
-  public int getHeight() {
-    return myHeight;
-  }
-
-  @Override
-  public int getWidth() {
-    return myWidth;
-  }
+  @Nonnull
+  Image toSWTImage();
 }

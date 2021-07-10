@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.web.fileChooser.impl;
+package consulo.fileChooser.impl;
 
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.fileChooser.FileChooserDialog;
@@ -22,14 +22,13 @@ import com.intellij.openapi.fileChooser.PathChooserDialog;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import consulo.ui.Component;
+import consulo.ui.Size;
 import consulo.ui.Tree;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.app.WindowWrapper;
-import consulo.ui.Size;
 import consulo.ui.layout.ScrollableLayout;
 import consulo.util.concurrent.AsyncResult;
-import consulo.web.fileChooser.FileTreeComponent;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -38,7 +37,7 @@ import javax.annotation.Nullable;
  * @author VISTALL
  * @since 15-Sep-17
  */
-public class WebPathChooserDialog implements PathChooserDialog, FileChooserDialog {
+public class UnifiedChooserDialog implements PathChooserDialog, FileChooserDialog {
   private static class DialogImpl extends WindowWrapper {
 
     private final Project myProject;
@@ -96,10 +95,11 @@ public class WebPathChooserDialog implements PathChooserDialog, FileChooserDialo
   }
 
   private FileChooserDescriptor myDescriptor;
+  
   @Nullable
   private Project myProject;
 
-  public WebPathChooserDialog(@Nullable Project project, @Nonnull FileChooserDescriptor descriptor) {
+  public UnifiedChooserDialog(@Nullable Project project, @Nonnull FileChooserDescriptor descriptor) {
     myDescriptor = descriptor;
     myProject = project;
   }

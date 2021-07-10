@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.web.fileChooser.impl;
+package consulo.fileChooser.impl;
 
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.fileChooser.FileChooserDialog;
@@ -29,17 +29,17 @@ import java.awt.*;
  * @author VISTALL
  * @since 2018-06-28
  */
-public class WebFileChooseDialogProvider implements FileChooseDialogProvider {
+public class UnifiedFileChooseDialogProvider implements FileChooseDialogProvider {
   @Nonnull
   @Override
   public FileChooserDialog createFileChooser(@Nonnull FileChooserDescriptor descriptor, @Nullable Project project, @Nullable Component parent) {
-    return new WebPathChooserDialog(project, descriptor);
+    return new UnifiedChooserDialog(project, descriptor);
   }
 
   @Nonnull
   @Override
   public PathChooserDialog createPathChooser(@Nonnull FileChooserDescriptor descriptor, @Nullable Project project, @Nullable Component parent) {
-    return new WebPathChooserDialog(project, descriptor);
+    return new UnifiedChooserDialog(project, descriptor);
   }
 
   @Nonnull

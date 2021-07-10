@@ -45,10 +45,14 @@ public abstract class DesktopSwtComponent<SWT extends Control> implements Compon
 
   protected SWT myComponent;
 
+  private boolean myEnabled = true;
+
   public final void bind(Composite parent, Object layoutData) {
     myComponent = createSWT(parent);
     myComponent.setLayoutData(layoutData);
 
+    myComponent.setEnabled(myEnabled);
+    
     initialize(myComponent);
   }
 
@@ -110,13 +114,17 @@ public abstract class DesktopSwtComponent<SWT extends Control> implements Compon
 
   @Override
   public boolean isEnabled() {
-    return true;
+    return myEnabled;
   }
 
   @RequiredUIAccess
   @Override
   public void setEnabled(boolean value) {
+    myEnabled = value;
 
+    if(myComponent != null) {
+      myComponent.setEnabled(value);
+    }
   }
 
   @Nullable
