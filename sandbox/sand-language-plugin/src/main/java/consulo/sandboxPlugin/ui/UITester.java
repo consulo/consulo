@@ -143,10 +143,13 @@ public class UITester {
         Alerts.okInfo(LocalizeValue.localizeTODO("This is INFO")).showAsync();
       }));
       layout.add(Button.create(LocalizeValue.localizeTODO("Warning"), event -> {
-        Alerts.okInfo(LocalizeValue.localizeTODO("This is WARN")).showAsync();
+        Alerts.okWarning(LocalizeValue.localizeTODO("This is WARN")).showAsync();
       }));
       layout.add(Button.create(LocalizeValue.localizeTODO("Error"), event -> {
-        Alerts.okInfo(LocalizeValue.localizeTODO("This is ERROR")).showAsync();
+        Alerts.okError(LocalizeValue.localizeTODO("This is ERROR")).showAsync();
+      }));
+      layout.add(Button.create(LocalizeValue.localizeTODO("Question"), event -> {
+        Alerts.okQuestion(LocalizeValue.localizeTODO("This is QUESTION")).showAsync();
       }));
       return layout;
     }

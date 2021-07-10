@@ -61,9 +61,13 @@ public final class Alerts {
   }
 
   @Nonnull
-  @Deprecated
   public static Alert<Object> okError(@Nonnull LocalizeValue textValue) {
     return okTemplate(textValue, Alert::asError);
+  }
+
+  @Nonnull
+  public static Alert<Object> okQuestion(@Nonnull LocalizeValue textValue) {
+    return okTemplate(textValue, Alert::asQuestion);
   }
 
   @Nonnull

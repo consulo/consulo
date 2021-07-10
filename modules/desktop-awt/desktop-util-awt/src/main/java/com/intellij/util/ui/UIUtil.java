@@ -1345,8 +1345,8 @@ public class UIUtil {
     return wrapToImageIfNeed("OptionPane.warningIcon");
   }
 
-  private static consulo.ui.image.Image wrapToImageIfNeed(String id) {
-    Icon icon = UIManager.getIcon("OptionPane.warningIcon");
+  private static consulo.ui.image.Image wrapToImageIfNeed(String imageIcon) {
+    Icon icon = UIManager.getIcon(imageIcon);
     if (icon instanceof consulo.ui.image.Image) {
       return (consulo.ui.image.Image)icon;
     }
