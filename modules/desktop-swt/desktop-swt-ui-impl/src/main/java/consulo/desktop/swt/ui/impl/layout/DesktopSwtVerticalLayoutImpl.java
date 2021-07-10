@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.desktop.swt.ui.impl;
+package consulo.desktop.swt.ui.impl.layout;
 
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;

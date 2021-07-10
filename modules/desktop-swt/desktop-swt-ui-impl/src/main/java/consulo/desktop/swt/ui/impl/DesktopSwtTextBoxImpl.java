@@ -16,8 +16,9 @@
 package consulo.desktop.swt.ui.impl;
 
 import consulo.disposer.Disposable;
-import consulo.ui.IntBox;
+import consulo.ui.TextBox;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.util.lang.StringUtil;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
@@ -27,23 +28,39 @@ import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
- * @since 29/04/2021
+ * @since 10/07/2021
  */
-public class DesktopSwtIntBoxImpl extends DesktopSwtComponent<Text> implements IntBox {
-  private final int myValue;
+public class DesktopSwtTextBoxImpl extends DesktopSwtComponent<Text> implements TextBox {
+  private String myText;
 
-  public DesktopSwtIntBoxImpl(int value) {
-    myValue = value;
+  public DesktopSwtTextBoxImpl(String text) {
+    myText = StringUtil.notNullize(text);
   }
 
   @Override
-  public void setPlaceholder(@Nullable String text) {
+  protected Text createSWT(Composite parent) {
+    return new Text(parent, SWT.BORDER);
+  }
+
+  @Override
+  protected void initialize(Text component) {
+    super.initialize(component);
+    component.setText(myText);
+  }
+
+  @Override
+  public void selectAll() {
 
   }
 
   @Override
-  public void setRange(int min, int max) {
+  public void setEditable(boolean editable) {
 
+  }
+
+  @Override
+  public boolean isEditable() {
+    return false;
   }
 
   @Override
@@ -53,7 +70,7 @@ public class DesktopSwtIntBoxImpl extends DesktopSwtComponent<Text> implements I
 
   @Nonnull
   @Override
-  public Disposable addValidator(@Nonnull Validator<Integer> validator) {
+  public Disposable addValidator(@Nonnull Validator<String> validator) {
     return null;
   }
 
@@ -65,18 +82,17 @@ public class DesktopSwtIntBoxImpl extends DesktopSwtComponent<Text> implements I
 
   @Nullable
   @Override
-  public Integer getValue() {
-    return null;
+  public String getValue() {
+    return myText;
   }
 
   @RequiredUIAccess
   @Override
-  public void setValue(Integer value, boolean fireListeners) {
+  public void setValue(String value, boolean fireListeners) {
+    myText = StringUtil.notNullize(value);
 
-  }
-
-  @Override
-  protected Text createSWT(Composite parent) {
-    return new Text(parent, SWT.BORDER);
+    if(myComponent != null) {
+      myComponent.setText(myText);
+    }
   }
 }

@@ -38,7 +38,6 @@ public class DesktopSwtUIAccess implements UIAccess {
       @Override
       public void run() {
         myDisplay = new Display();
-
         countDownLatch.countDown();
 
         while (true) {
@@ -65,6 +64,10 @@ public class DesktopSwtUIAccess implements UIAccess {
     }
   }
 
+  public Display getDisplay() {
+    return myDisplay;
+  }
+
   @Override
   public boolean isValid() {
     return !myDisplay.isDisposed();
@@ -73,11 +76,8 @@ public class DesktopSwtUIAccess implements UIAccess {
   @Nonnull
   @Override
   public <T> AsyncResult<T> give(@Nonnull Supplier<T> supplier) {
-    AsyncResult<T> result = AsyncResult.rejected();
-
-    myDisplay.asyncExec(() -> {
-      result.setDone(supplier.get());
-    });
+    AsyncResult<T> result = AsyncResult.undefined();
+    myDisplay.asyncExec(() -> result.setDone(supplier.get()));
     return result;
   }
 }

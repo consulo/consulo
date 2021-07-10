@@ -15,7 +15,9 @@
  */
 package consulo.desktop.swt.ui.impl;
 
+import consulo.desktop.swt.ui.impl.font.DesktopSwtFontManagerImpl;
 import consulo.desktop.swt.ui.impl.image.*;
+import consulo.desktop.swt.ui.impl.layout.*;
 import consulo.localize.LocalizeValue;
 import consulo.ui.*;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -106,6 +108,11 @@ public class DesktopSwtUIInternalImpl extends UIInternal {
   }
 
   @Override
+  public TableLayout _Layouts_table(StaticPosition fillOption) {
+    return new DesktopSwtTableLayoutImpl(fillOption);
+  }
+
+  @Override
   public ScrollableLayout _ScrollLayout_create(Component component) {
     return new DesktopSwtScrollableLayoutImpl(component);
   }
@@ -132,7 +139,12 @@ public class DesktopSwtUIInternalImpl extends UIInternal {
 
   @Override
   public TextBox _Components_textBox(String text) {
-    return null;
+    return new DesktopSwtTextBoxImpl(text);
+  }
+
+  @Override
+  public TextBoxWithHistory _Components_textBoxWithHistory(String text) {
+    return new DesktopSwtTextBoxWithHistoryImpl(text);
   }
 
   @Override
@@ -260,7 +272,7 @@ public class DesktopSwtUIInternalImpl extends UIInternal {
   @Nonnull
   @Override
   public FontManager _FontManager_get() {
-    return null;
+    return DesktopSwtFontManagerImpl.INSTANCE;
   }
 
   @Nonnull

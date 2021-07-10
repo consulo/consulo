@@ -52,12 +52,16 @@ public abstract class DesktopSwtComponent<SWT extends Control> implements Compon
     initialize(myComponent);
   }
 
+  public SWT toSWTComponent() {
+    return myComponent;
+  }
+
   protected abstract SWT createSWT(Composite parent);
 
   protected void initialize(SWT component) {
   }
 
-  protected final Composite getComposite() {
+  public final Composite getComposite() {
     if (myComponent instanceof Composite) {
       return (Composite)myComponent;
     }
@@ -74,7 +78,7 @@ public abstract class DesktopSwtComponent<SWT extends Control> implements Compon
     disposeSWT();
   }
 
-  protected void disposeSWT() {
+  public void disposeSWT() {
     if (myComponent != null) {
       myComponent.dispose();
       myComponent = null;

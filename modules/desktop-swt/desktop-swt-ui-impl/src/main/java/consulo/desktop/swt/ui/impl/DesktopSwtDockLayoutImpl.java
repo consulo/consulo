@@ -19,7 +19,6 @@ import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.DockLayout;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -114,7 +113,7 @@ public class DesktopSwtDockLayoutImpl extends DesktopSwtComponent<Composite> imp
   }
 
   @Override
-  protected void disposeSWT() {
+  public void disposeSWT() {
     super.disposeSWT();
 
     if(myCenterComponent != null) {

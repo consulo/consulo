@@ -13,8 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.desktop.swt.ui.impl;
+package consulo.desktop.swt.ui.impl.layout;
 
+import consulo.desktop.swt.ui.impl.DesktopSwtComponent;
 import consulo.ui.Component;
 import consulo.ui.layout.ScrollableLayout;
 import org.eclipse.swt.SWT;
@@ -38,13 +39,13 @@ public class DesktopSwtScrollableLayoutImpl extends DesktopSwtLayoutComponent im
   protected void initialize(Composite component) {
     ((DesktopSwtComponent)myComponent).bind(getComposite(), null);
 
-    ((ScrolledComposite)component).setContent(((DesktopSwtComponent)myComponent).myComponent);
+    ((ScrolledComposite)component).setContent(((DesktopSwtComponent)myComponent).toSWTComponent());
     ((ScrolledComposite)component).setExpandHorizontal(true);
     ((ScrolledComposite)component).setExpandVertical(true);
   }
 
   @Override
-  protected void disposeSWT() {
+  public void disposeSWT() {
     super.disposeSWT();
 
     myComponent.disposeSWT();
