@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 JetBrains s.r.o.
+ * Copyright 2013-2021 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,10 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.progress.util;
+package com.intellij.idea;
 
-import com.intellij.openapi.wm.ex.ProgressIndicatorEx;
+public class ApplicationStarterCore {
+  public volatile static boolean ourLoaded;
 
-public interface BlockingProgressIndicator extends ProgressIndicatorEx {
-  void startBlocking();
+  public static boolean isLoaded() {
+    return ourLoaded;
+  }
 }

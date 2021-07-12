@@ -67,8 +67,8 @@ import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolderEx;
 import jakarta.inject.Singleton;
 import org.jetbrains.annotations.NonNls;
-
 import javax.annotation.Nonnull;
+
 import javax.annotation.Nullable;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -303,7 +303,7 @@ public final class DaemonListeners implements Disposable {
 
     LaterInvocator.addModalityStateListener(new ModalityStateListener() {
       @Override
-      public void beforeModalityStateChanged(boolean __1) {
+      public void beforeModalityStateChanged(boolean __1, Object modalEntity) {
         // before showing dialog we are in non-modal context yet, and before closing dialog we are still in modal context
         boolean inModalContext = Registry.is("ide.perProjectModality") || LaterInvocator.isInModalContext();
         DaemonListeners.this.stopDaemon(inModalContext, "Modality change. Was modal: " + inModalContext);

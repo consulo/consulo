@@ -18,10 +18,17 @@ package consulo.web.progress.util;
 import com.intellij.openapi.progress.util.ProgressWindow;
 import consulo.localize.LocalizeValue;
 import consulo.progress.util.ProgressDialog;
+import consulo.ui.Label;
+import consulo.ui.Window;
 import consulo.ui.*;
 import consulo.ui.layout.VerticalLayout;
 import consulo.util.lang.StringUtil;
 import consulo.web.application.WebApplication;
+import javax.annotation.Nonnull;
+
+import java.awt.*;
+import java.util.concurrent.CompletableFuture;
+import java.util.function.Predicate;
 
 /**
  * @author VISTALL
@@ -41,7 +48,7 @@ public class WebProgressDialog implements ProgressDialog {
   }
 
   @Override
-  public void startBlocking() {
+  public void startBlocking(@Nonnull CompletableFuture<?> stopCondition, @Nonnull Predicate<AWTEvent> isCancellationEvent) {
 
   }
 

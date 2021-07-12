@@ -9,7 +9,6 @@ import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.DialogWrapperDialog;
 import com.intellij.openapi.ui.DialogWrapperPeer;
 import com.intellij.openapi.ui.impl.GlassPaneDialogWrapperPeer;
-import consulo.disposer.Disposer;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.wm.WindowManager;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
@@ -21,14 +20,17 @@ import com.intellij.util.Alarm;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import consulo.awt.TargetAWT;
-
+import consulo.disposer.Disposer;
 import javax.annotation.Nonnull;
+
 import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.io.File;
+import java.util.concurrent.CompletableFuture;
+import java.util.function.Predicate;
 
 
 public class ProgressDialog implements consulo.progress.util.ProgressDialog {
@@ -152,12 +154,13 @@ public class ProgressDialog implements consulo.progress.util.ProgressDialog {
   }
 
   @Override
-  public void startBlocking() {
-    IdeEventQueue.getInstance().pumpEventsForHierarchy(myPanel, event -> {
-      if (myProgressWindow.isCancellationEvent(event)) {
+  public void startBlocking(@Nonnull CompletableFuture<?> stopCondition, @Nonnull Predicate<AWTEvent> isCancellationEvent) {
+    IdeEventQueue.getInstance().pumpEventsForHierarchy(myPanel, stopCondition, event -> {
+      if (isCancellationEvent.test(event)) {
         cancel();
+        return true;
       }
-      return myProgressWindow.isStarted() && !myProgressWindow.isRunning();
+      return false;
     });
   }
 
@@ -257,7 +260,7 @@ public class ProgressDialog implements consulo.progress.util.ProgressDialog {
     ApplicationManager.getApplication().invokeLater(this::hideImmediately, ModalityState.any());
   }
 
-  void hideImmediately() {
+  public void hideImmediately() {
     if (myPopup != null) {
       myPopup.close(DialogWrapper.CANCEL_EXIT_CODE);
       myPopup = null;

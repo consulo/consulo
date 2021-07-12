@@ -15,19 +15,18 @@
  */
 package com.intellij.mock;
 
-import consulo.disposer.Disposable;
 import com.intellij.openapi.application.AccessToken;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationListener;
 import com.intellij.openapi.application.ModalityState;
-import com.intellij.openapi.application.impl.ModalityStateEx;
 import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.ThrowableComputable;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.access.RequiredWriteAction;
-import consulo.ui.annotation.RequiredUIAccess;
+import consulo.disposer.Disposable;
 import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import org.jetbrains.ide.PooledThreadExecutor;
 
 import javax.annotation.Nonnull;
@@ -37,8 +36,6 @@ import java.util.concurrent.Future;
 
 @Deprecated
 public class MockApplication extends MockComponentManager implements Application {
-  private ModalityState MODALITY_STATE_NONE;
-
   public static int INSTANCES_CREATED = 0;
 
   public MockApplication(@Nonnull Disposable parentDisposable) {
@@ -212,20 +209,7 @@ public class MockApplication extends MockComponentManager implements Application
   @Nonnull
   @Override
   public ModalityState getNoneModalityState() {
-    if (MODALITY_STATE_NONE == null) {
-      MODALITY_STATE_NONE = new ModalityStateEx() {
-        @Override
-        public boolean dominates(@Nonnull ModalityState anotherState) {
-          return false;
-        }
-
-        @Override
-        public String toString() {
-          return "NONE";
-        }
-      };
-    }
-    return MODALITY_STATE_NONE;
+    return ModalityState.NON_MODAL;
   }
 
   @Override

@@ -15,8 +15,10 @@
  */
 package com.intellij.openapi.application;
 
+import javax.annotation.Nonnull;
+
 import java.util.EventListener;
 
 public interface ModalityStateListener extends EventListener{
-  void beforeModalityStateChanged(boolean entering);
+  void beforeModalityStateChanged(boolean entering, @Nonnull Object modalEntity);
 }

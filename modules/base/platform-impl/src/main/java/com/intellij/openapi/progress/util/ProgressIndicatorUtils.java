@@ -124,11 +124,15 @@ public class ProgressIndicatorUtils {
     app.addApplicationListener(new ApplicationListener() {
       @Override
       public void beforeWriteActionStart(@Nonnull Object action) {
-        for (Runnable cancellation : ourWACancellations) {
-          cancellation.run();
-        }
+        cancelActionsToBeCancelledBeforeWrite();
       }
     }, app);
+  }
+
+  public static void cancelActionsToBeCancelledBeforeWrite() {
+    for (Runnable cancellation : ourWACancellations) {
+      cancellation.run();
+    }
   }
 
   public static boolean runActionAndCancelBeforeWrite(@Nonnull ApplicationEx application, @Nonnull Runnable cancellation, @Nonnull Runnable action) {
@@ -154,9 +158,8 @@ public class ProgressIndicatorUtils {
     }
   }
 
-  private static
   @Nonnull
-  Runnable indicatorCancellation(@Nonnull ProgressIndicator progressIndicator) {
+  private static Runnable indicatorCancellation(@Nonnull ProgressIndicator progressIndicator) {
     return () -> {
       if (!progressIndicator.isCanceled()) {
         progressIndicator.cancel();

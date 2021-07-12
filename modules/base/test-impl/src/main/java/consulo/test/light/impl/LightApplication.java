@@ -15,11 +15,9 @@
  */
 package consulo.test.light.impl;
 
-import consulo.container.plugin.PluginListenerDescriptor;
 import com.intellij.openapi.application.*;
-import com.intellij.openapi.application.impl.ModalityStateEx;
-import com.intellij.openapi.extensions.impl.ExtensionAreaId;
 import com.intellij.openapi.components.impl.ComponentManagerImpl;
+import com.intellij.openapi.extensions.impl.ExtensionAreaId;
 import com.intellij.openapi.extensions.impl.ExtensionsAreaImpl;
 import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.util.Condition;
@@ -27,11 +25,12 @@ import com.intellij.openapi.util.ThrowableComputable;
 import com.intellij.util.containers.MultiMap;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.access.RequiredWriteAction;
+import consulo.container.plugin.PluginListenerDescriptor;
 import consulo.disposer.Disposable;
 import consulo.injecting.InjectingContainer;
 import consulo.injecting.InjectingContainerBuilder;
-import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
@@ -46,8 +45,6 @@ import java.util.concurrent.Future;
 public class LightApplication extends ComponentManagerImpl implements Application {
   private final Disposable myLastDisposable;
   private final LightExtensionRegistrator myRegistrator;
-
-  private ModalityState myNoneModalityState;
 
   public LightApplication(Disposable lastDisposable, LightExtensionRegistrator registrator) {
     super(null, "LightApplication", ExtensionAreaId.APPLICATION, false);
@@ -218,20 +215,7 @@ public class LightApplication extends ComponentManagerImpl implements Applicatio
   @Nonnull
   @Override
   public ModalityState getNoneModalityState() {
-    if (myNoneModalityState == null) {
-      myNoneModalityState = new ModalityStateEx() {
-        @Override
-        public boolean dominates(@Nonnull ModalityState anotherState) {
-          return false;
-        }
-
-        @Override
-        public String toString() {
-          return "NONE";
-        }
-      };
-    }
-    return myNoneModalityState;
+    return ModalityState.NON_MODAL;
   }
 
   @Nonnull

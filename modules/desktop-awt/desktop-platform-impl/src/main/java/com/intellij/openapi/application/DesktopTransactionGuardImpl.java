@@ -314,7 +314,7 @@ public class DesktopTransactionGuardImpl extends TransactionGuardEx {
       return new Runnable() {
         @Override
         public void run() {
-          ApplicationManager.getApplication().assertIsDispatchThread();
+          ApplicationManager.getApplication().assertIsWriteThread();
           final boolean prev = myWritingAllowed;
           myWritingAllowed = true;
           try {

@@ -16,15 +16,24 @@
 package consulo.progress.util;
 
 import consulo.disposer.Disposable;
+import javax.annotation.Nonnull;
+
+import java.awt.*;
+import java.util.concurrent.CompletableFuture;
+import java.util.function.Predicate;
 
 /**
  * @author VISTALL
  * @since 2020-05-11
  */
 public interface ProgressDialog extends Disposable {
-  void startBlocking();
+  void startBlocking(@Nonnull CompletableFuture<?> stopCondition, @Nonnull Predicate<AWTEvent> isCancellationEvent);
 
   void hide();
+
+  default void hideImmediately() {
+    hide();
+  }
 
   void background();
 

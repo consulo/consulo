@@ -29,8 +29,8 @@ import consulo.localize.LocalizeValue;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
-
 import javax.annotation.Nonnull;
+
 import java.awt.*;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
@@ -55,6 +55,40 @@ public interface Application extends ComponentManager {
       throw new IllegalArgumentException("Application is not initialized");
     }
     return application;
+  }
+
+  /**
+   * Causes {@code runnable} to be executed asynchronously under Write Intent lock on some thread,
+   * with {@link ModalityState#defaultModalityState()} modality state.
+   *
+   * @param action the runnable to execute.
+   */
+  default void invokeLaterOnWriteThread(@Nonnull Runnable action) {
+    throw new AbstractMethodError();
+  }
+
+  /**
+   * Causes {@code runnable} to be executed asynchronously under Write Intent lock on some thread,
+   * when IDE is in the specified modality state (or a state with less modal dialogs open).
+   *
+   * @param action the runnable to execute.
+   * @param modal  the state in which action will be executed
+   */
+  default void invokeLaterOnWriteThread(@Nonnull Runnable action, @Nonnull ModalityState modal) {
+    throw new AbstractMethodError();
+  }
+
+  /**
+   * Causes {@code runnable} to be executed asynchronously under Write Intent lock on some thread,
+   * when IDE is in the specified modality state (or a state with less modal dialogs open)
+   * - unless the expiration condition is fulfilled.
+   *
+   * @param action  the runnable to execute.
+   * @param modal   the state in which action will be executed
+   * @param expired condition to check before execution.
+   */
+  default void invokeLaterOnWriteThread(@Nonnull Runnable action, @Nonnull ModalityState modal, @Nonnull Condition<?> expired) {
+    throw new AbstractMethodError();
   }
 
   /**

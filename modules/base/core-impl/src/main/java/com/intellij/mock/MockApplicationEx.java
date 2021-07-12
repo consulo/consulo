@@ -16,12 +16,12 @@
 package com.intellij.mock;
 
 import com.intellij.openapi.application.ex.ApplicationEx;
-import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.project.Project;
 import consulo.disposer.Disposable;
 import consulo.ui.annotation.RequiredUIAccess;
-
+import org.jetbrains.annotations.Nls;
 import javax.annotation.Nonnull;
+
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.io.IOException;
@@ -55,6 +55,17 @@ public class MockApplicationEx extends MockApplication implements ApplicationEx 
   }
 
   @Override
+  public boolean runProcessWithProgressSynchronously(@Nonnull Runnable process,
+                                                     @Nonnull String progressTitle,
+                                                     boolean canBeCanceled,
+                                                     boolean shouldShowModalWindow,
+                                                     @Nullable Project project,
+                                                     @Nullable JComponent parentComponent,
+                                                     @Nullable @Nls(capitalization = Nls.Capitalization.Title) String cancelText) {
+    return false;
+  }
+
+  @Override
   public void doNotSave() {
   }
 
@@ -67,32 +78,6 @@ public class MockApplicationEx extends MockApplication implements ApplicationEx 
     return false;
   }
 
-  @RequiredUIAccess
-  @Override
-  public boolean runProcessWithProgressSynchronously(@Nonnull final Runnable process, @Nonnull final String progressTitle, final boolean canBeCanceled, @Nullable final Project project,
-                                                     final JComponent parentComponent) {
-    return false;
-  }
-
-  @RequiredUIAccess
-  @Override
-  public boolean runProcessWithProgressSynchronously(@Nonnull Runnable process,
-                                                     @Nonnull String progressTitle,
-                                                     boolean canBeCanceled,
-                                                     @Nullable Project project,
-                                                     JComponent parentComponent,
-                                                     String cancelText) {
-    return false;
-  }
-
-  @RequiredUIAccess
-  @Override
-  public boolean runProcessWithProgressSynchronously(@Nonnull Runnable process,
-                                                     @Nonnull String progressTitle,
-                                                     boolean canBeCanceled,
-                                                     Project project) {
-    return false;
-  }
 
   @RequiredUIAccess
   @Override

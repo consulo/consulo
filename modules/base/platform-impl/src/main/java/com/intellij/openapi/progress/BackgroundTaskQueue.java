@@ -16,21 +16,21 @@
 
 package com.intellij.openapi.progress;
 
-import consulo.disposer.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.progress.impl.BackgroundableProcessIndicator;
 import com.intellij.openapi.progress.impl.ProgressManagerImpl;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Condition;
-import consulo.disposer.Disposer;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.Consumer;
 import com.intellij.util.concurrency.QueueProcessor;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
+import org.jetbrains.annotations.TestOnly;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import org.jetbrains.annotations.TestOnly;
 
 import static com.intellij.util.concurrency.QueueProcessor.ThreadToUse;
 
@@ -159,7 +159,7 @@ public class BackgroundTaskQueue {
       ProgressManagerImpl pm = (ProgressManagerImpl)ProgressManager.getInstance();
       if (synchronous) {
         try {
-          pm.runProcessWithProgressSynchronously(task, null);
+          pm.runProcessWithProgressSynchronously(task);
         }
         finally {
           continuation.run();

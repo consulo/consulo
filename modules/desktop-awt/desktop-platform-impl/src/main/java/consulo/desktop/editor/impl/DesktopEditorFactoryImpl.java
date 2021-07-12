@@ -16,7 +16,6 @@
 package consulo.desktop.editor.impl;
 
 import com.intellij.openapi.application.Application;
-import com.intellij.openapi.application.ModalityStateListener;
 import com.intellij.openapi.application.impl.LaterInvocator;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
@@ -41,12 +40,9 @@ public class DesktopEditorFactoryImpl extends EditorFactoryImpl {
     super(application);
 
 
-    LaterInvocator.addModalityStateListener(new ModalityStateListener() {
-      @Override
-      public void beforeModalityStateChanged(boolean entering) {
-        for (Editor editor : myEditors) {
-          ((DesktopEditorImpl)editor).beforeModalityStateChanged();
-        }
+    LaterInvocator.addModalityStateListener((entering, modalEntity) -> {
+      for (Editor editor : myEditors) {
+        ((DesktopEditorImpl)editor).beforeModalityStateChanged();
       }
     }, application);
   }
