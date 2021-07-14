@@ -49,6 +49,7 @@ import com.intellij.util.concurrency.AppExecutorUtil;
 import com.intellij.util.concurrency.AppScheduledExecutorService;
 import com.intellij.util.containers.Stack;
 import com.intellij.util.io.storage.HeavyProcessLatch;
+import com.intellij.util.ui.EDT;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.application.ApplicationProperties;
 import consulo.application.internal.ApplicationWithIntentWriteLock;
@@ -64,6 +65,7 @@ import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.injecting.InjectingContainerBuilder;
 import consulo.logging.Logger;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import consulo.util.lang.DeprecatedMethodException;
@@ -573,7 +575,7 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
 
   @Override
   public boolean isReadAccessAllowed() {
-    return isWriteThread() || myLock.isReadLockedByThisThread();
+    return isWriteThread() || myLock.isReadLockedByThisThread() || isDispatchThread();
   }
 
   @Override
@@ -798,6 +800,15 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
   @Override
   public boolean isWriteAccessAllowed() {
     return isWriteThread() && myLock.isWriteLocked();
+  }
+
+  @Override
+  public boolean isDispatchThread() {
+    return UIAccess.isUIThread();
+  }
+
+  public boolean isCurrentWriteOnEdt() {
+    return EDT.isEdt(myLock.writeThread);
   }
 
   @Override

@@ -672,17 +672,12 @@ public class SimpleColoredComponent extends JComponent implements Accessible, Co
   @Override
   protected void paintComponent(final Graphics g) {
     try {
-      _doPaint(g);
+      doPaint((Graphics2D)g);
     }
     catch (RuntimeException e) {
       LOG.error(logSwingPath(), e);
       throw e;
     }
-  }
-
-  private synchronized void _doPaint(final Graphics g) {
-    checkCanPaint(g);
-    doPaint((Graphics2D)g);
   }
 
   protected void doPaint(final Graphics2D g) {

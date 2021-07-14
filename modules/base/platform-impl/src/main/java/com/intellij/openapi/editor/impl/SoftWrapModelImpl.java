@@ -2,10 +2,7 @@
 package com.intellij.openapi.editor.impl;
 
 import com.intellij.diagnostic.Dumpable;
-import consulo.disposer.Disposable;
-import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Attachment;
-import consulo.logging.Logger;
 import com.intellij.openapi.editor.*;
 import com.intellij.openapi.editor.colors.impl.FontPreferencesImpl;
 import com.intellij.openapi.editor.event.DocumentEvent;
@@ -19,12 +16,14 @@ import com.intellij.openapi.util.Segment;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.util.DocumentUtil;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.disposer.Disposable;
+import consulo.logging.Logger;
+import consulo.ui.UIAccess;
 import kava.beans.PropertyChangeEvent;
 import kava.beans.PropertyChangeListener;
-import javax.annotation.Nonnull;
-
 import org.jetbrains.annotations.TestOnly;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.awt.*;
 import java.util.ArrayList;
@@ -166,7 +165,7 @@ public class SoftWrapModelImpl extends InlayModel.SimpleAdapter implements SoftW
 
   @Override
   public boolean isSoftWrappingEnabled() {
-    ApplicationManager.getApplication().assertIsDispatchThread();
+    UIAccess.assertIsUIThread();
     return myUseSoftWraps && !myEditor.isPurePaintingMode();
   }
 

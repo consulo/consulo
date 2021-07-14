@@ -267,7 +267,7 @@ class EditorGutterComponentImpl extends EditorGutterComponentEx implements Mouse
 
   @Override
   public Dimension getPreferredSize() {
-    int w = getFoldingAreaOffset() + getFoldingAreaWidth();
+    int w = ReadAction.compute(() -> getFoldingAreaOffset() + getFoldingAreaWidth());
     Dimension size = new Dimension(w, myEditor.getPreferredHeight());
     JBInsets.addTo(size, getInsets());
     return size;

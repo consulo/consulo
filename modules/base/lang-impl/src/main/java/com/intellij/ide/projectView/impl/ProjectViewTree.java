@@ -7,6 +7,7 @@ import com.intellij.ide.projectView.ProjectViewNode;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
 import com.intellij.ide.util.treeView.NodeDescriptor;
 import com.intellij.ide.util.treeView.NodeRenderer;
+import com.intellij.openapi.application.ReadAction;
 import consulo.logging.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.registry.Registry;
@@ -141,7 +142,7 @@ public class ProjectViewTree extends DnDAwareTree {
       AbstractTreeNode node = (AbstractTreeNode)object;
       Object value = node.getValue();
       if (value instanceof PsiElement) {
-        return getColorForElement((PsiElement)value);
+        return ReadAction.compute(() -> getColorForElement((PsiElement)value));
       }
     }
     if (object instanceof ProjectViewNode) {
@@ -150,7 +151,7 @@ public class ProjectViewTree extends DnDAwareTree {
       if (file != null) {
         Project project = node.getProject();
         if (project != null && !project.isDisposed()) {
-          Color color = VfsPresentationUtil.getFileBackgroundColor(project, file);
+          Color color = ReadAction.compute(() -> VfsPresentationUtil.getFileBackgroundColor(project, file));
           if (color != null) return color;
         }
       }

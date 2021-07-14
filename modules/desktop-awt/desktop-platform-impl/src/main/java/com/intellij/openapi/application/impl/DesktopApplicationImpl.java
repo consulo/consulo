@@ -23,7 +23,10 @@ import com.intellij.idea.StartupUtil;
 import com.intellij.openapi.application.*;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.diagnostic.Attachment;
-import com.intellij.openapi.progress.*;
+import com.intellij.openapi.progress.EmptyProgressIndicator;
+import com.intellij.openapi.progress.ProcessCanceledException;
+import com.intellij.openapi.progress.ProgressIndicator;
+import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.progress.impl.CoreProgressManager;
 import com.intellij.openapi.progress.impl.ProgressResult;
 import com.intellij.openapi.progress.impl.ProgressRunner;
@@ -46,7 +49,6 @@ import com.intellij.util.ArrayUtil;
 import com.intellij.util.Restarter;
 import com.intellij.util.concurrency.AppExecutorUtil;
 import com.intellij.util.concurrency.AppScheduledExecutorService;
-import com.intellij.util.ui.EDT;
 import com.intellij.util.ui.UIUtil;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.ApplicationProperties;
@@ -214,11 +216,6 @@ public class DesktopApplicationImpl extends BaseApplication {
   @Override
   public boolean isHeadlessEnvironment() {
     return myHeadlessMode;
-  }
-
-  @Override
-  public boolean isDispatchThread() {
-    return EDT.isCurrentThreadEdt();
   }
 
   @Nonnull

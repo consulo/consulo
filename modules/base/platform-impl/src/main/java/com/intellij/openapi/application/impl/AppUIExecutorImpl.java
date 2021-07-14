@@ -15,11 +15,11 @@
  */
 package com.intellij.openapi.application.impl;
 
-import com.intellij.ide.IdeEventQueue;
 import com.intellij.openapi.application.*;
 import com.intellij.openapi.application.constraints.Expiration;
 import com.intellij.openapi.project.Project;
 import consulo.disposer.Disposable;
+import consulo.ui.UIAccess;
 
 import javax.annotation.Nonnull;
 import java.util.Collections;
@@ -104,7 +104,7 @@ public class AppUIExecutorImpl extends BaseExpirableExecutorMixinImpl<AppUIExecu
   @Nonnull
   @Override
   public AppUIExecutor later() {
-    int edtEventCount = Application.get().isDispatchThread() ? IdeEventQueue.getInstance().getEventCount() : -1;
+    int edtEventCount = UIAccess.isUIThread() ? UIAccess.current().getEventCount() : -1;
     return withConstraint(new ContextConstraint() {
       private volatile boolean usedOnce;
 
@@ -113,9 +113,9 @@ public class AppUIExecutorImpl extends BaseExpirableExecutorMixinImpl<AppUIExecu
         switch (thread) {
           case EDT:
             if (edtEventCount == -1) {
-              return Application.get().isDispatchThread();
+              return UIAccess.isUIThread();
             }
-            return usedOnce || edtEventCount != IdeEventQueue.getInstance().getEventCount();
+            return usedOnce || edtEventCount != UIAccess.current().getEventCount();
           case WT:
             return usedOnce;
           default:

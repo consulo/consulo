@@ -19,9 +19,9 @@ import com.intellij.openapi.util.ThrowableComputable;
 import com.intellij.util.ObjectUtil;
 import com.intellij.util.ReflectionUtil;
 import com.intellij.util.ThrowableRunnable;
-import com.intellij.util.ui.UIUtil;
 import consulo.annotation.DeprecationInfo;
 import consulo.annotation.access.RequiredWriteAction;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
@@ -45,20 +45,24 @@ public final class WriteAction {
   }
 
   public static void runAndWait(@RequiredUIAccess @RequiredWriteAction Runnable runnable) {
-    if (Application.get().isDispatchThread()) {
+    Application application = Application.get();
+    if (application.isDispatchThread()) {
       run(runnable::run);
     }
     else {
-      UIUtil.invokeAndWaitIfNeeded((Runnable)() -> run(runnable::run));
+      UIAccess uiAccess = application.getLastUIAccess();
+      uiAccess.giveAndWaitIfNeed(() -> run(runnable::run));
     }
   }
 
   public static <T> T computeAndWait(@RequiredUIAccess @RequiredWriteAction Supplier<T> supplier) {
-    if (Application.get().isDispatchThread()) {
+    Application application = Application.get();
+    if (application.isDispatchThread()) {
       return compute(supplier::get);
     }
     else {
-      return UIUtil.invokeAndWaitIfNeeded(() -> compute(supplier::get));
+      UIAccess uiAccess = application.getLastUIAccess();
+      return uiAccess.giveAndWaitIfNeed(() -> compute(supplier::get));
     }
   }
 

@@ -4,15 +4,11 @@ import com.intellij.ide.StartupProgress;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.application.TransactionGuard;
-import com.intellij.openapi.progress.EmptyProgressIndicator;
-import com.intellij.openapi.progress.ProcessCanceledException;
-import com.intellij.openapi.progress.ProgressManager;
-import com.intellij.openapi.progress.util.ProgressWindow;
+import com.intellij.openapi.application.impl.ReadMostlyRWLock;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Condition;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.impl.BaseApplication;
-import consulo.disposer.Disposer;
 import consulo.injecting.InjectingContainerBuilder;
 import consulo.logging.Logger;
 import consulo.ui.UIAccess;
@@ -20,12 +16,12 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.lang.ref.SimpleReference;
 import consulo.web.application.WebApplication;
 import consulo.web.application.WebSession;
+import org.jetbrains.annotations.Nls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * @author VISTALL
@@ -51,6 +47,8 @@ public class WebApplicationImpl extends BaseApplication implements WebApplicatio
     super(splash);
 
     ApplicationManager.setApplication(this);
+
+    myLock = new ReadMostlyRWLock(null);
   }
 
   @Override
@@ -190,65 +188,15 @@ public class WebApplicationImpl extends BaseApplication implements WebApplicatio
 
   }
 
-  @RequiredUIAccess
   @Override
   public boolean runProcessWithProgressSynchronously(@Nonnull Runnable process,
                                                      @Nonnull String progressTitle,
                                                      boolean canBeCanceled,
+                                                     boolean shouldShowModalWindow,
                                                      @Nullable Project project,
-                                                     JComponent parentComponent,
-                                                     String cancelText) {
-
-    assertIsDispatchThread();
-    boolean writeAccessAllowed = isWriteAccessAllowed();
-    if (writeAccessAllowed // Disallow running process in separate thread from under write action.
-        // The thread will deadlock trying to get read action otherwise.
-        || isHeadlessEnvironment() && !isUnitTestMode()) {
-      if (writeAccessAllowed) {
-        LOG.debug("Starting process with progress from within write action makes no sense");
-      }
-      try {
-        ProgressManager.getInstance().runProcess(process, new EmptyProgressIndicator());
-      }
-      catch (ProcessCanceledException e) {
-        // ok to ignore.
-        return false;
-      }
-      return true;
-    }
-
-    final ProgressWindow progress = new ProgressWindow(canBeCanceled, false, project, parentComponent, cancelText);
-    // in case of abrupt application exit when 'ProgressManager.getInstance().runProcess(process, progress)' below
-    // does not have a chance to run, and as a result the progress won't be disposed
-    Disposer.register(this, progress);
-
-    progress.setTitle(progressTitle);
-
-    final AtomicBoolean threadStarted = new AtomicBoolean();
-    //noinspection SSBasedInspection
-    getLastUIAccess().give(() -> {
-      executeOnPooledThread(() -> {
-        try {
-          ProgressManager.getInstance().runProcess(process, progress);
-        }
-        catch (ProcessCanceledException e) {
-          progress.cancel();
-          // ok to ignore.
-        }
-        catch (RuntimeException e) {
-          progress.cancel();
-          throw e;
-        }
-      });
-      threadStarted.set(true);
-    });
-
-    progress.startBlocking();
-
-    LOG.assertTrue(threadStarted.get());
-    LOG.assertTrue(!progress.isRunning());
-
-    return !progress.isCanceled();
+                                                     @Nullable JComponent parentComponent,
+                                                     @Nullable @Nls(capitalization = Nls.Capitalization.Title) String cancelText) {
+    return true;
   }
 
   @RequiredUIAccess
@@ -281,18 +229,5 @@ public class WebApplicationImpl extends BaseApplication implements WebApplicatio
   @Nullable
   public WebSession getCurrentSession() {
     return myCurrentSession;
-  }
-
-  @Override
-  public boolean isReadAccessAllowed() {
-    if (isDispatchThread()) {
-      return true;
-    }
-    return isWriteThread() || myLock.isReadLockedByThisThread();
-  }
-
-  @Override
-  public boolean isDispatchThread() {
-    return UIAccess.isUIThread();
   }
 }

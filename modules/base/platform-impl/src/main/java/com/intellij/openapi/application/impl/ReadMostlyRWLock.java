@@ -11,6 +11,7 @@ import com.intellij.util.containers.ConcurrentList;
 import com.intellij.util.containers.ContainerUtil;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +34,7 @@ import static com.intellij.openapi.progress.util.ProgressIndicatorUtils.cancelAc
  * Write lock: sets global {@link #writeRequested} bit and waits for all readers (in global {@link #readers} list) to release their locks by checking {@link Reader#readRequested} for all readers.
  */
 public final class ReadMostlyRWLock {
-  volatile Thread writeThread;
+  public volatile Thread writeThread;
   private volatile Thread writeIntendedThread;
 
   //@VisibleForTesting
@@ -48,7 +49,7 @@ public final class ReadMostlyRWLock {
   // (we have to reduce frequency of this "dead readers GC" activity because Thread.isAlive() turned out to be too expensive)
   private volatile long deadReadersGCStamp;
 
-  public ReadMostlyRWLock(@Nonnull Thread writeThread) {
+  public ReadMostlyRWLock(@Nullable Thread writeThread) {
   }
 
   // Each reader thread has instance of this struct in its thread local. it's also added to global "readers" list.

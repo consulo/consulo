@@ -16,6 +16,7 @@
 package com.intellij.ui.treeStructure;
 
 import com.intellij.ide.util.treeView.*;
+import com.intellij.openapi.application.ReadAction;
 import com.intellij.openapi.ui.GraphicsConfig;
 import com.intellij.openapi.ui.Queryable;
 import com.intellij.openapi.util.Condition;
@@ -345,7 +346,7 @@ public class Tree extends JTree implements ComponentWithEmptyText, ComponentWith
     if (path != null) {
       final Object node = path.getLastPathComponent();
       if (node instanceof DefaultMutableTreeNode) {
-        return getFileColorFor(((DefaultMutableTreeNode)node).getUserObject());
+        return ReadAction.compute(() -> getFileColorFor(((DefaultMutableTreeNode)node).getUserObject()));
       }
     }
     return null;

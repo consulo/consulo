@@ -15,9 +15,11 @@
  */
 package consulo.ui.desktop.internal;
 
+import com.intellij.ide.IdeEventQueue;
 import consulo.components.impl.stores.ComponentStoreImpl;
 import consulo.logging.Logger;
 import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.concurrent.AsyncResult;
 
 import javax.annotation.Nonnull;
@@ -42,6 +44,13 @@ public class AWTUIAccessImpl implements UIAccess {
   @Override
   public boolean isHeadless() {
     return GraphicsEnvironment.isHeadless();
+  }
+
+  @RequiredUIAccess
+  @Override
+  public int getEventCount() {
+    UIAccess.assertIsUIThread();
+    return IdeEventQueue.getInstance().getEventCount();
   }
 
   @Nonnull

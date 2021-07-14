@@ -82,6 +82,7 @@ import consulo.disposer.TraceableDisposable;
 import consulo.editor.internal.EditorInternal;
 import consulo.fileEditor.impl.EditorsSplitters;
 import consulo.logging.Logger;
+import consulo.ui.UIAccess;
 import consulo.ui.color.ColorValue;
 import consulo.ui.util.ColorValueUtil;
 import consulo.util.dataholder.Key;
@@ -930,7 +931,6 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
   @Override
   @Nonnull
   public EditorSettings getSettings() {
-    assertReadAccess();
     return mySettings;
   }
 
@@ -3191,7 +3191,7 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
   }
 
   static void assertIsDispatchThread() {
-    ApplicationManager.getApplication().assertIsDispatchThread();
+    UIAccess.assertIsUIThread();
   }
 
   private static void assertReadAccess() {

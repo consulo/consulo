@@ -31,6 +31,7 @@ import com.intellij.util.diff.FilesTooBigForDiffException;
 import com.intellij.util.text.CharArrayUtil;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
+import consulo.ui.UIAccess;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolderBase;
 import org.jetbrains.annotations.NonNls;
@@ -971,7 +972,7 @@ public class DesktopCaretImpl extends UserDataHolderBase implements Caret, Dumpa
 
   @Override
   public int getSelectionStart() {
-    validateContext(false);
+    validateContext(true);
     if (hasSelection()) {
       RangeMarker marker = mySelectionMarker;
       if (marker != null) {
@@ -1359,7 +1360,7 @@ public class DesktopCaretImpl extends UserDataHolderBase implements Caret, Dumpa
 
   private static void validateContext(boolean requireEdt) {
     if (requireEdt) {
-      ApplicationManager.getApplication().assertIsDispatchThread();
+      UIAccess.assertIsUIThread();
     }
     else {
       ApplicationManager.getApplication().assertReadAccessAllowed();
