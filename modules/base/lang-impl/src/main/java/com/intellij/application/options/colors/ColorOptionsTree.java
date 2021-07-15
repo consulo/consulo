@@ -18,7 +18,6 @@ package com.intellij.application.options.colors;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.TreeSpeedSearch;
 import com.intellij.ui.treeStructure.Tree;
-import com.intellij.util.containers.ContainerUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -34,12 +33,7 @@ public class ColorOptionsTree extends Tree {
 
   public final static String NAME_SEPARATOR = "//";
 
-  private static final Comparator<EditorSchemeAttributeDescriptor> ATTR_COMPARATOR = new Comparator<EditorSchemeAttributeDescriptor>() {
-    @Override
-    public int compare(EditorSchemeAttributeDescriptor o1, EditorSchemeAttributeDescriptor o2) {
-      return StringUtil.naturalCompare(o1.toString(), o2.toString());
-    }
-  };
+  private static final Comparator<EditorSchemeAttributeDescriptor> ATTR_COMPARATOR = (o1, o2) -> StringUtil.naturalCompare(o1.toString(), o2.toString());
 
   public ColorOptionsTree(@Nonnull String categoryName) {
     super(createTreeModel());
@@ -50,10 +44,15 @@ public class ColorOptionsTree extends Tree {
     new TreeSpeedSearch(this, TreeSpeedSearch.NODE_DESCRIPTOR_TOSTRING, true);
   }
 
+  private boolean isMyDescriptor(EditorSchemeAttributeDescriptor descriptor) {
+    String groupAsString = descriptor.getGroup().getValue();
+    return myCategoryName.equals(groupAsString);
+  }
+
   public void fillOptions(@Nonnull ColorAndFontOptions options) {
     DefaultMutableTreeNode root = new DefaultMutableTreeNode();
     for (EditorSchemeAttributeDescriptor description : getOrderedDescriptors(options)) {
-      if (!description.getGroup().equals(myCategoryName)) continue;
+      if (!isMyDescriptor(description)) continue;
       List<String> path = extractPath(description);
       if (path != null && path.size() > 1) {
         MyTreeNode groupNode = ensureGroup(root, path, 0);
@@ -71,9 +70,9 @@ public class ColorOptionsTree extends Tree {
   }
 
   private Collection<EditorSchemeAttributeDescriptor> getOrderedDescriptors(@Nonnull ColorAndFontOptions options) {
-    ArrayList<EditorSchemeAttributeDescriptor> list = ContainerUtil.newArrayList();
+    ArrayList<EditorSchemeAttributeDescriptor> list = new ArrayList<>();
     for (EditorSchemeAttributeDescriptor description : options.getCurrentDescriptions()) {
-      if (!description.getGroup().equals(myCategoryName)) continue;
+      if (!isMyDescriptor(description)) continue;
       list.add(description);
     }
     Collections.sort(list, ATTR_COMPARATOR);
@@ -96,24 +95,16 @@ public class ColorOptionsTree extends Tree {
   }
 
   public void selectOptionByType(@Nonnull final String attributeType) {
-    selectPath(findOption(myTreeModel.getRoot(), new DescriptorMatcher() {
-      @Override
-      public boolean matches(@Nonnull Object data) {
-        if (data instanceof EditorSchemeAttributeDescriptor) {
-          return attributeType.equals(((EditorSchemeAttributeDescriptor)data).getType());
-        }
-        return false;
+    selectPath(findOption(myTreeModel.getRoot(), data -> {
+      if (data instanceof EditorSchemeAttributeDescriptor) {
+        return attributeType.equals(((EditorSchemeAttributeDescriptor)data).getType());
       }
+      return false;
     }));
   }
 
   public void selectOptionByName(@Nonnull final String optionName) {
-    selectPath(findOption(myTreeModel.getRoot(), new DescriptorMatcher() {
-      @Override
-      public boolean matches(@Nonnull Object data) {
-        return !optionName.isEmpty() &&  StringUtil.containsIgnoreCase(data.toString(), optionName);
-      }
-    }));
+    selectPath(findOption(myTreeModel.getRoot(), data -> !optionName.isEmpty() && StringUtil.containsIgnoreCase(data.toString(), optionName)));
   }
 
   @Nullable
@@ -143,7 +134,7 @@ public class ColorOptionsTree extends Tree {
   private static List<String> extractPath(@Nonnull EditorSchemeAttributeDescriptor descriptor) {
     if (descriptor instanceof ColorAndFontDescription) {
       String name = descriptor.toString();
-      List<String> path = new ArrayList<String>();
+      List<String> path = new ArrayList<>();
       int separatorStart = name.indexOf(NAME_SEPARATOR);
       int nextChunkStart = 0;
       while(separatorStart > 0) {

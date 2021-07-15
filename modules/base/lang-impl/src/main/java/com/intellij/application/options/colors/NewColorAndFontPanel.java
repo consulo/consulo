@@ -179,7 +179,7 @@ public class NewColorAndFontPanel extends JPanel {
   }
 
   public boolean contains(final EditorSchemeAttributeDescriptor descriptor) {
-    return descriptor.getGroup().equals(myCategory);
+    return descriptor.getGroup().getValue().equals(myCategory);
   }
 
   public JComponent getPanel() {
