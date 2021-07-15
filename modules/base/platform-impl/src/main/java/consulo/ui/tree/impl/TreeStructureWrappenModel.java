@@ -49,7 +49,7 @@ public class TreeStructureWrappenModel<T> implements TreeModel<T> {
   }
 
   @Override
-  public void fetchChildren(@Nonnull Function<T, TreeNode<T>> nodeFactory, @Nullable T parentValue) {
+  public void buildChildren(@Nonnull Function<T, TreeNode<T>> nodeFactory, @Nullable T parentValue) {
     ThrowableComputable<Object[],RuntimeException> action = () -> myStructure.getChildElements(parentValue);
     for (Object o : AccessRule.read(action)) {
       T element = (T)o;

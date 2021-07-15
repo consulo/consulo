@@ -67,6 +67,12 @@ public interface UIAccess {
     }
   }
 
+  @RequiredUIAccess
+  default int getEventCount() {
+    assertIsUIThread();
+    return -1;
+  }
+
   boolean isValid();
 
   @Nonnull

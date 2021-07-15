@@ -15,18 +15,20 @@
  */
 package consulo.ui.desktop.internal.layout;
 
+import consulo.awt.TargetAWT;
 import consulo.ui.Component;
-import consulo.ui.layout.DockLayout;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.layout.DockLayout;
 
 import javax.annotation.Nonnull;
+import javax.swing.*;
 import java.awt.*;
 
 /**
  * @author VISTALL
  * @since 09-Jun-16
  */
-public class DesktopDockLayoutImpl extends DesktopLayoutBase implements DockLayout {
+public class DesktopDockLayoutImpl extends DesktopLayoutBase<JPanel> implements DockLayout {
   public DesktopDockLayoutImpl() {
     initDefaultPanel(new BorderLayout());
   }
@@ -35,7 +37,7 @@ public class DesktopDockLayoutImpl extends DesktopLayoutBase implements DockLayo
   @Nonnull
   @Override
   public DockLayout top(@Nonnull Component component) {
-    add(component, BorderLayout.NORTH);
+    set(component, BorderLayout.NORTH);
     return this;
   }
 
@@ -43,7 +45,7 @@ public class DesktopDockLayoutImpl extends DesktopLayoutBase implements DockLayo
   @Nonnull
   @Override
   public DockLayout bottom(@Nonnull Component component) {
-    add(component, BorderLayout.SOUTH);
+    set(component, BorderLayout.SOUTH);
     return this;
   }
 
@@ -51,7 +53,7 @@ public class DesktopDockLayoutImpl extends DesktopLayoutBase implements DockLayo
   @Nonnull
   @Override
   public DockLayout center(@Nonnull Component component) {
-    add(component, BorderLayout.CENTER);
+    set(component, BorderLayout.CENTER);
     return this;
   }
 
@@ -59,7 +61,7 @@ public class DesktopDockLayoutImpl extends DesktopLayoutBase implements DockLayo
   @Nonnull
   @Override
   public DockLayout left(@Nonnull Component component) {
-    add(component, BorderLayout.WEST);
+    set(component, BorderLayout.WEST);
     return this;
   }
 
@@ -67,7 +69,19 @@ public class DesktopDockLayoutImpl extends DesktopLayoutBase implements DockLayo
   @Nonnull
   @Override
   public DockLayout right(@Nonnull Component component) {
-    add(component, BorderLayout.EAST);
+    set(component, BorderLayout.EAST);
     return this;
+  }
+
+  protected void set(Component component, Object constraints) {
+    JPanel panel = toAWTComponent();
+
+    BorderLayout layout = (BorderLayout)panel.getLayout();
+    java.awt.Component old = layout.getLayoutComponent(constraints);
+    if(old != null) {
+      panel.remove(old);
+    }
+
+    panel.add(TargetAWT.to(component), constraints);
   }
 }

@@ -99,7 +99,7 @@ public class DesktopSwtTreeImpl<E> extends DesktopSwtComponent<org.eclipse.swt.w
   private void build(Object parent, E value) {
     List<DesktopSwtTreeNode<E>> list = new ArrayList<>();
 
-    myModel.fetchChildren(e -> {
+    myModel.buildChildren(e -> {
       DesktopSwtTreeNode<E> node = new DesktopSwtTreeNode<>(e);
       list.add(node);
       return node;

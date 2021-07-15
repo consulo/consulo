@@ -171,7 +171,7 @@ public class WebTreeImpl<NODE> extends UIComponentWithVaadinComponent<WebTreeImp
     private List<WebTreeNodeImpl<E>> fetchChildren(@Nonnull WebTreeNodeImpl<E> parent, boolean fetchNext) {
       List<WebTreeNodeImpl<E>> list = new ArrayList<>();
 
-      myModel.fetchChildren(node -> {
+      myModel.buildChildren(node -> {
         WebTreeNodeImpl<E> child = new WebTreeNodeImpl<>(parent, node, myNodeMap);
         list.add(child);
         return child;

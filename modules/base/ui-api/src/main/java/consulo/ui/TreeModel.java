@@ -26,7 +26,7 @@ import java.util.function.Function;
  * @since 12-Sep-17
  */
 public interface TreeModel<N> {
-  void fetchChildren(@Nonnull Function<N, TreeNode<N>> nodeFactory, @Nullable N parentValue);
+  void buildChildren(@Nonnull Function<N, TreeNode<N>> nodeFactory, @Nullable N parentValue);
 
   /**
    * If return true - children will be build for current node, and node will be marked as leaf (if not children)
