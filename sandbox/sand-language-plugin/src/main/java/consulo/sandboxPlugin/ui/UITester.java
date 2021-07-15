@@ -27,6 +27,7 @@ import consulo.ui.model.TableModel;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.function.Function;
 
@@ -82,6 +83,19 @@ public class UITester {
       swipeLayout.register("right", () -> swipeChildLayout("Left", () -> swipeLayout.swipeLeftTo("left")));
 
       tabbedLayout.addTab("SwipeLayout", swipeLayout);
+
+      VerticalLayout borderLayout = VerticalLayout.create();
+      DockLayout dockLayout = DockLayout.create();
+      Button centerBtn = Button.create(LocalizeValue.localizeTODO("Center"));
+      centerBtn.addClickListener(event -> {
+        dockLayout.center(HorizontalLayout.create().add(Label.create(LocalizeValue.of(LocalDateTime.now().toString()))));
+      }) ;
+      
+      borderLayout.add(centerBtn).add(dockLayout);
+
+      borderLayout.add(centerBtn);
+
+      tabbedLayout.addTab("DockLayout", borderLayout);
 
       return tabbedLayout;
     }

@@ -37,6 +37,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.tree.TreePath;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.function.BiConsumer;
 
@@ -168,7 +169,10 @@ public class DesktopTreeImpl<E> extends SwingComponentDelegate<DesktopTreeImpl.M
         return node;
       }, targetParent);
 
-      nodes.sort(myModel.getNodeComparator());
+      Comparator<TreeNode<K>> comparator = myModel.getNodeComparator();
+      if (comparator != null) {
+        nodes.sort(comparator);
+      }
       return nodes.toArray(MyTreeNodeImpl[]::new);
     }
 
@@ -216,13 +220,13 @@ public class DesktopTreeImpl<E> extends SwingComponentDelegate<DesktopTreeImpl.M
     tree.setCellRenderer(new NodeRenderer());
     tree.addTreeSelectionListener(e -> {
       TreePath path = TreeUtil.getSelectedPathIfOne(tree);
-      if(path == null) {
+      if (path == null) {
         return;
       }
 
       Object object = TreeUtil.getLastUserObject(path);
 
-      if(object instanceof MyNodeDescriptor node) {
+      if (object instanceof MyNodeDescriptor node) {
         MyTreeNodeImpl element = (MyTreeNodeImpl)node.getElement();
 
         getListenerDispatcher(SelectListener.class).onSelected(element);

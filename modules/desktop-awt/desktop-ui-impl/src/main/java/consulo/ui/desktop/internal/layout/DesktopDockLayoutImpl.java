@@ -78,10 +78,12 @@ public class DesktopDockLayoutImpl extends DesktopLayoutBase<JPanel> implements 
 
     BorderLayout layout = (BorderLayout)panel.getLayout();
     java.awt.Component old = layout.getLayoutComponent(constraints);
-    if(old != null) {
+    if (old != null) {
       panel.remove(old);
     }
 
     panel.add(TargetAWT.to(component), constraints);
+    panel.validate();
+    panel.repaint();
   }
 }

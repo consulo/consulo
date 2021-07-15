@@ -172,7 +172,7 @@ public interface Component extends Disposable, UserDataHolder {
     return addListener(KeyListener.class, keyListener);
   }
 
-  default Disposable addClickListener(@Nonnull ClickListener clickListener) {
+  default Disposable addClickListener(@RequiredUIAccess @Nonnull ClickListener clickListener) {
     return addListener(ClickListener.class, clickListener);
   }
 
