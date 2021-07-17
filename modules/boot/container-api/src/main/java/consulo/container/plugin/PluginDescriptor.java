@@ -53,6 +53,10 @@ public interface PluginDescriptor {
   @Nonnull
   PluginId[] getOptionalDependentPluginIds();
 
+  @Nonnull
+  PluginId[] getIncompatibleWithPlugindIds();
+
+  @Nullable
   String getVendor();
 
   @Nullable

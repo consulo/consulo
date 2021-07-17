@@ -70,6 +70,12 @@ public abstract class PluginDescriptorStub implements PluginDescriptor {
     return PluginId.EMPTY_ARRAY;
   }
 
+  @Nonnull
+  @Override
+  public PluginId[] getIncompatibleWithPlugindIds() {
+    return PluginId.EMPTY_ARRAY;
+  }
+
   @Override
   public String getVendor() {
     return null;
