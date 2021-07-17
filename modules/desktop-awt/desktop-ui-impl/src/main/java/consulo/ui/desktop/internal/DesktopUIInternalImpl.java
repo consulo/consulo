@@ -369,7 +369,7 @@ public class DesktopUIInternalImpl extends UIInternal {
 
   @Override
   public Hyperlink _Components_hyperlink(String text) {
-    return null;
+    return new DesktopHyperlinkImpl(text);
   }
 
   @Override

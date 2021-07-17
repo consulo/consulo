@@ -163,13 +163,13 @@ public abstract class WindowOverAWTWindow implements Window, ToSwingWindowWrappe
   @Nonnull
   @Override
   public <T extends EventListener> T getListenerDispatcher(@Nonnull Class<T> eventClass) {
-    throw new UnsupportedOperationException();
+    return myUIDataObject.getDispatcher(eventClass);
   }
 
   @Nonnull
   @Override
   public <T extends EventListener> Disposable addListener(@Nonnull Class<T> eventClass, @Nonnull T listener) {
-    throw new UnsupportedOperationException();
+    return myUIDataObject.addListener(eventClass, listener);
   }
 
   @Nullable

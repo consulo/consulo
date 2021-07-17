@@ -129,6 +129,8 @@ public class UITester {
       IntSlider intSlider = IntSlider.create(3);
       intSlider.addValueListener(event -> Alerts.okInfo("intSlider " + event.getValue()).showAsync());
       layout.add(HorizontalLayout.create().add(Label.create("IntSlider")).add(intSlider));
+
+      layout.add(Hyperlink.create("Some Link", (e) -> Alerts.okInfo(LocalizeValue.localizeTODO("Clicked!!!")).showAsync()));
       return layout;
     }
 
