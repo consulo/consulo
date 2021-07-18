@@ -38,9 +38,12 @@ import consulo.awt.TargetAWT;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginId;
 import consulo.container.plugin.PluginManager;
+import consulo.ide.eap.EarlyAccessProgramManager;
 import consulo.ide.plugins.InstalledPluginsState;
 import consulo.ide.updateSettings.UpdateSettings;
 import consulo.logging.Logger;
+import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -213,6 +216,7 @@ public class PlatformOrPluginDialog extends DialogWrapper {
   }
 
   @Override
+  @RequiredUIAccess
   public void doOKAction() {
     super.doOKAction();
 
@@ -222,6 +226,8 @@ public class PlatformOrPluginDialog extends DialogWrapper {
         return;
       }
     }
+
+    UIAccess uiAccess = UIAccess.current();
 
     Task.Backgroundable.queue(myProject, IdeBundle.message("progress.download.plugins"), true, PluginManagerUISettings.getInstance(), indicator -> {
       List<PluginDescriptor> installed = new ArrayList<>(myNodes.size());
@@ -235,17 +241,25 @@ public class PlatformOrPluginDialog extends DialogWrapper {
 
         try {
           PluginDownloader downloader = PluginDownloader.createDownloader(pluginDescriptor, myPlatformVersion, myType != PlatformOrPluginUpdateResult.Type.PLUGIN_INSTALL);
-          if (downloader.prepareToInstall(indicator)) {
+
+          boolean checkChecksum = EarlyAccessProgramManager.is(CheckChecksumEarlyAccessProgramDescriptor.class);
+
+          downloader.prepareToInstall(checkChecksum, uiAccess, indicator, (d) -> {
+            // already was installed
+            if(InstalledPluginsState.getInstance().wasUpdated(pluginDescriptor.getPluginId())) {
+              return;
+            }
+
             InstalledPluginsState.getInstance().getUpdatedPlugins().add(pluginDescriptor.getPluginId());
 
-            downloader.install(indicator, true);
+            d.install(indicator, true);
 
             if (pluginDescriptor instanceof PluginNode) {
               ((PluginNode)pluginDescriptor).setStatus(PluginNode.STATUS_DOWNLOADED);
             }
 
             installed.add(pluginDescriptor);
-          }
+          });
         }
         catch (ProcessCanceledException e) {
           throw e;

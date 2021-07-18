@@ -225,4 +225,10 @@ public abstract class PluginDescriptorStub implements PluginDescriptor {
   public boolean isExperimental() {
     return false;
   }
+
+  @Nullable
+  @Override
+  public String getChecksumSHA3_256() {
+    return null;
+  }
 }
