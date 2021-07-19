@@ -79,7 +79,7 @@ public class UnifiedSettingsDialog extends WholeLeftWindowWrapper {
   protected Couple<Component> createComponents() {
     TreeModel<Configurable> configurableTreeModel = new TreeModel<>() {
       @Override
-      public void fetchChildren(@Nonnull Function<Configurable, TreeNode<Configurable>> nodeFactory, @Nullable Configurable parentValue) {
+      public void buildChildren(@Nonnull Function<Configurable, TreeNode<Configurable>> nodeFactory, @Nullable Configurable parentValue) {
         if (parentValue != null) {
           if (parentValue instanceof Configurable.Composite) {
             build(nodeFactory, ((Configurable.Composite)parentValue).getConfigurables());

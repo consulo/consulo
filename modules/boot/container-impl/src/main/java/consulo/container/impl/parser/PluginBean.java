@@ -53,6 +53,8 @@ public class PluginBean extends ComponentManagerConfig {
   //@AbstractCollection(surroundWithTag = false)
   public List<PluginDependency> dependencies = Collections.emptyList();
 
+  public List<String> incompatibleWith = Collections.emptyList();
+
   //@Property(surroundWithTag = false)
   //@AbstractCollection(surroundWithTag = false)
   public List<PluginHelpSet> helpSets = Collections.emptyList();
@@ -79,5 +81,5 @@ public class PluginBean extends ComponentManagerConfig {
 
   public List<PluginListenerDescriptor> projectListeners = Collections.emptyList();
 
-  public List<PluginListenerDescriptor> moduleListeners = Collections.emptyList();;
+  public List<PluginListenerDescriptor> moduleListeners = Collections.emptyList();
 }

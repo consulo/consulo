@@ -55,6 +55,7 @@ public class PluginDescriptorImpl extends PluginDescriptorStub {
   private final boolean myIsPreInstalled;
   private PluginId[] myDependencies = PluginId.EMPTY_ARRAY;
   private PluginId[] myOptionalDependencies = PluginId.EMPTY_ARRAY;
+  private PluginId[] myIncompatibleWithPluginds = PluginId.EMPTY_ARRAY;
   private Map<PluginId, String> myOptionalConfigs;
   private Map<PluginId, PluginDescriptorImpl> myOptionalDescriptors;
   @Nonnull
@@ -145,6 +146,14 @@ public class PluginDescriptorImpl extends PluginDescriptorStub {
         }
       }
     }
+
+    Set<PluginId> incompatibleWithPluginds = new LinkedHashSet<PluginId>();
+    for (String pluginId : pluginBean.incompatibleWith) {
+      if(!StringUtilRt.isEmpty(pluginId)) {
+        incompatibleWithPluginds.add(PluginId.getId(pluginId));
+      }
+    }
+    myIncompatibleWithPluginds = incompatibleWithPluginds.isEmpty() ? PluginId.EMPTY_ARRAY : incompatibleWithPluginds.toArray(new PluginId[incompatibleWithPluginds.size()]);
 
     myDependencies = dependentPlugins.isEmpty() ? PluginId.EMPTY_ARRAY : dependentPlugins.toArray(new PluginId[dependentPlugins.size()]);
     myOptionalDependencies = optionalDependentPlugins.isEmpty() ? PluginId.EMPTY_ARRAY : optionalDependentPlugins.toArray(new PluginId[optionalDependentPlugins.size()]);
@@ -308,6 +317,12 @@ public class PluginDescriptorImpl extends PluginDescriptorStub {
   @Nonnull
   public PluginId[] getOptionalDependentPluginIds() {
     return myOptionalDependencies;
+  }
+
+  @Nonnull
+  @Override
+  public PluginId[] getIncompatibleWithPlugindIds() {
+    return myIncompatibleWithPluginds;
   }
 
   @Override

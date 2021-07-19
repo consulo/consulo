@@ -17,18 +17,19 @@ package consulo.sandboxPlugin.ui;
 
 import consulo.ide.ui.FileChooserTextBoxBuilder;
 import consulo.localize.LocalizeValue;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.*;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.app.WindowWrapper;
+import consulo.ui.image.Image;
 import consulo.ui.layout.*;
 import consulo.ui.model.TableModel;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+import java.time.LocalDateTime;
+import java.util.*;
+import java.util.function.Function;
 
 /**
  * @author VISTALL
@@ -51,6 +52,7 @@ public class UITester {
       });
       tabbedLayout.addTab("Components", components());
       tabbedLayout.addTab("Components > Table", table());
+      tabbedLayout.addTab("Components > Tree", tree());
       tabbedLayout.addTab("Alerts", alerts());
 
       return tabbedLayout;
@@ -82,6 +84,19 @@ public class UITester {
 
       tabbedLayout.addTab("SwipeLayout", swipeLayout);
 
+      VerticalLayout borderLayout = VerticalLayout.create();
+      DockLayout dockLayout = DockLayout.create();
+      Button centerBtn = Button.create(LocalizeValue.localizeTODO("Center"));
+      centerBtn.addClickListener(event -> {
+        dockLayout.center(HorizontalLayout.create().add(Label.create(LocalizeValue.of(LocalDateTime.now().toString()))));
+      }) ;
+      
+      borderLayout.add(centerBtn).add(dockLayout);
+
+      borderLayout.add(centerBtn);
+
+      tabbedLayout.addTab("DockLayout", borderLayout);
+
       return tabbedLayout;
     }
 
@@ -110,10 +125,12 @@ public class UITester {
       layout.add(HorizontalLayout.create().add(Label.create("Toggle Switch")).add(toggleSwitch).add(checkBox));
 
       layout.add(HorizontalLayout.create().add(Label.create("Password")).add(PasswordBox.create()));
-      
+
       IntSlider intSlider = IntSlider.create(3);
       intSlider.addValueListener(event -> Alerts.okInfo("intSlider " + event.getValue()).showAsync());
       layout.add(HorizontalLayout.create().add(Label.create("IntSlider")).add(intSlider));
+
+      layout.add(Hyperlink.create("Some Link", (e) -> Alerts.okInfo(LocalizeValue.localizeTODO("Clicked!!!")).showAsync()));
       return layout;
     }
 
@@ -134,6 +151,36 @@ public class UITester {
       layout.center(ScrollableLayout.create(Table.create(columns, model)));
 
       return layout;
+    }
+
+    @RequiredUIAccess
+    private Component tree() {
+      Tree<String> tree = Tree.create(new TreeModel<String>() {
+        @Override
+        public void buildChildren(@Nonnull Function<String, TreeNode<String>> nodeFactory, @Nullable String parentValue) {
+          if (parentValue == null) {
+            for (int i = 0; i < 50; i++) {
+              TreeNode<String> node = nodeFactory.apply("First Child = " + i);
+
+              List<Image> icons =
+                      List.of(PlatformIconGroup.nodesClass(), PlatformIconGroup.nodesEnum(), PlatformIconGroup.nodesStruct(), PlatformIconGroup.nodesInterface(), PlatformIconGroup.nodesAttribute());
+              int r = new Random().nextInt(icons.size());
+
+              node.setRender((s, textItemPresentation) -> {
+                textItemPresentation.append(s);
+                textItemPresentation.withIcon(icons.get(r));
+              });
+            }
+          }
+          else {
+            for (int i = 0; i < 10; i++) {
+              nodeFactory.apply(parentValue + ", second child = " + i);
+            }
+          }
+        }
+      });
+
+      return ScrollableLayout.create(tree);
     }
 
     @RequiredUIAccess

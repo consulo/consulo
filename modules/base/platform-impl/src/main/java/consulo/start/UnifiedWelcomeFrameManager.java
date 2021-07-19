@@ -23,7 +23,6 @@ import com.intellij.openapi.application.Application;
 import com.intellij.openapi.options.ShowSettingsUtil;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.wm.IdeFrame;
-import com.intellij.openapi.wm.WindowManager;
 import consulo.application.impl.FrameTitleUtil;
 import consulo.ui.*;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -31,7 +30,7 @@ import consulo.ui.border.BorderPosition;
 import consulo.ui.layout.DockLayout;
 import consulo.ui.layout.VerticalLayout;
 import consulo.ui.model.ListModel;
-import consulo.wm.impl.UnifiedWindowManagerImpl;
+import consulo.wm.impl.UnifiedWelcomeIdeFrame;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -120,8 +119,7 @@ public class UnifiedWelcomeFrameManager extends WelcomeFrameManager {
 
     welcomeFrame.setContent(layout);
 
-    UnifiedWindowManagerImpl windowManager = (UnifiedWindowManagerImpl)WindowManager.getInstance();
-    return windowManager.createWelcomeIdeFrame(welcomeFrame, myProjectManager.getDefaultProject());
+    return new UnifiedWelcomeIdeFrame(welcomeFrame, myProjectManager.getDefaultProject());
   }
 
   public static void collectAllActions(List<AnAction> group, ActionGroup actionGroup) {

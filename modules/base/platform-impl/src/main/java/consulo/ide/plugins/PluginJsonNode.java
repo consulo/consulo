@@ -28,6 +28,10 @@ public class PluginJsonNode {
     public String[] values = ArrayUtil.EMPTY_STRING_ARRAY;
   }
 
+  public static class Checksum {
+    public String sha3_256;
+  }
+
   public String id;
   public String name;
   public String description;
@@ -45,4 +49,6 @@ public class PluginJsonNode {
   // public Extension[] extensions;  old extensions impl
   public Extension[] extensionsV2;
   public boolean experimental;
+
+  public Checksum checksum = new Checksum();
 }

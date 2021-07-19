@@ -32,6 +32,8 @@ import com.intellij.util.ui.UIUtil;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
+import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -44,7 +46,7 @@ import java.util.Set;
  * @since 29.11.14
  */
 public class CustomizeDownloadAndStartStepPanel extends AbstractCustomizeWizardStep {
-  private static final Logger LOGGER = Logger.getInstance(CustomizeDownloadAndStartStepPanel.class);
+  private static final Logger LOG = Logger.getInstance(CustomizeDownloadAndStartStepPanel.class);
 
   private static class MyProgressIndicator extends MockProgressIndicator {
     private final JBLabel myLabel;
@@ -92,6 +94,7 @@ public class CustomizeDownloadAndStartStepPanel extends AbstractCustomizeWizardS
   }
 
   @Override
+  @RequiredUIAccess
   public boolean beforeShown(boolean forward) {
     final Set<PluginDescriptor> pluginsForDownload = myPluginsStepPanel == null ? Collections.<PluginDescriptor>emptySet() : myPluginsStepPanel.getPluginsForDownload();
     if (pluginsForDownload.isEmpty()) {
@@ -105,21 +108,22 @@ public class CustomizeDownloadAndStartStepPanel extends AbstractCustomizeWizardS
       panel.add(progressBar);
       add(panel);
 
+      UIAccess uiAccess = UIAccess.current();
+
       final ProgressIndicator indicator = new MyProgressIndicator(infoLabel, progressBar);
-      Application.get().executeOnPooledThread((Runnable)() -> {
+      Application.get().executeOnPooledThread(() -> {
         for (PluginDescriptor pluginDescriptor : pluginsForDownload) {
           try {
             PluginDownloader downloader = PluginDownloader.createDownloader(pluginDescriptor, false);
-            downloader.prepareToInstall(indicator);
-            downloader.install(true);
+            downloader.prepareToInstall(true, uiAccess, indicator, (d) -> d.install(true));
           }
           catch (Exception e) {
-            LOGGER.warn(e);
+            LOG.warn(e);
           }
         }
 
         myDone = true;
-        UIUtil.invokeLaterIfNeeded(() -> placeStartButton());
+        uiAccess.give(this::placeStartButton);
       });
     }
 

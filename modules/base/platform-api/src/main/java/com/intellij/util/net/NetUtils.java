@@ -26,6 +26,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
+import java.security.MessageDigest;
 
 public class NetUtils {
   private NetUtils() {
@@ -90,7 +91,25 @@ public class NetUtils {
    */
 
   // TODO [VISTALL] move to another util
+  public static int copyStreamContent(@Nullable ProgressIndicator indicator, @Nonnull InputStream inputStream, @Nonnull OutputStream outputStream, int expectedContentSize)
+          throws IOException, ProcessCanceledException {
+    return copyStreamContent(indicator, null, inputStream, outputStream, expectedContentSize);
+  }
+
+  /**
+   * @param indicator           Progress indicator.
+   * @param digest              MessageDigest for updating while dowloading
+   * @param inputStream         source stream
+   * @param outputStream        destination stream
+   * @param expectedContentSize expected content size, used in progress indicator. can be -1.
+   * @return bytes copied
+   * @throws IOException                                            if IO error occur
+   * @throws com.intellij.openapi.progress.ProcessCanceledException if process was canceled.
+   */
+
+  // TODO [VISTALL] move to another util
   public static int copyStreamContent(@Nullable ProgressIndicator indicator,
+                                      @Nullable MessageDigest digest,
                                       @Nonnull InputStream inputStream,
                                       @Nonnull OutputStream outputStream,
                                       int expectedContentSize) throws IOException, ProcessCanceledException {
@@ -106,6 +125,10 @@ public class NetUtils {
     int total = 0;
     while ((count = inputStream.read(buffer)) > 0) {
       outputStream.write(buffer, 0, count);
+      if(digest != null) {
+        digest.update(buffer, 0, count);
+      }
+      
       total += count;
 
       if (indicator != null) {

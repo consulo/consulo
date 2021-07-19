@@ -11,6 +11,9 @@
     <action id="ShowUITesterAction" class="consulo.sandboxPlugin.ide.action.ShowUITesterAction">
       <add-to-group group-id="ToolsMenu"/>
     </action>
+    <action id="ShowUnifiedSettingsDialogAction" class="consulo.sandboxPlugin.ide.action.ShowUnifiedSettingsDialogAction">
+      <add-to-group group-id="ToolsMenu"/>
+    </action>
 
     <action id="ViewPackagesAction" class="consulo.sandboxPlugin.packageView.ViewPackagesAction">
       <add-to-group group-id="ToolsMenu"/>

@@ -16,27 +16,30 @@
 package com.intellij.openapi.updateSettings.impl;
 
 import com.intellij.ide.IdeBundle;
-import com.intellij.ide.plugins.InstalledPluginsTableModel;
-import com.intellij.ide.plugins.PluginManager;
 import com.intellij.ide.plugins.RepositoryHelper;
 import com.intellij.ide.startup.StartupActionScriptManager;
 import com.intellij.openapi.application.ApplicationInfo;
-import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.ui.Messages;
+import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.io.StreamUtil;
 import com.intellij.util.ObjectUtil;
+import com.intellij.util.ThrowableConsumer;
 import com.intellij.util.io.HttpRequests;
 import com.intellij.util.io.ZipUtil;
 import consulo.container.boot.ContainerPathManager;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginId;
+import consulo.container.plugin.PluginManager;
 import consulo.ide.updateSettings.UpdateSettings;
 import consulo.ide.updateSettings.impl.PlatformOrPluginUpdateChecker;
 import consulo.logging.Logger;
+import consulo.ui.UIAccess;
 import consulo.util.io2.PathUtil;
+import consulo.util.lang.StringUtil;
+import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
 import org.apache.commons.compress.compressors.gzip.GzipCompressorInputStream;
@@ -46,6 +49,9 @@ import javax.annotation.Nullable;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.Locale;
 
 /**
  * @author anna
@@ -53,6 +59,9 @@ import java.nio.file.Paths;
  */
 public class PluginDownloader {
   private static final Logger LOG = Logger.getInstance(PluginDownloader.class);
+
+  private static final String CHECHSUM_ALGORITHM = "SHA3-256";
+  private static final int MAX_TRYS = 3;
 
   @Nonnull
   public static PluginDownloader createDownloader(@Nonnull PluginDescriptor descriptor, boolean viaUpdate) {
@@ -71,7 +80,6 @@ public class PluginDownloader {
 
   private File myFile;
   private File myOldFile;
-  private String myDescription;
 
   private final PluginDescriptor myDescriptor;
 
@@ -84,32 +92,62 @@ public class PluginDownloader {
     myIsPlatform = PlatformOrPluginUpdateChecker.getPlatformPluginId() == pluginDescriptor.getPluginId();
   }
 
-  public boolean prepareToInstall(ProgressIndicator pi) throws IOException {
-    PluginDescriptor descriptor = null;
-    if (!Boolean.getBoolean(StartupActionScriptManager.STARTUP_WIZARD_MODE) && PluginManager.isPluginInstalled(myPluginId)) {
+  public void prepareToInstall(boolean checkChecksum, @Nonnull UIAccess uiAccess, @Nonnull ProgressIndicator pi, ThrowableConsumer<PluginDownloader, IOException> onSuccess) throws IOException {
+    PluginDescriptor descriptor;
+    if (!Boolean.getBoolean(StartupActionScriptManager.STARTUP_WIZARD_MODE) && PluginManager.findPlugin(myPluginId) != null) {
       //store old plugins file
-      descriptor = PluginManager.getPlugin(myPluginId);
+      descriptor = PluginManager.findPlugin(myPluginId);
 
       myOldFile = descriptor.getPath();
     }
 
-    // download plugin
+    // if there no checksum at server, disable check
+    String expectedChecksum = myDescriptor.getChecksumSHA3_256();
+    if (expectedChecksum == null) {
+      checkChecksum = false;
+    }
+
     String errorMessage = IdeBundle.message("unknown.error");
-    try {
-      myFile = downloadPlugin(pi);
+    if (checkChecksum) {
+      for (int i = 0; i < MAX_TRYS; i++) {
+        try {
+          pi.checkCanceled();
+
+          Pair<File, String> info = downloadPlugin(pi, expectedChecksum, i);
+
+          if (StringUtil.equal(info.getSecond(), expectedChecksum, true)) {
+            myFile = info.getFirst();
+            break;
+          }
+          else {
+            errorMessage = IdeBundle.message("checksum.failed");
+            LOG.warn("Checksum check failed. Plugin: " + myPluginId + ", expected: " + expectedChecksum + ", actual: " + info.getSecond());
+          }
+        }
+        catch (IOException e) {
+          myFile = null;
+          errorMessage = e.getMessage();
+        }
+      }
     }
-    catch (IOException ex) {
-      myFile = null;
-      errorMessage = ex.getMessage();
+    else {
+      try {
+        myFile = downloadPlugin(pi, "<disabled>", -1).getFirst();
+      }
+      catch (IOException e) {
+        myFile = null;
+        errorMessage = e.getMessage();
+      }
     }
+
     if (myFile == null) {
       final String text = IdeBundle.message("error.plugin.was.not.installed", getPluginName(), errorMessage);
       final String title = IdeBundle.message("title.failed.to.download");
-      ApplicationManager.getApplication().invokeLater(() -> Messages.showErrorDialog(text, title));
-      return false;
+      uiAccess.give(() -> Messages.showErrorDialog(text, title));
+      return;
     }
 
-    return !InstalledPluginsTableModel.wasUpdated(myDescriptor.getPluginId());
+    onSuccess.consume(this);
   }
 
   public void install(boolean deleteTempFile) throws IOException {
@@ -205,7 +243,8 @@ public class PluginDownloader {
     }
   }
 
-  private File downloadPlugin(final ProgressIndicator indicator) throws IOException {
+  @Nonnull
+  private Pair<File, String> downloadPlugin(@Nonnull ProgressIndicator indicator, String expectedChecksum, int tryIndex) throws IOException {
     File pluginsTemp = new File(ContainerPathManager.get().getPluginTempPath());
     if (!pluginsTemp.exists() && !pluginsTemp.mkdirs()) {
       throw new IOException(IdeBundle.message("error.cannot.create.temp.dir", pluginsTemp));
@@ -220,13 +259,25 @@ public class PluginDownloader {
       indicator.setText2(IdeBundle.message("progress.downloading.plugin", getPluginName()));
     }
 
+    LOG.info("Downloading plugin: " + myPluginId + ", try: " + tryIndex + ", checksum: " + expectedChecksum);
+
     return HttpRequests.request(myPluginUrl).gzip(false).connect(request -> {
-      request.saveToFile(file, indicator);
+      MessageDigest digest;
+      try {
+        digest = MessageDigest.getInstance(CHECHSUM_ALGORITHM);
+      }
+      catch (NoSuchAlgorithmException e) {
+        throw new IOException(e);
+      }
+
+      request.saveToFile(file, digest, indicator);
+
+      String checksum = Hex.encodeHexString(digest.digest()).toUpperCase(Locale.ROOT);
 
       String fileName = getFileName();
       File newFile = new File(file.getParentFile(), fileName);
       FileUtil.rename(file, newFile);
-      return newFile;
+      return Pair.create(newFile, checksum);
     });
   }
 
@@ -245,14 +296,6 @@ public class PluginDownloader {
   @Nonnull
   public String getPluginName() {
     return ObjectUtil.notNull(myDescriptor.getName(), myPluginId.toString());
-  }
-
-  public void setDescription(String description) {
-    myDescription = description;
-  }
-
-  public String getDescription() {
-    return myDescription;
   }
 
   public PluginDescriptor getDescriptor() {

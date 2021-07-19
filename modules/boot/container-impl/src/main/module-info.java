@@ -9,7 +9,7 @@ module consulo.container.impl {
 
   exports consulo.container.impl;
   exports consulo.container.impl.classloader;
-  // TODO [VISTALL] must be exported only to advanced proxy moduke
+  // TODO [VISTALL] must be exported only to advanced proxy module
   exports consulo.container.impl.classloader.proxy;
   exports consulo.container.impl.parser;
 

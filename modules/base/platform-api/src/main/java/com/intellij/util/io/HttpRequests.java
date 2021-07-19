@@ -20,26 +20,27 @@ import com.intellij.ide.IdeBundle;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationInfo;
 import com.intellij.openapi.application.ApplicationManager;
-import consulo.logging.Logger;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.util.io.BufferExposingByteArrayOutputStream;
-import com.intellij.openapi.util.io.FileUtilRt;
+import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.io.StreamUtil;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.CharsetToolkit;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.SystemProperties;
 import com.intellij.util.net.HttpConfigurable;
 import com.intellij.util.net.NetUtils;
 import com.intellij.util.net.ssl.CertificateManager;
+import consulo.logging.Logger;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
 import java.io.*;
 import java.net.*;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -82,7 +83,12 @@ public final class HttpRequests {
     boolean isSuccessful() throws IOException;
 
     @Nonnull
-    File saveToFile(@Nonnull File file, @Nullable ProgressIndicator indicator) throws IOException;
+    default File saveToFile(@Nonnull File file, @Nullable ProgressIndicator indicator) throws IOException {
+      return saveToFile(file, null, indicator);
+    }
+
+    @Nonnull
+    File saveToFile(@Nonnull File file, @Nullable MessageDigest digest, @Nullable ProgressIndicator indicator) throws IOException;
 
     @Nonnull
     byte[] readBytes(@Nullable ProgressIndicator indicator) throws IOException;
@@ -337,26 +343,22 @@ public final class HttpRequests {
 
     @Override
     @Nonnull
-    public File saveToFile(@Nonnull File file, @Nullable ProgressIndicator indicator) throws IOException {
-      FileUtilRt.createParentDirs(file);
+    public File saveToFile(@Nonnull File file, @Nullable MessageDigest digest, @Nullable ProgressIndicator indicator) throws IOException {
+      FileUtil.createParentDirs(file);
 
       boolean deleteFile = true;
       try {
-        OutputStream out = new FileOutputStream(file);
-        try {
-          NetUtils.copyStreamContent(indicator, getInputStream(), out, getConnection().getContentLength());
+        try (OutputStream out = new FileOutputStream(file)) {
+          NetUtils.copyStreamContent(indicator, digest, getInputStream(), out, getConnection().getContentLength());
           deleteFile = false;
         }
         catch (IOException e) {
           throw new IOException(createErrorMessage(e, this, false), e);
         }
-        finally {
-          out.close();
-        }
       }
       finally {
         if (deleteFile) {
-          FileUtilRt.delete(file);
+          FileUtil.delete(file);
         }
       }
 
@@ -420,7 +422,7 @@ public final class HttpRequests {
       }
     }
 
-    return CharsetToolkit.UTF8_CHARSET;
+    return StandardCharsets.UTF_8;
   }
 
   private static URLConnection openConnection(RequestBuilderImpl builder) throws IOException {

@@ -136,6 +136,15 @@ public class PluginBeanParser {
     pluginBean.projectListeners = readListeners(rootTag, "projectListeners");
     pluginBean.moduleListeners = readListeners(rootTag, "moduleListeners");
 
+    List<String> incompatibleWith = new ArrayList<String>();
+    for (SimpleXmlElement incompatibleWithElement : rootTag.getChildren("incompatible-with")) {
+      incompatibleWith.add(incompatibleWithElement.getText());
+    }
+
+    if(!incompatibleWith.isEmpty()) {
+      pluginBean.incompatibleWith = incompatibleWith;
+    }
+
     // region deprecated stuff
     List<ComponentConfig> appComponents = new ArrayList<ComponentConfig>();
     for (SimpleXmlElement appComponentElements : rootTag.getChildren("application-components")) {

@@ -178,12 +178,7 @@ public class OptionsPanelImpl implements OptionsPanel {
 
   @Override
   public Runnable showOption(final String attributeDisplayName) {
-    return new Runnable() {
-      @Override
-      public void run() {
-        myOptionsTree.selectOptionByName(attributeDisplayName);
-      }
-    };
+    return () -> myOptionsTree.selectOptionByName(attributeDisplayName);
   }
 
   @Override
@@ -201,10 +196,10 @@ public class OptionsPanelImpl implements OptionsPanel {
 
   @Override
   public Set<String> processListOptions() {
-    HashSet<String> result = new HashSet<String>();
+    HashSet<String> result = new HashSet<>();
     EditorSchemeAttributeDescriptor[] descriptions = myOptions.getCurrentDescriptions();
     for (EditorSchemeAttributeDescriptor description : descriptions) {
-      if (description.getGroup().equals(myCategoryName)) {
+      if (description.getGroup().getValue().equals(myCategoryName)) {
         result.add(description.toString());
       }
     }

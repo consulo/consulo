@@ -72,6 +72,8 @@ public class PluginNode extends PluginDescriptorStub {
 
   private List<SimpleExtension> mySimpleExtensions = Collections.emptyList();
 
+  private String myChecksumSha3_256;
+
   public PluginNode() {
   }
 
@@ -99,6 +101,7 @@ public class PluginNode extends PluginDescriptorStub {
       addOptionalDependency(Arrays.stream(jsonPlugin.optionalDependencies).map(PluginId::getId).toArray(PluginId[]::new));
     }
 
+    myChecksumSha3_256 = jsonPlugin.checksum.sha3_256;
     myExperimental = jsonPlugin.experimental;
     PluginJsonNode.Extension[] extensions = jsonPlugin.extensionsV2;
     if (extensions != null) {
@@ -352,6 +355,12 @@ public class PluginNode extends PluginDescriptorStub {
   @Override
   public boolean isExperimental() {
     return myExperimental;
+  }
+
+  @Nullable
+  @Override
+  public String getChecksumSHA3_256() {
+    return myChecksumSha3_256;
   }
 
   public void setExperimental(boolean experimental) {

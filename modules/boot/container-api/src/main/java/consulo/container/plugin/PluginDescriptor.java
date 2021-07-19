@@ -53,6 +53,10 @@ public interface PluginDescriptor {
   @Nonnull
   PluginId[] getOptionalDependentPluginIds();
 
+  @Nonnull
+  PluginId[] getIncompatibleWithPlugindIds();
+
+  @Nullable
   String getVendor();
 
   @Nullable
@@ -124,4 +128,7 @@ public interface PluginDescriptor {
   boolean isDeleted();
 
   boolean isExperimental();
+
+  @Nullable
+  String getChecksumSHA3_256();
 }

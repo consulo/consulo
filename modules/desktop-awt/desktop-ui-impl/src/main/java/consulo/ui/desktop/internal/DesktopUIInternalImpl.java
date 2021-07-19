@@ -119,6 +119,11 @@ public class DesktopUIInternalImpl extends UIInternal {
   }
 
   @Override
+  public <E> Tree<E> _Components_tree(E rootValue, TreeModel<E> model) {
+    return new DesktopTreeImpl<>(rootValue, model);
+  }
+
+  @Override
   public Image _Image_lazy(Supplier<Image> imageSupplier) {
     return new DesktopLazyImageImpl(imageSupplier);
   }
@@ -364,7 +369,7 @@ public class DesktopUIInternalImpl extends UIInternal {
 
   @Override
   public Hyperlink _Components_hyperlink(String text) {
-    return null;
+    return new DesktopHyperlinkImpl(text);
   }
 
   @Override

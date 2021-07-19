@@ -52,6 +52,9 @@ abstract class DesktopLayoutBase<T extends JPanel> extends SwingComponentDelegat
   }
 
   protected void add(Component component, Object constraints) {
-    toAWTComponent().add(TargetAWT.to(component), constraints);
+    T panel = toAWTComponent();
+    panel.add(TargetAWT.to(component), constraints);
+    panel.validate();
+    panel.repaint();
   }
 }

@@ -20,7 +20,6 @@ import com.intellij.ui.components.JBScrollPane;
 import consulo.awt.TargetAWT;
 import consulo.awt.impl.FromSwingComponentWrapper;
 import consulo.ui.Component;
-import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.desktop.internal.base.SwingComponentDelegate;
 import consulo.ui.layout.ScrollableLayout;
 
@@ -46,13 +45,10 @@ public class DesktopScrollableLayoutImpl extends SwingComponentDelegate<JScrollP
   }
 
   public DesktopScrollableLayoutImpl(@Nullable Component component) {
-    myComponent = new MyJBScrollPane(TargetAWT.to(component));
-  }
+    MyJBScrollPane pane = new MyJBScrollPane(TargetAWT.to(component));
+    initialize(pane);
 
-  @RequiredUIAccess
-  @Override
-  public void removeBorders() {
-    myComponent.setBorder(IdeBorderFactory.createEmptyBorder());
-    myComponent.setViewportBorder(IdeBorderFactory.createEmptyBorder());
+    pane.setBorder(IdeBorderFactory.createEmptyBorder());
+    pane.setViewportBorder(IdeBorderFactory.createEmptyBorder());
   }
 }
