@@ -16,11 +16,13 @@
 package consulo.components.impl.stores.storage;
 
 import com.intellij.openapi.application.AccessToken;
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.*;
 import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.openapi.util.JDOMUtil;
 import com.intellij.openapi.util.Pair;
+import com.intellij.openapi.util.ThrowableComputable;
 import com.intellij.openapi.util.WriteExternalException;
 import com.intellij.openapi.util.text.StringUtilRt;
 import com.intellij.openapi.vfs.*;
@@ -214,15 +216,13 @@ public final class VfsDirectoryBasedStorage extends StateStorageBase<DirectorySt
       return file;
     }
 
-    AccessToken token = ApplicationManager.getApplication().acquireWriteActionLock(VfsDirectoryBasedStorage.class);
     try {
-      return parentVirtualFile.createChildData(requestor, fileName);
+      return Application.get().runWriteAction((ThrowableComputable<VirtualFile, IOException>)() -> {
+        return parentVirtualFile.createChildData(requestor, fileName);
+      });
     }
     catch (IOException e) {
       throw new StateStorageException(e);
-    }
-    finally {
-      token.finish();
     }
   }
 
@@ -360,17 +360,13 @@ public final class VfsDirectoryBasedStorage extends StateStorageBase<DirectorySt
     }
 
     private void deleteFiles(@Nonnull VirtualFile dir) {
-      AccessToken token = ApplicationManager.getApplication().acquireWriteActionLock(VfsDirectoryBasedStorage.class);
-      try {
+      Application.get().runWriteAction(() -> {
         for (VirtualFile file : dir.getChildren()) {
           if (removedFileNames.contains(file.getName())) {
             deleteFile(file, this);
           }
         }
-      }
-      finally {
-        token.finish();
-      }
+      });
     }
   }
 

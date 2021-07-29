@@ -17,8 +17,7 @@ package consulo.components.impl.stores;
 
 import com.intellij.notification.NotificationType;
 import com.intellij.notification.NotificationsManager;
-import com.intellij.openapi.application.AccessToken;
-import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationNamesInfo;
 import com.intellij.openapi.components.RoamingType;
 import com.intellij.openapi.components.StateStorage;
@@ -28,6 +27,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.openapi.project.ex.ProjectEx;
 import com.intellij.openapi.util.JDOMUtil;
+import com.intellij.openapi.util.ThrowableComputable;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.LocalFileSystem;
@@ -40,7 +40,9 @@ import com.intellij.util.io.UnsyncByteArrayOutputStream;
 import com.intellij.util.ui.UIUtil;
 import consulo.application.AccessRule;
 import consulo.logging.Logger;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.concurrent.AsyncResult;
+import consulo.util.lang.ref.SimpleReference;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.Parent;
@@ -123,36 +125,41 @@ public class StorageUtil {
   }
 
   @Nonnull
+  @RequiredUIAccess
   public static VirtualFile writeFile(@Nullable File file,
                                       @Nonnull Object requestor,
-                                      @Nullable VirtualFile virtualFile,
+                                      @Nullable VirtualFile lastResolvedFile,
                                       @Nonnull byte[] content,
                                       @Nullable LineSeparator lineSeparatorIfPrependXmlProlog) throws IOException {
-    AccessToken token = ApplicationManager.getApplication().acquireWriteActionLock(StorageUtil.class);
+    SimpleReference<VirtualFile> vFileRef = SimpleReference.create();
     try {
-      if (file != null && (virtualFile == null || !virtualFile.isValid())) {
-        virtualFile = getOrCreateVirtualFile(requestor, file);
-      }
-      assert virtualFile != null;
-      try (OutputStream out = virtualFile.getOutputStream(requestor)) {
-        if (lineSeparatorIfPrependXmlProlog != null) {
-          out.write(XML_PROLOG);
-          out.write(lineSeparatorIfPrependXmlProlog.getSeparatorBytes());
+      return Application.get().runWriteAction((ThrowableComputable<VirtualFile, IOException>)() -> {
+        VirtualFile virtualFile = lastResolvedFile;
+        vFileRef.set(virtualFile);
+        if (file != null && (virtualFile == null || !virtualFile.isValid())) {
+          virtualFile = getOrCreateVirtualFile(requestor, file);
         }
-        out.write(content);
-      }
-      return virtualFile;
+        vFileRef.set(virtualFile);
+        assert virtualFile != null;
+        try (OutputStream out = virtualFile.getOutputStream(requestor)) {
+          if (lineSeparatorIfPrependXmlProlog != null) {
+            out.write(XML_PROLOG);
+            out.write(lineSeparatorIfPrependXmlProlog.getSeparatorBytes());
+          }
+          out.write(content);
+        }
+        return virtualFile;
+      });
+
     }
     catch (FileNotFoundException e) {
+      VirtualFile virtualFile = vFileRef.get();
       if (virtualFile == null) {
         throw e;
       }
       else {
         throw new ReadOnlyModificationException(file);
       }
-    }
-    finally {
-      token.finish();
     }
   }
 
@@ -217,16 +224,16 @@ public class StorageUtil {
     }
   }
 
+  @RequiredUIAccess
   public static void deleteFile(@Nonnull Object requestor, @Nonnull VirtualFile virtualFile) throws IOException {
-    AccessToken token = ApplicationManager.getApplication().acquireWriteActionLock(StorageUtil.class);
     try {
-      virtualFile.delete(requestor);
+      Application.get().runWriteAction((ThrowableComputable<Object, IOException>)() -> {
+        virtualFile.delete(requestor);
+        return null;
+      });
     }
     catch (FileNotFoundException e) {
       throw new ReadOnlyModificationException(VfsUtil.virtualToIoFile(virtualFile));
-    }
-    finally {
-      token.finish();
     }
   }
 

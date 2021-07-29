@@ -80,11 +80,4 @@ public class AWTUIAccessImpl implements UIAccess {
       //
     }
   }
-
-  @RequiredUIAccess
-  @Override
-  public int getEventCount() {
-    UIAccess.assertIsUIThread();
-    return IdeEventQueue.getInstance().getEventCount();
-  }
 }
