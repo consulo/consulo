@@ -91,12 +91,12 @@ public class ModulesConfiguratorImpl implements ModulesConfigurator, ModuleEdito
   @Override
   @RequiredUIAccess
   public void dispose() {
-    ApplicationManager.getApplication().runWriteAction(() -> {
-      for (final ModuleEditor moduleEditor : myModuleEditors) {
-        Disposer.dispose(moduleEditor);
-      }
-      myModuleEditors.clear();
+    for (final ModuleEditor moduleEditor : myModuleEditors) {
+      Disposer.dispose(moduleEditor);
+    }
+    myModuleEditors.clear();
 
+    WriteAction.run(() -> {
       if (myModuleModel != null) {
         myModuleModel.dispose();
       }
@@ -159,19 +159,17 @@ public class ModulesConfiguratorImpl implements ModulesConfigurator, ModuleEdito
     
     myModuleModel = ModuleManager.getInstance(myProject).getModifiableModel();
 
-    ApplicationManager.getApplication().runWriteAction(() -> {
-      if (!myModuleEditors.isEmpty()) {
-        LOG.error("module editors was not disposed");
-        myModuleEditors.clear();
+    if (!myModuleEditors.isEmpty()) {
+      LOG.error("module editors was not disposed");
+      myModuleEditors.clear();
+    }
+    final Module[] modules = myModuleModel.getModules();
+    if (modules.length > 0) {
+      for (Module module : modules) {
+        getOrCreateModuleEditor(module);
       }
-      final Module[] modules = myModuleModel.getModules();
-      if (modules.length > 0) {
-        for (Module module : modules) {
-          getOrCreateModuleEditor(module);
-        }
-        Collections.sort(myModuleEditors, myModuleEditorComparator);
-      }
-    });
+      Collections.sort(myModuleEditors, myModuleEditorComparator);
+    }
     myModified = false;
   }
 
@@ -262,19 +260,16 @@ public class ModulesConfiguratorImpl implements ModulesConfigurator, ModuleEdito
       }
     }
 
-    ApplicationManager.getApplication().runWriteAction(new Runnable() {
-      @Override
-      public void run() {
-        try {
-          final ModifiableRootModel[] rootModels = models.toArray(new ModifiableRootModel[models.size()]);
-          ModifiableModelCommitter.multiCommit(rootModels, myModuleModel);
-          myModuleModelCommitted = true;
-        }
-        finally {
+    ApplicationManager.getApplication().runWriteAction(() -> {
+      try {
+        final ModifiableRootModel[] rootModels = models.toArray(new ModifiableRootModel[models.size()]);
+        ModifiableModelCommitter.multiCommit(rootModels, myModuleModel);
+        myModuleModelCommitted = true;
+      }
+      finally {
 
-          myModuleModel = ModuleManager.getInstance(myProject).getModifiableModel();
-          myModuleModelCommitted = false;
-        }
+        myModuleModel = ModuleManager.getInstance(myProject).getModifiableModel();
+        myModuleModelCommitted = false;
       }
     });
 
@@ -338,11 +333,9 @@ public class ModulesConfiguratorImpl implements ModulesConfigurator, ModuleEdito
 
         importProvider.process(importContext, myProject, myModuleModel, modules::add);
 
-        WriteAction.runAndWait(() -> {
-          for (Module module : modules) {
-            getOrCreateModuleEditor(module);
-          }
-        });
+        for (Module module : modules) {
+          getOrCreateModuleEditor(module);
+        }
 
         asyncPromise.setResult(modules);
       });
@@ -380,11 +373,10 @@ public class ModulesConfiguratorImpl implements ModulesConfigurator, ModuleEdito
 
           Module newModule = NewOrImportModuleUtil.doCreate(panel, myModuleModel, moduleDir, false);
 
-          ApplicationManager.getApplication().runWriteAction(() -> {
-            getOrCreateModuleEditor(newModule);
+          getOrCreateModuleEditor(newModule);
 
-            Collections.sort(myModuleEditors, myModuleEditorComparator);
-          });
+          Collections.sort(myModuleEditors, myModuleEditorComparator);
+
           processModuleCountChanged();
 
           promise.setResult(Collections.singletonList(newModule));
