@@ -18,6 +18,7 @@ package com.intellij.vcs.log.impl;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vcs.changes.ui.ChangesViewContentManager;
 import com.intellij.openapi.wm.ToolWindow;
+import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.openapi.wm.ex.ToolWindowManagerEx;
 import com.intellij.openapi.wm.ex.ToolWindowManagerListener;
 import com.intellij.ui.content.Content;
@@ -156,7 +157,7 @@ public class VcsLogTabsWatcher implements Disposable {
     }
 
     @Override
-    public void stateChanged() {
+    public void stateChanged(ToolWindowManager toolWindowManager) {
       selectionChanged();
     }
 

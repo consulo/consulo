@@ -25,11 +25,9 @@ import com.intellij.openapi.wm.StatusBar;
 import com.intellij.openapi.wm.WindowManagerListener;
 import com.intellij.openapi.wm.ex.IdeFrameEx;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
-import com.intellij.openapi.wm.impl.CommandProcessorBase;
 import com.intellij.openapi.wm.impl.ToolWindowLayout;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.wm.impl.UnifiedWelcomeIdeFrame;
 import consulo.wm.impl.UnifiedWindowManagerImpl;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
@@ -170,11 +168,6 @@ public class WebWindowManagerImpl extends UnifiedWindowManagerImpl implements Pe
   @RequiredUIAccess
   @Override
   public IdeFrame findFrameFor(@Nullable Project project) {
-    return null;
-  }
-
-  @Override
-  public CommandProcessorBase getCommandProcessor() {
     return null;
   }
 

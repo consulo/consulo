@@ -175,7 +175,7 @@ public abstract class AbstractPsiBasedNode<Value> extends ProjectViewNode<Value>
 
     final Bookmark bookmarkAtFile = BookmarkManager.getInstance(project).findFileBookmark(file);
     if (bookmarkAtFile != null) {
-      iconDescriptor.setRightIcon(bookmarkAtFile.getIcon());
+      iconDescriptor.setRightIcon(bookmarkAtFile.getIcon(false));
     }
 
     if (!file.isWritable()) {

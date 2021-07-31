@@ -19,7 +19,6 @@ import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.BusyObject;
 import com.intellij.openapi.wm.IdeFocusManager;
-import com.intellij.openapi.wm.impl.commands.FinalizableCommand;
 import com.intellij.openapi.wm.impl.content.DesktopToolWindowContentUi;
 import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentFactory;
@@ -35,7 +34,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.event.InputEvent;
-import java.util.ArrayList;
 
 /**
  * @author Anton Katilin
@@ -91,17 +89,10 @@ public final class DesktopToolWindowImpl extends ToolWindowBase {
   public AsyncResult<Void> getReady(@Nonnull final Object requestor) {
     final AsyncResult<Void> result = AsyncResult.undefined();
     myShowing.getReady(this).doWhenDone(() -> {
-      ArrayList<FinalizableCommand> cmd = new ArrayList<>();
-      cmd.add(new FinalizableCommand(null) {
-        @Override
-        public void run() {
-          IdeFocusManager.getInstance(myToolWindowManager.getProject()).doWhenFocusSettlesDown(() -> {
-            if (myContentManager.isDisposed()) return;
-            myContentManager.getReady(requestor).notify(result);
-          });
-        }
+      IdeFocusManager.getInstance(myToolWindowManager.getProject()).doWhenFocusSettlesDown(() -> {
+        if (myContentManager.isDisposed()) return;
+        myContentManager.getReady(requestor).notify(result);
       });
-      myToolWindowManager.execute(cmd);
     });
     return result;
   }

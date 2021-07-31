@@ -19,16 +19,20 @@
  */
 package com.intellij.ide.bookmarks.actions;
 
-import com.intellij.openapi.ui.VerticalFlowLayout;
+import com.intellij.openapi.actionSystem.ActionToolbar;
 import com.intellij.ui.ClickListener;
 import com.intellij.ui.Gray;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.LightColors;
+import com.intellij.ui.border.CustomLineBorder;
+import com.intellij.ui.components.panels.HorizontalLayout;
 import com.intellij.ui.components.panels.NonOpaquePanel;
+import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
+import com.intellij.util.ui.components.BorderLayoutPanel;
+import consulo.awt.TargetAWT;
 
 import javax.swing.*;
-import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -40,23 +44,25 @@ public class MnemonicChooser extends JPanel {
   private static final Color FREE_CELL_COLOR = new JBColor(LightColors.SLIGHTLY_GRAY, Gray._80);
 
   public MnemonicChooser() {
-    super(new VerticalFlowLayout());
-    JPanel numbers = new NonOpaquePanel(new GridLayout(2, 5, 2, 2));
+    super(new HorizontalLayout(20));
+    setBorder(JBUI.Borders.empty(10));
+    
+    JPanel numbers = new NonOpaquePanel(new GridLayout(2, 5, 10, 10));
     for (char i = '1'; i <= '9'; i++) {
-      numbers.add(new MnemonicLabel(i));
+      numbers.add(wrapLabel(i));
     }
-    numbers.add(new MnemonicLabel('0'));
+    numbers.add(wrapLabel('0'));
     
 
-    JPanel letters = new NonOpaquePanel(new GridLayout(5, 6, 2, 2));
+    JPanel letters = new NonOpaquePanel(new GridLayout(5, 6, 10, 10));
     for (char c = 'A'; c <= 'Z'; c++) {
-      letters.add(new MnemonicLabel(c));
+      letters.add(wrapLabel(c));
     }
 
-    add(numbers);
-    add(new JSeparator());
-    add(letters);
-    setBackground(UIUtil.getListBackground());
+    // just ignore vertical expand
+    add(new BorderLayoutPanel().addToTop(numbers));
+    // just ignore vertical expand
+    add(new BorderLayoutPanel().addToTop(letters));
 
     addKeyListener(new KeyAdapter() {
       @Override
@@ -92,11 +98,22 @@ public class MnemonicChooser extends JPanel {
     return isOccupied(c) ? OCCUPIED_CELL_COLOR  : FREE_CELL_COLOR;
   }
 
+  private JComponent wrapLabel(char c) {
+    JPanel panel = new JPanel(new BorderLayout());
+    panel.setPreferredSize(TargetAWT.to(ActionToolbar.DEFAULT_MINIMUM_BUTTON_SIZE));
+    panel.setMinimumSize(TargetAWT.to(ActionToolbar.DEFAULT_MINIMUM_BUTTON_SIZE));
+    panel.setMaximumSize(TargetAWT.to(ActionToolbar.DEFAULT_MINIMUM_BUTTON_SIZE));
+
+    panel.setBorder(new CustomLineBorder(1, 1, 1, 1));
+
+    panel.add(new MnemonicLabel(c), BorderLayout.CENTER);
+    return panel;
+  }
+
   private class MnemonicLabel extends JLabel {
     private MnemonicLabel(final char c) {
       setOpaque(true);
       setText(Character.toString(c));
-      setBorder(new LineBorder(new JBColor(Gray._192, Gray._150), 1));
       setHorizontalAlignment(CENTER);
 
       setBackground(backgroundForMnemonic(c));

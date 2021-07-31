@@ -19,25 +19,24 @@ import com.intellij.execution.testframework.TestConsoleProperties;
 import com.intellij.execution.testframework.TestFrameworkPropertyListener;
 import com.intellij.execution.testframework.TestTreeView;
 import com.intellij.execution.testframework.ToolbarPanel;
-import consulo.awt.TargetAWT;
-import consulo.disposer.Disposable;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.editor.colors.EditorColorsManager;
 import com.intellij.openapi.ui.Splitter;
-import consulo.disposer.Disposer;
-import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowAnchor;
 import com.intellij.openapi.wm.ToolWindowManager;
-import com.intellij.openapi.wm.ex.ToolWindowManagerEx;
 import com.intellij.openapi.wm.ex.ToolWindowManagerListener;
 import com.intellij.ui.*;
 import com.intellij.util.Producer;
 import com.intellij.util.ui.UIUtil;
+import consulo.awt.TargetAWT;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
+import consulo.util.dataholder.Key;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import javax.swing.border.CompoundBorder;
 import java.awt.*;
@@ -70,7 +69,7 @@ public abstract class TestResultsPanel extends JPanel implements Disposable, Dat
     myStatisticsSplitterProportionProperty = mySplitterProportionProperty + "_Statistics";
     final ToolWindowManagerListener listener = new ToolWindowManagerListener() {
       @Override
-      public void stateChanged() {
+      public void stateChanged(ToolWindowManager toolWindowManager) {
         final boolean splitVertically = splitVertically();
         myStatusLine.setPreferredSize(splitVertically);
         mySplitter.setOrientation(splitVertically);
@@ -78,7 +77,7 @@ public abstract class TestResultsPanel extends JPanel implements Disposable, Dat
         repaint();
       }
     };
-    ToolWindowManagerEx.getInstanceEx(properties.getProject()).addToolWindowManagerListener(listener, this);
+    properties.getProject().getMessageBus().connect(this).subscribe(ToolWindowManagerListener.TOPIC, listener);
   }
 
   public void initUI() {

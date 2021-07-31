@@ -16,10 +16,9 @@
 package consulo.ui.ex;
 
 import com.intellij.openapi.wm.impl.WindowInfoImpl;
-import com.intellij.openapi.wm.impl.commands.FinalizableCommand;
+import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.Comparator;
 
 /**
@@ -29,21 +28,21 @@ import java.util.Comparator;
  * TODO [VISTALL] create method getComponent() with type {@link consulo.ui.Component}
  */
 public interface ToolWindowPanel {
-  @Nonnull
-  FinalizableCommand createAddButtonCmd(final ToolWindowStripeButton button, @Nonnull WindowInfoImpl info, @Nonnull Comparator<ToolWindowStripeButton> comparator, @Nonnull Runnable finishCallBack);
+  @RequiredUIAccess
+  void addButton(final ToolWindowStripeButton button, @Nonnull WindowInfoImpl info, @Nonnull Comparator<ToolWindowStripeButton> comparator);
 
-  @Nonnull
-  FinalizableCommand createUpdateButtonPositionCmd(@Nonnull String id, @Nonnull Runnable finishCallback);
+  @RequiredUIAccess
+  void updateButtonPosition(@Nonnull String id);
 
-  @Nonnull
-  FinalizableCommand createSetEditorComponentCmd(Object component, @Nonnull Runnable finishCallBack);
+  @RequiredUIAccess
+  void setEditorComponent(Object component);
 
-  @Nullable
-  FinalizableCommand createRemoveButtonCmd(@Nonnull String id, @Nonnull Runnable finishCallBack);
+  @RequiredUIAccess
+  void removeButton(@Nonnull String id);
 
-  @Nonnull
-  FinalizableCommand createRemoveDecoratorCmd(@Nonnull String id, final boolean dirtyMode, @Nonnull Runnable finishCallBack);
+  @RequiredUIAccess
+  void removeDecorator(@Nonnull String id, final boolean dirtyMode);
 
-  @Nonnull
-  FinalizableCommand createAddDecoratorCmd(@Nonnull ToolWindowInternalDecorator decorator, @Nonnull WindowInfoImpl info, final boolean dirtyMode, @Nonnull Runnable finishCallBack);
+  @RequiredUIAccess
+  void addDecorator(@Nonnull ToolWindowInternalDecorator decorator, @Nonnull WindowInfoImpl info, final boolean dirtyMode);
 }

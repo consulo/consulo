@@ -46,7 +46,6 @@ import consulo.disposer.Disposer;
 import consulo.logging.Logger;
 import consulo.start.WelcomeFrameManager;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.wm.impl.DesktopCommandProcessorImpl;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
@@ -101,7 +100,6 @@ public final class DesktopWindowManagerImpl extends WindowManagerEx implements P
 
   private final EventDispatcher<WindowManagerListener> myEventDispatcher = EventDispatcher.create(WindowManagerListener.class);
 
-  private final CommandProcessorBase myCommandProcessor;
   private final DesktopWindowWatcher myWindowWatcher;
   /**
    * That is the default layout.
@@ -131,7 +129,6 @@ public final class DesktopWindowManagerImpl extends WindowManagerEx implements P
       Disposer.register(application, () -> disposeRootFrame());
     }
 
-    myCommandProcessor = new DesktopCommandProcessorImpl();
     myWindowWatcher = new DesktopWindowWatcher(application);
     final KeyboardFocusManager keyboardFocusManager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
     keyboardFocusManager.addPropertyChangeListener(FOCUSED_WINDOW_PROPERTY_NAME, myWindowWatcher);
@@ -700,15 +697,6 @@ public final class DesktopWindowManagerImpl extends WindowManagerEx implements P
   @Nullable
   public final Component getFocusedComponent(@Nullable final Project project) {
     return myWindowWatcher.getFocusedComponent(project);
-  }
-
-  /**
-   * Private part
-   */
-  @Override
-  @Nonnull
-  public final CommandProcessorBase getCommandProcessor() {
-    return myCommandProcessor;
   }
 
   @Override

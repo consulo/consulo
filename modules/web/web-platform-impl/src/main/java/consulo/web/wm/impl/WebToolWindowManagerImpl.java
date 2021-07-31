@@ -30,10 +30,8 @@ import com.intellij.openapi.wm.WindowManager;
 import com.intellij.openapi.wm.ex.IdeFrameEx;
 import com.intellij.openapi.wm.ex.ToolWindowEx;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
-import com.intellij.openapi.wm.impl.CommandProcessorBase;
 import com.intellij.openapi.wm.impl.InternalDecoratorListener;
 import com.intellij.openapi.wm.impl.WindowInfoImpl;
-import com.intellij.openapi.wm.impl.commands.FinalizableCommand;
 import com.intellij.util.messages.MessageBusConnection;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.localize.LocalizeValue;
@@ -49,14 +47,13 @@ import consulo.web.ui.ex.WebToolWindowPanelImpl;
 import consulo.web.ui.ex.WebToolWindowStripeButtonImpl;
 import consulo.wm.impl.ToolWindowManagerBase;
 import consulo.wm.impl.UnifiedToolWindowImpl;
+import jakarta.inject.Inject;
+import jakarta.inject.Provider;
+import jakarta.inject.Singleton;
 import org.jdom.Element;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import jakarta.inject.Inject;
-import jakarta.inject.Provider;
-import jakarta.inject.Singleton;
-import java.util.List;
 
 /**
  * @author VISTALL
@@ -119,13 +116,14 @@ public class WebToolWindowManagerImpl extends ToolWindowManagerBase {
   }
 
   @Override
-  protected void initAll(List<FinalizableCommand> commandsList) {
-    appendUpdateToolWindowsPaneCmd(commandsList);
+  @RequiredUIAccess
+  protected void postInitialize() {
+    updateToolWindowsPane();
 
     Component editorComponent = getEditorComponent(myProject);
     //myEditorComponentFocusWatcher.install(editorComponent);
 
-    appendSetEditorComponentCmd(editorComponent, commandsList);
+    setEditorComponent(editorComponent);
     //if (myEditorWasActive && editorComponent instanceof DesktopEditorsSplitters) {
     //  activateEditorComponentImpl(commandsList, true);
     //}
@@ -149,12 +147,6 @@ public class WebToolWindowManagerImpl extends ToolWindowManagerBase {
   @Override
   protected void doWhenFirstShown(Object component, Runnable runnable) {
     UIAccess.get().give(runnable);
-  }
-
-  @Nonnull
-  @Override
-  protected CommandProcessorBase createCommandProcessor() {
-    return new WebCommandProcessorImpl();
   }
 
   @Nonnull
@@ -191,34 +183,34 @@ public class WebToolWindowManagerImpl extends ToolWindowManagerBase {
     return true;
   }
 
+  @RequiredUIAccess
   @Override
-  protected void appendRequestFocusInToolWindowCmd(String id, List<FinalizableCommand> commandList, boolean forced) {
+  protected void requestFocusInToolWindow(String id, boolean forced) {
 
   }
 
+  @RequiredUIAccess
   @Override
-  protected void appendRemoveWindowedDecoratorCmd(WindowInfoImpl info, List<FinalizableCommand> commandsList) {
+  protected void removeWindowedDecorator(WindowInfoImpl info) {
 
   }
 
+  @RequiredUIAccess
   @Override
-  protected void appendAddFloatingDecorator(ToolWindowInternalDecorator internalDecorator, List<FinalizableCommand> commandList, WindowInfoImpl toBeShownInfo) {
+  protected void addFloatingDecorator(ToolWindowInternalDecorator internalDecorator, WindowInfoImpl toBeShownInfo) {
 
   }
 
+  @RequiredUIAccess
   @Override
-  protected void appendAddWindowedDecorator(ToolWindowInternalDecorator internalDecorator, List<FinalizableCommand> commandList, WindowInfoImpl toBeShownInfo) {
+  protected void addWindowedDecorator(ToolWindowInternalDecorator internalDecorator, WindowInfoImpl toBeShownInfo) {
 
   }
 
+  @RequiredUIAccess
   @Override
-  protected void appendUpdateToolWindowsPaneCmd(List<FinalizableCommand> commandsList) {
+  protected void updateToolWindowsPane() {
 
-  }
-
-  @Override
-  protected boolean hasModalChild(WindowInfoImpl info) {
-    return false;
   }
 
   @RequiredUIAccess

@@ -147,7 +147,7 @@ public final class EditorTabbedContainer implements Disposable, CloseAction.Clos
 
     ((ToolWindowManagerEx)ToolWindowManager.getInstance(myProject)).addToolWindowManagerListener(new ToolWindowManagerListener() {
       @Override
-      public void stateChanged() {
+      public void stateChanged(ToolWindowManager toolWindowManager) {
         updateTabBorder();
       }
 

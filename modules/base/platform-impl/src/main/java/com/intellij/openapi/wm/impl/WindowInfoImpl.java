@@ -141,7 +141,7 @@ public final class WindowInfoImpl implements Cloneable, WindowInfo {
     myAutoHide = info.myAutoHide;
     myFloatingBounds = info.myFloatingBounds == null ? null : info.myFloatingBounds.clone();
     myId = info.myId;
-    setTypeAndCheck(info.myType);
+    myType = info.myType;
     myInternalType = info.myInternalType;
     myVisible = info.myVisible;
     myWeight = info.myWeight;
@@ -302,7 +302,7 @@ public final class WindowInfoImpl implements Cloneable, WindowInfo {
     catch (IllegalArgumentException ignored) {
     }
     try {
-      setTypeAndCheck(ToolWindowType.valueOf(element.getAttributeValue(TYPE_ATTR)));
+      myType = ToolWindowType.valueOf(element.getAttributeValue(TYPE_ATTR));
     }
     catch (IllegalArgumentException ignored) {
     }
@@ -397,12 +397,7 @@ public final class WindowInfoImpl implements Cloneable, WindowInfo {
     if (ToolWindowType.DOCKED == type || ToolWindowType.SLIDING == type) {
       myInternalType = type;
     }
-    setTypeAndCheck(type);
-  }
-
-  //Hardcoded to avoid single-usage-API
-  private void setTypeAndCheck(@Nonnull ToolWindowType type) {
-    myType = ToolWindowId.PREVIEW == myId && type == ToolWindowType.DOCKED ? ToolWindowType.SLIDING : type;
+    myType = type;
   }
 
   public void setVisible(final boolean visible) {
