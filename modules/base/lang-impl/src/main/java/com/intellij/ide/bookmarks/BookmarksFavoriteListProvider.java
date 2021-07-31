@@ -100,7 +100,7 @@ public class BookmarksFavoriteListProvider extends AbstractFavoritesListProvider
         @Override
         protected void update(PresentationData presentation) {
           presentation.setPresentableText(bookmark.toString());
-          presentation.setIcon(bookmark.getIcon());
+          presentation.setIcon(bookmark.getIcon(false));
         }
       };
       child.setParent(myNode);
@@ -186,15 +186,15 @@ public class BookmarksFavoriteListProvider extends AbstractFavoritesListProvider
                                 int row,
                                 boolean hasFocus) {
     renderer.clear();
-    renderer.setIcon(Bookmark.getDefaultIcon());
+    renderer.setIcon(Bookmark.getDefaultIcon(false));
     if (value instanceof Bookmark) {
       Bookmark bookmark = (Bookmark)value;
       BookmarkItem.setupRenderer(renderer, myProject, bookmark, selected);
       if (renderer.getIcon() != null) {
-        renderer.setIcon(ImageEffects.appendRight(bookmark.getIcon(), renderer.getIcon()));
+        renderer.setIcon(ImageEffects.appendRight(bookmark.getIcon(false), renderer.getIcon()));
       }
       else {
-        renderer.setIcon(bookmark.getIcon());
+        renderer.setIcon(bookmark.getIcon(false));
       }
     }
     else {

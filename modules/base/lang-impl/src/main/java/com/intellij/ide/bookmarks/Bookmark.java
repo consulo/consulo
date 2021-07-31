@@ -17,7 +17,6 @@
 package com.intellij.ide.bookmarks;
 
 import com.intellij.codeInsight.daemon.GutterMark;
-import com.intellij.icons.AllIcons;
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.structureView.StructureViewBuilder;
 import com.intellij.ide.structureView.StructureViewModel;
@@ -47,6 +46,7 @@ import com.intellij.pom.Navigatable;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
 import consulo.annotation.access.RequiredReadAction;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.color.ColorValue;
 import consulo.ui.color.RGBColor;
 import consulo.ui.ex.util.LightDarkColorValue;
@@ -56,6 +56,7 @@ import consulo.ui.image.ImageEffects;
 import consulo.ui.image.canvas.Canvas2D;
 import consulo.ui.style.ComponentColors;
 import consulo.ui.style.StandardColors;
+import consulo.util.lang.Couple;
 import consulo.util.lang.ref.SimpleReference;
 
 import javax.annotation.Nonnull;
@@ -64,31 +65,36 @@ import java.awt.*;
 
 public class Bookmark implements Navigatable {
   //0..9  + A..Z
-  private static final Image[] ourMnemonicImageCache = new Image[36];
+  // Gutter + Action icon
+  @SuppressWarnings("unchecked")
+  private static final Couple<Image>[] ourMnemonicImageCache = new Couple[36];
 
   @Nonnull
-  public static Image getDefaultIcon() {
-    return AllIcons.Actions.Checked;
+  public static Image getDefaultIcon(boolean gutter) {
+    return gutter ? PlatformIconGroup.actionsBookmarkSmall() : PlatformIconGroup.actionsBookmark();
   }
 
   @Nonnull
-  private static Image getMnemonicIcon(char mnemonic) {
+  private static Image getMnemonicIcon(char mnemonic, boolean gutter) {
     int index = mnemonic - 48;
     if (index > 9) index -= 7;
     if (index < 0 || index > ourMnemonicImageCache.length - 1) {
-      return createMnemonicIcon(mnemonic);
+      return createMnemonicIcon(mnemonic, gutter);
     }
 
     if (ourMnemonicImageCache[index] == null) {
-      ourMnemonicImageCache[index] = createMnemonicIcon(mnemonic);
+      // its not mistake about using gutter icon as default icon for named bookmarks, too big icon
+      ourMnemonicImageCache[index] = Couple.of(createMnemonicIcon(mnemonic, true), createMnemonicIcon(mnemonic, true));
     }
-    return ourMnemonicImageCache[index];
+    Couple<Image> couple = ourMnemonicImageCache[index];
+    return gutter ? couple.getFirst() : couple.getSecond();
   }
 
   @Nonnull
-  private static Image createMnemonicIcon(char cha) {
-    int width = AllIcons.Actions.Checked.getWidth();
-    int height = AllIcons.Actions.Checked.getHeight();
+  private static Image createMnemonicIcon(char cha, boolean gutter) {
+    int width = gutter ? 12 : 16;
+    int height = gutter ? 12 : 16;
+    int fontSize = gutter ? 11 : 13;
 
     return ImageEffects.canvas(width, height, c -> {
       c.setFillStyle(new LightDarkColorValue(new RGBColor(255, 255, 204), new RGBColor(103, 81, 51)));
@@ -100,7 +106,7 @@ public class Bookmark implements Navigatable {
 
       c.setFillStyle(ComponentColors.TEXT);
       EditorColorsScheme scheme = EditorColorsManager.getInstance().getGlobalScheme();
-      c.setFont(FontManager.get().createFont(scheme.getEditorFontName(), 11, consulo.ui.font.Font.STYLE_PLAIN));
+      c.setFont(FontManager.get().createFont(scheme.getEditorFontName(), fontSize, consulo.ui.font.Font.STYLE_PLAIN));
       c.setTextAlign(Canvas2D.TextAlign.center);
       c.setTextBaseline(Canvas2D.TextBaseline.middle);
 
@@ -199,12 +205,17 @@ public class Bookmark implements Navigatable {
     if (!found.isNull()) found.get().dispose();
   }
 
-  @Nonnull
-  public Image getIcon() {
+  public Image getIcon(boolean gutter) {
     if (myMnemonic == 0) {
-      return getDefaultIcon();
+      return getDefaultIcon(gutter);
     }
-    return getMnemonicIcon(myMnemonic);
+    return getMnemonicIcon(myMnemonic, gutter);
+  }
+
+  @Nonnull
+  @Deprecated(forRemoval = true)
+  public Image getIcon() {
+    return getIcon(true);
   }
 
   public String getDescription() {
@@ -331,7 +342,7 @@ public class Bookmark implements Navigatable {
     @Override
     @Nonnull
     public Image getIcon() {
-      return myBookmark.getIcon();
+      return myBookmark.getIcon(true);
     }
 
     @Override
