@@ -72,12 +72,11 @@ public class RunToolWindowManager {
     myParentDisposable = parentDisposable;
     project.getMessageBus().connect().subscribe(ToolWindowManagerListener.TOPIC, new ToolWindowManagerListener() {
       @Override
-      public void stateChanged() {
+      public void stateChanged(ToolWindowManager tw) {
         if (project.isDisposed()) {
           return;
         }
 
-        ToolWindowManager tw = toolWindowManager.get();
         Set<String> currentWindows = new HashSet<>();
         ContainerUtil.addAll(currentWindows, tw.getToolWindowIds());
         myToolwindowIdZBuffer.retainAll(currentWindows);

@@ -23,7 +23,7 @@ import java.awt.*;
 /**
  * @author Eugene Belyaev
  */
-final class Surface extends JComponent {
+public final class Surface extends JComponent {
   private final Image myTopImage;
   private final Image myBottomImage;
   private final double myPixelsPerSec;
@@ -70,6 +70,7 @@ final class Surface extends JComponent {
     }
   }
 
+  @Override
   public final void paint(final Graphics g) {
     final Rectangle bounds = getBounds();
     if (myAnchor == ToolWindowAnchor.LEFT) {

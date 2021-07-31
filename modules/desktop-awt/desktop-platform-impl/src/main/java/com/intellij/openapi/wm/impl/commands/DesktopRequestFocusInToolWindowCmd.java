@@ -35,28 +35,19 @@ import java.awt.*;
  *
  * @author Vladimir Kondratyev
  */
-public final class DesktopRequestFocusInToolWindowCmd extends FinalizableCommand {
+public final class DesktopRequestFocusInToolWindowCmd {
   private static final Logger LOG = Logger.getInstance(DesktopRequestFocusInToolWindowCmd.class);
+  private final IdeFocusManager myFocusManager;
   private final DesktopToolWindowImpl myToolWindow;
   private final FocusWatcher myFocusWatcher;
 
   private final Project myProject;
 
-  public DesktopRequestFocusInToolWindowCmd(IdeFocusManager focusManager, final DesktopToolWindowImpl toolWindow, final FocusWatcher focusWatcher, final Runnable finishCallBack, Project project) {
-    super(finishCallBack);
+  public DesktopRequestFocusInToolWindowCmd(IdeFocusManager focusManager, final DesktopToolWindowImpl toolWindow, final FocusWatcher focusWatcher, Project project) {
+    myFocusManager = focusManager;
     myToolWindow = toolWindow;
     myFocusWatcher = focusWatcher;
     myProject = project;
-  }
-
-  @Override
-  public final void run() {
-    try {
-      requestFocus();
-    }
-    finally {
-      finish();
-    }
   }
 
   private void bringOwnerToFront() {
@@ -88,7 +79,7 @@ public final class DesktopRequestFocusInToolWindowCmd extends FinalizableCommand
     }
   }
 
-  private void requestFocus() {
+  public void requestFocus() {
     final Alarm checkerAlarm = new Alarm();
     Runnable checker = new Runnable() {
       final long startTime = System.currentTimeMillis();
@@ -103,10 +94,10 @@ public final class DesktopRequestFocusInToolWindowCmd extends FinalizableCommand
         if (c != null) {
           final Component owner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getPermanentFocusOwner();
           if (owner != c) {
-            getManager().getFocusManager().requestFocusInProject(c, myProject);
+            myFocusManager.requestFocusInProject(c, myProject);
             bringOwnerToFront();
           }
-          getManager().getFocusManager().doWhenFocusSettlesDown(() -> updateToolWindow(c));
+          myFocusManager.doWhenFocusSettlesDown(() -> updateToolWindow(c));
         }
         else {
           checkerAlarm.addRequest(this, 100);

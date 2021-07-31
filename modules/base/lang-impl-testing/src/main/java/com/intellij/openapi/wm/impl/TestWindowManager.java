@@ -282,11 +282,6 @@ public final class TestWindowManager extends WindowManagerEx {
   }
 
   @Override
-  public final CommandProcessorBase getCommandProcessor() {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
   public final ToolWindowLayout getLayout() {
     throw new UnsupportedOperationException();
   }

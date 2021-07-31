@@ -9,13 +9,11 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.CustomShortcutSet;
 import com.intellij.openapi.application.ApplicationManager;
-import consulo.disposer.Disposable;
-import consulo.disposer.Disposer;
-import consulo.logging.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.openapi.wm.ex.ToolWindowManagerListener;
 import com.intellij.ui.border.CustomLineBorder;
 import com.intellij.ui.speedSearch.SpeedSearch;
@@ -23,9 +21,14 @@ import com.intellij.ui.speedSearch.SpeedSearchSupply;
 import com.intellij.util.text.NameUtilCore;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
+import consulo.logging.Logger;
+import kava.beans.PropertyChangeListener;
+import kava.beans.PropertyChangeSupport;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.text.AttributeSet;
@@ -33,8 +36,6 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.PlainDocument;
 import java.awt.*;
 import java.awt.event.*;
-import kava.beans.PropertyChangeListener;
-import kava.beans.PropertyChangeSupport;
 import java.util.ListIterator;
 import java.util.NoSuchElementException;
 
@@ -635,7 +636,7 @@ public abstract class SpeedSearchBase<Comp extends JComponent> extends SpeedSear
 
   private class MyToolWindowManagerListener implements ToolWindowManagerListener {
     @Override
-    public void stateChanged() {
+    public void stateChanged(ToolWindowManager toolWindowManager) {
       manageSearchPopup(null);
     }
   }

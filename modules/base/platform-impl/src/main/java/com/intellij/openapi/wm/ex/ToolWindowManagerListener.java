@@ -15,7 +15,9 @@
  */
 package com.intellij.openapi.wm.ex;
 
+import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.util.messages.Topic;
+import consulo.annotation.DeprecationInfo;
 
 import javax.annotation.Nonnull;
 import java.util.EventListener;
@@ -31,6 +33,12 @@ public interface ToolWindowManagerListener extends EventListener {
   default void toolWindowRegistered(@Nonnull String id) {
   }
 
+  default void stateChanged(ToolWindowManager toolWindowManager) {
+    stateChanged();
+  }
+
+  @Deprecated(forRemoval = true)
+  @DeprecationInfo("Use with ToolWindowManager parameter")
   default void stateChanged() {
   }
 }

@@ -25,7 +25,6 @@ import com.intellij.openapi.wm.StatusBar;
 import com.intellij.openapi.wm.WindowManagerListener;
 import com.intellij.openapi.wm.ex.IdeFrameEx;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
-import com.intellij.openapi.wm.impl.CommandProcessorBase;
 import com.intellij.openapi.wm.impl.ToolWindowLayout;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -169,11 +168,6 @@ public class DesktopSwtWindowManagerImpl extends UnifiedWindowManagerImpl implem
   @RequiredUIAccess
   @Override
   public IdeFrame findFrameFor(@Nullable Project project) {
-    return null;
-  }
-
-  @Override
-  public CommandProcessorBase getCommandProcessor() {
     return null;
   }
 

@@ -15,14 +15,16 @@
  */
 package consulo.web.ui.ex;
 
-import consulo.logging.Logger;
 import com.intellij.openapi.wm.ToolWindowAnchor;
 import com.intellij.openapi.wm.WindowInfo;
 import com.intellij.openapi.wm.impl.WindowInfoImpl;
-import com.intellij.openapi.wm.impl.commands.FinalizableCommand;
 import consulo.annotation.DeprecationInfo;
+import consulo.logging.Logger;
 import consulo.ui.Component;
-import consulo.ui.ex.*;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.ToolWindowInternalDecorator;
+import consulo.ui.ex.ToolWindowPanel;
+import consulo.ui.ex.ToolWindowStripeButton;
 import consulo.ui.web.internal.TargetVaddin;
 import consulo.ui.web.internal.WebThreeComponentSplitLayoutImpl;
 import consulo.ui.web.internal.base.UIComponentWithVaadinComponent;
@@ -60,13 +62,12 @@ public class WebToolWindowPanelImpl extends UIComponentWithVaadinComponent<WebTo
     }
   }
 
-  private final class AddToolStripeButtonCmd extends FinalizableCommand {
+  private final class AddToolStripeButtonCmd implements Runnable {
     private final WebToolWindowStripeButtonImpl myButton;
     private final WindowInfoImpl myInfo;
     private final Comparator<ToolWindowStripeButton> myComparator;
 
-    public AddToolStripeButtonCmd(final WebToolWindowStripeButtonImpl button, @Nonnull WindowInfoImpl info, @Nonnull Comparator<ToolWindowStripeButton> comparator, @Nonnull Runnable finishCallBack) {
-      super(finishCallBack);
+    public AddToolStripeButtonCmd(final WebToolWindowStripeButtonImpl button, @Nonnull WindowInfoImpl info, @Nonnull Comparator<ToolWindowStripeButton> comparator) {
       myButton = button;
       myInfo = info;
       myComparator = comparator;
@@ -74,79 +75,67 @@ public class WebToolWindowPanelImpl extends UIComponentWithVaadinComponent<WebTo
 
     @Override
     public final void run() {
-      try {
-        final ToolWindowAnchor anchor = myInfo.getAnchor();
-        if (ToolWindowAnchor.TOP == anchor) {
-          myTopStripe.addButton(myButton, myComparator);
-        }
-        else if (ToolWindowAnchor.LEFT == anchor) {
-          myLeftStripe.addButton(myButton, myComparator);
-        }
-        else if (ToolWindowAnchor.BOTTOM == anchor) {
-          myBottomStripe.addButton(myButton, myComparator);
-        }
-        else if (ToolWindowAnchor.RIGHT == anchor) {
-          myRightStripe.addButton(myButton, myComparator);
-        }
-        else {
-          LOG.error("unknown anchor: " + anchor);
-        }
-        getVaadinComponent().markAsDirtyRecursive();
+      final ToolWindowAnchor anchor = myInfo.getAnchor();
+      if (ToolWindowAnchor.TOP == anchor) {
+        myTopStripe.addButton(myButton, myComparator);
       }
-      finally {
-        finish();
+      else if (ToolWindowAnchor.LEFT == anchor) {
+        myLeftStripe.addButton(myButton, myComparator);
       }
+      else if (ToolWindowAnchor.BOTTOM == anchor) {
+        myBottomStripe.addButton(myButton, myComparator);
+      }
+      else if (ToolWindowAnchor.RIGHT == anchor) {
+        myRightStripe.addButton(myButton, myComparator);
+      }
+      else {
+        LOG.error("unknown anchor: " + anchor);
+      }
+      getVaadinComponent().markAsDirtyRecursive();
     }
   }
 
-  private final class UpdateButtonPositionCmd extends FinalizableCommand {
+  private final class UpdateButtonPositionCmd implements Runnable {
     private final String myId;
 
-    private UpdateButtonPositionCmd(@Nonnull String id, @Nonnull Runnable finishCallBack) {
-      super(finishCallBack);
+    private UpdateButtonPositionCmd(@Nonnull String id) {
       myId = id;
     }
 
     @Override
     public void run() {
-      try {
-        WebToolWindowStripeButtonImpl stripeButton = getButtonById(myId);
-        if (stripeButton == null) {
-          return;
-        }
-
-        WindowInfo info = stripeButton.getWindowInfo();
-        ToolWindowAnchor anchor = info.getAnchor();
-
-        if (ToolWindowAnchor.TOP == anchor) {
-          myTopStripe.markAsDirtyRecursive();
-        }
-        else if (ToolWindowAnchor.LEFT == anchor) {
-          myLeftStripe.markAsDirtyRecursive();
-        }
-        else if (ToolWindowAnchor.BOTTOM == anchor) {
-          myBottomStripe.markAsDirtyRecursive();
-        }
-        else if (ToolWindowAnchor.RIGHT == anchor) {
-          myRightStripe.markAsDirtyRecursive();
-        }
-        else {
-          LOG.error("unknown anchor: " + anchor);
-        }
+      WebToolWindowStripeButtonImpl stripeButton = getButtonById(myId);
+      if (stripeButton == null) {
+        return;
       }
-      finally {
-        finish();
+
+      WindowInfo info = stripeButton.getWindowInfo();
+      ToolWindowAnchor anchor = info.getAnchor();
+
+      if (ToolWindowAnchor.TOP == anchor) {
+        myTopStripe.markAsDirtyRecursive();
+      }
+      else if (ToolWindowAnchor.LEFT == anchor) {
+        myLeftStripe.markAsDirtyRecursive();
+      }
+      else if (ToolWindowAnchor.BOTTOM == anchor) {
+        myBottomStripe.markAsDirtyRecursive();
+      }
+      else if (ToolWindowAnchor.RIGHT == anchor) {
+        myRightStripe.markAsDirtyRecursive();
+      }
+      else {
+        LOG.error("unknown anchor: " + anchor);
       }
     }
   }
 
-  private final class AddDockedComponentCmd extends FinalizableCommand {
+  private final class AddDockedComponentCmd implements Runnable {
     private final ToolWindowInternalDecorator myDecorator;
     private final WindowInfoImpl myInfo;
     private final boolean myDirtyMode;
 
-    public AddDockedComponentCmd(@Nonnull ToolWindowInternalDecorator decorator, @Nonnull WindowInfoImpl info, final boolean dirtyMode, @Nonnull Runnable finishCallBack) {
-      super(finishCallBack);
+    public AddDockedComponentCmd(@Nonnull ToolWindowInternalDecorator decorator, @Nonnull WindowInfoImpl info, final boolean dirtyMode) {
       myDecorator = decorator;
       myInfo = info;
       myDirtyMode = dirtyMode;
@@ -154,56 +143,43 @@ public class WebToolWindowPanelImpl extends UIComponentWithVaadinComponent<WebTo
 
     @Override
     public final void run() {
-      try {
-        final ToolWindowAnchor anchor = myInfo.getAnchor();
+      final ToolWindowAnchor anchor = myInfo.getAnchor();
 
-        setComponent(myDecorator, anchor, WindowInfoImpl.normalizeWeigh(myInfo.getWeight()));
-      }
-      finally {
-        finish();
-      }
+      setComponent(myDecorator, anchor, WindowInfoImpl.normalizeWeigh(myInfo.getWeight()));
     }
   }
 
-  private final class RemoveDockedComponentCmd extends FinalizableCommand {
+  private final class RemoveDockedComponentCmd implements Runnable {
     private final WindowInfoImpl myInfo;
     private final boolean myDirtyMode;
 
-    public RemoveDockedComponentCmd(@Nonnull WindowInfoImpl info, final boolean dirtyMode, @Nonnull Runnable finishCallBack) {
-      super(finishCallBack);
+    public RemoveDockedComponentCmd(@Nonnull WindowInfoImpl info, final boolean dirtyMode) {
       myInfo = info;
       myDirtyMode = dirtyMode;
     }
 
     @Override
     public final void run() {
-      try {
-        setComponent(null, myInfo.getAnchor(), 0);
-      }
-      finally {
-        finish();
+      setComponent(null, myInfo.getAnchor(), 0);
+
+      if(!myDirtyMode) {
+        toVaadinComponent().markAsDirtyRecursive();
       }
     }
   }
 
-  private final class SetEditorComponentCmd extends FinalizableCommand {
+  private final class SetEditorComponentCmd implements Runnable {
     private final Component myComponent;
 
-    public SetEditorComponentCmd(Component component, @Nonnull Runnable finishCallBack) {
-      super(finishCallBack);
+    public SetEditorComponentCmd(Component component) {
       myComponent = component;
     }
 
     @Override
     public void run() {
-      try {
-        setDocumentComponent(myComponent);
-        //myLayeredPane.validate();
-        //myLayeredPane.repaint();
-      }
-      finally {
-        finish();
-      }
+      setDocumentComponent(myComponent);
+      //myLayeredPane.validate();
+      //myLayeredPane.repaint();
     }
   }
 
@@ -276,28 +252,24 @@ public class WebToolWindowPanelImpl extends UIComponentWithVaadinComponent<WebTo
     return myId2Button.get(id);
   }
 
-  @Nonnull
+  @RequiredUIAccess
   @Override
-  public FinalizableCommand createAddButtonCmd(ToolWindowStripeButton button, @Nonnull WindowInfoImpl info, @Nonnull Comparator<ToolWindowStripeButton> comparator, @Nonnull Runnable finishCallBack) {
+  public void addButton(ToolWindowStripeButton button, @Nonnull WindowInfoImpl info, @Nonnull Comparator<ToolWindowStripeButton> comparator) {
     final WindowInfoImpl copiedInfo = info.copy();
     myId2Button.put(copiedInfo.getId(), (WebToolWindowStripeButtonImpl)button);
-    return new AddToolStripeButtonCmd((WebToolWindowStripeButtonImpl)button, copiedInfo, comparator, finishCallBack);
+    new AddToolStripeButtonCmd((WebToolWindowStripeButtonImpl)button, copiedInfo, comparator).run();
   }
 
+  @RequiredUIAccess
   @Nullable
   @Override
-  public FinalizableCommand createRemoveButtonCmd(@Nonnull String id, @Nonnull Runnable finishCallBack) {
-    return new FinalizableCommand(finishCallBack) {
-      @Override
-      public void run() {
-
-      }
-    };
+  public void removeButton(@Nonnull String id) {
+    // todo
   }
 
-  @Nonnull
+  @RequiredUIAccess
   @Override
-  public FinalizableCommand createRemoveDecoratorCmd(@Nonnull String id, boolean dirtyMode, @Nonnull Runnable finishCallBack) {
+  public void removeDecorator(@Nonnull String id, boolean dirtyMode) {
     final ToolWindowInternalDecorator decorator = getDecoratorById(id);
     final WindowInfoImpl info = getDecoratorInfoById(id);
 
@@ -308,25 +280,14 @@ public class WebToolWindowPanelImpl extends UIComponentWithVaadinComponent<WebTo
 
     if (info.isDocked()) {
       if (sideInfo == null) {
-        return new RemoveDockedComponentCmd(info, dirtyMode, finishCallBack);
+        new RemoveDockedComponentCmd(info, dirtyMode).run();
       }
       else {
-        return new FinalizableCommand(finishCallBack) {
-          @Override
-          public void run() {
 
-          }
-        };
         //return new RemoveSplitAndDockedComponentCmd(info, dirtyMode, finishCallBack);
       }
     }
     else if (info.isSliding()) {
-      return new FinalizableCommand(finishCallBack) {
-        @Override
-        public void run() {
-
-        }
-      };
       //return new RemoveSlidingComponentCmd(decorator, info, dirtyMode, finishCallBack);
     }
     else {
@@ -342,9 +303,9 @@ public class WebToolWindowPanelImpl extends UIComponentWithVaadinComponent<WebTo
     return myId2Decorator.get(id);
   }
 
-  @Nonnull
+  @RequiredUIAccess
   @Override
-  public FinalizableCommand createAddDecoratorCmd(@Nonnull ToolWindowInternalDecorator decorator, @Nonnull WindowInfoImpl info, boolean dirtyMode, @Nonnull Runnable finishCallBack) {
+  public void addDecorator(@Nonnull ToolWindowInternalDecorator decorator, @Nonnull WindowInfoImpl info, boolean dirtyMode) {
     final WindowInfoImpl copiedInfo = info.copy();
     final String id = copiedInfo.getId();
 
@@ -354,25 +315,14 @@ public class WebToolWindowPanelImpl extends UIComponentWithVaadinComponent<WebTo
     if (info.isDocked()) {
       WindowInfoImpl sideInfo = getDockedInfoAt(info.getAnchor(), !info.isSplit());
       if (sideInfo == null) {
-        return new AddDockedComponentCmd(decorator, info, dirtyMode, finishCallBack);
+        new AddDockedComponentCmd(decorator, info, dirtyMode).run();
       }
       else {
         //return new AddAndSplitDockedComponentCmd((DesktopInternalDecorator)decorator, info, dirtyMode, finishCallBack);
-        return new FinalizableCommand(finishCallBack) {
-          @Override
-          public void run() {
-
-          }
-        };
       }
     }
     else if (info.isSliding()) {
-      return new FinalizableCommand(finishCallBack) {
-        @Override
-        public void run() {
 
-        }
-      };
       //return new AddSlidingComponentCmd((DesktopInternalDecorator)decorator, info, dirtyMode, finishCallBack);
     }
     else {
@@ -390,15 +340,15 @@ public class WebToolWindowPanelImpl extends UIComponentWithVaadinComponent<WebTo
     return null;
   }
 
-  @Nonnull
+  @RequiredUIAccess
   @Override
-  public FinalizableCommand createUpdateButtonPositionCmd(@Nonnull String id, @Nonnull Runnable finishCallback) {
-    return new UpdateButtonPositionCmd(id, finishCallback);
+  public void updateButtonPosition(@Nonnull String id) {
+    new UpdateButtonPositionCmd(id).run();
   }
 
-  @Nonnull
+  @RequiredUIAccess
   @Override
-  public FinalizableCommand createSetEditorComponentCmd(Object component, @Nonnull Runnable finishCallBack) {
-    return new SetEditorComponentCmd((Component)component, finishCallBack);
+  public void setEditorComponent(Object component) {
+    new SetEditorComponentCmd((Component)component).run();
   }
 }

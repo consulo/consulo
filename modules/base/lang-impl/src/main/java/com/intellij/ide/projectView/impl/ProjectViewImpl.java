@@ -64,7 +64,6 @@ import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.*;
 import com.intellij.openapi.wm.ex.ToolWindowEx;
-import com.intellij.openapi.wm.ex.ToolWindowManagerEx;
 import com.intellij.openapi.wm.ex.ToolWindowManagerListener;
 import com.intellij.psi.*;
 import com.intellij.psi.impl.file.PsiPackageHelper;
@@ -214,7 +213,7 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
   private ContentManager myContentManager;
 
   @Inject
-  public ProjectViewImpl(@Nonnull Project project, FileEditorManager fileEditorManager, ToolWindowManager toolWindowManager, @Nonnull ProjectViewSharedSettings projectViewSharedSettings) {
+  public ProjectViewImpl(@Nonnull Project project, FileEditorManager fileEditorManager, @Nonnull ProjectViewSharedSettings projectViewSharedSettings) {
     myProject = project;
     myProjectViewSharedSettings = projectViewSharedSettings;
 
@@ -253,11 +252,11 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
         setAutoscrollToSource(state, myCurrentViewId);
       }
     };
-    ((ToolWindowManagerEx)toolWindowManager).addToolWindowManagerListener(new ToolWindowManagerListener() {
+    project.getMessageBus().connect(this).subscribe(ToolWindowManagerListener.TOPIC, new ToolWindowManagerListener() {
       private boolean toolWindowVisible;
 
       @Override
-      public void stateChanged() {
+      public void stateChanged(ToolWindowManager toolWindowManager) {
         ToolWindow window = toolWindowManager.getToolWindow(ToolWindowId.PROJECT_VIEW);
         if (window == null) return;
         if (window.isVisible() && !toolWindowVisible) {
