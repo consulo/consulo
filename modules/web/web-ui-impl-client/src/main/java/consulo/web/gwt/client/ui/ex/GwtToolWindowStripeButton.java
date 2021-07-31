@@ -41,16 +41,6 @@ public class GwtToolWindowStripeButton extends SimplePanel {
   private Runnable myClickListener;
 
   public GwtToolWindowStripeButton() {
-    doLayout();
-  }
-
-  public void doLayout() {
-    HorizontalPanel widget = new HorizontalPanel();
-    widget.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
-    widget.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
-    widget.setHeight("100%");
-
-    setWidget(widget);
     sinkEvents(Event.ONCLICK | Event.ONFOCUS);
 
     addDomHandler(event -> {
@@ -68,6 +58,17 @@ public class GwtToolWindowStripeButton extends SimplePanel {
         myClickListener.run();
       }
     }, ClickEvent.getType());
+
+    doLayout();
+  }
+
+  public void doLayout() {
+    HorizontalPanel widget = new HorizontalPanel();
+    widget.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
+    widget.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
+    widget.setHeight("100%");
+
+    setWidget(widget);
 
     if (isVertical()) {
       setVerticalText();
