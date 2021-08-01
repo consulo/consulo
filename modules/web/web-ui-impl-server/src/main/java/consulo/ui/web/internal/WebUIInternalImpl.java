@@ -31,9 +31,11 @@ import consulo.ui.internal.UIInternal;
 import consulo.ui.layout.*;
 import consulo.ui.model.ListModel;
 import consulo.ui.model.MutableListModel;
+import consulo.ui.model.TableModel;
 import consulo.ui.style.StyleManager;
 import consulo.ui.web.internal.image.*;
 import consulo.ui.web.internal.layout.*;
+import consulo.util.lang.StringUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -72,7 +74,7 @@ public class WebUIInternalImpl extends UIInternal {
 
   @Override
   public SwipeLayout _Layouts_swipe() {
-    throw new UnsupportedOperationException();
+    return new WebSwipeLayoutImpl();
   }
 
   @Override
@@ -368,12 +370,43 @@ public class WebUIInternalImpl extends UIInternal {
 
   @Override
   public TextBoxWithExtensions _Components_textBoxWithExtensions(String text) {
-    throw new UnsupportedOperationException();
+    return new WebTextBoxWithExtensionsImpl(text);
   }
 
   @Override
   public FoldoutLayout _Layouts_foldout(LocalizeValue titleValue, Component component, boolean show) {
-    throw new UnsupportedOperationException();
+    return new WebFoldoutLayoutImpl();
+  }
+
+  @Override
+  public ToggleSwitch _Components_toggleSwitch(boolean selected) {
+    return new WebToggleSwitchImpl(selected);
+  }
+
+  @Nonnull
+  @Override
+  public PasswordBox _Components_passwordBox(@Nullable String passwordText) {
+    return new WebPasswordBoxImpl(StringUtil.notNullize(passwordText));
+  }
+
+  @Override
+  public <T> Table<T> _Table_create(@Nonnull Iterable<? extends TableColumn> columns, @Nonnull TableModel<T> model) {
+    return new WebTableImpl<>();
+  }
+
+  @Override
+  public IntSlider _Components_intSlider(int min, int max, int value) {
+    return new WebIntSliderImpl(min, max, value);
+  }
+
+  @Override
+  public <Value, Item> TableColumn<Value, Item> _Components_tableColumBuild(String name, Function<Item, Value> converter) {
+    return new WebTableColumn<>(name, converter);
+  }
+
+  @Override
+  public <T> TableModel<T> _TableModel_create(Collection<? extends T> list) {
+    return new WebTableModel<>(list);
   }
 
   @Override

@@ -189,4 +189,9 @@ public class WebTabbedLayoutImpl extends UIComponentWithVaadinComponent<WebTabbe
     presentation.append(tabName);
     return addTab(presentation, component);
   }
+
+  @Override
+  public void removeTab(@Nonnull Tab tab) {
+    // todo
+  }
 }

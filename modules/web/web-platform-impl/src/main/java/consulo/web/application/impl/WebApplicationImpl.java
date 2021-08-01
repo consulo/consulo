@@ -58,6 +58,11 @@ public class WebApplicationImpl extends BaseApplication implements WebApplicatio
     builder.bind(TransactionGuard.class).to(new WebTransactionGuardImpl());
   }
 
+  @Override
+  public boolean isInternal() {
+    return true;
+  }
+
   @Nullable
   public WebStartupProgressImpl getSplash() {
     return (WebStartupProgressImpl)mySplashRef.get();

@@ -198,35 +198,28 @@ public class WebEditorWindow extends EditorWindowBase implements EditorWindow, D
 
         beforePublisher.beforeFileClosed(editorManager, file);
 
-        //if (myTabbedPane != null && editor != null) {
-        //  final int componentIndex = findComponentIndex(editor.getComponent());
-        //  if (componentIndex >= 0) { // editor could close itself on decomposition
-        //    final int indexToSelect = calcIndexToSelect(file, componentIndex);
-        //    Pair<String, Integer> pair = Pair.create(file.getUrl(), componentIndex);
-        //    myRemovedTabs.push(pair);
-        //    if (myTabsHidingInProgress.get()) {
-        //      myHiddenTabs.push(pair);
-        //    }
-        //    myTabbedPane.removeTabAt(componentIndex, indexToSelect, transferFocus);
-        //    editorManager.disposeComposite(editor);
-        //  }
-        //}
-        //else {
+        if (editor != null) {
+          Tab tab = myEditors.remove(editor);
+          if(tab != null) {
+            editorManager.disposeComposite(editor);
+          }
+        }
+        else {
 
-          //if (inSplitter()) {
-          //  Splitter splitter = (Splitter)myPanel.getParent();
-          //  JComponent otherComponent = splitter.getOtherComponent(myPanel);
-          //
-          //  if (otherComponent != null) {
-          //    IdeFocusManager.findInstance().requestFocus(otherComponent, true);
-          //  }
-          //}
+          if (inSplitter()) {
+            //Splitter splitter = (Splitter)myPanel.getParent();
+            //JComponent otherComponent = splitter.getOtherComponent(myPanel);
+
+            //if (otherComponent != null) {
+            //  IdeFocusManager.findInstance().requestFocus(otherComponent, true);
+            //}
+          }
 
           //myPanel.removeAll();
           if (editor != null) {
             editorManager.disposeComposite(editor);
           }
-        //}
+        }
 
         if (disposeIfNeeded && getTabCount() == 0) {
           //removeFromSplitter();

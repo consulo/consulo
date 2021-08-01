@@ -20,11 +20,15 @@ import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.ClickEvent;
 import consulo.ui.event.ClickListener;
+import consulo.ui.image.Image;
 import consulo.ui.web.internal.base.UIComponentWithVaadinComponent;
 import consulo.ui.web.internal.base.VaadinComponent;
+import consulo.ui.web.servlet.WebImageMapper;
 import consulo.web.gwt.shared.ui.state.button.ButtonRpc;
+import consulo.web.gwt.shared.ui.state.button.ButtonState;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
@@ -40,12 +44,25 @@ public class WebButtonImpl extends UIComponentWithVaadinComponent<WebButtonImpl.
       }
     };
 
+    private Image myImage;
+
     public Vaadin() {
       registerRpc(myRpc);
     }
 
     public void setText(String text) {
       getState().caption = text;
+      markAsDirty();
+    }
+
+    @Override
+    public ButtonState getState() {
+      return (ButtonState)super.getState();
+    }
+
+    public void setIcon(Image icon) {
+      myImage = icon;
+      getState().myImageState = icon == null ? null : WebImageMapper.map(icon).getState();
       markAsDirty();
     }
   }
@@ -70,5 +87,17 @@ public class WebButtonImpl extends UIComponentWithVaadinComponent<WebButtonImpl.
   @Override
   public Vaadin createVaadinComponent() {
     return new Vaadin();
+  }
+
+  @RequiredUIAccess
+  @Override
+  public void setIcon(@Nullable Image image) {
+    toVaadinComponent().setIcon(image);
+  }
+
+  @Nullable
+  @Override
+  public Image getIcon() {
+    return toVaadinComponent().myImage;
   }
 }

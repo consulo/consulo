@@ -20,12 +20,14 @@ import consulo.ui.Button;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.ClickEvent;
 import consulo.ui.event.ClickListener;
+import consulo.ui.image.Image;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Composite;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
@@ -64,5 +66,17 @@ public class DesktopSwtButtonImpl extends DesktopSwtComponent<org.eclipse.swt.wi
   @Override
   public void setText(@Nonnull String text) {
     myText = LocalizeValue.of(text);
+  }
+
+  @Nullable
+  @Override
+  public Image getIcon() {
+    return null;
+  }
+
+  @RequiredUIAccess
+  @Override
+  public void setIcon(@Nullable Image image) {
+
   }
 }

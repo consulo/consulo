@@ -97,6 +97,47 @@ public abstract class EditorsSplittersBase<W extends EditorWindowBase> implement
   public void afterFileOpen(VirtualFile file) {
   }
 
+  @RequiredUIAccess
+  @Override
+  public void closeFile(VirtualFile file, boolean moveFocus) {
+    final List<W> windows = findWindows(file);
+    if (!windows.isEmpty()) {
+      final VirtualFile nextFile = findNextFile(file);
+      for (final W window : windows) {
+        LOG.assertTrue(window.getSelectedEditor() != null);
+        window.closeFile(file, false, moveFocus);
+        if (window.getTabCount() == 0 && nextFile != null && myManager.getProject().isOpen()) {
+          EditorWithProviderComposite newComposite = myManager.newEditorComposite(nextFile);
+          window.setEditor(newComposite, moveFocus); // newComposite can be null
+        }
+      }
+      // cleanup windows with no tabs
+      for (final W window : windows) {
+        if (window.isDisposed()) {
+          // call to window.unsplit() which might make its sibling disposed
+          continue;
+        }
+        if (window.getTabCount() == 0) {
+          window.unsplit(false);
+        }
+      }
+    }
+  }
+
+  @Nullable
+  private VirtualFile findNextFile(final VirtualFile file) {
+    final W[] windows = getWindows(); // TODO: use current file as base
+    for (int i = 0; i != windows.length; ++i) {
+      final VirtualFile[] files = windows[i].getFiles();
+      for (final VirtualFile fileAt : files) {
+        if (!Objects.equals(fileAt, file)) {
+          return fileAt;
+        }
+      }
+    }
+    return null;
+  }
+
   @Override
   public void setTabsPlacement(final int tabPlacement) {
     final W[] windows = getWindows();

@@ -19,9 +19,11 @@ import consulo.annotation.DeprecationInfo;
 import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.ClickListener;
+import consulo.ui.image.Image;
 import consulo.ui.internal.UIInternal;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
@@ -59,4 +61,10 @@ public interface Button extends Component {
 
   @RequiredUIAccess
   void setText(@Nonnull String text);
+
+  @Nullable
+  Image getIcon();
+
+  @RequiredUIAccess
+  void setIcon(@Nullable Image image);
 }

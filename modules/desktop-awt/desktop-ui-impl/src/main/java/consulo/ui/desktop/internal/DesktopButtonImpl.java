@@ -15,8 +15,8 @@
  */
 package consulo.ui.desktop.internal;
 
+import consulo.awt.TargetAWT;
 import consulo.awt.impl.FromSwingComponentWrapper;
-import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
 import consulo.ui.Button;
 import consulo.ui.Component;
@@ -24,8 +24,10 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.desktop.internal.base.SwingComponentDelegate;
 import consulo.ui.event.ClickEvent;
 import consulo.ui.event.ClickListener;
+import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.swing.*;
 
 /**
@@ -72,11 +74,6 @@ class DesktopButtonImpl extends SwingComponentDelegate<JButton> implements Butto
     toAWTComponent().addActionListener(e -> getListenerDispatcher(ClickListener.class).clicked(new ClickEvent(this)));
   }
 
-  @Override
-  public Disposable addClickListener(@Nonnull ClickListener clickListener) {
-    return addListener(ClickListener.class, clickListener);
-  }
-
   @Nonnull
   @Override
   public String getText() {
@@ -87,5 +84,17 @@ class DesktopButtonImpl extends SwingComponentDelegate<JButton> implements Butto
   @Override
   public void setText(@Nonnull String text) {
     toAWTComponent().setText(text);
+  }
+
+  @Nullable
+  @Override
+  public Image getIcon() {
+    return TargetAWT.from(toAWTComponent().getIcon());
+  }
+
+  @RequiredUIAccess
+  @Override
+  public void setIcon(@Nullable Image image) {
+    toAWTComponent().setIcon(TargetAWT.to(image));
   }
 }

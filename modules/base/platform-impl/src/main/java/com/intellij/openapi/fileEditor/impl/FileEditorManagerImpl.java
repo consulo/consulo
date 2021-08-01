@@ -1017,7 +1017,7 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
 
 
   @Nullable
-  EditorWithProviderComposite newEditorComposite(final VirtualFile file) {
+  public EditorWithProviderComposite newEditorComposite(final VirtualFile file) {
     if (file == null) {
       return null;
     }

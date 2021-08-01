@@ -18,7 +18,6 @@ package consulo.web.fileEditor.impl;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.fileEditor.impl.FileEditorManagerImpl;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.docking.DockManager;
 import consulo.disposer.Disposer;
 import consulo.fileEditor.impl.EditorWindow;
@@ -112,13 +111,6 @@ public class WebEditorsSplitters extends EditorsSplittersBase<WebEditorWindow> {
   @Override
   protected ModalityState getComponentModality() {
     return ModalityState.any();
-  }
-
-
-  @RequiredUIAccess
-  @Override
-  public void closeFile(VirtualFile file, boolean moveFocus) {
-
   }
 
   @Override
