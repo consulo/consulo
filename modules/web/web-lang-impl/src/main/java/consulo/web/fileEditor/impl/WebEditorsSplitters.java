@@ -15,17 +15,15 @@
  */
 package consulo.web.fileEditor.impl;
 
-import com.intellij.openapi.application.AccessToken;
-import com.intellij.openapi.fileEditor.FileEditor;
-import com.intellij.openapi.fileEditor.impl.DesktopDockableEditorTabbedContainer;
+import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.fileEditor.impl.FileEditorManagerImpl;
+import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.docking.DockManager;
 import consulo.disposer.Disposer;
 import consulo.fileEditor.impl.EditorWindow;
-import consulo.fileEditor.impl.EditorWithProviderComposite;
-import consulo.fileEditor.impl.EditorsSplitters;
 import consulo.fileEditor.impl.EditorsSplittersBase;
+import consulo.logging.Logger;
 import consulo.ui.Component;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -34,21 +32,21 @@ import consulo.web.ui.docking.impl.WebDockableEditorTabbedContainer;
 import org.jdom.Element;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.Collections;
-import java.util.List;
 
 /**
  * @author VISTALL
  * @since 2018-05-09
  */
-public class WebEditorsSplitters extends EditorsSplittersBase implements EditorsSplitters {
-  private EditorWindow myCurrentWindow;
+public class WebEditorsSplitters extends EditorsSplittersBase<WebEditorWindow> {
+  private static final Logger LOG = Logger.getInstance(WebEditorsSplitters.class);
+  
+  private final Project myProject;
 
   private WrappedLayout myLayout;
 
-  public WebEditorsSplitters(FileEditorManagerImpl editorManager, DockManager dockManager, boolean createOwnDockableContainer) {
-    super(editorManager);
+  public WebEditorsSplitters(Project project, FileEditorManagerImpl editorManager, DockManager dockManager, boolean createOwnDockableContainer) {
+    super(project, editorManager);
+    myProject = project;
 
     myLayout = WrappedLayout.create();
 
@@ -61,13 +59,14 @@ public class WebEditorsSplitters extends EditorsSplittersBase implements Editors
 
   @Nonnull
   @Override
-  public Component getUIComponent() {
-    return myLayout;
+  protected WebEditorWindow[] createArray(int size) {
+    return new WebEditorWindow[size];
   }
 
+  @Nonnull
   @Override
-  public void readExternal(Element element) {
-
+  public Component getUIComponent() {
+    return myLayout;
   }
 
   @Override
@@ -92,101 +91,34 @@ public class WebEditorsSplitters extends EditorsSplittersBase implements Editors
 
   @Override
   public void clear() {
+    for (WebEditorWindow window : myWindows) {
+      window.dispose();
+    }
+    //todo myComponent.removeAll();
+    myWindows.clear();
+    setCurrentWindow(null);
+    //todo myComponent.repaint(); // revalidate doesn't repaint correctly after "Close All"
+  }
 
+  @RequiredUIAccess
+  @Override
+  protected void createCurrentWindow() {
+    LOG.assertTrue(myCurrentWindow == null);
+    setCurrentWindow(new WebEditorWindow(myProject, myManager, this));
+    myLayout.set(myCurrentWindow.getUIComponent());
   }
 
   @Nonnull
   @Override
-  @RequiredUIAccess
-  public EditorWindow getOrCreateCurrentWindow(VirtualFile file) {
-    if (myCurrentWindow != null) {
-      return myCurrentWindow;
-    }
-    myCurrentWindow = new WebEditorWindow(myManager, this);
-    myLayout.set(myCurrentWindow.getUIComponent());
-    return myCurrentWindow;
+  protected ModalityState getComponentModality() {
+    return ModalityState.any();
   }
 
-  @Override
-  public void setCurrentWindow(EditorWindow window, boolean requestFocus) {
-    myCurrentWindow = window;
-
-    if (window != null) {
-      myLayout.set(window.getUIComponent());
-    }
-  }
-
-  @Nullable
-  @Override
-  public EditorWindow getCurrentWindow() {
-    return myCurrentWindow;
-  }
-
-  @Override
-  public void updateFileIcon(VirtualFile virtualFile) {
-
-  }
-
-  @Override
-  public void updateFileColor(VirtualFile virtualFile) {
-
-  }
-
-  @Override
-  public void updateFileBackgroundColor(VirtualFile virtualFile) {
-
-  }
-
-  @Override
-  public VirtualFile[] getOpenFiles() {
-    return new VirtualFile[0];
-  }
-
-  @Override
-  public AccessToken increaseChange() {
-    return null;
-  }
-
-  @Override
-  public boolean isInsideChange() {
-    return false;
-  }
 
   @RequiredUIAccess
   @Override
   public void closeFile(VirtualFile file, boolean moveFocus) {
 
-  }
-
-  @Nonnull
-  @Override
-  public VirtualFile[] getSelectedFiles() {
-    return new VirtualFile[0];
-  }
-
-  @Nonnull
-  @Override
-  public FileEditor[] getSelectedEditors() {
-    return new FileEditor[0];
-  }
-
-  @Nonnull
-  @Override
-  public List<EditorWithProviderComposite> findEditorComposites(@Nonnull VirtualFile file) {
-    return Collections.emptyList();
-  }
-
-  @Override
-  public EditorWithProviderComposite[] getEditorsComposites() {
-    return new EditorWithProviderComposite[0];
-  }
-
-  @Override
-  public EditorWindow[] getWindows() {
-    if (myCurrentWindow != null) {
-      return new EditorWindow[]{myCurrentWindow};
-    }
-    return EditorWindow.EMPTY_ARRAY;
   }
 
   @Override
@@ -195,12 +127,6 @@ public class WebEditorsSplitters extends EditorsSplittersBase implements Editors
       return new EditorWindow[]{myCurrentWindow};
     }
     return EditorWindow.EMPTY_ARRAY;
-  }
-
-  @Nullable
-  @Override
-  public VirtualFile getCurrentFile() {
-    return null;
   }
 
   @Override

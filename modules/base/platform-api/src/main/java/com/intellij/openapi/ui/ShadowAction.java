@@ -16,7 +16,6 @@
 
 package com.intellij.openapi.ui;
 
-import consulo.disposer.Disposable;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.keymap.Keymap;
@@ -24,8 +23,9 @@ import com.intellij.openapi.keymap.KeymapManager;
 import com.intellij.openapi.keymap.KeymapManagerListener;
 import com.intellij.util.ui.update.Activatable;
 import com.intellij.util.ui.update.UiNotifyConnector;
-import javax.annotation.Nullable;
+import consulo.disposer.Disposable;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 
 public final class ShadowAction implements Disposable {

@@ -391,7 +391,7 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
   /**
    * Updates tab title and tab tool tip for the specified {@code file}
    */
-  void updateFileName(@Nullable final VirtualFile file) {
+  public void updateFileName(@Nullable final VirtualFile file) {
     // Queue here is to prevent title flickering when tab is being closed and two events arriving: with component==null and component==next focused tab
     // only the last event makes sense to handle
     myQueue.queue(new Update("UpdateFileName " + (file == null ? "" : file.getPath())) {
@@ -1539,7 +1539,7 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
     return status != FileStatus.UNKNOWN && status != FileStatus.NOT_CHANGED;
   }
 
-  void disposeComposite(@Nonnull EditorWithProviderComposite editor) {
+  public void disposeComposite(@Nonnull EditorWithProviderComposite editor) {
     if (getAllEditors().length == 0) {
       setCurrentWindow(null);
     }
@@ -1580,7 +1580,7 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
   /**
    * @param splitters - taken getAllSplitters() value if parameter is null
    */
-  void runChange(@Nonnull FileEditorManagerChange change, @Nullable EditorsSplitters splitters) {
+  public void runChange(@Nonnull FileEditorManagerChange change, @Nullable EditorsSplitters splitters) {
     Set<EditorsSplitters> target = new HashSet<>();
     if (splitters == null) {
       target.addAll(getAllSplitters());
@@ -1820,17 +1820,16 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
       setTabsMode(uiSettings.getEditorTabPlacement() != UISettings.TABS_NONE && !uiSettings.getPresentationMode());
 
       for (EditorsSplitters each : getAllSplitters()) {
-        DesktopEditorsSplitters editorsSplitters = (DesktopEditorsSplitters)each;
 
-        editorsSplitters.setTabsPlacement(uiSettings.getEditorTabPlacement());
-        editorsSplitters.trimToSize(uiSettings.getEditorTabLimit());
+        each.setTabsPlacement(uiSettings.getEditorTabPlacement());
+        each.trimToSize(uiSettings.getEditorTabLimit());
 
         // Tab layout policy
         if (uiSettings.getScrollTabLayoutInEditor()) {
-          editorsSplitters.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
+          each.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
         }
         else {
-          editorsSplitters.setTabLayoutPolicy(JTabbedPane.WRAP_TAB_LAYOUT);
+          each.setTabLayoutPolicy(JTabbedPane.WRAP_TAB_LAYOUT);
         }
       }
 
@@ -1918,7 +1917,7 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
     mySelectionHistory.add(0, record);
   }
 
-  void removeSelectionRecord(@Nonnull VirtualFile file, @Nonnull EditorWindow window) {
+  public void removeSelectionRecord(@Nonnull VirtualFile file, @Nonnull EditorWindow window) {
     mySelectionHistory.remove(Pair.create(file, window));
     updateFileName(file);
   }

@@ -24,6 +24,10 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.border.BorderPosition;
 import consulo.ui.border.BorderStyle;
 import consulo.ui.color.ColorValue;
+import consulo.ui.event.AttachEvent;
+import consulo.ui.event.AttachListener;
+import consulo.ui.event.DetachEvent;
+import consulo.ui.event.DetachListener;
 import consulo.ui.font.Font;
 import consulo.ui.font.FontManager;
 import consulo.ui.impl.UIDataObject;
@@ -49,6 +53,8 @@ public abstract class UIComponentWithVaadinComponent<T extends AbstractComponent
     myVaadinComponent = createVaadinComponent();
 
     myVaadinComponent.setComponent(this);
+    myVaadinComponent.addAttachListener(event -> getListenerDispatcher(AttachListener.class).onAttach(new AttachEvent(this)));
+    myVaadinComponent.addDetachListener(event -> getListenerDispatcher(DetachListener.class).onDetach(new DetachEvent(this)));
   }
 
   @Nonnull

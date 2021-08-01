@@ -21,7 +21,9 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.border.BorderPosition;
 import consulo.ui.border.BorderStyle;
 import consulo.ui.color.ColorValue;
+import consulo.ui.event.AttachListener;
 import consulo.ui.event.ClickListener;
+import consulo.ui.event.DetachListener;
 import consulo.ui.event.KeyListener;
 import consulo.ui.font.Font;
 import consulo.ui.style.ComponentColors;
@@ -168,10 +170,22 @@ public interface Component extends Disposable, UserDataHolder {
   @Nonnull
   <T extends EventListener> T getListenerDispatcher(@Nonnull Class<T> eventClass);
 
+  @Nonnull
   default Disposable addKeyListener(@Nonnull KeyListener keyListener) {
     return addListener(KeyListener.class, keyListener);
   }
 
+  @Nonnull
+  default Disposable addAttachListener(@Nonnull AttachListener attachListener) {
+    return addListener(AttachListener.class, attachListener);
+  }
+
+  @Nonnull
+  default Disposable addDetachListener(@Nonnull DetachListener detachListener) {
+    return addListener(DetachListener.class, detachListener);
+  }
+
+  @Nonnull
   default Disposable addClickListener(@RequiredUIAccess @Nonnull ClickListener clickListener) {
     return addListener(ClickListener.class, clickListener);
   }

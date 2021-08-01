@@ -76,7 +76,7 @@ public class WebTextEditor extends UserDataHolderBase implements TextEditor {
   @Nonnull
   @Override
   public FileEditorState getState(@Nonnull FileEditorStateLevel level) {
-    return null;
+    return FileEditorState.INSTANCE;
   }
 
   @Override

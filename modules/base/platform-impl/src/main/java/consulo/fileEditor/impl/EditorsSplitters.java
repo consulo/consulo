@@ -99,6 +99,12 @@ public interface EditorsSplitters extends AWTComponentProvider {
 
   boolean isShowing();
 
+  void setTabsPlacement(final int tabPlacement);
+
+  void setTabLayoutPolicy(int scrollTabLayout);
+
+  void trimToSize(final int editor_tab_limit);
+
   @Nonnull
   default Component getUIComponent() {
     throw new UnsupportedOperationException("Unsupported platform");

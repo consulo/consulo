@@ -21,8 +21,6 @@ import com.intellij.ide.ui.UISettings;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataProvider;
 import com.intellij.openapi.application.ApplicationManager;
-import consulo.awt.TargetAWT;
-import consulo.logging.Logger;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.ScrollType;
 import com.intellij.openapi.editor.ScrollingModel;
@@ -30,14 +28,10 @@ import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.fileEditor.FileEditorManagerListener;
 import com.intellij.openapi.fileEditor.TextEditor;
 import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;
-import com.intellij.openapi.fileTypes.UnknownFileType;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.GraphicsConfig;
 import com.intellij.openapi.ui.Splitter;
 import com.intellij.openapi.ui.ThreeComponentsSplitter;
-import consulo.disposer.Disposer;
-import com.intellij.openapi.util.Iconable;
-import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -52,13 +46,15 @@ import com.intellij.util.ui.EmptyIcon;
 import com.intellij.util.ui.GraphicsUtil;
 import com.intellij.util.ui.UIUtil;
 import consulo.annotation.DeprecationInfo;
+import consulo.awt.TargetAWT;
 import consulo.desktop.util.awt.migration.AWTComponentProviderUtil;
+import consulo.disposer.Disposer;
 import consulo.fileEditor.impl.*;
-import consulo.fileTypes.impl.VfsIconUtil;
-import consulo.ui.annotation.RequiredUIAccess;
+import consulo.logging.Logger;
 import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
-import consulo.ui.image.ImageEffects;
+import consulo.util.dataholder.Key;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -184,16 +180,6 @@ public class DesktopEditorWindow extends EditorWindowBase implements EditorWindo
     }
     myPanel.removeAll();
     myPanel.revalidate();
-  }
-
-  @Override
-  public void closeFile(final VirtualFile file) {
-    closeFile(file, true);
-  }
-
-  @Override
-  public void closeFile(final VirtualFile file, final boolean disposeIfNeeded) {
-    closeFile(file, disposeIfNeeded, true);
   }
 
   @Override
@@ -390,19 +376,19 @@ public class DesktopEditorWindow extends EditorWindowBase implements EditorWindo
     return myPanel.getComponentCount();
   }
 
-  void setForegroundAt(final int index, final Color color) {
+  protected void setForegroundAt(final int index, final Color color) {
     if (myTabbedPane != null) {
       myTabbedPane.setForegroundAt(index, color);
     }
   }
 
-  void setWaveColor(final int index, @Nullable final Color color) {
+  protected void setWaveColor(final int index, @Nullable final Color color) {
     if (myTabbedPane != null) {
       myTabbedPane.setWaveColor(index, color);
     }
   }
 
-  private void setIconAt(final int index, final consulo.ui.image.Image icon) {
+  protected void setIconAt(final int index, final consulo.ui.image.Image icon) {
     if (myTabbedPane != null) {
       myTabbedPane.setIconAt(index, icon);
     }
@@ -429,8 +415,8 @@ public class DesktopEditorWindow extends EditorWindowBase implements EditorWindo
     }
   }
 
-
-  void setTabLayoutPolicy(final int policy) {
+  @Override
+  protected void setTabLayoutPolicy(final int policy) {
     if (myTabbedPane != null) {
       myTabbedPane.setTabLayoutPolicy(policy);
     }
@@ -479,14 +465,6 @@ public class DesktopEditorWindow extends EditorWindowBase implements EditorWindo
   @Override
   public void setAsCurrentWindow(final boolean requestFocus) {
     myOwner.setCurrentWindow(this, requestFocus);
-  }
-
-  void updateFileBackgroundColor(@Nonnull VirtualFile file) {
-    final int index = findEditorIndex(findFileComposite(file));
-    if (index != -1) {
-      final Color color = EditorTabbedContainer.calcTabColor(getManager().getProject(), file);
-      setBackgroundColorAt(index, color);
-    }
   }
 
   @Override
@@ -854,72 +832,6 @@ public class DesktopEditorWindow extends EditorWindowBase implements EditorWindo
     }
   }
 
-  void updateFileIcon(VirtualFile file) {
-    final int index = findEditorIndex(findFileComposite(file));
-    LOG.assertTrue(index != -1);
-    setIconAt(index, getFileIcon(file));
-  }
-
-  @Override
-  protected void updateFileName(VirtualFile file) {
-    final int index = findEditorIndex(findFileComposite(file));
-    if (index != -1) {
-      setTitleAt(index, EditorTabbedContainer.calcTabTitle(getManager().getProject(), file));
-      setToolTipTextAt(index, UISettings.getInstance().getShowTabsTooltips() ? getManager().getFileTooltipText(file) : null);
-    }
-  }
-
-  /**
-   * @return icon which represents file's type and modification status
-   */
-  @Nullable
-  private consulo.ui.image.Image getFileIcon(@Nonnull final VirtualFile file) {
-    if (!file.isValid()) {
-      return UnknownFileType.INSTANCE.getIcon();
-    }
-
-    final Image baseIcon = VfsIconUtil.getIconNoDefer(file, Iconable.ICON_FLAG_READ_STATUS, getManager().getProject());
-    int count = 1;
-
-    final Image pinIcon;
-    final DesktopEditorComposite composite = findFileComposite(file);
-    if (composite != null && composite.isPinned()) {
-      count++;
-      pinIcon = AllIcons.Nodes.TabPin;
-    }
-    else {
-      pinIcon = null;
-    }
-
-    // FIXME [VISTALL] not supported for now
-    Icon modifiedIcon = null;
-    //UISettings settings = UISettings.getInstance();
-    //if (settings.getMarkModifiedTabsWithAsterisk() || !settings.getHideTabsIfNeed()) {
-    //  modifiedIcon = settings.getMarkModifiedTabsWithAsterisk() && composite != null && composite.isModified() ? MODIFIED_ICON : GAP_ICON;
-    //  count++;
-    //}
-    //else {
-    //  modifiedIcon = null;
-    //}
-    //
-    //if (count == 1) return baseIcon;
-
-    if(pinIcon != null && modifiedIcon == null) {
-      return ImageEffects.layered(baseIcon, pinIcon);
-    }
-
-    // FIXME [VISTALL] not supported for now
-    //int i = 0;
-    //final LayeredIcon result = new LayeredIcon(count);
-    //int xShift = !settings.getHideTabsIfNeed() ? 4 : 0;
-    //result.setIcon(baseIcon, i++, xShift, 0);
-    //if (pinIcon != null) result.setIcon(pinIcon, i++, xShift, 0);
-    //if (modifiedIcon != null) result.setIcon(modifiedIcon, i++);
-    //
-    //return JBUI.scale(result);
-    return baseIcon;
-  }
-
   @Override
   public void unsplit(boolean setCurrent) {
     checkConsistency();
@@ -1049,7 +961,7 @@ public class DesktopEditorWindow extends EditorWindowBase implements EditorWindo
     }
   }
 
-  void trimToSize(final int limit, @Nullable final VirtualFile fileToIgnore, final boolean transferFocus) {
+  protected void trimToSize(final int limit, @Nullable final VirtualFile fileToIgnore, final boolean transferFocus) {
     if (myTabbedPane == null) return;
 
     FileEditorManagerEx.getInstanceEx(getManager().getProject()).getReady(this).doWhenDone(() -> {

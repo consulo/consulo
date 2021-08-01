@@ -15,40 +15,57 @@
  */
 package consulo.web.fileEditor.impl;
 
+import com.intellij.ide.DataManager;
+import com.intellij.ide.ui.UISettings;
+import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.actionSystem.DataContext;
+import com.intellij.openapi.fileEditor.FileEditorManagerListener;
 import com.intellij.openapi.fileEditor.impl.FileEditorManagerImpl;
+import com.intellij.openapi.fileEditor.impl.tabActions.CloseTab;
+import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
+import consulo.disposer.Disposable;
 import consulo.fileEditor.impl.EditorWindow;
 import consulo.fileEditor.impl.EditorWindowBase;
 import consulo.fileEditor.impl.EditorWithProviderComposite;
-import consulo.fileEditor.impl.EditorsSplitters;
+import consulo.fileEditor.impl.EditorsSplittersBase;
 import consulo.fileTypes.impl.VfsIconUtil;
 import consulo.ui.Component;
-import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.Tab;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.image.Image;
 import consulo.ui.layout.TabbedLayout;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.awt.*;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
  * @author VISTALL
  * @since 2018-05-09
  */
-public class WebEditorWindow extends EditorWindowBase implements EditorWindow {
+public class WebEditorWindow extends EditorWindowBase implements EditorWindow, Disposable {
+  private final Project myProject;
   private FileEditorManagerImpl myManager;
-  private EditorsSplitters myEditorsSplitters;
+  private EditorsSplittersBase<WebEditorWindow> myOwner;
 
   private TabbedLayout myTabbedLayout = TabbedLayout.create();
 
   private Map<EditorWithProviderComposite, Tab> myEditors = new LinkedHashMap<>();
 
   @RequiredUIAccess
-  public WebEditorWindow(FileEditorManagerImpl manager, EditorsSplitters editorsSplitters) {
+  public WebEditorWindow(Project project, FileEditorManagerImpl manager, EditorsSplittersBase<WebEditorWindow> owner) {
+    myProject = project;
     myManager = manager;
-    myEditorsSplitters = editorsSplitters;
+    myOwner = owner;
+
+    myOwner.addWindow(this);
+    if (myOwner.getCurrentWindow() == null) {
+      myOwner.setCurrentWindow(this, false);
+    }
   }
 
   @Override
@@ -85,6 +102,31 @@ public class WebEditorWindow extends EditorWindowBase implements EditorWindow {
 
   }
 
+  @Override
+  protected void setForegroundAt(int index, Color color) {
+
+  }
+
+  @Override
+  protected void setWaveColor(int index, @Nullable Color color) {
+
+  }
+
+  @Override
+  protected void setIconAt(int index, Image icon) {
+
+  }
+
+  @Override
+  protected void setTabLayoutPolicy(int policy) {
+
+  }
+
+  @Override
+  protected void trimToSize(int limit, @Nullable VirtualFile fileToIgnore, boolean transferFocus) {
+
+  }
+
   @Nonnull
   @Override
   public FileEditorManagerImpl getManager() {
@@ -116,17 +158,25 @@ public class WebEditorWindow extends EditorWindowBase implements EditorWindow {
   @Nullable
   @Override
   public EditorWithProviderComposite getSelectedEditor() {
-    return null;
+    if (myEditors.isEmpty()) {
+      return null;
+    }
+    Map.Entry<EditorWithProviderComposite, Tab> entry = myEditors.entrySet().iterator().next();
+    return entry.getKey();
   }
 
   @Nonnull
   @Override
-  public EditorsSplitters getOwner() {
-    return myEditorsSplitters;
+  public EditorsSplittersBase<WebEditorWindow> getOwner() {
+    return myOwner;
   }
 
   @Override
   public VirtualFile getSelectedFile() {
+    EditorWithProviderComposite selectedEditor = getSelectedEditor();
+    if(selectedEditor != null) {
+      return selectedEditor.getFile();
+    }
     return null;
   }
 
@@ -136,18 +186,83 @@ public class WebEditorWindow extends EditorWindowBase implements EditorWindow {
   }
 
   @Override
-  public void closeFile(VirtualFile file) {
-
-  }
-
-  @Override
-  public void closeFile(VirtualFile file, boolean disposeIfNeeded) {
-
-  }
-
-  @Override
   public void closeFile(@Nonnull VirtualFile file, boolean disposeIfNeeded, boolean transferFocus) {
+    final FileEditorManagerImpl editorManager = getManager();
+    editorManager.runChange(splitters -> {
+      final List<EditorWithProviderComposite> editors = splitters.findEditorComposites(file);
+      if (editors.isEmpty()) return;
+      try {
+        final EditorWithProviderComposite editor = findFileComposite(file);
 
+        final FileEditorManagerListener.Before beforePublisher = editorManager.getProject().getMessageBus().syncPublisher(FileEditorManagerListener.Before.FILE_EDITOR_MANAGER);
+
+        beforePublisher.beforeFileClosed(editorManager, file);
+
+        //if (myTabbedPane != null && editor != null) {
+        //  final int componentIndex = findComponentIndex(editor.getComponent());
+        //  if (componentIndex >= 0) { // editor could close itself on decomposition
+        //    final int indexToSelect = calcIndexToSelect(file, componentIndex);
+        //    Pair<String, Integer> pair = Pair.create(file.getUrl(), componentIndex);
+        //    myRemovedTabs.push(pair);
+        //    if (myTabsHidingInProgress.get()) {
+        //      myHiddenTabs.push(pair);
+        //    }
+        //    myTabbedPane.removeTabAt(componentIndex, indexToSelect, transferFocus);
+        //    editorManager.disposeComposite(editor);
+        //  }
+        //}
+        //else {
+
+          //if (inSplitter()) {
+          //  Splitter splitter = (Splitter)myPanel.getParent();
+          //  JComponent otherComponent = splitter.getOtherComponent(myPanel);
+          //
+          //  if (otherComponent != null) {
+          //    IdeFocusManager.findInstance().requestFocus(otherComponent, true);
+          //  }
+          //}
+
+          //myPanel.removeAll();
+          if (editor != null) {
+            editorManager.disposeComposite(editor);
+          }
+        //}
+
+        if (disposeIfNeeded && getTabCount() == 0) {
+          //removeFromSplitter();
+          if (UISettings.getInstance().getEditorTabPlacement() == UISettings.TABS_NONE) {
+            //final EditorsSplitters owner = getOwner();
+            //if (owner != null) {
+            //  final ThreeComponentsSplitter splitter = UIUtil.getParentOfType(ThreeComponentsSplitter.class, owner.getComponent());
+            //  if (splitter != null) {
+            //    splitter.revalidate();
+            //    splitter.repaint();
+            //  }
+            //}
+          }
+        }
+        else {
+          //myPanel.revalidate();
+          //if (myTabbedPane == null) {
+          //  // in tabless mode
+          //  myPanel.repaint();
+          //}
+        }
+      }
+      finally {
+        editorManager.removeSelectionRecord(file, this);
+
+        editorManager.notifyPublisher(() -> {
+          final Project project = editorManager.getProject();
+          if (!project.isDisposed()) {
+            final FileEditorManagerListener afterPublisher = project.getMessageBus().syncPublisher(FileEditorManagerListener.FILE_EDITOR_MANAGER);
+            afterPublisher.fileClosed(editorManager, file);
+          }
+        });
+
+        ((WebEditorsSplitters)splitters).afterFileClosed(file);
+      }
+    }, myOwner);
   }
 
   @Override
@@ -201,7 +316,8 @@ public class WebEditorWindow extends EditorWindowBase implements EditorWindow {
       if (fileComposite == null) {
         Tab tab = myTabbedLayout.addTab(editor.getFile().getName(), editor.getUIComponent());
         tab.setCloseHandler((thisTab, component) -> {
-          myEditors.remove(editor);
+          DataContext dataContext = DataManager.getInstance().getDataContext();
+          new CloseTab(myTabbedLayout, myProject, editor.getFile(), this).actionPerformed(AnActionEvent.createFromInputEvent(null, "Test", null, dataContext));
         });
         tab.withIcon(VfsIconUtil.getIcon(editor.getFile(), 0, myManager.getProject()));
         myEditors.put(editor, tab);
@@ -236,6 +352,11 @@ public class WebEditorWindow extends EditorWindowBase implements EditorWindow {
 
   @Override
   public void requestFocus(boolean force) {
+
+  }
+
+  @Override
+  public void dispose() {
 
   }
 }

@@ -24,6 +24,7 @@ import com.intellij.openapi.wm.WindowManager;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;
 import consulo.logging.Logger;
+import consulo.ui.Component;
 import consulo.ui.Window;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.util.TraverseUtil;
@@ -51,14 +52,19 @@ public class UnifiedEditorTrackerImpl extends EditorTracker {
 
   @RequiredUIAccess
   @Override
-  protected void editorCreated(@Nonnull EditorFactoryEvent event) {
-    final Editor editor = event.getEditor();
+  protected void editorCreated(@Nonnull EditorFactoryEvent editorFactoryEvent) {
+    final Editor editor = editorFactoryEvent.getEditor();
     if ((editor.getProject() != null && editor.getProject() != myProject) || myProject.isDisposedOrDisposeInProgress()) {
       return;
     }
 
     final PsiFile psiFile = PsiDocumentManager.getInstance(myProject).getPsiFile(editor.getDocument());
     if (psiFile == null) return;
+
+    Component uiComponent = editor.getUIComponent();
+    uiComponent.addAttachListener(e -> {
+      registerEditor(editor);
+    });
 
     // TODO [VISTALL] focus handling
 

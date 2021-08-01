@@ -22,18 +22,17 @@ import com.intellij.openapi.fileEditor.impl.DesktopEditorWithProviderComposite;
 import com.intellij.openapi.fileEditor.impl.DesktopEditorsSplitters;
 import com.intellij.openapi.fileEditor.impl.PsiAwareFileEditorManagerImpl;
 import com.intellij.openapi.project.Project;
-import consulo.disposer.Disposer;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.problems.WolfTheProblemSolver;
 import com.intellij.psi.PsiManager;
 import com.intellij.ui.docking.DockManager;
 import com.intellij.util.ui.JBUI;
-
-import javax.annotation.Nonnull;
+import consulo.disposer.Disposer;
 import jakarta.inject.Inject;
+import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
 
-import jakarta.inject.Provider;
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 
@@ -80,7 +79,7 @@ public class DesktopPsiAwareFileEditorManagerImpl extends PsiAwareFileEditorMana
           final JPanel panel = new JPanel(new BorderLayout());
           panel.setOpaque(false);
           panel.setBorder(JBUI.Borders.empty());
-          DesktopEditorsSplitters splitters = new DesktopEditorsSplitters(this, myDockManager, true);
+          DesktopEditorsSplitters splitters = new DesktopEditorsSplitters(myProject, this, myDockManager, true);
           mySplitters = splitters;
           Disposer.register(myProject, splitters);
           panel.add(splitters.getComponent(), BorderLayout.CENTER);

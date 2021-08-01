@@ -28,7 +28,7 @@ import java.beans.PropertyChangeListener;
 public final class PositionPanel extends EditorBasedWidget
         implements StatusBarWidget.Multiframe, StatusBarWidget.TextPresentation, CaretListener, SelectionListener, BulkAwareDocumentListener.Simple, PropertyChangeListener {
 
-  public static final Key<Object> DISABLE_FOR_EDITOR = new Key<>("positionPanel.disableForEditor");
+  public static final Key<Object> DISABLE_FOR_EDITOR = Key.create("positionPanel.disableForEditor");
 
   public static final String SPACE = "     ";
   public static final String SEPARATOR = ":";

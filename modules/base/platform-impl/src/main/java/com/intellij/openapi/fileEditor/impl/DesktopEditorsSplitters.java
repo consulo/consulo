@@ -20,49 +20,41 @@ import com.intellij.diagnostic.ActivityCategory;
 import com.intellij.diagnostic.StartUpMeasurer;
 import com.intellij.ide.DataManager;
 import com.intellij.ide.ui.UISettings;
-import com.intellij.ide.ui.UISettingsListener;
-import com.intellij.openapi.application.*;
+import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.application.ModalityState;
+import com.intellij.openapi.application.ReadAction;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
-import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.fileEditor.impl.text.FileDropHandler;
 import com.intellij.openapi.keymap.KeymapManager;
 import com.intellij.openapi.keymap.KeymapManagerListener;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
-import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Splitter;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.openapi.util.Ref;
-import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.wm.*;
+import com.intellij.openapi.wm.FocusWatcher;
+import com.intellij.openapi.wm.ToolWindow;
+import com.intellij.openapi.wm.ToolWindowId;
+import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.openapi.wm.ex.IdeFocusTraversalPolicy;
-import com.intellij.openapi.wm.ex.WindowManagerEx;
-import com.intellij.openapi.wm.impl.FrameTitleBuilder;
 import com.intellij.openapi.wm.impl.IdePanePanel;
-import com.intellij.ui.JBColor;
 import com.intellij.ui.OnePixelSplitter;
 import com.intellij.ui.awt.RelativePoint;
 import com.intellij.ui.docking.DockManager;
 import com.intellij.ui.tabs.JBTabs;
 import com.intellij.ui.tabs.impl.JBTabsImpl;
-import com.intellij.util.Alarm;
 import com.intellij.util.PathUtil;
-import com.intellij.util.containers.ArrayListSet;
-import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.UIUtil;
 import consulo.annotation.DeprecationInfo;
-import consulo.awt.TargetAWT;
 import consulo.desktop.util.awt.migration.AWTComponentProviderUtil;
-import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.fileEditor.impl.EditorWindow;
 import consulo.fileEditor.impl.EditorWithProviderComposite;
-import consulo.fileEditor.impl.EditorsSplitters;
+import consulo.fileEditor.impl.EditorsSplittersBase;
 import consulo.logging.Logger;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -76,15 +68,13 @@ import java.awt.*;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.event.ContainerEvent;
-import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.*;
-import java.util.concurrent.CopyOnWriteArraySet;
 
 @Deprecated
 @DeprecationInfo("Desktop only")
 @SuppressWarnings("deprecation")
-public class DesktopEditorsSplitters implements Disposable, EditorsSplitters {
+public class DesktopEditorsSplitters extends EditorsSplittersBase<DesktopEditorWindow> {
   private static final Logger LOG = Logger.getInstance(DesktopEditorsSplitters.class);
 
   private static final String PINNED = "pinned";
@@ -92,19 +82,14 @@ public class DesktopEditorsSplitters implements Disposable, EditorsSplitters {
 
   private static final Key<Object> DUMMY_KEY = Key.create("EditorsSplitters.dummy.key");
 
-  private DesktopEditorWindow myCurrentWindow;
-  private final Set<DesktopEditorWindow> myWindows = new CopyOnWriteArraySet<>();
-
-  private final FileEditorManagerImpl myManager;
-  private Element mySplittersElement;  // temporarily used during initialization
-  int myInsideChange;
   private final MyFocusWatcher myFocusWatcher;
-  private final Alarm myIconUpdaterAlarm = new Alarm();
   private final UIBuilder myUIBuilder = new UIBuilder();
 
   private final IdePanePanel myComponent;
 
-  public DesktopEditorsSplitters(FileEditorManagerImpl manager, DockManager dockManager, boolean createOwnDockableContainer) {
+  public DesktopEditorsSplitters(Project project, FileEditorManagerImpl manager, DockManager dockManager, boolean createOwnDockableContainer) {
+    super(project, manager);
+
     myComponent = new IdePanePanel(new BorderLayout()) {
       @Override
       protected void paintComponent(Graphics g) {
@@ -126,7 +111,6 @@ public class DesktopEditorsSplitters implements Disposable, EditorsSplitters {
 
     AWTComponentProviderUtil.putMark(myComponent, this);
 
-    myManager = manager;
     myFocusWatcher = new MyFocusWatcher();
 
     clear();
@@ -141,28 +125,24 @@ public class DesktopEditorsSplitters implements Disposable, EditorsSplitters {
       myComponent.repaint();
     };
     KeymapManager.getInstance().addKeymapManagerListener(keymapListener, this);
+  }
 
-    Application.get().getMessageBus().connect(this).subscribe(UISettingsListener.TOPIC, source -> {
-      if (!myManager.getProject().isOpen()) {
-        return;
-      }
+  @Nonnull
+  @Override
+  protected ModalityState getComponentModality() {
+    return ModalityState.stateForComponent(myComponent);
+  }
 
-      for (VirtualFile file : getOpenFiles()) {
-        updateFileBackgroundColor(file);
-        updateFileIcon(file);
-        updateFileColor(file);
-      }
-    });
+  @Nonnull
+  @Override
+  protected DesktopEditorWindow[] createArray(int size) {
+    return new DesktopEditorWindow[size];
   }
 
   @Nonnull
   @Override
   public JComponent getComponent() {
     return myComponent;
-  }
-
-  public FileEditorManagerImpl getManager() {
-    return myManager;
   }
 
   @Override
@@ -181,28 +161,9 @@ public class DesktopEditorsSplitters implements Disposable, EditorsSplitters {
     myFocusWatcher.install(myComponent);
   }
 
-  private void stopListeningFocus() {
+  @Override
+  protected void stopListeningFocus() {
     myFocusWatcher.deinstall(myComponent);
-  }
-
-  @Override
-  public void dispose() {
-    myIconUpdaterAlarm.cancelAllRequests();
-    stopListeningFocus();
-  }
-
-  @Override
-  @Nullable
-  public VirtualFile getCurrentFile() {
-    if (myCurrentWindow != null) {
-      return myCurrentWindow.getSelectedFile();
-    }
-    return null;
-  }
-
-
-  private boolean showEmptyText() {
-    return myCurrentWindow == null || myCurrentWindow.getFiles().length == 0;
   }
 
   @Override
@@ -276,7 +237,7 @@ public class DesktopEditorsSplitters implements Disposable, EditorsSplitters {
   private Element writeComposite(VirtualFile file, EditorWithProviderComposite composite, boolean pinned, DesktopEditorWithProviderComposite selectedEditor) {
     Element fileElement = new Element("file");
     fileElement.setAttribute("leaf-file-name", file.getName()); // TODO: all files
-    composite.currentStateAsHistoryEntry().writeExternal(fileElement, getManager().getProject());
+    composite.currentStateAsHistoryEntry().writeExternal(fileElement, myProject);
     fileElement.setAttribute(PINNED, Boolean.toString(pinned));
     fileElement.setAttribute(CURRENT_IN_TAB, Boolean.toString(composite.equals(selectedEditor)));
     return fileElement;
@@ -341,194 +302,8 @@ public class DesktopEditorsSplitters implements Disposable, EditorsSplitters {
   }
 
   @Override
-  public void readExternal(final Element element) {
-    mySplittersElement = element;
-  }
-
-  @Override
   public boolean isShowing() {
     return myComponent.isShowing();
-  }
-
-  @Override
-  @Nonnull
-  public VirtualFile[] getOpenFiles() {
-    final Set<VirtualFile> files = new ArrayListSet<>();
-    for (final DesktopEditorWindow myWindow : myWindows) {
-      final EditorWithProviderComposite[] editors = myWindow.getEditors();
-      for (final EditorWithProviderComposite editor : editors) {
-        VirtualFile file = editor.getFile();
-        // background thread may call this method when invalid file is being removed
-        // do not return it here as it will quietly drop out soon
-        if (file.isValid()) {
-          files.add(file);
-        }
-      }
-    }
-    return VfsUtilCore.toVirtualFileArray(files);
-  }
-
-  @Override
-  @Nonnull
-  public VirtualFile[] getSelectedFiles() {
-    final Set<VirtualFile> files = new ArrayListSet<>();
-    for (final DesktopEditorWindow window : myWindows) {
-      final VirtualFile file = window.getSelectedFile();
-      if (file != null) {
-        files.add(file);
-      }
-    }
-    final VirtualFile[] virtualFiles = VfsUtilCore.toVirtualFileArray(files);
-    final VirtualFile currentFile = getCurrentFile();
-    if (currentFile != null) {
-      for (int i = 0; i != virtualFiles.length; ++i) {
-        if (Comparing.equal(virtualFiles[i], currentFile)) {
-          virtualFiles[i] = virtualFiles[0];
-          virtualFiles[0] = currentFile;
-          break;
-        }
-      }
-    }
-    return virtualFiles;
-  }
-
-  @Override
-  @Nonnull
-  public FileEditor[] getSelectedEditors() {
-    Set<DesktopEditorWindow> windows = new HashSet<>(myWindows);
-    final EditorWindow currentWindow = getCurrentWindow();
-    if (currentWindow != null) {
-      windows.add((DesktopEditorWindow)currentWindow);
-    }
-    List<FileEditor> editors = new ArrayList<>();
-    for (final DesktopEditorWindow window : windows) {
-      final DesktopEditorWithProviderComposite composite = window.getSelectedEditor();
-      if (composite != null) {
-        editors.add(composite.getSelectedEditor());
-      }
-    }
-    return editors.toArray(new FileEditor[editors.size()]);
-  }
-
-  @Override
-  public void updateFileIcon(@Nonnull final VirtualFile file) {
-    updateFileIconLater(file);
-  }
-
-  private void updateFileIconImmediately(final VirtualFile file) {
-    final Collection<DesktopEditorWindow> windows = findWindows(file);
-    for (DesktopEditorWindow window : windows) {
-      window.updateFileIcon(file);
-    }
-  }
-
-  private final Set<VirtualFile> myFilesToUpdateIconsFor = new HashSet<>();
-
-  private void updateFileIconLater(VirtualFile file) {
-    myFilesToUpdateIconsFor.add(file);
-    myIconUpdaterAlarm.cancelAllRequests();
-    myIconUpdaterAlarm.addRequest(() -> {
-      if (myManager.getProject().isDisposed()) return;
-      for (VirtualFile file1 : myFilesToUpdateIconsFor) {
-        updateFileIconImmediately(file1);
-      }
-      myFilesToUpdateIconsFor.clear();
-    }, 200, ModalityState.stateForComponent(myComponent));
-  }
-
-  @Override
-  public void updateFileColor(@Nonnull final VirtualFile file) {
-    final Collection<DesktopEditorWindow> windows = findWindows(file);
-    for (DesktopEditorWindow window : windows) {
-      final int index = window.findEditorIndex(window.findFileComposite(file));
-      LOG.assertTrue(index != -1);
-      window.setForegroundAt(index, TargetAWT.to(getManager().getFileColor(file)));
-      window.setWaveColor(index, getManager().isProblem(file) ? JBColor.red : null);
-    }
-  }
-
-  public void trimToSize(final int editor_tab_limit) {
-    for (DesktopEditorWindow window : myWindows) {
-      window.trimToSize(editor_tab_limit, null, true);
-    }
-  }
-
-  public void setTabsPlacement(final int tabPlacement) {
-    final DesktopEditorWindow[] windows = getWindows();
-    for (int i = 0; i != windows.length; ++i) {
-      windows[i].setTabsPlacement(tabPlacement);
-    }
-  }
-
-  void setTabLayoutPolicy(int scrollTabLayout) {
-    final DesktopEditorWindow[] windows = getWindows();
-    for (int i = 0; i != windows.length; ++i) {
-      windows[i].setTabLayoutPolicy(scrollTabLayout);
-    }
-  }
-
-  @Override
-  public void updateFileName(@Nullable final VirtualFile updatedFile) {
-    final DesktopEditorWindow[] windows = getWindows();
-    for (int i = 0; i != windows.length; ++i) {
-      for (VirtualFile file : windows[i].getFiles()) {
-        if (updatedFile == null || file.getName().equals(updatedFile.getName())) {
-          windows[i].updateFileName(file);
-        }
-      }
-    }
-
-    Project project = myManager.getProject();
-
-    final IdeFrame frame = getFrame(project);
-    if (frame != null) {
-      VirtualFile file = getCurrentFile();
-
-      File ioFile = file == null ? null : new File(file.getPresentableUrl());
-      String fileTitle = null;
-      if (file != null) {
-        fileTitle = DumbService.isDumb(project) ? file.getName() : FrameTitleBuilder.getInstance().getFileTitle(project, file);
-      }
-
-      frame.setFileTitle(fileTitle, ioFile);
-    }
-  }
-
-  protected IdeFrame getFrame(Project project) {
-    final IdeFrame frame = WindowManagerEx.getInstance().getIdeFrame(project);
-    LOG.assertTrue(ApplicationManager.getApplication().isUnitTestMode() || frame != null);
-    return frame;
-  }
-
-  @Override
-  public boolean isInsideChange() {
-    return myInsideChange > 0;
-  }
-
-  @Override
-  public AccessToken increaseChange() {
-    myInsideChange++;
-    return new AccessToken() {
-      @Override
-      public void finish() {
-        myInsideChange--;
-      }
-    };
-  }
-
-  private void setCurrentWindow(@Nullable final EditorWindow currentWindow) {
-    if (currentWindow != null && !myWindows.contains(currentWindow)) {
-      throw new IllegalArgumentException(currentWindow + " is not a member of this container");
-    }
-    myCurrentWindow = (DesktopEditorWindow)currentWindow;
-  }
-
-  @Override
-  public void updateFileBackgroundColor(@Nonnull VirtualFile file) {
-    final DesktopEditorWindow[] windows = getWindows();
-    for (int i = 0; i != windows.length; ++i) {
-      windows[i].updateFileBackgroundColor(file);
-    }
   }
 
   @Override
@@ -550,12 +325,6 @@ public class DesktopEditorsSplitters implements Disposable, EditorsSplitters {
       return 1;
     }
     return 0;
-  }
-
-  protected void afterFileClosed(VirtualFile file) {
-  }
-
-  protected void afterFileOpen(VirtualFile file) {
   }
 
   @Nullable
@@ -641,37 +410,9 @@ public class DesktopEditorsSplitters implements Disposable, EditorsSplitters {
     return myComponent.getComponentCount() > 0 ? (JPanel)myComponent.getComponent(0) : null;
   }
 
+  @RequiredUIAccess
   @Override
-  @Nullable
-  public EditorWindow getCurrentWindow() {
-    return myCurrentWindow;
-  }
-
-  @Nonnull
-  @Override
-  public EditorWindow getOrCreateCurrentWindow(final VirtualFile file) {
-    final List<DesktopEditorWindow> windows = findWindows(file);
-    if (getCurrentWindow() == null) {
-      final Iterator<DesktopEditorWindow> iterator = myWindows.iterator();
-      if (!windows.isEmpty()) {
-        setCurrentWindow(windows.get(0), false);
-      }
-      else if (iterator.hasNext()) {
-        setCurrentWindow(iterator.next(), false);
-      }
-      else {
-        createCurrentWindow();
-      }
-    }
-    else if (!windows.isEmpty()) {
-      if (!windows.contains(getCurrentWindow())) {
-        setCurrentWindow(windows.get(0), false);
-      }
-    }
-    return getCurrentWindow();
-  }
-
-  void createCurrentWindow() {
+  protected void createCurrentWindow() {
     LOG.assertTrue(myCurrentWindow == null);
     setCurrentWindow(createEditorWindow());
     myComponent.add(myCurrentWindow.myPanel, BorderLayout.CENTER);
@@ -679,98 +420,6 @@ public class DesktopEditorsSplitters implements Disposable, EditorsSplitters {
 
   protected DesktopEditorWindow createEditorWindow() {
     return new DesktopEditorWindow(this);
-  }
-
-  /**
-   * sets the window passed as a current ('focused') window among all splitters. All file openings will be done inside this
-   * current window
-   *
-   * @param window       a window to be set as current
-   * @param requestFocus whether to request focus to the editor currently selected in this window
-   */
-  @Override
-  public void setCurrentWindow(@Nullable final EditorWindow window, final boolean requestFocus) {
-    EditorWithProviderComposite newEditor = window == null ? null : window.getSelectedEditor();
-
-    Runnable fireRunnable = () -> getManager().fireSelectionChanged(newEditor);
-
-    setCurrentWindow(window);
-
-    getManager().updateFileName(window == null ? null : window.getSelectedFile());
-
-    if (window != null) {
-      final EditorWithProviderComposite selectedEditor = window.getSelectedEditor();
-      if (selectedEditor != null) {
-        fireRunnable.run();
-      }
-
-      if (requestFocus) {
-        window.requestFocus(true);
-      }
-    }
-    else {
-      fireRunnable.run();
-    }
-  }
-
-  void addWindow(DesktopEditorWindow window) {
-    myWindows.add(window);
-  }
-
-  void removeWindow(DesktopEditorWindow window) {
-    myWindows.remove(window);
-    if (myCurrentWindow == window) {
-      myCurrentWindow = null;
-    }
-  }
-
-  boolean containsWindow(DesktopEditorWindow window) {
-    return myWindows.contains(window);
-  }
-
-  //---------------------------------------------------------
-
-  @Override
-  public EditorWithProviderComposite[] getEditorsComposites() {
-    List<EditorWithProviderComposite> res = new ArrayList<>();
-
-    for (final EditorWindow myWindow : myWindows) {
-      final EditorWithProviderComposite[] editors = myWindow.getEditors();
-      ContainerUtil.addAll(res, editors);
-    }
-    return res.toArray(new EditorWithProviderComposite[res.size()]);
-  }
-
-  //---------------------------------------------------------
-
-  @Override
-  @Nonnull
-  public List<EditorWithProviderComposite> findEditorComposites(@Nonnull VirtualFile file) {
-    List<EditorWithProviderComposite> res = new ArrayList<>();
-    for (final EditorWindow window : myWindows) {
-      final EditorWithProviderComposite fileComposite = window.findFileComposite(file);
-      if (fileComposite != null) {
-        res.add(fileComposite);
-      }
-    }
-    return res;
-  }
-
-  @Nonnull
-  private List<DesktopEditorWindow> findWindows(final VirtualFile file) {
-    List<DesktopEditorWindow> res = new ArrayList<>();
-    for (DesktopEditorWindow window : myWindows) {
-      if (window.findFileComposite(file) != null) {
-        res.add(window);
-      }
-    }
-    return res;
-  }
-
-  @Override
-  @Nonnull
-  public DesktopEditorWindow[] getWindows() {
-    return myWindows.toArray(new DesktopEditorWindow[myWindows.size()]);
   }
 
   @Override
