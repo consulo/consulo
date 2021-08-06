@@ -4,17 +4,17 @@
 package com.intellij.openapi.editor.impl.view;
 
 import com.intellij.openapi.diagnostic.Attachment;
-import consulo.logging.Logger;
 import com.intellij.openapi.editor.*;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
 import com.intellij.openapi.editor.impl.DesktopEditorImpl;
-import com.intellij.openapi.editor.impl.FoldingModelImpl;
 import com.intellij.openapi.editor.impl.SoftWrapModelImpl;
 import com.intellij.openapi.editor.impl.softwrap.SoftWrapDrawingType;
 import com.intellij.util.DocumentUtil;
-import javax.annotation.Nonnull;
+import consulo.editor.impl.CodeEditorFoldingModelBase;
+import consulo.logging.Logger;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.geom.Point2D;
 import java.util.List;
@@ -31,7 +31,7 @@ class EditorCoordinateMapper {
 
   private final EditorView myView;
   private final Document myDocument;
-  private final FoldingModelImpl myFoldingModel;
+  private final CodeEditorFoldingModelBase myFoldingModel;
 
   EditorCoordinateMapper(EditorView view) {
     myView = view;

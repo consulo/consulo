@@ -895,6 +895,9 @@ public class DesktopEditorAnalyzeStatusPanel implements Disposable {
       }
     };
 
+  }
+  
+  public void updateUI() {
     JComponent toolbar = statusToolbar.getComponent();
     toolbar.setLayout(new StatusComponentLayout());
     toolbar.addComponentListener(toolbarComponentListener);

@@ -5,10 +5,11 @@ import com.intellij.openapi.editor.RangeMarker;
 import com.intellij.openapi.editor.ex.DocumentEx;
 import com.intellij.openapi.editor.ex.LineIterator;
 import com.intellij.openapi.editor.ex.RangeMarkerEx;
-import consulo.util.dataholder.UserDataHolderBase;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.util.ArrayUtilRt;
 import com.intellij.util.Processor;
+import consulo.util.collection.ArrayUtil;
+import consulo.util.dataholder.UserDataHolderBase;
+
 import javax.annotation.Nonnull;
 
 /**
@@ -18,7 +19,7 @@ import javax.annotation.Nonnull;
 public class EditorTextFieldRendererDocument extends UserDataHolderBase implements DocumentEx {
   private final RangeMarkerTree<RangeMarkerEx> myRangeMarkers = new RangeMarkerTree<RangeMarkerEx>(this) {
   };
-  private char[] myChars = ArrayUtilRt.EMPTY_CHAR_ARRAY;
+  private char[] myChars = ArrayUtil.EMPTY_CHAR_ARRAY;
   private String myString = "";
   private LineSet myLineSet = LineSet.createLineSet(myString);
 

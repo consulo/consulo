@@ -9,7 +9,7 @@ import com.intellij.openapi.editor.FoldRegion;
 import com.intellij.openapi.editor.FoldingGroup;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.editor.ex.FoldingModelEx;
-import com.intellij.openapi.editor.impl.FoldingModelImpl;
+import com.intellij.openapi.editor.impl.DesktopFoldingModelImpl;
 import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.project.IndexNotReadyException;
@@ -133,7 +133,7 @@ class UpdateFoldRegionsOperation implements Runnable {
       FoldRegion region = foldingModel.createFoldRegion(range.getStartOffset(), range.getEndOffset(), placeholder == null ? "..." : placeholder, group, descriptor.isNonExpandable());
       if (region == null) continue;
 
-      if (descriptor.isNonExpandable()) region.putUserData(FoldingModelImpl.SELECT_REGION_ON_CARET_NEARBY, Boolean.TRUE);
+      if (descriptor.isNonExpandable()) region.putUserData(DesktopFoldingModelImpl.SELECT_REGION_ON_CARET_NEARBY, Boolean.TRUE);
 
       PsiElement psi = descriptor.getElement().getPsi();
 

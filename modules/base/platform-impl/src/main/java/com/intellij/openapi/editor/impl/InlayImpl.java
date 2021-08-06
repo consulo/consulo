@@ -4,6 +4,7 @@ package com.intellij.openapi.editor.impl;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.EditorCustomElementRenderer;
 import com.intellij.openapi.editor.Inlay;
+import consulo.editor.impl.CodeEditorBase;
 import consulo.util.dataholder.Key;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -11,19 +12,18 @@ import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 
-abstract class InlayImpl<R extends EditorCustomElementRenderer, T extends InlayImpl> extends RangeMarkerWithGetterImpl implements Inlay<R> {
-  static final Key<Integer> OFFSET_BEFORE_DISPOSAL = Key.create("inlay.offset.before.disposal");
+public abstract class InlayImpl<R extends EditorCustomElementRenderer, T extends InlayImpl> extends RangeMarkerWithGetterImpl implements Inlay<R> {
+  public static final Key<Integer> OFFSET_BEFORE_DISPOSAL = Key.create("inlay.offset.before.disposal");
 
   @Nonnull
-  final DesktopEditorImpl myEditor;
+  final CodeEditorBase myEditor;
   @Nonnull
-  final R myRenderer;
+  public final R myRenderer;
   private final boolean myRelatedToPrecedingText;
 
   int myWidthInPixels;
 
-  @SuppressWarnings("AbstractMethodCallInConstructor")
-  InlayImpl(@Nonnull DesktopEditorImpl editor, int offset, boolean relatesToPrecedingText, @Nonnull R renderer) {
+  InlayImpl(@Nonnull CodeEditorBase editor, int offset, boolean relatesToPrecedingText, @Nonnull R renderer) {
     super(editor.getDocument(), offset, offset, false);
     myEditor = editor;
     myRelatedToPrecedingText = relatesToPrecedingText;

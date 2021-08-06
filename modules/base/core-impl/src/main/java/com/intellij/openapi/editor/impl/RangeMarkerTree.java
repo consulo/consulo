@@ -16,12 +16,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
-class RangeMarkerTree<T extends RangeMarkerEx> extends IntervalTreeImpl<T> implements PrioritizedInternalDocumentListener {
-  RangeMarkerTree(@Nonnull Document document) {
+public class RangeMarkerTree<T extends RangeMarkerEx> extends IntervalTreeImpl<T> implements PrioritizedInternalDocumentListener {
+  public RangeMarkerTree(@Nonnull Document document) {
     document.addDocumentListener(this);
   }
 
-  RangeMarkerTree() {
+  public RangeMarkerTree() {
   }
 
   @Override
@@ -63,7 +63,7 @@ class RangeMarkerTree<T extends RangeMarkerEx> extends IntervalTreeImpl<T> imple
     return 0;
   }
 
-  void dispose(@Nonnull Document document) {
+  public void dispose(@Nonnull Document document) {
     document.removeDocumentListener(this);
   }
 
@@ -121,7 +121,7 @@ class RangeMarkerTree<T extends RangeMarkerEx> extends IntervalTreeImpl<T> imple
     ((RangeMarkerImpl)key).myNode = (RMNode<RangeMarkerEx>)intervalNode;
   }
 
-  static class RMNode<T extends RangeMarkerEx> extends IntervalTreeImpl.IntervalNode<T> {
+  public static class RMNode<T extends RangeMarkerEx> extends IntervalTreeImpl.IntervalNode<T> {
     private static final byte EXPAND_TO_LEFT_FLAG = VALID_FLAG << 1;
     private static final byte EXPAND_TO_RIGHT_FLAG = EXPAND_TO_LEFT_FLAG << 1;
     static final byte STICK_TO_RIGHT_FLAG = EXPAND_TO_RIGHT_FLAG << 1;
@@ -145,7 +145,7 @@ class RangeMarkerTree<T extends RangeMarkerEx> extends IntervalTreeImpl<T> imple
       return isFlagSet(STICK_TO_RIGHT_FLAG);
     }
 
-    void onRemoved() {
+    public void onRemoved() {
     }
 
     @Override
@@ -237,7 +237,7 @@ class RangeMarkerTree<T extends RangeMarkerEx> extends IntervalTreeImpl<T> imple
   }
 
   // returns true if all deltas involved are still 0
-  boolean collectAffectedMarkersAndShiftSubtrees(@Nullable IntervalNode<T> root, @Nonnull DocumentEvent e, @Nonnull List<? super IntervalNode<T>> affected) {
+  public boolean collectAffectedMarkersAndShiftSubtrees(@Nullable IntervalNode<T> root, @Nonnull DocumentEvent e, @Nonnull List<? super IntervalNode<T>> affected) {
     if (root == null) return true;
     boolean norm = pushDelta(root);
 

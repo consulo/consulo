@@ -16,7 +16,6 @@
 package consulo.ui.web.internal.ex;
 
 import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.editor.ex.DocumentEx;
 import com.intellij.openapi.editor.ex.EditorMarkupModel;
 import com.intellij.openapi.editor.ex.ErrorStripTooltipRendererProvider;
 import com.intellij.openapi.editor.ex.ErrorStripeListener;
@@ -36,8 +35,8 @@ public class WebEditorMarkupModelImpl extends MarkupModelImpl implements EditorM
   @Nonnull
   private final WebEditorImpl myWebEditor;
 
-  public WebEditorMarkupModelImpl(@Nonnull DocumentEx document, @Nonnull WebEditorImpl webEditor) {
-    super(document);
+  public WebEditorMarkupModelImpl(@Nonnull WebEditorImpl webEditor) {
+    super(webEditor.getDocument());
     myWebEditor = webEditor;
   }
 

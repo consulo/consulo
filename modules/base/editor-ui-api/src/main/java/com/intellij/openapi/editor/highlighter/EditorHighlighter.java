@@ -18,17 +18,21 @@ package com.intellij.openapi.editor.highlighter;
 
 import com.intellij.openapi.editor.colors.EditorColorsScheme;
 import com.intellij.openapi.editor.event.DocumentListener;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public interface EditorHighlighter extends DocumentListener {
   @Nonnull
   HighlighterIterator createIterator(int startOffset);
+
   void setText(@Nonnull CharSequence text);
 
-  default void setText(@Nonnull CharSequence text, @Nullable String debugInfo)  {
+  default void setText(@Nonnull CharSequence text, @Nullable String debugInfo) {
     setText(text);
   }
+
   void setEditor(@Nonnull HighlighterClient editor);
+
   void setColorScheme(@Nonnull EditorColorsScheme scheme);
 }

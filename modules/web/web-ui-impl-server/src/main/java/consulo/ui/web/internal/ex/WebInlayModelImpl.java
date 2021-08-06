@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2018 consulo.io
+ * Copyright 2013-2021 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,23 +16,16 @@
 package consulo.ui.web.internal.ex;
 
 import consulo.editor.impl.CodeEditorBase;
-import consulo.editor.impl.CodeEditorCaretModelBase;
+import consulo.editor.impl.CodeEditorInlayModelBase;
 
 import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
- * @since 2018-05-10
+ * @since 04/08/2021
  */
-public class WebCaretModelImpl extends CodeEditorCaretModelBase<WebCaretImpl> {
-
-  public WebCaretModelImpl(@Nonnull CodeEditorBase editor) {
+public class WebInlayModelImpl extends CodeEditorInlayModelBase {
+  public WebInlayModelImpl(@Nonnull CodeEditorBase editor) {
     super(editor);
-  }
-
-  @Nonnull
-  @Override
-  protected WebCaretImpl createCaret(CodeEditorBase editor, CodeEditorCaretModelBase<WebCaretImpl> model) {
-    return new WebCaretImpl(editor, model);
   }
 }

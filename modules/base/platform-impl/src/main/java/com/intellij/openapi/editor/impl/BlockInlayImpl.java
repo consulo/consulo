@@ -4,18 +4,20 @@ package com.intellij.openapi.editor.impl;
 import com.intellij.openapi.editor.EditorCustomElementRenderer;
 import com.intellij.openapi.editor.Inlay;
 import com.intellij.openapi.editor.VisualPosition;
+import consulo.editor.impl.CodeEditorBase;
+
 import javax.annotation.Nonnull;
 
 import java.awt.*;
 import java.util.List;
 import java.util.function.IntSupplier;
 
-class BlockInlayImpl<R extends EditorCustomElementRenderer> extends InlayImpl<R, BlockInlayImpl> implements IntSupplier {
-  final boolean myShowAbove;
-  final int myPriority;
+public class BlockInlayImpl<R extends EditorCustomElementRenderer> extends InlayImpl<R, BlockInlayImpl> implements IntSupplier {
+  public final boolean myShowAbove;
+  public final int myPriority;
   private int myHeightInPixels;
 
-  BlockInlayImpl(@Nonnull DesktopEditorImpl editor, int offset, boolean relatesToPrecedingText, boolean showAbove, int priority, @Nonnull R renderer) {
+  public BlockInlayImpl(@Nonnull CodeEditorBase editor, int offset, boolean relatesToPrecedingText, boolean showAbove, int priority, @Nonnull R renderer) {
     super(editor, offset, relatesToPrecedingText, renderer);
     myShowAbove = showAbove;
     myPriority = priority;

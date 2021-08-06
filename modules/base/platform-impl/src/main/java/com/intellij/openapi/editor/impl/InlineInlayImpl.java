@@ -5,6 +5,8 @@ import com.intellij.openapi.editor.EditorCustomElementRenderer;
 import com.intellij.openapi.editor.Inlay;
 import com.intellij.openapi.editor.VisualPosition;
 import com.intellij.openapi.editor.event.DocumentEvent;
+import consulo.editor.impl.CodeEditorBase;
+import consulo.editor.impl.CodeEditorInlayModelBase;
 import consulo.util.dataholder.Key;
 import com.intellij.util.DocumentUtil;
 import javax.annotation.Nonnull;
@@ -12,10 +14,10 @@ import javax.annotation.Nonnull;
 import java.awt.*;
 import java.util.List;
 
-class InlineInlayImpl<R extends EditorCustomElementRenderer> extends InlayImpl<R, InlineInlayImpl> {
+public class InlineInlayImpl<R extends EditorCustomElementRenderer> extends InlayImpl<R, InlineInlayImpl> {
   private static final Key<Integer> ORDER_BEFORE_DISPOSAL = Key.create("inlay.order.before.disposal");
 
-  InlineInlayImpl(@Nonnull DesktopEditorImpl editor, int offset, boolean relatesToPrecedingText, @Nonnull R renderer) {
+  public InlineInlayImpl(@Nonnull CodeEditorBase editor, int offset, boolean relatesToPrecedingText, @Nonnull R renderer) {
     super(editor, offset, relatesToPrecedingText, renderer);
   }
 
@@ -35,7 +37,7 @@ class InlineInlayImpl<R extends EditorCustomElementRenderer> extends InlayImpl<R
 
   @Override
   protected void onReTarget(int startOffset, int endOffset, int destOffset) {
-    InlayModelImpl inlayModel = myEditor.getInlayModel();
+    CodeEditorInlayModelBase inlayModel = myEditor.getInlayModel();
     inlayModel.myPutMergedIntervalsAtBeginning = intervalStart() == endOffset;
     if (DocumentUtil.isInsideSurrogatePair(getDocument(), getOffset())) {
       inlayModel.myMoveInProgress = true;
@@ -93,7 +95,7 @@ class InlineInlayImpl<R extends EditorCustomElementRenderer> extends InlayImpl<R
     return myEditor.getLineHeight();
   }
 
-  int getOrder() {
+  public int getOrder() {
     Integer value = getUserData(ORDER_BEFORE_DISPOSAL);
     return value == null ? -1 : value;
   }

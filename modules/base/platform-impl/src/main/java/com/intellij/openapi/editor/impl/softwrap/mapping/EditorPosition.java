@@ -18,19 +18,18 @@ package com.intellij.openapi.editor.impl.softwrap.mapping;
 import com.intellij.openapi.editor.*;
 import javax.annotation.Nonnull;
 
-class EditorPosition implements Cloneable {
-
+public class EditorPosition implements Cloneable {
   public int logicalLine;
   public int offset;
   public int x;
 
   private final Editor myEditor;
 
-  EditorPosition(@Nonnull Editor editor) {
+  public EditorPosition(@Nonnull Editor editor) {
     myEditor = editor;
   }
 
-  EditorPosition(@Nonnull LogicalPosition logical, int offset, @Nonnull Editor editor) {
+  public EditorPosition(@Nonnull LogicalPosition logical, int offset, @Nonnull Editor editor) {
     myEditor = editor;
     logicalLine = logical.line;
     this.offset = offset;
@@ -65,7 +64,7 @@ class EditorPosition implements Cloneable {
   }
 
   @Override
-  protected EditorPosition clone() {
+  public EditorPosition clone() {
     EditorPosition result = new EditorPosition(myEditor);
     result.logicalLine = logicalLine;
     result.offset = offset;

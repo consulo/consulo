@@ -19,10 +19,11 @@
  */
 package com.intellij.openapi.editor;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
 public interface IndentsModel {
-  @javax.annotation.Nullable
+  @Nullable
   IndentGuideDescriptor getCaretIndentGuide();
 
   /**
@@ -33,7 +34,7 @@ public interface IndentsModel {
    * @return            indent guide descriptor registered for the given lines at the current model previously if any;
    *                    <code>null</code> otherwise
    */
-  @javax.annotation.Nullable
+  @Nullable
   IndentGuideDescriptor getDescriptor(int startLine, int endLine);
 
   void assumeIndents(List<IndentGuideDescriptor> descriptors);

@@ -330,4 +330,27 @@ public interface Caret extends UserDataHolderEx, Disposable {
    * @see #getVisualAttributes()
    */
   void setVisualAttributes(@Nonnull CaretVisualAttributes attributes);
+
+  /**
+   * @return information on whether current selection's direction in known
+   * @see #setUnknownDirection(boolean)
+   */
+  default boolean isUnknownDirection() {
+    return false;
+  }
+
+  /**
+   * There is a possible case that we don't know selection's direction. For example, a user might triple-click editor (select the
+   * whole line). We can't say what selection end is a {@link #getLeadSelectionOffset() leading end} then. However, that matters
+   * in a situation when a user clicks before or after that line holding Shift key. It's expected that the selection is expanded
+   * up to that point than.
+   * <p/>
+   * That's why we allow to specify that the direction is unknown and {@link #isUnknownDirection() expose this information}
+   * later.
+   * <p/>
+   * <b>Note:</b> when this method is called with {@code 'true'}, subsequent calls are guaranteed to return {@code true}
+   * until selection is changed. 'Unknown direction' flag is automatically reset then.
+   */
+  default void setUnknownDirection(boolean unknownDirection) {
+  }
 }

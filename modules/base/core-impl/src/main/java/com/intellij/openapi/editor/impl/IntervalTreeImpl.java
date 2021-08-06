@@ -30,7 +30,7 @@ import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.function.Predicate;
 
-abstract class IntervalTreeImpl<T> extends RedBlackTree<T> implements IntervalTree<T> {
+public abstract class IntervalTreeImpl<T> extends RedBlackTree<T> implements IntervalTree<T> {
   static final Logger LOG = Logger.getInstance(IntervalTreeImpl.class);
   static final boolean DEBUG = LOG.isDebugEnabled() || ApplicationManager.getApplication() != null && ApplicationManager.getApplication().isUnitTestMode();
   private int keySize; // number of all intervals, counting all duplicates, some of them maybe gced
@@ -41,11 +41,11 @@ abstract class IntervalTreeImpl<T> extends RedBlackTree<T> implements IntervalTr
   private final ReferenceQueue<T> myReferenceQueue = new ReferenceQueue<>();
   private int deadReferenceCount;
 
-  static class IntervalNode<E> extends RedBlackTree.Node<E> implements MutableInterval {
+  public static class IntervalNode<E> extends RedBlackTree.Node<E> implements MutableInterval {
     private volatile int myStart;
     private volatile int myEnd;
     private static final byte ATTACHED_TO_TREE_FLAG = COLOR_MASK << 1; // true if the node is inserted to the tree
-    final List<Getter<E>> intervals;
+    public final List<Getter<E>> intervals;
     int maxEnd; // max of all intervalEnd()s among all children.
     int delta;  // delta of startOffset. getStartOffset() = myStartOffset + Sum of deltas up to root
 
@@ -144,7 +144,7 @@ abstract class IntervalTreeImpl<T> extends RedBlackTree<T> implements IntervalTr
       setFlag(ATTACHED_TO_TREE_FLAG, attached);
     }
 
-    void removeIntervalInternal(int i) {
+    protected void removeIntervalInternal(int i) {
       intervals.remove(i);
       if (isAttachedToTree()) {   // for detached node, do not update tree node count
         assert myIntervalTree.keySize > 0 : myIntervalTree.keySize;
@@ -161,7 +161,7 @@ abstract class IntervalTreeImpl<T> extends RedBlackTree<T> implements IntervalTr
       }
     }
 
-    void addIntervalsFrom(@Nonnull IntervalNode<E> otherNode) {
+    public void addIntervalsFrom(@Nonnull IntervalNode<E> otherNode) {
       for (Getter<E> key : otherNode.intervals) {
         E interval = key.get();
         if (interval != null) addInterval(interval);
@@ -1301,7 +1301,7 @@ abstract class IntervalTreeImpl<T> extends RedBlackTree<T> implements IntervalTr
     collectGced(root.getRight(), gced);
   }
 
-  void fireBeforeRemoved(@Nonnull T markerEx, @Nonnull @NonNls Object reason) {
+  public void fireBeforeRemoved(@Nonnull T markerEx, @Nonnull @NonNls Object reason) {
   }
 
   private boolean firingBeforeRemove; // accessed under l.writeLock() only

@@ -32,12 +32,12 @@ public class RangeMarkerImpl extends UserDataHolderBase implements RangeMarkerEx
   private final long myId;
   private static final StripedIDGenerator counter = new StripedIDGenerator();
 
-  RangeMarkerImpl(@Nonnull DocumentEx document, int start, int end, boolean register, boolean forceDocumentStrongReference) {
+  public RangeMarkerImpl(@Nonnull DocumentEx document, int start, int end, boolean register, boolean forceDocumentStrongReference) {
     this(forceDocumentStrongReference ? document : ObjectUtils.notNull(FileDocumentManager.getInstance().getFile(document), document), document.getTextLength(), start, end, register, false, false);
   }
 
   // constructor which creates marker without document and saves it in the virtual file directly. Can be cheaper than loading document.
-  RangeMarkerImpl(@Nonnull VirtualFile virtualFile, int start, int end, boolean register) {
+  public RangeMarkerImpl(@Nonnull VirtualFile virtualFile, int start, int end, boolean register) {
     // unfortunately we don't know the exact document size until we load it
     this(virtualFile, estimateDocumentLength(virtualFile), start, end, register, false, false);
   }
@@ -141,7 +141,7 @@ public class RangeMarkerImpl extends UserDataHolderBase implements RangeMarkerEx
     myNode.getTree().changeData(this, getStartOffset(), getEndOffset(), isGreedyToLeft(), greedy, isStickingToRight(), getLayer());
   }
 
-  void setStickingToRight(boolean value) {
+  public void setStickingToRight(boolean value) {
     if (!isValid() || value == isStickingToRight()) return;
     myNode.getTree().changeData(this, getStartOffset(), getEndOffset(), isGreedyToLeft(), isGreedyToRight(), value, getLayer());
   }
@@ -289,14 +289,14 @@ public class RangeMarkerImpl extends UserDataHolderBase implements RangeMarkerEx
     return "RangeMarker" + (isGreedyToLeft() ? "[" : "(") + (isValid() ? "" : "invalid:") + getStartOffset() + "," + getEndOffset() + (isGreedyToRight() ? "]" : ")") + " " + getId();
   }
 
-  int setIntervalStart(int start) {
+  public int setIntervalStart(int start) {
     if (start < 0) {
       LOG.error("Negative start: " + start);
     }
     return myNode.setIntervalStart(start);
   }
 
-  int setIntervalEnd(int end) {
+  public int setIntervalEnd(int end) {
     if (end < 0) {
       LOG.error("Negative end: " + end);
     }

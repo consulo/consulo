@@ -5,17 +5,19 @@ import com.intellij.openapi.editor.EditorCustomElementRenderer;
 import com.intellij.openapi.editor.Inlay;
 import com.intellij.openapi.editor.VisualPosition;
 import com.intellij.util.DocumentUtil;
+import consulo.editor.impl.CodeEditorBase;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import java.awt.*;
 import java.util.List;
 
-class AfterLineEndInlayImpl<R extends EditorCustomElementRenderer> extends InlayImpl<R, AfterLineEndInlayImpl> {
+public class AfterLineEndInlayImpl<R extends EditorCustomElementRenderer> extends InlayImpl<R, AfterLineEndInlayImpl> {
   private static int ourGlobalCounter = 0;
-  final int myOrder;
+  public final int myOrder;
 
-  AfterLineEndInlayImpl(@Nonnull DesktopEditorImpl editor, int offset, boolean relatesToPrecedingText, @Nonnull R renderer) {
+  public AfterLineEndInlayImpl(@Nonnull CodeEditorBase editor, int offset, boolean relatesToPrecedingText, @Nonnull R renderer) {
     super(editor, offset, relatesToPrecedingText, renderer);
     //noinspection AssignmentToStaticFieldFromInstanceMethod
     myOrder = ourGlobalCounter++;

@@ -19,6 +19,8 @@ import com.intellij.openapi.editor.LogicalPosition;
 import com.intellij.openapi.editor.ScrollType;
 import com.intellij.openapi.editor.event.VisibleAreaListener;
 import com.intellij.openapi.editor.ex.ScrollingModelEx;
+import consulo.editor.impl.CodeEditorBase;
+import consulo.editor.impl.CodeEditorScrollingModelBase;
 
 import javax.annotation.Nonnull;
 import java.awt.*;
@@ -27,7 +29,11 @@ import java.awt.*;
  * @author VISTALL
  * @since 06/12/2020
  */
-public class WebScrollingModelImpl implements ScrollingModelEx {
+public class WebScrollingModelImpl extends CodeEditorScrollingModelBase implements ScrollingModelEx {
+  public WebScrollingModelImpl(CodeEditorBase editor) {
+    super(editor);
+  }
+
   @Override
   public void accumulateViewportChanges() {
 
@@ -97,16 +103,6 @@ public class WebScrollingModelImpl implements ScrollingModelEx {
 
   @Override
   public void scroll(int horizontalOffset, int verticalOffset) {
-
-  }
-
-  @Override
-  public void addVisibleAreaListener(@Nonnull VisibleAreaListener listener) {
-
-  }
-
-  @Override
-  public void removeVisibleAreaListener(@Nonnull VisibleAreaListener listener) {
 
   }
 }

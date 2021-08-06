@@ -125,7 +125,7 @@ class RangeHighlighterTree extends RangeMarkerTree<RangeHighlighterEx> {
     }
 
     @Override
-    void removeIntervalInternal(int i) {
+    public void removeIntervalInternal(int i) {
       RangeHighlighterEx h = intervals.get(i).get();
       boolean recalculateFlags = h.isRenderedInGutter() || h.isRenderedInScrollBar();
       super.removeIntervalInternal(i);
@@ -134,7 +134,7 @@ class RangeHighlighterTree extends RangeMarkerTree<RangeHighlighterEx> {
   }
 
   @Override
-  void fireBeforeRemoved(@Nonnull RangeHighlighterEx markerEx, @Nonnull Object reason) {
+  public void fireBeforeRemoved(@Nonnull RangeHighlighterEx markerEx, @Nonnull Object reason) {
     myMarkupModel.fireBeforeRemoved(markerEx);
   }
 }

@@ -23,7 +23,7 @@ import com.intellij.openapi.editor.ScrollingModel;
 import com.intellij.openapi.editor.event.VisibleAreaEvent;
 import com.intellij.openapi.editor.event.VisibleAreaListener;
 import com.intellij.openapi.editor.ex.EditorEx;
-import com.intellij.openapi.editor.impl.FoldingModelImpl;
+import com.intellij.openapi.editor.impl.DesktopFoldingModelImpl;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.containers.ContainerUtil;
 import javax.annotation.Nonnull;
@@ -343,7 +343,7 @@ public class SyncScrollSupport {
 
     @Override
     public void visibleAreaChanged(VisibleAreaEvent e) {
-      if (((FoldingModelImpl)getSlave().getFoldingModel()).isInBatchFoldingOperation()) return;
+      if (((DesktopFoldingModelImpl)getSlave().getFoldingModel()).isInBatchFoldingOperation()) return;
 
       Rectangle newRectangle = e.getNewRectangle();
       Rectangle oldRectangle = e.getOldRectangle();

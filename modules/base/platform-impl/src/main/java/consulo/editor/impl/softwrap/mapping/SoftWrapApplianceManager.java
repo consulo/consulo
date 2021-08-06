@@ -1,5 +1,5 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package com.intellij.openapi.editor.impl.softwrap.mapping;
+package consulo.editor.impl.softwrap.mapping;
 
 import com.intellij.diagnostic.AttachmentFactory;
 import com.intellij.diagnostic.Dumpable;
@@ -13,6 +13,7 @@ import com.intellij.openapi.editor.impl.softwrap.SoftWrapDrawingType;
 import com.intellij.openapi.editor.impl.softwrap.SoftWrapImpl;
 import com.intellij.openapi.editor.impl.softwrap.SoftWrapPainter;
 import com.intellij.openapi.editor.impl.softwrap.SoftWrapsStorage;
+import com.intellij.openapi.editor.impl.softwrap.mapping.*;
 import com.intellij.openapi.editor.impl.view.IterationState;
 import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.openapi.project.Project;
@@ -23,6 +24,8 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.EditorNotifications;
 import com.intellij.util.DocumentUtil;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.editor.impl.CodeEditorBase;
+import consulo.editor.impl.CodeEditorSoftWrapModelBase;
 import consulo.editor.internal.EditorInternal;
 import consulo.logging.Logger;
 import consulo.util.dataholder.Key;
@@ -48,12 +51,13 @@ import java.util.List;
  * Not thread-safe.
  *
  * @author Denis Zhdanov
+ * @implNote common part from desktop implentation
  */
-public class SoftWrapApplianceManager implements Dumpable {
-  public static final Key<Object> IGNORE_OLD_SOFT_WRAP_LOGIC_REGISTRY_OPTION = new Key<>("softWrap.ignoreOldSoftWrapLogicRegistryOption");
+public abstract class SoftWrapApplianceManager implements Dumpable {
+  public static final Key<Object> IGNORE_OLD_SOFT_WRAP_LOGIC_REGISTRY_OPTION = Key.create("softWrap.ignoreOldSoftWrapLogicRegistryOption");
 
   private static final Logger LOG = Logger.getInstance(SoftWrapApplianceManager.class);
-  private static final int QUICK_DUMMY_WRAPPING = Integer.MAX_VALUE; // special value to request a tentative wrapping
+  protected static final int QUICK_DUMMY_WRAPPING = Integer.MAX_VALUE; // special value to request a tentative wrapping
   // before editor is shown and actual available width is known
   private static final int QUICK_WRAP_CHAR_COUNT = 1000;
 
@@ -77,10 +81,10 @@ public class SoftWrapApplianceManager implements Dumpable {
   private final FontTypesStorage myOffset2fontType = new FontTypesStorage();
   private final WidthsStorage myOffset2widthInPixels = new WidthsStorage();
 
-  private final SoftWrapsStorage myStorage;
-  private final DesktopEditorImpl myEditor;
-  private SoftWrapPainter myPainter;
-  private final CachingSoftWrapDataMapper myDataMapper;
+  protected final SoftWrapsStorage myStorage;
+  protected final CodeEditorBase myEditor;
+  protected SoftWrapPainter myPainter;
+  protected final CachingSoftWrapDataMapper myDataMapper;
 
   /**
    * Visual area width change causes soft wraps addition/removal, so, we want to update {@code 'y'} coordinate
@@ -95,16 +99,15 @@ public class SoftWrapApplianceManager implements Dumpable {
   private VisibleAreaWidthProvider myWidthProvider;
   private LineWrapPositionStrategy myLineWrapPositionStrategy;
   private IncrementalCacheUpdateEvent myEventBeingProcessed;
-  private boolean myCustomIndentUsedLastTime;
-  private int myCustomIndentValueUsedLastTime;
-  private int myVisibleAreaWidth;
+  protected boolean myCustomIndentUsedLastTime;
+  protected int myCustomIndentValueUsedLastTime;
+  protected int myVisibleAreaWidth;
   private boolean myInProgress;
   private boolean myIsDirty = true;
   private IncrementalCacheUpdateEvent myDocumentChangedEvent;
   private int myAvailableWidth = QUICK_DUMMY_WRAPPING;
 
-
-  public SoftWrapApplianceManager(@Nonnull SoftWrapsStorage storage, @Nonnull DesktopEditorImpl editor, @Nonnull SoftWrapPainter painter, CachingSoftWrapDataMapper dataMapper) {
+  public SoftWrapApplianceManager(@Nonnull SoftWrapsStorage storage, @Nonnull CodeEditorBase editor, @Nonnull SoftWrapPainter painter, CachingSoftWrapDataMapper dataMapper) {
     myStorage = storage;
     myEditor = editor;
     myPainter = painter;
@@ -209,7 +212,7 @@ public class SoftWrapApplianceManager implements Dumpable {
     }
   }
 
-  private void recalculateSoftWraps(@Nonnull IncrementalCacheUpdateEvent event) {
+  protected void recalculateSoftWraps(@Nonnull IncrementalCacheUpdateEvent event) {
     if (myEditor.getDocument() instanceof DocumentImpl && ((DocumentImpl)myEditor.getDocument()).acceptsSlashR()) {
       LOG.error("Soft wrapping is not supported for documents with non-standard line endings. File: " + myEditor.getVirtualFile());
     }
@@ -221,15 +224,9 @@ public class SoftWrapApplianceManager implements Dumpable {
       myEventBeingProcessed = event;
       notifyListenersOnCacheUpdateStart(event);
       int endOffsetUpperEstimate = getEndOffsetUpperEstimate(event);
-      if (myVisibleAreaWidth == QUICK_DUMMY_WRAPPING) {
-        doRecalculateSoftWrapsRoughly(event);
-      }
-      else if (Registry.is("editor.old.soft.wrap.logic") && !IGNORE_OLD_SOFT_WRAP_LOGIC_REGISTRY_OPTION.isIn(myEditor)) {
-        doRecalculateSoftWraps(event, endOffsetUpperEstimate);
-      }
-      else {
-        new SoftWrapEngine(myEditor, myPainter, myStorage, myDataMapper, event, myVisibleAreaWidth, myCustomIndentUsedLastTime ? myCustomIndentValueUsedLastTime : -1).generate();
-      }
+
+      doRecalculateSoftWraps0(event, endOffsetUpperEstimate);
+
       if (LOG.isDebugEnabled()) {
         LOG.debug("Soft wrap recalculation done: " + event.toString() + ". " + (event.getActualEndOffset() - event.getStartOffset()) + " characters processed");
       }
@@ -256,12 +253,21 @@ public class SoftWrapApplianceManager implements Dumpable {
     }
   }
 
-  private void doRecalculateSoftWraps(IncrementalCacheUpdateEvent event, int endOffsetUpperEstimate) {
+  protected void doRecalculateSoftWraps0(@Nonnull IncrementalCacheUpdateEvent event, int endOffsetUpperEstimate) {
+    if (myVisibleAreaWidth == QUICK_DUMMY_WRAPPING) {
+      doRecalculateSoftWrapsRoughly(event);
+    }
+    else {
+      doRecalculateSoftWraps(event, endOffsetUpperEstimate);
+    }
+  }
+
+  protected void doRecalculateSoftWraps(IncrementalCacheUpdateEvent event, int endOffsetUpperEstimate) {
     // Preparation.
     myContext.reset();
     myOffset2fontType.clear();
     myOffset2widthInPixels.clear();
-    EditorTextRepresentationHelper editorTextRepresentationHelper = SoftWrapModelImpl.getEditorTextRepresentationHelper(myEditor);
+    EditorTextRepresentationHelper editorTextRepresentationHelper = CodeEditorSoftWrapModelBase.getEditorTextRepresentationHelper(myEditor);
     if (editorTextRepresentationHelper instanceof DefaultEditorTextRepresentationHelper) {
       ((DefaultEditorTextRepresentationHelper)editorTextRepresentationHelper).updateContext();
     }
@@ -342,7 +348,7 @@ public class SoftWrapApplianceManager implements Dumpable {
 
   // this method generates soft-wraps at some places just to ensure visual lines have limited width, to avoid related performance problems
   // correct procedure is not used to speed up editor opening
-  private void doRecalculateSoftWrapsRoughly(IncrementalCacheUpdateEvent event) {
+  protected void doRecalculateSoftWrapsRoughly(IncrementalCacheUpdateEvent event) {
     Document document = myEditor.getDocument();
     int lineCount = document.getLineCount();
     int offset = event.getStartOffset();
@@ -907,8 +913,7 @@ public class SoftWrapApplianceManager implements Dumpable {
     return myListeners.remove(listener);
   }
 
-
-  private void notifyListenersOnCacheUpdateStart(IncrementalCacheUpdateEvent event) {
+  protected void notifyListenersOnCacheUpdateStart(IncrementalCacheUpdateEvent event) {
     //noinspection ForLoopReplaceableByForEach
     for (int i = 0; i < myListeners.size(); i++) {
       // Avoid unnecessary Iterator object construction as this method is expected to be called frequently.
@@ -1051,9 +1056,9 @@ public class SoftWrapApplianceManager implements Dumpable {
 
   private static class DefaultVisibleAreaWidthProvider implements VisibleAreaWidthProvider {
 
-    private final DesktopEditorImpl myEditor;
+    private final CodeEditorBase myEditor;
 
-    DefaultVisibleAreaWidthProvider(DesktopEditorImpl editor) {
+    DefaultVisibleAreaWidthProvider(CodeEditorBase editor) {
       myEditor = editor;
     }
 

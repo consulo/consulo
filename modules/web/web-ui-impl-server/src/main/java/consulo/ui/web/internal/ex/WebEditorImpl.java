@@ -15,49 +15,32 @@
  */
 package consulo.ui.web.internal.ex;
 
-import com.intellij.ide.CopyProvider;
-import com.intellij.ide.CutProvider;
-import com.intellij.ide.DeleteProvider;
-import com.intellij.ide.PasteProvider;
+import com.intellij.ide.DataManager;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.editor.*;
-import com.intellij.openapi.editor.colors.EditorColorsManager;
-import com.intellij.openapi.editor.colors.EditorColorsScheme;
-import com.intellij.openapi.editor.event.EditorMouseListener;
-import com.intellij.openapi.editor.event.EditorMouseMotionListener;
-import com.intellij.openapi.editor.ex.*;
-import com.intellij.openapi.editor.highlighter.EditorHighlighter;
-import com.intellij.openapi.editor.impl.EditorFilteringMarkupModelEx;
-import com.intellij.openapi.editor.impl.SettingsImpl;
+import com.intellij.openapi.editor.ex.EditorGutterComponentEx;
+import com.intellij.openapi.editor.impl.MarkupModelImpl;
 import com.intellij.openapi.editor.impl.TextDrawingCallback;
-import com.intellij.openapi.editor.markup.RangeHighlighter;
-import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Condition;
-import com.intellij.openapi.vfs.VirtualFile;
 import consulo.annotation.access.RequiredReadAction;
-import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.editor.internal.EditorInternal;
+import consulo.editor.impl.*;
 import consulo.internal.arquill.editor.server.ArquillEditor;
 import consulo.ui.Component;
 import consulo.ui.web.internal.base.ComponentHolder;
 import consulo.ui.web.internal.base.FromVaadinComponentWrapper;
 import consulo.ui.web.internal.base.UIComponentWithVaadinComponent;
-import kava.beans.PropertyChangeListener;
 import org.intellij.lang.annotations.MagicConstant;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.awt.*;
-import java.util.Collection;
-import java.util.function.IntFunction;
 
 /**
  * @author VISTALL
  * @since 2019-02-18
  */
-public class WebEditorImpl extends UIComponentWithVaadinComponent<WebEditorImpl.Vaadin> implements Component, EditorInternal {
+public class WebEditorImpl extends CodeEditorBase {
   public static class Vaadin extends ArquillEditor implements ComponentHolder, FromVaadinComponentWrapper {
     private Component myComponent;
 
@@ -77,45 +60,77 @@ public class WebEditorImpl extends UIComponentWithVaadinComponent<WebEditorImpl.
     }
   }
 
-  private final DocumentEx myDocument;
-  private final Project myProject;
-  @Nonnull
-  private final EditorKind myKind;
+  private static class EditorComponent extends UIComponentWithVaadinComponent<WebEditorImpl.Vaadin> implements Component {
+    @Nonnull
+    @Override
+    public Vaadin createVaadinComponent() {
+      return new Vaadin("");
+    }
+  }
 
-  private final WebFoldingModelImpl myFoldingModel = new WebFoldingModelImpl();
-  private final WebSelectionModelImpl mySelectionModel = new WebSelectionModelImpl();
-  private final WebCaretModelImpl myCaretModel = new WebCaretModelImpl(this);
-  private final WebScrollingModelImpl myScrollingModel = new WebScrollingModelImpl();
-  private final WebEditorMarkupModelImpl myEditorMarkupModel;
-  private final EditorFilteringMarkupModelEx myFilteringMarkupModel;
-
-  private EditorColorsScheme myEditorColorsScheme;
-
-  private volatile EditorHighlighter myHighlighter; // updated in EDT, but can be accessed from other threads (under read action)
-
-  private EditorSettings mySettings;
-
-  private Disposable myDisposable = Disposable.newDisposable();
+  private final EditorComponent myEditorComponent;
 
   @RequiredReadAction
   public WebEditorImpl(@Nonnull Document document, boolean viewer, @Nullable Project project, @Nonnull EditorKind kind) {
-    myProject = project;
-    myKind = kind;
-    myDocument = (DocumentEx)document;
+    super(document, viewer, project, kind);
 
-    myEditorColorsScheme = EditorColorsManager.getInstance().getGlobalScheme();
-    mySettings = new SettingsImpl(this, project, kind);
-    myEditorMarkupModel = new WebEditorMarkupModelImpl(myDocument, this);
-    myFilteringMarkupModel = new EditorFilteringMarkupModelEx(this, myEditorMarkupModel);
+    myEditorComponent = new EditorComponent();
 
-    Vaadin vaadin = toVaadinComponent();
+    Vaadin vaadin = myEditorComponent.toVaadinComponent();
     vaadin.setWidth("100%");
     vaadin.setHeight("100%");
     vaadin.setText(myDocument.getText());
   }
 
+  @Nonnull
   @Override
-  public void throwEditorNotDisposedError(@Nonnull String msg) {
+  public Component getUIComponent() {
+    return myEditorComponent;
+  }
+
+  @Override
+  protected CodeEditorSelectionModelBase createSelectionModel() {
+    return new WebSelectionModelImpl(this);
+  }
+
+  @Override
+  protected MarkupModelImpl createMarkupModel() {
+    return new WebEditorMarkupModelImpl(this);
+  }
+
+  @Override
+  protected CodeEditorFoldingModelBase createFoldingModel() {
+    return new WebFoldingModelImpl(this);
+  }
+
+  @Override
+  protected CodeEditorCaretModelBase createCaretModel() {
+    return new WebCaretModelImpl(this);
+  }
+
+  @Override
+  protected CodeEditorScrollingModelBase createScrollingModel() {
+    return new WebScrollingModelImpl(this);
+  }
+
+  @Override
+  protected CodeEditorInlayModelBase createInlayModel() {
+    return new WebInlayModelImpl(this);
+  }
+
+  @Override
+  protected CodeEditorSoftWrapModelBase createSoftWrapModel() {
+    return new WebSoftWrapModelImpl(this);
+  }
+
+  @Nonnull
+  @Override
+  protected DataContext getComponentContext() {
+    return DataManager.getInstance().getDataContext(getUIComponent());
+  }
+
+  @Override
+  protected void stopDumb() {
 
   }
 
@@ -124,34 +139,13 @@ public class WebEditorImpl extends UIComponentWithVaadinComponent<WebEditorImpl.
     Disposer.dispose(myDisposable);
   }
 
-  @Nonnull
   @Override
-  public Disposable getDisposable() {
-    return myDisposable;
+  public int offsetToVisualLine(int offset, boolean beforeSoftWrap) {
+    return 0;
   }
 
   @Override
-  public boolean isHighlighterAvailable(@Nonnull RangeHighlighter highlighter) {
-    return true;
-  }
-
-  @Override
-  public boolean isScrollToCaret() {
-    return false;
-  }
-
-  @Override
-  public boolean shouldSoftWrapsBeForced() {
-    return false;
-  }
-
-  @Override
-  public void setHighlightingFilter(@Nullable Condition<RangeHighlighter> filter) {
-
-  }
-
-  @Override
-  public int getFontSize() {
+  public int visualLineStartOffset(int visualLine) {
     return 0;
   }
 
@@ -160,87 +154,10 @@ public class WebEditorImpl extends UIComponentWithVaadinComponent<WebEditorImpl.
 
   }
 
-  @Override
-  public void stopDumbLater() {
-
-  }
-
-  @Override
-  @Nonnull
-  public Vaadin createVaadinComponent() {
-    return new Vaadin("");
-  }
-
-  @Nonnull
-  @Override
-  public Component getUIComponent() {
-    return this;
-  }
-
-  @Nonnull
-  @Override
-  public DocumentEx getDocument() {
-    return myDocument;
-  }
-
-  @Override
-  public boolean isViewer() {
-    return false;
-  }
-
-  @Nonnull
-  @Override
-  public SelectionModel getSelectionModel() {
-    return mySelectionModel;
-  }
-
-  @Nonnull
-  @Override
-  public MarkupModelEx getMarkupModel() {
-    return myEditorMarkupModel;
-  }
-
-  @Nonnull
-  @Override
-  public MarkupModelEx getFilteredDocumentMarkupModel() {
-    return myFilteringMarkupModel;
-  }
-
   @Nonnull
   @Override
   public EditorGutterComponentEx getGutterComponentEx() {
     return null;
-  }
-
-  @Nonnull
-  @Override
-  public EditorHighlighter getHighlighter() {
-    return myHighlighter;
-  }
-
-  @Override
-  public void setViewer(boolean isViewer) {
-
-  }
-
-  @Override
-  public void setHighlighter(@Nonnull EditorHighlighter highlighter) {
-    myHighlighter = highlighter;
-  }
-
-  @Override
-  public void setColorsScheme(@Nonnull EditorColorsScheme scheme) {
-    myEditorColorsScheme = scheme;
-  }
-
-  @Override
-  public void setInsertMode(boolean val) {
-
-  }
-
-  @Override
-  public void setColumnMode(boolean val) {
-
   }
 
   @Override
@@ -264,47 +181,12 @@ public class WebEditorImpl extends UIComponentWithVaadinComponent<WebEditorImpl.
   }
 
   @Override
-  public CutProvider getCutProvider() {
-    return null;
-  }
-
-  @Override
-  public CopyProvider getCopyProvider() {
-    return null;
-  }
-
-  @Override
-  public PasteProvider getPasteProvider() {
-    return null;
-  }
-
-  @Override
-  public DeleteProvider getDeleteProvider() {
-    return null;
-  }
-
-  @Override
-  public void repaint(int startOffset, int endOffset) {
+  public void repaint(int startOffset, int endOffset, boolean invalidateTextLayout) {
 
   }
 
   @Override
   public void reinitSettings() {
-
-  }
-
-  @Override
-  public void addPropertyChangeListener(@Nonnull PropertyChangeListener listener, @Nonnull Disposable parentDisposable) {
-
-  }
-
-  @Override
-  public void addPropertyChangeListener(@Nonnull PropertyChangeListener listener) {
-
-  }
-
-  @Override
-  public void removePropertyChangeListener(@Nonnull PropertyChangeListener listener) {
 
   }
 
@@ -324,43 +206,6 @@ public class WebEditorImpl extends UIComponentWithVaadinComponent<WebEditorImpl.
   }
 
   @Override
-  public void addFocusListener(@Nonnull FocusChangeListener listener) {
-
-  }
-
-  @Override
-  public void addFocusListener(@Nonnull FocusChangeListener listener, @Nonnull Disposable parentDisposable) {
-
-  }
-
-  @Override
-  public void setOneLineMode(boolean b) {
-
-  }
-
-  @Override
-  public boolean isRendererMode() {
-    return false;
-  }
-
-  @Override
-  public void setRendererMode(boolean isRendererMode) {
-
-  }
-
-  @Override
-  public void setFile(VirtualFile vFile) {
-
-  }
-
-  @Nonnull
-  @Override
-  public DataContext getDataContext() {
-    return null;
-  }
-
-
-  @Override
   public void setFontSize(int fontSize) {
 
   }
@@ -376,56 +221,8 @@ public class WebEditorImpl extends UIComponentWithVaadinComponent<WebEditorImpl.
   }
 
   @Override
-  public VirtualFile getVirtualFile() {
-    return null;
-  }
-
-  @Override
   public TextDrawingCallback getTextDrawingCallback() {
     return null;
-  }
-
-  @Nonnull
-  @Override
-  public FoldingModelEx getFoldingModel() {
-    return myFoldingModel;
-  }
-
-  @Nonnull
-  @Override
-  public ScrollingModelEx getScrollingModel() {
-    return myScrollingModel;
-  }
-
-  @Nonnull
-  @Override
-  public EditorColorsScheme createBoundColorSchemeDelegate(@Nullable EditorColorsScheme customGlobalScheme) {
-    return null;
-  }
-
-  @Override
-  public void setPlaceholder(@Nullable CharSequence text) {
-
-  }
-
-  @Override
-  public void setPlaceholderAttributes(@Nullable TextAttributes attributes) {
-
-  }
-
-  @Override
-  public void setShowPlaceholderWhenFocused(boolean show) {
-
-  }
-
-  @Override
-  public boolean isStickySelection() {
-    return false;
-  }
-
-  @Override
-  public void setStickySelection(boolean enable) {
-
   }
 
   @Override
@@ -434,78 +231,8 @@ public class WebEditorImpl extends UIComponentWithVaadinComponent<WebEditorImpl.
   }
 
   @Override
-  public void setPrefixTextAndAttributes(@Nullable String prefixText, @Nullable TextAttributes attributes) {
-
-  }
-
-  @Override
-  public boolean isPurePaintingMode() {
-    return false;
-  }
-
-  @Override
-  public void setPurePaintingMode(boolean enabled) {
-
-  }
-
-  @Override
-  public void registerLineExtensionPainter(IntFunction<Collection<LineExtensionInfo>> lineExtensionPainter) {
-
-  }
-
-  @Override
-  public int getExpectedCaretOffset() {
-    return 0;
-  }
-
-  @Override
-  public void setContextMenuGroupId(@Nullable String groupId) {
-
-  }
-
-  @Nullable
-  @Override
-  public String getContextMenuGroupId() {
-    return null;
-  }
-
-  @Override
-  public void installPopupHandler(@Nonnull EditorPopupHandler popupHandler) {
-
-  }
-
-  @Override
-  public void uninstallPopupHandler(@Nonnull EditorPopupHandler popupHandler) {
-
-  }
-
-  @Override
   public void setCustomCursor(@Nonnull Object requestor, @Nullable Cursor cursor) {
 
-  }
-
-  @Nonnull
-  @Override
-  public CaretModel getCaretModel() {
-    return myCaretModel;
-  }
-
-  @Nonnull
-  @Override
-  public SoftWrapModelEx getSoftWrapModel() {
-    return null;
-  }
-
-  @Nonnull
-  @Override
-  public EditorSettings getSettings() {
-    return mySettings;
-  }
-
-  @Nonnull
-  @Override
-  public EditorColorsScheme getColorsScheme() {
-    return myEditorColorsScheme;
   }
 
   @Override
@@ -548,52 +275,6 @@ public class WebEditorImpl extends UIComponentWithVaadinComponent<WebEditorImpl.
     return null;
   }
 
-  @Override
-  public void addEditorMouseListener(@Nonnull EditorMouseListener listener) {
-
-  }
-
-  @Override
-  public void removeEditorMouseListener(@Nonnull EditorMouseListener listener) {
-
-  }
-
-  @Override
-  public void addEditorMouseMotionListener(@Nonnull EditorMouseMotionListener listener) {
-
-  }
-
-  @Override
-  public void removeEditorMouseMotionListener(@Nonnull EditorMouseMotionListener listener) {
-
-  }
-
-  @Override
-  public boolean isDisposed() {
-    return Disposer.isDisposed(myDisposable);
-  }
-
-  @Nullable
-  @Override
-  public Project getProject() {
-    return myProject;
-  }
-
-  @Override
-  public boolean isInsertMode() {
-    return false;
-  }
-
-  @Override
-  public boolean isColumnMode() {
-    return false;
-  }
-
-  @Override
-  public boolean isOneLineMode() {
-    return false;
-  }
-
   @Nonnull
   @Override
   public EditorGutter getGutter() {
@@ -603,24 +284,5 @@ public class WebEditorImpl extends UIComponentWithVaadinComponent<WebEditorImpl.
   @Override
   public boolean hasHeaderComponent() {
     return false;
-  }
-
-
-  @Nonnull
-  @Override
-  public IndentsModel getIndentsModel() {
-    return null;
-  }
-
-  @Nonnull
-  @Override
-  public InlayModel getInlayModel() {
-    return null;
-  }
-
-  @Nonnull
-  @Override
-  public EditorKind getEditorKind() {
-    return myKind;
   }
 }
