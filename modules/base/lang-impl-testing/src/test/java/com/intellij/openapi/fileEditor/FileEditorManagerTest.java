@@ -29,6 +29,7 @@ import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.fileEditor.impl.EditorWithProviderComposite;
 import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
@@ -198,6 +199,7 @@ public abstract class FileEditorManagerTest extends FileEditorManagerTestCase {
       return true;
     }
 
+    @RequiredUIAccess
     @Nonnull
     @Override
     public FileEditor createEditor(@Nonnull Project project, @Nonnull VirtualFile file) {

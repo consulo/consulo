@@ -35,4 +35,9 @@ public class WebCaretModelImpl extends CodeEditorCaretModelBase<WebCaretImpl> {
   protected WebCaretImpl createCaret(CodeEditorBase editor, CodeEditorCaretModelBase<WebCaretImpl> model) {
     return new WebCaretImpl(editor, model);
   }
+
+  @Override
+  public boolean supportsMultipleCarets() {
+    return false;
+  }
 }

@@ -22,7 +22,6 @@ package com.intellij.openapi.fileEditor.impl.text;
 import com.intellij.codeHighlighting.BackgroundEditorHighlighter;
 import com.intellij.codeInsight.daemon.impl.TextEditorBackgroundHighlighter;
 import com.intellij.codeInsight.folding.CodeFoldingManager;
-import consulo.logging.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
@@ -33,21 +32,29 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.WriteExternalException;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiDocumentManager;
+import consulo.fileEditor.impl.text.TextEditorComponentContainerFactory;
+import consulo.logging.Logger;
+import consulo.ui.annotation.RequiredUIAccess;
+import jakarta.inject.Inject;
 import org.jdom.Element;
-import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 
-@SuppressWarnings("deprecation")
-public class DesktopPsiAwareTextEditorProvider extends DesktopTextEditorProvider {
-  private static final Logger LOG = Logger.getInstance(DesktopPsiAwareTextEditorProvider.class);
-  @NonNls
+public class PsiAwareTextEditorProviderImpl extends TextEditorProviderImpl {
+  private static final Logger LOG = Logger.getInstance(PsiAwareTextEditorProviderImpl.class);
+
   private static final String FOLDING_ELEMENT = "folding";
 
+  @Inject
+  public PsiAwareTextEditorProviderImpl(TextEditorComponentContainerFactory textEditorComponentContainerFactory) {
+    super(textEditorComponentContainerFactory);
+  }
+
+  @RequiredUIAccess
   @Override
   @Nonnull
   public FileEditor createEditor(@Nonnull final Project project, @Nonnull final VirtualFile file) {
-    return new DesktopPsiAwareTextEditorImpl(project, file, this);
+    return new PsiAwareTextEditorImpl(project, file, this);
   }
 
   @Override
@@ -114,11 +121,11 @@ public class DesktopPsiAwareTextEditorProvider extends DesktopTextEditorProvider
   }
 
   @Override
-  protected void setStateImpl(final Project project, final Editor editor, final TextEditorState state) {
+  public void setStateImpl(final Project project, final Editor editor, final TextEditorState state) {
     super.setStateImpl(project, editor, state);
     // Folding
     final CodeFoldingState foldState = state.getFoldingState();
-    if (project != null && foldState != null && DesktopAsyncEditorLoader.isEditorLoaded(editor)) {
+    if (project != null && foldState != null && AsyncEditorLoader.isEditorLoaded(editor)) {
       if (!PsiDocumentManager.getInstance(project).isCommitted(editor.getDocument())) {
         PsiDocumentManager.getInstance(project).commitDocument(editor.getDocument());
         LOG.error("File should be parsed when changing editor state, otherwise UI might be frozen for a considerable time");

@@ -15,6 +15,7 @@
  */
 package consulo.editor.internal;
 
+import com.intellij.openapi.editor.EditorDropHandler;
 import com.intellij.openapi.editor.VisualPosition;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.editor.markup.RangeHighlighter;
@@ -89,5 +90,9 @@ public interface EditorInternal extends EditorEx {
 
   default boolean isAtBidiRunBoundary(@Nonnull VisualPosition visualPosition) {
     return false;
+  }
+
+  default void setDropHandler(@Nonnull EditorDropHandler dropHandler) {
+
   }
 }

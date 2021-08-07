@@ -17,7 +17,6 @@ package consulo.ui.web.internal.ex;
 
 import com.intellij.openapi.editor.LogicalPosition;
 import com.intellij.openapi.editor.ScrollType;
-import com.intellij.openapi.editor.event.VisibleAreaListener;
 import com.intellij.openapi.editor.ex.ScrollingModelEx;
 import consulo.editor.impl.CodeEditorBase;
 import consulo.editor.impl.CodeEditorScrollingModelBase;
@@ -47,13 +46,15 @@ public class WebScrollingModelImpl extends CodeEditorScrollingModelBase implemen
   @Nonnull
   @Override
   public Rectangle getVisibleArea() {
-    return null;
+    // todo unsupported
+    return new Rectangle(Integer.MAX_VALUE, Integer.MAX_VALUE);
   }
 
   @Nonnull
   @Override
   public Rectangle getVisibleAreaOnScrollingFinished() {
-    return null;
+    // todo unsupported
+    return new Rectangle(Integer.MAX_VALUE, Integer.MAX_VALUE);
   }
 
   @Override

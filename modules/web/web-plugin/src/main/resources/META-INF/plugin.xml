@@ -67,7 +67,8 @@
 
     <fileChooseDialogProvider implementation="consulo.fileChooser.impl.UnifiedFileChooseDialogProvider" order="last"/>
 
-    <fileEditorProvider implementation="consulo.web.fileEditor.impl.text.WebTextEditorProvider"/>
+    <applicationService serviceInterface="consulo.fileEditor.impl.text.TextEditorComponentContainerFactory"
+                        serviceImplementation="consulo.fileEditor.impl.text.UnifiedTextEditorComponentContainerFactory"/>
 
     <applicationService serviceInterface="consulo.wm.ApplicationIdeFocusManager" serviceImplementation="consulo.web.wm.impl.WebApplicationIdeFocusManagerImpl" lazy="false"/>
     <applicationService serviceInterface="com.intellij.openapi.wm.WindowManager" serviceImplementation="consulo.web.wm.impl.WebWindowManagerImpl"/>

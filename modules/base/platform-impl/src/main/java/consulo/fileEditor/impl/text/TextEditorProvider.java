@@ -19,6 +19,7 @@ import com.intellij.openapi.editor.*;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
 import com.intellij.openapi.fileEditor.*;
 import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;
+import com.intellij.openapi.fileEditor.impl.text.TextEditorProviderImpl;
 import com.intellij.openapi.fileEditor.impl.text.TextEditorState;
 import com.intellij.openapi.fileTypes.BinaryFileTypeDecompilers;
 import com.intellij.openapi.fileTypes.FileType;
@@ -40,7 +41,7 @@ import java.util.List;
  * @author VISTALL
  * @since 2018-05-10
  * <p>
- * Extracted part from {@link com.intellij.openapi.fileEditor.impl.text.DesktopTextEditorProvider}
+ * Extracted part from {@link TextEditorProviderImpl}
  */
 public abstract class TextEditorProvider implements FileEditorProvider, DumbAware {
   @Nonnull

@@ -37,6 +37,9 @@ public abstract class CodeEditorScrollingModelBase implements ScrollingModelEx {
     myEditor = editor;
   }
 
+  public void finishAnimation() {
+  }
+
   @Override
   public void addVisibleAreaListener(@Nonnull VisibleAreaListener listener) {
     myVisibleAreaListeners.add(listener);

@@ -18,7 +18,7 @@ package com.intellij.openapi.fileEditor.impl;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.fileEditor.TextEditor;
-import com.intellij.openapi.fileEditor.impl.text.DesktopTextEditorImpl;
+import com.intellij.openapi.fileEditor.impl.text.TextEditorImpl;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -38,7 +38,7 @@ public abstract class EditorFileSwapper {
     TextEditor res = null;
 
     for (FileEditor fileEditor : fileEditors) {
-      if (fileEditor instanceof DesktopTextEditorImpl) {
+      if (fileEditor instanceof TextEditorImpl) {
         if (res == null) {
           res = (TextEditor)fileEditor;
         }

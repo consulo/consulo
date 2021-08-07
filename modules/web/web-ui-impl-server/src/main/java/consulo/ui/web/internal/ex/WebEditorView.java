@@ -16,6 +16,7 @@
 package consulo.ui.web.internal.ex;
 
 import com.intellij.openapi.editor.LogicalPosition;
+import com.intellij.openapi.editor.VisualPosition;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
 import com.intellij.openapi.editor.impl.view.LogicalPositionCache;
 import consulo.disposer.Disposable;

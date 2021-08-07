@@ -31,23 +31,27 @@ import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.project.Project;
-import consulo.util.dataholder.Key;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
 import com.intellij.ui.EditorNotifications;
+import consulo.fileEditor.impl.text.TextEditorComponentContainerFactory;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.util.dataholder.Key;
+
 import javax.annotation.Nonnull;
 
-public class DesktopPsiAwareTextEditorImpl extends DesktopTextEditorImpl {
+public class PsiAwareTextEditorImpl extends TextEditorImpl {
   private TextEditorBackgroundHighlighter myBackgroundHighlighter;
 
-  public DesktopPsiAwareTextEditorImpl(@Nonnull final Project project, @Nonnull final VirtualFile file, final DesktopTextEditorProvider provider) {
+  @RequiredUIAccess
+  public PsiAwareTextEditorImpl(@Nonnull final Project project, @Nonnull final VirtualFile file, final TextEditorProviderImpl provider) {
     super(project, file, provider);
   }
 
   @Nonnull
   @Override
-  protected Runnable loadEditorInBackground() {
+  public Runnable loadEditorInBackground() {
     Runnable baseAction = super.loadEditorInBackground();
     PsiFile psiFile = PsiManager.getInstance(myProject).findFile(myFile);
     Document document = FileDocumentManager.getInstance().getDocument(myFile);
@@ -69,12 +73,12 @@ public class DesktopPsiAwareTextEditorImpl extends DesktopTextEditorImpl {
   @Nonnull
   @Override
   protected TextEditorComponent createEditorComponent(final Project project, final VirtualFile file) {
-    return new PsiAwareTextEditorComponent(project, file, this);
+    return new PsiAwareTextEditorComponent(project, file, this, myTextEditorComponentContainerFactory);
   }
 
   @Override
   public BackgroundEditorHighlighter getBackgroundHighlighter() {
-    if (!DesktopAsyncEditorLoader.isEditorLoaded(getEditor())) {
+    if (!AsyncEditorLoader.isEditorLoaded(getEditor())) {
       return null;
     }
 
@@ -88,10 +92,11 @@ public class DesktopPsiAwareTextEditorImpl extends DesktopTextEditorImpl {
     private final Project myProject;
     private final VirtualFile myFile;
 
-    private PsiAwareTextEditorComponent(@Nonnull final Project project,
-                                        @Nonnull final VirtualFile file,
-                                        @Nonnull final DesktopTextEditorImpl textEditor) {
-      super(project, file, textEditor);
+    private PsiAwareTextEditorComponent(@Nonnull  Project project,
+                                        @Nonnull  VirtualFile file,
+                                        @Nonnull  TextEditorImpl textEditor,
+                                        @Nonnull TextEditorComponentContainerFactory factory) {
+      super(project, file, textEditor, factory);
       myProject = project;
       myFile = file;
     }

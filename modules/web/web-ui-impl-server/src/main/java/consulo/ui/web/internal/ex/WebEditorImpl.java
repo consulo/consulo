@@ -20,9 +20,7 @@ import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.command.UndoConfirmationPolicy;
 import com.intellij.openapi.editor.*;
 import com.intellij.openapi.editor.actionSystem.DocCommandGroupId;
-import com.intellij.openapi.editor.event.EditorMouseEvent;
-import com.intellij.openapi.editor.event.EditorMouseEventArea;
-import com.intellij.openapi.editor.event.EditorMouseListener;
+import com.intellij.openapi.editor.event.*;
 import com.intellij.openapi.editor.ex.EditorGutterComponentEx;
 import com.intellij.openapi.editor.impl.MarkupModelImpl;
 import com.intellij.openapi.editor.impl.TextDrawingCallback;
@@ -79,11 +77,17 @@ public class WebEditorImpl extends CodeEditorBase {
 
   private final EditorComponent myEditorComponent;
 
-  private WebEditorView myView;
+  private final WebEditorView myView;
+
+  private final WebEditorGutterComponentImpl myGutterComponent;
+
+  private int myLastCaretPosition;
 
   @RequiredReadAction
   public WebEditorImpl(@Nonnull Document document, boolean viewer, @Nullable Project project, @Nonnull EditorKind kind) {
     super(document, viewer, project, kind);
+
+    myGutterComponent = new WebEditorGutterComponentImpl();
 
     myView = new WebEditorView(this);
     myView.reset();
@@ -98,6 +102,15 @@ public class WebEditorImpl extends CodeEditorBase {
     vaadin.setText(myDocument.getText());
 
     vaadin.addMouseDownListener(this::runMousePressedCommand);
+
+    myCaretModel.addCaretListener(new CaretListener() {
+      @Override
+      public void caretPositionChanged(CaretEvent e) {
+        myLastCaretPosition = e.getCaret().getOffset();
+      }
+    });
+
+    vaadin.addAttachListener(attachEvent -> vaadin.setCaretOffset(myLastCaretPosition));
   }
 
   // due EditorMouseEvent use awt Event, we need set fake event, until migrate to own event system
@@ -241,7 +254,7 @@ public class WebEditorImpl extends CodeEditorBase {
   @Nonnull
   @Override
   public EditorGutterComponentEx getGutterComponentEx() {
-    return null;
+    return myGutterComponent;
   }
 
   @Override
@@ -367,17 +380,30 @@ public class WebEditorImpl extends CodeEditorBase {
   @Nonnull
   @Override
   public VisualPosition offsetToVisualPosition(int offset, boolean leanForward, boolean beforeSoftWrap) {
-    return null;
+    // todo impl
+    return offsetToVisualPosition(offset);
   }
 
   @Nonnull
   @Override
   public EditorGutter getGutter() {
-    return null;
+    return getGutterComponentEx();
   }
 
   @Override
   public boolean hasHeaderComponent() {
     return false;
+  }
+
+  @Nonnull
+  public LogicalPosition xyToLogicalPosition(@Nonnull java.awt.Point p) {
+    // todo fake return
+    return new LogicalPosition(0, 0);
+  }
+
+  @Nonnull
+  public java.awt.Point visualPositionToXY(@Nonnull VisualPosition visible) {
+    // todo fake return
+    return new Point(1, 1);
   }
 }

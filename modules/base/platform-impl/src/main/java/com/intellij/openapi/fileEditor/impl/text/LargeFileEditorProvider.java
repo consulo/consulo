@@ -20,6 +20,7 @@ import com.intellij.ide.structureView.StructureViewBuilder;
 import com.intellij.openapi.fileEditor.*;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.dataholder.UserDataHolderBase;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -41,6 +42,7 @@ public class LargeFileEditorProvider implements FileEditorProvider, DumbAware {
     return TextEditorProvider.isTextFile(file) && SingleRootFileViewProvider.isTooLargeForContentLoading(file);
   }
 
+  @RequiredUIAccess
   @Override
   @Nonnull
   public FileEditor createEditor(@Nonnull Project project, @Nonnull final VirtualFile file) {

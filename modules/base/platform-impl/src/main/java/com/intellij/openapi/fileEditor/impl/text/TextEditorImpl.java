@@ -26,11 +26,13 @@ import com.intellij.openapi.editor.highlighter.EditorHighlighter;
 import com.intellij.openapi.editor.highlighter.EditorHighlighterFactory;
 import com.intellij.openapi.fileEditor.*;
 import com.intellij.openapi.project.Project;
-import consulo.disposer.Disposer;
-import consulo.util.dataholder.UserDataHolderBase;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.pom.Navigatable;
-import consulo.annotation.DeprecationInfo;
+import consulo.disposer.Disposer;
+import consulo.fileEditor.impl.text.TextEditorComponentContainerFactory;
+import consulo.ui.Component;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.util.dataholder.UserDataHolderBase;
 import kava.beans.PropertyChangeListener;
 import kava.beans.PropertyChangeSupport;
 
@@ -41,31 +43,35 @@ import javax.swing.*;
 /**
  * @author Vladimir Kondratyev
  */
-@Deprecated
-@DeprecationInfo("Desktop only")
-@SuppressWarnings("deprecation")
-public class DesktopTextEditorImpl extends UserDataHolderBase implements TextEditor {
-  protected final Project myProject;
+public class TextEditorImpl extends UserDataHolderBase implements TextEditor {
+  public final Project myProject;
+
   private final PropertyChangeSupport myChangeSupport;
   @Nonnull
   private final TextEditorComponent myComponent;
-  @Nonnull
-  protected final VirtualFile myFile;
-  private final DesktopAsyncEditorLoader myAsyncLoader;
 
-  public DesktopTextEditorImpl(@Nonnull final Project project, @Nonnull final VirtualFile file, final DesktopTextEditorProvider provider) {
+  @Nonnull
+  public final VirtualFile myFile;
+ 
+  private final AsyncEditorLoader myAsyncLoader;
+
+  protected final TextEditorComponentContainerFactory myTextEditorComponentContainerFactory;
+
+  @RequiredUIAccess
+  public TextEditorImpl(@Nonnull final Project project, @Nonnull final VirtualFile file, final TextEditorProviderImpl provider) {
     myProject = project;
     myFile = file;
     myChangeSupport = new PropertyChangeSupport(this);
+    myTextEditorComponentContainerFactory = provider.myTextEditorComponentContainerFactory;
     myComponent = createEditorComponent(project, file);
     Disposer.register(this, myComponent);
 
-    myAsyncLoader = new DesktopAsyncEditorLoader(this, myComponent, provider);
+    myAsyncLoader = new AsyncEditorLoader(this, myComponent, provider);
     myAsyncLoader.start();
   }
 
   @Nonnull
-  protected Runnable loadEditorInBackground() {
+  public Runnable loadEditorInBackground() {
     EditorColorsScheme scheme = EditorColorsManager.getInstance().getGlobalScheme();
     EditorHighlighter highlighter = EditorHighlighterFactory.getInstance().createEditorHighlighter(myFile, scheme, myProject);
     EditorEx editor = (EditorEx)getEditor();
@@ -75,33 +81,45 @@ public class DesktopTextEditorImpl extends UserDataHolderBase implements TextEdi
 
   @Nonnull
   protected TextEditorComponent createEditorComponent(final Project project, final VirtualFile file) {
-    return new TextEditorComponent(project, file, this);
+    return new TextEditorComponent(project, file, this, myTextEditorComponentContainerFactory);
   }
 
   @Override
-  public void dispose(){
-  }
-
-  @Override
-  @Nonnull
-  public TextEditorComponent getComponent() {
-    return myComponent;
+  public void dispose() {
   }
 
   @Override
   @Nonnull
-  public JComponent getPreferredFocusedComponent(){
+  public JComponent getComponent() {
+    return myComponent.getComponentContainer().getComponent();
+  }
+
+  @Nullable
+  @Override
+  public Component getUIComponent() {
+    return myComponent.getComponentContainer().getUIComponent();
+  }
+
+  @Nullable
+  @Override
+  public Component getPreferredFocusedUIComponent() {
+    return getUIComponent();
+  }
+
+  @Override
+  @Nonnull
+  public JComponent getPreferredFocusedComponent() {
     return getActiveEditor().getContentComponent();
   }
 
   @Override
   @Nonnull
-  public Editor getEditor(){
+  public Editor getEditor() {
     return getActiveEditor();
   }
 
   /**
-   * @see TextEditorComponent#getEditor()
+   * @see DesktopTextEditorComponent#getEditor()
    */
   @Nonnull
   private Editor getActiveEditor() {
@@ -148,7 +166,7 @@ public class DesktopTextEditorImpl extends UserDataHolderBase implements TextEdi
     myComponent.updateModifiedProperty();
   }
 
-  void firePropertyChange(final String propertyName, final Object oldValue, final Object newValue) {
+  public void firePropertyChange(final String propertyName, final Object oldValue, final Object newValue) {
     myChangeSupport.firePropertyChange(propertyName, oldValue, newValue);
   }
 
@@ -188,8 +206,7 @@ public class DesktopTextEditorImpl extends UserDataHolderBase implements TextEdi
 
   @Override
   public boolean canNavigateTo(@Nonnull final Navigatable navigatable) {
-    return navigatable instanceof OpenFileDescriptor && (((OpenFileDescriptor)navigatable).getLine() != -1 ||
-                                                         ((OpenFileDescriptor)navigatable).getOffset() >= 0);
+    return navigatable instanceof OpenFileDescriptor && (((OpenFileDescriptor)navigatable).getLine() != -1 || ((OpenFileDescriptor)navigatable).getOffset() >= 0);
   }
 
   @Override
@@ -199,6 +216,6 @@ public class DesktopTextEditorImpl extends UserDataHolderBase implements TextEdi
 
   @Override
   public String toString() {
-    return "Editor: "+myComponent.getFile();
+    return "Editor: " + myComponent.getFile();
   }
 }

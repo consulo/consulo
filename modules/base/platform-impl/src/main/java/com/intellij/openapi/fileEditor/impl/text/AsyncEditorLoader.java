@@ -25,15 +25,15 @@ import com.intellij.openapi.fileEditor.FileEditorStateLevel;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.project.Project;
-import consulo.util.dataholder.Key;
 import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.ui.EditorNotifications;
 import com.intellij.util.concurrency.AppExecutorUtil;
 import com.intellij.util.concurrency.Semaphore;
-import consulo.annotation.DeprecationInfo;
 import consulo.fileEditor.impl.EditorsSplitters;
 import consulo.logging.Logger;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.util.dataholder.Key;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -41,12 +41,12 @@ import java.util.List;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-@Deprecated
-@DeprecationInfo("Desktop only")
-@SuppressWarnings("deprecation")
-public class DesktopAsyncEditorLoader {
+/**
+ * Extract common implementation from desktop impl
+ */
+public class AsyncEditorLoader {
   private static final ExecutorService ourExecutor = AppExecutorUtil.createBoundedApplicationPoolExecutor("AsyncEditorLoader Pool", 2);
-  private static final Key<DesktopAsyncEditorLoader> ASYNC_LOADER = Key.create("ASYNC_LOADER");
+  private static final Key<AsyncEditorLoader> ASYNC_LOADER = Key.create("ASYNC_LOADER");
   private static final int SYNCHRONOUS_LOADING_WAITING_TIME_MS = 200;
   private static final int DOCUMENT_COMMIT_WAITING_TIME_MS = 5_000;
   @Nonnull
@@ -54,16 +54,16 @@ public class DesktopAsyncEditorLoader {
   @Nonnull
   private final Project myProject;
   @Nonnull
-  private final DesktopTextEditorImpl myTextEditor;
+  private final TextEditorImpl myTextEditor;
   @Nonnull
   private final TextEditorComponent myEditorComponent;
   @Nonnull
-  private final DesktopTextEditorProvider myProvider;
+  private final TextEditorProviderImpl myProvider;
   private final List<Runnable> myDelayedActions = new ArrayList<>();
   private TextEditorState myDelayedState;
   private final AtomicBoolean myLoadingFinished = new AtomicBoolean();
 
-  DesktopAsyncEditorLoader(@Nonnull DesktopTextEditorImpl textEditor, @Nonnull TextEditorComponent component, @Nonnull DesktopTextEditorProvider provider) {
+  public AsyncEditorLoader(@Nonnull TextEditorImpl textEditor, @Nonnull TextEditorComponent component, @Nonnull TextEditorProviderImpl provider) {
     myProvider = provider;
     myTextEditor = textEditor;
     myProject = textEditor.myProject;
@@ -72,10 +72,11 @@ public class DesktopAsyncEditorLoader {
     myEditor = textEditor.getEditor();
     myEditor.putUserData(ASYNC_LOADER, this);
 
-    myEditorComponent.getContentPanel().setVisible(false);
+    myEditorComponent.getComponentContainer().hideContent();
   }
 
-  void start() {
+  @RequiredUIAccess
+  public void start() {
     ApplicationManager.getApplication().assertIsDispatchThread();
 
     Future<Runnable> asyncLoading = scheduleLoading();
@@ -97,7 +98,7 @@ public class DesktopAsyncEditorLoader {
       }
     }
     if (showProgress) {
-      myEditorComponent.startLoading();
+      myEditorComponent.getComponentContainer().startLoading();
     }
   }
 
@@ -118,7 +119,7 @@ public class DesktopAsyncEditorLoader {
           throw e;
         }
         catch (Exception e) {
-          Logger.getInstance(DesktopAsyncEditorLoader.class).error("Error during async editor loading", e);
+          Logger.getInstance(AsyncEditorLoader.class).error("Error during async editor loading", e);
           return null;
         }
       });
@@ -195,7 +196,7 @@ public class DesktopAsyncEditorLoader {
 
   public static void performWhenLoaded(@Nonnull Editor editor, @Nonnull Runnable runnable) {
     ApplicationManager.getApplication().assertIsDispatchThread();
-    DesktopAsyncEditorLoader loader = editor.getUserData(ASYNC_LOADER);
+    AsyncEditorLoader loader = editor.getUserData(ASYNC_LOADER);
     if (loader == null) {
       runnable.run();
     }
@@ -205,7 +206,8 @@ public class DesktopAsyncEditorLoader {
   }
 
   @Nonnull
-  TextEditorState getEditorState(@Nonnull FileEditorStateLevel level) {
+  @RequiredUIAccess
+  public TextEditorState getEditorState(@Nonnull FileEditorStateLevel level) {
     ApplicationManager.getApplication().assertIsDispatchThread();
 
 
@@ -216,7 +218,8 @@ public class DesktopAsyncEditorLoader {
     return state;
   }
 
-  void setEditorState(@Nonnull final TextEditorState state, boolean exactState) {
+  @RequiredUIAccess
+  public void setEditorState(@Nonnull final TextEditorState state, boolean exactState) {
     ApplicationManager.getApplication().assertIsDispatchThread();
 
     if (!isDone()) {

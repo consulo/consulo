@@ -17,18 +17,21 @@ package com.intellij.openapi.fileEditor.impl.text;
 
 import com.intellij.codeHighlighting.BackgroundEditorHighlighter;
 import com.intellij.ide.structureView.StructureViewBuilder;
-import consulo.logging.Logger;
 import com.intellij.openapi.editor.*;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
 import com.intellij.openapi.fileEditor.*;
 import com.intellij.openapi.project.Project;
-import consulo.util.dataholder.UserDataHolderBase;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.pom.Navigatable;
 import com.intellij.psi.SingleRootFileViewProvider;
 import com.intellij.util.ui.update.UiNotifyConnector;
-import consulo.annotation.DeprecationInfo;
+import consulo.fileEditor.impl.text.TextEditorComponentContainerFactory;
 import consulo.fileEditor.impl.text.TextEditorProvider;
+import consulo.logging.Logger;
+import consulo.ui.Component;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.util.dataholder.UserDataHolderBase;
+import jakarta.inject.Inject;
 import kava.beans.PropertyChangeListener;
 
 import javax.annotation.Nonnull;
@@ -41,22 +44,27 @@ import java.util.List;
  * @author Anton Katilin
  * @author Vladimir Kondratyev
  */
-@Deprecated
-@DeprecationInfo("Desktop only")
-@SuppressWarnings("deprecation")
-public class DesktopTextEditorProvider extends TextEditorProvider {
-  private static final Logger LOG = Logger.getInstance(DesktopTextEditorProvider.class);
+public class TextEditorProviderImpl extends TextEditorProvider {
+  private static final Logger LOG = Logger.getInstance(TextEditorProviderImpl.class);
+
+  protected final TextEditorComponentContainerFactory myTextEditorComponentContainerFactory;
+
+  @Inject
+  public TextEditorProviderImpl(TextEditorComponentContainerFactory textEditorComponentContainerFactory) {
+    myTextEditorComponentContainerFactory = textEditorComponentContainerFactory;
+  }
 
   @Override
   public boolean accept(@Nonnull Project project, @Nonnull VirtualFile file) {
     return isTextFile(file) && !SingleRootFileViewProvider.isTooLargeForContentLoading(file);
   }
 
+  @RequiredUIAccess
   @Override
   @Nonnull
   public FileEditor createEditor(@Nonnull Project project, @Nonnull final VirtualFile file) {
     LOG.assertTrue(accept(project, file));
-    return new DesktopTextEditorImpl(project, file, this);
+    return new TextEditorImpl(project, file, this);
   }
 
   @Override
@@ -76,7 +84,7 @@ public class DesktopTextEditorProvider extends TextEditorProvider {
     return new EditorWrapper(editor);
   }
 
-  protected void setStateImpl(final Project project, final Editor editor, final TextEditorState state){
+  public void setStateImpl(final Project project, final Editor editor, final TextEditorState state){
     if (state.CARETS != null && state.CARETS.length > 0) {
       if (editor.getCaretModel().supportsMultipleCarets()) {
         CaretModel caretModel = editor.getCaretModel();
@@ -143,6 +151,18 @@ public class DesktopTextEditorProvider extends TextEditorProvider {
     @Override
     public JComponent getPreferredFocusedComponent() {
       return myEditor.getContentComponent();
+    }
+
+    @Nullable
+    @Override
+    public Component getUIComponent() {
+      return myEditor.getUIComponent();
+    }
+
+    @Nullable
+    @Override
+    public Component getPreferredFocusedUIComponent() {
+      return myEditor.getUIComponent();
     }
 
     @Override

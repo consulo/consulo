@@ -191,7 +191,7 @@ public class CodeEditorFoldingModelBase extends InlayModel.SimpleAdapter impleme
     myDoNotCollapseCaret |= dontCollapseCaret;
     boolean oldBatchFlag = myIsBatchFoldingProcessing;
     if (!oldBatchFlag) {
-      ((DesktopScrollingModelImpl)myEditor.getScrollingModel()).finishAnimation();
+      myEditor.getScrollingModel().finishAnimation();
       myScrollingPositionKeeper.savePosition();
       myDisableScrollingPositionAdjustment = false;
     }
@@ -413,7 +413,7 @@ public class CodeEditorFoldingModelBase extends InlayModel.SimpleAdapter impleme
             caret.moveToLogicalPosition(positionToUse);
           }
           else {
-            ((DesktopCaretImpl)caret).updateVisualPosition();
+            ((CodeEditorCaretBase)caret).updateVisualPosition();
           }
         }
 
@@ -697,7 +697,7 @@ public class CodeEditorFoldingModelBase extends InlayModel.SimpleAdapter impleme
     @Nonnull
     @Override
     protected Node<FoldRegionImpl> createNewNode(@Nonnull FoldRegionImpl key, int start, int end, boolean greedyToLeft, boolean greedyToRight, boolean stickingToRight, int layer) {
-      return new Node<FoldRegionImpl>(this, key, start, end, greedyToLeft, greedyToRight, stickingToRight) {
+      return new Node<>(this, key, start, end, greedyToLeft, greedyToRight, stickingToRight) {
         @Override
         public void onRemoved() {
           for (Getter<FoldRegionImpl> getter : intervals) {

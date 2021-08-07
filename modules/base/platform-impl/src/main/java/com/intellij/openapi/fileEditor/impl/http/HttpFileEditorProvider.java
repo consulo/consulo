@@ -24,6 +24,7 @@ import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.impl.http.HttpVirtualFile;
+import consulo.ui.annotation.RequiredUIAccess;
 import org.jdom.Element;
 import javax.annotation.Nonnull;
 
@@ -35,6 +36,7 @@ public class HttpFileEditorProvider implements FileEditorProvider, DumbAware {
     return file instanceof HttpVirtualFile && !file.isDirectory();
   }
 
+  @RequiredUIAccess
   @Nonnull
   public FileEditor createEditor(@Nonnull final Project project, @Nonnull final VirtualFile file) {
     return new HttpFileEditor(project, (HttpVirtualFile)file); 

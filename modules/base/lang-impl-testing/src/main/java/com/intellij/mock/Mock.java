@@ -680,6 +680,7 @@ public class Mock {
       return false;
     }
 
+    @RequiredUIAccess
     @Override
     @Nonnull
     public FileEditor createEditor(@Nonnull Project project, @Nonnull VirtualFile file) {

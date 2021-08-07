@@ -54,7 +54,7 @@ public interface FileEditor extends UserDataHolder, Disposable {
    * Returns component to be focused when editor is opened.
    */
   @Nullable
-  default Component getUIPreferredFocusedComponent() {
+  default Component getPreferredFocusedUIComponent() {
     throw new AbstractMethodError();
   }
 
