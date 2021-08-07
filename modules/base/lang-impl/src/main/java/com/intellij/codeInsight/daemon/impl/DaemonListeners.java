@@ -139,11 +139,11 @@ public final class DaemonListeners implements Disposable {
       public void caretPositionChanged(@Nonnull CaretEvent e) {
         final Editor editor = e.getEditor();
         Application app = ApplicationManager.getApplication();
-        if ((editor.getComponent().isShowing() || app.isHeadlessEnvironment()) && worthBothering(editor.getDocument(), editor.getProject())) {
+        if ((editor.isShowing() || app.isHeadlessEnvironment()) && worthBothering(editor.getDocument(), editor.getProject())) {
 
           if (!app.isUnitTestMode()) {
             ApplicationManager.getApplication().invokeLater(() -> {
-              if ((editor.getComponent().isShowing() || app.isHeadlessEnvironment()) && !myProject.isDisposed()) {
+              if ((editor.isShowing() || app.isHeadlessEnvironment()) && !myProject.isDisposed()) {
                 IntentionsUI.getInstance(myProject).invalidate();
               }
             }, ModalityState.current());

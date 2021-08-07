@@ -1205,7 +1205,7 @@ public final class DesktopEditorImpl extends CodeEditorBase implements EditorInt
       myView.invalidateRange(startOffset, endOffset);
     }
 
-    if (!isShowing()) {
+    if (!isGutterShowing()) {
       return;
     }
     // We do repaint in case of equal offsets because there is a possible case that there is a soft wrap at the same offset and
@@ -1217,7 +1217,7 @@ public final class DesktopEditorImpl extends CodeEditorBase implements EditorInt
     }
   }
 
-  private boolean isShowing() {
+  private boolean isGutterShowing() {
     return myGutterComponent.isShowing();
   }
 
@@ -1242,7 +1242,7 @@ public final class DesktopEditorImpl extends CodeEditorBase implements EditorInt
    * @param endLine   end logical line to repaint (inclusive)
    */
   private void repaintLines(int startLine, int endLine) {
-    if (!isShowing()) return;
+    if (!isGutterShowing()) return;
 
     int startVisualLine = logicalToVisualLine(startLine);
     int endVisualLine = myDocument.getTextLength() <= 0 ? 0 : offsetToVisualLine(myDocument.getLineEndOffset(Math.min(myDocument.getLineCount() - 1, endLine)));
@@ -3743,20 +3743,6 @@ public final class DesktopEditorImpl extends CodeEditorBase implements EditorInt
 
   boolean isInPresentationMode() {
     return UISettings.getInstance().getPresentationMode() && EditorUtil.isRealFileEditor(this);
-  }
-
-  @Override
-  public void putInfo(@Nonnull Map<String, String> info) {
-    final VisualPosition visual = getCaretModel().getVisualPosition();
-    info.put("caret", visual.getLine() + ":" + visual.getColumn());
-  }
-
-  private void invokePopupIfNeeded(EditorMouseEvent event) {
-    if (event.getArea() == EditorMouseEventArea.EDITING_AREA && event.getMouseEvent().isPopupTrigger() && !event.isConsumed()) {
-      for (int i = myPopupHandlers.size() - 1; i >= 0; i--) {
-        if (myPopupHandlers.get(i).handlePopup(event)) break;
-      }
-    }
   }
 
   @Override

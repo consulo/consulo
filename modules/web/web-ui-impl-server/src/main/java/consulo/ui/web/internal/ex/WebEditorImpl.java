@@ -17,15 +17,22 @@ package consulo.ui.web.internal.ex;
 
 import com.intellij.ide.DataManager;
 import com.intellij.openapi.actionSystem.DataContext;
+import com.intellij.openapi.command.UndoConfirmationPolicy;
 import com.intellij.openapi.editor.*;
+import com.intellij.openapi.editor.actionSystem.DocCommandGroupId;
+import com.intellij.openapi.editor.event.EditorMouseEvent;
+import com.intellij.openapi.editor.event.EditorMouseEventArea;
+import com.intellij.openapi.editor.event.EditorMouseListener;
 import com.intellij.openapi.editor.ex.EditorGutterComponentEx;
 import com.intellij.openapi.editor.impl.MarkupModelImpl;
 import com.intellij.openapi.editor.impl.TextDrawingCallback;
+import com.intellij.openapi.fileEditor.ex.IdeDocumentHistory;
 import com.intellij.openapi.project.Project;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.disposer.Disposer;
 import consulo.editor.impl.*;
 import consulo.internal.arquill.editor.server.ArquillEditor;
+import consulo.internal.arquill.editor.server.event.MouseDownEvent;
 import consulo.ui.Component;
 import consulo.ui.web.internal.base.ComponentHolder;
 import consulo.ui.web.internal.base.FromVaadinComponentWrapper;
@@ -34,7 +41,9 @@ import org.intellij.lang.annotations.MagicConstant;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseEvent;
 
 /**
  * @author VISTALL
@@ -70,9 +79,16 @@ public class WebEditorImpl extends CodeEditorBase {
 
   private final EditorComponent myEditorComponent;
 
+  private WebEditorView myView;
+
   @RequiredReadAction
   public WebEditorImpl(@Nonnull Document document, boolean viewer, @Nullable Project project, @Nonnull EditorKind kind) {
     super(document, viewer, project, kind);
+
+    myView = new WebEditorView(this);
+    myView.reset();
+
+    Disposer.register(myDisposable, myView);
 
     myEditorComponent = new EditorComponent();
 
@@ -80,6 +96,74 @@ public class WebEditorImpl extends CodeEditorBase {
     vaadin.setWidth("100%");
     vaadin.setHeight("100%");
     vaadin.setText(myDocument.getText());
+
+    vaadin.addMouseDownListener(this::runMousePressedCommand);
+  }
+
+  // due EditorMouseEvent use awt Event, we need set fake event, until migrate to own event system
+  private static final MouseEvent fakeEvent = new MouseEvent(new JLabel("fake"), 0, 0, 0, 0, 0, 1, false);
+
+  private void runMousePressedCommand(@Nonnull final MouseDownEvent e) {
+    //myLastMousePressedLocation = xyToLogicalPosition(e.getPoint());
+    //myCaretStateBeforeLastPress = isToggleCaretEvent(e) ? myCaretModel.getCaretsAndSelections() : Collections.emptyList();
+    //myCurrentDragIsSubstantial = false;
+    //myDragStarted = false;
+    //clearDnDContext();
+
+    boolean forceProcessing = false;
+    //myMousePressedEvent = e;
+    EditorMouseEvent event = new EditorMouseEvent(this, fakeEvent, EditorMouseEventArea.EDITING_AREA);
+
+    myExpectedCaretOffset = e.getTextOffset();
+    try {
+      for (EditorMouseListener mouseListener : myMouseListeners) {
+        boolean wasConsumed = event.isConsumed();
+        mouseListener.mousePressed(event);
+        //noinspection deprecation
+        if (!wasConsumed && event.isConsumed() && mouseListener instanceof com.intellij.util.EditorPopupHandler) {
+          // compatibility with legacy code, this logic should be removed along with EditorPopupHandler
+          forceProcessing = true;
+        }
+        if (isReleased) return;
+      }
+    }
+    finally {
+      myExpectedCaretOffset = -1;
+    }
+
+    //if (event.getArea() == EditorMouseEventArea.LINE_MARKERS_AREA || event.getArea() == EditorMouseEventArea.FOLDING_OUTLINE_AREA && !isInsideGutterWhitespaceArea(e)) {
+    //  myDragOnGutterSelectionStartLine = EditorUtil.yPositionToLogicalLine(DesktopEditorImpl.this, e);
+    //}
+
+    if (event.isConsumed() && !forceProcessing) return;
+
+    if (myCommandProcessor != null) {
+      Runnable runnable = () -> {
+        if (processMousePressed(e) && myProject != null && !myProject.isDefault()) {
+          IdeDocumentHistory.getInstance(myProject).includeCurrentCommandAsNavigation();
+        }
+      };
+      myCommandProcessor.executeCommand(myProject, runnable, "", DocCommandGroupId.noneGroupId(getDocument()), UndoConfirmationPolicy.DEFAULT, getDocument());
+    }
+    else {
+      processMousePressed(e);
+    }
+
+    invokePopupIfNeeded(event);
+  }
+
+  private boolean processMousePressed(MouseDownEvent e) {
+    CodeEditorCaretBase primaryCaret = getCaretModel().getPrimaryCaret();
+
+    primaryCaret.moveToOffset(e.getTextOffset());
+    return true;
+  }
+
+  @Override
+  protected void bulkUpdateFinished() {
+    myView.reset();
+
+    super.bulkUpdateFinished();
   }
 
   @Nonnull
@@ -187,7 +271,7 @@ public class WebEditorImpl extends CodeEditorBase {
 
   @Override
   public void reinitSettings() {
-
+    myView.reset();
   }
 
   @Override
@@ -242,31 +326,42 @@ public class WebEditorImpl extends CodeEditorBase {
 
   @Override
   public int logicalPositionToOffset(@Nonnull LogicalPosition pos) {
+    return myView.logicalPositionToOffset(pos);
+  }
+
+  @Override
+  public int visualLineToY(int visualLine) {
     return 0;
+  }
+
+  @Override
+  public boolean isShowing() {
+    return myEditorComponent.isVisible();
   }
 
   @Nonnull
   @Override
   public VisualPosition logicalToVisualPosition(@Nonnull LogicalPosition logicalPos) {
-    return null;
+    return new VisualPosition(logicalPos.line, logicalPos.column, logicalPos.visualPositionLeansRight);
   }
 
   @Nonnull
   @Override
   public LogicalPosition visualToLogicalPosition(@Nonnull VisualPosition visiblePos) {
-    return null;
+    return new LogicalPosition(visiblePos.getLine(), visiblePos.getColumn(), visiblePos.leansRight);
   }
 
   @Nonnull
   @Override
   public LogicalPosition offsetToLogicalPosition(int offset) {
-    return null;
+    return myView.offsetToLogicalPosition(offset);
   }
 
   @Nonnull
   @Override
   public VisualPosition offsetToVisualPosition(int offset) {
-    return null;
+    LogicalPosition position = myView.offsetToLogicalPosition(offset);
+    return logicalToVisualPosition(position);
   }
 
   @Nonnull

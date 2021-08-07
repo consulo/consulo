@@ -11,6 +11,7 @@ import com.intellij.openapi.fileEditor.ex.IdeDocumentHistory;
 import com.intellij.openapi.keymap.KeymapUtil;
 import com.intellij.openapi.project.Project;
 import consulo.disposer.Disposer;
+import consulo.platform.Platform;
 import consulo.util.dataholder.Key;
 import com.intellij.openapi.wm.StatusBar;
 import com.intellij.openapi.wm.StatusBarWidget;
@@ -148,6 +149,10 @@ public final class PositionPanel extends EditorBasedWidget
   }
 
   private boolean isFocusedEditor(Editor editor) {
+    // TODO [VISTALL] temp hack
+    if (Platform.current().isWebService()) {
+      return editor.isShowing();
+    }
     Component focusOwner = getFocusedComponent();
     return focusOwner == editor.getContentComponent();
   }

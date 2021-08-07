@@ -19,10 +19,7 @@ import com.intellij.openapi.editor.actionSystem.EditorAction;
 import com.intellij.openapi.editor.colors.*;
 import com.intellij.openapi.editor.colors.impl.DelegateColorScheme;
 import com.intellij.openapi.editor.colors.impl.FontPreferencesImpl;
-import com.intellij.openapi.editor.event.DocumentEvent;
-import com.intellij.openapi.editor.event.EditorMouseEvent;
-import com.intellij.openapi.editor.event.EditorMouseListener;
-import com.intellij.openapi.editor.event.EditorMouseMotionListener;
+import com.intellij.openapi.editor.event.*;
 import com.intellij.openapi.editor.ex.*;
 import com.intellij.openapi.editor.ex.util.EditorScrollingPositionKeeper;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
@@ -35,6 +32,7 @@ import com.intellij.openapi.editor.markup.RangeHighlighter;
 import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.ui.Queryable;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -69,7 +67,7 @@ import java.util.function.IntFunction;
 /**
  * Common part from desktop CodeEditor implementation
  */
-public abstract class CodeEditorBase extends UserDataHolderBase implements EditorInternal, HighlighterClient, Dumpable {
+public abstract class CodeEditorBase extends UserDataHolderBase implements EditorInternal, HighlighterClient, Dumpable, Queryable {
   protected class MyColorSchemeDelegate extends DelegateColorScheme {
     private final FontPreferencesImpl myFontPreferences = new FontPreferencesImpl();
     private final FontPreferencesImpl myConsoleFontPreferences = new FontPreferencesImpl();
@@ -602,6 +600,14 @@ public abstract class CodeEditorBase extends UserDataHolderBase implements Edito
     }
   }
 
+  protected void invokePopupIfNeeded(EditorMouseEvent event) {
+    if (event.getArea() == EditorMouseEventArea.EDITING_AREA && event.getMouseEvent().isPopupTrigger() && !event.isConsumed()) {
+      for (int i = myPopupHandlers.size() - 1; i >= 0; i--) {
+        if (myPopupHandlers.get(i).handlePopup(event)) break;
+      }
+    }
+  }
+
   private void beforeChangedUpdate(DocumentEvent e) {
     ApplicationManager.getApplication().assertIsDispatchThread();
 
@@ -984,6 +990,12 @@ public abstract class CodeEditorBase extends UserDataHolderBase implements Edito
   @Override
   public void throwEditorNotDisposedError(@Nonnull final String msg) {
     myTraceableDisposable.throwObjectNotDisposedError(msg);
+  }
+
+  @Override
+  public void putInfo(@Nonnull Map<String, String> info) {
+    final VisualPosition visual = getCaretModel().getVisualPosition();
+    info.put("caret", visual.getLine() + ":" + visual.getColumn());
   }
 
   /**

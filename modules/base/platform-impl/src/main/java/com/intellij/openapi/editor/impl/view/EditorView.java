@@ -81,7 +81,7 @@ public class EditorView implements TextDrawingCallback, Disposable, Dumpable, Hi
     myMapper = new EditorCoordinateMapper(this);
     mySizeManager = new EditorSizeManager(this);
     myTextLayoutCache = new TextLayoutCache(this);
-    myLogicalPositionCache = new LogicalPositionCache(this);
+    myLogicalPositionCache = new LogicalPositionCache(editor, this::getTabSize);
     myCharWidthCache = new CharWidthCache(this);
     myTabFragment = new TabFragment(this);
 
