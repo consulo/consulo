@@ -233,7 +233,42 @@ public class WebEditorImpl extends CodeEditorBase {
 
   @Override
   public void release() {
+    assertIsDispatchThread();
+    if (isReleased) {
+      throwDisposalError("Double release of editor:");
+    }
+    myTraceableDisposable.kill(null);
+
+    isReleased = true;
+    //mySizeAdjustmentStrategy.cancelAllRequests();
+    //cancelAutoResetForMouseSelectionState();
+
+    myFoldingModel.dispose();
+    mySoftWrapModel.release();
+    myMarkupModel.dispose();
+
+    myScrollingModel.dispose();
+    //myGutterComponent.dispose();
+    //myMousePressedEvent = null;
+    //myMouseMovedEvent = null;
+    Disposer.dispose(myCaretModel);
+    Disposer.dispose(mySoftWrapModel);
+    Disposer.dispose(myView);
+    //clearCaretThread();
+
+    myFocusListeners.clear();
+    myMouseListeners.clear();
+    myMouseMotionListeners.clear();
+
+    //myEditorComponent.removeMouseListener(myMouseListener);
+    //myGutterComponent.removeMouseListener(myMouseListener);
+    //myEditorComponent.removeMouseMotionListener(myMouseMotionListener);
+    //myGutterComponent.removeMouseMotionListener(myMouseMotionListener);
+
+    //CodeStyleSettingsManager.removeListener(myProject, this);
+
     Disposer.dispose(myDisposable);
+    //myVerticalScrollBar.setUI(null); // clear error panel's cached image
   }
 
   @Override
