@@ -19,7 +19,7 @@ import com.vaadin.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.HorizontalLayout;
 import consulo.ui.web.internal.TargetVaddin;
-import consulo.ui.web.internal.base.UIComponentWithVaadinComponent;
+import consulo.ui.web.internal.base.VaadinComponentDelegate;
 import consulo.ui.web.internal.base.VaadinComponentContainer;
 import consulo.ui.web.internal.border.WebBorderBuilder;
 import consulo.web.gwt.shared.ui.state.layout.BaseLayoutState;
@@ -33,7 +33,7 @@ import java.util.List;
  * @author VISTALL
  * @since 2019-02-19
  */
-public class WebHorizontalLayoutImpl extends UIComponentWithVaadinComponent<WebHorizontalLayoutImpl.Vaadin> implements HorizontalLayout {
+public class WebHorizontalLayoutImpl extends VaadinComponentDelegate<WebHorizontalLayoutImpl.Vaadin> implements HorizontalLayout {
   public static class Vaadin extends VaadinComponentContainer {
     private final List<Component> myChildren = new LinkedList<>();
 

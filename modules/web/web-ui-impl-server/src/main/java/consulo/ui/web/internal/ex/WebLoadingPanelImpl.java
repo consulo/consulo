@@ -15,7 +15,7 @@
  */
 package consulo.ui.web.internal.ex;
 
-import consulo.ui.web.internal.base.UIComponentWithVaadinComponent;
+import consulo.ui.web.internal.base.VaadinComponentDelegate;
 import consulo.ui.web.internal.base.VaadinComponent;
 
 import javax.annotation.Nonnull;
@@ -24,7 +24,7 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 2019-02-18
  */
-public class WebLoadingPanelImpl extends UIComponentWithVaadinComponent<WebLoadingPanelImpl.Vaadin> {
+public class WebLoadingPanelImpl extends VaadinComponentDelegate<WebLoadingPanelImpl.Vaadin> {
   public static class Vaadin extends VaadinComponent {
 
   }

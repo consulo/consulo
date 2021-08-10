@@ -34,7 +34,7 @@ import consulo.internal.arquill.editor.server.event.MouseDownEvent;
 import consulo.ui.Component;
 import consulo.ui.web.internal.base.ComponentHolder;
 import consulo.ui.web.internal.base.FromVaadinComponentWrapper;
-import consulo.ui.web.internal.base.UIComponentWithVaadinComponent;
+import consulo.ui.web.internal.base.VaadinComponentDelegate;
 import org.intellij.lang.annotations.MagicConstant;
 
 import javax.annotation.Nonnull;
@@ -67,7 +67,7 @@ public class WebEditorImpl extends CodeEditorBase {
     }
   }
 
-  private static class EditorComponent extends UIComponentWithVaadinComponent<WebEditorImpl.Vaadin> implements Component {
+  private static class EditorComponent extends VaadinComponentDelegate<Vaadin> implements Component {
     @Nonnull
     @Override
     public Vaadin createVaadinComponent() {

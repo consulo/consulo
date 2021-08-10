@@ -21,7 +21,7 @@ import com.intellij.openapi.wm.WindowInfo;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.ToolWindowStripeButton;
 import consulo.ui.image.Image;
-import consulo.ui.web.internal.base.UIComponentWithVaadinComponent;
+import consulo.ui.web.internal.base.VaadinComponentDelegate;
 import consulo.ui.web.internal.base.VaadinComponent;
 import consulo.ui.web.servlet.WebImageMapper;
 import consulo.web.gwt.shared.ui.ex.state.toolWindow.ToolWindowStripeButtonRpc;
@@ -35,7 +35,7 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 25-Sep-17
  */
-public class WebToolWindowStripeButtonImpl extends UIComponentWithVaadinComponent<WebToolWindowStripeButtonImpl.Vaadin> implements ToolWindowStripeButton {
+public class WebToolWindowStripeButtonImpl extends VaadinComponentDelegate<WebToolWindowStripeButtonImpl.Vaadin> implements ToolWindowStripeButton {
   public static class Vaadin extends VaadinComponent {
     private ToolWindowStripeButtonRpc myRpc = () -> {
       WebToolWindowStripeButtonImpl component = toUIComponent();

@@ -27,7 +27,7 @@ import consulo.ui.ex.ToolWindowPanel;
 import consulo.ui.ex.ToolWindowStripeButton;
 import consulo.ui.web.internal.TargetVaddin;
 import consulo.ui.web.internal.WebThreeComponentSplitLayoutImpl;
-import consulo.ui.web.internal.base.UIComponentWithVaadinComponent;
+import consulo.ui.web.internal.base.VaadinComponentDelegate;
 import consulo.ui.web.internal.base.VaadinComponentContainer;
 import consulo.web.gwt.shared.ui.state.layout.DockLayoutState;
 import consulo.web.wm.impl.WebToolWindowInternalDecorator;
@@ -40,7 +40,7 @@ import java.util.*;
  * @author VISTALL
  * @since 25-Sep-17
  */
-public class WebToolWindowPanelImpl extends UIComponentWithVaadinComponent<WebToolWindowPanelImpl.Vaadin> implements ToolWindowPanel {
+public class WebToolWindowPanelImpl extends VaadinComponentDelegate<WebToolWindowPanelImpl.Vaadin> implements ToolWindowPanel {
   private static final Logger LOG = Logger.getInstance(WebToolWindowPanelImpl.class);
 
   public static class Vaadin extends VaadinComponentContainer {

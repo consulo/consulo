@@ -44,12 +44,12 @@ import java.util.function.Function;
  * @author VISTALL
  * @since 2019-02-17
  */
-public abstract class UIComponentWithVaadinComponent<T extends AbstractComponent & ComponentHolder> implements Component, DataObjectHolder, ToVaddinComponentWrapper {
+public abstract class VaadinComponentDelegate<T extends AbstractComponent & ComponentHolder> implements Component, DataObjectHolder, ToVaddinComponentWrapper {
   private T myVaadinComponent;
 
   private Font myFont = FontManager.get().createFont("?", 12);
 
-  public UIComponentWithVaadinComponent() {
+  public VaadinComponentDelegate() {
     myVaadinComponent = createVaadinComponent();
 
     myVaadinComponent.setComponent(this);

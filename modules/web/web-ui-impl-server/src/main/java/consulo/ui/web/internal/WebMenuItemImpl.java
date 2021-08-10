@@ -20,7 +20,7 @@ import consulo.ui.MenuItem;
 import consulo.ui.event.ClickEvent;
 import consulo.ui.event.ClickListener;
 import consulo.ui.image.Image;
-import consulo.ui.web.internal.base.UIComponentWithVaadinComponent;
+import consulo.ui.web.internal.base.VaadinComponentDelegate;
 import consulo.ui.web.internal.base.VaadinComponent;
 import consulo.ui.web.servlet.WebImageMapper;
 import consulo.web.gwt.shared.ui.state.menu.MenuItemRpc;
@@ -33,7 +33,7 @@ import javax.annotation.Nullable;
  * @author VISTALL
  * @since 2019-02-18
  */
-public class WebMenuItemImpl extends UIComponentWithVaadinComponent<WebMenuItemImpl.Vaadin> implements MenuItem {
+public class WebMenuItemImpl extends VaadinComponentDelegate<WebMenuItemImpl.Vaadin> implements MenuItem {
   public static class Vaadin extends VaadinComponent {
     private MenuItemRpc myRpc = new MenuItemRpc() {
       @Override

@@ -20,7 +20,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.TableLayout;
 import consulo.ui.StaticPosition;
 import consulo.ui.web.internal.TargetVaddin;
-import consulo.ui.web.internal.base.UIComponentWithVaadinComponent;
+import consulo.ui.web.internal.base.VaadinComponentDelegate;
 import consulo.ui.web.internal.base.VaadinComponentContainer;
 import consulo.web.gwt.shared.ui.state.layout.TableLayoutState;
 
@@ -31,7 +31,7 @@ import java.util.*;
  * @author VISTALL
  * @since 2020-08-25
  */
-public class WebTableLayoutImpl extends UIComponentWithVaadinComponent<WebTableLayoutImpl.Vaadin> implements TableLayout {
+public class WebTableLayoutImpl extends VaadinComponentDelegate<WebTableLayoutImpl.Vaadin> implements TableLayout {
 
   public static class Vaadin extends VaadinComponentContainer {
     private final Map<Component, TableLayoutState.TableCell> myChildren = new LinkedHashMap<>();

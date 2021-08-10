@@ -18,7 +18,7 @@ package consulo.ui.web.internal;
 import consulo.disposer.Disposable;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.TextBox;
-import consulo.ui.web.internal.base.UIComponentWithVaadinComponent;
+import consulo.ui.web.internal.base.VaadinComponentDelegate;
 import consulo.ui.web.internal.base.VaadinComponent;
 
 import javax.annotation.Nonnull;
@@ -28,7 +28,7 @@ import javax.annotation.Nullable;
  * @author VISTALL
  * @since 2019-02-18
  */
-public class WebTextBoxImpl extends UIComponentWithVaadinComponent<WebTextBoxImpl.Vaadin> implements TextBox {
+public class WebTextBoxImpl extends VaadinComponentDelegate<WebTextBoxImpl.Vaadin> implements TextBox {
   public static class Vaadin extends VaadinComponent {
   }
 

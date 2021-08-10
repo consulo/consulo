@@ -19,7 +19,7 @@ import com.vaadin.ui.Component;
 import consulo.ui.MenuBar;
 import consulo.ui.MenuItem;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.web.internal.base.UIComponentWithVaadinComponent;
+import consulo.ui.web.internal.base.VaadinComponentDelegate;
 import consulo.ui.web.internal.base.VaadinComponentContainer;
 
 import javax.annotation.Nonnull;
@@ -31,7 +31,7 @@ import java.util.List;
  * @author VISTALL
  * @since 2019-02-18
  */
-public class WebMenuBarImpl extends UIComponentWithVaadinComponent<WebMenuBarImpl.Vaadin> implements MenuBar {
+public class WebMenuBarImpl extends VaadinComponentDelegate<WebMenuBarImpl.Vaadin> implements MenuBar {
   public static class Vaadin extends VaadinComponentContainer {
     private List<Component> myMenuItems = new ArrayList<>();
 

@@ -17,7 +17,7 @@ package consulo.ui.web.internal;
 
 import consulo.ui.ImageBox;
 import consulo.ui.image.Image;
-import consulo.ui.web.internal.base.UIComponentWithVaadinComponent;
+import consulo.ui.web.internal.base.VaadinComponentDelegate;
 import consulo.ui.web.internal.base.VaadinComponent;
 import consulo.ui.web.servlet.WebImageMapper;
 import consulo.web.gwt.shared.ui.state.ImageBoxState;
@@ -28,7 +28,7 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 2019-02-17
  */
-public class WebImageBoxImpl extends UIComponentWithVaadinComponent<WebImageBoxImpl.Vaadin> implements ImageBox {
+public class WebImageBoxImpl extends VaadinComponentDelegate<WebImageBoxImpl.Vaadin> implements ImageBox {
   protected static class Vaadin extends VaadinComponent {
     public void set(Image image) {
       getState().myImageState = WebImageMapper.map(image).getState();
