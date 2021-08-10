@@ -16,7 +16,7 @@
 package consulo.desktop.swt.ui.impl.layout;
 
 import com.intellij.util.containers.MultiMap;
-import consulo.desktop.swt.ui.impl.DesktopSwtComponent;
+import consulo.desktop.swt.ui.impl.SWTComponentDelegate;
 import consulo.ui.Component;
 import consulo.ui.layout.Layout;
 import consulo.util.lang.Pair;
@@ -32,12 +32,12 @@ import java.util.List;
  * @author VISTALL
  * @since 29/04/2021
  */
-public abstract class DesktopSwtLayoutComponent extends DesktopSwtComponent<Composite> implements Layout {
+public abstract class DesktopSwtLayoutComponent extends SWTComponentDelegate<Composite> implements Layout {
   private static final String ourNullMapper = "____null____";
 
-  private List<Pair<DesktopSwtComponent<?>, Object>> myComponents = new ArrayList<>();
+  private List<Pair<SWTComponentDelegate<?>, Object>> myComponents = new ArrayList<>();
 
-  private MultiMap<String, Pair<DesktopSwtComponent<?>, Object>> myMappedComponents = new MultiMap<>();
+  private MultiMap<String, Pair<SWTComponentDelegate<?>, Object>> myMappedComponents = new MultiMap<>();
 
   @Override
   protected Composite createSWT(Composite parent) {
@@ -51,11 +51,11 @@ public abstract class DesktopSwtLayoutComponent extends DesktopSwtComponent<Comp
       component.setLayout(layout);
     }
 
-    for (Pair<DesktopSwtComponent<?>, Object> pair : myComponents) {
-      DesktopSwtComponent<?> comp = pair.getFirst();
+    for (Pair<SWTComponentDelegate<?>, Object> pair : myComponents) {
+      SWTComponentDelegate<?> comp = pair.getFirst();
       Object value = pair.getSecond();
 
-      ((DesktopSwtComponent)comp).bind(getComposite(), convertLayoutData(value));
+      ((SWTComponentDelegate)comp).bind(getComposite(), convertLayoutData(value));
 
       String k = value == null ? ourNullMapper : value.toString();
 
@@ -70,7 +70,7 @@ public abstract class DesktopSwtLayoutComponent extends DesktopSwtComponent<Comp
     super.setParent(component);
 
     if (component != null) {
-      initialize(((DesktopSwtComponent)component).getComposite());
+      initialize(((SWTComponentDelegate)component).getComposite());
     }
   }
 
@@ -82,11 +82,11 @@ public abstract class DesktopSwtLayoutComponent extends DesktopSwtComponent<Comp
 
     myMappedComponents.clear();
 
-    for (Pair<DesktopSwtComponent<?>, Object> pair : myMappedComponents.values()) {
+    for (Pair<SWTComponentDelegate<?>, Object> pair : myMappedComponents.values()) {
       pair.getFirst().disposeSWT();
     }
 
-    for (Pair<DesktopSwtComponent<?>, Object> pair : myComponents) {
+    for (Pair<SWTComponentDelegate<?>, Object> pair : myComponents) {
       pair.getFirst().disposeSWT();
     }
   }
@@ -99,25 +99,25 @@ public abstract class DesktopSwtLayoutComponent extends DesktopSwtComponent<Comp
   protected abstract org.eclipse.swt.widgets.Layout createLayout();
 
   protected void add(Component component, Object layoutData) {
-    add((DesktopSwtComponent<?>)component, layoutData);
+    add((SWTComponentDelegate<?>)component, layoutData);
   }
 
-  protected void add(DesktopSwtComponent<?> component, Object layoutData) {
+  protected void add(SWTComponentDelegate<?> component, Object layoutData) {
     if (myComponent != null) {
       if (layoutData != null) {
-        Collection<Pair<DesktopSwtComponent<?>, Object>> components = myMappedComponents.remove(layoutData.toString());
+        Collection<Pair<SWTComponentDelegate<?>, Object>> components = myMappedComponents.remove(layoutData.toString());
         if (components != null) {
-          for (Pair<DesktopSwtComponent<?>, Object> oldPair : components) {
-            DesktopSwtComponent<?> first = oldPair.getFirst();
+          for (Pair<SWTComponentDelegate<?>, Object> oldPair : components) {
+            SWTComponentDelegate<?> first = oldPair.getFirst();
 
-            ((DesktopSwtComponent)first).setParent(null);
+            ((SWTComponentDelegate)first).setParent(null);
           }
         }
       }
 
       myMappedComponents.putValue(layoutData == null ? ourNullMapper : layoutData.toString(), Pair.create(component, layoutData));
 
-      ((DesktopSwtComponent)component).bind(getComposite(), convertLayoutData(layoutData));
+      ((SWTComponentDelegate)component).bind(getComposite(), convertLayoutData(layoutData));
 
       myComponent.layout(true, true);
     }

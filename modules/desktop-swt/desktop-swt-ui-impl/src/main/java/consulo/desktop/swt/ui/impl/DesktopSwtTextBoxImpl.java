@@ -30,7 +30,7 @@ import javax.annotation.Nullable;
  * @author VISTALL
  * @since 10/07/2021
  */
-public class DesktopSwtTextBoxImpl extends DesktopSwtComponent<Text> implements TextBox {
+public class DesktopSwtTextBoxImpl extends SWTComponentDelegate<Text> implements TextBox {
   private String myText;
 
   public DesktopSwtTextBoxImpl(String text) {

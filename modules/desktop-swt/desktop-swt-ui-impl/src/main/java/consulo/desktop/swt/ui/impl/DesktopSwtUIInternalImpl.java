@@ -290,7 +290,7 @@ public class DesktopSwtUIInternalImpl extends UIInternal {
     Shell activeShell = display.getActiveShell();
 
     if(activeShell != null) {
-      Object data = activeShell.getData(DesktopSwtComponent.UI_COMPONENT_KEY);
+      Object data = activeShell.getData(SWTComponentDelegate.UI_COMPONENT_KEY);
       if(data != null) {
         return (Window)data;
       }

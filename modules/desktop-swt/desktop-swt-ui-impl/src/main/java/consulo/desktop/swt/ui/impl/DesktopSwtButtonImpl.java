@@ -33,7 +33,7 @@ import javax.annotation.Nullable;
  * @author VISTALL
  * @since 29/04/2021
  */
-public class DesktopSwtButtonImpl extends DesktopSwtComponent<org.eclipse.swt.widgets.Button> implements Button {
+public class DesktopSwtButtonImpl extends SWTComponentDelegate<org.eclipse.swt.widgets.Button> implements Button {
   private LocalizeValue myText;
 
   public DesktopSwtButtonImpl(LocalizeValue text) {

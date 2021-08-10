@@ -29,7 +29,7 @@ import javax.annotation.Nullable;
  * @author VISTALL
  * @since 29/04/2021
  */
-public class DesktopSwtIntBoxImpl extends DesktopSwtComponent<Text> implements IntBox {
+public class DesktopSwtIntBoxImpl extends SWTComponentDelegate<Text> implements IntBox {
   private final int myValue;
 
   public DesktopSwtIntBoxImpl(int value) {

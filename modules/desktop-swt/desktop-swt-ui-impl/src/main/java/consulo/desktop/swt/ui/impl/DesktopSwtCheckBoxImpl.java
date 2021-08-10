@@ -28,7 +28,7 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 29/04/2021
  */
-public class DesktopSwtCheckBoxImpl extends DesktopSwtComponent<Button> implements CheckBox {
+public class DesktopSwtCheckBoxImpl extends SWTComponentDelegate<Button> implements CheckBox {
   private LocalizeValue myText = LocalizeValue.empty();
 
   private boolean myValue;

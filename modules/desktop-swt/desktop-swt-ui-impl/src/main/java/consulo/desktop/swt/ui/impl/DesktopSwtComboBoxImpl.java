@@ -34,7 +34,7 @@ import java.util.List;
  * @author VISTALL
  * @since 29/04/2021
  */
-public class DesktopSwtComboBoxImpl<E> extends DesktopSwtComponent<CCombo> implements ComboBox<E> {
+public class DesktopSwtComboBoxImpl<E> extends SWTComponentDelegate<CCombo> implements ComboBox<E> {
   private TextItemRender<E> myRender = (render, index, item) -> {
     if (item == null) {
       render.append("");
