@@ -24,6 +24,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.border.BorderPosition;
 import consulo.ui.border.BorderStyle;
 import consulo.ui.color.ColorValue;
+import consulo.ui.cursor.Cursor;
 import consulo.ui.event.AttachEvent;
 import consulo.ui.event.AttachListener;
 import consulo.ui.event.DetachEvent;
@@ -33,6 +34,7 @@ import consulo.ui.font.FontManager;
 import consulo.ui.impl.UIDataObject;
 import consulo.ui.web.internal.TargetVaddin;
 import consulo.ui.web.internal.WebFontImpl;
+import consulo.ui.web.internal.cursor.CursorConverter;
 import consulo.util.dataholder.Key;
 
 import javax.annotation.Nonnull;
@@ -48,6 +50,8 @@ public abstract class VaadinComponentDelegate<T extends AbstractComponent & Comp
   private T myVaadinComponent;
 
   private Font myFont = FontManager.get().createFont("?", 12);
+
+  private Cursor myCursor;
 
   public VaadinComponentDelegate() {
     myVaadinComponent = createVaadinComponent();
@@ -187,6 +191,18 @@ public abstract class VaadinComponentDelegate<T extends AbstractComponent & Comp
   @Override
   public void setEnabled(boolean value) {
     myVaadinComponent.setEnabled(value);
+  }
+
+  @Override
+  public void setCursor(@Nullable Cursor cursor) {
+    myCursor = cursor;
+    CursorConverter.setCursor(toVaadinComponent(), cursor);
+  }
+
+  @Nullable
+  @Override
+  public Cursor getCursor() {
+    return myCursor;
   }
 
   public void bordersChanged() {
