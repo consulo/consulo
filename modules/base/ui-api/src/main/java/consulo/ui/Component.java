@@ -21,6 +21,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.border.BorderPosition;
 import consulo.ui.border.BorderStyle;
 import consulo.ui.color.ColorValue;
+import consulo.ui.cursor.Cursor;
 import consulo.ui.event.AttachListener;
 import consulo.ui.event.ClickListener;
 import consulo.ui.event.DetachListener;
@@ -149,18 +150,34 @@ public interface Component extends Disposable, UserDataHolder {
 
   @Nullable
   default ColorValue getForegroundColor() {
-    throw new IllegalArgumentException("Not supported");
+    throw new AbstractMethodError("not supported");
   }
 
   default void setForegroundColor(@Nullable ColorValue foreground) {
-    throw new IllegalArgumentException("Not supported");
+    throw new AbstractMethodError("not supported");
   }
 
+  @Nonnull
   default Component withForegroundColor(@Nullable ColorValue foreground) {
     setForegroundColor(foreground);
     return this;
   }
 
+  @Nullable
+  default Cursor getCursor() {
+    throw new AbstractMethodError("not supported");
+  }
+
+  default void setCursor(@Nullable Cursor cursor) {
+    throw new AbstractMethodError("not supported");
+  }
+
+  @Nonnull
+  default Component withCursor(@Nullable Cursor cursor) {
+    setCursor(cursor);
+    return this;
+  }
+  
   /**
    * @return runner for unregister listener
    */

@@ -22,6 +22,7 @@ import consulo.container.plugin.PluginIds;
 import consulo.container.plugin.PluginManager;
 import consulo.ui.Component;
 import consulo.ui.Window;
+import consulo.ui.cursor.Cursor;
 import consulo.ui.font.Font;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageKey;
@@ -116,6 +117,16 @@ public class TargetAWT {
   @Contract("null -> null")
   public static ColorValue from(@Nullable java.awt.Color color) {
     return ourFacade.from(color);
+  }
+
+  @Contract("null -> null")
+  public static java.awt.Cursor to(Cursor cursor) {
+    return ourFacade.to(cursor);
+  }
+
+  @Contract("null -> null")
+  public static Cursor from(java.awt.Cursor cursor) {
+    return ourFacade.from(cursor);
   }
 
   @Contract("null -> null")

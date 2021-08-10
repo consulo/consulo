@@ -27,6 +27,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.border.BorderPosition;
 import consulo.ui.border.BorderStyle;
 import consulo.ui.color.ColorValue;
+import consulo.ui.cursor.Cursor;
 import consulo.ui.desktop.internal.DesktopFontImpl;
 import consulo.ui.desktop.internal.util.AWTFocusAdapterAsFocusListener;
 import consulo.ui.desktop.internal.util.AWTKeyAdapterAsKeyListener;
@@ -181,6 +182,17 @@ public class SwingComponentDelegate<T extends java.awt.Component> implements Com
     dataObject().removeBorder(borderPosition);
 
     bordersChanged();
+  }
+
+  @Override
+  public void setCursor(@Nullable Cursor cursor) {
+    toAWTComponent().setCursor(TargetAWT.to(cursor));
+  }
+
+  @Nullable
+  @Override
+  public Cursor getCursor() {
+    return TargetAWT.from(toAWTComponent().getCursor());
   }
 
   private void bordersChanged() {
