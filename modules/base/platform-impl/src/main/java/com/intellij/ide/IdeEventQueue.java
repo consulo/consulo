@@ -21,7 +21,7 @@ import com.intellij.ide.plugins.PluginManager;
 import com.intellij.ide.ui.UISettings;
 import com.intellij.idea.ApplicationStarter;
 import com.intellij.openapi.application.*;
-import com.intellij.openapi.application.impl.InvocationUtil;
+import com.intellij.openapi.application.impl.InvocationUtil2;
 import com.intellij.openapi.application.impl.LaterInvocator;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.diagnostic.FrequentEventDetector;
@@ -47,7 +47,9 @@ import com.intellij.util.ui.UIUtil;
 import consulo.application.TransactionGuardEx;
 import consulo.application.internal.ApplicationWithIntentWriteLock;
 import consulo.awt.TargetAWT;
+import consulo.awt.hacking.InvocationUtil;
 import consulo.awt.hacking.PostEventQueueHacking;
+import consulo.awt.hacking.SequencedEventNestedFieldHolder;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
@@ -61,7 +63,6 @@ import javax.swing.plaf.basic.ComboPopup;
 import java.awt.*;
 import java.awt.event.*;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Queue;
@@ -86,7 +87,7 @@ public class IdeEventQueue extends EventQueue {
   private static final Logger FOCUS_AWARE_RUNNABLES_LOG = Logger.getInstance(IdeEventQueue.class.getName() + ".runnables");
 
   private static final Set<Class<? extends Runnable>> ourRunnablesWoWrite = Set.of(InvocationUtil.REPAINT_PROCESSING_CLASS);
-  private static final Set<Class<? extends Runnable>> ourRunnablesWithWrite = Set.of(InvocationUtil.FLUSH_NOW_CLASS);
+  private static final Set<Class<? extends Runnable>> ourRunnablesWithWrite = Set.of(InvocationUtil2.FLUSH_NOW_CLASS);
   private static final boolean ourDefaultEventWithWrite = true;
 
   private static TransactionGuardEx ourTransactionGuard;
@@ -476,33 +477,6 @@ public class IdeEventQueue extends EventQueue {
         SequencedEventNestedFieldHolder.invokeDispose(sequenceEventToDispose);
       }
       myCurrentSequencedEvent = e;
-    }
-  }
-
-  private static final class SequencedEventNestedFieldHolder {
-    private static final Field NESTED_FIELD;
-    private static final Method DISPOSE_METHOD;
-    private static final Class<?> SEQUENCED_EVENT_CLASS;
-
-    private static void invokeDispose(AWTEvent event) {
-      try {
-        DISPOSE_METHOD.invoke(event);
-      }
-      catch (IllegalAccessException | InvocationTargetException e) {
-        throw new RuntimeException(e);
-      }
-    }
-
-    static {
-      try {
-        SEQUENCED_EVENT_CLASS = Class.forName("java.awt.SequencedEvent");
-        NESTED_FIELD = ReflectionUtil.getDeclaredField(SEQUENCED_EVENT_CLASS, "nested");
-        DISPOSE_METHOD = ReflectionUtil.getDeclaredMethod(SEQUENCED_EVENT_CLASS, "dispose");
-        if (NESTED_FIELD == null) throw new RuntimeException();
-      }
-      catch (ClassNotFoundException e) {
-        throw new RuntimeException(e);
-      }
     }
   }
 

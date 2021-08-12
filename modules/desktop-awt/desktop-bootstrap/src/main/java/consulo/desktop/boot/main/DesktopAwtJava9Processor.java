@@ -67,5 +67,6 @@ public class DesktopAwtJava9Processor implements Java9ModuleProcessor {
     instanceInvoke(java_lang_Module_addOpens, javaDesktopModule, "javax.swing.plaf.basic", desktopHackingModule);
     instanceInvoke(java_lang_Module_addOpens, javaDesktopModule, "javax.swing.text.html", desktopHackingModule);
     instanceInvoke(java_lang_Module_addOpens, javaDesktopModule, "java.awt.peer", desktopHackingModule);
+    instanceInvoke(java_lang_Module_addOpens, javaDesktopModule, "java.awt.event", desktopHackingModule);
   }
 }

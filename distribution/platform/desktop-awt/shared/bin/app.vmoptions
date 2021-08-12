@@ -9,3 +9,4 @@
 --add-opens=java.base/java.lang=consulo.container.impl
 --add-opens=java.desktop/javax.swing.text.html=consulo.container.impl
 --add-opens=java.desktop/java.awt.peer=consulo.container.impl
+--add-opens=java.desktop/java.awt.event=consulo.container.impl

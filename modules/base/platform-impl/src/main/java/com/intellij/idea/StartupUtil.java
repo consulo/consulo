@@ -18,7 +18,6 @@ package com.intellij.idea;
 import com.intellij.jna.JnaLoader;
 import com.intellij.openapi.application.ApplicationInfo;
 import com.intellij.openapi.application.ApplicationNamesInfo;
-import com.intellij.openapi.application.impl.ApplicationInfoImpl;
 import com.intellij.openapi.util.ShutDownTracker;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.SystemInfoRt;
@@ -200,7 +199,7 @@ public class StartupUtil {
     log.info("------------------------------------------------------ IDE STARTED ------------------------------------------------------");
     log.info("Using logger factory: " + factory.getClass().getSimpleName());
 
-    ApplicationInfo appInfo = ApplicationInfoImpl.getShadowInstance();
+    ApplicationInfo appInfo = ApplicationInfo.getInstance();
     ApplicationNamesInfo namesInfo = ApplicationNamesInfo.getInstance();
     String buildDate = new SimpleDateFormat("dd MMM yyyy HH:ss", Locale.US).format(appInfo.getBuildDate().getTime());
     log.info("IDE: " + namesInfo.getFullProductName() + " (build #" + appInfo.getBuild() + ", " + buildDate + ")");
