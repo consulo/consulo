@@ -1,6 +1,8 @@
 // Copyright 2000-2021 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package org.jetbrains.io;
 
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.LocalFileSystem;
@@ -9,18 +11,13 @@ import com.intellij.openapi.vfs.VirtualFile;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.File;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 
 public final class LocalFileFinder {
-  private static record Result(boolean value,long time) {
-  }
-
   // if java.io.File.exists() takes more time than this timeout we assume that this is network drive and do not ping it any more
   private static final int FILE_EXISTS_MAX_TIMEOUT_MILLIS = 10;
 
-  private static final Map<Character, Result> windowsDrivesMap = new ConcurrentHashMap<>();
+  private static final Cache<Character, Boolean> windowsDrivesMap = CacheBuilder.newBuilder().expireAfterWrite(5, TimeUnit.MINUTES).build();
 
   private LocalFileFinder() {
   }
@@ -49,31 +46,18 @@ public final class LocalFileFinder {
     }
 
     final char driveLetter = Character.toUpperCase(path.charAt(0));
-    Boolean driveExists = null;
-
-    final long t0 = System.currentTimeMillis();
-
-    Result result = windowsDrivesMap.get(driveLetter);
-    if (result != null) {
-      // 5 min expired
-      if ((t0 - result.time()) > TimeUnit.MINUTES.toMillis(5)) {
-        windowsDrivesMap.remove(driveLetter);
-      }
-      else {
-        driveExists = result.value();
-      }
-    }
-
+    final Boolean driveExists = windowsDrivesMap.getIfPresent(driveLetter);
     if (driveExists != null) {
       return driveExists;
     }
     else {
+      final long t0 = System.currentTimeMillis();
       boolean exists = new File(driveLetter + ":" + File.separator).exists();
       if (System.currentTimeMillis() - t0 > FILE_EXISTS_MAX_TIMEOUT_MILLIS) {
         exists = false; // may be a slow network drive
       }
 
-      windowsDrivesMap.putIfAbsent(driveLetter, new Result(exists, t0));
+      windowsDrivesMap.put(driveLetter, exists);
       return exists;
     }
   }
