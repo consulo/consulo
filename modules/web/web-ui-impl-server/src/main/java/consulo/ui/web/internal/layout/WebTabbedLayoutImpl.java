@@ -21,7 +21,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.Tab;
 import consulo.ui.layout.TabbedLayout;
 import consulo.ui.web.internal.TargetVaddin;
-import consulo.ui.web.internal.base.UIComponentWithVaadinComponent;
+import consulo.ui.web.internal.base.VaadinComponentDelegate;
 import consulo.ui.web.internal.base.VaadinComponentContainer;
 import consulo.ui.web.servlet.WebImageMapper;
 import consulo.web.gwt.shared.ui.state.tab.TabbedLayoutClientRpc;
@@ -39,7 +39,7 @@ import java.util.function.BiConsumer;
  * @author VISTALL
  * @since 2019-02-19
  */
-public class WebTabbedLayoutImpl extends UIComponentWithVaadinComponent<WebTabbedLayoutImpl.Vaadin> implements TabbedLayout {
+public class WebTabbedLayoutImpl extends VaadinComponentDelegate<WebTabbedLayoutImpl.Vaadin> implements TabbedLayout {
   public static class Vaadin extends VaadinComponentContainer {
     private Map<WebTabImpl, com.vaadin.ui.Component> myTabs = new LinkedHashMap<>();
 
@@ -188,5 +188,10 @@ public class WebTabbedLayoutImpl extends UIComponentWithVaadinComponent<WebTabbe
     WebTabImpl presentation = new WebTabImpl(getVaadinComponent().myTabs.size(), this);
     presentation.append(tabName);
     return addTab(presentation, component);
+  }
+
+  @Override
+  public void removeTab(@Nonnull Tab tab) {
+    // todo
   }
 }

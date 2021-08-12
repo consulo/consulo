@@ -25,7 +25,7 @@ import consulo.ui.style.ComponentColors;
 import consulo.ui.style.StandardColors;
 import consulo.ui.style.Style;
 import consulo.ui.style.StyleManager;
-import consulo.ui.web.internal.base.UIComponentWithVaadinComponent;
+import consulo.ui.web.internal.base.VaadinComponentDelegate;
 import consulo.ui.web.internal.base.VaadinSingleComponentContainer;
 import consulo.ui.web.internal.util.Mappers;
 import consulo.web.gwt.shared.ui.state.ApplicationContainerState;
@@ -39,7 +39,7 @@ import java.util.Map;
  * @author VISTALL
  * @since 2020-11-21
  */
-public class WebApplicationContainerImpl extends UIComponentWithVaadinComponent<WebApplicationContainerImpl.Vaadin> {
+public class WebApplicationContainerImpl extends VaadinComponentDelegate<WebApplicationContainerImpl.Vaadin> {
   public static class Vaadin extends VaadinSingleComponentContainer {
     public void set(@Nonnull Component component) {
       setContent(TargetVaddin.to(component));

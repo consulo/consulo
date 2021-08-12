@@ -13,6 +13,8 @@ import com.intellij.openapi.wm.*;
 import com.intellij.ui.EditorTextField;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.messages.MessageBusConnection;
+import consulo.platform.Platform;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -77,8 +79,11 @@ public abstract class EditorBasedWidget implements StatusBarWidget, FileEditorMa
   }
 
   boolean isOurEditor(Editor editor) {
+    if(Platform.current().isWebService()) {
+      return true;
+    }
     return editor != null &&
-           editor.getComponent().isShowing() &&
+           editor.isShowing() &&
            !Boolean.TRUE.equals(editor.getUserData(EditorTextField.SUPPLEMENTARY_KEY)) &&
            WindowManager.getInstance().getStatusBar(editor.getComponent(), editor.getProject()) == myStatusBar;
   }

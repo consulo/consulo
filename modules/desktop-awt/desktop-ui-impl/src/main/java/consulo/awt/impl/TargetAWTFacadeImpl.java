@@ -27,6 +27,7 @@ import consulo.ui.Component;
 import consulo.ui.Window;
 import consulo.ui.*;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.cursor.StandardCursors;
 import consulo.ui.desktop.internal.DesktopFontImpl;
 import consulo.ui.desktop.internal.image.libraryImage.DesktopImageKeyImpl;
 import consulo.ui.desktop.internal.window.WindowOverAWTWindow;
@@ -274,6 +275,47 @@ public class TargetAWTFacadeImpl implements TargetAWTFacade {
   public java.awt.Image toImage(@Nonnull ImageKey key) {
     DesktopImageKeyImpl desktopImageKey = (DesktopImageKeyImpl)key;
     return desktopImageKey.toAWTImage();
+  }
+
+  @Override
+  public Cursor to(consulo.ui.cursor.Cursor cursor) {
+    if(cursor instanceof StandardCursors systemCursor) {
+      switch (systemCursor) {
+        case ARROW:
+          return Cursor.getDefaultCursor();
+        case CROSSHAIR:
+          return Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR);
+        case TEXT:
+          return Cursor.getPredefinedCursor(Cursor.TEXT_CURSOR);
+        case WAIT:
+          return Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR);
+        case HAND:
+          return Cursor.getPredefinedCursor(Cursor.HAND_CURSOR);
+      }
+    }
+    throw new UnsupportedOperationException(cursor.toString());
+  }
+
+  @Override
+  public consulo.ui.cursor.Cursor from(Cursor cursor) {
+    if(cursor == null) {
+      return null;
+    }
+
+    switch (cursor.getType()) {
+      case Cursor.DEFAULT_CURSOR:
+        return StandardCursors.ARROW;
+      case Cursor.CROSSHAIR_CURSOR:
+        return StandardCursors.CROSSHAIR;
+      case Cursor.TEXT_CURSOR:
+        return StandardCursors.TEXT;
+      case Cursor.WAIT_CURSOR:
+        return StandardCursors.WAIT;
+      case Cursor.HAND_CURSOR:
+        return StandardCursors.HAND;
+
+    }
+    throw new UnsupportedOperationException(cursor.toString());
   }
 
   public static SimpleTextAttributes from(@Nonnull TextAttribute textAttribute) {

@@ -26,7 +26,6 @@ import com.intellij.openapi.editor.event.DocumentAdapter;
 import com.intellij.openapi.editor.event.DocumentEvent;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.editor.ex.EditorMarkupModel;
-import com.intellij.openapi.editor.impl.DesktopEditorImpl;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.fileEditor.FileEditorManager;
@@ -35,39 +34,39 @@ import com.intellij.openapi.fileTypes.FileTypeEvent;
 import com.intellij.openapi.fileTypes.FileTypeListener;
 import com.intellij.openapi.fileTypes.FileTypeManager;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileEvent;
 import com.intellij.openapi.vfs.VirtualFileListener;
 import com.intellij.openapi.vfs.VirtualFilePropertyEvent;
 import com.intellij.openapi.wm.WindowManager;
 import com.intellij.openapi.wm.ex.StatusBarEx;
-import com.intellij.ui.components.JBLoadingPanel;
 import com.intellij.util.FileContentUtilCore;
 import com.intellij.util.messages.MessageBusConnection;
-import com.intellij.util.ui.JBSwingUtilities;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
+import consulo.editor.internal.EditorInternal;
+import consulo.fileEditor.impl.text.TextEditorComponentContainer;
+import consulo.fileEditor.impl.text.TextEditorComponentContainerFactory;
 import consulo.fileEditor.impl.text.TextEditorProvider;
 import consulo.logging.Logger;
 import consulo.util.dataholder.Key;
+import consulo.util.lang.Comparing;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.swing.*;
-import java.awt.*;
 
 /**
  * @author Anton Katilin
  * @author Vladimir Kondratyev
  */
-public class TextEditorComponent extends JBLoadingPanel implements DataProvider, Disposable {
+public class TextEditorComponent implements DataProvider, Disposable {
   private static final Logger LOG = Logger.getInstance(TextEditorComponent.class);
 
   private final Project myProject;
   @Nonnull
   private final VirtualFile myFile;
-  private final DesktopTextEditorImpl myTextEditor;
+
+  private final TextEditorImpl myTextEditor;
   /**
    * Document to be edited
    */
@@ -87,8 +86,9 @@ public class TextEditorComponent extends JBLoadingPanel implements DataProvider,
 
   private final EditorHighlighterUpdater myEditorHighlighterUpdater;
 
-  public TextEditorComponent(@Nonnull final Project project, @Nonnull final VirtualFile file, @Nonnull final DesktopTextEditorImpl textEditor) {
-    super(new BorderLayout(), textEditor);
+  private final TextEditorComponentContainer myTextEditorComponentContainer;
+
+  public TextEditorComponent(@Nonnull final Project project, @Nonnull final VirtualFile file, @Nonnull final TextEditorImpl textEditor, @Nonnull TextEditorComponentContainerFactory editorFactory) {
 
     myProject = project;
     myFile = file;
@@ -99,10 +99,11 @@ public class TextEditorComponent extends JBLoadingPanel implements DataProvider,
     myDocument.addDocumentListener(new MyDocumentListener(), this);
 
     myEditor = createEditor();
-    add(myEditor.getComponent(), BorderLayout.CENTER);
     myModified = isModifiedImpl();
     myValid = isEditorValidImpl();
     LOG.assertTrue(myValid);
+
+    myTextEditorComponentContainer = editorFactory.createTextComponentContainer(myEditor, this, this);
 
     MyVirtualFileListener myVirtualFileListener = new MyVirtualFileListener();
     myFile.getFileSystem().addVirtualFileListener(myVirtualFileListener);
@@ -168,7 +169,7 @@ public class TextEditorComponent extends JBLoadingPanel implements DataProvider,
 
     ((EditorEx)editor).setContextMenuGroupId(IdeActions.GROUP_EDITOR_POPUP);
 
-    ((DesktopEditorImpl)editor).setDropHandler(new FileDropHandler(editor));
+    ((EditorInternal)editor).setDropHandler(new FileDropHandler(editor));
 
     TextEditorProvider.putTextEditor(editor, myTextEditor);
     return editor;
@@ -236,13 +237,7 @@ public class TextEditorComponent extends JBLoadingPanel implements DataProvider,
 
   @Nullable
   private Editor validateCurrentEditor() {
-    Component focusOwner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
-    if (focusOwner instanceof JComponent) {
-      final JComponent jComponent = (JComponent)focusOwner;
-      if (jComponent.getClientProperty("AuxEditorComponent") != null) return null; // Hack for EditorSearchComponent
-    }
-
-    return myEditor;
+    return myTextEditorComponentContainer.validateEditor(myEditor);
   }
 
   @Override
@@ -337,26 +332,16 @@ public class TextEditorComponent extends JBLoadingPanel implements DataProvider,
   }
 
   public void loadingFinished() {
-    if (isLoading()) {
-      stopLoading();
-    }
+    myTextEditorComponentContainer.loadingFinished();
+  }
 
-    getContentPanel().setVisible(true);
+  @Nonnull
+  public TextEditorComponentContainer getComponentContainer() {
+    return myTextEditorComponentContainer;
   }
 
   @Nonnull
   public VirtualFile getFile() {
     return myFile;
-  }
-
-  @Override
-  public Color getBackground() {
-    //noinspection ConstantConditions
-    return myEditor == null ? super.getBackground() : myEditor.getContentComponent().getBackground();
-  }
-
-  @Override
-  protected Graphics getComponentGraphics(Graphics g) {
-    return JBSwingUtilities.runGlobalCGTransform(this, super.getComponentGraphics(g));
   }
 }

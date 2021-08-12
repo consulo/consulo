@@ -779,6 +779,7 @@ public class ProjectManagerImpl extends ProjectManagerEx implements Disposable {
         mainResult.setDone();
       }
       catch (Throwable e) {
+        LOG.error(e);
         mainResult.rejectWithThrowable(e);
       }
       finally {

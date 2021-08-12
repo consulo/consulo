@@ -10,20 +10,22 @@ import com.intellij.openapi.editor.impl.EditorDocumentPriorities;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.DocumentUtil;
 import consulo.disposer.Disposable;
+import consulo.editor.impl.CodeEditorBase;
 
 import javax.annotation.Nonnull;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.function.IntSupplier;
 
 /**
  * Caches information allowing faster offset<->logicalPosition conversions even for long lines.
  * Requests for conversion can be made from under read action, document changes and cache invalidation should be done in EDT.
  */
-class LogicalPositionCache implements PrioritizedDocumentListener, Disposable, Dumpable {
+public class LogicalPositionCache implements PrioritizedDocumentListener, Disposable, Dumpable {
   private final Document myDocument;
-  private final EditorView myView;
+  private final IntSupplier myTabSizeSupplier;
+  private final CodeEditorBase myEditor;
   private ArrayList<LineData> myLines = new ArrayList<>();
   private int myTabSize = -1;
   private int myDocumentChangeOldEndLine;
@@ -32,9 +34,10 @@ class LogicalPositionCache implements PrioritizedDocumentListener, Disposable, D
   @SuppressWarnings("FieldAccessedSynchronizedAndUnsynchronized")
   private boolean myUpdateInProgress;
 
-  LogicalPositionCache(EditorView view) {
-    myView = view;
-    myDocument = view.getEditor().getDocument();
+  public LogicalPositionCache(CodeEditorBase editor, IntSupplier tabSizeSupplier) {
+    myEditor = editor;
+    myTabSizeSupplier = tabSizeSupplier;
+    myDocument = myEditor.getDocument();
     myDocument.addDocumentListener(this, this);
   }
 
@@ -70,17 +73,17 @@ class LogicalPositionCache implements PrioritizedDocumentListener, Disposable, D
     return true;
   }
 
-  synchronized void reset(boolean force) {
+  public synchronized void reset(boolean force) {
     checkDisposed();
     int oldTabSize = myTabSize;
-    myTabSize = myView.getTabSize();
+    myTabSize = myTabSizeSupplier.getAsInt();
     if (force || oldTabSize != myTabSize) {
       invalidateLines(0, myLines.size() - 1, myDocument.getLineCount() - 1, !force && myLines.size() == myDocument.getLineCount());
     }
   }
 
   @Nonnull
-  synchronized LogicalPosition offsetToLogicalPosition(int offset) {
+  public synchronized LogicalPosition offsetToLogicalPosition(int offset) {
     if (myUpdateInProgress) throw new IllegalStateException();
     int textLength = myDocument.getTextLength();
     if (offset <= 0 || textLength == 0) {
@@ -99,7 +102,7 @@ class LogicalPositionCache implements PrioritizedDocumentListener, Disposable, D
     return lineData.offsetToLogicalColumn(myDocument, line, myTabSize, myDocument.getLineStartOffset(line) + intraLineOffset);
   }
 
-  synchronized int logicalPositionToOffset(@Nonnull LogicalPosition pos) {
+  public synchronized int logicalPositionToOffset(@Nonnull LogicalPosition pos) {
     int line = pos.line;
     int column = pos.column;
     if (line >= myDocument.getLineCount()) return myDocument.getTextLength();
@@ -192,14 +195,14 @@ class LogicalPositionCache implements PrioritizedDocumentListener, Disposable, D
   }
 
   private void checkDisposed() {
-    if (myLines == null) myView.getEditor().throwDisposalError("Editor is already disposed");
+    if (myLines == null) myEditor.throwDisposalError("Editor is already disposed");
   }
 
   synchronized void validateState() {
     int lineCount = myDocument.getLineCount();
     int cacheSize = myLines.size();
     if (cacheSize != lineCount) throw new IllegalStateException("Line count: " + lineCount + ", cache size: " + cacheSize);
-    int tabSize = myView.getTabSize();
+    int tabSize = myTabSizeSupplier.getAsInt();
     for (int i = 0; i < cacheSize; i++) {
       LineData data = myLines.get(i);
       if (data != null) {

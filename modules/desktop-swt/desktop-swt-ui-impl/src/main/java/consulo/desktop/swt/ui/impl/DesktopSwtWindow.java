@@ -30,8 +30,8 @@ import javax.annotation.Nullable;
  * @author VISTALL
  * @since 29/04/2021
  */
-public class DesktopSwtWindow extends DesktopSwtComponent<Shell> implements Window {
-  private DesktopSwtComponent myContent;
+public class DesktopSwtWindow extends SWTComponentDelegate<Shell> implements Window {
+  private SWTComponentDelegate myContent;
 
   public DesktopSwtWindow(String title, WindowOptions options) {
     int flags = SWT.SHELL_TRIM;
@@ -86,7 +86,7 @@ public class DesktopSwtWindow extends DesktopSwtComponent<Shell> implements Wind
   @RequiredUIAccess
   @Override
   public void setContent(@Nonnull Component content) {
-    myContent = (DesktopSwtComponent)content;
+    myContent = (SWTComponentDelegate)content;
   }
 
   @RequiredUIAccess

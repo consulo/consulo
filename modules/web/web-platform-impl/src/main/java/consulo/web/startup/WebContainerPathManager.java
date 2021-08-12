@@ -15,6 +15,7 @@
  */
 package consulo.web.startup;
 
+import consulo.application.ApplicationProperties;
 import consulo.container.boot.ContainerPathManager;
 
 import javax.annotation.Nonnull;
@@ -54,5 +55,15 @@ class WebContainerPathManager extends ContainerPathManager {
   @Override
   public File getDocumentsDir() {
     return new File(System.getProperty("user.dir"), "Consulo Projects");
+  }
+
+  @Nonnull
+  @Override
+  public String[] getPluginsPaths() {
+    String pluginsPath = System.getProperty(ApplicationProperties.CONSULO_PLUGINS_PATHS);
+    if(pluginsPath != null) {
+      return pluginsPath.split(File.pathSeparator);
+    }
+    return super.getPluginsPaths();
   }
 }

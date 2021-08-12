@@ -15,190 +15,29 @@
  */
 package consulo.ui.web.internal.ex;
 
-import com.intellij.openapi.editor.*;
-import com.intellij.openapi.editor.event.CaretListener;
-import com.intellij.openapi.editor.markup.TextAttributes;
-import consulo.disposer.Disposable;
+import consulo.editor.impl.CodeEditorBase;
+import consulo.editor.impl.CodeEditorCaretModelBase;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.Collections;
-import java.util.List;
 
 /**
  * @author VISTALL
  * @since 2018-05-10
  */
-public class WebCaretModelImpl implements CaretModel {
-  private WebCaretImpl myPrimaryCaret;
-  private WebEditorImpl myEditor;
+public class WebCaretModelImpl extends CodeEditorCaretModelBase<WebCaretImpl> {
 
-  public WebCaretModelImpl(WebEditorImpl editor) {
-    myEditor = editor;
-    myPrimaryCaret = new WebCaretImpl(this, editor);
-  }
-
-  @Override
-  public void moveCaretRelatively(int columnShift, int lineShift, boolean withSelection, boolean blockSelection, boolean scrollToCaret) {
-
-  }
-
-  @Override
-  public void moveToLogicalPosition(@Nonnull LogicalPosition pos) {
-
-  }
-
-  @Override
-  public void moveToVisualPosition(@Nonnull VisualPosition pos) {
-
-  }
-
-  @Override
-  public void moveToOffset(int offset) {
-
-  }
-
-  @Override
-  public void moveToOffset(int offset, boolean locateBeforeSoftWrap) {
-
-  }
-
-  @Override
-  public boolean isUpToDate() {
-    return false;
+  public WebCaretModelImpl(@Nonnull CodeEditorBase editor) {
+    super(editor);
   }
 
   @Nonnull
   @Override
-  public LogicalPosition getLogicalPosition() {
-    return null;
-  }
-
-  @Nonnull
-  @Override
-  public VisualPosition getVisualPosition() {
-    return null;
-  }
-
-  @Override
-  public int getOffset() {
-    return 0;
-  }
-
-  @Override
-  public void addCaretListener(@Nonnull CaretListener listener) {
-
-  }
-
-  @Override
-  public void removeCaretListener(@Nonnull CaretListener listener) {
-
-  }
-
-  @Override
-  public int getVisualLineStart() {
-    return 0;
-  }
-
-  @Override
-  public int getVisualLineEnd() {
-    return 0;
-  }
-
-  @Override
-  public TextAttributes getTextAttributes() {
-    return null;
+  protected WebCaretImpl createCaret(CodeEditorBase editor, CodeEditorCaretModelBase<WebCaretImpl> model) {
+    return new WebCaretImpl(editor, model);
   }
 
   @Override
   public boolean supportsMultipleCarets() {
     return false;
-  }
-
-  @Nonnull
-  @Override
-  public Caret getCurrentCaret() {
-    return myPrimaryCaret;
-  }
-
-  @Nonnull
-  @Override
-  public Caret getPrimaryCaret() {
-    return myPrimaryCaret;
-  }
-
-  @Override
-  public int getCaretCount() {
-    return 1;
-  }
-
-  @Nonnull
-  @Override
-  public List<Caret> getAllCarets() {
-    return Collections.singletonList(myPrimaryCaret);
-  }
-
-  @Nullable
-  @Override
-  public Caret getCaretAt(@Nonnull VisualPosition pos) {
-    return null;
-  }
-
-  @Nullable
-  @Override
-  public Caret addCaret(@Nonnull VisualPosition pos) {
-    return null;
-  }
-
-  @Nullable
-  @Override
-  public Caret addCaret(@Nonnull VisualPosition pos, boolean makePrimary) {
-    return null;
-  }
-
-  @Override
-  public boolean removeCaret(@Nonnull Caret caret) {
-    return false;
-  }
-
-  @Override
-  public void removeSecondaryCarets() {
-
-  }
-
-  @Override
-  public void setCaretsAndSelections(@Nonnull List<? extends CaretState> caretStates) {
-
-  }
-
-  @Override
-  public void setCaretsAndSelections(@Nonnull List<? extends CaretState> caretStates, boolean updateSystemSelection) {
-
-  }
-
-  @Nonnull
-  @Override
-  public List<CaretState> getCaretsAndSelections() {
-    return Collections.emptyList();
-  }
-
-  @Override
-  public void runForEachCaret(@Nonnull CaretAction action) {
-
-  }
-
-  @Override
-  public void runForEachCaret(@Nonnull CaretAction action, boolean reverseOrder) {
-
-  }
-
-  @Override
-  public void addCaretActionListener(@Nonnull CaretActionListener listener, @Nonnull Disposable disposable) {
-
-  }
-
-  @Override
-  public void runBatchCaretOperation(@Nonnull Runnable runnable) {
-
   }
 }

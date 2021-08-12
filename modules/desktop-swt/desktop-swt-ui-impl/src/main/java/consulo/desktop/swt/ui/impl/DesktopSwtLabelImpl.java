@@ -16,7 +16,6 @@
 package consulo.desktop.swt.ui.impl;
 
 import consulo.localize.LocalizeValue;
-import consulo.ui.HorizontalAlignment;
 import consulo.ui.Label;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
@@ -30,7 +29,7 @@ import javax.annotation.Nullable;
  * @author VISTALL
  * @since 29/04/2021
  */
-public class DesktopSwtLabelImpl extends DesktopSwtComponent<org.eclipse.swt.widgets.Label> implements Label {
+public class DesktopSwtLabelImpl extends SWTComponentDelegate<org.eclipse.swt.widgets.Label> implements Label {
   private LocalizeValue myText = LocalizeValue.empty();
 
   public DesktopSwtLabelImpl(LocalizeValue text) {

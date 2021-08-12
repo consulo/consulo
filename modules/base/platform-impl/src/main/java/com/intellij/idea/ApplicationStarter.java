@@ -19,8 +19,6 @@ import com.intellij.ide.StartupProgress;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.TransactionGuard;
 import com.intellij.openapi.application.ex.ApplicationEx;
-import com.intellij.openapi.util.Pair;
-import com.intellij.util.io.URLUtil;
 import consulo.application.TransactionGuardEx;
 import consulo.container.boot.ContainerPathManager;
 import consulo.container.classloader.PluginClassLoader;
@@ -36,6 +34,8 @@ import consulo.plugins.internal.PluginsLoader;
 import consulo.start.CommandLineArgs;
 import consulo.ui.image.IconLibraryManager;
 import consulo.ui.impl.image.BaseIconLibraryManager;
+import consulo.util.io.URLUtil;
+import consulo.util.lang.Pair;
 import consulo.util.lang.ref.SimpleReference;
 
 import javax.annotation.Nonnull;
@@ -48,14 +48,13 @@ public abstract class ApplicationStarter {
   private static final Logger LOG = Logger.getInstance(ApplicationStarter.class);
 
   private static ApplicationStarter ourInstance;
-  public volatile static boolean ourLoaded;
 
   public static ApplicationStarter getInstance() {
     return ourInstance;
   }
 
   public static boolean isLoaded() {
-    return ourLoaded;
+    return ApplicationStarterCore.isLoaded();
   }
 
   private final CommandLineArgs myArgs;
@@ -164,7 +163,7 @@ public abstract class ApplicationStarter {
         main(stat, appInitalizeMark, app, newConfigFolder, myArgs);
       }
 
-      ourLoaded = true;
+      ApplicationStarterCore.ourLoaded = true;
     }
     catch (Exception e) {
       throw new RuntimeException(e);

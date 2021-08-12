@@ -31,7 +31,7 @@ import java.util.List;
  * @author VISTALL
  * @since 10/07/2021
  */
-public class DesktopSwtTextBoxWithHistoryImpl extends DesktopSwtComponent<Text> implements TextBoxWithHistory {
+public class DesktopSwtTextBoxWithHistoryImpl extends SWTComponentDelegate<Text> implements TextBoxWithHistory {
   private final String myText;
 
   public DesktopSwtTextBoxWithHistoryImpl(String text) {

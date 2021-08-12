@@ -20,7 +20,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.DockLayout;
 import consulo.ui.layout.Layout;
 import consulo.ui.web.internal.TargetVaddin;
-import consulo.ui.web.internal.base.UIComponentWithVaadinComponent;
+import consulo.ui.web.internal.base.VaadinComponentDelegate;
 import consulo.ui.web.internal.base.VaadinComponentContainer;
 import consulo.ui.web.internal.border.WebBorderBuilder;
 import consulo.web.gwt.shared.ui.state.layout.DockLayoutState;
@@ -35,7 +35,7 @@ import java.util.Map;
  * @author VISTALL
  * @since 2019-02-17
  */
-public class WebDockLayoutImpl extends UIComponentWithVaadinComponent<WebDockLayoutImpl.Vaadin> implements DockLayout {
+public class WebDockLayoutImpl extends VaadinComponentDelegate<WebDockLayoutImpl.Vaadin> implements DockLayout {
   protected static class Vaadin extends VaadinComponentContainer {
     private final Map<DockLayoutState.Constraint, com.vaadin.ui.Component> myChildren = new LinkedHashMap<>();
 

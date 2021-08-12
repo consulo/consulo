@@ -256,6 +256,7 @@ final class TestEditorManagerImpl extends FileEditorManagerEx implements Disposa
         return false;
       }
 
+      @RequiredUIAccess
       @Override
       @Nonnull
       public FileEditor createEditor(@Nonnull Project project, @Nonnull VirtualFile file) {

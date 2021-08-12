@@ -127,7 +127,7 @@ public class CachingSoftWrapDataMapper implements SoftWrapAwareDocumentParsingLi
   }
 
   @Nullable
-  SoftWrapImpl getLastSoftWrap() {
+  public SoftWrapImpl getLastSoftWrap() {
     List<SoftWrapImpl> softWraps = myStorage.getSoftWraps();
     return softWraps.isEmpty() ? null : softWraps.get(softWraps.size() - 1);
   }

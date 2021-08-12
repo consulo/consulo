@@ -19,6 +19,7 @@ import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.AnSeparator;
 import com.intellij.openapi.actionSystem.ToggleAction;
+import com.intellij.openapi.application.ReadAction;
 import com.intellij.openapi.editor.*;
 import com.intellij.openapi.editor.ex.MarkupModelEx;
 import com.intellij.openapi.editor.ex.RangeHighlighterEx;
@@ -49,7 +50,6 @@ import consulo.logging.Logger;
 import consulo.ui.image.Image;
 import consulo.util.collection.primitive.ints.IntLists;
 import consulo.util.lang.DeprecatedMethodException;
-import gnu.trove.TIntArrayList;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -120,7 +120,7 @@ public class TrafficLightRenderer implements ErrorStripeRenderer, Disposable {
   }
 
   private PsiFile getPsiFile() {
-    return PsiDocumentManager.getInstance(myProject).getPsiFile(myDocument);
+    return ReadAction.compute(() -> PsiDocumentManager.getInstance(myProject).getPsiFile(myDocument));
   }
 
   @Nonnull

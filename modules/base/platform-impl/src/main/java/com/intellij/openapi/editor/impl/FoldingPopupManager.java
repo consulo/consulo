@@ -10,6 +10,8 @@ import com.intellij.openapi.editor.event.EditorMouseEventArea;
 import com.intellij.openapi.editor.event.EditorMouseListener;
 import com.intellij.openapi.editor.event.EditorMouseMotionListener;
 import com.intellij.openapi.editor.ex.EditorEx;
+import consulo.editor.impl.CodeEditorBase;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.dataholder.Key;
 import com.intellij.util.Alarm;
 import javax.annotation.Nonnull;
@@ -37,12 +39,13 @@ public class FoldingPopupManager implements EditorMouseListener, EditorMouseMoti
     editor.putUserData(DISABLED, null);
   }
 
-  FoldingPopupManager(DesktopEditorImpl editor) {
+  FoldingPopupManager(CodeEditorBase editor) {
     myAlarm = new Alarm(editor.getDisposable());
     editor.addEditorMouseListener(this);
     editor.addEditorMouseMotionListener(this);
   }
 
+  @RequiredUIAccess
   @Override
   public void mouseMoved(@Nonnull EditorMouseEvent e) {
     myAlarm.cancelAllRequests();
@@ -69,7 +72,7 @@ public class FoldingPopupManager implements EditorMouseListener, EditorMouseMoti
 
   @Nonnull
   private static DocumentFragment createDocumentFragment(@Nonnull FoldRegion fold) {
-    DesktopEditorImpl editor = (DesktopEditorImpl)fold.getEditor();
+    CodeEditorBase editor = (CodeEditorBase)fold.getEditor();
     Document document = editor.getDocument();
     FoldingGroup group = fold.getGroup();
     int startOffset = fold.getStartOffset();

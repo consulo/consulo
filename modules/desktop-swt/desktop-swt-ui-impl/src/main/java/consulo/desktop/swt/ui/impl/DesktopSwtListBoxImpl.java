@@ -30,7 +30,7 @@ import javax.annotation.Nullable;
  * @author VISTALL
  * @since 29/04/2021
  */
-public class DesktopSwtListBoxImpl<E> extends DesktopSwtComponent<List> implements ListBox<E> {
+public class DesktopSwtListBoxImpl<E> extends SWTComponentDelegate<List> implements ListBox<E> {
 
   private final ListModel<E> myModel;
 

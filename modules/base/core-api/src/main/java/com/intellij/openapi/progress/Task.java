@@ -17,17 +17,19 @@ package com.intellij.openapi.progress;
 
 import com.intellij.CommonBundle;
 import com.intellij.openapi.application.ApplicationManager;
-import consulo.logging.Logger;
+import com.intellij.openapi.application.EdtReplacementThread;
 import com.intellij.openapi.project.DumbModeAction;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.ExceptionUtil;
+import consulo.logging.Logger;
 import consulo.ui.annotation.RequiredUIAccess;
 import org.jetbrains.annotations.Nls;
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
+import javax.annotation.Nullable;
+import javax.swing.*;
 import java.util.function.Consumer;
 
 /**
@@ -50,14 +52,18 @@ public abstract class Task implements TaskInfo, Progressive {
   private static final Logger LOG = Logger.getInstance(Task.class);
 
   protected final Project myProject;
+  @Nullable
+  protected final JComponent myParentComponent;
+
   protected String myTitle;
   private final boolean myCanBeCancelled;
 
   private String myCancelText = CommonBundle.getCancelButtonText();
   private String myCancelTooltipText = CommonBundle.getCancelButtonText();
 
-  public Task(@Nullable Project project, @Nls(capitalization = Nls.Capitalization.Title) @Nonnull String title, boolean canBeCancelled) {
+  public Task(@Nullable Project project, @Nullable JComponent parentComponent, @Nls(capitalization = Nls.Capitalization.Title) @Nonnull String title, boolean canBeCancelled) {
     myProject = project;
+    myParentComponent = parentComponent;
     myTitle = title;
     myCanBeCancelled = canBeCancelled;
   }
@@ -117,6 +123,19 @@ public abstract class Task implements TaskInfo, Progressive {
 
   public final void queue() {
     ProgressManager.getInstance().run(this);
+  }
+
+  /**
+   * Specifies the thread to run callbacks on. See {@link EdtReplacementThread} documentation for more info.
+   */
+  @Nonnull
+  public EdtReplacementThread whereToRunCallbacks() {
+    return EdtReplacementThread.EDT_WITH_IW;
+  }
+
+  @Nullable
+  public final JComponent getParentComponent() {
+    return myParentComponent;
   }
 
   @Override
@@ -192,16 +211,11 @@ public abstract class Task implements TaskInfo, Progressive {
 
   public abstract static class Backgroundable extends Task implements PerformInBackgroundOption {
 
-    public static void queue(@Nullable Project project,
-                             @Nls(capitalization = Nls.Capitalization.Title) @Nonnull String title,
-                             @Nonnull Consumer<ProgressIndicator> consumer) {
+    public static void queue(@Nullable Project project, @Nls(capitalization = Nls.Capitalization.Title) @Nonnull String title, @Nonnull Consumer<ProgressIndicator> consumer) {
       queue(project, title, true, consumer);
     }
 
-    public static void queue(@Nullable Project project,
-                             @Nls(capitalization = Nls.Capitalization.Title) @Nonnull String title,
-                             boolean canBeCancelled,
-                             @Nonnull Consumer<ProgressIndicator> consumer) {
+    public static void queue(@Nullable Project project, @Nls(capitalization = Nls.Capitalization.Title) @Nonnull String title, boolean canBeCancelled, @Nonnull Consumer<ProgressIndicator> consumer) {
       queue(project, title, canBeCancelled, null, consumer);
     }
 
@@ -252,7 +266,7 @@ public abstract class Task implements TaskInfo, Progressive {
                           @Nls(capitalization = Nls.Capitalization.Title) @Nonnull String title,
                           boolean canBeCancelled,
                           @Nullable PerformInBackgroundOption backgroundOption) {
-      super(project, title, canBeCancelled);
+      super(project, null, title, canBeCancelled);
       myBackgroundOption = backgroundOption;
       if (StringUtil.isEmptyOrSpaces(title)) {
         LOG.warn("Empty title for backgroundable task.", new Throwable());
@@ -292,9 +306,12 @@ public abstract class Task implements TaskInfo, Progressive {
 
   public abstract static class Modal extends Task {
     public Modal(@Nullable Project project, @Nls(capitalization = Nls.Capitalization.Title) @Nonnull String title, boolean canBeCancelled) {
-      super(project, title, canBeCancelled);
+      super(project, null, title, canBeCancelled);
     }
 
+    public Modal(@Nullable Project project, @Nls(capitalization = Nls.Capitalization.Title) @Nonnull String title, @Nullable JComponent parentComponent, boolean canBeCancelled) {
+      super(project, parentComponent, title, canBeCancelled);
+    }
 
     @Override
     public final boolean isModal() {
@@ -326,10 +343,7 @@ public abstract class Task implements TaskInfo, Progressive {
       this(notificationName, notificationTitle, notificationText, false);
     }
 
-    public NotificationInfo(@Nonnull final String notificationName,
-                            @Nonnull final String notificationTitle,
-                            @Nonnull final String notificationText,
-                            final boolean showWhenFocused) {
+    public NotificationInfo(@Nonnull final String notificationName, @Nonnull final String notificationTitle, @Nonnull final String notificationText, final boolean showWhenFocused) {
       myNotificationName = notificationName;
       myNotificationTitle = notificationTitle;
       myNotificationText = notificationText;

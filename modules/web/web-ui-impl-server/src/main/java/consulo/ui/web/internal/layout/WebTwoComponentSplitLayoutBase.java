@@ -19,7 +19,7 @@ import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.TwoComponentSplitLayout;
 import consulo.ui.web.internal.TargetVaddin;
-import consulo.ui.web.internal.base.UIComponentWithVaadinComponent;
+import consulo.ui.web.internal.base.VaadinComponentDelegate;
 
 import javax.annotation.Nonnull;
 
@@ -27,7 +27,7 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 2019-02-17
  */
-public abstract class WebTwoComponentSplitLayoutBase<V extends WebSplitLayoutVaadinBase<?>> extends UIComponentWithVaadinComponent<V> implements TwoComponentSplitLayout {
+public abstract class WebTwoComponentSplitLayoutBase<V extends WebSplitLayoutVaadinBase<?>> extends VaadinComponentDelegate<V> implements TwoComponentSplitLayout {
   @Override
   public void setProportion(int percent) {
     getVaadinComponent().setProportion(percent);

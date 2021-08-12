@@ -20,7 +20,7 @@ import consulo.ui.Label;
 import consulo.ui.LabelOptions;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
-import consulo.ui.web.internal.base.UIComponentWithVaadinComponent;
+import consulo.ui.web.internal.base.VaadinComponentDelegate;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -29,7 +29,7 @@ import javax.annotation.Nullable;
  * @author VISTALL
  * @since 2019-02-19
  */
-public abstract class WebLabelBase<V extends VaadinLabelComponentBase> extends UIComponentWithVaadinComponent<V> implements Label {
+public abstract class WebLabelBase<V extends VaadinLabelComponentBase> extends VaadinComponentDelegate<V> implements Label {
   public WebLabelBase(LocalizeValue text, LabelOptions options) {
     setText(text);
     getVaadinComponent().setHorizontalAlignment(options.getHorizontalAlignment());

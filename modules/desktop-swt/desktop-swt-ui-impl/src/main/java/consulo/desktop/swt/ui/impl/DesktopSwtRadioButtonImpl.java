@@ -27,7 +27,7 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 29/04/2021
  */
-public class DesktopSwtRadioButtonImpl extends DesktopSwtComponent<Button> implements RadioButton {
+public class DesktopSwtRadioButtonImpl extends SWTComponentDelegate<Button> implements RadioButton {
   private String myText;
   private boolean mySelected;
 

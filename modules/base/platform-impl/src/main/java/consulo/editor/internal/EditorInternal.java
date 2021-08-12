@@ -15,6 +15,8 @@
  */
 package consulo.editor.internal;
 
+import com.intellij.openapi.editor.EditorDropHandler;
+import com.intellij.openapi.editor.VisualPosition;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.editor.markup.RangeHighlighter;
 import com.intellij.openapi.util.Condition;
@@ -39,6 +41,17 @@ public interface EditorInternal extends EditorEx {
 
   void release();
 
+  default int offsetToVisualLine(int offset) {
+    return offsetToVisualLine(offset, false);
+  }
+
+  int offsetToVisualLine(int offset, boolean beforeSoftWrap);
+
+  int visualLineStartOffset(int visualLine);
+
+  default void validateSize() {
+  }
+
   @Nonnull
   Disposable getDisposable();
 
@@ -56,7 +69,30 @@ public interface EditorInternal extends EditorEx {
 
   void stopDumbLater();
 
+  default void reinitViewSettings() {
+    reinitSettings();
+  }
+
   default int getVisibleLineCount() {
     return getDocument().getLineCount();
+  }
+
+  default boolean isInDistractionFreeMode() {
+    return false;
+  }
+
+  default void updateCaretCursor() {
+  }
+
+  default boolean isRtlLocation(@Nonnull VisualPosition visualPosition) {
+    return false;
+  }
+
+  default boolean isAtBidiRunBoundary(@Nonnull VisualPosition visualPosition) {
+    return false;
+  }
+
+  default void setDropHandler(@Nonnull EditorDropHandler dropHandler) {
+
   }
 }

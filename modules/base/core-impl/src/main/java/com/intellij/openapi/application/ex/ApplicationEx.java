@@ -20,8 +20,9 @@ import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-
+import org.jetbrains.annotations.Nls;
 import javax.annotation.Nonnull;
+
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.io.IOException;
@@ -83,20 +84,10 @@ public interface ApplicationEx extends Application {
   /**
    * Runs modal process. For internal use only, see {@link Task}
    */
-  @RequiredUIAccess
-  default boolean runProcessWithProgressSynchronously(@Nonnull Runnable process, @Nonnull String progressTitle, boolean canBeCanceled, Project project) {
-    return runProcessWithProgressSynchronously(process, progressTitle, canBeCanceled, project, null);
-  }
-
-  /**
-   * Runs modal process. For internal use only, see {@link Task}
-   */
-  @RequiredUIAccess
   default boolean runProcessWithProgressSynchronously(@Nonnull Runnable process, @Nonnull String progressTitle, boolean canBeCanceled, @Nullable Project project, JComponent parentComponent) {
-    return runProcessWithProgressSynchronously(process, progressTitle, canBeCanceled, project, parentComponent, null);
+    return runProcessWithProgressSynchronously(process, progressTitle, canBeCanceled, true, project, null, null);
   }
 
-  @RequiredUIAccess
   default void executeSuspendingWriteAction(@Nullable Project project, @Nonnull String title, @Nonnull Runnable runnable) {
     runnable.run();
   }
@@ -104,13 +95,21 @@ public interface ApplicationEx extends Application {
   /**
    * Runs modal process. For internal use only, see {@link Task}
    */
-  @RequiredUIAccess
+  default boolean runProcessWithProgressSynchronously(@Nonnull Runnable process, @Nonnull String progressTitle, boolean canBeCanceled, Project project) {
+    return runProcessWithProgressSynchronously(process, progressTitle, canBeCanceled, true, project, null, null);
+  }
+
+  /**
+   * Runs modal or non-modal process.
+   * For internal use only, see {@link Task}
+   */
   boolean runProcessWithProgressSynchronously(@Nonnull Runnable process,
                                               @Nonnull String progressTitle,
                                               boolean canBeCanceled,
+                                              boolean shouldShowModalWindow,
                                               @Nullable Project project,
-                                              JComponent parentComponent,
-                                              final String cancelText);
+                                              @Nullable JComponent parentComponent,
+                                              @Nullable @Nls(capitalization = Nls.Capitalization.Title) String cancelText);
 
   @RequiredUIAccess
   void assertIsDispatchThread(@Nullable JComponent component);

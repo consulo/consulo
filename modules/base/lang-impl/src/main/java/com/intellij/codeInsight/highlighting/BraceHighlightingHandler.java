@@ -181,7 +181,7 @@ public class BraceHighlightingHandler {
 
   private static boolean isValidEditor(@Nonnull Editor editor) {
     Project editorProject = editor.getProject();
-    return editorProject != null && !editorProject.isDisposed() && !editor.isDisposed() && editor.getComponent().isShowing() && !editor.isViewer();
+    return editorProject != null && !editorProject.isDisposed() && !editor.isDisposed() && editor.isShowing() && !editor.isViewer();
   }
 
   @Nonnull

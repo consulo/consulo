@@ -15,11 +15,13 @@
  */
 package consulo.web.gwt.client.ui;
 
+import com.google.gwt.core.client.Scheduler;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.AbstractComponentConnector;
 import com.vaadin.shared.ui.Connect;
 import consulo.web.gwt.client.ui.image.ImageConverter;
 import consulo.web.gwt.shared.ui.state.image.MultiImageState;
+import consulo.web.gwt.shared.ui.state.menu.MenuItemRpc;
 import consulo.web.gwt.shared.ui.state.menu.MenuItemState;
 
 import javax.annotation.Nonnull;
@@ -29,12 +31,13 @@ import javax.annotation.Nonnull;
  * @since 12-Sep-17
  */
 @Connect(canonicalName = "consulo.ui.web.internal.WebMenuItemImpl.Vaadin")
-public class GwtMenuItemImplConnector extends AbstractComponentConnector {
+public class GwtMenuItemImplConnector extends AbstractComponentConnector implements Scheduler.ScheduledCommand {
   @Override
   public void onStateChanged(StateChangeEvent stateChangeEvent) {
     super.onStateChanged(stateChangeEvent);
 
     getWidget().getItem().setHTML(createTextLayout(getState().caption, getState().myImageState).getElement().getString());
+    getWidget().getItem().setScheduledCommand(this);
   }
 
   @Override
@@ -60,5 +63,10 @@ public class GwtMenuItemImplConnector extends AbstractComponentConnector {
     label.setText(text);
     layout.add(label);
     return layout;
+  }
+
+  @Override
+  public void execute() {
+    getRpcProxy(MenuItemRpc.class).onClick();
   }
 }

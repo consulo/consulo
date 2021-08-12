@@ -21,7 +21,10 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.border.BorderPosition;
 import consulo.ui.border.BorderStyle;
 import consulo.ui.color.ColorValue;
+import consulo.ui.cursor.Cursor;
+import consulo.ui.event.AttachListener;
 import consulo.ui.event.ClickListener;
+import consulo.ui.event.DetachListener;
 import consulo.ui.event.KeyListener;
 import consulo.ui.font.Font;
 import consulo.ui.style.ComponentColors;
@@ -147,18 +150,34 @@ public interface Component extends Disposable, UserDataHolder {
 
   @Nullable
   default ColorValue getForegroundColor() {
-    throw new IllegalArgumentException("Not supported");
+    throw new AbstractMethodError("not supported");
   }
 
   default void setForegroundColor(@Nullable ColorValue foreground) {
-    throw new IllegalArgumentException("Not supported");
+    throw new AbstractMethodError("not supported");
   }
 
+  @Nonnull
   default Component withForegroundColor(@Nullable ColorValue foreground) {
     setForegroundColor(foreground);
     return this;
   }
 
+  @Nullable
+  default Cursor getCursor() {
+    throw new AbstractMethodError("not supported");
+  }
+
+  default void setCursor(@Nullable Cursor cursor) {
+    throw new AbstractMethodError("not supported");
+  }
+
+  @Nonnull
+  default Component withCursor(@Nullable Cursor cursor) {
+    setCursor(cursor);
+    return this;
+  }
+  
   /**
    * @return runner for unregister listener
    */
@@ -168,10 +187,22 @@ public interface Component extends Disposable, UserDataHolder {
   @Nonnull
   <T extends EventListener> T getListenerDispatcher(@Nonnull Class<T> eventClass);
 
+  @Nonnull
   default Disposable addKeyListener(@Nonnull KeyListener keyListener) {
     return addListener(KeyListener.class, keyListener);
   }
 
+  @Nonnull
+  default Disposable addAttachListener(@Nonnull AttachListener attachListener) {
+    return addListener(AttachListener.class, attachListener);
+  }
+
+  @Nonnull
+  default Disposable addDetachListener(@Nonnull DetachListener detachListener) {
+    return addListener(DetachListener.class, detachListener);
+  }
+
+  @Nonnull
   default Disposable addClickListener(@RequiredUIAccess @Nonnull ClickListener clickListener) {
     return addListener(ClickListener.class, clickListener);
   }

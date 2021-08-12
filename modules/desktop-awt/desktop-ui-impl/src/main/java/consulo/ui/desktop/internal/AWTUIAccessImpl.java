@@ -46,6 +46,13 @@ public class AWTUIAccessImpl implements UIAccess {
     return GraphicsEnvironment.isHeadless();
   }
 
+  @RequiredUIAccess
+  @Override
+  public int getEventCount() {
+    UIAccess.assertIsUIThread();
+    return IdeEventQueue.getInstance().getEventCount();
+  }
+
   @Nonnull
   @Override
   public <T> AsyncResult<T> give(@Nonnull Supplier<T> supplier) {
@@ -72,12 +79,5 @@ public class AWTUIAccessImpl implements UIAccess {
     catch (InterruptedException | InvocationTargetException e) {
       //
     }
-  }
-
-  @RequiredUIAccess
-  @Override
-  public int getEventCount() {
-    UIAccess.assertIsUIThread();
-    return IdeEventQueue.getInstance().getEventCount();
   }
 }

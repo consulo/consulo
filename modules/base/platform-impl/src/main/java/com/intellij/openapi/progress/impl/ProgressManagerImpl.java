@@ -80,9 +80,9 @@ public class ProgressManagerImpl extends CoreProgressManager implements Disposab
   }
 
   @Override
-  public boolean runProcessWithProgressSynchronously(@Nonnull final Task task, @Nullable final JComponent parentComponent) {
+  public boolean runProcessWithProgressSynchronously(@Nonnull final Task task) {
     final long start = System.currentTimeMillis();
-    final boolean result = super.runProcessWithProgressSynchronously(task, parentComponent);
+    final boolean result = super.runProcessWithProgressSynchronously(task);
     if (result) {
       final long end = System.currentTimeMillis();
       final Task.NotificationInfo notificationInfo = task.notifyFinished();

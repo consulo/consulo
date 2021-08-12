@@ -30,6 +30,8 @@ import com.intellij.ui.docking.DockManager;
 import com.intellij.ui.docking.DockableContent;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.disposer.Disposer;
+import consulo.ui.Component;
+import consulo.ui.util.TraverseUtil;
 import org.jdom.Element;
 
 import javax.annotation.Nonnull;
@@ -72,6 +74,29 @@ public abstract class BaseDockManager extends DockManager implements PersistentS
     Disposer.register(factory, () -> myFactories.remove(id));
 
     readStateFor(id);
+  }
+
+  @Nullable
+  @Override
+  public DockContainer getContainerFor(Component c) {
+    if (c == null) return null;
+
+    for (DockContainer eachContainer : myContainers) {
+      if (TraverseUtil.isDescendingFrom(c, eachContainer.getUIContainerComponent())) {
+        return eachContainer;
+      }
+    }
+
+    Component parent = TraverseUtil.findUltimateParent(c);
+    if (parent == null) return null;
+
+    for (DockContainer eachContainer : myContainers) {
+      if (parent == TraverseUtil.findUltimateParent(eachContainer.getUIContainerComponent())) {
+        return eachContainer;
+      }
+    }
+
+    return null;
   }
 
   public void readState() {

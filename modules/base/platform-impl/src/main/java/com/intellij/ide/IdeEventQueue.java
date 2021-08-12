@@ -21,6 +21,7 @@ import com.intellij.ide.plugins.PluginManager;
 import com.intellij.ide.ui.UISettings;
 import com.intellij.idea.ApplicationStarter;
 import com.intellij.openapi.application.*;
+import com.intellij.openapi.application.impl.InvocationUtil;
 import com.intellij.openapi.application.impl.LaterInvocator;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.diagnostic.FrequentEventDetector;
@@ -38,14 +39,13 @@ import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.openapi.wm.WindowManager;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
 import com.intellij.openapi.wm.impl.FocusManagerImpl;
-import com.intellij.ui.mac.touchbar.TouchBarsManager;
 import com.intellij.util.Alarm;
 import com.intellij.util.ReflectionUtil;
 import com.intellij.util.containers.ContainerUtil;
-import java.util.HashMap;
 import com.intellij.util.ui.EDT;
 import com.intellij.util.ui.UIUtil;
 import consulo.application.TransactionGuardEx;
+import consulo.application.internal.ApplicationWithIntentWriteLock;
 import consulo.awt.TargetAWT;
 import consulo.awt.hacking.PostEventQueueHacking;
 import consulo.disposer.Disposable;
@@ -61,14 +61,17 @@ import javax.swing.plaf.basic.ComboPopup;
 import java.awt.*;
 import java.awt.event.*;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Queue;
 import java.util.*;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 
 import static java.awt.event.MouseEvent.MOUSE_MOVED;
 import static java.awt.event.MouseEvent.MOUSE_PRESSED;
@@ -81,6 +84,10 @@ public class IdeEventQueue extends EventQueue {
   private static final Logger LOG = Logger.getInstance(IdeEventQueue.class);
 
   private static final Logger FOCUS_AWARE_RUNNABLES_LOG = Logger.getInstance(IdeEventQueue.class.getName() + ".runnables");
+
+  private static final Set<Class<? extends Runnable>> ourRunnablesWoWrite = Set.of(InvocationUtil.REPAINT_PROCESSING_CLASS);
+  private static final Set<Class<? extends Runnable>> ourRunnablesWithWrite = Set.of(InvocationUtil.FLUSH_NOW_CLASS);
+  private static final boolean ourDefaultEventWithWrite = true;
 
   private static TransactionGuardEx ourTransactionGuard;
   private static ProgressManager ourProgressManager;
@@ -111,7 +118,10 @@ public class IdeEventQueue extends EventQueue {
   final AtomicInteger myKeyboardEventsPosted = new AtomicInteger();
   final AtomicInteger myKeyboardEventsDispatched = new AtomicInteger();
   private boolean myIsInInputEvent;
-  private AWTEvent myCurrentEvent;
+  private AWTEvent myCurrentEvent = new InvocationEvent(this, EmptyRunnable.getInstance());
+  @Nullable
+  private AWTEvent myCurrentSequencedEvent;
+
   private long myLastActiveTime;
   private long myLastEventTime = System.currentTimeMillis();
   private WindowManagerEx myWindowManager;
@@ -356,6 +366,11 @@ public class IdeEventQueue extends EventQueue {
 
   @Override
   public void dispatchEvent(@Nonnull AWTEvent e) {
+    // DO NOT ADD ANYTHING BEFORE fixNestedSequenceEvent is called
+
+    fixNestedSequenceEvent(e);
+    // Add code below if you need
+
     // Update EDT if it changes (might happen after Application disposal)
     EDT.updateEdt();
 
@@ -387,55 +402,107 @@ public class IdeEventQueue extends EventQueue {
     AWTEvent oldEvent = myCurrentEvent;
     myCurrentEvent = e;
 
-    try (AccessToken ignored = startActivity(e)) {
-      ProgressManager progressManager = obtainProgressManager();
-      if (progressManager != null) {
-        progressManager.computePrioritized(() -> {
+    AWTEvent finalE1 = e;
+    Runnable runnable = InvocationUtil.extractRunnable(e);
+    Class<? extends Runnable> runnableClass = runnable != null ? runnable.getClass() : Runnable.class;
+    Runnable processEventRunnable = () -> {
+      Application application = ApplicationManager.getApplication();
+      ProgressManager progressManager = application != null && !application.isDisposed() ? ProgressManager.getInstance() : null;
+
+      try (AccessToken ignored = startActivity(finalE1)) {
+        if (progressManager != null) {
+          progressManager.computePrioritized(() -> {
+            _dispatchEvent(myCurrentEvent);
+            return null;
+          });
+        }
+        else {
           _dispatchEvent(myCurrentEvent);
-          return null;
-        });
-      }
-      else {
-        _dispatchEvent(myCurrentEvent);
-      }
-    }
-    catch (Throwable t) {
-      processException(t);
-    }
-    finally {
-      myIsInInputEvent = wasInputEvent;
-      myCurrentEvent = oldEvent;
-
-      for (EventDispatcher each : myPostProcessors) {
-        each.dispatch(e);
-      }
-
-      if (e instanceof KeyEvent) {
-        maybeReady();
-      }
-    }
-
-    if (isFocusEvent(e)) {
-      TouchBarsManager.onFocusEvent(e);
-
-      if (FOCUS_AWARE_RUNNABLES_LOG.isDebugEnabled()) {
-        FOCUS_AWARE_RUNNABLES_LOG.debug("Focus event list (execute on focus event): " + runnablesWaitingForFocusChangeState());
-      }
-      List<AWTEvent> events = new ArrayList<>();
-      while (!focusEventsList.isEmpty()) {
-        AWTEvent f = focusEventsList.poll();
-        events.add(f);
-        if (f.equals(e)) break;
-      }
-      events.stream().map(entry -> myRunnablesWaitingFocusChange.remove(entry)).filter(lor -> lor != null).flatMap(listOfRunnables -> listOfRunnables.stream()).filter(r -> r != null)
-              .filter(r -> !(r instanceof ExpirableRunnable && ((ExpirableRunnable)r).isExpired())).forEach(runnable -> {
-        try {
-          runnable.run();
         }
-        catch (Exception ex) {
-          LOG.error(ex);
+      }
+      catch (Throwable t) {
+        processException(t);
+      }
+      finally {
+        myIsInInputEvent = wasInputEvent;
+        myCurrentEvent = oldEvent;
+
+        if (myCurrentSequencedEvent == finalE1) {
+          myCurrentSequencedEvent = null;
         }
-      });
+
+        for (EventDispatcher each : myPostProcessors) {
+          each.dispatch(finalE1);
+        }
+
+        if (finalE1 instanceof KeyEvent) {
+          maybeReady();
+        }
+        //if (eventWatcher != null && runnableClass != InvocationUtil.FLUSH_NOW_CLASS) {
+        //  eventWatcher.logTimeMillis(runnableClass != Runnable.class ? runnableClass.getName() : finalE1.toString(), startedAt, runnableClass);
+        //}
+      }
+
+      if (isFocusEvent(finalE1)) {
+        onFocusEvent(finalE1);
+      }
+    };
+
+    if (runnableClass != Runnable.class) {
+      if (ourRunnablesWoWrite.contains(runnableClass)) {
+        processEventRunnable.run();
+        return;
+      }
+      if (ourRunnablesWithWrite.contains(runnableClass)) {
+        ((ApplicationWithIntentWriteLock)Application.get()).runIntendedWriteActionOnCurrentThread(processEventRunnable);
+        return;
+      }
+    }
+
+    if (ourDefaultEventWithWrite) {
+      ((ApplicationWithIntentWriteLock)Application.get()).runIntendedWriteActionOnCurrentThread(processEventRunnable);
+    }
+    else {
+      processEventRunnable.run();
+    }
+  }
+
+  // Fixes IDEA-218430: nested sequence events cause deadlock
+  private void fixNestedSequenceEvent(@Nonnull AWTEvent e) {
+    if (e.getClass() == SequencedEventNestedFieldHolder.SEQUENCED_EVENT_CLASS) {
+      if (myCurrentSequencedEvent != null) {
+        AWTEvent sequenceEventToDispose = myCurrentSequencedEvent;
+        myCurrentSequencedEvent = null; // Set to null BEFORE dispose b/c `dispose` can dispatch events internally
+        SequencedEventNestedFieldHolder.invokeDispose(sequenceEventToDispose);
+      }
+      myCurrentSequencedEvent = e;
+    }
+  }
+
+  private static final class SequencedEventNestedFieldHolder {
+    private static final Field NESTED_FIELD;
+    private static final Method DISPOSE_METHOD;
+    private static final Class<?> SEQUENCED_EVENT_CLASS;
+
+    private static void invokeDispose(AWTEvent event) {
+      try {
+        DISPOSE_METHOD.invoke(event);
+      }
+      catch (IllegalAccessException | InvocationTargetException e) {
+        throw new RuntimeException(e);
+      }
+    }
+
+    static {
+      try {
+        SEQUENCED_EVENT_CLASS = Class.forName("java.awt.SequencedEvent");
+        NESTED_FIELD = ReflectionUtil.getDeclaredField(SEQUENCED_EVENT_CLASS, "nested");
+        DISPOSE_METHOD = ReflectionUtil.getDeclaredMethod(SEQUENCED_EVENT_CLASS, "dispose");
+        if (NESTED_FIELD == null) throw new RuntimeException();
+      }
+      catch (ClassNotFoundException e) {
+        throw new RuntimeException(e);
+      }
     }
   }
 
@@ -468,7 +535,8 @@ public class IdeEventQueue extends EventQueue {
   @Override
   @Nonnull
   public AWTEvent getNextEvent() throws InterruptedException {
-    AWTEvent event = super.getNextEvent();
+    AWTEvent event = appIsLoaded() ? ((ApplicationWithIntentWriteLock)Application.get()).runUnlockingIntendedWrite(() -> super.getNextEvent()) : super.getNextEvent();
+
     if (isKeyboardEvent(event) && myKeyboardEventsDispatched.incrementAndGet() > myKeyboardEventsPosted.get()) {
       throw new RuntimeException(event + "; posted: " + myKeyboardEventsPosted + "; dispatched: " + myKeyboardEventsDispatched);
     }
@@ -848,44 +916,50 @@ public class IdeEventQueue extends EventQueue {
     }
   }
 
-  public void pumpEventsForHierarchy(Component modalComponent, @Nonnull Condition<AWTEvent> exitCondition) {
+  public void pumpEventsForHierarchy(@Nonnull Component modalComponent, @Nonnull Future<?> exitCondition, @Nonnull Predicate<? super AWTEvent> isCancelEvent) {
+    assert EventQueue.isDispatchThread();
     if (LOG.isDebugEnabled()) {
       LOG.debug("pumpEventsForHierarchy(" + modalComponent + ", " + exitCondition + ")");
     }
-    AWTEvent event;
-    do {
+    while (!exitCondition.isDone()) {
       try {
-        event = getNextEvent();
-        boolean eventOk = true;
-        if (event instanceof InputEvent) {
-          final Object s = event.getSource();
-          if (s instanceof Component) {
-            Component c = (Component)s;
-            Window modalWindow = modalComponent == null ? null : SwingUtilities.windowForComponent(modalComponent);
-            while (c != null && c != modalWindow) c = c.getParent();
-            if (c == null) {
-              eventOk = false;
-              if (LOG.isDebugEnabled()) {
-                LOG.debug("pumpEventsForHierarchy.consumed: " + event);
-              }
-              ((InputEvent)event).consume();
-            }
-          }
-        }
-
-        if (eventOk) {
+        AWTEvent event = getNextEvent();
+        boolean consumed = consumeUnrelatedEvent(modalComponent, event);
+        if (!consumed) {
           dispatchEvent(event);
+        }
+        if (isCancelEvent.test(event)) {
+          break;
         }
       }
       catch (Throwable e) {
         LOG.error(e);
-        event = null;
       }
     }
-    while (!exitCondition.value(event));
     if (LOG.isDebugEnabled()) {
       LOG.debug("pumpEventsForHierarchy.exit(" + modalComponent + ", " + exitCondition + ")");
     }
+  }
+
+  // return true if consumed
+  private static boolean consumeUnrelatedEvent(@Nonnull Component modalComponent, @Nonnull AWTEvent event) {
+    boolean consumed = false;
+    if (event instanceof InputEvent) {
+      Object s = event.getSource();
+      if (s instanceof Component) {
+        Component c = (Component)s;
+        Window modalWindow = SwingUtilities.windowForComponent(modalComponent);
+        while (c != null && c != modalWindow) c = c.getParent();
+        if (c == null) {
+          consumed = true;
+          if (LOG.isDebugEnabled()) {
+            LOG.debug("pumpEventsForHierarchy.consumed: " + event);
+          }
+          ((InputEvent)event).consume();
+        }
+      }
+    }
+    return consumed;
   }
 
   @FunctionalInterface
@@ -1071,6 +1145,38 @@ public class IdeEventQueue extends EventQueue {
 
   public boolean isInputMethodEnabled() {
     return !SystemInfo.isMac || myInputMethodLock == 0;
+  }
+
+  private void onFocusEvent(@Nonnull AWTEvent event) {
+    if (FOCUS_AWARE_RUNNABLES_LOG.isDebugEnabled()) {
+      FOCUS_AWARE_RUNNABLES_LOG.debug("Focus event list (execute on focus event): " + runnablesWaitingForFocusChangeState());
+    }
+    List<AWTEvent> events = new ArrayList<>();
+    while (!focusEventsList.isEmpty()) {
+      AWTEvent f = focusEventsList.poll();
+      events.add(f);
+      if (f.equals(event)) {
+        break;
+      }
+    }
+
+    for (AWTEvent entry : events) {
+      List<Runnable> runnables = myRunnablesWaitingFocusChange.remove(entry);
+      if (runnables == null) {
+        continue;
+      }
+
+      for (Runnable r : runnables) {
+        if (r != null && !(r instanceof ExpirableRunnable && ((ExpirableRunnable)r).isExpired())) {
+          try {
+            r.run();
+          }
+          catch (Throwable e) {
+            processException(e);
+          }
+        }
+      }
+    }
   }
 
   public void disableInputMethods(@Nonnull Disposable parentDisposable) {

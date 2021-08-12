@@ -3,6 +3,7 @@ package com.intellij.openapi.application.impl;
 
 import com.intellij.openapi.application.*;
 import jakarta.inject.Singleton;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 
@@ -35,7 +36,13 @@ public class AsyncExecutionServiceImpl extends AsyncExecutionService {
   @Nonnull
   @Override
   protected AppUIExecutor createUIExecutor(@Nonnull ModalityState modalityState) {
-    return new AppUIExecutorImpl(modalityState);
+    return new AppUIExecutorImpl(modalityState, ExecutionThread.EDT);
+  }
+
+  @NotNull
+  @Override
+  protected AppUIExecutor createWriteThreadExecutor(@NotNull ModalityState modalityState) {
+    return new AppUIExecutorImpl(modalityState, ExecutionThread.WT);
   }
 
   @Nonnull

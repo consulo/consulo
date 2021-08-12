@@ -62,6 +62,10 @@ public interface Editor extends UserDataHolder {
    */
   boolean isViewer();
 
+  default boolean isShowing() {
+    return getComponent().isShowing();
+  }
+
   /**
    * Returns the component for the entire editor including the scrollbars, error stripe, gutter
    * and other decorations. The component can be used, for example, for converting logical to

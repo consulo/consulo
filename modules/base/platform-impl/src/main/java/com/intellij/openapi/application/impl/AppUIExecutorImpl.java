@@ -15,14 +15,13 @@
  */
 package com.intellij.openapi.application.impl;
 
-import com.intellij.ide.IdeEventQueue;
 import com.intellij.openapi.application.*;
 import com.intellij.openapi.application.constraints.Expiration;
 import com.intellij.openapi.project.Project;
 import consulo.disposer.Disposable;
+import consulo.ui.UIAccess;
 
 import javax.annotation.Nonnull;
-
 import java.util.Collections;
 import java.util.Set;
 import java.util.concurrent.Executor;
@@ -32,64 +31,104 @@ import java.util.function.BooleanSupplier;
  * from kotlin
  */
 public class AppUIExecutorImpl extends BaseExpirableExecutorMixinImpl<AppUIExecutorImpl> implements AppUIExecutor {
-  private static class MyExecutor implements Executor {
-    private final ModalityState myModalityState;
+  private static class MyEdtExecutor implements Executor {
+    private final ModalityState modality;
 
-    private MyExecutor(ModalityState modalityState) {
-      myModalityState = modalityState;
+    private MyEdtExecutor(ModalityState modalityState) {
+      modality = modalityState;
     }
 
     @Override
     public void execute(@Nonnull Runnable command) {
       Application application = Application.get();
-      if (application.isDispatchThread() && !ModalityState.current().dominates(myModalityState)) {
+      if (application.isDispatchThread() && !ModalityState.current().dominates(modality)) {
         command.run();
       }
       else {
-        application.invokeLater(command, myModalityState);
+        application.invokeLater(command, modality);
       }
     }
   }
 
-  private final ModalityState modality;
+  private static class MyWtExecutor implements Executor {
+    private final ModalityState modality;
 
-  public AppUIExecutorImpl(ModalityState modalityState) {
-    super(new ContextConstraint[0], new BooleanSupplier[0], Collections.emptySet(), new MyExecutor(modalityState));
-    modality = modalityState;
+    private MyWtExecutor(ModalityState modalityState) {
+      modality = modalityState;
+    }
+
+    @Override
+    public void execute(@Nonnull Runnable command) {
+      Application application = Application.get();
+      if (application.isWriteThread() && !ModalityState.current().dominates(modality)) {
+        command.run();
+      }
+      else {
+        application.invokeLaterOnWriteThread(command, modality);
+      }
+    }
   }
 
-  public AppUIExecutorImpl(ModalityState modalityState, ContextConstraint[] constraints, BooleanSupplier[] cancellationConditions, Set<? extends Expiration> expirableHandles) {
-    super(constraints, cancellationConditions, expirableHandles, new MyExecutor(modalityState));
+  private static Executor getExecutorForThread(ExecutionThread thread, ModalityState modality) {
+    switch (thread) {
+      case EDT:
+        return new MyEdtExecutor(modality);
+      case WT:
+        return new MyWtExecutor(modality);
+      default:
+        throw new UnsupportedOperationException(thread.name());
+    }
+  }
+
+  private final ModalityState modality;
+  private final ExecutionThread thread;
+
+  public AppUIExecutorImpl(ModalityState modalityState, ExecutionThread thread) {
+    super(new ContextConstraint[0], new BooleanSupplier[0], Collections.emptySet(), getExecutorForThread(thread, modalityState));
     modality = modalityState;
+    this.thread = thread;
+  }
+
+  public AppUIExecutorImpl(ModalityState modalityState, ExecutionThread thread, ContextConstraint[] constraints, BooleanSupplier[] cancellationConditions, Set<? extends Expiration> expirableHandles) {
+    super(constraints, cancellationConditions, expirableHandles, getExecutorForThread(thread, modalityState));
+    this.thread = thread;
+    this.modality = modalityState;
   }
 
   @Nonnull
   @Override
   protected AppUIExecutorImpl cloneWith(ContextConstraint[] constraints, BooleanSupplier[] cancellationConditions, Set<? extends Expiration> expirationSet) {
-    return new AppUIExecutorImpl(modality, constraints, cancellationConditions, expirationSet);
+    return new AppUIExecutorImpl(modality, thread, constraints, cancellationConditions, expirationSet);
   }
 
   @Nonnull
   @Override
   public AppUIExecutor later() {
-    int edtEventCount = Application.get().isDispatchThread() ? IdeEventQueue.getInstance().getEventCount() : -1;
+    int edtEventCount = UIAccess.isUIThread() ? UIAccess.current().getEventCount() : -1;
     return withConstraint(new ContextConstraint() {
       private volatile boolean usedOnce;
 
       @Override
       public boolean isCorrectContext() {
-        if (edtEventCount == -1) {
-          return Application.get().isDispatchThread();
+        switch (thread) {
+          case EDT:
+            if (edtEventCount == -1) {
+              return UIAccess.isUIThread();
+            }
+            return usedOnce || edtEventCount != UIAccess.current().getEventCount();
+          case WT:
+            return usedOnce;
+          default:
+            throw new UnsupportedOperationException();
         }
-        return usedOnce || edtEventCount != IdeEventQueue.getInstance().getEventCount();
       }
 
       @Override
       public void schedule(Runnable runnable) {
-        Application.get().invokeLater(() -> {
+        dispatchLaterUnconstrained(() -> {
           usedOnce = true;
           runnable.run();
-        }, AppUIExecutorImpl.this.modality);
+        });
       }
 
       @Override
@@ -138,6 +177,13 @@ public class AppUIExecutorImpl extends BaseExpirableExecutorMixinImpl<AppUIExecu
 
   @Override
   public void dispatchLaterUnconstrained(Runnable runnable) {
-    ApplicationManager.getApplication().invokeLater(runnable, modality);
+    switch (thread) {
+      case EDT:
+        ApplicationManager.getApplication().invokeLater(runnable, modality);
+        break;
+      case WT:
+        ApplicationManager.getApplication().invokeLaterOnWriteThread(runnable, modality);
+        break;
+    }
   }
 }

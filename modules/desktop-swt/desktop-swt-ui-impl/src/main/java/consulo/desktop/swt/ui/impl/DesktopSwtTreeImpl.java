@@ -30,7 +30,7 @@ import java.util.List;
  * @author VISTALL
  * @since 29/04/2021
  */
-public class DesktopSwtTreeImpl<E> extends DesktopSwtComponent<org.eclipse.swt.widgets.Tree> implements Tree<E> {
+public class DesktopSwtTreeImpl<E> extends SWTComponentDelegate<org.eclipse.swt.widgets.Tree> implements Tree<E> {
   private final E myRootValue;
   private final TreeModel<E> myModel;
 

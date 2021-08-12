@@ -88,6 +88,11 @@ public class WebIdeRootView {
       }
       else {
         MenuItem menu = MenuItem.create(presentation.getText());
+        menu.addClickListener(event -> {
+          DataContext dataContext = DataManager.getInstance().getDataContext();
+
+          action.actionPerformed(AnActionEvent.createFromDataContext("Test", presentation, dataContext));
+        });
         menu.setIcon(presentation.getIcon());
         actionAdded.accept(menu);
       }

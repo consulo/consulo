@@ -57,4 +57,6 @@ public interface TabbedLayout extends Layout {
   @Nonnull
   @RequiredUIAccess
   Tab addTab(@Nonnull String tabName, @Nonnull Component component);
+
+  void removeTab(@Nonnull Tab tab);
 }

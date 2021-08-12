@@ -29,12 +29,12 @@ import com.intellij.openapi.editor.impl.TextDrawingCallback;
 import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Condition;
-import consulo.disposer.Disposable;
-import consulo.ui.color.ColorValue;
-import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.Consumer;
+import consulo.disposer.Disposable;
+import consulo.ui.color.ColorValue;
+import consulo.util.dataholder.Key;
 import kava.beans.PropertyChangeListener;
 import org.intellij.lang.annotations.MagicConstant;
 import org.jetbrains.annotations.NonNls;
@@ -128,7 +128,11 @@ public interface EditorEx extends Editor {
 
   DeleteProvider getDeleteProvider();
 
-  void repaint(int startOffset, int endOffset);
+  default void repaint(int startOffset, int endOffset) {
+    repaint(startOffset, endOffset, true);
+  }
+
+  void repaint(int startOffset, int endOffset, boolean invalidateTextLayout);
 
   void reinitSettings();
 

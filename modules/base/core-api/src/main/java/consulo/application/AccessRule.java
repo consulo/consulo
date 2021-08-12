@@ -15,19 +15,18 @@
  */
 package consulo.application;
 
+import com.intellij.openapi.application.AppUIExecutor;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.util.ThrowableComputable;
 import com.intellij.util.ThrowableRunnable;
 import com.intellij.util.concurrency.AppExecutorUtil;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.access.RequiredWriteAction;
-import consulo.application.internal.ApplicationWithIntentWriteLock;
 import consulo.logging.Logger;
 import consulo.util.concurrent.AsyncResult;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.concurrent.ExecutorService;
 
 /**
  * @author VISTALL
@@ -83,27 +82,17 @@ public final class AccessRule {
 
   @Nonnull
   public static <T> AsyncResult<T> writeAsync(@RequiredWriteAction @Nonnull ThrowableComputable<T, Throwable> action) {
-    ApplicationWithIntentWriteLock application = (ApplicationWithIntentWriteLock)Application.get();
-    ExecutorService service = AppExecutorUtil.getAppExecutorService();
     AsyncResult<T> result = AsyncResult.undefined();
-    service.execute(() -> {
-      application.acquireWriteIntentLock();
-
+    AppUIExecutor.onWriteThread().later().execute(() -> {
       try {
-        try {
-          result.setDone(application.runWriteActionNoIntentLock(action));
-        }
-        catch (Throwable throwable) {
-          LOG.error(throwable);
-
-          result.rejectWithThrowable(throwable);
-        }
+        result.setDone(action.compute());
       }
-      finally {
-        application.releaseWriteIntentLock();
+      catch (Throwable throwable) {
+        LOG.error(throwable);
+
+        result.rejectWithThrowable(throwable);
       }
     });
-
     return result;
   }
 }

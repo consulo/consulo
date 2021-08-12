@@ -110,6 +110,10 @@ public class DesktopEditorMarkupModelImpl extends MarkupModelImpl implements Edi
     myErrorPanel = new DesktopEditorErrorPanel(editor, myStatusPanel, this);
   }
 
+  public void updateUI() {
+    myStatusPanel.updateUI();
+  }
+
   @Override
   public int getMinMarkHeight() {
     return myMinMarkHeight;

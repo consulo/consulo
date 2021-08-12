@@ -20,7 +20,7 @@ import consulo.ui.Menu;
 import consulo.ui.MenuItem;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
-import consulo.ui.web.internal.base.UIComponentWithVaadinComponent;
+import consulo.ui.web.internal.base.VaadinComponentDelegate;
 import consulo.ui.web.internal.base.VaadinComponentContainer;
 import consulo.ui.web.servlet.WebImageMapper;
 import consulo.web.gwt.shared.ui.state.menu.MenuState;
@@ -35,7 +35,7 @@ import java.util.List;
  * @author VISTALL
  * @since 2019-02-19
  */
-public class WebMenuImpl extends UIComponentWithVaadinComponent<WebMenuImpl.Vaadin> implements Menu {
+public class WebMenuImpl extends VaadinComponentDelegate<WebMenuImpl.Vaadin> implements Menu {
   public static class Vaadin extends VaadinComponentContainer {
     private List<Component> myMenuItems = new ArrayList<>();
 

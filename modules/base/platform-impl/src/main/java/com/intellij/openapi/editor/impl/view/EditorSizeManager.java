@@ -20,7 +20,7 @@ import com.intellij.openapi.util.TextRange;
 import com.intellij.util.DocumentUtil;
 import consulo.util.collection.primitive.ints.IntList;
 import consulo.util.collection.primitive.ints.IntLists;
-import gnu.trove.TIntArrayList;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import org.jetbrains.annotations.TestOnly;
@@ -434,7 +434,7 @@ class EditorSizeManager implements PrioritizedDocumentListener, Disposable, Fold
   private boolean shouldUseLineWidthCache() {
     if (myView.getEditor().isPurePaintingMode()) return false;
 
-    FoldingModelImpl model = myView.getEditor().getFoldingModel();
+    DesktopFoldingModelImpl model = myView.getEditor().getFoldingModel();
     if (model.isFoldingEnabled()) return true;
 
     model.setFoldingEnabled(true);

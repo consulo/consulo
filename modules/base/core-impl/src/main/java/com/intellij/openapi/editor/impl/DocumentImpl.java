@@ -55,7 +55,6 @@ import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolderBase;
 import kava.beans.PropertyChangeListener;
 import kava.beans.PropertyChangeSupport;
-import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;
@@ -1166,8 +1165,8 @@ public class DocumentImpl extends UserDataHolderBase implements DocumentEx {
   }
 
   @Nonnull
-  String dumpState() {
-    @NonNls StringBuilder result = new StringBuilder();
+  public String dumpState() {
+    StringBuilder result = new StringBuilder();
     result.append(", intervals:\n");
     for (int line = 0; line < getLineCount(); line++) {
       result.append(line).append(": ").append(getLineStartOffset(line)).append("-").append(getLineEndOffset(line)).append(", ");

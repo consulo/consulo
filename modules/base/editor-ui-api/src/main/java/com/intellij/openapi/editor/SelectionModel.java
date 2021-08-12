@@ -218,4 +218,11 @@ public interface SelectionModel {
    * @return Selection attributes.
    */
   TextAttributes getTextAttributes();
+
+  default boolean isUnknownDirection() {
+    return false;
+  }
+
+  default void setUnknownDirection(boolean unknownDirection) {
+  }
 }

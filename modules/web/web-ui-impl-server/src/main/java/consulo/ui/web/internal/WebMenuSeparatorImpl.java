@@ -17,7 +17,7 @@ package consulo.ui.web.internal;
 
 import consulo.ui.MenuSeparator;
 import consulo.ui.image.Image;
-import consulo.ui.web.internal.base.UIComponentWithVaadinComponent;
+import consulo.ui.web.internal.base.VaadinComponentDelegate;
 import consulo.ui.web.internal.base.VaadinComponent;
 
 import javax.annotation.Nonnull;
@@ -27,7 +27,7 @@ import javax.annotation.Nullable;
  * @author VISTALL
  * @since 2019-02-18
  */
-public class WebMenuSeparatorImpl extends UIComponentWithVaadinComponent<WebMenuSeparatorImpl.Vaadin> implements MenuSeparator {
+public class WebMenuSeparatorImpl extends VaadinComponentDelegate<WebMenuSeparatorImpl.Vaadin> implements MenuSeparator {
   public static class Vaadin extends VaadinComponent {
 
   }

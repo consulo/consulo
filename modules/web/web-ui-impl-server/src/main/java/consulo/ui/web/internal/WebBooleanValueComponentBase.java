@@ -18,7 +18,7 @@ package consulo.ui.web.internal;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.UIAccess;
 import consulo.ui.ValueComponent;
-import consulo.ui.web.internal.base.UIComponentWithVaadinComponent;
+import consulo.ui.web.internal.base.VaadinComponentDelegate;
 
 import javax.annotation.Nullable;
 
@@ -26,7 +26,7 @@ import javax.annotation.Nullable;
  * @author VISTALL
  * @since 2019-02-19
  */
-public abstract class WebBooleanValueComponentBase<E extends VaadinBooleanValueComponentBase> extends UIComponentWithVaadinComponent<E> implements ValueComponent<Boolean> {
+public abstract class WebBooleanValueComponentBase<E extends VaadinBooleanValueComponentBase> extends VaadinComponentDelegate<E> implements ValueComponent<Boolean> {
   public WebBooleanValueComponentBase(boolean value) {
     getVaadinComponent().getState().myChecked = value;
   }

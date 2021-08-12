@@ -26,8 +26,6 @@ import com.intellij.openapi.editor.event.EditorMouseMotionListener;
 import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
-import consulo.disposer.Disposable;
-import consulo.util.dataholder.Key;
 import com.intellij.psi.PsiCompiledElement;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiElement;
@@ -35,12 +33,15 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil;
 import com.intellij.util.Alarm;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.disposer.Disposable;
 import consulo.logging.Logger;
+import consulo.platform.Platform;
+import consulo.util.dataholder.Key;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import jakarta.inject.Inject;
-import jakarta.inject.Singleton;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
@@ -67,6 +68,10 @@ public class ImageOrColorPreviewManager implements Disposable, EditorMouseMotion
 
   @Inject
   public ImageOrColorPreviewManager(EditorFactory editorFactory) {
+    if(Platform.current().isWebService()) {
+      return;
+    }
+    
     // we don't use multicaster because we don't want to serve all editors - only supported
     editorFactory.addEditorFactoryListener(new EditorFactoryListener() {
       @Override

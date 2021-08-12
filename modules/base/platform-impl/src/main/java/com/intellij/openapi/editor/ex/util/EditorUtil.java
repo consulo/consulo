@@ -40,7 +40,7 @@ import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.openapi.editor.textarea.TextComponentEditor;
 import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.fileEditor.TextEditor;
-import com.intellij.openapi.fileEditor.impl.text.DesktopTextEditorImpl;
+import com.intellij.openapi.fileEditor.impl.text.TextEditorImpl;
 import com.intellij.openapi.util.*;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
@@ -74,7 +74,7 @@ public final class EditorUtil {
    * false if the editor is part of EditorTextField, CommitMessage and etc.
    */
   public static boolean isRealFileEditor(@Nullable Editor editor) {
-    return editor != null && TextEditorProvider.getInstance().getTextEditor(editor) instanceof DesktopTextEditorImpl;
+    return editor != null && TextEditorProvider.getInstance().getTextEditor(editor) instanceof TextEditorImpl;
   }
 
   public static boolean isPasswordEditor(@Nullable Editor editor) {

@@ -14,14 +14,6 @@
  * limitations under the License.
  */
 
-/*
- * Created by IntelliJ IDEA.
- * User: max
- * Date: Jun 10, 2002
- * Time: 10:14:59 PM
- * To change template for new class use
- * Code Style | Class Templates options (Tools | IDE Options).
- */
 package com.intellij.openapi.editor.impl;
 
 import com.intellij.ide.RemoteDesktopService;
@@ -34,16 +26,14 @@ import com.intellij.openapi.editor.event.DocumentAdapter;
 import com.intellij.openapi.editor.event.DocumentEvent;
 import com.intellij.openapi.editor.event.VisibleAreaEvent;
 import com.intellij.openapi.editor.event.VisibleAreaListener;
-import com.intellij.openapi.editor.ex.ScrollingModelEx;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
-import com.intellij.openapi.fileEditor.impl.text.DesktopAsyncEditorLoader;
+import com.intellij.openapi.fileEditor.impl.text.AsyncEditorLoader;
 import com.intellij.ui.components.Interpolable;
 import com.intellij.util.SystemProperties;
-import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.Animator;
 import consulo.annotation.DeprecationInfo;
 import consulo.disposer.Disposer;
-import consulo.logging.Logger;
+import consulo.editor.impl.CodeEditorScrollingModelBase;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -52,16 +42,11 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.List;
 
 @Deprecated
 @DeprecationInfo("Desktop implementation")
-public class DesktopScrollingModelImpl implements ScrollingModelEx {
-  private static final Logger LOG = Logger.getInstance(DesktopScrollingModelImpl.class);
-
-  private final DesktopEditorImpl myEditor;
-  private final List<VisibleAreaListener> myVisibleAreaListeners = ContainerUtil.createLockFreeCopyOnWriteList();
-
+@SuppressWarnings("deprecation")
+public class DesktopScrollingModelImpl extends CodeEditorScrollingModelBase {
   private AnimatedScrollingRunnable myCurrentAnimationRequest = null;
   private boolean myAnimationDisabled = false;
 
@@ -100,7 +85,10 @@ public class DesktopScrollingModelImpl implements ScrollingModelEx {
   };
 
   public DesktopScrollingModelImpl(DesktopEditorImpl editor) {
-    myEditor = editor;
+    super(editor);
+ }
+
+  public void registerListeners() {
     myEditor.getScrollPane().getViewport().addChangeListener(myViewportChangeListener);
     myEditor.getDocument().addDocumentListener(myDocumentListener);
   }
@@ -150,7 +138,7 @@ public class DesktopScrollingModelImpl implements ScrollingModelEx {
   public void scrollToCaret(@Nonnull ScrollType scrollType) {
     assertIsDispatchThread();
     myEditor.validateSize();
-    DesktopAsyncEditorLoader.performWhenLoaded(myEditor, () -> scrollTo(myEditor.getCaretModel().getVisualPosition(), scrollType));
+    AsyncEditorLoader.performWhenLoaded(myEditor, () -> scrollTo(myEditor.getCaretModel().getVisualPosition(), scrollType));
   }
 
   private void scrollTo(@Nonnull VisualPosition pos, @Nonnull ScrollType scrollType) {
@@ -169,7 +157,7 @@ public class DesktopScrollingModelImpl implements ScrollingModelEx {
   public void scrollTo(@Nonnull LogicalPosition pos, @Nonnull ScrollType scrollType) {
     assertIsDispatchThread();
 
-    DesktopAsyncEditorLoader.performWhenLoaded(myEditor, () -> scrollTo(myEditor.logicalPositionToXY(pos), scrollType));
+    AsyncEditorLoader.performWhenLoaded(myEditor, () -> scrollTo(myEditor.logicalPositionToXY(pos), scrollType));
   }
 
   private static void assertIsDispatchThread() {
@@ -391,17 +379,6 @@ public class DesktopScrollingModelImpl implements ScrollingModelEx {
       _scrollHorizontally(hOffset);
       _scrollVertically(vOffset);
     }
-  }
-
-  @Override
-  public void addVisibleAreaListener(@Nonnull VisibleAreaListener listener) {
-    myVisibleAreaListeners.add(listener);
-  }
-
-  @Override
-  public void removeVisibleAreaListener(@Nonnull VisibleAreaListener listener) {
-    boolean success = myVisibleAreaListeners.remove(listener);
-    LOG.assertTrue(success);
   }
 
   public void finishAnimation() {

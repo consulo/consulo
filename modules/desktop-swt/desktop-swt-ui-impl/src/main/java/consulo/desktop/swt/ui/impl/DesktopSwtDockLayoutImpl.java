@@ -30,13 +30,13 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 29/04/2021
  */
-public class DesktopSwtDockLayoutImpl extends DesktopSwtComponent<Composite> implements DockLayout {
+public class DesktopSwtDockLayoutImpl extends SWTComponentDelegate<Composite> implements DockLayout {
 
-  private DesktopSwtComponent myLeftComponent;
-  private DesktopSwtComponent myCenterComponent;
-  private DesktopSwtComponent myRightComponent;
-  private DesktopSwtComponent myBottomComponent;
-  private DesktopSwtComponent myTopComponent;
+  private SWTComponentDelegate myLeftComponent;
+  private SWTComponentDelegate myCenterComponent;
+  private SWTComponentDelegate myRightComponent;
+  private SWTComponentDelegate myBottomComponent;
+  private SWTComponentDelegate myTopComponent;
 
   private Composite myCenterComposite;
 
@@ -63,7 +63,7 @@ public class DesktopSwtDockLayoutImpl extends DesktopSwtComponent<Composite> imp
     top.setLayout(new FillLayout());
     top.setLayoutData(topData);
     if (myTopComponent != null) {
-      ((DesktopSwtComponent)myTopComponent).bind(top, null);
+      ((SWTComponentDelegate)myTopComponent).bind(top, null);
     }
 
     // center
@@ -79,7 +79,7 @@ public class DesktopSwtDockLayoutImpl extends DesktopSwtComponent<Composite> imp
     left.setLayoutData(new GridData(GridData.FILL_VERTICAL));
 
     if(myLeftComponent != null) {
-      ((DesktopSwtComponent)myLeftComponent).bind(left, null);
+      ((SWTComponentDelegate)myLeftComponent).bind(left, null);
     }
 
     myCenterComposite = new Composite(centerContainer, SWT.NONE);
@@ -87,7 +87,7 @@ public class DesktopSwtDockLayoutImpl extends DesktopSwtComponent<Composite> imp
     myCenterComposite.setLayoutData(new GridData(GridData.FILL_BOTH));
 
     if(myCenterComponent != null) {
-      ((DesktopSwtComponent)myCenterComponent).bind(myCenterComposite, null);
+      ((SWTComponentDelegate)myCenterComponent).bind(myCenterComposite, null);
     }
 
     Composite right = new Composite(centerContainer, SWT.NONE);
@@ -96,7 +96,7 @@ public class DesktopSwtDockLayoutImpl extends DesktopSwtComponent<Composite> imp
 
 
     if (myRightComponent != null) {
-      ((DesktopSwtComponent)myRightComponent).bind(right, null);
+      ((SWTComponentDelegate)myRightComponent).bind(right, null);
     }
 
     // bottom
@@ -108,7 +108,7 @@ public class DesktopSwtDockLayoutImpl extends DesktopSwtComponent<Composite> imp
     bottom.setLayoutData(bottomData);
 
     if (myBottomComponent != null) {
-      ((DesktopSwtComponent)myBottomComponent).bind(bottom, null);
+      ((SWTComponentDelegate)myBottomComponent).bind(bottom, null);
     }
   }
 
@@ -125,7 +125,7 @@ public class DesktopSwtDockLayoutImpl extends DesktopSwtComponent<Composite> imp
   @Nonnull
   @Override
   public DockLayout top(@Nonnull Component component) {
-    myTopComponent = (DesktopSwtComponent)component;
+    myTopComponent = (SWTComponentDelegate)component;
     return this;
   }
 
@@ -133,7 +133,7 @@ public class DesktopSwtDockLayoutImpl extends DesktopSwtComponent<Composite> imp
   @Nonnull
   @Override
   public DockLayout bottom(@Nonnull Component component) {
-    myBottomComponent = (DesktopSwtComponent)component;
+    myBottomComponent = (SWTComponentDelegate)component;
     return this;
   }
 
@@ -141,11 +141,11 @@ public class DesktopSwtDockLayoutImpl extends DesktopSwtComponent<Composite> imp
   @Nonnull
   @Override
   public DockLayout center(@Nonnull Component component) {
-    DesktopSwtComponent old = myCenterComponent;
+    SWTComponentDelegate old = myCenterComponent;
     if(old != null) {
       old.setParent(null);
     }
-    myCenterComponent = (DesktopSwtComponent)component;
+    myCenterComponent = (SWTComponentDelegate)component;
     if(myCenterComposite != null) {
       myCenterComponent.bind(myCenterComposite, null);
       myCenterComposite.layout(true, true);
@@ -157,7 +157,7 @@ public class DesktopSwtDockLayoutImpl extends DesktopSwtComponent<Composite> imp
   @Nonnull
   @Override
   public DockLayout left(@Nonnull Component component) {
-    myLeftComponent = (DesktopSwtComponent)component;
+    myLeftComponent = (SWTComponentDelegate)component;
     return this;
   }
 
@@ -165,7 +165,7 @@ public class DesktopSwtDockLayoutImpl extends DesktopSwtComponent<Composite> imp
   @Nonnull
   @Override
   public DockLayout right(@Nonnull Component component) {
-    myRightComponent = (DesktopSwtComponent)component;
+    myRightComponent = (SWTComponentDelegate)component;
     return this;
   }
 }

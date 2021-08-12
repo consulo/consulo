@@ -476,9 +476,9 @@ class EditorWindowImpl extends com.intellij.injected.editor.EditorWindowImpl imp
   }
 
   @Override
-  public void repaint(final int startOffset, final int endOffset) {
+  public void repaint(final int startOffset, final int endOffset, boolean invalidateTextLayout) {
     checkValid();
-    myDelegate.repaint(myDocumentWindow.injectedToHost(startOffset), myDocumentWindow.injectedToHost(endOffset));
+    myDelegate.repaint(myDocumentWindow.injectedToHost(startOffset), myDocumentWindow.injectedToHost(endOffset), invalidateTextLayout);
   }
 
   @Override

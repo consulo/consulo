@@ -2,10 +2,16 @@
 
 package com.intellij.openapi.editor.impl;
 
-import com.intellij.openapi.editor.*;
+import com.intellij.openapi.editor.Document;
+import com.intellij.openapi.editor.Editor;
+import com.intellij.openapi.editor.FoldRegion;
+import com.intellij.openapi.editor.FoldingGroup;
 import com.intellij.openapi.editor.event.DocumentEvent;
-import consulo.util.dataholder.Key;
 import com.intellij.util.DocumentUtil;
+import consulo.editor.impl.CodeEditorBase;
+import consulo.editor.impl.CodeEditorFoldingModelBase;
+import consulo.util.dataholder.Key;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -14,14 +20,14 @@ public class FoldRegionImpl extends RangeMarkerWithGetterImpl implements FoldReg
   private static final Key<Boolean> SHOW_GUTTER_MARK_FOR_SINGLE_LINE = Key.create("show.gutter.mark.for.single.line");
 
   private boolean myIsExpanded;
-  private final DesktopEditorImpl myEditor;
+  private final CodeEditorBase myEditor;
   private String myPlaceholderText;
   private final FoldingGroup myGroup;
   private final boolean myShouldNeverExpand;
   private boolean myDocumentRegionWasChanged;
-  int mySizeBeforeUpdate; // temporary field used during update on document change
+  public int mySizeBeforeUpdate; // temporary field used during update on document change
 
-  FoldRegionImpl(@Nonnull DesktopEditorImpl editor, int startOffset, int endOffset, @Nonnull String placeholder, @Nullable FoldingGroup group, boolean shouldNeverExpand) {
+  public FoldRegionImpl(@Nonnull CodeEditorBase editor, int startOffset, int endOffset, @Nonnull String placeholder, @Nullable FoldingGroup group, boolean shouldNeverExpand) {
     super(editor.getDocument(), startOffset, endOffset, false);
     myGroup = group;
     myShouldNeverExpand = shouldNeverExpand;
@@ -40,8 +46,8 @@ public class FoldRegionImpl extends RangeMarkerWithGetterImpl implements FoldReg
     setExpanded(expanded, true);
   }
 
-  void setExpanded(boolean expanded, boolean notify) {
-    FoldingModelImpl foldingModel = myEditor.getFoldingModel();
+  public void setExpanded(boolean expanded, boolean notify) {
+    CodeEditorFoldingModelBase foldingModel = (CodeEditorFoldingModelBase)myEditor.getFoldingModel();
     if (myGroup == null) {
       doSetExpanded(expanded, foldingModel, this, notify);
     }
@@ -63,7 +69,7 @@ public class FoldRegionImpl extends RangeMarkerWithGetterImpl implements FoldReg
     }
   }
 
-  private static void doSetExpanded(boolean expanded, FoldingModelImpl foldingModel, FoldRegion region, boolean notify) {
+  private static void doSetExpanded(boolean expanded, CodeEditorFoldingModelBase foldingModel, FoldRegion region, boolean notify) {
     if (expanded) {
       foldingModel.expandFoldRegion(region, notify);
     }
@@ -77,7 +83,7 @@ public class FoldRegionImpl extends RangeMarkerWithGetterImpl implements FoldReg
     return super.isValid() && intervalStart() < intervalEnd();
   }
 
-  void setExpandedInternal(boolean toExpand) {
+  public void setExpandedInternal(boolean toExpand) {
     myIsExpanded = toExpand;
   }
 
@@ -103,11 +109,11 @@ public class FoldRegionImpl extends RangeMarkerWithGetterImpl implements FoldReg
     return myShouldNeverExpand;
   }
 
-  boolean hasDocumentRegionChanged() {
+  public boolean hasDocumentRegionChanged() {
     return myDocumentRegionWasChanged;
   }
 
-  void resetDocumentRegionChanged() {
+  public void resetDocumentRegionChanged() {
     myDocumentRegionWasChanged = false;
   }
 
@@ -169,12 +175,12 @@ public class FoldRegionImpl extends RangeMarkerWithGetterImpl implements FoldReg
   @Override
   public void setPlaceholderText(@Nonnull String text) {
     myPlaceholderText = text;
-    myEditor.getFoldingModel().onPlaceholderTextChanged(this);
+    ((CodeEditorFoldingModelBase)myEditor.getFoldingModel()).onPlaceholderTextChanged(this);
   }
 
   @Override
   public void dispose() {
-    myEditor.getFoldingModel().removeRegionFromTree(this);
+    ((CodeEditorFoldingModelBase)myEditor.getFoldingModel()).removeRegionFromTree(this);
   }
 
   @Override

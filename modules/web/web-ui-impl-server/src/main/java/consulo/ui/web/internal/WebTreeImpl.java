@@ -21,7 +21,7 @@ import consulo.ui.Tree;
 import consulo.ui.TreeModel;
 import consulo.ui.TreeNode;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.web.internal.base.UIComponentWithVaadinComponent;
+import consulo.ui.web.internal.base.VaadinComponentDelegate;
 import consulo.ui.web.internal.base.VaadinComponent;
 import consulo.web.gwt.shared.ui.state.tree.TreeClientRpc;
 import consulo.web.gwt.shared.ui.state.tree.TreeServerRpc;
@@ -35,7 +35,7 @@ import java.util.*;
  * @author VISTALL
  * @since 2019-02-18
  */
-public class WebTreeImpl<NODE> extends UIComponentWithVaadinComponent<WebTreeImpl.Vaadin<NODE>> implements Tree<NODE> {
+public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl.Vaadin<NODE>> implements Tree<NODE> {
   public static class Vaadin<E> extends VaadinComponent {
     @SuppressWarnings("unchecked")
     private final TreeServerRpc myTreeServerRpc = new TreeServerRpc() {

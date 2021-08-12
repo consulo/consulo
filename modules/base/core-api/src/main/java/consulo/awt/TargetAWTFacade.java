@@ -21,6 +21,7 @@ import consulo.ui.Size;
 import consulo.ui.Window;
 import consulo.ui.color.ColorValue;
 import consulo.ui.color.RGBColor;
+import consulo.ui.cursor.Cursor;
 import consulo.ui.font.Font;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageKey;
@@ -75,4 +76,12 @@ public interface TargetAWTFacade {
   java.awt.Font to(@Nonnull Font font);
 
   java.awt.Image toImage(@Nonnull ImageKey key);
+
+  default java.awt.Cursor to(Cursor cursor) {
+    throw new AbstractMethodError();
+  }
+
+  default Cursor from(java.awt.Cursor cursor) {
+    throw new AbstractMethodError();
+  }
 }

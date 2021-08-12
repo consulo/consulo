@@ -18,6 +18,7 @@ package com.intellij.openapi.options;
 import com.intellij.openapi.application.AccessToken;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.application.WriteAction;
 import com.intellij.openapi.application.ex.DecodeDefaultsUtil;
 import com.intellij.openapi.components.RoamingType;
 import com.intellij.openapi.components.ServiceManager;
@@ -529,13 +530,8 @@ public class SchemesManagerImpl<T extends Named, E extends ExternalizableScheme>
       if (renamed) {
         file = myDir.findChild(currentFileNameWithoutExtension + mySchemeExtension);
         if (file != null) {
-          AccessToken token = ApplicationManager.getApplication().acquireWriteActionLock(SchemesManagerImpl.class);
-          try {
-            file.rename(this, fileName);
-          }
-          finally {
-            token.finish();
-          }
+          final VirtualFile finalFile = file;
+          WriteAction.run(() -> finalFile.rename(this, fileName));
         }
       }
 
@@ -546,15 +542,12 @@ public class SchemesManagerImpl<T extends Named, E extends ExternalizableScheme>
         file = VfsDirectoryBasedStorage.getFile(fileName, myDir, this);
       }
 
-      AccessToken token = ApplicationManager.getApplication().acquireWriteActionLock(SchemesManagerImpl.class);
-      try {
-        try (OutputStream out = file.getOutputStream(this)) {
+      final VirtualFile finalFile1 = file;
+      WriteAction.run(() -> {
+        try (OutputStream out = finalFile1.getOutputStream(this)) {
           out.write(byteOut);
         }
-      }
-      finally {
-        token.finish();
-      }
+      });
     }
     else if (renamed) {
       myFilesToDelete.add(currentFileNameWithoutExtension);
@@ -592,18 +585,14 @@ public class SchemesManagerImpl<T extends Named, E extends ExternalizableScheme>
 
     VirtualFile dir = getVirtualDir();
     if (dir != null) {
-      AccessToken token = ApplicationManager.getApplication().acquireWriteActionLock(SchemesManagerImpl.class);
-      try {
+      WriteAction.run(() -> {
         for (VirtualFile file : dir.getChildren()) {
           if (myFilesToDelete.contains(file.getNameWithoutExtension())) {
             VfsDirectoryBasedStorage.deleteFile(file, this);
           }
         }
         myFilesToDelete.clear();
-      }
-      finally {
-        token.finish();
-      }
+      });
     }
   }
 

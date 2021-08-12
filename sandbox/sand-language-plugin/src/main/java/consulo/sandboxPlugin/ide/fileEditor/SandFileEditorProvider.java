@@ -21,6 +21,7 @@ import com.intellij.openapi.fileEditor.FileEditorProvider;
 import com.intellij.openapi.fileEditor.FileEditorState;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
+import consulo.ui.annotation.RequiredUIAccess;
 import org.jdom.Element;
 import javax.annotation.Nonnull;
 import consulo.sandboxPlugin.lang.SandFileType;
@@ -35,6 +36,7 @@ public class SandFileEditorProvider implements FileEditorProvider {
     return file.getFileType() == SandFileType.INSTANCE;
   }
 
+  @RequiredUIAccess
   @Nonnull
   @Override
   public FileEditor createEditor(@Nonnull Project project, @Nonnull VirtualFile file) {

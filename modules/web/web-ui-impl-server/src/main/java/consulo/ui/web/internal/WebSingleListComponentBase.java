@@ -19,7 +19,7 @@ import consulo.ui.TextItemRender;
 import consulo.ui.ValueComponent;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.model.ListModel;
-import consulo.ui.web.internal.base.UIComponentWithVaadinComponent;
+import consulo.ui.web.internal.base.VaadinComponentDelegate;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -28,7 +28,7 @@ import javax.annotation.Nullable;
  * @author VISTALL
  * @since 2019-02-19
  */
-public abstract class WebSingleListComponentBase<E, V extends VaadinSingleListComponentBase<E>> extends UIComponentWithVaadinComponent<V> implements ValueComponent<E> {
+public abstract class WebSingleListComponentBase<E, V extends VaadinSingleListComponentBase<E>> extends VaadinComponentDelegate<V> implements ValueComponent<E> {
   protected WebSingleListComponentBase(ListModel<E> model) {
     getVaadinComponent().setModel(model);
   }

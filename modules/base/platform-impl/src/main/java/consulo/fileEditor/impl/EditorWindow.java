@@ -69,9 +69,13 @@ public interface EditorWindow {
 
   boolean inSplitter();
 
-  void closeFile(final VirtualFile file);
+  default void closeFile(final VirtualFile file) {
+    closeFile(file, true);
+  }
 
-  void closeFile(final VirtualFile file, final boolean disposeIfNeeded);
+  default void closeFile(final VirtualFile file, final boolean disposeIfNeeded) {
+    closeFile(file, disposeIfNeeded, true);
+  }
 
   void closeFile(@Nonnull final VirtualFile file, final boolean disposeIfNeeded, final boolean transferFocus);
 

@@ -21,7 +21,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.ClickEvent;
 import consulo.ui.event.ClickListener;
 import consulo.ui.image.Image;
-import consulo.ui.web.internal.base.UIComponentWithVaadinComponent;
+import consulo.ui.web.internal.base.VaadinComponentDelegate;
 import consulo.ui.web.internal.base.VaadinComponent;
 import consulo.ui.web.servlet.WebImageMapper;
 import consulo.web.gwt.shared.ui.state.button.ButtonRpc;
@@ -34,7 +34,7 @@ import javax.annotation.Nullable;
  * @author VISTALL
  * @since 2019-02-17
  */
-public class WebHyperlinkImpl extends UIComponentWithVaadinComponent<WebHyperlinkImpl.Vaadin> implements Hyperlink {
+public class WebHyperlinkImpl extends VaadinComponentDelegate<WebHyperlinkImpl.Vaadin> implements Hyperlink {
   public static class Vaadin extends VaadinComponent {
     private final ButtonRpc myRpc = new ButtonRpc() {
       @Override

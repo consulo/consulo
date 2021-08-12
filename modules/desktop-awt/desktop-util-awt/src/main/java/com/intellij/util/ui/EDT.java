@@ -3,7 +3,7 @@ package com.intellij.util.ui;
 
 import consulo.logging.Logger;
 
-import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.awt.*;
 
 /**
@@ -26,7 +26,7 @@ public final class EDT {
     ourEventDispatchThread = Thread.currentThread();
   }
 
-  public static boolean isEdt(@Nonnull Thread thread) {
+  public static boolean isEdt(@Nullable Thread thread) {
     return thread == ourEventDispatchThread;
   }
 

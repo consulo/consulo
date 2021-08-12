@@ -20,7 +20,7 @@ import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.LabeledLayout;
 import consulo.ui.web.internal.TargetVaddin;
-import consulo.ui.web.internal.base.UIComponentWithVaadinComponent;
+import consulo.ui.web.internal.base.VaadinComponentDelegate;
 import consulo.ui.web.internal.base.VaadinSingleComponentContainer;
 
 import javax.annotation.Nonnull;
@@ -29,7 +29,7 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 2019-02-18
  */
-public class WebLabeledLayoutImpl extends UIComponentWithVaadinComponent<WebLabeledLayoutImpl.Vaadin> implements LabeledLayout {
+public class WebLabeledLayoutImpl extends VaadinComponentDelegate<WebLabeledLayoutImpl.Vaadin> implements LabeledLayout {
   public static class Vaadin extends VaadinSingleComponentContainer {
     private LocalizeValue myLabelValue = LocalizeValue.empty();
 

@@ -21,6 +21,7 @@ import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.*;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.app.WindowWrapper;
+import consulo.ui.cursor.StandardCursors;
 import consulo.ui.image.Image;
 import consulo.ui.layout.*;
 import consulo.ui.model.TableModel;
@@ -186,15 +187,15 @@ public class UITester {
     @RequiredUIAccess
     private Component alerts() {
       VerticalLayout layout = VerticalLayout.create();
-      layout.add(Button.create(LocalizeValue.localizeTODO("Info"), event -> {
+      layout.add(Button.create(LocalizeValue.localizeTODO("Info. Hand Cursor"), event -> {
         Alerts.okInfo(LocalizeValue.localizeTODO("This is INFO")).showAsync();
-      }));
+      }).withCursor(StandardCursors.HAND));
       layout.add(Button.create(LocalizeValue.localizeTODO("Warning"), event -> {
         Alerts.okWarning(LocalizeValue.localizeTODO("This is WARN")).showAsync();
       }));
-      layout.add(Button.create(LocalizeValue.localizeTODO("Error"), event -> {
+      layout.add(Button.create(LocalizeValue.localizeTODO("Error. Wait Cursor"), event -> {
         Alerts.okError(LocalizeValue.localizeTODO("This is ERROR")).showAsync();
-      }));
+      }).withCursor(StandardCursors.WAIT));
       layout.add(Button.create(LocalizeValue.localizeTODO("Question"), event -> {
         Alerts.okQuestion(LocalizeValue.localizeTODO("This is QUESTION")).showAsync();
       }));

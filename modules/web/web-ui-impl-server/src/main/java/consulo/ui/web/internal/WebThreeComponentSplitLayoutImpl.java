@@ -21,7 +21,7 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.HasComponents;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.ThreeComponentSplitLayout;
-import consulo.ui.web.internal.base.UIComponentWithVaadinComponent;
+import consulo.ui.web.internal.base.VaadinComponentDelegate;
 import consulo.ui.web.internal.base.VaadinComponent;
 import consulo.web.gwt.shared.ui.ex.state.ThreeComponentSplitLayoutState;
 
@@ -35,7 +35,7 @@ import java.util.List;
  * @author VISTALL
  * @since 2019-02-18
  */
-public class WebThreeComponentSplitLayoutImpl extends UIComponentWithVaadinComponent<WebThreeComponentSplitLayoutImpl.Vaadin> implements ThreeComponentSplitLayout {
+public class WebThreeComponentSplitLayoutImpl extends VaadinComponentDelegate<WebThreeComponentSplitLayoutImpl.Vaadin> implements ThreeComponentSplitLayout {
   public static class Vaadin extends VaadinComponent implements HasComponents {
     @Override
     public ThreeComponentSplitLayoutState getState() {

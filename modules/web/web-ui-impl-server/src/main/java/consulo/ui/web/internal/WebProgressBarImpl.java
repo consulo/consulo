@@ -16,7 +16,7 @@
 package consulo.ui.web.internal;
 
 import consulo.ui.ProgressBar;
-import consulo.ui.web.internal.base.UIComponentWithVaadinComponent;
+import consulo.ui.web.internal.base.VaadinComponentDelegate;
 import consulo.ui.web.internal.base.VaadinComponent;
 import consulo.web.gwt.shared.ui.state.ProgressBarState;
 
@@ -26,7 +26,7 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 2020-05-11
  */
-public class WebProgressBarImpl extends UIComponentWithVaadinComponent<WebProgressBarImpl.Vaadin> implements ProgressBar {
+public class WebProgressBarImpl extends VaadinComponentDelegate<WebProgressBarImpl.Vaadin> implements ProgressBar {
   public static class Vaadin extends VaadinComponent {
     @Override
     public ProgressBarState getState() {

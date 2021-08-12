@@ -26,6 +26,7 @@ import consulo.desktop.swt.ui.impl.DesktopSwtUIAccess;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.lang.ref.SimpleReference;
+import org.jetbrains.annotations.Nls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -67,19 +68,6 @@ public class DesktopSwtApplicationImpl extends BaseApplication {
   @Override
   public void exit() {
 
-  }
-
-  @Override
-  public boolean isReadAccessAllowed() {
-    if (isDispatchThread()) {
-      return true;
-    }
-    return isWriteThread() || myLock.isReadLockedByThisThread();
-  }
-
-  @Override
-  public boolean isDispatchThread() {
-    return UIAccess.isUIThread();
   }
 
   @Override
@@ -169,6 +157,17 @@ public class DesktopSwtApplicationImpl extends BaseApplication {
   }
 
   @Override
+  public boolean runProcessWithProgressSynchronously(@Nonnull Runnable process,
+                                                     @Nonnull String progressTitle,
+                                                     boolean canBeCanceled,
+                                                     boolean shouldShowModalWindow,
+                                                     @Nullable Project project,
+                                                     @Nullable JComponent parentComponent,
+                                                     @Nullable @Nls(capitalization = Nls.Capitalization.Title) String cancelText) {
+    return true;
+  }
+
+  @Override
   public boolean isActive() {
     return true;
   }
@@ -177,17 +176,6 @@ public class DesktopSwtApplicationImpl extends BaseApplication {
   @Override
   public UIAccess getLastUIAccess() {
     return DesktopSwtUIAccess.INSTANCE;
-  }
-
-  @RequiredUIAccess
-  @Override
-  public boolean runProcessWithProgressSynchronously(@Nonnull Runnable process,
-                                                     @Nonnull String progressTitle,
-                                                     boolean canBeCanceled,
-                                                     @Nullable Project project,
-                                                     JComponent parentComponent,
-                                                     String cancelText) {
-    return true;
   }
 
   @RequiredUIAccess

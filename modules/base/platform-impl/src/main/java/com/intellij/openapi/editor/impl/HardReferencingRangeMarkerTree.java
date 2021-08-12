@@ -3,6 +3,7 @@ package com.intellij.openapi.editor.impl;
 
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.util.Getter;
+
 import javax.annotation.Nonnull;
 
 /**
@@ -10,8 +11,8 @@ import javax.annotation.Nonnull;
  *
  * @see RangeMarkerWithGetterImpl
  */
-class HardReferencingRangeMarkerTree<T extends RangeMarkerWithGetterImpl> extends RangeMarkerTree<T> {
-  HardReferencingRangeMarkerTree(@Nonnull Document document) {
+public class HardReferencingRangeMarkerTree<T extends RangeMarkerWithGetterImpl> extends RangeMarkerTree<T> {
+  public HardReferencingRangeMarkerTree(@Nonnull Document document) {
     super(document);
   }
 
@@ -21,8 +22,8 @@ class HardReferencingRangeMarkerTree<T extends RangeMarkerWithGetterImpl> extend
     return new Node<>(this, key, start, end, greedyToLeft, greedyToRight, stickingToRight);
   }
 
-  static class Node<T extends RangeMarkerWithGetterImpl> extends RMNode<T> {
-    Node(@Nonnull RangeMarkerTree<T> rangeMarkerTree, @Nonnull T key, int start, int end, boolean greedyToLeft, boolean greedyToRight, boolean stickingToRight) {
+  public static class Node<T extends RangeMarkerWithGetterImpl> extends RMNode<T> {
+    public Node(@Nonnull RangeMarkerTree<T> rangeMarkerTree, @Nonnull T key, int start, int end, boolean greedyToLeft, boolean greedyToRight, boolean stickingToRight) {
       super(rangeMarkerTree, key, start, end, greedyToLeft, greedyToRight, stickingToRight);
     }
 

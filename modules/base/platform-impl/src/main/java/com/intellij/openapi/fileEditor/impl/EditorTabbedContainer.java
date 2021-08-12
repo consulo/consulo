@@ -15,7 +15,6 @@
  */
 package com.intellij.openapi.fileEditor.impl;
 
-import com.intellij.icons.AllIcons;
 import com.intellij.ide.GeneralSettings;
 import com.intellij.ide.IdeEventQueue;
 import com.intellij.ide.actions.CloseAction;
@@ -23,6 +22,7 @@ import com.intellij.ide.actions.ShowFilePathAction;
 import com.intellij.ide.ui.UISettings;
 import com.intellij.ide.ui.UISettingsListener;
 import com.intellij.ide.ui.customization.CustomActionsSchema;
+import com.intellij.openapi.fileEditor.impl.tabActions.CloseTab;
 import consulo.awt.TargetAWT;
 import consulo.disposer.Disposable;
 import com.intellij.openapi.actionSystem.*;
@@ -33,10 +33,8 @@ import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;
 import com.intellij.openapi.fileEditor.ex.IdeDocumentHistory;
 import com.intellij.openapi.fileEditor.impl.text.FileDropHandler;
-import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Queryable;
-import com.intellij.openapi.ui.ShadowAction;
 import com.intellij.openapi.util.*;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -53,13 +51,11 @@ import com.intellij.ui.docking.DragSession;
 import com.intellij.ui.tabs.*;
 import com.intellij.ui.tabs.impl.JBEditorTabs;
 import com.intellij.ui.tabs.impl.JBTabsImpl;
-import com.intellij.util.BitUtil;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.TimedDeadzone;
 import com.intellij.util.ui.UIUtil;
 import consulo.disposer.Disposer;
 import consulo.fileEditor.impl.EditorWindow;
-import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.dataholder.Key;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
@@ -70,7 +66,6 @@ import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
-import java.awt.event.InputEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.List;
@@ -327,7 +322,7 @@ public final class EditorTabbedContainer implements Disposable, CloseAction.Clos
     tab.setTestableUi(new MyQueryable(tab));
 
     final ActionGroup.Builder tabActions = ActionGroup.newImmutableBuilder();
-    tabActions.add(new CloseTab(comp, tab));
+    tabActions.add(new CloseTab(comp, myProject, file, myWindow));
 
     tab.setTabLabelActions(tabActions.build(), ActionPlaces.EDITOR_TAB);
     myTabs.addTabSilently(tab, indexToInsert);
@@ -400,51 +395,6 @@ public final class EditorTabbedContainer implements Disposable, CloseAction.Clos
   @Override
   public void dispose() {
 
-  }
-
-  private class CloseTab extends AnAction implements DumbAware {
-
-    ShadowAction myShadow;
-    private final TabInfo myTabInfo;
-
-    CloseTab(JComponent c, TabInfo info) {
-      myTabInfo = info;
-      myShadow = new ShadowAction(this, ActionManager.getInstance().getAction(IdeActions.ACTION_CLOSE), c);
-    }
-
-    @RequiredUIAccess
-    @Override
-    public void update(final AnActionEvent e) {
-      e.getPresentation().setIcon(AllIcons.Actions.Close);
-      e.getPresentation().setHoveredIcon(AllIcons.Actions.CloseHovered);
-      e.getPresentation().setVisible(UISettings.getInstance().getShowCloseButton());
-      e.getPresentation().setText("Close. Alt-click to close others.");
-    }
-
-    @RequiredUIAccess
-    @Override
-    public void actionPerformed(final AnActionEvent e) {
-      final FileEditorManagerEx mgr = FileEditorManagerEx.getInstanceEx(myProject);
-      consulo.fileEditor.impl.EditorWindow window;
-      final VirtualFile file = (VirtualFile)myTabInfo.getObject();
-      if (ActionPlaces.EDITOR_TAB.equals(e.getPlace())) {
-        window = myWindow;
-      }
-      else {
-        window = mgr.getCurrentWindow();
-      }
-
-      if (window != null) {
-        if (BitUtil.isSet(e.getModifiers(), InputEvent.ALT_MASK)) {
-          window.closeAllExcept(file);
-        }
-        else {
-          if (window.findFileComposite(file) != null) {
-            mgr.closeFile(file, window);
-          }
-        }
-      }
-    }
   }
 
   private class MyDataProvider implements DataProvider {

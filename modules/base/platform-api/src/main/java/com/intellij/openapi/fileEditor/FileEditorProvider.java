@@ -19,6 +19,7 @@ import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import consulo.disposer.Disposer;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.dataholder.Key;
 import com.intellij.openapi.vfs.VirtualFile;
 import org.jdom.Element;
@@ -54,6 +55,7 @@ public interface FileEditorProvider {
    * @return created editor for specified file. This method should never return {@code null}.
    */
   @Nonnull
+  @RequiredUIAccess
   FileEditor createEditor(@Nonnull Project project, @Nonnull VirtualFile file);
 
   /**

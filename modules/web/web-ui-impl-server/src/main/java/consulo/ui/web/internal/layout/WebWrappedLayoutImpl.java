@@ -19,7 +19,7 @@ import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.WrappedLayout;
 import consulo.ui.web.internal.TargetVaddin;
-import consulo.ui.web.internal.base.UIComponentWithVaadinComponent;
+import consulo.ui.web.internal.base.VaadinComponentDelegate;
 import consulo.ui.web.internal.base.VaadinSingleComponentContainer;
 import consulo.ui.web.internal.border.WebBorderBuilder;
 import consulo.web.gwt.shared.ui.state.layout.BaseSingleLayoutState;
@@ -31,7 +31,7 @@ import javax.annotation.Nullable;
  * @author VISTALL
  * @since 2019-02-17
  */
-public class WebWrappedLayoutImpl extends UIComponentWithVaadinComponent<WebWrappedLayoutImpl.Vaadin> implements WrappedLayout {
+public class WebWrappedLayoutImpl extends VaadinComponentDelegate<WebWrappedLayoutImpl.Vaadin> implements WrappedLayout {
   public static class Vaadin extends VaadinSingleComponentContainer {
     @Override
     public void beforeClientResponse(boolean initial) {

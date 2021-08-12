@@ -6,8 +6,9 @@ import com.intellij.openapi.editor.LogicalPosition;
 import com.intellij.openapi.editor.SoftWrap;
 import com.intellij.openapi.editor.event.DocumentEvent;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
-import com.intellij.openapi.editor.impl.DesktopEditorImpl;
-import com.intellij.openapi.editor.impl.SoftWrapModelImpl;
+import consulo.editor.impl.CodeEditorBase;
+import consulo.editor.impl.CodeEditorSoftWrapModelBase;
+
 import javax.annotation.Nonnull;
 
 /**
@@ -33,7 +34,7 @@ public class IncrementalCacheUpdateEvent {
    *
    * @param event object that describes document change that caused cache update
    */
-  IncrementalCacheUpdateEvent(@Nonnull DocumentEvent event, @Nonnull DesktopEditorImpl editor) {
+  public IncrementalCacheUpdateEvent(@Nonnull DocumentEvent event, @Nonnull CodeEditorBase editor) {
     this(event.getOffset(), event.getOffset() + event.getOldLength(), event.getOffset() + event.getNewLength(), editor);
   }
 
@@ -41,7 +42,7 @@ public class IncrementalCacheUpdateEvent {
    * Creates new {@code IncrementalCacheUpdateEvent} object for the event not changing document length
    * (like expansion of folded region).
    */
-  IncrementalCacheUpdateEvent(int startOffset, int endOffset, @Nonnull DesktopEditorImpl editor) {
+  public IncrementalCacheUpdateEvent(int startOffset, int endOffset, @Nonnull CodeEditorBase editor) {
     this(startOffset, endOffset, endOffset, editor);
   }
 
@@ -51,14 +52,14 @@ public class IncrementalCacheUpdateEvent {
    *
    * @param document target document to reparse
    */
-  IncrementalCacheUpdateEvent(@Nonnull Document document) {
+  public IncrementalCacheUpdateEvent(@Nonnull Document document) {
     myStartOffset = 0;
     myMandatoryEndOffset = document.getTextLength();
     myLengthDiff = 0;
     myStartLogicalPosition = new LogicalPosition(0, 0);
   }
 
-  private IncrementalCacheUpdateEvent(int startOffset, int oldEndOffset, int newEndOffset, @Nonnull DesktopEditorImpl editor) {
+  private IncrementalCacheUpdateEvent(int startOffset, int oldEndOffset, int newEndOffset, @Nonnull CodeEditorBase editor) {
     VisualLineInfo info = getVisualLineInfo(editor, startOffset, false);
     if (info.startsWithSoftWrap) {
       info = getVisualLineInfo(editor, info.startOffset, true);
@@ -70,7 +71,7 @@ public class IncrementalCacheUpdateEvent {
   }
 
 
-  private static VisualLineInfo getVisualLineInfo(@Nonnull DesktopEditorImpl editor, int offset, boolean beforeSoftWrap) {
+  private static VisualLineInfo getVisualLineInfo(@Nonnull CodeEditorBase editor, int offset, boolean beforeSoftWrap) {
     Document document = editor.getDocument();
     int textLength = document.getTextLength();
     if (offset <= 0 || textLength == 0) return new VisualLineInfo(0, false);
@@ -78,7 +79,7 @@ public class IncrementalCacheUpdateEvent {
 
     int startOffset = EditorUtil.getNotFoldedLineStartOffset(editor, offset);
 
-    SoftWrapModelImpl softWrapModel = editor.getSoftWrapModel();
+    CodeEditorSoftWrapModelBase softWrapModel = editor.getSoftWrapModel();
     int wrapIndex = softWrapModel.getSoftWrapIndex(offset);
     int prevSoftWrapIndex = wrapIndex < 0 ? -wrapIndex - 2 : wrapIndex - (beforeSoftWrap ? 1 : 0);
     SoftWrap prevSoftWrap = prevSoftWrapIndex < 0 ? null : softWrapModel.getRegisteredSoftWraps().get(prevSoftWrapIndex);
@@ -108,7 +109,7 @@ public class IncrementalCacheUpdateEvent {
    * Returns logical position, from which soft wrap recalculation should start
    */
   @Nonnull
-  LogicalPosition getStartLogicalPosition() {
+  public LogicalPosition getStartLogicalPosition() {
     return myStartLogicalPosition;
   }
 

@@ -20,7 +20,7 @@ import consulo.ui.*;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.web.internal.base.ComponentHolder;
 import consulo.ui.web.internal.base.FromVaadinComponentWrapper;
-import consulo.ui.web.internal.base.UIComponentWithVaadinComponent;
+import consulo.ui.web.internal.base.VaadinComponentDelegate;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -29,7 +29,7 @@ import javax.annotation.Nullable;
  * @author VISTALL
  * @since 15-Sep-17
  */
-public class WebWindowImpl extends UIComponentWithVaadinComponent<WebWindowImpl.Vaadin> implements Window {
+public class WebWindowImpl extends VaadinComponentDelegate<WebWindowImpl.Vaadin> implements Window {
   public static class Vaadin extends com.vaadin.ui.Window implements ComponentHolder, FromVaadinComponentWrapper {
     private Component myComponent;
 

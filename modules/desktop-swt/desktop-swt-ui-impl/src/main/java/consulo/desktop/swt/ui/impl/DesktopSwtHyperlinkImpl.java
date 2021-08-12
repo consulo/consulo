@@ -33,7 +33,7 @@ import javax.annotation.Nullable;
  * @author VISTALL
  * @since 29/04/2021
  */
-public class DesktopSwtHyperlinkImpl extends DesktopSwtComponent<Link> implements Hyperlink {
+public class DesktopSwtHyperlinkImpl extends SWTComponentDelegate<Link> implements Hyperlink {
   private String myText;
 
   public DesktopSwtHyperlinkImpl(String text) {

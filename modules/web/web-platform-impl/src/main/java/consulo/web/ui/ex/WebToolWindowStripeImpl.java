@@ -19,7 +19,7 @@ import com.vaadin.shared.communication.SharedState;
 import com.vaadin.ui.Component;
 import consulo.ui.ex.ToolWindowStripeButton;
 import consulo.ui.web.internal.TargetVaddin;
-import consulo.ui.web.internal.base.UIComponentWithVaadinComponent;
+import consulo.ui.web.internal.base.VaadinComponentDelegate;
 import consulo.ui.web.internal.base.VaadinComponentContainer;
 import consulo.web.gwt.shared.ui.ex.state.toolWindow.ToolWindowStripeState;
 import consulo.web.gwt.shared.ui.state.layout.DockLayoutState;
@@ -34,7 +34,7 @@ import java.util.List;
  * @author VISTALL
  * @since 25-Sep-17
  */
-public class WebToolWindowStripeImpl extends UIComponentWithVaadinComponent<WebToolWindowStripeImpl.Vaadin> {
+public class WebToolWindowStripeImpl extends VaadinComponentDelegate<WebToolWindowStripeImpl.Vaadin> {
   public static class Vaadin extends VaadinComponentContainer {
     private DockLayoutState.Constraint myConstraint = DockLayoutState.Constraint.CENTER;
     private final List<Component> myButtons = new ArrayList<>();

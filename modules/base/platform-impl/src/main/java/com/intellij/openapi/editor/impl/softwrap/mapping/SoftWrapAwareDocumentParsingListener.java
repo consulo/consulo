@@ -17,7 +17,7 @@ package com.intellij.openapi.editor.impl.softwrap.mapping;
 
 import javax.annotation.Nonnull;
 
-interface SoftWrapAwareDocumentParsingListener {
+public interface SoftWrapAwareDocumentParsingListener {
 
   /**
    * Notifies current listener that particular document region re-parsing is about to begin.

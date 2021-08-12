@@ -60,4 +60,15 @@
       <outputDirectory>Consulo/platform/buildSNAPSHOT/</outputDirectory>
     </fileSet>
   </fileSets>
+
+  <dependencySets>
+    <dependencySet>
+      <outputDirectory>Consulo/platform/buildSNAPSHOT/plugins/consulo.sandbox.plugin/lib</outputDirectory>
+      <unpack>false</unpack>
+      <scope>runtime</scope>
+      <includes>
+        <include>consulo:consulo-sand-language-plugin</include>
+      </includes>
+    </dependencySet>
+  </dependencySets>
 </assembly>

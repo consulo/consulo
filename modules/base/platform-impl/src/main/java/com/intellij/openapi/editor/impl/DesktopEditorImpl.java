@@ -1,10 +1,10 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.openapi.editor.impl;
 
-import com.intellij.application.options.EditorFontsConstants;
 import com.intellij.codeInsight.hint.EditorFragmentComponent;
 import com.intellij.diagnostic.Dumpable;
-import com.intellij.ide.*;
+import com.intellij.ide.DataManager;
+import com.intellij.ide.IdeEventQueue;
 import com.intellij.ide.dnd.DnDManager;
 import com.intellij.ide.ui.UISettings;
 import com.intellij.openapi.actionSystem.*;
@@ -17,19 +17,20 @@ import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.command.UndoConfirmationPolicy;
 import com.intellij.openapi.editor.*;
 import com.intellij.openapi.editor.actionSystem.*;
-import com.intellij.openapi.editor.colors.*;
+import com.intellij.openapi.editor.colors.EditorColorKey;
+import com.intellij.openapi.editor.colors.EditorColors;
+import com.intellij.openapi.editor.colors.EditorColorsScheme;
+import com.intellij.openapi.editor.colors.EditorFontType;
 import com.intellij.openapi.editor.colors.impl.DelegateColorScheme;
-import com.intellij.openapi.editor.colors.impl.FontPreferencesImpl;
 import com.intellij.openapi.editor.event.*;
-import com.intellij.openapi.editor.ex.EditorPopupHandler;
-import com.intellij.openapi.editor.ex.*;
-import com.intellij.openapi.editor.ex.util.EditorScrollingPositionKeeper;
+import com.intellij.openapi.editor.ex.EditorEx;
+import com.intellij.openapi.editor.ex.RangeHighlighterEx;
+import com.intellij.openapi.editor.ex.SoftWrapChangeListener;
 import com.intellij.openapi.editor.ex.util.EditorUIUtil;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
 import com.intellij.openapi.editor.ex.util.EmptyEditorHighlighter;
 import com.intellij.openapi.editor.highlighter.EditorHighlighter;
 import com.intellij.openapi.editor.highlighter.HighlighterClient;
-import com.intellij.openapi.editor.impl.event.MarkupModelListener;
 import com.intellij.openapi.editor.impl.view.EditorView;
 import com.intellij.openapi.editor.markup.*;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
@@ -38,7 +39,6 @@ import com.intellij.openapi.keymap.Keymap;
 import com.intellij.openapi.keymap.KeymapManager;
 import com.intellij.openapi.keymap.KeymapUtil;
 import com.intellij.openapi.progress.ProgressManager;
-import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.AbstractPainter;
 import com.intellij.openapi.ui.Queryable;
@@ -78,20 +78,17 @@ import consulo.desktop.editor.impl.StatusComponentContainer;
 import consulo.desktop.util.awt.migration.AWTComponentProviderUtil;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.disposer.TraceableDisposable;
+import consulo.editor.impl.*;
 import consulo.editor.internal.EditorInternal;
 import consulo.fileEditor.impl.EditorsSplitters;
 import consulo.logging.Logger;
 import consulo.ui.color.ColorValue;
 import consulo.ui.util.ColorValueUtil;
 import consulo.util.dataholder.Key;
-import consulo.util.dataholder.UserDataHolderBase;
 import kava.beans.PropertyChangeEvent;
 import kava.beans.PropertyChangeListener;
-import kava.beans.PropertyChangeSupport;
 import org.intellij.lang.annotations.JdkConstants;
 import org.intellij.lang.annotations.MagicConstant;
-import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;
@@ -124,26 +121,21 @@ import java.util.*;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.function.IntFunction;
 
 @Deprecated
 @DeprecationInfo("Desktop implementation")
-public final class DesktopEditorImpl extends UserDataHolderBase implements EditorInternal, HighlighterClient, Queryable, Dumpable, CodeStyleSettingsListener {
+@SuppressWarnings("deprecation")
+public final class DesktopEditorImpl extends CodeEditorBase implements EditorInternal, HighlighterClient, Queryable, Dumpable, CodeStyleSettingsListener {
   public static final int TEXT_ALIGNMENT_LEFT = 0;
   public static final int TEXT_ALIGNMENT_RIGHT = 1;
 
-  private static final int MIN_FONT_SIZE = 8;
   private static final Logger LOG = Logger.getInstance(DesktopEditorImpl.class);
   private static final Key DND_COMMAND_KEY = Key.create("DndCommand");
 
   private static final Key<JComponent> PERMANENT_HEADER = Key.create("PERMANENT_HEADER");
 
-  @SuppressWarnings("WeakerAccess")
-  public static final Key<Boolean> DISABLE_CARET_POSITION_KEEPING = Key.create("editor.disable.caret.position.keeping");
   private static final boolean HONOR_CAMEL_HUMPS_ON_TRIPLE_CLICK = Boolean.parseBoolean(System.getProperty("idea.honor.camel.humps.on.triple.click"));
   private static final Key<BufferedImage> BUFFER = Key.create("buffer");
-  @Nonnull
-  private final DocumentEx myDocument;
 
   private final JPanel myPanel;
   @Nonnull
@@ -152,7 +144,6 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
   private final EditorComponentImpl myEditorComponent;
   @Nonnull
   private final EditorGutterComponentImpl myGutterComponent;
-  private final TraceableDisposable myTraceableDisposable = TraceableDisposable.newTraceDisposable(true);
   private final FocusModeModel myFocusModeModel;
   private volatile long myLastTypedActionTimestamp = -1;
   private String myLastTypedAction;
@@ -176,15 +167,8 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
     EMPTY_CURSOR = emptyCursor;
   }
 
-  private final CommandProcessor myCommandProcessor;
   @Nonnull
   private final MyScrollBar myVerticalScrollBar;
-
-  private final List<EditorMouseListener> myMouseListeners = ContainerUtil.createLockFreeCopyOnWriteList();
-  @Nonnull
-  private final List<EditorMouseMotionListener> myMouseMotionListeners = ContainerUtil.createLockFreeCopyOnWriteList();
-
-  private boolean myIsInsertMode = true;
 
   @Nonnull
   private final CaretCursor myCaretCursor;
@@ -192,11 +176,6 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
 
   @SuppressWarnings("RedundantStringConstructorCall")
   private final Object MOUSE_DRAGGED_GROUP = new String("MouseDraggedGroup");
-
-  @Nonnull
-  private final SettingsImpl mySettings;
-
-  private boolean isReleased;
 
   @Nullable
   private MouseEvent myMousePressedEvent;
@@ -213,32 +192,6 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
   private EditorMouseEventArea myMousePressArea;
   private int mySavedSelectionStart = -1;
   private int mySavedSelectionEnd = -1;
-
-  private final PropertyChangeSupport myPropertyChangeSupport = new PropertyChangeSupport(this);
-  private MyEditable myEditable;
-
-  @Nonnull
-  private EditorColorsScheme myScheme;
-  private boolean myIsViewer;
-  @Nonnull
-  private final DesktopSelectionModelImpl mySelectionModel;
-  @Nonnull
-  private final DesktopEditorMarkupModelImpl myMarkupModel;
-  @Nonnull
-  private final EditorFilteringMarkupModelEx myDocumentMarkupModel;
-  @Nonnull
-  private final MarkupModelListener myMarkupModelListener;
-
-  @Nonnull
-  private final FoldingModelImpl myFoldingModel;
-  @Nonnull
-  private final DesktopScrollingModelImpl myScrollingModel;
-  @Nonnull
-  private final DesktopCaretModelImpl myCaretModel;
-  @Nonnull
-  private final SoftWrapModelImpl mySoftWrapModel;
-  @Nonnull
-  private final InlayModelImpl myInlayModel;
 
   @Nonnull
   private static final RepaintCursorCommand ourCaretBlinkingCommand = new RepaintCursorCommand();
@@ -258,8 +211,6 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
   private static final int MOUSE_SELECTION_STATE_WORD_SELECTED = 1;
   private static final int MOUSE_SELECTION_STATE_LINE_SELECTED = 2;
 
-  private volatile EditorHighlighter myHighlighter; // updated in EDT, but can be accessed from other threads (under read action)
-  private Disposable myHighlighterDisposable = Disposable.newDisposable();
   private final TextDrawingCallback myTextDrawingCallback = new MyTextDrawingCallback();
 
   @MagicConstant(intValues = {VERTICAL_SCROLLBAR_LEFT, VERTICAL_SCROLLBAR_RIGHT})
@@ -267,21 +218,12 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
   private boolean myKeepSelectionOnMousePress;
 
   private boolean myUpdateCursor;
-  private final EditorScrollingPositionKeeper myScrollingPositionKeeper;
-  private boolean myRestoreScrollingPosition;
 
-  @Nullable
-  private final Project myProject;
   private long myMouseSelectionChangeTimestamp;
   private int mySavedCaretOffsetForDNDUndoHack;
-  private final List<FocusChangeListener> myFocusListeners = ContainerUtil.createLockFreeCopyOnWriteList();
 
   private MyInputMethodHandler myInputMethodRequestsHandler;
   private InputMethodRequests myInputMethodRequestsSwingWrapper;
-  private boolean myIsOneLineMode;
-  private boolean myIsRendererMode;
-  private VirtualFile myVirtualFile;
-  private boolean myIsColumnMode;
   @Nullable
   private ColorValue myForcedBackground;
   @Nullable
@@ -304,26 +246,9 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
 
   private EditorDropHandler myDropHandler;
 
-  private Condition<RangeHighlighter> myHighlightingFilter;
-
-  @Nonnull
-  private final IndentsModel myIndentsModel;
-
-  @Nullable
-  private CharSequence myPlaceholderText;
-  @Nullable
-  private TextAttributes myPlaceholderAttributes;
-  private boolean myShowPlaceholderWhenFocused;
-
-  private boolean myStickySelection;
-  private int myStickySelectionStart;
-  private boolean myScrollToCaret = true;
-
-  private boolean myPurePaintingMode;
   private boolean myPaintSelection;
 
   private final EditorSizeAdjustmentStrategy mySizeAdjustmentStrategy = new EditorSizeAdjustmentStrategy();
-  private final Disposable myDisposable = Disposable.newDisposable();
 
   private List<CaretState> myCaretStateBeforeLastPress;
   LogicalPosition myLastMousePressedLocation;
@@ -344,94 +269,31 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
   private boolean myCharKeyPressed;
   private boolean myNeedToSelectPreviousChar;
 
-  private boolean myDocumentChangeInProgress;
   private boolean myErrorStripeNeedsRepaint;
-
-  private String myContextMenuGroupId = IdeActions.GROUP_BASIC_EDITOR_POPUP;
-  private final List<EditorPopupHandler> myPopupHandlers = new ArrayList<>();
 
   private boolean myUseEditorAntialiasing = true;
 
   private final ImmediatePainter myImmediatePainter;
 
-  private final List<IntFunction<Collection<LineExtensionInfo>>> myLineExtensionPainters = new SmartList<>();
-
   static {
     ourCaretBlinkingCommand.start();
   }
 
-  private volatile int myExpectedCaretOffset = -1;
-
   private boolean myBackgroundImageSet;
-
-  private final EditorKind myKind;
 
   private boolean myScrollingToCaret;
 
   private StatusComponentContainer myStatusComponentContainer = new StatusComponentContainer();
 
   public DesktopEditorImpl(@Nonnull Document document, boolean viewer, @Nullable Project project, @Nonnull EditorKind kind) {
-    assertIsDispatchThread();
-    myProject = project;
-    myDocument = (DocumentEx)document;
-    myScheme = createBoundColorSchemeDelegate(null);
+    super(document, viewer, project, kind);
+    
     myScrollPane = new MyScrollPane(); // create UI after scheme initialization
-    myIsViewer = viewer;
-    myKind = kind;
-    mySettings = new SettingsImpl(this, project, kind);
-    if (!mySettings.isUseSoftWraps() && shouldSoftWrapsBeForced()) {
-      mySettings.setUseSoftWrapsQuiet();
-      putUserData(FORCED_SOFT_WRAPS, Boolean.TRUE);
-    }
 
-    MarkupModelEx documentMarkup = (MarkupModelEx)DocumentMarkupModel.forDocument(myDocument, myProject, true);
-
-    mySelectionModel = new DesktopSelectionModelImpl(this);
-    myMarkupModel = new DesktopEditorMarkupModelImpl(this);
-    myDocumentMarkupModel = new EditorFilteringMarkupModelEx(this, documentMarkup);
-    myFoldingModel = new FoldingModelImpl(this);
-    myCaretModel = new DesktopCaretModelImpl(this);
-    myScrollingModel = new DesktopScrollingModelImpl(this);
-    myInlayModel = new InlayModelImpl(this);
-    Disposer.register(myCaretModel, myInlayModel);
-    mySoftWrapModel = new SoftWrapModelImpl(this);
-
-    myCommandProcessor = CommandProcessor.getInstance();
+    getScrollingModel().registerListeners();
 
     myImmediatePainter = new ImmediatePainter(this);
 
-    myMarkupModelListener = new MarkupModelListener() {
-      @Override
-      public void afterAdded(@Nonnull RangeHighlighterEx highlighter) {
-        onHighlighterChanged(highlighter, canImpactGutterSize(highlighter), EditorUtil.attributesImpactFontStyleOrColor(highlighter.getTextAttributes()));
-      }
-
-      @Override
-      public void beforeRemoved(@Nonnull RangeHighlighterEx highlighter) {
-        onHighlighterChanged(highlighter, canImpactGutterSize(highlighter), EditorUtil.attributesImpactFontStyleOrColor(highlighter.getTextAttributes()));
-      }
-
-      @Override
-      public void attributesChanged(@Nonnull RangeHighlighterEx highlighter, boolean renderersChanged, boolean fontStyleOrColorChanged) {
-        onHighlighterChanged(highlighter, renderersChanged, fontStyleOrColorChanged);
-      }
-    };
-
-    getFilteredDocumentMarkupModel().addMarkupModelListener(myCaretModel, myMarkupModelListener);
-    getMarkupModel().addMarkupModelListener(myCaretModel, myMarkupModelListener);
-
-    myDocument.addDocumentListener(myFoldingModel, myCaretModel);
-    myDocument.addDocumentListener(myCaretModel, myCaretModel);
-
-    myDocument.addDocumentListener(new EditorDocumentAdapter(), myCaretModel);
-    myDocument.addDocumentListener(mySoftWrapModel, myCaretModel);
-
-    myFoldingModel.addListener(mySoftWrapModel, myCaretModel);
-
-    myInlayModel.addListener(myFoldingModel, myCaretModel);
-    myInlayModel.addListener(myCaretModel, myCaretModel);
-
-    myIndentsModel = new IndentsModelImpl(this);
     myCaretModel.addCaretListener(new CaretListener() {
       @Nullable
       private LightweightHint myCurrentHint;
@@ -474,13 +336,13 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
           myPrimaryCaret.updateVisualPosition(); // repainting old primary caret's row background
         }
         repaintCaretRegion(e);
-        myPrimaryCaret = myCaretModel.getPrimaryCaret();
+        myPrimaryCaret = (DesktopCaretImpl)myCaretModel.getPrimaryCaret();
       }
 
       @Override
       public void caretRemoved(@Nonnull CaretEvent e) {
         repaintCaretRegion(e);
-        myPrimaryCaret = myCaretModel.getPrimaryCaret(); // repainting new primary caret's row background
+        myPrimaryCaret = (DesktopCaretImpl)myCaretModel.getPrimaryCaret(); // repainting new primary caret's row background
         myPrimaryCaret.updateVisualPosition();
       }
     });
@@ -514,6 +376,8 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
     if (shouldScrollBarBeOpaque()) myVerticalScrollBar.setOpaque(true);
     myPanel = new JPanel(new BorderLayout());
 
+    getMarkupModel().updateUI();
+    
     UIUtil.putClientProperty(myPanel, UIUtil.NOT_IN_HIERARCHY_COMPONENTS, (Iterable<JComponent>)() -> {
       JComponent component = getPermanentHeaderComponent();
       if (component != null && component.getParent() == null) {
@@ -567,12 +431,49 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
 
     myFocusModeModel = new FocusModeModel(this);
     Disposer.register(myDisposable, myFocusModeModel);
-    myPopupHandlers.add(new DefaultPopupHandler());
-
-    myScrollingPositionKeeper = new EditorScrollingPositionKeeper(this);
-    Disposer.register(myDisposable, myScrollingPositionKeeper);
 
     myLatencyPublisher = ApplicationManager.getApplication().getMessageBus().syncPublisher(LatencyListener.TOPIC);
+  }
+
+  @Override
+  protected CodeEditorSelectionModelBase createSelectionModel() {
+    return new DesktopSelectionModelImpl(this);
+  }
+
+  @Override
+  protected MarkupModelImpl createMarkupModel() {
+    return new DesktopEditorMarkupModelImpl(this);
+  }
+
+  @Override
+  protected CodeEditorFoldingModelBase createFoldingModel() {
+    return new DesktopFoldingModelImpl(this);
+  }
+
+  @Override
+  protected CodeEditorCaretModelBase createCaretModel() {
+    return new DesktopCaretModelImpl(this);
+  }
+
+  @Override
+  protected CodeEditorScrollingModelBase createScrollingModel() {
+    return new DesktopScrollingModelImpl(this);
+  }
+
+  @Override
+  protected CodeEditorInlayModelBase createInlayModel() {
+    return new InlayModelImpl(this);
+  }
+
+  @Override
+  protected CodeEditorSoftWrapModelBase createSoftWrapModel() {
+    return new SoftWrapModelImpl(this);
+  }
+
+  @Nonnull
+  @Override
+  protected DataContext getComponentContext() {
+    return DataManager.getInstance().getDataContext(getContentComponent());
   }
 
   public void applyFocusMode() {
@@ -591,7 +492,8 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
     return myFocusModeModel;
   }
 
-  private boolean canImpactGutterSize(@Nonnull RangeHighlighterEx highlighter) {
+  @Override
+  protected boolean canImpactGutterSize(@Nonnull RangeHighlighterEx highlighter) {
     if (highlighter.getGutterIconRenderer() != null) return true;
     LineMarkerRenderer lineMarkerRenderer = highlighter.getLineMarkerRenderer();
     if (lineMarkerRenderer == null) return false;
@@ -600,7 +502,8 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
            position == LineMarkerRendererEx.Position.RIGHT && !myGutterComponent.myForceRightFreePaintersAreaShown;
   }
 
-  private void onHighlighterChanged(@Nonnull RangeHighlighterEx highlighter, boolean canImpactGutterSize, boolean fontStyleOrColorChanged) {
+  @Override
+  protected void onHighlighterChanged(@Nonnull RangeHighlighterEx highlighter, boolean canImpactGutterSize, boolean fontStyleOrColorChanged) {
     if (myDocument.isInBulkUpdate()) return; // bulkUpdateFinished() will repaint anything
 
     if (canImpactGutterSize) {
@@ -638,7 +541,7 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
         myErrorStripeNeedsRepaint = true;
       }
       else {
-        myMarkupModel.repaint(start, end);
+        getMarkupModel().repaint(start, end);
       }
     }
 
@@ -700,20 +603,6 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
     return !myBackgroundImageSet && !Registry.is("editor.transparent.scrollbar");
   }
 
-  public boolean shouldSoftWrapsBeForced() {
-    if (myProject != null && PsiDocumentManager.getInstance(myProject).isDocumentBlockedByPsi(myDocument)) {
-      // Disable checking for files in intermediate states - e.g. for files during refactoring.
-      return false;
-    }
-    int lineWidthLimit = Registry.intValue("editor.soft.wrap.force.limit");
-    for (int i = 0; i < myDocument.getLineCount(); i++) {
-      if (myDocument.getLineEndOffset(i) - myDocument.getLineStartOffset(i) > lineWidthLimit) {
-        return true;
-      }
-    }
-    return false;
-  }
-
   @Nonnull
   static Color adjustThumbColor(@Nonnull Color base, boolean dark) {
     return dark ? ColorUtil.withAlpha(ColorUtil.shift(base, 1.35), 0.5) : ColorUtil.withAlpha(ColorUtil.shift(base, 0.68), 0.4);
@@ -733,12 +622,6 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
     }
   }
 
-  @Nonnull
-  @Override
-  public EditorColorsScheme createBoundColorSchemeDelegate(@Nullable final EditorColorsScheme customGlobalScheme) {
-    return new MyColorSchemeDelegate(customGlobalScheme);
-  }
-
   private void repaintGuide(@Nullable IndentGuideDescriptor guide) {
     if (guide != null) {
       repaintLines(guide.startLine, guide.endLine);
@@ -752,78 +635,13 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
 
   @Override
   public void setPrefixTextAndAttributes(@Nullable String prefixText, @Nullable TextAttributes attributes) {
-    mySoftWrapModel.recalculate();
+    super.setPrefixTextAndAttributes(prefixText, attributes);
     myView.setPrefix(prefixText, attributes);
-  }
-
-  @Override
-  public boolean isPurePaintingMode() {
-    return myPurePaintingMode;
-  }
-
-  @Override
-  public void setPurePaintingMode(boolean enabled) {
-    myPurePaintingMode = enabled;
-  }
-
-  @Override
-  public void registerLineExtensionPainter(IntFunction<Collection<LineExtensionInfo>> lineExtensionPainter) {
-    myLineExtensionPainters.add(lineExtensionPainter);
-  }
-
-  public boolean processLineExtensions(int line, Processor<? super LineExtensionInfo> processor) {
-    for (IntFunction<Collection<LineExtensionInfo>> painter : myLineExtensionPainters) {
-      for (LineExtensionInfo extension : painter.apply(line)) {
-        if (!processor.process(extension)) {
-          return false;
-        }
-      }
-    }
-    if (myProject != null && myVirtualFile != null) {
-      for (EditorLinePainter painter : EditorLinePainter.EP_NAME.getExtensions()) {
-        Collection<LineExtensionInfo> extensions = painter.getLineExtensions(myProject, myVirtualFile, line);
-        if (extensions != null) {
-          for (LineExtensionInfo extension : extensions) {
-            if (!processor.process(extension)) {
-              return false;
-            }
-          }
-        }
-      }
-    }
-    return true;
   }
 
   @Override
   public void registerScrollBarRepaintCallback(@Nullable Consumer<Graphics> callback) {
     myVerticalScrollBar.registerRepaintCallback(callback);
-  }
-
-  @Override
-  public int getExpectedCaretOffset() {
-    int expectedCaretOffset = myExpectedCaretOffset;
-    return expectedCaretOffset == -1 ? getCaretModel().getOffset() : expectedCaretOffset;
-  }
-
-  @Override
-  public void setContextMenuGroupId(@Nullable String groupId) {
-    myContextMenuGroupId = groupId;
-  }
-
-  @Nullable
-  @Override
-  public String getContextMenuGroupId() {
-    return myContextMenuGroupId;
-  }
-
-  @Override
-  public void installPopupHandler(@Nonnull EditorPopupHandler popupHandler) {
-    myPopupHandlers.add(popupHandler);
-  }
-
-  @Override
-  public void uninstallPopupHandler(@Nonnull EditorPopupHandler popupHandler) {
-    myPopupHandlers.remove(popupHandler);
   }
 
   @Nullable
@@ -843,95 +661,45 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
   }
 
   @Override
-  public void setViewer(boolean isViewer) {
-    myIsViewer = isViewer;
-  }
-
-  @Override
-  public boolean isViewer() {
-    return myIsViewer || myIsRendererMode;
-  }
-
-  @Override
-  public boolean isRendererMode() {
-    return myIsRendererMode;
-  }
-
-  @Override
-  public void setRendererMode(boolean isRendererMode) {
-    myIsRendererMode = isRendererMode;
-  }
-
-  @Override
-  public void setFile(VirtualFile vFile) {
-    myVirtualFile = vFile;
-    reinitSettings();
-  }
-
-  @Override
-  public VirtualFile getVirtualFile() {
-    return myVirtualFile;
-  }
-
-  @Override
   @Nonnull
   public DesktopSelectionModelImpl getSelectionModel() {
-    return mySelectionModel;
+    return (DesktopSelectionModelImpl)super.getSelectionModel();
   }
 
   @Override
   @Nonnull
-  public MarkupModelEx getMarkupModel() {
-    return myMarkupModel;
+  public DesktopEditorMarkupModelImpl getMarkupModel() {
+    return (DesktopEditorMarkupModelImpl)super.getMarkupModel();
   }
 
   @Override
   @Nonnull
-  public MarkupModelEx getFilteredDocumentMarkupModel() {
-    return myDocumentMarkupModel;
-  }
-
-  @Override
-  @Nonnull
-  public FoldingModelImpl getFoldingModel() {
-    return myFoldingModel;
+  public DesktopFoldingModelImpl getFoldingModel() {
+    return (DesktopFoldingModelImpl)super.getFoldingModel();
   }
 
   @Override
   @Nonnull
   public DesktopCaretModelImpl getCaretModel() {
-    return myCaretModel;
+    return (DesktopCaretModelImpl)super.getCaretModel();
   }
 
   @Override
   @Nonnull
-  public ScrollingModelEx getScrollingModel() {
-    return myScrollingModel;
+  public DesktopScrollingModelImpl getScrollingModel() {
+    return (DesktopScrollingModelImpl)super.getScrollingModel();
   }
 
   @Override
   @Nonnull
   public SoftWrapModelImpl getSoftWrapModel() {
-    return mySoftWrapModel;
+    return (SoftWrapModelImpl)super.getSoftWrapModel();
   }
 
   @Nonnull
   @Override
   public InlayModelImpl getInlayModel() {
-    return myInlayModel;
-  }
-
-  @Nonnull
-  @Override
-  public EditorKind getEditorKind() {
-    return myKind;
-  }
-
-  @Override
-  @Nonnull
-  public EditorSettings getSettings() {
-    assertReadAccess();
-    return mySettings;
+    return (InlayModelImpl)super.getInlayModel();
   }
 
   public void resetSizes() {
@@ -941,6 +709,11 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
   @Override
   public void reinitSettings() {
     reinitSettings(true);
+  }
+
+  @Override
+  public void reinitViewSettings() {
+    myView.reinitSettings();
   }
 
   private void reinitSettings(boolean updateGutterSize) {
@@ -998,20 +771,6 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
     if (myFocusModeModel != null) {
       myFocusModeModel.clearFocusMode();
     }
-  }
-
-  /**
-   * To be called when editor was not disposed while it should
-   */
-  public void throwEditorNotDisposedError(@Nonnull final String msg) {
-    myTraceableDisposable.throwObjectNotDisposedError(msg);
-  }
-
-  /**
-   * In case of "editor not disposed error" use {@link #throwEditorNotDisposedError(String)}
-   */
-  public void throwDisposalError(@Nonnull String msg) {
-    myTraceableDisposable.throwDisposalError(msg);
   }
 
   // EditorFactory.releaseEditor should be used to release editor
@@ -1175,8 +934,8 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
     myPanel.addComponentListener(new ComponentAdapter() {
       @Override
       public void componentResized(@Nonnull ComponentEvent e) {
-        myMarkupModel.recalcEditorDimensions();
-        myMarkupModel.repaint(-1, -1);
+        getMarkupModel().recalcEditorDimensions();
+        getMarkupModel().repaint(-1, -1);
         if (!isRightAligned()) return;
         updateCaretCursor();
         myCaretCursor.repaint();
@@ -1230,10 +989,6 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
     finally {
       myScrollingModel.enableAnimation();
     }
-  }
-
-  public int getFontSize() {
-    return myScheme.getEditorFontSize();
   }
 
   @Nonnull
@@ -1295,47 +1050,6 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
     EditorActionManager.getInstance().getTypedAction().actionPerformed(this, c, dataContext);
   }
 
-  private void fireFocusLost(@Nonnull FocusEvent event) {
-    for (FocusChangeListener listener : myFocusListeners) {
-      listener.focusLost(this, event);
-    }
-  }
-
-  private void fireFocusGained(@Nonnull FocusEvent event) {
-    for (FocusChangeListener listener : myFocusListeners) {
-      listener.focusGained(this, event);
-    }
-  }
-
-  @Override
-  public void setHighlighter(@Nonnull final EditorHighlighter highlighter) {
-    if (isReleased) return; // do not set highlighter to the released editor
-    assertIsDispatchThread();
-    final Document document = getDocument();
-    Disposer.dispose(myHighlighterDisposable);
-
-    document.addDocumentListener(highlighter);
-    myHighlighterDisposable = () -> document.removeDocumentListener(highlighter);
-    Disposer.register(myDisposable, myHighlighterDisposable);
-    highlighter.setEditor(this);
-    highlighter.setText(document.getImmutableCharSequence());
-    if (!(highlighter instanceof EmptyEditorHighlighter)) {
-      EditorHighlighterCache.rememberEditorHighlighterForCachesOptimization(document, highlighter);
-    }
-    myHighlighter = highlighter;
-
-    if (myPanel != null) {
-      reinitSettings();
-    }
-  }
-
-  @Nonnull
-  @Override
-  public EditorHighlighter getHighlighter() {
-    assertReadAccess();
-    return myHighlighter;
-  }
-
   @Override
   @Nonnull
   public EditorComponentImpl getContentComponent() {
@@ -1346,49 +1060,6 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
   @Override
   public EditorGutterComponentImpl getGutterComponentEx() {
     return myGutterComponent;
-  }
-
-  @Override
-  public void addPropertyChangeListener(@Nonnull PropertyChangeListener listener) {
-    myPropertyChangeSupport.addPropertyChangeListener(listener);
-  }
-
-  @Override
-  public void addPropertyChangeListener(@Nonnull final PropertyChangeListener listener, @Nonnull Disposable parentDisposable) {
-    addPropertyChangeListener(listener);
-    Disposer.register(parentDisposable, () -> removePropertyChangeListener(listener));
-  }
-
-  @Override
-  public void removePropertyChangeListener(@Nonnull PropertyChangeListener listener) {
-    myPropertyChangeSupport.removePropertyChangeListener(listener);
-  }
-
-  @Override
-  public void setInsertMode(boolean mode) {
-    assertIsDispatchThread();
-    boolean oldValue = myIsInsertMode;
-    myIsInsertMode = mode;
-    myPropertyChangeSupport.firePropertyChange(PROP_INSERT_MODE, oldValue, mode);
-    myCaretCursor.repaint();
-  }
-
-  @Override
-  public boolean isInsertMode() {
-    return myIsInsertMode;
-  }
-
-  @Override
-  public void setColumnMode(boolean mode) {
-    assertIsDispatchThread();
-    boolean oldValue = myIsColumnMode;
-    myIsColumnMode = mode;
-    myPropertyChangeSupport.firePropertyChange(PROP_COLUMN_MODE, oldValue, mode);
-  }
-
-  @Override
-  public boolean isColumnMode() {
-    return myIsColumnMode;
   }
 
   @Override
@@ -1457,10 +1128,12 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
   }
 
   // optimization: do not do column calculations here since we are interested in line number only
-  public int offsetToVisualLine(int offset) {
-    return myView.offsetToVisualLine(offset, false);
+  @Override
+  public int offsetToVisualLine(int offset, boolean beforeSoftWrap) {
+    return myView.offsetToVisualLine(offset, beforeSoftWrap);
   }
 
+  @Override
   public int visualLineStartOffset(int visualLine) {
     return myView.visualLineToOffset(visualLine);
   }
@@ -1521,11 +1194,7 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
   }
 
   @Override
-  public void repaint(int startOffset, int endOffset) {
-    repaint(startOffset, endOffset, true);
-  }
-
-  void repaint(int startOffset, int endOffset, boolean invalidateTextLayout) {
+  public void repaint(int startOffset, int endOffset, boolean invalidateTextLayout) {
     if (myDocument.isInBulkUpdate()) {
       return;
     }
@@ -1536,7 +1205,7 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
       myView.invalidateRange(startOffset, endOffset);
     }
 
-    if (!isShowing()) {
+    if (!isGutterShowing()) {
       return;
     }
     // We do repaint in case of equal offsets because there is a possible case that there is a soft wrap at the same offset and
@@ -1548,7 +1217,7 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
     }
   }
 
-  private boolean isShowing() {
+  private boolean isGutterShowing() {
     return myGutterComponent.isShowing();
   }
 
@@ -1573,7 +1242,7 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
    * @param endLine   end logical line to repaint (inclusive)
    */
   private void repaintLines(int startLine, int endLine) {
-    if (!isShowing()) return;
+    if (!isGutterShowing()) return;
 
     int startVisualLine = logicalToVisualLine(startLine);
     int endVisualLine = myDocument.getTextLength() <= 0 ? 0 : offsetToVisualLine(myDocument.getLineEndOffset(Math.min(myDocument.getLineCount() - 1, endLine)));
@@ -1591,19 +1260,15 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
     myGutterComponent.repaint(0, yStart, myGutterComponent.getWidth(), height);
   }
 
-  private void bulkUpdateStarted() {
+  @Override
+  protected void bulkUpdateStarted() {
     myView.getPreferredSize(); // make sure size is calculated (in case it will be required while bulk mode is active)
 
-    myScrollingModel.onBulkDocumentUpdateStarted();
-
-    myScrollingPositionKeeper.savePosition();
-
-    myCaretModel.onBulkDocumentUpdateStarted();
-    mySoftWrapModel.onBulkDocumentUpdateStarted();
-    myFoldingModel.onBulkDocumentUpdateStarted();
+    ((DesktopScrollingModelImpl)myScrollingModel).onBulkDocumentUpdateStarted();
   }
 
-  private void bulkUpdateFinished() {
+  @Override
+  protected void bulkUpdateFinished() {
     myFoldingModel.onBulkDocumentUpdateFinished();
     mySoftWrapModel.onBulkDocumentUpdateFinished();
     myView.reset();
@@ -1622,37 +1287,19 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
     }
   }
 
-  private void beforeChangedUpdate(DocumentEvent e) {
-    ApplicationManager.getApplication().assertIsDispatchThread();
-
-    myDocumentChangeInProgress = true;
-    if (isStickySelection()) {
-      setStickySelection(false);
-    }
-    if (myDocument.isInBulkUpdate()) {
-      // Assuming that the job is done at bulk listener callback methods.
-      return;
-    }
-
-    myRestoreScrollingPosition = getCaretModel().getOffset() < e.getOffset() || getCaretModel().getOffset() > e.getOffset() + e.getOldLength();
-    if (myRestoreScrollingPosition) {
-      myScrollingPositionKeeper.savePosition();
-    }
-  }
-
   void invokeDelayedErrorStripeRepaint() {
     if (myErrorStripeNeedsRepaint) {
-      myMarkupModel.repaint(-1, -1);
+      getMarkupModel().repaint(-1, -1);
       myErrorStripeNeedsRepaint = false;
     }
   }
 
-  private void changedUpdate(DocumentEvent e) {
+  protected void changedUpdate(DocumentEvent e) {
     myDocumentChangeInProgress = false;
     if (myDocument.isInBulkUpdate()) return;
 
     if (myErrorStripeNeedsRepaint) {
-      myMarkupModel.repaint(e.getOffset(), e.getOffset() + e.getNewLength());
+      getMarkupModel().repaint(e.getOffset(), e.getOffset() + e.getNewLength());
       myErrorStripeNeedsRepaint = false;
     }
 
@@ -1690,6 +1337,30 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
     }
   }
 
+  @Override
+  public void setInsertMode(boolean mode) {
+    super.setInsertMode(mode);
+    myCaretCursor.repaint();
+  }
+
+  @Override
+  @Nonnull
+  public String dumpState() {
+    return super.dumpState() +
+           "\ninsets: " +
+           myEditorComponent.getInsets() +
+           (myView == null ? "" : "\nview: " + myView.dumpState());
+  }
+
+  @Override
+  public void setHighlighter(@Nonnull EditorHighlighter highlighter) {
+    super.setHighlighter(highlighter);
+
+    if (myPanel != null) {
+      reinitSettings();
+    }
+  }
+
   private void escapeGutterAccessibleLine(int offsetStart, int offsetEnd) {
     int startVisLine = offsetToVisualLine(offsetStart);
     int endVisLine = offsetToVisualLine(offsetEnd);
@@ -1704,19 +1375,6 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
       myDefaultCursor = EMPTY_CURSOR;
       updateEditorCursor();
     }
-  }
-
-  public boolean isScrollToCaret() {
-    return myScrollToCaret;
-  }
-
-  public void setScrollToCaret(boolean scrollToCaret) {
-    myScrollToCaret = scrollToCaret;
-  }
-
-  @Nonnull
-  public Disposable getDisposable() {
-    return myDisposable;
   }
 
   private static int countLineFeeds(@Nonnull CharSequence c) {
@@ -1742,7 +1400,8 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
     }
   }
 
-  void validateSize() {
+  @Override
+  public void validateSize() {
     if (isReleased) return;
 
     Dimension dim = getPreferredSize();
@@ -1757,8 +1416,8 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
         myEditorComponent.setSize(dim);
         myEditorComponent.fireResized();
 
-        myMarkupModel.recalcEditorDimensions();
-        myMarkupModel.repaint(-1, -1);
+        getMarkupModel().recalcEditorDimensions();
+        getMarkupModel().repaint(-1, -1);
       }
     }
   }
@@ -1770,52 +1429,8 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
 
   @Override
   @Nonnull
-  public DocumentEx getDocument() {
-    return myDocument;
-  }
-
-  @Override
-  @Nonnull
   public JComponent getComponent() {
     return myPanel;
-  }
-
-  @Override
-  public void addEditorMouseListener(@Nonnull EditorMouseListener listener) {
-    myMouseListeners.add(listener);
-  }
-
-  @Override
-  public void removeEditorMouseListener(@Nonnull EditorMouseListener listener) {
-    boolean success = myMouseListeners.remove(listener);
-    LOG.assertTrue(success || isReleased);
-  }
-
-  @Override
-  public void addEditorMouseMotionListener(@Nonnull EditorMouseMotionListener listener) {
-    myMouseMotionListeners.add(listener);
-  }
-
-  @Override
-  public void removeEditorMouseMotionListener(@Nonnull EditorMouseMotionListener listener) {
-    boolean success = myMouseMotionListeners.remove(listener);
-    LOG.assertTrue(success || isReleased);
-  }
-
-  @Override
-  public boolean isStickySelection() {
-    return myStickySelection;
-  }
-
-  @Override
-  public void setStickySelection(boolean enable) {
-    myStickySelection = enable;
-    if (enable) {
-      myStickySelectionStart = getCaretModel().getOffset();
-    }
-    else {
-      mySelectionModel.removeSelection();
-    }
   }
 
   public void setHorizontalTextAlignment(@MagicConstant(intValues = {TEXT_ALIGNMENT_LEFT, TEXT_ALIGNMENT_RIGHT}) int alignment) {
@@ -1827,22 +1442,14 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
   }
 
   @Override
-  public boolean isDisposed() {
-    return isReleased;
-  }
-
-  public void stopDumbLater() {
-    if (ApplicationManager.getApplication().isUnitTestMode()) return;
-    ApplicationManager.getApplication().invokeLater(this::stopDumb, ModalityState.current(), __ -> isDisposed());
-  }
-
-  private void stopDumb() {
+  protected void stopDumb() {
     putUserData(BUFFER, null);
   }
 
   /**
    * {@link #stopDumbLater} or {@link #stopDumb} must be performed in finally
    */
+  @Override
   public void startDumb() {
     if (ApplicationManager.getApplication().isHeadlessEnvironment()) return;
     if (!Registry.is("editor.dumb.mode.available")) return;
@@ -1900,12 +1507,6 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
 
   Color getDisposedBackground() {
     return new JBColor(new Color(128, 255, 128), new Color(128, 255, 128));
-  }
-
-  @Nonnull
-  @Override
-  public IndentsModel getIndentsModel() {
-    return myIndentsModel;
   }
 
   @Override
@@ -1978,34 +1579,6 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
     return myTextDrawingCallback;
   }
 
-  @Override
-  public void setPlaceholder(@Nullable CharSequence text) {
-    myPlaceholderText = text;
-  }
-
-  @Override
-  public void setPlaceholderAttributes(@Nullable TextAttributes attributes) {
-    myPlaceholderAttributes = attributes;
-  }
-
-  @Nullable
-  public TextAttributes getPlaceholderAttributes() {
-    return myPlaceholderAttributes;
-  }
-
-  public CharSequence getPlaceholder() {
-    return myPlaceholderText;
-  }
-
-  @Override
-  public void setShowPlaceholderWhenFocused(boolean show) {
-    myShowPlaceholderWhenFocused = show;
-  }
-
-  public boolean getShowPlaceholderWhenFocused() {
-    return myShowPlaceholderWhenFocused;
-  }
-
   ColorValue getBackgroundColor(@Nonnull final TextAttributes attributes) {
     final ColorValue attrColor = attributes.getBackgroundColor();
     return Comparing.equal(attrColor, myScheme.getDefaultBackground()) ? getBackgroundColor() : attrColor;
@@ -2037,34 +1610,6 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
 
   public void setPaintSelection(boolean paintSelection) {
     myPaintSelection = paintSelection;
-  }
-
-  @Override
-  @Nonnull
-  @NonNls
-  public String dumpState() {
-    return "allow caret inside tab: " +
-           mySettings.isCaretInsideTabs() +
-           ", allow caret after line end: " +
-           mySettings.isVirtualSpace() +
-           ", soft wraps: " +
-           (mySoftWrapModel.isSoftWrappingEnabled() ? "on" : "off") +
-           ", caret model: " +
-           getCaretModel().dumpState() +
-           ", soft wraps data: " +
-           getSoftWrapModel().dumpState() +
-           "\n\nfolding data: " +
-           getFoldingModel().dumpState() +
-           "\ninlay model: " +
-           getInlayModel().dumpState() +
-           (myDocument instanceof DocumentImpl ? "\n\ndocument info: " + ((DocumentImpl)myDocument).dumpState() : "") +
-           "\nfont preferences: " +
-           myScheme.getFontPreferences() +
-           "\npure painting mode: " +
-           myPurePaintingMode +
-           "\ninsets: " +
-           myEditorComponent.getInsets() +
-           (myView == null ? "" : "\nview: " + myView.dumpState());
   }
 
   @Nullable
@@ -2193,6 +1738,7 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
    * lines (considering that single logical document line may be represented on multiple visual lines because of
    * soft wraps appliance) minus number of folded lines
    */
+  @Override
   public int getVisibleLineCount() {
     return getVisibleLogicalLinesCount() + getSoftWrapModel().getSoftWrapsIntroducedLinesNumber();
   }
@@ -2316,29 +1862,6 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
         !isCreateRectangularSelectionEvent(myMousePressedEvent)) {
       getSelectionModel().removeSelection();
     }
-  }
-
-  @Nonnull
-  @Override
-  public DataContext getDataContext() {
-    return getProjectAwareDataContext(DataManager.getInstance().getDataContext(getContentComponent()));
-  }
-
-  @Nonnull
-  private DataContext getProjectAwareDataContext(@Nonnull final DataContext original) {
-    if (original.getData(CommonDataKeys.PROJECT) == myProject) return original;
-
-    return new DataContext() {
-      @Nullable
-      @Override
-      @SuppressWarnings("unchecked")
-      public <T> T getData(@Nonnull Key<T> dataId) {
-        if (CommonDataKeys.PROJECT == dataId) {
-          return (T)myProject;
-        }
-        return original.getData(dataId);
-      }
-    };
   }
 
   private boolean isInsideGutterWhitespaceArea(@Nonnull MouseEvent e) {
@@ -2704,7 +2227,7 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
     }
   }
 
-  void updateCaretCursor() {
+  public void updateCaretCursor() {
     myUpdateCursor = true;
     if (myCaretCursor.myIsShown) {
       myCaretCursor.myStartTime = System.currentTimeMillis();
@@ -2713,6 +2236,16 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
       myCaretCursor.myIsShown = true;
       myCaretCursor.repaint();
     }
+  }
+
+  @Override
+  public boolean isRtlLocation(@Nonnull VisualPosition visualPosition) {
+    return myView.isRtlLocation(visualPosition);
+  }
+
+  @Override
+  public boolean isAtBidiRunBoundary(@Nonnull VisualPosition visualPosition) {
+    return myView.isAtBidiRunBoundary(visualPosition);
   }
 
   private void setCursorPosition() {
@@ -2751,27 +2284,6 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
   }
 
   @Override
-  public void addFocusListener(@Nonnull FocusChangeListener listener) {
-    myFocusListeners.add(listener);
-  }
-
-  @Override
-  public void addFocusListener(@Nonnull FocusChangeListener listener, @Nonnull Disposable parentDisposable) {
-    DisposerUtil.add(listener, myFocusListeners, parentDisposable);
-  }
-
-  @Override
-  @Nullable
-  public Project getProject() {
-    return myProject;
-  }
-
-  @Override
-  public boolean isOneLineMode() {
-    return myIsOneLineMode;
-  }
-
-  @Override
   public boolean isEmbeddedIntoDialogWrapper() {
     return myEmbeddedIntoDialogWrapper;
   }
@@ -2784,13 +2296,6 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
     myScrollPane.setFocusable(!b);
     myEditorComponent.setFocusCycleRoot(!b);
     myEditorComponent.setFocusable(b);
-  }
-
-  @Override
-  public void setOneLineMode(boolean isOneLineMode) {
-    myIsOneLineMode = isOneLineMode;
-    getScrollPane().setInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT, null);
-    reinitSettings();
   }
 
   public static class CaretRectangle {
@@ -3084,120 +2589,6 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
     }
   }
 
-  private MyEditable getViewer() {
-    if (myEditable == null) {
-      myEditable = new MyEditable();
-    }
-    return myEditable;
-  }
-
-  @Override
-  public CopyProvider getCopyProvider() {
-    return getViewer();
-  }
-
-  @Override
-  public CutProvider getCutProvider() {
-    return getViewer();
-  }
-
-  @Override
-  public PasteProvider getPasteProvider() {
-
-    return getViewer();
-  }
-
-  @Override
-  public DeleteProvider getDeleteProvider() {
-    return getViewer();
-  }
-
-  private class MyEditable implements CutProvider, CopyProvider, PasteProvider, DeleteProvider, DumbAware {
-    @Override
-    public void performCopy(@Nonnull DataContext dataContext) {
-      executeAction(IdeActions.ACTION_EDITOR_COPY, dataContext);
-    }
-
-    @Override
-    public boolean isCopyEnabled(@Nonnull DataContext dataContext) {
-      return true;
-    }
-
-    @Override
-    public boolean isCopyVisible(@Nonnull DataContext dataContext) {
-      return getSelectionModel().hasSelection(true);
-    }
-
-    @Override
-    public void performCut(@Nonnull DataContext dataContext) {
-      executeAction(IdeActions.ACTION_EDITOR_CUT, dataContext);
-    }
-
-    @Override
-    public boolean isCutEnabled(@Nonnull DataContext dataContext) {
-      return !isViewer();
-    }
-
-    @Override
-    public boolean isCutVisible(@Nonnull DataContext dataContext) {
-      return isCutEnabled(dataContext) && getSelectionModel().hasSelection(true);
-    }
-
-    @Override
-    public void performPaste(@Nonnull DataContext dataContext) {
-      executeAction(IdeActions.ACTION_EDITOR_PASTE, dataContext);
-    }
-
-    @Override
-    public boolean isPastePossible(@Nonnull DataContext dataContext) {
-      // Copy of isPasteEnabled. See interface method javadoc.
-      return !isViewer();
-    }
-
-    @Override
-    public boolean isPasteEnabled(@Nonnull DataContext dataContext) {
-      return !isViewer();
-    }
-
-    @Override
-    public void deleteElement(@Nonnull DataContext dataContext) {
-      executeAction(IdeActions.ACTION_EDITOR_DELETE, dataContext);
-    }
-
-    @Override
-    public boolean canDeleteElement(@Nonnull DataContext dataContext) {
-      return !isViewer();
-    }
-
-    private void executeAction(@Nonnull String actionId, @Nonnull DataContext dataContext) {
-      EditorAction action = (EditorAction)ActionManager.getInstance().getAction(actionId);
-      if (action != null) {
-        action.actionPerformed(DesktopEditorImpl.this, dataContext);
-      }
-    }
-  }
-
-  @Override
-  public void setColorsScheme(@Nonnull EditorColorsScheme scheme) {
-    assertIsDispatchThread();
-    myScheme = scheme;
-    reinitSettings();
-  }
-
-  @Override
-  @Nonnull
-  public EditorColorsScheme getColorsScheme() {
-    return myScheme;
-  }
-
-  static void assertIsDispatchThread() {
-    ApplicationManager.getApplication().assertIsDispatchThread();
-  }
-
-  private static void assertReadAccess() {
-    ApplicationManager.getApplication().assertReadAccessAllowed();
-  }
-
   @Override
   public void setVerticalScrollbarOrientation(int type) {
     assertIsDispatchThread();
@@ -3210,7 +2601,7 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
     else {
       myScrollPane.setLayout(new ScrollPaneLayout());
     }
-    myMarkupModel.updateErrorStripePanel();
+    getMarkupModel().updateErrorStripePanel();
     myScrollingModel.scrollHorizontally(currentHorOffset);
   }
 
@@ -3334,7 +2725,7 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
   }
 
   public void beforeModalityStateChanged() {
-    myScrollingModel.beforeModalityStateChanged();
+    ((DesktopScrollingModelImpl)myScrollingModel).beforeModalityStateChanged();
   }
 
   EditorDropHandler getDropHandler() {
@@ -3343,24 +2734,6 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
 
   public void setDropHandler(@Nonnull EditorDropHandler dropHandler) {
     myDropHandler = dropHandler;
-  }
-
-  public void setHighlightingFilter(@Nullable Condition<RangeHighlighter> filter) {
-    if (myHighlightingFilter == filter) return;
-    Condition<RangeHighlighter> oldFilter = myHighlightingFilter;
-    myHighlightingFilter = filter;
-
-    for (RangeHighlighter highlighter : myDocumentMarkupModel.getDelegate().getAllHighlighters()) {
-      boolean oldAvailable = oldFilter == null || oldFilter.value(highlighter);
-      boolean newAvailable = filter == null || filter.value(highlighter);
-      if (oldAvailable != newAvailable) {
-        myMarkupModelListener.attributesChanged((RangeHighlighterEx)highlighter, true, EditorUtil.attributesImpactFontStyleOrColor(highlighter.getTextAttributes()));
-      }
-    }
-  }
-
-  public boolean isHighlighterAvailable(@Nonnull RangeHighlighter highlighter) {
-    return myHighlightingFilter == null || myHighlightingFilter.value(highlighter);
   }
 
   private static class MyInputMethodHandleSwingThreadWrapper implements InputMethodRequests {
@@ -4133,213 +3506,6 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
     }
   }
 
-  private class MyColorSchemeDelegate extends DelegateColorScheme {
-    private final FontPreferencesImpl myFontPreferences = new FontPreferencesImpl();
-    private final FontPreferencesImpl myConsoleFontPreferences = new FontPreferencesImpl();
-    private final Map<TextAttributesKey, TextAttributes> myOwnAttributes = new HashMap<>();
-    private final Map<EditorColorKey, ColorValue> myOwnColors = new HashMap<>();
-    private final EditorColorsScheme myCustomGlobalScheme;
-    private Map<EditorFontType, Font> myFontsMap;
-    private int myMaxFontSize = EditorFontsConstants.getMaxEditorFontSize();
-    private int myFontSize = -1;
-    private int myConsoleFontSize = -1;
-    private String myFaceName;
-    private Float myLineSpacing;
-
-    private MyColorSchemeDelegate(@Nullable EditorColorsScheme globalScheme) {
-      super(globalScheme == null ? EditorColorsManager.getInstance().getGlobalScheme() : globalScheme);
-      myCustomGlobalScheme = globalScheme;
-      updateGlobalScheme();
-    }
-
-    private void reinitFonts() {
-      EditorColorsScheme delegate = getDelegate();
-      String editorFontName = getEditorFontName();
-      int editorFontSize = getEditorFontSize();
-      updatePreferences(myFontPreferences, editorFontName, editorFontSize, delegate == null ? null : delegate.getFontPreferences());
-      String consoleFontName = getConsoleFontName();
-      int consoleFontSize = getConsoleFontSize();
-      updatePreferences(myConsoleFontPreferences, consoleFontName, consoleFontSize, delegate == null ? null : delegate.getConsoleFontPreferences());
-
-      myFontsMap = new EnumMap<>(EditorFontType.class);
-      myFontsMap.put(EditorFontType.PLAIN, new Font(editorFontName, Font.PLAIN, editorFontSize));
-      myFontsMap.put(EditorFontType.BOLD, new Font(editorFontName, Font.BOLD, editorFontSize));
-      myFontsMap.put(EditorFontType.ITALIC, new Font(editorFontName, Font.ITALIC, editorFontSize));
-      myFontsMap.put(EditorFontType.BOLD_ITALIC, new Font(editorFontName, Font.BOLD | Font.ITALIC, editorFontSize));
-      myFontsMap.put(EditorFontType.CONSOLE_PLAIN, new Font(consoleFontName, Font.PLAIN, consoleFontSize));
-      myFontsMap.put(EditorFontType.CONSOLE_BOLD, new Font(consoleFontName, Font.BOLD, consoleFontSize));
-      myFontsMap.put(EditorFontType.CONSOLE_ITALIC, new Font(consoleFontName, Font.ITALIC, consoleFontSize));
-      myFontsMap.put(EditorFontType.CONSOLE_BOLD_ITALIC, new Font(consoleFontName, Font.BOLD | Font.ITALIC, consoleFontSize));
-    }
-
-    private void updatePreferences(@Nonnull FontPreferencesImpl preferences, @Nonnull String fontName, int fontSize, @Nullable FontPreferences delegatePreferences) {
-      preferences.clear();
-      preferences.register(fontName, fontSize);
-      if (delegatePreferences != null) {
-        boolean first = true; //skip delegate's primary font
-        for (String font : delegatePreferences.getRealFontFamilies()) {
-          if (!first) {
-            preferences.register(font, fontSize);
-          }
-          first = false;
-        }
-      }
-      preferences.setUseLigatures(delegatePreferences != null && delegatePreferences.useLigatures());
-    }
-
-    private void reinitFontsAndSettings() {
-      reinitFonts();
-      reinitSettings();
-    }
-
-    @Override
-    public TextAttributes getAttributes(TextAttributesKey key) {
-      if (myOwnAttributes.containsKey(key)) return myOwnAttributes.get(key);
-      return getDelegate().getAttributes(key);
-    }
-
-    @Override
-    public void setAttributes(@Nonnull TextAttributesKey key, TextAttributes attributes) {
-      myOwnAttributes.put(key, attributes);
-    }
-
-    @Nullable
-    @Override
-    public ColorValue getColor(EditorColorKey key) {
-      if (myOwnColors.containsKey(key)) {
-        return myOwnColors.get(key);
-      }
-      return getDelegate().getColor(key);
-    }
-
-    @Override
-    public void setColor(EditorColorKey key, ColorValue color) {
-      myOwnColors.put(key, color);
-
-      // These two are here because those attributes are cached and I do not whant the clients to call editor's reinit
-      // settings in this case.
-      myCaretModel.reinitSettings();
-      mySelectionModel.reinitSettings();
-    }
-
-    @Override
-    public int getEditorFontSize() {
-      if (myFontSize == -1) {
-        return getDelegate().getEditorFontSize();
-      }
-      return myFontSize;
-    }
-
-    @Override
-    public void setEditorFontSize(int fontSize) {
-      if (fontSize < MIN_FONT_SIZE) fontSize = MIN_FONT_SIZE;
-      if (fontSize > myMaxFontSize) fontSize = myMaxFontSize;
-      if (fontSize == myFontSize) return;
-      myFontSize = fontSize;
-      reinitFontsAndSettings();
-    }
-
-    @Nonnull
-    @Override
-    public FontPreferences getFontPreferences() {
-      return myFontPreferences.getEffectiveFontFamilies().isEmpty() ? getDelegate().getFontPreferences() : myFontPreferences;
-    }
-
-    @Override
-    public void setFontPreferences(@Nonnull FontPreferences preferences) {
-      if (Comparing.equal(preferences, myFontPreferences)) return;
-      preferences.copyTo(myFontPreferences);
-      reinitFontsAndSettings();
-    }
-
-    @Nonnull
-    @Override
-    public FontPreferences getConsoleFontPreferences() {
-      return myConsoleFontPreferences.getEffectiveFontFamilies().isEmpty() ? getDelegate().getConsoleFontPreferences() : myConsoleFontPreferences;
-    }
-
-    @Override
-    public void setConsoleFontPreferences(@Nonnull FontPreferences preferences) {
-      if (Comparing.equal(preferences, myConsoleFontPreferences)) return;
-      preferences.copyTo(myConsoleFontPreferences);
-      reinitFontsAndSettings();
-    }
-
-    @Override
-    public String getEditorFontName() {
-      if (myFaceName == null) {
-        return getDelegate().getEditorFontName();
-      }
-      return myFaceName;
-    }
-
-    @Override
-    public void setEditorFontName(String fontName) {
-      if (Comparing.equal(fontName, myFaceName)) return;
-      myFaceName = fontName;
-      reinitFontsAndSettings();
-    }
-
-    @Nonnull
-    @Override
-    public Font getFont(EditorFontType key) {
-      if (myFontsMap != null) {
-        Font font = myFontsMap.get(key);
-        if (font != null) return font;
-      }
-      return getDelegate().getFont(key);
-    }
-
-    @Override
-    public void setFont(EditorFontType key, Font font) {
-      if (myFontsMap == null) {
-        reinitFontsAndSettings();
-      }
-      myFontsMap.put(key, font);
-      reinitSettings();
-    }
-
-    @Override
-    @Nullable
-    public EditorColorsScheme clone() {
-      return null;
-    }
-
-    private void updateGlobalScheme() {
-      setDelegate(myCustomGlobalScheme == null ? EditorColorsManager.getInstance().getGlobalScheme() : myCustomGlobalScheme);
-    }
-
-    @Override
-    public void setDelegate(@Nonnull EditorColorsScheme delegate) {
-      super.setDelegate(delegate);
-      int globalFontSize = getDelegate().getEditorFontSize();
-      myMaxFontSize = Math.max(EditorFontsConstants.getMaxEditorFontSize(), globalFontSize);
-      reinitFonts();
-    }
-
-    @Override
-    public void setConsoleFontSize(int fontSize) {
-      myConsoleFontSize = fontSize;
-      reinitFontsAndSettings();
-    }
-
-    @Override
-    public int getConsoleFontSize() {
-      return myConsoleFontSize == -1 ? super.getConsoleFontSize() : myConsoleFontSize;
-    }
-
-    @Override
-    public float getLineSpacing() {
-      return myLineSpacing == null ? super.getLineSpacing() : myLineSpacing;
-    }
-
-    @Override
-    public void setLineSpacing(float lineSpacing) {
-      myLineSpacing = EditorFontsConstants.checkAndFixEditorLineSpacing(lineSpacing);
-      reinitSettings();
-    }
-  }
-
   private static class ExplosionPainter extends AbstractPainter {
     private final Point myExplosionLocation;
     private final Image myImage;
@@ -4565,33 +3731,6 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
     }
   }
 
-  private class EditorDocumentAdapter implements PrioritizedDocumentListener {
-    @Override
-    public void beforeDocumentChange(@Nonnull DocumentEvent e) {
-      beforeChangedUpdate(e);
-    }
-
-    @Override
-    public void documentChanged(@Nonnull DocumentEvent e) {
-      changedUpdate(e);
-    }
-
-    @Override
-    public void bulkUpdateStarting(@Nonnull Document document) {
-      bulkUpdateStarted();
-    }
-
-    @Override
-    public void bulkUpdateFinished(@Nonnull Document document) {
-      DesktopEditorImpl.this.bulkUpdateFinished();
-    }
-
-    @Override
-    public int getPriority() {
-      return EditorDocumentPriorities.EDITOR_DOCUMENT_ADAPTER;
-    }
-  }
-
   @Override
   @Nonnull
   public EditorGutter getGutter() {
@@ -4604,20 +3743,6 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
 
   boolean isInPresentationMode() {
     return UISettings.getInstance().getPresentationMode() && EditorUtil.isRealFileEditor(this);
-  }
-
-  @Override
-  public void putInfo(@Nonnull Map<String, String> info) {
-    final VisualPosition visual = getCaretModel().getVisualPosition();
-    info.put("caret", visual.getLine() + ":" + visual.getColumn());
-  }
-
-  private void invokePopupIfNeeded(EditorMouseEvent event) {
-    if (event.getArea() == EditorMouseEventArea.EDITING_AREA && event.getMouseEvent().isPopupTrigger() && !event.isConsumed()) {
-      for (int i = myPopupHandlers.size() - 1; i >= 0; i--) {
-        if (myPopupHandlers.get(i).handlePopup(event)) break;
-      }
-    }
   }
 
   @Override
@@ -4647,20 +3772,6 @@ public final class DesktopEditorImpl extends UserDataHolderBase implements Edito
     myFoldingModel.validateState();
     myCaretModel.validateState();
     myInlayModel.validateState();
-  }
-
-  private class DefaultPopupHandler extends ContextMenuPopupHandler.ById {
-    @Nullable
-    @Override
-    public String getActionGroupId(@Nonnull EditorMouseEvent event) {
-      String contextMenuGroupId = myContextMenuGroupId;
-      Inlay inlay = myInlayModel.getElementAt(event.getMouseEvent().getPoint());
-      if (inlay != null) {
-        String inlayContextMenuGroupId = inlay.getRenderer().getContextMenuGroupId(inlay);
-        if (inlayContextMenuGroupId != null) contextMenuGroupId = inlayContextMenuGroupId;
-      }
-      return contextMenuGroupId;
-    }
   }
 
   private class MyScrollPane extends JBScrollPane {

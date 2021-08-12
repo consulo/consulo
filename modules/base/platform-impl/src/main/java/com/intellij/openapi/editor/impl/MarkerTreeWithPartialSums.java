@@ -13,8 +13,8 @@ import java.util.function.IntSupplier;
  * Only 'non-greedy' markers with zero length are supported (for such markers start offset is always equal to end offset).
  * Not thread safe - cannot be used from multiple threads simultaneously.
  */
-class MarkerTreeWithPartialSums<T extends RangeMarkerWithGetterImpl & IntSupplier> extends HardReferencingRangeMarkerTree<T> {
-  MarkerTreeWithPartialSums(@Nonnull Document document) {
+public class MarkerTreeWithPartialSums<T extends RangeMarkerWithGetterImpl & IntSupplier> extends HardReferencingRangeMarkerTree<T> {
+  public MarkerTreeWithPartialSums(@Nonnull Document document) {
     super(document);
   }
 
@@ -35,7 +35,7 @@ class MarkerTreeWithPartialSums<T extends RangeMarkerWithGetterImpl & IntSupplie
   /**
    * Calculates sum of values associated with markers having offset less than or equal to given offset.
    */
-  int getSumOfValuesUpToOffset(int offset) {
+  public int getSumOfValuesUpToOffset(int offset) {
     return getSumOfValuesForOverlappingRanges(getRoot(), offset, 0);
   }
 
@@ -119,7 +119,7 @@ class MarkerTreeWithPartialSums<T extends RangeMarkerWithGetterImpl & IntSupplie
     }
 
     @Override
-    void removeIntervalInternal(int i) {
+    public void removeIntervalInternal(int i) {
       super.removeIntervalInternal(i);
       recalculateSubTreeSumUp();
     }
