@@ -161,7 +161,7 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
    * If value is {@code false}, IW lock will be granted on EDT at all times, guaranteeing the same execution model as before
    * IW lock introduction.
    */
-  public static final boolean USE_SEPARATE_WRITE_THREAD = true;
+  public static final boolean USE_SEPARATE_WRITE_THREAD = Boolean.getBoolean("idea.use.separate.write.thread");
 
   private static final Logger LOG = Logger.getInstance(BaseApplication.class);
   private static final ExtensionPointName<ServiceDescriptor> APP_SERVICES = ExtensionPointName.create("com.intellij.applicationService");
@@ -450,10 +450,16 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
 
     ShutDownTracker.getInstance().ensureStopperThreadsFinished();
 
+    super.dispose();
+
+    // Remove IW lock from EDT as EDT might be re-created which might lead to deadlock if anybody uses this disposed app
+    if (!USE_SEPARATE_WRITE_THREAD) {
+      invokeLater(() -> releaseWriteIntentLock(), ModalityState.NON_MODAL);
+    }
+
     AppScheduledExecutorService service = (AppScheduledExecutorService)AppExecutorUtil.getAppScheduledExecutorService();
     service.shutdownAppScheduledExecutorService();
 
-    super.dispose();
     Disposer.dispose(myLastDisposable); // dispose it last
   }
 

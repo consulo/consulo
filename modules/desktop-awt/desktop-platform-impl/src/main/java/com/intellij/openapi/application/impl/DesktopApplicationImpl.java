@@ -158,6 +158,10 @@ public class DesktopApplicationImpl extends BaseApplication {
 
     myLock = new ReadMostlyRWLock(edt);
 
+    if (!USE_SEPARATE_WRITE_THREAD) {
+      UIUtil.invokeAndWaitIfNeeded((Runnable)() -> acquireWriteIntentLock(getClass().getName()));
+    }
+
     NoSwingUnderWriteAction.watchForEvents(this);
   }
 
