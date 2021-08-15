@@ -281,6 +281,14 @@
     
     <!--optional dependency-->
     <dependency>
+      <groupId>net.java.dev.jna</groupId>
+      <artifactId>jna-jpms</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>net.java.dev.jna</groupId>
+      <artifactId>jna-platform-jpms</artifactId>
+    </dependency>
+    <dependency>
       <groupId>org.apache.xmlrpc</groupId>
       <artifactId>xmlrpc-common</artifactId>
     </dependency>

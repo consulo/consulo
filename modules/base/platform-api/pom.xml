@@ -74,7 +74,7 @@
       <artifactId>consulo-util-collection-primitive</artifactId>
       <version>${project.version}</version>
     </dependency>
-    
+
     <!--internal dependencies-->
     <dependency>
       <groupId>consulo.internal</groupId>

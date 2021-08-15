@@ -29,14 +29,14 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-    <jna.version>5.6.0</jna.version>
+    <jna.version>5.8.0</jna.version>
     <jdom.version>3.0-SNAPSHOT</jdom.version>
-    <log4j2.version>2.13.3</log4j2.version>
-    <guava.version>29.0-jre</guava.version>
+    <log4j2.version>2.14.1</log4j2.version>
+    <guava.version>30.1.1-jre</guava.version>
     <!--please exclude common logging library from dependency-->
-    <httpclient.version>4.5.3</httpclient.version>
-    <netty.version>4.1.52.Final</netty.version>
-    <gson.version>2.8.6</gson.version>
+    <httpclient.version>4.5.13</httpclient.version>
+    <netty.version>4.1.66.Final</netty.version>
+    <gson.version>2.8.7</gson.version>
     <cglib.version>3.2.4</cglib.version>
     <slf4j.version>2.0.0-alpha1</slf4j.version>
     <junit.version>4.12</junit.version>
@@ -100,7 +100,7 @@
       <dependency>
         <groupId>org.apache.commons</groupId>
         <artifactId>commons-compress</artifactId>
-        <version>1.18</version>
+        <version>1.21</version>
       </dependency>
       <dependency>
         <groupId>consulo.internal</groupId>
@@ -121,18 +121,18 @@
       </dependency>
       <dependency>
         <groupId>net.java.dev.jna</groupId>
-        <artifactId>jna</artifactId>
+        <artifactId>jna-jpms</artifactId>
+        <version>${jna.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>net.java.dev.jna</groupId>
+        <artifactId>jna-platform-jpms</artifactId>
         <version>${jna.version}</version>
       </dependency>
       <dependency>
         <groupId>consulo.internal</groupId>
         <artifactId>jakarta.inject-api</artifactId>
         <version>1.0.3-SNAPSHOT</version>
-      </dependency>
-      <dependency>
-        <groupId>net.java.dev.jna</groupId>
-        <artifactId>jna-platform</artifactId>
-        <version>${jna.version}</version>
       </dependency>
       <dependency>
         <groupId>org.imgscalr</groupId>
@@ -147,7 +147,7 @@
       <dependency>
         <groupId>org.lz4</groupId>
         <artifactId>lz4-java</artifactId>
-        <version>1.7.1</version>
+        <version>1.8.0</version>
       </dependency>
       <dependency>
         <groupId>org.apache.logging.log4j</groupId>
@@ -398,7 +398,7 @@
       <dependency>
         <groupId>org.apache.commons</groupId>
         <artifactId>commons-lang3</artifactId>
-        <version>3.9</version>
+        <version>3.12.0</version>
         <optional>true</optional>
       </dependency>
       <dependency>
@@ -447,7 +447,7 @@
       <dependency>
         <groupId>org.yaml</groupId>
         <artifactId>snakeyaml</artifactId>
-        <version>1.27</version>
+        <version>1.29</version>
       </dependency>
       <dependency>
         <groupId>org.eclipse.jetty</groupId>

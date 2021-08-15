@@ -100,11 +100,11 @@
     </dependency>
     <dependency>
       <groupId>net.java.dev.jna</groupId>
-      <artifactId>jna</artifactId>
+      <artifactId>jna-jpms</artifactId>
     </dependency>
     <dependency>
       <groupId>net.java.dev.jna</groupId>
-      <artifactId>jna-platform</artifactId>
+      <artifactId>jna-platform-jpms</artifactId>
     </dependency>
     <dependency>
       <groupId>org.lz4</groupId>

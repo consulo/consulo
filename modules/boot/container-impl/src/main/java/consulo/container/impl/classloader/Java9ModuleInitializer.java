@@ -99,6 +99,10 @@ public class Java9ModuleInitializer {
       toResolve.add("jsr305");
       toResolve.add("org.slf4j");
 
+      // jna provide dependency to desktop, need version without desktop dep?
+      toResolve.add("com.sun.jna");
+      toResolve.add("com.sun.jna.platform");
+
       //toResolve.add("org.apache.commons.compress");
       toResolve.add("org.apache.logging.log4j");
       // consulo internal
@@ -132,9 +136,6 @@ public class Java9ModuleInitializer {
       //toResolve.add("jakarta.activation");
       // requires java.desktop???
       //toResolve.add("java.xml.bind");
-
-      //toResolve.add("com.sun.jna");
-      //toResolve.add("com.sun.jna.platform");
 
       toResolve.add("consulo.ui.api");
       //toResolve.add("svg.salamander");
