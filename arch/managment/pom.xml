@@ -44,7 +44,7 @@
     <servlet.version>3.1.0</servlet.version>
     <websocket.version>1.1</websocket.version>
     <vaadin.version>8.12-SNAPSHOT</vaadin.version>
-    <jaxb.version>2.3.2</jaxb.version>
+    <jaxb.version>3.0.1</jaxb.version>
     <jetty.version>9.4.31.v20200723</jetty.version>
 
     <build.number>SNAPSHOT</build.number>
@@ -532,14 +532,19 @@
         <version>${jaxb.version}</version>
       </dependency>
       <dependency>
+        <groupId>org.glassfish.jaxb</groupId>
+        <artifactId>txw2</artifactId>
+        <version>${jaxb.version}</version>
+      </dependency>
+      <dependency>
         <groupId>com.sun.istack</groupId>
         <artifactId>istack-commons-runtime</artifactId>
-        <version>3.0.11</version>
+        <version>4.0.1</version>
       </dependency>
       <dependency>
         <groupId>jakarta.activation</groupId>
         <artifactId>jakarta.activation-api</artifactId>
-        <version>1.2.1</version>
+        <version>2.0.1</version>
       </dependency>
     </dependencies>
   </dependencyManagement>

@@ -173,7 +173,9 @@
         <include>org.apache.ws.commons:ws-commons-util</include>
         <include>org.yaml:snakeyaml</include>
         <include>jakarta.xml.bind:jakarta.xml.bind-api</include>
+        <include>org.glassfish.jaxb:jaxb-core</include>
         <include>org.glassfish.jaxb:jaxb-runtime</include>
+        <include>org.glassfish.jaxb:txw2</include>
         <include>com.sun.istack:istack-commons-runtime</include>
         <include>jakarta.activation:jakarta.activation-api</include>
       </includes>
