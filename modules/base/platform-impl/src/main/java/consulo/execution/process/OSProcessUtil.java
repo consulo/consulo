@@ -17,6 +17,7 @@ package consulo.execution.process;
 
 import com.intellij.execution.process.ProcessInfo;
 import com.intellij.openapi.util.text.StringUtil;
+import consulo.logging.Logger;
 import consulo.util.collection.ArrayUtil;
 
 import javax.annotation.Nonnull;
@@ -24,13 +25,14 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Stream;
 
 /**
  * @author VISTALL
  * @since 31-Jan-17
  */
 public class OSProcessUtil {
+  private static final Logger LOG = Logger.getInstance(OSProcessUtil.class);
+
   @Deprecated
   public static int getCurrentProcessId() {
     return (int)ProcessHandle.current().pid();
@@ -41,29 +43,32 @@ public class OSProcessUtil {
   }
 
   @Nonnull
-  public static ProcessInfo[] getProcessList() {
-    Stream<ProcessHandle> stream = ProcessHandle.allProcesses();
-
+  public static List<ProcessInfo> getProcessList() {
     List<ProcessInfo> processInfos = new ArrayList<>();
 
-    stream.forEach(it -> {
+    ProcessHandle.allProcesses().forEach(it -> {
       long pid = it.pid();
-      
-      ProcessHandle.Info info = it.info();
 
-      Optional<String> commandOptional = info.command();
-      // no access to process info
-      if(commandOptional.isEmpty() && info.user().isEmpty()) {
-        return;
+      try {
+        ProcessHandle.Info info = it.info();
+
+        Optional<String> commandOptional = info.command();
+        // no access to process info
+        if(commandOptional.isEmpty() && info.user().isEmpty()) {
+          return;
+        }
+
+        String command = commandOptional.orElse("");
+        String commandLine = info.commandLine().orElse("");
+        String args = StringUtil.join(info.arguments().orElse(ArrayUtil.EMPTY_STRING_ARRAY), " ");
+
+        processInfos.add(new ProcessInfo((int)pid, commandLine, new File(command).getName(), args, command));
       }
-      
-      String command = commandOptional.orElse("");
-      String commandLine = info.commandLine().orElse("");
-      String args = StringUtil.join(info.arguments().orElse(ArrayUtil.EMPTY_STRING_ARRAY), " ");
-
-      processInfos.add(new ProcessInfo((int)pid, commandLine, new File(command).getName(), args, command));
+      catch (Throwable e) {
+        LOG.warn("Failed to get #info() for processId: " + pid, e);
+      }
     });
 
-    return processInfos.toArray(ProcessInfo[]::new);
+    return processInfos;
   }
 }

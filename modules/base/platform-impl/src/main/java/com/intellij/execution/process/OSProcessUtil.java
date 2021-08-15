@@ -16,6 +16,7 @@
 package com.intellij.execution.process;
 
 import javax.annotation.Nonnull;
+import java.util.List;
 
 @Deprecated
 public class OSProcessUtil {
@@ -26,7 +27,7 @@ public class OSProcessUtil {
 
   @Nonnull
   @Deprecated
-  public static ProcessInfo[] getProcessList() {
+  public static List<ProcessInfo> getProcessList() {
     return consulo.execution.process.OSProcessUtil.getProcessList();
   }
 }

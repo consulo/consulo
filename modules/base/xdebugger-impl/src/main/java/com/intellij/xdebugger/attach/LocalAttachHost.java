@@ -5,17 +5,16 @@ import com.intellij.execution.ExecutionException;
 import com.intellij.execution.configurations.GeneralCommandLine;
 import com.intellij.execution.process.BaseProcessHandler;
 import com.intellij.execution.process.CapturingProcessHandler;
-import com.intellij.execution.process.OSProcessUtil;
 import com.intellij.execution.process.ProcessInfo;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
-import javax.annotation.Nonnull;
+import consulo.execution.process.OSProcessUtil;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Arrays;
 import java.util.List;
 
 public class LocalAttachHost extends EnvironmentAwareHost {
@@ -24,7 +23,7 @@ public class LocalAttachHost extends EnvironmentAwareHost {
   @Nonnull
   @Override
   public List<ProcessInfo> getProcessList() {
-    return Arrays.asList(OSProcessUtil.getProcessList());
+    return OSProcessUtil.getProcessList();
   }
 
   @Nonnull
