@@ -17,7 +17,6 @@ package consulo.container.impl;
 
 import consulo.container.impl.parser.*;
 import consulo.container.plugin.*;
-import consulo.util.nodep.SystemInfoRt;
 import consulo.util.nodep.io.FileUtilRt;
 import consulo.util.nodep.map.SimpleMultiMap;
 import consulo.util.nodep.text.StringUtilRt;
@@ -27,7 +26,9 @@ import consulo.util.nodep.xml.node.SimpleXmlElement;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.*;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
@@ -381,14 +382,7 @@ public class PluginDescriptorImpl extends PluginDescriptorStub {
   public List<File> getClassPath() {
     if (myPath.isDirectory()) {
       final List<File> result = new ArrayList<File>();
-
       fillLibs(new File(myPath, "lib"), result);
-
-      // special case until we move to JRE11
-      if (SystemInfoRt.isJavaVersionAtLeast(11, 0, 0)) {
-        fillLibs(new File(myPath, "lib_11"), result);
-      }
-
       return result;
     }
     else {
