@@ -24,18 +24,16 @@ import com.intellij.ui.awt.RelativeRectangle;
 import com.intellij.ui.paint.LinePainter2D;
 import com.intellij.ui.scale.JBUIScale;
 import com.intellij.ui.switcher.QuickActionProvider;
+import com.intellij.util.IJSwingUtilities;
 import com.intellij.util.ui.*;
-import com.intellij.util.ui.update.Activatable;
-import com.intellij.util.ui.update.UiNotifyConnector;
 import consulo.awt.TargetAWT;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.ide.base.BaseDataManager;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
+import consulo.ui.Size;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
-import consulo.ui.Size;
 import consulo.util.dataholder.Key;
 import org.intellij.lang.annotations.MagicConstant;
 import org.jetbrains.annotations.TestOnly;
@@ -46,8 +44,6 @@ import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.lang.ref.ReferenceQueue;
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -79,6 +75,9 @@ public class ActionToolbarImpl extends JPanel implements ActionToolbar, QuickAct
       }
     }
   }
+
+  private static final String SUPPRESS_ACTION_COMPONENT_WARNING = "ActionToolbarImpl.suppressCustomComponentWarning";
+  private static final String SUPPRESS_TARGET_COMPONENT_WARNING = "ActionToolbarImpl.suppressTargetComponentWarning";
 
   /**
    * This array contains Rectangles which define bounds of the corresponding
@@ -121,6 +120,8 @@ public class ActionToolbarImpl extends JPanel implements ActionToolbar, QuickAct
   private boolean mySkipWindowAdjustments;
   private boolean myMinimalMode;
   private boolean myForceUseMacEnhancements;
+
+  private final Throwable myCreationTrace = new Throwable("toolbar creation trace");
 
   public ActionButton getSecondaryActionsButton() {
     return mySecondaryActionsButton;
@@ -895,32 +896,6 @@ public class ActionToolbarImpl extends JPanel implements ActionToolbar, QuickAct
     }
   }
 
-  private static class ToolbarReference extends WeakReference<ActionToolbarImpl> {
-    private static final ReferenceQueue<ActionToolbarImpl> ourQueue = new ReferenceQueue<>();
-    private volatile Disposable myDisposable;
-
-    ToolbarReference(@Nonnull ActionToolbarImpl toolbar) {
-      super(toolbar, ourQueue);
-      processQueue();
-    }
-
-    private static void processQueue() {
-      while (true) {
-        ToolbarReference ref = (ToolbarReference)ourQueue.poll();
-        if (ref == null) break;
-        ref.disposeReference();
-      }
-    }
-
-    private void disposeReference() {
-      Disposable disposable = myDisposable;
-      if (disposable != null) {
-        myDisposable = null;
-        Disposer.dispose(disposable);
-      }
-    }
-  }
-
   private final class MySeparator extends JComponent {
     @Nonnull
     private final LocalizeValue myTextValue;
@@ -1107,31 +1082,18 @@ public class ActionToolbarImpl extends JPanel implements ActionToolbar, QuickAct
 
   @Override
   public void setTargetComponent(final JComponent component) {
+    if (myTargetComponent == null) {
+      putClientProperty(SUPPRESS_TARGET_COMPONENT_WARNING, true);
+    }
+
     myTargetComponent = component;
 
-    if (myTargetComponent != null) {
-      updateWhenFirstShown(myTargetComponent, new ToolbarReference(this));
+    if (myTargetComponent != component) {
+      myTargetComponent = component;
+      if (isShowing()) {
+        updateActionsImmediately();
+      }
     }
-  }
-
-  private static void updateWhenFirstShown(@Nonnull JComponent targetComponent, @Nonnull ToolbarReference ref) {
-    Activatable activatable = new Activatable.Adapter() {
-      @Override
-      public void showNotify() {
-        ActionToolbarImpl toolbar = ref.get();
-        if (toolbar != null) {
-          toolbar.myUpdater.updateActions(false, false);
-        }
-      }
-    };
-
-    ref.myDisposable = new UiNotifyConnector(targetComponent, activatable) {
-      @Override
-      protected void showNotify() {
-        super.showNotify();
-        ref.disposeReference();
-      }
-    };
   }
 
   @Nonnull
@@ -1147,7 +1109,14 @@ public class ActionToolbarImpl extends JPanel implements ActionToolbar, QuickAct
 
   @Nonnull
   protected DataContext getDataContext() {
-    return myTargetComponent != null ? myDataManager.getDataContext(myTargetComponent) : ((BaseDataManager)myDataManager).getDataContextTest(this);
+    if (myTargetComponent == null && getClientProperty(SUPPRESS_TARGET_COMPONENT_WARNING) == null && !ApplicationManager.getApplication().isUnitTestMode()) {
+      putClientProperty(SUPPRESS_TARGET_COMPONENT_WARNING, true);
+      LOG.warn("'" + myPlace + "' toolbar by default uses any focused component to update its actions. " +
+               "Toolbar actions that need local UI context would be incorrectly disabled. " +
+               "Please call toolbar.setTargetComponent() explicitly.", myCreationTrace);
+    }
+    Component target = myTargetComponent != null ? myTargetComponent : IJSwingUtilities.getFocusedComponentInWindowOrSelf(this);
+    return myDataManager.getDataContext(target);
   }
 
   @Override
