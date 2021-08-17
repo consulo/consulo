@@ -34,6 +34,8 @@ import com.intellij.openapi.wm.WindowManager;
 import com.intellij.openapi.wm.ex.StatusBarEx;
 import com.intellij.util.Alarm;
 import consulo.disposer.Disposable;
+import consulo.ui.Component;
+import consulo.ui.FocusableComponent;
 
 import javax.annotation.Nonnull;
 
@@ -88,19 +90,24 @@ public class StatusBarUpdater implements Disposable {
     }
 
     Editor editor = FileEditorManager.getInstance(myProject).getSelectedTextEditor();
-    if (editor == null || !editor.getContentComponent().hasFocus()) {
+    if (editor == null) {
+      return;
+    }
+
+    Component contentUIComponent = editor.getContentUIComponent();
+    if(!FocusableComponent.hasFocus(contentUIComponent)) {
       return;
     }
 
     final Document document = editor.getDocument();
-    if (document instanceof DocumentEx && ((DocumentEx)document).isInBulkUpdate()) return;
+    if (document instanceof DocumentEx && document.isInBulkUpdate()) return;
 
     int offset = editor.getCaretModel().getOffset();
     DaemonCodeAnalyzer codeAnalyzer = DaemonCodeAnalyzer.getInstance(myProject);
     HighlightInfo info = ((DaemonCodeAnalyzerImpl)codeAnalyzer).findHighlightByOffset(document, offset, false, HighlightSeverity.WARNING);
     String text = info != null && info.getDescription() != null ? info.getDescription() : "";
 
-    StatusBar statusBar = WindowManager.getInstance().getStatusBar(editor.getContentComponent(), myProject);
+    StatusBar statusBar = WindowManager.getInstance().getStatusBar(contentUIComponent, myProject);
     if (statusBar instanceof StatusBarEx) {
       StatusBarEx barEx = (StatusBarEx)statusBar;
       if (!text.equals(barEx.getInfo())) {

@@ -80,6 +80,12 @@ public class TargetAWTFacadeImpl implements TargetAWTFacade {
     }
   }
 
+  @Nonnull
+  @Override
+  public Component wrap(@Nonnull java.awt.Component component) {
+    return new TempComponentWrapper(component);
+  }
+
   @Override
   @Nonnull
   public java.awt.Dimension to(@Nonnull Size size) {

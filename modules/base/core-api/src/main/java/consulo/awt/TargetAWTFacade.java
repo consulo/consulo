@@ -54,6 +54,11 @@ public interface TargetAWTFacade {
   @Contract("null -> null")
   Component from(@Nullable java.awt.Component component);
 
+  @Nonnull
+  default Component wrap(@Nonnull java.awt.Component component) {
+    throw new UnsupportedOperationException();
+  }
+
   @Contract("null -> null")
   java.awt.Window to(@Nullable Window component);
 

@@ -15,6 +15,7 @@
  */
 package consulo.web.gwt.shared.ui.state;
 
+import javax.annotation.Nonnull;
 import java.io.Serializable;
 
 /**
@@ -26,13 +27,8 @@ public class RGBColorShared implements Serializable  {
   public int myGreen;
   public int myBlue;
 
-  @Override
-  public String toString() {
-    final StringBuilder sb = new StringBuilder("RGBColor{");
-    sb.append("myRed=").append(myRed);
-    sb.append(", myGreen=").append(myGreen);
-    sb.append(", myBlue=").append(myBlue);
-    sb.append('}');
-    return sb.toString();
+  @Nonnull
+  public  String toString() {
+    return "rgb(" + myRed + ", " + myGreen + ", " + myBlue + ")";
   }
 }

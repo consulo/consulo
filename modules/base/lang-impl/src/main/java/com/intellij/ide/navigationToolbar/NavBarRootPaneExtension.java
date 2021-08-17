@@ -37,10 +37,10 @@ import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import consulo.awt.TargetAWT;
 import consulo.disposer.Disposer;
-import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nullable;
-
 import jakarta.inject.Inject;
+import org.jetbrains.annotations.NonNls;
+
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 
@@ -143,6 +143,7 @@ public class NavBarRootPaneExtension extends IdeRootPaneNorthExtension {
       if (toolbarRunGroup instanceof ActionGroup) {
         final boolean needGap = isNeedGap(toolbarRunGroup);
         final ActionToolbar actionToolbar = manager.createActionToolbar(ActionPlaces.NAVIGATION_BAR_TOOLBAR, (ActionGroup)toolbarRunGroup, true);
+        actionToolbar.setTargetComponent(null);
         final JComponent component = actionToolbar.getComponent();
         myRunPanel = new JPanel(new BorderLayout()) {
           @Override

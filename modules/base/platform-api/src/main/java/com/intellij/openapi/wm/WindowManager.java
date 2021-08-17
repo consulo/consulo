@@ -97,6 +97,10 @@ public abstract class WindowManager {
     return null;
   }
 
+  public StatusBar getStatusBar(@Nonnull consulo.ui.Component c, @Nullable Project project) {
+    return null;
+  }
+
   @Deprecated
   @Nullable
   public JFrame getFrame(@Nullable Project project) {

@@ -18,6 +18,7 @@ package consulo.ui.desktop.internal;
 import com.intellij.ui.scale.JBUIScale;
 import com.intellij.util.io.UnsyncByteArrayInputStream;
 import com.intellij.util.ui.EDT;
+import com.intellij.util.ui.update.UiNotifyConnector;
 import com.kitfox.svg.SVGDiagram;
 import consulo.awt.TargetAWT;
 import consulo.localize.LocalizeValue;
@@ -471,5 +472,12 @@ public class DesktopUIInternalImpl extends UIInternal {
   @Override
   public PasswordBox _Components_passwordBox(@Nullable String passwordText) {
     return new DesktopPasswordBoxImpl(passwordText);
+  }
+
+  @Override
+  public void _ShowNotifier_once(@Nonnull Component component, @Nonnull Runnable action) {
+    java.awt.Component awtComponent = TargetAWT.to(component);
+
+    UiNotifyConnector.doWhenFirstShown(awtComponent, action);
   }
 }

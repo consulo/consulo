@@ -102,6 +102,18 @@ public interface Editor extends UserDataHolder {
     throw new UnsupportedOperationException("Unsupported platform");
   }
 
+  /**
+   * Returns the component for the content area of the editor (the area displaying the document text).
+   * The component can be used, for example, for converting logical to screen coordinates.
+   * The instance is implementing {@link DataProvider}
+   *
+   * @return the component instance.
+   */
+  @Nonnull
+  default Component getContentUIComponent() {
+    throw new UnsupportedOperationException("Unsupported platform");
+  }
+
   default void setBorder(@Nullable Border border) {
     throw new UnsupportedOperationException("Unsupported platform");
   }

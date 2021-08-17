@@ -436,6 +436,11 @@ public final class DesktopWindowManagerImpl extends WindowManagerEx implements P
   }
 
   @Override
+  public StatusBar getStatusBar(@Nonnull consulo.ui.Component c, @Nullable Project project) {
+    return getStatusBar(TargetAWT.to(c), project);
+  }
+
+  @Override
   public StatusBar getStatusBar(@Nonnull Component c, @Nullable Project project) {
     Component parent = UIUtil.findUltimateParent(c);
     if (parent instanceof Window) {

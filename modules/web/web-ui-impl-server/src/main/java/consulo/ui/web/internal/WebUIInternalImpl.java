@@ -15,6 +15,7 @@
  */
 package consulo.ui.web.internal;
 
+import com.vaadin.shared.Registration;
 import com.vaadin.ui.UI;
 import consulo.localize.LocalizeValue;
 import consulo.ui.*;
@@ -36,6 +37,7 @@ import consulo.ui.style.StyleManager;
 import consulo.ui.web.internal.image.*;
 import consulo.ui.web.internal.layout.*;
 import consulo.util.lang.StringUtil;
+import consulo.util.lang.ref.SimpleReference;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -242,6 +244,11 @@ public class WebUIInternalImpl extends UIInternal {
   }
 
   @Override
+  public Image _ImageEffects_colorize(Image baseImage, ColorValue colorValue) {
+    return baseImage;
+  }
+
+  @Override
   public Image _ImageEffects_resize(Image original, int width, int height) {
     return new WebResizeImageImpl(original, width, height);
   }
@@ -412,5 +419,26 @@ public class WebUIInternalImpl extends UIInternal {
   @Override
   public FocusManager _FocusManager_get() {
     return WebFocusManagerImpl.ourInstance;
+  }
+
+  @Override
+  public void _ShowNotifier_once(@Nonnull Component component, @Nonnull Runnable action) {
+    // TODO [VISTALL] logic for this notifier is not fully correct. Run only on first attach to parent, npt vo
+    com.vaadin.ui.Component vaadinComponent = TargetVaddin.to(component);
+
+    SimpleReference<Registration> ref = SimpleReference.create();
+
+    Registration registration = vaadinComponent.addAttachListener(attachEvent -> {
+      UIAccess uiAccess = UIAccess.current();
+
+      uiAccess.give(() -> {
+        ref.get().remove();
+        
+        action.run();
+      });
+    });
+    ref.set(registration);
+
+    action.run();
   }
 }

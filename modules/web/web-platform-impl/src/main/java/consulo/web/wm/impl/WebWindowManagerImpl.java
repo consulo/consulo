@@ -88,6 +88,14 @@ public class WebWindowManagerImpl extends UnifiedWindowManagerImpl implements Pe
   }
 
   @Override
+  public StatusBar getStatusBar(@Nonnull consulo.ui.Component c, @Nullable Project project) {
+    if(project == null) {
+      return null;
+    }
+    return getStatusBar(project);
+  }
+
+  @Override
   public IdeFrameEx getIdeFrame(@Nullable Project project) {
     return myProject2Frame.get(project);
   }

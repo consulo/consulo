@@ -8,7 +8,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.wm.StatusBar;
 import com.intellij.openapi.wm.StatusBarWidgetFactory;
-import com.intellij.openapi.wm.impl.status.IdeStatusBarImpl;
+import com.intellij.openapi.wm.ex.StatusBarEx;
 import com.intellij.ui.UIBundle;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.ui.UIAccess;
@@ -16,7 +16,6 @@ import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -87,6 +86,7 @@ public class StatusBarWidgetsActionGroup extends ActionGroup {
       }
     }
 
+    @RequiredUIAccess
     @Override
     public void update(@Nonnull AnActionEvent e) {
       super.update(e);
@@ -97,11 +97,10 @@ public class StatusBarWidgetsActionGroup extends ActionGroup {
       }
     }
 
-    private
     @Nullable
-    static StatusBarWidgetFactory getFactory(@Nonnull AnActionEvent e) {
+    private static StatusBarWidgetFactory getFactory(@Nonnull AnActionEvent e) {
       Project project = e.getProject();
-      String hoveredWidgetId = e.getData(IdeStatusBarImpl.HOVERED_WIDGET_ID);
+      String hoveredWidgetId = e.getData(StatusBarEx.HOVERED_WIDGET_ID);
       StatusBar statusBar = e.getData(PlatformDataKeys.STATUS_BAR);
       if (project != null && hoveredWidgetId != null && statusBar != null) {
         return StatusBarWidgetsManager.getInstance(project).findWidgetFactory(hoveredWidgetId);

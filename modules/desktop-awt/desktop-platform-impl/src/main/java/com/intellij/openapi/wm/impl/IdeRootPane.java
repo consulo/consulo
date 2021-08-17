@@ -210,6 +210,7 @@ public class IdeRootPane extends JRootPane implements Disposable, UISettingsList
             true
     );
     toolBar.setLayoutPolicy(ActionToolbar.WRAP_LAYOUT_POLICY);
+    toolBar.setTargetComponent(null);
 
     DefaultActionGroup menuGroup = new DefaultActionGroup();
     menuGroup.add(new ViewToolbarAction());

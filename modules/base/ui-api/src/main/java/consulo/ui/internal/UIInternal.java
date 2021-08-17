@@ -266,4 +266,8 @@ public abstract class UIInternal {
   public PasswordBox _Components_passwordBox(@Nullable String passwordText) {
     throw new UnsupportedOperationException();
   }
+
+  public void _ShowNotifier_once(@Nonnull Component component, @RequiredUIAccess @Nonnull Runnable action) {
+    throw new UnsupportedOperationException();
+  }
 }

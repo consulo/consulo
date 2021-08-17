@@ -17,24 +17,32 @@ package consulo.ui.web.internal.ex;
 
 import com.intellij.ide.DataManager;
 import com.intellij.openapi.actionSystem.DataContext;
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.command.UndoConfirmationPolicy;
 import com.intellij.openapi.editor.*;
 import com.intellij.openapi.editor.actionSystem.DocCommandGroupId;
 import com.intellij.openapi.editor.event.*;
 import com.intellij.openapi.editor.ex.EditorGutterComponentEx;
+import com.intellij.openapi.editor.highlighter.HighlighterIterator;
 import com.intellij.openapi.editor.impl.MarkupModelImpl;
 import com.intellij.openapi.editor.impl.TextDrawingCallback;
+import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.openapi.fileEditor.ex.IdeDocumentHistory;
 import com.intellij.openapi.project.Project;
 import consulo.annotation.access.RequiredReadAction;
+import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.editor.impl.*;
 import consulo.internal.arquill.editor.server.ArquillEditor;
 import consulo.internal.arquill.editor.server.event.MouseDownEvent;
 import consulo.ui.Component;
+import consulo.ui.FocusableComponent;
+import consulo.ui.color.ColorValue;
 import consulo.ui.web.internal.base.ComponentHolder;
 import consulo.ui.web.internal.base.FromVaadinComponentWrapper;
 import consulo.ui.web.internal.base.VaadinComponentDelegate;
+import consulo.ui.web.internal.util.Mappers;
+import consulo.web.gwt.shared.ui.state.RGBColorShared;
 import org.intellij.lang.annotations.MagicConstant;
 
 import javax.annotation.Nonnull;
@@ -42,6 +50,8 @@ import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author VISTALL
@@ -67,11 +77,17 @@ public class WebEditorImpl extends CodeEditorBase {
     }
   }
 
-  private static class EditorComponent extends VaadinComponentDelegate<Vaadin> implements Component {
+  private static class EditorComponent extends VaadinComponentDelegate<Vaadin> implements Component, FocusableComponent {
     @Nonnull
     @Override
     public Vaadin createVaadinComponent() {
       return new Vaadin("");
+    }
+
+    @Override
+    public boolean hasFocus() {
+      // TODO [VISTALL] fake
+      return true;
     }
   }
 
@@ -80,8 +96,6 @@ public class WebEditorImpl extends CodeEditorBase {
   private final WebEditorView myView;
 
   private final WebEditorGutterComponentImpl myGutterComponent;
-
-  private int myLastCaretPosition;
 
   @RequiredReadAction
   public WebEditorImpl(@Nonnull Document document, boolean viewer, @Nullable Project project, @Nonnull EditorKind kind) {
@@ -103,18 +117,45 @@ public class WebEditorImpl extends CodeEditorBase {
 
     vaadin.addMouseDownListener(this::runMousePressedCommand);
 
+    Disposable firstCall = Disposable.newDisposable("caret first");
     myCaretModel.addCaretListener(new CaretListener() {
       @Override
       public void caretPositionChanged(CaretEvent e) {
-        myLastCaretPosition = e.getCaret().getOffset();
-      }
-    });
+        firstCall.disposeWithTree();
 
-    vaadin.addAttachListener(attachEvent -> vaadin.setCaretOffset(myLastCaretPosition));
+        int offset = e.getCaret().getOffset();
+
+        Application.get().getLastUIAccess().give(() -> vaadin.setCaretOffset(offset));
+      }
+    }, firstCall);
+
+    vaadin.addAttachListener(attachEvent -> update());
   }
 
   // due EditorMouseEvent use awt Event, we need set fake event, until migrate to own event system
   private static final MouseEvent fakeEvent = new MouseEvent(new JLabel("fake"), 0, 0, 0, 0, 0, 1, false);
+
+  public void update() {
+    HighlighterIterator iterator = myHighlighter.createIterator(0);
+    while (!iterator.atEnd()) {
+      int start = iterator.getStart();
+      int end = iterator.getEnd();
+
+      TextAttributes textAttributes = iterator.getTextAttributes();
+
+      Map<String, String> map = new HashMap<>();
+      ColorValue foregroundColor = textAttributes.getForegroundColor();
+      if(foregroundColor != null) {
+        RGBColorShared rgb = Mappers.map(foregroundColor.toRGB());
+        map.put("color", rgb.toString());
+      }
+      
+      myEditorComponent.toVaadinComponent().addAnnotation(start, end, "orion.annotation.info", map);
+
+      iterator.advance();
+    }
+
+  }
 
   private void runMousePressedCommand(@Nonnull final MouseDownEvent e) {
     //myLastMousePressedLocation = xyToLogicalPosition(e.getPoint());
@@ -182,6 +223,12 @@ public class WebEditorImpl extends CodeEditorBase {
   @Nonnull
   @Override
   public Component getUIComponent() {
+    return myEditorComponent;
+  }
+
+  @Nonnull
+  @Override
+  public Component getContentUIComponent() {
     return myEditorComponent;
   }
 

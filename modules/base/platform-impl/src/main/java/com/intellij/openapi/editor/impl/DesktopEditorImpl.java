@@ -1058,6 +1058,12 @@ public final class DesktopEditorImpl extends CodeEditorBase implements EditorInt
 
   @Nonnull
   @Override
+  public consulo.ui.Component getContentUIComponent() {
+    return TargetAWT.wrap(myEditorComponent);
+  }
+
+  @Nonnull
+  @Override
   public EditorGutterComponentImpl getGutterComponentEx() {
     return myGutterComponent;
   }
@@ -1431,6 +1437,12 @@ public final class DesktopEditorImpl extends CodeEditorBase implements EditorInt
   @Nonnull
   public JComponent getComponent() {
     return myPanel;
+  }
+
+  @Nonnull
+  @Override
+  public consulo.ui.Component getUIComponent() {
+    return TargetAWT.wrap(myPanel);
   }
 
   public void setHorizontalTextAlignment(@MagicConstant(intValues = {TEXT_ALIGNMENT_LEFT, TEXT_ALIGNMENT_RIGHT}) int alignment) {

@@ -16,12 +16,14 @@
 package com.intellij.openapi.fileEditor.impl;
 
 import com.intellij.ProjectTopics;
+import com.intellij.ide.DataManager;
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.IdeEventQueue;
 import com.intellij.ide.plugins.PluginManagerCore;
 import com.intellij.ide.ui.UISettings;
 import com.intellij.ide.ui.UISettingsListener;
 import com.intellij.injected.editor.VirtualFileWindow;
+import com.intellij.openapi.actionSystem.DataContext;
 import consulo.awt.TargetAWT;
 import consulo.disposer.Disposable;
 import com.intellij.openapi.application.AccessToken;
@@ -75,10 +77,7 @@ import consulo.annotation.access.RequiredWriteAction;
 import consulo.application.AccessRule;
 import consulo.component.PersistentStateComponentWithUIState;
 import consulo.disposer.Disposer;
-import consulo.fileEditor.impl.EditorComposite;
-import consulo.fileEditor.impl.EditorWindow;
-import consulo.fileEditor.impl.EditorWithProviderComposite;
-import consulo.fileEditor.impl.EditorsSplitters;
+import consulo.fileEditor.impl.*;
 import consulo.fileEditor.impl.text.TextEditorProvider;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
@@ -875,8 +874,8 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
 
       // Notify editors about selection changes
       window.getOwner().setCurrentWindow(window, focusEditor);
-      if (window.getOwner() instanceof DesktopEditorsSplitters) {
-        ((DesktopEditorsSplitters)window.getOwner()).afterFileOpen(file);
+      if (window.getOwner() instanceof EditorsSplittersBase) {
+        ((EditorsSplittersBase)window.getOwner()).afterFileOpen(file);
       }
       addSelectionRecord(file, window);
 
@@ -1502,10 +1501,11 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
       final FileEditorManagerListener publisher = getProject().getMessageBus().syncPublisher(FileEditorManagerListener.FILE_EDITOR_MANAGER);
 
       if (newData.first != null) {
-        final JComponent component = newData.second.getComponent();
-        final EditorWindowHolder holder = UIUtil.getParentOfType(EditorWindowHolder.class, component);
-        if (holder != null) {
-          addSelectionRecord(newData.first, holder.getEditorWindow());
+        DataContext context = DataManager.getInstance().getDataContext(newData.second.getUIComponent());
+
+        EditorWindow editorWindow = context.getData(EditorWindow.DATA_KEY);
+        if (editorWindow != null) {
+          addSelectionRecord(newData.first, editorWindow);
         }
       }
       notifyPublisher(() -> publisher.selectionChanged(event));

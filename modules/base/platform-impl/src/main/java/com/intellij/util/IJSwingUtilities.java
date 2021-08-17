@@ -22,10 +22,10 @@ import com.intellij.openapi.wm.ex.WindowManagerEx;
 import com.intellij.ui.EditorTextField;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.FilteringIterator;
-import consulo.util.collection.primitive.ints.IntStack;
 import com.intellij.util.ui.JBSwingUtilities;
 import com.intellij.util.ui.UIUtil;
 import consulo.awt.TargetAWT;
+import consulo.util.collection.primitive.ints.IntStack;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -86,6 +86,13 @@ public class IJSwingUtilities extends JBSwingUtilities {
     }
 
     return SwingUtilities.isDescendingFrom(focusedComponent, component);
+  }
+
+  @Nonnull
+  public static Component getFocusedComponentInWindowOrSelf(@Nonnull Component component) {
+    Window window = UIUtil.getWindow(component);
+    Component focusedComponent = window == null ? null : WindowManagerEx.getInstanceEx().getFocusedComponent(window);
+    return focusedComponent != null ? focusedComponent : component;
   }
 
   /**

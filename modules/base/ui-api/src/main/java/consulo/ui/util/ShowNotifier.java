@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2019 consulo.io
+ * Copyright 2013-2021 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,26 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui;
+package consulo.ui.util;
 
-import consulo.disposer.Disposable;
-import consulo.ui.event.FocusListener;
+import consulo.ui.Component;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.internal.UIInternal;
 
 import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
- * @since 2019-11-09
+ * @since 16/08/2021
  */
-public interface FocusableComponent extends Component {
-  static boolean hasFocus(@Nonnull Component component) {
-    return component instanceof FocusableComponent f && f.hasFocus();
-  }
-
-  boolean hasFocus();
-
-  @Nonnull
-  default Disposable addFocusListener(@Nonnull FocusListener listener) {
-    return addListener(FocusListener.class, listener);
+public final class ShowNotifier {
+  public static void once(@Nonnull Component component, @RequiredUIAccess @Nonnull Runnable action) {
+    UIInternal.get()._ShowNotifier_once(component, action);
   }
 }

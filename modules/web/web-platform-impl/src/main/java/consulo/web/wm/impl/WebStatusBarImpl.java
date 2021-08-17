@@ -45,6 +45,8 @@ import consulo.ui.layout.DockLayout;
 import consulo.ui.layout.HorizontalLayout;
 import consulo.ui.layout.WrappedLayout;
 import consulo.ui.style.ComponentColors;
+import consulo.util.lang.StringUtil;
+import consulo.web.wm.impl.status.WebInfoAndProgressPanel;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -97,9 +99,16 @@ public class WebStatusBarImpl implements StatusBarEx {
 
   private final DockLayout myComponent = DockLayout.create();
 
+  private WebInfoAndProgressPanel myInfoAndProgressPanel;
+
+  private String myInfoText;
+
   @RequiredUIAccess
   public WebStatusBarImpl(Application application, @Nullable StatusBar master) {
     myApplication = application;
+
+    myInfoAndProgressPanel = new WebInfoAndProgressPanel();
+    addWidget(myInfoAndProgressPanel, Position.CENTER, "__IGNORED__");
 
     if (master == null) {
       addWidget(new ToolWindowsWidget(this), Position.LEFT);
@@ -112,18 +121,22 @@ public class WebStatusBarImpl implements StatusBarEx {
   }
 
   @Override
-  public void setInfo(@Nullable String s) {
+  public void setInfo(@Nullable String text) {
+    myInfoText = text;
 
+    myApplication.getLastUIAccess().give(() -> {
+      myInfoAndProgressPanel.setStatusText(StringUtil.notNullize(text));
+    });
   }
 
   @Override
-  public void setInfo(@Nullable String s, @Nullable String requestor) {
-
+  public void setInfo(@Nullable String text, @Nullable String requestor) {
+    myInfoText = text;
   }
 
   @Override
   public String getInfo() {
-    return null;
+    return myInfoText;
   }
 
   @Override
@@ -183,7 +196,7 @@ public class WebStatusBarImpl implements StatusBarEx {
 
   @RequiredUIAccess
   private static PseudoComponent wrap(StatusBarWidget widget) {
-    if(widget instanceof CustomStatusBarWidget) {
+    if (widget instanceof CustomStatusBarWidget) {
       return () -> {
         consulo.ui.Component component = ((CustomStatusBarWidget)widget).getUIComponent();
         if (component == null) {

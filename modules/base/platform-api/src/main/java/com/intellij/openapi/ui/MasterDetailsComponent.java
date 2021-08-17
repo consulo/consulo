@@ -251,7 +251,10 @@ public abstract class MasterDetailsComponent implements Configurable, MasterDeta
           group.add(action);
         }
       }
-      final JComponent component = ActionManager.getInstance().createActionToolbar(ActionPlaces.UNKNOWN, group, true).getComponent();
+      ActionToolbar toolbar = ActionManager.getInstance().createActionToolbar(ActionPlaces.UNKNOWN, group, true);
+      toolbar.setTargetComponent(myTree);
+      
+      final JComponent component = toolbar.getComponent();
       myNorthPanel.add(component, BorderLayout.NORTH);
     }
   }

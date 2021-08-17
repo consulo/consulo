@@ -20,6 +20,7 @@ import com.intellij.openapi.actionSystem.DataProvider;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.ui.components.JBLoadingPanel;
 import com.intellij.util.ui.JBSwingUtilities;
+import consulo.awt.TargetAWT;
 import consulo.disposer.Disposable;
 import consulo.fileEditor.impl.text.TextEditorComponentContainer;
 
@@ -72,8 +73,7 @@ public class DesktopAwtTextEditorComponentContainer implements TextEditorCompone
 
   @Override
   public consulo.ui.Component getUIComponent() {
-    // unsupported
-    return null;
+    return TargetAWT.wrap(myComponent);
   }
 
   @Override

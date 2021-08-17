@@ -99,6 +99,14 @@ public class TargetAWT {
     return ourFacade.to(component);
   }
 
+  /**
+   * Wrap AWT component to untyped UI component. Calling any methods from it except #from() not supported
+   */
+  @Nonnull
+  public static Component wrap(@Nonnull java.awt.Component component) {
+    return ourFacade.wrap(component);
+  }
+
   @Contract("null -> null")
   public static Component from(@Nullable java.awt.Component component) {
     return ourFacade.from(component);

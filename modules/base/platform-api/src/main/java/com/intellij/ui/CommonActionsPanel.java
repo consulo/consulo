@@ -146,6 +146,7 @@ public class CommonActionsPanel extends JPanel {
                                                           position == ActionToolbarPosition.BOTTOM || position == ActionToolbarPosition.TOP,
                                                           myDecorateButtons);
     toolbar.getComponent().setOpaque(false);
+    toolbar.setTargetComponent(contextComponent);
     toolbar.getComponent().setBorder(null);
     add(toolbar.getComponent(), BorderLayout.CENTER);
   }

@@ -24,12 +24,12 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.pom.Navigatable;
 import com.intellij.psi.SingleRootFileViewProvider;
-import com.intellij.util.ui.update.UiNotifyConnector;
 import consulo.fileEditor.impl.text.TextEditorComponentContainerFactory;
 import consulo.fileEditor.impl.text.TextEditorProvider;
 import consulo.logging.Logger;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.util.ShowNotifier;
 import consulo.util.dataholder.UserDataHolderBase;
 import jakarta.inject.Inject;
 import kava.beans.PropertyChangeListener;
@@ -126,7 +126,9 @@ public class TextEditorProviderImpl extends TextEditorProvider {
     };
     //noinspection TestOnlyProblems
     if (Boolean.TRUE.equals(editor.getUserData(TREAT_AS_SHOWN))) scrollingRunnable.run();
-    else UiNotifyConnector.doWhenFirstShown(editor.getContentComponent(), scrollingRunnable);
+    else {
+      ShowNotifier.once(editor.getContentUIComponent(), scrollingRunnable);
+    }
   }
 
   public class EditorWrapper extends UserDataHolderBase implements TextEditor {

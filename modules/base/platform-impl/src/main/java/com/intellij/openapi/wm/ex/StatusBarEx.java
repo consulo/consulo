@@ -23,6 +23,7 @@ import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.wm.StatusBar;
 import consulo.disposer.Disposable;
 import consulo.ui.image.Image;
+import consulo.util.dataholder.Key;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -34,6 +35,8 @@ import java.util.List;
  * @author spleaner
  */
 public interface StatusBarEx extends StatusBar, Disposable {
+  Key<String> HOVERED_WIDGET_ID = Key.create("HOVERED_WIDGET_ID");
+
   void startRefreshIndication(String tooltipText);
 
   void stopRefreshIndication();

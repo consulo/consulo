@@ -61,7 +61,6 @@ import java.util.*;
  * User: spLeaner
  */
 public class IdeStatusBarImpl extends JComponent implements StatusBarEx, IdeEventQueue.EventDispatcher, DataProvider {
-  public static final Key<String> HOVERED_WIDGET_ID = Key.create("HOVERED_WIDGET_ID");
   private static final String WIDGET_ID = "STATUS_BAR_WIDGET_ID";
 
   private static final int MIN_ICON_HEIGHT = 18 + 1 + 1;
@@ -169,7 +168,7 @@ public class IdeStatusBarImpl extends JComponent implements StatusBarEx, IdeEven
     this(null);
   }
 
-  IdeStatusBarImpl(@Nullable IdeStatusBarImpl master) {
+  public IdeStatusBarImpl(@Nullable IdeStatusBarImpl master) {
     setLayout(new BorderLayout());
     setBorder(JBUI.Borders.empty(1, 0, 0, 6));
 

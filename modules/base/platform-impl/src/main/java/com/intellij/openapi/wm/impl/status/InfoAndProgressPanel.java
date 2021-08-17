@@ -128,7 +128,7 @@ public class InfoAndProgressPanel extends JPanel implements CustomStatusBarWidge
   @SuppressWarnings("FieldAccessedSynchronizedAndUnsynchronized")
   private LinkLabel<Object> myMultiProcessLink;
 
-  InfoAndProgressPanel() {
+  public InfoAndProgressPanel() {
     setOpaque(false);
     setBorder(JBUI.Borders.empty());
 
@@ -220,7 +220,7 @@ public class InfoAndProgressPanel extends JPanel implements CustomStatusBarWidge
   }
 
   @Nonnull
-  List<Pair<TaskInfo, ProgressIndicator>> getBackgroundProcesses() {
+  public List<Pair<TaskInfo, ProgressIndicator>> getBackgroundProcesses() {
     synchronized (myOriginals) {
       if (myOriginals.isEmpty()) return Collections.emptyList();
 
@@ -233,7 +233,7 @@ public class InfoAndProgressPanel extends JPanel implements CustomStatusBarWidge
     }
   }
 
-  void addProgress(@Nonnull ProgressIndicatorEx original, @Nonnull TaskInfo info) {
+  public void addProgress(@Nonnull ProgressIndicatorEx original, @Nonnull TaskInfo info) {
     synchronized (myOriginals) {
       final boolean veryFirst = !hasProgressIndicators();
 
@@ -529,11 +529,11 @@ public class InfoAndProgressPanel extends JPanel implements CustomStatusBarWidge
     return Couple.of(text, requestor);
   }
 
-  void setRefreshVisible(final boolean visible) {
+  public void setRefreshVisible(final boolean visible) {
     UIUtil.invokeLaterIfNeeded(() -> myRefreshIcon.setVisible(visible));
   }
 
-  void setRefreshToolTipText(final String tooltip) {
+  public void setRefreshToolTipText(final String tooltip) {
     myRefreshIcon.setToolTipText(tooltip);
   }
 
