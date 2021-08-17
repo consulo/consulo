@@ -690,11 +690,11 @@ public class InfoAndProgressPanel extends JPanel implements CustomStatusBarWidge
   //  return "~" + (int)Math.ceil(t / (60 * 1000f)) + " min";
   //}
 
-  boolean isProcessWindowOpen() {
+  public boolean isProcessWindowOpen() {
     return myPopup.isShowing();
   }
 
-  void setProcessWindowOpen(final boolean open) {
+  public void setProcessWindowOpen(final boolean open) {
     if (open) {
       openProcessPopup(true);
     }
