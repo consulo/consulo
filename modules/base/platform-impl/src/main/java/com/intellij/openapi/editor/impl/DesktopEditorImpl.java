@@ -503,7 +503,7 @@ public final class DesktopEditorImpl extends CodeEditorBase implements EditorInt
   }
 
   @Override
-  protected void onHighlighterChanged(@Nonnull RangeHighlighterEx highlighter, boolean canImpactGutterSize, boolean fontStyleOrColorChanged) {
+  protected void onHighlighterChanged(@Nonnull RangeHighlighterEx highlighter, boolean canImpactGutterSize, boolean fontStyleOrColorChanged, boolean remove) {
     if (myDocument.isInBulkUpdate()) return; // bulkUpdateFinished() will repaint anything
 
     if (canImpactGutterSize) {

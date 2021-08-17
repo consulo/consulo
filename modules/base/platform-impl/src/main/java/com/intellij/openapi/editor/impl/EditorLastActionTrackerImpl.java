@@ -26,6 +26,7 @@ import com.intellij.openapi.editor.event.EditorEventMulticaster;
 import com.intellij.openapi.editor.event.EditorMouseEvent;
 import com.intellij.openapi.editor.event.EditorMouseListener;
 import consulo.disposer.Disposer;
+import consulo.editor.impl.CodeEditorBase;
 import consulo.util.dataholder.Key;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -50,7 +51,7 @@ public class EditorLastActionTrackerImpl extends EditorLastActionTracker impleme
     myActionManager = actionManager;
     application.getMessageBus().connect(this).subscribe(AnActionListener.TOPIC, this);
     myEditorEventMulticaster = editorFactory.getEventMulticaster();
-    myEditorEventMulticaster.addEditorMouseListener(this);
+    myEditorEventMulticaster.addEditorMouseListener(this, this);
   }
 
   @Override
@@ -120,20 +121,17 @@ public class EditorLastActionTrackerImpl extends EditorLastActionTracker impleme
   }
 
   private void registerDisposeHandler(final Editor editor) {
-    if (!(editor instanceof DesktopEditorImpl)) {
+    if (!(editor instanceof CodeEditorBase)) {
       return;
     }
-    DesktopEditorImpl editorImpl = (DesktopEditorImpl)editor;
+    CodeEditorBase editorImpl = (CodeEditorBase)editor;
     if (editorImpl.replace(DISPOSABLE_SET, null, Boolean.TRUE)) {
-      Disposer.register(editorImpl.getDisposable(), new Disposable() {
-        @Override
-        public void dispose() {
-          if (myCurrentEditor == editor) {
-            myCurrentEditor = null;
-          }
-          if (myLastEditor == editor) {
-            myLastEditor = null;
-          }
+      Disposer.register(editorImpl.getDisposable(), () -> {
+        if (myCurrentEditor == editor) {
+          myCurrentEditor = null;
+        }
+        if (myLastEditor == editor) {
+          myLastEditor = null;
         }
       });
     }

@@ -43,6 +43,7 @@ import consulo.ui.web.internal.base.ComponentHolder;
 import consulo.ui.web.internal.base.FromVaadinComponentWrapper;
 import consulo.ui.web.internal.base.VaadinComponentDelegate;
 import consulo.ui.web.internal.util.Mappers;
+import consulo.util.dataholder.Key;
 import consulo.util.lang.BitUtil;
 import consulo.web.gwt.shared.ui.state.RGBColorShared;
 import org.intellij.lang.annotations.MagicConstant;
@@ -92,6 +93,8 @@ public class WebEditorImpl extends CodeEditorBase {
       return true;
     }
   }
+
+  private static final Key<Integer> ANNOTATION_ID = Key.create("annotation.id");
 
   private final EditorComponent myEditorComponent;
 
@@ -159,6 +162,12 @@ public class WebEditorImpl extends CodeEditorBase {
       map.put("color", rgb.toString());
     }
 
+    ColorValue backgroundColor = textAttributes.getBackgroundColor();
+    if (backgroundColor != null) {
+      RGBColorShared rgb = Mappers.map(backgroundColor.toRGB());
+      map.put("backgroundColor", rgb.toString());
+    }
+
     int fontType = textAttributes.getFontType();
     if (BitUtil.isSet(fontType, Font.BOLD)) {
       map.put("fontWeight", "bold");
@@ -172,20 +181,33 @@ public class WebEditorImpl extends CodeEditorBase {
   }
 
   @Override
-  protected void onHighlighterChanged(@Nonnull RangeHighlighterEx highlighter, boolean canImpactGutterSize, boolean fontStyleOrColorChanged) {
+  protected void onHighlighterChanged(@Nonnull RangeHighlighterEx highlighter, boolean canImpactGutterSize, boolean fontStyleOrColorChanged, boolean remove) {
+    if (myDocument.isInBulkUpdate()) return; // bulkUpdateFinished() will repaint anything
+
+    Vaadin vaadin = myEditorComponent.toVaadinComponent();
+
+    Integer annId = highlighter.getUserData(ANNOTATION_ID);
+    if (annId != null) {
+      vaadin.removeAnnotation(annId);
+    }
+
+    if (remove) {
+      return;
+    }
+    
     int textLength = myDocument.getTextLength();
 
     int start = Math.min(Math.max(highlighter.getAffectedAreaStartOffset(), 0), textLength);
     int end = Math.min(Math.max(highlighter.getAffectedAreaEndOffset(), 0), textLength);
 
     TextAttributes textAttributes = highlighter.getTextAttributes();
-    if(textAttributes == null) {
+    if (textAttributes == null) {
       return;
     }
 
-    Vaadin vaadin = myEditorComponent.toVaadinComponent();
+    annId = vaadin.addAnnotation(start, end, "orion.annotation.info", convertToCssProperties(textAttributes));
 
-    vaadin.addAnnotation(start, end, "orion.annotation.info", convertToCssProperties(textAttributes));
+    highlighter.putUserData(ANNOTATION_ID, annId);
   }
 
   private void runMousePressedCommand(@Nonnull final MouseDownEvent e) {

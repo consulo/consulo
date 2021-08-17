@@ -504,17 +504,17 @@ public abstract class CodeEditorBase extends UserDataHolderBase implements Edito
     myMarkupModelListener = new MarkupModelListener() {
       @Override
       public void afterAdded(@Nonnull RangeHighlighterEx highlighter) {
-        onHighlighterChanged(highlighter, canImpactGutterSize(highlighter), EditorUtil.attributesImpactFontStyleOrColor(highlighter.getTextAttributes()));
+        onHighlighterChanged(highlighter, canImpactGutterSize(highlighter), EditorUtil.attributesImpactFontStyleOrColor(highlighter.getTextAttributes()), false);
       }
 
       @Override
       public void beforeRemoved(@Nonnull RangeHighlighterEx highlighter) {
-        onHighlighterChanged(highlighter, canImpactGutterSize(highlighter), EditorUtil.attributesImpactFontStyleOrColor(highlighter.getTextAttributes()));
+        onHighlighterChanged(highlighter, canImpactGutterSize(highlighter), EditorUtil.attributesImpactFontStyleOrColor(highlighter.getTextAttributes()), true);
       }
 
       @Override
       public void attributesChanged(@Nonnull RangeHighlighterEx highlighter, boolean renderersChanged, boolean fontStyleOrColorChanged) {
-        onHighlighterChanged(highlighter, renderersChanged, fontStyleOrColorChanged);
+        onHighlighterChanged(highlighter, renderersChanged, fontStyleOrColorChanged, false);
       }
     };
 
@@ -561,9 +561,8 @@ public abstract class CodeEditorBase extends UserDataHolderBase implements Edito
     return false;
   }
 
-  protected void onHighlighterChanged(@Nonnull RangeHighlighterEx highlighter, boolean canImpactGutterSize, boolean fontStyleOrColorChanged) {
+  protected void onHighlighterChanged(@Nonnull RangeHighlighterEx highlighter, boolean canImpactGutterSize, boolean fontStyleOrColorChanged, boolean remove) {
   }
-
 
   protected void bulkUpdateStarted() {
     myScrollingPositionKeeper.savePosition();
