@@ -53,6 +53,9 @@ public abstract class VaadinComponentDelegate<T extends AbstractComponent & Comp
 
   private Cursor myCursor;
 
+  public VaadinComponentDelegate(boolean noBody) {
+ }
+
   public VaadinComponentDelegate() {
     myVaadinComponent = createVaadinComponent();
 

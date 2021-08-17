@@ -23,8 +23,4 @@
   <source path="shared"/>
 
   <super-source path="override"/>
-
-  <replace-with class="consulo.web.gwt.client.ui.contextmenu.VMenuItem">
-    <when-type-is class="com.vaadin.client.ui.VMenuBar.CustomMenuItem"/>
-  </replace-with>
 </module>

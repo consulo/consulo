@@ -270,4 +270,9 @@ public abstract class UIInternal {
   public void _ShowNotifier_once(@Nonnull Component component, @RequiredUIAccess @Nonnull Runnable action) {
     throw new UnsupportedOperationException();
   }
+
+  @Nonnull
+  public PopupMenu _PopupMenu_create(Component target) {
+    throw new UnsupportedOperationException();
+  }
 }

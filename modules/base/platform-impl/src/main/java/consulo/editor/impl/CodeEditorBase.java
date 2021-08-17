@@ -600,7 +600,7 @@ public abstract class CodeEditorBase extends UserDataHolderBase implements Edito
   }
 
   protected void invokePopupIfNeeded(EditorMouseEvent event) {
-    if (event.getArea() == EditorMouseEventArea.EDITING_AREA && event.getMouseEvent().isPopupTrigger() && !event.isConsumed()) {
+    if (event.getArea() == EditorMouseEventArea.EDITING_AREA && event.isPopupTrigger() && !event.isConsumed()) {
       for (int i = myPopupHandlers.size() - 1; i >= 0; i--) {
         if (myPopupHandlers.get(i).handlePopup(event)) break;
       }

@@ -17,9 +17,11 @@ package com.intellij.openapi.editor.event;
 
 import com.intellij.openapi.editor.*;
 import com.intellij.openapi.editor.markup.GutterIconRenderer;
-import javax.annotation.Nonnull;
+import consulo.ui.event.details.InputDetails;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.swing.*;
 import java.awt.event.MouseEvent;
 import java.util.EventObject;
 
@@ -34,8 +36,23 @@ import java.util.EventObject;
  * {@link MouseEvent#MOUSE_EXITED MOUSE_EXITED} events. Return values of corresponding event getters are unspecified for those events.
  */
 public class EditorMouseEvent extends EventObject {
+  // create with holder. because we not use at AWT impl it for now
+  static class FakeHolder {
+    // due EditorMouseEvent use awt Event, we need set fake event, until migrate to own event system
+    private static final JLabel fakeLabel = new JLabel("fake");
+
+    private static MouseEvent createFake() {
+      return new MouseEvent(fakeLabel, 0, 0, 0, 0, 0, 1, false);
+    }
+  }
+
   @Nonnull
   private final MouseEvent myMouseEvent;
+  @Nullable
+  private final InputDetails myInputDetails;
+  private boolean myConsumed;
+  private final boolean myPopupTrigger;
+
   private final EditorMouseEventArea myEditorArea;
   private final int myOffset;
   private final LogicalPosition myLogicalPosition;
@@ -46,11 +63,17 @@ public class EditorMouseEvent extends EventObject {
   private final GutterIconRenderer myGutterIconRenderer;
 
   public EditorMouseEvent(@Nonnull Editor editor, @Nonnull MouseEvent mouseEvent, EditorMouseEventArea area) {
-    this(editor, mouseEvent, area, 0, new LogicalPosition(0, 0), new VisualPosition(0, 0), true, null, null, null);
+    this(editor, mouseEvent, null, mouseEvent.isPopupTrigger(), area, 0, new LogicalPosition(0, 0), new VisualPosition(0, 0), true, null, null, null);
+  }
+
+  public EditorMouseEvent(@Nonnull Editor editor, @Nonnull InputDetails inputDetails, boolean popupTrigger, EditorMouseEventArea area) {
+    this(editor, FakeHolder.createFake(), inputDetails, popupTrigger, area, 0, new LogicalPosition(0, 0), new VisualPosition(0, 0), true, null, null, null);
   }
 
   public EditorMouseEvent(@Nonnull Editor editor,
                           @Nonnull MouseEvent mouseEvent,
+                          @Nullable InputDetails inputDetails,
+                          boolean popupTrigger,
                           EditorMouseEventArea area,
                           int offset,
                           @Nonnull LogicalPosition logicalPosition,
@@ -62,6 +85,8 @@ public class EditorMouseEvent extends EventObject {
     super(editor);
 
     myMouseEvent = mouseEvent;
+    myInputDetails = inputDetails;
+    myPopupTrigger = popupTrigger;
     myEditorArea = area;
     myOffset = offset;
     myLogicalPosition = logicalPosition;
@@ -82,12 +107,36 @@ public class EditorMouseEvent extends EventObject {
     return myMouseEvent;
   }
 
+  @Nullable
+  public InputDetails getInputDetails() {
+    return myInputDetails;
+  }
+
   public void consume() {
-    myMouseEvent.consume();
+    if (myInputDetails != null) {
+      myConsumed = true;
+    }
+    else {
+      myMouseEvent.consume();
+    }
   }
 
   public boolean isConsumed() {
-    return myMouseEvent.isConsumed();
+    if(myInputDetails != null) {
+      return myConsumed;
+    }
+    else {
+      return myMouseEvent.isConsumed();
+    }
+  }
+
+  public boolean isPopupTrigger() {
+    if(myInputDetails != null) {
+      return myPopupTrigger;
+    }
+    else {
+      return myMouseEvent.isPopupTrigger();
+    }
   }
 
   public EditorMouseEventArea getArea() {

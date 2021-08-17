@@ -146,9 +146,4 @@ public class DesktopSwtTreeImpl<E> extends SWTComponentDelegate<org.eclipse.swt.
   public void expand(@Nonnull TreeNode<E> node) {
 
   }
-
-  @Override
-  public void setContextHandler(@Nonnull ContextHandler contextHandler) {
-
-  }
 }

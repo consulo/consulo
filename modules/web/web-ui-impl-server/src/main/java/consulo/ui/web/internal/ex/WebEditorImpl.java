@@ -39,6 +39,7 @@ import consulo.internal.arquill.editor.server.event.MouseDownEvent;
 import consulo.ui.Component;
 import consulo.ui.FocusableComponent;
 import consulo.ui.color.ColorValue;
+import consulo.ui.event.details.MouseInputDetails;
 import consulo.ui.web.internal.base.ComponentHolder;
 import consulo.ui.web.internal.base.FromVaadinComponentWrapper;
 import consulo.ui.web.internal.base.VaadinComponentDelegate;
@@ -53,6 +54,7 @@ import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -194,7 +196,7 @@ public class WebEditorImpl extends CodeEditorBase {
     if (remove) {
       return;
     }
-    
+
     int textLength = myDocument.getTextLength();
 
     int start = Math.min(Math.max(highlighter.getAffectedAreaStartOffset(), 0), textLength);
@@ -219,7 +221,10 @@ public class WebEditorImpl extends CodeEditorBase {
 
     boolean forceProcessing = false;
     //myMousePressedEvent = e;
-    EditorMouseEvent event = new EditorMouseEvent(this, fakeEvent, EditorMouseEventArea.EDITING_AREA);
+    MouseInputDetails.MouseButton mouseButton = MouseInputDetails.MouseButton.values()[e.getButton()];
+    EditorMouseEvent event =
+            new EditorMouseEvent(this, new MouseInputDetails(e.getX(), e.getY(), EnumSet.noneOf(MouseInputDetails.Modifier.class), mouseButton), mouseButton == MouseInputDetails.MouseButton.RIGHT,
+                                 EditorMouseEventArea.EDITING_AREA);
 
     myExpectedCaretOffset = e.getTextOffset();
     try {

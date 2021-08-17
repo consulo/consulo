@@ -256,9 +256,4 @@ public class DesktopTreeImpl<E> extends SwingComponentDelegate<DesktopTreeImpl.M
   public void expand(@Nonnull TreeNode<E> node) {
 
   }
-
-  @Override
-  public void setContextHandler(@Nonnull ContextHandler contextHandler) {
-
-  }
 }

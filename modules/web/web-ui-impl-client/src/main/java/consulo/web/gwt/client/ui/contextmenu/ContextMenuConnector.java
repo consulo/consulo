@@ -1,219 +1,183 @@
-package consulo.web.gwt.client.ui.contextmenu;
+/*
+ * Copyright 2000-2018 Vaadin Ltd.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
+ */
 
-import java.util.List;
-import java.util.logging.Logger;
+package consulo.web.gwt.client.ui.contextmenu;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Command;
-import com.google.gwt.user.client.Event;
-import com.google.gwt.user.client.Event.NativePreviewEvent;
-import com.google.gwt.user.client.Event.NativePreviewHandler;
-import com.vaadin.client.ApplicationConnection;
+import com.google.gwt.user.client.ui.Widget;
+import com.vaadin.client.HasWidget;
 import com.vaadin.client.ServerConnector;
-import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.extensions.AbstractExtensionConnector;
-import com.vaadin.client.ui.Icon;
 import com.vaadin.client.ui.VMenuBar;
-import com.vaadin.client.ui.VMenuBar.CustomMenuItem;
-import consulo.web.gwt.shared.ui.contextmenu.client.ContextMenuClientRpc;
-import consulo.web.gwt.shared.ui.contextmenu.client.ContextMenuServerRpc;
-import consulo.web.gwt.shared.ui.contextmenu.client.MenuSharedState;
-import consulo.web.gwt.shared.ui.contextmenu.client.MenuSharedState.MenuItemState;
+import com.vaadin.shared.ui.ComponentStateUtil;
 import com.vaadin.shared.ui.Connect;
+import consulo.web.gwt.shared.ui.contextmenu.ContextMenuClientRpc;
+import consulo.web.gwt.shared.ui.contextmenu.ContextMenuItemState;
+import consulo.web.gwt.shared.ui.contextmenu.ContextMenuServerRpc;
+import consulo.web.gwt.shared.ui.contextmenu.ContextMenuState;
 
-@SuppressWarnings("serial")
-@Connect(canonicalName = "consulo.ui.internal.contextmenu.ContextMenu")
-public class ContextMenuConnector extends AbstractExtensionConnector {
-    @SuppressWarnings("unused")
-    private static Logger logger = Logger.getLogger("ContextMenuConnector");
+import java.util.Iterator;
+import java.util.Stack;
 
-    // TODO: make it so that we don't need this dummy root menu bar.
-    private MyVMenuBar dummyRootMenuBar;
-    private MyVMenuBar contextMenuWidget;
+@Connect(canonicalName = "consulo.ui.web.internal.contextmenu.ContextMenu")
+public class ContextMenuConnector extends AbstractExtensionConnector implements HasWidget {
 
-    @Override
-    public MenuSharedState getState() {
-        return (MenuSharedState) super.getState();
-    }
+  private VContextMenu contextMenu;
+  private VMenuBar.CustomMenuItem contextMenuRoot;
 
-    @Override
-    public void onStateChanged(StateChangeEvent stateChangeEvent) {
-        super.onStateChanged(stateChangeEvent);
+  @Override
+  protected void extend(ServerConnector target) {
+  }
 
-        contextMenuWidget.clearItems();
-        addMenuItemsFromState(contextMenuWidget, getState().menuItems);
-    }
+  @Override
+  public void onStateChanged(StateChangeEvent event) {
+    super.onStateChanged(event);
+    contextMenu.client = getConnection();
+    updateFromState(getState());
+  }
 
-    @Override
-    protected void init() {
-        super.init();
+  protected void updateFromState(ContextMenuState state) {
 
-        dummyRootMenuBar = GWT.create(MyVMenuBar.class);
+    contextMenu.enabled = state.enabled;
+    contextMenu.htmlContentAllowed = state.htmlContentAllowed;
 
-        CustomMenuItem item = GWT.create(CustomMenuItem.class);
-        dummyRootMenuBar.getItems().add(item);
+    Stack<Iterator<ContextMenuItemState>> iteratorStack = new Stack<>();
+    Stack<VMenuBar> menuStack = new Stack<>();
+    VMenuBar currentMenu = contextMenuRoot.getSubMenu();
+    currentMenu.clearItems();
+    if (state.menuItems != null && !state.menuItems.isEmpty()) {
+      Iterator<ContextMenuItemState> itr = state.menuItems.iterator();
+      while (itr.hasNext()) {
+        ContextMenuItemState menuItemState = itr.next();
+        VMenuBar.CustomMenuItem currentItem;
 
-        contextMenuWidget = new MyVMenuBar(true, dummyRootMenuBar);
-        item.setSubMenu(contextMenuWidget);
+        boolean itemHasCommand = menuItemState.command;
+        boolean itemIsCheckable = menuItemState.checkable;
 
-        // application connection that is used for all our overlays
-        MyVOverlay.setApplicationConnection2(this.getConnection());
+        String iconUrl = menuItemState.icon == null ? null : menuItemState.icon.getURL();
+        boolean subMenu = menuItemState.childItems != null && !menuItemState.childItems.isEmpty();
+        String itemHTML = contextMenu.buildItemHTML(menuItemState.separator, subMenu, iconUrl, menuItemState.text);
 
-        registerRpc(ContextMenuClientRpc.class, new ContextMenuClientRpc() {
-            @Override
-            public void showContextMenu(int x, int y) {
-                showMenu(x, y);
-            }
-        });
-
-        Event.addNativePreviewHandler(new NativePreviewHandler() {
-            @Override
-            public void onPreviewNativeEvent(NativePreviewEvent event) {
-                if (event.getTypeInt() == Event.ONKEYDOWN
-                        && contextMenuWidget.isPopupShowing()) {
-                    boolean handled = contextMenuWidget.handleNavigation(
-                            event.getNativeEvent().getKeyCode(),
-                            event.getNativeEvent().getCtrlKey(),
-                            event.getNativeEvent().getShiftKey());
-
-                    if (handled) {
-                        event.cancel();
-                    }
-                }
-            }
-        });
-    }
-
-    private void addMenuItemsFromState(VMenuBar menuToAddTo,
-            List<MenuItemState> menuItems) {
-        if (menuItems == null)
-            return;
-
-        for (MenuItemState menuItemState : menuItems) {
-            CustomMenuItem newItem = addMenuItemToMenu(menuToAddTo,
-                    menuItemState);
-
-            if (menuItemState.childItems != null
-                    && menuItemState.childItems.size() > 0) {
-                VMenuBar subMenu = new MyVMenuBar(true, menuToAddTo);
-                addMenuItemsFromState(subMenu, menuItemState.childItems);
-                newItem.setSubMenu(subMenu);
-            }
+        Command cmd = null;
+        if (!menuItemState.separator) {
+          if (itemHasCommand || itemIsCheckable) {
+            // Construct a command that fires onMenuClick(int) with
+            // the
+            // item's id-number
+            cmd = () -> contextMenu.onMenuClick(menuItemState.id);
+          }
         }
-    }
 
-    private CustomMenuItem addMenuItemToMenu(VMenuBar menuToAddTo,
-            final MenuItemState menuItemState) {
-        String itemText = buildItemHTML(menuItemState,
-                getState().htmlContentAllowed, getConnection());
-        CustomMenuItem item = menuToAddTo.addItem(itemText, new Command() {
-            @Override
-            public void execute() {
-                if (contextMenuWidget.isAttached()) {
-                    dummyRootMenuBar.hideChildren();
-                    itemSelected(menuItemState.id);
-                }
+        currentItem = currentMenu.addItem(itemHTML, cmd);
+        currentItem.setId("" + menuItemState.id);
+        updateItemFromState(currentItem, menuItemState);
+
+        if (subMenu) {
+          menuStack.push(currentMenu);
+          iteratorStack.push(itr);
+          itr = menuItemState.childItems.iterator();
+          currentMenu = new VContextMenu(true, currentMenu);
+          getConnection().getVTooltip().connectHandlersToWidget(currentMenu);
+          // this is the top-level style that also propagates to items
+          // -
+          // any item specific styles are set above in
+          // currentItem.updateFromUIDL(item, client)
+          if (ComponentStateUtil.hasStyles(getState())) {
+            for (String style : getState().styles) {
+              currentMenu.addStyleDependentName(style);
             }
-        });
-
-        updateMenuItemFromState(item, menuItemState);
-
-        return item;
-    }
-
-    private void updateMenuItemFromState(CustomMenuItem item,
-            MenuItemState state) {
-        item.setEnabled(state.enabled);
-        item.setCheckable(state.checkable);
-        item.setChecked(state.checked);
-        item.setStyleName(state.styleName);
-        if (state.description != null) {
-                    item.getElement()
-                            .setAttribute("title", state.description);
-            }
-        if (item instanceof VMenuItem) { // TODO: when these are added, the
-                                         // condition must be removed
-            ((VMenuItem) item).setSeparator(state.separator);
-            ((VMenuItem) item).setDescription(state.description);
+          }
+          currentItem.setSubMenu(currentMenu);
         }
-    }
 
-    // TODO adapted from VMenuBar.buildItemHTML, must be removed/refactored asap
-    private static String buildItemHTML(MenuItemState state,
-            boolean htmlContentAllowed, ApplicationConnection connection) {
-        // Construct html from the text and the optional icon
-        StringBuffer itemHTML = new StringBuffer();
-        if (state.separator) {
-            itemHTML.append("<span>---</span>");
-        } else {
-            // Add submenu indicator
-            if (state.childItems != null && state.childItems.size() > 0) {
-                itemHTML.append(
-                        "<span class=\"v-menubar-submenu-indicator\">&#x25BA;</span>");
-            }
+        while (!itr.hasNext() && !iteratorStack.empty()) {
+          boolean hasCheckableItem = false;
+          for (VMenuBar.CustomMenuItem menuItem : currentMenu.getItems()) {
+            hasCheckableItem = hasCheckableItem || menuItem.isCheckable();
+          }
+          if (hasCheckableItem) {
+            currentMenu.addStyleDependentName("check-column");
+          }
+          else {
+            currentMenu.removeStyleDependentName("check-column");
+          }
 
-            itemHTML.append("<span class=\"v-menubar-menuitem-caption\">");
-
-            if (state.icon != null) {
-                Icon icon = connection.getIcon(state.icon.getURL());
-                if (icon != null) {
-                    itemHTML.append(icon.getElement().getString());
-                }
-            }
-
-            String itemText = state.text;
-            if (!htmlContentAllowed) {
-                itemText = WidgetUtil.escapeHTML(itemText);
-            }
-            itemHTML.append(itemText);
-            itemHTML.append("</span>");
+          itr = iteratorStack.pop();
+          currentMenu = menuStack.pop();
         }
-        return itemHTML.toString();
+      }
+    }
+  }
+
+  private void updateItemFromState(VMenuBar.CustomMenuItem currentItem, ContextMenuItemState menuItemState) {
+    currentItem.setSeparator(menuItemState.separator);
+    currentItem.setEnabled(menuItemState.enabled);
+
+    if (!menuItemState.separator && menuItemState.checked) {
+      // if the selected attribute is present (either true or false),
+      // the item is selectable
+      currentItem.setCheckable(true);
+      currentItem.setChecked(menuItemState.checked);
+    }
+    else {
+      currentItem.setCheckable(false);
     }
 
-    protected void itemSelected(int id) {
-        getRpcProxy(ContextMenuServerRpc.class).itemClicked(id, true);
+    currentItem.setStyleName(menuItemState.styleName);
+
+    currentItem.setDescription(menuItemState.description);
+    currentItem.setDescriptionContentMode(menuItemState.descriptionContentMode);
+    if (menuItemState.description != null) {
+      currentItem.getElement().setAttribute("title", menuItemState.description);
     }
 
-    private void showMenu(int eventX, int eventY) {
-        CustomMenuItem firstItem = dummyRootMenuBar.getItems().get(0);
-        dummyRootMenuBar.setSelected(firstItem);
-        dummyRootMenuBar.showChildMenuAt(firstItem, eventY, eventX);
-    }
+    currentItem.updateStyleNames();
 
-    @Override
-    protected void extend(ServerConnector target) {
-        Logger.getLogger("ContextMenuConnector").info("extend");
+  }
 
-        // Widget widget = ((AbstractComponentConnector) target).getWidget();
+  @Override
+  protected void init() {
+    super.init();
+    contextMenu = GWT.create(VContextMenu.class);
+    contextMenu.connector = this;
+    contextMenuRoot = contextMenu.addItem("", null);
+    contextMenuRoot.setSubMenu(new VContextMenu(true, contextMenu));
 
-        // widget.addDomHandler(new ContextMenuHandler() {
-        //
-        // @Override
-        // public void onContextMenu(ContextMenuEvent event) {
-        // event.stopPropagation();
-        // event.preventDefault();
-        //
-        // showMenu(event.getNativeEvent().getClientX(), event
-        // .getNativeEvent().getClientY());
-        // }
-        // }, ContextMenuEvent.getType());
+    registerRpc(ContextMenuClientRpc.class, new ContextMenuClientRpc() {
+      @Override
+      public void showContextMenu(int x, int y) {
+        contextMenu.showRootMenu(x, y);
+      }
+    });
 
-        // widget.addDomHandler(new KeyDownHandler() {
-        // @Override
-        // public void onKeyDown(KeyDownEvent event) {
-        // // FIXME: check if menu is shown or handleNavigation will do it?
-        //
-        // boolean handled = contextMenuWidget.handleNavigation(event
-        // .getNativeEvent().getKeyCode(), event.getNativeEvent()
-        // .getCtrlKey(), event.getNativeEvent().getShiftKey());
-        //
-        // if (handled) {
-        // event.stopPropagation();
-        // event.preventDefault();
-        // }
-        // }
-        // }, KeyDownEvent.getType());
-    }
+  }
+
+  @Override
+  public ContextMenuState getState() {
+    return (ContextMenuState)super.getState();
+  }
+
+  public void onMenuClick(int clickedItemId) {
+    getRpcProxy(ContextMenuServerRpc.class).itemClicked(clickedItemId);
+  }
+
+  @Override
+  public Widget getWidget() {
+    return contextMenuRoot.getSubMenu();
+  }
 }

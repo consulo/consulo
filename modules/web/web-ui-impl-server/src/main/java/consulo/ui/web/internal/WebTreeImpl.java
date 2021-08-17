@@ -16,13 +16,12 @@
 package consulo.ui.web.internal;
 
 import com.vaadin.ui.UI;
-import consulo.ui.ContextHandler;
 import consulo.ui.Tree;
 import consulo.ui.TreeModel;
 import consulo.ui.TreeNode;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.web.internal.base.VaadinComponentDelegate;
 import consulo.ui.web.internal.base.VaadinComponent;
+import consulo.ui.web.internal.base.VaadinComponentDelegate;
 import consulo.web.gwt.shared.ui.state.tree.TreeClientRpc;
 import consulo.web.gwt.shared.ui.state.tree.TreeServerRpc;
 import consulo.web.gwt.shared.ui.state.tree.TreeState;
@@ -79,16 +78,12 @@ public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl.Vaadi
 
       @Override
       public void onContextMenu(int x, int y) {
-        if (myContextHandler != null) {
-          myContextHandler.show(x, y);
-        }
+        // todo use ?
       }
     };
 
     private final List<TreeState.TreeChange> myChanges = new ArrayList<>();
     private final Map<String, WebTreeNodeImpl<E>> myNodeMap = new LinkedHashMap<>();
-
-    private ContextHandler myContextHandler;
 
     private String mySelectedValue;
 
@@ -232,10 +227,5 @@ public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl.Vaadi
   @Override
   public void expand(@Nonnull TreeNode<NODE> node) {
     getVaadinComponent().queue((WebTreeNodeImpl<NODE>)node, TreeState.TreeChangeType.SET);
-  }
-
-  @Override
-  public void setContextHandler(@Nonnull ContextHandler contextHandler) {
-    getVaadinComponent().myContextHandler = contextHandler;
   }
 }

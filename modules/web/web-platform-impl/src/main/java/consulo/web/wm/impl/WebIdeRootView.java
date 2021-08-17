@@ -19,14 +19,11 @@ import com.intellij.ide.DataManager;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.impl.MenuItemPresentationFactory;
 import com.intellij.openapi.project.Project;
+import consulo.actionSystem.impl.UnifiedActionUtil;
 import consulo.ide.base.BaseDataManager;
-import consulo.ui.*;
+import consulo.ui.MenuBar;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.web.internal.WebRootPaneImpl;
-
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.function.Consumer;
 
 /**
  * @author VISTALL
@@ -65,55 +62,7 @@ public class WebIdeRootView {
 
     AnAction action = ActionManager.getInstance().getAction(IdeActions.GROUP_MAIN_MENU);
 
-    expandActionGroup((ActionGroup)action, dataContext, ActionManager.getInstance(), myPresentationFactory, menuItem -> myMenuBar.add(menuItem));
-  }
-
-  private static void expandActionGroup(ActionGroup group, DataContext context, ActionManager actionManager, MenuItemPresentationFactory menuItemPresentationFactory, Consumer<MenuItem> actionAdded) {
-    Map<AnAction, Presentation> actions = new LinkedHashMap<>();
-
-    expandActionGroup0(group, context, actions, actionManager, menuItemPresentationFactory);
-
-    for (Map.Entry<AnAction, Presentation> entry : actions.entrySet()) {
-      AnAction action = entry.getKey();
-      Presentation presentation = entry.getValue();
-
-      if (action instanceof AnSeparator) {
-        actionAdded.accept(MenuSeparator.create());
-      }
-      else if (action instanceof ActionGroup) {
-        MenuItem menu = Menu.create(presentation.getText());
-        menu.setIcon(presentation.getIcon());
-        actionAdded.accept(menu);
-        expandActionGroup((ActionGroup)action, context, actionManager, menuItemPresentationFactory, ((Menu)menu)::add);
-      }
-      else {
-        MenuItem menu = MenuItem.create(presentation.getText());
-        menu.addClickListener(event -> {
-          DataContext dataContext = DataManager.getInstance().getDataContext();
-
-          action.actionPerformed(AnActionEvent.createFromDataContext("Test", presentation, dataContext));
-        });
-        menu.setIcon(presentation.getIcon());
-        actionAdded.accept(menu);
-      }
-    }
-  }
-
-  private static void expandActionGroup0(ActionGroup group,
-                                         DataContext context,
-                                         Map<AnAction, Presentation> newVisibleActions,
-                                         ActionManager actionManager,
-                                         MenuItemPresentationFactory menuItemPresentationFactory) {
-    if (group == null) return;
-    final AnAction[] children = group.getChildren(null);
-    for (final AnAction action : children) {
-      final Presentation presentation = menuItemPresentationFactory.getPresentation(action);
-      final AnActionEvent e = new AnActionEvent(null, context, ActionPlaces.MAIN_MENU, presentation, actionManager, 0);
-      e.setInjectedContext(action.isInInjectedContext());
-      action.update(e);
-
-      newVisibleActions.put(action, presentation);
-    }
+    UnifiedActionUtil.expandActionGroup((ActionGroup)action, dataContext, ActionManager.getInstance(), myPresentationFactory, menuItem -> myMenuBar.add(menuItem));
   }
 
   public WebRootPaneImpl getRootPanel() {

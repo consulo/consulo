@@ -30,6 +30,7 @@ import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.ui.ComponentUtil;
 import com.intellij.util.messages.MessageBusConnection;
 import com.intellij.util.ui.UIUtil;
+import consulo.annotation.DeprecationInfo;
 import consulo.awt.TargetAWT;
 import consulo.ui.ex.ToolWindowInternalDecorator;
 
@@ -39,12 +40,15 @@ import javax.swing.*;
 import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
 import java.awt.*;
+import java.util.function.Supplier;
 
 /**
  * @author Anton Katilin
  * @author Vladimir Kondratyev
  */
-public final class ActionPopupMenuImpl implements ApplicationActivationListener, ActionPopupMenu {
+@Deprecated
+@DeprecationInfo("desktop only")
+public final class DesktopActionPopupMenuImpl implements ApplicationActivationListener, ActionPopupMenu {
 
   private final MyMenu myMenu;
   private final ActionManagerImpl myManager;
@@ -53,15 +57,21 @@ public final class ActionPopupMenuImpl implements ApplicationActivationListener,
   private final Application myApp;
   private IdeFrame myFrame;
   @Nullable
-  private Getter<DataContext> myDataContextProvider;
+  private Supplier<DataContext> myDataContextProvider;
   private boolean myIsToolWindowContextMenu;
 
-  public ActionPopupMenuImpl(String place, @Nonnull ActionGroup group, ActionManagerImpl actionManager, @Nullable PresentationFactory factory) {
+  public DesktopActionPopupMenuImpl(String place, @Nonnull ActionGroup group, ActionManagerImpl actionManager, @Nullable PresentationFactory factory) {
     myManager = actionManager;
     myMenu = new MyMenu(place, group, factory);
     myApp = ApplicationManager.getApplication();
   }
 
+  @Override
+  public void show(consulo.ui.Component component, int x, int y) {
+    myMenu.show(TargetAWT.to(component), x, y);
+  }
+
+  @Nonnull
   @Override
   public JPopupMenu getComponent() {
     return myMenu;
@@ -77,6 +87,11 @@ public final class ActionPopupMenuImpl implements ApplicationActivationListener,
   @Override
   public ActionGroup getActionGroup() {
     return myMenu.myGroup;
+  }
+
+  @Override
+  public void setTargetComponent(@Nonnull consulo.ui.Component component) {
+    setTargetComponent((JComponent)TargetAWT.to(component));
   }
 
   @Override
@@ -133,7 +148,7 @@ public final class ActionPopupMenuImpl implements ApplicationActivationListener,
             myFrame = uiWindow.getUserData(IdeFrame.KEY);
           }
           myConnection = myApp.getMessageBus().connect();
-          myConnection.subscribe(ApplicationActivationListener.TOPIC, ActionPopupMenuImpl.this);
+          myConnection.subscribe(ApplicationActivationListener.TOPIC, DesktopActionPopupMenuImpl.this);
         }
       }
 
@@ -158,7 +173,7 @@ public final class ActionPopupMenuImpl implements ApplicationActivationListener,
       }
 
       private void disposeMenu() {
-        myManager.removeActionPopup(ActionPopupMenuImpl.this);
+        myManager.removeActionPopup(DesktopActionPopupMenuImpl.this);
         removeAll();
         if (myConnection != null) {
           myConnection.disconnect();
@@ -169,7 +184,7 @@ public final class ActionPopupMenuImpl implements ApplicationActivationListener,
       public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
         removeAll();
         Utils.fillMenu(myGroup, MyMenu.this, !UISettings.getInstance().getDisableMnemonics(), myPresentationFactory, myContext, myPlace, false, LaterInvocator.isInModalContext(), false);
-        myManager.addActionPopup(ActionPopupMenuImpl.this);
+        myManager.addActionPopup(DesktopActionPopupMenuImpl.this);
       }
     }
   }

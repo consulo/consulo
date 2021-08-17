@@ -84,7 +84,7 @@ public class Utils {
 
   private static final boolean DO_FULL_EXPAND = Boolean.getBoolean("actionSystem.use.full.group.expand"); // for tests and debug
 
-  static void fillMenu(@Nonnull ActionGroup group,
+  public static void fillMenu(@Nonnull ActionGroup group,
                        JComponent component,
                        boolean enableMnemonics,
                        PresentationFactory presentationFactory,

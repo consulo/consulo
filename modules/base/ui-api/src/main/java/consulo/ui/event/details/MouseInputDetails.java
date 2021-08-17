@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2018 consulo.io
+ * Copyright 2013-2021 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,12 +13,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui;
+package consulo.ui.event.details;
+
+import javax.annotation.Nonnull;
+import java.util.EnumSet;
 
 /**
  * @author VISTALL
- * @since 2018-05-11
+ * @since 17/08/2021
  */
-public interface ContextHandler {
-  void show(int x, int y);
+public class MouseInputDetails extends ModifiedInputDetails {
+  public static enum MouseButton {
+    LEFT,
+    MIDDLE,
+    RIGHT
+  }
+
+  private final MouseButton myButton;
+
+  public MouseInputDetails(int x, int y, @Nonnull EnumSet<Modifier> modifiers, @Nonnull MouseButton button) {
+    super(x, y, modifiers);
+    myButton = button;
+  }
+
+  @Nonnull
+  public MouseButton getButton() {
+    return myButton;
+  }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2020 consulo.io
+ * Copyright 2013-2021 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,27 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui.event;
+package consulo.ui;
 
-import consulo.annotation.DeprecationInfo;
-import consulo.ui.Component;
-import consulo.ui.event.details.InputDetails;
+import consulo.ui.internal.UIInternal;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
- * @since 2020-11-21
+ * @since 17/08/2021
  */
-public final class ClickEvent extends UIEvent<Component> {
-  @Deprecated
-  @DeprecationInfo("Use constructor with InputDetails")
-  public ClickEvent(@Nonnull Component component) {
-    super(component);
+public interface PopupMenu extends Menu {
+  @Nonnull
+  static PopupMenu create(@Nonnull Component target) {
+    return UIInternal.get()._PopupMenu_create(target);
   }
 
-  public ClickEvent(@Nonnull Component component, @Nullable InputDetails inputDetails) {
-    super(component, inputDetails);
-  }
+  void show(int relativeX, int relativeY);
 }

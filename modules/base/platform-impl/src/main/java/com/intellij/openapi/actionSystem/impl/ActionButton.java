@@ -236,7 +236,7 @@ public class ActionButton extends JComponent implements ActionButtonComponent, A
   private void actionPerformed(final AnActionEvent event) {
     if (myAction instanceof ActionGroup && !(myAction instanceof CustomComponentAction) && ((ActionGroup)myAction).isPopup() && !((ActionGroup)myAction).canBePerformed(event.getDataContext())) {
       final ActionManagerImpl am = (ActionManagerImpl)ActionManager.getInstance();
-      ActionPopupMenuImpl popupMenu = (ActionPopupMenuImpl)am.createActionPopupMenu(event.getPlace(), (ActionGroup)myAction, new MenuItemPresentationFactory() {
+      DesktopActionPopupMenuImpl popupMenu = (DesktopActionPopupMenuImpl)am.createActionPopupMenu(event.getPlace(), (ActionGroup)myAction, new MenuItemPresentationFactory() {
         @Override
         protected void processPresentation(Presentation presentation) {
           if (myNoIconsInPopup) {

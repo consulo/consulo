@@ -32,6 +32,7 @@ import com.intellij.util.messages.MessageBusConnection;
 import com.intellij.util.ui.UIUtil;
 import consulo.actionSystem.ActionToolbarFactory;
 import consulo.actionSystem.impl.LocalizeHelper;
+import consulo.actionSystem.impl.UnifiedActionPopupMenuImpl;
 import consulo.application.TransactionGuardEx;
 import consulo.container.PluginException;
 import consulo.container.plugin.PluginDescriptor;
@@ -43,6 +44,7 @@ import consulo.disposer.Disposer;
 import consulo.extensions.ListOfElementsEP;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
+import consulo.platform.Platform;
 import consulo.platform.impl.action.LastActionTracker;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
@@ -409,13 +411,19 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
 
   @Nonnull
   public ActionPopupMenu createActionPopupMenu(@Nonnull String place, @Nonnull ActionGroup group, @Nullable PresentationFactory presentationFactory) {
-    return new ActionPopupMenuImpl(place, group, this, presentationFactory);
+    if(Platform.current().isWebService()) {
+      return new UnifiedActionPopupMenuImpl(place, group, this, presentationFactory);
+    }
+    return new DesktopActionPopupMenuImpl(place, group, this, presentationFactory);
   }
 
   @Nonnull
   @Override
   public ActionPopupMenu createActionPopupMenu(@Nonnull String place, @Nonnull ActionGroup group) {
-    return new ActionPopupMenuImpl(place, group, this, null);
+    if (Platform.current().isWebService()) {
+      return new UnifiedActionPopupMenuImpl(place, group, this, null);
+    }
+    return new DesktopActionPopupMenuImpl(place, group, this, null);
   }
 
   @Nonnull
@@ -1122,7 +1130,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
 
   public boolean isToolWindowContextMenuVisible() {
     for (Object popup : myPopups) {
-      if (popup instanceof ActionPopupMenuImpl && ((ActionPopupMenuImpl)popup).isToolWindowContextMenu()) {
+      if (popup instanceof DesktopActionPopupMenuImpl && ((DesktopActionPopupMenuImpl)popup).isToolWindowContextMenu()) {
         return true;
       }
     }

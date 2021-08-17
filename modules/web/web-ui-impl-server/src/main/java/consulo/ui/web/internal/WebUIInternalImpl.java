@@ -421,6 +421,12 @@ public class WebUIInternalImpl extends UIInternal {
     return WebFocusManagerImpl.ourInstance;
   }
 
+  @Nonnull
+  @Override
+  public PopupMenu _PopupMenu_create(Component target) {
+    return new WebPopupMenuImpl(target);
+  }
+
   @Override
   public void _ShowNotifier_once(@Nonnull Component component, @Nonnull Runnable action) {
     // TODO [VISTALL] logic for this notifier is not fully correct. Run only on first attach to parent, npt vo

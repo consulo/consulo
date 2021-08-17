@@ -8,7 +8,8 @@ import com.intellij.openapi.actionSystem.ActionPlaces;
 import com.intellij.openapi.actionSystem.ActionPopupMenu;
 import com.intellij.openapi.editor.event.EditorMouseEvent;
 import com.intellij.openapi.editor.ex.EditorPopupHandler;
-import com.intellij.util.ObjectUtils;
+import consulo.ui.event.details.InputDetails;
+import consulo.util.lang.ObjectUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -29,11 +30,22 @@ public abstract class ContextMenuPopupHandler implements EditorPopupHandler {
     ActionGroup group = getActionGroup(event);
     if (group != null) {
       ActionPopupMenu popupMenu = ActionManager.getInstance().createActionPopupMenu(ActionPlaces.EDITOR_POPUP, group);
-      MouseEvent e = event.getMouseEvent();
-      final Component c = e.getComponent();
-      if (c != null && c.isShowing()) {
-        popupMenu.getComponent().show(c, e.getX(), e.getY());
+
+      InputDetails inputDetails = event.getInputDetails();
+      if (inputDetails != null) {
+        consulo.ui.Component uiComponent = event.getEditor().getUIComponent();
+
+        popupMenu.show(uiComponent, inputDetails.getX(), inputDetails.getY());
       }
+      // obsolete implementation
+      else {
+        MouseEvent e = event.getMouseEvent();
+        final Component c = e.getComponent();
+        if (c != null && c.isShowing()) {
+          popupMenu.getComponent().show(c, e.getX(), e.getY());
+        }
+      }
+
       event.consume();
     }
     return true;
@@ -41,7 +53,7 @@ public abstract class ContextMenuPopupHandler implements EditorPopupHandler {
 
   @Nullable
   private static ActionGroup getGroupForId(@Nullable String groupId) {
-    return groupId == null ? null : ObjectUtils.tryCast(CustomActionsSchema.getInstance().getCorrectedAction(groupId), ActionGroup.class);
+    return groupId == null ? null : ObjectUtil.tryCast(CustomActionsSchema.getInstance().getCorrectedAction(groupId), ActionGroup.class);
   }
 
   /**

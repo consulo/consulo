@@ -48,8 +48,6 @@ public interface Tree<E> extends Component {
 
   void expand(@Nonnull TreeNode<E> node);
 
-  void setContextHandler(@Nonnull ContextHandler contextHandler);
-
   @Nonnull
   default Disposable addSelectListener(@Nonnull @RequiredUIAccess SelectListener<E> listener) {
     return addListener(SelectListener.class, listener);
