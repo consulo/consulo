@@ -238,6 +238,9 @@
     <backgroundPostStartupActivity implementation="com.intellij.diagnostic.WindowsDefenderCheckerActivity"/>
     <applicationService serviceImplementation="com.intellij.diagnostic.WindowsDefenderChecker"/>
 
+    <projectService serviceInterface="com.intellij.codeInsight.daemon.impl.IntentionsUI"
+                    serviceImplementation="com.intellij.codeInsight.daemon.impl.IntentionsUIImpl"/>
+
     <uiDecorator implementation="consulo.ide.ui.impl.mac.MacAquaUIDecorator"/>
     <uiDecorator implementation="consulo.ide.ui.impl.DefaultUIDecorator" order="last"/>
   </extensions>

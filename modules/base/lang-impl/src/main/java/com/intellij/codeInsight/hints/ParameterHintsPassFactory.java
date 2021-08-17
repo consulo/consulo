@@ -31,14 +31,14 @@ import com.intellij.openapi.editor.VisualPosition;
 import com.intellij.openapi.editor.ex.EditorSettingsExternalizable;
 import com.intellij.openapi.editor.ex.util.CaretVisualPositionKeeper;
 import com.intellij.openapi.progress.ProgressIndicator;
-import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.Pair;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.SyntaxTraverser;
 import com.intellij.util.containers.ContainerUtil;
-import java.util.HashSet;
 import consulo.annotation.access.RequiredReadAction;
+import consulo.platform.Platform;
+import consulo.util.dataholder.Key;
 import gnu.trove.TIntObjectHashMap;
 
 import javax.annotation.Nonnull;
@@ -57,7 +57,12 @@ public class ParameterHintsPassFactory implements TextEditorHighlightingPassFact
   @Nullable
   @Override
   public TextEditorHighlightingPass createHighlightingPass(@Nonnull PsiFile file, @Nonnull Editor editor) {
-    if (editor.isOneLineMode()) return null;
+    if (Platform.current().isWebService()) {
+      return null;
+    }
+    if (editor.isOneLineMode()) {
+      return null;
+    }
     return new ParameterHintsPass(file, editor);
   }
 
@@ -85,11 +90,7 @@ public class ParameterHintsPassFactory implements TextEditorHighlightingPassFact
         blackList.addAll(getBlackList(dependentLanguage));
       }
 
-      List<Matcher> matchers = blackList
-              .stream()
-              .map(MatcherConstructor::createMatcher)
-              .filter(Objects::nonNull)
-              .collect(Collectors.toList());
+      List<Matcher> matchers = blackList.stream().map(MatcherConstructor::createMatcher).filter(Objects::nonNull).collect(Collectors.toList());
 
       SyntaxTraverser.psiTraverser(myFile).forEach(element -> process(element, provider, matchers));
     }
@@ -136,7 +137,7 @@ public class ParameterHintsPassFactory implements TextEditorHighlightingPassFact
         if (!presentationManager.isParameterHint(inlay)) continue;
         int offset = inlay.getOffset();
         Pair<String, InlayParameterHintsProvider> pair = myAnnotations.remove(offset);
-        String newText = pair == null ? null :pair.getFirst();
+        String newText = pair == null ? null : pair.getFirst();
         InlayParameterHintsProvider parameterHintsProvider = pair == null ? null : pair.getSecond();
         if (delayRemoval(inlay, caretMap)) continue;
         String oldText = presentationManager.getHintText(inlay);

@@ -34,6 +34,9 @@ public class Main {
     // FIXME [VISTALL] we ned this?
     System.setProperty("java.awt.headless", "true");
 
+    // enable separate write thread
+    System.setProperty("idea.use.separate.write.thread", "true");
+
     StatCollector stat = new StatCollector();
 
     File modulesDirectory = BootstrapClassLoaderUtil.getModulesDirectory();

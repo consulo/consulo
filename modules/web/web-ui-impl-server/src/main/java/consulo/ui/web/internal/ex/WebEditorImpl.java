@@ -23,6 +23,7 @@ import com.intellij.openapi.editor.*;
 import com.intellij.openapi.editor.actionSystem.DocCommandGroupId;
 import com.intellij.openapi.editor.event.*;
 import com.intellij.openapi.editor.ex.EditorGutterComponentEx;
+import com.intellij.openapi.editor.ex.RangeHighlighterEx;
 import com.intellij.openapi.editor.highlighter.HighlighterIterator;
 import com.intellij.openapi.editor.impl.MarkupModelImpl;
 import com.intellij.openapi.editor.impl.TextDrawingCallback;
@@ -42,6 +43,7 @@ import consulo.ui.web.internal.base.ComponentHolder;
 import consulo.ui.web.internal.base.FromVaadinComponentWrapper;
 import consulo.ui.web.internal.base.VaadinComponentDelegate;
 import consulo.ui.web.internal.util.Mappers;
+import consulo.util.lang.BitUtil;
 import consulo.web.gwt.shared.ui.state.RGBColorShared;
 import org.intellij.lang.annotations.MagicConstant;
 
@@ -143,18 +145,47 @@ public class WebEditorImpl extends CodeEditorBase {
 
       TextAttributes textAttributes = iterator.getTextAttributes();
 
-      Map<String, String> map = new HashMap<>();
-      ColorValue foregroundColor = textAttributes.getForegroundColor();
-      if(foregroundColor != null) {
-        RGBColorShared rgb = Mappers.map(foregroundColor.toRGB());
-        map.put("color", rgb.toString());
-      }
-      
-      myEditorComponent.toVaadinComponent().addAnnotation(start, end, "orion.annotation.info", map);
+      myEditorComponent.toVaadinComponent().addAnnotation(start, end, "orion.annotation.info", convertToCssProperties(textAttributes));
 
       iterator.advance();
     }
+  }
 
+  private Map<String, String> convertToCssProperties(TextAttributes textAttributes) {
+    Map<String, String> map = new HashMap<>();
+    ColorValue foregroundColor = textAttributes.getForegroundColor();
+    if (foregroundColor != null) {
+      RGBColorShared rgb = Mappers.map(foregroundColor.toRGB());
+      map.put("color", rgb.toString());
+    }
+
+    int fontType = textAttributes.getFontType();
+    if (BitUtil.isSet(fontType, Font.BOLD)) {
+      map.put("fontWeight", "bold");
+    }
+
+    if (BitUtil.isSet(fontType, Font.ITALIC)) {
+      map.put("fontStyle", "italic");
+    }
+
+    return map;
+  }
+
+  @Override
+  protected void onHighlighterChanged(@Nonnull RangeHighlighterEx highlighter, boolean canImpactGutterSize, boolean fontStyleOrColorChanged) {
+    int textLength = myDocument.getTextLength();
+
+    int start = Math.min(Math.max(highlighter.getAffectedAreaStartOffset(), 0), textLength);
+    int end = Math.min(Math.max(highlighter.getAffectedAreaEndOffset(), 0), textLength);
+
+    TextAttributes textAttributes = highlighter.getTextAttributes();
+    if(textAttributes == null) {
+      return;
+    }
+
+    Vaadin vaadin = myEditorComponent.toVaadinComponent();
+
+    vaadin.addAnnotation(start, end, "orion.annotation.info", convertToCssProperties(textAttributes));
   }
 
   private void runMousePressedCommand(@Nonnull final MouseDownEvent e) {

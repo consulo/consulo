@@ -1438,9 +1438,6 @@
     <projectService serviceInterface="com.intellij.util.indexing.FileBasedIndexScanRunnableCollector"
                     serviceImplementation="com.intellij.util.indexing.FileBasedIndexScanRunnableCollectorImpl"/>
 
-    <projectService serviceInterface="com.intellij.codeInsight.daemon.impl.IntentionsUI"
-                    serviceImplementation="com.intellij.codeInsight.daemon.impl.IntentionsUIImpl"/>
-
     <projectService serviceImplementation="com.intellij.ide.bookmarks.BookmarkManager"/>
 
     <postStartupActivity implementation="com.intellij.ide.bookmarks.BookmarkManager$MyStartupActivity"/>

@@ -34,6 +34,7 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.MultiMap;
 import consulo.disposer.Disposable;
 import consulo.logging.Logger;
+import consulo.platform.Platform;
 import consulo.util.collection.primitive.ints.IntMaps;
 import consulo.util.collection.primitive.ints.IntObjectMap;
 import consulo.util.dataholder.Key;
@@ -491,7 +492,7 @@ final class PassExecutorService implements Disposable {
       }
       Document document = pass.getDocument();
       try {
-        if (fileEditor.getComponent().isDisplayable() || ApplicationManager.getApplication().isHeadlessEnvironment()) {
+        if (Platform.current().isWebService() || fileEditor.getComponent().isDisplayable() || ApplicationManager.getApplication().isHeadlessEnvironment()) {
           pass.applyInformationToEditor();
           repaintErrorStripeAndIcon(fileEditor);
           FileStatusMap fileStatusMap = DaemonCodeAnalyzerEx.getInstanceEx(myProject).getFileStatusMap();

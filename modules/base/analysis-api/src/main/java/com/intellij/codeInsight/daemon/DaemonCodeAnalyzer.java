@@ -24,6 +24,7 @@ import com.intellij.util.messages.Topic;
 import consulo.disposer.Disposable;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Collection;
 
@@ -41,13 +42,13 @@ public abstract class DaemonCodeAnalyzer {
   public abstract void setUpdateByTimerEnabled(boolean value);
   public abstract void disableUpdateByTimer(@Nonnull Disposable parentDisposable);
 
-  public abstract boolean isHighlightingAvailable(@javax.annotation.Nullable PsiFile file);
+  public abstract boolean isHighlightingAvailable(@Nullable PsiFile file);
 
   public abstract void setImportHintsEnabled(@Nonnull PsiFile file, boolean value);
   public abstract void resetImportHintsEnabledForProject();
   public abstract void setHighlightingEnabled(@Nonnull PsiFile file, boolean value);
   public abstract boolean isImportHintsEnabled(@Nonnull PsiFile file);
-  public abstract boolean isAutohintsAvailable(@javax.annotation.Nullable PsiFile file);
+  public abstract boolean isAutohintsAvailable(@Nullable PsiFile file);
 
   /**
    * Force rehighlighting for all files.

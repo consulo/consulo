@@ -99,6 +99,11 @@ public class WebApplicationImpl extends BaseApplication implements WebApplicatio
   }
 
   @Override
+  public boolean isWriteThread() {
+    return super.isWriteThread() || isDispatchThread();
+  }
+
+  @Override
   public void exit() {
 
   }

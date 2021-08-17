@@ -26,6 +26,7 @@ import consulo.disposer.Disposer;
 import com.intellij.util.Alarm;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.UIUtil;
+import consulo.platform.Platform;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -278,7 +279,12 @@ public class MergingUpdateQueue implements Runnable, Disposable, Activatable {
     };
 
     if (myExecuteInDispatchThread) {
-      UIUtil.invokeAndWaitIfNeeded(toRun);
+      if(Platform.current().isWebService()) {
+        Application.get().getLastUIAccess().giveAndWaitIfNeed(toRun);
+      }
+      else {
+        UIUtil.invokeAndWaitIfNeeded(toRun);
+      }
     }
     else {
       toRun.run();
