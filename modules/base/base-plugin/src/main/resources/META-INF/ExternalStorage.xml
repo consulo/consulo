@@ -15,6 +15,8 @@
   -->
 <consulo-plugin>
   <extensions defaultExtensionNs="com.intellij">
-    <applicationLoadListener implementation="consulo.externalStorage.ExternalStorageAppListener" />
+    <applicationLoadListener implementation="consulo.externalStorage.ExternalStorageAppListener"/>
+
+    <settingsEntryPointActionProvider implementation="consulo.auth.ServiceAuthSettingsEntryPointProvider"/>
   </extensions>
 </consulo-plugin>

@@ -396,6 +396,7 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
       }
     });
 
+    backToolbar.setTargetComponent(myContentPane);
     return myContentPane;
   }
 

@@ -139,7 +139,7 @@ class ExternalStorageQueue {
         HttpGet request = new HttpGet(urlBuilder.build());
         String authKey = WebServicesConfiguration.getInstance().getOAuthKey(WebServiceApi.SYNCHRONIZE_API);
         if (authKey != null) {
-          request.addHeader("Authorization", authKey);
+          request.addHeader("Authorization", "Bearer " + authKey);
         }
 
         byte[] data = client.execute(request, response -> {
@@ -258,7 +258,7 @@ class ExternalStorageQueue {
         HttpGet request = new HttpGet(urlBuilder.build());
         String authKey = WebServicesConfiguration.getInstance().getOAuthKey(WebServiceApi.SYNCHRONIZE_API);
         if (authKey != null) {
-          request.addHeader("Authorization", authKey);
+          request.addHeader("Authorization", "Bearer " + authKey);
         }
 
         client.execute(request, response -> {
@@ -309,7 +309,7 @@ class ExternalStorageQueue {
 
         String authKey = WebServicesConfiguration.getInstance().getOAuthKey(WebServiceApi.SYNCHRONIZE_API);
         if (authKey != null) {
-          request.addHeader("Authorization", authKey);
+          request.addHeader("Authorization", "Bearer " + authKey);
         }
 
         PushFileResponse pushFileResponse = client.execute(request, response -> {

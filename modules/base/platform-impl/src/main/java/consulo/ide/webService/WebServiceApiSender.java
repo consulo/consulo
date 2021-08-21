@@ -42,7 +42,7 @@ public class WebServiceApiSender {
 
       String authKey = WebServicesConfiguration.getInstance().getOAuthKey(serviceApi);
       if (authKey != null) {
-        post.addHeader("Authorization", authKey);
+        post.addHeader("Authorization", "Bearer " + authKey);
       }
       return httpClient.execute(post, response -> {
         int statusCode = response.getStatusLine().getStatusCode();

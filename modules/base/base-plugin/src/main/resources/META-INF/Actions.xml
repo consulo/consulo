@@ -21,8 +21,6 @@
     <!-- grouping for Settings -> Keymap -> Others -->
     <group id="Other.KeymapGroup"/>
 
-    <action id="Login" class="consulo.auth.action.LoginAction"/>
-
     <group id="Diff.EditorPopupMenu"/>
     <group id="Diff.ViewerPopupMenu"/>
     <group id="Diff.ViewerToolbar"/>
@@ -577,7 +575,6 @@
       <separator/>
       <reference ref="RunAnything"/>
       <reference ref="SearchEverywhere"/>
-      <reference ref="Login"/>
     </group>
 
     <group id="NavBarVcsGroup"/>
@@ -1417,7 +1414,6 @@
       <separator/>
       <reference ref="SearchEverywhere"/>
       <reference ref="SettingsEntryPoint"/>
-      <reference ref="Login"/>
     </group>
 
     <group id="Bookmarks">
