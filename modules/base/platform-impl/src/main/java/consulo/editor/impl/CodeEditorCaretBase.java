@@ -18,15 +18,13 @@ import com.intellij.openapi.editor.event.DocumentEvent;
 import com.intellij.openapi.editor.event.SelectionEvent;
 import com.intellij.openapi.editor.ex.DocumentEx;
 import com.intellij.openapi.editor.ex.EditorEx;
-import com.intellij.openapi.editor.ex.EditorGutterComponentEx;
 import com.intellij.openapi.editor.ex.FoldingModelEx;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
-import com.intellij.openapi.editor.impl.*;
+import com.intellij.openapi.editor.impl.DesktopSelectionModelImpl;
+import com.intellij.openapi.editor.impl.RangeMarkerImpl;
 import com.intellij.openapi.editor.impl.event.DocumentEventImpl;
 import com.intellij.openapi.editor.impl.softwrap.SoftWrapHelper;
-import com.intellij.openapi.editor.impl.view.EditorPainter;
 import com.intellij.openapi.ide.CopyPasteManager;
-import com.intellij.openapi.util.registry.Registry;
 import com.intellij.util.DocumentUtil;
 import com.intellij.util.diff.FilesTooBigForDiffException;
 import consulo.disposer.Disposer;
@@ -977,7 +975,7 @@ public class CodeEditorCaretBase extends UserDataHolderBase implements Caret, Du
 
   @Override
   public int getSelectionStart() {
-    validateContext(true);
+    validateContext(false);
     if (hasSelection()) {
       RangeMarker marker = mySelectionMarker;
       if (marker != null) {
