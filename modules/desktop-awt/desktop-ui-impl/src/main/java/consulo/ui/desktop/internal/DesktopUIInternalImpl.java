@@ -20,6 +20,7 @@ import com.intellij.util.io.UnsyncByteArrayInputStream;
 import com.intellij.util.ui.EDT;
 import com.intellij.util.ui.update.UiNotifyConnector;
 import com.kitfox.svg.SVGDiagram;
+import com.kitfox.svg.SVGUniverse;
 import consulo.awt.TargetAWT;
 import consulo.localize.LocalizeValue;
 import consulo.ui.Button;
@@ -80,7 +81,7 @@ public class DesktopUIInternalImpl extends UIInternal {
   public Image _Image_fromUrl(URL url) throws IOException {
 
     if (url.toString().endsWith(".svg")) {
-      ThreadLocalSVGUniverse svgUniverse = new ThreadLocalSVGUniverse();
+      SVGUniverse svgUniverse = new SVGUniverse();
 
       try {
         SVGDiagram diagram = svgUniverse.getDiagram(url.toURI());
@@ -104,7 +105,7 @@ public class DesktopUIInternalImpl extends UIInternal {
   public Image _Image_fromBytes(Image.ImageType imageType, byte[] bytes, int width, int height) throws IOException {
     switch (imageType) {
       case SVG:
-        ThreadLocalSVGUniverse svgUniverse = new ThreadLocalSVGUniverse();
+        SVGUniverse svgUniverse = new SVGUniverse();
 
         URI uri = svgUniverse.loadSVG(new UnsyncByteArrayInputStream(bytes), "dummy" + System.currentTimeMillis() + ".svg");
 

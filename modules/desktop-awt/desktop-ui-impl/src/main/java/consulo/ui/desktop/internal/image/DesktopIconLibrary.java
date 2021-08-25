@@ -17,13 +17,13 @@ package consulo.ui.desktop.internal.image;
 
 import com.intellij.util.io.UnsyncByteArrayInputStream;
 import com.kitfox.svg.SVGDiagram;
+import com.kitfox.svg.SVGUniverse;
 import consulo.logging.Logger;
 import consulo.ui.desktop.internal.image.libraryImage.DesktopAWTImageImpl;
 import consulo.ui.desktop.internal.image.libraryImage.DesktopSvgImageImpl;
-import consulo.ui.desktop.internal.image.libraryImage.ThreadLocalSVGUniverse;
 import consulo.ui.image.Image;
-import consulo.ui.impl.image.BaseIconLibraryManager;
 import consulo.ui.impl.image.BaseIconLibraryImpl;
+import consulo.ui.impl.image.BaseIconLibraryManager;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -38,7 +38,7 @@ import java.util.Objects;
 public class DesktopIconLibrary extends BaseIconLibraryImpl {
   private static final Logger LOG = Logger.getInstance(DesktopIconLibrary.class);
 
-  private final ThreadLocalSVGUniverse mySVGUniverse = new ThreadLocalSVGUniverse();
+  private final SVGUniverse mySVGUniverse = new SVGUniverse();
   
   public DesktopIconLibrary(String id, BaseIconLibraryManager baseIconLibraryManager) {
     super(id, baseIconLibraryManager);
@@ -63,7 +63,7 @@ public class DesktopIconLibrary extends BaseIconLibraryImpl {
       }
       catch (IOException e) {
         LOG.warn(e);
-        return null;
+        return Image.empty(width, height);
       }
     }
     else {
