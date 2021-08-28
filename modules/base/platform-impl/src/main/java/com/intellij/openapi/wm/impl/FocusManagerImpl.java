@@ -99,7 +99,7 @@ public final class FocusManagerImpl implements IdeFocusManager, Disposable {
         if (e.getID() == WindowEvent.WINDOW_CLOSED) {
           consulo.ui.Window uiWindow = TargetAWT.from(wnd);
 
-          IdeFrame ideFrame = uiWindow.getUserData(IdeFrame.KEY);
+          IdeFrame ideFrame = uiWindow == null ? null : uiWindow.getUserData(IdeFrame.KEY);
           if (ideFrame != null) {
             myLastFocused.remove(ideFrame);
             myLastFocusedAtDeactivation.remove(ideFrame);
