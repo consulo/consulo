@@ -28,7 +28,8 @@ public enum WebServiceApi {
   MAIN(null, "https://consulo.io"),
   ERROR_REPORTER_API("Error Reporter", "https://hub.consulo.io/api/errorReporter/"),
   ERROR_REPORT(null, "https://hub.consulo.io/errorReport"),
-  STATISTICS_API(null, "https://hub.consulo.io/api/statistics/"),
+  STATISTICS_API("Statistics", "https://hub.consulo.io/api/statistics/"),
+  DEVELOPER_API("Developer", "https://hub.consulo.io/api/developer/"),
   SYNCHRONIZE_API("Synchronize", "https://hub.consulo.io/api/storage/"),
   REPOSITORY_API(null, "https://hub.consulo.io/api/repository/");
 

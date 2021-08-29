@@ -17,11 +17,10 @@ package com.intellij.diagnostic;
 
 import com.intellij.openapi.diagnostic.IdeaLoggingEvent;
 import com.intellij.openapi.util.text.StringUtil;
-import org.jetbrains.annotations.NonNls;
 
 public class LogMessage extends AbstractMessage {
 
-  @NonNls static final String NO_MESSAGE = "No message";
+  static final String NO_MESSAGE = "No message";
 
   private String myHeader = NO_MESSAGE;
   private final Throwable myThrowable;

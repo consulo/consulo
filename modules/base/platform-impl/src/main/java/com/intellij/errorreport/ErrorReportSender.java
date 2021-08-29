@@ -22,7 +22,6 @@ import com.intellij.errorreport.error.AuthorizationFailedException;
 import com.intellij.errorreport.error.UpdateAvailableException;
 import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.Project;
-import com.intellij.util.Consumer;
 import com.intellij.util.net.HttpConfigurable;
 import consulo.external.api.ErrorReportBean;
 import consulo.ide.webService.WebServiceApi;
@@ -32,6 +31,7 @@ import consulo.ide.webService.WebServiceException;
 import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.util.Map;
+import java.util.function.Consumer;
 
 /**
  * @author stathik
@@ -49,24 +49,24 @@ public class ErrorReportSender {
   private ErrorReportSender() {
   }
 
-  public static void sendReport(Project project, ErrorReportBean errorBean, final java.util.function.Consumer<String> callback, final Consumer<Exception> errback) {
+  public static void sendReport(Project project, ErrorReportBean errorBean, long assignUserId, Consumer<String> callback,  Consumer<Exception> errback) {
     Task.Backgroundable.queue(project, DiagnosticBundle.message("title.submitting.error.report"), indicator -> {
       try {
         HttpConfigurable.getInstance().prepareURL(WebServiceApi.MAIN.buildUrl());
 
-        String id = sendAndHandleResult(errorBean);
+        String id = sendAndHandleResult(errorBean, assignUserId);
 
         callback.accept(id);
       }
       catch (Exception ex) {
-        errback.consume(ex);
+        errback.accept(ex);
       }
     });
   }
 
   @Nonnull
-  public static String sendAndHandleResult(@Nonnull ErrorReportBean error) throws IOException, AuthorizationFailedException, UpdateAvailableException {
-    String reply = WebServiceApiSender.doPost(WebServiceApi.ERROR_REPORTER_API, "create", error);
+  public static String sendAndHandleResult(@Nonnull ErrorReportBean error, long assignUserId) throws IOException, AuthorizationFailedException, UpdateAvailableException {
+    String reply = WebServiceApiSender.doPost(WebServiceApi.ERROR_REPORTER_API, "create?assignUserId=" + assignUserId, error);
 
     Map<String, String> map = new Gson().fromJson(reply, new TypeToken<Map<String, String>>() {
     }.getType());

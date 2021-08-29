@@ -21,6 +21,10 @@ import com.intellij.icons.AllIcons;
 import com.intellij.ide.DataManager;
 import com.intellij.ide.plugins.PluginManager;
 import com.intellij.ide.util.PropertiesComponent;
+import com.intellij.notification.Notification;
+import com.intellij.notification.NotificationDisplayType;
+import com.intellij.notification.NotificationType;
+import com.intellij.notification.Notifications;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
@@ -53,6 +57,8 @@ import consulo.container.plugin.PluginId;
 import consulo.container.plugin.PluginIds;
 import consulo.desktop.wm.impl.DesktopIdeFrameUtil;
 import consulo.ide.base.BaseDataManager;
+import consulo.ide.webService.WebServiceApi;
+import consulo.ide.webService.WebServicesConfiguration;
 import consulo.logging.Logger;
 import consulo.logging.attachment.Attachment;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -83,7 +89,6 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
   public static Key<String> CURRENT_TRACE_KEY = Key.create("current_stack_trace_key");
 
   public static final int COMPONENTS_WIDTH = 670;
-  public static Collection<Developer> ourDevelopersList = Collections.emptyList();
 
   private JPanel myContentPane;
   private JPanel myBackButtonPanel;
@@ -129,14 +134,7 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
     }
     setCancelButtonText(CommonBundle.message("close.action.name"));
     setModal(false);
-    if (myInternalMode) {
-      if (ourDevelopersList.isEmpty()) {
-        loadDevelopersAsynchronously();
-      }
-      else {
-        myDetailsTabForm.setDevelopers(ourDevelopersList);
-      }
-    }
+    loadDevelopersAsynchronously();
   }
 
   private void loadDevelopersAsynchronously() {
@@ -149,9 +147,9 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
           myDevelopers[0] = DevelopersLoader.fetchDevelopers(indicator);
         }
         catch (IOException e) {
-          //Notifications.Bus.register("Error reporter", NotificationDisplayType.BALLOON);
-          //Notifications.Bus.notify(new Notification("Error reporter", "Communication error",
-          //                                          "Unable to load developers list from server.", NotificationType.WARNING));
+          Notifications.Bus.register("Error reporter", NotificationDisplayType.BALLOON);
+          Notifications.Bus.notify(new Notification("Error reporter", "Communication error",
+                                                    "Unable to load developers list from server.", NotificationType.WARNING));
         }
       }
 
@@ -160,8 +158,6 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
       public void onSuccess() {
         Collection<Developer> developers = myDevelopers[0];
         myDetailsTabForm.setDevelopers(developers);
-        //noinspection AssignmentToStaticFieldFromInstanceMethod
-        ourDevelopersList = developers;
       }
     };
     ProgressManager.getInstance().run(task);
@@ -536,8 +532,7 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
   }
 
   private void updateAssigneePane(AbstractMessage message) {
-    final ErrorReportSubmitter submitter = message != null ? getSubmitter(message.getThrowable()) : null;
-    myDetailsTabForm.setAssigneeVisible(false);
+    myDetailsTabForm.setAssigneeVisible(WebServicesConfiguration.getInstance().getOAuthKey(WebServiceApi.DEVELOPER_API) != null);
   }
 
   private void updateInfoLabel(AbstractMessage message) {
@@ -701,7 +696,7 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
         myDetailsTabForm.setCommentsTextEnabled(false);
       }
 
-      myDetailsTabForm.setAssigneeId(message == null ? null : message.getAssigneeId());
+      myDetailsTabForm.setAssigneeId(message == null ? 0 : message.getAssigneeId());
 
       List<Attachment> attachments = message instanceof LogMessageEx ? ((LogMessageEx)message).getAttachments() : Collections.<Attachment>emptyList();
       if (!attachments.isEmpty()) {

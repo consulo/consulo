@@ -15,54 +15,41 @@
  */
 package com.intellij.diagnostic;
 
+import com.google.gson.Gson;
 import com.intellij.openapi.progress.ProgressIndicator;
-import org.apache.http.HttpEntity;
-import org.apache.http.client.config.RequestConfig;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClientBuilder;
+import consulo.ide.webService.WebServiceApi;
+import consulo.ide.webService.WebServiceApiSender;
+import consulo.ide.webService.WebServicesConfiguration;
 
-import java.io.BufferedReader;
+import javax.annotation.Nonnull;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
-import java.util.Collection;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 class DevelopersLoader {
-  private static final String DEVELOPERS_LIST_URL = "http://ea-engine.labs.intellij.net/data?category=developers";
+  static class UserAccount {
+    long id;
 
-  private DevelopersLoader() {
+    String username;
   }
 
-  public static Collection<Developer> fetchDevelopers(ProgressIndicator indicator) throws IOException {
-    RequestConfig requestConfig = RequestConfig.custom().setConnectionRequestTimeout(1000).build();
-    try (CloseableHttpClient client = HttpClientBuilder.create().setDefaultRequestConfig(requestConfig).build()) {
-      return client.execute(new HttpGet(DEVELOPERS_LIST_URL), response -> {
-        List<Developer> developers = new LinkedList<Developer>();
-        developers.add(Developer.NULL);
-
-        HttpEntity entity = response.getEntity();
-        if (entity == null) {
-          return developers;
-        }
-
-        BufferedReader reader = new BufferedReader(new InputStreamReader(entity.getContent(), StandardCharsets.UTF_8));
-
-        while (true) {
-          String line = reader.readLine();
-          if (line == null) break;
-          int i = line.indexOf('\t');
-          if (i == -1) throw new IOException("Protocol error");
-          int id = Integer.parseInt(line.substring(0, i));
-          String name = line.substring(i + 1);
-          developers.add(new Developer(id, name));
-          indicator.checkCanceled();
-        }
-
-        return developers;
-      });
+  @Nonnull
+  public static List<Developer> fetchDevelopers(ProgressIndicator indicator) throws IOException {
+    String oAuthKey = WebServicesConfiguration.getInstance().getOAuthKey(WebServiceApi.DEVELOPER_API);
+    if(oAuthKey == null) {
+      return List.of(Developer.NULL);
     }
+
+    String devList = WebServiceApiSender.doGet(WebServiceApi.DEVELOPER_API, "list");
+
+    UserAccount[] userAccounts = new Gson().fromJson(devList, UserAccount[].class);
+
+    List<Developer> developers = new ArrayList<>();
+    developers.add(Developer.NULL);
+
+    for (UserAccount userAccount : userAccounts) {
+      developers.add(new Developer(userAccount.id, userAccount.username));
+    }
+    return developers;
   }
 }

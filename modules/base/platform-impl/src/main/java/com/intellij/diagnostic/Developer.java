@@ -18,19 +18,19 @@ package com.intellij.diagnostic;
 public class Developer {
   public static final Developer NULL = new NullDeveloper();
 
-  private Integer myId;
+  private long myId;
 
   private String myName;
 
   private Developer() {
   }
 
-  public Developer(int id, String name) {
+  public Developer(long id, String name) {
     myId = id;
     myName = name;
   }
 
-  public Integer getId() {
+  public long getId() {
     return myId;
   }
 
@@ -49,8 +49,8 @@ public class Developer {
 
   private static class NullDeveloper extends Developer {
     @Override
-    public Integer getId() {
-      return null;
+    public long getId() {
+      return 0;
     }
 
     @Override

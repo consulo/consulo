@@ -124,15 +124,19 @@ public class ITNReporter extends ErrorReportSubmitter {
 
     Object data = event.getData();
 
-    if (data instanceof AbstractMessage) {
-      errorBean.setAssigneeId(((AbstractMessage)data).getAssigneeId());
+    long assignUserId = 0;
+
+    if (data instanceof AbstractMessage abstractMessage) {
+      assignUserId = abstractMessage.getAssigneeId();
     }
 
     if (data instanceof LogMessageEx) {
       errorBean.setAttachments(((LogMessageEx)data).getAttachments());
     }
 
-    ErrorReportSender.sendReport(project, errorBean, id -> {
+    // TODO send assignUserId
+    
+    ErrorReportSender.sendReport(project, errorBean, assignUserId, id -> {
       ourPreviousErrorReporterId = id;
       String shortId = id.substring(0, 8);
       final SubmittedReportInfo reportInfo = new SubmittedReportInfo(WebServiceApi.ERROR_REPORT.buildUrl("#" + id), shortId, SubmittedReportInfo.SubmissionStatus.NEW_ISSUE);

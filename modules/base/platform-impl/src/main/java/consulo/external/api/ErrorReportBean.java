@@ -56,7 +56,6 @@ public class ErrorReportBean extends InformationBean {
   private String message;
   private String stackTrace;
   private String description;
-  private Integer assigneeId;
 
   public String installationID;
 
@@ -113,14 +112,6 @@ public class ErrorReportBean extends InformationBean {
     for (Attachment attachment : attachments) {
       this.attachments.add(new AttachmentBean(attachment.getName(), attachment.getPath(), attachment.getEncodedBytes()));
     }
-  }
-
-  public Integer getAssigneeId() {
-    return assigneeId;
-  }
-
-  public void setAssigneeId(Integer assigneeId) {
-    this.assigneeId = assigneeId;
   }
 
   public String getInstallationID() {

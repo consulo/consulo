@@ -26,7 +26,8 @@ public class DetailsTabForm {
   private JButton myAnalyzeStacktraceButton;
   private JComboBox myAssigneeComboBox;
   private JPanel myAssigneePanel;
-  private Integer myAssigneeId;
+
+  private long myAssigneeId;
   private boolean myProcessEvents = true;
 
   public DetailsTabForm(@Nullable Action analyzeAction, boolean internalMode) {
@@ -99,7 +100,7 @@ public class DetailsTabForm {
     updateSelectedDeveloper();
   }
 
-  public void setAssigneeId(@Nullable Integer assigneeId) {
+  public void setAssigneeId(long assigneeId) {
     myAssigneeId = assigneeId;
     if (myAssigneeComboBox.getItemCount() > 0) {
       updateSelectedDeveloper();
@@ -130,10 +131,9 @@ public class DetailsTabForm {
     }
   }
 
-  @Nullable
-  public Integer getAssigneeId() {
+  public long getAssigneeId() {
     Developer assignee = (Developer) myAssigneeComboBox.getSelectedItem();
-    return assignee == null ? null : assignee.getId();
+    return assignee == null ? 0 : assignee.getId();
   }
 
   public void addAssigneeListener(ActionListener listener) {

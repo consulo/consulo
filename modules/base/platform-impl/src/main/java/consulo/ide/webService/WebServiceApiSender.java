@@ -17,6 +17,7 @@ package consulo.ide.webService;
 
 import com.google.gson.Gson;
 import com.intellij.diagnostic.DiagnosticBundle;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
@@ -34,6 +35,26 @@ import java.nio.charset.StandardCharsets;
  * @since 2020-05-30
  */
 public class WebServiceApiSender {
+  @Nonnull
+  public static String doGet(WebServiceApi serviceApi, String url) throws IOException {
+    try (CloseableHttpClient httpClient = HttpClients.createDefault()) {
+      HttpGet post = new HttpGet(serviceApi.buildUrl(url));
+
+      String authKey = WebServicesConfiguration.getInstance().getOAuthKey(serviceApi);
+      if (authKey != null) {
+        post.addHeader("Authorization", "Bearer " + authKey);
+      }
+      return httpClient.execute(post, response -> {
+        int statusCode = response.getStatusLine().getStatusCode();
+        if (statusCode != HttpURLConnection.HTTP_OK) {
+          throw new WebServiceException(DiagnosticBundle.message("error.http.result.code", statusCode), statusCode);
+        }
+
+        return EntityUtils.toString(response.getEntity(), StandardCharsets.UTF_8);
+      });
+    }
+  }
+
   @Nonnull
   public static String doPost(WebServiceApi serviceApi, String url, Object bean) throws IOException {
     try (CloseableHttpClient httpClient = HttpClients.createDefault()) {

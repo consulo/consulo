@@ -54,7 +54,7 @@ public class GroupedLogMessage extends AbstractMessage {
   }
 
   @Override
-  public void setAssigneeId(Integer assigneeId) {
+  public void setAssigneeId(long assigneeId) {
     for (AbstractMessage message : myMessages) {
       message.setAssigneeId(assigneeId);
     }
