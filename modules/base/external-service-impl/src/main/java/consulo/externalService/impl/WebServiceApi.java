@@ -26,14 +26,14 @@ import java.util.Locale;
  */
 public enum WebServiceApi {
   MAIN(null, "https://consulo.io"),
-  ERROR_REPORTER_API("Error Reporter", "https://hub2.consulo.io/api/errorReporter/"),
-  ERROR_REPORT(null, "https://hub2.consulo.io/errorReport"),
-  STATISTICS_API("Statistics", "https://hub2.consulo.io/api/statistics/"),
-  DEVELOPER_API("Developer", "https://hub2.consulo.io/api/developer/"),
-  SYNCHRONIZE_API("Synchronize", "https://hub2.consulo.io/api/storage/"),
-  OAUTH_API(null, "https://hub2.consulo.io/api/oauth/"),
-  LINK_CONSULO(null, "https://hub2.consulo.io/#!linkConsulo"),
-  REPOSITORY_API(null, "https://hub2.consulo.io/api/repository/");
+  ERROR_REPORTER_API("Error Reporter", "https://hub.consulo.io/api/errorReporter/"),
+  ERROR_REPORT(null, "https://hub.consulo.io/errorReport"),
+  STATISTICS_API("Statistics", "https://hub.consulo.io/api/statistics/"),
+  DEVELOPER_API("Developer", "https://hub.consulo.io/api/developer/"),
+  SYNCHRONIZE_API("Synchronize", "https://hub.consulo.io/api/storage/"),
+  OAUTH_API(null, "https://hub.consulo.io/api/oauth/"),
+  LINK_CONSULO(null, "https://hub.consulo.io/#!linkConsulo"),
+  REPOSITORY_API(null, "https://hub.consulo.io/api/repository/");
 
   @Nullable
   private String myDescription;
