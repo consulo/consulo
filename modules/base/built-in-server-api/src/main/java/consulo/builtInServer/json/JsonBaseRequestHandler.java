@@ -16,19 +16,19 @@
 package consulo.builtInServer.json;
 
 import com.google.gson.GsonBuilder;
-import com.intellij.openapi.vfs.CharsetToolkit;
+import consulo.builtInServer.http.HttpRequestHandler;
+import consulo.builtInServer.http.Responses;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.http.FullHttpRequest;
 import io.netty.handler.codec.http.FullHttpResponse;
 import io.netty.handler.codec.http.HttpMethod;
 import io.netty.handler.codec.http.HttpRequest;
-import consulo.builtInServer.http.HttpRequestHandler;
-import consulo.builtInServer.http.Responses;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 
 /**
  * @author VISTALL
@@ -75,7 +75,7 @@ public abstract class JsonBaseRequestHandler extends HttpRequestHandler {
 
     String jsonResponse = new GsonBuilder().setPrettyPrinting().create().toJson(responseObject);
 
-    response.content().writeBytes(Unpooled.copiedBuffer(jsonResponse, CharsetToolkit.UTF8_CHARSET));
+    response.content().writeBytes(Unpooled.copiedBuffer(jsonResponse, StandardCharsets.UTF_8));
 
     Responses.send(response, context.channel(), request);
     return true;

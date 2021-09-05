@@ -17,6 +17,12 @@
   <extensions defaultExtensionNs="com.intellij">
     <applicationLoadListener implementation="consulo.externalStorage.ExternalStorageAppListener"/>
 
-    <settingsEntryPointActionProvider implementation="consulo.auth.ServiceAuthSettingsEntryPointProvider"/>
+    <settingsEntryPointActionProvider implementation="consulo.externalService.impl.action.ServiceAuthSettingsEntryPointProvider"/>
+
+    <httpRequestHandler implementation="consulo.externalService.impl.RedirectAuthHttpHandler"/>
+
+    <applicationService serviceInterface="consulo.externalService.ExternalServiceConfiguration" serviceImplementation="consulo.externalService.impl.ExternalServiceConfigurationImpl"/>
+
+    <applicationConfigurable id="externalServices" displayName="External Services" instance="consulo.externalService.impl.ui.ExternalServiceConfigurable"/>
   </extensions>
 </consulo-plugin>

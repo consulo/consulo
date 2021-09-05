@@ -28,7 +28,7 @@ import consulo.ide.eap.plugins.ExperimentalPluginsDescriptor;
 import consulo.ide.plugins.PluginJsonNode;
 import consulo.ide.updateSettings.UpdateChannel;
 import consulo.ide.updateSettings.impl.PlatformOrPluginUpdateChecker;
-import consulo.ide.webService.WebServiceApi;
+import consulo.externalService.impl.WebServiceApi;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

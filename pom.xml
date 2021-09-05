@@ -78,6 +78,8 @@
     <module>modules/base/duplicates-analysis</module>
     <module>modules/base/editor-ui-api</module>
     <module>modules/base/editor-ui-ex</module>
+    <module>modules/base/external-service-api</module>
+    <module>modules/base/external-service-impl</module>
     <module>modules/base/external-storage-impl</module>
     <module>modules/base/external-system-api</module>
     <module>modules/base/external-system-impl</module>

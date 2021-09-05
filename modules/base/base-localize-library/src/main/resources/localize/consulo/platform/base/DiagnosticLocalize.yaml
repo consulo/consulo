@@ -1,0 +1,210 @@
+error.itn.returns.wrong.data:
+  text: ITN returns wrong data
+error.http.result.code:
+  text: 'HTTP Result code: {0}'
+diagnostic.out.of.memory.error:
+  text: <html>There is not enough memory to perform the requested operation.<br>Please increase ''{0}'' setting and restart the IDE for change to take effect.</html>
+diagnostic.out.of.memory.willBeSavedTo:
+  text: <html><b>Changes will be saved to</b> ''{0}''</html>
+diagnostic.out.of.memory.title:
+  text: Out of Memory
+diagnostic.out.of.memory.currentValue:
+  text: '(current value: {0})'
+diagnostic.out.of.memory.currentValue.unknown:
+  text: Unknown
+diagnostic.out.of.memory.continue:
+  text: Continue
+diagnostic.out.of.memory.dump:
+  text: Memory Dump
+diagnostic.error.report.send:
+  text: '&Send'
+diagnostic.error.report.description:
+  text: |-
+    If you would like to get notified when the exceptions you submit are fixed,
+    please fill in your Consulo Account login and password.
+diagnostic.error.report.login.name:
+  text: '&Username:'
+diagnostic.error.report.login.password:
+  text: '&Password:'
+diagnostic.error.report.submit.error.anonymously:
+  text: <html>Submit report anonymously or use <a>JetBrains Account...</a></html>
+diagnostic.error.report.submit.report.as:
+  text: <html>Submit report as <a>{0}</a></html>
+diagnostic.error.report.additional.info.label:
+  text: '&Additional information (steps to reproduce, what were you doing when the exception occurred):'
+error.report.gratitude:
+  text: Thank you for your feedback!
+error.report.authentication.failed:
+  text: Consulo Account authentication failed. Do you want to try again?
+error.report.posting.failed:
+  text: 'Report posting failed: {0}. Do you want to try again?'
+error.report.exception.title:
+  text: Error Report
+error.report.failure.message:
+  text: Error report sending failed.
+error.report.new.eap.build.message:
+  text: New build {0} is available.
+error.report.sending.failure:
+  text: Sending failed. Do you want to try again?
+error.list.message.info:
+  text: '{0}. Occurred {1,choice,1#once|2#{1} times} since the last clear.'
+error.list.message.unread:
+  text: Unread.
+error.list.message.submission.failed:
+  text: Submission failed
+error.list.message.submitted.as.link:
+  text: Submitted as <a href="{0}">{1}</a>
+error.list.message.duplicate:
+  text: '[Duplicate]'
+error.list.message.submitted:
+  text: Submitted
+error.list.message.blame.core:
+  text: Exception in platform.
+error.list.message.blame.plugin:
+  text: Exception in plugin <b>{0}</b>.
+error.list.message.blame.unknown.plugin:
+  text: Exception in <b>unknown plugin</b>.
+error.list.message.index.count:
+  text: '{0} of {1}'
+error.report.to.consulo.action:
+  text: Send Report
+error.list.back.action:
+  text: Back
+error.list.forward.action:
+  text: Forward
+error.list.title:
+  text: IDE Fatal Errors
+error.list.popup.immediately.checkbox:
+  text: Popup this window immediately next time internal error occurs
+error.list.shutdown.action:
+  text: Shut_down
+error.list.clear.action:
+  text: _Clear And Close
+error.list.submit.action:
+  text: Submit
+error.list.close.action:
+  text: C_lose
+error.list.restart.action:
+  text: R_estart
+error.list.disable.plugin:
+  text: '&Disable plugin...'
+error.list.disable.plugin.0:
+  text: Disable plugin {0}
+error.notification.tooltip:
+  text: <html><body>IDE internal error occurred.<br>Click to see details and submit a bug report.</body></html>
+error.notification.empty.text:
+  text: No IDE fatal errors
+error.new.notification.title:
+  text: IDE Error Occurred
+error.new.notification.link:
+  text: See Details and Submit Report
+error.monitor.too.many.errors:
+  text: Too many IDE fatal errors. Monitoring stopped.
+error.report.title:
+  text: Error Report
+log.monitor.no.files:
+  text: No log files attached
+log.monitor.remove.button:
+  text: '&Remove'
+log.monitor.add.button:
+  text: A&dd
+log.monitor.group:
+  text: Log files to be shown in console
+log.monitor.log.file.column:
+  text: Log File Entry
+log.monitor.is.active.column:
+  text: Is Active
+log.monitor.is.skipped.column:
+  text: Skip Content
+log.monitor.edit.aliases.title:
+  text: Edit Log Files Aliases
+log.monitor.edit.aliases.name:
+  text: '&Alias:'
+log.monitor.edit.aliases.location:
+  text: '&Log File Location:'
+log.monitor.edit.aliases.show.all.checkbox.title:
+  text: '&Show all files coverable by pattern'
+log.console.filter.show.errors:
+  text: errors
+log.console.filter.show.errors.and.warnings:
+  text: warnings
+log.console.filter.show.all:
+  text: all
+title.submitting.error.report:
+  text: Submitting Error Report
+log.console.filter.show.errors.warnings.and.infos:
+  text: infos
+error.comments.tab.title:
+  text: Comments
+error.dialog.error.prompt:
+  text: '&Error message'
+error.dialog.comment.prompt:
+  text: '<html><u>P</u>lease fill in any details that may be important: steps to reproduce, what were you doing when problem occurred, etc.:</html>'
+error.details.tab.title:
+  text: Details
+error.dialog.disable.plugin.prompt.dependants:
+  text: <html>Are you sure you would like to disable plugin <b>{0}</b>?<br/>Functionality provided by the plugin and dependent plugins will no longer be available.</html>
+error.dialog.disable.plugin.prompt:
+  text: <html>Are you sure to disable plugin <b>{0}</b>?<br/>Functionality provided by the plugin will no longer be available.</html>
+error.dialog.disable.plugin.restart:
+  text: Changes in plugin configuration will take effect after {0} restart.
+error.dialog.disable.plugin.norestart:
+  text: After disabling the plugin please restart {0} to apply changes in plugin configuration.
+error.dialog.disable.plugin.title:
+  text: Disable Plugin
+error.dialog.disable.plugin.action.disable:
+  text: '&Disable'
+error.dialog.disable.plugin.action.disableAndRestart:
+  text: Disable and &Restart
+error.dialog.foreign.plugin.warning.text:
+  text: This plugin is not a production of Consulo. Please report the problem to plugin vendor.
+error.dialog.foreign.plugin.warning.text.vendor:
+  text: 'This plugin is not a production of Consulo. Please report the problem to plugin vendor:'
+error.dialog.clear.action:
+  text: '&Clear'
+error.dialog.clear.all.action:
+  text: '&Clear all'
+error.list.empty:
+  text: (no errors)
+error.dialog.attachment.path.column.title:
+  text: Path
+error.dialog.attachment.include.column.title:
+  text: Include
+error.attachments.tab.title:
+  text: Attachments
+error.dialog.filecontent.title:
+  text: File content
+error.dialog.conflict.plugin.title:
+  text: Conflicting Plugins
+error.dialog.conflict.plugin.header.platform:
+  text: 'The following plugin{0,choice,1#|2#s} conflict{0,choice,1#s|2#} with IDE:'
+error.dialog.conflict.plugin.header.each.other:
+  text: '<html><p style="line-height: 150%;">The plugins below cannot function at the same time. Select which to enable:</p></html>'
+error.dialog.conflict.plugin.disable.all:
+  text: None, disable all plugins above
+error.dialog.conflict.plugin.button.enable.and.restart:
+  text: Enable and Restart
+error.dialog.conflict.plugin.button.disable.all:
+  text: Disable All and Restart
+diagnostic.error.report.include.attachment.warning:
+  text: 'Report will include attachment: ''''<a>{0}</a>''''.'
+diagnostic.error.report.include.attachments.warning:
+  text: Report will include <a>{0} attachments</a>.
+virus.scanning.warn.message:
+  text: Windows Defender might be impacting your build and IDE performance. {0} checked the following directories:<br>{1}
+virus.scanning.fix.explanation:
+  text: <html>To improve performance, {0} can update your Windows Defender configuration to exclude your project directories from real-time scanning.<br>This will require running a command with administrator privileges.<br>Alternatively, you can configure Windows Defender manually, according to the <a href="{1}">instructions</a>.
+virus.scanning.fix.title:
+  text: Configure Windows Defender
+virus.scanning.fix.automatically:
+  text: Configure Automatically
+virus.scanning.fix.manually:
+  text: Configure Manually
+virus.scanning.fix.success.notification:
+  text: Windows Defender configuration updated
+virus.scanning.fix.failed:
+  text: 'Failed to update Windows Defender configuration: {0}'
+virus.scanning.dont.show.again:
+  text: Don't show again
+virus.scanning.dont.show.again.this.project:
+  text: Don't show again for this project

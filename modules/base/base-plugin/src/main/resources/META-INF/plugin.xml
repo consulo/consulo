@@ -1199,7 +1199,7 @@
     <extensionPoint name="statusBarWidgetProvider" interface="com.intellij.openapi.wm.StatusBarWidgetProvider"/>
     <extensionPoint name="statusBarWidgetFactory" interface="com.intellij.openapi.wm.StatusBarWidgetFactory"/>
 
-    <extensionPoint name="settingsEntryPointActionProvider" interface="com.intellij.ide.actions.SettingsEntryPointAction$ActionProvider"/>
+    <extensionPoint name="settingsEntryPointActionProvider" interface="com.intellij.ide.actions.SettingsEntryPointActionProvider"/>
   </extensionPoints>
 
   <extensions defaultExtensionNs="com.intellij">
@@ -1361,11 +1361,6 @@
 
     <applicationService serviceInterface="com.intellij.remote.ext.CredentialsManager"
                         serviceImplementation="com.intellij.remote.ext.CredentialsManagerImpl"/>
-
-    <applicationService serviceInterface="consulo.ide.webService.WebServicesConfiguration"
-                        serviceImplementation="consulo.ide.webService.WebServicesConfiguration"/>
-
-    <applicationService serviceImplementation="consulo.auth.ServiceAuthConfiguration"/>
 
     <applicationService serviceInterface="com.intellij.ide.RecentProjectsManager" serviceImplementation="com.intellij.ide.RecentDirectoryProjectsManager"/>
 

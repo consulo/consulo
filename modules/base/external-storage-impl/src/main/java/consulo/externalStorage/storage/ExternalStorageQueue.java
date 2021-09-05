@@ -16,11 +16,11 @@
 package consulo.externalStorage.storage;
 
 import com.google.gson.Gson;
-import com.intellij.errorreport.error.AuthorizationFailedException;
 import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationType;
 import com.intellij.openapi.application.WriteAction;
 import com.intellij.openapi.components.RoamingType;
+import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.components.StateStorage;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectBundle;
@@ -37,13 +37,15 @@ import com.intellij.util.io.UnsyncByteArrayInputStream;
 import com.intellij.util.ui.UIUtil;
 import consulo.components.impl.stores.IApplicationStore;
 import consulo.components.impl.stores.storage.StateStorageManager;
-import consulo.ide.webService.WebServiceApi;
-import consulo.ide.webService.WebServicesConfiguration;
+import consulo.externalService.AuthorizationFailedException;
+import consulo.externalService.ExternalServiceConfiguration;
+import consulo.externalService.impl.ExternalServiceConfigurationImpl;
+import consulo.externalService.impl.WebServiceApi;
+import consulo.externalService.impl.WebServiceApiSender;
+import consulo.ide.updateSettings.UpdateSettings;
 import consulo.logging.Logger;
 import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.utils.URIBuilder;
-import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
@@ -113,6 +115,7 @@ class ExternalStorageQueue {
     myLoadTask = myExecutorService.schedule(this::fetchFilesFromServer, 10, TimeUnit.SECONDS);
   }
 
+  // TODO [VISTALL] move web api call to WebServiceApiSender
   void fetchFilesFromServer() {
     if (myLoadItems.isEmpty()) {
       return;
@@ -137,7 +140,8 @@ class ExternalStorageQueue {
 
       try (CloseableHttpClient client = HttpClients.createDefault()) {
         HttpGet request = new HttpGet(urlBuilder.build());
-        String authKey = WebServicesConfiguration.getInstance().getOAuthKey(WebServiceApi.SYNCHRONIZE_API);
+        // TODO [VISTALL] unsecure
+        String authKey = ((ExternalServiceConfigurationImpl)ServiceManager.getService(ExternalServiceConfiguration.class)).getOAuthKey();
         if (authKey != null) {
           request.addHeader("Authorization", "Bearer " + authKey);
         }
@@ -244,32 +248,8 @@ class ExternalStorageQueue {
 
   void deleteFromServer(String fileSpec, RoamingType roamingType) {
     myExecutorService.execute(() -> {
-      try (CloseableHttpClient client = HttpClients.createDefault()) {
-        URIBuilder urlBuilder;
-        try {
-          urlBuilder = new URIBuilder(WebServiceApi.SYNCHRONIZE_API.buildUrl("deleteFile"));
-        }
-        catch (URISyntaxException e1) {
-          throw new RuntimeException(e1);
-        }
-
-        urlBuilder.addParameter("filePath", ExternalStorage.buildFileSpec(roamingType, fileSpec));
-
-        HttpGet request = new HttpGet(urlBuilder.build());
-        String authKey = WebServicesConfiguration.getInstance().getOAuthKey(WebServiceApi.SYNCHRONIZE_API);
-        if (authKey != null) {
-          request.addHeader("Authorization", "Bearer " + authKey);
-        }
-
-        client.execute(request, response -> {
-          int statusCode = response.getStatusLine().getStatusCode();
-          switch (statusCode) {
-            case HttpURLConnection.HTTP_UNAUTHORIZED:
-              throw new AuthorizationFailedException();
-          }
-
-          return null;
-        });
+      try {
+        WebServiceApiSender.doGet(WebServiceApi.SYNCHRONIZE_API, "deleteFile", Map.of("filePath", ExternalStorage.buildFileSpec(roamingType, fileSpec)));
       }
       catch (Exception e) {
         LOG.error(e);
@@ -296,32 +276,14 @@ class ExternalStorageQueue {
 
       Gson gson = new Gson();
 
-      try (CloseableHttpClient client = HttpClients.createDefault()) {
-        URIBuilder urlBuilder = new URIBuilder(WebServiceApi.SYNCHRONIZE_API.buildUrl("pushFile"));
-
+      try {
         String buildFileSpec = ExternalStorage.buildFileSpec(roamingType, fileSpec);
 
-        PushFileRequestBean bean = new PushFileRequestBean(buildFileSpec, compressedData);
+        PushFileRequestBean bean = new PushFileRequestBean(UpdateSettings.getInstance().getChannel(), buildFileSpec, compressedData);
 
-        HttpPost request = new HttpPost(urlBuilder.build());
-        request.setHeader("Content-Type", "application/json");
-        request.setEntity(new StringEntity(gson.toJson(bean)));
+        String jsonResult = WebServiceApiSender.doPost(WebServiceApi.SYNCHRONIZE_API, "pushFile", bean);
 
-        String authKey = WebServicesConfiguration.getInstance().getOAuthKey(WebServiceApi.SYNCHRONIZE_API);
-        if (authKey != null) {
-          request.addHeader("Authorization", "Bearer " + authKey);
-        }
-
-        PushFileResponse pushFileResponse = client.execute(request, response -> {
-          if (response.getStatusLine().getStatusCode() == HttpURLConnection.HTTP_UNAUTHORIZED) {
-            throw new AuthorizationFailedException();
-          }
-
-          if (response.getStatusLine().getStatusCode() != HttpURLConnection.HTTP_OK) {
-            throw new IllegalArgumentException(EntityUtils.toString(response.getEntity()));
-          }
-          return gson.fromJson(EntityUtils.toString(response.getEntity()), PushFileResponse.class);
-        });
+        PushFileResponse pushFileResponse = gson.fromJson(jsonResult, PushFileResponse.class);
 
         Pair<byte[], Integer> uncompressPair = DataCompressor.uncompress(new UnsyncByteArrayInputStream(compressedData));
 

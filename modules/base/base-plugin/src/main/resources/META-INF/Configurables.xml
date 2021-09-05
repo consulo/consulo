@@ -175,9 +175,8 @@
                              key="title.plugins"/>
 
     <applicationConfigurable parentId="preferences.pluginManager"
-                             instance="consulo.ide.webService.WebServicesConfigurable"
-                             bundle="messages.IdeBundle"
-                             key="title.web.services"/>
+                             instance="consulo.ide.updateSettings.UpdatesConfigurable"
+                             displayName="Update Settings" />
 
     <applicationConfigurable parentId="general" instance="com.intellij.util.net.HttpProxyConfigurable" id="http.proxy" displayName="HTTP Proxy"/>
 
@@ -185,11 +184,6 @@
                              bundle="messages.KeyMapBundle"/>
     <applicationConfigurable parentId="general" instance="com.intellij.openapi.keymap.impl.ui.QuickListsPanel" id="reference.idesettings.quicklists"
                              displayName="Quick Lists"/>
-
-    <applicationConfigurable instance="com.intellij.internal.statistic.configurable.StatisticsConfigurable"
-                             parentId="preferences.pluginManager"
-                             id="usage.statistics"
-                             displayName="Usage Statistics"/>
 
     <applicationConfigurable displayName="System" parentId="general" instance="com.intellij.ide.GeneralSettingsConfigurable"/>
 

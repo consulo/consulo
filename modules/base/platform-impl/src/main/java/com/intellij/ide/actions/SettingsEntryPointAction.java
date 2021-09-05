@@ -9,7 +9,6 @@ import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.TooltipDescriptionProvider;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
-import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
@@ -80,12 +79,12 @@ public final class SettingsEntryPointAction extends DumbAwareAction implements R
   private static ListPopup createMainPopup(@Nonnull DataContext context, @Nonnull Runnable disposeCallback) {
     ActionGroup.Builder group = ActionGroup.newImmutableBuilder();
 
-    for (ActionProvider provider : ActionProvider.EP_NAME.getExtensionList()) {
+    for (SettingsEntryPointActionProvider provider : SettingsEntryPointActionProvider.EP_NAME.getExtensionList()) {
       Collection<AnAction> actions = provider.getUpdateActions(context);
       if (!actions.isEmpty()) {
         for (AnAction action : actions) {
           Presentation presentation = action.getTemplatePresentation();
-          IconState iconState = (IconState)presentation.getClientProperty(ActionProvider.ICON_KEY);
+          IconState iconState = (IconState)presentation.getClientProperty(SettingsEntryPointActionProvider.ICON_KEY);
           if (iconState != null) {
             presentation.setIcon(getActionIcon(iconState));
           }
@@ -321,14 +320,5 @@ public final class SettingsEntryPointAction extends DumbAwareAction implements R
     ApplicationUpdate,
     ApplicationComponentUpdate,
     RestartRequired
-  }
-
-  public interface ActionProvider {
-    ExtensionPointName<ActionProvider> EP_NAME = ExtensionPointName.create("com.intellij.settingsEntryPointActionProvider");
-
-    String ICON_KEY = "Update_Type_Icon_Key";
-
-    @Nonnull
-    Collection<AnAction> getUpdateActions(@Nonnull DataContext context);
   }
 }

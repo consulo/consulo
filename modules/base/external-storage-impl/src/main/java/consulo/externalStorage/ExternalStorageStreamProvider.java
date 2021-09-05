@@ -18,15 +18,15 @@ package consulo.externalStorage;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.components.RoamingType;
 import consulo.components.impl.stores.IApplicationStore;
-import consulo.components.impl.stores.storage.StateStorageManager;
 import consulo.components.impl.stores.StreamProvider;
-import com.intellij.openapi.util.text.StringUtil;
+import consulo.components.impl.stores.storage.StateStorageManager;
+import consulo.externalService.ExternalService;
+import consulo.externalService.ExternalServiceConfiguration;
 import consulo.externalStorage.storage.ExternalStorage;
-import consulo.ide.webService.WebServiceApi;
-import consulo.ide.webService.WebServicesConfiguration;
+import consulo.util.lang.ThreeState;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collection;
@@ -38,15 +38,17 @@ import java.util.Collection;
 public class ExternalStorageStreamProvider extends StreamProvider {
   private final ExternalStorage myStorage;
   private final StateStorageManager myStateStorageManager;
+  private final ExternalServiceConfiguration myExternalServiceConfiguration;
 
-  public ExternalStorageStreamProvider(Application application, IApplicationStore applicationStore) {
+  public ExternalStorageStreamProvider(Application application, ExternalServiceConfiguration externalServiceConfiguration, IApplicationStore applicationStore) {
+    myExternalServiceConfiguration = externalServiceConfiguration;
     myStorage = new ExternalStorage(applicationStore);
     myStateStorageManager = applicationStore.getStateStorageManager();
   }
 
   @Override
   public boolean isEnabled() {
-    return !StringUtil.isEmpty(WebServicesConfiguration.getInstance().getOAuthKey(WebServiceApi.SYNCHRONIZE_API));
+    return myExternalServiceConfiguration.getState(ExternalService.STORAGE) == ThreeState.YES;
   }
 
   @Nonnull

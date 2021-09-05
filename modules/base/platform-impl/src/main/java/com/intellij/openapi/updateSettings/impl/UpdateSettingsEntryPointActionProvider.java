@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.updateSettings.impl;
 
-import com.intellij.ide.actions.SettingsEntryPointAction;
+import com.intellij.ide.actions.SettingsEntryPointActionProvider;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.project.DumbAwareAction;
@@ -35,7 +35,7 @@ import java.util.List;
  * @author VISTALL
  * @since 01/04/2021
  */
-public class UpdateSettingsEntryPointActionProvider implements SettingsEntryPointAction.ActionProvider {
+public class UpdateSettingsEntryPointActionProvider implements SettingsEntryPointActionProvider {
   private static class IconifiedCheckForUpdateAction extends CheckForUpdateAction {
     private final boolean myIsPlatform;
 

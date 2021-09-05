@@ -16,6 +16,7 @@
 package consulo.externalStorage.storage;
 
 import consulo.external.api.InformationBean;
+import consulo.ide.updateSettings.UpdateChannel;
 
 import java.util.Base64;
 
@@ -27,7 +28,9 @@ public class PushFileRequestBean extends InformationBean {
   private String bytes;
   private String filePath;
 
-  public PushFileRequestBean(String filePath, byte[] data) {
+  public PushFileRequestBean(UpdateChannel updateChannel, String filePath, byte[] data) {
+    super(updateChannel);
+    
     this.filePath = filePath;
     bytes = Base64.getEncoder().encodeToString(data);
   }

@@ -45,6 +45,8 @@
         <include>consulo:consulo-dvcs-impl</include>
         <include>consulo:consulo-editor-ui-api</include>
         <include>consulo:consulo-editor-ui-ex</include>
+        <include>consulo:consulo-external-service-api</include>
+        <include>consulo:consulo-external-service-impl</include>
         <include>consulo:consulo-external-storage-impl</include>
         <include>consulo:consulo-external-system-api</include>
         <include>consulo:consulo-external-system-impl</include>

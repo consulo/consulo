@@ -245,6 +245,11 @@
       <artifactId>consulo-util-collection-via-trove</artifactId>
       <version>${project.version}</version>
     </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>consulo-external-service-impl</artifactId>
+      <version>${project.version}</version>
+    </dependency>
 
     <dependency>
       <groupId>consulo.internal.sound</groupId>

@@ -353,6 +353,7 @@ public class SearchEverywhereUI extends BigPopupUI implements DataProvider, Quic
 
     myToolbar = ActionManager.getInstance().createActionToolbar("search.everywhere.toolbar", actionGroup, true);
     myToolbar.setLayoutPolicy(ActionToolbar.NOWRAP_LAYOUT_POLICY);
+    myToolbar.setTargetComponent(null);
     myToolbar.updateActionsImmediately();
     JComponent toolbarComponent = myToolbar.getComponent();
     toolbarComponent.setOpaque(false);

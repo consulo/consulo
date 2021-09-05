@@ -19,6 +19,7 @@ import com.intellij.ide.ApplicationLoadListener;
 import com.intellij.openapi.application.Application;
 import consulo.components.impl.stores.IApplicationStore;
 import consulo.components.impl.stores.storage.StateStorageManager;
+import consulo.externalService.ExternalServiceConfiguration;
 import jakarta.inject.Inject;
 
 import javax.annotation.Nonnull;
@@ -29,10 +30,13 @@ import javax.annotation.Nonnull;
  */
 public class ExternalStorageAppListener implements ApplicationLoadListener {
   private final Application myApplication;
+  @Nonnull
+  private final ExternalServiceConfiguration myExternalServiceConfiguration;
   private final IApplicationStore myApplicationStore;
 
   @Inject
-  public ExternalStorageAppListener(@Nonnull Application application, IApplicationStore applicationStore) {
+  public ExternalStorageAppListener(@Nonnull Application application, @Nonnull ExternalServiceConfiguration externalServiceConfiguration, IApplicationStore applicationStore) {
+    myExternalServiceConfiguration = externalServiceConfiguration;
     myApplicationStore = applicationStore;
     myApplication = application;
   }
@@ -41,6 +45,6 @@ public class ExternalStorageAppListener implements ApplicationLoadListener {
   public void beforeApplicationLoaded() {
     StateStorageManager stateStorageManager = myApplicationStore.getStateStorageManager();
 
-    stateStorageManager.setStreamProvider(new ExternalStorageStreamProvider(myApplication, myApplicationStore));
+    stateStorageManager.setStreamProvider(new ExternalStorageStreamProvider(myApplication, myExternalServiceConfiguration, myApplicationStore));
   }
 }

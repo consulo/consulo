@@ -28,6 +28,7 @@ import com.intellij.notification.Notifications;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.diagnostic.ErrorReportSubmitter;
 import com.intellij.openapi.diagnostic.IdeaLoggingEvent;
 import com.intellij.openapi.diagnostic.SubmittedReportInfo;
@@ -56,13 +57,14 @@ import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginId;
 import consulo.container.plugin.PluginIds;
 import consulo.desktop.wm.impl.DesktopIdeFrameUtil;
+import consulo.externalService.ExternalService;
+import consulo.externalService.ExternalServiceConfiguration;
 import consulo.ide.base.BaseDataManager;
-import consulo.ide.webService.WebServiceApi;
-import consulo.ide.webService.WebServicesConfiguration;
 import consulo.logging.Logger;
 import consulo.logging.attachment.Attachment;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.dataholder.Key;
+import consulo.util.lang.ThreeState;
 import consulo.util.lang.ref.SimpleReference;
 
 import javax.annotation.Nonnull;
@@ -185,23 +187,15 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
 
   @Override
   public void newEntryAdded() {
-    SwingUtilities.invokeLater(new Runnable() {
-      @Override
-      public void run() {
-        rebuildHeaders();
-        updateControls();
-      }
+    SwingUtilities.invokeLater(() -> {
+      rebuildHeaders();
+      updateControls();
     });
   }
 
   @Override
   public void poolCleared() {
-    SwingUtilities.invokeLater(new Runnable() {
-      @Override
-      public void run() {
-        doOKAction();
-      }
-    });
+    SwingUtilities.invokeLater(() -> doOKAction());
   }
 
   @Override
@@ -211,12 +205,25 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
   @Nonnull
   @Override
   protected Action[] createActions() {
+    List<Action> actions = new ArrayList<>(3);
     if (SystemInfo.isMac) {
-      return new Action[]{getCancelAction(), myClearAction, myBlameAction};
+      actions.add(getCancelAction());
+      actions.add(myClearAction);
+      actions.add(myBlameAction);
     }
     else {
-      return new Action[]{myClearAction, myBlameAction, getCancelAction()};
+      actions.add(myClearAction);
+      actions.add(myBlameAction);
+      actions.add(getCancelAction());
     }
+
+    ExternalServiceConfiguration externalServiceConfiguration = ServiceManager.getService(ExternalServiceConfiguration.class);
+
+    if(externalServiceConfiguration.getState(ExternalService.ERROR_REPORTING) == ThreeState.NO) {
+      actions.remove(myBlameAction);
+    }
+
+    return actions.toArray(Action[]::new);
   }
 
   @Override
@@ -532,7 +539,10 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
   }
 
   private void updateAssigneePane(AbstractMessage message) {
-    myDetailsTabForm.setAssigneeVisible(WebServicesConfiguration.getInstance().getOAuthKey(WebServiceApi.DEVELOPER_API) != null);
+    ExternalServiceConfiguration externalServiceConfiguration = ServiceManager.getService(ExternalServiceConfiguration.class);
+    ThreeState devListState = externalServiceConfiguration.getState(ExternalService.DEVELOPER_LIST);
+
+    myDetailsTabForm.setAssigneeVisible(devListState != ThreeState.NO);
   }
 
   private void updateInfoLabel(AbstractMessage message) {

@@ -16,8 +16,8 @@
 package com.intellij.diagnostic;
 
 import com.intellij.errorreport.ErrorReportSender;
-import com.intellij.errorreport.error.AuthorizationFailedException;
-import com.intellij.errorreport.error.UpdateAvailableException;
+import consulo.externalService.AuthorizationFailedException;
+import consulo.externalService.UpdateAvailableException;
 import com.intellij.ide.DataManager;
 import com.intellij.idea.ActionsBundle;
 import com.intellij.notification.Notification;
@@ -45,8 +45,8 @@ import consulo.container.plugin.PluginIds;
 import consulo.container.plugin.PluginManager;
 import consulo.external.api.ErrorReportBean;
 import consulo.ide.updateSettings.UpdateSettings;
-import consulo.ide.webService.WebServiceApi;
-import consulo.ide.webService.WebServiceException;
+import consulo.externalService.impl.WebServiceApi;
+import consulo.externalService.impl.WebServiceException;
 import consulo.logging.Logger;
 import consulo.platform.impl.action.LastActionTracker;
 import consulo.ui.UIAccess;
@@ -79,7 +79,7 @@ public class ITNReporter extends ErrorReportSubmitter {
                                    String additionalInfo,
                                    final Component parentComponent,
                                    final Consumer<SubmittedReportInfo> callback) {
-    ErrorReportBean errorBean = new ErrorReportBean(event.getThrowable(), LastActionTracker.ourLastActionId);
+    ErrorReportBean errorBean = new ErrorReportBean(UpdateSettings.getInstance().getChannel(), event.getThrowable(), LastActionTracker.ourLastActionId);
 
     return doSubmit(event, parentComponent, callback, errorBean, additionalInfo);
   }
