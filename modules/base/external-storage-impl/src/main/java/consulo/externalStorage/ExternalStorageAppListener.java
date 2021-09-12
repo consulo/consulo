@@ -20,6 +20,7 @@ import com.intellij.openapi.application.Application;
 import consulo.components.impl.stores.IApplicationStore;
 import consulo.components.impl.stores.storage.StateStorageManager;
 import consulo.externalService.ExternalServiceConfiguration;
+import consulo.externalStorage.storage.ExternalStorage;
 import jakarta.inject.Inject;
 
 import javax.annotation.Nonnull;
@@ -45,6 +46,16 @@ public class ExternalStorageAppListener implements ApplicationLoadListener {
   public void beforeApplicationLoaded() {
     StateStorageManager stateStorageManager = myApplicationStore.getStateStorageManager();
 
-    stateStorageManager.setStreamProvider(new ExternalStorageStreamProvider(myApplication, myExternalServiceConfiguration, myApplicationStore));
+    ExternalStorage storage = new ExternalStorage();
+
+    ExternalStorageManager storageManager = new ExternalStorageManager(myApplication, myApplicationStore, storage);
+
+    ExternalStorageStreamProvider provider = new ExternalStorageStreamProvider(storage, myExternalServiceConfiguration);
+
+    stateStorageManager.setStreamProvider(provider);
+
+    if (provider.isEnabled()) {
+      storageManager.startChecking();
+    }
   }
 }

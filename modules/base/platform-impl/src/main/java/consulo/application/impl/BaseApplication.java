@@ -358,11 +358,6 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
   }
 
   @Override
-  public void doNotSave() {
-    doNotSave(true);
-  }
-
-  @Override
   public void doNotSave(boolean value) {
     myDoNotSave = value;
   }

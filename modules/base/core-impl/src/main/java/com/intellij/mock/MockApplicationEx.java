@@ -66,10 +66,6 @@ public class MockApplicationEx extends MockApplication implements ApplicationEx 
   }
 
   @Override
-  public void doNotSave() {
-  }
-
-  @Override
   public void doNotSave(boolean value) {
   }
 

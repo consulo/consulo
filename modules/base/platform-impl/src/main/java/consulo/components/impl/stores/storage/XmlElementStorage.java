@@ -110,7 +110,13 @@ public abstract class XmlElementStorage extends StateStorageBase<StorageData> {
   @Nullable
   protected final Element loadDataFromStreamProvider() throws IOException, JDOMException {
     assert myStreamProvider != null;
-    return JDOMUtil.load(myStreamProvider.loadContent(myFileSpec, myRoamingType));
+    try {
+      return JDOMUtil.load(myStreamProvider.loadContent(myFileSpec, myRoamingType));
+    }
+    catch (JDOMException | IOException e) {
+      LOG.warn("Failed to read file content, fileSpec=" + myFileSpec + ", roamingType=" + myRoamingType);
+      throw e;
+    }
   }
 
   protected final void loadState(@Nonnull StorageData result, @Nonnull Element element) {

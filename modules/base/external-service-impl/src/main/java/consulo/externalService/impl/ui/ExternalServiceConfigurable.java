@@ -17,10 +17,12 @@ package consulo.externalService.impl.ui;
 
 import com.intellij.internal.statistic.configurable.SendPeriod;
 import com.intellij.internal.statistic.persistence.UsageStatisticsPersistenceComponent;
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.externalService.ExternalService;
 import consulo.externalService.ExternalServiceConfiguration;
+import consulo.externalService.ExternalServiceConfigurationListener;
 import consulo.localize.LocalizeValue;
 import consulo.options.SimpleConfigurableByProperties;
 import consulo.ui.ComboBox;
@@ -44,14 +46,24 @@ import java.util.List;
  * @since 04/09/2021
  */
 public class ExternalServiceConfigurable extends SimpleConfigurableByProperties implements Configurable {
+  private final Application myApplication;
   private final Provider<ExternalServiceConfiguration> myExternalServiceConfigurationProvider;
   private final Provider<UsageStatisticsPersistenceComponent> myUsageStatisticsPersistenceComponentProvider;
 
   @Inject
-  public ExternalServiceConfigurable(Provider<ExternalServiceConfiguration> externalServiceConfigurationProvider,
+  public ExternalServiceConfigurable(Application application,
+                                     Provider<ExternalServiceConfiguration> externalServiceConfigurationProvider,
                                      Provider<UsageStatisticsPersistenceComponent> usageStatisticsPersistenceComponentProvider) {
+    myApplication = application;
     myExternalServiceConfigurationProvider = externalServiceConfigurationProvider;
     myUsageStatisticsPersistenceComponentProvider = usageStatisticsPersistenceComponentProvider;
+  }
+
+  @Override
+  protected void afterApply() {
+    super.afterApply();
+
+    myApplication.getMessageBus().syncPublisher(ExternalServiceConfigurationListener.TOPIC).configurationChanged(myExternalServiceConfigurationProvider.get());
   }
 
   @RequiredUIAccess
@@ -103,7 +115,7 @@ public class ExternalServiceConfigurable extends SimpleConfigurableByProperties 
         });
 
         propertyBuilder.add(periodBox, statistics::getPeriod, statistics::setPeriod);
-        
+
         line.right(HorizontalLayout.create().add(sendPeriodLabel).add(periodBox).add(stateBox));
       }
       else {

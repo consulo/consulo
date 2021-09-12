@@ -17,9 +17,7 @@ package consulo.externalService.impl;
 
 import com.google.gson.Gson;
 import com.intellij.openapi.components.ServiceManager;
-import consulo.externalService.AuthorizationFailedException;
-import consulo.externalService.ExternalService;
-import consulo.externalService.ExternalServiceConfiguration;
+import consulo.externalService.*;
 import consulo.platform.base.localize.DiagnosticLocalize;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.ThreeState;
@@ -33,7 +31,9 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
@@ -44,13 +44,24 @@ import java.util.Map;
  * @since 2020-05-30
  */
 public class WebServiceApiSender {
-  @Nonnull
-  public static String doGet(WebServiceApi serviceApi, String url) throws IOException {
-    return doGet(serviceApi, url, Map.of());
+  private static final Gson ourGson = new Gson();
+
+  @Nullable
+  public static <T> T doGet(WebServiceApi serviceApi, String url, Class<T> beanClass) throws IOException {
+    return doGet(serviceApi, url, Map.of(), beanClass);
   }
 
-  @Nonnull
-  public static String doGet(WebServiceApi serviceApi, String url, Map<String, String> parameters) throws IOException {
+  @Nullable
+  public static <T> T doGet(WebServiceApi serviceApi, String url, Map<String, String> parameters, Type beanClass) throws IOException {
+    byte[] bytes = doGetBytes(serviceApi, url, parameters);
+    if (bytes == null) {
+      return null;
+    }
+    return ourGson.fromJson(new String(bytes, StandardCharsets.UTF_8), beanClass);
+  }
+
+  @Nullable
+  public static byte[] doGetBytes(WebServiceApi serviceApi, String url, Map<String, String> parameters) throws IOException {
     try (CloseableHttpClient httpClient = HttpClients.createDefault()) {
       HttpGet request;
       try {
@@ -76,9 +87,13 @@ public class WebServiceApiSender {
         int statusCode = response.getStatusLine().getStatusCode();
         switch (statusCode) {
           case HttpURLConnection.HTTP_OK:
-            return EntityUtils.toString(response.getEntity(), StandardCharsets.UTF_8);
+            return EntityUtils.toByteArray(response.getEntity());
           case HttpURLConnection.HTTP_UNAUTHORIZED:
             throw new AuthorizationFailedException();
+          case HttpURLConnection.HTTP_NOT_MODIFIED:
+            throw new NotModifiedException();
+          case HttpURLConnection.HTTP_NOT_FOUND:
+            throw new NotFoundException();
           default:
             throw new WebServiceException(DiagnosticLocalize.errorHttpResultCode(statusCode).get(), statusCode);
         }
@@ -88,8 +103,6 @@ public class WebServiceApiSender {
 
   @Nonnull
   public static String doPost(WebServiceApi serviceApi, String url, Object bean) throws IOException {
-    map(serviceApi);
-
     try (CloseableHttpClient httpClient = HttpClients.createDefault()) {
       HttpPost request = new HttpPost(serviceApi.buildUrl(url));
       request.setHeader("Content-Type", "application/json");
@@ -140,7 +153,7 @@ public class WebServiceApiSender {
         return ExternalService.STATISTICS;
       case DEVELOPER_API:
         return ExternalService.DEVELOPER_LIST;
-      case SYNCHRONIZE_API:
+      case STORAGE_API:
         return ExternalService.STORAGE;
       default:
         throw new IllegalArgumentException(api.name() + " not supported");

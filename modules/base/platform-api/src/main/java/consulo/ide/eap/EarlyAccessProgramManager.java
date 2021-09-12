@@ -27,8 +27,8 @@ import org.jdom.Element;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author VISTALL
@@ -48,7 +48,7 @@ public class EarlyAccessProgramManager implements PersistentStateComponent<Eleme
 
   private static final Logger LOG = Logger.getInstance(EarlyAccessProgramManager.class);
 
-  private final Map<Class<? extends EarlyAccessProgramDescriptor>, Boolean> myStates = new ConcurrentHashMap<>();
+  private final Map<Class<? extends EarlyAccessProgramDescriptor>, Boolean> myStates = new LinkedHashMap<>();
 
   @Inject
   public EarlyAccessProgramManager() {

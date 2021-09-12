@@ -22,9 +22,11 @@ import com.intellij.util.ui.JBUI;
 import com.intellij.util.xmlb.XmlSerializerUtil;
 import consulo.externalService.ExternalService;
 import consulo.externalService.ExternalServiceConfiguration;
+import consulo.externalService.ExternalServiceConfigurationListener;
 import consulo.logging.Logger;
 import consulo.ui.image.Image;
 import consulo.util.lang.ThreeState;
+import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.apache.commons.codec.digest.DigestUtils;
 
@@ -42,7 +44,7 @@ import java.util.Map;
 @Singleton
 @State(name = "ExternalServiceConfiguration", storages = @Storage(value = "externalService.xml", roamingType = RoamingType.DISABLED))
 public class ExternalServiceConfigurationImpl implements PersistentStateComponent<ExternalServiceConfigurationImpl.State>, ExternalServiceConfiguration {
-  private static final Logger LOGGER = Logger.getInstance(ExternalServiceConfigurationImpl.class);
+  private static final Logger LOG = Logger.getInstance(ExternalServiceConfigurationImpl.class);
 
   public static class State {
     public String email;
@@ -54,6 +56,13 @@ public class ExternalServiceConfigurationImpl implements PersistentStateComponen
 
   private final State myState = new State();
   private Image myUserIcon;
+
+  private final Application myApplication;
+
+  @Inject
+  public ExternalServiceConfigurationImpl(Application application) {
+    myApplication = application;
+  }
 
   @Override
   public void updateIcon() {
@@ -76,7 +85,7 @@ public class ExternalServiceConfigurationImpl implements PersistentStateComponen
         myState.iconBytes = Base64.getEncoder().encodeToString(bytes);
       }
       catch (IOException e) {
-        LOGGER.error(e);
+        LOG.error(e);
       }
     });
   }
@@ -108,6 +117,11 @@ public class ExternalServiceConfigurationImpl implements PersistentStateComponen
   @Override
   public void loadState(State state) {
     XmlSerializerUtil.copyBean(state, myState);
+  }
+
+  @Override
+  public void afterLoadState() {
+    myApplication.getMessageBus().syncPublisher(ExternalServiceConfigurationListener.TOPIC).configurationChanged(this);
   }
 
   @Override

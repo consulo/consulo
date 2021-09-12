@@ -15,7 +15,6 @@
  */
 package com.intellij.diagnostic;
 
-import com.google.gson.Gson;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.progress.ProgressIndicator;
 import consulo.external.api.UserAccount;
@@ -40,9 +39,7 @@ public class DevelopersLoader {
       return List.of(Developer.NULL);
     }
 
-    String devList = WebServiceApiSender.doGet(WebServiceApi.DEVELOPER_API, "list");
-
-    UserAccount[] userAccounts = new Gson().fromJson(devList, UserAccount[].class);
+    UserAccount[] userAccounts = WebServiceApiSender.doGet(WebServiceApi.DEVELOPER_API, "list", UserAccount[].class);
 
     List<Developer> developers = new ArrayList<>();
     developers.add(Developer.NULL);

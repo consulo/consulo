@@ -15,11 +15,8 @@
  */
 package consulo.externalStorage;
 
-import com.intellij.openapi.application.Application;
 import com.intellij.openapi.components.RoamingType;
-import consulo.components.impl.stores.IApplicationStore;
 import consulo.components.impl.stores.StreamProvider;
-import consulo.components.impl.stores.storage.StateStorageManager;
 import consulo.externalService.ExternalService;
 import consulo.externalService.ExternalServiceConfiguration;
 import consulo.externalStorage.storage.ExternalStorage;
@@ -37,17 +34,19 @@ import java.util.Collection;
  */
 public class ExternalStorageStreamProvider extends StreamProvider {
   private final ExternalStorage myStorage;
-  private final StateStorageManager myStateStorageManager;
   private final ExternalServiceConfiguration myExternalServiceConfiguration;
 
-  public ExternalStorageStreamProvider(Application application, ExternalServiceConfiguration externalServiceConfiguration, IApplicationStore applicationStore) {
+  public ExternalStorageStreamProvider(ExternalStorage externalStorage, ExternalServiceConfiguration externalServiceConfiguration) {
     myExternalServiceConfiguration = externalServiceConfiguration;
-    myStorage = new ExternalStorage(applicationStore);
-    myStateStorageManager = applicationStore.getStateStorageManager();
+    myStorage = externalStorage;
   }
 
   @Override
   public boolean isEnabled() {
+    if(!myStorage.isInitialized()) {
+      return false;
+    }
+
     return myExternalServiceConfiguration.getState(ExternalService.STORAGE) == ThreeState.YES;
   }
 
@@ -65,7 +64,7 @@ public class ExternalStorageStreamProvider extends StreamProvider {
   @Nullable
   @Override
   public InputStream loadContent(@Nonnull String fileSpec, @Nonnull RoamingType roamingType) throws IOException {
-    return myStorage.loadContent(fileSpec, roamingType, myStateStorageManager);
+    return myStorage.loadContent(fileSpec, roamingType);
   }
 
   @Override

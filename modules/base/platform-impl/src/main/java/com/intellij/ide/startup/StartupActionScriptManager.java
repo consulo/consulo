@@ -26,7 +26,6 @@ import org.jdom.input.SAXBuilder;
 import org.jdom.input.sax.XMLReaders;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
-import org.jetbrains.annotations.NonNls;
 
 import javax.swing.*;
 import java.io.*;
@@ -35,17 +34,16 @@ import java.util.*;
 
 /**
  * @author cdr
+ * <p>
+ * FIXME [VISTALL] In ideal world this class must be moved to containter-impl module
  */
 public class StartupActionScriptManager {
   public interface ActionCommand {
     void execute(Logger logger) throws IOException;
   }
 
-  public static class UnzipCommand implements ActionCommand, Serializable {
-    @NonNls
+  public static class UnzipCommand implements ActionCommand {
     private static final String action = "unzip";
-
-    private static final long serialVersionUID = 2;
 
     private File mySource;
     private FilenameFilter myFilenameFilter;
@@ -103,11 +101,32 @@ public class StartupActionScriptManager {
 
   }
 
-  public static class DeleteCommand implements ActionCommand, Serializable {
-    @NonNls
-    private static final String action = "delete";
+  public static class CreateFileCommand implements ActionCommand {
+    private static final String action = "createFile";
 
-    private static final long serialVersionUID = 3;
+    private final File myTargetFile;
+
+    public CreateFileCommand(File targetFile) {
+      myTargetFile = targetFile;
+    }
+
+    public File getTargetFile() {
+      return myTargetFile;
+    }
+
+    @Override
+    public String toString() {
+      return action + "[" + myTargetFile.getAbsolutePath() + "]";
+    }
+
+    @Override
+    public void execute(Logger logger) throws IOException {
+      FileUtilRt.createIfNotExists(myTargetFile);
+    }
+  }
+
+  public static class DeleteCommand implements ActionCommand {
+    private static final String action = "delete";
 
     private final File mySource;
 
@@ -142,10 +161,8 @@ public class StartupActionScriptManager {
     }
   }
 
-  @NonNls
   public static final String STARTUP_WIZARD_MODE = "StartupWizardMode";
 
-  @NonNls
   private static final String ourStartXmlFileName = "start.xml";
 
   private StartupActionScriptManager() {
@@ -219,6 +236,10 @@ public class StartupActionScriptManager {
           if (DeleteCommand.action.equals(name)) {
             String path = element.getAttributeValue("source");
             list.add(new DeleteCommand(new File(path)));
+          }
+          else if (CreateFileCommand.action.equals(name)) {
+            String path = element.getAttributeValue("target");
+            list.add(new CreateFileCommand(new File(path)));
           }
           else if (UnzipCommand.action.equals(name)) {
             String sourceValue = element.getAttributeValue("source");
@@ -300,6 +321,12 @@ public class StartupActionScriptManager {
           rootElement.addContent(element);
 
           element.setAttribute("source", ((DeleteCommand)command).getSource().getPath());
+        }
+        else if(command instanceof CreateFileCommand cf) {
+          Element element = new Element(CreateFileCommand.action);
+          rootElement.addContent(element);
+
+          element.setAttribute("target", cf.getTargetFile().getPath());
         }
         else if (command instanceof UnzipCommand) {
           Element element = new Element(UnzipCommand.action);

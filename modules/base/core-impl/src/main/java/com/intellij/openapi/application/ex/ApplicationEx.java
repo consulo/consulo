@@ -15,14 +15,15 @@
  */
 package com.intellij.openapi.application.ex;
 
+import com.intellij.openapi.application.AccessToken;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import org.jetbrains.annotations.Nls;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.io.IOException;
@@ -62,7 +63,21 @@ public interface ApplicationEx extends Application {
    */
   boolean isWriteActionPending();
 
-  void doNotSave();
+  @Nonnull
+  default AccessToken startSaveBlock() {
+    doNotSave();
+
+    return new AccessToken() {
+      @Override
+      public void finish() {
+        doNotSave(false);
+      }
+    };
+  }
+
+  default void doNotSave() {
+    doNotSave(true);
+  }
 
   void doNotSave(boolean value);
 
