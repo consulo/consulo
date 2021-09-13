@@ -94,6 +94,8 @@ public class ExternaStoragePluginManager {
 
         Map<PluginId, PluginDescriptor> repo = ContainerUtil.newMapFromValues(repositoryPlugins.iterator(), PluginDescriptor::getPluginId);
 
+        Set<PluginId> unresolvedPlugins = new HashSet<>();
+
         // validate for new dependencies
         for (Map.Entry<PluginId, Couple<Boolean>> entry : updateList.entrySet()) {
           if (!entry.getValue().getSecond()) {
@@ -102,7 +104,9 @@ public class ExternaStoragePluginManager {
 
           PluginDescriptor repositoryPlugin = repo.get(entry.getKey());
           if (repositoryPlugin == null) {
-            LOG.warn("Can't install storage plugin: " + entry.getKey());
+            unresolvedPlugins.add(entry.getKey());
+
+            LOG.warn("Unresolved storage plugin: " + entry.getKey());
             continue;
           }
 
@@ -116,6 +120,7 @@ public class ExternaStoragePluginManager {
           }
         }
 
+        updateList.keySet().removeAll(unresolvedPlugins);
 
         for (Map.Entry<PluginId, Couple<Boolean>> entry : updateList.entrySet()) {
           if (!entry.getValue().getSecond()) {
@@ -123,9 +128,7 @@ public class ExternaStoragePluginManager {
           }
 
           PluginDescriptor repositoryPlugin = repo.get(entry.getKey());
-          if (repositoryPlugin == null) {
-            continue;
-          }
+          assert repositoryPlugin != null;
 
           PluginDownloader downloader = PluginDownloader.createDownloader(repositoryPlugin, false);
           indicator.setTextValue(LocalizeValue.localizeTODO("Downloading new plugin '" + repositoryPlugin.getName() + "'..."));
