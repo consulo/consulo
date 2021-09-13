@@ -15,7 +15,6 @@
  */
 package consulo.externalStorage.storage;
 
-import com.google.gson.Gson;
 import com.intellij.openapi.components.RoamingType;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.io.FileUtil;
@@ -187,8 +186,6 @@ public class ExternalStorage {
 
   private void saveContentOnServer(@Nonnull String fileSpec, RoamingType roamingType, byte[] content) {
     myExecutorService.execute(() -> {
-      Gson gson = new Gson();
-
       try {
         // compress data with -1 mod count - for local, server will update it after pushing data
         byte[] compressedData = DataCompressor.compress(content, -1);
@@ -197,9 +194,9 @@ public class ExternalStorage {
 
         PushFileRequestBean bean = new PushFileRequestBean(UpdateSettings.getInstance().getChannel(), buildFileSpec, compressedData);
 
-        String jsonResult = WebServiceApiSender.doPost(WebServiceApi.STORAGE_API, "pushFile", bean);
+        PushFileResponseBean pushFileResponse = WebServiceApiSender.doPost(WebServiceApi.STORAGE_API, "pushFile", bean, PushFileResponseBean.class);
 
-        PushFileResponseBean pushFileResponse = gson.fromJson(jsonResult, PushFileResponseBean.class);
+        assert pushFileResponse != null;
 
         writeModCount(buildFileSpec, pushFileResponse.modCount);
 

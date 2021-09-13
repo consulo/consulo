@@ -16,13 +16,12 @@
 package com.intellij.errorreport;
 
 import com.google.common.reflect.TypeToken;
-import com.google.gson.Gson;
-import consulo.externalService.AuthorizationFailedException;
-import consulo.externalService.UpdateAvailableException;
 import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.net.HttpConfigurable;
 import consulo.external.api.ErrorReportBean;
+import consulo.externalService.AuthorizationFailedException;
+import consulo.externalService.UpdateAvailableException;
 import consulo.externalService.impl.WebServiceApi;
 import consulo.externalService.impl.WebServiceApiSender;
 import consulo.externalService.impl.WebServiceException;
@@ -66,11 +65,11 @@ public class ErrorReportSender {
 
   @Nonnull
   public static String sendAndHandleResult(@Nonnull ErrorReportBean error, long assignUserId) throws IOException, AuthorizationFailedException, UpdateAvailableException {
-    String reply = WebServiceApiSender.doPost(WebServiceApi.ERROR_REPORTER_API, "create?assignUserId=" + assignUserId, error);
-
-    Map<String, String> map = new Gson().fromJson(reply, new TypeToken<Map<String, String>>() {
+    Map<String, String> map = WebServiceApiSender.doPost(WebServiceApi.ERROR_REPORTER_API, "create?assignUserId=" + assignUserId, error, new TypeToken<Map<String, String>>() {
     }.getType());
 
+    assert map != null;
+    
     String type = map.get("type");
     if (type == null) {
       throw new WebServiceException("No 'type' data", 500);

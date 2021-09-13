@@ -30,7 +30,6 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.IOException;
 import java.lang.reflect.Type;
@@ -103,8 +102,8 @@ public class WebServiceApiSender {
     }
   }
 
-  @Nonnull
-  public static String doPost(WebServiceApi serviceApi, String url, Object bean) throws IOException {
+  @Nullable
+  public static <T> T doPost(WebServiceApi serviceApi, String url, Object bean, Type resultType) throws IOException {
     try (CloseableHttpClient httpClient = HttpClients.createDefault()) {
       HttpPost request = new HttpPost(serviceApi.buildUrl(url));
       request.setHeader("Content-Type", "application/json");
@@ -120,7 +119,8 @@ public class WebServiceApiSender {
         int statusCode = response.getStatusLine().getStatusCode();
         switch (statusCode) {
           case HttpURLConnection.HTTP_OK:
-            return EntityUtils.toString(response.getEntity(), StandardCharsets.UTF_8);
+            String json = EntityUtils.toString(response.getEntity(), StandardCharsets.UTF_8);
+            return ourGson.fromJson(json, resultType);
           case HttpURLConnection.HTTP_UNAUTHORIZED:
             throw new AuthorizationFailedException();
           default:

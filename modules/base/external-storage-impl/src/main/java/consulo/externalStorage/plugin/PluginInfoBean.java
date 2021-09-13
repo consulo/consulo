@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2013-2021 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,24 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.util.containers;
+package consulo.externalStorage.plugin;
 
-import java.util.function.Function;
+/**
+ * @author VISTALL
+ * @since 13/09/2021
+ */
+public class PluginInfoBean {
+  public String id;
 
-@FunctionalInterface
-public interface Convertor<Src, Dst> extends Function<Src, Dst> {
-  IntoSelf SELF = new IntoSelf();
+  public boolean enabled;
 
-  class IntoSelf<Src> implements Convertor<Src, Src> {
-    public Src convert(Src o) {
-      return o;
-    }
+  public PluginInfoBean() {
   }
 
-  Dst convert(Src o);
-
-  @Override
-  default Dst apply(Src src) {
-    return convert(src);
+  public PluginInfoBean(String id, boolean enabled) {
+    this.id = id;
+    this.enabled = enabled;
   }
 }

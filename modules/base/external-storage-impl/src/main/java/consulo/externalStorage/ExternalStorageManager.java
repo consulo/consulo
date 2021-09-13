@@ -15,6 +15,7 @@
  */
 package consulo.externalStorage;
 
+import com.intellij.ide.plugins.PluginInstallUtil;
 import com.intellij.ide.startup.StartupActionScriptManager;
 import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationType;
@@ -23,6 +24,7 @@ import com.intellij.openapi.application.AppUIExecutor;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.application.ex.ApplicationEx;
+import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
@@ -33,6 +35,7 @@ import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.openapi.wm.WindowManager;
 import com.intellij.util.concurrency.AppExecutorUtil;
 import com.intellij.util.io.UnsyncByteArrayInputStream;
+import consulo.application.ApplicationProperties;
 import consulo.components.impl.stores.IApplicationStore;
 import consulo.components.impl.stores.StoreUtil;
 import consulo.externalService.ExternalService;
@@ -44,6 +47,7 @@ import consulo.externalService.impl.WebServiceApiSender;
 import consulo.externalStorage.storage.DataCompressor;
 import consulo.externalStorage.storage.ExternalStorage;
 import consulo.externalStorage.storage.InfoAllBeanResponse;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.util.lang.ThreeState;
 
@@ -84,11 +88,20 @@ public class ExternalStorageManager {
   }
 
   public void startChecking() {
-    myCheckingFuture = AppExecutorUtil.getAppScheduledExecutorService().scheduleWithFixedDelay(this::checkForModifications, 5, 5, TimeUnit.MINUTES);
+    boolean inSandbox = ApplicationProperties.isInSandbox();
+    int time = inSandbox ? 1 : 10;
+    
+    myCheckingFuture = AppExecutorUtil.getAppScheduledExecutorService().scheduleWithFixedDelay(() -> {
+      Task.Backgroundable.queue(null, "Checking external storage...", this::checkForModifications);
+    }, time, time, TimeUnit.MINUTES);
   }
 
-  private void checkForModifications() {
+  private void checkForModifications(@Nonnull ProgressIndicator indicator) {
     try {
+      boolean wantRestart = !ExternaStoragePluginManager.updatePlugins(indicator).isEmpty();
+
+      indicator.setTextValue(LocalizeValue.localizeTODO("Checking external storage for modifications..."));
+ 
       InfoAllBeanResponse response = WebServiceApiSender.doGet(WebServiceApi.STORAGE_API, "infoAll", InfoAllBeanResponse.class);
 
       Map<String, Long> localModsCount = myStorage.getModificationInfo();
@@ -140,6 +153,14 @@ public class ExternalStorageManager {
 
       if (!reloadComponentNames.isEmpty() || !fetchNewFileSpecs.isEmpty()) {
         runRefresher(fetchNewFileSpecs, reloadComponentNames);
+      }
+
+      if(wantRestart) {
+        myApplication.invokeLater(() -> {
+          if (PluginInstallUtil.showRestartIDEADialog() == Messages.YES) {
+            Application.get().restart(true);
+          }
+        }, ModalityState.NON_MODAL);
       }
     }
     catch (Exception e) {
@@ -204,7 +225,7 @@ public class ExternalStorageManager {
     ThreeState state = configuration.getState(ExternalService.STORAGE);
     switch (state) {
       case YES:
-        Task.Backgroundable.queue(null, "Initialing external storage...", indicator -> fetchAllFiles());
+        Task.Backgroundable.queue(null, "Initialing external storage...", this::initialize);
         break;
       case NO:
         myCheckingFuture.cancel(false);
@@ -213,7 +234,7 @@ public class ExternalStorageManager {
     }
   }
 
-  private void fetchAllFiles() {
+  private void initialize(ProgressIndicator indicator) {
     try {
       // unzip all data
       byte[] bytes = WebServiceApiSender.doGetBytes(WebServiceApi.STORAGE_API, "getAll", Map.of());
@@ -234,6 +255,9 @@ public class ExternalStorageManager {
         }
       }
 
+      // there not check for restart - restart will be anyway
+      ExternaStoragePluginManager.updatePlugins(indicator);
+      
       // add action for restart
       StartupActionScriptManager.addActionCommand(new StartupActionScriptManager.CreateFileCommand(myStorage.getInitializedFile()));
 
@@ -251,6 +275,11 @@ public class ExternalStorageManager {
       myStorage.setInitialized(true);
 
       StoreUtil.save(myApplicationStore, true, null);
+
+      // if there plugins change - require restart
+      if(!ExternaStoragePluginManager.updatePlugins(indicator).isEmpty()) {
+        myApplication.invokeLater(this::showRestartDialog, ModalityState.NON_MODAL);
+      }
     }
     catch (IOException e) {
       LOG.warn(e);
@@ -258,7 +287,7 @@ public class ExternalStorageManager {
   }
 
   private void showRestartDialog() {
-    if (Messages.showYesNoDialog("Restart required for apply External Storage settings. Restart now?", "Consulo", Messages.getInformationIcon()) == Messages.YES) {
+    if (Messages.showYesNoDialog("Restart required for apply External Storage settings change. Restart now?", "Consulo", Messages.getInformationIcon()) == Messages.YES) {
       myApplication.restart(true);
     }
   }

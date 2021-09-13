@@ -130,7 +130,7 @@ public class StatisticsSendManager implements Disposable {
     }
 
     try {
-      WebServiceApiSender.doPost(WebServiceApi.STATISTICS_API, "push", bean);
+      WebServiceApiSender.doPost(WebServiceApi.STATISTICS_API, "push", bean, Object.class);
 
       component.setSentTime(System.currentTimeMillis());
     }
