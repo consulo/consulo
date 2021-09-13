@@ -23,16 +23,21 @@ import com.intellij.openapi.updateSettings.impl.PluginDownloader;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginId;
+import consulo.container.plugin.PluginIds;
 import consulo.container.plugin.PluginManager;
+import consulo.externalService.ExternalService;
+import consulo.externalService.ExternalServiceConfiguration;
 import consulo.externalService.impl.WebServiceApi;
 import consulo.externalService.impl.WebServiceApiSender;
-import consulo.externalStorage.plugin.PluginInfoBean;
+import consulo.externalStorage.plugin.StoragePlugin;
+import consulo.externalStorage.plugin.StoragePluginState;
 import consulo.ide.eap.EarlyAccessProgramManager;
 import consulo.ide.plugins.InstalledPluginsState;
+import consulo.ide.plugins.PluginActionListener;
 import consulo.ide.updateSettings.UpdateSettings;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
-import consulo.util.lang.Couple;
+import consulo.util.lang.ThreeState;
 
 import javax.annotation.Nonnull;
 import java.util.*;
@@ -41,53 +46,130 @@ import java.util.*;
  * @author VISTALL
  * @since 13/09/2021
  */
-public class ExternaStoragePluginManager {
+public class ExternaStoragePluginManager implements PluginActionListener {
+  private static class PluginActionInfo {
+    private boolean enabled;
+
+    // YES - install
+    // UNSURE - left as is
+    // NO - uninstall
+    private ThreeState installOrUninstall;
+
+    private PluginActionInfo(boolean enabled, ThreeState installOrUninstall) {
+      this.enabled = enabled;
+      this.installOrUninstall = installOrUninstall;
+    }
+
+    @Override
+    public String toString() {
+      return "PluginActionInfo{" + "enabled=" + enabled + ", installOrUninstall=" + installOrUninstall + '}';
+    }
+  }
+
   private static final Logger LOG = Logger.getInstance(ExternaStoragePluginManager.class);
 
-  @Nonnull
-  public static Map<PluginId, Couple<Boolean>> updatePlugins(@Nonnull ProgressIndicator indicator) {
+  private final ExternalServiceConfiguration myExternalServiceConfiguration;
+
+  public ExternaStoragePluginManager(Application application, ExternalServiceConfiguration externalServiceConfiguration) {
+    myExternalServiceConfiguration = externalServiceConfiguration;
+    application.getMessageBus().connect().subscribe(PluginActionListener.TOPIC, this);
+  }
+
+  @Override
+  public void pluginInstalled(@Nonnull PluginId pluginId) {
+    sendAction("/plugins/add", pluginId, StoragePluginState.ENABLED);
+  }
+
+  @Override
+  public void pluginUninstalled(@Nonnull PluginId pluginId) {
+    sendAction("/plugins/delete", pluginId, StoragePluginState.UNINSTALLED);
+  }
+
+  private void sendAction(String action, PluginId pluginId, StoragePluginState state) {
+    try {
+      if (myExternalServiceConfiguration.getState(ExternalService.STORAGE) != ThreeState.YES) {
+        return;
+      }
+
+      List<StoragePlugin> inPlugins = List.of(new StoragePlugin(pluginId.toString(), state));
+
+      WebServiceApiSender.doPost(WebServiceApi.STORAGE_API, action, inPlugins, StoragePlugin[].class);
+    }
+    catch (Exception e) {
+      LOG.warn(e);
+    }
+  }
+
+  private static boolean toEnabledState(StoragePluginState state) {
+    switch (state) {
+      case ENABLED:
+        return true;
+      case DISABLED:
+        return false;
+      default:
+        throw new IllegalArgumentException(state.name());
+    }
+  }
+
+  /**
+   * Return true if restart required
+   */
+  public boolean updatePlugins(@Nonnull ProgressIndicator indicator) {
     try {
       indicator.setTextValue(LocalizeValue.localizeTODO("Updating plugin infos..."));
 
       List<PluginDescriptor> plugins = PluginManager.getPlugins();
-      List<PluginInfoBean> inPlugins = new ArrayList<>();
+      List<StoragePlugin> inPlugins = new ArrayList<>();
       for (PluginDescriptor plugin : plugins) {
-        inPlugins.add(new PluginInfoBean(plugin.getPluginId().toString(), plugin.isEnabled()));
+        // skip platform plugins
+        if(PluginIds.isPlatformPlugin(plugin.getPluginId())) {
+          continue;
+        }
+
+        inPlugins.add(new StoragePlugin(plugin.getPluginId().toString(), plugin.isEnabled() ? StoragePluginState.ENABLED : StoragePluginState.DISABLED));
       }
 
-      PluginInfoBean[] beans = WebServiceApiSender.doPost(WebServiceApi.STORAGE_API, "/plugins/merge", inPlugins, PluginInfoBean[].class);
+      StoragePlugin[] beans = WebServiceApiSender.doPost(WebServiceApi.STORAGE_API, "/plugins/merge", inPlugins, StoragePlugin[].class);
 
       assert beans != null;
 
-      // pluginId + [enabled, wantInstall]
-      Map<PluginId, Couple<Boolean>> updateList = new LinkedHashMap<>();
+      Map<PluginId, PluginActionInfo> pluginActions = new LinkedHashMap<>();
 
       boolean wantAnyInstall = false;
 
-      for (PluginInfoBean bean : beans) {
+      for (StoragePlugin bean : beans) {
         PluginId pluginId = PluginId.getId(bean.id);
-
         PluginDescriptor plugin = PluginManager.findPlugin(pluginId);
 
-        if (plugin == null) {
-          wantAnyInstall = true;
+        switch (bean.state) {
+          case UNINSTALLED:
+            if (plugin != null) {
+              pluginActions.put(pluginId, new PluginActionInfo(false, ThreeState.NO));
+            }
+            break;
+          case ENABLED:
+          case DISABLED:
+            if (plugin == null) {
+              wantAnyInstall = true;
 
-          updateList.put(pluginId, Couple.of(bean.enabled, true));
-        }
-        else {
-          if(plugin.isEnabled() == bean.enabled) {
-            continue;
-          }
-          
-          updateList.put(pluginId, Couple.of(bean.enabled, false));
+              pluginActions.put(pluginId, new PluginActionInfo(bean.state == StoragePluginState.ENABLED, ThreeState.YES));
+            }
+            else {
+              if (plugin.isEnabled() == toEnabledState(bean.state)) {
+                continue;
+              }
+
+              pluginActions.put(pluginId, new PluginActionInfo(bean.state == StoragePluginState.ENABLED, ThreeState.UNSURE));
+            }
+            break;
         }
       }
 
-      if (updateList.isEmpty()) {
-        return Map.of();
+      if (pluginActions.isEmpty()) {
+        return false;
       }
 
-      LOG.info("Requesting update: " + updateList);
+      LOG.info("Requesting update: " + pluginActions);
 
       if (wantAnyInstall) {
         List<PluginDescriptor> repositoryPlugins = RepositoryHelper.loadOnlyPluginsFromRepository(indicator, UpdateSettings.getInstance().getChannel(), EarlyAccessProgramManager.getInstance());
@@ -97,8 +179,8 @@ public class ExternaStoragePluginManager {
         Set<PluginId> unresolvedPlugins = new HashSet<>();
 
         // validate for new dependencies
-        for (Map.Entry<PluginId, Couple<Boolean>> entry : updateList.entrySet()) {
-          if (!entry.getValue().getSecond()) {
+        for (Map.Entry<PluginId, PluginActionInfo> entry : pluginActions.entrySet()) {
+          if (entry.getValue().installOrUninstall != ThreeState.YES) {
             continue;
           }
 
@@ -113,50 +195,53 @@ public class ExternaStoragePluginManager {
           Set<PluginDescriptor> pluginsForInstall = PluginInstallUtil.getPluginsForInstall(List.of(repositoryPlugin), repositoryPlugins);
 
           for (PluginDescriptor pluginDescriptor : pluginsForInstall) {
-            Couple<Boolean> state = updateList.get(pluginDescriptor.getPluginId());
+            PluginActionInfo state = pluginActions.get(pluginDescriptor.getPluginId());
             if (state == null) {
-              updateList.put(pluginDescriptor.getPluginId(), Couple.of(true, true));
+              pluginActions.put(pluginDescriptor.getPluginId(), new PluginActionInfo(true, ThreeState.YES));
             }
           }
         }
 
-        updateList.keySet().removeAll(unresolvedPlugins);
+        pluginActions.keySet().removeAll(unresolvedPlugins);
 
-        for (Map.Entry<PluginId, Couple<Boolean>> entry : updateList.entrySet()) {
-          if (!entry.getValue().getSecond()) {
-            continue;
+        for (Map.Entry<PluginId, PluginActionInfo> entry : pluginActions.entrySet()) {
+          ThreeState installOrUninstall = entry.getValue().installOrUninstall;
+          boolean pluginEnabled = entry.getValue().enabled;
+          PluginId pluginId = entry.getKey();
+
+          switch (installOrUninstall) {
+            case YES:
+              PluginDescriptor repositoryPlugin = repo.get(pluginId);
+              assert repositoryPlugin != null;
+
+              PluginDownloader downloader = PluginDownloader.createDownloader(repositoryPlugin, false);
+              indicator.setTextValue(LocalizeValue.localizeTODO("Downloading new plugin '" + repositoryPlugin.getName() + "'..."));
+              downloader.prepareToInstall(true, Application.get().getLastUIAccess(), indicator, pluginDownloader -> {
+                InstalledPluginsState.getInstance().getInstalledPlugins().add(pluginId);
+
+                pluginDownloader.install(indicator, true);
+              });
+
+              if (pluginEnabled) {
+                PluginManager.enablePlugin(entry.getKey().toString());
+              }
+              else {
+                PluginManager.disablePlugin(entry.getKey().toString());
+              }
+              break;
+            case NO:
+              PluginInstallUtil.prepareToUninstall(pluginId);
+              break;
           }
-
-          PluginDescriptor repositoryPlugin = repo.get(entry.getKey());
-          assert repositoryPlugin != null;
-
-          PluginDownloader downloader = PluginDownloader.createDownloader(repositoryPlugin, false);
-          indicator.setTextValue(LocalizeValue.localizeTODO("Downloading new plugin '" + repositoryPlugin.getName() + "'..."));
-          downloader.prepareToInstall(true, Application.get().getLastUIAccess(), indicator, pluginDownloader -> {
-            InstalledPluginsState.getInstance().getInstalledPlugins().add(entry.getKey());
-            
-            pluginDownloader.install(indicator, true);
-          });
-
         }
       }
 
-      for (Map.Entry<PluginId, Couple<Boolean>> entry : updateList.entrySet()) {
-        Couple<Boolean> value = entry.getValue();
-        if (value.getFirst()) {
-          PluginManager.enablePlugin(entry.getKey().toString());
-        }
-        else {
-          PluginManager.disablePlugin(entry.getKey().toString());
-        }
-      }
-
-      return updateList;
+      return !pluginActions.isEmpty();
     }
     catch (Exception e) {
       LOG.warn(e);
     }
 
-    return Map.of();
+    return false;
   }
 }

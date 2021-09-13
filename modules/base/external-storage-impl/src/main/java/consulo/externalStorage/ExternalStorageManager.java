@@ -77,11 +77,14 @@ public class ExternalStorageManager {
   private final ExternalStorage myStorage;
   @Nonnull
   private final IApplicationStore myApplicationStore;
+  @Nonnull
+  private final ExternaStoragePluginManager myPluginManager;
 
   private Future<?> myCheckingFuture = CompletableFuture.completedFuture(null);
 
-  public ExternalStorageManager(@Nonnull Application application, @Nonnull IApplicationStore applicationStore, @Nonnull ExternalStorage storage) {
+  public ExternalStorageManager(@Nonnull Application application, @Nonnull IApplicationStore applicationStore, @Nonnull ExternalStorage storage, @Nonnull ExternaStoragePluginManager pluginManager) {
     myApplicationStore = applicationStore;
+    myPluginManager = pluginManager;
     myApplication = (ApplicationEx)application;
     myStorage = storage;
     application.getMessageBus().connect().subscribe(ExternalServiceConfigurationListener.TOPIC, this::configurationChanged);
@@ -98,7 +101,7 @@ public class ExternalStorageManager {
 
   private void checkForModifications(@Nonnull ProgressIndicator indicator) {
     try {
-      boolean wantRestart = !ExternaStoragePluginManager.updatePlugins(indicator).isEmpty();
+      boolean wantRestart = myPluginManager.updatePlugins(indicator);
 
       indicator.setTextValue(LocalizeValue.localizeTODO("Checking external storage for modifications..."));
  
@@ -256,7 +259,7 @@ public class ExternalStorageManager {
       }
 
       // there not check for restart - restart will be anyway
-      ExternaStoragePluginManager.updatePlugins(indicator);
+      myPluginManager.updatePlugins(indicator);
       
       // add action for restart
       StartupActionScriptManager.addActionCommand(new StartupActionScriptManager.CreateFileCommand(myStorage.getInitializedFile()));
@@ -277,7 +280,7 @@ public class ExternalStorageManager {
       StoreUtil.save(myApplicationStore, true, null);
 
       // if there plugins change - require restart
-      if(!ExternaStoragePluginManager.updatePlugins(indicator).isEmpty()) {
+      if(myPluginManager.updatePlugins(indicator)) {
         myApplication.invokeLater(this::showRestartDialog, ModalityState.NON_MODAL);
       }
     }

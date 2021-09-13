@@ -19,16 +19,16 @@ package consulo.externalStorage.plugin;
  * @author VISTALL
  * @since 13/09/2021
  */
-public class PluginInfoBean {
+public class StoragePlugin {
   public String id;
 
-  public boolean enabled;
+  public StoragePluginState state;
 
-  public PluginInfoBean() {
+  public StoragePlugin() {
   }
 
-  public PluginInfoBean(String id, boolean enabled) {
+  public StoragePlugin(String id, StoragePluginState state) {
     this.id = id;
-    this.enabled = enabled;
+    this.state = state;
   }
 }

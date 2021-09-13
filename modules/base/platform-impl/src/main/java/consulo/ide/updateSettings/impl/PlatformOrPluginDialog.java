@@ -40,6 +40,7 @@ import consulo.container.plugin.PluginId;
 import consulo.container.plugin.PluginManager;
 import consulo.ide.eap.EarlyAccessProgramManager;
 import consulo.ide.plugins.InstalledPluginsState;
+import consulo.ide.plugins.PluginActionListener;
 import consulo.ide.updateSettings.UpdateSettings;
 import consulo.logging.Logger;
 import consulo.ui.UIAccess;
@@ -256,6 +257,8 @@ public class PlatformOrPluginDialog extends DialogWrapper {
 
             if (pluginDescriptor instanceof PluginNode) {
               ((PluginNode)pluginDescriptor).setStatus(PluginNode.STATUS_DOWNLOADED);
+
+              Application.get().getMessageBus().syncPublisher(PluginActionListener.TOPIC).pluginInstalled(pluginDescriptor.getPluginId());
             }
 
             installed.add(pluginDescriptor);

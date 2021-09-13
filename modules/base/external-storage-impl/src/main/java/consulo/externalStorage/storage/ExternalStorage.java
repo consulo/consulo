@@ -52,7 +52,7 @@ public class ExternalStorage {
   public static final String INITIALIZED_FILE_NAME = "initialized";
   public static final String MODCOUNT_EXTENSION = ".modcount";
 
-  private Path myProxyDirectory;
+  private final Path myProxyDirectory;
 
   private Boolean myInitializedState;
 
