@@ -18,7 +18,6 @@ package com.intellij.openapi.editor.colors.impl;
 import com.intellij.ide.ui.LafManager;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.*;
-import consulo.logging.Logger;
 import com.intellij.openapi.editor.EditorFactory;
 import com.intellij.openapi.editor.colors.EditorColorsListener;
 import com.intellij.openapi.editor.colors.EditorColorsManager;
@@ -36,28 +35,27 @@ import com.intellij.util.ThrowableConvertor;
 import com.intellij.util.io.URLUtil;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.xmlb.annotations.OptionTag;
+import consulo.logging.Logger;
+import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
-import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import jakarta.inject.Inject;
-
 import java.net.URL;
 import java.util.*;
 
 @Singleton
 @State(
         name = "EditorColorsManagerImpl",
-        storages = @Storage(file = StoragePathMacros.APP_CONFIG + "/colors.scheme.xml"),
+        // make roamingType per platform, due user can use light laf on one platform, and dark on other
+        storages = @Storage(value = "colors.scheme.xml", roamingType = RoamingType.PER_PLATFORM),
         additionalExportFile = EditorColorsManagerImpl.FILE_SPEC
 )
 public class EditorColorsManagerImpl extends EditorColorsManager implements PersistentStateComponent<EditorColorsManagerImpl.State> {
   private static final Logger LOG = Logger.getInstance(EditorColorsManagerImpl.class);
 
-  @NonNls
   private static final String SCHEME_NODE_NAME = "scheme";
   private static final String DEFAULT_NAME = "Default";
   static final String FILE_SPEC = StoragePathMacros.ROOT_CONFIG + "/colors";
@@ -104,7 +102,6 @@ public class EditorColorsManagerImpl extends EditorColorsManager implements Pers
       }
 
       @Nonnull
-      @NonNls
       @Override
       public String getSchemeExtension() {
         return ".icls";
