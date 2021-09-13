@@ -15,9 +15,7 @@
  */
 package consulo.components.impl.stores.storage;
 
-import com.intellij.openapi.application.AccessToken;
 import com.intellij.openapi.application.Application;
-import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.*;
 import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.openapi.util.JDOMUtil;
@@ -286,12 +284,12 @@ public final class VfsDirectoryBasedStorage extends StateStorageBase<DirectorySt
 
     @Override
     @Nullable
-    public SaveSession createSaveSession() {
+    public SaveSession createSaveSession(boolean force) {
       return storage.checkIsSavingDisabled() || copiedStorageData == null ? null : this;
     }
 
     @Override
-    public void save() {
+    public void save(boolean force) {
       VirtualFile dir = storage.getVirtualFile();
       if (copiedStorageData.isEmpty()) {
         if (dir != null && dir.exists()) {

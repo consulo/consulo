@@ -20,11 +20,9 @@ import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationType;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.ApplicationNamesInfo;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.ShutDownTracker;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.util.SmartList;
 import consulo.application.ApplicationProperties;
 import consulo.container.plugin.PluginId;
 import consulo.container.plugin.PluginManager;
@@ -33,6 +31,7 @@ import consulo.ui.UIAccess;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 
 public final class StoreUtil {
   private static final Logger LOG = Logger.getInstance(StoreUtil.class);
@@ -40,10 +39,10 @@ public final class StoreUtil {
   private StoreUtil() {
   }
 
-  public static void save(@Nonnull IComponentStore stateStore, @Nullable Project project) {
+  public static void save(@Nonnull IComponentStore stateStore, boolean force, @Nullable Project project) {
     ShutDownTracker.getInstance().registerStopperThread(Thread.currentThread());
     try {
-      stateStore.save(new SmartList<>());
+      stateStore.save(force, new ArrayList<>());
     }
     catch (IComponentStore.SaveCancelledException e) {
       LOG.info(e);
@@ -57,7 +56,7 @@ public final class StoreUtil {
       }
 
       String messagePostfix =
-              " Please restart " + ApplicationNamesInfo.getInstance().getFullProductName() + "</p>" + (Application.get().isInternal() ? "<p>" + StringUtil.getThrowableText(e) + "</p>" : "");
+              " Please restart " + Application.get().getName() + "</p>" + (Application.get().isInternal() ? "<p>" + StringUtil.getThrowableText(e) + "</p>" : "");
 
       PluginId pluginId = IdeErrorsDialog.findFirstPluginId(e);
       if (pluginId == null) {
@@ -80,7 +79,7 @@ public final class StoreUtil {
   public static void saveAsync(@Nonnull IComponentStore stateStore, @Nonnull UIAccess uiAccess, @Nullable Project project) {
     ShutDownTracker.getInstance().registerStopperThread(Thread.currentThread());
     try {
-      stateStore.saveAsync(uiAccess, new SmartList<>());
+      stateStore.saveAsync(uiAccess, new ArrayList<>());
     }
     catch (IComponentStore.SaveCancelledException e) {
       LOG.info(e);
@@ -95,7 +94,7 @@ public final class StoreUtil {
 
       uiAccess.give(() -> {
         String messagePostfix =
-                " Please restart " + ApplicationNamesInfo.getInstance().getFullProductName() + "</p>" + (Application.get().isInternal() ? "<p>" + StringUtil.getThrowableText(e) + "</p>" : "");
+                " Please restart " + Application.get().getName() + "</p>" + (Application.get().isInternal() ? "<p>" + StringUtil.getThrowableText(e) + "</p>" : "");
 
         PluginId pluginId = IdeErrorsDialog.findFirstPluginId(e);
         if (pluginId == null) {

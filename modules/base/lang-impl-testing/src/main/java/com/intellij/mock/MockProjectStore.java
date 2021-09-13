@@ -108,7 +108,7 @@ public class MockProjectStore implements IProjectStore {
   }
 
   @Override
-  public void save(@Nonnull List<Pair<StateStorage.SaveSession, File>> readonlyFiles) {
+  public void save(boolean force, @Nonnull List<Pair<StateStorage.SaveSession, File>> readonlyFiles) {
 
   }
 

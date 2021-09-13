@@ -34,9 +34,11 @@ import com.intellij.openapi.wm.WindowManager;
 import com.intellij.util.concurrency.AppExecutorUtil;
 import com.intellij.util.io.UnsyncByteArrayInputStream;
 import consulo.components.impl.stores.IApplicationStore;
+import consulo.components.impl.stores.StoreUtil;
 import consulo.externalService.ExternalService;
 import consulo.externalService.ExternalServiceConfiguration;
 import consulo.externalService.ExternalServiceConfigurationListener;
+import consulo.externalService.NoContentException;
 import consulo.externalService.impl.WebServiceApi;
 import consulo.externalService.impl.WebServiceApiSender;
 import consulo.externalStorage.storage.DataCompressor;
@@ -214,7 +216,6 @@ public class ExternalStorageManager {
   private void fetchAllFiles() {
     try {
       // unzip all data
-
       byte[] bytes = WebServiceApiSender.doGetBytes(WebServiceApi.STORAGE_API, "getAll", Map.of());
 
       assert bytes != null;
@@ -222,7 +223,7 @@ public class ExternalStorageManager {
       myStorage.wipe();
 
       try (ZipInputStream zipInputStream = new ZipInputStream(new ByteArrayInputStream(bytes), StandardCharsets.UTF_8)) {
-        ZipEntry entry = null;
+        ZipEntry entry;
 
         while ((entry = zipInputStream.getNextEntry()) != null) {
           String fileName = entry.getName();
@@ -237,6 +238,19 @@ public class ExternalStorageManager {
       StartupActionScriptManager.addActionCommand(new StartupActionScriptManager.CreateFileCommand(myStorage.getInitializedFile()));
 
       myApplication.invokeLater(this::showRestartDialog, ModalityState.NON_MODAL);
+    }
+    catch (NoContentException ignored) {
+      // there no content on server. it will throw at doGetBytes. In this case we need initialize all data
+
+      try {
+        myStorage.wipe();
+      }
+      catch (IOException ignored2) {
+      }
+
+      myStorage.setInitialized(true);
+
+      StoreUtil.save(myApplicationStore, true, null);
     }
     catch (IOException e) {
       LOG.warn(e);

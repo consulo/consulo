@@ -195,8 +195,8 @@ public class DefaultProjectStoreImpl extends ProjectStoreImpl {
 
     @Nonnull
     @Override
-    public List<SaveSession> createSaveSessions() {
-      return ContainerUtil.createMaybeSingletonList(externalizationSession.createSaveSession());
+    public List<SaveSession> createSaveSessions(boolean force) {
+      return ContainerUtil.createMaybeSingletonList(externalizationSession.createSaveSession(false));
     }
   }
 }

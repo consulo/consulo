@@ -24,7 +24,6 @@ import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.PathUtilRt;
 import com.intellij.util.ReflectionUtil;
-import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.messages.MessageBus;
 import consulo.components.impl.stores.StreamProvider;
@@ -190,7 +189,7 @@ public abstract class StateStorageManagerImpl implements StateStorageManager, Di
       StateStorage storage = myStorages.get(fileSpec);
       if (storage instanceof VfsFileBasedStorage) {
         if (result == null) {
-          result = new SmartList<>();
+          result = new ArrayList<>();
         }
         result.add((VfsFileBasedStorage)storage);
       }
@@ -323,7 +322,7 @@ public abstract class StateStorageManagerImpl implements StateStorageManager, Di
 
     @Nonnull
     @Override
-    public List<SaveSession> createSaveSessions() {
+    public List<SaveSession> createSaveSessions(boolean force) {
       if (mySessions.isEmpty()) {
         return Collections.emptyList();
       }
@@ -331,13 +330,13 @@ public abstract class StateStorageManagerImpl implements StateStorageManager, Di
       List<SaveSession> saveSessions = null;
       Collection<StateStorage.ExternalizationSession> externalizationSessions = mySessions.values();
       for (StateStorage.ExternalizationSession session : externalizationSessions) {
-        SaveSession saveSession = session.createSaveSession();
+        SaveSession saveSession = session.createSaveSession(force);
         if (saveSession != null) {
           if (saveSessions == null) {
             if (externalizationSessions.size() == 1) {
               return Collections.singletonList(saveSession);
             }
-            saveSessions = new SmartList<>();
+            saveSessions = new ArrayList<>();
           }
           saveSessions.add(saveSession);
         }

@@ -38,7 +38,7 @@ public interface IComponentStore {
 
   void load() throws IOException, StateStorageException;
 
-  void save(@Nonnull List<Pair<StateStorage.SaveSession, File>> readonlyFiles);
+  void save(boolean force, @Nonnull List<Pair<StateStorage.SaveSession, File>> readonlyFiles);
 
   @RequiredWriteAction
   void saveAsync(@Nonnull UIAccess uiAccess, @Nonnull List<Pair<StateStorage.SaveSession, File>> readonlyFiles);

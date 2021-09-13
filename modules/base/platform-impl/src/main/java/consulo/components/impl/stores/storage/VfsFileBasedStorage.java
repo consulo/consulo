@@ -100,13 +100,6 @@ public final class VfsFileBasedStorage extends XmlElementStorage {
     return new FileSaveSession(storageData);
   }
 
-  public void forceSave() {
-    XmlElementStorageSaveSession externalizationSession = startExternalization();
-    if (externalizationSession != null) {
-      externalizationSession.forceSave();
-    }
-  }
-
   private class FileSaveSession extends XmlElementStorageSaveSession {
     protected FileSaveSession(@Nonnull StorageData storageData) {
       super(storageData);
@@ -117,8 +110,7 @@ public final class VfsFileBasedStorage extends XmlElementStorage {
       byte[] content = element == null ? null : StorageUtil.writeToBytes(element);
       try {
         if (myStreamProvider != null && myStreamProvider.isEnabled()) {
-          // stream provider always use LF separator
-          saveForProvider(myLineSeparator == LineSeparator.LF ? content : null, element);
+          saveForProvider(content, element);
         }
       }
       catch (Throwable e) {

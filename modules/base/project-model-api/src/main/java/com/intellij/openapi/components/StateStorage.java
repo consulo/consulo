@@ -43,17 +43,14 @@ public interface StateStorage {
 
     /**
      * return null if nothing to save
+     * @param force - ignore store check
      */
     @Nullable
-    SaveSession createSaveSession();
+    SaveSession createSaveSession(boolean force);
   }
 
   interface SaveSession {
-    void save();
-
-    default void saveAsync() {
-      save();
-    }
+    void save(boolean force);
   }
 
   interface Listener {

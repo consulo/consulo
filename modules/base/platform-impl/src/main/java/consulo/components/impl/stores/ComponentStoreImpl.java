@@ -86,7 +86,7 @@ public abstract class ComponentStoreImpl implements IComponentStore {
   }
 
   @Override
-  public final void save(@Nonnull List<Pair<StateStorage.SaveSession, File>> readonlyFiles) {
+  public final void save(boolean force, @Nonnull List<Pair<SaveSession, File>> readonlyFiles) {
     ExternalizationSession externalizationSession = myComponents.isEmpty() ? null : getStateStorageManager().startExternalization();
     if (externalizationSession != null) {
       String[] names = ArrayUtil.toStringArray(myComponents.keySet());
@@ -94,7 +94,7 @@ public abstract class ComponentStoreImpl implements IComponentStore {
       for (String name : names) {
         StateComponentInfo<?> componentInfo = myComponents.get(name);
 
-        commitComponentInsideSingleUIWriteThread(componentInfo, externalizationSession);
+        commitComponentInsideSingleUIWriteThread(componentInfo, externalizationSession, force);
       }
     }
 
@@ -107,12 +107,14 @@ public abstract class ComponentStoreImpl implements IComponentStore {
       }
     }
 
-    doSave(externalizationSession == null ? null : externalizationSession.createSaveSessions(), readonlyFiles);
+    doSave(force, externalizationSession == null ? null : externalizationSession.createSaveSessions(force), readonlyFiles);
   }
 
   @RequiredWriteAction
   @Override
   public void saveAsync(@Nonnull UIAccess uiAccess, @Nonnull List<Pair<SaveSession, File>> readonlyFiles) {
+    boolean force = false;
+
     ExternalizationSession externalizationSession = myComponents.isEmpty() ? null : getStateStorageManager().startExternalization();
     if (externalizationSession != null) {
       String[] names = ArrayUtil.toStringArray(myComponents.keySet());
@@ -120,7 +122,7 @@ public abstract class ComponentStoreImpl implements IComponentStore {
       for (String name : names) {
         StateComponentInfo<?> componentInfo = myComponents.get(name);
 
-        commitComponentInsideSingleUIWriteThread(componentInfo, externalizationSession);
+        commitComponentInsideSingleUIWriteThread(componentInfo, externalizationSession, force);
       }
     }
 
@@ -133,20 +135,20 @@ public abstract class ComponentStoreImpl implements IComponentStore {
       }
     }
 
-    doSave(externalizationSession == null ? null : externalizationSession.createSaveSessions(), readonlyFiles);
+    doSave(force, externalizationSession == null ? null : externalizationSession.createSaveSessions(force), readonlyFiles);
   }
 
-  protected void doSave(@Nullable List<SaveSession> saveSessions, @Nonnull List<Pair<SaveSession, File>> readonlyFiles) {
+  protected void doSave(boolean force, @Nullable List<SaveSession> saveSessions, @Nonnull List<Pair<SaveSession, File>> readonlyFiles) {
     if (saveSessions != null) {
       for (SaveSession session : saveSessions) {
-        executeSave(session, readonlyFiles);
+        executeSave(session, force, readonlyFiles);
       }
     }
   }
 
-  protected static void executeSave(@Nonnull SaveSession session, @Nonnull List<Pair<SaveSession, File>> readonlyFiles) {
+  protected static void executeSave(@Nonnull SaveSession session, boolean force, @Nonnull List<Pair<SaveSession, File>> readonlyFiles) {
     try {
-      session.save();
+      session.save(force);
     }
     catch (ReadOnlyModificationException e) {
       readonlyFiles.add(Pair.create(session, e.getFile()));
@@ -154,11 +156,11 @@ public abstract class ComponentStoreImpl implements IComponentStore {
   }
 
   @SuppressWarnings({"unchecked", "RequiredXAction"})
-  private <T> void commitComponentInsideSingleUIWriteThread(@Nonnull StateComponentInfo<T> componentInfo, @Nonnull ExternalizationSession session) {
+  private <T> void commitComponentInsideSingleUIWriteThread(@Nonnull StateComponentInfo<T> componentInfo, @Nonnull ExternalizationSession session, boolean force) {
     PersistentStateComponent<T> component = componentInfo.getComponent();
 
     long countToSet = -1;
-    if(component instanceof PersistentStateComponentWithModificationTracker) {
+    if(component instanceof PersistentStateComponentWithModificationTracker && !force) {
       long count = ((PersistentStateComponentWithModificationTracker<T>)component).getStateModificationCount();
 
       long oldCount = myComponentsModificationCount.get(componentInfo.getName());

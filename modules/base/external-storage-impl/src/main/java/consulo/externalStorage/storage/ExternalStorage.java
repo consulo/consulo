@@ -21,6 +21,7 @@ import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.util.concurrency.AppExecutorUtil;
 import consulo.container.boot.ContainerPathManager;
+import consulo.externalService.NotFoundException;
 import consulo.externalService.impl.WebServiceApi;
 import consulo.externalService.impl.WebServiceApiSender;
 import consulo.ide.updateSettings.UpdateSettings;
@@ -255,8 +256,10 @@ public class ExternalStorage {
         String fullFileSpec = ExternalStorage.buildFileSpec(roamingType, fileSpec);
 
         LOG.info("Deleting file: " + fullFileSpec);
-        
+
         WebServiceApiSender.doGet(WebServiceApi.STORAGE_API, "deleteFile", Map.of("filePath", fullFileSpec), Object.class);
+      }
+      catch (NotFoundException ignored) {
       }
       catch (Exception e) {
         LOG.warn(e);
@@ -271,7 +274,7 @@ public class ExternalStorage {
   }
 
   public boolean deleteWithoutServer(@Nonnull String fullFileSpec) {
-    LOG.info("Removing config file: " + fullFileSpec);
+    LOG.info("Removing local file: " + fullFileSpec);
 
     Path file = myProxyDirectory.resolve(fullFileSpec);
     if (Files.exists(file)) {

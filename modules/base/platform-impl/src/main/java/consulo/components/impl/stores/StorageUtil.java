@@ -18,7 +18,6 @@ package consulo.components.impl.stores;
 import com.intellij.notification.NotificationType;
 import com.intellij.notification.NotificationsManager;
 import com.intellij.openapi.application.Application;
-import com.intellij.openapi.application.ApplicationNamesInfo;
 import com.intellij.openapi.components.RoamingType;
 import com.intellij.openapi.components.StateStorage;
 import com.intellij.openapi.components.StoragePathMacros;
@@ -83,7 +82,7 @@ public class StorageUtil {
         if (!macros.isEmpty()) {
           LOG.debug("Reporting unknown path macros " + macros + " in component " + componentName);
           String format = "<p><i>%s</i> %s undefined. <a href=\"define\">Fix it</a></p>";
-          String productName = ApplicationNamesInfo.getInstance().getProductName();
+          String productName = Application.get().getName().get();
           String content = String.format(format, StringUtil.join(macros, ", "), macros.size() == 1 ? "is" : "are") +
                            "<br>Path variables are used to substitute absolute paths " +
                            "in " +

@@ -76,7 +76,7 @@ public  class XmlElementStorageTest extends MockApplicationTestCase {
     Element newState = tag("component", attr("name", "test"), tag("bar"));
     StateStorage.ExternalizationSession externalizationSession = storage.startExternalization();
     externalizationSession.setState(this, "test", newState, null);
-    externalizationSession.createSaveSession().save();
+    externalizationSession.createSaveSession(false).save(force);
     assertNotNull(storage.mySavedElement);
     assertNotNull(storage.mySavedElement.getChild("component").getChild("bar"));
     assertNull(storage.mySavedElement.getChild("component").getChild("foo"));

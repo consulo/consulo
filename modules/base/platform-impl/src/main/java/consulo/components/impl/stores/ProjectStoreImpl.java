@@ -38,12 +38,11 @@ import consulo.components.impl.stores.storage.VfsFileBasedStorage;
 import consulo.components.impl.stores.storage.XmlElementStorage;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
+import jakarta.inject.Singleton;
 import org.jdom.Element;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import jakarta.inject.Singleton;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -260,7 +259,7 @@ public class ProjectStoreImpl extends BaseFileConfigurableStoreImpl implements I
   }
 
   @Override
-  protected final void doSave(@Nullable List<SaveSession> saveSessions, @Nonnull List<Pair<SaveSession, File>> readonlyFiles) {
+  protected final void doSave(boolean force, @Nullable List<SaveSession> saveSessions, @Nonnull List<Pair<SaveSession, File>> readonlyFiles) {
     ProjectStorageUtil.UnableToSaveProjectNotification[] notifications = NotificationsManager.getNotificationsManager().getNotificationsOfType(ProjectStorageUtil.UnableToSaveProjectNotification.class, myProject);
     if (notifications.length > 0) {
       throw new SaveCancelledException();
@@ -268,7 +267,7 @@ public class ProjectStoreImpl extends BaseFileConfigurableStoreImpl implements I
 
     beforeSave(readonlyFiles);
 
-    super.doSave(saveSessions, readonlyFiles);
+    super.doSave(force, saveSessions, readonlyFiles);
 
     if (!readonlyFiles.isEmpty()) {
       ReadonlyStatusHandler.OperationStatus status = AccessRule.read(() -> {
@@ -285,7 +284,7 @@ public class ProjectStoreImpl extends BaseFileConfigurableStoreImpl implements I
         List<Pair<SaveSession, File>> oldList = new ArrayList<>(readonlyFiles);
         readonlyFiles.clear();
         for (Pair<SaveSession, File> entry : oldList) {
-          executeSave(entry.first, readonlyFiles);
+          executeSave(entry.first, false, readonlyFiles);
         }
 
         if (!readonlyFiles.isEmpty()) {

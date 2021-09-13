@@ -67,8 +67,9 @@ public interface StateStorageManager {
 
     /**
      * return empty list if nothing to save
+     * @param force
      */
     @Nonnull
-    List<StateStorage.SaveSession> createSaveSessions();
+    List<StateStorage.SaveSession> createSaveSessions(boolean force);
   }
 }

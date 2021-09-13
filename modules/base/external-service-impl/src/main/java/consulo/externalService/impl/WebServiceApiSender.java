@@ -94,6 +94,8 @@ public class WebServiceApiSender {
             throw new NotModifiedException();
           case HttpURLConnection.HTTP_NOT_FOUND:
             throw new NotFoundException();
+          case HttpURLConnection.HTTP_NO_CONTENT:
+            throw new NoContentException();
           default:
             throw new WebServiceException(DiagnosticLocalize.errorHttpResultCode(statusCode).get(), statusCode);
         }

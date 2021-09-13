@@ -31,7 +31,6 @@ import org.jdom.JDOMException;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.IOException;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -193,7 +192,10 @@ public abstract class XmlElementStorage extends StateStorageBase<StorageData> {
 
     @Nullable
     @Override
-    public final SaveSession createSaveSession() {
+    public final SaveSession createSaveSession(boolean force) {
+      if(force) {
+        return this;
+      }
       return checkIsSavingDisabled() || myCopiedStorageData == null ? null : this;
     }
 
@@ -220,30 +222,20 @@ public abstract class XmlElementStorage extends StateStorageBase<StorageData> {
       }
     }
 
-    public void forceSave() {
-      LOG.assertTrue(myCopiedStorageData == null);
-
-      if (myBlockSavingTheContent) {
-        return;
-      }
-
-      try {
-        doSave(getElement(myOriginalStorageData, isCollapsePathsOnSave(), Collections.<String, Element>emptyMap()));
-      }
-      catch (IOException e) {
-        throw new StateStorageException(e);
-      }
-    }
-
     @Override
-    public final void save() {
+    public final void save(boolean force) {
       if (myBlockSavingTheContent) {
         return;
       }
 
       try {
-        doSave(getElement(myCopiedStorageData, isCollapsePathsOnSave(), myNewLiveStates));
-        myLoadedData = myCopiedStorageData;
+        if(force) {
+          doSave(getElement(myOriginalStorageData, isCollapsePathsOnSave(), Map.of()));
+        }
+        else {
+          doSave(getElement(myCopiedStorageData, isCollapsePathsOnSave(), myNewLiveStates));
+          myLoadedData = myCopiedStorageData;
+        }
       }
       catch (IOException e) {
         throw new StateStorageException(e);

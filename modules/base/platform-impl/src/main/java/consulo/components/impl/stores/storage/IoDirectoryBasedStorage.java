@@ -218,12 +218,12 @@ public class IoDirectoryBasedStorage extends StateStorageBase<DirectoryStorageDa
 
     @Override
     @Nullable
-    public SaveSession createSaveSession() {
+    public SaveSession createSaveSession(boolean force) {
       return storage.checkIsSavingDisabled() || copiedStorageData == null ? null : this;
     }
 
     @Override
-    public void save() {
+    public void save(boolean force) {
       File dir = storage.myDir;
       if (copiedStorageData.isEmpty()) {
         if (dir.exists()) {

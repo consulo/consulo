@@ -89,11 +89,10 @@ public final class IoFileBasedStorage extends XmlElementStorage {
         myLineSeparator = isUseLfLineSeparatorByDefault() ? LineSeparator.LF : LineSeparator.getSystemLineSeparator();
       }
 
-      byte[] content = element == null ? null : StorageUtil.writeToBytes(element, myLineSeparator.getSeparatorString());
+      byte[] content = element == null ? null : StorageUtil.writeToBytes(element);
       try {
         if (myStreamProvider != null && myStreamProvider.isEnabled()) {
-          // stream provider always use LF separator
-          saveForProvider(myLineSeparator == LineSeparator.LF ? content : null, element);
+          saveForProvider(content, element);
         }
       }
       catch (Throwable e) {
