@@ -26,8 +26,6 @@ import com.intellij.util.ObjectUtil;
 import consulo.builtInServer.BuiltInServerManager;
 import consulo.externalService.ExternalServiceConfiguration;
 import consulo.externalService.impl.ExternalServiceConfigurationImpl;
-import consulo.externalService.impl.ServiceAuthEarlyAccessProgramDescriptor;
-import consulo.ide.eap.EarlyAccessProgramManager;
 import consulo.externalService.impl.WebServiceApi;
 import consulo.localize.LocalizeValue;
 import consulo.ui.Alerts;
@@ -57,11 +55,6 @@ public class LoginAction extends AnAction implements RightAlignedToolbarAction, 
   @RequiredUIAccess
   @Override
   public void update(@Nonnull AnActionEvent e) {
-    if (!EarlyAccessProgramManager.is(ServiceAuthEarlyAccessProgramDescriptor.class)) {
-      e.getPresentation().setEnabledAndVisible(false);
-      return;
-    }
-
     ExternalServiceConfiguration configuration = myExternalServiceConfigurationProvider.get();
 
     Presentation presentation = e.getPresentation();

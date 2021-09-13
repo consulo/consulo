@@ -20,7 +20,6 @@
 
   <extensions defaultExtensionNs="com.intellij">
     <eapDescriptor implementation="consulo.diagram.actions.ShowDiagramAction$DiagramSupport" />
-    <eapDescriptor implementation="consulo.externalService.impl.ServiceAuthEarlyAccessProgramDescriptor" />
     <eapDescriptor implementation="consulo.ide.updateSettings.impl.CheckChecksumEarlyAccessProgramDescriptor" />
     <eapDescriptor implementation="consulo.ui.impl.ModalityPerProjectEAPDescriptor" />
     <eapDescriptor implementation="consulo.ide.eap.plugins.ExperimentalPluginsDescriptor" />

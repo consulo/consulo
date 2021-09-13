@@ -19,8 +19,6 @@ import com.intellij.ide.actions.SettingsEntryPointActionProvider;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.DataContext;
 import consulo.externalService.ExternalServiceConfiguration;
-import consulo.externalService.impl.ServiceAuthEarlyAccessProgramDescriptor;
-import consulo.ide.eap.EarlyAccessProgramManager;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 
@@ -45,12 +43,9 @@ public class ServiceAuthSettingsEntryPointProvider implements SettingsEntryPoint
   @Nonnull
   @Override
   public Collection<AnAction> getUpdateActions(@Nonnull DataContext context) {
-    if (EarlyAccessProgramManager.is(ServiceAuthEarlyAccessProgramDescriptor.class)) {
-      if (myLoginAction == null) {
-        myLoginAction = new LoginAction(myExternalServiceConfigurationProvider);
-      }
-      return List.of(myLoginAction);
+    if (myLoginAction == null) {
+      myLoginAction = new LoginAction(myExternalServiceConfigurationProvider);
     }
-    return List.of();
+    return List.of(myLoginAction);
   }
 }
