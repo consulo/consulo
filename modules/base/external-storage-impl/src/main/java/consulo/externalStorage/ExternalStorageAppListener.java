@@ -48,7 +48,7 @@ public class ExternalStorageAppListener implements ApplicationLoadListener {
 
     ExternalStorage storage = new ExternalStorage();
 
-    ExternaStoragePluginManager pluginManager = new ExternaStoragePluginManager(myApplication, myExternalServiceConfiguration);
+    ExternalStoragePluginManager pluginManager = new ExternalStoragePluginManager(myApplication, myExternalServiceConfiguration);
 
     ExternalStorageManager storageManager = new ExternalStorageManager(myApplication, myApplicationStore, storage, pluginManager);
 

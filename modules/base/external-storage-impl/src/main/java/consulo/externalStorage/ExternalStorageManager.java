@@ -61,6 +61,7 @@ import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -78,11 +79,13 @@ public class ExternalStorageManager {
   @Nonnull
   private final IApplicationStore myApplicationStore;
   @Nonnull
-  private final ExternaStoragePluginManager myPluginManager;
+  private final ExternalStoragePluginManager myPluginManager;
 
   private Future<?> myCheckingFuture = CompletableFuture.completedFuture(null);
 
-  public ExternalStorageManager(@Nonnull Application application, @Nonnull IApplicationStore applicationStore, @Nonnull ExternalStorage storage, @Nonnull ExternaStoragePluginManager pluginManager) {
+  private AtomicBoolean myCheckingState = new AtomicBoolean();
+
+  public ExternalStorageManager(@Nonnull Application application, @Nonnull IApplicationStore applicationStore, @Nonnull ExternalStorage storage, @Nonnull ExternalStoragePluginManager pluginManager) {
     myApplicationStore = applicationStore;
     myPluginManager = pluginManager;
     myApplication = (ApplicationEx)application;
@@ -95,6 +98,10 @@ public class ExternalStorageManager {
     int time = inSandbox ? 1 : 10;
     
     myCheckingFuture = AppExecutorUtil.getAppScheduledExecutorService().scheduleWithFixedDelay(() -> {
+      if(!myCheckingState.compareAndSet(false, true)) {
+        return;
+      }
+      
       Task.Backgroundable.queue(null, "Checking external storage...", this::checkForModifications);
     }, time, time, TimeUnit.MINUTES);
   }
@@ -107,6 +114,8 @@ public class ExternalStorageManager {
  
       InfoAllBeanResponse response = WebServiceApiSender.doGet(WebServiceApi.STORAGE_API, "infoAll", InfoAllBeanResponse.class);
 
+      assert response != null;
+      
       Map<String, Long> localModsCount = myStorage.getModificationInfo();
 
       Set<String> reloadComponentNames = new LinkedHashSet<>();
@@ -155,7 +164,7 @@ public class ExternalStorageManager {
       }
 
       if (!reloadComponentNames.isEmpty() || !fetchNewFileSpecs.isEmpty()) {
-        runRefresher(fetchNewFileSpecs, reloadComponentNames);
+        runRefresher(fetchNewFileSpecs, reloadComponentNames, indicator);
       }
 
       if(wantRestart) {
@@ -169,59 +178,62 @@ public class ExternalStorageManager {
     catch (Exception e) {
       LOG.warn(e);
     }
+    finally {
+      myCheckingState.set(false);
+    }
   }
 
-  private void runRefresher(Map<String, Long> fetchNewFileSpecs, Set<String> reloadComponentNames) {
-    Task.Backgroundable.queue(null, "Refreshing from external storage...", indicator -> {
-      try (AccessToken unused = myApplication.startSaveBlock()) {
-        // fist of all we need download changed or new files
-        for (Map.Entry<String, Long> entry : fetchNewFileSpecs.entrySet()) {
-          String fullFileSpec = entry.getKey();
-          // FIXME [VISTALL] we not use mod count, due it will send not modified
-          //Long modCount = entry.getValue();
+  private void runRefresher(Map<String, Long> fetchNewFileSpecs, Set<String> reloadComponentNames, ProgressIndicator indicator) {
+    indicator.setTextValue(LocalizeValue.localizeTODO("Refreshing from external storage..."));
+ 
+    try (AccessToken unused = myApplication.startSaveBlock()) {
+      // fist of all we need download changed or new files
+      for (Map.Entry<String, Long> entry : fetchNewFileSpecs.entrySet()) {
+        String fullFileSpec = entry.getKey();
+        // FIXME [VISTALL] we not use mod count, due it will send not modified
+        //Long modCount = entry.getValue();
 
-          try {
-            byte[] compressed = WebServiceApiSender.doGetBytes(WebServiceApi.STORAGE_API, "getFile", Map.of("filePath", fullFileSpec, "modCount", "0"));
+        try {
+          byte[] compressed = WebServiceApiSender.doGetBytes(WebServiceApi.STORAGE_API, "getFile", Map.of("filePath", fullFileSpec, "modCount", "0"));
 
-            Pair<byte[], Integer> uncompressedData = DataCompressor.uncompress(new UnsyncByteArrayInputStream(compressed));
+          Pair<byte[], Integer> uncompressedData = DataCompressor.uncompress(new UnsyncByteArrayInputStream(compressed));
 
-            try (InputStream stream = new UnsyncByteArrayInputStream(uncompressedData.getFirst())) {
-              reloadComponentNames.addAll(ExternalStorage.readComponentNames(stream));
-            }
-
-            LOG.info("Reloading data: " + fullFileSpec);
-
-            myStorage.writeLocalFile(fullFileSpec, uncompressedData.getFirst(), uncompressedData.getSecond());
+          try (InputStream stream = new UnsyncByteArrayInputStream(uncompressedData.getFirst())) {
+            reloadComponentNames.addAll(ExternalStorage.readComponentNames(stream));
           }
-          catch (Exception e) {
-            LOG.warn(e);
-          }
+
+          LOG.info("Reloading data: " + fullFileSpec);
+
+          myStorage.writeLocalFile(fullFileSpec, uncompressedData.getFirst(), uncompressedData.getSecond());
         }
+        catch (Exception e) {
+          LOG.warn(e);
+        }
+      }
 
-        LOG.info("Reloading components: " + reloadComponentNames);
+      LOG.info("Reloading components: " + reloadComponentNames);
 
-        AppUIExecutor.onWriteThread(ModalityState.NON_MODAL).later().execute(() -> {
-          myApplicationStore.reinitComponents(reloadComponentNames, true);
+      AppUIExecutor.onWriteThread(ModalityState.NON_MODAL).later().execute(() -> {
+        myApplicationStore.reinitComponents(reloadComponentNames, true);
 
-          myApplication.invokeLater(() -> {
-            Project project = null;
-            Project[] openProjects = ProjectManager.getInstance().getOpenProjects();
-            for (Project openProject : openProjects) {
-              IdeFrame ideFrame = WindowManager.getInstance().getIdeFrame(openProject);
-              if (ideFrame.isActive()) {
-                project = openProject;
-                break;
-              }
+        myApplication.invokeLater(() -> {
+          Project project = null;
+          Project[] openProjects = ProjectManager.getInstance().getOpenProjects();
+          for (Project openProject : openProjects) {
+            IdeFrame ideFrame = WindowManager.getInstance().getIdeFrame(openProject);
+            if (ideFrame.isActive()) {
+              project = openProject;
+              break;
             }
+          }
 
-            new Notification("externalStorage", "External Storage", "Local configuration refreshed", NotificationType.INFORMATION).notify(project);
-          });
+          new Notification("externalStorage", "External Storage", "Local configuration refreshed", NotificationType.INFORMATION).notify(project);
         });
-      }
-      catch (Exception e) {
-        LOG.warn(e);
-      }
-    });
+      });
+    }
+    catch (Exception e) {
+      LOG.warn(e);
+    }
   }
 
   private void configurationChanged(@Nonnull ExternalServiceConfiguration configuration) {

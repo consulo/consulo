@@ -46,7 +46,7 @@ import java.util.*;
  * @author VISTALL
  * @since 13/09/2021
  */
-public class ExternaStoragePluginManager implements PluginActionListener {
+public class ExternalStoragePluginManager implements PluginActionListener {
   private static class PluginActionInfo {
     private boolean enabled;
 
@@ -66,11 +66,11 @@ public class ExternaStoragePluginManager implements PluginActionListener {
     }
   }
 
-  private static final Logger LOG = Logger.getInstance(ExternaStoragePluginManager.class);
+  private static final Logger LOG = Logger.getInstance(ExternalStoragePluginManager.class);
 
   private final ExternalServiceConfiguration myExternalServiceConfiguration;
 
-  public ExternaStoragePluginManager(Application application, ExternalServiceConfiguration externalServiceConfiguration) {
+  public ExternalStoragePluginManager(Application application, ExternalServiceConfiguration externalServiceConfiguration) {
     myExternalServiceConfiguration = externalServiceConfiguration;
     application.getMessageBus().connect().subscribe(PluginActionListener.TOPIC, this);
   }
@@ -116,7 +116,7 @@ public class ExternaStoragePluginManager implements PluginActionListener {
    */
   public boolean updatePlugins(@Nonnull ProgressIndicator indicator) {
     try {
-      indicator.setTextValue(LocalizeValue.localizeTODO("Updating plugin infos..."));
+      indicator.setTextValue(LocalizeValue.localizeTODO("Checking plugins state..."));
 
       List<PluginDescriptor> plugins = PluginManager.getPlugins();
       List<StoragePlugin> inPlugins = new ArrayList<>();
