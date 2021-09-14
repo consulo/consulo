@@ -150,6 +150,16 @@ public class ExternaStoragePluginManager implements PluginActionListener {
           case ENABLED:
           case DISABLED:
             if (plugin == null) {
+              if(InstalledPluginsState.getInstance().getInstalledPlugins().contains(pluginId)) {
+                if (bean.state == StoragePluginState.ENABLED) {
+                  PluginManager.enablePlugin(pluginId.toString());
+                }
+                else {
+                  PluginManager.disablePlugin(pluginId.toString());
+                }
+                continue;
+              }
+
               wantAnyInstall = true;
 
               pluginActions.put(pluginId, new PluginActionInfo(bean.state == StoragePluginState.ENABLED, ThreeState.YES));
