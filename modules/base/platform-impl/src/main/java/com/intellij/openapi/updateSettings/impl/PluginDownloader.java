@@ -27,6 +27,7 @@ import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.io.StreamUtil;
 import com.intellij.util.ObjectUtil;
 import com.intellij.util.ThrowableConsumer;
+import com.intellij.util.TimeoutUtil;
 import com.intellij.util.io.HttpRequests;
 import com.intellij.util.io.ZipUtil;
 import consulo.container.boot.ContainerPathManager;
@@ -127,6 +128,8 @@ public class PluginDownloader {
         catch (IOException e) {
           myFile = null;
           errorMessage = e.getMessage();
+
+          TimeoutUtil.sleep(5000L);
         }
       }
     }
