@@ -120,7 +120,7 @@ public class ExternalStorageManager {
 
       Set<String> reloadComponentNames = new LinkedHashSet<>();
 
-      Map<String, Long> fetchNewFileSpecs = new LinkedHashMap<>();
+      Set<String> fetchNewFileSpecs = new LinkedHashSet<>();
 
       for (Map.Entry<String, Long> serverEntry : response.files.entrySet()) {
         String serverFullFileSpec = serverEntry.getKey();
@@ -130,11 +130,11 @@ public class ExternalStorageManager {
 
         if (localModCount == null) {
           // register file spec for fetching
-          fetchNewFileSpecs.put(serverFullFileSpec, serverModCount);
+          fetchNewFileSpecs.add(serverFullFileSpec);
         }
         else if (!Objects.equals(serverModCount, localModCount)) {
           // register file spec for fetching
-          fetchNewFileSpecs.put(serverFullFileSpec, serverModCount);
+          fetchNewFileSpecs.add(serverFullFileSpec);
 
           // load component names for reloading
           try (InputStream stream = myStorage.loadContent(serverFullFileSpec)) {
@@ -183,18 +183,14 @@ public class ExternalStorageManager {
     }
   }
 
-  private void runRefresher(Map<String, Long> fetchNewFileSpecs, Set<String> reloadComponentNames, ProgressIndicator indicator) {
+  private void runRefresher(Set<String> fetchNewFileSpecs, Set<String> reloadComponentNames, ProgressIndicator indicator) {
     indicator.setTextValue(LocalizeValue.localizeTODO("Refreshing from external storage..."));
  
     try (AccessToken unused = myApplication.startSaveBlock()) {
       // fist of all we need download changed or new files
-      for (Map.Entry<String, Long> entry : fetchNewFileSpecs.entrySet()) {
-        String fullFileSpec = entry.getKey();
-        // FIXME [VISTALL] we not use mod count, due it will send not modified
-        //Long modCount = entry.getValue();
-
+      for (String fullFileSpec : fetchNewFileSpecs) {
         try {
-          byte[] compressed = WebServiceApiSender.doGetBytes(WebServiceApi.STORAGE_API, "getFile", Map.of("filePath", fullFileSpec, "modCount", "0"));
+          byte[] compressed = WebServiceApiSender.doGetBytes(WebServiceApi.STORAGE_API, "getFile", Map.of("filePath", fullFileSpec));
 
           Pair<byte[], Integer> uncompressedData = DataCompressor.uncompress(new UnsyncByteArrayInputStream(compressed));
 
