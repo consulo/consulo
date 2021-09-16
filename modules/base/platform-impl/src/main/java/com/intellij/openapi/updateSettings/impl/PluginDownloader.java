@@ -61,7 +61,7 @@ import java.util.Locale;
 public class PluginDownloader {
   private static final Logger LOG = Logger.getInstance(PluginDownloader.class);
 
-  private static final String CHECHSUM_ALGORITHM = "SHA3-256";
+  private static final String CHECKSUM_ALGORITHM = "SHA3-256";
   private static final int MAX_TRYS = 3;
 
   @Nonnull
@@ -267,7 +267,7 @@ public class PluginDownloader {
     return HttpRequests.request(myPluginUrl).gzip(false).connect(request -> {
       MessageDigest digest;
       try {
-        digest = MessageDigest.getInstance(CHECHSUM_ALGORITHM);
+        digest = MessageDigest.getInstance(CHECKSUM_ALGORITHM);
       }
       catch (NoSuchAlgorithmException e) {
         throw new IOException(e);
