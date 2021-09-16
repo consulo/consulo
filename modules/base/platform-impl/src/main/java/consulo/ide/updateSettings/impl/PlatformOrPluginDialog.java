@@ -38,7 +38,6 @@ import consulo.awt.TargetAWT;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginId;
 import consulo.container.plugin.PluginManager;
-import consulo.ide.eap.EarlyAccessProgramManager;
 import consulo.ide.plugins.InstalledPluginsState;
 import consulo.ide.plugins.PluginActionListener;
 import consulo.ide.updateSettings.UpdateSettings;
@@ -243,9 +242,7 @@ public class PlatformOrPluginDialog extends DialogWrapper {
         try {
           PluginDownloader downloader = PluginDownloader.createDownloader(pluginDescriptor, myPlatformVersion, myType != PlatformOrPluginUpdateResult.Type.PLUGIN_INSTALL);
 
-          boolean checkChecksum = EarlyAccessProgramManager.is(CheckChecksumEarlyAccessProgramDescriptor.class);
-
-          downloader.prepareToInstall(checkChecksum, uiAccess, indicator, (d) -> {
+          downloader.prepareToInstall(true, uiAccess, indicator, (d) -> {
             // already was installed
             if(InstalledPluginsState.getInstance().wasUpdated(pluginDescriptor.getPluginId())) {
               return;
