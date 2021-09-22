@@ -16,7 +16,7 @@
 package com.intellij.ide.customize;
 
 import com.intellij.ide.startup.StartupActionScriptManager;
-import com.intellij.openapi.application.ApplicationNamesInfo;
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.wm.IdeFocusManager;
@@ -36,6 +36,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+@Deprecated
 public class CustomizeIDEWizardDialog extends DialogWrapper implements ActionListener {
   private static final String BUTTONS = "BUTTONS";
   private static final String NOBUTTONS = "NOBUTTONS";
@@ -59,7 +60,7 @@ public class CustomizeIDEWizardDialog extends DialogWrapper implements ActionLis
     super(null);
     myPluginDescriptors = pluginDescriptors;
     myPredefinedTemplateSets = predefinedTemplateSets;
-    setTitle("Customize " + ApplicationNamesInfo.getInstance().getProductName());
+    setTitle("Customize " + Application.get().getName());
     initSteps();
     mySkipButton.addActionListener(this);
     myBackButton.addActionListener(this);
@@ -85,7 +86,9 @@ public class CustomizeIDEWizardDialog extends DialogWrapper implements ActionLis
   }
 
   protected void initSteps() {
+    mySteps.add(new CustomizeAuthOrScratchStep(() -> {}));
     mySteps.add(new CustomizeUIThemeStepPanel());
+    
     if (SystemInfo.isMac) {
       mySteps.add(new CustomizeKeyboardSchemeStepPanel());
     }
@@ -195,13 +198,13 @@ public class CustomizeIDEWizardDialog extends DialogWrapper implements ActionLis
       mySkipButton.setVisible(false);
     }
     if (myIndex > 0) {
-      myBackButton.setText("Back to " + mySteps.get(myIndex - 1).getTitle());
+      myBackButton.setText("Back");
     }
     mySkipButton.setText("Skip " + (myIndex > 0 ? "Remaining" : "All"));
 
     boolean nextButton = myIndex < mySteps.size() - 1;
     if (nextButton) {
-      myNextButton.setText("Next: " + mySteps.get(myIndex + 1).getTitle());
+      myNextButton.setText("Next");
     }
     else {
       myNextButton.setVisible(false);

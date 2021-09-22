@@ -73,12 +73,12 @@ public class CustomizeDownloadAndStartStepPanel extends AbstractCustomizeWizardS
     }
   }
 
-  private final CustomizeIDEWizardDialog myCustomizeIDEWizardDialog;
+  private final DialogWrapper myCustomizeIDEWizardDialog;
   private final CustomizePluginsStepPanel myPluginsStepPanel;
 
   private boolean myDone;
 
-  public CustomizeDownloadAndStartStepPanel(CustomizeIDEWizardDialog customizeIDEWizardDialog, @Nullable CustomizePluginsStepPanel pluginsStepPanel) {
+  public CustomizeDownloadAndStartStepPanel(DialogWrapper customizeIDEWizardDialog, @Nullable CustomizePluginsStepPanel pluginsStepPanel) {
     myCustomizeIDEWizardDialog = customizeIDEWizardDialog;
     myPluginsStepPanel = pluginsStepPanel;
     setLayout(new VerticalFlowLayout(VerticalFlowLayout.MIDDLE));
@@ -131,7 +131,10 @@ public class CustomizeDownloadAndStartStepPanel extends AbstractCustomizeWizardS
   }
 
   private void placeStartButton() {
-    myCustomizeIDEWizardDialog.updateHeader();
+    if(myCustomizeIDEWizardDialog instanceof CustomizeIDEWizardDialog cd) {
+      cd.updateHeader();
+    }
+    
     removeAll();
     add(createStartButton());
   }

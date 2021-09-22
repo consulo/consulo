@@ -18,6 +18,10 @@ package com.intellij.ide.customize;
 import com.intellij.ui.ClickListener;
 import com.intellij.ui.ColorUtil;
 import com.intellij.util.ui.UIUtil;
+import consulo.disposer.Disposable;
+import consulo.ide.customize.CustomizeWizardContext;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.wizard.WizardStep;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;
@@ -26,7 +30,7 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.MouseEvent;
 
-public abstract class AbstractCustomizeWizardStep extends JPanel {
+public abstract class AbstractCustomizeWizardStep extends JPanel implements WizardStep<CustomizeWizardContext> {
   protected static final int GAP = 20;
 
   protected abstract String getTitle();
@@ -89,5 +93,22 @@ public abstract class AbstractCustomizeWizardStep extends JPanel {
 
   public boolean beforeShown(boolean forward) {
     return false;
+  }
+
+  @RequiredUIAccess
+  @Nonnull
+  @Override
+  public consulo.ui.Component getComponent(@Nonnull Disposable uiDisposable) {
+    throw new UnsupportedOperationException("unsupported UI");
+  }
+
+  @RequiredUIAccess
+  @Nonnull
+  @Override
+  public Component getSwingComponent(@Nonnull Disposable uiDisposable) {
+    JPanel panel = new JPanel(new BorderLayout());
+    panel.add(new JLabel(getHTMLHeader()), BorderLayout.NORTH);
+    panel.add(this, BorderLayout.CENTER);
+    return panel;
   }
 }

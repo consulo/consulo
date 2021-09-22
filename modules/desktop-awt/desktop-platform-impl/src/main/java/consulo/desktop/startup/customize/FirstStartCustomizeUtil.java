@@ -15,7 +15,6 @@
  */
 package consulo.desktop.startup.customize;
 
-import com.intellij.ide.customize.CustomizeIDEWizardDialog;
 import com.intellij.ide.plugins.RepositoryHelper;
 import com.intellij.ide.ui.laf.intellij.IntelliJLaf;
 import com.intellij.openapi.application.Application;
@@ -30,6 +29,7 @@ import com.intellij.util.io.UnsyncByteArrayInputStream;
 import com.intellij.util.ui.UIUtil;
 import consulo.container.boot.ContainerPathManager;
 import consulo.container.plugin.PluginDescriptor;
+import consulo.ide.customize.CustomizeIDEWizardDialog;
 import consulo.ide.eap.EarlyAccessProgramManager;
 import consulo.ide.updateSettings.UpdateSettings;
 import consulo.logging.Logger;
@@ -103,7 +103,7 @@ public class FirstStartCustomizeUtil {
 
       UIUtil.invokeLaterIfNeeded(() -> {
         downloadDialog.close(DialogWrapper.OK_EXIT_CODE);
-        new CustomizeIDEWizardDialog(pluginDescriptors, predefinedTemplateSets).show();
+        new CustomizeIDEWizardDialog(pluginDescriptors, predefinedTemplateSets).showAsync();
       });
     });
     downloadDialog.showAsync();
