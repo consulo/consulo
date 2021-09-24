@@ -30,6 +30,11 @@ public interface LocalizeValue extends Supplier<String> {
   }
 
   @Nonnull
+  static LocalizeValue space() {
+    return SingleLocalizeValue.ourSpace;
+  }
+
+  @Nonnull
   static LocalizeValue of() {
     return empty();
   }
