@@ -21,26 +21,25 @@ import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
-import consulo.util.dataholder.Key;
 import com.intellij.util.xmlb.annotations.MapAnnotation;
+import consulo.util.dataholder.Key;
+import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
-import jakarta.inject.Singleton;
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 @Singleton
-@State(
-        name = "DiffSettings",
-        storages = @Storage(file = DiffUtil.DIFF_CONFIG)
-)
+@State(name = "DiffSettings", storages = @Storage(file = DiffUtil.DIFF_CONFIG))
 public class DiffSettingsHolder implements PersistentStateComponent<DiffSettingsHolder.State> {
   public static final Key<DiffSettings> KEY = Key.create("DiffSettings");
 
   private static class SharedSettings {
     public boolean GO_TO_NEXT_FILE_ON_NEXT_DIFFERENCE = true;
+    public boolean SHOW_DIFF_IN_EDITOR_SETTING = true;
   }
 
   private static class PlaceSettings {
@@ -67,6 +66,14 @@ public class DiffSettingsHolder implements PersistentStateComponent<DiffSettings
     @Nonnull
     public List<String> getDiffToolsOrder() {
       return PLACE_SETTINGS.DIFF_TOOLS_ORDER;
+    }
+
+    public boolean isShowDiffInEditor() {
+      return SHARED_SETTINGS.SHOW_DIFF_IN_EDITOR_SETTING;
+    }
+
+    public void setShowDiffInEditor(boolean value) {
+      SHARED_SETTINGS.SHOW_DIFF_IN_EDITOR_SETTING = value;
     }
 
     public void setDiffToolsOrder(@Nonnull List<String> order) {
@@ -99,13 +106,13 @@ public class DiffSettingsHolder implements PersistentStateComponent<DiffSettings
     }
 
     @Nonnull
-    public static DiffSettings getSettings(@javax.annotation.Nullable String place) {
+    public static DiffSettings getSettings(@Nullable String place) {
       return getInstance().getSettings(place);
     }
   }
 
   @Nonnull
-  public DiffSettings getSettings(@javax.annotation.Nullable String place) {
+  public DiffSettings getSettings(@Nullable String place) {
     if (place == null) place = DiffPlaces.DEFAULT;
 
     PlaceSettings placeSettings = myState.PLACES_MAP.get(place);

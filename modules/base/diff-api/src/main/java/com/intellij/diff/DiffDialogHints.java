@@ -16,10 +16,11 @@
 package com.intellij.diff;
 
 import com.intellij.openapi.ui.WindowWrapper;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.awt.*;
+import java.util.function.Consumer;
 
 public class DiffDialogHints {
   @Nonnull
@@ -31,35 +32,42 @@ public class DiffDialogHints {
   @Nonnull
   public static final DiffDialogHints NON_MODAL = new DiffDialogHints(WindowWrapper.Mode.NON_MODAL);
 
-  //
-  // Impl
-  //
-
-  @javax.annotation.Nullable
+  @Nullable
   private final WindowWrapper.Mode myMode;
-  @javax.annotation.Nullable
+  @Nullable
   private final Component myParent;
+  @Nullable
+  private final Consumer<WindowWrapper> myWindowConsumer;
 
   public DiffDialogHints(@Nullable WindowWrapper.Mode mode) {
     this(mode, null);
   }
 
-  public DiffDialogHints(@javax.annotation.Nullable WindowWrapper.Mode mode, @Nullable Component parent) {
-    myMode = mode;
-    myParent = parent;
+  public DiffDialogHints(@Nullable WindowWrapper.Mode mode, @Nullable Component parent) {
+    this(mode, parent, null);
   }
 
-  //
-  // Getters
-  //
+  public DiffDialogHints(@Nullable WindowWrapper.Mode mode, @Nullable Component parent, @Nullable Consumer<WindowWrapper> windowConsumer) {
+    myMode = mode;
+    myParent = parent;
+    myWindowConsumer = windowConsumer;
+  }
 
   @Nullable
   public WindowWrapper.Mode getMode() {
     return myMode;
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   public Component getParent() {
     return myParent;
+  }
+
+  /**
+   * NB: Consumer might not be called at all (ex: for external diff/merge tools, that do not spawn WindowWrapper)
+   */
+  @Nullable
+  public Consumer<WindowWrapper> getWindowConsumer() {
+    return myWindowConsumer;
   }
 }

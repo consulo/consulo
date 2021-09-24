@@ -18,12 +18,12 @@ package com.intellij.openapi.fileEditor;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.vfs.VirtualFile;
 import consulo.disposer.Disposer;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.dataholder.Key;
-import com.intellij.openapi.vfs.VirtualFile;
 import org.jdom.Element;
-import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 
 /**
@@ -88,7 +88,6 @@ public interface FileEditorProvider {
    * unique non null id. The id is used for saving/loading of EditorStates.
    */
   @Nonnull
-  @NonNls
   String getEditorTypeId();
 
   /**
@@ -99,5 +98,7 @@ public interface FileEditorProvider {
    * @see FileEditorPolicy#PLACE_BEFORE_DEFAULT_EDITOR
    */
   @Nonnull
-  FileEditorPolicy getPolicy();
+  default FileEditorPolicy getPolicy() {
+    return FileEditorPolicy.HIDE_DEFAULT_EDITOR;
+  }
 }

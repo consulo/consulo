@@ -56,12 +56,11 @@ import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
 import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import org.intellij.lang.annotations.JdkConstants;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import jakarta.inject.Singleton;
 import javax.swing.*;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
@@ -216,7 +215,9 @@ public class ChangesViewManager implements ChangesViewI, ProjectComponent, Persi
     visualActionsGroup.add(new IgnoredSettingsAction());
     visualActionsGroup.add(new ToggleDetailsAction());
     visualActionsGroup.add(new ContextHelpAction(ChangesListView.HELP_ID));
-    toolbarPanel.add(ActionManager.getInstance().createActionToolbar(ActionPlaces.CHANGES_VIEW_TOOLBAR, visualActionsGroup, false).getComponent(), BorderLayout.CENTER);
+    ActionToolbar actionToolbar = ActionManager.getInstance().createActionToolbar(ActionPlaces.CHANGES_VIEW_TOOLBAR, visualActionsGroup, false);
+    actionToolbar.setTargetComponent(panel);
+    toolbarPanel.add(actionToolbar.getComponent(), BorderLayout.CENTER);
 
 
     myView.setMenuActions((DefaultActionGroup)ActionManager.getInstance().getAction("ChangesViewPopupMenu"));

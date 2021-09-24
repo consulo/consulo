@@ -65,6 +65,9 @@ import java.util.*;
 
 @State(name = "IdeDocumentHistory", storages = @Storage(value = StoragePathMacros.WORKSPACE_FILE))
 public class IdeDocumentHistoryImpl extends IdeDocumentHistory implements Disposable, PersistentStateComponent<IdeDocumentHistoryImpl.RecentlyChangedFilesState> {
+  public interface SkipFromDocumentHistory {
+  }
+
   private static final Logger LOG = Logger.getInstance(IdeDocumentHistoryImpl.class);
 
   private static final int BACK_QUEUE_LIMIT = Registry.intValue("editor.navigation.history.stack.size");
@@ -527,17 +530,7 @@ public class IdeDocumentHistoryImpl extends IdeDocumentHistory implements Dispos
   }
 
   private static boolean removeInvalidFilesFrom(@Nonnull List<PlaceInfo> backPlaces) {
-    boolean removed = false;
-    for (Iterator<PlaceInfo> iterator = backPlaces.iterator(); iterator.hasNext(); ) {
-      PlaceInfo info = iterator.next();
-      final VirtualFile file = info.myFile;
-      if (!file.isValid()) {
-        iterator.remove();
-        removed = true;
-      }
-    }
-
-    return removed;
+    return backPlaces.removeIf(info -> (info.myFile instanceof SkipFromDocumentHistory) || !info.myFile.isValid());
   }
 
   @Override

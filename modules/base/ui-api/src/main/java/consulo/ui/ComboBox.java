@@ -133,8 +133,8 @@ public interface ComboBox<E> extends ValueComponent<E> {
 
   void setRender(@Nonnull TextItemRender<E> render);
 
-  default void setTextRender(@Nonnull Function<E, String> stringFuc) {
-    setRender((render, index, item) -> render.append(stringFuc.apply(item)));
+  default void setTextRender(@Nonnull Function<E, LocalizeValue> localizeValueFunction) {
+    setRender((render, index, item) -> render.append(localizeValueFunction.apply(item)));
   }
 
   void setValueByIndex(int index);

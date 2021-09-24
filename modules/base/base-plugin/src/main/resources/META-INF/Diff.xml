@@ -39,6 +39,15 @@
     <applicationService serviceInterface="com.intellij.diff.comparison.ComparisonManager"
                         serviceImplementation="com.intellij.diff.comparison.ComparisonManagerImpl"/>
 
+    <projectService serviceInterface="com.intellij.diff.editor.DiffEditorTabFilesManager" serviceImplementation="com.intellij.diff.editor.DefaultDiffTabFilesManager"/>
+
+    <fileEditorProvider implementation="com.intellij.diff.editor.DiffEditorProvider"/>
+
+    <editorTabTitleProvider implementation="com.intellij.diff.editor.DiffEditorTabTitleProvider"/>
+    <editorTabColorProvider implementation="com.intellij.diff.editor.VcsEditorTabColorProvider"/>
+
+    <iconDescriptorUpdater implementation="consulo.diff.editor.impl.DiffIconDescriptorUpdater" order="last"/>
+
     <diff.merge.MergeTool implementation="com.intellij.openapi.vcs.changes.patch.tool.ApplyPatchMergeTool"/>
     <diff.DiffTool implementation="com.intellij.openapi.vcs.changes.patch.tool.ApplyPatchDiffTool"/>
 

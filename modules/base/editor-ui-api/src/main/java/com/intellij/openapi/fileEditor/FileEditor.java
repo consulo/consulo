@@ -17,13 +17,12 @@ package com.intellij.openapi.fileEditor;
 
 import com.intellij.codeHighlighting.BackgroundEditorHighlighter;
 import com.intellij.ide.structureView.StructureViewBuilder;
-import consulo.disposer.Disposable;
-import consulo.util.dataholder.UserDataHolder;
 import com.intellij.openapi.vfs.VirtualFile;
 import consulo.awt.TargetAWT;
+import consulo.disposer.Disposable;
 import consulo.ui.Component;
+import consulo.util.dataholder.UserDataHolder;
 import kava.beans.PropertyChangeListener;
-import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -37,12 +36,10 @@ public interface FileEditor extends UserDataHolder, Disposable {
   /**
    * @see #isModified()
    */
-  @NonNls
   String PROP_MODIFIED = "modified";
   /**
    * @see #isValid()
    */
-  @NonNls
   String PROP_VALID = "valid";
 
   @Nullable
@@ -64,7 +61,6 @@ public interface FileEditor extends UserDataHolder, Disposable {
    * and "Text". So "GUI Designer" can be a name of one editor and "Text"
    * can be a name of other editor. The method should never return <code>null</code>.
    */
-  @NonNls
   @Nonnull
   String getName();
 
@@ -72,14 +68,17 @@ public interface FileEditor extends UserDataHolder, Disposable {
    * @return editor's internal state. Method should never return <code>null</code>.
    */
   @Nonnull
-  FileEditorState getState(@Nonnull FileEditorStateLevel level);
+  default FileEditorState getState(@Nonnull FileEditorStateLevel level) {
+    return FileEditorState.INSTANCE;
+  }
 
   /**
    * Applies given state to the editor.
    *
    * @param state cannot be null
    */
-  void setState(@Nonnull FileEditorState state);
+  default void setState(@Nonnull FileEditorState state) {
+  }
 
   /**
    * @return whether the editor's content is modified in comparison with its file.
@@ -90,7 +89,9 @@ public interface FileEditor extends UserDataHolder, Disposable {
    * @return whether the editor is valid or not. For some reasons
    * editor can become invalid. For example, text editor becomes invalid when its file is deleted.
    */
-  boolean isValid();
+  default boolean isValid() {
+    return true;
+  }
 
   /**
    * This method is invoked each time when the editor is selected.
@@ -133,7 +134,9 @@ public interface FileEditor extends UserDataHolder, Disposable {
    * @return the location of user focus. Typically it's a caret or any other form of selection start.
    */
   @Nullable
-  FileEditorLocation getCurrentLocation();
+  default FileEditorLocation getCurrentLocation() {
+    return null;
+  }
 
   @Nullable
   default StructureViewBuilder getStructureViewBuilder() {
@@ -156,7 +159,7 @@ public interface FileEditor extends UserDataHolder, Disposable {
   @Nonnull
   default javax.swing.JComponent getComponent() {
     Component uiComponent = getUIComponent();
-    if(uiComponent != null) {
+    if (uiComponent != null) {
       return (javax.swing.JComponent)TargetAWT.to(uiComponent);
     }
     throw new AbstractMethodError();

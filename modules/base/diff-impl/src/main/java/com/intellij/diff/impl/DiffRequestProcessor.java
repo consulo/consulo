@@ -503,6 +503,11 @@ public abstract class DiffRequestProcessor implements Disposable {
   }
 
   @Nullable
+  public DiffRequest getActiveRequest() {
+    return myActiveRequest;
+  }
+
+  @Nullable
   public Project getProject() {
     return myProject;
   }
