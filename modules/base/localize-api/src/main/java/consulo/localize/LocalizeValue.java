@@ -47,6 +47,14 @@ public interface LocalizeValue extends Supplier<String> {
     return new SingleLocalizeValue(text);
   }
 
+  static LocalizeValue join(@Nonnull LocalizeValue... values) {
+    if(values.length == 0) {
+      return of();
+    }
+
+    return new JoinLocalizeValue(values);
+  }
+
   @Override
   @Nonnull
   default String get() {
