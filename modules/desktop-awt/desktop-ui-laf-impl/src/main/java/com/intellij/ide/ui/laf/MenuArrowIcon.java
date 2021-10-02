@@ -15,47 +15,51 @@
  */
 package com.intellij.ide.ui.laf;
 
+import com.intellij.openapi.util.NotNullLazyValue;
 import consulo.awt.TargetAWT;
 import consulo.ui.image.Image;
 
 import javax.swing.*;
 import javax.swing.plaf.UIResource;
 import java.awt.*;
+import java.util.function.Supplier;
 
 // from kotlin
-public class MenuArrowIcon implements Icon, UIResource {
-  private final Icon myIcon;
-  private final Icon mySelectedIcon;
-  private final Icon myDisabledIcon;
 
-  public MenuArrowIcon(Image icon, Image selectedIcon, Image disabledIcon) {
-    myIcon = TargetAWT.to(icon);
-    mySelectedIcon = TargetAWT.to(selectedIcon);
-    myDisabledIcon = TargetAWT.to(disabledIcon);
+//TODO - dont call it inside laf initialize
+public class MenuArrowIcon implements Icon, UIResource {
+  private final NotNullLazyValue<Icon> myIcon;
+  private final NotNullLazyValue<Icon> mySelectedIcon;
+  private final NotNullLazyValue<Icon> myDisabledIcon;
+
+  public MenuArrowIcon(Supplier<Image> icon, Supplier<Image> selectedIcon, Supplier<Image> disabledIcon) {
+    myIcon = NotNullLazyValue.createValue(() -> TargetAWT.to(icon.get()));
+    mySelectedIcon = NotNullLazyValue.createValue(() -> TargetAWT.to(selectedIcon.get()));
+    myDisabledIcon = NotNullLazyValue.createValue(() -> TargetAWT.to(disabledIcon.get()));
   }
 
   @Override
   public void paintIcon(Component c, Graphics g, int x, int y) {
     if (c instanceof JMenuItem mi) {
       if (!mi.getModel().isEnabled()) {
-        myDisabledIcon.paintIcon(c, g, x, y);
+        myDisabledIcon.get().paintIcon(c, g, x, y);
       }
       else if (mi.getModel().isArmed() || (mi instanceof JMenu && mi.getModel().isSelected())) {
-        mySelectedIcon.paintIcon(c, g, x, y);
+        mySelectedIcon.get().paintIcon(c, g, x, y);
       }
       else {
-        myIcon.paintIcon(c, g, x, y);
+        myIcon.get().paintIcon(c, g, x, y);
       }
     }
   }
 
   @Override
   public int getIconWidth() {
-    return myIcon.getIconWidth();
+    return myIcon.get().getIconWidth();
   }
 
   @Override
   public int getIconHeight() {
-    return myIcon.getIconHeight();
+    return myIcon.get().getIconHeight();
   }
 }

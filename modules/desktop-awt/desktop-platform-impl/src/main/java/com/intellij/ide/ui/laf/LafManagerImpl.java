@@ -599,7 +599,7 @@ public final class LafManagerImpl extends LafManager implements Disposable, Pers
 
   private static final class DefaultMenuArrowIcon extends MenuArrowIcon {
     private DefaultMenuArrowIcon() {
-      super(PlatformIconGroup.ideMenuArrow(), PlatformIconGroup.ideMenuArrowSelected(), ImageEffects.grayed(PlatformIconGroup.ideMenuArrow()));
+      super(() -> PlatformIconGroup.ideMenuArrow(), () -> PlatformIconGroup.ideMenuArrowSelected(), () -> ImageEffects.grayed(PlatformIconGroup.ideMenuArrow()));
     }
   }
 
