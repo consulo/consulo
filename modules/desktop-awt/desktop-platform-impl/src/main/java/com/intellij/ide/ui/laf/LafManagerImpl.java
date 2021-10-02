@@ -72,8 +72,10 @@ import consulo.ide.ui.laf.modernWhite.ModernWhiteLookAndFeelInfo;
 import consulo.ide.ui.laf.modernWhite.NativeModernWhiteLookAndFeelInfo;
 import consulo.localize.LocalizeManager;
 import consulo.logging.Logger;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.desktop.internal.style.DesktopStyleImpl;
 import consulo.ui.image.IconLibraryManager;
+import consulo.ui.image.ImageEffects;
 import consulo.ui.impl.image.BaseIconLibraryManager;
 import consulo.ui.style.Style;
 import jakarta.inject.Inject;
@@ -528,6 +530,8 @@ public final class LafManagerImpl extends LafManager implements Disposable, Pers
     patchOptionPaneIcons(uiDefaults);
 
     fixSeparatorColor(uiDefaults);
+                                                      
+    fixMenuIssues(uiDefaults);
 
     LafManagerImplUtil.insertCustomComponentUI(uiDefaults);
 
@@ -585,6 +589,17 @@ public final class LafManagerImpl extends LafManager implements Disposable, Pers
     if (UIUtil.isUnderAquaLookAndFeel()) {
       uiDefaults.put("Separator.background", UIUtil.AQUA_SEPARATOR_BACKGROUND_COLOR);
       uiDefaults.put("Separator.foreground", UIUtil.AQUA_SEPARATOR_FOREGROUND_COLOR);
+    }
+  }
+
+  private static void fixMenuIssues(@Nonnull UIDefaults uiDefaults) {
+    uiDefaults.put("Menu.arrowIcon", new DefaultMenuArrowIcon());
+    uiDefaults.put("MenuItem.background", UIManager.getColor("Menu.background"));
+  }
+
+  private static final class DefaultMenuArrowIcon extends MenuArrowIcon {
+    private DefaultMenuArrowIcon() {
+      super(PlatformIconGroup.ideMenuArrow(), PlatformIconGroup.ideMenuArrowSelected(), ImageEffects.grayed(PlatformIconGroup.ideMenuArrow()));
     }
   }
 

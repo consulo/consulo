@@ -34,6 +34,11 @@ import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 
 public abstract class IdeFrameDecorator implements Disposable {
+  public static boolean isCustomDecorationActive() {
+    // not implemented
+    return false;
+  }
+
   @Nullable
   @ReviewAfterMigrationToJRE(9)
   public static IdeFrameDecorator decorate(@Nonnull IdeFrameEx frame) {
