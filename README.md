@@ -73,7 +73,7 @@ If you want run Consulo from repository
 ## Links
 
 * [Contributing Guide](https://github.com/consulo/consulo/blob/master/CONTRIBUTING.md)
-* [Download](https://consulo.dev)
+* [Download](https://consulo.app)
 * [Issues](https://github.com/consulo/consulo/issues)
 * [Forum](https://discuss.consulo.io/)
 * [Discord Channel](https://discord.gg/Ab3Ka5gTFv)
