@@ -20,6 +20,7 @@ import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.options.SearchableConfigurable;
 import consulo.container.plugin.PluginDescriptor;
+import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ui.annotation.RequiredUIAccess;
 import jakarta.inject.Inject;
@@ -44,9 +45,10 @@ public class PluginsConfigurable implements SearchableConfigurable, Configurable
   @RequiredUIAccess
   @Nullable
   @Override
-  public JComponent createComponent() {
+  public JComponent createComponent(@Nonnull Disposable parentDisposable) {
     if (myPanel == null) {
       myPanel = new PluginsPanel();
+      Disposer.register(parentDisposable, myPanel);
     }
     return myPanel.getComponent();
   }
@@ -87,9 +89,7 @@ public class PluginsConfigurable implements SearchableConfigurable, Configurable
   @RequiredUIAccess
   @Override
   public void disposeUIResources() {
-    if (myPanel != null) {
-      Disposer.dispose(myPanel);
-    }
+    myPanel = null;
   }
 
   @Override

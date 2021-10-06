@@ -15,20 +15,20 @@
   -->
 <consulo-plugin>
   <extensionPoints>
-    <extensionPoint name="eapDescriptor" interface="consulo.ide.eap.EarlyAccessProgramDescriptor" />
+    <extensionPoint name="eapDescriptor" interface="consulo.ide.eap.EarlyAccessProgramDescriptor"/>
   </extensionPoints>
 
   <extensions defaultExtensionNs="com.intellij">
-    <eapDescriptor implementation="consulo.diagram.actions.ShowDiagramAction$DiagramSupport" />
-    <eapDescriptor implementation="consulo.ui.impl.ModalityPerProjectEAPDescriptor" />
-    <eapDescriptor implementation="consulo.ide.eap.plugins.ExperimentalPluginsDescriptor" />
+    <eapDescriptor implementation="consulo.diagram.actions.ShowDiagramAction$DiagramSupport"/>
+    <eapDescriptor implementation="consulo.ui.impl.ModalityPerProjectEAPDescriptor"/>
+    <eapDescriptor implementation="consulo.ide.eap.plugins.ExperimentalPluginsDescriptor"/>
 
-    <backgroundPostStartupActivity implementation="consulo.ide.eap.plugins.ExperimentalPluginsNotifier" />
+    <backgroundPostStartupActivity implementation="consulo.ide.eap.plugins.ExperimentalPluginsNotifier"/>
 
     <applicationConfigurable parentId="preferences.pluginManager"
                              bundle="messages.IdeBundle"
                              key="eap.configurable.name"
-                             instance="consulo.ide.eap.EarlyAccessProgramConfigurable" />
-    <applicationService serviceImplementation="consulo.ide.eap.EarlyAccessProgramManager" />
+                             instance="consulo.ide.eap.EarlyAccessProgramConfigurable"/>
+    <applicationService serviceImplementation="consulo.ide.eap.EarlyAccessProgramManager"/>
   </extensions>
 </consulo-plugin>

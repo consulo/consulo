@@ -243,5 +243,7 @@
 
     <uiDecorator implementation="consulo.ide.ui.impl.mac.MacAquaUIDecorator"/>
     <uiDecorator implementation="consulo.ide.ui.impl.DefaultUIDecorator" order="last"/>
+
+    <eapDescriptor implementation="consulo.fileChooser.impl.system.windows2.IFileDialogEarlyAccessProgramDescriptor"/>
   </extensions>
 </consulo-plugin>

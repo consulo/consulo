@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2018 consulo.io
+ * Copyright 2013-2021 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,24 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui.fileOperateDialog;
+package consulo.fileChooser.impl.system.windows2;
+
+import consulo.ide.eap.EarlyAccessProgramDescriptor;
+import consulo.platform.Platform;
 
 import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
- * @since 2018-06-28
+ * @since 06/10/2021
  */
-public interface FileOperateDialogProvider {
-  String APPLICATION_ID = "application";
-
+public class IFileDialogEarlyAccessProgramDescriptor extends EarlyAccessProgramDescriptor {
   @Nonnull
-  String getId();
+  @Override
+  public String getName() {
+    return "New system look for file choose dialog (Windows)";
+  }
 
-  @Nonnull
-  String getName();
-
-  default boolean isAvailable() {
-    return true;
+  @Override
+  public boolean isAvailable() {
+    return Platform.current().os().isWindows();
   }
 }

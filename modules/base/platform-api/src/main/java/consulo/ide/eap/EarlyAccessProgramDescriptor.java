@@ -17,6 +17,7 @@ package consulo.ide.eap;
 
 import com.intellij.openapi.extensions.ExtensionPointName;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
@@ -45,8 +46,8 @@ public abstract class EarlyAccessProgramDescriptor {
     return false;
   }
 
-  @Nonnull
+  @Nullable
   public String getDescription() {
-    return "";
+    return null;
   }
 }

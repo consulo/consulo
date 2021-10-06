@@ -130,7 +130,7 @@ public class GeneralSettingsConfigurable extends SimpleConfigurable<GeneralSetti
 
       ComboBox.Builder<FileOperateDialogProvider> fileChooseDialogBox = ComboBox.<FileOperateDialogProvider>builder();
       for (FileChooseDialogProvider fileChooseDialogProvider : FileChooseDialogProvider.EP_NAME.getExtensionList()) {
-        if (fileChooseDialogProvider.isAvaliable()) {
+        if (fileChooseDialogProvider.isAvailable()) {
           fileChooseDialogBox.add(fileChooseDialogProvider, fileChooseDialogProvider.getName());
         }
       }
@@ -139,7 +139,7 @@ public class GeneralSettingsConfigurable extends SimpleConfigurable<GeneralSetti
 
       ComboBox.Builder<FileOperateDialogProvider> fileSaveDialogBox = ComboBox.<FileOperateDialogProvider>builder();
       for (FileSaveDialogProvider fileSaveDialogProvider : FileSaveDialogProvider.EP_NAME.getExtensionList()) {
-        if (fileSaveDialogProvider.isAvaliable()) {
+        if (fileSaveDialogProvider.isAvailable()) {
           fileSaveDialogBox.add(fileSaveDialogProvider, fileSaveDialogProvider.getName());
         }
       }
