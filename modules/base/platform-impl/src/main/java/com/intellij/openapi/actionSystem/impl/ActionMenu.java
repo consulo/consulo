@@ -194,6 +194,10 @@ public final class ActionMenu extends JMenu {
     updateIcon();
   }
 
+  public boolean isMainMenuPlace() {
+    return myPlace.equals(ActionPlaces.MAIN_MENU);
+  }
+
   private void addStubItem() {
     if (myStubItem != null) {
       add(myStubItem);
@@ -318,7 +322,7 @@ public final class ActionMenu extends JMenu {
   }
 
   private boolean isTopMenuBar() {
-    return TopApplicationMenuUtil.isMacSystemMenu && myPlace == ActionPlaces.MAIN_MENU;
+    return TopApplicationMenuUtil.isMacSystemMenu && isMainMenuPlace();
   }
 
   private boolean isTopMenuBarAfterOpenJDKMemLeakFix() {

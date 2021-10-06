@@ -455,7 +455,10 @@ public final class DesktopWindowManagerImpl extends WindowManagerEx implements P
 
     IdeFrame frame = findFrameFor(project);
     if (frame != null) {
-      return frame.getStatusBar().findChild(c);
+      StatusBar statusBar = frame.getStatusBar();
+      if (statusBar != null) {
+        return statusBar.findChild(c);
+      }
     }
 
     assert false : "Cannot find status bar for " + c;
