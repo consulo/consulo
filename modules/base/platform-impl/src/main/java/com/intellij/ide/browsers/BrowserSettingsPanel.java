@@ -16,6 +16,8 @@ import com.intellij.util.ui.table.IconTableCellRenderer;
 import com.intellij.util.ui.table.TableModelEditor;
 import consulo.awt.TargetAWT;
 import consulo.disposer.Disposable;
+import consulo.ide.actions.webSearch.WebSearchEngine;
+import consulo.ide.actions.webSearch.WebSearchOptions;
 import consulo.ide.ui.FileChooserTextBoxBuilder;
 import consulo.localize.LocalizeValue;
 import consulo.ui.CheckBox;
@@ -24,6 +26,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.DockLayout;
 import consulo.ui.layout.VerticalLayout;
 import consulo.ui.util.LabeledBuilder;
+import jakarta.inject.Provider;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -113,6 +116,8 @@ final class BrowserSettingsPanel {
       return !WebBrowserManager.getInstance().isPredefinedBrowser(item);
     }
   }, PATH_COLUMN_INFO};
+  
+  private final Provider<WebSearchOptions> myWebSearchOptionsProvider;
 
   private JPanel root;
 
@@ -123,13 +128,15 @@ final class BrowserSettingsPanel {
 
   private ComboBox<DefaultBrowserPolicy> myDefaultBrowserPolicyComboBox;
   private CheckBox myShowBrowserPopupCheckBox;
+  private ComboBox<WebSearchEngine> myWebSearchEngineComboBox;
 
   private TableModelEditor<ConfigurableWebBrowser> browsersEditor;
 
   private String customPathValue;
 
   @RequiredUIAccess
-  BrowserSettingsPanel(Disposable uiDisposable) {
+  BrowserSettingsPanel(Provider<WebSearchOptions> webSearchOptionsProvider, Disposable uiDisposable) {
+    myWebSearchOptionsProvider = webSearchOptionsProvider;
     root = new JPanel(new BorderLayout());
 
     myShowBrowserPopupCheckBox = CheckBox.create(LocalizeValue.localizeTODO("Show browser popup in the editor"));
@@ -233,6 +240,9 @@ final class BrowserSettingsPanel {
     defaultBrowserPanel.left(LabeledBuilder.simple(LocalizeValue.localizeTODO("Default Browser:"), myDefaultBrowserPolicyComboBox));
     defaultBrowserPanel.center(myAlternativeBrowserPathBox.getComponent());
 
+    ComboBox.Builder<WebSearchEngine> webSearchEngineBuilder = ComboBox.<WebSearchEngine>builder().fillByEnum(WebSearchEngine.class, WebSearchEngine::getPresentableName);
+    bottomPanel.add(LabeledBuilder.sided(LocalizeValue.localizeTODO("Web Search Engine:"), myWebSearchEngineComboBox = webSearchEngineBuilder.build()));
+
     bottomPanel.add(myShowBrowserPopupCheckBox);
 
     browsersEditor = new TableModelEditor<>(COLUMNS, itemEditor, "No web browsers configured").modelListener(new TableModelEditor.DataChangedListener<ConfigurableWebBrowser>() {
@@ -304,6 +314,12 @@ final class BrowserSettingsPanel {
       return true;
     }
 
+    WebSearchOptions webSearchOptions = myWebSearchOptionsProvider.get();
+
+    if(webSearchOptions.getEngine() != myWebSearchEngineComboBox.getValue()) {
+      return true;
+    }
+
     return browsersEditor.isModified();
   }
 
@@ -321,6 +337,9 @@ final class BrowserSettingsPanel {
     browserManager.setShowBrowserHover(myShowBrowserPopupCheckBox.getValueOrError());
     browserManager.defaultBrowserPolicy = getDefaultBrowser();
     browserManager.setList(browsersEditor.apply());
+
+    WebSearchOptions webSearchOptions = myWebSearchOptionsProvider.get();
+    webSearchOptions.setEngine(myWebSearchEngineComboBox.getValueOrError());
   }
 
   private DefaultBrowserPolicy getDefaultBrowser() {
@@ -340,6 +359,9 @@ final class BrowserSettingsPanel {
     customPathValue = settings.getBrowserPath();
     myAlternativeBrowserPathBox.getComponent().setEnabled(effectiveDefaultBrowserPolicy == DefaultBrowserPolicy.ALTERNATIVE);
     updateCustomPathTextFieldValue(effectiveDefaultBrowserPolicy);
+
+    WebSearchOptions webSearchOptions = myWebSearchOptionsProvider.get();
+    myWebSearchEngineComboBox.setValue(webSearchOptions.getEngine());
   }
 
   private static DefaultBrowserPolicy getDefaultBrowserPolicy(WebBrowserManager manager) {
