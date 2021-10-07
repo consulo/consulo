@@ -7,26 +7,29 @@ import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
 import com.intellij.openapi.options.ShowSettingsUtil;
 import com.intellij.openapi.ui.ComboBox;
+import com.intellij.openapi.ui.LabeledComponent;
 import com.intellij.openapi.ui.TextFieldWithBrowseButton;
+import com.intellij.openapi.ui.VerticalFlowLayout;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.ui.CollectionComboBoxModel;
 import com.intellij.ui.SimpleListCellRenderer;
-import com.intellij.ui.TitledSeparator;
 import com.intellij.ui.components.JBCheckBox;
 import com.intellij.util.Function;
 import com.intellij.util.PathUtil;
-import com.intellij.util.ui.*;
+import com.intellij.util.ui.ColumnInfo;
+import com.intellij.util.ui.ListTableModel;
+import com.intellij.util.ui.LocalPathCellEditor;
 import com.intellij.util.ui.table.IconTableCellRenderer;
 import com.intellij.util.ui.table.TableModelEditor;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.event.TableModelEvent;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
+import java.awt.*;
 import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 import java.util.ArrayList;
 import java.util.UUID;
 
@@ -113,8 +116,6 @@ final class BrowserSettingsPanel {
 
   private TextFieldWithBrowseButton alternativeBrowserPathField;
 
-  private JPanel defaultBrowserPanel;
-
   @SuppressWarnings("UnusedDeclaration")
   private JComponent browsersTable;
 
@@ -126,9 +127,16 @@ final class BrowserSettingsPanel {
   private String customPathValue;
 
   BrowserSettingsPanel() {
-    alternativeBrowserPathField.addBrowseFolderListener(IdeBundle.message("title.select.path.to.browser"), null, null, APP_FILE_CHOOSER_DESCRIPTOR);
-    defaultBrowserPanel.setBorder(TitledSeparator.createEmptyBorder());
+    root = new JPanel(new BorderLayout());
 
+    showBrowserHover = new JBCheckBox("Show browser popup in the editor");
+
+    alternativeBrowserPathField = new TextFieldWithBrowseButton();
+    alternativeBrowserPathField.addBrowseFolderListener(IdeBundle.message("title.select.path.to.browser"), null, null, APP_FILE_CHOOSER_DESCRIPTOR);
+
+    JPanel bottomPanel = new JPanel(new VerticalFlowLayout());
+    root.add(bottomPanel, BorderLayout.SOUTH);
+    
     ArrayList<DefaultBrowserPolicy> defaultBrowserPolicies = new ArrayList<>();
     if (BrowserLauncherAppless.canUseSystemDefaultBrowserPolicy()) {
       defaultBrowserPolicies.add(DefaultBrowserPolicy.SYSTEM);
@@ -136,20 +144,18 @@ final class BrowserSettingsPanel {
     defaultBrowserPolicies.add(DefaultBrowserPolicy.FIRST);
     defaultBrowserPolicies.add(DefaultBrowserPolicy.ALTERNATIVE);
 
+    defaultBrowserPolicyComboBox = new ComboBox<>();
     defaultBrowserPolicyComboBox.setModel(new CollectionComboBoxModel<>(defaultBrowserPolicies));
-    defaultBrowserPolicyComboBox.addItemListener(new ItemListener() {
-      @Override
-      public void itemStateChanged(@Nonnull ItemEvent e) {
-        boolean customPathEnabled = e.getItem() == DefaultBrowserPolicy.ALTERNATIVE;
-        if (e.getStateChange() == ItemEvent.DESELECTED) {
-          if (customPathEnabled) {
-            customPathValue = alternativeBrowserPathField.getText();
-          }
+    defaultBrowserPolicyComboBox.addItemListener(e -> {
+      boolean customPathEnabled = e.getItem() == DefaultBrowserPolicy.ALTERNATIVE;
+      if (e.getStateChange() == ItemEvent.DESELECTED) {
+        if (customPathEnabled) {
+          customPathValue = alternativeBrowserPathField.getText();
         }
-        else if (e.getStateChange() == ItemEvent.SELECTED) {
-          alternativeBrowserPathField.setEnabled(customPathEnabled);
-          updateCustomPathTextFieldValue((DefaultBrowserPolicy)e.getItem());
-        }
+      }
+      else if (e.getStateChange() == ItemEvent.SELECTED) {
+        alternativeBrowserPathField.setEnabled(customPathEnabled);
+        updateCustomPathTextFieldValue((DefaultBrowserPolicy)e.getItem());
       }
     });
 
@@ -158,21 +164,7 @@ final class BrowserSettingsPanel {
       if (text == null) throw new IllegalStateException(String.valueOf(value));
       return text;
     }));
-  }
 
-  private void updateCustomPathTextFieldValue(@Nonnull DefaultBrowserPolicy browser) {
-    if (browser == DefaultBrowserPolicy.ALTERNATIVE) {
-      alternativeBrowserPathField.setText(customPathValue);
-    }
-    else if (browser == DefaultBrowserPolicy.FIRST) {
-      setCustomPathToFirstListed();
-    }
-    else {
-      alternativeBrowserPathField.setText("");
-    }
-  }
-
-  private void createUIComponents() {
     TableModelEditor.DialogItemEditor<ConfigurableWebBrowser> itemEditor = new TableModelEditor.DialogItemEditor<ConfigurableWebBrowser>() {
       @Nonnull
       @Override
@@ -189,7 +181,7 @@ final class BrowserSettingsPanel {
       @Override
       public void edit(@Nonnull ConfigurableWebBrowser browser, @Nonnull Function<ConfigurableWebBrowser, ConfigurableWebBrowser> mutator, boolean isAdd) {
         BrowserSpecificSettings settings = cloneSettings(browser);
-        if(settings == null) {
+        if (settings == null) {
           return;
         }
 
@@ -226,6 +218,13 @@ final class BrowserSettingsPanel {
         return !WebBrowserManager.getInstance().isPredefinedBrowser(item);
       }
     };
+
+    JPanel defaultBrowserPanel = new JPanel(new BorderLayout());
+    bottomPanel.add(defaultBrowserPanel);
+
+    defaultBrowserPanel.add(LabeledComponent.create(defaultBrowserPolicyComboBox, "Default Browser"), BorderLayout.WEST);
+    defaultBrowserPanel.add(alternativeBrowserPathField, BorderLayout.CENTER);
+
     browsersEditor = new TableModelEditor<>(COLUMNS, itemEditor, "No web browsers configured").modelListener(new TableModelEditor.DataChangedListener<ConfigurableWebBrowser>() {
       @Override
       public void tableChanged(@Nonnull TableModelEvent event) {
@@ -246,6 +245,20 @@ final class BrowserSettingsPanel {
       }
     });
     browsersTable = browsersEditor.createComponent();
+
+    root.add(browsersTable, BorderLayout.CENTER);
+  }
+
+  private void updateCustomPathTextFieldValue(@Nonnull DefaultBrowserPolicy browser) {
+    if (browser == DefaultBrowserPolicy.ALTERNATIVE) {
+      alternativeBrowserPathField.setText(customPathValue);
+    }
+    else if (browser == DefaultBrowserPolicy.FIRST) {
+      setCustomPathToFirstListed();
+    }
+    else {
+      alternativeBrowserPathField.setText("");
+    }
   }
 
   private void setCustomPathToFirstListed() {
