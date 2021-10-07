@@ -19,6 +19,8 @@ import com.intellij.ide.IdeBundle;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.options.SearchableConfigurable;
+import consulo.disposer.Disposable;
+import consulo.ui.annotation.RequiredUIAccess;
 import org.jetbrains.annotations.Nls;
 
 import javax.annotation.Nonnull;
@@ -34,11 +36,6 @@ public class BrowserSettings implements SearchableConfigurable, Configurable.NoS
   }
 
   @Override
-  public Runnable enableSearch(final String option) {
-    return null;
-  }
-
-  @Override
   @Nls
   public String getDisplayName() {
     return IdeBundle.message("browsers.settings");
@@ -50,19 +47,22 @@ public class BrowserSettings implements SearchableConfigurable, Configurable.NoS
     return "reference.settings.ide.settings.web.browsers";
   }
 
+  @RequiredUIAccess
   @Override
-  public JComponent createComponent() {
+  public JComponent createComponent(@Nonnull Disposable uiDisposable) {
     if (myPanel == null) {
-      myPanel = new BrowserSettingsPanel();
+      myPanel = new BrowserSettingsPanel(uiDisposable);
     }
     return myPanel.getComponent();
   }
 
+  @RequiredUIAccess
   @Override
   public boolean isModified() {
     return myPanel != null && myPanel.isModified();
   }
 
+  @RequiredUIAccess
   @Override
   public void apply() throws ConfigurationException {
     if (myPanel != null) {
@@ -70,6 +70,7 @@ public class BrowserSettings implements SearchableConfigurable, Configurable.NoS
     }
   }
 
+  @RequiredUIAccess
   @Override
   public void reset() {
     if (myPanel != null) {
@@ -77,13 +78,16 @@ public class BrowserSettings implements SearchableConfigurable, Configurable.NoS
     }
   }
 
+  @RequiredUIAccess
   @Override
   public void disposeUIResources() {
     myPanel = null;
   }
 
   public void selectBrowser(@Nonnull WebBrowser browser) {
-    createComponent();
+    if(myPanel == null) {
+      throw new IllegalArgumentException("not initialized ui");
+    }
     myPanel.selectBrowser(browser);
   }
 }

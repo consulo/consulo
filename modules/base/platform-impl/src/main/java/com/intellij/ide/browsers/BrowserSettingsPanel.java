@@ -6,14 +6,7 @@ import com.intellij.ide.IdeBundle;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
 import com.intellij.openapi.options.ShowSettingsUtil;
-import com.intellij.openapi.ui.ComboBox;
-import com.intellij.openapi.ui.LabeledComponent;
-import com.intellij.openapi.ui.TextFieldWithBrowseButton;
-import com.intellij.openapi.ui.VerticalFlowLayout;
 import com.intellij.openapi.util.Comparing;
-import com.intellij.ui.CollectionComboBoxModel;
-import com.intellij.ui.SimpleListCellRenderer;
-import com.intellij.ui.components.JBCheckBox;
 import com.intellij.util.Function;
 import com.intellij.util.PathUtil;
 import com.intellij.util.ui.ColumnInfo;
@@ -21,6 +14,16 @@ import com.intellij.util.ui.ListTableModel;
 import com.intellij.util.ui.LocalPathCellEditor;
 import com.intellij.util.ui.table.IconTableCellRenderer;
 import com.intellij.util.ui.table.TableModelEditor;
+import consulo.awt.TargetAWT;
+import consulo.disposer.Disposable;
+import consulo.ide.ui.FileChooserTextBoxBuilder;
+import consulo.localize.LocalizeValue;
+import consulo.ui.CheckBox;
+import consulo.ui.ComboBox;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.layout.DockLayout;
+import consulo.ui.layout.VerticalLayout;
+import consulo.ui.util.LabeledBuilder;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -29,7 +32,6 @@ import javax.swing.event.TableModelEvent;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 import java.awt.*;
-import java.awt.event.ItemEvent;
 import java.util.ArrayList;
 import java.util.UUID;
 
@@ -114,29 +116,30 @@ final class BrowserSettingsPanel {
 
   private JPanel root;
 
-  private TextFieldWithBrowseButton alternativeBrowserPathField;
+  private FileChooserTextBoxBuilder.Controller myAlternativeBrowserPathBox;
 
   @SuppressWarnings("UnusedDeclaration")
   private JComponent browsersTable;
 
-  private ComboBox<DefaultBrowserPolicy> defaultBrowserPolicyComboBox;
-  private JBCheckBox showBrowserHover;
+  private ComboBox<DefaultBrowserPolicy> myDefaultBrowserPolicyComboBox;
+  private CheckBox myShowBrowserPopupCheckBox;
 
   private TableModelEditor<ConfigurableWebBrowser> browsersEditor;
 
   private String customPathValue;
 
-  BrowserSettingsPanel() {
+  @RequiredUIAccess
+  BrowserSettingsPanel(Disposable uiDisposable) {
     root = new JPanel(new BorderLayout());
 
-    showBrowserHover = new JBCheckBox("Show browser popup in the editor");
+    myShowBrowserPopupCheckBox = CheckBox.create(LocalizeValue.localizeTODO("Show browser popup in the editor"));
 
-    alternativeBrowserPathField = new TextFieldWithBrowseButton();
-    alternativeBrowserPathField.addBrowseFolderListener(IdeBundle.message("title.select.path.to.browser"), null, null, APP_FILE_CHOOSER_DESCRIPTOR);
+    myAlternativeBrowserPathBox =
+            FileChooserTextBoxBuilder.create(null).fileChooserDescriptor(APP_FILE_CHOOSER_DESCRIPTOR).dialogTitle(IdeBundle.message("title.select.path.to.browser")).uiDisposable(uiDisposable).build();
 
-    JPanel bottomPanel = new JPanel(new VerticalFlowLayout());
-    root.add(bottomPanel, BorderLayout.SOUTH);
-    
+    VerticalLayout bottomPanel = VerticalLayout.create();
+    root.add(TargetAWT.to(bottomPanel), BorderLayout.SOUTH);
+
     ArrayList<DefaultBrowserPolicy> defaultBrowserPolicies = new ArrayList<>();
     if (BrowserLauncherAppless.canUseSystemDefaultBrowserPolicy()) {
       defaultBrowserPolicies.add(DefaultBrowserPolicy.SYSTEM);
@@ -144,28 +147,33 @@ final class BrowserSettingsPanel {
     defaultBrowserPolicies.add(DefaultBrowserPolicy.FIRST);
     defaultBrowserPolicies.add(DefaultBrowserPolicy.ALTERNATIVE);
 
-    defaultBrowserPolicyComboBox = new ComboBox<>();
-    defaultBrowserPolicyComboBox.setModel(new CollectionComboBoxModel<>(defaultBrowserPolicies));
-    defaultBrowserPolicyComboBox.addItemListener(e -> {
-      boolean customPathEnabled = e.getItem() == DefaultBrowserPolicy.ALTERNATIVE;
-      if (e.getStateChange() == ItemEvent.DESELECTED) {
-        if (customPathEnabled) {
-          customPathValue = alternativeBrowserPathField.getText();
-        }
+    myDefaultBrowserPolicyComboBox = ComboBox.create(defaultBrowserPolicies);
+    myDefaultBrowserPolicyComboBox.selectFirst();
+    myDefaultBrowserPolicyComboBox.addValueListener(event -> {
+      DefaultBrowserPolicy value = event.getValue();
+      boolean customPathEnabled = value == DefaultBrowserPolicy.ALTERNATIVE;
+
+      if(myAlternativeBrowserPathBox.getComponent().isEnabled()) {
+        customPathValue = myAlternativeBrowserPathBox.getValue();
       }
-      else if (e.getStateChange() == ItemEvent.SELECTED) {
-        alternativeBrowserPathField.setEnabled(customPathEnabled);
-        updateCustomPathTextFieldValue((DefaultBrowserPolicy)e.getItem());
+
+      myAlternativeBrowserPathBox.getComponent().setEnabled(customPathEnabled);
+      updateCustomPathTextFieldValue(value);
+    });
+    myDefaultBrowserPolicyComboBox.setTextRender(defaultBrowserPolicy -> {
+      switch (defaultBrowserPolicy) {
+        case SYSTEM:
+          return LocalizeValue.localizeTODO("System default");
+        case FIRST:
+          return LocalizeValue.localizeTODO("First listed");
+        case ALTERNATIVE:
+          return LocalizeValue.localizeTODO("Custom path");
+        default:
+          throw new IllegalArgumentException(defaultBrowserPolicies.toString());
       }
     });
 
-    defaultBrowserPolicyComboBox.setRenderer(SimpleListCellRenderer.create("", value -> {
-      String text = value == DefaultBrowserPolicy.SYSTEM ? "System default" : value == DefaultBrowserPolicy.FIRST ? "First listed" : value == DefaultBrowserPolicy.ALTERNATIVE ? "Custom path" : null;
-      if (text == null) throw new IllegalStateException(String.valueOf(value));
-      return text;
-    }));
-
-    TableModelEditor.DialogItemEditor<ConfigurableWebBrowser> itemEditor = new TableModelEditor.DialogItemEditor<ConfigurableWebBrowser>() {
+    TableModelEditor.DialogItemEditor<ConfigurableWebBrowser> itemEditor = new TableModelEditor.DialogItemEditor<>() {
       @Nonnull
       @Override
       public Class<ConfigurableWebBrowser> getItemClass() {
@@ -219,11 +227,13 @@ final class BrowserSettingsPanel {
       }
     };
 
-    JPanel defaultBrowserPanel = new JPanel(new BorderLayout());
+    DockLayout defaultBrowserPanel = DockLayout.create();
     bottomPanel.add(defaultBrowserPanel);
 
-    defaultBrowserPanel.add(LabeledComponent.create(defaultBrowserPolicyComboBox, "Default Browser"), BorderLayout.WEST);
-    defaultBrowserPanel.add(alternativeBrowserPathField, BorderLayout.CENTER);
+    defaultBrowserPanel.left(LabeledBuilder.simple(LocalizeValue.localizeTODO("Default Browser:"), myDefaultBrowserPolicyComboBox));
+    defaultBrowserPanel.center(myAlternativeBrowserPathBox.getComponent());
+
+    bottomPanel.add(myShowBrowserPopupCheckBox);
 
     browsersEditor = new TableModelEditor<>(COLUMNS, itemEditor, "No web browsers configured").modelListener(new TableModelEditor.DataChangedListener<ConfigurableWebBrowser>() {
       @Override
@@ -249,29 +259,31 @@ final class BrowserSettingsPanel {
     root.add(browsersTable, BorderLayout.CENTER);
   }
 
+  @RequiredUIAccess
   private void updateCustomPathTextFieldValue(@Nonnull DefaultBrowserPolicy browser) {
     if (browser == DefaultBrowserPolicy.ALTERNATIVE) {
-      alternativeBrowserPathField.setText(customPathValue);
+      myAlternativeBrowserPathBox.setValue(customPathValue);
     }
     else if (browser == DefaultBrowserPolicy.FIRST) {
       setCustomPathToFirstListed();
     }
     else {
-      alternativeBrowserPathField.setText("");
+      myAlternativeBrowserPathBox.setValue("");
     }
   }
 
+  @RequiredUIAccess
   private void setCustomPathToFirstListed() {
     ListTableModel<ConfigurableWebBrowser> model = browsersEditor.getModel();
     for (int i = 0, n = model.getRowCount(); i < n; i++) {
       ConfigurableWebBrowser browser = model.getRowValue(i);
       if (browser.isActive() && browser.getPath() != null) {
-        alternativeBrowserPathField.setText(browser.getPath());
+        myAlternativeBrowserPathBox.setValue(browser.getPath());
         return;
       }
     }
 
-    alternativeBrowserPathField.setText("");
+    myAlternativeBrowserPathBox.setValue("");
   }
 
   @Nonnull
@@ -284,47 +296,49 @@ final class BrowserSettingsPanel {
     GeneralSettings generalSettings = GeneralSettings.getInstance();
 
     DefaultBrowserPolicy defaultBrowserPolicy = getDefaultBrowser();
-    if (getDefaultBrowserPolicy(browserManager) != defaultBrowserPolicy || browserManager.isShowBrowserHover() != showBrowserHover.isSelected()) {
+    if (getDefaultBrowserPolicy(browserManager) != defaultBrowserPolicy || browserManager.isShowBrowserHover() != myShowBrowserPopupCheckBox.getValueOrError()) {
       return true;
     }
 
-    if (defaultBrowserPolicy == DefaultBrowserPolicy.ALTERNATIVE && !Comparing.strEqual(generalSettings.getBrowserPath(), alternativeBrowserPathField.getText())) {
+    if (defaultBrowserPolicy == DefaultBrowserPolicy.ALTERNATIVE && !Comparing.strEqual(generalSettings.getBrowserPath(), myAlternativeBrowserPathBox.getValue())) {
       return true;
     }
 
     return browsersEditor.isModified();
   }
 
+  @RequiredUIAccess
   public void apply() {
     GeneralSettings settings = GeneralSettings.getInstance();
 
     settings.setUseDefaultBrowser(getDefaultBrowser() == DefaultBrowserPolicy.SYSTEM);
 
-    if (alternativeBrowserPathField.isEnabled()) {
-      settings.setBrowserPath(alternativeBrowserPathField.getText());
+    if (myAlternativeBrowserPathBox.getComponent().isEnabled()) {
+      settings.setBrowserPath(myAlternativeBrowserPathBox.getValue());
     }
 
     WebBrowserManager browserManager = WebBrowserManager.getInstance();
-    browserManager.setShowBrowserHover(showBrowserHover.isSelected());
+    browserManager.setShowBrowserHover(myShowBrowserPopupCheckBox.getValueOrError());
     browserManager.defaultBrowserPolicy = getDefaultBrowser();
     browserManager.setList(browsersEditor.apply());
   }
 
   private DefaultBrowserPolicy getDefaultBrowser() {
-    return (DefaultBrowserPolicy)defaultBrowserPolicyComboBox.getSelectedItem();
+    return myDefaultBrowserPolicyComboBox.getValueOrError();
   }
 
+  @RequiredUIAccess
   public void reset() {
     final WebBrowserManager browserManager = WebBrowserManager.getInstance();
     DefaultBrowserPolicy effectiveDefaultBrowserPolicy = getDefaultBrowserPolicy(browserManager);
-    defaultBrowserPolicyComboBox.setSelectedItem(effectiveDefaultBrowserPolicy);
+    myDefaultBrowserPolicyComboBox.setValue(effectiveDefaultBrowserPolicy);
 
     GeneralSettings settings = GeneralSettings.getInstance();
-    showBrowserHover.setSelected(browserManager.isShowBrowserHover());
+    myShowBrowserPopupCheckBox.setValue(browserManager.isShowBrowserHover());
     browsersEditor.reset(browserManager.getList());
 
     customPathValue = settings.getBrowserPath();
-    alternativeBrowserPathField.setEnabled(effectiveDefaultBrowserPolicy == DefaultBrowserPolicy.ALTERNATIVE);
+    myAlternativeBrowserPathBox.getComponent().setEnabled(effectiveDefaultBrowserPolicy == DefaultBrowserPolicy.ALTERNATIVE);
     updateCustomPathTextFieldValue(effectiveDefaultBrowserPolicy);
   }
 
