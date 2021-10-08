@@ -16,8 +16,9 @@ If you can't describe issue, you can use our [forum](https://discuss.consulo.io/
 | ------------- |-----------------:|
 | Java 11       | ![jdk11](https://github.com/consulo/consulo/workflows/jdk11/badge.svg) |
 | Java 14       | ![jdk14](https://github.com/consulo/consulo/workflows/jdk14/badge.svg) |
-| Java 15 EA    | ![jdk15](https://github.com/consulo/consulo/workflows/jdk15/badge.svg) |
-| Java 16 EA    | ![jdk16](https://github.com/consulo/consulo/workflows/jdk16/badge.svg) |
+| Java 15       | ![jdk15](https://github.com/consulo/consulo/workflows/jdk15/badge.svg) |
+| Java 16       | ![jdk16](https://github.com/consulo/consulo/workflows/jdk16/badge.svg) |
+| Java 17       | ![jdk17](https://github.com/consulo/consulo/workflows/jdk17/badge.svg) |
 
 First of all, you need those tools:
 
@@ -72,7 +73,7 @@ If you want run Consulo from repository
 ## Links
 
 * [Contributing Guide](https://github.com/consulo/consulo/blob/master/CONTRIBUTING.md)
-* [Download](https://consulo.dev)
+* [Download](https://consulo.app)
 * [Issues](https://github.com/consulo/consulo/issues)
 * [Forum](https://discuss.consulo.io/)
 * [Discord Channel](https://discord.gg/Ab3Ka5gTFv)

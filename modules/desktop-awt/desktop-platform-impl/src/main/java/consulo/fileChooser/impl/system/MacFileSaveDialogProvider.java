@@ -18,8 +18,8 @@ package consulo.fileChooser.impl.system;
 import com.intellij.openapi.fileChooser.FileSaverDescriptor;
 import com.intellij.openapi.fileChooser.FileSaverDialog;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.SystemInfo;
 import com.intellij.ui.mac.MacFileSaverDialog;
+import consulo.platform.Platform;
 import consulo.ui.fileOperateDialog.FileSaveDialogProvider;
 
 import javax.annotation.Nonnull;
@@ -44,8 +44,8 @@ public class MacFileSaveDialogProvider implements FileSaveDialogProvider {
   }
 
   @Override
-  public boolean isAvaliable() {
-    return SystemInfo.isMac;
+  public boolean isAvailable() {
+    return Platform.current().os().isMac();
   }
 
   @Nonnull

@@ -39,7 +39,7 @@ public class DarculaCheckBoxUI extends MetalCheckBoxUI {
   @Override
   public void installUI(JComponent c) {
     super.installUI(c);
-    if (ComponentUtil.getParentOfType((Class<? extends CellRendererPane>)CellRendererPane.class, (Component)c) != null) {
+    if (ComponentUtil.getParentOfType(CellRendererPane.class, c) != null) {
       c.setBorder(null);
     }
   }
@@ -162,7 +162,11 @@ public class DarculaCheckBoxUI extends MetalCheckBoxUI {
   }
 
   protected Dimension computeOurPreferredSize(JComponent c) {
-    return computeCheckboxPreferredSize(c, getDefaultIcon());
+    return null;
+    // disable - fix bug with table cell render, and mouse over
+    // see https://github.com/consulo/consulo/issues/473
+    // exists in intellij idea at commit time
+    //return computeCheckboxPreferredSize(c, getDefaultIcon());
   }
 
   /**

@@ -21,14 +21,13 @@ import com.intellij.diff.merge.MergeTool;
 import com.intellij.diff.requests.DiffRequest;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import consulo.ui.annotation.RequiredUIAccess;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.List;
 
 public abstract class DiffManagerEx extends DiffManager {
-  @SuppressWarnings("MethodOverridesStaticMethodOfSuperclass")
   @Nonnull
   public static DiffManagerEx getInstance() {
     return (DiffManagerEx)ServiceManager.getService(DiffManager.class);
@@ -39,13 +38,13 @@ public abstract class DiffManagerEx extends DiffManager {
   //
 
   @RequiredUIAccess
-  public abstract void showDiffBuiltin(@javax.annotation.Nullable Project project, @Nonnull DiffRequest request);
+  public abstract void showDiffBuiltin(@Nullable Project project, @Nonnull DiffRequest request);
 
   @RequiredUIAccess
-  public abstract void showDiffBuiltin(@javax.annotation.Nullable Project project, @Nonnull DiffRequest request, @Nonnull DiffDialogHints hints);
+  public abstract void showDiffBuiltin(@Nullable Project project, @Nonnull DiffRequest request, @Nonnull DiffDialogHints hints);
 
   @RequiredUIAccess
-  public abstract void showDiffBuiltin(@javax.annotation.Nullable Project project, @Nonnull DiffRequestChain requests, @Nonnull DiffDialogHints hints);
+  public abstract void showDiffBuiltin(@Nullable Project project, @Nonnull DiffRequestChain requests, @Nonnull DiffDialogHints hints);
 
   @RequiredUIAccess
   public abstract void showMergeBuiltin(@Nullable Project project, @Nonnull MergeRequest request);

@@ -19,8 +19,8 @@ import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.fileChooser.FileChooserDialog;
 import com.intellij.openapi.fileChooser.PathChooserDialog;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.SystemInfo;
 import com.intellij.ui.mac.MacPathChooserDialog;
+import consulo.platform.Platform;
 import consulo.ui.fileOperateDialog.FileChooseDialogProvider;
 
 import javax.annotation.Nonnull;
@@ -45,8 +45,8 @@ public class MacFileChooseDialogProvider implements FileChooseDialogProvider {
   }
 
   @Override
-  public boolean isAvaliable() {
-    return SystemInfo.isMac && SystemInfo.isJetBrainsJvm;
+  public boolean isAvailable() {
+    return Platform.current().os().isMac();
   }
 
   @Nonnull

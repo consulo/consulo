@@ -93,7 +93,7 @@ public class AppearanceConfigurable extends SimpleConfigurable<AppearanceConfigu
       uiOptions.add(myAltDNDCheckBox = CheckBox.create("Drag-n-Drop with ALT pressed only"));
 
       myLafComboBox = ComboBox.create(StyleManager.get().getStyles());
-      myLafComboBox.setTextRender(style -> style == null ? "" : style.getName());
+      myLafComboBox.setTextRender(style -> style == null ? LocalizeValue.empty() : LocalizeValue.of(style.getName()));
       uiOptions.add(LabeledBuilder.simple(IdeLocalize.comboboxLookAndFeel(), myLafComboBox));
 
       List<Object> iconThemes = new ArrayList<>();

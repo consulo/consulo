@@ -117,7 +117,7 @@ public class EarlyAccessProgramConfigurable implements Configurable, Configurabl
       eapPanel.add(topPanel);
       eapPanel.setBorder(new CustomLineBorder(0, 0, 1, 0));
 
-      String description = StringUtil.notNullizeIfEmpty(descriptor.getDescription(), "Description is not available");
+      String description = StringUtil.notNullize(descriptor.getDescription());
       JTextPane textPane = new JTextPane();
       textPane.setText(description);
       textPane.setEditable(false);

@@ -19,12 +19,13 @@ import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.ItemRemovable;
 import com.intellij.util.ui.UIUtil;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableColumn;
+import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
 import java.awt.*;
 import java.util.ArrayList;
@@ -228,11 +229,22 @@ public class TableUtil {
   }
 
   public static void setupCheckboxColumn(@Nonnull JTable table, int columnIndex) {
-    setupCheckboxColumn(table.getColumnModel().getColumn(columnIndex));
+    TableColumnModel cModel = table.getColumnModel();
+    setupCheckboxColumn(cModel.getColumn(columnIndex), cModel.getColumnMargin());
   }
 
+  /**
+   * @deprecated doesn't take into account column margin.
+   * Use {@link #setupCheckboxColumn(JTable, int)} instead.
+   * Or use {@link #setupCheckboxColumn(TableColumn, int)} with {@link TableColumnModel#getColumnMargin()} accounted for.
+   */
+  @Deprecated
   public static void setupCheckboxColumn(@Nonnull TableColumn column) {
-    int checkboxWidth = new JCheckBox().getPreferredSize().width;
+    setupCheckboxColumn(column, 0);
+  }
+
+  public static void setupCheckboxColumn(@Nonnull TableColumn column, int additionalWidth) {
+    int checkboxWidth = new JCheckBox().getPreferredSize().width + additionalWidth;
     column.setResizable(false);
     column.setPreferredWidth(checkboxWidth);
     column.setMaxWidth(checkboxWidth);

@@ -24,7 +24,7 @@ import javax.annotation.Nonnull;
 abstract class BaseLocalizeValue implements LocalizeValue {
   protected static final Object[] ourEmptyArgs = new Object[0];
 
-  private final Object[] myArgs;
+  protected final Object[] myArgs;
 
   private LocalizeManager myLocalizeManager;
 
@@ -54,12 +54,7 @@ abstract class BaseLocalizeValue implements LocalizeValue {
   protected abstract String getUnformattedText(@Nonnull LocalizeManager localizeManager);
 
   @Nonnull
-  private String calcValue() {
-    LocalizeManager manager = getLocalizeManager();
-    if (myModificationCount == manager.getModificationCount()) {
-      return myText;
-    }
-
+  protected String calcValue(LocalizeManager manager) {
     String newText;
     String unformattedText = getUnformattedText(manager);
     if (myArgs.length > 0) {
@@ -77,14 +72,21 @@ abstract class BaseLocalizeValue implements LocalizeValue {
       newText = unformattedText;
     }
 
-    myText = newText;
-    myModificationCount = manager.getModificationCount();
     return newText;
   }
 
   @Nonnull
   @Override
   public String getValue() {
-    return calcValue();
+    LocalizeManager manager = getLocalizeManager();
+    if (myModificationCount == manager.getModificationCount()) {
+      return myText;
+    }
+
+    String newText = calcValue(manager);
+
+    myText = newText;
+    myModificationCount = manager.getModificationCount();
+    return newText;
   }
 }

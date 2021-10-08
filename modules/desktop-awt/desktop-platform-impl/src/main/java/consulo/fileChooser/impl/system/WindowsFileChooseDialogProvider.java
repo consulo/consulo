@@ -19,8 +19,11 @@ import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.fileChooser.FileChooserDialog;
 import com.intellij.openapi.fileChooser.PathChooserDialog;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.SystemInfo;
 import com.intellij.ui.win.WinPathChooserDialog;
+import consulo.fileChooser.impl.system.windows2.IFileDialogEarlyAccessProgramDescriptor;
+import consulo.fileChooser.impl.system.windows2.WinPathChooserDialog2;
+import consulo.ide.eap.EarlyAccessProgramManager;
+import consulo.platform.Platform;
 import consulo.ui.fileOperateDialog.FileChooseDialogProvider;
 
 import javax.annotation.Nonnull;
@@ -45,13 +48,16 @@ public class WindowsFileChooseDialogProvider implements FileChooseDialogProvider
   }
 
   @Override
-  public boolean isAvaliable() {
-    return SystemInfo.isWindows;
+  public boolean isAvailable() {
+    return Platform.current().os().isWindows();
   }
 
   @Nonnull
   @Override
   public FileChooserDialog createFileChooser(@Nonnull FileChooserDescriptor descriptor, @Nullable Project project, @Nullable Component parent) {
+    if(EarlyAccessProgramManager.is(IFileDialogEarlyAccessProgramDescriptor.class)) {
+      return new WinPathChooserDialog2(descriptor, parent, project);
+    }
     return new WinPathChooserDialog(descriptor, parent, project);
   }
 

@@ -95,13 +95,13 @@ public class ExternalServiceConfigurable extends SimpleConfigurableByProperties 
       stateBox.setTextRender(threeState -> {
         switch (threeState) {
           case YES:
-            return "Enabled (Unanonymous)";
+            return LocalizeValue.localizeTODO("Enabled (Unanonymous)");
           case UNSURE:
-            return "Enabled (Anonymous)";
+            return LocalizeValue.localizeTODO("Enabled (Anonymous)");
           case NO:
-            return "Disabled";
+            return LocalizeValue.localizeTODO("Disabled");
           default:
-            return "";
+            return LocalizeValue.empty();
         }
       });
 

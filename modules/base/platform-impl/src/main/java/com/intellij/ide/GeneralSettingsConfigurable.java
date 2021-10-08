@@ -19,12 +19,10 @@ import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.options.SearchableConfigurable;
 import com.intellij.openapi.util.NotNullComputable;
 import com.intellij.util.ObjectUtil;
-import consulo.localize.LocalizeManager;
-import consulo.platform.base.localize.IdeLocalize;
 import consulo.fileChooser.FileOperateDialogSettings;
-import consulo.ide.actions.webSearch.WebSearchEngine;
-import consulo.ide.actions.webSearch.WebSearchOptions;
+import consulo.localize.LocalizeManager;
 import consulo.options.SimpleConfigurable;
+import consulo.platform.base.localize.IdeLocalize;
 import consulo.ui.*;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.fileOperateDialog.FileChooseDialogProvider;
@@ -34,10 +32,10 @@ import consulo.ui.layout.HorizontalLayout;
 import consulo.ui.layout.LabeledLayout;
 import consulo.ui.layout.VerticalLayout;
 import consulo.ui.util.LabeledComponents;
+import jakarta.inject.Inject;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import jakarta.inject.Inject;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.Set;
@@ -70,8 +68,6 @@ public class GeneralSettingsConfigurable extends SimpleConfigurable<GeneralSetti
 
     private ComboBox<FileOperateDialogProvider> myFileChooseDialogBox;
     private ComboBox<FileOperateDialogProvider> myFileSaveDialogBox;
-
-    private ComboBox<WebSearchEngine> myWebSearchEngineComboBox;
 
     private VerticalLayout myRootLayout;
 
@@ -130,7 +126,7 @@ public class GeneralSettingsConfigurable extends SimpleConfigurable<GeneralSetti
 
       ComboBox.Builder<FileOperateDialogProvider> fileChooseDialogBox = ComboBox.<FileOperateDialogProvider>builder();
       for (FileChooseDialogProvider fileChooseDialogProvider : FileChooseDialogProvider.EP_NAME.getExtensionList()) {
-        if (fileChooseDialogProvider.isAvaliable()) {
+        if (fileChooseDialogProvider.isAvailable()) {
           fileChooseDialogBox.add(fileChooseDialogProvider, fileChooseDialogProvider.getName());
         }
       }
@@ -139,7 +135,7 @@ public class GeneralSettingsConfigurable extends SimpleConfigurable<GeneralSetti
 
       ComboBox.Builder<FileOperateDialogProvider> fileSaveDialogBox = ComboBox.<FileOperateDialogProvider>builder();
       for (FileSaveDialogProvider fileSaveDialogProvider : FileSaveDialogProvider.EP_NAME.getExtensionList()) {
-        if (fileSaveDialogProvider.isAvaliable()) {
+        if (fileSaveDialogProvider.isAvailable()) {
           fileSaveDialogBox.add(fileSaveDialogProvider, fileSaveDialogProvider.getName());
         }
       }
@@ -147,12 +143,6 @@ public class GeneralSettingsConfigurable extends SimpleConfigurable<GeneralSetti
       fileDialogsLayout.add(LabeledComponents.leftWithRight("File Save Dialog Type", myFileSaveDialogBox = fileSaveDialogBox.build()));
 
       myRootLayout.add(LabeledLayout.create("File Dialogs", fileDialogsLayout));
-
-      VerticalLayout webSearchOptionsLayout = VerticalLayout.create();
-      ComboBox.Builder<WebSearchEngine> webSearchEngineBuilder = ComboBox.<WebSearchEngine>builder().fillByEnum(WebSearchEngine.class, WebSearchEngine::getPresentableName);
-      webSearchOptionsLayout.add(LabeledComponents.leftWithRight("Engine", myWebSearchEngineComboBox = webSearchEngineBuilder.build()));
-
-      myRootLayout.add(LabeledLayout.create(IdeLocalize.webSearchLabelLayout(), webSearchOptionsLayout));
     }
 
     @Nonnull
@@ -162,13 +152,11 @@ public class GeneralSettingsConfigurable extends SimpleConfigurable<GeneralSetti
     }
   }
 
-  private final WebSearchOptions myWebSearchOptions;
   private final GeneralSettings myGeneralSettings;
   private final FileOperateDialogSettings myFileOperateDialogSettings;
 
   @Inject
-  public GeneralSettingsConfigurable(WebSearchOptions webSearchOptions, GeneralSettings generalSettings, FileOperateDialogSettings fileOperateDialogSettings) {
-    myWebSearchOptions = webSearchOptions;
+  public GeneralSettingsConfigurable(GeneralSettings generalSettings, FileOperateDialogSettings fileOperateDialogSettings) {
     myGeneralSettings = generalSettings;
     myFileOperateDialogSettings = fileOperateDialogSettings;
   }
@@ -209,7 +197,6 @@ public class GeneralSettingsConfigurable extends SimpleConfigurable<GeneralSetti
 
     isModified |= myGeneralSettings.isUseSafeWrite() != component.myChkUseSafeWrite.getValue();
 
-    isModified |= myWebSearchOptions.getEngine() != component.myWebSearchEngineComboBox.getValue();
     return isModified;
   }
 
@@ -250,8 +237,6 @@ public class GeneralSettingsConfigurable extends SimpleConfigurable<GeneralSetti
 
     apply(component.myFileChooseDialogBox, myFileOperateDialogSettings::setFileChooseDialogId);
     apply(component.myFileSaveDialogBox, myFileOperateDialogSettings::setFileSaveDialogId);
-
-    myWebSearchOptions.setEngine(component.myWebSearchEngineComboBox.getValue());
   }
 
   private void apply(ComboBox<FileOperateDialogProvider> comboBox, Consumer<String> func) {
@@ -301,8 +286,6 @@ public class GeneralSettingsConfigurable extends SimpleConfigurable<GeneralSetti
         component.myOpenProjectInSameWindow.setValue(true);
         break;
     }
-
-    component.myWebSearchEngineComboBox.setValue(myWebSearchOptions.getEngine());
 
     reset(component.myFileChooseDialogBox, myFileOperateDialogSettings::getFileChooseDialogId);
     reset(component.myFileSaveDialogBox, myFileOperateDialogSettings::getFileSaveDialogId);

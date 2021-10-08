@@ -90,7 +90,7 @@ public class FileChooserFactoryImpl extends FileChooserFactory {
     String forceOperateDialogProviderId = fileChooserDescriptor.getForceOperateDialogProviderId();
     if (forceOperateDialogProviderId != null) {
       for (T extension : extensions) {
-        if (forceOperateDialogProviderId.equals(extension.getId()) && extension.isAvaliable()) {
+        if (forceOperateDialogProviderId.equals(extension.getId()) && extension.isAvailable()) {
           return extension;
         }
       }
@@ -104,7 +104,7 @@ public class FileChooserFactoryImpl extends FileChooserFactory {
 
     if (targetId != null) {
       for (T extension : extensions) {
-        if (targetId.equals(extension.getId()) && extension.isAvaliable()) {
+        if (targetId.equals(extension.getId()) && extension.isAvailable()) {
           return extension;
         }
       }

@@ -59,7 +59,7 @@ public final class BrowserLauncherImpl extends BrowserLauncherAppless {
                                      IdeBundle.message("button.fix"), null) == Messages.NO) {
           final BrowserSettings browserSettings = new BrowserSettings();
 
-          AsyncResult<Void> result = ShowSettingsUtil.getInstance().editConfigurable(project, browserSettings, browser == null ? null : (Runnable)() -> browserSettings.selectBrowser(browser));
+          AsyncResult<Void> result = ShowSettingsUtil.getInstance().editConfigurable(project, browserSettings, browser == null ? null :() -> browserSettings.selectBrowser(browser));
           result.doWhenDone(() -> {
             if (launchTask != null) {
               launchTask.run();

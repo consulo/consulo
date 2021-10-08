@@ -43,7 +43,7 @@ import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.List;
 
-public abstract class CacheDiffRequestChainProcessor extends DiffRequestProcessor {
+public class CacheDiffRequestChainProcessor extends DiffRequestProcessor {
   private static final Logger LOG = Logger.getInstance(CacheDiffRequestChainProcessor.class);
 
   @Nonnull
@@ -56,7 +56,7 @@ public abstract class CacheDiffRequestChainProcessor extends DiffRequestProcesso
   @Nonnull
   private final DiffTaskQueue myQueue = new DiffTaskQueue();
 
-  public CacheDiffRequestChainProcessor(@javax.annotation.Nullable Project project, @Nonnull DiffRequestChain requestChain) {
+  public CacheDiffRequestChainProcessor(@Nullable Project project, @Nonnull DiffRequestChain requestChain) {
     super(project, requestChain);
     myRequestChain = requestChain;
   }
@@ -119,7 +119,7 @@ public abstract class CacheDiffRequestChainProcessor extends DiffRequestProcesso
     );
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   protected DiffRequest loadRequestFast(@Nonnull DiffRequestProducer producer, boolean useCache) {
     if (!useCache) return null;
     return myRequestCache.get(producer);

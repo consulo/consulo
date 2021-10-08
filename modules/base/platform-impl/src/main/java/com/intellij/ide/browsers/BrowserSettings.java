@@ -16,9 +16,16 @@
 package com.intellij.ide.browsers;
 
 import com.intellij.ide.IdeBundle;
+import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.options.SearchableConfigurable;
+import consulo.annotation.DeprecationInfo;
+import consulo.disposer.Disposable;
+import consulo.ide.actions.webSearch.WebSearchOptions;
+import consulo.ui.annotation.RequiredUIAccess;
+import jakarta.inject.Inject;
+import jakarta.inject.Provider;
 import org.jetbrains.annotations.Nls;
 
 import javax.annotation.Nonnull;
@@ -27,15 +34,23 @@ import javax.swing.*;
 public class BrowserSettings implements SearchableConfigurable, Configurable.NoScroll {
   private BrowserSettingsPanel myPanel;
 
+  private Provider<WebSearchOptions> myWebSearchOptionsProvider;
+
+  @Deprecated
+  @DeprecationInfo("Don't use custom creating. Use initialize via extensions")
+  public BrowserSettings() {
+    this(() -> ServiceManager.getService(WebSearchOptions.class));
+  }
+
+  @Inject
+  public BrowserSettings(Provider<WebSearchOptions> webSearchOptionsProvider) {
+    myWebSearchOptionsProvider = webSearchOptionsProvider;
+  }
+
   @Override
   @Nonnull
   public String getId() {
     return getHelpTopic();
-  }
-
-  @Override
-  public Runnable enableSearch(final String option) {
-    return null;
   }
 
   @Override
@@ -50,19 +65,22 @@ public class BrowserSettings implements SearchableConfigurable, Configurable.NoS
     return "reference.settings.ide.settings.web.browsers";
   }
 
+  @RequiredUIAccess
   @Override
-  public JComponent createComponent() {
+  public JComponent createComponent(@Nonnull Disposable uiDisposable) {
     if (myPanel == null) {
-      myPanel = new BrowserSettingsPanel();
+      myPanel = new BrowserSettingsPanel(myWebSearchOptionsProvider, uiDisposable);
     }
     return myPanel.getComponent();
   }
 
+  @RequiredUIAccess
   @Override
   public boolean isModified() {
     return myPanel != null && myPanel.isModified();
   }
 
+  @RequiredUIAccess
   @Override
   public void apply() throws ConfigurationException {
     if (myPanel != null) {
@@ -70,6 +88,7 @@ public class BrowserSettings implements SearchableConfigurable, Configurable.NoS
     }
   }
 
+  @RequiredUIAccess
   @Override
   public void reset() {
     if (myPanel != null) {
@@ -77,13 +96,16 @@ public class BrowserSettings implements SearchableConfigurable, Configurable.NoS
     }
   }
 
+  @RequiredUIAccess
   @Override
   public void disposeUIResources() {
     myPanel = null;
   }
 
   public void selectBrowser(@Nonnull WebBrowser browser) {
-    createComponent();
+    if(myPanel == null) {
+      throw new IllegalArgumentException("not initialized ui");
+    }
     myPanel.selectBrowser(browser);
   }
 }

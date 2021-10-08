@@ -30,7 +30,7 @@ public interface FileOperateDialogProvider {
   @Nonnull
   String getName();
 
-  default boolean isAvaliable() {
+  default boolean isAvailable() {
     return true;
   }
 }
