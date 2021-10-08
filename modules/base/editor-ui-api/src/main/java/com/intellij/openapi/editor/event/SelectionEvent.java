@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 JetBrains s.r.o.
+ * Copyright 2000-2017 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,17 +17,15 @@ package com.intellij.openapi.editor.event;
 
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.util.TextRange;
+import consulo.util.lang.Pair;
 
 import java.util.EventObject;
 
 public class SelectionEvent extends EventObject {
-  private TextRange[] myOldRanges;
-  private TextRange[] myNewRanges;
+  private final Pair<TextRange[], TextRange> myOldRanges;
+  private final Pair<TextRange[], TextRange> myNewRanges;
 
-
-  public SelectionEvent(Editor editor,
-                        int[] oldSelectionStarts, int[] oldSelectionEnds,
-                        int[] newSelectionStarts, int[] newSelectionEnds) {
+  public SelectionEvent(Editor editor, int[] oldSelectionStarts, int[] oldSelectionEnds, int[] newSelectionStarts, int[] newSelectionEnds) {
     super(editor);
 
     assertCorrectSelection(oldSelectionStarts, oldSelectionEnds);
@@ -35,7 +33,6 @@ public class SelectionEvent extends EventObject {
 
     myOldRanges = getRanges(oldSelectionStarts, oldSelectionEnds);
     myNewRanges = getRanges(newSelectionStarts, newSelectionEnds);
-
   }
 
   public SelectionEvent(Editor editor, int oldStart, int oldEnd, int newStart, int newEnd) {
@@ -47,40 +44,39 @@ public class SelectionEvent extends EventObject {
   }
 
   public Editor getEditor() {
-    return (Editor) getSource();
+    return (Editor)getSource();
   }
 
   public TextRange getOldRange() {
-    return getRange(myOldRanges);
+    return myOldRanges.second;
   }
 
   public TextRange getNewRange() {
-    return getRange(myNewRanges);
+    return myNewRanges.second;
   }
 
   public TextRange[] getOldRanges() {
-    return myOldRanges;
+    return myOldRanges.first;
   }
 
   public TextRange[] getNewRanges() {
-    return myNewRanges;
+    return myNewRanges.first;
   }
 
-  private static TextRange[] getRanges(int[] starts, int[] ends) {
+  private static Pair<TextRange[], TextRange> getRanges(int[] starts, int[] ends) {
     if (starts.length == 0) {
-      return TextRange.EMPTY_ARRAY;
+      return Pair.create(TextRange.EMPTY_ARRAY, TextRange.EMPTY_RANGE);
     }
     final TextRange[] ranges = new TextRange[starts.length];
+    int startOffset = Integer.MAX_VALUE;
+    int endOffset = Integer.MIN_VALUE;
     for (int i = 0; i < starts.length; ++i) {
-      ranges[i] = new TextRange(starts[i], ends[i]);
+      int start = starts[i];
+      int end = ends[i];
+      ranges[i] = new TextRange(start, end);
+      startOffset = Math.min(startOffset, start);
+      endOffset = Math.max(endOffset, end);
     }
-    return ranges;
-  }
-
-  private static TextRange getRange(TextRange[] ranges) {
-    if (ranges.length == 0) {
-      return TextRange.EMPTY_RANGE;
-    }
-    return new TextRange(ranges[0].getStartOffset(), ranges[ranges.length - 1].getEndOffset());
+    return Pair.create(ranges, new TextRange(startOffset, endOffset));
   }
 }
