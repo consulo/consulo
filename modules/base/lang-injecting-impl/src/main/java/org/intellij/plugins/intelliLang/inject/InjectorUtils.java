@@ -96,7 +96,7 @@ public class InjectorUtils {
     boolean injectionStarted = false;
     for (Trinity<PsiLanguageInjectionHost, InjectedLanguage, TextRange> trinity : list) {
       final PsiLanguageInjectionHost host = trinity.first;
-      if (host.getContainingFile() != containingFile) {
+      if (host.getContainingFile() != containingFile || !host.isValidHost()) {
         continue;
       }
 
