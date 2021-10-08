@@ -17,7 +17,13 @@
 package org.intellij.plugins.intelliLang.inject;
 
 import com.intellij.lang.Language;
+import com.intellij.lang.LanguageParserDefinitions;
+import com.intellij.lang.ParserDefinition;
 import com.intellij.lang.injection.MultiHostRegistrar;
+import com.intellij.openapi.fileTypes.FileType;
+import com.intellij.openapi.fileTypes.FileTypeManager;
+import com.intellij.openapi.fileTypes.LanguageFileType;
+import com.intellij.openapi.fileTypes.ex.FileTypeIdentifiableByVirtualFile;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.TextRange;
@@ -25,7 +31,9 @@ import com.intellij.openapi.util.Trinity;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.*;
 import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil;
+import com.intellij.psi.injection.ReferenceInjector;
 import com.intellij.psi.util.PsiTreeUtil;
+import com.intellij.testFramework.LightVirtualFile;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.NullableFunction;
 import com.intellij.util.ObjectUtils;
@@ -59,12 +67,39 @@ public class InjectorUtils {
   private InjectorUtils() {
   }
 
+  @Nullable
+  public static Language getLanguage(@Nonnull BaseInjection injection) {
+    return getLanguageByString(injection.getInjectedLanguageId());
+  }
+
+  @Nullable
+  public static Language getLanguageByString(@Nonnull String languageId) {
+    Language language = InjectedLanguage.findLanguageById(languageId);
+    if (language != null) return language;
+    ReferenceInjector injector = ReferenceInjector.findById(languageId);
+    if (injector != null) return injector.toLanguage();
+    FileTypeManager fileTypeManager = FileTypeManager.getInstance();
+    FileType fileType = fileTypeManager.getFileTypeByExtension(languageId);
+    if (fileType instanceof LanguageFileType) {
+      return ((LanguageFileType)fileType).getLanguage();
+    }
+
+    LightVirtualFile lightVirtualFile = new LightVirtualFile(languageId);
+    for (FileType registeredFileType : fileTypeManager.getRegisteredFileTypes()) {
+      if (registeredFileType instanceof FileTypeIdentifiableByVirtualFile &&
+          registeredFileType instanceof LanguageFileType &&
+          ((FileTypeIdentifiableByVirtualFile)registeredFileType).isMyFileType(lightVirtualFile)) {
+        return ((LanguageFileType)registeredFileType).getLanguage();
+      }
+    }
+    return null;
+  }
 
   public static boolean registerInjectionSimple(@Nonnull PsiLanguageInjectionHost host,
                                                 @Nonnull BaseInjection injection,
                                                 @Nullable LanguageInjectionSupport support,
                                                 @Nonnull MultiHostRegistrar registrar) {
-    Language language = InjectedLanguage.findLanguageById(injection.getInjectedLanguageId());
+    Language language = getLanguage(injection);
     if (language == null) {
       return false;
     }
@@ -93,10 +128,24 @@ public class InjectorUtils {
     if (language == null/* && (pair.second.getLength() > 0*/) {
       return;
     }
+
+    ParserDefinition parser = LanguageParserDefinitions.INSTANCE.forLanguage(language);
+    ReferenceInjector injector = ReferenceInjector.findById(language.getID());
+    if (parser == null && injector != null) {
+      for (Trinity<PsiLanguageInjectionHost, InjectedLanguage, TextRange> trinity : list) {
+        String prefix = trinity.second.getPrefix();
+        String suffix = trinity.second.getSuffix();
+        PsiLanguageInjectionHost host = trinity.first;
+        TextRange textRange = trinity.third;
+        InjectedLanguageUtil.injectReference(registrar, language, prefix, suffix, host, textRange);
+        return;
+      }
+      return;
+    }
     boolean injectionStarted = false;
     for (Trinity<PsiLanguageInjectionHost, InjectedLanguage, TextRange> trinity : list) {
       final PsiLanguageInjectionHost host = trinity.first;
-      if (host.getContainingFile() != containingFile) {
+      if (host.getContainingFile() != containingFile || !host.isValidHost()) {
         continue;
       }
 

@@ -15,8 +15,8 @@
  */
 package org.intellij.plugins.intelliLang.inject.config;
 
+import com.intellij.lang.Language;
 import com.intellij.openapi.components.PersistentStateComponent;
-import consulo.logging.Logger;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.TextRange;
@@ -32,6 +32,7 @@ import com.intellij.util.ArrayUtil;
 import com.intellij.util.Function;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.logging.Logger;
 import consulo.util.dataholder.Key;
 import org.intellij.lang.annotations.RegExp;
 import org.intellij.plugins.intelliLang.inject.InjectorUtils;
@@ -89,11 +90,19 @@ public class BaseInjection implements Injection, PersistentStateComponent<Elemen
     return mySupportId;
   }
 
+  @Override
+  @Nullable
+  public Language getInjectedLanguage() {
+    return InjectorUtils.getLanguage(this);
+  }
+
+  @Override
   @Nonnull
   public String getInjectedLanguageId() {
     return myInjectedLanguageId;
   }
 
+  @Override
   @Nonnull
   public String getDisplayName() {
     return myDisplayName;
@@ -107,6 +116,7 @@ public class BaseInjection implements Injection, PersistentStateComponent<Elemen
     myInjectedLanguageId = injectedLanguageId;
   }
 
+  @Override
   @Nonnull
   public String getPrefix() {
     return myPrefix;
@@ -116,6 +126,7 @@ public class BaseInjection implements Injection, PersistentStateComponent<Elemen
     myPrefix = prefix;
   }
 
+  @Override
   @Nonnull
   public String getSuffix() {
     return mySuffix;
@@ -125,6 +136,7 @@ public class BaseInjection implements Injection, PersistentStateComponent<Elemen
     mySuffix = suffix;
   }
 
+  @Override
   @Nonnull
   public List<TextRange> getInjectedArea(final PsiElement element) {
     final TextRange textRange = ElementManipulators.getValueTextRange(element);
@@ -138,6 +150,7 @@ public class BaseInjection implements Injection, PersistentStateComponent<Elemen
       textEscaper.decode(textRange, sb);
       final List<TextRange> ranges = getMatchingRanges(myCompiledValuePattern.matcher(StringPattern.newBombedCharSequence(sb)), sb.length());
       return !ranges.isEmpty() ? ContainerUtil.map(ranges, new Function<TextRange, TextRange>() {
+        @Override
         public TextRange fun(TextRange s) {
           return new TextRange(textEscaper.getOffsetInHost(s.getStartOffset(), textRange), textEscaper.getOffsetInHost(s.getEndOffset(), textRange));
         }
@@ -152,6 +165,7 @@ public class BaseInjection implements Injection, PersistentStateComponent<Elemen
     return false;
   }
 
+  @Override
   public boolean acceptsPsiElement(final PsiElement element) {
     ProgressManager.checkCanceled();
     for (InjectionPlace place : myPlaces) {
@@ -229,6 +243,7 @@ public class BaseInjection implements Injection, PersistentStateComponent<Elemen
     return this;
   }
 
+  @Override
   public void loadState(Element element) {
     final PatternCompiler<PsiElement> helper = getCompiler();
     myDisplayName = StringUtil.notNullize(element.getChildText("display-name"));
@@ -261,6 +276,7 @@ public class BaseInjection implements Injection, PersistentStateComponent<Elemen
 
   protected void readExternalImpl(Element e) {}
 
+  @Override
   public final Element getState() {
     final Element e = new Element("injection");
     e.setAttribute("language", myInjectedLanguageId);
@@ -279,6 +295,7 @@ public class BaseInjection implements Injection, PersistentStateComponent<Elemen
       e.addContent(new Element("single-file"));
     }
     Arrays.sort(myPlaces, new Comparator<InjectionPlace>() {
+      @Override
       public int compare(final InjectionPlace o1, final InjectionPlace o2) {
         return Comparing.compare(o1.getText(), o2.getText());
       }

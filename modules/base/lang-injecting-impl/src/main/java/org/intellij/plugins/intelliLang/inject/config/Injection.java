@@ -15,10 +15,12 @@
  */
 package org.intellij.plugins.intelliLang.inject.config;
 
+import com.intellij.lang.Language;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.List;
 
 /**
@@ -36,6 +38,9 @@ public interface Injection {
 
   @Nonnull
   String getInjectedLanguageId();
+
+  @Nullable
+  Language getInjectedLanguage();
 
   @Nonnull
   String getPrefix();
