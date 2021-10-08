@@ -77,35 +77,40 @@ public class LoginAction extends AnAction implements RightAlignedToolbarAction, 
   public void actionPerformed(@Nonnull AnActionEvent e) {
     ExternalServiceConfiguration configuration = myExternalServiceConfigurationProvider.get();
 
-    if(configuration.getEmail() != null) {
+    if (configuration.getEmail() != null) {
       Alerts.yesNo().asWarning().text(LocalizeValue.localizeTODO("Do logout?")).showAsync().doWhenDone(value -> {
-        if(value) {
+        if (value) {
           // call internal implementation
-          ((ExternalServiceConfigurationImpl) configuration).reset();
+          ((ExternalServiceConfigurationImpl)configuration).reset();
         }
       });
-    } else {
-      String tokenForAuth = RandomStringUtils.randomAlphabetic(48);
-      
-      int localPort = BuiltInServerManager.getInstance().getPort();
-
-      StringBuilder builder = new StringBuilder(WebServiceApi.LINK_CONSULO.buildUrl());
-      builder.append("?");
-      builder.append("token=").append(tokenForAuth).append("&");
-      builder.append("host=").append(URLEncoder.encode(getHostName(), StandardCharsets.UTF_8)).append("&");
-      
-      String redirectUrl = "http://localhost:" + localPort + "/redirectAuth";
-      redirectUrl = redirectUrl.replace("&", "%26");
-      redirectUrl = redirectUrl.replace("/", "%2F");
-      redirectUrl = redirectUrl.replace(":", "%3A");
-
-      builder.append("redirect=").append(redirectUrl);
-
-      BrowserUtil.browse(builder.toString());
+    }
+    else {
+      callLogin();
     }
   }
 
-  private String getHostName() {
+  public static void callLogin() {
+    String tokenForAuth = RandomStringUtils.randomAlphabetic(48);
+
+    int localPort = BuiltInServerManager.getInstance().getPort();
+
+    StringBuilder builder = new StringBuilder(WebServiceApi.LINK_CONSULO.buildUrl());
+    builder.append("?");
+    builder.append("token=").append(tokenForAuth).append("&");
+    builder.append("host=").append(URLEncoder.encode(getHostName(), StandardCharsets.UTF_8)).append("&");
+
+    String redirectUrl = "http://localhost:" + localPort + "/redirectAuth";
+    redirectUrl = redirectUrl.replace("&", "%26");
+    redirectUrl = redirectUrl.replace("/", "%2F");
+    redirectUrl = redirectUrl.replace(":", "%3A");
+
+    builder.append("redirect=").append(redirectUrl);
+
+    BrowserUtil.browse(builder.toString());
+  }
+
+  private static String getHostName() {
     String hostname = "Unknown";
 
     try {

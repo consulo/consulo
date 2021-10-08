@@ -366,7 +366,3 @@ status.bar.write.thread.widget.name:
   text: Write Thread
 status.bar.column.status.tooltip.text:
   text: Column selection mode
-new.user.customize.manager:
-  text: From Scratch
-hub.user.customize.manager:
-  text: Already use Hub

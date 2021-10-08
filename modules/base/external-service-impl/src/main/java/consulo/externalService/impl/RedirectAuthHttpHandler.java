@@ -91,7 +91,7 @@ public class RedirectAuthHttpHandler extends HttpRequestHandler {
 
         externalServiceConfiguration.updateIcon();
 
-        uiAccess.give(() -> Alerts.okInfo(LocalizeValue.localizeTODO("Successfuly logged as " + requestResult.userAccount.username)).showAsync());
+        uiAccess.give(() -> Alerts.okInfo(LocalizeValue.localizeTODO("Successfully logged as " + requestResult.userAccount.username)).showAsync());
       }
       catch (IOException e) {
         LOG.warn(e);

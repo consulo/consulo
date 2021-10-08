@@ -24,6 +24,7 @@ import javax.annotation.Nonnull;
 import javax.accessibility.Accessible;
 import javax.accessibility.AccessibleContext;
 import javax.accessibility.AccessibleRole;
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 
@@ -33,13 +34,17 @@ import static javax.swing.SwingConstants.LEFT;
 import static javax.swing.SwingUtilities.layoutCompoundLabel;
 
 public class SeparatorWithText extends JComponent implements Accessible {
-
   private String myCaption;
   private int myPrefWidth;
   private int myAlignment;
   private Color myTextForeground;
 
   public SeparatorWithText() {
+    this(null);
+  }
+
+  public SeparatorWithText(@Nullable String caption) {
+    myCaption = caption;
     setBorder(BorderFactory.createEmptyBorder(getVgap(), 0, getVgap(), 0));
     setFont(UIUtil.getLabelFont());
     setFont(getFont().deriveFont(Font.BOLD));
