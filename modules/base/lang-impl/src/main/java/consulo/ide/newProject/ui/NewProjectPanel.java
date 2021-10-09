@@ -200,7 +200,7 @@ public abstract class NewProjectPanel extends BaseWelcomeScreenPanel implements 
           myWizardSession = new WizardSession<>(myWizardContext, steps);
 
           if (myWizardSession.hasNext()) {
-            WizardStep<NewModuleWizardContext> step = myWizardSession.next();
+            WizardStep<NewModuleWizardContext> step = myWizardSession.nextWithStepEnter();
 
             toShow = step.getSwingComponent(this);
           }
@@ -248,7 +248,7 @@ public abstract class NewProjectPanel extends BaseWelcomeScreenPanel implements 
 
       if (hasNext) {
         setOKActionText(CommonBundle.getNextButtonText());
-        setOKAction(() -> gotoStep(rightContentPanel, myWizardSession.next()));
+        setOKAction(() -> gotoStep(rightContentPanel, myWizardSession.nextWithStepEnter()));
       }
       else {
         setOKActionText(IdeBundle.message("button.create"));
@@ -257,7 +257,7 @@ public abstract class NewProjectPanel extends BaseWelcomeScreenPanel implements 
 
       int currentStepIndex = myWizardSession.getCurrentStepIndex();
       if (currentStepIndex != 0) {
-        setCancelAction(() -> gotoStep(rightContentPanel, myWizardSession.prev()));
+        setCancelAction(() -> gotoStep(rightContentPanel, myWizardSession.prevWithStepEnter()));
         setCancelText(CommonBundle.message("button.back"));
       }
       else {

@@ -53,6 +53,7 @@ import com.intellij.util.ui.UIUtil;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.ApplicationProperties;
 import consulo.application.impl.BaseApplication;
+import consulo.awt.hacking.AWTAccessorHacking;
 import consulo.awt.hacking.AWTAutoShutdownHacking;
 import consulo.desktop.boot.main.windows.WindowsCommandLineProcessor;
 import consulo.disposer.Disposable;
@@ -67,7 +68,6 @@ import consulo.util.lang.ExceptionUtil;
 import consulo.util.lang.ref.SimpleReference;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.TestOnly;
-import sun.awt.AWTAccessor;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -571,8 +571,7 @@ public class DesktopApplicationImpl extends BaseApplication {
   }
 
   private static Thread getEventQueueThread() {
-    EventQueue eventQueue = Toolkit.getDefaultToolkit().getSystemEventQueue();
-    return AWTAccessor.getEventQueueAccessor().getDispatchThread(eventQueue);
+    return AWTAccessorHacking.getEventQueueThread();
   }
 
   @RequiredUIAccess

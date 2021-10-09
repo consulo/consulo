@@ -23,6 +23,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.ExceptionUtil;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.ui.annotation.RequiredUIAccess;
 import org.jetbrains.annotations.Nls;
@@ -211,6 +212,11 @@ public abstract class Task implements TaskInfo, Progressive {
 
   public abstract static class Backgroundable extends Task implements PerformInBackgroundOption {
 
+    public static void queue(@Nullable Project project, @Nls(capitalization = Nls.Capitalization.Title) @Nonnull LocalizeValue titleValue, @Nonnull Consumer<ProgressIndicator> consumer) {
+      queue(project, titleValue.get(), true, consumer);
+    }
+
+    @Deprecated
     public static void queue(@Nullable Project project, @Nls(capitalization = Nls.Capitalization.Title) @Nonnull String title, @Nonnull Consumer<ProgressIndicator> consumer) {
       queue(project, title, true, consumer);
     }
@@ -305,6 +311,27 @@ public abstract class Task implements TaskInfo, Progressive {
   }
 
   public abstract static class Modal extends Task {
+    public static void queue(@Nullable Project project, @Nls(capitalization = Nls.Capitalization.Title) @Nonnull LocalizeValue titleValue, @Nonnull Consumer<ProgressIndicator> consumer) {
+      queue(project, titleValue.get(), true, consumer);
+    }
+
+    @Deprecated
+    public static void queue(@Nullable Project project, @Nls(capitalization = Nls.Capitalization.Title) @Nonnull String title, @Nonnull Consumer<ProgressIndicator> consumer) {
+      queue(project, title, true, consumer);
+    }
+
+    public static void queue(@Nullable Project project,
+                             @Nls(capitalization = Nls.Capitalization.Title) @Nonnull String title,
+                             boolean canBeCancelled,
+                             @Nonnull Consumer<ProgressIndicator> consumer) {
+      new Modal(project, title, canBeCancelled) {
+        @Override
+        public void run(@Nonnull ProgressIndicator indicator) {
+          consumer.accept(indicator);
+        }
+      }.queue();
+    }
+
     public Modal(@Nullable Project project, @Nls(capitalization = Nls.Capitalization.Title) @Nonnull String title, boolean canBeCancelled) {
       super(project, null, title, canBeCancelled);
     }

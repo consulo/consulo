@@ -37,7 +37,9 @@ public abstract class AbstractCustomizeWizardStep extends JPanel implements Wiza
 
   protected abstract String getHTMLHeader();
 
-  protected abstract String getHTMLFooter();
+  protected String getHTMLFooter() {
+    return null;
+  }
 
   @Nonnull
   protected static Color getSelectionBackground() {

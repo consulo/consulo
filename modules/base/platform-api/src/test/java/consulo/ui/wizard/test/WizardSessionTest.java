@@ -84,12 +84,12 @@ public class WizardSessionTest extends Assert {
 
     assertTrue(session.hasNext());
 
-    assertEquals(session.next().toString(), "first");
-    assertEquals(session.next().toString(), "second");
-    assertEquals(session.next().toString(), "fourth");
+    assertEquals(session.nextWithStepEnter().toString(), "first");
+    assertEquals(session.nextWithStepEnter().toString(), "second");
+    assertEquals(session.nextWithStepEnter().toString(), "fourth");
 
 
-    WizardStep<Object> prev = session.prev();
+    WizardStep<Object> prev = session.prevWithStepEnter();
 
     assertEquals(prev.toString(), "second");
   }
@@ -108,17 +108,17 @@ public class WizardSessionTest extends Assert {
 
     assertTrue(session.hasNext());
 
-    session.next();
+    session.nextWithStepEnter();
 
     assertTrue(first.myStepEnter);
 
-    session.next();
+    session.nextWithStepEnter();
 
     assertTrue(first.myStepLeave);
 
     assertTrue(second.myStepEnter);
 
-    session.next();
+    session.nextWithStepEnter();
 
     assertTrue(second.myStepLeave);
 
@@ -141,18 +141,18 @@ public class WizardSessionTest extends Assert {
 
     assertTrue(session.hasNext());
 
-    session.next();
-    session.next();
+    session.nextWithStepEnter();
+    session.nextWithStepEnter();
 
-    WizardStep<Object> _3step = session.next();
+    WizardStep<Object> _3step = session.nextWithStepEnter();
 
     assertEquals(_3step.toString(), "fourth");
 
-    WizardStep<Object> prev = session.prev();
+    WizardStep<Object> prev = session.prevWithStepEnter();
 
     assertEquals(prev.toString(), "second");
 
-    WizardStep<Object> prev2 = session.prev();
+    WizardStep<Object> prev2 = session.prevWithStepEnter();
 
     assertEquals(prev2.toString(), "first");
   }
@@ -212,9 +212,9 @@ public class WizardSessionTest extends Assert {
 
     assertTrue(session.hasNext());
 
-    session.next();
+    session.nextWithStepEnter();
 
-    WizardStep<InvisibleContext> endStep = session.next();
+    WizardStep<InvisibleContext> endStep = session.nextWithStepEnter();
 
     assertEquals(endStep.toString(), "end");
   }

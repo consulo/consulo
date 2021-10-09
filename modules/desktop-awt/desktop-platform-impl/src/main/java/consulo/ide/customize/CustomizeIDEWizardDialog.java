@@ -15,17 +15,16 @@
  */
 package consulo.ide.customize;
 
-import com.intellij.ide.customize.CustomizeAuthOrScratchStep;
+import consulo.desktop.startup.customize.CustomizeAuthOrScratchStep;
 import com.intellij.ide.customize.CustomizeKeyboardSchemeStepPanel;
-import com.intellij.ide.customize.CustomizePluginsStepPanel;
 import com.intellij.ide.customize.CustomizeUIThemeStepPanel;
 import com.intellij.ide.startup.StartupActionScriptManager;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.util.SystemInfo;
-import com.intellij.util.containers.MultiMap;
 import com.intellij.util.ui.JBUI;
 import consulo.container.plugin.PluginDescriptor;
-import consulo.desktop.startup.customize.CustomizeDownloadAndStartStepPanel;
+import consulo.desktop.startup.customize.CustomizeDownloadStep;
+import consulo.desktop.startup.customize.CustomizeFinishedLastStep;
 import consulo.desktop.startup.customize.CustomizePluginTemplatesStepPanel;
 import consulo.desktop.startup.customize.PluginTemplate;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -45,36 +44,23 @@ import java.util.Map;
  * @since 22/09/2021
  */
 public class CustomizeIDEWizardDialog extends WizardBasedDialog<CustomizeWizardContext> {
-  private final MultiMap<String, PluginDescriptor> myPluginDescriptors;
-  private final Map<String, PluginTemplate> myPredefinedTemplateSets;
 
-  public CustomizeIDEWizardDialog(MultiMap<String, PluginDescriptor> pluginDescriptors, Map<String, PluginTemplate> predefinedTemplateSets) {
+  public CustomizeIDEWizardDialog(List<PluginDescriptor> pluginDescriptors, Map<String, PluginTemplate> predefinedTemplateSets) {
     super(null);
 
-    myPluginDescriptors = pluginDescriptors;
-    myPredefinedTemplateSets = predefinedTemplateSets;
-    myWizardContext = new CustomizeWizardContext();
+    myWizardContext = new CustomizeWizardContext(pluginDescriptors, predefinedTemplateSets);
 
     List<WizardStep<CustomizeWizardContext>> steps = new ArrayList<>();
-    steps.add(new CustomizeAuthOrScratchStep(this::doOKAction));
+    steps.add(new CustomizeAuthOrScratchStep(this::doOKAction, myWizardContext));
     steps.add(new CustomizeUIThemeStepPanel());
 
     if (SystemInfo.isMac) {
       steps.add(new CustomizeKeyboardSchemeStepPanel());
     }
 
-    CustomizePluginTemplatesStepPanel templateStepPanel = myPredefinedTemplateSets.isEmpty() ? null : new CustomizePluginTemplatesStepPanel(myPredefinedTemplateSets);
-    CustomizePluginsStepPanel pluginsStepPanel = null;
-    if (!myPluginDescriptors.isEmpty()) {
-
-      if (templateStepPanel != null) {
-        steps.add(templateStepPanel);
-      }
-      pluginsStepPanel = new CustomizePluginsStepPanel(myPluginDescriptors, templateStepPanel);
-      steps.add(pluginsStepPanel);
-
-    }
-    steps.add(new CustomizeDownloadAndStartStepPanel(this, pluginsStepPanel));
+    steps.add(new CustomizePluginTemplatesStepPanel(myWizardContext));
+    steps.add(new CustomizeDownloadStep(this::doOKAction));
+    steps.add(new CustomizeFinishedLastStep(this::doOKAction));
 
     myWizardSession = new WizardSession<>(myWizardContext, steps);
 

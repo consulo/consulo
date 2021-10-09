@@ -15,25 +15,17 @@
  */
 package consulo.externalService.impl;
 
-import com.google.gson.Gson;
-import com.intellij.openapi.application.Application;
-import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.util.io.StreamUtil;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.io.HttpRequests;
 import consulo.builtInServer.http.HttpRequestHandler;
 import consulo.builtInServer.http.Responses;
-import consulo.external.api.UserAccount;
-import consulo.externalService.ExternalServiceConfiguration;
-import consulo.localize.LocalizeValue;
-import consulo.logging.Logger;
-import consulo.ui.Alerts;
-import consulo.ui.UIAccess;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.http.FullHttpRequest;
 import io.netty.handler.codec.http.FullHttpResponse;
 import io.netty.handler.codec.http.HttpMethod;
 import io.netty.handler.codec.http.QueryStringDecoder;
+import jakarta.inject.Inject;
+import jakarta.inject.Provider;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
@@ -45,11 +37,11 @@ import java.nio.charset.StandardCharsets;
  * @since 04/09/2021
  */
 public class RedirectAuthHttpHandler extends HttpRequestHandler {
-  private static final Logger LOG = Logger.getInstance(RedirectAuthHttpHandler.class);
+  private final Provider<HubAuthorizationService> myHubAuthorizationServiceProvider;
 
-  public static class OAuthRequestResult {
-    public UserAccount userAccount;
-    public String token;
+  @Inject
+  public RedirectAuthHttpHandler(Provider<HubAuthorizationService> hubAuthorizationServiceProvider) {
+    myHubAuthorizationServiceProvider = hubAuthorizationServiceProvider;
   }
 
   @Override
@@ -61,7 +53,7 @@ public class RedirectAuthHttpHandler extends HttpRequestHandler {
   public boolean process(@Nonnull QueryStringDecoder urlDecoder, @Nonnull FullHttpRequest request, @Nonnull ChannelHandlerContext context) throws IOException {
     String token = ContainerUtil.getFirstItem(urlDecoder.parameters().get("token"));
     if (token != null) {
-      doGetToken(token);
+      myHubAuthorizationServiceProvider.get().doGetToken(token);
     }
 
     FullHttpResponse response = Responses.response("text/html; charset=utf-8", null);
@@ -74,30 +66,5 @@ public class RedirectAuthHttpHandler extends HttpRequestHandler {
 
     Responses.send(response, context.channel(), request);
     return true;
-  }
-
-  private static void doGetToken(String sharedToken) {
-    Task.Backgroundable.queue(null, "Requesting oauth token...", indicator -> {
-      UIAccess uiAccess = Application.get().getLastUIAccess();
-
-      try {
-        String json = HttpRequests.request(WebServiceApi.OAUTH_API.buildUrl("request?token=" + sharedToken)).readString(indicator);
-
-        OAuthRequestResult requestResult = new Gson().fromJson(json, OAuthRequestResult.class);
-
-        ExternalServiceConfiguration externalServiceConfiguration = Application.get().getInstance(ExternalServiceConfiguration.class);
-
-        ((ExternalServiceConfigurationImpl)externalServiceConfiguration).authorize(requestResult.userAccount.username, requestResult.token);
-
-        externalServiceConfiguration.updateIcon();
-
-        uiAccess.give(() -> Alerts.okInfo(LocalizeValue.localizeTODO("Successfully logged as " + requestResult.userAccount.username)).showAsync());
-      }
-      catch (IOException e) {
-        LOG.warn(e);
-
-        uiAccess.give(() -> Alerts.okError(LocalizeValue.localizeTODO("Failed to request oauth token")).showAsync());
-      }
-    });
   }
 }

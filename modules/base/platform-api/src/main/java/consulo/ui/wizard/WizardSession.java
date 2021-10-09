@@ -15,6 +15,7 @@
  */
 package consulo.ui.wizard;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.logging.Logger;
 
 import javax.annotation.Nonnull;
@@ -47,6 +48,15 @@ public final class WizardSession<CONTEXT> {
   }
 
   @Nonnull
+  @Deprecated
+  @DeprecationInfo("Obsolete due it call #onStepEnter before UI build")
+  public WizardStep<CONTEXT> nextWithStepEnter() {
+    WizardStep<CONTEXT> next = next();
+    next.onStepEnter(myContext);
+    return next;
+  }
+
+  @Nonnull
   public WizardStep<CONTEXT> next() {
     if (myFinished) {
       throw new IllegalArgumentException("Finished");
@@ -71,7 +81,6 @@ public final class WizardSession<CONTEXT> {
     myCurrentStepIndex = nextStepIndex;
     myPreviusStepIndex = oldIndex;
 
-    step.onStepEnter(myContext);
     return step;
   }
 
@@ -93,11 +102,18 @@ public final class WizardSession<CONTEXT> {
 
     WizardStep<CONTEXT> step = mySteps.get(myPreviusStepIndex);
 
-    step.onStepEnter(myContext);
-
     myPreviusStepIndex = findPrevStepIndex();
 
     return step;
+  }
+
+  @Nonnull
+  @Deprecated
+  @DeprecationInfo("Obsolete due it call #onStepEnter before UI build")
+  public WizardStep<CONTEXT> prevWithStepEnter() {
+    WizardStep<CONTEXT> prev = prev();
+    prev.onStepEnter(myContext);
+    return prev;
   }
 
   public void finish() {

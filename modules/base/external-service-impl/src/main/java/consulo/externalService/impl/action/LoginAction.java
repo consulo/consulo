@@ -16,58 +16,51 @@
 package consulo.externalService.impl.action;
 
 import com.intellij.icons.AllIcons;
-import com.intellij.ide.BrowserUtil;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.Presentation;
 import com.intellij.openapi.actionSystem.RightAlignedToolbarAction;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.util.ObjectUtil;
-import consulo.builtInServer.BuiltInServerManager;
-import consulo.externalService.ExternalServiceConfiguration;
-import consulo.externalService.impl.ExternalServiceConfigurationImpl;
-import consulo.externalService.impl.WebServiceApi;
+import consulo.externalService.impl.HubAuthorizationService;
 import consulo.localize.LocalizeValue;
 import consulo.ui.Alerts;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
+import consulo.util.concurrent.AsyncResult;
 import jakarta.inject.Provider;
-import org.apache.commons.lang3.RandomStringUtils;
 
 import javax.annotation.Nonnull;
-import java.net.InetAddress;
-import java.net.URLEncoder;
-import java.net.UnknownHostException;
-import java.nio.charset.StandardCharsets;
 
 /**
  * @author VISTALL
  * @since 01-Mar-17
  */
 public class LoginAction extends AnAction implements RightAlignedToolbarAction, DumbAware {
-  private final Provider<ExternalServiceConfiguration> myExternalServiceConfigurationProvider;
+  private final Provider<HubAuthorizationService> myHubAuthorizationServiceProvider;
 
-  public LoginAction(Provider<ExternalServiceConfiguration> externalServiceConfigurationProvider) {
-    super("Login", null, AllIcons.Actions.LoginAvator);
-    myExternalServiceConfigurationProvider = externalServiceConfigurationProvider;
+  public LoginAction(Provider<HubAuthorizationService> hubAuthorizationServiceProvider) {
+    super(LocalizeValue.localizeTODO("Login"), LocalizeValue.empty(), AllIcons.Actions.LoginAvator);
+    myHubAuthorizationServiceProvider = hubAuthorizationServiceProvider;
   }
 
   @RequiredUIAccess
   @Override
   public void update(@Nonnull AnActionEvent e) {
-    ExternalServiceConfiguration configuration = myExternalServiceConfigurationProvider.get();
+    HubAuthorizationService hubAuthorizationService = myHubAuthorizationServiceProvider.get();
 
     Presentation presentation = e.getPresentation();
 
-    String email = configuration.getEmail();
+    String email = hubAuthorizationService.getEmail();
     if (email == null) {
-      presentation.setText("Not authorized...");
+      presentation.setTextValue(LocalizeValue.localizeTODO("Not authorized..."));
       presentation.setIcon(AllIcons.Actions.LoginAvator);
     }
     else {
       presentation.setTextValue(LocalizeValue.of(email));
 
-      Image userIcon = configuration.getUserIcon();
+      Image userIcon = hubAuthorizationService.getUserIcon();
       presentation.setIcon(ObjectUtil.notNull(userIcon, AllIcons.Actions.LoginAvator));
     }
   }
@@ -75,52 +68,24 @@ public class LoginAction extends AnAction implements RightAlignedToolbarAction, 
   @RequiredUIAccess
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
-    ExternalServiceConfiguration configuration = myExternalServiceConfigurationProvider.get();
+    HubAuthorizationService hubAuthorizationService = myHubAuthorizationServiceProvider.get();
 
-    if (configuration.getEmail() != null) {
+    UIAccess uiAccess = UIAccess.current();
+    if (hubAuthorizationService.getEmail() != null) {
       Alerts.yesNo().asWarning().text(LocalizeValue.localizeTODO("Do logout?")).showAsync().doWhenDone(value -> {
         if (value) {
-          // call internal implementation
-          ((ExternalServiceConfigurationImpl)configuration).reset();
+          hubAuthorizationService.reset();
         }
       });
     }
     else {
-      callLogin();
+      AsyncResult<Void> result = myHubAuthorizationServiceProvider.get().openLinkSite(false);
+      result.doWhenDone(() -> {
+        uiAccess.give(() -> Alerts.okInfo(LocalizeValue.localizeTODO("Successfully logged as " + hubAuthorizationService.getEmail())).showAsync());
+      });
+      result.doWhenRejected(() -> {
+        uiAccess.give(() -> Alerts.okError(LocalizeValue.localizeTODO("Failed to request oauth token")).showAsync());
+      });
     }
-  }
-
-  public static void callLogin() {
-    String tokenForAuth = RandomStringUtils.randomAlphabetic(48);
-
-    int localPort = BuiltInServerManager.getInstance().getPort();
-
-    StringBuilder builder = new StringBuilder(WebServiceApi.LINK_CONSULO.buildUrl());
-    builder.append("?");
-    builder.append("token=").append(tokenForAuth).append("&");
-    builder.append("host=").append(URLEncoder.encode(getHostName(), StandardCharsets.UTF_8)).append("&");
-
-    String redirectUrl = "http://localhost:" + localPort + "/redirectAuth";
-    redirectUrl = redirectUrl.replace("&", "%26");
-    redirectUrl = redirectUrl.replace("/", "%2F");
-    redirectUrl = redirectUrl.replace(":", "%3A");
-
-    builder.append("redirect=").append(redirectUrl);
-
-    BrowserUtil.browse(builder.toString());
-  }
-
-  private static String getHostName() {
-    String hostname = "Unknown";
-
-    try {
-      InetAddress addr;
-      addr = InetAddress.getLocalHost();
-      hostname = addr.getHostName();
-    }
-    catch (UnknownHostException ignored) {
-    }
-
-    return hostname;
   }
 }

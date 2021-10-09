@@ -23,10 +23,9 @@ import com.intellij.util.ui.tree.TreeUtil;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginId;
 import consulo.container.plugin.PluginManager;
-import consulo.desktop.startup.customize.CustomizePluginTemplatesStepPanel;
+import consulo.ide.customize.CustomizeWizardContext;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import java.awt.*;
@@ -35,12 +34,10 @@ import java.util.*;
 public class CustomizePluginsStepPanel extends AbstractCustomizeWizardStep {
 
   private final MultiMap<String, PluginDescriptor> myPluginDescriptors;
-  private final CustomizePluginTemplatesStepPanel myTemplateStepPanel;
   private final CheckedTreeNode myRoot;
 
-  public CustomizePluginsStepPanel(MultiMap<String, PluginDescriptor> pluginDescriptors, @Nullable CustomizePluginTemplatesStepPanel templateStepPanel) {
+  public CustomizePluginsStepPanel(MultiMap<String, PluginDescriptor> pluginDescriptors) {
     myPluginDescriptors = pluginDescriptors;
-    myTemplateStepPanel = templateStepPanel;
     setLayout(new BorderLayout());
 
     myRoot = new CheckedTreeNode(null);
@@ -134,14 +131,10 @@ public class CustomizePluginsStepPanel extends AbstractCustomizeWizardStep {
   }
 
   @Override
-  public boolean beforeShown(boolean forward) {
-    if (myTemplateStepPanel == null) {
-      return false;
-    }
-    Set<String> enablePluginSet = myTemplateStepPanel.getEnablePluginSet();
+  public void onStepEnter(@Nonnull CustomizeWizardContext context) {
+    Set<String> enabledPluginSets = context.getEnabledPluginSets();
 
-    setupChecked(myRoot, enablePluginSet, null);
-    return false;
+    setupChecked(myRoot, enabledPluginSets, null);
   }
 
   private static void setupChecked(DefaultMutableTreeNode treeNode, Set<String> set, Boolean state) {
@@ -165,23 +158,19 @@ public class CustomizePluginsStepPanel extends AbstractCustomizeWizardStep {
   }
 
   @Nonnull
-  public Set<PluginDescriptor> getPluginsForDownload() {
-    Set<PluginDescriptor> set = new HashSet<>();
+  public Set<PluginId> getPluginsForDownload() {
+    Set<PluginId> set = new HashSet<>();
     collect(myRoot, set);
     return set;
   }
 
-  private static void collect(DefaultMutableTreeNode treeNode, Set<PluginDescriptor> set) {
+  private static void collect(DefaultMutableTreeNode treeNode, Set<PluginId> set) {
     Object userObject = treeNode.getUserObject();
     if (userObject instanceof PluginDescriptor) {
       CheckedTreeNode checkedTreeNode = (CheckedTreeNode)treeNode;
       if (checkedTreeNode.isChecked()) {
         PluginDescriptor pluginDescriptor = (PluginDescriptor)userObject;
-
-        PluginDescriptor idePlugin = PluginManager.findPlugin(pluginDescriptor.getPluginId());
-        if (idePlugin == null) {
-          set.add(pluginDescriptor);
-        }
+        set.add(pluginDescriptor.getPluginId());
       }
     }
 
@@ -190,6 +179,16 @@ public class CustomizePluginsStepPanel extends AbstractCustomizeWizardStep {
       DefaultMutableTreeNode childAt = (DefaultMutableTreeNode)treeNode.getChildAt(i);
       collect(childAt, set);
     }
+  }
+
+  @Override
+  public boolean isVisible(@Nonnull CustomizeWizardContext context) {
+    return context.getEmail() == null;
+  }
+
+  @Override
+  public void onStepLeave(@Nonnull CustomizeWizardContext context) {
+    context.setPluginsForDownload(getPluginsForDownload());
   }
 
   @Override

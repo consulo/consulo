@@ -21,6 +21,8 @@
 
     <httpRequestHandler implementation="consulo.externalService.impl.RedirectAuthHttpHandler"/>
 
+    <applicationService serviceImplementation="consulo.externalService.impl.HubAuthorizationService"/>
+
     <applicationService serviceInterface="consulo.externalService.ExternalServiceConfiguration" serviceImplementation="consulo.externalService.impl.ExternalServiceConfigurationImpl"/>
 
     <applicationConfigurable id="externalServices" displayName="External Services" instance="consulo.externalService.impl.ui.ExternalServiceConfigurable"/>

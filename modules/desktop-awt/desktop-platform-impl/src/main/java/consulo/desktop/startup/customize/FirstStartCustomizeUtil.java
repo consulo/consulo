@@ -22,7 +22,6 @@ import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.util.JDOMUtil;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.io.FileUtilRt;
-import com.intellij.util.containers.MultiMap;
 import com.intellij.util.io.DownloadUtil;
 import com.intellij.util.io.URLUtil;
 import com.intellij.util.io.UnsyncByteArrayInputStream;
@@ -87,23 +86,22 @@ public class FirstStartCustomizeUtil {
     };
 
     Application.get().executeOnPooledThread(() -> {
-      MultiMap<String, PluginDescriptor> pluginDescriptors = new MultiMap<>();
+      List<PluginDescriptor> pluginDescriptors = List.of();
       Map<String, PluginTemplate> predefinedTemplateSets = new TreeMap<>();
       try {
-        List<PluginDescriptor> ideaPluginDescriptors = RepositoryHelper.loadOnlyPluginsFromRepository(null, UpdateSettings.getInstance().getChannel(), EarlyAccessProgramManager.getInstance());
-        for (PluginDescriptor pluginDescriptor : ideaPluginDescriptors) {
-          String category = pluginDescriptor.getCategory();
-          pluginDescriptors.putValue(category, pluginDescriptor);
-        }
+        pluginDescriptors = RepositoryHelper.loadOnlyPluginsFromRepository(null, UpdateSettings.getInstance().getChannel(), EarlyAccessProgramManager.getInstance());
+
         loadPredefinedTemplateSets(predefinedTemplateSets);
       }
       catch (Exception e) {
         LOG.warn(e);
       }
 
+      final List<PluginDescriptor> finalPluginDescriptors = pluginDescriptors;
+      
       UIUtil.invokeLaterIfNeeded(() -> {
         downloadDialog.close(DialogWrapper.OK_EXIT_CODE);
-        new CustomizeIDEWizardDialog(pluginDescriptors, predefinedTemplateSets).showAsync();
+        new CustomizeIDEWizardDialog(finalPluginDescriptors, predefinedTemplateSets).showAsync();
       });
     });
     downloadDialog.showAsync();
@@ -124,7 +122,7 @@ public class FirstStartCustomizeUtil {
 
       Map<String, byte[]> datas = new HashMap<>();
       Map<String, URL> images = new HashMap<>();
-      
+
       try (ZipInputStream zipInputStream = new ZipInputStream(new FileInputStream(zipFile))) {
         ZipEntry e;
         while ((e = zipInputStream.getNextEntry()) != null) {
@@ -138,7 +136,7 @@ public class FirstStartCustomizeUtil {
             byte[] bytes = FileUtil.loadBytes(zipInputStream, (int)e.getSize());
 
             String templateName = FileUtilRt.getNameWithoutExtension(onlyFileName(e));
-            if(isSvg) {
+            if (isSvg) {
               images.put(templateName, URLUtil.getJarEntryURL(zipFile, name.replace(" ", "%20")));
             }
             else {
@@ -157,7 +155,7 @@ public class FirstStartCustomizeUtil {
           URL imageUrl = images.get(name);
 
           Image image = imageUrl == null ? Image.empty(IMAGE_SIZE) : ImageEffects.resize(Image.fromUrl(imageUrl), IMAGE_SIZE, IMAGE_SIZE);
-          
+
           readPredefinePluginSet(document, name, image, predefinedTemplateSets);
         }
         catch (Exception e) {
@@ -187,10 +185,10 @@ public class FirstStartCustomizeUtil {
     String description = rootElement.getChildTextTrim("description");
     for (Element element : rootElement.getChildren("plugin")) {
       String id = element.getAttributeValue("id");
-      if(id == null) {
+      if (id == null) {
         continue;
       }
-      
+
       pluginIds.add(id);
     }
     int row = Integer.parseInt(rootElement.getAttributeValue("row", "0"));

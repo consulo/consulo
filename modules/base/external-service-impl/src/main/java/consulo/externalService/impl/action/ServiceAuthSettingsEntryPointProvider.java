@@ -18,7 +18,7 @@ package consulo.externalService.impl.action;
 import com.intellij.ide.actions.SettingsEntryPointActionProvider;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.DataContext;
-import consulo.externalService.ExternalServiceConfiguration;
+import consulo.externalService.impl.HubAuthorizationService;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 
@@ -33,18 +33,18 @@ import java.util.List;
 public class ServiceAuthSettingsEntryPointProvider implements SettingsEntryPointActionProvider {
   private LoginAction myLoginAction;
 
-  private final Provider<ExternalServiceConfiguration> myExternalServiceConfigurationProvider;
+  private final Provider<HubAuthorizationService> myHubAuthorizationServiceProvider;
 
   @Inject
-  public ServiceAuthSettingsEntryPointProvider(Provider<ExternalServiceConfiguration> externalServiceConfigurationProvider) {
-    myExternalServiceConfigurationProvider = externalServiceConfigurationProvider;
+  public ServiceAuthSettingsEntryPointProvider(Provider<HubAuthorizationService> hubAuthorizationServiceProvider) {
+    myHubAuthorizationServiceProvider = hubAuthorizationServiceProvider;
   }
 
   @Nonnull
   @Override
   public Collection<AnAction> getUpdateActions(@Nonnull DataContext context) {
     if (myLoginAction == null) {
-      myLoginAction = new LoginAction(myExternalServiceConfigurationProvider);
+      myLoginAction = new LoginAction(myHubAuthorizationServiceProvider);
     }
     return List.of(myLoginAction);
   }

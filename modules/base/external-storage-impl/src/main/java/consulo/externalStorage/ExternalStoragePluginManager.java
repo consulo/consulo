@@ -40,6 +40,7 @@ import consulo.logging.Logger;
 import consulo.util.lang.ThreeState;
 
 import javax.annotation.Nonnull;
+import java.io.IOException;
 import java.util.*;
 
 /**
@@ -85,6 +86,18 @@ public class ExternalStoragePluginManager implements PluginActionListener {
     sendAction("/plugins/delete", pluginId, StoragePluginState.UNINSTALLED);
   }
 
+  @Nonnull
+  public static StoragePlugin[] list() {
+    StoragePlugin[] beans = new StoragePlugin[0];
+    try {
+      beans = WebServiceApiSender.doGet(WebServiceApi.STORAGE_API, "/plugins/list", StoragePlugin[].class);
+    }
+    catch (IOException e) {
+      LOG.warn(e);
+    }
+    return beans;
+  }
+
   private void sendAction(String action, PluginId pluginId, StoragePluginState state) {
     try {
       if (myExternalServiceConfiguration.getState(ExternalService.STORAGE) != ThreeState.YES) {
@@ -122,7 +135,7 @@ public class ExternalStoragePluginManager implements PluginActionListener {
       List<StoragePlugin> inPlugins = new ArrayList<>();
       for (PluginDescriptor plugin : plugins) {
         // skip platform plugins
-        if(PluginIds.isPlatformPlugin(plugin.getPluginId())) {
+        if (PluginIds.isPlatformPlugin(plugin.getPluginId())) {
           continue;
         }
 
@@ -150,7 +163,7 @@ public class ExternalStoragePluginManager implements PluginActionListener {
           case ENABLED:
           case DISABLED:
             if (plugin == null) {
-              if(InstalledPluginsState.getInstance().getInstalledPlugins().contains(pluginId)) {
+              if (InstalledPluginsState.getInstance().getInstalledPlugins().contains(pluginId)) {
                 if (bean.state == StoragePluginState.ENABLED) {
                   PluginManager.enablePlugin(pluginId.toString());
                 }

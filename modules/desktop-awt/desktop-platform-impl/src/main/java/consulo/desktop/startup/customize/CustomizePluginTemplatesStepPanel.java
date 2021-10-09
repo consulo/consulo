@@ -22,6 +22,7 @@ import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import consulo.awt.TargetAWT;
+import consulo.ide.customize.CustomizeWizardContext;
 import consulo.ui.ImageBox;
 import consulo.ui.image.Image;
 import consulo.util.lang.StringUtil;
@@ -37,17 +38,14 @@ import java.util.*;
  */
 public class CustomizePluginTemplatesStepPanel extends AbstractCustomizeWizardStep {
   @Nonnull
-  private final Map<String, PluginTemplate> myPredefinedTemplates;
-  @Nonnull
   private Map<String, JCheckBox> mySetBoxes = new HashMap<>();
 
-  public CustomizePluginTemplatesStepPanel(Map<String, PluginTemplate> predefinedTemplates) {
-    myPredefinedTemplates = predefinedTemplates;
+  public CustomizePluginTemplatesStepPanel(CustomizeWizardContext context) {
     setLayout(new BorderLayout());
 
     JPanel panel = new JPanel(new GridBagLayout());
 
-    for (Map.Entry<String, PluginTemplate> entry : predefinedTemplates.entrySet()) {
+    for (Map.Entry<String, PluginTemplate> entry : context.getPredefinedTemplateSets().entrySet()) {
       JCheckBox checkBox = new JCheckBox(entry.getKey());
       checkBox.setFont(UIUtil.getLabelFont(UIUtil.FontSize.BIGGER));
       checkBox.setOpaque(false);
@@ -93,17 +91,38 @@ public class CustomizePluginTemplatesStepPanel extends AbstractCustomizeWizardSt
     add(pane, BorderLayout.CENTER);
   }
 
-  @Nonnull
-  public Set<String> getEnablePluginSet() {
-    Set<String> set = new HashSet<>();
+  @Override
+  public void onStepEnter(@Nonnull CustomizeWizardContext context) {
     for (Map.Entry<String, JCheckBox> entry : mySetBoxes.entrySet()) {
-        if(entry.getValue().isSelected()) {
-          PluginTemplate template = myPredefinedTemplates.get(entry.getKey());
+      String setName = entry.getKey();
+      JCheckBox value = entry.getValue();
 
-          set.addAll(template.getPluginIds());
-        }
+      value.setSelected(context.getEnabledPluginSets().contains(setName));
     }
-    return set;
+  }
+
+  @Override
+  public void onStepLeave(@Nonnull CustomizeWizardContext context) {
+    Set<String> enabledPluginsSet = new HashSet<>();
+    for (Map.Entry<String, JCheckBox> entry : mySetBoxes.entrySet()) {
+      if (entry.getValue().isSelected()) {
+        PluginTemplate template = context.getPredefinedTemplateSets().get(entry.getKey());
+
+        enabledPluginsSet.add(entry.getKey());
+      }
+    }
+
+    context.setEnabledPluginSets(enabledPluginsSet);
+  }
+
+  @Override
+  public boolean isVisible(@Nonnull CustomizeWizardContext context) {
+    // no plugin templates
+    if (context.getPredefinedTemplateSets().isEmpty()) {
+      return false;
+    }
+
+    return context.getEmail() == null;
   }
 
   @Override
@@ -114,10 +133,5 @@ public class CustomizePluginTemplatesStepPanel extends AbstractCustomizeWizardSt
   @Override
   protected String getHTMLHeader() {
     return "<html><body><h2>Select predefined plugin sets</h2></body></html>";
-  }
-
-  @Override
-  protected String getHTMLFooter() {
-    return null;
   }
 }

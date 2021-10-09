@@ -104,13 +104,15 @@ public abstract class WizardBasedDialog<C> extends DialogWrapper {
     JBCardLayout layout = new JBCardLayout();
     JPanel contentPanel = new JPanel(layout);
 
-    WizardStep<C> first = myWizardSession.next();
+    WizardStep<C> first = myWizardSession.nextWithStepEnter();
 
     int currentStepIndex = myWizardSession.getCurrentStepIndex();
 
     String id = "step-" + currentStepIndex;
     contentPanel.add(first.getSwingComponent(getDisposable()), id);
 
+    first.onStepEnter(myWizardContext);
+    
     layout.show(contentPanel, id);
 
     updateButtonPresentation(contentPanel);
@@ -122,6 +124,8 @@ public abstract class WizardBasedDialog<C> extends DialogWrapper {
   private void gotoStep(JPanel rightContentPanel, WizardStep<C> step) {
     Component swingComponent = step.getSwingComponent(getDisposable());
 
+    step.onStepEnter(myWizardContext);
+    
     String id = "step-" + myWizardSession.getCurrentStepIndex();
 
     JBCardLayout layout = (JBCardLayout)rightContentPanel.getLayout();

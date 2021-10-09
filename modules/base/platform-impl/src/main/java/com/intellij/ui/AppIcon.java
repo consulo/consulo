@@ -97,11 +97,15 @@ public class AppIcon {
   }
 
   public void requestFocus(IdeFrame frame) {
-    if (frame.isActive()) {
+    requestFocus(frame.getWindow());
+  }
+
+  public void requestFocus(Window window) {
+    if (Window.getActiveWindow() == window) {
       return;
     }
 
-    TaskBar.get().requestFocus(frame.getWindow());
+    TaskBar.get().requestFocus(window);
   }
 
   @Nullable
