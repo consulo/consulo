@@ -34,6 +34,7 @@ import consulo.disposer.Disposable;
 import consulo.ide.settings.impl.ProjectStructureSettingsUtil;
 import consulo.ide.ui.FileChooserTextBoxBuilder;
 import consulo.localize.LocalizeValue;
+import consulo.platform.base.localize.ProjecLocalize;
 import consulo.preferences.internal.ConfigurableWeight;
 import consulo.roots.ui.configuration.ModulesConfigurator;
 import consulo.roots.ui.configuration.ProjectStructureElementConfigurable;
@@ -44,6 +45,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.DockLayout;
 import consulo.ui.layout.VerticalLayout;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.IOException;
 
@@ -78,9 +80,10 @@ public class ProjectConfigurable extends ProjectStructureElementConfigurable<Pro
     return mySettingsElement;
   }
 
+  @Nonnull
   @RequiredUIAccess
   @Override
-  public Component createOptionsPanel(Disposable parentUIDisposable) {
+  public Component createOptionsPanel(@Nonnull Disposable parentUIDisposable) {
     init(parentUIDisposable);
     return myLayout;
   }
@@ -89,7 +92,7 @@ public class ProjectConfigurable extends ProjectStructureElementConfigurable<Pro
   private void init(Disposable parentUIDisposable) {
     myLayout = VerticalLayout.create();
 
-    myLayout.add(HtmlLabel.create("<html><body><b>Project name:</b></body></html>"));
+    myLayout.add(HtmlLabel.create(LocalizeValue.localizeTODO("<html><body><b>Project name:</b></body></html>")));
 
     myProjectName = TextBox.create().withVisibleLength(40);
 
@@ -105,7 +108,7 @@ public class ProjectConfigurable extends ProjectStructureElementConfigurable<Pro
       getModulesConfigurator().processModuleCompilerOutputChanged(getCompilerOutputUrl());
     });
 
-    myLayout.add(HtmlLabel.create(LocalizeValue.localizeTODO(ProjectBundle.message("project.compiler.output"))));
+    myLayout.add(HtmlLabel.create(ProjecLocalize.projectCompilerOutput()));
     myLayout.add(myCompilerPathController);
   }
 

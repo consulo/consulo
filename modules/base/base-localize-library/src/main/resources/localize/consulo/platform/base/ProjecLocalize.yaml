@@ -1,0 +1,713 @@
+project.configuration.save.file.not.found:
+  text: '{0} not found'
+project.macros.cancel.button:
+  text: Cancel Project Load
+project.macros.variable.missing.error:
+  text: Value for the path variable "{0}" is not defined
+project.macros.variable.missing.title:
+  text: Undefined Path Variable
+project.macros.prompt:
+  text: 'TODO: message'
+project.macros.name.column:
+  text: Macro Name
+project.macros.path.column:
+  text: Path
+project.save.error:
+  text: |-
+    Could not save project:
+    {0}
+project.load.undefined.path.variables.error:
+  text: There are undefined path variables in project file
+project.load.undefined.path.variables.message:
+  text: There are undefined path variables in project configuration files.
+project.load.undefined.path.variables.all.needed:
+  text: All path variables should be defined
+project.load.undefined.path.variables.title:
+  text: Path Variables Not Defined
+project.load.default.error:
+  text: Error Loading Default Project
+project.load.progress:
+  text: Loading Project
+project.load.waiting.watcher:
+  text: Scanning project directories...
+project.reload.external.change.single:
+  text: |-
+    Project file {0} has been changed externally.
+    It is recommended to reload project for changes to take effect.
+project.reload.external.change.multiple:
+  text: |-
+    Project files:
+    {0}
+    have been changed externally.
+    It is recommended to reload project for changes to take effect.
+project.reload.external.change.title:
+  text: Project Files Changed
+project.reload.write.failed:
+  text: Error writing to file ''{0}''. Project may reload incorrectly.
+project.reload.write.failed.title:
+  text: Write Error
+project.reload.failed:
+  text: 'Error while loading external changes: {0}. Project will be reloaded.'
+project.reload.failed.title:
+  text: Reload Error
+project.convert.old.prompt:
+  text: |-
+    The project {0} you are about to open has an older format.
+    {1} will automatically convert it to the new format.
+    You will not be able to open it by earlier versions.
+    The old project file will be saved to {2}.
+    Proceed with conversion?
+project.convert.problems.detected:
+  text: 'During your project conversion, the following problem(s) were detected:'
+project.convert.problems.help:
+  text: |2-
+
+
+    Press 'Show Help' for more information.
+project.convert.problems.title:
+  text: Project Conversion Problems
+project.convert.problems.help.button:
+  text: Show Help
+project.load.new.version.warning:
+  text: The project {0} you are about to open has been created by a newer version of {1}. If you open it, your project is likely to be corrupted. Continue?
+project.default.settings:
+  text: Default project settings
+project.configure.path.variables.title:
+  text: Configure Path Variables
+project.configure.path.variables.description.title:
+  text: 'Description:'
+project.configure.path.variables.no.description.text:
+  text: No description
+project.convert.source.roots.not.under.project.roots.error:
+  text: There are source roots that are not under project roots.
+project.convert.javadoc.paths.error:
+  text: JavaDoc paths cannot be converted.
+project.convert.multiple.output.paths.error:
+  text: The project uses multiple output paths.
+framework.detected.info.text:
+  text: '{0} {1, choice, 1#framework is|2#frameworks are} detected in the project <a href="configure">Configure</a>'
+progress.text.searching.frameworks:
+  text: Searching for frameworks. Please wait.
+message.text.stop.searching.for.frameworks:
+  text: '{0} is currently searching for frameworks. Would you like to stop the search?'
+label.text.the.following.frameworks.are.detected:
+  text: <html><body>Several frameworks are detected in the project. Please review the following items and exclude mistakenly detected.</body></html>
+label.text.no.frameworks.detected:
+  text: No frameworks detected.
+sdk.java.name:
+  text: JDK
+sdk.java.unknown.name:
+  text: Unknown
+sdk.java.corrupt.error:
+  text: Probably SDK installed in ''{0}'' is corrupt
+sdk.java.corrupt.title:
+  text: Cannot Detect SDK Version
+sdk.java.name.template:
+  text: java version "{0}"
+sdk.table.settings:
+  text: SDK Table
+sdk.unknown.name:
+  text: Unknown SDK
+sdk.list.name.required.error:
+  text: Please specify SDK name
+sdk.list.unique.name.required.error:
+  text: Please specify a different SDK name
+button.add:
+  text: Add
+button.remove:
+  text: Remove
+sdk.paths.specify.url.button:
+  text: Specify URL...
+sdk.configure.title:
+  text: Configure SDK
+sdk.configure.save.settings.error:
+  text: Cannot Save Settings
+sdk.configure.editor.title:
+  text: SDK Editor
+sdk.configure.type.home.path:
+  text: 'Path:'
+sdk.configure.general.home.path:
+  text: 'SDK home path:'
+sdk.configure.home.invalid.error:
+  text: The selected directory is not a valid home for {0}
+sdk.configure.home.file.invalid.error:
+  text: The selected file is not a valid home for {0}
+sdk.configure.home.title:
+  text: Select Home Directory for {0}
+sdk.configure.javadoc.url.prompt:
+  text: 'Enter documentation URL:'
+sdk.configure.javadoc.url.title:
+  text: Specify Documentation URL
+project.index.scanning.files.progress:
+  text: Scanning files...
+project.index.building.exclude.roots.progress:
+  text: Building exclude roots...
+project.index.processing.module.content.progress:
+  text: Processing module "{0}" content...
+project.index.processing.module.sources.progress:
+  text: Processing module "{0}" sources...
+project.index.processing.library.sources.progress:
+  text: Processing module "{0}" library sources...
+project.index.processing.library.classes.progress:
+  text: Processing module "{0}" library classes...
+project.root.module.source:
+  text: <Module source>
+project.language.level.reload.prompt:
+  text: |-
+    Language level changes will take effect on project reload.
+    Would you like to reload project "{0}" now?
+project.language.level.reload.title:
+  text: Language Level Changed
+library.global.settings:
+  text: Global libraries
+module.paths.title:
+  text: Sources
+module.paths.output.title:
+  text: Select Output Path
+module.paths.test.output.title:
+  text: Select Test Output Path
+module.paths.resource.output.title:
+  text: Select Resource Output Path
+module.paths.exclude.output.checkbox:
+  text: Exclude output paths
+module.paths.output.label:
+  text: 'Output path:'
+module.paths.test.output.label:
+  text: 'Test output path:'
+module.paths.resource.output.label:
+  text: 'Resource output path:'
+module.paths.test.resource.output.label:
+  text: 'Test Resource output path:'
+module.paths.searching.source.roots.progress:
+  text: Searching for source roots in {0}
+module.paths.searching.source.roots.title:
+  text: Adding Source Roots
+module.paths.add.content.action:
+  text: Add _Content Root
+module.paths.add.content.action.description:
+  text: Add content root to the module
+module.paths.add.content.title:
+  text: Select content root directory
+module.paths.add.content.prompt:
+  text: Content root is a directory containing all files related to this module
+module.paths.add.content.already.exists.error:
+  text: Content root "{0}" already exists
+module.paths.add.content.intersect.error:
+  text: |-
+    Content root being added "{0}"
+    is located below existing content root "{1}".
+    Content entries should not intersect.
+module.paths.add.content.dominate.error:
+  text: |-
+    Content root being added "{0}"
+    dominates existing content root "{1}".
+    Content entries should not intersect.
+module.paths.add.content.duplicate.error:
+  text: |-
+    Content root "{0}" already defined for module "{1}".
+    Two modules in a project cannot share the same content root.
+module.paths.validation.duplicate.content.error:
+  text: |-
+    Content root "{0}" is defined for modules "{1}" and "{2}".
+    Two modules in a project cannot share the same content root.
+module.paths.validation.duplicate.source.root.error:
+  text: |-
+    Module "{0}"
+    must not contain source root "{1}".
+    The root already belongs to module "{2}"
+module.paths.validation.source.root.belongs.to.another.module.error:
+  text: |-
+    Source root "{0}"
+    cannot be defined in module "{1}" because it belongs to content of nested module "{2}"
+module.paths.remove.content.prompt:
+  text: Remove content root "{0}"?
+module.paths.remove.content.title:
+  text: Remove Content Root
+module.paths.empty.node:
+  text: <empty>
+module.paths.sources.group:
+  text: Source Folders
+module.paths.resources.group:
+  text: Resource Folders
+module.paths.test.sources.group:
+  text: Test Source Folders
+module.paths.test.resources.group:
+  text: Test Resource Folders
+module.paths.excluded.group:
+  text: Excluded Folders
+module.paths.remove.content.tooltip:
+  text: Remove Content Entry
+module.paths.unmark.0.tooltip:
+  text: Unmark {0}
+module.paths.include.excluded.tooltip:
+  text: Include
+module.paths.remove.tooltip:
+  text: Remove
+module.paths.properties.tooltip:
+  text: Properties
+module.paths.add.properties.title:
+  text: Add Property
+module.paths.add.properties.desc:
+  text: Choose Property
+module.dependencies.title:
+  text: Dependencies
+module.dependencies.caption:
+  text: Check modules this module depends on
+module.javadoc.title:
+  text: JavaDoc
+module.javadoc.add.path.button:
+  text: '&Add Path...'
+module.javadoc.add.url.button:
+  text: Add JavaDoc URL...
+module.javadoc.remove.button:
+  text: '&Remove'
+module.javadoc.add.path.title:
+  text: Add Path To JavaDoc
+module.javadoc.add.path.prompt:
+  text: Select jar/zip files or directories in which module javadoc documentation is located
+sdk.combo.box.item:
+  text: <No SDK>
+module.libraries.javadoc.url.button:
+  text: Specify Documentation &URL...
+module.libraries.attach.sources.button:
+  text: Attach &Sources...
+module.libraries.attach.sources.immediately.button:
+  text: Attach &Sources
+module.libraries.attach.more.button:
+  text: Attach &More...
+attach.annotations.button:
+  text: Attach Anno&tations...
+module.libraries.add.button:
+  text: '&Add Library...'
+button.text.attach.files:
+  text: Attach &Files or Directories...
+library.attach.files.action:
+  text: Attach Files or Directories
+library.attach.files.to.library.action:
+  text: Attach Files or Directories to Library ''{0}''
+library.attach.files.description:
+  text: Select files or directories in which library classes, sources and documentation are located
+library.sources.not.found:
+  text: Sources not found
+library.sources.not.attached:
+  text: Sources not attached
+library.attach.sources.action:
+  text: Attach Sources
+library.attach.sources.action.busy.text:
+  text: Attaching...
+library.attach.sources.description:
+  text: Select jar/zip files or directories in which library sources are located
+module.sdk.not.defined:
+  text: Module SDK is not defined
+module.sdk.setup:
+  text: Setup SDK
+module.module.language.level:
+  text: '&Language level:'
+module.module.language.level.comment:
+  text: (effective on project reload)
+module.circular.dependency.warning.short:
+  text: There is circular dependency between modules {0}
+module.circular.dependency.warning.description:
+  text: <html><b>There are circular dependencies between modules:</b> {0}</html>
+module.add.error.message:
+  text: 'Error adding module to project: {0}'
+module.add.error.title:
+  text: Add Module
+module.add.action:
+  text: Add
+module.remove.action:
+  text: Remove
+module.remove.last.confirmation:
+  text: |-
+    Are you sure you want to remove the only module from this project?
+    No files will be deleted on disk.
+module.remove.confirmation:
+  text: |-
+    Remove module ''{0}'' from the project?
+    No files will be deleted on disk.
+module.remove.confirmation.title:
+  text: Remove Module
+module.classpath.button.edit:
+  text: Ed&it...
+module.libraries.include.all.button:
+  text: Include All
+module.libraries.exclude.all.button:
+  text: Exclude All
+modules.order.export.title:
+  text: Order/Export
+modules.classpath.title:
+  text: Dependencies
+modules.order.export.export.column:
+  text: Export
+modules.order.export.scope.column:
+  text: Scope
+module.classpath.button.move.up:
+  text: Move Up
+module.classpath.button.move.down:
+  text: Move Down
+module.remove.confirmation.prompt:
+  text: |-
+    Remove {1, choice, 1#Module|2#Modules} {0} from the project?
+    No files will be deleted.
+module.remove.command:
+  text: Detach module from project
+module.new.action:
+  text: New Module
+module.new.action.description:
+  text: Add new module to the project
+module.toggle.excluded.action:
+  text: Excluded
+module.toggle.excluded.action.description:
+  text: Include/Exclude directory from module
+module.toggle.test.sources.action:
+  text: Test Sources
+module.toggle.resources.action:
+  text: Resources
+module.toggle.sources.action:
+  text: Sources
+module.toggle.web.resources.action:
+  text: Web Resources
+module.toggle.test.resources.action:
+  text: Test Resources
+module.toggle.0.action.description:
+  text: Mark directory as a {0}
+library.binaries.node:
+  text: Binaries
+library.javadocs.node:
+  text: Documentation
+library.empty.item:
+  text: <empty library>
+library.name.not.specified.error:
+  text: Please enter library name
+library.name.not.specified.title:
+  text: Library Name Not Specified
+library.name.already.exists.error:
+  text: Library "{0}" already exists
+library.name.already.exists.title:
+  text: Library Already Exists
+classpath.add.new.library.action:
+  text: New Library...
+classpath.add.simple.module.library.action:
+  text: Files or directories...
+classpath.add.library.action:
+  text: Library...
+classpath.add.module.dependency.action:
+  text: Module Dependency...
+classpath.chooser.title.add.module.dependency:
+  text: Choose Modules
+classpath.chooser.description.add.module.dependency:
+  text: 'Select the modules the current module should depend on:'
+classpath.title.adding.dependency:
+  text: Adding Dependency
+classpath.message.library.already.added:
+  text: Library ''{0}'' already added to this module
+message.no.module.dependency.candidates:
+  text: Found no modules to depend on
+library.configure.title:
+  text: Configure Library
+library.configure.module.title:
+  text: Configure Module Library
+library.configure.project.title:
+  text: Configure Project Libraries
+library.configure.global.title:
+  text: Configure Global Libraries
+library.remove.action:
+  text: Remove
+library.root.node:
+  text: Root
+library.sources.node:
+  text: Sources
+project.order.entry.project:
+  text: <Project>
+unknown.sdk:
+  text: Unknown SDK
+library.empty.library.item:
+  text: Empty Library
+module.already.exists.error:
+  text: Module ''{0}'' already exists in the project.
+module.cannot.load.error:
+  text: |-
+    Cannot load module ''{0}'':
+    {1}
+module.remove.from.project.confirmation:
+  text: Would you like to remove module ''{0}'' from the project?
+element.kind.name.module:
+  text: module
+module.dir.does.not.exist.error:
+  text: Module dir ''{0}'' does not exist
+libraries.node.text.ide:
+  text: Libraries contain classes that add up various functionality to your applications. Libraries also include source files and JavaDocs that can help you develop your projects.<br><br>IntelliJ IDEA uses libraries to assist you with code completion, validation, error highlighting, etc.<br><br>Global libraries are referenced through the entire project and can be used from all modules. Also they are available to all projects create locally on your computer.<br><br>Note that Global libraries are not available to anybody you share your project with. If you are sharing project with your team, please use Project libraries instead.<br><br>Expand the node and select child items to manage Global libraries. <br><br> To attach a library to a module, select that module, click the Dependencies tab, click Add and specify the library location.
+libraries.node.text.project:
+  text: Libraries contain classes that add up various functionality to your applications. Libraries also include source files and JavaDocs that can help you develop your projects.<br><br>IntelliJ IDEA uses libraries to assist you with code completion, validation, error highlighting, etc.<br><br>Project libraries are referenced through the entire project and can be used from all modules. Also they are available to everybody you share the project with.<br><br>Expand the node and select child items to manage Project libraries.<br><br> To attach a library to a module, select that module, click the Dependencies tab, click Add and specify the library location.
+libraries.node.text.module:
+  text: Libraries contain classes that add up various functionality to your applications. Libraries also include source files and JavaDocs that can help you develop your projects.<br><br>IntelliJ IDEA uses libraries to assist you with code completion, validation, error highlighting, etc.<br><br>Module libraries are referenced only from the module they are attached to. Expand the node and select child items to manage Module libraries.<br><br> To attach a library to a module, select that module, click the Dependencies tab, click Add and specify the library location.
+global.bundles.display.name:
+  text: SDKs/Bundles/Tools
+global.bundles.empty.text:
+  text: Select an bundle to view or edit its details here
+add.action.name:
+  text: Add new ...
+add.new.global.library.text:
+  text: New Global Library
+add.new.project.library.text:
+  text: New Project Library
+project.roots.display.name:
+  text: Modules
+project.settings.display.name:
+  text: Project Structure
+empty.module.selection.string:
+  text: Select a module to view or edit its details here
+copy.module.dialog.title:
+  text: Copy Module
+enter.module.copy.name.error.message:
+  text: Enter module copy name
+module.0.already.exists.error.message:
+  text: Module ''{0}'' already exists
+path.0.is.invalid.error.message:
+  text: Path ''{0}'' is invalid
+project.inherit.compile.output.path:
+  text: Inherit project compile output path
+project.module.compile.output.path:
+  text: Use module compile output path
+project.compiler.output:
+  text: '<html><b>Project compiler output:</b><br>This path is used to store all project compilation results. <br>A directory corresponding to each module is created under this path. <br>This directory contains two subdirectories: Production and Test for production code and test sources, respectively.<br>A module specific compiler output path can be configured for each of the modules as required</html>'
+find.usages.action.text:
+  text: Find Usages
+dependencies.used.in.popup.title:
+  text: Used in
+classpath.panel.analyze:
+  text: Analyze
+classpath.panel.navigate.action.text:
+  text: Navigate
+output.tab.title:
+  text: Output
+project.roots.module.banner.text:
+  text: Module ''{0}''
+global.library.display.name:
+  text: Global {0, choice, 1#Library|2#Libraries}
+project.library.display.name:
+  text: Project {0, choice, 1#Library|2#Libraries}
+module.library.display.name:
+  text: Module {0, choice, 1#Library|2#Libraries}
+project.roots.library.banner.text:
+  text: '{1} ''''{0}'''''
+project.roots.project.banner.text:
+  text: General Settings for Project ''{0}''
+set.up.jdk.title:
+  text: Set up SDK
+module.group.banner.text:
+  text: Module group ''{0}''
+sdk.banner.text:
+  text: '{0} ''''{1}'''''
+project.roots.module.groups.text:
+  text: Module groups are used to logically organize project modules.
+rename.message.prefix.scope:
+  text: Scope
+rename.scope.title:
+  text: Rename scope.
+rename.message.prefix.module:
+  text: Module
+rename.module.title:
+  text: Rename module
+project.roots.plain.mode.action.text.disabled:
+  text: Hide Module Groups
+project.roots.plain.mode.action.text.enabled:
+  text: Show Module Groups
+project.roots.tooltip.library.has.broken.paths:
+  text: Library ''{0}'' has broken {1, choice, 1#path|2#paths}.
+project.roots.error.message.invalid.roots:
+  text: invalid {0} {1, choice, 1#root|2#roots}
+choose.modules.dialog.title:
+  text: Choose Modules
+choose.modules.dialog.description:
+  text: Library ''{0}'' will be added to the selected modules.
+project.roots.javadoc.tab.description:
+  text: <html>Manage external JavaDocs attached to this module. External JavaDoc override JavaDoc annotations you might have in your module.</html>
+project.roots.output.compiler.title:
+  text: Compiler output
+project.roots.module.jdk.problem.message:
+  text: Module SDK is not defined.
+project.roots.module.duplicate.name.message:
+  text: duplicate module name
+project.roots.library.problem.message:
+  text: invalid item ''{0}'' in the dependencies list
+project.roots.project.display.name:
+  text: Project
+sdk.configuration.exception:
+  text: SDK ''{0}'' is invalid.
+project.roots.project.jdk.inherited:
+  text: Project SDK
+add.new.header.text:
+  text: Add
+add.new.module.text.full:
+  text: Module
+project.roots.replace.library.entry.message:
+  text: Do you really want to replace old library ''{0}''
+project.roots.replace.library.entry.title:
+  text: Library already added
+project.roots.classpath.format.label:
+  text: 'Dependencies storage format:'
+external.annotations.root.chooser.title:
+  text: Select external annotations root for {0}
+external.annotations.root.chooser.description:
+  text: External annotations would be saved in appropriate folder
+external.annotation.prompt:
+  text: External annotation prompt
+external.annotations.suggestion.message:
+  text: <html><body>If you do not want annotations in your code you may use external storage.<br> To configure external annotations please specify root directory where files with annotations would be placed</body></html>
+sdk.configure.annotations.tab:
+  text: Annotations
+project.roots.path.tab.title:
+  text: Compiler Paths
+project.roots.external.annotations.tab.title:
+  text: External Annotations
+project.roots.external.annotations.description:
+  text: <html>Manage external annotations attached to this module.</html>
+add.external.annotations.path.title:
+  text: Add path to external annotations
+add.external.annotations.path.description:
+  text: Select path in which external annotations for module sources is located
+dialog.title.packaging.choose.library:
+  text: Choose Library
+dialog.title.packaging.choose.module:
+  text: Choose Module
+action.name.facet.navigate:
+  text: Navigate
+error.message.unknown.facet.type.0:
+  text: 'Unknown facet type: ''''{0}'''''
+error.message.cannot.load.facet.condiguration.0:
+  text: 'Cannot load facet condiguration: {0}'
+error.message.facet.type.isn.t.specified:
+  text: Facet type isn''t specified
+error.message.cannot.find.underlying.facet.type.for.0:
+  text: Cannot find underlying facet type for ''{0}''
+error.message.0.facet.must.be.placed.under.1.facet:
+  text: '{0} facet must be placed under {1} facet'
+error.message.0.cannot.be.placed.under.1:
+  text: '{0} cannot be placed under {1}'
+error.message.0.facets.are.not.allowed.in.1:
+  text: '{0} facets are not allowed in {1}'
+button.text.remove.selected:
+  text: Remove Selected
+button.text.ignore.selected:
+  text: Ignore Selected
+button.text.keep.all:
+  text: Keep All
+confirmation.message.would.you.like.to.ignore.facet:
+  text: Would you like to ignore facet ''{0}'' from module ''{1}''?
+element.kind.name.facet:
+  text: facet
+error.message.configuration.cannot.load:
+  text: Cannot load
+label.text.0.cannot.be.loaded.remove:
+  text: '{0} cannot be loaded. You can remove them from the project (no files will be deleted).'
+label.text.0.cannot.be.loaded.ignore:
+  text: '{0} cannot be loaded. You can mark them as ignored to suppress this error notification.'
+display.name.artifacts:
+  text: Artifacts
+banner.slogan.artifact.0:
+  text: Artifact ''{0}''
+artifacts.add.copy.action:
+  text: Add
+label.text.output.directory:
+  text: 'Output directory:'
+checkbox.text.build.on.make:
+  text: '&Build on make'
+action.name.remove.packaging.element:
+  text: Remove
+action.description.remove.packaging.elements:
+  text: Remove Selected Elements
+artifacts.create.action:
+  text: Create {0}
+action.name.extract.artifact:
+  text: Extract Artifact...
+label.text.specify.artifact.name:
+  text: 'Specify artifact &name:'
+dialog.title.extract.artifact:
+  text: Extract Artifact
+action.name.inline.artifact:
+  text: Inline Artifact
+action.name.rename.packaging.element:
+  text: Rename
+drag.n.drop.text.0.packaging.elements:
+  text: '{0} elements'
+artifact.source.items.tree.tooltip:
+  text: <html>Double-click on element to put into default location<br>Drag-and-drop element to add into the desired location<br>More actions are available in the popup menu</html>
+module.type.empty.name:
+  text: Empty Project
+module.type.empty.description:
+  text: Dialog Project Structure will open to help you build the project structure
+project.import.reuse.current.project.checkbox.name:
+  text: Import into &current project
+project.new.wizard.progress.title:
+  text: Initialization ...
+project.new.wizard.from.scratch.title:
+  text: Create {0} from &scratch
+project.new.wizard.from.scratch.description:
+  text: Create new {0} {1}
+project.new.wizard.import.title:
+  text: Import {0} from external &model
+project.new.wizard.import.description:
+  text: <html>Create {0} {1} from external model ({2})</html>
+project.new.wizard.from.existent.sources.title:
+  text: Create {0} from &existing sources
+project.new.wizard.from.existent.sources.description:
+  text: <html>Create {0} {1} structure over existing sources</html>
+project.new.wizard.from.template.title:
+  text: Create {0} from &template
+project.new.wizard.from.template.description:
+  text: <html>Create {0} with pre-defined support for your favourite framework/technology</html>
+project.new.wizard.from.template.error:
+  text: '{0} type not selected'
+choose.module.home:
+  text: Choose Module Home Dir
+project.new.wizard.module.name.title:
+  text: 'Module na&me:'
+project.new.wizard.module.root.title:
+  text: 'Content &root:'
+project.new.wizard.module.file.title:
+  text: 'Mod&ule file location:'
+label.text.please.select.desired.technologies:
+  text: Please select the desired technologies.
+label.text.framework.support.description:
+  text: This will download all needed libraries and create Facets in project configuration.
+file.chooser.directory.for.downloaded.libraries.title:
+  text: Directory for Downloaded Libraries
+file.chooser.directory.for.downloaded.libraries.description:
+  text: Downloaded libraries will be copied to selected directory
+dialog.title.library.downloading.settings:
+  text: Library Downloading Settings
+combobox.item.global.library:
+  text: Global Library
+combobox.item.project.library:
+  text: Project Library
+combobox.item.module.library:
+  text: Module Library
+dialog.title.add.frameworks.support:
+  text: Add Frameworks Support
+dialog.title.add.framework.0.support:
+  text: Add {0} Support
+warning.message.some.required.libraries.wasn.t.downloaded:
+  text: Some required library wasn't downloaded. Do you want to proceed without it?
+project.new.wizard.module.content.root.chooser.title:
+  text: Select module content root
+project.new.wizard.module.content.root.chooser.description:
+  text: Selected directory will be marked as module content root
+project.new.wizard.module.file.chooser.title:
+  text: Select module file parent directory
+project.new.wizard.module.file.description:
+  text: Module .iml file would be placed in selected directory
+project.new.wizard.select.type.label:
+  text: Select type
+project.new.wizard.description.title:
+  text: Description
+external.annotations.in.code.option:
+  text: Add in &code
+external.annotations.external.option:
+  text: Add &externally
+project.new.wizard.import.footnote:
+  text: Import from external model is available from New Project Wizard only
+loading.components.for:
+  text: Loading components for ''{0}''...
+library.docs.node:
+  text: Documentation

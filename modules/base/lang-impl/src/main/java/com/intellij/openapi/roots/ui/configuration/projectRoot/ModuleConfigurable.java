@@ -124,6 +124,7 @@ public class ModuleConfigurable extends ProjectStructureElementConfigurable<Modu
     group.add(new NewLayerAction(moduleEditor, true));
 
     ActionToolbar actionToolbar = ActionManager.getInstance().createActionToolbar(ActionPlaces.UNKNOWN, group, true);
+    actionToolbar.setTargetComponent(panel);
     JComponent toolbarComponent = actionToolbar.getComponent();
     toolbarComponent.setBorder(JBUI.Borders.empty());
 
