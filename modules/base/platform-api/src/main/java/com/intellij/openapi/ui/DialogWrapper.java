@@ -1154,7 +1154,6 @@ public abstract class DialogWrapper {
    * @return dimension service key
    */
   @Nullable
-  @NonNls
   protected String getDimensionServiceKey() {
     return null;
   }

@@ -55,7 +55,8 @@ import java.util.List;
  * @author Konstantin Bulenkov
  */
 public class DarculaLaf extends BaseLookAndFeel {
-  public static final String NAME = "Darcula";
+  public static final String NAME = "Dark";
+
   BasicLookAndFeel base;
 
   public DarculaLaf() {

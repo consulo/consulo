@@ -22,6 +22,8 @@ import com.intellij.openapi.keymap.KeymapManager;
 import com.intellij.openapi.keymap.ex.KeymapManagerEx;
 import com.intellij.openapi.keymap.impl.DefaultKeymap;
 import com.intellij.openapi.ui.VerticalFlowLayout;
+import consulo.ide.customize.CustomizeWizardContext;
+
 import javax.annotation.Nonnull;
 
 import javax.swing.*;
@@ -95,6 +97,11 @@ public class CustomizeKeyboardSchemeStepPanel extends AbstractCustomizeWizardSte
         keymapManager.setActiveKeymap(keymap);
       }
     }
+  }
+
+  @Override
+  public boolean isVisible(@Nonnull CustomizeWizardContext context) {
+    return context.getEmail() == null;
   }
 
   @Override

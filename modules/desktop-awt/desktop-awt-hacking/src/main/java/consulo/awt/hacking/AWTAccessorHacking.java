@@ -34,6 +34,11 @@ public class AWTAccessorHacking {
     return AWTAccessor.getComponentAccessor().getPeer(component);
   }
 
+  public static Thread getEventQueueThread() {
+    EventQueue eventQueue = Toolkit.getDefaultToolkit().getSystemEventQueue();
+    return AWTAccessor.getEventQueueAccessor().getDispatchThread(eventQueue);
+  }
+
   public static int getExtendedStateFromPeer(Frame component) {
     int extendedState = component.getExtendedState();
     ComponentPeer peer = AWTAccessor.getComponentAccessor().getPeer(component);

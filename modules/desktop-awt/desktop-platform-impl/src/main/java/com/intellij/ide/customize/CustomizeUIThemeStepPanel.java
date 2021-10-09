@@ -22,6 +22,7 @@ import com.intellij.openapi.editor.colors.EditorColorsScheme;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.util.IconUtil;
 import consulo.awt.TargetAWT;
+import consulo.ide.customize.CustomizeWizardContext;
 import consulo.ide.ui.laf.LafWithColorScheme;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.image.Image;
@@ -39,6 +40,8 @@ public class CustomizeUIThemeStepPanel extends AbstractCustomizeWizardStep {
   private static final String DARCULA = "Dark";
   private boolean myColumnMode;
   private JLabel myPreviewLabel;
+
+  private Map<String, JRadioButton> myLafState = new LinkedHashMap<>();
   private Map<String, Image> myLafNames = new LinkedHashMap<>();
 
   public CustomizeUIThemeStepPanel() {
@@ -70,6 +73,7 @@ public class CustomizeUIThemeStepPanel extends AbstractCustomizeWizardStep {
         radioButton.setSelected(true);
         defaultLafName = lafName;
       }
+      myLafState.put(lafName, radioButton);
       final JPanel panel = createBigButtonPanel(new BorderLayout(10, 10), radioButton, () -> applyLaf(lafName, CustomizeUIThemeStepPanel.this));
       panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
       panel.add(radioButton, BorderLayout.NORTH);
@@ -77,7 +81,7 @@ public class CustomizeUIThemeStepPanel extends AbstractCustomizeWizardStep {
         @Override
         public Dimension getPreferredSize() {
           Dimension size = super.getPreferredSize();
-          if (myColumnMode) size.width *=2;
+          if (myColumnMode) size.width *= 2;
           return size;
         }
       };
@@ -98,12 +102,19 @@ public class CustomizeUIThemeStepPanel extends AbstractCustomizeWizardStep {
   }
 
   @Override
-  public Dimension getPreferredSize() {
-    Dimension size = super.getPreferredSize();
-    size.width += 30;
-    return size;
+  public void onStepEnter(@Nonnull CustomizeWizardContext context) {
+    LookAndFeel lookAndFeel = UIManager.getLookAndFeel();
+
+    JRadioButton button = myLafState.get(lookAndFeel.getName());
+    if (button != null) {
+      button.setSelected(true);
+    }
   }
 
+  @Override
+  public boolean isVisible(@Nonnull CustomizeWizardContext context) {
+    return context.getEmail() == null;
+  }
 
   @Override
   public String getTitle() {
@@ -121,8 +132,12 @@ public class CustomizeUIThemeStepPanel extends AbstractCustomizeWizardStep {
   }
 
   private void applyLaf(String lafName, Component component) {
+    LookAndFeel lookAndFeel = UIManager.getLookAndFeel();
+
     UIManager.LookAndFeelInfo info = getLookAndFeelInfo(lafName);
-    if (info == null) return;
+    if (info == null || lookAndFeel.getName().equals(lafName)) {
+      return;
+    }
 
     LafManager.getInstance().setCurrentLookAndFeel(info);
 
@@ -144,7 +159,7 @@ public class CustomizeUIThemeStepPanel extends AbstractCustomizeWizardStep {
   @Nullable
   private static UIManager.LookAndFeelInfo getLookAndFeelInfo(@Nonnull String name) {
     for (UIManager.LookAndFeelInfo lookAndFeelInfo : LafManager.getInstance().getInstalledLookAndFeels()) {
-      if(name.equals(lookAndFeelInfo.getName())) {
+      if (name.equals(lookAndFeelInfo.getName())) {
         return lookAndFeelInfo;
       }
     }
