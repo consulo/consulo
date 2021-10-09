@@ -38,7 +38,7 @@ public class ModuleDependencyActionProvider implements AddModuleDependencyAction
   @Nonnull
   @Override
   public LocalizeValue getActionName(@Nonnull ModuleRootLayer layer) {
-    return LocalizeValue.of("Module");
+    return LocalizeValue.localizeTODO("Module");
   }
 
   @Nonnull

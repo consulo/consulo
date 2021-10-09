@@ -51,9 +51,9 @@ import java.util.function.Consumer;
 public class SandNewModuleBuilder implements NewModuleBuilder {
   @Override
   public void setupContext(@Nonnull NewModuleContext context) {
-    NewModuleContextGroup group = context.addGroup("sand", LocalizeValue.of("Sand"));
+    NewModuleContextGroup group = context.addGroup("sand", LocalizeValue.localizeTODO("Sand"));
 
-    group.add(LocalizeValue.of("Sand Example"), AllIcons.Nodes.Static, new UnzipNewModuleBuilderProcessor<NewModuleWizardContext>("/moduleTemplates/Hello.zip") {
+    group.add(LocalizeValue.localizeTODO("Sand Example"), AllIcons.Nodes.Static, new UnzipNewModuleBuilderProcessor<>("/moduleTemplates/Hello.zip") {
       @Nonnull
       @Override
       public NewModuleWizardContext createContext(boolean isNewProject) {
@@ -73,7 +73,7 @@ public class SandNewModuleBuilder implements NewModuleBuilder {
       }
     });
 
-    group.add(LocalizeValue.of("Empty"), AllIcons.FileTypes.Any_type, Integer.MAX_VALUE, new NewModuleBuilderProcessor<NewModuleWizardContext>() {
+    group.add(LocalizeValue.localizeTODO("Empty"), AllIcons.FileTypes.Any_type, Integer.MAX_VALUE, new NewModuleBuilderProcessor<>() {
       @Nonnull
       @Override
       public NewModuleWizardContext createContext(boolean isNewProject) {
@@ -89,9 +89,9 @@ public class SandNewModuleBuilder implements NewModuleBuilder {
       }
     });
 
-    NewModuleContextGroup subGroup = group.addGroup("sand-sub", LocalizeValue.of("Sand Inner"), AllIcons.Nodes.UnknownJdk);
+    NewModuleContextGroup subGroup = group.addGroup("sand-sub", LocalizeValue.localizeTODO("Sand Inner"), AllIcons.Nodes.UnknownJdk);
 
-    subGroup.add(LocalizeValue.of("Sand Hello"), AllIcons.Nodes.Project, new NewModuleBuilderProcessor<NewModuleWizardContext>() {
+    subGroup.add(LocalizeValue.localizeTODO("Sand Hello"), AllIcons.Nodes.Project, new NewModuleBuilderProcessor<>() {
       @Nonnull
       @Override
       public NewModuleWizardContext createContext(boolean isNewProject) {
@@ -100,7 +100,7 @@ public class SandNewModuleBuilder implements NewModuleBuilder {
 
       @Override
       public void buildSteps(@Nonnull Consumer<WizardStep<NewModuleWizardContext>> consumer, @Nonnull NewModuleWizardContext context) {
-        consumer.accept(new UnifiedProjectOrModuleNameStep<NewModuleWizardContext>(context) {
+        consumer.accept(new UnifiedProjectOrModuleNameStep<>(context) {
           @RequiredUIAccess
           @Override
           protected void extend(@Nonnull FormBuilder builder, Disposable uiDisposable) {
@@ -110,7 +110,7 @@ public class SandNewModuleBuilder implements NewModuleBuilder {
           }
         });
 
-        consumer.accept(new WizardStep<NewModuleWizardContext>() {
+        consumer.accept(new WizardStep<>() {
           @RequiredUIAccess
           @Nonnull
           @Override

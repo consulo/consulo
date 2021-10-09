@@ -191,11 +191,11 @@ public class AppearanceConfigurable extends SimpleConfigurable<AppearanceConfigu
     private LocalizeValue textForAntialiasingType(@Nonnull AntialiasingType type) {
       switch (type) {
         case SUBPIXEL:
-          return LocalizeValue.of("Subpixel");
+          return LocalizeValue.localizeTODO("Subpixel");
         case GREYSCALE:
-          return LocalizeValue.of("Greyscale");
+          return LocalizeValue.localizeTODO("Greyscale");
         case OFF:
-          return LocalizeValue.of("No antialiasing");
+          return LocalizeValue.localizeTODO("No antialiasing");
         default:
           throw new IllegalArgumentException(type.toString());
       }

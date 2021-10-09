@@ -26,8 +26,7 @@ import java.util.List;
  */
 public class Utils {
   private static final Logger LOG = Logger.getInstance(Utils.class);
-  @NonNls
-  public static final LocalizeValue NOTHING_HERE = LocalizeValue.of("Nothing here");
+  public static final LocalizeValue NOTHING_HERE = LocalizeValue.localizeTODO("Nothing here");
   public static final AnAction EMPTY_MENU_FILLER = new AnAction(NOTHING_HERE) {
 
     {

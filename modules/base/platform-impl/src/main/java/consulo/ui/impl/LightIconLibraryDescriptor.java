@@ -42,6 +42,6 @@ public class LightIconLibraryDescriptor implements IconLibraryDescriptor {
   @Nonnull
   @Override
   public LocalizeValue getName() {
-    return LocalizeValue.of("Light");
+    return LocalizeValue.localizeTODO("Light");
   }
 }

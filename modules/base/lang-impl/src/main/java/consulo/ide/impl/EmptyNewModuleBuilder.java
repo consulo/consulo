@@ -32,7 +32,7 @@ import javax.annotation.Nonnull;
 public class EmptyNewModuleBuilder implements NewModuleBuilder {
   @Override
   public void setupContext(@Nonnull NewModuleContext context) {
-    context.add(LocalizeValue.of("Empty"), AllIcons.FileTypes.Any_type, new NewModuleBuilderProcessor<NewModuleWizardContext>() {
+    context.add(LocalizeValue.localizeTODO("Empty"), AllIcons.FileTypes.Any_type, new NewModuleBuilderProcessor<NewModuleWizardContext>() {
       @Nonnull
       @Override
       public NewModuleWizardContext createContext(boolean isNewProject) {

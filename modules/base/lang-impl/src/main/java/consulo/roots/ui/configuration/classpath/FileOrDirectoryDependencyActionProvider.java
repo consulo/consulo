@@ -50,7 +50,7 @@ public class FileOrDirectoryDependencyActionProvider implements AddModuleDepende
   @Nonnull
   @Override
   public LocalizeValue getActionName(@Nonnull ModuleRootLayer layer) {
-    return LocalizeValue.of("File or Directory");
+    return LocalizeValue.localizeTODO("File or Directory");
   }
 
   @Nonnull

@@ -66,7 +66,7 @@ public class ProjectLibraryActionProvider implements AddModuleDependencyActionPr
   @Nonnull
   @Override
   public LocalizeValue getActionName(@Nonnull ModuleRootLayer layer) {
-    return LocalizeValue.of("Library");
+    return LocalizeValue.localizeTODO("Library");
   }
 
   @Nonnull

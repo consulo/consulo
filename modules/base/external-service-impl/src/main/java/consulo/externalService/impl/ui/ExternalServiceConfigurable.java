@@ -76,7 +76,7 @@ public class ExternalServiceConfigurable extends SimpleConfigurableByProperties 
     boolean authorized = extService.isAuthorized();
 
     VerticalLayout layout = VerticalLayout.create();
-    layout.add(DockLayout.create().left(Label.create(LocalizeValue.of("Account: "))).right(Label.create(authorized ? LocalizeValue.of(extService.getEmail()) : LocalizeValue.localizeTODO("<none>"))));
+    layout.add(DockLayout.create().left(Label.create(LocalizeValue.localizeTODO("Account: "))).right(Label.create(authorized ? LocalizeValue.of(extService.getEmail()) : LocalizeValue.localizeTODO("<none>"))));
 
     VerticalLayout servicesLayout = VerticalLayout.create();
 
