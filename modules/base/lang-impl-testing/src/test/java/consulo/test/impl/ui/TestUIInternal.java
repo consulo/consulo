@@ -148,11 +148,6 @@ public class TestUIInternal extends UIInternal {
   }
 
   @Override
-  public RadioButton _Components_radioButton(String text, boolean selected) {
-    return null;
-  }
-
-  @Override
   public Hyperlink _Components_hyperlink(String text) {
     return null;
   }

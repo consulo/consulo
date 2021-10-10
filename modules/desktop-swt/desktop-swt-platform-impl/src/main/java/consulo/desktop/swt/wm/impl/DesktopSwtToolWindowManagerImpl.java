@@ -134,7 +134,7 @@ public class DesktopSwtToolWindowManagerImpl extends ToolWindowManagerBase {
   @Nonnull
   @RequiredUIAccess
   protected Component createInitializingLabel() {
-    Label label = Label.create("Initializing...");
+    Label label = Label.create(LocalizeValue.localizeTODO("Initializing..."));
     DockLayout dock = DockLayout.create();
     dock.center(label);
     return label;

@@ -16,9 +16,10 @@
 package consulo.ui.web.internal;
 
 import com.intellij.openapi.util.Comparing;
+import consulo.localize.LocalizeValue;
 import consulo.ui.RadioButton;
-import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
 
@@ -29,20 +30,22 @@ import javax.annotation.Nonnull;
 public class WebRadioButtonImpl extends WebBooleanValueComponentBase<WebRadioButtonImpl.Vaadin> implements RadioButton {
 
   public static class Vaadin extends VaadinBooleanValueComponentBase {
-    public void setText(@Nonnull final String text) {
+    public void setText(@Nonnull final LocalizeValue text) {
       if (Comparing.equal(getState().caption, text)) {
         return;
       }
 
-      getState().caption = text;
+      getState().caption = text.getValue();
 
       markAsDirty();
     }
   }
 
-  public WebRadioButtonImpl(boolean selected, String text) {
+  private LocalizeValue myText = LocalizeValue.empty();
+
+  public WebRadioButtonImpl(boolean selected, LocalizeValue text) {
     super(selected);
-    setText(text);
+    setLabelText(text);
   }
 
   @Nonnull
@@ -53,15 +56,17 @@ public class WebRadioButtonImpl extends WebBooleanValueComponentBase<WebRadioBut
 
   @Override
   @Nonnull
-  public String getText() {
-    return getVaadinComponent().getState().caption;
+  public LocalizeValue getLabelText() {
+    return myText;
   }
 
   @RequiredUIAccess
   @Override
-  public void setText(@Nonnull final String text) {
+  public void setLabelText(@Nonnull final LocalizeValue text) {
     UIAccess.assertIsUIThread();
 
+    myText = text;
+    
     getVaadinComponent().setText(text);
   }
 }

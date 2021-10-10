@@ -165,7 +165,7 @@ public class DesktopSwtUIInternalImpl extends UIInternal {
   }
 
   @Override
-  public RadioButton _Components_radioButton(String text, boolean selected) {
+  public RadioButton _Components_radioButton(LocalizeValue text, boolean selected) {
     return new DesktopSwtRadioButtonImpl(text, selected);
   }
 

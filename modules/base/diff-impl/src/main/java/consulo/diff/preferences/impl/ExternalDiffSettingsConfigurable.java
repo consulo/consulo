@@ -22,6 +22,7 @@ import com.intellij.openapi.options.Configurable;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ide.ui.FileChooserTextBoxBuilder;
+import consulo.localize.LocalizeValue;
 import consulo.options.SimpleConfigurableByProperties;
 import consulo.platform.base.localize.DiffLocalize;
 import consulo.ui.CheckBox;
@@ -54,7 +55,7 @@ public class ExternalDiffSettingsConfigurable extends SimpleConfigurableByProper
   @Override
   protected Component createLayout(PropertyBuilder propertyBuilder) {
     myUIDisposable = Disposable.newDisposable();
-    
+
     VerticalLayout rootLayout = VerticalLayout.create();
 
     ExternalDiffSettings externalDiffSettings = myExternalDiffSettings.get();
@@ -79,7 +80,7 @@ public class ExternalDiffSettingsConfigurable extends SimpleConfigurableByProper
     propertyBuilder.add(diffParameters, externalDiffSettings::getDiffParameters, externalDiffSettings::setDiffParameters);
 
     rootLayout.add(diffPanel.build());
-    
+
     enableForFiles.addValueListener(event -> {
       diffParameters.setEnabled(enableForFiles.getValue());
       diffBox.getComponent().setEnabled(enableForFiles.getValue());
@@ -111,8 +112,8 @@ public class ExternalDiffSettingsConfigurable extends SimpleConfigurableByProper
       mergeBox.getComponent().setEnabled(enableForMerge.getValue());
     });
 
-    rootLayout.add(HtmlLabel
-                           .create("Different merge tools have different parameters. It's important to specify all necessary parameters in proper order<br> <b>%1</b> - left (Local changes)<br> <b>%2</b> - base (Current version without local changes)<br> <b>%3</b> - right (Server content)<br> <b>%4</b> - output path"));
+    rootLayout.add(HtmlLabel.create(LocalizeValue.localizeTODO(
+            "Different merge tools have different parameters. It's important to specify all necessary parameters in proper order<br> <b>%1</b> - left (Local changes)<br> <b>%2</b> - base (Current version without local changes)<br> <b>%3</b> - right (Server content)<br> <b>%4</b> - output path")));
     return rootLayout;
   }
 
@@ -121,7 +122,7 @@ public class ExternalDiffSettingsConfigurable extends SimpleConfigurableByProper
   protected void disposeUIResources(@Nonnull LayoutWrapper component) {
     super.disposeUIResources(component);
 
-    if(myUIDisposable != null) {
+    if (myUIDisposable != null) {
       Disposer.dispose(myUIDisposable);
     }
   }

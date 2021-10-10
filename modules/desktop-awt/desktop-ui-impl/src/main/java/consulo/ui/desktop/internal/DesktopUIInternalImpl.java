@@ -360,7 +360,7 @@ public class DesktopUIInternalImpl extends UIInternal {
   }
 
   @Override
-  public RadioButton _Components_radioButton(String text, boolean selected) {
+  public RadioButton _Components_radioButton(LocalizeValue text, boolean selected) {
     return new DesktopRadioButtonImpl(text, selected);
   }
 

@@ -15,24 +15,33 @@
  */
 package consulo.ui.desktop.internal;
 
+import com.intellij.ui.components.JBRadioButton;
 import consulo.awt.impl.FromSwingComponentWrapper;
-import consulo.disposer.Disposable;
+import consulo.localize.LocalizeValue;
 import consulo.ui.Component;
 import consulo.ui.RadioButton;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.desktop.internal.base.SwingComponentDelegate;
+import consulo.ui.util.MnemonicInfo;
 
 import javax.annotation.Nonnull;
-import javax.swing.*;
 
 /**
  * @author VISTALL
  * @since 14-Jun-16
  */
-class DesktopRadioButtonImpl extends SwingComponentDelegate<JRadioButton> implements RadioButton {
-  class MyJRadioButton extends JRadioButton implements FromSwingComponentWrapper {
-    MyJRadioButton(String text, boolean selected) {
-      super(text, selected);
+class DesktopRadioButtonImpl extends SwingComponentDelegate<DesktopRadioButtonImpl.MyJBRadioButton> implements RadioButton {
+  class MyJBRadioButton extends JBRadioButton implements FromSwingComponentWrapper {
+    private LocalizeValue myLabelText = LocalizeValue.empty();
+
+    @Override
+    public void updateUI() {
+      super.updateUI();
+
+      // null if called from parent object before field initialize
+      if (myLabelText != null) {
+        updateLabelText();
+      }
     }
 
     @Nonnull
@@ -40,41 +49,73 @@ class DesktopRadioButtonImpl extends SwingComponentDelegate<JRadioButton> implem
     public Component toUIComponent() {
       return DesktopRadioButtonImpl.this;
     }
+
+    public void setLabelText(LocalizeValue labelText) {
+      myLabelText = labelText;
+    }
+
+    public LocalizeValue getLabelText() {
+      return myLabelText;
+    }
+
+    private void updateLabelText() {
+      String text = myLabelText.getValue();
+
+      MnemonicInfo mnemonicInfo = MnemonicInfo.parse(text);
+      if (mnemonicInfo == null) {
+        toAWTComponent().setText(text);
+
+        setMnemonic(0);
+        setDisplayedMnemonicIndex(-1);
+      }
+      else {
+        toAWTComponent().setText(mnemonicInfo.getText());
+        setMnemonic(mnemonicInfo.getKeyCode());
+        setDisplayedMnemonicIndex(mnemonicInfo.getIndex());
+      }
+    }
   }
 
-  public DesktopRadioButtonImpl(String text, boolean selected) {
-    myComponent = new MyJRadioButton(text, selected);
-  }
-
-  @Nonnull
-  @Override
-  public Disposable addValueListener(@Nonnull ValueListener<Boolean> valueListener) {
-    DesktopValueListenerAsItemListenerImpl<Boolean> listener = new DesktopValueListenerAsItemListenerImpl<>(this, valueListener, false);
-    myComponent.addItemListener(listener);
-    return () -> myComponent.removeItemListener(listener);
+  public DesktopRadioButtonImpl(LocalizeValue textValue, boolean selected) {
+    MyJBRadioButton component = new MyJBRadioButton();
+    component.setSelected(selected);
+    initialize(component);
+    setLabelText(textValue);
+    component.addActionListener(e -> fireListeners());
   }
 
   @Nonnull
   @Override
   public Boolean getValue() {
-    return myComponent.isSelected();
+    return toAWTComponent().isSelected();
   }
 
   @RequiredUIAccess
   @Override
   public void setValue(@Nonnull Boolean value, boolean fireListeners) {
-    myComponent.setSelected(value);
+    toAWTComponent().setSelected(value);
+
+    if (fireListeners) {
+      fireListeners();
+    }
+  }
+
+  @SuppressWarnings("unchecked")
+  @RequiredUIAccess
+  private void fireListeners() {
+    getListenerDispatcher(ValueListener.class).valueChanged(new ValueEvent(this, toAWTComponent().isSelected()));
   }
 
   @Nonnull
   @Override
-  public String getText() {
-    return myComponent.getText();
+  public LocalizeValue getLabelText() {
+    return toAWTComponent().getLabelText();
   }
 
   @RequiredUIAccess
   @Override
-  public void setText(@Nonnull String text) {
-    myComponent.setText(text);
+  public void setLabelText(@Nonnull LocalizeValue labelText) {
+    toAWTComponent().setLabelText(labelText);
+    toAWTComponent().updateLabelText();
   }
 }

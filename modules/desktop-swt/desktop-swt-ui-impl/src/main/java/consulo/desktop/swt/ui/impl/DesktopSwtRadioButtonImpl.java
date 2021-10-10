@@ -15,6 +15,7 @@
  */
 package consulo.desktop.swt.ui.impl;
 
+import consulo.localize.LocalizeValue;
 import consulo.ui.RadioButton;
 import consulo.ui.annotation.RequiredUIAccess;
 import org.eclipse.swt.SWT;
@@ -28,10 +29,10 @@ import javax.annotation.Nonnull;
  * @since 29/04/2021
  */
 public class DesktopSwtRadioButtonImpl extends SWTComponentDelegate<Button> implements RadioButton {
-  private String myText;
+  private LocalizeValue myText;
   private boolean mySelected;
 
-  public DesktopSwtRadioButtonImpl(String text, boolean selected) {
+  public DesktopSwtRadioButtonImpl(LocalizeValue text, boolean selected) {
     myText = text;
     mySelected = selected;
   }
@@ -40,7 +41,7 @@ public class DesktopSwtRadioButtonImpl extends SWTComponentDelegate<Button> impl
   protected void initialize(Button component) {
     super.initialize(component);
 
-    component.setText(myText);
+    component.setText(myText.get());
     component.setSelection(mySelected);
   }
 
@@ -62,17 +63,17 @@ public class DesktopSwtRadioButtonImpl extends SWTComponentDelegate<Button> impl
 
   @Nonnull
   @Override
-  public String getText() {
+  public LocalizeValue getLabelText() {
     return myText;
   }
 
   @RequiredUIAccess
   @Override
-  public void setText(@Nonnull String text) {
+  public void setLabelText(@Nonnull LocalizeValue text) {
     myText = text;
 
     if(myComponent != null) {
-      myComponent.setText(text);
+      myComponent.setText(text.get());
     }
   }
 

@@ -26,6 +26,7 @@ import com.intellij.openapi.wm.ToolWindowFactory;
 import com.intellij.openapi.wm.ex.ToolWindowEx;
 import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentFactory;
+import consulo.localize.LocalizeValue;
 import consulo.ui.Label;
 import consulo.ui.annotation.RequiredUIAccess;
 
@@ -41,7 +42,7 @@ public class SandToolWindowFactory implements ToolWindowFactory {
   public void createToolWindowContent(@Nonnull Project project, @Nonnull ToolWindow toolWindow) {
     ContentFactory contentFactory = ContentFactory.getInstance();
 
-    Content content = contentFactory.createUIContent(Label.create("test"), "Test", false);
+    Content content = contentFactory.createUIContent(Label.create(LocalizeValue.localizeTODO("test")), "Test", false);
     toolWindow.getContentManager().addContent(content);
 
     ((ToolWindowEx)toolWindow).setTitleActions(new AnAction("Expand All", null, AllIcons.Actions.Expandall) {

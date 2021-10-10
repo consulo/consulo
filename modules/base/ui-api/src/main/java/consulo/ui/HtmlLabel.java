@@ -26,12 +26,6 @@ import javax.annotation.Nonnull;
  */
 public interface HtmlLabel extends Label {
   @Nonnull
-  @Deprecated
-  static HtmlLabel create(@Nonnull String html) {
-    return create(LocalizeValue.of(html));
-  }
-
-  @Nonnull
   static HtmlLabel create(@Nonnull LocalizeValue html) {
     return create(html, LabelOptions.builder().build());
   }

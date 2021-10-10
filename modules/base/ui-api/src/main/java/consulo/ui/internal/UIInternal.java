@@ -130,7 +130,10 @@ public abstract class UIInternal {
 
   public abstract <E> ListBox<E> _Components_listBox(ListModel<E> model);
 
-  public abstract RadioButton _Components_radioButton(String text, boolean selected);
+  @Nonnull
+  public RadioButton _Components_radioButton(LocalizeValue text, boolean selected) {
+    throw new UnsupportedOperationException();
+  }
 
   public Button _Components_button(LocalizeValue text) {
     throw new UnsupportedOperationException();

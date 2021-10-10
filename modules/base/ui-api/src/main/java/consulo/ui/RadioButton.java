@@ -15,6 +15,8 @@
  */
 package consulo.ui;
 
+import consulo.annotation.DeprecationInfo;
+import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.internal.UIInternal;
 
@@ -26,13 +28,27 @@ import javax.annotation.Nonnull;
  */
 public interface RadioButton extends ValueComponent<Boolean> {
   @Nonnull
+  @Deprecated
+  @DeprecationInfo("Use with LocalizeValue parameter")
   static RadioButton create(@Nonnull String text) {
     return create(text, false);
   }
 
   @Nonnull
+  @Deprecated
+  @DeprecationInfo("Use with LocalizeValue parameter")
   static RadioButton create(@Nonnull String text, boolean selected) {
-    return UIInternal.get()._Components_radioButton(text, selected);
+    return create(LocalizeValue.of(text), selected);
+  }
+
+  @Nonnull
+  static RadioButton create(@Nonnull LocalizeValue textValue) {
+    return create(textValue, false);
+  }
+
+  @Nonnull
+  static RadioButton create(@Nonnull LocalizeValue textValue, boolean selected) {
+    return UIInternal.get()._Components_radioButton(textValue, selected);
   }
 
   @Nonnull
@@ -50,10 +66,10 @@ public interface RadioButton extends ValueComponent<Boolean> {
   void setValue(@Nonnull Boolean value, boolean fireListeners);
 
   @Nonnull
-  String getText();
+  LocalizeValue getLabelText();
 
   @RequiredUIAccess
-  void setText(@Nonnull String text);
+  void setLabelText(@Nonnull LocalizeValue text);
 
   @Nonnull
   default RadioButton toGroup(ValueGroup<Boolean> group) {

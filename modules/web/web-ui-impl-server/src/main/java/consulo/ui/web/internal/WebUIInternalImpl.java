@@ -156,8 +156,9 @@ public class WebUIInternalImpl extends UIInternal {
     return new WebListBoxImpl<>(model);
   }
 
+  @Nonnull
   @Override
-  public RadioButton _Components_radioButton(String text, boolean selected) {
+  public RadioButton _Components_radioButton(LocalizeValue text, boolean selected) {
     return new WebRadioButtonImpl(selected, text);
   }
 

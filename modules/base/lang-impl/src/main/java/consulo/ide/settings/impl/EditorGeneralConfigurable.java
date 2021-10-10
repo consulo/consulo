@@ -37,16 +37,18 @@ import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import consulo.codeInspection.ui.ErrorPropertiesProvider;
+import consulo.localize.LocalizeValue;
 import consulo.options.SimpleConfigurableByProperties;
 import consulo.platform.Platform;
+import consulo.platform.base.localize.ApplicationLocalize;
 import consulo.ui.*;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.border.BorderPosition;
+import consulo.ui.border.BorderStyle;
 import consulo.ui.layout.DockLayout;
 import consulo.ui.layout.HorizontalLayout;
 import consulo.ui.layout.LabeledLayout;
 import consulo.ui.layout.VerticalLayout;
-import consulo.ui.border.BorderPosition;
-import consulo.ui.border.BorderStyle;
 import consulo.ui.util.LabeledComponents;
 import consulo.util.collection.ContainerUtil;
 
@@ -73,25 +75,25 @@ public class EditorGeneralConfigurable extends SimpleConfigurableByProperties im
 
     VerticalLayout mouseLayout = VerticalLayout.create();
 
-    CheckBox cbHonorCamelHumpsWhenSelectingByClicking = CheckBox.create(ApplicationBundle.message("checkbox.honor.camelhumps.words.settings.on.double.click"));
+    CheckBox cbHonorCamelHumpsWhenSelectingByClicking = CheckBox.create(ApplicationLocalize.checkboxHonorCamelhumpsWordsSettingsOnDoubleClick());
     mouseLayout.add(cbHonorCamelHumpsWhenSelectingByClicking);
     propertyBuilder.add(cbHonorCamelHumpsWhenSelectingByClicking, editorSettings::isMouseClickSelectionHonorsCamelWords, editorSettings::setMouseClickSelectionHonorsCamelWords);
 
     CheckBox cbEnableWheelFontChange = CheckBox.create(Platform.current().os().isMac()
-                                                       ? ApplicationBundle.message("checkbox.enable.ctrl.mousewheel.changes.font.size.macos")
-                                                       : ApplicationBundle.message("checkbox.enable.ctrl.mousewheel.changes.font.size"));
+                                                       ? ApplicationLocalize.checkboxEnableCtrlMousewheelChangesFontSizeMacos()
+                                                       : ApplicationLocalize.checkboxEnableCtrlMousewheelChangesFontSize());
     mouseLayout.add(cbEnableWheelFontChange);
     propertyBuilder.add(cbEnableWheelFontChange, editorSettings::isWheelFontChangeEnabled, editorSettings::setWheelFontChangeEnabled);
 
-    CheckBox cbEnableDnD = CheckBox.create(ApplicationBundle.message("checkbox.enable.drag.n.drop.functionality.in.editor"));
+    CheckBox cbEnableDnD = CheckBox.create(ApplicationLocalize.checkboxEnableDragNDropFunctionalityInEditor());
     mouseLayout.add(cbEnableDnD);
     propertyBuilder.add(cbEnableDnD, editorSettings::isDndEnabled, editorSettings::setDndEnabled);
 
-    layout.add(LabeledLayout.create(ApplicationBundle.message("group.advanced.mouse.usages"), mouseLayout));
+    layout.add(LabeledLayout.create(ApplicationLocalize.groupAdvancedMouseUsages(), mouseLayout));
 
     VerticalLayout scrollingLayout = VerticalLayout.create();
 
-    CheckBox smoothScrolling = CheckBox.create(ApplicationBundle.message("checkbox.smooth.scrolling"));
+    CheckBox smoothScrolling = CheckBox.create(ApplicationLocalize.checkboxSmoothScrolling());
     scrollingLayout.add(smoothScrolling);
     propertyBuilder.add(smoothScrolling, editorSettings::isSmoothScrolling, editorSettings::setSmoothScrolling);
 
@@ -172,36 +174,36 @@ public class EditorGeneralConfigurable extends SimpleConfigurableByProperties im
     propertyBuilder.add(allowPlacementCaretInsideTabs, editorSettings::isCaretInsideTabs, editorSettings::setCaretInsideTabs);
     virtualSpaceLayout.add(allowPlacementCaretInsideTabs);
 
-    CheckBox showVirtualSpacesBottom = CheckBox.create(ApplicationBundle.message("checkbox.show.virtual.space.at.file.bottom"));
+    CheckBox showVirtualSpacesBottom = CheckBox.create(ApplicationLocalize.checkboxShowVirtualSpaceAtFileBottom());
     propertyBuilder.add(showVirtualSpacesBottom, editorSettings::isAdditionalPageAtBottom, editorSettings::setAdditionalPageAtBottom);
     virtualSpaceLayout.add(showVirtualSpacesBottom);
 
-    layout.add(LabeledLayout.create(ApplicationBundle.message("group.virtual.space"), virtualSpaceLayout));
+    layout.add(LabeledLayout.create(ApplicationLocalize.groupVirtualSpace(), virtualSpaceLayout));
 
     VerticalLayout highlightCaretMovementLayout = VerticalLayout.create();
 
-    CheckBox highlightMatchedBrace = CheckBox.create(ApplicationBundle.message("checkbox.highlight.matched.brace"));
+    CheckBox highlightMatchedBrace = CheckBox.create(ApplicationLocalize.checkboxHighlightMatchedBrace());
     propertyBuilder.add(highlightMatchedBrace, () -> codeInsightSettings.HIGHLIGHT_BRACES, v -> codeInsightSettings.HIGHLIGHT_BRACES = v);
     highlightCaretMovementLayout.add(highlightMatchedBrace);
 
-    CheckBox highlightCurrentScope = CheckBox.create(ApplicationBundle.message("checkbox.highlight.current.scope"));
+    CheckBox highlightCurrentScope = CheckBox.create(ApplicationLocalize.checkboxHighlightCurrentScope());
     propertyBuilder.add(highlightCurrentScope, () -> codeInsightSettings.HIGHLIGHT_SCOPE, v -> codeInsightSettings.HIGHLIGHT_SCOPE = v);
     highlightCaretMovementLayout.add(highlightCurrentScope);
 
-    CheckBox highlightUsageAtCaret = CheckBox.create("Highlight usages of element at caret");
+    CheckBox highlightUsageAtCaret = CheckBox.create(LocalizeValue.localizeTODO("Highlight usages of element at caret"));
     propertyBuilder.add(highlightUsageAtCaret, () -> codeInsightSettings.HIGHLIGHT_IDENTIFIER_UNDER_CARET, v -> codeInsightSettings.HIGHLIGHT_IDENTIFIER_UNDER_CARET = v);
     highlightCaretMovementLayout.add(highlightUsageAtCaret);
 
-    layout.add(LabeledLayout.create(ApplicationBundle.message("group.brace.highlighting"), highlightCaretMovementLayout));
+    layout.add(LabeledLayout.create(ApplicationLocalize.groupBraceHighlighting(), highlightCaretMovementLayout));
 
     VerticalLayout formattingLayout = VerticalLayout.create();
 
-    CheckBox showNotificationAfterReformat = CheckBox.create("Show notification after reformat code action");
+    CheckBox showNotificationAfterReformat = CheckBox.create(LocalizeValue.localizeTODO("Show notification after reformat code action"));
     propertyBuilder.add(showNotificationAfterReformat, () -> editorSettings.getOptions().SHOW_NOTIFICATION_AFTER_REFORMAT_CODE_ACTION,
                         v -> editorSettings.getOptions().SHOW_NOTIFICATION_AFTER_REFORMAT_CODE_ACTION = v);
     formattingLayout.add(showNotificationAfterReformat);
 
-    CheckBox showNotificationAfterOptimizeImport = CheckBox.create("Show notification after optimize imports action");
+    CheckBox showNotificationAfterOptimizeImport = CheckBox.create(LocalizeValue.localizeTODO("Show notification after optimize imports action"));
     propertyBuilder.add(showNotificationAfterOptimizeImport, () -> editorSettings.getOptions().SHOW_NOTIFICATION_AFTER_OPTIMIZE_IMPORTS_ACTION,
                         v -> editorSettings.getOptions().SHOW_NOTIFICATION_AFTER_OPTIMIZE_IMPORTS_ACTION = v);
     formattingLayout.add(showNotificationAfterOptimizeImport);
@@ -210,15 +212,15 @@ public class EditorGeneralConfigurable extends SimpleConfigurableByProperties im
 
     VerticalLayout refactoringLayout = VerticalLayout.create();
 
-    CheckBox enableInplaceMode = CheckBox.create(ApplicationBundle.message("checkbox.rename.local.variables.inplace"));
+    CheckBox enableInplaceMode = CheckBox.create(ApplicationLocalize.checkboxRenameLocalVariablesInplace());
     propertyBuilder.add(enableInplaceMode, editorSettings::isVariableInplaceRenameEnabled, editorSettings::setVariableInplaceRenameEnabled);
     refactoringLayout.add(enableInplaceMode);
 
-    CheckBox presectOldName = CheckBox.create(ApplicationBundle.message("checkbox.rename.local.variables.preselect"));
+    CheckBox presectOldName = CheckBox.create(ApplicationLocalize.checkboxRenameLocalVariablesPreselect());
     propertyBuilder.add(enableInplaceMode, editorSettings::isPreselectRename, editorSettings::setPreselectRename);
     refactoringLayout.add(presectOldName);
 
-    layout.add(LabeledLayout.create("Refactorings", refactoringLayout));
+    layout.add(LabeledLayout.create(LocalizeValue.localizeTODO("Refactorings"), refactoringLayout));
 
     VerticalLayout richCopyLayout = VerticalLayout.create();
 
@@ -297,17 +299,17 @@ public class EditorGeneralConfigurable extends SimpleConfigurableByProperties im
     propertyBuilder.add(stripTrailingSpacesOnSave, editorSettings::getStripTrailingSpaces, editorSettings::setStripTrailingSpaces);
     otherLayout.add(LabeledComponents.leftWithRight(ApplicationBundle.message("combobox.strip.trailing.spaces.on.save"), stripTrailingSpacesOnSave));
 
-    CheckBox ensureLineFeedOnSave = CheckBox.create("Ensure line feed at file end on Save");
+    CheckBox ensureLineFeedOnSave = CheckBox.create(LocalizeValue.localizeTODO("Ensure line feed at file end on Save"));
     propertyBuilder.add(ensureLineFeedOnSave, editorSettings::isEnsureNewLineAtEOF, editorSettings::setEnsureNewLineAtEOF);
     otherLayout.add(ensureLineFeedOnSave);
 
-    CheckBox showQuickDocOnMouseMove = CheckBox.create("Show quick doc on mouse move");
+    CheckBox showQuickDocOnMouseMove = CheckBox.create(LocalizeValue.localizeTODO("Show quick doc on mouse move"));
     propertyBuilder.add(showQuickDocOnMouseMove, editorSettings::isShowQuickDocOnMouseOverElement, editorSettings::setShowQuickDocOnMouseOverElement);
 
     IntBox tooltipDelay = IntBox.create();
     tooltipDelay.setEnabled(false);
     propertyBuilder.add(tooltipDelay, editorSettings::getTooltipsDelay, editorSettings::setTooltipsDelay);
-    Label delayMs = Label.create("Delay (ms)");
+    Label delayMs = Label.create(LocalizeValue.localizeTODO("Delay (ms)"));
     delayMs.setEnabled(false);
 
     showQuickDocOnMouseMove.addValueListener(event -> {
@@ -317,7 +319,7 @@ public class EditorGeneralConfigurable extends SimpleConfigurableByProperties im
 
     otherLayout.add(DockLayout.create().left(showQuickDocOnMouseMove).right(HorizontalLayout.create(5).add(delayMs).add(tooltipDelay)));
 
-    layout.add(LabeledLayout.create("Other", otherLayout));
+    layout.add(LabeledLayout.create(LocalizeValue.localizeTODO("Other"), otherLayout));
     return layout;
   }
 
