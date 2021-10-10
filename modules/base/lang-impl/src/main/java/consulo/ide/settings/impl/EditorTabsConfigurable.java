@@ -17,6 +17,7 @@ package consulo.ide.settings.impl;
 
 import com.intellij.ide.ui.UISettings;
 import com.intellij.openapi.options.Configurable;
+import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
 import consulo.options.SimpleConfigurableByProperties;
 import consulo.platform.base.localize.ApplicationLocalize;
@@ -44,7 +45,7 @@ public class EditorTabsConfigurable extends SimpleConfigurableByProperties imple
   @RequiredUIAccess
   @Nonnull
   @Override
-  protected Component createLayout(PropertyBuilder propertyBuilder) {
+  protected Component createLayout(PropertyBuilder propertyBuilder, @Nonnull Disposable uiDisposable) {
     UISettings uiSettings = UISettings.getInstance();
 
     VerticalLayout layout = VerticalLayout.create();

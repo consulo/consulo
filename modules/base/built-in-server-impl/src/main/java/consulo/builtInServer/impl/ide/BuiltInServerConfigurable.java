@@ -16,6 +16,7 @@
 package consulo.builtInServer.impl.ide;
 
 import com.intellij.openapi.options.Configurable;
+import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
 import consulo.options.SimpleConfigurableByProperties;
 import consulo.ui.CheckBox;
@@ -47,7 +48,7 @@ public class BuiltInServerConfigurable extends SimpleConfigurableByProperties im
   @RequiredUIAccess
   @Nonnull
   @Override
-  protected Component createLayout(PropertyBuilder propertyBuilder) {
+  protected Component createLayout(PropertyBuilder propertyBuilder, Disposable uiDisposable) {
     BuiltInServerOptions options = BuiltInServerOptions.getInstance();
 
     VerticalLayout root = VerticalLayout.create();
@@ -55,11 +56,11 @@ public class BuiltInServerConfigurable extends SimpleConfigurableByProperties im
     propertyBuilder.add(portBox, () -> options.builtInServerPort, it -> options.builtInServerPort = it);
     root.add(LabeledBuilder.simple(LocalizeValue.localizeTODO("Port"), portBox));
 
-    CheckBox canAcceptExternalConnectionsBox = CheckBox.create("Can accept external connections");
+    CheckBox canAcceptExternalConnectionsBox = CheckBox.create(LocalizeValue.localizeTODO("Can accept external connections"));
     propertyBuilder.add(canAcceptExternalConnectionsBox, () -> options.builtInServerAvailableExternally, it -> options.builtInServerAvailableExternally = it);
     root.add(canAcceptExternalConnectionsBox);
 
-    CheckBox allowUnsignedRequestsBox = CheckBox.create("Allow unsigned requests");
+    CheckBox allowUnsignedRequestsBox = CheckBox.create(LocalizeValue.localizeTODO("Allow unsigned requests"));
     propertyBuilder.add(allowUnsignedRequestsBox, () -> options.allowUnsignedRequests, it -> options.allowUnsignedRequests = it);
     root.add(allowUnsignedRequestsBox);
     return root;

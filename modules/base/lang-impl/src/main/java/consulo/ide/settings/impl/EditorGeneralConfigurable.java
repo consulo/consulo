@@ -37,6 +37,7 @@ import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import consulo.codeInspection.ui.ErrorPropertiesProvider;
+import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
 import consulo.options.SimpleConfigurableByProperties;
 import consulo.platform.Platform;
@@ -65,7 +66,7 @@ public class EditorGeneralConfigurable extends SimpleConfigurableByProperties im
   @RequiredUIAccess
   @Nonnull
   @Override
-  protected Component createLayout(PropertyBuilder propertyBuilder) {
+  protected Component createLayout(PropertyBuilder propertyBuilder, @Nonnull Disposable uiDisposable) {
     EditorSettingsExternalizable editorSettings = EditorSettingsExternalizable.getInstance();
     CodeInsightSettings codeInsightSettings = CodeInsightSettings.getInstance();
     UISettings uiSettings = UISettings.getInstance();

@@ -16,6 +16,7 @@
 package consulo.sandboxPlugin.ide.coverage;
 
 import com.intellij.openapi.options.Configurable;
+import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
 import consulo.options.SimpleConfigurableByProperties;
 import consulo.ui.CheckBox;
@@ -34,7 +35,7 @@ public class SandCoverageConfigurable extends SimpleConfigurableByProperties imp
   @RequiredUIAccess
   @Nonnull
   @Override
-  protected Component createLayout(PropertyBuilder propertyBuilder) {
+  protected Component createLayout(PropertyBuilder propertyBuilder, @Nonnull Disposable uiDisposable) {
     VerticalLayout layout = VerticalLayout.create();
     layout.add(CheckBox.create(LocalizeValue.localizeTODO("Some sand option")));
     return layout;

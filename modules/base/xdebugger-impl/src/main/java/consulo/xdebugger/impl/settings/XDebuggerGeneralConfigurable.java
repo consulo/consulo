@@ -19,8 +19,10 @@ import com.intellij.openapi.options.Configurable;
 import com.intellij.xdebugger.XDebuggerBundle;
 import com.intellij.xdebugger.impl.settings.XDebuggerGeneralSettings;
 import com.intellij.xdebugger.impl.settings.XDebuggerSettingManagerImpl;
+import consulo.disposer.Disposable;
 import consulo.options.SimpleConfigurableByProperties;
-import consulo.ui.*;
+import consulo.ui.CheckBox;
+import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.VerticalLayout;
 
@@ -34,7 +36,7 @@ public class XDebuggerGeneralConfigurable extends SimpleConfigurableByProperties
   @RequiredUIAccess
   @Nonnull
   @Override
-  protected Component createLayout(PropertyBuilder propertyBuilder) {
+  protected Component createLayout(PropertyBuilder propertyBuilder, @Nonnull Disposable uiDisposable) {
     XDebuggerGeneralSettings settings = XDebuggerSettingManagerImpl.getInstanceImpl().getGeneralSettings();
 
     VerticalLayout layout = VerticalLayout.create();

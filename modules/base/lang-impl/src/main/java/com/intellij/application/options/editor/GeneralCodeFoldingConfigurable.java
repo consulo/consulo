@@ -17,9 +17,10 @@
 package com.intellij.application.options.editor;
 
 import com.intellij.codeInsight.folding.CodeFoldingSettings;
-import com.intellij.openapi.application.ApplicationBundle;
 import com.intellij.openapi.options.Configurable;
+import consulo.disposer.Disposable;
 import consulo.options.SimpleConfigurableByProperties;
+import consulo.platform.base.localize.ApplicationLocalize;
 import consulo.ui.CheckBox;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -34,24 +35,24 @@ public class GeneralCodeFoldingConfigurable extends SimpleConfigurableByProperti
   @RequiredUIAccess
   @Nonnull
   @Override
-  protected Component createLayout(PropertyBuilder propertyBuilder) {
+  protected Component createLayout(PropertyBuilder propertyBuilder, @Nonnull Disposable uiDisposable) {
     VerticalLayout verticalLayout = VerticalLayout.create();
 
     CodeFoldingSettings settings = CodeFoldingSettings.getInstance();
 
-    CheckBox fileHeaderBox = CheckBox.create(ApplicationBundle.message("checkbox.collapse.file.header"));
+    CheckBox fileHeaderBox = CheckBox.create(ApplicationLocalize.checkboxCollapseFileHeader());
     verticalLayout.add(fileHeaderBox);
     propertyBuilder.add(fileHeaderBox, () -> settings.COLLAPSE_FILE_HEADER, val -> settings.COLLAPSE_FILE_HEADER = val);
 
-    CheckBox importsBox = CheckBox.create(ApplicationBundle.message("checkbox.collapse.title.imports"));
+    CheckBox importsBox = CheckBox.create(ApplicationLocalize.checkboxCollapseTitleImports());
     verticalLayout.add(importsBox);
     propertyBuilder.add(importsBox, () -> settings.COLLAPSE_IMPORTS, val -> settings.COLLAPSE_IMPORTS = val);
 
-    CheckBox docCommentsBox = CheckBox.create(ApplicationBundle.message("checkbox.collapse.javadoc.comments"));
+    CheckBox docCommentsBox = CheckBox.create(ApplicationLocalize.checkboxCollapseJavadocComments());
     verticalLayout.add(docCommentsBox);
     propertyBuilder.add(docCommentsBox, () -> settings.COLLAPSE_DOC_COMMENTS, val -> settings.COLLAPSE_DOC_COMMENTS = val);
 
-    CheckBox methodsBox = CheckBox.create(ApplicationBundle.message("checkbox.collapse.method.bodies"));
+    CheckBox methodsBox = CheckBox.create(ApplicationLocalize.checkboxCollapseMethodBodies());
     verticalLayout.add(methodsBox);
     propertyBuilder.add(methodsBox, () -> settings.COLLAPSE_METHODS, val -> settings.COLLAPSE_METHODS = val);
 

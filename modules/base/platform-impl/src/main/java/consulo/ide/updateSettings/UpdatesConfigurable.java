@@ -16,6 +16,7 @@
 package consulo.ide.updateSettings;
 
 import com.intellij.openapi.options.Configurable;
+import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
 import consulo.options.SimpleConfigurableByProperties;
 import consulo.ui.CheckBox;
@@ -37,7 +38,7 @@ public class UpdatesConfigurable extends SimpleConfigurableByProperties implemen
   @RequiredUIAccess
   @Nonnull
   @Override
-  protected Component createLayout(PropertyBuilder propertyBuilder) {
+  protected Component createLayout(PropertyBuilder propertyBuilder, @Nonnull Disposable uiDisposable) {
     UpdateSettings updateSettings = UpdateSettings.getInstance();
 
     VerticalLayout layout = VerticalLayout.create();

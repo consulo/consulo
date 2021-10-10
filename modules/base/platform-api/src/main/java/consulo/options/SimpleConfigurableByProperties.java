@@ -93,14 +93,14 @@ public abstract class SimpleConfigurableByProperties extends SimpleConfigurable<
 
   @RequiredUIAccess
   @Nonnull
-  protected abstract Component createLayout(PropertyBuilder propertyBuilder);
+  protected abstract Component createLayout(@Nonnull PropertyBuilder propertyBuilder, @Nonnull Disposable uiDisposabl);
 
   @RequiredUIAccess
   @Nonnull
   @Override
-  protected final SimpleConfigurableByProperties.LayoutWrapper createPanel(Disposable uiDisposable) {
+  protected final SimpleConfigurableByProperties.LayoutWrapper createPanel(@Nonnull Disposable uiDisposable) {
     PropertyBuilder builder;
-    Component panel = createLayout(builder = new PropertyBuilder());
+    Component panel = createLayout(builder = new PropertyBuilder(), uiDisposable);
     myProperties = builder.myProperties;
     return new LayoutWrapper(panel);
   }

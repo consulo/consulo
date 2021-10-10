@@ -18,6 +18,7 @@ package consulo.diff.preferences.impl;
 import com.intellij.diff.impl.DiffSettingsHolder;
 import com.intellij.diff.tools.util.base.TextDiffSettingsHolder;
 import com.intellij.openapi.options.Configurable;
+import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
 import consulo.options.SimpleConfigurableByProperties;
 import consulo.ui.CheckBox;
@@ -47,7 +48,7 @@ public class DiffSettingsConfigurable extends SimpleConfigurableByProperties imp
   @RequiredUIAccess
   @Nonnull
   @Override
-  protected Component createLayout(PropertyBuilder propertyBuilder) {
+  protected Component createLayout(PropertyBuilder propertyBuilder, @Nonnull Disposable uiDisposable) {
     TextDiffSettingsHolder.TextDiffSettings textDiffSettings = TextDiffSettingsHolder.TextDiffSettings.getSettings();
     DiffSettingsHolder.DiffSettings diffSettings = DiffSettingsHolder.DiffSettings.getSettings();
 

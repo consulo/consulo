@@ -20,6 +20,7 @@ import com.intellij.internal.statistic.persistence.UsageStatisticsPersistenceCom
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.disposer.Disposable;
 import consulo.externalService.ExternalService;
 import consulo.externalService.ExternalServiceConfiguration;
 import consulo.externalService.ExternalServiceConfigurationListener;
@@ -69,7 +70,7 @@ public class ExternalServiceConfigurable extends SimpleConfigurableByProperties 
   @RequiredUIAccess
   @Nonnull
   @Override
-  protected Component createLayout(PropertyBuilder propertyBuilder) {
+  protected Component createLayout(PropertyBuilder propertyBuilder, @Nonnull Disposable uiDisposable) {
     ExternalServiceConfiguration extService = myExternalServiceConfigurationProvider.get();
     UsageStatisticsPersistenceComponent statistics = myUsageStatisticsPersistenceComponentProvider.get();
 

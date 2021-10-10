@@ -20,7 +20,6 @@ import com.intellij.openapi.diff.DiffBundle;
 import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
 import com.intellij.openapi.options.Configurable;
 import consulo.disposer.Disposable;
-import consulo.disposer.Disposer;
 import consulo.ide.ui.FileChooserTextBoxBuilder;
 import consulo.localize.LocalizeValue;
 import consulo.options.SimpleConfigurableByProperties;
@@ -43,7 +42,6 @@ import javax.annotation.Nonnull;
  */
 public class ExternalDiffSettingsConfigurable extends SimpleConfigurableByProperties implements Configurable {
   private final Provider<ExternalDiffSettings> myExternalDiffSettings;
-  private Disposable myUIDisposable;
 
   @Inject
   public ExternalDiffSettingsConfigurable(Provider<ExternalDiffSettings> externalDiffSettings) {
@@ -53,9 +51,7 @@ public class ExternalDiffSettingsConfigurable extends SimpleConfigurableByProper
   @RequiredUIAccess
   @Nonnull
   @Override
-  protected Component createLayout(PropertyBuilder propertyBuilder) {
-    myUIDisposable = Disposable.newDisposable();
-
+  protected Component createLayout(PropertyBuilder propertyBuilder, @Nonnull Disposable uiDisposable) {
     VerticalLayout rootLayout = VerticalLayout.create();
 
     ExternalDiffSettings externalDiffSettings = myExternalDiffSettings.get();
@@ -69,14 +65,14 @@ public class ExternalDiffSettingsConfigurable extends SimpleConfigurableByProper
     FileChooserTextBoxBuilder diffBoxBuilder = FileChooserTextBoxBuilder.create(null);
     diffBoxBuilder.dialogTitle(DiffBundle.message("select.external.diff.program.dialog.title"));
     diffBoxBuilder.fileChooserDescriptor(FileChooserDescriptorFactory.createSingleFileNoJarsDescriptor());
-    diffBoxBuilder.uiDisposable(myUIDisposable);
+    diffBoxBuilder.uiDisposable(uiDisposable);
 
     FileChooserTextBoxBuilder.Controller diffBox = diffBoxBuilder.build();
-    diffPanel.addLabeled("Path to executable", diffBox.getComponent());
+    diffPanel.addLabeled(LocalizeValue.localizeTODO("Path to executable"), diffBox.getComponent());
     propertyBuilder.add(diffBox::getValue, diffBox::setValue, externalDiffSettings::getDiffExePath, externalDiffSettings::setDiffExePath);
 
     TextBox diffParameters = TextBox.create();
-    diffPanel.addLabeled("Parameters", diffParameters);
+    diffPanel.addLabeled(LocalizeValue.localizeTODO("Parameters"), diffParameters);
     propertyBuilder.add(diffParameters, externalDiffSettings::getDiffParameters, externalDiffSettings::setDiffParameters);
 
     rootLayout.add(diffPanel.build());
@@ -95,14 +91,14 @@ public class ExternalDiffSettingsConfigurable extends SimpleConfigurableByProper
     FileChooserTextBoxBuilder mergeBoxBuilder = FileChooserTextBoxBuilder.create(null);
     mergeBoxBuilder.dialogTitle(DiffBundle.message("select.external.merge.program.dialog.title"));
     mergeBoxBuilder.fileChooserDescriptor(FileChooserDescriptorFactory.createSingleFileNoJarsDescriptor());
-    mergeBoxBuilder.uiDisposable(myUIDisposable);
+    mergeBoxBuilder.uiDisposable(uiDisposable);
 
     FileChooserTextBoxBuilder.Controller mergeBox = mergeBoxBuilder.build();
-    mergePanel.addLabeled("Path to executable", mergeBox.getComponent());
+    mergePanel.addLabeled(LocalizeValue.localizeTODO("Path to executable"), mergeBox.getComponent());
     propertyBuilder.add(mergeBox::getValue, mergeBox::setValue, externalDiffSettings::getMergeExePath, externalDiffSettings::setMergeExePath);
 
     TextBox mergeParameters = TextBox.create();
-    mergePanel.addLabeled("Parameters", mergeParameters);
+    mergePanel.addLabeled(LocalizeValue.localizeTODO("Parameters"), mergeParameters);
     propertyBuilder.add(mergeParameters, externalDiffSettings::getMergeParameters, externalDiffSettings::setMergeParameters);
 
     rootLayout.add(mergePanel.build());
@@ -115,15 +111,5 @@ public class ExternalDiffSettingsConfigurable extends SimpleConfigurableByProper
     rootLayout.add(HtmlLabel.create(LocalizeValue.localizeTODO(
             "Different merge tools have different parameters. It's important to specify all necessary parameters in proper order<br> <b>%1</b> - left (Local changes)<br> <b>%2</b> - base (Current version without local changes)<br> <b>%3</b> - right (Server content)<br> <b>%4</b> - output path")));
     return rootLayout;
-  }
-
-  @RequiredUIAccess
-  @Override
-  protected void disposeUIResources(@Nonnull LayoutWrapper component) {
-    super.disposeUIResources(component);
-
-    if (myUIDisposable != null) {
-      Disposer.dispose(myUIDisposable);
-    }
   }
 }
