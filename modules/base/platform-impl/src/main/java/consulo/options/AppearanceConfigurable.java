@@ -23,6 +23,7 @@ import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.util.NotNullComputable;
 import com.intellij.util.ui.UIUtil;
+import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.localize.IdeLocalize;
 import consulo.platform.base.localize.KeyMapLocalize;
@@ -211,7 +212,7 @@ public class AppearanceConfigurable extends SimpleConfigurable<AppearanceConfigu
   @RequiredUIAccess
   @Nonnull
   @Override
-  protected LayoutImpl createPanel() {
+  protected LayoutImpl createPanel(Disposable uiDisposable) {
     return new LayoutImpl();
   }
 

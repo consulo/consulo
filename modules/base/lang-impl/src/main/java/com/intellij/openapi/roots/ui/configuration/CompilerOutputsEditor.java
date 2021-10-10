@@ -28,6 +28,7 @@ import consulo.compiler.ModuleCompilerPathsManager;
 import consulo.disposer.Disposable;
 import consulo.ide.ui.FileChooserTextBoxBuilder;
 import consulo.localize.LocalizeValue;
+import consulo.platform.base.localize.ProjectLocalize;
 import consulo.roots.ContentFolderScopes;
 import consulo.roots.ContentFolderTypeProvider;
 import consulo.roots.ui.configuration.ModulesConfigurator;
@@ -72,8 +73,8 @@ public class CompilerOutputsEditor extends ModuleElementsEditor {
   @Override
   public Component createUIComponentImpl(@Nonnull Disposable parentUIDisposable) {
     ModuleCompilerPathsManager moduleCompilerPathsManager = ModuleCompilerPathsManager.getInstance(getModule());
-    myInheritCompilerOutput = RadioButton.create(ProjectBundle.message("project.inherit.compile.output.path"));
-    myPerModuleCompilerOutput = RadioButton.create(ProjectBundle.message("project.module.compile.output.path"));
+    myInheritCompilerOutput = RadioButton.create(ProjectLocalize.projectInheritCompileOutputPath());
+    myPerModuleCompilerOutput = RadioButton.create(ProjectLocalize.projectModuleCompileOutputPath());
 
     ValueGroups.boolGroup().add(myInheritCompilerOutput).add(myPerModuleCompilerOutput);
 

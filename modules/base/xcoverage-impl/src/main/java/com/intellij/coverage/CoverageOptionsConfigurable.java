@@ -5,6 +5,8 @@ import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.options.SearchableConfigurable;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.NotNullComputable;
+import consulo.disposer.Disposable;
+import consulo.localize.LocalizeValue;
 import consulo.options.SimpleConfigurable;
 import consulo.ui.CheckBox;
 import consulo.ui.Component;
@@ -26,6 +28,8 @@ import java.util.List;
  */
 public class CoverageOptionsConfigurable extends SimpleConfigurable<CoverageOptionsConfigurable.Panel> implements SearchableConfigurable, Configurable.NoScroll {
   public static class Panel implements NotNullComputable<Component> {
+    private final Disposable myUiDisposable;
+
     private RadioButton myShowOptionsRB;
     private RadioButton myReplaceRB;
     private RadioButton myAddRB;
@@ -38,32 +42,34 @@ public class CoverageOptionsConfigurable extends SimpleConfigurable<CoverageOpti
     private List<Configurable> myChildren = new ArrayList<>();
 
     @RequiredUIAccess
-    Panel(Project project) {
+    Panel(Project project, Disposable uiDisposable) {
+      myUiDisposable = uiDisposable;
+      
       myWholePanel = VerticalLayout.create();
 
       ValueGroup<Boolean> group = ValueGroup.createBool();
       VerticalLayout primaryGroup = VerticalLayout.create();
 
-      myShowOptionsRB = RadioButton.create("Show options before applying coverage to the editor");
+      myShowOptionsRB = RadioButton.create(LocalizeValue.localizeTODO("Show options before applying coverage to the editor"));
       primaryGroup.add(myShowOptionsRB);
       group.add(myShowOptionsRB);
 
-      myDoNotApplyRB = RadioButton.create("Do not apply collected coverage");
+      myDoNotApplyRB = RadioButton.create(LocalizeValue.localizeTODO("Do not apply collected coverage"));
       primaryGroup.add(myDoNotApplyRB);
       group.add(myDoNotApplyRB);
 
-      myReplaceRB = RadioButton.create("Replace active suites with the new one");
+      myReplaceRB = RadioButton.create(LocalizeValue.localizeTODO("Replace active suites with the new one"));
       primaryGroup.add(myReplaceRB);
       group.add(myReplaceRB);
 
-      myAddRB = RadioButton.create("Add to the active suites");
+      myAddRB = RadioButton.create(LocalizeValue.localizeTODO("Add to the active suites"));
       primaryGroup.add(myAddRB);
       group.add(myAddRB);
       
-      myActivateCoverageViewCB = CheckBox.create("Activate Coverage &View ");
+      myActivateCoverageViewCB = CheckBox.create(LocalizeValue.localizeTODO("Activate Coverage &View "));
       primaryGroup.add(myActivateCoverageViewCB);
       
-      myWholePanel.add(LabeledLayout.create("When new coverage is gathered", primaryGroup));
+      myWholePanel.add(LabeledLayout.create(LocalizeValue.localizeTODO("When new coverage is gathered"), primaryGroup));
 
       for (CoverageOptions options : CoverageOptions.EP_NAME.getExtensionList(project)) {
         Configurable configurable = options.createConfigurable();
@@ -73,9 +79,9 @@ public class CoverageOptionsConfigurable extends SimpleConfigurable<CoverageOpti
       }
 
       for (Configurable child : myChildren) {
-        Component uiComponent = child.createUIComponent();
+        Component uiComponent = child.createUIComponent(myUiDisposable);
         assert uiComponent != null;
-        myWholePanel.add(LabeledLayout.create(child.getDisplayName(), uiComponent));
+        myWholePanel.add(LabeledLayout.create(LocalizeValue.of(child.getDisplayName()), uiComponent));
       }
     }
 
@@ -115,8 +121,8 @@ public class CoverageOptionsConfigurable extends SimpleConfigurable<CoverageOpti
   @RequiredUIAccess
   @Nonnull
   @Override
-  protected Panel createPanel() {
-    return new Panel(myProject);
+  protected Panel createPanel(@Nonnull Disposable uiDisposable) {
+    return new Panel(myProject, uiDisposable);
   }
 
   @RequiredUIAccess

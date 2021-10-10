@@ -28,6 +28,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.ObjectUtil;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.awt.TargetAWT;
+import consulo.localize.LocalizeValue;
 import consulo.moduleImport.ModuleImportContext;
 import consulo.moduleImport.ModuleImportProvider;
 import consulo.moduleImport.ModuleImportProviders;
@@ -147,7 +148,7 @@ public class ModuleImportProcessor {
     });
     box.setValueByIndex(0);
 
-    LabeledLayout layout = LabeledLayout.create("Select import target", box);
+    LabeledLayout layout = LabeledLayout.create(LocalizeValue.localizeTODO("Select import target"), box);
 
     DialogBuilder builder = new DialogBuilder();
     builder.setTitle("Import Target");

@@ -26,12 +26,16 @@ import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.options.SearchableConfigurable;
 import com.intellij.openapi.util.NotNullComputable;
 import com.intellij.openapi.util.text.StringUtil;
-import consulo.ui.annotation.RequiredUIAccess;
 import consulo.codeInsight.template.postfix.settings.PostfixTemplatesChildConfigurable;
+import consulo.disposer.Disposable;
+import consulo.localize.LocalizeValue;
 import consulo.options.SimpleConfigurable;
-import consulo.ui.*;
+import consulo.ui.CheckBox;
+import consulo.ui.ComboBox;
+import consulo.ui.Component;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.VerticalLayout;
-import consulo.ui.util.LabeledComponents;
+import consulo.ui.util.LabeledBuilder;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -50,10 +54,10 @@ public class PostfixTemplatesConfigurable extends SimpleConfigurable<PostfixTemp
     public Layout() {
       myLayout = VerticalLayout.create();
 
-      myPostfixTemplatesEnabled = CheckBox.create("&Enable postfix templates");
+      myPostfixTemplatesEnabled = CheckBox.create(LocalizeValue.localizeTODO("&Enable postfix templates"));
       myLayout.add(myPostfixTemplatesEnabled);
 
-      myCompletionEnabledCheckbox = CheckBox.create("&Show postfix templates in completion autopopup");
+      myCompletionEnabledCheckbox = CheckBox.create(LocalizeValue.localizeTODO("&Show postfix templates in completion autopopup"));
       myLayout.add(myCompletionEnabledCheckbox);
 
       ComboBox.Builder<Character> builder = ComboBox.<Character>builder();
@@ -62,7 +66,7 @@ public class PostfixTemplatesConfigurable extends SimpleConfigurable<PostfixTemp
       builder.add(TemplateSettings.TAB_CHAR, CodeInsightBundle.message("template.shortcut.tab"));
       myShortcutComboBox = builder.build();
 
-      myLayout.add(LabeledComponents.left("Expand templates with", myShortcutComboBox));
+      myLayout.add(LabeledBuilder.sided(LocalizeValue.localizeTODO("Expand templates with"), myShortcutComboBox));
 
       myPostfixTemplatesEnabled.addValueListener(event -> updateComponents());
     }
@@ -97,8 +101,8 @@ public class PostfixTemplatesConfigurable extends SimpleConfigurable<PostfixTemp
   }
 
   protected Configurable[] buildConfigurables() {
-    LanguageExtensionPoint[] extensions = LanguagePostfixTemplate.EP_NAME.getExtensions();
-    List<Configurable> list = new ArrayList<>(extensions.length);
+    List<LanguageExtensionPoint> extensions = LanguagePostfixTemplate.EP_NAME.getExtensionList();
+    List<Configurable> list = new ArrayList<>(extensions.size());
     for (LanguageExtensionPoint extensionPoint : extensions) {
       list.add(new PostfixTemplatesChildConfigurable(extensionPoint));
     }
@@ -118,7 +122,7 @@ public class PostfixTemplatesConfigurable extends SimpleConfigurable<PostfixTemp
   @RequiredUIAccess
   @Nonnull
   @Override
-  protected Layout createPanel() {
+  protected Layout createPanel(@Nonnull Disposable uiDisposable) {
     return new Layout();
   }
 

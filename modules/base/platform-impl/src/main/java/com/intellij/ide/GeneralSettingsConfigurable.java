@@ -19,8 +19,10 @@ import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.options.SearchableConfigurable;
 import com.intellij.openapi.util.NotNullComputable;
 import com.intellij.util.ObjectUtil;
+import consulo.disposer.Disposable;
 import consulo.fileChooser.FileOperateDialogSettings;
 import consulo.localize.LocalizeManager;
+import consulo.localize.LocalizeValue;
 import consulo.options.SimpleConfigurable;
 import consulo.platform.base.localize.IdeLocalize;
 import consulo.ui.*;
@@ -31,7 +33,7 @@ import consulo.ui.fileOperateDialog.FileSaveDialogProvider;
 import consulo.ui.layout.HorizontalLayout;
 import consulo.ui.layout.LabeledLayout;
 import consulo.ui.layout.VerticalLayout;
-import consulo.ui.util.LabeledComponents;
+import consulo.ui.util.LabeledBuilder;
 import jakarta.inject.Inject;
 
 import javax.annotation.Nonnull;
@@ -78,14 +80,14 @@ public class GeneralSettingsConfigurable extends SimpleConfigurable<GeneralSetti
       VerticalLayout startupOrShutdownLayout = VerticalLayout.create();
       startupOrShutdownLayout.add(myChkReopenLastProject = CheckBox.create(IdeLocalize.checkboxReopenLastProjectOnStartup()));
       startupOrShutdownLayout.add(myConfirmExit = CheckBox.create(IdeLocalize.checkboxConfirmApplicationExit()));
-      myRootLayout.add(LabeledLayout.create("Startup/Shutdown", startupOrShutdownLayout));
+      myRootLayout.add(LabeledLayout.create(LocalizeValue.localizeTODO("Startup/Shutdown"), startupOrShutdownLayout));
 
       VerticalLayout projectReopeningLayout = VerticalLayout.create();
       ValueGroup<Boolean> projectOpenGroup = ValueGroup.createBool();
-      projectReopeningLayout.add(myOpenProjectInNewWindow = RadioButton.create("Open project in new window").toGroup(projectOpenGroup));
-      projectReopeningLayout.add(myOpenProjectInSameWindow = RadioButton.create("Open project in the same window").toGroup(projectOpenGroup));
-      projectReopeningLayout.add(myConfirmWindowToOpenProject = RadioButton.create("Confirm window to open project in").toGroup(projectOpenGroup));
-      myRootLayout.add(LabeledLayout.create("Project Opening", projectReopeningLayout));
+      projectReopeningLayout.add(myOpenProjectInNewWindow = RadioButton.create(LocalizeValue.localizeTODO("Open project in new window")).toGroup(projectOpenGroup));
+      projectReopeningLayout.add(myOpenProjectInSameWindow = RadioButton.create(LocalizeValue.localizeTODO("Open project in the same window")).toGroup(projectOpenGroup));
+      projectReopeningLayout.add(myConfirmWindowToOpenProject = RadioButton.create(LocalizeValue.localizeTODO("Confirm window to open project in")).toGroup(projectOpenGroup));
+      myRootLayout.add(LabeledLayout.create(LocalizeValue.localizeTODO("Project Opening"), projectReopeningLayout));
 
       VerticalLayout syncLayout = VerticalLayout.create();
       syncLayout.add(myChkSyncOnFrameActivation = CheckBox.create(IdeLocalize.checkboxSynchronizeFilesOnFrameActivation()));
@@ -99,28 +101,28 @@ public class GeneralSettingsConfigurable extends SimpleConfigurable<GeneralSetti
       syncWithIde.add(Label.create(IdeBundle.message("label.inactive.timeout.sec")));
       myChkAutoSaveIfInactive.addValueListener(event -> myTfInactiveTimeout.setEnabled(event.getValue()));
 
-      syncLayout.add(myChkUseSafeWrite = CheckBox.create("Use \"safe write\" (save changes to a temporary file first)"));
-      myRootLayout.add(LabeledLayout.create("Synchronization", syncLayout));
+      syncLayout.add(myChkUseSafeWrite = CheckBox.create(LocalizeValue.localizeTODO("Use \"safe write\" (save changes to a temporary file first)")));
+      myRootLayout.add(LabeledLayout.create(LocalizeValue.localizeTODO("Synchronization"), syncLayout));
 
       VerticalLayout screenLayout = VerticalLayout.create();
       screenLayout.add(myChkSupportScreenReaders = CheckBox.create(IdeLocalize.checkboxSupportScreenReaders()));
-      myRootLayout.add(LabeledLayout.create("Accessibility", screenLayout));
+      myRootLayout.add(LabeledLayout.create(LocalizeValue.localizeTODO("Accessibility"), screenLayout));
 
       VerticalLayout localizeLayout = VerticalLayout.create();
       Set<Locale> avaliableLocales = LocalizeManager.get().getAvaliableLocales();
       ComboBox.Builder<Locale> builder = ComboBox.builder();
       builder.add(avaliableLocales, Locale::getDisplayName);
 
-      localizeLayout.add(LabeledComponents.leftWithRight("Locale", myLocaleBox = builder.build()));
-      myRootLayout.add(LabeledLayout.create("Localization", localizeLayout));
+      localizeLayout.add(LabeledBuilder.sided(LocalizeValue.localizeTODO("Locale"), myLocaleBox = builder.build()));
+      myRootLayout.add(LabeledLayout.create(LocalizeValue.localizeTODO("Localization"), localizeLayout));
 
       VerticalLayout processLayout = VerticalLayout.create();
       ValueGroup<Boolean> processGroup = ValueGroup.createBool();
-      processLayout.add(myTerminateProcessRadioButton = RadioButton.create(IdeBundle.message("radio.process.close.terminate")).toGroup(processGroup));
-      processLayout.add(myDisconnectRadioButton = RadioButton.create(IdeBundle.message("radio.process.close.disconnect")).toGroup(processGroup));
-      processLayout.add(myAskRadioButton = RadioButton.create(IdeBundle.message("radio.process.close.ask")).toGroup(processGroup));
+      processLayout.add(myTerminateProcessRadioButton = RadioButton.create(IdeLocalize.radioProcessCloseTerminate()).toGroup(processGroup));
+      processLayout.add(myDisconnectRadioButton = RadioButton.create(IdeLocalize.radioProcessCloseDisconnect()).toGroup(processGroup));
+      processLayout.add(myAskRadioButton = RadioButton.create(IdeLocalize.radioProcessCloseAsk()).toGroup(processGroup));
 
-      myRootLayout.add(LabeledLayout.create(IdeBundle.message("group.settings.process.tab.close"), processLayout));
+      myRootLayout.add(LabeledLayout.create(IdeLocalize.groupSettingsProcessTabClose(), processLayout));
 
       VerticalLayout fileDialogsLayout = VerticalLayout.create();
 
@@ -131,7 +133,7 @@ public class GeneralSettingsConfigurable extends SimpleConfigurable<GeneralSetti
         }
       }
 
-      fileDialogsLayout.add(LabeledComponents.leftWithRight("File/Path Choose Dialog Type", myFileChooseDialogBox = fileChooseDialogBox.build()));
+      fileDialogsLayout.add(LabeledBuilder.sided(LocalizeValue.localizeTODO("File/Path Choose Dialog Type"), myFileChooseDialogBox = fileChooseDialogBox.build()));
 
       ComboBox.Builder<FileOperateDialogProvider> fileSaveDialogBox = ComboBox.<FileOperateDialogProvider>builder();
       for (FileSaveDialogProvider fileSaveDialogProvider : FileSaveDialogProvider.EP_NAME.getExtensionList()) {
@@ -140,9 +142,9 @@ public class GeneralSettingsConfigurable extends SimpleConfigurable<GeneralSetti
         }
       }
 
-      fileDialogsLayout.add(LabeledComponents.leftWithRight("File Save Dialog Type", myFileSaveDialogBox = fileSaveDialogBox.build()));
+      fileDialogsLayout.add(LabeledBuilder.sided(LocalizeValue.localizeTODO("File Save Dialog Type"), myFileSaveDialogBox = fileSaveDialogBox.build()));
 
-      myRootLayout.add(LabeledLayout.create("File Dialogs", fileDialogsLayout));
+      myRootLayout.add(LabeledLayout.create(LocalizeValue.localizeTODO("File Dialogs"), fileDialogsLayout));
     }
 
     @Nonnull
@@ -164,7 +166,7 @@ public class GeneralSettingsConfigurable extends SimpleConfigurable<GeneralSetti
   @RequiredUIAccess
   @Nonnull
   @Override
-  protected MyComponent createPanel() {
+  protected MyComponent createPanel(@Nonnull Disposable uiDisposable) {
     return new MyComponent();
   }
 

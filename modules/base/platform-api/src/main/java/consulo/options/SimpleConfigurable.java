@@ -18,6 +18,7 @@ package consulo.options;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.options.UnnamedConfigurable;
 import com.intellij.openapi.util.NotNullComputable;
+import consulo.disposer.Disposable;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.Component;
 
@@ -33,7 +34,7 @@ public abstract class SimpleConfigurable<T extends NotNullComputable<? extends C
 
   @RequiredUIAccess
   @Nonnull
-  protected abstract T createPanel();
+  protected abstract T createPanel(@Nonnull Disposable uiDisposable);
 
   @RequiredUIAccess
   protected abstract boolean isModified(@Nonnull T component);
@@ -66,9 +67,9 @@ public abstract class SimpleConfigurable<T extends NotNullComputable<? extends C
   @RequiredUIAccess
   @Nullable
   @Override
-  public Component createUIComponent() {
+  public Component createUIComponent(@Nonnull Disposable uiDisposable) {
     if (myComponent == null) {
-      myComponent = createPanel();
+      myComponent = createPanel(uiDisposable);
     }
     return myComponent.compute();
   }

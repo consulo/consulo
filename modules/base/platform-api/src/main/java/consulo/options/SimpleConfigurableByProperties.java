@@ -18,6 +18,7 @@ package consulo.options;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.NotNullComputable;
+import consulo.disposer.Disposable;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.Component;
 import consulo.ui.ValueComponent;
@@ -97,7 +98,7 @@ public abstract class SimpleConfigurableByProperties extends SimpleConfigurable<
   @RequiredUIAccess
   @Nonnull
   @Override
-  protected final SimpleConfigurableByProperties.LayoutWrapper createPanel() {
+  protected final SimpleConfigurableByProperties.LayoutWrapper createPanel(Disposable uiDisposable) {
     PropertyBuilder builder;
     Component panel = createLayout(builder = new PropertyBuilder());
     myProperties = builder.myProperties;

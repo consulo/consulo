@@ -16,16 +16,17 @@
 package consulo.ide.settings.impl;
 
 import com.intellij.ide.ui.UISettings;
-import com.intellij.openapi.application.ApplicationBundle;
 import com.intellij.openapi.options.Configurable;
+import consulo.localize.LocalizeValue;
 import consulo.options.SimpleConfigurableByProperties;
+import consulo.platform.base.localize.ApplicationLocalize;
 import consulo.ui.*;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.layout.LabeledLayout;
-import consulo.ui.layout.VerticalLayout;
 import consulo.ui.border.BorderPosition;
 import consulo.ui.border.BorderStyle;
-import consulo.ui.util.LabeledComponents;
+import consulo.ui.layout.LabeledLayout;
+import consulo.ui.layout.VerticalLayout;
+import consulo.ui.util.LabeledBuilder;
 
 import javax.annotation.Nonnull;
 
@@ -51,43 +52,43 @@ public class EditorTabsConfigurable extends SimpleConfigurableByProperties imple
     VerticalLayout tabAppearanceLayout = VerticalLayout.create();
 
     ComboBox.Builder<Integer> tabPlacement = ComboBox.builder();
-    tabPlacement.add(UISettings.PLACEMENT_EDITOR_TAB_NONE, ApplicationBundle.message("combobox.tab.placement.none"));
-    tabPlacement.add(UISettings.PLACEMENT_EDITOR_TAB_TOP, ApplicationBundle.message("combobox.tab.placement.top"));
-    tabPlacement.add(UISettings.PLACEMENT_EDITOR_TAB_BOTTOM, ApplicationBundle.message("combobox.tab.placement.bottom"));
-    tabPlacement.add(UISettings.PLACEMENT_EDITOR_TAB_LEFT, ApplicationBundle.message("combobox.tab.placement.left"));
-    tabPlacement.add(UISettings.PLACEMENT_EDITOR_TAB_RIGHT, ApplicationBundle.message("combobox.tab.placement.right"));
+    tabPlacement.add(UISettings.PLACEMENT_EDITOR_TAB_NONE, ApplicationLocalize.comboboxTabPlacementNone());
+    tabPlacement.add(UISettings.PLACEMENT_EDITOR_TAB_TOP, ApplicationLocalize.comboboxTabPlacementTop());
+    tabPlacement.add(UISettings.PLACEMENT_EDITOR_TAB_BOTTOM, ApplicationLocalize.comboboxTabPlacementBottom());
+    tabPlacement.add(UISettings.PLACEMENT_EDITOR_TAB_LEFT, ApplicationLocalize.comboboxTabPlacementLeft());
+    tabPlacement.add(UISettings.PLACEMENT_EDITOR_TAB_RIGHT, ApplicationLocalize.comboboxTabPlacementRight());
 
     ComboBox<Integer> tabPlacementBox = tabPlacement.build();
     propertyBuilder.add(tabPlacementBox, () -> uiSettings.EDITOR_TAB_PLACEMENT, v -> uiSettings.EDITOR_TAB_PLACEMENT = v);
 
-    tabAppearanceLayout.add(LabeledComponents.leftWithRight(ApplicationBundle.message("combobox.editor.tab.placement"), tabPlacementBox));
+    tabAppearanceLayout.add(LabeledBuilder.sided(ApplicationLocalize.comboboxEditorTabPlacement(), tabPlacementBox));
 
-    CheckBox showTabsInSingleRow = CheckBox.create(ApplicationBundle.message("checkbox.editor.tabs.in.single.row"));
+    CheckBox showTabsInSingleRow = CheckBox.create(ApplicationLocalize.checkboxEditorTabsInSingleRow());
     showTabsInSingleRow.setEnabled(false);
     propertyBuilder.add(showTabsInSingleRow, () -> uiSettings.SCROLL_TAB_LAYOUT_IN_EDITOR, v -> uiSettings.SCROLL_TAB_LAYOUT_IN_EDITOR = v);
     tabAppearanceLayout.add(showTabsInSingleRow);
 
-    CheckBox hideExtensionsInTabs = CheckBox.create(ApplicationBundle.message("checkbox.hide.file.extension.in.editor.tabs"));
+    CheckBox hideExtensionsInTabs = CheckBox.create(ApplicationLocalize.checkboxHideFileExtensionInEditorTabs());
     hideExtensionsInTabs.setEnabled(false);
     propertyBuilder.add(hideExtensionsInTabs, () -> uiSettings.HIDE_KNOWN_EXTENSION_IN_TABS, v -> uiSettings.HIDE_KNOWN_EXTENSION_IN_TABS = v);
     tabAppearanceLayout.add(hideExtensionsInTabs);
 
-    CheckBox showDirectoryWithNotUniqueName = CheckBox.create("Show directory in editor tabs for non-unique filenames");
+    CheckBox showDirectoryWithNotUniqueName = CheckBox.create(LocalizeValue.localizeTODO("Show directory in editor tabs for non-unique filenames"));
     showDirectoryWithNotUniqueName.setEnabled(false);
     propertyBuilder.add(showDirectoryWithNotUniqueName, () -> uiSettings.SHOW_DIRECTORY_FOR_NON_UNIQUE_FILENAMES, v -> uiSettings.SHOW_DIRECTORY_FOR_NON_UNIQUE_FILENAMES = v);
     tabAppearanceLayout.add(showDirectoryWithNotUniqueName);
 
-    CheckBox showCloseButton = CheckBox.create(ApplicationBundle.message("checkbox.editor.tabs.show.close.button"));
+    CheckBox showCloseButton = CheckBox.create(ApplicationLocalize.checkboxEditorTabsShowCloseButton());
     showCloseButton.setEnabled(false);
     propertyBuilder.add(showCloseButton, () -> uiSettings.SHOW_CLOSE_BUTTON, v -> uiSettings.SHOW_CLOSE_BUTTON = v);
     tabAppearanceLayout.add(showCloseButton);
 
-    CheckBox markModifiedTabsWithAsterisk = CheckBox.create(ApplicationBundle.message("checkbox.mark.modified.tabs.with.asterisk"));
+    CheckBox markModifiedTabsWithAsterisk = CheckBox.create(ApplicationLocalize.checkboxMarkModifiedTabsWithAsterisk());
     markModifiedTabsWithAsterisk.setEnabled(false);
     propertyBuilder.add(markModifiedTabsWithAsterisk, () -> uiSettings.MARK_MODIFIED_TABS_WITH_ASTERISK, v -> uiSettings.MARK_MODIFIED_TABS_WITH_ASTERISK = v);
     tabAppearanceLayout.add(markModifiedTabsWithAsterisk);
 
-    CheckBox showTabsTooltip = CheckBox.create(ApplicationBundle.message("checkbox.show.tabs.tooltips"));
+    CheckBox showTabsTooltip = CheckBox.create(ApplicationLocalize.checkboxShowTabsTooltips());
     showTabsTooltip.setEnabled(false);
     propertyBuilder.add(showTabsTooltip, () -> uiSettings.SHOW_TABS_TOOLTIPS, v -> uiSettings.SHOW_TABS_TOOLTIPS = v);
     tabAppearanceLayout.add(showTabsTooltip);
@@ -111,18 +112,18 @@ public class EditorTabsConfigurable extends SimpleConfigurableByProperties imple
       }
     });
 
-    layout.add(LabeledLayout.create(ApplicationBundle.message("group.tab.appearance"), tabAppearanceLayout));
+    layout.add(LabeledLayout.create(ApplicationLocalize.groupTabAppearance(), tabAppearanceLayout));
 
     VerticalLayout tabClosingPolicyLayout = VerticalLayout.create();
 
     IntBox tabLimitBox = IntBox.create();
     propertyBuilder.add(tabLimitBox, () -> uiSettings.EDITOR_TAB_LIMIT, v -> uiSettings.EDITOR_TAB_LIMIT = v);
-    tabClosingPolicyLayout.add(LabeledComponents.leftWithRight(ApplicationBundle.message("editbox.tab.limit"), tabLimitBox));
+    tabClosingPolicyLayout.add(LabeledBuilder.sided(ApplicationLocalize.editboxTabLimit(), tabLimitBox));
 
-    tabClosingPolicyLayout.add(Label.create(ApplicationBundle.message("label.when.number.of.opened.editors.exceeds.tab.limit")));
+    tabClosingPolicyLayout.add(Label.create(ApplicationLocalize.labelWhenNumberOfOpenedEditorsExceedsTabLimit()));
 
-    RadioButton closeNotModifiedFiles = RadioButton.create(ApplicationBundle.message("radio.close.non.modified.files.first"));
-    RadioButton closeLessFrequentlyFiles = RadioButton.create(ApplicationBundle.message("radio.close.less.frequently.used.files"));
+    RadioButton closeNotModifiedFiles = RadioButton.create(ApplicationLocalize.radioCloseNonModifiedFilesFirst());
+    RadioButton closeLessFrequentlyFiles = RadioButton.create(ApplicationLocalize.radioCloseLessFrequentlyUsedFiles());
 
     propertyBuilder.add(() -> {
       if (closeNotModifiedFiles.getValueOrError()) {
@@ -149,11 +150,11 @@ public class EditorTabsConfigurable extends SimpleConfigurableByProperties imple
     leftIndent.addBorder(BorderPosition.LEFT, BorderStyle.EMPTY, null, 15);
     tabClosingPolicyLayout.add(leftIndent);
 
-    tabClosingPolicyLayout.add(Label.create(ApplicationBundle.message("label.when.closing.active.editor")));
+    tabClosingPolicyLayout.add(Label.create(ApplicationLocalize.labelWhenClosingActiveEditor()));
 
-    RadioButton activeLeft = RadioButton.create(ApplicationBundle.message("radio.activate.left.neighbouring.tab"));
-    RadioButton activeRight = RadioButton.create(ApplicationBundle.message("radio.activate.right.neighbouring.tab"));
-    RadioButton activeMost = RadioButton.create(ApplicationBundle.message("radio.activate.most.recently.opened.tab"));
+    RadioButton activeLeft = RadioButton.create(ApplicationLocalize.radioActivateLeftNeighbouringTab());
+    RadioButton activeRight = RadioButton.create(ApplicationLocalize.radioActivateRightNeighbouringTab());
+    RadioButton activeMost = RadioButton.create(ApplicationLocalize.radioActivateMostRecentlyOpenedTab());
 
     ValueGroup.createBool().add(activeLeft).add(activeRight).add(activeMost);
 
@@ -182,7 +183,7 @@ public class EditorTabsConfigurable extends SimpleConfigurableByProperties imple
         return ActiveTabState.MOST_RECENT;
       }
 
-      if(uiSettings.ACTIVATE_RIGHT_EDITOR_ON_CLOSE) {
+      if (uiSettings.ACTIVATE_RIGHT_EDITOR_ON_CLOSE) {
         return ActiveTabState.RIGHT;
       }
       return ActiveTabState.LEFT;
@@ -195,7 +196,7 @@ public class EditorTabsConfigurable extends SimpleConfigurableByProperties imple
     leftIndent.addBorder(BorderPosition.LEFT, BorderStyle.EMPTY, null, 15);
     tabClosingPolicyLayout.add(leftIndent);
 
-    layout.add(LabeledLayout.create(ApplicationBundle.message("group.tab.closing.policy"), tabClosingPolicyLayout));
+    layout.add(LabeledLayout.create(ApplicationLocalize.groupTabClosingPolicy(), tabClosingPolicyLayout));
     return layout;
   }
 

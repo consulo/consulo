@@ -28,6 +28,8 @@ import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.NotNullComputable;
+import consulo.disposer.Disposable;
+import consulo.localize.LocalizeValue;
 import consulo.options.SimpleConfigurable;
 import consulo.ui.*;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -90,7 +92,7 @@ public class EditorSmartKeysConfigurable extends SimpleConfigurable<EditorSmartK
       myWholeLayout.add(LabeledComponents.left(ApplicationBundle.message("combobox.paste.reformat"), myReformatOnPasteCombo = reformatOnPasteBuilder.build()));
 
       VerticalLayout enterLayout = VerticalLayout.create();
-      myWholeLayout.add(LabeledLayout.create("Enter", enterLayout));
+      myWholeLayout.add(LabeledLayout.create(LocalizeValue.localizeTODO("Enter"), enterLayout));
 
       enterLayout.add(myCbSmartIndentOnEnter = CheckBox.create(ApplicationBundle.message("checkbox.smart.indent")));
       enterLayout.add(myCbInsertPairCurlyBraceOnEnter = CheckBox.create(ApplicationBundle.message("checkbox.insert.pair.curly.brace")));
@@ -98,7 +100,7 @@ public class EditorSmartKeysConfigurable extends SimpleConfigurable<EditorSmartK
       myCbInsertJavadocStubOnEnter.setVisible(hasAnyDocAwareCommenters());
 
       VerticalLayout backspaceLayout = VerticalLayout.create();
-      myWholeLayout.add(LabeledLayout.create("Backspace", backspaceLayout));
+      myWholeLayout.add(LabeledLayout.create(LocalizeValue.localizeTODO("Backspace"), backspaceLayout));
 
       ComboBox.Builder<SmartBackspaceMode> smartIndentBuilder = ComboBox.builder();
       smartIndentBuilder.add(SmartBackspaceMode.OFF, ApplicationBundle.message("combobox.smart.backspace.off"));
@@ -145,7 +147,7 @@ public class EditorSmartKeysConfigurable extends SimpleConfigurable<EditorSmartK
   @RequiredUIAccess
   @Nonnull
   @Override
-  protected Panel createPanel() {
+  protected Panel createPanel(@Nonnull Disposable uiDisposable) {
     return new Panel();
   }
 

@@ -28,6 +28,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Pair;
 import consulo.ide.settings.impl.EditorGeneralConfigurable;
 import consulo.options.SimpleConfigurableByProperties;
+import consulo.platform.base.localize.ApplicationLocalize;
 import consulo.ui.CheckBox;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -59,7 +60,7 @@ public class CodeFoldingConfigurable extends SimpleConfigurableByProperties impl
   protected Component createLayout(PropertyBuilder propertyBuilder) {
     VerticalLayout verticalLayout = VerticalLayout.create();
 
-    CheckBox outlineBox = CheckBox.create(ApplicationBundle.message("checkbox.show.code.folding.outline"));
+    CheckBox outlineBox = CheckBox.create(ApplicationLocalize.checkboxShowCodeFoldingOutline());
     verticalLayout.add(outlineBox);
     EditorSettingsExternalizable externalizable = EditorSettingsExternalizable.getInstance();
     propertyBuilder.add(outlineBox, externalizable::isFoldingOutlineShown, externalizable::setFoldingOutlineShown);

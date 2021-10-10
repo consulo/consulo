@@ -49,6 +49,7 @@ import consulo.ui.layout.DockLayout;
 import consulo.ui.layout.HorizontalLayout;
 import consulo.ui.layout.LabeledLayout;
 import consulo.ui.layout.VerticalLayout;
+import consulo.ui.util.LabeledBuilder;
 import consulo.ui.util.LabeledComponents;
 import consulo.util.collection.ContainerUtil;
 
@@ -97,8 +98,8 @@ public class EditorGeneralConfigurable extends SimpleConfigurableByProperties im
     scrollingLayout.add(smoothScrolling);
     propertyBuilder.add(smoothScrolling, editorSettings::isSmoothScrolling, editorSettings::setSmoothScrolling);
 
-    RadioButton preferScrolling = RadioButton.create("Prefer scrolling editor canvas to keep caret line centered");
-    RadioButton preferMovingCaret = RadioButton.create("Prefer moving caret line to minimize editor scrolling");
+    RadioButton preferScrolling = RadioButton.create(LocalizeValue.localizeTODO("Prefer scrolling editor canvas to keep caret line centered"));
+    RadioButton preferMovingCaret = RadioButton.create(LocalizeValue.localizeTODO("Prefer moving caret line to minimize editor scrolling"));
 
     ValueGroup.createBool().add(preferScrolling).add(preferMovingCaret);
 
@@ -119,7 +120,7 @@ public class EditorGeneralConfigurable extends SimpleConfigurableByProperties im
     scrollingLayout.add(preferScrolling);
     scrollingLayout.add(preferMovingCaret);
 
-    layout.add(LabeledLayout.create("Scrolling", scrollingLayout));
+    layout.add(LabeledLayout.create(LocalizeValue.localizeTODO("Scrolling"), scrollingLayout));
 
     VerticalLayout limitsLayout = VerticalLayout.create();
 
@@ -135,19 +136,19 @@ public class EditorGeneralConfigurable extends SimpleConfigurableByProperties im
     limitsLayout.add(LabeledComponents.leftWithRight(ApplicationBundle.message("editbox.console.history.limit"), consoleHistoryLimit));
     propertyBuilder.add(consoleHistoryLimit, () -> uiSettings.CONSOLE_COMMAND_HISTORY_LIMIT, v -> uiSettings.CONSOLE_COMMAND_HISTORY_LIMIT = v);
 
-    layout.add(LabeledLayout.create(ApplicationBundle.message("group.limits"), limitsLayout));
+    layout.add(LabeledLayout.create(ApplicationLocalize.groupLimits(), limitsLayout));
 
     VerticalLayout virtualSpaceLayout = VerticalLayout.create();
 
-    CheckBox useSoftWrapsInEditor = CheckBox.create(ApplicationBundle.message("checkbox.use.soft.wraps.at.editor"));
+    CheckBox useSoftWrapsInEditor = CheckBox.create(ApplicationLocalize.checkboxUseSoftWrapsAtEditor());
     virtualSpaceLayout.add(useSoftWrapsInEditor);
     propertyBuilder.add(useSoftWrapsInEditor, () -> editorSettings.isUseSoftWraps(SoftWrapAppliancePlaces.MAIN_EDITOR), v -> editorSettings.setUseSoftWraps(v, SoftWrapAppliancePlaces.MAIN_EDITOR));
 
-    CheckBox useSoftWrapsInConsole = CheckBox.create(ApplicationBundle.message("checkbox.use.soft.wraps.at.console"));
+    CheckBox useSoftWrapsInConsole = CheckBox.create(ApplicationLocalize.checkboxUseSoftWrapsAtConsole());
     virtualSpaceLayout.add(useSoftWrapsInConsole);
     propertyBuilder.add(useSoftWrapsInConsole, () -> editorSettings.isUseSoftWraps(SoftWrapAppliancePlaces.CONSOLE), v -> editorSettings.setUseSoftWraps(v, SoftWrapAppliancePlaces.CONSOLE));
 
-    CheckBox useCustomSoftWrapIndent = CheckBox.create(ApplicationBundle.message("checkbox.use.custom.soft.wraps.indent"));
+    CheckBox useCustomSoftWrapIndent = CheckBox.create(ApplicationLocalize.checkboxUseCustomSoftWrapsIndent());
     useCustomSoftWrapIndent.setEnabled(false);
     propertyBuilder.add(useCustomSoftWrapIndent, editorSettings::isUseCustomSoftWrapIndent, editorSettings::setUseCustomSoftWrapIndent);
 
@@ -166,11 +167,11 @@ public class EditorGeneralConfigurable extends SimpleConfigurableByProperties im
     customSoftWrapLayout.right(customSoftWrapIndent);
     virtualSpaceLayout.add(customSoftWrapLayout);
 
-    CheckBox allowPlacementCaretAtLineEnd = CheckBox.create(ApplicationBundle.message("checkbox.allow.placement.of.caret.after.end.of.line"));
+    CheckBox allowPlacementCaretAtLineEnd = CheckBox.create(ApplicationLocalize.checkboxAllowPlacementOfCaretAfterEndOfLine());
     propertyBuilder.add(allowPlacementCaretAtLineEnd, editorSettings::isVirtualSpace, editorSettings::setVirtualSpace);
     virtualSpaceLayout.add(allowPlacementCaretAtLineEnd);
 
-    CheckBox allowPlacementCaretInsideTabs = CheckBox.create(ApplicationBundle.message("checkbox.allow.placement.of.caret.inside.tabs"));
+    CheckBox allowPlacementCaretInsideTabs = CheckBox.create(ApplicationLocalize.checkboxAllowPlacementOfCaretInsideTabs());
     propertyBuilder.add(allowPlacementCaretInsideTabs, editorSettings::isCaretInsideTabs, editorSettings::setCaretInsideTabs);
     virtualSpaceLayout.add(allowPlacementCaretInsideTabs);
 
@@ -208,7 +209,7 @@ public class EditorGeneralConfigurable extends SimpleConfigurableByProperties im
                         v -> editorSettings.getOptions().SHOW_NOTIFICATION_AFTER_OPTIMIZE_IMPORTS_ACTION = v);
     formattingLayout.add(showNotificationAfterOptimizeImport);
 
-    layout.add(LabeledLayout.create("Formatting", formattingLayout));
+    layout.add(LabeledLayout.create(LocalizeValue.localizeTODO("Formatting"), formattingLayout));
 
     VerticalLayout refactoringLayout = VerticalLayout.create();
 
@@ -263,9 +264,9 @@ public class EditorGeneralConfigurable extends SimpleConfigurableByProperties im
         colorSchemeBox.setValue(RichCopySettings.ACTIVE_GLOBAL_SCHEME_MARKER);
       }
     }, richCopySettings::getSchemeName, richCopySettings::setSchemeName);
-    richCopyLayout.add(LabeledComponents.leftWithRight(ApplicationBundle.message("combobox.richcopy.color.scheme"), colorSchemeBox));
+    richCopyLayout.add(LabeledBuilder.sided(ApplicationLocalize.comboboxRichcopyColorScheme(), colorSchemeBox));
 
-    layout.add(LabeledLayout.create(ApplicationBundle.message("group.richcopy"), richCopyLayout));
+    layout.add(LabeledLayout.create(ApplicationLocalize.groupRichcopy(), richCopyLayout));
 
     VerticalLayout errorHighlightingLayout = VerticalLayout.create();
 
@@ -286,7 +287,7 @@ public class EditorGeneralConfigurable extends SimpleConfigurableByProperties im
       provider.fillProperties(errorHighlightingLayout::add, propertyBuilder);
     }
 
-    layout.add(LabeledLayout.create(ApplicationBundle.message("group.error.highlighting"), errorHighlightingLayout));
+    layout.add(LabeledLayout.create(ApplicationLocalize.groupErrorHighlighting(), errorHighlightingLayout));
 
     VerticalLayout otherLayout = VerticalLayout.create();
 

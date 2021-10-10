@@ -120,7 +120,7 @@ public class UITester {
       ToggleSwitch toggleSwitch = ToggleSwitch.create(true);
       toggleSwitch.addValueListener(event -> Alerts.okInfo("toggle").showAsync());
 
-      CheckBox checkBox = CheckBox.create("Check box");
+      CheckBox checkBox = CheckBox.create(LocalizeValue.localizeTODO("Check box"));
       checkBox.addValueListener(event -> Alerts.okInfo("checkBox").showAsync());
 
       layout.add(HorizontalLayout.create().add(Label.create("Toggle Switch")).add(toggleSwitch).add(checkBox));

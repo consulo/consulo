@@ -20,6 +20,7 @@ import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.application.ApplicationBundle;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.options.SearchableConfigurable;
+import consulo.disposer.Disposable;
 import consulo.options.SimpleConfigurable;
 import consulo.ui.annotation.RequiredUIAccess;
 
@@ -30,7 +31,7 @@ public class CodeCompletionOptions extends SimpleConfigurable<CodeCompletionPane
   @RequiredUIAccess
   @Nonnull
   @Override
-  protected CodeCompletionPanel createPanel() {
+  protected CodeCompletionPanel createPanel(Disposable uiDisposable) {
     return new CodeCompletionPanel(ActionManager.getInstance());
   }
 

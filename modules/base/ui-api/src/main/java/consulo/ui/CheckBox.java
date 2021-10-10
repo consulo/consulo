@@ -31,7 +31,7 @@ import javax.annotation.Nonnull;
 public interface CheckBox extends ValueComponent<Boolean>, Mnemonicable {
   @Nonnull
   @RequiredUIAccess
-  @Deprecated
+  @Deprecated(forRemoval = true)
   @DeprecationInfo("Please don't use not localize text")
   static CheckBox create(@Nonnull String label) {
     return create(LocalizeValue.of(label));
@@ -39,7 +39,7 @@ public interface CheckBox extends ValueComponent<Boolean>, Mnemonicable {
 
   @Nonnull
   @RequiredUIAccess
-  @Deprecated
+  @Deprecated(forRemoval = true)
   @DeprecationInfo("Please don't use not localize text")
   static CheckBox create(@Nonnull String label, boolean selected) {
     return create(LocalizeValue.of(label), selected);

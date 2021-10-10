@@ -108,18 +108,18 @@ public class CodeCompletionPanel implements NotNullComputable<Layout> {
     complGroup.add(myCbOnSmartTypeCompletion2);
     completionOptions.add(complGroup);
 
-    myCbSorting2 = CheckBox.create("Sort lookup items lexicographically");
+    myCbSorting2 = CheckBox.create(LocalizeValue.localizeTODO("Sort lookup items lexicographically"));
 
     if(PowerSaveMode.isEnabled()) {
-      myCbAutocompletion2 = CheckBox.create("Autopopup code completion (not available in Power Save mode)");
+      myCbAutocompletion2 = CheckBox.create(LocalizeValue.localizeTODO("Autopopup code completion (not available in Power Save mode)"));
     }
     else {
-      myCbAutocompletion2 = CheckBox.create("Autopopup code completion");
+      myCbAutocompletion2 = CheckBox.create(LocalizeValue.localizeTODO("Autopopup code completion"));
     }
 
     completionOptions.add(myCbAutocompletion2);
 
-    myCbSelectByChars2 = CheckBox.create("Insert selected variant by typing dot, space, etc.");
+    myCbSelectByChars2 = CheckBox.create(LocalizeValue.localizeTODO("Insert selected variant by typing dot, space, etc."));
     myCbSelectByChars2.setEnabled(false);
 
     VerticalLayout indentChars = VerticalLayout.create().add(myCbSelectByChars2);

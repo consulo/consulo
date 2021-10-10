@@ -16,6 +16,7 @@
 package consulo.ide.updateSettings;
 
 import com.intellij.openapi.options.Configurable;
+import consulo.localize.LocalizeValue;
 import consulo.options.SimpleConfigurableByProperties;
 import consulo.ui.CheckBox;
 import consulo.ui.ComboBox;
@@ -24,7 +25,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.HorizontalLayout;
 import consulo.ui.layout.LabeledLayout;
 import consulo.ui.layout.VerticalLayout;
-import consulo.ui.util.LabeledComponents;
+import consulo.ui.util.LabeledBuilder;
 
 import javax.annotation.Nonnull;
 
@@ -42,9 +43,9 @@ public class UpdatesConfigurable extends SimpleConfigurableByProperties implemen
     VerticalLayout layout = VerticalLayout.create();
 
     VerticalLayout repoLayout = VerticalLayout.create();
-    layout.add(LabeledLayout.create("Repository settings", repoLayout));
+    layout.add(LabeledLayout.create(LocalizeValue.localizeTODO("Repository settings"), repoLayout));
 
-    CheckBox enableUpdates = CheckBox.create("Enabled updates?");
+    CheckBox enableUpdates = CheckBox.create(LocalizeValue.localizeTODO("Enabled updates?"));
     propertyBuilder.add(enableUpdates, updateSettings::isEnable, updateSettings::setEnable);
 
     ComboBox<UpdateChannel> channelComboBox = ComboBox.<UpdateChannel>builder().fillByEnum(UpdateChannel.class, Object::toString).build();
@@ -53,7 +54,7 @@ public class UpdatesConfigurable extends SimpleConfigurableByProperties implemen
     enableUpdates.addValueListener(event -> channelComboBox.setEnabled(event.getValue()));
 
     repoLayout.add(HorizontalLayout.create().add(enableUpdates));
-    repoLayout.add(LabeledComponents.left("Channel", channelComboBox));
+    repoLayout.add(LabeledBuilder.sided(LocalizeValue.localizeTODO("Channel"), channelComboBox));
     return layout;
   }
 }

@@ -34,7 +34,7 @@ import consulo.disposer.Disposable;
 import consulo.ide.settings.impl.ProjectStructureSettingsUtil;
 import consulo.ide.ui.FileChooserTextBoxBuilder;
 import consulo.localize.LocalizeValue;
-import consulo.platform.base.localize.ProjecLocalize;
+import consulo.platform.base.localize.ProjectLocalize;
 import consulo.preferences.internal.ConfigurableWeight;
 import consulo.roots.ui.configuration.ModulesConfigurator;
 import consulo.roots.ui.configuration.ProjectStructureElementConfigurable;
@@ -108,7 +108,7 @@ public class ProjectConfigurable extends ProjectStructureElementConfigurable<Pro
       getModulesConfigurator().processModuleCompilerOutputChanged(getCompilerOutputUrl());
     });
 
-    myLayout.add(HtmlLabel.create(ProjecLocalize.projectCompilerOutput()));
+    myLayout.add(HtmlLabel.create(ProjectLocalize.projectCompilerOutput()));
     myLayout.add(myCompilerPathController);
   }
 

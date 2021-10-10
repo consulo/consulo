@@ -8,6 +8,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.IdeBorderFactory;
 import com.intellij.ui.TitledSeparator;
 import consulo.disposer.Disposable;
+import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.options.ConfigurableUIMigrationUtil;
 import consulo.platform.Platform;
@@ -63,16 +64,16 @@ class MergedCompositeConfigurable implements SearchableConfigurable {
   @RequiredUIAccess
   @Nullable
   @Override
-  public Component createUIComponent() {
+  public Component createUIComponent(@Nonnull Disposable uiDisposable) {
     if (myRootComponent == null) {
       Configurable firstConfigurable = children[0];
       if (children.length == 1) {
-        myRootComponent = firstConfigurable.createUIComponent();
+        myRootComponent = firstConfigurable.createUIComponent(uiDisposable);
       }
       else {
         VerticalLayout verticalLayout = VerticalLayout.create();
         for (Configurable configurable : children) {
-          Component uiComponent = configurable.createUIComponent();
+          Component uiComponent = configurable.createUIComponent(uiDisposable);
           if (uiComponent == null) {
             continue;
           }
@@ -82,7 +83,7 @@ class MergedCompositeConfigurable implements SearchableConfigurable {
             verticalLayout.add(uiComponent);
           }
           else {
-            LabeledLayout labeledLayout = LabeledLayout.create(displayName);
+            LabeledLayout labeledLayout = LabeledLayout.create(LocalizeValue.of(displayName));
             labeledLayout.set(uiComponent);
             verticalLayout.add(labeledLayout);
           }

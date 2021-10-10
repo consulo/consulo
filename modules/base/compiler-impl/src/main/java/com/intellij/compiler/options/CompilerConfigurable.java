@@ -23,14 +23,18 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.NotNullComputable;
 import consulo.compiler.CompilationType;
+import consulo.disposer.Disposable;
+import consulo.localize.LocalizeValue;
 import consulo.options.SimpleConfigurable;
-import consulo.ui.*;
+import consulo.ui.CheckBox;
+import consulo.ui.ComboBox;
+import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.VerticalLayout;
-import consulo.ui.util.LabeledComponents;
+import consulo.ui.util.LabeledBuilder;
+import jakarta.inject.Inject;
 
 import javax.annotation.Nonnull;
-import jakarta.inject.Inject;
 
 public class CompilerConfigurable extends SimpleConfigurable<CompilerConfigurable.Root> implements Configurable {
   protected static class Root implements NotNullComputable<Component> {
@@ -45,7 +49,7 @@ public class CompilerConfigurable extends SimpleConfigurable<CompilerConfigurabl
       myLayout = VerticalLayout.create();
 
       myCompilerOptions = ComboBox.<CompilationType>builder().fillByEnum(CompilationType.class, Enum::name).build();
-      Component compilerOptions = LabeledComponents.left("Compilation type:", myCompilerOptions);
+      Component compilerOptions = LabeledBuilder.sided(LocalizeValue.localizeTODO("Compilation type:"), myCompilerOptions);
       myLayout.add(compilerOptions);
       compilerOptions.setVisible(false);
 
@@ -73,7 +77,7 @@ public class CompilerConfigurable extends SimpleConfigurable<CompilerConfigurabl
   @RequiredUIAccess
   @Nonnull
   @Override
-  protected Root createPanel() {
+  protected Root createPanel(Disposable uiDisposable) {
     return new Root();
   }
 
