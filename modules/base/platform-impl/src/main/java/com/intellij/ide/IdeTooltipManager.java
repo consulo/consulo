@@ -88,7 +88,7 @@ public final class IdeTooltipManager implements Disposable, AWTEventListener {
     myIsEnabled = Registry.get("ide.tooltip.callout");
     myHelpTooltip = Registry.get("ide.helptooltip.enabled");
 
-    RegistryValueListener.Adapter listener = new RegistryValueListener.Adapter() {
+    RegistryValueListener listener = new RegistryValueListener() {
       @Override
       public void afterValueChanged(@Nonnull RegistryValue value) {
         processEnabled();

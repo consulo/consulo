@@ -109,7 +109,6 @@ public class PlaybackRunner {
             @Override
             public void run() {
               activityMonitor.setActive(false);
-              restoreRegistryValues();
             }
           });
         }
@@ -140,13 +139,6 @@ public class PlaybackRunner {
     }
 
     return myActionCallback;
-  }
-
-  private void restoreRegistryValues() {
-    final Set<String> storedKeys = myRegistryValues.keySet();
-    for (String each : storedKeys) {
-      Registry.get(each).setValue(myRegistryValues.get(each));
-    }
   }
 
   private void executeFrom(final int cmdIndex, File baseDir) {
@@ -269,9 +261,7 @@ public class PlaybackRunner {
   protected PlaybackCommand createCommand(String string, int line, File scriptDir) {
     AbstractCommand cmd;
 
-    if (string.startsWith(RegistryValueCommand.PREFIX)) {
-      cmd = new RegistryValueCommand(string, line);
-    } else if (string.startsWith(AbstractCommand.CMD_PREFIX + AbstractCommand.CMD_PREFIX)) {
+    if (string.startsWith(AbstractCommand.CMD_PREFIX + AbstractCommand.CMD_PREFIX)) {
       cmd = new EmptyCommand(line);
     }
     else if (string.startsWith(KeyCodeTypeCommand.PREFIX)) {

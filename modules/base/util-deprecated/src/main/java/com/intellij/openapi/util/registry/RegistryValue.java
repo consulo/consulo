@@ -15,43 +15,38 @@
  */
 package com.intellij.openapi.util.registry;
 
-import com.intellij.util.containers.ContainerUtil;
 import consulo.disposer.Disposable;
-import consulo.disposer.Disposer;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.awt.*;
-import java.util.List;
 import java.util.MissingResourceException;
 
 /**
  * @author Kirill Kalishev
  * @author Konstantin Bulenkov
  */
+@Deprecated
 public class RegistryValue {
-
-  private final Registry myRegistry;
+  @Nonnull
   private final String myKey;
-
-  private final List<RegistryValueListener> myListeners = ContainerUtil.createLockFreeCopyOnWriteList();
-
-  private boolean myChangedSinceStart;
+  @Nullable
+  private String myValue;
 
   private String myStringCachedValue;
   private Integer myIntCachedValue;
   private Double myDoubleCachedValue;
   private Boolean myBooleanCachedValue;
 
-  RegistryValue(@Nonnull Registry registry, @Nonnull String key) {
-    myRegistry = registry;
+  RegistryValue(@Nonnull String key, @Nullable String value) {
     myKey = key;
+    myValue = value;
   }
 
   @Nonnull
   public String getKey() {
     return myKey;
   }
-
 
   @Nonnull
   public String asString() {
@@ -65,7 +60,7 @@ public class RegistryValue {
       myBooleanCachedValue = Boolean.valueOf(get(myKey, "false", true));
     }
 
-    return myBooleanCachedValue.booleanValue();
+    return myBooleanCachedValue;
   }
 
   public int asInteger() {
@@ -73,7 +68,7 @@ public class RegistryValue {
       myIntCachedValue = Integer.valueOf(get(myKey, "0", true));
     }
 
-    return myIntCachedValue.intValue();
+    return myIntCachedValue;
   }
 
   public double asDouble() {
@@ -81,7 +76,7 @@ public class RegistryValue {
       myDoubleCachedValue = Double.valueOf(get(myKey, "0.0", true));
     }
 
-    return myDoubleCachedValue.doubleValue();
+    return myDoubleCachedValue;
   }
 
   public Color asColor(Color defaultValue) {
@@ -104,14 +99,6 @@ public class RegistryValue {
     return get(myKey + ".description", "", false);
   }
 
-  public boolean isRestartRequired() {
-    return Boolean.valueOf(get(myKey + ".restartRequired", "false", false));
-  }
-
-  public boolean isChangedFromDefault() {
-    return !asString().equals(getBundleValue(myKey, false));
-  }
-
   private String get(@Nonnull String key, String defaultValue, boolean isValue) throws MissingResourceException {
     if (isValue) {
       if (myStringCachedValue == null) {
@@ -126,10 +113,6 @@ public class RegistryValue {
   }
 
   private String _get(@Nonnull String key, String defaultValue, boolean mustExistInBundle) throws MissingResourceException {
-    final String userValue = myRegistry.getUserProperties().get(key);
-    if (userValue != null) {
-      return userValue;
-    }
     String systemProperty = System.getProperty(key);
     if (systemProperty != null) {
       return systemProperty;
@@ -141,17 +124,8 @@ public class RegistryValue {
     return defaultValue;
   }
 
-  private static String getBundleValue(@Nonnull String key, boolean mustExist) throws MissingResourceException {
-    try {
-      return Registry.getBundle().getString(key);
-    }
-    catch (MissingResourceException e) {
-      if (mustExist) {
-        throw e;
-      }
-    }
-
-    return null;
+  private String getBundleValue(@Nonnull String key, boolean mustExist) throws MissingResourceException {
+    return myValue;
   }
 
   public void setValue(boolean value) {
@@ -163,37 +137,12 @@ public class RegistryValue {
   }
 
   public void setValue(String value) {
+    myValue = value;
+
     resetCache();
-
-    for (RegistryValueListener each : myListeners) {
-      each.beforeValueChanged(this);
-    }
-
-    myRegistry.getUserProperties().put(myKey, value);
-
-    for (RegistryValueListener each : myListeners) {
-      each.afterValueChanged(this);
-    }
-
-    if (!isChangedFromDefault()) {
-      myRegistry.getUserProperties().remove(myKey);
-    }
-
-    myChangedSinceStart = true;
   }
-
-  public boolean isChangedSinceAppStart() {
-    return myChangedSinceStart;
-  }
-
-  public void resetToDefault() {
-    setValue(getBundleValue(myKey, true));
-  }
-
 
   public void addListener(@Nonnull final RegistryValueListener listener, @Nonnull Disposable parent) {
-    myListeners.add(listener);
-    Disposer.register(parent, () -> myListeners.remove(listener));
   }
 
   @Override

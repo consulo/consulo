@@ -1365,7 +1365,6 @@
     <applicationService serviceInterface="com.intellij.ide.RecentProjectsManager" serviceImplementation="com.intellij.ide.RecentDirectoryProjectsManager"/>
 
     <applicationService serviceImplementation="consulo.fileChooser.FileOperateDialogSettings"/>
-    <applicationService serviceImplementation="com.intellij.openapi.util.registry.RegistryState"/>
     <applicationService serviceImplementation="com.intellij.ide.MacOSApplicationProvider"/>
     <applicationService serviceImplementation="consulo.ide.actions.webSearch.WebSearchOptions"/>
 

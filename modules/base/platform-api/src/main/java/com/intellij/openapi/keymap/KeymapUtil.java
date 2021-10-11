@@ -365,7 +365,7 @@ public class KeymapUtil {
   public static boolean isTooltipRequest(KeyEvent keyEvent) {
     if (ourTooltipKeysProperty == null) {
       ourTooltipKeysProperty = Registry.get("ide.forcedShowTooltip");
-      ourTooltipKeysProperty.addListener(new RegistryValueListener.Adapter() {
+      ourTooltipKeysProperty.addListener(new RegistryValueListener() {
         @Override
         public void afterValueChanged(RegistryValue value) {
           updateTooltipRequestKey(value);

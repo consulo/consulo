@@ -15,17 +15,15 @@
  */
 package com.intellij.openapi.util.registry;
 
+import consulo.annotation.DeprecationInfo;
+
+@Deprecated
+@DeprecationInfo("Settings must use own state or use EarlyAccessProgramDescriptor. Never invoked")
 public interface RegistryValueListener {
 
-  void beforeValueChanged(RegistryValue value);
-  void afterValueChanged(RegistryValue value);
-
-  class Adapter implements RegistryValueListener {
-    public void beforeValueChanged(RegistryValue value) {
-    }
-
-    public void afterValueChanged(RegistryValue value) {
-    }
+  default void beforeValueChanged(RegistryValue value) {
   }
 
+  default void afterValueChanged(RegistryValue value) {
+  }
 }

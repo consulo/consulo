@@ -421,14 +421,6 @@ public class EditorTestUtil {
     }
   }
 
-  public static void enableMultipleCarets() {
-    Registry.get("editor.allow.multiple.carets").setValue(true);
-  }
-
-  public static void disableMultipleCarets() {
-    Registry.get("editor.allow.multiple.carets").setValue(false);
-  }
-
   public static class CaretAndSelectionState {
     public final List<CaretInfo> carets = new ArrayList<CaretInfo>();
     @javax.annotation.Nullable
