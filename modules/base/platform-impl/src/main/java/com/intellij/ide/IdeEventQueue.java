@@ -367,6 +367,9 @@ public class IdeEventQueue extends EventQueue {
 
   @Override
   public void dispatchEvent(@Nonnull AWTEvent e) {
+    if(e instanceof KeyEvent) {
+      System.out.println(e);
+    }
     // DO NOT ADD ANYTHING BEFORE fixNestedSequenceEvent is called
 
     fixNestedSequenceEvent(e);
@@ -394,8 +397,9 @@ public class IdeEventQueue extends EventQueue {
     e = fixNonEnglishKeyboardLayouts(e);
 
     e = mapEvent(e);
-    if (Registry.is("keymap.windows.as.meta")) {
-      e = mapMetaState(e);
+    AWTEvent metaEvent = mapMetaState(e);
+    if (metaEvent != null && Registry.is("keymap.windows.as.meta")) {
+      e = metaEvent;
     }
 
     boolean wasInputEvent = myIsInInputEvent;
@@ -586,24 +590,32 @@ public class IdeEventQueue extends EventQueue {
 
   @Nonnull
   private static AWTEvent mapEvent(@Nonnull AWTEvent e) {
-    if (SystemInfo.isXWindow && e instanceof MouseEvent && ((MouseEvent)e).getButton() > 3) {
-      MouseEvent src = (MouseEvent)e;
-      if (src.getButton() < 6) {
-        // Convert these events(buttons 4&5 in are produced by touchpad, they must be converted to horizontal scrolling events
-        e = new MouseWheelEvent(src.getComponent(), MouseEvent.MOUSE_WHEEL, src.getWhen(), src.getModifiers() | InputEvent.SHIFT_DOWN_MASK, src.getX(), src.getY(), 0, false,
-                                MouseWheelEvent.WHEEL_UNIT_SCROLL, src.getClickCount(), src.getButton() == 4 ? -1 : 1);
-      }
-      else {
-        // Here we "shift" events with buttons 6 and 7 to similar events with buttons 4 and 5
-        // See java.awt.InputEvent#BUTTON_DOWN_MASK, 1<<14 is 4th physical button, 1<<15 is 5th.
-        //noinspection MagicConstant
-        e = new MouseEvent(src.getComponent(), src.getID(), src.getWhen(), src.getModifiers() | (1 << 8 + src.getButton()), src.getX(), src.getY(), 1, src.isPopupTrigger(), src.getButton() - 2);
-      }
-    }
-    return e;
+    return SystemInfo.isXWindow && e instanceof MouseEvent && ((MouseEvent)e).getButton() > 3 ? mapXWindowMouseEvent((MouseEvent)e) : e;
   }
 
   @Nonnull
+  private static AWTEvent mapXWindowMouseEvent(MouseEvent src) {
+    if (src.getButton() < 6) {
+      // Convert these events(buttons 4&5 in are produced by touchpad, they must be converted to horizontal scrolling events
+      return new MouseWheelEvent(src.getComponent(), MouseEvent.MOUSE_WHEEL, src.getWhen(), src.getModifiers() | InputEvent.SHIFT_DOWN_MASK, src.getX(), src.getY(), 0, false, MouseWheelEvent.WHEEL_UNIT_SCROLL, src.getClickCount(), src.getButton() == 4 ? -1 : 1);
+    }
+
+    // Here we "shift" events with buttons 6 and 7 to similar events with buttons 4 and 5
+    // See java.awt.InputEvent#BUTTON_DOWN_MASK, 1<<14 is 4th physical button, 1<<15 is 5th.
+    //noinspection MagicConstant
+    return new MouseEvent(src.getComponent(), src.getID(), src.getWhen(), src.getModifiers() | (1 << 8 + src.getButton()), src.getX(), src.getY(), 1, src.isPopupTrigger(), src.getButton() - 2);
+  }
+
+  /**
+   * Here we try to use 'Windows' key like modifier, so we patch events with modifier 'Meta'
+   * when 'Windows' key was pressed and still is not released.
+   *
+   * @param e event to be patched
+   * @return new 'patched' event if need, otherwise null
+   * <p>
+   * Note: As side-effect this method tracks special flag for 'Windows' key state that is valuable on itself
+   */
+  @Nullable
   private AWTEvent mapMetaState(@Nonnull AWTEvent e) {
     if (myWinMetaPressed) {
       Application app = ApplicationManager.getApplication();
@@ -612,7 +624,7 @@ public class IdeEventQueue extends EventQueue {
       weAreNotActive |= e instanceof FocusEvent && ((FocusEvent)e).getOppositeComponent() == null;
       if (weAreNotActive) {
         myWinMetaPressed = false;
-        return e;
+        return null;
       }
     }
 
@@ -621,7 +633,7 @@ public class IdeEventQueue extends EventQueue {
       if (ke.getKeyCode() == KeyEvent.VK_WINDOWS) {
         if (ke.getID() == KeyEvent.KEY_PRESSED) myWinMetaPressed = true;
         if (ke.getID() == KeyEvent.KEY_RELEASED) myWinMetaPressed = false;
-        return new KeyEvent(ke.getComponent(), ke.getID(), ke.getWhen(), ke.getModifiers() | ke.getModifiersEx(), KeyEvent.VK_META, ke.getKeyChar(), ke.getKeyLocation());
+        return null;
       }
       if (myWinMetaPressed) {
         return new KeyEvent(ke.getComponent(), ke.getID(), ke.getWhen(), ke.getModifiers() | ke.getModifiersEx() | InputEvent.META_MASK, ke.getKeyCode(), ke.getKeyChar(), ke.getKeyLocation());
@@ -634,7 +646,7 @@ public class IdeEventQueue extends EventQueue {
                             me.getButton());
     }
 
-    return e;
+    return null;
   }
 
   public void _dispatchEvent(@Nonnull AWTEvent e) {
