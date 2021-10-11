@@ -20,6 +20,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.vfs.VirtualFile;
 import consulo.awt.TargetAWT;
+import consulo.disposer.Disposer;
 import consulo.start.WelcomeFrameManager;
 import consulo.ui.annotation.RequiredUIAccess;
 
@@ -127,7 +128,7 @@ public class NewProjectDialog extends DialogWrapper {
   @Override
   protected void dispose() {
     myProjectPanel.finish();
-    myProjectPanel.dispose();
+    Disposer.dispose(myProjectPanel);
 
     super.dispose();
   }
