@@ -15,17 +15,20 @@
  */
 package com.intellij.ui;
 
-import com.intellij.openapi.extensions.ExtensionPointName;
+import com.intellij.openapi.application.Application;
 import org.intellij.lang.annotations.JdkConstants;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.awt.*;
 
 /**
  * @author egor
  */
-interface SuitableFontProvider {
-  ExtensionPointName<SuitableFontProvider> EP_NAME = ExtensionPointName.create("com.intellij.ui.suitableFontProvider");
+public interface SuitableFontProvider {
+  @Nonnull
+  static SuitableFontProvider getInstance() {
+    return Application.get().getInstance(SuitableFontProvider.class);
+  }
 
   Font getFontAbleToDisplay(char c, int size, @JdkConstants.FontStyle int style, @Nonnull String defaultFontFamily);
 }

@@ -102,11 +102,6 @@ public class SimpleColoredComponent extends JComponent implements Accessible, Co
    */
   private Border myBorder;
 
-  /**
-   * If true, then for character that the current font can not draw we try to look for a fallback font that can
-   */
-  private boolean mySupportFontFallback = false;
-
   private int myMainTextLastIndex = -1;
 
   private final IntIntMap myFragmentPadding;
@@ -504,10 +499,7 @@ public class SimpleColoredComponent extends JComponent implements Accessible, Co
     for (char c = it.first(); c != CharacterIterator.DONE; c = it.next()) {
       Font font = basefont;
       if (!font.canDisplay(c)) {
-        for (SuitableFontProvider provider : SuitableFontProvider.EP_NAME.getExtensions()) {
-          font = provider.getFontAbleToDisplay(c, basefont.getSize(), basefont.getStyle(), basefont.getFamily());
-          if (font != null) break;
-        }
+        font = SuitableFontProvider.getInstance().getFontAbleToDisplay(c, basefont.getSize(), basefont.getStyle(), basefont.getFamily());
       }
       int i = it.getIndex();
       if (!Comparing.equal(currentFont, font)) {
@@ -525,14 +517,7 @@ public class SimpleColoredComponent extends JComponent implements Accessible, Co
   }
 
   private boolean needFontFallback(Font font, String text) {
-    return mySupportFontFallback && font.canDisplayUpTo(text) != -1 && text.indexOf(CharacterIterator.DONE) == -1; // see IDEA-137517, TextLayout does not support this character
-  }
-
-  /**
-   * If true, then for character that the current font can not draw we try to look for a fallback font that can
-   */
-  public void setSupportFontFallback(boolean supportFontFallback) {
-    mySupportFontFallback = supportFontFallback;
+    return font.canDisplayUpTo(text) != -1 && text.indexOf(CharacterIterator.DONE) == -1; // see IDEA-137517, TextLayout does not support this character
   }
 
   /**

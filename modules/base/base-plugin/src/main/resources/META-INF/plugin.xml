@@ -792,8 +792,6 @@
 
     <extensionPoint name="scopeTreeExpander" interface="com.intellij.ide.scopeView.ScopeTreeStructureExpander" area="PROJECT"/>
 
-    <extensionPoint name="ui.suitableFontProvider" interface="com.intellij.ui.SuitableFontProvider"/>
-
     <extensionPoint name="schemeImporter" beanClass="com.intellij.openapi.options.SchemeImporterEP">
       <with attribute="schemeClass" implements="consulo.util.pointers.Named"/>
       <with attribute="implementationClass" implements="com.intellij.openapi.options.SchemeImporter"/>
@@ -2775,6 +2773,8 @@
                     serviceImplementation="com.intellij.build.SyncViewManager"/>
     <projectService serviceInterface="com.intellij.build.BuildWorkspaceConfiguration"
                     serviceImplementation="com.intellij.build.BuildWorkspaceConfigurationImpl"/>
+
+    <applicationService serviceInterface="com.intellij.ui.SuitableFontProvider" serviceImplementation="com.intellij.ui.SuitableFontProviderImpl" />
 
     <settingsEntryPointActionProvider implementation="com.intellij.openapi.updateSettings.impl.UpdateSettingsEntryPointActionProvider"/>
   </extensions>
