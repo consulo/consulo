@@ -367,9 +367,6 @@ public class IdeEventQueue extends EventQueue {
 
   @Override
   public void dispatchEvent(@Nonnull AWTEvent e) {
-    if(e instanceof KeyEvent) {
-      System.out.println(e);
-    }
     // DO NOT ADD ANYTHING BEFORE fixNestedSequenceEvent is called
 
     fixNestedSequenceEvent(e);
