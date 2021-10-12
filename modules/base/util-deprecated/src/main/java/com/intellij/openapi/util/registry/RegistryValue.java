@@ -50,14 +50,15 @@ public class RegistryValue {
 
   @Nonnull
   public String asString() {
-    final String value = get(myKey, null, true);
-    assert value != null : myKey;
-    return value;
+    if (myStringCachedValue == null) {
+      myStringCachedValue = get(myKey, "");
+    }
+    return myStringCachedValue;
   }
 
   public boolean asBoolean() {
     if (myBooleanCachedValue == null) {
-      myBooleanCachedValue = Boolean.valueOf(get(myKey, "false", true));
+      myBooleanCachedValue = Boolean.valueOf(get(myKey, "false"));
     }
 
     return myBooleanCachedValue;
@@ -65,7 +66,7 @@ public class RegistryValue {
 
   public int asInteger() {
     if (myIntCachedValue == null) {
-      myIntCachedValue = Integer.valueOf(get(myKey, "0", true));
+      myIntCachedValue = Integer.valueOf(get(myKey, "0"));
     }
 
     return myIntCachedValue;
@@ -73,14 +74,14 @@ public class RegistryValue {
 
   public double asDouble() {
     if (myDoubleCachedValue == null) {
-      myDoubleCachedValue = Double.valueOf(get(myKey, "0.0", true));
+      myDoubleCachedValue = Double.valueOf(get(myKey, "0.0"));
     }
 
     return myDoubleCachedValue;
   }
 
   public Color asColor(Color defaultValue) {
-    final String s = get(myKey, null, true);
+    final String s = get(myKey, null);
     if (s != null) {
       final String[] rgb = s.split(",");
       if (rgb.length == 3) {
@@ -94,38 +95,17 @@ public class RegistryValue {
     return defaultValue;
   }
 
-  @Nonnull
-  public String getDescription() {
-    return get(myKey + ".description", "", false);
-  }
-
-  private String get(@Nonnull String key, String defaultValue, boolean isValue) throws MissingResourceException {
-    if (isValue) {
-      if (myStringCachedValue == null) {
-        myStringCachedValue = _get(key, defaultValue, isValue);
-        if (isBoolean()) {
-          myStringCachedValue = Boolean.valueOf(myStringCachedValue).toString();
-        }
-      }
-      return myStringCachedValue;
-    }
-    return _get(key, defaultValue, isValue);
-  }
-
-  private String _get(@Nonnull String key, String defaultValue, boolean mustExistInBundle) throws MissingResourceException {
+  private String get(@Nonnull String key, String defaultValue) throws MissingResourceException {
     String systemProperty = System.getProperty(key);
     if (systemProperty != null) {
       return systemProperty;
     }
-    final String bundleValue = getBundleValue(key, mustExistInBundle);
-    if (bundleValue != null) {
-      return bundleValue;
-    }
-    return defaultValue;
-  }
 
-  private String getBundleValue(@Nonnull String key, boolean mustExist) throws MissingResourceException {
-    return myValue;
+    if (myValue != null) {
+      return myValue;
+    }
+
+    return defaultValue;
   }
 
   public void setValue(boolean value) {
