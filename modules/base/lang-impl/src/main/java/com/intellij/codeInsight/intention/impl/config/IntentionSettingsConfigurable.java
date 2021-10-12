@@ -21,12 +21,11 @@ import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.SearchableConfigurable;
 import consulo.disposer.Disposable;
 import consulo.ui.annotation.RequiredUIAccess;
-import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 
-public class IntentionSettingsConfigurable implements SearchableConfigurable, Configurable.HoldPreferredFocusedComponent {
+public class IntentionSettingsConfigurable implements SearchableConfigurable, Configurable.NoMargin, Configurable.NoScroll, Configurable.HoldPreferredFocusedComponent {
   public static final String HELP_ID = "preferences.intentionPowerPack";
   private IntentionSettingsPanel myPanel;
 
