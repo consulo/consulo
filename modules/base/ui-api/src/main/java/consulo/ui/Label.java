@@ -27,6 +27,8 @@ import javax.annotation.Nullable;
 /**
  * @author VISTALL
  * @since 11-Jun-16
+ *
+ * For advanced version of label {@link AdvancedLabel}
  */
 public interface Label extends Component, Mnemonicable {
   @Nonnull

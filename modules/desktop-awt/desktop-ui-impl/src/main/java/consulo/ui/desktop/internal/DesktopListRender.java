@@ -43,7 +43,7 @@ class DesktopListRender<E> extends ColoredListCellRenderer<E> {
 
   @Override
   protected void customizeCellRenderer(@Nonnull JList<? extends E> list, E value, int index, boolean selected, boolean hasFocus) {
-    DesktopItemPresentationImpl<E> render = new DesktopItemPresentationImpl<E>(this) {
+    DesktopTextItemPresentationImpl render = new DesktopTextItemPresentationImpl(this) {
       @Nonnull
       @Override
       public TextItemPresentation withAntialiasingType(@Nonnull AntialiasingType type) {

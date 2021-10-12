@@ -481,4 +481,10 @@ public class DesktopUIInternalImpl extends UIInternal {
 
     UiNotifyConnector.doWhenFirstShown(awtComponent, action);
   }
+
+  @Nonnull
+  @Override
+  public AdvancedLabel _Components_advancedLabel() {
+    return new DesktopAdvancedLabelImpl();
+  }
 }

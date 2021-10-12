@@ -15,12 +15,12 @@
  */
 package consulo.ui.desktop.internal;
 
-import com.intellij.ui.ColoredListCellRenderer;
+import com.intellij.ui.SimpleColoredComponent;
 import consulo.awt.TargetAWT;
 import consulo.awt.impl.TargetAWTFacadeImpl;
 import consulo.localize.LocalizeValue;
-import consulo.ui.TextItemPresentation;
 import consulo.ui.TextAttribute;
+import consulo.ui.TextItemPresentation;
 import consulo.ui.font.Font;
 import consulo.ui.image.Image;
 
@@ -31,36 +31,36 @@ import javax.annotation.Nullable;
  * @author VISTALL
  * @since 12-Jun-16
  */
-class DesktopItemPresentationImpl<E> implements TextItemPresentation {
-  private ColoredListCellRenderer<E> myRenderer;
+class DesktopTextItemPresentationImpl implements TextItemPresentation {
+  private final SimpleColoredComponent mySimpleColoredComponent;
 
-  public DesktopItemPresentationImpl(ColoredListCellRenderer<E> renderer) {
-    myRenderer = renderer;
+  public DesktopTextItemPresentationImpl(SimpleColoredComponent simpleColoredComponent) {
+    mySimpleColoredComponent = simpleColoredComponent;
   }
 
   @Override
   public void clearText() {
-    Image icon = myRenderer.getIcon();
-    myRenderer.clear();
-    myRenderer.setIcon(icon);
+    Image icon = mySimpleColoredComponent.getIcon();
+    mySimpleColoredComponent.clear();
+    mySimpleColoredComponent.setIcon(icon);
   }
 
   @Nonnull
   @Override
   public TextItemPresentation withFont(@Nonnull Font font) {
-    myRenderer.setFont(TargetAWT.to(font));
+    mySimpleColoredComponent.setFont(TargetAWT.to(font));
     return this;
   }
 
   @Nonnull
   @Override
   public TextItemPresentation withIcon(@Nullable Image icon) {
-    myRenderer.setIcon(icon);
+    mySimpleColoredComponent.setIcon(icon);
     return this;
   }
 
   @Override
   public void append(@Nonnull LocalizeValue text, @Nonnull TextAttribute textAttribute) {
-    myRenderer.append(text.get(), TargetAWTFacadeImpl.from(textAttribute));
+    mySimpleColoredComponent.append(text.get(), TargetAWTFacadeImpl.from(textAttribute));
   }
 }

@@ -22,9 +22,11 @@ import consulo.ui.*;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.app.WindowWrapper;
 import consulo.ui.cursor.StandardCursors;
+import consulo.ui.font.Font;
 import consulo.ui.image.Image;
 import consulo.ui.layout.*;
 import consulo.ui.model.TableModel;
+import consulo.ui.style.StandardColors;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -67,7 +69,7 @@ public class UITester {
       fold.add(Label.create("Some label"));
       fold.add(Button.create("Some Button", (e) -> Alerts.okError("Clicked!").showAsync()));
 
-      FoldoutLayout layout = FoldoutLayout.create(LocalizeValue.localizeTODO("Show Me"), fold);
+      FoldoutLayout layout = FoldoutLayout.create(LocalizeValue.of("Show Me"), fold);
       layout.addStateListener(state -> Alerts.okInfo("State " + state).showAsync());
 
       tabbedLayout.addTab("FoldoutLayout", layout);
@@ -80,14 +82,14 @@ public class UITester {
 
       SwipeLayout swipeLayout = SwipeLayout.create();
 
-      swipeLayout.register("left", () -> swipeChildLayout("Right", () -> swipeLayout.swipeRightTo("right")));
-      swipeLayout.register("right", () -> swipeChildLayout("Left", () -> swipeLayout.swipeLeftTo("left")));
+      swipeLayout.register("left", () -> swipeChildLayout(LocalizeValue.of("Right"), () -> swipeLayout.swipeRightTo("right")));
+      swipeLayout.register("right", () -> swipeChildLayout(LocalizeValue.of("Left"), () -> swipeLayout.swipeLeftTo("left")));
 
       tabbedLayout.addTab("SwipeLayout", swipeLayout);
 
       VerticalLayout borderLayout = VerticalLayout.create();
       DockLayout dockLayout = DockLayout.create();
-      Button centerBtn = Button.create(LocalizeValue.localizeTODO("Center"));
+      Button centerBtn = Button.create(LocalizeValue.of("Center"));
       centerBtn.addClickListener(event -> {
         dockLayout.center(HorizontalLayout.create().add(Label.create(LocalizeValue.of(LocalDateTime.now().toString()))));
       }) ;
@@ -102,7 +104,7 @@ public class UITester {
     }
 
     @RequiredUIAccess
-    private Layout swipeChildLayout(String text, @RequiredUIAccess Runnable runnable) {
+    private Layout swipeChildLayout(LocalizeValue text, @RequiredUIAccess Runnable runnable) {
       DockLayout dockLayout = DockLayout.create();
 
       dockLayout.center(HorizontalLayout.create().add(Button.create(text, e -> runnable.run())));
@@ -118,20 +120,25 @@ public class UITester {
       layout.add(builder.build());
 
       ToggleSwitch toggleSwitch = ToggleSwitch.create(true);
-      toggleSwitch.addValueListener(event -> Alerts.okInfo("toggle").showAsync());
+      toggleSwitch.addValueListener(event -> Alerts.okInfo(LocalizeValue.of("toggle")).showAsync());
 
-      CheckBox checkBox = CheckBox.create(LocalizeValue.localizeTODO("Check box"));
-      checkBox.addValueListener(event -> Alerts.okInfo("checkBox").showAsync());
+      CheckBox checkBox = CheckBox.create(LocalizeValue.of("Check box"));
+      checkBox.addValueListener(event -> Alerts.okInfo(LocalizeValue.of("checkBox")).showAsync());
 
-      layout.add(HorizontalLayout.create().add(Label.create("Toggle Switch")).add(toggleSwitch).add(checkBox));
+      layout.add(AdvancedLabel.create().updatePresentation(presentation -> {
+        presentation.append(LocalizeValue.of("Advanced "), TextAttribute.REGULAR_BOLD);
+        presentation.append(LocalizeValue.of("Label"), new TextAttribute(Font.STYLE_PLAIN, StandardColors.RED, StandardColors.BLACK));
+      }));
 
-      layout.add(HorizontalLayout.create().add(Label.create("Password")).add(PasswordBox.create()));
+      layout.add(HorizontalLayout.create().add(Label.create(LocalizeValue.of("Toggle Switch"))).add(toggleSwitch).add(checkBox));
+
+      layout.add(HorizontalLayout.create().add(Label.create(LocalizeValue.of("Password"))).add(PasswordBox.create()));
 
       IntSlider intSlider = IntSlider.create(3);
-      intSlider.addValueListener(event -> Alerts.okInfo("intSlider " + event.getValue()).showAsync());
-      layout.add(HorizontalLayout.create().add(Label.create("IntSlider")).add(intSlider));
+      intSlider.addValueListener(event -> Alerts.okInfo(LocalizeValue.of("intSlider " + event.getValue())).showAsync());
+      layout.add(HorizontalLayout.create().add(Label.create(LocalizeValue.of("IntSlider"))).add(intSlider));
 
-      layout.add(Hyperlink.create("Some Link", (e) -> Alerts.okInfo(LocalizeValue.localizeTODO("Clicked!!!")).showAsync()));
+      layout.add(Hyperlink.create("Some Link", (e) -> Alerts.okInfo(LocalizeValue.of("Clicked!!!")).showAsync()));
       return layout;
     }
 
@@ -187,17 +194,17 @@ public class UITester {
     @RequiredUIAccess
     private Component alerts() {
       VerticalLayout layout = VerticalLayout.create();
-      layout.add(Button.create(LocalizeValue.localizeTODO("Info. Hand Cursor"), event -> {
-        Alerts.okInfo(LocalizeValue.localizeTODO("This is INFO")).showAsync();
+      layout.add(Button.create(LocalizeValue.of("Info. Hand Cursor"), event -> {
+        Alerts.okInfo(LocalizeValue.of("This is INFO")).showAsync();
       }).withCursor(StandardCursors.HAND));
-      layout.add(Button.create(LocalizeValue.localizeTODO("Warning"), event -> {
-        Alerts.okWarning(LocalizeValue.localizeTODO("This is WARN")).showAsync();
+      layout.add(Button.create(LocalizeValue.of("Warning"), event -> {
+        Alerts.okWarning(LocalizeValue.of("This is WARN")).showAsync();
       }));
-      layout.add(Button.create(LocalizeValue.localizeTODO("Error. Wait Cursor"), event -> {
-        Alerts.okError(LocalizeValue.localizeTODO("This is ERROR")).showAsync();
+      layout.add(Button.create(LocalizeValue.of("Error. Wait Cursor"), event -> {
+        Alerts.okError(LocalizeValue.of("This is ERROR")).showAsync();
       }).withCursor(StandardCursors.WAIT));
-      layout.add(Button.create(LocalizeValue.localizeTODO("Question"), event -> {
-        Alerts.okQuestion(LocalizeValue.localizeTODO("This is QUESTION")).showAsync();
+      layout.add(Button.create(LocalizeValue.of("Question"), event -> {
+        Alerts.okQuestion(LocalizeValue.of("This is QUESTION")).showAsync();
       }));
       return layout;
     }
