@@ -18,6 +18,7 @@ package com.intellij.ide.actions;
 import com.intellij.CommonBundle;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.SearchableConfigurable;
+import com.intellij.openapi.options.UnnamedConfigurable;
 import com.intellij.openapi.options.ex.Settings;
 import com.intellij.openapi.options.ex.SingleConfigurableEditor;
 import com.intellij.openapi.options.newEditor.DesktopSettingsDialog;
@@ -126,29 +127,19 @@ public class DesktopShowSettingsUtilImpl extends BaseProjectStructureShowSetting
     }.queue();
   }
 
+  @SuppressWarnings("unchecked")
   @RequiredUIAccess
   @Override
-  public void showSettingsDialog(@Nullable final Project project, final Class configurableClass) {
+  public <T extends UnnamedConfigurable> void showAndSelect(@Nullable Project project, @Nonnull Class<T> configurableClass, @Nonnull Consumer<T> afterSelect) {
     assert Configurable.class.isAssignableFrom(configurableClass) : "Not a configurable: " + configurableClass.getName();
 
     Configurable[] configurables = buildConfigurables(project);
 
-    Configurable config = findByClass(configurables, configurableClass);
-
-    assert config != null : "Cannot find configurable: " + configurableClass.getName();
-
-    showSettingsImpl(project, project1 -> configurables, config, dialog -> {
+    showSettingsImpl(project, project1 -> configurables, null, dialog -> {
+      final Settings editor = dialog.getDataUnchecked(Settings.KEY);
+      assert editor != null;
+      editor.select(configurableClass).doWhenDone(afterSelect);
     });
-  }
-
-  @Nullable
-  private static Configurable findByClass(Configurable[] configurables, Class configurableClass) {
-    for (Configurable configurable : configurables) {
-      if (configurableClass.isInstance(configurable)) {
-        return configurable;
-      }
-    }
-    return null;
   }
 
   @RequiredUIAccess
@@ -171,7 +162,7 @@ public class DesktopShowSettingsUtilImpl extends BaseProjectStructureShowSetting
 
     showSettingsImpl(project, it -> configurables, configurable2Select, dialog -> {
       final Settings editor = dialog.getDataUnchecked(Settings.KEY);
-      LOG.assertTrue(editor != null);
+      assert editor != null;
       editor.select(configurable2Select, filter);
     });
   }

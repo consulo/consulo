@@ -144,7 +144,8 @@ public abstract class IntentionSettingsTree {
     final CheckedTreeNode child = findChildRecursively(getRoot(), familyName);
     if (child != null) {
       final TreePath path = new TreePath(child.getPath());
-      TreeUtil.selectPath(myTree, path);
+      // focus after select, due some components can grab focus
+      TreeUtil.selectPath(myTree, path).doWhenDone(() -> myTree.requestFocus());
     }
   }
 

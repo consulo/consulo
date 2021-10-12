@@ -17,6 +17,7 @@ package com.intellij.openapi.options;
 
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
+import consulo.annotation.DeprecationInfo;
 import consulo.options.ProjectStructureSelector;
 import consulo.platform.Platform;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -40,7 +41,19 @@ public abstract class ShowSettingsUtil {
   }
 
   @RequiredUIAccess
-  public abstract void showSettingsDialog(@Nullable Project project, Class toSelect);
+  public void showSettingsDialog(@Nullable Project project, Class toSelect) {
+    showAndSelect(project, toSelect, o -> {
+    });
+  }
+
+  @RequiredUIAccess
+  public <T extends UnnamedConfigurable> void showAndSelect(@Nullable Project project, @Nonnull Class<T> toSelect) {
+    showAndSelect(project, toSelect, o -> {
+    });
+  }
+
+  @RequiredUIAccess
+  public abstract <T extends UnnamedConfigurable> void showAndSelect(@Nullable Project project, @Nonnull Class<T> toSelect, @Nonnull Consumer<T> afterSelect);
 
   @RequiredUIAccess
   public abstract void showSettingsDialog(@Nullable Project project, @Nonnull String nameToSelect);
@@ -60,36 +73,54 @@ public abstract class ShowSettingsUtil {
   public abstract AsyncResult<Void> showProjectStructureDialog(@Nonnull Project project, @RequiredUIAccess @Nonnull Consumer<ProjectStructureSelector> consumer);
 
   @RequiredUIAccess
+  @Deprecated
+  @DeprecationInfo("Show #showAndSelect()")
   public AsyncResult<Void> editConfigurable(Project project, Configurable configurable) {
     return editConfigurable(null, project, configurable);
   }
 
   @RequiredUIAccess
+  @Deprecated
+  @DeprecationInfo("Show #showAndSelect()")
   public abstract AsyncResult<Void> editConfigurable(@Nullable String title, Project project, Configurable configurable);
 
   @RequiredUIAccess
+  @Deprecated
+  @DeprecationInfo("Show #showAndSelect()")
   public AsyncResult<Void> editConfigurable(Project project, Configurable configurable, Runnable advancedInitialization) {
     return editConfigurable(null, project, configurable, advancedInitialization);
   }
 
   @RequiredUIAccess
+  @Deprecated
+  @DeprecationInfo("Show #showAndSelect()")
   public abstract AsyncResult<Void> editConfigurable(@Nullable String title, Project project, Configurable configurable, Runnable advancedInitialization);
 
   @RequiredUIAccess
+  @Deprecated
+  @DeprecationInfo("Show #showAndSelect()")
   public abstract AsyncResult<Void> editConfigurable(Component parent, Configurable configurable);
 
   @RequiredUIAccess
+  @Deprecated
+  @DeprecationInfo("Show #showAndSelect()")
   public abstract AsyncResult<Void> editConfigurable(Component parent, Configurable configurable, Runnable advancedInitialization);
 
   @RequiredUIAccess
+  @Deprecated
+  @DeprecationInfo("Show #showAndSelect()")
   public AsyncResult<Void> editConfigurable(Project project, String dimensionServiceKey, Configurable configurable) {
     return editConfigurable(null, project, dimensionServiceKey, configurable);
   }
 
   @RequiredUIAccess
+  @Deprecated
+  @DeprecationInfo("Show #showAndSelect()")
   public abstract AsyncResult<Void> editConfigurable(@Nullable String title, Project project, String dimensionServiceKey, Configurable configurable);
 
   @RequiredUIAccess
+  @Deprecated
+  @DeprecationInfo("Show #showAndSelect()")
   public abstract AsyncResult<Void> editConfigurable(Component parent, String dimensionServiceKey, Configurable configurable);
 
   /**

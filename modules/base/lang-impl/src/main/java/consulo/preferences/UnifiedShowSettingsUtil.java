@@ -16,6 +16,7 @@
 package consulo.preferences;
 
 import com.intellij.openapi.options.Configurable;
+import com.intellij.openapi.options.UnnamedConfigurable;
 import com.intellij.openapi.project.DefaultProjectFactory;
 import com.intellij.openapi.project.Project;
 import consulo.options.BaseProjectStructureShowSettingsUtil;
@@ -55,7 +56,7 @@ public class UnifiedShowSettingsUtil extends BaseProjectStructureShowSettingsUti
 
   @RequiredUIAccess
   @Override
-  public void showSettingsDialog(@Nullable Project project, Class toSelect) {
+  public <T extends UnnamedConfigurable> void showAndSelect(@Nullable Project project, @Nonnull Class<T> toSelect, @Nonnull Consumer<T> afterSelect) {
     showSettingsDialog(project);
   }
 

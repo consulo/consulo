@@ -20,22 +20,21 @@
 package com.intellij.codeInsight.intention.impl.config;
 
 import com.intellij.codeInsight.CodeInsightBundle;
-import com.intellij.ide.plugins.PluginManager;
+import com.intellij.ide.DataManager;
 import com.intellij.ide.ui.search.SearchUtil;
-import com.intellij.openapi.application.ApplicationNamesInfo;
+import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.fileTypes.ex.FileTypeManagerEx;
-import com.intellij.openapi.options.ShowSettingsUtil;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.project.ProjectManager;
+import com.intellij.openapi.options.ex.Settings;
 import com.intellij.ui.HyperlinkLabel;
 import com.intellij.ui.TitledSeparator;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginId;
+import consulo.container.plugin.PluginIds;
+import consulo.container.plugin.PluginManager;
 import consulo.ide.plugins.PluginsConfigurable;
 import consulo.logging.Logger;
 import consulo.ui.annotation.RequiredUIAccess;
-import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nullable;
 import javax.swing.*;
@@ -84,29 +83,33 @@ public class IntentionDescriptionPanel {
   }
 
   private void setupPoweredByPanel(final IntentionActionMetaData actionMetaData) {
-    PluginId pluginId = actionMetaData == null ? null : actionMetaData.getPluginId();
-    JComponent owner;
-    if (pluginId == null) {
-      @NonNls String label = "<html><body><b>" + ApplicationNamesInfo.getInstance().getFullProductName() + "</b></body></html>";
-      owner = new JLabel(label);
-    }
-    else {
-      final PluginDescriptor pluginDescriptor = PluginManager.getPlugin(pluginId);
-      HyperlinkLabel label = new HyperlinkLabel(CodeInsightBundle.message("powered.by.plugin", pluginDescriptor.getName()));
-      label.addHyperlinkListener(new HyperlinkListener() {
-        @RequiredUIAccess
-        @Override
-        public void hyperlinkUpdate(HyperlinkEvent e) {
-          final ShowSettingsUtil util = ShowSettingsUtil.getInstance();
-          final PluginsConfigurable pluginConfigurable = new PluginsConfigurable();
-          final Project project = ProjectManager.getInstance().getDefaultProject();
-          util.editConfigurable(project, pluginConfigurable, () -> pluginConfigurable.select(pluginDescriptor));
-        }
-      });
-      owner = label;
-    }
-    //myPoweredByContainer.setVisible(true);
     myPoweredByPanel.removeAll();
+    
+    PluginId pluginId = actionMetaData == null ? null : actionMetaData.getPluginId();
+    if (pluginId == null || PluginIds.isPlatformPlugin(pluginId)) {
+      myPoweredByPanel.setVisible(false);
+      return;
+    }
+
+    JComponent owner;
+    final PluginDescriptor pluginDescriptor = PluginManager.findPlugin(pluginId);
+    HyperlinkLabel label = new HyperlinkLabel(CodeInsightBundle.message("powered.by.plugin", pluginDescriptor.getName()));
+    label.addHyperlinkListener(new HyperlinkListener() {
+      @RequiredUIAccess
+      @Override
+      public void hyperlinkUpdate(HyperlinkEvent e) {
+        DataContext dataContext = DataManager.getInstance().getDataContext(myPoweredByPanel);
+
+        Settings data = dataContext.getData(Settings.KEY);
+        if(data == null) {
+          return;
+        }
+
+        data.select(PluginsConfigurable.class).doWhenDone((pluginConfigurable) -> pluginConfigurable.select(pluginDescriptor));
+      }
+    });
+    owner = label;
+    myPoweredByPanel.setVisible(true);
     myPoweredByPanel.add(owner, BorderLayout.CENTER);
   }
 
@@ -125,12 +128,7 @@ public class IntentionDescriptionPanel {
       assert afterURL != null : "no template file. resources are not copied?";
       showUsages(myAfterPanel, myAfterSeparator, myAfterUsagePanels, new ResourceTextDescriptor[]{new ResourceTextDescriptor(afterURL)});
 
-      SwingUtilities.invokeLater(new Runnable() {
-        @Override
-        public void run() {
-          myPanel.revalidate();
-        }
-      });
+      SwingUtilities.invokeLater(() -> myPanel.revalidate());
     }
     catch (IOException e) {
       LOG.error(e);

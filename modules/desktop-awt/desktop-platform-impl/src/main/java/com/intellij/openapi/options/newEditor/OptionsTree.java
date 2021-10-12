@@ -20,6 +20,7 @@ import com.intellij.ide.util.treeView.NodeDescriptor;
 import com.intellij.ide.util.treeView.NodeRenderer;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.SearchableConfigurable;
+import com.intellij.openapi.options.UnnamedConfigurable;
 import com.intellij.openapi.options.ex.ConfigurableWrapper;
 import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.ui.SimpleTextAttributes;
@@ -43,6 +44,7 @@ import consulo.ui.decorator.SwingUIDecorator;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageKey;
 import consulo.util.concurrent.AsyncResult;
+import consulo.util.lang.Pair;
 import org.jetbrains.concurrency.Promise;
 
 import javax.annotation.Nonnull;
@@ -291,6 +293,17 @@ public class OptionsTree implements Disposable, OptionsEditorColleague {
 
   public SimpleNode findNodeFor(final Configurable toSelect) {
     return myConfigurable2Node.get(toSelect);
+  }
+
+  @Nullable
+  public <T extends UnnamedConfigurable> Pair<Configurable, T> findConfigurableInfo(Class<T> configurableClass) {
+    for (Configurable configurable : myConfigurable2Node.keySet()) {
+      T cast = ConfigurableWrapper.cast(configurable, configurableClass);
+      if (cast != null) {
+        return Pair.create(configurable, cast);
+      }
+    }
+    return null;
   }
 
   @Nullable

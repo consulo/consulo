@@ -17,6 +17,8 @@ package com.intellij.openapi.options.ex;
 
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.SearchableConfigurable;
+import com.intellij.openapi.options.UnnamedConfigurable;
+import consulo.annotation.DeprecationInfo;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.dataholder.Key;
 
@@ -35,11 +37,20 @@ public interface Settings {
   @Nullable
   SearchableConfigurable findConfigurableById(@Nonnull String configurableId);
 
+  <T extends Configurable> T findConfigurable(Class<T> configurableClass);
+
+  @Deprecated
+  @DeprecationInfo("Use #select(Configurable)")
   AsyncResult<Void> select(Configurable configurable);
 
+  @Deprecated
+  @DeprecationInfo("Use #select(Configurable)")
   AsyncResult<Void> select(Configurable configurable, final String text);
 
+  @Deprecated
+  @DeprecationInfo("Use #select(Configurable)")
   AsyncResult<Void> clearSearchAndSelect(Configurable configurable);
 
-  <T extends Configurable> T findConfigurable(Class<T> configurableClass);
+  @Nonnull
+  <T extends UnnamedConfigurable> AsyncResult<T> select(@Nonnull Class<T> clazz);
 }

@@ -26,6 +26,7 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.options.SearchableConfigurable;
+import com.intellij.openapi.options.UnnamedConfigurable;
 import com.intellij.openapi.options.ex.ConfigurableWrapper;
 import com.intellij.openapi.options.ex.GlassPanel;
 import com.intellij.openapi.options.ex.Settings;
@@ -68,6 +69,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.decorator.SwingUIDecorator;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.dataholder.Key;
+import consulo.util.lang.Pair;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.concurrency.Promise;
 import org.jetbrains.concurrency.Promises;
@@ -700,15 +702,6 @@ public class OptionsEditor implements DataProvider, Disposable, AWTEventListener
     return myLoadingDecorator.getComponent();
   }
 
-  @Nonnull
-  public AsyncResult<Void> select(Class<? extends Configurable> configurableClass) {
-    final Configurable configurable = findConfigurable(configurableClass);
-    if (configurable == null) {
-      return AsyncResult.rejected();
-    }
-    return select(configurable);
-  }
-
   @Override
   @Nullable
   public <T extends Configurable> T findConfigurable(Class<T> configurableClass) {
@@ -741,6 +734,21 @@ public class OptionsEditor implements DataProvider, Disposable, AWTEventListener
   public AsyncResult<Void> select(Configurable configurable, final String text) {
     AsyncResult<Void> callback = AsyncResult.undefined();
     Promises.toActionCallback(myFilter.refilterFor(text, false, true)).doWhenDone(() -> myTree.select(configurable).notify(callback));
+    return callback;
+  }
+
+  @Nonnull
+  @Override
+  public <T extends UnnamedConfigurable> AsyncResult<T> select(@Nonnull Class<T> clazz) {
+    Pair<Configurable, T> configurableInfo = myTree.findConfigurableInfo(clazz);
+    if(configurableInfo == null) {
+      return AsyncResult.rejected();
+    }
+
+    AsyncResult<T> callback = AsyncResult.undefined();
+    Promises.toActionCallback(myFilter.refilterFor("", false, true)).doWhenDone(() -> myTree.select(configurableInfo.getFirst()).doWhenDone(() -> {
+      callback.setDone(configurableInfo.getSecond());
+    }));
     return callback;
   }
 

@@ -19,29 +19,33 @@ package com.intellij.codeInsight.intention.impl.config;
 import com.intellij.codeInsight.CodeInsightBundle;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.SearchableConfigurable;
+import consulo.disposer.Disposable;
+import consulo.ui.annotation.RequiredUIAccess;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
-public class IntentionSettingsConfigurable implements SearchableConfigurable, Configurable.HoldPreferredFocusedComponent, IntentionsConfigurable {
-  @NonNls
+public class IntentionSettingsConfigurable implements SearchableConfigurable, Configurable.HoldPreferredFocusedComponent {
   public static final String HELP_ID = "preferences.intentionPowerPack";
   private IntentionSettingsPanel myPanel;
 
+  @RequiredUIAccess
   @Override
-  public JComponent createComponent() {
+  public JComponent createComponent(@Nonnull Disposable uiDisposable) {
     if (myPanel == null) {
       myPanel = new IntentionSettingsPanel();
     }
     return myPanel.getComponent();
   }
 
+  @RequiredUIAccess
   @Override
   public JComponent getPreferredFocusedComponent() {
     return myPanel.getIntentionTree();
   }
 
+  @RequiredUIAccess
   @Override
   public boolean isModified() {
     return myPanel != null && myPanel.isModified();
@@ -52,16 +56,19 @@ public class IntentionSettingsConfigurable implements SearchableConfigurable, Co
     return CodeInsightBundle.message("intention.settings");
   }
 
+  @RequiredUIAccess
   @Override
   public void reset() {
     myPanel.reset();
   }
 
+  @RequiredUIAccess
   @Override
   public void apply() {
     myPanel.apply();
   }
 
+  @RequiredUIAccess
   @Override
   public void disposeUIResources() {
     if (myPanel != null) {
