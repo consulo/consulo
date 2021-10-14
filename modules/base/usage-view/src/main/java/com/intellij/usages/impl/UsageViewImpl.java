@@ -44,7 +44,6 @@ import com.intellij.usages.rules.*;
 import com.intellij.util.Alarm;
 import com.intellij.util.Consumer;
 import com.intellij.util.EditSourceOnDoubleClickHandler;
-import com.intellij.util.ReflectionUtil;
 import com.intellij.util.concurrency.AppExecutorUtil;
 import com.intellij.util.concurrency.BoundedTaskExecutor;
 import com.intellij.util.concurrency.EdtExecutorService;
@@ -57,6 +56,7 @@ import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.tree.TreeModelAdapter;
 import com.intellij.util.ui.tree.TreeUtil;
+import consulo.awt.hacking.BasicTreeUIHacking;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
@@ -506,8 +506,8 @@ public class UsageViewImpl implements UsageViewEx {
     if (myExpandingCollapsing) return; // to avoid quadratic row enumeration
     // clear renderer cache of node preferred size
     TreeUI ui = myTree.getUI();
-    if (ui instanceof BasicTreeUI) {
-      AbstractLayoutCache treeState = ReflectionUtil.getField(BasicTreeUI.class, ui, AbstractLayoutCache.class, "treeState");
+    if (ui instanceof BasicTreeUI basicTreeUI) {
+      AbstractLayoutCache treeState = BasicTreeUIHacking.getTreeState(basicTreeUI);
       Rectangle visibleRect = myTree.getVisibleRect();
       int rowForLocation = myTree.getClosestRowForLocation(0, visibleRect.y);
       int visibleRowCount = getVisibleRowCount();
