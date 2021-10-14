@@ -65,8 +65,12 @@ public class RegistryValue {
   }
 
   public int asInteger() {
+    return asInteger(0);
+  }
+
+  public int asInteger(int defaultValue) {
     if (myIntCachedValue == null) {
-      myIntCachedValue = Integer.valueOf(get(myKey, "0"));
+      myIntCachedValue = Integer.valueOf(get(myKey, String.valueOf(defaultValue)));
     }
 
     return myIntCachedValue;

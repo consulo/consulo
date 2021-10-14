@@ -17,7 +17,6 @@ package com.intellij.openapi.util.registry;
 
 import com.intellij.openapi.util.AtomicNotNullLazyValue;
 import consulo.annotation.DeprecationInfo;
-import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.PropertyKey;
 
 import javax.annotation.Nonnull;
@@ -27,8 +26,7 @@ import java.util.*;
 @Deprecated
 @DeprecationInfo(value = "Use `EarlyAccessProgramDescriptor` or `PropertiesComponent`")
 public class Registry {
-  @NonNls
-  public static final String REGISTRY_BUNDLE = "misc.registry";
+  private static final String REGISTRY_BUNDLE = "misc.registry";
 
   private static AtomicNotNullLazyValue<Map<String, RegistryValue>> ourRegistry = AtomicNotNullLazyValue.createValue(() -> {
     Map<String, RegistryValue> properties = new LinkedHashMap<>();
@@ -56,7 +54,7 @@ public class Registry {
     return ourRegistry.get().computeIfAbsent(key, s -> new RegistryValue(s, null));
   }
 
-  public static boolean is(@PropertyKey(resourceBundle = REGISTRY_BUNDLE) @Nonnull String key) throws MissingResourceException {
+  public static boolean is(@PropertyKey(resourceBundle = REGISTRY_BUNDLE) @Nonnull String key) {
     return get(key).asBoolean();
   }
 
@@ -69,29 +67,24 @@ public class Registry {
     }
   }
 
-  public static int intValue(@PropertyKey(resourceBundle = REGISTRY_BUNDLE) @Nonnull String key) throws MissingResourceException {
+  public static int intValue(@PropertyKey(resourceBundle = REGISTRY_BUNDLE) @Nonnull String key) {
     return get(key).asInteger();
   }
 
   public static int intValue(@PropertyKey(resourceBundle = REGISTRY_BUNDLE) @Nonnull String key, int defaultValue) {
-    try {
-      return get(key).asInteger();
-    }
-    catch (MissingResourceException ex) {
-      return defaultValue;
-    }
+    return get(key).asInteger(defaultValue);
   }
 
-  public static double doubleValue(@PropertyKey(resourceBundle = REGISTRY_BUNDLE) @Nonnull String key) throws MissingResourceException {
+  public static double doubleValue(@PropertyKey(resourceBundle = REGISTRY_BUNDLE) @Nonnull String key) {
     return get(key).asDouble();
   }
 
   @Nonnull
-  public static String stringValue(@PropertyKey(resourceBundle = REGISTRY_BUNDLE) @Nonnull String key) throws MissingResourceException {
+  public static String stringValue(@PropertyKey(resourceBundle = REGISTRY_BUNDLE) @Nonnull String key) {
     return get(key).asString();
   }
 
-  public static Color getColor(@PropertyKey(resourceBundle = REGISTRY_BUNDLE) @Nonnull String key, Color defaultValue) throws MissingResourceException {
+  public static Color getColor(@PropertyKey(resourceBundle = REGISTRY_BUNDLE) @Nonnull String key, Color defaultValue) {
     return get(key).asColor(defaultValue);
   }
 }
