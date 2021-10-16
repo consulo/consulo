@@ -35,7 +35,6 @@ import com.intellij.util.containers.ContainerUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
 import java.util.List;
 
@@ -106,7 +105,7 @@ public abstract class DvcsBranchPopup<Repo extends Repository> {
       @Override
       public void hyperlinkUpdate(@Nonnull Notification notification, @Nonnull HyperlinkEvent event) {
         if (event.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
-          ShowSettingsUtil.getInstance().showSettingsDialog(myProject, myVcs.getConfigurable().getDisplayName());
+          ShowSettingsUtil.getInstance().showSettingsDialog(myProject, myVcs.getDisplayName());
           if (myVcsSettings.getSyncSetting() == DvcsSyncSettings.Value.DONT_SYNC) {
             notification.expire();
           }
