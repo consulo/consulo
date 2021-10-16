@@ -132,12 +132,6 @@ public class VcsMappingConfigurationDialog extends DialogWrapper {
     pack();
   }
 
-  @Nonnull
-  @Override
-  protected Action[] createLeftSideActions() {
-    return new Action[] { new ConfigureVcsAction() };
-  }
-
   protected void doOKAction() {
     if (myVcsConfigurable != null) {
       try {
@@ -232,17 +226,6 @@ public class VcsMappingConfigurationDialog extends DialogWrapper {
                 };
         ProgressManager.getInstance().run(task);
       }
-    }
-  }
-
-  private class ConfigureVcsAction extends AbstractAction {
-    public ConfigureVcsAction() {
-      super(VcsBundle.message("button.configure"));
-    }
-
-    public void actionPerformed(ActionEvent e) {
-      VcsDescriptor wrapper = (VcsDescriptor) myVCSComboBox.getSelectedItem();
-      new VcsConfigurationsDialog(myProject, null, wrapper).show();
     }
   }
 }

@@ -20,6 +20,7 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.ui.ComboBox;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.registry.Registry;
@@ -48,8 +49,6 @@ import javax.swing.*;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.io.File;
@@ -69,7 +68,7 @@ public class VcsDirectoryConfigurationPanel extends JPanel implements Configurab
   private final String myProjectMessage;
   private final ProjectLevelVcsManager myVcsManager;
   private final TableView<MapInfo> myDirectoryMappingTable;
-  private final ComboboxWithBrowseButton myVcsComboBox = new ComboboxWithBrowseButton();
+  private final ComboBox<VcsDescriptor> myVcsComboBox = new ComboBox<>();
   private final List<ModuleVcsListener> myListeners = ContainerUtil.createLockFreeCopyOnWriteList();
 
   private final MyDirectoryRenderer myDirectoryRenderer;
@@ -257,14 +256,14 @@ public class VcsDirectoryConfigurationPanel extends JPanel implements Configurab
               return new AbstractTableCellEditor() {
                 @Override
                 public Object getCellEditorValue() {
-                  final VcsDescriptor selectedVcs = (VcsDescriptor)myVcsComboBox.getComboBox().getSelectedItem();
+                  final VcsDescriptor selectedVcs = (VcsDescriptor)myVcsComboBox.getSelectedItem();
                   return ((selectedVcs == null) || selectedVcs.isNone()) ? "" : selectedVcs.getName();
                 }
 
                 @Override
                 public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
                   String vcsName = (String)value;
-                  myVcsComboBox.getComboBox().setSelectedItem(myAllVcss.get(vcsName));
+                  myVcsComboBox.setSelectedItem(myAllVcss.get(vcsName));
                   return myVcsComboBox;
                 }
               };
@@ -329,21 +328,13 @@ public class VcsDirectoryConfigurationPanel extends JPanel implements Configurab
     };
     initializeModel();
 
-    final JComboBox comboBox = myVcsComboBox.getComboBox();
-    comboBox.setModel(buildVcsWrappersModel(myProject));
-    comboBox.addItemListener(new ItemListener() {
+    myVcsComboBox.setModel(buildVcsWrappersModel(myProject));
+    myVcsComboBox.addItemListener(new ItemListener() {
       @Override
       public void itemStateChanged(final ItemEvent e) {
         if (myDirectoryMappingTable.isEditing()) {
           myDirectoryMappingTable.stopEditing();
         }
-      }
-    });
-    myVcsComboBox.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        final VcsDescriptor vcsWrapper = ((VcsDescriptor)comboBox.getSelectedItem());
-        new VcsConfigurationsDialog(project, comboBox, vcsWrapper).show();
       }
     });
 
