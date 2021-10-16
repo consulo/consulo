@@ -18,11 +18,12 @@ package com.intellij.openapi.vcs.changes.committed;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.project.Project;
+import consulo.disposer.Disposable;
+import consulo.ui.annotation.RequiredUIAccess;
 import org.jetbrains.annotations.Nls;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 /**
  * @author yole
@@ -38,17 +39,15 @@ public class CacheSettingsPanel implements Configurable {
   private CommittedChangesCache myCache;
 
   public CacheSettingsPanel() {
-    myRefreshCheckbox.addActionListener(new ActionListener() {
-      public void actionPerformed(ActionEvent e) {
-        updateControls();
-      }
-    });
+    myRefreshCheckbox.addActionListener(e -> updateControls());
   }
 
   public void initPanel(final Project project) {
     myCache = CommittedChangesCache.getInstance(project);
   }
 
+  @RequiredUIAccess
+  @Override
   public void apply() throws ConfigurationException {
     final CommittedChangesCache.State state = new CommittedChangesCache.State();
     state.setInitialCount(((SpinnerNumberModel)myCountSpinner.getModel()).getNumber().intValue());
@@ -58,6 +57,8 @@ public class CacheSettingsPanel implements Configurable {
     myCache.loadState(state);
   }
 
+  @RequiredUIAccess
+  @Override
   public boolean isModified() {
     CommittedChangesCache.State state = myCache.getState();
 
@@ -69,6 +70,8 @@ public class CacheSettingsPanel implements Configurable {
     return false;
   }
 
+  @RequiredUIAccess
+  @Override
   public void reset() {
     final CommittedChangesCache.State state = myCache.getState();
 
@@ -96,24 +99,29 @@ public class CacheSettingsPanel implements Configurable {
     return myTopPanel;
   }
 
+  @Override
   @Nls
   public String getDisplayName() {
     return "Cache";
   }
 
+  @Override
   public String getHelpTopic() {
     return "project.propVCSSupport.Cache";
   }
 
-  public JComponent createComponent() {
+  @RequiredUIAccess
+  @Override
+  public JComponent createComponent(@Nonnull Disposable uiDisposable) {
     return getPanel();
   }
 
+  @RequiredUIAccess
+  @Override
   public void disposeUIResources() {
   }
 
   public void setEnabled(final boolean value) {
     myRefreshCheckbox.setEnabled(value);
   }
-
 }
