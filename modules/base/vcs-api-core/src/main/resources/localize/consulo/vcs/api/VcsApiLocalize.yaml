@@ -261,7 +261,7 @@ checkbox.force.non.empty.messages:
 tooltip.text.action.applicable.to.vcses:
   text: 'Applicable to: {0}'
 version.control.main.configurable.name:
-  text: VCS
+  text: Version Control
 configuration.tab.name.general.settings:
   text: General Settings
 configuration.commit.message.margin.title:

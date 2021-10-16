@@ -197,8 +197,7 @@
                              bundle="messages.IdeBundle"/>
 
     <projectConfigurable instance="com.intellij.openapi.vcs.configurable.VcsManagerConfigurable"
-                         bundle="messages.VcsBundle"
-                         key="version.control.main.configurable.name"
+                         displayName="consulo.vcs.api.VcsApiLocalize@version.control.main.configurable.name"
                          dynamic="true"
                          id="vcs"/>
 
