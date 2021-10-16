@@ -23,6 +23,7 @@ import com.intellij.openapi.util.NotNullLazyValue;
 import com.intellij.util.xmlb.annotations.Attribute;
 import com.intellij.util.xmlb.annotations.Tag;
 import consulo.injecting.InjectingContainerOwner;
+import consulo.localize.LocalizeManager;
 import consulo.logging.Logger;
 
 import javax.annotation.Nonnull;
@@ -47,7 +48,13 @@ public abstract class ConfigurableEP<T extends UnnamedConfigurable> extends Abst
   public String bundle;
 
   public String getDisplayName() {
-    if (displayName != null) return displayName;
+    if (displayName != null) {
+      if (displayName.contains("@")) {
+        return LocalizeManager.get().fromStringKey(displayName).get();
+      }
+      return displayName;
+    }
+
     LOG.assertTrue(bundle != null, "Bundle missed for " + instanceClass);
     final ResourceBundle resourceBundle = AbstractBundle.getResourceBundle(bundle, myPluginDescriptor.getPluginClassLoader());
     return displayName = CommonBundle.message(resourceBundle, key);
