@@ -17,6 +17,8 @@ package com.intellij.usages.impl;
 
 import com.intellij.usages.UsageTarget;
 import com.intellij.usages.UsageView;
+import consulo.util.lang.ObjectUtil;
+
 import javax.annotation.Nonnull;
 
 /**
@@ -47,9 +49,10 @@ class UsageTargetNode extends Node {
     return false;
   }
 
+  @Nonnull
   @Override
   protected String getText(@Nonnull final UsageView view) {
-    return getTarget().getPresentation().getPresentableText();
+    return ObjectUtil.notNull(getTarget().getPresentation().getPresentableText(), "");
   }
 
   @Nonnull

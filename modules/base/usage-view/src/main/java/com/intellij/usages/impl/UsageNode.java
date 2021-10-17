@@ -90,6 +90,7 @@ public class UsageNode extends Node implements Comparable<UsageNode>, Navigatabl
     return isExcluded();
   }
 
+  @Nonnull
   @Override
   protected String getText(@Nonnull final UsageView view) {
     try {

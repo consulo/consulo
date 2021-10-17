@@ -69,7 +69,7 @@ public abstract class Node extends DefaultMutableTreeNode {
 
   protected abstract boolean isDataExcluded();
 
-
+  @Nonnull
   protected abstract String getText(@Nonnull UsageView view);
 
   public final boolean isValid() {
