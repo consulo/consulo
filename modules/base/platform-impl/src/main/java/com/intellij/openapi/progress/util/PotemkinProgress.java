@@ -8,8 +8,8 @@ import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.concurrency.Semaphore;
+import consulo.awt.hacking.SunToolkitHacking;
 import org.jetbrains.annotations.Nls;
-import sun.awt.SunToolkit;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -71,7 +71,7 @@ public class PotemkinProgress extends ProgressWindow implements PingProgress {
   @Nonnull
   @Override
   protected ProgressDialog getDialog() {
-    return (ProgressDialog) Objects.requireNonNull(super.getDialog());
+    return (ProgressDialog)Objects.requireNonNull(super.getDialog());
   }
 
   private long myLastInteraction;
@@ -92,7 +92,7 @@ public class PotemkinProgress extends ProgressWindow implements PingProgress {
   }
 
   private void dispatchAwtEventsWithoutModelAccess(int timeoutMs) {
-    SunToolkit.flushPendingEvents();
+    SunToolkitHacking.flushPendingEvents();
     try {
       while (true) {
         dispatchInvocationEvents();
@@ -139,7 +139,7 @@ public class PotemkinProgress extends ProgressWindow implements PingProgress {
 
   @Nullable
   private JRootPane considerShowingDialog(long now) {
-    if (now - myLastUiUpdate > myDelayInMillis) {
+    if (now - myLastUiUpdate > myDelayInMillis && myApp.isActive()) {
       getDialog().myRepaintRunnable.run();
       showDialog();
       return getDialog().getPanel().getRootPane();

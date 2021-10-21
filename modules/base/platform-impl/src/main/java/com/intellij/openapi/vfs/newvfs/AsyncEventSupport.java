@@ -3,10 +3,10 @@ package com.intellij.openapi.vfs.newvfs;
 
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ReadAction;
-import consulo.logging.Logger;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.progress.ProgressManager;
+import com.intellij.openapi.progress.util.PingProgress;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.vfs.AsyncFileListener;
 import com.intellij.openapi.vfs.VirtualFileManager;
@@ -14,6 +14,7 @@ import com.intellij.openapi.vfs.impl.VirtualFileManagerImpl;
 import com.intellij.openapi.vfs.newvfs.events.VFileEvent;
 import com.intellij.openapi.vfs.newvfs.persistent.PersistentFS;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.logging.Logger;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -89,6 +90,7 @@ public final class AsyncEventSupport {
 
   private static void beforeVfsChange(List<? extends AsyncFileListener.ChangeApplier> appliers) {
     for (AsyncFileListener.ChangeApplier applier : appliers) {
+      PingProgress.interactWithEdtProgress();
       try {
         applier.beforeVfsChange();
       }
@@ -100,6 +102,7 @@ public final class AsyncEventSupport {
 
   private static void afterVfsChange(List<? extends AsyncFileListener.ChangeApplier> appliers) {
     for (AsyncFileListener.ChangeApplier applier : appliers) {
+      PingProgress.interactWithEdtProgress();
       try {
         applier.afterVfsChange();
       }

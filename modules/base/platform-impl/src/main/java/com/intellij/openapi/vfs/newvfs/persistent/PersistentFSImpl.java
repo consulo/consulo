@@ -5,6 +5,7 @@ import com.intellij.concurrency.ConcurrentCollectionFactory;
 import com.intellij.concurrency.JobSchedulerImpl;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.progress.util.PingProgress;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectLocator;
 import com.intellij.openapi.util.Comparing;
@@ -952,6 +953,8 @@ public final class PersistentFSImpl extends PersistentFS implements Disposable {
     List<VFileEvent> validated = new ArrayList<>(cappedInitialSize);
     BulkFileListener publisher = getPublisher();
     while (startIndex != events.size()) {
+      PingProgress.interactWithEdtProgress();
+
       applyEvents.clear();
       files.clear();
       middleDirs.clear();
@@ -959,12 +962,15 @@ public final class PersistentFSImpl extends PersistentFS implements Disposable {
       startIndex = groupAndValidate(events, startIndex, applyEvents, validated, files, middleDirs);
 
       if (!validated.isEmpty()) {
+        PingProgress.interactWithEdtProgress();
         // do defensive copy to cope with ill-written listeners that save passed list for later processing
         List<VFileEvent> toSend = ContainerUtil.immutableList(validated.toArray(new VFileEvent[0]));
         publisher.before(toSend);
 
+        PingProgress.interactWithEdtProgress();
         applyEvents.forEach(Runnable::run);
 
+        PingProgress.interactWithEdtProgress();
         publisher.after(toSend);
       }
     }
