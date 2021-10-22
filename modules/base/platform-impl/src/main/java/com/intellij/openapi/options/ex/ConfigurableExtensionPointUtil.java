@@ -77,7 +77,7 @@ public class ConfigurableExtensionPointUtil {
         iterator.remove();
       }
     }
-    ContainerUtil.addAll(result, idToConfigurable.values());
+    consulo.util.collection.ContainerUtil.addAll(result, idToConfigurable.values());
 
     return result;
   }

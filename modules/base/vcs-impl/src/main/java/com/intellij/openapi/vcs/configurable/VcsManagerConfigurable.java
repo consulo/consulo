@@ -19,14 +19,13 @@ import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.options.SearchableConfigurable;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.NotNullLazyValue;
+import com.intellij.openapi.vcs.AbstractVcs;
 import com.intellij.openapi.vcs.ProjectLevelVcsManager;
 import com.intellij.openapi.vcs.VcsBundle;
 import com.intellij.openapi.vcs.VcsConfigurableProvider;
 import com.intellij.openapi.vcs.changes.ChangeListManagerImpl;
 import com.intellij.openapi.vcs.changes.conflicts.ChangelistConflictConfigurable;
 import com.intellij.openapi.vcs.changes.ui.IgnoredSettingsPanel;
-import com.intellij.openapi.vcs.impl.VcsDescriptor;
 import consulo.disposer.Disposable;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -145,9 +144,7 @@ public class VcsManagerConfigurable extends SearchableConfigurable.Parent.Abstra
     if (!myProject.isDefault()) {
       result.add(new IgnoredSettingsPanel(myProject));
     }
-    /*if (!myProject.isDefault()) {
-      result.add(new CacheSettingsPanel(myProject));
-    }*/
+
     result.add(new IssueNavigationConfigurationPanel(myProject));
     if (!myProject.isDefault()) {
       result.add(new ChangelistConflictConfigurable(ChangeListManagerImpl.getInstanceImpl(myProject)));
@@ -160,11 +157,12 @@ public class VcsManagerConfigurable extends SearchableConfigurable.Parent.Abstra
       }
     }
 
-    VcsDescriptor[] vcses = ProjectLevelVcsManager.getInstance(myProject).getAllVcss();
-    for (VcsDescriptor vcs : vcses) {
-      result.add(createVcsConfigurableWrapper(vcs));
+    for (AbstractVcs<?> vcs : ProjectLevelVcsManager.getInstance(myProject).getAllSupportedVcss()) {
+      Configurable configurable = vcs.getConfigurable();
+      if(configurable != null) {
+        result.add(createVcsConfigurableWrapper(vcs, configurable));
+      }
     }
-
     return result.toArray(new Configurable[result.size()]);
   }
 
@@ -172,14 +170,7 @@ public class VcsManagerConfigurable extends SearchableConfigurable.Parent.Abstra
     myMappings.addVcsListener(activeVcses -> myGeneralPanel.updateAvailableOptions(activeVcses));
   }
 
-  private Configurable createVcsConfigurableWrapper(final VcsDescriptor vcs) {
-    final NotNullLazyValue<Configurable> delegate = new NotNullLazyValue<>() {
-      @Nonnull
-      @Override
-      protected Configurable compute() {
-        return ProjectLevelVcsManager.getInstance(myProject).findVcsByName(vcs.getName()).getConfigurable();
-      }
-    };
+  private Configurable createVcsConfigurableWrapper(AbstractVcs<?> vcs, Configurable delegate) {
     return new SearchableConfigurable(){
 
       @Override
@@ -190,55 +181,55 @@ public class VcsManagerConfigurable extends SearchableConfigurable.Parent.Abstra
 
       @Override
       public String getHelpTopic() {
-        return delegate.getValue().getHelpTopic();
+        return delegate.getHelpTopic();
       }
 
       @RequiredUIAccess
       @Override
       public JComponent createComponent() {
-        return delegate.getValue().createComponent();
+        return delegate.createComponent();
       }
 
       @RequiredUIAccess
       @Override
-      public JComponent createComponent(Disposable uiDisposable) {
-        return delegate.getValue().createComponent(uiDisposable);
+      public JComponent createComponent(@Nonnull Disposable uiDisposable) {
+        return delegate.createComponent(uiDisposable);
       }
 
       @RequiredUIAccess
       @Override
       public Component createUIComponent() {
-        return delegate.getValue().createUIComponent();
+        return delegate.createUIComponent();
       }
 
       @RequiredUIAccess
       @Override
-      public Component createUIComponent(Disposable uiDisposable) {
-        return delegate.getValue().createUIComponent(uiDisposable);
+      public Component createUIComponent(@Nonnull Disposable uiDisposable) {
+        return delegate.createUIComponent(uiDisposable);
       }
 
       @RequiredUIAccess
       @Override
       public boolean isModified() {
-        return delegate.getValue().isModified();
+        return delegate.isModified();
       }
 
       @RequiredUIAccess
       @Override
       public void apply() throws ConfigurationException {
-        delegate.getValue().apply();
+        delegate.apply();
       }
 
       @RequiredUIAccess
       @Override
       public void reset() {
-        delegate.getValue().reset();
+        delegate.reset();
       }
 
       @RequiredUIAccess
       @Override
       public void disposeUIResources() {
-        delegate.getValue().disposeUIResources();
+        delegate.disposeUIResources();
       }
 
       @Override

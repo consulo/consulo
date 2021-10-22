@@ -34,6 +34,7 @@ import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -160,6 +161,12 @@ public abstract class ProjectLevelVcsManager {
    * @return true if the VCS is used by any of the modules, false otherwise
    */
   public abstract boolean checkVcsIsActive(@NonNls String vcsName);
+
+  /**
+   * Returns the list of VCSes supported by plugins.
+   */
+  @Nonnull
+  public abstract Collection<AbstractVcs> getAllSupportedVcss();
 
   /**
    * Returns the list of VCSes used by at least one module in the project.

@@ -148,7 +148,10 @@ public abstract class AbstractVcs<ComList extends CommittedChangeList> extends S
     return false;
   }
 
-  public abstract Configurable getConfigurable();
+  @Nullable
+  public Configurable getConfigurable() {
+    return null;
+  }
 
   @Nullable
   public TransactionProvider getTransactionProvider() {
