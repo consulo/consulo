@@ -15,13 +15,9 @@
  */
 package consulo.util.collection.primitive.longs;
 
-import consulo.util.collection.primitive.ints.IntCollection;
-
 import javax.annotation.Nonnull;
 import java.util.Spliterator;
 import java.util.Spliterators;
-import java.util.function.LongConsumer;
-import java.util.stream.IntStream;
 import java.util.stream.LongStream;
 import java.util.stream.StreamSupport;
 
@@ -46,8 +42,8 @@ public interface LongCollection extends LongIterable {
 
   boolean remove(long value);
 
-  default void removeAll(int[] array) {
-    for (int value : array) {
+  default void removeAll(long... array) {
+    for (long value : array) {
       remove(value);
     }
   }

@@ -44,7 +44,7 @@ public interface IntCollection extends IntIterable {
 
   boolean remove(int value);
 
-  default void removeAll(int[] array) {
+  default void removeAll(int... array) {
     for (int value : array) {
       remove(value);
     }
