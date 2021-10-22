@@ -20,7 +20,6 @@ import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.options.SearchableConfigurable;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.NotNullLazyValue;
-import com.intellij.openapi.vcs.AbstractVcs;
 import com.intellij.openapi.vcs.ProjectLevelVcsManager;
 import com.intellij.openapi.vcs.VcsBundle;
 import com.intellij.openapi.vcs.VcsConfigurableProvider;
@@ -28,14 +27,16 @@ import com.intellij.openapi.vcs.changes.ChangeListManagerImpl;
 import com.intellij.openapi.vcs.changes.conflicts.ChangelistConflictConfigurable;
 import com.intellij.openapi.vcs.changes.ui.IgnoredSettingsPanel;
 import com.intellij.openapi.vcs.impl.VcsDescriptor;
-import org.jetbrains.annotations.Nls;
-import javax.annotation.Nonnull;
-
+import consulo.disposer.Disposable;
+import consulo.ui.Component;
+import consulo.ui.annotation.RequiredUIAccess;
 import jakarta.inject.Inject;
+import org.jetbrains.annotations.Nls;
+
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 
 public class VcsManagerConfigurable extends SearchableConfigurable.Parent.Abstract implements Configurable.NoScroll {
@@ -48,6 +49,7 @@ public class VcsManagerConfigurable extends SearchableConfigurable.Parent.Abstra
     myProject = project;
   }
 
+  @RequiredUIAccess
   @Override
   public JComponent createComponent() {
     myMappings = new VcsDirectoryConfigurationPanel(myProject);
@@ -62,23 +64,27 @@ public class VcsManagerConfigurable extends SearchableConfigurable.Parent.Abstra
     return true;
   }
 
+  @RequiredUIAccess
   @Override
   public boolean isModified() {
     return myMappings != null && myMappings.isModified();
   }
 
+  @RequiredUIAccess
   @Override
   public void apply() throws ConfigurationException {
     super.apply();
     myMappings.apply();
   }
 
+  @RequiredUIAccess
   @Override
   public void reset() {
     super.reset();
     myMappings.reset();
   }
 
+  @RequiredUIAccess
   @Override
   public void disposeUIResources() {
     super.disposeUIResources();
@@ -163,16 +169,11 @@ public class VcsManagerConfigurable extends SearchableConfigurable.Parent.Abstra
   }
 
   private void addListenerToGeneralPanel() {
-    myMappings.addVcsListener(new ModuleVcsListener() {
-      @Override
-      public void activeVcsSetChanged(Collection<AbstractVcs> activeVcses) {
-        myGeneralPanel.updateAvailableOptions(activeVcses);
-      }
-    });
+    myMappings.addVcsListener(activeVcses -> myGeneralPanel.updateAvailableOptions(activeVcses));
   }
 
   private Configurable createVcsConfigurableWrapper(final VcsDescriptor vcs) {
-    final NotNullLazyValue<Configurable> delegate = new NotNullLazyValue<Configurable>() {
+    final NotNullLazyValue<Configurable> delegate = new NotNullLazyValue<>() {
       @Nonnull
       @Override
       protected Configurable compute() {
@@ -192,26 +193,49 @@ public class VcsManagerConfigurable extends SearchableConfigurable.Parent.Abstra
         return delegate.getValue().getHelpTopic();
       }
 
+      @RequiredUIAccess
       @Override
       public JComponent createComponent() {
         return delegate.getValue().createComponent();
       }
 
+      @RequiredUIAccess
+      @Override
+      public JComponent createComponent(Disposable uiDisposable) {
+        return delegate.getValue().createComponent(uiDisposable);
+      }
+
+      @RequiredUIAccess
+      @Override
+      public Component createUIComponent() {
+        return delegate.getValue().createUIComponent();
+      }
+
+      @RequiredUIAccess
+      @Override
+      public Component createUIComponent(Disposable uiDisposable) {
+        return delegate.getValue().createUIComponent(uiDisposable);
+      }
+
+      @RequiredUIAccess
       @Override
       public boolean isModified() {
         return delegate.getValue().isModified();
       }
 
+      @RequiredUIAccess
       @Override
       public void apply() throws ConfigurationException {
         delegate.getValue().apply();
       }
 
+      @RequiredUIAccess
       @Override
       public void reset() {
         delegate.getValue().reset();
       }
 
+      @RequiredUIAccess
       @Override
       public void disposeUIResources() {
         delegate.getValue().disposeUIResources();

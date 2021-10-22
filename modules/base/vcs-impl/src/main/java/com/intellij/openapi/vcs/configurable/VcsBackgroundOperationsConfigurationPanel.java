@@ -22,12 +22,13 @@ import com.intellij.openapi.vcs.VcsConfiguration;
 import com.intellij.openapi.vcs.VcsShowOptionsSettingImpl;
 import com.intellij.openapi.vcs.changes.RemoteRevisionsCache;
 import com.intellij.openapi.vcs.changes.committed.CacheSettingsPanel;
+import consulo.disposer.Disposable;
+import consulo.ui.annotation.RequiredUIAccess;
 import org.jetbrains.annotations.Nls;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.*;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -44,7 +45,7 @@ public class VcsBackgroundOperationsConfigurationPanel implements SearchableConf
   private JCheckBox myCbCheckoutInBackground;
   private JCheckBox myPerformRevertInBackgroundCheckBox;
   private JCheckBox myTrackChangedOnServer;
-  private JComponent myCachePanel;
+  private JPanel myCachePanelHolder;
   private JSpinner myChangedOnServerInterval;
   private CacheSettingsPanel myCacheSettingsPanel;
 
@@ -56,16 +57,11 @@ public class VcsBackgroundOperationsConfigurationPanel implements SearchableConf
       final VcsConfiguration settings = VcsConfiguration.getInstance(myProject);
       myChangedOnServerInterval.setModel(new SpinnerNumberModel(settings.CHANGED_ON_SERVER_INTERVAL, 5, 48 * 10 * 60, 5));
 
-      myTrackChangedOnServer.addActionListener(new ActionListener() {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-          myChangedOnServerInterval.setEnabled(myTrackChangedOnServer.isSelected());
-        }
-      });
-
+      myTrackChangedOnServer.addActionListener(e -> myChangedOnServerInterval.setEnabled(myTrackChangedOnServer.isSelected()));
     }
   }
 
+  @Override
   public void apply() throws ConfigurationException {
 
     VcsConfiguration settings = VcsConfiguration.getInstance(myProject);
@@ -92,6 +88,7 @@ public class VcsBackgroundOperationsConfigurationPanel implements SearchableConf
     RemoteRevisionsCache.getInstance(myProject).updateAutomaticRefreshAlarmState(remoteCacheStateChanged);
   }
 
+  @Override
   public boolean isModified() {
 
     VcsConfiguration settings = VcsConfiguration.getInstance(myProject);
@@ -127,6 +124,7 @@ public class VcsBackgroundOperationsConfigurationPanel implements SearchableConf
     return false;
   }
 
+  @Override
   public void reset() {
     VcsConfiguration settings = VcsConfiguration.getInstance(myProject);
     myCbCommitInBackground.setSelected(settings.PERFORM_COMMIT_IN_BACKGROUND);
@@ -151,33 +149,32 @@ public class VcsBackgroundOperationsConfigurationPanel implements SearchableConf
     return myPanel;
   }
 
+  @Override
   @Nls
   public String getDisplayName() {
     return "Background";
   }
 
+  @Override
   public String getHelpTopic() {
     return "project.propVCSSupport.Background";
   }
 
+  @Override
   @Nonnull
   public String getId() {
     return getHelpTopic();
   }
 
-  public Runnable enableSearch(String option) {
-    return null;
-  }
-
-  public JComponent createComponent() {
+  @RequiredUIAccess
+  @Override
+  public JComponent createComponent(@Nonnull Disposable uiDisposable) {
     return getPanel();
   }
 
-  public void disposeUIResources() {
-  }
-
   private void createUIComponents() {
+    myCachePanelHolder = new JPanel(new BorderLayout());
     myCacheSettingsPanel = new CacheSettingsPanel();
-    myCachePanel = myCacheSettingsPanel.createComponent();
+    myCachePanelHolder.add(myCacheSettingsPanel.getPanel(), BorderLayout.CENTER);
   }
 }

@@ -28,7 +28,7 @@ import javax.swing.*;
 /**
  * @author yole
  */
-public class CacheSettingsPanel implements Configurable {
+public class CacheSettingsPanel {
   private JSpinner myCountSpinner;
   private JPanel myTopPanel;
   private JSpinner myRefreshSpinner;
@@ -47,7 +47,6 @@ public class CacheSettingsPanel implements Configurable {
   }
 
   @RequiredUIAccess
-  @Override
   public void apply() throws ConfigurationException {
     final CommittedChangesCache.State state = new CommittedChangesCache.State();
     state.setInitialCount(((SpinnerNumberModel)myCountSpinner.getModel()).getNumber().intValue());
@@ -58,7 +57,6 @@ public class CacheSettingsPanel implements Configurable {
   }
 
   @RequiredUIAccess
-  @Override
   public boolean isModified() {
     CommittedChangesCache.State state = myCache.getState();
 
@@ -71,7 +69,6 @@ public class CacheSettingsPanel implements Configurable {
   }
 
   @RequiredUIAccess
-  @Override
   public void reset() {
     final CommittedChangesCache.State state = myCache.getState();
 
@@ -97,28 +94,6 @@ public class CacheSettingsPanel implements Configurable {
 
   public JComponent getPanel() {
     return myTopPanel;
-  }
-
-  @Override
-  @Nls
-  public String getDisplayName() {
-    return "Cache";
-  }
-
-  @Override
-  public String getHelpTopic() {
-    return "project.propVCSSupport.Cache";
-  }
-
-  @RequiredUIAccess
-  @Override
-  public JComponent createComponent(@Nonnull Disposable uiDisposable) {
-    return getPanel();
-  }
-
-  @RequiredUIAccess
-  @Override
-  public void disposeUIResources() {
   }
 
   public void setEnabled(final boolean value) {
