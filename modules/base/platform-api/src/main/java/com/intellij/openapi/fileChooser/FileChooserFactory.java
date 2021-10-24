@@ -75,7 +75,7 @@ public abstract class FileChooserFactory {
    * @param parent     if null then will be registered with {@link PlatformDataKeys#UI_DISPOSABLE}
    */
   public void installFileCompletion(@Nonnull JTextField field, @Nonnull FileChooserDescriptor descriptor, boolean showHidden, @Nullable Disposable parent) {
-    throw new AbstractMethodError();
+    // nothing by default, check platform implementation
   }
 
   /**
