@@ -136,6 +136,25 @@ public class PluginBeanParser {
     pluginBean.projectListeners = readListeners(rootTag, "projectListeners");
     pluginBean.moduleListeners = readListeners(rootTag, "moduleListeners");
 
+    Map<String, Set<String>> permissions = new HashMap<String, Set<String>>();
+    for (SimpleXmlElement permissionsElement : rootTag.getChildren("permissions")) {
+      for (SimpleXmlElement permissionElement : permissionsElement.getChildren("permission")) {
+        String permissionType = permissionElement.getAttributeValue("type", "NOT_SET");
+
+        Set<String> options = new LinkedHashSet<String>();
+
+        for (SimpleXmlElement permissionOption : permissionElement.getChildren("permission-option")) {
+          options.add(permissionOption.getText());
+        }
+
+        permissions.put(permissionType, options);
+      }
+    }
+
+    if (!permissions.isEmpty()) {
+      pluginBean.permissions = permissions;
+    }
+
     List<String> incompatibleWith = new ArrayList<String>();
     for (SimpleXmlElement incompatibleWithElement : rootTag.getChildren("incompatible-with")) {
       incompatibleWith.add(incompatibleWithElement.getText());

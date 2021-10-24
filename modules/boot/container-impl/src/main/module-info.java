@@ -12,6 +12,8 @@ module consulo.container.impl {
   // TODO [VISTALL] must be exported only to advanced proxy module
   exports consulo.container.impl.classloader.proxy;
   exports consulo.container.impl.parser;
+  // TODO [VISTALL] export only to core module
+  exports consulo.container.impl.securityManager;
 
   uses consulo.container.boot.ContainerStartup;
 

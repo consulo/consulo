@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2019 consulo.io
+ * Copyright 2013-2021 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,29 +13,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.container.classloader;
+package consulo.startup;
 
-import consulo.container.plugin.PluginDescriptor;
-import consulo.container.plugin.PluginId;
+import consulo.ide.eap.EarlyAccessProgramDescriptor;
 
 import javax.annotation.Nonnull;
-import java.io.IOException;
-import java.net.URL;
-import java.util.Enumeration;
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
- * @since 2019-11-23
+ * @since 24/10/2021
  */
-public interface PluginClassLoader {
+public class PluginPermissionEarlyAccessProgramDescriptor extends EarlyAccessProgramDescriptor {
   @Nonnull
-  PluginId getPluginId();
+  @Override
+  public String getName() {
+    return "Plugin permissions";
+  }
 
-  @Nonnull
-  PluginDescriptor getPluginDescriptor();
+  @Nullable
+  @Override
+  public String getDescription() {
+    return "Enable plugin permissions for plugins. See https://github.com/consulo/long-term-todo/issues/12";
+  }
 
-  boolean hasLoadedClass(@Nonnull String className);
-
-  @Nonnull
-  Enumeration<URL> findOwnResources(String name) throws IOException;
+  @Override
+  public boolean isRestartRequired() {
+    return true;
+  }
 }

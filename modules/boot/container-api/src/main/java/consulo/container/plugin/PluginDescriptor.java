@@ -106,6 +106,9 @@ public interface PluginDescriptor {
   @Nonnull
   List<PluginListenerDescriptor> getModuleListeners();
 
+  @Nullable
+  PluginPermissionDescriptor getPermissionDescriptor(@Nonnull PluginPermissionType permissionType);
+
   /**
    * If return not null, plugin loaded in module mode. Object instance of {@link ModuleLayer}
    */

@@ -29,11 +29,6 @@ public abstract class EarlyAccessProgramDescriptor {
   @Nonnull
   public abstract String getName();
 
-  @Nonnull
-  public String getGroupName() {
-    return "Platform";
-  }
-
   public boolean getDefaultState() {
     return false;
   }

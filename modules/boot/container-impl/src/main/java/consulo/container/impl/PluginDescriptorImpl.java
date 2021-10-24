@@ -68,6 +68,8 @@ public class PluginDescriptorImpl extends PluginDescriptorStub {
   private List<PluginListenerDescriptor> myProjectListeners = Collections.emptyList();
   private List<PluginListenerDescriptor> myModuleListeners = Collections.emptyList();
 
+  private Map<PluginPermissionType, PluginPermissionDescriptor> myPermissionDescriptors = Collections.emptyMap();
+
   private boolean myDeleted = false;
   private ClassLoader myLoader;
   private Object myModuleLayer;
@@ -93,12 +95,12 @@ public class PluginDescriptorImpl extends PluginDescriptorStub {
     return myPath;
   }
 
-  public void readExternal(@Nonnull InputStream stream, @Nullable ZipFile zipFile) throws SimpleXmlParsingException {
+  public void readExternal(@Nonnull InputStream stream, @Nullable ZipFile zipFile, @Nonnull ContainerLogger log) throws SimpleXmlParsingException {
     SimpleXmlElement element = SimpleXmlReader.parse(stream);
-    readExternal(element, zipFile);
+    readExternal(element, zipFile, log);
   }
 
-  private void readExternal(@Nonnull SimpleXmlElement element, @Nullable ZipFile zipFile) throws SimpleXmlParsingException {
+  private void readExternal(@Nonnull SimpleXmlElement element, @Nullable ZipFile zipFile, @Nonnull ContainerLogger log) throws SimpleXmlParsingException {
     final PluginBean pluginBean = PluginBeanParser.parseBean(element, null);
     assert pluginBean != null;
     url = pluginBean.url;
@@ -164,6 +166,20 @@ public class PluginDescriptorImpl extends PluginDescriptorStub {
       List<PluginHelpSet> sets = pluginBean.helpSets;
       for (PluginHelpSet pluginHelpSet : sets) {
         myHelpSets.add(new HelpSetPath(pluginHelpSet.file, pluginHelpSet.path));
+      }
+    }
+
+    for (Map.Entry<String, Set<String>> permissionEntry : pluginBean.permissions.entrySet()) {
+      try {
+        PluginPermissionType permissionType = PluginPermissionType.valueOf(permissionEntry.getKey());
+        if (myPermissionDescriptors.isEmpty()) {
+          myPermissionDescriptors = new HashMap<PluginPermissionType, PluginPermissionDescriptor>();
+        }
+        
+        myPermissionDescriptors.put(permissionType, new PluginPermissionDescriptor(permissionType, permissionEntry.getValue()));
+      }
+      catch (IllegalArgumentException e) {
+        log.warn("Unknown permissionType " + permissionEntry.getKey() + ", plugin: " + myId);
       }
     }
 

@@ -5,6 +5,7 @@ import consulo.container.PluginException;
 import consulo.container.impl.classloader.proxy.ProxyDescription;
 import consulo.container.impl.classloader.proxy.ProxyFactory;
 import consulo.container.impl.classloader.proxy.ProxyHolderClassLoader;
+import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginId;
 import consulo.container.classloader.PluginClassLoader;
 import consulo.util.nodep.classloader.UrlClassLoader;
@@ -30,8 +31,7 @@ class PluginClassLoaderImpl extends UrlClassLoader implements PluginClassLoader,
   }
 
   private final ClassLoader[] myParents;
-  private final PluginId myPluginId;
-  private final String myPluginVersion;
+  private final PluginDescriptor myPluginDescriptor;
   private final List<String> myLibDirectories;
 
   private ConcurrentMap<ProxyDescription, ProxyFactory> myProxyFactories = new ConcurrentHashMap<ProxyDescription, ProxyFactory>();
@@ -39,21 +39,19 @@ class PluginClassLoaderImpl extends UrlClassLoader implements PluginClassLoader,
   /**
    * Constructor for main platform plugins, it will set parent for ClassLoader - it's need for correct parent resolving for ServiceLoader
    */
-  public PluginClassLoaderImpl(@Nonnull List<URL> urls, @Nonnull ClassLoader parent, PluginId pluginId, String version, File pluginRoot) {
-    super(pluginId.getIdString(), build().urls(urls).parent(parent).urlsWithProtectionDomain(new HashSet<URL>(urls)).allowLock().useCache());
+  public PluginClassLoaderImpl(@Nonnull List<URL> urls, @Nonnull ClassLoader parent, @Nonnull PluginDescriptor pluginDescriptor) {
+    super(pluginDescriptor.getPluginId().getIdString(), build().urls(urls).parent(parent).urlsWithProtectionDomain(new HashSet<URL>(urls)).allowLock().useCache());
     myParents = new ClassLoader[] {parent};
-    myPluginId = pluginId;
-    myPluginVersion = version;
-    File libDir = new File(pluginRoot, "lib");
+    myPluginDescriptor = pluginDescriptor;
+    File libDir = new File(pluginDescriptor.getPath(), "lib");
     myLibDirectories = libDir.exists() ? Collections.singletonList(libDir.getAbsolutePath()) : Collections.<String>emptyList();
   }
 
-  public PluginClassLoaderImpl(@Nonnull List<URL> urls, @Nonnull ClassLoader[] parents, PluginId pluginId, String version, File pluginRoot) {
-    super(pluginId.getIdString(), build().urls(urls).urlsWithProtectionDomain(new HashSet<URL>(urls)).allowLock().useCache().noPreload());
+  public PluginClassLoaderImpl(@Nonnull List<URL> urls, @Nonnull ClassLoader[] parents, @Nonnull PluginDescriptor pluginDescriptor) {
+    super(pluginDescriptor.getPluginId().getIdString(), build().urls(urls).urlsWithProtectionDomain(new HashSet<URL>(urls)).allowLock().useCache().noPreload());
     myParents = parents;
-    myPluginId = pluginId;
-    myPluginVersion = version;
-    File libDir = new File(pluginRoot, "lib");
+    myPluginDescriptor = pluginDescriptor;
+    File libDir = new File(myPluginDescriptor.getPath(), "lib");
     myLibDirectories = libDir.exists() ? Collections.singletonList(libDir.getAbsolutePath()) : Collections.<String>emptyList();
   }
 
@@ -183,13 +181,13 @@ class PluginClassLoaderImpl extends UrlClassLoader implements PluginClassLoader,
         c = _findClass(name);
       }
       catch (IncompatibleClassChangeError e) {
-        throw new PluginException("While loading class " + name + ": " + e.getMessage(), e, myPluginId);
+        throw new PluginException("While loading class " + name + ": " + e.getMessage(), e, getPluginId());
       }
       catch (UnsupportedClassVersionError e) {
-        throw new PluginException("While loading class " + name + ": " + e.getMessage(), e, myPluginId);
+        throw new PluginException("While loading class " + name + ": " + e.getMessage(), e, getPluginId());
       }
       if (c != null) {
-        PluginLoadStatistics.get().addPluginClass(myPluginId);
+        PluginLoadStatistics.get().addPluginClass(getPluginId());
       }
 
       return c;
@@ -309,14 +307,21 @@ class PluginClassLoaderImpl extends UrlClassLoader implements PluginClassLoader,
     return null;
   }
 
+  @Nonnull
   @Override
   public PluginId getPluginId() {
-    return myPluginId;
+    return myPluginDescriptor.getPluginId();
+  }
+
+  @Nonnull
+  @Override
+  public PluginDescriptor getPluginDescriptor() {
+    return myPluginDescriptor;
   }
 
   @Override
   public String toString() {
-    return "PluginClassLoader[" + myPluginId + ", " + myPluginVersion + "] " + super.toString();
+    return "PluginClassLoader[" + myPluginDescriptor.getPluginId() + ", " + myPluginDescriptor.getVersion() + "] " + super.toString();
   }
 
   @Nonnull

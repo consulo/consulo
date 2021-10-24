@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2019 consulo.io
+ * Copyright 2013-2021 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,29 +13,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.container.classloader;
-
-import consulo.container.plugin.PluginDescriptor;
-import consulo.container.plugin.PluginId;
+package consulo.container.plugin;
 
 import javax.annotation.Nonnull;
-import java.io.IOException;
-import java.net.URL;
-import java.util.Enumeration;
+import java.util.Collections;
+import java.util.Set;
 
 /**
  * @author VISTALL
- * @since 2019-11-23
+ * @since 24/10/2021
  */
-public interface PluginClassLoader {
-  @Nonnull
-  PluginId getPluginId();
+public final class PluginPermissionDescriptor {
+  private final PluginPermissionType myType;
+  private final Set<String> myOptions;
+
+  public PluginPermissionDescriptor(@Nonnull PluginPermissionType type, @Nonnull Set<String> options) {
+    myType = type;
+    myOptions = Collections.unmodifiableSet(options);
+  }
 
   @Nonnull
-  PluginDescriptor getPluginDescriptor();
-
-  boolean hasLoadedClass(@Nonnull String className);
+  public PluginPermissionType getType() {
+    return myType;
+  }
 
   @Nonnull
-  Enumeration<URL> findOwnResources(String name) throws IOException;
+  public Set<String> getOptions() {
+    return myOptions;
+  }
 }

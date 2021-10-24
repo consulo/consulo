@@ -2691,7 +2691,7 @@
 
     <cachesInvalidator implementation="com.intellij.compiler.impl.TranslatingCompilerFilesMonitorImpl$MonitorCachesInvalidator"/>
 
-    <cachesInvalidator implementation="consulo.consulo.vfs.newvfs.persistent.FSCachesInvalidator"/>
+    <cachesInvalidator implementation="consulo.vfs.newvfs.persistent.FSCachesInvalidator"/>
 
     <applicationService serviceInterface="com.intellij.openapi.project.ProjectManager" serviceImplementation="com.intellij.openapi.project.impl.ProjectManagerImpl"/>
     <projectService serviceInterface="com.intellij.openapi.module.ModuleManager" serviceImplementation="com.intellij.openapi.module.impl.ModuleManagerComponent"/>

@@ -15,11 +15,10 @@
  */
 package consulo.container.impl.classloader;
 
-import consulo.container.plugin.PluginId;
 import consulo.container.classloader.PluginClassLoader;
+import consulo.container.plugin.PluginDescriptor;
 
 import javax.annotation.Nonnull;
-import java.io.File;
 import java.net.URL;
 import java.util.List;
 
@@ -30,13 +29,13 @@ import java.util.List;
 public class PluginClassLoaderFactory {
   @SuppressWarnings("unchecked")
   @Nonnull
-  public static <C extends ClassLoader & PluginClassLoader> C create(@Nonnull List<URL> urls, @Nonnull ClassLoader parent, PluginId pluginId, String version, File pluginRoot) {
-    return (C)new PluginClassLoaderImpl(urls, parent, pluginId, version, pluginRoot);
+  public static <C extends ClassLoader & PluginClassLoader> C create(@Nonnull List<URL> urls, @Nonnull ClassLoader parent, PluginDescriptor pluginDescriptor) {
+    return (C)new PluginClassLoaderImpl(urls, parent, pluginDescriptor);
   }
 
   @SuppressWarnings("unchecked")
   @Nonnull
-  public static <C extends ClassLoader & PluginClassLoader> C create(@Nonnull List<URL> urls, @Nonnull ClassLoader[] parents, PluginId pluginId, String version, File pluginRoot) {
-    return (C)new PluginClassLoaderImpl(urls, parents, pluginId, version, pluginRoot);
+  public static <C extends ClassLoader & PluginClassLoader> C create(@Nonnull List<URL> urls, @Nonnull ClassLoader[] parents, PluginDescriptor pluginDescriptor) {
+    return (C)new PluginClassLoaderImpl(urls, parents, pluginDescriptor);
   }
 }

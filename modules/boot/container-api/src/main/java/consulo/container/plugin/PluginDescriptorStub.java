@@ -153,6 +153,12 @@ public abstract class PluginDescriptorStub implements PluginDescriptor {
     return Collections.emptyList();
   }
 
+  @Nullable
+  @Override
+  public PluginPermissionDescriptor getPermissionDescriptor(@Nonnull PluginPermissionType permissionType) {
+    return null;
+  }
+
   @Override
   public Object getModuleLayer() {
     return null;

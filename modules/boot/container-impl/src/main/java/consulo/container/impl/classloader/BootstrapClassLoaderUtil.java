@@ -22,6 +22,7 @@ import consulo.container.impl.ContainerLogger;
 import consulo.container.impl.PluginDescriptorImpl;
 import consulo.container.impl.PluginDescriptorLoader;
 import consulo.container.impl.PluginHolderModificator;
+import consulo.container.impl.securityManager.ConsuloSecurityManager;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.util.StatCollector;
 import consulo.util.nodep.SystemInfoRt;
@@ -40,6 +41,8 @@ public class BootstrapClassLoaderUtil {
   @Nonnull
   public static ContainerStartup buildContainerStartup(Map<String, Object> args, File modulesDirectory, ContainerLogger containerLogger, Java9ModuleProcessor processor) throws Exception {
     StatCollector stat = (StatCollector)args.get(ContainerStartup.STAT_COLLECTOR);
+
+    System.setSecurityManager(new ConsuloSecurityManager());
 
     Runnable bootInitialize = stat.mark("boot.classloader.initialize");
 
@@ -67,7 +70,7 @@ public class BootstrapClassLoaderUtil {
 
       ClassLoader basePluginClassLoader = base.getPluginClassLoader();
 
-      ClassLoader loader = PluginClassLoaderFactory.create(filesToUrls(descriptor.getClassPath()), basePluginClassLoader, descriptor.getPluginId(), null, moduleDirectory);
+      ClassLoader loader = PluginClassLoaderFactory.create(filesToUrls(descriptor.getClassPath()), basePluginClassLoader, descriptor);
 
       if (SystemInfoRt.IS_AT_LEAST_JAVA9) {
         descriptor.setModuleLayer(Java9ModuleInitializer.initializeEtcModules(Collections.singletonList(base.getModuleLayer()), descriptor.getClassPath(), loader));
@@ -114,7 +117,7 @@ public class BootstrapClassLoaderUtil {
 
     ClassLoader parent = BootstrapClassLoaderUtil.class.getClassLoader();
 
-    ClassLoader loader = PluginClassLoaderFactory.create(filesToUrls(platformBasePlugin.getClassPath()), parent, platformBasePlugin.getPluginId(), null, platformBaseDirectory);
+    ClassLoader loader = PluginClassLoaderFactory.create(filesToUrls(platformBasePlugin.getClassPath()), parent, platformBasePlugin);
 
     if (SystemInfoRt.IS_AT_LEAST_JAVA9) {
       platformBasePlugin.setModuleLayer(Java9ModuleInitializer.initializeBaseModules(platformBasePlugin.getClassPath(), loader, containerLogger, processor));

@@ -20,6 +20,8 @@ import consulo.util.nodep.xml.node.SimpleXmlElement;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class PluginBean extends ComponentManagerConfig {
   //@Tag("name")
@@ -82,4 +84,6 @@ public class PluginBean extends ComponentManagerConfig {
   public List<PluginListenerDescriptor> projectListeners = Collections.emptyList();
 
   public List<PluginListenerDescriptor> moduleListeners = Collections.emptyList();
+
+  public Map<String, Set<String>> permissions = Collections.emptyMap();
 }

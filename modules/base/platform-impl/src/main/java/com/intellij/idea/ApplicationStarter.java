@@ -25,13 +25,16 @@ import consulo.container.classloader.PluginClassLoader;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginManager;
 import consulo.container.util.StatCollector;
+import consulo.ide.eap.EarlyAccessProgramManager;
 import consulo.localize.LocalizeManager;
 import consulo.localize.impl.LocalizeManagerImpl;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
+import consulo.plugins.internal.ConsuloSecurityManagerEnabler;
 import consulo.plugins.internal.PluginsInitializeInfo;
 import consulo.plugins.internal.PluginsLoader;
 import consulo.start.CommandLineArgs;
+import consulo.startup.PluginPermissionEarlyAccessProgramDescriptor;
 import consulo.ui.image.IconLibraryManager;
 import consulo.ui.impl.image.BaseIconLibraryManager;
 import consulo.util.io.URLUtil;
@@ -155,6 +158,11 @@ public abstract class ApplicationStarter {
     try {
       ApplicationEx app = (ApplicationEx)Application.get();
       app.load(ContainerPathManager.get().getOptionsPath());
+
+      boolean enableSecurityManager = EarlyAccessProgramManager.is(PluginPermissionEarlyAccessProgramDescriptor.class);
+      if (enableSecurityManager) {
+        ConsuloSecurityManagerEnabler.enableSecurityManager();
+      }
 
       if (needStartInTransaction()) {
         ((TransactionGuardEx)TransactionGuard.getInstance()).performUserActivity(() -> main(stat, appInitalizeMark, app, newConfigFolder, myArgs));

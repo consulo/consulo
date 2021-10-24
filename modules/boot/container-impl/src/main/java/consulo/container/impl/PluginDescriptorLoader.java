@@ -165,7 +165,7 @@ public class PluginDescriptorLoader {
           InputStream inputStream = zipFile.getInputStream(entry);
 
           PluginDescriptorImpl descriptor = new PluginDescriptorImpl(pluginPath, iconBytes, isPreInstalledPath);
-          descriptor.readExternal(inputStream, zipFile);
+          descriptor.readExternal(inputStream, zipFile, logger);
           return descriptor;
         }
       }

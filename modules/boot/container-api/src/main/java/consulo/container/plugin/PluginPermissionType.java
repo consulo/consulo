@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2019 consulo.io
+ * Copyright 2013-2021 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,29 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.container.classloader;
-
-import consulo.container.plugin.PluginDescriptor;
-import consulo.container.plugin.PluginId;
-
-import javax.annotation.Nonnull;
-import java.io.IOException;
-import java.net.URL;
-import java.util.Enumeration;
+package consulo.container.plugin;
 
 /**
  * @author VISTALL
- * @since 2019-11-23
+ * @since 24/10/2021
  */
-public interface PluginClassLoader {
-  @Nonnull
-  PluginId getPluginId();
-
-  @Nonnull
-  PluginDescriptor getPluginDescriptor();
-
-  boolean hasLoadedClass(@Nonnull String className);
-
-  @Nonnull
-  Enumeration<URL> findOwnResources(String name) throws IOException;
+public enum PluginPermissionType {
+  PROCESS,
+  NATIVE_LIBRARY,
+  SOCKET
 }

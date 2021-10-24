@@ -512,16 +512,13 @@ public class PluginsLoader {
 
   @Nullable
   static ClassLoader createPluginClassLoader(@Nonnull File[] classPath, @Nonnull ClassLoader[] parentLoaders, @Nonnull PluginDescriptor pluginDescriptor) {
-    PluginId pluginId = pluginDescriptor.getPluginId();
-    File pluginRoot = pluginDescriptor.getPath();
-
     try {
       final List<URL> urls = new ArrayList<>(classPath.length);
       for (File aClassPath : classPath) {
         final File file = aClassPath.getCanonicalFile(); // it is critical not to have "." and ".." in classpath elements
         urls.add(file.toURI().toURL());
       }
-      return PluginClassLoaderFactory.create(urls, parentLoaders, pluginId, pluginDescriptor.getVersion(), pluginRoot);
+      return PluginClassLoaderFactory.create(urls, parentLoaders, pluginDescriptor);
     }
     catch (IOException e) {
       getLogger().error(e);

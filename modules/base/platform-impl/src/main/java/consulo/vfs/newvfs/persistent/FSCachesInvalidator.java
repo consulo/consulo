@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.consulo.vfs.newvfs.persistent;
+package consulo.vfs.newvfs.persistent;
 
 import com.intellij.ide.caches.CachesInvalidator;
 import com.intellij.openapi.vfs.newvfs.persistent.FSRecords;

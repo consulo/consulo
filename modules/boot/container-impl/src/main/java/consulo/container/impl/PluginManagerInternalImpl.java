@@ -62,7 +62,7 @@ public class PluginManagerInternalImpl implements PluginManagerInternal {
     if (!(temp instanceof PluginClassLoader)) {
       return null;
     }
-    return PluginManager.findPlugin(((PluginClassLoader)temp).getPluginId());
+    return ((PluginClassLoader)temp).getPluginDescriptor();
   }
 
   @Nonnull
