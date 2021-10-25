@@ -15,6 +15,7 @@
  */
 package com.intellij.util;
 
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.io.FileUtilRt;
 import com.intellij.openapi.util.io.StreamUtil;
@@ -26,6 +27,7 @@ import com.sun.jna.ptr.IntByReference;
 import com.sun.jna.win32.StdCallLibrary;
 import consulo.application.ApplicationProperties;
 import consulo.container.boot.ContainerPathManager;
+import consulo.platform.Platform;
 
 import javax.annotation.Nonnull;
 import java.io.File;
@@ -105,8 +107,8 @@ public class Restarter {
   }
 
   private static void restartOnWindows(@Nonnull final String... beforeRestart) throws IOException {
-    Kernel32 kernel32 = Native.loadLibrary("kernel32", Kernel32.class);
-    Shell32 shell32 = Native.loadLibrary("shell32", Shell32.class);
+    Kernel32 kernel32 = Native.load("kernel32", Kernel32.class);
+    Shell32 shell32 = Native.load("shell32", Shell32.class);
 
     final int pid = kernel32.GetCurrentProcessId();
     final IntByReference argc = new IntByReference();
@@ -125,6 +127,14 @@ public class Restarter {
     // process has a chance to open the handle to our process, and that it doesn't wait for the termination of an unrelated
     // process which happened to have the same process ID.
     TimeoutUtil.sleep(500);
+  }
+
+  /**
+   * @return full path to consulo.exe or consulo64.exe
+   */
+  @Nonnull
+  public static String getExecutableOnWindows() {
+    return Platform.current().mapWindowsExecutable(Application.get().getName().toLowerCase().get(), "exe");
   }
 
   private static void restartOnMac(@Nonnull final String... beforeRestart) throws IOException {

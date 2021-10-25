@@ -47,6 +47,7 @@ import consulo.container.plugin.PluginManager;
 import consulo.container.util.StatCollector;
 import consulo.desktop.impl.ide.MacTopMenuInitializer;
 import consulo.desktop.impl.ide.TopMenuInitializer;
+import consulo.desktop.start.WindowsAutoRestartManager;
 import consulo.desktop.start.splash.DesktopSplash;
 import consulo.desktop.startup.customize.FirstStartCustomizeUtil;
 import consulo.ide.plugins.PluginsConfigurable;
@@ -174,6 +175,8 @@ public class DesktopApplicationStarter extends ApplicationStarter {
 
     if (myPlatform.os().isMac()) {
       MacTopMenuInitializer.installAutoUpdateMenu();
+    } else if(myPlatform.os().isWindowsVistaOrNewer()) {
+      WindowsAutoRestartManager.register();
     }
 
     if (Boolean.getBoolean("consulo.first.start.testing") || newConfigFolder && !ApplicationProperties.isInSandbox()) {
