@@ -43,7 +43,7 @@ public class WindowsAutoRestartManager {
    */
   public static void register() {
     // if jna failed or restart not supported - do not register
-    if (!JnaLoader.isLoaded() || Boolean.getBoolean("consulo.windows.auto.restarter")) {
+    if (!JnaLoader.isLoaded() || !Boolean.getBoolean("consulo.windows.auto.restarter")) {
       return;
     }
 
