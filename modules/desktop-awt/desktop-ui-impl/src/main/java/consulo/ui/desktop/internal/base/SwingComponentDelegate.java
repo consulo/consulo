@@ -20,6 +20,7 @@ import consulo.annotation.DeprecationInfo;
 import consulo.awt.TargetAWT;
 import consulo.awt.impl.ToSwingComponentWrapper;
 import consulo.disposer.Disposable;
+import consulo.localize.LocalizeValue;
 import consulo.ui.Component;
 import consulo.ui.FocusableComponent;
 import consulo.ui.Size;
@@ -38,6 +39,7 @@ import consulo.ui.event.KeyListener;
 import consulo.ui.font.Font;
 import consulo.ui.impl.BorderInfo;
 import consulo.ui.impl.UIDataObject;
+import consulo.ui.util.MnemonicInfo;
 import consulo.util.dataholder.Key;
 
 import javax.annotation.Nonnull;
@@ -67,6 +69,23 @@ public class SwingComponentDelegate<T extends java.awt.Component> implements Com
 
     if (this instanceof FocusableComponent) {
       myComponent.addFocusListener(new AWTFocusAdapterAsFocusListener((FocusableComponent)this, getListenerDispatcher(FocusListener.class)));
+    }
+  }
+
+  protected static void updateTextForButton(AbstractButton button, LocalizeValue textValue) {
+    String text = textValue.getValue();
+
+    MnemonicInfo mnemonicInfo = MnemonicInfo.parse(text);
+    if (mnemonicInfo == null) {
+      button.setText(text);
+
+      button.setMnemonic(0);
+      button.setDisplayedMnemonicIndex(-1);
+    }
+    else {
+      button.setText(mnemonicInfo.getText());
+      button. setMnemonic(mnemonicInfo.getKeyCode());
+      button.setDisplayedMnemonicIndex(mnemonicInfo.getIndex());
     }
   }
 

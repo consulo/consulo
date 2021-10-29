@@ -22,7 +22,6 @@ import consulo.ui.CheckBox;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.desktop.internal.base.SwingComponentDelegate;
-import consulo.ui.util.MnemonicInfo;
 
 import javax.annotation.Nonnull;
 
@@ -59,20 +58,7 @@ public class DesktopCheckBoxImpl extends SwingComponentDelegate<DesktopCheckBoxI
     }
 
     private void updateLabelText() {
-      String text = myLabelText.getValue();
-
-      MnemonicInfo mnemonicInfo = MnemonicInfo.parse(text);
-      if (mnemonicInfo == null) {
-        toAWTComponent().setText(text);
-
-        setMnemonic(0);
-        setDisplayedMnemonicIndex(-1);
-      }
-      else {
-        toAWTComponent().setText(mnemonicInfo.getText());
-        setMnemonic(mnemonicInfo.getKeyCode());
-        setDisplayedMnemonicIndex(mnemonicInfo.getIndex());
-      }
+      updateTextForButton(this, myLabelText);
     }
   }
 
