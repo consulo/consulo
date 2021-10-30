@@ -23,7 +23,9 @@ import com.intellij.ui.components.JBLabel;
 import com.intellij.util.ui.DialogUtil;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
+import consulo.awt.TargetAWT;
 import consulo.localize.LocalizeValue;
+import consulo.ui.Component;
 import consulo.ui.Window;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.desktop.internal.DesktopCheckBoxImpl;
@@ -49,8 +51,8 @@ public class DesktopPlainAlertImpl<V> extends BaseAlert<V> {
 
     private DesktopCheckBoxImpl myRememberBox;
 
-    DialogImpl(boolean canBeParent) {
-      super(canBeParent);
+    DialogImpl(java.awt.Component parentComponent) {
+      super(parentComponent, false);
 
       setTitle(myTitle.getValue());
 
@@ -203,10 +205,22 @@ public class DesktopPlainAlertImpl<V> extends BaseAlert<V> {
     }
   }
 
+  @Override
+  @RequiredUIAccess
+  @Nonnull
+  public AsyncResult<V> showAsync(@Nullable Component component) {
+    return showAsync(TargetAWT.to(component));
+  }
+
   @RequiredUIAccess
   @Nonnull
   @Override
   public AsyncResult<V> showAsync(@Nullable Window component) {
+    return showAsync(TargetAWT.to(component));
+  }
+
+  @RequiredUIAccess
+  private AsyncResult<V> showAsync(@Nullable java.awt.Component component) {
     if (myButtons.isEmpty()) {
       throw new UnsupportedOperationException("Buttons empty");
     }
@@ -221,7 +235,7 @@ public class DesktopPlainAlertImpl<V> extends BaseAlert<V> {
     }
 
     AsyncResult<V> result = AsyncResult.undefined();
-    DialogImpl dialog = new DialogImpl(false);
+    DialogImpl dialog = new DialogImpl(component);
     AsyncResult<Void> async = dialog.showAsync();
     async.doWhenProcessed(() -> {
       V selectValue = dialog.mySelectedValue;
