@@ -18,6 +18,8 @@ package consulo.ui.desktop.internal.alert;
 import com.intellij.ui.messages.SheetMessage;
 import com.intellij.ui.messages.SheetMessageUtil;
 import com.intellij.util.ui.UIUtil;
+import consulo.awt.TargetAWT;
+import consulo.ui.Component;
 import consulo.ui.UIAccess;
 import consulo.ui.Window;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -27,6 +29,7 @@ import consulo.util.concurrent.AsyncResult;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.swing.*;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -35,6 +38,17 @@ import java.util.Map;
  * @since 10/07/2021
  */
 public class DesktopMacAlertImpl<V> extends BaseAlert<V> {
+  @RequiredUIAccess
+  @Nonnull
+  @Override
+  public AsyncResult<V> showAsync(@Nullable Component component) {
+    if (component == null) {
+      return showAsync((Window)null);
+    }
+    java.awt.Window window = SwingUtilities.getWindowAncestor(TargetAWT.to(component));
+    return window == null ? showAsync((Window)null) : showAsync(TargetAWT.from(window));
+  }
+
   @RequiredUIAccess
   @Nonnull
   @Override
