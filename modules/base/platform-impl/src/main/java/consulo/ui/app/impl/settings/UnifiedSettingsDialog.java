@@ -17,6 +17,7 @@ package consulo.ui.app.impl.settings;
 
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.util.Couple;
+import consulo.localize.LocalizeValue;
 import consulo.ui.*;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.app.WholeLeftWindowWrapper;
@@ -111,7 +112,7 @@ public class UnifiedSettingsDialog extends WholeLeftWindowWrapper {
     Tree<Configurable> component = Tree.create(configurableTreeModel);
 
     DockLayout rightPart = DockLayout.create();
-    rightPart.center(Label.create("Select configurable"));
+    rightPart.center(Label.create(LocalizeValue.localizeTODO("Select configurable")));
 
     component.addSelectListener(node -> {
       Configurable configurable = node.getValue();

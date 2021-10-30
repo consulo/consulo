@@ -15,11 +15,27 @@
  */
 package consulo.ui;
 
+import javax.annotation.Nonnull;
+
 /**
  * @author VISTALL
  * @since 03/05/2021
  */
 public abstract class ComponentOptions {
+  protected static abstract class ComponentOptionsBuilder<B extends ComponentOptionsBuilder<B>> {
+    protected boolean myBackgroundPaint = true;
+
+    @Nonnull
+    @SuppressWarnings("unchecked")
+    public B backgroundPaint(boolean value) {
+      myBackgroundPaint = value;
+      return (B)this;
+    }
+
+    @Nonnull
+    public abstract ComponentOptions build();
+  }
+
   private final boolean myBackgroundPaint;
 
   protected ComponentOptions(boolean backgroundPaint) {

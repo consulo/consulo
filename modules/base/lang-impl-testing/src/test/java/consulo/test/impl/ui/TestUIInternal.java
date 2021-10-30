@@ -102,7 +102,7 @@ public class TestUIInternal extends UIInternal {
   }
 
   @Override
-  public ScrollableLayout _ScrollLayout_create(Component component) {
+  public ScrollableLayout _ScrollLayout_create(Component component, ScrollableLayoutOptions options) {
     return null;
   }
 

@@ -27,6 +27,11 @@ import javax.annotation.Nonnull;
 public interface ScrollableLayout extends Layout {
   @Nonnull
   static ScrollableLayout create(@Nonnull Component component) {
-    return UIInternal.get()._ScrollLayout_create(component);
+    return create(component, ScrollableLayoutOptions.builder().build());
+  }
+
+  @Nonnull
+  static ScrollableLayout create(@Nonnull Component component, @Nonnull ScrollableLayoutOptions options) {
+    return UIInternal.get()._ScrollLayout_create(component, options);
   }
 }

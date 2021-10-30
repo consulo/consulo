@@ -22,17 +22,19 @@ import javax.annotation.Nonnull;
  * @since 03/05/2021
  */
 public final class LabelOptions extends ComponentOptions {
-  public static final class Builder {
+  public static final class Builder extends ComponentOptionsBuilder<Builder> {
     private HorizontalAlignment myHorizontalAlignment = HorizontalAlignment.LEFT;
 
     @Nonnull
-    public Builder horizontalAligment(@Nonnull HorizontalAlignment alignment) {
+    public Builder horizontalAlignment(@Nonnull HorizontalAlignment alignment) {
       myHorizontalAlignment = alignment;
       return this;
     }
 
+    @Nonnull
+    @Override
     public LabelOptions build() {
-      return new LabelOptions(myHorizontalAlignment);
+      return new LabelOptions(myBackgroundPaint, myHorizontalAlignment);
     }
   }
 
@@ -43,8 +45,8 @@ public final class LabelOptions extends ComponentOptions {
 
   private final HorizontalAlignment myHorizontalAlignment;
 
-  public LabelOptions(@Nonnull HorizontalAlignment horizontalAlignment) {
-    super(true);
+  private LabelOptions(boolean backgroundPaint, @Nonnull HorizontalAlignment horizontalAlignment) {
+    super(backgroundPaint);
     myHorizontalAlignment = horizontalAlignment;
   }
 

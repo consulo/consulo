@@ -103,7 +103,9 @@ public abstract class UIInternal {
     throw new UnsupportedOperationException();
   }
 
-  public abstract ScrollableLayout _ScrollLayout_create(Component component);
+  public ScrollableLayout _ScrollLayout_create(Component component, ScrollableLayoutOptions options) {
+    throw new UnsupportedOperationException();
+  }
 
   public abstract HorizontalLayout _Layouts_horizontal(int gapInPixesl);
 

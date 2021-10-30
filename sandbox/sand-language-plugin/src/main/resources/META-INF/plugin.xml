@@ -63,7 +63,7 @@
     <toolWindow id="Sand"
                 anchor="right"
                 requireModuleExtensions="sand"
-                icon="consulo.platform.base.PlatformIconGroup@toolwindows.toolWindowCommander"
+                icon="consulo.platform.base.PlatformIconGroup@toolwindows.toolwindowcommander"
                 canCloseContents="true"
                 factoryClass="consulo.sandboxPlugin.ide.toolwindow.SandToolWindowFactory"/>
     <newModuleBuilder implementation="consulo.sandboxPlugin.ide.module.SandNewModuleBuilder"/>
@@ -79,5 +79,7 @@
     <webSocketAccepter implementation="consulo.sandboxPlugin.webSocket.TestWebSocketAccepter"/>
 
     <coverageOptions implementation="consulo.sandboxPlugin.ide.coverage.SandCoverageOptions"/>
+
+    <projectConfigurable id="sand.editor" parentId="editor" displayName="Sand Editor" instance="consulo.sandboxPlugin.ui.SandConfigurable"/>
   </extensions>
 </consulo-plugin>

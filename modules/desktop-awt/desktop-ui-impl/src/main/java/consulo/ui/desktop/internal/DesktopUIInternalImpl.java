@@ -314,8 +314,8 @@ public class DesktopUIInternalImpl extends UIInternal {
   }
 
   @Override
-  public ScrollableLayout _ScrollLayout_create(Component component) {
-    return new DesktopScrollableLayoutImpl(component);
+  public ScrollableLayout _ScrollLayout_create(Component component, ScrollableLayoutOptions options) {
+    return new DesktopScrollableLayoutImpl(component, options);
   }
 
   @Override

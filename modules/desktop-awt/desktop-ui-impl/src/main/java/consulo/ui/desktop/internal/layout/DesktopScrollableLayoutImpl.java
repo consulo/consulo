@@ -22,6 +22,7 @@ import consulo.awt.impl.FromSwingComponentWrapper;
 import consulo.ui.Component;
 import consulo.ui.desktop.internal.base.SwingComponentDelegate;
 import consulo.ui.layout.ScrollableLayout;
+import consulo.ui.layout.ScrollableLayoutOptions;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -44,11 +45,35 @@ public class DesktopScrollableLayoutImpl extends SwingComponentDelegate<JScrollP
     }
   }
 
-  public DesktopScrollableLayoutImpl(@Nullable Component component) {
+  public DesktopScrollableLayoutImpl(@Nullable Component component, ScrollableLayoutOptions options) {
     MyJBScrollPane pane = new MyJBScrollPane(TargetAWT.to(component));
     initialize(pane);
 
     pane.setBorder(IdeBorderFactory.createEmptyBorder());
     pane.setViewportBorder(IdeBorderFactory.createEmptyBorder());
+
+    switch (options.getHorizontalScrollPolicy()) {
+      case ALWAYS:
+        pane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
+        break;
+      case IF_NEED:
+        pane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        break;
+      case NEVER:
+        pane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        break;
+    }
+
+    switch (options.getVerticalScrollPolicy()) {
+      case ALWAYS:
+        pane.setHorizontalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+        break;
+      case IF_NEED:
+        pane.setHorizontalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+        break;
+      case NEVER:
+        pane.setHorizontalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
+        break;
+    }
   }
 }
