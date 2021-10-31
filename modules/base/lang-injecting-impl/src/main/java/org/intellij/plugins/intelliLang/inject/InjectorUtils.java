@@ -261,14 +261,6 @@ public class InjectorUtils {
     return Configuration.getInstance();
   }
 
-  /**
-   * @deprecated use {@link InjectorUtils#putInjectedFileUserData(PsiElement, Language, Key, Object)} instead
-   */
-  @Deprecated
-  public static <T> void putInjectedFileUserData(@Nonnull MultiHostRegistrar registrar, @Nonnull Key<T> key, T value) {
-    InjectedLanguageUtil.putInjectedFileUserData(registrar, key, value);
-  }
-
   public static boolean canBeRemoved(BaseInjection injection) {
     if (injection.isEnabled()) {
       return false;

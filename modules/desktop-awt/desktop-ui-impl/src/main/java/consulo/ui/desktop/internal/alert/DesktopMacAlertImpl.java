@@ -17,11 +17,9 @@ package consulo.ui.desktop.internal.alert;
 
 import com.intellij.ui.messages.SheetMessage;
 import com.intellij.ui.messages.SheetMessageUtil;
-import com.intellij.util.ui.UIUtil;
 import consulo.ui.UIAccess;
 import consulo.ui.Window;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.image.Image;
 import consulo.ui.impl.BaseAlert;
 import consulo.util.concurrent.AsyncResult;
 
@@ -63,7 +61,7 @@ public class DesktopMacAlertImpl<V> extends BaseAlert<V> {
         }
       }
 
-      SheetMessage sheetMessage = new SheetMessage(finalComponent, myTitle.getValue(), myText.get(), getIcon(), buttons, null, defaultBtn, defaultBtn);
+      SheetMessage sheetMessage = new SheetMessage(finalComponent, myTitle.getValue(), myText.get(), DesktopPlainAlertImpl.getIcon(myType), buttons, null, defaultBtn, defaultBtn);
 
       String sheetMessageResultText = sheetMessage.getResult();
       if (sheetMessageResultText == null) {
@@ -80,21 +78,5 @@ public class DesktopMacAlertImpl<V> extends BaseAlert<V> {
       }
     });
     return result;
-  }
-
-  @Nullable
-  private Image getIcon() {
-    switch (myType) {
-      case INFO:
-        return UIUtil.getInformationIcon();
-      case WARNING:
-        return UIUtil.getWarningIcon();
-      case ERROR:
-        return UIUtil.getErrorIcon();
-      case QUESTION:
-        return UIUtil.getQuestionIcon();
-      default:
-        throw new UnsupportedOperationException(myType.name());
-    }
   }
 }

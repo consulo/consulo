@@ -42,7 +42,6 @@ import consulo.lang.util.LanguageVersionUtil;
 import consulo.logging.Logger;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolderEx;
-import consulo.util.lang.DeprecatedMethodException;
 import org.jetbrains.annotations.Contract;
 
 import javax.annotation.Nonnull;
@@ -731,20 +730,6 @@ public class InjectedLanguageUtil {
   public static <T> void putInjectedFileUserData(@Nonnull PsiElement element, @Nonnull Language language, @Nonnull Key<T> key, @Nullable T value) {
     PsiFile file = getCachedInjectedFileWithLanguage(element, language);
     if (file != null) {
-      file.putUserData(key, value);
-    }
-  }
-
-  /**
-   * @deprecated use {@link #putInjectedFileUserData(PsiElement, Language, Key, Object)} instead
-   */
-  @Deprecated
-  public static <T> void putInjectedFileUserData(MultiHostRegistrar registrar, Key<T> key, T value) {
-    DeprecatedMethodException.report("use putInjectedFileUserData(PsiElement, Language, Key, Object)} instead");
-    InjectionResult result = ((InjectionRegistrarImpl)registrar).getInjectedResult();
-    if (result != null && result.files != null) {
-      List<? extends PsiFile> files = result.files;
-      PsiFile file = files.get(files.size() - 1);
       file.putUserData(key, value);
     }
   }

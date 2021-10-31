@@ -26,6 +26,7 @@ import com.intellij.util.ui.UIUtil;
 import consulo.awt.TargetAWT;
 import consulo.localize.LocalizeValue;
 import consulo.ui.Component;
+import consulo.ui.NotificationType;
 import consulo.ui.Window;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.desktop.internal.DesktopCheckBoxImpl;
@@ -51,11 +52,15 @@ public class DesktopPlainAlertImpl<V> extends BaseAlert<V> {
 
     private DesktopCheckBoxImpl myRememberBox;
 
-    DialogImpl(java.awt.Component parentComponent) {
-      super(parentComponent, false);
-
+    DialogImpl() {
+      super(false);
       setTitle(myTitle.getValue());
+      init();
+    }
 
+    DialogImpl(@Nonnull java.awt.Component parentComponent) {
+      super(parentComponent, false);
+      setTitle(myTitle.getValue());
       init();
     }
 
@@ -115,14 +120,12 @@ public class DesktopPlainAlertImpl<V> extends BaseAlert<V> {
     protected JComponent doCreateCenterPanel() {
       JPanel panel = new JPanel(new BorderLayout(15, 0));
 
-      Image icon = getIcon();
-      if (icon != null) {
-        JLabel iconLabel = new JBLabel(icon);
-        Container container = new Container();
-        container.setLayout(new BorderLayout());
-        container.add(iconLabel, BorderLayout.NORTH);
-        panel.add(container, BorderLayout.WEST);
-      }
+      Image icon = getIcon(myType);
+      JLabel iconLabel = new JBLabel(icon);
+      Container container = new Container();
+      container.setLayout(new BorderLayout());
+      container.add(iconLabel, BorderLayout.NORTH);
+      panel.add(container, BorderLayout.WEST);
 
       String textValue = myText.getValue();
       if (!textValue.isEmpty()) {
@@ -189,9 +192,9 @@ public class DesktopPlainAlertImpl<V> extends BaseAlert<V> {
     }
   }
 
-  @Nullable
-  private Image getIcon() {
-    switch (myType) {
+  @Nonnull
+  public static Image getIcon(NotificationType type) {
+    switch (type) {
       case INFO:
         return UIUtil.getInformationIcon();
       case WARNING:
@@ -201,7 +204,7 @@ public class DesktopPlainAlertImpl<V> extends BaseAlert<V> {
       case QUESTION:
         return UIUtil.getQuestionIcon();
       default:
-        throw new UnsupportedOperationException(myType.name());
+        throw new UnsupportedOperationException(type.name());
     }
   }
 
@@ -235,12 +238,17 @@ public class DesktopPlainAlertImpl<V> extends BaseAlert<V> {
     }
 
     AsyncResult<V> result = AsyncResult.undefined();
-    DialogImpl dialog = new DialogImpl(component);
+    DialogImpl dialog = component == null ? new DialogImpl() : new DialogImpl(component);
     AsyncResult<Void> async = dialog.showAsync();
     async.doWhenProcessed(() -> {
       V selectValue = dialog.mySelectedValue;
+      // null of if dialog closed via X button, not target buttons
+      if(selectValue == null) {
+        selectValue = myExitValue.get();
+      }
+
       if (myRemember != null) {
-        if (dialog.myRememberBox.getValue()) {
+        if (dialog.myRememberBox.getValueOrError()) {
           myRemember.setValue(selectValue);
         }
       }
