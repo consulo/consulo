@@ -95,20 +95,4 @@ public class DesktopMacAlertImpl<V> extends BaseAlert<V> {
     });
     return result;
   }
-
-  @Nullable
-  private Image getIcon() {
-    switch (myType) {
-      case INFO:
-        return UIUtil.getInformationIcon();
-      case WARNING:
-        return UIUtil.getWarningIcon();
-      case ERROR:
-        return UIUtil.getErrorIcon();
-      case QUESTION:
-        return UIUtil.getQuestionIcon();
-      default:
-        throw new UnsupportedOperationException(myType.name());
-    }
-  }
 }
