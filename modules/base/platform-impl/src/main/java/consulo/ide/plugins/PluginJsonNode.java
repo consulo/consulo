@@ -32,6 +32,12 @@ public class PluginJsonNode {
     public String sha3_256;
   }
 
+  public static class Permission {
+    public String type;
+
+    public String[] options;
+  }
+
   public String id;
   public String name;
   public String description;
@@ -49,6 +55,6 @@ public class PluginJsonNode {
   // public Extension[] extensions;  old extensions impl
   public Extension[] extensionsV2;
   public boolean experimental;
-
+  public Permission[] permissions;
   public Checksum checksum = new Checksum();
 }

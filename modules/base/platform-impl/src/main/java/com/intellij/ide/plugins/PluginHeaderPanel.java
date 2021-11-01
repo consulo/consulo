@@ -17,9 +17,7 @@ package com.intellij.ide.plugins;
 
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.ex.ApplicationEx;
 import com.intellij.openapi.ui.DialogWrapper;
-import com.intellij.ui.Gray;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.components.JBLabel;
 import com.intellij.ui.components.JBTextArea;
@@ -32,6 +30,8 @@ import com.intellij.util.ui.components.BorderLayoutPanel;
 import consulo.awt.TargetAWT;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginIds;
+import consulo.container.plugin.PluginPermissionDescriptor;
+import consulo.container.plugin.PluginPermissionType;
 import consulo.ide.plugins.PluginIconHolder;
 
 import javax.annotation.Nullable;
@@ -58,6 +58,9 @@ public class PluginHeaderPanel {
   private JPanel myVersionInfoPanel;
   private JLabel myExperimentalLabel;
   private JLabel myIconLabel;
+  private JLabel myPermissionLabel;
+  private JPanel myPermissionsPanel;
+
 
   enum ACTION_ID {
     INSTALL,
@@ -69,7 +72,7 @@ public class PluginHeaderPanel {
 
   public PluginHeaderPanel(@Nullable PluginManagerMain manager, JTable pluginTable) {
     initComponents();
-    
+
     myManager = manager;
   }
 
@@ -161,18 +164,38 @@ public class PluginHeaderPanel {
     myVersion.getParent().revalidate();
     myVersion.revalidate();
 
+    myExperimentalLabel.setText("Experimental");
     myExperimentalLabel.setVisible(plugin.isExperimental());
     if (plugin.isExperimental()) {
       myExperimentalLabel.setIcon(TargetAWT.to(AllIcons.General.BalloonWarning));
       myExperimentalLabel.setFont(UIUtil.getLabelFont(UIUtil.FontSize.BIGGER).deriveFont(Font.BOLD));
       myExperimentalLabel.setForeground(JBColor.RED);
     }
+
+    myPermissionsPanel.removeAll();
+
+    boolean noPermission = true;
+    for (PluginPermissionType permissionType : PluginPermissionType.values()) {
+      PluginPermissionDescriptor permissionDescriptor = plugin.getPermissionDescriptor(permissionType);
+      if (permissionDescriptor != null) {
+        JBLabel label = new JBLabel("- " + permissionType.name());
+        myPermissionsPanel.add(label);
+        noPermission = false;
+      }
+    }
+
+    if (noPermission) {
+      JBLabel noPermissionsLabel = new JBLabel("<no special permissions>");
+      noPermissionsLabel.setForeground(JBColor.GRAY);
+      noPermissionsLabel.setFont(UIUtil.getLabelFont(UIUtil.FontSize.SMALL));
+      myPermissionsPanel.add(noPermissionsLabel);
+    }
   }
 
   private void initComponents() {
     myRoot = new JPanel(new VerticalLayout(JBUI.scale(5)));
     myRoot.setOpaque(false);
-    
+
     myIconLabel = new JBLabel();
     myName = new JBTextArea();
     myName.setBorder(JBUI.Borders.empty());
@@ -196,6 +219,12 @@ public class PluginHeaderPanel {
     myExperimentalLabel = new JBLabel();
     myRoot.add(new BorderLayoutPanel().addToLeft(myCategory).addToRight(myExperimentalLabel).andTransparent());
 
+    myPermissionLabel = new JBLabel("Permissions:");
+    myPermissionLabel.setFont(UIUtil.getLabelFont(UIUtil.FontSize.NORMAL).deriveFont(Font.BOLD));
+    myPermissionsPanel = new JPanel(new VerticalLayout(0));
+    myPermissionsPanel.setOpaque(false);
+    myPermissionsPanel.setBorder(JBUI.Borders.empty(0, 8, 0, 0));
+
     myDownloadsPanel = new JPanel(new HorizontalLayout(JBUI.scale(5)));
     myDownloadsPanel.setOpaque(false);
     myDownloadsPanel.add(myRating = new RatesPanel());
@@ -204,12 +233,15 @@ public class PluginHeaderPanel {
 
     myUpdated = new JBLabel();
     myVersion = new JBLabel();
-    
+
     myVersionInfoPanel = new JPanel(new HorizontalLayout(JBUI.scale(5)));
     myVersionInfoPanel.setOpaque(false);
     myVersionInfoPanel.add(myUpdated);
     myVersionInfoPanel.add(myVersion);
     myRoot.add(myVersionInfoPanel);
+
+    myRoot.add(myPermissionLabel);
+    myRoot.add(myPermissionsPanel);
 
     myInstallButton.addActionListener(e -> {
       switch (myActionId) {
@@ -227,18 +259,18 @@ public class PluginHeaderPanel {
           if (dialog != null) {
             dialog.doOKActionPublic();
 
-            ((ApplicationEx)ApplicationManager.getApplication()).restart(true);
+            ApplicationManager.getApplication().restart(true);
           }
           break;
       }
       setPlugin(myPlugin);
     });
 
-    final JBColor greyed = new JBColor(Gray._130, Gray._200);
-    myCategory.setForeground(greyed);
-    myDownloads.setForeground(greyed);
-    myUpdated.setForeground(greyed);
-    myVersion.setForeground(greyed);
+    myCategory.setForeground(JBColor.GRAY);
+    myDownloads.setForeground(JBColor.GRAY);
+    myUpdated.setForeground(JBColor.GRAY);
+    myVersion.setForeground(JBColor.GRAY);
+
     final Font smallFont = UIUtil.getLabelFont(UIUtil.FontSize.SMALL);
     myCategory.setFont(smallFont);
     myVersion.setFont(smallFont);

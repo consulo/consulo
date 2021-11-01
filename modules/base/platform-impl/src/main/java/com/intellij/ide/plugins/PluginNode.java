@@ -15,9 +15,7 @@
  */
 package com.intellij.ide.plugins;
 
-import consulo.container.plugin.PluginDescriptorStub;
-import consulo.container.plugin.PluginId;
-import consulo.container.plugin.SimpleExtension;
+import consulo.container.plugin.*;
 import consulo.ide.plugins.PluginJsonNode;
 import consulo.logging.Logger;
 import consulo.ui.image.Image;
@@ -71,6 +69,7 @@ public class PluginNode extends PluginDescriptorStub {
   private Image myInitializedIcon;
 
   private List<SimpleExtension> mySimpleExtensions = Collections.emptyList();
+  private Map<PluginPermissionType, PluginPermissionDescriptor> myPermissions = Collections.emptyMap();
 
   private String myChecksumSha3_256;
 
@@ -110,6 +109,21 @@ public class PluginNode extends PluginDescriptorStub {
         mySimpleExtensions.add(new SimpleExtension(extension.key, extension.values));
       }
     }
+
+    PluginJsonNode.Permission[] permissions = jsonPlugin.permissions;
+    if(permissions != null) {
+      myPermissions = new HashMap<>();
+      for (PluginJsonNode.Permission permission : permissions) {
+        try {
+          PluginPermissionType type = PluginPermissionType.valueOf(permission.type);
+          Set<String> options = permission.options == null ? Set.of() : new TreeSet<>(Arrays.asList(permission.options));
+          myPermissions.put(type, new PluginPermissionDescriptor(type, options));
+        }
+        catch (IllegalArgumentException e) {
+          // ignored unknown permission
+        }
+      }
+    }
   }
 
   private static byte[] decodeIconBytes(String iconBytes) {
@@ -133,6 +147,12 @@ public class PluginNode extends PluginDescriptorStub {
     return mySimpleExtensions;
   }
 
+  @Nullable
+  @Override
+  public PluginPermissionDescriptor getPermissionDescriptor(@Nonnull PluginPermissionType permissionType) {
+    return myPermissions.get(permissionType);
+  }
+
   public void setCategory(String category) {
     this.category = category;
   }
@@ -153,6 +173,7 @@ public class PluginNode extends PluginDescriptorStub {
     this.id = PluginId.getId(id);
   }
 
+  @Nonnull
   @Override
   public String getCategory() {
     return normalizeCategory(category);
