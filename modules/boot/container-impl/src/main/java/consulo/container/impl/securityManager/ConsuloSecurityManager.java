@@ -29,12 +29,16 @@ import java.util.Set;
 public class ConsuloSecurityManager extends SecurityManager {
   private final ClassLoader mySystemClassLoader;
   private final ClassLoader myPlatformClassLoader;
+  private final ClassLoader myPrimaryClassLoader;
 
   private boolean myEnabled = false;
 
   public ConsuloSecurityManager() {
     mySystemClassLoader = ClassLoader.getSystemClassLoader();
     myPlatformClassLoader = ClassLoader.getPlatformClassLoader();
+
+    // this classloader, can be created by java loader(equal to mySystemClassLoader), but can be another if running by maven
+    myPrimaryClassLoader = getClass().getClassLoader();
   }
 
   public void setEnabled(boolean enabled) {
@@ -135,7 +139,7 @@ public class ConsuloSecurityManager extends SecurityManager {
     Set<ClassLoader> classLoaders = new LinkedHashSet<ClassLoader>();
     for (Class<?> aClass : classContext) {
       ClassLoader classLoader = aClass.getClassLoader();
-      if (classLoader == null || myPlatformClassLoader == classLoader || mySystemClassLoader == classLoader) {
+      if (classLoader == null || myPlatformClassLoader == classLoader || mySystemClassLoader == classLoader || myPrimaryClassLoader == classLoader) {
         continue;
       }
       classLoaders.add(classLoader);
