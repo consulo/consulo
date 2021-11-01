@@ -41,4 +41,29 @@ public final class PluginPermissionDescriptor {
   public Set<String> getOptions() {
     return myOptions;
   }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+
+    PluginPermissionDescriptor that = (PluginPermissionDescriptor)o;
+
+    if (myType != that.myType) return false;
+    if (!myOptions.equals(that.myOptions)) return false;
+
+    return true;
+  }
+
+  @Override
+  public int hashCode() {
+    int result = myType.hashCode();
+    result = 31 * result + myOptions.hashCode();
+    return result;
+  }
+
+  @Override
+  public String toString() {
+    return "PluginPermissionDescriptor{" + "myType=" + myType + ", myOptions=" + myOptions + '}';
+  }
 }
