@@ -473,6 +473,12 @@ public class PluginDescriptorImpl extends PluginDescriptorStub {
     return myModuleListeners;
   }
 
+  @Nullable
+  @Override
+  public PluginPermissionDescriptor getPermissionDescriptor(@Nonnull PluginPermissionType permissionType) {
+    return myPermissionDescriptors.get(permissionType);
+  }
+
   @Override
   public String toString() {
     return "PluginDescriptor[name='" + myName + "', classpath='" + myPath + "']";
