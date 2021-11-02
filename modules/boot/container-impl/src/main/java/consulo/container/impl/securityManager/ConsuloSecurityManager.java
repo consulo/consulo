@@ -18,8 +18,11 @@ package consulo.container.impl.securityManager;
 import consulo.container.classloader.PluginClassLoader;
 import consulo.container.plugin.*;
 
+import javax.annotation.Nullable;
 import java.security.Permission;
+import java.util.HashMap;
 import java.util.LinkedHashSet;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -33,12 +36,17 @@ public class ConsuloSecurityManager extends SecurityManager {
 
   private boolean myEnabled = false;
 
+  // map library->jvm class, in this case we don't check permissions
+  private final Map<String, String> mySpecialNativeCalls = new HashMap<String, String>();
+
   public ConsuloSecurityManager() {
     mySystemClassLoader = ClassLoader.getSystemClassLoader();
     myPlatformClassLoader = ClassLoader.getPlatformClassLoader();
 
     // this classloader, can be created by java loader(equal to mySystemClassLoader), but can be another if running by maven
     myPrimaryClassLoader = getClass().getClassLoader();
+
+    mySpecialNativeCalls.put("net", "java.net.AbstractPlainDatagramSocketImpl");
   }
 
   public void setEnabled(boolean enabled) {
@@ -85,12 +93,27 @@ public class ConsuloSecurityManager extends SecurityManager {
 
   @Override
   public void checkLink(String lib) {
-    checkPermission(PluginPermissionType.NATIVE_LIBRARY);
+    Class<?>[] classContext = null;
+
+    if (myEnabled) {
+      String safeTraceCall = mySpecialNativeCalls.get(lib);
+      if (safeTraceCall != null) {
+        classContext = getClassContext();
+
+        for (Class<?> aClass : classContext) {
+          if (aClass.getName().equals(safeTraceCall)) {
+            return;
+          }
+        }
+      }
+    }
+
+    checkPermission(PluginPermissionType.NATIVE_LIBRARY, classContext);
   }
 
   @Override
   public void checkListen(int port) {
-    checkPermission(PluginPermissionType.SOCKET);
+    checkPermission(PluginPermissionType.SOCKET_BIND);
   }
 
   @Override
@@ -100,15 +123,19 @@ public class ConsuloSecurityManager extends SecurityManager {
 
   @Override
   public void checkConnect(String host, int port, Object context) {
-    checkPermission(PluginPermissionType.SOCKET);
+    checkPermission(PluginPermissionType.SOCKET_CONNECT);
   }
 
   private void checkPermission(PluginPermissionType pluginPermissionType) {
+    checkPermission(pluginPermissionType, null);
+  }
+
+  private void checkPermission(PluginPermissionType pluginPermissionType, @Nullable Class<?>[] alreadyCalledContext) {
     if (!myEnabled) {
       return;
     }
 
-    Set<ClassLoader> classLoaders = mergeClassLoaders();
+    Set<ClassLoader> classLoaders = mergeClassLoaders(alreadyCalledContext);
 
     for (ClassLoader classLoader : classLoaders) {
       if (classLoader instanceof PluginClassLoader) {
@@ -133,8 +160,8 @@ public class ConsuloSecurityManager extends SecurityManager {
     }
   }
 
-  private Set<ClassLoader> mergeClassLoaders() {
-    Class<?>[] classContext = getClassContext();
+  private Set<ClassLoader> mergeClassLoaders(@Nullable Class<?>[] alreadyCalledContext) {
+    Class<?>[] classContext = alreadyCalledContext == null ? getClassContext() : alreadyCalledContext;
 
     Set<ClassLoader> classLoaders = new LinkedHashSet<ClassLoader>();
     for (Class<?> aClass : classContext) {
