@@ -1,0 +1,34 @@
+database:
+  text: Database
+custom.language:
+  text: Custom Language
+grammar.language:
+  text: Grammar Language
+markup.language:
+  text: Markup Language
+template.language:
+  text: Template Language
+build.framework:
+  text: Build Framework
+software.framework:
+  text: Software Framework
+game.framework:
+  text: Game Framework
+test.framework:
+  text: Text Framework
+web.framework:
+  text: Web Framework
+ide.framework:
+  text: IDE Framework
+library:
+  text: Library
+language.extension:
+  text: Language Extension
+vcs:
+  text: Version Control
+import:
+  text: Import
+run.debug:
+  text: Debugging
+run.converage:
+  text: Coverage

@@ -33,6 +33,8 @@ import consulo.container.plugin.PluginIds;
 import consulo.container.plugin.PluginPermissionDescriptor;
 import consulo.container.plugin.PluginPermissionType;
 import consulo.ide.plugins.PluginIconHolder;
+import consulo.localize.LocalizeValue;
+import consulo.util.lang.StringUtil;
 
 import javax.annotation.Nullable;
 import javax.swing.*;
@@ -46,7 +48,6 @@ public class PluginHeaderPanel {
 
   @Nullable
   private final PluginManagerMain myManager;
-  private JBLabel myCategory;
   private JTextArea myName;
   private JBLabel myDownloads;
   private RatesPanel myRating;
@@ -55,12 +56,11 @@ public class PluginHeaderPanel {
   private JBLabel myVersion;
   private JPanel myRoot;
   private JPanel myDownloadsPanel;
-  private JPanel myVersionInfoPanel;
   private JLabel myExperimentalLabel;
   private JLabel myIconLabel;
-  private JLabel myPermissionLabel;
-  private JPanel myPermissionsPanel;
 
+  private JPanel myTagsPanel;
+  private JPanel myPermissionsPanel;
 
   enum ACTION_ID {
     INSTALL,
@@ -70,7 +70,7 @@ public class PluginHeaderPanel {
 
   private ACTION_ID myActionId = ACTION_ID.INSTALL;
 
-  public PluginHeaderPanel(@Nullable PluginManagerMain manager, JTable pluginTable) {
+  public PluginHeaderPanel(@Nullable PluginManagerMain manager) {
     initComponents();
 
     myManager = manager;
@@ -79,20 +79,19 @@ public class PluginHeaderPanel {
   public void setPlugin(PluginDescriptor plugin) {
     myPlugin = plugin;
     myRoot.setVisible(true);
-    myCategory.setVisible(true);
     myDownloadsPanel.setVisible(true);
     myInstallButton.setVisible(true);
     myUpdated.setVisible(true);
 
     myName.setText(plugin.getName());
     myName.setFont(UIUtil.getLabelFont(UIUtil.FontSize.BIGGER).deriveFont(Font.BOLD));
-    myCategory.setText(plugin.getCategory().toUpperCase());
+    myVersion.setText(StringUtil.notNullize(plugin.getVersion(), "N/A"));
+
     if (plugin instanceof PluginNode) {
       final PluginNode node = (PluginNode)plugin;
 
       myRating.setRate(node.getRating());
       myDownloads.setText(node.getDownloads() + " downloads");
-      myVersion.setText(" ver " + node.getVersion());
       myUpdated.setText("Updated " + DateFormatUtil.formatDate(node.getDate()));
       switch (node.getStatus()) {
         case PluginNode.STATUS_INSTALLED:
@@ -107,11 +106,7 @@ public class PluginHeaderPanel {
     }
     else {
       myActionId = null;
-      myVersionInfoPanel.remove(myUpdated);
-      myCategory.setVisible(false);
       myDownloadsPanel.setVisible(false);
-      final String version = plugin.getVersion();
-      myVersion.setText("Version: " + (version == null ? "N/A" : version));
       myUpdated.setVisible(false);
       if (!PluginIds.isPlatformPlugin(plugin.getPluginId())) {
         if (plugin.isDeleted()) {
@@ -161,8 +156,6 @@ public class PluginHeaderPanel {
     myRoot.revalidate();
     myInstallButton.getParent().revalidate();
     myInstallButton.revalidate();
-    myVersion.getParent().revalidate();
-    myVersion.revalidate();
 
     myExperimentalLabel.setText("Experimental");
     myExperimentalLabel.setVisible(plugin.isExperimental());
@@ -190,6 +183,12 @@ public class PluginHeaderPanel {
       noPermissionsLabel.setFont(UIUtil.getLabelFont(UIUtil.FontSize.SMALL));
       myPermissionsPanel.add(noPermissionsLabel);
     }
+
+    myTagsPanel.removeAll();
+
+    for (LocalizeValue tagValue : PluginManagerMain.getLocalizedTags(plugin)) {
+      myTagsPanel.add(new JBLabel(tagValue.get()));
+    }
   }
 
   private void initComponents() {
@@ -215,33 +214,45 @@ public class PluginHeaderPanel {
 
     myRoot.add(new BorderLayoutPanel().addToLeft(myIconLabel).addToCenter(myName).addToRight(buttonPanel).andTransparent());
 
-    myCategory = new JBLabel();
     myExperimentalLabel = new JBLabel();
-    myRoot.add(new BorderLayoutPanel().addToLeft(myCategory).addToRight(myExperimentalLabel).andTransparent());
+    myRoot.add(new BorderLayoutPanel().addToRight(myExperimentalLabel).andTransparent());
 
-    myPermissionLabel = new JBLabel("Permissions:");
-    myPermissionLabel.setFont(UIUtil.getLabelFont(UIUtil.FontSize.NORMAL).deriveFont(Font.BOLD));
+    Font boldFont = UIUtil.getLabelFont(UIUtil.FontSize.NORMAL).deriveFont(Font.BOLD);
+
+    JLabel permissionLabel = new JBLabel("Permissions:");
+    permissionLabel.setFont(boldFont);
     myPermissionsPanel = new JPanel(new VerticalLayout(0));
     myPermissionsPanel.setOpaque(false);
     myPermissionsPanel.setBorder(JBUI.Borders.empty(0, 8, 0, 0));
 
+    JLabel tagsLabel = new JBLabel("Tags:");
+    tagsLabel.setFont(boldFont);
+    myTagsPanel = new JPanel(new VerticalLayout(0));
+    myTagsPanel.setOpaque(false);
+    myTagsPanel.setBorder(JBUI.Borders.empty(0, 8, 0, 0));
+
     myDownloadsPanel = new JPanel(new HorizontalLayout(JBUI.scale(5)));
     myDownloadsPanel.setOpaque(false);
-    myDownloadsPanel.add(myRating = new RatesPanel());
     myDownloadsPanel.add(myDownloads = new JBLabel());
-    myRoot.add(myDownloadsPanel);
+    myDownloadsPanel.add(myRating = new RatesPanel());
+    myRoot.add(new BorderLayoutPanel().andTransparent().addToRight(myDownloadsPanel));
 
     myUpdated = new JBLabel();
     myVersion = new JBLabel();
 
-    myVersionInfoPanel = new JPanel(new HorizontalLayout(JBUI.scale(5)));
-    myVersionInfoPanel.setOpaque(false);
-    myVersionInfoPanel.add(myUpdated);
-    myVersionInfoPanel.add(myVersion);
-    myRoot.add(myVersionInfoPanel);
+    JPanel versionInfoPanel = new JPanel(new HorizontalLayout(JBUI.scale(5)));
+    versionInfoPanel.setOpaque(false);
+    JBLabel verLabel = new JBLabel("Version:");
+    verLabel.setFont(boldFont);
+    versionInfoPanel.add(verLabel);
+    versionInfoPanel.add(myVersion);
+    myRoot.add(versionInfoPanel);
 
-    myRoot.add(myPermissionLabel);
+    myRoot.add(permissionLabel);
     myRoot.add(myPermissionsPanel);
+
+    myRoot.add(tagsLabel);
+    myRoot.add(myTagsPanel);
 
     myInstallButton.addActionListener(e -> {
       switch (myActionId) {
@@ -266,21 +277,12 @@ public class PluginHeaderPanel {
       setPlugin(myPlugin);
     });
 
-    myCategory.setForeground(JBColor.GRAY);
     myDownloads.setForeground(JBColor.GRAY);
     myUpdated.setForeground(JBColor.GRAY);
-    myVersion.setForeground(JBColor.GRAY);
-
     final Font smallFont = UIUtil.getLabelFont(UIUtil.FontSize.SMALL);
-    myCategory.setFont(smallFont);
-    myVersion.setFont(smallFont);
     myDownloads.setFont(smallFont);
     myUpdated.setFont(smallFont);
     myRoot.setVisible(false);
-  }
-
-  public JBLabel getCategory() {
-    return myCategory;
   }
 
   public JTextArea getName() {

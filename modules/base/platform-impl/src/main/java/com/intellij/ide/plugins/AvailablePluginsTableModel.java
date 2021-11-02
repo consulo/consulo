@@ -23,23 +23,24 @@
 package com.intellij.ide.plugins;
 
 import com.intellij.util.ui.ColumnInfo;
+import consulo.annotation.DeprecationInfo;
 import consulo.container.plugin.PluginDescriptor;
+import consulo.container.plugin.PluginManager;
+import consulo.localize.LocalizeValue;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.TreeSet;
+import java.util.*;
 
 /**
  * @author stathik
  */
 public class AvailablePluginsTableModel extends PluginTableModel {
+  public static final String ALL = "*";
 
-  public static final String ALL = "All";
-  private String myCategory = ALL;
-  private TreeSet<String> myAvailableCategories = new TreeSet<>();
+  private String myTargetTag = ALL;
 
-  protected static final String STATUS = "Status";
+  private Map<String, LocalizeValue> myAvailableTags = new TreeMap<>();
 
   public AvailablePluginsTableModel() {
     super.columns = new ColumnInfo[]{new AvailablePluginColumnInfo(this)};
@@ -48,33 +49,45 @@ public class AvailablePluginsTableModel extends PluginTableModel {
     view = new ArrayList<>();
   }
 
-  public String getCategory() {
-    return myCategory;
+  @Nonnull
+  public String getTargetTag() {
+    return myTargetTag;
   }
 
-  public void setCategory(String category, String filter) {
-    myCategory = category;
+  public void setTargetTag(String tag, String filter) {
+    myTargetTag = tag;
     filter(filter);
   }
 
   @Override
   public boolean isPluginDescriptorAccepted(PluginDescriptor descriptor) {
-    final String category = descriptor.getCategory();
-    if (category != null) {
-      if (!ALL.equals(myCategory) && !category.equals(myCategory)) return false;
+    if (!myTargetTag.equals(ALL)) {
+      if (!getHackyTags(descriptor).contains(myTargetTag)) {
+        return false;
+      }
     }
-
     return true;
   }
 
-  public TreeSet<String> getAvailableCategories() {
-    return myAvailableCategories;
+  @Deprecated
+  @DeprecationInfo("Migrate to #getTags()")
+  private static Set<String> getHackyTags(PluginDescriptor descriptor) {
+    Set<String> tags = descriptor.getTags();
+    if(!tags.isEmpty()) {
+      return tags;
+    }
+    return Set.of(descriptor.getCategory());
+  }
+
+  @Nonnull
+  public Map<String, LocalizeValue> getAvailableTags() {
+    return myAvailableTags;
   }
 
   private static void updateStatus(final PluginDescriptor descr) {
     if (descr instanceof PluginNode) {
       final PluginNode node = (PluginNode)descr;
-      PluginDescriptor existing = PluginManager.getPlugin(descr.getPluginId());
+      PluginDescriptor existing = PluginManager.findPlugin(descr.getPluginId());
       if (existing != null) {
         node.setStatus(PluginNode.STATUS_INSTALLED);
         node.setInstalledVersion(existing.getVersion());
@@ -85,7 +98,7 @@ public class AvailablePluginsTableModel extends PluginTableModel {
   @Override
   public void updatePluginsList(List<PluginDescriptor> list) {
     view.clear();
-    myAvailableCategories.clear();
+    myAvailableTags.clear();
     filtered.clear();
 
     //  For each downloadable plugin we need to know whether its counterpart
@@ -94,12 +107,15 @@ public class AvailablePluginsTableModel extends PluginTableModel {
     for (PluginDescriptor descr : list) {
       updateStatus(descr);
       view.add(descr);
-      final String category = descr.getCategory();
-      if (category != null) {
-        myAvailableCategories.add(category);
-      }
-      else {
-        myAvailableCategories.add(AvailablePluginsManagerMain.N_A);
+
+      Set<String> tags = descr.getTags();
+      if (!tags.isEmpty()) {
+        for (String tag : tags) {
+          myAvailableTags.put(tag, PluginManagerMain.getTagLocalizeValue(tag));
+        }
+      } else {
+        String category = descr.getCategory();
+        myAvailableTags.put(category, LocalizeValue.of(category));
       }
     }
 

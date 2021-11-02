@@ -45,7 +45,6 @@ public class PluginManagerColumnInfo extends ColumnInfo<PluginDescriptor, String
   public static final int COLUMN_DOWNLOADS = 1;
   public static final int COLUMN_RATE = 2;
   public static final int COLUMN_DATE = 3;
-  public static final int COLUMN_CATEGORY = 4;
   private static final float mgByte = 1024.0f * 1024.0f;
   private static final float kByte = 1024.0f;
 
@@ -85,9 +84,6 @@ public class PluginManagerColumnInfo extends ColumnInfo<PluginDescriptor, String
       else {
         return IdeBundle.message("plugin.info.not.available");
       }
-    }
-    else if (columnIdx == COLUMN_CATEGORY) {
-      return base.getCategory();
     }
     else if (columnIdx == COLUMN_RATE) {
       return ((PluginNode)base).getRating();
@@ -205,7 +201,7 @@ public class PluginManagerColumnInfo extends ColumnInfo<PluginDescriptor, String
         return 0;
       };
     }
-    return (o1, o2) -> StringUtil.compare(o1.getCategory(), o2.getCategory(), true);
+    return (o1, o2) -> 0;
   }
 
   @SuppressWarnings({"HardCodedStringLiteral"})
@@ -285,11 +281,8 @@ public class PluginManagerColumnInfo extends ColumnInfo<PluginDescriptor, String
         String downloads = myPluginDescriptor.getDownloads();
         myLabel.setText(!StringUtil.isEmpty(downloads) ? downloads : "n/a");
         myLabel.setHorizontalAlignment(SwingConstants.RIGHT);
-      } else if (column == COLUMN_CATEGORY) {
-        String category = myPluginDescriptor.getCategory();
-
-        myLabel.setText(!StringUtil.isEmpty(category) ? category : "n/a");
       }
+
       if (myPluginDescriptor.getStatus() == PluginNode.STATUS_INSTALLED) {
         PluginId pluginId = myPluginDescriptor.getPluginId();
         final boolean hasNewerVersion = InstalledPluginsTableModel.hasNewerVersion(pluginId);

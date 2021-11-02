@@ -1055,6 +1055,8 @@ column.plugins.downloads:
   text: Downloads
 column.plugins.category:
   text: Category
+column.plugins.tag:
+  text: Tag
 column.plugins.rate:
   text: Rating
 plugin.info.not.available:

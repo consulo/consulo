@@ -24,6 +24,7 @@ import java.io.File;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author VISTALL
@@ -102,6 +103,12 @@ public abstract class PluginDescriptorStub implements PluginDescriptor {
   @Override
   public String getLocalize() {
     return null;
+  }
+
+  @Nonnull
+  @Override
+  public Set<String> getTags() {
+    return Collections.emptySet();
   }
 
   @Nonnull

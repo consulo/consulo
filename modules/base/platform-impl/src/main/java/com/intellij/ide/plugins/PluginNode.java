@@ -73,6 +73,8 @@ public class PluginNode extends PluginDescriptorStub {
 
   private String myChecksumSha3_256;
 
+  private Set<String> myTags = Collections.emptySet();
+
   public PluginNode() {
   }
 
@@ -124,6 +126,12 @@ public class PluginNode extends PluginDescriptorStub {
         }
       }
     }
+
+    String[] tags = jsonPlugin.tags;
+    if(tags != null) {
+      myTags = new TreeSet<>();
+      Collections.addAll(myTags, tags);
+    }
   }
 
   private static byte[] decodeIconBytes(String iconBytes) {
@@ -139,6 +147,12 @@ public class PluginNode extends PluginDescriptorStub {
       }
     }
     return ArrayUtil.EMPTY_BYTE_ARRAY;
+  }
+
+  @Nonnull
+  @Override
+  public Set<String> getTags() {
+    return myTags;
   }
 
   @Override

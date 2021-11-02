@@ -47,7 +47,10 @@ import consulo.container.plugin.PluginIds;
 import consulo.disposer.Disposable;
 import consulo.ide.eap.EarlyAccessProgramManager;
 import consulo.ide.updateSettings.UpdateSettings;
+import consulo.localize.LocalizeKey;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
+import consulo.platform.base.localize.RepositoryTagLocalize;
 import consulo.roots.ui.configuration.session.ConfigurableSession;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.lang.ref.SimpleReference;
@@ -65,6 +68,7 @@ import java.net.URL;
 import java.util.List;
 import java.util.*;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 import static com.intellij.openapi.util.text.StringUtil.isEmptyOrSpaces;
 
@@ -113,7 +117,7 @@ public abstract class PluginManagerMain implements Disposable {
     myDescriptionTextArea.addHyperlinkListener(new MyHyperlinkListener());
     myDescriptionTextArea.setBackground(UIUtil.getTextFieldBackground());
 
-    myPluginHeaderPanel = new PluginHeaderPanel(this, getPluginTable());
+    myPluginHeaderPanel = new PluginHeaderPanel(this);
 
     JPanel headerPanel = new JPanel(new BorderLayout());
     headerPanel.setBackground(UIUtil.getTextFieldBackground());
@@ -509,9 +513,10 @@ public abstract class PluginManagerMain implements Disposable {
       if (description != null && isAccepted(search, filter, description)) {
         return true;
       }
-      final String category = descriptor.getCategory();
-      if (isAccepted(search, filter, category)) {
-        return true;
+      for (LocalizeValue tag : getLocalizedTags(descriptor)) {
+        if (isAccepted(search, filter, tag.getValue())) {
+          return true;
+        }
       }
       final String changeNotes = descriptor.getChangeNotes();
       if (changeNotes != null && isAccepted(search, filter, changeNotes)) {
@@ -519,6 +524,21 @@ public abstract class PluginManagerMain implements Disposable {
       }
     }
     return false;
+  }
+
+  @Nonnull
+  public static Set<LocalizeValue> getLocalizedTags(PluginDescriptor pluginDescriptor) {
+    Set<String> tags = pluginDescriptor.getTags();
+    if (!tags.isEmpty()) {
+      return tags.stream().map(PluginManagerMain::getTagLocalizeValue).collect(Collectors.toSet());
+    }
+
+    return Set.of(LocalizeValue.of(pluginDescriptor.getCategory()));
+  }
+
+  @Nonnull
+  public static LocalizeValue getTagLocalizeValue(@Nonnull String tagId) {
+    return LocalizeKey.of(RepositoryTagLocalize.ID, tagId).getValue();
   }
 
   private static boolean isAccepted(final Set<String> search, @Nonnull final String filter, @Nonnull final String description) {

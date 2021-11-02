@@ -155,6 +155,17 @@ public class PluginBeanParser {
       pluginBean.permissions = permissions;
     }
 
+    Set<String> tags = new TreeSet<String>();
+    for (SimpleXmlElement tagsElement : rootTag.getChildren("tags")) {
+      for (SimpleXmlElement tagElement : tagsElement.getChildren("tag")) {
+        tags.add(tagElement.getText());
+      }
+    }
+
+    if(!tags.isEmpty()) {
+      pluginBean.tags = tags;
+    }
+
     List<String> incompatibleWith = new ArrayList<String>();
     for (SimpleXmlElement incompatibleWithElement : rootTag.getChildren("incompatible-with")) {
       incompatibleWith.add(incompatibleWithElement.getText());

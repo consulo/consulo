@@ -7,6 +7,15 @@
 
   <depends config-file="consulo.platform.desktop.xml" optional="true">consulo.platform.desktop</depends>
 
+  <tags>
+    <tag>database</tag>
+    <tag>custom.language</tag>
+    <tag>markup.language</tag>
+    <tag>template.language</tag>
+    <tag>build.framework</tag>
+    <tag>software.framework</tag>
+  </tags>
+
   <actions>
     <action id="ShowUITesterAction" class="consulo.sandboxPlugin.ide.action.ShowUITesterAction">
       <add-to-group group-id="ToolsMenu"/>

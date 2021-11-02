@@ -56,5 +56,6 @@ public class PluginJsonNode {
   public Extension[] extensionsV2;
   public boolean experimental;
   public Permission[] permissions;
+  public String[] tags;
   public Checksum checksum = new Checksum();
 }

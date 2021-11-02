@@ -18,17 +18,21 @@ package com.intellij.ide.plugins;
 import com.intellij.ide.plugins.sorters.SortByDownloadsAction;
 import com.intellij.ide.plugins.sorters.SortByRatingAction;
 import com.intellij.ide.plugins.sorters.SortByUpdatedAction;
-import com.intellij.openapi.actionSystem.*;
+import com.intellij.openapi.actionSystem.ActionGroup;
+import com.intellij.openapi.actionSystem.AnAction;
+import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.actionSystem.DefaultActionGroup;
 import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.util.ui.update.UiNotifyConnector;
 import consulo.container.plugin.PluginDescriptor;
+import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;
 import java.util.List;
 import java.util.Locale;
-import java.util.TreeSet;
+import java.util.Map;
 import java.util.function.Consumer;
 
 /**
@@ -36,7 +40,6 @@ import java.util.function.Consumer;
  */
 public class AvailablePluginsManagerMain extends PluginManagerMain {
   public static final String MANAGE_REPOSITORIES = "Manage repositories...";
-  public static final String N_A = "N/A";
 
   public AvailablePluginsManagerMain() {
     super();
@@ -82,7 +85,7 @@ public class AvailablePluginsManagerMain extends PluginManagerMain {
 
   @Override
   protected void addCustomFilters(Consumer<JComponent> adder) {
-    LabelPopup categoryPopup = new LabelPopup("Category:", this::createCategoryFilters);
+    LabelPopup categoryPopup = new LabelPopup("Tag:", this::createCategoryFilters);
 
     adder.accept(categoryPopup);
 
@@ -90,35 +93,29 @@ public class AvailablePluginsManagerMain extends PluginManagerMain {
   }
 
   private void updateCategoryPopup(LabelPopup labelPopup) {
-    String category = ((AvailablePluginsTableModel)myPluginsModel).getCategory();
-    if (category == null) {
-      category = N_A;
-    }
+    String category = ((AvailablePluginsTableModel)myPluginsModel).getTargetTag();
     labelPopup.setPrefixedText(category);
   }
 
   @Nonnull
-  private DefaultActionGroup createCategoryFilters(LabelPopup labelPopup) {
-    final TreeSet<String> availableCategories = ((AvailablePluginsTableModel)myPluginsModel).getAvailableCategories();
-    final DefaultActionGroup gr = new DefaultActionGroup();
-    gr.addAction(createFilterByCategoryAction(AvailablePluginsTableModel.ALL, labelPopup));
-    final boolean noCategory = availableCategories.remove(N_A);
-    for (final String availableCategory : availableCategories) {
-      gr.addAction(createFilterByCategoryAction(availableCategory, labelPopup));
+  private ActionGroup createCategoryFilters(LabelPopup labelPopup) {
+    final Map<String, LocalizeValue> availableCategories = ((AvailablePluginsTableModel)myPluginsModel).getAvailableTags();
+
+    ActionGroup.Builder builder = ActionGroup.newImmutableBuilder();
+    builder.add(createFilterByCategoryAction(AvailablePluginsTableModel.ALL, LocalizeValue.of("*"), labelPopup));
+    for (final Map.Entry<String, LocalizeValue> entry : availableCategories.entrySet()) {
+      builder.add(createFilterByCategoryAction(entry.getKey(), entry.getValue(), labelPopup));
     }
-    if (noCategory) {
-      gr.addAction(createFilterByCategoryAction(N_A, labelPopup));
-    }
-    return gr;
+    return builder.build();
   }
 
-  private AnAction createFilterByCategoryAction(final String availableCategory, LabelPopup labelPopup) {
-    return new DumbAwareAction(availableCategory) {
+  private AnAction createFilterByCategoryAction(String tagId, LocalizeValue tagLocalizeValue, LabelPopup labelPopup) {
+    return new DumbAwareAction(tagLocalizeValue) {
       @RequiredUIAccess
       @Override
       public void actionPerformed(@Nonnull AnActionEvent e) {
         final String filter = myFilter.getFilter().toLowerCase(Locale.ROOT);
-        ((AvailablePluginsTableModel)myPluginsModel).setCategory(availableCategory, filter);
+        ((AvailablePluginsTableModel)myPluginsModel).setTargetTag(tagId, filter);
         updateCategoryPopup(labelPopup);
       }
     };

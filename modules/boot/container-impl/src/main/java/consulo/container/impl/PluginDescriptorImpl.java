@@ -79,6 +79,9 @@ public class PluginDescriptorImpl extends PluginDescriptorStub {
   private SimpleMultiMap<String, ExtensionInfo> myExtensions = SimpleMultiMap.emptyMap();
   @Nonnull
   private SimpleMultiMap<String, SimpleXmlElement> myExtensionsPoints = SimpleMultiMap.emptyMap();
+
+  private Set<String> myTags = Collections.emptySet();
+
   private String myDescriptionChildText;
   private boolean myEnabled = true;
   private Boolean mySkipped;
@@ -152,7 +155,7 @@ public class PluginDescriptorImpl extends PluginDescriptorStub {
 
     Set<PluginId> incompatibleWithPluginds = new LinkedHashSet<PluginId>();
     for (String pluginId : pluginBean.incompatibleWith) {
-      if(!StringUtilRt.isEmpty(pluginId)) {
+      if (!StringUtilRt.isEmpty(pluginId)) {
         incompatibleWithPluginds.add(PluginId.getId(pluginId));
       }
     }
@@ -169,13 +172,17 @@ public class PluginDescriptorImpl extends PluginDescriptorStub {
       }
     }
 
+    if (!pluginBean.tags.isEmpty()) {
+      myTags = Collections.unmodifiableSet(pluginBean.tags);
+    }
+
     for (Map.Entry<String, Set<String>> permissionEntry : pluginBean.permissions.entrySet()) {
       try {
         PluginPermissionType permissionType = PluginPermissionType.valueOf(permissionEntry.getKey());
         if (myPermissionDescriptors.isEmpty()) {
           myPermissionDescriptors = new HashMap<PluginPermissionType, PluginPermissionDescriptor>();
         }
-        
+
         myPermissionDescriptors.put(permissionType, new PluginPermissionDescriptor(permissionType, permissionEntry.getValue()));
       }
       catch (IllegalArgumentException e) {
@@ -301,6 +308,12 @@ public class PluginDescriptorImpl extends PluginDescriptorStub {
     if (myExtensionsPoints.isEmpty()) {
       myExtensionsPoints = SimpleMultiMap.newHashMap();
     }
+  }
+
+  @Nonnull
+  @Override
+  public Set<String> getTags() {
+    return myTags;
   }
 
   @Override
@@ -535,7 +548,7 @@ public class PluginDescriptorImpl extends PluginDescriptorStub {
   @Nonnull
   @Override
   public ClassLoader getPluginClassLoader() {
-    if(myLoader == null) {
+    if (myLoader == null) {
       throw new IllegalArgumentException("Do not call #getPluginClassLoader() is plugin is not loaded");
     }
     return myLoader;

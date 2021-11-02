@@ -33,6 +33,7 @@ import consulo.awt.TargetAWT;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginId;
 import consulo.ide.plugins.PluginIconHolder;
+import consulo.localize.LocalizeValue;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;
@@ -127,9 +128,10 @@ public class PluginsTableRenderer extends DefaultTableCellRenderer {
     myName.setForeground(fg);
     myStatus.setForeground(grayedFg);
     myStatus.setIcon(PluginIconHolder.get(myPluginDescriptor));
-    String category = myPluginDescriptor.getCategory();
     myCategory.setForeground(grayedFg);
-    myCategory.setText(category.toUpperCase() + " ");
+
+    Set<LocalizeValue> tags = PluginManagerMain.getLocalizedTags(myPluginDescriptor);
+    myCategory.setText(StringUtil.join(tags, LocalizeValue::get, ", ").toUpperCase() + " ");
     myPanel.setBackground(bg);
     myLastUpdated.setForeground(grayedFg);
     myLastUpdated.setText("");

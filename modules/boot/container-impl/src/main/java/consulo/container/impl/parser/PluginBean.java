@@ -86,4 +86,6 @@ public class PluginBean extends ComponentManagerConfig {
   public List<PluginListenerDescriptor> moduleListeners = Collections.emptyList();
 
   public Map<String, Set<String>> permissions = Collections.emptyMap();
+
+  public Set<String> tags = Collections.emptySet();
 }

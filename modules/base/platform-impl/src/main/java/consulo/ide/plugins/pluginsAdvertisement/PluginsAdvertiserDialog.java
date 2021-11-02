@@ -71,7 +71,7 @@ public class PluginsAdvertiserDialog extends WholeWestDialogWrapper {
 
     JPanel rightPanel = new JPanel(new BorderLayout());
     rightPanel.setBorder(BorderFactory.createLineBorder(UIUtil.getBorderColor(), 1));
-    PluginHeaderPanel headerPanel = new PluginHeaderPanel(null, pluginTable);
+    PluginHeaderPanel headerPanel = new PluginHeaderPanel(null);
 
     JEditorPane descriptionPanel = new JEditorPane();
     descriptionPanel.setEditorKit(UIUtil.getHTMLEditorKit());

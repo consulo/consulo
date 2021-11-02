@@ -23,6 +23,7 @@ import javax.annotation.Nullable;
 import java.io.File;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author VISTALL
@@ -72,7 +73,12 @@ public interface PluginDescriptor {
   String getLocalize();
 
   @Nonnull
+  @Deprecated
+  @DeprecationInfo("Use #getTags()")
   String getCategory();
+
+  @Nonnull
+  Set<String> getTags();
 
   @Nonnull
   List<SimpleXmlElement> getActionsDescriptionElements();
