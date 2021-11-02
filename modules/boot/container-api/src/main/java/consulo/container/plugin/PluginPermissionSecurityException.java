@@ -19,8 +19,12 @@ package consulo.container.plugin;
  * @author VISTALL
  * @since 24/10/2021
  */
-public class PluginPermissionSecurityException extends SecurityException{
+public class PluginPermissionSecurityException extends SecurityException {
   public PluginPermissionSecurityException(PluginDescriptor pluginDescriptor, PluginPermissionType pluginPermissionType) {
     super("Plugin '" + pluginDescriptor.getPluginId() + "' not have " + pluginPermissionType + " permission.");
+  }
+
+  public PluginPermissionSecurityException(PluginDescriptor pluginDescriptor, PluginPermissionType pluginPermissionType, String target) {
+    super("Plugin '" + pluginDescriptor.getPluginId() + "' not have " + pluginPermissionType + " permission. Target: " + target);
   }
 }

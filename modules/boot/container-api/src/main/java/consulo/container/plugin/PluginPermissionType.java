@@ -15,12 +15,43 @@
  */
 package consulo.container.plugin;
 
+import consulo.annotation.DeprecationInfo;
+
 /**
  * @author VISTALL
  * @since 24/10/2021
  */
 public enum PluginPermissionType {
+  @Deprecated(forRemoval = true)
+  @DeprecationInfo("Use PROCESS_CREATE")
   PROCESS,
+  /**
+   * running any process in OS (and destroy if need)
+   */
+  PROCESS_CREATE,
+  /**
+   * list all processes in OS, and destroy them (protected by user space)
+   */
+  PROCESS_MANAGE,
+  /**
+   * loading native libraries in Consulo process
+   */
   NATIVE_LIBRARY,
-  SOCKET
+  @Deprecated(forRemoval = true)
+  @DeprecationInfo("Splitting to SOCKET_BIND and SOCKET_CONNECT")
+  SOCKET,
+  /**
+   * binding any TCP/UDP socket
+   */
+  SOCKET_BIND,
+  /**
+   * connecting to any TCP/UDP socket
+   */
+  SOCKET_CONNECT,
+  /**
+   * permission for control access to internet by url(http, https), by plain implementation.
+   *
+   * warning: some clients can implement own socket handling, and they will require {@link #SOCKET_CONNECT} permission, and don't checked it by this permission
+   */
+  INTERNET_URL_ACCESS
 }

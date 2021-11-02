@@ -19,6 +19,7 @@ import consulo.container.classloader.PluginClassLoader;
 import consulo.container.plugin.*;
 
 import javax.annotation.Nullable;
+import java.net.URLPermission;
 import java.security.Permission;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
@@ -35,6 +36,9 @@ public class ConsuloSecurityManager extends SecurityManager {
   private final ClassLoader myPrimaryClassLoader;
 
   private boolean myEnabled = false;
+
+  private URLPermission httpsUrlPermission = new URLPermission("https:*");
+  private URLPermission httpUrlPermission = new URLPermission("http:*");
 
   // map library->jvm class, in this case we don't check permissions
   private final Map<String, String> mySpecialNativeCalls = new HashMap<String, String>();
@@ -80,6 +84,14 @@ public class ConsuloSecurityManager extends SecurityManager {
       if ("setSecurityManager".equals(name)) {
         throw new SecurityException("Can't change security manager");
       }
+      else if ("manageProcess".equals(name)) {
+        checkPermission(PluginPermissionType.PROCESS_MANAGE, null);
+      }
+    }
+    else if (perm instanceof URLPermission) {
+      if (httpsUrlPermission.implies(perm) || httpUrlPermission.implies(perm)) {
+        checkPermission(PluginPermissionType.INTERNET_URL_ACCESS, perm.getName());
+      }
     }
   }
 
@@ -88,7 +100,7 @@ public class ConsuloSecurityManager extends SecurityManager {
    */
   @Override
   public void checkExec(String cmd) {
-    checkPermission(PluginPermissionType.PROCESS);
+    checkPermission(PluginPermissionType.PROCESS_CREATE, cmd);
   }
 
   @Override
@@ -108,12 +120,12 @@ public class ConsuloSecurityManager extends SecurityManager {
       }
     }
 
-    checkPermission(PluginPermissionType.NATIVE_LIBRARY, classContext);
+    checkPermission(PluginPermissionType.NATIVE_LIBRARY, lib, classContext);
   }
 
   @Override
   public void checkListen(int port) {
-    checkPermission(PluginPermissionType.SOCKET_BIND);
+    checkPermission(PluginPermissionType.SOCKET_BIND, "*:" + port);
   }
 
   @Override
@@ -123,14 +135,14 @@ public class ConsuloSecurityManager extends SecurityManager {
 
   @Override
   public void checkConnect(String host, int port, Object context) {
-    checkPermission(PluginPermissionType.SOCKET_CONNECT);
+    checkPermission(PluginPermissionType.SOCKET_CONNECT, host + ":" + port);
   }
 
-  private void checkPermission(PluginPermissionType pluginPermissionType) {
-    checkPermission(pluginPermissionType, null);
+  private void checkPermission(PluginPermissionType pluginPermissionType, @Nullable String target) {
+    checkPermission(pluginPermissionType, target, null);
   }
 
-  private void checkPermission(PluginPermissionType pluginPermissionType, @Nullable Class<?>[] alreadyCalledContext) {
+  private void checkPermission(PluginPermissionType pluginPermissionType, @Nullable String target, @Nullable Class<?>[] alreadyCalledContext) {
     if (!myEnabled) {
       return;
     }
@@ -151,7 +163,12 @@ public class ConsuloSecurityManager extends SecurityManager {
         PluginPermissionDescriptor permissionDescriptor = pluginDescriptor.getPermissionDescriptor(pluginPermissionType);
 
         if (permissionDescriptor == null) {
-          throw new PluginPermissionSecurityException(pluginDescriptor, pluginPermissionType);
+          if (target != null) {
+            throw new PluginPermissionSecurityException(pluginDescriptor, pluginPermissionType, target);
+          }
+          else {
+            throw new PluginPermissionSecurityException(pluginDescriptor, pluginPermissionType);
+          }
         }
       }
       else {
