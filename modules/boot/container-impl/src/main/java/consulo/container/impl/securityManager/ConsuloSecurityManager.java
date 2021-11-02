@@ -40,6 +40,8 @@ public class ConsuloSecurityManager extends SecurityManager {
   private URLPermission httpsUrlPermission = new URLPermission("https:*");
   private URLPermission httpUrlPermission = new URLPermission("http:*");
 
+  private RuntimePermission getEnvPermission = new RuntimePermission("getenv.*");
+
   // map library->jvm class, in this case we don't check permissions
   private final Map<String, String> mySpecialNativeCalls = new HashMap<String, String>();
 
@@ -78,14 +80,29 @@ public class ConsuloSecurityManager extends SecurityManager {
   }
 
   @Override
+  public void checkPropertiesAccess() {
+    checkPermission(PluginPermissionType.GET_ENV, null);
+  }
+
+  @Override
+  public void checkPropertyAccess(String key) {
+    checkPermission(PluginPermissionType.GET_ENV, "jvmenv." + key);
+  }
+
+  @Override
   public void checkPermission(Permission perm, Object context) {
     if (perm instanceof RuntimePermission) {
-      String name = perm.getName();
-      if ("setSecurityManager".equals(name)) {
-        throw new SecurityException("Can't change security manager");
+      if (getEnvPermission.implies(perm)) {
+        checkPermission(PluginPermissionType.GET_ENV, perm.getName());
       }
-      else if ("manageProcess".equals(name)) {
-        checkPermission(PluginPermissionType.PROCESS_MANAGE, null);
+      else {
+        String name = perm.getName();
+        if ("setSecurityManager".equals(name)) {
+          throw new SecurityException("Can't change security manager");
+        }
+        else if ("manageProcess".equals(name)) {
+          checkPermission(PluginPermissionType.PROCESS_MANAGE, null);
+        }
       }
     }
     else if (perm instanceof URLPermission) {

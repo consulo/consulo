@@ -28,6 +28,9 @@ import java.util.*;
 public class Registry {
   private static final String REGISTRY_BUNDLE = "misc.registry";
 
+  // copy jvm properties, disable override in runtime
+  private static final Properties ourJvmProperties = new Properties(System.getProperties());
+
   private static AtomicNotNullLazyValue<Map<String, RegistryValue>> ourRegistry = AtomicNotNullLazyValue.createValue(() -> {
     Map<String, RegistryValue> properties = new LinkedHashMap<>();
 
@@ -43,7 +46,7 @@ public class Registry {
 
       String value = resourceBundle.getString(key);
 
-      properties.put(key, new RegistryValue(key, value));
+      properties.put(key, new RegistryValue(key, value, ourJvmProperties));
     }
 
     return properties;
@@ -51,7 +54,7 @@ public class Registry {
 
   @Nonnull
   public static RegistryValue get(@PropertyKey(resourceBundle = REGISTRY_BUNDLE) @Nonnull String key) {
-    return ourRegistry.get().computeIfAbsent(key, s -> new RegistryValue(s, null));
+    return ourRegistry.get().computeIfAbsent(key, s -> new RegistryValue(s, null, ourJvmProperties));
   }
 
   public static boolean is(@PropertyKey(resourceBundle = REGISTRY_BUNDLE) @Nonnull String key) {

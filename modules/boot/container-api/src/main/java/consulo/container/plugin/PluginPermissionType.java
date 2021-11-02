@@ -53,5 +53,9 @@ public enum PluginPermissionType {
    *
    * warning: some clients can implement own socket handling, and they will require {@link #SOCKET_CONNECT} permission, and don't checked it by this permission
    */
-  INTERNET_URL_ACCESS
+  INTERNET_URL_ACCESS,
+  /**
+   * list envs of OS, and get values of them
+   */
+  GET_ENV
 }

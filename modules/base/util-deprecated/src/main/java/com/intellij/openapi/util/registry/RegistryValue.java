@@ -21,6 +21,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.awt.*;
 import java.util.MissingResourceException;
+import java.util.Properties;
 
 /**
  * @author Kirill Kalishev
@@ -32,15 +33,18 @@ public class RegistryValue {
   private final String myKey;
   @Nullable
   private String myValue;
+  @Nonnull
+  private final Properties myProperties;
 
   private String myStringCachedValue;
   private Integer myIntCachedValue;
   private Double myDoubleCachedValue;
   private Boolean myBooleanCachedValue;
 
-  RegistryValue(@Nonnull String key, @Nullable String value) {
+  RegistryValue(@Nonnull String key, @Nullable String value, @Nonnull Properties properties) {
     myKey = key;
     myValue = value;
+    myProperties = properties;
   }
 
   @Nonnull
@@ -100,7 +104,7 @@ public class RegistryValue {
   }
 
   private String get(@Nonnull String key, String defaultValue) throws MissingResourceException {
-    String systemProperty = System.getProperty(key);
+    String systemProperty = myProperties.getProperty(key);
     if (systemProperty != null) {
       return systemProperty;
     }
@@ -138,9 +142,5 @@ public class RegistryValue {
     myStringCachedValue = null;
     myIntCachedValue = null;
     myBooleanCachedValue = null;
-  }
-
-  public boolean isBoolean() {
-    return "true".equals(asString()) || "false".equals(asString());
   }
 }
