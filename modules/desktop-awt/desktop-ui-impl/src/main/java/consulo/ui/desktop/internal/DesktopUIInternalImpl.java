@@ -36,7 +36,10 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
 import consulo.ui.desktop.internal.alert.DesktopAlertFactory;
 import consulo.ui.desktop.internal.image.*;
-import consulo.ui.desktop.internal.image.libraryImage.*;
+import consulo.ui.desktop.internal.image.libraryImage.DesktopAWTImageImpl;
+import consulo.ui.desktop.internal.image.libraryImage.DesktopImageKeyImpl;
+import consulo.ui.desktop.internal.image.libraryImage.DesktopLibraryInnerImage;
+import consulo.ui.desktop.internal.image.libraryImage.DesktopSvgImageImpl;
 import consulo.ui.desktop.internal.layout.*;
 import consulo.ui.desktop.internal.style.DesktopStyleManagerImpl;
 import consulo.ui.desktop.internal.textBox.*;
@@ -110,10 +113,14 @@ public class DesktopUIInternalImpl extends UIInternal {
         URI uri = svgUniverse.loadSVG(new UnsyncByteArrayInputStream(bytes), "dummy" + System.currentTimeMillis() + ".svg");
 
         SVGDiagram diagram = svgUniverse.getDiagram(uri, false);
-        if(diagram == null) {
+
+        if (diagram == null) {
           throw new IOException("Wrong svg bytes");
         }
-        return new DesktopSvgImageImpl(diagram, null, width, height, null);
+
+        // dirty hack due we can't set different scale for width + height
+        float scale = (float)(height / diagram.getViewRect().getHeight());
+        return new DesktopSvgImageImpl(diagram, null, (int)diagram.getViewRect().getWidth(), (int)diagram.getViewRect().getHeight(), scale, null);
       default:
         BufferedImage image = ImageIO.read(new UnsyncByteArrayInputStream(bytes));
         return new DesktopAWTImageImpl(new DesktopAWTImageImpl.ImageBytes(null, image), null, width, height, null);
@@ -176,7 +183,8 @@ public class DesktopUIInternalImpl extends UIInternal {
 
   @Override
   public Image _ImageEffects_resize(Image original, int width, int height) {
-    return new DesktopResizeImageImpl(TargetAWT.to(original), width, height);
+    float scale = height / (float)original.getHeight();
+    return _ImageEffects_resize(original, scale);
   }
 
   @Override
@@ -185,7 +193,7 @@ public class DesktopUIInternalImpl extends UIInternal {
       return ((DesktopImage)original).copyWithScale(scale);
     }
 
-    if(original instanceof DesktopLibraryInnerImage) {
+    if (original instanceof DesktopLibraryInnerImage) {
       return ((DesktopLibraryInnerImage)original).copyWithScale(scale);
     }
     return original;
