@@ -25,7 +25,6 @@ import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
 
 import javax.annotation.Nonnull;
-import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -34,9 +33,10 @@ import java.util.concurrent.ConcurrentHashMap;
  * @since 07/12/2020
  */
 public class PluginIconHolder {
+  private static final int ICON_SIZE = 32;
+
   private static final Logger LOG = Logger.getInstance(PluginIconHolder.class);
 
-  private static final float ourScale = 2;
   private static final Map<PluginId, Image> ourIcons = new ConcurrentHashMap<>();
 
   @Nonnull
@@ -64,7 +64,7 @@ public class PluginIconHolder {
 
   @Nonnull
   public static Image decorateIcon(@Nonnull Image image) {
-    return ImageEffects.resize(image, ourScale);
+    return ImageEffects.resize(image, ICON_SIZE, ICON_SIZE);
   }
 
   @Nonnull
@@ -75,10 +75,10 @@ public class PluginIconHolder {
     }
 
     try {
-      Image image = Image.fromBytes(Image.ImageType.SVG, iconBytes, Image.DEFAULT_ICON_SIZE, Image.DEFAULT_ICON_SIZE);
+      Image image = Image.fromBytes(Image.ImageType.SVG, iconBytes, ICON_SIZE, ICON_SIZE);
       return decorateIcon(image);
     }
-    catch (IOException e) {
+    catch (Throwable e) {
       LOG.warn(e);
     }
     

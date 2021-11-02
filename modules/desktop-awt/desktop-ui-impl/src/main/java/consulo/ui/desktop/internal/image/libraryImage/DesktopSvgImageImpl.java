@@ -55,25 +55,38 @@ public class DesktopSvgImageImpl extends DesktopInnerImageImpl<DesktopSvgImageIm
     float height = myHeight * myScale;
 
     SVGDiagram targetDiagram = myX1Diagram;
-    double scale = 1f;
-    if ((scale = getScale(JBUI.ScaleType.SYS_SCALE)) > 1f) {
-      width *= scale;
-      height *= scale;
+    double jvmScale = 1f;
+    if ((jvmScale = getScale(JBUI.ScaleType.SYS_SCALE)) > 1f) {
+      width *= jvmScale;
+      height *= jvmScale;
     }
 
     float ideScale = JBUI.scale(1f);
 
-    if(scale > 1f || myScale > 1.5f) {
+    if (jvmScale > 1f || myScale > 1.5f) {
       targetDiagram = myX2Diagram != null ? myX2Diagram : targetDiagram;
     }
 
-    JBHiDPIScaledImage image = new JBHiDPIScaledImage(scale, width, height, BufferedImage.TYPE_INT_ARGB, PaintUtil.RoundingMode.ROUND);
+    double imageScale = jvmScale;
+    // downscale
+    if (myScale < 1f) {
+      imageScale = 1f;
+      width = myWidth;
+      height = myHeight;
+    }
+
+    JBHiDPIScaledImage image = new JBHiDPIScaledImage(imageScale, width, height, BufferedImage.TYPE_INT_ARGB, PaintUtil.RoundingMode.ROUND);
     Graphics2D g = image.createGraphics();
     GraphicsUtil.setupAAPainting(g);
     paintIcon(targetDiagram, g, 0, 0, width, height);
     g.dispose();
 
-    image = image.scale(ideScale * myScale);
+    if (myScale < 1) {
+      image = image.scale(ideScale * myScale * jvmScale);
+    }
+    else {
+      image = image.scale(ideScale * myScale);
+    }
 
     java.awt.Image toPaintImage = image;
     if (myFilter != null) {
@@ -82,7 +95,7 @@ public class DesktopSvgImageImpl extends DesktopInnerImageImpl<DesktopSvgImageIm
       toPaintImage = ImageUtil.filter(toPaintImage, imageFilter);
 
       if (ideScale > 1f) {
-        toPaintImage = RetinaImage.createFrom(toPaintImage, scale, null);
+        toPaintImage = RetinaImage.createFrom(toPaintImage, jvmScale, null);
       }
     }
 
