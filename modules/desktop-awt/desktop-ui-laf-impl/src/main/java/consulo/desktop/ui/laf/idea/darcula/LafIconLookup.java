@@ -22,11 +22,15 @@ import consulo.ui.image.ImageKey;
 import javax.annotation.Nonnull;
 import javax.swing.*;
 import java.util.Locale;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * from kotlin
  */
 public class LafIconLookup {
+  private static final Map<String, Icon> ourCache = new ConcurrentHashMap<>();
+
   public static Icon getIcon(@Nonnull String name, boolean selected, boolean focused, boolean enabled) {
     return getIcon(name, selected, focused, enabled, false, false);
   }
@@ -60,6 +64,8 @@ public class LafIconLookup {
       key = key + "Disabled";
     }
 
-    return TargetAWT.to(ImageKey.of("consulo.platform.desktop.laf.LookAndFeelIconGroup", "components." + key.toLowerCase(Locale.ROOT), Image.DEFAULT_ICON_SIZE, Image.DEFAULT_ICON_SIZE));
+    String imageId = "components." + key.toLowerCase(Locale.ROOT);
+
+    return ourCache.computeIfAbsent(imageId, s -> TargetAWT.to(ImageKey.of("consulo.platform.desktop.laf.LookAndFeelIconGroup", imageId, Image.DEFAULT_ICON_SIZE, Image.DEFAULT_ICON_SIZE)));
   }
 }

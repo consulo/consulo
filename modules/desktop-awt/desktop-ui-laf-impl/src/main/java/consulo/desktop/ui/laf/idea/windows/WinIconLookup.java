@@ -24,6 +24,8 @@ import consulo.ui.image.ImageKey;
 import javax.annotation.Nonnull;
 import javax.swing.*;
 import java.util.Locale;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * just adapter for icon groups
@@ -31,6 +33,8 @@ import java.util.Locale;
  * @see LafIconLookup
  */
 public class WinIconLookup {
+  private static final Map<String, Icon> ourCache = new ConcurrentHashMap<>();
+
   public static Icon getIcon(@Nonnull String name, boolean selected, boolean focused, boolean enabled) {
     return getIcon(name, selected, focused, enabled, false, false);
   }
@@ -75,6 +79,12 @@ public class WinIconLookup {
       width = 10;
       height = 6;
     }
-    return TargetAWT.to(ImageKey.of(WindowsIconGroup.ID, "components." + key.toLowerCase(Locale.ROOT), width, height));
+
+
+    String imageId = "components." + key.toLowerCase(Locale.ROOT);
+
+    final int finalWidth = width;
+    final int finalHeight = height;
+    return ourCache.computeIfAbsent(imageId, s -> TargetAWT.to(ImageKey.of(WindowsIconGroup.ID, imageId, finalWidth, finalHeight)));
   }
 }
