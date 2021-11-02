@@ -26,6 +26,7 @@ import consulo.container.plugin.PluginIds;
 import consulo.container.plugin.PluginManager;
 import consulo.logging.Logger;
 import consulo.logging.LoggerLevel;
+import consulo.platform.Platform;
 import consulo.platform.impl.action.LastActionTracker;
 import consulo.util.lang.ControlFlowException;
 import consulo.util.lang.ThreeState;
@@ -132,10 +133,11 @@ public class Log4J2Logger implements Logger {
       logger.error(info);
     }
 
-    logger.error("JDK: " + System.getProperties().getProperty("java.version", "unknown"));
-    logger.error("VM: " + System.getProperties().getProperty("java.vm.name", "unknown"));
-    logger.error("Vendor: " + System.getProperties().getProperty("java.vendor", "unknown"));
-    logger.error("OS: " + System.getProperties().getProperty("os.name", "unknown"));
+    Platform platform = Platform.current();
+    logger.error("JDK: " + platform.jvm().version());
+    logger.error("VM: " + platform.jvm().name());
+    logger.error("Vendor: " + platform.jvm().vendor());
+    logger.error("OS: " + platform.os().name());
 
     Application application = ApplicationManager.getApplication();
     // only if app not disposed or not started disposing

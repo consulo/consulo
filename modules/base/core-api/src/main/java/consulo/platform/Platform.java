@@ -123,6 +123,9 @@ public interface Platform {
     @Nonnull
     String vendor();
 
+    @Nonnull
+    String name();
+
     @Nullable
     String getRuntimeProperty(@Nonnull String key);
 

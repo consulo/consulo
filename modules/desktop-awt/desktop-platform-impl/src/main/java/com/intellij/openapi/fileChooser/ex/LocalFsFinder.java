@@ -24,7 +24,7 @@ import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileManager;
-import com.intellij.util.SystemProperties;
+import consulo.platform.Platform;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
@@ -38,7 +38,7 @@ import java.util.List;
 
 public class LocalFsFinder implements FileLookup.Finder, FileLookup {
 
-  private File myBaseDir = new File(SystemProperties.getUserHome());
+  private File myBaseDir = Platform.current().user().homePath().toFile();
 
   @Override
   public LookupFile find(@Nonnull final String path) {

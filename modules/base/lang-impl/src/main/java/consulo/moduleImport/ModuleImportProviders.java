@@ -27,7 +27,7 @@ public class ModuleImportProviders {
   @Nonnull
   public static List<ModuleImportProvider> getExtensions(boolean forImportAction) {
     List<ModuleImportProvider> list = new ArrayList<>();
-    for (ModuleImportProvider<?> provider : ModuleImportProvider.EP_NAME.getExtensionList()) {
+    ModuleImportProvider.EP_NAME.forEachExtensionSafe(provider -> {
       if (forImportAction) {
         if (!provider.isOnlyForNewImport()) {
           list.add(provider);
@@ -36,7 +36,7 @@ public class ModuleImportProviders {
       else {
         list.add(provider);
       }
-    }
+    });
     return list;
   }
 }

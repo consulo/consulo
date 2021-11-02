@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.container.impl.securityManager;
+package consulo.container.impl.securityManager.impl;
 
 import consulo.container.classloader.PluginClassLoader;
 import consulo.container.plugin.*;
@@ -86,6 +86,11 @@ public class ConsuloSecurityManager extends SecurityManager {
 
   @Override
   public void checkPropertyAccess(String key) {
+    // see javax.swing.text.AbstractDocument.I18NProperty
+    if ("i18n".equals(key)) {
+      return;
+    }
+
     checkPermission(PluginPermissionType.GET_ENV, "jvmenv." + key);
   }
 

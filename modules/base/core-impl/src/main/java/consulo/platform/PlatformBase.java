@@ -83,6 +83,8 @@ public abstract class PlatformBase implements Platform {
   }
 
   protected static class OperatingSystemImpl implements OperatingSystem {
+    private final String myOSArch = StringUtil.notNullize(System.getProperty("os.arch"));
+
     @Override
     public boolean isWindows() {
       return isWindows;
@@ -155,28 +157,38 @@ public abstract class PlatformBase implements Platform {
     @Nonnull
     @Override
     public String arch() {
-      return StringUtil.notNullize(System.getProperty("os.arch"));
+      return myOSArch;
     }
   }
 
   protected static class JvmImpl implements Jvm {
+    private String myJavaVersion = System.getProperty("java.version");
+    private String myJavaRuntimeVersion = StringUtil.notNullize(System.getProperty("java.runtime.version"), "n/a");
+    private String myJavaVendor = StringUtil.notNullize(System.getProperty("java.vendor"), "n/a");
+    private String myJavaName = StringUtil.notNullize(System.getProperty("java.vm.name"), "n/a");
 
     @Nonnull
     @Override
     public String version() {
-      return System.getProperty("java.version");
+      return myJavaVersion;
     }
 
     @Nonnull
     @Override
     public String runtimeVersion() {
-      return StringUtil.notNullize(System.getProperty("java.runtime.version"), "n/a");
+      return myJavaRuntimeVersion;
     }
 
     @Nonnull
     @Override
     public String vendor() {
-      return StringUtil.notNullize(System.getProperty("java.vendor"), "n/a");
+      return myJavaVendor;
+    }
+
+    @Nonnull
+    @Override
+    public String name() {
+      return myJavaName;
     }
 
     @Nullable
@@ -208,6 +220,9 @@ public abstract class PlatformBase implements Platform {
   }
 
   protected static class UserImpl implements User {
+    private final String myUserName = System.getProperty("user.name");
+    private final Path myUserPath = Path.of(System.getProperty("user.home"));
+
     @Override
     public boolean superUser() {
       return false;
@@ -216,13 +231,13 @@ public abstract class PlatformBase implements Platform {
     @Nonnull
     @Override
     public String name() {
-      return System.getProperty("user.name");
+      return myUserName;
     }
 
     @Nonnull
     @Override
     public Path homePath() {
-      return Path.of(System.getProperty("user.home"));
+      return myUserPath;
     }
   }
 

@@ -22,7 +22,7 @@ import consulo.container.impl.ContainerLogger;
 import consulo.container.impl.PluginDescriptorImpl;
 import consulo.container.impl.PluginDescriptorLoader;
 import consulo.container.impl.PluginHolderModificator;
-import consulo.container.impl.securityManager.ConsuloSecurityManager;
+import consulo.container.impl.securityManager.impl.ConsuloSecurityManager;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.util.StatCollector;
 import consulo.util.nodep.SystemInfoRt;

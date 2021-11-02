@@ -15,7 +15,7 @@
  */
 package consulo.plugins.internal;
 
-import consulo.container.impl.securityManager.ConsuloSecurityManager;
+import consulo.container.impl.securityManager.impl.ConsuloSecurityManager;
 
 /**
  * @author VISTALL

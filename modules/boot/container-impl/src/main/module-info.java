@@ -13,7 +13,7 @@ module consulo.container.impl {
   exports consulo.container.impl.classloader.proxy;
   exports consulo.container.impl.parser;
   // TODO [VISTALL] export only to core module
-  exports consulo.container.impl.securityManager;
+  exports consulo.container.impl.securityManager.impl;
 
   uses consulo.container.boot.ContainerStartup;
 

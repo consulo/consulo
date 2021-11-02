@@ -34,7 +34,7 @@ public enum PluginPermissionType {
    */
   PROCESS_MANAGE,
   /**
-   * loading native libraries in Consulo process
+   * loading native libraries into Consulo process
    */
   NATIVE_LIBRARY,
   @Deprecated(forRemoval = true)
@@ -55,7 +55,7 @@ public enum PluginPermissionType {
    */
   INTERNET_URL_ACCESS,
   /**
-   * list envs of OS, and get values of them
+   * list envs of OS, and get values of them. Also handle access to jvm properties
    */
   GET_ENV
 }
