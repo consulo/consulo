@@ -527,13 +527,13 @@ public abstract class PluginManagerMain implements Disposable {
   }
 
   @Nonnull
-  public static Set<LocalizeValue> getLocalizedTags(PluginDescriptor pluginDescriptor) {
+  public static Collection<LocalizeValue> getLocalizedTags(PluginDescriptor pluginDescriptor) {
     Set<String> tags = pluginDescriptor.getTags();
     if (!tags.isEmpty()) {
-      return tags.stream().map(PluginManagerMain::getTagLocalizeValue).collect(Collectors.toSet());
+      return tags.stream().map(PluginManagerMain::getTagLocalizeValue).collect(Collectors.toList());
     }
 
-    return Set.of(LocalizeValue.of(pluginDescriptor.getCategory()));
+    return List.of(LocalizeValue.of(pluginDescriptor.getCategory()));
   }
 
   @Nonnull

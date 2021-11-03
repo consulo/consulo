@@ -41,6 +41,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableModel;
 import java.awt.*;
 import java.text.DecimalFormat;
+import java.util.Collection;
 import java.util.Set;
 
 /**
@@ -130,7 +131,7 @@ public class PluginsTableRenderer extends DefaultTableCellRenderer {
     myStatus.setIcon(PluginIconHolder.get(myPluginDescriptor));
     myCategory.setForeground(grayedFg);
 
-    Set<LocalizeValue> tags = PluginManagerMain.getLocalizedTags(myPluginDescriptor);
+    Collection<LocalizeValue> tags = PluginManagerMain.getLocalizedTags(myPluginDescriptor);
     myCategory.setText(StringUtil.join(tags, LocalizeValue::get, ", ").toUpperCase() + " ");
     myPanel.setBackground(bg);
     myLastUpdated.setForeground(grayedFg);
