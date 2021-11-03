@@ -1,7 +1,7 @@
 database:
   text: Database
 custom.language:
-  text: Custom Language
+  text: Programming Language
 grammar.language:
   text: Grammar Language
 markup.language:
@@ -15,11 +15,13 @@ software.framework:
 game.framework:
   text: Game Framework
 test.framework:
-  text: Text Framework
+  text: Test Framework
 web.framework:
   text: Web Framework
 ide.framework:
   text: IDE Framework
+ui.framework:
+  text: UI Framework
 library:
   text: Library
 language.extension:
@@ -32,3 +34,11 @@ run.debug:
   text: Debugging
 run.converage:
   text: Coverage
+experimental:
+  text: Experimental
+web.server:
+  text: Web Server
+web.tools:
+  text: Web Tools
+tools:
+  text: Tools
