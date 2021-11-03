@@ -32,7 +32,7 @@ import:
   text: Import
 run.debug:
   text: Debugging
-run.converage:
+run.coverage:
   text: Coverage
 experimental:
   text: Experimental
