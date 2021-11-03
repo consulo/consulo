@@ -22,15 +22,16 @@ import consulo.awt.TargetAWT;
 import consulo.desktop.util.awt.MorphValue;
 import consulo.desktop.util.awt.laf.GTKPlusUIUtil;
 import consulo.ide.ui.laf.LafWithIconLibrary;
+import consulo.logging.Logger;
+import consulo.ui.color.ColorValue;
 import consulo.ui.decorator.SwingUIDecorator;
 import consulo.ui.desktop.internal.image.DesktopImage;
 import consulo.ui.image.IconLibraryManager;
 import consulo.ui.image.Image;
 import consulo.ui.impl.style.StyleImpl;
-import consulo.ui.color.ColorValue;
-import consulo.ui.style.StyleColorValue;
 import consulo.ui.style.ComponentColors;
 import consulo.ui.style.StandardColors;
+import consulo.ui.style.StyleColorValue;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;
@@ -41,6 +42,8 @@ import java.util.Objects;
  * @since 2020-08-23
  */
 public class DesktopStyleImpl extends StyleImpl {
+  private static final Logger LOG = Logger.getInstance(DesktopStyleImpl.class);
+
   private final MorphValue<Boolean> myDarkValue = MorphValue.of(() -> {
     if (UIUtil.isUnderGTKLookAndFeel()) {
       return GTKPlusUIUtil.isDarkTheme();
@@ -58,6 +61,7 @@ public class DesktopStyleImpl extends StyleImpl {
   @Nonnull
   @Override
   public ColorValue getColorValue(@Nonnull StyleColorValue colorValue) {
+    // maybe time for map?
     if (colorValue == ComponentColors.TEXT || colorValue == ComponentColors.TEXT_FOREGROUND) {
       return TargetAWT.from(UIUtil.getLabelForeground());
     }
@@ -109,13 +113,17 @@ public class DesktopStyleImpl extends StyleImpl {
     else if (colorValue == StandardColors.LIGHT_RED) {
       return TargetAWT.from(LightColors.RED);
     }
-    throw new UnsupportedOperationException(colorValue.toString());
+    else if (colorValue == StandardColors.CYAN) {
+      return TargetAWT.from(JBColor.CYAN);
+    }
+    LOG.error(new UnsupportedOperationException(colorValue.toString()));
+    return TargetAWT.from(JBColor.WHITE);
   }
 
   @Nonnull
   @Override
   public Image getImage(@Nonnull Image image) {
-    if(image instanceof DesktopImage) {
+    if (image instanceof DesktopImage) {
       return ((DesktopImage<?>)image).copyWithTargetIconLibrary(getIconLibraryId(), this::getImage);
     }
     return image;
@@ -140,7 +148,7 @@ public class DesktopStyleImpl extends StyleImpl {
   @Nonnull
   @Override
   public String getIconLibraryId() {
-    if(myLookAndFeelInfo instanceof LafWithIconLibrary) {
+    if (myLookAndFeelInfo instanceof LafWithIconLibrary) {
       return ((LafWithIconLibrary)myLookAndFeelInfo).getIconLibraryId();
     }
     return IconLibraryManager.LIGHT_LIBRARY_ID;
