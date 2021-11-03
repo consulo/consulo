@@ -30,7 +30,7 @@ vcs:
   text: Version Control
 import:
   text: Import
-run.debug:
+run.debugger:
   text: Debugging
 run.coverage:
   text: Coverage
@@ -42,3 +42,13 @@ web.tools:
   text: Web Tools
 tools:
   text: Tools
+cloud:
+  text: Cloud
+ide.theme:
+  text: IDE Theme
+ide.extension:
+  text: IDE Extension
+script.language:
+  text: Script Language
+pattern.language:
+  text: Pattern Language
