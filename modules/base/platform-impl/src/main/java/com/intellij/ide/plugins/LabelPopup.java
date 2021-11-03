@@ -23,6 +23,7 @@ import com.intellij.ui.ClickListener;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import consulo.awt.TargetAWT;
+import consulo.localize.LocalizeValue;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;
@@ -34,9 +35,9 @@ import java.util.function.Function;
  * @since 03/12/2020
  */
 public class LabelPopup extends JLabel {
-  private final String myPrefix;
+  private final LocalizeValue myPrefix;
 
-  public LabelPopup(String prefix, Function<LabelPopup, ? extends ActionGroup> groupBuilder) {
+  public LabelPopup(LocalizeValue prefix, Function<LabelPopup, ? extends ActionGroup> groupBuilder) {
     myPrefix = prefix;
     setForeground(UIUtil.getLabelDisabledForeground());
     setBorder(JBUI.Borders.empty(1, 1, 1, 5));
@@ -47,14 +48,15 @@ public class LabelPopup extends JLabel {
       @Override
       public boolean onClick(@Nonnull MouseEvent event, int clickCount) {
         LabelPopup component = LabelPopup.this;
-        JBPopupFactory.getInstance().createActionGroupPopup(prefix, groupBuilder.apply(component), DataManager.getInstance().getDataContext(component), JBPopupFactory.ActionSelectionAid.SPEEDSEARCH, true)
+        JBPopupFactory.getInstance()
+                .createActionGroupPopup(myPrefix.get(), groupBuilder.apply(component), DataManager.getInstance().getDataContext(component), JBPopupFactory.ActionSelectionAid.SPEEDSEARCH, true)
                 .showUnderneathOf(component);
         return true;
       }
     }.installOn(this);
   }
 
-  public void setPrefixedText(String text) {
-    setText(myPrefix + " " + text);
+  public void setPrefixedText(LocalizeValue tagValue) {
+    setText(LocalizeValue.join(myPrefix, LocalizeValue.space(), tagValue).get());
   }
 }

@@ -27,6 +27,7 @@ import consulo.annotation.DeprecationInfo;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginManager;
 import consulo.localize.LocalizeValue;
+import consulo.util.lang.Pair;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;
@@ -38,7 +39,7 @@ import java.util.*;
 public class AvailablePluginsTableModel extends PluginTableModel {
   public static final String ALL = "*";
 
-  private String myTargetTag = ALL;
+  private Pair<String, LocalizeValue> myTargetTagInfo = Pair.create(ALL, LocalizeValue.of(ALL));
 
   private Map<String, LocalizeValue> myAvailableTags = new TreeMap<>();
 
@@ -50,19 +51,22 @@ public class AvailablePluginsTableModel extends PluginTableModel {
   }
 
   @Nonnull
-  public String getTargetTag() {
-    return myTargetTag;
+  public Pair<String, LocalizeValue> getTargetTagInfo() {
+    return myTargetTagInfo;
   }
 
-  public void setTargetTag(String tag, String filter) {
-    myTargetTag = tag;
+  public void setTargetTag(String tag, LocalizeValue tagValue, String filter) {
+    myTargetTagInfo = Pair.create(tag, tagValue);
+
     filter(filter);
   }
 
   @Override
   public boolean isPluginDescriptorAccepted(PluginDescriptor descriptor) {
-    if (!myTargetTag.equals(ALL)) {
-      if (!getHackyTags(descriptor).contains(myTargetTag)) {
+    String tag = myTargetTagInfo.getFirst();
+
+    if (!tag.equals(ALL)) {
+      if (!getHackyTags(descriptor).contains(tag)) {
         return false;
       }
     }

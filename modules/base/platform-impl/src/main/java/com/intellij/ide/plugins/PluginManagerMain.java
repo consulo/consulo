@@ -149,7 +149,7 @@ public abstract class PluginManagerMain implements Disposable {
     };
     header.setBorder(new CustomLineBorder(0, 0, JBUI.scale(1), 0));
 
-    LabelPopup sortLabel = new LabelPopup("Sort by:", labelPopup -> createSortersGroup());
+    LabelPopup sortLabel = new LabelPopup(LocalizeValue.localizeTODO("Sort by:"), labelPopup -> createSortersGroup());
 
     header.add(myFilter, BorderLayout.CENTER);
     JPanel rightHelpPanel = new JPanel(new HorizontalLayout(JBUI.scale(5)));
@@ -177,7 +177,7 @@ public abstract class PluginManagerMain implements Disposable {
         text += "updated,";
       }
       text += "name";
-      sortLabel.setPrefixedText(text);
+      sortLabel.setPrefixedText(LocalizeValue.of(text));
     };
     myPluginTable.getModel().addTableModelListener(modelListener);
     modelListener.tableChanged(null);

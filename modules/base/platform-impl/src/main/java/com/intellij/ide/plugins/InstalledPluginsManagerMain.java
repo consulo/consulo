@@ -37,6 +37,7 @@ import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginId;
 import consulo.fileTypes.ArchiveFileType;
 import consulo.ide.plugins.PluginsPanel;
+import consulo.localize.LocalizeValue;
 import consulo.plugins.internal.PluginsLoader;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.fileChooser.FileChooser;
@@ -124,7 +125,7 @@ public class InstalledPluginsManagerMain extends PluginManagerMain {
 
   @Override
   protected void addCustomFilters(Consumer<JComponent> adder) {
-    LabelPopup showPopupLabel = new LabelPopup("Show:", labelPopup -> createShowGroupPopup(labelPopup));
+    LabelPopup showPopupLabel = new LabelPopup(LocalizeValue.localizeTODO("Show:"), this::createShowGroupPopup);
 
     adder.accept(showPopupLabel);
 
@@ -132,7 +133,7 @@ public class InstalledPluginsManagerMain extends PluginManagerMain {
   }
 
   private void updateShowPopupText(LabelPopup labelPopup) {
-    labelPopup.setPrefixedText(((InstalledPluginsTableModel)myPluginsModel).getEnabledFilter());
+    labelPopup.setPrefixedText(LocalizeValue.of(((InstalledPluginsTableModel)myPluginsModel).getEnabledFilter()));
   }
 
   private DefaultActionGroup createShowGroupPopup(LabelPopup labelPopup) {

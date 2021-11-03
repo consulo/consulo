@@ -27,6 +27,7 @@ import com.intellij.util.ui.update.UiNotifyConnector;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.util.lang.Pair;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;
@@ -85,7 +86,7 @@ public class AvailablePluginsManagerMain extends PluginManagerMain {
 
   @Override
   protected void addCustomFilters(Consumer<JComponent> adder) {
-    LabelPopup categoryPopup = new LabelPopup("Tag:", this::createCategoryFilters);
+    LabelPopup categoryPopup = new LabelPopup(LocalizeValue.localizeTODO("Tag:"), this::createCategoryFilters);
 
     adder.accept(categoryPopup);
 
@@ -93,8 +94,8 @@ public class AvailablePluginsManagerMain extends PluginManagerMain {
   }
 
   private void updateCategoryPopup(LabelPopup labelPopup) {
-    String category = ((AvailablePluginsTableModel)myPluginsModel).getTargetTag();
-    labelPopup.setPrefixedText(category);
+    Pair<String, LocalizeValue> tag = ((AvailablePluginsTableModel)myPluginsModel).getTargetTagInfo();
+    labelPopup.setPrefixedText(tag.getSecond());
   }
 
   @Nonnull
@@ -115,7 +116,7 @@ public class AvailablePluginsManagerMain extends PluginManagerMain {
       @Override
       public void actionPerformed(@Nonnull AnActionEvent e) {
         final String filter = myFilter.getFilter().toLowerCase(Locale.ROOT);
-        ((AvailablePluginsTableModel)myPluginsModel).setTargetTag(tagId, filter);
+        ((AvailablePluginsTableModel)myPluginsModel).setTargetTag(tagId, tagLocalizeValue, filter);
         updateCategoryPopup(labelPopup);
       }
     };
