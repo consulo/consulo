@@ -103,7 +103,8 @@ public class AvailablePluginsManagerMain extends PluginManagerMain {
     final Map<String, LocalizeValue> availableCategories = ((AvailablePluginsTableModel)myPluginsModel).getAvailableTags();
 
     ActionGroup.Builder builder = ActionGroup.newImmutableBuilder();
-    builder.add(createFilterByCategoryAction(AvailablePluginsTableModel.ALL, LocalizeValue.of("*"), labelPopup));
+    Pair<String, LocalizeValue> unspecifiedTagInfo = AvailablePluginsTableModel.getUnspecifiedTagInfo();
+    builder.add(createFilterByCategoryAction(unspecifiedTagInfo.getFirst(), unspecifiedTagInfo.getSecond(), labelPopup));
     for (final Map.Entry<String, LocalizeValue> entry : availableCategories.entrySet()) {
       builder.add(createFilterByCategoryAction(entry.getKey(), entry.getValue(), labelPopup));
     }

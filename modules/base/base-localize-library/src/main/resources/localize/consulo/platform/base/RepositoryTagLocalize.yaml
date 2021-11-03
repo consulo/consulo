@@ -1,3 +1,5 @@
+all:
+  text: '<all>'
 database:
   text: Database
 custom.language:
@@ -52,3 +54,13 @@ script.language:
   text: Script Language
 pattern.language:
   text: Pattern Language
+issue.managment:
+  text: Issue Managment
+editor:
+  text: Editor
+editor.extension:
+  text: Editor Extension
+editor.spelling:
+  text: Editor Spelling
+serialize.framework:
+  text: Serialize Framework
