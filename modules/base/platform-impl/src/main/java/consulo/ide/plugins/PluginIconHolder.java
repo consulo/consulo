@@ -55,7 +55,7 @@ public class PluginIconHolder {
       return ourIcons.computeIfAbsent(pluginDescriptor.getPluginId(), pluginId -> {
         PluginDescriptor plugin = PluginManager.findPlugin(pluginId);
         if (plugin == null) {
-          return decorateIcon(PlatformIconGroup.nodesPlugin());
+          return decorateIcon(PlatformIconGroup.nodesPluginBig());
         }
         return initializeImage(pluginDescriptor);
       });
@@ -71,7 +71,7 @@ public class PluginIconHolder {
   private static Image initializeImage(@Nonnull PluginDescriptor pluginDescriptor) {
     byte[] iconBytes = pluginDescriptor.getIconBytes();
     if (iconBytes.length == 0) {
-      return decorateIcon(PlatformIconGroup.nodesPlugin());
+      return decorateIcon(PlatformIconGroup.nodesPluginBig());
     }
 
     try {
@@ -82,6 +82,6 @@ public class PluginIconHolder {
       LOG.warn(e);
     }
     
-    return decorateIcon(PlatformIconGroup.nodesPlugin());
+    return decorateIcon(PlatformIconGroup.nodesPluginBig());
   }
 }
