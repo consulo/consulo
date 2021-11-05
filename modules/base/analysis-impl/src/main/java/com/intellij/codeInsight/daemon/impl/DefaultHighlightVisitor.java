@@ -24,6 +24,8 @@ import com.intellij.psi.PsiErrorElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.util.ReflectionUtil;
 import com.intellij.util.containers.ConcurrentFactoryMap;
+import consulo.localize.LocalizeValue;
+
 import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
@@ -152,7 +154,7 @@ final class DefaultHighlightVisitor implements HighlightVisitor, DumbAware {
 
   private static HighlightInfo createInfoWithoutFixes(@Nonnull PsiErrorElement element) {
     TextRange range = element.getTextRange();
-    String errorDescription = element.getErrorDescription();
+    LocalizeValue errorDescription = element.getErrorDescriptionValue();
     if (!range.isEmpty()) {
       return HighlightInfo.newHighlightInfo(HighlightInfoType.ERROR).range(range).descriptionAndTooltip(errorDescription).create();
     }
