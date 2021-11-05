@@ -160,6 +160,7 @@ public class ContentEntriesEditor extends ModuleElementsEditor {
     JPanel contentPanel = new JPanel(new GridBagLayout());
 
     final ActionToolbar actionToolbar = ActionManager.getInstance().createActionToolbar(ActionPlaces.UNKNOWN, myRootTreeEditor.getEditingActionsGroup(), true);
+    actionToolbar.setTargetComponent(contentPanel);
     contentPanel.add(actionToolbar.getComponent(),
                      new GridBagConstraints(1, 0, 1, 1, 1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL,
                                             new JBInsets(0, 0, 0, 0), 0, 0));
