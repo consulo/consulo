@@ -1,22 +1,4 @@
-/*
- * Copyright 2000-2016 JetBrains s.r.o.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
-/*
- * @author max
- */
+// Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.openapi.command.undo;
 
 import com.intellij.openapi.command.CommandProcessor;
@@ -27,7 +9,7 @@ import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;
 import javax.annotation.Nonnull;
 
-public class UndoUtil {
+public final class UndoUtil {
   private UndoUtil() {
   }
 
@@ -43,18 +25,51 @@ public class UndoUtil {
     CommandProcessor.getInstance().addAffectedDocuments(project, document);
   }
 
-  /**
-   * @deprecated please use CommandProcessor.getInstance().addAffectedFiles instead
-   */
-  public static void markVirtualFileForUndo(@Nonnull Project project, @Nonnull VirtualFile file) {
-    CommandProcessor.getInstance().addAffectedFiles(project, file);
-  }
-
   public static void disableUndoFor(@Nonnull Document document) {
     document.putUserData(UndoConstants.DONT_RECORD_UNDO, Boolean.TRUE);
   }
 
+  public static void disableUndoIn(@Nonnull Document document, @Nonnull Runnable runnable) {
+    document.putUserData(UndoConstants.DONT_RECORD_UNDO, Boolean.TRUE);
+    try {
+      runnable.run();
+    }
+    finally {
+      document.putUserData(UndoConstants.DONT_RECORD_UNDO, null);
+    }
+  }
+
+  public static void disableUndoFor(@Nonnull VirtualFile file) {
+    file.putUserData(UndoConstants.DONT_RECORD_UNDO, Boolean.TRUE);
+  }
+
+  public static void enableUndoFor(@Nonnull Document document) {
+    document.putUserData(UndoConstants.DONT_RECORD_UNDO, null);
+  }
+
   public static boolean isUndoDisabledFor(@Nonnull Document document) {
     return Boolean.TRUE.equals(document.getUserData(UndoConstants.DONT_RECORD_UNDO));
+  }
+
+  public static boolean isUndoDisabledFor(@Nonnull VirtualFile file) {
+    return Boolean.TRUE.equals(file.getUserData(UndoConstants.DONT_RECORD_UNDO));
+  }
+
+  public static void forceUndoIn(@Nonnull VirtualFile file, @Nonnull Runnable runnable) {
+    file.putUserData(UndoConstants.FORCE_RECORD_UNDO, Boolean.TRUE);
+    try {
+      runnable.run();
+    }
+    finally {
+      file.putUserData(UndoConstants.FORCE_RECORD_UNDO, null);
+    }
+  }
+
+  public static void setForceUndoFlag(@Nonnull VirtualFile file, boolean flag) {
+    file.putUserData(UndoConstants.FORCE_RECORD_UNDO, flag ? Boolean.TRUE : null);
+  }
+
+  public static boolean isForceUndoFlagSet(@Nonnull VirtualFile file) {
+    return file.getUserData(UndoConstants.FORCE_RECORD_UNDO) == Boolean.TRUE;
   }
 }

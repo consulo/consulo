@@ -14,7 +14,7 @@ import com.intellij.util.ObjectUtils;
 import com.intellij.util.ThreeState;
 import consulo.application.impl.BaseApplication;
 import org.jetbrains.annotations.Nls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;
 import javax.swing.*;
@@ -29,7 +29,7 @@ public class WriteThreadIndicatorWidgetFactory implements StatusBarWidgetFactory
 
   @Override
   public
-  @NotNull
+  @Nonnull
   String getId() {
     return ID;
   }
@@ -37,25 +37,25 @@ public class WriteThreadIndicatorWidgetFactory implements StatusBarWidgetFactory
   @Override
   public
   @Nls
-  @NotNull
+  @Nonnull
   String getDisplayName() {
     return UIBundle.message("status.bar.write.thread.widget.name");
   }
 
   @Override
-  public boolean isAvailable(@NotNull Project project) {
+  public boolean isAvailable(@Nonnull Project project) {
     return ApplicationManager.getApplication().isInternal();
   }
 
   @Override
   public
-  @NotNull
-  StatusBarWidget createWidget(@NotNull Project project) {
+  @Nonnull
+  StatusBarWidget createWidget(@Nonnull Project project) {
     return new WriteThreadWidget();
   }
 
   @Override
-  public void disposeWidget(@NotNull StatusBarWidget widget) {
+  public void disposeWidget(@Nonnull StatusBarWidget widget) {
     Disposer.dispose(widget);
   }
 
@@ -65,7 +65,7 @@ public class WriteThreadIndicatorWidgetFactory implements StatusBarWidgetFactory
   }
 
   @Override
-  public boolean canBeEnabledOn(@NotNull StatusBar statusBar) {
+  public boolean canBeEnabledOn(@Nonnull StatusBar statusBar) {
     return ApplicationManager.getApplication().isInternal();
   }
 
@@ -102,14 +102,14 @@ public class WriteThreadIndicatorWidgetFactory implements StatusBarWidgetFactory
       return null;
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public String ID() {
       return ID;
     }
 
     @Override
-    public void install(@NotNull StatusBar statusBar) {
+    public void install(@Nonnull StatusBar statusBar) {
       BaseApplication application = ObjectUtils.tryCast(ApplicationManager.getApplication(), BaseApplication.class);
       if (application == null) {
         return;

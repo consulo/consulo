@@ -16,7 +16,6 @@
 
 package com.intellij.codeInsight.template;
 
-import com.intellij.psi.PsiFile;
 import javax.annotation.Nonnull;
 
 /**
@@ -28,8 +27,7 @@ public class EverywhereContextType extends TemplateContextType {
   }
 
   @Override
-  public boolean isInContext(@Nonnull PsiFile file, int offset) {
+  public boolean isInContext(@Nonnull TemplateActionContext templateActionContext) {
     return true;
   }
-
 }

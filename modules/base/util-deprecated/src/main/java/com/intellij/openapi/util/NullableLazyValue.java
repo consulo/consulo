@@ -17,11 +17,13 @@ package com.intellij.openapi.util;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.function.Supplier;
 
 /**
  * @author peter
  */
 public abstract class NullableLazyValue<T> {
+  @Deprecated(forRemoval = true)
   public static <E> NullableLazyValue<E> createValue(@Nonnull final Factory<? extends E> factory) {
     return new NullableLazyValue<E>() {
       @Nullable
@@ -32,7 +34,22 @@ public abstract class NullableLazyValue<T> {
     };
   }
 
-  @Deprecated
+  public static <E> NullableLazyValue<E> createValue(@Nonnull final Supplier<? extends E> factory) {
+    return new NullableLazyValue<E>() {
+      @Nullable
+      @Override
+      protected E compute() {
+        return factory.get();
+      }
+    };
+  }
+
+  @Deprecated(forRemoval = true)
+  public static <E> NullableLazyValue<E> of(@Nonnull final Supplier<E> factory) {
+    return createValue(factory);
+  }
+
+  @Deprecated(forRemoval = true)
   public static <E> NullableLazyValue<E> of(@Nonnull final Factory<E> factory) {
     return createValue(factory);
   }

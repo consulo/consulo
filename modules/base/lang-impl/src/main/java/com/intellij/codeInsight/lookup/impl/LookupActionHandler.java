@@ -6,6 +6,7 @@ import com.intellij.codeInsight.completion.CodeCompletionFeatures;
 import com.intellij.codeInsight.completion.CompletionProgressIndicator;
 import com.intellij.codeInsight.completion.impl.CompletionServiceImpl;
 import com.intellij.codeInsight.lookup.CharFilter;
+import com.intellij.codeInsight.lookup.LookupFocusDegree;
 import com.intellij.codeInsight.lookup.LookupManager;
 import com.intellij.featureStatistics.FeatureUsageTracker;
 import com.intellij.ide.ui.UISettings;
@@ -63,8 +64,8 @@ public abstract class LookupActionHandler extends EditorActionHandler {
 
   private static void executeUpOrDown(LookupImpl lookup, boolean up) {
     if (!lookup.isFocused()) {
-      boolean semiFocused = lookup.getFocusDegree() == LookupImpl.FocusDegree.SEMI_FOCUSED;
-      lookup.setFocusDegree(LookupImpl.FocusDegree.FOCUSED);
+      boolean semiFocused = lookup.getLookupFocusDegree() == LookupFocusDegree.SEMI_FOCUSED;
+      lookup.setFocusDegree(LookupFocusDegree.FOCUSED);
       if (!up && !semiFocused) {
         return;
       }
@@ -155,7 +156,7 @@ public abstract class LookupActionHandler extends EditorActionHandler {
 
     @Override
     protected void executeInLookup(final LookupImpl lookup, DataContext context, Caret caret) {
-      lookup.setFocusDegree(LookupImpl.FocusDegree.FOCUSED);
+      lookup.setFocusDegree(LookupFocusDegree.FOCUSED);
       ScrollingUtil.movePageDown(lookup.getList());
     }
   }
@@ -167,7 +168,7 @@ public abstract class LookupActionHandler extends EditorActionHandler {
 
     @Override
     protected void executeInLookup(final LookupImpl lookup, DataContext context, Caret caret) {
-      lookup.setFocusDegree(LookupImpl.FocusDegree.FOCUSED);
+      lookup.setFocusDegree(LookupFocusDegree.FOCUSED);
       ScrollingUtil.movePageUp(lookup.getList());
     }
   }

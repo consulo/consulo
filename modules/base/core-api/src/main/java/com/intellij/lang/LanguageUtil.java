@@ -23,10 +23,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.FileViewProvider;
-import com.intellij.psi.LanguageSubstitutors;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
+import com.intellij.psi.*;
 import com.intellij.psi.templateLanguages.TemplateLanguage;
 import com.intellij.testFramework.LightVirtualFile;
 import com.intellij.util.containers.ContainerUtil;
@@ -46,17 +43,35 @@ public final class LanguageUtil {
   private LanguageUtil() {
   }
 
+  public static
   @Nullable
-  public static Language getLanguageForPsi(@Nonnull Project project, @Nullable VirtualFile file) {
-    Language language = getFileLanguage(file);
-    if (language == null) return null;
-    return LanguageSubstitutors.INSTANCE.substituteLanguage(language, file, project);
+  Language getLanguageForPsi(@Nonnull Project project, @Nullable VirtualFile file) {
+    return getLanguageForPsi(project, file, null);
+  }
+
+  @Nullable
+  public static Language getLanguageForPsi(@Nonnull Project project, @Nullable VirtualFile file, @Nullable FileType fileType) {
+    if (file == null) return null;
+    // a copy-paste of getFileLanguage(file)
+    Language explicit = file instanceof LightVirtualFile ? ((LightVirtualFile)file).getLanguage() : null;
+    Language fileLanguage = explicit != null ? explicit : getFileTypeLanguage(fileType != null ? fileType : file.getFileType());
+
+    if (fileLanguage == null) return null;
+    // run generic file-level substitutors, e.g. for scratches
+    for (LanguageSubstitutor substitutor : LanguageSubstitutors.INSTANCE.forKey(Language.ANY)) {
+      Language language = substitutor.getLanguage(file, project);
+      if (language != null && language != Language.ANY) {
+        fileLanguage = language;
+        break;
+      }
+    }
+    return LanguageSubstitutors.INSTANCE.substituteLanguage(fileLanguage, file, project);
   }
 
   @Nullable
   public static Language getFileLanguage(@Nullable VirtualFile file) {
     if (file == null) return null;
-    Language l = file instanceof LightVirtualFile? ((LightVirtualFile)file).getLanguage() : null;
+    Language l = file instanceof LightVirtualFile ? ((LightVirtualFile)file).getLanguage() : null;
     return l != null ? l : getFileTypeLanguage(file.getFileType());
   }
 
@@ -76,11 +91,11 @@ public final class LanguageUtil {
     String textStr = left.getText() + right.getText();
 
     lexer.start(textStr, 0, textStr.length());
-    if(lexer.getTokenType() != left.getElementType()) return ParserDefinition.SpaceRequirements.MUST;
-    if(lexer.getTokenEnd() != left.getTextLength()) return ParserDefinition.SpaceRequirements.MUST;
+    if (lexer.getTokenType() != left.getElementType()) return ParserDefinition.SpaceRequirements.MUST;
+    if (lexer.getTokenEnd() != left.getTextLength()) return ParserDefinition.SpaceRequirements.MUST;
     lexer.advance();
-    if(lexer.getTokenEnd() != textStr.length()) return ParserDefinition.SpaceRequirements.MUST;
-    if(lexer.getTokenType() != right.getElementType()) return ParserDefinition.SpaceRequirements.MUST;
+    if (lexer.getTokenEnd() != textStr.length()) return ParserDefinition.SpaceRequirements.MUST;
+    if (lexer.getTokenType() != right.getElementType()) return ParserDefinition.SpaceRequirements.MUST;
     return ParserDefinition.SpaceRequirements.MAY;
   }
 
@@ -99,7 +114,7 @@ public final class LanguageUtil {
     if (element == null) return false;
 
     final PsiFile psiFile = element.getContainingFile();
-    if(psiFile == null) return false;
+    if (psiFile == null) return false;
 
     final Language language = psiFile.getViewProvider().getBaseLanguage();
     return language instanceof TemplateLanguage;
@@ -125,7 +140,7 @@ public final class LanguageUtil {
   }
 
   public static boolean isFileLanguage(@Nonnull Language language) {
-    if ( language instanceof InjectableLanguage) return false;
+    if (language instanceof InjectableLanguage) return false;
     if (LanguageParserDefinitions.INSTANCE.forLanguage(language) == null) return false;
     LanguageFileType type = language.getAssociatedFileType();
     if (type == null || StringUtil.isEmpty(type.getDefaultExtension())) return false;

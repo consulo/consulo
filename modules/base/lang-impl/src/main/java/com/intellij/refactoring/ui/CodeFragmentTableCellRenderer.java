@@ -35,6 +35,7 @@ public class CodeFragmentTableCellRenderer implements TableCellRenderer {
   private final Project myProject;
   private final FileType myFileType;
 
+  @Deprecated(forRemoval = true)
   public CodeFragmentTableCellRenderer(Project project) {
     this(project, InternalStdFileTypes.JAVA);
   }

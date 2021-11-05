@@ -31,6 +31,6 @@
         displayName="Postfix Completion"
         dynamic="true"
         instance="com.intellij.codeInsight.template.postfix.settings.PostfixTemplatesConfigurable"/>
-    <completion.contributor language="any" implementationClass="com.intellij.codeInsight.template.postfix.completion.PostfixTemplateCompletionContributor"/>
+    <completion.contributor language="any" implementationClass="com.intellij.codeInsight.template.postfix.completion.PostfixTemplateCompletionContributor" order="last"/>
   </extensions>
 </consulo-plugin>

@@ -5,8 +5,6 @@ import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiDocumentManager;
 import consulo.disposer.Disposable;
 import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
-
 import javax.annotation.Nonnull;
 
 /**
@@ -42,8 +40,8 @@ public interface AppUIExecutor extends BaseExpirableExecutor<AppUIExecutor> {
    *
    * @see ModalityState
    */
-  @NotNull
-  static AppUIExecutor onWriteThread(@NotNull ModalityState modality) {
+  @Nonnull
+  static AppUIExecutor onWriteThread(@Nonnull ModalityState modality) {
     return AsyncExecutionService.getService().createWriteThreadExecutor(modality);
   }
 
@@ -53,7 +51,7 @@ public interface AppUIExecutor extends BaseExpirableExecutor<AppUIExecutor> {
    *
    * @see ModalityState#defaultModalityState()
    */
-  @NotNull
+  @Nonnull
   static AppUIExecutor onWriteThread() {
     return onWriteThread(ModalityState.defaultModalityState());
   }

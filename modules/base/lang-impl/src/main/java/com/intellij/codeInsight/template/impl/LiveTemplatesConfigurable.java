@@ -24,10 +24,13 @@ import consulo.disposer.Disposer;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 
 public class LiveTemplatesConfigurable implements SearchableConfigurable, Configurable.NoScroll {
+  public static String displayName() {
+    return CodeInsightBundle.message("templates.settings.page.title");
+  }
+
   private TemplateListPanel myPanel;
 
   @Override
@@ -43,7 +46,7 @@ public class LiveTemplatesConfigurable implements SearchableConfigurable, Config
 
   @Override
   public String getDisplayName() {
-    return CodeInsightBundle.message("templates.settings.page.title");
+    return displayName();
   }
 
   @Override

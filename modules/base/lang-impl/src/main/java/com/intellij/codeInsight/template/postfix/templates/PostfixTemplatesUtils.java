@@ -23,9 +23,10 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
 import com.intellij.refactoring.util.CommonRefactoringUtil;
-
 import javax.annotation.Nonnull;
+
 import javax.annotation.Nullable;
+import java.util.Set;
 
 public abstract class PostfixTemplatesUtils {
   private PostfixTemplatesUtils() {
@@ -50,11 +51,24 @@ public abstract class PostfixTemplatesUtils {
     CommonRefactoringUtil.showErrorHint(project, editor, "Can't expand postfix template", "Can't expand postfix template", "");
   }
 
+  /**
+   * Returns all templates registered in the provider, including the edited templates and builtin templates in their current state
+   */
+  @Nonnull
+  public static Set<PostfixTemplate> getAvailableTemplates(@Nonnull PostfixTemplateProvider provider) {
+    //Set<PostfixTemplate> result = new HashSet<>(provider.getTemplates());
+    //for (PostfixTemplate template : PostfixTemplateStorage.getInstance().getTemplates(provider)) {
+    //  if (template instanceof PostfixChangedBuiltinTemplate) {
+    //    result.remove(((PostfixChangedBuiltinTemplate)template).getBuiltinTemplate());
+    //  }
+    //  result.add(template);
+    //}
+    return provider.getTemplates();
+  }
+
   @Nonnull
   public static String getLangForProvider(@Nonnull PostfixTemplateProvider provider) {
-    LanguageExtensionPoint[] extensions = LanguagePostfixTemplate.EP_NAME.getExtensions();
-
-    for (LanguageExtensionPoint extension : extensions) {
+    for (LanguageExtensionPoint extension : LanguagePostfixTemplate.EP_NAME.getExtensionList()) {
       if (provider.equals(extension.getInstance())) {
         return extension.getKey();
       }

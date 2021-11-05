@@ -15,6 +15,8 @@
  */
 package com.intellij.openapi.application;
 
+import consulo.annotation.DeprecationInfo;
+
 public interface WriteActionAware {
   /**
    * Indicate whether this action should be invoked inside write action.
@@ -24,6 +26,8 @@ public interface WriteActionAware {
    *
    * @return true if the action requires a write action, false otherwise.
    */
+  @Deprecated
+  @DeprecationInfo("Prefer using own write wrapper")
   default boolean startInWriteAction() {
     return true;
   }

@@ -1,18 +1,4 @@
-/*
- * Copyright 2000-2014 JetBrains s.r.o.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.codeInsight.template.impl;
 
 import com.intellij.codeInsight.template.CustomLiveTemplate;
@@ -26,37 +12,42 @@ import com.intellij.openapi.vfs.ReadonlyStatusHandler;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
+import java.util.Collections;
 import java.util.Set;
 
-/**
- * Created by IntelliJ IDEA.
- * User: Eugene.Kudelevsky
- * Date: 25.03.2010
- * Time: 1:50:53
- */
 public class WrapWithCustomTemplateAction extends AnAction {
   private final CustomLiveTemplate myTemplate;
   private final Editor myEditor;
+  @Nullable
+  private final Runnable myAfterExecutionCallback;
   private final PsiFile myFile;
 
-  public WrapWithCustomTemplateAction(CustomLiveTemplate template,
-                                      final Editor editor,
-                                      final PsiFile file,
-                                      final Set<Character> usedMnemonicsSet) {
+  public WrapWithCustomTemplateAction(CustomLiveTemplate template, final Editor editor, final PsiFile file, final Set<Character> usedMnemonicsSet) {
+    this(template, editor, file, usedMnemonicsSet, null);
+  }
+
+  public WrapWithCustomTemplateAction(CustomLiveTemplate template, final Editor editor, final PsiFile file, final Set<Character> usedMnemonicsSet, @Nullable Runnable afterExecutionCallback) {
     super(InvokeTemplateAction.extractMnemonic(template.getTitle(), usedMnemonicsSet));
     myTemplate = template;
     myFile = file;
     myEditor = editor;
+    myAfterExecutionCallback = afterExecutionCallback;
   }
 
 
   @Override
-  public void actionPerformed(AnActionEvent e) {
+  public void actionPerformed(@Nonnull AnActionEvent e) {
+    perform();
+  }
+
+  public void perform() {
     final Document document = myEditor.getDocument();
     final VirtualFile file = FileDocumentManager.getInstance().getFile(document);
     if (file != null) {
-      ReadonlyStatusHandler.getInstance(myFile.getProject()).ensureFilesWritable(file);
+      ReadonlyStatusHandler.getInstance(myFile.getProject()).ensureFilesWritable(Collections.singletonList(file));
     }
 
     String selection = myEditor.getSelectionModel().getSelectedText(true);
@@ -65,6 +56,9 @@ public class WrapWithCustomTemplateAction extends AnAction {
       selection = selection.trim();
       PsiDocumentManager.getInstance(myFile.getProject()).commitAllDocuments();
       myTemplate.wrap(selection, new CustomTemplateCallback(myEditor, myFile));
+      if (myAfterExecutionCallback != null) {
+        myAfterExecutionCallback.run();
+      }
     }
   }
 }

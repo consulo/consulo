@@ -110,7 +110,7 @@ public class LookupImpl extends LightweightHint implements LookupEx, Disposable,
   private boolean myDisposed = false;
   private boolean myHidden = false;
   private boolean mySelectionTouched;
-  private FocusDegree myFocusDegree = FocusDegree.FOCUSED;
+  private LookupFocusDegree myFocusDegree = LookupFocusDegree.FOCUSED;
   private volatile boolean myCalculating;
   private final Advertiser myAdComponent;
   volatile int myLookupTextWidth = 50;
@@ -180,16 +180,16 @@ public class LookupImpl extends LightweightHint implements LookupEx, Disposable,
   }
 
   @Override
-  public FocusDegree getFocusDegree() {
+  public LookupFocusDegree getLookupFocusDegree() {
     return myFocusDegree;
   }
 
   @Override
   public boolean isFocused() {
-    return getFocusDegree() == FocusDegree.FOCUSED;
+    return getLookupFocusDegree() == LookupFocusDegree.FOCUSED;
   }
 
-  public void setFocusDegree(FocusDegree focusDegree) {
+  public void setFocusDegree(LookupFocusDegree focusDegree) {
     myFocusDegree = focusDegree;
     for (LookupListener listener : myListeners) {
       listener.focusDegreeChanged();
@@ -763,7 +763,7 @@ public class LookupImpl extends LightweightHint implements LookupEx, Disposable,
       delegateActionToEditor(IdeActions.ACTION_EDITOR_TAB, () -> new ChooseItemAction.Replacing(), actionEvent);
       delegateActionToEditor(IdeActions.ACTION_EDITOR_ENTER,
               /* e.g. rename popup comes initially unfocused */
-                             () -> getFocusDegree() == FocusDegree.UNFOCUSED ? new NextVariableAction() : new ChooseItemAction.FocusedOnly(), actionEvent);
+                             () -> getLookupFocusDegree() == LookupFocusDegree.UNFOCUSED ? new NextVariableAction() : new ChooseItemAction.FocusedOnly(), actionEvent);
       delegateActionToEditor(IdeActions.ACTION_EDITOR_MOVE_CARET_UP, null, actionEvent);
       delegateActionToEditor(IdeActions.ACTION_EDITOR_MOVE_CARET_DOWN, null, actionEvent);
       delegateActionToEditor(IdeActions.ACTION_EDITOR_MOVE_CARET_RIGHT, null, actionEvent);
@@ -891,7 +891,7 @@ public class LookupImpl extends LightweightHint implements LookupEx, Disposable,
     new ClickListener() {
       @Override
       public boolean onClick(@Nonnull MouseEvent e, int clickCount) {
-        setFocusDegree(FocusDegree.FOCUSED);
+        setFocusDegree(LookupFocusDegree.FOCUSED);
         markSelectionTouched();
 
         if (clickCount == 2) {
@@ -1281,11 +1281,5 @@ public class LookupImpl extends LightweightHint implements LookupEx, Disposable,
 
   FontPreferences getFontPreferences() {
     return myFontPreferences;
-  }
-
-  public enum FocusDegree {
-    FOCUSED,
-    SEMI_FOCUSED,
-    UNFOCUSED
   }
 }

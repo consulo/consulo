@@ -18,23 +18,21 @@ package com.intellij.codeInsight.template.impl;
 
 import com.intellij.codeInsight.CodeInsightActionHandler;
 import com.intellij.codeInsight.CodeInsightBundle;
-import com.intellij.codeInsight.CodeInsightUtilBase;
 import com.intellij.codeInsight.completion.PlainPrefixMatcher;
 import com.intellij.codeInsight.hint.HintManager;
 import com.intellij.codeInsight.lookup.*;
 import com.intellij.codeInsight.lookup.impl.LookupImpl;
-import com.intellij.codeInsight.template.CustomLiveTemplate;
-import com.intellij.codeInsight.template.CustomLiveTemplateBase;
-import com.intellij.codeInsight.template.CustomTemplateCallback;
-import com.intellij.codeInsight.template.TemplateManager;
+import com.intellij.codeInsight.template.*;
+import com.intellij.codeWithMe.ClientId;
 import com.intellij.diagnostic.AttachmentFactory;
 import com.intellij.featureStatistics.FeatureUsageTracker;
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.Result;
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
-import com.intellij.openapi.fileEditor.FileDocumentManager;
+import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.text.StringUtil;
@@ -42,12 +40,11 @@ import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.MultiMap;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import consulo.logging.Logger;
 import consulo.ui.annotation.RequiredUIAccess;
+import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import java.util.*;
 import java.util.regex.Pattern;
 
@@ -58,15 +55,11 @@ public class ListTemplatesHandler implements CodeInsightActionHandler {
   @RequiredUIAccess
   @Override
   public void invoke(@Nonnull final Project project, @Nonnull final Editor editor, @Nonnull PsiFile file) {
-    if (!CodeInsightUtilBase.prepareEditorForWrite(editor)) return;
-    if (!FileDocumentManager.getInstance().requestWriting(editor.getDocument(), project)) {
-      return;
-    }
     EditorUtil.fillVirtualSpaceUntilCaret(editor);
 
     PsiDocumentManager.getInstance(project).commitDocument(editor.getDocument());
     int offset = editor.getCaretModel().getOffset();
-    List<TemplateImpl> applicableTemplates = TemplateManagerImpl.listApplicableTemplateWithInsertingDummyIdentifier(editor, file, false);
+    List<TemplateImpl> applicableTemplates = TemplateManagerImpl.listApplicableTemplateWithInsertingDummyIdentifier(TemplateActionContext.expanding(file, editor));
 
     Map<TemplateImpl, String> matchingTemplates = filterTemplatesByPrefix(applicableTemplates, editor, offset, false, true);
     MultiMap<String, CustomLiveTemplateLookupElement> customTemplatesLookupElements = getCustomTemplatesLookupItems(editor, file, offset);
@@ -78,26 +71,28 @@ public class ListTemplatesHandler implements CodeInsightActionHandler {
     }
 
     if (matchingTemplates.isEmpty() && customTemplatesLookupElements.isEmpty()) {
-      HintManager.getInstance().showErrorHint(editor, CodeInsightBundle.message("templates.no.defined"));
+      if (!ApplicationManager.getApplication().isUnitTestMode()) {
+        HintManager.getInstance().showErrorHint(editor, CodeInsightBundle.message("templates.no.defined"));
+      }
       return;
     }
 
     showTemplatesLookup(project, editor, file, matchingTemplates, customTemplatesLookupElements);
   }
 
-  public static Map<TemplateImpl, String> filterTemplatesByPrefix(@Nonnull Collection<TemplateImpl> templates, @Nonnull Editor editor,
+  public static Map<TemplateImpl, String> filterTemplatesByPrefix(@Nonnull Collection<? extends TemplateImpl> templates, @Nonnull Editor editor,
                                                                   int offset, boolean fullMatch, boolean searchInDescription) {
     if (offset > editor.getDocument().getTextLength()) {
-      LOG.error("Cannot filter templates, index out of bounds. Offset: " + offset,
-                AttachmentFactory.createAttachment(editor.getDocument()));
+      LOG.error("Cannot filter templates, index out of bounds. Offset: " + offset, AttachmentFactory.createAttachment(editor.getDocument()));
     }
     CharSequence documentText = editor.getDocument().getCharsSequence().subSequence(0, offset);
 
     String prefixWithoutDots = computeDescriptionMatchingPrefix(editor.getDocument(), offset);
     Pattern prefixSearchPattern = Pattern.compile(".*\\b" + prefixWithoutDots + ".*");
 
-    Map<TemplateImpl, String> matchingTemplates = new TreeMap<TemplateImpl, String>(TemplateListPanel.TEMPLATE_COMPARATOR);
+    Map<TemplateImpl, String> matchingTemplates = new TreeMap<>(TemplateListPanel.TEMPLATE_COMPARATOR);
     for (TemplateImpl template : templates) {
+      ProgressManager.checkCanceled();
       String templateKey = template.getKey();
       if (fullMatch) {
         int startOffset = documentText.length() - templateKey.length();
@@ -109,7 +104,13 @@ public class ListTemplatesHandler implements CodeInsightActionHandler {
         }
       }
       else {
+        if (!ClientId.isCurrentlyUnderLocalId() && prefixWithoutDots.isEmpty()) {
+          matchingTemplates.put(template, prefixWithoutDots);
+          continue;
+        }
+
         for (int i = templateKey.length(); i > 0; i--) {
+          ProgressManager.checkCanceled();
           String prefix = templateKey.substring(0, i);
           int startOffset = documentText.length() - i;
           if (startOffset > 0 && Character.isJavaIdentifierPart(documentText.charAt(startOffset - 1))) {
@@ -160,7 +161,8 @@ public class ListTemplatesHandler implements CodeInsightActionHandler {
                                                                                                 int offset) {
     final MultiMap<String, CustomLiveTemplateLookupElement> result = MultiMap.create();
     CustomTemplateCallback customTemplateCallback = new CustomTemplateCallback(editor, file);
-    for (CustomLiveTemplate customLiveTemplate : TemplateManagerImpl.listApplicableCustomTemplates(editor, file, false)) {
+    TemplateActionContext templateActionContext = TemplateActionContext.expanding(file, editor);
+    for (CustomLiveTemplate customLiveTemplate : TemplateManagerImpl.listApplicableCustomTemplates(templateActionContext)) {
       if (customLiveTemplate instanceof CustomLiveTemplateBase) {
         String customTemplatePrefix = ((CustomLiveTemplateBase)customLiveTemplate).computeTemplateKeyWithoutContextChecking(customTemplateCallback);
         if (customTemplatePrefix != null) {

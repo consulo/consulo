@@ -15,7 +15,6 @@
  */
 package com.intellij.openapi.vcs.checkin;
 
-import com.intellij.openapi.fileTypes.InternalStdFileTypes;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.GeneratedSourcesFilter;
@@ -26,8 +25,8 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
 import com.intellij.psi.util.PsiUtilCore;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.util.ArrayList;
@@ -77,11 +76,7 @@ public class CheckinHandlerUtil {
 
   private static boolean isFileUnderSourceRoot(@Nonnull Project project, @Nonnull VirtualFile file) {
     ProjectFileIndex index = ProjectRootManager.getInstance(project).getFileIndex();
-    if (InternalStdFileTypes.JAVA == file.getFileType()) {
-      return index.isInSource(file) && !index.isInLibrarySource(file);
-    } else {
-      return index.isInContent(file) && !index.isInLibrarySource(file) ;
-    }
+    return index.isInContent(file) && !index.isInLibrarySource(file);
   }
 
   static void disableWhenDumb(@Nonnull Project project, @Nonnull JCheckBox checkBox, @Nonnull String tooltip) {

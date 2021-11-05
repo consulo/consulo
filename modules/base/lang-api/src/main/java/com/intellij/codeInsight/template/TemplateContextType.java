@@ -1,19 +1,4 @@
-/*
- * Copyright 2000-2009 JetBrains s.r.o.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
+// Copyright 2000-2021 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.codeInsight.template;
 
 import com.intellij.openapi.editor.Document;
@@ -21,41 +6,67 @@ import com.intellij.openapi.editor.EditorFactory;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.fileTypes.SyntaxHighlighter;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.VolatileNullableLazyValue;
 import com.intellij.psi.PsiFile;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
+import java.util.function.Supplier;
+
 /**
- * @author yole
+ * Implement this class to describe some particular context that the user may associate with a live template, e.g., "Java String Start".
+ * Contexts are available for the user in the Live Template management UI.
  */
 public abstract class TemplateContextType {
   public static final ExtensionPointName<TemplateContextType> EP_NAME = ExtensionPointName.create("com.intellij.liveTemplateContext");
 
+  @Nonnull
   private final String myContextId;
+  @Nonnull
   private final String myPresentableName;
-  private final Class<? extends TemplateContextType> myBaseContextType;
+  private final VolatileNullableLazyValue<TemplateContextType> myBaseContextType;
 
   protected TemplateContextType(@Nonnull @NonNls String id, @Nonnull String presentableName) {
     this(id, presentableName, EverywhereContextType.class);
   }
 
-  protected TemplateContextType(@Nonnull @NonNls String id,
-                                @Nonnull String presentableName,
-                                @javax.annotation.Nullable Class<? extends TemplateContextType> baseContextType) {
+  protected TemplateContextType(@Nonnull @NonNls String id, @Nonnull String presentableName, @Nullable Class<? extends TemplateContextType> baseContextType) {
     myContextId = id;
     myPresentableName = presentableName;
-    myBaseContextType = baseContextType;
+    myBaseContextType = VolatileNullableLazyValue.createValue((Supplier<? extends TemplateContextType>)() -> baseContextType == null ? null : EP_NAME.findExtensionOrFail(baseContextType));
   }
 
+  /**
+   * @return context presentable name for templates editor
+   */
+  @Nonnull
   public String getPresentableName() {
     return myPresentableName;
   }
 
+  /**
+   * @return unique ID to be used on configuration files to flag if this context is enabled for particular template
+   */
+  @Nonnull
   public String getContextId() {
     return myContextId;
   }
 
-  public abstract boolean isInContext(@Nonnull PsiFile file, int offset);
+  /**
+   * @deprecated use {@link #isInContext(TemplateActionContext)}
+   */
+  @Deprecated(forRemoval = true)
+  public boolean isInContext(@Nonnull PsiFile file, int offset) {
+    throw new RuntimeException("Please, implement isInContext(TemplateActionContext) method and don't invoke this method directly");
+  }
+
+  /**
+   * @return true iff this context type permits using template associated with it according to {@code templateActionContext}
+   */
+  public boolean isInContext(@Nonnull TemplateActionContext templateActionContext) {
+    return isInContext(templateActionContext.getFile(), templateActionContext.getStartOffset());
+  }
 
   /**
    * @return whether an abbreviation of this context's template can be entered in editor
@@ -65,16 +76,37 @@ public abstract class TemplateContextType {
     return true;
   }
 
-  @javax.annotation.Nullable
+  /**
+   * @return syntax highlighter that going to be used in live template editor for template with context type enabled. If several context
+   * types are enabled - first registered wins.
+   */
+  @Nullable
   public SyntaxHighlighter createHighlighter() {
     return null;
   }
 
-  @javax.annotation.Nullable
+  /**
+   * @return parent context type. Parent context serves two purposes:
+   * <ol>
+   * <li>Context types hierarchy shown as a tree in template editor</li>
+   * <li>When template applicability is computed, IDE finds all deepest applicable context types for the current {@link TemplateActionContext}
+   * and excludes checking of all of their parent contexts. Then, IDE checks that at least one of these deepest applicable contexts is
+   * enabled for the template.</li>
+   * </ol>
+   */
+  @Nullable
   public TemplateContextType getBaseContextType() {
-    return myBaseContextType != null ? EP_NAME.findExtension(myBaseContextType) : null;
+    return myBaseContextType.getValue();
   }
 
+  public void clearCachedBaseContextType() {
+    myBaseContextType.drop();
+  }
+
+  /**
+   * @return document for live template editor. Used for live templates with this context type enabled. If several context types are enabled -
+   * first registered wins.
+   */
   public Document createDocument(CharSequence text, Project project) {
     return EditorFactory.getInstance().createDocument(text);
   }

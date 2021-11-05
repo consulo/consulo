@@ -18,12 +18,13 @@ package com.intellij.codeInsight.folding.impl.actions;
 import com.intellij.codeInsight.CodeInsightActionHandler;
 import com.intellij.codeInsight.actions.BaseCodeInsightAction;
 import com.intellij.codeInsight.folding.impl.CollapseExpandDocCommentsHandler;
+
 import javax.annotation.Nonnull;
 
-public class CollapseDocCommentsAction extends BaseCodeInsightAction{
+public class CollapseDocCommentsAction extends BaseCodeInsightAction {
   @Nonnull
   @Override
-  protected CodeInsightActionHandler getHandler(){
+  protected CodeInsightActionHandler getHandler() {
     return new CollapseExpandDocCommentsHandler(false);
   }
 }

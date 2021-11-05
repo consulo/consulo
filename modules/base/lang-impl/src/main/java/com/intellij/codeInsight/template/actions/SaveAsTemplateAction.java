@@ -27,6 +27,7 @@ package com.intellij.codeInsight.template.actions;
 import com.intellij.codeInsight.completion.CompletionUtil;
 import com.intellij.codeInsight.completion.OffsetKey;
 import com.intellij.codeInsight.completion.OffsetsInFile;
+import com.intellij.codeInsight.template.TemplateActionContext;
 import com.intellij.codeInsight.template.TemplateContextType;
 import com.intellij.codeInsight.template.impl.*;
 import com.intellij.lang.Language;
@@ -35,7 +36,6 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.command.WriteCommandAction;
-import consulo.logging.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.EditorFactory;
@@ -46,8 +46,8 @@ import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.*;
 import com.intellij.psi.util.PsiElementFilter;
 import com.intellij.psi.util.PsiTreeUtil;
-import java.util.HashMap;
 import consulo.lang.LanguagePointerUtil;
+import consulo.logging.Logger;
 import consulo.util.pointers.NamedPointer;
 
 import java.util.*;
@@ -67,8 +67,7 @@ public class SaveAsTemplateAction extends AnAction {
     final Project project = file.getProject();
     PsiDocumentManager.getInstance(project).commitAllDocuments();
 
-    final TextRange selection = new TextRange(editor.getSelectionModel().getSelectionStart(),
-                                              editor.getSelectionModel().getSelectionEnd());
+    final TextRange selection = new TextRange(editor.getSelectionModel().getSelectionStart(), editor.getSelectionModel().getSelectionEnd());
     PsiElement current = file.findElementAt(selection.getStartOffset());
     int startOffset = selection.getStartOffset();
     while (current instanceof PsiWhiteSpace) {
@@ -151,13 +150,10 @@ public class SaveAsTemplateAction extends AnAction {
     OffsetKey startKey = OffsetKey.create("pivot");
     OffsetsInFile offsets = new OffsetsInFile(file);
     offsets.getOffsets().addOffset(startKey, startOffset);
-    OffsetsInFile copy = TemplateManagerImpl.copyWithDummyIdentifier(offsets,
-                                                                     editor.getSelectionModel().getSelectionStart(),
-                                                                     editor.getSelectionModel().getSelectionEnd(),
-                                                                     CompletionUtil.DUMMY_IDENTIFIER_TRIMMED);
+    OffsetsInFile copy =
+            TemplateManagerImpl.copyWithDummyIdentifier(offsets, editor.getSelectionModel().getSelectionStart(), editor.getSelectionModel().getSelectionEnd(), CompletionUtil.DUMMY_IDENTIFIER_TRIMMED);
 
-    Set<TemplateContextType> applicable = TemplateManagerImpl.getApplicableContextTypes(copy.getFile(),
-                                                                                        copy.getOffsets().getOffset(startKey));
+    Set<TemplateContextType> applicable = TemplateManagerImpl.getApplicableContextTypes(TemplateActionContext.expanding(copy.getFile(), copy.getOffsets().getOffset(startKey)));
 
     for (TemplateContextType contextType : TemplateContextType.EP_NAME.getExtensionList()) {
       template.getTemplateContext().setEnabled(contextType, applicable.contains(contextType));

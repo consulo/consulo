@@ -1,64 +1,54 @@
-/*
- * Copyright 2000-2014 JetBrains s.r.o.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2000-2021 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
 package com.intellij.codeInsight.lookup.impl.actions;
 
 import com.intellij.codeInsight.completion.CodeCompletionFeatures;
 import com.intellij.codeInsight.completion.CompletionProcess;
 import com.intellij.codeInsight.completion.CompletionService;
+import com.intellij.codeInsight.hint.HintManagerImpl;
 import com.intellij.codeInsight.lookup.Lookup;
+import com.intellij.codeInsight.lookup.LookupFocusDegree;
 import com.intellij.codeInsight.lookup.LookupManager;
 import com.intellij.codeInsight.lookup.impl.LookupImpl;
+import com.intellij.codeInsight.template.TemplateActionContext;
 import com.intellij.codeInsight.template.impl.*;
 import com.intellij.codeInsight.template.impl.editorActions.ExpandLiveTemplateCustomAction;
 import com.intellij.featureStatistics.FeatureUsageTracker;
 import com.intellij.openapi.actionSystem.DataContext;
+import com.intellij.openapi.editor.Caret;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.actionSystem.EditorAction;
 import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
+import com.intellij.openapi.editor.actionSystem.LatencyAwareEditorAction;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;
+import com.intellij.util.SlowOperations;
 import com.intellij.util.containers.ContainerUtil;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.List;
 
-public abstract class ChooseItemAction extends EditorAction {
+public abstract class ChooseItemAction extends EditorAction implements HintManagerImpl.ActionToIgnore, LatencyAwareEditorAction {
   public ChooseItemAction(Handler handler) {
     super(handler);
   }
 
-  protected static class Handler extends EditorActionHandler {
+  public static class Handler extends EditorActionHandler {
     final boolean focusedOnly;
     final char finishingChar;
 
-    protected Handler(boolean focusedOnly, char finishingChar) {
+    public Handler(boolean focusedOnly, char finishingChar) {
       this.focusedOnly = focusedOnly;
       this.finishingChar = finishingChar;
     }
 
     @Override
-    public void execute(@Nonnull final Editor editor, final DataContext dataContext) {
+    public void doExecute(@Nonnull Editor editor, @Nullable Caret caret, DataContext dataContext) {
       final LookupImpl lookup = (LookupImpl)LookupManager.getActiveLookup(editor);
-      if (lookup == null) {
-        throw new AssertionError("The last lookup disposed at: " + LookupImpl.getLastLookupDisposeTrace() + "\n-----------------------\n");
-      }
+      assert lookup != null;
 
-      if ((finishingChar == Lookup.NORMAL_SELECT_CHAR || finishingChar == Lookup.REPLACE_SELECT_CHAR) &&
-          hasTemplatePrefix(lookup, finishingChar)) {
+      if ((finishingChar == Lookup.NORMAL_SELECT_CHAR || finishingChar == Lookup.REPLACE_SELECT_CHAR) && hasTemplatePrefix(lookup, finishingChar)) {
         lookup.hideLookup(true);
 
         ExpandLiveTemplateCustomAction.createExpandTemplateHandler(finishingChar).execute(editor, null, dataContext);
@@ -70,24 +60,28 @@ public abstract class ChooseItemAction extends EditorAction {
         if (!lookup.isFocused()) {
           FeatureUsageTracker.getInstance().triggerFeatureUsed(CodeCompletionFeatures.EDITING_COMPLETION_CONTROL_ENTER);
         }
-      } else if (finishingChar == Lookup.COMPLETE_STATEMENT_SELECT_CHAR) {
+      }
+      else if (finishingChar == Lookup.COMPLETE_STATEMENT_SELECT_CHAR) {
         FeatureUsageTracker.getInstance().triggerFeatureUsed(CodeCompletionFeatures.EDITING_COMPLETION_FINISH_BY_SMART_ENTER);
-      } else if (finishingChar == Lookup.REPLACE_SELECT_CHAR) {
+      }
+      else if (finishingChar == Lookup.REPLACE_SELECT_CHAR) {
         FeatureUsageTracker.getInstance().triggerFeatureUsed(CodeCompletionFeatures.EDITING_COMPLETION_REPLACE);
-      } else if (finishingChar == '.')  {
+      }
+      else if (finishingChar == '.') {
         FeatureUsageTracker.getInstance().triggerFeatureUsed(CodeCompletionFeatures.EDITING_COMPLETION_FINISH_BY_CONTROL_DOT);
       }
 
-      lookup.finishLookup(finishingChar);
+      SlowOperations.allowSlowOperations(() -> lookup.finishLookup(finishingChar));
     }
 
 
     @Override
-    public boolean isEnabled(Editor editor, DataContext dataContext) {
+    public boolean isEnabledForCaret(@Nonnull Editor editor, @Nonnull Caret caret, DataContext dataContext) {
       LookupImpl lookup = (LookupImpl)LookupManager.getActiveLookup(editor);
       if (lookup == null) return false;
       if (!lookup.isAvailableToUser()) return false;
-      if (focusedOnly && lookup.getFocusDegree() == LookupImpl.FocusDegree.UNFOCUSED) return false;
+      if (lookup.getCurrentItemOrEmpty() == null) return false;
+      if (focusedOnly && lookup.getLookupFocusDegree() == LookupFocusDegree.UNFOCUSED) return false;
       if (finishingChar == Lookup.REPLACE_SELECT_CHAR) {
         return !lookup.getItems().isEmpty();
       }
@@ -126,7 +120,7 @@ public abstract class ChooseItemAction extends EditorAction {
         return true;
       }
 
-      List<TemplateImpl> templates = TemplateManagerImpl.listApplicableTemplateWithInsertingDummyIdentifier(editor, file, false);
+      List<TemplateImpl> templates = SlowOperations.allowSlowOperations(() -> TemplateManagerImpl.listApplicableTemplateWithInsertingDummyIdentifier(TemplateActionContext.expanding(file, editor)));
       TemplateImpl template = LiveTemplateCompletionContributor.findFullMatchedApplicableTemplate(editor, offset, templates);
       if (template != null && shortcutChar == TemplateSettings.getInstance().getShortcutChar(template)) {
         return true;

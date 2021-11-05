@@ -20,8 +20,8 @@ import com.intellij.openapi.application.WriteActionAware;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.util.ReflectionUtil;
-
 import javax.annotation.Nonnull;
+
 import javax.annotation.Nullable;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

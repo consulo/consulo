@@ -34,6 +34,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.ProperTextRange;
 import com.intellij.openapi.util.TextRange;
+import com.intellij.psi.PsiCompiledElement;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.util.CachedValueProvider;
@@ -43,17 +44,15 @@ import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.util.PairProcessor;
 import com.intellij.util.containers.ConcurrentFactoryMap;
 import com.intellij.util.containers.ContainerUtil;
-import java.util.HashMap;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.util.dataholder.Key;
 import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
+import javax.annotation.Nonnull;
 import org.jetbrains.annotations.TestOnly;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import jakarta.inject.Singleton;
 import java.util.*;
 import java.util.concurrent.ConcurrentMap;
 
@@ -261,27 +260,30 @@ public class TemplateManagerImpl extends TemplateManager implements Disposable {
     }
 
     PsiFile file = PsiUtilBase.getPsiFileInEditor(editor, myProject);
-    if (file == null) return null;
+    if (file == null || file instanceof PsiCompiledElement) return null;
 
     Map<TemplateImpl, String> template2argument = findMatchingTemplates(file, editor, shortcutChar, TemplateSettings.getInstance());
-
+    TemplateActionContext templateActionContext = TemplateActionContext.expanding(file, editor);
+    boolean multiCaretMode = editor.getCaretModel().getCaretCount() > 1;
     List<CustomLiveTemplate> customCandidates = ContainerUtil.findAll(CustomLiveTemplate.EP_NAME.getExtensions(), customLiveTemplate -> shortcutChar == customLiveTemplate.getShortcut() &&
-                                                                                                                                        (editor.getCaretModel().getCaretCount() <= 1 ||
-                                                                                                                                         supportsMultiCaretMode(customLiveTemplate)));
+                                                                                                                                        (!multiCaretMode ||
+                                                                                                                                         supportsMultiCaretMode(customLiveTemplate)) &&
+                                                                                                                                        isApplicable(customLiveTemplate, templateActionContext));
     if (!customCandidates.isEmpty()) {
       int caretOffset = editor.getCaretModel().getOffset();
-      PsiFile fileCopy = insertDummyIdentifierWithCache(file, caretOffset, caretOffset, "").getFile();
-      Document document = editor.getDocument();
-
-      for (final CustomLiveTemplate customLiveTemplate : customCandidates) {
-        if (isApplicable(customLiveTemplate, editor, fileCopy)) {
-          final String key = customLiveTemplate.computeTemplateKey(new CustomTemplateCallback(editor, fileCopy));
-          if (key != null) {
-            int offsetBeforeKey = caretOffset - key.length();
-            CharSequence text = document.getImmutableCharSequence();
-            if (template2argument == null || !containsTemplateStartingBefore(template2argument, offsetBeforeKey, caretOffset, text)) {
-              return () -> customLiveTemplate.expand(key, new CustomTemplateCallback(editor, file));
-            }
+      CustomTemplateCallback templateCallback = new CustomTemplateCallback(editor, file);
+      for (CustomLiveTemplate customLiveTemplate : customCandidates) {
+        String key = customLiveTemplate.computeTemplateKey(templateCallback);
+        if (key != null) {
+          int offsetBeforeKey = caretOffset - key.length();
+          CharSequence text = editor.getDocument().getImmutableCharSequence();
+          if (template2argument == null || !containsTemplateStartingBefore(template2argument, offsetBeforeKey, caretOffset, text)) {
+            return () -> {
+              customLiveTemplate.expand(key, templateCallback);
+              if (multiCaretMode) {
+                PsiDocumentManager.getInstance(templateCallback.getProject()).commitDocument(editor.getDocument());
+              }
+            };
           }
         }
       }
@@ -292,14 +294,6 @@ public class TemplateManagerImpl extends TemplateManager implements Disposable {
 
   private static boolean supportsMultiCaretMode(CustomLiveTemplate customLiveTemplate) {
     return !(customLiveTemplate instanceof CustomLiveTemplateBase) || ((CustomLiveTemplateBase)customLiveTemplate).supportsMultiCaret();
-  }
-
-  public static boolean isApplicable(@Nonnull CustomLiveTemplate customLiveTemplate, @Nonnull Editor editor, @Nonnull PsiFile file) {
-    return isApplicable(customLiveTemplate, editor, file, false);
-  }
-
-  public static boolean isApplicable(@Nonnull CustomLiveTemplate customLiveTemplate, @Nonnull Editor editor, @Nonnull PsiFile file, boolean wrapping) {
-    return customLiveTemplate.isApplicable(file, CustomTemplateCallback.getOffset(editor), wrapping);
   }
 
   private static int getArgumentOffset(int caretOffset, String argument, CharSequence text) {
@@ -347,8 +341,8 @@ public class TemplateManagerImpl extends TemplateManager implements Disposable {
       return null;
     }
 
-    candidatesWithoutArgument = filterApplicableCandidates(file, caretOffset, candidatesWithoutArgument);
-    candidatesWithArgument = filterApplicableCandidates(file, argumentOffset, candidatesWithArgument);
+    candidatesWithoutArgument = filterApplicableCandidates(TemplateActionContext.expanding(file, caretOffset), candidatesWithoutArgument);
+    candidatesWithArgument = filterApplicableCandidates(TemplateActionContext.expanding(file, argumentOffset), candidatesWithArgument);
     Map<TemplateImpl, String> candidate2Argument = new HashMap<>();
     addToMap(candidate2Argument, candidatesWithoutArgument, null);
     addToMap(candidate2Argument, candidatesWithArgument, argument);
@@ -434,20 +428,32 @@ public class TemplateManagerImpl extends TemplateManager implements Disposable {
     }, CodeInsightBundle.message("insert.code.template.command"), null);
   }
 
-  private static List<TemplateImpl> filterApplicableCandidates(PsiFile file, int caretOffset, List<TemplateImpl> candidates) {
+  private static List<TemplateImpl> filterApplicableCandidates(@Nonnull TemplateActionContext templateActionContext, @Nonnull List<TemplateImpl> candidates) {
     if (candidates.isEmpty()) {
       return candidates;
     }
 
-    PsiFile copy = insertDummyIdentifierWithCache(file, caretOffset, caretOffset, CompletionUtil.DUMMY_IDENTIFIER_TRIMMED).getFile();
+    PsiFile copy = insertDummyIdentifierWithCache(templateActionContext).getFile();
 
     List<TemplateImpl> result = new ArrayList<>();
     for (TemplateImpl candidate : candidates) {
-      if (isApplicable(copy, caretOffset - candidate.getKey().length(), candidate)) {
+      if (isApplicable(candidate, TemplateActionContext.expanding(copy, templateActionContext.getStartOffset() - candidate.getKey().length()))) {
         result.add(candidate);
       }
     }
     return result;
+  }
+
+  public static boolean isApplicable(TemplateImpl template, @Nonnull TemplateActionContext templateActionContext) {
+    return isApplicable(template, getApplicableContextTypes(templateActionContext));
+  }
+
+  /**
+   * @deprecated use {@link #isApplicable(TemplateImpl, TemplateActionContext)}
+   */
+  @Deprecated(forRemoval = true)
+  public static boolean isApplicable(PsiFile file, int offset, TemplateImpl template) {
+    return isApplicable(template, TemplateActionContext.expanding(file, offset));
   }
 
   private static List<TemplateContextType> getBases(TemplateContextType type) {
@@ -459,11 +465,10 @@ public class TemplateManagerImpl extends TemplateManager implements Disposable {
     }
   }
 
-  private static Set<TemplateContextType> getDirectlyApplicableContextTypes(@Nonnull PsiFile file, int offset) {
+  private static Set<TemplateContextType> getDirectlyApplicableContextTypes(@Nonnull TemplateActionContext templateActionContext) {
     LinkedHashSet<TemplateContextType> set = new LinkedHashSet<>();
-    LinkedList<TemplateContextType> contexts = buildOrderedContextTypes();
-    for (TemplateContextType contextType : contexts) {
-      if (contextType.isInContext(file, offset)) {
+    for (TemplateContextType contextType : buildOrderedContextTypes()) {
+      if (contextType.isInContext(templateActionContext)) {
         set.add(contextType);
       }
     }
@@ -510,10 +515,6 @@ public class TemplateManagerImpl extends TemplateManager implements Disposable {
     return false;
   }
 
-  public static boolean isApplicable(PsiFile file, int offset, TemplateImpl template) {
-    return isApplicable(template, getApplicableContextTypes(file, offset));
-  }
-
   public static boolean isApplicable(TemplateImpl template, Set<TemplateContextType> contextTypes) {
     for (TemplateContextType type : contextTypes) {
       if (template.getTemplateContext().isEnabled(type)) {
@@ -523,53 +524,61 @@ public class TemplateManagerImpl extends TemplateManager implements Disposable {
     return false;
   }
 
-  public static List<TemplateImpl> listApplicableTemplates(PsiFile file, int offset, boolean selectionOnly) {
-    Set<TemplateContextType> contextTypes = getApplicableContextTypes(file, offset);
+  /**
+   * @implNote custom templates and callbacks require additional work. There is a single place where offset provided externally, instead
+   * of using one from the callback and this is probably a mistake. If this is the case, action context may be included into the callback.
+   */
+  public static boolean isApplicable(@Nonnull CustomLiveTemplate customLiveTemplate, @Nonnull TemplateActionContext templateActionContext) {
+    CustomTemplateCallback callback = new CustomTemplateCallback(Objects.requireNonNull(templateActionContext.getEditor()), templateActionContext.getFile());
+    return customLiveTemplate.isApplicable(callback, callback.getOffset(), templateActionContext.isSurrounding());
+  }
 
-    final ArrayList<TemplateImpl> result = ContainerUtil.newArrayList();
+  public static List<TemplateImpl> listApplicableTemplates(@Nonnull TemplateActionContext templateActionContext) {
+    Set<TemplateContextType> contextTypes = getApplicableContextTypes(templateActionContext);
+
+    final ArrayList<TemplateImpl> result = new ArrayList<>();
     for (final TemplateImpl template : TemplateSettings.getInstance().getTemplates()) {
-      if (!template.isDeactivated() && (!selectionOnly || template.isSelectionTemplate()) && isApplicable(template, contextTypes)) {
+      if (!template.isDeactivated() && (!templateActionContext.isSurrounding() || template.isSelectionTemplate()) && isApplicable(template, contextTypes)) {
         result.add(template);
       }
     }
     return result;
   }
 
-  public static List<TemplateImpl> listApplicableTemplateWithInsertingDummyIdentifier(Editor editor, PsiFile file, boolean selectionOnly) {
-    int startOffset = editor.getSelectionModel().getSelectionStart();
-    int endOffset = editor.getSelectionModel().getSelectionEnd();
-    OffsetsInFile offsets = insertDummyIdentifierWithCache(file, startOffset, endOffset, CompletionUtil.DUMMY_IDENTIFIER_TRIMMED);
-    return listApplicableTemplates(offsets.getFile(), getStartOffset(offsets), selectionOnly);
+  public static List<TemplateImpl> listApplicableTemplateWithInsertingDummyIdentifier(@Nonnull TemplateActionContext templateActionContext) {
+    OffsetsInFile offsets = insertDummyIdentifierWithCache(templateActionContext);
+    return listApplicableTemplates(TemplateActionContext.create(offsets.getFile(), null, getStartOffset(offsets), getEndOffset(offsets), templateActionContext.isSurrounding()));
   }
 
-  public static List<CustomLiveTemplate> listApplicableCustomTemplates(@Nonnull Editor editor, @Nonnull PsiFile file, boolean selectionOnly) {
+  public static List<CustomLiveTemplate> listApplicableCustomTemplates(@Nonnull TemplateActionContext templateActionContext) {
     List<CustomLiveTemplate> result = new ArrayList<>();
     for (CustomLiveTemplate template : CustomLiveTemplate.EP_NAME.getExtensions()) {
-      if ((!selectionOnly || template.supportsWrapping()) && isApplicable(template, editor, file, selectionOnly)) {
+      if ((!templateActionContext.isSurrounding() || template.supportsWrapping()) && isApplicable(template, templateActionContext)) {
         result.add(template);
       }
     }
     return result;
   }
 
-  public static Set<TemplateContextType> getApplicableContextTypes(PsiFile file, int offset) {
-    Set<TemplateContextType> result = getDirectlyApplicableContextTypes(file, offset);
+  public static Set<TemplateContextType> getApplicableContextTypes(@Nonnull TemplateActionContext templateActionContext) {
+    Set<TemplateContextType> result = getDirectlyApplicableContextTypes(templateActionContext);
 
+    PsiFile file = templateActionContext.getFile();
     Language baseLanguage = file.getViewProvider().getBaseLanguage();
     if (baseLanguage != file.getLanguage()) {
       PsiFile basePsi = file.getViewProvider().getPsi(baseLanguage);
       if (basePsi != null) {
-        result.addAll(getDirectlyApplicableContextTypes(basePsi, offset));
+        result.addAll(getDirectlyApplicableContextTypes(templateActionContext.withFile(basePsi)));
       }
     }
 
     // if we have, for example, a Ruby fragment in RHTML selected with its exact bounds, the file language and the base
     // language will be ERb, so we won't match HTML templates for it. but they're actually valid
-    Language languageAtOffset = PsiUtilCore.getLanguageAtOffset(file, offset);
+    Language languageAtOffset = PsiUtilCore.getLanguageAtOffset(file, templateActionContext.getStartOffset());
     if (languageAtOffset != file.getLanguage() && languageAtOffset != baseLanguage) {
       PsiFile basePsi = file.getViewProvider().getPsi(languageAtOffset);
       if (basePsi != null) {
-        result.addAll(getDirectlyApplicableContextTypes(basePsi, offset));
+        result.addAll(getDirectlyApplicableContextTypes(templateActionContext.withFile(basePsi)));
       }
     }
 
@@ -587,14 +596,15 @@ public class TemplateManagerImpl extends TemplateManager implements Disposable {
     return offsets.getOffsets().getOffset(END_OFFSET);
   }
 
-  private static OffsetsInFile insertDummyIdentifierWithCache(PsiFile file, int startOffset, int endOffset, String replacement) {
-    ProperTextRange editRange = ProperTextRange.create(startOffset, endOffset);
-    assertRangeWithinDocument(editRange, file.getViewProvider().getDocument());
+  private static OffsetsInFile insertDummyIdentifierWithCache(@Nonnull TemplateActionContext templateActionContext) {
+    ProperTextRange editRange = ProperTextRange.create(templateActionContext.getStartOffset(), templateActionContext.getEndOffset());
+    PsiFile file = templateActionContext.getFile();
+    assertRangeWithinDocument(editRange, Objects.requireNonNull(file.getViewProvider().getDocument()));
 
     ConcurrentMap<Pair<ProperTextRange, String>, OffsetsInFile> map = CachedValuesManager.getCachedValue(file, () -> CachedValueProvider.Result
             .create(ConcurrentFactoryMap.createMap(key -> copyWithDummyIdentifier(new OffsetsInFile(file), key.first.getStartOffset(), key.first.getEndOffset(), key.second)), file,
                     file.getViewProvider().getDocument()));
-    return map.get(Pair.create(editRange, replacement));
+    return map.get(Pair.create(editRange, CompletionUtil.DUMMY_IDENTIFIER_TRIMMED));
   }
 
   private static void assertRangeWithinDocument(ProperTextRange editRange, Document document) {

@@ -47,4 +47,8 @@ public class ClientId {
   public static ClientId getCurrent() {
     return ourLocal;
   }
+
+  public static boolean isCurrentlyUnderLocalId() {
+    return true;
+  }
 }

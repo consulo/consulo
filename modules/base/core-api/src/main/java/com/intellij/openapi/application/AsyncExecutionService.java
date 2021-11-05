@@ -2,9 +2,8 @@
 package com.intellij.openapi.application;
 
 import com.intellij.openapi.components.ServiceManager;
-import org.jetbrains.annotations.NotNull;
-
 import javax.annotation.Nonnull;
+
 import java.util.concurrent.Callable;
 
 /**
@@ -18,8 +17,8 @@ public abstract class AsyncExecutionService {
   @Nonnull
   protected abstract AppUIExecutor createUIExecutor(@Nonnull ModalityState modalityState);
 
-  @NotNull
-  protected abstract AppUIExecutor createWriteThreadExecutor(@NotNull ModalityState modalityState);
+  @Nonnull
+  protected abstract AppUIExecutor createWriteThreadExecutor(@Nonnull ModalityState modalityState);
 
   @Nonnull
   protected abstract <T> NonBlockingReadAction<T> buildNonBlockingReadAction(@Nonnull Callable<T> computation);

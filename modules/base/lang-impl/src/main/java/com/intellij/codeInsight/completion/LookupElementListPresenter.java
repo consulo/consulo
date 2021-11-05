@@ -2,7 +2,8 @@
 package com.intellij.codeInsight.completion;
 
 import com.intellij.codeInsight.lookup.LookupElement;
-import com.intellij.codeInsight.lookup.impl.LookupImpl;
+import com.intellij.codeInsight.lookup.LookupFocusDegree;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -25,7 +26,7 @@ public interface LookupElementListPresenter {
 
   int getLastVisibleIndex();
 
-  LookupImpl.FocusDegree getFocusDegree();
+  LookupFocusDegree getLookupFocusDegree();
 
   boolean isShown();
 }

@@ -17,39 +17,14 @@
 package com.intellij.codeInsight;
 
 import com.intellij.codeInsight.intention.FileModifier;
-import com.intellij.openapi.application.Application;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiFile;
-import consulo.annotation.DeprecationInfo;
-import consulo.annotation.access.RequiredWriteAction;
 import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
 
 public interface CodeInsightActionHandler extends FileModifier {
-  abstract class WriteActionAdapter implements CodeInsightActionHandler{
-    @Override
-    @RequiredUIAccess
-    public final void invoke(@Nonnull final Project project, @Nonnull final Editor editor, @Nonnull final PsiFile file) {
-      Application.get().runWriteAction(() -> invokeInWriteAction(project, editor, file));
-    }
-
-    @RequiredWriteAction
-    public abstract void invokeInWriteAction(@Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiFile file);
-
-    @Override
-    public final boolean startInWriteAction() {
-      return false;
-    }
-  }
-
   @RequiredUIAccess
   void invoke(@Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiFile file);
-
-  @Deprecated
-  @DeprecationInfo("Please return 'false' always, if u need wrap into write action - use WriteActionAdapter")
-  default boolean startInWriteAction() {
-    return true;
-  }
 }

@@ -23,7 +23,7 @@ public class InternalStdFileTypes {
   private InternalStdFileTypes() { }
 
   public static final LanguageFileType JAVA = (LanguageFileType)FileTypeManager.getInstance().getStdFileType("JAVA");
-  public static final FileType CLASS = FileTypeManager.getInstance().getStdFileType("CLASS");
+  //public static final FileType CLASS = FileTypeManager.getInstance().getStdFileType("CLASS");
   //public static final LanguageFileType JSP = (LanguageFileType)FileTypeManager.getInstance().getStdFileType("JSP");
   //public static final LanguageFileType JSPX = (LanguageFileType)FileTypeManager.getInstance().getStdFileType("JSPX");
   public static final LanguageFileType XML = (LanguageFileType)FileTypeManager.getInstance().getStdFileType("XML");

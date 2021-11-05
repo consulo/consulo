@@ -20,7 +20,7 @@ import com.intellij.openapi.fileTypes.LanguageFileType;
 import com.intellij.openapi.fileTypes.SyntaxHighlighter;
 import com.intellij.openapi.fileTypes.SyntaxHighlighterFactory;
 import com.intellij.psi.PsiFile;
-import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 
 /**
@@ -29,14 +29,14 @@ import javax.annotation.Nonnull;
 public abstract class FileTypeBasedContextType extends TemplateContextType {
   private final LanguageFileType myFileType;
 
-  protected FileTypeBasedContextType(@Nonnull @NonNls String id, @Nonnull String presentableName, @Nonnull LanguageFileType fileType) {
+  protected FileTypeBasedContextType(@Nonnull String id, @Nonnull String presentableName, @Nonnull LanguageFileType fileType) {
     super(id, presentableName);
     myFileType = fileType;
   }
 
   @Override
-  public boolean isInContext(@Nonnull final PsiFile file, final int offset) {
-    return myFileType == file.getFileType();
+  public boolean isInContext(@Nonnull TemplateActionContext templateActionContext) {
+    return myFileType == templateActionContext.getFile().getFileType();
   }
 
   @Override

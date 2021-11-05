@@ -52,12 +52,7 @@ public class PostfixTemplateLookupActionProvider implements LookupActionProvider
               if(childConfigurable == null) {
                 return;
               }
-              ShowSettingsUtil.getInstance().editConfigurable(project, childConfigurable, new Runnable() {
-                @Override
-                public void run() {
-                  childConfigurable.focusTemplate(template);
-                }
-              });
+              ShowSettingsUtil.getInstance().editConfigurable(project, childConfigurable, () -> childConfigurable.focusTemplate(template));
             }
           });
           return Result.HIDE_LOOKUP;

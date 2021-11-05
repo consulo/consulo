@@ -30,7 +30,6 @@ import com.intellij.openapi.command.UndoConfirmationPolicy;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.actionSystem.DocCommandGroupId;
-import com.intellij.openapi.fileTypes.InternalStdFileTypes;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Condition;
@@ -45,7 +44,6 @@ import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -250,7 +248,7 @@ public abstract class BaseRefactoringAction extends AnAction implements UpdateIn
   }
 
   protected boolean isAvailableForLanguage(Language language) {
-    return language.isKindOf(InternalStdFileTypes.JAVA.getLanguage());
+    return true;
   }
 
   protected boolean isAvailableForFile(PsiFile file) {

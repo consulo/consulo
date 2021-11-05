@@ -1,32 +1,17 @@
-/*
- * Copyright 2000-2014 JetBrains s.r.o.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
 package com.intellij.codeInsight.generation.surroundWith;
 
 import com.intellij.codeInsight.CodeInsightActionHandler;
 import com.intellij.codeInsight.CodeInsightBundle;
-import com.intellij.codeInsight.CodeInsightUtilBase;
 import com.intellij.codeInsight.hint.HintManager;
-import com.intellij.codeInsight.template.CustomLiveTemplate;
 import com.intellij.codeInsight.template.TemplateManager;
-import com.intellij.codeInsight.template.impl.InvokeTemplateAction;
-import com.intellij.codeInsight.template.impl.TemplateImpl;
-import com.intellij.codeInsight.template.impl.TemplateManagerImpl;
-import com.intellij.codeInsight.template.impl.WrapWithCustomTemplateAction;
+import com.intellij.codeInsight.template.impl.LiveTemplatesConfigurable;
+import com.intellij.codeInsight.template.impl.SurroundWithTemplateHandler;
 import com.intellij.ide.DataManager;
+import com.intellij.ide.IdeBundle;
+import com.intellij.idea.ActionsBundle;
+import com.intellij.lang.LangBundle;
 import com.intellij.lang.Language;
 import com.intellij.lang.LanguageSurrounders;
 import com.intellij.lang.folding.CustomFoldingSurroundDescriptor;
@@ -34,13 +19,8 @@ import com.intellij.lang.surroundWith.SurroundDescriptor;
 import com.intellij.lang.surroundWith.Surrounder;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.Result;
 import com.intellij.openapi.command.WriteCommandAction;
-import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.editor.LogicalPosition;
-import com.intellij.openapi.editor.ScrollType;
-import com.intellij.openapi.editor.SelectionModel;
-import com.intellij.openapi.extensions.Extensions;
+import com.intellij.openapi.editor.*;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.options.ShowSettingsUtil;
 import com.intellij.openapi.project.Project;
@@ -51,19 +31,15 @@ import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.refactoring.rename.inplace.InplaceRefactoring;
-import com.intellij.util.IncorrectOperationException;
-import com.intellij.util.containers.ContainerUtil;
+import com.intellij.util.DocumentUtil;
+import com.intellij.util.text.CharArrayUtil;
 import com.intellij.util.ui.UIUtil;
-import consulo.logging.Logger;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import java.util.*;
 
 public class SurroundWithHandler implements CodeInsightActionHandler {
-  private static final Logger LOG = Logger.getInstance(SurroundWithHandler.class);
-  private static final String CHOOSER_TITLE = CodeInsightBundle.message("surround.with.chooser.title");
   public static final TextRange CARET_IS_OK = new TextRange(0, 0);
 
   @Override
@@ -73,13 +49,13 @@ public class SurroundWithHandler implements CodeInsightActionHandler {
 
   @Override
   public boolean startInWriteAction() {
-    return true;
+    return false;
   }
 
   public static void invoke(@Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiFile file, Surrounder surrounder) {
-    if (!CodeInsightUtilBase.prepareEditorForWrite(editor)) return;
+    if (!EditorModificationUtil.checkModificationAllowed(editor)) return;
     if (file instanceof PsiCompiledElement) {
-      HintManager.getInstance().showErrorHint(editor, "Can't modify decompiled code");
+      HintManager.getInstance().showErrorHint(editor, LangBundle.message("hint.text.can.t.modify.decompiled.code"));
       return;
     }
 
@@ -88,21 +64,19 @@ public class SurroundWithHandler implements CodeInsightActionHandler {
       showPopup(editor, applicable);
     }
     else if (!ApplicationManager.getApplication().isUnitTestMode()) {
-      HintManager.getInstance().showErrorHint(editor, "Couldn't find Surround With variants applicable to the current context");
+      HintManager.getInstance().showErrorHint(editor, LangBundle.message("hint.text.couldn.t.find.surround"));
     }
   }
 
   @Nullable
-  public static List<AnAction> buildSurroundActions(final Project project, final Editor editor, PsiFile file, @Nullable Surrounder surrounder){
+  public static List<AnAction> buildSurroundActions(final Project project, final Editor editor, PsiFile file, @Nullable Surrounder surrounder) {
     SelectionModel selectionModel = editor.getSelectionModel();
     boolean hasSelection = selectionModel.hasSelection();
     if (!hasSelection) {
-      selectionModel.selectLineAtCaret();
+      selectLogicalLineContentsAtCaret(editor);
     }
     int startOffset = selectionModel.getSelectionStart();
     int endOffset = selectionModel.getSelectionEnd();
-
-    PsiDocumentManager.getInstance(project).commitAllDocuments();
 
     PsiElement element1 = file.findElementAt(startOffset);
     PsiElement element2 = file.findElementAt(endOffset - 1);
@@ -110,7 +84,7 @@ public class SurroundWithHandler implements CodeInsightActionHandler {
     if (element1 == null || element2 == null) return null;
 
     TextRange textRange = new TextRange(startOffset, endOffset);
-    for(SurroundWithRangeAdjuster adjuster: Extensions.getExtensions(SurroundWithRangeAdjuster.EP_NAME)) {
+    for (SurroundWithRangeAdjuster adjuster : SurroundWithRangeAdjuster.EP_NAME.getExtensionList()) {
       textRange = adjuster.adjustSurroundWithRange(file, textRange, hasSelection);
       if (textRange == null) return null;
     }
@@ -121,14 +95,13 @@ public class SurroundWithHandler implements CodeInsightActionHandler {
     final Language baseLanguage = file.getViewProvider().getBaseLanguage();
     assert element1 != null;
     final Language l = element1.getParent().getLanguage();
-    List<SurroundDescriptor> surroundDescriptors = new ArrayList<SurroundDescriptor>();
 
-    surroundDescriptors.addAll(LanguageSurrounders.INSTANCE.allForLanguage(l));
+    List<SurroundDescriptor> surroundDescriptors = new ArrayList<>(LanguageSurrounders.INSTANCE.allForLanguage(l));
     if (l != baseLanguage) surroundDescriptors.addAll(LanguageSurrounders.INSTANCE.allForLanguage(baseLanguage));
     surroundDescriptors.add(CustomFoldingSurroundDescriptor.INSTANCE);
 
     int exclusiveCount = 0;
-    List<SurroundDescriptor> exclusiveSurroundDescriptors = new ArrayList<SurroundDescriptor>();
+    List<SurroundDescriptor> exclusiveSurroundDescriptors = new ArrayList<>();
     for (SurroundDescriptor sd : surroundDescriptors) {
       if (sd.isExclusive()) {
         exclusiveCount++;
@@ -145,7 +118,7 @@ public class SurroundWithHandler implements CodeInsightActionHandler {
       return null;
     }
 
-    Map<Surrounder, PsiElement[]> surrounders = ContainerUtil.newLinkedHashMap();
+    Map<Surrounder, PsiElement[]> surrounders = new LinkedHashMap<>();
     for (SurroundDescriptor descriptor : surroundDescriptors) {
       final PsiElement[] elements = descriptor.getElementsToSurround(file, startOffset, endOffset);
       if (elements.length > 0) {
@@ -153,7 +126,7 @@ public class SurroundWithHandler implements CodeInsightActionHandler {
           assert element != null : "descriptor " + descriptor + " returned null element";
           assert element.isValid() : descriptor;
         }
-        for (Surrounder s: descriptor.getSurrounders()) {
+        for (Surrounder s : descriptor.getSurrounders()) {
           surrounders.put(s, elements);
         }
       }
@@ -161,19 +134,27 @@ public class SurroundWithHandler implements CodeInsightActionHandler {
     return doBuildSurroundActions(project, editor, file, surrounders);
   }
 
+  public static void selectLogicalLineContentsAtCaret(Editor editor) {
+    int caretOffset = editor.getCaretModel().getOffset();
+    Document document = editor.getDocument();
+    CharSequence text = document.getImmutableCharSequence();
+    editor.getSelectionModel().setSelection(CharArrayUtil.shiftForward(text, DocumentUtil.getLineStartOffset(caretOffset, document), " \t"),
+                                            CharArrayUtil.shiftBackward(text, DocumentUtil.getLineEndOffset(caretOffset, document) - 1, " \t") + 1);
+  }
+
   private static void invokeSurrounderInTests(Project project,
                                               Editor editor,
                                               PsiFile file,
                                               Surrounder surrounder,
                                               int startOffset,
-                                              int endOffset, List<SurroundDescriptor> surroundDescriptors) {
+                                              int endOffset, List<? extends SurroundDescriptor> surroundDescriptors) {
     assert ApplicationManager.getApplication().isUnitTestMode();
     for (SurroundDescriptor descriptor : surroundDescriptors) {
       final PsiElement[] elements = descriptor.getElementsToSurround(file, startOffset, endOffset);
       if (elements.length > 0) {
         for (Surrounder descriptorSurrounder : descriptor.getSurrounders()) {
           if (surrounder.getClass().equals(descriptorSurrounder.getClass())) {
-            doSurround(project, editor, surrounder, elements);
+            WriteCommandAction.runWriteCommandAction(project, () -> doSurround(project, editor, surrounder, elements));
             return;
           }
         }
@@ -184,53 +165,39 @@ public class SurroundWithHandler implements CodeInsightActionHandler {
   private static void showPopup(Editor editor, List<AnAction> applicable) {
     DataContext context = DataManager.getInstance().getDataContext(editor.getContentComponent());
     JBPopupFactory.ActionSelectionAid mnemonics = JBPopupFactory.ActionSelectionAid.MNEMONICS;
-    DefaultActionGroup group = new DefaultActionGroup(applicable.toArray(new AnAction[applicable.size()]));
-    JBPopupFactory.getInstance().createActionGroupPopup(CHOOSER_TITLE, group, context, mnemonics, true).showInBestPositionFor(editor);
+    DefaultActionGroup group = new DefaultActionGroup(applicable.toArray(AnAction.EMPTY_ARRAY));
+    JBPopupFactory.getInstance().createActionGroupPopup(CodeInsightBundle.message("surround.with.chooser.title"), group, context, mnemonics, true).showInBestPositionFor(editor);
   }
 
   static void doSurround(final Project project, final Editor editor, final Surrounder surrounder, final PsiElement[] elements) {
-    if (!FileDocumentManager.getInstance().requestWriting(editor.getDocument(), project)) {
-      return;
+    PsiDocumentManager.getInstance(project).commitAllDocuments();
+    int col = editor.getCaretModel().getLogicalPosition().column;
+    int line = editor.getCaretModel().getLogicalPosition().line;
+    if (!editor.getCaretModel().supportsMultipleCarets()) {
+      LogicalPosition pos = new LogicalPosition(0, 0);
+      editor.getCaretModel().moveToLogicalPosition(pos);
     }
-
-    try {
-      PsiDocumentManager.getInstance(project).commitAllDocuments();
-      int col = editor.getCaretModel().getLogicalPosition().column;
-      int line = editor.getCaretModel().getLogicalPosition().line;
-      if (!editor.getCaretModel().supportsMultipleCarets()) {
-        LogicalPosition pos = new LogicalPosition(0, 0);
-        editor.getCaretModel().moveToLogicalPosition(pos);
+    TextRange range = surrounder.surroundElements(project, editor, elements);
+    if (range != CARET_IS_OK) {
+      if (TemplateManager.getInstance(project).getActiveTemplate(editor) == null && InplaceRefactoring.getActiveInplaceRenamer(editor) == null) {
+        LogicalPosition pos1 = new LogicalPosition(line, col);
+        editor.getCaretModel().moveToLogicalPosition(pos1);
       }
-      TextRange range = surrounder.surroundElements(project, editor, elements);
-      if (range != CARET_IS_OK) {
-        if (TemplateManager.getInstance(project).getActiveTemplate(editor) == null &&
-            InplaceRefactoring.getActiveInplaceRenamer(editor) == null) {
-          LogicalPosition pos1 = new LogicalPosition(line, col);
-          editor.getCaretModel().moveToLogicalPosition(pos1);
-        }
-        if (range != null) {
-          int offset = range.getStartOffset();
-          editor.getCaretModel().removeSecondaryCarets();
-          editor.getCaretModel().moveToOffset(offset);
-          editor.getScrollingModel().scrollToCaret(ScrollType.RELATIVE);
-          editor.getSelectionModel().setSelection(range.getStartOffset(), range.getEndOffset());
-        }
+      if (range != null) {
+        int offset = range.getStartOffset();
+        editor.getCaretModel().removeSecondaryCarets();
+        editor.getCaretModel().moveToOffset(offset);
+        editor.getScrollingModel().scrollToCaret(ScrollType.RELATIVE);
+        editor.getSelectionModel().setSelection(range.getStartOffset(), range.getEndOffset());
       }
-    }
-    catch (IncorrectOperationException e) {
-      LOG.error(e);
     }
   }
 
   @Nullable
-  private static List<AnAction> doBuildSurroundActions(Project project,
-                                                       Editor editor,
-                                                       PsiFile file,
-                                                       Map<Surrounder, PsiElement[]> surrounders) {
-    final List<AnAction> applicable = new ArrayList<AnAction>();
-    boolean hasEnabledSurrounders = false;
+  private static List<AnAction> doBuildSurroundActions(Project project, Editor editor, PsiFile file, Map<Surrounder, PsiElement[]> surrounders) {
+    List<AnAction> applicable = new ArrayList<>();
 
-    Set<Character> usedMnemonicsSet = new HashSet<Character>();
+    Set<Character> usedMnemonicsSet = new HashSet<>();
 
     int index = 0;
     for (Map.Entry<Surrounder, PsiElement[]> entry : surrounders.entrySet()) {
@@ -250,32 +217,17 @@ public class SurroundWithHandler implements CodeInsightActionHandler {
         index++;
         usedMnemonicsSet.add(Character.toUpperCase(mnemonic));
         applicable.add(new InvokeSurrounderAction(surrounder, project, editor, elements, mnemonic));
-        hasEnabledSurrounders = true;
       }
     }
 
-    List<CustomLiveTemplate> customTemplates = TemplateManagerImpl.listApplicableCustomTemplates(editor, file, true);
-    List<TemplateImpl> templates = TemplateManagerImpl.listApplicableTemplateWithInsertingDummyIdentifier(editor, file, true);
-
-    if (!templates.isEmpty() || !customTemplates.isEmpty()) {
-      applicable.add(new AnSeparator("Live templates"));
-    }
-
-    for (TemplateImpl template : templates) {
-      applicable.add(new InvokeTemplateAction(template, editor, project, usedMnemonicsSet));
-      hasEnabledSurrounders = true;
-    }
-
-    for (CustomLiveTemplate customTemplate : customTemplates) {
-      applicable.add(new WrapWithCustomTemplateAction(customTemplate, editor, file, usedMnemonicsSet));
-      hasEnabledSurrounders = true;
-    }
-
-    if (!templates.isEmpty() || !customTemplates.isEmpty()) {
+    List<AnAction> templateGroup = SurroundWithTemplateHandler.createActionGroup(editor, file, usedMnemonicsSet);
+    if (!templateGroup.isEmpty()) {
+      applicable.add(new AnSeparator(IdeBundle.messagePointer("action.Anonymous.text.live.templates")));
+      applicable.addAll(templateGroup);
       applicable.add(AnSeparator.getInstance());
       applicable.add(new ConfigureTemplatesAction());
     }
-    return hasEnabledSurrounders ? applicable : null;
+    return applicable.isEmpty() ? null : applicable;
   }
 
   private static class InvokeSurrounderAction extends AnAction {
@@ -284,7 +236,7 @@ public class SurroundWithHandler implements CodeInsightActionHandler {
     private final Editor myEditor;
     private final PsiElement[] myElements;
 
-    public InvokeSurrounderAction(Surrounder surrounder, Project project, Editor editor, PsiElement[] elements, char mnemonic) {
+    InvokeSurrounderAction(Surrounder surrounder, Project project, Editor editor, PsiElement[] elements, char mnemonic) {
       super(UIUtil.MNEMONIC + String.valueOf(mnemonic) + ". " + surrounder.getTemplateDescription());
       mySurrounder = surrounder;
       myProject = project;
@@ -293,24 +245,28 @@ public class SurroundWithHandler implements CodeInsightActionHandler {
     }
 
     @Override
-    public void actionPerformed(AnActionEvent e) {
-      new WriteCommandAction(myProject) {
-        @Override
-        protected void run(@Nonnull Result result) throws Exception {
-          doSurround(myProject, myEditor, mySurrounder, myElements);
-        }
-      }.execute();
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+      if (!FileDocumentManager.getInstance().requestWriting(myEditor.getDocument(), myProject)) {
+        return;
+      }
+
+      Language language = Language.ANY;
+      if (myElements != null && myElements.length != 0) {
+        language = myElements[0].getLanguage();
+      }
+      WriteCommandAction.runWriteCommandAction(myProject, () -> doSurround(myProject, myEditor, mySurrounder, myElements));
+      //SurroundWithLogger.logSurrounder(mySurrounder, language, myProject);
     }
   }
 
-  private static class ConfigureTemplatesAction extends AnAction {
+  private static final class ConfigureTemplatesAction extends AnAction {
     private ConfigureTemplatesAction() {
-      super("Configure Live Templates...");
+      super(ActionsBundle.message("action.ConfigureTemplatesAction.text"));
     }
 
     @Override
-    public void actionPerformed(AnActionEvent e) {
-      ShowSettingsUtil.getInstance().showSettingsDialog(e.getData(CommonDataKeys.PROJECT), "Live Templates");
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+      ShowSettingsUtil.getInstance().showSettingsDialog(e.getData(CommonDataKeys.PROJECT), LiveTemplatesConfigurable.displayName());
     }
   }
 }

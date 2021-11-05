@@ -65,7 +65,7 @@ public class CamelHumpMatcher extends PrefixMatcher {
     return false;
   }
 
-  boolean isTypoTolerant() {
+  public boolean isTypoTolerant() {
     return myTypoTolerant;
   }
 

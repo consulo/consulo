@@ -17,7 +17,8 @@ package com.intellij.testFramework;
 
 import com.intellij.injected.editor.VirtualFileWindow;
 import com.intellij.openapi.fileTypes.FileType;
-import com.intellij.openapi.fileTypes.InternalStdFileTypes;
+import com.intellij.openapi.fileTypes.FileTypeManager;
+import com.intellij.openapi.fileTypes.LanguageFileType;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileFilter;
 
@@ -30,6 +31,9 @@ import java.util.Set;
  * @author cdr
  */
 public class FileTreeAccessFilter implements VirtualFileFilter {
+  private static final FileType CLASS = FileTypeManager.getInstance().getStdFileType("CLASS");
+  private static final LanguageFileType JAVA = (LanguageFileType)FileTypeManager.getInstance().getStdFileType("JAVA");
+
   protected final Set<VirtualFile> myAddedClasses = new HashSet<VirtualFile>();
   private boolean myTreeAccessAllowed;
 
@@ -40,7 +44,7 @@ public class FileTreeAccessFilter implements VirtualFileFilter {
     if (myAddedClasses.contains(file) || myTreeAccessAllowed) return false;
 
     FileType fileType = file.getFileType();
-    return (fileType == InternalStdFileTypes.JAVA || fileType == InternalStdFileTypes.CLASS) && !file.getName().equals("package-info.java");
+    return (fileType == JAVA || fileType == CLASS) && !file.getName().equals("package-info.java");
   }
 
   public void allowTreeAccessForFile(@Nonnull VirtualFile file) {
