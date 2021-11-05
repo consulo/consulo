@@ -20,15 +20,26 @@ import com.intellij.codeInsight.daemon.impl.analysis.HighlightInfoHolder;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
+
 import javax.annotation.Nonnull;
 
 public interface HighlightVisitor {
   ExtensionPointName<HighlightVisitor> EP_HIGHLIGHT_VISITOR = ExtensionPointName.create("com.intellij.highlightVisitor");
 
   boolean suitableForFile(@Nonnull PsiFile file);
+
   void visit(@Nonnull PsiElement element);
+
   boolean analyze(@Nonnull PsiFile file, final boolean updateWholeFile, @Nonnull HighlightInfoHolder holder, @Nonnull Runnable action);
+
   @Nonnull
   HighlightVisitor clone();
-  int order();
+
+  /**
+   * @deprecated unused, left for binary compatibility
+   */
+  @Deprecated
+  default int order() {
+    return -1;
+  }
 }

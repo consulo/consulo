@@ -18,6 +18,7 @@ package com.intellij.lang.annotation;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.PsiFile;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Implemented by a custom language plugin to process the files in a language by an
@@ -35,7 +36,7 @@ public abstract class ExternalAnnotator<InitialInfoType, AnnotationResultType> {
    * @param file file to annotate
    * @return see {@link ExternalAnnotator#collectInformation(PsiFile, Editor, boolean)}
    */
-  @javax.annotation.Nullable
+  @Nullable
   public InitialInfoType collectInformation(@Nonnull PsiFile file) {
     return null;
   }
@@ -49,7 +50,7 @@ public abstract class ExternalAnnotator<InitialInfoType, AnnotationResultType> {
    * @param hasErrors indicates if file has errors detected by preceding analyses
    * @return information to pass to {@link ExternalAnnotator#doAnnotate(InitialInfoType)} or {@code null} if annotation should be skipped
    */
-  @javax.annotation.Nullable
+  @Nullable
   public InitialInfoType collectInformation(@Nonnull PsiFile file, @Nonnull Editor editor, boolean hasErrors) {
     return hasErrors ? null : collectInformation(file);
   }
@@ -60,7 +61,7 @@ public abstract class ExternalAnnotator<InitialInfoType, AnnotationResultType> {
    * @param collectedInfo initial information gathered by {@link ExternalAnnotator#collectInformation(PsiFile, Editor, boolean)}
    * @return annotation result to pass to {@link ExternalAnnotator#apply(PsiFile, AnnotationResultType, AnnotationHolder)}
    */
-  @javax.annotation.Nullable
+  @Nullable
   public AnnotationResultType doAnnotate(InitialInfoType collectedInfo) {
     return null;
   }

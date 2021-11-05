@@ -28,10 +28,11 @@ import javax.annotation.Nullable;
 import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 
 /**
  * @author mike
- *
+ * <p>
  * Prefer {@link consulo.extensions.StrictExtensionPointName}
  */
 public class ExtensionPointName<T> {
@@ -126,6 +127,26 @@ public class ExtensionPointName<T> {
         PluginExceptionUtil.logPluginError(LOG, e.getMessage(), e, value.getClass());
       }
     });
+  }
+
+  @Nullable
+  public T findFirstSafe(@Nonnull ComponentManager componentManager, @Nonnull Predicate<T> predicate) {
+    for (T extension : getExtensionList(componentManager)) {
+      try {
+        if (predicate.test(extension)) {
+          return extension;
+        }
+      }
+      catch (Throwable e) {
+        PluginExceptionUtil.logPluginError(LOG, e.getMessage(), e, extension.getClass());
+      }
+    }
+    return null;
+  }
+
+  @Nullable
+  public T findFirstSafe(@Nonnull Predicate<T> predicate) {
+    return findFirstSafe(Application.get(), predicate);
   }
 
   public void processWithPluginDescriptor(@Nonnull ComponentManager manager, @Nonnull BiConsumer<? super T, ? super PluginDescriptor> consumer) {

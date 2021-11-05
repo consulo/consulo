@@ -26,10 +26,11 @@ import consulo.util.collection.primitive.ints.IntLists;
 import consulo.util.collection.primitive.ints.IntMaps;
 import consulo.util.collection.primitive.longs.ConcurrentLongObjectMap;
 import consulo.util.collection.primitive.longs.LongMaps;
-import gnu.trove.*;
+import gnu.trove.TIntArrayList;
+import gnu.trove.TIntProcedure;
 import org.jetbrains.annotations.Contract;
-
 import javax.annotation.Nonnull;
+
 import javax.annotation.Nullable;
 import java.lang.reflect.Array;
 import java.util.*;
@@ -1368,6 +1369,20 @@ public class ContainerUtil extends ContainerUtilRt {
   public static <T, U extends T> U findInstance(@Nonnull Iterator<? extends T> iterator, @Nonnull Class<? extends U> aClass) {
     //noinspection unchecked
     return (U)find(iterator, FilteringIterator.instanceOf(aClass));
+  }
+
+  @Contract(pure = true)
+  @Nonnull
+  public static <T> List<T> filterIsInstance(@Nonnull Collection<?> collection, final @Nonnull Class<? extends T> aClass) {
+    //noinspection unchecked
+    return filter((Collection<T>)collection, Conditions.instanceOf(aClass));
+  }
+
+  @Contract(pure = true)
+  @Nonnull
+  public static <T> List<T> filterIsInstance(@Nonnull final Object[] collection, final @Nonnull Class<? extends T> aClass) {
+    //noinspection unchecked
+    return (List<T>)filter(collection, Conditions.instanceOf(aClass));
   }
 
   @Nullable

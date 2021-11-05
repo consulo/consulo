@@ -17,6 +17,7 @@
 package com.intellij.codeInspection.ex;
 
 import com.intellij.analysis.AnalysisScope;
+import com.intellij.codeInsight.daemon.impl.DaemonProgressIndicator;
 import com.intellij.codeInspection.*;
 import com.intellij.codeInspection.lang.GlobalInspectionContextExtension;
 import com.intellij.codeInspection.lang.InspectionExtensionsFactory;
@@ -476,5 +477,13 @@ public class GlobalInspectionContextBase extends UserDataHolderBase implements G
   @Nonnull
   public StdJobDescriptors getStdJobDescriptors() {
     return myStdJobDescriptors;
+  }
+
+  public static void assertUnderDaemonProgress() {
+    ProgressIndicator indicator = ProgressIndicatorProvider.getGlobalProgressIndicator();
+    ProgressIndicator original = indicator == null ? null : ProgressWrapper.unwrapAll(indicator);
+    if (!(original instanceof DaemonProgressIndicator)) {
+      throw new IllegalStateException("must be run under DaemonProgressIndicator, but got: " + (original == null ? "null" : ": " + original.getClass()) + ": " + original);
+    }
   }
 }

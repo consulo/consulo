@@ -24,6 +24,7 @@ import consulo.util.dataholder.UserDataHolderEx;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public abstract class RainbowVisitor implements HighlightVisitor {
   private HighlightInfoHolder myHolder;
@@ -55,19 +56,14 @@ public abstract class RainbowVisitor implements HighlightVisitor {
     return true;
   }
 
-  @Override
-  public int order() {
-    return 1;
-  }
-
-  protected void addInfo(@javax.annotation.Nullable HighlightInfo highlightInfo) {
+  protected void addInfo(@Nullable HighlightInfo highlightInfo) {
     myHolder.add(highlightInfo);
   }
 
   protected HighlightInfo getInfo(@Nonnull final PsiElement context,
                                   @Nonnull final PsiElement rainbowElement,
                                   @Nonnull final String name,
-                                  @javax.annotation.Nullable final TextAttributesKey colorKey) {
+                                  @Nullable final TextAttributesKey colorKey) {
     int colorIndex = UsedColors.getOrAddColorIndex((UserDataHolderEx)context, name, getHighlighter().getColorsCount());
     return getHighlighter().getInfo(colorIndex, rainbowElement, colorKey);
   }

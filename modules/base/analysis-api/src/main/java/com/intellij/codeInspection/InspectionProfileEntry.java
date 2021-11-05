@@ -16,7 +16,6 @@
 package com.intellij.codeInspection;
 
 import com.intellij.codeHighlighting.HighlightDisplayLevel;
-import consulo.logging.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.openapi.util.WriteExternalException;
@@ -28,12 +27,13 @@ import com.intellij.util.xmlb.SerializationFilter;
 import com.intellij.util.xmlb.SkipDefaultValuesSerializationFilters;
 import com.intellij.util.xmlb.XmlSerializationException;
 import com.intellij.util.xmlb.XmlSerializer;
+import consulo.logging.Logger;
 import org.jdom.Element;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -47,7 +47,7 @@ import java.util.Set;
  * @since 28-Nov-2005
  */
 @SuppressWarnings("JavadocReference")
-public abstract class InspectionProfileEntry implements BatchSuppressableTool{
+public abstract class InspectionProfileEntry implements BatchSuppressableTool {
   public static final String GENERAL_GROUP_NAME = InspectionsBundle.message("inspection.general.tools.group.name");
 
   private static final Logger LOG = Logger.getInstance(InspectionProfileEntry.class);
@@ -98,9 +98,14 @@ public abstract class InspectionProfileEntry implements BatchSuppressableTool{
   }
 
   interface DefaultNameProvider {
-    @Nullable String getDefaultShortName();
-    @Nullable String getDefaultDisplayName();
-    @Nullable String getDefaultGroupDisplayName();
+    @Nullable
+    String getDefaultShortName();
+
+    @Nullable
+    String getDefaultDisplayName();
+
+    @Nullable
+    String getDefaultGroupDisplayName();
   }
 
   protected volatile DefaultNameProvider myNameProvider = null;
@@ -172,7 +177,7 @@ public abstract class InspectionProfileEntry implements BatchSuppressableTool{
 
   @Nonnull
   public static String getShortName(@Nonnull String className) {
-    return StringUtil.trimEnd(StringUtil.trimEnd(className, "Inspection"),"InspectionBase");
+    return StringUtil.trimEnd(StringUtil.trimEnd(className, "Inspection"), "InspectionBase");
   }
 
   /**
@@ -196,6 +201,7 @@ public abstract class InspectionProfileEntry implements BatchSuppressableTool{
 
   /**
    * This method is called each time UI is shown.
+   *
    * @return null if no UI options required.
    */
   @Nullable
@@ -369,8 +375,13 @@ public abstract class InspectionProfileEntry implements BatchSuppressableTool{
       if (descriptionUrl == null) return null;
       return ResourceUtil.loadText(descriptionUrl);
     }
-    catch (IOException ignored) { }
+    catch (IOException ignored) {
+    }
 
     return null;
+  }
+
+  public static String getGeneralGroupName() {
+    return InspectionsBundle.message("inspection.general.tools.group.name");
   }
 }

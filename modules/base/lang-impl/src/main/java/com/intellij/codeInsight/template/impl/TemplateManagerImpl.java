@@ -49,9 +49,9 @@ import consulo.disposer.Disposer;
 import consulo.util.dataholder.Key;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
-import javax.annotation.Nonnull;
 import org.jetbrains.annotations.TestOnly;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
 import java.util.concurrent.ConcurrentMap;
@@ -265,7 +265,7 @@ public class TemplateManagerImpl extends TemplateManager implements Disposable {
     Map<TemplateImpl, String> template2argument = findMatchingTemplates(file, editor, shortcutChar, TemplateSettings.getInstance());
     TemplateActionContext templateActionContext = TemplateActionContext.expanding(file, editor);
     boolean multiCaretMode = editor.getCaretModel().getCaretCount() > 1;
-    List<CustomLiveTemplate> customCandidates = ContainerUtil.findAll(CustomLiveTemplate.EP_NAME.getExtensions(), customLiveTemplate -> shortcutChar == customLiveTemplate.getShortcut() &&
+    List<CustomLiveTemplate> customCandidates = ContainerUtil.findAll(CustomLiveTemplate.EP_NAME.getExtensionList(), customLiveTemplate -> shortcutChar == customLiveTemplate.getShortcut() &&
                                                                                                                                         (!multiCaretMode ||
                                                                                                                                          supportsMultiCaretMode(customLiveTemplate)) &&
                                                                                                                                         isApplicable(customLiveTemplate, templateActionContext));
