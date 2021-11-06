@@ -56,17 +56,12 @@ public class ExtensionsAreaImpl {
 
   public void registerExtensionPoint(@Nonnull PluginDescriptor pluginDescriptor, @Nonnull SimpleXmlElement extensionPointElement) {
     final String pluginId = pluginDescriptor.getPluginId().getIdString();
-    String epName = extensionPointElement.getAttributeValue("qualifiedName");
-    if (epName == null) {
-      final String name = extensionPointElement.getAttributeValue("name");
-      if (name == null) {
-        throw new RuntimeException("'name' attribute not specified for extension point in '" + pluginId + "' plugin");
-      }
-      epName = pluginId + '.' + name;
+    final String name = extensionPointElement.getAttributeValue("name");
+    if (name == null) {
+      throw new RuntimeException("'name' attribute not specified for extension point in '" + pluginId + "' plugin");
     }
-    else {
-      LOG.warn("Using 'qualifiedName' which is deprecated. " + extensionPointElement + ". PluginId: " + pluginId);
-    }
+
+    String epName = pluginId + '.' + name;
 
     String beanClassName = extensionPointElement.getAttributeValue("beanClass");
     String interfaceClassName = extensionPointElement.getAttributeValue("interface");
