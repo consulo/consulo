@@ -15,7 +15,6 @@
  */
 package consulo.bundle.impl;
 
-import consulo.logging.Logger;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.SdkModificator;
 import com.intellij.openapi.projectRoots.SdkType;
@@ -31,40 +30,33 @@ import java.util.Collection;
  * @since 10.02.15
  */
 public class DefaultPredefinedBundlesProvider extends PredefinedBundlesProvider {
-  private static final Logger LOG = Logger.getInstance(DefaultPredefinedBundlesProvider.class);
-
   @Override
   public void createBundles(@Nonnull Context context) {
-    for (SdkType sdkType : SdkType.EP_NAME.getExtensionList()) {
-      try {
-        if (sdkType.canCreatePredefinedSdks()) {
-          Collection<String> paths = sdkType.suggestHomePaths();
+    SdkType.EP_NAME.forEachExtensionSafe(sdkType -> {
+      if (sdkType.canCreatePredefinedSdks()) {
+        Collection<String> paths = sdkType.suggestHomePaths();
 
-          for (String path : paths) {
-            path = sdkType.adjustSelectedSdkHome(path);
+        for (String path : paths) {
+          path = sdkType.adjustSelectedSdkHome(path);
 
-            if (sdkType.isValidSdkHome(path)) {
-              VirtualFile dirPath = LocalFileSystem.getInstance().findFileByPath(path);
-              if (dirPath == null) {
-                continue;
-              }
-
-              String sdkPath = sdkType.sdkPath(dirPath);
-
-              Sdk sdk = context.createSdk(sdkType, sdkPath);
-              SdkModificator sdkModificator = sdk.getSdkModificator();
-              sdkModificator.setHomePath(sdkPath);
-              sdkModificator.setVersionString(sdkType.getVersionString(sdkPath));
-              sdkModificator.commitChanges();
-
-              sdkType.setupSdkPaths(sdk);
+          if (sdkType.isValidSdkHome(path)) {
+            VirtualFile dirPath = LocalFileSystem.getInstance().findFileByPath(path);
+            if (dirPath == null) {
+              continue;
             }
+
+            String sdkPath = sdkType.sdkPath(dirPath);
+
+            Sdk sdk = context.createSdk(sdkType, sdkPath);
+            SdkModificator sdkModificator = sdk.getSdkModificator();
+            sdkModificator.setHomePath(sdkPath);
+            sdkModificator.setVersionString(sdkType.getVersionString(sdkPath));
+            sdkModificator.commitChanges();
+
+            sdkType.setupSdkPaths(sdk);
           }
         }
       }
-      catch (Error e) {
-        LOG.error(e);
-      }
-    }
+    });
   }
 }
