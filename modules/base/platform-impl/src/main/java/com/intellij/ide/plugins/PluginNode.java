@@ -73,7 +73,7 @@ public class PluginNode extends PluginDescriptorStub {
 
   private String myChecksumSha3_256;
 
-  private Set<String> myTags = Collections.emptySet();
+  private final Set<String> myTags = new TreeSet<>();
 
   public PluginNode() {
   }
@@ -113,7 +113,7 @@ public class PluginNode extends PluginDescriptorStub {
     }
 
     PluginJsonNode.Permission[] permissions = jsonPlugin.permissions;
-    if(permissions != null) {
+    if (permissions != null) {
       myPermissions = new HashMap<>();
       for (PluginJsonNode.Permission permission : permissions) {
         try {
@@ -128,9 +128,12 @@ public class PluginNode extends PluginDescriptorStub {
     }
 
     String[] tags = jsonPlugin.tags;
-    if(tags != null) {
-      myTags = new TreeSet<>();
+    if (tags != null) {
       Collections.addAll(myTags, tags);
+    }
+
+    if (jsonPlugin.experimental) {
+      myTags.add(EXPERIMENTAL_TAG);
     }
   }
 

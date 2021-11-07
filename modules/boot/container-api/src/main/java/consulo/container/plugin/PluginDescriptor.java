@@ -32,6 +32,8 @@ import java.util.Set;
 public interface PluginDescriptor {
   PluginDescriptor[] EMPTY_ARRAY = new PluginDescriptor[0];
 
+  String EXPERIMENTAL_TAG = "experimental";
+
   @Nonnull
   PluginId getPluginId();
 

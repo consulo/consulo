@@ -176,6 +176,13 @@ public class PluginDescriptorImpl extends PluginDescriptorStub {
       myTags = Collections.unmodifiableSet(pluginBean.tags);
     }
 
+    if(pluginBean.experimental) {
+      Set<String> oldTags = new TreeSet<String>(myTags);
+      oldTags.add(EXPERIMENTAL_TAG);
+
+      myTags = Collections.unmodifiableSet(oldTags);
+    }
+
     for (Map.Entry<String, Set<String>> permissionEntry : pluginBean.permissions.entrySet()) {
       try {
         PluginPermissionType permissionType = PluginPermissionType.valueOf(permissionEntry.getKey());
