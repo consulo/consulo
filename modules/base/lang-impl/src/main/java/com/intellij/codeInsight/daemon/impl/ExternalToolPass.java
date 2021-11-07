@@ -31,11 +31,10 @@ import com.intellij.openapi.editor.event.DocumentListener;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.psi.FileViewProvider;
 import com.intellij.psi.PsiFile;
-import java.util.HashMap;
 import com.intellij.util.ui.update.Update;
-import javax.annotation.Nonnull;
 import consulo.annotation.access.RequiredReadAction;
 
+import javax.annotation.Nonnull;
 import java.util.*;
 
 /**
@@ -76,7 +75,7 @@ public class ExternalToolPass extends TextEditorHighlightingPass {
     myFile = file;
     myStartOffset = startOffset;
     myEndOffset = endOffset;
-    myAnnotationHolder = new AnnotationHolderImpl(new AnnotationSession(file));
+    myAnnotationHolder = new AnnotationHolderImpl(new AnnotationSession(file), false);
 
     myAnnotator2DataMap = new HashMap<ExternalAnnotator, MyData>();
     myExternalToolPassFactory = externalToolPassFactory;
