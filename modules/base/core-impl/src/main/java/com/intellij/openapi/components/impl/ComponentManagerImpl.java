@@ -281,7 +281,7 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
   private void loadServices(List<Class> notLazyServices, InjectingContainerBuilder builder) {
     ExtensionPointName<ServiceDescriptor> ep = getServiceExtensionPointName();
     if (ep != null) {
-      ExtensionPointImpl<ServiceDescriptor> extensionPoint = (ExtensionPointImpl<ServiceDescriptor>)myExtensionsArea.getExtensionPoint(ep);
+      ExtensionPointImpl<ServiceDescriptor> extensionPoint = myExtensionsArea.getExtensionPointImpl(ep);
       // there no injector at that level - build it via hardcode
       List<Pair<ServiceDescriptor, PluginDescriptor>> descriptorList = extensionPoint.buildUnsafe(aClass -> new ServiceDescriptor());
       // and cache it

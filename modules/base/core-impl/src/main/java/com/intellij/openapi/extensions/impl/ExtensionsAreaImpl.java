@@ -97,7 +97,7 @@ public class ExtensionsAreaImpl {
     SimpleXmlElement element = extensionInfo.getElement();
 
     ExtensionComponentAdapter adapter;
-    final ExtensionPointImpl extensionPoint = getExtensionPoint(epName);
+    final ExtensionPointImpl extensionPoint = getExtensionPointImpl(epName);
     if (extensionPoint.getKind() == ExtensionPoint.Kind.INTERFACE) {
       String implClass = element.getAttributeValue("implementation");
       if (implClass == null) {
@@ -156,7 +156,7 @@ public class ExtensionsAreaImpl {
 
   public void registerExtensionPoint(@Nonnull String extensionPointName, @Nonnull String extensionPointBeanClass, @Nonnull PluginDescriptor descriptor, @Nonnull ExtensionPoint.Kind kind) {
     if (hasExtensionPoint(extensionPointName)) {
-      final ExtensionPointImpl oldEP = getExtensionPoint(extensionPointName);
+      final ExtensionPointImpl oldEP = getExtensionPointImpl(extensionPointName);
 
       LOG.error("Duplicate registration for EP: " + extensionPointName + ": original plugin " + oldEP.getDescriptor().getPluginId() + ", new plugin " + descriptor.getPluginId(),
                 myEPTraces.get(extensionPointName));
@@ -189,7 +189,7 @@ public class ExtensionsAreaImpl {
   }
 
   @Nonnull
-  public <T> ExtensionPointImpl<T> getExtensionPoint(@Nonnull String extensionPointName) {
+  public <T> ExtensionPointImpl<T> getExtensionPointImpl(@Nonnull String extensionPointName) {
     //noinspection unchecked
     ExtensionPointImpl<T> extensionPoint = myExtensionPoints.get(extensionPointName);
     if (extensionPoint == null) {
@@ -200,8 +200,19 @@ public class ExtensionsAreaImpl {
 
   @Nonnull
   @SuppressWarnings({"unchecked"})
+  public <T> ExtensionPointImpl<T> getExtensionPointImpl(@Nonnull ExtensionPointName<T> extensionPointName) {
+    return getExtensionPointImpl(extensionPointName.getName());
+  }
+
+  @Nonnull
+  @SuppressWarnings({"unchecked"})
   public <T> ExtensionPoint<T> getExtensionPoint(@Nonnull ExtensionPointName<T> extensionPointName) {
-    return getExtensionPoint(extensionPointName.getName());
+    ExtensionPointImpl<T> extensionPoint = myExtensionPoints.get(extensionPointName.getName());
+    if (extensionPoint == null) {
+      LOG.error("Missing extension point: " + extensionPointName + " in area " + myComponentManager);
+      return EmptyExtensionPoint.get();
+    }
+    return extensionPoint;
   }
 
   @Nonnull

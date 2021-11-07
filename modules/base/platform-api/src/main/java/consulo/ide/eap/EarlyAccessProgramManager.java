@@ -57,8 +57,8 @@ public class EarlyAccessProgramManager implements PersistentStateComponent<Eleme
   public boolean getState(@Nonnull Class<? extends EarlyAccessProgramDescriptor> key) {
     Boolean value = myStates.get(key);
     if (value == null) {
-      EarlyAccessProgramDescriptor extension = EarlyAccessProgramDescriptor.EP_NAME.findExtensionOrFail(key);
-      return extension.getDefaultState();
+      EarlyAccessProgramDescriptor extension = EarlyAccessProgramDescriptor.EP_NAME.findExtension(key);
+      return extension != null && extension.getDefaultState();
     }
     return value;
   }
@@ -80,7 +80,7 @@ public class EarlyAccessProgramManager implements PersistentStateComponent<Eleme
     Element element = new Element("state");
     for (Map.Entry<Class<? extends EarlyAccessProgramDescriptor>, Boolean> entry : myStates.entrySet()) {
       EarlyAccessProgramDescriptor extension = EarlyAccessProgramDescriptor.EP_NAME.findExtension(entry.getKey());
-      if (extension.getDefaultState() == entry.getValue()) {
+      if (extension == null || extension.getDefaultState() == entry.getValue()) {
         continue;
       }
 
