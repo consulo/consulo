@@ -15,21 +15,26 @@
  */
 package consulo.ide.plugins.pluginsAdvertisement;
 
-import com.intellij.ide.plugins.*;
-import consulo.container.plugin.PluginId;
+import com.intellij.ide.plugins.InstallPluginAction;
+import com.intellij.ide.plugins.PluginManagerMain;
+import com.intellij.ide.plugins.PluginTable;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Couple;
 import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.ui.TableUtil;
+import com.intellij.ui.border.CustomLineBorder;
 import com.intellij.util.ui.JBUI;
-import com.intellij.util.ui.UIUtil;
-import consulo.container.plugin.PluginDescriptor;
-import consulo.ui.annotation.RequiredUIAccess;
+import com.intellij.util.ui.components.BorderLayoutPanel;
 import consulo.application.ui.WholeWestDialogWrapper;
+import consulo.container.plugin.PluginDescriptor;
+import consulo.container.plugin.PluginId;
+import consulo.ide.plugins.PluginDescriptionPanel;
+import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
+import javax.swing.border.Border;
 import java.awt.*;
 import java.util.HashMap;
 import java.util.List;
@@ -69,32 +74,20 @@ public class PluginsAdvertiserDialog extends WholeWestDialogWrapper {
     model.addTableModelListener(e -> setOKActionEnabled(myDownloadState.values().stream().filter(it -> it).findAny().isPresent()));
     PluginTable pluginTable = new PluginTable(model);
 
-    JPanel rightPanel = new JPanel(new BorderLayout());
-    rightPanel.setBorder(BorderFactory.createLineBorder(UIUtil.getBorderColor(), 1));
-    PluginHeaderPanel headerPanel = new PluginHeaderPanel(null);
-
-    JEditorPane descriptionPanel = new JEditorPane();
-    descriptionPanel.setEditorKit(UIUtil.getHTMLEditorKit());
-    descriptionPanel.setEditable(false);
-    descriptionPanel.addHyperlinkListener(new PluginManagerMain.MyHyperlinkListener());
-
-    JPanel panel = headerPanel.getPanel();
-    panel.setBorder(JBUI.Borders.empty(5));
-    rightPanel.add(panel, BorderLayout.NORTH);
-    rightPanel.add(descriptionPanel, BorderLayout.CENTER);
+    PluginDescriptionPanel descriptionPanel = new PluginDescriptionPanel();
 
     pluginTable.getSelectionModel().addListSelectionListener(e -> {
       final int selectedRow = pluginTable.getSelectedRow();
       if (selectedRow != -1) {
         final PluginDescriptor selection = model.getObjectAt(selectedRow);
         if (selection != null) {
-          PluginManagerMain.pluginInfoUpdate(selection, null, descriptionPanel, headerPanel, null);
+          descriptionPanel.setPlugin(selection, null);
         }
       }
     });
 
     TableUtil.ensureSelectionExists(pluginTable);
-    return Couple.<JComponent>of(ScrollPaneFactory.createScrollPane(pluginTable, true), rightPanel);
+    return Couple.<JComponent>of(ScrollPaneFactory.createScrollPane(pluginTable, true), descriptionPanel.getPanel());
   }
 
   @Override
@@ -117,6 +110,24 @@ public class PluginsAdvertiserDialog extends WholeWestDialogWrapper {
               }
             });
     super.doOKAction();
+  }
+
+  @Override
+  protected Border createContentPaneBorder() {
+    return JBUI.Borders.empty();
+  }
+
+  @Nullable
+  @Override
+  protected JComponent createSouthPanel() {
+    JComponent southPanel = super.createSouthPanel();
+    if (southPanel != null) {
+      southPanel.setBorder(JBUI.Borders.empty(ourDefaultBorderInsets));
+      BorderLayoutPanel borderLayoutPanel = JBUI.Panels.simplePanel(southPanel);
+      borderLayoutPanel.setBorder(new CustomLineBorder(JBUI.scale(1), 0, 0, 0));
+      return borderLayoutPanel;
+    }
+    return null;
   }
 
   public boolean isUserInstalledPlugins() {

@@ -20,7 +20,6 @@ import com.intellij.icons.AllIcons;
 import com.intellij.ide.BrowserUtil;
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.plugins.sorters.SortByStatusAction;
-import com.intellij.ide.ui.search.SearchUtil;
 import com.intellij.ide.ui.search.SearchableOptionsRegistrar;
 import com.intellij.notification.*;
 import com.intellij.openapi.actionSystem.ActionGroup;
@@ -43,9 +42,9 @@ import com.intellij.util.ui.components.BorderLayoutPanel;
 import com.intellij.util.ui.update.UiNotifyConnector;
 import com.intellij.xml.util.XmlStringUtil;
 import consulo.container.plugin.PluginDescriptor;
-import consulo.container.plugin.PluginIds;
 import consulo.disposer.Disposable;
 import consulo.ide.eap.EarlyAccessProgramManager;
+import consulo.ide.plugins.PluginDescriptionPanel;
 import consulo.ide.updateSettings.UpdateSettings;
 import consulo.localize.LocalizeKey;
 import consulo.localize.LocalizeValue;
@@ -70,8 +69,6 @@ import java.util.*;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
-import static com.intellij.openapi.util.text.StringUtil.isEmptyOrSpaces;
-
 /**
  * @author stathik
  * @since Dec 25, 2003
@@ -79,17 +76,11 @@ import static com.intellij.openapi.util.text.StringUtil.isEmptyOrSpaces;
 public abstract class PluginManagerMain implements Disposable {
   public static Logger LOG = Logger.getInstance(PluginManagerMain.class);
 
-  private static final String TEXT_SUFFIX = "</body></html>";
-  private static final String HTML_PREFIX = "<a href=\"";
-  private static final String HTML_SUFFIX = "</a>";
-
   private boolean requireShutdown = false;
 
   private Wrapper myRoot;
 
-  private JEditorPane myDescriptionTextArea;
-
-  private PluginHeaderPanel myPluginHeaderPanel;
+  private PluginDescriptionPanel myDescriptionPanel;
 
   protected JPanel myTablePanel;
   protected PluginTableModel myPluginsModel;
@@ -111,24 +102,9 @@ public abstract class PluginManagerMain implements Disposable {
     OnePixelSplitter splitter = new OnePixelSplitter(false, 0.5f);
     myRoot.setContent(splitter);
 
-    myDescriptionTextArea = new JEditorPane("text/html", "");
-    myDescriptionTextArea.setEditorKit(UIUtil.getHTMLEditorKit());
-    myDescriptionTextArea.setEditable(false);
-    myDescriptionTextArea.addHyperlinkListener(new MyHyperlinkListener());
-    myDescriptionTextArea.setBackground(UIUtil.getTextFieldBackground());
-
-    myPluginHeaderPanel = new PluginHeaderPanel(this);
-
-    JPanel headerPanel = new JPanel(new BorderLayout());
-    headerPanel.setBackground(UIUtil.getTextFieldBackground());
-
-    myPluginHeaderPanel.getPanel().setBackground(UIUtil.getTextFieldBackground());
-    myPluginHeaderPanel.getPanel().setOpaque(true);
-    myPluginHeaderPanel.getPanel().setBorder(JBUI.Borders.empty(5));
-
-    headerPanel.add(myPluginHeaderPanel.getPanel(), BorderLayout.NORTH);
-    headerPanel.add(ScrollPaneFactory.createScrollPane(myDescriptionTextArea, true), BorderLayout.CENTER);
-    splitter.setSecondComponent(headerPanel);
+    myDescriptionPanel = new PluginDescriptionPanel();
+    
+    splitter.setSecondComponent(myDescriptionPanel.getPanel());
 
     myTablePanel = new JPanel(new BorderLayout());
     splitter.setFirstComponent(myTablePanel);
@@ -229,11 +205,7 @@ public abstract class PluginManagerMain implements Disposable {
   @RequiredUIAccess
   public void refresh() {
     final PluginDescriptor[] descriptors = myPluginTable.getSelectedObjects();
-    pluginInfoUpdate(descriptors != null && descriptors.length == 1 ? descriptors[0] : null, myFilter.getFilter(), myDescriptionTextArea, myPluginHeaderPanel, this);
-    //myActionToolbar.updateActionsImmediately();
-    //final JComponent parent = (JComponent)myHeader.getParent();
-    //parent.revalidate();
-    //parent.repaint();
+    myDescriptionPanel.setPlugin(descriptors != null && descriptors.length == 1 ? descriptors[0] : null, myFilter.getFilter());
   }
 
   public void setRequireShutdown(boolean val) {
@@ -336,87 +308,6 @@ public abstract class PluginManagerMain implements Disposable {
 
   public void ignoreChanges() {
     requireShutdown = false;
-  }
-
-  public static void pluginInfoUpdate(PluginDescriptor plugin, @Nullable String filter, @Nonnull JEditorPane descriptionTextArea, @Nonnull PluginHeaderPanel header, PluginManagerMain manager) {
-
-    if (plugin == null) {
-      setTextValue(null, filter, descriptionTextArea);
-      header.getPanel().setVisible(false);
-      return;
-    }
-    StringBuilder sb = new StringBuilder();
-    header.setPlugin(plugin);
-    String description = plugin.getDescription();
-    if (!isEmptyOrSpaces(description)) {
-      sb.append(description);
-    }
-
-    String changeNotes = plugin.getChangeNotes();
-    if (!isEmptyOrSpaces(changeNotes)) {
-      sb.append("<h4>Change Notes</h4>");
-      sb.append(changeNotes);
-    }
-
-    if (!PluginIds.isPlatformPlugin(plugin.getPluginId())) {
-      String vendor = plugin.getVendor();
-      String vendorEmail = plugin.getVendorEmail();
-      String vendorUrl = plugin.getVendorUrl();
-      if (!isEmptyOrSpaces(vendor) || !isEmptyOrSpaces(vendorEmail) || !isEmptyOrSpaces(vendorUrl)) {
-        sb.append("<h4>Vendor</h4>");
-
-        if (!isEmptyOrSpaces(vendor)) {
-          sb.append(vendor);
-        }
-        if (!isEmptyOrSpaces(vendorUrl)) {
-          sb.append("<br>").append(composeHref(vendorUrl));
-        }
-        if (!isEmptyOrSpaces(vendorEmail)) {
-          sb.append("<br>").append(HTML_PREFIX).append("mailto:").append(vendorEmail).append("\">").append(vendorEmail).append(HTML_SUFFIX);
-        }
-      }
-
-      String pluginDescriptorUrl = plugin.getUrl();
-      if (!isEmptyOrSpaces(pluginDescriptorUrl)) {
-        sb.append("<h4>Plugin homepage</h4>").append(composeHref(pluginDescriptorUrl));
-      }
-
-      String size = plugin instanceof PluginNode ? ((PluginNode)plugin).getSize() : null;
-      if (!isEmptyOrSpaces(size)) {
-        sb.append("<h4>Size</h4>").append(PluginManagerColumnInfo.getFormattedSize(size));
-      }
-    }
-
-    setTextValue(sb, filter, descriptionTextArea);
-  }
-
-  private static void setTextValue(@Nullable StringBuilder text, @Nullable String filter, JEditorPane pane) {
-    if (text != null) {
-      text.insert(0, getTextPrefix());
-      text.append(TEXT_SUFFIX);
-      pane.setText(SearchUtil.markup(text.toString(), filter).trim());
-      pane.setCaretPosition(0);
-    }
-    else {
-      pane.setText(getTextPrefix() + TEXT_SUFFIX);
-    }
-  }
-
-  private static String getTextPrefix() {
-    String string = "<html><head>\n" +
-                    "    <style type=\"text/css\">\n" +
-                    "        p {\n font-family: Arial,serif; font-size: %dpt; margin: %dpx %dpx\n" +
-                    "        }\n" +
-                    "    </style>\n" +
-                    "</head><body style=\"font-family: Arial,serif; font-size: %dpt; margin: %dpx %dpx;\">";
-    int font = JBUI.scale(12);
-    int margin5 = JBUI.scale(5);
-    int margin2 = JBUI.scale(2);
-    return String.format(string, font, margin2, margin2, font, margin5, margin5);
-  }
-
-  private static String composeHref(String vendorUrl) {
-    return HTML_PREFIX + vendorUrl + "\">" + vendorUrl + HTML_SUFFIX;
   }
 
   public boolean isModified() {
