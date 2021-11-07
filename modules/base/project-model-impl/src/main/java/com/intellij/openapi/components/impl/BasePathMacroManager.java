@@ -30,6 +30,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.openapi.vfs.VirtualFileSystem;
 import com.intellij.util.containers.FactoryMap;
+import consulo.security.impl.PrivilegedAction;
 import org.jdom.Element;
 import javax.annotation.Nullable;
 
@@ -164,7 +165,7 @@ public class BasePathMacroManager extends PathMacroManager {
 
     @Override
     public void expandPaths(final Element element) {
-      getExpandMacroMap().substitute(element, SystemInfo.isFileSystemCaseSensitive);
+      PrivilegedAction.runPrivilegedAction(() -> getExpandMacroMap().substitute(element, SystemInfo.isFileSystemCaseSensitive));
     }
 
     @Override

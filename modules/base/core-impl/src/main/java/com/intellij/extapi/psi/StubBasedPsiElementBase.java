@@ -48,6 +48,7 @@ import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.ArrayFactory;
 import com.intellij.util.ArrayUtil;
 import consulo.psi.impl.source.internal.SubstrateRefOwner;
+import consulo.security.impl.PrivilegedAction;
 import consulo.util.dataholder.Key;
 import org.jetbrains.annotations.NonNls;
 
@@ -86,7 +87,7 @@ import java.util.List;
  */
 public class StubBasedPsiElementBase<T extends StubElement> extends ASTDelegatePsiElement implements StubBasedPsiElement<T>, SubstrateRefOwner<T> {
   public static final Key<String> CREATION_TRACE = Key.create("CREATION_TRACE");
-  public static final boolean ourTraceStubAstBinding = "true".equals(System.getProperty("trace.stub.ast.binding", "false"));
+  public static final boolean ourTraceStubAstBinding = PrivilegedAction.runPrivilegedAction(() -> "true".equals(System.getProperty("trace.stub.ast.binding", "false")));
   private volatile SubstrateRef mySubstrateRef;
   private final IElementType myElementType;
 

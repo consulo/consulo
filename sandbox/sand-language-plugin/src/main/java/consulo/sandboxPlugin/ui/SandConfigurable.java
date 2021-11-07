@@ -19,6 +19,7 @@ import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.ConfigurationException;
 import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
+import consulo.security.impl.PrivilegedAction;
 import consulo.ui.Alerts;
 import consulo.ui.Button;
 import consulo.ui.Component;
@@ -27,6 +28,8 @@ import consulo.ui.layout.VerticalLayout;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.io.IOException;
+import java.net.URL;
 
 /**
  * @author VISTALL
@@ -41,6 +44,18 @@ public class SandConfigurable implements Configurable {
 
     verticalLayout.add(Button.create(LocalizeValue.localizeTODO("&Click me"), event -> {
       Alerts.okInfo(LocalizeValue.localizeTODO("Info")).showAsync(verticalLayout);
+    }));
+
+    verticalLayout.add(Button.create(LocalizeValue.localizeTODO("Open Me"), event -> {
+      PrivilegedAction.runPrivilegedAction(() -> {
+        try {
+          return new URL("https://consulo.io").openStream();
+        }
+        catch (IOException e) {
+        }
+        return null;
+      });
+
     }));
 
     return verticalLayout;

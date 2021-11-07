@@ -29,6 +29,7 @@ import consulo.annotation.access.RequiredWriteAction;
 import consulo.component.PersistentStateComponentWithUIState;
 import consulo.components.impl.stores.storage.StateStorageManager.ExternalizationSession;
 import consulo.logging.Logger;
+import consulo.security.impl.PrivilegedAction;
 import consulo.ui.UIAccess;
 import consulo.util.collection.ArrayUtil;
 import jakarta.inject.Provider;
@@ -250,7 +251,7 @@ public abstract class ComponentStoreImpl implements IComponentStore {
       storeModificationCountAfterLoad(component, componentInfo);
     }
     else {
-      T defaultState = loadDefaultState(componentInfo, component, stateClass);
+      T defaultState = PrivilegedAction.runPrivilegedAction(() -> loadDefaultState(componentInfo, component, stateClass));
       if (defaultState != null) {
         component.loadState(defaultState);
 

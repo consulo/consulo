@@ -17,20 +17,46 @@ package consulo.container.impl.securityManager.impl;
 
 import consulo.container.classloader.PluginClassLoader;
 import consulo.container.plugin.*;
+import consulo.util.nodep.function.Getter;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.net.URLPermission;
 import java.security.Permission;
-import java.util.HashMap;
-import java.util.LinkedHashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author VISTALL
  * @since 23/10/2021
  */
 public class ConsuloSecurityManager extends SecurityManager {
+  public static void runPrivilegedAction(@Nonnull Runnable runnable) {
+    ConsuloSecurityManager securityManager = (ConsuloSecurityManager)System.getSecurityManager();
+
+    securityManager.myPrivilegedAction.set(Boolean.TRUE);
+
+    try {
+      runnable.run();
+    }
+    finally {
+      securityManager.myPrivilegedAction.remove();
+    }
+  }
+
+  @Nullable
+  public static <T> T runPrivilegedAction(@Nonnull Getter<T> getter) {
+    ConsuloSecurityManager securityManager = (ConsuloSecurityManager)System.getSecurityManager();
+
+    securityManager.myPrivilegedAction.set(Boolean.TRUE);
+
+    try {
+      return getter.get();
+    }
+    finally {
+      securityManager.myPrivilegedAction.remove();
+    }
+  }
+
   private final ClassLoader mySystemClassLoader;
   private final ClassLoader myPlatformClassLoader;
   private final ClassLoader myPrimaryClassLoader;
@@ -44,6 +70,15 @@ public class ConsuloSecurityManager extends SecurityManager {
 
   // map library->jvm class, in this case we don't check permissions
   private final Map<String, String> mySpecialNativeCalls = new HashMap<String, String>();
+
+  private final ThreadLocal<Boolean> myPrivilegedAction = new ThreadLocal<Boolean>() {
+    @Override
+    protected Boolean initialValue() {
+      return false;
+    }
+  };
+
+  private final Set<String> myTrustedProperties = new HashSet<String>(Arrays.asList("i18n", "org.openjdk.java.util.stream.tripwire", "net.n3.nanoxml.XMLParser"));
 
   public ConsuloSecurityManager() {
     mySystemClassLoader = ClassLoader.getSystemClassLoader();
@@ -86,12 +121,11 @@ public class ConsuloSecurityManager extends SecurityManager {
 
   @Override
   public void checkPropertyAccess(String key) {
-    // see javax.swing.text.AbstractDocument.I18NProperty
-    if ("i18n".equals(key)) {
+    if (myTrustedProperties.contains(key)) {
       return;
     }
 
-    checkPermission(PluginPermissionType.GET_ENV, "jvmenv." + key);
+    checkPermission(PluginPermissionType.GET_ENV, "jvmenv|" + key);
   }
 
   @Override
@@ -165,7 +199,7 @@ public class ConsuloSecurityManager extends SecurityManager {
   }
 
   private void checkPermission(PluginPermissionType pluginPermissionType, @Nullable String target, @Nullable Class<?>[] alreadyCalledContext) {
-    if (!myEnabled) {
+    if (!myEnabled || myPrivilegedAction.get()) {
       return;
     }
 

@@ -30,7 +30,7 @@
   </actions>
 
   <permissions>
-    <permission type="PROCESS"/>
+    <permission type="PROCESS_CREATE"/>
     <permission type="NATIVE_LIBRARY"/>
   </permissions>
 
