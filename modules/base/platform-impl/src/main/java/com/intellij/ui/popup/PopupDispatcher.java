@@ -23,10 +23,11 @@ public class PopupDispatcher implements AWTEventListener, KeyEventDispatcher, Id
   private static final PopupDispatcher ourInstance = new PopupDispatcher();
 
   static {
-    if (System.getProperty("is.popup.test") != null || ApplicationManager.getApplication() != null && ApplicationManager.getApplication().isUnitTestMode()) {
-      Toolkit.getDefaultToolkit().addAWTEventListener(ourInstance, MouseEvent.MOUSE_PRESSED);
-      KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(ourInstance);
-    }
+    // disable this add due it will require get property plugin access
+    //if (System.getProperty("is.popup.test") != null || ApplicationManager.getApplication() != null && ApplicationManager.getApplication().isUnitTestMode()) {
+    //  Toolkit.getDefaultToolkit().addAWTEventListener(ourInstance, MouseEvent.MOUSE_PRESSED);
+    //  KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(ourInstance);
+    //}
   }
 
   private PopupDispatcher() {
