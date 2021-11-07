@@ -16,7 +16,6 @@
 package com.intellij.util.io;
 
 import consulo.logging.Logger;
-import com.intellij.util.SystemProperties;
 
 import java.io.IOException;
 import java.io.RandomAccessFile;
@@ -27,7 +26,9 @@ import java.io.RandomAccessFile;
  */
 class RandomAccessFileWithLengthAndSizeTracking extends RandomAccessFile {
   private static final Logger LOG = Logger.getInstance(RandomAccessFileWithLengthAndSizeTracking.class);
-  private static final boolean doAssertions = SystemProperties.getBooleanProperty("idea.do.random.access.wrapper.assertions", false);
+  // SystemProperties.getBooleanProperty("idea.do.random.access.wrapper.assertions", false);
+  // we can't use consulo.security.impl.PrivilegedAction here due util module
+  private static final boolean doAssertions = false;
 
   private final String myPath;
   private volatile long mySize;
