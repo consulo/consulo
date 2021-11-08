@@ -15,51 +15,34 @@
  */
 package consulo.ide.plugins;
 
-import com.intellij.ide.plugins.PluginNode;
 import consulo.container.plugin.PluginDescriptor;
-import consulo.container.plugin.PluginId;
-import consulo.container.plugin.PluginManager;
 import consulo.logging.Logger;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
+import consulo.ui.style.StyleManager;
 
 import javax.annotation.Nonnull;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author VISTALL
  * @since 07/12/2020
  */
 public class PluginIconHolder {
+  private static final String PLUGIN_ICON_KEY = "PLUGIN_ICON_KEY";
+
   private static final int ICON_SIZE = 32;
 
   private static final Logger LOG = Logger.getInstance(PluginIconHolder.class);
 
-  private static final Map<PluginId, Image> ourIcons = new ConcurrentHashMap<>();
-
   @Nonnull
   public static Image get(@Nonnull PluginDescriptor pluginDescriptor) {
-    if (pluginDescriptor instanceof PluginNode) {
-      Image forceIcon = ((PluginNode)pluginDescriptor).getInitializedIcon();
-      if (forceIcon != null) {
-        return forceIcon;
-      }
+    return pluginDescriptor.computeUserData(PLUGIN_ICON_KEY, s -> ImageEffects.canvas(ICON_SIZE, ICON_SIZE, canvas2D -> {
+      // canvas state will dropped on theme change
+      Image pluginImage = initializeImage(pluginDescriptor);
 
-      Image image = initializeImage(pluginDescriptor);
-      ((PluginNode)pluginDescriptor).setInitializedIcon(image);
-      return image;
-    }
-    else {
-      return ourIcons.computeIfAbsent(pluginDescriptor.getPluginId(), pluginId -> {
-        PluginDescriptor plugin = PluginManager.findPlugin(pluginId);
-        if (plugin == null) {
-          return decorateIcon(PlatformIconGroup.nodesPluginBig());
-        }
-        return initializeImage(pluginDescriptor);
-      });
-    }
+      canvas2D.drawImage(pluginImage, 0, 0);
+    }));
   }
 
   @Nonnull
@@ -69,7 +52,7 @@ public class PluginIconHolder {
 
   @Nonnull
   private static Image initializeImage(@Nonnull PluginDescriptor pluginDescriptor) {
-    byte[] iconBytes = pluginDescriptor.getIconBytes();
+    byte[] iconBytes = pluginDescriptor.getIconBytes(StyleManager.get().getCurrentStyle().isDark());
     if (iconBytes.length == 0) {
       return decorateIcon(PlatformIconGroup.nodesPluginBig());
     }

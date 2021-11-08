@@ -18,6 +18,7 @@ package consulo.ui.desktop.internal.image;
 import com.intellij.util.ui.GraphicsUtil;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
+import consulo.desktop.util.awt.UIModificationTracker;
 import consulo.ui.desktop.internal.image.canvas.DesktopCanvas2DImpl;
 import consulo.ui.image.Image;
 import consulo.ui.image.canvas.Canvas2D;
@@ -31,10 +32,13 @@ import java.util.function.Consumer;
  * @since 2018-06-15
  */
 public class DesktopCanvasImageImpl extends JBUI.RasterJBIcon implements Image {
+  private static final UIModificationTracker ourUIModificationTracker = UIModificationTracker.getInstance();
+
   private final int myWidth;
   private final int myHeight;
   private final Consumer<Canvas2D> myCanvas2DConsumer;
 
+  private long myModificationCount;
   private java.awt.Image myImage;
 
   public DesktopCanvasImageImpl(int width, int height, Consumer<Canvas2D> canvas2DConsumer) {
@@ -47,7 +51,7 @@ public class DesktopCanvasImageImpl extends JBUI.RasterJBIcon implements Image {
   public void paintIcon(Component c, Graphics g, int x, int y) {
     JBUI.ScaleContext ctx = JBUI.ScaleContext.create((Graphics2D)g);
 
-    if (updateScaleContext(ctx)) {
+    if (updateScaleContext(ctx) || myModificationCount != ourUIModificationTracker.getModificationCount()) {
       myImage = null;
     }
 
@@ -59,6 +63,7 @@ public class DesktopCanvasImageImpl extends JBUI.RasterJBIcon implements Image {
       DesktopCanvas2DImpl canvas2D = new DesktopCanvas2DImpl((Graphics2D)graphics);
       myCanvas2DConsumer.accept(canvas2D);
 
+      myModificationCount = ourUIModificationTracker.getModificationCount();
       myImage = image;
     }
 

@@ -236,7 +236,7 @@ public class PluginNode extends PluginDescriptorStub {
 
   @Nonnull
   @Override
-  public byte[] getIconBytes() {
+  public byte[] getIconBytes(boolean isDarkTheme) {
     return myIconBytes;
   }
 

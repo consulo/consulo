@@ -16,6 +16,7 @@
 package consulo.container.plugin;
 
 import consulo.annotation.DeprecationInfo;
+import consulo.util.nodep.function.Function;
 import consulo.util.nodep.xml.node.SimpleXmlElement;
 
 import javax.annotation.Nonnull;
@@ -124,7 +125,11 @@ public interface PluginDescriptor {
   Object getModuleLayer();
 
   @Nonnull
+  @Deprecated
+  @DeprecationInfo("use #getIconBytes(darkOrLight)")
   byte[] getIconBytes();
+
+  byte[] getIconBytes(boolean isDarkTheme);
 
   @Deprecated
   @DeprecationInfo("This method is obsolete now. Bundled plugin is always platform modules - it can't load plugins")
@@ -142,4 +147,13 @@ public interface PluginDescriptor {
 
   @Nullable
   String getChecksumSHA3_256();
+
+  @Nullable
+  <K, V> V getUserData(K key);
+
+  /**
+   * Put user data data
+   */
+  @Nonnull
+  <K, V> V computeUserData(K key, Function<K, V> function);
 }

@@ -16,6 +16,7 @@
 package consulo.container.plugin;
 
 import consulo.util.nodep.ArrayUtilRt;
+import consulo.util.nodep.function.Function;
 import consulo.util.nodep.xml.node.SimpleXmlElement;
 
 import javax.annotation.Nonnull;
@@ -25,12 +26,16 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 /**
  * @author VISTALL
  * @since 2019-07-17
  */
 public abstract class PluginDescriptorStub implements PluginDescriptor {
+  private final ConcurrentMap<Object, Object> myUserData = new ConcurrentHashMap<Object, Object>();
+
   @Nonnull
   @Override
   public ClassLoader getPluginClassLoader() {
@@ -174,7 +179,31 @@ public abstract class PluginDescriptorStub implements PluginDescriptor {
   @Nonnull
   @Override
   public byte[] getIconBytes() {
+    return getIconBytes(false);
+  }
+
+  @Override
+  public byte[] getIconBytes(boolean isDarkTheme) {
     return ArrayUtilRt.EMPTY_BYTE_ARRAY;
+  }
+
+  @Nullable
+  @Override
+  @SuppressWarnings("unchecked")
+  public <K, V> V getUserData(K key) {
+    return (V)myUserData.get(key);
+  }
+
+  @Nonnull
+  @Override
+  public <K, V> V computeUserData(K key, final Function<K, V> function) {
+    V data = getUserData(key);
+    if (data != null) {
+      return data;
+    }
+    V value = function.fun(key);
+    myUserData.putIfAbsent(key, value);
+    return value;
   }
 
   @Override

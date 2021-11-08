@@ -53,6 +53,7 @@ public class PluginDescriptorImpl extends PluginDescriptorStub {
   private String url;
   private final File myPath;
   private final byte[] myIconBytes;
+  private final byte[] myDarkIconBytes;
   private final boolean myIsPreInstalled;
   private PluginId[] myDependencies = PluginId.EMPTY_ARRAY;
   private PluginId[] myOptionalDependencies = PluginId.EMPTY_ARRAY;
@@ -87,9 +88,10 @@ public class PluginDescriptorImpl extends PluginDescriptorStub {
   private Boolean mySkipped;
   private boolean myExperimental;
 
-  public PluginDescriptorImpl(@Nonnull File pluginPath, @Nonnull byte[] iconBytes, boolean isPreInstalled) {
+  public PluginDescriptorImpl(@Nonnull File pluginPath, @Nonnull byte[] iconBytes, @Nonnull byte[] darkIconBytes, boolean isPreInstalled) {
     myPath = pluginPath;
     myIconBytes = iconBytes;
+    myDarkIconBytes = darkIconBytes;
     myIsPreInstalled = isPreInstalled;
   }
 
@@ -335,7 +337,10 @@ public class PluginDescriptorImpl extends PluginDescriptorStub {
 
   @Nonnull
   @Override
-  public byte[] getIconBytes() {
+  public byte[] getIconBytes(boolean isDarkTheme) {
+    if(isDarkTheme && myDarkIconBytes.length > 0) {
+      return myDarkIconBytes;
+    }
     return myIconBytes;
   }
 

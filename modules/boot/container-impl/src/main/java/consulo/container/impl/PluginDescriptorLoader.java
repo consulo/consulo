@@ -157,14 +157,21 @@ public class PluginDescriptorLoader {
         ZipEntry entry = zipFile.getEntry("META-INF/" + fileName);
         if (entry != null) {
           byte[] iconBytes = ArrayUtilRt.EMPTY_BYTE_ARRAY;
+          byte[] darkIconBytes = ArrayUtilRt.EMPTY_BYTE_ARRAY;
+
           ZipEntry pluginIconSvg = zipFile.getEntry("META-INF/pluginIcon.svg");
           if (pluginIconSvg != null) {
             iconBytes = loadFromStream(zipFile.getInputStream(pluginIconSvg));
           }
 
+          pluginIconSvg = zipFile.getEntry("META-INF/pluginIcon_dark.svg");
+          if (pluginIconSvg != null) {
+            darkIconBytes = loadFromStream(zipFile.getInputStream(pluginIconSvg));
+          }
+
           InputStream inputStream = zipFile.getInputStream(entry);
 
-          PluginDescriptorImpl descriptor = new PluginDescriptorImpl(pluginPath, iconBytes, isPreInstalledPath);
+          PluginDescriptorImpl descriptor = new PluginDescriptorImpl(pluginPath, iconBytes, darkIconBytes, isPreInstalledPath);
           descriptor.readExternal(inputStream, zipFile, logger);
           return descriptor;
         }
