@@ -49,11 +49,14 @@ public class PluginsAdvertiserDialog extends WholeWestDialogWrapper {
   @Nullable
   private final Project myProject;
   private final List<PluginDescriptor> myToInstallPlugins;
+  @Nonnull
+  private final List<PluginDescriptor> myAllPlugins;
   private boolean myUserAccepted;
   private final Map<PluginId, Boolean> myDownloadState;
 
-  public PluginsAdvertiserDialog(@Nullable Project project, @Nonnull List<PluginDescriptor> toInstallPlugins) {
+  public PluginsAdvertiserDialog(@Nullable Project project, @Nonnull List<PluginDescriptor> allPlugins, @Nonnull List<PluginDescriptor> toInstallPlugins) {
     super(project);
+    myAllPlugins = allPlugins;
     myDownloadState = new HashMap<>(toInstallPlugins.size());
 
     for (PluginDescriptor pluginDescriptor : toInstallPlugins) {
@@ -81,7 +84,7 @@ public class PluginsAdvertiserDialog extends WholeWestDialogWrapper {
       if (selectedRow != -1) {
         final PluginDescriptor selection = model.getObjectAt(selectedRow);
         if (selection != null) {
-          descriptionPanel.setPlugin(selection, null);
+          descriptionPanel.update(selection, null, myAllPlugins, null);
         }
       }
     });

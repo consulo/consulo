@@ -62,6 +62,7 @@ public class FileTypeChooser extends DialogWrapper {
   private JRadioButton myInstallPluginFromRepository;
 
   private final Set<PluginDescriptor> myFeaturePlugins;
+  private final List<PluginDescriptor> myAllPlugins;
 
   private FileTypeChooser(@Nonnull List<String> patterns, @Nonnull String fileName) {
     super(true);
@@ -120,17 +121,17 @@ public class FileTypeChooser extends DialogWrapper {
     myPattern.setModel(new CollectionComboBoxModel<>(ContainerUtil.map(patterns, FunctionUtil.<String>id()), patterns.get(0)));
 
     UnknownExtension fileFeatureForChecking = new UnknownExtension(FileTypeFactory.FILE_TYPE_FACTORY_EP.getName(), fileName);
-    List<PluginDescriptor> allPlugins = PluginsAdvertiserHolder.getLoadedPluginDescriptors();
-    myFeaturePlugins = PluginsAdvertiser.findByFeature(allPlugins, fileFeatureForChecking);
+    myAllPlugins = PluginsAdvertiserHolder.getLoadedPluginDescriptors();
+    myFeaturePlugins = PluginsAdvertiser.findByFeature(myAllPlugins, fileFeatureForChecking);
 
     ItemListener listener = e -> {
       boolean selected = myOpenInIdea.isSelected();
-      
+
       myList.setEnabled(selected);
       scrollPane.setEnabled(selected);
       scrollPane.getViewport().setEnabled(selected);
     };
-    
+
     myOpenInIdea.addItemListener(listener);
     myInstallPluginFromRepository.addItemListener(listener);
     myOpenAsNative.addItemListener(listener);
@@ -140,7 +141,7 @@ public class FileTypeChooser extends DialogWrapper {
     }
     else {
       myOpenInIdea.setSelected(true);
-      
+
       myInstallPluginFromRepository.setVisible(false);
     }
 
@@ -225,7 +226,7 @@ public class FileTypeChooser extends DialogWrapper {
     }
     final FileType type = chooser.getSelectedType();
     if (type == null) {
-      final PluginsAdvertiserDialog advertiserDialog = new PluginsAdvertiserDialog(null, new ArrayList<>(chooser.myFeaturePlugins));
+      final PluginsAdvertiserDialog advertiserDialog = new PluginsAdvertiserDialog(null, chooser.myAllPlugins, new ArrayList<>(chooser.myFeaturePlugins));
       advertiserDialog.show();
       return null;
     }
@@ -234,8 +235,7 @@ public class FileTypeChooser extends DialogWrapper {
       return null;
     }
 
-    ApplicationManager.getApplication()
-            .runWriteAction(() -> FileTypeManagerEx.getInstanceEx().associatePattern(type, (String)chooser.myPattern.getSelectedItem()));
+    ApplicationManager.getApplication().runWriteAction(() -> FileTypeManagerEx.getInstanceEx().associatePattern(type, (String)chooser.myPattern.getSelectedItem()));
 
     return type;
   }

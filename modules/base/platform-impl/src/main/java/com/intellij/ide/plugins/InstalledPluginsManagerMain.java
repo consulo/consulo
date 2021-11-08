@@ -97,7 +97,7 @@ public class InstalledPluginsManagerMain extends PluginManagerMain {
           }
           if (((InstalledPluginsTableModel)myPluginsModel).appendOrUpdateDescriptor(pluginDescriptor)) {
             PluginDownloader.install(file, file.getName(), false);
-            select(pluginDescriptor);
+            select(pluginDescriptor.getPluginId());
             checkInstalledPluginDependencies(pluginDescriptor);
             setRequireShutdown(true);
           }
@@ -143,11 +143,11 @@ public class InstalledPluginsManagerMain extends PluginManagerMain {
         @RequiredUIAccess
         @Override
         public void actionPerformed(@Nonnull AnActionEvent e) {
-          final PluginDescriptor[] selection = myPluginTable.getSelectedObjects();
+          final PluginDescriptor selection = myPluginTable.getSelectedObject();
           final String filter = myFilter.getFilter().toLowerCase(Locale.ROOT);
           ((InstalledPluginsTableModel)myPluginsModel).setEnabledFilter(enabledValue, filter);
           if (selection != null) {
-            select(selection);
+            select(selection.getPluginId());
           }
 
           updateShowPopupText(labelPopup);

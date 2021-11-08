@@ -16,15 +16,22 @@
 package consulo.ide.plugins;
 
 import com.intellij.ide.BrowserUtil;
+import com.intellij.ide.DataManager;
 import com.intellij.ide.plugins.PluginHeaderPanel;
 import com.intellij.ide.plugins.PluginManagerColumnInfo;
+import com.intellij.ide.plugins.PluginManagerMain;
 import com.intellij.ide.plugins.PluginNode;
 import com.intellij.ide.ui.search.SearchUtil;
+import com.intellij.openapi.actionSystem.DataContext;
+import com.intellij.openapi.options.ex.Settings;
 import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
-import consulo.container.plugin.PluginDescriptor;
-import consulo.container.plugin.PluginIds;
+import com.intellij.xml.util.XmlStringUtil;
+import consulo.container.plugin.*;
+import consulo.util.collection.ArrayUtil;
+import consulo.util.collection.ContainerUtil;
+import consulo.util.lang.StringUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -35,6 +42,8 @@ import javax.swing.text.html.HTMLDocument;
 import javax.swing.text.html.HTMLFrameHyperlinkEvent;
 import java.awt.*;
 import java.net.URL;
+import java.util.List;
+import java.util.*;
 
 import static consulo.util.lang.StringUtil.isEmptyOrSpaces;
 
@@ -54,6 +63,13 @@ public class PluginDescriptionPanel {
           doc.processHTMLFrameHyperlinkEvent(evt);
         }
         else {
+          String description = e.getDescription();
+          if (description.startsWith(PLUGIN_PREFIX)) {
+            String pluginId = description.substring(PLUGIN_PREFIX.length(), description.length());
+            select(pane, PluginId.getId(pluginId));
+            return;
+          }
+
           URL url = e.getURL();
           if (url != null) {
             BrowserUtil.browse(url);
@@ -61,8 +77,20 @@ public class PluginDescriptionPanel {
         }
       }
     }
+
+    private void select(JEditorPane pane, PluginId pluginId) {
+      DataContext dataContext = DataManager.getInstance().getDataContext(pane);
+
+      Settings data = dataContext.getData(Settings.KEY);
+      if (data == null) {
+        return;
+      }
+
+      data.select(PluginsConfigurable.class).doWhenDone((pluginConfigurable) -> pluginConfigurable.select(pluginId));
+    }
   }
 
+  private static final String PLUGIN_PREFIX = "plugin://";
   private static final String TEXT_SUFFIX = "</body></html>";
   private static final String HTML_PREFIX = "<a href=\"";
   private static final String HTML_SUFFIX = "</a>";
@@ -76,10 +104,10 @@ public class PluginDescriptionPanel {
     myPanel = new JPanel(new BorderLayout());
     myPanel.setBackground(UIUtil.getTextFieldBackground());
 
-    myPluginHeaderPanel = new PluginHeaderPanel(null);
+    myPluginHeaderPanel = new PluginHeaderPanel();
     myPluginHeaderPanel.getPanel().setBackground(UIUtil.getTextFieldBackground());
     myPluginHeaderPanel.getPanel().setOpaque(true);
-    myPluginHeaderPanel.getPanel().setBorder(JBUI.Borders.empty(5));
+    myPluginHeaderPanel.getPanel().setBorder(JBUI.Borders.empty(5, 5, 0, 5));
 
     myPanel.add(myPluginHeaderPanel.getPanel(), BorderLayout.NORTH);
 
@@ -92,59 +120,153 @@ public class PluginDescriptionPanel {
     myPanel.add(ScrollPaneFactory.createScrollPane(myDescriptionTextArea, true), BorderLayout.CENTER);
   }
 
-  public void setPlugin(@Nullable PluginDescriptor plugin, @Nullable String filter) {
-    pluginInfoUpdate(plugin, filter, myDescriptionTextArea, myPluginHeaderPanel);
-  }
-
-  private static void pluginInfoUpdate(PluginDescriptor plugin, @Nullable String filter, @Nonnull JEditorPane descriptionTextArea, @Nonnull PluginHeaderPanel header) {
+  public void update(@Nullable PluginDescriptor plugin, @Nullable PluginManagerMain manager, @Nonnull List<PluginDescriptor> allPlugins, @Nullable String filter) {
     if (plugin == null) {
-      setTextValue(null, filter, descriptionTextArea);
-      header.getPanel().setVisible(false);
+      setTextValue(null, filter, myDescriptionTextArea);
+      myPluginHeaderPanel.getPanel().setVisible(false);
       return;
     }
+
     StringBuilder sb = new StringBuilder();
-    header.setPlugin(plugin);
+    myPluginHeaderPanel.update(plugin, manager);
+
+    sb.append("<h3>Version:</h3>").append("&nbsp;&nbsp;").append(StringUtil.notNullize(plugin.getVersion(), "N/A"));
+
+    if (PluginIds.isPlatformPlugin(plugin.getPluginId())) {
+      setTextValue(sb, filter, myDescriptionTextArea);
+      return;
+    }
+
+    sb.append("<h3>Permissions:</h3>");
+    boolean noPermissions = true;
+    for (PluginPermissionType type : PluginPermissionType.values()) {
+      PluginPermissionDescriptor pluginPermissionDescriptor = plugin.getPermissionDescriptor(type);
+      if (pluginPermissionDescriptor != null) {
+        noPermissions = false;
+
+        sb.append("&nbsp;&nbsp;").append(type.name()).append("<br>");
+      }
+    }
+
+    if (noPermissions) {
+      sb.append("&nbsp;&nbsp;<span style=\"color: gray\">").append(XmlStringUtil.escapeString("<no special permissions>")).append("</span><br>");
+    }
+
+    sb.append("<br>");
+
     String description = plugin.getDescription();
     if (!isEmptyOrSpaces(description)) {
       sb.append(description);
     }
+    else {
+      sb.append("<span style=\"color: gray\">").append(XmlStringUtil.escapeString("<description not provided>")).append("</span>");
+    }
 
     String changeNotes = plugin.getChangeNotes();
     if (!isEmptyOrSpaces(changeNotes)) {
-      sb.append("<h4>Change Notes</h4>");
+      sb.append("<h3>Change Notes</h3>");
       sb.append(changeNotes);
     }
 
-    if (!PluginIds.isPlatformPlugin(plugin.getPluginId())) {
-      String vendor = plugin.getVendor();
-      String vendorEmail = plugin.getVendorEmail();
-      String vendorUrl = plugin.getVendorUrl();
-      if (!isEmptyOrSpaces(vendor) || !isEmptyOrSpaces(vendorEmail) || !isEmptyOrSpaces(vendorUrl)) {
-        sb.append("<h4>Vendor</h4>");
+    String vendor = plugin.getVendor();
+    String vendorEmail = plugin.getVendorEmail();
+    String vendorUrl = plugin.getVendorUrl();
+    if (!isEmptyOrSpaces(vendor) || !isEmptyOrSpaces(vendorEmail) || !isEmptyOrSpaces(vendorUrl)) {
+      sb.append("<h3>Vendor</h3>");
 
-        if (!isEmptyOrSpaces(vendor)) {
-          sb.append(vendor);
-        }
-        if (!isEmptyOrSpaces(vendorUrl)) {
-          sb.append("<br>").append(composeHref(vendorUrl));
-        }
-        if (!isEmptyOrSpaces(vendorEmail)) {
-          sb.append("<br>").append(HTML_PREFIX).append("mailto:").append(vendorEmail).append("\">").append(vendorEmail).append(HTML_SUFFIX);
-        }
+      if (!isEmptyOrSpaces(vendor)) {
+        sb.append("&nbsp;&nbsp;").append(vendor);
       }
-
-      String pluginDescriptorUrl = plugin.getUrl();
-      if (!isEmptyOrSpaces(pluginDescriptorUrl)) {
-        sb.append("<h4>Plugin homepage</h4>").append(composeHref(pluginDescriptorUrl));
+      if (!isEmptyOrSpaces(vendorEmail)) {
+        sb.append("&nbsp;").append(HTML_PREFIX).append("mailto:").append(vendorEmail).append("\">").append(vendorEmail).append(HTML_SUFFIX);
       }
-
-      String size = plugin instanceof PluginNode ? ((PluginNode)plugin).getSize() : null;
-      if (!isEmptyOrSpaces(size)) {
-        sb.append("<h4>Size</h4>").append(PluginManagerColumnInfo.getFormattedSize(size));
+      if (!isEmptyOrSpaces(vendorUrl)) {
+        sb.append("&nbsp;").append(composeHref(vendorUrl));
       }
     }
 
-    setTextValue(sb, filter, descriptionTextArea);
+    String pluginDescriptorUrl = plugin.getUrl();
+    if (!isEmptyOrSpaces(pluginDescriptorUrl)) {
+      sb.append("<h3>Plugin homepage</h3>").append(composeHref(pluginDescriptorUrl));
+    }
+
+    String size = plugin instanceof PluginNode ? ((PluginNode)plugin).getSize() : null;
+    if (!isEmptyOrSpaces(size)) {
+      sb.append("<h3>Size</h3>").append(PluginManagerColumnInfo.getFormattedSize(size));
+    }
+
+    Map<PluginDescriptor, Boolean> depends = new LinkedHashMap<>();
+    for (PluginId pluginId : plugin.getDependentPluginIds()) {
+      if (PluginIds.isPlatformPlugin(pluginId)) {
+        continue;
+      }
+
+      PluginDescriptor temp = findPlugin(allPlugins, pluginId);
+      if (temp != null) depends.put(temp, Boolean.FALSE);
+    }
+
+    for (PluginId pluginId : plugin.getOptionalDependentPluginIds()) {
+      if (PluginIds.isPlatformPlugin(pluginId)) {
+        continue;
+      }
+      PluginDescriptor temp = findPlugin(allPlugins, pluginId);
+      if (temp != null) depends.put(temp, Boolean.TRUE);
+    }
+
+    if (!depends.isEmpty()) {
+      sb.append("<h3>Depends on plugins:</h3>");
+
+      for (Map.Entry<PluginDescriptor, Boolean> entry : depends.entrySet()) {
+        PluginDescriptor key = entry.getKey();
+        Boolean optional = entry.getValue();
+
+        sb.append("&nbsp;&nbsp;");
+        sb.append("<a href=\"").append(PLUGIN_PREFIX).append(key.getPluginId()).append("\">").append(key.getName());
+        if (optional) {
+          sb.append("&nbsp;(optional)");
+        }
+        sb.append("</a>");
+
+        sb.append("<br>");
+      }
+    }
+
+    Map<PluginId, PluginDescriptor> dependentPlugins = new TreeMap<>();
+    for (PluginDescriptor descriptor : allPlugins) {
+      if (ArrayUtil.contains(plugin.getPluginId(), descriptor.getDependentPluginIds())) {
+        dependentPlugins.put(descriptor.getPluginId(), descriptor);
+      }
+
+      if (ArrayUtil.contains(plugin.getPluginId(), descriptor.getOptionalDependentPluginIds())) {
+        dependentPlugins.put(descriptor.getPluginId(), descriptor);
+      }
+    }
+
+    if (!dependentPlugins.isEmpty()) {
+      sb.append("<h3>Dependent plugins:</h3>");
+
+      for (PluginDescriptor pluginDescriptor : dependentPlugins.values()) {
+        sb.append("&nbsp;&nbsp;");
+        sb.append("<a href=\"").append("plugin://").append(pluginDescriptor.getPluginId()).append("\">").append(pluginDescriptor.getName());
+        sb.append("</a>");
+        sb.append("<br>");
+      }
+    }
+
+    Set<String> tags = plugin.getTags();
+    if (!tags.isEmpty()) {
+      sb.append("<h3>Tags:</h3>");
+      for (String tag : tags) {
+        sb.append("&nbsp;&nbsp;").append(PluginManagerMain.getTagLocalizeValue(tag).get()).append("<br>");
+      }
+    }
+
+    setTextValue(sb, filter, myDescriptionTextArea);
+  }
+
+  @Nullable
+  private static PluginDescriptor findPlugin(@Nonnull List<PluginDescriptor> allPlugins, @Nonnull PluginId pluginId) {
+    return ContainerUtil.find(allPlugins, it -> it.getPluginId() == pluginId);
   }
 
   private static void setTextValue(@Nullable StringBuilder text, @Nullable String filter, JEditorPane pane) {
@@ -173,7 +295,7 @@ public class PluginDescriptionPanel {
     int font = JBUI.scale(12);
     int margin5 = JBUI.scale(5);
     int margin2 = JBUI.scale(2);
-    return String.format(string, font, margin2, margin2, font, margin5, margin5);
+    return String.format(string, font, margin2, 0, font, 0, margin5);
   }
 
   @Nonnull

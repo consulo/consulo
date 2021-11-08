@@ -18,11 +18,11 @@ package com.intellij.ide.plugins;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.TableUtil;
 import com.intellij.ui.table.JBTable;
-import com.intellij.util.ArrayUtil;
 import com.intellij.util.ui.ColumnInfo;
 import com.intellij.util.ui.TextTransferable;
 import com.intellij.xml.util.XmlStringUtil;
 import consulo.container.plugin.PluginDescriptor;
+import consulo.container.plugin.PluginId;
 
 import javax.annotation.Nullable;
 import javax.swing.*;
@@ -103,12 +103,12 @@ public class PluginTable extends JBTable {
     return ((PluginTableModel)getModel()).getObjectAt(convertRowIndexToModel(row));
   }
 
-  public void select(PluginDescriptor... descriptors) {
+  public void select(PluginId target) {
     PluginTableModel tableModel = (PluginTableModel)getModel();
     getSelectionModel().clearSelection();
     for (int i = 0; i < tableModel.getRowCount(); i++) {
       PluginDescriptor descriptorAt = tableModel.getObjectAt(i);
-      if (ArrayUtil.find(descriptors, descriptorAt) != -1) {
+      if (target == descriptorAt.getPluginId()) {
         final int row = convertRowIndexToView(i);
         getSelectionModel().addSelectionInterval(row, row);
       }

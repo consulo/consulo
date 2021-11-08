@@ -105,7 +105,7 @@ public class IntentionDescriptionPanel {
           return;
         }
 
-        data.select(PluginsConfigurable.class).doWhenDone((pluginConfigurable) -> pluginConfigurable.select(pluginDescriptor));
+        data.select(PluginsConfigurable.class).doWhenDone((pluginConfigurable) -> pluginConfigurable.selectInstalled(pluginId));
       }
     });
     owner = label;

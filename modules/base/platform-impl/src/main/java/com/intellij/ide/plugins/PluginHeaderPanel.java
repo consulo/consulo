@@ -18,6 +18,7 @@ package com.intellij.ide.plugins;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.ui.DialogWrapper;
+import com.intellij.openapi.ui.VerticalFlowLayout;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.components.JBLabel;
 import com.intellij.ui.components.JBTextArea;
@@ -30,37 +31,27 @@ import com.intellij.util.ui.components.BorderLayoutPanel;
 import consulo.awt.TargetAWT;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginIds;
-import consulo.container.plugin.PluginPermissionDescriptor;
-import consulo.container.plugin.PluginPermissionType;
 import consulo.ide.plugins.PluginIconHolder;
-import consulo.localize.LocalizeValue;
-import consulo.util.lang.StringUtil;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionListener;
 
 /**
  * @author Konstantin Bulenkov
  */
 public class PluginHeaderPanel {
-  private PluginDescriptor myPlugin;
-
-  @Nullable
-  private final PluginManagerMain myManager;
   private JTextArea myName;
   private JBLabel myDownloads;
   private RatesPanel myRating;
   private JBLabel myUpdated;
   private JButton myInstallButton;
-  private JBLabel myVersion;
   private JPanel myRoot;
   private JPanel myDownloadsPanel;
   private JLabel myExperimentalLabel;
   private JLabel myIconLabel;
-
-  private JPanel myTagsPanel;
-  private JPanel myPermissionsPanel;
 
   enum ACTION_ID {
     INSTALL,
@@ -70,14 +61,13 @@ public class PluginHeaderPanel {
 
   private ACTION_ID myActionId = ACTION_ID.INSTALL;
 
-  public PluginHeaderPanel(@Nullable PluginManagerMain manager) {
-    initComponents();
+  private ActionListener myActionListener;
 
-    myManager = manager;
+  public PluginHeaderPanel() {
+    initComponents();
   }
 
-  public void setPlugin(PluginDescriptor plugin) {
-    myPlugin = plugin;
+  public void update(@Nonnull PluginDescriptor plugin, @Nullable PluginManagerMain manager) {
     myRoot.setVisible(true);
     myDownloadsPanel.setVisible(true);
     myInstallButton.setVisible(true);
@@ -85,7 +75,6 @@ public class PluginHeaderPanel {
 
     myName.setText(plugin.getName());
     myName.setFont(UIUtil.getLabelFont(UIUtil.FontSize.BIGGER).deriveFont(Font.BOLD));
-    myVersion.setText(StringUtil.notNullize(plugin.getVersion(), "N/A"));
 
     if (plugin instanceof PluginNode) {
       final PluginNode node = (PluginNode)plugin;
@@ -116,12 +105,12 @@ public class PluginHeaderPanel {
           myActionId = ACTION_ID.UNINSTALL;
         }
       }
-      if (myActionId == ACTION_ID.RESTART && myManager != null && !myManager.isRequireShutdown()) {
+      if (myActionId == ACTION_ID.RESTART && manager != null && !manager.isRequireShutdown()) {
         myActionId = null;
       }
     }
 
-    if (myManager == null || myActionId == null) {
+    if (manager == null || myActionId == null) {
       myActionId = ACTION_ID.INSTALL;
       myInstallButton.setVisible(false);
     }
@@ -156,6 +145,34 @@ public class PluginHeaderPanel {
     myRoot.revalidate();
     myInstallButton.getParent().revalidate();
     myInstallButton.revalidate();
+    if (myActionListener != null) {
+      myInstallButton.removeActionListener(myActionListener);
+      myActionListener = null;
+    }
+
+    myActionListener = e -> {
+      switch (myActionId) {
+        case INSTALL:
+          new InstallPluginAction(manager).install(null, () -> UIUtil.invokeLaterIfNeeded(() -> update(plugin, manager)));
+          break;
+        case UNINSTALL:
+          UninstallPluginAction.uninstall(manager.getInstalled(), plugin);
+          break;
+        case RESTART:
+          if (manager != null) {
+            manager.apply();
+          }
+          final DialogWrapper dialog = DialogWrapper.findInstance(KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner());
+          if (dialog != null) {
+            dialog.doOKActionPublic();
+
+            ApplicationManager.getApplication().restart(true);
+          }
+          break;
+      }
+      update(plugin, manager);
+    };
+    myInstallButton.addActionListener(myActionListener);
 
     myExperimentalLabel.setText("Experimental");
     myExperimentalLabel.setVisible(plugin.isExperimental());
@@ -163,31 +180,6 @@ public class PluginHeaderPanel {
       myExperimentalLabel.setIcon(TargetAWT.to(AllIcons.General.BalloonWarning));
       myExperimentalLabel.setFont(UIUtil.getLabelFont(UIUtil.FontSize.BIGGER).deriveFont(Font.BOLD));
       myExperimentalLabel.setForeground(JBColor.RED);
-    }
-
-    myPermissionsPanel.removeAll();
-
-    boolean noPermission = true;
-    for (PluginPermissionType permissionType : PluginPermissionType.values()) {
-      PluginPermissionDescriptor permissionDescriptor = plugin.getPermissionDescriptor(permissionType);
-      if (permissionDescriptor != null) {
-        JBLabel label = new JBLabel("- " + permissionType.name());
-        myPermissionsPanel.add(label);
-        noPermission = false;
-      }
-    }
-
-    if (noPermission) {
-      JBLabel noPermissionsLabel = new JBLabel("<no special permissions>");
-      noPermissionsLabel.setForeground(JBColor.GRAY);
-      noPermissionsLabel.setFont(UIUtil.getLabelFont(UIUtil.FontSize.SMALL));
-      myPermissionsPanel.add(noPermissionsLabel);
-    }
-
-    myTagsPanel.removeAll();
-
-    for (LocalizeValue tagValue : PluginManagerMain.getLocalizedTags(plugin)) {
-      myTagsPanel.add(new JBLabel(tagValue.get()));
     }
   }
 
@@ -208,28 +200,15 @@ public class PluginHeaderPanel {
     myInstallButton = new JButton();
     myInstallButton.setOpaque(false);
 
-    JPanel buttonPanel = new JPanel(new VerticalLayout(JBUI.scale(5)));
-    buttonPanel.setOpaque(false);
-    buttonPanel.add(myInstallButton);
+    JPanel nameWrapper = new JPanel(new VerticalFlowLayout(VerticalFlowLayout.MIDDLE, true, true));
+    nameWrapper.setOpaque(false);
+    nameWrapper.add(myName);
 
-    myRoot.add(new BorderLayoutPanel().addToLeft(myIconLabel).addToCenter(myName).addToRight(buttonPanel).andTransparent());
+    myRoot.add(new BorderLayoutPanel().addToLeft(myIconLabel).addToCenter(nameWrapper).andTransparent());
+    myRoot.add(new BorderLayoutPanel().addToRight(myInstallButton).andTransparent());
 
     myExperimentalLabel = new JBLabel();
     myRoot.add(new BorderLayoutPanel().addToRight(myExperimentalLabel).andTransparent());
-
-    Font boldFont = UIUtil.getLabelFont(UIUtil.FontSize.NORMAL).deriveFont(Font.BOLD);
-
-    JLabel permissionLabel = new JBLabel("Permissions:");
-    permissionLabel.setFont(boldFont);
-    myPermissionsPanel = new JPanel(new VerticalLayout(0));
-    myPermissionsPanel.setOpaque(false);
-    myPermissionsPanel.setBorder(JBUI.Borders.empty(0, 8, 0, 0));
-
-    JLabel tagsLabel = new JBLabel("Tags:");
-    tagsLabel.setFont(boldFont);
-    myTagsPanel = new JPanel(new VerticalLayout(0));
-    myTagsPanel.setOpaque(false);
-    myTagsPanel.setBorder(JBUI.Borders.empty(0, 8, 0, 0));
 
     myDownloadsPanel = new JPanel(new HorizontalLayout(JBUI.scale(5)));
     myDownloadsPanel.setOpaque(false);
@@ -238,44 +217,6 @@ public class PluginHeaderPanel {
     myRoot.add(new BorderLayoutPanel().andTransparent().addToRight(myDownloadsPanel));
 
     myUpdated = new JBLabel();
-    myVersion = new JBLabel();
-
-    JPanel versionInfoPanel = new JPanel(new HorizontalLayout(JBUI.scale(5)));
-    versionInfoPanel.setOpaque(false);
-    JBLabel verLabel = new JBLabel("Version:");
-    verLabel.setFont(boldFont);
-    versionInfoPanel.add(verLabel);
-    versionInfoPanel.add(myVersion);
-    myRoot.add(versionInfoPanel);
-
-    myRoot.add(permissionLabel);
-    myRoot.add(myPermissionsPanel);
-
-    myRoot.add(tagsLabel);
-    myRoot.add(myTagsPanel);
-
-    myInstallButton.addActionListener(e -> {
-      switch (myActionId) {
-        case INSTALL:
-          new InstallPluginAction(myManager).install(null, () -> UIUtil.invokeLaterIfNeeded(() -> setPlugin(myPlugin)));
-          break;
-        case UNINSTALL:
-          UninstallPluginAction.uninstall(myManager.getInstalled(), myPlugin);
-          break;
-        case RESTART:
-          if (myManager != null) {
-            myManager.apply();
-          }
-          final DialogWrapper dialog = DialogWrapper.findInstance(KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner());
-          if (dialog != null) {
-            dialog.doOKActionPublic();
-
-            ApplicationManager.getApplication().restart(true);
-          }
-          break;
-      }
-      setPlugin(myPlugin);
-    });
 
     myDownloads.setForeground(JBColor.GRAY);
     myUpdated.setForeground(JBColor.GRAY);
@@ -283,26 +224,6 @@ public class PluginHeaderPanel {
     myDownloads.setFont(smallFont);
     myUpdated.setFont(smallFont);
     myRoot.setVisible(false);
-  }
-
-  public JTextArea getName() {
-    return myName;
-  }
-
-  public JBLabel getDownloads() {
-    return myDownloads;
-  }
-
-  public RatesPanel getRating() {
-    return myRating;
-  }
-
-  public JBLabel getUpdated() {
-    return myUpdated;
-  }
-
-  public JButton getInstallButton() {
-    return myInstallButton;
   }
 
   public JPanel getPanel() {

@@ -99,7 +99,7 @@ public class PluginsAdvertiser implements StartupActivity.Background, DumbAware 
                   else if ("configure".equals(description)) {
                     notification.expire();
 
-                    new PluginsAdvertiserDialog(project, new ArrayList<>(ids)).show();
+                    new PluginsAdvertiserDialog(project, pluginDescriptors, new ArrayList<>(ids)).showAsync();
                   }
                 }
               }).notify(project);

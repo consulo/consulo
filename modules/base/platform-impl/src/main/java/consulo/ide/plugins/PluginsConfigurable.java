@@ -19,7 +19,7 @@ import com.intellij.ide.IdeBundle;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.options.SearchableConfigurable;
-import consulo.container.plugin.PluginDescriptor;
+import consulo.container.plugin.PluginId;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -100,7 +100,15 @@ public class PluginsConfigurable implements SearchableConfigurable, Configurable
     };
   }
 
-  public void select(PluginDescriptor... descriptors) {
-    myPanel.select(descriptors);
+  public void selectInstalled(PluginId pluginId) {
+    myPanel.selectInstalled(pluginId);
+  }
+
+  public void selectAvailable(PluginId pluginId) {
+    myPanel.selectAvailable(pluginId);
+  }
+
+  public void select(PluginId pluginId) {
+    myPanel.getSelected().select(pluginId);
   }
 }

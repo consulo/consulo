@@ -42,6 +42,7 @@ import com.intellij.util.ui.components.BorderLayoutPanel;
 import com.intellij.util.ui.update.UiNotifyConnector;
 import com.intellij.xml.util.XmlStringUtil;
 import consulo.container.plugin.PluginDescriptor;
+import consulo.container.plugin.PluginId;
 import consulo.disposer.Disposable;
 import consulo.ide.eap.EarlyAccessProgramManager;
 import consulo.ide.plugins.PluginDescriptionPanel;
@@ -205,7 +206,8 @@ public abstract class PluginManagerMain implements Disposable {
   @RequiredUIAccess
   public void refresh() {
     final PluginDescriptor[] descriptors = myPluginTable.getSelectedObjects();
-    myDescriptionPanel.setPlugin(descriptors != null && descriptors.length == 1 ? descriptors[0] : null, myFilter.getFilter());
+    List<PluginDescriptor> allPlugins = myPluginsModel.getAllPlugins();
+    myDescriptionPanel.update(descriptors != null && descriptors.length == 1 ? descriptors[0] : null, this, allPlugins, myFilter.getFilter());
   }
 
   public void setRequireShutdown(boolean val) {
@@ -217,11 +219,11 @@ public abstract class PluginManagerMain implements Disposable {
   }
 
   protected void modifyPluginsList(List<PluginDescriptor> list) {
-    PluginDescriptor[] selected = myPluginTable.getSelectedObjects();
+    PluginDescriptor selected = myPluginTable.getSelectedObject();
     myPluginsModel.updatePluginsList(list);
     myPluginsModel.filter(myFilter.getFilter().toLowerCase());
     if (selected != null) {
-      select(selected);
+      select(selected.getPluginId());
     }
   }
 
@@ -390,8 +392,8 @@ public abstract class PluginManagerMain implements Disposable {
     }
   }
 
-  public void select(PluginDescriptor... descriptors) {
-    myPluginTable.select(descriptors);
+  public void select(PluginId pluginId) {
+    myPluginTable.select(pluginId);
   }
 
   protected static boolean isAccepted(String filter, Set<String> search, PluginDescriptor descriptor) {

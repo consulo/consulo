@@ -28,12 +28,13 @@ import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.ui.components.panels.Wrapper;
 import com.intellij.ui.tabs.TabInfo;
 import com.intellij.ui.tabs.impl.JBEditorTabs;
-import consulo.container.plugin.PluginDescriptor;
+import consulo.container.plugin.PluginId;
 import consulo.container.plugin.PluginManager;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.util.dataholder.Key;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 
 /**
@@ -98,8 +99,12 @@ public class PluginsPanel implements Disposable {
     myInstalledPluginsPanel.filter(option);
   }
 
-  public void select(PluginDescriptor... pluginDescriptor) {
-    myInstalledPluginsPanel.select(pluginDescriptor);
+  public void selectInstalled(PluginId pluginId) {
+    myInstalledPluginsPanel.select(pluginId);
+  }
+
+  public void selectAvailable(PluginId pluginId) {
+    myAvailablePluginsManagerMain.select(pluginId);
   }
 
   public void select(PluginManagerMain main) {
@@ -116,6 +121,21 @@ public class PluginsPanel implements Disposable {
 
     TabInfo tabAt = myTabs.getTabAt(index);
     myTabs.select(tabAt, false);
+  }
+
+  @Nonnull
+  public PluginManagerMain getSelected() {
+    TabInfo selectedInfo = myTabs.getSelectedInfo();
+    if (selectedInfo == null) {
+      return myInstalledPluginsPanel;
+    }
+
+    int index = myTabs.getIndexOf(selectedInfo);
+    if(index == 0) {
+      return myAvailablePluginsManagerMain;
+    }
+
+    return myInstalledPluginsPanel;
   }
 
   public JComponent getComponent() {

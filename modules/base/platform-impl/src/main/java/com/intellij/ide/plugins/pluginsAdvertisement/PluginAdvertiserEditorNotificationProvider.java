@@ -19,7 +19,6 @@ import com.intellij.ide.IdeBundle;
 import com.intellij.ide.plugins.PluginManager;
 import com.intellij.ide.plugins.PluginManagerCore;
 import com.intellij.ide.plugins.PluginManagerMain;
-import consulo.container.plugin.PluginId;
 import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.fileTypes.FileTypeFactory;
 import com.intellij.openapi.fileTypes.PlainTextFileType;
@@ -32,13 +31,14 @@ import com.intellij.ui.EditorNotificationPanel;
 import com.intellij.ui.EditorNotifications;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.container.plugin.PluginDescriptor;
+import consulo.container.plugin.PluginId;
 import consulo.editor.notifications.EditorNotificationProvider;
 import consulo.ide.plugins.pluginsAdvertisement.PluginsAdvertiserDialog;
 import consulo.ide.plugins.pluginsAdvertisement.PluginsAdvertiserHolder;
+import jakarta.inject.Inject;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import jakarta.inject.Inject;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -79,14 +79,14 @@ public class PluginAdvertiserEditorNotificationProvider implements EditorNotific
 
     Set<PluginDescriptor> byFeature = PluginsAdvertiser.findByFeature(allPlugins, fileFeatureForChecking);
     if (!byFeature.isEmpty()) {
-      return createPanel(file, byFeature);
+      return createPanel(file, byFeature, allPlugins);
 
     }
     return null;
   }
 
   @Nonnull
-  private EditorNotificationPanel createPanel(VirtualFile virtualFile, Set<PluginDescriptor> plugins) {
+  private EditorNotificationPanel createPanel(VirtualFile virtualFile, Set<PluginDescriptor> plugins, List<PluginDescriptor> allPlugins) {
     String extension = virtualFile.getExtension();
 
     final EditorNotificationPanel panel = new EditorNotificationPanel();
@@ -102,7 +102,7 @@ public class PluginAdvertiserEditorNotificationProvider implements EditorNotific
     }
     else {
       panel.createActionLabel(IdeBundle.message("plugin.advestiser.notification.install.link", plugins.size()), () -> {
-        final PluginsAdvertiserDialog advertiserDialog = new PluginsAdvertiserDialog(null, new ArrayList<>(plugins));
+        final PluginsAdvertiserDialog advertiserDialog = new PluginsAdvertiserDialog(null, allPlugins, new ArrayList<>(plugins));
         advertiserDialog.show();
         if (advertiserDialog.isUserInstalledPlugins()) {
           myEnabledExtensions.add(extension);

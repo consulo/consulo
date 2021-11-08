@@ -45,11 +45,11 @@ public abstract class AbstractSortByAction extends ToggleAction {
 
   @Override
   public final void setSelected(AnActionEvent e, boolean state) {
-    PluginDescriptor[] selected = myTable.getSelectedObjects();
+    PluginDescriptor selected = myTable.getSelectedObject();
     setSelected(state);
     myModel.sort();
     if (selected != null) {
-      myTable.select(selected);
+      myTable.select(selected.getPluginId());
     }
   }
 }
