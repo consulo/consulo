@@ -185,10 +185,16 @@ public abstract class ProjectLevelVcsManager {
 
   public abstract boolean hasAnyMappings();
 
-  @Deprecated
-  public abstract void addMessageToConsoleWindow(String message, TextAttributes attributes);
+  @Deprecated(forRemoval = true)
+  public void addMessageToConsoleWindow(final String message, final TextAttributes attributes) {
+    addMessageToConsoleWindow(message, new ConsoleViewContentType("", attributes));
+  }
 
-  public abstract void addMessageToConsoleWindow(@Nullable String message, @Nonnull ConsoleViewContentType contentType);
+  public void addMessageToConsoleWindow(@Nullable String message, @Nonnull ConsoleViewContentType contentType) {
+    addMessageToConsoleWindow(VcsConsoleLine.create(message, contentType));
+  }
+
+  public abstract void addMessageToConsoleWindow(@Nullable VcsConsoleLine line);
 
   @Nonnull
   public abstract VcsShowSettingOption getStandardOption(@Nonnull VcsConfiguration.StandardOption option, @Nonnull AbstractVcs vcs);

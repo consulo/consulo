@@ -17,7 +17,6 @@ package com.intellij.openapi.vcs.impl;
 
 import com.intellij.execution.filters.TextConsoleBuilderFactory;
 import com.intellij.execution.ui.ConsoleView;
-import com.intellij.execution.ui.ConsoleViewContentType;
 import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.actionSystem.ActionToolbar;
 import com.intellij.openapi.actionSystem.DefaultActionGroup;
@@ -27,13 +26,11 @@ import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.components.StoragePathMacros;
-import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.FileIndexFacade;
 import com.intellij.openapi.util.InvalidDataException;
-import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.ThrowableComputable;
 import com.intellij.openapi.util.WriteExternalException;
 import com.intellij.openapi.util.io.FileUtil;
@@ -148,7 +145,7 @@ public class ProjectLevelVcsManagerImpl extends ProjectLevelVcsManagerEx impleme
 
   private final Set<ActionKey> myBackgroundRunningTasks = ContainerUtil.newHashSet();
 
-  private final List<Pair<String, ConsoleViewContentType>> myPendingOutput = ContainerUtil.newArrayList();
+  private final List<VcsConsoleLine> myPendingOutput = new ArrayList<>();
 
   private final VcsHistoryCache myVcsHistoryCache;
   private final ContentRevisionCache myContentRevisionCache;
@@ -388,31 +385,20 @@ public class ProjectLevelVcsManagerImpl extends ProjectLevelVcsManagerEx impleme
     return !myMappings.isEmpty();
   }
 
-  @Deprecated
   @Override
-  public void addMessageToConsoleWindow(final String message, final TextAttributes attributes) {
-    addMessageToConsoleWindow(message, new ConsoleViewContentType("", attributes));
-  }
-
-  @Override
-  public void addMessageToConsoleWindow(@Nullable final String message, @Nonnull final ConsoleViewContentType contentType) {
-    if (!Registry.is("vcs.showConsole")) {
-      return;
-    }
-    if (StringUtil.isEmptyOrSpaces(message)) {
-      return;
-    }
+  public void addMessageToConsoleWindow(@Nullable VcsConsoleLine line) {
+    if (line == null) return;
 
     ApplicationManager.getApplication().invokeLater(() -> {
       // for default and disposed projects the ContentManager is not available.
       if (myProject.isDisposed() || myProject.isDefault()) return;
       final ContentManager contentManager = getContentManager();
       if (contentManager == null) {
-        myPendingOutput.add(Pair.create(message, contentType));
+        myPendingOutput.add(line);
       }
       else {
         getOrCreateConsoleContent(contentManager);
-        printToConsole(message, contentType);
+        line.print(myConsole);
       }
     }, ModalityState.defaultModalityState());
   }
@@ -435,16 +421,12 @@ public class ProjectLevelVcsManagerImpl extends ProjectLevelVcsManagerEx impleme
       content.setDisposer(myConsoleDisposer);
       contentManager.addContent(content);
 
-      for (Pair<String, ConsoleViewContentType> pair : myPendingOutput) {
-        printToConsole(pair.first, pair.second);
+      for (VcsConsoleLine pair : myPendingOutput) {
+       pair.print(myConsole);
       }
       myPendingOutput.clear();
     }
     return content;
-  }
-
-  private void printToConsole(@Nonnull String message, @Nonnull ConsoleViewContentType contentType) {
-    myConsole.print(message + "\n", contentType);
   }
 
   private void releaseConsole() {
