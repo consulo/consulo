@@ -4,6 +4,8 @@ package com.intellij.util.ui;
 import consulo.logging.Logger;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.ui.style.StyleManager;
+
 import javax.annotation.Nonnull;
 
 import javax.imageio.ImageIO;
@@ -89,10 +91,12 @@ public class JBHtmlEditorKit extends HTMLEditorKit {
   }
 
   public static StyleSheet createStyleSheet() {
+    return createStyleSheet(StyleManager.get().getCurrentStyle().isDark());
+  }
+
+  public static StyleSheet createStyleSheet(boolean dark) {
     StyleSheet style = new StyleSheet();
-    // FIXME [VISTALL] this code runs before app initialze, that mean before LafManagerImpl initiaze, that mean - it will be always alwya
-    style.addStyleSheet(UIUtil.getDefaultHtmlKitCss());
-    //style.addStyleSheet(UIUtil.isUnderDarcula() ? (StyleSheet)UIManager.getDefaults().get("StyledEditorKit.JBDefaultStyle") : UIUtil.getDefaultHtmlKitCss());
+    style.addStyleSheet(dark ? (StyleSheet)UIManager.getDefaults().get("StyledEditorKit.JBDefaultStyle") : UIUtil.getDefaultHtmlKitCss());
     style.addRule("code { font-size: 100%; }"); // small by Swing's default
     style.addRule("small { font-size: small; }"); // x-small by Swing's default
     style.addRule("a { text-decoration: none;}");

@@ -397,7 +397,7 @@ public class UIUtil {
     kit.setStyleSheet(null);
 
     // Applied to all JLabel instances, including subclasses. Supported in JBR only.
-    UIManager.getDefaults().put("javax.swing.JLabel.userStyleSheet", JBHtmlEditorKit.createStyleSheet());
+    UIManager.getDefaults().put("javax.swing.JLabel.userStyleSheet", JBHtmlEditorKit.createStyleSheet(false));
   }
 
   public static StyleSheet getDefaultHtmlKitCss() {
