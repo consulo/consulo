@@ -29,6 +29,7 @@ import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.xml.util.XmlStringUtil;
 import consulo.container.plugin.*;
+import consulo.desktop.util.awt.MorphColor;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.StringUtil;
@@ -102,11 +103,10 @@ public class PluginDescriptionPanel {
 
   public PluginDescriptionPanel() {
     myPanel = new JPanel(new BorderLayout());
-    myPanel.setBackground(UIUtil.getTextFieldBackground());
+    myPanel.setBackground(MorphColor.of(UIUtil::getTextFieldBackground));
 
     myPluginHeaderPanel = new PluginHeaderPanel();
-    myPluginHeaderPanel.getPanel().setBackground(UIUtil.getTextFieldBackground());
-    myPluginHeaderPanel.getPanel().setOpaque(true);
+    myPluginHeaderPanel.getPanel().setOpaque(false);
     myPluginHeaderPanel.getPanel().setBorder(JBUI.Borders.empty(5, 5, 0, 5));
 
     myPanel.add(myPluginHeaderPanel.getPanel(), BorderLayout.NORTH);
@@ -115,7 +115,7 @@ public class PluginDescriptionPanel {
     myDescriptionTextArea.setEditorKit(UIUtil.getHTMLEditorKit());
     myDescriptionTextArea.setEditable(false);
     myDescriptionTextArea.addHyperlinkListener(new MyHyperlinkListener());
-    myDescriptionTextArea.setBackground(UIUtil.getTextFieldBackground());
+    myDescriptionTextArea.setOpaque(false);
 
     myPanel.add(ScrollPaneFactory.createScrollPane(myDescriptionTextArea, true), BorderLayout.CENTER);
   }
