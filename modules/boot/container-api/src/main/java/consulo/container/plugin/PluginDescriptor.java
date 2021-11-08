@@ -16,7 +16,6 @@
 package consulo.container.plugin;
 
 import consulo.annotation.DeprecationInfo;
-import consulo.util.nodep.function.Function;
 import consulo.util.nodep.xml.node.SimpleXmlElement;
 
 import javax.annotation.Nonnull;
@@ -32,6 +31,10 @@ import java.util.Set;
  */
 public interface PluginDescriptor {
   PluginDescriptor[] EMPTY_ARRAY = new PluginDescriptor[0];
+
+  public interface UserDataCalculator<Param, Result> {
+    Result calc(Param param);
+  }
 
   String EXPERIMENTAL_TAG = "experimental";
 
@@ -155,5 +158,5 @@ public interface PluginDescriptor {
    * Put user data data
    */
   @Nonnull
-  <K, V> V computeUserData(K key, Function<K, V> function);
+  <K, V> V computeUserData(K key, UserDataCalculator<K, V> function);
 }

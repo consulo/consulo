@@ -16,7 +16,6 @@
 package consulo.container.plugin;
 
 import consulo.util.nodep.ArrayUtilRt;
-import consulo.util.nodep.function.Function;
 import consulo.util.nodep.xml.node.SimpleXmlElement;
 
 import javax.annotation.Nonnull;
@@ -196,12 +195,12 @@ public abstract class PluginDescriptorStub implements PluginDescriptor {
 
   @Nonnull
   @Override
-  public <K, V> V computeUserData(K key, final Function<K, V> function) {
+  public <K, V> V computeUserData(K key, final UserDataCalculator<K, V> function) {
     V data = getUserData(key);
     if (data != null) {
       return data;
     }
-    V value = function.fun(key);
+    V value = function.calc(key);
     myUserData.putIfAbsent(key, value);
     return value;
   }
