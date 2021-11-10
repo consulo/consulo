@@ -22,6 +22,7 @@ import consulo.annotation.DeprecationInfo;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.logging.Logger;
 import consulo.util.PluginExceptionUtil;
+import consulo.util.lang.ControlFlowException;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -124,6 +125,9 @@ public class ExtensionPointName<T> {
         consumer.accept(value);
       }
       catch (Throwable e) {
+        if (e instanceof ControlFlowException) {
+          throw ControlFlowException.rethrow(e);
+        }
         PluginExceptionUtil.logPluginError(LOG, e.getMessage(), e, value.getClass());
       }
     });
@@ -138,6 +142,9 @@ public class ExtensionPointName<T> {
         }
       }
       catch (Throwable e) {
+        if (e instanceof ControlFlowException) {
+          throw ControlFlowException.rethrow(e);
+        }
         PluginExceptionUtil.logPluginError(LOG, e.getMessage(), e, extension.getClass());
       }
     }

@@ -15,9 +15,18 @@
  */
 package consulo.util.lang;
 
+import javax.annotation.Nonnull;
+
 /**
  * A marker interface for exceptions that should never be logged.
  */
-@SuppressWarnings("NonExceptionNameEndsWithException")
 public interface ControlFlowException {
+  @Nonnull
+  public static RuntimeException rethrow(Throwable t) {
+    if (!(t instanceof ControlFlowException)) {
+      throw new IllegalArgumentException(t.getClass() + " is not ControlFlowException");
+    }
+
+    return (RuntimeException)t;
+  }
 }
