@@ -377,18 +377,18 @@ public class NewErrorTreeViewPanel extends JPanel implements DataProvider, Occur
     if (path == null) {
       return;
     }
-    DefaultActionGroup group = new DefaultActionGroup();
+    ActionGroup.Builder group = ActionGroup.newImmutableBuilder();
     if (getData(PlatformDataKeys.NAVIGATABLE) != null) {
       group.add(ActionManager.getInstance().getAction(IdeActions.ACTION_EDIT_SOURCE));
     }
     group.add(ActionManager.getInstance().getAction(IdeActions.ACTION_COPY));
     addExtraPopupMenuActions(group);
 
-    ActionPopupMenu menu = ActionManager.getInstance().createActionPopupMenu(ActionPlaces.COMPILER_MESSAGES_POPUP, group);
+    ActionPopupMenu menu = ActionManager.getInstance().createActionPopupMenu(ActionPlaces.COMPILER_MESSAGES_POPUP, group.build());
     menu.getComponent().show(component, x, y);
   }
 
-  protected void addExtraPopupMenuActions(DefaultActionGroup group) {
+  protected void addExtraPopupMenuActions(ActionGroup.Builder group) {
   }
 
   public void setProcessController(ProcessController controller) {
@@ -501,7 +501,7 @@ public class NewErrorTreeViewPanel extends JPanel implements DataProvider, Occur
   }
 
   private JComponent createToolbarPanel(@Nullable Runnable rerunAction) {
-    DefaultActionGroup group = new DefaultActionGroup();
+    ActionGroup.Builder group = ActionGroup.newImmutableBuilder();
     addActionsBefore(group);
     if (rerunAction != null) {
       group.add(new RerunAction(rerunAction));
@@ -528,15 +528,16 @@ public class NewErrorTreeViewPanel extends JPanel implements DataProvider, Occur
 
     addActionsAfter(group);
 
-    myToolbar = ActionManager.getInstance().createActionToolbar(ActionPlaces.COMPILER_MESSAGES_TOOLBAR, group, false);
+    myToolbar = ActionManager.getInstance().createActionToolbar(ActionPlaces.COMPILER_MESSAGES_TOOLBAR, group.build(), false);
+    myToolbar.setTargetComponent(myMessagePanel);
 
     return myToolbar.getComponent();
   }
 
-  protected void addActionsBefore(DefaultActionGroup group) {
+  protected void addActionsBefore(ActionGroup.Builder group) {
   }
 
-  public void addActionsAfter(DefaultActionGroup group) {
+  public void addActionsAfter(ActionGroup.Builder group) {
   }
 
   @Override

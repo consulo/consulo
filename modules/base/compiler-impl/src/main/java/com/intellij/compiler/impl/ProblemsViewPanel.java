@@ -28,12 +28,12 @@ public class ProblemsViewPanel extends NewErrorTreeViewPanel {
   }
 
   @Override
-  public void addActionsAfter(DefaultActionGroup group) {
+  public void addActionsAfter(ActionGroup.Builder group) {
     group.add(new CompilerPropertiesAction());
   }
 
   @Override
-  protected void addExtraPopupMenuActions(DefaultActionGroup group) {
+  protected void addExtraPopupMenuActions(ActionGroup.Builder group) {
     group.add(new ExcludeFromCompileAction(myProject, this));
 
     ActionGroup popupGroup = (ActionGroup)ActionManager.getInstance().getAction(IdeActions.GROUP_COMPILER_ERROR_VIEW_POPUP);
