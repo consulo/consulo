@@ -214,8 +214,7 @@ public class JarHandler extends ZipHandler {
 
   @Nonnull
   private static String getJarsDir() {
-    String dir = System.getProperty("jars_dir");
-    return dir == null ? ContainerPathManager.get().getSystemPath() + File.separatorChar + JARS_FOLDER : dir;
+    return ContainerPathManager.get().getSystemPath() + File.separatorChar + JARS_FOLDER;
   }
 
   @Nonnull
