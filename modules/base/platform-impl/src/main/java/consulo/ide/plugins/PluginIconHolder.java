@@ -45,8 +45,12 @@ public class PluginIconHolder {
     }));
   }
 
+  public static void put(@Nonnull PluginDescriptor descriptor, @Nonnull Image image) {
+    descriptor.computeUserData(PLUGIN_ICON_KEY, s -> decorateIcon(image));
+  }
+
   @Nonnull
-  public static Image decorateIcon(@Nonnull Image image) {
+  private static Image decorateIcon(@Nonnull Image image) {
     return ImageEffects.resize(image, ICON_SIZE, ICON_SIZE);
   }
 

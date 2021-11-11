@@ -65,8 +65,7 @@ public class PluginNode extends PluginDescriptorStub {
   private boolean myExperimental;
 
   private byte[] myIconBytes = ArrayUtil.EMPTY_BYTE_ARRAY;
-
-  private Image myInitializedIcon;
+  private byte[] myIconDarkBytes = ArrayUtil.EMPTY_BYTE_ARRAY;
 
   private List<SimpleExtension> mySimpleExtensions = Collections.emptyList();
   private Map<PluginPermissionType, PluginPermissionDescriptor> myPermissions = Collections.emptyMap();
@@ -93,6 +92,7 @@ public class PluginNode extends PluginDescriptorStub {
     setDownloads(String.valueOf(jsonPlugin.downloads));
     setCategory(jsonPlugin.category);
     myIconBytes = decodeIconBytes(jsonPlugin.iconBytes);
+    myIconDarkBytes = decodeIconBytes(jsonPlugin.iconDarkBytes);
 
     if (jsonPlugin.dependencies != null) {
       addDependency(Arrays.stream(jsonPlugin.dependencies).map(PluginId::getId).toArray(PluginId[]::new));
@@ -237,16 +237,10 @@ public class PluginNode extends PluginDescriptorStub {
   @Nonnull
   @Override
   public byte[] getIconBytes(boolean isDarkTheme) {
+    if (isDarkTheme && myIconDarkBytes.length > 0) {
+      return myIconDarkBytes;
+    }
     return myIconBytes;
-  }
-
-  @Nullable
-  public Image getInitializedIcon() {
-    return myInitializedIcon;
-  }
-
-  public void setInitializedIcon(@Nullable Image initializedIcon) {
-    myInitializedIcon = initializedIcon;
   }
 
   public void setDescription(String description) {

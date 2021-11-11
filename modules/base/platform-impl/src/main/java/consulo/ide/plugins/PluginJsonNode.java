@@ -49,6 +49,7 @@ public class PluginJsonNode {
   public Integer rating;
   public String version;
   public String iconBytes;
+  public String iconDarkBytes;
   public String platformVersion;
   public String[] dependencies;
   public String[] optionalDependencies;
