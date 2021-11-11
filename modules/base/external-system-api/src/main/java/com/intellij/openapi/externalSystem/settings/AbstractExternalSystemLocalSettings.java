@@ -26,12 +26,11 @@ import com.intellij.openapi.externalSystem.util.ExternalSystemConstants;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.Project;
-import com.intellij.util.SystemProperties;
 import com.intellij.util.containers.ContainerUtilRt;
 import consulo.annotation.access.RequiredReadAction;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -48,9 +47,6 @@ import java.util.concurrent.atomic.AtomicReference;
  * @since 4/4/13 4:51 PM
  */
 public abstract class AbstractExternalSystemLocalSettings {
-  private static final boolean PRESERVE_EXPAND_STATE
-    = !SystemProperties.getBooleanProperty("external.system.forget.expand.nodes.state", false);
-
   private final AtomicReference<Map<String/*tree path*/, Boolean/*expanded*/>>                               myExpandStates
                                                                                                                                                 =
     new AtomicReference<Map<String, Boolean>>(new HashMap<String, Boolean>());
@@ -190,12 +186,7 @@ public abstract class AbstractExternalSystemLocalSettings {
   }
 
   public void fillState(@Nonnull State state) {
-    if (PRESERVE_EXPAND_STATE) {
-      state.tasksExpandState = myExpandStates.get();
-    }
-    else {
-      state.tasksExpandState = Collections.emptyMap();
-    }
+    state.tasksExpandState = myExpandStates.get();
     state.recentTasks = myRecentTasks.get();
     state.availableProjects = myAvailableProjects.get();
     state.availableTasks = myAvailableTasks.get();
