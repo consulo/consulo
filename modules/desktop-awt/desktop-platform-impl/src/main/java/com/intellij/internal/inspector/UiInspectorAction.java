@@ -1045,7 +1045,7 @@ public class UiInspectorAction extends ToggleAction implements DumbAware {
   private static class InspectorTableModel extends AbstractTableModel {
 
     final List<String> PROPERTIES =
-            Arrays.asList("ui", "getLocation", "getLocationOnScreen", "getSize", "isOpaque", "getBorder", "getForeground", "getBackground", "getFont", "getCellRenderer", "getCellEditor",
+            Arrays.asList("getUI", "getLocation", "getLocationOnScreen", "getSize", "isOpaque", "getBorder", "getForeground", "getBackground", "getFont", "getCellRenderer", "getCellEditor",
                           "getMinimumSize", "getMaximumSize", "getPreferredSize", "getText", "isEditable", "getIcon", "getVisibleRect", "getLayout", "getAlignmentX", "getAlignmentY", "getTooltipText",
                           "getToolTipText", "isShowing", "isEnabled", "isVisible", "isDoubleBuffered", "isFocusable", "isFocusCycleRoot", "isFocusOwner", "isValid", "isDisplayable", "isLightweight");
 
