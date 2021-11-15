@@ -32,6 +32,7 @@ import com.intellij.util.ui.components.BorderLayoutPanel;
 import consulo.awt.TargetAWT;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginId;
+import consulo.ide.plugins.PluginDescriptionPanel;
 import consulo.ide.plugins.PluginIconHolder;
 import consulo.localize.LocalizeValue;
 
@@ -88,6 +89,7 @@ public class PluginsTableRenderer extends DefaultTableCellRenderer {
 
     myDownloads = new JBLabel();
     myRating = new RatesPanel();
+    myRating.setVisible(PluginDescriptionPanel.ENABLED_STARS);
 
     rightPanel.addToTop(myRating);
 
@@ -211,9 +213,5 @@ public class PluginsTableRenderer extends DefaultTableCellRenderer {
     }
 
     return IdeBundle.message("plugin.manager.incompatible.tooltip", ApplicationNamesInfo.getInstance().getFullProductName());
-  }
-
-  private void createUIComponents() {
-    myRating = new RatesPanel();
   }
 }

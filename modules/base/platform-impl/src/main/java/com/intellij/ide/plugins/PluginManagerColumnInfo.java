@@ -16,31 +16,25 @@
 package com.intellij.ide.plugins;
 
 import com.intellij.ide.IdeBundle;
-import consulo.container.plugin.PluginId;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.ui.LightColors;
 import com.intellij.util.text.DateFormatUtil;
 import com.intellij.util.ui.ColumnInfo;
-import com.intellij.util.ui.UIUtil;
 import consulo.container.plugin.PluginDescriptor;
+import consulo.container.plugin.PluginId;
 import consulo.ide.plugins.InstalledPluginsState;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;
-import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
-import java.awt.*;
 import java.util.Comparator;
 
 /**
- * Created by IntelliJ IDEA.
  * User: stathik
  * Date: Dec 11, 2003
  * Time: 2:55:50 PM
- * To change this template use Options | File Templates.
  */
-public class PluginManagerColumnInfo extends ColumnInfo<PluginDescriptor, String> {
+public abstract class PluginManagerColumnInfo extends ColumnInfo<PluginDescriptor, String> {
   public static final int COLUMN_NAME = 0;
   public static final int COLUMN_DOWNLOADS = 1;
   public static final int COLUMN_RATE = 2;
@@ -236,61 +230,5 @@ public class PluginManagerColumnInfo extends ColumnInfo<PluginDescriptor, String
   }
 
   @Override
-  public TableCellRenderer getRenderer(PluginDescriptor o) {
-    if (columnIdx == COLUMN_RATE) {
-      return new DefaultTableCellRenderer(){
-        private RatesPanel myPanel = new RatesPanel();
-        @Override
-        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-          final Component orig = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-          myPanel.setBackground(orig.getBackground());
-          if (value != null) {
-            myPanel.setRate((String)value);
-          }
-          return myPanel;
-        }
-      };
-    }
-    return new PluginTableCellRenderer((PluginNode)o);
-  }
-
-  private static class PluginTableCellRenderer extends DefaultTableCellRenderer {
-    private final JLabel myLabel = new JLabel();
-    private final PluginNode myPluginDescriptor;
-
-    private PluginTableCellRenderer(PluginNode pluginDescriptor) {
-      myLabel.setFont(UIUtil.getLabelFont(UIUtil.FontSize.SMALL));
-      myLabel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 2));
-      myPluginDescriptor = pluginDescriptor;
-    }
-
-    @Override
-    public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-      Component orig = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-      final Color bg = orig.getBackground();
-      final Color grayedFg = isSelected ? orig.getForeground() : Color.GRAY;
-      myLabel.setForeground(grayedFg);
-      myLabel.setBackground(bg);
-      myLabel.setOpaque(true);
-
-      if (column == COLUMN_DATE) {
-        long date = myPluginDescriptor.getDate();
-        myLabel.setText(date != 0 && date != Long.MAX_VALUE ? DateFormatUtil.formatDate(date) : "n/a");
-        myLabel.setHorizontalAlignment(SwingConstants.RIGHT);
-      } else if (column == COLUMN_DOWNLOADS) {
-        String downloads = myPluginDescriptor.getDownloads();
-        myLabel.setText(!StringUtil.isEmpty(downloads) ? downloads : "n/a");
-        myLabel.setHorizontalAlignment(SwingConstants.RIGHT);
-      }
-
-      if (myPluginDescriptor.getStatus() == PluginNode.STATUS_INSTALLED) {
-        PluginId pluginId = myPluginDescriptor.getPluginId();
-        final boolean hasNewerVersion = InstalledPluginsTableModel.hasNewerVersion(pluginId);
-        if (hasNewerVersion) {
-          if (!isSelected) myLabel.setBackground(LightColors.BLUE);
-        }
-      }
-      return myLabel;
-    }
-  }
+  public abstract TableCellRenderer getRenderer(PluginDescriptor o);
 }

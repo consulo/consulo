@@ -53,6 +53,9 @@ import static consulo.util.lang.StringUtil.isEmptyOrSpaces;
  * @since 08/11/2021
  */
 public class PluginDescriptionPanel {
+  // repository not support rating. disable stars for now
+  public static final boolean ENABLED_STARS = false;
+
   private static class MyHyperlinkListener implements HyperlinkListener {
     @Override
     public void hyperlinkUpdate(HyperlinkEvent e) {

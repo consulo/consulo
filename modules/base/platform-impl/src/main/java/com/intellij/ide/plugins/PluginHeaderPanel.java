@@ -31,6 +31,7 @@ import com.intellij.util.ui.components.BorderLayoutPanel;
 import consulo.awt.TargetAWT;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginIds;
+import consulo.ide.plugins.PluginDescriptionPanel;
 import consulo.ide.plugins.PluginIconHolder;
 
 import javax.annotation.Nonnull;
@@ -214,6 +215,7 @@ public class PluginHeaderPanel {
     myDownloadsPanel.setOpaque(false);
     myDownloadsPanel.add(myDownloads = new JBLabel());
     myDownloadsPanel.add(myRating = new RatesPanel());
+    myRating.setVisible(PluginDescriptionPanel.ENABLED_STARS);
     myRoot.add(new BorderLayoutPanel().andTransparent().addToRight(myDownloadsPanel));
 
     myUpdated = new JBLabel();

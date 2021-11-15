@@ -25,6 +25,7 @@ import com.intellij.openapi.actionSystem.DefaultActionGroup;
 import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.util.ui.update.UiNotifyConnector;
 import consulo.container.plugin.PluginDescriptor;
+import consulo.ide.plugins.PluginDescriptionPanel;
 import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.lang.Pair;
@@ -127,7 +128,9 @@ public class AvailablePluginsManagerMain extends PluginManagerMain {
   protected DefaultActionGroup createSortersGroup() {
     final DefaultActionGroup group = super.createSortersGroup();
     group.addAction(new SortByDownloadsAction(myPluginTable, myPluginsModel));
-    group.addAction(new SortByRatingAction(myPluginTable, myPluginsModel));
+    if (PluginDescriptionPanel.ENABLED_STARS) {
+      group.addAction(new SortByRatingAction(myPluginTable, myPluginsModel));
+    }
     group.addAction(new SortByUpdatedAction(myPluginTable, myPluginsModel));
     return group;
   }

@@ -140,20 +140,19 @@ public abstract class PluginManagerMain implements Disposable {
     myTablePanel.add(header, BorderLayout.NORTH);
 
     final TableModelListener modelListener = e -> {
-      String text = "";
+      String text = "name";
       if (myPluginsModel.isSortByStatus()) {
-        text += "status,";
+        text = "status";
       }
-      if (myPluginsModel.isSortByRating()) {
-        text += "rating,";
+      else if (myPluginsModel.isSortByRating()) {
+        text = "rating";
       }
-      if (myPluginsModel.isSortByDownloads()) {
-        text += "downloads,";
+      else if (myPluginsModel.isSortByDownloads()) {
+        text = "downloads";
       }
-      if (myPluginsModel.isSortByUpdated()) {
-        text += "updated,";
+      else if (myPluginsModel.isSortByUpdated()) {
+        text = "updated";
       }
-      text += "name";
       sortLabel.setPrefixedText(LocalizeValue.of(text));
     };
     myPluginTable.getModel().addTableModelListener(modelListener);
