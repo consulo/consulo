@@ -18,11 +18,12 @@ package com.intellij.diff.tools.util.side;
 import com.intellij.diff.tools.holders.EditorHolder;
 import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 
 public class OnesideContentPanel extends JPanel {
-  public OnesideContentPanel(@Nonnull EditorHolder holder, @Nonnull JComponent titleComponent) {
+  public OnesideContentPanel(@Nonnull EditorHolder holder, @Nullable JComponent titleComponent) {
     super(new BorderLayout());
 
     add(new HolderPanel(holder, titleComponent), BorderLayout.CENTER);
