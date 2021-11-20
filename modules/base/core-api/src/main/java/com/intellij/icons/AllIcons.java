@@ -887,9 +887,6 @@ public class AllIcons {
 
     public static class Big {
       public static final Image Step_1 = PlatformIconGroup.processBigStep_1(); // 32x32
-      public static final Image Step_10 = PlatformIconGroup.processBigStep_10(); // 32x32
-      public static final Image Step_11 = PlatformIconGroup.processBigStep_11(); // 32x32
-      public static final Image Step_12 = PlatformIconGroup.processBigStep_12(); // 32x32
       public static final Image Step_2 = PlatformIconGroup.processBigStep_2(); // 32x32
       public static final Image Step_3 = PlatformIconGroup.processBigStep_3(); // 32x32
       public static final Image Step_4 = PlatformIconGroup.processBigStep_4(); // 32x32
@@ -897,13 +894,9 @@ public class AllIcons {
       public static final Image Step_6 = PlatformIconGroup.processBigStep_6(); // 32x32
       public static final Image Step_7 = PlatformIconGroup.processBigStep_7(); // 32x32
       public static final Image Step_8 = PlatformIconGroup.processBigStep_8(); // 32x32
-      public static final Image Step_9 = PlatformIconGroup.processBigStep_9(); // 32x32
       public static final Image Step_passive = PlatformIconGroup.processBigStep_passive(); // 32x32
 
     }
-
-    public static final Image DisabledDebug = PlatformIconGroup.processDisabledDebug(); // 13x13
-    public static final Image DisabledRun = PlatformIconGroup.processDisabledRun(); // 13x13
 
     public static class FS {
       public static final Image Step_1 = PlatformIconGroup.processFsStep_1(); // 16x16
@@ -930,9 +923,6 @@ public class AllIcons {
     }
 
     public static final Image Step_1 = PlatformIconGroup.processStep_1(); // 16x16
-    public static final Image Step_10 = PlatformIconGroup.processStep_10(); // 16x16
-    public static final Image Step_11 = PlatformIconGroup.processStep_11(); // 16x16
-    public static final Image Step_12 = PlatformIconGroup.processStep_12(); // 16x16
     public static final Image Step_2 = PlatformIconGroup.processStep_2(); // 16x16
     public static final Image Step_3 = PlatformIconGroup.processStep_3(); // 16x16
     public static final Image Step_4 = PlatformIconGroup.processStep_4(); // 16x16
@@ -940,7 +930,6 @@ public class AllIcons {
     public static final Image Step_6 = PlatformIconGroup.processStep_6(); // 16x16
     public static final Image Step_7 = PlatformIconGroup.processStep_7(); // 16x16
     public static final Image Step_8 = PlatformIconGroup.processStep_8(); // 16x16
-    public static final Image Step_9 = PlatformIconGroup.processStep_9(); // 16x16
     public static final Image Step_mask = PlatformIconGroup.processStep_mask(); // 16x16
     public static final Image Step_passive = PlatformIconGroup.processStep_passive(); // 16x16
     public static final Image Stop = PlatformIconGroup.processStop(); // 16x16
