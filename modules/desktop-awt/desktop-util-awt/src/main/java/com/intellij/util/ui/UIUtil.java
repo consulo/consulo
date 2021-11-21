@@ -86,6 +86,7 @@ import java.util.List;
 import java.util.*;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.function.Supplier;
 import java.util.regex.Pattern;
 
 /**
@@ -384,7 +385,7 @@ public class UIUtil {
   private UIUtil() {
   }
 
-  public static void configureHtmlKitStylesheet() {
+  public static void configureHtmlKitStylesheet(@Nonnull Supplier<? extends StyleSheet> styleSheetFactory) {
     if (ourDefaultHtmlKitCss != null) {
       return;
     }
@@ -397,7 +398,7 @@ public class UIUtil {
     kit.setStyleSheet(null);
 
     // Applied to all JLabel instances, including subclasses. Supported in JBR only.
-    UIManager.getDefaults().put("javax.swing.JLabel.userStyleSheet", JBHtmlEditorKit.createStyleSheet(false));
+    UIManager.getDefaults().put("javax.swing.JLabel.userStyleSheet", styleSheetFactory.get());
   }
 
   public static StyleSheet getDefaultHtmlKitCss() {
@@ -2499,14 +2500,6 @@ public class UIUtil {
       getLogger().warn(url + " loading failed", e);
       return null;
     }
-  }
-
-  public static HTMLEditorKit getHTMLEditorKit() {
-    return getHTMLEditorKit(true);
-  }
-
-  public static HTMLEditorKit getHTMLEditorKit(boolean noGapsBetweenParagraphs) {
-    return new JBHtmlEditorKit(noGapsBetweenParagraphs);
   }
 
   @Nonnull

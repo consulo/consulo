@@ -242,6 +242,10 @@ public class ConsuloSecurityManager extends SecurityManager {
       if (classLoader == null || myPlatformClassLoader == classLoader || mySystemClassLoader == classLoader || myPrimaryClassLoader == classLoader) {
         continue;
       }
+      
+      if(classLoader.getClass().getName().equals("jdk.internal.reflect.DelegatingClassLoader")) {
+        continue;
+      }
       classLoaders.add(classLoader);
     }
 

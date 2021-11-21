@@ -19,6 +19,7 @@ import com.intellij.ui.AnchorableComponent;
 import com.intellij.ui.ColorUtil;
 import com.intellij.util.SystemProperties;
 import com.intellij.util.ui.JBFont;
+import com.intellij.util.ui.JBHtmlEditorKit;
 import com.intellij.util.ui.UIUtil;
 import consulo.awt.TargetAWT;
 import consulo.desktop.util.awt.StringHtmlUtil;
@@ -284,7 +285,7 @@ public class JBLabel extends JLabel implements AnchorableComponent {
         myEditorPane.setBorder(null);
         UIUtil.putClientProperty(myEditorPane, UIUtil.NOT_IN_HIERARCHY_COMPONENTS, Collections.singleton(ellipsisLabel));
 
-        myEditorPane.setEditorKit(UIUtil.getHTMLEditorKit());
+        myEditorPane.setEditorKit(JBHtmlEditorKit.create());
         updateStyle(myEditorPane);
 
         myEditorPane.setText(getText());

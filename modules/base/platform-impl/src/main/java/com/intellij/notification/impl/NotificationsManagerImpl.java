@@ -939,7 +939,7 @@ public class NotificationsManagerImpl extends NotificationsManager {
 
   public static int calculateContentHeight(int lines) {
     JEditorPane text = new JEditorPane();
-    text.setEditorKit(UIUtil.getHTMLEditorKit());
+    text.setEditorKit(JBHtmlEditorKit.create());
     text.setText(NotificationsUtil.buildHtml(null, null, "Content" + StringUtil.repeat("<br>\nContent", lines - 1), null, null, null, NotificationsUtil.getFontStyle()));
     text.setEditable(false);
     text.setOpaque(false);

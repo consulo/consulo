@@ -23,7 +23,6 @@ import com.intellij.ide.fileTemplates.FileTemplate;
 import com.intellij.ide.fileTemplates.FileTemplateManager;
 import com.intellij.lexer.Lexer;
 import com.intellij.lexer.MergingLexerAdapter;
-import consulo.logging.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.EditorFactory;
@@ -58,14 +57,15 @@ import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.ui.SeparatorFactory;
 import com.intellij.ui.components.panels.HorizontalLayout;
 import com.intellij.util.containers.ContainerUtil;
+import com.intellij.util.ui.JBHtmlEditorKit;
 import com.intellij.util.ui.JBUI;
-import com.intellij.util.ui.UIUtil;
 import com.intellij.xml.util.XmlStringUtil;
+import consulo.logging.Logger;
 import consulo.ui.annotation.RequiredUIAccess;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -170,7 +170,7 @@ public class FileTemplateConfigurable implements Configurable, Configurable.NoSc
     myTemplateEditor = createEditor();
 
     myDescriptionComponent = new JEditorPane();
-    myDescriptionComponent.setEditorKit(UIUtil.getHTMLEditorKit());
+    myDescriptionComponent.setEditorKit(JBHtmlEditorKit.create());
     myDescriptionComponent.setText(EMPTY_HTML);
     myDescriptionComponent.setEditable(false);
     myDescriptionComponent.addHyperlinkListener(new BrowserHyperlinkListener());

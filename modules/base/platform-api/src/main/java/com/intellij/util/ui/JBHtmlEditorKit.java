@@ -1,13 +1,16 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.util.ui;
 
-import consulo.logging.Logger;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.awt.TargetAWT;
+import consulo.desktop.util.awt.html.ColoredHRuleView;
+import consulo.logging.Logger;
+import consulo.ui.image.Image;
+import consulo.ui.image.ImageKey;
 import consulo.ui.style.StyleManager;
 
 import javax.annotation.Nonnull;
-
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
@@ -21,13 +24,25 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.net.URL;
 import java.util.Base64;
 import java.util.List;
+import java.util.function.Function;
 
 public class JBHtmlEditorKit extends HTMLEditorKit {
+  public static JBHtmlEditorKit create() {
+    return new JBHtmlEditorKit();
+  }
+
+  public static JBHtmlEditorKit create(boolean noGapsBetweenParagraphs) {
+    return new JBHtmlEditorKit(noGapsBetweenParagraphs);
+  }
+
   private static final Logger LOG = Logger.getInstance(JBHtmlEditorKit.class);
 
-  private static final ViewFactory ourViewFactory = new JBHtmlFactory();
+  private final ViewFactory myViewFactory = new JBHtmlFactory();
+
+  private Function<String, Image> myImageResolver = null;
 
   @Override
   public Cursor getDefaultCursor() {
@@ -69,6 +84,10 @@ public class JBHtmlEditorKit extends HTMLEditorKit {
         }
       }
     };
+  }
+
+  public void setImageResolver(Function<String, Image> imageResolver) {
+    myImageResolver = imageResolver;
   }
 
   @Override
@@ -148,7 +167,7 @@ public class JBHtmlEditorKit extends HTMLEditorKit {
 
   @Override
   public ViewFactory getViewFactory() {
-    return ourViewFactory;
+    return myViewFactory;
   }
 
   @Nonnull
@@ -177,11 +196,32 @@ public class JBHtmlEditorKit extends HTMLEditorKit {
     }
   }
 
-  public static class JBHtmlFactory extends HTMLFactory {
+  public class JBHtmlFactory extends HTMLFactory {
     @Override
     public View create(Element elem) {
       AttributeSet attrs = elem.getAttributes();
-      if ("img".equals(elem.getName())) {
+      if ("hr".equals(elem.getName())) {
+        return new ColoredHRuleView(elem);
+      }
+      else if ("icon".equals(elem.getName())) {
+        String src = (String)attrs.getAttribute(HTML.Attribute.SRC);
+        if (src != null) {
+          if (src.contains("@")) {
+            ImageKey imageKey = ImageKey.fromString(src, consulo.ui.image.Image.DEFAULT_ICON_SIZE, consulo.ui.image.Image.DEFAULT_ICON_SIZE);
+            return new MyIconView(elem, imageKey);
+          }
+          else {
+            try {
+              consulo.ui.image.Image image = consulo.ui.image.Image.fromUrl(new URL(src));
+              return new MyIconView(elem, image);
+            }
+            catch (IOException e) {
+              LOG.warn(e);
+            }
+          }
+        }
+      }
+      else if ("img".equals(elem.getName())) {
         String src = (String)attrs.getAttribute(HTML.Attribute.SRC);
         // example: "data:image/png;base64,ENCODED_IMAGE_HERE"
         if (src != null && src.startsWith("data:image") && src.contains("base64")) {
@@ -198,135 +238,200 @@ public class JBHtmlEditorKit extends HTMLEditorKit {
             }
           }
         }
+
+        if (src != null && myImageResolver != null) {
+          Image icon = myImageResolver.apply(src);
+          if (icon != null) {
+            return new MyIconView(elem, icon);
+          }
+        }
       }
       return super.create(elem);
     }
+  }
 
-    private static class MyBufferedImageView extends View {
-      private static final int DEFAULT_BORDER = 0;
-      private final BufferedImage myBufferedImage;
-      private final int width;
-      private final int height;
-      private final int border;
-      private final float vAlign;
 
-      private MyBufferedImageView(Element elem, BufferedImage myBufferedImage) {
-        super(elem);
-        this.myBufferedImage = myBufferedImage;
-        int width = getIntAttr(HTML.Attribute.WIDTH, -1);
-        int height = getIntAttr(HTML.Attribute.HEIGHT, -1);
-        if (width < 0 && height < 0) {
-          this.width = myBufferedImage.getWidth();
-          this.height = myBufferedImage.getHeight();
-        }
-        else if (width < 0) {
-          this.width = height * getAspectRatio();
-          this.height = height;
-        }
-        else if (height < 0) {
-          this.width = width;
-          this.height = width / getAspectRatio();
-        }
-        else {
-          this.width = width;
-          this.height = height;
-        }
-        this.border = getIntAttr(HTML.Attribute.BORDER, DEFAULT_BORDER);
-        Object alignment = elem.getAttributes().getAttribute(HTML.Attribute.ALIGN);
-        float vAlign = 1.0f;
-        if (alignment != null) {
-          alignment = alignment.toString();
-          if ("top".equals(alignment)) {
-            vAlign = 0f;
-          }
-          else if ("middle".equals(alignment)) {
-            vAlign = .5f;
-          }
-        }
-        this.vAlign = vAlign;
+  private static class MyIconView extends View {
+    private final consulo.ui.image.Image myViewIcon;
+
+    private MyIconView(Element elem, consulo.ui.image.Image viewIcon) {
+      super(elem);
+      myViewIcon = viewIcon;
+    }
+
+    @Override
+    public float getPreferredSpan(int axis) {
+      switch (axis) {
+        case View.X_AXIS:
+          return myViewIcon.getWidth();
+        case View.Y_AXIS:
+          return myViewIcon.getHeight();
+        default:
+          throw new IllegalArgumentException("Invalid axis: " + axis);
       }
+    }
 
-      private int getAspectRatio() {
-        return myBufferedImage.getWidth() / myBufferedImage.getHeight();
-      }
+    @Override
+    public String getToolTipText(float x, float y, Shape allocation) {
+      return (String)super.getElement().getAttributes().getAttribute(HTML.Attribute.ALT);
+    }
 
-      private int getIntAttr(HTML.Attribute name, int defaultValue) {
-        AttributeSet attr = getElement().getAttributes();
-        if (attr.isDefined(name)) {
-          String val = (String)attr.getAttribute(name);
-          if (val == null) {
-            return defaultValue;
-          }
-          else {
-            try {
-              return Math.max(0, Integer.parseInt(val));
-            }
-            catch (NumberFormatException x) {
-              return defaultValue;
-            }
-          }
+    @Override
+    public void paint(Graphics g, Shape allocation) {
+      TargetAWT.to(myViewIcon).paintIcon(null, g, allocation.getBounds().x, allocation.getBounds().y - 4);
+    }
+
+    @Override
+    public Shape modelToView(int pos, Shape a, Position.Bias b) throws BadLocationException {
+      int p0 = getStartOffset();
+      int p1 = getEndOffset();
+      if ((pos >= p0) && (pos <= p1)) {
+        Rectangle r = a.getBounds();
+        if (pos == p1) {
+          r.x += r.width;
         }
-        else {
+        r.width = 0;
+        return r;
+      }
+      throw new BadLocationException(pos + " not in range " + p0 + "," + p1, pos);
+    }
+
+    @Override
+    public int viewToModel(float x, float y, Shape a, Position.Bias[] bias) {
+      Rectangle alloc = (Rectangle)a;
+      if (x < alloc.x + (alloc.width / 2f)) {
+        bias[0] = Position.Bias.Forward;
+        return getStartOffset();
+      }
+      bias[0] = Position.Bias.Backward;
+      return getEndOffset();
+    }
+  }
+
+  private static class MyBufferedImageView extends View {
+    private static final int DEFAULT_BORDER = 0;
+    private final BufferedImage myBufferedImage;
+    private final int width;
+    private final int height;
+    private final int border;
+    private final float vAlign;
+
+    private MyBufferedImageView(Element elem, BufferedImage myBufferedImage) {
+      super(elem);
+      this.myBufferedImage = myBufferedImage;
+      int width = getIntAttr(HTML.Attribute.WIDTH, -1);
+      int height = getIntAttr(HTML.Attribute.HEIGHT, -1);
+      if (width < 0 && height < 0) {
+        this.width = myBufferedImage.getWidth();
+        this.height = myBufferedImage.getHeight();
+      }
+      else if (width < 0) {
+        this.width = height * getAspectRatio();
+        this.height = height;
+      }
+      else if (height < 0) {
+        this.width = width;
+        this.height = width / getAspectRatio();
+      }
+      else {
+        this.width = width;
+        this.height = height;
+      }
+      this.border = getIntAttr(HTML.Attribute.BORDER, DEFAULT_BORDER);
+      Object alignment = elem.getAttributes().getAttribute(HTML.Attribute.ALIGN);
+      float vAlign = 1.0f;
+      if (alignment != null) {
+        alignment = alignment.toString();
+        if ("top".equals(alignment)) {
+          vAlign = 0f;
+        }
+        else if ("middle".equals(alignment)) {
+          vAlign = .5f;
+        }
+      }
+      this.vAlign = vAlign;
+    }
+
+    private int getAspectRatio() {
+      return myBufferedImage.getWidth() / myBufferedImage.getHeight();
+    }
+
+    private int getIntAttr(HTML.Attribute name, int defaultValue) {
+      AttributeSet attr = getElement().getAttributes();
+      if (attr.isDefined(name)) {
+        String val = (String)attr.getAttribute(name);
+        if (val == null) {
           return defaultValue;
         }
-      }
-
-      @Override
-      public float getPreferredSpan(int axis) {
-        switch (axis) {
-          case View.X_AXIS:
-            return width + 2 * border;
-          case View.Y_AXIS:
-            return height + 2 * border;
-          default:
-            throw new IllegalArgumentException("Invalid axis: " + axis);
-        }
-      }
-
-      @Override
-      public String getToolTipText(float x, float y, Shape allocation) {
-        return (String)super.getElement().getAttributes().getAttribute(HTML.Attribute.ALT);
-      }
-
-      @Override
-      public void paint(Graphics g, Shape a) {
-        Rectangle bounds = a.getBounds();
-        g.drawImage(myBufferedImage, bounds.x + border, bounds.y + border, width, height, null);
-      }
-
-      @Override
-      public Shape modelToView(int pos, Shape a, Position.Bias b) {
-        int p0 = getStartOffset();
-        int p1 = getEndOffset();
-        if ((pos >= p0) && (pos <= p1)) {
-          Rectangle r = a.getBounds();
-          if (pos == p1) {
-            r.x += r.width;
+        else {
+          try {
+            return Math.max(0, Integer.parseInt(val));
           }
-          r.width = 0;
-          return r;
+          catch (NumberFormatException x) {
+            return defaultValue;
+          }
         }
-        return null;
       }
+      else {
+        return defaultValue;
+      }
+    }
 
-      @Override
-      public int viewToModel(float x, float y, Shape a, Position.Bias[] bias) {
-        Rectangle alloc = (Rectangle)a;
-        if (x < alloc.x + alloc.width) {
-          bias[0] = Position.Bias.Forward;
-          return getStartOffset();
-        }
-        bias[0] = Position.Bias.Backward;
-        return getEndOffset();
+    @Override
+    public float getPreferredSpan(int axis) {
+      switch (axis) {
+        case View.X_AXIS:
+          return width + 2 * border;
+        case View.Y_AXIS:
+          return height + 2 * border;
+        default:
+          throw new IllegalArgumentException("Invalid axis: " + axis);
       }
+    }
 
-      @Override
-      public float getAlignment(int axis) {
-        if (axis == View.Y_AXIS) {
-          return vAlign;
+    @Override
+    public String getToolTipText(float x, float y, Shape allocation) {
+      return (String)super.getElement().getAttributes().getAttribute(HTML.Attribute.ALT);
+    }
+
+    @Override
+    public void paint(Graphics g, Shape a) {
+      Rectangle bounds = a.getBounds();
+      g.drawImage(myBufferedImage, bounds.x + border, bounds.y + border, width, height, null);
+    }
+
+    @Override
+    public Shape modelToView(int pos, Shape a, Position.Bias b) {
+      int p0 = getStartOffset();
+      int p1 = getEndOffset();
+      if ((pos >= p0) && (pos <= p1)) {
+        Rectangle r = a.getBounds();
+        if (pos == p1) {
+          r.x += r.width;
         }
-        return super.getAlignment(axis);
+        r.width = 0;
+        return r;
       }
+      return null;
+    }
+
+    @Override
+    public int viewToModel(float x, float y, Shape a, Position.Bias[] bias) {
+      Rectangle alloc = (Rectangle)a;
+      if (x < alloc.x + alloc.width) {
+        bias[0] = Position.Bias.Forward;
+        return getStartOffset();
+      }
+      bias[0] = Position.Bias.Backward;
+      return getEndOffset();
+    }
+
+    @Override
+    public float getAlignment(int axis) {
+      if (axis == View.Y_AXIS) {
+        return vAlign;
+      }
+      return super.getAlignment(axis);
     }
   }
 }

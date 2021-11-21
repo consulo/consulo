@@ -15,31 +15,49 @@
  */
 package com.intellij.ide.actions;
 
-import com.intellij.ide.BrowserUtil;
-import com.intellij.ide.IdeBundle;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.application.ApplicationInfo;
+import com.intellij.openapi.application.Application;
+import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.project.DumbAware;
+import com.intellij.openapi.project.Project;
+import consulo.ide.plugins.whatsNew.WhatsNewVirtualFile;
+import consulo.localize.LocalizeValue;
+import consulo.platform.base.localize.IdeLocalize;
+import consulo.ui.annotation.RequiredUIAccess;
+import jakarta.inject.Inject;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author max
  */
 public class WhatsNewAction extends AnAction implements DumbAware {
-  public void actionPerformed(AnActionEvent e) {
-    BrowserUtil.launchBrowser(ApplicationInfo.getInstance().getWhatsNewUrl());
+  private final Application myApplication;
+
+  @Inject
+  public WhatsNewAction(Application application) {
+    myApplication = application;
   }
 
+  @RequiredUIAccess
+  @Override
+  public void actionPerformed(@Nonnull AnActionEvent e) {
+    Project project = e.getProject();
+    if(project == null) {
+      return;
+    }
+
+    LocalizeValue text = IdeLocalize.whatsnewActionCustomText(myApplication.getName());
+
+    FileEditorManager.getInstance(project).openFile(new WhatsNewVirtualFile(text), true);
+  }
+
+  @RequiredUIAccess
   @Override
   public void update(AnActionEvent e) {
-    ApplicationInfo info = ApplicationInfo.getInstance();
-    boolean visible = info.getWhatsNewUrl() != null;
-    e.getPresentation().setVisible(visible);
-    if (visible) {
-      e.getPresentation()
-        .setText(IdeBundle.message("whatsnew.action.custom.text", info.getFullApplicationName()));
-      e.getPresentation().setDescription(
-        IdeBundle.message("whatsnew.action.custom.description", info.getFullApplicationName()));
-    }
+    e.getPresentation().setVisible(e.getProject() != null);
+    e.getPresentation().setTextValue(IdeLocalize.whatsnewActionCustomText(myApplication.getName()));
+    e.getPresentation().setDescriptionValue(IdeLocalize.whatsnewActionCustomDescription(myApplication.getName()));
   }
 }

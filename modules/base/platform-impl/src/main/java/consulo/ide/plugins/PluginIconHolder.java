@@ -35,7 +35,7 @@ import java.util.function.Supplier;
 public class PluginIconHolder {
   private static final String PLUGIN_ICON_KEY = "PLUGIN_ICON_KEY";
 
-  private static final int ICON_SIZE = 32;
+  public static final int ICON_SIZE = 32;
 
   private static final Logger LOG = Logger.getInstance(PluginIconHolder.class);
 

@@ -280,41 +280,7 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
       }
     }
     myEditorPane.setBackground(TargetAWT.to(EditorColorsUtil.getGlobalOrDefaultColor(COLOR_KEY)));
-    HTMLEditorKit editorKit = new JBHtmlEditorKit(true) {
-      @Override
-      public ViewFactory getViewFactory() {
-        return new JBHtmlFactory() {
-          @Override
-          public View create(Element elem) {
-            AttributeSet attrs = elem.getAttributes();
-            if ("icon".equals(elem.getName())) {
-              String src = (String)attrs.getAttribute(HTML.Attribute.SRC);
-              if(src != null) {
-                if(src.contains("@")) {
-                  ImageKey imageKey = ImageKey.fromString(src, consulo.ui.image.Image.DEFAULT_ICON_SIZE, consulo.ui.image.Image.DEFAULT_ICON_SIZE);
-                  return new MyIconView(elem, imageKey);
-                }
-                else {
-                  try {
-                    consulo.ui.image.Image image = consulo.ui.image.Image.fromUrl(new URL(src));
-                    return new MyIconView(elem, image);
-                  }
-                  catch (IOException e) {
-                    LOG.warn(e);
-                  }
-                }
-              }
-            }
-            View view = super.create(elem);
-            if (view instanceof ImageView) {
-              // we have to work with raw image, apply scaling manually
-              return new MyScalingImageView(elem);
-            }
-            return view;
-          }
-        };
-      }
-    };
+    HTMLEditorKit editorKit = JBHtmlEditorKit.create(true);
     prepareCSS(editorKit);
     myEditorPane.setEditorKit(editorKit);
     myEditorPane.setBorder(JBUI.Borders.empty());

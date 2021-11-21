@@ -25,6 +25,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.updateSettings.impl.PluginDownloader;
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vcs.FileStatus;
 import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.ui.border.CustomLineBorder;
@@ -232,11 +233,18 @@ public class PlatformOrPluginDialog extends DialogWrapper {
     Task.Backgroundable.queue(myProject, IdeBundle.message("progress.download.plugins"), true, PluginManagerUISettings.getInstance(), indicator -> {
       List<PluginDescriptor> installed = new ArrayList<>(myNodes.size());
 
+      Map<String, String> pluginHistory = new HashMap<>();
+
       for (PlatformOrPluginNode platformOrPluginNode : myNodes) {
         PluginDescriptor pluginDescriptor = platformOrPluginNode.getFutureDescriptor();
         // update list contains broken plugins
         if (pluginDescriptor == null) {
           continue;
+        }
+
+        PluginDescriptor currentDescriptor = platformOrPluginNode.getCurrentDescriptor();
+        if(currentDescriptor != null) {
+          pluginHistory.put(platformOrPluginNode.getPluginId().toString(), StringUtil.notNullize(currentDescriptor.getVersion(), "0"));
         }
 
         try {
@@ -268,6 +276,8 @@ public class PlatformOrPluginDialog extends DialogWrapper {
           LOG.error(e);
         }
       }
+
+      Application.get().getInstance(UpdateHistory.class).replaceHistory(pluginHistory);
 
       if (myAfterCallback != null) {
         myAfterCallback.accept(installed);

@@ -132,6 +132,9 @@ public class WebServiceApiSender {
 
   private static String findOAuthKey(WebServiceApi api) {
     ExternalService service = map(api);
+    if (service == null) {
+      return null;
+    }
 
     ExternalServiceConfigurationImpl externalServiceConfiguration = (ExternalServiceConfigurationImpl)ServiceManager.getService(ExternalServiceConfiguration.class);
 
@@ -147,6 +150,7 @@ public class WebServiceApiSender {
     }
   }
 
+  @Nullable
   private static ExternalService map(WebServiceApi api) {
     switch (api) {
       case ERROR_REPORTER_API:
@@ -157,6 +161,8 @@ public class WebServiceApiSender {
         return ExternalService.DEVELOPER_LIST;
       case STORAGE_API:
         return ExternalService.STORAGE;
+      case REPOSITORY_API:
+        return null;
       default:
         throw new IllegalArgumentException(api.name() + " not supported");
     }

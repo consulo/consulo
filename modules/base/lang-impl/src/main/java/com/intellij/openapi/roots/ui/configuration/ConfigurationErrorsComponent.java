@@ -23,15 +23,12 @@ import com.intellij.ui.CollectionListModel;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.awt.RelativePoint;
 import com.intellij.ui.components.JBList;
-import com.intellij.util.ui.BaseButtonBehavior;
-import com.intellij.util.ui.JBUI;
-import com.intellij.util.ui.TimedDeadzone;
-import com.intellij.util.ui.UIUtil;
+import com.intellij.util.ui.*;
 import consulo.awt.TargetAWT;
 import consulo.ui.image.Image;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
@@ -273,8 +270,8 @@ public class ConfigurationErrorsComponent extends JPanel {
 
       myText.setEditable(false);
       myFakeTextPane.setEditable(false);
-      myText.setEditorKit(UIUtil.getHTMLEditorKit());
-      myFakeTextPane.setEditorKit(UIUtil.getHTMLEditorKit());
+      myText.setEditorKit(JBHtmlEditorKit.create());
+      myFakeTextPane.setEditorKit(JBHtmlEditorKit.create());
 
       myFakeViewport = new JViewport();
       myFakeViewport.setView(myFakeTextPane);

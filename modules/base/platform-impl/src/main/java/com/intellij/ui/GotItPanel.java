@@ -15,8 +15,8 @@
  */
 package com.intellij.ui;
 
+import com.intellij.util.ui.JBHtmlEditorKit;
 import com.intellij.util.ui.JBUI;
-import com.intellij.util.ui.UIUtil;
 
 import javax.swing.*;
 import java.awt.*;
@@ -42,7 +42,7 @@ public class GotItPanel {
     Font font = myTitle.getFont();
     myTitle.setFont(font.deriveFont((float)JBUI.scaleFontSize(20)));
     myMessage = new JEditorPane("text/html", "<html></html>");
-    myMessage.setEditorKit(UIUtil.getHTMLEditorKit());
+    myMessage.setEditorKit(JBHtmlEditorKit.create());
     myMessage.setEditable(false);
     myMessage.addHyperlinkListener(BrowserHyperlinkListener.INSTANCE);
     myMessage.setFont(JBUI.Fonts.biggerFont());

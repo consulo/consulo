@@ -13,20 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.updateSettings.impl;
-
-import consulo.ide.eap.EarlyAccessProgramDescriptor;
-
-import javax.annotation.Nonnull;
+package consulo.externalService.impl.repository.history;
 
 /**
  * @author VISTALL
- * @since 18/07/2021
+ * @since 20/11/2021
+ *
+ * @link https://github.com/consulo/hub.consulo.io/blob/master/backend/src/main/java/consulo/hub/backend/repository/RestPluginHistoryEntry.java
  */
-public class CheckChecksumEarlyAccessProgramDescriptor extends EarlyAccessProgramDescriptor {
-  @Nonnull
-  @Override
-  public String getName() {
-    return "Check checksum while plugin installing";
-  }
+public class PluginHistoryEntry {
+  public String pluginVersion;
+
+  public String repoUrl;
+
+  //private String commitUrl;
+  public String commitHash;
+  public String commitMessage;
+  public long commitTimestamp;
+  public String commitAuthor;
 }

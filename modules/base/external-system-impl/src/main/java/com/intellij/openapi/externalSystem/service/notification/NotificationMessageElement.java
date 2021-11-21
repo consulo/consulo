@@ -23,6 +23,7 @@ import com.intellij.ui.CustomizeColoredTreeCellRenderer;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.LoadingNode;
 import com.intellij.ui.SimpleColoredComponent;
+import com.intellij.util.ui.JBHtmlEditorKit;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.tree.WideSelectionTreeUI;
 import consulo.ui.image.Image;
@@ -114,7 +115,7 @@ public class NotificationMessageElement extends NavigatableMessageElement {
     String message = StringUtil.join(this.getText(), "<br>");
     myEditorPane.setEditable(false);
     myEditorPane.setOpaque(false);
-    myEditorPane.setEditorKit(UIUtil.getHTMLEditorKit());
+    myEditorPane.setEditorKit(JBHtmlEditorKit.create());
     myEditorPane.setHighlighter(null);
 
     final StyleSheet styleSheet = ((HTMLDocument)myEditorPane.getDocument()).getStyleSheet();

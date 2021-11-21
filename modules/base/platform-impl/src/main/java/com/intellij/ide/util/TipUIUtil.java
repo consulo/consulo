@@ -32,6 +32,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.ResourceUtil;
+import com.intellij.util.ui.JBHtmlEditorKit;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import consulo.awt.TargetAWT;
@@ -246,7 +247,7 @@ public class TipUIUtil {
       }
     });
     URL resource = ResourceUtil.getResource(TipUIUtil.class, "/tips/css/", UIUtil.isUnderDarcula() ? "tips_darcula.css" : "tips.css");
-    HTMLEditorKit kit = UIUtil.getHTMLEditorKit(false);
+    HTMLEditorKit kit = JBHtmlEditorKit.create(false);
     kit.getStyleSheet().addStyleSheet(UIUtil.loadStyleSheet(resource));
     browser.setEditorKit(kit);
     return browser;

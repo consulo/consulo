@@ -42,7 +42,7 @@ public class SwingHelper {
       textPane = new JEditorPane();
     }
     textPane.setFont(font != null ? font : UIUtil.getLabelFont());
-    textPane.setEditorKit(UIUtil.getHTMLEditorKit());
+    textPane.setEditorKit(JBHtmlEditorKit.create());
     textPane.setEditable(false);
     if (background != null) {
       textPane.setBackground(background);

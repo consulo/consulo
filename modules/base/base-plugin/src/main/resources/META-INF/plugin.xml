@@ -1297,6 +1297,7 @@
     <applicationService serviceInterface="com.intellij.openapi.editor.actionSystem.EditorActionManager"
                         serviceImplementation="com.intellij.openapi.editor.impl.EditorActionManagerImpl"/>
     <applicationService serviceImplementation="consulo.ide.updateSettings.UpdateSettings"/>
+    <applicationService serviceImplementation="consulo.ide.updateSettings.impl.UpdateHistory"/>
     <applicationService serviceInterface="com.intellij.featureStatistics.FeatureUsageTracker"
                         serviceImplementation="com.intellij.featureStatistics.FeatureUsageTrackerImpl"/>
     <applicationService serviceInterface="com.intellij.reporting.FreezeLogger"
@@ -2777,6 +2778,10 @@
     <applicationService serviceInterface="com.intellij.ui.SuitableFontProvider" serviceImplementation="com.intellij.ui.SuitableFontProviderImpl" />
 
     <settingsEntryPointActionProvider implementation="com.intellij.openapi.updateSettings.impl.UpdateSettingsEntryPointActionProvider"/>
+
+    <fileEditorProvider implementation="consulo.ide.plugins.whatsNew.WhatsNewVirtualFileEditorProvider" />
+    <editorTabColorProvider implementation="consulo.ide.plugins.whatsNew.WhatsNewEditorTabColorProvider" />
+    <postStartupActivity implementation="consulo.ide.plugins.whatsNew.WhatsNewStartupActivity" />
   </extensions>
 
   <applicationListeners>

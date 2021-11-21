@@ -25,6 +25,7 @@ import com.intellij.ide.ui.search.SearchUtil;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.options.ex.Settings;
 import com.intellij.ui.ScrollPaneFactory;
+import com.intellij.util.ui.JBHtmlEditorKit;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.xml.util.XmlStringUtil;
@@ -115,7 +116,7 @@ public class PluginDescriptionPanel {
     myPanel.add(myPluginHeaderPanel.getPanel(), BorderLayout.NORTH);
 
     myDescriptionTextArea = new JEditorPane("text/html", "");
-    myDescriptionTextArea.setEditorKit(UIUtil.getHTMLEditorKit());
+    myDescriptionTextArea.setEditorKit(JBHtmlEditorKit.create());
     myDescriptionTextArea.setEditable(false);
     myDescriptionTextArea.addHyperlinkListener(new MyHyperlinkListener());
     myDescriptionTextArea.setOpaque(false);
