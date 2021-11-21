@@ -47,8 +47,8 @@ public class WhatsNewStartupActivity implements StartupActivity.DumbAware {
 
     if (updateHistory.isWantOpenAtStart()) {
       updateHistory.setWantOpenAtStart(false);
-      
-      FileEditorManager.getInstance(project).openFile(new WhatsNewVirtualFile(IdeLocalize.whatsnewActionCustomText(myApplication.getName())), true);
+
+      uiAccess.give(() -> FileEditorManager.getInstance(project).openFile(new WhatsNewVirtualFile(IdeLocalize.whatsnewActionCustomText(myApplication.getName())), true));
     }
   }
 }
