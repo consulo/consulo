@@ -1,6 +1,7 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.util.ui;
 
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.awt.TargetAWT;
@@ -207,7 +208,17 @@ public class JBHtmlEditorKit extends HTMLEditorKit {
         String src = (String)attrs.getAttribute(HTML.Attribute.SRC);
         if (src != null) {
           if (src.contains("@")) {
-            ImageKey imageKey = ImageKey.fromString(src, consulo.ui.image.Image.DEFAULT_ICON_SIZE, consulo.ui.image.Image.DEFAULT_ICON_SIZE);
+            int width = consulo.ui.image.Image.DEFAULT_ICON_SIZE;
+            int height = consulo.ui.image.Image.DEFAULT_ICON_SIZE;
+            Object widthValue = attrs.getAttribute(HTML.Attribute.WIDTH);
+            if (widthValue != null) {
+              width = StringUtil.parseInt(widthValue.toString(), width);
+            }
+            Object heightValue = attrs.getAttribute(HTML.Attribute.HEIGHT);
+            if (heightValue != null) {
+              height = StringUtil.parseInt(heightValue.toString(), height);
+            }
+            ImageKey imageKey = ImageKey.fromString(src, width, height);
             return new MyIconView(elem, imageKey);
           }
           else {
