@@ -22,6 +22,7 @@ import org.jetbrains.annotations.PropertyKey;
 import javax.annotation.Nonnull;
 import java.awt.*;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Deprecated
 @DeprecationInfo(value = "Use `EarlyAccessProgramDescriptor` or `PropertiesComponent`")
@@ -32,7 +33,7 @@ public class Registry {
   private static final Properties ourJvmProperties = new Properties(System.getProperties());
 
   private static AtomicNotNullLazyValue<Map<String, RegistryValue>> ourRegistry = AtomicNotNullLazyValue.createValue(() -> {
-    Map<String, RegistryValue> properties = new LinkedHashMap<>();
+    Map<String, RegistryValue> properties = new ConcurrentHashMap<>();
 
     ResourceBundle resourceBundle = ResourceBundle.getBundle(REGISTRY_BUNDLE);
 
