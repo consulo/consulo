@@ -163,12 +163,12 @@ public class WhatsNewVirtualFileEditor extends UserDataHolderBase implements Fil
         PluginDescriptor plugin = PluginManager.findPlugin(key);
         assert plugin != null;
 
-        HtmlChunk.Element imgTd = HtmlChunk.Element.tag("td");
+        HtmlChunk.Element imgTd = HtmlChunk.tag("td");
 
         HtmlChunk.Element pluginImg = HtmlChunk.tag("img").attr("src", plugin.getPluginId().getIdString()).attr("width", PluginIconHolder.ICON_SIZE).attr("height", PluginIconHolder.ICON_SIZE);
         imgTd = imgTd.child(pluginImg);
 
-        HtmlChunk.Element nameTd = HtmlChunk.Element.tag("td").style("padding-left: 10px");
+        HtmlChunk.Element nameTd = HtmlChunk.tag("td").style("padding-left: 10px");
 
         Font font = UIUtil.getLabelFont(UIUtil.FontSize.BIGGER);
 
@@ -189,27 +189,31 @@ public class WhatsNewVirtualFileEditor extends UserDataHolderBase implements Fil
 
         nameTd = nameTd.child(HtmlChunk.br()).child(HtmlChunk.tag("code").addText(versionHistorySpan.toString()));
 
-        HtmlChunk.Element tr = HtmlChunk.Element.tag("tr");
+        HtmlChunk.Element tr = HtmlChunk.tag("tr");
         tr = tr.children(imgTd, nameTd);
 
-        body = body.child(HtmlChunk.Element.tag("table").child(tr));
+        body = body.child(HtmlChunk.tag("table").child(tr));
 
         HtmlChunk.Element ul = HtmlChunk.ul();
 
         for (PluginHistoryEntry pluginHistoryEntry : entries) {
           List<HtmlChunk> children = new ArrayList<>();
+
+          children.add(HtmlChunk.tag("code").addText("#").addText(pluginHistoryEntry.pluginVersion));
+          children.add(HtmlChunk.nbsp());
+
           if (pluginHistoryEntry.commitTimestamp != 0) {
             String date = JBDateFormat.getDefaultFormatter().formatPrettyDateTime(pluginHistoryEntry.commitTimestamp);
 
-            children.add(HtmlChunk.Element.tag("code").addText("[" + date + "]"));
+            children.add(HtmlChunk.tag("code").addText("[" + date + "]"));
             children.add(HtmlChunk.nbsp());
           }
 
-          children.add(HtmlChunk.Element.span().addText(pluginHistoryEntry.commitMessage));
+          children.add(HtmlChunk.span().addText(pluginHistoryEntry.commitMessage));
 
           if (!StringUtil.isEmptyOrSpaces(pluginHistoryEntry.commitHash)) {
             children.add(HtmlChunk.nbsp());
-            children.add(HtmlChunk.Element.span().addText("(commit: " + StringUtil.first(pluginHistoryEntry.commitHash, 7, false) + ")"));
+            children.add(HtmlChunk.span().addText("(commit: " + StringUtil.first(pluginHistoryEntry.commitHash, 7, false) + ")"));
           }
           ul = ul.child(HtmlChunk.li().children(children));
         }
