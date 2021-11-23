@@ -43,7 +43,6 @@ public class UpdateHistory implements PersistentStateComponent<UpdateHistory.Sta
   private State myState = new State();
 
   public void replaceHistory(Map<String, String> history) {
-    myState.pluginVersions.clear();
     myState.pluginVersions.putAll(history);
 
     myState.wantOpenAtStart = true;
