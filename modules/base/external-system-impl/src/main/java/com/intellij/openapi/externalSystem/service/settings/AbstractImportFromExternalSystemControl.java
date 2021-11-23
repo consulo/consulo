@@ -27,8 +27,9 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.TextComponentAccessor;
 import com.intellij.openapi.ui.TextFieldWithBrowseButton;
 import com.intellij.openapi.util.text.StringUtil;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -36,59 +37,46 @@ import java.awt.*;
 
 /**
  * A control which knows how to manage settings of external project being imported.
- * 
+ *
  * @author Denis Zhdanov
  * @since 4/30/13 2:33 PM
  */
-public abstract class AbstractImportFromExternalSystemControl<
-  ProjectSettings extends ExternalProjectSettings,
-  L extends ExternalSystemSettingsListener<ProjectSettings>,
-  SystemSettings extends AbstractExternalSystemSettings<SystemSettings, ProjectSettings, L>>
-{
+public abstract class AbstractImportFromExternalSystemControl<ProjectSettings extends ExternalProjectSettings, L extends ExternalSystemSettingsListener<ProjectSettings>, SystemSettings extends AbstractExternalSystemSettings<SystemSettings, ProjectSettings, L>> {
   @Nonnull
-  private final SystemSettings  mySystemSettings;
+  private final SystemSettings mySystemSettings;
   @Nonnull
   private final ProjectSettings myProjectSettings;
 
   @Nonnull
-  private final PaintAwarePanel           myComponent              = new PaintAwarePanel(new GridBagLayout());
+  private final PaintAwarePanel myComponent = new PaintAwarePanel(new GridBagLayout());
   @Nonnull
   private final TextFieldWithBrowseButton myLinkedProjectPathField = new TextFieldWithBrowseButton();
 
   @Nonnull
-  private final  ExternalSystemSettingsControl<ProjectSettings> myProjectSettingsControl;
+  private final ExternalSystemSettingsControl<ProjectSettings> myProjectSettingsControl;
   @Nonnull
-  private final  ProjectSystemId                                myExternalSystemId;
-  @javax.annotation.Nullable
-  private final ExternalSystemSettingsControl<SystemSettings>  mySystemSettingsControl;
+  private final ProjectSystemId myExternalSystemId;
+  @Nullable
+  private final ExternalSystemSettingsControl<SystemSettings> mySystemSettingsControl;
 
-  @javax.annotation.Nullable
+  @Nullable
   Project myCurrentProject;
 
   @SuppressWarnings("AbstractMethodCallInConstructor")
-  protected AbstractImportFromExternalSystemControl(@Nonnull ProjectSystemId externalSystemId,
-                                                    @Nonnull SystemSettings systemSettings,
-                                                    @Nonnull ProjectSettings projectSettings)
-  {
+  protected AbstractImportFromExternalSystemControl(@Nonnull ProjectSystemId externalSystemId, @Nonnull SystemSettings systemSettings, @Nonnull ProjectSettings projectSettings) {
     myExternalSystemId = externalSystemId;
     mySystemSettings = systemSettings;
     myProjectSettings = projectSettings;
     myProjectSettingsControl = createProjectSettingsControl(projectSettings);
     mySystemSettingsControl = createSystemSettingsControl(systemSettings);
 
-    JLabel linkedProjectPathLabel =
-      new JLabel(ExternalSystemBundle.message("settings.label.select.project", externalSystemId.getReadableName()));
+    JLabel linkedProjectPathLabel = new JLabel(ExternalSystemBundle.message("settings.label.select.project", externalSystemId.getReadableName()));
     ExternalSystemManager<?, ?, ?, ?, ?> manager = ExternalSystemApiUtil.getManager(externalSystemId);
     assert manager != null;
     FileChooserDescriptor fileChooserDescriptor = manager.getExternalProjectDescriptor();
 
-    myLinkedProjectPathField.addBrowseFolderListener("",
-                                                     ExternalSystemBundle
-                                                       .message("settings.label.select.project", externalSystemId.getReadableName()),
-                                                     null,
-                                                     fileChooserDescriptor,
-                                                     TextComponentAccessor.TEXT_FIELD_WHOLE_TEXT,
-                                                     false);
+    myLinkedProjectPathField.addBrowseFolderListener("", ExternalSystemBundle.message("settings.label.select.project", externalSystemId.getReadableName()), null, fileChooserDescriptor,
+                                                     TextComponentAccessor.TEXT_FIELD_WHOLE_TEXT, false);
     myLinkedProjectPathField.getTextField().getDocument().addDocumentListener(new DocumentListener() {
       @Override
       public void insertUpdate(DocumentEvent e) {
@@ -129,10 +117,10 @@ public abstract class AbstractImportFromExternalSystemControl<
    * This property helps us to achieve that - when an ide project is defined, that means that new modules are being imported
    * to that ide project from external project; when this property is <code>null</code> that means that new ide project is being
    * created on the target external project basis.
-   * 
-   * @param currentProject  current ide project (if any)
+   *
+   * @param currentProject current ide project (if any)
    */
-  public void setCurrentProject(@javax.annotation.Nullable Project currentProject) {
+  public void setCurrentProject(@Nullable Project currentProject) {
     myCurrentProject = currentProject;
   }
 
@@ -141,8 +129,8 @@ public abstract class AbstractImportFromExternalSystemControl<
   /**
    * Creates a control for managing given project settings.
    *
-   * @param settings  target external project settings
-   * @return          control for managing given project settings
+   * @param settings target external project settings
+   * @return control for managing given project settings
    */
   @Nonnull
   protected abstract ExternalSystemSettingsControl<ProjectSettings> createProjectSettingsControl(@Nonnull ProjectSettings settings);
@@ -150,11 +138,11 @@ public abstract class AbstractImportFromExternalSystemControl<
   /**
    * Creates a control for managing given system-level settings (if any).
    *
-   * @param settings  target system settings
-   * @return          a control for managing given system-level settings;
-   *                  <code>null</code> if current external system doesn't have system-level settings (only project-level settings)
+   * @param settings target system settings
+   * @return a control for managing given system-level settings;
+   * <code>null</code> if current external system doesn't have system-level settings (only project-level settings)
    */
-  @javax.annotation.Nullable
+  @Nullable
   protected abstract ExternalSystemSettingsControl<SystemSettings> createSystemSettingsControl(@Nonnull SystemSettings settings);
 
   @Nonnull
@@ -198,7 +186,7 @@ public abstract class AbstractImportFromExternalSystemControl<
     else if (myCurrentProject != null) {
       ExternalSystemManager<?, ?, ?, ?, ?> manager = ExternalSystemApiUtil.getManager(myExternalSystemId);
       assert manager != null;
-      AbstractExternalSystemSettings<?, ?,?> settings = manager.getSettingsProvider().fun(myCurrentProject);
+      AbstractExternalSystemSettings<?, ?, ?> settings = manager.getSettingsProvider().fun(myCurrentProject);
       if (settings.getLinkedProjectSettings(linkedProjectPath) != null) {
         throw new ConfigurationException(ExternalSystemBundle.message("error.project.already.registered"));
       }

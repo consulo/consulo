@@ -30,16 +30,17 @@ import com.intellij.ui.components.JBList;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.ContainerUtilRt;
+import com.intellij.util.ui.JBUI;
+import consulo.disposer.Disposable;
+import consulo.ui.annotation.RequiredUIAccess;
 import org.jetbrains.annotations.Nls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.io.File;
-import java.util.Comparator;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -74,24 +75,18 @@ public abstract class AbstractExternalSystemConfigurable<
   @Nonnull
   private final Project         myProject;
 
-  @javax.annotation.Nullable
+  @Nullable
   private ExternalSystemSettingsControl<SystemSettings>  mySystemSettingsControl;
-  @javax.annotation.Nullable
+  @Nullable
   private ExternalSystemSettingsControl<ProjectSettings> myActiveProjectSettingsControl;
 
   private PaintAwarePanel  myComponent;
-  private JBList           myProjectsList;
-  private DefaultListModel myProjectsModel;
+  private JBList<String>           myProjectsList;
+  private DefaultListModel<String> myProjectsModel;
 
   protected AbstractExternalSystemConfigurable(@Nonnull Project project, @Nonnull ProjectSystemId externalSystemId) {
     myProject = project;
     myExternalSystemId = externalSystemId;
-  }
-
-  @Nullable
-  @Override
-  public Runnable enableSearch(String option) {
-    return null;
   }
 
   @Nls
@@ -100,14 +95,15 @@ public abstract class AbstractExternalSystemConfigurable<
     return myExternalSystemId.getReadableName();
   }
 
-  @javax.annotation.Nullable
+  @RequiredUIAccess
+  @Nullable
   @Override
-  public JComponent createComponent() {
+  public JComponent createComponent(@Nonnull Disposable uiDisposable) {
     if (myComponent == null) {
       myComponent = new PaintAwarePanel(new GridBagLayout());
       SystemSettings settings = getSettings();
-      prepareProjectSettings(settings);
-      prepareSystemSettings(settings);
+      prepareProjectSettings(settings, uiDisposable);
+      prepareSystemSettings(settings, uiDisposable);
       ExternalSystemUiUtil.fillBottom(myComponent);
     }
     return myComponent;
@@ -122,24 +118,18 @@ public abstract class AbstractExternalSystemConfigurable<
     return manager.getSettingsProvider().fun(myProject);
   }
 
-  @SuppressWarnings("unchecked")
-  private void prepareProjectSettings(@Nonnull SystemSettings s) {
-    myProjectsModel = new DefaultListModel();
-    myProjectsList = new JBList(myProjectsModel);
+  private void prepareProjectSettings(@Nonnull SystemSettings s, Disposable uiDisposable) {
+    myProjectsModel = new DefaultListModel<>();
+    myProjectsList = new JBList<>(myProjectsModel);
     myProjectsList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
     addTitle(ExternalSystemBundle.message("settings.title.linked.projects", myExternalSystemId.getReadableName()));
     myComponent.add(new JBScrollPane(myProjectsList), ExternalSystemUiUtil.getFillLineConstraints(1));
 
     addTitle(ExternalSystemBundle.message("settings.title.project.settings"));
-    List<ProjectSettings> settings = ContainerUtilRt.newArrayList(s.getLinkedProjectsSettings());
+    List<ProjectSettings> settings = new ArrayList<ProjectSettings>(s.getLinkedProjectsSettings());
     myProjectsList.setVisibleRowCount(Math.max(3, Math.min(5, settings.size())));
-    ContainerUtil.sort(settings, new Comparator<ProjectSettings>() {
-      @Override
-      public int compare(ProjectSettings s1, ProjectSettings s2) {
-        return getProjectName(s1.getExternalProjectPath()).compareTo(getProjectName(s2.getExternalProjectPath()));
-      }
-    });
+    ContainerUtil.sort(settings, (s1, s2) -> getProjectName(s1.getExternalProjectPath()).compareTo(getProjectName(s2.getExternalProjectPath())));
 
     myProjectSettingsControls.clear();
     for (ProjectSettings setting : settings) {
@@ -150,23 +140,19 @@ public abstract class AbstractExternalSystemConfigurable<
       control.showUi(false);
     }
 
-    myProjectsList.addListSelectionListener(new ListSelectionListener() {
-      @SuppressWarnings("unchecked")
-      @Override
-      public void valueChanged(ListSelectionEvent e) {
-        if (e.getValueIsAdjusting()) {
-          return;
-        }
-        int i = myProjectsList.getSelectedIndex();
-        if (i < 0) {
-          return;
-        }
-        if (myActiveProjectSettingsControl != null) {
-          myActiveProjectSettingsControl.showUi(false);
-        }
-        myActiveProjectSettingsControl = myProjectSettingsControls.get(i);
-        myActiveProjectSettingsControl.showUi(true);
+    myProjectsList.addListSelectionListener(e -> {
+      if (e.getValueIsAdjusting()) {
+        return;
       }
+      int i = myProjectsList.getSelectedIndex();
+      if (i < 0) {
+        return;
+      }
+      if (myActiveProjectSettingsControl != null) {
+        myActiveProjectSettingsControl.showUi(false);
+      }
+      myActiveProjectSettingsControl = myProjectSettingsControls.get(i);
+      myActiveProjectSettingsControl.showUi(true);
     });
 
     
@@ -178,7 +164,7 @@ public abstract class AbstractExternalSystemConfigurable<
   
   private void addTitle(@Nonnull String title) {
     JPanel panel = new JPanel(new GridBagLayout());
-    panel.setBorder(IdeBorderFactory.createTitledBorder(title, false, new Insets(ExternalSystemUiUtil.INSETS, 0, 0, 0)));
+    panel.setBorder(IdeBorderFactory.createTitledBorder(title, false, JBUI.insetsTop(ExternalSystemUiUtil.INSETS)));
     myComponent.add(panel, ExternalSystemUiUtil.getFillLineConstraints(0));
   }
 
@@ -198,7 +184,7 @@ public abstract class AbstractExternalSystemConfigurable<
     return file.isDirectory() || file.getParentFile() == null ? file.getName() : file.getParentFile().getName();
   }
 
-  private void prepareSystemSettings(@Nonnull SystemSettings s) {
+  private void prepareSystemSettings(@Nonnull SystemSettings s, @Nonnull Disposable uiDisposable) {
     mySystemSettingsControl = createSystemSettingsControl(s);
     if (mySystemSettingsControl != null) {
       mySystemSettingsControl.fillUi(myComponent, 1);
@@ -212,9 +198,10 @@ public abstract class AbstractExternalSystemConfigurable<
    * @return          a control for managing given system-level settings;
    *                  <code>null</code> if current external system doesn't have system-level settings (only project-level settings)
    */
-  @javax.annotation.Nullable
+  @Nullable
   protected abstract ExternalSystemSettingsControl<SystemSettings> createSystemSettingsControl(@Nonnull SystemSettings settings);
 
+  @RequiredUIAccess
   @Override
   public boolean isModified() {
     for (ExternalSystemSettingsControl<ProjectSettings> control : myProjectSettingsControls) {
@@ -225,13 +212,14 @@ public abstract class AbstractExternalSystemConfigurable<
     return mySystemSettingsControl != null && mySystemSettingsControl.isModified();
   }
 
+  @RequiredUIAccess
   @Override
   public void apply() throws ConfigurationException {
     SystemSettings systemSettings = getSettings();
     L publisher = systemSettings.getPublisher();
     publisher.onBulkChangeStart();
     try {
-      List<ProjectSettings> projectSettings = ContainerUtilRt.newArrayList();
+      List<ProjectSettings> projectSettings = new ArrayList<>();
       for (ExternalSystemSettingsControl<ProjectSettings> control : myProjectSettingsControls) {
         ProjectSettings s = newProjectSettings();
         control.apply(s);
@@ -258,6 +246,7 @@ public abstract class AbstractExternalSystemConfigurable<
   @Nonnull
   protected abstract ProjectSettings newProjectSettings();
 
+  @RequiredUIAccess
   @Override
   public void reset() {
     for (ExternalSystemSettingsControl<ProjectSettings> control : myProjectSettingsControls) {
@@ -268,6 +257,7 @@ public abstract class AbstractExternalSystemConfigurable<
     }
   }
 
+  @RequiredUIAccess
   @Override
   public void disposeUIResources() {
     for (ExternalSystemSettingsControl<ProjectSettings> control : myProjectSettingsControls) {

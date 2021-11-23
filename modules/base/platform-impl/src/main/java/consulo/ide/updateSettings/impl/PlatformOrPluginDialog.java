@@ -19,6 +19,7 @@ import com.intellij.ide.IdeBundle;
 import com.intellij.ide.actions.SettingsEntryPointAction;
 import com.intellij.ide.plugins.*;
 import com.intellij.openapi.application.Application;
+import com.intellij.openapi.application.ApplicationInfo;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.Project;
@@ -38,6 +39,7 @@ import com.intellij.util.ui.components.BorderLayoutPanel;
 import consulo.awt.TargetAWT;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginId;
+import consulo.container.plugin.PluginIds;
 import consulo.container.plugin.PluginManager;
 import consulo.ide.plugins.InstalledPluginsState;
 import consulo.ide.plugins.PluginActionListener;
@@ -233,18 +235,11 @@ public class PlatformOrPluginDialog extends DialogWrapper {
     Task.Backgroundable.queue(myProject, IdeBundle.message("progress.download.plugins"), true, PluginManagerUISettings.getInstance(), indicator -> {
       List<PluginDescriptor> installed = new ArrayList<>(myNodes.size());
 
-      Map<String, String> pluginHistory = new HashMap<>();
-
       for (PlatformOrPluginNode platformOrPluginNode : myNodes) {
         PluginDescriptor pluginDescriptor = platformOrPluginNode.getFutureDescriptor();
         // update list contains broken plugins
         if (pluginDescriptor == null) {
           continue;
-        }
-
-        PluginDescriptor currentDescriptor = platformOrPluginNode.getCurrentDescriptor();
-        if(currentDescriptor != null) {
-          pluginHistory.put(platformOrPluginNode.getPluginId().toString(), StringUtil.notNullize(currentDescriptor.getVersion(), "0"));
         }
 
         try {
@@ -276,6 +271,17 @@ public class PlatformOrPluginDialog extends DialogWrapper {
           LOG.error(e);
         }
       }
+
+      Map<String, String> pluginHistory = new HashMap<>();
+      for (PluginDescriptor descriptor : PluginManager.getPlugins()) {
+        if (PluginIds.isPlatformPlugin(descriptor.getPluginId())) {
+          continue;
+        }
+        
+        pluginHistory.put(descriptor.getPluginId().getIdString(), StringUtil.notNullize(descriptor.getVersion()));
+      }
+
+      pluginHistory.put(PlatformOrPluginUpdateChecker.getPlatformPluginId().getIdString(), ApplicationInfo.getInstance().getBuild().toString());
 
       Application.get().getInstance(UpdateHistory.class).replaceHistory(pluginHistory);
 
