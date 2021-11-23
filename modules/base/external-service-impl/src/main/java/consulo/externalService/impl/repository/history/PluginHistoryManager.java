@@ -36,11 +36,11 @@ public class PluginHistoryManager {
     String baseUrl;
     if (fromVersion.equals(toVersion)) {
       baseUrl = "history/listByVersion";
-      params = Map.of("id", pluginId, "version", fromVersion, "includeFromVersion", "false");
+      params = Map.of("id", pluginId, "version", fromVersion/*, "includeFromVersion", "false"*/);
     }
     else {
       baseUrl = "history/listByVersionRange";
-      params = Map.of("id", pluginId, "fromVersion", fromVersion, "toVersion", toVersion, "includeFromVersion", "false");
+      params = Map.of("id", pluginId, "fromVersion", fromVersion, "toVersion", toVersion/*, "includeFromVersion", "false"*/);
     }
 
     try {
