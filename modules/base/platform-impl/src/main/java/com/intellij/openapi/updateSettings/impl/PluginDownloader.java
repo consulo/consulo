@@ -20,13 +20,11 @@ import com.intellij.ide.plugins.RepositoryHelper;
 import com.intellij.ide.startup.StartupActionScriptManager;
 import com.intellij.openapi.application.ApplicationInfo;
 import com.intellij.openapi.progress.ProgressIndicator;
-import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.io.StreamUtil;
 import com.intellij.util.ObjectUtil;
-import com.intellij.util.ThrowableConsumer;
 import com.intellij.util.TimeoutUtil;
 import com.intellij.util.io.HttpRequests;
 import com.intellij.util.io.ZipUtil;
@@ -36,8 +34,10 @@ import consulo.container.plugin.PluginId;
 import consulo.container.plugin.PluginManager;
 import consulo.ide.updateSettings.UpdateSettings;
 import consulo.ide.updateSettings.impl.PlatformOrPluginUpdateChecker;
+import consulo.ide.updateSettings.impl.PluginDownloadFailedException;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
-import consulo.ui.UIAccess;
+import consulo.platform.base.localize.IdeLocalize;
 import consulo.util.io2.PathUtil;
 import consulo.util.lang.StringUtil;
 import org.apache.commons.codec.binary.Hex;
@@ -93,7 +93,7 @@ public class PluginDownloader {
     myIsPlatform = PlatformOrPluginUpdateChecker.getPlatformPluginId() == pluginDescriptor.getPluginId();
   }
 
-  public void prepareToInstall(boolean checkChecksum, @Nonnull UIAccess uiAccess, @Nonnull ProgressIndicator pi, ThrowableConsumer<PluginDownloader, IOException> onSuccess) throws IOException {
+  public void download(@Nonnull ProgressIndicator pi) throws PluginDownloadFailedException {
     PluginDescriptor descriptor;
     if (!Boolean.getBoolean(StartupActionScriptManager.STARTUP_WIZARD_MODE) && PluginManager.findPlugin(myPluginId) != null) {
       //store old plugins file
@@ -102,13 +102,15 @@ public class PluginDownloader {
       myOldFile = descriptor.getPath();
     }
 
+    boolean checkChecksum = true;
+    
     // if there no checksum at server, disable check
     String expectedChecksum = myDescriptor.getChecksumSHA3_256();
     if (expectedChecksum == null) {
       checkChecksum = false;
     }
 
-    String errorMessage = IdeBundle.message("unknown.error");
+    LocalizeValue errorMessage = IdeLocalize.unknownError();
     if (checkChecksum) {
       for (int i = 0; i < MAX_TRYS; i++) {
         try {
@@ -121,13 +123,13 @@ public class PluginDownloader {
             break;
           }
           else {
-            errorMessage = IdeBundle.message("checksum.failed");
+            errorMessage = IdeLocalize.checksumFailed();
             LOG.warn("Checksum check failed. Plugin: " + myPluginId + ", expected: " + expectedChecksum + ", actual: " + info.getSecond());
           }
         }
-        catch (IOException e) {
+        catch (Throwable e) {
           myFile = null;
-          errorMessage = e.getMessage();
+          errorMessage = LocalizeValue.of(e.getLocalizedMessage());
 
           TimeoutUtil.sleep(5000L);
         }
@@ -137,20 +139,15 @@ public class PluginDownloader {
       try {
         myFile = downloadPlugin(pi, "<disabled>", -1).getFirst();
       }
-      catch (IOException e) {
+      catch (Throwable e) {
         myFile = null;
-        errorMessage = e.getMessage();
+        errorMessage = LocalizeValue.of(e.getLocalizedMessage());
       }
     }
 
     if (myFile == null) {
-      final String text = IdeBundle.message("error.plugin.was.not.installed", getPluginName(), errorMessage);
-      final String title = IdeBundle.message("title.failed.to.download");
-      uiAccess.give(() -> Messages.showErrorDialog(text, title));
-      return;
+      throw new PluginDownloadFailedException(myPluginId, getPluginName(), errorMessage);
     }
-
-    onSuccess.consume(this);
   }
 
   public void install(boolean deleteTempFile) throws IOException {
@@ -285,6 +282,11 @@ public class PluginDownloader {
   }
 
   @Nonnull
+  public PluginId getPluginId() {
+    return myPluginId;
+  }
+
+  @Nonnull
   private String getFileName() {
     String fileName = myPluginId + "_" + myDescriptor.getVersion();
     if (myIsPlatform) {
@@ -301,7 +303,8 @@ public class PluginDownloader {
     return ObjectUtil.notNull(myDescriptor.getName(), myPluginId.toString());
   }
 
-  public PluginDescriptor getDescriptor() {
+  @Nonnull
+  public PluginDescriptor getPluginDescriptor() {
     return myDescriptor;
   }
 }

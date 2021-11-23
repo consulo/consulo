@@ -226,11 +226,10 @@ public class ExternalStoragePluginManager implements PluginActionListener {
 
               PluginDownloader downloader = PluginDownloader.createDownloader(repositoryPlugin, false);
               indicator.setTextValue(LocalizeValue.localizeTODO("Downloading new plugin '" + repositoryPlugin.getName() + "'..."));
-              downloader.prepareToInstall(true, Application.get().getLastUIAccess(), indicator, pluginDownloader -> {
-                InstalledPluginsState.getInstance().getInstalledPlugins().add(pluginId);
+              downloader.download(indicator);
 
-                pluginDownloader.install(indicator, true);
-              });
+              InstalledPluginsState.getInstance().getInstalledPlugins().add(pluginId);
+              downloader.install(indicator, true);
 
               if (pluginEnabled) {
                 PluginManager.enablePlugin(entry.getKey().toString());

@@ -115,7 +115,8 @@ public class CustomizeDownloadAndStartStepPanel extends AbstractCustomizeWizardS
         for (PluginDescriptor pluginDescriptor : pluginsForDownload) {
           try {
             PluginDownloader downloader = PluginDownloader.createDownloader(pluginDescriptor, false);
-            downloader.prepareToInstall(true, uiAccess, indicator, (d) -> d.install(true));
+            downloader.download(indicator);
+            downloader.install(indicator, true);
           }
           catch (Exception e) {
             LOG.warn(e);

@@ -1101,6 +1101,8 @@ progress.downloading.list.of.plugins:
   text: Downloading List of Plugins
 progress.download.plugins:
   text: Downloading...
+progress.installing.plugins:
+  text: Installing plugins...
 button.http.proxy.settings:
   text: '&HTTP Proxy Settings...'
 ide.restart.action:
@@ -2537,3 +2539,5 @@ run.anything.context.tooltip:
   text: Choose context the current command will be executed in
 web.search.label.layout:
   text: Web Search
+checksum.failed:
+  text: Checksum mismatch. Try again later

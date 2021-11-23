@@ -20,7 +20,6 @@ import com.intellij.ide.actions.SettingsEntryPointAction;
 import com.intellij.ide.plugins.*;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationInfo;
-import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
@@ -44,7 +43,10 @@ import consulo.container.plugin.PluginManager;
 import consulo.ide.plugins.InstalledPluginsState;
 import consulo.ide.plugins.PluginActionListener;
 import consulo.ide.updateSettings.UpdateSettings;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
+import consulo.platform.base.localize.IdeLocalize;
+import consulo.ui.Alerts;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 
@@ -55,6 +57,7 @@ import javax.swing.border.Border;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableModel;
 import java.awt.*;
+import java.io.IOException;
 import java.util.List;
 import java.util.*;
 import java.util.function.Consumer;
@@ -187,7 +190,7 @@ public class PlatformOrPluginDialog extends DialogWrapper {
         toShowPluginList.add(node.getCurrentDescriptor());
       }
 
-      if(PlatformOrPluginUpdateChecker.isPlatform(node.getPluginId())) {
+      if (PlatformOrPluginUpdateChecker.isPlatform(node.getPluginId())) {
         assert futureDescriptor != null;
 
         myPlatformVersion = futureDescriptor.getVersion();
@@ -235,6 +238,7 @@ public class PlatformOrPluginDialog extends DialogWrapper {
     Task.Backgroundable.queue(myProject, IdeBundle.message("progress.download.plugins"), true, PluginManagerUISettings.getInstance(), indicator -> {
       List<PluginDescriptor> installed = new ArrayList<>(myNodes.size());
 
+      List<PluginDownloader> forInstall = new ArrayList<>(myNodes.size());
       for (PlatformOrPluginNode platformOrPluginNode : myNodes) {
         PluginDescriptor pluginDescriptor = platformOrPluginNode.getFutureDescriptor();
         // update list contains broken plugins
@@ -245,30 +249,43 @@ public class PlatformOrPluginDialog extends DialogWrapper {
         try {
           PluginDownloader downloader = PluginDownloader.createDownloader(pluginDescriptor, myPlatformVersion, myType != PlatformOrPluginUpdateResult.Type.PLUGIN_INSTALL);
 
-          downloader.prepareToInstall(true, uiAccess, indicator, (d) -> {
-            // already was installed
-            if(InstalledPluginsState.getInstance().wasUpdated(pluginDescriptor.getPluginId())) {
-              return;
-            }
+          forInstall.add(downloader);
 
-            InstalledPluginsState.getInstance().getUpdatedPlugins().add(pluginDescriptor.getPluginId());
-
-            d.install(indicator, true);
-
-            if (pluginDescriptor instanceof PluginNode) {
-              ((PluginNode)pluginDescriptor).setStatus(PluginNode.STATUS_DOWNLOADED);
-
-              Application.get().getMessageBus().syncPublisher(PluginActionListener.TOPIC).pluginInstalled(pluginDescriptor.getPluginId());
-            }
-
-            installed.add(pluginDescriptor);
-          });
+          downloader.download(indicator);
         }
-        catch (ProcessCanceledException e) {
-          throw e;
+        catch (PluginDownloadFailedException e) {
+          uiAccess.give(() -> Alerts.okError(e.getLocalizeMessage()).showAsync());
+          return;
         }
-        catch (Exception e) {
-          LOG.error(e);
+      }
+
+      indicator.setTextValue(IdeLocalize.progressInstallingPlugins());
+
+      InstalledPluginsState installedPluginsState = InstalledPluginsState.getInstance();
+      for (PluginDownloader downloader : forInstall) {
+        try {
+          // already was installed
+          if (installedPluginsState.wasUpdated(downloader.getPluginId())) {
+            continue;
+          }
+
+          installedPluginsState.getUpdatedPlugins().add(downloader.getPluginId());
+
+          downloader.install(indicator, true);
+
+          PluginDescriptor pluginDescriptor = downloader.getPluginDescriptor();
+
+          if (pluginDescriptor instanceof PluginNode) {
+            ((PluginNode)pluginDescriptor).setStatus(PluginNode.STATUS_DOWNLOADED);
+
+            Application.get().getMessageBus().syncPublisher(PluginActionListener.TOPIC).pluginInstalled(pluginDescriptor.getPluginId());
+          }
+
+          installed.add(pluginDescriptor);
+        }
+        catch (IOException e) {
+          uiAccess.give(() -> Alerts.okError(LocalizeValue.of(e.getLocalizedMessage())).showAsync());
+          return;
         }
       }
 
@@ -277,7 +294,7 @@ public class PlatformOrPluginDialog extends DialogWrapper {
         if (PluginIds.isPlatformPlugin(descriptor.getPluginId())) {
           continue;
         }
-        
+
         pluginHistory.put(descriptor.getPluginId().getIdString(), StringUtil.notNullize(descriptor.getVersion()));
       }
 
