@@ -261,6 +261,9 @@ public class PlatformOrPluginDialog extends DialogWrapper {
 
       indicator.setTextValue(IdeLocalize.progressInstallingPlugins());
 
+      Application application = Application.get();
+      UpdateHistory updateHistory = application.getInstance(UpdateHistory.class);
+
       InstalledPluginsState installedPluginsState = InstalledPluginsState.getInstance();
       for (PluginDownloader downloader : forInstall) {
         try {
@@ -278,7 +281,11 @@ public class PlatformOrPluginDialog extends DialogWrapper {
           if (pluginDescriptor instanceof PluginNode) {
             ((PluginNode)pluginDescriptor).setStatus(PluginNode.STATUS_DOWNLOADED);
 
-            Application.get().getMessageBus().syncPublisher(PluginActionListener.TOPIC).pluginInstalled(pluginDescriptor.getPluginId());
+            application.getMessageBus().syncPublisher(PluginActionListener.TOPIC).pluginInstalled(pluginDescriptor.getPluginId());
+
+            if (pluginDescriptor.isExperimental()) {
+              updateHistory.setShowExperimentalWarning(true);
+            }
           }
 
           installed.add(pluginDescriptor);
@@ -300,7 +307,7 @@ public class PlatformOrPluginDialog extends DialogWrapper {
 
       pluginHistory.put(PlatformOrPluginUpdateChecker.getPlatformPluginId().getIdString(), ApplicationInfo.getInstance().getBuild().toString());
 
-      Application.get().getInstance(UpdateHistory.class).replaceHistory(pluginHistory);
+      updateHistory.replaceHistory(pluginHistory);
 
       if (myAfterCallback != null) {
         myAfterCallback.accept(installed);

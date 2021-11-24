@@ -37,7 +37,9 @@ public class UpdateHistory implements PersistentStateComponent<UpdateHistory.Sta
   public static class State {
     public Map<String, String> pluginVersions = new TreeMap<>();
 
-    public boolean wantOpenAtStart;
+    public boolean showChangeLog;
+
+    public boolean showExperimentalWarning = true;
   }
 
   private State myState = new State();
@@ -45,15 +47,23 @@ public class UpdateHistory implements PersistentStateComponent<UpdateHistory.Sta
   public void replaceHistory(Map<String, String> history) {
     myState.pluginVersions.putAll(history);
 
-    myState.wantOpenAtStart = true;
+    myState.showChangeLog = true;
   }
 
-  public void setWantOpenAtStart(boolean value) {
-    myState.wantOpenAtStart = value;
+  public void setShowChangeLog(boolean value) {
+    myState.showChangeLog = value;
   }
 
-  public boolean isWantOpenAtStart() {
-    return myState.wantOpenAtStart;
+  public boolean isShowChangeLog() {
+    return myState.showChangeLog;
+  }
+
+  public void setShowExperimentalWarning(boolean value) {
+    myState.showExperimentalWarning = value;
+  }
+
+  public boolean isShowExperimentalWarning() {
+    return myState.showExperimentalWarning;
   }
 
   @Nonnull

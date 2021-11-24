@@ -26,6 +26,7 @@ import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 
 import javax.annotation.Nonnull;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * @author VISTALL
@@ -35,6 +36,8 @@ public class WhatsNewStartupActivity implements StartupActivity.DumbAware {
   private final Application myApplication;
   private final Provider<UpdateHistory> myUpdateHistoryProvider;
 
+  private final AtomicBoolean myAlreadyShow = new AtomicBoolean();
+
   @Inject
   public WhatsNewStartupActivity(Application application, Provider<UpdateHistory> updateHistoryProvider) {
     myApplication = application;
@@ -43,12 +46,14 @@ public class WhatsNewStartupActivity implements StartupActivity.DumbAware {
 
   @Override
   public void runActivity(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
-    UpdateHistory updateHistory = myUpdateHistoryProvider.get();
+    if(myAlreadyShow.compareAndSet(false, true)) {
+      UpdateHistory updateHistory = myUpdateHistoryProvider.get();
 
-    if (updateHistory.isWantOpenAtStart()) {
-      updateHistory.setWantOpenAtStart(false);
+      if (updateHistory.isShowChangeLog()) {
+        updateHistory.setShowChangeLog(false);
 
-      uiAccess.give(() -> FileEditorManager.getInstance(project).openFile(new WhatsNewVirtualFile(IdeLocalize.whatsnewActionCustomText(myApplication.getName())), true));
+        uiAccess.give(() -> FileEditorManager.getInstance(project).openFile(new WhatsNewVirtualFile(IdeLocalize.whatsnewActionCustomText(myApplication.getName())), true));
+      }
     }
   }
 }

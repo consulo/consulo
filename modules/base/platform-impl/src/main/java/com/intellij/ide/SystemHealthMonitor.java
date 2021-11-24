@@ -39,19 +39,24 @@ import com.sun.jna.Native;
 import com.sun.jna.Pointer;
 import consulo.application.AccessRule;
 import consulo.container.boot.ContainerPathManager;
-import consulo.ide.updateSettings.impl.PlatformOrPluginUpdateChecker;
+import consulo.container.plugin.PluginDescriptor;
+import consulo.container.plugin.PluginManager;
+import consulo.ide.updateSettings.impl.UpdateHistory;
 import consulo.logging.Logger;
 import consulo.util.ApplicationPropertiesComponent;
 import jakarta.inject.Inject;
+import jakarta.inject.Provider;
 import org.jetbrains.annotations.PropertyKey;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
 import java.io.File;
+import java.util.List;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.stream.Collectors;
 
 public class SystemHealthMonitor extends PreloadingActivity {
   private static final Logger LOG = Logger.getInstance(SystemHealthMonitor.class);
@@ -59,52 +64,54 @@ public class SystemHealthMonitor extends PreloadingActivity {
   private static final NotificationGroup GROUP = new NotificationGroup("System Health", NotificationDisplayType.STICKY_BALLOON, false);
 
   private final ApplicationPropertiesComponent myProperties;
-
-  private static String checkJavaLower11RuntimeIgnoreKey = "java.lower.11.runtime";
+  @Nonnull
+  private final Provider<UpdateHistory> myUpdateHistoryProvider;
 
   @Inject
-  public SystemHealthMonitor(@Nonnull ApplicationPropertiesComponent properties) {
+  public SystemHealthMonitor(@Nonnull ApplicationPropertiesComponent properties, @Nonnull Provider<UpdateHistory> updateHistoryProvider) {
     myProperties = properties;
+    myUpdateHistoryProvider = updateHistoryProvider;
   }
 
   @Override
   public void preload(@Nonnull ProgressIndicator indicator) {
     checkEARuntime();
-    checkJavaLower11Runtime();
+    checkExperimentalPlugins();
     checkReservedCodeCacheSize();
     checkSignalBlocking();
     checkHiDPIMode();
     startDiskSpaceMonitoring();
   }
 
-  private void checkJavaLower11Runtime() {
-    // if jre is bundled - skip, we will update it with platform
-    if (PlatformOrPluginUpdateChecker.isJreBuild()) {
+  private void checkExperimentalPlugins() {
+    List<PluginDescriptor> plugins = PluginManager.getPlugins().stream().filter(PluginDescriptor::isExperimental).collect(Collectors.toList());
+    if (plugins.isEmpty()) {
       return;
     }
 
-    // already at 11
-    if (SystemInfo.isJavaVersionAtLeast(11)) {
+    UpdateHistory updateHistory = myUpdateHistoryProvider.get();
+    if (!updateHistory.isShowExperimentalWarning()) {
       return;
     }
 
-    if (myProperties.getBoolean(checkJavaLower11RuntimeIgnoreKey)) {
-      return;
+    StringBuilder builder = new StringBuilder();
+    builder.append(StringUtil.join(plugins, (it) -> "<b>" + it.getName() + "</b>", ", "));
+    if (plugins.size() == 1) {
+      builder.append(" is ");
     }
+    else {
+      builder.append(" are ");
+    }
+    builder.append(" experimental. <br> <a href=\"\">Got it!</a>");
 
     Application app = Application.get();
     app.invokeLater(() -> {
-      Notification notification = GROUP.createNotification("", IdeBundle.message("lower.jre.versions.11.message"), NotificationType.WARNING, new NotificationListener.Adapter() {
+      Notification notification = GROUP.createNotification("", builder.toString(), NotificationType.WARNING, new NotificationListener.Adapter() {
+
         @Override
         protected void hyperlinkActivated(@Nonnull Notification notification, @Nonnull HyperlinkEvent e) {
+          updateHistory.setShowExperimentalWarning(false);
           notification.expire();
-
-          if ("ignore".equals(e.getDescription())) {
-            myProperties.setValue(checkJavaLower11RuntimeIgnoreKey, true);
-          }
-          else if ("jre".equals(e.getDescription())) {
-            PlatformOrPluginUpdateChecker.setForceBundledJreAtUpdate();
-          }
         }
       });
       notification.setImportant(true);
@@ -129,7 +136,7 @@ public class SystemHealthMonitor extends PreloadingActivity {
   private void checkSignalBlocking() {
     if (SystemInfo.isUnix && JnaLoader.isLoaded()) {
       try {
-        LibC lib = Native.loadLibrary("c", LibC.class);
+        LibC lib = Native.load("c", LibC.class);
         Memory buf = new Memory(1024);
         if (lib.sigaction(LibC.SIGINT, null, buf) == 0) {
           long handler = Native.POINTER_SIZE == 8 ? buf.getLong(0) : buf.getInt(0);
