@@ -372,7 +372,7 @@ public class SearchEverywhereUI extends BigPopupUI implements DataProvider, Quic
   @Override
   protected TextBoxWithExtensions createSearchField() {
     TextBoxWithExtensions field = super.createSearchField();
-    field.setExtensions(new TextBoxWithExtensions.Extension(true, AllIcons.Actions.FindPlain, null));
+    field.setExtensions(new TextBoxWithExtensions.Extension(true, AllIcons.Actions.Search, null));
     field.addUserDataProvider(PlatformDataKeys.PREDEFINED_TEXT, () -> field.getValue());
     return field;
   }

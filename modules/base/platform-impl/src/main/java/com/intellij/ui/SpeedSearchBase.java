@@ -2,6 +2,7 @@
 package com.intellij.ui;
 
 import com.intellij.featureStatistics.FeatureUsageTracker;
+import com.intellij.icons.AllIcons;
 import com.intellij.ide.DataManager;
 import com.intellij.ide.ui.UISettings;
 import com.intellij.openapi.actionSystem.AnAction;
@@ -16,6 +17,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.openapi.wm.ex.ToolWindowManagerListener;
 import com.intellij.ui.border.CustomLineBorder;
+import com.intellij.ui.components.JBLabel;
 import com.intellij.ui.speedSearch.SpeedSearch;
 import com.intellij.ui.speedSearch.SpeedSearchSupply;
 import com.intellij.util.text.NameUtilCore;
@@ -42,9 +44,9 @@ import java.util.NoSuchElementException;
 public abstract class SpeedSearchBase<Comp extends JComponent> extends SpeedSearchSupply {
   private static final Logger LOG = Logger.getInstance(SpeedSearchBase.class);
 
-  private static final Border BORDER = new CustomLineBorder(JBColor.namedColor("SpeedSearch.borderColor", JBColor.GRAY), JBUI.insets(1));
+  private static final Border BORDER = new CustomLineBorder(JBColor.namedColor("SpeedSearch.borderColor", JBColor.LIGHT_GRAY), JBUI.insets(1));
   private static final Color FOREGROUND_COLOR = JBColor.namedColor("SpeedSearch.foreground", UIUtil.getToolTipForeground());
-  private static final Color BACKGROUND_COLOR = JBColor.namedColor("SpeedSearch.background", new JBColor(UIUtil.getToolTipBackground().brighter(), Gray._111));
+  private static final Color BACKGROUND_COLOR = JBColor.namedColor("SpeedSearch.background", new JBColor(Gray.xFF, Gray._111));
   private static final Color ERROR_FOREGROUND_COLOR = JBColor.namedColor("SpeedSearch.errorForeground", JBColor.RED);
 
   private SearchPopup mySearchPopup;
@@ -402,7 +404,8 @@ public abstract class SpeedSearchBase<Comp extends JComponent> extends SpeedSear
 
     SearchPopup(String initialString) {
       mySearchField = new SearchField();
-      final JLabel searchLabel = new JLabel(" " + UIBundle.message("search.popup.search.for.label") + " ");
+      final JLabel searchLabel = new JBLabel(AllIcons.Actions.Search);
+      searchLabel.setBorder(JBUI.Borders.empty(0, 2));
       searchLabel.setFont(searchLabel.getFont().deriveFont(Font.BOLD));
       searchLabel.setForeground(FOREGROUND_COLOR);
       mySearchField.setBorder(null);

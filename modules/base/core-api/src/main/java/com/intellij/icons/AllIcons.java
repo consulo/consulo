@@ -139,8 +139,8 @@ public class AllIcons {
     public static final Image RunToCursor = PlatformIconGroup.actionsRunToCursor(); // 16x16
     public static final Image Run_anything = PlatformIconGroup.actionsRun_anything();
     public static final Image Scratch = PlatformIconGroup.actionsScratch(); // 16x16
-    public static final Image Search = Find; // 16x16
-    public static final Image SearchWithHistory = PlatformIconGroup.actionsSearch(); // 16x16
+    public static final Image Search = PlatformIconGroup.actionsSearch(); // 16x16
+    public static final Image SearchWithHistory = PlatformIconGroup.actionsSearchWithHistory(); // 16x16
     public static final Image SearchNewLine = PlatformIconGroup.actionsSearchNewLine(); // 16x16
     public static final Image SearchNewLineHover = PlatformIconGroup.actionsSearchNewLineHover(); // 16x16
     public static final Image Selectall = PlatformIconGroup.actionsSelectall(); // 16x16
