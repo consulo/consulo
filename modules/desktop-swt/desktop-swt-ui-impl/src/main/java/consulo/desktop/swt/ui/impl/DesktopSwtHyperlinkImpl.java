@@ -17,8 +17,8 @@ package consulo.desktop.swt.ui.impl;
 
 import consulo.ui.Hyperlink;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.event.ClickEvent;
-import consulo.ui.event.ClickListener;
+import consulo.ui.event.HyperlinkEvent;
+import consulo.ui.event.HyperlinkListener;
 import consulo.ui.image.Image;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -52,7 +52,7 @@ public class DesktopSwtHyperlinkImpl extends SWTComponentDelegate<Link> implemen
     component.addSelectionListener(new SelectionAdapter() {
       @Override
       public void widgetSelected(SelectionEvent e) {
-        getListenerDispatcher(ClickListener.class).clicked(new ClickEvent(DesktopSwtHyperlinkImpl.this));
+        getListenerDispatcher(HyperlinkListener.class).navigate(new HyperlinkEvent(DesktopSwtHyperlinkImpl.this, ""));
       }
     });
   }

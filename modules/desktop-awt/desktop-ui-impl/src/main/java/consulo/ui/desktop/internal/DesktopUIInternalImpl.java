@@ -495,4 +495,10 @@ public class DesktopUIInternalImpl extends UIInternal {
   public AdvancedLabel _Components_advancedLabel() {
     return new DesktopAdvancedLabelImpl();
   }
+
+  @Nonnull
+  @Override
+  public HtmlView _Components_htmlView() {
+    return new DesktopHtmlViewImpl();
+  }
 }

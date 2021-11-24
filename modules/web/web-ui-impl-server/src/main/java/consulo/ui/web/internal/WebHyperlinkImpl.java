@@ -18,11 +18,11 @@ package consulo.ui.web.internal;
 import consulo.ui.Component;
 import consulo.ui.Hyperlink;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.event.ClickEvent;
-import consulo.ui.event.ClickListener;
+import consulo.ui.event.HyperlinkEvent;
+import consulo.ui.event.HyperlinkListener;
 import consulo.ui.image.Image;
-import consulo.ui.web.internal.base.VaadinComponentDelegate;
 import consulo.ui.web.internal.base.VaadinComponent;
+import consulo.ui.web.internal.base.VaadinComponentDelegate;
 import consulo.ui.web.servlet.WebImageMapper;
 import consulo.web.gwt.shared.ui.state.button.ButtonRpc;
 import consulo.web.gwt.shared.ui.state.button.ButtonState;
@@ -40,7 +40,7 @@ public class WebHyperlinkImpl extends VaadinComponentDelegate<WebHyperlinkImpl.V
       @Override
       public void onClick() {
         Component component = toUIComponent();
-        component.getListenerDispatcher(ClickListener.class).clicked(new ClickEvent(component));
+        component.getListenerDispatcher(HyperlinkListener.class).navigate(new HyperlinkEvent(component, ""));
       }
     };
 

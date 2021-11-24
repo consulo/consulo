@@ -285,4 +285,9 @@ public abstract class UIInternal {
   public AdvancedLabel _Components_advancedLabel() {
     throw new UnsupportedOperationException();
   }
+
+  @Nonnull
+  public HtmlView _Components_htmlView() {
+    throw new UnsupportedOperationException();
+  }
 }

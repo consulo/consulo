@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2018 consulo.io
+ * Copyright 2013-2021 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,41 +16,32 @@
 package consulo.ui;
 
 import consulo.disposer.Disposable;
-import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.HyperlinkListener;
-import consulo.ui.image.Image;
 import consulo.ui.internal.UIInternal;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
- * @since 2018-05-11
+ * @since 24/11/2021
+ *
+ * Simple html view. HTML5, CSS3, JS not supported. WebView can be used as replacement, if need more powerful html view
  */
-public interface Hyperlink extends Component {
+public interface HtmlView extends Component, ValueComponent<String> {
   @Nonnull
-  static Hyperlink create(@Nonnull String text) {
-    return UIInternal.get()._Components_hyperlink(text);
+  static HtmlView create() {
+    return UIInternal.get()._Components_htmlView();
   }
 
+  void setEditable(boolean editable);
+
+  boolean isEditable();
+
   @Nonnull
-  static Hyperlink create(@Nonnull String text, @Nonnull @RequiredUIAccess HyperlinkListener listener) {
-    Hyperlink hyperlink = UIInternal.get()._Components_hyperlink(text);
-    hyperlink.addHyperlinkListener(listener);
-    return hyperlink;
+  default HtmlView withEditable(boolean editable) {
+    setEditable(editable);
+    return this;
   }
-
-  @Nonnull
-  String getText();
-
-  @RequiredUIAccess
-  void setText(@Nonnull String text);
-
-  void setImage(@Nullable Image icon);
-
-  @Nullable
-  Image getImage();
 
   @Nonnull
   default Disposable addHyperlinkListener(@Nonnull HyperlinkListener hyperlinkListener) {

@@ -23,8 +23,8 @@ import consulo.ui.Component;
 import consulo.ui.Hyperlink;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.desktop.internal.base.SwingComponentDelegate;
-import consulo.ui.event.ClickEvent;
-import consulo.ui.event.ClickListener;
+import consulo.ui.event.HyperlinkEvent;
+import consulo.ui.event.HyperlinkListener;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
@@ -49,7 +49,7 @@ public class DesktopHyperlinkImpl extends SwingComponentDelegate<DesktopHyperlin
 
   public DesktopHyperlinkImpl(String text) {
     MyLinkLabel label = new MyLinkLabel(text, null, (aSource, aLinkData) -> {
-      getListenerDispatcher(ClickListener.class).clicked(new ClickEvent(this));
+      getListenerDispatcher(HyperlinkListener.class).navigate(new HyperlinkEvent(this, ""));
     });
     initialize(label);
   }
