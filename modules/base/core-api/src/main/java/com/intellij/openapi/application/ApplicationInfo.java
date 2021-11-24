@@ -131,16 +131,6 @@ public class ApplicationInfo {
     return getName();
   }
 
-  @NonNls
-  public String getHelpURL() {
-    return "jar:file:///" + getHelpJarPath() + "!/" + "idea";
-  }
-
-  @NonNls
-  private String getHelpJarPath() {
-    return ContainerPathManager.get().getHomePath() + File.separator + "help" + File.separator + "ideahelp.jar";
-  }
-
   @Nonnull
   public final String getFullApplicationName() {
     StringBuilder buffer = new StringBuilder();
@@ -155,12 +145,6 @@ public class ApplicationInfo {
     }
 
     return buffer.toString();
-  }
-
-  @Nonnull
-  public final String getWhatsNewUrl() {
-    // TODO [VISTALL] change log url?
-    return "https://github.com/consulo/consulo";
   }
 
   @Nonnull
@@ -208,11 +192,5 @@ public class ApplicationInfo {
 
   private static String getUrl(String prefix) {
     return (ApplicationProperties.isInSandbox() ? prefix + "-sandbox" : prefix) + ".png";
-  }
-
-  @Deprecated
-  @DeprecationInfo("Always true")
-  public static boolean contextHelpAvailable() {
-    return true;
   }
 }
