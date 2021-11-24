@@ -29,11 +29,6 @@ import com.intellij.openapi.ui.popup.JBPopup;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Iconable;
-import consulo.awt.TargetAWT;
-import consulo.localize.LocalizeValue;
-import consulo.logging.Logger;
-import consulo.ui.style.StandardColors;
-import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
@@ -66,14 +61,17 @@ import com.intellij.util.ui.StatusText;
 import com.intellij.util.ui.UIUtil;
 import consulo.fileEditor.impl.EditorWindow;
 import consulo.fileTypes.impl.VfsIconUtil;
-import consulo.ui.annotation.RequiredUIAccess;
+import consulo.localize.LocalizeValue;
+import consulo.logging.Logger;
 import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.style.StandardColors;
+import consulo.util.dataholder.Key;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
-import javax.swing.border.Border;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.awt.*;
@@ -505,8 +503,7 @@ public class Switcher extends AnAction implements DumbAware {
         files.setAlignmentY(1f);
         final JScrollPane pane = ScrollPaneFactory.createScrollPane(files, true);
         pane.setPreferredSize(new Dimension(Math.max(myTopPanel.getPreferredSize().width - toolWindows.getPreferredSize().width, files.getPreferredSize().width), 20 * 20));
-        Border border = JBUI.Borders.merge(JBUI.Borders.emptyLeft(9), new CustomLineBorder(SEPARATOR_COLOR, JBUI.insetsLeft(1)), true);
-        pane.setBorder(border);
+        pane.setBorder(JBUI.Borders.customLineLeft(JBUI.CurrentTheme.Popup.separatorColor()));
         this.add(pane, BorderLayout.CENTER);
         if (selectionIndex > -1) {
           files.setSelectedIndex(selectionIndex);
