@@ -87,14 +87,6 @@ public class DiffDividerDrawUtil {
     config.restore();
   }
 
-  public static void paintPolygonsOnScrollbar(@Nonnull Graphics2D g, int width, @Nonnull Editor editor1, @Nonnull Editor editor2, @Nonnull DividerPaintable paintable) {
-    List<DividerPolygon> polygons = createVisiblePolygons(editor1, editor2, paintable);
-
-    for (DividerPolygon polygon : polygons) {
-      polygon.paintOnScrollbar(g, width);
-    }
-  }
-
   @Nonnull
   public static List<DividerPolygon> createVisiblePolygons(@Nonnull Editor editor1, @Nonnull Editor editor2, @Nonnull DividerPaintable paintable) {
     final List<DividerPolygon> polygons = new ArrayList<DividerPolygon>();
@@ -264,28 +256,6 @@ public class DiffDividerDrawUtil {
       }
 
       g.setStroke(oldStroke);
-    }
-
-    public void paintOnScrollbar(Graphics2D g, int width) {
-      int startY = myStart1 - 1;
-      int endY = myEnd1 - 1;
-      int height = endY - startY;
-
-      int startX = 0;
-      int endX = startX + width - 1;
-
-      g.setColor(TargetAWT.to(myColor));
-      if (height > 2) {
-        if (!myResolved) {
-          g.fillRect(startX, startY, width, height);
-        }
-
-        DiffDrawUtil.drawChunkBorderLine(g, startX, endX, startY, myColor, false, myResolved);
-        DiffDrawUtil.drawChunkBorderLine(g, startX, endX, endY, myColor, false, myResolved);
-      }
-      else {
-        DiffDrawUtil.drawChunkBorderLine(g, startX, endX, startY, myColor, true, myResolved);
-      }
     }
 
     public String toString() {

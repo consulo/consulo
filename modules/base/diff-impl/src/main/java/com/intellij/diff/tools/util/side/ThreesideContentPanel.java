@@ -22,38 +22,54 @@ import com.intellij.diff.tools.util.ThreeDiffSplitter;
 import com.intellij.diff.util.Side;
 import com.intellij.diff.util.ThreeSide;
 import com.intellij.openapi.editor.ex.EditorEx;
-import com.intellij.util.Consumer;
+import com.intellij.util.containers.ContainerUtil;
 import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
-import java.util.ArrayList;
 import java.util.List;
 
 public class ThreesideContentPanel extends JPanel {
   @Nonnull
   private final ThreeDiffSplitter mySplitter;
-  @Nullable
-  private final EditorEx myBaseEditor;
+  @Nonnull
+  private final List<DiffContentPanel> myPanels;
 
-  public ThreesideContentPanel(@Nonnull List<? extends EditorHolder> holders, @Nonnull List<JComponent> titleComponents) {
+  public ThreesideContentPanel(@Nonnull List<? extends JComponent> contents) {
     super(new BorderLayout());
-    assert holders.size() == 3;
-    assert titleComponents.size() == 3;
+    assert contents.size() == 3;
 
-    EditorHolder baseHolder = ThreeSide.BASE.select(holders);
-    myBaseEditor = baseHolder instanceof TextEditorHolder ? ((TextEditorHolder)baseHolder).getEditor() : null;
+    myPanels = ContainerUtil.map(contents, it -> new DiffContentPanel(it));
+    DiffContentPanel.syncTitleHeights(myPanels);
 
-    ArrayList<JComponent> components = new ArrayList<JComponent>(3);
-    for (int i = 0; i < 3; i++) {
-      components.add(new HolderPanel(holders.get(i), titleComponents.get(i)));
-    }
-
-    mySplitter = new ThreeDiffSplitter(components);
+    mySplitter = new ThreeDiffSplitter(myPanels);
     add(mySplitter, BorderLayout.CENTER);
   }
+
+  public void setTitles(@Nonnull List<JComponent> titleComponents) {
+    for (ThreeSide side : ThreeSide.values()) {
+      DiffContentPanel panel = side.select(myPanels);
+      JComponent title = side.select(titleComponents);
+      panel.setTitle(title);
+    }
+  }
+
+  //public void setBreadcrumbs(@Nonnull ThreeSide side, @Nullable DiffBreadcrumbsPanel breadcrumbs, @Nonnull TextDiffSettings settings) {
+  //  if (breadcrumbs != null) {
+  //    DiffContentPanel panel = side.select(myPanels);
+  //    panel.setBreadcrumbs(breadcrumbs);
+  //    panel.updateBreadcrumbsPlacement(settings.getBreadcrumbsPlacement());
+  //    settings.addListener(new TextDiffSettings.Listener.Adapter() {
+  //      @Override
+  //      public void breadcrumbsPlacementChanged() {
+  //        panel.updateBreadcrumbsPlacement(settings.getBreadcrumbsPlacement());
+  //        repaintDividers();
+  //      }
+  //    }, breadcrumbs);
+  //  }
+  //}
 
   @RequiredUIAccess
   public void setPainter(@Nullable DiffSplitter.Painter painter, @Nonnull Side side) {
@@ -61,16 +77,32 @@ public class ThreesideContentPanel extends JPanel {
   }
 
   public void repaintDividers() {
-    if (myBaseEditor != null) myBaseEditor.getScrollPane().getVerticalScrollBar().repaint();
-    mySplitter.repaintDividers();
+    repaintDivider(Side.LEFT);
+    repaintDivider(Side.RIGHT);
   }
 
   public void repaintDivider(@Nonnull Side side) {
-    if (side == Side.RIGHT && myBaseEditor != null) myBaseEditor.getScrollPane().getVerticalScrollBar().repaint();
     mySplitter.repaintDivider(side);
   }
 
-  public void setScrollbarPainter(@Nonnull Consumer<Graphics> painter) {
-    if (myBaseEditor != null) myBaseEditor.registerScrollBarRepaintCallback(painter);
+  public static class Holders extends ThreesideContentPanel {
+    @Nullable
+    private final EditorEx myBaseEditor;
+
+    public Holders(@Nonnull List<? extends EditorHolder> holders) {
+      super(ContainerUtil.map(holders, holder -> holder.getComponent()));
+
+
+      EditorHolder baseHolder = ThreeSide.BASE.select(holders);
+      myBaseEditor = baseHolder instanceof TextEditorHolder ? ((TextEditorHolder)baseHolder).getEditor() : null;
+    }
+
+    @Override
+    public void repaintDivider(@Nonnull Side side) {
+      if (side == Side.RIGHT && myBaseEditor != null) {
+        myBaseEditor.getScrollPane().getVerticalScrollBar().repaint();
+      }
+      super.repaintDivider(side);
+    }
   }
 }

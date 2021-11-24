@@ -28,14 +28,14 @@ import com.intellij.diff.tools.util.base.ListenerDiffViewerBase;
 import com.intellij.diff.util.DiffUtil;
 import com.intellij.diff.util.Side;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
-import consulo.disposer.Disposer;
-import consulo.util.dataholder.Key;
 import com.intellij.pom.Navigatable;
+import consulo.disposer.Disposer;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.util.dataholder.Key;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import consulo.ui.annotation.RequiredUIAccess;
-
 import javax.swing.*;
 import java.util.List;
 
@@ -56,8 +56,7 @@ public abstract class OnesideDiffViewer<T extends EditorHolder> extends Listener
     mySide = Side.fromRight(myRequest.getContents().get(0) instanceof EmptyContent);
     myHolder = createEditorHolder(factory);
 
-    JComponent titlePanels = createTitle();
-    myContentPanel = new OnesideContentPanel(myHolder, titlePanels);
+    myContentPanel = OnesideContentPanel.createFromHolder(myHolder);
 
     myPanel = new SimpleDiffPanel(myContentPanel, this, context);
   }
@@ -66,6 +65,7 @@ public abstract class OnesideDiffViewer<T extends EditorHolder> extends Listener
   protected void onInit() {
     super.onInit();
     myPanel.setPersistentNotifications(DiffUtil.getCustomNotifications(myContext, myRequest));
+    myContentPanel.setTitle(createTitle());
   }
 
   @Override

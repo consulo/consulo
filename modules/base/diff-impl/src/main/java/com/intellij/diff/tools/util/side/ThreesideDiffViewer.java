@@ -63,17 +63,18 @@ public abstract class ThreesideDiffViewer<T extends EditorHolder> extends Listen
 
     myHolders = createEditorHolders(factory);
 
-    List<JComponent> titlePanel = createTitles();
     myFocusTrackerSupport = new FocusTrackerSupport.Threeside(myHolders);
-    myContentPanel = new ThreesideContentPanel(myHolders, titlePanel);
+    myContentPanel = new ThreesideContentPanel.Holders(myHolders);
 
     myPanel = new SimpleDiffPanel(myContentPanel, this, context);
   }
 
+  @RequiredUIAccess
   @Override
   protected void onInit() {
     super.onInit();
     myPanel.setPersistentNotifications(DiffUtil.getCustomNotifications(myContext, myRequest));
+    myContentPanel.setTitles(createTitles());
   }
 
   @Override
@@ -130,7 +131,7 @@ public abstract class ThreesideDiffViewer<T extends EditorHolder> extends Listen
     return myPanel;
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   @Override
   public JComponent getPreferredFocusedComponent() {
     if (!myPanel.isGoodContent()) return null;
@@ -172,7 +173,7 @@ public abstract class ThreesideDiffViewer<T extends EditorHolder> extends Listen
   // Misc
   //
 
-  @javax.annotation.Nullable
+  @Nullable
   @Override
   protected Navigatable getNavigatable() {
     return getCurrentSide().select(getRequest().getContents()).getNavigatable();
@@ -230,6 +231,7 @@ public abstract class ThreesideDiffViewer<T extends EditorHolder> extends Listen
       ActionUtil.copyFrom(this, id);
     }
 
+    @RequiredUIAccess
     @Override
     public void actionPerformed(AnActionEvent e) {
       DiffRequest request = createRequest();

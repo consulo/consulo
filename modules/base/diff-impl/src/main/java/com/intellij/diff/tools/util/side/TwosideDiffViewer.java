@@ -28,14 +28,14 @@ import com.intellij.diff.tools.util.base.ListenerDiffViewerBase;
 import com.intellij.diff.util.DiffUtil;
 import com.intellij.diff.util.Side;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
-import consulo.disposer.Disposer;
-import consulo.util.dataholder.Key;
 import com.intellij.pom.Navigatable;
+import consulo.disposer.Disposer;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.util.dataholder.Key;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import consulo.ui.annotation.RequiredUIAccess;
-
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -57,17 +57,18 @@ public abstract class TwosideDiffViewer<T extends EditorHolder> extends Listener
 
     myHolders = createEditorHolders(factory);
 
-    List<JComponent> titlePanels = createTitles();
     myFocusTrackerSupport = new FocusTrackerSupport.Twoside(myHolders);
-    myContentPanel = new TwosideContentPanel(myHolders, titlePanels);
+    myContentPanel = TwosideContentPanel.createFromHolders(myHolders);
 
     myPanel = new SimpleDiffPanel(myContentPanel, this, context);
   }
 
+  @RequiredUIAccess
   @Override
   protected void onInit() {
     super.onInit();
     myPanel.setPersistentNotifications(DiffUtil.getCustomNotifications(myContext, myRequest));
+    myContentPanel.setTitles(createTitles());
   }
 
   @Override

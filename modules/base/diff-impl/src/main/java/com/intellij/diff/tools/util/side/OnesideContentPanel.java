@@ -16,16 +16,41 @@
 package com.intellij.diff.tools.util.side;
 
 import com.intellij.diff.tools.holders.EditorHolder;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 
 public class OnesideContentPanel extends JPanel {
-  public OnesideContentPanel(@Nonnull EditorHolder holder, @Nullable JComponent titleComponent) {
+  private final DiffContentPanel myPanel;
+
+  public OnesideContentPanel(@Nonnull JComponent content) {
     super(new BorderLayout());
 
-    add(new HolderPanel(holder, titleComponent), BorderLayout.CENTER);
+    myPanel = new DiffContentPanel(content);
+    add(myPanel, BorderLayout.CENTER);
+  }
+
+  public void setTitle(@Nullable JComponent titles) {
+    myPanel.setTitle(titles);
+  }
+
+  //public void setBreadcrumbs(@Nullable DiffBreadcrumbsPanel breadcrumbs, @Nonnull TextDiffSettings settings) {
+  //  if (breadcrumbs != null) {
+  //    myPanel.setBreadcrumbs(breadcrumbs);
+  //    myPanel.updateBreadcrumbsPlacement(settings.getBreadcrumbsPlacement());
+  //    settings.addListener(new TextDiffSettings.Listener.Adapter() {
+  //      @Override
+  //      public void breadcrumbsPlacementChanged() {
+  //        myPanel.updateBreadcrumbsPlacement(settings.getBreadcrumbsPlacement());
+  //      }
+  //    }, breadcrumbs);
+  //  }
+  //}
+
+  @Nonnull
+  public static OnesideContentPanel createFromHolder(@Nonnull EditorHolder holder) {
+    return new OnesideContentPanel(holder.getComponent());
   }
 }

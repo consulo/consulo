@@ -28,15 +28,14 @@ import com.intellij.openapi.diff.DiffBundle;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.event.DocumentEvent;
 import com.intellij.openapi.editor.ex.EditorEx;
+import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.util.Function;
 import consulo.awt.TargetAWT;
 import consulo.disposer.Disposable;
-import consulo.util.dataholder.Key;
-import consulo.util.dataholder.UserDataHolder;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.util.Consumer;
-import com.intellij.util.Function;
 import consulo.logging.Logger;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.util.dataholder.Key;
+import consulo.util.dataholder.UserDataHolder;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
@@ -83,7 +82,6 @@ public abstract class ThreesideTextDiffViewerEx extends ThreesideTextDiffViewer 
     super.onInit();
     myContentPanel.setPainter(new MyDividerPainter(Side.LEFT), Side.LEFT);
     myContentPanel.setPainter(new MyDividerPainter(Side.RIGHT), Side.RIGHT);
-    myContentPanel.setScrollbarPainter(new MyScrollbarPainter());
   }
 
   @Override
@@ -313,7 +311,7 @@ public abstract class ThreesideTextDiffViewerEx extends ThreesideTextDiffViewer 
   // Helpers
   //
 
-  @javax.annotation.Nullable
+  @Nullable
   @Override
   public Object getData(@Nonnull @NonNls Key<?> dataId) {
     if (DiffDataKeys.PREV_NEXT_DIFFERENCE_ITERABLE == dataId) {
@@ -386,24 +384,8 @@ public abstract class ThreesideTextDiffViewerEx extends ThreesideTextDiffViewer 
     }
   }
 
-  protected class MyScrollbarPainter implements Consumer<Graphics> {
-    @Nonnull
-    private final DividerPaintable myPaintable = getDividerPaintable(Side.RIGHT);
-
-    @Override
-    public void consume(Graphics g) {
-      EditorEx editor1 = getEditor(ThreeSide.BASE);
-      EditorEx editor2 = getEditor(ThreeSide.RIGHT);
-
-      int width = editor1.getScrollPane().getVerticalScrollBar().getWidth();
-      DiffDividerDrawUtil.paintPolygonsOnScrollbar((Graphics2D)g, width, editor1, editor2, myPaintable);
-
-      myFoldingModel.paintOnScrollbar((Graphics2D)g, width);
-    }
-  }
-
   protected class MyStatusPanel extends StatusPanel {
-    @javax.annotation.Nullable
+    @Nullable
     @Override
     protected String getMessage() {
       if (myChangesCount < 0 || myConflictsCount < 0) return null;

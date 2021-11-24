@@ -19,10 +19,11 @@ import com.intellij.diff.tools.holders.EditorHolder;
 import com.intellij.diff.tools.util.DiffSplitter;
 import com.intellij.diff.util.Side;
 import com.intellij.openapi.actionSystem.AnAction;
-import javax.annotation.Nonnull;
-
+import com.intellij.util.containers.ContainerUtil;
 import consulo.ui.annotation.RequiredUIAccess;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;
@@ -30,29 +31,56 @@ import java.util.List;
 public class TwosideContentPanel extends JPanel {
   @Nonnull
   private final DiffSplitter mySplitter;
+  @Nonnull
+  private final List<DiffContentPanel> myPanels;
 
-  public TwosideContentPanel(@Nonnull List<? extends EditorHolder> holders, @Nonnull List<JComponent> titleComponents) {
+  public TwosideContentPanel(@Nonnull List<? extends JComponent> contents) {
     super(new BorderLayout());
-    assert holders.size() == 2;
-    assert titleComponents.size() == 2;
+    assert contents.size() == 2;
+
+    myPanels = ContainerUtil.map(contents, it -> new DiffContentPanel(it));
+    DiffContentPanel.syncTitleHeights(myPanels);
 
     mySplitter = new DiffSplitter();
-    mySplitter.setFirstComponent(new HolderPanel(Side.LEFT.select(holders), Side.LEFT.select(titleComponents)));
-    mySplitter.setSecondComponent(new HolderPanel(Side.RIGHT.select(holders), Side.RIGHT.select(titleComponents)));
+    mySplitter.setFirstComponent(Side.LEFT.select(myPanels));
+    mySplitter.setSecondComponent(Side.RIGHT.select(myPanels));
     mySplitter.setHonorComponentsMinimumSize(false);
     add(mySplitter, BorderLayout.CENTER);
   }
 
-  public void setBottomAction(@javax.annotation.Nullable AnAction value) {
+  public void setTitles(@Nonnull List<JComponent> titleComponents) {
+    for (Side side : Side.values()) {
+      DiffContentPanel panel = side.select(myPanels);
+      JComponent title = side.select(titleComponents);
+      panel.setTitle(title);
+    }
+  }
+
+  //public void setBreadcrumbs(@Nonnull Side side, @Nullable DiffBreadcrumbsPanel breadcrumbs, @Nonnull TextDiffSettings settings) {
+  //  if (breadcrumbs != null) {
+  //    DiffContentPanel panel = side.select(myPanels);
+  //    panel.setBreadcrumbs(breadcrumbs);
+  //    panel.updateBreadcrumbsPlacement(settings.getBreadcrumbsPlacement());
+  //    settings.addListener(new TextDiffSettings.Listener.Adapter() {
+  //      @Override
+  //      public void breadcrumbsPlacementChanged() {
+  //        panel.updateBreadcrumbsPlacement(settings.getBreadcrumbsPlacement());
+  //        repaintDivider();
+  //      }
+  //    }, breadcrumbs);
+  //  }
+  //}
+
+  public void setBottomAction(@Nullable AnAction value) {
     mySplitter.setBottomAction(value);
   }
 
-  public void setTopAction(@javax.annotation.Nullable AnAction value) {
+  public void setTopAction(@Nullable AnAction value) {
     mySplitter.setTopAction(value);
   }
 
   @RequiredUIAccess
-  public void setPainter(@javax.annotation.Nullable DiffSplitter.Painter painter) {
+  public void setPainter(@Nullable DiffSplitter.Painter painter) {
     mySplitter.setPainter(painter);
   }
 
@@ -63,5 +91,10 @@ public class TwosideContentPanel extends JPanel {
   @Nonnull
   public DiffSplitter getSplitter() {
     return mySplitter;
+  }
+
+  @Nonnull
+  public static TwosideContentPanel createFromHolders(@Nonnull List<? extends EditorHolder> holders) {
+    return new TwosideContentPanel(ContainerUtil.map(holders, holder -> holder.getComponent()));
   }
 }
