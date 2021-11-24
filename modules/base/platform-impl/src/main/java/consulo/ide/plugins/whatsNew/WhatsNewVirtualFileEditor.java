@@ -15,6 +15,7 @@
  */
 package consulo.ide.plugins.whatsNew;
 
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationInfo;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
 import com.intellij.openapi.fileEditor.FileEditor;
@@ -88,7 +89,12 @@ public class WhatsNewVirtualFileEditor extends UserDataHolderBase implements Fil
     myEditorPanel.setFont(EditorUtil.getEditorFont());
     JBHtmlEditorKit kit = JBHtmlEditorKit.create();
     kit.setImageResolver(src -> {
-      PluginDescriptor plugin = PluginManager.findPlugin(PluginId.getId(src));
+      PluginId pluginId = PluginId.getId(src);
+      if (PlatformOrPluginUpdateChecker.isPlatform(pluginId)) {
+        return PluginIconHolder.decorateIcon(Application.get().getIcon());
+      }
+      
+      PluginDescriptor plugin = PluginManager.findPlugin(pluginId);
       if (plugin != null) {
         return PluginIconHolder.get(plugin);
       }
@@ -128,10 +134,10 @@ public class WhatsNewVirtualFileEditor extends UserDataHolderBase implements Fil
       }
 
       PluginId platformPluginId = PlatformOrPluginUpdateChecker.getPlatformPluginId();
-      String platformVersion = ApplicationInfo.getInstance().getFullVersion();
+      String platformBuild = ApplicationInfo.getInstance().getBuild().asString();
 
       PluginHistoryEntry[] pluginHistoryEntries =
-              PluginHistoryManager.fetchHistory(platformPluginId.getIdString(), myUpdateHistory.getHistoryVersion(platformPluginId, platformVersion), platformVersion);
+              PluginHistoryManager.fetchHistory(platformPluginId.getIdString(), myUpdateHistory.getHistoryVersion(platformPluginId, platformBuild), platformBuild);
       
       for (PluginHistoryEntry pluginHistoryEntry : pluginHistoryEntries) {
         entries.putValue(platformPluginId, pluginHistoryEntry);
@@ -160,23 +166,32 @@ public class WhatsNewVirtualFileEditor extends UserDataHolderBase implements Fil
         Set<PluginHistoryEntry> entries = new TreeSet<>((o1, o2) -> Long.compareUnsigned(o1.commitTimestamp, o2.commitTimestamp));
         entries.addAll(entry.getValue());
 
-        PluginDescriptor plugin = PluginManager.findPlugin(key);
-        assert plugin != null;
+        String pluginName;
+        String pluginVersion;
+        if (PlatformOrPluginUpdateChecker.isPlatform(key)) {
+          pluginName = "Platform";
+          pluginVersion = ApplicationInfo.getInstance().getBuild().asString();
+        } else {
+          PluginDescriptor plugin = PluginManager.findPlugin(key);
+          assert plugin != null;
+          pluginName = plugin.getName();
+          pluginVersion = plugin.getVersion();
+        }
 
         HtmlChunk.Element imgTd = HtmlChunk.tag("td");
 
-        HtmlChunk.Element pluginImg = HtmlChunk.tag("img").attr("src", plugin.getPluginId().getIdString()).attr("width", PluginIconHolder.ICON_SIZE).attr("height", PluginIconHolder.ICON_SIZE);
+        HtmlChunk.Element pluginImg = HtmlChunk.tag("img").attr("src", key.getIdString()).attr("width", PluginIconHolder.ICON_SIZE).attr("height", PluginIconHolder.ICON_SIZE);
         imgTd = imgTd.child(pluginImg);
 
         HtmlChunk.Element nameTd = HtmlChunk.tag("td").style("padding-left: 10px");
 
         Font font = UIUtil.getLabelFont(UIUtil.FontSize.BIGGER);
 
-        nameTd = nameTd.child(HtmlChunk.span("font-weight: bold; font-size: " + font.getSize()).addText(plugin.getName()));
+        nameTd = nameTd.child(HtmlChunk.span("font-weight: bold; font-size: " + font.getSize()).addText(pluginName));
 
         StringBuilder versionHistorySpan = new StringBuilder();
-        String historyVersion = myUpdateHistory.getHistoryVersion(plugin.getPluginId(), plugin.getVersion());
-        if (!historyVersion.equals(plugin.getVersion())) {
+        String historyVersion = myUpdateHistory.getHistoryVersion(key, pluginVersion);
+        if (!historyVersion.equals(pluginVersion)) {
           versionHistorySpan.append("#");
           versionHistorySpan.append(historyVersion);
           versionHistorySpan.append(" ");
@@ -185,7 +200,7 @@ public class WhatsNewVirtualFileEditor extends UserDataHolderBase implements Fil
         }
 
         versionHistorySpan.append("#");
-        versionHistorySpan.append(plugin.getVersion());
+        versionHistorySpan.append(pluginVersion);
 
         nameTd = nameTd.child(HtmlChunk.br()).child(HtmlChunk.tag("code").addText(versionHistorySpan.toString()));
 

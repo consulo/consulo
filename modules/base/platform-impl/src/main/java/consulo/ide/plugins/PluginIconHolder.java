@@ -62,7 +62,7 @@ public class PluginIconHolder {
   }
 
   @Nonnull
-  private static Image decorateIcon(@Nonnull Image image) {
+  public static Image decorateIcon(@Nonnull Image image) {
     return ImageEffects.resize(image, ICON_SIZE, ICON_SIZE);
   }
 

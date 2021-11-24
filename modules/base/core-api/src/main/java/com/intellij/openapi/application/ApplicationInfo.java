@@ -21,12 +21,10 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.PathUtil;
 import consulo.annotation.DeprecationInfo;
 import consulo.application.ApplicationProperties;
-import consulo.container.boot.ContainerPathManager;
 import consulo.logging.Logger;
-import org.jetbrains.annotations.NonNls;
+import consulo.platform.Platform;
 
 import javax.annotation.Nonnull;
-import java.io.File;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.jar.Attributes;
@@ -35,7 +33,7 @@ import java.util.jar.Manifest;
 
 /**
  * I don't think changed random thread name is good idea.
- * 
+ * <p>
  * Thread currentThread = Thread.currentThread();
  * currentThread.setName(getFullApplicationName());
  */
@@ -58,9 +56,15 @@ public class ApplicationInfo {
 
       Attributes attributes = manifest.getMainAttributes();
 
-      String buildNumber = attributes.getValue("Consulo-Build-Number");
-      if (buildNumber != null) {
-        myBuild = BuildNumber.fromString(buildNumber);
+      String buildNumberFromJvm = Platform.current().jvm().getRuntimeProperty("consulo.build.number");
+      if (buildNumberFromJvm != null) {
+        myBuild = BuildNumber.fromString(buildNumberFromJvm);
+      }
+      else {
+        String buildNumber = attributes.getValue("Consulo-Build-Number");
+        if (buildNumber != null) {
+          myBuild = BuildNumber.fromString(buildNumber);
+        }
       }
 
       // yyyyMMddHHmm
