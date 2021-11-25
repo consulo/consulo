@@ -313,16 +313,17 @@ public class PlatformOrPluginDialog extends DialogWrapper {
         myAfterCallback.accept(installed);
       }
 
-    }, () -> {
       if (myType != PlatformOrPluginUpdateResult.Type.PLUGIN_INSTALL) {
-        UpdateSettings updateSettings = UpdateSettings.getInstance();
-        updateSettings.setLastCheckResult(PlatformOrPluginUpdateResult.Type.RESTART_REQUIRED);
+        SwingUtilities.invokeLater(() -> {
+          UpdateSettings updateSettings = UpdateSettings.getInstance();
+          updateSettings.setLastCheckResult(PlatformOrPluginUpdateResult.Type.RESTART_REQUIRED);
 
-        SettingsEntryPointAction.updateState(updateSettings);
+          SettingsEntryPointAction.updateState(updateSettings);
 
-        if (PluginInstallUtil.showRestartIDEADialog() == Messages.YES) {
-          Application.get().restart(true);
-        }
+          if (PluginInstallUtil.showRestartIDEADialog() == Messages.YES) {
+            Application.get().restart(true);
+          }
+        });
       }
     });
   }
