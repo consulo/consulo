@@ -20,6 +20,7 @@ import com.intellij.ui.ClickListener;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.components.panels.NonOpaquePanel;
 import com.intellij.util.concurrency.EdtExecutorService;
+import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import consulo.disposer.Disposer;
 
@@ -191,10 +192,6 @@ public final class IdeMessagePanel extends NonOpaquePanel implements MessagePool
     return frame.isActive();
   }
 
-  private static final Color TEXT_COLOR = JBColor.namedColor("Notification.errorForeground", NotificationsManagerImpl.DEFAULT_TEXT_COLOR);
-  private static final Color FILL_COLOR = JBColor.namedColor("Notification.errorBackground", new JBColor(0XF5E6E7, 0X593D41));
-  private static final Color BORDER_COLOR = JBColor.namedColor("Notification.errorBorderColor", new JBColor(0XE0A8A9, 0X73454B));
-
   private void showErrorNotification(@Nonnull Project project) {
     String title = DiagnosticBundle.message("error.new.notification.title");
     String linkText = DiagnosticBundle.message("error.new.notification.link");
@@ -212,9 +209,9 @@ public final class IdeMessagePanel extends NonOpaquePanel implements MessagePool
 
     BalloonLayoutData layoutData = BalloonLayoutData.createEmpty();
     layoutData.fadeoutTime = 5000;
-    layoutData.textColor = TEXT_COLOR;
-    layoutData.fillColor = FILL_COLOR;
-    layoutData.borderColor = BORDER_COLOR;
+    layoutData.textColor = JBUI.CurrentTheme.Notification.Error.FOREGROUND;
+    layoutData.fillColor = JBUI.CurrentTheme.Notification.Error.BACKGROUND;
+    layoutData.borderColor = JBUI.CurrentTheme.Notification.Error.BORDER_COLOR;
 
     assert myBalloon == null;
     myBalloon = NotificationsManagerImpl.createBalloon(myFrame, notification, false, false, new Ref<>(layoutData), project);

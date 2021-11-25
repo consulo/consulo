@@ -84,9 +84,8 @@ import java.util.List;
 @Singleton
 public class NotificationsManagerImpl extends NotificationsManager {
   public static final Color DEFAULT_TEXT_COLOR = new JBColor(Gray._0, Gray._191);
-  private static final Color TEXT_COLOR = JBColor.namedColor("Notification.foreground", DEFAULT_TEXT_COLOR);
-  public static final Color FILL_COLOR = JBColor.namedColor("Notification.background", new JBColor(Gray._242, new Color(78, 80, 82)));
-  public static final Color BORDER_COLOR = JBColor.namedColor("Notification.borderColor", new JBColor(Gray._178.withAlpha(205), new Color(86, 90, 92, 205)));
+  public static final Color FILL_COLOR = JBColor.namedColor("Notification.background", new JBColor(Gray._242, new Color(0x4E5052)));
+  public static final Color BORDER_COLOR = JBColor.namedColor("Notification.borderColor", new JBColor(0xCDB2B2B2, 0xCD565A5C));
 
   public NotificationsManagerImpl() {
     ApplicationManager.getApplication().getMessageBus().connect().subscribe(Notifications.TOPIC, new MyNotificationListener(null));
@@ -340,7 +339,7 @@ public class NotificationsManagerImpl extends NotificationsManager {
     layoutDataRef.set(layoutData);
 
     if (layoutData.textColor == null) {
-      layoutData.textColor = TEXT_COLOR;
+      layoutData.textColor = JBColor.namedColor("Notification.foreground", DEFAULT_TEXT_COLOR);
     }
 
     if (layoutData.fillColor == null) {

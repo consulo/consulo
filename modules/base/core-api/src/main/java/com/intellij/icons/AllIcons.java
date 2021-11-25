@@ -649,18 +649,6 @@ public class AllIcons {
       public static final Image InfoEvents = PlatformIconGroup.ideNotificationInfoEvents(); // 13x13
       public static final Image NoEvents = PlatformIconGroup.ideNotificationNoEvents(); // 16x16
 
-      public static class Shadow {
-        public static final Image Bottom_left = PlatformIconGroup.ideNotificationShadowBottom_left(); // 14x16
-        public static final Image Bottom_right = PlatformIconGroup.ideNotificationShadowBottom_right(); // 14x16
-        public static final Image Bottom = PlatformIconGroup.ideNotificationShadowBottom(); // 4x8
-        public static final Image Left = PlatformIconGroup.ideNotificationShadowLeft(); // 6x4
-        public static final Image Right = PlatformIconGroup.ideNotificationShadowRight(); // 6x4
-        public static final Image Top_left = PlatformIconGroup.ideNotificationShadowTop_left(); // 14x12
-        public static final Image Top_right = PlatformIconGroup.ideNotificationShadowTop_right(); // 14x12
-        public static final Image Top = PlatformIconGroup.ideNotificationShadowTop(); // 4x4
-
-      }
-
       public static final Image WarningEvents = PlatformIconGroup.ideNotificationWarningEvents(); // 16x16
 
     }
@@ -677,28 +665,14 @@ public class AllIcons {
     public static final Image Readwrite = PlatformIconGroup.ideReadwrite(); // 16x16
 
     public static class Shadow {
-      public static final Image Bottom_left = PlatformIconGroup.ideShadowBottom_left(); // 18x22
-      public static final Image Bottom_right = PlatformIconGroup.ideShadowBottom_right(); // 18x22
+      public static final Image Bottom_left = PlatformIconGroup.ideShadowBottomLeft(); // 18x22
+      public static final Image Bottom_right = PlatformIconGroup.ideShadowBottomRight(); // 18x22
       public static final Image Bottom = PlatformIconGroup.ideShadowBottom(); // 4x14
       public static final Image Left = PlatformIconGroup.ideShadowLeft(); // 10x4
-
-      public static class Popup {
-        public static final Image Bottom_left = PlatformIconGroup.ideShadowPopupBottom_left(); // 20x20
-        public static final Image Bottom_right = PlatformIconGroup.ideShadowPopupBottom_right(); // 20x20
-        public static final Image Bottom = PlatformIconGroup.ideShadowPopupBottom(); // 1x10
-        public static final Image Left = PlatformIconGroup.ideShadowPopupLeft(); // 7x1
-        public static final Image Right = PlatformIconGroup.ideShadowPopupRight(); // 7x1
-        public static final Image Top_left = PlatformIconGroup.ideShadowPopupTop_left(); // 14x14
-        public static final Image Top_right = PlatformIconGroup.ideShadowPopupTop_right(); // 14x14
-        public static final Image Top = PlatformIconGroup.ideShadowPopupTop(); // 1x4
-
-      }
-
       public static final Image Right = PlatformIconGroup.ideShadowRight(); // 10x4
-      public static final Image Top_left = PlatformIconGroup.ideShadowTop_left(); // 18x14
-      public static final Image Top_right = PlatformIconGroup.ideShadowTop_right(); // 18x14
+      public static final Image Top_left = PlatformIconGroup.ideShadowTopLeft(); // 18x14
+      public static final Image Top_right = PlatformIconGroup.ideShadowTopRight(); // 18x14
       public static final Image Top = PlatformIconGroup.ideShadowTop(); // 4x6
-
     }
 
     public static final Image SharedScope = PlatformIconGroup.ideSharedScope(); // 16x16

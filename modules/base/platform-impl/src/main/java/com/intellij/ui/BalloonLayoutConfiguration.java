@@ -79,8 +79,8 @@ public class BalloonLayoutConfiguration {
       RawStyleWidth = 205;
     }
 
-    width += AllIcons.Ide.Notification.Shadow.Left.getWidth();
-    width += AllIcons.Ide.Notification.Shadow.Right.getWidth();
+    width += AllIcons.Ide.Shadow.Left.getWidth();
+    width += AllIcons.Ide.Shadow.Right.getWidth();
 
     RawWidth = width;
   }

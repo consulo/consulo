@@ -14,6 +14,7 @@ import com.intellij.util.Function;
 import com.intellij.util.ui.components.BorderLayoutPanel;
 import consulo.desktop.util.awt.component.VerticalLayoutPanel;
 import kava.beans.PropertyChangeListener;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -120,6 +121,17 @@ public class JBUI {
 
       public static int fieldsSeparatorWidth() {
         return getInt("NewClass.separatorWidth", JBUIScale.scale(10));
+      }
+    }
+
+    public interface Notification {
+      Color FOREGROUND = JBColor.namedColor("Notification.foreground", Label.foreground());
+      Color BACKGROUND = JBColor.namedColor("Notification.background", 0xFFF8D1, 0x1D3857);
+
+      interface Error {
+        Color FOREGROUND = JBColor.namedColor("Notification.errorForeground", Notification.FOREGROUND);
+        Color BACKGROUND = JBColor.namedColor("Notification.errorBackground", 0xF5E6E7, 0x593D41);
+        Color BORDER_COLOR = JBColor.namedColor("Notification.errorBorderColor", 0xE0A8A9, 0x73454B);
       }
     }
 
@@ -1100,6 +1112,16 @@ public class JBUI {
     @Nonnull
     public static Border customLine(Color color) {
       return customLine(color, 1);
+    }
+
+    @Nonnull
+    public static Border customLineRight(Color color) {
+      return customLine(color, 0, 0, 0, 1);
+    }
+
+    @Nonnull
+    public static Border customLineLeft(Color color) {
+      return customLine(color, 0, 1, 0, 0);
     }
 
     @Nonnull
