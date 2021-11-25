@@ -111,7 +111,16 @@ public class WhatsNewVirtualFileEditor extends UserDataHolderBase implements Fil
     myLoadingFuture = AppExecutorUtil.getAppExecutorService().submit(() -> {
       List<PluginDescriptor> plugins = PluginManager.getPlugins();
 
-      MultiMap<PluginId, PluginHistoryEntry> entries = new MultiMap<>();
+      MultiMap<PluginId, PluginHistoryEntry> entries = MultiMap.createLinked();
+      PluginId platformPluginId = PlatformOrPluginUpdateChecker.getPlatformPluginId();
+      String platformBuild = ApplicationInfo.getInstance().getBuild().asString();
+
+      PluginHistoryEntry[] pluginHistoryEntries = PluginHistoryManager.fetchHistory(platformPluginId.getIdString(), myUpdateHistory.getHistoryVersion(platformPluginId, platformBuild), platformBuild);
+
+      for (PluginHistoryEntry pluginHistoryEntry : pluginHistoryEntries) {
+        entries.putValue(platformPluginId, pluginHistoryEntry);
+      }
+
       for (PluginDescriptor plugin : plugins) {
         if (myLoadingFuture.isCancelled()) {
           return;
@@ -126,21 +135,11 @@ public class WhatsNewVirtualFileEditor extends UserDataHolderBase implements Fil
           continue;
         }
 
-        PluginHistoryEntry[] pluginHistoryEntries = PluginHistoryManager.fetchHistory(plugin.getPluginId().getIdString(), myUpdateHistory.getHistoryVersion(plugin.getPluginId(), version), version);
+        pluginHistoryEntries = PluginHistoryManager.fetchHistory(plugin.getPluginId().getIdString(), myUpdateHistory.getHistoryVersion(plugin.getPluginId(), version), version);
 
         for (PluginHistoryEntry pluginHistoryEntry : pluginHistoryEntries) {
           entries.putValue(plugin.getPluginId(), pluginHistoryEntry);
         }
-      }
-
-      PluginId platformPluginId = PlatformOrPluginUpdateChecker.getPlatformPluginId();
-      String platformBuild = ApplicationInfo.getInstance().getBuild().asString();
-
-      PluginHistoryEntry[] pluginHistoryEntries =
-              PluginHistoryManager.fetchHistory(platformPluginId.getIdString(), myUpdateHistory.getHistoryVersion(platformPluginId, platformBuild), platformBuild);
-      
-      for (PluginHistoryEntry pluginHistoryEntry : pluginHistoryEntries) {
-        entries.putValue(platformPluginId, pluginHistoryEntry);
       }
 
       SwingUtilities.invokeLater(() -> {
