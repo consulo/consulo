@@ -27,7 +27,6 @@ import com.intellij.openapi.application.ex.ApplicationEx;
 import com.intellij.openapi.project.DumbAwareRunnable;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
-import com.intellij.openapi.project.ProjectManagerAdapter;
 import com.intellij.openapi.startup.StartupManager;
 import com.intellij.openapi.ui.DialogWrapperDialog;
 import com.intellij.openapi.ui.MessageType;
@@ -265,18 +264,6 @@ public class NotificationsManagerImpl extends NotificationsManager {
             if (!sticky) {
               ((BalloonImpl)balloon).startSmartFadeoutTimer(10000);
             }
-            else //noinspection ConstantConditions
-              if (noProjects && !true) {
-                projectManager.addProjectManagerListener(new ProjectManagerAdapter() {
-                  @Override
-                  public void projectOpened(Project project) {
-                    projectManager.removeProjectManagerListener(this);
-                    if (!balloon.isDisposed()) {
-                      ((BalloonImpl)balloon).startFadeoutTimer(300);
-                    }
-                  }
-                });
-              }
           }
         });
       }
