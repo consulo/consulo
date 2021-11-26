@@ -24,6 +24,7 @@ import com.intellij.openapi.util.text.HtmlBuilder;
 import com.intellij.openapi.util.text.HtmlChunk;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.ui.BrowserHyperlinkListener;
 import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.ui.components.JBLoadingPanel;
 import com.intellij.util.concurrency.AppExecutorUtil;
@@ -93,7 +94,7 @@ public class WhatsNewVirtualFileEditor extends UserDataHolderBase implements Fil
       if (PlatformOrPluginUpdateChecker.isPlatform(pluginId)) {
         return PluginIconHolder.decorateIcon(Application.get().getIcon());
       }
-      
+
       PluginDescriptor plugin = PluginManager.findPlugin(pluginId);
       if (plugin != null) {
         return PluginIconHolder.get(plugin);
@@ -103,6 +104,7 @@ public class WhatsNewVirtualFileEditor extends UserDataHolderBase implements Fil
     });
     myEditorPanel.setEditorKit(kit);
     myEditorPanel.setEditable(false);
+    myEditorPanel.addHyperlinkListener(BrowserHyperlinkListener.INSTANCE);
 
     return myLoadingPanel;
   }
@@ -170,7 +172,8 @@ public class WhatsNewVirtualFileEditor extends UserDataHolderBase implements Fil
         if (PlatformOrPluginUpdateChecker.isPlatform(key)) {
           pluginName = "Platform";
           pluginVersion = ApplicationInfo.getInstance().getBuild().asString();
-        } else {
+        }
+        else {
           PluginDescriptor plugin = PluginManager.findPlugin(key);
           assert plugin != null;
           pluginName = plugin.getName();
@@ -227,7 +230,19 @@ public class WhatsNewVirtualFileEditor extends UserDataHolderBase implements Fil
 
           if (!StringUtil.isEmptyOrSpaces(pluginHistoryEntry.commitHash)) {
             children.add(HtmlChunk.nbsp());
-            children.add(HtmlChunk.span().addText("(commit: " + StringUtil.first(pluginHistoryEntry.commitHash, 7, false) + ")"));
+            String commitShort = StringUtil.first(pluginHistoryEntry.commitHash, 7, false);
+            HtmlChunk.Element commitSpan = HtmlChunk.span();
+            commitSpan = commitSpan.addText("(commit: ");
+            String commitUrl = buildCommitUrl(pluginHistoryEntry.repoUrl, pluginHistoryEntry.commitHash);
+            if (commitUrl != null) {
+              commitSpan = commitSpan.child(HtmlChunk.tag("a").attr("href", commitUrl).addText(commitShort));
+            }
+            else {
+              commitSpan = commitSpan.addText(commitShort);
+            }
+            commitSpan = commitSpan.addText(")");
+
+            children.add(commitSpan);
           }
           ul = ul.child(HtmlChunk.li().children(children));
         }
@@ -247,6 +262,25 @@ public class WhatsNewVirtualFileEditor extends UserDataHolderBase implements Fil
 
     myEditorPanel.setText(html.wrapWith("html").toString());
     myEditorPanel.setCaretPosition(0);
+  }
+
+  private static String buildCommitUrl(String url, String commitHash) {
+    if (StringUtil.isEmptyOrSpaces(url) || StringUtil.isEmptyOrSpaces(commitHash)) {
+      return null;
+    }
+
+    if (url.startsWith("https://github.com")) {
+      StringBuilder builder = new StringBuilder();
+      builder.append(url);
+      if (!url.endsWith("/")) {
+        builder.append("/");
+      }
+      builder.append("commit/");
+      builder.append(commitHash);
+      return builder.toString();
+    }
+
+    return null;
   }
 
   @Nullable
