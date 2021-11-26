@@ -32,7 +32,7 @@ import com.intellij.ui.InplaceButton;
 import com.intellij.ui.TabbedPaneWrapper;
 import com.intellij.ui.awt.RelativePoint;
 import com.intellij.ui.components.labels.LinkLabel;
-import com.intellij.ui.components.panels.Wrapper;
+import com.intellij.ui.components.panels.HorizontalLayout;
 import com.intellij.ui.scale.JBUIScale;
 import com.intellij.util.Alarm;
 import com.intellij.util.containers.ContainerUtil;
@@ -357,27 +357,23 @@ public class InfoAndProgressPanel extends JPanel implements CustomStatusBarWidge
 
   private void buildInProcessCount() {
     removeAll();
-    setLayout(new BorderLayout());
+    setLayout(new InlineLayout());
 
-    final JPanel progressCountPanel = new JPanel(new BorderLayout(0, 0));
-    progressCountPanel.setOpaque(false);
     myMultiProcessLink = new LinkLabel<>(getMultiProgressLinkText(), null, (aSource, aLinkData) -> triggerPopupShowing());
 
     if (SystemInfo.isMac) myMultiProcessLink.setFont(JBUI.Fonts.label(11));
 
     myMultiProcessLink.setOpaque(false);
 
-    Wrapper labelComp = new Wrapper(myMultiProcessLink);
-    labelComp.setOpaque(false);
-    progressCountPanel.add(labelComp, BorderLayout.CENTER);
+    JPanel iconAndProgress = new JPanel(new HorizontalLayout(5));
+    iconAndProgress.setOpaque(false);
 
-    //myProgressIcon.setBorder(new IdeStatusBarImpl.MacStatusBarWidgetBorder());
-    progressCountPanel.add(myProgressIcon.getValue(), BorderLayout.WEST);
+    iconAndProgress.add(myProgressIcon.get());
+    iconAndProgress.add(myMultiProcessLink);
 
-    add(myRefreshAndInfoPanel, BorderLayout.CENTER);
+    add(myRefreshAndInfoPanel);
 
-    progressCountPanel.setBorder(JBUI.Borders.emptyRight(4));
-    add(progressCountPanel, BorderLayout.EAST);
+    add(iconAndProgress);
 
     revalidate();
     repaint();
@@ -417,14 +413,17 @@ public class InfoAndProgressPanel extends JPanel implements CustomStatusBarWidge
     add(myRefreshAndInfoPanel);
 
     final JPanel inlinePanel = new JPanel(new BorderLayout());
-
     inline.getComponent().setBorder(JBUI.Borders.empty(1, 0, 0, 2));
+
     final JComponent inlineComponent = inline.getComponent();
     inlineComponent.setOpaque(false);
-    inlinePanel.add(inlineComponent, BorderLayout.CENTER);
 
-    //myProgressIcon.setBorder(new IdeStatusBarImpl.MacStatusBarWidgetBorder());
-    inlinePanel.add(myProgressIcon.getValue(), BorderLayout.WEST);
+    JPanel iconAndProgress = new JPanel(new HorizontalLayout(5));
+    iconAndProgress.setOpaque(false);
+    iconAndProgress.add(myProgressIcon.get());
+    iconAndProgress.add(inlineComponent);
+
+    inlinePanel.add(iconAndProgress, BorderLayout.CENTER);
 
     inline.updateProgressNow();
     inlinePanel.setOpaque(false);
