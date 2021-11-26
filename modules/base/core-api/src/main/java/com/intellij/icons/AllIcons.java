@@ -907,7 +907,9 @@ public class AllIcons {
     public static final Image Step_mask = PlatformIconGroup.processStep_mask(); // 16x16
     public static final Image Step_passive = PlatformIconGroup.processStep_passive(); // 16x16
     public static final Image Stop = PlatformIconGroup.processStop(); // 16x16
+    public static final Image StopSmall = PlatformIconGroup.processStopSmall(); // 16x16
     public static final Image StopHovered = PlatformIconGroup.processStopHovered(); // 16x16
+    public static final Image StopSmallHovered = PlatformIconGroup.processStopSmallHovered(); // 16x16
 
   }
 

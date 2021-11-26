@@ -26,6 +26,10 @@ import java.awt.peer.FramePeer;
  * @since 2020-10-19
  */
 public class AWTAccessorHacking {
+  public static void setParent(Component comp, Container parent) {
+    AWTAccessor.getComponentAccessor().setParent(comp, null);
+  }
+
   public static void setGraphicsConfiguration(Component component, GraphicsConfiguration gc) {
     AWTAccessor.getComponentAccessor().setGraphicsConfiguration(component, gc);
   }

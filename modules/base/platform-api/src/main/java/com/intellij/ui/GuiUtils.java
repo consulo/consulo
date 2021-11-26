@@ -35,6 +35,7 @@ import com.intellij.util.ArrayUtil;
 import com.intellij.util.Consumer;
 import com.intellij.util.ui.UIUtil;
 import consulo.annotation.DeprecationInfo;
+import consulo.awt.hacking.AWTAccessorHacking;
 import consulo.ui.annotation.RequiredUIAccess;
 import org.intellij.lang.annotations.JdkConstants;
 import org.jetbrains.annotations.NonNls;
@@ -46,8 +47,8 @@ import javax.swing.border.TitledBorder;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumnModel;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
+import java.beans.PropertyChangeListener;
 import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 
@@ -384,5 +385,25 @@ public class GuiUtils {
     FontMetrics fontMetrics = comp.getFontMetrics(comp.getFont());
     size.width = fontMetrics.charWidth('a') * charCount;
     return size;
+  }
+
+  /**
+   * removes all children and parent references, listeners from {@code container} to avoid possible memory leaks
+   */
+  public static void removePotentiallyLeakingReferences(@Nonnull Container container) {
+    assert SwingUtilities.isEventDispatchThread();
+    AWTAccessorHacking.setParent(container, null);
+    container.removeAll();
+    for (ComponentListener c : container.getComponentListeners()) container.removeComponentListener(c);
+    for (FocusListener c : container.getFocusListeners()) container.removeFocusListener(c);
+    for (HierarchyListener c : container.getHierarchyListeners()) container.removeHierarchyListener(c);
+    for (HierarchyBoundsListener c : container.getHierarchyBoundsListeners()) container.removeHierarchyBoundsListener(c);
+    for (KeyListener c : container.getKeyListeners()) container.removeKeyListener(c);
+    for (MouseListener c : container.getMouseListeners()) container.removeMouseListener(c);
+    for (MouseMotionListener c : container.getMouseMotionListeners()) container.removeMouseMotionListener(c);
+    for (MouseWheelListener c : container.getMouseWheelListeners()) container.removeMouseWheelListener(c);
+    for (InputMethodListener c : container.getInputMethodListeners()) container.removeInputMethodListener(c);
+    for (PropertyChangeListener c : container.getPropertyChangeListeners()) container.removePropertyChangeListener(c);
+    for (ContainerListener c : container.getContainerListeners()) container.removeContainerListener(c);
   }
 }
