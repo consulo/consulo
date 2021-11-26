@@ -1,7 +1,6 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.openapi.wm.impl.status;
 
-import com.intellij.icons.AllIcons;
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.ui.UISettings;
 import com.intellij.openapi.progress.TaskInfo;
@@ -19,13 +18,12 @@ import com.intellij.util.ui.GridBag;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import consulo.disposer.Disposable;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
-
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
@@ -119,12 +117,10 @@ public class InlineProgressIndicator extends ProgressIndicatorBase implements Di
   }
 
   private ProgressButton createCancelButton() {
-    InplaceButton cancelButton = new InplaceButton(new IconButton(myInfo.getCancelTooltipText(), AllIcons.Process.Stop, AllIcons.Process.StopHovered), new ActionListener() {
-      @Override
-      public void actionPerformed(final ActionEvent e) {
-        cancelRequest();
-      }
-    }).setFillBg(false);
+    Image icon = myCompact ? PlatformIconGroup.processStopSmall() : PlatformIconGroup.processStop();
+    Image hoveredIcon = myCompact ? PlatformIconGroup.processStopSmallHovered() : PlatformIconGroup.processStopSmallHovered();
+
+    InplaceButton cancelButton = new InplaceButton(new IconButton(myInfo.getCancelTooltipText(), icon, hoveredIcon), e -> cancelRequest()).setFillBg(false);
 
     cancelButton.setVisible(myInfo.isCancellable());
 
