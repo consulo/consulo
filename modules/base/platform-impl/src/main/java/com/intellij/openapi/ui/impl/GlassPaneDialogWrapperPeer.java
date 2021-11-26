@@ -583,7 +583,7 @@ public class GlassPaneDialogWrapperPeer extends DialogWrapperPeer {
         shadow = null;
       }
       else if (shadow == null || shadowWidth != width || shadowHeight != height) {
-        shadow = ShadowBorderPainter.createShadow(this, width, height);
+        //shadow = ShadowBorderPainter.createShadow(this, width, height);
         shadowWidth = width;
         shadowHeight = height;
       }
