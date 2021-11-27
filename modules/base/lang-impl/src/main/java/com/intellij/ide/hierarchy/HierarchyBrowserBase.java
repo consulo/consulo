@@ -100,14 +100,7 @@ public abstract class HierarchyBrowserBase extends SimpleToolWindowPanel impleme
   protected void appendActions(@Nonnull DefaultActionGroup actionGroup, @Nullable String helpID) {
     actionGroup.add(myAutoScrollToSourceHandler.createToggleAction());
     actionGroup.add(ActionManager.getInstance().getAction(IdeActions.ACTION_EXPAND_ALL));
-    actionGroup.add(new PinToolwindowTabAction() {
-      @Override
-      public void update(AnActionEvent event) {
-        super.update(event);
-        // sometimes there is no content to close, e.g. in usage view preview
-        event.getPresentation().setVisible(myContent != null);
-      }
-    });
+    actionGroup.add(ActionManager.getInstance().getAction(PinToolwindowTabAction.ACTION_NAME));
     actionGroup.add(new CloseAction());
     if (helpID != null) {
       actionGroup.add(new ContextHelpAction(helpID));

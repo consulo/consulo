@@ -61,7 +61,7 @@ public class TabbedContentTabLabel extends ContentTabLabel {
 
   @Override
   protected void fillIcons(List<AdditionalIcon> icons) {
-    icons.add(new AdditionalIcon(new ActiveIcon(AllIcons.General.ArrowDown, AllIcons.General.ArrowDown)) {
+    icons.add(new AdditionalIcon(AllIcons.General.ArrowDown, AllIcons.General.ArrowDown) {
       @Nonnull
       @Override
       public Rectangle getRectangle() {
@@ -69,7 +69,7 @@ public class TabbedContentTabLabel extends ContentTabLabel {
       }
 
       @Override
-      public boolean getActive() {
+      public boolean isHovered() {
         return mouseOverIcon(this) || isPopupShown();
       }
 

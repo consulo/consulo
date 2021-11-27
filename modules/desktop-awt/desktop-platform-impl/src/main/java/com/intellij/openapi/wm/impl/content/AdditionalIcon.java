@@ -15,7 +15,8 @@
  */
 package com.intellij.openapi.wm.impl.content;
 
-import com.intellij.openapi.ui.popup.ActiveIcon;
+import consulo.awt.TargetAWT;
+import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -25,11 +26,16 @@ import java.awt.*;
  * from kotlin
  */
 public abstract class AdditionalIcon {
-  private final ActiveIcon myIcon;
+  @Nonnull
+  private final Image myRegularIcon;
+  @Nonnull
+  private final Image myHoveredImage;
+
   private int myX;
 
-  public AdditionalIcon(@Nonnull ActiveIcon icon) {
-    myIcon = icon;
+  public AdditionalIcon(@Nonnull Image regularIcon, @Nonnull Image hoveredImage) {
+    myRegularIcon = regularIcon;
+    myHoveredImage = hoveredImage;
   }
 
   public Point getCenterPoint() {
@@ -46,17 +52,17 @@ public abstract class AdditionalIcon {
   }
 
   public int getIconWidth() {
-    return myIcon.getIconWidth();
+    return myRegularIcon.getWidth();
   }
 
   public int getIconHeight() {
-    return myIcon.getIconHeight();
+    return myRegularIcon.getHeight();
   }
 
   public void paintIcon(Component c, Graphics g) {
-    myIcon.setActive(getActive());
+    Image image = isHovered() ? myHoveredImage : myRegularIcon;
 
-    myIcon.paintIcon(c, g, getX(), getIconY());
+    TargetAWT.to(image).paintIcon(c, g, getX(), getIconY());
   }
 
   public void setX(int x) {
@@ -69,7 +75,7 @@ public abstract class AdditionalIcon {
 
   public abstract Rectangle getRectangle();
 
-  public abstract boolean getActive();
+  public abstract boolean isHovered();
 
   public abstract boolean getAvailable();
 

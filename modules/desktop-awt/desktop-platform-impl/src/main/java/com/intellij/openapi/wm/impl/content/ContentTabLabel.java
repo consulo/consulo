@@ -3,6 +3,7 @@ package com.intellij.openapi.wm.impl.content;
 
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.DataManager;
+import com.intellij.ide.IdeBundle;
 import com.intellij.ide.IdeTooltip;
 import com.intellij.ide.IdeTooltipManager;
 import com.intellij.ide.ui.UISettings;
@@ -11,7 +12,6 @@ import com.intellij.openapi.actionSystem.ex.ActionManagerEx;
 import com.intellij.openapi.actionSystem.ex.ActionUtil;
 import com.intellij.openapi.keymap.KeymapManager;
 import com.intellij.openapi.keymap.KeymapUtil;
-import com.intellij.openapi.ui.popup.ActiveIcon;
 import com.intellij.ui.Gray;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.content.Content;
@@ -21,8 +21,9 @@ import com.intellij.util.ui.BaseButtonBehavior;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.TimedDeadzone;
 import com.intellij.util.ui.UIUtil;
-import kava.beans.PropertyChangeEvent;
-import kava.beans.PropertyChangeListener;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.ui.image.Image;
+import consulo.ui.image.ImageState;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;
@@ -36,20 +37,12 @@ import java.util.Map;
 import java.util.Optional;
 
 class ContentTabLabel extends BaseLabel {
-  private static final int MAX_WIDTH = JBUI.scale(300);
-  private static final int DEFAULT_HORIZONTAL_INSET = JBUI.scale(12);
-  protected static final int ICONS_GAP = JBUI.scale(3);
-
-  private final ActiveIcon myCloseIcon = new ActiveIcon(AllIcons.Actions.CloseHovered, AllIcons.Actions.Close);
-  private final Content myContent;
-  private final TabContentLayout myLayout;
-
-  private final List<AdditionalIcon> myAdditionalIcons = new SmartList<>();
-  private String myText = null;
-  private int myIconWithInsetsWidth;
-
-  private final AdditionalIcon closeTabIcon = new AdditionalIcon(myCloseIcon) {
+  private class CloseContentAction extends AdditionalIcon {
     private static final String ACTION_NAME = "Close tab";
+
+    public CloseContentAction(@Nonnull Image regularIcon, @Nonnull Image hoveredImage) {
+      super(regularIcon, hoveredImage);
+    }
 
     @Nonnull
     @Override
@@ -58,7 +51,7 @@ class ContentTabLabel extends BaseLabel {
     }
 
     @Override
-    public boolean getActive() {
+    public boolean isHovered() {
       return mouseOverIcon(this);
     }
 
@@ -70,7 +63,15 @@ class ContentTabLabel extends BaseLabel {
     @Nonnull
     @Override
     public Runnable getAction() {
-      return () -> contentManager().removeContent(getContent(), true);
+      return () -> {
+        Content content = getContent();
+        if (content.isPinned()) {
+          content.setPinned(false);
+          return;
+        }
+
+        contentManager().removeContent(getContent(), true);
+      };
     }
 
     @Override
@@ -81,13 +82,58 @@ class ContentTabLabel extends BaseLabel {
     @Nonnull
     @Override
     public String getTooltip() {
+      if (getContent().isPinned()) {
+        return IdeBundle.message("action.unpin.tab.tooltip");
+      }
+
       String text = KeymapUtil.getShortcutsText(KeymapManager.getInstance().getActiveKeymap().getShortcuts(IdeActions.ACTION_CLOSE_ACTIVE_TAB));
 
       return text.isEmpty() || !isSelected() ? ACTION_NAME : ACTION_NAME + " (" + text + ")";
     }
-  };
+  }
+
+  private static final int MAX_WIDTH = JBUI.scale(300);
+  private static final int DEFAULT_HORIZONTAL_INSET = JBUI.scale(12);
+  protected static final int ICONS_GAP = JBUI.scale(3);
+
+  private final ImageState<Boolean> myPinImageState = new ImageState<>(Boolean.FALSE);
+  private final Image myActiveCloseIcon = Image.stated(myPinImageState, p -> p ? PlatformIconGroup.actionsPinTab() : AllIcons.Actions.CloseHovered);
+  private final Image myRegularCloseIcon = Image.stated(myPinImageState, p -> p ? PlatformIconGroup.actionsPinTab() : AllIcons.Actions.Close);
+
+  private final Content myContent;
+  private final TabContentLayout myLayout;
+
+  private final List<AdditionalIcon> myAdditionalIcons = new SmartList<>();
+  private String myText = null;
+  private int myIconWithInsetsWidth;
 
   private CurrentTooltip currentIconTooltip;
+
+  BaseButtonBehavior behavior = new BaseButtonBehavior(this) {
+    @Override
+    protected void execute(final MouseEvent e) {
+
+      Optional<Runnable> first = myAdditionalIcons.stream().filter(icon -> mouseOverIcon(icon)).map(icon -> icon.getAction()).findFirst();
+
+      if (first.isPresent()) {
+        first.get().run();
+        return;
+      }
+
+      selectContent();
+
+      if (e.getClickCount() == 2 && e.getButton() == MouseEvent.BUTTON1 && !myLayout.myDoubleClickActions.isEmpty()) {
+        DataContext dataContext = DataManager.getInstance().getDataContext(ContentTabLabel.this);
+        for (AnAction action : myLayout.myDoubleClickActions) {
+          AnActionEvent event = AnActionEvent.createFromInputEvent(e, ActionPlaces.UNKNOWN, null, dataContext);
+          if (ActionUtil.lastUpdateAndCheckDumb(action, event, false)) {
+            ActionManagerEx.getInstanceEx().fireBeforeActionPerformed(action, dataContext, event);
+            ActionUtil.performActionDumbAware(action, event);
+          }
+        }
+      }
+    }
+  };
 
   private void showTooltip(AdditionalIcon icon) {
 
@@ -125,31 +171,9 @@ class ContentTabLabel extends BaseLabel {
     currentIconTooltip = null;
   }
 
-  BaseButtonBehavior behavior = new BaseButtonBehavior(this) {
-    @Override
-    protected void execute(final MouseEvent e) {
-
-      Optional<Runnable> first = myAdditionalIcons.stream().filter(icon -> mouseOverIcon(icon)).map(icon -> icon.getAction()).findFirst();
-
-      if (first.isPresent()) {
-        first.get().run();
-        return;
-      }
-
-      selectContent();
-
-      if (e.getClickCount() == 2 && e.getButton() == MouseEvent.BUTTON1 && !myLayout.myDoubleClickActions.isEmpty()) {
-        DataContext dataContext = DataManager.getInstance().getDataContext(ContentTabLabel.this);
-        for (AnAction action : myLayout.myDoubleClickActions) {
-          AnActionEvent event = AnActionEvent.createFromInputEvent(e, ActionPlaces.UNKNOWN, null, dataContext);
-          if (ActionUtil.lastUpdateAndCheckDumb(action, event, false)) {
-            ActionManagerEx.getInstanceEx().fireBeforeActionPerformed(action, dataContext, event);
-            ActionUtil.performActionDumbAware(action, event);
-          }
-        }
-      }
-    }
-  };
+  private void updateCloseIcon() {
+    myPinImageState.setState(getContent().isPinned());
+  }
 
   @Override
   public void setText(String text) {
@@ -194,21 +218,25 @@ class ContentTabLabel extends BaseLabel {
     behavior.setActionTrigger(MouseEvent.MOUSE_RELEASED);
     behavior.setMouseDeadzone(TimedDeadzone.NULL);
 
-    myContent.addPropertyChangeListener(new PropertyChangeListener() {
-      @Override
-      public void propertyChange(PropertyChangeEvent event) {
-        final String property = event.getPropertyName();
-        if (Content.IS_CLOSABLE.equals(property)) {
-          repaint();
-        }
+    myContent.addPropertyChangeListener(event -> {
+      final String property = event.getPropertyName();
+      if (Content.IS_CLOSABLE.equals(property)) {
+        repaint();
+      }
+      if (Content.PROP_PINNED.equals(property)) {
+        updateCloseIcon();
       }
     });
+
+    if (myContent.isPinned()) {
+      SwingUtilities.invokeLater(this::updateCloseIcon);
+    }
 
     setMaximumSize(new Dimension(MAX_WIDTH, getMaximumSize().height));
   }
 
   protected void fillIcons(List<AdditionalIcon> icons) {
-    icons.add(closeTabIcon);
+    icons.add(new CloseContentAction(myRegularCloseIcon, myActiveCloseIcon));
   }
 
   @Override

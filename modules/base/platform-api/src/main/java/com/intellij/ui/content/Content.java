@@ -25,7 +25,6 @@ import consulo.ui.image.Image;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolder;
 import kava.beans.PropertyChangeListener;
-import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nullable;
 import javax.swing.*;
@@ -43,6 +42,7 @@ public interface Content extends UserDataHolder, ComponentContainer {
   String PROP_DESCRIPTION = "description";
   String PROP_COMPONENT = "component";
   String IS_CLOSABLE = "isClosable";
+  String PROP_PINNED = "pinned";
 
   Key<Boolean> TABBED_CONTENT_KEY = Key.create("tabbedContent");
   Key<String> TAB_GROUP_NAME_KEY = Key.create("tabbedGroupName");
@@ -108,7 +108,7 @@ public interface Content extends UserDataHolder, ComponentContainer {
 
   boolean isPinned();
 
-  void setPinned(boolean locked);
+  void setPinned(boolean pinned);
 
   boolean isPinnable();
 

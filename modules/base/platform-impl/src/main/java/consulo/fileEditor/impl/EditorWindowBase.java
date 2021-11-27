@@ -15,7 +15,6 @@
  */
 package consulo.fileEditor.impl;
 
-import com.intellij.icons.AllIcons;
 import com.intellij.ide.ui.UISettings;
 import com.intellij.openapi.fileEditor.impl.EditorTabbedContainer;
 import com.intellij.openapi.fileEditor.impl.FileEditorManagerImpl;
@@ -25,8 +24,6 @@ import com.intellij.openapi.util.Iconable;
 import com.intellij.openapi.vfs.VirtualFile;
 import consulo.fileTypes.impl.VfsIconUtil;
 import consulo.logging.Logger;
-import consulo.ui.image.Image;
-import consulo.ui.image.ImageEffects;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -91,16 +88,6 @@ public abstract class EditorWindowBase implements EditorWindow {
     final consulo.ui.image.Image baseIcon = VfsIconUtil.getIconNoDefer(file, Iconable.ICON_FLAG_READ_STATUS, getManager().getProject());
     int count = 1;
 
-    final Image pinIcon;
-    final EditorComposite composite = findFileComposite(file);
-    if (composite != null && composite.isPinned()) {
-      count++;
-      pinIcon = AllIcons.Nodes.TabPin;
-    }
-    else {
-      pinIcon = null;
-    }
-
     // FIXME [VISTALL] not supported for now
     consulo.ui.image.Image modifiedIcon = null;
     //UISettings settings = UISettings.getInstance();
@@ -113,10 +100,6 @@ public abstract class EditorWindowBase implements EditorWindow {
     //}
     //
     //if (count == 1) return baseIcon;
-
-    if (pinIcon != null && modifiedIcon == null) {
-      return ImageEffects.layered(baseIcon, pinIcon);
-    }
 
     // FIXME [VISTALL] not supported for now
     //int i = 0;

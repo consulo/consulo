@@ -16,7 +16,6 @@
  */
 package com.intellij.ui.content.impl;
 
-import com.intellij.icons.AllIcons;
 import com.intellij.openapi.actionSystem.ActionGroup;
 import com.intellij.openapi.util.BusyObject;
 import com.intellij.openapi.util.Computable;
@@ -25,12 +24,10 @@ import com.intellij.ui.content.ContentManager;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ui.image.Image;
-import consulo.ui.image.ImageEffects;
 import consulo.util.dataholder.UserDataHolderBase;
 import consulo.wm.ContentEx;
 import kava.beans.PropertyChangeListener;
 import kava.beans.PropertyChangeSupport;
-import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nullable;
 import javax.swing.*;
@@ -42,11 +39,10 @@ public class ContentImpl extends UserDataHolderBase implements ContentEx {
   private JComponent myComponent;
 
   private Image myIcon;
-  private Image myLayeredIcon;
 
   private final PropertyChangeSupport myChangeSupport = new PropertyChangeSupport(this);
   private ContentManager myManager = null;
-  private boolean myIsLocked = false;
+  private boolean myIsPinned = false;
   private boolean myPinnable = true;
   private Disposable myDisposer = null;
   private boolean myShouldDisposeContent = true;
@@ -104,23 +100,12 @@ public class ContentImpl extends UserDataHolderBase implements ContentEx {
   public void setIcon(Image icon) {
     Image oldValue = getIcon();
     myIcon = icon;
-    if(myIcon == null) {
-      myLayeredIcon = AllIcons.Nodes.PinToolWindow;
-    }
-    else {
-      myLayeredIcon = ImageEffects.layered(myIcon, AllIcons.Nodes.PinToolWindow);
-    }
     myChangeSupport.firePropertyChange(PROP_ICON, oldValue, getIcon());
   }
 
   @Override
   public Image getIcon() {
-    if (myIsLocked) {
-      return myIcon == null ? AllIcons.Nodes.PinToolWindow : myLayeredIcon;
-    }
-    else {
-      return myIcon;
-    }
+    return myIcon;
   }
 
   @Override
@@ -219,7 +204,6 @@ public class ContentImpl extends UserDataHolderBase implements ContentEx {
     Disposer.dispose(this);
   }
 
-  //TODO[anton,vova] investigate
   @Override
   public boolean isValid() {
     return myManager != null;
@@ -227,16 +211,15 @@ public class ContentImpl extends UserDataHolderBase implements ContentEx {
 
   @Override
   public boolean isPinned() {
-    return myIsLocked;
+    return myIsPinned;
   }
 
   @Override
-  public void setPinned(boolean locked) {
-    if (isPinnable()) {
-      Image oldIcon = getIcon();
-      myIsLocked = locked;
-      Image newIcon = getIcon();
-      myChangeSupport.firePropertyChange(PROP_ICON, oldIcon, newIcon);
+  public void setPinned(boolean pinned) {
+    if (isPinnable() && myIsPinned != pinned) {
+      boolean wasPinned = isPinned();
+      myIsPinned = pinned;
+      myChangeSupport.firePropertyChange(PROP_PINNED, wasPinned, pinned);
     }
   }
 
@@ -288,10 +271,10 @@ public class ContentImpl extends UserDataHolderBase implements ContentEx {
     return myPlace;
   }
 
-  @NonNls
+  @Override
   public String toString() {
     StringBuilder sb = new StringBuilder("Content name=").append(myDisplayName);
-    if (myIsLocked)
+    if (myIsPinned)
       sb.append(", pinned");
     if (myExecutionId != 0)
       sb.append(", executionId=").append(myExecutionId);

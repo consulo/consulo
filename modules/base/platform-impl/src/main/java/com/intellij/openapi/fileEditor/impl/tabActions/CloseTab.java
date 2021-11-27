@@ -16,6 +16,7 @@
 package com.intellij.openapi.fileEditor.impl.tabActions;
 
 import com.intellij.icons.AllIcons;
+import com.intellij.ide.IdeBundle;
 import com.intellij.ide.ui.UISettings;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;
@@ -25,9 +26,11 @@ import com.intellij.openapi.ui.ShadowAction;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.BitUtil;
 import consulo.fileEditor.impl.EditorWindow;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.event.InputEvent;
 
@@ -53,15 +56,31 @@ public class CloseTab extends AnAction implements DumbAware {
   @RequiredUIAccess
   @Override
   public void update(final AnActionEvent e) {
-    e.getPresentation().setIcon(AllIcons.Actions.Close);
-    e.getPresentation().setHoveredIcon(AllIcons.Actions.CloseHovered);
-    e.getPresentation().setVisible(UISettings.getInstance().getShowCloseButton());
-    e.getPresentation().setText("Close. Alt-click to close others.");
+    boolean pinned = isPinned();
+
+    e.getPresentation().setIcon(pinned ? PlatformIconGroup.actionsPinTab() : AllIcons.Actions.Close);
+    e.getPresentation().setHoveredIcon(pinned ? PlatformIconGroup.actionsPinTab() : AllIcons.Actions.CloseHovered);
+    e.getPresentation().setVisible(UISettings.getInstance().getShowCloseButton() || pinned);
+    if (pinned) {
+      e.getPresentation().setText(IdeBundle.message("action.unpin.tab"));
+    }
+    else {
+      e.getPresentation().setText("Close. Alt-click to close others.");
+    }
+  }
+
+  private boolean isPinned() {
+    return myEditorWindow.isFilePinned(myFile);
   }
 
   @RequiredUIAccess
   @Override
-  public void actionPerformed(final AnActionEvent e) {
+  public void actionPerformed(@Nonnull final AnActionEvent e) {
+    if (isPinned() && ActionPlaces.EDITOR_TAB.equals(e.getPlace())) {
+      myEditorWindow.setFilePinned(myFile, false);
+      return;
+    }
+
     final FileEditorManagerEx mgr = FileEditorManagerEx.getInstanceEx(myProject);
     EditorWindow window;
     final VirtualFile file = myFile;
@@ -73,7 +92,7 @@ public class CloseTab extends AnAction implements DumbAware {
     }
 
     if (window != null) {
-      if (BitUtil.isSet(e.getModifiers(), InputEvent.ALT_MASK)) {
+      if (BitUtil.isSet(e.getModifiers(), InputEvent.ALT_DOWN_MASK)) {
         window.closeAllExcept(file);
       }
       else {
