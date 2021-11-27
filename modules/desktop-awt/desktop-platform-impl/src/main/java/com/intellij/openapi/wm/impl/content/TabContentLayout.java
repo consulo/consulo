@@ -18,8 +18,6 @@ import com.intellij.ui.tabs.impl.singleRow.MoreTabsIcon;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.BaseButtonBehavior;
 import com.intellij.util.ui.UIUtil;
-import consulo.ui.decorator.SwingUIDecorator;
-import consulo.ui.style.StyleManager;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -275,8 +273,7 @@ class TabContentLayout extends ContentLayout {
   }
 
   private static Color getColor(boolean selected, boolean hovered) {
-    Color color = selected && hovered ? SwingUIDecorator.get(SwingUIDecorator::getSidebarColor) : UIUtil.getPanelBackground();
-    return StyleManager.get().getCurrentStyle().isDark() ? color.brighter() : color.darker();
+    return UIUtil.getPanelBackground();
   }
 
   @Override
