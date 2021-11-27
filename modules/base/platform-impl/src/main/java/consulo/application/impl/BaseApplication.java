@@ -65,6 +65,7 @@ import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.injecting.InjectingContainerBuilder;
 import consulo.logging.Logger;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
@@ -477,6 +478,12 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
   @Override
   public Image getIcon() {
     return ApplicationProperties.isInSandbox() ? AllIcons.Icon16_Sandbox : AllIcons.Icon16;
+  }
+
+  @Nonnull
+  @Override
+  public Image getBigIcon() {
+    return ApplicationProperties.isInSandbox() ? PlatformIconGroup.consuloBigSandbox() : PlatformIconGroup.consuloBig();
   }
 
   @Nonnull

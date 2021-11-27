@@ -92,7 +92,7 @@ public class WhatsNewVirtualFileEditor extends UserDataHolderBase implements Fil
     kit.setImageResolver(src -> {
       PluginId pluginId = PluginId.getId(src);
       if (PlatformOrPluginUpdateChecker.isPlatform(pluginId)) {
-        return PluginIconHolder.decorateIcon(Application.get().getIcon());
+        return PluginIconHolder.decorateIcon(Application.get().getBigIcon());
       }
 
       PluginDescriptor plugin = PluginManager.findPlugin(pluginId);

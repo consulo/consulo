@@ -278,7 +278,7 @@ public class PlatformOrPluginUpdateChecker {
       thisPlatform.setVersion(appInfo.getBuild().asString());
       thisPlatform.setName(newPlatformPlugin.getName());
 
-      PluginIconHolder.put(newPlatformPlugin, Application.get().getIcon());
+      PluginIconHolder.put(newPlatformPlugin, Application.get().getBigIcon());
 
       targets.add(new PlatformOrPluginNode(platformPluginId, thisPlatform, newPlatformPlugin));
 

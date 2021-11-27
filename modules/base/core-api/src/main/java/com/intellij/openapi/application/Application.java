@@ -485,10 +485,18 @@ public interface Application extends ComponentManager {
   boolean isActive();
 
   /**
-   * @return Application icon. In sandbox icon maybe different
+   * @return Application icon. In sandbox icon maybe different. Size 16x16
    */
   @Nonnull
   Image getIcon();
+
+  /**
+   * @return Application icon. In sandbox icon maybe different. Better for downscale
+   */
+  @Nonnull
+  default Image getBigIcon() {
+    return getIcon();
+  }
 
   @Nonnull
   default LocalizeValue getName() {
