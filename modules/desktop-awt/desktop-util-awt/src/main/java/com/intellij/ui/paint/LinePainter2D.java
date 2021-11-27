@@ -7,15 +7,12 @@ import com.intellij.ui.paint.PaintUtil.RoundingMode;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.JBUI.ScaleContext;
 import com.intellij.util.ui.UIUtil;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.awt.*;
 import java.awt.geom.Line2D;
 import java.awt.geom.Path2D;
 import java.util.EnumSet;
-
-import static com.intellij.ui.paint.PaintUtil.alignToInt;
-import static com.intellij.ui.paint.PaintUtil.getParityMode;
 
 /**
  * Draws a line with a stroke defined by {@link StrokeType}, provided that the graphics stroke is {@link BasicStroke}),
@@ -196,21 +193,11 @@ public class LinePainter2D {
       path.lineTo(x1 + swx_2 - capx_1, y1 + swy_2 - capy_1);
       path.closePath();
 
-      PaintUtil.paintWithAA(g, valueAA, new Runnable() {
-        @Override
-        public void run() {
-          g.fill(path);
-        }
-      });
+      PaintUtil.paintWithAA(g, valueAA, () -> g.fill(path));
     }
     else {
       final Line2D line = new Line2D.Double(x1, y1, x2, y2);
-      PaintUtil.paintWithAA(g, valueAA, new Runnable() {
-        @Override
-        public void run() {
-          g.draw(line);
-        }
-      });
+      PaintUtil.paintWithAA(g, valueAA, () -> g.draw(line));
     }
   }
 
@@ -233,12 +220,7 @@ public class LinePainter2D {
       path.lineTo(xPoints[p], yPoints[p]);
     }
     path.closePath();
-    PaintUtil.paintWithAA(g, valueAA, new Runnable() {
-      @Override
-      public void run() {
-        g.fill(path);
-      }
-    });
+    PaintUtil.paintWithAA(g, valueAA, () -> g.fill(path));
   }
 
   /**
@@ -366,7 +348,7 @@ public class LinePainter2D {
       sizeWithStroke = sw_1 + prefSize + sw_2;
     }
     _xy -= (pm == ParityMode.ODD ? sizeWithStroke - PaintUtil.devPixel(g) : sizeWithStroke) / 2 - sw_1;
-    return new Pair<Double, Double>(_xy, prefSize);
+    return new Pair<>(_xy, prefSize);
   }
 
   /**

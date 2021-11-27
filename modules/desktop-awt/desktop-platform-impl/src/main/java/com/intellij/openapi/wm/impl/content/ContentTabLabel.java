@@ -12,15 +12,12 @@ import com.intellij.openapi.actionSystem.ex.ActionManagerEx;
 import com.intellij.openapi.actionSystem.ex.ActionUtil;
 import com.intellij.openapi.keymap.KeymapManager;
 import com.intellij.openapi.keymap.KeymapUtil;
-import com.intellij.ui.Gray;
-import com.intellij.ui.JBColor;
 import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentManager;
 import com.intellij.util.SmartList;
 import com.intellij.util.ui.BaseButtonBehavior;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.TimedDeadzone;
-import com.intellij.util.ui.UIUtil;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageState;
@@ -324,29 +321,6 @@ class ContentTabLabel extends BaseLabel {
     myIconWithInsetsWidth = iconWidth + right + left;
 
     return new Dimension(iconWidth + size.width, size.height);
-  }
-
-  @Override
-  protected boolean allowEngravement() {
-    return isSelected() || (myUi != null && myUi.myWindow.isActive());
-  }
-
-  @Override
-  protected Color getActiveFg(boolean selected) {
-    if (contentManager().getContentCount() > 1) {
-      return selected ? JBColor.white : UIUtil.isUnderDarcula() ? UIUtil.getLabelForeground() : JBColor.black;
-    }
-
-    return super.getActiveFg(selected);
-  }
-
-  @Override
-  protected Color getPassiveFg(boolean selected) {
-    if (contentManager().getContentCount() > 1) {
-      return selected && !UIUtil.isUnderDarcula() ? Gray._255 : UIUtil.isUnderDarcula() ? UIUtil.getLabelDisabledForeground() : Gray._75;
-    }
-
-    return super.getPassiveFg(selected);
   }
 
   private void paintIcons(final Graphics g) {

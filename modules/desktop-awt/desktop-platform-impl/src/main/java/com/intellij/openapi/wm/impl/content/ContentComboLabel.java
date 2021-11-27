@@ -70,11 +70,6 @@ public class ContentComboLabel extends BaseLabel {
   }
 
   @Override
-  protected boolean allowEngravement() {
-    return myUi == null || myUi.myWindow.isActive();
-  }
-
-  @Override
   public Dimension getPreferredSize() {
     Dimension size = super.getPreferredSize();
     if (!isPreferredSizeSet() && isToDrawCombo()) {

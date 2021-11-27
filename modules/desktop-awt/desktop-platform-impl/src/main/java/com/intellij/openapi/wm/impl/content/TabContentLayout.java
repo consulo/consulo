@@ -14,6 +14,7 @@ import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentManager;
 import com.intellij.ui.content.ContentManagerEvent;
 import com.intellij.ui.content.TabbedContent;
+import com.intellij.ui.paint.LinePainter2D;
 import com.intellij.ui.tabs.impl.singleRow.MoreTabsIcon;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.BaseButtonBehavior;
@@ -258,22 +259,23 @@ class TabContentLayout extends ContentLayout {
 
     for (ContentTabLabel each : myTabs) {
       if (each.isSelected() || each.isHovered()) {
-        Color color = getColor(each.isSelected(), myUi.myWindow.isActive());
-
         Rectangle r = each.getBounds();
         Graphics2D g2d = (Graphics2D)g.create();
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-        g2d.setColor(color);
+        g2d.setColor(UIUtil.getPanelBackground());
 
         g2d.fillRect(isIdVisible() ? r.x : r.x - 2, r.y, r.width, r.height);
+
+        if (each.isSelected() && myUi.myWindow.isActive()) {
+          g2d.setColor(UIUtil.getBorderColor());
+          LinePainter2D.paint(g2d, r.x, r.y, r.x, r.y + r.height);
+          LinePainter2D.paint(g2d, r.x + r.width, r.y, r.x + r.width, r.y + r.height);
+        }
+
         g2d.dispose();
       }
     }
-  }
-
-  private static Color getColor(boolean selected, boolean hovered) {
-    return UIUtil.getPanelBackground();
   }
 
   @Override

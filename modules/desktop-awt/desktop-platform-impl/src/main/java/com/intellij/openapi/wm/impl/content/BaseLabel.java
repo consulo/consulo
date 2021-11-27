@@ -84,10 +84,6 @@ public class BaseLabel extends JLabel {
     return g;
   }
 
-  protected boolean allowEngravement() {
-    return true;
-  }
-
   protected Color getActiveFg(boolean selected) {
     return myActiveFg;
   }
