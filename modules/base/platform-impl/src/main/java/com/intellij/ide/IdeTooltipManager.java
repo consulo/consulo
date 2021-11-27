@@ -476,8 +476,9 @@ public final class IdeTooltipManager implements Disposable, AWTEventListener {
   }
 
   @SuppressWarnings({"UnusedParameters"})
+  @Deprecated(forRemoval = true)
   public Color getBorderColor(boolean awtTooltip) {
-    return new JBColor(Gray._160, new Color(91, 93, 95));
+    return JBUI.CurrentTheme.Tooltip.borderColor();
   }
 
   @SuppressWarnings({"UnusedParameters"})

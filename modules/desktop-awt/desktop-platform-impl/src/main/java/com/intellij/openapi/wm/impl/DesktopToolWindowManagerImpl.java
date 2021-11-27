@@ -656,6 +656,7 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
 
     final BalloonHyperlinkListener listenerWrapper = new BalloonHyperlinkListener(listener);
     final Balloon balloon = JBPopupFactory.getInstance().createHtmlTextBalloonBuilder(text.replace("\n", "<br>"), icon, type.getPopupBackground(), listenerWrapper).setHideOnClickOutside(false)
+            .setBorderColor(type.getBorderColor())
             .setHideOnFrameResize(false).createBalloon();
     FrameStateManager.getInstance().getApplicationActive().doWhenDone(() -> {
       final Alarm alarm = new Alarm();

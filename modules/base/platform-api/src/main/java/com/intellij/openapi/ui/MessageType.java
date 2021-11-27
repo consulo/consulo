@@ -17,7 +17,7 @@ package com.intellij.openapi.ui;
 
 import com.intellij.icons.AllIcons;
 import com.intellij.notification.NotificationType;
-import com.intellij.ui.JBColor;
+import com.intellij.util.ui.JBUI;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
@@ -25,25 +25,27 @@ import java.awt.*;
 
 public class MessageType {
 
-  public static final MessageType ERROR = new MessageType(AllIcons.General.NotificationError,
-                                                          new JBColor(new Color(255, 204, 204, 230), new Color(112, 71, 69)),
-                                                          new JBColor(new Color(0xAC0013), new Color(0xEF5F65)));
-  public static final MessageType INFO = new MessageType(AllIcons.General.NotificationInfo,
-                                                         new JBColor(new Color(186, 238, 186, 230), new Color(73, 117, 73)),
-                                                         new JBColor(new Color(0x000000), new Color(0xbbbbbb)));
-  public static final MessageType WARNING = new MessageType(AllIcons.General.NotificationWarning,
-                                                            new JBColor(new Color(249, 247, 142, 230), new Color(90, 82, 33)),
-                                                            new JBColor(new Color(164, 145, 82), new Color(0xBBB529)));
+  public static final MessageType ERROR =
+          new MessageType(AllIcons.General.NotificationError, JBUI.CurrentTheme.NotificationError.backgroundColor(), JBUI.CurrentTheme.NotificationError.foregroundColor(),
+                          JBUI.CurrentTheme.NotificationError.borderColor());
+
+  public static final MessageType INFO = new MessageType(AllIcons.General.NotificationInfo, JBUI.CurrentTheme.NotificationInfo.backgroundColor(), JBUI.CurrentTheme.NotificationInfo.foregroundColor(),
+                                                         JBUI.CurrentTheme.NotificationInfo.borderColor());
+
+  public static final MessageType WARNING =
+          new MessageType(AllIcons.General.NotificationWarning, JBUI.CurrentTheme.NotificationWarning.backgroundColor(), JBUI.CurrentTheme.NotificationWarning.foregroundColor(),
+                          JBUI.CurrentTheme.NotificationWarning.borderColor());
 
   private final Image myDefaultIcon;
   private final Color myPopupBackground;
-  @Nonnull
   private final Color myForeground;
+  private final Color myBorderColor;
 
-  private MessageType(@Nonnull Image defaultIcon, @Nonnull Color popupBackground, @Nonnull Color foreground) {
+  private MessageType(@Nonnull Image defaultIcon, @Nonnull Color popupBackground, @Nonnull Color foreground, @Nonnull Color borderColor) {
     myDefaultIcon = defaultIcon;
     myPopupBackground = popupBackground;
     myForeground = foreground;
+    myBorderColor = borderColor;
   }
 
   @Nonnull
@@ -56,8 +58,14 @@ public class MessageType {
     return myPopupBackground;
   }
 
+  @Nonnull
   public Color getTitleForeground() {
     return myForeground;
+  }
+
+  @Nonnull
+  public Color getBorderColor() {
+    return myBorderColor;
   }
 
   @Nonnull

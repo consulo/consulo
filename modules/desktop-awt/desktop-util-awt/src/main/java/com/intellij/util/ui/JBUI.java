@@ -14,8 +14,8 @@ import com.intellij.util.Function;
 import com.intellij.util.ui.components.BorderLayoutPanel;
 import consulo.desktop.util.awt.component.VerticalLayoutPanel;
 import kava.beans.PropertyChangeListener;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -193,6 +193,69 @@ public class JBUI {
       @Nonnull
       public static Color hoverBackground() {
         return JBColor.namedColor("StatusBar.hoverBackground", ActionButton.hoverBackground());
+      }
+    }
+
+    public static final class Tooltip {
+      @Nonnull
+      public static Color shortcutForeground() {
+        return JBColor.namedColor("ToolTip.shortcutForeground", new JBColor(0x787878, 0x999999));
+      }
+
+      @Nonnull
+      public static Color borderColor() {
+        return JBColor.namedColor("ToolTip.borderColor", new JBColor(0xadadad, 0x636569));
+      }
+    }
+
+    public static final class NotificationInfo {
+      @Nonnull
+      public static Color backgroundColor() {
+        return JBColor.namedColor("Notification.ToolWindow.informativeBackground", new JBColor(0xbaeeba, 0x33412E));
+      }
+
+      @Nonnull
+      public static Color foregroundColor() {
+        return JBColor.namedColor("Notification.ToolWindow.informativeForeground", UIUtil.getToolTipForeground());
+      }
+
+      @Nonnull
+      public static Color borderColor() {
+        return JBColor.namedColor("Notification.ToolWindow.informativeBorderColor", new JBColor(0xa0bf9d, 0x85997a));
+      }
+    }
+
+    public static final class NotificationWarning {
+      @Nonnull
+      public static Color backgroundColor() {
+        return JBColor.namedColor("Notification.ToolWindow.warningBackground", new JBColor(0xf9f78e, 0x5a5221));
+      }
+
+      @Nonnull
+      public static Color foregroundColor() {
+        return JBColor.namedColor("Notification.ToolWindow.warningForeground", UIUtil.getToolTipForeground());
+      }
+
+      @Nonnull
+      public static Color borderColor() {
+        return JBColor.namedColor("Notification.ToolWindow.warningBorderColor", new JBColor(0xbab824, 0xa69f63));
+      }
+    }
+
+    public static final class NotificationError {
+      @Nonnull
+      public static Color backgroundColor() {
+        return JBColor.namedColor("Notification.ToolWindow.errorBackground", new JBColor(0xffcccc, 0x704745));
+      }
+
+      @Nonnull
+      public static Color foregroundColor() {
+        return JBColor.namedColor("Notification.ToolWindow.errorForeground", UIUtil.getToolTipForeground());
+      }
+
+      @Nonnull
+      public static Color borderColor() {
+        return JBColor.namedColor("Notification.ToolWindow.errorBorderColor", new JBColor(0xd69696, 0x998a8a));
       }
     }
 
@@ -664,8 +727,7 @@ public class JBUI {
     @Nonnull
     public Scale of(double value) {
       return Scale.create(value, this);
-    }
-  }
+    }}
 
   /**
    * A scale factor of a particular type.
