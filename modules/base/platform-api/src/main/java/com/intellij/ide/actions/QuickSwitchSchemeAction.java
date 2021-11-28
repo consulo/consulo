@@ -30,7 +30,7 @@ import javax.annotation.Nonnull;
  * @author max
  */
 public abstract class QuickSwitchSchemeAction extends AnAction implements DumbAware {
-  protected static final Image ourCurrentAction = AllIcons.Diff.CurrentLine;
+  protected static final Image ourCurrentAction = AllIcons.Actions.Forward;
   protected static final Image ourNotCurrentAction = Image.empty(Image.DEFAULT_ICON_SIZE);
   @Nonnull
   protected String myActionPlace = ActionPlaces.UNKNOWN;

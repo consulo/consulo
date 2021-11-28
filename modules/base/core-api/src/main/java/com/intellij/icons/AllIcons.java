@@ -348,7 +348,6 @@ public class AllIcons {
     public static final Image ArrowRight = PlatformIconGroup.diffArrowRight(); // 11x11
     public static final Image ArrowRightDown = PlatformIconGroup.diffArrowRightDown(); // 11x11
     public static final Image BranchDiff = PlatformIconGroup.diffBranchDiff(); // 16x16
-    public static final Image CurrentLine = PlatformIconGroup.diffCurrentLine(); // 16x16
     public static final Image Diff = PlatformIconGroup.diffDiff(); // 16x16
     public static final Image LeftDiff = PlatformIconGroup.diffLeftDiff(); // 16x16
     public static final Image MagicResolve = PlatformIconGroup.diffMagicResolve(); // 12x12
