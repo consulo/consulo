@@ -2747,26 +2747,6 @@ public class UIUtil {
     });
   }
 
-  @Nullable
-  public static ComboPopup getComboBoxPopup(JComboBox comboBox) {
-    final ComboBoxUI ui = comboBox.getUI();
-    if (ui instanceof BasicComboBoxUI) {
-      try {
-        final Field popup = BasicComboBoxUI.class.getDeclaredField("popup");
-        popup.setAccessible(true);
-        return (ComboPopup)popup.get(ui);
-      }
-      catch (NoSuchFieldException e) {
-        return null;
-      }
-      catch (IllegalAccessException e) {
-        return null;
-      }
-    }
-
-    return null;
-  }
-
   @SuppressWarnings({"HardCodedStringLiteral"})
   public static void fixFormattedField(JFormattedTextField field) {
     if (SystemInfo.isMac) {

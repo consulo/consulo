@@ -23,10 +23,14 @@ import com.intellij.ui.IdeBorderFactory;
 import com.intellij.ui.components.JBList;
 import com.intellij.util.ui.MacUIUtil;
 import com.intellij.util.ui.UIUtil;
+import consulo.awt.hacking.BasicComboBoxUIHacking;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import javax.swing.*;
+import javax.swing.plaf.ComboBoxUI;
+import javax.swing.plaf.basic.BasicComboBoxUI;
 import javax.swing.plaf.basic.ComboPopup;
 import java.awt.*;
 import java.awt.event.*;
@@ -186,7 +190,11 @@ public class ComboBox<E> extends ComboBoxWithWidePopup<E> implements AWTEventLis
 
   @Nullable
   public ComboPopup getPopup() {
-    return UIUtil.getComboBoxPopup(this);
+    ComboBoxUI ui = getUI();
+    if (ui instanceof BasicComboBoxUI bui) {
+      return BasicComboBoxUIHacking.getPopup(bui);
+    }
+    return null;
   }
 
   public ComboBox(final E[] items, final int preferredWidth) {
