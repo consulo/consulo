@@ -22,23 +22,25 @@ import com.intellij.openapi.actionSystem.ActionPlaces;
 import com.intellij.openapi.actionSystem.DefaultActionGroup;
 import com.intellij.openapi.actionSystem.impl.ActionToolbarImpl;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.util.ui.UIUtil;
-import consulo.logging.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.ComboBox;
-import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.ui.*;
+import com.intellij.ui.ComboboxSpeedSearch;
+import com.intellij.ui.PopupHandler;
+import com.intellij.ui.PopupMenuListenerAdapter;
+import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.ui.border.CustomLineBorder;
 import com.intellij.ui.components.panels.Wrapper;
 import com.intellij.util.concurrency.EdtExecutorService;
-import java.util.HashMap;
+import com.intellij.util.ui.UIUtil;
 import com.intellij.xdebugger.XDebugSession;
 import com.intellij.xdebugger.frame.XExecutionStack;
 import com.intellij.xdebugger.frame.XStackFrame;
 import com.intellij.xdebugger.frame.XSuspendContext;
 import com.intellij.xdebugger.impl.XDebugSessionImpl;
 import com.intellij.xdebugger.impl.actions.XDebuggerActions;
+import consulo.logging.Logger;
+import consulo.util.dataholder.Key;
 import gnu.trove.TObjectIntHashMap;
 
 import javax.annotation.Nonnull;
@@ -198,7 +200,7 @@ public class XFramesView extends XDebugView {
     final ActionToolbarImpl toolbar =
             (ActionToolbarImpl)ActionManager.getInstance().createActionToolbar(ActionPlaces.DEBUGGER_TOOLBAR, framesGroup, true);
     toolbar.setReservePlaceAutoPopupIcon(false);
-    toolbar.getComponent().setBorder(new EmptyBorder(1, 0, 0, 0));
+    toolbar.setTargetComponent(myFramesList);
     return toolbar;
   }
 
