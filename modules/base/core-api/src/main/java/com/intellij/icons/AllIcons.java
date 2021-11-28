@@ -698,7 +698,6 @@ public class AllIcons {
     public static final Image ExcludeRoot = PlatformIconGroup.modulesExcludeRoot(); // 16x16
     public static final Image GeneratedMark = PlatformIconGroup.modulesGeneratedMark(); // 16x16
     public static final Image Library = PlatformIconGroup.modulesLibrary(); // 16x16
-    public static final Image Merge = PlatformIconGroup.modulesMerge(); // 16x16
     public static final Image ModulesNode = PlatformIconGroup.modulesModulesNode(); // 16x16
     public static final Image SourceRoot = PlatformIconGroup.modulesSourceRoot(); // 16x16
     public static final Image ResourcesRoot = PlatformIconGroup.modulesResourcesRoot(); // 16x16
