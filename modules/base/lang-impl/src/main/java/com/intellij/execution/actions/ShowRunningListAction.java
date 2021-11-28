@@ -41,9 +41,8 @@ import com.intellij.ui.awt.RelativePoint;
 import com.intellij.ui.components.panels.NonOpaquePanel;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
-import consulo.ui.annotation.RequiredUIAccess;
 import consulo.awt.TargetAWT;
-import consulo.ui.image.ImageEffects;
+import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;
@@ -58,8 +57,7 @@ import java.util.Set;
 
 public class ShowRunningListAction extends AnAction {
   public ShowRunningListAction() {
-    super(ExecutionBundle.message("show.running.list.action.name"), ExecutionBundle.message("show.running.list.action.description"),
-          ImageEffects.layered(AllIcons.RunConfigurations.Variables, AllIcons.Nodes.RunnableMark));
+    super(ExecutionBundle.message("show.running.list.action.name"), ExecutionBundle.message("show.running.list.action.description"), null);
   }
 
   @RequiredUIAccess
