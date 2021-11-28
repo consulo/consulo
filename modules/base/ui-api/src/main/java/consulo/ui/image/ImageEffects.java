@@ -47,6 +47,9 @@ public final class ImageEffects {
 
   @Nonnull
   public static Image resize(@Nonnull Image original, int width, int height) {
+    if (original.getHeight() == height && original.getWidth() == width) {
+      return original;
+    }
     return UIInternal.get()._ImageEffects_resize(original, width, height);
   }
 
