@@ -17,6 +17,7 @@
 package com.intellij.compiler.impl;
 
 import com.intellij.CommonBundle;
+import com.intellij.build.BuildContentManager;
 import com.intellij.compiler.CompilerMessageImpl;
 import com.intellij.compiler.CompilerWorkspaceConfiguration;
 import com.intellij.compiler.ModuleCompilerUtil;
@@ -57,7 +58,6 @@ import com.intellij.openapi.vfs.*;
 import com.intellij.openapi.vfs.newvfs.ManagingFS;
 import com.intellij.openapi.vfs.newvfs.RefreshQueue;
 import com.intellij.openapi.wm.StatusBar;
-import com.intellij.openapi.wm.ToolWindowId;
 import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.openapi.wm.WindowManager;
 import com.intellij.packaging.artifacts.Artifact;
@@ -229,7 +229,11 @@ public class CompileDriver {
         myAllOutputDirectories = getAllOutputDirectories(compileContext);
         // need this for updating zip archives experiment, uncomment if the feature is turned on
         //myOutputFinder = new OutputPathFinder(myAllOutputDirectories);
-        result.set(doCompile(compileContext, false, false, true));
+        ExitStatus status = doCompile(compileContext, false, false, true);
+
+        result.set(status);
+
+        task.setEndCompilationStamp(status, System.currentTimeMillis());
       }
       finally {
         CompilerCacheManager.getInstance(myProject).flushCaches();
@@ -462,7 +466,10 @@ public class CompileDriver {
         }
 
         TranslatingCompilerFilesMonitor.getInstance().ensureInitializationCompleted(myProject, compileContext.getProgressIndicator());
-        doCompile(compileContext, isRebuild, forceCompile, callback, checkCachesVersion);
+
+        ExitStatus status = doCompile(compileContext, isRebuild, forceCompile, callback, checkCachesVersion);
+
+        compileTask.setEndCompilationStamp(status, System.currentTimeMillis());
       }
       finally {
         FileUtil.delete(CompilerPaths.getRebuildMarkerFile(myProject));
@@ -472,7 +479,7 @@ public class CompileDriver {
     compileTask.start(compileWork);
   }
 
-  private void doCompile(final CompileContextImpl compileContext, final boolean isRebuild, final boolean forceCompile, final CompileStatusNotification callback, final boolean checkCachesVersion) {
+  private ExitStatus doCompile(final CompileContextImpl compileContext, final boolean isRebuild, final boolean forceCompile, final CompileStatusNotification callback, final boolean checkCachesVersion) {
     ExitStatus status = ExitStatus.ERRORS;
     boolean wereExceptions = false;
     final long vfsTimestamp = (ManagingFS.getInstance()).getCreationTimestamp();
@@ -480,12 +487,12 @@ public class CompileDriver {
       if (checkCachesVersion) {
         checkCachesVersion(compileContext, vfsTimestamp);
         if (compileContext.isRebuildRequested()) {
-          return;
+          return status;
         }
       }
       writeStatus(new CompileStatus(DEPENDENCY_FORMAT_VERSION, true, vfsTimestamp), compileContext);
       if (compileContext.getMessageCount(CompilerMessageCategory.ERROR) > 0) {
-        return;
+        return status;
       }
 
       myAllOutputDirectories = getAllOutputDirectories(compileContext);
@@ -531,6 +538,8 @@ public class CompileDriver {
                 duration);
       }
     }
+
+    return status;
   }
 
   /**
@@ -577,12 +586,7 @@ public class CompileDriver {
           final String statusMessage = createStatusMessage(_status, warningCount, errorCount, duration);
           final MessageType messageType = errorCount > 0 ? MessageType.ERROR : warningCount > 0 ? MessageType.WARNING : MessageType.INFO;
           if (duration > ONE_MINUTE_MS) {
-            if (ToolWindowManager.getInstance(myProject).getToolWindow(ToolWindowId.MESSAGES_WINDOW) != null) {
-              ToolWindowManager.getInstance(myProject).notifyByBalloon(ToolWindowId.MESSAGES_WINDOW, messageType, statusMessage);
-            }
-            else {
-              WindowManager.getInstance().getStatusBar(myProject).setInfo(statusMessage);
-            }
+            ToolWindowManager.getInstance(myProject).notifyByBalloon(BuildContentManager.TOOL_WINDOW_ID, messageType, statusMessage);
           }
           CompilerManager.NOTIFICATION_GROUP.createNotification(statusMessage, messageType).notify(myProject);
           if (_status != ExitStatus.UP_TO_DATE && compileContext.getMessageCount(null) > 0) {
@@ -1897,6 +1901,8 @@ CompilerManagerImpl.addDeletedPath(outputPath.getPath());
         if (onTaskFinished != null) {
           onTaskFinished.run();
         }
+
+        task.setEndCompilationStamp(compileContext.getMessageCount(CompilerMessageCategory.ERROR) > 0 ? ExitStatus.ERRORS : ExitStatus.SUCCESS, System.currentTimeMillis());
       }
     });
   }

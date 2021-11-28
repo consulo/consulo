@@ -172,6 +172,11 @@
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
+      <artifactId>consulo-compiler-build-ui-impl</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
       <artifactId>consulo-duplicates-analysis</artifactId>
       <version>${project.version}</version>
     </dependency>

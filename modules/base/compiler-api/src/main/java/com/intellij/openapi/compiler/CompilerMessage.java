@@ -17,7 +17,10 @@ package com.intellij.openapi.compiler;
 
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.pom.Navigatable;
+
 import javax.annotation.Nullable;
+import java.util.Collection;
+import java.util.Collections;
 
 /**
  * Describes a single compiler message that is shown in compiler message view.
@@ -76,4 +79,11 @@ public interface CompilerMessage {
   int getLine();
 
   int getColumn();
+
+  /**
+   * @return module name (or names of modules in a module dependency cycle) where this message occurred
+   */
+  default Collection<String> getModuleNames() {
+    return Collections.emptyList();
+  }
 }

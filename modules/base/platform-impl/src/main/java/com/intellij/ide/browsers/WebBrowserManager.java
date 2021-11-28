@@ -5,23 +5,23 @@ import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
-import consulo.logging.Logger;
 import com.intellij.openapi.util.*;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.xmlb.SkipDefaultValuesSerializationFilters;
 import com.intellij.util.xmlb.XmlSerializer;
+import consulo.logging.Logger;
+import jakarta.inject.Singleton;
 import org.jdom.Element;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import jakarta.inject.Singleton;
 import java.util.*;
 
 @Singleton
 @State(name = "WebBrowsersConfiguration", storages = @Storage("web-browsers.xml"))
-public class WebBrowserManager extends SimpleModificationTracker implements PersistentStateComponent<Element> {
+public class WebBrowserManager extends SimpleModificationTracker implements PersistentStateComponent<Element>, consulo.ide.browsers.WebBrowserManager {
   private static final Logger LOG = Logger.getInstance(WebBrowserManager.class);
 
   // default standard browser ID must be constant across all IDE versions on all machines for all users
@@ -55,7 +55,7 @@ public class WebBrowserManager extends SimpleModificationTracker implements Pers
   }
 
   public static WebBrowserManager getInstance() {
-    return ServiceManager.getService(WebBrowserManager.class);
+    return (WebBrowserManager)ServiceManager.getService(consulo.ide.browsers.WebBrowserManager.class);
   }
 
   public static boolean isYandexBrowser(@Nonnull WebBrowser browser) {

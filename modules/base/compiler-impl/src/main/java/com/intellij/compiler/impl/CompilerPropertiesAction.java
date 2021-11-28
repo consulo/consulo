@@ -28,7 +28,7 @@ import com.intellij.openapi.project.Project;
  * @author Eugene Zhuravlev
  *         Date: 9/12/12
  */
-class CompilerPropertiesAction extends AnAction {
+public class CompilerPropertiesAction extends AnAction {
   public CompilerPropertiesAction() {
     super(CompilerBundle.message("action.compiler.properties.text"), null, AllIcons.General.Settings);
   }

@@ -217,7 +217,7 @@ public final class BuildContentManagerImpl implements BuildContentManager {
     if (pair.first == null) {
       content.putUserData(Content.TAB_LABEL_ORIENTATION_KEY, ComponentOrientation.RIGHT_TO_LEFT);
     }
-    content.setIcon(ExecutionUtil.getIconWithLiveIndicator(pair.first));
+    content.setIcon(ExecutionUtil.getIconWithLiveIndicator(pair.first == null ? PlatformIconGroup.toolwindowsToolWindowBuild() : pair.first));
     invokeLaterIfNeeded(() -> {
       JComponent component = content.getComponent();
       component.invalidate();

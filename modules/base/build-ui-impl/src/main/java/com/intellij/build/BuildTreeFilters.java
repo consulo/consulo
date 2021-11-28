@@ -15,7 +15,6 @@
  */
 package com.intellij.build;
 
-import com.intellij.icons.AllIcons;
 import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.lang.LangBundle;
 import com.intellij.openapi.actionSystem.AnActionEvent;
@@ -81,14 +80,13 @@ public class BuildTreeFilters {
       }
     }
 
-    private final String text;
     private final String stateKey;
     private final Filterable<ExecutionNode> filterable;
     private final Predicate<ExecutionNode> filter;
     private final boolean defaultState;
 
     FilterToggleAction(String text, String stateKey, Filterable<ExecutionNode> filterable, Predicate<ExecutionNode> filter, boolean defaultState) {
-      this.text = text;
+      super(text);
       this.stateKey = stateKey;
       this.filterable = filterable;
       this.filter = filter;

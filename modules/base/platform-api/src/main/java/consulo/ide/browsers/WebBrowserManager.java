@@ -13,20 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.build;
+package consulo.ide.browsers;
 
-import jakarta.inject.Singleton;
+import com.intellij.ide.browsers.WebBrowser;
+import com.intellij.openapi.components.ServiceManager;
+
+import javax.annotation.Nonnull;
+import java.util.List;
 
 /**
  * @author VISTALL
- * @since 17/01/2021
- *
- * from kotlin
+ * @since 28/11/2021
  */
-@Singleton
-public class BuildWorkspaceConfigurationImpl implements BuildWorkspaceConfiguration {
-  @Override
-  public boolean isShowFirstErrorInEditor() {
-    return true;
+public interface WebBrowserManager {
+  public static WebBrowserManager getInstance() {
+    return ServiceManager.getService(WebBrowserManager.class);
   }
+
+  @Nonnull
+  List<WebBrowser> getActiveBrowsers();
 }

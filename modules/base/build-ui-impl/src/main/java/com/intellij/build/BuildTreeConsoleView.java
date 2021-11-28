@@ -22,7 +22,6 @@ import com.intellij.ide.util.treeView.AbstractTreeStructure;
 import com.intellij.ide.util.treeView.NodeDescriptor;
 import com.intellij.ide.util.treeView.NodeRenderer;
 import com.intellij.idea.ActionsBundle;
-import com.intellij.lang.LangBundle;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.ActionUtil;
 import com.intellij.openapi.application.ApplicationManager;
@@ -433,7 +432,7 @@ public class BuildTreeConsoleView implements ConsoleView, DataProvider, BuildCon
       myFinishedBuildEventReceived.set(true);
       String aHint = event.getHint();
       String time = DateFormatUtil.formatDateTime(event.getEventTime());
-      aHint = aHint == null ? LangBundle.message("build.event.message.at", time) : LangBundle.message("build.event.message.0.at.1", aHint, time);
+      aHint = aHint == null ? BuildBundle.message("build.event.message.at", time) : BuildBundle.message("build.event.message.0.at.1", aHint, time);
       currentNode.setHint(aHint);
       myDeferredEvents.forEach(buildEvent -> onEventInternal(buildId, buildEvent));
       if (myConsoleViewHandler.myExecutionNode == null) {
@@ -522,9 +521,8 @@ public class BuildTreeConsoleView implements ConsoleView, DataProvider, BuildCon
     }
   }
 
-  private
   @Nullable
-  Runnable showErrorIfFirst(@Nonnull ExecutionNode node, @Nullable Navigatable navigatable) {
+  private Runnable showErrorIfFirst(@Nonnull ExecutionNode node, @Nullable Navigatable navigatable) {
     if (myShownFirstError.compareAndSet(false, true)) {
       return () -> {
         TreeUtil.promiseSelect(myTree, visitor(node));
@@ -957,6 +955,7 @@ public class BuildTreeConsoleView implements ConsoleView, DataProvider, BuildCon
       myPanel.add(myView.getComponent(), BorderLayout.CENTER);
       myConsoleToolbarActionGroup = new DefaultActionGroup();
       myToolbar = ActionManager.getInstance().createActionToolbar("BuildConsole", myConsoleToolbarActionGroup, false);
+      myToolbar.setTargetComponent(myPanel);
       showTextConsoleToolbarActions();
       myPanel.add(myToolbar.getComponent(), BorderLayout.EAST);
       tree.addTreeSelectionListener(e -> {

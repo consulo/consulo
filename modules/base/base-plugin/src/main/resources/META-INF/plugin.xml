@@ -1223,7 +1223,7 @@
     <applicationService serviceInterface="com.intellij.openapi.projectRoots.impl.JdkVersionDetector"
                         serviceImplementation="com.intellij.openapi.projectRoots.impl.JdkVersionDetectorImpl"/>
 
-    <applicationService serviceImplementation="com.intellij.ide.browsers.WebBrowserManager"/>
+    <applicationService serviceInterface="consulo.ide.browsers.WebBrowserManager" serviceImplementation="com.intellij.ide.browsers.WebBrowserManager"/>
 
     <applicationService serviceInterface="com.intellij.ide.browsers.BrowserLauncher" serviceImplementation="com.intellij.ide.browsers.BrowserLauncherImpl"/>
 
@@ -2504,6 +2504,7 @@
 
     <applicationService serviceInterface="com.intellij.execution.filters.HyperlinkInfoFactory"
                         serviceImplementation="com.intellij.execution.filters.impl.HyperlinkInfoFactoryImpl"/>
+    <consoleFilterProvider implementation="com.intellij.execution.filters.UrlFilter$UrlFilterProvider"/>
 
     <schemeOwner serviceInterface="com.intellij.profile.codeInspection.InspectionProfileManager"/>
 
@@ -2773,7 +2774,7 @@
     <projectService serviceInterface="com.intellij.build.SyncViewManager"
                     serviceImplementation="com.intellij.build.SyncViewManager"/>
     <projectService serviceInterface="com.intellij.build.BuildWorkspaceConfiguration"
-                    serviceImplementation="com.intellij.build.BuildWorkspaceConfigurationImpl"/>
+                    serviceImplementation="consulo.compiler.impl.build.BuildWorkspaceConfigurationImpl"/>
 
     <applicationService serviceInterface="com.intellij.ui.SuitableFontProvider" serviceImplementation="com.intellij.ui.SuitableFontProviderImpl" />
 

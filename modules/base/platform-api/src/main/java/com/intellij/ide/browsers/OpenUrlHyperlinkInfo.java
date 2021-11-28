@@ -21,9 +21,11 @@ import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.DefaultActionGroup;
 import com.intellij.openapi.ide.CopyPasteManager;
+import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.Conditions;
+import consulo.ide.browsers.WebBrowserManager;
 import consulo.platform.base.icon.PlatformIconGroup;
 
 import javax.annotation.Nonnull;
@@ -59,7 +61,7 @@ public final class OpenUrlHyperlinkInfo implements HyperlinkWithPopupMenuInfo {
     DefaultActionGroup group = new DefaultActionGroup();
     for (final WebBrowser browser : WebBrowserManager.getInstance().getActiveBrowsers()) {
       if (browserCondition == null ? (this.browser == null || browser.equals(this.browser)) : browserCondition.value(browser)) {
-        group.add(new AnAction("Open in " + browser.getName(), "Open URL in " + browser.getName(), browser.getIcon()) {
+        group.add(new DumbAwareAction("Open in " + browser.getName(), "Open URL in " + browser.getName(), browser.getIcon()) {
           @Override
           public void actionPerformed(AnActionEvent e) {
             BrowserLauncher.getInstance().browse(url, browser, e.getProject());

@@ -21,14 +21,14 @@
  */
 package com.intellij.compiler.progress;
 
-import com.intellij.compiler.ProblemsView;
+import com.intellij.compiler.impl.ExitStatus;
 import com.intellij.openapi.application.Application;
-import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.compiler.CompilerManager;
 import com.intellij.openapi.compiler.CompilerMessage;
 import com.intellij.openapi.compiler.CompilerMessageCategory;
 import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import com.intellij.openapi.progress.EmptyProgressIndicator;
+import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.progress.util.AbstractProgressIndicatorExBase;
@@ -41,12 +41,12 @@ import com.intellij.pom.Navigatable;
 import com.intellij.problems.WolfTheProblemSolver;
 import com.intellij.ui.AppIcon;
 import com.intellij.util.ui.UIUtil;
+import consulo.compiler.impl.BuildViewServiceFactory;
 import consulo.compiler.impl.CompilerManagerImpl;
-import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.UIAccess;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.UUID;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 
@@ -56,21 +56,32 @@ public class CompilerTask extends Task.Backgroundable {
   private final boolean myWaitForPreviousSession;
   private int myErrorCount = 0;
   private int myWarningCount = 0;
-  private boolean myMessagesAutoActivated = false;
 
   private volatile ProgressIndicator myIndicator = new EmptyProgressIndicator();
   private Runnable myCompileWork;
   private final boolean myCompilationStartedAutomatically;
+  private final UUID mySessionId;
+
+  private final BuildViewService myBuildViewService;
+  private long myEndCompilationStamp;
+  private ExitStatus myExitStatus;
 
   public CompilerTask(@Nonnull Project project, String contentName, boolean waitForPreviousSession, boolean compilationStartedAutomatically) {
     super(project, contentName);
     myWaitForPreviousSession = waitForPreviousSession;
     myCompilationStartedAutomatically = compilationStartedAutomatically;
+    mySessionId = UUID.randomUUID();
+    myBuildViewService = Application.get().getInstance(BuildViewServiceFactory.class).createBuildViewService(project, mySessionId, contentName);
   }
 
   @Nonnull
   public ProgressIndicator getIndicator() {
     return myIndicator;
+  }
+
+  public void setEndCompilationStamp(ExitStatus exitStatus, long endCompilationStamp) {
+    myExitStatus = exitStatus;
+    myEndCompilationStamp = endCompilationStamp;
   }
 
   @Override
@@ -83,7 +94,13 @@ public class CompilerTask extends Task.Backgroundable {
   public void run(@Nonnull final ProgressIndicator indicator) {
     myIndicator = indicator;
 
+    long startCompilationStamp = System.currentTimeMillis();
+
+
     indicator.setIndeterminate(false);
+
+    myBuildViewService.onStart(mySessionId, startCompilationStamp, () -> {
+    }, indicator);
 
     final Semaphore semaphore = ((CompilerManagerImpl)CompilerManager.getInstance(myProject)).getCompilationSemaphore();
     boolean acquired = false;
@@ -110,9 +127,13 @@ public class CompilerTask extends Task.Backgroundable {
       }
       myCompileWork.run();
     }
+    catch (ProcessCanceledException ignored) {
+    }
     finally {
       try {
         indicator.stop();
+
+        myBuildViewService.onEnd(mySessionId, myExitStatus, myEndCompilationStamp);
       }
       finally {
         if (acquired) {
@@ -130,33 +151,26 @@ public class CompilerTask extends Task.Backgroundable {
       @Override
       public void cancel() {
         super.cancel();
-        closeUI();
         stopAppIconProgress();
       }
 
       @Override
       public void stop() {
         super.stop();
-        if (!isCanceled()) {
-          closeUI();
-        }
         stopAppIconProgress();
       }
 
       private void stopAppIconProgress() {
-        UIUtil.invokeLaterIfNeeded(new Runnable() {
-          @Override
-          public void run() {
-            AppIcon appIcon = AppIcon.getInstance();
-            if (appIcon.hideProgress(myProject, APP_ICON_ID)) {
-              if (myErrorCount > 0) {
-                appIcon.setErrorBadge(myProject, String.valueOf(myErrorCount));
-                appIcon.requestAttention(myProject, true);
-              }
-              else if (!myCompilationStartedAutomatically) {
-                appIcon.setOkBadge(myProject, true);
-                appIcon.requestAttention(myProject, false);
-              }
+        UIUtil.invokeLaterIfNeeded(() -> {
+          AppIcon appIcon = AppIcon.getInstance();
+          if (appIcon.hideProgress(myProject, APP_ICON_ID)) {
+            if (myErrorCount > 0) {
+              appIcon.setErrorBadge(myProject, String.valueOf(myErrorCount));
+              appIcon.requestAttention(myProject, true);
+            }
+            else if (!myCompilationStartedAutomatically) {
+              appIcon.setOkBadge(myProject, true);
+              appIcon.requestAttention(myProject, false);
             }
           }
         });
@@ -165,12 +179,7 @@ public class CompilerTask extends Task.Backgroundable {
       @Override
       public void setFraction(final double fraction) {
         super.setFraction(fraction);
-        UIUtil.invokeLaterIfNeeded(new Runnable() {
-          @Override
-          public void run() {
-            AppIcon.getInstance().setProgress(myProject, APP_ICON_ID, AppIconScheme.Progress.BUILD, fraction, true);
-          }
-        });
+        UIUtil.invokeLaterIfNeeded(() -> AppIcon.getInstance().setProgress(myProject, APP_ICON_ID, AppIconScheme.Progress.BUILD, fraction, true));
       }
     });
   }
@@ -191,19 +200,7 @@ public class CompilerTask extends Task.Backgroundable {
       informWolf(message);
     }
 
-    Application application = Application.get();
-    if (application.isDispatchThread()) {
-      // implicit ui thread
-      //noinspection RequiredXAction
-      doAddMessage(message);
-    }
-    else {
-      application.invokeLater(() -> {
-        if (!myProject.isDisposed()) {
-          doAddMessage(message);
-        }
-      }, ModalityState.NON_MODAL);
-    }
+    myBuildViewService.addMessage(mySessionId, message);
   }
 
   private void informWolf(final CompilerMessage message) {
@@ -212,41 +209,9 @@ public class CompilerTask extends Task.Backgroundable {
     wolf.queue(file);
   }
 
-  @RequiredUIAccess
-  private void doAddMessage(final CompilerMessage message) {
-    UIAccess.assertIsUIThread();
-
-    final CompilerMessageCategory category = message.getCategory();
-
-    final boolean shouldAutoActivate =
-            !myMessagesAutoActivated && (CompilerMessageCategory.ERROR.equals(category) || (CompilerMessageCategory.WARNING.equals(category) && !ProblemsView.getInstance(myProject).isHideWarnings()));
-    if (shouldAutoActivate) {
-      myMessagesAutoActivated = true;
-      activateMessageView();
-    }
-  }
-
   public void start(Runnable compileWork) {
     myCompileWork = compileWork;
     queue();
-  }
-
-  @RequiredUIAccess
-  private void activateMessageView() {
-    ProblemsView.getInstance(myProject).showOrHide(false);
-  }
-
-  private void closeUI() {
-    Application application = Application.get();
-    application.invokeLater(() -> {
-      final boolean shouldRetainView = myErrorCount > 0 || myWarningCount > 0 && !ProblemsView.getInstance(myProject).isHideWarnings();
-      if (shouldRetainView) {
-        ProblemsView.getInstance(myProject).selectFirstMessage();
-      }
-      else {
-        ProblemsView.getInstance(myProject).showOrHide(true);
-      }
-    }, ModalityState.NON_MODAL);
   }
 
   private static VirtualFile getVirtualFile(final CompilerMessage message) {
