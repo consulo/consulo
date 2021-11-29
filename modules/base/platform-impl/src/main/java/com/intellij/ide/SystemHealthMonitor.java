@@ -19,11 +19,13 @@ import com.intellij.concurrency.JobScheduler;
 import com.intellij.diagnostic.VMOptions;
 import com.intellij.jna.JnaLoader;
 import com.intellij.notification.*;
+import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ApplicationNamesInfo;
 import com.intellij.openapi.application.PreloadingActivity;
 import com.intellij.openapi.progress.ProgressIndicator;
+import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.ThrowableComputable;
@@ -43,6 +45,7 @@ import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginManager;
 import consulo.ide.updateSettings.impl.UpdateHistory;
 import consulo.logging.Logger;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.ApplicationPropertiesComponent;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
@@ -102,14 +105,15 @@ public class SystemHealthMonitor extends PreloadingActivity {
     else {
       builder.append(" are ");
     }
-    builder.append(" experimental. <br> <a href=\"\">Got it!</a>");
+    builder.append(" experimental");
 
     Application app = Application.get();
     app.invokeLater(() -> {
-      Notification notification = GROUP.createNotification("", builder.toString(), NotificationType.WARNING, new NotificationListener.Adapter() {
-
+      Notification notification = GROUP.createNotification("", builder.toString(), NotificationType.WARNING, null);
+      notification.addAction(new DumbAwareAction("Got it!") {
+        @RequiredUIAccess
         @Override
-        protected void hyperlinkActivated(@Nonnull Notification notification, @Nonnull HyperlinkEvent e) {
+        public void actionPerformed(@Nonnull AnActionEvent e) {
           updateHistory.setShowExperimentalWarning(false);
           notification.expire();
         }
@@ -165,7 +169,7 @@ public class SystemHealthMonitor extends PreloadingActivity {
     LOG.info("issue detected: " + key + (ignored ? " (ignored)" : ""));
     if (ignored) return;
 
-    String message = IdeBundle.message(key, params) + IdeBundle.message("sys.health.acknowledge.link");
+    String message = IdeBundle.message(key, params);
 
     Application app = Application.get();
     app.invokeLater(() -> {
@@ -173,6 +177,15 @@ public class SystemHealthMonitor extends PreloadingActivity {
         @Override
         protected void hyperlinkActivated(@Nonnull Notification notification, @Nonnull HyperlinkEvent e) {
           adapter.hyperlinkActivated(e);
+        }
+      });
+
+      notification.addAction(new DumbAwareAction("Do not show again") {
+        @RequiredUIAccess
+        @Override
+        public void actionPerformed(@Nonnull AnActionEvent e) {
+          myProperties.setValue("ignore." + key, "true");
+          notification.expire();
         }
       });
       notification.setImportant(true);
@@ -285,12 +298,7 @@ public class SystemHealthMonitor extends PreloadingActivity {
     @Override
     protected void hyperlinkActivated(HyperlinkEvent e) {
       String url = e.getDescription();
-      if ("ack".equals(url)) {
-        myProperties.setValue("ignore." + key, "true");
-      }
-      else {
-        BrowserUtil.browse(url);
-      }
+      BrowserUtil.browse(url);
     }
   }
 }
