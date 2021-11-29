@@ -49,14 +49,15 @@ import com.intellij.ui.FilterComponent;
 import com.intellij.ui.awt.RelativePoint;
 import com.intellij.util.Alarm;
 import com.intellij.util.IJSwingUtilities;
-import java.util.HashMap;
 import com.intellij.util.ui.FormBuilder;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.tree.TreeUtil;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.image.ImageEffects;
 import org.jetbrains.annotations.Nls;
 
 import javax.annotation.Nonnull;
@@ -67,10 +68,8 @@ import javax.swing.event.DocumentEvent;
 import java.awt.*;
 import java.awt.event.*;
 import java.beans.PropertyChangeListener;
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class KeymapPanel implements SearchableConfigurable, Configurable.NoScroll, KeymapListener {
 
@@ -350,7 +349,7 @@ public class KeymapPanel implements SearchableConfigurable, Configurable.NoScrol
     group.add(commonActionsManager.createExpandAllAction(treeExpander, myActionsTree.getTree()));
     group.add(commonActionsManager.createCollapseAllAction(treeExpander, myActionsTree.getTree()));
 
-    group.add(new AnAction("Edit Shortcut", "Edit Shortcut", AllIcons.Actions.Properties) {
+    group.add(new DumbAwareAction("Edit Shortcut", "Edit Shortcut", ImageEffects.layered(PlatformIconGroup.actionsEdit(), PlatformIconGroup.generalDropdown())) {
       {
         registerCustomShortcutSet(new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0)), myActionsTree.getTree());
       }
