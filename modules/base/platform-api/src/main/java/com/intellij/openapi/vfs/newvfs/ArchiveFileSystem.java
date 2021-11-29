@@ -17,7 +17,6 @@ package com.intellij.openapi.vfs.newvfs;
 
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.fileTypes.FileTypeRegistry;
-import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.io.BufferExposingByteArrayInputStream;
 import com.intellij.openapi.util.io.FileAttributes;
 import com.intellij.openapi.util.text.StringUtil;
@@ -26,12 +25,14 @@ import com.intellij.openapi.vfs.impl.ArchiveHandler;
 import com.intellij.util.io.URLUtil;
 import consulo.annotation.DeprecationInfo;
 import consulo.fileTypes.ArchiveFileType;
-import javax.annotation.Nonnull;
+import consulo.util.dataholder.Key;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.function.Function;
 
 /**
  * Common interface of archive-based file systems (jar://, phar:// etc).
@@ -42,10 +43,14 @@ import java.io.OutputStream;
  */
 @Deprecated
 public abstract class ArchiveFileSystem extends NewVirtualFileSystem {
-  @Deprecated @DeprecationInfo("Use URLUtil#ARCHIVE_SEPARATOR")
+  @Deprecated
+  @DeprecationInfo("Use URLUtil#ARCHIVE_SEPARATOR")
   public static final String ARCHIVE_SEPARATOR = URLUtil.ARCHIVE_SEPARATOR;
 
   private static final Key<VirtualFile> LOCAL_FILE = Key.create("vfs.archive.local.file");
+
+  private final Function<VirtualFile, FileAttributes> myAttrGetter = ManagingFS.getInstance().accessDiskWithCheckCanceled(file -> getHandler(file).getAttributes(getRelativePath(file)));
+  private final Function<VirtualFile, String[]> myChildrenGetter = ManagingFS.getInstance().accessDiskWithCheckCanceled(file -> getHandler(file).list(getRelativePath(file)));
 
   /**
    * Returns a root entry of an archive hosted by a given local file
@@ -158,13 +163,13 @@ public abstract class ArchiveFileSystem extends NewVirtualFileSystem {
   @Nullable
   @Override
   public FileAttributes getAttributes(@Nonnull VirtualFile file) {
-    return getHandler(file).getAttributes(getRelativePath(file));
+    return myAttrGetter.apply(file);
   }
 
   @Nonnull
   @Override
   public String[] list(@Nonnull VirtualFile file) {
-    return getHandler(file).list(getRelativePath(file));
+    return myChildrenGetter.apply(file);
   }
 
   @Override

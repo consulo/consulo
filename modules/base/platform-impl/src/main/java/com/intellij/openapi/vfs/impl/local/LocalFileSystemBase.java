@@ -3,7 +3,6 @@ package com.intellij.openapi.vfs.impl.local;
 
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
-import consulo.logging.Logger;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.io.*;
 import com.intellij.openapi.util.text.StringUtil;
@@ -18,9 +17,10 @@ import com.intellij.util.PathUtilRt;
 import com.intellij.util.ThrowableConsumer;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.io.SafeFileOutputStream;
+import consulo.logging.Logger;
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
+import javax.annotation.Nullable;
 import java.io.*;
 import java.nio.file.*;
 import java.util.ArrayList;
@@ -37,6 +37,9 @@ public abstract class LocalFileSystemBase extends LocalFileSystem {
   private static final FileAttributes FAKE_ROOT_ATTRIBUTES = new FileAttributes(true, false, false, false, DEFAULT_LENGTH, DEFAULT_TIMESTAMP, false);
 
   private final List<LocalFileOperationsHandler> myHandlers = new ArrayList<>();
+
+  private final DiskQueryRelay<String, FileAttributes> myAttrGetter = new DiskQueryRelay<>(FileSystemUtil::getAttributes);
+  private final DiskQueryRelay<File, String[]> myChildrenGetter = new DiskQueryRelay<>(dir -> dir.list());
 
   @Override
   @Nullable
@@ -57,22 +60,25 @@ public abstract class LocalFileSystemBase extends LocalFileSystem {
 
   @Nonnull
   private static File convertToIOFile(@Nonnull VirtualFile file) {
+    return new File(toIoPath(file));
+  }
+
+  @Nonnull
+  protected static String toIoPath(@Nonnull VirtualFile file) {
     String path = file.getPath();
     if (StringUtil.endsWithChar(path, ':') && path.length() == 2 && SystemInfo.isWindows) {
-      path += '/';  // makes 'C:' resolve to a root directory of the drive C:, not the current directory on that drive
+      // makes 'C:' resolve to a root directory of the drive C:, not the current directory on that drive
+      path += '/';
     }
-    return new File(path);
+    return path;
   }
 
   @Nonnull
   private static File convertToIOFileAndCheck(@Nonnull VirtualFile file) throws FileNotFoundException {
     File ioFile = convertToIOFile(file);
 
-    if (SystemInfo.isUnix) { // avoid opening fifo files
-      FileAttributes attributes = FileSystemUtil.getAttributes(ioFile);
-      if (attributes != null && !attributes.isFile()) {
-        throw new FileNotFoundException("Not a file: " + ioFile + " (type=" + attributes.type + ')');
-      }
+    if (SystemInfo.isUnix && file.is(VFileProperty.SPECIAL)) { // avoid opening fifo files
+      throw new FileNotFoundException("Not a file: " + ioFile + " (type=" + FileSystemUtil.getAttributes(ioFile) + ')');
     }
 
     return ioFile;
@@ -121,8 +127,7 @@ public abstract class LocalFileSystemBase extends LocalFileSystem {
   @Nonnull
   @Override
   public String[] list(@Nonnull VirtualFile file) {
-    File directory = convertToIOFile(file);
-    String[] names = directory.list(DirectoryAccessChecker.getFileFilter(directory));
+    String[] names = myChildrenGetter.accessDiskWithCheckCanceled(convertToIOFile(file));
     return names == null ? ArrayUtil.EMPTY_STRING_ARRAY : names;
   }
 
@@ -701,12 +706,15 @@ public abstract class LocalFileSystemBase extends LocalFileSystem {
 
   @Override
   public FileAttributes getAttributes(@Nonnull VirtualFile file) {
-    String path = normalize(file.getPath());
-    if (path == null) return null;
-    if (file.getParent() == null && path.startsWith("//")) {
-      return FAKE_ROOT_ATTRIBUTES;  // fake Windows roots
+    String path = file.getPath();
+    if (SystemInfo.isWindows && file.getParent() == null && path.startsWith("//")) {
+      return FAKE_ROOT_ATTRIBUTES;  // UNC roots
     }
-    return FileSystemUtil.getAttributes(FileUtil.toSystemDependentName(path));
+    return getAttributes(path);
+  }
+
+  protected FileAttributes getAttributes(@Nonnull String path) {
+    return myAttrGetter.accessDiskWithCheckCanceled(FileUtilRt.toSystemDependentName(path));
   }
 
   @Override

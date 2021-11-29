@@ -60,9 +60,8 @@ import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.dataholder.Key;
 import org.jdom.Element;
-import org.jetbrains.annotations.NotNull;
-
 import javax.annotation.Nonnull;
+
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
@@ -434,7 +433,7 @@ public class DesktopEditorsSplitters extends EditorsSplittersBase<DesktopEditorW
   @RequiredUIAccess
   @Override
   @Nullable
-  public EditorWindow openInRightSplit(@NotNull VirtualFile file, boolean requestFocus) {
+  public EditorWindow openInRightSplit(@Nonnull VirtualFile file, boolean requestFocus) {
     DesktopEditorWindow window = getCurrentWindow();
 
     if (window == null) {

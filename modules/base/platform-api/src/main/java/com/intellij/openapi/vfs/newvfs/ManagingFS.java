@@ -4,11 +4,12 @@ package com.intellij.openapi.vfs.newvfs;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.vfs.VirtualFile;
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
+import javax.annotation.Nullable;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.util.function.Function;
 
 /**
  * @author max
@@ -76,4 +77,7 @@ public abstract class ManagingFS implements FileSystemInterface {
 
   @Nullable
   public abstract VirtualFile findFileById(int id);
+
+  @Nonnull
+  protected abstract <P, R> Function<P, R> accessDiskWithCheckCanceled(Function<? super P, ? extends R> function);
 }
