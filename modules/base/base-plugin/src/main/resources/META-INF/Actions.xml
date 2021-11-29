@@ -170,7 +170,7 @@
     </group>
 
     <!-- grouping for Settings -> Keymap -> Version Control Systems -->
-    <group id="Diff.KeymapGroup" text="Diff \&amp;\&amp; Merge">
+    <group id="Diff.KeymapGroup" text="Diff &amp;&amp; Merge">
       <action id="Diff.ShowDiff" class="com.intellij.openapi.actionSystem.EmptyAction" icon="consulo.platform.base.PlatformIconGroup@actions.diff"/>
       <!-- CommonShortcuts.getDiff() -->
       <action id="CompareTwoFiles" class="com.intellij.diff.actions.CompareFilesAction" icon="consulo.platform.base.PlatformIconGroup@actions.diff"/>
