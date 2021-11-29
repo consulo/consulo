@@ -69,12 +69,7 @@ public class NotificationsConfigurablePanel extends JPanel implements Disposable
 
     myDisplayBalloons = new JCheckBox("Display balloon notifications");
     myDisplayBalloons.setMnemonic('b');
-    myDisplayBalloons.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        myTable.repaint();
-      }
-    });
+    myDisplayBalloons.addActionListener(e -> myTable.repaint());
 
     mySystemNotifications = new JCheckBox("Enable system notifications");
     mySystemNotifications.setMnemonic('s');

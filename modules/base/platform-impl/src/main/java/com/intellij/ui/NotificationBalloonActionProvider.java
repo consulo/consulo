@@ -19,19 +19,16 @@ import com.intellij.icons.AllIcons;
 import com.intellij.notification.impl.NotificationsConfigurable;
 import com.intellij.notification.impl.NotificationsConfigurationImpl;
 import com.intellij.openapi.options.ShowSettingsUtil;
-import com.intellij.openapi.util.Computable;
-import com.intellij.util.Consumer;
 import com.intellij.util.ui.JBRectangle;
 import consulo.awt.TargetAWT;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.InputEvent;
-import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,10 +46,7 @@ public class NotificationBalloonActionProvider implements BalloonImpl.ActionProv
 
   private static final Rectangle CloseHoverBounds = new JBRectangle(5, 5, 12, 10);
 
-  public NotificationBalloonActionProvider(@Nonnull BalloonImpl balloon,
-                                           @Nullable Component repaintPanel,
-                                           @Nonnull BalloonLayoutData layoutData,
-                                           @Nullable String displayGroupId) {
+  public NotificationBalloonActionProvider(@Nonnull BalloonImpl balloon, @Nullable Component repaintPanel, @Nonnull BalloonLayoutData layoutData, @Nullable String displayGroupId) {
     myLayoutData = layoutData;
     myDisplayGroupId = displayGroupId;
     myBalloon = balloon;
@@ -62,77 +56,58 @@ public class NotificationBalloonActionProvider implements BalloonImpl.ActionProv
   @Nonnull
   @Override
   public List<BalloonImpl.ActionButton> createActions() {
-    myActions = new ArrayList<BalloonImpl.ActionButton>();
+    myActions = new ArrayList<>();
 
-    if (!myLayoutData.showSettingButton || myDisplayGroupId == null ||
-        !NotificationsConfigurationImpl.getInstanceImpl().isRegistered(myDisplayGroupId)) {
+    if (!myLayoutData.showSettingButton || myDisplayGroupId == null || !NotificationsConfigurationImpl.getInstanceImpl().isRegistered(myDisplayGroupId)) {
       mySettingButton = null;
     }
     else {
-      mySettingButton = myBalloon.new ActionButton(
-              AllIcons.Ide.Notification.Gear, AllIcons.Ide.Notification.GearHover,
-              "Configure Notification", new Consumer<MouseEvent>() {
-        @Override
-        public void consume(MouseEvent event) {
-          myBalloon.runWithSmartFadeoutPause(new Runnable() {
-            @Override
-            public void run() {
-              final NotificationsConfigurable configurable = new NotificationsConfigurable();
-              ShowSettingsUtil.getInstance().editConfigurable(myLayoutData.project, configurable, new Runnable() {
+      mySettingButton =
+              myBalloon.new ActionButton(AllIcons.Ide.Notification.Gear, AllIcons.Ide.Notification.GearHover, "Configure Notification", event -> myBalloon.runWithSmartFadeoutPause(new Runnable() {
                 @Override
+                @RequiredUIAccess
                 public void run() {
-                  //noinspection ConstantConditions
-                  configurable.enableSearch(myDisplayGroupId).run();
+                  ShowSettingsUtil.getInstance().showAndSelect(myLayoutData.project, NotificationsConfigurable.class, notificationsConfigurable -> {
+                    notificationsConfigurable.enableSearch(myDisplayGroupId).run();
+                  });
                 }
-              });
-            }
-          });
-        }
-      }) {
-        @Override
-        public void repaint() {
-          super.repaint();
-          if (myRepaintPanel != null) {
-            myRepaintPanel.repaint();
-          }
-        }
-      };
+              })) {
+                @Override
+                public void repaint() {
+                  super.repaint();
+                  if (myRepaintPanel != null) {
+                    myRepaintPanel.repaint();
+                  }
+                }
+              };
       myActions.add(mySettingButton);
 
       if (myRepaintPanel != null) {
-        myLayoutData.showActions = new Computable<Boolean>() {
-          @Override
-          public Boolean compute() {
-            for (BalloonImpl.ActionButton action : myActions) {
-              if (!action.isShowing() || !action.hasPaint()) {
-                return Boolean.FALSE;
-              }
+        myLayoutData.showActions = () -> {
+          for (BalloonImpl.ActionButton action : myActions) {
+            if (!action.isShowing() || !action.hasPaint()) {
+              return Boolean.FALSE;
             }
-            return Boolean.TRUE;
           }
+          return Boolean.TRUE;
         };
       }
     }
 
-    myCloseButton = myBalloon.new ActionButton(
-            AllIcons.Ide.Notification.Close, AllIcons.Ide.Notification.CloseHover,
-            "Close Notification (Alt-Click close all notifications)", new Consumer<MouseEvent>() {
-      @Override
-      public void consume(MouseEvent event) {
-        final int modifiers = event.getModifiers();
-        //noinspection SSBasedInspection
-        SwingUtilities.invokeLater(new Runnable() {
-          @Override
-          public void run() {
-            if ((modifiers & InputEvent.ALT_MASK) != 0) {
-              myLayoutData.closeAll.run();
-            }
-            else {
-              myBalloon.hide();
-            }
+    myCloseButton = myBalloon.new ActionButton(AllIcons.Ide.Notification.Close, AllIcons.Ide.Notification.CloseHover, "Close Notification (Alt-Click close all notifications)", event -> {
+      final int modifiers = event.getModifiers();
+      //noinspection SSBasedInspection
+      SwingUtilities.invokeLater(new Runnable() {
+        @Override
+        public void run() {
+          if ((modifiers & InputEvent.ALT_MASK) != 0) {
+            myLayoutData.closeAll.run();
           }
-        });
-      }
+          else {
+            myBalloon.hide();
+          }
+        }
+      });
     }) {
       @Override
       protected void paintIcon(@Nonnull Graphics g, @Nonnull Image icon) {
@@ -150,8 +125,7 @@ public class NotificationBalloonActionProvider implements BalloonImpl.ActionProv
     Insets borderInsets = myBalloon.getShadowBorderInsets();
     int x = bounds.x + bounds.width - borderInsets.right - closeSize.width - myLayoutData.configuration.rightActionsOffset.width;
     int y = bounds.y + borderInsets.top + myLayoutData.configuration.rightActionsOffset.height;
-    myCloseButton.setBounds(x - CloseHoverBounds.x, y - CloseHoverBounds.y,
-                            closeSize.width + CloseHoverBounds.width, closeSize.height + CloseHoverBounds.height);
+    myCloseButton.setBounds(x - CloseHoverBounds.x, y - CloseHoverBounds.y, closeSize.width + CloseHoverBounds.width, closeSize.height + CloseHoverBounds.height);
 
     if (mySettingButton != null) {
       Dimension size = mySettingButton.getPreferredSize();

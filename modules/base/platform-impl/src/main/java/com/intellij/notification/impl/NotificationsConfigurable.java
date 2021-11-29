@@ -19,6 +19,7 @@ import com.intellij.notification.impl.ui.NotificationsConfigurablePanel;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.options.SearchableConfigurable;
+import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ui.annotation.RequiredUIAccess;
 import org.jetbrains.annotations.Nls;
@@ -48,9 +49,10 @@ public class NotificationsConfigurable implements Configurable, SearchableConfig
 
   @RequiredUIAccess
   @Override
-  public JComponent createComponent() {
+  public JComponent createComponent(@Nonnull Disposable uiDisposable) {
     if (myComponent == null) {
       myComponent = new NotificationsConfigurablePanel();
+      Disposer.register(uiDisposable, myComponent);
     }
 
     return myComponent;
@@ -77,10 +79,7 @@ public class NotificationsConfigurable implements Configurable, SearchableConfig
   @RequiredUIAccess
   @Override
   public void disposeUIResources() {
-    if(myComponent != null) {
-      Disposer.dispose(myComponent);
-      myComponent = null;
-    }
+    myComponent = null;
   }
 
   @Override
@@ -91,11 +90,6 @@ public class NotificationsConfigurable implements Configurable, SearchableConfig
 
   @Override
   public Runnable enableSearch(final String option) {
-    return new Runnable() {
-      @Override
-      public void run() {
-        myComponent.selectGroup(option);
-      }
-    };
+    return () -> myComponent.selectGroup(option);
   }
 }
