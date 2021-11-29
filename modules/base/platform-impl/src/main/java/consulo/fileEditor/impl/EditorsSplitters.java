@@ -17,17 +17,18 @@ package consulo.fileEditor.impl;
 
 import com.intellij.openapi.application.AccessToken;
 import com.intellij.openapi.fileEditor.FileEditor;
-import consulo.util.dataholder.Key;
 import com.intellij.openapi.vfs.VirtualFile;
 import consulo.annotation.DeprecationInfo;
 import consulo.desktop.util.awt.migration.AWTComponentProvider;
 import consulo.ui.Component;
-import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.util.dataholder.Key;
 import org.jdom.Element;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.swing.*;
 import java.util.List;
 
 /**
@@ -104,6 +105,22 @@ public interface EditorsSplitters extends AWTComponentProvider {
   void setTabLayoutPolicy(int scrollTabLayout);
 
   void trimToSize(final int editor_tab_limit);
+
+  @Nullable
+  @RequiredUIAccess
+  default EditorWindow openInRightSplit(@Nonnull VirtualFile file) {
+    return openInRightSplit(file, true);
+  }
+
+  @Nullable
+  @RequiredUIAccess
+  default EditorWindow openInRightSplit(@Nonnull VirtualFile file, boolean requestFocus) {
+    EditorWindow window = getCurrentWindow();
+    if (window == null) {
+      return null;
+    }
+    return window.split(SwingConstants.VERTICAL, true, file, true);
+  }
 
   @Nonnull
   default Component getUIComponent() {

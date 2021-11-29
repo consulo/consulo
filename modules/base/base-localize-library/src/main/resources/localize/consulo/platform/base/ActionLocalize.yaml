@@ -2674,3 +2674,7 @@ action.ChangesView.ApplyPatchFromClipboard.description:
   text: Apply a patch to the sources of the project
 action.SearchEverywhere.text:
   text: Search Everywhere
+action.OpenInRightSplit.text:
+  text: Open in Right Split
+action.OpenInRightSplit.description:
+  text: Split editor area into 2 tab groups and open the current file to the right group

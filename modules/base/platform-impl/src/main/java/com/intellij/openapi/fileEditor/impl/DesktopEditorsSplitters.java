@@ -33,7 +33,6 @@ import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Splitter;
-import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -53,6 +52,7 @@ import com.intellij.util.ui.UIUtil;
 import consulo.annotation.DeprecationInfo;
 import consulo.desktop.util.awt.migration.AWTComponentProviderUtil;
 import consulo.disposer.Disposer;
+import consulo.fileEditor.impl.EditorWindow;
 import consulo.fileEditor.impl.EditorWithProviderComposite;
 import consulo.fileEditor.impl.EditorsSplittersBase;
 import consulo.logging.Logger;
@@ -60,6 +60,7 @@ import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.dataholder.Key;
 import org.jdom.Element;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -428,6 +429,31 @@ public class DesktopEditorsSplitters extends EditorsSplittersBase<DesktopEditorW
       }
     }
     return null;
+  }
+
+  @RequiredUIAccess
+  @Override
+  @Nullable
+  public EditorWindow openInRightSplit(@NotNull VirtualFile file, boolean requestFocus) {
+    DesktopEditorWindow window = getCurrentWindow();
+
+    if (window == null) {
+      return null;
+    }
+    Container parent = window.myPanel.getParent();
+    if (parent instanceof Splitter) {
+      JComponent component = ((Splitter)parent).getSecondComponent();
+      if (component != window.myPanel) {
+        //reuse
+        EditorWindow rightSplitWindow = findWindowWith(component);
+        if (rightSplitWindow != null) {
+          myManager.openFileWithProviders(file, requestFocus, rightSplitWindow);
+          return rightSplitWindow;
+        }
+      }
+    }
+
+    return window.split(SwingConstants.VERTICAL, true, file, requestFocus);
   }
 
   public boolean isFloating() {

@@ -384,6 +384,7 @@
         <group id="ToolWindowsGroup" class="com.intellij.ide.actions.ToolWindowsGroup" popup="true"/>
 
         <action id="EditSource" class="com.intellij.ide.actions.EditSourceAction"/>
+        <action id="OpenInRightSplit" class="com.intellij.ide.actions.OpenInRightSplitAction" icon="consulo.platform.base.PlatformIconGroup@actions.splitvertically"/>
         <action id="ViewSource" class="com.intellij.ide.actions.ViewSourceAction"/>
         <separator/>
         <group id="ViewRecentActions">
@@ -1659,6 +1660,7 @@
       <action id="UsageView.Rerun" class="com.intellij.usages.actions.RerunSearchAction" icon="consulo.platform.base.PlatformIconGroup@actions.rerun" use-shortcut-of="Rerun"/>
       <separator/>
       <reference ref="EditSource"/>
+      <reference ref="OpenInRightSplit"/>
       <action id="UsageView.Include" class="com.intellij.usages.actions.IncludeUsageAction"/>
       <action id="UsageView.Exclude" class="com.intellij.usages.actions.ExcludeUsageAction" use-shortcut-of="$Delete"/>
       <separator/>
@@ -2423,5 +2425,12 @@
 
       <add-to-group group-id="MainMenu" anchor="after" relative-to-action="ToolsMenu"/>
     </group>
+
+    <reference id="OpenInRightSplit">
+      <add-to-group group-id="RunContextPopupGroup" anchor="last"/>
+    </reference>
+    <!--<reference id="SplitChooser">
+      <add-to-group group-id="RunContextPopupGroup" anchor="after" relative-to-action="OpenInRightSplit"/>
+    </reference>    -->
   </actions>
 </consulo-plugin>
