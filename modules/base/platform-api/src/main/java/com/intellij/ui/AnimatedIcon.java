@@ -49,11 +49,10 @@ public class AnimatedIcon implements Icon, Image {
       super(DELAY, ICONS.toArray(new Icon[0]));
     }
 
-    public static final int DELAY = 50;
-    public static final List<Icon> ICONS =
-            immutableList(AllIcons.Process.FS.Step_1, AllIcons.Process.FS.Step_2, AllIcons.Process.FS.Step_3, AllIcons.Process.FS.Step_4, AllIcons.Process.FS.Step_5, AllIcons.Process.FS.Step_6,
-                          AllIcons.Process.FS.Step_7, AllIcons.Process.FS.Step_8, AllIcons.Process.FS.Step_9, AllIcons.Process.FS.Step_10, AllIcons.Process.FS.Step_11, AllIcons.Process.FS.Step_12,
-                          AllIcons.Process.FS.Step_13, AllIcons.Process.FS.Step_14, AllIcons.Process.FS.Step_15, AllIcons.Process.FS.Step_16, AllIcons.Process.FS.Step_17, AllIcons.Process.FS.Step_18);
+    public static final int DELAY = 130;
+    public static final List<Image> ICONS =
+            List.of(AllIcons.Process.Step_1, AllIcons.Process.Step_2, AllIcons.Process.Step_3, AllIcons.Process.Step_4, AllIcons.Process.Step_5, AllIcons.Process.Step_6, AllIcons.Process.Step_7,
+                    AllIcons.Process.Step_8);
 
     public static final AnimatedIcon INSTANCE = new Default();
   }
