@@ -8,7 +8,7 @@ import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.options.ShowSettingsUtil;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectBundle;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class ModuleLinkFilter implements Filter {
 
@@ -20,7 +20,7 @@ public class ModuleLinkFilter implements Filter {
   }
 
   @Override
-  public Result applyFilter(@NotNull String line, int entireLength) {
+  public Result applyFilter(@Nonnull String line, int entireLength) {
     int start = line.indexOf("[");
     if (start == -1) return null;
     int end = line.indexOf(']', start + 1);
@@ -32,7 +32,7 @@ public class ModuleLinkFilter implements Filter {
     int lineStart = entireLength - line.length();
     return new Result(lineStart + start + 1 + (isTests ? TESTS_PREFIX.length() : 0), lineStart + end, new HyperlinkInfo() {
       @Override
-      public void navigate(@NotNull Project project) {
+      public void navigate(@Nonnull Project project) {
         if (project.isDisposed()) return;
         Module module = ModuleManager.getInstance(myProject).findModuleByName(moduleName);
         if (module == null || module.isDisposed()) return;

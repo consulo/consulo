@@ -26,9 +26,8 @@ import com.intellij.pom.Navigatable;
 import consulo.localize.LocalizeValue;
 import consulo.util.lang.StringUtil;
 import org.jetbrains.annotations.Nls;
-import org.jetbrains.annotations.NotNull;
-
 import javax.annotation.Nonnull;
+
 import javax.annotation.Nullable;
 import java.io.File;
 import java.util.*;
@@ -41,15 +40,15 @@ import java.util.*;
  */
 public class BuildViewServiceImpl implements BuildViewService {
   private static class ConsolePrinter {
-    @NotNull
+    @Nonnull
     private final BuildProgress<BuildProgressDescriptor> progress;
     private volatile boolean isNewLinePosition = true;
 
-    private ConsolePrinter(@NotNull BuildProgress<BuildProgressDescriptor> progress) {
+    private ConsolePrinter(@Nonnull BuildProgress<BuildProgressDescriptor> progress) {
       this.progress = progress;
     }
 
-    private void print(@NotNull @Nls String message, @NotNull MessageEvent.Kind kind) {
+    private void print(@Nonnull @Nls String message, @Nonnull MessageEvent.Kind kind) {
       String text = wrapWithAnsiColor(kind, message);
       if (!isNewLinePosition && !com.intellij.openapi.util.text.StringUtil.startsWithChar(message, '\r')) {
         text = '\n' + text;
@@ -166,7 +165,7 @@ public class BuildViewServiceImpl implements BuildViewService {
         myBuildProgress.progress(lastMessage, 100, (long)(fraction * 100), "%");
       }
 
-      @NotNull
+      @Nonnull
       private Stack<String> getTextStack() {
         Stack< String> stack = myTextStack;
         if (stack == null) myTextStack = stack = new Stack<>();
@@ -256,7 +255,7 @@ public class BuildViewServiceImpl implements BuildViewService {
     }
   }
 
-  private static String getMessageTitle(@NotNull CompilerMessage compilerMessage) {
+  private static String getMessageTitle(@Nonnull CompilerMessage compilerMessage) {
     String message = null;
     String[] messages = com.intellij.openapi.util.text.StringUtil.splitByLines(compilerMessage.getMessage());
     if (messages.length > 1) {
@@ -282,18 +281,18 @@ public class BuildViewServiceImpl implements BuildViewService {
   }
 
   @Nullable
-  private BuildIssue buildIssue(@NotNull Collection<String> moduleNames,
-                                @NotNull String title,
-                                @NotNull String message,
-                                @NotNull MessageEvent.Kind kind,
+  private BuildIssue buildIssue(@Nonnull Collection<String> moduleNames,
+                                @Nonnull String title,
+                                @Nonnull String message,
+                                @Nonnull MessageEvent.Kind kind,
                                 @Nullable VirtualFile virtualFile,
                                 @Nullable Navigatable navigatable) {
     // TODO [VISTALL] use ep? like in idea
     return null;
   }
 
-  @NotNull
-  private static MessageEvent.Kind convertCategory(@NotNull CompilerMessageCategory category) {
+  @Nonnull
+  private static MessageEvent.Kind convertCategory(@Nonnull CompilerMessageCategory category) {
     switch (category) {
       case ERROR:
         return MessageEvent.Kind.ERROR;
