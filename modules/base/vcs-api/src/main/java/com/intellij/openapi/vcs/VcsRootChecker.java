@@ -16,8 +16,9 @@
 package com.intellij.openapi.vcs;
 
 import com.intellij.openapi.extensions.ExtensionPointName;
-import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Checks VCS roots, revealing invalid roots (registered in the settings, but not related to real VCS roots on disk)
@@ -48,7 +49,7 @@ public abstract class VcsRootChecker {
    * @param path - path to check
    * @return true if it is a DOT_DIR
    */
-  public boolean isVcsDir(@javax.annotation.Nullable String path) {
+  public boolean isVcsDir(@Nullable String path) {
     return false;
   }
 }

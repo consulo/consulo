@@ -189,6 +189,7 @@ public class UIUtil {
   public static final String CHECKBOX_ROLLOVER_PROPERTY = "JCheckBox.rollOver.rectangle";
   public static final String CHECKBOX_PRESSED_PROPERTY = "JCheckBox.pressed.rectangle";
 
+
   /**
    * Alt+click does copy text from tooltip or balloon to clipboard.
    * We collect this text from components recursively and this generic approach might 'grab' unexpected text fragments.
@@ -199,8 +200,10 @@ public class UIUtil {
 
   private static final String[] STANDARD_FONT_SIZES = {"8", "9", "10", "11", "12", "14", "16", "18", "20", "22", "24", "26", "28", "36", "48", "72"};
 
-  @NonNls
   public static final String BORDER_LINE = "<hr size=1 noshade>";
+  public static final String BR = "<br/>";
+  public static final String HR = "<hr/>";
+  public static final String LINE_SEPARATOR = "\n";
 
   /**
    * The comment to display when the cursor is over the component,

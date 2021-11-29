@@ -80,6 +80,11 @@ public class VcsNotifier {
   }
 
   @Nonnull
+  public Notification notifyError(@Nullable String displayId, @Nonnull String title, @Nonnull String message, @Nonnull NotificationAction... actions) {
+    return notifyError(title, message, null).addActions(actions);
+  }
+
+  @Nonnull
   public Notification notifyError(@Nonnull String title, @Nonnull String message) {
     return notifyError(title, message, null);
   }
@@ -172,6 +177,11 @@ public class VcsNotifier {
   @Nonnull
   public Notification notifyMinorInfo(@Nonnull String title, @Nonnull String message, @Nullable NotificationListener listener) {
     return notify(STANDARD_NOTIFICATION, title, message, NotificationType.INFORMATION, listener);
+  }
+
+  @Nonnull
+  public Notification notifyMinorInfo(@Nullable String displayId, @Nonnull String title, @Nonnull String message, @Nonnull NotificationAction... actions) {
+    return notify(STANDARD_NOTIFICATION, title, message, NotificationType.INFORMATION, null).addActions(actions);
   }
 
   public Notification logInfo(@Nonnull String title, @Nonnull String message) {

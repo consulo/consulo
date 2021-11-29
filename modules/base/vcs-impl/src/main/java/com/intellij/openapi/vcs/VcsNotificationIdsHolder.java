@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2012 JetBrains s.r.o.
+ * Copyright 2013-2021 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,30 +15,10 @@
  */
 package com.intellij.openapi.vcs;
 
-import javax.annotation.Nonnull;
-
 /**
- * Incorrect VCS root definition: either an unregistered, or an incorrectly registered VCS root.
- *
- * @author Kirill Likhodedov
- * @see VcsRootChecker
+ * from kotlin
  */
-public interface VcsRootError {
-
-  enum Type {
-    EXTRA_MAPPING,
-    UNREGISTERED_ROOT
-  }
-
-  /**
-   * @return type of mapping error
-   */
-  @Nonnull
-  Type getType();
-
-  /**
-   * @return affected directory mapping
-   */
-  @Nonnull
-  VcsDirectoryMapping getMapping();
+public class VcsNotificationIdsHolder {
+  public static final String ROOTS_REGISTERED = "vcs.roots.registered";
+  public static final String ROOTS_INVALID = "vcs.roots.invalid";
 }

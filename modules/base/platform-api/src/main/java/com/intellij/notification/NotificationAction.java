@@ -21,11 +21,23 @@ import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.function.BiConsumer;
 
 /**
  * @author Alexander Lobas
  */
 public abstract class NotificationAction extends DumbAwareAction {
+  @Nonnull
+  public static NotificationAction create(@Nullable String text, @RequiredUIAccess @Nonnull BiConsumer<? super AnActionEvent, ? super Notification> actionPerformed) {
+    return new NotificationAction(text) {
+      @RequiredUIAccess
+      @Override
+      public void actionPerformed(@Nonnull AnActionEvent e, @Nonnull Notification notification) {
+        actionPerformed.accept(e, notification);
+      }
+    };
+  }
+
   public NotificationAction(@Nullable String text) {
     super(text);
   }

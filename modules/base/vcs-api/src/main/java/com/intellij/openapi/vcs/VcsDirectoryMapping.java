@@ -56,6 +56,13 @@ public class VcsDirectoryMapping {
     return myDirectory;
   }
 
+  /**
+   * @return if this mapping denotes "no vcs" aka "&lt;none&gt;".
+   */
+  public boolean isNoneMapping() {
+    return myVcs.isEmpty();
+  }
+
   private void initSystemIndependentPath() {
     mySystemIdependentPath = FileUtil.toSystemIndependentName(myDirectory);
   }

@@ -42,8 +42,8 @@ import com.intellij.util.ui.*;
 import com.intellij.xml.util.XmlStringUtil;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nls;
-
 import javax.annotation.Nonnull;
+
 import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.table.TableCellEditor;
@@ -99,6 +99,10 @@ public class VcsDirectoryConfigurationPanel extends JPanel implements Configurab
         return o1.type.ordinal() - o2.type.ordinal();
       }
     };
+
+    static MapInfo unregistered(@Nonnull VcsDirectoryMapping mapping) {
+      return new MapInfo(mapping, Type.UNREGISTERED);
+    }
 
     static MapInfo unregistered(@Nonnull String path, @Nonnull String vcs) {
       return new MapInfo(new VcsDirectoryMapping(path, vcs), Type.UNREGISTERED);
@@ -368,7 +372,7 @@ public class VcsDirectoryConfigurationPanel extends JPanel implements Configurab
     if (!errors.isEmpty()) {
       mappings.add(MapInfo.SEPARATOR);
       for (VcsRootError error : errors) {
-        mappings.add(MapInfo.unregistered(error.getMapping(), error.getVcsKey().getName()));
+        mappings.add(MapInfo.unregistered(error.getMapping()));
       }
     }
 

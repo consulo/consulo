@@ -295,6 +295,14 @@ public class Notification {
   }
 
   @Nonnull
+  public Notification addActions(@Nonnull AnAction... actions) {
+    for (AnAction action : actions) {
+      addAction(action);
+    }
+    return this;
+  }
+
+  @Nonnull
   public Notification addAction(@Nonnull AnAction action) {
     if (myActions == null) {
       myActions = new ArrayList<>();

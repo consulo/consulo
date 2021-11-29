@@ -28,9 +28,9 @@ import com.intellij.util.xmlb.annotations.AbstractCollection;
 import com.intellij.util.xmlb.annotations.OptionTag;
 import com.intellij.util.xmlb.annotations.Property;
 import com.intellij.util.xmlb.annotations.Tag;
+import jakarta.inject.Singleton;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
-import jakarta.inject.Singleton;
 
 import java.util.*;
 
@@ -305,4 +305,7 @@ public final class VcsConfiguration implements PersistentStateComponent<VcsConfi
     IGNORED_UNREGISTERED_ROOTS = unregisteredRoots;
   }
 
+  public boolean isIgnoredUnregisteredRoot(@Nonnull String root) {
+    return IGNORED_UNREGISTERED_ROOTS.contains(root);
+  }
 }

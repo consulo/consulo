@@ -45,6 +45,7 @@ import com.intellij.openapi.wm.StatusBar;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.containers.ContainerUtilRt;
 import consulo.logging.Logger;
+import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;
@@ -653,27 +654,30 @@ public class VcsUtil {
   }
 
   @Nonnull
-  public static List<VcsDirectoryMapping> addMapping(@Nonnull List<VcsDirectoryMapping> existingMappings,
-                                                     @Nonnull String path,
-                                                     @Nonnull String vcs) {
+  public static List<VcsDirectoryMapping> addMapping(@Nonnull List<? extends VcsDirectoryMapping> existingMappings, @Nonnull @NonNls String path, @Nonnull @NonNls String vcs) {
+    return addMapping(existingMappings, new VcsDirectoryMapping(path, vcs));
+  }
+
+  @Nonnull
+  public static List<VcsDirectoryMapping> addMapping(@Nonnull List<? extends VcsDirectoryMapping> existingMappings, @Nonnull VcsDirectoryMapping newMapping) {
     List<VcsDirectoryMapping> mappings = new ArrayList<>(existingMappings);
     for (Iterator<VcsDirectoryMapping> iterator = mappings.iterator(); iterator.hasNext(); ) {
       VcsDirectoryMapping mapping = iterator.next();
-      if (mapping.isDefaultMapping() && StringUtil.isEmptyOrSpaces(mapping.getVcs())) {
+      if (mapping.isDefaultMapping() && mapping.isNoneMapping()) {
         LOG.debug("Removing <Project> -> <None> mapping");
         iterator.remove();
       }
-      else if (FileUtil.pathsEqual(mapping.getDirectory(), path)) {
+      else if (FileUtil.pathsEqual(mapping.getDirectory(), newMapping.getDirectory())) {
         if (!StringUtil.isEmptyOrSpaces(mapping.getVcs())) {
-          LOG.warn("Substituting existing mapping [" + path + "] -> [" + mapping.getVcs() + "] with [" + vcs + "]");
+          LOG.warn("Substituting existing mapping [" + mapping.getDirectory() + "] -> [" + mapping.getVcs() + "] with [" + mapping.getVcs() + "]");
         }
         else {
-          LOG.debug("Removing [" + path + "] -> <None> mapping");
+          LOG.debug("Removing [" + mapping.getDirectory() + "] -> <None> mapping");
         }
         iterator.remove();
       }
     }
-    mappings.add(new VcsDirectoryMapping(path, vcs));
+    mappings.add(newMapping);
     return mappings;
   }
 
