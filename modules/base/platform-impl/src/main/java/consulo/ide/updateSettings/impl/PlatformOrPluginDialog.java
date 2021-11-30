@@ -283,7 +283,7 @@ public class PlatformOrPluginDialog extends DialogWrapper {
 
             application.getMessageBus().syncPublisher(PluginActionListener.TOPIC).pluginInstalled(pluginDescriptor.getPluginId());
 
-            if (pluginDescriptor.isExperimental()) {
+            if (myType == PlatformOrPluginUpdateResult.Type.PLUGIN_INSTALL && pluginDescriptor.isExperimental()) {
               updateHistory.setShowExperimentalWarning(true);
             }
           }
