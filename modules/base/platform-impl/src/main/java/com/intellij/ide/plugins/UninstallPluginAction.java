@@ -21,16 +21,17 @@ import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.Presentation;
 import com.intellij.openapi.application.Application;
-import consulo.container.plugin.PluginId;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.ui.Messages;
 import consulo.container.plugin.PluginDescriptor;
+import consulo.container.plugin.PluginId;
 import consulo.container.plugin.PluginIds;
 import consulo.ide.plugins.InstalledPluginsState;
 import consulo.ide.plugins.PluginActionListener;
 import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.io.IOException;
 import java.util.List;
 import java.util.Set;
@@ -113,22 +114,26 @@ public class UninstallPluginAction extends AnAction implements DumbAware {
     }
   }
 
-  private static void uninstallPlugin(PluginDescriptor descriptor, PluginManagerMain host) {
+  public static void uninstallPlugin(PluginDescriptor descriptor, @Nullable PluginManagerMain host) {
     PluginId pluginId = descriptor.getPluginId();
 
     Application.get().getMessageBus().syncPublisher(PluginActionListener.TOPIC).pluginUninstalled(pluginId);
 
-    PluginManagerCore.markAsDeletedPlugin(descriptor);
     try {
       PluginInstallUtil.prepareToUninstall(pluginId);
+
+      PluginManagerCore.markAsDeletedPlugin(descriptor);
+      
       final Set<PluginId> installedPlugins = InstalledPluginsState.getInstance().getInstalledPlugins();
       while (installedPlugins.contains(pluginId)) {
         installedPlugins.remove(pluginId);
       }
-      host.setRequireShutdown(descriptor.isEnabled());
+      if (host != null) {
+        host.setRequireShutdown(descriptor.isEnabled());
+      }
     }
-    catch (IOException e1) {
-      PluginManagerMain.LOG.error(e1);
+    catch (IOException e) {
+      PluginManagerMain.LOG.error(e);
     }
   }
 }

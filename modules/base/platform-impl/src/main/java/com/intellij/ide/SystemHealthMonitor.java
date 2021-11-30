@@ -17,6 +17,7 @@ package com.intellij.ide;
 
 import com.intellij.concurrency.JobScheduler;
 import com.intellij.diagnostic.VMOptions;
+import com.intellij.ide.plugins.UninstallPluginAction;
 import com.intellij.jna.JnaLoader;
 import com.intellij.notification.*;
 import com.intellij.openapi.actionSystem.AnActionEvent;
@@ -42,6 +43,7 @@ import com.sun.jna.Pointer;
 import consulo.application.AccessRule;
 import consulo.container.boot.ContainerPathManager;
 import consulo.container.plugin.PluginDescriptor;
+import consulo.container.plugin.PluginIds;
 import consulo.container.plugin.PluginManager;
 import consulo.ide.updateSettings.impl.UpdateHistory;
 import consulo.logging.Logger;
@@ -80,10 +82,46 @@ public class SystemHealthMonitor extends PreloadingActivity {
   public void preload(@Nonnull ProgressIndicator indicator) {
     checkEARuntime();
     checkExperimentalPlugins();
+    checkObsoletePlugins();
     checkReservedCodeCacheSize();
     checkSignalBlocking();
     checkHiDPIMode();
     startDiskSpaceMonitoring();
+  }
+
+  private void checkObsoletePlugins() {
+    List<PluginDescriptor> plugins = PluginManager.getPlugins().stream().filter(it -> PluginIds.getObsoletePlugins().contains(it.getPluginId())).collect(Collectors.toList());
+    if (plugins.isEmpty()) {
+      return;
+    }
+
+    StringBuilder builder = new StringBuilder();
+    builder.append(StringUtil.join(plugins, (it) -> it.getName(), ", "));
+    if (plugins.size() == 1) {
+      builder.append(" is ");
+    }
+    else {
+      builder.append(" are ");
+    } 
+    builder.append(" obsolete. You can uninstall without consequences.");
+
+    Application app = Application.get();
+    app.invokeLater(() -> {
+      Notification notification = GROUP.createNotification(builder.toString(), NotificationType.WARNING);
+      notification.addAction(new DumbAwareAction("Uninstall...") {
+        @RequiredUIAccess
+        @Override
+        public void actionPerformed(@Nonnull AnActionEvent e) {
+          notification.expire();
+
+          for (PluginDescriptor plugin : plugins) {
+            UninstallPluginAction.uninstallPlugin(plugin, null);
+          }
+        }
+      });
+      notification.setImportant(true);
+      Notifications.Bus.notify(notification);
+    });
   }
 
   private void checkExperimentalPlugins() {
@@ -109,7 +147,7 @@ public class SystemHealthMonitor extends PreloadingActivity {
 
     Application app = Application.get();
     app.invokeLater(() -> {
-      Notification notification = GROUP.createNotification("", builder.toString(), NotificationType.WARNING, null);
+      Notification notification = GROUP.createNotification(builder.toString(), NotificationType.WARNING);
       notification.addAction(new DumbAwareAction("Got it!") {
         @RequiredUIAccess
         @Override

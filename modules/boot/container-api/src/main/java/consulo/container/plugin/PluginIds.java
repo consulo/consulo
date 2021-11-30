@@ -34,6 +34,8 @@ public final class PluginIds {
 
   public static final PluginId CONSULO_PLATFORM_WEB = PluginId.getId("consulo.platform.web");
 
+  private static final Set<PluginId> ourMergedObsoletePlugins = new HashSet<PluginId>(Arrays.asList(PluginId.getId("org.intellij.intelliLang")));
+
   private static final Set<PluginId> ourPlatformIds = new HashSet<PluginId>(Arrays.asList(CONSULO_PLATFORM_DESKTOP, CONSULO_PLATFORM_DESKTOP_SWT, CONSULO_PLATFORM_WEB));
 
   public static boolean isPlatformImplementationPlugin(@Nonnull PluginId pluginId) {
@@ -42,5 +44,10 @@ public final class PluginIds {
 
   public static boolean isPlatformPlugin(@Nonnull PluginId pluginId) {
     return CONSULO_PLATFORM_BASE.equals(pluginId) || isPlatformImplementationPlugin(pluginId);
+  }
+
+  @Nonnull
+  public static Set<PluginId> getObsoletePlugins() {
+    return ourMergedObsoletePlugins;
   }
 }
