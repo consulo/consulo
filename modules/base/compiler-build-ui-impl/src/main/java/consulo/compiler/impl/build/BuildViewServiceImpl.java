@@ -13,7 +13,6 @@ import com.intellij.compiler.progress.BuildViewService;
 import com.intellij.compiler.progress.ModuleLinkFilter;
 import com.intellij.execution.filters.RegexpFilter;
 import com.intellij.execution.filters.UrlFilter;
-import com.intellij.internal.statistic.beans.ConvertUsagesUtil;
 import com.intellij.openapi.compiler.CompilerMessage;
 import com.intellij.openapi.compiler.CompilerMessageCategory;
 import com.intellij.openapi.fileEditor.OpenFileDescriptor;
@@ -26,8 +25,8 @@ import com.intellij.pom.Navigatable;
 import consulo.localize.LocalizeValue;
 import consulo.util.lang.StringUtil;
 import org.jetbrains.annotations.Nls;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.File;
 import java.util.*;
@@ -147,51 +146,52 @@ public class BuildViewServiceImpl implements BuildViewService {
     }
     ((ProgressIndicatorEx)indicator).addStateDelegate(new DummyProgressIndicator() {
       private final Map<String, Set<String>> mySeenMessages = new HashMap<>();
-      private String lastMessage = null;
-      private Stack<String> myTextStack;
+      private LocalizeValue lastMessage = LocalizeValue.empty();
+      private Stack<LocalizeValue> myTextStack;
 
       @Override
       public void setTextValue(@Nonnull LocalizeValue text) {
-        addIndicatorNewMessagesAsBuildOutput(text.getValue());
+        addIndicatorNewMessagesAsBuildOutput(text);
       }
 
       @Override
       public void pushState() {
-        getTextStack().push(indicator.getText());
+        getTextStack().push(indicator.getTextValue());
       }
 
       @Override
       public void setFraction(double fraction) {
-        myBuildProgress.progress(lastMessage, 100, (long)(fraction * 100), "%");
+        myBuildProgress.progress(lastMessage.get(), 100, (long)(fraction * 100), "%");
       }
 
       @Nonnull
-      private Stack<String> getTextStack() {
-        Stack< String> stack = myTextStack;
+      private Stack<LocalizeValue> getTextStack() {
+        Stack<LocalizeValue> stack = myTextStack;
         if (stack == null) myTextStack = stack = new Stack<>();
         return stack;
       }
 
-      private void addIndicatorNewMessagesAsBuildOutput(@Nls String msg) {
-        Stack<String> textStack = getTextStack();
+      private void addIndicatorNewMessagesAsBuildOutput(@Nls LocalizeValue msg) {
+        Stack<LocalizeValue> textStack = getTextStack();
         if (!textStack.isEmpty() && msg.equals(textStack.peek())) {
           textStack.pop();
           return;
         }
-        if (ConvertUsagesUtil.isEmptyOrSpaces(msg) || msg.equals(lastMessage)) return;
+        if (StringUtil.isEmptyOrSpaces(msg.getValue()) || msg.equals(lastMessage)) return;
         lastMessage = msg;
 
-        int start = msg.indexOf("[");
+        String msgText = msg.get();
+        int start = msgText.indexOf("[");
         if (start >= 1) {
-          int end = msg.indexOf(']', start + 1);
+          int end = msgText.indexOf(']', start + 1);
           if (end != -1) {
-            String buildTargetNameCandidate = msg.substring(start + 1, end);
+            String buildTargetNameCandidate = msgText.substring(start + 1, end);
             Set<String> targets = mySeenMessages.computeIfAbsent(buildTargetNameCandidate, unused -> new HashSet<>());
-            boolean isSeenMessage = !targets.add(msg.substring(0, start));
+            boolean isSeenMessage = !targets.add(msgText.substring(0, start));
             if (isSeenMessage) return;
           }
         }
-        myConsolePrinter.print(msg, MessageEvent.Kind.SIMPLE);
+        myConsolePrinter.print(msgText, MessageEvent.Kind.SIMPLE);
       }
     });
   }
