@@ -488,8 +488,6 @@ public class AllIcons {
     public static final Image PluginManager = PlatformIconGroup.generalPluginManager(); // 32x32
     public static final Image Progress = PlatformIconGroup.generalProgress(); // 8x10
     public static final Image ProjectConfigurable = PlatformIconGroup.generalProjectConfigurable(); // 9x9
-    public static final Image ProjectConfigurableBanner = PlatformIconGroup.generalProjectConfigurableBanner(); // 9x9
-    public static final Image ProjectConfigurableSelected = PlatformIconGroup.generalProjectConfigurableSelected(); // 9x9
     public static final Image ProjectSettings = PlatformIconGroup.generalProjectSettings(); // 16x16
     public static final Image ProjectStructure = PlatformIconGroup.generalProjectStructure(); // 16x16
     public static final Image ProjectTab = PlatformIconGroup.generalProjectTab(); // 16x16

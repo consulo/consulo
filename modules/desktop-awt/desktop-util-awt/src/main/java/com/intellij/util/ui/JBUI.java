@@ -485,15 +485,13 @@ public class JBUI {
         private static final Color BACKGROUND = JBColor.namedColor("Tree.selectionBackground", DEFAULT_RENDERER_SELECTION_BACKGROUND);
         private static final Color FOREGROUND = JBColor.namedColor("Tree.selectionForeground", Label.foreground(true));
 
-        public static
         @Nonnull
-        Color background(boolean focused) {
+        public static Color background(boolean focused) {
           return focused ? BACKGROUND : Inactive.BACKGROUND;
         }
 
-        public static
         @Nonnull
-        Color foreground(boolean focused) {
+        public static Color foreground(boolean focused) {
           return focused ? FOREGROUND : Inactive.FOREGROUND;
         }
 

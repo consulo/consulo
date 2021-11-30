@@ -16,14 +16,13 @@
 package com.intellij.openapi.ui;
 
 import com.intellij.icons.AllIcons;
-import com.intellij.openapi.options.OptionsBundle;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.components.JBLabel;
 import com.intellij.ui.components.labels.LinkLabel;
 import com.intellij.ui.components.labels.LinkListener;
 import com.intellij.ui.components.panels.NonOpaquePanel;
-import java.util.HashMap;
 import com.intellij.util.ui.JBUI;
 
 import javax.annotation.Nonnull;
@@ -33,16 +32,17 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
 class Banner extends NonOpaquePanel implements PropertyChangeListener {
   private int myBannerMinHeight;
   private final JComponent myText = new MyText();
-  private final JLabel myProjectIcon = new JBLabel(AllIcons.General.ProjectConfigurableBanner, SwingConstants.LEFT);
+  private final JLabel myProjectIcon = new JBLabel(AllIcons.General.ProjectConfigurable, SwingConstants.LEFT);
   private final NonOpaquePanel myActionsPanel = new NonOpaquePanel(new FlowLayout(FlowLayout.RIGHT, 2, 2));
 
-  private final Map<Action, LinkLabel> myActions = new HashMap<Action, LinkLabel>();
+  private final Map<Action, LinkLabel> myActions = new HashMap<>();
 
   public Banner() {
     setLayout(new BorderLayout());
@@ -119,7 +119,7 @@ class Banner extends NonOpaquePanel implements PropertyChangeListener {
   public void forProject(Project project) {
     if (project != null) {
       myProjectIcon.setVisible(true);
-      myProjectIcon.setText(OptionsBundle.message(project.isDefault() ? "configurable.default.project.tooltip" : "configurable.current.project.tooltip"));
+      myProjectIcon.setToolTipText(ProjectBundle.message(project.isDefault() ? "configurable.default.project.tooltip" : "configurable.current.project.tooltip"));
     }
     else {
       myProjectIcon.setVisible(false);

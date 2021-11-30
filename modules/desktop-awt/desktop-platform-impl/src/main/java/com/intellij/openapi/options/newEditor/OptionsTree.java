@@ -18,30 +18,37 @@ package com.intellij.openapi.options.newEditor;
 import com.intellij.ide.projectView.PresentationData;
 import com.intellij.ide.util.treeView.NodeDescriptor;
 import com.intellij.ide.util.treeView.NodeRenderer;
+import com.intellij.ide.util.treeView.PresentableNodeDescriptor;
+import com.intellij.openapi.editor.colors.EditorColorsManager;
+import com.intellij.openapi.editor.colors.EditorColorsScheme;
+import com.intellij.openapi.editor.colors.TextAttributesKey;
+import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.SearchableConfigurable;
 import com.intellij.openapi.options.UnnamedConfigurable;
 import com.intellij.openapi.options.ex.ConfigurableWrapper;
-import com.intellij.ui.ScrollPaneFactory;
-import com.intellij.ui.SimpleTextAttributes;
-import com.intellij.ui.TreeUIHelper;
+import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.ui.*;
+import com.intellij.ui.scale.JBUIScale;
 import com.intellij.ui.treeStructure.*;
 import com.intellij.ui.treeStructure.filtered.FilteringTreeBuilder;
 import com.intellij.ui.treeStructure.filtered.FilteringTreeStructure;
 import com.intellij.util.containers.ContainerUtil;
+import com.intellij.util.ui.JBInsets;
 import com.intellij.util.ui.JBUI;
+import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.tree.TreeUtil;
 import com.intellij.util.ui.update.MergingUpdateQueue;
 import com.intellij.util.ui.update.Update;
+import consulo.awt.TargetAWT;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.TextItemPresentation;
 import consulo.ui.TreeNode;
-import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.app.impl.settings.UnifiedConfigurableComparator;
+import consulo.ui.color.ColorValue;
 import consulo.ui.decorator.SwingUIDecorator;
-import consulo.ui.image.Image;
 import consulo.ui.image.ImageKey;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.lang.Pair;
@@ -53,6 +60,7 @@ import javax.swing.*;
 import javax.swing.event.TreeExpansionEvent;
 import javax.swing.event.TreeExpansionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.TreeCellRenderer;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 import java.awt.*;
@@ -65,6 +73,37 @@ import java.util.*;
 import java.util.function.BiConsumer;
 
 public class OptionsTree implements Disposable, OptionsEditorColleague {
+  private class MyRenderer extends CellRendererPanel implements TreeCellRenderer {
+    final NodeRenderer myTextLabel = new NodeRenderer();
+    final JLabel myNodeIcon = new JLabel();
+    final JLabel myProjectIcon = new JLabel();
+
+    MyRenderer() {
+      setLayout(new BorderLayout());
+      add(BorderLayout.CENTER, myTextLabel);
+      add(BorderLayout.WEST, myNodeIcon);
+      add(BorderLayout.EAST, myProjectIcon);
+      setBorder(JBUI.Borders.empty(1, 0, 3, 10));
+    }
+
+    @Override
+    public Component getTreeCellRendererComponent(JTree tree, Object value, boolean selected, boolean expanded, boolean leaf, int row, boolean hasFocus) {
+      myTextLabel.getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, hasFocus);
+      myTextLabel.setFont(tree.getFont());
+      myProjectIcon.setIcon(null);
+      
+      Base baseNode = extractNode(value);
+      if (baseNode instanceof ConfigurableNode) {
+        Configurable configurable = baseNode.getConfigurable();
+
+        if (OptionsEditor.isProjectConfigurable(configurable)) {
+          myProjectIcon.setIcon(TargetAWT.to(PlatformIconGroup.generalProjectConfigurable()));
+        }
+      }
+      return this;
+    }
+  }
+
   private final Configurable[] myConfigurables;
   FilteringTreeBuilder myBuilder;
   private Root myRoot;
@@ -103,40 +142,7 @@ public class OptionsTree implements Disposable, OptionsEditorColleague {
     myTree.setRootVisible(false);
     myTree.setRowHeight(JBUI.scale(24));
     myTree.setShowsRootHandles(true);
-    myTree.setCellRenderer(new NodeRenderer() {
-      private int myIconGap = 5;
-
-      @RequiredUIAccess
-      @Override
-      public void customizeCellRenderer(@Nonnull JTree tree, Object value, boolean selected, boolean expanded, boolean leaf, int row, boolean hasFocus) {
-        super.customizeCellRenderer(tree, value, selected, expanded, leaf, row, hasFocus);
-
-        Base node = extractNode(value);
-
-        if (node instanceof ConfigurableNode) {
-          Configurable configurable = node.getConfigurable();
-
-          if (OptionsEditor.isProjectConfigurable(configurable)) {
-            ImageKey imageKey = selected ? PlatformIconGroup.generalProjectConfigurableSelected() : PlatformIconGroup.generalProjectConfigurableBanner();
-            setIcon(imageKey);
-            setIconOnTheRight(true);
-          }
-        }
-      }
-
-      @Nonnull
-      @Override
-      public Dimension getPreferredSize() {
-        Dimension size = super.getPreferredSize();
-        size.width += JBUI.scale(myIconGap);
-        return size;
-      }
-
-      @Override
-      protected void doPaintIcon(@Nonnull Graphics2D g, @Nonnull Image icon, int offset) {
-        super.doPaintIcon(g, icon, offset + JBUI.scale(myIconGap));
-      }
-    });
+    myTree.setCellRenderer(new MyRenderer());
     myBuilder = new MyBuilder(structure);
     myBuilder.setFilteringMerge(300, null);
     Disposer.register(this, myBuilder);
