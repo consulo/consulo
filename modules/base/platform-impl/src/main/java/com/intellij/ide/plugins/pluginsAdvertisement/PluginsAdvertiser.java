@@ -15,9 +15,8 @@
  */
 package com.intellij.ide.plugins.pluginsAdvertisement;
 
-import com.intellij.notification.NotificationDisplayType;
-import com.intellij.notification.NotificationGroup;
-import com.intellij.notification.NotificationType;
+import com.intellij.notification.*;
+import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.fileTypes.FileNameMatcher;
 import com.intellij.openapi.fileTypes.FileNameMatcherFactory;
 import com.intellij.openapi.fileTypes.FileTypeFactory;
@@ -36,10 +35,10 @@ import consulo.ide.plugins.pluginsAdvertisement.PluginsAdvertiserDialog;
 import consulo.ide.plugins.pluginsAdvertisement.PluginsAdvertiserHolder;
 import consulo.ide.updateSettings.UpdateSettings;
 import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.swing.event.HyperlinkEvent;
 import java.util.*;
 
 public class PluginsAdvertiser implements StartupActivity.Background, DumbAware {
@@ -85,24 +84,29 @@ public class PluginsAdvertiser implements StartupActivity.Background, DumbAware 
         return;
       }
 
-      ourGroup.createNotification(ourGroup.getDisplayId(),
-                                  "Features covered by non-installed plugins are detected.<br>" + "<a href=\"configure\">Configure plugins...</a><br>" + "<a href=\"ignore\">Ignore All</a>",
-                                  NotificationType.INFORMATION, (notification, event) -> {
-                if (event.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
-                  final String description = event.getDescription();
-                  if ("ignore".equals(description)) {
-                    for (UnknownExtension feature : unknownExtensions) {
-                      collectorSuggester.ignoreFeature(feature);
-                    }
-                    notification.expire();
-                  }
-                  else if ("configure".equals(description)) {
-                    notification.expire();
+      Notification notification =
+              ourGroup.createNotification("Features covered by non-installed plugins are detected.", NotificationType.INFORMATION);
+      notification.addAction(new NotificationAction("Install plugins...") {
+        @RequiredUIAccess
+        @Override
+        public void actionPerformed(@Nonnull AnActionEvent e, @Nonnull Notification notification) {
+          notification.expire();
 
-                    new PluginsAdvertiserDialog(project, pluginDescriptors, new ArrayList<>(ids)).showAsync();
-                  }
-                }
-              }).notify(project);
+          new PluginsAdvertiserDialog(project, pluginDescriptors, new ArrayList<>(ids)).showAsync();
+        }
+      });
+      notification.addAction(new NotificationAction("Ignore") {
+        @RequiredUIAccess
+        @Override
+        public void actionPerformed(@Nonnull AnActionEvent e, @Nonnull Notification notification) {
+          notification.expire();
+
+          for (UnknownExtension feature : unknownExtensions) {
+            collectorSuggester.ignoreFeature(feature);
+          }
+        }
+      });
+      notification.notify(project);
     });
   }
 
@@ -127,7 +131,7 @@ public class PluginsAdvertiser implements StartupActivity.Background, DumbAware 
   private static boolean isMyFeature(String extensionValue, UnknownExtension feature) {
     if (feature.getExtensionKey().equals(FileTypeFactory.FILE_TYPE_FACTORY_EP.getName())) {
       FileNameMatcher matcher = createMatcher(extensionValue);
-      return matcher != null && matcher.accept(feature.getValue());
+      return matcher != null && matcher.acceptsCharSequence(feature.getValue());
     }
     else {
       return extensionValue.equals(feature.getValue());
