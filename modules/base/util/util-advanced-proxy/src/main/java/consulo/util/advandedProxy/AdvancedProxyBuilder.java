@@ -18,6 +18,7 @@ package consulo.util.advandedProxy;
 import consulo.util.advandedProxy.internal.AdvancedProxyFacade;
 import consulo.util.advandedProxy.internal.impl.bytebuddy.ByteBuddyAdvancedProxyFacade;
 import consulo.util.collection.ArrayUtil;
+import consulo.util.nodep.JavaVersion;
 import net.sf.cglib.proxy.CglibAdvancedProxyFacade;
 
 import javax.annotation.Nonnull;
@@ -34,7 +35,7 @@ public class AdvancedProxyBuilder<T> {
   private static final AdvancedProxyFacade ourAdvancedProxyFacade;
 
   static {
-    if (Boolean.getBoolean("consulo.enable.bytebuddy.proxy")) {
+    if (Boolean.getBoolean("consulo.enable.bytebuddy.proxy") || JavaVersion.current().isAtLeast(17)) {
       ourAdvancedProxyFacade = new ByteBuddyAdvancedProxyFacade();
     }
     else {
