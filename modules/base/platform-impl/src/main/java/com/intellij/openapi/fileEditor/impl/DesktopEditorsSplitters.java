@@ -97,6 +97,8 @@ public class DesktopEditorsSplitters extends EditorsSplittersBase<DesktopEditorW
           super.paintComponent(g);
           g.setColor(UIUtil.isUnderDarcula() ? UIUtil.getBorderColor() : new Color(0, 0, 0, 50));
           g.drawLine(0, 0, getWidth(), 0);
+
+          EditorEmptyTextPainter.ourInstance.paintEmptyText(this, g);
         }
       }
     };
