@@ -46,7 +46,7 @@ public class ByteBuddyAdvancedProxyFacade implements AdvancedProxyFacade {
   private final ByteBuddy myBuddy;
 
   public ByteBuddyAdvancedProxyFacade() {
-    myBuddy = new ByteBuddy().with(ClassFileVersion.JAVA_V11).with(TypeValidation.ENABLED);
+    myBuddy = new ByteBuddy().with(ClassFileVersion.JAVA_V11).with(TypeValidation.DISABLED);
   }
 
   @Nonnull
