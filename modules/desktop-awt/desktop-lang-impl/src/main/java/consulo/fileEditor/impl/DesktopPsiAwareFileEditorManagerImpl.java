@@ -67,11 +67,6 @@ public class DesktopPsiAwareFileEditorManagerImpl extends PsiAwareFileEditorMana
   }
 
   @Override
-  public void flipTabs() {
-    myPanels.revalidate();
-  }
-
-  @Override
   protected void initUI() {
     if (myPanels == null) {
       synchronized (myInitLock) {

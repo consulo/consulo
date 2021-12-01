@@ -166,7 +166,7 @@ public abstract class JBTabsImpl extends JComponent
 
   private JBTabsPosition myPosition = JBTabsPosition.top;
 
-  private final TabsBorder myBorder = new TabsBorder(this);
+  private final TabsBorder myBorder;
   private BaseNavigationAction myNextAction;
   private BaseNavigationAction myPrevAction;
 
@@ -220,6 +220,9 @@ public abstract class JBTabsImpl extends JComponent
     myFocusManager = focusManager != null ? focusManager : getGlobalInstance();
 
     setOpaque(true);
+
+    myBorder = createBorder();
+
     setPaintBorder(-1, -1, -1, -1);
 
     myNavigationActions = new DefaultActionGroup();
@@ -324,6 +327,10 @@ public abstract class JBTabsImpl extends JComponent
     }
 
     updateUI();
+  }
+
+  public TabsBorder createBorder() {
+    return new TabsBorder(this);
   }
 
   protected SingleRowLayout createSingleRowLayout() {
@@ -1486,7 +1493,7 @@ public abstract class JBTabsImpl extends JComponent
   public Rectangle layoutComp(int componentX, int componentY, final JComponent comp, int deltaWidth, int deltaHeight) {
     final Insets insets = getLayoutInsets();
 
-    final Insets border = isHideTabs() ? JBUI.emptyInsets() : myBorder.getEffectiveBorder();
+    final Insets border = myBorder.getEffectiveBorder();
 
     final Insets inner = getInnerInsets();
     border.top += inner.top;

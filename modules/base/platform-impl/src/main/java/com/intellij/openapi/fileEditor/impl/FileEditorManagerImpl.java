@@ -509,22 +509,6 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
     }
   }
 
-
-  @Override
-  public void flipTabs() {
-  }
-
-  @Override
-  public boolean tabsMode() {
-    return false;
-  }
-
-  private void setTabsMode(final boolean mode) {
-    if (tabsMode() != mode) {
-      flipTabs();
-    }
-  }
-
   @Override
   public boolean isInSplitter() {
     final EditorWindow currentWindow = getSplitters().getCurrentWindow();
@@ -809,8 +793,6 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
       compositeRef.set(window.findFileComposite(file));
       boolean newEditor = compositeRef.isNull();
       if (newEditor) {
-        clearWindowIfNeeded(window);
-
         getProject().getMessageBus().syncPublisher(FileEditorManagerListener.Before.FILE_EDITOR_MANAGER).beforeFileOpened(this, file);
 
         FileEditor[] newEditors = new FileEditor[newProviders.length];
@@ -942,12 +924,6 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
       providers = providerList.toArray(new FileEditorProvider[providerList.size()]);
     }
     return createEditorWithProviderComposite(file, editors, providers, this);
-  }
-
-  private static void clearWindowIfNeeded(@Nonnull EditorWindow window) {
-    if (UISettings.getInstance().getEditorTabPlacement() == UISettings.TABS_NONE || UISettings.getInstance().getPresentationMode()) {
-      window.clear();
-    }
   }
 
   private void restoreEditorState(@Nonnull VirtualFile file, @Nonnull FileEditorProvider provider, @Nonnull final FileEditor editor, HistoryEntry entry, boolean newEditor) {
@@ -1381,13 +1357,11 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
     getMainSplitters().startListeningFocus();
 
     final FileStatusManager fileStatusManager = FileStatusManager.getInstance(myProject);
-    if (fileStatusManager != null) {
-      /*
-        Updates tabs colors
-       */
-      final MyFileStatusListener myFileStatusListener = new MyFileStatusListener();
-      fileStatusManager.addFileStatusListener(myFileStatusListener, myProject);
-    }
+    /*
+      Updates tabs colors
+     */
+    final MyFileStatusListener myFileStatusListener = new MyFileStatusListener();
+    fileStatusManager.addFileStatusListener(myFileStatusListener, myProject);
     connection.subscribe(FileTypeManager.TOPIC, new MyFileTypeListener());
     connection.subscribe(ProjectTopics.PROJECT_ROOTS, new MyRootsListener());
 
@@ -1403,7 +1377,6 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
 
     StartupManager.getInstance(myProject).registerPostStartupActivity((DumbAwareRunnable)() -> {
       if (myProject.isDisposed()) return;
-      setTabsMode(UISettings.getInstance().getEditorTabPlacement() != UISettings.TABS_NONE);
 
       ToolWindowManager.getInstance(myProject).invokeLater(() -> {
         if (!myProject.isDisposed()) {
@@ -1817,10 +1790,9 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
     @Override
     public void uiSettingsChanged(final UISettings uiSettings) {
       assertDispatchThread();
-      setTabsMode(uiSettings.getEditorTabPlacement() != UISettings.TABS_NONE && !uiSettings.getPresentationMode());
+      getMainSplitters().revalidate();
 
       for (EditorsSplitters each : getAllSplitters()) {
-
         each.setTabsPlacement(uiSettings.getEditorTabPlacement());
         each.trimToSize(uiSettings.getEditorTabLimit());
 

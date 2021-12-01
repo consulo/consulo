@@ -118,10 +118,6 @@ public abstract class FileEditorManagerEx extends FileEditorManager implements B
 
   public abstract void changeSplitterOrientation();
 
-  public abstract void flipTabs();
-
-  public abstract boolean tabsMode();
-
   public abstract boolean isInSplitter();
 
   public abstract boolean hasOpenedFile();

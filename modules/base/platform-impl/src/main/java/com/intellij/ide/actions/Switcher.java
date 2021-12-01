@@ -687,7 +687,7 @@ public class Switcher extends AnAction implements DumbAware {
         EditorWindow currentWindow = editorManager.getCurrentWindow();
         VirtualFile currentFile = currentWindow != null ? currentWindow.getSelectedFile() : null;
         for (int i = filesForInit.size() - 1; i >= minIndex; i--) {
-          if (pinned && UISettings.getInstance().getEditorTabPlacement() != UISettings.TABS_NONE && selectedFiles.contains(filesForInit.get(i))) {
+          if (pinned && UISettings.getInstance().getEditorTabPlacement() != UISettings.PLACEMENT_EDITOR_TAB_NONE && selectedFiles.contains(filesForInit.get(i))) {
             continue;
           }
 

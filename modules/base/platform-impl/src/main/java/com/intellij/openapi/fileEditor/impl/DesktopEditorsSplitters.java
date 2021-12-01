@@ -135,6 +135,11 @@ public class DesktopEditorsSplitters extends EditorsSplittersBase<DesktopEditorW
     return ModalityState.stateForComponent(myComponent);
   }
 
+  @Override
+  public void revalidate() {
+    myComponent.revalidate();
+  }
+
   @Nonnull
   @Override
   protected DesktopEditorWindow[] createArray(int size) {
@@ -211,12 +216,6 @@ public class DesktopEditorsSplitters extends EditorsSplittersBase<DesktopEditorW
       }
 
       writeWindow(res, findWindowWith(comp));
-      return res;
-    }
-    else if (comp instanceof DesktopEditorWindow.TCompForTablessMode) {
-      DesktopEditorWithProviderComposite composite = ((DesktopEditorWindow.TCompForTablessMode)comp).myEditor;
-      Element res = new Element("leaf");
-      res.addContent(writeComposite(composite.getFile(), composite, false, composite));
       return res;
     }
     else {

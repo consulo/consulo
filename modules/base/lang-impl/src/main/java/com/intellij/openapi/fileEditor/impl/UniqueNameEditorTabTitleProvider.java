@@ -24,7 +24,7 @@ public class UniqueNameEditorTabTitleProvider implements EditorTabTitleProvider 
     }
 
     // Even though this is a 'tab title provider' it is used also when tabs are not shown, namely for building IDE frame title.
-    String uniqueName = uiSettings.getEditorTabPlacement() == UISettings.TABS_NONE
+    String uniqueName = uiSettings.getEditorTabPlacement() == UISettings.PLACEMENT_EDITOR_TAB_NONE
                         ? UniqueVFilePathBuilder.getInstance().getUniqueVirtualFilePath(project, file)
                         : UniqueVFilePathBuilder.getInstance().getUniqueVirtualFilePathWithinOpenedFileEditors(project, file);
     uniqueName = getEditorTabText(uniqueName, File.separator, uiSettings.getHideKnownExtensionInTabs());

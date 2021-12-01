@@ -134,4 +134,7 @@ public interface EditorsSplitters extends AWTComponentProvider {
   default javax.swing.JComponent getComponent() {
     throw new UnsupportedOperationException("Unsupported platform");
   }
+
+  default void revalidate() {
+  }
 }

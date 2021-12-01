@@ -175,20 +175,9 @@ final class TestEditorManagerImpl extends FileEditorManagerEx implements Disposa
     return "SplitTabContainer" + ((Object) counter).toString();
   }
 
-
   @Override
   public void changeSplitterOrientation() {
 
-  }
-
-  @Override
-  public void flipTabs() {
-
-  }
-
-  @Override
-  public boolean tabsMode() {
-    return false;
   }
 
   @Override

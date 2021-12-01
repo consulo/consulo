@@ -16,7 +16,6 @@
 package consulo.web.fileEditor.impl;
 
 import com.intellij.ide.DataManager;
-import com.intellij.ide.ui.UISettings;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.fileEditor.FileEditorManagerListener;
@@ -221,26 +220,11 @@ public class WebEditorWindow extends EditorWindowBase implements EditorWindow, D
           }
         }
 
-        if (disposeIfNeeded && getTabCount() == 0) {
-          //removeFromSplitter();
-          if (UISettings.getInstance().getEditorTabPlacement() == UISettings.TABS_NONE) {
-            //final EditorsSplitters owner = getOwner();
-            //if (owner != null) {
-            //  final ThreeComponentsSplitter splitter = UIUtil.getParentOfType(ThreeComponentsSplitter.class, owner.getComponent());
-            //  if (splitter != null) {
-            //    splitter.revalidate();
-            //    splitter.repaint();
-            //  }
-            //}
-          }
-        }
-        else {
-          //myPanel.revalidate();
-          //if (myTabbedPane == null) {
-          //  // in tabless mode
-          //  myPanel.repaint();
-          //}
-        }
+        //myPanel.revalidate();
+        //if (myTabbedPane == null) {
+        //  // in tabless mode
+        //  myPanel.repaint();
+        //}
       }
       finally {
         editorManager.removeSelectionRecord(file, this);

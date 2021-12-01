@@ -22,9 +22,6 @@ import com.intellij.ide.actions.ShowFilePathAction;
 import com.intellij.ide.ui.UISettings;
 import com.intellij.ide.ui.UISettingsListener;
 import com.intellij.ide.ui.customization.CustomActionsSchema;
-import com.intellij.openapi.fileEditor.impl.tabActions.CloseTab;
-import consulo.awt.TargetAWT;
-import consulo.disposer.Disposable;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.editor.colors.EditorColorsManager;
@@ -32,16 +29,18 @@ import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;
 import com.intellij.openapi.fileEditor.ex.IdeDocumentHistory;
+import com.intellij.openapi.fileEditor.impl.tabActions.CloseTab;
 import com.intellij.openapi.fileEditor.impl.text.FileDropHandler;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Queryable;
-import com.intellij.openapi.util.*;
+import com.intellij.openapi.util.ActionCallback;
+import com.intellij.openapi.util.AsyncResult;
+import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.*;
 import com.intellij.openapi.wm.ex.ToolWindowManagerEx;
 import com.intellij.openapi.wm.ex.ToolWindowManagerListener;
-import com.intellij.ui.ColorUtil;
 import com.intellij.ui.InplaceButton;
 import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.ui.docking.DockContainer;
@@ -54,15 +53,16 @@ import com.intellij.ui.tabs.impl.JBTabsImpl;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.TimedDeadzone;
 import com.intellij.util.ui.UIUtil;
+import consulo.awt.TargetAWT;
+import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.fileEditor.impl.EditorWindow;
 import consulo.util.dataholder.Key;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
-import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
@@ -89,8 +89,7 @@ public final class EditorTabbedContainer implements Disposable, CloseAction.Clos
     myWindow = window;
     myProject = project;
     final ActionManager actionManager = ActionManager.getInstance();
-    myTabs = new JBEditorTabs(project, actionManager, IdeFocusManager.getInstance(project), this);
-    myTabs.setBorder(new MyShadowBorder(myTabs));
+    myTabs = new JBEditorTabs(project, actionManager, IdeFocusManager.getInstance(project), this) ;
     myTabs.setTransferHandler(new MyTransferHandler());
     myTabs.setDataProvider(new MyDataProvider())
             .setPopupGroup(() -> (ActionGroup)CustomActionsSchema.getInstance().getCorrectedAction(IdeActions.GROUP_EDITOR_TAB_POPUP),
@@ -288,6 +287,7 @@ public final class EditorTabbedContainer implements Disposable, CloseAction.Clos
   }
 
   public void setTabPlacement(final int tabPlacement) {
+    myTabs.getPresentation().setHideTabs(false);
     switch (tabPlacement) {
       case UISettings.PLACEMENT_EDITOR_TAB_TOP:
         myTabs.getPresentation().setTabsPosition(JBTabsPosition.top);
@@ -300,6 +300,9 @@ public final class EditorTabbedContainer implements Disposable, CloseAction.Clos
         break;
       case UISettings.PLACEMENT_EDITOR_TAB_RIGHT:
         myTabs.getPresentation().setTabsPosition(JBTabsPosition.right);
+        break;
+      case UISettings.PLACEMENT_EDITOR_TAB_NONE:
+        myTabs.getPresentation().setHideTabs(true);
         break;
       default:
         throw new IllegalArgumentException("Unknown tab placement code=" + tabPlacement);
@@ -640,53 +643,6 @@ public final class EditorTabbedContainer implements Disposable, CloseAction.Clos
     @Override
     public boolean canImport(JComponent comp, DataFlavor[] transferFlavors) {
       return myFileDropHandler.canHandleDrop(transferFlavors);
-    }
-  }
-
-  private static class MyShadowBorder implements Border {
-    private final JBEditorTabs myTabs;
-
-    MyShadowBorder(JBEditorTabs tabs) {
-      myTabs = tabs;
-    }
-
-    @Override
-    public void paintBorder(Component component, Graphics g, int x, int y, int w, int h) {
-      Rectangle selectedBounds = myTabs.getSelectedBounds();
-      if (selectedBounds != null && selectedBounds.y > 0) selectedBounds = null;//Not first row selection
-      Rectangle bounds = new Rectangle(x, y, w, h);
-      g.setColor(UIUtil.CONTRAST_BORDER_COLOR);
-      drawLine(bounds, selectedBounds, g, 0);
-      if (UIUtil.isUnderDarcula() || true) { //remove shadow for all for awhile
-        return;
-      }
-      g.setColor(ColorUtil.withAlpha(UIUtil.CONTRAST_BORDER_COLOR, .5));
-      drawLine(bounds, selectedBounds, g, 1);
-      g.setColor(ColorUtil.withAlpha(UIUtil.CONTRAST_BORDER_COLOR, .2));
-      drawLine(bounds, selectedBounds, g, 2);
-    }
-
-    private static void drawLine(Rectangle bounds, @Nullable Rectangle selectedBounds, Graphics g, int yShift) {
-      if (selectedBounds != null) {
-        if (selectedBounds.x > 0) {
-          UIUtil.drawLine(g, bounds.x, bounds.y + yShift, selectedBounds.x - 2, bounds.y + yShift);
-        }
-        UIUtil.drawLine(g, selectedBounds.x + selectedBounds.width + 1, bounds.y + yShift, bounds.x + bounds.width, bounds.y + yShift);
-      }
-      else {
-        UIUtil.drawLine(g, bounds.x, bounds.y + yShift, bounds.x + bounds.width, bounds.y + yShift);
-      }
-    }
-
-
-    @Override
-    public Insets getBorderInsets(Component component) {
-      return JBUI.emptyInsets();
-    }
-
-    @Override
-    public boolean isBorderOpaque() {
-      return false;
     }
   }
 }

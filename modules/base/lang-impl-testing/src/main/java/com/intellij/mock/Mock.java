@@ -267,15 +267,6 @@ public class Mock {
     }
 
     @Override
-    public void flipTabs() {
-    }
-
-    @Override
-    public boolean tabsMode() {
-      return false;
-    }
-
-    @Override
     public boolean isInSplitter() {
       return false;
     }

@@ -36,7 +36,6 @@ import com.intellij.openapi.editor.markup.ErrorStripeRenderer;
 import com.intellij.openapi.util.ProperTextRange;
 import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.ui.HintHint;
-import com.intellij.ui.JBColor;
 import com.intellij.ui.PopupHandler;
 import com.intellij.ui.awt.RelativePoint;
 import com.intellij.ui.scale.JBUIScale;
@@ -252,12 +251,7 @@ public class DesktopEditorErrorPanel extends JComponent implements UISettingsLis
       hideMyEditorPreviewHint();
     }
 
-    if(source.EDITOR_TAB_PLACEMENT == UISettings.PLACEMENT_EDITOR_TAB_NONE) {
-      setBorder(JBUI.Borders.customLine(JBColor.border(), 1, 0, 0, 0));
-    }
-    else {
-      setBorder(JBUI.Borders.empty());
-    }
+    setBorder(JBUI.Borders.empty());
   }
 
   @RequiredUIAccess
