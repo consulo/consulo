@@ -372,8 +372,6 @@ public class AllIcons {
     public static final Image Custom = PlatformIconGroup.fileTypesCustom(); // 16x16
     public static final Image Diagram = PlatformIconGroup.actionsErDiagram(); // 16x16
     public static final Image Dtd = PlatformIconGroup.fileTypesDtd(); // 16x16
-    public static final Image Facelets = PlatformIconGroup.fileTypesFacelets(); // 16x16
-    public static final Image FacesConfig = PlatformIconGroup.fileTypesFacesConfig(); // 16x16
     public static final Image Htaccess = PlatformIconGroup.fileTypesHtaccess(); // 16x16
     public static final Image Html = PlatformIconGroup.fileTypesHtml(); // 16x16
     public static final Image Idl = PlatformIconGroup.fileTypesIdl(); // 16x16
