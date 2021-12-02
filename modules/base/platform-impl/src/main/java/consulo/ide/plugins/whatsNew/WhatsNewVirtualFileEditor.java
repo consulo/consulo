@@ -226,7 +226,7 @@ public class WhatsNewVirtualFileEditor extends UserDataHolderBase implements Fil
             children.add(HtmlChunk.nbsp());
           }
 
-          children.add(HtmlChunk.span().addText(pluginHistoryEntry.commitMessage));
+          children.add(WhatsNewCommitParser.parse(pluginHistoryEntry.commitMessage));
 
           if (!StringUtil.isEmptyOrSpaces(pluginHistoryEntry.commitHash)) {
             children.add(HtmlChunk.nbsp());
