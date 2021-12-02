@@ -20,9 +20,12 @@ import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.wm.IdeFocusManager;
+import com.intellij.ui.tabs.JBTabsPosition;
+import com.intellij.ui.tabs.TabsUtil;
 import com.intellij.ui.tabs.impl.singleRow.CompressibleSingleRowLayout;
 import com.intellij.ui.tabs.impl.singleRow.ScrollableSingleRowLayout;
 import com.intellij.ui.tabs.impl.singleRow.SingleRowLayout;
+import com.intellij.util.ui.JBUI;
 import consulo.disposer.Disposable;
 
 import javax.annotation.Nullable;
@@ -36,6 +39,16 @@ public class JBEditorTabs extends JBTabsImpl {
 
   public JBEditorTabs(@Nullable Project project, ActionManager actionManager, IdeFocusManager focusManager, @Nullable Disposable parent) {
     super(project, actionManager, focusManager, parent, true);
+  }
+
+  @Override
+  public TabsBorder createBorder() {
+    return new TabsBorder(this) {
+      @Override
+      protected Insets createEffectiveInsets(JBTabsPosition position) {
+        return JBUI.insets(position == JBTabsPosition.top ? TabsUtil.TABS_BORDER : 0, 0, 0, 0);
+      }
+    };
   }
 
   @Override
