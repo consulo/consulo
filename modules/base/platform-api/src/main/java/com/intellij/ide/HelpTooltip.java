@@ -20,6 +20,7 @@ import com.intellij.util.ui.JBEmptyBorder;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.JBValue;
 import com.intellij.util.ui.UIUtil;
+import com.intellij.util.ui.accessibility.ScreenReader;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -120,13 +121,13 @@ public class HelpTooltip {
 
   private BooleanSupplier masterPopupOpenCondition;
 
-  private ComponentPopupBuilder myPopupBuilder;
+  protected ComponentPopupBuilder myPopupBuilder;
   private Dimension myPopupSize;
   private JBPopup myPopup;
   private final Alarm popupAlarm = new Alarm();
   private boolean isOverPopup;
   private boolean isMultiline;
-  private int myDismissDelay;
+  private String myToolTipText;
 
   protected MouseAdapter myMouseListener;
 
@@ -263,7 +264,6 @@ public class HelpTooltip {
    * @param component is the owner component for the tooltip.
    */
   public void installOn(@Nonnull JComponent component) {
-    getDismissDelay();
     neverHide = neverHide || UIUtil.isHelpButton(component);
 
     createMouseListeners();
@@ -271,10 +271,6 @@ public class HelpTooltip {
 
     component.putClientProperty(TOOLTIP_PROPERTY, this);
     installMouseListeners(component);
-  }
-
-  protected final void getDismissDelay() {
-    myDismissDelay = Registry.intValue(isMultiline ? "ide.helptooltip.full.dismissDelay" : "ide.helptooltip.regular.dismissDelay");
   }
 
   protected final void createMouseListeners() {
@@ -452,16 +448,25 @@ public class HelpTooltip {
 
   private void scheduleShow(MouseEvent e, int delay) {
     popupAlarm.cancelAllRequests();
+
+    if (ScreenReader.isActive()) return; // Disable HelpTooltip in screen reader mode.
+
     popupAlarm.addRequest(() -> {
       initialShowScheduled = false;
-
       if (masterPopupOpenCondition == null || masterPopupOpenCondition.getAsBoolean()) {
-        myPopup = myPopupBuilder.createPopup();
-
         Component owner = e.getComponent();
+        String text = owner instanceof JComponent ? ((JComponent)owner).getToolTipText(e) : null;
+        if (myPopup != null && !myPopup.isDisposed()) {
+          if (StringUtil.isEmpty(text) && StringUtil.isEmpty(myToolTipText)) return; // do nothing if a tooltip become empty
+          if (StringUtil.equals(text, myToolTipText)) return; // do nothing if a tooltip is not changed
+          myPopup.cancel(); // cancel previous popup before showing a new one
+        }
+        myToolTipText = text;
+        myPopup = myPopupBuilder.createPopup();
         myPopup.show(new RelativePoint(owner, alignment.getPointFor(owner, myPopupSize, e.getPoint())));
         if (!neverHide) {
-          scheduleHide(true, myDismissDelay);
+          int dismissDelay = Registry.intValue(isMultiline ? "ide.helptooltip.full.dismissDelay" : "ide.helptooltip.regular.dismissDelay");
+          scheduleHide(true, dismissDelay);
         }
       }
     }, delay);
