@@ -30,6 +30,7 @@ import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.GraphicsConfig;
 import com.intellij.openapi.ui.Splitter;
+import com.intellij.openapi.ui.ThreeComponentsSplitter;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -211,7 +212,7 @@ public class DesktopEditorWindow extends EditorWindowBase implements EditorWindo
 
         beforePublisher.beforeFileClosed(editorManager, file);
 
-        if (editor != null) {
+        if (myTabbedPane != null && editor != null) {
           final int componentIndex = findComponentIndex(editor.getComponent());
           if (componentIndex >= 0) { // editor could close itself on decomposition
             final int indexToSelect = calcIndexToSelect(file, componentIndex);
@@ -237,7 +238,21 @@ public class DesktopEditorWindow extends EditorWindowBase implements EditorWindo
           myPanel.removeAll();
         }
 
-        myPanel.revalidate();
+        if (disposeIfNeeded && getTabCount() == 0) {
+          removeFromSplitter();
+          if (UISettings.getInstance().getEditorTabPlacement() == UISettings.TABS_NONE) {
+            final DesktopEditorsSplitters owner = getOwner();
+            final ThreeComponentsSplitter splitter = UIUtil.getParentOfType(ThreeComponentsSplitter.class, owner.getComponent());
+            if (splitter != null) {
+              splitter.revalidate();
+              splitter.repaint();
+            }
+          }
+        }
+        else {
+          myPanel.revalidate();
+          myPanel.repaint();
+        }
       }
       finally {
         editorManager.removeSelectionRecord(file, this);
