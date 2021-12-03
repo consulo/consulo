@@ -16,11 +16,10 @@
 package com.intellij.openapi.editor.impl;
 
 import com.intellij.ide.ui.UISettings;
-import com.intellij.openapi.util.SystemInfo;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.border.CustomLineBorder;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 
@@ -30,16 +29,12 @@ import java.awt.*;
 public class EditorHeaderComponent extends JPanel {
   public EditorHeaderComponent() {
     super(new BorderLayout(0, 0));
-    boolean topBorderRequired = !SystemInfo.isMac && UISettings.getInstance().EDITOR_TAB_PLACEMENT != UISettings.PLACEMENT_EDITOR_TAB_TOP &&
-                                !(UISettings.getInstance().SHOW_MAIN_TOOLBAR && UISettings.getInstance().SHOW_NAVIGATION_BAR);
-    setBorder(new CustomLineBorder(JBColor.border(), topBorderRequired ? 1 : 0, 0, 1, 0));
+    setBorder(new CustomLineBorder(JBColor.border(), 0, 0, 1, 0));
   }
 
   @Override
   public void paint(@Nonnull Graphics g) {
-    Graphics2D g2 = (Graphics2D)g;
-    g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-    g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+    UISettings.setupAntialiasing(g);
     super.paint(g);
   }
 }
