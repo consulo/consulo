@@ -790,7 +790,8 @@ public class AllIcons {
     public static final Image Pointcut = PlatformIconGroup.nodesPointcut(); // 16x16
     public static final Image PpFile = PlatformIconGroup.nodesPpFile(); // 16x16
     public static final Image PpInvalid = PlatformIconGroup.nodesPpInvalid(); // 16x16
-    public static final Image PpJar = PlatformIconGroup.nodesPpJar(); // 16x16
+    @Deprecated
+    public static final Image PpJar = PlatformIconGroup.fileTypesArchive();
     public static final Image PpLib = PlatformIconGroup.nodesPpLib(); // 16x16
     public static final Image PpLibFolder = PlatformIconGroup.nodesPpLibFolder(); // 16x16
     public static final Image PpWeb = PlatformIconGroup.nodesPpWeb(); // 16x16
