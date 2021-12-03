@@ -914,15 +914,10 @@ public class AllIcons {
     public static final Image Cvs = PlatformIconGroup.providersCvs(); // 16x16
     public static final Image Eclipse = PlatformIconGroup.providersEclipse(); // 16x16
     public static final Image Google = PlatformIconGroup.providersGoogle(); // 16x16
-    public static final Image Hibernate = PlatformIconGroup.providersHibernate(); // 16x16
     public static final Image Ibm = PlatformIconGroup.providersIbm(); // 16x16
     public static final Image Microsoft = PlatformIconGroup.providersMicrosoft(); // 16x16
-    public static final Image Mysql = PlatformIconGroup.providersMysql(); // 16x16
     public static final Image Oracle = PlatformIconGroup.providersOracle(); // 16x16
-    public static final Image Postgresql = PlatformIconGroup.providersPostgresql(); // 16x16
-    public static final Image Sqlite = PlatformIconGroup.providersSqlite(); // 16x16
     public static final Image Sun = PlatformIconGroup.providersSun(); // 16x16
-
   }
 
   public static class RunConfigurations {
