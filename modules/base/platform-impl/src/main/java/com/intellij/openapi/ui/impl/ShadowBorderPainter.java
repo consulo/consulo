@@ -15,7 +15,6 @@
  */
 package com.intellij.openapi.ui.impl;
 
-import com.intellij.icons.AllIcons;
 import com.intellij.ui.Gray;
 import com.intellij.util.ui.ImageUtil;
 import consulo.desktop.util.awt.graphics.GraphicsUtilities;
@@ -30,16 +29,17 @@ import java.awt.image.BufferedImage;
  * @author Konstantin Bulenkov
  */
 public class ShadowBorderPainter {
-  public static final ShadowPainter ourShadowPainter =
-          new ShadowPainter(AllIcons.Ide.Shadow.Top, AllIcons.Ide.Shadow.Top_right, AllIcons.Ide.Shadow.Right, AllIcons.Ide.Shadow.Bottom_right, AllIcons.Ide.Shadow.Bottom,
-                            AllIcons.Ide.Shadow.Bottom_left, AllIcons.Ide.Shadow.Left, AllIcons.Ide.Shadow.Top_left, Gray.x00.withAlpha(30));
+  //private static final ShadowPainter ourShadowPainter =
+  //        new ShadowPainter(AllIcons.Ide.Shadow.Top, AllIcons.Ide.Shadow.Top_right, AllIcons.Ide.Shadow.Right, AllIcons.Ide.Shadow.Bottom_right, AllIcons.Ide.Shadow.Bottom,
+  //                          AllIcons.Ide.Shadow.Bottom_left, AllIcons.Ide.Shadow.Left, AllIcons.Ide.Shadow.Top_left, Gray.x00.withAlpha(30));
 
 
   private ShadowBorderPainter() {
   }
 
   public static BufferedImage createShadow(final JComponent c, final int width, final int height, boolean isPopup) {
-    return ourShadowPainter.createShadow(c, width, height);
+    //return ourShadowPainter.createShadow(c, width, height);
+    return null;
   }
 
   public static BufferedImage createShadow(final JComponent c, final int width, final int height) {
