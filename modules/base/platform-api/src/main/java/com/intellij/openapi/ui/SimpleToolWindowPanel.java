@@ -18,8 +18,7 @@ package com.intellij.openapi.ui;
 import com.intellij.openapi.actionSystem.ActionToolbar;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.DataProvider;
-import com.intellij.ui.JBColor;
-import com.intellij.ui.paint.LinePainter2D;
+import com.intellij.ui.components.JBPanelWithEmptyText;
 import com.intellij.ui.switcher.QuickActionProvider;
 import com.intellij.util.containers.JBIterable;
 import com.intellij.util.ui.JBUI;
@@ -35,10 +34,9 @@ import java.awt.event.ContainerEvent;
 import java.util.Collections;
 import java.util.List;
 
-public class SimpleToolWindowPanel extends JPanel implements QuickActionProvider, DataProvider {
+public class SimpleToolWindowPanel extends JBPanelWithEmptyText implements QuickActionProvider, DataProvider {
 
   private JComponent myToolbar;
-  private JComponent myContent;
 
   private boolean myBorderless;
   protected boolean myVertical;
@@ -82,12 +80,15 @@ public class SimpleToolWindowPanel extends JPanel implements QuickActionProvider
     if (c == null) {
       remove(myToolbar);
     }
+
     myToolbar = c;
 
     if (c != null) {
       if (myVertical) {
+        c.setBorder(JBUI.Borders.customLine(UIUtil.getBorderColor(), 0, 0, 1, 0));
         add(c, BorderLayout.NORTH);
       } else {
+        c.setBorder(JBUI.Borders.customLine(UIUtil.getBorderColor(), 0, 0, 0, 1));
         add(c, BorderLayout.WEST);
       }
     }
@@ -96,6 +97,7 @@ public class SimpleToolWindowPanel extends JPanel implements QuickActionProvider
     repaint();
   }
 
+  @Override
   @Nullable
   public Object getData(@Nonnull Key<?> dataId) {
     return QuickActionProvider.KEY == dataId && myProvideQuickActions ? this : null;
@@ -106,22 +108,24 @@ public class SimpleToolWindowPanel extends JPanel implements QuickActionProvider
     return this;
   }
 
+  @Override
   public List<AnAction> getActions(boolean originalProvider) {
     JBIterable<ActionToolbar> toolbars = UIUtil.uiTraverser(myToolbar).traverse().filter(ActionToolbar.class);
     if (toolbars.size() == 0) return Collections.emptyList();
-    return toolbars.flatten(toolbar -> toolbar.getActions()).toList();
+    return toolbars.flatten(ActionToolbar::getActions).toList();
   }
 
+  @Override
   public JComponent getComponent() {
     return this;
   }
 
+  @Override
   public boolean isCycleRoot() {
     return false;
   }
 
   public void setContent(JComponent c) {
-    myContent = c;
     add(c, BorderLayout.CENTER);
 
     if (myBorderless) {
@@ -130,22 +134,5 @@ public class SimpleToolWindowPanel extends JPanel implements QuickActionProvider
 
     revalidate();
     repaint();
-  }
-
-  @Override
-  protected void paintComponent(final Graphics g) {
-    super.paintComponent(g);
-
-    if (myToolbar != null && myToolbar.getParent() == this && myContent != null && myContent.getParent() == this) {
-      g.setColor(JBColor.border());
-      if (myVertical) {
-        int y = (int)myToolbar.getBounds().getMaxY();
-        LinePainter2D.paint((Graphics2D)g, 0, y, getWidth(), y);
-      }
-      else {
-        int x = (int)myToolbar.getBounds().getMaxX();
-        LinePainter2D.paint((Graphics2D)g, x, 0, x, getHeight());
-      }
-    }
   }
 }
