@@ -15,8 +15,11 @@
  */
 package com.intellij.lang;
 
+import com.intellij.lexer.Lexer;
+import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.TokenSet;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -92,5 +95,50 @@ public class PsiBuilderUtil {
   @Nonnull
   public static CharSequence rawTokenText(PsiBuilder builder, int index) {
     return builder.getOriginalText().subSequence(builder.rawTokenTypeStart(index), builder.rawTokenTypeStart(index + 1));
+  }
+
+  /**
+   * Checks if `text` looks like a proper block.
+   * In particular it
+   * (1) checks brace balance
+   * (2) verifies that the block's closing brace is the last token
+   *
+   * @param text       - text to check
+   * @param lexer      - lexer to use
+   * @param leftBrace  - left brace element type
+   * @param rightBrace - right brace element type
+   * @return true if `text` passes the checks
+   */
+  public static boolean hasProperBraceBalance(@Nonnull CharSequence text, @Nonnull Lexer lexer, @Nonnull IElementType leftBrace, @Nonnull IElementType rightBrace) {
+    lexer.start(text);
+
+    if (lexer.getTokenType() != leftBrace) return false;
+
+    lexer.advance();
+    int balance = 1;
+
+    while (true) {
+      ProgressManager.checkCanceled();
+      IElementType type = lexer.getTokenType();
+
+      if (type == null) {
+        //eof: checking balance
+        return balance == 0;
+      }
+
+      if (balance == 0) {
+        //the last brace is not the last token
+        return false;
+      }
+
+      if (type == leftBrace) {
+        balance++;
+      }
+      else if (type == rightBrace) {
+        balance--;
+      }
+
+      lexer.advance();
+    }
   }
 }

@@ -17,9 +17,11 @@ package com.intellij.openapi.editor.ex.util;
 
 import com.intellij.diagnostic.Dumpable;
 import com.intellij.diagnostic.LogMessageEx;
+import com.intellij.ide.DataManager;
 import com.intellij.ide.ui.UISettings;
 import com.intellij.injected.editor.EditorWindow;
-import consulo.disposer.Disposable;
+import com.intellij.openapi.actionSystem.CommonDataKeys;
+import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.WriteAction;
 import com.intellij.openapi.editor.*;
@@ -34,27 +36,32 @@ import com.intellij.openapi.editor.ex.DocumentEx;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.editor.impl.ComplementaryFontsRegistry;
 import com.intellij.openapi.editor.impl.DesktopEditorImpl;
-import com.intellij.openapi.editor.impl.FontInfo;
 import com.intellij.openapi.editor.impl.DesktopScrollingModelImpl;
+import com.intellij.openapi.editor.impl.FontInfo;
 import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.openapi.editor.textarea.TextComponentEditor;
 import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.fileEditor.TextEditor;
 import com.intellij.openapi.fileEditor.impl.text.TextEditorImpl;
-import com.intellij.openapi.util.*;
+import com.intellij.openapi.util.Pair;
+import com.intellij.openapi.util.Ref;
+import com.intellij.openapi.util.SystemInfo;
+import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.DocumentUtil;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.messages.MessageBusConnection;
+import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.fileEditor.impl.text.TextEditorProvider;
 import consulo.logging.Logger;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
+import consulo.util.dataholder.Key;
 import org.intellij.lang.annotations.JdkConstants;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
@@ -908,4 +915,22 @@ public final class EditorUtil {
     }, disposable);
   }
 
+
+  @Nonnull
+  public static DataContext getEditorDataContext(@Nonnull Editor editor) {
+    DataContext context = DataManager.getInstance().getDataContext(editor.getContentComponent());
+    if (context.getData(CommonDataKeys.PROJECT) == editor.getProject()) {
+      return context;
+    }
+    return new DataContext() {
+      @Nullable
+      @Override
+      public <T> T getData(@Nonnull Key<T> dataId) {
+        if (CommonDataKeys.PROJECT == dataId) {
+          return (T)editor.getProject();
+        }
+        return context.getData(dataId);
+      }
+    };
+  }
 }

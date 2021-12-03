@@ -20,6 +20,7 @@ import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.ex.DocumentEx;
 import com.intellij.openapi.util.TextRange;
+
 import javax.annotation.Nonnull;
 
 /**
@@ -137,5 +138,15 @@ public final class DocumentUtil {
 
   public static int getNextCodePointOffset(@Nonnull Document document, int offset) {
     return offset + (isSurrogatePair(document, offset) ? 2 : 1);
+  }
+
+  public static boolean isLineEmpty(@Nonnull Document document, final int line) {
+    final CharSequence chars = document.getCharsSequence();
+    int start = document.getLineStartOffset(line);
+    int end = Math.min(document.getLineEndOffset(line), document.getTextLength() - 1);
+    for (int i = start; i <= end; i++) {
+      if (!Character.isWhitespace(chars.charAt(i))) return false;
+    }
+    return true;
   }
 }
