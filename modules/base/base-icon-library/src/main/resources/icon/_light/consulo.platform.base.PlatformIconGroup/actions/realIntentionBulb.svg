@@ -1,6 +1,13 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
-  <g fill="#6E6E6E" fill-rule="evenodd" transform="translate(3 4)">
-    <path
-        d="M10.108434 3.96199965L8.03801633 1.89158197 3 6.90139228 3 8.97180996 5.07041768 8.97180996 10.108434 3.96199965zM11.8337821 2.23665158C12.055406 2.01500638 12.055406 1.42308794 11.8337821 1.20144274L10.7985732.1662339C10.5769494-.0554112999 9.98498829-.0554112999 9.7633644.1662339L8.72815556 1.20144274 10.7985732 3.27186042 11.8337821 2.23665158zM5.86396103 2L4.86396103 3 0 3 0 2 5.86396103 2zM7.86396103 4.4408921e-16L6.86396103 1 0 1 0 0 7.86396103 0zM3.86396103 4L2.86396103 5 0 5 0 4 3.86396103 4z"/>
-  </g>
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 25.0.1, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 16 16" enable-background="new 0 0 16 16" xml:space="preserve">
+<g transform="translate(3 4)">
+	<polygon fill-rule="evenodd" clip-rule="evenodd" fill="#63BF6A" points="10.1,4 8,1.9 3,6.9 3,9 5.1,9 	"/>
+	<path fill-rule="evenodd" clip-rule="evenodd" fill="#6E6E6E" d="M11.8,2.2c0.2-0.2,0.2-0.8,0-1l-1-1c-0.2-0.2-0.8-0.2-1,0l-1,1
+		l2.1,2.1L11.8,2.2z"/>
+	<polygon fill-rule="evenodd" clip-rule="evenodd" fill="#6E6E6E" points="5.9,2 4.9,3 0,3 0,2 	"/>
+	<polygon fill-rule="evenodd" clip-rule="evenodd" fill="#6E6E6E" points="7.9,0 6.9,1 0,1 0,0 	"/>
+	<polygon fill-rule="evenodd" clip-rule="evenodd" fill="#6E6E6E" points="3.9,4 2.9,5 0,5 0,4 	"/>
+</g>
 </svg>
