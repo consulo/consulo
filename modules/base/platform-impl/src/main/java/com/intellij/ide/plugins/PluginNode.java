@@ -18,7 +18,6 @@ package com.intellij.ide.plugins;
 import consulo.container.plugin.*;
 import consulo.ide.plugins.PluginJsonNode;
 import consulo.logging.Logger;
-import consulo.ui.image.Image;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.lang.StringUtil;
 
@@ -87,6 +86,7 @@ public class PluginNode extends PluginDescriptorStub {
     setDescription(jsonPlugin.description);
     setDate(jsonPlugin.date);
     setVendor(jsonPlugin.vendor);
+    setUrl(jsonPlugin.url);
     setVersion(jsonPlugin.version);
     setPlatformVersion(jsonPlugin.platformVersion);
     setDownloads(String.valueOf(jsonPlugin.downloads));

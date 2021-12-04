@@ -43,6 +43,7 @@ public class PluginJsonNode {
   public String description;
   public String category;
   public String vendor;
+  public String url;
   public int downloads;
   public Long length;
   public Long date;
