@@ -15,12 +15,20 @@
  */
 package com.intellij.util;
 
+import java.util.function.BiFunction;
+
 /**
  * Created with IntelliJ IDEA.
  * User: Irina.Chernushina
  * Date: 8/22/12
  * Time: 5:26 PM
  */
-public interface PairConvertor<First,Second,Result> {
+@FunctionalInterface
+public interface PairConvertor<First, Second, Result> extends BiFunction<First, Second, Result> {
   Result convert(final First first, final Second second);
+
+  @Override
+  default Result apply(First first, Second second) {
+    return convert(first, second);
+  }
 }

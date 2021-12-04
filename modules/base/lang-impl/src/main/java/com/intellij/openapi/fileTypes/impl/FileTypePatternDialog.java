@@ -80,6 +80,7 @@ public class FileTypePatternDialog {
     return myMainPanel;
   }
 
+  @Nullable
   public Language getTemplateDataLanguage() {
     return (Language)myLanguageCombo.getSelectedItem();
   }

@@ -20,10 +20,9 @@ import com.intellij.openapi.fileTypes.ex.FileTypeManagerEx;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.ArrayUtil;
-import com.intellij.util.IncorrectOperationException;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.util.Collections;
 import java.util.List;
 
@@ -41,21 +40,6 @@ public class MockFileTypeManager extends FileTypeManagerEx {
 
   @Override
   public void unregisterFileType(FileType fileType) {
-  }
-
-  @Override
-  @Nonnull
-  public String getIgnoredFilesList() {
-    throw new IncorrectOperationException();
-  }
-
-  @Override
-  public void setIgnoredFilesList(@Nonnull String list) {
-  }
-
-  @Override
-  public boolean isIgnoredFilesListEqualToCurrent(String list) {
-    return false;
   }
 
   public void save() {

@@ -36,6 +36,14 @@ public class IgnoredPatternSet {
     return Collections.unmodifiableSet(myMasks);
   }
 
+  public void setIgnoreMasks(@Nonnull Set<String> files) {
+    clearPatterns();
+
+    for (String ignoredFile : files) {
+      addIgnoreMask(ignoredFile);
+    }
+  }
+
   public void setIgnoreMasks(@Nonnull String list) {
     clearPatterns();
 
@@ -46,7 +54,6 @@ public class IgnoredPatternSet {
         addIgnoreMask(ignoredFile);
       }
     }
-
   }
 
   void addIgnoreMask(@Nonnull String ignoredFile) {

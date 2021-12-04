@@ -9,8 +9,7 @@ import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.function.Supplier;
 
 /**
@@ -126,7 +125,21 @@ public abstract class FileTypeManager extends FileTypeRegistry {
    * @return Semicolon-delimited list of patterns.
    */
   @Nonnull
-  public abstract String getIgnoredFilesList();
+  @Deprecated
+  public String getIgnoredFilesList() {
+    Set<String> masks = getIgnoredFiles();
+    return masks.isEmpty() ? "" : String.join(";", masks) + ";";
+  }
+
+  /**
+   * Returns the list of patterns for files and folders
+   * which are excluded from the project structure though they may be present
+   * physically on disk.
+   */
+  @Nonnull
+  public Set<String> getIgnoredFiles() {
+    throw new UnsupportedOperationException();
+  }
 
   /**
    * Sets new list of semicolon-delimited patterns for files and folders which
@@ -134,7 +147,27 @@ public abstract class FileTypeManager extends FileTypeRegistry {
    *
    * @param list List of semicolon-delimited patterns.
    */
-  public abstract void setIgnoredFilesList(@Nonnull String list);
+  public void setIgnoredFilesList(@Nonnull String list) {
+    Set<String> files = new LinkedHashSet<>();
+    StringTokenizer tokenizer = new StringTokenizer(list, ";");
+    while (tokenizer.hasMoreTokens()) {
+      String ignoredFile = tokenizer.nextToken();
+      if (ignoredFile != null) {
+        files.add(ignoredFile);
+      }
+    }
+
+    setIgnoredFiles(files);
+  }
+
+  /**
+   * Sets new list of patterns for files and folders which
+   * are excluded from the project structure.
+   *
+   */
+  public void setIgnoredFiles(@Nonnull Set<String> list) {
+    throw new UnsupportedOperationException();
+  }
 
   /**
    * Adds an extension to the list of extensions associated with a file type.

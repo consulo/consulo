@@ -1251,29 +1251,18 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements Persistent
     return FileUtilRt.getExtension(fileName);
   }
 
-  @Override
   @Nonnull
-  public String getIgnoredFilesList() {
-    Set<String> masks = myIgnoredPatterns.getIgnoreMasks();
-    return masks.isEmpty() ? "" : StringUtil.join(masks, ";") + ";";
+  @Override
+  public Set<String> getIgnoredFiles() {
+    return myIgnoredPatterns.getIgnoreMasks();
   }
 
   @Override
-  public void setIgnoredFilesList(@Nonnull String list) {
+  public void setIgnoredFiles(@Nonnull Set<String> list) {
     fireBeforeFileTypesChanged();
     myIgnoredFileCache.clearCache();
     myIgnoredPatterns.setIgnoreMasks(list);
     fireFileTypesChanged();
-  }
-
-  @Override
-  public boolean isIgnoredFilesListEqualToCurrent(@Nonnull String list) {
-    Set<String> tempSet = new HashSet<>();
-    StringTokenizer tokenizer = new StringTokenizer(list, ";");
-    while (tokenizer.hasMoreTokens()) {
-      tempSet.add(tokenizer.nextToken());
-    }
-    return tempSet.equals(myIgnoredPatterns.getIgnoreMasks());
   }
 
   @Override
@@ -1290,7 +1279,7 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements Persistent
   @Nonnull
   public String[] getAssociatedExtensions(@Nonnull FileType type) {
     synchronized (PENDING_INIT_LOCK) {
-      instantiatePendingFileTypeByName(type.getName());
+      instantiatePendingFileTypeByName(type.getId());
 
       //noinspection deprecation
       return myPatternsTable.getAssociatedExtensions(type);
@@ -1301,7 +1290,7 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements Persistent
   @Nonnull
   public List<FileNameMatcher> getAssociations(@Nonnull FileType type) {
     synchronized (PENDING_INIT_LOCK) {
-      instantiatePendingFileTypeByName(type.getName());
+      instantiatePendingFileTypeByName(type.getId());
 
       return myPatternsTable.getAssociations(type);
     }
@@ -1733,14 +1722,14 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements Persistent
 
 
   @Nonnull
-  FileTypeAssocTable<FileType> getExtensionMap() {
+  public FileTypeAssocTable<FileType> getExtensionMap() {
     synchronized (PENDING_INIT_LOCK) {
       instantiatePendingFileTypes();
     }
     return myPatternsTable;
   }
 
-  void setPatternsTable(@Nonnull Set<? extends FileType> fileTypes, @Nonnull FileTypeAssocTable<FileType> assocTable) {
+  public void setPatternsTable(@Nonnull Set<? extends FileType> fileTypes, @Nonnull FileTypeAssocTable<FileType> assocTable) {
     Map<FileNameMatcher, FileType> removedMappings = getExtensionMap().getRemovedMappings(assocTable, fileTypes);
     fireBeforeFileTypesChanged();
     for (FileType existing : getRegisteredFileTypes()) {

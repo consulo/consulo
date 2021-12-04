@@ -29,6 +29,7 @@ import javax.annotation.Nullable;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 class MockFileTypeManager extends FileTypeManager {
 
@@ -109,12 +110,12 @@ class MockFileTypeManager extends FileTypeManager {
 
   @Nonnull
   @Override
-  public String getIgnoredFilesList() {
-    return "";
+  public Set<String> getIgnoredFiles() {
+    return Set.of();
   }
 
   @Override
-  public void setIgnoredFilesList(@Nonnull String list) {
+  public void setIgnoredFiles(@Nonnull Set<String> list) {
   }
 
   @Override

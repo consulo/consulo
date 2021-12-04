@@ -187,7 +187,7 @@
 
     <applicationConfigurable displayName="System" parentId="general" instance="com.intellij.ide.GeneralSettingsConfigurable"/>
 
-    <applicationConfigurable parentId="editor" instance="com.intellij.openapi.fileTypes.impl.FileTypeConfigurable" id="preferences.fileTypes"
+    <applicationConfigurable parentId="editor" instance="consulo.fileTypes.ui.impl.FileTypeConfigurable" id="preferences.fileTypes"
                              key="filetype.settings.title" bundle="messages.FileTypesBundle"/>
 
     <applicationConfigurable instance="com.intellij.ide.browsers.BrowserSettings"

@@ -18,7 +18,11 @@ package com.intellij.openapi.fileTypes.ex;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.fileTypes.FileTypeFactory;
 import com.intellij.openapi.fileTypes.FileTypeManager;
+
 import javax.annotation.Nonnull;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.StringTokenizer;
 
 /**
  * @author max
@@ -40,7 +44,15 @@ public abstract class FileTypeManagerEx extends FileTypeManager {
   @Deprecated
   public abstract void unregisterFileType(@Nonnull FileType fileType);
 
-  public abstract boolean isIgnoredFilesListEqualToCurrent(@Nonnull String list);
+  @Deprecated
+  public boolean isIgnoredFilesListEqualToCurrent(@Nonnull String list) {
+    Set<String> tempSet = new HashSet<>();
+    StringTokenizer tokenizer = new StringTokenizer(list, ";");
+    while (tokenizer.hasMoreTokens()) {
+      tempSet.add(tokenizer.nextToken());
+    }
+    return tempSet.equals(getIgnoredFiles());
+  }
 
   @Nonnull
   public abstract String getExtension(@Nonnull String fileName);

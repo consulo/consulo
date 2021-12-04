@@ -68,7 +68,7 @@ public class FileTypeAssocTable<T> {
     }
   }
 
-  boolean removeAssociation(@Nonnull FileNameMatcher matcher, @Nonnull T type) {
+  public boolean removeAssociation(@Nonnull FileNameMatcher matcher, @Nonnull T type) {
     if (matcher instanceof ExtensionFileNameMatcher) {
       String extension = ((ExtensionFileNameMatcher)matcher).getExtension();
       if (myExtensionMappings.get(extension) == type) {
@@ -93,7 +93,7 @@ public class FileTypeAssocTable<T> {
     return myMatchingMappings.removeIf(assoc -> matcher.equals(assoc.getFirst()));
   }
 
-  boolean removeAllAssociations(@Nonnull T type) {
+  public boolean removeAllAssociations(@Nonnull T type) {
     boolean changed = removeAssociationsFromMap(myExtensionMappings, type, false);
 
     changed = removeAssociationsFromMap(myExactFileNameAnyCaseMappings, type, changed);
@@ -128,7 +128,7 @@ public class FileTypeAssocTable<T> {
   }
 
   @Nullable
-  T findAssociatedFileType(@Nonnull FileNameMatcher matcher) {
+  public T findAssociatedFileType(@Nonnull FileNameMatcher matcher) {
     if (matcher instanceof ExtensionFileNameMatcher) {
       return findByExtension(((ExtensionFileNameMatcher)matcher).getExtension());
     }
