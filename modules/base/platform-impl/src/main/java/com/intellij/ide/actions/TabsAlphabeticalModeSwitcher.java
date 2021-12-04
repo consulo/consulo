@@ -18,9 +18,8 @@ package com.intellij.ide.actions;
 import com.intellij.ide.ui.UISettings;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.ToggleAction;
-import com.intellij.openapi.util.registry.Registry;
-import com.intellij.ui.tabs.impl.JBEditorTabs;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 
 /**
@@ -28,17 +27,17 @@ import javax.swing.*;
  */
 public class TabsAlphabeticalModeSwitcher extends ToggleAction {
   @Override
-  public boolean isSelected(AnActionEvent e) {
-    return Registry.is(JBEditorTabs.TABS_ALPHABETICAL_KEY);
+  public boolean isSelected(@Nonnull AnActionEvent e) {
+    return UISettings.getInstance().EDITOR_TABS_ALPHABETICAL_SORT;
   }
 
   @Override
-  public void setSelected(AnActionEvent e, boolean state) {
-    JBEditorTabs.setAlphabeticalMode(state);
+  public void setSelected(@Nonnull AnActionEvent e, boolean state) {
+    UISettings.getInstance().EDITOR_TABS_ALPHABETICAL_SORT = state;
   }
 
   @Override
-  public void update(AnActionEvent e) {
+  public void update(@Nonnull AnActionEvent e) {
     super.update(e);
     final int place = UISettings.getInstance().EDITOR_TAB_PLACEMENT;
     e.getPresentation().setEnabled(UISettings.getInstance().SCROLL_TAB_LAYOUT_IN_EDITOR

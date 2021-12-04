@@ -210,15 +210,7 @@ public class IntelliJEditorTabsUI extends JBEditorTabsUI {
     boolean rightGhostExists = tabs.isSingleRow();
 
     if (!tabs.isStealthModeEffective() && !tabs.isHideTabs()) {
-      if (tabs.isSingleRow() && tabs.getSingleRowLayoutInternal().myLastSingRowLayout.lastGhostVisible) {
-        paintLastGhost(g2d);
-      }
-
       paintNonSelectedTabs(tabs, g2d, leftGhostExists, rightGhostExists);
-
-      if (tabs.isSingleRow() && tabs.getSingleRowLayoutInternal().myLastSingRowLayout.firstGhostVisible) {
-        paintFirstGhost(g2d);
-      }
     }
 
     config.setAntialiasing(false);

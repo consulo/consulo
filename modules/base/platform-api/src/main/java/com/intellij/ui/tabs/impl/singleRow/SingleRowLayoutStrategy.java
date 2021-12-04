@@ -174,13 +174,7 @@ public abstract class SingleRowLayoutStrategy {
     }
 
     public Rectangle getMoreRect(final SingleRowPassInfo data) {
-      int x;
-      if (myTabs.isEditorTabs()) {
-        x = data.layoutSize.width - data.moreRectAxisSize - 1;
-      }
-      else {
-        x = data.position + (data.lastGhostVisible ? data.lastGhost.width : 0);
-      }
+      int x = data.layoutSize.width - data.moreRectAxisSize - 1;
       return new Rectangle(x, data.insets.top + JBTabsImpl.getSelectionTabVShift(),
                                             data.moreRectAxisSize - 1, myTabs.myHeaderFitSize.height - 1);
     }

@@ -79,10 +79,6 @@ public class JBEditorTabs extends JBTabsImpl {
 
   @Override
   public boolean isAlphabeticalMode() {
-    return Registry.is(TABS_ALPHABETICAL_KEY);
-  }
-
-  public static void setAlphabeticalMode(boolean on) {
-    Registry.get(TABS_ALPHABETICAL_KEY).setValue(on);
+    return UISettings.getInstance().EDITOR_TABS_ALPHABETICAL_SORT;
   }
 }

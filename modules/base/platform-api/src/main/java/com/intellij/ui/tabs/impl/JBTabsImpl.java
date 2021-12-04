@@ -2203,12 +2203,6 @@ public abstract class JBTabsImpl extends JComponent
     return true;
   }
 
-  @Deprecated
-  @DeprecationInfo("Always false")
-  public final boolean isGhostsAlwaysVisible() {
-    return false;
-  }
-
   @Override
   public boolean isSingleRow() {
     return getEffectiveLayout() == mySingleRowLayout;

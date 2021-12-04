@@ -16,6 +16,7 @@
 package com.intellij.ui.tabs.impl;
 
 import com.intellij.ide.IdeBundle;
+import com.intellij.ide.ui.UISettings;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.ui.InplaceButton;
 import com.intellij.ui.MouseDragHelper;
@@ -248,7 +249,7 @@ class DragHelper extends MouseDragHelper {
                                                        IdeBundle.message("title.warning"),
                                                        Messages.getQuestionIcon());
         if (answer == Messages.OK) {
-          JBEditorTabs.setAlphabeticalMode(false);
+          UISettings.getInstance().EDITOR_TABS_ALPHABETICAL_SORT = false;
           myTabs.relayout(true, false);
           myTabs.revalidate();
         }

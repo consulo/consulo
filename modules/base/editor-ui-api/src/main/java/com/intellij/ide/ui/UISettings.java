@@ -161,6 +161,7 @@ public class UISettings extends SimpleModificationTracker implements PersistentS
   public static final int TABS_NONE = PLACEMENT_EDITOR_TAB_NONE;
 
   public int EDITOR_TAB_PLACEMENT = PLACEMENT_EDITOR_TAB_TOP;
+  public boolean EDITOR_TABS_ALPHABETICAL_SORT = false;
   public boolean HIDE_KNOWN_EXTENSION_IN_TABS = false;
   public boolean SHOW_ICONS_IN_QUICK_NAVIGATION = true;
   public boolean CLOSE_NON_MODIFIED_FILES_FIRST = false;

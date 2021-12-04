@@ -211,18 +211,6 @@ public class SingleRowLayout extends TabLayout {
   }
 
   protected void layoutLabelsAndGhosts(final SingleRowPassInfo data) {
-    if (data.firstGhostVisible || myTabs.isGhostsAlwaysVisible()) {
-      data.firstGhost = getStrategy().getLayoutRect(data, data.position, myTabs.getGhostTabLength());
-      myTabs.layout(myLeftGhost, data.firstGhost);
-      data.position += getStrategy().getLengthIncrement(data.firstGhost.getSize()) + myTabs.getInterTabSpaceLength();
-    }
-
-    int deltaToFit = 0;
-    if (data.firstGhostVisible || data.lastGhostVisible) {
-      if (data.requiredLength < data.toFitLength && getStrategy().canBeStretched()) {
-        deltaToFit = (int)Math.floor((data.toFitLength - data.requiredLength) / (double)data.toLayout.size());
-      }
-    }
 
     int totalLength = 0;
     int positionStart = data.position;
@@ -239,16 +227,8 @@ public class SingleRowLayout extends TabLayout {
       label.setActionPanelVisible(true);
       final Dimension eachSize = label.getPreferredSize();
 
-      boolean isLast = data.toLayout.indexOf(eachInfo) == data.toLayout.size() - 1;
-
-      int length;
-      if (!isLast || deltaToFit == 0) {
-        length = getStrategy().getLengthIncrement(eachSize) + deltaToFit;
-      }
-      else {
-        length = data.toFitLength - totalLength;
-      }
-      boolean continueLayout = applyTabLayout(data, label, length, deltaToFit);
+      int length = getStrategy().getLengthIncrement(eachSize);
+      boolean continueLayout = applyTabLayout(data, label, length, 0);
 
       data.position = getStrategy().getMaxPosition(label.getBounds());
       data.position += myTabs.getInterTabSpaceLength();
@@ -261,11 +241,6 @@ public class SingleRowLayout extends TabLayout {
 
     for (TabInfo eachInfo : data.toDrop) {
       JBTabsImpl.resetLayout(myTabs.myInfo2Label.get(eachInfo));
-    }
-
-    if (data.lastGhostVisible || myTabs.isGhostsAlwaysVisible()) {
-      data.lastGhost = getStrategy().getLayoutRect(data, data.position, myTabs.getGhostTabLength());
-      myTabs.layout(myRightGhost, data.lastGhost);
     }
   }
 
@@ -390,19 +365,6 @@ public class SingleRowLayout extends TabLayout {
     data.toLayout.remove(info);
     if (data.toDrop.size() == 1) {
       data.toFitLength -= data.moreRectAxisSize;
-    }
-
-    if (!data.firstGhostVisible && isFirstSide) {
-      data.firstGhostVisible = !myTabs.isEditorTabs();
-      if (!myTabs.isGhostsAlwaysVisible() && !myTabs.isEditorTabs()) {
-        data.toFitLength -= myTabs.getGhostTabLength();
-      }
-    }
-    else if (!data.lastGhostVisible && !isFirstSide) {
-      data.lastGhostVisible = !myTabs.isEditorTabs();
-      if (!myTabs.isGhostsAlwaysVisible() && !myTabs.isEditorTabs()) {
-        data.toFitLength -= myTabs.getGhostTabLength();
-      }
     }
   }
 
