@@ -48,12 +48,14 @@ public abstract class SWTComponentDelegate<SWT extends Control> implements Compo
   protected SWT myComponent;
 
   private boolean myEnabled = true;
+  private boolean myVisible = true;
 
   public final void bind(Composite parent, Object layoutData) {
     myComponent = createSWT(parent);
     myComponent.setLayoutData(layoutData);
 
     myComponent.setEnabled(myEnabled);
+    myComponent.setVisible(myVisible);
     myComponent.setData(UI_COMPONENT_KEY, this);
     
     initialize(myComponent);
@@ -106,13 +108,17 @@ public abstract class SWTComponentDelegate<SWT extends Control> implements Compo
 
   @Override
   public boolean isVisible() {
-    return true;
+    return myVisible;
   }
 
   @RequiredUIAccess
   @Override
   public void setVisible(boolean value) {
+    myVisible = value;
 
+    if (myComponent != null) {
+      myComponent.setVisible(myVisible);
+    }
   }
 
   @Override

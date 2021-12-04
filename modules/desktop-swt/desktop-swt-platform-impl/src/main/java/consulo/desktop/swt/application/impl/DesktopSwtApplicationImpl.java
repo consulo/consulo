@@ -18,6 +18,7 @@ package consulo.desktop.swt.application.impl;
 import com.intellij.ide.StartupProgress;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
+import com.intellij.openapi.application.impl.ReadMostlyRWLock;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Condition;
 import consulo.annotation.access.RequiredReadAction;
@@ -40,7 +41,9 @@ import java.awt.*;
 public class DesktopSwtApplicationImpl extends BaseApplication {
   public DesktopSwtApplicationImpl(@Nonnull SimpleReference<? extends StartupProgress> splashRef) {
     super(splashRef);
-    
+
+    myLock = new ReadMostlyRWLock(null);
+
     ApplicationManager.setApplication(this);
   }
 
