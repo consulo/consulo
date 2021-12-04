@@ -3,6 +3,7 @@ package com.intellij.ui;
 
 import com.intellij.ui.components.panels.NonOpaquePanel;
 import com.intellij.ui.components.panels.OpaquePanel;
+import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.accessibility.AccessibleContextUtil;
 import consulo.awt.TargetAWT;
@@ -85,7 +86,7 @@ public abstract class GroupedElementsRenderer {
   }
 
   private static Border getBorder() {
-    return new EmptyBorder(UIUtil.getListCellPadding());
+    return new EmptyBorder(JBUI.CurrentTheme.ActionsList.cellPadding());
   }
 
   public abstract static class List extends GroupedElementsRenderer {

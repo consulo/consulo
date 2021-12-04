@@ -19,9 +19,8 @@ import com.intellij.util.ui.UIUtil;
 import consulo.awt.TargetAWT;
 import consulo.ui.image.Image;
 
-import javax.annotation.Nullable;
-
 import javax.accessibility.AccessibleContext;
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 
@@ -90,7 +89,7 @@ public class PopupListElementRenderer<E> extends GroupedItemsListRenderer<E> {
     myValueLabel.setForeground(UIManager.getColor("MenuItem.acceleratorForeground"));
     panel.add(myValueLabel, BorderLayout.CENTER);
     myShortcutLabel = new JLabel();
-    myShortcutLabel.setBorder(JBUI.Borders.emptyRight(3));
+    myShortcutLabel.setBorder(JBUI.Borders.empty(0, 0, 1, 3));
     myShortcutLabel.setForeground(UIManager.getColor("MenuItem.acceleratorForeground"));
     panel.add(myShortcutLabel, BorderLayout.EAST);
     return layoutComponent(panel);

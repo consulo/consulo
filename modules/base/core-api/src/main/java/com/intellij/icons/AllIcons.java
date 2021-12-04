@@ -582,15 +582,7 @@ public class AllIcons {
 
     public static class Ide {
       public static final Image NextStep = PlatformIconGroup.iconsIdeNextStep(); // 12x12
-      public static final Image NextStepGrayed = PlatformIconGroup.iconsIdeNextStepGrayed(); // 12x12
       public static final Image NextStepInverted = PlatformIconGroup.iconsIdeNextStepInverted(); // 12x12
-      public static final Image SpeedSearchPrompt = PlatformIconGroup.iconsIdeSpeedSearchPrompt(); // 16x16
-
-    }
-
-    public static class Inspector {
-      public static final Image SortByCategory = PlatformIconGroup.iconsInspectorSortByCategory(); // 16x16
-      public static final Image SortByName = PlatformIconGroup.iconsInspectorSortByName(); // 16x16
     }
   }
 
@@ -601,7 +593,6 @@ public class AllIcons {
       public static final Image Left = PlatformIconGroup.ideDndLeft(); // 16x16
       public static final Image Right = PlatformIconGroup.ideDndRight(); // 16x16
       public static final Image Top = PlatformIconGroup.ideDndTop(); // 16x16
-
     }
 
     public static final Image EmptyFatalError = PlatformIconGroup.ideEmptyFatalError(); // 16x16

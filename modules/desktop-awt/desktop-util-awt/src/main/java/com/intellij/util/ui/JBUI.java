@@ -14,6 +14,7 @@ import com.intellij.util.Function;
 import com.intellij.util.ui.components.BorderLayoutPanel;
 import consulo.desktop.util.awt.component.VerticalLayoutPanel;
 import kava.beans.PropertyChangeListener;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -60,6 +61,18 @@ public class JBUI {
       @Nonnull
       public static Color borderColor() {
         return JBColor.namedColor("Popup.Advertiser.borderColor", Gray._135);
+      }
+    }
+
+    public static class ActionsList {
+      @Nonnull
+      public static Insets numberMnemonicInsets() {
+        return insets("ActionsList.mnemonicsBorderInsets", insets(0, 8, 1, 6));
+      }
+
+      @Nonnull
+      public static Insets cellPadding() {
+        return insets("ActionsList.cellBorderInsets", insets(1, 12, 1, 12));
       }
     }
 
