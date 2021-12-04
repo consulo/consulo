@@ -20,10 +20,8 @@ import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.wm.impl.status.BasicStatusBarUI;
 import com.intellij.ui.components.OnOffButton;
 import consulo.desktop.ui.laf.ui.basic.BasicCaptionPanelUI;
-import consulo.ide.ui.laf.darcula.DarculaEditorTabsUI;
 import consulo.ide.ui.laf.intellij.ActionButtonUI;
-import consulo.ide.ui.laf.mac.MacEditorTabsUI;
-import consulo.ui.style.StyleManager;
+import consulo.ide.ui.laf.intellij.IntelliJEditorTabsUI;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
@@ -78,7 +76,7 @@ public class LafManagerImplUtil {
     }
 
     if (uiDefaults.get("JBEditorTabsUI") == null) {
-      uiDefaults.put("JBEditorTabsUI", StyleManager.get().getCurrentStyle().isDark() ? DarculaEditorTabsUI.class.getName() : MacEditorTabsUI.class.getName());
+      uiDefaults.put("JBEditorTabsUI", IntelliJEditorTabsUI.class.getName());
     }
 
     if (uiDefaults.get("IdeStatusBarUI") == null) {

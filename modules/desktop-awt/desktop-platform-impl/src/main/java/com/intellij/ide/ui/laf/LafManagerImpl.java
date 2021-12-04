@@ -65,8 +65,8 @@ import consulo.disposer.Disposable;
 import consulo.ide.eap.EarlyAccessProgramManager;
 import consulo.ide.ui.laf.GTKPlusEAPDescriptor;
 import consulo.ide.ui.laf.LafWithColorScheme;
+import consulo.ide.ui.laf.intellij.IntelliJEditorTabsUI;
 import consulo.ide.ui.laf.mac.MacButtonlessScrollbarUI;
-import consulo.ide.ui.laf.mac.MacEditorTabsUI;
 import consulo.ide.ui.laf.modernDark.ModernDarkLookAndFeelInfo;
 import consulo.ide.ui.laf.modernWhite.ModernWhiteLookAndFeelInfo;
 import consulo.ide.ui.laf.modernWhite.NativeModernWhiteLookAndFeelInfo;
@@ -504,7 +504,7 @@ public final class LafManagerImpl extends LafManager implements Disposable, Pers
     if (UIUtil.isUnderAquaLookAndFeel()) {
       uiDefaults.put("Panel.opaque", Boolean.TRUE);
       uiDefaults.put("ScrollBarUI", MacButtonlessScrollbarUI.class.getName());
-      uiDefaults.put("JBEditorTabsUI", MacEditorTabsUI.class.getName());
+      uiDefaults.put("JBEditorTabsUI", IntelliJEditorTabsUI.class.getName());
       uiDefaults.put("MenuItemUI", BegMenuItemUI.class.getName());
       uiDefaults.put("CheckBoxMenuItemUI", BegMenuItemUI.class.getName());
       uiDefaults.put("MenuUI", IdeaMenuUI.class.getName());

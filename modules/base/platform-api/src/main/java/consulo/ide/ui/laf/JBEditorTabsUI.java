@@ -27,7 +27,5 @@ import java.awt.*;
 public abstract class JBEditorTabsUI extends ComponentUI {
   public abstract void clearLastPaintedTab();
 
-  public abstract void setModifyTabColor(Color color);
-
   public abstract void paintChildren(JBTabsImpl tabs, Graphics g);
 }
