@@ -115,7 +115,37 @@ public class TabLabel extends JPanel {
         myInfo.setPreviousSelection(null);
         handlePopup(e);
       }
+
+      @Override
+      public void mouseEntered(MouseEvent e) {
+        setHovered(true);
+      }
+
+      @Override
+      public void mouseExited(MouseEvent e) {
+        setHovered(false);
+      }
     });
+  }
+
+  private void setHovered(boolean value) {
+    if (myTabs.isHoveredTab(this) == value) return;
+    if (value) {
+      myTabs.setHovered(this);
+    }
+    else {
+      myTabs.unHover(this);
+    }
+  }
+
+  @Override
+  public boolean isFocusable() {
+    // We don't want the focus unless we are the selected tab.
+    if (myTabs.getSelectedLabel() != this) {
+      return false;
+    }
+
+    return super.isFocusable();
   }
 
   private SimpleColoredComponent createLabel(final JBTabsImpl tabs) {

@@ -344,8 +344,11 @@ public class IntelliJEditorTabsUI extends JBEditorTabsUI {
     ShapeInfo shape = computeLabelShape(tabs, label);
 
     Color tabColor = label.getInfo().getTabColor();
-
-    tabColor = tabColor == null ? new JBColor(Gray._255, Gray._85) : tabColor;
+    if (tabs.isPaintFocus() && tabs.isHoveredTab(label)) {
+      tabColor = ColorUtil.toAlpha(tabColor == null ? new JBColor(Gray._255, Gray._85) : tabColor, 180);
+    } else {
+      tabColor = tabColor == null ? new JBColor(Gray._255, Gray._85) : tabColor;
+    }
 
     g2d.setColor(tabColor);
 
@@ -354,11 +357,15 @@ public class IntelliJEditorTabsUI extends JBEditorTabsUI {
     doPaintLabelBorder(g2d, tabs, label, rect, tabColor, true);
   }
 
-  protected void doPaintInactive(JBTabsImpl t, Graphics2D g2d, TabLabel label) {
-    ShapeInfo shape = computeLabelShape(t, label);
+  protected void doPaintInactive(JBTabsImpl tabs, Graphics2D g2d, TabLabel label) {
+    ShapeInfo shape = computeLabelShape(tabs, label);
 
     Color tabColor = label.getInfo().getTabColor();
-    tabColor = tabColor != null ? ColorUtil.toAlpha(tabColor, 150) : UIUtil.getControlColor();
+    if (tabs.isPaintFocus() && tabs.isHoveredTab(label)) {
+      tabColor = ColorUtil.toAlpha(tabColor != null ? tabColor : UIUtil.getControlColor(), 180);
+    } else {
+      tabColor = tabColor != null ? ColorUtil.toAlpha(tabColor, 150) : UIUtil.getControlColor();
+    }
 
     Rectangle rect = label.getBounds();
 
@@ -370,7 +377,7 @@ public class IntelliJEditorTabsUI extends JBEditorTabsUI {
 
     g2d.fill(shape.fillPath.getShape());
 
-    doPaintLabelBorder(g2d, t, label, rect, tabColor, false);
+    doPaintLabelBorder(g2d, tabs, label, rect, tabColor, false);
   }
 
   private void doPaintLabelBorder(Graphics2D g2d, JBTabsImpl tabs, TabLabel label, Rectangle rect, Color tabColor, boolean repaintDownLine) {

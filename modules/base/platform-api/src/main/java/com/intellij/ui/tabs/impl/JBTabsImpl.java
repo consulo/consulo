@@ -183,6 +183,8 @@ public abstract class JBTabsImpl extends JComponent
   private Runnable myDeferredFocusRequest;
   private int myFirstTabOffset;
 
+  private TabLabel tabLabelAtMouse;
+
   @Deprecated
   @DeprecationInfo("Use JBEditorTabs or TabbedPaneWrapper")
   @SuppressWarnings("deprecation")
@@ -337,6 +339,30 @@ public abstract class JBTabsImpl extends JComponent
     }
 
     return this;
+  }
+
+  public void setHovered(TabLabel label) {
+    TabLabel old = tabLabelAtMouse;
+    tabLabelAtMouse = label;
+
+    if (old != null) {
+      old.repaint();
+    }
+
+    if (tabLabelAtMouse != null) {
+      tabLabelAtMouse.repaint();
+    }
+  }
+
+  void unHover(TabLabel label) {
+    if (tabLabelAtMouse == label) {
+      tabLabelAtMouse = null;
+      label.repaint();
+    }
+  }
+
+  public boolean isHoveredTab(TabLabel label) {
+    return label != null && label == tabLabelAtMouse;
   }
 
   @Deprecated
@@ -1927,7 +1953,7 @@ public abstract class JBTabsImpl extends JComponent
     relayout(true, false);
   }
 
-  private boolean isPaintFocus() {
+  public boolean isPaintFocus() {
     return myPaintFocus;
   }
 
