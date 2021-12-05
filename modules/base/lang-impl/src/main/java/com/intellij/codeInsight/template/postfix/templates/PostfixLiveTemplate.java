@@ -23,7 +23,7 @@ import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.Conditions;
-import com.intellij.openapi.util.Disposer;
+import consulo.disposer.Disposer;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiDocumentManager;
@@ -207,7 +207,7 @@ public class PostfixLiveTemplate extends CustomLiveTemplateBase {
   public Collection<? extends CustomLiveTemplateLookupElement> getLookupElements(@Nonnull PsiFile file, @Nonnull Editor editor, int offset) {
     Collection<CustomLiveTemplateLookupElement> result = new HashSet<>();
     CustomTemplateCallback callback = new CustomTemplateCallback(editor, file);
-    Disposable parentDisposable = Disposer.newDisposable();
+    Disposable parentDisposable = Disposable.newDisposable();
     try {
       for (PostfixTemplateProvider provider : LanguagePostfixTemplate.LANG_EP.allForLanguage(getLanguage(callback))) {
         ProgressManager.checkCanceled();
@@ -329,7 +329,7 @@ public class PostfixLiveTemplate extends CustomLiveTemplateBase {
   }
 
   private static boolean isApplicableTemplate(@Nonnull PostfixTemplateProvider provider, @Nonnull String key, @Nonnull PsiFile file, @Nonnull Editor editor, @Nullable PostfixTemplate template) {
-    Disposable parentDisposable = Disposer.newDisposable();
+    Disposable parentDisposable = Disposable.newDisposable();
     try {
       return createIsApplicationTemplateFunction(provider, key, file, editor, parentDisposable).value(template);
     }

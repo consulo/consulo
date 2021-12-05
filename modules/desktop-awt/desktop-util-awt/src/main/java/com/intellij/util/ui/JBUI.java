@@ -14,9 +14,8 @@ import com.intellij.util.Function;
 import com.intellij.util.ui.components.BorderLayoutPanel;
 import consulo.desktop.util.awt.component.VerticalLayoutPanel;
 import kava.beans.PropertyChangeListener;
-import org.jetbrains.annotations.NotNull;
-
 import javax.annotation.Nonnull;
+
 import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.border.Border;

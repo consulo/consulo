@@ -7,7 +7,6 @@ import com.intellij.codeInsight.template.CustomLiveTemplate;
 import com.intellij.codeInsight.template.CustomLiveTemplateBase;
 import com.intellij.codeInsight.template.CustomTemplateCallback;
 import com.intellij.codeInsight.template.TemplateActionContext;
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.project.DumbAware;
@@ -22,6 +21,7 @@ import com.intellij.ui.EditorTextField;
 import com.intellij.util.ProcessingContext;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.codeInsight.completion.CompletionProvider;
+import consulo.disposer.Disposable;
 import consulo.util.dataholder.Key;
 import org.jetbrains.annotations.TestOnly;
 

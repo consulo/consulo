@@ -15,9 +15,7 @@
  */
 package com.intellij.openapi.fileChooser.ex;
 
-import com.intellij.icons.AllIcons;
 import com.intellij.ide.DesktopSaveAndSyncHandlerImpl;
-import com.intellij.ide.IdeEventQueue;
 import com.intellij.ide.SaveAndSyncHandler;
 import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.ide.util.treeView.NodeRenderer;
@@ -28,9 +26,9 @@ import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.fileChooser.*;
 import com.intellij.openapi.fileChooser.impl.FileChooserUtil;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.ui.ComboBox;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
-import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.util.Iconable;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
@@ -41,8 +39,6 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.ui.*;
-import com.intellij.ui.components.JBLabel;
-import com.intellij.ui.components.JBList;
 import com.intellij.ui.components.labels.LinkLabel;
 import com.intellij.ui.treeStructure.Tree;
 import com.intellij.util.ArrayUtil;
@@ -56,6 +52,7 @@ import consulo.disposer.Disposer;
 import consulo.fileChooser.impl.FileChooserFactoryImpl;
 import consulo.fileTypes.impl.VfsIconUtil;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.image.Image;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.dataholder.Key;
 import org.jetbrains.annotations.NonNls;
@@ -70,11 +67,9 @@ import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
 import java.awt.*;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseEvent;
 import java.io.File;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 public class FileChooserDialogImpl extends DialogWrapper implements FileChooserDialog, PathChooserDialog, FileLookup {
   @NonNls
@@ -89,7 +84,7 @@ public class FileChooserDialogImpl extends DialogWrapper implements FileChooserD
   private JPanel myNorthPanel;
   private TextFieldAction myTextFieldAction;
   protected FileTextFieldImpl myPathTextField;
-  private JComponent myPathTextFieldWrapper;
+  private ComboBox<String> myPath;
 
   private MergingUpdateQueue myUiUpdater;
   private boolean myTreeIsUpdating;
@@ -234,7 +229,7 @@ public class FileChooserDialogImpl extends DialogWrapper implements FileChooserD
   }
 
   protected void saveRecent(String path) {
-    final List<String> files = new ArrayList<String>(Arrays.asList(getRecentFiles()));
+    final List<String> files = new ArrayList<>(Arrays.asList(getRecentFiles()));
     files.remove(path);
     files.add(0, path);
     while (files.size() > 30) {
@@ -245,72 +240,16 @@ public class FileChooserDialogImpl extends DialogWrapper implements FileChooserD
 
   @Nonnull
   private String[] getRecentFiles() {
-    final String[] recent = PropertiesComponent.getInstance().getValues(RECENT_FILES_KEY);
-    if (recent != null) {
-      if (recent.length > 0 && myPathTextField.getField().getText().replace('\\', '/').equals(recent[0])) {
-        final String[] pathes = new String[recent.length - 1];
-        System.arraycopy(recent, 1, pathes, 0, recent.length - 1);
-        return pathes;
-      }
-      return recent;
+    String[] array = PropertiesComponent.getInstance().getValues(RECENT_FILES_KEY);
+    if (array == null) {
+      return ArrayUtil.EMPTY_STRING_ARRAY;
     }
-    return ArrayUtil.EMPTY_STRING_ARRAY;
+
+    if (array.length > 0 && myPathTextField != null && myPathTextField.getField().getText().replace('\\', '/').equals(array[0])) {
+      return Arrays.copyOfRange(array, 1, array.length);
+    }
+    return array;
   }
-
-
-  protected JComponent createHistoryButton() {
-    JLabel label = new JBLabel(AllIcons.Actions.Get);
-    label.setToolTipText("Recent files");
-    new ClickListener() {
-      @Override
-      public boolean onClick(@Nonnull MouseEvent event, int clickCount) {
-        showRecentFilesPopup();
-        return true;
-      }
-    }.installOn(label);
-
-    new AnAction() {
-      @RequiredUIAccess
-      @Override
-      public void actionPerformed(AnActionEvent e) {
-        showRecentFilesPopup();
-      }
-
-      @RequiredUIAccess
-      @Override
-      public void update(AnActionEvent e) {
-        e.getPresentation().setEnabled(!IdeEventQueue.getInstance().isPopupActive());
-      }
-    }.registerCustomShortcutSet(KeyEvent.VK_DOWN, 0, myPathTextField.getField());
-    return label;
-  }
-
-  private void showRecentFilesPopup() {
-    final JBList files = new JBList(getRecentFiles()) {
-      @Override
-      public Dimension getPreferredSize() {
-        return new Dimension(myPathTextField.getField().getWidth(), super.getPreferredSize().height);
-      }
-    };
-    files.setCellRenderer(new ColoredListCellRenderer() {
-      @Override
-      protected void customizeCellRenderer(JList list, Object value, int index, boolean selected, boolean hasFocus) {
-        final String path = value.toString();
-        append(path);
-        final VirtualFile file = LocalFileSystem.getInstance().findFileByIoFile(new File(path));
-        if (file != null) {
-          setIcon(VfsIconUtil.getIcon(file, Iconable.ICON_FLAG_READ_STATUS, null));
-        }
-      }
-    });
-    JBPopupFactory.getInstance().createListPopupBuilder(files).setItemChoosenCallback(new Runnable() {
-      @Override
-      public void run() {
-        myPathTextField.getField().setText(files.getSelectedValue().toString());
-      }
-    }).createPopup().showUnderneathOf(myPathTextField.getField());
-  }
-
 
   protected DefaultActionGroup createActionGroup() {
     registerFileChooserShortcut(IdeActions.ACTION_DELETE, "FileChooser.Delete");
@@ -366,24 +305,26 @@ public class FileChooserDialogImpl extends DialogWrapper implements FileChooserD
       toolbarPanel.add(extraToolbarPanel, BorderLayout.SOUTH);
     }
 
-    myPathTextFieldWrapper = new JPanel(new BorderLayout());
-    myPathTextFieldWrapper.setBorder(JBUI.Borders.emptyBottom(2));
-    myPathTextField = new FileTextFieldImpl.Vfs(FileChooserFactoryImpl.getMacroMap(), getDisposable(), new LocalFsFinder.FileChooserFilter(myChooserDescriptor, myFileSystemTree)) {
+    myPath = new ComboBox<>(getRecentFiles());
+    myPath.setEditable(true);
+    myPath.setRenderer(SimpleListCellRenderer.<String>create((label, value, index) -> {
+      label.setText(value);
+      VirtualFile file = LocalFileSystem.getInstance().findFileByIoFile(new File(value));
+      label.setIcon(file == null ? Image.empty(Image.DEFAULT_ICON_SIZE) : VfsIconUtil.getIcon(file, Iconable.ICON_FLAG_READ_STATUS, null));
+    }));
+
+    myPathTextField = new FileTextFieldImpl.Vfs((JTextField)myPath.getEditor().getEditorComponent(), FileChooserFactoryImpl.getMacroMap(), getDisposable(),
+                                                new LocalFsFinder.FileChooserFilter(myChooserDescriptor, myFileSystemTree)) {
       @Override
       protected void onTextChanged(final String newValue) {
         myUiUpdater.cancelAllUpdates();
         updateTreeFromPath(newValue);
       }
     };
-    consulo.disposer.Disposer.register(myDisposable, myPathTextField);
-    myPathTextFieldWrapper.add(myPathTextField.getField(), BorderLayout.CENTER);
-    if (getRecentFiles().length > 0) {
-      myPathTextFieldWrapper.add(createHistoryButton(), BorderLayout.EAST);
-    }
+    Disposer.register(myDisposable, myPathTextField);
 
     myNorthPanel = new JPanel(new BorderLayout());
     myNorthPanel.add(toolbarPanel, BorderLayout.NORTH);
-
 
     updateTextFieldShowing();
 
@@ -549,7 +490,7 @@ public class FileChooserDialogImpl extends DialogWrapper implements FileChooserD
     return myFileSystemTree.getSelectedFiles();
   }
 
-  private final Map<String, LocalFileSystem.WatchRequest> myRequests = new HashMap<String, LocalFileSystem.WatchRequest>();
+  private final Map<String, LocalFileSystem.WatchRequest> myRequests = new HashMap<>();
 
   private static boolean isToShowTextField() {
     return PropertiesComponent.getInstance().getBoolean(FILE_CHOOSER_SHOW_PATH_PROPERTY, true);
@@ -624,14 +565,14 @@ public class FileChooserDialogImpl extends DialogWrapper implements FileChooserD
 
   private void updateTextFieldShowing() {
     myTextFieldAction.update();
-    myNorthPanel.remove(myPathTextFieldWrapper);
+    myNorthPanel.remove(myPath);
     if (isToShowTextField()) {
-      final ArrayList<VirtualFile> selection = new ArrayList<VirtualFile>();
+      final ArrayList<VirtualFile> selection = new ArrayList<>();
       if (myFileSystemTree.getSelectedFile() != null) {
         selection.add(myFileSystemTree.getSelectedFile());
       }
       updatePathFromTree(selection, true);
-      myNorthPanel.add(myPathTextFieldWrapper, BorderLayout.CENTER);
+      myNorthPanel.add(myPath, BorderLayout.CENTER);
     }
     else {
       setErrorText(null);

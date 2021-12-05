@@ -3,7 +3,6 @@ package com.intellij.openapi.wm.impl.status;
 
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.wm.CustomStatusBarWidget;
 import com.intellij.openapi.wm.StatusBar;
 import com.intellij.openapi.wm.StatusBarWidget;
@@ -13,6 +12,7 @@ import com.intellij.ui.UIBundle;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.ThreeState;
 import consulo.application.impl.BaseApplication;
+import consulo.disposer.Disposer;
 import org.jetbrains.annotations.Nls;
 import javax.annotation.Nonnull;
 
