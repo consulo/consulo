@@ -3,7 +3,7 @@
   <g fill="none" fill-rule="evenodd">
     <polygon fill="#AFB1B3" points="2 2 14 2 12 4 4 4"/>
     <polygon fill="#AFB1B3" points="2 11 14 11 12 13 4 13" transform="matrix(1 0 0 -1 0 24)"/>
-    <rect width="8" height="2" x="4" y="5" fill="#AFB1B3"/>
-    <rect width="8" height="2" x="4" y="8" fill="#AFB1B3"/>
+    <rect width="8" height="2" x="4" y="5" fill="#D4933C"/>
+    <rect width="8" height="2" x="4" y="8" fill="#6A9AB5"/>
   </g>
 </svg>

@@ -791,7 +791,7 @@
       <action id="ChangesView.RemoveChangeList" class="com.intellij.openapi.vcs.changes.actions.RemoveChangeListAction"
               icon="consulo.platform.base.PlatformIconGroup@general.remove"/>
       <action id="ChangesView.SetDefault" class="com.intellij.openapi.vcs.changes.actions.SetDefaultChangeListAction"
-              icon="consulo.platform.base.PlatformIconGroup@actions.submit1"/>
+              icon="consulo.platform.base.PlatformIconGroup@actions.selectall"/>
       <action id="ChangesView.Move" class="com.intellij.openapi.vcs.changes.actions.MoveChangesToAnotherListAction"
               icon="consulo.platform.base.PlatformIconGroup@actions.movetoanotherchangelist"/>
       <action id="ChangesView.Diff" class="com.intellij.openapi.vcs.changes.actions.diff.ShowDiffAction"

@@ -35,7 +35,7 @@ import com.intellij.openapi.vcs.changes.LocalChangeList;
 public class SetDefaultChangeListAction extends AnAction implements DumbAware {
   public SetDefaultChangeListAction() {
     super(VcsBundle.message("changes.action.setdefaultchangelist.text"),
-          VcsBundle.message("changes.action.setdefaultchangelist.description"), AllIcons.Actions.Submit1);
+          VcsBundle.message("changes.action.setdefaultchangelist.description"), AllIcons.Actions.Selectall);
   }
 
 

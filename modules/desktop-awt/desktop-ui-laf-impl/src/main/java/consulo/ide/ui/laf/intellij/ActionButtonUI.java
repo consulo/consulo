@@ -20,13 +20,17 @@ import com.intellij.ide.ui.UISettings;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.impl.ActionButton;
 import com.intellij.openapi.actionSystem.impl.ActionButtonWithText;
+import com.intellij.openapi.actionSystem.impl.ActionToolbarImpl;
 import com.intellij.openapi.ui.GraphicsConfig;
 import com.intellij.ui.ColorUtil;
 import com.intellij.ui.Gray;
+import com.intellij.ui.scale.JBUIScale;
 import com.intellij.util.ui.GraphicsUtil;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import consulo.awt.TargetAWT;
+import consulo.ui.image.Image;
+import consulo.ui.image.ImageEffects;
 
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
@@ -125,10 +129,15 @@ public class ActionButtonUI extends ComponentUI implements consulo.actionSystem.
     paintIcon(g, c, TargetAWT.to(c.getIcon()));
 
     if (c.shallPaintDownArrow()) {
-      int x = JBUI.scale(5);
-      int y = JBUI.scale(4);
+      Container parent = c.getParent();
+      
+      boolean horizontal = !(parent instanceof ActionToolbarImpl) || ((ActionToolbarImpl)parent).getOrientation() == ActionToolbar.HORIZONTAL_ORIENTATION;
+      int x = horizontal ? JBUIScale.scale(6) : JBUIScale.scale(5);
+      int y = horizontal ? JBUIScale.scale(5) : JBUIScale.scale(6);
 
-      TargetAWT.to(AllIcons.General.Dropdown).paintIcon(c, g, x, y);
+      Image image = c.isEnabled() ? AllIcons.General.Dropdown : ImageEffects.grayed(AllIcons.General.Dropdown);
+      
+      TargetAWT.to(image).paintIcon(c, g, x, y);
     }
   }
 
@@ -151,6 +160,7 @@ public class ActionButtonUI extends ComponentUI implements consulo.actionSystem.
     }
   }
 
+  @Override
   public void paintBackground(ActionButton button, Graphics g, Dimension size, int state) {
     if (state == ActionButtonComponent.NORMAL && !button.isBackgroundSet()) return;
 

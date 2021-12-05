@@ -157,7 +157,6 @@ public class AllIcons {
     public static final Image SplitVertically = PlatformIconGroup.actionsSplitVertically(); // 16x16
     public static final Image StartDebugger = PlatformIconGroup.actionsStartDebugger(); // 16x16
     public static final Image StepOut = PlatformIconGroup.actionsStepOut(); // 16x16
-    public static final Image Submit1 = PlatformIconGroup.actionsSubmit1(); // 11x11
     public static final Image Suspend = PlatformIconGroup.actionsSuspend(); // 16x16
     public static final Image SwapPanels = PlatformIconGroup.actionsSwapPanels(); // 16x16
     public static final Image SynchronizeScrolling = PlatformIconGroup.actionsSynchronizeScrolling(); // 16x16
@@ -395,7 +394,6 @@ public class AllIcons {
     public static final Image AutoscrollFromSource = PlatformIconGroup.generalAutoscrollFromSource(); // 16x16
     public static final Image AutoscrollToSource = PlatformIconGroup.generalAutoscrollToSource(); // 16x16
     public static final Image Balloon = PlatformIconGroup.generalBalloon(); // 16x16
-    public static final Image BalloonClose = PlatformIconGroup.generalBalloonClose(); // 30x30
     public static final Image BalloonError = PlatformIconGroup.generalBalloonError(); // 16x16
     public static final Image BalloonInformation = PlatformIconGroup.generalBalloonInformation(); // 16x16
     public static final Image BalloonWarning = PlatformIconGroup.generalBalloonWarning(); // 16x16
