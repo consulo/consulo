@@ -35,7 +35,7 @@ public class UnknownContentFolderTypeProvider extends ContentFolderTypeProvider 
   @Nonnull
   @Override
   public Image getIcon() {
-    return AllIcons.Toolbar.Unknown;
+    return AllIcons.Actions.Help;
   }
 
   @Nonnull

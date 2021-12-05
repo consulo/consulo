@@ -959,7 +959,6 @@ public class AllIcons {
     public static final Image Tomcat = PlatformIconGroup.runConfigurationsTomcat(); // 16x16
     public static final Image TrackCoverage = PlatformIconGroup.runConfigurationsTrackCoverage(); // 16x16
     public static final Image TrackTests = PlatformIconGroup.runConfigurationsTrackTests(); // 16x16
-    public static final Image Unknown = PlatformIconGroup.runConfigurationsUnknown(); // 16x16
     public static final Image Variables = PlatformIconGroup.runConfigurationsVariables(); // 16x16
     public static final Image Web_app = PlatformIconGroup.runConfigurationsWeb_app(); // 16x16
     public static final Image WithCoverageLayer = PlatformIconGroup.runConfigurationsWithCoverageLayer(); // 16x16
@@ -968,7 +967,6 @@ public class AllIcons {
 
   public static class Toolbar {
     public static final Image Filterdups = PlatformIconGroup.toolbarFilterdups(); // 16x16
-    public static final Image Folders = PlatformIconGroup.toolbarFolders(); // 16x16
     public static final Image Unknown = PlatformIconGroup.toolbarUnknown(); // 16x16
 
   }

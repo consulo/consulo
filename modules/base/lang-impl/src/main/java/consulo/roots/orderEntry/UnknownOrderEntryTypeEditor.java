@@ -29,6 +29,6 @@ public class UnknownOrderEntryTypeEditor implements OrderEntryTypeEditor<Unknown
   @Nonnull
   @Override
   public CellAppearanceEx getCellAppearance(@Nonnull UnknownOrderEntryImpl orderEntry) {
-    return SimpleTextCellAppearance.invalid(orderEntry.getPresentableName(), AllIcons.Toolbar.Unknown);
+    return SimpleTextCellAppearance.invalid(orderEntry.getPresentableName(), AllIcons.Actions.Help);
   }
 }

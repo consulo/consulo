@@ -636,7 +636,7 @@ abstract class TodoPanel extends SimpleToolWindowPanel implements OccurenceNavig
 
   public static final class MyShowPackagesAction extends ToggleAction {
     public MyShowPackagesAction() {
-      super(IdeBundle.message("action.group.by.packages"), null, AllIcons.Toolbar.Folders);
+      super(IdeBundle.message("action.group.by.packages"), null, AllIcons.Actions.GroupByPackage);
     }
 
     @Override

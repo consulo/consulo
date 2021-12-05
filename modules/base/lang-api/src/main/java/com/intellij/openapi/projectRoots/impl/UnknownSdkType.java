@@ -71,7 +71,7 @@ public class UnknownSdkType extends SdkType{
 
   @Override
   public Image getIcon() {
-    return AllIcons.Toolbar.Unknown;
+    return AllIcons.Actions.Help;
   }
 
   @Nullable

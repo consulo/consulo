@@ -137,7 +137,7 @@ public class ProgramRunnerUtil {
     RunConfiguration configuration = settings.getConfiguration();
     ConfigurationFactory factory = settings.getFactory();
     Image icon = factory != null ? factory.getIcon(configuration) : null;
-    if (icon == null) icon = AllIcons.RunConfigurations.Unknown;
+    if (icon == null) icon = AllIcons.Actions.Help;
     return icon;
   }
 

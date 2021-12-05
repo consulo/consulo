@@ -61,7 +61,7 @@ public class SandServerType extends ServerType<SandServerConfiguration> {
   @Nonnull
   @Override
   public Image getIcon() {
-    return AllIcons.Toolbar.Unknown;
+    return AllIcons.Actions.Help;
   }
 
   @Nonnull

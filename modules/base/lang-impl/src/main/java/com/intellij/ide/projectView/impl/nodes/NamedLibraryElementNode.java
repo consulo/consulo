@@ -121,7 +121,7 @@ public class NamedLibraryElementNode extends ProjectViewNode<NamedLibraryElement
       if(cellAppearance instanceof ModifiableCellAppearanceEx) {
         icon = ((ModifiableCellAppearanceEx)cellAppearance).getIcon();
       }
-      presentation.setIcon(icon == null ? AllIcons.Toolbar.Unknown : icon);
+      presentation.setIcon(icon == null ? AllIcons.Actions.Help : icon);
     }
   }
 

@@ -43,7 +43,7 @@ public class UnknownConfigurationType implements ConfigurationType {
 
   @Override
   public Image getIcon() {
-    return AllIcons.RunConfigurations.Unknown;
+    return AllIcons.Actions.Help;
   }
 
   @Override

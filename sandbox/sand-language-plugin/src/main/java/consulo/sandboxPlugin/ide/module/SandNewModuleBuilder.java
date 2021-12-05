@@ -89,7 +89,7 @@ public class SandNewModuleBuilder implements NewModuleBuilder {
       }
     });
 
-    NewModuleContextGroup subGroup = group.addGroup("sand-sub", LocalizeValue.localizeTODO("Sand Inner"), AllIcons.Nodes.UnknownJdk);
+    NewModuleContextGroup subGroup = group.addGroup("sand-sub", LocalizeValue.localizeTODO("Sand Inner"), AllIcons.Nodes.Folder);
 
     subGroup.add(LocalizeValue.localizeTODO("Sand Hello"), AllIcons.Nodes.Project, new NewModuleBuilderProcessor<>() {
       @Nonnull

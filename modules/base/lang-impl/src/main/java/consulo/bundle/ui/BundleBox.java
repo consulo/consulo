@@ -274,7 +274,7 @@ public class BundleBox implements PseudoComponent {
 
     myOriginalComboBox.setRender((render, index, value) -> {
       if (value instanceof InvalidBundleBoxItem) {
-        render.withIcon(AllIcons.Toolbar.Unknown);
+        render.withIcon(AllIcons.Actions.Help);
         render.append(value.getBundleName(), TextAttribute.ERROR);
       }
       else if (value instanceof CustomBundleBoxItem) {
@@ -304,7 +304,7 @@ public class BundleBox implements PseudoComponent {
         Sdk sdk = value.getBundle();
         String sdkName = value.getBundleName();
         assert sdkName != null;
-        render.withIcon(sdk == null ? AllIcons.Toolbar.Unknown : SdkUtil.getIcon(sdk));
+        render.withIcon(sdk == null ? AllIcons.Actions.Help : SdkUtil.getIcon(sdk));
         render.append(sdkName, sdk == null ? TextAttribute.ERROR : TextAttribute.REGULAR);
         String version = sdk == null ? null : sdk.getVersionString();
         if (version != null) {

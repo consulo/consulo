@@ -95,7 +95,7 @@ public class OrderEntryAppearanceServiceImpl extends OrderEntryAppearanceService
   @Override
   public CellAppearanceEx forSdk(@Nullable final Sdk jdk, final boolean isInComboBox, final boolean selected, final boolean showVersion) {
     if (jdk == null) {
-      return SimpleTextCellAppearance.invalid(ProjectBundle.message("unknown.sdk"), AllIcons.Toolbar.Unknown);
+      return SimpleTextCellAppearance.invalid(ProjectBundle.message("unknown.sdk"), AllIcons.Actions.Help);
     }
 
     String name = jdk.getName();

@@ -408,7 +408,7 @@ public class UpdateInfoTree extends PanelWithActionsAndCloseButton {
 
   private class MyGroupByPackagesAction extends ToggleAction implements DumbAware {
     public MyGroupByPackagesAction() {
-      super(VcsBundle.message("action.name.group.by.packages"), null, AllIcons.Toolbar.Folders);
+      super(VcsBundle.message("action.name.group.by.packages"), null, AllIcons.Actions.GroupByPackage);
     }
 
     public boolean isSelected(AnActionEvent e) {

@@ -117,7 +117,7 @@ public class SdkComboBox extends ComboBoxWithWidePopup {
       public void customizeCellRenderer(@Nonnull JList list, SdkComboBoxItem value, int index, boolean selected, boolean hasFocus) {
         setIcon(Image.empty(16));    // to fix vertical size
         if (value instanceof InvalidSdkComboBoxItem) {
-          setIcon(AllIcons.Toolbar.Unknown);
+          setIcon(AllIcons.Actions.Help);
           append(value.getSdkName(), SimpleTextAttributes.ERROR_ATTRIBUTES);
         }
         else if (value instanceof CustomSdkComboBoxItem) {
@@ -147,7 +147,7 @@ public class SdkComboBox extends ComboBoxWithWidePopup {
           Sdk sdk = value.getSdk();
           String sdkName = value.getSdkName();
           assert sdkName != null;
-          setIcon(sdk == null ? AllIcons.Toolbar.Unknown : SdkUtil.getIcon(sdk));
+          setIcon(sdk == null ? AllIcons.Actions.Help : SdkUtil.getIcon(sdk));
           append(sdkName, sdk == null ? SimpleTextAttributes.ERROR_ATTRIBUTES : SimpleTextAttributes.REGULAR_ATTRIBUTES);
           String version = sdk == null ? null : sdk.getVersionString();
           if (version != null) {
