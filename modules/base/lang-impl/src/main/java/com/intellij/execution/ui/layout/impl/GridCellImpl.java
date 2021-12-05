@@ -30,15 +30,12 @@ import com.intellij.ui.components.panels.NonOpaquePanel;
 import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentManager;
 import com.intellij.ui.tabs.JBTabs;
-import com.intellij.ui.tabs.JBTabsPosition;
 import com.intellij.ui.tabs.TabInfo;
 import com.intellij.ui.tabs.TabsListener;
 import com.intellij.ui.tabs.impl.JBEditorTabs;
 import com.intellij.ui.tabs.impl.TabLabel;
-import com.intellij.ui.tabs.impl.TabsBorder;
 import com.intellij.ui.tabs.impl.singleRow.ScrollableSingleRowLayout;
 import com.intellij.ui.tabs.impl.singleRow.SingleRowLayout;
-import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import consulo.util.dataholder.Key;
 
@@ -77,22 +74,8 @@ public class GridCellImpl implements GridCell {
       }
 
       @Override
-      public TabsBorder createBorder() {
-        return new TabsBorder(this) {
-          @Override
-          protected Insets createEffectiveInsets(JBTabsPosition position) {
-            //return JBUI.insetsTop(1);
-
-            if (myTabs.getPresentation().isHideTabs()) {
-              return JBUI.emptyInsets();
-            }
-            //
-            //if (position == JBTabsPosition.top) {
-            //  return JBUI.insetsTop(1);
-            //}
-            return JBUI.insets(1, 0, 0, 0);
-          }
-        };
+      public boolean isTabsBorderEnabled() {
+        return false;
       }
 
       @Override
@@ -292,9 +275,9 @@ public class GridCellImpl implements GridCell {
     ViewContext myContext;
 
     private ProviderWrapper(final Content content, final ViewContext context) {
+      super(new BorderLayout());
       myContent = content;
       myContext = context;
-      setLayout(new BorderLayout());
       add(content.getComponent(), BorderLayout.CENTER);
     }
 

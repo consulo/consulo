@@ -166,7 +166,7 @@ public class TabLabel extends JPanel {
     };
     label.setOpaque(false);
     label.setBorder(null);
-    label.setIconTextGap(tabs.isEditorTabs() ? (!UISettings.getInstance().HIDE_TABS_IF_NEED ? JBUI.scale(4) : JBUI.scale(2)) : new JLabel().getIconTextGap());
+    label.setIconTextGap((!UISettings.getInstance().HIDE_TABS_IF_NEED ? JBUI.scale(4) : JBUI.scale(2)));
     label.setIconOpaque(false);
     label.setIpad(JBUI.emptyInsets());
 
@@ -176,7 +176,7 @@ public class TabLabel extends JPanel {
   @Override
   public Insets getInsets() {
     Insets insets = super.getInsets();
-    if (myTabs.isEditorTabs() && UISettings.getInstance().SHOW_CLOSE_BUTTON) {
+    if (UISettings.getInstance().SHOW_CLOSE_BUTTON) {
       insets.right = JBUI.scale(3);
     }
     return insets;
@@ -300,22 +300,22 @@ public class TabLabel extends JPanel {
   @Override
   public Dimension getPreferredSize() {
     final Dimension size = super.getPreferredSize();
-    size.height = TabsUtil.getTabsHeight();
+    size.height = TabsUtil.getRealTabsHeight();
     if (myActionPanel != null && !myActionPanel.isVisible()) {
       final Dimension actionPanelSize = myActionPanel.getPreferredSize();
       size.width += actionPanelSize.width;
     }
 
+
+    //@Override
+    //public Dimension getPreferredSize() {
+    //  Dimension result = super.getPreferredSize();
+    //  result.height += myTabs.getActiveTabUnderlineHeight() - JBUI.scale(1);
+    //  return result;
+    //}
+
     final JBTabsPosition pos = myTabs.getTabsPosition();
     switch (pos) {
-      case top:
-      case bottom:
-        if (myTabs.hasUnderline()) size.height += myTabs.getActiveTabUnderlineHeight() - 1;
-
-        if(myInfo.getGroup() != null) {
-          size.height += JBUI.scale(4);
-        }
-        break;
       case left:
       case right:
         size.width += getSelectedOffset();

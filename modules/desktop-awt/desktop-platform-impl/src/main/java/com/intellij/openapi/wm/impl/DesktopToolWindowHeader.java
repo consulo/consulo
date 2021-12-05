@@ -243,6 +243,6 @@ public abstract class DesktopToolWindowHeader extends JPanel implements Disposab
   @Override
   public Dimension getPreferredSize() {
     Dimension size = super.getPreferredSize();
-    return new Dimension(size.width, TabsUtil.getTabsHeight() + JBUI.scale(TabsUtil.TAB_VERTICAL_PADDING) * 2);
+    return new Dimension(size.width, TabsUtil.getRealTabsHeight());
   }
 }

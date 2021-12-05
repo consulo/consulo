@@ -34,4 +34,8 @@ public class TabsUtil {
   public static int getTabsHeight() {
     return JBUI.scale(24);
   }
+
+  public static int getRealTabsHeight() {
+    return TabsUtil.getTabsHeight() + JBUI.scale(TabsUtil.TAB_VERTICAL_PADDING) * 2;
+  }
 }

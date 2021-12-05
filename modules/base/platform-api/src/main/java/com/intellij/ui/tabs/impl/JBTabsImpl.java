@@ -162,11 +162,9 @@ public abstract class JBTabsImpl extends JComponent
   private TimedDeadzone.Length myTabActionsMouseDeadzone = TimedDeadzone.DEFAULT;
 
   private long myRemoveDeferredRequest;
-  private boolean myTestMode;
 
   private JBTabsPosition myPosition = JBTabsPosition.top;
 
-  private final TabsBorder myBorder;
   private BaseNavigationAction myNextAction;
   private BaseNavigationAction myPrevAction;
 
@@ -220,8 +218,6 @@ public abstract class JBTabsImpl extends JComponent
     myFocusManager = focusManager != null ? focusManager : getGlobalInstance();
 
     setOpaque(true);
-
-    myBorder = createBorder();
 
     setPaintBorder(-1, -1, -1, -1);
 
@@ -303,21 +299,19 @@ public abstract class JBTabsImpl extends JComponent
           consulo.disposer.Disposer.register(child, myAnimator);
           consulo.disposer.Disposer.register(child, () -> removeTimerUpdate());
 
-          if (!myTestMode) {
-            final IdeGlassPane gp = IdeGlassPaneUtil.find(child);
-            if (gp != null) {
-              gp.addMouseMotionPreprocessor(myTabActionsAutoHideListener, child);
-              myGlassPane = gp;
-            }
-
-            UIUtil.addAwtListener(event -> {
-              if (mySingleRowLayout.myMorePopup != null) return;
-              processFocusChange();
-            }, AWTEvent.FOCUS_EVENT_MASK, child);
-
-            myDragHelper = new DragHelper(child);
-            myDragHelper.start();
+          final IdeGlassPane gp = IdeGlassPaneUtil.find(child);
+          if (gp != null) {
+            gp.addMouseMotionPreprocessor(myTabActionsAutoHideListener, child);
+            myGlassPane = gp;
           }
+
+          UIUtil.addAwtListener(event -> {
+            if (mySingleRowLayout.myMorePopup != null) return;
+            processFocusChange();
+          }, AWTEvent.FOCUS_EVENT_MASK, child);
+
+          myDragHelper = new DragHelper(child);
+          myDragHelper.start();
 
           if (myProject != null && myFocusManager == getGlobalInstance()) {
             myFocusManager = IdeFocusManager.getInstance(myProject);
@@ -327,10 +321,6 @@ public abstract class JBTabsImpl extends JComponent
     }
 
     updateUI();
-  }
-
-  public TabsBorder createBorder() {
-    return new TabsBorder(this);
   }
 
   protected SingleRowLayout createSingleRowLayout() {
@@ -347,10 +337,6 @@ public abstract class JBTabsImpl extends JComponent
     }
 
     return this;
-  }
-
-  public int getActiveTabUnderlineHeight() {
-    return TabsUtil.ACTIVE_TAB_UNDERLINE_HEIGHT;
   }
 
   @Deprecated
@@ -483,23 +469,19 @@ public abstract class JBTabsImpl extends JComponent
     }
   }
 
-  void setTestMode(final boolean testMode) {
-    myTestMode = testMode;
-  }
-
-  public void layoutComp(SingleRowPassInfo data, int deltaX, int deltaY, int deltaWidth, int deltaHeight) {
+  public void layoutComp(SingleRowPassInfo data, int deltaX, int deltaY) {
     if (data.hToolbar != null) {
       final int toolbarHeight = data.hToolbar.getPreferredSize().height;
-      final Rectangle compRect = layoutComp(deltaX, toolbarHeight + deltaY, data.comp, deltaWidth, deltaHeight);
+      final Rectangle compRect = layoutComp(deltaX, toolbarHeight + deltaY, data.comp);
       layout(data.hToolbar, compRect.x, compRect.y - toolbarHeight, compRect.width, toolbarHeight);
     }
     else if (data.vToolbar != null) {
       final int toolbarWidth = data.vToolbar.getPreferredSize().width;
-      final Rectangle compRect = layoutComp(toolbarWidth + deltaX, deltaY, data.comp, deltaWidth, deltaHeight);
+      final Rectangle compRect = layoutComp(toolbarWidth + deltaX, deltaY, data.comp);
       layout(data.vToolbar, compRect.x - toolbarWidth, compRect.y, toolbarWidth, compRect.height);
     }
     else {
-      layoutComp(deltaX, deltaY, data.comp, deltaWidth, deltaHeight);
+      layoutComp(deltaX, deltaY, data.comp);
     }
   }
 
@@ -939,12 +921,6 @@ public abstract class JBTabsImpl extends JComponent
   private AsyncResult<Void> requestFocus(final JComponent toFocus) {
     if (toFocus == null) return AsyncResult.resolved();
 
-    if (myTestMode) {
-      getGlobalInstance().doWhenFocusSettlesDown(() -> getGlobalInstance().requestFocus(toFocus, true));
-      return AsyncResult.resolved();
-    }
-
-
     if (isShowing()) {
       return myFocusManager.requestFocus(toFocus, true);
     }
@@ -1381,9 +1357,8 @@ public abstract class JBTabsImpl extends JComponent
     private final JBTabsImpl myTabs;
 
     public Toolbar(JBTabsImpl tabs, TabInfo info) {
+      super(new BorderLayout());
       myTabs = tabs;
-
-      setLayout(new BorderLayout());
 
       final ActionGroup group = info.getGroup();
       final JComponent side = info.getSideComponent();
@@ -1490,10 +1465,10 @@ public abstract class JBTabsImpl extends JComponent
     }
   }
 
-  public Rectangle layoutComp(int componentX, int componentY, final JComponent comp, int deltaWidth, int deltaHeight) {
+  public Rectangle layoutComp(int componentX, int componentY, final JComponent comp) {
     final Insets insets = getLayoutInsets();
 
-    final Insets border = myBorder.getEffectiveBorder();
+    final Insets border = JBUI.emptyInsets();
 
     final Insets inner = getInnerInsets();
     border.top += inner.top;
@@ -1527,10 +1502,6 @@ public abstract class JBTabsImpl extends JComponent
       insets = JBUI.emptyInsets();
     }
     return insets;
-  }
-
-  public int getToolbarInset() {
-    return 0;
   }
 
   public void resetLayout(boolean resetLabels) {
@@ -1567,14 +1538,6 @@ public abstract class JBTabsImpl extends JComponent
     if (resetLabels) {
       resetLayout(myInfo2Label.get(each));
     }
-  }
-
-  public static int getArcSize() {
-    return 4;
-  }
-
-  public int getGhostTabLength() {
-    return 15;
   }
 
   public JBTabsPosition getPosition() {
@@ -1628,13 +1591,6 @@ public abstract class JBTabsImpl extends JComponent
     super.paint(g);
   }
 
-  @Override
-  protected void paintChildren(final Graphics g) {
-    super.paintChildren(g);
-
-    getUIInternal().paintChildren(this, g);
-  }
-
   private Max computeMaxSize() {
     Max max = new Max();
     for (TabInfo eachInfo : myVisibleInfos) {
@@ -1651,6 +1607,10 @@ public abstract class JBTabsImpl extends JComponent
     max.myToolbar.height++;
 
     return max;
+  }
+
+  public int getTabBorderSize() {
+    return TabsUtil.TABS_BORDER;
   }
 
   @Override
@@ -1867,10 +1827,6 @@ public abstract class JBTabsImpl extends JComponent
     revalidateAndRepaint(layoutNow);
   }
 
-  public TabsBorder getTabsBorder() {
-    return myBorder;
-  }
-
   @Override
   @Nonnull
   public JBTabs addTabMouseListener(@Nonnull MouseListener listener) {
@@ -1969,20 +1925,6 @@ public abstract class JBTabsImpl extends JComponent
     myHideTabs = hideTabs;
 
     relayout(true, false);
-  }
-
-  @Override
-  public JBTabsPresentation setPaintBorder(int top, int left, int right, int bottom) {
-    return myBorder.setPaintBorder(top, left, right, bottom);
-  }
-
-  @Override
-  public JBTabsPresentation setTabSidePaintBorder(int size) {
-    return myBorder.setTabSidePaintBorder(size);
-  }
-
-  static int getBorder(int size) {
-    return size == -1 ? 1 : size;
   }
 
   private boolean isPaintFocus() {
@@ -2197,10 +2139,6 @@ public abstract class JBTabsImpl extends JComponent
 
   public boolean useBoldLabels() {
     return false;
-  }
-
-  public boolean hasUnderline() {
-    return true;
   }
 
   @Override
@@ -2504,8 +2442,13 @@ public abstract class JBTabsImpl extends JComponent
     return myVisibleInfos.isEmpty();
   }
 
-  public int getInterTabSpaceLength() {
-    return 1;
+  public final int getInterTabSpaceLength() {
+    // join two borders into one
+    return -1;
+  }
+
+  public boolean isTabsBorderEnabled() {
+    return true;
   }
 
   @Override

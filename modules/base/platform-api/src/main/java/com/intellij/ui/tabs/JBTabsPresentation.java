@@ -28,8 +28,17 @@ public interface JBTabsPresentation {
 
   void setHideTabs(boolean hideTabs);
 
-  JBTabsPresentation setPaintBorder(int top, int left, int right, int bottom);
-  JBTabsPresentation setTabSidePaintBorder(int size);
+  @Deprecated
+  @DeprecationInfo("Doing nothing")
+  default JBTabsPresentation setPaintBorder(int top, int left, int right, int bottom) {
+    return this;
+  }
+
+  @Deprecated
+  @DeprecationInfo("Doing nothing")
+  default JBTabsPresentation setTabSidePaintBorder(int size) {
+    return this;
+  }
 
   JBTabsPresentation setPaintFocus(boolean paintFocus);
 

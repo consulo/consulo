@@ -56,12 +56,7 @@ public class JBTabsPaneImpl implements TabbedPane, SwingConstants {
       public void selectionChanged(TabInfo oldSelection, TabInfo newSelection) {
         fireChanged(new ChangeEvent(myTabs));
       }
-    }).getPresentation()
-            .setPaintBorder(1, 1, 1, 1)
-            .setTabSidePaintBorder(2)
-            .setPaintFocus(UIUtil.isUnderBuildInLaF())
-            .setAlwaysPaintSelectedTab(UIUtil.isUnderBuildInLaF())
-            .setGhostsAlwaysVisible(true);
+    });
 
     setTabPlacement(tabPlacement);
   }

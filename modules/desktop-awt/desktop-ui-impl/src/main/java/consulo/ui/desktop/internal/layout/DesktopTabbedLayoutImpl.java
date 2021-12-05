@@ -36,8 +36,6 @@ public class DesktopTabbedLayoutImpl extends SwingComponentDelegate<JBEditorTabs
       super(null, ActionManager.getInstance(), null, null);
 
       setFirstTabOffset(10);
-
-      getPresentation().setPaintBorder(1, 1, 1, 1).setTabSidePaintBorder(2);
     }
 
     @Override

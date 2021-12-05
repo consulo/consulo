@@ -49,6 +49,7 @@ import com.intellij.util.ArrayUtil;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
+import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import consulo.annotation.DeprecationInfo;
 import consulo.awt.TargetAWT;
@@ -174,8 +175,8 @@ public abstract class DesktopEditorComposite implements EditorComposite {
   private TabbedPaneWrapper.AsJBTabs createTabbedPaneWrapper(FileEditor[] editors) {
     PrevNextActionsDescriptor descriptor = new PrevNextActionsDescriptor(IdeActions.ACTION_NEXT_EDITOR_TAB, IdeActions.ACTION_PREVIOUS_EDITOR_TAB);
     final TabbedPaneWrapper.AsJBTabs wrapper = new TabbedPaneWrapper.AsJBTabs(myFileEditorManager.getProject(), SwingConstants.BOTTOM, descriptor, this);
-    wrapper.getTabs().getPresentation().setPaintBorder(0, 0, 0, 0).setTabSidePaintBorder(1).setGhostsAlwaysVisible(true)
-            .setUiDecorator(() -> new UiDecorator.UiDecoration(null, new Insets(0, 8, 0, 8)));
+    wrapper.getTabs().getPresentation()
+            .setUiDecorator(() -> new UiDecorator.UiDecoration(null, JBUI.insets(0, 8)));
     wrapper.getTabs().getComponent().setBorder(new EmptyBorder(0, 0, 1, 0));
 
     boolean firstEditor = true;

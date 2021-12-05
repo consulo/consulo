@@ -15,10 +15,7 @@
  */
 package consulo.ide.ui.laf;
 
-import com.intellij.ui.tabs.impl.JBTabsImpl;
-
 import javax.swing.plaf.ComponentUI;
-import java.awt.*;
 
 /**
  * @author VISTALL
@@ -26,6 +23,4 @@ import java.awt.*;
  */
 public abstract class JBEditorTabsUI extends ComponentUI {
   public abstract void clearLastPaintedTab();
-
-  public abstract void paintChildren(JBTabsImpl tabs, Graphics g);
 }

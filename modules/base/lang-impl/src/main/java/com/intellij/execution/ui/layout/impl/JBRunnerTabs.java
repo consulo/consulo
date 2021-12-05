@@ -15,7 +15,6 @@
  */
 package com.intellij.execution.ui.layout.impl;
 
-import consulo.disposer.Disposable;
 import com.intellij.openapi.actionSystem.ActionGroup;
 import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.project.Project;
@@ -26,10 +25,10 @@ import com.intellij.ui.tabs.UiDecorator;
 import com.intellij.ui.tabs.impl.JBEditorTabs;
 import com.intellij.ui.tabs.impl.JBTabsImpl;
 import com.intellij.ui.tabs.impl.TabLabel;
-import com.intellij.util.ui.JBUI;
+import consulo.disposer.Disposable;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.awt.*;
 import java.util.Map;
@@ -98,13 +97,6 @@ public class JBRunnerTabs extends JBEditorTabs {
         wrapper.remove(0);
         wrapper.add(Box.createHorizontalStrut(6), BorderLayout.WEST);
       }
-    }
-
-    @Override
-    public Dimension getPreferredSize() {
-      Dimension result = super.getPreferredSize();
-      result.height += myTabs.getActiveTabUnderlineHeight() - JBUI.scale(1);
-      return result;
     }
   }
 }

@@ -17,12 +17,12 @@ import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Computable;
-import consulo.disposer.Disposable;
-import consulo.disposer.Disposer;
 import com.intellij.openapi.wm.ToolWindowId;
 import com.intellij.openapi.wm.ToolWindowManager;
-import javax.annotation.Nonnull;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
@@ -144,15 +144,16 @@ public class RunContentExecutor implements Disposable {
   }
 
   private static JComponent createConsolePanel(ConsoleView view, ActionGroup actions) {
-    JPanel panel = new JPanel();
-    panel.setLayout(new BorderLayout());
+    JPanel panel = new JPanel(new BorderLayout());
+
     panel.add(view.getComponent(), BorderLayout.CENTER);
-    panel.add(createToolbar(actions), BorderLayout.WEST);
+    panel.add(createToolbar(actions, panel), BorderLayout.WEST);
     return panel;
   }
 
-  private static JComponent createToolbar(ActionGroup actions) {
+  private static JComponent createToolbar(ActionGroup actions, JPanel panel) {
     ActionToolbar actionToolbar = ActionManager.getInstance().createActionToolbar(ActionPlaces.UNKNOWN, actions, false);
+    actionToolbar.setTargetComponent(panel);
     return actionToolbar.getComponent();
   }
 
