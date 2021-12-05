@@ -19,7 +19,6 @@ import com.intellij.ide.DataManager;
 import com.intellij.ide.util.scopeChooser.ScopeChooserConfigurable;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.ConfigurationException;
-import com.intellij.openapi.options.SearchableConfigurable;
 import com.intellij.openapi.options.ex.Settings;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Comparing;
@@ -28,10 +27,12 @@ import com.intellij.openapi.vcs.VcsConfiguration;
 import com.intellij.psi.search.scope.packageSet.NamedScope;
 import com.intellij.psi.search.scope.packageSet.NamedScopesHolder;
 import com.intellij.ui.components.labels.LinkLabel;
-import com.intellij.ui.components.labels.LinkListener;
 import com.intellij.util.ui.UIUtil;
+import consulo.disposer.Disposable;
+import consulo.ui.annotation.RequiredUIAccess;
 import org.jetbrains.annotations.Nls;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -79,44 +80,42 @@ class VcsUpdateInfoScopeFilterConfigurable implements Configurable, NamedScopesH
     return VcsBundle.message("settings.filter.update.project.info.by.scope");
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   @Override
   public String getHelpTopic() {
     return null;
   }
 
-  @javax.annotation.Nullable
+  @RequiredUIAccess
+  @Nullable
   @Override
-  public JComponent createComponent() {
+  public JComponent createComponent(Disposable uiDisposable) {
     final JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
     panel.add(myCheckbox);
     panel.add(myComboBox);
     panel.add(Box.createHorizontalStrut(UIUtil.DEFAULT_HGAP));
-    panel.add(new LinkLabel("Edit scopes", null, new LinkListener() {
-      @Override
-      public void linkSelected(LinkLabel aSource, Object aLinkData) {
-        final Settings optionsEditor = DataManager.getInstance().getDataContext(panel).getData(Settings.KEY);
-        if (optionsEditor != null) {
-          SearchableConfigurable configurable = optionsEditor.findConfigurableById(new ScopeChooserConfigurable(myProject).getId());
-          if (configurable != null) {
-            optionsEditor.select(configurable);
-          }
-        }
+    panel.add(new LinkLabel<>("Edit scopes", null, (aSource, aLinkData) -> {
+      final Settings optionsEditor = DataManager.getInstance().getDataContext(panel).getData(Settings.KEY);
+      if (optionsEditor != null) {
+        optionsEditor.select(ScopeChooserConfigurable.class);
       }
     }));
     return panel;
   }
 
+  @RequiredUIAccess
   @Override
   public boolean isModified() {
     return !Comparing.equal(myVcsConfiguration.UPDATE_FILTER_SCOPE_NAME, getScopeFilterName());
   }
 
+  @RequiredUIAccess
   @Override
   public void apply() throws ConfigurationException {
     myVcsConfiguration.UPDATE_FILTER_SCOPE_NAME = getScopeFilterName();
   }
 
+  @RequiredUIAccess
   @Override
   public void reset() {
     myComboBox.removeAllItems();
@@ -135,6 +134,7 @@ class VcsUpdateInfoScopeFilterConfigurable implements Configurable, NamedScopesH
     myCheckbox.setSelected(selection);
   }
 
+  @RequiredUIAccess
   @Override
   public void disposeUIResources() {
     for (NamedScopesHolder holder : myNamedScopeHolders) {
