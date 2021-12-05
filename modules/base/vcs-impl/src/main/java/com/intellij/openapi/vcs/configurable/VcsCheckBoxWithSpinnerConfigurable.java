@@ -15,11 +15,12 @@
  */
 package com.intellij.openapi.vcs.configurable;
 
-import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.ui.JBUI;
+import consulo.disposer.Disposable;
 import consulo.ui.annotation.RequiredUIAccess;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 
@@ -29,7 +30,7 @@ import java.awt.*;
  * Date: 11/28/12
  * Time: 2:41 PM
  */
-public abstract class VcsCheckBoxWithSpinnerConfigurable implements Configurable {
+public abstract class VcsCheckBoxWithSpinnerConfigurable {
   protected final Project myProject;
   private final String myCheckboxText;
   private final String myMeasure;
@@ -43,8 +44,7 @@ public abstract class VcsCheckBoxWithSpinnerConfigurable implements Configurable
   }
 
   @RequiredUIAccess
-  @Override
-  public JComponent createComponent() {
+  public JComponent createComponent(@Nonnull Disposable uiDisposable) {
     JPanel wrapper = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
     myHighlightRecentlyChanged = new JCheckBox(myCheckboxText);
     myHighlightInterval = new JSpinner(createSpinnerModel());
@@ -59,4 +59,10 @@ public abstract class VcsCheckBoxWithSpinnerConfigurable implements Configurable
   }
 
   protected abstract SpinnerNumberModel createSpinnerModel();
+
+  public abstract boolean isModified();
+
+  public abstract void reset();
+
+  public abstract void apply();
 }

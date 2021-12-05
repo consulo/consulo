@@ -23,14 +23,13 @@ import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.vcs.VcsBundle;
 import com.intellij.openapi.vcs.VcsConfiguration;
 import com.intellij.ui.components.JBCheckBox;
-import org.jetbrains.annotations.Nls;
+import consulo.disposer.Disposable;
+import consulo.ui.annotation.RequiredUIAccess;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class VcsCommitMessageMarginConfigurable implements UnnamedConfigurable {
 
@@ -48,16 +47,12 @@ public class VcsCommitMessageMarginConfigurable implements UnnamedConfigurable {
     myWrapCheckbox = new JBCheckBox(ApplicationBundle.message("checkbox.wrap.typing.on.right.margin"), false);
   }
 
+  @RequiredUIAccess
   @Nullable
   @Override
-  public JComponent createComponent() {
-    JComponent spinnerComponent = mySpinnerConfigurable.createComponent();
-    mySpinnerConfigurable.myHighlightRecentlyChanged.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        myWrapCheckbox.setEnabled(mySpinnerConfigurable.myHighlightRecentlyChanged.isSelected());
-      }
-    });
+  public JComponent createComponent(@Nonnull Disposable uiDisposable) {
+    JComponent spinnerComponent = mySpinnerConfigurable.createComponent(uiDisposable);
+    mySpinnerConfigurable.myHighlightRecentlyChanged.addActionListener(e -> myWrapCheckbox.setEnabled(mySpinnerConfigurable.myHighlightRecentlyChanged.isSelected()));
 
     JPanel rootPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
     rootPanel.add(spinnerComponent);
@@ -65,27 +60,25 @@ public class VcsCommitMessageMarginConfigurable implements UnnamedConfigurable {
     return rootPanel;
   }
 
+  @RequiredUIAccess
   @Override
   public boolean isModified() {
     return mySpinnerConfigurable.isModified() || myWrapCheckbox.isSelected() != myConfiguration.WRAP_WHEN_TYPING_REACHES_RIGHT_MARGIN;
   }
 
+  @RequiredUIAccess
   @Override
   public void apply() throws ConfigurationException {
     mySpinnerConfigurable.apply();
     myConfiguration.WRAP_WHEN_TYPING_REACHES_RIGHT_MARGIN = myWrapCheckbox.isSelected();
   }
 
+  @RequiredUIAccess
   @Override
   public void reset() {
     mySpinnerConfigurable.reset();
     myWrapCheckbox.setSelected(myConfiguration.WRAP_WHEN_TYPING_REACHES_RIGHT_MARGIN);
     myWrapCheckbox.setEnabled(mySpinnerConfigurable.myHighlightRecentlyChanged.isSelected());
-  }
-
-  @Override
-  public void disposeUIResources() {
-    mySpinnerConfigurable.disposeUIResources();
   }
 
   private class MySpinnerConfigurable extends VcsCheckBoxWithSpinnerConfigurable {
@@ -98,12 +91,6 @@ public class VcsCommitMessageMarginConfigurable implements UnnamedConfigurable {
     protected SpinnerNumberModel createSpinnerModel() {
       final int columns = myConfiguration.COMMIT_MESSAGE_MARGIN_SIZE;
       return new SpinnerNumberModel(columns, 0, 10000, 1);
-    }
-
-    @Nls
-    @Override
-    public String getDisplayName() {
-      return VcsBundle.message("configuration.commit.message.margin.title");
     }
 
     @Override
@@ -120,7 +107,7 @@ public class VcsCommitMessageMarginConfigurable implements UnnamedConfigurable {
     }
 
     @Override
-    public void apply() throws ConfigurationException {
+    public void apply() {
       myConfiguration.USE_COMMIT_MESSAGE_MARGIN = myHighlightRecentlyChanged.isSelected();
       myConfiguration.COMMIT_MESSAGE_MARGIN_SIZE = ((Number) myHighlightInterval.getValue()).intValue();
     }

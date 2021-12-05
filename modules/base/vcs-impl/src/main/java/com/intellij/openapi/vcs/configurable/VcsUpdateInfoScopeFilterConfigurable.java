@@ -17,7 +17,6 @@ package com.intellij.openapi.vcs.configurable;
 
 import com.intellij.ide.DataManager;
 import com.intellij.ide.util.scopeChooser.ScopeChooserConfigurable;
-import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.options.ex.Settings;
 import com.intellij.openapi.project.Project;
@@ -30,7 +29,6 @@ import com.intellij.ui.components.labels.LinkLabel;
 import com.intellij.util.ui.UIUtil;
 import consulo.disposer.Disposable;
 import consulo.ui.annotation.RequiredUIAccess;
-import org.jetbrains.annotations.Nls;
 
 import javax.annotation.Nullable;
 import javax.swing.*;
@@ -41,7 +39,7 @@ import java.awt.*;
 /**
  * @author Kirill Likhodedov
  */
-class VcsUpdateInfoScopeFilterConfigurable implements Configurable, NamedScopesHolder.ScopeListener {
+class VcsUpdateInfoScopeFilterConfigurable implements NamedScopesHolder.ScopeListener {
   
   private final JCheckBox myCheckbox;
   private final JComboBox myComboBox;
@@ -74,21 +72,9 @@ class VcsUpdateInfoScopeFilterConfigurable implements Configurable, NamedScopesH
     reset();
   }
   
-  @Nls
-  @Override
-  public String getDisplayName() {
-    return VcsBundle.message("settings.filter.update.project.info.by.scope");
-  }
-
-  @Nullable
-  @Override
-  public String getHelpTopic() {
-    return null;
-  }
 
   @RequiredUIAccess
   @Nullable
-  @Override
   public JComponent createComponent(Disposable uiDisposable) {
     final JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
     panel.add(myCheckbox);
@@ -104,19 +90,16 @@ class VcsUpdateInfoScopeFilterConfigurable implements Configurable, NamedScopesH
   }
 
   @RequiredUIAccess
-  @Override
   public boolean isModified() {
     return !Comparing.equal(myVcsConfiguration.UPDATE_FILTER_SCOPE_NAME, getScopeFilterName());
   }
 
   @RequiredUIAccess
-  @Override
   public void apply() throws ConfigurationException {
     myVcsConfiguration.UPDATE_FILTER_SCOPE_NAME = getScopeFilterName();
   }
 
   @RequiredUIAccess
-  @Override
   public void reset() {
     myComboBox.removeAllItems();
     boolean selection = false;
@@ -135,7 +118,6 @@ class VcsUpdateInfoScopeFilterConfigurable implements Configurable, NamedScopesH
   }
 
   @RequiredUIAccess
-  @Override
   public void disposeUIResources() {
     for (NamedScopesHolder holder : myNamedScopeHolders) {
       holder.removeScopeListener(this);

@@ -16,6 +16,7 @@
 
 package com.intellij.openapi.options;
 
+import consulo.disposer.Disposable;
 import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
@@ -62,7 +63,15 @@ public interface SearchableConfigurable extends Configurable {
 
       @RequiredUIAccess
       @Override
+      @Deprecated
       public JComponent createComponent() {
+        return null;
+      }
+
+      @RequiredUIAccess
+      @Nullable
+      @Override
+      public JComponent createComponent(@Nonnull Disposable parentDisposable) {
         return null;
       }
 

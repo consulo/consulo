@@ -15,11 +15,9 @@
  */
 package com.intellij.openapi.vcs.configurable;
 
-import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.vcs.contentAnnotation.VcsContentAnnotationSettings;
-import org.jetbrains.annotations.Nls;
 
 import javax.swing.*;
 
@@ -32,26 +30,21 @@ public class VcsContentAnnotationConfigurable extends VcsCheckBoxWithSpinnerConf
     super(project, "Show changed in last", "days");
   }
 
+  @Override
   protected SpinnerNumberModel createSpinnerModel() {
     return new SpinnerNumberModel(1, 1, VcsContentAnnotationSettings.ourMaxDays, 1);
-  }
-
-  @Nls
-  @Override
-  public String getDisplayName() {
-    return "Show recently changed";
   }
 
   @Override
   public boolean isModified() {
     VcsContentAnnotationSettings settings = VcsContentAnnotationSettings.getInstance(myProject);
     if (myHighlightRecentlyChanged.isSelected() != settings.isShow()) return true;
-    if (! Comparing.equal(myHighlightInterval.getValue(), settings.getLimitDays())) return true;
+    if (!Comparing.equal(myHighlightInterval.getValue(), settings.getLimitDays())) return true;
     return false;
   }
 
   @Override
-  public void apply() throws ConfigurationException {
+  public void apply() {
     VcsContentAnnotationSettings settings = VcsContentAnnotationSettings.getInstance(myProject);
     settings.setShow(myHighlightRecentlyChanged.isSelected());
     settings.setLimit(((Number)myHighlightInterval.getValue()).intValue());

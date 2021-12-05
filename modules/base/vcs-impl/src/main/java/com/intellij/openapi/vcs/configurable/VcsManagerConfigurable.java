@@ -50,8 +50,8 @@ public class VcsManagerConfigurable extends SearchableConfigurable.Parent.Abstra
 
   @RequiredUIAccess
   @Override
-  public JComponent createComponent() {
-    myMappings = new VcsDirectoryConfigurationPanel(myProject);
+  public JComponent createComponent(@Nonnull Disposable uiDiposable) {
+    myMappings = new VcsDirectoryConfigurationPanel(myProject, uiDiposable);
     if (myGeneralPanel != null) {
       addListenerToGeneralPanel();
     }

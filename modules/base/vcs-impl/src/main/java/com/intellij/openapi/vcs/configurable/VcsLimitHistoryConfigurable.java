@@ -15,11 +15,9 @@
  */
 package com.intellij.openapi.vcs.configurable;
 
-import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.vcs.VcsConfiguration;
-import org.jetbrains.annotations.Nls;
 
 import javax.swing.*;
 
@@ -43,23 +41,17 @@ public class VcsLimitHistoryConfigurable extends VcsCheckBoxWithSpinnerConfigura
     return new SpinnerNumberModel(rows, 10, 1000000, 10);
   }
 
-  @Nls
-  @Override
-  public String getDisplayName() {
-    return "Limit History";
-  }
-
   @Override
   public boolean isModified() {
     if (myHighlightRecentlyChanged.isSelected() != myConfiguration.LIMIT_HISTORY) return true;
-    if (! Comparing.equal(myHighlightInterval.getValue(), myConfiguration.MAXIMUM_HISTORY_ROWS)) return true;
+    if (!Comparing.equal(myHighlightInterval.getValue(), myConfiguration.MAXIMUM_HISTORY_ROWS)) return true;
     return false;
   }
 
   @Override
-  public void apply() throws ConfigurationException {
+  public void apply() {
     myConfiguration.LIMIT_HISTORY = myHighlightRecentlyChanged.isSelected();
-    myConfiguration.MAXIMUM_HISTORY_ROWS = ((Number) myHighlightInterval.getValue()).intValue();
+    myConfiguration.MAXIMUM_HISTORY_ROWS = ((Number)myHighlightInterval.getValue()).intValue();
   }
 
   @Override
