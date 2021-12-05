@@ -289,7 +289,7 @@ public class AllFileTemplatesConfigurable implements SearchableConfigurable, Con
                 .setEnabled(myCurrentTab != myCodeTemplatesList && myCurrentTab != myOtherTemplatesList && myCurrentTab.getSelectedTemplate() != null);
       }
     };
-    AnAction resetAction = new AnAction(IdeBundle.message("action.reset.to.default"), null, AllIcons.Actions.Reset) {
+    AnAction resetAction = new AnAction(IdeBundle.message("action.reset.to.default"), null, AllIcons.General.Reset) {
       @RequiredUIAccess
       @Override
       public void actionPerformed(@Nonnull AnActionEvent e) {

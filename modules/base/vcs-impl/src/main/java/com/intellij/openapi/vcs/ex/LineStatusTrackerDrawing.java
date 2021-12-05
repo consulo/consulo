@@ -16,8 +16,6 @@
 package com.intellij.openapi.vcs.ex;
 
 import com.intellij.diff.util.DiffUtil;
-import com.intellij.icons.AllIcons;
-import consulo.disposer.Disposable;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.ActionUtil;
 import com.intellij.openapi.editor.Editor;
@@ -26,11 +24,12 @@ import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.vcs.VcsApplicationSettings;
 import com.intellij.openapi.vcs.actions.ShowNextChangeMarkerAction;
 import com.intellij.openapi.vcs.actions.ShowPrevChangeMarkerAction;
+import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
+import consulo.platform.base.icon.PlatformIconGroup;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;
@@ -65,7 +64,7 @@ public class LineStatusTrackerDrawing {
 
     @Nonnull
     @Override
-    protected ActionToolbar buildToolbar(@javax.annotation.Nullable Point mousePosition, @Nonnull Disposable parentDisposable) {
+    protected ActionToolbar buildToolbar(@Nullable Point mousePosition, @Nonnull Disposable parentDisposable) {
       final DefaultActionGroup group = new DefaultActionGroup();
 
       final ShowPrevChangeMarkerAction localShowPrevAction = new ShowPrevChangeMarkerAction(myTracker.getPrevRange(myRange), myTracker, myEditor);
@@ -90,15 +89,12 @@ public class LineStatusTrackerDrawing {
       DiffUtil.registerAction(copyRange, editorComponent);
 
       final List<AnAction> actionList = ActionUtil.getActions(editorComponent);
-      Disposer.register(parentDisposable, new Disposable() {
-        @Override
-        public void dispose() {
-          actionList.remove(localShowPrevAction);
-          actionList.remove(localShowNextAction);
-          actionList.remove(rollback);
-          actionList.remove(showDiff);
-          actionList.remove(copyRange);
-        }
+      Disposer.register(parentDisposable, () -> {
+        actionList.remove(localShowPrevAction);
+        actionList.remove(localShowNextAction);
+        actionList.remove(rollback);
+        actionList.remove(showDiff);
+        actionList.remove(copyRange);
       });
 
       return ActionManager.getInstance().createActionToolbar(ActionPlaces.FILEHISTORY_VIEW_TOOLBAR, group, true);
@@ -124,7 +120,7 @@ public class LineStatusTrackerDrawing {
                                   @Nonnull Editor editor,
                                   @Nonnull LineStatusTracker tracker,
                                   @Nullable Point mousePosition) {
-      super("Show Detailed Differences", null, AllIcons.Actions.PreviewDetails);
+      super("Highlight Words", null, PlatformIconGroup.generalHighlighting());
       myRange = range;
       myEditor = editor;
       myTracker = tracker;

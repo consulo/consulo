@@ -130,8 +130,6 @@ public class AllIcons {
     public static final Image RemoveMulticaret = PlatformIconGroup.actionsRemoveMulticaret(); // 16x16
     public static final Image Replace = PlatformIconGroup.actionsReplace(); // 16x16
     public static final Image Rerun = PlatformIconGroup.actionsRerun(); // 16x16
-    public static final Image Reset = PlatformIconGroup.actionsReset(); // 16x16
-    public static final Image Reset_to_empty = PlatformIconGroup.actionsReset_to_empty(); // 16x16
     public static final Image Restart = PlatformIconGroup.actionsRestart(); // 16x16
     public static final Image Resume = PlatformIconGroup.actionsResume(); // 16x16
     public static final Image Right = PlatformIconGroup.actionsRight(); // 16x16

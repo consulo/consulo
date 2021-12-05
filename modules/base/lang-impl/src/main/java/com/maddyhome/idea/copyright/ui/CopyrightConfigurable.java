@@ -133,7 +133,7 @@ public class CopyrightConfigurable extends NamedConfigurable<CopyrightProfile> i
       }
     });
     if (PredefinedCopyrightTextEP.EP_NAME.hasAnyExtensions()) {
-      group.add(new AnAction("Reset To", null, AllIcons.Actions.Reset) {
+      group.add(new AnAction("Reset To", null, AllIcons.General.Reset) {
         @RequiredUIAccess
         @Override
         public void actionPerformed(@Nonnull AnActionEvent e) {

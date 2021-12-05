@@ -26,28 +26,27 @@ import com.intellij.diff.util.DiffUtil;
 import com.intellij.diff.util.TextDiffType;
 import com.intellij.openapi.actionSystem.ActionToolbar;
 import com.intellij.openapi.editor.*;
-import com.intellij.openapi.editor.colors.EditorColors;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.editor.highlighter.EditorHighlighterFactory;
 import com.intellij.openapi.editor.markup.RangeHighlighter;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.fileTypes.PlainTextFileType;
-import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.util.BackgroundTaskUtil;
-import consulo.awt.TargetAWT;
-import consulo.disposer.Disposable;
-import consulo.disposer.Disposer;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.HintHint;
 import com.intellij.ui.HintListener;
+import com.intellij.ui.JBColor;
 import com.intellij.ui.LightweightHint;
-import com.intellij.util.Function;
 import com.intellij.util.ui.JBUI;
+import consulo.awt.TargetAWT;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
+import consulo.ui.annotation.RequiredUIAccess;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
@@ -156,6 +155,7 @@ public abstract class LineStatusMarkerPopup {
     }
   }
 
+  @RequiredUIAccess
   @Nullable
   private List<DiffFragment> computeWordDiff() {
     if (!isShowInnerDifferences()) return null;
@@ -164,12 +164,7 @@ public abstract class LineStatusMarkerPopup {
     final CharSequence vcsContent = myTracker.getVcsContent(myRange);
     final CharSequence currentContent = myTracker.getCurrentContent(myRange);
 
-    return BackgroundTaskUtil.tryComputeFast(new Function<ProgressIndicator, List<DiffFragment>>() {
-      @Override
-      public List<DiffFragment> fun(ProgressIndicator indicator) {
-        return ByWord.compare(vcsContent, currentContent, ComparisonPolicy.DEFAULT, indicator);
-      }
-    }, Registry.intValue("diff.status.tracker.byword.delay"));
+    return BackgroundTaskUtil.tryComputeFast(indicator -> ByWord.compare(vcsContent, currentContent, ComparisonPolicy.DEFAULT, indicator), Registry.intValue("diff.status.tracker.byword.delay"));
   }
 
   private void installMasterEditorHighlighters(@Nullable List<DiffFragment> wordDiff, @Nonnull Disposable parentDisposable) {
@@ -245,7 +240,7 @@ public abstract class LineStatusMarkerPopup {
       boolean isEditorVisible = myEditorComponent != null;
 
       Color background = TargetAWT.to(((EditorEx)editor).getBackgroundColor());
-      Color borderColor = TargetAWT.to(editor.getColorsScheme().getColor(EditorColors.SELECTED_TEARLINE_COLOR));
+      Color borderColor = JBColor.border();
 
       JComponent toolbarComponent = toolbar.getComponent();
       toolbarComponent.setBackground(background);

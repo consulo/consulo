@@ -961,7 +961,7 @@
             text="Compare with Local" description="Compare version from selected revision with current version"
             icon="consulo.platform.base.PlatformIconGroup@actions.diffwithcurrent"/>
 
-    <action id="Vcs.RollbackChangedLines" class="com.intellij.openapi.vcs.ex.RollbackLineStatusAction" icon="consulo.platform.base.PlatformIconGroup@actions.reset">
+    <action id="Vcs.RollbackChangedLines" class="com.intellij.openapi.vcs.ex.RollbackLineStatusAction" icon="consulo.platform.base.PlatformIconGroup@general.reset">
     </action>
 
     <action id="WelcomeScreen.GetFromVcs" class="com.intellij.openapi.wm.impl.welcomeScreen.GetFromVcsAction"
