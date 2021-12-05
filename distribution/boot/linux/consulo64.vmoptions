@@ -5,7 +5,6 @@
 -Dsun.io.useCanonCaches=false
 -Djava.net.preferIPv4Stack=true
 -XX:+UseCodeCacheFlushing
--XX:+UseConcMarkSweepGC
 -XX:SoftRefLRUPolicyMSPerMB=50
 -XX:+HeapDumpOnOutOfMemoryError
 -Dawt.useSystemAAFontSettings=lcd
