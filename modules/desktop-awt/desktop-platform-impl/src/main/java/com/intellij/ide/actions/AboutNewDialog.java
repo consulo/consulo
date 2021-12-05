@@ -17,6 +17,7 @@ package com.intellij.ide.actions;
 
 import com.intellij.CommonBundle;
 import com.intellij.concurrency.JobScheduler;
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationInfo;
 import com.intellij.openapi.application.ApplicationNamesInfo;
 import com.intellij.openapi.ide.CopyPasteManager;
@@ -40,6 +41,7 @@ import java.awt.*;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.TreeMap;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -119,10 +121,8 @@ public class AboutNewDialog extends WholeWestDialogWrapper {
 
     ApplicationInfo info = ApplicationInfo.getInstance();
 
-    ApplicationNamesInfo namesInfo = ApplicationNamesInfo.getInstance();
-
     AboutBuilder builder = new AboutBuilder();
-    builder.group(namesInfo.getFullProductName());
+    builder.group(Application.get().getName().get());
     builder.item("version", info.getFullVersion());
     builder.item("build number", String.valueOf(info.getBuild()));
     builder.item("build date", DateFormatUtil.formatAboutDialogDate(info.getBuildDate().getTime()));
@@ -142,7 +142,7 @@ public class AboutNewDialog extends WholeWestDialogWrapper {
     builder.item("runtimeVersion", platform.jvm().runtimeVersion());
     builder.item("locale", Locale.getDefault().toString());
     builder.group("JVM Env");
-    for (Map.Entry<String, String> entry : platform.jvm().getRuntimeProperties().entrySet()) {
+    for (Map.Entry<String, String> entry : new TreeMap<>(platform.jvm().getRuntimeProperties()).entrySet()) {
       builder.item(entry.getKey(), StringUtil.escapeCharCharacters(entry.getValue()));
     }
 
@@ -152,7 +152,7 @@ public class AboutNewDialog extends WholeWestDialogWrapper {
     builder.item("arch", platform.os().arch());
 
     builder.group("Env");
-    for (Map.Entry<String, String> entry : platform.os().getEnvironmentVariables().entrySet()) {
+    for (Map.Entry<String, String> entry : new TreeMap<>(platform.os().getEnvironmentVariables()).entrySet()) {
       builder.item(entry.getKey(), StringUtil.escapeCharCharacters(entry.getValue()));
     }
 
