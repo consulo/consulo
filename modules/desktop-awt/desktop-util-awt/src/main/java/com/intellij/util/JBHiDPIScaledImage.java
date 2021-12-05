@@ -6,9 +6,9 @@ import com.intellij.ui.scale.JBUIScale;
 import com.intellij.util.ui.ImageUtil;
 import com.intellij.util.ui.JBUI;
 import org.imgscalr.Scalr;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.awt.image.ImageObserver;
@@ -153,7 +153,7 @@ public final class JBHiDPIScaledImage extends BufferedImage {
     int h = (int)(scaleFactor * getRealHeight(null));
     if (w <= 0 || h <= 0) return this;
 
-    Image scaled = Scalr.resize(ImageUtil.toBufferedImage(img), Scalr.Method.SPEED, w, h);
+    Image scaled = Scalr.resize(ImageUtil.toBufferedImage(img), Scalr.Method.QUALITY, w, h);
 
     double newUserWidth = w / myScale;
     double newUserHeight = h / myScale;
@@ -168,6 +168,7 @@ public final class JBHiDPIScaledImage extends BufferedImage {
     return newImg;
   }
 
+
   /**
    * Returns JBHiDPIScaledImage of the same structure scaled to the provided dimensions.
    * Dimensions are in user-space coordinates (unscaled)
@@ -176,6 +177,17 @@ public final class JBHiDPIScaledImage extends BufferedImage {
    */
   @Nonnull
   public JBHiDPIScaledImage scale(int targetUserWidth, int targetUserHeight) {
+    return scale(targetUserWidth, targetUserHeight, Scalr.Method.QUALITY);
+  }
+
+  /**
+   * Returns JBHiDPIScaledImage of the same structure scaled to the provided dimensions.
+   * Dimensions are in user-space coordinates (unscaled)
+   *
+   * @return scaled instance
+   */
+  @Nonnull
+  public JBHiDPIScaledImage scale(int targetUserWidth, int targetUserHeight, Scalr.Method method) {
     Image img = myImage == null ? this : myImage;
 
     int w = getUserWidth(null);
@@ -185,7 +197,7 @@ public final class JBHiDPIScaledImage extends BufferedImage {
     int targetWidth = (int)round(targetUserWidth * myScale);
     int targetHeight = (int)round(targetUserHeight * myScale);
 
-    Image scaled = Scalr.resize(ImageUtil.toBufferedImage(img), Scalr.Method.SPEED, Scalr.Mode.FIT_EXACT, targetWidth, targetHeight);
+    Image scaled = Scalr.resize(ImageUtil.toBufferedImage(img), method, Scalr.Mode.FIT_EXACT, targetWidth, targetHeight);
 
     if (myImage != null) {
       return new JBHiDPIScaledImage(scaled, targetUserWidth, targetUserHeight, getType());

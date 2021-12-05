@@ -88,7 +88,7 @@ public class DesktopUIInternalImpl extends UIInternal {
 
       try {
         SVGDiagram diagram = svgUniverse.getDiagram(url.toURI());
-        return new DesktopSvgImageImpl(diagram, null, (int)diagram.getWidth(), (int)diagram.getHeight(), null);
+        return new DesktopSvgImageImpl(diagram, null, (int)diagram.getWidth(), (int)diagram.getHeight(), null, null, null);
       }
       catch (URISyntaxException e) {
         throw new IOException(e);
@@ -120,7 +120,7 @@ public class DesktopUIInternalImpl extends UIInternal {
 
         // dirty hack due we can't set different scale for width + height
         float scale = (float)(height / diagram.getViewRect().getHeight());
-        return new DesktopSvgImageImpl(diagram, null, (int)diagram.getViewRect().getWidth(), (int)diagram.getViewRect().getHeight(), scale, null);
+        return new DesktopSvgImageImpl(diagram, null, (int)diagram.getViewRect().getWidth(), (int)diagram.getViewRect().getHeight(), scale, null, null, null);
       default:
         BufferedImage image = ImageIO.read(new UnsyncByteArrayInputStream(bytes));
         return new DesktopAWTImageImpl(new DesktopAWTImageImpl.ImageBytes(null, image), null, width, height, null);

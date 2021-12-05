@@ -562,7 +562,7 @@ public class DesktopCanvas2DImpl implements Canvas2D {
         else {
           BufferedImage resizedImage = new BufferedImage(icon.getIconWidth(), icon.getIconHeight(), BufferedImage.TYPE_INT_ARGB);
           icon.paintIcon(mxLightweightLabel.getSharedInstance(), resizedImage.getGraphics(), 0, 0);
-          resizedImage = Scalr.resize(resizedImage, Scalr.Method.SPEED, bounds.width, bounds.height);
+          resizedImage = Scalr.resize(resizedImage, Scalr.Method.QUALITY, bounds.width, bounds.height);
           graphics.drawImage(resizedImage, null, bounds.x, bounds.y);
         }
       }

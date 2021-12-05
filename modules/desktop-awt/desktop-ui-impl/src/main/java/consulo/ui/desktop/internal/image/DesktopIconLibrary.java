@@ -59,7 +59,7 @@ public class DesktopIconLibrary extends BaseIconLibraryImpl {
           _x2Diagram = Objects.requireNonNull(mySVGUniverse.getDiagram(_x2Url));
         }
 
-        return new DesktopSvgImageImpl(_x1Diagram, _x2Diagram, width, height, null);
+        return new DesktopSvgImageImpl(_x1Diagram, _x2Diagram, width, height, null, groupId, imageId);
       }
       catch (IOException e) {
         LOG.warn(e);
