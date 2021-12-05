@@ -68,12 +68,12 @@ public abstract class DesktopInnerImageImpl<T extends DesktopInnerImageImpl<T>> 
   protected abstract T withScale(float scale);
 
   @Nonnull
-  protected abstract java.awt.Image calcImage();
+  protected abstract java.awt.Image calcImage(@Nullable JBUI.ScaleContext ctx);
 
   @Nonnull
   @Override
-  public java.awt.Image toAWTImage() {
-    return calcImage();
+  public java.awt.Image toAWTImage(@Nullable JBUI.ScaleContext ctx) {
+    return calcImage(ctx);
   }
 
   @Override
@@ -86,7 +86,7 @@ public abstract class DesktopInnerImageImpl<T extends DesktopInnerImageImpl<T>> 
 
     java.awt.Image cachedImage = myCachedImage;
     if (cachedImage == null) {
-      cachedImage = calcImage();
+      cachedImage = calcImage(ctx);
       myCachedImage = cachedImage;
     }
 

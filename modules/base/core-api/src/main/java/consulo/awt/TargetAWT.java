@@ -15,6 +15,7 @@
  */
 package consulo.awt;
 
+import com.intellij.util.ui.JBUI;
 import consulo.annotation.ReviewAfterMigrationToJRE;
 import consulo.container.StartupError;
 import consulo.container.plugin.PluginDescriptor;
@@ -152,7 +153,7 @@ public class TargetAWT {
     return ourFacade.to(font);
   }
 
-  public static java.awt.Image toImage(@Nonnull ImageKey key) {
-    return ourFacade.toImage(key);
+  public static java.awt.Image toImage(@Nonnull ImageKey key, JBUI.ScaleContext ctx) {
+    return ourFacade.toImage(key, ctx);
   }
 }

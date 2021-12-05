@@ -1,5 +1,6 @@
 package consulo.ui.desktop.internal.image.libraryImage;
 
+import com.intellij.util.ui.JBUI;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
@@ -15,7 +16,7 @@ public interface DesktopLibraryInnerImage extends Image {
   void dropCache();
 
   @Nonnull
-  java.awt.Image toAWTImage();
+  java.awt.Image toAWTImage(JBUI.ScaleContext ctx);
 
   @Nonnull
   default Image copyWithScale(float scale) {

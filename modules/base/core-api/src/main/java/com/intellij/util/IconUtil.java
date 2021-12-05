@@ -121,7 +121,7 @@ public class IconUtil {
   @DeprecationInfo("Not always work")
   public static Image toImage(@Nonnull Icon icon, @Nullable JBUI.ScaleContext ctx) {
     if(icon instanceof ImageKey) {
-      return TargetAWT.toImage((ImageKey)icon);
+      return TargetAWT.toImage((ImageKey)icon, ctx);
     }
     else if(icon instanceof ImageIcon) {
       return ((ImageIcon)icon).getImage();

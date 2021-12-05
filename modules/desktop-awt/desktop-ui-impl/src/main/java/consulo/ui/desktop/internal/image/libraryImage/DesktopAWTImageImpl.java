@@ -93,9 +93,13 @@ public class DesktopAWTImageImpl extends DesktopInnerImageImpl<DesktopAWTImageIm
   @SuppressWarnings("UndesirableClassUsage")
   @Nonnull
   @Override
-  protected Image calcImage() {
+  protected Image calcImage(JBUI.ScaleContext ctx) {
+    if (ctx == null) {
+      ctx = JBUI.ScaleContext.create();
+    }
+
     ImageBytes target = myX1Data;
-    double scale = getScale(JBUI.ScaleType.SYS_SCALE);
+    double scale = ctx.getScale(JBUI.ScaleType.SYS_SCALE);
     if (scale > 1f || myScale > 1.5f) {
       target = myX2Data != null ? myX2Data : target;
     }
@@ -126,7 +130,7 @@ public class DesktopAWTImageImpl extends DesktopInnerImageImpl<DesktopAWTImageIm
         toPaintImage = RetinaImage.createFrom(toPaintImage, scale, null);
       }
 
-      toPaintImage = ImageUtil.ensureHiDPI(toPaintImage, JBUI.ScaleContext.create(JBUI.Scale.create(getScale(JBUI.ScaleType.SYS_SCALE), JBUI.ScaleType.SYS_SCALE)));
+      toPaintImage = ImageUtil.ensureHiDPI(toPaintImage, ctx);
 
       if (toPaintImage instanceof JBHiDPIScaledImage) {
         toPaintImage = ((JBHiDPIScaledImage)toPaintImage).scale(getWidth(), getHeight());

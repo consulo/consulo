@@ -125,7 +125,7 @@ public class DefaultJava9TaskBarImpl implements TaskBar {
       if (visible) {
         if (myOkImage == null) {
           ImageKey okIcon = PlatformIconGroup.macAppIconOk512();
-          Image imageKeyImage = TargetAWT.toImage(okIcon);
+          Image imageKeyImage = TargetAWT.toImage(okIcon, null);
           myOkImage = ImageUtil.toBufferedImage(imageKeyImage);
         }
 

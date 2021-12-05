@@ -278,9 +278,9 @@ public class TargetAWTFacadeImpl implements TargetAWTFacade {
   }
 
   @Override
-  public java.awt.Image toImage(@Nonnull ImageKey key) {
+  public java.awt.Image toImage(@Nonnull ImageKey key, @Nullable JBUI.ScaleContext ctx) {
     DesktopImageKeyImpl desktopImageKey = (DesktopImageKeyImpl)key;
-    return desktopImageKey.toAWTImage();
+    return desktopImageKey.toAWTImage(ctx);
   }
 
   @Override

@@ -123,11 +123,11 @@ public class DesktopImageKeyImpl extends DesktopBaseLazyImageImpl implements Ima
   @Nonnull
   @Override
   @SuppressWarnings("UndesirableClassUsage")
-  public java.awt.Image toAWTImage() {
+  public java.awt.Image toAWTImage(@Nullable JBUI.ScaleContext ctx) {
     Image icon = ourLibraryManager.getIcon(myForceIconLibraryId, myGroupId, myImageId, myWidth, myHeight);
     if (icon instanceof DesktopLibraryInnerImage) {
       ((DesktopLibraryInnerImage)icon).dropCache();
-      return ((DesktopLibraryInnerImage)icon).toAWTImage();
+      return ((DesktopLibraryInnerImage)icon).toAWTImage(ctx);
     }
 
     BufferedImage b = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_ARGB);

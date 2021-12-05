@@ -15,6 +15,7 @@
  */
 package consulo.desktop.swt.ui.impl;
 
+import com.intellij.util.ui.JBUI;
 import consulo.awt.TargetAWTFacade;
 import consulo.ui.Rectangle2D;
 import consulo.ui.Size;
@@ -148,7 +149,7 @@ public class TargetAWTFacadeStub implements TargetAWTFacade {
   }
 
   @Override
-  public java.awt.Image toImage(@Nonnull ImageKey key) {
+  public java.awt.Image toImage(@Nonnull ImageKey key, JBUI.ScaleContext ctx) {
     throw new UnsupportedOperationException();
   }
 }

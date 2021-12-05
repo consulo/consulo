@@ -15,6 +15,7 @@
  */
 package consulo.awt;
 
+import com.intellij.util.ui.JBUI;
 import consulo.ui.Component;
 import consulo.ui.Rectangle2D;
 import consulo.ui.Size;
@@ -80,7 +81,7 @@ public interface TargetAWTFacade {
   @Nonnull
   java.awt.Font to(@Nonnull Font font);
 
-  java.awt.Image toImage(@Nonnull ImageKey key);
+  java.awt.Image toImage(@Nonnull ImageKey key, @Nullable JBUI.ScaleContext ctx);
 
   default java.awt.Cursor to(Cursor cursor) {
     throw new AbstractMethodError();

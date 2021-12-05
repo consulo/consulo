@@ -12,7 +12,6 @@ import com.kitfox.svg.SVGException;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.awt.*;
-import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.awt.image.ImageFilter;
 import java.util.function.Supplier;
@@ -50,13 +49,17 @@ public class DesktopSvgImageImpl extends DesktopInnerImageImpl<DesktopSvgImageIm
   @Override
   @SuppressWarnings("UndesirableClassUsage")
   @Nonnull
-  protected java.awt.Image calcImage() {
+  protected java.awt.Image calcImage(@Nullable JBUI.ScaleContext ctx) {
+    if (ctx == null) {
+      ctx = JBUI.ScaleContext.create();
+    }
+
     float width = myWidth * myScale;
     float height = myHeight * myScale;
 
     SVGDiagram targetDiagram = myX1Diagram;
     double jvmScale = 1f;
-    if ((jvmScale = getScale(JBUI.ScaleType.SYS_SCALE)) > 1f) {
+    if ((jvmScale = ctx.getScale(JBUI.ScaleType.SYS_SCALE)) > 1f) {
       width *= jvmScale;
       height *= jvmScale;
     }
@@ -77,7 +80,6 @@ public class DesktopSvgImageImpl extends DesktopInnerImageImpl<DesktopSvgImageIm
 
     JBHiDPIScaledImage image = new JBHiDPIScaledImage(imageScale, width, height, BufferedImage.TYPE_INT_ARGB, PaintUtil.RoundingMode.ROUND);
     Graphics2D g = image.createGraphics();
-    GraphicsUtil.setupAAPainting(g);
     paintIcon(targetDiagram, g, 0, 0, width, height);
     g.dispose();
 
@@ -99,19 +101,16 @@ public class DesktopSvgImageImpl extends DesktopInnerImageImpl<DesktopSvgImageIm
       }
     }
 
-    toPaintImage = ImageUtil.ensureHiDPI(toPaintImage, JBUI.ScaleContext.create(JBUI.Scale.create(getScale(JBUI.ScaleType.SYS_SCALE), JBUI.ScaleType.SYS_SCALE)));
+    toPaintImage = ImageUtil.ensureHiDPI(toPaintImage, ctx);
     return toPaintImage;
   }
 
   private void paintIcon(SVGDiagram diagram, Graphics2D g, int x, int y, float width, float height) {
+    GraphicsUtil.setupAAPainting(g);
+
     diagram.setDeviceViewport(new Rectangle((int)width, (int)height));
 
-    g.translate(x, y);
     diagram.setIgnoringClipHeuristic(true);
-
-
-    AffineTransform oldXform = g.getTransform();
-    g.transform(new AffineTransform());
 
     try {
       diagram.render(g);
@@ -119,9 +118,5 @@ public class DesktopSvgImageImpl extends DesktopInnerImageImpl<DesktopSvgImageIm
     catch (SVGException e) {
       throw new RuntimeException(e);
     }
-
-    g.setTransform(oldXform);
-
-    g.translate(-x, -y);
   }
 }

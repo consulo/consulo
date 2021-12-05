@@ -153,7 +153,7 @@ public final class JBHiDPIScaledImage extends BufferedImage {
     int h = (int)(scaleFactor * getRealHeight(null));
     if (w <= 0 || h <= 0) return this;
 
-    Image scaled = Scalr.resize(ImageUtil.toBufferedImage(img), Scalr.Method.ULTRA_QUALITY, w, h);
+    Image scaled = Scalr.resize(ImageUtil.toBufferedImage(img), Scalr.Method.SPEED, w, h);
 
     double newUserWidth = w / myScale;
     double newUserHeight = h / myScale;
@@ -185,7 +185,7 @@ public final class JBHiDPIScaledImage extends BufferedImage {
     int targetWidth = (int)round(targetUserWidth * myScale);
     int targetHeight = (int)round(targetUserHeight * myScale);
 
-    Image scaled = Scalr.resize(ImageUtil.toBufferedImage(img), Scalr.Method.ULTRA_QUALITY, Scalr.Mode.FIT_EXACT, targetWidth, targetHeight);
+    Image scaled = Scalr.resize(ImageUtil.toBufferedImage(img), Scalr.Method.SPEED, Scalr.Mode.FIT_EXACT, targetWidth, targetHeight);
 
     if (myImage != null) {
       return new JBHiDPIScaledImage(scaled, targetUserWidth, targetUserHeight, getType());
