@@ -89,44 +89,33 @@ public class DesktopEditorErrorPanel extends JComponent implements UISettingsLis
     }
     Document document = myEditor.getDocument();
     int startLineNumber = end == -1 ? 0 : offsetToLine(start, document);
+    int editorStartY = myEditor.visualLineToY(startLineNumber);
     int startY;
-    int lineCount;
-    if (myEditorSourceHeight < myEditorTargetHeight) {
-      lineCount = 0;
-      startY = myEditorScrollbarTop + startLineNumber * myEditor.getLineHeight();
+    int editorTargetHeight = Math.max(0, myEditorTargetHeight);
+    if (myEditorSourceHeight < editorTargetHeight) {
+      startY = myEditorScrollbarTop + editorStartY;
     }
     else {
-      lineCount = myEditorSourceHeight / myEditor.getLineHeight();
-      startY = myEditorScrollbarTop + (int)((float)startLineNumber / lineCount * myEditorTargetHeight);
+      startY = myEditorScrollbarTop + (int)((float)editorStartY / myEditorSourceHeight * editorTargetHeight);
     }
 
     int endY;
     int endLineNumber = offsetToLine(end, document);
     if (end == -1 || start == -1) {
-      endY = Math.min(myEditorSourceHeight, myEditorTargetHeight);
+      endY = Math.min(myEditorSourceHeight, editorTargetHeight);
     }
-    else if (start == end || offsetToLine(start, document) == endLineNumber) {
+    else if (startLineNumber == endLineNumber) {
       endY = startY; // both offsets are on the same line, no need to recalc Y position
     }
+    else if (myEditorSourceHeight < editorTargetHeight) {
+      endY = myEditorScrollbarTop + myEditor.visualLineToY(endLineNumber);
+    }
     else {
-      if (myEditorSourceHeight < myEditorTargetHeight) {
-        endY = myEditorScrollbarTop + endLineNumber * myEditor.getLineHeight();
-      }
-      else {
-        endY = myEditorScrollbarTop + (int)((float)endLineNumber / lineCount * myEditorTargetHeight);
-      }
+      int editorEndY = myEditor.visualLineToY(endLineNumber);
+      endY = myEditorScrollbarTop + (int)((float)editorEndY / myEditorSourceHeight * editorTargetHeight);
     }
 
     if (endY < startY) endY = startY;
-    if (startY < 0 || endY < 0) {
-      //LOGGER.error("Bad text range startY=" + startY +
-      //             ", endY=" +  endY +
-      //             ", myEditorSourceHeight=" + myEditorSourceHeight +
-      //             ", myEditorTargetHeight=" + myEditorTargetHeight +
-      //             ", myEditorScrollbarTop=" + myEditorScrollbarTop);
-      return new ProperTextRange(0, 0);
-    }
-
     return new ProperTextRange(startY, endY);
   }
 
@@ -207,10 +196,15 @@ public class DesktopEditorErrorPanel extends JComponent implements UISettingsLis
   public void recalcEditorDimensions() {
     int scrollBarHeight = myEditor.getPanel().getHeight();
 
-    // 2px - top diff and bottom
     myEditorScrollbarTop = getIconPanelSize();
-    int editorScrollbarBottom = 0;
-    myEditorTargetHeight = scrollBarHeight - myEditorScrollbarTop - editorScrollbarBottom;
+    int editorScrollBarBottom = 0;
+    JScrollBar horizontalScrollBar = myEditor.getScrollPane().getHorizontalScrollBar();
+    if (horizontalScrollBar != null && horizontalScrollBar.isVisible()) {
+      // reduce visible height by bottom scrollbar, and one just pixel
+      editorScrollBarBottom = horizontalScrollBar.getHeight() + JBUI.scale(1);
+    }
+
+    myEditorTargetHeight = scrollBarHeight - myEditorScrollbarTop - editorScrollBarBottom;
     myEditorSourceHeight = myEditor.getPreferredHeight();
 
     dimensionsAreValid = scrollBarHeight != 0;
