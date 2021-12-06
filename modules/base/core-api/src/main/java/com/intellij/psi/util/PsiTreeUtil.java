@@ -1055,15 +1055,23 @@ public class PsiTreeUtil {
   }
 
   @Nonnull
+  @RequiredReadAction
   public static LanguageVersion getLanguageVersion(@Nonnull PsiElement element) {
     LanguageVersion languageVersion = element.getUserData(LanguageVersion.KEY);
-    if (languageVersion == null) {
-      final Language language = element.getLanguage();
-      final LanguageVersionResolver versionResolver = LanguageVersionResolvers.INSTANCE.forLanguage(language);
-      languageVersion = versionResolver.getLanguageVersion(language, element);
-      element.putUserData(LanguageVersion.KEY, languageVersion);
+    if (languageVersion != null) {
+      return languageVersion;
     }
-    return languageVersion;
+
+    Language language = element.getLanguage();
+    PsiFile containingFile = element.getContainingFile();
+    if(containingFile != null && containingFile.getLanguage() == language) {
+      return containingFile.getLanguageVersion();
+    }
+
+    return CachedValuesManager.getCachedValue(element, () -> {
+      final LanguageVersionResolver versionResolver = LanguageVersionResolvers.INSTANCE.forLanguage(language);
+      return CachedValueProvider.Result.create(versionResolver.getLanguageVersion(language, element), PsiModificationTracker.MODIFICATION_COUNT);
+    });
   }
 
   @Nullable

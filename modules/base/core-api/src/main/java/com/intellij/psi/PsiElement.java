@@ -73,6 +73,7 @@ public interface PsiElement extends UserDataHolder {
    * @return language version
    */
   @Nonnull
+  @RequiredReadAction
   LanguageVersion getLanguageVersion();
 
   /**

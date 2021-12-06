@@ -486,9 +486,17 @@ public abstract class PsiFileImpl extends UserDataHolderBase implements PsiFileE
     return getViewProvider().isEventSystemEnabled();
   }
 
+  @RequiredReadAction
   @Nonnull
   @Override
   public LanguageVersion getLanguageVersion() {
+    VirtualFile file = getVirtualFile();
+    if (file != null) {
+      LanguageVersion version = file.getUserData(LanguageVersion.KEY);
+      if (version != null && version.getLanguage() == getLanguage()) {
+        return version;
+      }
+    }
     return PsiTreeUtil.getLanguageVersion(this);
   }
 
