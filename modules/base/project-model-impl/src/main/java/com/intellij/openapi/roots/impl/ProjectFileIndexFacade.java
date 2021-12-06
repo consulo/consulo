@@ -23,22 +23,25 @@ import com.intellij.openapi.roots.ProjectFileIndex;
 import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.util.ModificationTracker;
 import com.intellij.openapi.vfs.VirtualFile;
-import javax.annotation.Nonnull;
 import jakarta.inject.Inject;
+import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author yole
  */
 @Singleton
 public class ProjectFileIndexFacade extends FileIndexFacade {
-  private final DirectoryIndex myDirectoryIndex;
   private final ProjectFileIndex myFileIndex;
+  private final Provider<DirectoryIndex> myDirectoryIndexProvider;
 
   @Inject
-  public ProjectFileIndexFacade(final Project project, final ProjectRootManager rootManager, final DirectoryIndex directoryIndex) {
+  public ProjectFileIndexFacade(final Project project, final ProjectRootManager rootManager, final Provider<DirectoryIndex> directoryIndex) {
     super(project);
-    myDirectoryIndex = directoryIndex;
+    myDirectoryIndexProvider = directoryIndex;
     myFileIndex = rootManager.getFileIndex();
   }
 
@@ -77,7 +80,7 @@ public class ProjectFileIndexFacade extends FileIndexFacade {
     return myFileIndex.isUnderIgnored(file);
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   @Override
   public Module getModuleForFile(@Nonnull VirtualFile file) {
     return myFileIndex.getModuleForFile(file);
@@ -94,10 +97,11 @@ public class ProjectFileIndexFacade extends FileIndexFacade {
     if (!childDir.isDirectory()) {
       childDir = childDir.getParent();
     }
+    DirectoryIndex dirIndex = myDirectoryIndexProvider.get();
     while (true) {
       if (childDir == null) return false;
       if (childDir.equals(baseDir)) return true;
-      if (myDirectoryIndex.getInfoForDirectory(childDir) == null) return false;
+      if (!dirIndex.getInfoForFile(childDir).isInProject(childDir)) return false;
       childDir = childDir.getParent();
     }
   }

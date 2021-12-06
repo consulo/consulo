@@ -678,65 +678,72 @@ public class RunManagerImpl extends RunManagerEx implements PersistentStateCompo
 
   @Override
   public void loadState(Element parentNode) {
-    clear(false);
+    try {
+      ourLocalRunManager.set(this);
 
-    List<Element> children = parentNode.getChildren(CONFIGURATION);
-    Element[] sortedElements = children.toArray(new Element[children.size()]);
-    // ensure templates are loaded first
-    Arrays.sort(sortedElements, (a, b) -> {
-      final boolean aDefault = Boolean.valueOf(a.getAttributeValue("default", "false"));
-      final boolean bDefault = Boolean.valueOf(b.getAttributeValue("default", "false"));
-      return aDefault == bDefault ? 0 : aDefault ? -1 : 1;
-    });
+      clear(false);
 
-    // element could be detached, so, we must not use for each
-    //noinspection ForLoopReplaceableByForEach
-    for (int i = 0, length = sortedElements.length; i < length; i++) {
-      Element element = sortedElements[i];
-      RunnerAndConfigurationSettings configurationSettings;
-      try {
-        configurationSettings = loadConfiguration(element, false);
-      }
-      catch (ProcessCanceledException e) {
-        configurationSettings = null;
-      }
-      catch (Throwable e) {
-        LOG.error(e);
-        continue;
-      }
-      if (configurationSettings == null) {
-        if (myUnknownElements == null) {
-          myUnknownElements = new SmartList<>();
+      List<Element> children = parentNode.getChildren(CONFIGURATION);
+      Element[] sortedElements = children.toArray(new Element[children.size()]);
+      // ensure templates are loaded first
+      Arrays.sort(sortedElements, (a, b) -> {
+        final boolean aDefault = Boolean.valueOf(a.getAttributeValue("default", "false"));
+        final boolean bDefault = Boolean.valueOf(b.getAttributeValue("default", "false"));
+        return aDefault == bDefault ? 0 : aDefault ? -1 : 1;
+      });
+
+      // element could be detached, so, we must not use for each
+      //noinspection ForLoopReplaceableByForEach
+      for (int i = 0, length = sortedElements.length; i < length; i++) {
+        Element element = sortedElements[i];
+        RunnerAndConfigurationSettings configurationSettings;
+        try {
+          configurationSettings = loadConfiguration(element, false);
         }
-        myUnknownElements.add((Element)element.detach());
-      }
-    }
-
-    myOrder.readExternal(parentNode);
-
-    // migration (old ids to UUIDs)
-    readList(myOrder);
-
-    myRecentlyUsedTemporaries.clear();
-    Element recentNode = parentNode.getChild(RECENT);
-    if (recentNode != null) {
-      JDOMExternalizableStringList list = new JDOMExternalizableStringList();
-      list.readExternal(recentNode);
-      readList(list);
-      for (String name : list) {
-        RunnerAndConfigurationSettings settings = myConfigurations.get(name);
-        if (settings != null) {
-          myRecentlyUsedTemporaries.add(settings.getConfiguration());
+        catch (ProcessCanceledException e) {
+          configurationSettings = null;
+        }
+        catch (Throwable e) {
+          LOG.error(e);
+          continue;
+        }
+        if (configurationSettings == null) {
+          if (myUnknownElements == null) {
+            myUnknownElements = new SmartList<>();
+          }
+          myUnknownElements.add(element.detach());
         }
       }
+
+      myOrder.readExternal(parentNode);
+
+      // migration (old ids to UUIDs)
+      readList(myOrder);
+
+      myRecentlyUsedTemporaries.clear();
+      Element recentNode = parentNode.getChild(RECENT);
+      if (recentNode != null) {
+        JDOMExternalizableStringList list = new JDOMExternalizableStringList();
+        list.readExternal(recentNode);
+        readList(list);
+        for (String name : list) {
+          RunnerAndConfigurationSettings settings = myConfigurations.get(name);
+          if (settings != null) {
+            myRecentlyUsedTemporaries.add(settings.getConfiguration());
+          }
+        }
+      }
+      myOrdered = false;
+
+      myLoadedSelectedConfigurationUniqueName = parentNode.getAttributeValue(SELECTED_ATTR);
+      setSelectedConfigurationId(myLoadedSelectedConfigurationUniqueName);
+
+      fireBeforeRunTasksUpdated();
+      fireRunConfigurationSelected();
     }
-    myOrdered = false;
-
-    myLoadedSelectedConfigurationUniqueName = parentNode.getAttributeValue(SELECTED_ATTR);
-    setSelectedConfigurationId(myLoadedSelectedConfigurationUniqueName);
-
-    fireBeforeRunTasksUpdated();
-    fireRunConfigurationSelected();
+    finally {
+      ourLocalRunManager.remove();
+    }
   }
 
   private void readList(@Nonnull JDOMExternalizableStringList list) {
@@ -1187,7 +1194,13 @@ public class RunManagerImpl extends RunManagerEx implements PersistentStateCompo
     addConfiguration(settings, isShared, getTemplateBeforeRunTasks(settings.getConfiguration()), false);
   }
 
+  private static final ThreadLocal<RunManagerImpl> ourLocalRunManager = ThreadLocal.withInitial(() -> null);
+
   public static RunManagerImpl getInstanceImpl(final Project project) {
+    RunManagerImpl runManager = ourLocalRunManager.get();
+    if(runManager != null) {
+      return runManager;
+    }
     return (RunManagerImpl)RunManager.getInstance(project);
   }
 

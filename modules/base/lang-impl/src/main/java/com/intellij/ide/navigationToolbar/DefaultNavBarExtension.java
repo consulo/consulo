@@ -105,14 +105,15 @@ public class DefaultNavBarExtension extends AbstractNavBarModelExtension {
   }
 
   private static boolean processChildren(final Project object, final Processor<Object> processor) {
-    return ApplicationManager.getApplication().runReadAction(new Computable<Boolean>() {
-      @Override
-      public Boolean compute() {
-        for (Module module : ModuleManager.getInstance(object).getModules()) {
-          if (!processor.process(module)) return false;
-        }
-        return true;
+    if (!object.isInitialized()) {
+      return true;
+    }
+
+    return ApplicationManager.getApplication().runReadAction((Computable<Boolean>)() -> {
+      for (Module module : ModuleManager.getInstance(object).getModules()) {
+        if (!processor.process(module)) return false;
       }
+      return true;
     });
   }
 

@@ -53,6 +53,11 @@ public interface FileType extends Named {
     return getId();
   }
 
+  @Nonnull
+  default String getDisplayName() {
+    return getId();
+  }
+
   /**
    * Returns the user-readable description of the file type.
    *

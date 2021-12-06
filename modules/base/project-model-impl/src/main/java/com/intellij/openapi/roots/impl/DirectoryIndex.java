@@ -18,7 +18,6 @@ package com.intellij.openapi.roots.impl;
 
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.ContentFolder;
 import com.intellij.openapi.roots.OrderEntry;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.Query;
@@ -45,9 +44,6 @@ public abstract class DirectoryIndex {
 
   @Nonnull
   public abstract DirectoryInfo getInfoForFile(@Nonnull VirtualFile file);
-
-  @Nullable
-  public abstract ContentFolder getContentFolder(@Nonnull DirectoryInfo info);
 
   @Nullable
   public abstract ContentFolderTypeProvider getContentFolderType(@Nonnull DirectoryInfo info);

@@ -352,7 +352,9 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
       }
 
       ProjectEx project = (ProjectEx)openProject;
-      project.save();
+      if (project.isInitialized()) {
+        project.save();
+      }
     }
 
     saveSettings();

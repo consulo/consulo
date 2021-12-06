@@ -105,6 +105,8 @@
     <extensionPoint name="fileTypeFactory"
                     interface="com.intellij.openapi.fileTypes.FileTypeFactory"/>
 
+    <extensionPoint name="fileTypeOverrider" interface="com.intellij.openapi.fileTypes.impl.FileTypeOverrider"/>
+
     <extensionPoint name="fileType"
                     beanClass="com.intellij.openapi.fileTypes.impl.FileTypeBean"/>
 
@@ -1666,12 +1668,6 @@
     <!-- this depends on TemplateLanguageConfigurable which isn't registered in LangExtensions, so it should go here as well -->
     <errorQuickFixProvider implementation="com.intellij.psi.templateLanguages.TemplateLanguageErrorQuickFixProvider"/>
 
-    <fileTypeFactory implementation="com.intellij.openapi.file.exclude.EnforcedPlainTextFileTypeFactory"/>
-    <applicationService serviceInterface="com.intellij.openapi.file.exclude.EnforcedPlainTextFileTypeManager"
-                        serviceImplementation="com.intellij.openapi.file.exclude.EnforcedPlainTextFileTypeManager"/>
-    <projectService serviceInterface="com.intellij.openapi.file.exclude.ProjectPlainTextFileTypeManager"
-                    serviceImplementation="com.intellij.openapi.file.exclude.ProjectPlainTextFileTypeManager"/>
-
     <roots.watchedRootsProvider implementation="consulo.compiler.CompilerConfigurationImpl$MyWatchedRootsProvider"/>
     <projectService serviceInterface="consulo.roots.ui.configuration.projectRoot.daemon.ProjectStructureProblemsSettings"
                     serviceImplementation="com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureProblemsSettingsImpl"/>
@@ -2706,6 +2702,7 @@
     <projectService serviceImplementation="com.intellij.openapi.vcs.changes.committed.OutdatedVersionNotifier" lazy="false"/>
     <projectService serviceImplementation="com.intellij.openapi.vcs.changes.committed.IncomingChangesIndicator" lazy="false"/>
     <projectService serviceImplementation="com.intellij.psi.impl.file.impl.PsiVFSListener" lazy="false"/>
+    <postStartupActivity id="vfsStartup" implementation="com.intellij.psi.impl.file.impl.PsiVFSListener$MyStartUpActivity" order="first"/>
 
     <searchEverywhereContributor implementation="com.intellij.ide.actions.searcheverywhere.ClassSearchEverywhereContributor$Factory"/>
     <searchEverywhereContributor implementation="com.intellij.ide.actions.searcheverywhere.FileSearchEverywhereContributor$Factory"/>
@@ -2776,13 +2773,21 @@
     <projectService serviceInterface="com.intellij.build.BuildWorkspaceConfiguration"
                     serviceImplementation="consulo.compiler.impl.build.BuildWorkspaceConfigurationImpl"/>
 
-    <applicationService serviceInterface="com.intellij.ui.SuitableFontProvider" serviceImplementation="com.intellij.ui.SuitableFontProviderImpl" />
+    <applicationService serviceInterface="com.intellij.ui.SuitableFontProvider" serviceImplementation="com.intellij.ui.SuitableFontProviderImpl"/>
 
     <settingsEntryPointActionProvider implementation="com.intellij.openapi.updateSettings.impl.UpdateSettingsEntryPointActionProvider"/>
 
-    <fileEditorProvider implementation="consulo.ide.plugins.whatsNew.WhatsNewVirtualFileEditorProvider" />
-    <editorTabColorProvider implementation="consulo.ide.plugins.whatsNew.WhatsNewEditorTabColorProvider" />
-    <postStartupActivity implementation="consulo.ide.plugins.whatsNew.WhatsNewStartupActivity" />
+    <fileEditorProvider implementation="consulo.ide.plugins.whatsNew.WhatsNewVirtualFileEditorProvider"/>
+    <editorTabColorProvider implementation="consulo.ide.plugins.whatsNew.WhatsNewEditorTabColorProvider"/>
+    <postStartupActivity implementation="consulo.ide.plugins.whatsNew.WhatsNewStartupActivity"/>
+
+    <fileTypeOverrider implementation="com.intellij.openapi.file.exclude.UserFileTypeOverrider"/>
+    <applicationService serviceImplementation="com.intellij.openapi.file.exclude.OverrideFileTypeManager"/>
+
+    <projectService serviceInterface="com.intellij.openapi.roots.impl.DirectoryIndex" serviceImplementation="com.intellij.openapi.roots.impl.DirectoryIndexImpl"/>
+
+    <projectService serviceImplementation="com.intellij.execution.impl.ProjectRunConfigurationManager"/>
+    <postStartupActivity implementation="com.intellij.execution.impl.ProjectRunConfigurationManager$MyStartupActivity"/>
   </extensions>
 
   <applicationListeners>

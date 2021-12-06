@@ -2738,3 +2738,23 @@ action.Diff.PreviousConflict.text:
   text: Previous Conflict
 action.Diff.PreviousConflict.description:
   text: Move to the previous unresolved conflict
+action.OverrideFileTypeAction.text:
+  text: Override File Type
+action.OverrideFileTypeAction.description:
+  text: Treat current file as a file of different file type
+action.OverrideFileTypeAction.verbose.description:
+  text: Treat file ''{0}''{1,choice,0#|1# (and {1} more files)} as a file of different file type
+action.ReverteOverrideFileTypeAction.text:
+  text: Revert File Type Override
+action.ReverteOverrideFileTypeAction.description:
+  text: Undo "Override File Type" action and restore the old file type
+action.ReverteOverrideFileTypeAction.verbose.description:
+  text: Undo "Override File Type" action and restore the old file type for file ''{0}''{1,choice,0#|1# (and {1} more files)}
+group.OverrideFileTypeAction.title:
+  text: Choose File Type
+group.OverrideFileTypeAction.bundledPlugin:
+  text: bundled
+group.OverrideFileTypeAction.fromNamedPlugin:
+  text: from ''{0}'' plugin
+action.ChangeToThisFileTypeAction.description:
+  text: Override File Type to ''{0}''

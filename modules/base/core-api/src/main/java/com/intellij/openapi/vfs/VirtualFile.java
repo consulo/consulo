@@ -19,10 +19,13 @@ import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.fileTypes.FileTypeRegistry;
-import com.intellij.openapi.util.*;
+import com.intellij.openapi.util.Comparing;
+import com.intellij.openapi.util.ModificationTracker;
+import com.intellij.openapi.util.ThrowableComputable;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.encoding.EncodingRegistry;
 import com.intellij.testFramework.LightVirtualFile;
+import com.intellij.util.ArrayFactory;
 import com.intellij.util.LineSeparator;
 import consulo.logging.Logger;
 import consulo.util.dataholder.Key;
@@ -59,6 +62,7 @@ public abstract class VirtualFile extends UserDataHolderBase implements Modifica
 
   public static final Key<Object> REQUESTOR_MARKER = Key.create("REQUESTOR_MARKER");
   public static final VirtualFile[] EMPTY_ARRAY = new VirtualFile[0];
+  public static final ArrayFactory<VirtualFile> ARRAY_FACTORY = count -> count == 0 ? EMPTY_ARRAY : new VirtualFile[count];
 
   /**
    * Used as a property name in the {@link VirtualFilePropertyEvent} fired when the name of a

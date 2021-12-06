@@ -23,38 +23,40 @@ import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.*;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.JBIterable;
 import consulo.application.AccessRule;
 import consulo.roots.OrderEntryWithTracking;
 import consulo.roots.types.BinariesOrderRootType;
 import consulo.roots.types.SourcesOrderRootType;
 import jakarta.inject.Inject;
+import jakarta.inject.Provider;
+import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
-
-import jakarta.inject.Singleton;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Singleton
 public class FileBasedIndexScanRunnableCollectorImpl extends FileBasedIndexScanRunnableCollector {
   private final Project myProject;
-  private final ProjectFileIndex myProjectFileIndex;
+  @Nonnull
+  private final Provider<ProjectFileIndex> myProjectFileIndexProvider;
   private final FileTypeManager myFileTypeManager;
 
   @Inject
-  public FileBasedIndexScanRunnableCollectorImpl(@Nonnull Project project) {
-    this.myProject = project;
-    this.myProjectFileIndex = ProjectRootManager.getInstance(myProject).getFileIndex();
-    this.myFileTypeManager = FileTypeManager.getInstance();
+  public FileBasedIndexScanRunnableCollectorImpl(@Nonnull Project project, @Nonnull Provider<ProjectFileIndex> projectFileIndexProvider) {
+    myProject = project;
+    myProjectFileIndexProvider = projectFileIndexProvider;
+    myFileTypeManager = FileTypeManager.getInstance();
   }
 
   @Override
   public boolean shouldCollect(@Nonnull VirtualFile file) {
-    if (myProjectFileIndex.isInContent(file) || myProjectFileIndex.isInLibraryClasses(file) || myProjectFileIndex.isInLibrarySource(file)) {
+    ProjectFileIndex projectFileIndex = myProjectFileIndexProvider.get();
+    if (projectFileIndex.isInContent(file) || projectFileIndex.isInLibraryClasses(file) || projectFileIndex.isInLibrarySource(file)) {
       return !myFileTypeManager.isFileIgnored(file);
     }
     return false;
@@ -62,15 +64,17 @@ public class FileBasedIndexScanRunnableCollectorImpl extends FileBasedIndexScanR
 
   @Override
   public List<Runnable> collectScanRootRunnables(@Nonnull ContentIterator processor, ProgressIndicator indicator) {
+    ProjectFileIndex projectFileIndex = myProjectFileIndexProvider.get();
+
     return AccessRule.read(() -> {
       if (myProject.isDisposed()) {
         return Collections.emptyList();
       }
 
       List<Runnable> tasks = new ArrayList<>();
-      final Set<VirtualFile> visitedRoots = ContainerUtil.newConcurrentSet();
+      final Set<VirtualFile> visitedRoots = ConcurrentHashMap.newKeySet();
 
-      tasks.add(() -> myProjectFileIndex.iterateContent(processor, file -> !file.isDirectory() || visitedRoots.add(file)));
+      tasks.add(() -> projectFileIndex.iterateContent(processor, file -> !file.isDirectory() || visitedRoots.add(file)));
 
       JBIterable<VirtualFile> contributedRoots = JBIterable.empty();
       for (IndexableSetContributor contributor : Extensions.getExtensions(IndexableSetContributor.EP_NAME)) {
@@ -105,7 +109,7 @@ public class FileBasedIndexScanRunnableCollectorImpl extends FileBasedIndexScanR
                   if (visitedRoots.add(root)) {
                     tasks.add(() -> {
                       if (myProject.isDisposed() || module.isDisposed() || !root.isValid()) return;
-                      FileBasedIndex.iterateRecursively(root, processor, indicator, visitedRoots, myProjectFileIndex);
+                      FileBasedIndex.iterateRecursively(root, processor, indicator, visitedRoots, projectFileIndex);
                     });
                   }
                 }

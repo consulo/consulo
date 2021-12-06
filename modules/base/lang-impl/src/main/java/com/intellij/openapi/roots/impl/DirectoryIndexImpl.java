@@ -19,11 +19,11 @@ import com.intellij.ProjectTopics;
 import com.intellij.openapi.fileTypes.FileTypeEvent;
 import com.intellij.openapi.fileTypes.FileTypeListener;
 import com.intellij.openapi.fileTypes.FileTypeManager;
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.*;
+import com.intellij.openapi.roots.ModuleRootEvent;
+import com.intellij.openapi.roots.ModuleRootListener;
+import com.intellij.openapi.roots.OrderEntry;
 import com.intellij.openapi.util.LowMemoryWatcher;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileManager;
@@ -34,7 +34,7 @@ import com.intellij.util.Query;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.messages.MessageBusConnection;
 import consulo.annotation.access.RequiredReadAction;
-import consulo.disposer.Disposer;
+import consulo.disposer.Disposable;
 import consulo.logging.Logger;
 import consulo.roots.ContentFolderTypeProvider;
 import consulo.util.collection.primitive.ints.ConcurrentIntObjectMap;
@@ -46,7 +46,7 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 @Singleton
-public class DirectoryIndexImpl extends DirectoryIndex {
+public class DirectoryIndexImpl extends DirectoryIndex implements Disposable  {
   private static final Logger LOG = Logger.getInstance(DirectoryIndexImpl.class);
 
   private final Project myProject;
@@ -57,9 +57,14 @@ public class DirectoryIndexImpl extends DirectoryIndex {
 
   @Inject
   @RequiredReadAction
-  public DirectoryIndexImpl(@Nonnull Project project, @Nonnull ModuleManager moduleManager) {
+  public DirectoryIndexImpl(@Nonnull Project project) {
     myProject = project;
     myConnection = project.getMessageBus().connect(project);
+
+    if (myProject.isDefault()) {
+      return;
+    }
+
     myConnection.subscribe(FileTypeManager.TOPIC, new FileTypeListener() {
       @Override
       public void fileTypesChanged(@Nonnull FileTypeEvent event) {
@@ -90,30 +95,16 @@ public class DirectoryIndexImpl extends DirectoryIndex {
         index.onLowMemory();
       }
     }, project);
-
-    markContentRootsForRefresh(moduleManager);
-
-    Disposer.register(project, () -> {
-      myDisposed = true;
-      myRootIndex = null;
-    });
-  }
-
-  @RequiredReadAction
-  private void markContentRootsForRefresh(ModuleManager moduleManager) {
-    Module[] modules = moduleManager.getModules();
-    for (Module module : modules) {
-      VirtualFile[] contentRoots = ModuleRootManager.getInstance(module).getContentRoots();
-      for (VirtualFile contentRoot : contentRoots) {
-        if (contentRoot instanceof NewVirtualFile) {
-          ((NewVirtualFile)contentRoot).markDirtyRecursively();
-        }
-      }
-    }
   }
 
   private void dispatchPendingEvents() {
     myConnection.deliverImmediately();
+  }
+
+  @Override
+  public void dispose() {
+    myDisposed = true;
+    myRootIndex = null;
   }
 
   @Override
@@ -163,15 +154,6 @@ public class DirectoryIndexImpl extends DirectoryIndex {
     if (!(file instanceof NewVirtualFile)) return NonProjectDirectoryInfo.NOT_SUPPORTED_VIRTUAL_FILE_IMPLEMENTATION;
 
     return getRootIndex().getInfoForFile(file);
-  }
-
-  @Nullable
-  @Override
-  public ContentFolder getContentFolder(@Nonnull DirectoryInfo info) {
-    if (info.isInModuleSource()) {
-      return info.getContentFolder();
-    }
-    return null;
   }
 
   @Override

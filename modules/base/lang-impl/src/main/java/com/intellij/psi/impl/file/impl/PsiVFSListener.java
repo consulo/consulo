@@ -4,7 +4,6 @@ package com.intellij.psi.impl.file.impl;
 import com.intellij.AppTopics;
 import com.intellij.ProjectTopics;
 import com.intellij.openapi.application.Application;
-import consulo.logging.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.fileEditor.FileDocumentManagerListener;
@@ -22,7 +21,6 @@ import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.roots.ProjectFileIndex;
 import com.intellij.openapi.roots.impl.PushedFilePropertiesUpdater;
 import com.intellij.openapi.roots.impl.PushedFilePropertiesUpdaterImpl;
-import com.intellij.openapi.startup.StartupManager;
 import com.intellij.openapi.util.io.FileUtilRt;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -36,14 +34,16 @@ import com.intellij.psi.impl.PsiTreeChangeEventImpl;
 import com.intellij.util.FileContentUtilCore;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.messages.MessageBusConnection;
+import consulo.logging.Logger;
+import consulo.project.startup.StartupActivity;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
+import jakarta.inject.Inject;
+import jakarta.inject.Provider;
+import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import jakarta.inject.Inject;
-import jakarta.inject.Singleton;
-
-import jakarta.inject.Provider;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -51,6 +51,25 @@ import java.util.function.BiPredicate;
 
 @Singleton
 public class PsiVFSListener implements BulkFileListener {
+  public static class MyStartUpActivity implements StartupActivity {
+
+    @Override
+    public void runActivity(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
+      PsiVFSListener psiVFSListener = project.getInstance(PsiVFSListener.class);
+
+      MessageBusConnection connection = project.getMessageBus().connect();
+      connection.subscribe(ProjectTopics.PROJECT_ROOTS, psiVFSListener.new MyModuleRootListener());
+      connection.subscribe(FileTypeManager.TOPIC, new FileTypeListener() {
+        @Override
+        public void fileTypesChanged(@Nonnull FileTypeEvent e) {
+          psiVFSListener.myFileManager.processFileTypesChanged(e.getRemovedFileType() != null);
+        }
+      });
+      connection.subscribe(AppTopics.FILE_DOCUMENT_SYNC, psiVFSListener.new MyFileDocumentManagerAdapter());
+
+      installGlobalListener();
+    }
+  }
   private static final Logger LOG = Logger.getInstance(PsiVFSListener.class);
 
   private final FileTypeManager myFileTypeManager;
@@ -64,30 +83,12 @@ public class PsiVFSListener implements BulkFileListener {
 
   @Inject
   public PsiVFSListener(@Nonnull Project project, Provider<ProjectFileIndex> fileIndex) {
-    installGlobalListener();
-
     myProject = project;
     myFileTypeManager = FileTypeManager.getInstance();
     myFileIndex = fileIndex;
     myManager = (PsiManagerImpl)PsiManager.getInstance(project);
     myFileManager = (FileManagerImpl)myManager.getFileManager();
 
-    if (project.isDefault()) {
-      return;
-    }
-
-    // events must handled only after pre-startup (https://upsource.jetbrains.com/intellij/review/IDEA-CR-47395)
-    StartupManager.getInstance(project).registerPreStartupActivity(() -> {
-      MessageBusConnection connection = project.getMessageBus().connect();
-      connection.subscribe(ProjectTopics.PROJECT_ROOTS, new MyModuleRootListener());
-      connection.subscribe(FileTypeManager.TOPIC, new FileTypeListener() {
-        @Override
-        public void fileTypesChanged(@Nonnull FileTypeEvent e) {
-          myFileManager.processFileTypesChanged(e.getRemovedFileType() != null);
-        }
-      });
-      connection.subscribe(AppTopics.FILE_DOCUMENT_SYNC, new MyFileDocumentManagerAdapter());
-    });
   }
 
   /**

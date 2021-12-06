@@ -156,6 +156,8 @@ public abstract class ModuleManagerImpl extends ModuleManager implements Persist
 
   private boolean myFirstLoad = true;
 
+  protected boolean myReady = false;
+
   public static final String ELEMENT_MODULES = "modules";
   public static final String ELEMENT_MODULE = "module";
 
@@ -462,6 +464,10 @@ public abstract class ModuleManagerImpl extends ModuleManager implements Persist
   @Override
   @Nonnull
   public Module[] getModules() {
+    if (!myReady) {
+      throw new IllegalArgumentException("Modules not initialized at current moment");
+    }
+
     if (myModuleModel.myIsWritable) {
       ApplicationManager.getApplication().assertReadAccessAllowed();
     }
@@ -474,6 +480,10 @@ public abstract class ModuleManagerImpl extends ModuleManager implements Persist
   @Override
   @Nonnull
   public Module[] getSortedModules() {
+    if (!myReady) {
+      throw new IllegalArgumentException("Modules not initialized at current moment");
+    }
+
     ApplicationManager.getApplication().assertReadAccessAllowed();
     deliverPendingEvents();
     if (myCachedSortedModules == null) {
@@ -485,6 +495,10 @@ public abstract class ModuleManagerImpl extends ModuleManager implements Persist
   @RequiredReadAction
   @Override
   public Module findModuleByName(@Nonnull String name) {
+    if (!myReady) {
+      throw new IllegalArgumentException("Modules not initialized at current moment");
+    }
+
     ApplicationManager.getApplication().assertReadAccessAllowed();
     return myModuleModel.findModuleByName(name);
   }

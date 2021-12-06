@@ -28,11 +28,11 @@ import consulo.roots.ContentFolderScopes;
 import consulo.roots.ContentFolderTypeProvider;
 import consulo.roots.orderEntry.OrderEntryType;
 import jakarta.inject.Inject;
+import jakarta.inject.Provider;
+import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import jakarta.inject.Singleton;
 import java.util.*;
 
 @Singleton
@@ -40,13 +40,15 @@ public class ModuleFileIndexImpl extends FileIndexBase implements ModuleFileInde
   private final Module myModule;
 
   @Inject
-  public ModuleFileIndexImpl(Module module, DirectoryIndex directoryIndex, FileTypeManager fileTypeManager) {
-    super(directoryIndex, fileTypeManager);
+  public ModuleFileIndexImpl(Module module, Provider<DirectoryIndex> directoryIndexProvider, FileTypeManager fileTypeManager) {
+    super(directoryIndexProvider, fileTypeManager);
     myModule = module;
   }
 
   @Override
   public boolean iterateContent(@Nonnull ContentIterator processor, @Nullable VirtualFileFilter filter) {
+    DirectoryIndex directoryIndex = myDirectoryIndexProvider.get();
+
     final Set<VirtualFile> contentRoots = AccessRule.read(() -> {
       if (myModule.isDisposed()) return Collections.emptySet();
 
@@ -59,7 +61,7 @@ public class ModuleFileIndexImpl extends FileIndexBase implements ModuleFileInde
 
           VirtualFile parent = root.getParent();
           if (parent != null) {
-            DirectoryInfo parentInfo = myDirectoryIndex.getInfoForFile(parent);
+            DirectoryInfo parentInfo = directoryIndex.getInfoForFile(parent);
             if (parentInfo.isInProject(parent) && myModule.equals(parentInfo.getModule())) continue; // inner content - skip it
           }
           result.add(root);
@@ -91,18 +93,18 @@ public class ModuleFileIndexImpl extends FileIndexBase implements ModuleFileInde
   @Override
   @Nonnull
   public List<OrderEntry> getOrderEntriesForFile(@Nonnull VirtualFile fileOrDir) {
-    return findAllOrderEntriesWithOwnerModule(myModule, Arrays.asList(myDirectoryIndex.getOrderEntries(getInfoForFileOrDirectory(fileOrDir))));
+    return findAllOrderEntriesWithOwnerModule(myModule, Arrays.asList(myDirectoryIndexProvider.get().getOrderEntries(getInfoForFileOrDirectory(fileOrDir))));
   }
 
   @Override
   public OrderEntry getOrderEntryForFile(@Nonnull VirtualFile fileOrDir) {
-    return findOrderEntryWithOwnerModule(myModule, Arrays.asList(myDirectoryIndex.getOrderEntries(getInfoForFileOrDirectory(fileOrDir))));
+    return findOrderEntryWithOwnerModule(myModule, Arrays.asList(myDirectoryIndexProvider.get().getOrderEntries(getInfoForFileOrDirectory(fileOrDir))));
   }
 
   @Override
   public boolean isInTestSourceContent(@Nonnull VirtualFile fileOrDir) {
     DirectoryInfo info = getInfoForFileOrDirectory(fileOrDir);
-    return info.isInModuleSource(fileOrDir) && myModule.equals(info.getModule()) && ContentFolderScopes.test().test(myDirectoryIndex.getContentFolderType(info));
+    return info.isInModuleSource(fileOrDir) && myModule.equals(info.getModule()) && ContentFolderScopes.test().test(myDirectoryIndexProvider.get().getContentFolderType(info));
   }
 
   @Nullable
@@ -110,7 +112,7 @@ public class ModuleFileIndexImpl extends FileIndexBase implements ModuleFileInde
   public ContentFolderTypeProvider getContentFolderTypeForFile(@Nonnull VirtualFile fileOrDir) {
     DirectoryInfo info = getInfoForFileOrDirectory(fileOrDir);
     if (info.isInModuleSource(fileOrDir) && myModule.equals(info.getModule())) {
-      return myDirectoryIndex.getContentFolderType(info);
+      return myDirectoryIndexProvider.get().getContentFolderType(info);
     }
     return null;
   }

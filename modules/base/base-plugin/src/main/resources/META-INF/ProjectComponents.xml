@@ -54,11 +54,6 @@
       <implementation-class>com.intellij.openapi.roots.impl.ProjectRootManagerComponent</implementation-class>
       <loadForDefaultProject/>
     </component>
-    <component>
-      <interface-class>com.intellij.openapi.roots.impl.DirectoryIndex</interface-class>
-      <implementation-class>com.intellij.openapi.roots.impl.DirectoryIndexImpl</implementation-class>
-      <loadForDefaultProject/>
-    </component>
 
     <component>
       <interface-class>com.intellij.psi.PsiManager</interface-class>
@@ -192,9 +187,6 @@
       <interface-class>com.intellij.execution.ExecutionTargetManager</interface-class>
       <implementation-class>com.intellij.execution.ExecutionTargetManagerImpl</implementation-class>
       <loadForDefaultProject/>
-    </component>
-    <component>
-      <implementation-class>com.intellij.execution.impl.ProjectRunConfigurationManager</implementation-class>
     </component>
     <component>
       <interface-class>com.intellij.execution.ExecutionManager</interface-class>

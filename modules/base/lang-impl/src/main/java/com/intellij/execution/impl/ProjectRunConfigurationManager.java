@@ -20,10 +20,13 @@ import com.intellij.execution.RunnerAndConfigurationSettings;
 import com.intellij.execution.configurations.RunConfiguration;
 import com.intellij.execution.configurations.UnknownRunConfiguration;
 import com.intellij.openapi.components.*;
+import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Pair;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.application.AccessRule;
+import consulo.project.startup.StartupActivity;
+import consulo.ui.UIAccess;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
@@ -42,6 +45,16 @@ import java.util.Set;
         @Storage(file = StoragePathMacros.PROJECT_CONFIG_DIR + "/runConfigurations/", stateSplitter = ProjectRunConfigurationManager.RunConfigurationStateSplitter.class)})
 @Singleton
 public class ProjectRunConfigurationManager implements PersistentStateComponent<Element> {
+  public static class MyStartupActivity implements StartupActivity.DumbAware {
+
+    @Override
+    public void runActivity(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
+      ProjectRunConfigurationManager manager = project.getInstance(ProjectRunConfigurationManager.class);
+
+      // just initialize it
+    }
+  }
+
   private final RunManagerImpl myManager;
   private List<Element> myUnloadedElements;
 

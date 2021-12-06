@@ -23,12 +23,13 @@ import consulo.container.plugin.PluginDescriptor;
 import consulo.logging.Logger;
 import consulo.util.PluginExceptionUtil;
 import consulo.util.lang.ControlFlowException;
-
 import javax.annotation.Nonnull;
+
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.function.Predicate;
 
 /**
@@ -131,6 +132,30 @@ public class ExtensionPointName<T> {
         PluginExceptionUtil.logPluginError(LOG, e.getMessage(), e, value.getClass());
       }
     });
+  }
+
+  @Nullable
+  public <R> R computeSafeIfAny(@Nonnull Function<? super T, ? extends R> processor) {
+    return computeSafeIfAny(Application.get(), processor);
+  }
+
+  @Nullable
+  public <R> R computeSafeIfAny(@Nonnull ComponentManager componentManager, @Nonnull Function<? super T, ? extends R> processor) {
+    for (T extension : getExtensionList(componentManager)) {
+      try {
+        R result = processor.apply(extension);
+        if (result != null) {
+          return result;
+        }
+      }
+      catch (Throwable e) {
+        if (e instanceof ControlFlowException) {
+          throw ControlFlowException.rethrow(e);
+        }
+        PluginExceptionUtil.logPluginError(LOG, e.getMessage(), e, extension.getClass());
+      }
+    }
+    return null;
   }
 
   @Nullable

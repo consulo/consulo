@@ -54,6 +54,10 @@ public class ModuleManagerComponent extends ModuleManagerImpl {
     myConnection.setDefaultHandler((event, params) -> cleanCachedStuff());
 
     myConnection.subscribe(ProjectTopics.PROJECT_ROOTS);
+
+    if(project.isDefault()) {
+      myReady = true;
+    }
   }
 
   @Nonnull
@@ -76,6 +80,7 @@ public class ModuleManagerComponent extends ModuleManagerImpl {
         }
       });
 
+      myReady = true;
       stat.dump("ModulesManager", LOG::info);
     }).doWhenDone((Runnable)result::setDone);
   }

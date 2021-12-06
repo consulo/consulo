@@ -1064,7 +1064,7 @@ public class PsiTreeUtil {
 
     Language language = element.getLanguage();
     PsiFile containingFile = element.getContainingFile();
-    if(containingFile != null && containingFile.getLanguage() == language) {
+    if(containingFile != null && containingFile != element && containingFile.getLanguage() == language) {
       return containingFile.getLanguageVersion();
     }
 

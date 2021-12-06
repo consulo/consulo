@@ -17,7 +17,6 @@
 package com.intellij.openapi.roots.impl;
 
 import com.intellij.injected.editor.VirtualFileWindow;
-import consulo.logging.Logger;
 import com.intellij.openapi.fileTypes.FileTypeManager;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
@@ -29,16 +28,17 @@ import com.intellij.openapi.roots.ProjectFileIndex;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileFilter;
 import consulo.application.AccessRule;
+import consulo.logging.Logger;
 import consulo.roots.ContentFolderScopes;
 import consulo.roots.ContentFolderTypeProvider;
 import consulo.roots.impl.ProductionResourceContentFolderTypeProvider;
 import consulo.roots.impl.TestResourceContentFolderTypeProvider;
+import jakarta.inject.Inject;
+import jakarta.inject.Provider;
+import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import jakarta.inject.Inject;
-import jakarta.inject.Singleton;
-
 import java.util.*;
 
 @Singleton
@@ -47,7 +47,7 @@ public class ProjectFileIndexImpl extends FileIndexBase implements ProjectFileIn
   private final Project myProject;
 
   @Inject
-  public ProjectFileIndexImpl(@Nonnull Project project, @Nonnull DirectoryIndex directoryIndex, @Nonnull FileTypeManager fileTypeManager) {
+  public ProjectFileIndexImpl(@Nonnull Project project, @Nonnull Provider<DirectoryIndex> directoryIndex, @Nonnull FileTypeManager fileTypeManager) {
     super(directoryIndex, fileTypeManager);
     myProject = project;
   }
@@ -126,7 +126,7 @@ public class ProjectFileIndexImpl extends FileIndexBase implements ProjectFileIn
   @Override
   @Nonnull
   public List<OrderEntry> getOrderEntriesForFile(@Nonnull VirtualFile file) {
-    return Arrays.asList(myDirectoryIndex.getOrderEntries(getInfoForFileOrDirectory(file)));
+    return Arrays.asList(myDirectoryIndexProvider.get().getOrderEntries(getInfoForFileOrDirectory(file)));
   }
 
   @Override
@@ -170,7 +170,7 @@ public class ProjectFileIndexImpl extends FileIndexBase implements ProjectFileIn
   @Override
   public String getPackageNameByDirectory(@Nonnull VirtualFile dir) {
     if (!dir.isDirectory()) LOG.error(dir.getPresentableUrl());
-    return myDirectoryIndex.getPackageName(dir);
+    return myDirectoryIndexProvider.get().getPackageName(dir);
   }
 
   @Override
@@ -189,13 +189,13 @@ public class ProjectFileIndexImpl extends FileIndexBase implements ProjectFileIn
   @Override
   public boolean isInResource(@Nonnull VirtualFile fileOrDir) {
     DirectoryInfo info = getInfoForFileOrDirectory(fileOrDir);
-    return info.isInModuleSource(fileOrDir) && ProductionResourceContentFolderTypeProvider.getInstance().equals(myDirectoryIndex.getContentFolderType(info));
+    return info.isInModuleSource(fileOrDir) && ProductionResourceContentFolderTypeProvider.getInstance().equals(myDirectoryIndexProvider.get().getContentFolderType(info));
   }
 
   @Override
   public boolean isInTestResource(@Nonnull VirtualFile fileOrDir) {
     DirectoryInfo info = getInfoForFileOrDirectory(fileOrDir);
-    return info.isInModuleSource(fileOrDir) && TestResourceContentFolderTypeProvider.getInstance().equals(myDirectoryIndex.getContentFolderType(info));
+    return info.isInModuleSource(fileOrDir) && TestResourceContentFolderTypeProvider.getInstance().equals(myDirectoryIndexProvider.get().getContentFolderType(info));
   }
 
   @Override
@@ -211,6 +211,7 @@ public class ProjectFileIndexImpl extends FileIndexBase implements ProjectFileIn
   }
 
   // a slightly faster implementation then the default one
+  @Override
   public boolean isInLibrary(@Nonnull VirtualFile fileOrDir) {
     DirectoryInfo info = getInfoForFileOrDirectory(fileOrDir);
     return info.isInProject(fileOrDir) && (info.hasLibraryClassRoot() || info.isInLibrarySource(fileOrDir));
@@ -238,14 +239,14 @@ public class ProjectFileIndexImpl extends FileIndexBase implements ProjectFileIn
   @Override
   public boolean isInTestSourceContent(@Nonnull VirtualFile fileOrDir) {
     DirectoryInfo info = getInfoForFileOrDirectory(fileOrDir);
-    return info.isInModuleSource(fileOrDir) && ContentFolderScopes.test().apply(myDirectoryIndex.getContentFolderType(info));
+    return info.isInModuleSource(fileOrDir) && ContentFolderScopes.test().apply(myDirectoryIndexProvider.get().getContentFolderType(info));
   }
 
   @Nullable
   @Override
   public ContentFolderTypeProvider getContentFolderTypeForFile(@Nonnull VirtualFile file) {
     DirectoryInfo info = getInfoForFileOrDirectory(file);
-    return myDirectoryIndex.getContentFolderType(info);
+    return myDirectoryIndexProvider.get().getContentFolderType(info);
   }
 
   @Override

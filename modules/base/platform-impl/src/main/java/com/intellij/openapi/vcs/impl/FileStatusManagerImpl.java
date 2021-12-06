@@ -18,19 +18,15 @@ package com.intellij.openapi.vcs.impl;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
-import com.intellij.openapi.components.ProjectComponent;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.EditorFactory;
 import com.intellij.openapi.editor.colors.EditorColorKey;
-import com.intellij.openapi.editor.colors.EditorColorsListener;
 import com.intellij.openapi.editor.colors.EditorColorsManager;
-import com.intellij.openapi.editor.colors.EditorColorsScheme;
 import com.intellij.openapi.editor.event.DocumentAdapter;
 import com.intellij.openapi.editor.event.DocumentEvent;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.project.DumbAwareRunnable;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.impl.DirectoryIndex;
 import com.intellij.openapi.startup.StartupManager;
 import com.intellij.openapi.vcs.FileStatus;
 import com.intellij.openapi.vcs.FileStatusListener;
@@ -57,7 +53,7 @@ import java.util.Map;
  * @author mike
  */
 @Singleton
-public class FileStatusManagerImpl extends FileStatusManager implements ProjectComponent, Disposable {
+public class FileStatusManagerImpl extends FileStatusManager implements Disposable {
   private final Map<VirtualFile, FileStatus> myCachedStatuses = Collections.synchronizedMap(new HashMap<VirtualFile, FileStatus>());
   private final Map<VirtualFile, Boolean> myWhetherExactlyParentToChanged =
           Collections.synchronizedMap(new HashMap<VirtualFile, Boolean>());
@@ -92,17 +88,12 @@ public class FileStatusManagerImpl extends FileStatusManager implements ProjectC
   }
 
   @Inject
-  public FileStatusManagerImpl(Project project, StartupManager startupManager, @SuppressWarnings("UnusedParameters") DirectoryIndex makeSureIndexIsInitializedFirst) {
+  public FileStatusManagerImpl(Project project, StartupManager startupManager) {
     myProject = project;
 
-    project.getMessageBus().connect().subscribe(EditorColorsManager.TOPIC, new EditorColorsListener() {
-      @Override
-      public void globalSchemeChange(EditorColorsScheme scheme) {
-        fileStatusesChanged();
-      }
-    });
-
     if (project.isDefault()) return;
+
+    project.getMessageBus().connect().subscribe(EditorColorsManager.TOPIC, scheme -> fileStatusesChanged());
 
     startupManager.registerPreStartupActivity(() -> {
       DocumentAdapter documentListener = new DocumentAdapter() {
@@ -117,10 +108,9 @@ public class FileStatusManagerImpl extends FileStatusManager implements ProjectC
       };
 
       final EditorFactory factory = EditorFactory.getInstance();
-      if (factory != null) {
-        factory.getEventMulticaster().addDocumentListener(documentListener, myProject);
-      }
+      factory.getEventMulticaster().addDocumentListener(documentListener, myProject);
     });
+    
     startupManager.registerPostStartupActivity(new DumbAwareRunnable() {
       @Override
       public void run() {

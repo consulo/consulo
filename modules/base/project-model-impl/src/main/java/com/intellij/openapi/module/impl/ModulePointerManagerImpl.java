@@ -25,11 +25,11 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.disposer.Disposer;
 import consulo.util.pointers.NamedPointerImpl;
 import consulo.util.pointers.NamedPointerManagerImpl;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import jakarta.inject.Inject;
-import jakarta.inject.Singleton;
 import java.util.List;
 
 /**
@@ -73,6 +73,10 @@ public class ModulePointerManagerImpl extends NamedPointerManagerImpl<Module> im
   @Override
   @RequiredReadAction
   protected Module findByName(@Nonnull String name) {
+    // while initializing do not allow search modules
+    if (!myProject.isInitialized()) {
+      return null;
+    }
     return ModuleManager.getInstance(myProject).findModuleByName(name);
   }
 }

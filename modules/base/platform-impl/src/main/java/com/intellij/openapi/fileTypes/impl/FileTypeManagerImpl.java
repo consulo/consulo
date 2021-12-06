@@ -719,10 +719,10 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements Persistent
   @Override
   @Nonnull
   public FileType getFileTypeByFile(@Nonnull VirtualFile file, @Nullable byte[] content) {
-    //FileType overriddenFileType = FileTypeOverrider.EP_NAME.computeSafeIfAny((overrider) -> overrider.getOverriddenFileType(file));
-    //if (overriddenFileType != null) {
-    //  return overriddenFileType;
-    //}
+    FileType overriddenFileType = FileTypeOverrider.EP_NAME.computeSafeIfAny((overrider) -> overrider.getOverriddenFileType(file));
+    if (overriddenFileType != null) {
+      return overriddenFileType;
+    }
 
     FileType fileType = getByFile(file);
     if (!(file instanceof StubVirtualFile)) {
@@ -1128,10 +1128,10 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements Persistent
       }
     }
 
-    //FileType overriddenFileType = FileTypeOverrider.EP_NAME.computeSafeIfAny((overrider) -> overrider.getOverriddenFileType(file));
-    //if (overriddenFileType != null) {
-    //  return overriddenFileType.equals(type);
-    //}
+    FileType overriddenFileType = FileTypeOverrider.EP_NAME.computeSafeIfAny((overrider) -> overrider.getOverriddenFileType(file));
+    if (overriddenFileType != null) {
+      return overriddenFileType.equals(type);
+    }
 
     if (type instanceof FileTypeIdentifiableByVirtualFile && ((FileTypeIdentifiableByVirtualFile)type).isMyFileType(file)) {
       return true;

@@ -26,6 +26,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileFilter;
 import com.intellij.util.ObjectUtil;
 import consulo.application.AccessRule;
+import jakarta.inject.Provider;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -35,14 +36,14 @@ import javax.annotation.Nullable;
  */
 public abstract class FileIndexBase implements FileIndex {
   protected final FileTypeManager myFileTypeManager;
-  protected final DirectoryIndex myDirectoryIndex;
+  protected final Provider<DirectoryIndex> myDirectoryIndexProvider;
   private final VirtualFileFilter myContentFilter = file -> {
     assert file != null;
     return ObjectUtil.assertNotNull(AccessRule.<Boolean, RuntimeException>read(() -> !isScopeDisposed() && isInContent(file)));
   };
 
-  public FileIndexBase(@Nonnull DirectoryIndex directoryIndex, @Nonnull FileTypeManager fileTypeManager) {
-    myDirectoryIndex = directoryIndex;
+  public FileIndexBase(@Nonnull Provider<DirectoryIndex> directoryIndexProvider, @Nonnull FileTypeManager fileTypeManager) {
+    myDirectoryIndexProvider = directoryIndexProvider;
     myFileTypeManager = fileTypeManager;
   }
 
@@ -73,7 +74,7 @@ public abstract class FileIndexBase implements FileIndex {
     if (file instanceof VirtualFileWindow) {
       file = ((VirtualFileWindow)file).getDelegate();
     }
-    return myDirectoryIndex.getInfoForFile(file);
+    return myDirectoryIndexProvider.get().getInfoForFile(file);
   }
 
   @Override

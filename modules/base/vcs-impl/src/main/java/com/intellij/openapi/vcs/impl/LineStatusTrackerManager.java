@@ -22,12 +22,9 @@
  */
 package com.intellij.openapi.vcs.impl;
 
-import consulo.disposer.Disposable;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.components.ProjectComponent;
-import consulo.disposer.Disposer;
-import consulo.logging.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.EditorFactory;
@@ -38,7 +35,6 @@ import com.intellij.openapi.editor.ex.DocumentBulkUpdateListener;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.impl.DirectoryIndex;
 import com.intellij.openapi.startup.StartupManager;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.text.StringUtil;
@@ -54,12 +50,15 @@ import com.intellij.util.Consumer;
 import com.intellij.util.concurrency.QueueProcessorRemovePartner;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.messages.MessageBusConnection;
-import jakarta.inject.Singleton;
-import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
+import consulo.logging.Logger;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
+import jakarta.inject.Singleton;
+import org.jetbrains.annotations.NonNls;
 
+import javax.annotation.Nonnull;
 import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.List;
@@ -100,8 +99,7 @@ public class LineStatusTrackerManager implements ProjectComponent, LineStatusTra
   public LineStatusTrackerManager(@Nonnull final Project project,
                                   @Nonnull final VcsBaseContentProvider statusProvider,
                                   @Nonnull final Application application,
-                                  @Nonnull final Provider<FileEditorManager> fileEditorManager,
-                                  @SuppressWarnings("UnusedParameters") DirectoryIndex makeSureIndexIsInitializedFirst) {
+                                  @Nonnull final Provider<FileEditorManager> fileEditorManager) {
     myLoadCounter = 0;
     myProject = project;
     myStatusProvider = statusProvider;
@@ -110,12 +108,26 @@ public class LineStatusTrackerManager implements ProjectComponent, LineStatusTra
     myFileEditorManager = fileEditorManager;
 
     myLineStatusTrackers = new HashMap<>();
-    myPartner = new QueueProcessorRemovePartner<>(myProject, new Consumer<BaseRevisionLoader>() {
+    myPartner = new QueueProcessorRemovePartner<>(myProject, (Consumer<BaseRevisionLoader>)baseRevisionLoader -> baseRevisionLoader.run());
+
+    myDisposable = new Disposable() {
       @Override
-      public void consume(BaseRevisionLoader baseRevisionLoader) {
-        baseRevisionLoader.run();
+      public void dispose() {
+        synchronized (myLock) {
+          for (final TrackerData data : myLineStatusTrackers.values()) {
+            data.tracker.release();
+          }
+
+          myLineStatusTrackers.clear();
+          myPartner.clear();
+        }
       }
-    });
+    };
+    Disposer.register(myProject, myDisposable);
+
+    if (myProject.isDefault()) {
+      return;
+    }
 
     MessageBusConnection busConnection = project.getMessageBus().connect();
     busConnection.subscribe(DocumentBulkUpdateListener.TOPIC, new DocumentBulkUpdateListener.Adapter() {
@@ -142,21 +154,6 @@ public class LineStatusTrackerManager implements ProjectComponent, LineStatusTra
         }
       }
     });
-
-    myDisposable = new Disposable() {
-      @Override
-      public void dispose() {
-        synchronized (myLock) {
-          for (final TrackerData data : myLineStatusTrackers.values()) {
-            data.tracker.release();
-          }
-
-          myLineStatusTrackers.clear();
-          myPartner.clear();
-        }
-      }
-    };
-    Disposer.register(myProject, myDisposable);
   }
 
   @Override

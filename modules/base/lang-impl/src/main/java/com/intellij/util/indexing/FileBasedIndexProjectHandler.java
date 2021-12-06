@@ -54,6 +54,10 @@ public class FileBasedIndexProjectHandler implements IndexableFileSet, Disposabl
     myIndex = index;
     myCollector = collector;
 
+    if (project.isDefault()) {
+      return;
+    }
+
     if (ApplicationManager.getApplication().isInternal()) {
       project.getMessageBus().connect(this).subscribe(DumbService.DUMB_MODE, new DumbService.DumbModeListener() {
 
@@ -64,36 +68,30 @@ public class FileBasedIndexProjectHandler implements IndexableFileSet, Disposabl
       });
     }
 
-    if(project.isDefault()) {
-      return;
-    }
-
     StartupManager startupManager = StartupManager.getInstance(project);
-    if (startupManager != null) {
-      startupManager.registerPreStartupActivity(() -> {
-        PushedFilePropertiesUpdater.getInstance(project).initializeProperties();
+    startupManager.registerPreStartupActivity(() -> {
+      PushedFilePropertiesUpdater.getInstance(project).initializeProperties();
 
-        // schedule dumb mode start after the read action we're currently in
-        TransactionGuard.submitTransaction(project, () -> {
-          if (FileBasedIndex.getInstance() instanceof FileBasedIndexImpl) {
-            DumbService.getInstance(project).queueTask(new UnindexedFilesUpdater(project));
-          }
-        });
-
-        myIndex.registerIndexableSet(this, project);
-        project.getMessageBus().connect(this).subscribe(ProjectManager.TOPIC, new ProjectManagerListener() {
-          private boolean removed;
-
-          @Override
-          public void projectClosing(@Nonnull Project eventProject) {
-            if (eventProject == project && !removed) {
-              removed = true;
-              myIndex.removeIndexableSet(FileBasedIndexProjectHandler.this);
-            }
-          }
-        });
+      // schedule dumb mode start after the read action we're currently in
+      TransactionGuard.submitTransaction(project, () -> {
+        if (FileBasedIndex.getInstance() instanceof FileBasedIndexImpl) {
+          DumbService.getInstance(project).queueTask(new UnindexedFilesUpdater(project));
+        }
       });
-    }
+
+      myIndex.registerIndexableSet(this, project);
+      project.getMessageBus().connect(this).subscribe(ProjectManager.TOPIC, new ProjectManagerListener() {
+        private boolean removed;
+
+        @Override
+        public void projectClosing(@Nonnull Project eventProject) {
+          if (eventProject == project && !removed) {
+            removed = true;
+            myIndex.removeIndexableSet(FileBasedIndexProjectHandler.this);
+          }
+        }
+      });
+    });
   }
 
   @Override
