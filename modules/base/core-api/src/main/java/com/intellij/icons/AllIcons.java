@@ -294,7 +294,6 @@ public class AllIcons {
 
     public static class MemoryView {
       public static final Image Active = PlatformIconGroup.debuggerMemoryViewActive(); // 13x13
-      public static final Image ClassTracked = PlatformIconGroup.debuggerMemoryViewClassTracked(); // 16x16
     }
 
     public static final Image MuteBreakpoints = PlatformIconGroup.debuggerMuteBreakpoints(); // 16x16
