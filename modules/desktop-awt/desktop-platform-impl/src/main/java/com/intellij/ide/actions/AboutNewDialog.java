@@ -19,7 +19,6 @@ import com.intellij.CommonBundle;
 import com.intellij.concurrency.JobScheduler;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationInfo;
-import com.intellij.openapi.application.ApplicationNamesInfo;
 import com.intellij.openapi.ide.CopyPasteManager;
 import com.intellij.openapi.ui.VerticalFlowLayout;
 import com.intellij.openapi.util.Couple;
@@ -28,17 +27,16 @@ import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.util.text.DateFormatUtil;
 import com.intellij.util.ui.TextTransferable;
 import com.intellij.util.ui.UIUtil;
+import consulo.application.ui.WholeWestDialogWrapper;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginManager;
 import consulo.platform.Platform;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.application.ui.WholeWestDialogWrapper;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
-import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.TreeMap;
@@ -129,9 +127,13 @@ public class AboutNewDialog extends WholeWestDialogWrapper {
 
     builder.group("Plugins");
 
-    List<PluginDescriptor> plugins = PluginManager.getPlugins();
-    for (PluginDescriptor plugin : plugins) {
-      builder.item(plugin.getPluginId().toString(), StringUtil.notNullize(plugin.getVersion(), info.getBuild().toString()));
+    Map<String, String> plugins = new TreeMap<>();
+    for (PluginDescriptor plugin : PluginManager.getPlugins()) {
+      plugins.put(plugin.getPluginId().toString(), StringUtil.notNullize(plugin.getVersion(), info.getBuild().toString()));
+    }
+
+    for (Map.Entry<String, String> entry : plugins.entrySet()) {
+      builder.item(entry.getKey(), entry.getValue());
     }
 
     Platform platform = Platform.current();
