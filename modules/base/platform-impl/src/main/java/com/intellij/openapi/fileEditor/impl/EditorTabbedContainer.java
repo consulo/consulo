@@ -95,6 +95,9 @@ public final class EditorTabbedContainer implements Disposable, CloseAction.Clos
     myTabs.setBorder(new CustomLineBorder(JBColor.border(), 1, 0, 0, 0) {
       @Override
       public Insets getBorderInsets(Component c) {
+        if (myTabs.getPresentation().isHideTabs()) {
+          return super.getBorderInsets(c);
+        }
         return JBUI.emptyInsets();
       }
     });
