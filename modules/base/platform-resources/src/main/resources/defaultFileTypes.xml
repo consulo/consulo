@@ -17,38 +17,5 @@
         <keywords keywords="FALSE;Object;TRUE;any;attribute;boolean;case;char;const;context;default;define;double;endif;enum;exception;fixed;float;ifdef;ifndef;in;inout;interface;long;module;octet;oneway;out;raises;readonly;sequence;short;string;struct;switch;typedef;union;unsigned;void;wchar;wstring" ignore_case="false" />
       </highlighting>
     </filetype>
-
-    <filetype binary="false" default_extension="pl" extensions="pl;pm" description="Perl files" name="Perl">
-      <highlighting>
-        <options>
-          <option name="LINE_COMMENT" value="#" />
-          <option name="HEX_PREFIX" value="0x" />
-          <option name="HAS_BRACES" value="true" />
-          <option name="HAS_BRACKETS" value="true" />
-          <option name="HAS_PARENS" value="true" />
-          <option name="HAS_STRING_ESCAPES" value="true" />
-        </options>
-        <keywords keywords="and;bless;caller;continue;die;do;dump;else;elsif;eq;eval;exit;for;foreach;goto;if;import;last;local;my;ne;next;no;or;our;package;qw;redo;ref;require;return;sub;tie;tied;unless;untie;until;use;wantarray;while" ignore_case="false" />
-        <keywords2 keywords="chmod;chomp;close;exists;grep;join;keys;length;open;print;push;seek;shift;split;truncate;warn" />
-      </highlighting>
-    </filetype>
-   <filetype binary="false" default_extension="cpp" extensions="c;cpp;h;hpp" description="C/C++ files" name="C++">
-     <highlighting>
-       <options>
-         <option name="LINE_COMMENT" value="//" />
-         <option name="COMMENT_START" value="/*" />
-         <option name="COMMENT_END" value="*/" />
-         <option name="HEX_PREFIX" value="0x" />
-         <option name="NUM_POSTFIXES" value="" />
-         <option name="HAS_BRACES" value="true" />
-         <option name="HAS_BRACKETS" value="true" />
-         <option name="HAS_PARENS" value="true" />
-         <option name="HAS_STRING_ESCAPES" value="true" />
-       </options>
-       <keywords keywords="#define;#else;#endif;#error;#if;#ifdef;#ifndef;#include;#line;#undef;auto;bool;break;case;char;const;continue;default;delete;do;double;else;enum;extern;false;float;for;goto;if;int;long;register;return;short;signed;sizeof;static;struct;switch;typedef;union;unsigned;void;volatile;while" ignore_case="false" />
-       <keywords2 keywords="asm;catch;class;const_cast;dynamic_cast;explicit;friend;inline;mutable;namespace;new;operator;private;protected;public;reinterpret_cast;static_cast;this;throw;true;try;typeid;typename;using;virtual;wchar_t" />
-       <keywords3 keywords="->" />
-     </highlighting>
-   </filetype>
   </filetypes>
 </component>
