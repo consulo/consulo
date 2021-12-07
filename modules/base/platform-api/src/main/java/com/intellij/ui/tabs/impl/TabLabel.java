@@ -31,6 +31,7 @@ import com.intellij.util.PairConsumer;
 import com.intellij.util.ui.Centerizer;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
+import com.intellij.util.ui.accessibility.ScreenReader;
 import consulo.awt.TargetAWT;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
@@ -69,15 +70,17 @@ public class TabLabel extends JPanel {
   private Rectangle myLastPaintedInactiveImageBounds;
 
   public TabLabel(JBTabsImpl tabs, final TabInfo info) {
-    super(false);
+    super(new BorderLayout(), false);
 
     myTabs = tabs;
     myInfo = info;
 
     myLabel = createLabel(tabs);
 
+    // Allow focus so that user can TAB into the selected TabLabel and then
+    // navigate through the other tabs using the LEFT/RIGHT keys.
+    setFocusable(ScreenReader.isActive());
     setOpaque(false);
-    setLayout(new BorderLayout());
 
     myLabelPlaceholder.setOpaque(false);
     add(myLabelPlaceholder, BorderLayout.CENTER);
@@ -151,11 +154,6 @@ public class TabLabel extends JPanel {
   private SimpleColoredComponent createLabel(final JBTabsImpl tabs) {
     SimpleColoredComponent label = new SimpleColoredComponent() {
       @Override
-      protected boolean shouldDrawDimmed() {
-        return myTabs.getSelectedInfo() != myInfo || myTabs.useBoldLabels();
-      }
-
-      @Override
       public Font getFont() {
         if (isFontSet() || !myTabs.useSmallLabels()) {
           return super.getFont();
@@ -164,41 +162,15 @@ public class TabLabel extends JPanel {
       }
 
       @Override
-      protected void doPaint(Graphics2D g) {
-        if (UISettings.getInstance().HIDE_TABS_IF_NEED || tabs.getTabsPosition() == JBTabsPosition.left || tabs.getTabsPosition() == JBTabsPosition.right) {
-          super.doPaint(g);
-          return;
-        }
-        Rectangle clip = getVisibleRect();
-        if (getPreferredSize().width <= clip.width) {
-          super.doPaint(g);
-          return;
-        }
-        int dimSize = 30;
-        int dimStep = 2;
-        Composite oldComposite = g.getComposite();
-        Shape oldClip = g.getClip();
-        try {
-          g.setClip(clip.x, clip.y, Math.max(0, clip.width - dimSize), clip.height);
-          super.doPaint(g);
-
-          for (int x = clip.x + clip.width - dimSize; x < clip.x + clip.width; x += dimStep) {
-            g.setClip(x, clip.y, dimStep, clip.height);
-            g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1 - ((float)x - (clip.x + clip.width - dimSize)) / dimSize));
-            super.doPaint(g);
-          }
-        }
-        finally {
-          g.setComposite(oldComposite);
-          g.setClip(oldClip);
-        }
+      protected int getTextOffsetY() {
+        return JBUI.scale(-2);
       }
     };
     label.setOpaque(false);
-    label.setBorder(null);
     label.setIconTextGap((!UISettings.getInstance().HIDE_TABS_IF_NEED ? JBUI.scale(4) : JBUI.scale(2)));
     label.setIconOpaque(false);
     label.setIpad(JBUI.emptyInsets());
+    label.setBorder(JBUI.Borders.empty());
 
     return label;
   }
@@ -220,18 +192,10 @@ public class TabLabel extends JPanel {
 
   protected void setPlaceholderContent(boolean toCenter, JComponent component) {
     myLabelPlaceholder.removeAll();
-
-    if (toCenter) {
-      final Centerizer center = new Centerizer(component);
-      myLabelPlaceholder.setContent(center);
-    }
-    else {
-      myLabelPlaceholder.setContent(component);
-    }
-
+    JComponent content = toCenter ? new Centerizer(component, Centerizer.TYPE.BOTH) : new Centerizer(component, Centerizer.TYPE.VERTICAL);
+    myLabelPlaceholder.setContent(content);
     myCentered = toCenter;
   }
-
 
   public void paintOffscreen(Graphics g) {
     synchronized (getTreeLock()) {
@@ -335,14 +299,6 @@ public class TabLabel extends JPanel {
       final Dimension actionPanelSize = myActionPanel.getPreferredSize();
       size.width += actionPanelSize.width;
     }
-
-
-    //@Override
-    //public Dimension getPreferredSize() {
-    //  Dimension result = super.getPreferredSize();
-    //  result.height += myTabs.getActiveTabUnderlineHeight() - JBUI.scale(1);
-    //  return result;
-    //}
 
     final JBTabsPosition pos = myTabs.getTabsPosition();
     switch (pos) {

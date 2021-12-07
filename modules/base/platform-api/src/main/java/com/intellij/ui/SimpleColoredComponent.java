@@ -764,7 +764,7 @@ public class SimpleColoredComponent extends JComponent implements Accessible, Co
       }
       g.setColor(color);
 
-      final int textBaseline = getTextBaseLine(metrics, getHeight());
+      final int textBaseline = getTextBaseLine(metrics, getHeight()) + getTextOffsetY();
 
       final int fragmentAlignment = myFragmentAlignment.getInt(i);
 
@@ -780,15 +780,6 @@ public class SimpleColoredComponent extends JComponent implements Accessible, Co
       }
 
       if (!attributes.isSearchMatch()) {
-        if (shouldDrawMacShadow()) {
-          g.setColor(SHADOW_COLOR);
-          doDrawString(g, fragment, offset, textBaseline + 1);
-        }
-
-        if (shouldDrawDimmed()) {
-          color = ColorUtil.dimmer(color);
-        }
-
         g.setColor(color);
         doDrawString(g, fragment, offset, textBaseline);
       }
@@ -842,15 +833,14 @@ public class SimpleColoredComponent extends JComponent implements Accessible, Co
       UIUtil.drawSearchMatch(g, (Integer)info[0], (Integer)info[1], getHeight());
       g.setFont((Font)info[4]);
 
-      if (shouldDrawMacShadow()) {
-        g.setColor(SHADOW_COLOR);
-        g.drawString((String)info[3], (Integer)info[0], (Integer)info[2] + 1);
-      }
-
       g.setColor(new JBColor(Gray._50, Gray._0));
       g.drawString((String)info[3], (Integer)info[0], (Integer)info[2]);
     }
     return offset;
+  }
+
+  protected int getTextOffsetY() {
+    return 0;
   }
 
   private int computeTextAlignShift(@Nonnull Font font) {
@@ -874,20 +864,12 @@ public class SimpleColoredComponent extends JComponent implements Accessible, Co
     return 0;
   }
 
-  protected boolean shouldDrawMacShadow() {
-    return false;
-  }
-
-  protected boolean shouldDrawDimmed() {
-    return false;
-  }
-
   protected boolean shouldDrawBackground() {
     return false;
   }
 
-  protected void paintIcon(@Nonnull Graphics g, @Nonnull Image icon, int offset) {
-    TargetAWT.to(icon).paintIcon(this, g, offset, (getHeight() - icon.getHeight()) / 2);
+  protected void paintIcon(@Nonnull Graphics g, @Nonnull Image icon, int offsetX) {
+    TargetAWT.to(icon).paintIcon(this, g, offsetX, (getHeight() - icon.getHeight()) / 2);
   }
 
   protected void applyAdditionalHints(@Nonnull Graphics2D g) {
