@@ -4,7 +4,7 @@
       extensions="idl"
       default_extension="idl"
       binary="false"
-      icon = "AllIcons.FileTypes.Idl">
+      icon = "consulo.platform.base.PlatformIconGroup@filetypes.idl">
 
       <highlighting>
         <options>
@@ -18,7 +18,7 @@
       </highlighting>
     </filetype>
 
-    <filetype binary="false" default_extension="pl" extensions="pl;pm" description="Perl files" name="Perl" icon="AllIcons.FileTypes.Custom">
+    <filetype binary="false" default_extension="pl" extensions="pl;pm" description="Perl files" name="Perl">
       <highlighting>
         <options>
           <option name="LINE_COMMENT" value="#" />
@@ -32,7 +32,7 @@
         <keywords2 keywords="chmod;chomp;close;exists;grep;join;keys;length;open;print;push;seek;shift;split;truncate;warn" />
       </highlighting>
     </filetype>
-   <filetype binary="false" default_extension="cpp" extensions="c;cpp;h;hpp" description="C/C++ files" name="C++" icon="AllIcons.FileTypes.Custom">
+   <filetype binary="false" default_extension="cpp" extensions="c;cpp;h;hpp" description="C/C++ files" name="C++">
      <highlighting>
        <options>
          <option name="LINE_COMMENT" value="//" />

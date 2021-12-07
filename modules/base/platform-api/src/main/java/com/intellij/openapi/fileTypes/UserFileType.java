@@ -5,10 +5,10 @@ import com.intellij.openapi.options.SettingsEditor;
 import com.intellij.openapi.vfs.VirtualFile;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.image.Image;
+import consulo.ui.image.ImageKey;
 
 import javax.annotation.Nonnull;
 import java.io.File;
-import java.net.MalformedURLException;
 
 public abstract class UserFileType<T extends UserFileType> implements FileType, Cloneable {
   @Nonnull
@@ -62,17 +62,22 @@ public abstract class UserFileType<T extends UserFileType> implements FileType, 
     Image icon = myIcon;
     if (icon == null) {
       if (myIconPath != null) {
-        try {
-          icon = Image.fromUrl(new File(myIconPath).toURI().toURL());
+        if (myIconPath.contains("@")) {
+          icon = ImageKey.fromString(myIconPath, Image.DEFAULT_ICON_SIZE, Image.DEFAULT_ICON_SIZE);
         }
-        catch (Exception ignored) {
+        else {
+          try {
+            icon = Image.fromUrl(new File(myIconPath).toURI().toURL());
+          }
+          catch (Exception ignored) {
+          }
         }
-        myIcon = icon;
       }
 
       if (icon == null) {
         icon = PlatformIconGroup.fileTypesCustom();
       }
+      myIcon = icon;
     }
     return icon;
   }
