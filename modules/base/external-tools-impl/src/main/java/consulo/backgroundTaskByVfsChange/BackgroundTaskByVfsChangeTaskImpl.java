@@ -152,7 +152,7 @@ public class BackgroundTaskByVfsChangeTaskImpl implements BackgroundTaskByVfsCha
       });
 
       if (myParameters.isShowConsole()) {
-        final RunContentExecutor contentExecutor = new RunContentExecutor(myProject, processHandler).withTitle(myProviderName).withActivateToolWindow(false);
+        final RunContentExecutor contentExecutor = new RunContentExecutor(myProject, processHandler).withTitle(myProviderName).withActivateToolWindow(false).with;
         UIUtil.invokeLaterIfNeeded(contentExecutor::run);
       }
       else {

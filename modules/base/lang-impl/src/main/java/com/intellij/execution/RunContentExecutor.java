@@ -21,6 +21,8 @@ import com.intellij.openapi.wm.ToolWindowId;
 import com.intellij.openapi.wm.ToolWindowManager;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -45,6 +47,8 @@ public class RunContentExecutor implements Disposable {
   private String myTitle = "Output";
   private String myHelpId = null;
   private boolean myActivateToolWindow = true;
+  private Image myIcon = PlatformIconGroup.generalRun();
+
   /**
    * User-provided console that has to be used instead of newly created
    */
@@ -62,6 +66,11 @@ public class RunContentExecutor implements Disposable {
 
   public RunContentExecutor withTitle(String title) {
     myTitle = title;
+    return this;
+  }
+
+  public RunContentExecutor withIcon(@Nonnull Image icon) {
+    myIcon = icon;
     return this;
   }
 
@@ -103,7 +112,7 @@ public class RunContentExecutor implements Disposable {
     DefaultActionGroup actions = new DefaultActionGroup();
 
     final JComponent consolePanel = createConsolePanel(console, actions);
-    RunContentDescriptor descriptor = new RunContentDescriptor(console, myProcess, consolePanel, myTitle);
+    RunContentDescriptor descriptor = new RunContentDescriptor(console, myProcess, consolePanel, myTitle, myIcon);
 
     Disposer.register(descriptor, this);
     Disposer.register(descriptor, console);
