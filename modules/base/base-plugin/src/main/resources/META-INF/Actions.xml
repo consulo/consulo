@@ -628,16 +628,15 @@
 
     <group id="WelcomeScreen.Documentation">
       <action id="WelcomeScreen.ReadHelp" class="com.intellij.ide.actions.HelpTopicsAction"
-              icon="consulo.platform.base.PlatformIconGroup@general.readhelp"/>
-      <action id="WelcomeScreen.ShowTips" class="com.intellij.ide.actions.ShowTipsAction"
-              icon="consulo.platform.base.PlatformIconGroup@general.tipsoftheday"/>
+              icon="consulo.platform.base.PlatformIconGroup@actions.help"/>
+      <action id="WelcomeScreen.ShowTips" class="com.intellij.ide.actions.ShowTipsAction"/>
       <reference ref="Help.KeymapReference"/>
 
       <action id="WelcomeScreen.Youtube" class="com.intellij.openapi.wm.impl.welcomeScreen.OpenYoutubeAction"
               icon="consulo.platform.base.PlatformIconGroup@general.youtube"/>
       <reference id="Help.JoinDiscordChannel"/>
       <action id="WelcomeScreen.DevelopPlugins" class="com.intellij.openapi.wm.impl.welcomeScreen.DevelopPluginsAction"
-              icon="consulo.platform.base.PlatformIconGroup@general.pluginmanager"/>
+              icon="consulo.platform.base.PlatformIconGroup@nodes.plugin"/>
     </group>
 
     <group id="WelcomeScreen.Configure">

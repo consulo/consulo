@@ -485,7 +485,6 @@ public class AllIcons {
     public static final Image ProjectStructure = PlatformIconGroup.generalProjectStructure(); // 16x16
     public static final Image ProjectTab = PlatformIconGroup.generalProjectTab(); // 16x16
     public static final Image QuestionDialog = PlatformIconGroup.generalQuestionDialog(); // 32x32
-    public static final Image ReadHelp = PlatformIconGroup.generalReadHelp(); // 32x32
     public static final Image Remove = PlatformIconGroup.generalRemove(); // 16x16
     public static final Image Reset = PlatformIconGroup.generalReset(); // 16x16
     public static final Image RunWithCoverage = PlatformIconGroup.generalRunWithCoverage(); // 16x16
@@ -516,7 +515,6 @@ public class AllIcons {
     public static final Image TemplateProjectSettings = PlatformIconGroup.generalTemplateProjectSettings(); // 32x32
     public static final Image TemplateProjectStructure = PlatformIconGroup.generalTemplateProjectStructure(); // 32x32
     public static final Image Tip = PlatformIconGroup.generalTip(); // 32x32
-    public static final Image TipsOfTheDay = PlatformIconGroup.generalTipsOfTheDay(); // 32x32
     public static final Image TodoDefault = PlatformIconGroup.generalTodoDefault(); // 12x12
     public static final Image TodoImportant = PlatformIconGroup.generalTodoImportant(); // 12x12
     public static final Image TodoQuestion = PlatformIconGroup.generalTodoQuestion(); // 12x12
