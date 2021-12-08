@@ -19,6 +19,7 @@ import com.intellij.openapi.actionSystem.ActionToolbar;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.DataProvider;
 import com.intellij.ui.components.JBPanelWithEmptyText;
+import com.intellij.ui.components.panels.Wrapper;
 import com.intellij.ui.switcher.QuickActionProvider;
 import com.intellij.util.containers.JBIterable;
 import com.intellij.util.ui.JBUI;
@@ -81,16 +82,20 @@ public class SimpleToolWindowPanel extends JBPanelWithEmptyText implements Quick
       remove(myToolbar);
     }
 
-    myToolbar = c;
 
     if (c != null) {
+      Wrapper wrapper = new Wrapper(c);
+      myToolbar = wrapper;
+
       if (myVertical) {
-        c.setBorder(JBUI.Borders.customLine(UIUtil.getBorderColor(), 0, 0, 1, 0));
-        add(c, BorderLayout.NORTH);
+        wrapper.setBorder(JBUI.Borders.customLine(UIUtil.getBorderColor(), 0, 0, 1, 0));
+        add(wrapper, BorderLayout.NORTH);
       } else {
-        c.setBorder(JBUI.Borders.customLine(UIUtil.getBorderColor(), 0, 0, 0, 1));
-        add(c, BorderLayout.WEST);
+        wrapper.setBorder(JBUI.Borders.customLine(UIUtil.getBorderColor(), 0, 0, 0, 1));
+        add(wrapper, BorderLayout.WEST);
       }
+    } else {
+      myToolbar = null;
     }
 
     revalidate();
