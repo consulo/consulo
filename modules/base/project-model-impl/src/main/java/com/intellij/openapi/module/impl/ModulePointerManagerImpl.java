@@ -73,8 +73,7 @@ public class ModulePointerManagerImpl extends NamedPointerManagerImpl<Module> im
   @Override
   @RequiredReadAction
   protected Module findByName(@Nonnull String name) {
-    // while initializing do not allow search modules
-    if (!myProject.isInitialized()) {
+    if (!myProject.isModulesReady()) {
       return null;
     }
     return ModuleManager.getInstance(myProject).findModuleByName(name);

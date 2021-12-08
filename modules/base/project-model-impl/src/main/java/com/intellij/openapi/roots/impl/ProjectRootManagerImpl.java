@@ -234,6 +234,9 @@ public class ProjectRootManagerImpl extends ProjectRootManagerEx {
   @Override
   public void clearScopesCachesForModules() {
     myRootsCache.clearCache();
+    if(!myProject.isModulesReady()) {
+      return;
+    }
     Module[] modules = ModuleManager.getInstance(myProject).getModules();
     for (Module module : modules) {
       ((ModuleRootManagerImpl)ModuleRootManager.getInstance(module)).dropCaches();

@@ -121,6 +121,10 @@ public interface Project extends ComponentManager {
 
   boolean isInitialized();
 
+  default boolean isModulesReady() {
+    return true;
+  }
+
   default boolean isDefault() {
     return false;
   }

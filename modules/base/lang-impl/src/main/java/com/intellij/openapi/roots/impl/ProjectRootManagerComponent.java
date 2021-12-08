@@ -321,6 +321,10 @@ public class ProjectRootManagerComponent extends ProjectRootManagerImpl implemen
   @Override
   public void clearScopesCachesForModules() {
     super.clearScopesCachesForModules();
+    if (!myProject.isModulesReady()) {
+      return;
+    }
+    
     Module[] modules = ModuleManager.getInstance(myProject).getModules();
     for (Module module : modules) {
       ModuleScopeProvider scopeProvider = ModuleScopeProvider.getInstance(module);

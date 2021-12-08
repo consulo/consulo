@@ -29,6 +29,7 @@ import com.intellij.openapi.components.TrackingPathMacroSubstitutor;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.module.impl.ModuleManagerComponent;
+import com.intellij.openapi.module.impl.ModuleManagerImpl;
 import com.intellij.openapi.progress.*;
 import com.intellij.openapi.project.*;
 import com.intellij.openapi.project.ex.ProjectEx;
@@ -262,6 +263,10 @@ public class ProjectManagerImpl extends ProjectManagerEx implements Disposable {
         project.getStateStore().load();
       }
       project.initNotLazyServices(null);
+
+      ModuleManagerImpl moduleManager = ModuleManagerImpl.getInstanceImpl(project);
+      moduleManager.setReady(true);
+
       succeed = true;
     }
     finally {

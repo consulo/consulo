@@ -23,6 +23,7 @@ import com.intellij.openapi.components.ServiceDescriptor;
 import com.intellij.openapi.components.impl.ProjectPathMacroManager;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.extensions.impl.ExtensionAreaId;
+import com.intellij.openapi.module.impl.ModuleManagerImpl;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.project.DumbAwareRunnable;
@@ -208,6 +209,12 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
   }
 
   @Override
+  public boolean isModulesReady() {
+    ModuleManagerImpl moduleManager = ModuleManagerImpl.getInstanceImpl(this);
+    return moduleManager.isReady();
+  }
+
+  @Override
   @Nonnull
   public String getProjectFilePath() {
     return getStateStore().getProjectFilePath();
@@ -289,8 +296,8 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
       return;
     }
 
-    if(!isInitialized()) {
-      LOG.warn(new Exception("Calling Project#save() but project not initialized"));
+    if(!isModulesReady()) {
+      LOG.warn(new Exception("Calling Project#save() but modules not initialized"));
       return;
     }
 

@@ -180,6 +180,14 @@ public abstract class ModuleManagerImpl extends ModuleManager implements Persist
     myMessageBus = project.getMessageBus();
   }
 
+  public void setReady(boolean ready) {
+    myReady = ready;
+  }
+
+  public boolean isReady() {
+    return myReady;
+  }
+
   @Override
   public void dispose() {
     myModuleModel.disposeModel();
