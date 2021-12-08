@@ -25,6 +25,7 @@ import java.util.RandomAccess;
  * @author VISTALL
  * @since 10/02/2021
  */
+@SuppressWarnings("deprecation")
 public class IntLists {
   private static final int REVERSE_THRESHOLD = 18;
 

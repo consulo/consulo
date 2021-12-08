@@ -15,6 +15,7 @@
  */
 package consulo.util.collection.primitive.ints.impl.list;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.util.collection.primitive.PrimitiveListIterator;
 import consulo.util.collection.primitive.ints.IntList;
 import consulo.util.collection.primitive.ints.impl.IntCollectionImpls;
@@ -23,6 +24,8 @@ import javax.annotation.Nonnull;
 import java.util.*;
 import java.util.function.IntConsumer;
 
+@Deprecated
+@DeprecationInfo("Use IntLists")
 public class IntArrayList implements Cloneable, IntList {
   /**
    * An optimized version of AbstractList.Itr
