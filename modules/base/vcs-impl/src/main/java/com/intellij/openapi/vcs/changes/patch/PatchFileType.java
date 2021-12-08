@@ -22,13 +22,12 @@
  */
 package com.intellij.openapi.vcs.changes.patch;
 
-import com.intellij.icons.AllIcons;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.vcs.VcsBundle;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.image.Image;
-import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -36,13 +35,11 @@ import java.io.File;
 
 public class PatchFileType implements FileType {
   public static final PatchFileType INSTANCE = new PatchFileType();
-  public static final String NAME = "PATCH";
 
   @Override
   @Nonnull
-  @NonNls
   public String getId() {
-    return NAME;
+    return "PATCH";
   }
 
   @Override
@@ -53,18 +50,17 @@ public class PatchFileType implements FileType {
 
   @Override
   @Nonnull
-  @NonNls
   public String getDefaultExtension() {
     return "patch";
   }
 
   @Override
-  @Nullable
+  @Nonnull
   public Image getIcon() {
-    return AllIcons.Nodes.Pointcut;
+    return PlatformIconGroup.fileTypesPatch();
   }
 
-  public static boolean isPatchFile(@javax.annotation.Nullable VirtualFile vFile) {
+  public static boolean isPatchFile(@Nullable VirtualFile vFile) {
     return vFile != null && vFile.getFileType() == PatchFileType.INSTANCE;
   }
 
