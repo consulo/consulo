@@ -44,7 +44,7 @@ public abstract class BaseContentCloseListener implements ProjectManagerListener
     }
     ProjectManagerEx projectManager = (ProjectManagerEx)ProjectManager.getInstance();
     projectManager.addProjectManagerListener(myProject, this);
-    Disposable vetoDisposable = projectManager.registerCloseProjectVeto(target -> canClose(project));
+    Disposable vetoDisposable = projectManager.registerCloseProjectVeto(this::canClose);
     Disposer.register(myProject, vetoDisposable);
   }
 
