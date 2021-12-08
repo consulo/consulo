@@ -771,8 +771,6 @@ public class AllIcons {
     public static final Image Parameter = PlatformIconGroup.nodesParameter(); // 16x16
     public static final Image PinToolWindow = PlatformIconGroup.nodesPinToolWindow(); // 13x13
     public static final Image Plugin = PlatformIconGroup.nodesPlugin(); // 16x16
-    public static final Image Pluginnotinstalled = PlatformIconGroup.nodesPluginnotinstalled(); // 16x16
-    public static final Image Pluginobsolete = PlatformIconGroup.nodesPluginobsolete(); // 16x16
     public static final Image Pointcut = PlatformIconGroup.nodesPointcut(); // 16x16
     public static final Image PpFile = PlatformIconGroup.nodesPpFile(); // 16x16
     public static final Image PpInvalid = PlatformIconGroup.nodesPpInvalid(); // 16x16
