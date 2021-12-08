@@ -478,7 +478,6 @@ public class AllIcons {
     public static final Image OverridingMethod = PlatformIconGroup.generalOverridingMethod(); // 10x14
     public static final Image PathVariables = PlatformIconGroup.generalPathVariables(); // 32x32
     public static final Image Pin_tab = PlatformIconGroup.generalPin_tab(); // 16x16
-    public static final Image PluginManager = PlatformIconGroup.generalPluginManager(); // 32x32
     public static final Image Progress = PlatformIconGroup.generalProgress(); // 8x10
     public static final Image ProjectConfigurable = PlatformIconGroup.generalProjectConfigurable(); // 9x9
     public static final Image ProjectSettings = PlatformIconGroup.generalProjectSettings(); // 16x16
