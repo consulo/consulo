@@ -32,18 +32,17 @@ public class BasicStatusBarUI extends ComponentUI {
     return new BasicStatusBarUI();
   }
 
-  private static final Color BORDER_TOP_COLOR = JBColor.namedColor("StatusBar.borderColor", new JBColor(0x919191, 0x919191));
   private static final JBValue BW = new JBValue.Float(1);
 
   @Override
   public void paint(final Graphics g, final JComponent c) {
-    Graphics2D g2d = (Graphics2D)g.create();
+    Graphics2D g2d = (Graphics2D)g;
     Rectangle r = new Rectangle(c.getSize());
     try {
       g2d.setColor(UIUtil.getPanelBackground());
       g2d.fill(r);
 
-      g2d.setColor(BORDER_TOP_COLOR);
+      g2d.setColor(JBColor.border());
       g2d.fill(new Rectangle(r.x, r.y, r.width, BW.get()));
     }
     finally {
