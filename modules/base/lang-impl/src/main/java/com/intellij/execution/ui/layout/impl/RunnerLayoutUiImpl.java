@@ -276,12 +276,7 @@ public class RunnerLayoutUiImpl implements consulo.disposer.Disposable.Parent, R
   public RunnerLayoutUi addListener(@Nonnull final ContentManagerListener listener, @Nonnull final Disposable parent) {
     final ContentManager mgr = getContentManager();
     mgr.addContentManagerListener(listener);
-    Disposer.register(parent, new Disposable() {
-      @Override
-      public void dispose() {
-        mgr.removeContentManagerListener(listener);
-      }
-    });
+    Disposer.register(parent, () -> mgr.removeContentManagerListener(listener));
     return this;
   }
 

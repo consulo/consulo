@@ -867,9 +867,8 @@ public class RunnerContentUi implements ContentUI, Disposable, CellTransform.Fac
 
       final AnAction[] actions = groupToBuild.getChildren(null);
       if (!Arrays.equals(actions, myContextActions.get(entry.getKey()))) {
-        String adjustedPlace = myActionsPlace == ActionPlaces.UNKNOWN ? ActionPlaces.TOOLBAR : myActionsPlace;
+        String adjustedPlace = ActionPlaces.UNKNOWN.equals(myActionsPlace) ? ActionPlaces.TOOLBAR : myActionsPlace;
         ActionToolbar tb = myActionManager.createActionToolbar(adjustedPlace, groupToBuild, true);
-        tb.getComponent().setBorder(null);
         tb.setTargetComponent(contextComponent);
         eachPlaceholder.setContent(tb.getComponent());
       }
@@ -889,7 +888,7 @@ public class RunnerContentUi implements ContentUI, Disposable, CellTransform.Fac
       Wrapper eachPlaceholder = entry.getValue();
       ActionToolbar tb = myActionManager.createActionToolbar(ActionPlaces.DEBUGGER_TOOLBAR, myMinimizedViewActions, true);
       tb.setTargetComponent(myComponent);
-      tb.getComponent().setBorder(null);
+      tb.getComponent().setBorder(JBUI.Borders.empty());
       tb.setReservePlaceAutoPopupIcon(false);
       JComponent minimized = tb.getComponent();
       eachPlaceholder.setContent(minimized);
