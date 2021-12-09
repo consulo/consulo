@@ -1085,6 +1085,7 @@
     <extensionPoint name="uiDebuggerExtension" interface="com.intellij.ui.debugger.UiDebuggerExtension"/>
 
     <extensionPoint name="projectViewPane" interface="com.intellij.ide.projectView.impl.AbstractProjectViewPane" area="PROJECT"/>
+    <extensionPoint name="projectViewPaneSelectionHelperiewPane" interface="com.intellij.ide.projectView.impl.ProjectViewPaneSelectionHelper"/>
     <extensionPoint name="projectViewOptionProvider" interface="consulo.ide.projectView.impl.ProjectViewPaneOptionProvider"/>
 
     <extensionPoint name="inlineActionHandler" interface="com.intellij.lang.refactoring.InlineActionHandler"/>

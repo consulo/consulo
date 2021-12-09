@@ -15,8 +15,8 @@ import java.util.List;
 /**
  * Implement this extension to customise selection process in the project view.
  */
-public abstract class ProjectViewPaneSelectionHelper {
-  private static final ExtensionPointName<ProjectViewPaneSelectionHelper> EP_NAME = ExtensionPointName.create("com.intellij.projectViewPaneSelectionHelper");
+public interface ProjectViewPaneSelectionHelper {
+  public static final ExtensionPointName<ProjectViewPaneSelectionHelper> EP_NAME = ExtensionPointName.create("com.intellij.projectViewPaneSelectionHelper");
 
   /**
    * @param selectionDescriptor information about target elements and potential {@link TreePath tree paths} for selection found by {@link AbstractProjectViewPane#createVisitor(PsiElement, VirtualFile, List)}  node visitor}
@@ -24,7 +24,7 @@ public abstract class ProjectViewPaneSelectionHelper {
    * @see AbstractTreeNode#canRepresent
    */
   @Nullable
-  protected abstract List<? extends TreePath> computeAdjustedPaths(@Nonnull SelectionDescriptor selectionDescriptor);
+  public abstract List<? extends TreePath> computeAdjustedPaths(@Nonnull SelectionDescriptor selectionDescriptor);
 
   /**
    * @param selectionDescriptor information about target elements and potential {@link TreePath tree paths} for selection found by {@link AbstractProjectViewPane#createVisitor(PsiElement, VirtualFile, List)}  node visitor}
@@ -32,7 +32,7 @@ public abstract class ProjectViewPaneSelectionHelper {
    * Returns {@link SelectionDescriptor#originalTreePaths original paths} by default
    */
   @Nonnull
-  static List<? extends TreePath> getAdjustedPaths(@Nonnull SelectionDescriptor selectionDescriptor) {
+  public static List<? extends TreePath> getAdjustedPaths(@Nonnull SelectionDescriptor selectionDescriptor) {
     for (ProjectViewPaneSelectionHelper helper : EP_NAME.getExtensionList()) {
       List<? extends TreePath> adjustedPaths = helper.computeAdjustedPaths(selectionDescriptor);
       if (adjustedPaths != null) {
