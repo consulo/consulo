@@ -16,11 +16,17 @@
 package consulo.backgroundTaskByVfsChange;
 
 import com.intellij.application.options.ReplacePathToMacroMap;
+import com.intellij.build.BuildViewManager;
+import com.intellij.build.DefaultBuildDescriptor;
+import com.intellij.build.progress.BuildProgress;
+import com.intellij.build.progress.BuildProgressDescriptor;
+import com.intellij.execution.filters.UrlFilter;
+import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.components.*;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.Task;
+import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileEvent;
 import com.intellij.openapi.vfs.VirtualFileListener;
@@ -30,17 +36,20 @@ import com.intellij.openapi.vfs.pointers.VirtualFilePointerManager;
 import com.intellij.util.xmlb.XmlSerializer;
 import consulo.backgroundTaskByVfsChange.ui.BackgroundTaskByVfsChangeManageDialog;
 import consulo.disposer.Disposable;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.util.concurrent.AsyncResult;
 import consulo.util.dataholder.Key;
 import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import org.jdom.Element;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import jakarta.inject.Singleton;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
+import java.util.function.Consumer;
 
 /**
  * @author VISTALL
@@ -151,28 +160,64 @@ public class BackgroundTaskByVfsChangeManagerImpl extends BackgroundTaskByVfsCha
       return;
     }
 
+    BuildProgress<BuildProgressDescriptor> buildProgress = BuildViewManager.createBuildProgress(myProject);
+
+    UUID uuid = UUID.randomUUID();
+    DefaultBuildDescriptor buildDescriptor = new DefaultBuildDescriptor(uuid, virtualFile.getName(), myProject.getBasePath(), System.currentTimeMillis());
+    buildDescriptor.withExecutionFilter(new UrlFilter(myProject));
+    buildDescriptor.withRestartAction(new DumbAwareAction("Restart", null, PlatformIconGroup.actionsExecute()) {
+      @RequiredUIAccess
+      @Override
+      public void actionPerformed(@Nonnull AnActionEvent e) {
+        BackgroundTaskByVfsChangeManager.getInstance(myProject).runTasks(virtualFile);
+      }
+    });
+    buildDescriptor.setActivateToolWindowWhenFailed(true);
+
+    for (BackgroundTaskByVfsChangeTask task : tasks) {
+      if (task.getParameters().isShowConsole()) {
+        buildDescriptor.setActivateToolWindowWhenAdded(true);
+        break;
+      }
+    }
+
+    buildProgress.start(BuildProgressDescriptor.of(buildDescriptor));
+
     Task.Backgroundable backgroundTask = new Task.Backgroundable(myProject, "Processing: " + virtualFile.getName()) {
       @Override
       public void run(@Nonnull ProgressIndicator indicator) {
         virtualFile.putUserData(PROCESSING_BACKGROUND_TASK, Boolean.TRUE);
-        call(indicator, virtualFile, tasks, 0);
+        call(indicator, tasks, buildProgress, 0, (result) -> {
+          virtualFile.putUserData(PROCESSING_BACKGROUND_TASK, null);
+
+          if (result) {
+            buildProgress.finish(System.currentTimeMillis());
+          }
+          else {
+            buildProgress.fail();
+          }
+        });
       }
     };
     backgroundTask.queue();
   }
 
-  public void call(final ProgressIndicator indicator, final VirtualFile file, final List<BackgroundTaskByVfsChangeTask> tasks, final int index) {
+  public void call(ProgressIndicator indicator, List<BackgroundTaskByVfsChangeTask> tasks, BuildProgress<BuildProgressDescriptor> buildProgress, int index, Consumer<Boolean> onFinish) {
     if (index == tasks.size()) {
-      file.putUserData(PROCESSING_BACKGROUND_TASK, null);
+      onFinish.accept(Boolean.TRUE);
       return;
     }
 
     BackgroundTaskByVfsChangeTaskImpl task = (BackgroundTaskByVfsChangeTaskImpl)tasks.get(index);
 
     AsyncResult<Void> callback = AsyncResult.undefined();
-    callback.doWhenProcessed(() -> call(indicator, file, tasks, index + 1));
+    // if ok - go next
+    callback.doWhenDone(() -> call(indicator, tasks, buildProgress, index + 1, onFinish));
+    // if failed - stop
+    callback.doWhenRejected(() -> onFinish.accept(Boolean.FALSE));
+
     indicator.setText2("Task: " + task.getName());
-    task.run(callback);
+    task.run(callback, buildProgress);
   }
 
   @Nullable

@@ -2,14 +2,28 @@
 package com.intellij.build.progress;
 
 import com.intellij.build.BuildDescriptor;
-import com.intellij.build.events.BuildEventsNls;
 
 import javax.annotation.Nonnull;
 
-//@ApiStatus.Experimental
 public interface BuildProgressDescriptor {
   @Nonnull
-  @BuildEventsNls.Title
+  public static BuildProgressDescriptor of(@Nonnull BuildDescriptor descriptor) {
+    return new BuildProgressDescriptor() {
+      @Nonnull
+      @Override
+      public String getTitle() {
+        return descriptor.getTitle();
+      }
+
+      @Nonnull
+      @Override
+      public BuildDescriptor getBuildDescriptor() {
+        return descriptor;
+      }
+    };
+  }
+
+  @Nonnull
   String getTitle();
 
   @Nonnull

@@ -16,17 +16,15 @@
 package consulo.backgroundTaskByVfsChange;
 
 import com.intellij.application.options.ReplacePathToMacroMap;
+import com.intellij.build.progress.BuildProgress;
+import com.intellij.build.progress.BuildProgressDescriptor;
 import com.intellij.execution.ExecutionException;
-import com.intellij.execution.RunContentExecutor;
 import com.intellij.execution.configurations.GeneralCommandLine;
-import com.intellij.execution.process.CapturingProcessHandler;
-import com.intellij.execution.process.ProcessAdapter;
-import com.intellij.execution.process.ProcessEvent;
+import com.intellij.execution.process.*;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.components.ExpandMacroToPathMap;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.io.FileUtilRt;
@@ -36,12 +34,12 @@ import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointer;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointerManager;
-import com.intellij.tools.ToolProcessAdapter;
 import com.intellij.util.ArrayUtil;
-import com.intellij.util.ui.UIUtil;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.logging.Logger;
 import consulo.ui.UIAccess;
+import consulo.util.concurrent.AsyncResult;
+import consulo.util.dataholder.Key;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -115,7 +113,7 @@ public class BackgroundTaskByVfsChangeTaskImpl implements BackgroundTaskByVfsCha
     return temp;
   }
 
-  public void run(@Nonnull final AsyncResult<Void> actionCallback) {
+  public void run(@Nonnull final AsyncResult<Void> actionCallback, BuildProgress<BuildProgressDescriptor> buildProgress) {
     try {
       UIAccess uiAccess = Application.get().getLastUIAccess();
 
@@ -132,10 +130,20 @@ public class BackgroundTaskByVfsChangeTaskImpl implements BackgroundTaskByVfsCha
       commandLine.setPassParentEnvironment(myParameters.isPassParentEnvs());
       commandLine.getEnvironment().putAll(myParameters.getEnvs());
 
-      CapturingProcessHandler processHandler = new CapturingProcessHandler(commandLine);
+      OSProcessHandler processHandler = ProcessHandlerFactory.getInstance().createProcessHandler(commandLine);
       processHandler.addProcessListener(new ProcessAdapter() {
         @Override
+        public void onTextAvailable(ProcessEvent event, Key outputType) {
+          buildProgress.output(event.getText(), outputType == ProcessOutputTypes.STDOUT || outputType == ProcessOutputTypes.SYSTEM);
+        }
+
+        @Override
         public void processTerminated(ProcessEvent event) {
+          if (event.getExitCode() != 0) {
+            actionCallback.setRejected();
+            return;
+          }
+
           actionCallback.setDone();
 
           String outPath = myParameters.getOutPath();
@@ -151,14 +159,7 @@ public class BackgroundTaskByVfsChangeTaskImpl implements BackgroundTaskByVfsCha
         }
       });
 
-      if (myParameters.isShowConsole()) {
-        final RunContentExecutor contentExecutor = new RunContentExecutor(myProject, processHandler).withTitle(myProviderName).withActivateToolWindow(false);
-        UIUtil.invokeLaterIfNeeded(contentExecutor::run);
-      }
-      else {
-        processHandler.addProcessListener(new ToolProcessAdapter(myProject, true, myName));
-        processHandler.startNotify();
-      }
+      processHandler.startNotify();
     }
     catch (ExecutionException e) {
       actionCallback.setRejected();
