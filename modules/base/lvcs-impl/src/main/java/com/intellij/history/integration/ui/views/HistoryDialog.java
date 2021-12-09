@@ -61,6 +61,7 @@ import com.intellij.util.ui.update.MergingUpdateQueue;
 import com.intellij.util.ui.update.Update;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
@@ -541,7 +542,7 @@ public abstract class HistoryDialog<T extends HistoryDialogModel> extends FrameW
 
   private class CreatePatchAction extends MyAction {
     public CreatePatchAction() {
-      super(message("action.create.patch"), null, AllIcons.Actions.CreatePatch);
+      super(message("action.create.patch"), null, PlatformIconGroup.fileTypesPatch());
     }
 
     @Override

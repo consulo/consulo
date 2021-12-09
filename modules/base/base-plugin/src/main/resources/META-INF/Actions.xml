@@ -774,7 +774,7 @@
 
     <action id="Vcs.RefreshStatuses" class="com.intellij.openapi.vcs.actions.RefreshStatuses"/>
     <action id="ChangesView.Refresh" class="com.intellij.openapi.vcs.changes.actions.RefreshAction" icon="consulo.platform.base.PlatformIconGroup@actions.refresh"/>
-    <action id="ChangesView.CreatePatch" class="com.intellij.openapi.vcs.changes.actions.CreatePatchAction" icon="consulo.platform.base.PlatformIconGroup@actions.createpatch"/>
+    <action id="ChangesView.CreatePatch" class="com.intellij.openapi.vcs.changes.actions.CreatePatchAction" icon="consulo.platform.base.PlatformIconGroup@filetypes.patch"/>
     <action id="ChangesView.Revert" class="com.intellij.openapi.vcs.changes.actions.RollbackAction"
             icon="consulo.platform.base.PlatformIconGroup@actions.rollback" text="_Revert..." description="Revert selected changes"/>
     <action id="ChangesView.Shelve" class="com.intellij.openapi.vcs.changes.shelf.ShelveChangesAction" icon="consulo.platform.base.PlatformIconGroup@vcs.shelvesilent"/>
@@ -844,7 +844,7 @@
       <action id="ShelvedChanges.Diff" class="com.intellij.openapi.vcs.changes.shelf.DiffShelvedChangesAction"
               icon="consulo.platform.base.PlatformIconGroup@actions.diff" use-shortcut-of="Diff.ShowDiff"/>
       <action id="ChangesView.CreatePatchFromChanges" class="com.intellij.openapi.vcs.changes.actions.CreatePatchFromChangesAction"
-              icon="consulo.platform.base.PlatformIconGroup@actions.createpatch"/>
+              icon="consulo.platform.base.PlatformIconGroup@filetypes.patch"/>
       <action id="ShelvedChanges.ImportPatches" class="com.intellij.openapi.vcs.changes.shelf.ImportIntoShelfAction"/>
       <separator/>
       <action id="ShelvedChanges.Rename" class="com.intellij.openapi.vcs.changes.shelf.RenameShelvedChangeListAction"

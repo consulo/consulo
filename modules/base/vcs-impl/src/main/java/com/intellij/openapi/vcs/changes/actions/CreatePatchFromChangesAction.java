@@ -16,7 +16,6 @@
 
 package com.intellij.openapi.vcs.changes.actions;
 
-import com.intellij.icons.AllIcons;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
@@ -33,6 +32,7 @@ import com.intellij.openapi.vcs.changes.patch.CreatePatchCommitExecutor;
 import com.intellij.openapi.vcs.changes.shelf.ShelvedChangeList;
 import com.intellij.openapi.vcs.changes.shelf.ShelvedChangesViewManager;
 import com.intellij.openapi.vcs.changes.ui.SessionDialog;
+import consulo.platform.base.icon.PlatformIconGroup;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -44,7 +44,7 @@ import java.util.List;
 public class CreatePatchFromChangesAction extends AnAction implements DumbAware {
   public CreatePatchFromChangesAction() {
     super(VcsBundle.message("action.name.create.patch.for.selected.revisions"),
-          VcsBundle.message("action.description.create.patch.for.selected.revisions"), AllIcons.Actions.CreatePatch);
+          VcsBundle.message("action.description.create.patch.for.selected.revisions"), PlatformIconGroup.fileTypesPatch());
   }
 
   public void actionPerformed(AnActionEvent e) {
