@@ -42,8 +42,6 @@ public class BootstrapClassLoaderUtil {
   public static ContainerStartup buildContainerStartup(Map<String, Object> args, File modulesDirectory, ContainerLogger containerLogger, Java9ModuleProcessor processor) throws Exception {
     StatCollector stat = (StatCollector)args.get(ContainerStartup.STAT_COLLECTOR);
 
-    System.setSecurityManager(new ConsuloSecurityManager());
-
     Runnable bootInitialize = stat.mark("boot.classloader.initialize");
 
     Runnable mark = stat.mark(CONSULO_PLATFORM_BASE + ".initialize");
