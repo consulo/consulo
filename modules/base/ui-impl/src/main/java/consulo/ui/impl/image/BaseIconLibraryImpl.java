@@ -133,18 +133,6 @@ public abstract class BaseIconLibraryImpl implements IconLibrary {
     if (image != null) {
       return image;
     }
-
-    String baseId = myBaseId;
-    if (baseId != null) {
-      BaseIconLibraryImpl library = myIconLibraryManager.getLibrary(baseId);
-      if (library != null) {
-        image = library.getIconNoLog(groupId, imageId, width, height);
-        if (image != null) {
-          return image;
-        }
-      }
-    }
-
     LOG.warn("Icon: " + groupId + "@" + imageId + " not found.");
     return null;
   }
@@ -158,6 +146,18 @@ public abstract class BaseIconLibraryImpl implements IconLibrary {
         return imageState.getOrCreateImage(this, width, height, groupId, imageId);
       }
     }
+
+    String baseId = myBaseId;
+    if (baseId != null) {
+      BaseIconLibraryImpl library = myIconLibraryManager.getLibrary(baseId);
+      if (library != null) {
+        Image image = library.getIconNoLog(groupId, imageId, width, height);
+        if (image != null) {
+          return image;
+        }
+      }
+    }
+
     return null;
   }
 }
