@@ -15,7 +15,9 @@
  */
 package consulo.fileTypes;
 
-import com.intellij.ide.IdeBundle;
+import consulo.localize.LocalizeValue;
+import consulo.platform.base.localize.IdeLocalize;
+
 import javax.annotation.Nonnull;
 
 /**
@@ -34,8 +36,8 @@ public final class ZipArchiveFileType extends ArchiveFileType {
 
   @Nonnull
   @Override
-  public String getDescription() {
-    return IdeBundle.message("filetype.description.zip.files");
+  public LocalizeValue getDescription() {
+    return IdeLocalize.filetypeDescriptionZipFiles();
   }
 
   @Nonnull

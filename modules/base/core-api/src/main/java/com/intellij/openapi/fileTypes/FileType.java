@@ -18,9 +18,9 @@ package com.intellij.openapi.fileTypes;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.ArrayFactory;
 import consulo.annotation.DeprecationInfo;
+import consulo.localize.LocalizeValue;
 import consulo.ui.image.Image;
 import consulo.util.pointers.Named;
-import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -46,7 +46,6 @@ public interface FileType extends Named {
    * @return The file type name.
    */
   @Nonnull
-  @NonNls
   @Deprecated
   @DeprecationInfo(value = "Use #getId(), and implement #getId()")
   default String getName() {
@@ -65,7 +64,7 @@ public interface FileType extends Named {
    */
 
   @Nonnull
-  String getDescription();
+  LocalizeValue getDescription();
 
   /**
    * Returns the default extension for files of the type.
@@ -74,7 +73,9 @@ public interface FileType extends Named {
    */
 
   @Nonnull
-  String getDefaultExtension();
+  default String getDefaultExtension() {
+    return "";
+  }
 
   /**
    * Returns the icon used for showing files of the type.

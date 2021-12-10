@@ -16,6 +16,8 @@
 package com.intellij.openapi.fileTypes;
 
 import com.intellij.icons.AllIcons;
+import consulo.localize.LocalizeValue;
+import consulo.platform.base.localize.FileTypeLocalize;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
@@ -35,8 +37,8 @@ public class PlainTextFileType extends LanguageFileType {
 
   @Override
   @Nonnull
-  public String getDescription() {
-    return FileTypesBundle.message("filetype.plaintext.description");
+  public LocalizeValue getDescription() {
+    return FileTypeLocalize.filetypePlaintextDescription();
   }
 
   @Override
@@ -45,6 +47,7 @@ public class PlainTextFileType extends LanguageFileType {
     return "txt";
   }
 
+  @Nonnull
   @Override
   public Image getIcon() {
     return AllIcons.FileTypes.Text;

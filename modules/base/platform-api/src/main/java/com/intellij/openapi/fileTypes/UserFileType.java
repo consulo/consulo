@@ -3,6 +3,7 @@ package com.intellij.openapi.fileTypes;
 
 import com.intellij.openapi.options.SettingsEditor;
 import com.intellij.openapi.vfs.VirtualFile;
+import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageKey;
@@ -32,14 +33,14 @@ public abstract class UserFileType<T extends UserFileType> implements FileType, 
 
   @Override
   @Nonnull
-  public String getName() {
+  public String getId() {
     return myName;
   }
 
   @Override
   @Nonnull
-  public String getDescription() {
-    return myDescription;
+  public LocalizeValue getDescription() {
+    return LocalizeValue.of(myDescription);
   }
 
   public void setName(@Nonnull String name) {
@@ -94,7 +95,7 @@ public abstract class UserFileType<T extends UserFileType> implements FileType, 
 
   public void copyFrom(@Nonnull UserFileType newType) {
     myName = newType.getName();
-    myDescription = newType.getDescription();
+    myDescription = newType.getDescription().get();
   }
 
   public void setIcon(@Nonnull Image icon) {

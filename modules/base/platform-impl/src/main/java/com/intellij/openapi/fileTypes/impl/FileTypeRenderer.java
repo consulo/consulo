@@ -46,7 +46,7 @@ public class FileTypeRenderer extends ColoredListCellRenderer<FileType> {
     
     setIcon(type.getIcon());
 
-    String description = type.getDescription();
+    String description = type.getDescription().get();
     String trimmedDescription = StringUtil.capitalizeWords(description.replaceAll("(?i)\\s*file(?:s)?$", ""), true);
     if (isDuplicated(description)) {
       append(trimmedDescription + " (" + type.getId() + ")");

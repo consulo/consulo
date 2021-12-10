@@ -1,0 +1,56 @@
+filetype.plaintext.description:
+  text: Text files
+filetype.chooser.title:
+  text: Register New File Type Association
+filetype.chooser.install.plugin:
+  text: Choose \& install plugin from repository
+filetype.chooser.prompt:
+  text: 'The file ''''{0}'''' is not associated with any file type. Please define the association:'
+filetype.registered.patterns.group:
+  text: Registered Patterns
+filetype.registered.pattern.remove.button:
+  text: Re&move
+filetype.registered.pattern.add.button:
+  text: '&Add...'
+filetype.settings.title:
+  text: File Types
+filetype.edit.existing.title:
+  text: Edit File Type
+filetype.edit.new.title:
+  text: New File Type
+filetype.edit.add.pattern.prompt:
+  text: 'Enter new &wildcard (''*'' and ''?'' allowed):'
+filetype.edit.add.pattern.title:
+  text: Add Wildcard
+filetype.edit.edit.pattern.title:
+  text: Edit Wildcard
+filetype.edit.add.pattern.exists.error:
+  text: This wildcard is reserved for ''{0}'' filetype and cannot be reassigned
+filetype.edit.add.pattern.exists.message:
+  text: This wildcard is already registered by ''{0}'' filetype
+filetype.edit.add.pattern.reassign.button:
+  text: '&Reassign wildcard'
+filetype.edit.add.pattern.exists.title:
+  text: Add Wildcard
+filetype.settings.component:
+  text: File types
+filetype.settings.cannot.save.error:
+  text: 'Can''''t save file types: {0}'
+filetype.settings.cannot.save.title:
+  text: Error Saving Settings
+filetype.settings.no.patterns:
+  text: No registered file patterns
+filetypes.recognized.group:
+  text: Recognized File Types
+filetypes.recognized.add.button:
+  text: A&dd...
+filetypes.recognized.remove.button:
+  text: '&Remove'
+filetypes.recognized.edit.button:
+  text: '&Edit...'
+filetype.chooser.file.pattern:
+  text: 'File &pattern:'
+unknown.file.type.description:
+  text: Unknown file
+native.file.type.description:
+  text: Files opened in associated applications

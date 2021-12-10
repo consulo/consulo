@@ -20,6 +20,7 @@
 package com.intellij.openapi.fileTypes;
 
 import com.intellij.lang.Language;
+import consulo.localize.LocalizeValue;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
@@ -39,8 +40,8 @@ public class MockLanguageFileType extends LanguageFileType {
 
   @Override
   @Nonnull
-  public String getDescription() {
-    return "Mock";
+  public LocalizeValue getDescription() {
+    return LocalizeValue.of("Mock");
   }
 
   @Override
@@ -49,8 +50,9 @@ public class MockLanguageFileType extends LanguageFileType {
     return ".mockExtensionThatProbablyWon'tEverExist";
   }
 
+  @Nonnull
   @Override
   public Image getIcon() {
-    return null;
+    return Image.empty(Image.DEFAULT_ICON_SIZE);
   }
 }

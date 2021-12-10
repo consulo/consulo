@@ -15,9 +15,10 @@
  */
 package com.intellij.diff.editor;
 
-import com.intellij.openapi.diff.DiffBundle;
 import com.intellij.openapi.fileTypes.FileType;
+import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.platform.base.localize.DiffLocalize;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
@@ -40,14 +41,8 @@ public class DiffFileType implements FileType {
 
   @Nonnull
   @Override
-  public String getDescription() {
-    return DiffBundle.message("filetype.diff.description");
-  }
-
-  @Nonnull
-  @Override
-  public String getDefaultExtension() {
-    return "";
+  public LocalizeValue getDescription() {
+    return DiffLocalize.filetypeDiffDescription();
   }
 
   @Override

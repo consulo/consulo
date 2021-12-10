@@ -210,8 +210,8 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements Persistent
         if (!StringUtil.isEmpty(fileType.getDefaultExtension())) {
           root.setAttribute("default_extension", fileType.getDefaultExtension());
         }
-        root.setAttribute(ATTRIBUTE_DESCRIPTION, fileType.getDescription());
-        root.setAttribute(ATTRIBUTE_NAME, fileType.getName());
+        root.setAttribute(ATTRIBUTE_DESCRIPTION, fileType.getDescription().get());
+        root.setAttribute(ATTRIBUTE_NAME, fileType.getId());
 
         fileType.writeExternal(root);
 
@@ -560,12 +560,12 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements Persistent
       if (shouldRedetect) {
         int id = ((VirtualFileWithId)file).getId();
         long flags = packedFlags.get(id);
-        FileType before = ObjectUtils.notNull(textOrBinaryFromCachedFlags(flags), ObjectUtils.notNull(file.getUserData(DETECTED_FROM_CONTENT_FILE_TYPE_KEY), PlainTextFileType.INSTANCE));
+        FileType before = ObjectUtil.notNull(textOrBinaryFromCachedFlags(flags), ObjectUtil.notNull(file.getUserData(DETECTED_FROM_CONTENT_FILE_TYPE_KEY), PlainTextFileType.INSTANCE));
         FileType after = getByFile(file);
 
         if (toLog()) {
           log("F: reDetect(" + file.getName() + ") prepare to redetect. flags: " + readableFlags(flags) +
-              "; beforeType: " + before.getName() + "; afterByFileType: " + (after == null ? null : after.getName()));
+              "; beforeType: " + before.getId() + "; afterByFileType: " + (after == null ? null : after.getId()));
         }
 
         if (after == null || mightBeReplacedByDetectedFileType(after)) {
@@ -575,8 +575,8 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements Persistent
           catch (IOException e) {
             crashed.add(file);
             if (toLog()) {
-              log("F: reDetect(" + file.getName() + ") " + "before: " + before.getName() + "; after: crashed with " + e.getMessage() +
-                  "; now getFileType()=" + file.getFileType().getName() +
+              log("F: reDetect(" + file.getName() + ") " + "before: " + before.getId() + "; after: crashed with " + e.getMessage() +
+                  "; now getFileType()=" + file.getFileType().getId() +
                   "; getUserData(DETECTED_FROM_CONTENT_FILE_TYPE_KEY): " + file.getUserData(DETECTED_FROM_CONTENT_FILE_TYPE_KEY));
             }
             continue;
@@ -590,8 +590,8 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements Persistent
           packedFlags.set(id, flags);
         }
         if (toLog()) {
-          log("F: reDetect(" + file.getName() + ") " + "before: " + before.getName() + "; after: " + after.getName() +
-              "; now getFileType()=" + file.getFileType().getName() +
+          log("F: reDetect(" + file.getName() + ") " + "before: " + before.getId() + "; after: " + after.getId() +
+              "; now getFileType()=" + file.getFileType().getId() +
               "; getUserData(DETECTED_FROM_CONTENT_FILE_TYPE_KEY): " + file.getUserData(DETECTED_FROM_CONTENT_FILE_TYPE_KEY));
         }
 

@@ -16,11 +16,12 @@
 package consulo.fileTypes;
 
 import com.intellij.icons.AllIcons;
-import com.intellij.ide.IdeBundle;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.util.NotNullLazyValue;
 import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.openapi.vfs.VirtualFileSystem;
+import consulo.localize.LocalizeValue;
+import consulo.platform.base.localize.IdeLocalize;
 import consulo.ui.image.Image;
 import consulo.vfs.ArchiveFileSystem;
 
@@ -49,8 +50,8 @@ public abstract class ArchiveFileType implements FileType {
 
   @Override
   @Nonnull
-  public String getDescription() {
-    return IdeBundle.message("filetype.description.archive.files");
+  public LocalizeValue getDescription() {
+    return IdeLocalize.filetypeDescriptionArchiveFiles();
   }
 
   @Override
@@ -59,6 +60,7 @@ public abstract class ArchiveFileType implements FileType {
     return "";
   }
 
+  @Nonnull
   @Override
   public Image getIcon() {
     return AllIcons.FileTypes.Archive;

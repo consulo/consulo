@@ -34,9 +34,10 @@ public abstract class FakeFileType implements FileTypeIdentifiableByVirtualFile 
     return "fakeExtension";
   }
 
+  @Nonnull
   @Override
   public Image getIcon() {
-    return null;
+    return Image.empty(Image.DEFAULT_ICON_SIZE);
   }
 
   @Override

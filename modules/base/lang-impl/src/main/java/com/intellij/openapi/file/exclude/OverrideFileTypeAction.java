@@ -75,7 +75,7 @@ public class OverrideFileTypeAction extends AnAction {
     private final FileType myType;
 
     ChangeToThisFileTypeAction(@Nonnull String displayText, @Nonnull VirtualFile[] files, @Nonnull FileType type) {
-      super(displayText, ActionsBundle.message("action.ChangeToThisFileTypeAction.description", type.getDescription()), type.getIcon());
+      super(displayText, ActionsBundle.message("action.ChangeToThisFileTypeAction.description", type.getDescription().get()), type.getIcon());
       myFiles = files;
       myType = type;
     }

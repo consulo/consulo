@@ -20,6 +20,7 @@ import com.intellij.util.ReflectionUtil;
 import com.intellij.util.SystemProperties;
 import com.intellij.util.containers.ClassMap;
 import com.intellij.util.containers.JBIterable;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.ui.image.Image;
 import org.jdom.Element;
@@ -1315,14 +1316,14 @@ public class CodeStyleSettings extends LegacyCodeStyleSettings implements Clonea
 
     @Override
     @Nonnull
-    public String getName() {
+    public String getId() {
       return "TempFileType";
     }
 
     @Override
     @Nonnull
-    public String getDescription() {
-      return "TempFileType";
+    public LocalizeValue getDescription() {
+      return LocalizeValue.of("TempFileType");
     }
 
     @Override
@@ -1331,6 +1332,7 @@ public class CodeStyleSettings extends LegacyCodeStyleSettings implements Clonea
       return myExtension;
     }
 
+    @Nonnull
     @Override
     public Image getIcon() {
       return null;

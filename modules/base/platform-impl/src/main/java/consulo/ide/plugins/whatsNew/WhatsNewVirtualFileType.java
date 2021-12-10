@@ -16,6 +16,7 @@
 package consulo.ide.plugins.whatsNew;
 
 import com.intellij.openapi.fileTypes.FileType;
+import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
@@ -37,14 +38,8 @@ public class WhatsNewVirtualFileType implements FileType {
 
   @Nonnull
   @Override
-  public String getDescription() {
-    return "";
-  }
-
-  @Nonnull
-  @Override
-  public String getDefaultExtension() {
-    return "";
+  public LocalizeValue getDescription() {
+    return LocalizeValue.of();
   }
 
   @Nonnull

@@ -115,7 +115,7 @@ public class FileTypeConfigurable implements SearchableConfigurable, Configurabl
         final PairConvertor<Object, String, Boolean> simpleConvertor = (element, s) -> {
           String value = element.toString();
           if (element instanceof FileType) {
-            value = ((FileType)element).getDescription();
+            value = ((FileType)element).getDescription().get();
           }
           return getComparator().matchingFragments(s, value) != null;
         };
@@ -432,7 +432,7 @@ public class FileTypeConfigurable implements SearchableConfigurable, Configurabl
     Arrays.sort(types, (o1, o2) -> {
       FileType fileType1 = o1;
       FileType fileType2 = o2;
-      return fileType1.getDescription().compareToIgnoreCase(fileType2.getDescription());
+      return fileType1.getDescription().get().compareToIgnoreCase(fileType2.getDescription().get());
     });
     myRecognizedFileType.setFileTypes(types);
   }

@@ -16,6 +16,8 @@
 package com.intellij.openapi.fileTypes;
 
 import com.intellij.icons.AllIcons;
+import consulo.localize.LocalizeValue;
+import consulo.platform.base.localize.FileTypeLocalize;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
@@ -33,16 +35,11 @@ public class UnknownFileType implements FileType {
 
   @Override
   @Nonnull
-  public String getDescription() {
-    return "UNKNOWN";
+  public LocalizeValue getDescription() {
+    return FileTypeLocalize.unknownFileTypeDescription();
   }
 
-  @Override
   @Nonnull
-  public String getDefaultExtension() {
-    return "";
-  }
-
   @Override
   public Image getIcon() {
     return AllIcons.FileTypes.Unknown;

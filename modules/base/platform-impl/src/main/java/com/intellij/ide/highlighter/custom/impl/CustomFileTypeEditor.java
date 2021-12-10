@@ -72,8 +72,8 @@ public class CustomFileTypeEditor extends SettingsEditor<AbstractFileType> {
   }
 
   public void resetEditorFrom(AbstractFileType fileType) {
-    myFileTypeName.setText(fileType.getName());
-    myFileTypeDescr.setText(fileType.getDescription());
+    myFileTypeName.setText(fileType.getId());
+    myFileTypeDescr.setText(fileType.getDescription().get());
 
     SyntaxTable table = fileType.getSyntaxTable();
 

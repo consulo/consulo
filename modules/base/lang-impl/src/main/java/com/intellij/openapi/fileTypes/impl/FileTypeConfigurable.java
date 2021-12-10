@@ -86,14 +86,7 @@ public class FileTypeConfigurable implements SearchableConfigurable, Configurabl
 
   private void updateFileTypeList() {
     FileType[] types = myTempFileTypes.toArray(new FileType[myTempFileTypes.size()]);
-    Arrays.sort(types, new Comparator() {
-      @Override
-      public int compare(Object o1, Object o2) {
-        FileType fileType1 = (FileType)o1;
-        FileType fileType2 = (FileType)o2;
-        return fileType1.getDescription().compareToIgnoreCase(fileType2.getDescription());
-      }
-    });
+    Arrays.sort(types, (o1, o2) -> o1.getDescription().get().compareToIgnoreCase(o2.getDescription().get()));
     myRecognizedFileType.setFileTypes(types);
   }
 
@@ -419,7 +412,7 @@ public class FileTypeConfigurable implements SearchableConfigurable, Configurabl
           public Boolean convert(Object element, String s) {
             String value = element.toString();
             if (element instanceof FileType) {
-              value = ((FileType)element).getDescription();
+              value = ((FileType)element).getDescription().get();
             }
             return getComparator().matchingFragments(s, value) != null;
           }

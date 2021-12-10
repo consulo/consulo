@@ -21,6 +21,7 @@ import com.intellij.openapi.fileTypes.LanguageFileType;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.LanguageSubstitutors;
+import consulo.localize.LocalizeValue;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
@@ -67,7 +68,7 @@ public class SubstitutedFileType extends LanguageFileType{
 
   @Nonnull
   @Override
-  public String getDescription() {
+  public LocalizeValue getDescription() {
     return myFileType.getDescription();
   }
 
@@ -77,6 +78,7 @@ public class SubstitutedFileType extends LanguageFileType{
     return myFileType.getDefaultExtension();
   }
 
+  @Nonnull
   @Override
   public Image getIcon() {
     return myFileType.getIcon();

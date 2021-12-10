@@ -176,3 +176,5 @@ merge.color.options.dialog.title:
   text: Merge Color Options
 option.inherit.ignored.color:
   text: Inherit ignored color
+filetype.diff.description:
+  text: Diff

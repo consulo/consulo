@@ -20,6 +20,8 @@ import com.intellij.icons.AllIcons;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.vfs.VirtualFile;
+import consulo.localize.LocalizeValue;
+import consulo.platform.base.localize.FileTypeLocalize;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
@@ -42,16 +44,11 @@ public class NativeFileType implements INativeFileType {
 
   @Override
   @Nonnull
-  public String getDescription() {
-    return "Files opened in associated applications";
+  public LocalizeValue getDescription() {
+    return FileTypeLocalize.nativeFileTypeDescription();
   }
 
-  @Override
   @Nonnull
-  public String getDefaultExtension() {
-    return "";
-  }
-
   @Override
   public Image getIcon() {
     return AllIcons.FileTypes.Custom;

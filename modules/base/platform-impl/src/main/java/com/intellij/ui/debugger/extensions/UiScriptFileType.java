@@ -18,6 +18,7 @@ package com.intellij.ui.debugger.extensions;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.vfs.CharsetToolkit;
 import com.intellij.openapi.vfs.VirtualFile;
+import consulo.localize.LocalizeValue;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
@@ -49,8 +50,8 @@ public class UiScriptFileType implements FileType {
 
   @Override
   @Nonnull
-  public String getDescription() {
-    return "UI test scripts.";
+  public LocalizeValue getDescription() {
+    return LocalizeValue.of("UI test scripts.");
   }
 
   public static final String myExtension = "ijs";
@@ -61,9 +62,10 @@ public class UiScriptFileType implements FileType {
     return myExtension;
   }
 
+  @Nonnull
   @Override
   public Image getIcon() {
-    return null;
+    return Image.empty(Image.DEFAULT_ICON_SIZE);
   }
 
   @Override

@@ -17,6 +17,7 @@ package consulo.sandboxPlugin.lang;
 
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.fileTypes.LanguageFileType;
+import consulo.localize.LocalizeValue;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
@@ -35,14 +36,14 @@ public class SandFileType extends LanguageFileType {
 
   @Nonnull
   @Override
-  public String getName() {
+  public String getId() {
     return "SAND";
   }
 
   @Nonnull
   @Override
-  public String getDescription() {
-    return "Sand files";
+  public LocalizeValue getDescription() {
+    return LocalizeValue.of("Sand files");
   }
 
   @Nonnull
@@ -51,7 +52,7 @@ public class SandFileType extends LanguageFileType {
     return "sand";
   }
 
-  @Nullable
+  @Nonnull
   @Override
   public Image getIcon() {
     return AllIcons.Nodes.Static;

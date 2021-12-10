@@ -33,11 +33,11 @@ import com.intellij.util.ReflectionUtil;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.lang.LanguageVersion;
 import consulo.lang.LanguageVersionResolvers;
+import consulo.localize.LocalizeValue;
 import consulo.ui.image.Image;
-import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.function.Function;
 
 /**
@@ -308,19 +308,18 @@ public class TemplateDataElementType extends IFileElementType implements ITempla
 
     @Override
     @Nonnull
-    public String getDescription() {
-      return "fake for language" + myLanguage.getID();
+    public LocalizeValue getDescription() {
+      return LocalizeValue.of("fake for language:" + myLanguage.getID());
     }
 
+    @Nonnull
     @Override
-    @Nullable
     public Image getIcon() {
       return null;
     }
 
     @Override
     @Nonnull
-    @NonNls
     public String getId() {
       return myLanguage.getID();
     }
