@@ -52,7 +52,6 @@ public class AllIcons {
     public static final Image Compile = PlatformIconGroup.actionsCompile(); // 16x16
     public static final Image Copy = PlatformIconGroup.actionsCopy(); // 16x16
     public static final Image CreateFromUsage = PlatformIconGroup.actionsCreateFromUsage(); // 16x16
-    public static final Image CreatePatch = PlatformIconGroup.actionsCreatePatch(); // 16x16
     public static final Image Cross = PlatformIconGroup.actionsCross(); // 12x12
     public static final Image Delete = Cancel;
     public static final Image Diff = PlatformIconGroup.actionsDiff(); // 16x16
