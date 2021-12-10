@@ -31,29 +31,42 @@ import java.util.*;
  */
 public class ConsuloSecurityManager extends SecurityManager {
   public static void runPrivilegedAction(@Nonnull Runnable runnable) {
-    ConsuloSecurityManager securityManager = (ConsuloSecurityManager)System.getSecurityManager();
+    SecurityManager securityManager = System.getSecurityManager();
+    
+    if (!(securityManager instanceof ConsuloSecurityManager)) {
+      runnable.run();
+      return;
+    }
 
-    securityManager.myPrivilegedAction.set(Boolean.TRUE);
+    ConsuloSecurityManager consuloSecurityManager = (ConsuloSecurityManager)securityManager;
+
+    consuloSecurityManager.myPrivilegedAction.set(Boolean.TRUE);
 
     try {
       runnable.run();
     }
     finally {
-      securityManager.myPrivilegedAction.remove();
+      consuloSecurityManager.myPrivilegedAction.remove();
     }
   }
 
   @Nullable
   public static <T> T runPrivilegedAction(@Nonnull Getter<T> getter) {
-    ConsuloSecurityManager securityManager = (ConsuloSecurityManager)System.getSecurityManager();
+    SecurityManager securityManager = System.getSecurityManager();
 
-    securityManager.myPrivilegedAction.set(Boolean.TRUE);
+    if (!(securityManager instanceof ConsuloSecurityManager)) {
+      return getter.get();
+    }
+
+    ConsuloSecurityManager consuloSecurityManager = (ConsuloSecurityManager)securityManager;
+
+    consuloSecurityManager.myPrivilegedAction.set(Boolean.TRUE);
 
     try {
       return getter.get();
     }
     finally {
-      securityManager.myPrivilegedAction.remove();
+      consuloSecurityManager.myPrivilegedAction.remove();
     }
   }
 
