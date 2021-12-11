@@ -188,11 +188,6 @@ public class IconUtil {
     return AllIcons.ToolbarDecorator.AddFolder;
   }
 
-  @Nonnull
-  public static consulo.ui.image.Image getAnalyzeIcon() {
-    return AllIcons.ToolbarDecorator.Analyze;
-  }
-
   public static void paintInCenterOf(@Nonnull Component c, Graphics g, Icon icon) {
     final int x = (c.getWidth() - icon.getIconWidth()) / 2;
     final int y = (c.getHeight() - icon.getIconHeight()) / 2;

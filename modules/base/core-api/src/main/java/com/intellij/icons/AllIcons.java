@@ -429,7 +429,6 @@ public class AllIcons {
     public static final Image ExpandComponent = PlatformIconGroup.generalExpandComponent();
     public static final Image ExpandComponentHover = PlatformIconGroup.generalExpandComponentHover();
     public static final Image ExpandAll = PlatformIconGroup.generalExpandAll(); // 11x16
-    public static final Image ExportSettings = PlatformIconGroup.generalExportSettings(); // 32x32
     public static final Image ExternalTools = PlatformIconGroup.generalExternalTools(); // 32x32
     public static final Image ExternalToolsSmall = PlatformIconGroup.generalExternalToolsSmall(); // 16x16
     public static final Image Filter = PlatformIconGroup.generalFilter(); // 16x16
@@ -525,7 +524,8 @@ public class AllIcons {
 
   public static class Graph {
     public static final Image ActualZoom = PlatformIconGroup.graphActualZoom(); // 16x16
-    public static final Image Export = PlatformIconGroup.graphExport(); // 16x16
+    @Deprecated
+    public static final Image Export = PlatformIconGroup.actionsExport();
     public static final Image FitContent = PlatformIconGroup.graphFitContent(); // 16x16
     public static final Image Grid = PlatformIconGroup.graphGrid(); // 16x16
     public static final Image Layout = PlatformIconGroup.graphLayout(); // 16x16
@@ -973,9 +973,10 @@ public class AllIcons {
     public static final Image AddPattern = PlatformIconGroup.toolbarDecoratorAddPattern(); // 16x16
     public static final Image AddRemoteDatasource = PlatformIconGroup.toolbarDecoratorAddRemoteDatasource(); // 16x16
     public static final Image AddYouTrack = PlatformIconGroup.toolbarDecoratorAddYouTrack(); // 16x16
-    public static final Image Analyze = PlatformIconGroup.toolbarDecoratorAnalyze(); // 14x14
-    public static final Image Export = PlatformIconGroup.toolbarDecoratorExport(); // 16x16
-    public static final Image Import = PlatformIconGroup.toolbarDecoratorImport(); // 16x16
+    @Deprecated
+    public static final Image Export = PlatformIconGroup.actionsExport(); // 16x16
+    @Deprecated
+    public static final Image Import = PlatformIconGroup.actionsImport(); // 16x16
   }
 
   public static class Toolwindows {

@@ -17,7 +17,6 @@ package com.intellij.util;
 
 import com.intellij.icons.AllIcons;
 import consulo.annotation.DeprecationInfo;
-import consulo.awt.TargetAWT;
 
 import javax.swing.*;
 
@@ -76,7 +75,6 @@ public interface PlatformIcons {
   Icon DELETE_ICON = (Icon)IconUtil.getRemoveIcon();
   Icon COPY_ICON = (Icon)AllIcons.Actions.Copy;
   Icon EDIT = (Icon)IconUtil.getEditIcon();
-  Icon ANALYZE = (Icon)TargetAWT.to(IconUtil.getAnalyzeIcon());
   Icon SELECT_ALL_ICON = (Icon)AllIcons.Actions.Selectall;
   Icon UNSELECT_ALL_ICON = (Icon)AllIcons.Actions.Unselectall;
   Icon PROPERTIES_ICON = (Icon)AllIcons.Actions.Properties;

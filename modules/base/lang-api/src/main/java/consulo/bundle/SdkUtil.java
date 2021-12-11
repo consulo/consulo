@@ -47,10 +47,10 @@ public class SdkUtil {
   @Nonnull
   public static Image getIcon(@Nullable Sdk sdk) {
     if (sdk == null) {
-      return AllIcons.Toolbar.Unknown;
+      return AllIcons.Actions.Help;
     }
     SdkType sdkType = (SdkType)sdk.getSdkType();
-    Image icon = ObjectUtil.notNull(sdkType.getIcon(), AllIcons.Toolbar.Unknown);
+    Image icon = ObjectUtil.notNull(sdkType.getIcon(), AllIcons.Actions.Help);
     if(sdk.isPredefined()) {
       return ImageEffects.layered(icon, AllIcons.Nodes.Locked);
     }
