@@ -21,47 +21,64 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.util.ReflectionUtil;
+import consulo.annotation.DeprecationInfo;
 import consulo.logging.Logger;
-import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.lang.reflect.Constructor;
+import java.util.function.Function;
 
 /**
  * @author VISTALL
  * @since 13:28/29.08.13
  */
 public class ElementTypeAsPsiFactory extends IElementType implements IElementTypeAsPsiFactory {
-  public static final Logger LOGGER = Logger.getInstance(ElementTypeAsPsiFactory.class);
+  private static final Logger LOG = Logger.getInstance(ElementTypeAsPsiFactory.class);
 
-  private Constructor<? extends PsiElement> myConstructor;
+  @Nonnull
+  private final Function<ASTNode, ? extends PsiElement> myFactory;
 
-  public ElementTypeAsPsiFactory(@Nonnull @NonNls String debugName, @Nullable Language language, @Nonnull Class<? extends PsiElement> clazz) {
+  @Deprecated(forRemoval = true)
+  @DeprecationInfo("Use constructor with Function parameter")
+  public ElementTypeAsPsiFactory(@Nonnull String debugName, @Nullable Language language, @Nonnull Class<? extends PsiElement> clazz) {
     this(debugName, language, true, clazz);
   }
 
-  public ElementTypeAsPsiFactory(@Nonnull @NonNls String debugName,
-                                 @Nullable Language language,
-                                 boolean register,
-                                 @Nonnull Class<? extends PsiElement> clazz) {
+  @Deprecated(forRemoval = true)
+  @DeprecationInfo("Use constructor with Function parameter")
+  public ElementTypeAsPsiFactory(@Nonnull String debugName, @Nullable Language language, boolean register, @Nonnull Class<? extends PsiElement> clazz) {
     super(debugName, language, register);
 
+    Function<ASTNode, PsiElement> function = null;
     try {
-      myConstructor = clazz.getConstructor(ASTNode.class);
+      Constructor<? extends PsiElement> constructor = clazz.getConstructor(ASTNode.class);
+      function = it -> ReflectionUtil.createInstance(constructor, it);
     }
     catch (NoSuchMethodException e) {
-      ElementTypeAsPsiFactory
-              .LOGGER.error("Cant find constructor for " + clazz.getName() + " with argument: " + ASTNode.class.getName() + ", or it not public.", e);
+      LOG.error("Cant find constructor for " + clazz.getName() + " with argument: " + ASTNode.class.getName() + ", or it not public.", e);
     }
+
+    if (function == null) {
+      function = it -> PsiUtilCore.NULL_PSI_ELEMENT;
+    }
+
+    myFactory = function;
+  }
+
+  public ElementTypeAsPsiFactory(@Nonnull String debugName, @Nullable Language language, @Nonnull Function<ASTNode, ? extends PsiElement> factory) {
+    this(debugName, language, true, factory);
+  }
+
+  public ElementTypeAsPsiFactory(@Nonnull String debugName, @Nullable Language language, boolean register, @Nonnull Function<ASTNode, ? extends PsiElement> factory) {
+    super(debugName, language, register);
+
+    myFactory = factory;
   }
 
   @Override
   @Nonnull
-  public PsiElement createElement(@Nonnull ASTNode astNode) {
-    if (myConstructor == null) {
-      return PsiUtilCore.NULL_PSI_ELEMENT;
-    }
-    return ReflectionUtil.createInstance(myConstructor, astNode);
+  public PsiElement createElement(@Nonnull ASTNode node) {
+    return myFactory.apply(node);
   }
 }
