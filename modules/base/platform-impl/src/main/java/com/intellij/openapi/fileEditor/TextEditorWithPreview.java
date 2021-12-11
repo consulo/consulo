@@ -5,17 +5,18 @@ import com.intellij.codeHighlighting.BackgroundEditorHighlighter;
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.structureView.StructureViewBuilder;
 import com.intellij.ide.util.PropertiesComponent;
-import consulo.disposer.Disposable;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.editor.ex.EditorGutterComponentEx;
 import com.intellij.openapi.project.DumbAware;
-import consulo.disposer.Disposer;
 import com.intellij.openapi.util.Pair;
+import com.intellij.openapi.wm.IdeFocusManager;
+import com.intellij.ui.JBColor;
+import com.intellij.ui.OnePixelSplitter;
+import com.intellij.util.ui.JBUI;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
 import consulo.ui.image.Image;
 import consulo.util.dataholder.UserDataHolderBase;
-import com.intellij.openapi.wm.IdeFocusManager;
-import com.intellij.ui.JBSplitter;
-import com.intellij.util.ui.JBUI;
 import kava.beans.PropertyChangeEvent;
 import kava.beans.PropertyChangeListener;
 
@@ -96,7 +97,7 @@ public class TextEditorWithPreview extends UserDataHolderBase implements FileEdi
   @Override
   public JComponent getComponent() {
     if (myComponent == null) {
-      final JBSplitter splitter = new JBSplitter(false, 0.5f, 0.15f, 0.85f);
+      final OnePixelSplitter splitter = new OnePixelSplitter(false, 0.5f, 0.15f, 0.85f);
       splitter.setSplitterProportionKey(getSplitterProportionKey());
       splitter.setFirstComponent(myEditor.getComponent());
       splitter.setSecondComponent(myPreview.getComponent());
@@ -334,6 +335,8 @@ public class TextEditorWithPreview extends UserDataHolderBase implements FileEdi
       add(myRightToolbar.getComponent(), BorderLayout.EAST);
 
       addComponentListener(myAdjustToGutterListener);
+
+      setBorder(JBUI.Borders.customLine(JBColor.border(), 0, 0, 1, 0));
     }
 
     public void addGutterToTrack(@Nonnull EditorGutterComponentEx gutterComponentEx) {
