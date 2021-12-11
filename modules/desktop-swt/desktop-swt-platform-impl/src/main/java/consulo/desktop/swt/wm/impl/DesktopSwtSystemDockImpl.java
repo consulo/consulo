@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2020 consulo.io
+ * Copyright 2013-2021 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,17 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.web.wm.impl;
+package consulo.desktop.swt.wm.impl;
 
 import com.intellij.openapi.wm.impl.SystemDock;
 import jakarta.inject.Singleton;
 
 /**
  * @author VISTALL
- * @since 2020-10-20
+ * @since 11/12/2021
  */
 @Singleton
-public class WebSystemDockImpl extends SystemDock {
+public class DesktopSwtSystemDockImpl extends SystemDock {
   @Override
   public void updateMenu() {
 

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.web.ui.docking.impl;
+package consulo.ui.docking.impl;
 
 import com.intellij.openapi.fileEditor.impl.DockableEditorContainerFactory;
 import com.intellij.openapi.fileEditor.impl.DockableEditorTabbedContainer;
@@ -24,7 +24,7 @@ import com.intellij.ui.docking.DockableContent;
 import consulo.disposer.Disposable;
 import consulo.fileEditor.impl.EditorsSplitters;
 import consulo.ui.Component;
-import consulo.web.fileEditor.impl.WebEditorsSplitters;
+import consulo.fileEditor.impl.UnifiedEditorsSplitters;
 import org.jdom.Element;
 
 import javax.annotation.Nonnull;
@@ -35,11 +35,11 @@ import java.awt.*;
  * @author VISTALL
  * @since 2020-11-21
  */
-public class WebDockableEditorTabbedContainer implements DockableEditorTabbedContainer {
+public class UnifiedDockableEditorTabbedContainer implements DockableEditorTabbedContainer {
   private final Project myProject;
-  private final WebEditorsSplitters mySplitters;
+  private final UnifiedEditorsSplitters mySplitters;
 
-  public WebDockableEditorTabbedContainer(Project project, WebEditorsSplitters splitters, boolean disposeWhenEmpty) {
+  public UnifiedDockableEditorTabbedContainer(Project project, UnifiedEditorsSplitters splitters, boolean disposeWhenEmpty) {
     myProject = project;
 
     mySplitters = splitters;

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.web.fileEditor.impl;
+package consulo.fileEditor.impl;
 
 import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.fileEditor.FileEditorProvider;
@@ -24,7 +24,6 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.problems.WolfTheProblemSolver;
 import com.intellij.psi.PsiManager;
 import com.intellij.ui.docking.DockManager;
-import consulo.fileEditor.impl.EditorWithProviderComposite;
 import consulo.ui.Component;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
@@ -37,16 +36,16 @@ import javax.annotation.Nonnull;
  * @since 2018-05-09
  */
 @Singleton
-public class WebPsiAwareFileEditorManagerImpl extends PsiAwareFileEditorManagerImpl {
+public class UnifiedPsiAwareFileEditorManagerImpl extends PsiAwareFileEditorManagerImpl {
   @Inject
-  public WebPsiAwareFileEditorManagerImpl(Project project, PsiManager psiManager, Provider<WolfTheProblemSolver> problemSolver, DockManager dockManager) {
+  public UnifiedPsiAwareFileEditorManagerImpl(Project project, PsiManager psiManager, Provider<WolfTheProblemSolver> problemSolver, DockManager dockManager) {
     super(project, psiManager, problemSolver, dockManager);
   }
 
   @Override
   protected void initUI() {
     if (mySplitters == null) {
-      mySplitters = new WebEditorsSplitters(myProject, this, myDockManager, true);
+      mySplitters = new UnifiedEditorsSplitters(myProject, this, myDockManager, true);
     }
   }
 
@@ -63,6 +62,6 @@ public class WebPsiAwareFileEditorManagerImpl extends PsiAwareFileEditorManagerI
                                                                           @Nonnull FileEditor[] editors,
                                                                           @Nonnull FileEditorProvider[] providers,
                                                                           @Nonnull FileEditorManagerEx fileEditorManager) {
-    return new WebEditorWithProviderComposite(file, editors, providers, fileEditorManager);
+    return new UnifiedEditorWithProviderComposite(file, editors, providers, fileEditorManager);
   }
 }

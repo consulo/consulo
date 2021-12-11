@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.web.ui.docking.impl;
+package consulo.ui.docking.impl;
 
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
@@ -37,9 +37,9 @@ import java.awt.event.MouseEvent;
  */
 @Singleton
 @State(name = "DockManager", storages = @Storage(file = StoragePathMacros.WORKSPACE_FILE))
-public class WebDockManagerImpl extends BaseDockManager {
+public class UnifiedDockManagerImpl extends BaseDockManager {
   @Inject
-  public WebDockManagerImpl(Project project) {
+  public UnifiedDockManagerImpl(Project project) {
     super(project);
   }
 

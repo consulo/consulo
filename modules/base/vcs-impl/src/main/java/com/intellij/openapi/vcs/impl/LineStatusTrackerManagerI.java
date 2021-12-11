@@ -15,11 +15,13 @@ package com.intellij.openapi.vcs.impl;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.vcs.ex.LineStatusTracker;
 
+import javax.annotation.Nullable;
+
 /**
  * @author irengrig
  */
 public interface LineStatusTrackerManagerI {
-  @javax.annotation.Nullable
+  @Nullable
   LineStatusTracker getLineStatusTracker(Document document);
 
   class Dummy implements LineStatusTrackerManagerI {

@@ -18,12 +18,15 @@ package consulo.desktop.swt.application.impl;
 import com.intellij.ide.StartupProgress;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
+import com.intellij.openapi.application.TransactionGuard;
 import com.intellij.openapi.application.impl.ReadMostlyRWLock;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Condition;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.impl.BaseApplication;
+import consulo.application.impl.UnifiedTransactionGuardImpl;
 import consulo.desktop.swt.ui.impl.DesktopSwtUIAccess;
+import consulo.injecting.InjectingContainerBuilder;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.lang.ref.SimpleReference;
@@ -45,6 +48,13 @@ public class DesktopSwtApplicationImpl extends BaseApplication {
     myLock = new ReadMostlyRWLock(null);
 
     ApplicationManager.setApplication(this);
+  }
+
+  @Override
+  protected void bootstrapInjectingContainer(@Nonnull InjectingContainerBuilder builder) {
+    super.bootstrapInjectingContainer(builder);
+
+    builder.bind(TransactionGuard.class).to(new UnifiedTransactionGuardImpl());
   }
 
   @Override
@@ -190,5 +200,10 @@ public class DesktopSwtApplicationImpl extends BaseApplication {
   @Override
   public void assertTimeConsuming() {
 
+  }
+
+  @Override
+  public boolean isInternal() {
+    return true;
   }
 }

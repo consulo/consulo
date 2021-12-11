@@ -33,11 +33,9 @@
   </project-components>
 
   <extensions defaultExtensionNs="com.intellij">
-    <applicationService serviceInterface="consulo.start.WelcomeFrameManager"
-                        serviceImplementation="consulo.start.UnifiedWelcomeFrameManager"/>
+    <applicationService serviceInterface="consulo.start.WelcomeFrameManager" serviceImplementation="consulo.start.UnifiedWelcomeFrameManager"/>
 
-    <applicationService serviceInterface="consulo.progress.util.ProgressDialogFactory"
-                        serviceImplementation="consulo.web.progress.util.WebProgressDialogFactory"/>
+    <applicationService serviceInterface="consulo.progress.util.ProgressDialogFactory" serviceImplementation="consulo.progress.util.impl.UnifiedProgressDialogFactory"/>
 
     <applicationService serviceInterface="com.intellij.ui.content.ContentFactory"
                         serviceImplementation="consulo.wm.impl.UnifiedContentFactoryImpl"/>
@@ -77,10 +75,10 @@
     <applicationService serviceInterface="consulo.ide.tipOfDay.TipOfDayManager" serviceImplementation="consulo.ide.tipOfDay.UnifiedTipOfDayManager"/>
     <applicationService serviceInterface="consulo.startup.customize.StartupCustomizeManager" serviceImplementation="consulo.web.startup.customize.WebStartupCustomizeManager"/>
 
-    <projectService serviceInterface="com.intellij.openapi.fileEditor.FileEditorManager" serviceImplementation="consulo.web.fileEditor.impl.WebPsiAwareFileEditorManagerImpl" lazy="false"/>
+    <projectService serviceInterface="com.intellij.openapi.fileEditor.FileEditorManager" serviceImplementation="consulo.fileEditor.impl.UnifiedPsiAwareFileEditorManagerImpl" lazy="false"/>
     <projectService serviceInterface="com.intellij.openapi.wm.ToolWindowManager" serviceImplementation="consulo.web.wm.impl.WebToolWindowManagerImpl" lazy="false"/>
-    <projectService serviceInterface="consulo.wm.ProjectIdeFocusManager" serviceImplementation="consulo.web.wm.impl.WebProjectIdeFocusManagerImpl" lazy="false"/>
-    <projectService serviceInterface="com.intellij.ui.docking.DockManager" serviceImplementation="consulo.web.ui.docking.impl.WebDockManagerImpl"/>
+    <projectService serviceInterface="consulo.wm.ProjectIdeFocusManager" serviceImplementation="consulo.wm.impl.UnifiedProjectIdeFocusManagerImpl" lazy="false"/>
+    <projectService serviceInterface="com.intellij.ui.docking.DockManager" serviceImplementation="consulo.ui.docking.impl.UnifiedDockManagerImpl"/>
 
     <projectService serviceInterface="com.intellij.codeInsight.daemon.impl.IntentionsUI" serviceImplementation="consulo.web.codeInsight.daemon.impl.WebIntentionsUIImpl"/>
 

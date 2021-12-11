@@ -9,6 +9,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Condition;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.impl.BaseApplication;
+import consulo.application.impl.UnifiedTransactionGuardImpl;
 import consulo.injecting.InjectingContainerBuilder;
 import consulo.logging.Logger;
 import consulo.ui.UIAccess;
@@ -55,7 +56,7 @@ public class WebApplicationImpl extends BaseApplication implements WebApplicatio
   protected void bootstrapInjectingContainer(@Nonnull InjectingContainerBuilder builder) {
     super.bootstrapInjectingContainer(builder);
 
-    builder.bind(TransactionGuard.class).to(new WebTransactionGuardImpl());
+    builder.bind(TransactionGuard.class).to(new UnifiedTransactionGuardImpl());
   }
 
   @Override

@@ -13,21 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.web.fileEditor.impl;
+package consulo.fileEditor.impl;
 
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.fileEditor.impl.FileEditorManagerImpl;
 import com.intellij.openapi.project.Project;
 import com.intellij.ui.docking.DockManager;
 import consulo.disposer.Disposer;
-import consulo.fileEditor.impl.EditorWindow;
-import consulo.fileEditor.impl.EditorsSplittersBase;
 import consulo.logging.Logger;
 import consulo.ui.Component;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.docking.impl.UnifiedDockableEditorTabbedContainer;
 import consulo.ui.layout.WrappedLayout;
-import consulo.web.ui.docking.impl.WebDockableEditorTabbedContainer;
 import org.jdom.Element;
 
 import javax.annotation.Nonnull;
@@ -36,21 +34,21 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 2018-05-09
  */
-public class WebEditorsSplitters extends EditorsSplittersBase<WebEditorWindow> {
-  private static final Logger LOG = Logger.getInstance(WebEditorsSplitters.class);
+public class UnifiedEditorsSplitters extends EditorsSplittersBase<UnifiedEditorWindow> {
+  private static final Logger LOG = Logger.getInstance(UnifiedEditorsSplitters.class);
   
   private final Project myProject;
 
   private WrappedLayout myLayout;
 
-  public WebEditorsSplitters(Project project, FileEditorManagerImpl editorManager, DockManager dockManager, boolean createOwnDockableContainer) {
+  public UnifiedEditorsSplitters(Project project, FileEditorManagerImpl editorManager, DockManager dockManager, boolean createOwnDockableContainer) {
     super(project, editorManager);
     myProject = project;
 
     myLayout = WrappedLayout.create();
 
     if (createOwnDockableContainer) {
-      WebDockableEditorTabbedContainer dockable = new WebDockableEditorTabbedContainer(myManager.getProject(), this, false);
+      UnifiedDockableEditorTabbedContainer dockable = new UnifiedDockableEditorTabbedContainer(myManager.getProject(), this, false);
       Disposer.register(editorManager.getProject(), dockable);
       dockManager.register(dockable);
     }
@@ -58,8 +56,8 @@ public class WebEditorsSplitters extends EditorsSplittersBase<WebEditorWindow> {
 
   @Nonnull
   @Override
-  protected WebEditorWindow[] createArray(int size) {
-    return new WebEditorWindow[size];
+  protected UnifiedEditorWindow[] createArray(int size) {
+    return new UnifiedEditorWindow[size];
   }
 
   @Nonnull
@@ -90,7 +88,7 @@ public class WebEditorsSplitters extends EditorsSplittersBase<WebEditorWindow> {
 
   @Override
   public void clear() {
-    for (WebEditorWindow window : myWindows) {
+    for (UnifiedEditorWindow window : myWindows) {
       window.dispose();
     }
     //todo myComponent.removeAll();
@@ -103,7 +101,7 @@ public class WebEditorsSplitters extends EditorsSplittersBase<WebEditorWindow> {
   @Override
   protected void createCurrentWindow() {
     LOG.assertTrue(myCurrentWindow == null);
-    setCurrentWindow(new WebEditorWindow(myProject, myManager, this));
+    setCurrentWindow(new UnifiedEditorWindow(myProject, myManager, this));
     myLayout.set(myCurrentWindow.getUIComponent());
   }
 

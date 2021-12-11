@@ -150,7 +150,7 @@ public class DesktopSwtUIInternalImpl extends UIInternal {
 
   @Override
   public ProgressBar _Components_progressBar() {
-    return null;
+    return new DesktopSwtProgressBarImpl();
   }
 
   @Nonnull

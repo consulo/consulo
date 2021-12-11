@@ -15,15 +15,12 @@
  *****************************************************************************/
 package org.eclipse.nebula.cwt.svg;
 
-import static java.lang.Math.PI;
-import static java.lang.Math.abs;
-import static java.lang.Math.acos;
-import static java.lang.Math.cos;
-import static java.lang.Math.hypot;
-import static java.lang.Math.round;
-import static java.lang.Math.sin;
-import static java.lang.Math.sqrt;
-import static java.lang.Math.toRadians;
+import org.eclipse.nebula.cwt.svg.SvgPaint.PaintType;
+import org.eclipse.nebula.cwt.svg.SvgTransform.Type;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.PathData;
+import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.widgets.Display;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;
@@ -35,12 +32,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.eclipse.nebula.cwt.svg.SvgPaint.PaintType;
-import org.eclipse.nebula.cwt.svg.SvgTransform.Type;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.PathData;
-import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.widgets.Display;
+import static java.lang.Math.*;
 
 class SvgLoader {
 
@@ -792,7 +784,10 @@ class SvgLoader {
 		if(s == null) {
 			return defaultValue;
 		} else {
-			return new Float(s);
+			if (s.endsWith("px")) {
+				s = s.substring(0, s.length() - 2);
+			}
+			return Float.parseFloat(s);
 		}
 	}
 

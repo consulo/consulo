@@ -13,15 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.web.progress.util;
+package consulo.progress.util.impl;
 
 import com.intellij.openapi.progress.util.ProgressWindow;
 import com.intellij.openapi.project.Project;
 import consulo.progress.util.ProgressDialog;
 import consulo.progress.util.ProgressDialogFactory;
+import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
-import jakarta.inject.Singleton;
 import javax.swing.*;
 
 /**
@@ -29,10 +29,10 @@ import javax.swing.*;
  * @since 2020-05-11
  */
 @Singleton
-public class WebProgressDialogFactory implements ProgressDialogFactory {
+public class UnifiedProgressDialogFactory implements ProgressDialogFactory {
   @Nonnull
   @Override
   public ProgressDialog create(ProgressWindow progressWindow, boolean shouldShowBackground, JComponent parent, Project project, String cancelText) {
-    return new WebProgressDialog(progressWindow);
+    return new UnifiedProgressDialog(project, progressWindow);
   }
 }

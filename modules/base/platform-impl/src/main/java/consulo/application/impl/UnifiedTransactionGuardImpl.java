@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.web.application.impl;
+package consulo.application.impl;
 
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ModalityState;
@@ -29,7 +29,7 @@ import javax.annotation.Nullable;
  * @author VISTALL
  * @since 2018-05-12
  */
-public class WebTransactionGuardImpl extends TransactionGuardEx {
+public class UnifiedTransactionGuardImpl extends TransactionGuardEx {
   @Override
   public void assertWriteSafeContext(@Nonnull ModalityState modality) {
 

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.web.fileEditor.impl;
+package consulo.fileEditor.impl;
 
 import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.fileEditor.FileEditorProvider;
@@ -21,7 +21,6 @@ import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;
 import com.intellij.openapi.fileEditor.ex.FileEditorWithProvider;
 import com.intellij.openapi.fileEditor.impl.HistoryEntry;
 import com.intellij.openapi.vfs.VirtualFile;
-import consulo.fileEditor.impl.EditorWithProviderComposite;
 import consulo.ui.Component;
 
 import javax.annotation.Nonnull;
@@ -33,7 +32,7 @@ import java.util.List;
  * @author VISTALL
  * @since 2018-05-09
  */
-public class WebEditorWithProviderComposite implements EditorWithProviderComposite {
+public class UnifiedEditorWithProviderComposite implements EditorWithProviderComposite {
   private VirtualFile myFile;
   private FileEditor[] myEditors;
   private FileEditorProvider[] myProviders;
@@ -41,7 +40,7 @@ public class WebEditorWithProviderComposite implements EditorWithProviderComposi
 
   private final Component[] myComponents;
 
-  public WebEditorWithProviderComposite(VirtualFile file, FileEditor[] editors, FileEditorProvider[] providers, FileEditorManagerEx fileEditorManager) {
+  public UnifiedEditorWithProviderComposite(VirtualFile file, FileEditor[] editors, FileEditorProvider[] providers, FileEditorManagerEx fileEditorManager) {
     myFile = file;
     myEditors = editors;
     myProviders = providers;

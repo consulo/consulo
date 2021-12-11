@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2017 consulo.io
+ * Copyright 2013-2021 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,116 +13,102 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.web.wm.impl;
+package consulo.desktop.swt.wm.impl;
 
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.application.ModalityState;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.ActionCallback;
 import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.ExpirableRunnable;
-import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.openapi.wm.IdeFrame;
+import consulo.wm.ApplicationIdeFocusManager;
 import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 
 /**
  * @author VISTALL
- * @since 12-Oct-17
+ * @since 11/12/2021
  */
 @Singleton
-public class WebProjectIdeFocusManagerImpl implements IdeFocusManager {
+public class DesktopSwtApplicationIdeFocusManagerImpl implements ApplicationIdeFocusManager {
   @Override
   @Nonnull
   public AsyncResult<Void> requestFocus(@Nonnull final Component c, final boolean forced) {
-    return IdeFocusManager.getGlobalInstance().requestFocus(c, forced);
+    return AsyncResult.resolved();
   }
 
   @Nonnull
   @Override
   public AsyncResult<Void> requestFocus(@Nonnull consulo.ui.Component c, boolean forced) {
-    return IdeFocusManager.getGlobalInstance().requestFocus(c, forced);
-  }
-
-  @Override
-  public AsyncResult<Void> requestFocusInProject(@Nonnull Component c, @Nullable Project project) {
-    return IdeFocusManager.getGlobalInstance().requestFocusInProject(c, project);
+    return AsyncResult.resolved();
   }
 
   @Override
   public JComponent getFocusTargetFor(@Nonnull final JComponent comp) {
-    return IdeFocusManager.getGlobalInstance().getFocusTargetFor(comp);
+    return null;
   }
 
   @Override
   public void doWhenFocusSettlesDown(@Nonnull final Runnable runnable) {
-    IdeFocusManager.getGlobalInstance().doWhenFocusSettlesDown(runnable);
+    runnable.run();
   }
 
   @Override
   public void doWhenFocusSettlesDown(@Nonnull Runnable runnable, @Nonnull ModalityState modality) {
-    IdeFocusManager.getGlobalInstance().doWhenFocusSettlesDown(runnable, modality);
+    runnable.run();
   }
 
   @Override
   public void doWhenFocusSettlesDown(@Nonnull ExpirableRunnable runnable) {
-    IdeFocusManager.getGlobalInstance().doWhenFocusSettlesDown(runnable);
+    if (!runnable.isExpired()) {
+      runnable.run();
+    }
   }
 
   @Override
-  @Nullable
-  public Component getFocusedDescendantFor(@Nonnull final Component comp) {
-    return IdeFocusManager.getGlobalInstance().getFocusedDescendantFor(comp);
+  public Component getFocusedDescendantFor(final Component c) {
+    return null;
   }
 
   @Override
-  public void typeAheadUntil(@Nonnull ActionCallback callback, @Nonnull String cause) {
-    IdeFocusManager.getGlobalInstance().typeAheadUntil(callback, cause);
-  }
-
   @Nonnull
-  @Override
   public AsyncResult<Void> requestDefaultFocus(boolean forced) {
-    return AsyncResult.resolved(null);
+    return AsyncResult.resolved();
   }
 
   @Override
   public boolean isFocusTransferEnabled() {
-    return IdeFocusManager.getGlobalInstance().isFocusTransferEnabled();
+    return true;
   }
 
   @Override
   public void setTypeaheadEnabled(boolean enabled) {
-    IdeFocusManager.getGlobalInstance().setTypeaheadEnabled(enabled);
   }
 
   @Override
   public Component getFocusOwner() {
-    return IdeFocusManager.getGlobalInstance().getFocusOwner();
+    return null;
   }
 
   @Override
   public void runOnOwnContext(@Nonnull DataContext context, @Nonnull Runnable runnable) {
-    IdeFocusManager.getGlobalInstance().runOnOwnContext(context, runnable);
+    runnable.run();
   }
 
   @Override
   public Component getLastFocusedFor(IdeFrame frame) {
-    return IdeFocusManager.getGlobalInstance().getLastFocusedFor(frame);
+    return null;
   }
 
   @Override
   public IdeFrame getLastFocusedFrame() {
-    return IdeFocusManager.getGlobalInstance().getLastFocusedFrame();
+    return null;
   }
 
   @Override
   public void toFront(JComponent c) {
-    IdeFocusManager.getGlobalInstance().toFront(c);
   }
 
   @Override

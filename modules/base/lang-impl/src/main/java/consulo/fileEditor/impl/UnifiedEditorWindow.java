@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.web.fileEditor.impl;
+package consulo.fileEditor.impl;
 
 import com.intellij.ide.DataManager;
 import com.intellij.openapi.actionSystem.AnActionEvent;
@@ -24,10 +24,6 @@ import com.intellij.openapi.fileEditor.impl.tabActions.CloseTab;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import consulo.disposer.Disposable;
-import consulo.fileEditor.impl.EditorWindow;
-import consulo.fileEditor.impl.EditorWindowBase;
-import consulo.fileEditor.impl.EditorWithProviderComposite;
-import consulo.fileEditor.impl.EditorsSplittersBase;
 import consulo.fileTypes.impl.VfsIconUtil;
 import consulo.ui.Component;
 import consulo.ui.Tab;
@@ -46,17 +42,17 @@ import java.util.Map;
  * @author VISTALL
  * @since 2018-05-09
  */
-public class WebEditorWindow extends EditorWindowBase implements EditorWindow, Disposable {
+public class UnifiedEditorWindow extends EditorWindowBase implements EditorWindow, Disposable {
   private final Project myProject;
   private FileEditorManagerImpl myManager;
-  private EditorsSplittersBase<WebEditorWindow> myOwner;
+  private EditorsSplittersBase<UnifiedEditorWindow> myOwner;
 
   private TabbedLayout myTabbedLayout = TabbedLayout.create();
 
   private Map<EditorWithProviderComposite, Tab> myEditors = new LinkedHashMap<>();
 
   @RequiredUIAccess
-  public WebEditorWindow(Project project, FileEditorManagerImpl manager, EditorsSplittersBase<WebEditorWindow> owner) {
+  public UnifiedEditorWindow(Project project, FileEditorManagerImpl manager, EditorsSplittersBase<UnifiedEditorWindow> owner) {
     myProject = project;
     myManager = manager;
     myOwner = owner;
@@ -166,7 +162,7 @@ public class WebEditorWindow extends EditorWindowBase implements EditorWindow, D
 
   @Nonnull
   @Override
-  public EditorsSplittersBase<WebEditorWindow> getOwner() {
+  public EditorsSplittersBase<UnifiedEditorWindow> getOwner() {
     return myOwner;
   }
 
@@ -237,7 +233,7 @@ public class WebEditorWindow extends EditorWindowBase implements EditorWindow, D
           }
         });
 
-        ((WebEditorsSplitters)splitters).afterFileClosed(file);
+        ((UnifiedEditorsSplitters)splitters).afterFileClosed(file);
       }
     }, myOwner);
   }

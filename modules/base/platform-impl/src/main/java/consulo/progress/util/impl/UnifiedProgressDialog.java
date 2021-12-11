@@ -13,9 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.web.progress.util;
+package consulo.progress.util.impl;
 
 import com.intellij.openapi.progress.util.ProgressWindow;
+import com.intellij.openapi.project.Project;
 import consulo.localize.LocalizeValue;
 import consulo.progress.util.ProgressDialog;
 import consulo.ui.Label;
@@ -23,9 +24,8 @@ import consulo.ui.Window;
 import consulo.ui.*;
 import consulo.ui.layout.VerticalLayout;
 import consulo.util.lang.StringUtil;
-import consulo.web.application.WebApplication;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.awt.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Predicate;
@@ -34,7 +34,8 @@ import java.util.function.Predicate;
  * @author VISTALL
  * @since 2020-05-11
  */
-public class WebProgressDialog implements ProgressDialog {
+public class UnifiedProgressDialog implements ProgressDialog {
+  private final Project myProject;
   private ProgressWindow myProgressWindow;
 
   private Window myWindow;
@@ -43,7 +44,8 @@ public class WebProgressDialog implements ProgressDialog {
   private Label myTextLabel2;
   private ProgressBar myProgressBar;
 
-  public WebProgressDialog(ProgressWindow progressWindow) {
+  public UnifiedProgressDialog(Project project, ProgressWindow progressWindow) {
+    myProject = project;
     myProgressWindow = progressWindow;
   }
 
@@ -64,7 +66,7 @@ public class WebProgressDialog implements ProgressDialog {
   @Override
   public void update() {
     if (myWindow != null) {
-      WebApplication.invokeOnCurrentSession(() -> {
+      myProject.getApplication().getLastUIAccess().give(() -> {
         System.out.println("update " + myProgressWindow.getText() + " " + myProgressWindow.getText2() + " " + myProgressWindow.getFraction());
         myTextLabel.setText(LocalizeValue.of(StringUtil.notNullize(myProgressWindow.getText())));
         myTextLabel2.setText(LocalizeValue.of(StringUtil.notNullize(myProgressWindow.getText2())));
@@ -75,7 +77,7 @@ public class WebProgressDialog implements ProgressDialog {
 
   @Override
   public void show() {
-    WebApplication.invokeOnCurrentSession(() -> {
+    myProject.getApplication().getLastUIAccess().give(() -> {
       VerticalLayout verticalLayout = VerticalLayout.create();
 
       verticalLayout.add(myTextLabel = Label.create());
@@ -112,7 +114,7 @@ public class WebProgressDialog implements ProgressDialog {
   @Override
   public void dispose() {
     if (myWindow != null) {
-      WebApplication.invokeOnCurrentSession(() -> {
+      myProject.getApplication().getLastUIAccess().give(() -> {
         myWindow.close();
         myWindow = null;
         myTextLabel = null;
