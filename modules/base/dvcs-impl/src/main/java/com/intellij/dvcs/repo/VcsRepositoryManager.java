@@ -18,11 +18,14 @@ package com.intellij.dvcs.repo;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.progress.util.BackgroundTaskUtil;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vcs.AbstractVcs;
+import com.intellij.openapi.vcs.FilePath;
 import com.intellij.openapi.vcs.ProjectLevelVcsManager;
 import com.intellij.openapi.vcs.VcsRoot;
 import com.intellij.openapi.vcs.impl.VcsInitObject;
 import com.intellij.openapi.vcs.impl.VcsStartupActivity;
+import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.Alarm;
 import com.intellij.util.ArrayUtil;
@@ -34,10 +37,7 @@ import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 /**
@@ -63,8 +63,7 @@ public class VcsRepositoryManager implements Disposable {
     return project.getInstance(VcsRepositoryManager.class);
   }
 
-  public static final Topic<VcsRepositoryMappingListener> VCS_REPOSITORY_MAPPING_UPDATED =
-          Topic.create("VCS repository mapping updated", VcsRepositoryMappingListener.class);
+  public static final Topic<VcsRepositoryMappingListener> VCS_REPOSITORY_MAPPING_UPDATED = Topic.create("VCS repository mapping updated", VcsRepositoryMappingListener.class);
 
   @Nonnull
   private final ProjectLevelVcsManager myVcsManager;
@@ -121,9 +120,33 @@ public class VcsRepositoryManager implements Disposable {
   }
 
   @Nullable
+  public Repository getExternalRepositoryForFile(@Nonnull VirtualFile file) {
+    Map<VirtualFile, Repository> repositories = getExternalRepositories();
+    for (Map.Entry<VirtualFile, Repository> entry : repositories.entrySet()) {
+      if (entry.getKey().isValid() && VfsUtilCore.isAncestor(entry.getKey(), file, false)) {
+        return entry.getValue();
+      }
+    }
+    return null;
+  }
+
+  @Nullable
+  public Repository getExternalRepositoryForFile(@Nonnull FilePath file) {
+    Map<VirtualFile, Repository> repositories = getExternalRepositories();
+    for (Map.Entry<VirtualFile, Repository> entry : repositories.entrySet()) {
+      if (entry.getKey().isValid() && FileUtil.isAncestor(entry.getKey().getPath(), file.getPath(), false)) {
+        return entry.getValue();
+      }
+    }
+    return null;
+  }
+
+  @Nullable
   public Repository getRepositoryForFile(@Nonnull VirtualFile file, boolean quick) {
     final VcsRoot vcsRoot = myVcsManager.getVcsRootObjectFor(file);
-    if (vcsRoot == null) return null;
+    if (vcsRoot == null) {
+      return getExternalRepositoryForFile(file);
+    }
     return quick ? getRepositoryForRootQuick(vcsRoot.getPath()) : getRepositoryForRoot(vcsRoot.getPath());
   }
 
@@ -204,6 +227,17 @@ public class VcsRepositoryManager implements Disposable {
     try {
       REPO_LOCK.readLock().lock();
       return Collections.unmodifiableCollection(myRepositories.values());
+    }
+    finally {
+      REPO_LOCK.readLock().unlock();
+    }
+  }
+
+  @Nonnull
+  private Map<VirtualFile, Repository> getExternalRepositories() {
+    REPO_LOCK.readLock().lock();
+    try {
+      return new HashMap<>(myExternalRepositories);
     }
     finally {
       REPO_LOCK.readLock().unlock();
