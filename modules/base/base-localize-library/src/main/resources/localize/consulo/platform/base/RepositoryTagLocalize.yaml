@@ -42,6 +42,8 @@ web.server:
   text: Web Server
 web.tools:
   text: Web Tools
+web.tool:
+  text: Web Tool
 tools:
   text: Tools
 cloud:
