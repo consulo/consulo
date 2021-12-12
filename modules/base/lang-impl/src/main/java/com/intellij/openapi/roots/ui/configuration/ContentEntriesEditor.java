@@ -361,8 +361,7 @@ public class ContentEntriesEditor extends ModuleElementsEditor {
     private final FileChooserDescriptor myDescriptor;
 
     public AddContentEntryAction() {
-      super(ProjectBundle.message("module.paths.add.content.action"),
-            ProjectBundle.message("module.paths.add.content.action.description"), AllIcons.Modules.AddContentEntry);
+      super(ProjectBundle.message("module.paths.add.content.action"), ProjectBundle.message("module.paths.add.content.action.description"), AllIcons.General.Add);
       myDescriptor = new FileChooserDescriptor(false, true, true, false, true, true) {
         @Override
         public void validateSelectedFiles(VirtualFile[] files) throws Exception {

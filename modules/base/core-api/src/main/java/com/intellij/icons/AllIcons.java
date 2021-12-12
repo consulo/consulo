@@ -663,7 +663,6 @@ public class AllIcons {
   }
 
   public static class Modules {
-    public static final Image AddContentEntry = PlatformIconGroup.modulesAddContentEntry(); // 16x16
     public static final Image AddExcludedRoot = PlatformIconGroup.modulesAddExcludedRoot(); // 16x16
     public static final Image Annotation = PlatformIconGroup.modulesAnnotation(); // 16x16
     public static final Image DeleteContentFolder = PlatformIconGroup.modulesDeleteContentFolder(); // 9x9
