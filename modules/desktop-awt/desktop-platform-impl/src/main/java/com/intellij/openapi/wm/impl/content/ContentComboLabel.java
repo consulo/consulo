@@ -21,12 +21,53 @@ import com.intellij.ui.content.Content;
 import com.intellij.ui.popup.PopupState;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
+import com.intellij.util.ui.accessibility.ScreenReader;
 
+import javax.accessibility.AccessibleAction;
+import javax.accessibility.AccessibleContext;
+import javax.accessibility.AccessibleRole;
+import javax.swing.*;
 import java.awt.*;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 public class ContentComboLabel extends BaseLabel {
+  private final class AccessibleContentComboLabel extends AccessibleBaseLabel implements AccessibleAction {
+    @Override
+    public AccessibleRole getAccessibleRole() {
+      return AccessibleRole.PUSH_BUTTON;
+    }
+
+    @Override
+    public AccessibleAction getAccessibleAction() {
+      return this;
+    }
+
+    // Implements AccessibleAction
+    @Override
+    public int getAccessibleActionCount() {
+      return 1;
+    }
+
+    @Override
+    public String getAccessibleActionDescription(int index) {
+      return index == 0 ? UIManager.getString("ComboBox.togglePopupText") : null;
+    }
+
+    @Override
+    public boolean doAccessibleAction(int index) {
+      if (index == 0) {
+        DesktopToolWindowContentUi.toggleContentPopup(myUi, myUi.getContentManager());
+        return true;
+      }
+      else {
+        return false;
+      }
+    }
+  }
+
   private final PopupState<JBPopup> myPopupState = PopupState.forPopup();
 
   private final ComboIcon myComboIcon = new ComboIcon() {
@@ -47,6 +88,19 @@ public class ContentComboLabel extends BaseLabel {
     super(layout.myUi, true);
     myLayout = layout;
     addMouseListener(new MouseAdapter(){});
+
+    if (ScreenReader.isActive()) {
+      setFocusable(true);
+      addKeyListener(new KeyAdapter() {
+        @Override
+        public void keyPressed(KeyEvent e) {
+          if (e.getModifiers() == 0 && e.getKeyCode() == KeyEvent.VK_SPACE) {
+            DesktopToolWindowContentUi.toggleContentPopup(myUi, myUi.getContentManager());
+          }
+          super.keyPressed(e);
+        }
+      });
+    }
   }
 
   @Override
@@ -94,5 +148,13 @@ public class ContentComboLabel extends BaseLabel {
   @Override
   public Content getContent() {
     return myUi.myManager.getSelectedContent();
+  }
+
+  @Override
+  public AccessibleContext getAccessibleContext() {
+    if (accessibleContext == null) {
+      accessibleContext = new AccessibleContentComboLabel();
+    }
+    return accessibleContext;
   }
 }

@@ -24,6 +24,7 @@ import com.intellij.util.ui.UIUtil;
 import consulo.awt.TargetAWT;
 import consulo.ui.image.ImageEffects;
 
+import javax.accessibility.AccessibleContext;
 import javax.swing.*;
 import java.awt.*;
 
@@ -123,5 +124,16 @@ public class BaseLabel extends JLabel {
 
   public Content getContent() {
     return null;
+  }
+
+  @Override
+  public AccessibleContext getAccessibleContext() {
+    if (accessibleContext == null) {
+      accessibleContext = new AccessibleBaseLabel();
+    }
+    return accessibleContext;
+  }
+
+  protected class AccessibleBaseLabel extends AccessibleJLabel {
   }
 }
