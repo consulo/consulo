@@ -1877,7 +1877,7 @@ action.AssociateWithFileType.text:
 action.AssociateWithFileType.description:
   text: Associate selected file with one of file types
 action.SynchronizeCurrentFile.text:
-  text: Synchronize selected file
+  text: Reload from Disk
 action.TypeHierarchy.BaseOnThisType.text:
   text: Base On This Type
 action.TypeHierarchy.Class.text:

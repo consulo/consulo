@@ -11,12 +11,12 @@ import com.intellij.openapi.vcs.changes.VcsDirtyScopeManager;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.newvfs.NewVirtualFile;
 import com.intellij.openapi.vfs.newvfs.RefreshQueue;
-import com.intellij.openapi.vfs.newvfs.VfsPresentationUtil;
 import com.intellij.openapi.wm.StatusBar;
 import com.intellij.openapi.wm.WindowManager;
 import com.intellij.util.containers.JBIterable;
-import javax.annotation.Nonnull;
+import consulo.ui.annotation.RequiredUIAccess;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 public class SynchronizeCurrentFileAction extends AnAction implements DumbAware {
@@ -32,12 +32,7 @@ public class SynchronizeCurrentFileAction extends AnAction implements DumbAware 
     }
   }
 
-  @Nonnull
-  private static String getMessage(@Nonnull Project project, @Nonnull List<? extends VirtualFile> files) {
-    VirtualFile single = files.size() == 1 ? files.get(0) : null;
-    return single != null ? IdeBundle.message("action.synchronize.file", VfsPresentationUtil.getPresentableNameForAction(project, single)) : IdeBundle.message("action.synchronize.selected.files");
-  }
-
+  @RequiredUIAccess
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
     Project project = getEventProject(e);
@@ -67,7 +62,7 @@ public class SynchronizeCurrentFileAction extends AnAction implements DumbAware 
     }
     StatusBar statusBar = WindowManager.getInstance().getStatusBar(project);
     if (statusBar != null) {
-      statusBar.setInfo(IdeBundle.message("action.sync.completed.successfully", getMessage(project, files)));
+      statusBar.setInfo(IdeBundle.message("action.sync.completed.successfully"));
     }
   }
 
