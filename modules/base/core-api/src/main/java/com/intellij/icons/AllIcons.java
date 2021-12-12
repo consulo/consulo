@@ -101,7 +101,6 @@ public class AllIcons {
     public static final Image Minimize = PlatformIconGroup.actionsMinimize(); // 16x16
     public static final Image Module = PlatformIconGroup.actionsModule(); // 16x16
     public static final Image More = PlatformIconGroup.actionsMore();
-    public static final Image Move_to_button_top = PlatformIconGroup.actionsMove_to_button_top(); // 11x12
     public static final Image Move_to_button = PlatformIconGroup.actionsMove_to_button(); // 11x10
     public static final Image MoveDown = PlatformIconGroup.actionsMoveDown(); // 14x14
     public static final Image MoveToAnotherChangelist = PlatformIconGroup.actionsMoveToAnotherChangelist(); // 16x16
