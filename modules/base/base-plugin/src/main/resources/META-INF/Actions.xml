@@ -646,8 +646,7 @@
       <action id="WelcomeScreen.Configure.Import" class="com.intellij.ide.actions.ImportSettingsAction"/>
       <action id="WelcomeScreen.Configure.Export" class="com.intellij.ide.actions.ExportSettingsAction"/>
 
-      <action id="WelcomeScreen.Configure.DesktopEntry" class="com.intellij.ide.actions.CreateDesktopEntryAction"/>
-
+      <reference id="CreateDesktopEntry"/>
       <reference id="CheckForUpdate"/>
       <reference id="ShowLog"/>
       <reference id="About"/>

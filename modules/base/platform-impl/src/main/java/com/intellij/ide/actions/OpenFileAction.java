@@ -101,14 +101,6 @@ public class OpenFileAction extends AnAction implements DumbAware {
     });
   }
 
-  @RequiredUIAccess
-  @Override
-  public void update(@Nonnull AnActionEvent e) {
-    if (WelcomeFrameManager.isFromWelcomeFrame(e)) {
-      e.getPresentation().setIcon(PlatformIconGroup.nodesFolderOpened());
-    }
-  }
-
   @Nonnull
   private static String getFileChooserDescription() {
     ProjectOpenProcessor[] providers = ProjectOpenProcessors.getInstance().getProcessors();

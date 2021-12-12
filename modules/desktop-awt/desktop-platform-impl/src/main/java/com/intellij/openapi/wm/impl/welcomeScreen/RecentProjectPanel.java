@@ -80,7 +80,7 @@ public class RecentProjectPanel {
   protected FilePathChecker myChecker;
   private int myHoverIndex = -1;
   private final int closeButtonInset = JBUI.scale(7);
-  private Image currentIcon = AllIcons.Welcome.Project.Remove;
+  private Image currentIcon = AllIcons.General.Remove;
 
   private final JPanel myCloseButtonForEditor = new JPanel() {
     {
@@ -286,12 +286,6 @@ public class RecentProjectPanel {
           final Rectangle cellBounds = myList.getCellBounds(index, index);
           if (cellBounds != null && cellBounds.contains(point)) {
             myList.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-            if (rectInListCoordinatesContains(cellBounds, point)) {
-              currentIcon = AllIcons.Welcome.Project.Remove_hover;
-            }
-            else {
-              currentIcon = AllIcons.Welcome.Project.Remove;
-            }
             myHoverIndex = index;
             myList.repaint(cellBounds);
           }
@@ -309,7 +303,6 @@ public class RecentProjectPanel {
       @Override
       public void mouseExited(MouseEvent e) {
         myHoverIndex = -1;
-        currentIcon = AllIcons.Welcome.Project.Remove;
         myList.repaint();
       }
     };

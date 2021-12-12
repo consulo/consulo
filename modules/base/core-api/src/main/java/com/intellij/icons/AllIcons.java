@@ -18,8 +18,6 @@ package com.intellij.icons;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.image.Image;
 
-import javax.swing.*;
-
 /**
  * Better use PlatformIconGroup
  */
@@ -1026,21 +1024,9 @@ public class AllIcons {
   }
 
   public static class Welcome {
-    public static final Image CreateDesktopEntry = PlatformIconGroup.welcomeCreateDesktopEntry(); // 32x32
     public static final Image CreateNewProject = PlatformIconGroup.welcomeCreateNewProject(); // 16x16
-    public static final Image CreateNewProjectfromExistingFiles = PlatformIconGroup.welcomeCreateNewProjectfromExistingFiles(); // 16x16
     public static final Image FromVCS = PlatformIconGroup.welcomeFromVCS(); // 16x16
-    public static final Image ImportProject = PlatformIconGroup.welcomeImportProject(); // 16x16
     public static final Image OpenProject = PlatformIconGroup.welcomeOpenProject(); // 16x16
-
-    public static class Project {
-      public static final Image Remove_hover = PlatformIconGroup.welcomeProjectRemove_hover(); // 10x10
-      public static final Image Remove = PlatformIconGroup.welcomeProjectRemove(); // 10x10
-
-    }
-
-    public static final Image Register = PlatformIconGroup.welcomeRegister(); // 32x32
-
   }
 
   public static class Webreferences {
