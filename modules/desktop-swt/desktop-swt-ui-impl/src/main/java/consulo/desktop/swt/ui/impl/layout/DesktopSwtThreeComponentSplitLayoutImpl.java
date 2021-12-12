@@ -18,7 +18,7 @@ package consulo.desktop.swt.ui.impl.layout;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.SplitLayoutPosition;
-import consulo.ui.layout.TwoComponentSplitLayout;
+import consulo.ui.layout.ThreeComponentSplitLayout;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.layout.FillLayout;
@@ -26,15 +26,16 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Layout;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
- * @since 29/04/2021
+ * @since 12/12/2021
  */
-public class DesktopSwtTwoComponentSplitLayoutImpl extends DesktopSwtLayoutComponent implements TwoComponentSplitLayout {
+public class DesktopSwtThreeComponentSplitLayoutImpl extends DesktopSwtLayoutComponent implements ThreeComponentSplitLayout {
   private final SplitLayoutPosition myPosition;
 
-  public DesktopSwtTwoComponentSplitLayoutImpl(SplitLayoutPosition position) {
+  public DesktopSwtThreeComponentSplitLayoutImpl(SplitLayoutPosition position) {
     myPosition = position;
   }
 
@@ -52,18 +53,13 @@ public class DesktopSwtTwoComponentSplitLayoutImpl extends DesktopSwtLayoutCompo
   protected void initialize(Composite component) {
     super.initialize(component);
 
-    ((SashForm) component).setSashWidth(1);
-  }
-
-  @Override
-  public void setProportion(int percent) {
-
+    ((SashForm)component).setSashWidth(1);
   }
 
   @RequiredUIAccess
   @Nonnull
   @Override
-  public TwoComponentSplitLayout setFirstComponent(@Nonnull Component component) {
+  public ThreeComponentSplitLayout setFirstComponent(@Nonnull Component component) {
     add(component, "first");
     return this;
   }
@@ -71,8 +67,16 @@ public class DesktopSwtTwoComponentSplitLayoutImpl extends DesktopSwtLayoutCompo
   @RequiredUIAccess
   @Nonnull
   @Override
-  public TwoComponentSplitLayout setSecondComponent(@Nonnull Component component) {
+  public ThreeComponentSplitLayout setSecondComponent(@Nonnull Component component) {
     add(component, "second");
+    return this;
+  }
+
+  @RequiredUIAccess
+  @Nonnull
+  @Override
+  public ThreeComponentSplitLayout setCenterComponent(@Nullable Component component) {
+    add(component, "center");
     return this;
   }
 

@@ -89,19 +89,19 @@ public class DesktopSwtToolWindowManagerImpl extends ToolWindowManagerBase {
 
   @RequiredUIAccess
   private void projectOpened() {
-    //WindowManagerEx windowManager = (WindowManagerEx)myWindowManager.get();
-    //
-    //myFrame = windowManager.allocateFrame(myProject);
-    //
-    //WebToolWindowPanelImpl toolWindowPanel = new WebToolWindowPanelImpl();
-    //
-    //myToolWindowPanel = toolWindowPanel;
-    //
-    //WebRootPaneImpl rootPanel = ((WebIdeFrameImpl)myFrame).getRootPanel();
-    //
-    //rootPanel.setCenterComponent(toolWindowPanel);
-    //
-    //((WebIdeFrameImpl)myFrame).show();
+    WindowManagerEx windowManager = (WindowManagerEx)myWindowManager.get();
+
+    myFrame = windowManager.allocateFrame(myProject);
+
+    DesktopSwtToolWindowPanelImpl toolWindowPanel = new DesktopSwtToolWindowPanelImpl();
+
+    myToolWindowPanel = toolWindowPanel;
+
+    DesktopSwtRootPaneImpl rootPanel = ((DesktopSwtIdeFrameImpl)myFrame).getRootPanel();
+
+    rootPanel.setCenterComponent(toolWindowPanel.getComponent());
+
+    ((DesktopSwtIdeFrameImpl)myFrame).show();
   }
 
   private void projectClosed() {
@@ -160,8 +160,7 @@ public class DesktopSwtToolWindowManagerImpl extends ToolWindowManagerBase {
   @Nonnull
   @Override
   protected ToolWindowStripeButton createStripeButton(ToolWindowInternalDecorator internalDecorator) {
-    //return new WebToolWindowStripeButtonImpl((WebToolWindowInternalDecorator)internalDecorator, (WebToolWindowPanelImpl)myToolWindowPanel);
-    return null;
+    return new DesktopSwtToolWindowStripeButtonImpl((DesktopSwtToolWindowInternalDecorator)internalDecorator, (DesktopSwtToolWindowPanelImpl) myToolWindowPanel);
   }
 
   @Nonnull
@@ -173,8 +172,7 @@ public class DesktopSwtToolWindowManagerImpl extends ToolWindowManagerBase {
   @Nonnull
   @Override
   protected ToolWindowInternalDecorator createInternalDecorator(Project project, @Nonnull WindowInfoImpl info, ToolWindowEx toolWindow, boolean dumbAware) {
-    //return new WebToolWindowInternalDecorator(project, info, (UnifiedToolWindowImpl)toolWindow, dumbAware);
-    return null;
+    return new DesktopSwtToolWindowInternalDecorator(project, info, (UnifiedToolWindowImpl)toolWindow, dumbAware);
   }
 
   @Override

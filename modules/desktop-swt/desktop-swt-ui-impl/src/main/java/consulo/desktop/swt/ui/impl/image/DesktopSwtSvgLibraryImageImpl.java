@@ -17,7 +17,7 @@ package consulo.desktop.swt.ui.impl.image;
 
 import consulo.ui.image.Image;
 import org.eclipse.nebula.cwt.svg.SvgDocument;
-import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.GC;
 
 import javax.annotation.Nonnull;
@@ -54,11 +54,12 @@ public class DesktopSwtSvgLibraryImageImpl implements Image, DesktopSwtImage {
   @Nonnull
   @Override
   public org.eclipse.swt.graphics.Image toSWTImage() {
+
     org.eclipse.swt.graphics.Image swtImage = new org.eclipse.swt.graphics.Image(null, myWidth, myHeight);
 
     GC gc = new GC(swtImage);
-    gc.setBackground(new Color(0, 0, 0, 0));
-    gc.setAlpha(0);
+
+    gc.setBackground(gc.getDevice().getSystemColor(SWT.COLOR_TRANSPARENT));
     gc.fillRectangle(0, 0, myWidth, myHeight);
 
     mySvgDocument.apply(gc, swtImage.getBounds());

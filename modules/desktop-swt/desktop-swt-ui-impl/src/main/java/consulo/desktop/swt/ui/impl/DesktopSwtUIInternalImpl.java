@@ -75,7 +75,7 @@ public class DesktopSwtUIInternalImpl extends UIInternal {
 
   @Override
   public WrappedLayout _Layouts_wrapped() {
-    return null;
+    return new DesktopSwtWrappedLayoutImpl();
   }
 
   @Override
@@ -95,7 +95,7 @@ public class DesktopSwtUIInternalImpl extends UIInternal {
 
   @Override
   public ThreeComponentSplitLayout _ThreeComponentSplitLayout_create(SplitLayoutPosition position) {
-    return null;
+    return new DesktopSwtThreeComponentSplitLayoutImpl(position);
   }
 
   @Override
@@ -196,7 +196,7 @@ public class DesktopSwtUIInternalImpl extends UIInternal {
 
   @Override
   public Image _Image_lazy(Supplier<Image> imageSupplier) {
-    return null;
+    return imageSupplier.get();
   }
 
   @Override
@@ -211,12 +211,12 @@ public class DesktopSwtUIInternalImpl extends UIInternal {
 
   @Override
   public Image _ImageEffects_grayed(@Nonnull Image original) {
-    return null;
+    return original;
   }
 
   @Override
   public Image _ImageEffects_appendRight(@Nonnull Image i0, @Nonnull Image i1) {
-    return null;
+    return i1;
   }
 
   @Override
@@ -226,12 +226,12 @@ public class DesktopSwtUIInternalImpl extends UIInternal {
 
   @Override
   public Image _ImageEffects_canvas(int width, int height, Consumer<Canvas2D> consumer) {
-    return null;
+    return Image.empty(width, height);
   }
 
   @Override
   public Image _ImageEffects_withText(Image baseImage, String text) {
-    return null;
+    return baseImage;
   }
 
   @Override
@@ -261,7 +261,7 @@ public class DesktopSwtUIInternalImpl extends UIInternal {
 
   @Override
   public MenuBar _MenuItems_menuBar() {
-    return null;
+    return new DesktopSwtMenuBar();
   }
 
   @Nonnull

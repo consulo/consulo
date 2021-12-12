@@ -15,41 +15,32 @@
  */
 package consulo.desktop.swt.ui.impl.layout;
 
-import consulo.desktop.swt.ui.impl.SWTComponentDelegate;
 import consulo.ui.Component;
-import consulo.ui.layout.ScrollableLayout;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.layout.WrappedLayout;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
-import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Layout;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
- * @since 29/04/2021
+ * @since 11/12/2021
  */
-public class DesktopSwtScrollableLayoutImpl extends DesktopSwtLayoutComponent implements ScrollableLayout {
-  private final SWTComponentDelegate<?> myComponent;
-
-  public DesktopSwtScrollableLayoutImpl(Component component) {
-    myComponent = (SWTComponentDelegate<?>)component;
-
-    add(myComponent, null);
-  }
-
-  @Override
-  public void disposeSWT() {
-    super.disposeSWT();
-
-    myComponent.disposeSWT();
-  }
-
-  @Override
-  protected Composite createSWT(Composite parent) {
-    return new Composite(parent, SWT.H_SCROLL | SWT.V_SCROLL);
-  }
-
+public class DesktopSwtWrappedLayoutImpl extends DesktopSwtLayoutComponent implements WrappedLayout {
+  @Nullable
   @Override
   protected Layout createLayout() {
-    return new FillLayout(SWT.VERTICAL | SWT.HORIZONTAL);
+    return new FillLayout(SWT.HORIZONTAL | SWT.VERTICAL);
+  }
+
+  @RequiredUIAccess
+  @Nonnull
+  @Override
+  public WrappedLayout set(@Nullable Component component) {
+    add(component, null);
+    return this;
   }
 }

@@ -29,6 +29,6 @@ public class DesktopSwtPlatformImpl extends PlatformBase {
 
   @Override
   public boolean isWebService() {
-    return false;
+    return true; // TODO dirty hack for fix some exceptions
   }
 }

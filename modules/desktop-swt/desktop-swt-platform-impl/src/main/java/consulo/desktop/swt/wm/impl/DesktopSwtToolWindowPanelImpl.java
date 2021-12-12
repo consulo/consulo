@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2017 consulo.io
+ * Copyright 2013-2021 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.web.ui.ex;
+package consulo.desktop.swt.wm.impl;
 
 import com.intellij.openapi.wm.ToolWindowAnchor;
 import com.intellij.openapi.wm.WindowInfo;
@@ -25,43 +25,22 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.ToolWindowInternalDecorator;
 import consulo.ui.ex.ToolWindowPanel;
 import consulo.ui.ex.ToolWindowStripeButton;
+import consulo.ui.layout.DockLayout;
 import consulo.ui.layout.SplitLayoutPosition;
 import consulo.ui.layout.ThreeComponentSplitLayout;
-import consulo.ui.web.internal.TargetVaddin;
-import consulo.ui.web.internal.base.VaadinComponentContainer;
-import consulo.ui.web.internal.base.VaadinComponentDelegate;
-import consulo.web.gwt.shared.ui.state.layout.DockLayoutState;
-import consulo.web.wm.impl.WebToolWindowInternalDecorator;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.*;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author VISTALL
- * @since 25-Sep-17
+ * @since 12/12/2021
  */
-public class WebToolWindowPanelImpl extends VaadinComponentDelegate<WebToolWindowPanelImpl.Vaadin> implements ToolWindowPanel {
-  private static final Logger LOG = Logger.getInstance(WebToolWindowPanelImpl.class);
-
-  public static class Vaadin extends VaadinComponentContainer {
-    private final List<com.vaadin.ui.Component> myChildren = new ArrayList<>();
-
-    @Override
-    public int getComponentCount() {
-      return myChildren.size();
-    }
-
-    @Override
-    public Iterator<com.vaadin.ui.Component> iterator() {
-      return myChildren.iterator();
-    }
-
-    private void add(com.vaadin.ui.Component component) {
-      addComponent(component);
-      myChildren.add(component);
-    }
-  }
+public class DesktopSwtToolWindowPanelImpl implements ToolWindowPanel {
+  private static final Logger LOG = Logger.getInstance(DesktopSwtToolWindowPanelImpl.class);
 
   private final class AddToolStripeButtonCmd implements Runnable {
     private final ToolWindowStripeButton myButton;
@@ -92,7 +71,7 @@ public class WebToolWindowPanelImpl extends VaadinComponentDelegate<WebToolWindo
       else {
         LOG.error("unknown anchor: " + anchor);
       }
-      getVaadinComponent().markAsDirtyRecursive();
+      //getVaadinComponent().markAsDirtyRecursive();
     }
   }
 
@@ -105,7 +84,7 @@ public class WebToolWindowPanelImpl extends VaadinComponentDelegate<WebToolWindo
 
     @Override
     public void run() {
-      WebToolWindowStripeButtonImpl stripeButton = getButtonById(myId);
+      DesktopSwtToolWindowStripeButtonImpl stripeButton = getButtonById(myId);
       if (stripeButton == null) {
         return;
       }
@@ -114,16 +93,16 @@ public class WebToolWindowPanelImpl extends VaadinComponentDelegate<WebToolWindo
       ToolWindowAnchor anchor = info.getAnchor();
 
       if (ToolWindowAnchor.TOP == anchor) {
-        myTopStripe.markAsDirtyRecursive();
+        //myTopStripe.markAsDirtyRecursive();
       }
       else if (ToolWindowAnchor.LEFT == anchor) {
-        myLeftStripe.markAsDirtyRecursive();
+        // myLeftStripe.markAsDirtyRecursive();
       }
       else if (ToolWindowAnchor.BOTTOM == anchor) {
-        myBottomStripe.markAsDirtyRecursive();
+        //myBottomStripe.markAsDirtyRecursive();
       }
       else if (ToolWindowAnchor.RIGHT == anchor) {
-        myRightStripe.markAsDirtyRecursive();
+        // myRightStripe.markAsDirtyRecursive();
       }
       else {
         LOG.error("unknown anchor: " + anchor);
@@ -163,8 +142,8 @@ public class WebToolWindowPanelImpl extends VaadinComponentDelegate<WebToolWindo
     public final void run() {
       setComponent(null, myInfo.getAnchor(), 0);
 
-      if(!myDirtyMode) {
-        toVaadinComponent().markAsDirtyRecursive();
+      if (!myDirtyMode) {
+        //toVaadinComponent().markAsDirtyRecursive();
       }
     }
   }
@@ -184,15 +163,15 @@ public class WebToolWindowPanelImpl extends VaadinComponentDelegate<WebToolWindo
     }
   }
 
-  private WebToolWindowStripeImpl myTopStripe = new WebToolWindowStripeImpl(DockLayoutState.Constraint.TOP);
-  private WebToolWindowStripeImpl myBottomStripe = new WebToolWindowStripeImpl(DockLayoutState.Constraint.BOTTOM);
-  private WebToolWindowStripeImpl myLeftStripe = new WebToolWindowStripeImpl(DockLayoutState.Constraint.LEFT);
-  private WebToolWindowStripeImpl myRightStripe = new WebToolWindowStripeImpl(DockLayoutState.Constraint.RIGHT);
+  private DesktopToolWindowStripeImpl myTopStripe = new DesktopToolWindowStripeImpl(DesktopToolWindowStripeImpl.Type.TOP);
+  private DesktopToolWindowStripeImpl myBottomStripe = new DesktopToolWindowStripeImpl(DesktopToolWindowStripeImpl.Type.BOTTOM);
+  private DesktopToolWindowStripeImpl myLeftStripe = new DesktopToolWindowStripeImpl(DesktopToolWindowStripeImpl.Type.LEFT);
+  private DesktopToolWindowStripeImpl myRightStripe = new DesktopToolWindowStripeImpl(DesktopToolWindowStripeImpl.Type.RIGHT);
 
-  private final Map<String, WebToolWindowStripeButtonImpl> myId2Button = new HashMap<>();
+  private final Map<String, DesktopSwtToolWindowStripeButtonImpl> myId2Button = new HashMap<>();
   private final Map<String, ToolWindowInternalDecorator> myId2Decorator = new HashMap<>();
   private final Map<ToolWindowInternalDecorator, WindowInfoImpl> myDecorator2Info = new HashMap<>();
-  private final Map<WebToolWindowStripeButtonImpl, WindowInfoImpl> myButton2Info = new HashMap<>();
+  private final Map<DesktopSwtToolWindowStripeButtonImpl, WindowInfoImpl> myButton2Info = new HashMap<>();
 
 
   private ThreeComponentSplitLayout myHorizontalSplitter = ThreeComponentSplitLayout.create(SplitLayoutPosition.HORIZONTAL);
@@ -202,24 +181,22 @@ public class WebToolWindowPanelImpl extends VaadinComponentDelegate<WebToolWindo
 
   private boolean myWidescreen;
 
-  public WebToolWindowPanelImpl() {
-    Vaadin vaadinComponent = getVaadinComponent();
+  private DockLayout myRoot = DockLayout.create();
 
-    vaadinComponent.add(TargetVaddin.to(myTopStripe));
-    vaadinComponent.add(TargetVaddin.to(myBottomStripe));
-    vaadinComponent.add(TargetVaddin.to(myLeftStripe));
-    vaadinComponent.add(TargetVaddin.to(myRightStripe));
-    vaadinComponent.add(TargetVaddin.to(myHorizontalSplitter));
+  public DesktopSwtToolWindowPanelImpl() {
+    myRoot.top(myTopStripe);
+    myRoot.bottom(myBottomStripe);
+    myRoot.left(myLeftStripe);
+    myRoot.right(myRightStripe);
+    myRoot.center(myHorizontalSplitter);
   }
 
-  @Nonnull
-  @Override
-  public Vaadin createVaadinComponent() {
-    return new Vaadin();
+  public DockLayout getComponent() {
+    return myRoot;
   }
 
   private void setComponent(@Nullable ToolWindowInternalDecorator d, @Nonnull ToolWindowAnchor anchor, final float weight) {
-    WebToolWindowInternalDecorator decorator = (WebToolWindowInternalDecorator)d;
+    DesktopSwtToolWindowInternalDecorator decorator = (DesktopSwtToolWindowInternalDecorator)d;
 
     consulo.ui.Component component = decorator == null ? null : decorator.getComponent();
 
@@ -249,7 +226,7 @@ public class WebToolWindowPanelImpl extends VaadinComponentDelegate<WebToolWindo
   }
 
   @Nullable
-  private WebToolWindowStripeButtonImpl getButtonById(final String id) {
+  private DesktopSwtToolWindowStripeButtonImpl getButtonById(final String id) {
     return myId2Button.get(id);
   }
 
@@ -257,8 +234,8 @@ public class WebToolWindowPanelImpl extends VaadinComponentDelegate<WebToolWindo
   @Override
   public void addButton(ToolWindowStripeButton button, @Nonnull WindowInfoImpl info, @Nonnull Comparator<ToolWindowStripeButton> comparator) {
     final WindowInfoImpl copiedInfo = info.copy();
-    myId2Button.put(copiedInfo.getId(), (WebToolWindowStripeButtonImpl)button);
-    new AddToolStripeButtonCmd((WebToolWindowStripeButtonImpl)button, copiedInfo, comparator).run();
+    myId2Button.put(copiedInfo.getId(), (DesktopSwtToolWindowStripeButtonImpl)button);
+    new AddToolStripeButtonCmd(button, copiedInfo, comparator).run();
   }
 
   @RequiredUIAccess

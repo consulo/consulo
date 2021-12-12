@@ -42,8 +42,7 @@
 
     <applicationService serviceInterface="com.intellij.openapi.help.HelpManager" serviceImplementation="com.intellij.openapi.help.HelpManager"/>
 
-    <projectService serviceInterface="com.intellij.ide.projectView.ProjectView"
-                    serviceImplementation="consulo.web.projectView.WebProjectViewImpl"/>
+    <projectService serviceInterface="com.intellij.ide.projectView.ProjectView" serviceImplementation="consulo.projectView.impl.UnifiedProjectViewImpl"/>
 
     <applicationService serviceInterface="com.intellij.ui.IconDeferrer"
                         serviceImplementation="com.intellij.ui.DummyIconDeferrer"/>

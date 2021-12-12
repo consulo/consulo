@@ -27,6 +27,7 @@ import consulo.ui.impl.UIDataObject;
 import consulo.util.dataholder.Key;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Widget;
 
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
@@ -38,7 +39,7 @@ import java.util.function.Function;
  * @author VISTALL
  * @since 29/04/2021
  */
-public abstract class SWTComponentDelegate<SWT extends Control> implements Component {
+public abstract class SWTComponentDelegate<SWT extends Widget> implements Component {
   public static final String UI_COMPONENT_KEY = "UI_COMPONENT_KEY";
 
   protected Size mySize;
@@ -52,11 +53,16 @@ public abstract class SWTComponentDelegate<SWT extends Control> implements Compo
 
   public final void bind(Composite parent, Object layoutData) {
     myComponent = createSWT(parent);
-    myComponent.setLayoutData(layoutData);
 
-    myComponent.setEnabled(myEnabled);
-    myComponent.setVisible(myVisible);
-    myComponent.setData(UI_COMPONENT_KEY, this);
+    if (myComponent instanceof Control control) {
+      control.setLayoutData(layoutData);
+      control.setEnabled(myEnabled);
+      control.setVisible(myVisible);
+      control.setData(UI_COMPONENT_KEY, this);
+      if (mySize != null) {
+        control.setSize(mySize.getWidth(), mySize.getHeight());
+      }
+    }
     
     initialize(myComponent);
   }
@@ -116,8 +122,8 @@ public abstract class SWTComponentDelegate<SWT extends Control> implements Compo
   public void setVisible(boolean value) {
     myVisible = value;
 
-    if (myComponent != null) {
-      myComponent.setVisible(myVisible);
+    if (myComponent instanceof Control control) {
+      control.setVisible(myVisible);
     }
   }
 
@@ -131,8 +137,8 @@ public abstract class SWTComponentDelegate<SWT extends Control> implements Compo
   public void setEnabled(boolean value) {
     myEnabled = value;
 
-    if(myComponent != null) {
-      myComponent.setEnabled(value);
+    if(myComponent instanceof Control control) {
+      control.setEnabled(value);
     }
   }
 
@@ -146,6 +152,11 @@ public abstract class SWTComponentDelegate<SWT extends Control> implements Compo
   @Override
   public void setSize(@Nonnull Size size) {
     mySize = size;
+
+    SWT swt = toSWTComponent();
+    if(swt instanceof Control control) {
+      control.setSize(size.getWidth(), size.getHeight());
+    }
   }
 
   @Nonnull

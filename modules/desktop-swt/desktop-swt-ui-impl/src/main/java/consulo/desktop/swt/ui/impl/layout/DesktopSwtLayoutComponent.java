@@ -18,6 +18,7 @@ package consulo.desktop.swt.ui.impl.layout;
 import com.intellij.util.containers.MultiMap;
 import consulo.desktop.swt.ui.impl.SWTComponentDelegate;
 import consulo.ui.Component;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.Layout;
 import consulo.util.lang.Pair;
 import org.eclipse.swt.SWT;
@@ -42,6 +43,25 @@ public abstract class DesktopSwtLayoutComponent extends SWTComponentDelegate<Com
   @Override
   protected Composite createSWT(Composite parent) {
     return new Composite(parent, SWT.NONE);
+  }
+
+  @RequiredUIAccess
+  @Override
+  public void removeAll() {
+    Composite composite = toSWTComponent();
+    if (composite != null) {
+      for (Pair<SWTComponentDelegate<?>, Object> pair : myComponents) {
+        pair.getFirst().disposeSWT();
+      }
+
+      myComponents.clear();
+
+      for (Pair<SWTComponentDelegate<?>, Object> pair : myMappedComponents.values()) {
+        pair.getFirst().disposeSWT();
+      }
+
+      myMappedComponents.clear();
+    }
   }
 
   @Override
@@ -80,11 +100,11 @@ public abstract class DesktopSwtLayoutComponent extends SWTComponentDelegate<Com
 
     myComponents.addAll(myMappedComponents.values());
 
-    myMappedComponents.clear();
-
     for (Pair<SWTComponentDelegate<?>, Object> pair : myMappedComponents.values()) {
       pair.getFirst().disposeSWT();
     }
+
+    myMappedComponents.clear();
 
     for (Pair<SWTComponentDelegate<?>, Object> pair : myComponents) {
       pair.getFirst().disposeSWT();

@@ -46,11 +46,9 @@ public class DesktopSwtLayeredImageImpl implements Image, DesktopSwtImage{
   @Override
   public org.eclipse.swt.graphics.Image toSWTImage() {
     org.eclipse.swt.graphics.Image swtImage = new org.eclipse.swt.graphics.Image(null, getWidth(), getHeight());
+    swtImage.setBackground(new Color(0, 0, 0, 0));
 
     GC gc = new GC(swtImage);
-    gc.setBackground(new Color(0, 0, 0, 0));
-    gc.setAlpha(0);
-    gc.fillRectangle(0, 0, getWidth(), getHeight());
 
     for (Image image : myImages) {
       DesktopSwtImage desktopSwtImage = (DesktopSwtImage)image;

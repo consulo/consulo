@@ -18,6 +18,7 @@ package consulo.web.ui.ex;
 import com.intellij.ide.ui.UISettings;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.WindowInfo;
+import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.ToolWindowStripeButton;
 import consulo.ui.image.Image;
@@ -139,6 +140,12 @@ public class WebToolWindowStripeButtonImpl extends VaadinComponentDelegate<WebTo
   @Override
   public Vaadin createVaadinComponent() {
     return new Vaadin();
+  }
+
+  @Nonnull
+  @Override
+  public Component getComponent() {
+    return this;
   }
 
   @RequiredUIAccess

@@ -16,13 +16,19 @@
 package consulo.desktop.swt.wm.impl;
 
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.wm.IdeRootPaneNorthExtension;
 import com.intellij.openapi.wm.StatusBar;
 import com.intellij.openapi.wm.ex.IdeFrameEx;
+import com.intellij.openapi.wm.impl.status.widget.StatusBarWidgetsManager;
 import com.intellij.ui.BalloonLayout;
 import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
 import consulo.ui.Rectangle2D;
+import consulo.ui.UIAccess;
 import consulo.ui.Window;
+import consulo.ui.WindowOptions;
+import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -33,17 +39,67 @@ import java.io.File;
  * @since 29/04/2021
  */
 public class DesktopSwtIdeFrameImpl implements IdeFrameEx, Disposable {
-  public DesktopSwtIdeFrameImpl(Project project) {
+  private final Project myProject;
+  private final DesktopSwtRootView myRootView;
 
+  private Window myWindow;
+  private DesktopSwtStatusBarImpl myStatusBar;
+
+  public DesktopSwtIdeFrameImpl(Project project) {
+    myProject = project;
+    myRootView = new DesktopSwtRootView(project);
   }
 
-  @Nullable
+  @RequiredUIAccess
+  public void show() {
+    myWindow = Window.create(myProject.getName(), WindowOptions.builder().disableResize().build());
+
+    myStatusBar = new DesktopSwtStatusBarImpl(myProject.getApplication(), null);
+    Disposer.register(this, myStatusBar);
+    myStatusBar.install(this);
+
+    myRootView.setStatusBar(myStatusBar);
+
+    StatusBarWidgetsManager.getInstance(myProject).updateAllWidgets(UIAccess.current());
+
+    //com.vaadin.ui.Window vaadinWindow = (com.vaadin.ui.Window)TargetVaddin.to(myWindow);
+    //WebFocusManagerImpl.register(vaadinWindow);
+    //vaadinWindow.setWindowMode(WindowMode.MAXIMIZED);
+
+    myWindow.addListener(Window.CloseListener.class, () -> {
+      myWindow.close();
+
+      ProjectManager.getInstance().closeAndDisposeAsync(myProject, UIAccess.current());
+    });
+
+    myWindow.setContent(myRootView.getRootPanel().getComponent());
+
+    myRootView.update();
+
+    myWindow.show();
+  }
+
+  public DesktopSwtRootPaneImpl getRootPanel() {
+    return myRootView.getRootPanel();
+  }
+
+  @Nonnull
+  @Override
+  public Window getWindow() {
+    return myWindow;
+  }
+
+  public void close() {
+    myProject.getApplication().getLastUIAccess().give(() -> {
+      myWindow.close();
+    });
+  }
+
   @Override
   public StatusBar getStatusBar() {
-    return null;
+    return myStatusBar;
   }
 
-  @Nullable
   @Override
   public Rectangle2D suggestChildFrameBounds() {
     return null;
@@ -52,7 +108,7 @@ public class DesktopSwtIdeFrameImpl implements IdeFrameEx, Disposable {
   @Nullable
   @Override
   public Project getProject() {
-    return null;
+    return myProject;
   }
 
   @Override
@@ -70,12 +126,6 @@ public class DesktopSwtIdeFrameImpl implements IdeFrameEx, Disposable {
     return null;
   }
 
-  @Nonnull
-  @Override
-  public Window getWindow() {
-    return null;
-  }
-
   @Nullable
   @Override
   public BalloonLayout getBalloonLayout() {
@@ -84,10 +134,6 @@ public class DesktopSwtIdeFrameImpl implements IdeFrameEx, Disposable {
 
   @Override
   public void dispose() {
-
-  }
-
-  public void close() {
 
   }
 }

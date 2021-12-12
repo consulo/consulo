@@ -19,8 +19,11 @@ import consulo.ui.*;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.lang.BitUtil;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Monitor;
 import org.eclipse.swt.widgets.Shell;
 
 import javax.annotation.Nonnull;
@@ -53,6 +56,11 @@ public class DesktopSwtWindow extends SWTComponentDelegate<Shell> implements Win
     FillLayout layout = new FillLayout();
     layout.type = SWT.VERTICAL;
     myComponent.setLayout(layout);
+
+    Monitor primaryMonitor = Display.getCurrent().getPrimaryMonitor();
+    Rectangle screenSize = primaryMonitor.getBounds();
+
+    myComponent.setLocation((screenSize.width - myComponent.getBounds().width) / 2, (screenSize.height - myComponent.getBounds().height) / 2);
   }
 
   @Override

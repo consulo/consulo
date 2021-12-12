@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2017 consulo.io
+ * Copyright 2013-2021 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,28 +13,37 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui.ex;
+package consulo.desktop.swt.ui.impl;
 
-import com.intellij.openapi.wm.WindowInfo;
-import consulo.disposer.Disposable;
-import consulo.ui.Component;
+import consulo.ui.MenuBar;
+import consulo.ui.MenuItem;
 import consulo.ui.annotation.RequiredUIAccess;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.Shell;
 
 import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
- * @since 12-Oct-17
+ * @since 12/12/2021
  */
-public interface ToolWindowStripeButton extends Disposable {
-  @Nonnull
-  WindowInfo getWindowInfo();
+public class DesktopSwtMenuBar extends SWTComponentDelegate<Menu> implements MenuBar {
+  @Override
+  protected Menu createSWT(Composite parent) {
+    return new Menu((Shell)parent, SWT.MENU);
+  }
 
-  void apply(@Nonnull WindowInfo windowInfo);
+  @Override
+  public void clear() {
+
+  }
 
   @RequiredUIAccess
-  void updatePresentation();
-
   @Nonnull
-  Component getComponent();
+  @Override
+  public MenuBar add(@Nonnull MenuItem menuItem) {
+    return this;
+  }
 }

@@ -13,8 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.desktop.swt.ui.impl;
+package consulo.desktop.swt.ui.impl.layout;
 
+import consulo.desktop.swt.ui.impl.SWTComponentDelegate;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.DockLayout;
@@ -78,7 +79,7 @@ public class DesktopSwtDockLayoutImpl extends SWTComponentDelegate<Composite> im
     left.setLayout(new FillLayout());
     left.setLayoutData(new GridData(GridData.FILL_VERTICAL));
 
-    if(myLeftComponent != null) {
+    if (myLeftComponent != null) {
       ((SWTComponentDelegate)myLeftComponent).bind(left, null);
     }
 
@@ -86,7 +87,7 @@ public class DesktopSwtDockLayoutImpl extends SWTComponentDelegate<Composite> im
     myCenterComposite.setLayout(new FillLayout());
     myCenterComposite.setLayoutData(new GridData(GridData.FILL_BOTH));
 
-    if(myCenterComponent != null) {
+    if (myCenterComponent != null) {
       ((SWTComponentDelegate)myCenterComponent).bind(myCenterComposite, null);
     }
 
@@ -112,11 +113,39 @@ public class DesktopSwtDockLayoutImpl extends SWTComponentDelegate<Composite> im
     }
   }
 
+  @RequiredUIAccess
+  @Override
+  public void removeAll() {
+    if (myLeftComponent != null) {
+      myLeftComponent.disposeSWT();
+    }
+
+    if (myRightComponent != null) {
+      myRightComponent.disposeSWT();
+      myLeftComponent = null;
+    }
+
+    if (myCenterComponent != null) {
+      myCenterComponent.disposeSWT();
+      myCenterComponent = null;
+    }
+
+    if (myTopComponent != null) {
+      myTopComponent.disposeSWT();
+      myTopComponent = null;
+    }
+
+    if (myBottomComponent != null) {
+      myBottomComponent.disposeSWT();
+      myBottomComponent = null;
+    }
+  }
+
   @Override
   public void disposeSWT() {
     super.disposeSWT();
 
-    if(myCenterComponent != null) {
+    if (myCenterComponent != null) {
       myCenterComponent.disposeSWT();
     }
   }
@@ -142,11 +171,11 @@ public class DesktopSwtDockLayoutImpl extends SWTComponentDelegate<Composite> im
   @Override
   public DockLayout center(@Nonnull Component component) {
     SWTComponentDelegate old = myCenterComponent;
-    if(old != null) {
+    if (old != null) {
       old.setParent(null);
     }
     myCenterComponent = (SWTComponentDelegate)component;
-    if(myCenterComposite != null) {
+    if (myCenterComposite != null) {
       myCenterComponent.bind(myCenterComposite, null);
       myCenterComposite.layout(true, true);
     }

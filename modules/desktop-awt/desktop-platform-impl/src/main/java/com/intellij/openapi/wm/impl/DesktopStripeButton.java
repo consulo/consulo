@@ -112,6 +112,12 @@ public final class DesktopStripeButton extends AnchoredButton implements ActionL
     tooltip.installOn(this);
   }
 
+  @Nonnull
+  @Override
+  public consulo.ui.Component getComponent() {
+    throw new UnsupportedOperationException();
+  }
+
   /**
    * We are using the trick here: the method does all things that super method does
    * excepting firing of the MNEMONIC_CHANGED_PROPERTY event. After that mnemonic

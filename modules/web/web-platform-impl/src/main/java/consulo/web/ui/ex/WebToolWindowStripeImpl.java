@@ -86,10 +86,10 @@ public class WebToolWindowStripeImpl extends VaadinComponentDelegate<WebToolWind
     getVaadinComponent().markAsDirtyRecursive();
   }
 
-  public void addButton(WebToolWindowStripeButtonImpl button, Comparator<ToolWindowStripeButton> comparator) {
+  public void addButton(ToolWindowStripeButton button, Comparator<ToolWindowStripeButton> comparator) {
     Vaadin vaadinComponent = getVaadinComponent();
 
-    vaadinComponent.myButtons.add(TargetVaddin.to(button));
+    vaadinComponent.myButtons.add(TargetVaddin.to(button.getComponent()));
 
     vaadinComponent.myButtons.sort((o1, o2) -> {
       ToolWindowStripeButton v1 = (ToolWindowStripeButton)TargetVaddin.from(o1);
@@ -97,6 +97,6 @@ public class WebToolWindowStripeImpl extends VaadinComponentDelegate<WebToolWind
       return comparator.compare(v1, v2);
     });
 
-    vaadinComponent.addComponent(TargetVaddin.to(button));
+    vaadinComponent.addComponent(TargetVaddin.to(button.getComponent()));
   }
 }
