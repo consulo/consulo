@@ -83,7 +83,6 @@ import consulo.editor.internal.EditorInternal;
 import consulo.fileEditor.impl.EditorsSplitters;
 import consulo.logging.Logger;
 import consulo.ui.color.ColorValue;
-import consulo.ui.util.ColorValueUtil;
 import consulo.util.dataholder.Key;
 import kava.beans.PropertyChangeEvent;
 import kava.beans.PropertyChangeListener;
@@ -96,7 +95,6 @@ import javax.annotation.Nullable;
 import javax.swing.Timer;
 import javax.swing.*;
 import javax.swing.border.Border;
-import javax.swing.plaf.ScrollBarUI;
 import javax.swing.plaf.ScrollPaneUI;
 import java.awt.*;
 import java.awt.datatransfer.DataFlavor;
@@ -168,7 +166,7 @@ public final class DesktopEditorImpl extends CodeEditorBase implements EditorInt
   }
 
   @Nonnull
-  private final MyScrollBar myVerticalScrollBar;
+  private final MyVerticalScrollBar myVerticalScrollBar;
 
   @Nonnull
   private final CaretCursor myCaretCursor;
@@ -372,8 +370,7 @@ public final class DesktopEditorImpl extends CodeEditorBase implements EditorInt
     new FoldingPopupManager(this);
 
     myEditorComponent = new EditorComponentImpl(this);
-    myVerticalScrollBar = (MyScrollBar)myScrollPane.getVerticalScrollBar();
-    if (shouldScrollBarBeOpaque()) myVerticalScrollBar.setOpaque(true);
+    myVerticalScrollBar = (MyVerticalScrollBar)myScrollPane.getVerticalScrollBar();
     myPanel = new JPanel(new BorderLayout());
 
     getMarkupModel().updateUI();
@@ -580,36 +577,6 @@ public final class DesktopEditorImpl extends CodeEditorBase implements EditorInt
         }, ModalityState.any());
       }
     }
-  }
-
-  /**
-   * This method is intended to control a blit-accelerated scrolling, because transparent scrollbars suppress it.
-   * Blit-acceleration copies as much of the rendered area as possible and then repaints only newly exposed region.
-   * It is possible to disable blit-acceleration using by the registry key {@code editor.transparent.scrollbar=true}.
-   * Also, when there's a background image, blit-acceleration cannot be used (because of the static overlay).
-   * In such cases this method returns {@code false} to use transparent scrollbars as designed.
-   * Enabled blit-acceleration improves scrolling performance and reduces CPU usage
-   * (especially if drawing is compute-intensive).
-   * <p>
-   * To have both the hardware acceleration and the background image
-   * we need to completely redesign JViewport machinery to support independent layers,
-   * which is (probably) possible, but it's a rather cumbersome task.
-   * Smooth scrolling still works event without the blit-acceleration,
-   * but with suboptimal performance and CPU usage.
-   *
-   * @return {@code true} if a scrollbar should be opaque, {@code false} otherwise
-   */
-  boolean shouldScrollBarBeOpaque() {
-    return !myBackgroundImageSet && !Registry.is("editor.transparent.scrollbar");
-  }
-
-  @Nonnull
-  static Color adjustThumbColor(@Nonnull Color base, boolean dark) {
-    return dark ? ColorUtil.withAlpha(ColorUtil.shift(base, 1.35), 0.5) : ColorUtil.withAlpha(ColorUtil.shift(base, 0.68), 0.4);
-  }
-
-  boolean isDarkEnough() {
-    return ColorValueUtil.isDark(getBackgroundColor());
   }
 
   private void repaintCaretRegion(CaretEvent e) {
@@ -2521,52 +2488,18 @@ public final class DesktopEditorImpl extends CodeEditorBase implements EditorInt
     }
   }
 
-  private static void updateOpaque(JScrollBar bar) {
-    if (bar instanceof OpaqueAwareScrollBar) {
-      bar.setOpaque(((OpaqueAwareScrollBar)bar).myOpaque);
-    }
-  }
-
-  private class OpaqueAwareScrollBar extends JBScrollBar {
-    private boolean myOpaque;
-
-    private OpaqueAwareScrollBar(@JdkConstants.AdjustableOrientation int orientation) {
+  private class MyHorizontalScrollBar extends JBScrollBar {
+    private MyHorizontalScrollBar(@JdkConstants.AdjustableOrientation int orientation) {
       super(orientation);
       UIUtil.putClientProperty(this, EditorColorKey.FUNCTION_KEY, key -> getColorsScheme().getColor(key));
-      addPropertyChangeListener("opaque", event -> {
-        revalidate();
-        repaint();
-      });
-    }
-
-    @Override
-    public void setOpaque(boolean opaque) {
-      myOpaque = opaque;
-      super.setOpaque(opaque || shouldScrollBarBeOpaque());
-    }
-
-    @Override
-    public boolean isOptimizedDrawingEnabled() {
-      return !myBackgroundImageSet;
     }
   }
 
-  class MyScrollBar extends JBScrollBar implements IdeGlassPane.TopComponent {
+  class MyVerticalScrollBar extends JBScrollBar implements IdeGlassPane.TopComponent {
     private Consumer<Graphics> myRepaintCallback;
 
-    private MyScrollBar(@JdkConstants.AdjustableOrientation int orientation) {
+    private MyVerticalScrollBar(@JdkConstants.AdjustableOrientation int orientation) {
       super(orientation);
-    }
-
-    @Override
-    public boolean canBePreprocessed(MouseEvent e) {
-      return JBScrollPane.canBePreprocessed(e, this);
-    }
-
-    @Override
-    public void setUI(ScrollBarUI ui) {
-      super.setUI(ui);
-      setOpaque(false);
     }
 
     @Override
@@ -2575,11 +2508,6 @@ public final class DesktopEditorImpl extends CodeEditorBase implements EditorInt
       if (myRepaintCallback != null) {
         myRepaintCallback.consume(g);
       }
-    }
-
-    @Override
-    public boolean isOpaque() {
-      return true;
     }
 
     @Override
@@ -2637,7 +2565,7 @@ public final class DesktopEditorImpl extends CodeEditorBase implements EditorInt
   }
 
   @Nonnull
-  public MyScrollBar getVerticalScrollBar() {
+  public MyVerticalScrollBar getVerticalScrollBar() {
     return myVerticalScrollBar;
   }
 
@@ -2646,8 +2574,8 @@ public final class DesktopEditorImpl extends CodeEditorBase implements EditorInt
   }
 
   @Nonnull
-  MyScrollBar getHorizontalScrollBar() {
-    return (MyScrollBar)myScrollPane.getHorizontalScrollBar();
+  MyVerticalScrollBar getHorizontalScrollBar() {
+    return (MyVerticalScrollBar)myScrollPane.getHorizontalScrollBar();
   }
 
   @MouseSelectionState
@@ -3827,13 +3755,13 @@ public final class DesktopEditorImpl extends CodeEditorBase implements EditorInt
     @Nonnull
     @Override
     public JScrollBar createHorizontalScrollBar() {
-      return new OpaqueAwareScrollBar(Adjustable.HORIZONTAL);
+      return new MyHorizontalScrollBar(Adjustable.HORIZONTAL);
     }
 
     @Nonnull
     @Override
     public JScrollBar createVerticalScrollBar() {
-      return new MyScrollBar(Adjustable.VERTICAL);
+      return new MyVerticalScrollBar(Adjustable.VERTICAL);
     }
 
     @Override

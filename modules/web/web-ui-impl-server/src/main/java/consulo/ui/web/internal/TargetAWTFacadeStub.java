@@ -66,8 +66,7 @@ public class TargetAWTFacadeStub implements TargetAWTFacade {
   @Nonnull
   @Override
   public Color to(@Nonnull RGBColor color) {
-    int alpha = (int)color.getAlpha() * 255;
-    return new java.awt.Color(color.getRed(), color.getGreen(), color.getBlue(), alpha);
+    return new java.awt.Color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
   }
 
   @Override
@@ -110,7 +109,7 @@ public class TargetAWTFacadeStub implements TargetAWTFacade {
     if(color == null) {
       return null;
     }
-    return new RGBColor(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha() / 255f);
+    return new RGBColor(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
   }
 
   @Override

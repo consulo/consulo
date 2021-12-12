@@ -27,8 +27,8 @@ import com.intellij.psi.codeStyle.arrangement.model.ArrangementAtomMatchConditio
 import com.intellij.psi.codeStyle.arrangement.std.ArrangementStandardSettingsManager;
 import com.intellij.psi.codeStyle.arrangement.std.ArrangementUiComponent;
 import com.intellij.psi.codeStyle.arrangement.std.StdArrangementTokens;
+import com.intellij.ui.ComponentUtil;
 import com.intellij.ui.IdeBorderFactory;
-import com.intellij.ui.components.JBScrollPane;
 import com.intellij.ui.table.JBTable;
 import com.intellij.util.ui.AbstractTableCellEditor;
 import consulo.util.collection.primitive.ints.IntList;
@@ -384,7 +384,7 @@ public class ArrangementMatchingRulesControl extends JBTable {
     myEditorRow = rowToEdit + 1;
     ArrangementEditorComponent editorComponent = new ArrangementEditorComponent(this, myEditorRow, editor);
     int width = getBounds().width;
-    JScrollPane scrollPane = JBScrollPane.findScrollPane(getParent());
+    JScrollPane scrollPane = ComponentUtil.getScrollPane(getParent());
     if (scrollPane != null) {
       width -= scrollPane.getVerticalScrollBar().getWidth();
     }

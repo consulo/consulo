@@ -29,9 +29,9 @@ import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.ui.ColoredListCellRenderer;
+import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.ui.components.JBList;
-import com.intellij.ui.components.JBScrollPane;
 import consulo.logging.Logger;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -350,7 +350,7 @@ public class RunConfigurationBeforeRunProvider extends BeforeRunTaskProvider<Run
           }
         }
       });
-      return new JBScrollPane(myJBList);
+      return ScrollPaneFactory.createScrollPane(myJBList);
     }
 
     public RunnerAndConfigurationSettings getSelectedSettings() {

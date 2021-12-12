@@ -27,16 +27,14 @@ import consulo.ui.Component;
 import consulo.ui.Window;
 import consulo.ui.*;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.color.ColorValue;
+import consulo.ui.color.RGBColor;
 import consulo.ui.cursor.StandardCursors;
 import consulo.ui.desktop.internal.DesktopFontImpl;
 import consulo.ui.desktop.internal.image.libraryImage.DesktopImageKeyImpl;
 import consulo.ui.desktop.internal.window.WindowOverAWTWindow;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageKey;
-import consulo.ui.color.ColorValue;
-import consulo.ui.color.RGBColor;
-import consulo.ui.Rectangle2D;
-import consulo.ui.Size;
 import org.jetbrains.annotations.Contract;
 
 import javax.annotation.Nonnull;
@@ -70,7 +68,7 @@ public class TargetAWTFacadeImpl implements TargetAWTFacade {
   private StubWindow mySharedOwnerFrame;
 
   public TargetAWTFacadeImpl() {
-    if(!GraphicsEnvironment.isHeadless()) {
+    if (!GraphicsEnvironment.isHeadless()) {
       JDialog stubDialog = new JDialog((Frame)null);
       java.awt.Window sharedOwnerFrame = stubDialog.getOwner();
       // of dialog have owner - we need stub it
@@ -95,8 +93,7 @@ public class TargetAWTFacadeImpl implements TargetAWTFacade {
   @Override
   @Nonnull
   public java.awt.Color to(@Nonnull RGBColor color) {
-    int alpha = (int)color.getAlpha() * 255;
-    return new java.awt.Color(color.getRed(), color.getGreen(), color.getBlue(), alpha);
+    return new java.awt.Color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
   }
 
   @Override
@@ -125,10 +122,10 @@ public class TargetAWTFacadeImpl implements TargetAWTFacade {
       return ((ToSwingComponentWrapper)component).toAWTComponent();
     }
 
-    if(component instanceof ToSwingWindowWrapper) {
+    if (component instanceof ToSwingWindowWrapper) {
       return ((ToSwingWindowWrapper)component).toAWTWindow();
     }
-    
+
     throw new IllegalArgumentException(component + " is not SwingComponentWrapper or ToSwingWindowWrapper");
   }
 
@@ -156,7 +153,7 @@ public class TargetAWTFacadeImpl implements TargetAWTFacade {
       return ((ToSwingWindowWrapper)window).toAWTWindow();
     }
 
-    if(window == mySharedOwnerFrame) {
+    if (window == mySharedOwnerFrame) {
       return mySharedOwnerFrame.toAWTWindow();
     }
     throw new IllegalArgumentException(window + " is not SwingWindowWrapper");
@@ -177,8 +174,8 @@ public class TargetAWTFacadeImpl implements TargetAWTFacade {
       return ((FromSwingWindowWrapper)window).toUIWindow();
     }
 
-    if(mySharedOwnerFrame != null) {
-      if(mySharedOwnerFrame.toAWTWindow() == window) {
+    if (mySharedOwnerFrame != null) {
+      if (mySharedOwnerFrame.toAWTWindow() == window) {
         return mySharedOwnerFrame;
       }
     }
@@ -202,9 +199,9 @@ public class TargetAWTFacadeImpl implements TargetAWTFacade {
     StringBuilder builder = new StringBuilder();
     builder.append("Window class: ");
     builder.append(window.getClass().getName());
-    if(window instanceof RootPaneContainer) {
+    if (window instanceof RootPaneContainer) {
       JRootPane rootPane = ((RootPaneContainer)window).getRootPane();
-      if(rootPane != null) {
+      if (rootPane != null) {
         builder.append(", rootPane: ");
         builder.append(rootPane.getClass().getName());
         builder.append("/");
@@ -271,7 +268,7 @@ public class TargetAWTFacadeImpl implements TargetAWTFacade {
   @Nonnull
   @Override
   public Font to(@Nonnull consulo.ui.font.Font font) {
-    if(font instanceof DesktopFontImpl) {
+    if (font instanceof DesktopFontImpl) {
       return ((DesktopFontImpl)font).getFont();
     }
     throw new UnsupportedOperationException(font + " unsupported");
@@ -285,7 +282,7 @@ public class TargetAWTFacadeImpl implements TargetAWTFacade {
 
   @Override
   public Cursor to(consulo.ui.cursor.Cursor cursor) {
-    if(cursor instanceof StandardCursors systemCursor) {
+    if (cursor instanceof StandardCursors systemCursor) {
       switch (systemCursor) {
         case ARROW:
           return Cursor.getDefaultCursor();
@@ -304,7 +301,7 @@ public class TargetAWTFacadeImpl implements TargetAWTFacade {
 
   @Override
   public consulo.ui.cursor.Cursor from(Cursor cursor) {
-    if(cursor == null) {
+    if (cursor == null) {
       return null;
     }
 

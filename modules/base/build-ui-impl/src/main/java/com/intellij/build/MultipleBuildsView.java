@@ -16,10 +16,10 @@ import com.intellij.openapi.ui.OnePixelDivider;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.ui.OnePixelSplitter;
+import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.ui.SimpleColoredComponent;
 import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.ui.components.JBList;
-import com.intellij.ui.components.JBScrollPane;
 import com.intellij.ui.content.Content;
 import com.intellij.ui.content.impl.ContentImpl;
 import com.intellij.util.Alarm;
@@ -186,10 +186,7 @@ public class MultipleBuildsView implements BuildProgressListener, Disposable {
           myViewManager.configureToolbar(myToolbarActions, this, view);
         }
         if (myBuildsList.getModel().getSize() > 1) {
-          JBScrollPane scrollPane = new JBScrollPane();
-          scrollPane.setBorder(JBUI.Borders.empty());
-          scrollPane.setViewportView(myBuildsList);
-          myThreeComponentsSplitter.setFirstComponent(scrollPane);
+          myThreeComponentsSplitter.setFirstComponent(ScrollPaneFactory.createScrollPane(myBuildsList, true));
           myBuildsList.setVisible(true);
           myBuildsList.setSelectedIndex(0);
 

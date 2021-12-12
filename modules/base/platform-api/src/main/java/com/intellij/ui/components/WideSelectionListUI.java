@@ -3,10 +3,11 @@ package com.intellij.ui.components;
 
 import com.intellij.openapi.util.ColoredItem;
 import com.intellij.ui.BackgroundSupplier;
+import com.intellij.ui.ComponentUtil;
 import com.intellij.ui.list.ListCellBackgroundSupplier;
 import com.intellij.util.ui.UIUtil;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
@@ -107,7 +108,7 @@ public final class WideSelectionListUI extends BasicListUI {
     if (bounds != null && index1 == index2 && list instanceof JBList && JList.VERTICAL == list.getLayoutOrientation()) {
       if (((JBList<?>)list).getExpandableItemsHandler().getExpandedItems().contains(index1)) {
         // increase paint area for list item with shown extendable popup
-        JScrollPane pane = JBScrollPane.findScrollPane(list);
+        JScrollPane pane = ComponentUtil.getScrollPane(list);
         JScrollBar bar = pane == null ? null : pane.getVerticalScrollBar();
         if (bar != null && !bar.isOpaque()) bounds.width += bar.getWidth();
       }

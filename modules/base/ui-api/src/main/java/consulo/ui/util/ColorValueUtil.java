@@ -90,7 +90,7 @@ public class ColorValueUtil {
     int r = rgb.getRed();
     int g = rgb.getGreen();
     int b = rgb.getBlue();
-    float alpha = rgb.getAlpha();
+    int alpha = rgb.getAlpha();
 
     /* From 2D group:
      * 1. black.brighter() should return grey

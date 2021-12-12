@@ -23,7 +23,7 @@ import com.intellij.openapi.util.Comparing;
 import com.intellij.ui.CheckboxTreeNoPolicy;
 import com.intellij.ui.CheckedTreeNode;
 import com.intellij.ui.OnePixelSplitter;
-import com.intellij.ui.components.JBScrollPane;
+import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.tree.TreeUtil;
 import consulo.awt.TargetAWT;
@@ -41,8 +41,8 @@ import consulo.roots.ui.configuration.extension.ExtensionCheckedTreeNode;
 import consulo.roots.ui.configuration.extension.ExtensionTreeCellRenderer;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.layout.Layout;
 import consulo.ui.border.BorderStyle;
+import consulo.ui.layout.Layout;
 import org.jetbrains.annotations.Nls;
 
 import javax.annotation.Nonnull;
@@ -152,7 +152,7 @@ public class ExtensionEditor extends ModuleElementsEditor {
 
     mySplitter.setFirstComponent(myTree);
 
-    rootPane.add(new JBScrollPane(mySplitter), BorderLayout.CENTER);
+    rootPane.add(ScrollPaneFactory.createScrollPane(mySplitter), BorderLayout.CENTER);
 
     return rootPane;
   }

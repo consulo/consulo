@@ -30,7 +30,7 @@ public final class RGBColor implements Serializable, ColorValue {
 
   @Nonnull
   public static RGBColor fromFloatValues(float r, float g, float b, float a) {
-    return new RGBColor((int)(r * 255 + 0.5), (int)(g * 255 + 0.5), (int)(b * 255 + 0.5), a);
+    return new RGBColor((int)(r * 255 + 0.5), (int)(g * 255 + 0.5), (int)(b * 255 + 0.5), (int)(b * 255 + 0.5));
   }
 
   @Nonnull
@@ -67,20 +67,24 @@ public final class RGBColor implements Serializable, ColorValue {
   private int myRed;
   private int myGreen;
   private int myBlue;
-  private float myAlpha;
+  private int myAlpha;
 
   private RGBColor() {
   }
 
-  public RGBColor(int red, int green, int blue) {
-    this(red, green, blue, 1f);
+  public RGBColor(int red, int green, int blue, float alpha) {
+    this(red, green, blue, Math.round(alpha * 255));
   }
 
-  public RGBColor(RGBColor color, float alpha) {
+  public RGBColor(int red, int green, int blue) {
+    this(red, green, blue, 255);
+  }
+
+  public RGBColor(RGBColor color, int alpha) {
     this(color.getRed(), color.getGreen(), color.getBlue(), alpha);
   }
 
-  public RGBColor(int red, int green, int blue, float alpha) {
+  public RGBColor(int red, int green, int blue, int alpha) {
     myRed = red;
     myGreen = green;
     myBlue = blue;
@@ -92,7 +96,7 @@ public final class RGBColor implements Serializable, ColorValue {
     values[0] = ((float)getRed()) / 255f;
     values[1] = ((float)getGreen()) / 255f;
     values[2] = ((float)getBlue()) / 255f;
-    values[3] = getAlpha();
+    values[3] = ((float)getAlpha()) / 255f;
     return values;
   }
 
@@ -114,13 +118,13 @@ public final class RGBColor implements Serializable, ColorValue {
     return myBlue;
   }
 
-  public float getAlpha() {
+  public int getAlpha() {
     return myAlpha;
   }
 
   @Nonnull
   @Override
-  public ColorValue withAlpha(float value) {
+  public ColorValue withAlpha(int value) {
     return new RGBColor(getRed(), getGreen(), getBlue(), value);
   }
 

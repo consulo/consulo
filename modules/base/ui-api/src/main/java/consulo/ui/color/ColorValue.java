@@ -39,7 +39,7 @@ public interface ColorValue {
 
       @Nonnull
       @Override
-      public ColorValue withAlpha(float value) {
+      public ColorValue withAlpha(int value) {
         throw new UnsupportedOperationException(errorMessage);
       }
     };
@@ -50,6 +50,11 @@ public interface ColorValue {
 
   @Nonnull
   default ColorValue withAlpha(float value) {
+    return new WithAlphaColorValue(this, (int)(value * 255 + 0.5f));
+  }
+
+  @Nonnull
+  default ColorValue withAlpha(int value) {
     return new WithAlphaColorValue(this, value);
   }
 }

@@ -3,11 +3,13 @@ package com.intellij.ui;
 
 import consulo.util.dataholder.Key;
 import org.jetbrains.annotations.Contract;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Predicate;
 
 public final class ComponentUtil {
@@ -96,5 +98,54 @@ public final class ComponentUtil {
 
   public static <T> void putClientProperty(@Nonnull JComponent component, @Nonnull Key<T> key, T value) {
     component.putClientProperty(key, value);
+  }
+
+  /**
+   * @param component a view component of the requested scroll pane
+   * @return a scroll pane for the given component or {@code null} if none
+   */
+  @Nullable
+  public static JScrollPane getScrollPane(@Nullable Component component) {
+    return component instanceof JScrollBar ? getScrollPane((JScrollBar)component) : getScrollPane(component instanceof JViewport ? (JViewport)component : getViewport(component));
+  }
+
+  /**
+   * @param viewport a viewport of the requested scroll pane
+   * @return a scroll pane for the given viewport or {@code null} if none
+   */
+  @Nullable
+  public static JScrollPane getScrollPane(@Nullable JViewport viewport) {
+    Container parent = viewport == null ? null : viewport.getParent();
+    return parent instanceof JScrollPane ? (JScrollPane)parent : null;
+  }
+
+  /**
+   * @param component a view component of the requested viewport
+   * @return a viewport for the given component or {@code null} if none
+   */
+  @Nullable
+  public static JViewport getViewport(@Nullable Component component) {
+    Container parent = component == null ? null : SwingUtilities.getUnwrappedParent(component);
+    return parent instanceof JViewport ? (JViewport)parent : null;
+  }
+
+  @Nonnull
+  public static <T extends JComponent> java.util.List<T> findComponentsOfType(JComponent parent, @Nonnull Class<? extends T> cls) {
+    java.util.List<T> result = new ArrayList<>();
+    findComponentsOfType(parent, cls, result);
+    return result;
+  }
+
+  private static <T extends JComponent> void findComponentsOfType(JComponent parent, @Nonnull Class<T> cls, @Nonnull List<? super T> result) {
+    if (parent == null) return;
+    if (cls.isAssignableFrom(parent.getClass())) {
+      @SuppressWarnings("unchecked") final T t = (T)parent;
+      result.add(t);
+    }
+    for (Component c : parent.getComponents()) {
+      if (c instanceof JComponent) {
+        findComponentsOfType((JComponent)c, cls, result);
+      }
+    }
   }
 }

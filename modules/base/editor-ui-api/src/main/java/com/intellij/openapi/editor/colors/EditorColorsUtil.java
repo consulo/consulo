@@ -15,14 +15,18 @@
  */
 package com.intellij.openapi.editor.colors;
 
+import com.intellij.ui.JBColor;
 import com.intellij.util.ui.UIUtil;
 import consulo.awt.TargetAWT;
 import consulo.ui.color.ColorValue;
 import consulo.ui.util.ColorValueUtil;
-
+import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
+
 import javax.annotation.Nullable;
 import javax.swing.*;
+import java.awt.*;
+import java.util.function.Function;
 
 /**
  * @author gregsh
@@ -69,5 +73,18 @@ public class EditorColorsUtil {
       }
     }
     return globalScheme;
+  }
+
+  @Nonnull
+  @Deprecated
+  public static EditorColorKey createColorKey(@NonNls @Nonnull String name, @Nonnull Color defaultColor) {
+    return EditorColorKey.createColorKey(name, TargetAWT.from(JBColor.namedColor(name, defaultColor)));
+  }
+
+  @Nullable
+  public static ColorValue getColor(@Nullable Component component, @Nonnull EditorColorKey key) {
+    Function<EditorColorKey, ColorValue> function = UIUtil.getClientProperty(component, EditorColorKey.FUNCTION_KEY);
+    ColorValue color = function == null ? null : function.apply(key);
+    return color != null ? color : key.getDefaultColorValue();
   }
 }

@@ -42,9 +42,9 @@ import consulo.util.dataholder.Key;
 import org.intellij.lang.annotations.JdkConstants;
 import org.intellij.lang.annotations.Language;
 import org.jetbrains.annotations.NonNls;
+import javax.annotation.Nonnull;
 import org.jetbrains.annotations.TestOnly;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.Timer;
 import javax.swing.*;
@@ -53,11 +53,8 @@ import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import javax.swing.plaf.ButtonUI;
-import javax.swing.plaf.ComboBoxUI;
 import javax.swing.plaf.FontUIResource;
-import javax.swing.plaf.basic.BasicComboBoxUI;
 import javax.swing.plaf.basic.BasicRadioButtonUI;
-import javax.swing.plaf.basic.ComboPopup;
 import javax.swing.text.*;
 import javax.swing.text.html.HTMLDocument;
 import javax.swing.text.html.HTMLEditorKit;
@@ -77,7 +74,6 @@ import java.beans.PropertyChangeListener;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.ref.WeakReference;
-import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URL;
@@ -294,6 +290,7 @@ public class UIUtil {
   }
 
   public enum ComponentStyle {
+    LARGE,
     REGULAR,
     SMALL,
     MINI
@@ -3756,6 +3753,24 @@ public class UIUtil {
     if (window != null) {
       window.toFront();
     }
+  }
+
+  /**
+   * Calculates a component style from the corresponding client property.
+   * The key "JComponent.sizeVariant" is used by Apple's L&F to scale components.
+   *
+   * @param component a component to process
+   * @return a component style of the specified component
+   */
+  @Nonnull
+  public static ComponentStyle getComponentStyle(Component component) {
+    if (component instanceof JComponent) {
+      Object property = ((JComponent)component).getClientProperty("JComponent.sizeVariant");
+      if ("large".equals(property)) return ComponentStyle.LARGE;
+      if ("small".equals(property)) return ComponentStyle.SMALL;
+      if ("mini".equals(property)) return ComponentStyle.MINI;
+    }
+    return ComponentStyle.REGULAR;
   }
 
   @Nonnull

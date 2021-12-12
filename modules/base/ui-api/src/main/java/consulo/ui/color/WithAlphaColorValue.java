@@ -23,9 +23,9 @@ import javax.annotation.Nonnull;
  */
 final class WithAlphaColorValue implements ColorValue {
   private final ColorValue myColorValue;
-  private final float myAlpha;
+  private final int myAlpha;
 
-  public WithAlphaColorValue(ColorValue colorValue, float alpha) {
+  public WithAlphaColorValue(ColorValue colorValue, int alpha) {
     myColorValue = colorValue;
     myAlpha = alpha;
   }

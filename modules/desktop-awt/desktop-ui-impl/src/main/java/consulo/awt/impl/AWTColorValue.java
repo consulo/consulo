@@ -64,8 +64,7 @@ class AWTColorValue implements ColorValue {
   }
 
   private RGBColor convert() {
-    float[] components = myColor.getRGBComponents(null);
-    return new RGBColor(myColor.getRed(), myColor.getGreen(), myColor.getBlue(), components[3]);
+    return new RGBColor(myColor.getRed(), myColor.getGreen(), myColor.getBlue(), myColor.getAlpha());
   }
 
   @Override

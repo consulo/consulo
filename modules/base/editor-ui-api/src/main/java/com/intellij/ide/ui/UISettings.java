@@ -203,6 +203,8 @@ public class UISettings extends SimpleModificationTracker implements PersistentS
 
   public int RECENT_LOCATIONS_LIMIT = 25;
 
+  public boolean CONTRAST_SCROLLBARS = false;
+
   public boolean FULL_PATHS_IN_WINDOW_HEADER;
 
   private final ComponentTreeEventDispatcher<UISettingsListener> myDispatcher = ComponentTreeEventDispatcher.create(UISettingsListener.class);
@@ -607,6 +609,10 @@ public class UISettings extends SimpleModificationTracker implements PersistentS
 
   public boolean getFullPathsInWindowHeader() {
     return FULL_PATHS_IN_WINDOW_HEADER;
+  }
+
+  public boolean getUseContrastScrollbars() {
+    return false;
   }
 
   public int getAnimatedScrollingDuration() {

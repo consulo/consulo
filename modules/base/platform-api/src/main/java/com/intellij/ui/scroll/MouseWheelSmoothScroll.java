@@ -1,7 +1,9 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package com.intellij.util.ui;
+package com.intellij.ui.scroll;
 
 import com.intellij.ide.ui.UISettings;
+import com.intellij.util.ui.TimerUtil;
+
 import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;
@@ -17,8 +19,8 @@ import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
-import static com.intellij.util.ui.SmoothScrollUtil.getEventScrollBar;
-import static com.intellij.util.ui.SmoothScrollUtil.isHorizontalScroll;
+import static com.intellij.ui.scroll.SmoothScrollUtil.getEventScrollBar;
+import static com.intellij.ui.scroll.SmoothScrollUtil.isHorizontalScroll;
 import static java.lang.Math.*;
 
 public final class MouseWheelSmoothScroll {

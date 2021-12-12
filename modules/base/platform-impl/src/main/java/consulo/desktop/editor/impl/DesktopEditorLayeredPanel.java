@@ -18,7 +18,6 @@ package consulo.desktop.editor.impl;
 import com.intellij.openapi.editor.impl.DesktopEditorImpl;
 import com.intellij.openapi.editor.impl.DesktopEditorMarkupModelImpl;
 import com.intellij.ui.components.JBLayeredPane;
-import com.intellij.ui.components.JBScrollBar;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;
@@ -66,7 +65,7 @@ public class DesktopEditorLayeredPanel {
   }
 
   private int getAlignPadding() {
-    JBScrollBar bar = myEditor.getVerticalScrollBar();
+    JScrollBar bar = myEditor.getVerticalScrollBar();
 
     int padding = bar.getWidth();
     DesktopEditorMarkupModelImpl markupModel = (DesktopEditorMarkupModelImpl)myEditor.getMarkupModel();
