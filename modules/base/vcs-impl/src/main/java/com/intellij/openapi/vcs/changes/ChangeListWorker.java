@@ -15,7 +15,6 @@
  */
 package com.intellij.openapi.vcs.changes;
 
-import consulo.logging.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Couple;
@@ -31,9 +30,10 @@ import com.intellij.util.ThreeState;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.MultiMap;
 import com.intellij.vcsUtil.VcsUtil;
+import consulo.logging.Logger;
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
+import javax.annotation.Nullable;
 import java.io.File;
 import java.util.*;
 
@@ -158,7 +158,7 @@ public class ChangeListWorker implements ChangeListsWriteOperations {
     return myMap.get(name);
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   public LocalChangeList getChangeList(String id) {
     for (LocalChangeList changeList : myMap.values()) {
       if (changeList.getId().equals(id)) {
@@ -197,12 +197,12 @@ public class ChangeListWorker implements ChangeListsWriteOperations {
     return list != null;
   }
 
-  public LocalChangeList addChangeList(@Nonnull final String name, @Nullable final String comment, @javax.annotation.Nullable Object data) {
+  public LocalChangeList addChangeList(@Nonnull final String name, @Nullable final String comment, @Nullable Object data) {
     return addChangeList(null, name, comment, false, data);
   }
 
-  LocalChangeList addChangeList(String id, @Nonnull final String name, @javax.annotation.Nullable final String description, final boolean inUpdate,
-                                @javax.annotation.Nullable Object data) {
+  LocalChangeList addChangeList(String id, @Nonnull final String name, @Nullable final String description, final boolean inUpdate,
+                                @Nullable Object data) {
     final boolean contains = myMap.containsKey(name);
     LOG.assertTrue(! contains, "Attempt to create duplicate changelist " + name);
     final LocalChangeListImpl newList = (LocalChangeListImpl) LocalChangeList.createEmptyChangeList(myProject, name);
@@ -472,7 +472,21 @@ public class ChangeListWorker implements ChangeListsWriteOperations {
     return null;
   }
 
-  @javax.annotation.Nullable
+  @Nonnull
+  public List<LocalChangeList> getAffectedLists(@Nonnull Collection<? extends Change> changes) {
+    final List<LocalChangeList> result = new ArrayList<>();
+    for (LocalChangeList list : myMap.values()) {
+      for (Change change : list.getChanges()) {
+        if (changes.contains(change)) {
+          result.add(list);
+        }
+      }
+    }
+
+    return result;
+  }
+
+  @Nullable
   public Change getChangeForPath(final FilePath file) {
     for (LocalChangeList list : myMap.values()) {
       for (Change change : list.getChanges()) {

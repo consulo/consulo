@@ -20,11 +20,6 @@ public class ScratchesNamedScope extends NamedScope {
   public ScratchesNamedScope() {
     super(scratchesAndConsoles(), PlatformIconGroup.scopeScratches(), new AbstractPackageSet(scratchesAndConsoles()) {
       @Override
-      public boolean contains(@Nonnull VirtualFile file, NamedScopesHolder holder) {
-        return ScratchesNamedScope.contains(holder.getProject(), file);
-      }
-
-      @Override
       public boolean contains(@Nonnull VirtualFile file, @Nonnull Project project, @Nullable NamedScopesHolder holder) {
         return ScratchesNamedScope.contains(project, file);
       }

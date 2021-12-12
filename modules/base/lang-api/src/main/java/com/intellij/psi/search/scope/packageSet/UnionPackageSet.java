@@ -15,7 +15,9 @@
  */
 package com.intellij.psi.search.scope.packageSet;
 
+import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
+
 import javax.annotation.Nonnull;
 
 public class UnionPackageSet extends PackageSetBase {
@@ -28,9 +30,9 @@ public class UnionPackageSet extends PackageSetBase {
   }
 
   @Override
-  public boolean contains(VirtualFile file, NamedScopesHolder holder) {
-    return (myFirstSet instanceof PackageSetBase ? ((PackageSetBase)myFirstSet).contains(file, holder) : myFirstSet.contains(getPsiFile(file, holder), holder)) ||
-           (mySecondSet instanceof PackageSetBase ? ((PackageSetBase)mySecondSet).contains(file, holder) : mySecondSet.contains(getPsiFile(file, holder), holder));
+  public boolean contains(VirtualFile file, Project project, NamedScopesHolder holder) {
+    return (myFirstSet instanceof PackageSetBase ? ((PackageSetBase)myFirstSet).contains(file, project, holder) : myFirstSet.contains(getPsiFile(file, project), holder)) ||
+           (mySecondSet instanceof PackageSetBase ? ((PackageSetBase)mySecondSet).contains(file, project, holder) : mySecondSet.contains(getPsiFile(file, project), holder));
   }
 
   @Override

@@ -17,13 +17,16 @@ package com.intellij.openapi.vcs.changes;
 
 import consulo.ui.annotation.RequiredUIAccess;
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
+import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.List;
 
 public abstract class ChangeListManagerEx extends ChangeListManager {
   public abstract boolean isInUpdate();
+
+  @Nonnull
+  public abstract Collection<LocalChangeList> getAffectedLists(@Nonnull Collection<? extends Change> changes);
 
   @Nullable
   public abstract LocalChangeList getIdentityChangeList(@Nonnull Change change);

@@ -39,11 +39,6 @@ public class NonProjectFilesScope extends NamedScope {
   public NonProjectFilesScope() {
     super(NAME, new AbstractPackageSet("NonProject") {
       @Override
-      public boolean contains(VirtualFile file, NamedScopesHolder holder) {
-        return contains(file, holder.getProject(), holder);
-      }
-
-      @Override
       public boolean contains(VirtualFile file, @Nonnull Project project, @Nullable NamedScopesHolder holder) {
         // do not include fake-files e.g. fragment-editors, database consoles, etc.
         if (file.getFileSystem() instanceof NonPhysicalFileSystem) return false;

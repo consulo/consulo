@@ -17,12 +17,16 @@ package com.intellij.psi.search.scope;
 
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.IdeBundle;
+import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.TestSourcesFilter;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.search.scope.packageSet.AbstractPackageSet;
 import com.intellij.psi.search.scope.packageSet.NamedScope;
 import com.intellij.psi.search.scope.packageSet.NamedScopesHolder;
 import com.intellij.ui.Colored;
+import consulo.ui.image.Image;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author Konstantin Bulenkov
@@ -33,8 +37,8 @@ public class TestsScope extends NamedScope {
   public TestsScope() {
     super(NAME, AllIcons.Modules.TestRoot, new AbstractPackageSet("test:*..*") {
       @Override
-      public boolean contains(VirtualFile file, NamedScopesHolder holder) {
-        return file != null && TestSourcesFilter.isTestSources(file, holder.getProject());
+      public boolean contains(VirtualFile file, Project project, NamedScopesHolder holder) {
+        return file != null && TestSourcesFilter.isTestSources(file, project);
       }
     });
   }
@@ -42,5 +46,11 @@ public class TestsScope extends NamedScope {
   @Override
   public String getDefaultColorName() {
     return "Green";
+  }
+
+  @Nonnull
+  @Override
+  public Image getIconForProjectView() {
+    return createOffsetIcon();
   }
 }

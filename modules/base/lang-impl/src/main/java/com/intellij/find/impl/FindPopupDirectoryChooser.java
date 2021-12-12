@@ -22,6 +22,7 @@ import com.intellij.icons.AllIcons;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CustomShortcutSet;
 import com.intellij.openapi.actionSystem.ToggleAction;
+import com.intellij.openapi.actionSystem.impl.ActionToolbarImpl;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.fileChooser.FileChooser;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
@@ -87,26 +88,25 @@ public class FindPopupDirectoryChooser extends JPanel {
         FileChooserDescriptor descriptor = FileChooserDescriptorFactory.createSingleFolderDescriptor();
         descriptor.setUseApplicationDialog();
         myFindPopupPanel.getCanClose().set(false);
-        FileChooser.chooseFiles(descriptor, myProject, null, VfsUtil.findFileByIoFile(new File(getDirectory()), true),
-                                new FileChooser.FileChooserConsumer() {
-                                  @Override
-                                  public void consume(List<VirtualFile> files) {
-                                    ApplicationManager.getApplication().invokeLater(() -> {
-                                      myFindPopupPanel.getCanClose().set(true);
-                                      IdeFocusManager.getInstance(myProject).requestFocus(myDirectoryComboBox.getEditor().getEditorComponent(), true);
-                                      myHelper.getModel().setDirectoryName(files.get(0).getPresentableUrl());
-                                      myDirectoryComboBox.getEditor().setItem(files.get(0).getPresentableUrl());
-                                    });
-                                  }
+        FileChooser.chooseFiles(descriptor, myProject, null, VfsUtil.findFileByIoFile(new File(getDirectory()), true), new FileChooser.FileChooserConsumer() {
+          @Override
+          public void consume(List<VirtualFile> files) {
+            ApplicationManager.getApplication().invokeLater(() -> {
+              myFindPopupPanel.getCanClose().set(true);
+              IdeFocusManager.getInstance(myProject).requestFocus(myDirectoryComboBox.getEditor().getEditorComponent(), true);
+              myHelper.getModel().setDirectoryName(files.get(0).getPresentableUrl());
+              myDirectoryComboBox.getEditor().setItem(files.get(0).getPresentableUrl());
+            });
+          }
 
-                                  @Override
-                                  public void cancelled() {
-                                    ApplicationManager.getApplication().invokeLater(() -> {
-                                      myFindPopupPanel.getCanClose().set(true);
-                                      IdeFocusManager.getInstance(myProject).requestFocus(myDirectoryComboBox.getEditor().getEditorComponent(), true);
-                                    });
-                                  }
-                                });
+          @Override
+          public void cancelled() {
+            ApplicationManager.getApplication().invokeLater(() -> {
+              myFindPopupPanel.getCanClose().set(true);
+              IdeFocusManager.getInstance(myProject).requestFocus(myDirectoryComboBox.getEditor().getEditorComponent(), true);
+            });
+          }
+        });
       }
     });
 
@@ -117,7 +117,9 @@ public class FindPopupDirectoryChooser extends JPanel {
     add(myDirectoryComboBox, BorderLayout.CENTER);
     JPanel buttonsPanel = new JPanel(new GridLayout(1, 2));
     buttonsPanel.add(mySelectDirectoryButton);
-    buttonsPanel.add(FindPopupPanel.createToolbar(recursiveDirectoryAction).getComponent()); //check if toolbar updates the button with no delays
+    ActionToolbarImpl toolbar = FindPopupPanel.createToolbar(recursiveDirectoryAction);
+    toolbar.setTargetComponent(this);
+    buttonsPanel.add(toolbar.getComponent()); //check if toolbar updates the button with no delays
     add(buttonsPanel, BorderLayout.EAST);
   }
 

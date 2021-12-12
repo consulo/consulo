@@ -18,24 +18,38 @@ package com.intellij.psi.search.scope.packageSet;
 import com.intellij.icons.AllIcons;
 import consulo.localize.LocalizeValue;
 import consulo.ui.image.Image;
+import consulo.ui.image.ImageEffects;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public class NamedScope {
-  private final String myName;
+  private final String myScopeId;
+  @Nonnull
+  private final LocalizeValue myPresentableName;
   @Nonnull
   private final Image myIcon;
   private final PackageSet myValue;
 
-  public NamedScope(@Nonnull String name, @Nonnull Image icon, @Nullable PackageSet value) {
-    myName = name;
-    myIcon = icon;
-    myValue = value;
+  @Deprecated
+  public NamedScope(@Nonnull String scopeId, @Nonnull Image icon, @Nullable PackageSet value) {
+    this(scopeId, LocalizeValue.of(scopeId), icon, value);
   }
 
-  public NamedScope(@Nonnull String name, @Nullable PackageSet value) {
-    this(name, AllIcons.Ide.LocalScope, value);
+  @Deprecated
+  public NamedScope(@Nonnull String scopeId, @Nullable PackageSet value) {
+    this(scopeId, LocalizeValue.of(scopeId), AllIcons.Ide.LocalScope, value);
+  }
+
+  public NamedScope(@Nonnull String scopeId, @Nonnull LocalizeValue presentableName, @Nonnull Image icon, @Nullable PackageSet value) {
+    myScopeId = scopeId;
+    myIcon = icon;
+    myValue = value;
+    myPresentableName = presentableName;
+  }
+
+  public NamedScope(@Nonnull String scopeId, @Nonnull LocalizeValue presentableName, @Nullable PackageSet value) {
+    this(scopeId, presentableName, AllIcons.Ide.LocalScope, value);
   }
 
   @Nonnull
@@ -44,13 +58,23 @@ public class NamedScope {
   }
 
   @Nonnull
+  public Image getIconForProjectView() {
+    return myIcon;
+  }
+
+  @Nonnull
+  protected Image createOffsetIcon() {
+    return ImageEffects.appendRight(Image.empty(Image.DEFAULT_ICON_SIZE, Image.DEFAULT_ICON_SIZE), myIcon);
+  }
+
+  @Nonnull
   public String getScopeId() {
-    return myName;
+    return myScopeId;
   }
 
   @Nonnull
   public LocalizeValue getPresentableName() {
-    return LocalizeValue.of(myName);
+    return myPresentableName;
   }
 
   /**
@@ -58,7 +82,7 @@ public class NamedScope {
    */
   @Nonnull
   public String getName() {
-    return myName;
+    return myScopeId;
   }
 
   @Nullable
@@ -67,7 +91,7 @@ public class NamedScope {
   }
 
   public NamedScope createCopy() {
-    return new NamedScope(myName, myIcon, myValue != null ? myValue.createCopy() : null);
+    return new NamedScope(myScopeId, myPresentableName, myIcon, myValue != null ? myValue.createCopy() : null);
   }
 
   @Nullable
@@ -77,12 +101,12 @@ public class NamedScope {
 
   public static class UnnamedScope extends NamedScope {
     public UnnamedScope(@Nonnull PackageSet value) {
-      super(value.getText(), value);
+      super(value.getText(), LocalizeValue.of(value.getText()), value);
     }
   }
 
   @Override
   public String toString() {
-    return "Scope '" + myName + "'; set:" + (myValue == null ? null : myValue.getText());
+    return "Scope '" + myScopeId + "'; set:" + (myValue == null ? null : myValue.getText());
   }
 }

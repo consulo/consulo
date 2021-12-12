@@ -17,9 +17,10 @@ package com.intellij.psi.search.scope.packageSet;
 
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
+import consulo.localize.LocalizeValue;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.Iterator;
 import java.util.List;
 
@@ -59,7 +60,8 @@ public abstract class CustomScopesProviderEx implements CustomScopesProvider {
   }
 
   public static enum ScopePlace {
-    SETTING, ACTION
+    SETTING,
+    ACTION
   }
 
   @SuppressWarnings({"UtilityClassWithoutPrivateConstructor"})
@@ -67,9 +69,9 @@ public abstract class CustomScopesProviderEx implements CustomScopesProvider {
     @Nonnull
     private static final String TEXT = FilePatternPackageSet.SCOPE_FILE + ":*//*";
     @Nonnull
-    private static final NamedScope ALL = new NamedScope("All", new AbstractPackageSet(TEXT, 0) {
+    private static final NamedScope ALL = new NamedScope("All", LocalizeValue.localizeTODO("All"), new AbstractPackageSet(TEXT, 0) {
       @Override
-      public boolean contains(final VirtualFile file, NamedScopesHolder scopesHolder) {
+      public boolean contains(final VirtualFile file, Project project, NamedScopesHolder scopesHolder) {
         return true;
       }
     });

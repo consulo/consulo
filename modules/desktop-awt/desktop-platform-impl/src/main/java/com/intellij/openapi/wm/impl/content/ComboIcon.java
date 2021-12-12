@@ -15,52 +15,30 @@
  */
 package com.intellij.openapi.wm.impl.content;
 
-import com.intellij.icons.AllIcons;
-import consulo.awt.TargetAWT;
-import consulo.ui.image.Image;
-import consulo.ui.image.ImageState;
+import com.intellij.util.ui.JBUI;
+import consulo.desktop.ui.laf.idea.darcula.LafIconLookup;
 
+import javax.swing.*;
 import java.awt.*;
 
 public abstract class ComboIcon {
-  private final ImageState<Boolean> myState = new ImageState<>(Boolean.FALSE);
-
-  private final Image myImage;
+  private final Icon myImage;
 
   public ComboIcon() {
-    myImage = AllIcons.General.ArrowDown;
+    myImage = LafIconLookup.getIcon("treeExpanded", false, false, true);
   }
 
   public void paintIcon(final Component c, final Graphics g) {
-    myState.setState(isActive());
+    Rectangle bounds = c.getBounds();
 
-    final Rectangle moreRect = getIconRec();
-
-    if (moreRect == null) return;
-
-    int iconY = getIconY(moreRect);
-    int iconX = getIconX(moreRect);
-
-    TargetAWT.to(myImage).paintIcon(c, g, iconX, iconY);
-  }
-
-  protected int getIconX(final Rectangle iconRec) {
-    return iconRec.x + iconRec.width / 2 - getIconWidth() / 2;
+    // we need it move to center of label text, not label
+    int borderTop = JBUI.scale(2);
+    myImage.paintIcon(c, g, bounds.x + bounds.width - myImage.getIconWidth(), bounds.y + myImage.getIconHeight() / 2 + borderTop);
   }
 
   public int getIconWidth() {
-    return myImage.getWidth();
+    return myImage.getIconWidth();
   }
-
-  protected int getIconY(final Rectangle iconRec) {
-    return iconRec.y + iconRec.height / 2 - getIconHeight() / 2 + 1;
-  }
-
-  public int getIconHeight() {
-    return myImage.getHeight();
-  }
-
-  public abstract Rectangle getIconRec();
 
   public abstract boolean isActive();
 }

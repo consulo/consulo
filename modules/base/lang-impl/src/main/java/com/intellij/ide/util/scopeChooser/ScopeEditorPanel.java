@@ -36,7 +36,6 @@ import com.intellij.packageDependencies.ui.*;
 import com.intellij.psi.search.scope.packageSet.*;
 import com.intellij.ui.*;
 import com.intellij.ui.treeStructure.Tree;
-import com.intellij.util.Consumer;
 import com.intellij.util.concurrency.AppExecutorUtil;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.tree.TreeUtil;
@@ -112,7 +111,7 @@ public class ScopeEditorPanel {
     myTreeMarker = new Marker() {
       @Override
       public boolean isMarked(VirtualFile file) {
-        return myCurrentScope != null && (myCurrentScope instanceof PackageSetBase ? ((PackageSetBase)myCurrentScope).contains(file, myHolder)
+        return myCurrentScope != null && (myCurrentScope instanceof PackageSetBase ? ((PackageSetBase)myCurrentScope).contains(file, project, myHolder)
                                                                                    : myCurrentScope.contains(PackageSetBase.getPsiFile(file, myHolder), myHolder));
       }
     };

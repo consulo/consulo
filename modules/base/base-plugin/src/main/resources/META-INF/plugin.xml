@@ -1197,6 +1197,7 @@
     <extensionPoint name="runAnything.commandCustomizer" interface="com.intellij.ide.actions.runAnything.commands.RunAnythingCommandCustomizer"/>
 
     <extensionPoint name="searchScopesProvider" interface="com.intellij.psi.search.SearchScopeProvider"/>
+    <extensionPoint name="findInProjectExtension" interface="com.intellij.find.impl.FindInProjectExtension"/>
 
     <extensionPoint name="uiDecorator" interface="consulo.ui.decorator.UIDecorator"/>
 
@@ -2037,11 +2038,14 @@
     <customScopesProvider implementation="com.intellij.packageDependencies.TestScopeProvider"/>
     <customScopesProvider implementation="consulo.packageDependencies.ResourceScopeProvider"/>
     <customScopesProvider implementation="consulo.packageDependencies.TestResourceScopeProvider"/>
-    <customScopesProvider implementation="com.intellij.packageDependencies.ChangeListsScopesProvider" order="last"/>
+    <customScopesProvider implementation="com.intellij.vcs.changes.ChangeListsScopesProvider" order="last"/>
     <refactoring.elementListenerProvider implementation="com.intellij.packageDependencies.ui.RefactoringScopeElementListenerProvider"/>
 
     <searchScopesProvider implementation="com.intellij.psi.search.DefaultSearchScopeProviders$Favorites"/>
+    <searchScopesProvider implementation="com.intellij.vcs.changes.ChangeListsSearchScopeProvider"/>
     <searchScopesProvider implementation="com.intellij.psi.search.DefaultSearchScopeProviders$CustomNamed" order="last"/>
+
+    <findInProjectExtension implementation="com.intellij.vcs.changes.ChangeListsFindInProjectExtension"/>
 
     <highlightVisitor implementation="com.intellij.codeInsight.daemon.impl.DefaultHighlightVisitor"/>
     <projectService serviceImplementation="com.intellij.codeInsight.daemon.impl.CachedAnnotators"/>

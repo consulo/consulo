@@ -23,9 +23,9 @@ import com.intellij.problems.WolfTheProblemSolver;
 import com.intellij.psi.search.scope.NonProjectFilesScope;
 import com.intellij.psi.search.scope.ProjectFilesScope;
 import com.intellij.psi.search.scope.packageSet.*;
+import jakarta.inject.Inject;
 
 import javax.annotation.Nonnull;
-import jakarta.inject.Inject;
 import java.util.Arrays;
 import java.util.List;
 
@@ -50,9 +50,8 @@ public class DefaultScopesProvider extends CustomScopesProviderEx {
     final String text = FilePatternPackageSet.SCOPE_FILE + ":*//*";
     myProblemsScope = new NamedScope(IdeBundle.message("predefined.scope.problems.name"), new AbstractPackageSet(text) {
       @Override
-      public boolean contains(VirtualFile file, NamedScopesHolder holder) {
-        return holder.getProject() == myProject
-               && WolfTheProblemSolver.getInstance(myProject).isProblemFile(file);
+      public boolean contains(VirtualFile file, Project project, NamedScopesHolder holder) {
+        return project == myProject && WolfTheProblemSolver.getInstance(project).isProblemFile(file);
       }
     });
     myScopes = Arrays.asList(projectScope, getAllScope(), nonProjectScope, new ScratchesNamedScope());

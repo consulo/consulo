@@ -67,7 +67,6 @@ import com.intellij.ui.*;
 import com.intellij.util.EditSourceOnDoubleClickHandler;
 import com.intellij.util.Function;
 import com.intellij.util.OpenSourceUtil;
-import java.util.HashSet;
 import com.intellij.util.messages.MessageBusConnection;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
@@ -334,7 +333,7 @@ public class ScopeTreeViewPanel extends JPanel implements Disposable {
       @Override
       public boolean isMarked(VirtualFile file) {
         return packageSet != null &&
-               (packageSet instanceof PackageSetBase ? ((PackageSetBase)packageSet).contains(file, holder) : packageSet.contains(PackageSetBase.getPsiFile(file, holder), holder));
+               (packageSet instanceof PackageSetBase ? ((PackageSetBase)packageSet).contains(file, myProject, holder) : packageSet.contains(PackageSetBase.getPsiFile(file, myProject), holder));
       }
     }, settings);
     myTree.setPaintBusy(true);
@@ -809,7 +808,7 @@ public class ScopeTreeViewPanel extends JPanel implements Disposable {
         if (virtualFile != null) {
           final ProjectView projectView = ProjectView.getInstance(myProject);
           final NamedScopesHolder holder = NamedScopesHolder.getHolder(myProject, CURRENT_SCOPE_NAME, myDependencyValidationManager);
-          if (packageSet instanceof PackageSetBase && !((PackageSetBase)packageSet).contains(virtualFile, holder) || psiFile != null && !packageSet.contains(psiFile, holder)) {
+          if (packageSet instanceof PackageSetBase && !((PackageSetBase)packageSet).contains(virtualFile, myProject, holder) || psiFile != null && !packageSet.contains(psiFile, holder)) {
             projectView.changeView(ProjectViewPane.ID);
           }
           projectView.select(element, virtualFile, false);

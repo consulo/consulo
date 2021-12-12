@@ -17,12 +17,12 @@
 package com.intellij.openapi.vcs.changes;
 
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vcs.actions.VcsContextFactory;
 import com.intellij.openapi.vcs.VcsBundle;
-import javax.annotation.Nonnull;
+import com.intellij.openapi.vcs.actions.VcsContextFactory;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nullable;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.Collection;
 
 /**
@@ -52,7 +52,7 @@ public abstract class LocalChangeList implements Cloneable, ChangeList {
 
   public abstract void setName(@Nonnull String name);
 
-  @javax.annotation.Nullable
+  @Nullable
   public abstract String getComment();
 
   public abstract void setComment(@Nullable String comment);
@@ -73,5 +73,9 @@ public abstract class LocalChangeList implements Cloneable, ChangeList {
 
   public boolean hasDefaultName() {
     return DEFAULT_NAME.equals(getName());
+  }
+
+  public boolean isBlank() {
+    return hasDefaultName() && getData() == null;
   }
 }

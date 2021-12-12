@@ -10,14 +10,13 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.ColoredItem;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.packageDependencies.ChangeListsScopesProvider;
 import com.intellij.psi.search.scope.packageSet.NamedScope;
 import com.intellij.psi.search.scope.packageSet.NamedScopesHolder;
 import com.intellij.ui.FileColorManager;
 import com.intellij.util.TreeItem;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -73,26 +72,6 @@ public class DefaultSearchScopeProviders {
     }
   }
 
-  public static class ChangeLists implements SearchScopeProvider {
-    @Override
-    public String getDisplayName() {
-      return "Local Changes";
-    }
-
-    @Nonnull
-    @Override
-    public List<SearchScope> getSearchScopes(@Nonnull Project project) {
-      List<SearchScope> result = new ArrayList<>();
-      List<NamedScope> changeLists = ChangeListsScopesProvider.getInstance(project).getFilteredScopes();
-      if (!changeLists.isEmpty()) {
-        for (NamedScope changeListScope : changeLists) {
-          result.add(wrapNamedScope(project, changeListScope, false));
-        }
-      }
-      return result;
-    }
-  }
-
   public static class CustomNamed implements SearchScopeProvider {
     @Override
     public String getDisplayName() {
@@ -115,7 +94,7 @@ public class DefaultSearchScopeProviders {
   }
 
   @Nonnull
-  private static GlobalSearchScope wrapNamedScope(@Nonnull Project project, @Nonnull NamedScope namedScope, boolean colored) {
+  public static GlobalSearchScope wrapNamedScope(@Nonnull Project project, @Nonnull NamedScope namedScope, boolean colored) {
     GlobalSearchScope scope = GlobalSearchScopesCore.filterScope(project, namedScope);
     if (!colored && !(namedScope instanceof WeighedItem)) return scope;
     int weight = namedScope instanceof WeighedItem ? ((WeighedItem)namedScope).getWeight() : -1;

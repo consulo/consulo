@@ -15,28 +15,34 @@
  */
 package com.intellij.psi.search.scope.packageSet;
 
+import com.intellij.diagnostic.PluginException;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
 import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
+
 /**
  * User: anna
  */
 public abstract class PackageSetBase implements PackageSet {
   /**
-   * @see PackageSetBase#contains(VirtualFile, Project, NamedScopesHolder)
+   * @deprecated use {@link PackageSetBase#contains(VirtualFile, Project, NamedScopesHolder)} instead
    */
-  @Deprecated
-  public abstract boolean contains(VirtualFile file, NamedScopesHolder holder);
+  @Deprecated(forRemoval = true)
+  public boolean contains(@Nonnull VirtualFile file, NamedScopesHolder holder) {
+    return false;
+  }
 
-  public boolean contains(VirtualFile file, @Nonnull Project project, @javax.annotation.Nullable NamedScopesHolder holder) {
+  public boolean contains(VirtualFile file, @Nonnull Project project, @Nullable NamedScopesHolder holder) {
     return contains(file, holder);
   }
 
   @Override
   public boolean contains(@Nonnull PsiFile file, NamedScopesHolder holder) {
+    PluginException.reportDeprecatedDefault(getClass(), "contains(VirtualFile, Project, NamedScopesHolder)", "Need proper implementation");
     return contains(file.getVirtualFile(), file.getProject(), holder);
   }
 
@@ -44,12 +50,12 @@ public abstract class PackageSetBase implements PackageSet {
    * @see PackageSetBase#getPsiFile(com.intellij.openapi.vfs.VirtualFile, com.intellij.psi.search.scope.packageSet.NamedScopesHolder)
    */
   @Deprecated
-  @javax.annotation.Nullable
+  @Nullable
   public static PsiFile getPsiFile(VirtualFile file, NamedScopesHolder holder) {
     return PsiManager.getInstance(holder.getProject()).findFile(file);
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   public static PsiFile getPsiFile(@Nonnull VirtualFile file, @Nonnull Project project) {
     return PsiManager.getInstance(project).findFile(file);
   }

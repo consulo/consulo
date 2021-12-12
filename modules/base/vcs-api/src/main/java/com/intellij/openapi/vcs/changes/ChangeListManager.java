@@ -24,9 +24,9 @@ import com.intellij.openapi.vcs.FileStatus;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.Consumer;
 import com.intellij.util.ThreeState;
+import javax.annotation.Nonnull;
 import org.jetbrains.annotations.TestOnly;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.File;
 import java.util.Collection;
@@ -62,6 +62,12 @@ public abstract class ChangeListManager implements ChangeListModification {
 
   @Nonnull
   public abstract List<LocalChangeList> getChangeLists();
+
+  @Nonnull
+  public abstract List<LocalChangeList> getChangeLists(@Nonnull Change change);
+
+  @Nonnull
+  public abstract List<LocalChangeList> getChangeLists(@Nonnull VirtualFile file);
 
   public abstract List<File> getAffectedPaths();
 
@@ -175,4 +181,8 @@ public abstract class ChangeListManager implements ChangeListModification {
 
   @Nonnull
   public abstract ThreeState haveChangesUnder(@Nonnull VirtualFile vf);
+
+  public boolean areChangeListsEnabled() {
+    return true;
+  }
 }

@@ -15,7 +15,9 @@
  */
 package com.intellij.psi.search.scope.packageSet;
 
+import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
+
 import javax.annotation.Nonnull;
 
 /**
@@ -28,7 +30,7 @@ public class InvalidPackageSet extends AbstractPackageSet {
   }
 
   @Override
-  public boolean contains(VirtualFile file, NamedScopesHolder holder) {
+  public boolean contains(VirtualFile file, Project project, NamedScopesHolder holder) {
     return false;
   }
 }

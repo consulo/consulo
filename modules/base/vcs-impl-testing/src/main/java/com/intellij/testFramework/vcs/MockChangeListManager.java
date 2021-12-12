@@ -26,9 +26,9 @@ import com.intellij.util.ThreeState;
 import com.intellij.vcsUtil.VcsUtil;
 import consulo.ui.annotation.RequiredUIAccess;
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
+import javax.annotation.Nullable;
 import java.io.File;
 import java.util.*;
 
@@ -103,6 +103,18 @@ public class MockChangeListManager extends ChangeListManagerEx {
   @Override
   public List<LocalChangeList> getChangeLists() {
     return getChangeListsCopy();
+  }
+
+  @Nonnull
+  @Override
+  public List<LocalChangeList> getChangeLists(@Nonnull Change change) {
+    return List.of();
+  }
+
+  @Nonnull
+  @Override
+  public List<LocalChangeList> getChangeLists(@Nonnull VirtualFile file) {
+    return List.of();
   }
 
   @Override
@@ -379,6 +391,12 @@ public class MockChangeListManager extends ChangeListManagerEx {
   @Override
   public boolean isInUpdate() {
     throw new UnsupportedOperationException();
+  }
+
+  @Nonnull
+  @Override
+  public Collection<LocalChangeList> getAffectedLists(@Nonnull Collection<? extends Change> changes) {
+    return List.of();
   }
 
   @Nonnull

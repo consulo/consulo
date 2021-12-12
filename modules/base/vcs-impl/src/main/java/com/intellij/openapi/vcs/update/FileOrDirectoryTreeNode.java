@@ -42,7 +42,7 @@ import java.util.Map;
 public abstract class FileOrDirectoryTreeNode extends AbstractTreeNode implements VirtualFilePointerListener, Disposable {
   private static final Map<FileStatus, SimpleTextAttributes> myFileStatusToAttributeMap = new HashMap<FileStatus, SimpleTextAttributes>();
   private final SimpleTextAttributes myInvalidAttributes;
-  private final Project myProject;
+  protected final Project myProject;
   protected final File myFile;
   private final String myName;
 

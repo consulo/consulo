@@ -15,6 +15,7 @@
  */
 package com.intellij.psi.search.scope.packageSet;
 
+import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import javax.annotation.Nonnull;
 
@@ -26,12 +27,12 @@ public class NamedPackageSetReference extends PackageSetBase {
   }
 
   @Override
-  public boolean contains(VirtualFile file, NamedScopesHolder holder) {
+  public boolean contains(VirtualFile file, Project project, NamedScopesHolder holder) {
     final NamedScope scope = holder.getScope(myName);
     if (scope != null) {
       final PackageSet packageSet = scope.getValue();
       if (packageSet != null) {
-        return packageSet instanceof PackageSetBase ? ((PackageSetBase)packageSet).contains(file, holder) : packageSet.contains(getPsiFile(file, holder), holder);
+        return packageSet instanceof PackageSetBase ? ((PackageSetBase)packageSet).contains(file, project, holder) : packageSet.contains(getPsiFile(file, project), holder);
       }
     }
     return false;

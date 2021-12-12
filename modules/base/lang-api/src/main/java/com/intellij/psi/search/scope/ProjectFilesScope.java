@@ -33,11 +33,6 @@ public class ProjectFilesScope extends NamedScope {
   public ProjectFilesScope() {
     super(NAME, new AbstractPackageSet("ProjectFiles") {
       @Override
-      public boolean contains(VirtualFile file, NamedScopesHolder holder) {
-        return contains(file, holder.getProject(), holder);
-      }
-
-      @Override
       public boolean contains(VirtualFile file, @Nonnull Project project, @javax.annotation.Nullable NamedScopesHolder holder) {
         if (file == null) return false;
         final ProjectFileIndex fileIndex = ProjectRootManager.getInstance(project).getFileIndex();

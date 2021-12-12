@@ -72,11 +72,6 @@ public class ContentComboLabel extends BaseLabel {
 
   private final ComboIcon myComboIcon = new ComboIcon() {
     @Override
-    public Rectangle getIconRec() {
-      return new Rectangle(getWidth() - getIconWidth() - JBUI.scale(3), 0, getIconWidth(), getHeight());
-    }
-
-    @Override
     public boolean isActive() {
       return myUi.myWindow.isActive();
     }

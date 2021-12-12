@@ -17,6 +17,7 @@ package consulo.psi.search.scope;
 
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.IdeBundle;
+import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ProjectFileIndex;
 import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -24,6 +25,9 @@ import com.intellij.psi.search.scope.packageSet.AbstractPackageSet;
 import com.intellij.psi.search.scope.packageSet.NamedScope;
 import com.intellij.psi.search.scope.packageSet.NamedScopesHolder;
 import com.intellij.ui.Colored;
+import consulo.ui.image.Image;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -36,10 +40,16 @@ public class TestResourcesScope extends NamedScope {
   public TestResourcesScope() {
     super(NAME, AllIcons.Modules.TestResourcesRoot, new AbstractPackageSet("test-rsc:*..*") {
       @Override
-      public boolean contains(VirtualFile file, NamedScopesHolder holder) {
-        final ProjectFileIndex index = ProjectRootManager.getInstance(holder.getProject()).getFileIndex();
+      public boolean contains(VirtualFile file, Project project, NamedScopesHolder holder) {
+        final ProjectFileIndex index = ProjectRootManager.getInstance(project).getFileIndex();
         return file != null && index.isInTestResource(file);
       }
     });
+  }
+
+  @Nonnull
+  @Override
+  public Image getIconForProjectView() {
+    return createOffsetIcon();
   }
 }

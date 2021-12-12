@@ -18,6 +18,8 @@ package com.intellij.icons;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.image.Image;
 
+import javax.swing.*;
+
 /**
  * Better use PlatformIconGroup
  */
@@ -1046,6 +1048,16 @@ public class AllIcons {
 
   }
 
+  public static final class Scope {
+    /**
+     * 16x16
+     */
+    public static final Image ChangedFiles = PlatformIconGroup.scopeChangedFiles();
+    /**
+     * 16x16
+     */
+    public static final Image ChangedFilesAll = PlatformIconGroup.scopeChangedFilesAll();
+  }
 
   public static class Xml {
 

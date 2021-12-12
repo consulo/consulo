@@ -23,10 +23,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.ThrowableComputable;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vcs.AbstractVcs;
-import com.intellij.openapi.vcs.FilePath;
-import com.intellij.openapi.vcs.FileStatus;
-import com.intellij.openapi.vcs.ProjectLevelVcsManager;
+import com.intellij.openapi.vcs.*;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -38,8 +35,8 @@ import consulo.application.AccessRule;
 import consulo.util.collection.HashingStrategy;
 import consulo.util.collection.Sets;
 import consulo.util.dataholder.Key;
-
 import javax.annotation.Nonnull;
+
 import javax.annotation.Nullable;
 import java.io.File;
 import java.util.*;
@@ -81,13 +78,13 @@ public class ChangesUtil {
     return revision.getFile();
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   public static FilePath getBeforePath(@Nonnull Change change) {
     ContentRevision revision = change.getBeforeRevision();
     return revision == null ? null : revision.getFile();
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   public static FilePath getAfterPath(@Nonnull Change change) {
     ContentRevision revision = change.getAfterRevision();
     return revision == null ? null : revision.getFile();
@@ -105,12 +102,12 @@ public class ChangesUtil {
     return ContainerUtil.map2SetNotNull(changes, change -> getVcsForChange(change, project));
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   public static AbstractVcs getVcsForFile(@Nonnull VirtualFile file, @Nonnull Project project) {
     return ProjectLevelVcsManager.getInstance(project).getVcsFor(file);
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   public static AbstractVcs getVcsForFile(@Nonnull File file, @Nonnull Project project) {
     return ProjectLevelVcsManager.getInstance(project).getVcsFor(VcsUtil.getFilePath(file));
   }
@@ -164,8 +161,8 @@ public class ChangesUtil {
     return files.filter(file -> !file.isDirectory()).map(file -> new OpenFileDescriptor(project, file)).toArray(Navigatable[]::new);
   }
 
-  @javax.annotation.Nullable
-  public static ChangeList getChangeListIfOnlyOne(@Nonnull Project project, @javax.annotation.Nullable Change[] changes) {
+  @Nullable
+  public static ChangeList getChangeListIfOnlyOne(@Nonnull Project project, @Nullable Change[] changes) {
     ChangeListManager manager = ChangeListManager.getInstance(project);
     String changeListName = manager.getChangeListNameIfOnlyOne(changes);
 
@@ -202,7 +199,7 @@ public class ChangesUtil {
     return filePath;
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   public static VirtualFile findValidParentUnderReadAction(@Nonnull FilePath path) {
     VirtualFile file = path.getVirtualFile();
     return file != null ? file : getValidParentUnderReadAction(path);
@@ -222,7 +219,7 @@ public class ChangesUtil {
     return result;
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   private static VirtualFile getValidParentUnderReadAction(@Nonnull FilePath filePath) {
     ThrowableComputable<VirtualFile, RuntimeException> action = () -> {
       VirtualFile result = null;
@@ -239,7 +236,7 @@ public class ChangesUtil {
     return AccessRule.read(action);
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   public static String getProjectRelativePath(@Nonnull Project project, @Nullable File fileName) {
     if (fileName == null) return null;
     VirtualFile baseDir = project.getBaseDir();
@@ -269,7 +266,7 @@ public class ChangesUtil {
 
   @FunctionalInterface
   public interface VcsSeparator<T> {
-    @javax.annotation.Nullable
+    @Nullable
     AbstractVcs getVcsFor(@Nonnull T item);
   }
 
@@ -334,7 +331,7 @@ public class ChangesUtil {
   /**
    * Find common ancestor for changes (included both before and after files)
    */
-  @javax.annotation.Nullable
+  @Nullable
   public static File findCommonAncestor(@Nonnull Collection<Change> changes) {
     File ancestor = null;
     for (Change change : changes) {
@@ -351,10 +348,23 @@ public class ChangesUtil {
     return ancestor;
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   private static File getCommonBeforeAfterAncestor(@Nonnull Change change) {
     FilePath before = getBeforePath(change);
     FilePath after = getAfterPath(change);
     return before == null ? ObjectUtils.assertNotNull(after).getIOFile() : after == null ? before.getIOFile() : FileUtil.findAncestor(before.getIOFile(), after.getIOFile());
+  }
+
+  public static boolean hasMeaningfulChangelists(@Nonnull Project project) {
+    ChangeListManager changeListManager = ChangeListManager.getInstance(project);
+    if (!changeListManager.areChangeListsEnabled()) return false;
+
+    if (VcsApplicationSettings.getInstance().CREATE_CHANGELISTS_AUTOMATICALLY) return true;
+
+    List<LocalChangeList> changeLists = changeListManager.getChangeLists();
+    if (changeLists.size() != 1) return true;
+    if (!changeLists.get(0).isBlank()) return true;
+
+    return false;
   }
 }

@@ -18,7 +18,6 @@ package com.intellij.openapi.vcs.changes;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.components.*;
-import consulo.logging.Logger;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
@@ -52,15 +51,15 @@ import com.intellij.util.containers.MultiMap;
 import com.intellij.util.messages.Topic;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.vcsUtil.VcsUtil;
+import consulo.logging.Logger;
 import consulo.ui.annotation.RequiredUIAccess;
 import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import org.jdom.Element;
+import javax.annotation.Nonnull;
 import org.jetbrains.annotations.TestOnly;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import jakarta.inject.Singleton;
 import javax.swing.*;
 import java.io.File;
 import java.util.*;
@@ -753,10 +752,34 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Projec
     }
   }
 
+  @Nonnull
+  @Override
+  public List<LocalChangeList> getChangeLists(@Nonnull Change change) {
+    return getAffectedLists(Collections.singletonList(change));
+  }
+  
+  @Nonnull
+  @Override
+  public List<LocalChangeList> getChangeLists(@Nonnull VirtualFile file) {
+    synchronized (myDataLock) {
+      Change change = myWorker.getChangeForPath(VcsUtil.getFilePath(file));
+      if (change == null) return Collections.emptyList();
+      return getChangeLists(change);
+    }
+  }
+
   @Override
   public List<File> getAffectedPaths() {
     synchronized (myDataLock) {
       return myWorker.getAffectedPaths();
+    }
+  }
+
+  @Override
+  @Nonnull
+  public List<LocalChangeList> getAffectedLists(@Nonnull Collection<? extends Change> changes) {
+    synchronized (myDataLock) {
+      return myWorker.getAffectedLists(changes);
     }
   }
 

@@ -8,6 +8,7 @@ import com.intellij.icons.AllIcons;
 import com.intellij.ide.DataManager;
 import com.intellij.navigation.ItemPresentation;
 import com.intellij.openapi.actionSystem.*;
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ReadAction;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
@@ -113,25 +114,15 @@ public class FindInProjectUtil {
       }
     }
 
-    if (directoryName == null && module == null && project != null) {
-      ChangeList changeList = ArrayUtil.getFirstElement(dataContext.getData(VcsDataKeys.CHANGE_LISTS));
-      if (changeList == null) {
-        Change change = ArrayUtil.getFirstElement(dataContext.getData(VcsDataKeys.CHANGES));
-        changeList = change == null ? null : ChangeListManager.getInstance(project).getChangeList(change);
+    if (directoryName == null) {
+      for (FindInProjectExtension extension : FindInProjectExtension.EP_NAME.getExtensionList(Application.get())) {
+        boolean success = extension.initModelFromContext(model, dataContext);
+        if (success) break;
       }
+    }
 
-      if (changeList != null) {
-        String changeListName = changeList.getName();
-        DefaultSearchScopeProviders.ChangeLists changeListsScopeProvider = SearchScopeProvider.EP_NAME.findExtension(DefaultSearchScopeProviders.ChangeLists.class);
-        if (changeListsScopeProvider != null) {
-          SearchScope changeListScope = ContainerUtil.find(changeListsScopeProvider.getSearchScopes(project), scope -> scope.getDisplayName().equals(changeListName));
-          if (changeListScope != null) {
-            model.setCustomScope(true);
-            model.setCustomScopeName(changeListScope.getDisplayName());
-            model.setCustomScope(changeListScope);
-          }
-        }
-      }
+    if (directoryName == null && module == null && project != null) {
+
     }
 
     // set project scope if we have no other settings

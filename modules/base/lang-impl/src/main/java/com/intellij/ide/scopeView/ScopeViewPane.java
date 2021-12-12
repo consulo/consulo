@@ -183,7 +183,13 @@ public class ScopeViewPane extends AbstractProjectViewPane {
   @Override
   public Image getPresentableSubIdIcon(@Nonnull String subId) {
     NamedScopeFilter filter = getFilter(subId);
-    return filter != null ? filter.getScope().getIcon() : getIcon();
+    if (filter != null) {
+      NamedScope scope = filter.getScope();
+      return scope.getIconForProjectView();
+    }
+    else {
+      return getIcon();
+    }
   }
 
   @Override
@@ -240,7 +246,7 @@ public class ScopeViewPane extends AbstractProjectViewPane {
                              final String name,
                              final NamedScopesHolder holder,
                              boolean requestFocus) {
-    if ((packageSet instanceof PackageSetBase && ((PackageSetBase)packageSet).contains(psiFileSystemItem.getVirtualFile(), holder)) ||
+    if ((packageSet instanceof PackageSetBase && ((PackageSetBase)packageSet).contains(psiFileSystemItem.getVirtualFile(), myProject, holder)) ||
         (psiFileSystemItem instanceof PsiFile && packageSet.contains((PsiFile)psiFileSystemItem, holder))) {
       if (!name.equals(getSubId())) {
         myProjectView.changeView(getId(), name);
