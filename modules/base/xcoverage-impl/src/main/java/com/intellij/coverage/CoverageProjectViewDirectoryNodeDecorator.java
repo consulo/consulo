@@ -13,7 +13,7 @@ import jakarta.inject.Inject;
 /**
  * @author yole
  */
-public class CoverageProjectViewDirectoryNodeDecorator extends AbstractCoverageProvejctViewNodeDecorator {
+public class CoverageProjectViewDirectoryNodeDecorator extends AbstractCoverageProjectViewNodeDecorator {
   @Inject
   public CoverageProjectViewDirectoryNodeDecorator(final CoverageDataManager coverageDataManager) {
     super(coverageDataManager);
