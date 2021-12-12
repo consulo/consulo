@@ -15,15 +15,21 @@
  */
 package consulo.desktop.swt.ui.impl;
 
-import consulo.ui.*;
+import consulo.ui.Tree;
+import consulo.ui.TreeModel;
+import consulo.ui.TreeNode;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.*;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.TreeAdapter;
+import org.eclipse.swt.events.TreeEvent;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.TreeItem;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -43,7 +49,7 @@ public class DesktopSwtTreeImpl<E> extends SWTComponentDelegate<org.eclipse.swt.
 
   @Override
   protected org.eclipse.swt.widgets.Tree createSWT(Composite parent) {
-    return new org.eclipse.swt.widgets.Tree(parent, SWT.FULL_SELECTION | SWT.SINGLE | SWT.NO_SCROLL);
+    return new org.eclipse.swt.widgets.Tree(parent, packScrollFlags(parent, SWT.FULL_SELECTION | SWT.SINGLE | SWT.NO_SCROLL));
   }
 
   @Override
@@ -105,7 +111,10 @@ public class DesktopSwtTreeImpl<E> extends SWTComponentDelegate<org.eclipse.swt.
       return node;
     }, value);
 
-    list.sort(myModel.getNodeComparator());
+    Comparator<TreeNode<E>> comparator = myModel.getNodeComparator();
+    if (comparator != null) {
+      list.sort(comparator);
+    }
 
     for (DesktopSwtTreeNode<E> node : list) {
       final TreeItem item;
@@ -114,6 +123,9 @@ public class DesktopSwtTreeImpl<E> extends SWTComponentDelegate<org.eclipse.swt.
       }
       else {
         item = new TreeItem((TreeItem)parent, SWT.NONE);
+      }
+      if (node.isLeaf()) {
+        item.setItemCount(0);
       }
       item.setData("node", node);
 

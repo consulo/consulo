@@ -15,6 +15,7 @@
  */
 package consulo.desktop.swt.ui.impl;
 
+import consulo.desktop.swt.ui.impl.layout.DesktopSwtScrollableLayoutImpl;
 import consulo.disposer.Disposable;
 import consulo.ui.Component;
 import consulo.ui.Size;
@@ -65,6 +66,17 @@ public abstract class SWTComponentDelegate<SWT extends Widget> implements Compon
     }
     
     initialize(myComponent);
+  }
+
+  protected static int packScrollFlags(Composite parent, int flags) {
+    Object data = parent.getData(UI_COMPONENT_KEY);
+    if (data instanceof DesktopSwtScrollableLayoutImpl) {
+      flags |= org.eclipse.swt.SWT.V_SCROLL;
+      flags |= org.eclipse.swt.SWT.H_SCROLL;
+      return flags;
+    }
+
+    return flags;
   }
 
   public SWT toSWTComponent() {

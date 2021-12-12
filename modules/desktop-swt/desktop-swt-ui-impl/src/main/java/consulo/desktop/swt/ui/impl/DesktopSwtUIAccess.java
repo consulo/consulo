@@ -34,7 +34,7 @@ public class DesktopSwtUIAccess implements UIAccess {
 
   public DesktopSwtUIAccess() {
     CountDownLatch countDownLatch = new CountDownLatch(1);
-    new Thread("SWT Event Queue") {
+    Thread thread = new Thread("SWT Event Queue") {
       @Override
       public void run() {
         myDisplay = new Display();
@@ -54,7 +54,10 @@ public class DesktopSwtUIAccess implements UIAccess {
           }
         }
       }
-    }.start();
+    };
+    thread.setDaemon(true);
+    thread.setPriority(Thread.MAX_PRIORITY);
+    thread.start();
 
     try {
       countDownLatch.await();
@@ -79,5 +82,10 @@ public class DesktopSwtUIAccess implements UIAccess {
     AsyncResult<T> result = AsyncResult.undefined();
     myDisplay.asyncExec(() -> result.setDone(supplier.get()));
     return result;
+  }
+
+  @Override
+  public void giveAndWait(@Nonnull Runnable runnable) {
+    myDisplay.syncExec(runnable);
   }
 }

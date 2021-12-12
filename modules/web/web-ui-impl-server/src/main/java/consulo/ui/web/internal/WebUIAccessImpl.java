@@ -29,7 +29,7 @@ import java.util.function.Supplier;
  * @since 16-Jun-16
  */
 public class WebUIAccessImpl implements UIAccess {
-  private static final Logger LOGGER = Logger.getInstance(WebUIAccessImpl.class);
+  private static final Logger LOG = Logger.getInstance(WebUIAccessImpl.class);
 
   private final UI myUI;
 
@@ -52,7 +52,7 @@ public class WebUIAccessImpl implements UIAccess {
           result.setDone(supplier.get());
         }
         catch (Throwable e) {
-          LOGGER.error(e);
+          LOG.error(e);
           result.rejectWithThrowable(e);
         }
       });

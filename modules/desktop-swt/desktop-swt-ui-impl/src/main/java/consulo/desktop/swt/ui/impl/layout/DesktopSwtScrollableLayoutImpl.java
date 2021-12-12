@@ -15,7 +15,6 @@
  */
 package consulo.desktop.swt.ui.impl.layout;
 
-import consulo.desktop.swt.ui.impl.SWTComponentDelegate;
 import consulo.ui.Component;
 import consulo.ui.layout.ScrollableLayout;
 import org.eclipse.swt.SWT;
@@ -28,24 +27,13 @@ import org.eclipse.swt.widgets.Layout;
  * @since 29/04/2021
  */
 public class DesktopSwtScrollableLayoutImpl extends DesktopSwtLayoutComponent implements ScrollableLayout {
-  private final SWTComponentDelegate<?> myComponent;
-
   public DesktopSwtScrollableLayoutImpl(Component component) {
-    myComponent = (SWTComponentDelegate<?>)component;
-
-    add(myComponent, null);
-  }
-
-  @Override
-  public void disposeSWT() {
-    super.disposeSWT();
-
-    myComponent.disposeSWT();
+    add(component, null);
   }
 
   @Override
   protected Composite createSWT(Composite parent) {
-    return new Composite(parent, SWT.H_SCROLL | SWT.V_SCROLL);
+    return new Composite(parent, SWT.NO_SCROLL);
   }
 
   @Override

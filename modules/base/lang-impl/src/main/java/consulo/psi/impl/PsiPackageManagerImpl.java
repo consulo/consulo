@@ -35,6 +35,7 @@ import consulo.psi.PsiPackage;
 import consulo.psi.PsiPackageManager;
 import consulo.psi.PsiPackageSupportProvider;
 import jakarta.inject.Inject;
+import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
@@ -54,12 +55,12 @@ public class PsiPackageManagerImpl extends PsiPackageManager implements Disposab
   private final Project myProject;
   private final ProjectFileIndex myProjectFileIndex;
   private final PsiManager myPsiManager;
-  private final DirectoryIndex myDirectoryIndex;
+  private final Provider<DirectoryIndex> myDirectoryIndex;
 
   private final Map<Class<? extends ModuleExtension>, ConcurrentMap<String, Object>> myPackageCache = new ConcurrentHashMap<>();
 
   @Inject
-  public PsiPackageManagerImpl(Project project, ProjectFileIndex projectFileIndex, PsiManager psiManager, DirectoryIndex directoryIndex) {
+  public PsiPackageManagerImpl(Project project, ProjectFileIndex projectFileIndex, PsiManager psiManager, Provider<DirectoryIndex> directoryIndex) {
     myProject = project;
     myProjectFileIndex = projectFileIndex;
     myPsiManager = psiManager;
@@ -124,7 +125,7 @@ public class PsiPackageManagerImpl extends PsiPackageManager implements Disposab
 
   @Nullable
   private PsiPackage createPackage(@Nonnull String qualifiedName, @Nonnull Class<? extends ModuleExtension> extensionClass) {
-    Query<VirtualFile> dirs = myDirectoryIndex.getDirectoriesByPackageName(qualifiedName, true);
+    Query<VirtualFile> dirs = myDirectoryIndex.get().getDirectoriesByPackageName(qualifiedName, true);
     if (dirs.findFirst() == null) {
       return null;
     }
@@ -191,7 +192,7 @@ public class PsiPackageManagerImpl extends PsiPackageManager implements Disposab
   @Nullable
   @Override
   public PsiPackage findPackage(@Nonnull PsiDirectory directory, @Nonnull Class<? extends ModuleExtension> extensionClass) {
-    String packageName = myDirectoryIndex.getPackageName(directory.getVirtualFile());
+    String packageName = myDirectoryIndex.get().getPackageName(directory.getVirtualFile());
     if (packageName == null) {
       return null;
     }
@@ -202,7 +203,7 @@ public class PsiPackageManagerImpl extends PsiPackageManager implements Disposab
   @Override
   @Nullable
   public PsiPackage findAnyPackage(@Nonnull VirtualFile directory) {
-    String packageName = myDirectoryIndex.getPackageName(directory);
+    String packageName = myDirectoryIndex.get().getPackageName(directory);
     if (packageName == null) {
       return null;
     }
@@ -243,7 +244,7 @@ public class PsiPackageManagerImpl extends PsiPackageManager implements Disposab
   @RequiredReadAction
   @Override
   public PsiPackage findAnyPackage(@Nonnull String packageName) {
-    Query<VirtualFile> dirs = myDirectoryIndex.getDirectoriesByPackageName(packageName, true);
+    Query<VirtualFile> dirs = myDirectoryIndex.get().getDirectoriesByPackageName(packageName, true);
     if (dirs.findFirst() == null) {
       return null;
     }

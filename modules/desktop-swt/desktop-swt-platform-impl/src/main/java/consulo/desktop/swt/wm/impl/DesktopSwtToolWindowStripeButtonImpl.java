@@ -42,6 +42,13 @@ public class DesktopSwtToolWindowStripeButtonImpl extends SWTComponentDelegate<B
     return new Button(parent, SWT.DEFAULT);
   }
 
+  @Override
+  protected void initialize(Button component) {
+    super.initialize(component);
+
+    component.setText(getWindowInfo().getId());
+  }
+
   @Nonnull
   @Override
   public WindowInfo getWindowInfo() {
