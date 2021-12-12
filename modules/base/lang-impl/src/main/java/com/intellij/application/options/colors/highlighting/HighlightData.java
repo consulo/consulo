@@ -25,6 +25,7 @@ import com.intellij.openapi.editor.markup.HighlighterTargetArea;
 import com.intellij.openapi.editor.markup.RangeHighlighter;
 import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.util.ui.UIUtil;
+import consulo.localize.LocalizeValue;
 import consulo.ui.color.ColorValue;
 
 import javax.annotation.Nonnull;
@@ -54,8 +55,7 @@ public class HighlightData {
     if (highlighted) list.add(new HighlightData(getStartOffset(), getEndOffset(), BLINKING_HIGHLIGHTS_ATTRIBUTES));
   }
 
-  public void addHighlToView(final Editor view, EditorColorsScheme scheme, final Map<TextAttributesKey,String> displayText) {
-
+  public void addHighlToView(final Editor view, EditorColorsScheme scheme, final Map<TextAttributesKey, LocalizeValue> displayText) {
     // XXX: Hack
     if (HighlighterColors.BAD_CHARACTER.equals(myHighlightType)) {
       return;
@@ -66,15 +66,12 @@ public class HighlightData {
       UIUtil.invokeAndWaitIfNeeded((Runnable)() -> {
         try {
           // IDEA-53203: add ERASE_MARKER for manually defined attributes
-          view.getMarkupModel().addRangeHighlighter(myStartOffset, myEndOffset, HighlighterLayer.ADDITIONAL_SYNTAX,
-                                                    TextAttributes.ERASE_MARKER, HighlighterTargetArea.EXACT_RANGE);
-          RangeHighlighter highlighter = view.getMarkupModel()
-                  .addRangeHighlighter(myStartOffset, myEndOffset, HighlighterLayer.ADDITIONAL_SYNTAX, attr,
-                                       HighlighterTargetArea.EXACT_RANGE);
+          view.getMarkupModel().addRangeHighlighter(myStartOffset, myEndOffset, HighlighterLayer.ADDITIONAL_SYNTAX, TextAttributes.ERASE_MARKER, HighlighterTargetArea.EXACT_RANGE);
+          RangeHighlighter highlighter = view.getMarkupModel().addRangeHighlighter(myStartOffset, myEndOffset, HighlighterLayer.ADDITIONAL_SYNTAX, attr, HighlighterTargetArea.EXACT_RANGE);
           final ColorValue errorStripeColor = attr.getErrorStripeColor();
           highlighter.setErrorStripeMarkColor(errorStripeColor);
-          final String tooltip = displayText.get(myHighlightType);
-          highlighter.setErrorStripeTooltip(tooltip);
+          final LocalizeValue tooltip = displayText.get(myHighlightType);
+          highlighter.setErrorStripeTooltip(tooltip == null ? null : tooltip.get());
         }
         catch (Exception e) {
           throw new RuntimeException(e);

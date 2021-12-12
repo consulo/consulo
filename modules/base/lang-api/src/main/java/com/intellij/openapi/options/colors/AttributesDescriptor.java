@@ -16,6 +16,10 @@
 package com.intellij.openapi.options.colors;
 
 import com.intellij.openapi.editor.colors.TextAttributesKey;
+import consulo.annotation.DeprecationInfo;
+import consulo.localize.LocalizeValue;
+
+import javax.annotation.Nonnull;
 
 /**
  * Describes a text attribute key the attributes for which can be configured in a custom
@@ -25,7 +29,13 @@ import com.intellij.openapi.editor.colors.TextAttributesKey;
  */
 public final class AttributesDescriptor {
   private final TextAttributesKey myKey;
-  private final String myDisplayName;
+  private final LocalizeValue myDisplayName;
+
+  @Deprecated
+  @DeprecationInfo("Use parameter with LocalizeValue")
+  public AttributesDescriptor(@Nonnull String displayName, @Nonnull TextAttributesKey key) {
+    this(LocalizeValue.of(displayName), key);
+  }
 
   /**
    * Creates an attribute descriptor with the specified name and text attributes key.
@@ -33,7 +43,7 @@ public final class AttributesDescriptor {
    * @param displayName the name of the attribute shown in the colors list.
    * @param key         the attributes key for which the colors are specified.
    */
-  public AttributesDescriptor(String displayName, TextAttributesKey key) {
+  public AttributesDescriptor(@Nonnull LocalizeValue displayName, @Nonnull TextAttributesKey key) {
     myKey = key;
     myDisplayName = displayName;
   }
@@ -43,6 +53,7 @@ public final class AttributesDescriptor {
    *
    * @return the attributes key.
    */
+  @Nonnull
   public TextAttributesKey getKey() {
     return myKey;
   }
@@ -52,7 +63,8 @@ public final class AttributesDescriptor {
    *
    * @return the name of the attribute.
    */
-  public String getDisplayName() {
+  @Nonnull
+  public LocalizeValue getDisplayName() {
     return myDisplayName;
   }
 }

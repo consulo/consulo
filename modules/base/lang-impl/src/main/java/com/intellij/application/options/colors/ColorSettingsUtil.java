@@ -25,13 +25,10 @@ import com.intellij.openapi.options.colors.AttributesDescriptor;
 import com.intellij.openapi.options.colors.ColorAndFontDescriptorsProvider;
 import com.intellij.openapi.options.colors.ColorSettingsPage;
 import com.intellij.openapi.util.text.StringUtil;
-import java.util.HashMap;
+import consulo.localize.LocalizeValue;
 
 import javax.annotation.Nonnull;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author lesya
@@ -40,9 +37,10 @@ public class ColorSettingsUtil {
   private ColorSettingsUtil() {
   }
 
-  public static Map<TextAttributesKey, String> keyToDisplayTextMap(final ColorSettingsPage page) {
+  @Nonnull
+  public static Map<TextAttributesKey, LocalizeValue> keyToDisplayTextMap(final ColorSettingsPage page) {
     final List<AttributesDescriptor> attributeDescriptors = getAllAttributeDescriptors(page);
-    final Map<TextAttributesKey, String> displayText = new HashMap<TextAttributesKey, String>();
+    final Map<TextAttributesKey, LocalizeValue> displayText = new HashMap<>();
     for (AttributesDescriptor attributeDescriptor : attributeDescriptors) {
       final TextAttributesKey key = attributeDescriptor.getKey();
       displayText.put(key, attributeDescriptor.getDisplayName());

@@ -41,6 +41,7 @@ import com.intellij.util.EventDispatcher;
 import com.intellij.util.ui.UIUtil;
 import consulo.awt.TargetAWT;
 import consulo.disposer.Disposer;
+import consulo.localize.LocalizeValue;
 import org.intellij.lang.annotations.JdkConstants;
 import javax.annotation.Nonnull;
 
@@ -191,7 +192,7 @@ public class SimpleEditorPreview implements PreviewPanel {
     UIUtil.invokeLaterIfNeeded(() -> {
       if (myEditor.isDisposed()) return;
       removeDecorations(myEditor);
-      final Map<TextAttributesKey, String> displayText = ColorSettingsUtil.keyToDisplayTextMap(myPage);
+      final Map<TextAttributesKey, LocalizeValue> displayText = ColorSettingsUtil.keyToDisplayTextMap(myPage);
       for (final HighlightData data : myHighlightData) {
         data.addHighlToView(myEditor, myOptions.getSelectedScheme(), displayText);
       }
@@ -288,7 +289,7 @@ public class SimpleEditorPreview implements PreviewPanel {
       while (!iterator.atEnd());
     }
 
-    final Map<TextAttributesKey, String> displayText = ColorSettingsUtil.keyToDisplayTextMap(page);
+    final Map<TextAttributesKey, LocalizeValue> displayText = ColorSettingsUtil.keyToDisplayTextMap(page);
 
     // sort highlights to avoid overlappings
     Collections.sort(highlights, Comparator.comparingInt(HighlightData::getStartOffset));

@@ -37,6 +37,7 @@ import com.intellij.util.ui.FormBuilder;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.components.BorderLayoutPanel;
 import consulo.awt.TargetAWT;
+import consulo.localize.LocalizeValue;
 import consulo.ui.ColorBox;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
@@ -304,9 +305,9 @@ public class ColorAndFontDescriptionPanel implements OptionsPanelImpl.ColorDescr
   @RequiredUIAccess
   private void setInheritanceInfo(ColorAndFontDescription description) {
     Pair<ColorSettingsPage, AttributesDescriptor> baseDescriptor = description.getBaseAttributeDescriptor();
-    if (baseDescriptor != null && baseDescriptor.second.getDisplayName() != null) {
-      String attrName = baseDescriptor.second.getDisplayName();
-      String attrLabel = attrName.replaceAll(ColorOptionsTree.NAME_SEPARATOR, FontUtil.rightArrow(UIUtil.getLabelFont()));
+    if (baseDescriptor != null) {
+      LocalizeValue attrName = baseDescriptor.second.getDisplayName();
+      String attrLabel = attrName.get().replaceAll(ColorOptionsTree.NAME_SEPARATOR, FontUtil.rightArrow(UIUtil.getLabelFont()));
       ColorSettingsPage settingsPage = baseDescriptor.first;
       String style = "<div style=\"text-align:right\" vertical-align=\"top\">";
       String tooltipText;

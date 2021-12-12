@@ -538,7 +538,7 @@ public class ColorAndFontOptions extends SearchableConfigurable.Parent.Abstract 
     
     List<AttributesDescriptor> attributeDescriptors = ColorSettingsUtil.getAllAttributeDescriptors(provider);
     for (AttributesDescriptor descriptor : attributeDescriptors) {
-      addSchemedDescription(descriptions, LocalizeValue.of(descriptor.getDisplayName()), group, descriptor.getKey(), scheme, null, null);
+      addSchemedDescription(descriptions, descriptor.getDisplayName(), group, descriptor.getKey(), scheme, null, null);
     }
 
     ColorDescriptor[] colorDescriptors = provider.getColorDescriptors();

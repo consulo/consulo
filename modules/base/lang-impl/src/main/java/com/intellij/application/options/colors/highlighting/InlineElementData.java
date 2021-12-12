@@ -24,6 +24,8 @@ import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.openapi.editor.markup.TextAttributes;
 import consulo.awt.TargetAWT;
 import consulo.disposer.Disposer;
+import consulo.localize.LocalizeValue;
+
 import javax.annotation.Nonnull;
 
 import java.awt.*;
@@ -52,7 +54,7 @@ public class InlineElementData extends HighlightData {
   }
 
   @Override
-  public void addHighlToView(Editor view, EditorColorsScheme scheme, Map<TextAttributesKey, String> displayText) {
+  public void addHighlToView(Editor view, EditorColorsScheme scheme, Map<TextAttributesKey, LocalizeValue> displayText) {
     int offset = getStartOffset();
     ParameterHintsPresentationManager.getInstance().addHint(view, offset, null, myText, false);
     List<Inlay> inlays = view.getInlayModel().getInlineElementsInRange(offset, offset);
