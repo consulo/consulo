@@ -125,12 +125,12 @@ class DefaultScrollBarUI extends ScrollBarUI {
         if (alignment == Alignment.BOTTOM) y += offset;
       }
     }
-    if (small) {
-      x += 1;
-      y += 1;
-      width -= 2;
-      height -= 2;
-    }
+    //if (small) {
+    //  x += 1;
+    //  y += 1;
+    //  width -= 2;
+    //  height -= 2;
+    //}
     p.paint(g, x, y, width, height, p.animator.myValue);
   }
 
