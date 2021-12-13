@@ -7,17 +7,18 @@ import com.intellij.ui.Gray;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.scale.JBUIScale;
 import com.intellij.util.ui.JBUI;
+import com.intellij.util.ui.UIUtil;
 
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.basic.BasicGraphicsUtils;
-import javax.swing.plaf.metal.MetalToggleButtonUI;
+import javax.swing.plaf.basic.BasicToggleButtonUI;
 import java.awt.*;
 
 /**
  * @author Vladimir Kondratyev
  */
-public final class DesktopStripeButtonUI extends MetalToggleButtonUI {
+public final class DesktopStripeButtonUI extends BasicToggleButtonUI {
   private static final Color BACKGROUND_COLOR = JBColor.namedColor("ToolWindow.Button.hoverBackground", new JBColor(Gray.x55.withAlpha(40), Gray.x0F.withAlpha(40)));
 
   private static final Color SELECTED_BACKGROUND_COLOR = JBColor.namedColor("ToolWindow.Button.selectedBackground", new JBColor(Gray.x55.withAlpha(85), Gray.x0F.withAlpha(85)));
@@ -158,7 +159,7 @@ public final class DesktopStripeButtonUI extends MetalToggleButtonUI {
         }
         else {
           /* paint the text disabled ***/
-          g2.setColor(getDisabledTextColor());
+          g2.setColor(UIUtil.getLabelDisabledForeground());
         }
         BasicGraphicsUtils.drawString(g2, clippedText, button.getMnemonic2(), myTextRect.x, myTextRect.y + fm.getAscent());
       }
