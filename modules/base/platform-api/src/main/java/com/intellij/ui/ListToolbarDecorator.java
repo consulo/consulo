@@ -37,26 +37,17 @@ class ListToolbarDecorator extends ToolbarDecorator {
   }
 
   private void createActions() {
-    myRemoveAction = new AnActionButtonRunnable() {
-      @Override
-      public void run(AnActionButton button) {
-        ListUtil.removeSelectedItems(myList);
-        updateButtons();
-      }
+    myRemoveAction = button -> {
+      ListUtil.removeSelectedItems(myList);
+      updateButtons();
     };
-    myUpAction = new AnActionButtonRunnable() {
-      @Override
-      public void run(AnActionButton button) {
-        ListUtil.moveSelectedItemsUp(myList);
-        updateButtons();
-      }
+    myUpAction = button -> {
+      ListUtil.moveSelectedItemsUp(myList);
+      updateButtons();
     };
-    myDownAction = new AnActionButtonRunnable() {
-      @Override
-      public void run(AnActionButton button) {
-        ListUtil.moveSelectedItemsDown(myList);
-        updateButtons();
-      }
+    myDownAction = button -> {
+      ListUtil.moveSelectedItemsDown(myList);
+      updateButtons();
     };
   }
 
