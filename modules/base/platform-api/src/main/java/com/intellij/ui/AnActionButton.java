@@ -34,7 +34,7 @@ import java.util.Set;
  * @author Konstantin Bulenkov
  */
 @Deprecated
-@DeprecationInfo("Be carefull while using this class. In most cases AnAction will be enought")
+@DeprecationInfo("Be carefull while using this class. In most cases AnAction will be enough")
 public abstract class AnActionButton extends AnAction implements ShortcutProvider {
   public static class AnActionButtonWrapper extends AnActionButton implements ActionWithDelegate<AnAction> {
     private final AnAction myAction;
