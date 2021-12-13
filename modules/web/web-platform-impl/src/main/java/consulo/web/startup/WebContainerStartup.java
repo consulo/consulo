@@ -99,7 +99,7 @@ public class WebContainerStartup implements ContainerStartup {
     Runnable appInitializeMark = stat.mark(StatCollector.APP_INITIALIZE);
 
     StartupUtil.prepareAndStart(args, stat, WebImportantFolderLocker::new, (newConfigFolder, commandLineArgs) -> {
-      ApplicationStarter starter = new WebApplicationStarter(commandLineArgs);
+      ApplicationStarter starter = new WebApplicationStarter(commandLineArgs, stat);
 
       AppExecutorUtil.getAppExecutorService().execute(() -> {
         starter.run(stat, appInitializeMark, newConfigFolder);

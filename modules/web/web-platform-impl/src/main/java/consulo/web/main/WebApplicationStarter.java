@@ -34,8 +34,8 @@ import javax.annotation.Nullable;
  * @since 15-May-16
  */
 public class WebApplicationStarter extends ApplicationStarter {
-  public WebApplicationStarter(@Nonnull CommandLineArgs args) {
-    super(args);
+  public WebApplicationStarter(@Nonnull CommandLineArgs args, @Nonnull StatCollector stat) {
+    super(args, stat);
   }
 
   @Nullable

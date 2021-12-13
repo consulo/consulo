@@ -69,7 +69,7 @@ public abstract class ApplicationStarter {
 
   protected PluginsInitializeInfo myPluginsInitializeInfo;
 
-  public ApplicationStarter(@Nonnull CommandLineArgs args) {
+  public ApplicationStarter(@Nonnull CommandLineArgs args, @Nonnull StatCollector stat) {
     LOG.assertTrue(ourInstance == null);
     //noinspection AssignmentToStaticFieldFromInstanceMethod
     ourInstance = this;
@@ -78,7 +78,7 @@ public abstract class ApplicationStarter {
 
     myPlatform = Platform.current();
 
-    initApplication(false, args);
+    initApplication(false, args, stat);
   }
 
   @Nonnull
@@ -93,7 +93,7 @@ public abstract class ApplicationStarter {
   @Nullable
   public abstract StartupProgress createSplash(CommandLineArgs args);
 
-  protected void initApplication(boolean isHeadlessMode, CommandLineArgs args) {
+  protected void initApplication(boolean isHeadlessMode, CommandLineArgs args, StatCollector stat) {
     StartupProgress splash = createSplash(args);
     if (splash != null) {
       mySplashRef.set(splash);

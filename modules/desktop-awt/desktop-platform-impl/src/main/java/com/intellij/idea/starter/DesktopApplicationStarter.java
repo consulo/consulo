@@ -71,6 +71,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.ForkJoinPool;
 
 /**
  * @author VISTALL
@@ -79,8 +80,8 @@ import java.util.Set;
 public class DesktopApplicationStarter extends ApplicationStarter {
   private static final Logger LOG = Logger.getInstance(DesktopApplicationStarter.class);
 
-  public DesktopApplicationStarter(@Nonnull CommandLineArgs args) {
-    super(args);
+  public DesktopApplicationStarter(@Nonnull CommandLineArgs args, @Nonnull StatCollector stat) {
+    super(args, stat);
   }
 
   @Nullable
@@ -115,16 +116,17 @@ public class DesktopApplicationStarter extends ApplicationStarter {
   }
 
   @Override
-  protected void initApplication(boolean isHeadlessMode, CommandLineArgs args) {
+  protected void initApplication(boolean isHeadlessMode, CommandLineArgs args, StatCollector stat) {
     invokeAtUIAndWait(() -> {
       System.setProperty("sun.awt.noerasebackground", "true");
 
       IdeEventQueue.getInstance(); // replace system event queue
     });
 
-    AppUIUtil.updateWindowIcon(JOptionPane.getRootFrame(), false);
+    stat.markWith("awt.update.window.icon", () -> AppUIUtil.updateWindowIcon(JOptionPane.getRootFrame(), false));
 
-    DesktopAppUIUtil.registerBundledFonts();
+    // execute it in parallel
+    ForkJoinPool.commonPool().execute(DesktopAppUIUtil::registerBundledFonts);
 
     invokeAtUIAndWait(() -> {
       if (myPlatform.os().isXWindow()) {
@@ -138,7 +140,7 @@ public class DesktopApplicationStarter extends ApplicationStarter {
       }
     });
 
-    super.initApplication(isHeadlessMode, args);
+    super.initApplication(isHeadlessMode, args, stat);
   }
 
   public static void updateFrameClass() {

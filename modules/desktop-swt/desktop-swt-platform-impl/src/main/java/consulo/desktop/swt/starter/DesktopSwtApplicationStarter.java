@@ -38,8 +38,8 @@ import javax.annotation.Nullable;
 public class DesktopSwtApplicationStarter extends ApplicationStarter {
   private static final Logger LOG = Logger.getInstance(DesktopSwtApplicationStarter.class);
 
-  public DesktopSwtApplicationStarter(CommandLineArgs commandLineArgs) {
-    super(commandLineArgs);
+  public DesktopSwtApplicationStarter(CommandLineArgs commandLineArgs, @Nonnull StatCollector stat) {
+    super(commandLineArgs, stat);
   }
 
   @Nullable

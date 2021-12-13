@@ -36,6 +36,22 @@ public class DesktopAppUIUtil extends AppUIUtil {
     registerFont("/fonts/FiraCode-Regular.ttf");
     registerFont("/fonts/FiraCode-Retina.ttf");
     registerFont("/fonts/FiraCode-SemiBold.ttf");
+    registerFont("/fonts/JetBrainsMono-Bold.ttf");
+    registerFont("/fonts/JetBrainsMono-BoldItalic.ttf");
+    registerFont("/fonts/JetBrainsMono-ExtraBold.ttf");
+    registerFont("/fonts/JetBrainsMono-ExtraBoldItalic.ttf");
+    registerFont("/fonts/JetBrainsMono-ExtraLight.ttf");
+    registerFont("/fonts/JetBrainsMono-ExtraLightItalic.ttf");
+    registerFont("/fonts/JetBrainsMono-Italic.ttf");
+    registerFont("/fonts/JetBrainsMono-Light.ttf");
+    registerFont("/fonts/JetBrainsMono-LightItalic.ttf");
+    registerFont("/fonts/JetBrainsMono-Medium.ttf");
+    registerFont("/fonts/JetBrainsMono-MediumItalic.ttf");
+    registerFont("/fonts/JetBrainsMono-Regular.ttf");
+    registerFont("/fonts/JetBrainsMono-SemiBold.ttf");
+    registerFont("/fonts/JetBrainsMono-SemiBoldItalic.ttf");
+    registerFont("/fonts/JetBrainsMono-Thin.ttf");
+    registerFont("/fonts/JetBrainsMono-ThinItalic.ttf");
   }
 
   private static void registerFont(String name) {

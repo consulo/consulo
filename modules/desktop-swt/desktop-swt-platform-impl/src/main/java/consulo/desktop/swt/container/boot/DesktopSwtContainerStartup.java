@@ -88,7 +88,7 @@ public class DesktopSwtContainerStartup implements ContainerStartup {
     }
 
     StartupUtil.prepareAndStart(args, stat, DesktopSwtImportantFolderLocker::new, (newConfigFolder, commandLineArgs) -> {
-      ApplicationStarter app = new DesktopSwtApplicationStarter(commandLineArgs);
+      ApplicationStarter app = new DesktopSwtApplicationStarter(commandLineArgs, stat);
 
       AppExecutorUtil.getAppExecutorService().execute(() -> app.run(stat, appInitalizeMark, newConfigFolder));
     });

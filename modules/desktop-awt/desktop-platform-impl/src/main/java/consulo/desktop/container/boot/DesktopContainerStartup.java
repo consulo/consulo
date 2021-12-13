@@ -116,7 +116,7 @@ public class DesktopContainerStartup implements ContainerStartup {
     // InternalLoggerFactory.setDefaultFactory(ApplicationInternalLoggerFactory.INSTANCE);
 
     StartupUtil.prepareAndStart(args, stat, DesktopImportantFolderLocker::new, (newConfigFolder, commandLineArgs) -> {
-      ApplicationStarter app = new DesktopApplicationStarter(commandLineArgs);
+      ApplicationStarter app = new DesktopApplicationStarter(commandLineArgs, stat);
 
       AppExecutorUtil.getAppExecutorService().execute(() -> app.run(stat, appInitalizeMark, newConfigFolder));
     });
