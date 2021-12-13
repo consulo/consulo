@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2020 consulo.io
+ * Copyright 2013-2021 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,30 +13,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.sandboxPlugin.ide.action;
+package consulo.ui.dialog.action;
 
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.project.DumbAwareAction;
-import consulo.sandboxPlugin.ui.UITester;
+import consulo.localize.LocalizeValue;
+import consulo.platform.base.localize.CommonLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.dialog.DialogService;
+import consulo.ui.dialog.Dialog;
 
 import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
- * @since 2020-05-29
+ * @since 13/12/2021
  */
-public class ShowUITesterAction extends DumbAwareAction {
-  private final DialogService myDialogService;
-
-  public ShowUITesterAction(DialogService dialogService) {
-    myDialogService = dialogService;
+public class OkAction extends DumbAwareAction {
+  public OkAction() {
+    super(CommonLocalize.buttonOk(), LocalizeValue.of(), null);
   }
 
   @RequiredUIAccess
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
-    UITester.show(myDialogService);
+    Dialog<Object> data = e.getRequiredData(Dialog.KEY);
+
+    data.doOkAction(data.getDescriptor().getOkValue());
   }
 }

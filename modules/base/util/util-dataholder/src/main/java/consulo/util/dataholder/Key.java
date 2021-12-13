@@ -59,6 +59,12 @@ public class Key<T> {
 
   @Nonnull
   @SuppressWarnings("deprecation")
+  public static <T> Key<T> create(@Nonnull Class<? extends T> clazz) {
+    return new Key<>(clazz.getName());
+  }
+
+  @Nonnull
+  @SuppressWarnings("deprecation")
   public static <T> Key<T> create(@Nonnull String name) {
     return new Key<>(name);
   }

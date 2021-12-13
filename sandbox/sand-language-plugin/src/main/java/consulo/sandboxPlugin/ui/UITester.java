@@ -15,13 +15,15 @@
  */
 package consulo.sandboxPlugin.ui;
 
+import consulo.disposer.Disposable;
 import consulo.ide.ui.FileChooserTextBoxBuilder;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.*;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.app.WindowWrapper;
 import consulo.ui.cursor.StandardCursors;
+import consulo.ui.dialog.DialogDescriptor;
+import consulo.ui.dialog.DialogService;
 import consulo.ui.font.Font;
 import consulo.ui.image.Image;
 import consulo.ui.layout.*;
@@ -39,16 +41,15 @@ import java.util.function.Function;
  * @since 2020-05-29
  */
 public class UITester {
-  private static class MyWindowWrapper extends WindowWrapper {
-
+  private static class MyWindowWrapper extends DialogDescriptor<Void> {
     public MyWindowWrapper() {
-      super("UI Tester");
+      super(LocalizeValue.of("UI Tester"));
     }
 
     @RequiredUIAccess
     @Nonnull
     @Override
-    protected Component createCenterComponent() {
+    public Component createCenterComponent(@Nonnull Disposable uiDisposable) {
       TabbedLayout tabbedLayout = TabbedLayout.create();
 
       tabbedLayout.addTab("Layouts", layouts()).setCloseHandler((tab, component) -> {
@@ -92,8 +93,8 @@ public class UITester {
       Button centerBtn = Button.create(LocalizeValue.of("Center"));
       centerBtn.addClickListener(event -> {
         dockLayout.center(HorizontalLayout.create().add(Label.create(LocalizeValue.of(LocalDateTime.now().toString()))));
-      }) ;
-      
+      });
+
       borderLayout.add(centerBtn).add(dockLayout);
 
       borderLayout.add(centerBtn);
@@ -101,6 +102,11 @@ public class UITester {
       tabbedLayout.addTab("DockLayout", borderLayout);
 
       return tabbedLayout;
+    }
+
+    @Override
+    public boolean isSetDefaultContentBorder() {
+      return false;
     }
 
     @RequiredUIAccess
@@ -215,13 +221,13 @@ public class UITester {
 
     @Nullable
     @Override
-    protected Size getDefaultSize() {
+    public Size getInitialSize() {
       return new Size(500, 500);
     }
   }
 
   @RequiredUIAccess
-  public static void show() {
-    new MyWindowWrapper().showAsync();
+  public static void show(DialogService dialogService) {
+    dialogService.build(null, new MyWindowWrapper()).showAsync();
   }
 }

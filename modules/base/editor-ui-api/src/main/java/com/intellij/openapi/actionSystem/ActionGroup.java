@@ -40,8 +40,16 @@ public abstract class ActionGroup extends AnAction {
     }
 
     @Nonnull
-    public Builder addAdd(@Nonnull List<? extends AnAction> items) {
+    public Builder addAll(@Nonnull List<? extends AnAction> items) {
       myActions.addAll(items);
+      return this;
+    }
+
+    @Nonnull
+    public Builder addAll(@Nonnull AnAction... actions) {
+      for (AnAction action : actions) {
+        myActions.add(action);
+      }
       return this;
     }
 

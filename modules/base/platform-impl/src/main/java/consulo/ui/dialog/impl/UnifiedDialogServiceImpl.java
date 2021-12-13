@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2020 consulo.io
+ * Copyright 2013-2021 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,30 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.sandboxPlugin.ide.action;
+package consulo.ui.dialog.impl;
 
-import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.project.DumbAwareAction;
-import consulo.sandboxPlugin.ui.UITester;
-import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.Component;
+import consulo.ui.dialog.Dialog;
+import consulo.ui.dialog.DialogDescriptor;
 import consulo.ui.dialog.DialogService;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
- * @since 2020-05-29
+ * @since 14/12/2021
  */
-public class ShowUITesterAction extends DumbAwareAction {
-  private final DialogService myDialogService;
-
-  public ShowUITesterAction(DialogService dialogService) {
-    myDialogService = dialogService;
-  }
-
-  @RequiredUIAccess
+public class UnifiedDialogServiceImpl implements DialogService {
+  @Nonnull
   @Override
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-    UITester.show(myDialogService);
+  public <V> Dialog<V> build(@Nullable Component parent, @Nonnull DialogDescriptor<V> descriptor) {
+    return null;
   }
 }

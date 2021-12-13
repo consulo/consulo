@@ -15,14 +15,15 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.List;
 
-class ButtonToolbarImpl extends JPanel {
+public class ButtonToolbarImpl extends JPanel {
   private final DataManager myDataManager;
   private final String myPlace;
   private final PresentationFactory myPresentationFactory;
-  private final ArrayList<ActionJButton> myActions = new ArrayList<>();
+  private final List<ActionJButton> myActions = new ArrayList<>();
 
-  ButtonToolbarImpl(@Nonnull String place, @Nonnull ActionGroup actionGroup) {
+  public ButtonToolbarImpl(@Nonnull String place, @Nonnull ActionGroup actionGroup) {
     super(new GridBagLayout());
     myPlace = place;
     myPresentationFactory = new PresentationFactory();
@@ -53,11 +54,15 @@ class ButtonToolbarImpl extends JPanel {
   private JPanel createButtons(AnAction[] actions) {
     JPanel buttonsPanel = new JPanel(new GridLayout(1, actions.length, 5, 0));
     for (final AnAction action : actions) {
-      ActionJButton button = new ActionJButton(action);
-      myActions.add(button);
+      JButton button = createButton(action);
+      myActions.add((ActionJButton)button);
       buttonsPanel.add(button);
     }
     return buttonsPanel;
+  }
+
+  protected JButton createButton(AnAction action) {
+    return new ActionJButton(action);
   }
 
   public JComponent getComponent() {

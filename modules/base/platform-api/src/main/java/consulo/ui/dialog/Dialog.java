@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2020 consulo.io
+ * Copyright 2013-2021 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,30 +13,36 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.sandboxPlugin.ide.action;
+package consulo.ui.dialog;
 
-import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.project.DumbAwareAction;
-import consulo.sandboxPlugin.ui.UITester;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.dialog.DialogService;
+import consulo.util.concurrent.AsyncResult;
+import consulo.util.dataholder.Key;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
- * @since 2020-05-29
+ * @since 13/12/2021
  */
-public class ShowUITesterAction extends DumbAwareAction {
-  private final DialogService myDialogService;
+public interface Dialog<V> {
+  Key<Dialog<Object>> KEY = Key.create(Dialog.class.getName());
 
-  public ShowUITesterAction(DialogService dialogService) {
-    myDialogService = dialogService;
-  }
-
+  @Nonnull
   @RequiredUIAccess
-  @Override
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-    UITester.show(myDialogService);
-  }
+  AsyncResult<V> showAsync();
+
+  /**
+   * Will done showAsync result with value
+   */
+  void doOkAction(@Nullable V value);
+
+  /**
+   * Will reject showAsync result
+   */
+  void doCancelAction();
+
+  @Nonnull
+  DialogDescriptor<V> getDescriptor();
 }
