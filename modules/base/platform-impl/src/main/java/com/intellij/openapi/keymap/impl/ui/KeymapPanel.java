@@ -323,7 +323,9 @@ public class KeymapPanel implements SearchableConfigurable, Configurable.NoScrol
   private JPanel createToolbarPanel() {
     final JPanel panel = new JPanel(new GridBagLayout());
     DefaultActionGroup group = new DefaultActionGroup();
-    final JComponent toolbar = ActionManager.getInstance().createActionToolbar(ActionPlaces.UNKNOWN, group, true).getComponent();
+    ActionToolbar firstToolbar = ActionManager.getInstance().createActionToolbar(ActionPlaces.UNKNOWN, group, true);
+    firstToolbar.setTargetComponent(panel);
+    final JComponent toolbar = firstToolbar.getComponent();
     final CommonActionsManager commonActionsManager = CommonActionsManager.getInstance();
     final TreeExpander treeExpander = new TreeExpander() {
       @Override
@@ -370,7 +372,9 @@ public class KeymapPanel implements SearchableConfigurable, Configurable.NoScrol
 
     panel.add(toolbar, new GridBagConstraints(0, 0, 1, 1, 1, 0, GridBagConstraints.WEST, GridBagConstraints.NONE, JBUI.insetsTop(8), 0, 0));
     group = new DefaultActionGroup();
-    final JComponent searchToolbar = ActionManager.getInstance().createActionToolbar(ActionPlaces.UNKNOWN, group, true).getComponent();
+    ActionToolbar actionToolbar = ActionManager.getInstance().createActionToolbar(ActionPlaces.UNKNOWN, group, true);
+    actionToolbar.setTargetComponent(panel);
+    final JComponent searchToolbar = actionToolbar.getComponent();
     final Alarm alarm = new Alarm();
     myFilterComponent = new FilterComponent("KEYMAP", 5) {
       @Override
