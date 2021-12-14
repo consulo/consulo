@@ -69,5 +69,7 @@
                     serviceImplementation="com.intellij.compiler.CompilerWorkspaceConfiguration"/>
 
     <macro implementation="com.intellij.ide.macro.OutputPathMacro"/>
+
+    <projectService serviceImplementation="com.intellij.compiler.impl.CompilerCacheManager"/>
   </extensions>
 </consulo-plugin>

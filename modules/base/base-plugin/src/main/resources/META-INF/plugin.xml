@@ -2793,6 +2793,8 @@
 
     <projectService serviceImplementation="com.intellij.execution.impl.ProjectRunConfigurationManager"/>
     <postStartupActivity implementation="com.intellij.execution.impl.ProjectRunConfigurationManager$MyStartupActivity"/>
+
+    <projectService serviceInterface="com.intellij.codeInsight.folding.CodeFoldingManager" serviceImplementation="com.intellij.codeInsight.folding.impl.CodeFoldingManagerImpl"/>
   </extensions>
 
   <applicationListeners>
@@ -2802,5 +2804,6 @@
 
   <projectListeners>
     <listener class="com.intellij.openapi.vfs.newvfs.impl.CachedFileType$PsiListener" topic="com.intellij.psi.util.PsiModificationTracker$Listener"/>
+    <listener class="consulo.roots.ExtensionListenerByLayerListenerInvoker" topic="consulo.roots.ModuleRootLayerListener"/>
   </projectListeners>
 </consulo-plugin>
