@@ -6,6 +6,7 @@
   <option name="EDITOR_LIGATURES" value="true"/>
   <option name="EDITOR_FONT_NAME" value="JetBrains Mono"/>
   <option name="EDITOR_FONT_SIZE" value="12"/>
+  <option name="EDITOR_LIGATURES" value="true"/>
   <colors>
     <option name="SELECTION_BACKGROUND" value="526da5"/>
     <option name="CARET_ROW_COLOR" value="fffaa6"/>
