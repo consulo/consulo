@@ -115,18 +115,12 @@ public class WebToolWindowManagerImpl extends ToolWindowManagerBase {
     myFrame = null;
   }
 
-  @Override
   @RequiredUIAccess
-  protected void postInitialize() {
-    updateToolWindowsPane();
-
+  @Override
+  protected void initializeEditorComponent() {
     Component editorComponent = getEditorComponent(myProject);
-    //myEditorComponentFocusWatcher.install(editorComponent);
 
     setEditorComponent(editorComponent);
-    //if (myEditorWasActive && editorComponent instanceof DesktopEditorsSplitters) {
-    //  activateEditorComponentImpl(commandsList, true);
-    //}
   }
 
   private Component getEditorComponent(Project project) {

@@ -1506,8 +1506,8 @@
 
     <postStartupActivity implementation="com.intellij.ide.TipOfTheDayStartupActivity"/>
     <postStartupActivity id="OpenFilesActivity" implementation="com.intellij.openapi.fileEditor.impl.OpenFilesActivity"/>
-    <postStartupActivity implementation="consulo.wm.impl.ToolWindowManagerBase$InitToolWindowsActivity" order="after OpenFilesActivity"/>
-    <postStartupActivity implementation="com.intellij.ui.breadcrumbs.BreadcrumbsInitializingActivity" order="before OpenFilesActivity"/>
+    <postStartupActivity id="InitToolWindows" implementation="consulo.wm.impl.ToolWindowManagerBase$InitToolWindowsActivity" order="before OpenFilesActivity"/>
+    <postStartupActivity implementation="com.intellij.ui.breadcrumbs.BreadcrumbsInitializingActivity" order="after InitToolWindows"/>
 
     <preloadingActivity implementation="com.intellij.openapi.actionSystem.impl.ActionPreloader"/>
     <preloadingActivity implementation="consulo.bundle.impl.PredefinedBundlesLoader"/>

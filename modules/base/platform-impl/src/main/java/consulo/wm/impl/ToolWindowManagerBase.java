@@ -33,6 +33,7 @@ import com.intellij.openapi.wm.impl.*;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.EventDispatcher;
 import com.intellij.util.messages.MessageBusConnection;
+import consulo.application.CallChain;
 import consulo.component.PersistentStateComponentWithUIState;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
@@ -50,6 +51,7 @@ import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
 import consulo.ui.image.ImageKey;
 import consulo.ui.style.StandardColors;
+import consulo.util.concurrent.AsyncResult;
 import jakarta.inject.Provider;
 import kava.beans.PropertyChangeEvent;
 import kava.beans.PropertyChangeListener;
@@ -69,14 +71,18 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
   public static class InitToolWindowsActivity implements StartupActivity.DumbAware {
     @Override
     public void runActivity(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
+      UIAccess.assetIsNotUIThread();
+
       ToolWindowManagerBase manager = (ToolWindowManagerBase)ToolWindowManagerEx.getInstanceEx(project);
 
-      uiAccess.give(manager::registerToolWindowsFromBeans).doWhenProcessed(() -> {
-        uiAccess.give(() -> {
-          manager.postInitialize();
-          manager.connectModuleExtensionListener();
-        });
-      });
+      CallChain.Link<Void, Void> chain = CallChain.first(uiAccess);
+      chain = chain.linkUI(manager::initializeEditorComponent);
+      chain = chain.linkAsync(() -> manager.registerToolWindowsFromBeans(uiAccess));
+      chain = chain.linkUI(manager::postInitialize);
+      chain = chain.linkUI(manager::connectModuleExtensionListener);
+
+      // toss it, and wait result
+      chain.tossAsync().getResultSync();
     }
   }
 
@@ -222,6 +228,9 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
   }
 
   @RequiredUIAccess
+  protected abstract void initializeEditorComponent();
+
+  @RequiredUIAccess
   protected void postInitialize() {
     updateToolWindowsPane();
   }
@@ -269,22 +278,31 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
     }
   }
 
-  @RequiredUIAccess
-  protected void registerToolWindowsFromBeans() {
-    final List<ToolWindowEP> beans = ToolWindowEP.EP_NAME.getExtensionList();
-    for (final ToolWindowEP bean : beans) {
-      if (checkCondition(myProject, bean)) {
-        try {
-          initToolWindow(bean);
+  @Nonnull
+  protected AsyncResult<Void> registerToolWindowsFromBeans(@Nonnull UIAccess uiAccess) {
+    List<AsyncResult<Void>> results = new ArrayList<>();
+
+    List<ToolWindowEP> beans = ToolWindowEP.EP_NAME.getExtensionList();
+    for (ToolWindowEP bean : beans) {
+      AsyncResult<Void> toolWindowResult = AsyncResult.undefined();
+      results.add(toolWindowResult);
+
+      uiAccess.give(() -> {
+        if (checkCondition(myProject, bean)) {
+          try {
+            initToolWindow(bean);
+          }
+          catch (ProcessCanceledException e) {
+            throw e;
+          }
+          catch (Throwable t) {
+            LOG.error("failed to init toolwindow " + bean.factoryClass, t);
+          }
         }
-        catch (ProcessCanceledException e) {
-          throw e;
-        }
-        catch (Throwable t) {
-          LOG.error("failed to init toolwindow " + bean.factoryClass, t);
-        }
-      }
+      }).notify(toolWindowResult);
     }
+
+    return AsyncResult.merge(results);
   }
 
   @RequiredUIAccess
@@ -892,7 +910,7 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
       }
     }
 
-    if(moveFocus) {
+    if (moveFocus) {
       activateEditorComponent();
     }
   }

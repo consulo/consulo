@@ -175,6 +175,12 @@ public class DesktopSwtToolWindowManagerImpl extends ToolWindowManagerBase {
     return new DesktopSwtToolWindowInternalDecorator(project, info, (UnifiedToolWindowImpl)toolWindow, dumbAware);
   }
 
+  @RequiredUIAccess
+  @Override
+  protected void initializeEditorComponent() {
+
+  }
+
   @Override
   public boolean isUnified() {
     return true;
