@@ -4,7 +4,7 @@
   <option name="CONSOLE_FONT_NAME" value="Monospaced"/>
   <option name="CONSOLE_FONT_SIZE" value="12"/>
   <option name="EDITOR_LIGATURES" value="true"/>
-  <option name="EDITOR_FONT_NAME" value="Fira Code"/>
+  <option name="EDITOR_FONT_NAME" value="JetBrains Mono"/>
   <option name="EDITOR_FONT_SIZE" value="12"/>
   <colors>
     <option name="SELECTION_BACKGROUND" value="526da5"/>
