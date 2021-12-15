@@ -255,6 +255,16 @@
       <artifactId>consulo-external-service-impl</artifactId>
       <version>${project.version}</version>
     </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>consulo-task-api</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>consulo-task-impl</artifactId>
+      <version>${project.version}</version>
+    </dependency>
 
     <dependency>
       <groupId>consulo.internal.sound</groupId>

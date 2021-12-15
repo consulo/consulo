@@ -97,6 +97,8 @@
         <include>consulo:consulo-xdebugger-impl</include>
         <include>consulo:consulo-xtest-impl</include>
         <include>consulo:consulo-xtest-sm-impl</include>
+        <include>consulo:consulo-task-api</include>
+        <include>consulo:consulo-task-impl</include>
 
         <include>consulo:consulo-base-localize-library</include>
         <include>consulo:consulo-base-icon-library</include>
