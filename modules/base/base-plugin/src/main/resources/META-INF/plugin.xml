@@ -2785,7 +2785,7 @@
 
     <fileEditorProvider implementation="consulo.ide.plugins.whatsNew.WhatsNewVirtualFileEditorProvider"/>
     <editorTabColorProvider implementation="consulo.ide.plugins.whatsNew.WhatsNewEditorTabColorProvider"/>
-    <postStartupActivity implementation="consulo.ide.plugins.whatsNew.WhatsNewStartupActivity"/>
+    <postStartupActivity implementation="consulo.ide.plugins.whatsNew.WhatsNewStartupActivity" order="after OpenFilesActivity"/>
 
     <fileTypeOverrider implementation="com.intellij.openapi.file.exclude.UserFileTypeOverrider"/>
     <applicationService serviceImplementation="com.intellij.openapi.file.exclude.OverrideFileTypeManager"/>
