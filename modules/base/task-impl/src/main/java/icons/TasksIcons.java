@@ -20,11 +20,9 @@ import consulo.task.impl.icon.TaskImplIconGroup;
 import consulo.ui.image.Image;
 
 public class TasksIcons {
-  public static final Image AutoMode = TaskImplIconGroup.autoMode();
   public static final Image Bug = TaskImplIconGroup.bug();
   public static final Image Clock = TaskImplIconGroup.clock();
   public static final Image Exception = TaskImplIconGroup.exception();
-  public static final Image Feature = TaskImplIconGroup.feature();
   @Deprecated
   public static final Image SavedContext = TaskImplIconGroup.savedContext();
   public static final Image StartTimer = TaskImplIconGroup.startTimer();

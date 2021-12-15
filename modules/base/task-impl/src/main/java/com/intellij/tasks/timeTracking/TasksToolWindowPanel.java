@@ -23,6 +23,7 @@ import com.intellij.util.text.DateFormatUtil;
 import com.intellij.util.ui.ColumnInfo;
 import com.intellij.util.ui.ListTableModel;
 import com.intellij.util.ui.UIUtil;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.image.ImageEffects;
 import icons.TasksIcons;
 
@@ -348,7 +349,7 @@ public class TasksToolWindowPanel extends SimpleToolWindowPanel implements Dispo
 
   private class ModeToggleAction extends ToggleAction {
     public ModeToggleAction() {
-      super("Auto mode", "Automatic starting and stopping of timer", TasksIcons.AutoMode);
+      super("Auto mode", "Automatic starting and stopping of timer", PlatformIconGroup.actionsRerun());
     }
 
     @Override

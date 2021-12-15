@@ -25,6 +25,7 @@ import com.intellij.util.xmlb.annotations.AbstractCollection;
 import com.intellij.util.xmlb.annotations.Attribute;
 import com.intellij.util.xmlb.annotations.Property;
 import com.intellij.util.xmlb.annotations.Tag;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.image.Image;
 import icons.TasksIcons;
 import org.jetbrains.annotations.NonNls;
@@ -324,7 +325,7 @@ public class LocalTaskImpl extends LocalTask
 			case EXCEPTION:
 				return TasksIcons.Exception;
 			case FEATURE:
-				return TasksIcons.Feature;
+				return PlatformIconGroup.nodesFavorite();
 			default:
 			case OTHER:
 				return issue ? AllIcons.FileTypes.Any_type : AllIcons.FileTypes.Unknown;
