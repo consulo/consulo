@@ -42,7 +42,6 @@ public class SwitchTaskCombo extends ComboBoxAction implements DumbAware
 	public JComponent createCustomComponent(final Presentation presentation)
 	{
 		ComboBoxButtonImpl button = new ComboBoxButtonImpl(this, presentation);
-		button.setVisible(false); // hide by default
 		return button;
 	}
 

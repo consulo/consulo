@@ -49,6 +49,13 @@
       <version>${project.version}</version>
       <scope>provided</scope>
     </dependency>
+    
+    <dependency>
+      <groupId>consulo</groupId>
+      <artifactId>consulo-task-impl</artifactId>
+      <version>${project.version}</version>
+      <scope>provided</scope>
+    </dependency>
 
     <dependency>
       <groupId>com.formdev</groupId>
