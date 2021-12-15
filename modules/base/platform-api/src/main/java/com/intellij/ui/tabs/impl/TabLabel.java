@@ -160,11 +160,6 @@ public class TabLabel extends JPanel {
         }
         return UIUtil.getLabelFont(UIUtil.FontSize.SMALL);
       }
-
-      @Override
-      protected int getTextOffsetY() {
-        return JBUI.scale(-2);
-      }
     };
     label.setOpaque(false);
     label.setIconTextGap((!UISettings.getInstance().HIDE_TABS_IF_NEED ? JBUI.scale(4) : JBUI.scale(2)));
