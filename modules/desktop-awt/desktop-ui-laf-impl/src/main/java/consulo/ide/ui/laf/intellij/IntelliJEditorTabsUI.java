@@ -203,7 +203,7 @@ public class IntelliJEditorTabsUI extends JBEditorTabsUI {
         JBTabsImpl.Toolbar toolbarComp = tabs.myInfo2Toolbar.get(tabs.getSelectedInfoInternal());
         if (toolbarComp != null && !toolbarComp.isEmpty()) {
           Rectangle toolBounds = toolbarComp.getBounds();
-          g2d.setColor(Color.RED);
+          g2d.setColor(JBColor.border());
           LinePainter2D.paint(g2d, toolBounds.getMaxX(), toolBounds.y, toolBounds.getMaxX(), toolBounds.getMaxY() - 1);
         }
       }
@@ -211,7 +211,7 @@ public class IntelliJEditorTabsUI extends JBEditorTabsUI {
         JBTabsImpl.Toolbar toolbarComp = tabs.myInfo2Toolbar.get(tabs.getSelectedInfoInternal());
         if (toolbarComp != null && !toolbarComp.isEmpty()) {
           Rectangle toolBounds = toolbarComp.getBounds();
-          g2d.setColor(Color.RED);
+          g2d.setColor(JBColor.border());
           LinePainter2D.paint(g2d, toolBounds.x, toolBounds.getMaxY(), toolBounds.getMaxX() - 1, toolBounds.getMaxY());
         }
       }
