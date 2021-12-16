@@ -17,7 +17,6 @@ package com.intellij.tasks;
 
 import com.intellij.openapi.util.JDOMUtil;
 import com.intellij.tasks.impl.TaskManagerImpl;
-import com.intellij.tasks.youtrack.YouTrackRepository;
 import com.intellij.util.xmlb.XmlSerializer;
 import org.jdom.Document;
 import org.jdom.Element;
@@ -33,7 +32,7 @@ import java.util.Collections;
 public abstract class TaskSettingsTest extends TaskManagerTestCase {
 
   public void testCarriageReturnInFormat() throws Exception {
-    TaskRepository repository = new YouTrackRepository();
+    TaskRepository repository = new TestRepository();
     String format = "foo \n bar";
     repository.setCommitMessageFormat(format);
     myTaskManager.setRepositories(Collections.singletonList(repository));
