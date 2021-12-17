@@ -26,7 +26,7 @@ public class ClientId {
   }
 
   public static Runnable withClientId(ClientId clientId, Runnable runnable) {
-    return withClientId(clientId, runnable);
+    return runnable;
   }
 
   public static <T> T withClientId(ClientId clientId, T action) {
