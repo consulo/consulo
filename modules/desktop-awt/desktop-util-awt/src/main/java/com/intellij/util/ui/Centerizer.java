@@ -26,7 +26,7 @@ public class Centerizer extends JPanel {
     this.type = type;
 
     setOpaque(false);
-    setBorder(null);
+    setBorder(JBUI.Borders.empty());
     setFocusable(false);
 
     add(comp);

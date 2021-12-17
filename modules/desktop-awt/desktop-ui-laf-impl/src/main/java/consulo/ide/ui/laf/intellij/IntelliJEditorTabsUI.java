@@ -223,13 +223,6 @@ public class IntelliJEditorTabsUI extends JBEditorTabsUI {
 
   protected void paintNonSelectedTabs(JBTabsImpl t, final Graphics2D g2d) {
     TabInfo selected = t.getSelectedInfo();
-    if (myLastPaintedSelection == null || !myLastPaintedSelection.equals(selected)) {
-      List<TabInfo> tabs = t.getTabs();
-      for (TabInfo each : tabs) {
-        t.myInfo2Label.get(each).setInactiveStateImage(null);
-      }
-    }
-
     for (int eachRow = 0; eachRow < t.getLastLayoutPass().getRowCount(); eachRow++) {
       for (int eachColumn = t.getLastLayoutPass().getColumnCount(eachRow) - 1; eachColumn >= 0; eachColumn--) {
         final TabInfo each = t.getLastLayoutPass().getTabAt(eachRow, eachColumn);

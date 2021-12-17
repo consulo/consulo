@@ -1109,8 +1109,6 @@ public abstract class JBTabsImpl extends JComponent
   }
 
   private void updateColor(final TabInfo tabInfo) {
-    myInfo2Label.get(tabInfo).setInactiveStateImage(null);
-
     updateTab(() -> {
       repaint();
       return true;

@@ -23,7 +23,6 @@ import com.intellij.openapi.actionSystem.DefaultActionGroup;
 import com.intellij.openapi.util.Pass;
 import com.intellij.ui.*;
 import com.intellij.ui.components.panels.Wrapper;
-import com.intellij.ui.tabs.JBTabsPosition;
 import com.intellij.ui.tabs.TabInfo;
 import com.intellij.ui.tabs.TabsUtil;
 import com.intellij.ui.tabs.UiDecorator;
@@ -43,7 +42,6 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.image.BufferedImage;
 import java.util.Arrays;
 import java.util.Objects;
 
@@ -66,16 +64,13 @@ public class TabLabel extends JPanel {
   private final Wrapper myLabelPlaceholder = new Wrapper(false);
   protected final JBTabsImpl myTabs;
 
-  private BufferedImage myInactiveStateImage;
-  private Rectangle myLastPaintedInactiveImageBounds;
-
   public TabLabel(JBTabsImpl tabs, final TabInfo info) {
     super(new BorderLayout(), false);
 
     myTabs = tabs;
     myInfo = info;
 
-    myLabel = createLabel(tabs);
+    myLabel = createLabel();
 
     // Allow focus so that user can TAB into the selected TabLabel and then
     // navigate through the other tabs using the LEFT/RIGHT keys.
@@ -144,14 +139,10 @@ public class TabLabel extends JPanel {
   @Override
   public boolean isFocusable() {
     // We don't want the focus unless we are the selected tab.
-    if (myTabs.getSelectedLabel() != this) {
-      return false;
-    }
-
-    return super.isFocusable();
+    return myTabs.getSelectedLabel() == this && super.isFocusable();
   }
 
-  private SimpleColoredComponent createLabel(final JBTabsImpl tabs) {
+  private SimpleColoredComponent createLabel() {
     SimpleColoredComponent label = new SimpleColoredComponent() {
       @Override
       public Font getFont() {
@@ -187,8 +178,9 @@ public class TabLabel extends JPanel {
 
   protected void setPlaceholderContent(boolean toCenter, JComponent component) {
     myLabelPlaceholder.removeAll();
-    JComponent content = toCenter ? new Centerizer(component, Centerizer.TYPE.BOTH) : new Centerizer(component, Centerizer.TYPE.VERTICAL);
-    myLabelPlaceholder.setContent(content);
+
+    JComponent centerizer = toCenter ? new Centerizer(component, Centerizer.TYPE.BOTH) : new Centerizer(component, Centerizer.TYPE.VERTICAL);
+    myLabelPlaceholder.setContent(centerizer);
     myCentered = toCenter;
   }
 
@@ -197,12 +189,6 @@ public class TabLabel extends JPanel {
       validateTree();
     }
     doPaint(g);
-  }
-
-  @Override
-  public void updateUI() {
-    super.updateUI();
-    setInactiveStateImage(null);
   }
 
   @Override
@@ -227,46 +213,18 @@ public class TabLabel extends JPanel {
   }
 
   public void doTranslate(PairConsumer<Integer, Integer> consumer) {
-    final JBTabsPosition pos = myTabs.getTabsPosition();
-
-    int dX = 0;
-    int dXs = 0;
-    int dY = 0;
-    int dYs = 0;
-    int selected = getSelectedOffset();
-    int plain = getNonSelectedOffset();
-
-    switch (pos) {
-      case bottom:
-        dY = -plain;
-        dYs = -selected;
-        break;
-      case left:
-        dX = plain;
-        dXs = selected;
-        break;
-      case right:
-        dX = -plain;
-        dXs = -selected;
-        break;
-      case top:
-        dY = plain;
-        dYs = selected;
-        break;
-    }
-
     if (!myTabs.isDropTarget(myInfo)) {
       if (myTabs.getSelectedInfo() != myInfo) {
-        consumer.consume(dX, dY);
+        consumer.consume(0, 0);
       }
       else {
-        consumer.consume(dXs, dYs);
+        consumer.consume(0, 0);
       }
     }
   }
 
   private void doPaint(final Graphics g) {
-    doTranslate((x, y) -> g.translate(x, y));
+    doTranslate(g::translate);
 
     final Composite oldComposite = ((Graphics2D)g).getComposite();
     //if (myTabs instanceof JBEditorTabs && !myTabs.isSingleRow() && myTabs.getSelectedInfo() != myInfo) {
@@ -278,14 +236,6 @@ public class TabLabel extends JPanel {
     doTranslate((x, y) -> g.translate(-x, -y));
   }
 
-  protected int getNonSelectedOffset() {
-    return 1;
-  }
-
-  protected int getSelectedOffset() {
-    return getNonSelectedOffset();
-  }
-
   @Override
   public Dimension getPreferredSize() {
     final Dimension size = super.getPreferredSize();
@@ -293,14 +243,6 @@ public class TabLabel extends JPanel {
     if (myActionPanel != null && !myActionPanel.isVisible()) {
       final Dimension actionPanelSize = myActionPanel.getPreferredSize();
       size.width += actionPanelSize.width;
-    }
-
-    final JBTabsPosition pos = myTabs.getTabsPosition();
-    switch (pos) {
-      case left:
-      case right:
-        size.width += getSelectedOffset();
-        break;
     }
 
     return size;
@@ -361,8 +303,6 @@ public class TabLabel extends JPanel {
     if (d != null && d.equals(pref)) {
       return;
     }
-
-    setInactiveStateImage(null);
 
     getLabelComponent().invalidate();
 
@@ -434,7 +374,7 @@ public class TabLabel extends JPanel {
 
     if (group == null) return;
 
-    myActionPanel = new ActionPanel(myTabs, myInfo, new Pass<MouseEvent>() {
+    myActionPanel = new ActionPanel(myTabs, myInfo, new Pass<>() {
       @Override
       public void pass(final MouseEvent event) {
         final MouseEvent me = SwingUtilities.convertMouseEvent(event.getComponent(), event, TabLabel.this);
@@ -582,27 +522,6 @@ public class TabLabel extends JPanel {
 
   public void setTabEnabled(boolean enabled) {
     getLabelComponent().setEnabled(enabled);
-  }
-
-
-  @Nullable
-  public BufferedImage getInactiveStateImage(Rectangle effectiveBounds) {
-    BufferedImage img = null;
-    if (myLastPaintedInactiveImageBounds != null && myLastPaintedInactiveImageBounds.getSize().equals(effectiveBounds.getSize())) {
-      img = myInactiveStateImage;
-    }
-    else {
-      setInactiveStateImage(null);
-    }
-    myLastPaintedInactiveImageBounds = effectiveBounds;
-    return img;
-  }
-
-  public void setInactiveStateImage(@Nullable BufferedImage img) {
-    if (myInactiveStateImage != null && img != myInactiveStateImage) {
-      myInactiveStateImage.flush();
-    }
-    myInactiveStateImage = img;
   }
 
   public JComponent getLabelComponent() {
