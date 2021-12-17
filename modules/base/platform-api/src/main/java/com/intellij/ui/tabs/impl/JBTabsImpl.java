@@ -15,7 +15,6 @@
  */
 package com.intellij.ui.tabs.impl;
 
-import consulo.disposer.Disposable;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.project.Project;
@@ -24,7 +23,6 @@ import com.intellij.openapi.ui.JBPopupMenu;
 import com.intellij.openapi.ui.Queryable;
 import com.intellij.openapi.ui.ShadowAction;
 import com.intellij.openapi.util.*;
-import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.openapi.wm.IdeGlassPane;
 import com.intellij.openapi.wm.IdeGlassPaneUtil;
@@ -44,6 +42,7 @@ import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.update.LazyUiDisposable;
 import consulo.annotation.DeprecationInfo;
 import consulo.awt.TargetAWT;
+import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ide.ui.laf.JBEditorTabsUI;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -1570,10 +1569,6 @@ public abstract class JBTabsImpl extends JComponent
 
   public TabLabel getSelectedLabel() {
     return myInfo2Label.get(getSelectedInfo());
-  }
-
-  public boolean isToBufferPainting() {
-    return Registry.is("ide.tabbedPane.bufferedPaint") && myUseBufferedPaint;
   }
 
   public List<TabInfo> getVisibleInfos() {
