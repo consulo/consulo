@@ -109,7 +109,7 @@ public abstract class SingleRowLayoutStrategy {
 
     @Override
     public int getMoreRectAxisSize() {
-      return AllIcons.General.MoreTabs.getWidth() + 15;
+      return AllIcons.Actions.FindAndShowNextMatchesSmall.getWidth() + 4;
     }
 
     @Override

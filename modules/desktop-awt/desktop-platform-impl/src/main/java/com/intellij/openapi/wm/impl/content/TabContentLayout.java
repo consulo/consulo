@@ -29,7 +29,6 @@ import java.util.*;
 
 class TabContentLayout extends ContentLayout {
 
-  static final int MORE_ICON_BORDER = 6;
   public static final int TAB_LAYOUT_START = 4;
   LayoutData myLastLayout;
 
@@ -177,21 +176,21 @@ class TabContentLayout extends ContentLayout {
     }
 
     if (data.toDrop.size() > 0) {
-      data.moreRect = new Rectangle(data.eachX + MORE_ICON_BORDER, 0, myMoreIcon.getIconWidth(), bounds.height);
+      data.moreRect = new Rectangle(data.eachX + 0, 0, myMoreIcon.getIconWidth(), bounds.height);
       myMoreIcon.updateCounter(data.toDrop.size());
     }
     else {
       data.moreRect = null;
     }
 
-    final Rectangle moreRect = data.moreRect == null ? null : new Rectangle(data.eachX, 0, myMoreIcon.getIconWidth() + MORE_ICON_BORDER, bounds.height);
+    final Rectangle moreRect = data.moreRect == null ? null : new Rectangle(data.eachX, 0, myMoreIcon.getIconWidth() + 0, bounds.height);
 
     myUi.isResizableArea = p -> moreRect == null || !moreRect.contains(p);
     myLastLayout = data;
   }
 
   private int calcMoreIconWidth() {
-    return myMoreIcon.getIconWidth() + MORE_ICON_BORDER * TAB_ARC;
+    return myMoreIcon.getIconWidth() + 0 * TAB_ARC;
   }
 
   @Override

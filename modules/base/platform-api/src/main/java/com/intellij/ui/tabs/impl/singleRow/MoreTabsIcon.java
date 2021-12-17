@@ -16,10 +16,6 @@
 package com.intellij.ui.tabs.impl.singleRow;
 
 import com.intellij.icons.AllIcons;
-import com.intellij.ide.ui.UISettings;
-import com.intellij.ui.ColorUtil;
-import com.intellij.ui.JBColor;
-import com.intellij.util.ui.UIUtil;
 import consulo.awt.TargetAWT;
 import consulo.ui.image.Image;
 
@@ -30,7 +26,7 @@ import java.awt.*;
  * @author pegov
  */
 public abstract class MoreTabsIcon {
-  private final Image icon = AllIcons.General.MoreTabs;
+  private final Image icon = AllIcons.Actions.FindAndShowNextMatchesSmall;
   private int myCounter;
 
   public void paintIcon(final Component c, Graphics graphics) {
@@ -41,19 +37,8 @@ public abstract class MoreTabsIcon {
 
     int iconY = getIconY(moreRect);
     int iconX = getIconX(moreRect);
-    graphics.setFont(UIUtil.getLabelFont().deriveFont((float)Math.min(8, UIUtil.getButtonFont().getSize())));
-    int width = graphics.getFontMetrics().stringWidth(String.valueOf(myCounter));
-    iconX -= width / 2 + 1;
 
     TargetAWT.to(icon).paintIcon(c, graphics, iconX, iconY);
-    Graphics g = graphics.create();
-    try {
-      UISettings.setupAntialiasing(g);
-      UIUtil.drawStringWithHighlighting(g, String.valueOf(myCounter), iconX + getIconWidth() + 2, iconY + getIconHeight() - 5, JBColor.BLACK, ColorUtil.withPreAlpha(JBColor.WHITE, .9));
-    }
-    finally {
-      g.dispose();
-    }
   }
 
   public int getIconWidth() {
