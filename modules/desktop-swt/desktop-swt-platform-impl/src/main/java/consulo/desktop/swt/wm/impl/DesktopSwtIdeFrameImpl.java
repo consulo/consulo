@@ -52,7 +52,7 @@ public class DesktopSwtIdeFrameImpl implements IdeFrameEx, Disposable {
 
   @RequiredUIAccess
   public void show() {
-    myWindow = Window.create(myProject.getName(), WindowOptions.builder().disableResize().build());
+    myWindow = Window.create(myProject.getName(), WindowOptions.builder().build());
 
     myStatusBar = new DesktopSwtStatusBarImpl(myProject.getApplication(), null);
     Disposer.register(this, myStatusBar);

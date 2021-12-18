@@ -20,6 +20,7 @@ import com.intellij.ide.startup.StartupActionScriptManager;
 import com.intellij.idea.ApplicationStarter;
 import com.intellij.idea.StartupUtil;
 import com.intellij.util.concurrency.AppExecutorUtil;
+import consulo.bootstrap.concurrent.IdeaForkJoinWorkerThreadFactory;
 import consulo.container.boot.ContainerPathManager;
 import consulo.container.boot.ContainerStartup;
 import consulo.container.util.StatCollector;
@@ -46,6 +47,10 @@ public class DesktopSwtContainerStartup implements ContainerStartup {
   public void run(@Nonnull Map<String, Object> map) {
     StatCollector stat = (StatCollector)map.get(ContainerStartup.STAT_COLLECTOR);
     String[] args = (String[])map.get(ContainerStartup.ARGS);
+
+    IdeaForkJoinWorkerThreadFactory.setupForkJoinCommonPool();
+
+    StartupUtil.initializeLogger();
 
     Runnable appInitializeMark = stat.mark(StatCollector.APP_INITIALIZE);
 

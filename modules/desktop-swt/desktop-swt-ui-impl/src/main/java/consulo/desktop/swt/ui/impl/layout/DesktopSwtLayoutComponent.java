@@ -33,7 +33,7 @@ import java.util.List;
  * @author VISTALL
  * @since 29/04/2021
  */
-public abstract class DesktopSwtLayoutComponent extends SWTComponentDelegate<Composite> implements Layout {
+public abstract class DesktopSwtLayoutComponent<LayoutData> extends SWTComponentDelegate<Composite> implements Layout {
   private static final String ourNullMapper = "____null____";
 
   private List<Pair<SWTComponentDelegate<?>, Object>> myComponents = new ArrayList<>();
@@ -118,11 +118,11 @@ public abstract class DesktopSwtLayoutComponent extends SWTComponentDelegate<Com
   @Nullable
   protected abstract org.eclipse.swt.widgets.Layout createLayout();
 
-  protected void add(Component component, Object layoutData) {
-    add((SWTComponentDelegate<?>)component, layoutData);
+  protected void add(Component component, LayoutData layoutLayoutData) {
+    add((SWTComponentDelegate<?>)component, layoutLayoutData);
   }
 
-  protected void add(SWTComponentDelegate<?> component, Object layoutData) {
+  protected void add(SWTComponentDelegate<?> component, LayoutData layoutData) {
     if (myComponent != null) {
       if (layoutData != null) {
         Collection<Pair<SWTComponentDelegate<?>, Object>> components = myMappedComponents.remove(layoutData.toString());

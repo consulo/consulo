@@ -15,6 +15,7 @@
  */
 package consulo.desktop.swt.ui.impl;
 
+import consulo.logging.Logger;
 import consulo.ui.UIAccess;
 import consulo.util.concurrent.AsyncResult;
 import org.eclipse.swt.widgets.Display;
@@ -30,6 +31,8 @@ import java.util.function.Supplier;
 public class DesktopSwtUIAccess implements UIAccess {
   public static final DesktopSwtUIAccess INSTANCE = new DesktopSwtUIAccess();
 
+  private static final Logger LOG = Logger.getInstance(DesktopSwtUIAccess.class);
+
   private Display myDisplay;
 
   public DesktopSwtUIAccess() {
@@ -41,6 +44,10 @@ public class DesktopSwtUIAccess implements UIAccess {
         countDownLatch.countDown();
 
         while (true) {
+          if (myDisplay.isDisposed()) {
+            break;
+          }
+
           boolean readAndDispatch = false;
           try {
             readAndDispatch = myDisplay.readAndDispatch();
@@ -80,12 +87,44 @@ public class DesktopSwtUIAccess implements UIAccess {
   @Override
   public <T> AsyncResult<T> give(@Nonnull Supplier<T> supplier) {
     AsyncResult<T> result = AsyncResult.undefined();
-    myDisplay.asyncExec(() -> result.setDone(supplier.get()));
+    myDisplay.asyncExec(() -> {
+      try {
+        result.setDone(supplier.get());
+      }
+      catch (Throwable e) {
+        LOG.error(e);
+        result.rejectWithThrowable(e);
+      }
+    });
+    return result;
+  }
+
+  @Nonnull
+  @Override
+  public AsyncResult<Void> give(@Nonnull Runnable runnable) {
+    AsyncResult<Void> result = AsyncResult.undefined();
+    myDisplay.asyncExec(() -> {
+      try {
+        runnable.run();
+        result.setDone();
+      }
+      catch (Throwable e) {
+        LOG.error(e);
+        result.rejectWithThrowable(e);
+      }
+    });
     return result;
   }
 
   @Override
   public void giveAndWait(@Nonnull Runnable runnable) {
-    myDisplay.syncExec(runnable);
+    myDisplay.syncExec(() -> {
+      try {
+        runnable.run();
+      }
+      catch (Throwable e) {
+        LOG.error(e);
+      }
+    });
   }
 }

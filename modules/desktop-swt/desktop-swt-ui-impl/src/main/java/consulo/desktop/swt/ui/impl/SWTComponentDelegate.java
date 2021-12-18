@@ -16,6 +16,7 @@
 package consulo.desktop.swt.ui.impl;
 
 import consulo.desktop.swt.ui.impl.layout.DesktopSwtScrollableLayoutImpl;
+import consulo.desktop.swt.ui.impl.layout.data.LayoutDataWithSize;
 import consulo.disposer.Disposable;
 import consulo.ui.Component;
 import consulo.ui.Size;
@@ -61,7 +62,9 @@ public abstract class SWTComponentDelegate<SWT extends Widget> implements Compon
       control.setVisible(myVisible);
       control.setData(UI_COMPONENT_KEY, this);
       if (mySize != null) {
-        control.setSize(mySize.getWidth(), mySize.getHeight());
+        if (layoutData instanceof LayoutDataWithSize) {
+          ((LayoutDataWithSize)layoutData).setSize(mySize);
+        }
       }
     }
     
@@ -167,7 +170,12 @@ public abstract class SWTComponentDelegate<SWT extends Widget> implements Compon
 
     SWT swt = toSWTComponent();
     if(swt instanceof Control control) {
-      control.setSize(size.getWidth(), size.getHeight());
+      Object layoutData = control.getLayoutData();
+      if (layoutData instanceof LayoutDataWithSize layoutDataWithSize) {
+        layoutDataWithSize.setSize(size);
+
+        control.getParent().requestLayout();
+      }
     }
   }
 

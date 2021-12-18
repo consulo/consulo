@@ -33,10 +33,10 @@ import javax.annotation.Nullable;
  * @author VISTALL
  * @since 29/04/2021
  */
-public class DesktopSwtWindow extends SWTComponentDelegate<Shell> implements Window {
+public class DesktopSwtWindowImpl extends SWTComponentDelegate<Shell> implements Window {
   private SWTComponentDelegate myContent;
 
-  public DesktopSwtWindow(String title, WindowOptions options) {
+  public DesktopSwtWindowImpl(String title, WindowOptions options) {
     int flags = SWT.SHELL_TRIM;
     flags = BitUtil.set(flags, SWT.CLOSE, options.isClosable());
     flags = BitUtil.set(flags, SWT.RESIZE, options.isResizable());
@@ -44,7 +44,7 @@ public class DesktopSwtWindow extends SWTComponentDelegate<Shell> implements Win
 
     Shell parent = null;
     Window owner = options.getOwner();
-    if(owner instanceof DesktopSwtWindow swtWindow) {
+    if(owner instanceof DesktopSwtWindowImpl swtWindow) {
       parent = swtWindow.toSWTComponent();
       flags = BitUtil.set(flags, SWT.APPLICATION_MODAL, true);
     }

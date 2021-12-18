@@ -163,10 +163,10 @@ public class DesktopSwtToolWindowPanelImpl implements ToolWindowPanel {
     }
   }
 
-  private DesktopToolWindowStripeImpl myTopStripe = new DesktopToolWindowStripeImpl(DesktopToolWindowStripeImpl.Type.TOP);
-  private DesktopToolWindowStripeImpl myBottomStripe = new DesktopToolWindowStripeImpl(DesktopToolWindowStripeImpl.Type.BOTTOM);
-  private DesktopToolWindowStripeImpl myLeftStripe = new DesktopToolWindowStripeImpl(DesktopToolWindowStripeImpl.Type.LEFT);
-  private DesktopToolWindowStripeImpl myRightStripe = new DesktopToolWindowStripeImpl(DesktopToolWindowStripeImpl.Type.RIGHT);
+  private DesktopToolWindowStripeImpl myTopStripe = new DesktopToolWindowStripeImpl(DesktopToolWindowStripeImpl.Position.TOP);
+  private DesktopToolWindowStripeImpl myBottomStripe = new DesktopToolWindowStripeImpl(DesktopToolWindowStripeImpl.Position.BOTTOM);
+  private DesktopToolWindowStripeImpl myLeftStripe = new DesktopToolWindowStripeImpl(DesktopToolWindowStripeImpl.Position.LEFT);
+  private DesktopToolWindowStripeImpl myRightStripe = new DesktopToolWindowStripeImpl(DesktopToolWindowStripeImpl.Position.RIGHT);
 
   private final Map<String, DesktopSwtToolWindowStripeButtonImpl> myId2Button = new HashMap<>();
   private final Map<String, ToolWindowInternalDecorator> myId2Decorator = new HashMap<>();

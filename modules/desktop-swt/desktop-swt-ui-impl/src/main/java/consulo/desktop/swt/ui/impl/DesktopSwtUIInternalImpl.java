@@ -279,7 +279,7 @@ public class DesktopSwtUIInternalImpl extends UIInternal {
   @Nonnull
   @Override
   public Window _Window_create(String title, WindowOptions options) {
-    return new DesktopSwtWindow(title, options);
+    return new DesktopSwtWindowImpl(title, options);
   }
 
   @Nullable

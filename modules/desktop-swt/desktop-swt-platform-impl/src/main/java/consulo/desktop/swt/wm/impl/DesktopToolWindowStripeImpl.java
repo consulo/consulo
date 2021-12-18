@@ -19,7 +19,10 @@ import consulo.desktop.swt.ui.impl.SWTComponentDelegate;
 import consulo.desktop.swt.ui.impl.layout.DesktopSwtLayoutComponent;
 import consulo.ui.ex.ToolWindowStripeButton;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.layout.RowLayout;
+import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Layout;
 
 import javax.annotation.Nullable;
@@ -30,17 +33,17 @@ import java.util.Comparator;
  * @since 12/12/2021
  */
 public class DesktopToolWindowStripeImpl extends DesktopSwtLayoutComponent {
-  public enum Type {
+  public enum Position {
     TOP,
     BOTTOM,
     LEFT,
     RIGHT
   }
 
-  private final Type myType;
+  private final Position myPosition;
 
-  public DesktopToolWindowStripeImpl(Type type) {
-    myType = type;
+  public DesktopToolWindowStripeImpl(Position position) {
+    myPosition = position;
   }
 
   public void addButton(ToolWindowStripeButton button, Comparator<ToolWindowStripeButton> comparator) {
@@ -50,7 +53,7 @@ public class DesktopToolWindowStripeImpl extends DesktopSwtLayoutComponent {
   @Nullable
   @Override
   protected Layout createLayout() {
-    switch (myType) {
+    switch (myPosition) {
       case LEFT:
       case RIGHT:
         RowLayout layout = new RowLayout(SWT.VERTICAL);
@@ -66,5 +69,19 @@ public class DesktopToolWindowStripeImpl extends DesktopSwtLayoutComponent {
     }
 
     throw new UnsupportedOperationException();
+  }
+
+  @Override
+  protected void initialize(Composite component) {
+    super.initialize(component);
+
+    component.setBackground(new Color(new RGB(255, 0, 0)));
+
+    if (myPosition == Position.LEFT || myPosition == Position.RIGHT) {
+      component.setSize(22, -1);
+    }
+    else if (myPosition == Position.TOP || myPosition == Position.BOTTOM) {
+      component.setSize(-1, 22);
+    }
   }
 }

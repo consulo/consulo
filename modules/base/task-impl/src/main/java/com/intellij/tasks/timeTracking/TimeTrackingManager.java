@@ -1,14 +1,5 @@
 package com.intellij.tasks.timeTracking;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.Date;
-
-import javax.annotation.Nonnull;
-import jakarta.inject.Inject;
-import jakarta.inject.Singleton;
-import javax.swing.Timer;
-
 import com.intellij.ide.IdeEventQueue;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
@@ -19,18 +10,22 @@ import com.intellij.openapi.components.StoragePathMacros;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.startup.StartupManager;
 import com.intellij.openapi.util.Disposer;
-import com.intellij.openapi.wm.IdeFocusManager;
-import com.intellij.openapi.wm.IdeFrame;
-import com.intellij.openapi.wm.ToolWindow;
-import com.intellij.openapi.wm.ToolWindowAnchor;
-import com.intellij.openapi.wm.ToolWindowId;
-import com.intellij.openapi.wm.ToolWindowManager;
+import com.intellij.openapi.wm.*;
 import com.intellij.tasks.LocalTask;
 import com.intellij.tasks.TaskManager;
 import com.intellij.tasks.timeTracking.model.WorkItem;
 import com.intellij.util.Alarm;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.xmlb.XmlSerializerUtil;
+import consulo.platform.Platform;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
+
+import javax.annotation.Nonnull;
+import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.Date;
 
 /**
  * User: Evgeny.Zakrevsky
@@ -200,7 +195,7 @@ public class TimeTrackingManager implements PersistentStateComponent<TimeTrackin
 		};
 		if(getState().autoMode)
 		{
-			IdeEventQueue.getInstance().addActivityListener(myActivityListener, myProject);
+			addAWTListener();
 		}
 	}
 
@@ -212,7 +207,7 @@ public class TimeTrackingManager implements PersistentStateComponent<TimeTrackin
 			getState().autoMode = on;
 			if(on)
 			{
-				IdeEventQueue.getInstance().addActivityListener(myActivityListener, myProject);
+				addAWTListener();
 			}
 			else
 			{
@@ -224,6 +219,15 @@ public class TimeTrackingManager implements PersistentStateComponent<TimeTrackin
 				}
 			}
 		}
+	}
+
+	private void addAWTListener()
+	{
+		if(Platform.current().isWebService())
+		{
+			return;
+		}
+		IdeEventQueue.getInstance().addActivityListener(myActivityListener, myProject);
 	}
 
 	@Override

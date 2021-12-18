@@ -13,17 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.desktop.swt.ui.impl;
+package consulo.desktop.swt.ui.impl.layout.data;
 
-import consulo.ui.Window;
-import org.eclipse.swt.widgets.Shell;
+import consulo.ui.Size;
 
 /**
  * @author VISTALL
- * @since 10/07/2021
+ * @since 18/12/2021
  */
-public class TargetSWT {
-  public static Shell to(Window window) {
-    return ((DesktopSwtWindowImpl)window).toSWTComponent();
-  }
+public interface LayoutDataWithSize {
+  void setSize(Size size);
 }
