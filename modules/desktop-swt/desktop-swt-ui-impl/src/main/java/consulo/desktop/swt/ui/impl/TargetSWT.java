@@ -15,8 +15,10 @@
  */
 package consulo.desktop.swt.ui.impl;
 
+import consulo.ui.Component;
 import consulo.ui.Window;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.Widget;
 
 /**
  * @author VISTALL
@@ -25,5 +27,13 @@ import org.eclipse.swt.widgets.Shell;
 public class TargetSWT {
   public static Shell to(Window window) {
     return ((DesktopSwtWindowImpl)window).toSWTComponent();
+  }
+
+  public static Component from(Widget component) {
+    Object data = component.getData(SWTComponentDelegate.UI_COMPONENT_KEY);
+    if (data instanceof Component) {
+      return (Component)data;
+    }
+    return null;
   }
 }

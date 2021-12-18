@@ -21,8 +21,8 @@ import consulo.ui.Tab;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.TabbedLayout;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.TabFolder;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -32,28 +32,32 @@ import java.util.List;
  * @author VISTALL
  * @since 18/12/2021
  */
-public class DesktopSwtTabbedLayoutImpl extends SWTComponentDelegate<TabFolder> implements TabbedLayout {
+public class DesktopSwtTabbedLayoutImpl extends SWTComponentDelegate<CTabFolder> implements TabbedLayout {
   private final List<DesktopSwtTabImpl> myTabs = new ArrayList<>();
 
   @Override
-  protected TabFolder createSWT(Composite parent) {
-    return new TabFolder(parent, SWT.TOP | SWT.BORDER);
+  protected CTabFolder createSWT(Composite parent) {
+    return new CTabFolder(parent, SWT.TOP | SWT.FLAT);
   }
 
   @Override
-  protected void initialize(TabFolder component) {
+  protected void initialize(CTabFolder component) {
     super.initialize(component);
 
     for (DesktopSwtTabImpl tab : myTabs) {
       tab.initialize(component);
     }
+
+    component.setSelection(myTabs.size() - 1);
   }
 
   private void init(DesktopSwtTabImpl tab) {
-    TabFolder tabFolder = toSWTComponent();
+    CTabFolder tabFolder = toSWTComponent();
 
     if (tabFolder != null) {
       tab.initialize(tabFolder);
+
+      tabFolder.setSelection(tab.getTabItem());
     }
   }
 
@@ -71,6 +75,8 @@ public class DesktopSwtTabbedLayoutImpl extends SWTComponentDelegate<TabFolder> 
 
     myTabs.add(swtTab);
     swtTab.setComponent(component);
+
+    init(swtTab);
     return tab;
   }
 
@@ -82,6 +88,8 @@ public class DesktopSwtTabbedLayoutImpl extends SWTComponentDelegate<TabFolder> 
     myTabs.add(tab);
     tab.append(tabName);
     tab.setComponent(component);
+
+    init(tab);
     return tab;
   }
 

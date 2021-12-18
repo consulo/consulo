@@ -20,9 +20,9 @@ import consulo.desktop.swt.ui.impl.SWTComponentDelegate;
 import consulo.ui.Component;
 import consulo.ui.Tab;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.CTabFolder;
+import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.TabFolder;
-import org.eclipse.swt.widgets.TabItem;
 
 import javax.annotation.Nullable;
 import java.util.function.BiConsumer;
@@ -34,7 +34,7 @@ import java.util.function.BiConsumer;
 public class DesktopSwtTabImpl extends DesktopSwtTextItemPresentation implements Tab {
   private SWTComponentDelegate<? extends Control> myComponent;
 
-  private TabItem myTabItem;
+  private CTabItem myTabItem;
 
   @Override
   public void setCloseHandler(@Nullable BiConsumer<Tab, Component> closeHandler) {
@@ -50,8 +50,13 @@ public class DesktopSwtTabImpl extends DesktopSwtTextItemPresentation implements
     myComponent = (SWTComponentDelegate<? extends Control>)component;
   }
 
-  public void initialize(TabFolder component) {
-    myTabItem = new TabItem(component, SWT.NULL);
+  public CTabItem getTabItem() {
+    return myTabItem;
+  }
+
+  public void initialize(CTabFolder component) {
+    myTabItem = new CTabItem(component, SWT.NULL);
+    myTabItem.setText(toString());
 
     if (myComponent != null) {
       myComponent.bind(component, null);

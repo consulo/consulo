@@ -15,9 +15,13 @@
  */
 package consulo.desktop.swt.ui.impl.layout;
 
+import consulo.desktop.swt.ui.impl.SWTComponentDelegate;
+import consulo.desktop.swt.ui.impl.TargetSWT;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.DockLayout;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Layout;
 
 import javax.annotation.Nonnull;

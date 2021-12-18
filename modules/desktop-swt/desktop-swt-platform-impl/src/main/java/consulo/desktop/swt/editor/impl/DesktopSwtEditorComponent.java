@@ -18,14 +18,14 @@ package consulo.desktop.swt.editor.impl;
 import com.intellij.openapi.editor.Document;
 import consulo.desktop.swt.ui.impl.SWTComponentDelegate;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Text;
 
 /**
  * @author VISTALL
  * @since 18/12/2021
  */
-public class DesktopSwtEditorComponent extends SWTComponentDelegate<StyledText> {
+public class DesktopSwtEditorComponent extends SWTComponentDelegate<Text> {
   private final Document myDocument;
 
   public DesktopSwtEditorComponent(Document document) {
@@ -33,12 +33,12 @@ public class DesktopSwtEditorComponent extends SWTComponentDelegate<StyledText> 
   }
 
   @Override
-  protected StyledText createSWT(Composite parent) {
-    return new StyledText(parent, SWT.DEFAULT);
+  protected Text createSWT(Composite parent) {
+    return new Text(parent, SWT.DEFAULT);
   }
 
   @Override
-  protected void initialize(StyledText component) {
+  protected void initialize(Text component) {
     super.initialize(component);
 
     component.setText(myDocument.getText());

@@ -59,6 +59,11 @@ class BorderLayout extends Layout {
       width = size.getWidth();
       height = size.getHeight();
     }
+
+    @Override
+    public String toString() {
+      return "BorderData{" + "position='" + position + '\'' + '}';
+    }
   }
 
   public final static String CENTER = "Center";
@@ -213,10 +218,6 @@ class BorderLayout extends Layout {
       }
     }
     return point;
-  }
-
-  public Control getCenterChild() {
-    return centerChild;
   }
 
   /**
