@@ -34,6 +34,7 @@ import consulo.ui.web.internal.TargetVaddin;
 import consulo.ui.web.internal.WebFocusManagerImpl;
 import consulo.ui.web.internal.WebRootPaneImpl;
 import consulo.web.application.WebApplication;
+import consulo.wm.impl.UnifiedStatusBarImpl;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -48,7 +49,7 @@ public class WebIdeFrameImpl implements IdeFrameEx, Disposable {
   private final WebIdeRootView myRootView;
 
   private Window myWindow;
-  private WebStatusBarImpl myStatusBar;
+  private UnifiedStatusBarImpl myStatusBar;
 
   public WebIdeFrameImpl(Project project) {
     myProject = project;
@@ -59,7 +60,7 @@ public class WebIdeFrameImpl implements IdeFrameEx, Disposable {
   public void show() {
     myWindow = Window.create(myProject.getName(), WindowOptions.builder().disableResize().build());
 
-    myStatusBar = new WebStatusBarImpl(myProject.getApplication(), null);
+    myStatusBar = new UnifiedStatusBarImpl(myProject.getApplication(), null);
     Disposer.register(this, myStatusBar);
     myStatusBar.install(this);
 

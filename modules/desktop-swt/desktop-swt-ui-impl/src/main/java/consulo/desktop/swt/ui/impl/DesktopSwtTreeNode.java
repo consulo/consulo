@@ -16,13 +16,8 @@
 package consulo.desktop.swt.ui.impl;
 
 import consulo.desktop.swt.ui.impl.image.DesktopSwtImage;
-import consulo.desktop.swt.ui.impl.image.DesktopSwtImageKeyImpl;
-import consulo.desktop.swt.ui.impl.image.DesktopSwtSvgLibraryImageImpl;
 import consulo.ui.TextItemPresentation;
 import consulo.ui.TreeNode;
-import org.eclipse.nebula.cwt.svg.SvgDocument;
-import org.eclipse.swt.graphics.GC;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.TreeItem;
 
 import javax.annotation.Nonnull;
@@ -39,6 +34,8 @@ public class DesktopSwtTreeNode<E> implements TreeNode<E> {
   private final E myValue;
 
   private TreeItem myTreeItem;
+
+  private boolean myLeaf;
 
   public DesktopSwtTreeNode(E value) {
     myValue = value;
@@ -81,12 +78,12 @@ public class DesktopSwtTreeNode<E> implements TreeNode<E> {
 
   @Override
   public void setLeaf(boolean leaf) {
-
+    myLeaf = leaf;
   }
 
   @Override
   public boolean isLeaf() {
-    return false;
+    return myLeaf;
   }
 
   @Nullable

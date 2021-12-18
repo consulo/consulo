@@ -40,6 +40,6 @@ public class DesktopSwtEditorFactoryImpl extends EditorFactoryImpl {
   @Nonnull
   @Override
   protected EditorInternal createEditorImpl(@Nonnull Document document, boolean isViewer, Project project, @Nonnull EditorKind kind) {
-    return null;
+    return new DesktopSwtEditorImpl(document, isViewer, project, kind);
   }
 }

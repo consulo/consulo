@@ -148,21 +148,6 @@ public class DesktopSwtToolWindowPanelImpl implements ToolWindowPanel {
     }
   }
 
-  private final class SetEditorComponentCmd implements Runnable {
-    private final Component myComponent;
-
-    public SetEditorComponentCmd(Component component) {
-      myComponent = component;
-    }
-
-    @Override
-    public void run() {
-      setDocumentComponent(myComponent);
-      //myLayeredPane.validate();
-      //myLayeredPane.repaint();
-    }
-  }
-
   private DesktopToolWindowStripeImpl myTopStripe = new DesktopToolWindowStripeImpl(DesktopToolWindowStripeImpl.Position.TOP);
   private DesktopToolWindowStripeImpl myBottomStripe = new DesktopToolWindowStripeImpl(DesktopToolWindowStripeImpl.Position.BOTTOM);
   private DesktopToolWindowStripeImpl myLeftStripe = new DesktopToolWindowStripeImpl(DesktopToolWindowStripeImpl.Position.LEFT);
@@ -327,6 +312,6 @@ public class DesktopSwtToolWindowPanelImpl implements ToolWindowPanel {
   @RequiredUIAccess
   @Override
   public void setEditorComponent(Object component) {
-    new SetEditorComponentCmd((Component)component).run();
+    setDocumentComponent((Component)component);
   }
 }

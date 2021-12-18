@@ -18,11 +18,9 @@ package consulo.desktop.swt.ui.impl;
 import consulo.ui.Tree;
 import consulo.ui.TreeModel;
 import consulo.ui.TreeNode;
+import consulo.ui.UIAccess;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.TreeAdapter;
-import org.eclipse.swt.events.TreeEvent;
+import org.eclipse.swt.events.*;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.TreeItem;
 
@@ -64,18 +62,18 @@ public class DesktopSwtTreeImpl<E> extends SWTComponentDelegate<org.eclipse.swt.
       }
     });
 
-    //myTree.addMouseListener(new MouseAdapter() {
-    //  @Override
-    //  public void mouseDoubleClick(MouseEvent e) {
-    //    TreeItem[] selection = myTree.getSelection();
-    //
-    //    UIAccess.current().give(() -> {
-    //      for (TreeItem treeItem : selection) {
-    //        treeItem.setExpanded(!treeItem.getExpanded());
-    //      }
-    //    });
-    //  }
-    //});
+    tree.addMouseListener(new MouseAdapter() {
+      @Override
+      public void mouseDoubleClick(MouseEvent e) {
+
+        UIAccess.current().give(() -> {
+          TreeNode<E> selectedNode = getSelectedNode();
+          if (selectedNode != null) {
+            myModel.onDoubleClick(DesktopSwtTreeImpl.this, selectedNode);
+          }
+        });
+      }
+    });
 
     tree.addTreeListener(new TreeAdapter() {
       @Override

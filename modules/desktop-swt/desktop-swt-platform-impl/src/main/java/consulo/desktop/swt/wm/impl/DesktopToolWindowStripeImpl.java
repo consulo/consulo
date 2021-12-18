@@ -17,10 +17,9 @@ package consulo.desktop.swt.wm.impl;
 
 import consulo.desktop.swt.ui.impl.SWTComponentDelegate;
 import consulo.desktop.swt.ui.impl.layout.DesktopSwtLayoutComponent;
+import consulo.ui.Size;
 import consulo.ui.ex.ToolWindowStripeButton;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Layout;
@@ -59,7 +58,7 @@ public class DesktopToolWindowStripeImpl extends DesktopSwtLayoutComponent {
         RowLayout layout = new RowLayout(SWT.VERTICAL);
         layout.spacing = 0;
         layout.wrap = false;
-        layout.fill = true;
+        layout.fill = false;
         return layout;
       case TOP:
       case BOTTOM:
@@ -75,13 +74,11 @@ public class DesktopToolWindowStripeImpl extends DesktopSwtLayoutComponent {
   protected void initialize(Composite component) {
     super.initialize(component);
 
-    component.setBackground(new Color(new RGB(255, 0, 0)));
-
     if (myPosition == Position.LEFT || myPosition == Position.RIGHT) {
-      component.setSize(22, -1);
+      setSize(new Size(22, -1));
     }
     else if (myPosition == Position.TOP || myPosition == Position.BOTTOM) {
-      component.setSize(-1, 22);
+      setSize(new Size(-1, 22));
     }
   }
 }

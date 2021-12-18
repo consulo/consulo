@@ -20,6 +20,7 @@ import com.intellij.openapi.actionSystem.impl.MenuItemPresentationFactory;
 import com.intellij.openapi.project.Project;
 import consulo.ui.MenuBar;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.wm.impl.UnifiedStatusBarImpl;
 
 /**
  * @author VISTALL
@@ -31,7 +32,7 @@ public class DesktopSwtRootView {
   private Project myProject;
 
   private MenuBar myMenuBar;
-  private DesktopSwtStatusBarImpl myStatusBar;
+  private UnifiedStatusBarImpl myStatusBar;
 
   @RequiredUIAccess
   public DesktopSwtRootView(Project project) {
@@ -46,7 +47,7 @@ public class DesktopSwtRootView {
   }
 
   @RequiredUIAccess
-  public void setStatusBar(DesktopSwtStatusBarImpl statusBar) {
+  public void setStatusBar(UnifiedStatusBarImpl statusBar) {
     myStatusBar = statusBar;
 
     myRootPanel.setStatusBar(statusBar);

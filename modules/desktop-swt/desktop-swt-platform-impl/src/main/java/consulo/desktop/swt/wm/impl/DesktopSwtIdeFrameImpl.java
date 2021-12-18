@@ -29,6 +29,7 @@ import consulo.ui.UIAccess;
 import consulo.ui.Window;
 import consulo.ui.WindowOptions;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.wm.impl.UnifiedStatusBarImpl;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -43,7 +44,7 @@ public class DesktopSwtIdeFrameImpl implements IdeFrameEx, Disposable {
   private final DesktopSwtRootView myRootView;
 
   private Window myWindow;
-  private DesktopSwtStatusBarImpl myStatusBar;
+  private UnifiedStatusBarImpl myStatusBar;
 
   public DesktopSwtIdeFrameImpl(Project project) {
     myProject = project;
@@ -54,7 +55,7 @@ public class DesktopSwtIdeFrameImpl implements IdeFrameEx, Disposable {
   public void show() {
     myWindow = Window.create(myProject.getName(), WindowOptions.builder().build());
 
-    myStatusBar = new DesktopSwtStatusBarImpl(myProject.getApplication(), null);
+    myStatusBar = new UnifiedStatusBarImpl(myProject.getApplication(), null);
     Disposer.register(this, myStatusBar);
     myStatusBar.install(this);
 

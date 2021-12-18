@@ -24,6 +24,7 @@ import consulo.ide.base.BaseDataManager;
 import consulo.ui.MenuBar;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.web.internal.WebRootPaneImpl;
+import consulo.wm.impl.UnifiedStatusBarImpl;
 
 /**
  * @author VISTALL
@@ -35,7 +36,7 @@ public class WebIdeRootView {
   private Project myProject;
 
   private MenuBar myMenuBar;
-  private WebStatusBarImpl myStatusBar;
+  private UnifiedStatusBarImpl myStatusBar;
 
   @RequiredUIAccess
   public WebIdeRootView(Project project) {
@@ -50,7 +51,7 @@ public class WebIdeRootView {
   }
 
   @RequiredUIAccess
-  public void setStatusBar(WebStatusBarImpl statusBar) {
+  public void setStatusBar(UnifiedStatusBarImpl statusBar) {
     myStatusBar = statusBar;
 
     myRootPanel.setStatusBar(statusBar);

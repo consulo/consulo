@@ -78,5 +78,7 @@
     <applicationService serviceInterface="com.intellij.ui.content.ContentFactory" serviceImplementation="consulo.wm.impl.UnifiedContentFactoryImpl"/>
 
     <projectService serviceInterface="com.intellij.ide.projectView.ProjectView" serviceImplementation="consulo.projectView.impl.UnifiedProjectViewImpl"/>
+
+    <projectService serviceInterface="com.intellij.codeInsight.daemon.impl.EditorTracker" serviceImplementation="consulo.codeInsight.daemon.impl.UnifiedEditorTrackerImpl"/>
   </extensions>
 </consulo-plugin>

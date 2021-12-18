@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.web.wm.impl;
+package consulo.wm.impl;
 
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
@@ -46,7 +46,7 @@ import consulo.ui.layout.HorizontalLayout;
 import consulo.ui.layout.WrappedLayout;
 import consulo.ui.style.ComponentColors;
 import consulo.util.lang.StringUtil;
-import consulo.web.wm.impl.status.WebInfoAndProgressPanel;
+import consulo.wm.impl.status.UnifiedInfoAndProgressPanel;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -61,8 +61,8 @@ import java.util.Map;
  * @author VISTALL
  * @since 25-Sep-17
  */
-public class WebStatusBarImpl implements StatusBarEx {
-  private WebIdeFrameImpl myFrame;
+public class UnifiedStatusBarImpl implements StatusBarEx {
+  private IdeFrame myFrame;
 
   private enum Position {
     LEFT,
@@ -99,15 +99,15 @@ public class WebStatusBarImpl implements StatusBarEx {
 
   private final DockLayout myComponent = DockLayout.create();
 
-  private WebInfoAndProgressPanel myInfoAndProgressPanel;
+  private UnifiedInfoAndProgressPanel myInfoAndProgressPanel;
 
   private String myInfoText;
 
   @RequiredUIAccess
-  public WebStatusBarImpl(Application application, @Nullable StatusBar master) {
+  public UnifiedStatusBarImpl(Application application, @Nullable StatusBar master) {
     myApplication = application;
 
-    myInfoAndProgressPanel = new WebInfoAndProgressPanel();
+    myInfoAndProgressPanel = new UnifiedInfoAndProgressPanel();
     addWidget(myInfoAndProgressPanel, Position.CENTER, "__IGNORED__");
 
     if (master == null) {
@@ -211,7 +211,7 @@ public class WebStatusBarImpl implements StatusBarEx {
 
       };
     }
-    return WebStatusBarWidgetWrapper.wrap(widget);
+    return UnifiedStatusBarWidgetWrapper.wrap(widget);
   }
 
   //private int getPositionIndex(@Nonnull Position position, @Nonnull String anchor) {
@@ -322,7 +322,7 @@ public class WebStatusBarImpl implements StatusBarEx {
 
   @Override
   public void install(IdeFrame frame) {
-    myFrame = (WebIdeFrameImpl)frame;
+    myFrame = frame;
   }
 
   @Nullable

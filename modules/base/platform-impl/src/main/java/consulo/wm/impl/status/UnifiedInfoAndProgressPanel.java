@@ -1,4 +1,4 @@
-package consulo.web.wm.impl.status;
+package consulo.wm.impl.status;
 
 import com.intellij.openapi.wm.CustomStatusBarWidget;
 import com.intellij.openapi.wm.StatusBar;
@@ -15,13 +15,13 @@ import javax.annotation.Nullable;
  * @author VISTALL
  * @since 16/08/2021
  */
-public class WebInfoAndProgressPanel implements CustomStatusBarWidget {
+public class UnifiedInfoAndProgressPanel implements CustomStatusBarWidget {
   private DockLayout myLayout;
 
   private Label myStatusLabel;
 
   @RequiredUIAccess
-  public WebInfoAndProgressPanel() {
+  public UnifiedInfoAndProgressPanel() {
     myLayout = DockLayout.create();
 
     myStatusLabel = Label.create();

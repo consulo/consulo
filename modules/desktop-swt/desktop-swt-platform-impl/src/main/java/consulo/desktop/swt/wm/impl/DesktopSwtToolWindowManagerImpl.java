@@ -112,18 +112,12 @@ public class DesktopSwtToolWindowManagerImpl extends ToolWindowManagerBase {
     myFrame = null;
   }
 
-  @Override
   @RequiredUIAccess
-  protected void postInitialize() {
-    updateToolWindowsPane();
-
+  @Override
+  protected void initializeEditorComponent() {
     Component editorComponent = getEditorComponent(myProject);
-    //myEditorComponentFocusWatcher.install(editorComponent);
 
     setEditorComponent(editorComponent);
-    //if (myEditorWasActive && editorComponent instanceof DesktopEditorsSplitters) {
-    //  activateEditorComponentImpl(commandsList, true);
-    //}
   }
 
   private Component getEditorComponent(Project project) {
@@ -134,7 +128,7 @@ public class DesktopSwtToolWindowManagerImpl extends ToolWindowManagerBase {
   @Nonnull
   @RequiredUIAccess
   protected Component createInitializingLabel() {
-    Label label = Label.create(LocalizeValue.localizeTODO("Initializing..."));
+    Label label = Label.create("Initializing...");
     DockLayout dock = DockLayout.create();
     dock.center(label);
     return label;
@@ -173,12 +167,6 @@ public class DesktopSwtToolWindowManagerImpl extends ToolWindowManagerBase {
   @Override
   protected ToolWindowInternalDecorator createInternalDecorator(Project project, @Nonnull WindowInfoImpl info, ToolWindowEx toolWindow, boolean dumbAware) {
     return new DesktopSwtToolWindowInternalDecorator(project, info, (UnifiedToolWindowImpl)toolWindow, dumbAware);
-  }
-
-  @RequiredUIAccess
-  @Override
-  protected void initializeEditorComponent() {
-
   }
 
   @Override

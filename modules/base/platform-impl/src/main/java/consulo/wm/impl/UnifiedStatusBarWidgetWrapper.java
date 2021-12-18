@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.web.wm.impl;
+package consulo.wm.impl;
 
 import com.intellij.openapi.wm.StatusBarWidget;
 import com.intellij.openapi.wm.impl.status.widget.StatusBarWidgetWrapper;
@@ -31,7 +31,7 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 2020-11-21
  */
-public class WebStatusBarWidgetWrapper {
+public class UnifiedStatusBarWidgetWrapper {
   @RequiredUIAccess
   public static PseudoComponent wrap(StatusBarWidget widget) {
     StatusBarWidget.WidgetPresentation presentation = widget.getPresentation();

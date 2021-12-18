@@ -19,7 +19,6 @@ import consulo.container.ExitCodes;
 import consulo.container.boot.ContainerStartup;
 import consulo.container.impl.SystemContainerLogger;
 import consulo.container.impl.classloader.BootstrapClassLoaderUtil;
-import consulo.container.impl.classloader.Java9ModuleProcessor;
 import consulo.container.util.StatCollector;
 import consulo.util.nodep.SystemInfoRt;
 
@@ -61,7 +60,7 @@ public class Main {
     map.put(ContainerStartup.ARGS, args);
     map.put(ContainerStartup.STAT_COLLECTOR, stat);
 
-    ContainerStartup containerStartup = BootstrapClassLoaderUtil.buildContainerStartup(map, modulesDirectory, SystemContainerLogger.INSTANCE, Java9ModuleProcessor.EMPTY);
+    ContainerStartup containerStartup = BootstrapClassLoaderUtil.buildContainerStartup(map, modulesDirectory, SystemContainerLogger.INSTANCE, new DesktopSwtJava9ModuleProcessor());
 
     containerStartup.run(map);
   }

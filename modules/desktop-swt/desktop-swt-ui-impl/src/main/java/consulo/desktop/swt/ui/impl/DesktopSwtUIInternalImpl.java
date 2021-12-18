@@ -100,7 +100,7 @@ public class DesktopSwtUIInternalImpl extends UIInternal {
 
   @Override
   public TabbedLayout _Layouts_tabbed() {
-    return null;
+    return new DesktopSwtTabbedLayoutImpl();
   }
 
   @Override
@@ -274,6 +274,11 @@ public class DesktopSwtUIInternalImpl extends UIInternal {
   @Override
   public FontManager _FontManager_get() {
     return DesktopSwtFontManagerImpl.INSTANCE;
+  }
+
+  @Override
+  public FocusManager _FocusManager_get() {
+    return DesktopSwtFocusManagerImpl.INSTANCE;
   }
 
   @Nonnull

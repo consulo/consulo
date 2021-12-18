@@ -196,6 +196,10 @@ class BorderLayout extends Layout {
   }
 
   protected Point getPreferredSize(Control control, int wHint, int hHint, boolean changed) {
+    if (!control.isVisible()) {
+      return new Point(0, 0);
+    }
+    
     Point point = control.computeSize(wHint, hHint, changed);
 
     Object layoutData = control.getLayoutData();
@@ -209,6 +213,10 @@ class BorderLayout extends Layout {
       }
     }
     return point;
+  }
+
+  public Control getCenterChild() {
+    return centerChild;
   }
 
   /**
