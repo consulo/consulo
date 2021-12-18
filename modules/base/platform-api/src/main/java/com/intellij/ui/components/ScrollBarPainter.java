@@ -13,6 +13,7 @@ import com.intellij.ui.paint.RectanglePainter;
 import com.intellij.util.ui.RegionPainter;
 import com.intellij.util.ui.UIUtil;
 import consulo.awt.TargetAWT;
+import consulo.platform.Platform;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -158,6 +159,9 @@ public abstract class ScrollBarPainter implements RegionPainter<Float> {
   }
 
   static void setBackground(@Nonnull Component component) {
+    if (Platform.current().isWebService()) {
+      return; // FIXME [VISTALL] hack due it will create in unified app, and will throw error  due conversion to awt which not supported
+    }
     component.setBackground(new JBColor(() -> getColor(component, BACKGROUND)));
   }
 

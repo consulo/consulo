@@ -8,6 +8,7 @@ import com.intellij.ui.scale.JBUIScale;
 import com.intellij.util.ui.RegionPainter;
 import com.intellij.ui.scroll.TouchScrollUtil;
 import com.intellij.util.ui.UIUtil;
+import consulo.platform.Platform;
 import consulo.ui.plaf.ScrollBarUIConstants;
 import consulo.util.dataholder.Key;
 import org.intellij.lang.annotations.JdkConstants;
@@ -18,6 +19,7 @@ import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.plaf.ScrollBarUI;
+import javax.swing.plaf.basic.BasicScrollBarUI;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
@@ -99,6 +101,10 @@ public class JBScrollBar extends JScrollBar implements TopComponent, Interpolabl
   @SuppressWarnings("UnusedParameters")
   @Nonnull
   public static ScrollBarUI createUI(JComponent c) {
+    // do not try create swing specific ui, until we fully migrate to unified ui
+    if (Platform.current().isWebService()) {
+      return new BasicScrollBarUI();
+    }
     return SystemInfo.isMac ? new MacScrollBarUI() : new DefaultScrollBarUI();
   }
 
