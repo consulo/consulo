@@ -22,7 +22,6 @@ import com.intellij.execution.configurations.*;
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.DataManager;
 import com.intellij.openapi.actionSystem.*;
-import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.options.*;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.LabeledComponent;
@@ -51,6 +50,7 @@ import com.intellij.util.ui.GridBag;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.tree.TreeUtil;
+import consulo.disposer.Disposable;
 import consulo.logging.Logger;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -58,7 +58,6 @@ import consulo.ui.decorator.SwingUIDecorator;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
 import consulo.util.dataholder.Key;
-import gnu.trove.THashSet;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
@@ -77,7 +76,7 @@ import java.util.*;
 import static com.intellij.execution.impl.RunConfigurable.NodeKind.*;
 import static com.intellij.ui.RowsDnDSupport.RefinedDropSupport.Position.*;
 
-class RunConfigurable extends BaseConfigurable {
+public class RunConfigurable extends BaseConfigurable {
   private static ConfigurationType HIDDEN_ITEMS_STUB = new ConfigurationType() {
     @Override
     public String getDisplayName() {
@@ -138,6 +137,8 @@ class RunConfigurable extends BaseConfigurable {
   private boolean isFolderCreating;
   private RunConfigurable.MyToolbarAddAction myAddAction = new MyToolbarAddAction();
 
+  private boolean myEditorMode;
+
   public RunConfigurable(final Project project) {
     this(project, null);
   }
@@ -145,6 +146,10 @@ class RunConfigurable extends BaseConfigurable {
   public RunConfigurable(final Project project, @Nullable final RunDialogBase runDialog) {
     myProject = project;
     myRunDialog = runDialog;
+  }
+
+  public void setEditorMode() {
+    myEditorMode = true;
   }
 
   @Override
@@ -155,7 +160,9 @@ class RunConfigurable extends BaseConfigurable {
   private void initTree() {
     myTree.setRootVisible(false);
     myTree.setShowsRootHandles(true);
-    SwingUIDecorator.apply(SwingUIDecorator::decorateSidebarTree, myTree);
+    if (!myEditorMode) {
+      SwingUIDecorator.apply(SwingUIDecorator::decorateSidebarTree, myTree);
+    }
     UIUtil.setLineStyleAngled(myTree);
     TreeUtil.installActions(myTree);
     new TreeSpeedSearch(myTree, new Convertor<TreePath, String>() {
@@ -573,8 +580,8 @@ class RunConfigurable extends BaseConfigurable {
             .setRemoveAction(removeAction).setRemoveActionUpdater(removeAction)
             .setRemoveActionName(ExecutionBundle.message("remove.run.configuration.action.name"))
             .setPanelBorder(JBUI.Borders.empty())
-            .setToolbarBorder(JBUI.Borders.empty())
-            .setToolbarBackgroundColor(SwingUIDecorator.get(SwingUIDecorator::getSidebarColor))
+            .setToolbarBorder(myEditorMode ? JBUI.Borders.customLine(JBColor.border(), 0, 0, 1, 0) : JBUI.Borders.empty())
+            .setToolbarBackgroundColor(myEditorMode ? UIUtil.getPanelBackground() : SwingUIDecorator.get(SwingUIDecorator::getSidebarColor))
             .setMoveUpAction(moveUpAction).setMoveUpActionName(ExecutionBundle.message("move.up.action.name")).setMoveUpActionUpdater(moveUpAction)
             .setMoveDownAction(moveDownAction).setMoveDownActionName(ExecutionBundle.message("move.down.action.name")).setMoveDownActionUpdater(moveDownAction)
             .addExtraAction(AnActionButton.fromAction(new MyCopyAction()))
@@ -624,17 +631,17 @@ class RunConfigurable extends BaseConfigurable {
 
   @RequiredUIAccess
   @Override
-  public JComponent createComponent() {
-    for (RunConfigurationsSettings each : Extensions.getExtensions(RunConfigurationsSettings.EXTENSION_POINT)) {
+  public JComponent createComponent(Disposable uiDisposable) {
+    for (RunConfigurationsSettings each : RunConfigurationsSettings.EXTENSION_POINT.getExtensionList()) {
       UnnamedConfigurable configurable = each.createConfigurable();
-      myAdditionalSettings.add(Pair.create(configurable, configurable.createComponent()));
+      myAdditionalSettings.add(Pair.create(configurable, configurable.createComponent(uiDisposable)));
     }
 
     myWholePanel = new JPanel(new BorderLayout());
     DataManager.registerDataProvider(myWholePanel, new DataProvider() {
       @Nullable
       @Override
-      public Object getData(@Nonnull @NonNls Key dataId) {
+      public Object getData(@Nonnull Key dataId) {
         return RunConfigurationSelector.KEY == dataId ? new RunConfigurationSelector() {
           @Override
           public void select(@Nonnull RunConfiguration configuration) {

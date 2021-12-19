@@ -2787,6 +2787,11 @@
     <editorTabColorProvider implementation="consulo.ide.plugins.whatsNew.WhatsNewEditorTabColorProvider"/>
     <postStartupActivity implementation="consulo.ide.plugins.whatsNew.WhatsNewStartupActivity" order="after OpenFilesActivity"/>
 
+    <fileEditorProvider implementation="consulo.execution.ui.editor.RunConfigurationFileEditorProvider"/>
+    <eapDescriptor implementation="consulo.execution.ui.editor.RunConfigurationFileEditorEarlyAccessDescriptor"/>
+    <editorTabColorProvider implementation="consulo.execution.ui.editor.RunConfigurationEditorTabColorProvider"/>
+    <editorTabTitleProvider implementation="consulo.execution.ui.editor.RunConfigurationEditorTabTitleProvider"/>
+
     <fileTypeOverrider implementation="com.intellij.openapi.file.exclude.UserFileTypeOverrider"/>
     <applicationService serviceImplementation="com.intellij.openapi.file.exclude.OverrideFileTypeManager"/>
 

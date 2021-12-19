@@ -21,9 +21,13 @@ import com.intellij.openapi.actionSystem.ActionPlaces;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.Presentation;
+import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
+import consulo.execution.ui.editor.RunConfigurationFileEditorEarlyAccessDescriptor;
+import consulo.execution.ui.editor.RunConfigurationVirtualFile;
+import consulo.ide.eap.EarlyAccessProgramManager;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.localize.ExecutionLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -36,11 +40,18 @@ public class EditRunConfigurationsAction extends DumbAwareAction {
     if (project != null && project.isDisposed()) {
       return;
     }
+
     if (project == null) {
       //setup template project configurations
       project = ProjectManager.getInstance().getDefaultProject();
     }
-    new EditConfigurationsDialog(project).showAsync();
+
+    if (EarlyAccessProgramManager.is(RunConfigurationFileEditorEarlyAccessDescriptor.class)) {
+      FileEditorManager.getInstance(project).openFile(new RunConfigurationVirtualFile(), true);
+    }
+    else {
+      new EditConfigurationsDialog(project).showAsync();
+    }
   }
 
   @RequiredUIAccess

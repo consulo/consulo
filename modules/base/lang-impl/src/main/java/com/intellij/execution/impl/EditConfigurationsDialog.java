@@ -48,7 +48,7 @@ public class EditConfigurationsDialog extends WholeWestSingleConfigurableEditor 
   @Override
   public Couple<JComponent> createSplitterComponents(JPanel rootPanel) {
     RunConfigurable configurable = getConfigurable();
-    configurable.createComponent();
+    configurable.createComponent(getDisposable());
     configurable.setWholePanel(rootPanel);
     Splitter splitter = configurable.getSplitter();
     return Couple.of(splitter.getFirstComponent(), splitter.getSecondComponent());

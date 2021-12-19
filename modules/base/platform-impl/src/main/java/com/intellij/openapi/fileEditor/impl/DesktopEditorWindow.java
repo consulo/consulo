@@ -531,7 +531,7 @@ public class DesktopEditorWindow extends EditorWindowBase implements EditorWindo
 
         final VirtualFile file = editor.getFile();
         final Image template = AllIcons.FileTypes.Text;
-        myTabbedPane.insertTab(file, Image.empty(template.getWidth(), template.getHeight()), new TComp(this, (DesktopEditorWithProviderComposite)editor), null, indexToInsert);
+        myTabbedPane.insertTab(file, Image.empty(template.getWidth(), template.getHeight()), new TComp(this, (DesktopEditorWithProviderComposite)editor), null, indexToInsert, this);
         trimToSize(UISettings.getInstance().getEditorTabLimit(), file, false);
         if (selectEditor) {
           setSelectedEditor((DesktopEditorWithProviderComposite)editor, focusEditor);
