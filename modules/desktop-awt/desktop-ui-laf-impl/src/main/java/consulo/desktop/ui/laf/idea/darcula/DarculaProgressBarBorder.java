@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2012 JetBrains s.r.o.
+ * Copyright 2000-2013 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,26 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.ide.ui.laf.darcula.ui;
+package consulo.desktop.ui.laf.idea.darcula;
 
-import javax.swing.*;
-import javax.swing.plaf.ComponentUI;
-import javax.swing.plaf.basic.BasicEditorPaneUI;
+import javax.swing.plaf.BorderUIResource;
 
 /**
  * @author Konstantin Bulenkov
  */
-public class DarculaEditorPaneUI extends BasicEditorPaneUI {
-  public DarculaEditorPaneUI(JComponent comp) {
-  }
-
-  @SuppressWarnings("MethodOverridesStaticMethodOfSuperclass")
-  public static ComponentUI createUI(JComponent comp) {
-    return new DarculaEditorPaneUI(comp);
-  }
-
-  @Override
-  protected void installDefaults() {
-    super.installDefaults();
+public class DarculaProgressBarBorder extends BorderUIResource.EmptyBorderUIResource {
+  public DarculaProgressBarBorder() {
+    super(0,0,0,0);
   }
 }

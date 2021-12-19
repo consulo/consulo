@@ -49,13 +49,4 @@ public class IntelliJLaf extends DarculaLaf {
   protected DefaultMetalTheme createMetalTheme() {
     return new IdeaBlueMetalTheme();
   }
-
-  @Deprecated
-  public static boolean isWindowsNativeLook() {
-    return false;
-  }
-
-  public static boolean isGraphite() {
-    return UIUtil.isGraphite();
-  }
 }

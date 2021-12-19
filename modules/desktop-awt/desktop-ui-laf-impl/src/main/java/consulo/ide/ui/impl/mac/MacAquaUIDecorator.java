@@ -15,9 +15,8 @@
  */
 package consulo.ide.ui.impl.mac;
 
-import com.intellij.ide.ui.laf.darcula.DarculaUIUtil;
-import com.intellij.ide.ui.laf.intellij.IntelliJLaf;
 import com.intellij.ui.ColorUtil;
+import com.intellij.util.ui.UIUtil;
 import consulo.ide.ui.impl.DefaultUIDecorator;
 import consulo.ui.decorator.SwingUIDecorator;
 import consulo.ui.style.StyleManager;
@@ -32,6 +31,10 @@ import java.awt.*;
  * @since 2018-07-23
  */
 public class MacAquaUIDecorator implements SwingUIDecorator {
+  public static final Color MAC_REGULAR_COLOR = new Color(0x80479cfc, true);
+
+  public static final Color MAC_GRAPHITE_COLOR = new Color(0x8099979d, true);
+
   @Override
   public boolean decorateSidebarTree(@Nonnull JTree tree) {
     DefaultUIDecorator.decorateTree0(tree, getSidebarColor());
@@ -52,7 +55,7 @@ public class MacAquaUIDecorator implements SwingUIDecorator {
   @Nullable
   @Override
   public Color getSidebarColor() {
-    Color color = IntelliJLaf.isGraphite() ? DarculaUIUtil.MAC_GRAPHITE_COLOR : DarculaUIUtil.MAC_REGULAR_COLOR;
+    Color color = UIUtil.isGraphite() ? MAC_GRAPHITE_COLOR : MAC_REGULAR_COLOR;
 
     return ColorUtil.desaturate(color, 8);
   }

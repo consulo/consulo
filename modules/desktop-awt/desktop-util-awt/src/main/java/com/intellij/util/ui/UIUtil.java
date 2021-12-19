@@ -3773,6 +3773,11 @@ public class UIUtil {
     return ComponentStyle.REGULAR;
   }
 
+  // Here we setup window to be checked in IdeEventQueue and reset typeahead state when the window finally appears and gets focus
+  public static void markAsTypeAheadAware(Window window) {
+    ClientProperty.put(window, "TypeAheadAwareWindow", Boolean.TRUE);
+  }
+
   @Nonnull
   public static Logger getLogger() {
     return Logger.getInstance(UIUtil.class);

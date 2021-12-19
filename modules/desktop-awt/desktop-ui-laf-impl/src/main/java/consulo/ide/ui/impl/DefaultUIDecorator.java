@@ -15,14 +15,14 @@
  */
 package consulo.ide.ui.impl;
 
-import com.intellij.ide.ui.laf.darcula.DarculaUIUtil;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.ui.ColorUtil;
 import com.intellij.util.ui.JBUI;
-import consulo.ui.decorator.SwingUIDecorator;
 import consulo.desktop.util.awt.MorphColor;
-import consulo.ui.style.StyleManager;
 import consulo.desktop.util.awt.laf.BuildInLookAndFeel;
+import consulo.ide.ui.impl.mac.MacAquaUIDecorator;
+import consulo.ui.decorator.SwingUIDecorator;
+import consulo.ui.style.StyleManager;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -58,7 +58,7 @@ public class DefaultUIDecorator implements SwingUIDecorator {
   private Color calcSidebarColor() {
     Color color = UIManager.getColor("Hyperlink.linkColor");
     if (color == null) {
-      color = DarculaUIUtil.MAC_REGULAR_COLOR;
+      color = MacAquaUIDecorator.MAC_REGULAR_COLOR;
     }
     return StyleManager.get().getCurrentStyle().isDark() ? ColorUtil.darker(color, 10) : ColorUtil.desaturate(color, 18);
   }

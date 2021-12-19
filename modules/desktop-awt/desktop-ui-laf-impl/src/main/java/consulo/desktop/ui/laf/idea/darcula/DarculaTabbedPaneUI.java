@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2016 consulo.io
+ * Copyright 2000-2012 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,24 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.ui.laf;
+package consulo.desktop.ui.laf.idea.darcula;
 
-import consulo.desktop.ui.laf.LookAndFeelInfoWithClassLoader;
-
-import javax.annotation.Nonnull;
+import javax.swing.*;
+import javax.swing.plaf.ComponentUI;
+import javax.swing.plaf.basic.BasicTabbedPaneUI;
 
 /**
- * @author VISTALL
- * @since 14.12.14
+ * @author Konstantin Bulenkov
  */
-public class MacDefaultLookAndFeelInfo extends LookAndFeelInfoWithClassLoader implements LafWithColorScheme {
-  public MacDefaultLookAndFeelInfo(String name, String className) {
-    super(name, className);
-  }
-
-  @Nonnull
-  @Override
-  public String getColorSchemeName() {
-    return getName();
+public class DarculaTabbedPaneUI extends BasicTabbedPaneUI {
+  @SuppressWarnings({"MethodOverridesStaticMethodOfSuperclass", "UnusedDeclaration"})
+  public static ComponentUI createUI(JComponent c) {
+    return new DarculaTabbedPaneUI();
   }
 }

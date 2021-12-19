@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2012 JetBrains s.r.o.
+ * Copyright 2013-2021 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,19 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.ide.ui.laf.darcula.ui;
+package consulo.desktop.ui.laf.windows11;
+
+import com.intellij.ide.ui.laf.intellij.IdeaPopupMenuUI;
 
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
-import javax.swing.plaf.basic.BasicPanelUI;
 
 /**
- * @author Konstantin Bulenkov
+ * @author VISTALL
+ * @since 19/12/2021
  */
-public class DarculaPanelUI extends BasicPanelUI {
+public class Windows11PopupMenuUI extends IdeaPopupMenuUI {
 
-  @SuppressWarnings({"MethodOverridesStaticMethodOfSuperclass", "UnusedDeclaration"})
-  public static ComponentUI createUI(JComponent c) {
-    return new DarculaPanelUI();
+  public static ComponentUI createUI(final JComponent c) {
+    return new Windows11PopupMenuUI();
+  }
+
+  @Override
+  public boolean isRoundBorder() {
+    return true;
   }
 }

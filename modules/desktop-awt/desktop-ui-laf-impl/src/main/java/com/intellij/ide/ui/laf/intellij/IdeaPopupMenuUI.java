@@ -5,7 +5,6 @@ import com.intellij.ide.ui.UISettings;
 import com.intellij.openapi.actionSystem.impl.ActionMenu;
 import com.intellij.openapi.ui.JBPopupMenu;
 import com.intellij.openapi.util.SystemInfoRt;
-import com.intellij.openapi.util.registry.Registry;
 import com.intellij.ui.Gray;
 import com.intellij.ui.JBColor;
 import com.intellij.util.ui.JBValue;
@@ -84,8 +83,8 @@ public class IdeaPopupMenuUI extends BasicPopupMenuUI {
     }
   }
 
-  public static boolean isRoundBorder() {
-    return Registry.is("popup.menu.roundBorder.enabled", false);
+  public boolean isRoundBorder() {
+    return false;
   }
 
   public static boolean hideEmptyIcon(Component c) {

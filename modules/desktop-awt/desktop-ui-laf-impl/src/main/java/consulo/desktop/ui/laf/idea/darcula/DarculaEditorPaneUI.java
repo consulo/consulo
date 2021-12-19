@@ -13,27 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.ide.ui.laf.darcula.ui;
-
-import com.intellij.util.ui.JBUI;
+package consulo.desktop.ui.laf.idea.darcula;
 
 import javax.swing.*;
-import javax.swing.border.AbstractBorder;
-import javax.swing.plaf.UIResource;
-import java.awt.*;
+import javax.swing.plaf.ComponentUI;
+import javax.swing.plaf.basic.BasicEditorPaneUI;
 
 /**
  * @author Konstantin Bulenkov
  */
-public class DarculaPopupMenuBorder extends AbstractBorder implements UIResource {
-  @Override
-  public void paintBorder(Component c, Graphics g, int x, int y, int width, int height) {
-    g.setColor(UIManager.getDefaults().getColor("Separator.foreground"));
-    g.drawRect(0, 0, width - JBUI.scale(1), height - JBUI.scale(1));
+public class DarculaEditorPaneUI extends BasicEditorPaneUI {
+  public DarculaEditorPaneUI(JComponent comp) {
+  }
+
+  @SuppressWarnings("MethodOverridesStaticMethodOfSuperclass")
+  public static ComponentUI createUI(JComponent comp) {
+    return new DarculaEditorPaneUI(comp);
   }
 
   @Override
-  public Insets getBorderInsets(Component c) {
-    return JBUI.insets(1, 1, 1, 1).asUIResource();
+  protected void installDefaults() {
+    super.installDefaults();
   }
 }

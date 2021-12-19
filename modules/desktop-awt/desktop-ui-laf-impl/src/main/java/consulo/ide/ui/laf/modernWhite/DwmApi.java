@@ -47,7 +47,7 @@ public interface DwmApi extends Library {
     }
   }
 
-  DwmApi INSTANCE = (DwmApi)Native.loadLibrary("dwmapi", DwmApi.class);
+  DwmApi INSTANCE = Native.load("dwmapi", DwmApi.class);
 
   WinNT.HRESULT DwmIsCompositionEnabled(IntByReference pfEnabled);
 

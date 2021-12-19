@@ -34,6 +34,7 @@ import com.intellij.openapi.editor.colors.EditorColorsManager;
 import com.intellij.openapi.editor.colors.EditorColorsScheme;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
+import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.JBPopupMenu;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.ui.popup.util.PopupUtil;
@@ -46,6 +47,8 @@ import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.openapi.wm.ex.IdeFrameEx;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
+import com.intellij.openapi.wm.impl.IdeGlassPaneImpl;
+import com.intellij.ui.ComponentUtil;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.ScreenUtil;
 import com.intellij.ui.content.Content;
@@ -67,9 +70,6 @@ import consulo.ide.ui.laf.GTKPlusEAPDescriptor;
 import consulo.ide.ui.laf.LafWithColorScheme;
 import consulo.ide.ui.laf.intellij.IntelliJEditorTabsUI;
 import consulo.ide.ui.laf.mac.MacButtonlessScrollbarUI;
-import consulo.ide.ui.laf.modernDark.ModernDarkLookAndFeelInfo;
-import consulo.ide.ui.laf.modernWhite.ModernWhiteLookAndFeelInfo;
-import consulo.ide.ui.laf.modernWhite.NativeModernWhiteLookAndFeelInfo;
 import consulo.localize.LocalizeManager;
 import consulo.logging.Logger;
 import consulo.platform.base.icon.PlatformIconGroup;
@@ -93,9 +93,10 @@ import javax.swing.plaf.synth.SynthLookAndFeel;
 import javax.swing.plaf.synth.SynthStyle;
 import javax.swing.plaf.synth.SynthStyleFactory;
 import java.awt.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.lang.reflect.Method;
 import java.util.List;
 import java.util.*;
 
@@ -121,6 +122,9 @@ public final class LafManagerImpl extends LafManager implements Disposable, Pers
 
   private static final String[] ourOptionPaneIconKeys = {"OptionPane.errorIcon", "OptionPane.informationIcon", "OptionPane.warningIcon", "OptionPane.questionIcon"};
 
+  // A constant from Mac OS X implementation. See CPlatformWindow.WINDOW_ALPHA
+  private static final String WINDOW_ALPHA = "Window.alpha";
+
   private final EventDispatcher<LafManagerListener> myListenerList = EventDispatcher.create(LafManagerListener.class);
 
   private final List<DesktopStyleImpl> myStyles;
@@ -140,14 +144,6 @@ public final class LafManagerImpl extends LafManager implements Disposable, Pers
     List<UIManager.LookAndFeelInfo> lafList = new ArrayList<>();
 
     lafList.add(new IntelliJLookAndFeelInfo());
-
-    if (!SystemInfo.isMac) {
-      if (SystemInfo.isWin8OrNewer) {
-        lafList.add(new NativeModernWhiteLookAndFeelInfo());
-      }
-      lafList.add(new ModernWhiteLookAndFeelInfo());
-      lafList.add(new ModernDarkLookAndFeelInfo());
-    }
     lafList.add(new DarculaLookAndFeelInfo());
 
     if (SystemInfo.isLinux && EarlyAccessProgramManager.is(GTKPlusEAPDescriptor.class)) {
@@ -836,13 +832,48 @@ public final class LafManagerImpl extends LafManager implements Disposable, Pers
     public Popup getPopup(final Component owner, final Component contents, final int x, final int y) throws IllegalArgumentException {
       final Point point = fixPopupLocation(contents, x, y);
 
-      final int popupType = UIUtil.isUnderGTKLookAndFeel() ? WEIGHT_HEAVY : PopupUtil.getPopupType(this);
+      final int popupType = PopupUtil.getPopupType(this);
       if (popupType >= 0) {
         PopupUtil.setPopupType(myDelegate, popupType);
       }
 
-      final Popup popup = myDelegate.getPopup(owner, contents, point.x, point.y);
-      fixPopupSize(popup, contents);
+      Popup popup = myDelegate.getPopup(owner, contents, point.x, point.y);
+      Window window = ComponentUtil.getWindow(contents);
+      String cleanupKey = "LafManagerImpl.rootPaneCleanup";
+      boolean isHeavyWeightPopup = window instanceof RootPaneContainer && window != ComponentUtil.getWindow(owner);
+      if (isHeavyWeightPopup) {
+        UIUtil.markAsTypeAheadAware(window);
+        window.setMinimumSize(null); // clear min-size from prev invocations on JBR11
+      }
+      if (isHeavyWeightPopup && ((RootPaneContainer)window).getRootPane().getClientProperty(cleanupKey) == null) {
+        final JRootPane rootPane = ((RootPaneContainer)window).getRootPane();
+        rootPane.setGlassPane(new IdeGlassPaneImpl(rootPane, false));
+        rootPane.putClientProperty(WINDOW_ALPHA, 1.0f);
+        rootPane.putClientProperty(cleanupKey, cleanupKey);
+        window.addWindowListener(new WindowAdapter() {
+          @Override
+          public void windowOpened(WindowEvent e) {
+            // cleanup will be handled by AbstractPopup wrapper
+            if (PopupUtil.getPopupContainerFor(rootPane) != null) {
+              window.removeWindowListener(this);
+              rootPane.putClientProperty(cleanupKey, null);
+            }
+          }
+
+          @Override
+          public void windowClosed(WindowEvent e) {
+            window.removeWindowListener(this);
+            rootPane.putClientProperty(cleanupKey, null);
+            DialogWrapper.cleanupRootPane(rootPane);
+            DialogWrapper.cleanupWindowListeners(window);
+          }
+        });
+        
+        //if (IdeaPopupMenuUI.isUnderPopup(contents)/* && IdeaPopupMenuUI.isRoundBorder()*/) {
+        //  window.setBackground(Gray.TRANSPARENT);
+        //  window.setOpacity(1);
+        //}
+      }
       return popup;
     }
 
@@ -874,24 +905,6 @@ public final class LafManagerImpl extends LafManager implements Disposable, Pers
       }
 
       return rec.getLocation();
-    }
-
-    private static void fixPopupSize(final Popup popup, final Component contents) {
-      if (!UIUtil.isUnderGTKLookAndFeel() || !(contents instanceof JPopupMenu)) return;
-
-      for (Class<?> aClass = popup.getClass(); aClass != null && Popup.class.isAssignableFrom(aClass); aClass = aClass.getSuperclass()) {
-        try {
-          final Method getComponent = aClass.getDeclaredMethod("getComponent");
-          getComponent.setAccessible(true);
-          final Object component = getComponent.invoke(popup);
-          if (component instanceof JWindow) {
-            ((JWindow)component).setSize(new Dimension(0, 0));
-          }
-          break;
-        }
-        catch (Exception ignored) {
-        }
-      }
     }
   }
 }

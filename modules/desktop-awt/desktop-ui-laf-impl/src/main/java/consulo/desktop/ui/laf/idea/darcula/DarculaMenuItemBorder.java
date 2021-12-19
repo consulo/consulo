@@ -1,4 +1,4 @@
-package com.intellij.ide.ui.laf.darcula.ui;
+package consulo.desktop.ui.laf.idea.darcula;
 
 import com.intellij.util.ui.JBUI;
 
