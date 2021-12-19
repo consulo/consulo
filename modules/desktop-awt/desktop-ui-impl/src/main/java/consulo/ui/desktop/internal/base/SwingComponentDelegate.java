@@ -46,9 +46,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.event.MouseEvent;
-import java.util.Collection;
 import java.util.EventListener;
-import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.function.Function;
 
@@ -219,31 +217,12 @@ public class SwingComponentDelegate<T extends java.awt.Component> implements Com
 
     component.setBorder(JBUI.Borders.empty());
 
-    Collection<BorderInfo> borders = dataObject().getBorders();
-
-    Map<BorderPosition, Integer> emptyBorders = new LinkedHashMap<>();
-    for (BorderInfo border : borders) {
-      if (border.getBorderStyle() == BorderStyle.EMPTY) {
-        emptyBorders.put(border.getBorderPosition(), border.getWidth());
-      }
-    }
-
-    if (!emptyBorders.isEmpty()) {
-      component.setBorder(JBUI.Borders.empty(getBorderSize(emptyBorders, BorderPosition.TOP), getBorderSize(emptyBorders, BorderPosition.LEFT), getBorderSize(emptyBorders, BorderPosition.BOTTOM),
-                                             getBorderSize(emptyBorders, BorderPosition.RIGHT)));
-
+    Map<BorderPosition, BorderInfo> borders = dataObject().getBorders();
+    if (borders.isEmpty()) {
       return;
     }
 
-    // FIXME [VISTALL] support other borders?
-  }
-
-  static int getBorderSize(Map<BorderPosition, Integer> map, BorderPosition position) {
-    Integer width = map.get(position);
-    if (width == null) {
-      return 0;
-    }
-    return JBUI.scale(width);
+    component.setBorder(new UIComponentBorder(borders));
   }
 
   @Nonnull

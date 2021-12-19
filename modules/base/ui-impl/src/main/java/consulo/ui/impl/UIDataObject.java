@@ -92,11 +92,8 @@ public class UIDataObject extends UserDataHolderBase {
   }
 
   @Nonnull
-  public Collection<BorderInfo> getBorders() {
-    if (myBorders == null) {
-      return Collections.emptyList();
-    }
-    return myBorders.values();
+  public Map<BorderPosition, BorderInfo> getBorders() {
+    return myBorders == null ? Map.of() : myBorders;
   }
 
   public void dispose() {

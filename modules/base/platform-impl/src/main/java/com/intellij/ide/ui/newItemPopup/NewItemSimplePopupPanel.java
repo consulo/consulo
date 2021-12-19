@@ -11,9 +11,12 @@ import consulo.awt.TargetAWT;
 import consulo.disposer.Disposer;
 import consulo.ui.TextBoxWithExtensions;
 import consulo.ui.ValidableComponent;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.border.BorderPosition;
 import consulo.ui.event.KeyEvent;
 import consulo.ui.event.KeyListener;
 import consulo.ui.border.BorderStyle;
+import consulo.ui.layout.WrappedLayout;
 
 import javax.annotation.Nonnull;
 import java.awt.*;
@@ -27,11 +30,16 @@ public class NewItemSimplePopupPanel extends JBPanel implements Disposable {
 
   protected Consumer<? super InputEvent> myApplyAction;
 
+  @RequiredUIAccess
   public NewItemSimplePopupPanel() {
     super(new BorderLayout());
 
     myTextField = createTextField();
-    add(TargetAWT.to(myTextField), BorderLayout.NORTH);
+
+    WrappedLayout layout = WrappedLayout.create(myTextField);
+    layout.addBorder(BorderPosition.TOP, BorderStyle.LINE);
+
+    add(TargetAWT.to(layout), BorderLayout.NORTH);
 
     //myErrorShowPoint = new RelativePoint(myTextField, new Point(0, myTextField.getHeight()));
   }

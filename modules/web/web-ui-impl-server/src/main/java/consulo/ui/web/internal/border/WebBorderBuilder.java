@@ -16,15 +16,16 @@
 package consulo.ui.web.internal.border;
 
 import consulo.ui.Component;
-import consulo.ui.impl.BorderInfo;
+import consulo.ui.border.BorderPosition;
 import consulo.ui.color.ColorValue;
+import consulo.ui.impl.BorderInfo;
 import consulo.ui.style.Style;
 import consulo.ui.style.StyleManager;
 import consulo.ui.web.internal.base.DataObjectHolder;
 import consulo.ui.web.internal.util.Mappers;
 import consulo.web.gwt.shared.ui.state.border.BorderListState;
 
-import java.util.Collection;
+import java.util.Map;
 
 /**
  * @author VISTALL
@@ -36,14 +37,12 @@ public class WebBorderBuilder {
 
     borderListState.myBorders.clear();
 
-    Style currentStyle = StyleManager.get().getCurrentStyle();
-
-    Collection<BorderInfo> borders = dataObjectHolder.dataObject().getBorders();
+    Map<BorderPosition, BorderInfo> borders = dataObjectHolder.dataObject().getBorders();
     if(borders.isEmpty()) {
       return;
     }
     
-    for (BorderInfo info : borders) {
+    for (BorderInfo info : borders.values()) {
       BorderListState.BorderState borderState = new BorderListState.BorderState();
       borderState.myPosition = Mappers.map(info.getBorderPosition());
       borderState.myStyle = Mappers.map(info.getBorderStyle());
