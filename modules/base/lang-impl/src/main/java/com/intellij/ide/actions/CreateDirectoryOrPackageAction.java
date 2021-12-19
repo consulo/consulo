@@ -36,12 +36,13 @@ import com.intellij.openapi.util.Trinity;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiElement;
 import consulo.awt.TargetAWT;
+import consulo.ide.actions.CreateDirectoryOrPackageType;
 import consulo.module.extension.ModuleExtension;
 import consulo.psi.PsiPackageSupportProvider;
 import consulo.roots.ContentFolderTypeProvider;
-import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.TextBox;
 import consulo.ui.ValidableComponent;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
@@ -50,35 +51,6 @@ import java.util.List;
 import java.util.function.Consumer;
 
 public class CreateDirectoryOrPackageAction extends AnAction implements DumbAware {
-  private enum ChildType {
-    Directory {
-      @Override
-      public String getName() {
-        return IdeBundle.message("action.directory");
-      }
-
-      @Override
-      public String getSeparator() {
-        return "\\/";
-      }
-    },
-    Package {
-      @Override
-      public String getName() {
-        return IdeBundle.message("action.package");
-      }
-
-      @Override
-      public String getSeparator() {
-        return ".";
-      }
-    };
-
-    public abstract String getName();
-
-    public abstract String getSeparator();
-  }
-
   public CreateDirectoryOrPackageAction() {
     super(IdeBundle.message("action.create.new.directory.or.package"), IdeBundle.message("action.create.new.directory.or.package"), null);
   }
@@ -99,24 +71,29 @@ public class CreateDirectoryOrPackageAction extends AnAction implements DumbAwar
       return;
     }
 
-    Trinity<ContentFolderTypeProvider, PsiDirectory, ChildType> info = getInfo(directory);
+    Trinity<ContentFolderTypeProvider, PsiDirectory, CreateDirectoryOrPackageType> info = getInfo(directory);
 
-    boolean isDirectory = info.getThird() == ChildType.Directory;
+    boolean isDirectory = info.getThird() == CreateDirectoryOrPackageType.Directory;
 
-    CreateDirectoryOrPackageHandler validator = new CreateDirectoryOrPackageHandler(project, directory, isDirectory, info.getThird().getSeparator());
+    CreateDirectoryOrPackageHandler validator = new CreateDirectoryOrPackageHandler(project, directory, info.getThird(), info.getThird().getSeparator());
 
     String title = isDirectory ? IdeBundle.message("title.new.directory") : IdeBundle.message("title.new.package");
 
-    createLightWeightPopup(validator, title, element -> {
+    String defaultValue = info.getThird().getDefaultValue(directory);
+
+    createLightWeightPopup(validator, title, defaultValue, element -> {
       if (element != null) {
         view.selectElement(element);
       }
     }).showCenteredInCurrentWindow(project);
   }
 
-  private JBPopup createLightWeightPopup(CreateDirectoryOrPackageHandler validator, String title, Consumer<PsiElement> consumer) {
+  @Nonnull
+  @RequiredUIAccess
+  private JBPopup createLightWeightPopup(CreateDirectoryOrPackageHandler validator, String title, String defaultValue, Consumer<PsiElement> consumer) {
     NewItemSimplePopupPanel contentPanel = new NewItemSimplePopupPanel();
     TextBox nameField = contentPanel.getTextField();
+    nameField.setValue(defaultValue);
     JBPopup popup = NewItemPopupUtil.createNewItemPopup(title, contentPanel, (JComponent)TargetAWT.to(nameField));
     contentPanel.addValidator(value -> {
       if (!validator.checkInput(value)) {
@@ -169,11 +146,11 @@ public class CreateDirectoryOrPackageAction extends AnAction implements DumbAwar
 
     // is more that one directories not show package support
     if (directories.length > 1) {
-      presentation.setText(ChildType.Directory.getName());
+      presentation.setText(CreateDirectoryOrPackageType.Directory.getName());
       presentation.setIcon(AllIcons.Nodes.TreeClosed);
     }
     else {
-      Trinity<ContentFolderTypeProvider, PsiDirectory, ChildType> info = getInfo(directories[0]);
+      Trinity<ContentFolderTypeProvider, PsiDirectory, CreateDirectoryOrPackageType> info = getInfo(directories[0]);
 
       presentation.setText(info.getThird().getName());
 
@@ -191,7 +168,7 @@ public class CreateDirectoryOrPackageAction extends AnAction implements DumbAwar
 
   @Nonnull
   @RequiredUIAccess
-  private static Trinity<ContentFolderTypeProvider, PsiDirectory, ChildType> getInfo(PsiDirectory d) {
+  private static Trinity<ContentFolderTypeProvider, PsiDirectory, CreateDirectoryOrPackageType> getInfo(PsiDirectory d) {
     Project project = d.getProject();
     ProjectFileIndex projectFileIndex = ProjectFileIndex.getInstance(project);
 
@@ -213,11 +190,11 @@ public class CreateDirectoryOrPackageAction extends AnAction implements DumbAwar
         ContentFolderTypeProvider contentFolderTypeForFile = projectFileIndex.getContentFolderTypeForFile(d.getVirtualFile());
         if (contentFolderTypeForFile != null) {
           Image childPackageIcon = contentFolderTypeForFile.getChildPackageIcon();
-          return Trinity.create(contentFolderTypeForFile, d, childPackageIcon != null ? ChildType.Package : ChildType.Directory);
+          return Trinity.create(contentFolderTypeForFile, d, childPackageIcon != null ? CreateDirectoryOrPackageType.Package : CreateDirectoryOrPackageType.Directory);
         }
       }
     }
 
-    return Trinity.create(null, d, ChildType.Directory);
+    return Trinity.create(null, d, CreateDirectoryOrPackageType.Directory);
   }
 }

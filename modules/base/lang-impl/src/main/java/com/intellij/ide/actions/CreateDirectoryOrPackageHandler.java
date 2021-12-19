@@ -19,7 +19,6 @@ import com.intellij.CommonBundle;
 import com.intellij.history.LocalHistory;
 import com.intellij.history.LocalHistoryAction;
 import com.intellij.ide.IdeBundle;
-import com.intellij.ide.util.DirectoryUtil;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.fileTypes.FileType;
@@ -35,6 +34,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiFileSystemItem;
 import com.intellij.util.IncorrectOperationException;
+import consulo.ide.actions.CreateDirectoryOrPackageType;
 import consulo.psi.PsiPackageManager;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
@@ -50,7 +50,8 @@ public class CreateDirectoryOrPackageHandler implements InputValidatorEx {
   private final Project myProject;
   @Nonnull
   private final PsiDirectory myDirectory;
-  private final boolean myIsDirectory;
+  @Nonnull
+  private final CreateDirectoryOrPackageType myType;
   @Nullable
   private PsiFileSystemItem myCreatedElement = null;
   @Nonnull
@@ -59,14 +60,18 @@ public class CreateDirectoryOrPackageHandler implements InputValidatorEx {
   private final Component myDialogParent;
   private String myErrorText;
 
-  public CreateDirectoryOrPackageHandler(@Nullable Project project, @Nonnull PsiDirectory directory, boolean isDirectory, @Nonnull final String delimiters) {
-    this(project, directory, isDirectory, delimiters, null);
+  public CreateDirectoryOrPackageHandler(@Nullable Project project, @Nonnull PsiDirectory directory, CreateDirectoryOrPackageType type, @Nonnull final String delimiters) {
+    this(project, directory, type, delimiters, null);
   }
 
-  public CreateDirectoryOrPackageHandler(@Nullable Project project, @Nonnull PsiDirectory directory, boolean isDirectory, @Nonnull final String delimiters, @Nullable Component dialogParent) {
+  public CreateDirectoryOrPackageHandler(@Nullable Project project,
+                                         @Nonnull PsiDirectory directory,
+                                         CreateDirectoryOrPackageType type,
+                                         @Nonnull final String delimiters,
+                                         @Nullable Component dialogParent) {
     myProject = project;
     myDirectory = directory;
-    myIsDirectory = isDirectory;
+    myType = type;
     myDelimiters = delimiters;
     myDialogParent = dialogParent;
   }
@@ -114,11 +119,13 @@ public class CreateDirectoryOrPackageHandler implements InputValidatorEx {
           vFile = child;
         }
       }
+
+      boolean isDirectory = myType == CreateDirectoryOrPackageType.Directory;
       if (FileTypeManager.getInstance().isFileIgnored(token)) {
-        myErrorText = "Trying to create a " + (myIsDirectory ? "directory" : "package") + " with an ignored name, the result will not be visible";
+        myErrorText = "Trying to create a " + (isDirectory ? "directory" : "package") + " with an ignored name, the result will not be visible";
         return true;
       }
-      if (!myIsDirectory && token.length() > 0 && !PsiPackageManager.getInstance(myDirectory.getProject()).isValidPackageName(myDirectory, token)) {
+      if (!isDirectory && token.length() > 0 && !PsiPackageManager.getInstance(myDirectory.getProject()).isValidPackageName(myDirectory, token)) {
         myErrorText = "Not a valid package name, it will not be possible to create a class inside";
         return true;
       }
@@ -164,12 +171,14 @@ public class CreateDirectoryOrPackageHandler implements InputValidatorEx {
 
   @Nullable
   private Boolean suggestCreatingFileInstead(String subDirName) {
+    boolean isDirectory = myType == CreateDirectoryOrPackageType.Directory;
+
     Boolean createFile = false;
     if (StringUtil.countChars(subDirName, '.') == 1 && Registry.is("ide.suggest.file.when.creating.filename.like.directory")) {
       FileType fileType = findFileTypeBoundToName(subDirName);
       if (fileType != null) {
         String message = "The name you entered looks like a file name. Do you want to create a file named " + subDirName + " instead?";
-        int ec = Messages.showYesNoCancelDialog(myProject, message, "File Name Detected", "&Yes, create file", "&No, create " + (myIsDirectory ? "directory" : "packages"),
+        int ec = Messages.showYesNoCancelDialog(myProject, message, "File Name Detected", "&Yes, create file", "&No, create " + (isDirectory ? "directory" : "packages"),
                                                 CommonBundle.getCancelButtonText(), fileType.getIcon());
         if (ec == Messages.CANCEL) {
           createFile = null;
@@ -189,6 +198,8 @@ public class CreateDirectoryOrPackageHandler implements InputValidatorEx {
   }
 
   private void doCreateElement(final String subDirName, final boolean createFile) {
+    boolean isDirectory = myType == CreateDirectoryOrPackageType.Directory;
+
     Runnable command = () -> {
       final Runnable run = () -> {
         String dirPath = myDirectory.getVirtualFile().getPresentableUrl();
@@ -197,7 +208,7 @@ public class CreateDirectoryOrPackageHandler implements InputValidatorEx {
         try {
           if (createFile) {
             CreateFileAction.MkDirs mkdirs = new CreateFileAction.MkDirs(subDirName, myDirectory);
-            myCreatedElement = mkdirs.directory.createFile(mkdirs.newName);
+            myCreatedElement = myType.createDirectory(mkdirs.directory, mkdirs.newName);
           }
           else {
             createDirectories(subDirName);
@@ -214,7 +225,7 @@ public class CreateDirectoryOrPackageHandler implements InputValidatorEx {
     };
     CommandProcessor.getInstance().executeCommand(myProject, command, createFile
                                                                       ? IdeBundle.message("command.create.file")
-                                                                      : myIsDirectory ? IdeBundle.message("command.create.directory") : IdeBundle.message("command.create.package"), null);
+                                                                      : isDirectory ? IdeBundle.message("command.create.directory") : IdeBundle.message("command.create.package"), null);
   }
 
   private void showErrorDialog(String message) {
@@ -228,8 +239,9 @@ public class CreateDirectoryOrPackageHandler implements InputValidatorEx {
     }
   }
 
+  @RequiredUIAccess
   protected void createDirectories(String subDirName) {
-    myCreatedElement = DirectoryUtil.createSubdirectories(subDirName, myDirectory, myDelimiters);
+    myCreatedElement = myType.createDirectory(myDirectory, subDirName);
   }
 
   @Nullable
