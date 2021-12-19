@@ -68,6 +68,8 @@ public interface Platform {
 
     boolean isWindows10OrNewer();
 
+    boolean isWindows11OrNewer();
+
     boolean isMac();
 
     boolean isLinux();

@@ -30,12 +30,13 @@ import consulo.awt.hacking.AppContextHacking;
 import consulo.awt.hacking.BasicLookAndFeelHacking;
 import consulo.awt.hacking.HTMLEditorKitHacking;
 import consulo.ide.ui.laf.BaseLookAndFeel;
+import consulo.platform.Platform;
 import consulo.ui.desktop.laf.extend.textBox.SupportTextBoxWithExpandActionExtender;
 import consulo.ui.desktop.laf.extend.textBox.SupportTextBoxWithExtensionsExtender;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageKey;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.plaf.*;
@@ -48,8 +49,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Constructor;
 import java.net.URL;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 /**
  * @author Konstantin Bulenkov
@@ -184,7 +185,24 @@ public class DarculaLaf extends BaseLookAndFeel {
   @SuppressWarnings("IOResourceOpenedButNotSafelyClosed")
   protected void loadDefaults(UIDefaults defaults) {
     final Properties properties = new Properties();
-    final String osSuffix = SystemInfo.isMac ? "mac" : SystemInfo.isWindows ? "windows" : "linux";
+    final String osSuffix;
+
+    Platform.OperatingSystem os = Platform.current().os();
+    if (os.isMac()) {
+      osSuffix = "mac";
+    }
+    else {
+      if (os.isWindows11OrNewer()) {
+        osSuffix = "windows11";
+      }
+      else if (os.isWindows()) {
+        osSuffix = "windows";
+      }
+      else {
+        osSuffix = "linux";
+      }
+    }
+
     try {
       InputStream stream = getClass().getResourceAsStream(getPrefix() + ".properties");
       properties.load(stream);
@@ -236,7 +254,8 @@ public class DarculaLaf extends BaseLookAndFeel {
           return new BorderUIResource.EmptyBorderUIResource(parseInsets(value));
         }
         else if (ints.size() == 5) {
-          return asUIResource(JBUI.Borders.customLine(ColorUtil.fromHex(ints.get(4)), Integer.parseInt(ints.get(0)), Integer.parseInt(ints.get(1)), Integer.parseInt(ints.get(2)), Integer.parseInt(ints.get(3))));
+          return asUIResource(
+                  JBUI.Borders.customLine(ColorUtil.fromHex(ints.get(4)), Integer.parseInt(ints.get(0)), Integer.parseInt(ints.get(1)), Integer.parseInt(ints.get(2)), Integer.parseInt(ints.get(3))));
         }
         Class<?> aClass = Class.forName(value, true, DarculaLaf.class.getClassLoader());
         Constructor<?> constructor = aClass.getDeclaredConstructor();

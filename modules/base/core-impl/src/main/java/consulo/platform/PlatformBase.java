@@ -15,6 +15,9 @@
  */
 package consulo.platform;
 
+import com.intellij.jna.JnaLoader;
+import com.sun.jna.platform.win32.Kernel32;
+import com.sun.jna.platform.win32.WinNT;
 import consulo.util.lang.StringUtil;
 
 import javax.annotation.Nonnull;
@@ -84,6 +87,11 @@ public abstract class PlatformBase implements Platform {
 
   protected static class OperatingSystemImpl implements OperatingSystem {
     private final String myOSArch = StringUtil.notNullize(System.getProperty("os.arch"));
+    private Boolean myWindows11OrLater;
+
+    public OperatingSystemImpl() {
+
+    }
 
     @Override
     public boolean isWindows() {
@@ -108,6 +116,31 @@ public abstract class PlatformBase implements Platform {
     @Override
     public boolean isWindows10OrNewer() {
       return isWin10OrNewer;
+    }
+
+    @Override
+    public boolean isWindows11OrNewer() {
+      if (myWindows11OrLater == null) {
+        myWindows11OrLater = isWindows11OrNewerImpl();
+      }
+      return myWindows11OrLater;
+    }
+
+    private boolean isWindows11OrNewerImpl() {
+      // at jdk 17 windows 11 will return in os name, but at old versions of jdk that will be Windows 10
+      boolean windows11OrLater = OS_NAME.contains("Windows 11");
+      if (isWindows10OrNewer() && !windows11OrLater && JnaLoader.isLoaded()) {
+        WinNT.OSVERSIONINFO osversioninfo = new WinNT.OSVERSIONINFO();
+        if (Kernel32.INSTANCE.GetVersionEx(osversioninfo)) {
+          int dwBuildNumber = osversioninfo.dwBuildNumber.intValue();
+
+          if (dwBuildNumber >= 22_000) {
+            return true;
+          }
+        }
+      }
+
+      return false;
     }
 
     @Override
