@@ -28,7 +28,6 @@ import com.intellij.openapi.fileEditor.FileEditorManagerListener;
 import com.intellij.openapi.fileEditor.TextEditor;
 import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.ui.GraphicsConfig;
 import com.intellij.openapi.ui.Splitter;
 import com.intellij.openapi.ui.ThreeComponentsSplitter;
 import com.intellij.openapi.util.Pair;
@@ -36,15 +35,11 @@ import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.openapi.wm.IdeFocusManager;
-import com.intellij.ui.JBColor;
 import com.intellij.ui.OnePixelSplitter;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.Stack;
-import com.intellij.util.ui.EmptyIcon;
-import com.intellij.util.ui.GraphicsUtil;
 import com.intellij.util.ui.UIUtil;
 import consulo.annotation.DeprecationInfo;
-import consulo.awt.TargetAWT;
 import consulo.desktop.util.awt.migration.AWTComponentProviderUtil;
 import consulo.disposer.Disposer;
 import consulo.fileEditor.impl.*;
@@ -79,33 +74,6 @@ public class DesktopEditorWindow extends EditorWindowBase implements EditorWindo
   @Nonnull
   private final EditorTabbedContainer myTabbedPane;
   private final DesktopEditorsSplitters myOwner;
-  private static final Icon MODIFIED_ICON = !UISettings.getInstance().HIDE_TABS_IF_NEED ? new Icon() {
-    @Override
-    public void paintIcon(Component c, Graphics g, int x, int y) {
-      GraphicsConfig config = GraphicsUtil.setupAAPainting(g);
-      Font oldFont = g.getFont();
-      try {
-        g.setFont(UIUtil.getLabelFont());
-        g.setColor(JBColor.foreground());
-        g.drawString("*", 0, 10);
-      }
-      finally {
-        config.restore();
-        g.setFont(oldFont);
-      }
-    }
-
-    @Override
-    public int getIconWidth() {
-      return 9;
-    }
-
-    @Override
-    public int getIconHeight() {
-      return 9;
-    }
-  } : TargetAWT.to(AllIcons.General.Modified);
-  private static final Icon GAP_ICON = EmptyIcon.create(MODIFIED_ICON);
 
   private boolean myIsDisposed;
   static final Key<Integer> INITIAL_INDEX_KEY = Key.create("initial editor index");

@@ -50,17 +50,6 @@ public class DesktopEditorWithProviderComposite extends DesktopEditorComposite i
   }
 
   @Override
-  public boolean isModified() {
-    final FileEditor[] editors = getEditors();
-    for (FileEditor editor : editors) {
-      if (editor.isModified()) {
-        return true;
-      }
-    }
-    return false;
-  }
-
-  @Override
   @Nonnull
   public FileEditorWithProvider getSelectedEditorWithProvider() {
     LOG.assertTrue(myEditors.length > 0, myEditors.length);

@@ -16,14 +16,21 @@
 package consulo.execution.ui.editor;
 
 import com.intellij.execution.impl.RunConfigurable;
+import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.fileEditor.FileEditor;
+import com.intellij.openapi.fileEditor.FileEditorManager;
+import com.intellij.openapi.fileEditor.impl.FileEditorManagerImpl;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ex.ProjectEx;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.ui.Splitter;
+import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.util.Alarm;
 import com.intellij.util.ui.JBUI;
+import com.intellij.util.ui.update.UiNotifyConnector;
+import consulo.fileEditor.internal.FileEditorWithModifiedIcon;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.dataholder.UserDataHolderBase;
 import kava.beans.PropertyChangeListener;
@@ -36,12 +43,18 @@ import javax.swing.*;
  * @author VISTALL
  * @since 19/12/2021
  */
-public class RunConfigurationFileEditor extends UserDataHolderBase implements FileEditor {
+public class RunConfigurationFileEditor extends UserDataHolderBase implements FileEditor, FileEditorWithModifiedIcon {
+  private final Alarm myUpdateAlarm = new Alarm(Alarm.ThreadToUse.SWING_THREAD);
+
+  private boolean myDisposed;
+
   private final Project myProject;
+  private final VirtualFile myFile;
   private RunConfigurable myRunConfigurable;
 
-  public RunConfigurationFileEditor(Project project) {
+  public RunConfigurationFileEditor(Project project, VirtualFile file) {
     myProject = project;
+    myFile = file;
     myRunConfigurable = new RunConfigurable(project);
     myRunConfigurable.setEditorMode();
 
@@ -70,10 +83,34 @@ public class RunConfigurationFileEditor extends UserDataHolderBase implements Fi
   @RequiredUIAccess
   public JComponent getComponent() {
     JComponent component = myRunConfigurable.createComponent(this);
+    assert component != null;
+
+    // fix borders
     Splitter splitter = myRunConfigurable.getSplitter();
     JComponent secondComponent = splitter.getSecondComponent();
     secondComponent.setBorder(JBUI.Borders.empty(DialogWrapper.ourDefaultBorderInsets));
+
+    UiNotifyConnector.doWhenFirstShown(component, () -> {
+      final Runnable updateRequest = new Runnable() {
+        @Override
+        public void run() {
+          if (myDisposed) {
+            return;
+          }
+          
+          FileEditorManagerImpl fileEditorManager = (FileEditorManagerImpl)FileEditorManager.getInstance(myProject);
+          fileEditorManager.updateFilePresentation(myFile);
+          addUpdateRequest(this);
+        }
+      };
+
+      addUpdateRequest(updateRequest);
+    });
     return component;
+  }
+
+  private void addUpdateRequest(final Runnable updateRequest) {
+    myUpdateAlarm.addRequest(updateRequest, 500, ModalityState.any());
   }
 
   @Nullable
@@ -115,8 +152,10 @@ public class RunConfigurationFileEditor extends UserDataHolderBase implements Fi
 
   @Override
   public void dispose() {
+    myDisposed = true;
+
     save();
-    
+
     myRunConfigurable.disposeUIResources();
   }
 }

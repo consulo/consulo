@@ -36,4 +36,14 @@ public interface EditorWithProviderComposite extends EditorComposite {
   void addEditor(@Nonnull FileEditor editor, FileEditorProvider provider);
 
   JComponent getPreferredFocusedComponent();
+
+  default boolean isModified() {
+    final FileEditor[] editors = getEditors();
+    for (FileEditor editor : editors) {
+      if (editor.isModified()) {
+        return true;
+      }
+    }
+    return false;
+  }
 }

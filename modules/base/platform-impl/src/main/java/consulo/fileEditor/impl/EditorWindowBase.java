@@ -16,14 +16,19 @@
 package consulo.fileEditor.impl;
 
 import com.intellij.ide.ui.UISettings;
+import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.fileEditor.impl.EditorTabPresentationUtil;
 import com.intellij.openapi.fileEditor.impl.FileEditorManagerImpl;
 import com.intellij.openapi.fileTypes.UnknownFileType;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Iconable;
 import com.intellij.openapi.vfs.VirtualFile;
+import consulo.fileEditor.internal.FileEditorWithModifiedIcon;
 import consulo.fileTypes.impl.VfsIconUtil;
 import consulo.logging.Logger;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.ui.image.Image;
+import consulo.ui.image.ImageEffects;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -40,7 +45,7 @@ public abstract class EditorWindowBase implements EditorWindow {
 
   protected abstract void setTitleAt(final int index, final String text);
 
-  protected abstract void setBackgroundColorAt(final int index, final java.awt.Color color);
+  protected abstract void setBackgroundColorAt(final int index, final Color color);
 
   protected abstract void setToolTipTextAt(final int index, final String text);
 
@@ -48,7 +53,7 @@ public abstract class EditorWindowBase implements EditorWindow {
 
   protected abstract void setWaveColor(final int index, @Nullable final Color color);
 
-  protected abstract void setIconAt(final int index, final consulo.ui.image.Image icon);
+  protected abstract void setIconAt(final int index, final Image icon);
 
   protected abstract void setTabLayoutPolicy(final int policy);
 
@@ -80,36 +85,40 @@ public abstract class EditorWindowBase implements EditorWindow {
    * @return icon which represents file's type and modification status
    */
   @Nullable
-  private consulo.ui.image.Image getFileIcon(@Nonnull final VirtualFile file) {
+  private Image getFileIcon(@Nonnull final VirtualFile file) {
     if (!file.isValid()) {
       return UnknownFileType.INSTANCE.getIcon();
     }
 
-    final consulo.ui.image.Image baseIcon = VfsIconUtil.getIconNoDefer(file, Iconable.ICON_FLAG_READ_STATUS, getManager().getProject());
-    int count = 1;
+    final Image baseIcon = VfsIconUtil.getIconNoDefer(file, Iconable.ICON_FLAG_READ_STATUS, getManager().getProject());
+    if (baseIcon == null) {
+      return null;
+    }
 
-    // FIXME [VISTALL] not supported for now
-    consulo.ui.image.Image modifiedIcon = null;
-    //UISettings settings = UISettings.getInstance();
-    //if (settings.getMarkModifiedTabsWithAsterisk() || !settings.getHideTabsIfNeed()) {
-    //  modifiedIcon = settings.getMarkModifiedTabsWithAsterisk() && composite != null && composite.isModified() ? MODIFIED_ICON : GAP_ICON;
-    //  count++;
-    //}
-    //else {
-    //  modifiedIcon = null;
-    //}
-    //
-    //if (count == 1) return baseIcon;
+    final EditorWithProviderComposite composite = findFileComposite(file);
 
-    // FIXME [VISTALL] not supported for now
-    //int i = 0;
-    //final LayeredIcon result = new LayeredIcon(count);
-    //int xShift = !settings.getHideTabsIfNeed() ? 4 : 0;
-    //result.setIcon(baseIcon, i++, xShift, 0);
-    //if (pinIcon != null) result.setIcon(pinIcon, i++, xShift, 0);
-    //if (modifiedIcon != null) result.setIcon(modifiedIcon, i++);
-    //
-    //return JBUI.scale(result);
+    boolean wantModifiedIcon = false;
+
+    UISettings settings = UISettings.getInstance();
+    if (settings.getMarkModifiedTabsWithAsterisk() || !settings.getHideTabsIfNeed()) {
+      if (settings.getMarkModifiedTabsWithAsterisk() && composite != null && composite.isModified()) {
+        wantModifiedIcon = true;
+      }
+    }
+
+    if (!wantModifiedIcon && composite != null) {
+      for (FileEditor fileEditor : composite.getEditors()) {
+        if (fileEditor instanceof FileEditorWithModifiedIcon && fileEditor.isModified()) {
+          wantModifiedIcon = true;
+          break;
+        }
+      }
+    }
+
+    if (wantModifiedIcon) {
+      return ImageEffects.appendRight(PlatformIconGroup.generalModified(), baseIcon);
+    }
+
     return baseIcon;
   }
 
