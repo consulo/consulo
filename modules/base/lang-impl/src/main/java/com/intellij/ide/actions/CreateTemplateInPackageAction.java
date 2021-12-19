@@ -36,6 +36,7 @@ import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.List;
 
 /**
  * @author peter
@@ -85,7 +86,7 @@ public abstract class CreateTemplateInPackageAction<T extends PsiElement> extend
       return true;
     }
 
-    PsiPackageSupportProvider[] extensions = PsiPackageSupportProvider.EP_NAME.getExtensions();
+    List<PsiPackageSupportProvider> extensions = PsiPackageSupportProvider.EP_NAME.getExtensionList();
 
     ProjectFileIndex projectFileIndex = ProjectRootManager.getInstance(project).getFileIndex();
     for (PsiDirectory dir : view.getDirectories()) {
