@@ -60,15 +60,18 @@ public class RunConfigurationFileEditor extends UserDataHolderBase implements Fi
 
     project.getApplication().getMessageBus().connect(this).subscribe(ProjectEx.ProjectSaved.TOPIC, targetProject -> {
       if (project == targetProject) {
-        save();
+        project.getApplication().getLastUIAccess().give(this::save);
       }
     });
   }
 
+  @RequiredUIAccess
   private void save() {
     if (myRunConfigurable.isModified()) {
       try {
         myRunConfigurable.apply();
+
+        myRunConfigurable.updateActiveConfigurationFromSelected();
       }
       catch (ConfigurationException e) {
         if (e.getMessage() != null) {

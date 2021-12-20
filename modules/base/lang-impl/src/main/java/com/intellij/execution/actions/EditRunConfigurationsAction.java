@@ -30,6 +30,7 @@ import consulo.execution.ui.editor.RunConfigurationVirtualFile;
 import consulo.ide.eap.EarlyAccessProgramManager;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.localize.ExecutionLocalize;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 
 public class EditRunConfigurationsAction extends DumbAwareAction {
@@ -37,9 +38,6 @@ public class EditRunConfigurationsAction extends DumbAwareAction {
   @Override
   public void actionPerformed(final AnActionEvent e) {
     Project project = e.getData(CommonDataKeys.PROJECT);
-    if (project != null && project.isDisposed()) {
-      return;
-    }
 
     if (project == null) {
       //setup template project configurations
@@ -47,7 +45,8 @@ public class EditRunConfigurationsAction extends DumbAwareAction {
     }
 
     if (EarlyAccessProgramManager.is(RunConfigurationFileEditorEarlyAccessDescriptor.class)) {
-      FileEditorManager.getInstance(project).openFile(new RunConfigurationVirtualFile(), true);
+      final Project finalProject = project;
+      UIAccess.current().give(() -> FileEditorManager.getInstance(finalProject).openFile(new RunConfigurationVirtualFile(), true));
     }
     else {
       new EditConfigurationsDialog(project).showAsync();

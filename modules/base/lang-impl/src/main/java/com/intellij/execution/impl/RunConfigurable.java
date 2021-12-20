@@ -742,7 +742,7 @@ public class RunConfigurable extends BaseConfigurable {
     myTree.repaint();
   }
 
-  protected void updateActiveConfigurationFromSelected() {
+  public void updateActiveConfigurationFromSelected() {
     if (mySelectedConfigurable != null && mySelectedConfigurable instanceof SingleConfigurationConfigurable) {
       RunnerAndConfigurationSettings settings =
               (RunnerAndConfigurationSettings)((SingleConfigurationConfigurable)mySelectedConfigurable).getSettings();
