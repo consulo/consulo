@@ -42,6 +42,7 @@ import consulo.ui.impl.UIDataObject;
 import consulo.ui.util.MnemonicInfo;
 import consulo.util.dataholder.Key;
 
+import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
@@ -183,6 +184,16 @@ public class SwingComponentDelegate<T extends java.awt.Component> implements Com
   @Override
   public <T extends EventListener> T getListenerDispatcher(@Nonnull Class<T> eventClass) {
     return dataObject().getDispatcher(eventClass);
+  }
+
+  @Override
+  @RequiredUIAccess
+  public void addBorders(@Nonnull BorderStyle borderStyle, @Nullable ColorValue colorKey, @Nonnegative int width) {
+    for (BorderPosition position : BorderPosition.values()) {
+      dataObject().addBorder(position, borderStyle, colorKey, width);
+    }
+
+    bordersChanged();
   }
 
   @RequiredUIAccess
