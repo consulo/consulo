@@ -520,7 +520,7 @@ public interface Application extends ComponentManager {
    * Return true if application is unified, and used unified ui code (swing based app will return false)
    */
   default boolean isUnifiedApplication() {
-    return true;
+    return false;
   }
 
   // region Deprecated stuff
