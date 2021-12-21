@@ -63,7 +63,6 @@ public class ApplicationProperties {
    * @type boolean
    */
   @Nonnull
-  @NonNls
   public static final String CONSULO_NO_EXTERNAL_PLATFORM = "consulo.no.external.platform";
 
   /**
