@@ -192,7 +192,7 @@
     </dependency>
 
 
-    <!--TODO [VISTALL] temp depedency-->
+    <!--TODO [VISTALL] temp dependency-->
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>consulo-desktop-awt-hacking</artifactId>
@@ -268,10 +268,6 @@
     <dependency>
       <groupId>com.github.markusbernhardt</groupId>
       <artifactId>proxy-vole</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>cglib</groupId>
-      <artifactId>cglib-nodep</artifactId>
     </dependency>
     <dependency>
       <groupId>net.bytebuddy</groupId>

@@ -330,10 +330,6 @@
       <artifactId>proxy-vole</artifactId>
     </dependency>
     <dependency>
-      <groupId>cglib</groupId>
-      <artifactId>cglib-nodep</artifactId>
-    </dependency>
-    <dependency>
       <groupId>net.bytebuddy</groupId>
       <artifactId>byte-buddy</artifactId>
     </dependency>
