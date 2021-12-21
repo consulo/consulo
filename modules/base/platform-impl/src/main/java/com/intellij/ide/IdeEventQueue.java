@@ -53,7 +53,6 @@ import consulo.awt.hacking.SequencedEventNestedFieldHolder;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
-import consulo.platform.Platform;
 import sun.awt.SunToolkit;
 
 import javax.annotation.Nonnull;
@@ -190,19 +189,24 @@ public class IdeEventQueue extends EventQueue {
     }
   }
 
-  private static class IdeEventQueueHolder {
-    private static final IdeEventQueue INSTANCE = new IdeEventQueue();
+  private static IdeEventQueue ourInstance;
+
+  public static void initialize() {
+    if (ourInstance != null) {
+      throw new Error();
+    }
+
+    ourInstance = new IdeEventQueue();
   }
 
   public static IdeEventQueue getInstance() {
-    return IdeEventQueueHolder.INSTANCE;
+    if (ourInstance == null) {
+      throw new IllegalArgumentException("IdeEventQueue is not initialed. Probably wrote application frontend");
+    }
+    return ourInstance;
   }
 
   private IdeEventQueue() {
-    if (Platform.current().isWebService()) {
-      throw new UnsupportedOperationException("This constructor must be never called inside WebService");
-    }
-
     EventQueue systemEventQueue = Toolkit.getDefaultToolkit().getSystemEventQueue();
     assert !(systemEventQueue instanceof IdeEventQueue) : systemEventQueue;
     systemEventQueue.push(this);

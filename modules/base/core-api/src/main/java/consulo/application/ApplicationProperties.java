@@ -17,7 +17,6 @@ package consulo.application;
 
 import com.intellij.openapi.util.NotNullLazyValue;
 import consulo.annotation.DeprecationInfo;
-import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 

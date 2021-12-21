@@ -120,7 +120,7 @@ public class DesktopApplicationStarter extends ApplicationStarter {
     invokeAtUIAndWait(() -> {
       System.setProperty("sun.awt.noerasebackground", "true");
 
-      IdeEventQueue.getInstance(); // replace system event queue
+      IdeEventQueue.initialize(); // replace system event queue
     });
 
     stat.markWith("awt.update.window.icon", () -> AppUIUtil.updateWindowIcon(JOptionPane.getRootFrame(), false));
