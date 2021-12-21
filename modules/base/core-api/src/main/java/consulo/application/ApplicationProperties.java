@@ -15,10 +15,10 @@
  */
 package consulo.application;
 
-import com.intellij.openapi.util.NotNullFactory;
 import com.intellij.openapi.util.NotNullLazyValue;
 import consulo.annotation.DeprecationInfo;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 
 /**
@@ -30,7 +30,6 @@ public class ApplicationProperties {
    * @type boolean
    */
   @Nonnull
-  @NonNls
   @Deprecated
   @DeprecationInfo("Use CONSULO_IN_SANDBOX")
   public static final String IDEA_IS_INTERNAL = "idea.is.internal";
@@ -43,16 +42,9 @@ public class ApplicationProperties {
    * @type boolean
    */
   @Nonnull
-  @NonNls
   public static final String CONSULO_IN_SANDBOX = "consulo.in.sandbox";
 
-  private static final NotNullLazyValue<Boolean> ourInSandboxValue = NotNullLazyValue.createValue(new NotNullFactory<Boolean>() {
-    @Nonnull
-    @Override
-    public Boolean create() {
-      return Boolean.getBoolean(CONSULO_IN_SANDBOX);
-    }
-  });
+  private static final NotNullLazyValue<Boolean> ourInSandboxValue = NotNullLazyValue.createValue(() -> Boolean.getBoolean(CONSULO_IN_SANDBOX));
 
   public static boolean isInSandbox() {
     return ourInSandboxValue.getValue();
@@ -62,7 +54,6 @@ public class ApplicationProperties {
    * @type boolean
    */
   @Nonnull
-  @NonNls
   @Deprecated
   public static final String CONSULO_IN_UNIT_TEST = "consulo.is.unit.test";
 
@@ -81,11 +72,9 @@ public class ApplicationProperties {
    * @type String
    */
   @Nonnull
-  @NonNls
   public static final String CONSULO_APP_HOME_PATH = "consulo.app.home.path";
 
   @Nonnull
-  @NonNls
   @Deprecated
   @DeprecationInfo("Old idea plugins path. See #CONSULO_PLUGINS_PATHS")
   public static final String IDEA_PLUGINS_PATH = "idea.plugins.path";
@@ -95,7 +84,6 @@ public class ApplicationProperties {
    * @type
    */
   @Nonnull
-  @NonNls
   public static final String CONSULO_INSTALL_PLUGINS_PATH = "consulo.install.plugins.path";
 
   /**
@@ -103,7 +91,6 @@ public class ApplicationProperties {
    * @type String[]
    */
   @Nonnull
-  @NonNls
   public static final String CONSULO_PLUGINS_PATHS = "consulo.plugins.paths";
 
   /**
