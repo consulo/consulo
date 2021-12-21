@@ -16,6 +16,7 @@
 
 package com.intellij.codeInsight.preview;
 
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.EditorFactory;
@@ -35,7 +36,6 @@ import com.intellij.util.Alarm;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.disposer.Disposable;
 import consulo.logging.Logger;
-import consulo.platform.Platform;
 import consulo.util.dataholder.Key;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -67,8 +67,8 @@ public class ImageOrColorPreviewManager implements Disposable, EditorMouseMotion
   private Collection<PsiElement> myElements;
 
   @Inject
-  public ImageOrColorPreviewManager(EditorFactory editorFactory) {
-    if(Platform.current().isWebService()) {
+  public ImageOrColorPreviewManager(Application application, EditorFactory editorFactory) {
+    if(!application.isSwingApplication()) {
       return;
     }
     

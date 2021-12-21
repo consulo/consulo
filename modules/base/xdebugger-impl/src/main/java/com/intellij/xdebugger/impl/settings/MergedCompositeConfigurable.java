@@ -1,5 +1,6 @@
 package com.intellij.xdebugger.impl.settings;
 
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.options.SearchableConfigurable;
@@ -9,16 +10,15 @@ import com.intellij.ui.IdeBorderFactory;
 import com.intellij.ui.TitledSeparator;
 import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
-import consulo.ui.annotation.RequiredUIAccess;
 import consulo.options.ConfigurableUIMigrationUtil;
-import consulo.platform.Platform;
 import consulo.ui.Component;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.LabeledLayout;
 import consulo.ui.layout.VerticalLayout;
 import org.jetbrains.annotations.Nls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
@@ -98,7 +98,7 @@ class MergedCompositeConfigurable implements SearchableConfigurable {
   @Nullable
   @Override
   public JComponent createComponent(@Nonnull Disposable parentDisposable) {
-    if (Platform.current().isWebService()) {
+    if (!Application.get().isSwingApplication()) {
       return null;
     }
 

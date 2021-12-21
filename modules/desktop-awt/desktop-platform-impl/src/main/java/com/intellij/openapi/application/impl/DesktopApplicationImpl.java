@@ -677,6 +677,11 @@ public class DesktopApplicationImpl extends BaseApplication {
     return Restarter.isSupported();
   }
 
+  @Override
+  public boolean isSwingApplication() {
+    return true;
+  }
+
   @TestOnly
   public void setDisposeInProgress(boolean disposeInProgress) {
     myDisposeInProgress = disposeInProgress;

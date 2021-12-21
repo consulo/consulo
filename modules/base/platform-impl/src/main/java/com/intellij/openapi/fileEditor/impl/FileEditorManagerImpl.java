@@ -24,8 +24,6 @@ import com.intellij.ide.ui.UISettings;
 import com.intellij.ide.ui.UISettingsListener;
 import com.intellij.injected.editor.VirtualFileWindow;
 import com.intellij.openapi.actionSystem.DataContext;
-import consulo.awt.TargetAWT;
-import consulo.disposer.Disposable;
 import com.intellij.openapi.application.AccessToken;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
@@ -75,14 +73,15 @@ import com.intellij.util.ui.update.Update;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.application.AccessRule;
+import consulo.awt.TargetAWT;
 import consulo.component.PersistentStateComponentWithUIState;
+import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.fileEditor.impl.*;
 import consulo.fileEditor.impl.text.TextEditorProvider;
 import consulo.logging.Logger;
-import consulo.platform.Platform;
-import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
 import consulo.ui.docking.BaseDockManager;
 import consulo.util.dataholder.Key;
@@ -280,7 +279,7 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
     assertDispatchThread();
 
     // FIXME [VISTALL] reimpl this
-    if(Platform.current().isDesktop()) {
+    if(myProject.getApplication().isSwingApplication()) {
       final IdeFocusManager fm = IdeFocusManager.getInstance(myProject);
       Component focusOwner = fm.getFocusOwner();
       if (focusOwner == null) {
@@ -634,10 +633,11 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
     return ((BaseDockManager)DockManager.getInstance(getProject())).createNewDockContainerFor(file, this);
   }
 
-  private static boolean isOpenInNewWindow() {
-    if (!Platform.current().isDesktop()) {
+  private boolean isOpenInNewWindow() {
+    if (!myProject.getApplication().isSwingApplication()) {
       return false;
     }
+    
     AWTEvent event = IdeEventQueue.getInstance().getTrueCurrentEvent();
 
     // Shift was used while clicking

@@ -3,6 +3,7 @@ package com.intellij.openapi.wm.impl.status;
 
 import com.intellij.ide.util.EditorGotoLineNumberDialog;
 import com.intellij.ide.util.GotoLineNumberDialog;
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.editor.*;
 import com.intellij.openapi.editor.event.*;
@@ -10,16 +11,15 @@ import com.intellij.openapi.fileEditor.FileEditorManagerEvent;
 import com.intellij.openapi.fileEditor.ex.IdeDocumentHistory;
 import com.intellij.openapi.keymap.KeymapUtil;
 import com.intellij.openapi.project.Project;
-import consulo.disposer.Disposer;
-import consulo.platform.Platform;
-import consulo.util.dataholder.Key;
 import com.intellij.openapi.wm.StatusBar;
 import com.intellij.openapi.wm.StatusBarWidget;
 import com.intellij.ui.UIBundle;
 import com.intellij.util.Alarm;
 import com.intellij.util.Consumer;
-import javax.annotation.Nonnull;
+import consulo.disposer.Disposer;
+import consulo.util.dataholder.Key;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -150,7 +150,7 @@ public final class PositionPanel extends EditorBasedWidget
 
   private boolean isFocusedEditor(Editor editor) {
     // TODO [VISTALL] temp hack
-    if (Platform.current().isWebService()) {
+    if (!Application.get().isSwingApplication()) {
       return editor.isShowing();
     }
     Component focusOwner = getFocusedComponent();

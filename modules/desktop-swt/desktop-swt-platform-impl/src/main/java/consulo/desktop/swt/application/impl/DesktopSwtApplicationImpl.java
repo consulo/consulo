@@ -206,4 +206,9 @@ public class DesktopSwtApplicationImpl extends BaseApplication {
   public boolean isInternal() {
     return true;
   }
+
+  @Override
+  public boolean isUnifiedApplication() {
+    return true;
+  }
 }

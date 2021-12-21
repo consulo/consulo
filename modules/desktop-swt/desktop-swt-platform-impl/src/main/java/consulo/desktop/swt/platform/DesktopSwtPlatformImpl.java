@@ -22,13 +22,4 @@ import consulo.platform.PlatformBase;
  * @since 29/04/2021
  */
 public class DesktopSwtPlatformImpl extends PlatformBase {
-  @Override
-  public boolean isDesktop() {
-    return false;
-  }
-
-  @Override
-  public boolean isWebService() {
-    return true; // TODO dirty hack for fix some exceptions
-  }
 }

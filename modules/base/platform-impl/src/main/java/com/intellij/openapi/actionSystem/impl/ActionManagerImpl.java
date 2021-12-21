@@ -44,7 +44,6 @@ import consulo.disposer.Disposer;
 import consulo.extensions.ListOfElementsEP;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
-import consulo.platform.Platform;
 import consulo.platform.impl.action.LastActionTracker;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
@@ -411,7 +410,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
 
   @Nonnull
   public ActionPopupMenu createActionPopupMenu(@Nonnull String place, @Nonnull ActionGroup group, @Nullable PresentationFactory presentationFactory) {
-    if(Platform.current().isWebService()) {
+    if(Application.get().isUnifiedApplication()) {
       return new UnifiedActionPopupMenuImpl(place, group, this, presentationFactory);
     }
     return new DesktopActionPopupMenuImpl(place, group, this, presentationFactory);
@@ -420,7 +419,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
   @Nonnull
   @Override
   public ActionPopupMenu createActionPopupMenu(@Nonnull String place, @Nonnull ActionGroup group) {
-    if (Platform.current().isWebService()) {
+    if (Application.get().isUnifiedApplication()) {
       return new UnifiedActionPopupMenuImpl(place, group, this, null);
     }
     return new DesktopActionPopupMenuImpl(place, group, this, null);

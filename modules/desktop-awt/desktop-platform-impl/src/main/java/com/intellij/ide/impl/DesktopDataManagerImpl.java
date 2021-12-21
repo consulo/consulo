@@ -32,7 +32,6 @@ import consulo.awt.impl.FromSwingComponentWrapper;
 import consulo.awt.impl.FromSwingWindowWrapper;
 import consulo.ide.base.BaseDataManager;
 import consulo.logging.Logger;
-import consulo.platform.Platform;
 import consulo.ui.ex.ToolWindowFloatingDecorator;
 import consulo.util.dataholder.Key;
 import jakarta.inject.Inject;
@@ -66,7 +65,7 @@ public class DesktopDataManagerImpl extends BaseDataManager {
     @Override
     @SuppressWarnings("unchecked")
     public <T> T getData(@Nonnull Key<T> dataId) {
-      int currentEventCount = Platform.current().isDesktop() ? IdeEventQueue.getInstance().getEventCount() : -1;
+      int currentEventCount = IdeEventQueue.getInstance().getEventCount();
       if (myEventCount != -1 && myEventCount != currentEventCount) {
         LOG.error("cannot share data context between Swing events; initial event count = " + myEventCount + "; current event count = " + currentEventCount);
         return doGetData(dataId);

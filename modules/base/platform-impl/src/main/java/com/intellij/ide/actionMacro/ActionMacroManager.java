@@ -18,7 +18,6 @@ package com.intellij.ide.actionMacro;
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.IdeEventQueue;
-import consulo.disposer.Disposable;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.ActionManagerEx;
 import com.intellij.openapi.actionSystem.ex.AnActionListener;
@@ -26,8 +25,6 @@ import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
-import consulo.disposer.Disposer;
-import consulo.logging.Logger;
 import com.intellij.openapi.keymap.KeymapUtil;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
@@ -52,7 +49,9 @@ import com.intellij.util.ui.AnimatedIcon;
 import com.intellij.util.ui.BaseButtonBehavior;
 import com.intellij.util.ui.PositionTracker;
 import com.intellij.util.ui.UIUtil;
-import consulo.platform.Platform;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
+import consulo.logging.Logger;
 import consulo.ui.image.Image;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -128,7 +127,9 @@ public class ActionMacroManager implements JDOMExternalizable, Disposable {
 
     myKeyProcessor = new MyKeyPostpocessor();
 
-    Platform.runIfDesktopPlatform(() -> IdeEventQueue.getInstance().addPostprocessor(myKeyProcessor, null));
+    if (application.isSwingApplication()) {
+      IdeEventQueue.getInstance().addPostprocessor(myKeyProcessor, null);
+    }
   }
 
   @Override

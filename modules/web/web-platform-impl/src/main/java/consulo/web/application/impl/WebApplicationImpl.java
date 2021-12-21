@@ -241,4 +241,9 @@ public class WebApplicationImpl extends BaseApplication implements WebApplicatio
   public WebSession getCurrentSession() {
     return myCurrentSession;
   }
+
+  @Override
+  public boolean isUnifiedApplication() {
+    return true;
+  }
 }

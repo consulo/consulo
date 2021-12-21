@@ -39,7 +39,6 @@ import consulo.logging.Logger;
 import consulo.logging.attachment.Attachment;
 import consulo.logging.attachment.AttachmentFactory;
 import consulo.logging.attachment.RuntimeExceptionWithAttachments;
-import consulo.platform.Platform;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jetbrains.annotations.TestOnly;
@@ -255,7 +254,7 @@ public class DumbServiceImpl extends DumbService implements Disposable, Modifica
     }
     final Application application = ApplicationManager.getApplication();
 
-    if (application.isUnitTestMode() || application.isHeadlessEnvironment() || Platform.current().isWebService()) {
+    if (application.isUnitTestMode() || application.isHeadlessEnvironment() || Application.get().isUnifiedApplication()) {
       runTaskSynchronously(task);
     }
     else {

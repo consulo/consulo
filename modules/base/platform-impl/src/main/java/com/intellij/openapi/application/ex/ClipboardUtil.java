@@ -15,13 +15,12 @@
  */
 package com.intellij.openapi.application.ex;
 
-import consulo.logging.Logger;
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.ide.CopyPasteManager;
 import com.intellij.openapi.util.SystemInfo;
-import consulo.platform.Platform;
+import consulo.logging.Logger;
 
 import javax.annotation.Nonnull;
-
 import javax.annotation.Nullable;
 import java.awt.datatransfer.DataFlavor;
 import java.util.function.Supplier;
@@ -67,7 +66,7 @@ public class ClipboardUtil {
 
   @Nullable
   public static String getTextInClipboard() {
-    if(Platform.current().isWebService()) {
+    if(!Application.get().isSwingApplication()) {
       return null; // TODO [VISTALL] no clipboard support
     }
     return CopyPasteManager.getInstance().getContents(DataFlavor.stringFlavor);

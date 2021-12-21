@@ -24,9 +24,4 @@ import consulo.platform.PlatformBase;
 public class WebPlatformImpl extends PlatformBase {
   public WebPlatformImpl() {
   }
-
-  @Override
-  public boolean isWebService() {
-    return true;
-  }
 }

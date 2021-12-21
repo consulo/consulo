@@ -329,14 +329,4 @@ public abstract class PlatformBase implements Platform {
   public User user() {
     return myUser;
   }
-
-  @Override
-  public boolean isDesktop() {
-    return false;
-  }
-
-  @Override
-  public boolean isWebService() {
-    return false;
-  }
 }

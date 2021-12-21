@@ -10,16 +10,16 @@ import com.intellij.ide.actions.runAnything.activity.RunAnythingProvider;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.CustomComponentAction;
 import com.intellij.openapi.actionSystem.impl.ActionButton;
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.keymap.MacKeymapUtil;
 import com.intellij.openapi.keymap.impl.ModifierKeyDoubleClickHandler;
 import com.intellij.openapi.project.DumbAware;
-import consulo.platform.Platform;
-import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.NotNullLazyValue;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.FontUtil;
+import consulo.util.dataholder.Key;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -37,7 +37,7 @@ public class RunAnythingAction extends AnAction implements CustomComponentAction
 
   private boolean myIsDoubleCtrlRegistered;
 
-  private static final NotNullLazyValue<Boolean> IS_ACTION_ENABLED = new NotNullLazyValue<Boolean>() {
+  private static final NotNullLazyValue<Boolean> IS_ACTION_ENABLED = new NotNullLazyValue<>() {
     @Nonnull
     @Override
     protected Boolean compute() {
@@ -45,8 +45,8 @@ public class RunAnythingAction extends AnAction implements CustomComponentAction
     }
   };
 
-  static {
-    if(Platform.current().isDesktop()) {
+  public RunAnythingAction(@Nonnull Application application) {
+    if(application.isSwingApplication()) {
       IdeEventQueue.getInstance().addPostprocessor(event -> {
         if (event instanceof KeyEvent) {
           final int keyCode = ((KeyEvent)event).getKeyCode();

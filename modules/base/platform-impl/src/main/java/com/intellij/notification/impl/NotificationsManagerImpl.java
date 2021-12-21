@@ -52,7 +52,6 @@ import com.intellij.util.ui.*;
 import consulo.awt.TargetAWT;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.platform.Platform;
 import consulo.start.WelcomeFrameManager;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
@@ -943,7 +942,7 @@ public class NotificationsManagerImpl extends NotificationsManager {
   public static class ProjectNotificationsComponent {
     @Inject
     public ProjectNotificationsComponent(@Nonnull final Project project) {
-      if (isDummyEnvironment() || Platform.current().isWebService()) {
+      if (isDummyEnvironment() || !project.getApplication().isSwingApplication()) {
         return;
       }
       project.getMessageBus().connect().subscribe(Notifications.TOPIC, new MyNotificationListener(project));
@@ -1002,7 +1001,7 @@ public class NotificationsManagerImpl extends NotificationsManager {
 
     @Override
     public void notify(@Nonnull Notification notification) {
-      if(Platform.current().isWebService()) {
+      if(!Application.get().isSwingApplication()) {
         return;
       }
       

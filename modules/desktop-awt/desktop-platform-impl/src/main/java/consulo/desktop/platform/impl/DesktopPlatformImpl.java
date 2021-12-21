@@ -66,9 +66,4 @@ class DesktopPlatformImpl extends PlatformBase {
   protected FileSystem createFS() {
     return new DesktopFileSystemImpl();
   }
-
-  @Override
-  public boolean isDesktop() {
-    return true;
-  }
 }

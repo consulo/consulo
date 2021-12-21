@@ -2,6 +2,7 @@ package com.intellij.tasks.timeTracking;
 
 import com.intellij.ide.IdeEventQueue;
 import com.intellij.openapi.Disposable;
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.State;
@@ -17,7 +18,6 @@ import com.intellij.tasks.timeTracking.model.WorkItem;
 import com.intellij.util.Alarm;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.xmlb.XmlSerializerUtil;
-import consulo.platform.Platform;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -223,7 +223,7 @@ public class TimeTrackingManager implements PersistentStateComponent<TimeTrackin
 
 	private void addAWTListener()
 	{
-		if(Platform.current().isWebService())
+		if(!Application.get().isSwingApplication())
 		{
 			return;
 		}

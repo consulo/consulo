@@ -30,38 +30,20 @@ import com.intellij.openapi.keymap.impl.ModifierKeyDoubleClickHandler;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.registry.Registry;
-import consulo.platform.Platform;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * @author Konstantin Bulenkov
  */
 public class SearchEverywhereAction extends AnAction implements CustomComponentAction, DumbAware {
-  private static AtomicBoolean ourShiftIsPressed = new AtomicBoolean(false);
-
-  static {
-    ModifierKeyDoubleClickHandler.getInstance().registerAction(IdeActions.ACTION_SEARCH_EVERYWHERE, KeyEvent.VK_SHIFT, -1);
-
-    if(Platform.current().isDesktop()) {
-      IdeEventQueue.getInstance().addPostprocessor(event -> {
-        if (event instanceof KeyEvent) {
-          final int keyCode = ((KeyEvent)event).getKeyCode();
-          if (keyCode == KeyEvent.VK_SHIFT) {
-            ourShiftIsPressed.set(event.getID() == KeyEvent.KEY_PRESSED);
-          }
-        }
-        return false;
-      }, null);
-    }
-  }
-
-  public SearchEverywhereAction() {
+  public SearchEverywhereAction(ModifierKeyDoubleClickHandler modifierKeyDoubleClickHandler) {
     setEnabledInModalContext(false);
+
+    modifierKeyDoubleClickHandler.registerAction(IdeActions.ACTION_SEARCH_EVERYWHERE, KeyEvent.VK_SHIFT, -1);
   }
 
   @Nonnull

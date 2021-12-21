@@ -20,6 +20,7 @@ import com.intellij.ide.IdeEventQueue;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.ActionManagerEx;
 import com.intellij.openapi.actionSystem.ex.AnActionListener;
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.util.Clock;
 import com.intellij.openapi.util.Couple;
@@ -28,7 +29,6 @@ import com.intellij.openapi.wm.IdeFocusManager;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
-import consulo.platform.Platform;
 import gnu.trove.TIntIntHashMap;
 import gnu.trove.TIntIntProcedure;
 import jakarta.inject.Inject;
@@ -108,7 +108,9 @@ public class ModifierKeyDoubleClickHandler implements Disposable {
                              boolean skipIfActionHasShortcut) {
     final MyDispatcher dispatcher = new MyDispatcher(actionId, modifierKeyCode, actionKeyCode, skipIfActionHasShortcut);
     MyDispatcher oldDispatcher = myDispatchers.put(actionId, dispatcher);
-    Platform.runIfDesktopPlatform(() -> IdeEventQueue.getInstance().addDispatcher(dispatcher, dispatcher));
+    if (Application.get().isSwingApplication()) {
+      IdeEventQueue.getInstance().addDispatcher(dispatcher, dispatcher);
+    }
     myActionManager.addAnActionListener(dispatcher, dispatcher);
     if (oldDispatcher != null) {
       Disposer.dispose(oldDispatcher);
@@ -137,7 +139,7 @@ public class ModifierKeyDoubleClickHandler implements Disposable {
     return myIsRunningAction;
   }
 
-  private class MyDispatcher extends AnActionListener.Adapter implements IdeEventQueue.EventDispatcher, Disposable {
+  private class MyDispatcher implements AnActionListener, IdeEventQueue.EventDispatcher, Disposable {
     private final String myActionId;
     private final int myModifierKeyCode;
     private final int myActionKeyCode;

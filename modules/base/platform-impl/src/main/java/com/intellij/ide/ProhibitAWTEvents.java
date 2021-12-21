@@ -16,11 +16,10 @@
 package com.intellij.ide;
 
 import com.intellij.openapi.application.AccessToken;
+import com.intellij.openapi.application.Application;
 import consulo.logging.Logger;
-import consulo.platform.Platform;
 
 import javax.annotation.Nonnull;
-
 import javax.swing.*;
 import java.awt.*;
 
@@ -50,7 +49,7 @@ public class ProhibitAWTEvents implements IdeEventQueue.EventDispatcher {
 
   @Nonnull
   public static AccessToken start(@Nonnull String activityName) {
-    if(!Platform.current().isDesktop()) {
+    if(!Application.get().isSwingApplication()) {
       return AccessToken.EMPTY_ACCESS_TOKEN;
     }
 

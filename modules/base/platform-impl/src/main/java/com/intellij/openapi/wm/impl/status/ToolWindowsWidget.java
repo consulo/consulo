@@ -32,7 +32,6 @@ import consulo.awt.TargetAWT;
 import consulo.desktop.wm.impl.DesktopIdeFrameUtil;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.platform.Platform;
 import consulo.ui.FocusManager;
 import consulo.ui.Label;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -62,7 +61,7 @@ public class ToolWindowsWidget implements CustomStatusBarWidget, StatusBarWidget
     myLabel = Label.create();
 
     // FIXME [VISTALL] desktop hack
-    if(Platform.current().isDesktop()) {
+    if(Application.get().isSwingApplication()) {
       JComponent awtLabel = (JComponent)TargetAWT.to(myLabel);
       
       new BaseButtonBehavior(awtLabel, TimedDeadzone.NULL) {
@@ -228,7 +227,7 @@ public class ToolWindowsWidget implements CustomStatusBarWidget, StatusBarWidget
 
       if (changes) {
         // FIXME [VISTALL] desktop hack
-        if (Platform.current().isDesktop()) {
+        if (Application.get().isSwingApplication()) {
           Component to = TargetAWT.to(myLabel);
 
           to.revalidate();

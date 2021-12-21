@@ -509,6 +509,20 @@ public interface Application extends ComponentManager {
   @Nonnull
   UIAccess getLastUIAccess();
 
+  /**
+   * Return true of application is swing based, and AWT thread used as ui thread
+   */
+  default boolean isSwingApplication() {
+    return false;
+  }
+
+  /**
+   * Return true if application is unified, and used unified ui code (swing based app will return false)
+   */
+  default boolean isUnifiedApplication() {
+    return true;
+  }
+
   // region Deprecated stuff
 
   /**

@@ -17,7 +17,6 @@ package consulo.platform;
 
 import com.intellij.util.LineSeparator;
 import com.intellij.util.ObjectUtil;
-import consulo.annotation.DeprecationInfo;
 import consulo.platform.internal.PlatformInternal;
 import consulo.ui.image.Image;
 
@@ -32,17 +31,6 @@ import java.util.Map;
  * @since 16-May-17
  */
 public interface Platform {
-  //region Migration staff
-  @Deprecated
-  @DeprecationInfo("This is marker for running tasks if desktop platform, in ideal future, must be removed")
-  @SuppressWarnings("deprecation")
-  static void runIfDesktopPlatform(@Nonnull Runnable runnable) {
-    if (current().isDesktop()) {
-      runnable.run();
-    }
-  }
-  //endregion
-
   interface FileSystem {
     boolean isCaseSensitive();
 
@@ -191,10 +179,6 @@ public interface Platform {
 
   @Nonnull
   User user();
-
-  boolean isDesktop();
-
-  boolean isWebService();
 
   @Nonnull
   default String mapWindowsExecutable(@Nonnull String baseName, @Nonnull String extension) {

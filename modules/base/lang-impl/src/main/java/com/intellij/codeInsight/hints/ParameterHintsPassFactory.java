@@ -24,6 +24,7 @@ import com.intellij.codeInsight.hints.filtering.MatcherConstructor;
 import com.intellij.codeInsight.hints.settings.Diff;
 import com.intellij.codeInsight.hints.settings.ParameterNameHintsSettings;
 import com.intellij.lang.Language;
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.editor.Caret;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.Inlay;
@@ -37,7 +38,6 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.SyntaxTraverser;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.annotation.access.RequiredReadAction;
-import consulo.platform.Platform;
 import consulo.util.dataholder.Key;
 import gnu.trove.TIntObjectHashMap;
 
@@ -57,7 +57,7 @@ public class ParameterHintsPassFactory implements TextEditorHighlightingPassFact
   @Nullable
   @Override
   public TextEditorHighlightingPass createHighlightingPass(@Nonnull PsiFile file, @Nonnull Editor editor) {
-    if (Platform.current().isWebService()) {
+    if (!Application.get().isSwingApplication()) {
       return null;
     }
     if (editor.isOneLineMode()) {

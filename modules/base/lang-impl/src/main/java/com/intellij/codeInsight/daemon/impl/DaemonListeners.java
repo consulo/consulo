@@ -62,13 +62,12 @@ import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
 import consulo.module.extension.ModuleExtension;
-import consulo.platform.Platform;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolderEx;
 import jakarta.inject.Singleton;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -179,21 +178,23 @@ public final class DaemonListeners implements Disposable {
     editorFactory.addEditorFactoryListener(new EditorFactoryListener() {
       @Override
       public void editorCreated(@Nonnull EditorFactoryEvent event) {
-        Platform.runIfDesktopPlatform(() -> {
-          Editor editor = event.getEditor();
-          Document document = editor.getDocument();
-          Project editorProject = editor.getProject();
-          // worthBothering() checks for getCachedPsiFile, so call getPsiFile here
-          PsiFile file = editorProject == null ? null : PsiDocumentManager.getInstance(editorProject).getPsiFile(document);
-          boolean showing = editor.getComponent().isShowing();
-          boolean worthBothering = worthBothering(document, editorProject);
-          if (!showing || !worthBothering) {
-            LOG.debug("Not worth bothering about editor created for : " + file + " because editor isShowing(): " + showing + "; project is open and file is mine: " + worthBothering);
-            return;
-          }
+        if (!Application.get().isSwingApplication()) {
+          return;
+        }
 
-          ErrorStripeUpdateManager.getInstance(myProject).repaintErrorStripePanel(editor);
-        });
+        Editor editor = event.getEditor();
+        Document document = editor.getDocument();
+        Project editorProject = editor.getProject();
+        // worthBothering() checks for getCachedPsiFile, so call getPsiFile here
+        PsiFile file = editorProject == null ? null : PsiDocumentManager.getInstance(editorProject).getPsiFile(document);
+        boolean showing = editor.isShowing();
+        boolean worthBothering = worthBothering(document, editorProject);
+        if (!showing || !worthBothering) {
+          LOG.debug("Not worth bothering about editor created for : " + file + " because editor isShowing(): " + showing + "; project is open and file is mine: " + worthBothering);
+          return;
+        }
+
+        ErrorStripeUpdateManager.getInstance(myProject).repaintErrorStripePanel(editor);
       }
 
       @Override

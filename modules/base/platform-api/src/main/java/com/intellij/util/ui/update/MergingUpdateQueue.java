@@ -21,16 +21,15 @@ import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.progress.ProcessCanceledException;
-import consulo.disposer.Disposable;
-import consulo.disposer.Disposer;
 import com.intellij.util.Alarm;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.UIUtil;
-import consulo.platform.Platform;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.util.List;
 import java.util.Map;
@@ -279,8 +278,9 @@ public class MergingUpdateQueue implements Runnable, Disposable, Activatable {
     };
 
     if (myExecuteInDispatchThread) {
-      if(Platform.current().isWebService()) {
-        Application.get().getLastUIAccess().giveAndWaitIfNeed(toRun);
+      Application application = Application.get();
+      if(application.isUnifiedApplication()) {
+        application.getLastUIAccess().giveAndWaitIfNeed(toRun);
       }
       else {
         UIUtil.invokeAndWaitIfNeeded(toRun);

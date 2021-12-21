@@ -18,13 +18,13 @@ package com.intellij.application.options.colors;
 
 import com.intellij.application.options.SaveSchemeDialog;
 import com.intellij.application.options.SkipSelfSearchComponent;
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationBundle;
 import com.intellij.openapi.editor.colors.EditorColorsScheme;
 import com.intellij.util.EventDispatcher;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.UIUtil;
 import consulo.awt.TargetAWT;
-import consulo.platform.Platform;
 import consulo.platform.base.localize.ApplicationLocalize;
 import consulo.ui.Button;
 import consulo.ui.ComboBox;
@@ -112,7 +112,7 @@ public class SchemesPanel implements SkipSelfSearchComponent {
   @Nonnull
   public Component getComponent() {
     // todo hack
-    if (Platform.current().isDesktop()) {
+    if (Application.get().isSwingApplication()) {
       JComponent component = (JComponent)TargetAWT.to(myLayout);
       UIUtil.putClientProperty(component, SkipSelfSearchComponent.KEY, Boolean.TRUE);
     }

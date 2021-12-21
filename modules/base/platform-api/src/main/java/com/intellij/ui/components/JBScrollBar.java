@@ -1,20 +1,19 @@
 // Copyright 2000-2021 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.ui.components;
 
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.wm.IdeGlassPane.TopComponent;
 import com.intellij.ui.ComponentUtil;
 import com.intellij.ui.scale.JBUIScale;
-import com.intellij.util.ui.RegionPainter;
 import com.intellij.ui.scroll.TouchScrollUtil;
+import com.intellij.util.ui.RegionPainter;
 import com.intellij.util.ui.UIUtil;
-import consulo.platform.Platform;
 import consulo.ui.plaf.ScrollBarUIConstants;
 import consulo.util.dataholder.Key;
 import org.intellij.lang.annotations.JdkConstants;
 
 import javax.annotation.Nonnull;
-
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -102,7 +101,7 @@ public class JBScrollBar extends JScrollBar implements TopComponent, Interpolabl
   @Nonnull
   public static ScrollBarUI createUI(JComponent c) {
     // do not try create swing specific ui, until we fully migrate to unified ui
-    if (Platform.current().isWebService()) {
+    if (!Application.get().isSwingApplication()) {
       return new BasicScrollBarUI();
     }
     return SystemInfo.isMac ? new MacScrollBarUI() : new DefaultScrollBarUI();
