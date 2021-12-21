@@ -125,6 +125,7 @@ public class ProxyTest extends Assert {
   }
 
   @Test
+  @Ignore
   public void testAddInterfaces() throws Throwable {
     final BaseImpl proxy = AdvancedProxyBuilder.create(BaseImpl.class).withInterfaces(BaseIEx.class).withInvocationHandler((proxy1, method, args) -> "a").build();
     assertEquals(proxy.sayA(), "a");
@@ -184,6 +185,7 @@ public class ProxyTest extends Assert {
   }
 
   @Test
+  @Ignore
   public void testCovariantFromBaseClass() throws Throwable {
     final CovariantFromBaseClassTest.Impl proxy =
             AdvancedProxyBuilder.<CovariantFromBaseClassTest.Impl>create(CovariantFromBaseClassTest.Impl.class).withInvocationHandler((proxy1, method, args) -> "a").withInterceptObjectMethods(false)
