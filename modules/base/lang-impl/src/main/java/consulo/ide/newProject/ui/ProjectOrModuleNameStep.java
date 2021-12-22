@@ -124,7 +124,7 @@ public class ProjectOrModuleNameStep<C extends NewModuleWizardContext> implement
   @RequiredUIAccess
   @Nonnull
   @Override
-  public java.awt.Component getSwingComponent(Disposable uiDisposable) {
+  public java.awt.Component getSwingComponent(@Nonnull C context, @Nonnull Disposable uiDisposable) {
     return myPanel;
   }
 
@@ -137,7 +137,7 @@ public class ProjectOrModuleNameStep<C extends NewModuleWizardContext> implement
   @RequiredUIAccess
   @Nonnull
   @Override
-  public Component getComponent(Disposable uiDisposable) {
+  public Component getComponent(@Nonnull C context, @Nonnull Disposable uiDisposable) {
     throw new UnsupportedOperationException();
   }
 

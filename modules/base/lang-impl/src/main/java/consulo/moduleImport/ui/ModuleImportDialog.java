@@ -142,7 +142,7 @@ public class ModuleImportDialog<C extends ModuleImportContext> extends DialogWra
     int currentStepIndex = myWizardSession.getCurrentStepIndex();
 
     String id = "step-" + currentStepIndex;
-    contentPanel.add(first.getSwingComponent(getDisposable()), id);
+    contentPanel.add(first.getSwingComponent(myContext, getDisposable()), id);
 
     layout.show(contentPanel, id);
 
@@ -153,7 +153,7 @@ public class ModuleImportDialog<C extends ModuleImportContext> extends DialogWra
   @RequiredUIAccess
   @SuppressWarnings("deprecation")
   private void gotoStep(JPanel rightContentPanel, WizardStep<C> step) {
-    Component swingComponent = step.getSwingComponent(getDisposable());
+    Component swingComponent = step.getSwingComponent(myContext, getDisposable());
 
     String id = "step-" + myWizardSession.getCurrentStepIndex();
 

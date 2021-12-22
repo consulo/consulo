@@ -53,7 +53,7 @@ public class UnifiedProjectOrModuleNameStep<C extends NewModuleWizardContext> im
   @RequiredUIAccess
   @Nonnull
   @Override
-  public Component getComponent(@Nonnull Disposable uiDisposable) {
+  public Component getComponent(@Nonnull C context, @Nonnull Disposable uiDisposable) {
     if (myRootPanel == null) {
       myRootPanel = buildComponent(uiDisposable);
     }

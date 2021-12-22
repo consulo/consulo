@@ -62,7 +62,7 @@ public class WizardSessionTest extends Assert {
     @RequiredUIAccess
     @Nonnull
     @Override
-    public Component getComponent(Disposable uiDisposable) {
+    public Component getComponent(@Nonnull T context, @Nonnull Disposable uiDisposable) {
       throw new UnsupportedOperationException();
     }
 
@@ -165,7 +165,7 @@ public class WizardSessionTest extends Assert {
     @RequiredUIAccess
     @Nonnull
     @Override
-    public Component getComponent(Disposable uiDisposable) {
+    public Component getComponent(@Nonnull InvisibleContext context, @Nonnull Disposable uiDisposable) {
       throw new UnsupportedOperationException();
     }
 
@@ -182,7 +182,7 @@ public class WizardSessionTest extends Assert {
       @RequiredUIAccess
       @Nonnull
       @Override
-      public Component getComponent(Disposable uiDisposable) {
+      public Component getComponent(@Nonnull InvisibleContext context, @Nonnull Disposable uiDisposable) {
         throw new UnsupportedOperationException();
       }
 
@@ -196,7 +196,7 @@ public class WizardSessionTest extends Assert {
       @RequiredUIAccess
       @Nonnull
       @Override
-      public Component getComponent(Disposable uiDisposable) {
+      public Component getComponent(@Nonnull InvisibleContext context, @Nonnull Disposable uiDisposable) {
         throw new UnsupportedOperationException();
       }
 

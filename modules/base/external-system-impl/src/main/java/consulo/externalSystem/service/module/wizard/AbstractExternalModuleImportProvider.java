@@ -48,7 +48,6 @@ import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.util.containers.ContainerUtilRt;
 import com.intellij.util.ui.UIUtil;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.logging.Logger;
@@ -62,6 +61,7 @@ import javax.annotation.Nullable;
 import java.io.File;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Consumer;
 
@@ -110,17 +110,8 @@ public abstract class AbstractExternalModuleImportProvider<C extends AbstractImp
 
   protected abstract void applyExtraSettings(@Nonnull ExternalModuleImportContext<C> context);
 
-
-  public void prepare(@Nonnull ExternalModuleImportContext<C> context) {
-    myControl.reset();
-    String pathToUse = context.getPath();
-    myControl.setLinkedProjectPath(pathToUse);
-    doPrepare(context);
-  }
-
   @Nonnull
-  public C getControl(@Nullable Project currentProject) {
-    myControl.setCurrentProject(currentProject);
+  public C getControl() {
     return myControl;
   }
 
@@ -139,7 +130,7 @@ public abstract class AbstractExternalModuleImportProvider<C extends AbstractImp
       public void run() {
         AbstractExternalSystemSettings systemSettings = ExternalSystemApiUtil.getSettings(project, myExternalSystemId);
         final ExternalProjectSettings projectSettings = getCurrentExternalProjectSettings();
-        Set<ExternalProjectSettings> projects = ContainerUtilRt.<ExternalProjectSettings>newHashSet(systemSettings.getLinkedProjectsSettings());
+        Set<ExternalProjectSettings> projects = new HashSet<>(systemSettings.getLinkedProjectsSettings());
         // add current importing project settings to linked projects settings or replace if similar already exist
         projects.remove(projectSettings);
         projects.add(projectSettings);

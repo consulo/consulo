@@ -38,7 +38,7 @@ public class ExternalSystemRunConfigurationEditor extends SettingsEditor<Externa
   @Override
   protected JComponent createEditor() {
     PaintAwarePanel result = new PaintAwarePanel(new GridBagLayout());
-    myControl.fillUi(result, 0);
+    myControl.fillUi(this, result, 0);
     return result;
   }
 

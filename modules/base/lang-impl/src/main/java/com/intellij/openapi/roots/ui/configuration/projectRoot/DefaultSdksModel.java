@@ -57,7 +57,7 @@ import java.util.*;
 public class DefaultSdksModel implements SdkModel, SettingsSdksModel {
   private static final Logger LOG = Logger.getInstance(DefaultSdksModel.class);
 
-  private final HashMap<Sdk, Sdk> mySdks = new HashMap<>();
+  private final Map<Sdk, Sdk> mySdks = new HashMap<>();
 
   private final EventDispatcher<Listener> mySdkEventsDispatcher = EventDispatcher.create(Listener.class);
   private final Provider<SdkTable> mySdkTableProvider;
@@ -145,10 +145,6 @@ public class DefaultSdksModel implements SdkModel, SettingsSdksModel {
 
   @Override
   public Map<Sdk, Sdk> getModifiedSdksMap() {
-    return mySdks;
-  }
-
-  public HashMap<Sdk, Sdk> getProjectSdks() {
     return mySdks;
   }
 

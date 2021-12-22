@@ -83,7 +83,7 @@ public class Sand2ModuleImportProvider implements ModuleImportProvider<ModuleImp
       @RequiredUIAccess
       @Nonnull
       @Override
-      public Component getComponent(Disposable uiDisposable) {
+      public Component getComponent(@Nonnull ModuleImportContext context, @Nonnull Disposable uiDisposable) {
         return LabeledLayout.create(LocalizeValue.localizeTODO("Some Text"), TextBox.create("Test Value"));
       }
     });

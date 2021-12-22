@@ -21,18 +21,18 @@ import com.intellij.openapi.externalSystem.util.ExternalSystemSettingsControl;
 import com.intellij.openapi.externalSystem.util.ExternalSystemUiUtil;
 import com.intellij.openapi.externalSystem.util.PaintAwarePanel;
 import com.intellij.ui.components.JBCheckBox;
+import consulo.disposer.Disposable;
+
 import javax.annotation.Nonnull;
 
 /**
  * Templates class for managing single external project settings (single ide project might contain multiple bindings to external
  * projects, e.g. one module is backed by a single external project and couple of others are backed by a single external multi-project).
- * 
+ *
  * @author Denis Zhdanov
  * @since 4/24/13 1:19 PM
  */
-public abstract class AbstractExternalProjectSettingsControl<S extends ExternalProjectSettings>
-  implements ExternalSystemSettingsControl<S>
-{
+public abstract class AbstractExternalProjectSettingsControl<S extends ExternalProjectSettings> implements ExternalSystemSettingsControl<S> {
 
   @Nonnull
   private S myInitialSettings;
@@ -55,26 +55,27 @@ public abstract class AbstractExternalProjectSettingsControl<S extends ExternalP
   }
 
   @Override
-  public void fillUi(@Nonnull PaintAwarePanel canvas, int indentLevel) {
+  public void fillUi(@Nonnull Disposable uiDisposable, @Nonnull PaintAwarePanel canvas, int indentLevel) {
     myUseAutoImportBox = new JBCheckBox(ExternalSystemBundle.message("settings.label.use.auto.import"));
     myUseAutoImportBox.setVisible(!myHideUseAutoImportBox);
     canvas.add(myUseAutoImportBox, ExternalSystemUiUtil.getFillLineConstraints(indentLevel));
-    myCreateEmptyContentRootDirectoriesBox =
-      new JBCheckBox(ExternalSystemBundle.message("settings.label.create.empty.content.root.directories"));
+    myCreateEmptyContentRootDirectoriesBox = new JBCheckBox(ExternalSystemBundle.message("settings.label.create.empty.content.root.directories"));
     canvas.add(myCreateEmptyContentRootDirectoriesBox, ExternalSystemUiUtil.getFillLineConstraints(indentLevel));
-    fillExtraControls(canvas, indentLevel); 
+    fillExtraControls(uiDisposable, canvas, indentLevel);
   }
-  
-  protected abstract void fillExtraControls(@Nonnull PaintAwarePanel content, int indentLevel);
 
+  protected abstract void fillExtraControls(@Nonnull Disposable uiDisposable, @Nonnull PaintAwarePanel content, int indentLevel);
+
+  @Override
   public boolean isModified() {
-    return myUseAutoImportBox.isSelected() != getInitialSettings().isUseAutoImport()
-           || myCreateEmptyContentRootDirectoriesBox.isSelected() != getInitialSettings().isCreateEmptyContentRootDirectories()
-           || isExtraSettingModified();
+    return myUseAutoImportBox.isSelected() != getInitialSettings().isUseAutoImport() ||
+           myCreateEmptyContentRootDirectoriesBox.isSelected() != getInitialSettings().isCreateEmptyContentRootDirectories() ||
+           isExtraSettingModified();
   }
 
   protected abstract boolean isExtraSettingModified();
 
+  @Override
   public void reset() {
     reset(false);
   }
@@ -99,10 +100,11 @@ public abstract class AbstractExternalProjectSettingsControl<S extends ExternalP
 
   protected abstract void applyExtraSettings(@Nonnull S settings);
 
+  @Override
   public void disposeUIResources() {
     ExternalSystemUiUtil.disposeUi(this);
   }
-  
+
   @Override
   public void showUi(boolean show) {
     ExternalSystemUiUtil.showUi(this, show);
@@ -114,5 +116,6 @@ public abstract class AbstractExternalProjectSettingsControl<S extends ExternalP
     updateInitialExtraSettings();
   }
 
-  protected void updateInitialExtraSettings(){}
+  protected void updateInitialExtraSettings() {
+  }
 }

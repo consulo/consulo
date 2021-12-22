@@ -16,6 +16,9 @@
 package com.intellij.openapi.externalSystem.util;
 
 import com.intellij.openapi.options.ConfigurationException;
+import consulo.annotation.DeprecationInfo;
+import consulo.disposer.Disposable;
+
 import javax.annotation.Nonnull;
 
 import java.awt.*;
@@ -35,11 +38,29 @@ public interface ExternalSystemSettingsControl<S> {
    * <b>Note:</b> given canvas component is expected to be managed by a {@link GridBagLayout}. That is the reason on why we use
    * this method instead of a method like 'JComponent getComponent()' - there is a possible case that given canvas has components
    * from more than one control and we might want them to be aligned.
+   *
+   * @param canvas      container to use as a holder for UI components specific to the current control
+   * @param indentLevel a hint on how much UI components added by the current control should be indented
+   */
+  default void fillUi(@Nonnull Disposable uiDisposable, @Nonnull PaintAwarePanel canvas, int indentLevel) {
+    fillUi(canvas, indentLevel);
+  }
+
+  /**
+   * Adds current control-specific UI controls to the given canvas.
+   * <p/>
+   * <b>Note:</b> given canvas component is expected to be managed by a {@link GridBagLayout}. That is the reason on why we use
+   * this method instead of a method like 'JComponent getComponent()' - there is a possible case that given canvas has components
+   * from more than one control and we might want them to be aligned.
    * 
    * @param canvas        container to use as a holder for UI components specific to the current control
    * @param indentLevel   a hint on how much UI components added by the current control should be indented
    */
-  void fillUi(@Nonnull PaintAwarePanel canvas, int indentLevel);
+  @Deprecated
+  @DeprecationInfo("use #fillUi() with disposable")
+  default void fillUi(@Nonnull PaintAwarePanel canvas, int indentLevel) {
+    throw new AbstractMethodError();
+  }
 
   /**
    * Asks current control to reset its state to the initial one.

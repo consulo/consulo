@@ -134,7 +134,7 @@ public abstract class AbstractExternalSystemConfigurable<
     myProjectSettingsControls.clear();
     for (ProjectSettings setting : settings) {
       ExternalSystemSettingsControl<ProjectSettings> control = createProjectSettingsControl(setting);
-      control.fillUi(myComponent, 1);
+      control.fillUi(uiDisposable, myComponent, 1);
       myProjectsModel.addElement(getProjectName(setting.getExternalProjectPath()));
       myProjectSettingsControls.add(control);
       control.showUi(false);
@@ -187,7 +187,7 @@ public abstract class AbstractExternalSystemConfigurable<
   private void prepareSystemSettings(@Nonnull SystemSettings s, @Nonnull Disposable uiDisposable) {
     mySystemSettingsControl = createSystemSettingsControl(s);
     if (mySystemSettingsControl != null) {
-      mySystemSettingsControl.fillUi(myComponent, 1);
+      mySystemSettingsControl.fillUi(uiDisposable, myComponent, 1);
     }
   }
 

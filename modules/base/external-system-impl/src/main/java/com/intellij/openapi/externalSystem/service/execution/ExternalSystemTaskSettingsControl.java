@@ -31,7 +31,10 @@ import com.intellij.ui.RawCommandLineEditor;
 import com.intellij.ui.components.JBLabel;
 import com.intellij.ui.components.JBTextField;
 import com.intellij.util.ui.GridBag;
+import consulo.disposer.Disposable;
+
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.awt.*;
 
@@ -61,7 +64,7 @@ public class ExternalSystemTaskSettingsControl implements ExternalSystemSettings
   private JBLabel myScriptParametersLabel;
   private RawCommandLineEditor myScriptParametersEditor;
 
-  @javax.annotation.Nullable
+  @Nullable
   private ExternalSystemTaskExecutionSettings myOriginalSettings;
 
   public ExternalSystemTaskSettingsControl(@Nonnull Project project, @Nonnull ProjectSystemId externalSystemId) {
@@ -69,12 +72,12 @@ public class ExternalSystemTaskSettingsControl implements ExternalSystemSettings
     myExternalSystemId = externalSystemId;
   }
 
-  public void setOriginalSettings(@javax.annotation.Nullable ExternalSystemTaskExecutionSettings originalSettings) {
+  public void setOriginalSettings(@Nullable ExternalSystemTaskExecutionSettings originalSettings) {
     myOriginalSettings = originalSettings;
   }
 
   @Override
-  public void fillUi(@Nonnull final PaintAwarePanel canvas, int indentLevel) {
+  public void fillUi(@Nonnull Disposable uiDisposable, @Nonnull final PaintAwarePanel canvas, int indentLevel) {
     myProjectPathLabel = new JBLabel(ExternalSystemBundle.message(
       "run.configuration.settings.label.project", myExternalSystemId.getReadableName()
     ));

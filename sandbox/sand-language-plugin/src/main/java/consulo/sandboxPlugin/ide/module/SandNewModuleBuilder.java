@@ -114,7 +114,7 @@ public class SandNewModuleBuilder implements NewModuleBuilder {
           @RequiredUIAccess
           @Nonnull
           @Override
-          public Component getComponent(Disposable uiDisposable) {
+          public Component getComponent(@Nonnull NewModuleWizardContext context, @Nonnull Disposable uiDisposable) {
             return DockLayout.create().top(Label.create(LocalizeValue.localizeTODO("Hello world from sand plugin")));
           }
         });

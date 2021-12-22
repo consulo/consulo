@@ -29,9 +29,10 @@ import javax.annotation.Nullable;
  * @since 2019-08-20
  */
 public interface WizardStep<CONTEXT> {
+
   @Nonnull
   @RequiredUIAccess
-  Component getComponent(@Nonnull Disposable uiDisposable);
+  Component getComponent(@Nonnull CONTEXT context, @Nonnull Disposable uiDisposable);
 
   @Nullable
   default Component getPreferredFocusedComponent() {
@@ -42,8 +43,8 @@ public interface WizardStep<CONTEXT> {
   @Deprecated
   @DeprecationInfo("Desktop UI version")
   @RequiredUIAccess
-  default java.awt.Component getSwingComponent(@Nonnull Disposable uiDisposable) {
-    return TargetAWT.to(getComponent(uiDisposable));
+  default java.awt.Component getSwingComponent(@Nonnull CONTEXT context, @Nonnull Disposable uiDisposable) {
+    return TargetAWT.to(getComponent(context, uiDisposable));
   }
 
   @Nullable
