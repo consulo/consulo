@@ -112,6 +112,8 @@
     <module>modules/base/remote-servers-api</module>
     <module>modules/base/remote-servers-agent-rt</module>
     <module>modules/base/remote-servers-impl</module>
+    <module>modules/base/runtime-api</module>
+    <module>modules/base/runtime-impl</module>
     <module>modules/base/vcs-api</module>
     <module>modules/base/vcs-api-core</module>
     <module>modules/base/vcs-log-graph-api</module>

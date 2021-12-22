@@ -15,7 +15,7 @@
  */
 package consulo.testFramework.platform;
 
-import consulo.platform.PlatformBase;
+import consulo.platform.impl.PlatformBase;
 
 /**
  * @author VISTALL

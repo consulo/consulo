@@ -277,6 +277,16 @@
       <artifactId>consulo-task-impl</artifactId>
       <version>${project.version}</version>
     </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>consulo-runtime-api</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>consulo-runtime-impl</artifactId>
+      <version>${project.version}</version>
+    </dependency>
 
     <dependency>
       <groupId>consulo.internal.sound</groupId>

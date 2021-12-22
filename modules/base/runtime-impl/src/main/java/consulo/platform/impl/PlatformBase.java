@@ -13,11 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.platform;
+package consulo.platform.impl;
 
-import com.intellij.jna.JnaLoader;
 import com.sun.jna.platform.win32.Kernel32;
 import com.sun.jna.platform.win32.WinNT;
+import consulo.platform.Platform;
 import consulo.util.lang.StringUtil;
 
 import javax.annotation.Nonnull;
@@ -128,16 +128,20 @@ public abstract class PlatformBase implements Platform {
 
     private boolean isWindows11OrNewerImpl() {
       // at jdk 17 windows 11 will return in os name, but at old versions of jdk that will be Windows 10
-      boolean windows11OrLater = OS_NAME.contains("Windows 11");
-      if (isWindows10OrNewer() && !windows11OrLater && JnaLoader.isLoaded()) {
-        WinNT.OSVERSIONINFO osversioninfo = new WinNT.OSVERSIONINFO();
-        if (Kernel32.INSTANCE.GetVersionEx(osversioninfo)) {
-          int dwBuildNumber = osversioninfo.dwBuildNumber.intValue();
+      try {
+        boolean windows11OrLater = OS_NAME.contains("Windows 11");
+        if (isWindows10OrNewer() && !windows11OrLater) {
+          WinNT.OSVERSIONINFO osversioninfo = new WinNT.OSVERSIONINFO();
+          if (Kernel32.INSTANCE.GetVersionEx(osversioninfo)) {
+            int dwBuildNumber = osversioninfo.dwBuildNumber.intValue();
 
-          if (dwBuildNumber >= 22_000) {
-            return true;
+            if (dwBuildNumber >= 22_000) {
+              return true;
+            }
           }
         }
+      }
+      catch (Throwable ignored) {
       }
 
       return false;
@@ -183,7 +187,7 @@ public abstract class PlatformBase implements Platform {
 
     @Nonnull
     @Override
-    public Map<String, String> getEnvironmentVariables() {
+    public Map<String, String> environmentVariables() {
       return Collections.unmodifiableMap(System.getenv());
     }
 

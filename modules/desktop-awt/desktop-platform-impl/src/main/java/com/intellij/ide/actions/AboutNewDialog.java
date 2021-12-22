@@ -154,7 +154,7 @@ public class AboutNewDialog extends WholeWestDialogWrapper {
     builder.item("arch", platform.os().arch());
 
     builder.group("Env");
-    for (Map.Entry<String, String> entry : new TreeMap<>(platform.os().getEnvironmentVariables()).entrySet()) {
+    for (Map.Entry<String, String> entry : new TreeMap<>(platform.os().environmentVariables()).entrySet()) {
       builder.item(entry.getKey(), StringUtil.escapeCharCharacters(entry.getValue()));
     }
 

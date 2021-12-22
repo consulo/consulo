@@ -15,8 +15,6 @@
  */
 package consulo.platform;
 
-import com.intellij.util.LineSeparator;
-import com.intellij.util.ObjectUtil;
 import consulo.platform.internal.PlatformInternal;
 import consulo.ui.image.Image;
 
@@ -75,7 +73,7 @@ public interface Platform {
     boolean isGNOME();
 
     @Nonnull
-    default LineSeparator getLineSeparator() {
+    default LineSeparator lineSeparator() {
       if (isWindows()) {
         return LineSeparator.CRLF;
       }
@@ -92,14 +90,15 @@ public interface Platform {
     String arch();
 
     @Nonnull
-    Map<String, String> getEnvironmentVariables();
+    Map<String, String> environmentVariables();
 
     @Nullable
     String getEnvironmentVariable(@Nonnull String key);
 
     @Nullable
     default String getEnvironmentVariable(@Nonnull String key, @Nonnull String defaultValue) {
-      return ObjectUtil.notNull(getEnvironmentVariable(key), defaultValue);
+      String environmentVariable = getEnvironmentVariable(key);
+      return environmentVariable == null ? defaultValue : environmentVariable;
     }
   }
 
@@ -121,7 +120,8 @@ public interface Platform {
 
     @Nullable
     default String getRuntimeProperty(@Nonnull String key, @Nonnull String defaultValue) {
-      return ObjectUtil.notNull(getRuntimeProperty(key), defaultValue);
+      String runtimeProperty = getRuntimeProperty(key);
+      return runtimeProperty == null ? defaultValue : runtimeProperty;
     }
 
     @Nonnull
@@ -144,23 +144,6 @@ public interface Platform {
 
     @Nonnull
     Path homePath();
-
-    @Deprecated
-    default boolean isSuperUser() {
-      return superUser();
-    }
-
-    @Nonnull
-    @Deprecated
-    default String getName() {
-      return name();
-    }
-
-    @Nonnull
-    @Deprecated
-    default Path getHomePath() {
-      return homePath();
-    }
   }
 
   @Nonnull

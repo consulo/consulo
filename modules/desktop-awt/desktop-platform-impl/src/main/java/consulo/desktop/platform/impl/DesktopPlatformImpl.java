@@ -17,7 +17,7 @@ package consulo.desktop.platform.impl;
 
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.io.win32.WindowsElevationUtil;
-import consulo.platform.PlatformBase;
+import consulo.platform.impl.PlatformBase;
 import consulo.ui.desktop.internal.image.DesktopImageOverIconImpl;
 import consulo.ui.image.Image;
 
