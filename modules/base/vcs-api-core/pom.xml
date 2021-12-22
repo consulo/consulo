@@ -39,7 +39,7 @@
     <plugins>
       <plugin>
         <groupId>consulo.maven</groupId>
-        <artifactId>consulo-maven-plugin</artifactId>
+        <artifactId>maven-consulo-plugin</artifactId>
         <executions>
           <execution>
             <id>gen</id>
