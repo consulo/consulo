@@ -705,7 +705,7 @@
     <group id="Console.HistoryActions">
       <action id="Console.History.Previous" class="com.intellij.openapi.actionSystem.EmptyAction"/>
       <action id="Console.History.Next" class="com.intellij.openapi.actionSystem.EmptyAction"/>
-      <action id="Console.History.Browse" class="com.intellij.openapi.actionSystem.EmptyAction" icon="consulo.platform.base.PlatformIconGroup@general.messagehistory"/>
+      <action id="Console.History.Browse" class="com.intellij.openapi.actionSystem.EmptyAction" icon="consulo.platform.base.PlatformIconGroup@vcs.history"/>
     </group>
 
     <group id="EditorContextBarMenu">
@@ -931,12 +931,9 @@
     </group>
 
     <group id="Vcs.MessageActionGroup">
-      <action id="Vcs.CheckCommitMessageSpelling"
-              class="com.intellij.openapi.vcs.actions.CheckCommitMessageSpellingAction"
-              icon="consulo.platform.base.PlatformIconGroup@vcs.checkspelling"/>
       <action id="Vcs.ShowMessageHistory"
               class="com.intellij.openapi.vcs.actions.ShowMessageHistoryAction"
-              icon="consulo.platform.base.PlatformIconGroup@general.messagehistory"/>
+              icon="consulo.platform.base.PlatformIconGroup@vcs.history"/>
     </group>
 
     <group id="VcsToobarActions">

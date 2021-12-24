@@ -462,7 +462,6 @@ public class AllIcons {
     public static final Image Mdot_empty = PlatformIconGroup.generalMdot_empty(); // 8x8
     public static final Image Mdot_white = PlatformIconGroup.generalMdot_white(); // 8x8
     public static final Image Mdot = PlatformIconGroup.generalMdot(); // 8x8
-    public static final Image MessageHistory = PlatformIconGroup.generalMessageHistory(); // 16x16
     public static final Image Modified = PlatformIconGroup.generalModified(); // 24x16
     public static final Image MoreTabs = PlatformIconGroup.generalMoreTabs(); // 16x16
     public static final Image Mouse = PlatformIconGroup.generalMouse(); // 32x32

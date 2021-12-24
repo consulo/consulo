@@ -16,7 +16,6 @@
 package com.intellij.xdebugger.impl.evaluate;
 
 import com.intellij.codeInsight.lookup.LookupManager;
-import com.intellij.icons.AllIcons;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CustomShortcutSet;
@@ -40,9 +39,9 @@ import com.intellij.xdebugger.impl.ui.XDebuggerEditorBase;
 import com.intellij.xdebugger.impl.ui.XDebuggerExpressionEditor;
 import consulo.awt.TargetAWT;
 import consulo.disposer.Disposable;
+import consulo.platform.base.icon.PlatformIconGroup;
 
 import javax.annotation.Nonnull;
-
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
@@ -66,7 +65,7 @@ public class ExpressionInputComponent extends EvaluationInputComponent {
                                                        expression != null ? expression : XExpressionImpl.EMPTY_EXPRESSION, false, true, false);
     myMainPanel.add(myExpressionEditor.getComponent(), BorderLayout.CENTER);
     JButton historyButton = new FixedSizeButton(myExpressionEditor.getComponent());
-    historyButton.setIcon(TargetAWT.to(AllIcons.General.MessageHistory));
+    historyButton.setIcon(TargetAWT.to(PlatformIconGroup.vcsHistory()));
     historyButton.setToolTipText(XDebuggerBundle.message("xdebugger.evaluate.history.hint"));
     historyButton.addActionListener(new ActionListener() {
       @Override
