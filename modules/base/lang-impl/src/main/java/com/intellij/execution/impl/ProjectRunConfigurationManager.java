@@ -51,7 +51,16 @@ public class ProjectRunConfigurationManager implements PersistentStateComponent<
     public void runActivity(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
       ProjectRunConfigurationManager manager = project.getInstance(ProjectRunConfigurationManager.class);
 
-      // just initialize it
+      // just initialize it project run manager (load shared runs)
+
+      RunManager runManager = RunManager.getInstance(project);
+      RunnerAndConfigurationSettings selectedConfiguration = runManager.getSelectedConfiguration();
+      if (selectedConfiguration == null) {
+        List<RunnerAndConfigurationSettings> settings = runManager.getAllSettings();
+        if (!settings.isEmpty()) {
+          runManager.setSelectedConfiguration(settings.get(0));
+        }
+      }
     }
   }
 
