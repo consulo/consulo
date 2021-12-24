@@ -18,7 +18,6 @@ package com.intellij.ui;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.util.Pair;
-import com.intellij.openapi.util.SystemInfo;
 import com.intellij.ui.border.CustomLineBorder;
 import com.intellij.ui.table.TableView;
 import com.intellij.util.SmartList;
@@ -31,12 +30,11 @@ import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 /**
  * @author Konstantin Bulenkov
@@ -96,7 +94,7 @@ public abstract class ToolbarDecorator implements CommonActionsPanel.ListenerFac
   }
 
   public ToolbarDecorator initPosition() {
-    setToolbarPosition(SystemInfo.isMac ? ActionToolbarPosition.BOTTOM : ActionToolbarPosition.RIGHT);
+    setToolbarPosition(ActionToolbarPosition.TOP);
     return this;
   }
 

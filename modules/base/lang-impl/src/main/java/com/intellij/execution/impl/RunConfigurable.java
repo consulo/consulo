@@ -580,7 +580,6 @@ public class RunConfigurable extends BaseConfigurable {
             .setRemoveAction(removeAction).setRemoveActionUpdater(removeAction)
             .setRemoveActionName(ExecutionBundle.message("remove.run.configuration.action.name"))
             .setPanelBorder(JBUI.Borders.empty())
-            .setToolbarBorder(myEditorMode ? JBUI.Borders.customLine(JBColor.border(), 0, 0, 1, 0) : JBUI.Borders.empty())
             .setToolbarBackgroundColor(myEditorMode ? UIUtil.getPanelBackground() : SwingUIDecorator.get(SwingUIDecorator::getSidebarColor))
             .setMoveUpAction(moveUpAction).setMoveUpActionName(ExecutionBundle.message("move.up.action.name")).setMoveUpActionUpdater(moveUpAction)
             .setMoveDownAction(moveDownAction).setMoveDownActionName(ExecutionBundle.message("move.down.action.name")).setMoveDownActionUpdater(moveDownAction)
