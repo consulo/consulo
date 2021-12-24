@@ -20,6 +20,8 @@ import consulo.ui.Component;
 import consulo.ui.Label;
 import consulo.ui.StaticPosition;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.border.BorderPosition;
+import consulo.ui.border.BorderStyle;
 import consulo.ui.layout.TableLayout;
 import consulo.ui.layout.VerticalLayout;
 import consulo.util.lang.StringUtil;
@@ -71,8 +73,11 @@ public class FormBuilder {
     if(!myBottomComponents.isEmpty()) {
       throw new IllegalArgumentException("Can't add labeled, after adding bottom components");
     }
-    
-    myLayout.add(Label.create(labelText), TableLayout.cell(myLineCount, 0));
+
+    Label label = Label.create(labelText);
+    label.addBorder(BorderPosition.RIGHT, BorderStyle.EMPTY, 5);
+
+    myLayout.add(label, TableLayout.cell(myLineCount, 0));
     myLayout.add(component, TableLayout.cell(myLineCount, 1).fill());
 
     myLineCount++;
@@ -86,6 +91,8 @@ public class FormBuilder {
       throw new IllegalArgumentException("Can't add labeled, after adding bottom components");
     }
 
+    label.addBorder(BorderPosition.RIGHT, BorderStyle.EMPTY, 5);
+    
     myLayout.add(label, TableLayout.cell(myLineCount, 0));
     myLayout.add(component, TableLayout.cell(myLineCount, 1).fill());
 
