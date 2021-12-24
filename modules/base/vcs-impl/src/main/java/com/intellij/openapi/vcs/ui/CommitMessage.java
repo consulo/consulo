@@ -66,6 +66,7 @@ public class CommitMessage extends AbstractDataProviderPanel implements Disposab
       labelPanel.add(separatorPanel, BorderLayout.CENTER);
     }
     ActionToolbar toolbar = ActionManager.getInstance().createActionToolbar(ActionPlaces.UNKNOWN, getToolbarActions(), withSeparator);
+    toolbar.setTargetComponent(this);
     toolbar.updateActionsImmediately();
     toolbar.setReservePlaceAutoPopupIcon(false);
     toolbar.getComponent().setBorder(BorderFactory.createEmptyBorder());
