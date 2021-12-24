@@ -15,6 +15,7 @@
  */
 package consulo.ui.desktop.internal.layout;
 
+import com.intellij.util.ui.JBUI;
 import consulo.awt.TargetAWT;
 import consulo.awt.impl.FromSwingComponentWrapper;
 import consulo.ui.Component;
@@ -83,6 +84,7 @@ public class DesktopTableLayoutImpl extends SwingComponentDelegate<JPanel> imple
     constraints.gridx = tableCell.getColumn();
     constraints.gridy = tableCell.getRow();
     constraints.weightx = tableCell.isFill() ? 1 : 0;
+    constraints.insets = JBUI.insets(5, 0, 5, 0);
     myGridPanel.add(TargetAWT.to(component), constraints);
     return this;
   }
