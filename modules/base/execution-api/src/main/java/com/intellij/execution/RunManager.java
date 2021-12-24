@@ -177,7 +177,7 @@ public abstract class RunManager {
    *
    * @param configuration the configuration to select, or null if nothing should be selected.
    */
-  public abstract void setSelectedConfiguration(@javax.annotation.Nullable RunnerAndConfigurationSettings configuration);
+  public abstract void setSelectedConfiguration(@Nullable RunnerAndConfigurationSettings configuration);
 
   /**
    * Creates a configuration of the specified type with the specified name. Note that you need to call
@@ -252,7 +252,7 @@ public abstract class RunManager {
     }
   }
 
-  public String suggestUniqueName(@javax.annotation.Nullable String name, @javax.annotation.Nullable ConfigurationType type) {
+  public String suggestUniqueName(@Nullable String name, @Nullable ConfigurationType type) {
     List<RunnerAndConfigurationSettings> settingsList = type != null ? getConfigurationSettingsList(type) : getAllSettings();
     List<String> names = ContainerUtil.map(settingsList, settings -> settings.getName());
     return suggestUniqueName(StringUtil.notNullize(name, UNNAMED), names);
