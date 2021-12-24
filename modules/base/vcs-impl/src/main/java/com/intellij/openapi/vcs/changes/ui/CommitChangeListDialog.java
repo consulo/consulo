@@ -404,8 +404,8 @@ public class CommitChangeListDialog extends DialogWrapper implements CheckinProj
 
     boolean beforeVisible = false;
     boolean afterVisible = false;
-    Box beforeBox = Box.createVerticalBox();
-    Box afterBox = Box.createVerticalBox();
+    JPanel beforeBox = new JPanel(new VerticalFlowLayout());
+    JPanel afterBox = new JPanel(new VerticalFlowLayout());
     for (BaseCheckinHandlerFactory factory : getCheckInFactories(project)) {
       final CheckinHandler handler = factory.createHandler(this, myCommitContext);
       if (handler == null || CheckinHandler.DUMMY.equals(handler)) continue;
