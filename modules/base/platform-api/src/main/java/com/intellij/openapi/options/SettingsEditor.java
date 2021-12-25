@@ -23,6 +23,8 @@ import com.intellij.util.containers.ContainerUtil;
 import consulo.annotation.DeprecationInfo;
 import consulo.awt.TargetAWT;
 import consulo.ui.Component;
+import consulo.ui.annotation.RequiredUIAccess;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -57,6 +59,7 @@ public abstract class SettingsEditor<Settings> implements Disposable {
   }
 
   @Nullable
+  @RequiredUIAccess
   protected Component createUIComponent() {
     return null;
   }

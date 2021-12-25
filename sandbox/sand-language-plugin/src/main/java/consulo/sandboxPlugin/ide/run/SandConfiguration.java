@@ -19,14 +19,17 @@ import com.intellij.execution.ExecutionException;
 import com.intellij.execution.Executor;
 import com.intellij.execution.configurations.*;
 import com.intellij.execution.runners.ExecutionEnvironment;
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.options.SettingsEditor;
 import com.intellij.openapi.project.Project;
-import com.intellij.ui.components.JBLabel;
+import consulo.execution.ui.CommonProgramParametersLayout;
+import consulo.ui.Component;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.dialog.DialogService;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.swing.*;
 
 /**
  * @author VISTALL
@@ -51,10 +54,14 @@ public class SandConfiguration extends RunConfigurationBase {
 
       }
 
+      @RequiredUIAccess
       @Nonnull
       @Override
-      protected JComponent createEditor() {
-        return new JBLabel("DUMMY");
+      protected Component createUIComponent() {
+        DialogService dialogService = Application.get().getInstance(DialogService.class);
+        CommonProgramParametersLayout layout = new CommonProgramParametersLayout(dialogService);
+        layout.build();
+        return layout.getComponent();
       }
     };
   }
