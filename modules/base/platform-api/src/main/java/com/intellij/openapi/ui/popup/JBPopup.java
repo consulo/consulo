@@ -1,17 +1,16 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.openapi.ui.popup;
 
-import consulo.disposer.Disposable;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.actionSystem.DataProvider;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
 import com.intellij.ui.awt.RelativePoint;
+import consulo.disposer.Disposable;
 import org.intellij.lang.annotations.JdkConstants;
-import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.InputEvent;
@@ -24,8 +23,6 @@ import java.awt.event.KeyEvent;
  * @see JBPopupFactory
  */
 public interface JBPopup extends Disposable, LightweightWindow {
-
-  @NonNls
   String KEY = "JBPopup";
 
   /**
