@@ -44,6 +44,7 @@ import consulo.awt.TargetAWT;
 import consulo.awt.hacking.AWTAccessorHacking;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
+import consulo.project.WelcomeProjectFactory;
 import consulo.start.WelcomeFrameManager;
 import consulo.ui.annotation.RequiredUIAccess;
 import jakarta.inject.Inject;
@@ -593,11 +594,23 @@ public final class DesktopWindowManagerImpl extends WindowManagerEx implements P
   public final IdeFrameEx allocateFrame(@Nonnull final Project project) {
     LOG.assertTrue(!myProject2Frame.containsKey(project));
 
+    WelcomeProjectFactory welcomeProjectFactory = Application.get().getInstance(WelcomeProjectFactory.class);
+
+    Project welcomeProject = welcomeProjectFactory.getWelcomeProject();
+
     JFrame jFrame;
     final DesktopIdeFrameImpl ideFrame;
+
     if (myProject2Frame.containsKey(null)) {
       ideFrame = getDefaultEmptyIdeFrame();
       myProject2Frame.remove(null);
+      myProject2Frame.put(project, ideFrame);
+      ideFrame.setProject(project);
+      jFrame = (JFrame)TargetAWT.to(ideFrame.getWindow());
+    }
+    else if (myProject2Frame.containsKey(welcomeProject)) {
+      ideFrame = myProject2Frame.get(welcomeProject);
+      myProject2Frame.remove(welcomeProject);
       myProject2Frame.put(project, ideFrame);
       ideFrame.setProject(project);
       jFrame = (JFrame)TargetAWT.to(ideFrame.getWindow());

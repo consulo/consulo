@@ -24,6 +24,8 @@ import com.intellij.openapi.wm.ToolWindowFactory;
 import com.intellij.openapi.wm.ex.ToolWindowEx;
 import consulo.ui.annotation.RequiredUIAccess;
 
+import javax.annotation.Nonnull;
+
 /**
  * @author yole
  */
@@ -33,5 +35,10 @@ public class StructureViewToolWindowFactory implements ToolWindowFactory, DumbAw
   public void createToolWindowContent(Project project, ToolWindow toolWindow) {
     StructureViewFactoryImpl factory = (StructureViewFactoryImpl)StructureViewFactory.getInstance(project);
     factory.initToolWindow((ToolWindowEx)toolWindow);
+  }
+
+  @Override
+  public boolean shouldBeAvailable(@Nonnull Project project) {
+    return !project.isWelcome();
   }
 }

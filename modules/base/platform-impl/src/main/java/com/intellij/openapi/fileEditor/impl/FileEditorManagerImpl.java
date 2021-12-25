@@ -79,7 +79,6 @@ import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.fileEditor.impl.*;
 import consulo.fileEditor.impl.text.TextEditorProvider;
-import consulo.fileEditor.internal.NotClosableFileMarker;
 import consulo.logging.Logger;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -570,10 +569,6 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
 
   public void closeFile(@Nonnull final VirtualFile file, final boolean moveFocus, final boolean closeAllCopies) {
     assertDispatchThread();
-
-    if (file instanceof NotClosableFileMarker) {
-      return;
-    }
 
     CommandProcessor.getInstance().executeCommand(myProject, () -> closeFileImpl(file, moveFocus, closeAllCopies), "", null);
   }

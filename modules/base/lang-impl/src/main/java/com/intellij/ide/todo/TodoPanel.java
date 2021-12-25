@@ -232,7 +232,10 @@ abstract class TodoPanel extends SimpleToolWindowPanel implements OccurenceNavig
 
     toolbarGroup.add(new MyPreviewAction());
 
-    setToolbar(ActionManager.getInstance().createActionToolbar(ActionPlaces.TODO_VIEW_TOOLBAR, toolbarGroup, false).getComponent());
+    ActionToolbar toolbar = ActionManager.getInstance().createActionToolbar(ActionPlaces.TODO_VIEW_TOOLBAR, toolbarGroup, false);
+    toolbar.setTargetComponent(this);
+    
+    setToolbar(toolbar.getComponent());
   }
 
   @Nonnull

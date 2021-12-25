@@ -33,7 +33,6 @@ import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.util.ActionCallback;
 import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.SystemInfo;
-import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.openapi.wm.IdeRootPaneNorthExtension;
 import com.intellij.openapi.wm.StatusBar;
@@ -413,12 +412,13 @@ public final class DesktopIdeFrameImpl implements IdeFrameEx, AccessibleContextA
       frame.getRootPane().putClientProperty("Window.documentFile", currentFile);
 
       final String applicationName = FrameTitleUtil.buildTitle();
+      ProjectManager projectManager = ProjectManager.getInstance();
+
       final TitleBuilder titleBuilder = new TitleBuilder();
-      if (SystemInfo.isMac) {
-        boolean addAppName = StringUtil.isEmpty(title) || ProjectManager.getInstance().getOpenProjects().length == 0;
-        titleBuilder.append(fileTitle).append(title).append(addAppName ? applicationName : null);
-      }
-      else {
+
+      if (projectManager.isWelcomeOnlyProjectOpened()) {
+        titleBuilder.append(title).append(applicationName);
+      } else {
         titleBuilder.append(title).append(fileTitle).append(applicationName);
       }
 

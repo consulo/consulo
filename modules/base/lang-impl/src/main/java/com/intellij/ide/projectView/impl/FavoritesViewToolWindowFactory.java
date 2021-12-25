@@ -41,4 +41,9 @@ public class FavoritesViewToolWindowFactory implements ToolWindowFactory, DumbAw
     final Content content = contentManager.getFactory().createContent(panel, null, false);
     contentManager.addContent(content);
   }
+
+  @Override
+  public boolean shouldBeAvailable(@Nonnull Project project) {
+    return !project.isWelcome();
+  }
 }

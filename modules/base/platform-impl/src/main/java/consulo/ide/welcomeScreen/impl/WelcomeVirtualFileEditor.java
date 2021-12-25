@@ -17,6 +17,8 @@ package consulo.ide.welcomeScreen.impl;
 
 import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.wm.impl.welcomeScreen.NewRecentProjectPanel;
+import com.intellij.ui.OnePixelSplitter;
 import consulo.util.dataholder.UserDataHolderBase;
 import kava.beans.PropertyChangeListener;
 
@@ -31,7 +33,7 @@ import javax.swing.*;
 public class WelcomeVirtualFileEditor extends UserDataHolderBase implements FileEditor {
   private final Project myProject;
 
-  private JComponent myComponent;
+  private OnePixelSplitter myComponent;
 
   public WelcomeVirtualFileEditor(Project project) {
     myProject = project;
@@ -44,7 +46,13 @@ public class WelcomeVirtualFileEditor extends UserDataHolderBase implements File
       return myComponent;
     }
 
-    myComponent = new JPanel();
+    myComponent = new OnePixelSplitter();
+    myComponent.setProportion(0.3f);
+    
+    NewRecentProjectPanel panel = new NewRecentProjectPanel(this, false);
+    myComponent.setFirstComponent(panel.getRootPanel());
+    myComponent.setSecondComponent(new JPanel());
+
     return myComponent;
   }
 

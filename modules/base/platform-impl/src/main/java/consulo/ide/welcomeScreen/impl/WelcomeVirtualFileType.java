@@ -15,27 +15,40 @@
  */
 package consulo.ide.welcomeScreen.impl;
 
-import com.intellij.openapi.fileEditor.impl.IdeDocumentHistoryImpl;
-import com.intellij.openapi.vfs.VirtualFileWithoutContent;
-import com.intellij.testFramework.LightVirtualFile;
-import consulo.fileEditor.internal.NotClosableFileMarker;
+import com.intellij.openapi.fileTypes.FileType;
+import consulo.localize.LocalizeValue;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.ui.image.Image;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 25/12/2021
  */
-public class WelcomeVirtualFile extends LightVirtualFile implements VirtualFileWithoutContent, IdeDocumentHistoryImpl.SkipFromDocumentHistory, NotClosableFileMarker {
-  public WelcomeVirtualFile() {
-    super("Welcome", WelcomeVirtualFileType.INSTANCE, "");
-  }
+public class WelcomeVirtualFileType implements FileType {
+  public static final WelcomeVirtualFileType INSTANCE = new WelcomeVirtualFileType();
 
   @Override
-  public boolean isValid() {
+  public boolean isReadOnly() {
     return true;
   }
 
+  @Nonnull
   @Override
-  public boolean equals(Object obj) {
-    return obj instanceof WelcomeVirtualFile;
+  public String getId() {
+    return "_WELCOME";
+  }
+
+  @Nonnull
+  @Override
+  public LocalizeValue getDescription() {
+    return LocalizeValue.of();
+  }
+
+  @Nonnull
+  @Override
+  public Image getIcon() {
+    return PlatformIconGroup.vcsHistory();
   }
 }
