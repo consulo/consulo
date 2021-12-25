@@ -39,6 +39,7 @@ import com.intellij.util.xmlb.annotations.AbstractCollection;
 import com.intellij.util.xmlb.annotations.Tag;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.preferences.MasterDetailsConfigurable;
 import consulo.ui.image.Image;
 import jakarta.inject.Inject;
 import org.jetbrains.annotations.NonNls;
@@ -148,7 +149,7 @@ public class ScopeChooserConfigurable extends MasterDetailsComponent implements 
     for (MyNode rootNode : rootNodes) {
       for (int i = 0; i < rootNode.getChildCount(); i++) {
         final MyNode node = (MyNode)rootNode.getChildAt(i);
-        final NamedConfigurable scopeConfigurable = node.getConfigurable();
+        final MasterDetailsConfigurable scopeConfigurable = node.getConfigurable();
         final String name = scopeConfigurable.getDisplayName();
         if (predefinedScopes.contains(name)) {
           selectNodeInTree(node);
@@ -258,7 +259,7 @@ public class ScopeChooserConfigurable extends MasterDetailsComponent implements 
         final TreePath path = e.getOldLeadSelectionPath();
         if (path != null) {
           final MyNode node = (MyNode)path.getLastPathComponent();
-          final NamedConfigurable namedConfigurable = node.getConfigurable();
+          final MasterDetailsConfigurable namedConfigurable = node.getConfigurable();
           if (namedConfigurable instanceof ScopeConfigurable) {
             ((ScopeConfigurable)namedConfigurable).cancelCurrentProgress();
           }
@@ -305,7 +306,7 @@ public class ScopeChooserConfigurable extends MasterDetailsComponent implements 
   }
 
   @Override
-  protected void updateSelection(@Nullable final NamedConfigurable configurable) {
+  protected void updateSelection(@Nullable final MasterDetailsConfigurable configurable) {
     super.updateSelection(configurable);
     if (configurable instanceof ScopeConfigurable) {
       ((ScopeConfigurable)configurable).restoreCanceledProgress();
@@ -531,7 +532,7 @@ public class ScopeChooserConfigurable extends MasterDetailsComponent implements 
       final TreePath selectionPath = myTree.getSelectionPath();
       if (selectionPath != null) {
         final MyNode node = (MyNode)selectionPath.getLastPathComponent();
-        final NamedConfigurable configurable = node.getConfigurable();
+        final MasterDetailsConfigurable configurable = node.getConfigurable();
         if (configurable instanceof ScopeConfigurable) {
           final ScopeConfigurable scopeConfigurable = (ScopeConfigurable)configurable;
           PackageSet set = scopeConfigurable.getEditableObject().getValue();

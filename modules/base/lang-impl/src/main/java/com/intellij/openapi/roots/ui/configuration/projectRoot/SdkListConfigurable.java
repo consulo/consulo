@@ -33,7 +33,6 @@ import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStr
 import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.SdkProjectStructureElement;
 import com.intellij.openapi.ui.MasterDetailsComponent;
 import com.intellij.openapi.ui.Messages;
-import com.intellij.openapi.ui.NamedConfigurable;
 import com.intellij.openapi.ui.NonEmptyInputValidator;
 import com.intellij.openapi.util.Condition;
 import com.intellij.util.Consumer;
@@ -42,6 +41,7 @@ import consulo.ide.settings.impl.ProjectStructureSettingsUtil;
 import consulo.ide.settings.impl.SettingsSdksModel;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.preferences.MasterDetailsConfigurable;
 import jakarta.inject.Inject;
 import org.jetbrains.annotations.Nls;
 
@@ -86,7 +86,7 @@ public class SdkListConfigurable extends BaseStructureConfigurable {
     private void updateName() {
       final TreePath path = myTree.getSelectionPath();
       if (path != null) {
-        final NamedConfigurable configurable = ((MyNode)path.getLastPathComponent()).getConfigurable();
+        final MasterDetailsConfigurable configurable = ((MyNode)path.getLastPathComponent()).getConfigurable();
         if (configurable != null && configurable instanceof SdkConfigurable) {
           configurable.updateName();
         }
@@ -303,7 +303,7 @@ public class SdkListConfigurable extends BaseStructureConfigurable {
 
       for (int k = 0; k < groupNode.getChildCount(); k++) {
         final MyNode sdkNode = (MyNode)groupNode.getChildAt(k);
-        final NamedConfigurable configurable = sdkNode.getConfigurable();
+        final MasterDetailsConfigurable configurable = sdkNode.getConfigurable();
         if (configurable.isModified()) {
           configurable.apply();
           modifiedSdks = true;
@@ -314,6 +314,7 @@ public class SdkListConfigurable extends BaseStructureConfigurable {
     if (mySdksModel.isModified() || modifiedSdks) mySdksModel.apply(this);
   }
 
+  @RequiredUIAccess
   @Override
   public boolean isModified() {
     return super.isModified() || mySdksModel.isModified();

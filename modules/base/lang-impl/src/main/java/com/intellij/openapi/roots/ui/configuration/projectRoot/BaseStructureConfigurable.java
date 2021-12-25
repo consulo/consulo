@@ -30,7 +30,6 @@ import com.intellij.openapi.roots.libraries.LibraryTable;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureElement;
 import com.intellij.openapi.ui.MasterDetailsComponent;
 import com.intellij.openapi.ui.MasterDetailsState;
-import com.intellij.openapi.ui.NamedConfigurable;
 import com.intellij.packaging.artifacts.Artifact;
 import com.intellij.ui.TreeSpeedSearch;
 import com.intellij.ui.awt.RelativePoint;
@@ -38,6 +37,7 @@ import com.intellij.util.IconUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.tree.TreeUtil;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.preferences.MasterDetailsConfigurable;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
@@ -122,7 +122,7 @@ public abstract class BaseStructureConfigurable extends MasterDetailsComponent i
     final TreePath selectionPath = myTree.getSelectionPath();
     if (selectionPath != null && selectionPath.getLastPathComponent() instanceof MyNode) {
       MyNode node = (MyNode)selectionPath.getLastPathComponent();
-      final NamedConfigurable configurable = node.getConfigurable();
+      final Configurable configurable = node.getConfigurable();
       if (configurable instanceof ProjectStructureElementConfigurable) {
         return ((ProjectStructureElementConfigurable)configurable).getProjectStructureElement();
       }
@@ -234,7 +234,7 @@ public abstract class BaseStructureConfigurable extends MasterDetailsComponent i
       super(objects -> {
         Object[] editableObjects = ContainerUtil.mapNotNull(objects, object -> {
           if (object instanceof MyNode) {
-            final NamedConfigurable namedConfigurable = ((MyNode)object).getConfigurable();
+            final MasterDetailsConfigurable namedConfigurable = ((MyNode)object).getConfigurable();
             if (namedConfigurable != null) {
               return namedConfigurable.getEditableObject();
             }
@@ -245,6 +245,7 @@ public abstract class BaseStructureConfigurable extends MasterDetailsComponent i
       });
     }
 
+    @RequiredUIAccess
     @Override
     public void actionPerformed(AnActionEvent e) {
       final TreePath[] paths = myTree.getSelectionPaths();
@@ -265,7 +266,7 @@ public abstract class BaseStructureConfigurable extends MasterDetailsComponent i
       if (!(last instanceof MyNode)) return false;
 
       final MyNode node = (MyNode)last;
-      final NamedConfigurable configurable = node.getConfigurable();
+      final MasterDetailsConfigurable configurable = node.getConfigurable();
       if (configurable == null) return false;
       final Object editableObject = configurable.getEditableObject();
 

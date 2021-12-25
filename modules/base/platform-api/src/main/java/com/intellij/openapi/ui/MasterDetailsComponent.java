@@ -44,6 +44,7 @@ import consulo.disposer.Disposer;
 import consulo.logging.Logger;
 import consulo.options.ConfigurableUIMigrationUtil;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.preferences.MasterDetailsConfigurable;
 import consulo.ui.image.Image;
 import consulo.util.concurrent.AsyncResult;
 import org.jetbrains.annotations.NonNls;
@@ -63,7 +64,7 @@ import java.util.*;
 public abstract class MasterDetailsComponent implements Configurable, MasterDetails {
   protected static final Logger LOG = Logger.getInstance(MasterDetailsComponent.class);
 
-  protected NamedConfigurable myCurrentConfigurable;
+  protected MasterDetailsConfigurable myCurrentConfigurable;
   protected final JBSplitter mySplitter;
 
   private JScrollPane myMaster;
@@ -99,7 +100,7 @@ public abstract class MasterDetailsComponent implements Configurable, MasterDeta
 
   private final List<ItemsChangeListener> myListeners = ContainerUtil.createLockFreeCopyOnWriteList();
 
-  private final Set<NamedConfigurable> myInitializedConfigurables = new HashSet<NamedConfigurable>();
+  private final Set<MasterDetailsConfigurable> myInitializedConfigurables = new HashSet<>();
 
   private boolean myHasDeletedItems;
   protected AutoScrollToSourceHandler myAutoScrollHandler;
@@ -203,7 +204,7 @@ public abstract class MasterDetailsComponent implements Configurable, MasterDeta
   protected void updateSelectionFromTree() {
     TreePath[] treePaths = myTree.getSelectionPaths();
     if (treePaths != null) {
-      List<NamedConfigurable> selectedConfigurables = new ArrayList<NamedConfigurable>();
+      List<MasterDetailsConfigurable> selectedConfigurables = new ArrayList<>();
       for (TreePath path : treePaths) {
         Object lastPathComponent = path.getLastPathComponent();
         if (lastPathComponent instanceof MyNode) {
@@ -227,7 +228,7 @@ public abstract class MasterDetailsComponent implements Configurable, MasterDeta
     }
   }
 
-  protected boolean updateMultiSelection(final List<NamedConfigurable> selectedConfigurables) {
+  protected boolean updateMultiSelection(final List<MasterDetailsConfigurable> selectedConfigurables) {
     return false;
   }
 
@@ -286,13 +287,14 @@ public abstract class MasterDetailsComponent implements Configurable, MasterDeta
     return panel;
   }
 
+  @RequiredUIAccess
   @Override
   public boolean isModified() {
     if (myHasDeletedItems) return true;
     final boolean[] modified = new boolean[1];
     TreeUtil.traverseDepth(myRoot, node -> {
       if (node instanceof MyNode) {
-        final NamedConfigurable configurable = ((MyNode)node).getConfigurable();
+        final MasterDetailsConfigurable configurable = ((MyNode)node).getConfigurable();
         if (isInitialized(configurable) && configurable.isModified()) {
           modified[0] = true;
           return false;
@@ -303,7 +305,7 @@ public abstract class MasterDetailsComponent implements Configurable, MasterDeta
     return modified[0];
   }
 
-  protected boolean isInitialized(final NamedConfigurable configurable) {
+  protected boolean isInitialized(final MasterDetailsConfigurable configurable) {
     return myInitializedConfigurables.contains(configurable);
   }
 
@@ -315,7 +317,7 @@ public abstract class MasterDetailsComponent implements Configurable, MasterDeta
     TreeUtil.traverse(myRoot, node -> {
       if (node instanceof MyNode) {
         try {
-          final NamedConfigurable configurable = ((MyNode)node).getConfigurable();
+          final MasterDetailsConfigurable configurable = ((MyNode)node).getConfigurable();
           if (isInitialized(configurable) && configurable.isModified()) {
             configurable.apply();
           }
@@ -337,6 +339,7 @@ public abstract class MasterDetailsComponent implements Configurable, MasterDeta
 
   protected abstract boolean wasObjectStored(Object editableObject);
 
+  @RequiredUIAccess
   @Override
   public void reset() {
     loadComponentState();
@@ -382,7 +385,7 @@ public abstract class MasterDetailsComponent implements Configurable, MasterDeta
     MyNode current = node;
     while (current != null) {
       final Object userObject = current.getUserObject();
-      if (!(userObject instanceof NamedConfigurable)) break;
+      if (!(userObject instanceof MasterDetailsConfigurable)) break;
       final String displayName = current.getDisplayName();
       if (StringUtil.isEmptyOrSpaces(displayName)) break;
       if (path.length() > 0) {
@@ -554,7 +557,7 @@ public abstract class MasterDetailsComponent implements Configurable, MasterDeta
     final TreePath selectionPath = myTree.getSelectionPath();
     if (selectionPath != null && selectionPath.getLastPathComponent() instanceof MyNode) {
       MyNode node = (MyNode)selectionPath.getLastPathComponent();
-      final NamedConfigurable configurable = node.getConfigurable();
+      final MasterDetailsConfigurable configurable = node.getConfigurable();
       LOG.assertTrue(configurable != null, "already disposed");
       return configurable.getEditableObject();
     }
@@ -562,11 +565,11 @@ public abstract class MasterDetailsComponent implements Configurable, MasterDeta
   }
 
   @Nullable
-  public NamedConfigurable getSelectedConfigurable() {
+  public MasterDetailsConfigurable getSelectedConfigurable() {
     final TreePath selectionPath = myTree.getSelectionPath();
     if (selectionPath != null) {
       MyNode node = (MyNode)selectionPath.getLastPathComponent();
-      final NamedConfigurable configurable = node.getConfigurable();
+      final MasterDetailsConfigurable configurable = node.getConfigurable();
       LOG.assertTrue(configurable != null, "already disposed");
       return configurable;
     }
@@ -607,7 +610,7 @@ public abstract class MasterDetailsComponent implements Configurable, MasterDeta
     return findNodeByCondition(root, configurable -> Comparing.equal(editableObject, configurable.getEditableObject()));
   }
 
-  protected static MyNode findNodeByCondition(final TreeNode root, final Condition<NamedConfigurable> condition) {
+  protected static MyNode findNodeByCondition(final TreeNode root, final Condition<MasterDetailsConfigurable> condition) {
     final MyNode[] nodeToSelect = new MyNode[1];
     TreeUtil.traverseDepth(root, node -> {
       if (condition.value(((MyNode)node).getConfigurable())) {
@@ -626,7 +629,7 @@ public abstract class MasterDetailsComponent implements Configurable, MasterDeta
     updateSelection(node != null ? node.getConfigurable() : null);
   }
 
-  protected void updateSelection(@Nullable NamedConfigurable configurable) {
+  protected void updateSelection(@Nullable MasterDetailsConfigurable configurable) {
     myDetails.setText(configurable != null ? configurable.getBannerSlogan() : null);
 
     myCurrentConfigurable = configurable;
@@ -647,7 +650,7 @@ public abstract class MasterDetailsComponent implements Configurable, MasterDeta
     }
   }
 
-  public void ensureInitialized(NamedConfigurable configurable) {
+  public void ensureInitialized(MasterDetailsConfigurable configurable) {
     if (!isInitialized(configurable)) {
       configurable.initialize();
       configurable.reset();
@@ -673,23 +676,23 @@ public abstract class MasterDetailsComponent implements Configurable, MasterDeta
     return null;
   }
 
-  protected void initializeConfigurable(final NamedConfigurable configurable) {
+  protected void initializeConfigurable(final MasterDetailsConfigurable configurable) {
     myInitializedConfigurables.add(configurable);
   }
 
   protected void checkApply(Set<MyNode> rootNodes, String prefix, String title) throws ConfigurationException {
     for (MyNode rootNode : rootNodes) {
-      final Set<String> names = new HashSet<String>();
+      final Set<String> names = new HashSet<>();
       for (int i = 0; i < rootNode.getChildCount(); i++) {
         final MyNode node = (MyNode)rootNode.getChildAt(i);
-        final NamedConfigurable scopeConfigurable = node.getConfigurable();
+        final MasterDetailsConfigurable scopeConfigurable = node.getConfigurable();
         final String name = scopeConfigurable.getDisplayName();
         if (name.trim().length() == 0) {
           selectNodeInTree(node);
           throw new ConfigurationException("Name should contain non-space characters");
         }
         if (names.contains(name)) {
-          final NamedConfigurable selectedConfigurable = getSelectedConfigurable();
+          final MasterDetailsConfigurable selectedConfigurable = getSelectedConfigurable();
           if (selectedConfigurable == null || !Comparing.strEqual(selectedConfigurable.getDisplayName(), name)) {
             selectNodeInTree(node);
           }
@@ -709,7 +712,7 @@ public abstract class MasterDetailsComponent implements Configurable, MasterDeta
     int idx = -1;
     for (TreePath path : paths) {
       final MyNode node = (MyNode)path.getLastPathComponent();
-      final NamedConfigurable namedConfigurable = node.getConfigurable();
+      final MasterDetailsConfigurable namedConfigurable = node.getConfigurable();
       final Object editableObject = namedConfigurable.getEditableObject();
       parentNode = (MyNode)node.getParent();
       idx = parentNode.getIndex(node);
@@ -771,13 +774,14 @@ public abstract class MasterDetailsComponent implements Configurable, MasterDeta
       myCondition = availableCondition;
     }
 
+    @RequiredUIAccess
     @Override
     public void update(AnActionEvent e) {
       final Presentation presentation = e.getPresentation();
       presentation.setEnabled(false);
       final TreePath[] selectionPath = myTree.getSelectionPaths();
       if (selectionPath != null) {
-        Object[] nodes = ContainerUtil.map2Array(selectionPath, new Function<TreePath, Object>() {
+        Object[] nodes = ContainerUtil.map2Array(selectionPath, new Function<>() {
           @Override
           public Object fun(TreePath treePath) {
             return treePath.getLastPathComponent();
@@ -788,6 +792,7 @@ public abstract class MasterDetailsComponent implements Configurable, MasterDeta
       }
     }
 
+    @RequiredUIAccess
     @Override
     public void actionPerformed(AnActionEvent e) {
       removePaths(myTree.getSelectionPaths());
@@ -795,7 +800,7 @@ public abstract class MasterDetailsComponent implements Configurable, MasterDeta
   }
 
   protected static Condition<Object[]> forAll(final Condition<Object> condition) {
-    return new Condition<Object[]>() {
+    return new Condition<>() {
       @Override
       public boolean value(Object[] objects) {
         for (Object object : objects) {
@@ -809,24 +814,24 @@ public abstract class MasterDetailsComponent implements Configurable, MasterDeta
   public static class MyNode extends DefaultMutableTreeNode {
     private boolean myDisplayInBold;
 
-    public MyNode(@Nonnull NamedConfigurable userObject) {
+    public MyNode(@Nonnull MasterDetailsConfigurable userObject) {
       super(userObject);
     }
 
-    public MyNode(@Nonnull NamedConfigurable userObject, boolean displayInBold) {
+    public MyNode(@Nonnull MasterDetailsConfigurable userObject, boolean displayInBold) {
       super(userObject);
       myDisplayInBold = displayInBold;
     }
 
     @Nonnull
     public String getDisplayName() {
-      final NamedConfigurable configurable = ((NamedConfigurable)getUserObject());
+      final Configurable configurable = ((Configurable)getUserObject());
       LOG.assertTrue(configurable != null, "Tree was already disposed");
       return configurable.getDisplayName();
     }
 
-    public NamedConfigurable getConfigurable() {
-      return (NamedConfigurable)getUserObject();
+    public MasterDetailsConfigurable getConfigurable() {
+      return (MasterDetailsConfigurable)getUserObject();
     }
 
     public boolean isDisplayInBold() {
@@ -840,9 +845,9 @@ public abstract class MasterDetailsComponent implements Configurable, MasterDeta
     @Nullable
     public Image getIcon(boolean expanded) {
       // thanks to invokeLater() in TreeUtil.showAndSelect(), we can get calls to getIcon() after the tree has been disposed
-      final NamedConfigurable configurable = getConfigurable();
+      final MasterDetailsConfigurable configurable = getConfigurable();
       if (configurable != null) {
-        return configurable.getIcon(expanded);
+        return configurable.getIcon();
       }
       return null;
     }
@@ -878,24 +883,29 @@ public abstract class MasterDetailsComponent implements Configurable, MasterDeta
           return null;
         }
 
+        @RequiredUIAccess
         @Override
-        public JComponent createOptionsPanel() {
+        public JComponent createOptionsPanel(Disposable uiDisposable) {
           return null;
         }
 
+        @RequiredUIAccess
         @Override
         public boolean isModified() {
           return false;
         }
 
+        @RequiredUIAccess
         @Override
         public void apply() throws ConfigurationException {
         }
 
+        @RequiredUIAccess
         @Override
         public void reset() {
         }
 
+        @RequiredUIAccess
         @Override
         public void disposeUIResources() {
         }
@@ -932,6 +942,7 @@ public abstract class MasterDetailsComponent implements Configurable, MasterDeta
       registerCustomShortcutSet(actionGroup.getShortcutSet(), myTree);
     }
 
+    @RequiredUIAccess
     @Override
     public void actionPerformed(AnActionEvent e) {
       final JBPopupFactory popupFactory = JBPopupFactory.getInstance();

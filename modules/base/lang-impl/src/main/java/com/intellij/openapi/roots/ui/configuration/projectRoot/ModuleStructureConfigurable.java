@@ -50,6 +50,7 @@ import consulo.moduleImport.ModuleImportProviders;
 import consulo.preferences.internal.ConfigurableWeight;
 import consulo.roots.ui.configuration.ProjectConfigurableWeights;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.preferences.MasterDetailsConfigurable;
 import consulo.util.dataholder.Key;
 import jakarta.inject.Inject;
 
@@ -72,8 +73,8 @@ public class ModuleStructureConfigurable extends BaseStructureConfigurable imple
   public static final String ID = "project.modules";
 
   private static final Comparator<MyNode> NODE_COMPARATOR = (o1, o2) -> {
-    final NamedConfigurable configurable1 = o1.getConfigurable();
-    final NamedConfigurable configurable2 = o2.getConfigurable();
+    final MasterDetailsConfigurable configurable1 = o1.getConfigurable();
+    final MasterDetailsConfigurable configurable2 = o2.getConfigurable();
     if (configurable1.getClass() == configurable2.getClass()) {
       return o1.getDisplayName().compareToIgnoreCase(o2.getDisplayName());
     }
@@ -163,7 +164,7 @@ public class ModuleStructureConfigurable extends BaseStructureConfigurable imple
   }
 
   @Override
-  protected void updateSelection(@Nullable final NamedConfigurable configurable) {
+  protected void updateSelection(@Nullable final MasterDetailsConfigurable configurable) {
     ApplicationManager.getApplication().assertIsDispatchThread();
     super.updateSelection(configurable);
     if (configurable != null) {
@@ -177,11 +178,10 @@ public class ModuleStructureConfigurable extends BaseStructureConfigurable imple
     return myAutoScrollEnabled;
   }
 
-  private void updateModuleEditorSelection(final NamedConfigurable configurable) {
+  private void updateModuleEditorSelection(final MasterDetailsConfigurable configurable) {
     if (configurable instanceof ModuleConfigurable) {
       final ModuleConfigurable moduleConfigurable = (ModuleConfigurable)configurable;
       final ModuleEditor editor = moduleConfigurable.getModuleEditor();
-
     }
   }
 
@@ -272,6 +272,7 @@ public class ModuleStructureConfigurable extends BaseStructureConfigurable imple
     }
   }
 
+  @RequiredUIAccess
   @Override
   public boolean isModified() {
     return getModulesConfigurator().isModified();
@@ -282,6 +283,7 @@ public class ModuleStructureConfigurable extends BaseStructureConfigurable imple
     return (ModulesConfiguratorImpl)util.getModulesModel(myProject);
   }
 
+  @RequiredUIAccess
   @Override
   public JComponent createComponent(Disposable parentUIDisposable) {
     return new MyDataProviderWrapper(super.createComponent(parentUIDisposable));
@@ -457,7 +459,7 @@ public class ModuleStructureConfigurable extends BaseStructureConfigurable imple
           ArrayList<Module> modules = new ArrayList<>();
           for (TreePath path : paths) {
             MyNode node = (MyNode)path.getLastPathComponent();
-            final NamedConfigurable configurable = node.getConfigurable();
+            final MasterDetailsConfigurable configurable = node.getConfigurable();
             LOG.assertTrue(configurable != null, "already disposed");
             final Object o = configurable.getEditableObject();
             if (o instanceof Module) {

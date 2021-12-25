@@ -37,7 +37,7 @@ import java.util.function.Consumer;
  * @author VISTALL
  * @since 2020-10-26
  */
-public abstract class NamedConfigurable<T> implements Configurable {
+public abstract class NamedConfigurable<T> implements Configurable, MasterDetailsConfigurable {
   private static class UIPanel {
     private final TextBox myNameField;
     private final DockLayout myNameLayout;
@@ -114,8 +114,10 @@ public abstract class NamedConfigurable<T> implements Configurable {
 
   public abstract void setDisplayName(String name);
 
+  @Override
   public abstract T getEditableObject();
 
+  @Override
   public String getBannerSlogan() {
     return null;
   }
@@ -170,6 +172,7 @@ public abstract class NamedConfigurable<T> implements Configurable {
     return null;
   }
 
+  @Override
   @RequiredUIAccess
   public void updateName() {
     if (myUIPanel == null) {

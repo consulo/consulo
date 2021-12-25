@@ -19,6 +19,7 @@ import com.intellij.CommonBundle;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.options.ShowSettingsUtil;
 import com.intellij.openapi.project.Project;
@@ -27,7 +28,6 @@ import com.intellij.openapi.roots.impl.libraries.LibraryImpl;
 import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.roots.libraries.LibraryTable;
 import com.intellij.openapi.roots.libraries.LibraryTablePresentation;
-import com.intellij.openapi.roots.libraries.LibraryTablesRegistrar;
 import com.intellij.openapi.roots.ui.configuration.LibraryTableModifiableModelProvider;
 import com.intellij.openapi.roots.ui.configuration.libraries.LibraryEditingUtil;
 import com.intellij.openapi.roots.ui.configuration.libraryEditor.CreateNewLibraryAction;
@@ -36,7 +36,6 @@ import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.LibraryPro
 import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureElement;
 import com.intellij.openapi.ui.MasterDetailsStateService;
 import com.intellij.openapi.ui.Messages;
-import com.intellij.openapi.ui.NamedConfigurable;
 import com.intellij.openapi.ui.NonEmptyInputValidator;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.util.ui.tree.TreeUtil;
@@ -44,6 +43,7 @@ import consulo.ide.settings.impl.ProjectStructureSettingsUtil;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.roots.ui.configuration.LibrariesConfigurator;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.preferences.MasterDetailsConfigurable;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -100,6 +100,7 @@ public abstract class BaseLibrariesConfigurable extends BaseStructureConfigurabl
     return "reference.settingsdialog.project.structure.library";
   }
 
+  @RequiredUIAccess
   @Override
   public boolean isModified() {
     boolean isModified = false;
@@ -148,7 +149,7 @@ public abstract class BaseLibrariesConfigurable extends BaseStructureConfigurabl
     for (int i = 0; i < myRoot.getChildCount(); i++) {
       final TreeNode node = myRoot.getChildAt(i);
       if (node instanceof MyNode) {
-        final NamedConfigurable configurable = ((MyNode)node).getConfigurable();
+        final Configurable configurable = ((MyNode)node).getConfigurable();
         if (configurable instanceof LibraryConfigurable) {
           libraryConfigurables.add((LibraryConfigurable)configurable);
         }
@@ -232,7 +233,7 @@ public abstract class BaseLibrariesConfigurable extends BaseStructureConfigurabl
   public abstract LibraryTableModifiableModelProvider getModelProvider();
 
   @Override
-  protected void updateSelection(@Nullable NamedConfigurable configurable) {
+  protected void updateSelection(@Nullable MasterDetailsConfigurable configurable) {
     boolean selectionChanged = !Comparing.equal(myCurrentConfigurable, configurable);
     if (myCurrentConfigurable != null && selectionChanged) {
       ((LibraryConfigurable)myCurrentConfigurable).onUnselected();

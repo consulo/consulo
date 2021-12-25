@@ -32,7 +32,6 @@ import com.intellij.openapi.roots.ui.configuration.libraryEditor.ExistingLibrary
 import com.intellij.openapi.roots.ui.configuration.projectRoot.LibrariesModifiableModel;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.LibraryConfigurable;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.ProjectLibrariesConfigurable;
-import com.intellij.openapi.ui.NamedConfigurable;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.PathUtil;
 import com.intellij.xml.util.XmlStringUtil;
@@ -42,6 +41,7 @@ import consulo.roots.types.DocumentationOrderRootType;
 import consulo.roots.types.SourcesOrderRootType;
 import consulo.roots.ui.configuration.LibrariesConfigurator;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.preferences.MasterDetailsConfigurable;
 import consulo.util.concurrent.AsyncResult;
 
 import javax.annotation.Nonnull;
@@ -217,7 +217,7 @@ public class LibraryProjectStructureElement extends ProjectStructureElement {
         ProjectLibrariesConfigurable librariesConfigurable = settings.findConfigurable(ProjectLibrariesConfigurable.class);
 
         navigate(myProject).doWhenDone(() -> {
-          final NamedConfigurable configurable = librariesConfigurable.getSelectedConfigurable();
+          final MasterDetailsConfigurable configurable = librariesConfigurable.getSelectedConfigurable();
           if (configurable instanceof LibraryConfigurable) {
             ((LibraryConfigurable)configurable).updateComponent();
           }

@@ -22,6 +22,7 @@ import com.intellij.util.ui.JBUI;
 import consulo.disposer.Disposable;
 import consulo.logging.Logger;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.preferences.MasterDetailsConfigurable;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
@@ -34,7 +35,7 @@ import java.awt.*;
  * User: anna
  * Date: 26-May-2006
  */
-public abstract class NamedConfigurable<T> implements Configurable {
+public abstract class NamedConfigurable<T> implements Configurable, MasterDetailsConfigurable<T> {
   private JTextField myNameField;
   private JPanel myNamePanel;
   private JPanel myWholePanel;
@@ -128,6 +129,12 @@ public abstract class NamedConfigurable<T> implements Configurable {
   @Deprecated
   public JComponent createOptionsPanel() {
     throw new AbstractMethodError();
+  }
+
+  @Nullable
+  @Override
+  public Image getIcon() {
+    return getIcon(false);
   }
 
   @Nullable

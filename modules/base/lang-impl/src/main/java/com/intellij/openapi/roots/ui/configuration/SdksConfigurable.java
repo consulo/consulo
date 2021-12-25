@@ -25,6 +25,7 @@ package com.intellij.openapi.roots.ui.configuration;
 import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.DefaultActionGroup;
+import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.options.ShowSettingsUtil;
 import com.intellij.openapi.project.Project;
@@ -35,15 +36,15 @@ import com.intellij.openapi.roots.ui.configuration.projectRoot.SdkConfigurable;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.SdkListConfigurable;
 import com.intellij.openapi.ui.MasterDetailsComponent;
 import com.intellij.openapi.ui.MasterDetailsStateService;
-import com.intellij.openapi.ui.NamedConfigurable;
 import com.intellij.openapi.ui.Splitter;
 import com.intellij.openapi.util.Conditions;
 import com.intellij.ui.TreeSpeedSearch;
 import com.intellij.util.IconUtil;
 import com.intellij.util.containers.Convertor;
-import consulo.ide.settings.impl.SettingsSdksModel;
 import consulo.ide.settings.impl.ProjectStructureSettingsUtil;
+import consulo.ide.settings.impl.SettingsSdksModel;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.preferences.MasterDetailsConfigurable;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nullable;
@@ -92,6 +93,7 @@ public class SdksConfigurable extends MasterDetailsComponent {
     myTree.setRootVisible(false);
   }
 
+  @RequiredUIAccess
   @Override
   public void reset() {
     super.reset();
@@ -134,7 +136,7 @@ public class SdksConfigurable extends MasterDetailsComponent {
     super.apply();
     boolean modifiedJdks = false;
     for (int i = 0; i < myRoot.getChildCount(); i++) {
-      final NamedConfigurable configurable = ((MyNode)myRoot.getChildAt(i)).getConfigurable();
+      final Configurable configurable = ((MyNode)myRoot.getChildAt(i)).getConfigurable();
       if (configurable.isModified()) {
         configurable.apply();
         modifiedJdks = true;
@@ -145,12 +147,14 @@ public class SdksConfigurable extends MasterDetailsComponent {
   }
 
 
+  @RequiredUIAccess
   @Override
   public boolean isModified() {
     return super.isModified() || mySdksModel.isModified();
   }
 
 
+  @RequiredUIAccess
   @Override
   public void disposeUIResources() {
     final Splitter splitter = extractSplitter();
@@ -181,7 +185,7 @@ public class SdksConfigurable extends MasterDetailsComponent {
     final Set<Sdk> sdks = new HashSet<Sdk>();
     for (int i = 0; i < myRoot.getChildCount(); i++) {
       final DefaultMutableTreeNode node = (DefaultMutableTreeNode)myRoot.getChildAt(i);
-      final NamedConfigurable namedConfigurable = (NamedConfigurable)node.getUserObject();
+      final MasterDetailsConfigurable namedConfigurable = (MasterDetailsConfigurable)node.getUserObject();
       sdks.add(((SdkConfigurable)namedConfigurable).getEditableObject());
     }
     final HashMap<Sdk, Sdk> map = new HashMap<Sdk, Sdk>(mySdksModel.getModifiedSdksMap());

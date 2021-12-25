@@ -30,6 +30,8 @@ import com.intellij.openapi.util.*;
 import com.intellij.util.IconUtil;
 import com.intellij.util.ui.tree.TreeUtil;
 import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.preferences.MasterDetailsConfigurable;
 import consulo.ui.image.Image;
 import consulo.util.collection.HashingStrategy;
 
@@ -71,6 +73,7 @@ public abstract class NamedItemsListEditor<T> extends MasterDetailsComponent {
     }
   }
 
+  @RequiredUIAccess
   @Override
   public void reset() {
     myResultItems = myOriginalItems;
@@ -171,7 +174,7 @@ public abstract class NamedItemsListEditor<T> extends MasterDetailsComponent {
     TreeUtil.traverse((TreeNode)myTree.getModel().getRoot(), new TreeUtil.Traverse() {
       @Override
       public boolean accept(Object node) {
-        final NamedConfigurable configurable = (NamedConfigurable)((DefaultMutableTreeNode)node).getUserObject();
+        final MasterDetailsConfigurable configurable = (MasterDetailsConfigurable)((DefaultMutableTreeNode)node).getUserObject();
         if (configurable.getEditableObject() == item) {
           result.set(((ItemConfigurable)configurable).myConfigurable);
           return false;
@@ -184,6 +187,7 @@ public abstract class NamedItemsListEditor<T> extends MasterDetailsComponent {
     return result.get();
   }
 
+  @RequiredUIAccess
   @Override
   public void disposeUIResources() {
     super.disposeUIResources();    //To change body of overridden methods use File | Settings | File Templates.
@@ -258,6 +262,7 @@ public abstract class NamedItemsListEditor<T> extends MasterDetailsComponent {
     }
   }
 
+  @RequiredUIAccess
   @Override
   public boolean isModified() {
     if (myResultItems.size() != myItems.size()) return true;
@@ -269,6 +274,7 @@ public abstract class NamedItemsListEditor<T> extends MasterDetailsComponent {
     return super.isModified();
   }
 
+  @RequiredUIAccess
   @Override
   public void apply() throws ConfigurationException {
     super.apply();

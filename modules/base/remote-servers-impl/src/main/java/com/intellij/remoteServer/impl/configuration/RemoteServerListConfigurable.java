@@ -10,18 +10,19 @@ import com.intellij.openapi.options.OptionalConfigurable;
 import com.intellij.openapi.options.SearchableConfigurable;
 import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.openapi.ui.MasterDetailsComponent;
-import com.intellij.openapi.ui.NamedConfigurable;
 import com.intellij.remoteServer.ServerType;
 import com.intellij.remoteServer.configuration.RemoteServer;
 import com.intellij.remoteServer.configuration.RemoteServersManager;
 import com.intellij.util.IconUtil;
 import com.intellij.util.text.UniqueNameGenerator;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.preferences.MasterDetailsConfigurable;
 import consulo.ui.image.Image;
 import jakarta.inject.Inject;
 import org.jetbrains.annotations.Nls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -56,6 +57,7 @@ public class RemoteServerListConfigurable extends MasterDetailsComponent impleme
     return "Clouds";
   }
 
+  @RequiredUIAccess
   @Override
   public void reset() {
     myRoot.removeAllChildren();
@@ -96,12 +98,12 @@ public class RemoteServerListConfigurable extends MasterDetailsComponent impleme
 
   @Override
   protected void processRemovedItems() {
-    Set<RemoteServer<?>> servers = new HashSet<RemoteServer<?>>();
-    for (NamedConfigurable<RemoteServer<?>> configurable : getConfiguredServers()) {
+    Set<RemoteServer<?>> servers = new HashSet<>();
+    for (MasterDetailsConfigurable<RemoteServer<?>> configurable : getConfiguredServers()) {
       servers.add(configurable.getEditableObject());
     }
 
-    List<RemoteServer<?>> toDelete = new ArrayList<RemoteServer<?>>();
+    List<RemoteServer<?>> toDelete = new ArrayList<>();
     for (RemoteServer<?> server : getServers()) {
       if (!servers.contains(server)) {
         toDelete.add(server);
@@ -112,11 +114,12 @@ public class RemoteServerListConfigurable extends MasterDetailsComponent impleme
     }
   }
 
+  @RequiredUIAccess
   @Override
   public void apply() throws ConfigurationException {
     super.apply();
-    Set<RemoteServer<?>> servers = new HashSet<RemoteServer<?>>(getServers());
-    for (NamedConfigurable<RemoteServer<?>> configurable : getConfiguredServers()) {
+    Set<RemoteServer<?>> servers = new HashSet<>(getServers());
+    for (MasterDetailsConfigurable<RemoteServer<?>> configurable : getConfiguredServers()) {
       RemoteServer<?> server = configurable.getEditableObject();
       server.setName(configurable.getDisplayName());
       if (!servers.contains(server)) {
@@ -128,7 +131,7 @@ public class RemoteServerListConfigurable extends MasterDetailsComponent impleme
   @Nullable
   @Override
   protected ArrayList<AnAction> createActions(boolean fromPopup) {
-    ArrayList<AnAction> actions = new ArrayList<AnAction>();
+    ArrayList<AnAction> actions = new ArrayList<>();
     if (myServerType == null) {
       actions.add(new AddRemoteServerGroup());
     }
@@ -149,6 +152,7 @@ public class RemoteServerListConfigurable extends MasterDetailsComponent impleme
     return true;
   }
 
+  @RequiredUIAccess
   @Override
   public void disposeUIResources() {
     Object selectedObject = getSelectedObject();
@@ -161,11 +165,11 @@ public class RemoteServerListConfigurable extends MasterDetailsComponent impleme
     return myLastSelectedServer;
   }
 
-  private List<NamedConfigurable<RemoteServer<?>>> getConfiguredServers() {
-    List<NamedConfigurable<RemoteServer<?>>> configurables = new ArrayList<NamedConfigurable<RemoteServer<?>>>();
+  private List<MasterDetailsConfigurable<RemoteServer<?>>> getConfiguredServers() {
+    List<MasterDetailsConfigurable<RemoteServer<?>>> configurables = new ArrayList<>();
     for (int i = 0; i < myRoot.getChildCount(); i++) {
       MyNode node = (MyNode)myRoot.getChildAt(i);
-      configurables.add((NamedConfigurable<RemoteServer<?>>)node.getConfigurable());
+      configurables.add((MasterDetailsConfigurable<RemoteServer<?>>)node.getConfigurable());
     }
     return configurables;
   }
@@ -210,7 +214,7 @@ public class RemoteServerListConfigurable extends MasterDetailsComponent impleme
     @Override
     public void actionPerformed(AnActionEvent e) {
       String name = UniqueNameGenerator.generateUniqueName(myServerType.getPresentableName(), s -> {
-        for (NamedConfigurable<RemoteServer<?>> configurable : getConfiguredServers()) {
+        for (MasterDetailsConfigurable<RemoteServer<?>> configurable : getConfiguredServers()) {
           if (configurable.getDisplayName().equals(s)) {
             return false;
           }

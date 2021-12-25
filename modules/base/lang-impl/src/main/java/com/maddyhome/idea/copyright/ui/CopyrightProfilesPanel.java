@@ -117,6 +117,7 @@ public class CopyrightProfilesPanel extends MasterDetailsComponent implements Se
     }
   }
 
+  @RequiredUIAccess
   public void apply() throws ConfigurationException {
     final Set<String> profiles = new HashSet<String>();
     for (int i = 0; i < myRoot.getChildCount(); i++) {
@@ -148,6 +149,7 @@ public class CopyrightProfilesPanel extends MasterDetailsComponent implements Se
     return profiles;
   }
 
+  @RequiredUIAccess
   @Override
   public void disposeUIResources() {
     super.disposeUIResources();
@@ -293,6 +295,7 @@ public class CopyrightProfilesPanel extends MasterDetailsComponent implements Se
     myInitialized.set(true);
   }
 
+  @RequiredUIAccess
   public void reset() {
     reloadTree();
     super.reset();

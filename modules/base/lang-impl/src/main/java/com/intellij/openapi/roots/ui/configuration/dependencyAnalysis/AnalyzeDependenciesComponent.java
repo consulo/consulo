@@ -45,7 +45,6 @@ import com.intellij.util.messages.MessageBusConnection;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.tree.TreeUtil;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.image.Image;
 import consulo.util.dataholder.Key;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NonNls;
@@ -111,6 +110,7 @@ public class AnalyzeDependenciesComponent extends MasterDetailsComponent {
   /**
    * {@inheritDoc}
    */
+  @RequiredUIAccess
   @Override
   public void disposeUIResources() {
     if (myMessageBusConnection != null) {
@@ -537,7 +537,7 @@ public class AnalyzeDependenciesComponent extends MasterDetailsComponent {
       return new CellAppearanceEx() {
         @Override
         public void customize(@Nonnull SimpleColoredComponent component) {
-          component.setIcon(getIcon());
+          component.setIcon(myExplanation.getIcon());
           final Font font = UIUtil.getTreeFont();
           if (isBold) {
             component.setFont(font.deriveFont(Font.BOLD));
@@ -568,13 +568,6 @@ public class AnalyzeDependenciesComponent extends MasterDetailsComponent {
       String p = f == null ? myExplanation.url() : f.getPath();
       p = suffixForBanner(p);
       return p;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    private Image getIcon() {
-      return myExplanation.getIcon();
     }
 
     /**

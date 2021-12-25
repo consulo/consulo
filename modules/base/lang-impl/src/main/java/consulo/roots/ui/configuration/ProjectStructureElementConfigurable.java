@@ -18,6 +18,7 @@ package consulo.roots.ui.configuration;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureElement;
 import consulo.preferences.NamedConfigurable;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.image.Image;
 
 import javax.annotation.Nullable;
 
@@ -35,4 +36,10 @@ public abstract class ProjectStructureElementConfigurable<T> extends NamedConfig
 
   @Nullable
   public abstract ProjectStructureElement getProjectStructureElement();
+
+  @Nullable
+  @Override
+  public Image getIcon() {
+    return null;
+  }
 }

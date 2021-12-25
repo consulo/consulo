@@ -234,6 +234,7 @@ public class ArtifactsStructureConfigurable extends BaseStructureConfigurable im
     return node;
   }
 
+  @RequiredUIAccess
   @Override
   public void reset() {
     loadComponentState();
@@ -241,6 +242,7 @@ public class ArtifactsStructureConfigurable extends BaseStructureConfigurable im
     super.reset();
   }
 
+  @RequiredUIAccess
   @Override
   public boolean isModified() {
     final ModifiableArtifactModel modifiableModel = myPackagingEditorContext.getActualModifiableModel();
@@ -332,6 +334,7 @@ public class ArtifactsStructureConfigurable extends BaseStructureConfigurable im
     selectNodeInTree(findNodeByObject(myRoot, artifact));
   }
 
+  @RequiredUIAccess
   @Override
   public void apply() throws ConfigurationException {
     myPackagingEditorContext.saveEditorSettings();

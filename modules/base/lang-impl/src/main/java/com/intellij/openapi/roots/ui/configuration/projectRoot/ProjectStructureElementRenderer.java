@@ -20,12 +20,12 @@ import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStr
 import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureProblemType;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureProblemsHolderImpl;
 import com.intellij.openapi.ui.MasterDetailsComponent;
-import com.intellij.openapi.ui.NamedConfigurable;
 import com.intellij.ui.ColoredTreeCellRenderer;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.util.ui.UIUtil;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.preferences.MasterDetailsConfigurable;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
@@ -49,13 +49,13 @@ public class ProjectStructureElementRenderer extends ColoredTreeCellRenderer {
     if (value instanceof MasterDetailsComponent.MyNode) {
       final MasterDetailsComponent.MyNode node = (MasterDetailsComponent.MyNode)value;
 
-      final NamedConfigurable namedConfigurable = node.getConfigurable();
+      final MasterDetailsConfigurable namedConfigurable = node.getConfigurable();
       if (namedConfigurable == null) {
         return;
       }
 
       final String displayName = node.getDisplayName();
-      final Image icon = namedConfigurable.getIcon(expanded);
+      final Image icon = namedConfigurable.getIcon();
       setIcon(icon);
       setToolTipText(null);
       setFont(UIUtil.getTreeFont());
