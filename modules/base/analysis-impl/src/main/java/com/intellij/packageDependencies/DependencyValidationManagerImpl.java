@@ -22,7 +22,6 @@ import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.components.StoragePathMacros;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Pair;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.search.scope.packageSet.*;
@@ -82,7 +81,7 @@ public class DependencyValidationManagerImpl extends DependencyValidationManager
   @Nonnull
   public List<NamedScope> getPredefinedScopes() {
     final List<NamedScope> predefinedScopes = new ArrayList<NamedScope>();
-    final CustomScopesProvider[] scopesProviders = CustomScopesProvider.CUSTOM_SCOPES_PROVIDER.getExtensions(myProject);
+    final List<CustomScopesProvider> scopesProviders = CustomScopesProvider.CUSTOM_SCOPES_PROVIDER.getExtensionList(myProject);
     for (CustomScopesProvider scopesProvider : scopesProviders) {
       predefinedScopes.addAll(scopesProvider.getCustomScopes());
     }
@@ -91,7 +90,7 @@ public class DependencyValidationManagerImpl extends DependencyValidationManager
 
   @Override
   public NamedScope getPredefinedScope(@Nonnull String name) {
-    final CustomScopesProvider[] scopesProviders = CustomScopesProvider.CUSTOM_SCOPES_PROVIDER.getExtensions(myProject);
+    final List<CustomScopesProvider> scopesProviders = CustomScopesProvider.CUSTOM_SCOPES_PROVIDER.getExtensionList(myProject);
     for (CustomScopesProvider scopesProvider : scopesProviders) {
       final NamedScope scope = scopesProvider instanceof CustomScopesProviderEx
                                ? ((CustomScopesProviderEx)scopesProvider).getCustomScope(name)
@@ -109,7 +108,7 @@ public class DependencyValidationManagerImpl extends DependencyValidationManager
   }
 
   @Override
-  @javax.annotation.Nullable
+  @Nullable
   public DependencyRule getViolatorDependencyRule(@Nonnull PsiFile from, @Nonnull PsiFile to) {
     for (DependencyRule dependencyRule : myRules) {
       if (dependencyRule.isForbiddenToUse(from, to)) return dependencyRule;
@@ -267,24 +266,7 @@ public class DependencyValidationManagerImpl extends DependencyValidationManager
     }
   }
 
-  @Override
-  @javax.annotation.Nullable
-  public NamedScope getScope(@javax.annotation.Nullable final String name) {
-    final NamedScope scope = super.getScope(name);
-    if (scope == null) {
-      final PackageSet packageSet = myUnnamedScopes.get(name);
-      if (packageSet != null) {
-        return new NamedScope.UnnamedScope(packageSet);
-      }
-    }
-    //compatibility for predefined scopes: rename Project -> All
-    if (scope == null && Comparing.strEqual(name, "Project")) {
-      return super.getScope("All");
-    }
-    return scope;
-  }
-
-  @javax.annotation.Nullable
+  @Nullable
   private static Element writeRule(DependencyRule rule) {
     NamedScope fromScope = rule.getFromScope();
     NamedScope toScope = rule.getToScope();

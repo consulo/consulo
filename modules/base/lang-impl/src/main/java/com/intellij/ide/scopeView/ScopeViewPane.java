@@ -148,7 +148,7 @@ public class ScopeViewPane extends AbstractProjectViewPane {
     myViewPanel = new ScopeTreeViewPanel(myProject);
     Disposer.register(this, myViewPanel);
     myViewPanel.initListeners();
-    myViewPanel.selectScope(NamedScopesHolder.getScope(myProject, getSubId()));
+    myViewPanel.selectScope(getSelectedScope());
     myTree = myViewPanel.getTree();
     PopupHandler.installPopupHandler(myTree, IdeActions.GROUP_SCOPE_VIEW_POPUP, ActionPlaces.SCOPE_VIEW_POPUP);
     enableDnD();
@@ -207,7 +207,7 @@ public class ScopeViewPane extends AbstractProjectViewPane {
   @Override
   public ActionCallback updateFromRoot(boolean restoreExpandedPaths) {
     saveExpandedPaths();
-    myViewPanel.selectScope(NamedScopesHolder.getScope(myProject, getSubId()));
+    myViewPanel.selectScope(getSelectedScope());
     restoreExpandedPaths();
     return new ActionCallback.Done();
   }
@@ -219,12 +219,12 @@ public class ScopeViewPane extends AbstractProjectViewPane {
     if (psiFile == null) return;
     if (!(element instanceof PsiElement)) return;
 
-    List<NamedScope> allScopes = new ArrayList<NamedScope>();
+    List<NamedScope> allScopes = new ArrayList<>();
     ContainerUtil.addAll(allScopes, myDependencyValidationManager.getScopes());
     ContainerUtil.addAll(allScopes, myNamedScopeManager.getScopes());
     for (int i = 0; i < allScopes.size(); i++) {
       final NamedScope scope = allScopes.get(i);
-      String name = scope.getName();
+      String name = scope.getScopeId();
       if (name.equals(getSubId())) {
         allScopes.set(i, allScopes.get(0));
         allScopes.set(0, scope);
@@ -232,7 +232,7 @@ public class ScopeViewPane extends AbstractProjectViewPane {
       }
     }
     for (NamedScope scope : allScopes) {
-      String name = scope.getName();
+      String name = scope.getScopeId();
       PackageSet packageSet = scope.getValue();
       if (packageSet == null) continue;
       if (changeView(packageSet, ((PsiElement)element), psiFile, name, myNamedScopeManager, requestFocus)) break;
