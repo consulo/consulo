@@ -18,10 +18,9 @@ package consulo.backgroundTaskByVfsChange;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.xmlb.annotations.Tag;
 import com.intellij.util.xmlb.annotations.Transient;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import java.util.Collections;
 import java.util.Map;
 
 /**
@@ -40,7 +39,7 @@ public class BackgroundTaskByVfsParametersImpl implements BackgroundTaskByVfsPar
   private String myExePath = "";
   private String myOutPath = "";
   private boolean myShowConsole = true;
-  private Map<String, String> myEnvs = Collections.emptyMap();
+  private Map<String, String> myEnvs = Map.of();
   private boolean myPassParentEnvs;
 
   public BackgroundTaskByVfsParametersImpl(Project project) {

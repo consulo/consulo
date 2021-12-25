@@ -22,6 +22,7 @@ import javax.annotation.Nullable;
 import java.util.Map;
 
 public interface CommonProgramRunConfigurationParameters {
+  @Nullable
   Project getProject();
 
   void setProgramParameters(@Nullable String value);

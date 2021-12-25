@@ -43,10 +43,9 @@ import javax.annotation.Nullable;
  * <p>
  * Unified implementation of {@link com.intellij.execution.ui.CommonProgramParametersPanel}
  */
-public class CommonProgramParametersLayout implements PseudoComponent {
+public class CommonProgramParametersLayout<P extends CommonProgramRunConfigurationParameters> implements PseudoComponent {
   private FileChooserTextBoxBuilder.Controller myWorkDirectoryBox;
   private EnvironmentVariablesTextFieldWithBrowseButton myEnvVariablesComponent;
-
   private TextBoxWithExpandAction myProgramParametersComponent;
 
   private Module myModuleContext = null;
@@ -145,7 +144,7 @@ public class CommonProgramParametersLayout implements PseudoComponent {
     myHasModuleMacro = true;
   }
 
-  public void applyTo(CommonProgramRunConfigurationParameters configuration) {
+  public void apply(P configuration) {
     configuration.setProgramParameters(myProgramParametersComponent.getValueOrError());
     configuration.setWorkingDirectory(myWorkDirectoryBox.getValue());
 
@@ -153,7 +152,7 @@ public class CommonProgramParametersLayout implements PseudoComponent {
     configuration.setPassParentEnvs(myEnvVariablesComponent.isPassParentEnvs());
   }
 
-  public void reset(CommonProgramRunConfigurationParameters configuration) {
+  public void reset(P configuration) {
     setProgramParameters(configuration.getProgramParameters());
     setWorkingDirectory(PathUtil.toSystemDependentName(configuration.getWorkingDirectory()));
 
