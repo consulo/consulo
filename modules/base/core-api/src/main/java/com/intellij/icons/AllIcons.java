@@ -1005,7 +1005,6 @@ public class AllIcons {
     public static final Image AllRevisions = PlatformIconGroup.vcsAllRevisions(); // 16x16
     public static final Image Arrow_left = PlatformIconGroup.vcsArrow_left(); // 16x16
     public static final Image Arrow_right = PlatformIconGroup.vcsArrow_right(); // 16x16
-    public static final Image CheckSpelling = PlatformIconGroup.vcsCheckSpelling(); // 16x16
     public static final Image Equal = PlatformIconGroup.vcsEqual(); // 16x16
     public static final Image History = PlatformIconGroup.vcsHistory(); // 16x16
     public static final Image MapBase = PlatformIconGroup.vcsMapBase(); // 16x16
