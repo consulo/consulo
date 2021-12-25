@@ -464,7 +464,12 @@ public final class DesktopIdeFrameImpl implements IdeFrameEx, AccessibleContextA
       }
     }
 
+    if (myRootPane != null) {
+      myRootPane.deinstallNorthComponents();
+    }
+
     myProject = project;
+    
     if (project != null) {
       ProjectFrameBounds.getInstance(project);   // make sure the service is initialized and its state will be saved
       if (myRootPane != null) {
@@ -473,11 +478,6 @@ public final class DesktopIdeFrameImpl implements IdeFrameEx, AccessibleContextA
       }
 
       installDefaultProjectStatusBarWidgets(myProject);
-    }
-    else {
-      if (myRootPane != null) { //already disposed
-        myRootPane.deinstallNorthComponents();
-      }
     }
 
     if (myJFrame.isVisible() && myRestoreFullScreen) {
