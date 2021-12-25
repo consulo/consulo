@@ -20,28 +20,33 @@ import com.intellij.ide.IdeBundle;
 import com.intellij.ide.dnd.aware.DnDAwareTree;
 import com.intellij.ide.favoritesTreeView.*;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
+import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
-import com.intellij.ui.AnActionButton;
 import com.intellij.ui.CommonActionsPanel;
 import com.intellij.util.IconUtil;
 import consulo.logging.Logger;
+import consulo.ui.annotation.RequiredUIAccess;
 
+import javax.annotation.Nonnull;
 import java.util.*;
 
 /**
  * @author anna
  * @author Konstantin Bulenkov
  */
-public class DeleteFromFavoritesAction extends AnActionButton implements DumbAware {
+public class DeleteFromFavoritesAction extends AnAction implements DumbAware {
   private static final Logger LOG = Logger.getInstance(DeleteFromFavoritesAction.class);
 
   public DeleteFromFavoritesAction() {
-    super(IdeBundle.message("action.remove.from.current.favorites"), IconUtil.getRemoveIcon());
+    super(IdeBundle.message("action.remove.from.current.favorites"), null, IconUtil.getRemoveIcon());
+
+    registerCustomShortcutSet(CommonActionsPanel.getCommonShortcut(CommonActionsPanel.Buttons.REMOVE), null);
   }
 
+  @RequiredUIAccess
   @Override
   public void actionPerformed(AnActionEvent e) {
     final DataContext dataContext = e.getDataContext();
@@ -87,8 +92,9 @@ public class DeleteFromFavoritesAction extends AnActionButton implements DumbAwa
     }
   }
 
+  @RequiredUIAccess
   @Override
-  public void updateButton(AnActionEvent e) {
+  public void update(@Nonnull AnActionEvent e) {
     e.getPresentation().setText(getTemplatePresentation().getText());
     final DataContext dataContext = e.getDataContext();
     Project project = e.getProject();

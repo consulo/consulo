@@ -220,6 +220,8 @@ public abstract class ToolbarDecorator implements CommonActionsPanel.ListenerFac
     return this;
   }
 
+  @Deprecated(forRemoval = true)
+  @DeprecationInfo("Use #addExtraActions(AnAction)")
   public ToolbarDecorator addExtraActions(AnActionButton... actions) {
     for (AnActionButton action : actions) {
       if (action != null) {
@@ -229,6 +231,8 @@ public abstract class ToolbarDecorator implements CommonActionsPanel.ListenerFac
     return this;
   }
 
+  @Deprecated(forRemoval = true)
+  @DeprecationInfo("Use #addExtraActions(AnAction)")
   public ToolbarDecorator addExtraAction(AnActionButton action) {
     myExtraActions.add(action);
     return this;

@@ -20,7 +20,6 @@ import consulo.localize.LocalizeValue;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
-
 import javax.annotation.Nullable;
 import javax.swing.*;
 

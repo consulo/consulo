@@ -583,10 +583,10 @@ public class RunConfigurable extends BaseConfigurable {
             .setToolbarBackgroundColor(myEditorMode ? UIUtil.getPanelBackground() : SwingUIDecorator.get(SwingUIDecorator::getSidebarColor))
             .setMoveUpAction(moveUpAction).setMoveUpActionName(ExecutionBundle.message("move.up.action.name")).setMoveUpActionUpdater(moveUpAction)
             .setMoveDownAction(moveDownAction).setMoveDownActionName(ExecutionBundle.message("move.down.action.name")).setMoveDownActionUpdater(moveDownAction)
-            .addExtraAction(AnActionButton.fromAction(new MyCopyAction()))
-            .addExtraAction(AnActionButton.fromAction(new MySaveAction()))
-            .addExtraAction(AnActionButton.fromAction(new MyEditDefaultsAction()))
-            .addExtraAction(AnActionButton.fromAction(new MyCreateFolderAction()))
+            .addExtraAction(new MyCopyAction())
+            .addExtraAction(new MySaveAction())
+            .addExtraAction(new MyEditDefaultsAction())
+            .addExtraAction(new MyCreateFolderAction())
             .setButtonComparator(ExecutionBundle.message("add.new.run.configuration.acrtion.name"),
                                  ExecutionBundle.message("remove.run.configuration.action.name"),
                                  ExecutionBundle.message("copy.configuration.action.name"),

@@ -43,7 +43,6 @@ import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.openapi.wm.IdeFocusManager;
-import com.intellij.ui.AnActionButton;
 import com.intellij.ui.ToolbarDecorator;
 import com.intellij.ui.border.CustomLineBorder;
 import com.intellij.ui.treeStructure.Tree;
@@ -117,7 +116,6 @@ public class LibraryRootsComponent implements Disposable, LibraryEditorComponent
   }
 
   private void onRootsChanged() {
-    myAddExcludedRootActionButton.setEnabled(!getNotExcludedRoots().isEmpty());
   }
 
   @Nonnull
@@ -187,7 +185,7 @@ public class LibraryRootsComponent implements Disposable, LibraryEditorComponent
       Image icon = descriptor.getToolbarIcon();
       if (icon != null) {
         AttachItemAction action = new AttachItemAction(descriptor, descriptor.getButtonText(), icon);
-        toolbarDecorator.addExtraAction(AnActionButton.fromAction(action));
+        toolbarDecorator.addExtraAction(action);
       }
       else {
         popupItems.add(descriptor);
@@ -195,7 +193,11 @@ public class LibraryRootsComponent implements Disposable, LibraryEditorComponent
     }
     myAddExcludedRootActionButton = new AddExcludedRootActionButton();
     toolbarDecorator.addExtraAction(myAddExcludedRootActionButton);
-    toolbarDecorator.addExtraAction(new AnActionButton("Remove", IconUtil.getRemoveIcon()) {
+    toolbarDecorator.addExtraAction(new AnAction("Remove", null, IconUtil.getRemoveIcon()) {
+      {
+        registerCustomShortcutSet(CommonShortcuts.DELETE, null);
+      }
+
       @RequiredUIAccess
       @Override
       public void actionPerformed(AnActionEvent e) {
@@ -225,8 +227,7 @@ public class LibraryRootsComponent implements Disposable, LibraryEditorComponent
       }
 
       @Override
-      public void updateButton(AnActionEvent e) {
-        super.updateButton(e);
+      public void update(AnActionEvent e) {
         Object[] elements = getSelectedElements();
         Presentation presentation = e.getPresentation();
         if (ContainerUtil.and(elements, new FilteringIterator.InstanceOf<>(ExcludedRootElement.class))) {
@@ -235,11 +236,6 @@ public class LibraryRootsComponent implements Disposable, LibraryEditorComponent
         else {
           presentation.setText(getTemplatePresentation().getText());
         }
-      }
-
-      @Override
-      public ShortcutSet getShortcut() {
-        return CommonShortcuts.DELETE;
       }
     });
     toolbarDecorator.setAddAction(button -> {
@@ -533,11 +529,12 @@ public class LibraryRootsComponent implements Disposable, LibraryEditorComponent
     return roots;
   }
 
-  private class AddExcludedRootActionButton extends AnActionButton {
+  private class AddExcludedRootActionButton extends AnAction {
     public AddExcludedRootActionButton() {
       super("Exclude", null, AllIcons.Modules.AddExcludedRoot);
     }
 
+    @RequiredUIAccess
     @Override
     public void actionPerformed(AnActionEvent e) {
       FileChooserDescriptor descriptor = FileChooserDescriptorFactory.createMultipleJavaPathDescriptor();
@@ -556,8 +553,8 @@ public class LibraryRootsComponent implements Disposable, LibraryEditorComponent
           break;
         }
       }
-      final VirtualFile[] files = FileChooser.chooseFiles(descriptor, myPanel, myProject, toSelect);
-      if (files.length > 0) {
+      
+      consulo.ui.fileChooser.FileChooser.chooseFiles(descriptor, myPanel, myProject, toSelect).doWhenDone(files -> {
         ApplicationManager.getApplication().runWriteAction(new Runnable() {
           @Override
           public void run() {
@@ -568,7 +565,13 @@ public class LibraryRootsComponent implements Disposable, LibraryEditorComponent
         });
         myLastChosen = files[0];
         libraryChanged(true);
-      }
+      });
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void update(@Nonnull AnActionEvent e) {
+      e.getPresentation().setEnabled(!getNotExcludedRoots().isEmpty());
     }
   }
 }

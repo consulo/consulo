@@ -15,6 +15,7 @@
  */
 package com.intellij.execution.util;
 
+import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.ui.*;
 import com.intellij.ui.table.TableView;
@@ -22,8 +23,8 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.ColumnInfo;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.ListTableModel;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
@@ -213,10 +214,9 @@ public abstract class ListTableWithButtons<T> extends Observable {
   protected abstract boolean isEmpty(T element);
 
   @Nonnull
-  protected AnActionButton[] createExtraActions() {
-    return new AnActionButton[0];
+  protected AnAction[] createExtraActions() {
+    return new AnAction[0];
   }
-
 
   @Nonnull
   protected List<T> getSelection() {

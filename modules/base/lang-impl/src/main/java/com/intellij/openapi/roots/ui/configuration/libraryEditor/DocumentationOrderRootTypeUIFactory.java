@@ -21,6 +21,7 @@
 package com.intellij.openapi.roots.ui.configuration.libraryEditor;
 
 import com.intellij.icons.AllIcons;
+import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CustomShortcutSet;
 import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
@@ -71,15 +72,22 @@ public class DocumentationOrderRootTypeUIFactory implements OrderRootTypeUIFacto
 
     @Override
     protected void addToolbarButtons(ToolbarDecorator toolbarDecorator) {
-      AnActionButton specifyUrlButton = new AnActionButton(ProjectBundle.message("sdk.paths.specify.url.button"), IconUtil.getAddLinkIcon()) {
+      AnAction specifyUrlButton = new AnAction(ProjectBundle.message("sdk.paths.specify.url.button"), null, IconUtil.getAddLinkIcon()) {
+        {
+          setShortcutSet(CustomShortcutSet.fromString("alt S"));
+        }
         @RequiredUIAccess
         @Override
         public void actionPerformed(@Nonnull AnActionEvent e) {
           onSpecifyUrlButtonClicked();
         }
+
+        @RequiredUIAccess
+        @Override
+        public void update(@Nonnull AnActionEvent e) {
+          e.getPresentation().setEnabled(myEnabled);
+        }
       };
-      specifyUrlButton.setShortcut(CustomShortcutSet.fromString("alt S"));
-      specifyUrlButton.addCustomUpdater(e -> myEnabled);
       toolbarDecorator.addExtraAction(specifyUrlButton);
     }
 

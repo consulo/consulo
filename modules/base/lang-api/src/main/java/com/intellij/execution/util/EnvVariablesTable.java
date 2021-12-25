@@ -17,15 +17,16 @@
 package com.intellij.execution.util;
 
 import com.intellij.idea.ActionsBundle;
+import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.ide.CopyPasteManager;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.ui.AnActionButton;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.ColumnInfo;
 import com.intellij.util.ui.ListTableModel;
 import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -139,8 +140,8 @@ public class EnvVariablesTable extends ListTableWithButtons<EnvironmentVariable>
 
   @Nonnull
   @Override
-  protected AnActionButton[] createExtraActions() {
-    AnActionButton copyButton = new AnActionButton(ActionsBundle.message("action.EditorCopy.text"), PlatformIconGroup.actionsCopy()) {
+  protected AnAction[] createExtraActions() {
+    AnAction copyButton = new AnAction(ActionsBundle.message("action.EditorCopy.text"), null, PlatformIconGroup.actionsCopy()) {
       @Override
       public void actionPerformed(@Nonnull AnActionEvent e) {
         stopEditing();
@@ -155,12 +156,13 @@ public class EnvVariablesTable extends ListTableWithButtons<EnvironmentVariable>
         CopyPasteManager.getInstance().setContents(new StringSelection(sb.toString()));
       }
 
+      @RequiredUIAccess
       @Override
-      public boolean isEnabled() {
-        return super.isEnabled() && !getSelection().isEmpty();
+      public void update(@Nonnull AnActionEvent e) {
+        e.getPresentation().setEnabled(!getSelection().isEmpty());
       }
     };
-    AnActionButton pasteButton = new AnActionButton(ActionsBundle.message("action.EditorPaste.text"), PlatformIconGroup.actionsMenu_paste()) {
+    AnAction pasteButton = new AnAction(ActionsBundle.message("action.EditorPaste.text"), null, PlatformIconGroup.actionsMenu_paste()) {
       @Override
       public void actionPerformed(@Nonnull AnActionEvent e) {
         removeSelected();
@@ -186,7 +188,7 @@ public class EnvVariablesTable extends ListTableWithButtons<EnvironmentVariable>
         setValues(variables);
       }
     };
-    return new AnActionButton[]{copyButton, pasteButton};
+    return new AnAction[]{copyButton, pasteButton};
   }
 
   @Override

@@ -20,15 +20,16 @@ import com.intellij.icons.AllIcons;
 import com.intellij.ide.DataManager;
 import com.intellij.ide.ui.UISettings;
 import com.intellij.ide.util.scopeChooser.ScopeChooserConfigurable;
+import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.options.ex.Settings;
 import com.intellij.openapi.ui.MessageType;
-import com.intellij.ui.AnActionButton;
 import com.intellij.ui.IdeBorderFactory;
 import com.intellij.ui.ToolbarDecorator;
 import com.intellij.ui.components.JBLabel;
 import consulo.disposer.Disposable;
+import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;
@@ -93,15 +94,17 @@ public class FileColorsConfigurablePanel extends JPanel implements Disposable {
     };
 
     final JPanel panel = ToolbarDecorator.createDecorator(myLocalTable)
-      .addExtraAction(new AnActionButton("Share", AllIcons.Actions.Share) {
+      .addExtraAction(new AnAction("Share", null, AllIcons.Actions.Share) {
+        @RequiredUIAccess
         @Override
         public void actionPerformed(AnActionEvent e) {
           share();
         }
 
+        @RequiredUIAccess
         @Override
-        public boolean isEnabled() {
-          return super.isEnabled() && myLocalTable.getSelectedRow() != -1;
+        public void update(@Nonnull AnActionEvent e) {
+          e.getPresentation().setEnabled(myLocalTable.getSelectedRow() != -1);
         }
       })
       .createPanel();
@@ -129,15 +132,17 @@ public class FileColorsConfigurablePanel extends JPanel implements Disposable {
     final JPanel sharedPanel = new JPanel(new BorderLayout());
     sharedPanel.setBorder(IdeBorderFactory.createTitledBorder("Shared colors", false));
     final JPanel shared = ToolbarDecorator.createDecorator(mySharedTable)
-      .addExtraAction(new AnActionButton("Unshare", AllIcons.Actions.Unshare) {
+      .addExtraAction(new AnAction("Unshare", null, AllIcons.Actions.Unshare) {
+        @RequiredUIAccess
         @Override
         public void actionPerformed(AnActionEvent e) {
           unshare();
         }
 
+        @RequiredUIAccess
         @Override
-        public boolean isEnabled() {
-          return super.isEnabled() && mySharedTable.getSelectedRow() != -1;
+        public void update(@Nonnull AnActionEvent e) {
+          e.getPresentation().setEnabled(mySharedTable.getSelectedRow() != -1);
         }
       })
       .createPanel();

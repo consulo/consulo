@@ -5,6 +5,7 @@ import com.intellij.CommonBundle;
 import com.intellij.execution.ExecutionException;
 import com.intellij.ide.ActivityTracker;
 import com.intellij.ide.IdeBundle;
+import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonShortcuts;
 import com.intellij.openapi.application.Application;
@@ -154,8 +155,8 @@ public class InstalledPackagesPanel extends JPanel {
     }.installOn(myPackagesTable);
   }
 
-  protected AnActionButton[] getExtraActions() {
-    return new AnActionButton[0];
+  protected AnAction[] getExtraActions() {
+    return new AnAction[0];
   }
 
   @Nonnull

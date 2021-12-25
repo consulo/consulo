@@ -23,7 +23,6 @@ import com.intellij.ide.*;
 import com.intellij.ide.dnd.aware.DnDAwareTree;
 import com.intellij.ide.favoritesTreeView.actions.*;
 import com.intellij.ide.projectView.PresentationData;
-import com.intellij.ide.projectView.ProjectView;
 import com.intellij.ide.projectView.impl.ModuleGroup;
 import com.intellij.ide.projectView.impl.nodes.LibraryGroupElement;
 import com.intellij.ide.projectView.impl.nodes.NamedLibraryElement;
@@ -187,24 +186,24 @@ public class FavoritesTreeViewPanel extends JPanel implements DataProvider, Dock
       }
     };
 
-    AnActionButton addActionButton = AnActionButton.fromAction(ActionManager.getInstance().getAction("AddNewFavoritesList"));
-    addActionButton.getTemplatePresentation().setIcon(CommonActionsPanel.Buttons.ADD.getIcon());
-    addActionButton.setShortcut(CommonActionsPanel.getCommonShortcut(CommonActionsPanel.Buttons.ADD));
+    AnAction addAction = ActionManager.getInstance().getAction("AddNewFavoritesList");
+    AnAction copiedAddAction = EmptyAction.wrap(addAction);
+    copiedAddAction.getTemplatePresentation().setIcon(CommonActionsPanel.Buttons.ADD.getIcon());
+    copiedAddAction.registerCustomShortcutSet(CommonActionsPanel.getCommonShortcut(CommonActionsPanel.Buttons.ADD), null);
 
-    AnActionButton editActionButton = AnActionButton.fromAction(new EditFavoritesAction());
-    editActionButton.setShortcut(CommonShortcuts.CTRL_ENTER);
+    AnAction editActionButton = new EditFavoritesAction();
+    editActionButton.registerCustomShortcutSet(CommonShortcuts.CTRL_ENTER, null);
 
-    AnActionButton deleteActionButton = new DeleteFromFavoritesAction();
-    deleteActionButton.setShortcut(CommonActionsPanel.getCommonShortcut(CommonActionsPanel.Buttons.REMOVE));
-
-    //final AnAction exportToTextFileAction = CommonActionsManager.getInstance().createExportToTextFileAction(createTextExporter());
-    //AnActionButton exportActionButton = AnActionButton.fromAction(exportToTextFileAction);
-    //exportActionButton.setShortcut(exportToTextFileAction.getShortcutSet());
+    AnAction deleteActionButton = new DeleteFromFavoritesAction();
 
     final ToolbarDecorator decorator =
-            ToolbarDecorator.createDecorator(myTree).initPosition().disableAddAction().disableRemoveAction().disableDownAction().disableUpAction().addExtraAction(addActionButton)
-                    .addExtraAction(editActionButton).addExtraAction(deleteActionButton);
-    //.addExtraAction(exportActionButton);
+            ToolbarDecorator.createDecorator(myTree)
+                    .initPosition()
+                    .disableAddAction()
+                    .disableRemoveAction()
+                    .disableDownAction()
+                    .disableUpAction()
+                    .addExtraActions(copiedAddAction, deleteActionButton, editActionButton);
 
     final AnAction action = ActionManager.getInstance().getAction(IdeActions.ACTION_NEW_ELEMENT);
     action.registerCustomShortcutSet(action.getShortcutSet(), myTree);
