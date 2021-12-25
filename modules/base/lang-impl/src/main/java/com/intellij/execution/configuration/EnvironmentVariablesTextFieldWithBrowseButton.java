@@ -22,40 +22,56 @@ import com.intellij.execution.util.EnvVariablesTable;
 import com.intellij.execution.util.EnvironmentVariable;
 import com.intellij.openapi.ui.DialogBuilder;
 import com.intellij.openapi.ui.DialogWrapper;
-import com.intellij.openapi.ui.TextFieldWithBrowseButton;
 import com.intellij.ui.HyperlinkLabel;
 import com.intellij.ui.UserActivityProviderComponent;
+import com.intellij.util.EventDispatcher;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.awt.TargetAWT;
+import consulo.localize.LocalizeValue;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.ui.TextBoxWithExtensions;
+import consulo.util.lang.StringUtil;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-public class EnvironmentVariablesTextFieldWithBrowseButton extends TextFieldWithBrowseButton implements UserActivityProviderComponent {
+public class EnvironmentVariablesTextFieldWithBrowseButton implements UserActivityProviderComponent {
+
+  private final EventDispatcher<ChangeListener> myListeners = EventDispatcher.create(ChangeListener.class);
 
   private EnvironmentVariablesData myData = EnvironmentVariablesData.DEFAULT;
-  private final List<ChangeListener> myListeners = ContainerUtil.createLockFreeCopyOnWriteList();
+
+  private final TextBoxWithExtensions myTextBox;
 
   public EnvironmentVariablesTextFieldWithBrowseButton() {
-    super();
-    setEditable(false);
-    addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(final ActionEvent e) {
-        new MyEnvironmentVariablesDialog().show();
+    myTextBox = TextBoxWithExtensions.create();
+    myTextBox.setPlaceholder(LocalizeValue.localizeTODO("Separate variables with semicolon: VAR=value; VAR1=value1"));
+
+    myTextBox.addLastExtension(new TextBoxWithExtensions.Extension(false, PlatformIconGroup.generalInlineVariables(), PlatformIconGroup.generalInlineVariablesHover(),
+                                                                   event -> new MyEnvironmentVariablesDialog().showAsync()));
+
+    myTextBox.addValueListener(event -> {
+      if (!StringUtil.equals(stringifyEnvs(myData), event.getValue())) {
+        Map<String, String> textEnvs = EnvVariablesTable.parseEnvsFromText(event.getValue());
+        myData = myData.with(textEnvs);
+        fireStateChanged();
       }
     });
+  }
+
+  @Nonnull
+  public consulo.ui.Component getComponent() {
+    return myTextBox;
   }
 
   /**
@@ -82,10 +98,25 @@ public class EnvironmentVariablesTextFieldWithBrowseButton extends TextFieldWith
   public void setData(@Nonnull EnvironmentVariablesData data) {
     EnvironmentVariablesData oldData = myData;
     myData = data;
-    setText(stringifyEnvs(data.getEnvs()));
+    myTextBox.setValue(stringifyEnvs(data.getEnvs()));
     if (!oldData.equals(data)) {
       fireStateChanged();
     }
+  }
+
+  @Nonnull
+  protected String stringifyEnvs(@Nonnull EnvironmentVariablesData evd) {
+    if (evd.getEnvs().isEmpty()) {
+      return "";
+    }
+    StringBuilder buf = new StringBuilder();
+    for (Map.Entry<String, String> entry : evd.getEnvs().entrySet()) {
+      if (buf.length() > 0) {
+        buf.append(";");
+      }
+      buf.append(StringUtil.escapeChar(entry.getKey(), ';')).append("=").append(StringUtil.escapeChar(entry.getValue(), ';'));
+    }
+    return buf.toString();
   }
 
   @Nonnull
@@ -113,18 +144,16 @@ public class EnvironmentVariablesTextFieldWithBrowseButton extends TextFieldWith
 
   @Override
   public void addChangeListener(ChangeListener changeListener) {
-    myListeners.add(changeListener);
+    myListeners.addListener(changeListener);
   }
 
   @Override
   public void removeChangeListener(ChangeListener changeListener) {
-    myListeners.remove(changeListener);
+    myListeners.removeListener(changeListener);
   }
 
   private void fireStateChanged() {
-    for (ChangeListener listener : myListeners) {
-      listener.stateChanged(new ChangeEvent(this));
-    }
+    myListeners.getMulticaster().stateChanged(new ChangeEvent(this));
   }
 
   public static void showParentEnvironmentDialog(@Nonnull Component parent) {
@@ -153,7 +182,7 @@ public class EnvironmentVariablesTextFieldWithBrowseButton extends TextFieldWith
     private final JPanel myWholePanel = new JPanel(new BorderLayout());
 
     protected MyEnvironmentVariablesDialog() {
-      super(EnvironmentVariablesTextFieldWithBrowseButton.this, true);
+      super(TargetAWT.to(getComponent()), true);
       myEnvVariablesTable = new EnvVariablesTable();
       myEnvVariablesTable.setValues(convertToVariables(myData.getEnvs(), false));
 

@@ -21,6 +21,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.DocumentAdapter;
 import com.intellij.ui.components.fields.ExpandableTextField;
 import consulo.disposer.Disposable;
+import consulo.localize.LocalizeValue;
 import consulo.ui.TextBoxWithExpandAction;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.desktop.internal.validableComponent.DocumentSwingValidator;
@@ -93,8 +94,8 @@ public class DesktopTextBoxWithExpandAction {
     }
 
     @Override
-    public void setPlaceholder(@Nullable String text) {
-      toAWTComponent().getEmptyText().setText(text);
+    public void setPlaceholder(@Nonnull LocalizeValue text) {
+      toAWTComponent().getEmptyText().setText(text.getValue());
     }
 
     @Override
@@ -182,7 +183,7 @@ public class DesktopTextBoxWithExpandAction {
     }
 
     @Override
-    public void setPlaceholder(@Nullable String text) {
+    public void setPlaceholder(@Nullable LocalizeValue text) {
       myTextBox.setPlaceholder(text);
     }
 

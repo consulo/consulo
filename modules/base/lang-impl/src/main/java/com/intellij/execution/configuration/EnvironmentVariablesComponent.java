@@ -22,16 +22,18 @@ package com.intellij.execution.configuration;
 
 import com.intellij.execution.ExecutionBundle;
 import com.intellij.openapi.ui.LabeledComponent;
-import com.intellij.openapi.ui.TextFieldWithBrowseButton;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.ui.UserActivityProviderComponent;
+import consulo.awt.TargetAWT;
+import consulo.ui.annotation.RequiredUIAccess;
 import org.jdom.Element;
 
 import javax.annotation.Nonnull;
+import javax.swing.*;
 import javax.swing.event.ChangeListener;
 import java.util.Map;
 
-public class EnvironmentVariablesComponent extends LabeledComponent<TextFieldWithBrowseButton> implements UserActivityProviderComponent {
+public class EnvironmentVariablesComponent extends LabeledComponent<JComponent> implements UserActivityProviderComponent {
   private static final String ENVS = "envs";
   public static final String ENV = "env";
   public static final String NAME = "name";
@@ -41,10 +43,11 @@ public class EnvironmentVariablesComponent extends LabeledComponent<TextFieldWit
 
   private final EnvironmentVariablesTextFieldWithBrowseButton myEnvVars;
 
+  @RequiredUIAccess
   public EnvironmentVariablesComponent() {
     super();
     myEnvVars = new EnvironmentVariablesTextFieldWithBrowseButton();
-    setComponent(myEnvVars);
+    setComponent((JComponent)TargetAWT.to(myEnvVars.getComponent()));
     setText(ExecutionBundle.message("environment.variables.component.title"));
   }
 
@@ -80,8 +83,7 @@ public class EnvironmentVariablesComponent extends LabeledComponent<TextFieldWit
   public static void readExternal(Element element, Map<String, String> envs) {
     final Element envsElement = element.getChild(ENVS);
     if (envsElement != null) {
-      for (Object o : envsElement.getChildren(ENV)) {
-        Element envElement = (Element)o;
+      for (Element envElement : envsElement.getChildren(ENV)) {
         final String envName = envElement.getAttributeValue(NAME);
         final String envValue = envElement.getAttributeValue(VALUE);
         if (envName != null && envValue != null) {

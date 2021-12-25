@@ -21,6 +21,7 @@ import com.intellij.ui.components.JBTextField;
 import consulo.awt.TargetAWT;
 import consulo.awt.impl.FromSwingComponentWrapper;
 import consulo.disposer.Disposable;
+import consulo.localize.LocalizeValue;
 import consulo.ui.Component;
 import consulo.ui.TextBox;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -112,8 +113,8 @@ public class DesktopTextBoxImpl extends DocumentSwingValidator<String, DesktopTe
   }
 
   @Override
-  public void setPlaceholder(@Nullable String text) {
-    toAWTComponent().getEmptyText().setText(text);
+  public void setPlaceholder(@Nullable LocalizeValue text) {
+    toAWTComponent().getEmptyText().setText(text.get());
   }
 
   @Override

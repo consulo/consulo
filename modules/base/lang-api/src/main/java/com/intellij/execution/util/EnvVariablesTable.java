@@ -33,7 +33,9 @@ import javax.swing.table.TableCellEditor;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.StringSelection;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 public class EnvVariablesTable extends ListTableWithButtons<EnvironmentVariable> {
   public EnvVariablesTable() {
@@ -195,5 +197,42 @@ public class EnvVariablesTable extends ListTableWithButtons<EnvironmentVariable>
   @Override
   protected boolean canDeleteElement(EnvironmentVariable selection) {
     return !selection.getIsPredefined();
+  }
+
+  @Nonnull
+  public static Map<String, String> parseEnvsFromText(String content) {
+    Map<String, String> result = new LinkedHashMap<>();
+    if (content != null && content.contains("=")) {
+      boolean legacyFormat = content.contains("\n");
+      List<String> pairs;
+      if (legacyFormat) {
+        pairs = StringUtil.split(content, "\n");
+      }
+      else {
+        pairs = new ArrayList<>();
+        int start = 0;
+        int end;
+        for (end = content.indexOf(";"); end < content.length(); end = content.indexOf(";", end + 1)) {
+          if (end == -1) {
+            pairs.add(content.substring(start).replace("\\;", ";"));
+            break;
+          }
+          if (end > 0 && (content.charAt(end - 1) != '\\')) {
+            pairs.add(content.substring(start, end).replace("\\;", ";"));
+            start = end + 1;
+          }
+        }
+      }
+      for (String pair : pairs) {
+        int pos = pair.indexOf('=');
+        if (pos <= 0) continue;
+        while (pos > 0 && pair.charAt(pos - 1) == '\\') {
+          pos = pair.indexOf('=', pos + 1);
+        }
+        pair = pair.replaceAll("[\\\\]", "\\\\\\\\");
+        result.put(StringUtil.unescapeStringCharacters(pair.substring(0, pos)).trim(), StringUtil.unescapeStringCharacters(pair.substring(pos + 1)));
+      }
+    }
+    return result;
   }
 }

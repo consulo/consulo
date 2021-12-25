@@ -15,6 +15,7 @@
  */
 package consulo.ui;
 
+import consulo.localize.LocalizeValue;
 import consulo.ui.internal.UIInternal;
 
 import javax.annotation.Nonnull;
@@ -35,13 +36,25 @@ public interface TextBox extends ValueComponent<String>, ValidableComponent<Stri
     return UIInternal.get()._Components_textBox(text);
   }
 
-  default void setPlaceholder(@Nullable String text) {
+  default void setPlaceholder(@Nonnull LocalizeValue text) {
     // unwarranted action
   }
 
   @Nonnull
-  default TextBox withPlaceholder(@Nullable String text) {
+  default TextBox withPlaceholder(@Nonnull LocalizeValue text) {
     setPlaceholder(text);
+    return this;
+  }
+
+  @Deprecated
+  default void setPlaceholder(@Nullable String text) {
+    setPlaceholder(text == null ? LocalizeValue.of() : LocalizeValue.of(text));
+  }
+
+  @Nonnull
+  @Deprecated
+  default TextBox withPlaceholder(@Nullable String text) {
+    setPlaceholder(text == null ? LocalizeValue.of() : LocalizeValue.of(text));
     return this;
   }
 

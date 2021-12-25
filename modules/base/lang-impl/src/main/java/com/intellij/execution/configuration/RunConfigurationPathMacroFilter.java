@@ -16,6 +16,7 @@
 package com.intellij.execution.configuration;
 
 import com.intellij.openapi.application.PathMacroFilter;
+import com.intellij.util.xmlb.Constants;
 import org.jdom.Attribute;
 import org.jdom.Element;
 
@@ -25,19 +26,13 @@ import org.jdom.Element;
 public class RunConfigurationPathMacroFilter extends PathMacroFilter {
   @Override
   public boolean skipPathMacros(Attribute attribute) {
-    final Element parent = attribute.getParent();
-    final String attrName = attribute.getName();
-    if (parent.getName().equals(EnvironmentVariablesData.ENV) &&
-        (attrName.equals(EnvironmentVariablesData.NAME) || attrName.equals(EnvironmentVariablesData.VALUE))) {
-      return true;
-    }
-    return false;
+    return attribute.getName().equals(Constants.NAME) && attribute.getParent().getName().equals("configuration");
   }
 
   @Override
   public boolean recursePathMacros(Attribute attribute) {
     final Element parent = attribute.getParent();
-    if (parent != null && "option".equals(parent.getName())) {
+    if (parent != null && Constants.OPTION.equals(parent.getName())) {
       final Element grandParent = parent.getParentElement();
       return grandParent != null && "configuration".equals(grandParent.getName());
     }

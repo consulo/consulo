@@ -406,7 +406,7 @@ public class StringUtil {
 
       int cmp;
       if (p1.matches("\\d+") && p2.matches("\\d+")) {
-        cmp = new Integer(p1).compareTo(new Integer(p2));
+        cmp = Integer.valueOf(p1).compareTo(Integer.valueOf(p2));
       }
       else {
         cmp = part1[idx].compareTo(part2[idx]);
@@ -425,7 +425,7 @@ public class StringUtil {
         String p = parts[idx];
         int cmp;
         if (p.matches("\\d+")) {
-          cmp = new Integer(p).compareTo(0);
+          cmp = Integer.valueOf(p).compareTo(0);
         }
         else {
           cmp = 1;
@@ -434,5 +434,118 @@ public class StringUtil {
       }
       return 0;
     }
+  }
+
+  @Contract(pure = true)
+  public static int indexOf(@Nonnull CharSequence s, char c) {
+    return indexOf(s, c, 0, s.length());
+  }
+
+  @Contract(pure = true)
+  public static int indexOf(@Nonnull CharSequence s, char c, int start) {
+    return indexOf(s, c, start, s.length());
+  }
+
+  @Contract(pure = true)
+  public static int indexOf(@Nonnull CharSequence s, char c, int start, int end) {
+    for (int i = start; i < end; i++) {
+      if (s.charAt(i) == c) return i;
+    }
+    return -1;
+  }
+
+  @Contract(pure = true)
+  public static String escapeChar(@Nonnull final String str, final char character) {
+    return escapeChars(str, character);
+  }
+
+  @Nonnull
+  @Contract(pure = true)
+  public static String escapeChars(@Nonnull final String str, final char... character) {
+    final StringBuilder buf = new StringBuilder(str);
+    for (char c : character) {
+      escapeChar(buf, c);
+    }
+    return buf.toString();
+  }
+
+  private static void escapeChar(@Nonnull final StringBuilder buf, final char character) {
+    int idx = 0;
+    while ((idx = indexOf(buf, character, idx)) >= 0) {
+      buf.insert(idx, "\\");
+      idx += 2;
+    }
+  }
+
+  public static void escapeStringCharacters(int length, @Nonnull String str, @Nonnull StringBuilder buffer) {
+    escapeStringCharacters(length, str, "\"", buffer);
+  }
+
+  @Nonnull
+  public static StringBuilder escapeStringCharacters(int length, @Nonnull String str, @Nullable String additionalChars, @Nonnull StringBuilder buffer) {
+    return escapeStringCharacters(length, str, additionalChars, true, buffer);
+  }
+
+  @Nonnull
+  public static StringBuilder escapeStringCharacters(int length, @Nonnull String str, @Nullable String additionalChars, boolean escapeSlash, @Nonnull StringBuilder buffer) {
+    char prev = 0;
+    for (int idx = 0; idx < length; idx++) {
+      char ch = str.charAt(idx);
+      switch (ch) {
+        case '\b':
+          buffer.append("\\b");
+          break;
+
+        case '\t':
+          buffer.append("\\t");
+          break;
+
+        case '\n':
+          buffer.append("\\n");
+          break;
+
+        case '\f':
+          buffer.append("\\f");
+          break;
+
+        case '\r':
+          buffer.append("\\r");
+          break;
+
+        default:
+          if (escapeSlash && ch == '\\') {
+            buffer.append("\\\\");
+          }
+          else if (additionalChars != null && additionalChars.indexOf(ch) > -1 && (escapeSlash || prev != '\\')) {
+            buffer.append("\\").append(ch);
+          }
+          else if (!isPrintableUnicode(ch)) {
+            CharSequence hexCode = toUpperCase(Integer.toHexString(ch));
+            buffer.append("\\u");
+            int paddingCount = 4 - hexCode.length();
+            while (paddingCount-- > 0) {
+              buffer.append(0);
+            }
+            buffer.append(hexCode);
+          }
+          else {
+            buffer.append(ch);
+          }
+      }
+      prev = ch;
+    }
+    return buffer;
+  }
+
+  @Contract(pure = true)
+  public static boolean isPrintableUnicode(char c) {
+    int t = Character.getType(c);
+    return t != Character.UNASSIGNED &&
+           t != Character.LINE_SEPARATOR &&
+           t != Character.PARAGRAPH_SEPARATOR &&
+           t != Character.CONTROL &&
+           t != Character.FORMAT &&
+           t != Character.PRIVATE_USE &&
+           t != Character.SURROGATE;
   }
 }

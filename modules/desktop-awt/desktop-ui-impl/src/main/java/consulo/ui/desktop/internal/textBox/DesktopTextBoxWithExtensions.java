@@ -24,6 +24,7 @@ import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import consulo.awt.TargetAWT;
 import consulo.disposer.Disposable;
+import consulo.localize.LocalizeValue;
 import consulo.ui.TextBoxWithExtensions;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
@@ -185,8 +186,8 @@ public class DesktopTextBoxWithExtensions {
     }
 
     @Override
-    public void setPlaceholder(@Nullable String text) {
-      toAWTComponent().getEmptyText().setText(text);
+    public void setPlaceholder(@Nonnull LocalizeValue text) {
+      toAWTComponent().getEmptyText().setText(text.getValue());
     }
 
     @Override
@@ -366,8 +367,8 @@ public class DesktopTextBoxWithExtensions {
     }
 
     @Override
-    public void setPlaceholder(@Nullable String text) {
-      myTextField.getEmptyText().setText(text);
+    public void setPlaceholder(@Nonnull LocalizeValue text) {
+      myTextField.getEmptyText().setText(text.toString());
     }
 
     @Override
