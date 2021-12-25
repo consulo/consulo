@@ -82,7 +82,7 @@ public class RunnerMediator {
   }
 
   @Nullable
-  private static String getRunnerPath() {
+  public static String getRunnerPath() {
     if (!Platform.current().os().isWindows()) {
       throw new IllegalStateException("There is no need of runner under unix based OS");
     }
@@ -150,18 +150,6 @@ public class RunnerMediator {
   public static class CustomDestroyProcessHandler extends ColoredProcessHandler {
     private final boolean mySoftKill;
 
-    /** @deprecated use CustomDestroyProcessHandler(GeneralCommandLine commandLine) (to remove in IDEA 16) */
-    public CustomDestroyProcessHandler(@Nonnull Process process, @Nonnull GeneralCommandLine commandLine) {
-      super(process, commandLine.getCommandLineString());
-      mySoftKill = false;
-    }
-
-    /** @deprecated use CustomDestroyProcessHandler(GeneralCommandLine commandLine, boolean softKill) (to remove in IDEA 16) */
-    public CustomDestroyProcessHandler(@Nonnull Process process, @Nonnull GeneralCommandLine commandLine, boolean softKill) {
-      super(process, commandLine.getCommandLineString());
-      mySoftKill = softKill;
-    }
-
     public CustomDestroyProcessHandler(@Nonnull GeneralCommandLine commandLine) throws ExecutionException {
       this(commandLine, false);
     }
@@ -171,9 +159,11 @@ public class RunnerMediator {
       mySoftKill = softKill;
     }
 
+    @Override
     protected boolean shouldDestroyProcessRecursively(){
       return true;
     }
+
     @Override
     protected void destroyProcessImpl() {
       if (!RunnerMediator.destroyProcess(getProcess(), mySoftKill)) {
