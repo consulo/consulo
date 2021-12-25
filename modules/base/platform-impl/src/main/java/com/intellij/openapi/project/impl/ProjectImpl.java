@@ -41,7 +41,6 @@ import com.intellij.psi.impl.DebugUtil;
 import com.intellij.util.TimedReference;
 import consulo.application.AccessRule;
 import consulo.components.impl.PlatformComponentManagerImpl;
-import consulo.components.impl.stores.DefaultProjectStoreImpl;
 import consulo.components.impl.stores.IProjectStore;
 import consulo.components.impl.stores.ProjectStoreImpl;
 import consulo.components.impl.stores.StoreUtil;
@@ -99,7 +98,7 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
       putUserData(CREATION_TRACE, DebugUtil.currentStackTrace());
     }
 
-    if (!isDefault()) {
+    if (!isDefault() && !isWelcome()) {
       if (noUIThread) {
         getStateStore().setProjectFilePathNoUI(dirPath);
       }
@@ -173,8 +172,12 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
     builder.bind(ProjectEx.class).to(this);
     builder.bind(ProjectPathMacroManager.class).to(ProjectPathMacroManager.class).forceSingleton();
 
-    final Class<? extends IProjectStore> storeClass = isDefault() ? DefaultProjectStoreImpl.class : ProjectStoreImpl.class;
-    builder.bind(IProjectStore.class).to(storeClass).forceSingleton();
+    builder.bind(IProjectStore.class).to(getStoreImplClass()).forceSingleton();
+  }
+
+  @Nonnull
+  protected Class<? extends IProjectStore> getStoreImplClass() {
+    return ProjectStoreImpl.class;
   }
 
   @Nonnull

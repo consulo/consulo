@@ -128,4 +128,8 @@ public interface Project extends ComponentManager {
   default boolean isDefault() {
     return false;
   }
+
+  default boolean isWelcome() {
+    return false;
+  }
 }

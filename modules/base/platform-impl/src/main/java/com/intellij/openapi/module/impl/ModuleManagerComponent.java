@@ -55,7 +55,7 @@ public class ModuleManagerComponent extends ModuleManagerImpl {
 
     myConnection.subscribe(ProjectTopics.PROJECT_ROOTS);
 
-    if(project.isDefault()) {
+    if(project.isDefault() || project.isWelcome()) {
       myReady = true;
     }
   }

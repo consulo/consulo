@@ -23,6 +23,8 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.Presentation;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.util.SystemInfo;
+import consulo.ui.annotation.RequiredUIAccess;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -34,16 +36,20 @@ public class RecentProjectsGroup extends ActionGroup implements DumbAware {
     // Let's make tile more macish
     if (SystemInfo.isMac) {
       templatePresentation.setText(ActionsBundle.message("group.reopen.mac.text"));
-    } else {
+    }
+    else {
       templatePresentation.setText(ActionsBundle.message("group.reopen.win.text"));
     }
   }
 
+  @Override
   @Nonnull
   public AnAction[] getChildren(@Nullable AnActionEvent e) {
     return RecentProjectsManagerBase.getInstance().getRecentProjectsActions(true);
   }
 
+  @RequiredUIAccess
+  @Override
   public void update(AnActionEvent event) {
     Presentation presentation = event.getPresentation();
     presentation.setEnabled(RecentProjectsManagerBase.getInstance().getRecentProjectsActions(true).length > 0);

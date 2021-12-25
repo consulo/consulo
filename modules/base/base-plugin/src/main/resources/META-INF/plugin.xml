@@ -1250,6 +1250,9 @@
     <applicationService serviceInterface="com.intellij.openapi.project.DefaultProjectFactory"
                         serviceImplementation="com.intellij.openapi.project.impl.DefaultProjectFactoryImpl" lazy="false"/>
 
+    <applicationService serviceInterface="consulo.project.WelcomeProjectFactory"
+                        serviceImplementation="consulo.project.impl.welcome.WelcomeProjectFactoryImpl" lazy="false"/>
+
     <applicationService serviceImplementation="com.intellij.openapi.editor.richcopy.settings.RichCopySettings"/>
     <applicationService serviceImplementation="com.intellij.openapi.actionSystem.impl.MouseGestureManager"/>
 

@@ -76,7 +76,7 @@ public class ProjectRootManagerComponent extends ProjectRootManagerImpl implemen
   private final BatchUpdateListener myHandler;
   private final MessageBusConnection myConnection;
 
-  private Set<LocalFileSystem.WatchRequest> myRootsToWatch = new HashSet<LocalFileSystem.WatchRequest>();
+  private Set<LocalFileSystem.WatchRequest> myRootsToWatch = new HashSet<>();
   private final boolean myDoLogCachesUpdate;
 
   @Inject
@@ -103,7 +103,7 @@ public class ProjectRootManagerComponent extends ProjectRootManagerImpl implemen
       }
     }, project);
 
-    if (!project.isDefault()) {
+    if (!project.isDefault() && !myProject.isWelcome()) {
       startupManager.registerStartupActivity(() -> myStartupActivityPerformed = true);
     }
 
@@ -161,7 +161,7 @@ public class ProjectRootManagerComponent extends ProjectRootManagerImpl implemen
     if (ApplicationManager.getApplication().isUnitTestMode() && (!myStartupActivityPerformed || myProject.isDisposed())) {
       return; // in test mode suppress addition to a queue unless project is properly initialized
     }
-    if (myProject.isDefault()) {
+    if (myProject.isDefault() || myProject.isWelcome()) {
       return;
     }
 
@@ -217,10 +217,10 @@ public class ProjectRootManagerComponent extends ProjectRootManagerImpl implemen
 
   @Nullable
   private Pair<Set<String>, Set<String>> getAllRoots(boolean includeSourceRoots) {
-    if (myProject.isDefault()) return null;
+    if (myProject.isDefault() || myProject.isWelcome()) return null;
 
-    final Set<String> recursive = new HashSet<String>();
-    final Set<String> flat = new HashSet<String>();
+    final Set<String> recursive = new HashSet<>();
+    final Set<String> flat = new HashSet<>();
 
     final String projectFilePath = myProject.getProjectFilePath();
     final File projectDirFile = projectFilePath == null ? null : new File(projectFilePath).getParentFile();
