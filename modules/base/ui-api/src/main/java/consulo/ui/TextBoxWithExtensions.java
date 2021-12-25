@@ -81,5 +81,14 @@ public interface TextBoxWithExtensions extends TextBox {
   TextBoxWithExtensions setExtensions(@Nonnull Extension... extensions);
 
   @Nonnull
-  TextBoxWithExtensions addExtension(@Nonnull Extension extension);
+  @Deprecated
+  default TextBoxWithExtensions addExtension(@Nonnull Extension extension) {
+    return addLastExtension(extension);
+  }
+
+  @Nonnull
+  TextBoxWithExtensions addLastExtension(@Nonnull Extension extension);
+
+  @Nonnull
+  TextBoxWithExtensions addFirstExtension(@Nonnull Extension extension);
 }

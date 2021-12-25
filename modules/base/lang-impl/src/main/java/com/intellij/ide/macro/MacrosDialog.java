@@ -18,8 +18,10 @@ package com.intellij.ide.macro;
 
 import com.intellij.ide.DataManager;
 import com.intellij.ide.IdeBundle;
+import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.impl.SimpleDataContext;
 import com.intellij.openapi.help.HelpManager;
+import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.util.text.StringUtil;
@@ -27,8 +29,9 @@ import com.intellij.ui.DoubleClickListener;
 import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.ui.SeparatorFactory;
 import com.intellij.ui.components.JBList;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -44,8 +47,12 @@ public final class MacrosDialog extends DialogWrapper {
   private final JTextArea myPreviewTextarea;
 
   public MacrosDialog(Project project) {
+    this(project, null);
+  }
+
+  public MacrosDialog(Project project, @Nullable Module module) {
     super(project, true);
-    MacroManager.getInstance().cacheMacrosPreview(SimpleDataContext.getProjectContext(project));
+    MacroManager.getInstance().cacheMacrosPreview(SimpleDataContext.builder().add(CommonDataKeys.PROJECT, project).add(CommonDataKeys.MODULE, module).build());
     setTitle(IdeBundle.message("title.macros"));
     setOKButtonText(IdeBundle.message("button.insert"));
 
@@ -87,17 +94,18 @@ public final class MacrosDialog extends DialogWrapper {
         }
         return name1.compareToIgnoreCase(name2);
       }
-      private final String ZERO = new String(new char[] {0});
+
+      private final String ZERO = new String(new char[]{0});
     });
     for (Macro macro : macros) {
       myMacrosModel.addElement(new MacroWrapper(macro));
     }
 
     addListeners();
-    if (myMacrosModel.size() > 0){
+    if (myMacrosModel.size() > 0) {
       myMacrosList.setSelectedIndex(0);
     }
-    else{
+    else {
       setOKActionEnabled(false);
     }
   }
@@ -105,7 +113,7 @@ public final class MacrosDialog extends DialogWrapper {
   @Override
   @Nonnull
   protected Action[] createActions() {
-    return new Action[]{getOKAction(),getCancelAction(),getHelpAction()};
+    return new Action[]{getOKAction(), getCancelAction(), getHelpAction()};
   }
 
   @Override
@@ -114,7 +122,7 @@ public final class MacrosDialog extends DialogWrapper {
   }
 
   @Override
-  protected String getDimensionServiceKey(){
+  protected String getDimensionServiceKey() {
     return "#com.intellij.ide.macro.MacrosDialog";
   }
 
@@ -183,27 +191,25 @@ public final class MacrosDialog extends DialogWrapper {
   }
 
   private void addListeners() {
-    myMacrosList.getSelectionModel().addListSelectionListener(
-      new ListSelectionListener() {
-        @Override
-        public void valueChanged(ListSelectionEvent e) {
-          Macro macro = getSelectedMacro();
-          if (macro == null){
-            myPreviewTextarea.setText("");
-            setOKActionEnabled(false);
-          }
-          else{
-            myPreviewTextarea.setText(macro.preview());
-            setOKActionEnabled(true);
-          }
+    myMacrosList.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+      @Override
+      public void valueChanged(ListSelectionEvent e) {
+        Macro macro = getSelectedMacro();
+        if (macro == null) {
+          myPreviewTextarea.setText("");
+          setOKActionEnabled(false);
+        }
+        else {
+          myPreviewTextarea.setText(macro.preview());
+          setOKActionEnabled(true);
         }
       }
-    );
+    });
 
     new DoubleClickListener() {
       @Override
       protected boolean onDoubleClick(MouseEvent e) {
-        if (getSelectedMacro() != null){
+        if (getSelectedMacro() != null) {
           close(OK_EXIT_CODE);
           return true;
         }
@@ -214,7 +220,7 @@ public final class MacrosDialog extends DialogWrapper {
 
   public Macro getSelectedMacro() {
     MacroWrapper macroWrapper = (MacroWrapper)myMacrosList.getSelectedValue();
-    if (macroWrapper != null){
+    if (macroWrapper != null) {
       return macroWrapper.myMacro;
     }
     return null;

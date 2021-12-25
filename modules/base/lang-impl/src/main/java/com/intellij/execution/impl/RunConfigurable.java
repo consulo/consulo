@@ -641,12 +641,7 @@ public class RunConfigurable extends BaseConfigurable {
       @Nullable
       @Override
       public Object getData(@Nonnull Key dataId) {
-        return RunConfigurationSelector.KEY == dataId ? new RunConfigurationSelector() {
-          @Override
-          public void select(@Nonnull RunConfiguration configuration) {
-            selectConfiguration(configuration);
-          }
-        } : null;
+        return RunConfigurationSelector.KEY == dataId ? (RunConfigurationSelector)configuration -> selectConfiguration(configuration) : null;
       }
     });
 

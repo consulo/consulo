@@ -20,9 +20,9 @@ import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nullable;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.io.File;
 
 public abstract class Macro {
@@ -33,21 +33,28 @@ public abstract class Macro {
 
   protected String myCachedPreview;
 
-  @NonNls public abstract String getName();
+  public abstract String getName();
+
+  @Nonnull
+  public String getDecoratedName() {
+    return "$" + getName() + "$";
+  }
+
   public abstract String getDescription();
+
   @Nullable
   public abstract String expand(DataContext dataContext) throws ExecutionCancelledException;
 
   @Nullable
-  public String expand(DataContext dataContext, String... args) throws ExecutionCancelledException{
+  public String expand(DataContext dataContext, String... args) throws ExecutionCancelledException {
     return expand(dataContext);
   }
 
   public void cachePreview(DataContext dataContext) {
-    try{
+    try {
       myCachedPreview = expand(dataContext);
     }
-    catch(ExecutionCancelledException e){
+    catch (ExecutionCancelledException e) {
       myCachedPreview = "";
     }
   }

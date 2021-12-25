@@ -52,6 +52,8 @@ public class RunConfigurationFileEditor extends UserDataHolderBase implements Fi
   private final VirtualFile myFile;
   private RunConfigurable myRunConfigurable;
 
+  private JComponent myComponent;
+
   public RunConfigurationFileEditor(Project project, VirtualFile file) {
     myProject = project;
     myFile = file;
@@ -85,6 +87,10 @@ public class RunConfigurationFileEditor extends UserDataHolderBase implements Fi
   @Override
   @RequiredUIAccess
   public JComponent getComponent() {
+    if (myComponent != null) {
+      return myComponent;
+    }
+
     JComponent component = myRunConfigurable.createComponent(this);
     assert component != null;
 
@@ -100,7 +106,7 @@ public class RunConfigurationFileEditor extends UserDataHolderBase implements Fi
           if (myDisposed) {
             return;
           }
-          
+
           FileEditorManagerImpl fileEditorManager = (FileEditorManagerImpl)FileEditorManager.getInstance(myProject);
           fileEditorManager.updateFilePresentation(myFile);
           addUpdateRequest(this);
@@ -109,7 +115,7 @@ public class RunConfigurationFileEditor extends UserDataHolderBase implements Fi
 
       addUpdateRequest(updateRequest);
     });
-    return component;
+    return myComponent = component;
   }
 
   private void addUpdateRequest(final Runnable updateRequest) {
@@ -160,5 +166,7 @@ public class RunConfigurationFileEditor extends UserDataHolderBase implements Fi
     save();
 
     myRunConfigurable.disposeUIResources();
+
+    myComponent = null;
   }
 }

@@ -36,7 +36,13 @@ public class WebTextBoxWithExtensionsImpl extends WebTextBoxImpl implements Text
 
   @Nonnull
   @Override
-  public TextBoxWithExtensions addExtension(@Nonnull Extension extension) {
+  public TextBoxWithExtensions addLastExtension(@Nonnull Extension extension) {
+    return this;
+  }
+
+  @Nonnull
+  @Override
+  public TextBoxWithExtensions addFirstExtension(@Nonnull Extension extension) {
     return this;
   }
 }

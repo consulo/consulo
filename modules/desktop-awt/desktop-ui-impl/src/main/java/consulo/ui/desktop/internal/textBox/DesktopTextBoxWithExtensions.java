@@ -163,9 +163,21 @@ public class DesktopTextBoxWithExtensions {
 
     @Nonnull
     @Override
-    public TextBoxWithExtensions addExtension(@Nonnull Extension extension) {
+    public TextBoxWithExtensions addFirstExtension(@Nonnull Extension extension) {
       List<ExtendableTextComponent.Extension> awtExtensions = new ArrayList<>(toAWTComponent().getExtensions());
       awtExtensions.add(convert(extension));
+
+      toAWTComponent().setExtensions(awtExtensions);
+      toAWTComponent().repaint();
+      return this;
+    }
+
+    @Nonnull
+    @Override
+    public TextBoxWithExtensions addLastExtension(@Nonnull Extension extension) {
+      List<ExtendableTextComponent.Extension> awtExtensions = new ArrayList<>();
+      awtExtensions.add(convert(extension));
+      awtExtensions.addAll(toAWTComponent().getExtensions());
 
       toAWTComponent().setExtensions(awtExtensions);
       toAWTComponent().repaint();
@@ -321,7 +333,14 @@ public class DesktopTextBoxWithExtensions {
 
     @Nonnull
     @Override
-    public TextBoxWithExtensions addExtension(@Nonnull Extension extension) {
+    public TextBoxWithExtensions addFirstExtension(@Nonnull Extension extension) {
+      setExtensions(ArrayUtil.prepend(extension, myExtensions));
+      return this;
+    }
+
+    @Nonnull
+    @Override
+    public TextBoxWithExtensions addLastExtension(@Nonnull Extension extension) {
       setExtensions(ArrayUtil.append(myExtensions, extension));
       return this;
     }
