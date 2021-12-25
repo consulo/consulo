@@ -41,11 +41,6 @@ import java.util.Map;
  */
 public class PtyCommandLine extends GeneralCommandLine {
   private static final Logger LOG = Logger.getInstance(PtyCommandLine.class);
-  private static final String RUN_PROCESSES_WITH_PTY = "run.processes.with.pty";
-
-  public static boolean isEnabled() {
-    return Registry.is(RUN_PROCESSES_WITH_PTY);
-  }
 
   private boolean myUseCygwinLaunch;
   private boolean myConsoleMode = true;
