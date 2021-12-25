@@ -24,6 +24,7 @@ import com.intellij.openapi.fileEditor.impl.tabActions.CloseTab;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import consulo.disposer.Disposable;
+import consulo.fileEditor.internal.NotClosableFileMarker;
 import consulo.fileTypes.impl.VfsIconUtil;
 import consulo.ui.Component;
 import consulo.ui.Tab;
@@ -285,14 +286,17 @@ public class UnifiedEditorWindow extends EditorWindowBase implements EditorWindo
 
     }
     else {
-      EditorWithProviderComposite fileComposite = findFileComposite(editor.getFile());
+      VirtualFile file = editor.getFile();
+      EditorWithProviderComposite fileComposite = findFileComposite(file);
       if (fileComposite == null) {
-        Tab tab = myTabbedLayout.addTab(editor.getFile().getName(), editor.getUIComponent());
+        Tab tab = myTabbedLayout.addTab(file.getName(), editor.getUIComponent());
         tab.setCloseHandler((thisTab, component) -> {
           DataContext dataContext = DataManager.getInstance().getDataContext();
-          new CloseTab(myTabbedLayout, myProject, editor.getFile(), this).actionPerformed(AnActionEvent.createFromInputEvent(null, "Test", null, dataContext));
+          if (!(file instanceof NotClosableFileMarker)) {
+            new CloseTab(myTabbedLayout, myProject, file, this).actionPerformed(AnActionEvent.createFromInputEvent(null, "Test", null, dataContext));
+          }
         });
-        tab.withIcon(VfsIconUtil.getIcon(editor.getFile(), 0, myManager.getProject()));
+        tab.withIcon(VfsIconUtil.getIcon(file, 0, myManager.getProject()));
         myEditors.put(editor, tab);
       }
       else {

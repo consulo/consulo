@@ -32,7 +32,7 @@ public class CloseAction extends AnAction implements DumbAware {
     e.getPresentation().setIcon(ActionPlaces.isToolbarPlace(e.getPlace()) ? AllIcons.Actions.Cancel : null);
 
     CloseTarget closeTarget = e.getData(CloseTarget.KEY);
-    e.getPresentation().setEnabled(closeTarget != null);
+    e.getPresentation().setEnabled(closeTarget != null && closeTarget.isCloseActionEnabled());
   }
 
   @RequiredUIAccess
@@ -45,5 +45,9 @@ public class CloseAction extends AnAction implements DumbAware {
     Key<CloseTarget> KEY = Key.create("GenericClosable");
 
     void close();
+
+    default boolean isCloseActionEnabled() {
+      return true;
+    }
   }
 }

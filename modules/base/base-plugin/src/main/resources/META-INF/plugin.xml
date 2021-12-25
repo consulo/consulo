@@ -2518,7 +2518,7 @@
 
     <projectService serviceImplementation="com.intellij.openapi.updateSettings.impl.pluginsAdvertisement.UnknownFeaturesCollector"/>
     <backgroundPostStartupActivity implementation="com.intellij.ide.plugins.pluginsAdvertisement.PluginsAdvertiser"/>
-    <backgroundPostStartupActivity implementation="consulo.project.impl.ReopenProjectToolWindowActivity"/>
+    <postStartupActivity implementation="consulo.project.impl.ReopenProjectToolWindowActivity" order="after InitToolWindows"/>
 
     <moduleService serviceInterface="consulo.compiler.ModuleCompilerPathsManager"
                    serviceImplementation="consulo.compiler.impl.ModuleCompilerPathsManagerImpl"/>
@@ -2803,6 +2803,9 @@
     <postStartupActivity implementation="com.intellij.execution.impl.ProjectRunConfigurationManager$MyStartupActivity"/>
 
     <projectService serviceInterface="com.intellij.codeInsight.folding.CodeFoldingManager" serviceImplementation="com.intellij.codeInsight.folding.impl.CodeFoldingManagerImpl"/>
+
+    <fileEditorProvider implementation="consulo.ide.welcomeScreen.impl.WelcomeVirtualFileEditorProvider"/>
+    <postStartupActivity implementation="consulo.ide.welcomeScreen.impl.WelcomeVirtualFileStartupActivity" order="last"/>
   </extensions>
 
   <applicationListeners>

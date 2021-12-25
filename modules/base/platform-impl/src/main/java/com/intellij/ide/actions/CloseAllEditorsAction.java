@@ -27,8 +27,11 @@ import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import consulo.fileEditor.impl.EditorWindow;
+import consulo.fileEditor.internal.NotClosableFileMarker;
+import consulo.ui.annotation.RequiredUIAccess;
 
 public class CloseAllEditorsAction extends AnAction implements DumbAware {
+  @RequiredUIAccess
   @Override
   public void actionPerformed(final AnActionEvent e) {
     final Project project = e.getData(CommonDataKeys.PROJECT);
@@ -38,7 +41,9 @@ public class CloseAllEditorsAction extends AnAction implements DumbAware {
       if (window != null) {
         final VirtualFile[] files = window.getFiles();
         for (final VirtualFile file : files) {
-          window.closeFile(file);
+          if (!(file instanceof NotClosableFileMarker)) {
+            window.closeFile(file);
+          }
         }
         return;
       }

@@ -59,6 +59,7 @@ import consulo.awt.TargetAWT;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.fileEditor.impl.EditorWindow;
+import consulo.fileEditor.internal.NotClosableFileMarker;
 import consulo.util.dataholder.Key;
 import org.jetbrains.annotations.NonNls;
 
@@ -334,7 +335,9 @@ public final class EditorTabbedContainer implements Disposable, CloseAction.Clos
     tab.setTestableUi(new MyQueryable(tab));
 
     final ActionGroup.Builder tabActions = ActionGroup.newImmutableBuilder();
-    tabActions.add(new CloseTab(comp, myProject, file, myWindow));
+    if (!(file instanceof NotClosableFileMarker)) {
+      tabActions.add(new CloseTab(comp, myProject, file, myWindow));
+    }
 
     tab.setTabLabelActions(tabActions.build(), ActionPlaces.EDITOR_TAB);
     myTabs.addTabSilently(tab, indexToInsert);
@@ -419,7 +422,7 @@ public final class EditorTabbedContainer implements Disposable, CloseAction.Clos
         final VirtualFile selectedFile = myWindow.getSelectedFile();
         return selectedFile != null && selectedFile.isValid() ? selectedFile : null;
       }
-      if (DesktopEditorWindow.DATA_KEY == dataId) {
+      if (EditorWindow.DATA_KEY == dataId) {
         return myWindow;
       }
       if (PlatformDataKeys.HELP_ID == dataId) {
@@ -431,10 +434,6 @@ public final class EditorTabbedContainer implements Disposable, CloseAction.Clos
         if (selected != null) {
           return EditorTabbedContainer.this;
         }
-      }
-
-      if (DesktopEditorWindow.DATA_KEY == dataId) {
-        return myWindow;
       }
 
       return null;
@@ -459,6 +458,19 @@ public final class EditorTabbedContainer implements Disposable, CloseAction.Clos
     });
   }
 
+  @Override
+  public boolean isCloseActionEnabled() {
+    TabInfo selected = myTabs.getTargetInfo();
+    if (selected == null) return true;
+
+    final VirtualFile file = (VirtualFile)selected.getObject();
+
+    if (file instanceof NotClosableFileMarker) {
+      return false;
+    }
+    return true;
+  }
+
   private boolean isFloating() {
     return myWindow.getOwner().isFloating();
   }
@@ -471,12 +483,18 @@ public final class EditorTabbedContainer implements Disposable, CloseAction.Clos
       if (UIUtil.isCloseClick(e, MouseEvent.MOUSE_RELEASED)) {
         final TabInfo info = myTabs.findInfo(e);
         if (info != null) {
+          Object selectedFile = info.getObject();
+          if (selectedFile instanceof NotClosableFileMarker) {
+            return;
+          }
+          
           IdeEventQueue.getInstance().blockNextEvents(e);
           if (e.isAltDown() && e.getButton() == MouseEvent.BUTTON1) {//close others
             List<TabInfo> allTabInfos = myTabs.getTabs();
             for (TabInfo tabInfo : allTabInfos) {
+              VirtualFile object = (VirtualFile)tabInfo.getObject();
               if (tabInfo == info) continue;
-              FileEditorManagerEx.getInstanceEx(myProject).closeFile((VirtualFile)tabInfo.getObject(), myWindow);
+              FileEditorManagerEx.getInstanceEx(myProject).closeFile(object, myWindow);
             }
           }
           else {

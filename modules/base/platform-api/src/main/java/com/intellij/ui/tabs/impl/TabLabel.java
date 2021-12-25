@@ -32,6 +32,7 @@ import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.accessibility.ScreenReader;
 import consulo.awt.TargetAWT;
+import consulo.fileEditor.internal.NotClosableFileMarker;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
 
@@ -166,6 +167,10 @@ public class TabLabel extends JPanel {
     Insets insets = super.getInsets();
     if (UISettings.getInstance().SHOW_CLOSE_BUTTON) {
       insets.right = JBUI.scale(3);
+    }
+
+    if (myInfo.getObject() instanceof NotClosableFileMarker) {
+      insets.right = JBUI.scale(8);
     }
     return insets;
   }

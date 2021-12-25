@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2020 consulo.io
+ * Copyright 2013-2021 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,14 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.project.impl;
+package consulo.ide.welcomeScreen.impl;
 
-import com.intellij.openapi.project.DumbAware;
+import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.EmptyRunnable;
-import com.intellij.openapi.wm.ToolWindow;
-import com.intellij.openapi.wm.ToolWindowId;
-import com.intellij.openapi.wm.ToolWindowManager;
 import consulo.project.startup.StartupActivity;
 import consulo.ui.UIAccess;
 
@@ -28,21 +24,13 @@ import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
- * @since 2020-10-22
+ * @since 25/12/2021
  */
-public class ReopenProjectToolWindowActivity implements StartupActivity.Background, DumbAware {
+public class WelcomeVirtualFileStartupActivity implements StartupActivity.DumbAware {
   @Override
   public void runActivity(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
-    ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(project);
-
-    ToolWindow toolWindow = toolWindowManager.getToolWindow(ToolWindowId.PROJECT_VIEW);
-
-    if (toolWindow != null) {
-      uiAccess.give(() -> {
-        if (!toolWindow.isActive()) {
-          toolWindow.activate(EmptyRunnable.getInstance());
-        }
-      });
+    if (project.isWelcome()) {
+      uiAccess.give(() -> FileEditorManager.getInstance(project).openFile(new WelcomeVirtualFile(), true));
     }
   }
 }
