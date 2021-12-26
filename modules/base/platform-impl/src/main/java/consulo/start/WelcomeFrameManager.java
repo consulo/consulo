@@ -27,9 +27,10 @@ import com.intellij.openapi.project.ProjectManagerListener;
 import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.openapi.wm.WindowManager;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
-import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.UIAccess;
+import consulo.project.WelcomeProjectFactory;
 import consulo.ui.Size;
+import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -85,10 +86,13 @@ public abstract class WelcomeFrameManager {
   public void showFrame() {
     UIAccess.assertIsUIThread();
 
-    if (myFrameInstance == null) {
-      myFrameInstance = createFrame();
-      myFrameInstance.getWindow().show();
-    }
+    WelcomeProjectFactory welcomeProjectFactory = Application.get().getInstance(WelcomeProjectFactory.class);
+
+    ProjectManager.getInstance().openProjectAsync(welcomeProjectFactory.getWelcomeProject(), UIAccess.current());
+    //if (myFrameInstance == null) {
+    //  myFrameInstance = createFrame();
+    //  myFrameInstance.getWindow().show();
+    //}
   }
 
   @RequiredUIAccess

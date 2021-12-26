@@ -24,11 +24,11 @@ import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import consulo.start.WelcomeFrameManager;
-import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
+import jakarta.inject.Inject;
 
 import javax.annotation.Nonnull;
-import jakarta.inject.Inject;
 
 public class CloseProjectAction extends AnAction implements DumbAware {
   private WelcomeFrameManager myWelcomeFrameManager;
@@ -58,6 +58,11 @@ public class CloseProjectAction extends AnAction implements DumbAware {
   public void update(@Nonnull AnActionEvent event) {
     Presentation presentation = event.getPresentation();
     Project project = event.getData(CommonDataKeys.PROJECT);
-    presentation.setEnabled(project != null);
+    if (project != null && project.isWelcome()) {
+      presentation.setEnabledAndVisible(false);
+    }
+    else {
+      presentation.setEnabled(project != null && !project.isWelcome());
+    }
   }
 }

@@ -149,6 +149,9 @@ public class WhatsNewVirtualFileEditor extends UserDataHolderBase implements Fil
 
         myLoadingPanel.add(ScrollPaneFactory.createScrollPane(myEditorPanel, true), BorderLayout.CENTER);
         myLoadingPanel.stopLoading();
+
+        myLoadingPanel.invalidate();
+        myLoadingPanel.repaint();
       });
     });
   }

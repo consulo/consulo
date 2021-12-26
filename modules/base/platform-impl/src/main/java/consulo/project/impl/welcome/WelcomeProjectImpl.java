@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 JetBrains s.r.o.
+ * Copyright 2013-2021 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,34 +13,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.project.impl;
+package consulo.project.impl.welcome;
 
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.project.ProjectManager;
-import consulo.components.impl.stores.DefaultProjectStoreImpl;
 import consulo.components.impl.stores.IProjectStore;
 import consulo.project.impl.SingleFileProjectImpl;
 
 import javax.annotation.Nonnull;
 
 /**
- * @author peter
+ * @author VISTALL
+ * @since 25/12/2021
  */
-public class DefaultProjectImpl extends SingleFileProjectImpl {
-  private static final String TEMPLATE_PROJECT_NAME = "Default (Template) Project";
+public class WelcomeProjectImpl extends SingleFileProjectImpl {
+  private static final String NAME = "Welcome";
 
-  DefaultProjectImpl(@Nonnull Application application, @Nonnull ProjectManager manager, @Nonnull String filePath, boolean optimiseTestLoadSpeed) {
-    super(application, manager, filePath, optimiseTestLoadSpeed, TEMPLATE_PROJECT_NAME, false);
+  WelcomeProjectImpl(@Nonnull Application application, @Nonnull ProjectManager manager, @Nonnull String filePath, boolean optimiseTestLoadSpeed) {
+    super(application, manager, filePath, optimiseTestLoadSpeed, NAME, false);
   }
 
-  @Override
   @Nonnull
+  @Override
   protected Class<? extends IProjectStore> getStoreImplClass() {
-    return DefaultProjectStoreImpl.class;
+    return WelcomeProjectStoreImpl.class;
   }
 
   @Override
-  public boolean isDefault() {
+  public boolean isWelcome() {
     return true;
   }
 }

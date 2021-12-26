@@ -36,7 +36,6 @@ import consulo.roots.ContentFolderTypeProvider;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
-import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -60,6 +59,10 @@ public class CompilerConfigurationImpl extends CompilerConfiguration {
     @Nonnull
     @Override
     public Set<String> getRootsToWatch() {
+      if (myProject.isWelcome()) {
+        return Set.of();
+      }
+      
       return ((CompilerConfigurationImpl)CompilerConfiguration.getInstance(myProject)).getRootsToWatch();
     }
   }

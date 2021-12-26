@@ -327,7 +327,7 @@ public class TranslationCompilerFilesMonitorVfsListener implements AsyncFileList
     // need read action to ensure that the project was not disposed during the iteration over the project list
     ApplicationManager.getApplication().runReadAction(() -> {
       for (final Project project : projectManager.getOpenProjects()) {
-        if (!project.isInitialized()) {
+        if (!project.isInitialized() || project.isWelcome()) {
           continue; // the content of this project will be scanned during its post-startup activities
         }
         final int projectId = monitor.getProjectId(project);

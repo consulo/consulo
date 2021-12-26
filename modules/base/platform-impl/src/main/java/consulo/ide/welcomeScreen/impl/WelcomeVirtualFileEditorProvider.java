@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2013-2021 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,32 +13,37 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package consulo.ide.welcomeScreen.impl;
 
-package com.intellij.ide.structureView.impl;
-
-import com.intellij.ide.structureView.StructureViewFactory;
+import com.intellij.openapi.fileEditor.FileEditor;
+import com.intellij.openapi.fileEditor.FileEditorProvider;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.wm.ToolWindow;
-import com.intellij.openapi.wm.ToolWindowFactory;
-import com.intellij.openapi.wm.ex.ToolWindowEx;
+import com.intellij.openapi.vfs.VirtualFile;
 import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
 
 /**
- * @author yole
+ * @author VISTALL
+ * @since 25/12/2021
  */
-public class StructureViewToolWindowFactory implements ToolWindowFactory, DumbAware {
-  @RequiredUIAccess
+public class WelcomeVirtualFileEditorProvider implements FileEditorProvider, DumbAware {
   @Override
-  public void createToolWindowContent(Project project, ToolWindow toolWindow) {
-    StructureViewFactoryImpl factory = (StructureViewFactoryImpl)StructureViewFactory.getInstance(project);
-    factory.initToolWindow((ToolWindowEx)toolWindow);
+  public boolean accept(@Nonnull Project project, @Nonnull VirtualFile file) {
+    return file instanceof WelcomeVirtualFile;
   }
 
+  @RequiredUIAccess
+  @Nonnull
   @Override
-  public boolean shouldBeAvailable(@Nonnull Project project) {
-    return !project.isWelcome();
+  public FileEditor createEditor(@Nonnull Project project, @Nonnull VirtualFile file) {
+    return new WelcomeVirtualFileEditor(project);
+  }
+
+  @Nonnull
+  @Override
+  public String getEditorTypeId() {
+    return "welcome";
   }
 }

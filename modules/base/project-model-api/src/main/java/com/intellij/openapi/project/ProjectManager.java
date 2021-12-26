@@ -16,8 +16,6 @@
 package com.intellij.openapi.project;
 
 import com.intellij.openapi.application.Application;
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.messages.Topic;
 import consulo.annotation.DeprecationInfo;
@@ -25,11 +23,9 @@ import consulo.disposer.Disposable;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.concurrent.AsyncResult;
-import org.jdom.JDOMException;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.io.IOException;
 
 /**
  * Provides project management.
@@ -84,6 +80,11 @@ public abstract class ProjectManager {
    */
   @Nonnull
   public abstract Project[] getOpenProjects();
+
+  public boolean isWelcomeOnlyProjectOpened() {
+    Project[] openProjects = getOpenProjects();
+    return openProjects.length == 1 && openProjects[0].isWelcome();
+  }
 
   /**
    * Returns the project which is used as a template for new projects. The template project

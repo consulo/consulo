@@ -13,12 +13,14 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public class ScratchesNamedScope extends NamedScope {
+  public static final String ID = "Scratches and Consoles";
+
   public static String scratchesAndConsoles() {
     return IdeBundle.message("scratches.and.consoles");
   }
 
   public ScratchesNamedScope() {
-    super(scratchesAndConsoles(), PlatformIconGroup.scopeScratches(), new AbstractPackageSet(scratchesAndConsoles()) {
+    super(ID, PlatformIconGroup.scopeScratches(), new AbstractPackageSet(scratchesAndConsoles()) {
       @Override
       public boolean contains(@Nonnull VirtualFile file, @Nonnull Project project, @Nullable NamedScopesHolder holder) {
         return ScratchesNamedScope.contains(project, file);

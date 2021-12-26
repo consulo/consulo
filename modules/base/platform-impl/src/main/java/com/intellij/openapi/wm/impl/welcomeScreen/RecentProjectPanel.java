@@ -236,7 +236,7 @@ public class RecentProjectPanel {
 
   @Nonnull
   private AnAction performSelectedAction(@Nonnull InputEvent event, AnAction selection) {
-    String actionPlace = UIUtil.uiParents(myList, true).filter(FlatWelcomeFrame.class).isEmpty() ? ActionPlaces.POPUP : ActionPlaces.WELCOME_SCREEN;
+    String actionPlace = /*UIUtil.uiParents(myList, true).filter(FlatWelcomeFrame.class).isEmpty() ? ActionPlaces.POPUP : */ActionPlaces.WELCOME_SCREEN;
     AnActionEvent actionEvent = AnActionEvent.createFromInputEvent(event, actionPlace, selection.getTemplatePresentation(), DataManager.getInstance().getDataContext(myList), false, false);
     ActionUtil.performActionDumbAwareWithCallbacks(selection, actionEvent, actionEvent.getDataContext());
     return selection;

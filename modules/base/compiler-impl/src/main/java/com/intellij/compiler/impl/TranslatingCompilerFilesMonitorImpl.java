@@ -100,6 +100,10 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
 
     @Override
     public void projectOpened(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
+      if (project.isWelcome()) {
+        return;
+      }
+
       TranslatingCompilerFilesMonitorImpl monitor = getMonitor();
 
       final MessageBusConnection conn = project.getMessageBus().connect();
@@ -205,6 +209,10 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
 
     @Override
     public void projectClosed(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
+      if (project.isWelcome()) {
+        return;
+      }
+      
       TranslatingCompilerFilesMonitorImpl monitor = getMonitor();
 
       final int projectId = monitor.getProjectId(project);

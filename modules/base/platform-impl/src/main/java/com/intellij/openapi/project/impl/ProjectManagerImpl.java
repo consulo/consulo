@@ -597,7 +597,8 @@ public class ProjectManagerImpl extends ProjectManagerEx implements Disposable {
 
         myApplication.getMessageBus().syncPublisher(TOPIC).projectClosed(project, uiAccess);
 
-        if (dispose) {
+        // welcome project can't not be disposed
+        if (dispose && !project.isWelcome()) {
           Disposer.dispose(project);
         }
       });

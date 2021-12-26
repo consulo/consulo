@@ -70,7 +70,6 @@ import com.intellij.psi.impl.file.PsiPackageHelper;
 import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.ui.AutoScrollFromSourceHandler;
 import com.intellij.ui.AutoScrollToSourceHandler;
-import com.intellij.ui.GuiUtils;
 import com.intellij.ui.components.JBList;
 import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentManager;
@@ -555,7 +554,6 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
       toolWindow.getComponent().putClientProperty(ToolWindowContentUI.HIDE_ID_LABEL, "true");
     }
 
-    GuiUtils.replaceJSplitPaneWithIDEASplitter(myPanel);
     SwingUtilities.invokeLater(() -> splitterProportions.restoreSplitterProportions(myPanel));
 
     if (loadPaneExtensions) {

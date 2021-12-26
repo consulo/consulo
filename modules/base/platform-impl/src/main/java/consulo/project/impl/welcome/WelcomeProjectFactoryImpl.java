@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2011 JetBrains s.r.o.
+ * Copyright 2013-2021 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,17 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.project.impl;
+package consulo.project.impl.welcome;
 
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
-import com.intellij.openapi.project.DefaultProjectFactory;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import consulo.components.impl.stores.DefaultProjectStoreImpl;
 import consulo.disposer.Disposable;
+import consulo.project.WelcomeProjectFactory;
 import consulo.project.impl.SingleFileProjectFactoryImpl;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -32,24 +32,20 @@ import org.jdom.Element;
 import javax.annotation.Nonnull;
 
 /**
- * @author yole
+ * @author VISTALL
+ * @since 25/12/2021
  */
-@State(name = "ProjectManager", storages = @Storage("project.default.xml"))
+@State(name = "ProjectManager", storages = @Storage("welcome.project.xml"))
 @Singleton
-public class DefaultProjectFactoryImpl extends SingleFileProjectFactoryImpl<DefaultProjectImpl> implements DefaultProjectFactory, PersistentStateComponent<Element>, Disposable {
+public class WelcomeProjectFactoryImpl extends SingleFileProjectFactoryImpl<WelcomeProjectImpl> implements WelcomeProjectFactory, PersistentStateComponent<Element>, Disposable {
   @Inject
-  public DefaultProjectFactoryImpl(@Nonnull Application application, @Nonnull ProjectManager projectManager) {
-    super(new DefaultProjectImpl(application, projectManager, "", application.isUnitTestMode()), DefaultProjectStoreImpl.ROOT_TAG_NAME);
+  public WelcomeProjectFactoryImpl(@Nonnull Application application, @Nonnull ProjectManager projectManager) {
+    super(new WelcomeProjectImpl(application, projectManager, "", application.isUnitTestMode()), DefaultProjectStoreImpl.ROOT_TAG_NAME);
   }
 
   @Nonnull
   @Override
-  public Project getDefaultProject() {
+  public Project getWelcomeProject() {
     return getProject();
-  }
-
-  @Deprecated
-  public boolean isDefaultProjectInitialized() {
-    return isProjectInitialized();
   }
 }

@@ -34,4 +34,9 @@ public class TodoToolWindowFactory implements ToolWindowFactory, DumbAware {
   public void createToolWindowContent(@Nonnull Project project, @Nonnull ToolWindow toolWindow) {
     ServiceManager.getService(project, TodoView.class).initToolWindow(toolWindow);
   }
+
+  @Override
+  public boolean shouldBeAvailable(@Nonnull Project project) {
+    return !project.isWelcome();
+  }
 }

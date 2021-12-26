@@ -184,8 +184,9 @@ public class ProjectUtil {
         AsyncResult<Void> reopenAsync = AsyncResult.undefined();
 
         Project projectToClose = projectToCloseFinal;
-        Project[] openProjects = ProjectManager.getInstance().getOpenProjects();
-        if (!forceOpenInNewFrame && openProjects.length > 0) {
+        ProjectManager projectManager = ProjectManager.getInstance();
+        Project[] openProjects = projectManager.getOpenProjects();
+        if (!forceOpenInNewFrame && openProjects.length > 0  && !projectManager.isWelcomeOnlyProjectOpened()) {
           if (projectToClose == null) {
             projectToClose = openProjects[openProjects.length - 1];
           }
