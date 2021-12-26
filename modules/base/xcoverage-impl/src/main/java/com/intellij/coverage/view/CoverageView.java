@@ -127,8 +127,9 @@ public class CoverageView extends JPanel implements DataProvider, Disposable {
       }
     });
 
-    final JComponent component =
-      ActionManager.getInstance().createActionToolbar(ActionPlaces.UNKNOWN, createToolbarActions(structure), false).getComponent();
+    ActionToolbar actionToolbar = ActionManager.getInstance().createActionToolbar(ActionPlaces.UNKNOWN, createToolbarActions(structure), false);
+    actionToolbar.setTargetComponent(this);
+    final JComponent component = actionToolbar.getComponent();
     add(component, BorderLayout.WEST);
   }
 

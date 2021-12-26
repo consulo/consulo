@@ -14,13 +14,6 @@
   - limitations under the License.
   -->
 <consulo-plugin>
-  <project-components>
-    <component>
-      <interface-class>com.intellij.coverage.CoverageDataManager</interface-class>
-      <implementation-class>com.intellij.coverage.CoverageDataManagerImpl</implementation-class>
-    </component>
-  </project-components>
-
   <extensionPoints>
     <extensionPoint name="coverageRunner" interface="com.intellij.coverage.CoverageRunner"/>
     <extensionPoint name="coverageEngine" interface="com.intellij.coverage.CoverageEngine"/>
@@ -35,6 +28,7 @@
 
     <projectService serviceImplementation="com.intellij.coverage.CoverageOptionsProvider"/>
     <projectService serviceImplementation="com.intellij.coverage.view.CoverageViewManager"/>
+    <projectService serviceInterface="com.intellij.coverage.CoverageDataManager" serviceImplementation="com.intellij.coverage.CoverageDataManagerImpl"/>
     <executor implementation="com.intellij.coverage.CoverageExecutor"/>
   </extensions>
   <actions>

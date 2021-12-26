@@ -11,18 +11,14 @@ import com.intellij.execution.process.ProcessAdapter;
 import com.intellij.execution.process.ProcessEvent;
 import com.intellij.execution.process.ProcessHandler;
 import com.intellij.ide.projectView.ProjectView;
-import consulo.disposer.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.components.ProjectComponent;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.components.StoragePathMacros;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.EditorFactory;
-import com.intellij.openapi.editor.colors.EditorColorsAdapter;
 import com.intellij.openapi.editor.colors.EditorColorsManager;
-import com.intellij.openapi.editor.colors.EditorColorsScheme;
 import com.intellij.openapi.editor.event.EditorFactoryEvent;
 import com.intellij.openapi.editor.event.EditorFactoryListener;
 import com.intellij.openapi.fileEditor.FileEditor;
@@ -33,7 +29,10 @@ import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.project.ProjectManagerAdapter;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
-import com.intellij.openapi.util.*;
+import com.intellij.openapi.util.Computable;
+import com.intellij.openapi.util.InvalidDataException;
+import com.intellij.openapi.util.JDOMExternalizable;
+import com.intellij.openapi.util.WriteExternalException;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiDocumentManager;
@@ -46,39 +45,35 @@ import com.intellij.rt.coverage.data.ProjectData;
 import com.intellij.util.Alarm;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.containers.ContainerUtil;
-
-import java.util.*;
-
 import com.intellij.util.ui.UIUtil;
 import consulo.container.boot.ContainerPathManager;
+import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
 import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import org.jdom.Element;
-import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import jakarta.inject.Singleton;
 import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.*;
 
 /**
  * @author ven
  */
 @Singleton
 @State(name = "CoverageDataManager", storages = @Storage(StoragePathMacros.WORKSPACE_FILE))
-public class CoverageDataManagerImpl extends CoverageDataManager implements JDOMExternalizable, ProjectComponent {
+public class CoverageDataManagerImpl extends CoverageDataManager implements JDOMExternalizable {
   private static final String REPLACE_ACTIVE_SUITES = "&Replace active suites";
   private static final String ADD_TO_ACTIVE_SUITES = "&Add to active suites";
   private static final String DO_NOT_APPLY_COLLECTED_COVERAGE = "Do not apply &collected coverage";
 
   private final List<CoverageSuiteListener> myListeners = ContainerUtil.createLockFreeCopyOnWriteList();
   private static final Logger LOG = Logger.getInstance(CoverageDataManagerImpl.class);
-  @NonNls
   private static final String SUITE = "SUITE";
 
   private final Project myProject;
@@ -105,12 +100,18 @@ public class CoverageDataManagerImpl extends CoverageDataManager implements JDOM
       return;
     }
 
-    EditorColorsManager.getInstance().addEditorColorsListener(new EditorColorsAdapter() {
+    project.getMessageBus().connect().subscribe(EditorColorsManager.TOPIC, scheme -> chooseSuitesBundle(myCurrentSuitesBundle));
+
+    EditorFactory.getInstance().addEditorFactoryListener(new CoverageEditorFactoryListener(), myProject);
+    ProjectManagerAdapter projectManagerListener = new ProjectManagerAdapter() {
       @Override
-      public void globalSchemeChange(EditorColorsScheme scheme) {
-        chooseSuitesBundle(myCurrentSuitesBundle);
+      public void projectClosing(Project project) {
+        synchronized (myLock) {
+          myIsProjectClosing = true;
+        }
       }
-    }, project);
+    };
+    ProjectManager.getInstance().addProjectManagerListener(myProject, projectManagerListener);
 
     addSuiteListener(new CoverageViewSuiteListener(this, myProject), myProject);
   }
@@ -443,24 +444,6 @@ public class CoverageDataManagerImpl extends CoverageDataManager implements JDOM
   }
 
   @Override
-  public void projectOpened() {
-    EditorFactory.getInstance().addEditorFactoryListener(new CoverageEditorFactoryListener(), myProject);
-    ProjectManagerAdapter projectManagerListener = new ProjectManagerAdapter() {
-      @Override
-      public void projectClosing(Project project) {
-        synchronized (myLock) {
-          myIsProjectClosing = true;
-        }
-      }
-    };
-    ProjectManager.getInstance().addProjectManagerListener(myProject, projectManagerListener);
-  }
-
-  @Override
-  public void projectClosed() {
-  }
-
-  @Override
   public <T> T doInReadActionIfProjectOpen(Computable<T> computation) {
     synchronized (myLock) {
       if (myIsProjectClosing) return null;
@@ -566,12 +549,7 @@ public class CoverageDataManagerImpl extends CoverageDataManager implements JDOM
   @Override
   public void addSuiteListener(final CoverageSuiteListener listener, Disposable parentDisposable) {
     myListeners.add(listener);
-    Disposer.register(parentDisposable, new Disposable() {
-      @Override
-      public void dispose() {
-        myListeners.remove(listener);
-      }
-    });
+    Disposer.register(parentDisposable, () -> myListeners.remove(listener));
   }
 
   public void fireBeforeSuiteChosen() {
