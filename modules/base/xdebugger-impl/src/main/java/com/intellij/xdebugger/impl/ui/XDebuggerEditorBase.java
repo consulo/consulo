@@ -17,6 +17,8 @@ package com.intellij.xdebugger.impl.ui;
 
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.DataManager;
+import com.intellij.ide.IdeBundle;
+import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.lang.Language;
 import com.intellij.lang.LanguageUtil;
 import com.intellij.openapi.actionSystem.AnAction;
@@ -25,17 +27,28 @@ import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.actionSystem.DefaultActionGroup;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
+import com.intellij.openapi.editor.actions.AbstractToggleUseSoftWrapsAction;
+import com.intellij.openapi.editor.colors.EditorColors;
+import com.intellij.openapi.editor.ex.EditorEx;
+import com.intellij.openapi.editor.ex.FoldingModelEx;
 import com.intellij.openapi.fileTypes.FileType;
+import com.intellij.openapi.keymap.KeymapUtil;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.ui.ComponentWithBrowseButton;
-import com.intellij.openapi.ui.DialogWrapper;
+import com.intellij.openapi.ui.popup.JBPopup;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.ui.popup.ListPopup;
+import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.psi.PsiElement;
 import com.intellij.reference.SoftReference;
 import com.intellij.ui.ClickListener;
+import com.intellij.ui.ComponentUtil;
+import com.intellij.ui.EditorTextField;
+import com.intellij.ui.awt.RelativePoint;
+import com.intellij.ui.components.JBLabel;
+import com.intellij.ui.components.JBScrollBar;
 import com.intellij.util.ui.JBUI;
+import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.components.BorderLayoutPanel;
 import com.intellij.xdebugger.XDebuggerBundle;
 import com.intellij.xdebugger.XExpression;
@@ -45,18 +58,18 @@ import com.intellij.xdebugger.evaluation.XDebuggerEditorsProvider;
 import com.intellij.xdebugger.evaluation.XDebuggerEditorsProviderBase;
 import com.intellij.xdebugger.impl.XDebuggerHistoryManager;
 import com.intellij.xdebugger.impl.breakpoints.XExpressionImpl;
-import com.intellij.xdebugger.impl.evaluate.CodeFragmentInputComponent;
 import consulo.awt.TargetAWT;
-import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
-import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.InputEvent;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.lang.ref.WeakReference;
 import java.util.Collection;
@@ -71,18 +84,25 @@ public abstract class XDebuggerEditorBase {
   private final XDebuggerEditorsProvider myDebuggerEditorsProvider;
   @Nonnull
   private final EvaluationMode myMode;
-  @Nullable private final String myHistoryId;
-  @Nullable private XSourcePosition mySourcePosition;
+  @Nullable
+  private final String myHistoryId;
+  @Nullable
+  private XSourcePosition mySourcePosition;
   private int myHistoryIndex = -1;
-  @Nullable private PsiElement myContext;
+  @Nullable
+  private PsiElement myContext;
 
-  private final JLabel myChooseFactory = new JLabel();
+  private final JLabel myLanguageChooser = new JLabel();
   private WeakReference<ListPopup> myPopup;
+
+  private final JLabel myExpandButton = new JBLabel(AllIcons.General.ExpandComponent);
+  private JBPopup myExpandedPopup;
+  private Runnable myExpandHandler;
 
   protected XDebuggerEditorBase(final Project project,
                                 @Nonnull XDebuggerEditorsProvider debuggerEditorsProvider,
                                 @Nonnull EvaluationMode mode,
-                                @Nullable @NonNls String historyId,
+                                @Nullable String historyId,
                                 final @Nullable XSourcePosition sourcePosition) {
     myProject = project;
     myDebuggerEditorsProvider = debuggerEditorsProvider;
@@ -90,12 +110,12 @@ public abstract class XDebuggerEditorBase {
     myHistoryId = historyId;
     mySourcePosition = sourcePosition;
 
-    myChooseFactory.setToolTipText(XDebuggerBundle.message("xdebugger.evaluate.language.hint"));
-    myChooseFactory.setBorder(JBUI.Borders.empty(0, 3, 0, 3));
+    myLanguageChooser.setToolTipText(XDebuggerBundle.message("xdebugger.evaluate.language.hint"));
+    myLanguageChooser.setBorder(JBUI.Borders.empty(0, 3, 0, 3));
     new ClickListener() {
       @Override
       public boolean onClick(@Nonnull MouseEvent e, int clickCount) {
-        if (myChooseFactory.isEnabled()) {
+        if (myLanguageChooser.isEnabled()) {
           ListPopup oldPopup = SoftReference.dereference(myPopup);
           if (oldPopup != null && !oldPopup.isDisposed()) {
             oldPopup.cancel();
@@ -103,13 +123,37 @@ public abstract class XDebuggerEditorBase {
             return true;
           }
           ListPopup popup = createLanguagePopup();
-          popup.showUnderneathOf(myChooseFactory);
+          popup.showUnderneathOf(myLanguageChooser);
           myPopup = new WeakReference<>(popup);
           return true;
         }
         return false;
       }
-    }.installOn(myChooseFactory);
+    }.installOn(myLanguageChooser);
+
+    // setup expand button
+    myExpandButton.setToolTipText(KeymapUtil.createTooltipText(IdeBundle.message("action.expand"), "ExpandExpandableComponent"));
+    myExpandButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+    myExpandButton.setBorder(JBUI.Borders.empty(0, 3));
+    myExpandButton.setDisabledIcon(TargetAWT.to(AllIcons.General.ExpandComponent));
+    new ClickListener() {
+      @Override
+      public boolean onClick(@Nonnull MouseEvent e, int clickCount) {
+        expand();
+        return true;
+      }
+    }.installOn(myExpandButton);
+    myExpandButton.addMouseListener(new MouseAdapter() {
+      @Override
+      public void mouseEntered(MouseEvent e) {
+        myExpandButton.setIcon(TargetAWT.to(AllIcons.General.ExpandComponentHover));
+      }
+
+      @Override
+      public void mouseExited(MouseEvent e) {
+        myExpandButton.setIcon(TargetAWT.to(AllIcons.General.ExpandComponent));
+      }
+    });
   }
 
   private ListPopup createLanguagePopup() {
@@ -128,9 +172,7 @@ public abstract class XDebuggerEditorBase {
     }
 
     DataContext dataContext = DataManager.getInstance().getDataContext(getComponent());
-    return JBPopupFactory.getInstance().createActionGroupPopup("Choose Language", actions, dataContext,
-                                                               JBPopupFactory.ActionSelectionAid.SPEEDSEARCH,
-                                                               false);
+    return JBPopupFactory.getInstance().createActionGroupPopup("Choose Language", actions, dataContext, JBPopupFactory.ActionSelectionAid.SPEEDSEARCH, false);
   }
 
   @Nonnull
@@ -144,34 +186,59 @@ public abstract class XDebuggerEditorBase {
     }
   }
 
-  protected JPanel decorate(JComponent component, boolean multiline, boolean showEditor) {
+  protected JComponent decorate(JComponent component, boolean multiline, boolean showEditor) {
     BorderLayoutPanel panel = JBUI.Panels.simplePanel();
 
     JPanel factoryPanel = JBUI.Panels.simplePanel();
-    factoryPanel.add(myChooseFactory, multiline ? BorderLayout.NORTH : BorderLayout.CENTER);
+    factoryPanel.add(myLanguageChooser, multiline ? BorderLayout.NORTH : BorderLayout.CENTER);
     panel.add(factoryPanel, BorderLayout.WEST);
 
     if (!multiline && showEditor) {
-      component = addMultilineButton(component);
+      component = addExpand(component, false);
     }
 
     panel.addToCenter(component);
 
-    return panel;
-  }
+    if (multiline) {
+      JBLabel adLabel = new JBLabel(getAdText(), SwingConstants.RIGHT);
+      adLabel.setComponentStyle(UIUtil.ComponentStyle.SMALL);
+      adLabel.setFontColor(UIUtil.FontColor.BRIGHTER);
+      panel.addToBottom(adLabel);
+    }
 
-  protected JPanel addMultilineButton(JComponent component) {
-    ComponentWithBrowseButton<JComponent> componentWithButton =
-            new ComponentWithBrowseButton<>(component, e -> showCodeFragmentEditor(component, this));
-    componentWithButton.setButtonIcon(PlatformIconGroup.actionsShowViewer());
-    return componentWithButton;
+    return panel;
   }
 
   protected JComponent addChooser(JComponent component) {
     BorderLayoutPanel panel = JBUI.Panels.simplePanel(component);
     panel.setBackground(component.getBackground());
-    panel.addToRight(myChooseFactory);
+    panel.addToRight(myLanguageChooser);
     return panel;
+  }
+
+  protected JComponent addExpand(JComponent component, boolean inheritBackground) {
+    BorderLayoutPanel panel;
+    if (inheritBackground) {
+      panel = new BorderLayoutPanel() {
+        @Override
+        public Color getBackground() {
+          return component.getBackground();
+        }
+      };
+    }
+    else {
+      panel = JBUI.Panels.simplePanel();
+      panel.setOpaque(false);
+    }
+    panel.addToCenter(component);
+    panel.addToRight(myExpandButton);
+    return panel;
+  }
+
+  private static String getAdText() {
+    return "";
+    //return XDebuggerBundle.message("xdebugger.evaluate.history.navigate.ad", NlsMessages.formatAndList(
+    //        Arrays.asList(KeymapUtil.getKeystrokeText(KeymapUtil.getKeyStroke(CommonShortcuts.MOVE_DOWN)), KeymapUtil.getKeystrokeText(KeymapUtil.getKeyStroke(CommonShortcuts.MOVE_UP)))));
   }
 
   public void setContext(@Nullable PsiElement context) {
@@ -226,15 +293,15 @@ public abstract class XDebuggerEditorBase {
     boolean many = languages.size() > 1;
 
     if (language != null) {
-      myChooseFactory.setVisible(many);
+      myLanguageChooser.setVisible(many);
     }
-    myChooseFactory.setVisible(myChooseFactory.isVisible() || many);
+    myLanguageChooser.setVisible(myLanguageChooser.isVisible() || many);
     //myChooseFactory.setEnabled(many && languages.contains(language));
 
     if (language != null && language.getAssociatedFileType() != null) {
       Image fileTypeIcon = ImageEffects.layered(language.getAssociatedFileType().getIcon(), AllIcons.General.Dropdown);
-      myChooseFactory.setIcon(TargetAWT.to(fileTypeIcon));
-      myChooseFactory.setDisabledIcon(TargetAWT.to(ImageEffects.grayed(fileTypeIcon)));
+      myLanguageChooser.setIcon(TargetAWT.to(fileTypeIcon));
+      myLanguageChooser.setDisabledIcon(TargetAWT.to(ImageEffects.grayed(fileTypeIcon)));
     }
 
     doSetText(text);
@@ -306,7 +373,7 @@ public abstract class XDebuggerEditorBase {
   }
 
   public boolean canGoBackward() {
-    return myHistoryIndex < getRecentExpressions().size()-1;
+    return myHistoryIndex < getRecentExpressions().size() - 1;
   }
 
   public boolean canGoForward() {
@@ -321,6 +388,115 @@ public abstract class XDebuggerEditorBase {
     }
   }
 
+  protected void prepareEditor(EditorEx editor) {
+  }
+
+  protected final void setExpandable(Editor editor) {
+    //editor.getContentComponent().putClientProperty(Expandable.class, this);
+  }
+
+  public void collapse() {
+    if (myExpandedPopup != null) {
+      myExpandedPopup.cancel();
+    }
+  }
+
+  public void expand() {
+    if (myExpandedPopup != null || !getComponent().isEnabled()) return;
+
+    if (myExpandHandler != null) {
+      myExpandHandler.run();
+      return;
+    }
+
+    XDebuggerExpressionEditor expressionEditor = new XDebuggerExpressionEditor(myProject, myDebuggerEditorsProvider, myHistoryId, mySourcePosition, getExpression(), true, true, false) {
+      @Override
+      protected JComponent decorate(JComponent component, boolean multiline, boolean showEditor) {
+        return component;
+      }
+    };
+
+    EditorTextField editorTextField = (EditorTextField)expressionEditor.getEditorComponent();
+    editorTextField.addSettingsProvider(this::prepareEditor);
+    editorTextField.addSettingsProvider(this::setExpandable);
+    editorTextField.setBorder(JBUI.Borders.empty());
+    editorTextField.setFont(editorTextField.getFont().deriveFont((float)getEditor().getColorsScheme().getEditorFontSize()));
+
+    JComponent component = expressionEditor.getComponent();
+    component.setPreferredSize(new Dimension(getComponent().getWidth(), 100));
+
+    myExpandedPopup = JBPopupFactory.getInstance().createComponentPopupBuilder(component, expressionEditor.getPreferredFocusedComponent()).setMayBeParent(true).setFocusable(true).setResizable(true)
+            .setRequestFocus(true).setLocateByContent(true).setCancelOnWindowDeactivation(false).setAdText(getAdText()).setKeyboardActions(Collections.singletonList(Pair.create(event -> {
+              collapse();
+              Window window = ComponentUtil.getWindow(getComponent());
+              if (window != null) {
+                window.dispatchEvent(new KeyEvent(getComponent(), KeyEvent.KEY_PRESSED, System.currentTimeMillis(), InputEvent.CTRL_MASK, KeyEvent.VK_ENTER, '\r'));
+              }
+            }, KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, InputEvent.CTRL_MASK)))).setCancelCallback(() -> {
+              setExpression(expressionEditor.getExpression());
+              requestFocusInEditor();
+              Editor baseEditor = getEditor();
+              if (baseEditor != null) {
+                foldNewLines((EditorEx)baseEditor);
+                Editor newEditor = expressionEditor.getEditor();
+                if (newEditor != null) {
+                  copyCaretPosition(newEditor, baseEditor);
+                  PropertiesComponent.getInstance().setValue(SOFT_WRAPS_KEY, newEditor.getSoftWrapModel().isSoftWrappingEnabled());
+                }
+              }
+              myExpandedPopup = null;
+              return true;
+            }).createPopup();
+
+    myExpandedPopup.show(new RelativePoint(getComponent(), new Point(0, 0)));
+
+    EditorEx editor = (EditorEx)expressionEditor.getEditor();
+    copyCaretPosition(getEditor(), editor);
+    editor.getSettings().setUseSoftWraps(isUseSoftWraps());
+
+    addCollapseButton(editor, this::collapse);
+
+    expressionEditor.requestFocusInEditor();
+  }
+
+  public void setExpandHandler(Runnable handler) {
+    myExpandHandler = handler;
+  }
+
+  private static void addCollapseButton(EditorEx editor, Runnable handler) {
+    //ErrorStripeEditorCustomization.DISABLED.customize(editor);
+    // TODO: copied from ExpandableTextField
+    JScrollPane pane = editor.getScrollPane();
+    pane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+    pane.getVerticalScrollBar().add(JBScrollBar.LEADING, new JBLabel(AllIcons.General.CollapseComponent) {{
+      setToolTipText(KeymapUtil.createTooltipText(IdeBundle.message("action.collapse"), "CollapseExpandableComponent"));
+      setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+      setBorder(JBUI.Borders.empty(5, 0, 5, 5));
+      addMouseListener(new MouseAdapter() {
+        @Override
+        public void mouseEntered(MouseEvent event) {
+          setIcon(TargetAWT.to(AllIcons.General.CollapseComponentHover));
+        }
+
+        @Override
+        public void mouseExited(MouseEvent event) {
+          setIcon(TargetAWT.to(AllIcons.General.CollapseComponent));
+        }
+
+        @Override
+        public void mouseClicked(MouseEvent event) {
+          handler.run();
+        }
+      });
+    }});
+  }
+
+  public static void copyCaretPosition(@Nullable Editor source, @Nullable Editor destination) {
+    if (source != null && destination != null) {
+      destination.getCaretModel().moveToOffset(source.getCaretModel().getOffset());
+    }
+  }
+
   public void goForward() {
     final List<XExpression> expressions = getRecentExpressions();
     if (myHistoryIndex > 0) {
@@ -329,48 +505,32 @@ public abstract class XDebuggerEditorBase {
     }
   }
 
-  private void showCodeFragmentEditor(Component parent, XDebuggerEditorBase baseEditor) {
-    DialogWrapper dialog = new DialogWrapper(parent, true) {
-      CodeFragmentInputComponent inputComponent =
-              new CodeFragmentInputComponent(baseEditor.getProject(), baseEditor.getEditorsProvider(), mySourcePosition,
-                                             XExpressionImpl.changeMode(baseEditor.getExpression(), EvaluationMode.CODE_FRAGMENT),
-                                             null, null);
-
-      {
-        setTitle("Edit");
-        init();
-      }
-
-      @Nullable
-      @Override
-      protected String getDimensionServiceKey() {
-        return "#xdebugger.code.fragment.editor";
-      }
-
-      @Nullable
-      @Override
-      protected JComponent createCenterPanel() {
-        JPanel component = inputComponent.getMainComponent();
-        component.setPreferredSize(JBUI.size(300, 200));
-        return component;
-      }
-
-      @Override
-      protected void doOKAction() {
-        super.doOKAction();
-        baseEditor.setExpression(inputComponent.getInputEditor().getExpression());
-        JComponent component = baseEditor.getPreferredFocusedComponent();
-        if (component != null) {
-          IdeFocusManager.findInstance().requestFocus(component, false);
+  protected static void foldNewLines(EditorEx editor) {
+    editor.getColorsScheme().setAttributes(EditorColors.FOLDED_TEXT_ATTRIBUTES, null);
+    editor.reinitSettings();
+    FoldingModelEx foldingModel = editor.getFoldingModel();
+    CharSequence text = editor.getDocument().getCharsSequence();
+    foldingModel.runBatchFoldingOperation(() -> {
+      foldingModel.clearFoldRegions();
+      for (int i = 0; i < text.length(); i++) {
+        if (text.charAt(i) == '\n') {
+          foldingModel.createFoldRegion(i, i + 1, "\u23ce", null, true);
         }
       }
+    });
+  }
 
-      @Nullable
-      @Override
-      public JComponent getPreferredFocusedComponent() {
-        return inputComponent.getInputEditor().getPreferredFocusedComponent();
-      }
-    };
-    dialog.show();
+  private static final String SOFT_WRAPS_KEY = "XDebuggerExpressionEditor_Use_Soft_Wraps";
+
+  public boolean isUseSoftWraps() {
+    return PropertiesComponent.getInstance().getBoolean(SOFT_WRAPS_KEY, true);
+  }
+
+  public void setUseSoftWraps(boolean use) {
+    PropertiesComponent.getInstance().setValue(SOFT_WRAPS_KEY, use);
+    Editor editor = getEditor();
+    if (editor != null) {
+      AbstractToggleUseSoftWrapsAction.toggleSoftWraps(editor, null, use);
+    }
   }
 }

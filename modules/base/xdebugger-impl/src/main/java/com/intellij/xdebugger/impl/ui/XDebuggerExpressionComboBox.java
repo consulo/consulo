@@ -18,11 +18,13 @@ package com.intellij.xdebugger.impl.ui;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.ex.EditorEx;
+import com.intellij.openapi.editor.ex.util.EditorUtil;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.ComboBox;
 import com.intellij.ui.EditorComboBoxEditor;
 import com.intellij.ui.EditorComboBoxRenderer;
 import com.intellij.ui.EditorTextField;
+import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.xdebugger.XExpression;
 import com.intellij.xdebugger.XSourcePosition;
@@ -30,10 +32,9 @@ import com.intellij.xdebugger.evaluation.EvaluationMode;
 import com.intellij.xdebugger.evaluation.XDebuggerEditorsProvider;
 import com.intellij.xdebugger.impl.XDebuggerHistoryManager;
 import com.intellij.xdebugger.impl.breakpoints.XExpressionImpl;
-import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
@@ -47,8 +48,11 @@ public class XDebuggerExpressionComboBox extends XDebuggerEditorBase {
   private XDebuggerComboBoxEditor myEditor;
   private XExpression myExpression;
 
-  public XDebuggerExpressionComboBox(@Nonnull Project project, @Nonnull XDebuggerEditorsProvider debuggerEditorsProvider, @Nullable @NonNls String historyId,
-                                     @Nullable XSourcePosition sourcePosition, boolean showEditor) {
+  public XDebuggerExpressionComboBox(@Nonnull Project project,
+                                     @Nonnull XDebuggerEditorsProvider debuggerEditorsProvider,
+                                     @Nullable String historyId,
+                                     @Nullable XSourcePosition sourcePosition,
+                                     boolean showEditor) {
     super(project, debuggerEditorsProvider, EvaluationMode.EXPRESSION, historyId, sourcePosition);
     myComboBox = new ComboBox<>(100);
     myComboBox.setEditable(true);
@@ -56,9 +60,10 @@ public class XDebuggerExpressionComboBox extends XDebuggerEditorBase {
     Dimension minimumSize = new Dimension(myComboBox.getMinimumSize());
     minimumSize.width = 100;
     myComboBox.setMinimumSize(minimumSize);
-    initEditor();
+    initEditor(showEditor);
     fillComboBox();
-    myComponent = showEditor ? addMultilineButton(myComboBox) : myComboBox;
+    myComponent = JBUI.Panels.simplePanel().addToTop(myComboBox);
+    setExpression(myExpression);
   }
 
   public ComboBox getComboBox() {
@@ -93,8 +98,8 @@ public class XDebuggerExpressionComboBox extends XDebuggerEditorBase {
     }
   }
 
-  private void initEditor() {
-    myEditor = new XDebuggerComboBoxEditor();
+  private void initEditor(boolean showEditor) {
+    myEditor = new XDebuggerComboBoxEditor(showEditor);
     myComboBox.setEditor(myEditor);
     //myEditor.setItem(myExpression);
     myComboBox.setRenderer(new EditorComboBoxRenderer(myEditor));
@@ -144,20 +149,37 @@ public class XDebuggerExpressionComboBox extends XDebuggerEditorBase {
     myComboBox.getEditor().selectAll();
   }
 
+  @Override
+  protected void prepareEditor(EditorEx editor) {
+    super.prepareEditor(editor);
+    editor.getColorsScheme().setEditorFontSize(Math.min(myComboBox.getFont().getSize(), EditorUtil.getEditorFont().getSize()));
+  }
+
   private class XDebuggerComboBoxEditor implements ComboBoxEditor {
     private final JComponent myPanel;
     private final EditorComboBoxEditor myDelegate;
 
-    public XDebuggerComboBoxEditor() {
+    public XDebuggerComboBoxEditor(boolean showMultiline) {
       myDelegate = new EditorComboBoxEditor(getProject(), getEditorsProvider().getFileType()) {
         @Override
         protected void onEditorCreate(EditorEx editor) {
           editor.putUserData(DebuggerCopyPastePreprocessor.REMOVE_NEWLINES_ON_PASTE, true);
+          prepareEditor(editor);
+          if (showMultiline) {
+            setExpandable(editor);
+          }
+          foldNewLines(editor);
           editor.getColorsScheme().setEditorFontSize(myComboBox.getFont().getSize());
         }
       };
       myDelegate.getEditorComponent().setFontInheritedFromLAF(false);
-      myPanel = addChooser(myDelegate.getEditorComponent());
+
+      JComponent comp = myDelegate.getEditorComponent();
+      comp = addChooser(comp);
+      if (showMultiline) {
+        comp = addExpand(comp, true);
+      }
+      myPanel = comp;
     }
 
     public EditorTextField getEditorTextField() {
