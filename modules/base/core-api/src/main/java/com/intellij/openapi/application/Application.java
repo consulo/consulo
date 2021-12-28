@@ -388,27 +388,6 @@ public interface Application extends ComponentManager {
   boolean isHeadlessEnvironment();
 
   /**
-   * Checks if IDE is currently running tests.
-   *
-   * @return true if IDE is running unit tests, false otherwise
-   */
-  default boolean isTestingMode() {
-    return false;
-  }
-
-  /**
-   * Checks if IDE is running as a compiler server
-   * No UI should be shown when IDE is running in this mode.
-   *
-   * @return true if IDE is running in compiler server, false otherwise
-   */
-  @Deprecated
-  @DeprecationInfo("Unused anymore")
-  default boolean isCompilerServerMode() {
-    return false;
-  }
-
-  /**
    * Checks if IDE is running as a command line applet or in unit test mode.
    * UI can be shown (e.g. diff frame)
    *
