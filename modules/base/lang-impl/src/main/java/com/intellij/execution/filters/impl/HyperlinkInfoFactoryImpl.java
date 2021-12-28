@@ -15,13 +15,15 @@
  */
 package com.intellij.execution.filters.impl;
 
-import com.intellij.execution.filters.*;
+import com.intellij.execution.filters.HyperlinkInfo;
+import com.intellij.execution.filters.HyperlinkInfoFactory;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.psi.PsiElement;
 import jakarta.inject.Singleton;
-
 import javax.annotation.Nonnull;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -29,11 +31,22 @@ import java.util.List;
  */
 @Singleton
 public class HyperlinkInfoFactoryImpl extends HyperlinkInfoFactory {
+  @Nonnull
+  @Override
+  public HyperlinkInfo createMultipleFilesHyperlinkInfo(@Nonnull List<? extends VirtualFile> files, int line, @Nonnull Project project) {
+    return new MultipleFilesHyperlinkInfo(files, line, project);
+  }
 
   @Nonnull
   @Override
-  public HyperlinkInfo createMultipleFilesHyperlinkInfo(@Nonnull List<VirtualFile> files,
-                                                        int line, @Nonnull Project project) {
-    return new MultipleFilesHyperlinkInfo(files, line, project);
+  public HyperlinkInfo createMultipleFilesHyperlinkInfo(@Nonnull List<? extends VirtualFile> files, int line, @Nonnull Project project, HyperlinkInfoFactory.HyperlinkHandler action) {
+    return new MultipleFilesHyperlinkInfo(files, line, project, action);
+  }
+
+  @Override
+  public
+  @Nonnull
+  HyperlinkInfo createMultiplePsiElementHyperlinkInfo(@Nonnull Collection<? extends PsiElement> elements) {
+    return new MultiPsiElementHyperlinkInfo(elements);
   }
 }
