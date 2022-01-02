@@ -13,18 +13,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.intellij.psi;
 
-import com.intellij.psi.search.GlobalSearchScope;
+import javax.annotation.Nullable;
 
 /**
- * Implemented by PSI files which must have non-standard resolve scope for elements contained in them.
- *
- * @author yole
+ * @author peter
  */
-public interface FileResolveScopeProvider {
-  GlobalSearchScope getFileResolveScope();
+public interface PsiQualifiedReference extends PsiReference {
+  /**
+   * Returns the qualifier of the reference (the element representing the content up to the
+   * last period).
+   *
+   * @return the qualifier, or null if the reference is not qualified.
+   */
+  @Nullable
+  PsiElement getQualifier();
 
-  boolean ignoreReferencedElementAccessibility();
+  /**
+   * Returns the text of the reference not including its qualifier.
+   *
+   * @return the non-qualified text of the reference, or null if the reference
+   * element is incomplete.
+   */
+  @Nullable
+  String getReferenceName();
 }

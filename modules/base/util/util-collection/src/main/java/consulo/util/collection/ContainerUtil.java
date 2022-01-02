@@ -24,6 +24,7 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.function.Function;
+import java.util.function.IntFunction;
 import java.util.function.Predicate;
 
 /**
@@ -638,5 +639,11 @@ public class ContainerUtil {
   @Contract(pure = true)
   public static <T> List<T> list(@Nonnull T... items) {
     return Arrays.asList(items);
+  }
+
+  @Nonnull
+  @Contract(pure = true)
+  public static <T> T[] toArray(@Nullable Collection<T> c, @Nonnull IntFunction<? extends T[]> factory) {
+    return c != null ? c.toArray(factory.apply(c.size())) : factory.apply(0);
   }
 }

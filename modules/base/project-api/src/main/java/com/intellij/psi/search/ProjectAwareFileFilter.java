@@ -13,18 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package com.intellij.psi.search;
 
-package com.intellij.psi;
+import com.intellij.openapi.project.Project;
+import com.intellij.openapi.vfs.VirtualFileFilter;
 
-import com.intellij.psi.search.GlobalSearchScope;
+import javax.annotation.Nullable;
 
 /**
- * Implemented by PSI files which must have non-standard resolve scope for elements contained in them.
- *
- * @author yole
+ * @author peter
  */
-public interface FileResolveScopeProvider {
-  GlobalSearchScope getFileResolveScope();
-
-  boolean ignoreReferencedElementAccessibility();
+public interface ProjectAwareFileFilter extends VirtualFileFilter {
+  @Nullable
+  Project getProject();
 }

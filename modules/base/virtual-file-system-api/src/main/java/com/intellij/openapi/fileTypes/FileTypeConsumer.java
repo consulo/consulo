@@ -13,18 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package com.intellij.openapi.fileTypes;
 
-package com.intellij.psi;
-
-import com.intellij.psi.search.GlobalSearchScope;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
- * Implemented by PSI files which must have non-standard resolve scope for elements contained in them.
- *
  * @author yole
  */
-public interface FileResolveScopeProvider {
-  GlobalSearchScope getFileResolveScope();
+public interface FileTypeConsumer {
+  String EXTENSION_DELIMITER = ";";
 
-  boolean ignoreReferencedElementAccessibility();
+  void consume(@Nonnull FileType fileType);
+
+  void consume(@Nonnull FileType fileType, final String extensions);
+
+  void consume(@Nonnull FileType fileType, final FileNameMatcher... matchers);
+
+  @Nullable
+  FileType getStandardFileTypeByName(@Nonnull String name);
 }

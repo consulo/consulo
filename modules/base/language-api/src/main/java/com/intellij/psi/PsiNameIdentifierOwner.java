@@ -16,15 +16,20 @@
 
 package com.intellij.psi;
 
-import com.intellij.psi.search.GlobalSearchScope;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.util.collection.ArrayFactory;
+
+import javax.annotation.Nullable;
 
 /**
- * Implemented by PSI files which must have non-standard resolve scope for elements contained in them.
- *
  * @author yole
  */
-public interface FileResolveScopeProvider {
-  GlobalSearchScope getFileResolveScope();
+public interface PsiNameIdentifierOwner extends PsiNamedElement {
+  public static final PsiNameIdentifierOwner[] EMPTY_ARRAY = new PsiNameIdentifierOwner[0];
 
-  boolean ignoreReferencedElementAccessibility();
+  public static ArrayFactory<PsiNameIdentifierOwner> ARRAY_FACTORY = count -> count == 0 ? EMPTY_ARRAY : new PsiNameIdentifierOwner[count];
+
+  @Nullable
+  @RequiredReadAction
+  PsiElement getNameIdentifier();
 }

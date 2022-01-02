@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2013-2016 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,18 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package consulo.fileTypes;
 
-package com.intellij.psi;
+import com.intellij.openapi.fileTypes.FileType;
+import com.intellij.openapi.vfs.VirtualFile;
+import consulo.util.lang.Pair;
 
-import com.intellij.psi.search.GlobalSearchScope;
+import javax.annotation.Nonnull;
+import java.nio.charset.Charset;
 
 /**
- * Implemented by PSI files which must have non-standard resolve scope for elements contained in them.
- *
- * @author yole
+ * @author VISTALL
+ * @since 29.04.14
  */
-public interface FileResolveScopeProvider {
-  GlobalSearchScope getFileResolveScope();
-
-  boolean ignoreReferencedElementAccessibility();
+public interface FileTypeWithPredefinedCharset extends FileType {
+  @Nonnull
+  Pair<Charset, String> getPredefinedCharset(@Nonnull VirtualFile virtualFile);
 }

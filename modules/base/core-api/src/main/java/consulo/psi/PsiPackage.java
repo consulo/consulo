@@ -33,13 +33,7 @@ import javax.annotation.Nullable;
 public interface PsiPackage extends PsiDirectoryContainer, PsiQualifiedNamedElement, PsiCheckedRenameElement, NavigationItem {
   public static final PsiPackage[] EMPTY_ARRAY = new PsiPackage[0];
 
-  public static ArrayFactory<PsiPackage> ARRAY_FACTORY = new ArrayFactory<PsiPackage>() {
-    @Nonnull
-    @Override
-    public PsiPackage[] create(int count) {
-      return count == 0 ? EMPTY_ARRAY : new PsiPackage[count];
-    }
-  };
+  public static ArrayFactory<PsiPackage> ARRAY_FACTORY = count -> count == 0 ? EMPTY_ARRAY : new PsiPackage[count];
 
   @Nullable
   PsiPackage getParentPackage();

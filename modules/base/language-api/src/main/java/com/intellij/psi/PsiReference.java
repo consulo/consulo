@@ -15,6 +15,7 @@
  */
 package com.intellij.psi;
 
+import com.intellij.openapi.util.TextRange;
 import com.intellij.util.IncorrectOperationException;
 import consulo.annotation.DeprecationInfo;
 import consulo.annotation.access.RequiredReadAction;
