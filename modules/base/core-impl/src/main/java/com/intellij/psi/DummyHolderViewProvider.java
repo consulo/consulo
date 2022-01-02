@@ -9,7 +9,7 @@ import com.intellij.psi.impl.source.DummyHolder;
 import com.intellij.psi.impl.source.tree.FileElement;
 import com.intellij.psi.impl.source.tree.LeafElement;
 import com.intellij.testFramework.LightVirtualFile;
-import com.intellij.util.LocalTimeCounter;
+import consulo.util.lang.LocalTimeCounter;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

@@ -39,7 +39,6 @@ import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.project.ex.ProjectEx;
 import com.intellij.openapi.project.ex.ProjectManagerEx;
 import com.intellij.openapi.util.Computable;
-import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.ShutDownTracker;
 import com.intellij.openapi.util.ThrowableComputable;
 import com.intellij.openapi.util.io.FileUtil;
@@ -85,6 +84,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.BooleanSupplier;
 
 /**
  * @author VISTALL
@@ -753,15 +753,15 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
   }
 
   @Override
-  public void invokeLaterOnWriteThread(@Nonnull Runnable action, @Nonnull ModalityState modal) {
+  public void invokeLaterOnWriteThread(@Nonnull Runnable action, @Nonnull consulo.ui.ModalityState modal) {
     invokeLaterOnWriteThread(action, modal, getDisposed());
   }
 
   @Override
-  public void invokeLaterOnWriteThread(@Nonnull Runnable action, @Nonnull ModalityState modal, @Nonnull Condition<?> expired) {
-    Runnable r = wrapLaterInvocation(action, modal);
+  public void invokeLaterOnWriteThread(@Nonnull Runnable action, @Nonnull consulo.ui.ModalityState modal, @Nonnull BooleanSupplier expired) {
+    Runnable r = wrapLaterInvocation(action, (ModalityState)modal);
     // EDT == Write Thread in legacy mode
-    LaterInvocator.invokeLaterWithCallback(() -> runIntendedWriteActionOnCurrentThread(r), modal, expired, null, !USE_SEPARATE_WRITE_THREAD);
+    LaterInvocator.invokeLaterWithCallback(() -> runIntendedWriteActionOnCurrentThread(r), (ModalityState)modal, expired, null, !USE_SEPARATE_WRITE_THREAD);
   }
 
   @Nonnull

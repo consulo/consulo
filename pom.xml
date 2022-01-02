@@ -56,6 +56,7 @@
 
     <module>modules/base/annotation</module>
     <module>modules/base/annotations</module>
+    <module>modules/base/application-api</module>
     <module>modules/base/analysis-api</module>
     <module>modules/base/analysis-impl</module>
     <module>modules/base/base-localize-library</module>
@@ -66,9 +67,11 @@
     <module>modules/base/built-in-server-impl</module>
     <module>modules/base/core-api</module>
     <module>modules/base/core-impl</module>
+    <module>modules/base/component-api</module>
     <module>modules/base/compiler-api</module>
     <module>modules/base/compiler-impl</module>
     <module>modules/base/compiler-build-ui-impl</module>
+    <module>modules/base/document-api</module>
     <module>modules/base/diff-api</module>
     <module>modules/base/diff-impl</module>
     <module>modules/base/disposer-api</module>
@@ -95,8 +98,10 @@
     <module>modules/base/platform-impl</module>
     <module>modules/base/platform-resources</module>
     <module>modules/base/platform-resources-en</module>
+    <module>modules/base/project-api</module>
     <module>modules/base/project-model-api</module>
     <module>modules/base/project-model-impl</module>
+    <module>modules/base/language-api</module>
     <module>modules/base/lang-api</module>
     <module>modules/base/lang-impl</module>
     <module>modules/base/lang-injecting-impl</module>
@@ -122,6 +127,7 @@
     <module>modules/base/vcs-log-api</module>
     <module>modules/base/vcs-log-impl</module>
     <module>modules/base/vcs-log-impl-testing</module>
+    <module>modules/base/virtual-file-system-api</module>
     <module>modules/base/vcs-impl</module>
     <module>modules/base/ui-api</module>
     <module>modules/base/ui-impl</module>

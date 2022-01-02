@@ -17,7 +17,6 @@ package com.intellij.mock;
 
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.vfs.VirtualFile;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.disposer.Disposable;
@@ -28,6 +27,7 @@ import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.function.BooleanSupplier;
 
 /**
  * @author yole
@@ -54,13 +54,8 @@ public class MockProject extends MockComponentManager implements Project {
 
   @Nonnull
   @Override
-  public Condition getDisposed() {
-    return new Condition() {
-      @Override
-      public boolean value(final Object o) {
-        return isDisposed();
-      }
-    };
+  public BooleanSupplier getDisposed() {
+    return this::isDisposed;
   }
 
   @Override

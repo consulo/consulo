@@ -1,6 +1,7 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.openapi.fileTypes;
 
+import com.intellij.lang.Language;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.messages.Topic;
@@ -29,6 +30,11 @@ public abstract class FileTypeManager extends FileTypeRegistry {
   @Nonnull
   public static FileTypeManager getInstance() {
     return ourInstance.get();
+  }
+
+  @Nullable
+  public LanguageFileType findFileTypeByLanguage(@Nonnull Language language) {
+    return language.findMyFileType(getRegisteredFileTypes());
   }
 
   /**

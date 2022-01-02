@@ -20,9 +20,15 @@
 package consulo.util.collection;
 
 import javax.annotation.Nonnull;
+import java.util.function.IntFunction;
 
 @FunctionalInterface
-public interface ArrayFactory<T> {
+public interface ArrayFactory<T> extends IntFunction<T[]> {
   @Nonnull
   T[] create(int count);
+
+  @Override
+  default T[] apply(int count) {
+    return create(count);
+  }
 }

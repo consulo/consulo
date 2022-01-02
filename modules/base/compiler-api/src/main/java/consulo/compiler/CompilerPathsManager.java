@@ -33,7 +33,7 @@ import jakarta.inject.Singleton;
  * @since 17:03/26.05.13
  */
 @Deprecated
-@DeprecationInfo(value = "Use CompilerConfiguration for projects, and ModuleCompilerPathsManager for modules", until = "2.0")
+@DeprecationInfo(value = "Use CompilerConfiguration for projects, and ModuleCompilerPathsManager for modules")
 @Singleton
 public class CompilerPathsManager {
   @Nonnull

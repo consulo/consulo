@@ -15,17 +15,15 @@
  */
 package com.intellij.util.concurrency;
 
-import com.intellij.openapi.application.AccessToken;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
 
 /**
  * Intended to use within try-with-resources.
  */
-public class LockToken extends AccessToken {
+public class LockToken implements AutoCloseable {
 
   private final Lock myLock;
 
@@ -34,7 +32,7 @@ public class LockToken extends AccessToken {
   }
 
   @Override
-  public void finish() {
+  public void close() {
     myLock.unlock();
   }
 

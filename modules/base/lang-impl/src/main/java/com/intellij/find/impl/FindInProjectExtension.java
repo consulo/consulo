@@ -25,7 +25,7 @@ import consulo.extensions.StrictExtensionPointName;
  * @since 12/12/2021
  */
 public interface FindInProjectExtension {
-  public static final StrictExtensionPointName<Application, FindInProjectExtension> EP_NAME = StrictExtensionPointName.forApplication("com.intellij.findInProjectExtension");
+  public static final StrictExtensionPointName<Application, FindInProjectExtension> EP_NAME = StrictExtensionPointName.create(Application.class, "com.intellij.findInProjectExtension");
 
   public boolean initModelFromContext(FindModel model, DataContext dataContext);
 }

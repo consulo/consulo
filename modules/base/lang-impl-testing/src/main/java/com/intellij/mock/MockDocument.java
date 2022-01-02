@@ -24,7 +24,7 @@ import com.intellij.openapi.editor.ex.RangeMarkerEx;
 import consulo.disposer.Disposable;
 import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.TextRange;
-import com.intellij.util.LocalTimeCounter;
+import consulo.util.lang.LocalTimeCounter;
 import com.intellij.util.Processor;
 
 import javax.annotation.Nonnull;

@@ -19,7 +19,6 @@
  */
 package com.intellij.psi.impl.source.tree;
 
-import com.intellij.openapi.diagnostic.LogUtil;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.util.Getter;
 import com.intellij.openapi.util.StaticGetter;
@@ -31,10 +30,12 @@ import com.intellij.util.text.CharArrayUtil;
 import com.intellij.util.text.ImmutableCharSequence;
 import consulo.logging.Logger;
 import consulo.logging.attachment.AttachmentFactory;
+import consulo.util.lang.ObjectUtil;
 import org.jetbrains.annotations.NonNls;
+import org.jetbrains.annotations.TestOnly;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import org.jetbrains.annotations.TestOnly;
 
 public class LazyParseableElement extends CompositeElement {
   private static final Logger LOG = Logger.getInstance(LazyParseableElement.class);
@@ -207,7 +208,7 @@ public class LazyParseableElement extends CompositeElement {
       child = child.getTreeNext();
     }
     if (length != text.length()) {
-      LOG.error("Text mismatch in " + LogUtil.objectAndClass(getElementType()), AttachmentFactory.get().create("code.txt", text.toString()));
+      LOG.error("Text mismatch in " + ObjectUtil.objectInfo(getElementType()), AttachmentFactory.get().create("code.txt", text.toString()));
     }
   }
 

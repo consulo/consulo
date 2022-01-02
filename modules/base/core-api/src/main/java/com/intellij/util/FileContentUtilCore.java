@@ -25,7 +25,6 @@ import com.intellij.openapi.vfs.newvfs.events.VFileEvent;
 import com.intellij.openapi.vfs.newvfs.events.VFilePropertyChangeEvent;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.ui.annotation.RequiredUIAccess;
-import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import java.util.*;
@@ -34,7 +33,7 @@ import java.util.*;
  * @author peter
  */
 public class FileContentUtilCore {
-  @NonNls public static final String FORCE_RELOAD_REQUESTOR = "FileContentUtilCore.saveOrReload";
+  public static final String FORCE_RELOAD_REQUESTOR = consulo.virtualFileSystem.internal.FileContentUtilCore.FORCE_RELOAD_REQUESTOR;
 
   @RequiredUIAccess
   public static void reparseFiles(@Nonnull VirtualFile... files) {

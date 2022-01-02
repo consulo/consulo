@@ -28,7 +28,7 @@ import com.intellij.psi.tree.ILazyParseableElementTypeBase;
 import com.intellij.psi.tree.TokenSet;
 import com.intellij.testFramework.LightVirtualFile;
 import com.intellij.util.CharTable;
-import com.intellij.util.LocalTimeCounter;
+import consulo.util.lang.LocalTimeCounter;
 import com.intellij.util.ReflectionUtil;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.lang.LanguageVersion;

@@ -3,7 +3,6 @@ package consulo.util.collection.impl.map;
 
 import consulo.util.collection.HashingStrategy;
 import consulo.util.collection.Maps;
-import consulo.util.lang.IncorrectOperationException;
 import consulo.util.lang.ref.SoftReference;
 
 import javax.annotation.Nonnull;
@@ -17,13 +16,13 @@ public abstract class RefValueHashMap<K, V> implements Map<K, V> {
   private final ReferenceQueue<V> myQueue = new ReferenceQueue<>();
 
   @Nonnull
-  public static IncorrectOperationException pointlessContainsKey() {
-    return new IncorrectOperationException("containsKey() makes no sense for weak/soft map because GC can clear the value any moment now");
+  public static UnsupportedOperationException pointlessContainsKey() {
+    return new UnsupportedOperationException("containsKey() makes no sense for weak/soft map because GC can clear the value any moment now");
   }
 
   @Nonnull
-  public static IncorrectOperationException pointlessContainsValue() {
-    return new IncorrectOperationException("containsValue() makes no sense for weak/soft map because GC can clear the key any moment now");
+  public static UnsupportedOperationException pointlessContainsValue() {
+    return new UnsupportedOperationException("containsValue() makes no sense for weak/soft map because GC can clear the key any moment now");
   }
 
   protected interface MyReference<K, T> extends Supplier<T> {

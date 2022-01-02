@@ -35,6 +35,7 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.function.BooleanSupplier;
 
 public final class LaterInvocator {
   private static final Logger LOG = Logger.getInstance(LaterInvocator.class);
@@ -85,25 +86,25 @@ public final class LaterInvocator {
   }
 
   @Nonnull
-  public static AsyncResult<Void> invokeLater(@Nonnull Runnable runnable, @Nonnull Condition<?> expired) {
+  public static AsyncResult<Void> invokeLater(@Nonnull Runnable runnable, @Nonnull BooleanSupplier expired) {
     ModalityState modalityState = ModalityState.defaultModalityState();
     return invokeLater(runnable, modalityState, expired);
   }
 
   @Nonnull
   public static AsyncResult<Void> invokeLater(@Nonnull Runnable runnable, @Nonnull ModalityState modalityState) {
-    return invokeLater(runnable, modalityState, Conditions.alwaysFalse());
+    return invokeLater(runnable, modalityState, () -> false);
   }
 
   @Nonnull
-  public static AsyncResult<Void> invokeLater(@Nonnull Runnable runnable, @Nonnull ModalityState modalityState, @Nonnull Condition<?> expired) {
+  public static AsyncResult<Void> invokeLater(@Nonnull Runnable runnable, @Nonnull ModalityState modalityState, @Nonnull BooleanSupplier expired) {
     AsyncResult<Void> callback = AsyncResult.undefined();
     invokeLaterWithCallback(runnable, modalityState, expired, callback, true);
     return callback;
   }
 
-  public static void invokeLaterWithCallback(@Nonnull Runnable runnable, @Nonnull ModalityState modalityState, @Nonnull Condition<?> expired, @Nullable ActionCallback callback, boolean onEdt) {
-    if (expired.value(null)) {
+  public static void invokeLaterWithCallback(@Nonnull Runnable runnable, @Nonnull ModalityState modalityState, @Nonnull BooleanSupplier expired, @Nullable ActionCallback callback, boolean onEdt) {
+    if (expired.getAsBoolean()) {
       if (callback != null) {
         callback.setRejected();
       }
@@ -140,7 +141,7 @@ public final class LaterInvocator {
         return "InvokeAndWait[" + runnable + "]";
       }
     };
-    invokeLaterWithCallback(runnable1, modalityState, Conditions.alwaysFalse(), null, true);
+    invokeLaterWithCallback(runnable1, modalityState, () -> false, null, true);
     semaphore.waitFor();
     if (!exception.isNull()) {
       Throwable cause = exception.get();

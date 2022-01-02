@@ -15,7 +15,6 @@
  */
 package consulo.util.nodep;
 
-import consulo.util.nodep.function.Function;
 import javax.annotation.Nonnull;
 
 public class Pair<A, B> {
@@ -37,16 +36,6 @@ public class Pair<A, B> {
   public static <A, B> Pair<A, B> pair(A first, B second) {
     //noinspection DontUsePairConstructor
     return new Pair<A, B>(first, second);
-  }
-
-  @Nonnull
-  public static <A, B> Function<A, Pair<A, B>> createFunction(final B value) {
-    return new Function<A, Pair<A, B>>() {
-      @Override
-      public Pair<A, B> fun(A a) {
-        return create(a, value);
-      }
-    };
   }
 
   public static <T> T getFirst(Pair<T, ?> pair) {

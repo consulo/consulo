@@ -6,7 +6,6 @@ import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.application.TransactionGuard;
 import com.intellij.openapi.application.impl.ReadMostlyRWLock;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Condition;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.impl.BaseApplication;
 import consulo.application.impl.UnifiedTransactionGuardImpl;
@@ -23,6 +22,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
+import java.util.function.BooleanSupplier;
 
 /**
  * @author VISTALL
@@ -116,25 +116,25 @@ public class WebApplicationImpl extends BaseApplication implements WebApplicatio
   }
 
   @Override
-  public void invokeLater(@Nonnull Runnable runnable, @Nonnull Condition expired) {
+  public void invokeLater(@Nonnull Runnable runnable, @Nonnull BooleanSupplier expired) {
     WebSession currentSession = getCurrentSession();
     if (currentSession != null) currentSession.getAccess().giveIfNeed(runnable);
   }
 
   @Override
-  public void invokeLater(@Nonnull Runnable runnable, @Nonnull ModalityState state) {
+  public void invokeLater(@Nonnull Runnable runnable, @Nonnull consulo.ui.ModalityState state) {
     WebSession currentSession = getCurrentSession();
     if (currentSession != null) currentSession.getAccess().giveIfNeed(runnable);
   }
 
   @Override
-  public void invokeLater(@Nonnull Runnable runnable, @Nonnull ModalityState state, @Nonnull Condition expired) {
+  public void invokeLater(@Nonnull Runnable runnable, @Nonnull consulo.ui.ModalityState state, @Nonnull BooleanSupplier expired) {
     WebSession currentSession = getCurrentSession();
     if (currentSession != null) currentSession.getAccess().giveIfNeed(runnable);
   }
 
   @Override
-  public void invokeAndWait(@Nonnull Runnable runnable, @Nonnull ModalityState modalityState) {
+  public void invokeAndWait(@Nonnull Runnable runnable, @Nonnull consulo.ui.ModalityState modalityState) {
     WebSession currentSession = getCurrentSession();
     if (currentSession != null) currentSession.getAccess().giveAndWaitIfNeed(runnable);
   }

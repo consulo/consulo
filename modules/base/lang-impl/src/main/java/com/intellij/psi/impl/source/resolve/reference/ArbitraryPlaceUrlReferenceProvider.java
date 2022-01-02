@@ -18,7 +18,6 @@ package com.intellij.psi.impl.source.resolve.reference;
 import com.intellij.openapi.paths.GlobalPathReferenceProvider;
 import com.intellij.openapi.paths.PathReferenceManager;
 import com.intellij.openapi.util.UserDataCache;
-import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vcs.IssueNavigationConfiguration;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiReference;
@@ -28,8 +27,9 @@ import com.intellij.psi.util.CachedValueProvider;
 import com.intellij.psi.util.CachedValuesManager;
 import com.intellij.util.ProcessingContext;
 import com.intellij.util.SmartList;
-import javax.annotation.Nonnull;
+import consulo.util.BombedStringUtil;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -47,7 +47,7 @@ public class ArbitraryPlaceUrlReferenceProvider extends PsiReferenceProvider {
 
         List<PsiReference> refs = null;
         GlobalPathReferenceProvider provider = myReferenceProvider.get();
-        CharSequence commentText = StringUtil.newBombedCharSequence(element.getText(), 500);
+        CharSequence commentText = BombedStringUtil.newBombedCharSequence(element.getText(), 500);
         for (IssueNavigationConfiguration.LinkMatch link : navigationConfiguration.findIssueLinks(commentText)) {
           if (refs == null) refs = new SmartList<>();
           if (provider == null) {

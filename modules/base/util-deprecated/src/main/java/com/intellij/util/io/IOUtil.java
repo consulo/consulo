@@ -4,10 +4,9 @@ package com.intellij.util.io;
 import com.intellij.openapi.util.ThreadLocalCachedValue;
 import com.intellij.openapi.util.ThrowableComputable;
 import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.openapi.vfs.CharsetToolkit;
 import com.intellij.util.SystemProperties;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.*;
 import java.lang.reflect.Field;
@@ -35,7 +34,7 @@ public class IOUtil {
 
       byte[] bytes = new byte[length * 2];
       stream.readFully(bytes);
-      return new String(bytes, 0, length * 2, CharsetToolkit.UTF_16BE_CHARSET);
+      return new String(bytes, 0, length * 2, StandardCharsets.UTF_16BE);
     }
     catch (IOException e) {
       throw e;

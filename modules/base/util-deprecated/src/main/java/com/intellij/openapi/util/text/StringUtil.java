@@ -15,7 +15,6 @@
  */
 package com.intellij.openapi.util.text;
 
-import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.util.*;
@@ -3102,21 +3101,6 @@ public class StringUtil extends StringUtilRt {
   @Contract(pure = true)
   public static String getShortName(@Nonnull String fqName, char separator) {
     return StringUtilRt.getShortName(fqName, separator);
-  }
-
-  @Nonnull
-  @Contract(pure = true)
-  public static CharSequence newBombedCharSequence(@Nonnull CharSequence sequence, long delay) {
-    final long myTime = System.currentTimeMillis() + delay;
-    return new BombedCharSequence(sequence) {
-      @Override
-      protected void checkCanceled() {
-        long l = System.currentTimeMillis();
-        if (l >= myTime) {
-          throw new ProcessCanceledException();
-        }
-      }
-    };
   }
 
   public static boolean trimEnd(@Nonnull StringBuilder buffer, @Nonnull CharSequence end) {

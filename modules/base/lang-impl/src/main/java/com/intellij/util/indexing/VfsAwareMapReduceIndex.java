@@ -39,7 +39,7 @@ public class VfsAwareMapReduceIndex<Key, Value, Input> extends MapReduceIndex<Ke
   static {
     if (!DebugAssertions.DEBUG) {
       final Application app = ApplicationManager.getApplication();
-      DebugAssertions.DEBUG = (app.isEAP() || app.isInternal()) && !ApplicationInfoImpl.isInPerformanceTest();
+      DebugAssertions.DEBUG = (app.isInternal()) && !ApplicationInfoImpl.isInPerformanceTest();
     }
   }
 

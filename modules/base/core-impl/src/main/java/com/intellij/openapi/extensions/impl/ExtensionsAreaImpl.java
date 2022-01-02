@@ -104,10 +104,10 @@ public class ExtensionsAreaImpl {
         LOG.error("'implementation' attribute not specified for '" + epName + "' extension in '" + pluginId.getIdString() + "' plugin");
         return;
       }
-      adapter = new ExtensionComponentAdapter(implClass, mapElement(element), pluginDescriptor, shouldDeserializeInstance(element));
+      adapter = new ExtensionComponentAdapter(myComponentManager, implClass, mapElement(element), pluginDescriptor, shouldDeserializeInstance(element));
     }
     else {
-      adapter = new ExtensionComponentAdapter(extensionPoint.getClassName(), mapElement(element), pluginDescriptor, true);
+      adapter = new ExtensionComponentAdapter(myComponentManager, extensionPoint.getClassName(), mapElement(element), pluginDescriptor, true);
     }
     extensionPoint.registerExtensionAdapter(adapter);
   }
@@ -213,6 +213,10 @@ public class ExtensionsAreaImpl {
       return EmptyExtensionPoint.get();
     }
     return extensionPoint;
+  }
+
+  public ComponentManager getComponentManager() {
+    return myComponentManager;
   }
 
   @Nonnull

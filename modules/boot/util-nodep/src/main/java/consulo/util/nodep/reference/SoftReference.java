@@ -29,7 +29,7 @@ import java.lang.ref.ReferenceQueue;
  * @author max
  */
 @SuppressWarnings("ClassNameSameAsAncestorName")
-public class SoftReference<T> extends java.lang.ref.SoftReference<T> implements Getter<T> {
+public class SoftReference<T> extends java.lang.ref.SoftReference<T> {
   //private final T myReferent;
 
   public SoftReference(final T referent) {
@@ -52,7 +52,7 @@ public class SoftReference<T> extends java.lang.ref.SoftReference<T> implements 
     return ref == null ? null : ref.get();
   }
   @Nullable
-  public static <T> T deref(@Nullable Getter<T> ref) {
+  public static <T> T deref(@Nullable SoftReference<T> ref) {
     return ref == null ? null : ref.get();
   }
 }

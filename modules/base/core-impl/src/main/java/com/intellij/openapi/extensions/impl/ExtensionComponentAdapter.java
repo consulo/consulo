@@ -15,11 +15,14 @@
  */
 package com.intellij.openapi.extensions.impl;
 
+import com.intellij.openapi.components.ComponentManager;
 import com.intellij.openapi.extensions.LoadingOrder;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.util.xmlb.XmlSerializer;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginId;
+import consulo.extensions.ComponentAware;
+import consulo.extensions.PluginAware;
 import consulo.injecting.InjectingProblemException;
 import org.jdom.Element;
 
@@ -32,15 +35,21 @@ import java.util.function.Function;
 public class ExtensionComponentAdapter<T> implements LoadingOrder.Orderable {
   public static final ExtensionComponentAdapter[] EMPTY_ARRAY = new ExtensionComponentAdapter[0];
 
-  protected T myComponentInstance;
+  protected volatile T myComponentInstance;
   protected Class<T> myImplementationClass;
 
+  private final ComponentManager myComponentManager;
   private final String myImplementationClassName;
   private final Element myExtensionElement;
   private final PluginDescriptor myPluginDescriptor;
   private final boolean myDeserializeInstance;
 
-  public ExtensionComponentAdapter(@Nonnull String implementationClass, Element extensionElement, PluginDescriptor pluginDescriptor, boolean deserializeInstance) {
+  public ExtensionComponentAdapter(@Nonnull ComponentManager componentManager,
+                                   @Nonnull String implementationClass,
+                                   Element extensionElement,
+                                   PluginDescriptor pluginDescriptor,
+                                   boolean deserializeInstance) {
+    myComponentManager = componentManager;
     myImplementationClassName = implementationClass;
     myExtensionElement = extensionElement;
     myPluginDescriptor = pluginDescriptor;
@@ -81,9 +90,12 @@ public class ExtensionComponentAdapter<T> implements LoadingOrder.Orderable {
         throw new PluginExtensionInitializationException(t.getMessage(), t, pluginId);
       }
 
-      if(myComponentInstance instanceof consulo.extensions.PluginAware) {
-        consulo.extensions.PluginAware pluginAware = (consulo.extensions.PluginAware)myComponentInstance;
+      if (myComponentInstance instanceof PluginAware pluginAware) {
         pluginAware.setPluginDescriptor(myPluginDescriptor);
+      }
+
+      if (myComponentInstance instanceof ComponentAware componentAware) {
+        componentAware.setComponent(myComponentManager);
       }
     }
 

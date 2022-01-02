@@ -29,5 +29,6 @@ public @interface DeprecationInfo {
   /**
    * @return version or date (for date pattern is yyyy-MM-dd)
    */
+  @Deprecated(forRemoval = true)
   String until() default "0";
 }

@@ -18,7 +18,6 @@ package com.intellij.util.io;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.SystemInfoRt;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.CharsetToolkit;
 import com.intellij.util.ThreeState;
 import consulo.annotation.DeprecationInfo;
 import consulo.logging.Logger;
@@ -30,7 +29,6 @@ import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
@@ -279,12 +277,7 @@ public class URLUtil {
    */
   @Nonnull
   public static String encodeURIComponent(@Nonnull String s) {
-    try {
-      return URLEncoder.encode(s, CharsetToolkit.UTF8).replace("+", "%20").replace("%21", "!").replace("%27", "'").replace("%28", "(").replace("%29", ")").replace("%7E", "~");
-    }
-    catch (UnsupportedEncodingException e) {
-      return s;
-    }
+    return URLEncoder.encode(s, StandardCharsets.UTF_8).replace("+", "%20").replace("%21", "!").replace("%27", "'").replace("%28", "(").replace("%29", ")").replace("%7E", "~");
   }
 
   @Nonnull

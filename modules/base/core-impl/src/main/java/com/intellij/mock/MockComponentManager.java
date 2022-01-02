@@ -16,8 +16,6 @@
 package com.intellij.mock;
 
 import com.intellij.openapi.components.ComponentManager;
-import com.intellij.openapi.util.Condition;
-import com.intellij.openapi.util.Conditions;
 import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.impl.MessageBusFactory;
 import consulo.disposer.Disposable;
@@ -27,6 +25,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.BooleanSupplier;
 
 @Deprecated
 public class MockComponentManager extends UserDataHolderBase implements ComponentManager {
@@ -75,7 +74,7 @@ public class MockComponentManager extends UserDataHolderBase implements Componen
 
   @Nonnull
   @Override
-  public Condition getDisposed() {
-    return Conditions.alwaysFalse();
+  public BooleanSupplier getDisposed() {
+    return () -> false;
   }
 }

@@ -15,8 +15,11 @@
  */
 package consulo.test.light.impl;
 
+import com.intellij.openapi.components.ComponentManager;
 import com.intellij.openapi.extensions.impl.ExtensionComponentAdapter;
 import org.jdom.Element;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -24,8 +27,8 @@ import org.jdom.Element;
  */
 class SimpleInstanceComponentAdapter<T> extends ExtensionComponentAdapter<T> {
   @SuppressWarnings("unchecked")
-  SimpleInstanceComponentAdapter(T value) {
-    super(value.getClass().getName(), new Element("instance"), null, false);
+  SimpleInstanceComponentAdapter(@Nonnull ComponentManager componentManager, T value) {
+    super(componentManager, value.getClass().getName(), new Element("instance"), null, false);
     myComponentInstance = value;
     myImplementationClass = (Class<T>)value.getClass();
   }

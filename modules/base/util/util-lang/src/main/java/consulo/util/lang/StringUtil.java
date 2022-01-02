@@ -537,6 +537,13 @@ public class StringUtil {
     return buffer;
   }
 
+  @Nonnull
+  @Contract(pure = true)
+  public static String trimExtension(@Nonnull String name) {
+    int index = name.lastIndexOf('.');
+    return index < 0 ? name : name.substring(0, index);
+  }
+
   @Contract(pure = true)
   public static boolean isPrintableUnicode(char c) {
     int t = Character.getType(c);

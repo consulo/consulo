@@ -67,7 +67,7 @@ final class CachedValueStabilityChecker {
 
   private static boolean shouldDoChecks() {
     Application app = ApplicationManager.getApplication();
-    return app.isUnitTestMode() || app.isInternal() || app.isEAP();
+    return app.isUnitTestMode() || app.isInternal();
   }
 
   static void checkProvidersEquivalent(CachedValueProvider<?> p1, CachedValueProvider<?> p2, Key<?> key) {

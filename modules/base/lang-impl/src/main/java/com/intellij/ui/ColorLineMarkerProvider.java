@@ -18,6 +18,7 @@ package com.intellij.ui;
 import com.intellij.codeHighlighting.Pass;
 import com.intellij.codeInsight.daemon.*;
 import com.intellij.icons.AllIcons;
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.markup.GutterIconRenderer;
@@ -32,6 +33,7 @@ import consulo.awt.TargetAWT;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
 import consulo.ui.color.ColorValue;
+import jakarta.inject.Inject;
 
 import javax.annotation.Nonnull;
 import java.awt.event.MouseEvent;
@@ -86,12 +88,17 @@ public final class ColorLineMarkerProvider implements LineMarkerProvider {
     }
   }
 
-  private final List<ElementColorProvider> myExtensions = ElementColorProvider.EP_NAME.getExtensionList();
+  private final Application myApplication;
 
+  @Inject
+  public ColorLineMarkerProvider(Application application) {
+    myApplication = application;
+  }
+  
   @RequiredReadAction
   @Override
   public LineMarkerInfo getLineMarkerInfo(@Nonnull PsiElement element) {
-    for (ElementColorProvider colorProvider : myExtensions) {
+    for (ElementColorProvider colorProvider : ElementColorProvider.EP_NAME.getExtensionList(myApplication)) {
       final ColorValue color = colorProvider.getColorFrom(element);
       if (color != null) {
         MyInfo info = new MyInfo(element, color, colorProvider);

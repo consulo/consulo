@@ -12,6 +12,8 @@ import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiFileFactory;
 import com.intellij.ui.EditorTextField;
+import consulo.util.lang.LocalTimeCounter;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

@@ -29,8 +29,8 @@ import com.intellij.testFramework.LightVirtualFile;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.JBIterable;
 import consulo.annotation.access.RequiredReadAction;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.Comparator;
@@ -43,9 +43,8 @@ public final class LanguageUtil {
   private LanguageUtil() {
   }
 
-  public static
   @Nullable
-  Language getLanguageForPsi(@Nonnull Project project, @Nullable VirtualFile file) {
+  public static Language getLanguageForPsi(@Nonnull Project project, @Nullable VirtualFile file) {
     return getLanguageForPsi(project, file, null);
   }
 

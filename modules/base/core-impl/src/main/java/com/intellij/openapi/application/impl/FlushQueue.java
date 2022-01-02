@@ -8,13 +8,14 @@ import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.util.ActionCallback;
-import com.intellij.openapi.util.Condition;
 import com.intellij.util.ExceptionUtil;
-import org.jetbrains.annotations.*;
+import org.jetbrains.annotations.NonNls;
+import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
+import java.util.function.BooleanSupplier;
 import java.util.function.Consumer;
 
 final class FlushQueue {
@@ -102,7 +103,7 @@ final class FlushQueue {
       while (!myQueue.isEmpty()) {
         RunnableInfo info = myQueue.getFirst();
 
-        if (info.expired.value(null)) {
+        if (info.expired.getAsBoolean()) {
           myQueue.removeFirst();
           info.markDone();
           continue;
@@ -173,7 +174,7 @@ final class FlushQueue {
 
       List<RunnableInfo> alive = new ArrayList<>(myQueue.size());
       for (RunnableInfo info : myQueue) {
-        if (info.expired.value(null)) {
+        if (info.expired.getAsBoolean()) {
           info.markDone();
         }
         else {
@@ -200,14 +201,14 @@ final class FlushQueue {
     @Nonnull
     private final ModalityState modalityState;
     @Nonnull
-    private final Condition<?> expired;
+    private final BooleanSupplier expired;
     @Nullable
     private final ActionCallback callback;
     @Nullable
     private final ClientId clientId;
 
     //@Async.Schedule
-    RunnableInfo(@Nonnull Runnable runnable, @Nonnull ModalityState modalityState, @Nonnull Condition<?> expired, @Nullable ActionCallback callback) {
+    RunnableInfo(@Nonnull Runnable runnable, @Nonnull ModalityState modalityState, @Nonnull BooleanSupplier expired, @Nullable ActionCallback callback) {
       this.runnable = runnable;
       this.modalityState = modalityState;
       this.expired = expired;
@@ -222,7 +223,7 @@ final class FlushQueue {
     @Override
     @NonNls
     public String toString() {
-      return "[runnable: " + runnable + "; state=" + modalityState + (expired.value(null) ? "; expired" : "") + "] ";
+      return "[runnable: " + runnable + "; state=" + modalityState + (expired.getAsBoolean() ? "; expired" : "") + "] ";
     }
   }
 }

@@ -28,7 +28,6 @@ import com.intellij.openapi.extensions.impl.ExtensionPointImpl;
 import com.intellij.openapi.extensions.impl.ExtensionsAreaImpl;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.util.Comparing;
-import com.intellij.openapi.util.Condition;
 import com.intellij.util.containers.MultiMap;
 import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.impl.MessageBusFactory;
@@ -57,6 +56,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
 
 /**
@@ -148,7 +148,7 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
   protected final ComponentManager myParent;
 
   private ComponentsRegistry myComponentsRegistry = new ComponentsRegistry();
-  private final Condition myDisposedCondition = o -> isDisposed();
+  private final BooleanSupplier myDisposedCondition = this::isDisposed;
 
   private boolean myNotLazyStepFinished;
 
@@ -466,7 +466,7 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
 
   @Override
   @Nonnull
-  public Condition getDisposed() {
+  public BooleanSupplier getDisposed() {
     return myDisposedCondition;
   }
 

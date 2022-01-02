@@ -21,15 +21,15 @@ import com.intellij.lang.FileASTNode;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.project.Project;
-import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.TextRange;
-import consulo.util.dataholder.UserDataHolder;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.impl.DiffLog;
+import com.intellij.util.IncorrectOperationException;
+import consulo.util.dataholder.Key;
+import consulo.util.dataholder.UserDataHolder;
 import consulo.util.lang.ControlFlowException;
-import consulo.util.lang.IncorrectOperationException;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;

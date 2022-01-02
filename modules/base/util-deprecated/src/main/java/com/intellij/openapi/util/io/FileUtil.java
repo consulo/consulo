@@ -36,6 +36,7 @@ import javax.annotation.Nullable;
 import java.io.*;
 import java.lang.reflect.Method;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
@@ -1069,7 +1070,7 @@ public class FileUtil extends FileUtilRt {
   }
 
   public static void appendToFile(@Nonnull File file, @Nonnull String text) throws IOException {
-    writeToFile(file, text.getBytes(CharsetToolkit.UTF8_CHARSET), true);
+    writeToFile(file, text.getBytes(StandardCharsets.UTF_8), true);
   }
 
   public static void writeToFile(@Nonnull File file, @Nonnull byte[] text) throws IOException {
@@ -1081,7 +1082,7 @@ public class FileUtil extends FileUtilRt {
   }
 
   public static void writeToFile(@Nonnull File file, @Nonnull String text, boolean append) throws IOException {
-    writeToFile(file, text.getBytes(CharsetToolkit.UTF8_CHARSET), append);
+    writeToFile(file, text.getBytes(StandardCharsets.UTF_8), append);
   }
 
   public static void writeToFile(@Nonnull File file, @Nonnull byte[] text, int off, int len) throws IOException {

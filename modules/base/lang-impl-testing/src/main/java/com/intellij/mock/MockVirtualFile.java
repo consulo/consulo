@@ -16,7 +16,7 @@
 package com.intellij.mock;
 
 import com.intellij.openapi.vfs.*;
-import com.intellij.util.LocalTimeCounter;
+import consulo.util.lang.LocalTimeCounter;
 import com.intellij.util.SmartList;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;

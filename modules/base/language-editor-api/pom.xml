@@ -38,7 +38,12 @@
   <dependencies>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>consulo-core-api</artifactId>
+      <artifactId>consulo-language-api</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>consulo-component-api</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>

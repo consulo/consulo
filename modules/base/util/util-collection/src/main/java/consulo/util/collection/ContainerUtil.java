@@ -473,4 +473,170 @@ public class ContainerUtil {
       }
     };
   }
+
+  @Nonnull
+  @Contract(pure = true)
+  public static <T> Iterable<T> concat(@Nonnull final Iterable<? extends T>... iterables) {
+    return new Iterable<T>() {
+      @Nonnull
+      @Override
+      public Iterator<T> iterator() {
+        Iterator[] iterators = new Iterator[iterables.length];
+        for (int i = 0; i < iterables.length; i++) {
+          Iterable<? extends T> iterable = iterables[i];
+          iterators[i] = iterable.iterator();
+        }
+        @SuppressWarnings("unchecked") Iterator<T> i = concatIterators(iterators);
+        return i;
+      }
+    };
+  }
+
+
+  /**
+   * @return read-only list consisting of the lists added together
+   */
+  @Nonnull
+  @Contract(pure = true)
+  public static <T> List<T> concat(@Nonnull final List<? extends T>... lists) {
+    int size = 0;
+    for (List<? extends T> each : lists) {
+      size += each.size();
+    }
+    if (size == 0) return List.of();
+    final int finalSize = size;
+    return new AbstractList<T>() {
+      @Override
+      public T get(final int index) {
+        if (index >= 0 && index < finalSize) {
+          int from = 0;
+          for (List<? extends T> each : lists) {
+            if (from <= index && index < from + each.size()) {
+              return each.get(index - from);
+            }
+            from += each.size();
+          }
+          if (from != finalSize) {
+            throw new ConcurrentModificationException("The list has changed. Its size was " + finalSize + "; now it's " + from);
+          }
+        }
+        throw new IndexOutOfBoundsException("index: " + index + "size: " + size());
+      }
+
+      @Override
+      public int size() {
+        return finalSize;
+      }
+    };
+  }
+
+  /**
+   * @return read-only list consisting of the two lists added together
+   */
+  @Nonnull
+  @Contract(pure = true)
+  public static <T> List<T> concat(@Nonnull final List<? extends T> list1, @Nonnull final List<? extends T> list2) {
+    if (list1.isEmpty() && list2.isEmpty()) {
+      return Collections.emptyList();
+    }
+    if (list1.isEmpty()) {
+      //noinspection unchecked
+      return (List<T>)list2;
+    }
+    if (list2.isEmpty()) {
+      //noinspection unchecked
+      return (List<T>)list1;
+    }
+
+    final int size1 = list1.size();
+    final int size = size1 + list2.size();
+
+    return new AbstractList<T>() {
+      @Override
+      public T get(int index) {
+        if (index < size1) {
+          return list1.get(index);
+        }
+
+        return list2.get(index - size1);
+      }
+
+      @Override
+      public int size() {
+        return size;
+      }
+    };
+  }
+
+  @Nonnull
+  @Contract(pure = true)
+  public static <T> Iterator<T> concatIterators(@Nonnull Iterator<T>... iterators) {
+    return new SequenceIterator<T>(iterators);
+  }
+
+  @Nonnull
+  @Contract(pure = true)
+  public static <T> Iterator<T> concatIterators(@Nonnull Collection<Iterator<T>> iterators) {
+    return new SequenceIterator<T>(iterators);
+  }
+
+  @Nonnull
+  @Contract(pure = true)
+  public static <T, V> List<T> concat(@Nonnull V[] array, @Nonnull Function<V, Collection<? extends T>> fun) {
+    return concat(Arrays.asList(array), fun);
+  }
+
+  /**
+   * @return read-only list consisting of the elements from the collections stored in list added together
+   */
+  @Nonnull
+  @Contract(pure = true)
+  public static <T> List<T> concat(@Nonnull Iterable<? extends Collection<T>> list) {
+    List<T> result = new ArrayList<T>();
+    for (final Collection<T> ts : list) {
+      result.addAll(ts);
+    }
+    return result.isEmpty() ? Collections.<T>emptyList() : result;
+  }
+
+  /**
+   * @param appendTail specify whether additional values should be appended in front or after the list
+   * @return read-only list consisting of the elements from specified list with some additional values
+   * @deprecated Use {@link #append(List, Object[])} or {@link #prepend(List, Object[])} instead
+   */
+  @Deprecated
+  @Nonnull
+  @Contract(pure = true)
+  public static <T> List<T> concat(boolean appendTail, @Nonnull List<? extends T> list, @Nonnull T... values) {
+    return appendTail ? concat(list, list(values)) : concat(list(values), list);
+  }
+
+  /**
+   * @return read-only list consisting of the lists added together
+   */
+  @Nonnull
+  @Contract(pure = true)
+  public static <T> List<T> concat(@Nonnull final List<List<? extends T>> lists) {
+    @SuppressWarnings("unchecked") List<? extends T>[] array = lists.toArray(new List[lists.size()]);
+    return concat(array);
+  }
+
+  /**
+   * @return read-only list consisting of the lists (made by listGenerator) added together
+   */
+  @Nonnull
+  @Contract(pure = true)
+  public static <T, V> List<T> concat(@Nonnull Iterable<? extends V> list, @Nonnull Function<V, Collection<? extends T>> listGenerator) {
+    List<T> result = new ArrayList<T>();
+    for (final V v : list) {
+      result.addAll(listGenerator.apply(v));
+    }
+    return result.isEmpty() ? List.of() : result;
+  }
+
+  @Nonnull
+  @Contract(pure = true)
+  public static <T> List<T> list(@Nonnull T... items) {
+    return Arrays.asList(items);
+  }
 }

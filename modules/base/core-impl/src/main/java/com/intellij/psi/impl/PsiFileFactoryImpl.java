@@ -35,17 +35,16 @@ import com.intellij.psi.impl.source.tree.FileElement;
 import com.intellij.psi.impl.source.tree.TreeElement;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.testFramework.LightVirtualFile;
+import com.intellij.util.text.CharSequenceSubSequence;
 import consulo.lang.LanguageVersion;
 import consulo.lang.util.LanguageVersionUtil;
-import com.intellij.util.LocalTimeCounter;
-import com.intellij.util.text.CharSequenceSubSequence;
 import consulo.logging.Logger;
+import consulo.util.lang.LocalTimeCounter;
 import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import jakarta.inject.Singleton;
 
 @Singleton
 public class PsiFileFactoryImpl extends PsiFileFactory {

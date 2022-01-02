@@ -33,7 +33,7 @@ import javax.annotation.Nonnull;
  * @since 27.09.14
  */
 public interface AddModuleDependencyActionProvider<T, C extends AddModuleDependencyContext<T>> {
-  StrictExtensionPointName<Application, AddModuleDependencyActionProvider> EP_NAME = StrictExtensionPointName.forApplication("com.intellij.addModuleDependencyActionProvider");
+  StrictExtensionPointName<Application, AddModuleDependencyActionProvider> EP_NAME = StrictExtensionPointName.create(Application.class, "com.intellij.addModuleDependencyActionProvider");
 
   C createContext(@Nonnull ClasspathPanel classpathPanel, @Nonnull ModulesConfigurator modulesConfigurator, @Nonnull LibrariesConfigurator librariesConfigurator);
 

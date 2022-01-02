@@ -8,5 +8,5 @@ import consulo.extensions.StrictExtensionPointName;
  * @author traff
  */
 public abstract class CoverageOptions extends ConfigurableProvider {
-  public static final StrictExtensionPointName<Project, CoverageOptions> EP_NAME = StrictExtensionPointName.forProject("com.intellij.coverageOptions");
+  public static final StrictExtensionPointName<Project, CoverageOptions> EP_NAME = StrictExtensionPointName.create(Project.class, "com.intellij.coverageOptions");
 }

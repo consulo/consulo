@@ -17,8 +17,9 @@
 package com.intellij.psi.impl.source.tree;
 
 import com.intellij.lang.ASTNode;
-import com.intellij.openapi.util.Ref;
 import com.intellij.util.diff.FlyweightCapableTreeStructure;
+import consulo.util.lang.ref.SimpleReference;
+
 import javax.annotation.Nonnull;
 
 /**
@@ -49,7 +50,7 @@ public class ASTStructure implements FlyweightCapableTreeStructure<ASTNode> {
   }
 
   @Override
-  public int getChildren(@Nonnull final ASTNode astNode, @Nonnull final Ref<ASTNode[]> into) {
+  public int getChildren(@Nonnull final ASTNode astNode, @Nonnull final SimpleReference<ASTNode[]> into) {
     ASTNode child = astNode.getFirstChildNode();
     if (child == null) return 0;
 

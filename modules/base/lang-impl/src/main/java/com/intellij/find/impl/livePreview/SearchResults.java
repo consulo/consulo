@@ -27,9 +27,10 @@ import com.intellij.util.concurrency.FutureResult;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.Stack;
 import com.intellij.util.ui.UIUtil;
+import consulo.util.BombedStringUtil;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.awt.*;
 import java.lang.reflect.InvocationTargetException;
@@ -309,7 +310,7 @@ public class SearchResults implements DocumentListener, CaretListener {
     while (true) {
       FindResult result;
       try {
-        CharSequence bombedCharSequence = StringUtil.newBombedCharSequence(charSequence, 3000);
+        CharSequence bombedCharSequence = BombedStringUtil.newBombedCharSequence(charSequence, 3000);
         result = findManager.findString(bombedCharSequence, offset, findModel, virtualFile);
         ((StringUtil.BombedCharSequence)bombedCharSequence).defuse();
       }

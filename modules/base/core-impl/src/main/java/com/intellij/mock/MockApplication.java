@@ -33,6 +33,7 @@ import javax.annotation.Nonnull;
 import java.awt.*;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
+import java.util.function.BooleanSupplier;
 
 @Deprecated
 public class MockApplication extends MockComponentManager implements Application {
@@ -213,11 +214,11 @@ public class MockApplication extends MockComponentManager implements Application
   }
 
   @Override
-  public void invokeLater(@Nonnull final Runnable runnable, @Nonnull final Condition expired) {
+  public void invokeLater(@Nonnull final Runnable runnable, @Nonnull final BooleanSupplier expired) {
   }
 
   @Override
-  public void invokeLater(@Nonnull final Runnable runnable, @Nonnull final ModalityState state, @Nonnull final Condition expired) {
+  public void invokeLater(@Nonnull final Runnable runnable, @Nonnull final ModalityState state, @Nonnull final BooleanSupplier expired) {
   }
 
   @Override

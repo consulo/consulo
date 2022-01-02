@@ -23,7 +23,6 @@ import com.intellij.openapi.progress.ProgressIndicatorProvider;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Pair;
-import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiErrorElement;
 import com.intellij.psi.PsiFile;
@@ -55,6 +54,7 @@ import consulo.util.collection.primitive.ints.IntObjectMap;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UnprotectedUserDataHolder;
 import consulo.util.lang.ThreeState;
+import consulo.util.lang.ref.SimpleReference;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
@@ -1660,7 +1660,7 @@ public class PsiBuilderImpl extends UnprotectedUserDataHolder implements PsiBuil
     private LighterASTNode[] nodes;
 
     @Override
-    public int getChildren(@Nonnull final LighterASTNode item, @Nonnull final Ref<LighterASTNode[]> into) {
+    public int getChildren(@Nonnull final LighterASTNode item, @Nonnull final SimpleReference<LighterASTNode[]> into) {
       if (item instanceof LazyParseableToken) {
         final FlyweightCapableTreeStructure<LighterASTNode> tree = ((LazyParseableToken)item).parseContents();
         final LighterASTNode root = tree.getRoot();

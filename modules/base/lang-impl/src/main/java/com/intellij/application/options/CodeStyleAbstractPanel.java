@@ -45,7 +45,7 @@ import com.intellij.ui.UserActivityWatcher;
 import com.intellij.ui.border.CustomLineBorder;
 import com.intellij.util.Alarm;
 import com.intellij.util.IncorrectOperationException;
-import com.intellij.util.LocalTimeCounter;
+import consulo.util.lang.LocalTimeCounter;
 import com.intellij.util.ui.update.UiNotifyConnector;
 import consulo.disposer.Disposable;
 import consulo.logging.Logger;

@@ -35,7 +35,7 @@ import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;
 import com.intellij.testFramework.PlatformLangTestCase;
 import com.intellij.util.IncorrectOperationException;
-import com.intellij.util.LocalTimeCounter;
+import consulo.util.lang.LocalTimeCounter;
 
 import javax.annotation.Nonnull;
 import java.io.ByteArrayOutputStream;

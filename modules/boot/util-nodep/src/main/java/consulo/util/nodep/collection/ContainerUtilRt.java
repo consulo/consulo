@@ -15,16 +15,12 @@
  */
 package consulo.util.nodep.collection;
 
-import consulo.util.nodep.ArrayUtilRt;
 import consulo.util.nodep.Pair;
 import consulo.util.nodep.function.Function;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.io.Serializable;
 import java.util.*;
-import java.util.LinkedHashSet;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * Stripped-down version of {@code com.intellij.util.containers.ContainerUtil}.
@@ -233,80 +229,6 @@ public class ContainerUtilRt {
   }
 
   /**
-   * A variant of {@link java.util.Collections#emptyList()},
-   * except that {@link #toArray()} here does not create garbage <code>new Object[0]</code> constantly.
-   */
-  private static class EmptyList<T> extends AbstractList<T> implements RandomAccess, Serializable {
-    private static final long serialVersionUID = 1L;
-
-    private static final EmptyList INSTANCE = new EmptyList();
-
-    @Override
-    public int size() {
-      return 0;
-    }
-
-    @Override
-    public boolean contains(Object obj) {
-      return false;
-    }
-
-    @Override
-    public T get(int index) {
-      throw new IndexOutOfBoundsException("Index: " + index);
-    }
-
-    @Nonnull
-    @Override
-    public Object[] toArray() {
-      return ArrayUtilRt.EMPTY_OBJECT_ARRAY;
-    }
-
-    @Nonnull
-    @Override
-    public <E> E[] toArray(@Nonnull E[] a) {
-      if (a.length != 0) {
-        a[0] = null;
-      }
-      return a;
-    }
-
-    @Nonnull
-    @Override
-    public Iterator<T> iterator() {
-      return EmptyIterator.getInstance();
-    }
-  }
-
-  @Nonnull
-  public static <T> List<T> emptyList() {
-    //noinspection unchecked
-    return (List<T>)EmptyList.INSTANCE;
-  }
-
-  @Nonnull
-  public static <T> CopyOnWriteArrayList<T> createEmptyCOWList() {
-    // does not create garbage new Object[0]
-    return new CopyOnWriteArrayList<T>(ContainerUtilRt.<T>emptyList());
-  }
-
-  /**
-   * @see #addIfNotNull(Collection, Object)
-   */
-  @Deprecated
-  public static <T> void addIfNotNull(@Nullable T element, @Nonnull Collection<T> result) {
-    if (element != null) {
-      result.add(element);
-    }
-  }
-
-  public static <T> void addIfNotNull(@Nonnull Collection<T> result, @Nullable T element) {
-    if (element != null) {
-      result.add(element);
-    }
-  }
-
-  /**
    * @return read-only list consisting of the elements from array converted by mapper
    */
   @Nonnull
@@ -319,7 +241,7 @@ public class ContainerUtilRt {
    */
   @Nonnull
   public static <T, V> List<V> map2List(@Nonnull Collection<? extends T> collection, @Nonnull Function<T, V> mapper) {
-    if (collection.isEmpty()) return emptyList();
+    if (collection.isEmpty()) return Collections.emptyList();
     List<V> list = new ArrayList<V>(collection.size());
     for (final T t : collection) {
       list.add(mapper.fun(t));

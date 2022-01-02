@@ -76,6 +76,7 @@ import java.awt.*;
 import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.function.BooleanSupplier;
 import java.util.function.Consumer;
 
 public class DesktopApplicationImpl extends BaseApplication {
@@ -233,19 +234,19 @@ public class DesktopApplicationImpl extends BaseApplication {
   }
 
   @Override
-  public void invokeLater(@Nonnull final Runnable runnable, @Nonnull final Condition expired) {
+  public void invokeLater(@Nonnull final Runnable runnable, @Nonnull final BooleanSupplier expired) {
     invokeLater(runnable, ModalityState.defaultModalityState(), expired);
   }
 
   @Override
-  public void invokeLater(@Nonnull final Runnable runnable, @Nonnull final ModalityState state) {
+  public void invokeLater(@Nonnull final Runnable runnable, @Nonnull final consulo.ui.ModalityState state) {
     invokeLater(runnable, state, getDisposed());
   }
 
   @Override
-  public void invokeLater(@Nonnull final Runnable runnable, @Nonnull final ModalityState state, @Nonnull final Condition expired) {
-    Runnable r = transactionGuard().wrapLaterInvocation(runnable, state);
-    LaterInvocator.invokeLaterWithCallback(() -> runIntendedWriteActionOnCurrentThread(r), state, expired, null, true);
+  public void invokeLater(@Nonnull final Runnable runnable, @Nonnull final consulo.ui.ModalityState state, @Nonnull final BooleanSupplier expired) {
+    Runnable r = transactionGuard().wrapLaterInvocation(runnable, (ModalityState)state);
+    LaterInvocator.invokeLaterWithCallback(() -> runIntendedWriteActionOnCurrentThread(r), (ModalityState)state, expired, null, true);
   }
 
   @RequiredUIAccess
@@ -299,7 +300,7 @@ public class DesktopApplicationImpl extends BaseApplication {
   }
 
   @Override
-  public void invokeAndWait(@Nonnull Runnable runnable, @Nonnull ModalityState modalityState) {
+  public void invokeAndWait(@Nonnull Runnable runnable, @Nonnull consulo.ui.ModalityState modalityState) {
     if (isDispatchThread()) {
       runnable.run();
       return;
@@ -313,8 +314,8 @@ public class DesktopApplicationImpl extends BaseApplication {
       throw new IllegalStateException("Calling invokeAndWait from read-action leads to possible deadlock.");
     }
 
-    Runnable r = transactionGuard().wrapLaterInvocation(runnable, modalityState);
-    LaterInvocator.invokeAndWait(() -> runIntendedWriteActionOnCurrentThread(r), modalityState);
+    Runnable r = transactionGuard().wrapLaterInvocation(runnable, (ModalityState)modalityState);
+    LaterInvocator.invokeAndWait(() -> runIntendedWriteActionOnCurrentThread(r), (ModalityState)modalityState);
   }
 
   @Override

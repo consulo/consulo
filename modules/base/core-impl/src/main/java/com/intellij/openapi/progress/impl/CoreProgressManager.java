@@ -390,7 +390,7 @@ public class CoreProgressManager extends ProgressManager implements Disposable {
   public Future<?> runProcessWithProgressAsynchronously(@Nonnull final Task.Backgroundable task,
                                                         @Nonnull final ProgressIndicator progressIndicator,
                                                         @Nullable final Runnable continuation,
-                                                        @Nonnull final ModalityState modalityState) {
+                                                        @Nonnull final consulo.ui.ModalityState modalityState) {
     IndicatorDisposable indicatorDisposable;
     if (progressIndicator instanceof Disposable) {
       // use IndicatorDisposable instead of progressIndicator to
@@ -409,7 +409,7 @@ public class CoreProgressManager extends ProgressManager implements Disposable {
                                                   @Nonnull CompletableFuture<? extends ProgressIndicator> progressIndicator,
                                                   @Nullable Runnable continuation,
                                                   @Nullable IndicatorDisposable indicatorDisposable,
-                                                  @Nullable ModalityState modalityState) {
+                                                  @Nullable consulo.ui.ModalityState modalityState) {
     AtomicLong elapsed = new AtomicLong();
     return new ProgressRunner<>(progress -> {
       long start = System.currentTimeMillis();
@@ -427,11 +427,11 @@ public class CoreProgressManager extends ProgressManager implements Disposable {
 
       ModalityState modality;
       if (modalityState != null) {
-        modality = modalityState;
+        modality = (ModalityState)modalityState;
       }
       else {
         try {
-          modality = progressIndicator.get().getModalityState();
+          modality = (ModalityState)progressIndicator.get().getModalityState();
         }
         catch (Throwable e) {
           modality = ModalityState.NON_MODAL;
@@ -865,7 +865,7 @@ public class CoreProgressManager extends ProgressManager implements Disposable {
   @Nonnull
   public static ModalityState getCurrentThreadProgressModality() {
     ProgressIndicator indicator = threadTopLevelIndicators.get(Thread.currentThread().getId());
-    ModalityState modality = indicator == null ? null : indicator.getModalityState();
+    ModalityState modality = indicator == null ? null : (ModalityState)indicator.getModalityState();
     return modality != null ? modality : ModalityState.NON_MODAL;
   }
 

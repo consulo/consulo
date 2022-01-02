@@ -38,7 +38,6 @@ import consulo.ui.image.Image;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.dataholder.Key;
 import jakarta.inject.Inject;
-import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 
@@ -56,7 +55,6 @@ public class CompileStepBeforeRun extends BeforeRunTaskProvider<CompileStepBefor
   private static final Logger LOG = Logger.getInstance(CompileStepBeforeRun.class);
   public static final Key<MakeBeforeRunTask> ID = Key.create("Make");
 
-  @NonNls
   protected static final String MAKE_PROJECT_ON_RUN_KEY = "makeProjectOnRun";
 
   private final Project myProject;

@@ -16,7 +16,6 @@
 package com.intellij.psi.stubs;
 
 import com.intellij.lang.*;
-import com.intellij.openapi.diagnostic.LogUtil;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.fileTypes.LanguageFileType;
 import com.intellij.openapi.progress.ProgressManager;
@@ -26,10 +25,11 @@ import com.intellij.psi.impl.source.PsiFileImpl;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.ILightStubFileElementType;
 import com.intellij.util.containers.BooleanStack;
-import consulo.util.collection.primitive.ints.IntStack;
 import com.intellij.util.containers.Stack;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.logging.Logger;
+import consulo.util.collection.primitive.ints.IntStack;
+import consulo.util.lang.ObjectUtil;
 
 import javax.annotation.Nonnull;
 import java.util.List;
@@ -149,7 +149,7 @@ public class LightStubBuilder implements StubBuilder {
         }
       }
       else {
-        LOG.error("Element is not of ILightStubElementType: " + LogUtil.objectAndClass(elementType) + ", " + element);
+        LOG.error("Element is not of ILightStubElementType: " + ObjectUtil.objectInfo(elementType) + ", " + element);
       }
     }
 

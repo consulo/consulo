@@ -15,9 +15,9 @@
  */
 package com.intellij.util.ui;
 
-import com.intellij.openapi.diagnostic.LogUtil;
-import consulo.logging.Logger;
 import com.intellij.util.ListWithSelection;
+import consulo.logging.Logger;
+import consulo.util.lang.ObjectUtil;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -65,7 +65,7 @@ public class ComboBoxTableCellRenderer extends JPanel implements TableCellRender
     }
     else {
       if (value != null) {
-        LOG.error("value " + LogUtil.objectAndClass(value) + ", at " + row + ":" + column + ", in " + table.getModel());
+        LOG.error("value " + ObjectUtil.objectInfo(value) + ", at " + row + ":" + column + ", in " + table.getModel());
       }
       myCombo.removeAllItems();
       myCombo.setSelectedIndex(-1);

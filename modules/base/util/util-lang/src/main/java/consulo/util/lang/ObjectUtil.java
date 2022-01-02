@@ -216,4 +216,8 @@ public class ObjectUtil {
   //  }
   //  return -(low + 1);
   //}
+  @Nonnull
+  public static  String objectInfo(@Nullable Object o) {
+    return o != null ? o + " (" + o.getClass().getName() + ")" : "null";
+  }
 }

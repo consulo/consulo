@@ -57,7 +57,7 @@ public abstract class LightExtensionRegistrator {
 
   protected <T> void registerExtension(ExtensionsAreaImpl area, ExtensionPointName<T> extensionPointName, T value) {
     ExtensionPointImpl<T> point = area.getExtensionPointImpl(extensionPointName);
-    point.registerExtensionAdapter(new SimpleInstanceComponentAdapter<>(value));
+    point.registerExtensionAdapter(new SimpleInstanceComponentAdapter<>(area.getComponentManager(), value));
   }
 
   protected void registerExtensionPoint(ExtensionsAreaImpl area, ExtensionPointName<?> name, Class aClass) {

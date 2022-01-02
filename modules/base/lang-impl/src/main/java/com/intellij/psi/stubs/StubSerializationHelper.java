@@ -1,7 +1,6 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.psi.stubs;
 
-import com.intellij.openapi.diagnostic.LogUtil;
 import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.util.io.BufferExposingByteArrayOutputStream;
 import com.intellij.openapi.util.io.StreamUtil;
@@ -15,6 +14,7 @@ import com.intellij.util.io.DataInputOutputUtil;
 import consulo.disposer.Disposable;
 import consulo.logging.Logger;
 import consulo.util.collection.primitive.ints.ConcurrentIntObjectMap;
+import consulo.util.lang.ObjectUtil;
 import gnu.trove.TIntObjectHashMap;
 import gnu.trove.TObjectIntHashMap;
 
@@ -139,7 +139,7 @@ class StubSerializationHelper {
     if (idValue == null) {
       String name = serializer.getExternalId();
       idValue = myNameToId.get(name);
-      assert idValue > 0 : "No ID found for serializer " + LogUtil.objectAndClass(serializer) +
+      assert idValue > 0 : "No ID found for serializer " + ObjectUtil.objectInfo(serializer) +
                            ", external id:" + name +
                            (serializer instanceof IElementType ? ", language:" + ((IElementType)serializer).getLanguage() + ", " + serializer : "");
       mySerializerToId.put(serializer, idValue);

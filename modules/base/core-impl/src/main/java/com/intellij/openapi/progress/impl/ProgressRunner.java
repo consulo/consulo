@@ -364,7 +364,7 @@ public final class ProgressRunner<R> {
                   LaterInvocator.leaveModal(progressIndicator);
                 }
                 else {
-                  ApplicationManager.getApplication().invokeLaterOnWriteThread(() -> LaterInvocator.leaveModal(progressIndicator), progressIndicator.getModalityState());
+                  ApplicationManager.getApplication().invokeLaterOnWriteThread(() -> LaterInvocator.leaveModal(progressIndicator), (ModalityState)progressIndicator.getModalityState());
                 }
               });
 
@@ -450,7 +450,7 @@ public final class ProgressRunner<R> {
             resultFuture.completeExceptionally(throwable);
             return;
           }
-          ModalityState processModality = progressIndicator.getModalityState();
+          ModalityState processModality = (ModalityState)progressIndicator.getModalityState();
           ApplicationManager.getApplication().invokeLaterOnWriteThread(runnable, processModality);
         });
         break;
