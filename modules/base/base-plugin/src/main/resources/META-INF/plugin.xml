@@ -2800,6 +2800,8 @@
     <postStartupActivity implementation="com.intellij.execution.impl.ProjectRunConfigurationManager$MyStartupActivity"/>
 
     <projectService serviceInterface="com.intellij.codeInsight.folding.CodeFoldingManager" serviceImplementation="com.intellij.codeInsight.folding.impl.CodeFoldingManagerImpl"/>
+
+    <applicationService serviceInterface="com.intellij.openapi.help.HelpManager" serviceImplementation="consulo.help.impl.HelpManagerImpl"/>
   </extensions>
 
   <applicationListeners>

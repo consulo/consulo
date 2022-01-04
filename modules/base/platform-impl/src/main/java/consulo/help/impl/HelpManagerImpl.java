@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2013-2022 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,18 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.help;
+package consulo.help.impl;
 
-import com.intellij.openapi.components.ServiceManager;
+import com.intellij.ide.BrowserUtil;
+import com.intellij.openapi.help.HelpManager;
+import consulo.externalService.impl.WebServiceApi;
+import consulo.util.lang.StringUtil;
+import jakarta.inject.Singleton;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public interface HelpManager {
-  @Nonnull
-  public static HelpManager getInstance() {
-    return ServiceManager.getService(HelpManager.class);
+/**
+ * @author VISTALL
+ * @since 04/01/2022
+ */
+@Singleton
+public class HelpManagerImpl implements HelpManager {
+  @Override
+  public void invokeHelp(@Nullable String id) {
+    BrowserUtil.browse(WebServiceApi.HELP.buildUrl(StringUtil.notNullize(id)));
   }
-
-  void invokeHelp(@Nullable String id);
 }
