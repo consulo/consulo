@@ -680,6 +680,6 @@ public class FileChooserDialogImpl extends DialogWrapper implements FileChooserD
 
   @Override
   protected String getHelpId() {
-    return "select.path.dialog";
+    return "platform/dialogs/open.dialog";
   }
 }
