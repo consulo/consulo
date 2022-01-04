@@ -55,7 +55,6 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.dataholder.Key;
-import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -72,7 +71,6 @@ import java.util.List;
 import java.util.*;
 
 public class FileChooserDialogImpl extends DialogWrapper implements FileChooserDialog, PathChooserDialog, FileLookup {
-  @NonNls
   public static final String FILE_CHOOSER_SHOW_PATH_PROPERTY = "FileChooser.ShowPath";
   public static final String RECENT_FILES_KEY = "file.chooser.recent.files";
   public static final String DRAG_N_DROP_HINT = "Drag and drop a file into the space above to quickly locate it in the tree";
@@ -258,7 +256,7 @@ public class FileChooserDialogImpl extends DialogWrapper implements FileChooserD
     return (DefaultActionGroup)ActionManager.getInstance().getAction("FileChooserToolbar");
   }
 
-  private void registerFileChooserShortcut(@NonNls final String baseActionId, @NonNls final String fileChooserActionId) {
+  private void registerFileChooserShortcut(final String baseActionId, final String fileChooserActionId) {
     final JTree tree = myFileSystemTree.getTree();
     final AnAction syncAction = ActionManager.getInstance().getAction(fileChooserActionId);
 
