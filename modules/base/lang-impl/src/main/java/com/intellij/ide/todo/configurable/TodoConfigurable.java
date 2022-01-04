@@ -391,12 +391,6 @@ public class TodoConfigurable implements SearchableConfigurable, Configurable.No
   }
 
   @Override
-  @Nonnull
-  public String getHelpTopic() {
-    return "preferences.toDoOptions";
-  }
-
-  @Override
   public void reset() {
     // Patterns
     myPatterns.clear();
@@ -438,7 +432,7 @@ public class TodoConfigurable implements SearchableConfigurable, Configurable.No
   @Override
   @Nonnull
   public String getId() {
-    return getHelpTopic();
+    return "toDoOptions";
   }
 
   @Override

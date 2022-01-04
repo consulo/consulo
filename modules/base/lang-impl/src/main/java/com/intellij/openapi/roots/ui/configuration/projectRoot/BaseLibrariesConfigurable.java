@@ -94,12 +94,6 @@ public abstract class BaseLibrariesConfigurable extends BaseStructureConfigurabl
     return false;
   }
 
-  @Override
-  @Nullable
-  public String getHelpTopic() {
-    return "reference.settingsdialog.project.structure.library";
-  }
-
   @RequiredUIAccess
   @Override
   public boolean isModified() {

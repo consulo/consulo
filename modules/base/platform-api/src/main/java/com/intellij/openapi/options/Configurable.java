@@ -53,13 +53,18 @@ import javax.swing.*;
  * @see consulo.options.SimpleConfigurable
  */
 public interface Configurable extends UnnamedConfigurable {
-  public static final Configurable[] EMPTY_ARRAY = new Configurable[0];
+  Configurable[] EMPTY_ARRAY = new Configurable[0];
 
-  public static ArrayFactory<Configurable> ARRAY_FACTORY = count -> count == 0 ? EMPTY_ARRAY : new Configurable[count];
+  ArrayFactory<Configurable> ARRAY_FACTORY = count -> count == 0 ? EMPTY_ARRAY : new Configurable[count];
 
   ExtensionPointName<ApplicationConfigurableEP<Configurable>> APPLICATION_CONFIGURABLE = ExtensionPointName.create("com.intellij.applicationConfigurable");
 
   ExtensionPointName<ProjectConfigurableEP<Configurable>> PROJECT_CONFIGURABLE = ExtensionPointName.create("com.intellij.projectConfigurable");
+
+  /**
+   * can be used inside {@link #getHelpTopic()} for disable help
+   */
+  String DISABLED_HELP_ID = "___disabled___";
 
   /**
    * Returns the user-visible name of the settings component.
@@ -71,10 +76,9 @@ public interface Configurable extends UnnamedConfigurable {
   }
 
   /**
-   * Returns the topic in the help file which is shown when help for the configurable
-   * is requested.
+   * Returns alternative id for help (not id of configurable)
    *
-   * @return the help topic, or null if no help is available.
+   * @return the help id
    */
   @Nullable
   default String getHelpTopic() {

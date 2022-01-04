@@ -360,7 +360,7 @@ public class ArtifactsStructureConfigurable extends BaseStructureConfigurable im
   @Override
   public String getHelpTopic() {
     final String topic = super.getHelpTopic();
-    return topic != null ? topic : "reference.settingsdialog.project.structure.artifacts";
+    return topic != null ? topic : null;
   }
 
   @Override

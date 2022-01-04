@@ -139,11 +139,6 @@ public class EditorSmartKeysConfigurable extends SimpleConfigurable<EditorSmartK
     return null;
   }
 
-  @Override
-  public String getHelpTopic() {
-    return "reference.settingsdialog.IDE.editor.smartkey";
-  }
-
   @RequiredUIAccess
   @Nonnull
   @Override

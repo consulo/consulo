@@ -91,13 +91,7 @@ public class PostfixTemplatesConfigurable extends SimpleConfigurable<PostfixTemp
   @Nonnull
   @Override
   public String getId() {
-    return "reference.settingsdialog.IDE.editor.postfix.templates";
-  }
-
-  @Nullable
-  @Override
-  public String getHelpTopic() {
-    return getId();
+    return "editing.postfixCompletion";
   }
 
   protected Configurable[] buildConfigurables() {

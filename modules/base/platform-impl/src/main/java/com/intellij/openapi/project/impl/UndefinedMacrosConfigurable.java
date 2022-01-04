@@ -15,7 +15,6 @@
  */
 package com.intellij.openapi.project.impl;
 
-import com.intellij.application.options.pathMacros.PathMacroConfigurable;
 import com.intellij.application.options.pathMacros.PathMacroListEditor;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.ConfigurationException;
@@ -39,10 +38,6 @@ public class UndefinedMacrosConfigurable implements Configurable{
   public UndefinedMacrosConfigurable(String text, Collection<String> undefinedMacroNames) {
     myText = text;
     myUndefinedMacroNames = undefinedMacroNames;
-  }
-
-  public String getHelpTopic() {
-    return PathMacroConfigurable.HELP_ID;
   }
 
   public String getDisplayName() {

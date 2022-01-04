@@ -57,12 +57,6 @@ public class ResourceCompilerConfigurable implements Configurable, Configurable.
     return "Resource";
   }
 
-  @javax.annotation.Nullable
-  @Override
-  public String getHelpTopic() {
-    return null;
-  }
-
   @Nullable
   @Override
   public JComponent createComponent() {

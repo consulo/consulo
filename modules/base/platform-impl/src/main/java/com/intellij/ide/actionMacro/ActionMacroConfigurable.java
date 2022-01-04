@@ -36,10 +36,6 @@ public class ActionMacroConfigurable implements Configurable {
     return IdeBundle.message("title.edit.macros");
   }
 
-  public String getHelpTopic() {
-    return null;
-  }
-
   public JComponent createComponent() {
     myPanel = new ActionMacroConfigurationPanel();
     return myPanel.getPanel();

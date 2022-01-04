@@ -173,13 +173,9 @@ public class IssueNavigationConfigurationPanel extends JPanel implements Searcha
     return "Issue Navigation";
   }
 
-  public String getHelpTopic() {
-    return "project.propVCSSupport.Issue.Navigation";
-  }
-
   @Nonnull
   public String getId() {
-    return getHelpTopic();
+    return "project.propVCSSupport.Issue.Navigation";
   }
 
   public Runnable enableSearch(String option) {

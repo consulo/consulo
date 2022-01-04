@@ -34,11 +34,6 @@ public class GeneralCodeStyleSettingsProvider extends CodeStyleSettingsProvider 
       protected CodeStyleAbstractPanel createPanel(final CodeStyleSettings settings) {
         return new GeneralCodeStylePanel(settings);
       }
-
-      @Override
-      public String getHelpTopic() {
-        return "reference.settingsdialog.IDE.globalcodestyle.general";
-      }
     };
   }
 

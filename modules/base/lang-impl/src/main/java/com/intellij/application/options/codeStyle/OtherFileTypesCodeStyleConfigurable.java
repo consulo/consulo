@@ -20,11 +20,6 @@ public class OtherFileTypesCodeStyleConfigurable extends CodeStyleAbstractConfig
     return myOptionsForm;
   }
 
-  @Override
-  public String getHelpTopic() {
-    return "settings.editor.codeStyle.other";
-  }
-
   @Nls
   public static String getDisplayNameText() {
     return ApplicationBundle.message("code.style.other.file.types");

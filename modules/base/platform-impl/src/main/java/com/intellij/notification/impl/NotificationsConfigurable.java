@@ -32,19 +32,12 @@ import javax.swing.*;
  */
 public class NotificationsConfigurable implements Configurable, SearchableConfigurable, Configurable.NoScroll {
   public static final String DISPLAY_NAME = "Notifications";
-  static final String ID = "reference.settings.ide.settings.notifications";
   private NotificationsConfigurablePanel myComponent;
 
   @Override
   @Nls
   public String getDisplayName() {
     return DISPLAY_NAME;
-  }
-
-  @Override
-  @Nonnull
-  public String getHelpTopic() {
-    return ID;
   }
 
   @RequiredUIAccess
@@ -85,7 +78,7 @@ public class NotificationsConfigurable implements Configurable, SearchableConfig
   @Override
   @Nonnull
   public String getId() {
-    return getHelpTopic();
+    return "notifcations";
   }
 
   @Override

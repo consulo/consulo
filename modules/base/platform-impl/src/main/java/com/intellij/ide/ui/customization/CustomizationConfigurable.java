@@ -46,11 +46,6 @@ public class CustomizationConfigurable implements SearchableConfigurable, Config
     return IdeBundle.message("title.customizations");
   }
 
-  @Override
-  public String getHelpTopic() {
-    return "preferences.customizations";
-  }
-
   @RequiredUIAccess
   @Override
   public void apply() throws ConfigurationException {
@@ -81,6 +76,6 @@ public class CustomizationConfigurable implements SearchableConfigurable, Config
   @Override
   @Nonnull
   public String getId() {
-    return getHelpTopic();
+    return "preferences.customizations";
   }
 }

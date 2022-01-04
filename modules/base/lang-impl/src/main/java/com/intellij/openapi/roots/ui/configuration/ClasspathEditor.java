@@ -45,11 +45,6 @@ public class ClasspathEditor extends ModuleElementsEditor implements ModuleRootL
   }
 
   @Override
-  public String getHelpTopic() {
-    return "projectStructure.modules.dependencies";
-  }
-
-  @Override
   public String getDisplayName() {
     return ProjectBundle.message("modules.classpath.title");
   }

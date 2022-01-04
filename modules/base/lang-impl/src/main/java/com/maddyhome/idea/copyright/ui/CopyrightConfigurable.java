@@ -36,14 +36,13 @@ import com.maddyhome.idea.copyright.CopyrightManager;
 import com.maddyhome.idea.copyright.CopyrightProfile;
 import com.maddyhome.idea.copyright.pattern.EntityUtil;
 import com.maddyhome.idea.copyright.pattern.VelocityHelper;
+import consulo.copyright.impl.PredefinedCopyrightTextEP;
 import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.copyright.impl.PredefinedCopyrightTextEP;
 import org.jetbrains.annotations.Nls;
-import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.awt.*;
 
@@ -206,13 +205,6 @@ public class CopyrightConfigurable extends NamedConfigurable<CopyrightProfile> i
   @Override
   public void setDisplayName(String s) {
     myCopyrightProfile.setName(s);
-  }
-
-  @Override
-  @Nullable
-  @NonNls
-  public String getHelpTopic() {
-    return null;
   }
 
   @Override

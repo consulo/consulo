@@ -113,11 +113,6 @@ public class CoverageOptionsConfigurable extends SimpleConfigurable<CoverageOpti
     return "Coverage";
   }
 
-  @Override
-  public String getHelpTopic() {
-    return "reference.project.settings.coverage";
-  }
-
   @RequiredUIAccess
   @Nonnull
   @Override

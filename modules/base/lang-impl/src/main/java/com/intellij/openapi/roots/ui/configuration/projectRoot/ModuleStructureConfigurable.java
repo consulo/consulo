@@ -304,12 +304,6 @@ public class ModuleStructureConfigurable extends BaseStructureConfigurable imple
     return ProjectBundle.message("project.roots.display.name");
   }
 
-  @Override
-  @Nullable
-  public String getHelpTopic() {
-    return "reference.settingsdialog.project.structure.module";
-  }
-
   public Project getProject() {
     return myProject;
   }

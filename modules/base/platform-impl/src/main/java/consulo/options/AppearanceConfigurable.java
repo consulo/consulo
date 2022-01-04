@@ -34,7 +34,6 @@ import consulo.ui.font.FontManager;
 import consulo.ui.image.IconLibrary;
 import consulo.ui.image.IconLibraryManager;
 import consulo.ui.layout.*;
-import consulo.ui.StaticPosition;
 import consulo.ui.style.Style;
 import consulo.ui.style.StyleManager;
 import consulo.ui.util.LabeledBuilder;
@@ -42,8 +41,10 @@ import consulo.util.lang.Comparing;
 import consulo.util.lang.ObjectUtil;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * @author VISTALL
@@ -290,12 +291,6 @@ public class AppearanceConfigurable extends SimpleConfigurable<AppearanceConfigu
     component.myDisableMnemonicInControlsCheckBox.setValue(settings.DISABLE_MNEMONICS_IN_CONTROLS);
     component.mySmoothScrollingBox.setValue(settings.SMOOTH_SCROLLING);
     component.myIconThemeComboBox.setValue(getActiveIconLibraryOrNull());
-  }
-
-  @Nullable
-  @Override
-  public String getHelpTopic() {
-    return "platform/preferences/general/appearance/";
   }
 
   @RequiredUIAccess

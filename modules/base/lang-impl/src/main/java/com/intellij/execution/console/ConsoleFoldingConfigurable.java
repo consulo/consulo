@@ -92,11 +92,6 @@ public class ConsoleFoldingConfigurable implements SearchableConfigurable, Confi
     return "Console Folding";
   }
 
-  @Override
-  public String getHelpTopic() {
-    return "reference.idesettings.console.folding";
-  }
-
   private static class MyAddDeleteListPanel extends AddEditDeleteListPanel<String> {
     private final String myQuery;
 

@@ -169,14 +169,9 @@ public class IgnoredSettingsPanel implements SearchableConfigurable, Configurabl
   }
 
   @Override
-  public String getHelpTopic() {
-    return "project.propVCSSupport.Ignored.Files";
-  }
-
-  @Override
   @Nonnull
   public String getId() {
-    return getHelpTopic();
+    return "project.propVCSSupport.Ignored.Files";
   }
 
   @Override

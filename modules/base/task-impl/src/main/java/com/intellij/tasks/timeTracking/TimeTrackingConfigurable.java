@@ -94,13 +94,6 @@ public class TimeTrackingConfigurable implements SearchableConfigurable, Configu
 
   @Nullable
   @Override
-  public String getHelpTopic() {
-    return null;
-    //return "reference.settings.project.tasks.timeTracking";
-  }
-
-  @Nullable
-  @Override
   public JComponent createComponent() {
     return myPanel;
   }

@@ -171,11 +171,6 @@ public class EditorAppearanceConfigurable extends CompositeConfigurable<UnnamedC
     return "Gutters";
   }
 
-  @Override
-  public String getHelpTopic() {
-    return "reference.settingsdialog.IDE.editor.appearance";
-  }
-
   @RequiredUIAccess
   @Override
   public JComponent createComponent() {

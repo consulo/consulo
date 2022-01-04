@@ -576,11 +576,6 @@ public class InjectionsSettingsUI implements SearchableConfigurable.Parent, Conf
     return "Language Injections";
   }
 
-  @Override
-  public String getHelpTopic() {
-    return "reference.settings.injection.language.injection.settings";
-  }
-
   private class InjectionsTable extends TableView<InjInfo> {
     private InjectionsTable(final List<InjInfo> injections) {
       super(new ListTableModel<InjInfo>(createInjectionColumnInfos(), injections, 1));

@@ -116,13 +116,9 @@ public class ChangelistConflictConfigurable extends BindableConfigurable impleme
     return "Changelist Conflicts";
   }
 
-  public String getHelpTopic() {
-    return "project.propVCSSupport.ChangelistConflict";
-  }
-
   @Nonnull
   public String getId() {
-    return getHelpTopic();
+    return "project.propVCSSupport.ChangelistConflict";
   }
 
   public Runnable enableSearch(String option) {

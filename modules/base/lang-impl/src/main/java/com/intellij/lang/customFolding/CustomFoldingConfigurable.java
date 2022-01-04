@@ -39,11 +39,6 @@ public class CustomFoldingConfigurable implements SearchableConfigurable {
   }
 
   @Override
-  public String getHelpTopic() {
-    return null; //TODO<rv>: Define help topic
-  }
-
-  @Override
   public JComponent createComponent() {
     return mySettingsPanel.getComponent();
   }

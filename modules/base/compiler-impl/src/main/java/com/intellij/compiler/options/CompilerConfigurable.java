@@ -110,9 +110,4 @@ public class CompilerConfigurable extends SimpleConfigurable<CompilerConfigurabl
   public String getDisplayName() {
     return CompilerBundle.message("compiler.configurable.display.name");
   }
-
-  @Override
-  public String getHelpTopic() {
-    return "project.propCompiler";
-  }
 }

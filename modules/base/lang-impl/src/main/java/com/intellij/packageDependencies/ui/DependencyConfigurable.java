@@ -70,11 +70,6 @@ public class DependencyConfigurable implements Configurable, Configurable.HoldPr
   }
 
   @Override
-  public String getHelpTopic() {
-    return "editing.analyzeDependencies.validation";
-  }
-
-  @Override
   public JComponent createComponent() {
     myDenyRulesModel = new MyTableModel(myProject, new ColumnInfo[]{DENY_USAGES_OF, DENY_USAGES_IN}, true);
     myDenyRulesModel.setSortable(false);

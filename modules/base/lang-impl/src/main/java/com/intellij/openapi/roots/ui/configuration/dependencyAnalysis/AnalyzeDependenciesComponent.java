@@ -424,22 +424,6 @@ public class AnalyzeDependenciesComponent extends MasterDetailsComponent {
      * {@inheritDoc}
      */
     @Override
-    public void disposeUIResources() {
-      //Do nothing
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String getHelpTopic() {
-      return null;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
     public boolean isModified() {
       return false;
     }

@@ -25,7 +25,6 @@ import com.intellij.util.Consumer;
 import com.intellij.util.Function;
 import com.intellij.util.containers.ConcurrentFactoryMap;
 import com.intellij.util.containers.ContainerUtil;
-import consulo.awt.TargetAWT;
 import org.jetbrains.annotations.Nls;
 
 import javax.annotation.Nullable;
@@ -229,11 +228,6 @@ public class TaskRepositoriesConfigurable extends BaseConfigurable implements Co
 	public String getDisplayName()
 	{
 		return "Servers";
-	}
-
-	public String getHelpTopic()
-	{
-		return "reference.settings.project.tasks.servers";
 	}
 
 	public JComponent createComponent()

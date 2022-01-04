@@ -29,11 +29,6 @@ public class  RunConfigurationConfigurableAdapter<T extends RunConfiguration> ex
     return getSettings().getName();
   }
 
-  @Override
-  public String getHelpTopic() {
-    return null;
-  }
-
   public T getConfiguration() {
     return getSettings();
   }

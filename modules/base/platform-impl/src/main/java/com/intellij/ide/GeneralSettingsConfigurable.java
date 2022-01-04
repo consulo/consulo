@@ -334,13 +334,7 @@ public class GeneralSettingsConfigurable extends SimpleConfigurable<GeneralSetti
 
   @Override
   @Nonnull
-  public String getHelpTopic() {
-    return "preferences.general";
-  }
-
-  @Override
-  @Nonnull
   public String getId() {
-    return getHelpTopic();
+    return "preferences.general";
   }
 }

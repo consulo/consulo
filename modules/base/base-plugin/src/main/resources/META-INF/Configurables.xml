@@ -99,6 +99,7 @@
                              instance="com.intellij.xdebugger.impl.settings.DebuggerConfigurable"/>
 
     <applicationConfigurable instance="consulo.ide.settings.impl.EditorGeneralConfigurable"
+                             id="editor.general"
                              parentId="editor"
                              key="title.editor"
                              bundle="messages.ApplicationBundle"
@@ -149,14 +150,16 @@
                              displayName="Appearance"/>
 
     <applicationConfigurable instance="com.intellij.application.options.editor.GutterIconsConfigurable"
-                             id="editor.preferences.gutterIcons"
+                             id="editor.gutterIcons"
                              parentId="editor"
                              displayName="Gutter Icons"/>
 
-    <projectConfigurable key="file.encodings.configurable"
+    <projectConfigurable id="file.encoding"
                          bundle="messages.IdeBundle"
+                         key="file.encodings.configurable"
                          parentId="editor"
                          instance="com.intellij.openapi.vfs.encoding.FileEncodingConfigurable"/>
+
     <projectConfigurable instance="com.intellij.ui.tabs.FileColorsConfigurable"
                          parentId="editor"
                          id="fileColors"
@@ -167,14 +170,15 @@
                              instance="consulo.options.ConfigurableAdapter"/>
 
 
-    <applicationConfigurable displayName="Notifications" parentId="general" instance="com.intellij.notification.impl.NotificationsConfigurable"/>
+    <applicationConfigurable displayName="Notifications" id="notifications" parentId="general" instance="com.intellij.notification.impl.NotificationsConfigurable"/>
 
     <applicationConfigurable instance="consulo.ide.plugins.PluginsConfigurable"
                              id="preferences.pluginManager"
                              bundle="messages.IdeBundle"
                              key="title.plugins"/>
 
-    <applicationConfigurable parentId="preferences.pluginManager"
+    <applicationConfigurable id="settings.update"
+                             parentId="preferences.pluginManager"
                              instance="consulo.ide.updateSettings.UpdatesConfigurable"
                              displayName="Update Settings" />
 
@@ -191,7 +195,7 @@
                              key="filetype.settings.title" bundle="messages.FileTypesBundle"/>
 
     <applicationConfigurable instance="com.intellij.ide.browsers.BrowserSettings"
-                             id="reference.settings.ide.settings.web.browsers"
+                             id="web.browsers"
                              parentId="general"
                              key="browsers.settings"
                              bundle="messages.IdeBundle"/>

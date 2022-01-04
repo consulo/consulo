@@ -237,11 +237,6 @@ public abstract class NamedItemsListEditor<T> extends MasterDetailsComponent {
     }
 
     @Override
-    public String getHelpTopic() {
-      return null;
-    }
-
-    @Override
     public boolean isModified() {
       return myConfigurable.isModified();
     }

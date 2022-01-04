@@ -50,19 +50,13 @@ public class BrowserSettings implements SearchableConfigurable, Configurable.NoS
   @Override
   @Nonnull
   public String getId() {
-    return getHelpTopic();
+    return "web.browsers";
   }
 
   @Override
   @Nls
   public String getDisplayName() {
     return IdeBundle.message("browsers.settings");
-  }
-
-  @Override
-  @Nonnull
-  public String getHelpTopic() {
-    return "reference.settings.ide.settings.web.browsers";
   }
 
   @RequiredUIAccess

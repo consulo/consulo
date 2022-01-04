@@ -45,7 +45,6 @@ import com.maddyhome.idea.copyright.options.ExternalOptionHelper;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.annotation.RequiredUIAccess;
 import org.jetbrains.annotations.Nls;
-import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -103,12 +102,6 @@ public class CopyrightProfilesPanel extends MasterDetailsComponent implements Se
   @Nls
   public String getDisplayName() {
     return "Copyright Profiles";
-  }
-
-  @Nullable
-  @NonNls
-  public String getHelpTopic() {
-    return "copyright.profiles";
   }
 
   protected void reloadAvailableProfiles() {
@@ -320,7 +313,7 @@ public class CopyrightProfilesPanel extends MasterDetailsComponent implements Se
 
   @Nonnull
   public String getId() {
-    return getHelpTopic();
+    return "copyright.profiles";
   }
 
   public Runnable enableSearch(String option) {

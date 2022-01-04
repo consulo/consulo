@@ -142,9 +142,4 @@ public class FirefoxSettingsConfigurable implements Configurable {
   public String getDisplayName() {
     return IdeBundle.message("display.name.firefox.settings");
   }
-
-  @Override
-  public String getHelpTopic() {
-    return null;
-  }
 }

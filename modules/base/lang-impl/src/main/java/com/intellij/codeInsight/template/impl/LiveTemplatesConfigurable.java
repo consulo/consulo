@@ -69,14 +69,8 @@ public class LiveTemplatesConfigurable implements SearchableConfigurable, Config
 
   @Override
   @Nonnull
-  public String getHelpTopic() {
-    return "editing.templates";
-  }
-
-  @Override
-  @Nonnull
   public String getId() {
-    return getHelpTopic();
+    return "editing.templates";
   }
 
   @Override

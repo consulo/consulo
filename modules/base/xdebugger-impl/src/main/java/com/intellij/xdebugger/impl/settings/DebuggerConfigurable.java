@@ -50,11 +50,6 @@ public class DebuggerConfigurable implements SearchableConfigurable.Parent {
     return DISPLAY_NAME;
   }
 
-  @Override
-  public String getHelpTopic() {
-    return "reference.idesettings.debugger";
-  }
-
   @Nonnull
   @Override
   public Configurable[] getConfigurables() {

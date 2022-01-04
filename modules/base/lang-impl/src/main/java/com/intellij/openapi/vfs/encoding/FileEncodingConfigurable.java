@@ -94,15 +94,9 @@ class FileEncodingConfigurable extends PerFileConfigurableBase<Charset> {
   }
 
   @Override
-  @Nullable
-  public String getHelpTopic() {
-    return "reference.settingsdialog.project.file.encodings";
-  }
-
-  @Override
   @Nonnull
   public String getId() {
-    return "File.Encoding";
+    return "file.encoding";
   }
 
   @Override
