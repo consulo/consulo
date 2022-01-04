@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.components;
 
-import com.intellij.openapi.diagnostic.ControlFlowException;
+import consulo.util.lang.ControlFlowException;
 
 /**
  * The base interface class for all components.

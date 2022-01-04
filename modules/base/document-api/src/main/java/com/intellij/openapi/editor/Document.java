@@ -3,6 +3,7 @@ package com.intellij.openapi.editor;
 
 import com.intellij.openapi.editor.event.BulkAwareDocumentListener;
 import com.intellij.openapi.editor.event.DocumentListener;
+import com.intellij.openapi.util.TextRange;
 import consulo.disposer.Disposable;
 import consulo.util.dataholder.UserDataHolder;
 import consulo.util.lang.CharArrayUtil;

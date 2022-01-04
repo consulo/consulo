@@ -39,10 +39,7 @@ import consulo.vfs.impl.archive.ArchiveFileSystemBase;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.File;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static com.intellij.openapi.util.Pair.pair;
@@ -211,7 +208,7 @@ public class VfsImplUtil {
         forEachDirectoryComponent(localPath, containingDirectoryPath -> {
           Set<String> handlers = ourDominatorsMap.get(containingDirectoryPath);
           if (handlers == null) {
-            ourDominatorsMap.put(containingDirectoryPath, handlers = ContainerUtil.newTroveSet());
+            ourDominatorsMap.put(containingDirectoryPath, handlers = new HashSet<>());
           }
           handlers.add(finalRootPath);
         });

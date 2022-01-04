@@ -18,7 +18,6 @@ package com.intellij.ide.util;
 import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.util.text.StringUtil;
 import org.jdom.Element;
-import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;
@@ -28,9 +27,9 @@ import java.util.Map;
 
 public class BasePropertiesComponentImpl implements PropertiesComponent, PersistentStateComponent<Element> {
   private final Map<String, String> myMap = new LinkedHashMap<>();
-  @NonNls private static final String ELEMENT_PROPERTY = "property";
-  @NonNls private static final String ATTRIBUTE_NAME = "name";
-  @NonNls private static final String ATTRIBUTE_VALUE = "value";
+  private static final String ELEMENT_PROPERTY = "property";
+  private static final String ATTRIBUTE_NAME = "name";
+  private static final String ATTRIBUTE_VALUE = "value";
 
   @TestOnly
   @Deprecated
@@ -131,13 +130,13 @@ public class BasePropertiesComponentImpl implements PropertiesComponent, Persist
 
   @Nullable
   @Override
-  public String[] getValues(@NonNls String name) {
+  public String[] getValues(String name) {
     final String value = getValue(name);
     return value != null ? value.split("\n") : null;
   }
 
   @Override
-  public void setValues(@NonNls String name, String[] values) {
+  public void setValues(String name, String[] values) {
     if (values == null) {
       setValue(name, null);
     }

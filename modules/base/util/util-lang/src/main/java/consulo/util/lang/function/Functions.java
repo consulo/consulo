@@ -38,12 +38,7 @@ public class Functions {
   }
 
   public static <A, B> Function<A, B> constant(final B b) {
-    return new Function<A, B>() {
-      @Override
-      public B apply(A a) {
-        return b;
-      }
-    };
+    return a -> b;
   }
 
   public static <A, B> Function<A, B> identity() {
@@ -55,12 +50,7 @@ public class Functions {
   }
 
   public static <A, B, C> Function<A, C> compose(final Function<A, B> f1, final Function<B, ? extends C> f2) {
-    return new Function<A, C>() {
-      @Override
-      public C apply(A a) {
-        return f2.apply(f1.apply(a));
-      }
-    };
+    return a -> f2.apply(f1.apply(a));
   }
 
   public static <A> Function<A, String> TO_STRING() {

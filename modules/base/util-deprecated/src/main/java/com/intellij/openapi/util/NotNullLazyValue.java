@@ -26,7 +26,6 @@ import java.util.function.Supplier;
  * @author peter
  */
 public abstract class NotNullLazyValue<T> implements Supplier<T> {
-  private static final RecursionGuard ourGuard = RecursionManager.createGuard("NotNullLazyValue");
   private T myValue;
 
   @Nonnull
@@ -36,7 +35,7 @@ public abstract class NotNullLazyValue<T> implements Supplier<T> {
   public T getValue() {
     T result = myValue;
     if (result == null) {
-      RecursionGuard.StackStamp stamp = ourGuard.markStack();
+      RecursionGuard.StackStamp stamp = RecursionManager.markStack();
       result = compute();
       if (stamp.mayCacheNow()) {
         myValue = result;

@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2018 consulo.io
+ * Copyright 2000-2017 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,26 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.util;
+package com.intellij.openapi.components;
 
-import consulo.logging.Logger;
+import javax.annotation.Nonnull;
 
-/**
- * @author VISTALL
- * @since 2018-09-22
- */
-public interface ProtectedRunnable extends Runnable {
-  Logger LOGGER = Logger.getInstance(ProtectedRunnable.class);
-
-  @Override
-  default void run() {
-    try {
-      runUnsafe();
-    }
-    catch (Throwable e) {
-      LOGGER.error(e);
-    }
+@Deprecated
+public interface NamedComponent {
+  /**
+   * Unique name of this component. If there is another component with the same name or
+   * name is null internal assertion will occur.
+   *
+   * @return the name of this component
+   */
+  @Nonnull
+  default String getComponentName() {
+    return getClass().getName();
   }
-
-  void runUnsafe();
 }

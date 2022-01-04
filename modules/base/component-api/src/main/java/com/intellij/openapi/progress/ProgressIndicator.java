@@ -111,7 +111,7 @@ public interface ProgressIndicator {
   @Nullable
   default String getText() {
     LocalizeValue value = getTextValue();
-    if(value == LocalizeValue.empty()) {
+    if (value == LocalizeValue.empty()) {
       return null;
     }
     return value.get();

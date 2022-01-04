@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2012 JetBrains s.r.o.
+ * Copyright 2013-2022 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,18 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package consulo.util.lang.lazy;
 
-package com.intellij.openapi.extensions;
+import javax.annotation.Nonnull;
+import java.util.function.Supplier;
 
-public class ExtensionException extends RuntimeException{
-  private final Class myExtensionClass;
-
-  public ExtensionException(final Class extensionClass) {
-    super(extensionClass.getCanonicalName());
-    myExtensionClass = extensionClass;
-  }
-
-  public Class getExtensionClass() {
-    return myExtensionClass;
+/**
+ * @author VISTALL
+ * @since 03/01/2022
+ */
+public interface LazyValue<T> extends Supplier<T> {
+  static <K> LazyValue<K> notNull(@Nonnull Supplier<K> factory) {
+    return new DefaultLazyValueImpl<K>(factory);
   }
 }

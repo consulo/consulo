@@ -17,11 +17,10 @@ package com.intellij.ide.util;
 
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.text.StringUtilRt;
-import com.intellij.util.ObjectUtils;
+import com.intellij.openapi.util.text.StringUtil;
 import consulo.util.ApplicationPropertiesComponent;
 import consulo.util.ProjectPropertiesComponent;
-import org.jetbrains.annotations.NonNls;
+import consulo.util.lang.ObjectUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -45,7 +44,7 @@ public interface PropertiesComponent {
   public abstract boolean isValueSet(String name);
 
   @Nullable
-  public abstract String getValue(@NonNls String name);
+  public abstract String getValue(String name);
 
   /**
    * Consider to use {@link #setValue(String, String, String)} to avoid write defaults.
@@ -80,12 +79,12 @@ public interface PropertiesComponent {
   public abstract void setValue(@Nonnull String name, boolean value, boolean defaultValue);
 
   @Nullable
-  public abstract String[] getValues(@NonNls String name);
+  public abstract String[] getValues(String name);
 
-  public abstract void setValues(@NonNls String name, String[] values);
+  public abstract void setValues(String name, String[] values);
 
-  default boolean isTrueValue(@NonNls String name) {
-    return Boolean.valueOf(getValue(name)).booleanValue();
+  default boolean isTrueValue(String name) {
+    return Boolean.valueOf(getValue(name));
   }
 
   default boolean getBoolean(@Nonnull String name, boolean defaultValue) {
@@ -97,11 +96,11 @@ public interface PropertiesComponent {
   }
 
   @Nonnull
-  default String getValue(@NonNls String name, @Nonnull String defaultValue) {
+  default String getValue(String name, @Nonnull String defaultValue) {
     if (!isValueSet(name)) {
       return defaultValue;
     }
-    return ObjectUtils.notNull(getValue(name), defaultValue);
+    return ObjectUtil.notNull(getValue(name), defaultValue);
   }
 
   @SuppressWarnings("unused")
@@ -114,10 +113,10 @@ public interface PropertiesComponent {
   }
 
   default int getInt(@Nonnull String name, int defaultValue) {
-    return StringUtilRt.parseInt(getValue(name), defaultValue);
+    return StringUtil.parseInt(getValue(name), defaultValue);
   }
 
-  default long getOrInitLong(@NonNls String name, long defaultValue) {
+  default long getOrInitLong(String name, long defaultValue) {
     try {
       String value = getValue(name);
       return value == null ? defaultValue : Long.parseLong(value);
@@ -130,7 +129,7 @@ public interface PropertiesComponent {
   @Deprecated
   /**
    * @deprecated Use {@link #getValue(String, String)}
-   */ default String getOrInit(@NonNls String name, String defaultValue) {
+   */ default String getOrInit(String name, String defaultValue) {
     if (!isValueSet(name)) {
       setValue(name, defaultValue);
       return defaultValue;

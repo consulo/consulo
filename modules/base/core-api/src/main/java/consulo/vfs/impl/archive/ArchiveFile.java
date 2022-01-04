@@ -53,6 +53,11 @@ public interface ArchiveFile {
     public int getSize() {
       return 0;
     }
+
+    @Override
+    public void close() {
+
+    }
   };
 
   @Nonnull
@@ -69,6 +74,5 @@ public interface ArchiveFile {
 
   int getSize();
 
-  default void close() {
-  }
+  void close() throws IOException;
 }

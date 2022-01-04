@@ -28,7 +28,7 @@ import javax.annotation.Nullable;
 public class LanguagePointerImpl implements NamedPointer<Language> {
   private String myId;
 
-  private NullableLazyValue<Language> myValue = new NullableLazyValue<Language>() {
+  private NullableLazyValue<Language> myValue = new NullableLazyValue<>() {
     @Nullable
     @Override
     protected Language compute() {

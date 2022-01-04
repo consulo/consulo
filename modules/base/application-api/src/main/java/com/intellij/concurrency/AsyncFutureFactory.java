@@ -15,14 +15,14 @@
  */
 package com.intellij.concurrency;
 
-import com.intellij.openapi.components.ServiceManager;
+import com.intellij.openapi.application.Application;
 
 /**
  * Author: dmitrylomov
  */
 public abstract class AsyncFutureFactory {
   public static AsyncFutureFactory getInstance() {
-    return ServiceManager.getService(AsyncFutureFactory.class);
+    return Application.get().getInstance(AsyncFutureFactory.class);
   }
 
   public static <V> AsyncFuture<V> wrap(V v) {

@@ -27,7 +27,7 @@ import java.util.Set;
  * @author peter
  */
 public class UniqueNameGenerator implements Condition<String> {
-  private final Set<String> myExistingNames = new HashSet<String>();
+  private final Set<String> myExistingNames = new HashSet<>();
 
   public <T> UniqueNameGenerator(final Collection<T> elements, @Nullable Function<T, String> namer) {
     for (final T t : elements) {
@@ -38,6 +38,7 @@ public class UniqueNameGenerator implements Condition<String> {
   public UniqueNameGenerator() {
   }
 
+  @Override
   public final boolean value(final String candidate) {
     return !myExistingNames.contains(candidate);
   }
@@ -51,11 +52,7 @@ public class UniqueNameGenerator implements Condition<String> {
   }
 
   public static String generateUniqueName(final String defaultName, final String prefix, final String suffix, final Collection<String> existingNames) {
-    return generateUniqueName(defaultName, prefix, suffix, new Condition<String>() {
-      public boolean value(final String s) {
-        return !existingNames.contains(s); 
-      }
-    });
+    return generateUniqueName(defaultName, prefix, suffix, s -> !existingNames.contains(s));
   }
   
   public static String generateUniqueName(final String defaultName, final Condition<String> validator) {

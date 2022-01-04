@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2017 JetBrains s.r.o.
+ * Copyright 2000-2012 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,23 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.components;
 
-import org.jetbrains.annotations.NonNls;
+package com.intellij.openapi.extensions;
 
-import javax.annotation.Nonnull;
+public class ExtensionException extends RuntimeException {
+  private final Class myExtensionClass;
 
-@Deprecated
-public interface NamedComponent {
-  /**
-   * Unique name of this component. If there is another component with the same name or
-   * name is null internal assertion will occur.
-   *
-   * @return the name of this component
-   */
-  @NonNls
-  @Nonnull
-  default String getComponentName() {
-    return getClass().getName();
+  public ExtensionException(final Class extensionClass) {
+    super(extensionClass.getCanonicalName());
+    myExtensionClass = extensionClass;
+  }
+
+  public Class getExtensionClass() {
+    return myExtensionClass;
   }
 }

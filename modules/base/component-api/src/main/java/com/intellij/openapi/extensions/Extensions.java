@@ -15,10 +15,9 @@
  */
 package com.intellij.openapi.extensions;
 
-import com.intellij.openapi.application.Application;
 import com.intellij.openapi.components.ComponentManager;
 import consulo.annotation.DeprecationInfo;
-import org.jetbrains.annotations.NonNls;
+import consulo.component.internal.RootComponentManager;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -29,7 +28,7 @@ public class Extensions {
   }
   @Nonnull
   @Deprecated
-  public static Object[] getExtensions(@NonNls String extensionPointName) {
+  public static Object[] getExtensions(@Nonnull String extensionPointName) {
     return getExtensions(extensionPointName, null);
   }
 
@@ -50,7 +49,7 @@ public class Extensions {
   @Nonnull
   @Deprecated
   public static <T> T[] getExtensions(String extensionPointName, @Nullable ComponentManager target) {
-    ComponentManager componentManager = target == null ? Application.get() : target;
+    ComponentManager componentManager = target == null ? RootComponentManager.getRootComponent() : target;
     ExtensionPoint<T> extensionPoint = componentManager.getExtensionPoint(ExtensionPointName.create(extensionPointName));
     return extensionPoint.getExtensions();
   }

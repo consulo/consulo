@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2016 consulo.io
+ * Copyright 2013-2022 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,20 +13,36 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.util.pointers;
+package consulo.util.lang.lazy;
+
+import consulo.util.lang.RecursionGuard;
+import consulo.util.lang.RecursionManager;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.function.Supplier;
 
 /**
  * @author VISTALL
- * @since 17:17/15.06.13
+ * @since 03/01/2022
  */
-public interface NamedPointer<T> extends Supplier<T> {
-  @Nonnull
-  String getName();
+class DefaultLazyValueImpl<T> implements LazyValue<T> {
+  private T myValue;
 
-  @Nullable
-  T get();
+   DefaultLazyValueImpl(Supplier<T> factory) {
+
+  }
+
+  @Nonnull
+  @Override
+  public T get() {
+    T result = myValue;
+    if (result == null) {
+      RecursionGuard.StackStamp stamp = RecursionManager.markStack();
+      result = compute();
+      if (stamp.mayCacheNow()) {
+        myValue = result;
+      }
+    }
+    return result;
+  }
 }

@@ -15,11 +15,11 @@
  */
 package consulo.async.ex;
 
-import com.intellij.util.Consumer;
 import com.intellij.util.concurrency.AppExecutorUtil;
 import consulo.util.concurrent.AsyncResult;
 
 import javax.annotation.Nonnull;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 /**
@@ -37,7 +37,7 @@ public class PooledAsyncResult {
   @Nonnull
   public static <V> AsyncResult<V> create(@Nonnull Consumer<AsyncResult<V>> consumer) {
     AsyncResult<V> result = AsyncResult.undefined();
-    AppExecutorUtil.getAppExecutorService().execute(() -> consumer.consume(result));
+    AppExecutorUtil.getAppExecutorService().execute(() -> consumer.accept(result));
     return result;
   }
 }

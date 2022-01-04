@@ -15,7 +15,6 @@
  */
 package consulo.vfs.impl.archive;
 
-import com.intellij.concurrency.ConcurrentCollectionFactory;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
@@ -26,6 +25,7 @@ import com.intellij.openapi.vfs.newvfs.ArchiveFileSystem;
 import com.intellij.openapi.vfs.newvfs.VfsImplUtil;
 import com.intellij.util.SystemProperties;
 import com.intellij.util.io.URLUtil;
+import consulo.util.collection.Sets;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -46,7 +46,7 @@ public abstract class ArchiveFileSystemBase extends ArchiveFileSystem implements
   protected ArchiveFileSystemBase(@Nonnull String protocol) {
     myProtocol = protocol;
     boolean noCopy = SystemProperties.getBooleanProperty("idea.jars.nocopy", !SystemInfo.isWindows);
-    myNoCopyJarPaths = noCopy ? null : ConcurrentCollectionFactory.createConcurrentSet(FileUtil.PATH_HASHING_STRATEGY);
+    myNoCopyJarPaths = noCopy ? null : Sets.newConcurrentHashSet(FileUtil.PATH_HASHING_STRATEGY);
   }
 
   @Nonnull

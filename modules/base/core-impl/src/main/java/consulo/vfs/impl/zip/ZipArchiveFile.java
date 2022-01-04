@@ -59,7 +59,7 @@ public class ZipArchiveFile implements ArchiveFile {
   @Override
   public Iterator<? extends ArchiveEntry> entries() {
     final Enumeration<? extends ZipEntry> entries = myZipFile.entries();
-    return new Iterator<ArchiveEntry>() {
+    return new Iterator<>() {
       @Override
       public boolean hasNext() {
         return entries.hasMoreElements();
@@ -80,11 +80,7 @@ public class ZipArchiveFile implements ArchiveFile {
   }
 
   @Override
-  public void close() {
-    try {
-      myZipFile.close();
-    }
-    catch (IOException ignored) {
-    }
+  public void close() throws IOException {
+    myZipFile.close();
   }
 }

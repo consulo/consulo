@@ -15,13 +15,11 @@
  */
 package com.intellij.openapi.components;
 
-import com.intellij.openapi.util.JDOMUtil;
-import com.intellij.openapi.util.Pair;
-import com.intellij.util.SmartList;
-import com.intellij.util.text.UniqueNameGenerator;
+import consulo.util.lang.Pair;
 import org.jdom.Element;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -29,7 +27,7 @@ public abstract class MainConfigurationStateSplitter extends StateSplitterEx {
   @Override
   public final List<Pair<Element, String>> splitState(@Nonnull Element state) {
     UniqueNameGenerator generator = new UniqueNameGenerator();
-    List<Pair<Element, String>> result = new SmartList<Pair<Element, String>>();
+    List<Pair<Element, String>> result = new ArrayList<>();
     for (Iterator<Element> iterator = state.getChildren(getSubStateTagName()).iterator(); iterator.hasNext(); ) {
       Element element = iterator.next();
       iterator.remove();

@@ -16,10 +16,15 @@
 package consulo.util;
 
 import com.intellij.ide.util.PropertiesComponent;
+import com.intellij.openapi.components.ServiceManager;
+import com.intellij.openapi.project.Project;
 
 /**
  * @author VISTALL
  * @since 2018-08-24
  */
 public interface ProjectPropertiesComponent extends PropertiesComponent {
+  static PropertiesComponent getInstance(Project project) {
+    return ServiceManager.getService(project, ProjectPropertiesComponent.class);
+  }
 }

@@ -15,6 +15,8 @@
  */
 package com.intellij.openapi.progress;
 
+import consulo.component.internal.RootComponentManager;
+
 import javax.annotation.Nullable;
 
 /**
@@ -22,7 +24,7 @@ import javax.annotation.Nullable;
  */
 public abstract class ProgressIndicatorProvider {
   public static ProgressIndicatorProvider getInstance() {
-    return ProgressManager.getInstance();
+    return RootComponentManager.getRootComponent().getInstance(ProgressIndicatorProvider.class);
   }
 
   public abstract ProgressIndicator getProgressIndicator();
@@ -35,10 +37,10 @@ public abstract class ProgressIndicatorProvider {
 
   @Nullable
   public static ProgressIndicator getGlobalProgressIndicator() {
-    return ProgressManager.getInstance().getProgressIndicator();
+    return getInstance().getProgressIndicator();
   }
 
   public static void checkCanceled() throws ProcessCanceledException {
-    ProgressManager.checkCanceled();
+    getInstance().doCheckCanceled();
   }
 }

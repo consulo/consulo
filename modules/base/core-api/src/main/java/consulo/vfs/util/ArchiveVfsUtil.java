@@ -15,20 +15,13 @@
  */
 package consulo.vfs.util;
 
-import consulo.fileTypes.ArchiveFileType;
 import com.intellij.openapi.fileTypes.FileType;
-import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.VirtualFile;
-import consulo.vfs.ArchiveFileSystem;
-import consulo.vfs.impl.archive.ArchiveEntry;
-import consulo.vfs.impl.archive.ArchiveFile;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import consulo.annotation.DeprecationInfo;
+import consulo.fileTypes.ArchiveFileType;
+import consulo.vfs.ArchiveFileSystem;
 
-import java.io.*;
-import java.util.Iterator;
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
@@ -66,63 +59,17 @@ public class ArchiveVfsUtil {
     return null;
   }
 
-  @Deprecated
-  @DeprecationInfo(value = "Use #getArchiveRootForLocalFile()", until = "2.0")
+  @Deprecated(forRemoval = true)
+  @DeprecationInfo(value = "Use #getArchiveRootForLocalFile()")
   @Nullable
   public static VirtualFile getJarRootForLocalFile(@Nullable VirtualFile virtualFile) {
     return getArchiveRootForLocalFile(virtualFile);
   }
 
-  @Deprecated
-  @DeprecationInfo(value = "Use #getVirtualFileForArchive()", until = "2.0")
+  @Deprecated(forRemoval = true)
+  @DeprecationInfo(value = "Use #getVirtualFileForArchive()")
   @Nullable
   public static VirtualFile getVirtualFileForJar(@Nullable VirtualFile virtualFile) {
     return getVirtualFileForArchive(virtualFile);
-  }
-
-  public static void extract(final @Nonnull ArchiveFile zipFile, @Nonnull File outputDir, @Nullable FilenameFilter filenameFilter)
-          throws IOException {
-    extract(zipFile, outputDir, filenameFilter, true);
-  }
-
-  public static void extract(final @Nonnull ArchiveFile zipFile,
-                             @Nonnull File outputDir,
-                             @Nullable FilenameFilter filenameFilter,
-                             boolean overwrite) throws IOException {
-    final Iterator<? extends ArchiveEntry> entries = zipFile.entries();
-    while (entries.hasNext()) {
-      ArchiveEntry entry = entries.next();
-      final File file = new File(outputDir, entry.getName());
-      if (filenameFilter == null || filenameFilter.accept(file.getParentFile(), file.getName())) {
-        extractEntry(entry, zipFile.getInputStream(entry), outputDir, overwrite);
-      }
-    }
-  }
-
-  public static void extractEntry(ArchiveEntry entry, final InputStream inputStream, File outputDir) throws IOException {
-    extractEntry(entry, inputStream, outputDir, true);
-  }
-
-  public static void extractEntry(ArchiveEntry entry, final InputStream inputStream, File outputDir, boolean overwrite) throws IOException {
-    final boolean isDirectory = entry.isDirectory();
-    final String relativeName = entry.getName();
-    final File file = new File(outputDir, relativeName);
-    if (file.exists() && !overwrite) return;
-
-    FileUtil.createParentDirs(file);
-    if (isDirectory) {
-      file.mkdir();
-    }
-    else {
-      final BufferedInputStream is = new BufferedInputStream(inputStream);
-      final BufferedOutputStream os = new BufferedOutputStream(new FileOutputStream(file));
-      try {
-        FileUtil.copy(is, os);
-      }
-      finally {
-        os.close();
-        is.close();
-      }
-    }
   }
 }
