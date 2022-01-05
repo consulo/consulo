@@ -52,7 +52,8 @@ public class TargetAWTFacadeImpl implements TargetAWTFacade {
     static final Logger LOG = Logger.getInstance(TargetAWTFacadeImpl.class);
   }
 
-  private final static String heavyWeightWindow = "javax.swing.Popup$HeavyWeightWindow";
+  private final static String popupHeavyWeightWindow = "javax.swing.Popup$HeavyWeightWindow";
+  private final static String popupDefaultFrame = "javax.swing.Popup$DefaultFrame";
 
   static class StubWindow extends WindowOverAWTWindow {
     public StubWindow(java.awt.Window window) {
@@ -180,18 +181,18 @@ public class TargetAWTFacadeImpl implements TargetAWTFacade {
       }
     }
 
-    String name = window.getClass().getName();
-    if (heavyWeightWindow.equals(name)) {
+    String className = window.getClass().getName();
+    if (popupHeavyWeightWindow.equals(className) || popupDefaultFrame.equals(className)) {
       JWindow jWindow = (JWindow)window;
 
       JRootPane rootPane = jWindow.getRootPane();
-      Object clientProperty = rootPane.getClientProperty(name);
+      Object clientProperty = rootPane.getClientProperty(className);
       if (clientProperty != null) {
         return (Window)clientProperty;
       }
       else {
         StubWindow stubWindow = new StubWindow(window);
-        rootPane.putClientProperty(name, stubWindow);
+        rootPane.putClientProperty(className, stubWindow);
         return stubWindow;
       }
     }
