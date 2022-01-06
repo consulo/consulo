@@ -13,6 +13,7 @@ import org.jetbrains.annotations.TestOnly;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
+import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 /**
@@ -67,7 +68,7 @@ public class RecursionManager {
    * without a need to bother to create {@link RecursionGuard}.
    */
   @Nullable
-  public static <T> T doPreventingRecursion(@Nonnull Object key, boolean memoize, Computable<T> computation) {
+  public static <T> T doPreventingRecursion(@Nonnull Object key, boolean memoize, Supplier<T> computation) {
     return createGuard(computation.getClass().getName()).doPreventingRecursion(key, memoize, computation);
   }
 
@@ -80,7 +81,7 @@ public class RecursionManager {
   public static <Key> RecursionGuard<Key> createGuard(@NonNls final String id) {
     return new RecursionGuard<Key>() {
       @Override
-      public <T> T doPreventingRecursion(@Nonnull Key key, boolean memoize, @Nonnull Computable<T> computation) {
+      public <T> T doPreventingRecursion(@Nonnull Key key, boolean memoize, @Nonnull Supplier<T> computation) {
         MyKey realKey = new MyKey(id, key, true);
         final CalculationStack stack = ourStack.get();
 
@@ -110,7 +111,7 @@ public class RecursionManager {
         Set<MyKey> preventionsBefore = memoize ? new HashSet<>(stack.preventions) : Collections.emptySet();
 
         try {
-          T result = computation.compute();
+          T result = computation.get();
 
           if (memoize) {
             stack.maybeMemoize(realKey, result, preventionsBefore);

@@ -27,7 +27,7 @@ import javax.annotation.Nullable;
 import java.lang.reflect.Type;
 import java.util.*;
 
-abstract class AbstractCollectionBinding extends Binding implements MultiNodeBinding, MainBinding {
+abstract class AbstractCollectionBinding extends Binding implements MultiNodeBinding {
   private Map<Class<?>, Binding> itemBindings;
 
   protected final Class<?> itemType;

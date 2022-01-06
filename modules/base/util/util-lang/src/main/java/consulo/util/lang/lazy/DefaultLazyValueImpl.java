@@ -15,9 +15,6 @@
  */
 package consulo.util.lang.lazy;
 
-import consulo.util.lang.RecursionGuard;
-import consulo.util.lang.RecursionManager;
-
 import javax.annotation.Nonnull;
 import java.util.function.Supplier;
 
@@ -26,10 +23,12 @@ import java.util.function.Supplier;
  * @since 03/01/2022
  */
 class DefaultLazyValueImpl<T> implements LazyValue<T> {
+  private final Supplier<T> myFactory;
+
   private T myValue;
 
-   DefaultLazyValueImpl(Supplier<T> factory) {
-
+  DefaultLazyValueImpl(Supplier<T> factory) {
+    myFactory = factory;
   }
 
   @Nonnull
@@ -37,11 +36,8 @@ class DefaultLazyValueImpl<T> implements LazyValue<T> {
   public T get() {
     T result = myValue;
     if (result == null) {
-      RecursionGuard.StackStamp stamp = RecursionManager.markStack();
-      result = compute();
-      if (stamp.mayCacheNow()) {
-        myValue = result;
-      }
+      result = myFactory.get();
+      myValue = result;
     }
     return result;
   }

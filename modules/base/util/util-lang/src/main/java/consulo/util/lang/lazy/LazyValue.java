@@ -24,6 +24,6 @@ import java.util.function.Supplier;
  */
 public interface LazyValue<T> extends Supplier<T> {
   static <K> LazyValue<K> notNull(@Nonnull Supplier<K> factory) {
-    return new DefaultLazyValueImpl<K>(factory);
+    return new DefaultLazyValueImpl<>(factory);
   }
 }

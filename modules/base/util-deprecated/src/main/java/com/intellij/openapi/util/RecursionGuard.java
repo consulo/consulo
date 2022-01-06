@@ -19,6 +19,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import java.util.List;
+import java.util.function.Supplier;
 
 /**
  * A helper object for {@link RecursionManager}. It's obtained from {@link RecursionManager#createGuard(String)}.
@@ -39,7 +40,7 @@ public abstract class RecursionGuard<Key> {
    * @return the result of the computation or {@code null} if we're entering a computation with this key on this thread recursively,
    */
   @Nullable
-  public abstract <T> T doPreventingRecursion(@Nonnull Key key, boolean memoize, @Nonnull Computable<T> computation);
+  public abstract <T> T doPreventingRecursion(@Nonnull Key key, boolean memoize, @Nonnull Supplier<T> computation);
 
   /**
    * @deprecated Use {@link RecursionManager#markStack()} instead
