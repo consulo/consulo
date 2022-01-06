@@ -19,7 +19,6 @@ import com.intellij.notification.NotificationGroup;
 import com.intellij.openapi.externalSystem.ExternalSystemManager;
 import com.intellij.openapi.externalSystem.model.ProjectSystemId;
 import com.intellij.openapi.externalSystem.util.ExternalSystemApiUtil;
-import com.intellij.openapi.externalSystem.util.ExternalSystemBundle;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.ToolWindow;
@@ -54,11 +53,10 @@ public abstract class AbstractExternalSystemToolWindowFactory implements ToolWin
   public void createToolWindowContent(final Project project, final ToolWindow toolWindow) {
     toolWindow.setTitle(myExternalSystemId.getReadableName());
     ContentManager contentManager = toolWindow.getContentManager();
-    String tasksTitle = ExternalSystemBundle.message("tool.window.title.tasks");
     ExternalSystemManager<?, ?, ?, ?, ?> manager = ExternalSystemApiUtil.getManager(myExternalSystemId);
     assert manager != null;
     ExternalSystemTasksPanel panel = new ExternalSystemTasksPanel(project, myExternalSystemId, myNotificationGroup);
-    Content tasksContent = ContentFactory.getInstance().createContent(panel, tasksTitle, true);
+    Content tasksContent = ContentFactory.getInstance().createContent(panel, "", true);
     contentManager.addContent(tasksContent);
   }
 }
