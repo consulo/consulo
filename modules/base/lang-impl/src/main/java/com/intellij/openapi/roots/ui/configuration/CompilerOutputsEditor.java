@@ -227,12 +227,6 @@ public class CompilerOutputsEditor extends ModuleElementsEditor {
   }
 
   @Override
-  @Nullable
-  public String getHelpTopic() {
-    return "project.structureModulesPage.outputJavadoc";
-  }
-
-  @Override
   @RequiredUIAccess
   public void moduleStateChanged() {
     ModuleCompilerPathsManager moduleCompilerPathsManager = ModuleCompilerPathsManager.getInstance(getModule());

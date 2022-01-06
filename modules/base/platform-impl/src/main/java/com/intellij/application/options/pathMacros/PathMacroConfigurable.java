@@ -71,11 +71,6 @@ public class PathMacroConfigurable implements SearchableConfigurable, Configurab
   }
 
   @Override
-  public String getHelpTopic() {
-    return HELP_ID;
-  }
-
-  @Override
   public boolean isModified() {
     return myEditor != null && myEditor.isModified();
   }
@@ -83,7 +78,7 @@ public class PathMacroConfigurable implements SearchableConfigurable, Configurab
   @Override
   @Nonnull
   public String getId() {
-    return getHelpTopic();
+    return HELP_ID;
   }
 
   @Override

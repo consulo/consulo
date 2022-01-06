@@ -131,7 +131,7 @@ public abstract class SdkType implements SdkTypeId {
 
   @Nonnull
   public String getHelpTopic() {
-    return "preferences.bundles";
+    return "bundle";
   }
 
   @Override

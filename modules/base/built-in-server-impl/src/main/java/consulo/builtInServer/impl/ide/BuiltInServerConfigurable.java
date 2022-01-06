@@ -27,19 +27,12 @@ import consulo.ui.layout.VerticalLayout;
 import consulo.ui.util.LabeledBuilder;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
  * @since 2020-11-27
  */
 public class BuiltInServerConfigurable extends SimpleConfigurableByProperties implements Configurable {
-  @Nullable
-  @Override
-  public String getHelpTopic() {
-    return "builtInServer";
-  }
-
   @Override
   public String getDisplayName() {
     return "Built-in server";

@@ -46,11 +46,6 @@ public class InvalidArtifactConfigurable extends ArtifactConfigurableBase {
   }
 
   @Override
-  public String getHelpTopic() {
-    return null;
-  }
-
-  @Override
   public boolean isModified() {
     return false;
   }

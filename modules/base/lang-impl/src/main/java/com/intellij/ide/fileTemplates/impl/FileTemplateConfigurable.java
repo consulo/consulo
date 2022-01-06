@@ -153,11 +153,6 @@ public class FileTemplateConfigurable implements Configurable, Configurable.NoSc
     return IdeBundle.message("title.edit.file.template");
   }
 
-  @Override
-  public String getHelpTopic() {
-    return null;
-  }
-
   @RequiredUIAccess
   @Override
   public JComponent createComponent() {

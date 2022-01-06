@@ -575,12 +575,6 @@ public class FileTypeConfigurable implements SearchableConfigurable, Configurabl
     return "preferences.fileType";
   }
 
-  @Nullable
-  @Override
-  public String getHelpTopic() {
-    return "platform/preferences/editor/fileTypes";
-  }
-
   @Override
   public String getDisplayName() {
     return FileTypesBundle.message("filetype.settings.title");

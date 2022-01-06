@@ -47,11 +47,6 @@ public class FileColorsConfigurable implements SearchableConfigurable, Configura
     return "File Colors";
   }
 
-  @Override
-  public String getHelpTopic() {
-    return "platform/preferences/editor/fileColors";
-  }
-
   @RequiredUIAccess
   @Override
   public JComponent createComponent() {
@@ -92,6 +87,6 @@ public class FileColorsConfigurable implements SearchableConfigurable, Configura
   @Nonnull
   @Override
   public String getId() {
-    return getHelpTopic();
+    return "fileColors";
   }
 }

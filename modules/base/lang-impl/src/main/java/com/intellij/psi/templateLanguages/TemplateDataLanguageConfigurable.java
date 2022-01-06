@@ -27,7 +27,7 @@ import com.intellij.util.ObjectUtils;
 import com.intellij.util.ui.tree.PerFileConfigurableBase;
 import consulo.util.dataholder.Key;
 import org.jetbrains.annotations.Nls;
-import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -39,17 +39,16 @@ public class TemplateDataLanguageConfigurable extends PerFileConfigurableBase<La
     super(project, TemplateDataLanguageMappings.getInstance(project));
   }
 
+  @Nonnull
+  @Override
+  public String getId() {
+    return "template.data.language.configurable";
+  }
+
   @Override
   @Nls
   public String getDisplayName() {
     return LangBundle.message("template.data.language.configurable");
-  }
-
-  @Override
-  @Nullable
-  @NonNls
-  public String getHelpTopic() {
-    return "reference.settingsdialog.project.template.languages";
   }
 
   @Override

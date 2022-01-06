@@ -55,6 +55,9 @@ import com.intellij.util.ui.update.MergingUpdateQueue;
 import com.intellij.util.ui.update.UiNotifyConnector;
 import com.intellij.util.ui.update.Update;
 import consulo.application.ApplicationProperties;
+import consulo.container.plugin.PluginId;
+import consulo.container.plugin.PluginIds;
+import consulo.container.plugin.PluginManager;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ide.base.BaseShowSettingsUtil;
@@ -647,7 +650,7 @@ public class OptionsEditor implements DataProvider, Disposable, AWTEventListener
 
     mySpotlightUpdate = new MergingUpdateQueue("OptionsSpotlight", 200, false, rootPanel, this, rootPanel);
 
-    if(preselectedConfigurable != BaseShowSettingsUtil.SKIP_SELECTION_CONFIGURATION) {
+    if (preselectedConfigurable != BaseShowSettingsUtil.SKIP_SELECTION_CONFIGURATION) {
       if (preselectedConfigurable != null) {
         myTree.select(preselectedConfigurable);
       }
@@ -741,7 +744,7 @@ public class OptionsEditor implements DataProvider, Disposable, AWTEventListener
   @Override
   public <T extends UnnamedConfigurable> AsyncResult<T> select(@Nonnull Class<T> clazz) {
     Pair<Configurable, T> configurableInfo = myTree.findConfigurableInfo(clazz);
-    if(configurableInfo == null) {
+    if (configurableInfo == null) {
       return AsyncResult.rejected();
     }
 
@@ -981,13 +984,82 @@ public class OptionsEditor implements DataProvider, Disposable, AWTEventListener
 
   @Nullable
   public String getHelpTopic() {
-    Configurable current = getContext().getCurrentConfigurable();
-    while (current != null) {
-      String topic = current.getHelpTopic();
-      if (topic != null) return topic;
-      current = getContext().getParentConfigurable(current);
+    final Configurable current = getContext().getCurrentConfigurable();
+    if (current == null || Configurable.DISABLED_HELP_ID.equals(current.getHelpTopic())) {
+      return null;
     }
-    return null;
+
+    Configurable target = current;
+    List<String> ids = new ArrayList<>();
+    while (target != null) {
+      String helpTopic = target.getHelpTopic();
+      if (Configurable.DISABLED_HELP_ID.equals(helpTopic)) {
+        return null;
+      }
+
+      String id = null;
+      if (target instanceof SearchableConfigurable) {
+        id = ((SearchableConfigurable)target).getId();
+      }
+
+      // override for target id by help topic
+      if (target == current && helpTopic != null) {
+        id = helpTopic;
+      }
+      
+      id = formatHelpId(id);
+
+      if (StringUtil.isEmptyOrSpaces(id)) {
+        return null;
+      }
+
+      ids.add(id);
+      
+      target = getContext().getParentConfigurable(target);
+    }
+
+    Collections.reverse(ids);
+
+    for (int i = 0; i < ids.size(); i++) {
+      String id = ids.get(i);
+
+      for (int j = i + 1; j < ids.size(); j++) {
+        String childId = ids.get(j);
+
+        String idWithDot = id + ".";
+        if (childId.startsWith(idWithDot)) {
+          ids.set(j, childId.substring(idWithDot.length(), childId.length()));
+        }
+      }
+    }
+
+    StringBuilder builder = new StringBuilder();
+
+    PluginId pluginId = getPluginId(current);
+    if (PluginIds.isPlatformPlugin(pluginId)) {
+      builder.append("platform/settings/");
+    } else {
+      builder.append("plugins/").append(pluginId).append("/settings/");
+    }
+    builder.append(String.join("/", ids));
+
+    return builder.toString();
+  }
+
+  @Nonnull
+  private static PluginId getPluginId(@Nonnull Configurable configurable) {
+    if (configurable instanceof ConfigurableWrapper) {
+      return ((ConfigurableWrapper)configurable).getEp().getPluginDescriptor().getPluginId();
+    }
+
+    return PluginManager.getPluginId(configurable.getClass());
+  }
+
+  private static String formatHelpId(@Nullable String id) {
+    if (StringUtil.isEmptyOrSpaces(id) || id.contains(" ")) {
+      return null;
+    }
+    return id;
   }
 
   public boolean isFilterFieldVisible() {
@@ -1097,11 +1169,11 @@ public class OptionsEditor implements DataProvider, Disposable, AWTEventListener
       }
 
       ConfigurableContext context = myConfigurable2Content.get(each);
-      if(context != null) {
+      if (context != null) {
         context.disposeWithTree();
       }
     });
-    
+
     myConfigurable2Content.clear();
     myConfigurable2LoadCallback.clear();
 

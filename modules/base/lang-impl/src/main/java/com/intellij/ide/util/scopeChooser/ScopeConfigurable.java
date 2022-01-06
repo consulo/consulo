@@ -26,9 +26,7 @@ import com.intellij.psi.search.scope.packageSet.NamedScope;
 import com.intellij.psi.search.scope.packageSet.NamedScopeManager;
 import com.intellij.psi.search.scope.packageSet.NamedScopesHolder;
 import com.intellij.psi.search.scope.packageSet.PackageSet;
-import org.jetbrains.annotations.NonNls;
 
-import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
@@ -94,13 +92,6 @@ public class ScopeConfigurable extends NamedConfigurable<NamedScope> {
     return local
             ? DependencyValidationManager.getInstance(myProject)
             : NamedScopeManager.getInstance(myProject);
-  }
-
-  @Override
-  @Nullable
-  @NonNls
-  public String getHelpTopic() {
-    return "project.scopes";
   }
 
   @Override

@@ -128,9 +128,4 @@ public class ChromeSettingsConfigurable implements Configurable {
   public String getDisplayName() {
     return "Chrome Settings";
   }
-
-  @Override
-  public String getHelpTopic() {
-    return null;
-  }
 }

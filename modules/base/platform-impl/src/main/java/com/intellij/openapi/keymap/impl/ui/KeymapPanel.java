@@ -915,11 +915,6 @@ public class KeymapPanel implements SearchableConfigurable, Configurable.NoScrol
     return KeyMapBundle.message("keymap.display.name");
   }
 
-  @Override
-  public String getHelpTopic() {
-    return "platform/preferences/general/keymap/";
-  }
-
   @RequiredUIAccess
   @Override
   public JComponent createComponent() {

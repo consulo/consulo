@@ -361,11 +361,6 @@ public class TemplateCommentPanel implements SearchableConfigurable, Configurabl
     return myOptionName;
   }
 
-  @Override
-  public String getHelpTopic() {
-    return "copyright.filetypes";
-  }
-
   @RequiredUIAccess
   @Override
   public JComponent createComponent() {
@@ -472,6 +467,11 @@ public class TemplateCommentPanel implements SearchableConfigurable, Configurabl
         ((TemplateOptionsPanelListener)fires[i + 1]).optionChanged();
       }
     }
+  }
+
+  @Override
+  public String getHelpTopic() {
+    return "copyright.filetypes";
   }
 
   @Override

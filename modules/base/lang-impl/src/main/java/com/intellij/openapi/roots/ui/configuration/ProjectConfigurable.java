@@ -42,12 +42,10 @@ import consulo.ui.Component;
 import consulo.ui.HtmlLabel;
 import consulo.ui.TextBox;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.image.Image;
 import consulo.ui.layout.DockLayout;
 import consulo.ui.layout.VerticalLayout;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.io.IOException;
 
 /**
@@ -194,12 +192,6 @@ public class ProjectConfigurable extends ProjectStructureElementConfigurable<Pro
   @Override
   public String getDisplayName() {
     return ProjectBundle.message("project.roots.project.display.name");
-  }
-
-  @Override
-  @Nullable
-  public String getHelpTopic() {
-    return "reference.settingsdialog.project.structure.general";
   }
 
   @RequiredUIAccess

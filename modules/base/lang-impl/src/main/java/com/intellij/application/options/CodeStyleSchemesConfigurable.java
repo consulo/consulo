@@ -283,11 +283,6 @@ public class CodeStyleSchemesConfigurable extends SearchableConfigurable.Parent.
     return "Code Style";
   }
 
-  @Override
-  public String getHelpTopic() {
-    return "reference.settingsdialog.IDE.globalcodestyle";
-  }
-
   @RequiredUIAccess
   @Override
   public boolean isModified() {

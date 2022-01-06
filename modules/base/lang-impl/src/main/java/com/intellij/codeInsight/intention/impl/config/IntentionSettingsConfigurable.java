@@ -26,7 +26,6 @@ import javax.annotation.Nonnull;
 import javax.swing.*;
 
 public class IntentionSettingsConfigurable implements SearchableConfigurable, Configurable.NoMargin, Configurable.NoScroll, Configurable.HoldPreferredFocusedComponent {
-  public static final String HELP_ID = "preferences.intentionPowerPack";
   private IntentionSettingsPanel myPanel;
 
   @RequiredUIAccess
@@ -77,11 +76,6 @@ public class IntentionSettingsConfigurable implements SearchableConfigurable, Co
   }
 
   @Override
-  public String getHelpTopic() {
-    return HELP_ID;
-  }
-
-  @Override
   public Runnable enableSearch(String option) {
     return myPanel.showOption(this, option);
   }
@@ -89,7 +83,7 @@ public class IntentionSettingsConfigurable implements SearchableConfigurable, Co
   @Override
   @Nonnull
   public String getId() {
-    return HELP_ID;
+    return "editor.code.intentions";
   }
 
   public void selectIntention(String familyName) {

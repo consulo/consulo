@@ -32,6 +32,7 @@ import consulo.ui.color.RGBColor;
 import consulo.ui.cursor.StandardCursors;
 import consulo.ui.desktop.internal.DesktopFontImpl;
 import consulo.ui.desktop.internal.image.libraryImage.DesktopImageKeyImpl;
+import consulo.ui.desktop.internal.window.DummyWindow;
 import consulo.ui.desktop.internal.window.WindowOverAWTWindow;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageKey;
@@ -52,7 +53,8 @@ public class TargetAWTFacadeImpl implements TargetAWTFacade {
     static final Logger LOG = Logger.getInstance(TargetAWTFacadeImpl.class);
   }
 
-  private final static String heavyWeightWindow = "javax.swing.Popup$HeavyWeightWindow";
+  private final static String popupHeavyWeightWindow = "javax.swing.Popup$HeavyWeightWindow";
+  private final static String popupDefaultFrame = "javax.swing.Popup$DefaultFrame";
 
   static class StubWindow extends WindowOverAWTWindow {
     public StubWindow(java.awt.Window window) {
@@ -66,9 +68,13 @@ public class TargetAWTFacadeImpl implements TargetAWTFacade {
   }
 
   private StubWindow mySharedOwnerFrame;
+  // stub for popup default frame. Popup create it when, no target window. just hack it
+  private DummyWindow myPopupDefaultFrame;
 
   public TargetAWTFacadeImpl() {
     if (!GraphicsEnvironment.isHeadless()) {
+      myPopupDefaultFrame = new DummyWindow();
+
       JDialog stubDialog = new JDialog((Frame)null);
       java.awt.Window sharedOwnerFrame = stubDialog.getOwner();
       // of dialog have owner - we need stub it
@@ -149,6 +155,10 @@ public class TargetAWTFacadeImpl implements TargetAWTFacade {
       return null;
     }
 
+    if (myPopupDefaultFrame == window) {
+      return null;
+    }
+
     if (window instanceof ToSwingWindowWrapper) {
       return ((ToSwingWindowWrapper)window).toAWTWindow();
     }
@@ -180,18 +190,22 @@ public class TargetAWTFacadeImpl implements TargetAWTFacade {
       }
     }
 
-    String name = window.getClass().getName();
-    if (heavyWeightWindow.equals(name)) {
+    String className = window.getClass().getName();
+    if (popupDefaultFrame.equals(className)) {
+      return myPopupDefaultFrame;
+    }
+
+    if (popupHeavyWeightWindow.equals(className)) {
       JWindow jWindow = (JWindow)window;
 
       JRootPane rootPane = jWindow.getRootPane();
-      Object clientProperty = rootPane.getClientProperty(name);
+      Object clientProperty = rootPane.getClientProperty(className);
       if (clientProperty != null) {
         return (Window)clientProperty;
       }
       else {
         StubWindow stubWindow = new StubWindow(window);
-        rootPane.putClientProperty(name, stubWindow);
+        rootPane.putClientProperty(className, stubWindow);
         return stubWindow;
       }
     }

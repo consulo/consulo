@@ -296,11 +296,6 @@ public class VcsGeneralConfigurationPanel implements SearchableConfigurable {
     return "Confirmation";
   }
 
-  @Nonnull
-  public String getHelpTopic() {
-    return "project.propVCSSupport.Confirmation";
-  }
-
   public JComponent createComponent() {
     return getPanel();
   }
@@ -310,7 +305,7 @@ public class VcsGeneralConfigurationPanel implements SearchableConfigurable {
 
   @Nonnull
   public String getId() {
-    return getHelpTopic();
+    return "project.propVCSSupport.Confirmation";
   }
 
   public Runnable enableSearch(String option) {

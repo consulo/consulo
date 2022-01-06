@@ -59,11 +59,6 @@ public class CopyrightFormattingConfigurable extends SearchableConfigurable.Pare
     return "Formatting";
   }
 
-  @Override
-  public String getHelpTopic() {
-    return getId();
-  }
-
   @RequiredUIAccess
   @Override
   public JComponent createComponent() {

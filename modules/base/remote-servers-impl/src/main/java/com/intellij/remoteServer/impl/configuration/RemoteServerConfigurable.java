@@ -125,12 +125,6 @@ public class RemoteServerConfigurable extends NamedConfigurable<RemoteServer<?>>
     return myServerName;
   }
 
-  @Nullable
-  @Override
-  public String getHelpTopic() {
-    return null;
-  }
-
   @Override
   public void setDisplayName(String name) {
     myServerName = name;

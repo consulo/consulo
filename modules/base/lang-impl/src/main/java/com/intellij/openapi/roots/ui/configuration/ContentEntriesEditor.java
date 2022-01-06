@@ -105,11 +105,6 @@ public class ContentEntriesEditor extends ModuleElementsEditor {
   }
 
   @Override
-  public String getHelpTopic() {
-    return "projectStructure.modules.sources";
-  }
-
-  @Override
   public String getDisplayName() {
     return ProjectBundle.message("module.paths.title");
   }

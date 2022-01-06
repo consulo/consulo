@@ -65,15 +65,9 @@ public class ToolConfigurable implements SearchableConfigurable, Configurable.No
   }
 
   @Override
-  public String getHelpTopic() {
-    return "preferences.externalTools";
-  }
-
-
-  @Override
   @Nonnull
   public String getId() {
-    return getHelpTopic();
+    return "preferences.externalTools";
   }
 
   @Override

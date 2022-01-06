@@ -73,10 +73,4 @@ public class CompilerExcludedConfigurable implements Configurable {
   public String getDisplayName() {
     return null;
   }
-
-  @Nullable
-  @Override
-  public String getHelpTopic() {
-    return null;
-  }
 }

@@ -19,13 +19,13 @@ import com.intellij.notification.NotificationGroup;
 import com.intellij.openapi.externalSystem.ExternalSystemManager;
 import com.intellij.openapi.externalSystem.model.ProjectSystemId;
 import com.intellij.openapi.externalSystem.util.ExternalSystemApiUtil;
-import com.intellij.openapi.externalSystem.util.ExternalSystemBundle;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowFactory;
+import com.intellij.ui.content.Content;
+import com.intellij.ui.content.ContentFactory;
 import com.intellij.ui.content.ContentManager;
-import com.intellij.ui.content.impl.ContentImpl;
 import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
@@ -53,11 +53,10 @@ public abstract class AbstractExternalSystemToolWindowFactory implements ToolWin
   public void createToolWindowContent(final Project project, final ToolWindow toolWindow) {
     toolWindow.setTitle(myExternalSystemId.getReadableName());
     ContentManager contentManager = toolWindow.getContentManager();
-    String tasksTitle = ExternalSystemBundle.message("tool.window.title.tasks");
     ExternalSystemManager<?, ?, ?, ?, ?> manager = ExternalSystemApiUtil.getManager(myExternalSystemId);
     assert manager != null;
     ExternalSystemTasksPanel panel = new ExternalSystemTasksPanel(project, myExternalSystemId, myNotificationGroup);
-    ContentImpl tasksContent = new ContentImpl(panel, tasksTitle, true);
+    Content tasksContent = ContentFactory.getInstance().createContent(panel, "", true);
     contentManager.addContent(tasksContent);
   }
 }

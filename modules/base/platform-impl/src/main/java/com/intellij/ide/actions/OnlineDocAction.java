@@ -15,11 +15,12 @@
  */
 package com.intellij.ide.actions;
 
-import com.intellij.ide.BrowserUtil;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.help.HelpManager;
 import com.intellij.openapi.project.DumbAwareAction;
 import consulo.ui.annotation.RequiredUIAccess;
+import jakarta.inject.Inject;
+import jakarta.inject.Provider;
 
 import javax.annotation.Nonnull;
 
@@ -27,9 +28,16 @@ import javax.annotation.Nonnull;
  * @author Vladimir Kondratyev
  */
 public class OnlineDocAction extends DumbAwareAction {
+  private final Provider<HelpManager> myHelpManagerProvider;
+
+  @Inject
+  public OnlineDocAction(Provider<HelpManager> helpManagerProvider) {
+    myHelpManagerProvider = helpManagerProvider;
+  }
+
   @RequiredUIAccess
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
-    BrowserUtil.browse(HelpManager.DEFAULT_HELP_URL);
+    myHelpManagerProvider.get().invokeHelp(null);
   }
 }

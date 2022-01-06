@@ -217,7 +217,7 @@ public class QuickListsPanel extends JPanel implements SearchableConfigurable, C
   @Override
   @Nonnull
   public String getId() {
-    return getHelpTopic();
+    return "quick.lists";
   }
 
   @Override
@@ -238,12 +238,6 @@ public class QuickListsPanel extends JPanel implements SearchableConfigurable, C
   @Nls
   public String getDisplayName() {
     return "Quick Lists";
-  }
-
-  @Override
-  @Nonnull
-  public String getHelpTopic() {
-    return "reference.idesettings.quicklists";
   }
 
   @Override

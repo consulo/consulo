@@ -59,7 +59,7 @@ import java.util.*;
  */
 public class GutterIconsConfigurable implements SearchableConfigurable, Configurable.NoScroll {
   public static final String DISPLAY_NAME = "Gutter Icons";
-  public static final String ID = "editor.preferences.gutterIcons";
+  public static final String ID = "editor.gutterIcons";
 
   private CheckBoxList<GutterIconDescriptor> myList;
   private JBCheckBox myShowGutterIconsJBCheckBox;
@@ -69,12 +69,6 @@ public class GutterIconsConfigurable implements SearchableConfigurable, Configur
   @Override
   public String getDisplayName() {
     return DISPLAY_NAME;
-  }
-
-  @Nullable
-  @Override
-  public String getHelpTopic() {
-    return "reference.settings.editor.gutter.icons";
   }
 
   @RequiredUIAccess

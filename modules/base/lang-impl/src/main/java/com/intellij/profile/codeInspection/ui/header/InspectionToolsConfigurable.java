@@ -425,11 +425,6 @@ public abstract class InspectionToolsConfigurable implements ErrorsConfigurable,
   }
 
   @Override
-  public String getHelpTopic() {
-    return "preferences.inspections";
-  }
-
-  @Override
   @Nonnull
   public String getId() {
     return ID;

@@ -14,20 +14,20 @@ import com.intellij.ui.components.JBCheckBox;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.ui.treeStructure.Tree;
 import com.intellij.util.Consumer;
-import java.util.HashSet;
 import com.intellij.util.ui.UIUtil;
 import consulo.disposer.Disposer;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.TreeSelectionModel;
 import java.awt.*;
 import java.security.cert.X509Certificate;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -160,12 +160,6 @@ public class CertificateConfigurable implements SearchableConfigurable, Configur
   @Override
   public String getDisplayName() {
     return "Server Certificates";
-  }
-
-  @Nullable
-  @Override
-  public String getHelpTopic() {
-    return "reference.idesettings.server.certificates";
   }
 
   @Nullable

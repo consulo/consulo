@@ -20,9 +20,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.NamedConfigurable;
 import org.intellij.plugins.intelliLang.inject.config.Injection;
 import org.intellij.plugins.intelliLang.inject.config.ui.InjectionPanel;
-import org.jetbrains.annotations.NonNls;
 
-import javax.annotation.Nullable;
 import javax.swing.*;
 
 public abstract class InjectionConfigurable<T extends Injection, P extends InjectionPanel<T>> extends NamedConfigurable<T> {
@@ -42,12 +40,6 @@ public abstract class InjectionConfigurable<T extends Injection, P extends Injec
 
   public T getEditableObject() {
     return myInjection;
-  }
-
-  @Nullable
-  @NonNls
-  public String getHelpTopic() {
-    return null;
   }
 
   public JComponent createOptionsPanel() {

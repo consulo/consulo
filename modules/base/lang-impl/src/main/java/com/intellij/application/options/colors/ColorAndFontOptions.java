@@ -1188,11 +1188,6 @@ public class ColorAndFontOptions extends SearchableConfigurable.Parent.Abstract 
     }
 
     @Override
-    public String getHelpTopic() {
-      return null;
-    }
-
-    @Override
     public int getConfigurableWeight() {
       if (myFactory instanceof ConfigurableWeight) {
         return ((ConfigurableWeight)myFactory).getConfigurableWeight();

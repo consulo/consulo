@@ -42,6 +42,9 @@ import javax.swing.*;
  * @since 2020-06-26
  */
 public class PluginsPanel implements Disposable {
+  public static final int FROM_REPOSITORY = 0;
+  public static final int INSTALLED = 1;
+
   public static final Key<PluginsPanel> KEY = Key.create("PluginsPanel");
 
   private JBEditorTabs myTabs;
@@ -110,10 +113,10 @@ public class PluginsPanel implements Disposable {
   public void select(PluginManagerMain main) {
     int index;
     if (main == myInstalledPluginsPanel) {
-      index = 1;
+      index = INSTALLED;
     }
     else if (main == myAvailablePluginsManagerMain) {
-      index = 0;
+      index = FROM_REPOSITORY;
     }
     else {
       throw new UnsupportedOperationException();
@@ -123,15 +126,20 @@ public class PluginsPanel implements Disposable {
     myTabs.select(tabAt, false);
   }
 
-  @Nonnull
-  public PluginManagerMain getSelected() {
+  public int getSelectedIndex() {
     TabInfo selectedInfo = myTabs.getSelectedInfo();
     if (selectedInfo == null) {
-      return myInstalledPluginsPanel;
+      return INSTALLED;
     }
 
-    int index = myTabs.getIndexOf(selectedInfo);
-    if(index == 0) {
+    return myTabs.getIndexOf(selectedInfo);
+  }
+
+  @Nonnull
+  public PluginManagerMain getSelected() {
+    int index = getSelectedIndex();
+
+    if(index == FROM_REPOSITORY) {
       return myAvailablePluginsManagerMain;
     }
 

@@ -196,7 +196,7 @@ public class IntentionManagerSettings implements PersistentStateComponent<Elemen
           final Set<String> words = processor.getProcessedWordsWithoutStemming(descriptionText);
           words.addAll(processor.getProcessedWords(data.getFamily()));
           for (String word : words) {
-            processor.addOption(word, data.getFamily(), data.getFamily(), IntentionSettingsConfigurable.HELP_ID, CodeInsightBundle.message("intention.settings"));
+            processor.addOption(word, data.getFamily(), data.getFamily(), "editor.code.intentions", CodeInsightBundle.message("intention.settings"));
           }
         }
         catch (IOException e) {

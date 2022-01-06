@@ -19,8 +19,6 @@ import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.ui.NamedConfigurable;
 import com.intellij.openapi.ui.PanelWithText;
 import consulo.ui.image.Image;
-import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nullable;
 
 import javax.swing.*;
 
@@ -69,13 +67,6 @@ public class TextConfigurable<T> extends NamedConfigurable<T> {
   @Override
   public void disposeUIResources() {
     //do nothing
-  }
-
-  @Override
-  @Nullable
-  @NonNls
-  public String getHelpTopic() {
-    return null;
   }
 
   @Override

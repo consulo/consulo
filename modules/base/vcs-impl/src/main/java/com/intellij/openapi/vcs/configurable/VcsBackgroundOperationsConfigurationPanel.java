@@ -156,14 +156,9 @@ public class VcsBackgroundOperationsConfigurationPanel implements SearchableConf
   }
 
   @Override
-  public String getHelpTopic() {
-    return "project.propVCSSupport.Background";
-  }
-
-  @Override
   @Nonnull
   public String getId() {
-    return getHelpTopic();
+    return "project.propVCSSupport.Background";
   }
 
   @RequiredUIAccess

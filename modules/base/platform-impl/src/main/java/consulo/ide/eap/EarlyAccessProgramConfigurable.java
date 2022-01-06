@@ -62,12 +62,6 @@ public class EarlyAccessProgramConfigurable implements Configurable, Configurabl
     return IdeBundle.message("eap.configurable.name");
   }
 
-  @Nullable
-  @Override
-  public String getHelpTopic() {
-    return "platform/preferences/eap";
-  }
-
   @RequiredUIAccess
   @Nullable
   @Override

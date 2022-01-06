@@ -39,12 +39,6 @@ import java.util.List;
  * @since 24/09/2021
  */
 public class DiffSettingsConfigurable extends SimpleConfigurableByProperties implements Configurable {
-  @Nonnull
-  @Override
-  public String getHelpTopic() {
-    return "platform/preferences/diff/";
-  }
-
   @RequiredUIAccess
   @Nonnull
   @Override

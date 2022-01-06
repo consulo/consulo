@@ -34,7 +34,7 @@ import javax.swing.*;
  * @since 2020-06-26
  */
 public class PluginsConfigurable implements SearchableConfigurable, Configurable.NoScroll, Configurable.HoldPreferredFocusedComponent, Configurable.NoMargin {
-  public static final String ID = "preferences.pluginManager";
+  public static final String ID = "platformAndPlugins";
 
   private PluginsPanel myPanel;
 
@@ -58,10 +58,29 @@ public class PluginsConfigurable implements SearchableConfigurable, Configurable
     return IdeBundle.message("title.plugins");
   }
 
+  @Nullable
+  @Override
+  public String getHelpTopic() {
+    String suffix = "";
+    if (myPanel != null) {
+      int selectedIndex = myPanel.getSelectedIndex();
+
+      switch (selectedIndex) {
+        case PluginsPanel.INSTALLED:
+          suffix = "/#installed";
+          break;
+        case PluginsPanel.FROM_REPOSITORY:
+          suffix = "/#from-repository";
+          break;
+      }
+    }
+    return getId() + suffix;
+  }
+
   @Nonnull
   @Override
   public String getId() {
-    return "preferences.pluginManager";
+    return ID;
   }
 
   @RequiredUIAccess

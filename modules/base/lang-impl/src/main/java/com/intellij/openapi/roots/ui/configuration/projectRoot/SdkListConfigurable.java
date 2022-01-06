@@ -166,7 +166,7 @@ public class SdkListConfigurable extends BaseStructureConfigurable {
   @Override
   @Nullable
   public String getHelpTopic() {
-    return myCurrentConfigurable != null ? myCurrentConfigurable.getHelpTopic() : "reference.settingsdialog.project.structure.jdk";
+    return myCurrentConfigurable != null ? myCurrentConfigurable.getHelpTopic() : null;
   }
 
   @Override

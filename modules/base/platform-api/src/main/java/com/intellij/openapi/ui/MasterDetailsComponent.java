@@ -876,13 +876,6 @@ public abstract class MasterDetailsComponent implements Configurable, MasterDeta
           return "";
         }
 
-        @Override
-        @Nullable
-        @NonNls
-        public String getHelpTopic() {
-          return null;
-        }
-
         @RequiredUIAccess
         @Override
         public JComponent createOptionsPanel(Disposable uiDisposable) {

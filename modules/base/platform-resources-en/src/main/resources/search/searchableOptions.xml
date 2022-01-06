@@ -17036,7 +17036,7 @@
     <option name="tag" hit="Tag tree (level 6)" />
     <option name="tree" hit="Tag tree (level 6)" />
   </configurable>
-  <configurable id="preferences.pluginManager" configurable_name="Plugins">
+  <configurable id="platformAndPlugins" configurable_name="Plugins">
     <option name="" hit="" />
     <option name="browse" hit="Browse repositories..." />
     <option name="repositories" hit="Browse repositories..." />

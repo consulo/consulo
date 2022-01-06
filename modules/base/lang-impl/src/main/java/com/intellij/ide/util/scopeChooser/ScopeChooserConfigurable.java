@@ -299,13 +299,6 @@ public class ScopeChooserConfigurable extends MasterDetailsComponent implements 
   }
 
   @Override
-  @Nonnull
-  @NonNls
-  public String getHelpTopic() {
-    return PROJECT_SCOPES;  //todo help id
-  }
-
-  @Override
   protected void updateSelection(@Nullable final MasterDetailsConfigurable configurable) {
     super.updateSelection(configurable);
     if (configurable instanceof ScopeConfigurable) {
@@ -375,9 +368,8 @@ public class ScopeChooserConfigurable extends MasterDetailsComponent implements 
 
   @Override
   @Nonnull
-  @NonNls
   public String getId() {
-    return getHelpTopic();
+    return PROJECT_SCOPES;
   }
 
   @Override
