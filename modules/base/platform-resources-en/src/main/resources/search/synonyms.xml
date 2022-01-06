@@ -220,7 +220,7 @@
 
   </configurable>
 
-  <configurable id="preferences.pluginManager" configurable_name="Plugins">
+  <configurable id="platformAndPlugins" configurable_name="Plugins">
     <synonym>Manage plugins</synonym>
     <synonym>Install plugins</synonym>
     <synonym>Remove plugins</synonym>

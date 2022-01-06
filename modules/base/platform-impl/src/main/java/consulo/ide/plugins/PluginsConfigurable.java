@@ -34,7 +34,7 @@ import javax.swing.*;
  * @since 2020-06-26
  */
 public class PluginsConfigurable implements SearchableConfigurable, Configurable.NoScroll, Configurable.HoldPreferredFocusedComponent, Configurable.NoMargin {
-  public static final String ID = "preferences.pluginManager";
+  public static final String ID = "platformAndPlugins";
 
   private PluginsPanel myPanel;
 

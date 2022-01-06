@@ -24,7 +24,8 @@
     <eapDescriptor implementation="consulo.ide.eap.plugins.ExperimentalPluginsDescriptor"/>
     <eapDescriptor implementation="consulo.startup.PluginPermissionEarlyAccessProgramDescriptor"/>
 
-    <applicationConfigurable parentId="preferences.pluginManager"
+    <applicationConfigurable parentId="platformAndPlugins"
+                             id="eap"
                              bundle="messages.IdeBundle"
                              key="eap.configurable.name"
                              instance="consulo.ide.eap.EarlyAccessProgramConfigurable"/>

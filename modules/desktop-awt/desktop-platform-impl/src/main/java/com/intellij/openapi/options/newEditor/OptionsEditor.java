@@ -998,11 +998,13 @@ public class OptionsEditor implements DataProvider, Disposable, AWTEventListener
       }
 
       String id = null;
-      if (helpTopic != null) {
-        id = helpTopic;
-      }
-      else if (target instanceof SearchableConfigurable) {
+      if (target instanceof SearchableConfigurable) {
         id = ((SearchableConfigurable)target).getId();
+      }
+
+      // override for target id by help topic
+      if (target == current && helpTopic != null) {
+        id = helpTopic;
       }
       
       id = formatHelpId(id);

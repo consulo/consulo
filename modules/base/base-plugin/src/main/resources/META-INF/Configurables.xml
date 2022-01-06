@@ -173,12 +173,12 @@
     <applicationConfigurable displayName="Notifications" id="notifications" parentId="general" instance="com.intellij.notification.impl.NotificationsConfigurable"/>
 
     <applicationConfigurable instance="consulo.ide.plugins.PluginsConfigurable"
-                             id="preferences.pluginManager"
+                             id="platformAndPlugins"
                              bundle="messages.IdeBundle"
                              key="title.plugins"/>
 
-    <applicationConfigurable id="settings.update"
-                             parentId="preferences.pluginManager"
+    <applicationConfigurable id="updateSettings"
+                             parentId="platformAndPlugins"
                              instance="consulo.ide.updateSettings.UpdatesConfigurable"
                              displayName="Update Settings" />
 
