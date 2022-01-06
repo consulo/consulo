@@ -21,6 +21,7 @@ import com.intellij.ui.SimpleColoredComponent;
 import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.ui.components.JBList;
 import com.intellij.ui.content.Content;
+import com.intellij.ui.content.ContentFactory;
 import com.intellij.ui.content.impl.ContentImpl;
 import com.intellij.util.Alarm;
 import com.intellij.util.SmartList;
@@ -265,7 +266,7 @@ public class MultipleBuildsView implements BuildProgressListener, Disposable {
           tb.getComponent().setBorder(JBUI.Borders.merge(tb.getComponent().getBorder(), JBUI.Borders.customLine(OnePixelDivider.BACKGROUND, 0, 0, 0, 1), true));
           consoleComponent.add(tb.getComponent(), BorderLayout.WEST);
 
-          myContent = new ContentImpl(consoleComponent, myViewManager.getViewName(), true);
+          myContent = ContentFactory.getInstance().createContent(consoleComponent, myViewManager.getViewName(), true);
           Disposer.register(myContent, new Disposable() {
             @Override
             public void dispose() {
