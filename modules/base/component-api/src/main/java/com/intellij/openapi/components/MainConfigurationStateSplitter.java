@@ -15,6 +15,7 @@
  */
 package com.intellij.openapi.components;
 
+import consulo.util.jdom.JDOMUtil;
 import consulo.util.lang.Pair;
 import org.jdom.Element;
 

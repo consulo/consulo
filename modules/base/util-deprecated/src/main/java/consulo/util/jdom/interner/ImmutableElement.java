@@ -18,7 +18,6 @@ import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.Conditions;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.Function;
-import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.ReflectionUtil;
 import com.intellij.util.containers.ContainerUtil;
 import org.jdom.*;
@@ -293,8 +292,8 @@ class ImmutableElement extends Element {
   }
 
   @Nonnull
-  static IncorrectOperationException immutableError(Object element) {
-    return new IncorrectOperationException("Can't change immutable element: " +
+  static UnsupportedOperationException immutableError(Object element) {
+    return new UnsupportedOperationException("Can't change immutable element: " +
                                            element.getClass() + ". To obtain mutable Element call .clone()");
   }
 
