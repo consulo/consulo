@@ -7,7 +7,7 @@
 
   <groupId>consulo</groupId>
   <artifactId>group</artifactId>
-  <version>2-SNAPSHOT</version>
+  <version>3-SNAPSHOT</version>
 
   <packaging>pom</packaging>
 
@@ -25,28 +25,8 @@
     <module>sandbox/sand-language-plugin</module>
 
     <module>modules/desktop-awt/desktop-awt-hacking</module>
-    <module>modules/desktop-awt/desktop-bootstrap</module>
-    <module>modules/desktop-awt/desktop-ui-impl</module>
-    <module>modules/desktop-awt/desktop-platform-impl</module>
-    <module>modules/desktop-awt/desktop-lang-impl</module>
-    <module>modules/desktop-awt/desktop-ui-laf-impl</module>
-    <module>modules/desktop-awt/desktop-graph-impl</module>
-    <module>modules/desktop-awt/desktop-util-awt</module>
-    <module>modules/desktop-awt/desktop-base-laf-icon-library</module>
     <module>modules/desktop-awt/desktop-plugin</module>
 
-    <module>modules/desktop-swt/desktop-swt-bootstrap</module>
-    <module>modules/desktop-swt/desktop-swt-plugin</module>
-    <module>modules/desktop-swt/desktop-swt-platform-impl</module>
-    <module>modules/desktop-swt/desktop-swt-ui-impl</module>
-
-    <module>modules/web/web-bootstrap</module>
-    <module>modules/web/web-ui-impl-client</module>
-    <module>modules/web/web-ui-impl-shared</module>
-    <module>modules/web/web-ui-impl-server</module>
-    <module>modules/web/web-platform-api</module>
-    <module>modules/web/web-platform-impl</module>
-    <module>modules/web/web-lang-impl</module>
     <module>modules/web/web-plugin</module>
 
     <module>modules/boot/bootstrap</module>
@@ -56,84 +36,16 @@
 
     <module>modules/base/annotation</module>
     <module>modules/base/annotations</module>
-    <module>modules/base/application-api</module>
-    <module>modules/base/analysis-api</module>
-    <module>modules/base/analysis-impl</module>
     <module>modules/base/base-localize-library</module>
     <module>modules/base/base-icon-library</module>
-    <module>modules/base/build-ui-api</module>
-    <module>modules/base/build-ui-impl</module>
-    <module>modules/base/built-in-server-api</module>
-    <module>modules/base/built-in-server-impl</module>
-    <module>modules/base/core-api</module>
-    <module>modules/base/core-impl</module>
-    <module>modules/base/component-api</module>
-    <module>modules/base/compiler-api</module>
-    <module>modules/base/compiler-impl</module>
-    <module>modules/base/compiler-build-ui-impl</module>
-    <module>modules/base/document-api</module>
-    <module>modules/base/diff-api</module>
-    <module>modules/base/diff-impl</module>
+    <module>modules/base/base-ide-impl</module>
     <module>modules/base/disposer-api</module>
     <module>modules/base/disposer-impl</module>
-    <module>modules/base/dvcs-api</module>
-    <module>modules/base/dvcs-impl</module>
-    <module>modules/base/dvcs-impl-testing</module>
-    <module>modules/base/duplicates-analysis</module>
-    <module>modules/base/editor-ui-api</module>
-    <module>modules/base/editor-ui-ex</module>
-    <module>modules/base/external-service-api</module>
-    <module>modules/base/external-service-impl</module>
-    <module>modules/base/external-storage-impl</module>
-    <module>modules/base/external-system-api</module>
-    <module>modules/base/external-system-impl</module>
-    <module>modules/base/external-tools-api</module>
-    <module>modules/base/external-tools-impl</module>
-    <module>modules/base/execution-api</module>
-    <module>modules/base/graph-api</module>
-    <module>modules/base/graph-impl</module>
-    <module>modules/base/indexing-api</module>
-    <module>modules/base/indexing-impl</module>
-    <module>modules/base/platform-api</module>
-    <module>modules/base/platform-impl</module>
-    <module>modules/base/platform-resources</module>
-    <module>modules/base/platform-resources-en</module>
-    <module>modules/base/project-api</module>
-    <module>modules/base/project-model-api</module>
-    <module>modules/base/project-model-impl</module>
-    <module>modules/base/language-api</module>
-    <module>modules/base/lang-api</module>
-    <module>modules/base/lang-impl</module>
-    <module>modules/base/lang-injecting-impl</module>
-    <module>modules/base/lang-impl-testing</module>
-    <module>modules/base/lvcs-api</module>
-    <module>modules/base/lvcs-impl</module>
-    <module>modules/base/lvcs-impl-testing</module>
     <module>modules/base/localize-api</module>
     <module>modules/base/localize-impl</module>
-    <module>modules/base/task-api</module>
-    <module>modules/base/task-impl</module>
-    <module>modules/base/test</module>
-    <module>modules/base/remote-servers-api</module>
-    <module>modules/base/remote-servers-agent-rt</module>
-    <module>modules/base/remote-servers-impl</module>
-    <module>modules/base/runtime-api</module>
-    <module>modules/base/runtime-impl</module>
-    <module>modules/base/vcs-api</module>
-    <module>modules/base/vcs-api-core</module>
-    <module>modules/base/vcs-log-graph-api</module>
-    <module>modules/base/vcs-log-graph-impl</module>
-    <module>modules/base/vcs-log-graph-impl-testing</module>
-    <module>modules/base/vcs-log-api</module>
-    <module>modules/base/vcs-log-impl</module>
-    <module>modules/base/vcs-log-impl-testing</module>
-    <module>modules/base/virtual-file-system-api</module>
-    <module>modules/base/vcs-impl</module>
     <module>modules/base/ui-api</module>
     <module>modules/base/ui-impl</module>
-    <module>modules/base/vcs-impl-testing</module>
-    <module>modules/base/usage-view</module>
-    <module>modules/base/util-deprecated</module>
+
     <module>modules/base/util/util-rmi</module>
     <module>modules/base/util/util-lang</module>
     <module>modules/base/util/util-collection</module>
@@ -146,28 +58,14 @@
     <module>modules/base/util/util-jdom</module>
     <module>modules/base/util/util-io</module>
     <module>modules/base/util/util-serializer</module>
-    <module>modules/base/util-testing</module>
-    <module>modules/base/xcoverage-data</module>
-    <module>modules/base/xcoverage-impl</module>
-    <module>modules/base/xdebugger-api</module>
-    <module>modules/base/xdebugger-impl</module>
-    <module>modules/base/xtest-impl</module>
-    <module>modules/base/xtest-sm-impl</module>
-    <module>modules/base/base-plugin</module>
 
     <module>modules/base/injecting/injecting-api</module>
     <module>modules/base/injecting/injecting-pico-impl</module>
     <module>modules/base/hacking-java-base</module>
 
-    <module>modules/base/language-editor-api</module>
-
     <module>modules/base/logging/logging-api</module>
     <module>modules/base/logging/logging-slf4j-binding-impl</module>
     <module>modules/base/logging/logging-log4j2-impl</module>
-
-    <module>modules/base/test-impl</module>
-
-    <module>modules/base/trash-can</module>
   </modules>
 
   <properties>

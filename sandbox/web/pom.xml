@@ -21,13 +21,13 @@
   <parent>
     <groupId>consulo</groupId>
     <artifactId>arch.ide</artifactId>
-    <version>2-SNAPSHOT</version>
+    <version>3-SNAPSHOT</version>
     <relativePath>../../arch/ide/pom.xml</relativePath>
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
   <artifactId>consulo-sandbox-web</artifactId>
-  <version>2-SNAPSHOT</version>
+  <version>3-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <properties>

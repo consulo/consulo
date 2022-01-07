@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  - Copyright 2013-2017 consulo.io
+  - Copyright 2013-2020 consulo.io
   -
   - Licensed under the Apache License, Version 2.0 (the "License");
   - you may not use this file except in compliance with the License.
@@ -26,25 +26,20 @@
 
   <modelVersion>4.0.0</modelVersion>
 
-  <artifactId>consulo-localize-api</artifactId>
+  <artifactId>consulo-base-ide-impl</artifactId>
   <version>3-SNAPSHOT</version>
 
   <packaging>jar</packaging>
 
-  <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <java.level>11</java.level>
-  </properties>
-
   <dependencies>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>consulo-annotation</artifactId>
+      <artifactId>consulo-ui-api</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>consulo-disposer-api</artifactId>
+      <artifactId>consulo-localize-api</artifactId>
       <version>${project.version}</version>
     </dependency>
   </dependencies>
