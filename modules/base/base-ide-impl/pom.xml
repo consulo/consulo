@@ -34,12 +34,44 @@
   <dependencies>
     <dependency>
       <groupId>${project.groupId}</groupId>
+      <artifactId>consulo-container-api</artifactId>
+      <version>${project.version}</version>
+      <optional>true</optional>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>consulo-container-impl</artifactId>
+      <version>${project.version}</version>
+      <optional>true</optional>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
       <artifactId>consulo-annotations</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
+      <artifactId>consulo-base-icon-library</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>consulo-base-localize-library</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
       <artifactId>consulo-ui-api</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>consulo-logging-api</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>consulo-injecting-api</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
@@ -50,6 +82,10 @@
     <dependency>
       <groupId>consulo.internal</groupId>
       <artifactId>jakarta.inject-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.jdom</groupId>
+      <artifactId>jdom-core</artifactId>
     </dependency>
   </dependencies>
 </project>

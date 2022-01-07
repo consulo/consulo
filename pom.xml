@@ -43,6 +43,8 @@
     <module>modules/base/disposer-impl</module>
     <module>modules/base/localize-api</module>
     <module>modules/base/localize-impl</module>
+    <module>modules/base/runtime-api</module>
+    <module>modules/base/runtime-impl</module>
     <module>modules/base/ui-api</module>
     <module>modules/base/ui-impl</module>
 
