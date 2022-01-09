@@ -13,13 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.util.advandedProxy.internal.impl.bytebuddy;
+package consulo.proxy.advanced.internal.impl.bytebuddy;
 
 import consulo.container.impl.classloader.proxy.ProxyDescription;
 import consulo.container.impl.classloader.proxy.ProxyHolderClassLoader;
-import consulo.util.advandedProxy.ProxyHelper;
-import consulo.util.advandedProxy.internal.AdvancedProxyFacade;
-import consulo.util.advandedProxy.internal.impl.AdvancedProxyTesting;
+import consulo.proxy.advanced.ProxyHelper;
+import consulo.proxy.advanced.internal.AdvancedProxyFacade;
+import consulo.proxy.advanced.internal.impl.AdvancedProxyTesting;
 import consulo.util.collection.ArrayUtil;
 import net.bytebuddy.ByteBuddy;
 import net.bytebuddy.ClassFileVersion;

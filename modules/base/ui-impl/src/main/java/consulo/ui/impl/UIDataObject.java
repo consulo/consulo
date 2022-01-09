@@ -16,20 +16,23 @@
 package consulo.ui.impl;
 
 import com.intellij.openapi.util.AtomicNotNullLazyValue;
-import com.intellij.util.EventDispatcher;
-import com.intellij.util.containers.ContainerUtil;
 import consulo.disposer.Disposable;
+import consulo.proxy.EventDispatcher;
 import consulo.ui.border.BorderPosition;
 import consulo.ui.border.BorderStyle;
 import consulo.ui.color.ColorValue;
+import consulo.util.collection.ContainerUtil;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolderBase;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.*;
+import java.util.EventListener;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 /**
  * @author VISTALL
@@ -41,7 +44,7 @@ public class UIDataObject extends UserDataHolderBase {
   @Nullable
   private Map<BorderPosition, BorderInfo> myBorders;
 
-  private final AtomicNotNullLazyValue<List<Function<Key<?>, Object>>> myUserDataProviders = AtomicNotNullLazyValue.createValue(ContainerUtil::createLockFreeCopyOnWriteList);
+  private final Supplier<List<Function<Key<?>, Object>>> myUserDataProviders = AtomicNotNullLazyValue.createValue(ContainerUtil::createLockFreeCopyOnWriteList);
 
   @SuppressWarnings("unchecked")
   public <T extends EventListener> Disposable addListener(Class<T> clazz, T value) {
@@ -57,14 +60,14 @@ public class UIDataObject extends UserDataHolderBase {
 
   @Nonnull
   public <T> Disposable addUserDataProvider(@Nonnull Function<Key<?>, Object> function) {
-    myUserDataProviders.getValue().add(function);
-    return () -> myUserDataProviders.getValue().remove(function);
+    myUserDataProviders.get().add(function);
+    return () -> myUserDataProviders.get().remove(function);
   }
 
   @Override
   @SuppressWarnings("unchecked")
   public <T> T getUserData(@Nonnull Key<T> key) {
-    List<Function<Key<?>, Object>> value = myUserDataProviders.getValue();
+    List<Function<Key<?>, Object>> value = myUserDataProviders.get();
     for (Function<Key<?>, Object> function : value) {
       Object funcValue = function.apply(key);
       if (funcValue != null) {

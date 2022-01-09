@@ -21,12 +21,12 @@
     <groupId>consulo</groupId>
     <artifactId>arch.managment</artifactId>
     <version>3-SNAPSHOT</version>
-    <relativePath>../../../../arch/managment/pom.xml</relativePath>
+    <relativePath>../../../arch/managment/pom.xml</relativePath>
   </parent>
 
   <modelVersion>4.0.0</modelVersion>
 
-  <artifactId>consulo-util-advanced-proxy</artifactId>
+  <artifactId>consulo-proxy</artifactId>
   <version>3-SNAPSHOT</version>
 
   <packaging>jar</packaging>
@@ -45,6 +45,11 @@
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>consulo-logging-api</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>consulo-disposer-api</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>

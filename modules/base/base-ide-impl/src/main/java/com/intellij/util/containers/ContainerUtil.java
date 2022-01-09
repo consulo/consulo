@@ -359,7 +359,7 @@ public class ContainerUtil extends ContainerUtilRt {
   @Contract(pure = true)
   @Deprecated
   public static <K> Set<K> newIdentityTroveSet() {
-    return Sets.newHashSet(ContainerUtil.<K>identityStrategy());
+    return Sets.newHashSet(ContainerUtil.identityStrategy());
   }
 
   @Nonnull
@@ -380,7 +380,7 @@ public class ContainerUtil extends ContainerUtilRt {
   @Contract(pure = true)
   @Deprecated
   public static <K, V> Map<K, V> newIdentityTroveMap() {
-    return Maps.newHashMap(ContainerUtil.<K>identityStrategy());
+    return Maps.newHashMap(ContainerUtil.identityStrategy());
   }
 
   @Nonnull

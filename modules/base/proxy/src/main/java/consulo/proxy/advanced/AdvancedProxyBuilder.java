@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.util.advandedProxy;
+package consulo.proxy.advanced;
 
-import consulo.util.advandedProxy.internal.AdvancedProxyFacade;
-import consulo.util.advandedProxy.internal.impl.bytebuddy.ByteBuddyAdvancedProxyFacade;
+import consulo.proxy.advanced.internal.AdvancedProxyFacade;
+import consulo.proxy.advanced.internal.impl.bytebuddy.ByteBuddyAdvancedProxyFacade;
 import consulo.util.collection.ArrayUtil;
 
 import javax.annotation.Nonnull;
@@ -29,7 +29,7 @@ import java.util.Objects;
  * @author VISTALL
  * @since 2020-06-18
  */
-public class AdvancedProxyBuilder<T> {
+public final class AdvancedProxyBuilder<T> {
   private static final AdvancedProxyFacade ourAdvancedProxyFacade;
 
   static {

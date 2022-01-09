@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.util.advandedProxy.internal.impl.bytebuddy;
+package consulo.proxy.advanced.internal.impl.bytebuddy;
 
 import consulo.util.nodep.classloader.MemoryResource;
 import consulo.util.nodep.classloader.UrlClassLoader;

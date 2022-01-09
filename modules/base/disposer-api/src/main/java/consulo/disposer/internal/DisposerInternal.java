@@ -18,6 +18,7 @@ package consulo.disposer.internal;
 import consulo.annotation.ReviewAfterMigrationToJRE;
 import consulo.disposer.Disposable;
 import consulo.disposer.TraceableDisposable;
+import consulo.disposer.util.DisposableList;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -53,6 +54,9 @@ public abstract class DisposerInternal {
 
   @Nullable
   public abstract <T extends Disposable> T findRegisteredObject(@Nonnull Disposable parentDisposable, @Nonnull T object);
+
+  @Nonnull
+  public abstract <T> DisposableList<T> createList();
 
   @Nonnull
   @ReviewAfterMigrationToJRE(value = 9, description = "Use consulo.util.ServiceLoaderUtil")

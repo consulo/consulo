@@ -22,9 +22,7 @@ import org.slf4j.LoggerFactory;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.lang.reflect.*;
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Predicate;
 
 /**
@@ -162,5 +160,58 @@ public class ReflectionUtil {
     }
     assert false : type;
     return null;
+  }
+
+  @Nonnull
+  public static Class<?> boxType(@Nonnull Class<?> type) {
+    if (!type.isPrimitive()) return type;
+    if (type == boolean.class) return Boolean.class;
+    if (type == byte.class) return Byte.class;
+    if (type == short.class) return Short.class;
+    if (type == int.class) return Integer.class;
+    if (type == long.class) return Long.class;
+    if (type == float.class) return Float.class;
+    if (type == double.class) return Double.class;
+    if (type == char.class) return Character.class;
+    return type;
+  }
+
+  @Nonnull
+  public static List<Method> getClassPublicMethods(@Nonnull Class aClass) {
+    return getClassPublicMethods(aClass, false);
+  }
+
+  @Nonnull
+  public static List<Method> getClassPublicMethods(@Nonnull Class aClass, boolean includeSynthetic) {
+    Method[] methods = aClass.getMethods();
+    return includeSynthetic ? Arrays.asList(methods) : filterRealMethods(methods);
+  }
+
+  @Nonnull
+  public static List<Method> getClassDeclaredMethods(@Nonnull Class aClass) {
+    return getClassDeclaredMethods(aClass, false);
+  }
+
+  @Nonnull
+  public static List<Method> getClassDeclaredMethods(@Nonnull Class aClass, boolean includeSynthetic) {
+    Method[] methods = aClass.getDeclaredMethods();
+    return includeSynthetic ? Arrays.asList(methods) : filterRealMethods(methods);
+  }
+
+  @Nonnull
+  public static List<Field> getClassDeclaredFields(@Nonnull Class aClass) {
+    Field[] fields = aClass.getDeclaredFields();
+    return Arrays.asList(fields);
+  }
+
+  @Nonnull
+  private static List<Method> filterRealMethods(@Nonnull Method[] methods) {
+    List<Method> result = new ArrayList<>();
+    for (Method method : methods) {
+      if (!method.isSynthetic()) {
+        result.add(method);
+      }
+    }
+    return result;
   }
 }

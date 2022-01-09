@@ -1,14 +1,13 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.disposer.internal.impl.objectTree;
 
-import com.intellij.util.SmartList;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
-import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.List;
 
 final class ObjectNode {
@@ -35,7 +34,7 @@ final class ObjectNode {
   void addChild(@Nonnull ObjectNode child) {
     List<ObjectNode> children = myChildren;
     if (children == null) {
-      myChildren = new SmartList<>(child);
+      myChildren = new ArrayList<>(List.of(child));
     }
     else {
       children.add(child);
@@ -131,7 +130,6 @@ final class ObjectNode {
     return myTrace;
   }
 
-  @TestOnly
   void assertNoReferencesKept(@Nonnull Disposable aDisposable) {
     assert getObject() != aDisposable;
     if (myChildren != null) {

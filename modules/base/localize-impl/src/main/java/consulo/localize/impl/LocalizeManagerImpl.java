@@ -15,18 +15,15 @@
  */
 package consulo.localize.impl;
 
-import com.intellij.CommonBundle;
-import com.intellij.openapi.util.io.FileUtilRt;
-import com.intellij.openapi.util.io.StreamUtil;
-import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.EventDispatcher;
-import com.intellij.util.io.URLUtil;
 import consulo.disposer.Disposable;
 import consulo.localize.LocalizeKey;
 import consulo.localize.LocalizeManager;
 import consulo.localize.LocalizeManagerListener;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
+import consulo.util.io.URLUtil;
+import consulo.util.lang.StringUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -35,6 +32,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.text.MessageFormat;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
@@ -226,7 +224,16 @@ public class LocalizeManagerImpl extends LocalizeManager {
   @Nonnull
   @Override
   public String formatText(String unformattedText, Object... arg) {
-    return CommonBundle.format(unformattedText, arg);
+    return format(unformattedText, arg);
+  }
+
+  @Nonnull
+  private static String format(@Nonnull String value, @Nonnull Object... params) {
+    if (params.length > 0 && value.indexOf('{') >= 0) {
+      return MessageFormat.format(value, params);
+    }
+
+    return value;
   }
 
   @Nullable

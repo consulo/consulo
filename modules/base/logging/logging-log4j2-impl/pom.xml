@@ -78,7 +78,7 @@
 
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>consulo-platform-impl</artifactId>
+      <artifactId>consulo-base-ide-impl</artifactId>
       <version>${project.version}</version>
     </dependency>
 

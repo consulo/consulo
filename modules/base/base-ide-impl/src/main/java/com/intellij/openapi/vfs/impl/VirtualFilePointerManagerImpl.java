@@ -36,7 +36,8 @@ import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.fileTypes.ArchiveFileType;
 import consulo.logging.Logger;
-import gnu.trove.THashSet;
+import consulo.util.collection.Maps;
+import consulo.util.collection.Sets;
 import gnu.trove.TObjectHashingStrategy;
 import gnu.trove.TObjectIntHashMap;
 import jakarta.inject.Singleton;
@@ -66,9 +67,9 @@ public final class VirtualFilePointerManagerImpl extends VirtualFilePointerManag
     }
   };
 
-  private final Map<VirtualFileSystem, Map<VirtualFilePointerListener, FilePointerPartNode>> myRoots = ContainerUtil.newIdentityTroveMap(); // guarded by this
+  private final Map<VirtualFileSystem, Map<VirtualFilePointerListener, FilePointerPartNode>> myRoots = Maps.newHashMap(ContainerUtil.identityStrategy()); // guarded by this
   // compare by identity because VirtualFilePointerContainer has too smart equals
-  private final Set<VirtualFilePointerContainerImpl> myContainers = ContainerUtil.newIdentityTroveSet();  // guarded by myContainers
+  private final Set<VirtualFilePointerContainerImpl> myContainers = Sets.newHashSet(ContainerUtil.identityStrategy()); // guarded by myContainers
 
   private int myPointerSetModCount;
 

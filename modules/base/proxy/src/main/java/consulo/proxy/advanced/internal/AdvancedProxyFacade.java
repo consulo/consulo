@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.util.advandedProxy.internal;
+package consulo.proxy.advanced.internal;
 
 import javax.annotation.Nonnull;
 import java.lang.reflect.InvocationHandler;

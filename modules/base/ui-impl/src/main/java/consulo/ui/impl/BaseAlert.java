@@ -15,12 +15,12 @@
  */
 package consulo.ui.impl;
 
-import com.intellij.util.containers.ContainerUtil;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.ui.Alert;
 import consulo.ui.AlertValueRemember;
 import consulo.ui.NotificationType;
+import consulo.util.collection.ContainerUtil;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;

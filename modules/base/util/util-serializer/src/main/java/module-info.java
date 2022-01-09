@@ -10,6 +10,8 @@ module consulo.util.serializer {
 
   requires org.slf4j;
 
+  requires java.desktop;
+
   exports com.intellij.util.xmlb;
   exports com.intellij.util.xmlb.annotations;
 }

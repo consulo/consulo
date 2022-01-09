@@ -15,9 +15,6 @@
  */
 package consulo.ui.impl.image;
 
-import com.intellij.openapi.util.Couple;
-import com.intellij.openapi.util.io.StreamUtil;
-import com.intellij.util.io.URLUtil;
 import consulo.annotation.ReviewAfterMigrationToJRE;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginManager;
@@ -28,6 +25,8 @@ import consulo.ui.image.IconLibraryManager;
 import consulo.ui.image.Image;
 import consulo.ui.style.Style;
 import consulo.ui.style.StyleManager;
+import consulo.util.io.URLUtil;
+import consulo.util.lang.Couple;
 import consulo.util.lang.ThreeState;
 
 import javax.annotation.Nonnull;
@@ -274,7 +273,7 @@ public abstract class BaseIconLibraryManager implements IconLibraryManager {
     String imagePathNoExtension = imagePath.substring(0, dotIndex);
 
     if (imagePathNoExtension.endsWith("_dark")) {
-      LOG.warn("Skipping dark old icon " + URLUtil.getJarEntryURL(jarFile, imagePath));
+      LOG.warn("Skipping dark old icon " + jarFile + "/" + imagePath);
       return;
     }
 

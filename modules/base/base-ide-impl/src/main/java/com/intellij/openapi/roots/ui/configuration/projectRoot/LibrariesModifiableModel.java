@@ -27,6 +27,8 @@ import com.intellij.openapi.roots.ui.configuration.libraryEditor.LibraryEditor;
 import com.intellij.openapi.roots.ui.configuration.libraryEditor.LibraryEditorListener;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.disposer.Disposer;
+import consulo.util.collection.Maps;
+import consulo.util.collection.Sets;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -39,8 +41,8 @@ import java.util.*;
 
 public class LibrariesModifiableModel implements LibraryTableBase.ModifiableModelEx {
   //todo[nik] remove LibraryImpl#equals method instead of using identity maps
-  private final Map<Library, ExistingLibraryEditor> myLibrary2EditorMap = ContainerUtil.<Library, ExistingLibraryEditor>newIdentityTroveMap();
-  private final Set<Library> myRemovedLibraries = ContainerUtil.<Library>newIdentityTroveSet();
+  private final Map<Library, ExistingLibraryEditor> myLibrary2EditorMap = Maps.newHashMap(ContainerUtil.identityStrategy());
+  private final Set<Library> myRemovedLibraries = Sets.newHashSet(ContainerUtil.identityStrategy());
 
   private LibraryTable.ModifiableModel myLibrariesModifiableModel;
   private final Project myProject;
