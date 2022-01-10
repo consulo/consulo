@@ -53,11 +53,17 @@ public class QuickListsManager {
   @Inject
   public QuickListsManager(@Nonnull ActionManager actionManager, @Nonnull SchemesManagerFactory schemesManagerFactory) {
     myActionManager = actionManager;
-    mySchemesManager = schemesManagerFactory.createSchemesManager(FILE_SPEC, new BaseSchemeProcessor<QuickList>() {
+    mySchemesManager = schemesManagerFactory.createSchemesManager(FILE_SPEC, new BaseSchemeProcessor<QuickList, QuickList>() {
       @Nonnull
       @Override
       public QuickList readScheme(@Nonnull Element element) {
         return createItem(element);
+      }
+
+      @Nonnull
+      @Override
+      public String getName(@Nonnull QuickList immutableElement) {
+        return immutableElement.getName();
       }
 
       @Override

@@ -320,7 +320,7 @@ public class ExecutionManagerImpl extends ExecutionManager implements Disposable
           else {
             project.getMessageBus().syncPublisher(EXECUTION_TOPIC).processNotStarted(executor.getId(), environment);
           }
-        }, o -> project.isDisposed())).doWhenRejectedWithThrowable(errorHandler);
+        }, () -> project.isDisposed())).doWhenRejectedWithThrowable(errorHandler);
       }
       catch (ExecutionException e) {
         errorHandler.accept(e);

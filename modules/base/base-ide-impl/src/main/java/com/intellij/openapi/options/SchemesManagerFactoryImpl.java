@@ -23,7 +23,6 @@ import consulo.components.impl.stores.IApplicationStore;
 import consulo.components.impl.stores.StreamProvider;
 import consulo.components.impl.stores.storage.StateStorageManager;
 import consulo.logging.Logger;
-import consulo.util.pointers.Named;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -44,12 +43,12 @@ public class SchemesManagerFactoryImpl extends SchemesManagerFactory implements 
   }
 
   @Override
-  public <T extends Named, E extends ExternalizableScheme> SchemesManager<T, E> createSchemesManager(final String fileSpec, final SchemeProcessor<E> processor, final RoamingType roamingType) {
+  public <T, E extends ExternalizableScheme> SchemesManager<T, E> createSchemesManager(final String fileSpec, final SchemeProcessor<T, E> processor, final RoamingType roamingType) {
     StateStorageManager stateStorageManager = myApplicationStore.getStateStorageManager();
     
     String baseDirPath = stateStorageManager.expandMacros(fileSpec);
     StreamProvider provider = stateStorageManager.getStreamProvider();
-    SchemesManagerImpl<T, E> manager = new SchemesManagerImpl<T, E>(fileSpec, processor, roamingType, provider, new File(baseDirPath));
+    SchemesManagerImpl<T, E> manager = new SchemesManagerImpl<>(fileSpec, processor, roamingType, provider, new File(baseDirPath));
     myRegisteredManagers.add(manager);
     return manager;
   }

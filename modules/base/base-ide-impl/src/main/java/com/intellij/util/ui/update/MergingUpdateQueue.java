@@ -299,7 +299,7 @@ public class MergingUpdateQueue implements Runnable, Disposable, Activatable {
     if (!myExecuteInDispatchThread) return true;
     if (myModalityStateComponent == ANY_COMPONENT) return true;
 
-    ModalityState current = ApplicationManager.getApplication().getCurrentModalityState();
+    consulo.ui.ModalityState current = ApplicationManager.getApplication().getCurrentModalityState();
     final ModalityState modalityState = getModalityState();
     return !current.dominates(modalityState);
   }

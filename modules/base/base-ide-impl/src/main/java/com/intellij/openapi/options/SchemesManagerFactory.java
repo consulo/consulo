@@ -20,17 +20,15 @@ import com.intellij.openapi.components.ServiceBean;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import consulo.annotation.DeprecationInfo;
-import consulo.util.pointers.Named;
 
 public abstract class SchemesManagerFactory {
-  public static ExtensionPointName<ServiceBean> SCHEME_OWNER = ExtensionPointName.create("com.intellij.schemeOwner");  
+  public static ExtensionPointName<ServiceBean> SCHEME_OWNER = ExtensionPointName.create("com.intellij.schemeOwner");
 
-  public abstract <T extends Named, E extends ExternalizableScheme> SchemesManager<T,E> createSchemesManager(String fileSpec, SchemeProcessor<E> processor,
-                                                                            RoamingType roamingType);
+  public abstract <T, E extends ExternalizableScheme> SchemesManager<T, E> createSchemesManager(String fileSpec, SchemeProcessor<T, E> processor, RoamingType roamingType);
 
   @Deprecated
   @DeprecationInfo("Use constructor injection instead")
-  public static SchemesManagerFactory getInstance(){
+  public static SchemesManagerFactory getInstance() {
     return ServiceManager.getService(SchemesManagerFactory.class);
   }
 

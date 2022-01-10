@@ -32,7 +32,7 @@ import java.io.File;
 import java.io.IOException;
 
 
-abstract public class ToolsProcessor<T extends Tool> extends BaseSchemeProcessor<ToolsGroup<T>> {
+abstract public class ToolsProcessor<T extends Tool> extends BaseSchemeProcessor<ToolsGroup<T>, ToolsGroup<T>> {
   @NonNls private static final String TOOL_SET = "toolSet";
   @NonNls private static final String TOOL = "tool";
   @NonNls private static final String ATTRIBUTE_NAME = "name";
@@ -129,6 +129,12 @@ abstract public class ToolsProcessor<T extends Tool> extends BaseSchemeProcessor
   protected abstract ToolsGroup<T> createToolsGroup(String groupName);
 
   protected abstract T createTool();
+
+  @Nonnull
+  @Override
+  public String getName(@Nonnull ToolsGroup<T> immutableElement) {
+    return immutableElement.getName();
+  }
 
   @Override
   public Parent writeScheme(@Nonnull final ToolsGroup<T> scheme) throws WriteExternalException {

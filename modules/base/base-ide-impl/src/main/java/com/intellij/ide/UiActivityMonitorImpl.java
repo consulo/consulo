@@ -119,7 +119,7 @@ public class UiActivityMonitorImpl extends UiActivityMonitor implements Modality
   }
 
   private static ModalityState getDefaultModalityState() {
-    return ApplicationManager.getApplication().getNoneModalityState();
+    return (ModalityState)ApplicationManager.getApplication().getNoneModalityState();
   }
 
   @Override

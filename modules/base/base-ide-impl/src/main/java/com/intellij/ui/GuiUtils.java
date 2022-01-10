@@ -24,7 +24,6 @@ import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
 import com.intellij.openapi.ui.FixedSizeButton;
 import com.intellij.openapi.ui.Splitter;
 import com.intellij.openapi.ui.TextFieldWithBrowseButton;
-import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.CharFilter;
 import com.intellij.openapi.util.text.StringUtil;
@@ -39,8 +38,8 @@ import consulo.awt.hacking.AWTAccessorHacking;
 import consulo.ui.annotation.RequiredUIAccess;
 import org.intellij.lang.annotations.JdkConstants;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
@@ -51,6 +50,7 @@ import java.awt.event.*;
 import java.beans.PropertyChangeListener;
 import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
+import java.util.function.BooleanSupplier;
 
 public class GuiUtils {
   private static final Insets paddingFromDialogBoundaries = new Insets(7, 5, 7, 5);
@@ -360,7 +360,7 @@ public class GuiUtils {
     }
   }
 
-  public static void invokeLaterIfNeeded(@Nonnull @RequiredUIAccess Runnable runnable, @Nonnull ModalityState modalityState, @Nonnull Condition expired) {
+  public static void invokeLaterIfNeeded(@Nonnull @RequiredUIAccess Runnable runnable, @Nonnull ModalityState modalityState, @Nonnull BooleanSupplier expired) {
     Application application = Application.get();
     if (application.isDispatchThread()) {
       runnable.run();

@@ -468,7 +468,7 @@ public class CoreProgressManager extends ProgressManager implements Disposable {
     ApplicationEx application = (ApplicationEx)Application.get();
     boolean result = application.runProcessWithProgressSynchronously(taskContainer, task.getTitle(), task.isCancellable(), task.isModal(), task.getProject(), task.getParentComponent(), task.getCancelText());
 
-    ApplicationUtil.invokeAndWaitSomewhere(task.whereToRunCallbacks(), application.getDefaultModalityState(), () -> finishTask(task, !result, exceptionRef.get()));
+    ApplicationUtil.invokeAndWaitSomewhere(task.whereToRunCallbacks(), (ModalityState)application.getDefaultModalityState(), () -> finishTask(task, !result, exceptionRef.get()));
     return result;
   }
 

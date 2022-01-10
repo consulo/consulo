@@ -201,7 +201,7 @@ public class VirtualFileDiffElement extends DiffElement<VirtualFile> {
         });
       }
 
-      ModalityState modalityState = ProgressManager.getInstance().getProgressIndicator().getModalityState();
+      ModalityState modalityState = (ModalityState)ProgressManager.getInstance().getProgressIndicator().getModalityState();
 
       VfsUtil.markDirty(true, true, virtualFile);
       RefreshQueue.getInstance().refresh(false, true, null, modalityState, virtualFile);

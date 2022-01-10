@@ -19,6 +19,7 @@ import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.fileTypes.FileTypeRegistry;
 import com.intellij.openapi.fileTypes.LanguageFileType;
 import com.intellij.openapi.util.NotNullLazyValue;
+import com.intellij.util.containers.MultiMap;
 import consulo.annotation.UsedInPlugin;
 import consulo.lang.LanguageVersion;
 import consulo.lang.LanguageVersionDefines;

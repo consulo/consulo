@@ -451,7 +451,7 @@ public class GotoActionModel implements ChooseByNameModel, Comparator<Object>, D
       finally {
         semaphore.up();
       }
-    }, myModality, __ -> indicator != null && indicator.isCanceled());
+    }, myModality, () -> indicator != null && indicator.isCanceled());
 
     while (!semaphore.waitFor(10)) {
       if (indicator != null && indicator.isCanceled()) {

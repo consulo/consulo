@@ -15,7 +15,6 @@
  */
 package com.intellij.openapi.options;
 
-import com.intellij.openapi.application.AccessToken;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.WriteAction;
@@ -34,7 +33,6 @@ import com.intellij.openapi.vfs.*;
 import com.intellij.openapi.vfs.tracker.VirtualFileTracker;
 import com.intellij.util.SmartList;
 import com.intellij.util.ThrowableConvertor;
-import com.intellij.util.containers.ContainerUtilRt;
 import com.intellij.util.io.URLUtil;
 import com.intellij.util.text.UniqueNameGenerator;
 import consulo.components.impl.stores.StorageUtil;
@@ -43,7 +41,6 @@ import consulo.components.impl.stores.storage.DirectoryStorageData;
 import consulo.components.impl.stores.storage.VfsDirectoryBasedStorage;
 import consulo.logging.Logger;
 import consulo.util.collection.ContainerUtil;
-import consulo.util.pointers.Named;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
@@ -58,11 +55,11 @@ import java.io.OutputStream;
 import java.net.URL;
 import java.util.*;
 
-public class SchemesManagerImpl<T extends Named, E extends ExternalizableScheme> extends AbstractSchemesManager<T, E> {
+public class SchemesManagerImpl<T, E extends ExternalizableScheme> extends AbstractSchemesManager<T, E> {
   private static final Logger LOG = Logger.getInstance(SchemesManagerImpl.class);
 
   private final String myFileSpec;
-  private final SchemeProcessor<E> myProcessor;
+  private final SchemeProcessor<T, E> myProcessor;
   private final RoamingType myRoamingType;
 
   private final StreamProvider myProvider;
@@ -75,7 +72,7 @@ public class SchemesManagerImpl<T extends Named, E extends ExternalizableScheme>
   private final Set<String> myFilesToDelete = new HashSet<String>();
 
   public SchemesManagerImpl(@Nonnull String fileSpec,
-                            @Nonnull SchemeProcessor<E> processor,
+                            @Nonnull SchemeProcessor<T, E> processor,
                             @Nonnull RoamingType roamingType,
                             @Nullable StreamProvider provider,
                             @Nonnull File baseDir) {
@@ -151,7 +148,7 @@ public class SchemesManagerImpl<T extends Named, E extends ExternalizableScheme>
             T newCurrentScheme = getCurrentScheme();
             if (oldCurrentScheme != null && newCurrentScheme == null) {
               if (!mySchemes.isEmpty()) {
-                setCurrentSchemeName(mySchemes.get(0).getName());
+                setCurrentSchemeName(myProcessor.getName(mySchemes.get(0)));
                 newCurrentScheme = getCurrentScheme();
               }
             }
@@ -163,6 +160,12 @@ public class SchemesManagerImpl<T extends Named, E extends ExternalizableScheme>
         }
       }, false, ApplicationManager.getApplication());
     }
+  }
+
+  @Nonnull
+  @Override
+  protected String getName(T value) {
+    return myProcessor.getName(value);
   }
 
   @Override
@@ -209,7 +212,7 @@ public class SchemesManagerImpl<T extends Named, E extends ExternalizableScheme>
     Collection<E> list = result.values();
     for (E scheme : list) {
       myProcessor.initScheme(scheme);
-      checkCurrentScheme(scheme);
+      checkCurrentScheme((T)scheme);
     }
     return list;
   }
@@ -279,11 +282,11 @@ public class SchemesManagerImpl<T extends Named, E extends ExternalizableScheme>
 
   @Nonnull
   private String checkFileNameIsFree(@Nonnull String subPath, @Nonnull String schemeName) {
-    for (Named scheme : mySchemes) {
+    for (T scheme : mySchemes) {
       if (scheme instanceof ExternalizableScheme) {
         String name = ((ExternalizableScheme)scheme).getExternalInfo().getCurrentFileName();
         if (name != null &&
-            !schemeName.equals(scheme.getName()) &&
+            !schemeName.equals(myProcessor.getName(scheme)) &&
             subPath.length() == (name.length() + mySchemeExtension.length()) &&
             subPath.startsWith(name) &&
             subPath.endsWith(mySchemeExtension)) {
@@ -398,11 +401,11 @@ public class SchemesManagerImpl<T extends Named, E extends ExternalizableScheme>
   private E readScheme(@Nonnull Element element, boolean duringLoad) throws InvalidDataException, IOException, JDOMException {
     E scheme;
     if (myProcessor instanceof BaseSchemeProcessor) {
-      scheme = ((BaseSchemeProcessor<E>)myProcessor).readScheme(element, duringLoad);
+      scheme = ((BaseSchemeProcessor<T, E>)myProcessor).readScheme(element, duringLoad);
     }
     else {
       //noinspection deprecation
-      scheme = myProcessor.readScheme(new Document((Element)element.detach()));
+      scheme = myProcessor.readScheme(new Document(element.detach()));
     }
     if (scheme != null) {
       scheme.getExternalInfo().setHash(JDOMUtil.getTreeHash(element, true));
@@ -440,7 +443,7 @@ public class SchemesManagerImpl<T extends Named, E extends ExternalizableScheme>
         E eScheme = (E)scheme;
         BaseSchemeProcessor.State state;
         if (myProcessor instanceof BaseSchemeProcessor) {
-          state = ((BaseSchemeProcessor<E>)myProcessor).getState(eScheme);
+          state = ((BaseSchemeProcessor<T, E>)myProcessor).getState(eScheme);
         }
         else {
           //noinspection deprecation
@@ -617,11 +620,11 @@ public class SchemesManagerImpl<T extends Named, E extends ExternalizableScheme>
   }
 
   @Override
-  protected void schemeDeleted(@Nonnull Named scheme) {
+  protected void schemeDeleted(@Nonnull T scheme) {
     super.schemeDeleted(scheme);
 
     if (scheme instanceof ExternalizableScheme) {
-      ContainerUtilRt.addIfNotNull(myFilesToDelete, ((ExternalizableScheme)scheme).getExternalInfo().getCurrentFileName());
+      ContainerUtil.addIfNotNull(myFilesToDelete, ((ExternalizableScheme)scheme).getExternalInfo().getCurrentFileName());
     }
   }
 

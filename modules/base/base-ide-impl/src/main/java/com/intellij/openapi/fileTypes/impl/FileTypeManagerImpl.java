@@ -172,7 +172,7 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements Persistent
     autoDetectedAttribute = new FileAttribute("AUTO_DETECTION_CACHE_ATTRIBUTE", fileTypeChangedCounter + getVersionFromDetectors(), true);
 
     myMessageBus = application.getMessageBus();
-    mySchemeManager = schemesManagerFactory.createSchemesManager(FILE_SPEC, new BaseSchemeProcessor<AbstractFileType>() {
+    mySchemeManager = schemesManagerFactory.createSchemesManager(FILE_SPEC, new BaseSchemeProcessor<FileType, AbstractFileType>() {
       @Nonnull
       @Override
       public AbstractFileType readScheme(@Nonnull Element element, boolean duringLoad) {
@@ -228,6 +228,12 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements Persistent
           myPatternsTable.removeAllAssociations(scheme);
           app.runWriteAction(() -> fireFileTypesChanged(null, scheme));
         }, ModalityState.NON_MODAL);
+      }
+
+      @Nonnull
+      @Override
+      public String getName(@Nonnull FileType immutableElement) {
+        return immutableElement.getId();
       }
     }, RoamingType.PER_USER);
 

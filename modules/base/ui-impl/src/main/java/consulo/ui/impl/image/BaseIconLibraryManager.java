@@ -25,7 +25,7 @@ import consulo.ui.image.IconLibraryManager;
 import consulo.ui.image.Image;
 import consulo.ui.style.Style;
 import consulo.ui.style.StyleManager;
-import consulo.util.io.URLUtil;
+import consulo.util.io.StreamUtil;
 import consulo.util.lang.Couple;
 import consulo.util.lang.ThreeState;
 

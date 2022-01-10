@@ -20,7 +20,6 @@ import com.intellij.openapi.components.StateStorageException;
 import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.components.TrackingPathMacroSubstitutor;
 import com.intellij.openapi.util.JDOMUtil;
-import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.WriteExternalException;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtilRt;
@@ -30,6 +29,7 @@ import consulo.application.options.PathMacrosService;
 import consulo.components.impl.stores.DefaultStateSerializer;
 import consulo.components.impl.stores.StorageUtil;
 import consulo.disposer.Disposable;
+import consulo.util.lang.Pair;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 

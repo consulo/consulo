@@ -120,7 +120,7 @@ public class DelegatingProgressIndicator implements WrappedProgressIndicator, St
   @Override
   @Nonnull
   public ModalityState getModalityState() {
-    return myIndicator.getModalityState();
+    return (ModalityState)myIndicator.getModalityState();
   }
 
   @Override

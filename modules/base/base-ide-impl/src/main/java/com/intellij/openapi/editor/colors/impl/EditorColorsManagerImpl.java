@@ -68,7 +68,7 @@ public class EditorColorsManagerImpl extends EditorColorsManager implements Pers
 
   @Inject
   public EditorColorsManagerImpl(SchemesManagerFactory schemesManagerFactory) {
-    mySchemesManager = schemesManagerFactory.createSchemesManager(FILE_SPEC, new BaseSchemeProcessor<EditorColorsSchemeImpl>() {
+    mySchemesManager = schemesManagerFactory.createSchemesManager(FILE_SPEC, new BaseSchemeProcessor<EditorColorsScheme, EditorColorsSchemeImpl>() {
       @Nonnull
       @Override
       public EditorColorsSchemeImpl readScheme(@Nonnull Element element) {
@@ -110,6 +110,12 @@ public class EditorColorsManagerImpl extends EditorColorsManager implements Pers
       @Override
       public boolean isUpgradeNeeded() {
         return true;
+      }
+
+      @Nonnull
+      @Override
+      public String getName(@Nonnull EditorColorsScheme immutableElement) {
+        return immutableElement.getName();
       }
     }, RoamingType.PER_USER);
 

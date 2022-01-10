@@ -18,18 +18,17 @@ package com.intellij.util.concurrency;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
-import consulo.logging.Logger;
 import com.intellij.openapi.progress.ProcessCanceledException;
-import com.intellij.openapi.util.Condition;
-import com.intellij.openapi.util.Conditions;
 import com.intellij.util.Consumer;
 import com.intellij.util.PairConsumer;
-import javax.annotation.Nonnull;
+import consulo.logging.Logger;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.BooleanSupplier;
 
 /**
  * <p>QueueProcessor processes elements which are being added to a queue via {@link #add(Object)} and {@link #addFirst(Object)} methods.</p>
@@ -68,24 +67,24 @@ public class QueueProcessor<T> {
   private boolean myStarted;
 
   private final ThreadToUse myThreadToUse;
-  private final Condition<?> myDeathCondition;
+  private final BooleanSupplier myDeathCondition;
   private final Map<MyOverrideEquals, ModalityState> myModalityState = new HashMap<MyOverrideEquals, ModalityState>();
 
   /**
    * Constructs a QueueProcessor, which will autostart as soon as the first element is added to it.
    */
   public QueueProcessor(@Nonnull Consumer<T> processor) {
-    this(processor, Conditions.alwaysFalse());
+    this(processor, () -> false);
   }
 
   /**
    * Constructs a QueueProcessor, which will autostart as soon as the first element is added to it.
    */
-  public QueueProcessor(@Nonnull Consumer<T> processor, @Nonnull Condition<?> deathCondition) {
+  public QueueProcessor(@Nonnull Consumer<T> processor, @Nonnull BooleanSupplier deathCondition) {
     this(processor, deathCondition, true);
   }
 
-  public QueueProcessor(@Nonnull Consumer<T> processor, @Nonnull Condition<?> deathCondition, boolean autostart) {
+  public QueueProcessor(@Nonnull Consumer<T> processor, @Nonnull BooleanSupplier deathCondition, boolean autostart) {
     this(wrappingProcessor(processor), autostart, ThreadToUse.POOLED, deathCondition);
   }
 
@@ -96,7 +95,7 @@ public class QueueProcessor<T> {
 
   @Nonnull
   public static QueueProcessor<Runnable> createRunnableQueueProcessor(ThreadToUse threadToUse) {
-    return new QueueProcessor<Runnable>(wrappingProcessor(new RunnableConsumer()), true, threadToUse, Conditions.FALSE);
+    return new QueueProcessor<Runnable>(wrappingProcessor(new RunnableConsumer()), true, threadToUse, () -> false);
   }
 
   @Nonnull
@@ -128,7 +127,7 @@ public class QueueProcessor<T> {
   public QueueProcessor(@Nonnull PairConsumer<T, Runnable> processor,
                         boolean autostart,
                         @Nonnull ThreadToUse threadToUse,
-                        @Nonnull Condition<?> deathCondition) {
+                        @Nonnull BooleanSupplier deathCondition) {
     myProcessor = processor;
     myStarted = autostart;
     myThreadToUse = threadToUse;
@@ -208,7 +207,7 @@ public class QueueProcessor<T> {
     final Runnable runnable = new Runnable() {
       @Override
       public void run() {
-        if (myDeathCondition.value(null)) return;
+        if (myDeathCondition.getAsBoolean()) return;
         runSafely(new Runnable() {
           @Override
           public void run() {

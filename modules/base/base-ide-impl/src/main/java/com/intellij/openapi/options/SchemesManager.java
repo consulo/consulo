@@ -16,16 +16,15 @@
 package com.intellij.openapi.options;
 
 import com.intellij.util.ThrowableConvertor;
-import consulo.util.pointers.Named;
 import org.jdom.Element;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.io.File;
 import java.util.Collection;
 import java.util.List;
 
-public abstract class SchemesManager<T extends Named, E extends ExternalizableScheme> {
+public abstract class SchemesManager<T, E extends ExternalizableScheme> {
   @Nonnull
   public abstract Collection<E> loadSchemes();
 

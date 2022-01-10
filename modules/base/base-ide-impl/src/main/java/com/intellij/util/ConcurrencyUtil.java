@@ -15,6 +15,7 @@
  */
 package com.intellij.util;
 
+import com.intellij.openapi.util.ThrowableComputable;
 import org.jetbrains.annotations.Contract;
 
 import javax.annotation.Nonnull;
@@ -22,6 +23,7 @@ import java.util.*;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.concurrent.locks.Lock;
 
 /**
  * @author cdr
@@ -240,23 +242,23 @@ public class ConcurrencyUtil {
     };
   }
 
-  //public static <T, E extends Throwable> T withLock(@Nonnull Lock lock, @Nonnull ThrowableComputable<T, E> runnable) throws E {
-  //  lock.lock();
-  //  try {
-  //    return runnable.compute();
-  //  }
-  //  finally {
-  //    lock.unlock();
-  //  }
-  //}
-  //
-  //public static <E extends Throwable> void withLock(@Nonnull Lock lock, @Nonnull ThrowableRunnable<E> runnable) throws E {
-  //  lock.lock();
-  //  try {
-  //    runnable.run();
-  //  }
-  //  finally {
-  //    lock.unlock();
-  //  }
-  //}
+  public static <T, E extends Throwable> T withLock(@Nonnull Lock lock, @Nonnull ThrowableComputable<T, E> runnable) throws E {
+    lock.lock();
+    try {
+      return runnable.compute();
+    }
+    finally {
+      lock.unlock();
+    }
+  }
+
+  public static <E extends Throwable> void withLock(@Nonnull Lock lock, @Nonnull ThrowableRunnable<E> runnable) throws E {
+    lock.lock();
+    try {
+      runnable.run();
+    }
+    finally {
+      lock.unlock();
+    }
+  }
 }

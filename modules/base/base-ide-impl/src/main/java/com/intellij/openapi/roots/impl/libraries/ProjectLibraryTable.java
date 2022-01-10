@@ -22,13 +22,12 @@ import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.openapi.roots.libraries.LibraryTable;
 import com.intellij.openapi.roots.libraries.LibraryTablePresentation;
 import com.intellij.openapi.roots.libraries.LibraryTablesRegistrar;
-import com.intellij.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import org.jdom.Element;
 
 import javax.annotation.Nonnull;
-
-import jakarta.inject.Singleton;
 import java.util.List;
 
 /**

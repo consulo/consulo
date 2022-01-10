@@ -1147,7 +1147,7 @@ public class DiffUtil {
    * Difference with {@link VfsUtil#markDirtyAndRefresh} is that refresh from VfsUtil will be performed with ModalityState.NON_MODAL.
    */
   public static void markDirtyAndRefresh(boolean async, boolean recursive, boolean reloadChildren, @Nonnull VirtualFile... files) {
-    ModalityState modalityState = ApplicationManager.getApplication().getDefaultModalityState();
+    ModalityState modalityState = (ModalityState)ApplicationManager.getApplication().getDefaultModalityState();
     VfsUtil.markDirty(recursive, reloadChildren, files);
     RefreshQueue.getInstance().refresh(async, recursive, null, modalityState, files);
   }

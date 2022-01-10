@@ -16,7 +16,8 @@
 
 package com.intellij.openapi.fileTypes;
 
-import consulo.util.lang.StringUtil;
+import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.util.PatternUtil;
 
 import javax.annotation.Nonnull;
 import java.util.regex.Matcher;

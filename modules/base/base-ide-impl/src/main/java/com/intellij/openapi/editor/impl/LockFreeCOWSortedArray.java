@@ -15,12 +15,12 @@
  */
 package com.intellij.openapi.editor.impl;
 
-import com.intellij.util.ArrayFactory;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.concurrency.AtomicFieldUpdater;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.util.Comparator;
+import java.util.function.IntFunction;
 
 /**
  * Maintains an atomic immutable array of listeners of type {@code T} in sorted order according to {@link #comparator}
@@ -29,17 +29,17 @@ import java.util.Comparator;
 class LockFreeCOWSortedArray<T> {
   @Nonnull
   private final Comparator<? super T> comparator;
-  private final ArrayFactory<T> arrayFactory;
+  private final IntFunction<T[]> arrayFactory;
   /** changed by {@link #UPDATER} only */
   @SuppressWarnings("FieldMayBeFinal")
   @Nonnull
   private volatile T[] listeners;
   private static final AtomicFieldUpdater<LockFreeCOWSortedArray, Object[]> UPDATER = AtomicFieldUpdater.forFieldOfType(LockFreeCOWSortedArray.class, Object[].class);
 
-  LockFreeCOWSortedArray(@Nonnull Comparator<? super T> comparator, @Nonnull ArrayFactory<T> arrayFactory) {
+  LockFreeCOWSortedArray(@Nonnull Comparator<? super T> comparator, @Nonnull IntFunction<T[]> arrayFactory) {
     this.comparator = comparator;
     this.arrayFactory = arrayFactory;
-    listeners = arrayFactory.create(0);
+    listeners = arrayFactory.apply(0);
   }
 
   // returns true if changed

@@ -24,18 +24,21 @@ import javax.annotation.Nonnull;
 
 import java.io.IOException;
 
-public interface SchemeProcessor<T extends ExternalizableScheme> {
-  T readScheme(@Nonnull Document schemeContent) throws InvalidDataException, IOException, JDOMException;
+public interface SchemeProcessor<T, E extends ExternalizableScheme> {
+  E readScheme(@Nonnull Document schemeContent) throws InvalidDataException, IOException, JDOMException;
 
-  Parent writeScheme(@Nonnull T scheme) throws WriteExternalException;
+  Parent writeScheme(@Nonnull E scheme) throws WriteExternalException;
 
-  boolean shouldBeSaved(@Nonnull T scheme);
+  boolean shouldBeSaved(@Nonnull E scheme);
 
-  void initScheme(@Nonnull T scheme);
+  void initScheme(@Nonnull E scheme);
 
-  void onSchemeAdded(@Nonnull T scheme);
+  void onSchemeAdded(@Nonnull E scheme);
 
-  void onSchemeDeleted(@Nonnull T scheme);
+  void onSchemeDeleted(@Nonnull E scheme);
 
-  void onCurrentSchemeChanged(final T oldCurrentScheme);
+  void onCurrentSchemeChanged(final E oldCurrentScheme);
+
+  @Nonnull
+  String getName(@Nonnull T immutableElement);
 }

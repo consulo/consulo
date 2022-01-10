@@ -117,7 +117,7 @@ public class ShelveChangesManager implements ProjectComponent, JDOMExternalizabl
     myProject = project;
     myPathMacroSubstitutor = projectPathMacroManager.createTrackingSubstitutor();
     myBus = project.getMessageBus();
-    mySchemeManager = schemesManagerFactory.createSchemesManager(SHELVE_MANAGER_DIR_PATH, new BaseSchemeProcessor<ShelvedChangeList>() {
+    mySchemeManager = schemesManagerFactory.createSchemesManager(SHELVE_MANAGER_DIR_PATH, new BaseSchemeProcessor<ShelvedChangeList, ShelvedChangeList>() {
       @Nullable
       @Override
       public ShelvedChangeList readScheme(@Nonnull Element element, boolean duringLoad) throws InvalidDataException {
@@ -131,6 +131,12 @@ public class ShelveChangesManager implements ProjectComponent, JDOMExternalizabl
         scheme.writeExternal(child);
         myPathMacroSubstitutor.collapsePaths(child);
         return child;
+      }
+
+      @Nonnull
+      @Override
+      public String getName(@Nonnull ShelvedChangeList immutableElement) {
+        return immutableElement.getName();
       }
     }, RoamingType.PER_USER);
 

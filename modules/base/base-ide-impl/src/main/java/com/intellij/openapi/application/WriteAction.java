@@ -16,13 +16,13 @@
 package com.intellij.openapi.application;
 
 import com.intellij.openapi.util.ThrowableComputable;
+import com.intellij.util.ReflectionUtil;
 import com.intellij.util.ThrowableRunnable;
 import consulo.annotation.DeprecationInfo;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.lang.ObjectUtil;
-import consulo.util.lang.reflect.ReflectionUtil;
 
 import javax.annotation.Nonnull;
 import java.util.function.Supplier;

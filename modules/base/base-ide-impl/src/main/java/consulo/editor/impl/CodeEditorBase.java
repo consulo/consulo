@@ -867,7 +867,7 @@ public abstract class CodeEditorBase extends UserDataHolderBase implements Edito
   @Override
   public void stopDumbLater() {
     if (ApplicationManager.getApplication().isUnitTestMode()) return;
-    ApplicationManager.getApplication().invokeLater(this::stopDumb, ModalityState.current(), __ -> isDisposed());
+    ApplicationManager.getApplication().invokeLater(this::stopDumb, ModalityState.current(), () -> isDisposed());
   }
 
   @Override

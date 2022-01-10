@@ -194,7 +194,7 @@ public class TemplateSettings implements PersistentStateComponent<TemplateSettin
 
   @Inject
   public TemplateSettings(SchemesManagerFactory schemesManagerFactory) {
-    mySchemesManager = schemesManagerFactory.createSchemesManager(TEMPLATES_DIR_PATH, new BaseSchemeProcessor<TemplateGroup>() {
+    mySchemesManager = schemesManagerFactory.createSchemesManager(TEMPLATES_DIR_PATH, new BaseSchemeProcessor<TemplateGroup, TemplateGroup>() {
       @Override
       @Nullable
       public TemplateGroup readScheme(@Nonnull final Document schemeContent) throws InvalidDataException {
@@ -246,6 +246,12 @@ public class TemplateSettings implements PersistentStateComponent<TemplateSettin
         for (TemplateImpl template : scheme.getElements()) {
           removeTemplate(template);
         }
+      }
+
+      @Nonnull
+      @Override
+      public String getName(@Nonnull TemplateGroup immutableElement) {
+        return immutableElement.getName();
       }
     }, RoamingType.PER_USER);
 

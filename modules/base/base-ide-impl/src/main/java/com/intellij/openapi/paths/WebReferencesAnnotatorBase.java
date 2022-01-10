@@ -20,26 +20,26 @@ import com.intellij.codeInsight.intention.IntentionAction;
 import com.intellij.lang.annotation.Annotation;
 import com.intellij.lang.annotation.AnnotationHolder;
 import com.intellij.lang.annotation.ExternalAnnotator;
-import consulo.logging.Logger;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiAnchor;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiReference;
-import java.util.HashMap;
+import consulo.logging.Logger;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.config.CookieSpecs;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.io.IOException;
 import java.net.UnknownHostException;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -231,7 +231,9 @@ public abstract class WebReferencesAnnotatorBase extends ExternalAnnotator<WebRe
   }
 
   private static enum MyFetchResult {
-    OK, UNKNOWN_HOST, NONEXISTENCE
+    OK,
+    UNKNOWN_HOST,
+    NONEXISTENCE
   }
 
   protected static class MyInfo {

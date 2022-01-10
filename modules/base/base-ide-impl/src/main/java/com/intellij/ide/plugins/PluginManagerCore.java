@@ -47,7 +47,7 @@ public class PluginManagerCore {
   @DeprecationInfo("Use consulo.container.plugin.PluginManager#getPlugins()")
   @SuppressWarnings("deprecation")
   public static PluginDescriptor[] getPlugins() {
-    List<PluginDescriptor> plugins = PluginManager.getPlugins();
+    List<PluginDescriptor> plugins = consulo.container.plugin.PluginManager.getPlugins();
     PluginDescriptor[] array = new PluginDescriptor[plugins.size()];
     for (int i = 0; i < plugins.size(); i++) {
       PluginDescriptor pluginDescriptor = plugins.get(i);
@@ -109,7 +109,7 @@ public class PluginManagerCore {
   }
 
   public static boolean isPluginClass(String className) {
-    return PluginManager.isInitialized() && getPluginByClassName(className) != null;
+    return consulo.container.plugin.PluginManager.isInitialized() && getPluginByClassName(className) != null;
   }
 
   @Nullable

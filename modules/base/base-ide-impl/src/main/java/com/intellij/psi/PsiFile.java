@@ -18,6 +18,7 @@ package com.intellij.psi;
 import com.intellij.lang.FileASTNode;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.psi.tree.IFileElementType;
 import com.intellij.psi.util.PsiUtilCore;
 import consulo.util.collection.ArrayFactory;
 import consulo.util.lang.ObjectUtil;

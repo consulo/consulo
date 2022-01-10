@@ -16,7 +16,6 @@
 package com.intellij.util.containers;
 
 import com.intellij.openapi.util.Condition;
-import com.intellij.openapi.util.Conditions;
 import com.intellij.util.Processor;
 import com.intellij.util.concurrency.Semaphore;
 import consulo.util.collection.HashingStrategy;
@@ -27,6 +26,7 @@ import javax.annotation.Nonnull;
 import javax.swing.*;
 import java.util.Collection;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.BooleanSupplier;
 
 /**
  * Allows to process elements in the EDT.
@@ -52,7 +52,7 @@ public class TransferToEDTQueue<T> {
   private final String myName;
   private final Processor<T> myProcessor;
   private volatile boolean stopped;
-  private final Condition<?> myShutUpCondition;
+  private final BooleanSupplier myShutUpCondition;
   private final int myMaxUnitOfWorkThresholdMs; //-1 means indefinite
 
   private final Queue<T> myQueue = new Queue<T>(10); // guarded by myQueue
@@ -62,7 +62,7 @@ public class TransferToEDTQueue<T> {
     public void run() {
       boolean b = invokeLaterScheduled.compareAndSet(true, false);
       assert b;
-      if (stopped || myShutUpCondition.value(null)) {
+      if (stopped || myShutUpCondition.getAsBoolean()) {
         stop();
         return;
       }
@@ -82,13 +82,13 @@ public class TransferToEDTQueue<T> {
     }
   };
 
-  public TransferToEDTQueue(@Nonnull @NonNls String name, @Nonnull Processor<T> processor, @Nonnull Condition<?> shutUpCondition) {
+  public TransferToEDTQueue(@Nonnull @NonNls String name, @Nonnull Processor<T> processor, @Nonnull BooleanSupplier shutUpCondition) {
     this(name, processor, shutUpCondition, DEFAULT_THRESHOLD);
   }
 
   public TransferToEDTQueue(@Nonnull @NonNls String name,
                             @Nonnull Processor<T> processor,
-                            @Nonnull Condition<?> shutUpCondition,
+                            @Nonnull BooleanSupplier shutUpCondition,
                             int maxUnitOfWorkThresholdMs) {
     myName = name;
     myProcessor = processor;
@@ -101,13 +101,10 @@ public class TransferToEDTQueue<T> {
   }
 
   public static TransferToEDTQueue<Runnable> createRunnableMerger(@Nonnull @NonNls String name, int maxUnitOfWorkThresholdMs) {
-    return new TransferToEDTQueue<Runnable>(name, new Processor<Runnable>() {
-      @Override
-      public boolean process(Runnable runnable) {
-        runnable.run();
-        return true;
-      }
-    }, Conditions.alwaysFalse(), maxUnitOfWorkThresholdMs);
+    return new TransferToEDTQueue<Runnable>(name, runnable -> {
+      runnable.run();
+      return true;
+    }, () -> false, maxUnitOfWorkThresholdMs);
   }
 
   private boolean isEmpty() {

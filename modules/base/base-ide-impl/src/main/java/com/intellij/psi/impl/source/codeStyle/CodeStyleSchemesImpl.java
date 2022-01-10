@@ -43,7 +43,7 @@ public abstract class CodeStyleSchemesImpl extends CodeStyleSchemes {
   private final SchemesManager<CodeStyleScheme, CodeStyleSchemeImpl> mySchemesManager;
 
   public CodeStyleSchemesImpl(SchemesManagerFactory schemesManagerFactory) {
-    SchemeProcessor<CodeStyleSchemeImpl> processor = new BaseSchemeProcessor<CodeStyleSchemeImpl>() {
+    SchemeProcessor<CodeStyleScheme, CodeStyleSchemeImpl> processor = new BaseSchemeProcessor<>() {
       @Nonnull
       @Override
       public CodeStyleSchemeImpl readScheme(@Nonnull Element element) {
@@ -63,6 +63,12 @@ public abstract class CodeStyleSchemesImpl extends CodeStyleSchemes {
       @Override
       public void initScheme(@Nonnull final CodeStyleSchemeImpl scheme) {
         scheme.init(CodeStyleSchemesImpl.this);
+      }
+
+      @Nonnull
+      @Override
+      public String getName(@Nonnull CodeStyleScheme immutableElement) {
+        return immutableElement.getName();
       }
     };
 

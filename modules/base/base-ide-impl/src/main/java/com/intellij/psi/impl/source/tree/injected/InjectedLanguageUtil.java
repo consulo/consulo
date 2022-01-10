@@ -233,11 +233,11 @@ public class InjectedLanguageUtil {
   @Nullable
   @SuppressWarnings("unchecked") // We check types dynamically (using isAssignableFrom)
   public static <T extends PsiFileBase> T findInjectedFile(@Nonnull final PsiElement expression, @Nonnull final Class<T> classToFind) {
-    final List<Pair<PsiElement, TextRange>> files = InjectedLanguageManager.getInstance(expression.getProject()).getInjectedPsiFiles(expression);
+    final List<consulo.util.lang.Pair<PsiElement, TextRange>> files = InjectedLanguageManager.getInstance(expression.getProject()).getInjectedPsiFiles(expression);
     if (files == null) {
       return null;
     }
-    for (final Pair<PsiElement, TextRange> fileInfo : files) {
+    for (final consulo.util.lang.Pair<PsiElement, TextRange> fileInfo : files) {
       final PsiElement injectedFile = fileInfo.first;
       if (classToFind.isAssignableFrom(injectedFile.getClass())) {
         return (T)injectedFile;

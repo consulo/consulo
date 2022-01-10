@@ -2,7 +2,7 @@
 package com.intellij.lang;
 
 import com.intellij.openapi.extensions.ExtensionPointName;
-import consulo.util.collection.ContainerUtil;
+import com.intellij.util.containers.ContainerUtil;
 
 import javax.annotation.Nonnull;
 import java.util.Collection;

@@ -42,6 +42,7 @@ import com.intellij.profile.Profile;
 import com.intellij.util.ArrayUtil;
 import consulo.logging.Logger;
 import consulo.ui.image.Image;
+import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
 import org.jdom.JDOMException;
@@ -49,8 +50,6 @@ import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import jakarta.inject.Inject;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
@@ -82,7 +81,7 @@ public class InspectionProfileManagerImpl extends InspectionProfileManager imple
     myRegistrar = registrar;
     registerProvidedSeverities();
 
-    mySchemesManager = schemesManagerFactory.createSchemesManager(FILE_SPEC, new BaseSchemeProcessor<InspectionProfileImpl>() {
+    mySchemesManager = schemesManagerFactory.createSchemesManager(FILE_SPEC, new BaseSchemeProcessor<Profile, InspectionProfileImpl>() {
       @Nonnull
       @Override
       public InspectionProfileImpl readScheme(@Nonnull Element element) {
@@ -132,6 +131,12 @@ public class InspectionProfileManagerImpl extends InspectionProfileManager imple
         if (current != null) {
           fireProfileChanged((Profile)oldCurrentScheme, current, null);
         }
+      }
+
+      @Nonnull
+      @Override
+      public String getName(@Nonnull Profile immutableElement) {
+        return immutableElement.getName();
       }
     }, RoamingType.PER_USER);
     mySeverityRegistrar = new SeverityRegistrar(application.getMessageBus());

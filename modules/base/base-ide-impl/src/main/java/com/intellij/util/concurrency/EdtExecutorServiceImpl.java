@@ -25,7 +25,7 @@ class EdtExecutorServiceImpl extends EdtExecutorService {
       SwingUtilities.invokeLater(command);
     }
     else {
-      execute(command, application.getAnyModalityState());
+      execute(command, (ModalityState)application.getAnyModalityState());
     }
   }
 

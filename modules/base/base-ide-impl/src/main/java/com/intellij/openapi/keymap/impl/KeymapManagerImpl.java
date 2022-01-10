@@ -53,7 +53,7 @@ public class KeymapManagerImpl extends KeymapManagerEx implements PersistentStat
 
   @Inject
   KeymapManagerImpl(DefaultKeymap defaultKeymap, SchemesManagerFactory factory) {
-    mySchemesManager = factory.createSchemesManager(KEYMAPS_DIR_PATH, new BaseSchemeProcessor<KeymapImpl>() {
+    mySchemesManager = factory.createSchemesManager(KEYMAPS_DIR_PATH, new BaseSchemeProcessor<Keymap, KeymapImpl>() {
       @Nonnull
       @Override
       public KeymapImpl readScheme(@Nonnull Element element) throws InvalidDataException {
@@ -71,6 +71,12 @@ public class KeymapManagerImpl extends KeymapManagerEx implements PersistentStat
       @Override
       public State getState(@Nonnull KeymapImpl scheme) {
         return scheme.canModify() ? State.POSSIBLY_CHANGED : State.NON_PERSISTENT;
+      }
+
+      @Nonnull
+      @Override
+      public String getName(@Nonnull Keymap immutableElement) {
+        return immutableElement.getName();
       }
     }, RoamingType.PER_USER);
 

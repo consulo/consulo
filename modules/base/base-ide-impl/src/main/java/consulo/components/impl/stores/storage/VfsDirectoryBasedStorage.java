@@ -19,7 +19,6 @@ import com.intellij.openapi.application.Application;
 import com.intellij.openapi.components.*;
 import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.openapi.util.JDOMUtil;
-import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.ThrowableComputable;
 import com.intellij.openapi.util.WriteExternalException;
 import com.intellij.openapi.util.text.StringUtilRt;
@@ -32,6 +31,7 @@ import consulo.components.impl.stores.DefaultStateSerializer;
 import consulo.components.impl.stores.ReadOnlyModificationException;
 import consulo.components.impl.stores.StorageUtil;
 import consulo.disposer.Disposable;
+import consulo.util.lang.Pair;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 

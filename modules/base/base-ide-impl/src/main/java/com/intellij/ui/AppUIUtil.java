@@ -22,7 +22,6 @@ import com.intellij.openapi.application.ApplicationNamesInfo;
 import com.intellij.openapi.application.impl.ApplicationInfoImpl;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.popup.Balloon;
-import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.util.ImageLoader;
@@ -39,6 +38,7 @@ import java.awt.image.BaseMultiResolutionImage;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.BooleanSupplier;
 
 /**
  * @author yole
@@ -99,7 +99,7 @@ public class AppUIUtil {
     invokeOnEdt(runnable, null);
   }
 
-  public static void invokeOnEdt(Runnable runnable, @Nullable Condition condition) {
+  public static void invokeOnEdt(Runnable runnable, @Nullable BooleanSupplier condition) {
     Application application = ApplicationManager.getApplication();
     if (application.isDispatchThread()) {
       runnable.run();

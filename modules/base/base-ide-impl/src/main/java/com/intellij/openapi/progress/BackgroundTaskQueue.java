@@ -32,6 +32,8 @@ import org.jetbrains.annotations.TestOnly;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import java.util.function.BooleanSupplier;
+
 import static com.intellij.util.concurrency.QueueProcessor.ThreadToUse;
 
 /**
@@ -52,7 +54,7 @@ public class BackgroundTaskQueue {
   public BackgroundTaskQueue(@Nullable Project project, @Nonnull String title) {
     myTitle = title;
 
-    Condition disposeCondition = project != null ? project.getDisposed() : ApplicationManager.getApplication().getDisposed();
+    BooleanSupplier disposeCondition = project != null ? project.getDisposed() : ApplicationManager.getApplication().getDisposed();
     myProcessor = new QueueProcessor<>(TaskData::consume, true, ThreadToUse.AWT, disposeCondition);
   }
 

@@ -16,10 +16,10 @@
 package com.intellij.psi.tree;
 
 import com.intellij.lang.Language;
+import com.intellij.util.containers.ContainerUtil;
 import consulo.logging.Logger;
 import consulo.util.collection.ArrayFactory;
 import consulo.util.collection.ArrayUtil;
-import consulo.util.collection.ContainerUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

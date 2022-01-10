@@ -21,7 +21,7 @@ import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Condition;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -37,12 +37,14 @@ public class WaitForProgressToShow {
     final Application application = ApplicationManager.getApplication();
     if (application.isDispatchThread()) {
       command.run();
-    } else {
+    }
+    else {
       final ProgressIndicator pi = ProgressManager.getInstance().getProgressIndicator();
       if (pi != null) {
         execute(pi);
         application.invokeAndWait(command, pi.getModalityState());
-      } else {
+      }
+      else {
         final ModalityState notNullModalityState = modalityState == null ? ModalityState.NON_MODAL : modalityState;
         application.invokeAndWait(command, notNullModalityState);
       }
@@ -53,17 +55,14 @@ public class WaitForProgressToShow {
     final Application application = ApplicationManager.getApplication();
     if (application.isDispatchThread()) {
       command.run();
-    } else {
+    }
+    else {
       final ProgressIndicator pi = ProgressManager.getInstance().getProgressIndicator();
       if (pi != null) {
         execute(pi);
-        application.invokeLater(command, pi.getModalityState(), new Condition() {
-          @Override
-          public boolean value(Object o) {
-            return (! project.isOpen()) || project.isDisposed();
-          }
-        });
-      } else {
+        application.invokeLater(command, pi.getModalityState(), () -> (!project.isOpen()) || project.isDisposed());
+      }
+      else {
         final ModalityState notNullModalityState = modalityState == null ? ModalityState.NON_MODAL : modalityState;
         application.invokeLater(command, notNullModalityState, project.getDisposed());
       }
@@ -74,7 +73,7 @@ public class WaitForProgressToShow {
     if (pi.isShowing()) {
       final long maxWait = 3000;
       final long start = System.currentTimeMillis();
-      while ((! pi.isPopupWasShown()) && (pi.isRunning()) && (System.currentTimeMillis() - maxWait < start)) {
+      while ((!pi.isPopupWasShown()) && (pi.isRunning()) && (System.currentTimeMillis() - maxWait < start)) {
         final Object lock = new Object();
         synchronized (lock) {
           try {

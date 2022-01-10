@@ -15,15 +15,15 @@
  */
 package consulo.ui.impl;
 
-import com.intellij.openapi.util.AtomicNotNullLazyValue;
 import consulo.disposer.Disposable;
 import consulo.proxy.EventDispatcher;
 import consulo.ui.border.BorderPosition;
 import consulo.ui.border.BorderStyle;
 import consulo.ui.color.ColorValue;
-import consulo.util.collection.ContainerUtil;
+import consulo.util.collection.Lists;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolderBase;
+import consulo.util.lang.lazy.LazyValue;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -44,7 +44,7 @@ public class UIDataObject extends UserDataHolderBase {
   @Nullable
   private Map<BorderPosition, BorderInfo> myBorders;
 
-  private final Supplier<List<Function<Key<?>, Object>>> myUserDataProviders = AtomicNotNullLazyValue.createValue(ContainerUtil::createLockFreeCopyOnWriteList);
+  private final Supplier<List<Function<Key<?>, Object>>> myUserDataProviders = LazyValue.atomicNotNull(Lists::newLockFreeCopyOnWriteList);
 
   @SuppressWarnings("unchecked")
   public <T extends EventListener> Disposable addListener(Class<T> clazz, T value) {
@@ -102,8 +102,5 @@ public class UIDataObject extends UserDataHolderBase {
   public void dispose() {
     myListeners.clear();
     myBorders = null;
-    if(myUserDataProviders.isComputed()) {
-      myUserDataProviders.getValue().clear();
-    }
   }
 }

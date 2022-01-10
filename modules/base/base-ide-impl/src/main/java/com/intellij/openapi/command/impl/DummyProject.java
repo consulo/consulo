@@ -17,7 +17,6 @@ package com.intellij.openapi.command.impl;
 
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.messages.MessageBus;
 import consulo.annotation.access.RequiredWriteAction;
@@ -29,6 +28,7 @@ import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.function.BooleanSupplier;
 
 /**
  * @author max
@@ -123,23 +123,8 @@ public class DummyProject extends UserDataHolderBase implements Project {
 
   @Override
   @Nonnull
-  public Condition getDisposed() {
-    return new Condition() {
-      @Override
-      public boolean value(final Object o) {
-        return isDisposed();
-      }
-    };
-  }
-
-  @Nonnull
-  public ComponentConfig[] getComponentConfigurations() {
-    return new ComponentConfig[0];
-  }
-
-  @Nullable
-  public Object getComponent(final ComponentConfig componentConfig) {
-    return null;
+  public BooleanSupplier getDisposed() {
+    return this::isDisposed;
   }
 
   @Override

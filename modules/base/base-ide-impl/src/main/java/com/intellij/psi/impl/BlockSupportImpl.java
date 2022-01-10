@@ -7,14 +7,12 @@ import com.intellij.lang.FileASTNode;
 import com.intellij.lang.Language;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Attachment;
-import consulo.logging.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.fileTypes.PlainTextLanguage;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.util.Couple;
 import com.intellij.openapi.util.Pair;
-import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.*;
@@ -33,6 +31,8 @@ import com.intellij.util.diff.DiffTree;
 import com.intellij.util.diff.DiffTreeChangeBuilder;
 import com.intellij.util.diff.FlyweightCapableTreeStructure;
 import com.intellij.util.diff.ShallowNodeComparator;
+import consulo.logging.Logger;
+import consulo.util.lang.ref.SimpleReference;
 import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
@@ -372,7 +372,7 @@ public class BlockSupportImpl extends BlockSupport {
   private static ASTStructure createInterruptibleASTStructure(@Nonnull final ASTNode oldRoot, @Nonnull final ProgressIndicator indicator) {
     return new ASTStructure(oldRoot) {
       @Override
-      public int getChildren(@Nonnull ASTNode astNode, @Nonnull Ref<ASTNode[]> into) {
+      public int getChildren(@Nonnull ASTNode astNode, @Nonnull SimpleReference<ASTNode[]> into) {
         indicator.checkCanceled();
         return super.getChildren(astNode, into);
       }

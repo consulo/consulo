@@ -109,6 +109,12 @@ public class AbstractFileType extends UserFileType<AbstractFileType> implements 
     return (AbstractFileType)super.clone();
   }
 
+  @Nonnull
+  @Override
+  public String getName() {
+    return getId();
+  }
+
   @Override
   public void copyFrom(@Nonnull UserFileType newType) {
     super.copyFrom(newType);

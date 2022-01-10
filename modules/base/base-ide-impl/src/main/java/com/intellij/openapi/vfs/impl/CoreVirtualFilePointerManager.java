@@ -15,6 +15,7 @@
  */
 package com.intellij.openapi.vfs.impl;
 
+import com.intellij.openapi.util.SimpleModificationTracker;
 import consulo.disposer.Disposable;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointer;
@@ -27,7 +28,7 @@ import javax.annotation.Nullable;
 /**
  * @author yole
  */
-public class CoreVirtualFilePointerManager extends VirtualFilePointerManager implements Disposable {
+public class CoreVirtualFilePointerManager extends SimpleModificationTracker implements VirtualFilePointerManager, Disposable {
   @Nonnull
   @Override
   public VirtualFilePointer create(@Nonnull String url, @Nonnull Disposable parent, @Nullable VirtualFilePointerListener listener) {

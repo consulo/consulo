@@ -38,6 +38,7 @@ import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.util.List;
+import java.util.function.BooleanSupplier;
 
 public class CommittedChangesViewManager implements ChangesViewContentProvider {
   private final ProjectLevelVcsManager myVcsManager;
@@ -78,9 +79,9 @@ public class CommittedChangesViewManager implements ChangesViewContentProvider {
         myComponent.passCachedListsToListener(myBus.syncPublisher(VcsConfigurationChangeListener.BRANCHES_CHANGED_RESPONSE),
                                               myProject, vcsRoot);
       }
-    }, new Condition() {
+    }, new BooleanSupplier() {
       @Override
-      public boolean value(Object o) {
+      public boolean getAsBoolean() {
         return (! myProject.isOpen()) || myProject.isDisposed() || myComponent == null;
       }
     });

@@ -1369,7 +1369,7 @@ public final class DesktopEditorImpl extends CodeEditorBase implements EditorInt
         finally {
           updatingSize = false;
         }
-      }, ModalityState.any(), __ -> isDisposed());
+      }, ModalityState.any(), () -> isDisposed());
     }
   }
 

@@ -389,12 +389,7 @@ public class LineStatusTrackerManager implements ProjectComponent, LineStatusTra
     }
 
     private void nonModalAliveInvokeLater(@Nonnull Runnable runnable) {
-      myApplication.invokeLater(runnable, ModalityState.NON_MODAL, new Condition() {
-        @Override
-        public boolean value(final Object ignore) {
-          return isDisabled();
-        }
-      });
+      myApplication.invokeLater(runnable, ModalityState.NON_MODAL, () -> isDisabled());
     }
 
     private void reportTrackerBaseLoadFailed() {

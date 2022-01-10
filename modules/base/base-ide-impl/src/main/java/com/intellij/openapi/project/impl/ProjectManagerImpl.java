@@ -911,7 +911,7 @@ public class ProjectManagerImpl extends ProjectManagerEx implements Disposable {
         if (!project.isDisposedOrDisposeInProgress()) {
           startupManager.scheduleBackgroundPostStartupActivities(uiAccess);
         }
-      }, ModalityState.NON_MODAL, o -> project.isDisposedOrDisposeInProgress());
+      }, ModalityState.NON_MODAL, project::isDisposedOrDisposeInProgress);
     }
   }
 

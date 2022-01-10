@@ -6,11 +6,11 @@ package com.intellij.psi.stubs;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.TokenSet;
-import consulo.util.collection.ArrayFactory;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.function.IntFunction;
 
 /**
  * @author max
@@ -38,10 +38,10 @@ public interface StubElement<T extends PsiElement> extends Stub {
   <E extends PsiElement> E[] getChildrenByType(@Nonnull TokenSet filter, final E[] array);
 
   @Nonnull
-  <E extends PsiElement> E[] getChildrenByType(@Nonnull IElementType elementType, @Nonnull ArrayFactory<E> f);
+  <E extends PsiElement> E[] getChildrenByType(@Nonnull IElementType elementType, @Nonnull IntFunction<E[]> f);
 
   @Nonnull
-  <E extends PsiElement> E[] getChildrenByType(@Nonnull TokenSet filter, @Nonnull ArrayFactory<E> f);
+  <E extends PsiElement> E[] getChildrenByType(@Nonnull TokenSet filter, @Nonnull IntFunction<E[]> f);
 
   @Nullable
   <E extends PsiElement> E getParentStubOfType(@Nonnull Class<E> parentClass);

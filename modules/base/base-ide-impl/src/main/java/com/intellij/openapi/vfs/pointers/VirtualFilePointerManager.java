@@ -9,7 +9,7 @@ import consulo.disposer.Disposable;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public abstract class VirtualFilePointerManager implements ModificationTracker {
+public interface VirtualFilePointerManager extends ModificationTracker {
   public static VirtualFilePointerManager getInstance() {
     return RootComponentManager.getRootComponent().getComponent(VirtualFilePointerManager.class);
   }

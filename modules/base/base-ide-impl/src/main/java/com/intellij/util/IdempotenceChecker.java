@@ -24,6 +24,7 @@ import javax.annotation.Nullable;
 import java.util.*;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.function.Supplier;
 
 public final class IdempotenceChecker {
   private static final Logger LOG = Logger.getInstance(IdempotenceChecker.class);
@@ -71,14 +72,14 @@ public final class IdempotenceChecker {
    * @param recomputeValue optionally, a way to recalculate the value one more time with {@link #isLoggingEnabled()} true,
    *                       and include the log collected via {@link #logTrace} into exception report.
    */
-  public static <T> void checkEquivalence(@Nullable T existing, @Nullable T fresh, @Nonnull Class<?> providerClass, @Nullable Computable<? extends T> recomputeValue) {
+  public static <T> void checkEquivalence(@Nullable T existing, @Nullable T fresh, @Nonnull Class<?> providerClass, @Nullable Supplier<? extends T> recomputeValue) {
     String msg = checkValueEquivalence(existing, fresh);
     if (msg != null) {
       reportFailure(existing, fresh, providerClass, recomputeValue, msg);
     }
   }
 
-  private static <T> void reportFailure(@Nullable T existing, @Nullable T fresh, @Nonnull Class<?> providerClass, @Nullable Computable<? extends T> recomputeValue, String msg) {
+  private static <T> void reportFailure(@Nullable T existing, @Nullable T fresh, @Nonnull Class<?> providerClass, @Nullable Supplier<? extends T> recomputeValue, String msg) {
     boolean shouldReport = ApplicationManager.getApplication().isUnitTestMode() || ourReportedValueClasses.add(providerClass);
     if (shouldReport) {
       if (recomputeValue != null) {
@@ -89,7 +90,7 @@ public final class IdempotenceChecker {
   }
 
   @Nonnull
-  private static <T> String recomputeWithLogging(@Nullable T existing, @Nullable T fresh, @Nonnull Computable<? extends T> recomputeValue) {
+  private static <T> String recomputeWithLogging(@Nullable T existing, @Nullable T fresh, @Nonnull Supplier<? extends T> recomputeValue) {
     ResultWithLog<T> rwl = computeWithLogging(recomputeValue);
     T freshest = rwl.result;
     @NonNls String msg = "\n\nRecomputation gives " + objAndClass(freshest);
@@ -115,7 +116,7 @@ public final class IdempotenceChecker {
    * @see #logTrace(String)
    */
   @Nonnull
-  public static <T> ResultWithLog<T> computeWithLogging(Computable<? extends T> recomputeValue) {
+  public static <T> ResultWithLog<T> computeWithLogging(Supplier<? extends T> recomputeValue) {
     List<String> threadLog = ourLog.get();
     boolean outermost = threadLog == null;
     if (outermost) {
@@ -123,7 +124,7 @@ public final class IdempotenceChecker {
     }
     try {
       int start = threadLog.size();
-      T result = recomputeValue.compute();
+      T result = recomputeValue.get();
       return new ResultWithLog<>(result, new ArrayList<>(threadLog.subList(start, threadLog.size())));
     }
     finally {
@@ -330,13 +331,13 @@ public final class IdempotenceChecker {
    * (depending on "platform.random.idempotence.check.rate" registry value)
    * the computation is re-run and checked for consistency with that cached value.
    */
-  public static <T> void applyForRandomCheck(T data, Object provider, Computable<? extends T> recomputeValue) {
+  public static <T> void applyForRandomCheck(T data, Object provider, Supplier<? extends T> recomputeValue) {
     if (areRandomChecksEnabled() && shouldPerformRandomCheck()) {
       RecursionGuard.StackStamp stamp = RecursionManager.markStack();
       Integer prevNesting = ourRandomCheckNesting.get();
       ourRandomCheckNesting.set(prevNesting + 1);
       try {
-        T fresh = recomputeValue.compute();
+        T fresh = recomputeValue.get();
         if (stamp.mayCacheNow()) {
           checkEquivalence(data, fresh, provider.getClass(), recomputeValue);
         }

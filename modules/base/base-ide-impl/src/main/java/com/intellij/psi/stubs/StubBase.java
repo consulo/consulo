@@ -11,14 +11,14 @@ import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.TokenSet;
-import com.intellij.util.ArrayFactory;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.ObjectUtil;
 import com.intellij.util.concurrency.AtomicFieldUpdater;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.List;
+import java.util.function.IntFunction;
 
 public abstract class StubBase<T extends PsiElement> extends ObjectStubBase<StubElement> implements StubElement<T> {
   StubList myStubList;
@@ -98,11 +98,11 @@ public abstract class StubBase<T extends PsiElement> extends ObjectStubBase<Stub
 
   @Nonnull
   @Override
-  public <E extends PsiElement> E[] getChildrenByType(@Nonnull final IElementType elementType, @Nonnull final ArrayFactory<E> f) {
+  public <E extends PsiElement> E[] getChildrenByType(@Nonnull final IElementType elementType, @Nonnull final IntFunction<E[]> f) {
     List<StubElement> childrenStubs = getChildrenStubs();
     int count = countChildren(elementType, childrenStubs);
 
-    E[] result = f.create(count);
+    E[] result = f.apply(count);
     if (count > 0) fillFilteredChildren(elementType, result, childrenStubs);
 
     return result;
@@ -160,11 +160,11 @@ public abstract class StubBase<T extends PsiElement> extends ObjectStubBase<Stub
 
   @Nonnull
   @Override
-  public <E extends PsiElement> E[] getChildrenByType(@Nonnull final TokenSet filter, @Nonnull final ArrayFactory<E> f) {
+  public <E extends PsiElement> E[] getChildrenByType(@Nonnull final TokenSet filter, @Nonnull final IntFunction<E[]> f) {
     List<StubElement> childrenStubs = getChildrenStubs();
     int count = countChildren(filter, childrenStubs);
 
-    E[] array = f.create(count);
+    E[] array = f.apply(count);
     if (count == 0) return array;
 
     fillFilteredChildren(filter, array, childrenStubs);

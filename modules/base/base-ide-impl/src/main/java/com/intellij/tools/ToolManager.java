@@ -19,7 +19,6 @@ import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.options.SchemeProcessor;
 import com.intellij.openapi.options.SchemesManagerFactory;
-
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -43,12 +42,12 @@ public class ToolManager extends BaseToolManager<Tool> {
   }
 
   @Override
-  protected SchemeProcessor<ToolsGroup<Tool>> createProcessor() {
-    return new ToolsProcessor<Tool>() {
+  protected SchemeProcessor<ToolsGroup<Tool>, ToolsGroup<Tool>> createProcessor() {
+    return new ToolsProcessor<>() {
 
       @Override
       protected ToolsGroup<Tool> createToolsGroup(String groupName) {
-        return new ToolsGroup<Tool>(groupName);
+        return new ToolsGroup<>(groupName);
       }
 
       @Override

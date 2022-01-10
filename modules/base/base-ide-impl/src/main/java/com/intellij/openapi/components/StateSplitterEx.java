@@ -16,6 +16,8 @@
 package com.intellij.openapi.components;
 
 
+import com.intellij.openapi.util.io.FileUtil;
+import com.intellij.util.text.UniqueNameGenerator;
 import consulo.util.lang.Pair;
 import org.jdom.Attribute;
 import org.jdom.Element;

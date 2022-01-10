@@ -17,16 +17,15 @@ package com.intellij.openapi.options;
 
 import com.intellij.util.text.UniqueNameGenerator;
 import consulo.logging.Logger;
-import consulo.util.pointers.Named;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
 
-public abstract class AbstractSchemesManager<T extends Named, E extends ExternalizableScheme> extends SchemesManager<T, E> {
+public abstract class AbstractSchemesManager<T, E extends ExternalizableScheme> extends SchemesManager<T, E> {
   private static final Logger LOG = Logger.getInstance(AbstractSchemesManager.class);
 
-  protected final List<T> mySchemes = new ArrayList<T>();
+  protected final List<T> mySchemes = new ArrayList<>();
   private volatile T myCurrentScheme;
   private String myCurrentSchemeName;
 
@@ -35,7 +34,7 @@ public abstract class AbstractSchemesManager<T extends Named, E extends External
     int toReplace = -1;
     for (int i = 0; i < mySchemes.size(); i++) {
       T existingScheme = mySchemes.get(i);
-      if (existingScheme.getName().equals(scheme.getName())) {
+      if (getName(existingScheme).equals(getName(scheme))) {
         toReplace = i;
         break;
       }
@@ -48,25 +47,28 @@ public abstract class AbstractSchemesManager<T extends Named, E extends External
     }
     else {
       //noinspection unchecked
-      renameScheme((ExternalizableScheme)scheme, UniqueNameGenerator.generateUniqueName(scheme.getName(), collectExistingNames(mySchemes)));
+      renameScheme((ExternalizableScheme)scheme, UniqueNameGenerator.generateUniqueName(getName(scheme), collectExistingNames(mySchemes)));
       mySchemes.add(scheme);
     }
     schemeAdded(scheme);
     checkCurrentScheme(scheme);
   }
 
-  protected void checkCurrentScheme(@Nonnull Named scheme) {
-    if (myCurrentScheme == null && Objects.equals(scheme.getName(), myCurrentSchemeName)) {
+  protected void checkCurrentScheme(@Nonnull T scheme) {
+    if (myCurrentScheme == null && Objects.equals(getName(scheme), myCurrentSchemeName)) {
       //noinspection unchecked
       myCurrentScheme = (T)scheme;
     }
   }
 
   @Nonnull
+  protected abstract String getName(T value);
+
+  @Nonnull
   private Collection<String> collectExistingNames(@Nonnull Collection<T> schemes) {
     Set<String> result = new HashSet<String>(schemes.size());
     for (T scheme : schemes) {
-      result.add(scheme.getName());
+      result.add(getName(scheme));
     }
     return result;
   }
@@ -89,7 +91,7 @@ public abstract class AbstractSchemesManager<T extends Named, E extends External
   @Nullable
   public T findSchemeByName(@Nonnull String schemeName) {
     for (T scheme : mySchemes) {
-      if (scheme.getName().equals(schemeName)) {
+      if (getName(scheme).equals(schemeName)) {
         return scheme;
       }
     }
@@ -106,14 +108,14 @@ public abstract class AbstractSchemesManager<T extends Named, E extends External
   @Nullable
   public T getCurrentScheme() {
     T currentScheme = myCurrentScheme;
-    return currentScheme == null ? null : findSchemeByName(currentScheme.getName());
+    return currentScheme == null ? null : findSchemeByName(getName(currentScheme));
   }
 
   @Override
   public void removeScheme(@Nonnull T scheme) {
     for (int i = 0, n = mySchemes.size(); i < n; i++) {
       T s = mySchemes.get(i);
-      if (scheme.getName().equals(s.getName())) {
+      if (getName(scheme).equals(getName(s))) {
         schemeDeleted(s);
         mySchemes.remove(i);
         break;
@@ -121,7 +123,7 @@ public abstract class AbstractSchemesManager<T extends Named, E extends External
     }
   }
 
-  protected void schemeDeleted(@Nonnull Named scheme) {
+  protected void schemeDeleted(@Nonnull T scheme) {
     if (myCurrentScheme == scheme) {
       myCurrentScheme = null;
     }
@@ -132,7 +134,7 @@ public abstract class AbstractSchemesManager<T extends Named, E extends External
   public Collection<String> getAllSchemeNames() {
     List<String> names = new ArrayList<String>(mySchemes.size());
     for (T scheme : mySchemes) {
-      names.add(scheme.getName());
+      names.add(getName(scheme));
     }
     return names;
   }

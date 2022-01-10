@@ -16,7 +16,7 @@
 
 package com.intellij.openapi.fileTypes;
 
-import consulo.util.lang.StringUtil;
+import com.intellij.openapi.util.text.StringUtil;
 
 import javax.annotation.Nonnull;
 

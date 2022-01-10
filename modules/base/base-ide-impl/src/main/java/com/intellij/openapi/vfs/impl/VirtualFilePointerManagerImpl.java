@@ -9,6 +9,7 @@ import com.intellij.openapi.fileTypes.FileTypeManager;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Pair;
+import com.intellij.openapi.util.SimpleModificationTracker;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.io.FileUtilRt;
@@ -50,7 +51,7 @@ import java.util.concurrent.ConcurrentMap;
 import java.util.stream.Collectors;
 
 @Singleton
-public final class VirtualFilePointerManagerImpl extends VirtualFilePointerManager implements Disposable {
+public final class VirtualFilePointerManagerImpl extends SimpleModificationTracker implements Disposable, VirtualFilePointerManager {
   private static final Logger LOG = Logger.getInstance(VirtualFilePointerManagerImpl.class);
   private static final Comparator<String> URL_COMPARATOR = SystemInfo.isFileSystemCaseSensitive ? String::compareTo : String::compareToIgnoreCase;
   static final boolean IS_UNDER_UNIT_TEST = ApplicationManager.getApplication().isUnitTestMode();
@@ -76,7 +77,7 @@ public final class VirtualFilePointerManagerImpl extends VirtualFilePointerManag
   static final class MyAsyncFileListener implements AsyncFileListener {
     @Override
     public ChangeApplier prepareChange(@Nonnull List<? extends VFileEvent> events) {
-      return ((VirtualFilePointerManagerImpl)getInstance()).prepareChange(events);
+      return ((VirtualFilePointerManagerImpl)VirtualFilePointerManager.getInstance()).prepareChange(events);
     }
   }
 

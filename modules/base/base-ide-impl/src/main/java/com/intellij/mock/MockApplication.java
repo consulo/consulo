@@ -20,7 +20,6 @@ import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationListener;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.util.Computable;
-import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.ThrowableComputable;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.access.RequiredWriteAction;
@@ -218,7 +217,7 @@ public class MockApplication extends MockComponentManager implements Application
   }
 
   @Override
-  public void invokeLater(@Nonnull final Runnable runnable, @Nonnull final ModalityState state, @Nonnull final BooleanSupplier expired) {
+  public void invokeLater(@Nonnull final Runnable runnable, @Nonnull final consulo.ui.ModalityState state, @Nonnull final BooleanSupplier expired) {
   }
 
   @Override
@@ -226,11 +225,11 @@ public class MockApplication extends MockComponentManager implements Application
   }
 
   @Override
-  public void invokeLater(@Nonnull Runnable runnable, @Nonnull ModalityState state) {
+  public void invokeLater(@Nonnull Runnable runnable, @Nonnull consulo.ui.ModalityState state) {
   }
 
   @Override
-  public void invokeAndWait(@Nonnull Runnable runnable, @Nonnull ModalityState modalityState) {
+  public void invokeAndWait(@Nonnull Runnable runnable, @Nonnull consulo.ui.ModalityState modalityState) {
   }
 
   @Nonnull

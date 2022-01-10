@@ -20,7 +20,6 @@ import consulo.platform.base.localize.CommonLocalize;
 import consulo.ui.Alert;
 import consulo.ui.AlertValueRemember;
 import consulo.ui.NotificationType;
-import consulo.util.collection.ContainerUtil;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -123,7 +122,7 @@ public abstract class BaseAlert<V> implements Alert<V> {
     if (myButtons.isEmpty()) {
       throw new IllegalArgumentException();
     }
-    ContainerUtil.getLastItem(myButtons).myDefault = true;
+    myButtons.get(myButtons.size() - 1).myDefault = true;
     return this;
   }
 
@@ -133,7 +132,7 @@ public abstract class BaseAlert<V> implements Alert<V> {
     if (myButtons.isEmpty()) {
       throw new IllegalArgumentException();
     }
-    myExitValue = ContainerUtil.getLastItem(myButtons).myValue;
+    myExitValue = myButtons.get(myButtons.size() - 1).myValue;
     return this;
   }
 

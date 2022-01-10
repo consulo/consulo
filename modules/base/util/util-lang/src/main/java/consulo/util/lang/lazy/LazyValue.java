@@ -23,6 +23,12 @@ import java.util.function.Supplier;
  * @since 03/01/2022
  */
 public interface LazyValue<T> extends Supplier<T> {
+  @Nonnull
+  static <K> LazyValue<K> atomicNotNull(@Nonnull Supplier<K> factory) {
+    return new AtomicLazyValueImpl<>(factory);
+  }
+
+  @Nonnull
   static <K> LazyValue<K> notNull(@Nonnull Supplier<K> factory) {
     return new DefaultLazyValueImpl<>(factory);
   }

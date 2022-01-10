@@ -38,8 +38,7 @@ public abstract class BaseToolManager<T extends Tool> {
   public BaseToolManager(ActionManager actionManagerEx, SchemesManagerFactory factory) {
     myActionManager = actionManagerEx;
 
-    mySchemesManager = factory.createSchemesManager(
-      getSchemesPath(), createProcessor(), RoamingType.PER_USER);
+    mySchemesManager = factory.createSchemesManager(getSchemesPath(), createProcessor(), RoamingType.PER_USER);
 
     mySchemesManager.loadSchemes();
     registerActions();
@@ -47,7 +46,7 @@ public abstract class BaseToolManager<T extends Tool> {
 
   protected abstract String getSchemesPath();
 
-  protected abstract SchemeProcessor<ToolsGroup<T>> createProcessor();
+  protected abstract SchemeProcessor<ToolsGroup<T>, ToolsGroup<T>> createProcessor();
 
   @Nullable
   public static String convertString(String s) {

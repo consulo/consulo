@@ -19,7 +19,6 @@ package com.intellij.psi;
 import com.intellij.openapi.util.TextRange;
 
 import javax.annotation.Nullable;
-import javax.naming.spi.ResolveResult;
 
 /**
  * @author Dmitry Avdeev

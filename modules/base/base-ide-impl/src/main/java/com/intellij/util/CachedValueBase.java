@@ -11,11 +11,12 @@ import com.intellij.psi.util.CachedValueProvider;
 import com.intellij.reference.SoftReference;
 import com.intellij.util.containers.NotNullList;
 import consulo.util.lang.ref.SimpleReference;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.lang.ref.Reference;
 import java.util.List;
+import java.util.function.Supplier;
 
 /**
  * @author Dmitry Avdeev
@@ -232,10 +233,10 @@ public abstract class CachedValueBase<T> {
 
     RecursionGuard.StackStamp stamp = RecursionManager.markStack();
 
-    Computable<Data<T>> calcData = () -> computeData(() -> doCompute(param));
+    Supplier<Data<T>> calcData = () -> computeData(() -> doCompute(param));
     data = RecursionManager.doPreventingRecursion(this, true, calcData);
     if (data == null) {
-      data = calcData.compute();
+      data = calcData.get();
     }
     else if (stamp.mayCacheNow()) {
       while (true) {

@@ -25,9 +25,6 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.EditorFactory;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.popup.Balloon;
-import com.intellij.openapi.util.Condition;
-import consulo.util.dataholder.Key;
-import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.ElementManipulators;
@@ -40,6 +37,8 @@ import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.util.dataholder.Key;
+import consulo.util.lang.Pair;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -67,20 +66,15 @@ public class QuickEditAction implements IntentionAction, LowPriorityAction {
   }
 
   @Nullable
-  protected Pair<PsiElement, TextRange> getRangePair(final PsiFile file, final Editor editor) {
+  protected consulo.util.lang.Pair<PsiElement, TextRange> getRangePair(final PsiFile file, final Editor editor) {
     final int offset = editor.getCaretModel().getOffset();
     final PsiLanguageInjectionHost host =
             PsiTreeUtil.getParentOfType(file.findElementAt(offset), PsiLanguageInjectionHost.class, false);
     if (host == null || ElementManipulators.getManipulator(host) == null) return null;
-    final List<Pair<PsiElement, TextRange>> injections = InjectedLanguageManager.getInstance(host.getProject()).getInjectedPsiFiles(host);
+    final List<consulo.util.lang.Pair<PsiElement, TextRange>> injections = InjectedLanguageManager.getInstance(host.getProject()).getInjectedPsiFiles(host);
     if (injections == null || injections.isEmpty()) return null;
     final int offsetInElement = offset - host.getTextRange().getStartOffset();
-    final Pair<PsiElement, TextRange> rangePair = ContainerUtil.find(injections, new Condition<Pair<PsiElement, TextRange>>() {
-      @Override
-      public boolean value(final Pair<PsiElement, TextRange> pair) {
-        return pair.second.containsRange(offsetInElement, offsetInElement);
-      }
-    });
+    final consulo.util.lang.Pair<PsiElement, TextRange> rangePair = ContainerUtil.find(injections, pair -> pair.second.containsRange(offsetInElement, offsetInElement));
     if (rangePair != null) {
       final Language language = rangePair.first.getContainingFile().getLanguage();
       final Object action = language.getUserData(EDIT_ACTION_AVAILABLE);

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 JetBrains s.r.o.
+ * Copyright 2013-2022 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,22 +13,37 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.packaging.impl.artifacts;
+package consulo.util.lang.lazy;
 
-import com.intellij.openapi.components.StateSplitterEx;
-import com.intellij.packaging.impl.artifacts.state.ArtifactState;
-import consulo.util.lang.Pair;
-import org.jdom.Element;
 import javax.annotation.Nonnull;
-
-import java.util.List;
+import java.util.function.Supplier;
 
 /**
- * @author nik
+ * @author VISTALL
+ * @since 10/01/2022
  */
-final class ArtifactManagerStateSplitter extends StateSplitterEx {
+ class AtomicLazyValueImpl<T> implements LazyValue<T> {
+  private final Supplier<T> myFactory;
+
+  private T myValue;
+
+  AtomicLazyValueImpl(Supplier<T> factory) {
+    myFactory = factory;
+  }
+
+  @Nonnull
   @Override
-  public List<Pair<Element, String>> splitState(@Nonnull Element state) {
-    return splitState(state, ArtifactState.NAME_ATTRIBUTE);
+  public T get() {
+    T value = myValue;
+    if (value != null) {
+      return value;
+    }
+    synchronized (this) {
+      value = myValue;
+      if (value == null) {
+        myValue = value = myFactory.get();
+      }
+    }
+    return value;
   }
 }
