@@ -1,23 +1,22 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.disposer.internal.impl.objectTree;
 
-import com.intellij.openapi.util.Comparing;
-import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.containers.FilteringIterator;
-import com.intellij.util.containers.Interner;
 import consulo.hacking.java.base.ThrowableHacking;
+import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.HashingStrategy;
+import consulo.util.interner.Interner;
 
 import javax.annotation.Nonnull;
 import java.util.Arrays;
+import java.util.Objects;
 import java.util.function.Function;
 
 /**
  * Please don't look, there's nothing interesting here.
- *
- *
- *
- *
+ * <p>
+ * <p>
+ * <p>
+ * <p>
  * If you insist, JVM stores stacktrace information in compact form in Throwable.backtrace field.
  * This class uses this field for comparing Throwables.
  * The available method Throwable.getStackTrace() unfortunately can't be used for that because it's
@@ -33,7 +32,7 @@ public class ThrowableInterner {
       }
       Object[] backtrace = getBacktrace(throwable);
       if (backtrace != null) {
-        Object[] stack = (Object[])ContainerUtil.find(backtrace, FilteringIterator.instanceOf(Object[].class));
+        Object[] stack = (Object[])ContainerUtil.find(backtrace, it -> it instanceof Object[]);
         return Arrays.hashCode(stack);
       }
       return Arrays.hashCode(throwable.getStackTrace());
@@ -44,8 +43,8 @@ public class ThrowableInterner {
       if (o1 == o2) return true;
       if (o1 == null || o2 == null) return false;
 
-      if (!Comparing.equal(o1.getClass(), o2.getClass())) return false;
-      if (!Comparing.equal(o1.getMessage(), o2.getMessage())) return false;
+      if (!Objects.equals(o1.getClass(), o2.getClass())) return false;
+      if (!Objects.equals(o1.getMessage(), o2.getMessage())) return false;
       if (!equals(o1.getCause(), o2.getCause())) return false;
       Object[] backtrace1 = getBacktrace(o1);
       Object[] backtrace2 = getBacktrace(o2);

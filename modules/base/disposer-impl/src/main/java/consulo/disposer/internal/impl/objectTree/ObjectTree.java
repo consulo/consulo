@@ -7,6 +7,7 @@ import consulo.logging.Logger;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.Maps;
+import consulo.util.lang.ControlFlowException;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -149,14 +150,14 @@ public final class ObjectTree {
   private static void handleExceptions(@Nonnull List<? extends Throwable> exceptions) {
     if (!exceptions.isEmpty()) {
       for (Throwable exception : exceptions) {
-        if (!(exception instanceof ProcessCanceledException)) {
+        if (!(exception instanceof ControlFlowException)) {
           getLogger().error(exception);
         }
       }
 
-      ProcessCanceledException pce = ContainerUtil.findInstance(exceptions, ProcessCanceledException.class);
+      Throwable pce = ContainerUtil.find(exceptions, it -> it instanceof ControlFlowException);
       if (pce != null) {
-        throw pce;
+        throw (RuntimeException)pce;
       }
     }
   }

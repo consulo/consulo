@@ -19,7 +19,10 @@ import org.jetbrains.annotations.Contract;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 import java.util.function.Function;
 
 /**
@@ -554,5 +557,266 @@ public class StringUtil {
            t != Character.FORMAT &&
            t != Character.PRIVATE_USE &&
            t != Character.SURROGATE;
+  }
+
+  @Nonnull
+  @Contract(pure = true)
+  public static String replace( @Nonnull String text,  @Nonnull String oldS,  @Nonnull String newS) {
+    return replace(text, oldS, newS, false);
+  }
+
+  @Nonnull
+  @Contract(pure = true)
+  public static String replaceIgnoreCase( @Nonnull String text,  @Nonnull String oldS,  @Nonnull String newS) {
+    return replace(text, oldS, newS, true);
+  }
+
+  @Contract(pure = true)
+  public static String replace( @Nonnull final String text,  @Nonnull final String oldS,  @Nonnull final String newS, final boolean ignoreCase) {
+    if (text.length() < oldS.length()) return text;
+
+    StringBuilder newText = null;
+    int i = 0;
+
+    while (i < text.length()) {
+      final int index = ignoreCase ? indexOfIgnoreCase(text, oldS, i) : text.indexOf(oldS, i);
+      if (index < 0) {
+        if (i == 0) {
+          return text;
+        }
+
+        newText.append(text, i, text.length());
+        break;
+      }
+      else {
+        if (newText == null) {
+          if (text.length() == oldS.length()) {
+            return newS;
+          }
+          newText = new StringBuilder(text.length() - i);
+        }
+
+        newText.append(text, i, index);
+        newText.append(newS);
+        i = index + oldS.length();
+      }
+    }
+    return newText != null ? newText.toString() : "";
+  }
+
+  @Contract(pure = true)
+  public static int indexOfIgnoreCase(@Nonnull String where, @Nonnull String what, int fromIndex) {
+    return indexOfIgnoreCase((CharSequence)where, what, fromIndex);
+  }
+
+  /**
+   * Implementation copied from {@link String#indexOf(String, int)} except character comparisons made case insensitive
+   */
+  @Contract(pure = true)
+  public static int indexOfIgnoreCase(@Nonnull CharSequence where, @Nonnull CharSequence what, int fromIndex) {
+    int targetCount = what.length();
+    int sourceCount = where.length();
+
+    if (fromIndex >= sourceCount) {
+      return targetCount == 0 ? sourceCount : -1;
+    }
+
+    if (fromIndex < 0) {
+      fromIndex = 0;
+    }
+
+    if (targetCount == 0) {
+      return fromIndex;
+    }
+
+    char first = what.charAt(0);
+    int max = sourceCount - targetCount;
+
+    for (int i = fromIndex; i <= max; i++) {
+      /* Look for first character. */
+      if (!charsEqualIgnoreCase(where.charAt(i), first)) {
+        //noinspection StatementWithEmptyBody,AssignmentToForLoopParameter
+        while (++i <= max && !charsEqualIgnoreCase(where.charAt(i), first)) ;
+      }
+
+      /* Found first character, now look at the rest of v2 */
+      if (i <= max) {
+        int j = i + 1;
+        int end = j + targetCount - 1;
+        //noinspection StatementWithEmptyBody
+        for (int k = 1; j < end && charsEqualIgnoreCase(where.charAt(j), what.charAt(k)); j++, k++) ;
+
+        if (j == end) {
+          /* Found whole string. */
+          return i;
+        }
+      }
+    }
+
+    return -1;
+  }
+
+  @Nonnull
+  @Contract(pure = true)
+  public static String trimLeading(@Nonnull String string) {
+    return trimLeading((CharSequence)string).toString();
+  }
+
+  @Nonnull
+  @Contract(pure = true)
+  public static CharSequence trimLeading(@Nonnull CharSequence string) {
+    int index = 0;
+    while (index < string.length() && Character.isWhitespace(string.charAt(index))) index++;
+    return string.subSequence(index, string.length());
+  }
+
+  @Nonnull
+  @Contract(pure = true)
+  public static String trimLeading(@Nonnull String string, char symbol) {
+    int index = 0;
+    while (index < string.length() && string.charAt(index) == symbol) index++;
+    return string.substring(index);
+  }
+
+  @Nonnull
+  @Contract(pure = true)
+  public static String trimTrailing(@Nonnull String string) {
+    return trimTrailing((CharSequence)string).toString();
+  }
+
+  @Nonnull
+  @Contract(pure = true)
+  public static CharSequence trimTrailing(@Nonnull CharSequence string) {
+    int index = string.length() - 1;
+    while (index >= 0 && Character.isWhitespace(string.charAt(index))) index--;
+    return string.subSequence(0, index + 1);
+  }
+
+  @Nonnull
+  @Contract(pure = true)
+  public static String trimTrailing(@Nonnull String string, char symbol) {
+    int index = string.length() - 1;
+    while (index >= 0 && string.charAt(index) == symbol) index--;
+    return string.substring(0, index + 1);
+  }
+
+  @Nonnull
+  @Contract(pure = true)
+  public static CharSequence trimTrailing(@Nonnull CharSequence string, char symbol) {
+    int index = string.length() - 1;
+    while (index >= 0 && string.charAt(index) == symbol) index--;
+    return string.subSequence(0, index + 1);
+  }
+
+  @Nonnull
+  @Contract(pure = true)
+  public static String getShortName(@Nonnull Class aClass) {
+    return getShortName(aClass.getName());
+  }
+
+  @Nonnull
+  @Contract(pure = true)
+  public static String getShortName(@Nonnull String fqName) {
+    return getShortName(fqName, '.');
+  }
+
+  @Nonnull
+  @Contract(pure = true)
+  public static String getShortName(@Nonnull String fqName, char separator) {
+    int lastPointIdx = fqName.lastIndexOf(separator);
+    if (lastPointIdx >= 0) {
+      return fqName.substring(lastPointIdx + 1);
+    }
+    return fqName;
+  }
+
+  /**
+   * Allows to retrieve index of last occurrence of the given symbols at <code>[start; end)</code> sub-sequence of the given text.
+   *
+   * @param s     target text
+   * @param c     target symbol which last occurrence we want to check
+   * @param start start offset of the target text (inclusive)
+   * @param end   end offset of the target text (exclusive)
+   * @return index of the last occurrence of the given symbol at the target sub-sequence of the given text if any;
+   * <code>-1</code> otherwise
+   */
+  @Contract(pure = true)
+  public static int lastIndexOf(@Nonnull CharSequence s, char c, int start, int end) {
+    for (int i = end - 1; i >= start; i--) {
+      if (s.charAt(i) == c) return i;
+    }
+    return -1;
+  }
+
+
+  @Nonnull
+  @Contract(pure = true)
+  public static List<String> split(@Nonnull String s, @Nonnull String separator) {
+    return split(s, separator, true);
+  }
+
+  @Nonnull
+  @Contract(pure = true)
+  public static List<CharSequence> split(@Nonnull CharSequence s, @Nonnull CharSequence separator) {
+    return split(s, separator, true, true);
+  }
+
+  @Nonnull
+  @Contract(pure = true)
+  public static List<String> split(@Nonnull String s, @Nonnull String separator, boolean excludeSeparator) {
+    return split(s, separator, excludeSeparator, true);
+  }
+
+  @Nonnull
+  @Contract(pure = true)
+  public static List<String> split(@Nonnull String s, @Nonnull String separator, boolean excludeSeparator, boolean excludeEmptyStrings) {
+    return (List)split((CharSequence)s, separator, excludeSeparator, excludeEmptyStrings);
+  }
+
+  @Nonnull
+  @Contract(pure = true)
+  public static List<CharSequence> split(@Nonnull CharSequence s, @Nonnull CharSequence separator, boolean excludeSeparator, boolean excludeEmptyStrings) {
+    if (separator.length() == 0) {
+      return List.of();
+    }
+    List<CharSequence> result = new ArrayList<>();
+    int pos = 0;
+    while (true) {
+      int index = indexOf(s, separator, pos);
+      if (index == -1) break;
+      final int nextPos = index + separator.length();
+      CharSequence token = s.subSequence(pos, excludeSeparator ? index : nextPos);
+      if (token.length() != 0 || !excludeEmptyStrings) {
+        result.add(token);
+      }
+      pos = nextPos;
+    }
+    if (pos < s.length() || !excludeEmptyStrings && pos == s.length()) {
+      result.add(s.subSequence(pos, s.length()));
+    }
+    return result;
+  }
+
+  @Contract(pure = true)
+  public static int indexOf(@Nonnull CharSequence sequence, @Nonnull CharSequence infix, int start) {
+    for (int i = start; i <= sequence.length() - infix.length(); i++) {
+      if (startsWith(sequence, i, infix)) {
+        return i;
+      }
+    }
+    return -1;
+  }
+
+  @Contract(pure = true)
+  public static boolean startsWith(@Nonnull CharSequence text, int startIndex, @Nonnull CharSequence prefix) {
+    int l1 = text.length() - startIndex;
+    int l2 = prefix.length();
+    if (l1 < l2) return false;
+
+    for (int i = 0; i < l2; i++) {
+      if (text.charAt(i + startIndex) != prefix.charAt(i)) return false;
+    }
+
+    return true;
   }
 }

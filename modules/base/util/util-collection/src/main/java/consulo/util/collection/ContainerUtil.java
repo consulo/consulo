@@ -226,6 +226,15 @@ public class ContainerUtil {
 
   @Nullable
   @Contract(pure = true)
+  public static <T> T find(@Nonnull T[] array, @Nonnull Predicate<? super T> condition) {
+    for (T element : array) {
+      if (condition.test(element)) return element;
+    }
+    return null;
+  }
+
+  @Nullable
+  @Contract(pure = true)
   public static <T> T find(@Nonnull Iterable<? extends T> iterable, @Nonnull final T equalTo) {
     return find(iterable, object -> equalTo == object || equalTo.equals(object));
   }

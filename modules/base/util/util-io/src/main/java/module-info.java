@@ -5,6 +5,7 @@
 module consulo.util.io {
   requires consulo.annotation;
   requires consulo.util.lang;
+  requires org.slf4j;
 
   exports consulo.util.io;
 }

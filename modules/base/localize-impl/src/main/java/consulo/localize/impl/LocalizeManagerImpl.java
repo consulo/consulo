@@ -15,13 +15,15 @@
  */
 package consulo.localize.impl;
 
-import com.intellij.util.EventDispatcher;
 import consulo.disposer.Disposable;
 import consulo.localize.LocalizeKey;
 import consulo.localize.LocalizeManager;
 import consulo.localize.LocalizeManagerListener;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
+import consulo.proxy.EventDispatcher;
+import consulo.util.io.FileUtil;
+import consulo.util.io.StreamUtil;
 import consulo.util.io.URLUtil;
 import consulo.util.lang.StringUtil;
 
@@ -107,7 +109,7 @@ public class LocalizeManagerImpl extends LocalizeManager {
           URL localizeFileUrl = URLUtil.getJarEntryURL(jarFile, name);
 
           String fileName = StringUtil.getShortName(name, '/');
-          String id = FileUtilRt.getNameWithoutExtension(fileName);
+          String id = FileUtil.getNameWithoutExtension(fileName);
 
           String localizeId = pluginId + "." + id;
           localizeFiles.put(localizeId, new LocalizeFileState(localizeId, localizeFileUrl));

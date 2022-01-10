@@ -43,13 +43,13 @@
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>consulo-util</artifactId>
+      <artifactId>consulo-util-lang</artifactId>
       <version>${project.version}</version>
       <optional>true</optional>
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>consulo-util-lang</artifactId>
+      <artifactId>consulo-util-interner</artifactId>
       <version>${project.version}</version>
       <optional>true</optional>
     </dependency>

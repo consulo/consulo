@@ -61,6 +61,7 @@
     <module>modules/base/util/util-jdom</module>
     <module>modules/base/util/util-io</module>
     <module>modules/base/util/util-serializer</module>
+    <module>modules/base/util/util-interner</module>
 
     <module>modules/base/injecting/injecting-api</module>
     <module>modules/base/injecting/injecting-pico-impl</module>

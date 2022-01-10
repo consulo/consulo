@@ -20,6 +20,7 @@ import consulo.disposer.Disposer;
 import consulo.disposer.util.DisposableList;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.ContainerUtil;
+import consulo.util.collection.Lists;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -37,7 +38,7 @@ import java.util.function.Predicate;
  */
 public class DisposableWrapperList<E> extends AbstractList<E> implements DisposableList<E> {
   @Nonnull
-  private final List<DisposableWrapper> myWrappedList = ContainerUtil.createLockFreeCopyOnWriteList();
+  private final List<DisposableWrapper> myWrappedList = Lists.newLockFreeCopyOnWriteList();
 
   public DisposableWrapperList() {
   }

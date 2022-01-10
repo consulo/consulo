@@ -9,6 +9,8 @@ import java.util.*;
 
 /**
  * Null-safe {@code equal} methods.
+ *
+ * prefer Objects
  */
 public class Comparing {
   private Comparing() {

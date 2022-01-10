@@ -23,6 +23,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.*;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.zip.ZipEntry;
@@ -124,6 +125,17 @@ public class URLUtil {
         zipFile.close();
       }
     };
+  }
+
+  @Nonnull
+  public static URL getJarEntryURL(@Nonnull File file, @Nonnull String pathInJar) throws MalformedURLException {
+    return getJarEntryURL(file.toURI(), pathInJar);
+  }
+
+  @Nonnull
+  public static URL getJarEntryURL(@Nonnull URI file, @Nonnull String pathInJar) throws MalformedURLException {
+    String fileURL = StringUtil.replace(file.toASCIIString(), "!", "%21");
+    return new URL("jar" + ':' + fileURL + "!/" + StringUtil.trimLeading(pathInJar, '/'));
   }
 
   @Nonnull
