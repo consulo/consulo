@@ -25,7 +25,8 @@
     <module>sandbox/sand-language-plugin</module>
 
     <module>modules/desktop-awt/desktop-awt-hacking</module>
-    <module>modules/desktop-awt/desktop-plugin</module>
+    <module>modules/desktop-awt/desktop-awt-plugin</module>
+    <module>modules/desktop-awt/desktop-awt-ide</module>
 
     <module>modules/web/web-plugin</module>
 

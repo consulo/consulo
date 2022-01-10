@@ -24,7 +24,7 @@
 
   <componentDescriptors>
     <componentDescriptor>${project.basedir}/../../distribution/src/platform.base.xml</componentDescriptor>
-    <componentDescriptor>${project.basedir}/../../distribution/src/platform.desktop.xml</componentDescriptor>
+    <componentDescriptor>${project.basedir}/../../distribution/src/platform.desktop.awt.xml</componentDescriptor>
   </componentDescriptors>
 
   <fileSets>
