@@ -43,6 +43,8 @@ import com.intellij.openapi.util.ShutDownTracker;
 import com.intellij.openapi.util.ThrowableComputable;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.openapi.vfs.encoding.EncodingManager;
+import com.intellij.openapi.vfs.encoding.EncodingRegistry;
 import com.intellij.util.EventDispatcher;
 import com.intellij.util.concurrency.AppExecutorUtil;
 import com.intellij.util.concurrency.AppScheduledExecutorService;
@@ -235,6 +237,8 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
     builder.bind(ApplicationPathMacroManager.class).to(ApplicationPathMacroManager.class).forceSingleton();
 
     builder.bind(FileTypeRegistry.class).to(FileTypeManager::getInstance);
+    builder.bind(ProgressIndicatorProvider.class).to(this::getProgressManager);
+    builder.bind(EncodingRegistry.class).to(EncodingManager::getInstance);
   }
 
   @Nullable

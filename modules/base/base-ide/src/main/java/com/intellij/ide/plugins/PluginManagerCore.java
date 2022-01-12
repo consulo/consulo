@@ -59,17 +59,17 @@ public class PluginManagerCore {
   @Nonnull
   @Deprecated
   public static List<String> getDisabledPlugins() {
-    return PluginManager.getDisabledPlugins();
+    return consulo.container.plugin.PluginManager.getDisabledPlugins();
   }
 
   @Deprecated
   public static boolean enablePlugin(String id) {
-    return PluginManager.enablePlugin(id);
+    return consulo.container.plugin.PluginManager.enablePlugin(id);
   }
 
   @Deprecated
   public static boolean disablePlugin(String id) {
-    return PluginManager.disablePlugin(id);
+    return consulo.container.plugin.PluginManager.disablePlugin(id);
   }
 
   @Nullable
@@ -201,7 +201,7 @@ public class PluginManagerCore {
   }
 
   public static boolean shouldSkipPlugin(final PluginDescriptor descriptor) {
-    return PluginManager.shouldSkipPlugin(descriptor);
+    return consulo.container.plugin.PluginManager.shouldSkipPlugin(descriptor);
   }
 
   public static boolean isSystemPlugin(@Nonnull PluginId pluginId) {

@@ -25,7 +25,7 @@
   </parent>
 
   <modelVersion>4.0.0</modelVersion>
-  <artifactId>consulo-platform-desktop-plugin</artifactId>
+  <artifactId>consulo-platform-desktop-awt-plugin</artifactId>
   <version>3-SNAPSHOT</version>
   <packaging>jar</packaging>
 </project>

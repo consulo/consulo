@@ -38,6 +38,13 @@
     </dependency>
 
     <dependency>
+      <groupId>consulo</groupId>
+      <artifactId>consulo-desktop-awt-ide</artifactId>
+      <version>${project.version}</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
       <groupId>com.formdev</groupId>
       <artifactId>flatlaf</artifactId>
       <version>0.17</version>

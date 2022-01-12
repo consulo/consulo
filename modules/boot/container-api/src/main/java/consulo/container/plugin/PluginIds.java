@@ -28,7 +28,7 @@ public final class PluginIds {
   // TODO [VISTALL] rename later. consulo.platform.base
   public static final PluginId CONSULO_PLATFORM_BASE = PluginId.getId("com.intellij");
 
-  public static final PluginId CONSULO_PLATFORM_DESKTOP = PluginId.getId("consulo.platform.desktop");
+  public static final PluginId CONSULO_PLATFORM_DESKTOP_AWT = PluginId.getId("consulo.platform.desktop.awt");
 
   public static final PluginId CONSULO_PLATFORM_DESKTOP_SWT = PluginId.getId("consulo.platform.desktop.swt");
 
@@ -36,7 +36,7 @@ public final class PluginIds {
 
   private static final Set<PluginId> ourMergedObsoletePlugins = new HashSet<PluginId>(Arrays.asList(PluginId.getId("org.intellij.intelliLang")));
 
-  private static final Set<PluginId> ourPlatformIds = new HashSet<PluginId>(Arrays.asList(CONSULO_PLATFORM_DESKTOP, CONSULO_PLATFORM_DESKTOP_SWT, CONSULO_PLATFORM_WEB));
+  private static final Set<PluginId> ourPlatformIds = new HashSet<PluginId>(Arrays.asList(CONSULO_PLATFORM_DESKTOP_AWT, CONSULO_PLATFORM_DESKTOP_SWT, CONSULO_PLATFORM_WEB));
 
   public static boolean isPlatformImplementationPlugin(@Nonnull PluginId pluginId) {
     return ourPlatformIds.contains(pluginId);

@@ -40,6 +40,7 @@ public class ApplicationManager {
 
   public static void setApplication(@Nullable Application instance) {
     ourApplication = instance;
+    RootComponentManager.setRootComponent(instance);
   }
 
   public static void setApplication(@Nonnull Application instance, @Nonnull Disposable parent) {
@@ -49,6 +50,5 @@ public class ApplicationManager {
     });
 
     setApplication(instance);
-    RootComponentManager.setRootComponent(instance);
   }
 }

@@ -102,7 +102,7 @@
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>consulo-platform-desktop-plugin</artifactId>
+      <artifactId>consulo-platform-desktop-awt-plugin</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
@@ -118,6 +118,16 @@
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>consulo-desktop-awt-ide</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>consulo-desktop-awt-bootstrap</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>consulo-util-interner</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>

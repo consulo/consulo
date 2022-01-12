@@ -27,6 +27,9 @@
     <module>modules/desktop-awt/desktop-awt-hacking</module>
     <module>modules/desktop-awt/desktop-awt-plugin</module>
     <module>modules/desktop-awt/desktop-awt-ide</module>
+    <module>modules/desktop-awt/desktop-awt-bootstrap</module>
+
+    <module>modules/desktop-swt/desktop-swt-bootstrap</module>
 
     <module>modules/web/web-plugin</module>
 

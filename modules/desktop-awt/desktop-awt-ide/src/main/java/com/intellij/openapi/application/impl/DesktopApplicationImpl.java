@@ -53,7 +53,7 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.application.ApplicationProperties;
 import consulo.application.impl.BaseApplication;
 import consulo.awt.hacking.AWTAutoShutdownHacking;
-import consulo.desktop.boot.main.windows.WindowsCommandLineProcessor;
+import consulo.desktop.awt.boot.main.windows.WindowsCommandLineProcessor;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.injecting.InjectingContainerBuilder;

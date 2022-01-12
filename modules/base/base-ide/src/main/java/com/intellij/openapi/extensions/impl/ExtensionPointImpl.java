@@ -207,7 +207,7 @@ public class ExtensionPointImpl<T> implements ExtensionPoint<T> {
 
     List<ExtensionExtender<T>> extenders = new ArrayList<>();
 
-    for (KeyedLazyInstanceEP<ExtensionExtender> ep : ExtensionExtender.EP_NAME.getExtensionList(myComponentManager)) {
+    for (KeyedLazyInstanceEP<ExtensionExtender> ep : ExtensionExtender.EP_NAME.getExtensionList()) {
       if (myName.equals(ep.getKey())) {
         try {
           ExtensionExtender extender = ep.getInstance();

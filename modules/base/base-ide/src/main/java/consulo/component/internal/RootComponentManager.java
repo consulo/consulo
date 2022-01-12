@@ -17,6 +17,8 @@ package consulo.component.internal;
 
 import com.intellij.openapi.components.ComponentManager;
 
+import javax.annotation.Nullable;
+
 /**
  * @author VISTALL
  * @since 28/12/2021
@@ -24,7 +26,7 @@ import com.intellij.openapi.components.ComponentManager;
 public class RootComponentManager {
   private static ComponentManager ourRootComponent;
 
-  public static void setRootComponent(ComponentManager rootComponent) {
+  public static void setRootComponent(@Nullable ComponentManager rootComponent) {
     ourRootComponent = rootComponent;
   }
 

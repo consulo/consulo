@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.desktop.boot.main;
+package consulo.desktop.awt.boot.main;
 
 import consulo.container.impl.classloader.Java9ModuleInitializer;
 import consulo.container.impl.classloader.Java9ModuleProcessor;
