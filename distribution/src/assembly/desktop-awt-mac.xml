@@ -24,7 +24,7 @@
 
   <componentDescriptors>
     <componentDescriptor>${project.basedir}/src/platform.base_mac.xml</componentDescriptor>
-    <componentDescriptor>${project.basedir}/src/platform.desktop_mac.xml</componentDescriptor>
+    <componentDescriptor>${project.basedir}/src/platform.desktop.awt_mac.xml</componentDescriptor>
   </componentDescriptors>
 
   <fileSets>
