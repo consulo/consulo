@@ -30,6 +30,8 @@
     <module>modules/desktop-awt/desktop-awt-bootstrap</module>
 
     <module>modules/desktop-swt/desktop-swt-bootstrap</module>
+    <module>modules/desktop-swt/desktop-swt-ide</module>
+    <module>modules/desktop-swt/desktop-swt-plugin</module>
 
     <module>modules/web/web-plugin</module>
 

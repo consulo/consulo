@@ -23,8 +23,7 @@
       <includes>
         <include>consulo:consulo-platform-desktop-swt-plugin</include>
         <include>consulo:consulo-desktop-swt-bootstrap</include>
-        <include>consulo:consulo-desktop-swt-platform-impl</include>
-        <include>consulo:consulo-desktop-swt-ui-impl</include>
+        <include>consulo:consulo-desktop-swt-ide</include>
         <!--TODO [VISTALL] bad dependency-->
         <include>consulo:consulo-desktop-awt-hacking</include>
         <include>org.eclipse.platform:org.eclipse.swt.win32.win32.x86_64</include>
