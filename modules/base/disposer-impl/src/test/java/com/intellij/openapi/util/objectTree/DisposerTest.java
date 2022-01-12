@@ -22,7 +22,6 @@ import consulo.disposer.internal.DisposerInternal;
 import consulo.disposer.internal.impl.DisposerInternalImpl;
 import consulo.disposer.internal.impl.objectTree.ObjectTree;
 import junit.framework.TestCase;
-import org.jetbrains.annotations.NonNls;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +38,7 @@ public class DisposerTest extends TestCase {
 
   private final List<MyDisposable> myDisposedObjects = new ArrayList<MyDisposable>();
 
-  @NonNls private final List<String> myDisposeActions = new ArrayList<String>();
+  private final List<String> myDisposeActions = new ArrayList<String>();
 
   @Override
   protected void setUp() throws Exception {
@@ -189,7 +188,7 @@ public class DisposerTest extends TestCase {
     Disposer.dispose(root);
 
 
-    @NonNls ArrayList<String> expected = new ArrayList<String>();
+    ArrayList<String> expected = new ArrayList<String>();
     expected.add("beforeDispose: root");
     expected.add("beforeDispose: subFolder");
     expected.add("dispose: leaf1");
@@ -218,7 +217,7 @@ public class DisposerTest extends TestCase {
     private boolean myDisposed = false;
     protected String myName;
 
-    public MyDisposable(@NonNls String aName) {
+    public MyDisposable(String aName) {
       myName = aName;
     }
 
@@ -239,7 +238,7 @@ public class DisposerTest extends TestCase {
   }
 
   private class MyParentDisposable extends MyDisposable implements Disposable.Parent {
-    private MyParentDisposable(@NonNls final String aName) {
+    private MyParentDisposable(final String aName) {
       super(aName);
     }
 
@@ -250,7 +249,7 @@ public class DisposerTest extends TestCase {
   }
 
   private class SelDisposable extends MyDisposable {
-    public SelDisposable(@NonNls String aName) {
+    public SelDisposable(String aName) {
       super(aName);
     }
 

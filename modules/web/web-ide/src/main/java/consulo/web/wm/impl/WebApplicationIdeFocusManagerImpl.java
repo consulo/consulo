@@ -21,9 +21,9 @@ import com.intellij.openapi.util.AsyncResult;
 import com.intellij.openapi.util.ExpirableRunnable;
 import com.intellij.openapi.wm.IdeFrame;
 import consulo.wm.ApplicationIdeFocusManager;
+import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
-import jakarta.inject.Singleton;
 import javax.swing.*;
 import java.awt.*;
 

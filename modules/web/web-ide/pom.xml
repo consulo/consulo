@@ -20,45 +20,45 @@
   <parent>
     <groupId>consulo</groupId>
     <artifactId>arch.global</artifactId>
-    <version>2-SNAPSHOT</version>
+    <version>3-SNAPSHOT</version>
     <relativePath>../../../arch/global/pom.xml</relativePath>
   </parent>
 
   <modelVersion>4.0.0</modelVersion>
 
-  <artifactId>consulo-web-platform-impl</artifactId>
-  <version>2-SNAPSHOT</version>
+  <artifactId>consulo-web-ide</artifactId>
+  <version>3-SNAPSHOT</version>
 
   <packaging>jar</packaging>
 
-  <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-  </properties>
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>consulo.maven</groupId>
+        <artifactId>maven-consulo-plugin</artifactId>
+        <version>2-SNAPSHOT</version>
+        <extensions>true</extensions>
+        <executions>
+          <execution>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>generate-icon</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
 
   <dependencies>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>consulo-ui-api</artifactId>
+      <artifactId>consulo-base-ide</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>consulo-core-impl</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>consulo-platform-impl</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>consulo-web-platform-api</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>consulo-web-ui-impl-server</artifactId>
+      <artifactId>consulo-container-impl</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
@@ -66,35 +66,55 @@
       <artifactId>consulo-runtime-impl</artifactId>
       <version>${project.version}</version>
     </dependency>
-    
     <dependency>
-      <groupId>consulo.internal.vaadin</groupId>
-      <artifactId>vaadin-server</artifactId>
-      <version>${vaadin.version}</version>
-      <optional>true</optional>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>consulo-web-ui-impl-server</artifactId>
+      <version>${project.version}</version>
     </dependency>
 
     <dependency>
       <groupId>org.eclipse.jetty</groupId>
       <artifactId>jetty-server</artifactId>
-      <optional>true</optional>
     </dependency>
-
     <dependency>
       <groupId>org.eclipse.jetty</groupId>
       <artifactId>jetty-servlet</artifactId>
-      <optional>true</optional>
     </dependency>
-
+    <dependency>
+      <groupId>org.eclipse.jetty</groupId>
+      <artifactId>jetty-util</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.eclipse.jetty</groupId>
+      <artifactId>jetty-http</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.eclipse.jetty</groupId>
+      <artifactId>jetty-io</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.eclipse.jetty</groupId>
+      <artifactId>jetty-security</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.eclipse.jetty</groupId>
+      <artifactId>jetty-continuation</artifactId>
+    </dependency>
     <dependency>
       <groupId>org.eclipse.jetty.websocket</groupId>
       <artifactId>websocket-server</artifactId>
-      <optional>true</optional>
     </dependency>
-
     <dependency>
-      <groupId>javax.servlet</groupId>
-      <artifactId>javax.servlet-api</artifactId>
+      <groupId>org.eclipse.jetty.websocket</groupId>
+      <artifactId>websocket-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.eclipse.jetty.websocket</groupId>
+      <artifactId>websocket-servlet</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.eclipse.jetty.websocket</groupId>
+      <artifactId>websocket-common</artifactId>
     </dependency>
   </dependencies>
 </project>

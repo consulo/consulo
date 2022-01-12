@@ -107,17 +107,7 @@
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>consulo-web-platform-impl</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>consulo-web-lang-impl</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>consulo-trash-can</artifactId>
+      <artifactId>consulo-web-ide</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
@@ -132,7 +122,7 @@
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>consulo-compiler-impl</artifactId>
+      <artifactId>consulo-util-interner</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
@@ -143,16 +133,6 @@
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>consulo-util-dataholder</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>consulo-external-tools-api</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>consulo-external-tools-impl</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
@@ -185,12 +165,6 @@
       <artifactId>consulo-util-collection-via-trove</artifactId>
       <version>${project.version}</version>
     </dependency>
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>consulo-external-service-impl</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-
 
     <!--TODO [VISTALL] temp dependency-->
     <dependency>
