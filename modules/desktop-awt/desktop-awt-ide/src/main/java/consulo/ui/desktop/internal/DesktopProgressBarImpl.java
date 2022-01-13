@@ -15,7 +15,7 @@
  */
 package consulo.ui.desktop.internal;
 
-import consulo.awt.impl.FromSwingComponentWrapper;
+import consulo.desktop.awt.internal.facade.FromSwingComponentWrapper;
 import consulo.ui.Component;
 import consulo.ui.ProgressBar;
 import consulo.ui.desktop.internal.base.SwingComponentDelegate;

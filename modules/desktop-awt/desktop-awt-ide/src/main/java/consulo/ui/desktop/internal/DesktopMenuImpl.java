@@ -16,7 +16,7 @@
 package consulo.ui.desktop.internal;
 
 import consulo.awt.TargetAWT;
-import consulo.awt.impl.FromSwingComponentWrapper;
+import consulo.desktop.awt.internal.facade.FromSwingComponentWrapper;
 import consulo.ui.*;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.desktop.internal.base.SwingComponentDelegate;

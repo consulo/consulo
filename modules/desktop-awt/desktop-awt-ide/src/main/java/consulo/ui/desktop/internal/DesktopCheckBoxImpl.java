@@ -16,7 +16,7 @@
 package consulo.ui.desktop.internal;
 
 import com.intellij.ui.components.JBCheckBox;
-import consulo.awt.impl.FromSwingComponentWrapper;
+import consulo.desktop.awt.internal.facade.FromSwingComponentWrapper;
 import consulo.localize.LocalizeValue;
 import consulo.ui.CheckBox;
 import consulo.ui.Component;

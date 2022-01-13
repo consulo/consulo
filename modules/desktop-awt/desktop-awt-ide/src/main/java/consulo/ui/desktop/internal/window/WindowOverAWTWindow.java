@@ -16,7 +16,7 @@
 package consulo.ui.desktop.internal.window;
 
 import consulo.awt.TargetAWT;
-import consulo.awt.impl.ToSwingWindowWrapper;
+import consulo.desktop.awt.internal.facade.ToSwingWindowWrapper;
 import consulo.disposer.Disposable;
 import consulo.ui.Component;
 import consulo.ui.MenuBar;

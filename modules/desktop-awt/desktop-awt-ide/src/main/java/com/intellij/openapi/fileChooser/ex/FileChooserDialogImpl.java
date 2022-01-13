@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.fileChooser.ex;
 
-import com.intellij.ide.DesktopSaveAndSyncHandlerImpl;
+import consulo.desktop.awt.internal.DesktopSaveAndSyncHandlerImpl;
 import com.intellij.ide.SaveAndSyncHandler;
 import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.ide.util.treeView.NodeRenderer;

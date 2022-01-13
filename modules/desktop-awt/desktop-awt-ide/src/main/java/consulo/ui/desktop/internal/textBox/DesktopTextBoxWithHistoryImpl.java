@@ -16,7 +16,7 @@
 package consulo.ui.desktop.internal.textBox;
 
 import com.intellij.ui.TextFieldWithHistory;
-import consulo.awt.impl.FromSwingComponentWrapper;
+import consulo.desktop.awt.internal.facade.FromSwingComponentWrapper;
 import consulo.ui.Component;
 import consulo.ui.TextBoxWithHistory;
 import consulo.ui.annotation.RequiredUIAccess;

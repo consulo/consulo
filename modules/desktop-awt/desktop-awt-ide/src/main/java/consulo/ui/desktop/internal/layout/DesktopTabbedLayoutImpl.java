@@ -17,7 +17,7 @@ package consulo.ui.desktop.internal.layout;
 
 import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.ui.tabs.impl.JBEditorTabs;
-import consulo.awt.impl.FromSwingComponentWrapper;
+import consulo.desktop.awt.internal.facade.FromSwingComponentWrapper;
 import consulo.ui.Component;
 import consulo.ui.Tab;
 import consulo.ui.annotation.RequiredUIAccess;

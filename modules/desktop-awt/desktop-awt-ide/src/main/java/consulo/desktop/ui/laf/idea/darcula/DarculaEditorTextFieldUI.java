@@ -15,7 +15,7 @@
  */
 package consulo.desktop.ui.laf.idea.darcula;
 
-import com.intellij.ide.ui.BasicEditorTextFieldUI;
+import consulo.desktop.awt.internal.ui.laf.BasicEditorTextFieldUI;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.ui.EditorTextField;
 import com.intellij.ui.scale.JBUIScale;

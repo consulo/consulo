@@ -45,7 +45,7 @@
           <keyboard-shortcut first-keystroke="control shift F11" keymap="$default"/>
         </action>
 
-        <action id="UiInspector" internal="true" class="com.intellij.internal.inspector.UiInspectorAction" text="UI Inspector"/>
+        <action id="UiInspector" internal="true" class="consulo.desktop.awt.internal.action.UiInspectorAction" text="UI Inspector"/>
         <action id="ShowSplash" internal="true" class="com.intellij.ui.ShowSplashAction" text="Show Splash"/>
         <action id="ShowGotItMessage" internal="true" class="consulo.internal.actions.ShowGotItMessageAction" text="Show GotItMessage"/>
         <action id="ValidationTest" internal="true" class="com.intellij.internal.validation.TestDialogWithValidationAction"
@@ -61,7 +61,7 @@
                 class="com.intellij.openapi.wm.impl.status.AddTestProcessActionIndefinite" text="Add Test Process Indefinite"/>
         <separator/>
         <action id="TestGestureAction" class="com.intellij.openapi.keymap.impl.ui.TestGestureAction" text="Test Gesture Action"/>
-        <action id="TestDndAction" class="com.intellij.internal.validation.TestDnd" text="Test Dnd"/>
+        <action id="TestDndAction" class="consulo.desktop.awt.internal.action.TestDnd" text="Test Dnd"/>
       </group>
       <group id="TopAnomalies" internal="true" class="com.intellij.internal.anomalies.TopAnomaliesAction" text="Top Anomalies"
              popup="true"/>
@@ -115,7 +115,7 @@
 
     <group popup="false">
       <separator/>
-      <action class="com.intellij.ide.ManageRecentProjectsAction" id="ManageRecentProjects"/>
+      <action class="consulo.desktop.awt.internal.action.ManageRecentProjectsAction" id="ManageRecentProjects"/>
       <add-to-group group-id="$LRU"/>
     </group>
   </actions>
@@ -124,7 +124,7 @@
 
     <component>
       <interface-class>com.intellij.ide.SaveAndSyncHandler</interface-class>
-      <implementation-class>com.intellij.ide.DesktopSaveAndSyncHandlerImpl</implementation-class>
+      <implementation-class>consulo.desktop.awt.internal.DesktopSaveAndSyncHandlerImpl</implementation-class>
     </component>
 
     <component>
@@ -190,7 +190,7 @@
                         serviceImplementation="com.intellij.openapi.vfs.newvfs.RefreshQueueImpl"/>
 
     <applicationService serviceInterface="com.intellij.openapi.options.ShowSettingsUtil"
-                        serviceImplementation="com.intellij.ide.actions.DesktopShowSettingsUtilImpl"/>
+                        serviceImplementation="consulo.desktop.awt.internal.action.DesktopShowSettingsUtilImpl"/>
 
     <applicationService serviceInterface="com.intellij.ide.DataManager"
                         serviceImplementation="com.intellij.ide.impl.DesktopDataManagerImpl"/>
@@ -218,7 +218,7 @@
                         serviceImplementation="consulo.desktop.awt.fileEditor.impl.text.DesktopTextEditorComponentContainerFactory"/>
 
     <applicationService serviceInterface="consulo.startup.customize.StartupCustomizeManager" serviceImplementation="consulo.desktop.startup.customize.DesktopStartupCustomizeManager"/>
-    <applicationService serviceInterface="com.intellij.ide.RemoteDesktopService" serviceImplementation="com.intellij.ide.DesktopRemoteDesktopDetector"/>
+    <applicationService serviceInterface="com.intellij.ide.RemoteDesktopService" serviceImplementation="consulo.desktop.awt.internal.DesktopRemoteDesktopDetector"/>
     <applicationService serviceInterface="consulo.wm.ApplicationIdeFocusManager" serviceImplementation="com.intellij.openapi.wm.impl.FocusManagerImpl" lazy="false"/>
     <applicationService serviceInterface="com.intellij.openapi.wm.WindowManager" serviceImplementation="com.intellij.openapi.wm.impl.DesktopWindowManagerImpl" lazy="false"/>
     <applicationService serviceInterface="com.intellij.openapi.ui.DialogWrapperPeerFactory" serviceImplementation="com.intellij.openapi.ui.impl.DialogWrapperPeerFactoryImpl"/>
@@ -233,8 +233,8 @@
 
     <projectService serviceInterface="com.intellij.codeInsight.daemon.impl.EditorTracker" serviceImplementation="consulo.desktop.codeInsight.daemon.impl.DesktopEditorTrackerImpl"/>
 
-    <backgroundPostStartupActivity implementation="com.intellij.diagnostic.WindowsDefenderCheckerActivity"/>
-    <applicationService serviceImplementation="com.intellij.diagnostic.WindowsDefenderChecker"/>
+    <backgroundPostStartupActivity implementation="consulo.desktop.awt.internal.windows.defender.WindowsDefenderCheckerActivity"/>
+    <applicationService serviceImplementation="consulo.desktop.awt.internal.windows.defender.WindowsDefenderChecker"/>
 
     <projectService serviceInterface="com.intellij.codeInsight.daemon.impl.IntentionsUI"
                     serviceImplementation="com.intellij.codeInsight.daemon.impl.IntentionsUIImpl"/>

@@ -17,7 +17,7 @@ package consulo.ui.desktop.internal;
 
 import com.intellij.ui.SimpleColoredComponent;
 import consulo.awt.TargetAWT;
-import consulo.awt.impl.TargetAWTFacadeImpl;
+import consulo.desktop.awt.internal.facade.TargetAWTFacadeImpl;
 import consulo.localize.LocalizeValue;
 import consulo.ui.TextAttribute;
 import consulo.ui.TextItemPresentation;

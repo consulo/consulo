@@ -15,7 +15,7 @@
  */
 package consulo.ui.desktop.internal.image;
 
-import consulo.awt.impl.ToSwingIconWrapper;
+import consulo.desktop.awt.internal.facade.ToSwingIconWrapper;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;

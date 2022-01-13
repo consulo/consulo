@@ -15,7 +15,7 @@
  */
 package consulo.desktop.impl.ide.actions;
 
-import com.intellij.ide.actions.AboutNewDialog;
+import consulo.desktop.awt.internal.action.AboutNewDialog;
 import consulo.ide.actions.AboutManager;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.Window;

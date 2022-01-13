@@ -16,7 +16,7 @@
 package consulo.ui.desktop.internal;
 
 import com.intellij.ui.components.JBList;
-import consulo.awt.impl.FromSwingComponentWrapper;
+import consulo.desktop.awt.internal.facade.FromSwingComponentWrapper;
 import consulo.disposer.Disposable;
 import consulo.ui.*;
 import consulo.ui.annotation.RequiredUIAccess;

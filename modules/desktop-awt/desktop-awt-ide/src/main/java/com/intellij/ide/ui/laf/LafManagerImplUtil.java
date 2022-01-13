@@ -15,7 +15,7 @@
  */
 package com.intellij.ide.ui.laf;
 
-import com.intellij.ide.ui.BasicEditorTextFieldUI;
+import consulo.desktop.awt.internal.ui.laf.BasicEditorTextFieldUI;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.wm.impl.status.BasicStatusBarUI;
 import com.intellij.ui.components.OnOffButton;
