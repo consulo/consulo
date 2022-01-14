@@ -40,7 +40,7 @@ import consulo.options.BaseProjectStructureShowSettingsUtil;
 import consulo.options.ProjectStructureSelector;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.impl.ModalityPerProjectEAPDescriptor;
+import consulo.ui.ex.impl.ModalityPerProjectEAPDescriptor;
 import consulo.util.concurrent.AsyncResult;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;

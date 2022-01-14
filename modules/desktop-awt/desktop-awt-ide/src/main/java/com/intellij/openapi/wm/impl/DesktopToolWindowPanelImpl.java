@@ -39,7 +39,7 @@ import consulo.logging.Logger;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.ToolWindowInternalDecorator;
 import consulo.ui.ex.ToolWindowStripeButton;
-import consulo.ui.impl.ToolWindowPanelImplEx;
+import consulo.ui.ex.impl.ToolWindowPanelImplEx;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

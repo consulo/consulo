@@ -42,9 +42,9 @@ import consulo.util.dataholder.Key;
 import org.intellij.lang.annotations.JdkConstants;
 import org.intellij.lang.annotations.Language;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 import org.jetbrains.annotations.TestOnly;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.Timer;
 import javax.swing.*;
@@ -3291,7 +3291,7 @@ public class UIUtil {
 
     // Evaluate the value depending on our current theme
     if (lcdContrastValue == 0) {
-      if (SystemInfo.isMacIntel64) {
+      if (SystemInfo.isMac) {
         lcdContrastValue = isUnderDarcula() ? 140 : 200;
       }
       else {

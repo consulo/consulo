@@ -1,10 +1,10 @@
 package com.intellij.remoteServer.agent.impl;
 
 import consulo.logging.Logger;
-import com.intellij.remoteServer.agent.annotation.AsyncCall;
-import com.intellij.remoteServer.agent.annotation.ChildCall;
-import com.intellij.remoteServer.agent.annotation.FinalCall;
-import com.intellij.remoteServer.agent.annotation.ImmediateCall;
+import consulo.remoteServer.agent.annotation.AsyncCall;
+import consulo.remoteServer.agent.annotation.ChildCall;
+import consulo.remoteServer.agent.annotation.FinalCall;
+import consulo.remoteServer.agent.annotation.ImmediateCall;
 import com.intellij.remoteServer.agent.impl.util.FinalTask;
 import com.intellij.remoteServer.agent.impl.util.SequentialTaskExecutor;
 

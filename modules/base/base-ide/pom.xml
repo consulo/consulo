@@ -52,10 +52,10 @@
         <artifactId>maven-compiler-plugin</artifactId>
         <configuration>
           <compilerArgs>
-            <compilerArg>--add-exports=java.desktop/sun.font=ALL-UNNAMED</compilerArg>
-            <compilerArg>--add-exports=java.desktop/sun.awt=ALL-UNNAMED</compilerArg>
-            <compilerArg>--add-exports=java.desktop/sun.awt.datatransfer=ALL-UNNAMED</compilerArg>
-            <compilerArg>--add-exports=java.desktop/java.awt.peer=ALL-UNNAMED</compilerArg>
+            <compilerArg>--add-exports=java.desktop/sun.font=consulo.base.ide</compilerArg>
+            <compilerArg>--add-exports=java.desktop/sun.awt=consulo.base.ide</compilerArg>
+            <compilerArg>--add-exports=java.desktop/sun.awt.datatransfer=consulo.base.ide</compilerArg>
+            <compilerArg>--add-exports=java.desktop/java.awt.peer=consulo.base.ide</compilerArg>
           </compilerArgs>
         </configuration>
       </plugin>
@@ -77,7 +77,7 @@
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>consulo-annotations</artifactId>
+      <artifactId>consulo-annotation</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
@@ -127,6 +127,11 @@
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
+      <artifactId>consulo-desktop-awt-eawt-wrapper</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
       <artifactId>consulo-desktop-awt-hacking</artifactId>
       <version>${project.version}</version>
     </dependency>
@@ -164,11 +169,6 @@
       <groupId>${project.groupId}</groupId>
       <artifactId>consulo-util-nodep</artifactId>
       <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>consulo.internal</groupId>
-      <artifactId>eawtstub</artifactId>
-      <version>2-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>consulo.internal</groupId>

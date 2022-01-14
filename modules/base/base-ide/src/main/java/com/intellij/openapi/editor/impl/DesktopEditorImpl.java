@@ -407,7 +407,7 @@ public final class DesktopEditorImpl extends CodeEditorBase implements EditorInt
 
     updateCaretCursor();
 
-    if (SystemInfo.isMacIntel64 && SystemInfo.isJetBrainsJvm && Registry.is("ide.mac.forceTouch")) {
+    if (SystemInfo.isMac && SystemInfo.isJetBrainsJvm ) {
       new MacGestureSupportForEditor(getComponent());
     }
 

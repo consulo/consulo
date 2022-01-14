@@ -15,28 +15,27 @@
  */
 package com.intellij.ui.mac;
 
-/*
- * @author denis
- */
-
-import com.apple.eawt.event.GestureListener;
-import com.apple.eawt.event.GestureUtilities;
-import com.apple.eawt.event.PressureEvent;
-import com.apple.eawt.event.PressureListener;
 import com.intellij.openapi.actionSystem.PressureShortcut;
 import com.intellij.openapi.keymap.impl.ui.MouseShortcutPanel;
+import consulo.eawt.wrapper.GestureUtilitiesWrapper;
+import consulo.eawt.wrapper.event.PressureEventWrapper;
+import consulo.eawt.wrapper.event.PressureListenerWrapper;
 
+/**
+ * @author denis
+ */
 public class MacGestureSupportForMouseShortcutPanel {
   public MacGestureSupportForMouseShortcutPanel(MouseShortcutPanel panel, Runnable runnable) {
-    GestureListener pressureListener = new PressureListener() {
+    PressureListenerWrapper pressureListener = new PressureListenerWrapper() {
       @Override
-      public void pressure(PressureEvent e) {
+      public void pressure(PressureEventWrapper e) {
         if (e.getStage() == 2) {
           panel.setShortcut(new PressureShortcut(e.getStage()));
           runnable.run();
         }
       }
     };
-    GestureUtilities.addGestureListenerTo(panel, pressureListener);
+
+    GestureUtilitiesWrapper.addGestureListenerTo(panel, pressureListener);
   }
 }

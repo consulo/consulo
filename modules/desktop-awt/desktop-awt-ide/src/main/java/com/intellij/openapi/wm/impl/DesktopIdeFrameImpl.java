@@ -274,7 +274,7 @@ public final class DesktopIdeFrameImpl implements IdeFrameEx, AccessibleContextA
     // http://lists.apple.com/archives/java-dev/2009/Dec/msg00240.html
     if (SystemInfo.isMac) myJFrame.setIconImage(null);
 
-    MouseGestureManager.getInstance().add(this);
+    //MouseGestureManager.getInstance().add(this);
 
     myFrameDecorator = IdeFrameDecorator.decorate(this);
 

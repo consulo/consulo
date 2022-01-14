@@ -1,7 +1,7 @@
 package com.intellij.remoteServer.agent.impl;
 
 import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.remoteServer.agent.RemoteAgent;
+import consulo.remoteServer.agent.RemoteAgent;
 import com.intellij.remoteServer.agent.RemoteAgentManager;
 import com.intellij.remoteServer.agent.RemoteAgentProxyFactory;
 import com.intellij.util.PathUtil;

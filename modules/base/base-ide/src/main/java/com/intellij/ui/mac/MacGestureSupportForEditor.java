@@ -15,9 +15,6 @@
  */
 package com.intellij.ui.mac;
 
-import com.apple.eawt.event.GestureUtilities;
-import com.apple.eawt.event.PressureEvent;
-import com.apple.eawt.event.PressureListener;
 import com.intellij.ide.DataManager;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.ActionManagerEx;
@@ -27,6 +24,10 @@ import com.intellij.openapi.keymap.KeymapManager;
 import com.intellij.openapi.keymap.impl.IdeKeyEventDispatcher;
 import com.intellij.openapi.keymap.impl.IdeMouseEventDispatcher;
 import com.intellij.openapi.keymap.impl.KeymapManagerImpl;
+import consulo.eawt.wrapper.GestureUtilitiesWrapper;
+import consulo.eawt.wrapper.event.PressureEventWrapper;
+import consulo.eawt.wrapper.event.PressureListenerWrapper;
+import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.swing.*;
 import java.awt.*;
@@ -40,32 +41,31 @@ public class MacGestureSupportForEditor {
   private final ArrayList<AnAction> myActions = new ArrayList<>(1);
 
   public MacGestureSupportForEditor(JComponent component) {
-    GestureUtilities.addGestureListenerTo(component, new PressureListener() {
+    GestureUtilitiesWrapper.addGestureListenerTo(component, new PressureListenerWrapper() {
       @Override
-      public void pressure(PressureEvent e) {
+      @RequiredUIAccess
+      public void pressure(PressureEventWrapper e) {
         if (IdeMouseEventDispatcher.isForceTouchAllowed() && e.getStage() == 2) {
           MouseShortcut shortcut = new PressureShortcut(e.getStage());
           fillActionsList(shortcut, IdeKeyEventDispatcher.isModalContext(component));
           ActionManagerEx actionManager = ActionManagerEx.getInstanceEx();
-          if (actionManager != null) {
-            AnAction[] actions = myActions.toArray(new AnAction[myActions.size()]);
-            for (AnAction action : actions) {
-              DataContext dataContext = DataManager.getInstance().getDataContext(component);
-              Presentation presentation = myPresentationFactory.getPresentation(action);
-              AnActionEvent actionEvent = new AnActionEvent(null, dataContext, ActionPlaces.MAIN_MENU, presentation,
-                                                            ActionManager.getInstance(),
-                                                            0);
-              action.beforeActionPerformedUpdate(actionEvent);
+          AnAction[] actions = myActions.toArray(new AnAction[myActions.size()]);
+          for (AnAction action : actions) {
+            DataContext dataContext = DataManager.getInstance().getDataContext(component);
+            Presentation presentation = myPresentationFactory.getPresentation(action);
+            AnActionEvent actionEvent = new AnActionEvent(null, dataContext, ActionPlaces.MAIN_MENU, presentation,
+                                                          ActionManager.getInstance(),
+                                                          0);
+            action.beforeActionPerformedUpdate(actionEvent);
 
-              if (presentation.isEnabled()) {
-                actionManager.fireBeforeActionPerformed(action, dataContext, actionEvent);
-                final Component context = dataContext.getData(PlatformDataKeys.CONTEXT_COMPONENT);
+            if (presentation.isEnabled()) {
+              actionManager.fireBeforeActionPerformed(action, dataContext, actionEvent);
+              final Component context = dataContext.getData(PlatformDataKeys.CONTEXT_COMPONENT);
 
-                if (context != null && !context.isShowing()) continue;
+              if (context != null && !context.isShowing()) continue;
 
-                action.actionPerformed(actionEvent);
+              action.actionPerformed(actionEvent);
 
-              }
             }
           }
           e.consume();
@@ -84,21 +84,19 @@ public class MacGestureSupportForEditor {
     // search in main keymap
     if (KeymapManagerImpl.ourKeymapManagerInitialized) {
       final KeymapManager keymapManager = KeymapManager.getInstance();
-      if (keymapManager != null) {
-        final Keymap keymap = keymapManager.getActiveKeymap();
-        final String[] actionIds = keymap.getActionIds(mouseShortcut);
+      final Keymap keymap = keymapManager.getActiveKeymap();
+      final String[] actionIds = keymap.getActionIds(mouseShortcut);
 
-        ActionManager actionManager = ActionManager.getInstance();
-        for (String actionId : actionIds) {
-          AnAction action = actionManager.getAction(actionId);
+      ActionManager actionManager = ActionManager.getInstance();
+      for (String actionId : actionIds) {
+        AnAction action = actionManager.getAction(actionId);
 
-          if (action == null) continue;
+        if (action == null) continue;
 
-          if (isModalContext && !action.isEnabledInModalContext()) continue;
+        if (isModalContext && !action.isEnabledInModalContext()) continue;
 
-          if (!myActions.contains(action)) {
-            myActions.add(action);
-          }
+        if (!myActions.contains(action)) {
+          myActions.add(action);
         }
       }
     }

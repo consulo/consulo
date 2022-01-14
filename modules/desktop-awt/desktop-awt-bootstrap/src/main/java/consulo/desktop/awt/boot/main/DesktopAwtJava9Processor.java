@@ -18,7 +18,7 @@ package consulo.desktop.awt.boot.main;
 import consulo.container.impl.classloader.Java9ModuleInitializer;
 import consulo.container.impl.classloader.Java9ModuleProcessor;
 
-import java.util.List;
+import java.util.Set;
 
 import static consulo.container.impl.classloader.Java9ModuleInitializer.*;
 
@@ -36,7 +36,7 @@ public class DesktopAwtJava9Processor implements Java9ModuleProcessor {
   }
 
   @Override
-  public void addBaseResolveModules(List<String> toResolve) {
+  public void addBaseResolveModules(Set<String> toResolve) {
     toResolve.add("consulo.desktop.awt.hacking");
   }
 

@@ -28,8 +28,8 @@ import com.intellij.util.ui.JBInsets;
 import consulo.desktop.util.awt.migration.AWTComponentProviderUtil;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.ui.impl.BalloonLayoutEx;
-import consulo.ui.impl.ToolWindowPanelImplEx;
+import consulo.ui.ex.impl.BalloonLayoutEx;
+import consulo.ui.ex.impl.ToolWindowPanelImplEx;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

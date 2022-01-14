@@ -64,7 +64,7 @@ import consulo.logging.Logger;
 import consulo.ui.decorator.SwingUIDecorator;
 import consulo.ui.UIAccess;
 import consulo.ui.desktop.internal.window.JDialogAsUIWindow;
-import consulo.ui.impl.ModalityPerProjectEAPDescriptor;
+import consulo.ui.ex.impl.ModalityPerProjectEAPDescriptor;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.dataholder.Key;
 import consulo.wm.util.IdeFrameUtil;

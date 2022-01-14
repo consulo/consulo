@@ -28,6 +28,7 @@
     <module>modules/desktop-awt/desktop-awt-plugin</module>
     <module>modules/desktop-awt/desktop-awt-ide</module>
     <module>modules/desktop-awt/desktop-awt-bootstrap</module>
+    <module>modules/desktop-awt/desktop-awt-eawt-wrapper</module>
 
     <module>modules/desktop-swt/desktop-swt-bootstrap</module>
     <module>modules/desktop-swt/desktop-swt-ide</module>

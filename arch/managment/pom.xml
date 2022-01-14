@@ -107,11 +107,17 @@
         <version>0.4.4</version>
       </dependency>
       <dependency>
+        <!--TODO remove this dependency. For now it's fix microba dep-->
+        <groupId>jgraph</groupId>
+        <artifactId>jgraph</artifactId>
+        <version>5.8.3.1</version>
+      </dependency>
+      <dependency>
         <groupId>consulo.internal</groupId>
         <artifactId>build.serviceMessages</artifactId>
         <version>1.0</version>
         <exclusions>
-          <!--FIXME [VISTALL] tempolary solution until we make depend to our library-->
+          <!--FIXME [VISTALL] temp solution until we make depend to our library-->
           <exclusion>
             <groupId>org.jetbrains</groupId>
             <artifactId>annotations-java5</artifactId>

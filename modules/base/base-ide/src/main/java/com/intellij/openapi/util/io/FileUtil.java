@@ -18,7 +18,6 @@ package com.intellij.openapi.util.io;
 import com.intellij.CommonBundle;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.CharsetToolkit;
 import com.intellij.util.*;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.Convertor;

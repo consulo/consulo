@@ -20,6 +20,7 @@ module consulo.ui.api {
   exports consulo.ui.cursor;
   exports consulo.ui.border;
   exports consulo.ui.event;
+  exports consulo.ui.event.details;
   exports consulo.ui.font;
   exports consulo.ui.image;
   exports consulo.ui.image.canvas;

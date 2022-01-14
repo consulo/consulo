@@ -1,2 +1,2 @@
-consulo.ui.impl.LightIconLibraryDescriptor
-consulo.ui.impl.DarkIconLibraryDescriptor
+consulo.ui.ex.impl.LightIconLibraryDescriptor
+consulo.ui.ex.impl.DarkIconLibraryDescriptor

@@ -49,8 +49,8 @@ import consulo.fileEditor.impl.EditorsSplitters;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.ui.image.Image;
-import consulo.ui.impl.BalloonLayoutEx;
-import consulo.ui.impl.ToolWindowPanelImplEx;
+import consulo.ui.ex.impl.BalloonLayoutEx;
+import consulo.ui.ex.impl.ToolWindowPanelImplEx;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

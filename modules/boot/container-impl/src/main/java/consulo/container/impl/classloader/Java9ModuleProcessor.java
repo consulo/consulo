@@ -15,7 +15,7 @@
  */
 package consulo.container.impl.classloader;
 
-import java.util.List;
+import java.util.Set;
 
 /**
  * @author VISTALL
@@ -29,12 +29,12 @@ public interface Java9ModuleProcessor {
     }
 
     @Override
-    public void addBaseResolveModules(List<String> toResolve) {
+    public void addBaseResolveModules(Set<String> toResolve) {
 
     }
   };
 
   void process(Object bootModuleLayer, Object controller);
 
-  void addBaseResolveModules(List<String> toResolve);
+  void addBaseResolveModules(Set<String> toResolve);
 }

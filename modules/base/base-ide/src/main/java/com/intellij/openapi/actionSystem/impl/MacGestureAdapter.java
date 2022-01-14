@@ -15,12 +15,16 @@
  */
 package com.intellij.openapi.actionSystem.impl;
 
-import com.apple.eawt.event.*;
 import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.ui.components.Magnificator;
 import com.intellij.ui.components.ZoomableViewport;
+import consulo.eawt.wrapper.GestureUtilitiesWrapper;
+import consulo.eawt.wrapper.event.GestureAdapterWrapper;
+import consulo.eawt.wrapper.event.GesturePhaseEventWrapper;
+import consulo.eawt.wrapper.event.MagnificationEventWrapper;
+import consulo.eawt.wrapper.event.SwipeEventWrapper;
 
 import javax.swing.*;
 import java.awt.*;
@@ -28,10 +32,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 
 /**
-* User: anna
-* Date: 11/29/11
-*/
-class MacGestureAdapter extends GestureAdapter {
+ * User: anna
+ * Date: 11/29/11
+ */
+class MacGestureAdapter extends GestureAdapterWrapper {
   double magnification;
   private final IdeFrame myFrame;
   private MouseGestureManager myManager;
@@ -41,17 +45,17 @@ class MacGestureAdapter extends GestureAdapter {
     myFrame = frame;
     magnification = 0;
     myManager = manager;
-    GestureUtilities.addGestureListenerTo(frame.getComponent(), this);
+    GestureUtilitiesWrapper.addGestureListenerTo(frame.getComponent(), this);
   }
 
   @Override
-  public void gestureBegan(GesturePhaseEvent event) {
+  public void gestureBegan(GesturePhaseEventWrapper t) {
     magnification = 0;
 
     Point mouse = MouseInfo.getPointerInfo().getLocation();
     SwingUtilities.convertPointFromScreen(mouse, myFrame.getComponent());
     Component deepest = SwingUtilities.getDeepestComponentAt(myFrame.getComponent(), mouse.x, mouse.y);
-    ZoomableViewport viewport = (ZoomableViewport) SwingUtilities.getAncestorOfClass(ZoomableViewport.class, deepest);
+    ZoomableViewport viewport = (ZoomableViewport)SwingUtilities.getAncestorOfClass(ZoomableViewport.class, deepest);
     if (viewport != null) {
       Magnificator magnificator = viewport.getMagnificator();
 
@@ -65,7 +69,7 @@ class MacGestureAdapter extends GestureAdapter {
   }
 
   @Override
-  public void gestureEnded(GesturePhaseEvent event) {
+  public void gestureEnded(GesturePhaseEventWrapper event) {
     if (myMagnifyingViewport != null) {
       myMagnifyingViewport.magnificationFinished(magnification);
       myMagnifyingViewport = null;
@@ -74,7 +78,7 @@ class MacGestureAdapter extends GestureAdapter {
   }
 
   @Override
-  public void swipedLeft(SwipeEvent event) {
+  public void swipedLeft(SwipeEventWrapper event) {
     ActionManager actionManager = ActionManager.getInstance();
     AnAction forward = actionManager.getAction("Forward");
     if (forward == null) return;
@@ -83,7 +87,7 @@ class MacGestureAdapter extends GestureAdapter {
   }
 
   @Override
-  public void swipedRight(SwipeEvent event) {
+  public void swipedRight(SwipeEventWrapper event) {
     ActionManager actionManager = ActionManager.getInstance();
     AnAction back = actionManager.getAction("Back");
     if (back == null) return;
@@ -97,7 +101,7 @@ class MacGestureAdapter extends GestureAdapter {
 
 
   @Override
-  public void magnify(MagnificationEvent event) {
+  public void magnify(MagnificationEventWrapper event) {
     myManager.activateTrackpad();
     magnification += event.getMagnification();
     if (myMagnifyingViewport != null) {
@@ -106,6 +110,6 @@ class MacGestureAdapter extends GestureAdapter {
   }
 
   public void remove(JComponent cmp) {
-    GestureUtilities.removeGestureListenerFrom(cmp, this);
+    GestureUtilitiesWrapper.removeGestureListenerFrom(cmp, this);
   }
 }

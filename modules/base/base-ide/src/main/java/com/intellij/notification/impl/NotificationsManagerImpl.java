@@ -55,7 +55,7 @@ import consulo.disposer.Disposer;
 import consulo.start.WelcomeFrameManager;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
-import consulo.ui.impl.BalloonLayoutEx;
+import consulo.ui.ex.impl.BalloonLayoutEx;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 

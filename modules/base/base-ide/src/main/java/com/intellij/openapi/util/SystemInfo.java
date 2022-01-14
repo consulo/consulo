@@ -113,7 +113,6 @@ public class SystemInfo extends SystemInfoRt {
   public static final boolean is32Bit = SystemInfoRt.is32Bit;
   public static final boolean is64Bit = SystemInfoRt.is64Bit;
   public static final boolean isAMD64 = "amd64".equals(OS_ARCH);
-  public static final boolean isMacIntel64 = isMac && "x86_64".equals(OS_ARCH);
 
   private static final NotNullLazyValue<Boolean> ourHasXdgOpen = new AtomicNotNullLazyValue<Boolean>() {
     @Nonnull

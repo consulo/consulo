@@ -91,55 +91,10 @@ public class Java9ModuleInitializer {
   public static Object initializeBaseModules(List<File> files, final ClassLoader targetClassLoader, ContainerLogger containerLogger, Java9ModuleProcessor processor) {
     Object moduleFinder = moduleFinderOf(files);
 
-    List<String> toResolve = new ArrayList<String>();
+    Set<String> toResolve = new LinkedHashSet<String>();
 
     containerLogger.info("Java 9 modules: " + (ourConsuloModulePathBoot ? "enabled" : "disabled"));
     if (ourConsuloModulePathBoot) {
-      toResolve.add("jakarta.inject");
-      toResolve.add("jsr305");
-      toResolve.add("org.slf4j");
-
-      // jna provide dependency to desktop, need version without desktop dep?
-      toResolve.add("com.sun.jna");
-      toResolve.add("com.sun.jna.platform");
-
-      //toResolve.add("org.apache.commons.compress");
-      toResolve.add("org.apache.logging.log4j");
-      // consulo internal
-      toResolve.add("org.jdom");
-      toResolve.add("gnu.trove");
-      toResolve.add("kava.beans");
-      // google
-      //toResolve.add("com.google.common");
-      toResolve.add("com.google.gson");
-
-      toResolve.add("consulo.annotation");
-      toResolve.add("consulo.logging.api");
-      //toResolve.add("consulo.injecting.api");
-      toResolve.add("consulo.disposer.api");
-      toResolve.add("consulo.localize.api");
-
-      toResolve.add("consulo.injecting.pico.impl");
-
-      toResolve.add("consulo.hacking.java.base");
-
-      toResolve.add("consulo.util.lang");
-      toResolve.add("consulo.util.collection");
-      toResolve.add("consulo.util.collection.primitive");
-      toResolve.add("consulo.util.concurrent");
-      toResolve.add("consulo.util.io");
-      toResolve.add("consulo.util.serializer");
-      toResolve.add("consulo.util.rmi");
-      toResolve.add("consulo.util.jdom");
-      toResolve.add("consulo.util.dataholder");
-
-      //toResolve.add("jakarta.activation");
-      // requires java.desktop???
-      //toResolve.add("java.xml.bind");
-
-      toResolve.add("consulo.ui.api");
-      //toResolve.add("svg.salamander");
-
       processor.addBaseResolveModules(toResolve);
 
       Set findAll = instanceInvoke(java_lang_module_ModuleFinder_findAll, moduleFinder);
@@ -149,9 +104,7 @@ public class Java9ModuleInitializer {
 
         String moduleName = instanceInvoke(java_lang_module_ModuleDescriptor_name, moduleDescriptor);
 
-        if (!toResolve.contains(moduleName)) {
-          containerLogger.warn("Module '" + moduleName + "' is not resolved");
-        }
+        toResolve.add(moduleName);
       }
     }
 
@@ -160,7 +113,7 @@ public class Java9ModuleInitializer {
     Object confBootModuleLayer = instanceInvoke(java_lang_ModuleLayer_configuration, bootModuleLayer);
 
     Object configuration = staticInvoke(java_lang_module_Configuration_resolve, moduleFinder, Collections.singletonList(confBootModuleLayer),
-                                        staticInvoke(java_lang_module_ModuleFinder_of, empyArray_java_nio_file_Path), toResolve);
+                                        staticInvoke(java_lang_module_ModuleFinder_of, empyArray_java_nio_file_Path), new ArrayList<String>(toResolve));
 
     Object functionLambda = directFunction(targetClassLoader);
 
