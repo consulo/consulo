@@ -29,11 +29,11 @@ import java.awt.event.MouseMotionListener;
  * @author Konstantin Bulenkov
  */
 @SuppressWarnings("ConstantConditions")
-class HeadlessDialog implements AbstractDialog {
+public class HeadlessDialog implements AbstractDialog {
   @Nonnull
   private final DialogWrapper myWrapper;
 
-  HeadlessDialog(@Nonnull DialogWrapper wrapper) {
+  public HeadlessDialog(@Nonnull DialogWrapper wrapper) {
     myWrapper = wrapper;
   }
 

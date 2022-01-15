@@ -42,7 +42,7 @@ public final class WindowInfoImpl implements Cloneable, WindowInfo {
   /**
    * Default window weight.
    */
-  static final float DEFAULT_WEIGHT = 0.33f;
+  public static final float DEFAULT_WEIGHT = 0.33f;
   private static final float DEFAULT_SIDE_WEIGHT = 0.5f;
 
   private boolean myActive;

@@ -16,8 +16,8 @@
 package consulo.sandboxPlugin.desktop.laf;
 
 import com.intellij.openapi.util.SystemInfo;
-import consulo.desktop.impl.ui.LookAndFeelProvider;
-import consulo.desktop.ui.laf.LookAndFeelInfoWithClassLoader;
+import consulo.desktop.awt.ui.LookAndFeelProvider;
+import consulo.desktop.awt.ui.plaf.LookAndFeelInfoWithClassLoader;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;

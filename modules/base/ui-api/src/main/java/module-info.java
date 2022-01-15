@@ -29,8 +29,7 @@ module consulo.ui.api {
   exports consulo.ui.style;
   exports consulo.ui.util;
 
-  // TODO [VISTALL] exports only to impl module
-  exports consulo.ui.internal;
+  exports consulo.ui.internal to consulo.desktop.awt.ide;
 
   uses UIInternal;
 }

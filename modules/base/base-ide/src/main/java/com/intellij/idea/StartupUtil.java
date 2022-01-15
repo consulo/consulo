@@ -25,7 +25,6 @@ import com.intellij.openapi.util.io.win32.IdeaWin32;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.EnvironmentUtil;
 import com.intellij.util.PairConsumer;
-import com.intellij.util.containers.ContainerUtil;
 import consulo.container.ExitCodes;
 import consulo.container.StartupError;
 import consulo.container.boot.ContainerPathManager;
@@ -47,7 +46,6 @@ import java.lang.management.ManagementFactory;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Locale;
-import java.util.ServiceLoader;
 import java.util.concurrent.ForkJoinPool;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
@@ -109,10 +107,7 @@ public class StartupUtil {
   }
 
   public static void initializeLogger() {
-    List<LoggerFactory> factories = ContainerUtil.newArrayList(ServiceLoader.load(LoggerFactory.class, StartupUtil.class.getClassLoader()));
-    ContainerUtil.weightSort(factories, LoggerFactory::getPriority);
-    LoggerFactory factory = factories.get(0);
-    LoggerFactoryInitializer.setFactory(factory);
+    LoggerFactoryInitializer.initializeLogger(StartupUtil.class.getClassLoader());
   }
 
   private enum ActivationResult {

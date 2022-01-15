@@ -8,4 +8,5 @@ module consulo.base.runtime.api {
   requires consulo.container.api;
 
   exports consulo.platform;
+  exports consulo.platform.internal to consulo.desktop.awt.ide;
 }

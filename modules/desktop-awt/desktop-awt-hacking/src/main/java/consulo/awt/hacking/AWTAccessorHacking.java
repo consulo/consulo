@@ -48,4 +48,9 @@ public class AWTAccessorHacking {
 
     return extendedState;
   }
+
+  public static Thread getDispatchThread() {
+    EventQueue eventQueue = Toolkit.getDefaultToolkit().getSystemEventQueue();
+    return AWTAccessor.getEventQueueAccessor().getDispatchThread(eventQueue);
+  }
 }

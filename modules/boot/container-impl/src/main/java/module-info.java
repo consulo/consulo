@@ -4,13 +4,12 @@ module consulo.container.impl {
 
   // add temp dependency
   requires transitive java.scripting;
-  // this depedency fix batik runtime
+  // this dependency fix batik runtime
   requires transitive jdk.xml.dom;
 
   exports consulo.container.impl;
   exports consulo.container.impl.classloader;
-  // TODO [VISTALL] must be exported only to advanced proxy module
-  exports consulo.container.impl.classloader.proxy;
+  exports consulo.container.impl.classloader.proxy to consulo.base.proxy;
   exports consulo.container.impl.parser;
   // TODO [VISTALL] export only to core module
   exports consulo.container.impl.securityManager.impl;

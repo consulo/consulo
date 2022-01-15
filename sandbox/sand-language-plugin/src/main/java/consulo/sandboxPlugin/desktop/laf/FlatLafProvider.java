@@ -19,8 +19,8 @@ import com.formdev.flatlaf.FlatDarculaLaf;
 import com.formdev.flatlaf.FlatDarkLaf;
 import com.formdev.flatlaf.FlatIntelliJLaf;
 import com.formdev.flatlaf.FlatLightLaf;
-import consulo.desktop.impl.ui.LookAndFeelProvider;
-import consulo.desktop.ui.laf.LookAndFeelInfoWithClassLoader;
+import consulo.desktop.awt.ui.LookAndFeelProvider;
+import consulo.desktop.awt.ui.plaf.LookAndFeelInfoWithClassLoader;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;

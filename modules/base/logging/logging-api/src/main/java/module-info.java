@@ -8,5 +8,6 @@ module consulo.logging.api {
   // TODO [VISTALL] this package must be exported only to impl module!
   exports consulo.logging.internal;
 
+  uses consulo.logging.internal.LoggerFactory;
   uses consulo.logging.attachment.AttachmentFactory;
 }
