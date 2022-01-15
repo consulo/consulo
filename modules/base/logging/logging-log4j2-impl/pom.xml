@@ -60,7 +60,16 @@
             </configuration>
           </execution>
         </executions>
-      </plugin></plugins>
+        <dependencies>
+          <dependency>
+            <!--add log4j2 dependency, due it will not found PluginProcessor if not add. Not resolved from module-path-->
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-core</artifactId>
+            <version>${log4j2.version}</version>
+          </dependency>
+        </dependencies>
+      </plugin>
+    </plugins>
   </build>
 
   <dependencies>

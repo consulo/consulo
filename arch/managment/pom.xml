@@ -31,7 +31,7 @@
 
     <jna.version>5.8.0</jna.version>
     <jdom.version>3.0-SNAPSHOT</jdom.version>
-    <log4j2.version>2.14.1</log4j2.version>
+    <log4j2.version>2.17.1</log4j2.version>
     <guava.version>30.1.1-jre</guava.version>
     <!--please exclude common logging library from dependency-->
     <httpclient.version>4.5.13</httpclient.version>
@@ -51,7 +51,7 @@
 
     <maven.assembly.plugin>3.2.0</maven.assembly.plugin>
     <maven.jar.plugin>3.2.0</maven.jar.plugin>
-    <maven.compile.plugin>3.8.1</maven.compile.plugin>
+    <maven.compile.plugin>3.9.0</maven.compile.plugin>
     <maven.surefire.plugin>2.22.2</maven.surefire.plugin>
     <maven.source.plugin>3.2.0</maven.source.plugin>
   </properties>

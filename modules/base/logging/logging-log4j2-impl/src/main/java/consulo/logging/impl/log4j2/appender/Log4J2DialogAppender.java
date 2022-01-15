@@ -38,7 +38,6 @@ import org.apache.logging.log4j.message.Message;
 import org.apache.logging.log4j.message.ObjectMessage;
 
 import javax.annotation.Nonnull;
-import javax.swing.*;
 import java.io.Serializable;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -104,7 +103,7 @@ public class Log4J2DialogAppender extends AbstractAppender {
 
       // Note, we MUST avoid SYNCHRONOUS invokeAndWait to prevent deadlocks
       final IdeaLoggingEvent finalIdeaEvent = ideaEvent;
-      SwingUtilities.invokeLater(() -> {
+      Application.get().invokeLater(() -> {
         try {
           appendToLoggers(finalIdeaEvent);
         }
