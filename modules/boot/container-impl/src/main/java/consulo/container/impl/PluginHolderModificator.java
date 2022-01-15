@@ -18,7 +18,6 @@ package consulo.container.impl;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginId;
 
-import javax.annotation.Nonnull;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -31,7 +30,6 @@ public class PluginHolderModificator {
 
   private static final AtomicReference<Map<PluginId, Integer>> ourPluginLoadOrder = new AtomicReference<Map<PluginId, Integer>>();
 
-  @Nonnull
   public static List<PluginDescriptor> getPlugins() {
     List<PluginDescriptor> descriptors = ourPlugins.get();
 
@@ -46,7 +44,7 @@ public class PluginHolderModificator {
     return ourPlugins.get() != null;
   }
 
-  public static void initialize(@Nonnull List<? extends PluginDescriptor> pluginDescriptors) {
+  public static void initialize(List<? extends PluginDescriptor> pluginDescriptors) {
     // create new array for dropping leak to list from another classloader etc
     ourPlugins.set(Collections.unmodifiableList(new ArrayList<PluginDescriptor>(pluginDescriptors)));
   }

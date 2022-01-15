@@ -15,7 +15,6 @@
  */
 package consulo.util.nodep.map;
 
-import javax.annotation.Nonnull;
 import java.util.*;
 
 /**
@@ -23,19 +22,17 @@ import java.util.*;
  * @since 2019-07-18
  */
 public class SimpleMultiMap<K, V> implements Map<K, Collection<V>> {
-  @Nonnull
   public static <K1, V1> SimpleMultiMap<K1, V1> emptyMap() {
     return new SimpleMultiMap<K1, V1>(Collections.<K1, Collection<V1>>emptyMap());
   }
 
-  @Nonnull
   public static <K1, V1> SimpleMultiMap<K1, V1> newHashMap() {
     return new SimpleMultiMap<K1, V1>(new HashMap<K1, Collection<V1>>());
   }
 
   private final Map<K, Collection<V>> myMap;
 
-  private SimpleMultiMap(@Nonnull Map<K, Collection<V>> delegate) {
+  private SimpleMultiMap(Map<K, Collection<V>> delegate) {
     myMap = delegate;
   }
 
@@ -65,7 +62,7 @@ public class SimpleMultiMap<K, V> implements Map<K, Collection<V>> {
   }
 
   @Override
-  @Nonnull
+
   public Collection<V> get(Object key) {
     Collection<V> vs = myMap.get(key);
     return vs == null ? Collections.<V>emptyList() : vs;
@@ -90,7 +87,7 @@ public class SimpleMultiMap<K, V> implements Map<K, Collection<V>> {
   }
 
   @Override
-  public void putAll(@Nonnull Map<? extends K, ? extends Collection<V>> map) {
+  public void putAll(Map<? extends K, ? extends Collection<V>> map) {
     for (Entry<? extends K, ? extends Collection<V>> e : map.entrySet()) {
       put(e.getKey(), e.getValue());
     }
@@ -106,19 +103,16 @@ public class SimpleMultiMap<K, V> implements Map<K, Collection<V>> {
     myMap.clear();
   }
 
-  @Nonnull
   @Override
   public Set<K> keySet() {
     return myMap.keySet();
   }
 
-  @Nonnull
   @Override
   public Collection<Collection<V>> values() {
     return myMap.values();
   }
 
-  @Nonnull
   @Override
   public Set<Entry<K, Collection<V>>> entrySet() {
     return myMap.entrySet();

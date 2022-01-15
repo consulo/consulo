@@ -15,10 +15,9 @@
  */
 package consulo.container.impl.classloader;
 
-import consulo.container.plugin.PluginId;
 import consulo.container.StartupError;
+import consulo.container.plugin.PluginId;
 
-import javax.annotation.Nonnull;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
@@ -35,7 +34,7 @@ public class PluginLoadStatistics {
     }
 
     @Override
-    void addPluginClass(@Nonnull PluginId pluginId) {
+    void addPluginClass(PluginId pluginId) {
       synchronized (myLock) {
         AtomicInteger value = myClassCounts.get(pluginId);
         if (value == null) {
@@ -75,9 +74,9 @@ public class PluginLoadStatistics {
     ourInstance = internal ? new InternalPluginClassCache() : new PluginLoadStatistics();
   }
 
-  @Nonnull
+
   public static PluginLoadStatistics get() {
-    if(ourInstance == null) {
+    if (ourInstance == null) {
       throw new StartupError("not initialized");
     }
     return ourInstance;
@@ -86,7 +85,7 @@ public class PluginLoadStatistics {
   PluginLoadStatistics() {
   }
 
-  void addPluginClass(@Nonnull PluginId pluginId) {
+  void addPluginClass(PluginId pluginId) {
   }
 
   public void dumpPluginClassStatistics(Consumer<String> logInfo) {

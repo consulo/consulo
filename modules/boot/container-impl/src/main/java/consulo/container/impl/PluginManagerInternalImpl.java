@@ -21,8 +21,6 @@ import consulo.container.plugin.PluginId;
 import consulo.container.plugin.PluginManager;
 import consulo.container.plugin.internal.PluginManagerInternal;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.io.File;
 import java.util.List;
 
@@ -31,8 +29,6 @@ import java.util.List;
  * @since 2019-07-25
  */
 public class PluginManagerInternalImpl implements PluginManagerInternal {
-
-  @Nonnull
   @Override
   public List<PluginDescriptor> getPlugins() {
     return PluginHolderModificator.getPlugins();
@@ -43,9 +39,8 @@ public class PluginManagerInternalImpl implements PluginManagerInternal {
     return PluginHolderModificator.isInitialized();
   }
 
-  @Nullable
   @Override
-  public File getPluginPath(@Nonnull Class<?> pluginClass) {
+  public File getPluginPath(Class<?> pluginClass) {
     ClassLoader temp = pluginClass.getClassLoader();
     assert temp instanceof PluginClassLoader : "classloader is not plugin";
     PluginClassLoader classLoader = (PluginClassLoader)temp;
@@ -55,9 +50,8 @@ public class PluginManagerInternalImpl implements PluginManagerInternal {
     return plugin.getPath();
   }
 
-  @Nullable
   @Override
-  public PluginDescriptor getPlugin(@Nonnull Class<?> pluginClass) {
+  public PluginDescriptor getPlugin(Class<?> pluginClass) {
     ClassLoader temp = pluginClass.getClassLoader();
     if (!(temp instanceof PluginClassLoader)) {
       return null;
@@ -65,14 +59,14 @@ public class PluginManagerInternalImpl implements PluginManagerInternal {
     return ((PluginClassLoader)temp).getPluginDescriptor();
   }
 
-  @Nonnull
+
   @Override
   public List<String> getDisabledPlugins() {
     return PluginValidator.getDisabledPlugins();
   }
 
   @Override
-  public boolean shouldSkipPlugin(@Nonnull PluginDescriptor descriptor) {
+  public boolean shouldSkipPlugin(PluginDescriptor descriptor) {
     return PluginValidator.shouldSkipPlugin(descriptor);
   }
 

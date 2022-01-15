@@ -15,7 +15,6 @@
  */
 package consulo.container.plugin;
 
-import javax.annotation.Nonnull;
 import java.util.Collections;
 import java.util.Set;
 
@@ -27,17 +26,15 @@ public final class PluginPermissionDescriptor {
   private final PluginPermissionType myType;
   private final Set<String> myOptions;
 
-  public PluginPermissionDescriptor(@Nonnull PluginPermissionType type, @Nonnull Set<String> options) {
+  public PluginPermissionDescriptor(PluginPermissionType type, Set<String> options) {
     myType = type;
     myOptions = Collections.unmodifiableSet(options);
   }
 
-  @Nonnull
   public PluginPermissionType getType() {
     return myType;
   }
 
-  @Nonnull
   public Set<String> getOptions() {
     return myOptions;
   }

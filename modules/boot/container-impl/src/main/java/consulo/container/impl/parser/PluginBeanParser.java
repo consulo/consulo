@@ -20,8 +20,6 @@ import consulo.container.plugin.PluginListenerDescriptor;
 import consulo.util.nodep.text.StringUtilRt;
 import consulo.util.nodep.xml.node.SimpleXmlElement;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.*;
 
 /**
@@ -29,10 +27,9 @@ import java.util.*;
  * @since 2019-03-24
  */
 public class PluginBeanParser {
-  private static Set<String> ourAllowedRootTags = new HashSet<String>(Arrays.asList("consulo-plugin", "idea-plugin"));
+  private static Set<String> ourAllowedRootTags = new HashSet<String>(Arrays.asList("consulo-plugin"));
 
-  @Nullable
-  public static PluginBean parseBean(@Nonnull SimpleXmlElement rootTag, @Nullable String pluginId) {
+  public static PluginBean parseBean(SimpleXmlElement rootTag, String pluginId) {
     String rootTagName = rootTag.getName();
     if (!ourAllowedRootTags.contains(rootTagName)) {
       return null;
@@ -162,7 +159,7 @@ public class PluginBeanParser {
       }
     }
 
-    if(!tags.isEmpty()) {
+    if (!tags.isEmpty()) {
       pluginBean.tags = tags;
     }
 
@@ -171,7 +168,7 @@ public class PluginBeanParser {
       incompatibleWith.add(incompatibleWithElement.getText());
     }
 
-    if(!incompatibleWith.isEmpty()) {
+    if (!incompatibleWith.isEmpty()) {
       pluginBean.incompatibleWith = incompatibleWith;
     }
 
@@ -229,7 +226,6 @@ public class PluginBeanParser {
     return list;
   }
 
-  @Nonnull
   private static List<SimpleXmlElement> expandChildren(SimpleXmlElement element, String childTag) {
     List<SimpleXmlElement> list = Collections.emptyList();
 

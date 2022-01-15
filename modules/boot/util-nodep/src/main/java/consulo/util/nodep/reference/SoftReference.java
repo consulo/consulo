@@ -15,9 +15,6 @@
  */
 package consulo.util.nodep.reference;
 
-import consulo.util.nodep.function.Getter;
-import javax.annotation.Nullable;
-
 import java.lang.ref.Reference;
 import java.lang.ref.ReferenceQueue;
 
@@ -47,12 +44,11 @@ public class SoftReference<T> extends java.lang.ref.SoftReference<T> {
   //  return myReferent;
   //}
 
-  @Nullable
-  public static <T> T dereference(@Nullable Reference<T> ref) {
+  public static <T> T dereference(Reference<T> ref) {
     return ref == null ? null : ref.get();
   }
-  @Nullable
-  public static <T> T deref(@Nullable SoftReference<T> ref) {
+
+  public static <T> T deref(SoftReference<T> ref) {
     return ref == null ? null : ref.get();
   }
 }

@@ -22,7 +22,6 @@ import consulo.container.plugin.PluginIds;
 import consulo.container.plugin.PluginManager;
 import consulo.util.nodep.io.FileUtilRt;
 
-import javax.annotation.Nonnull;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -36,7 +35,7 @@ public class PluginValidator {
 
   public static PluginDescriptorVersionValidator VALIDATOR = new PluginDescriptorVersionValidator() {
     @Override
-    public boolean validateVersion(@Nonnull PluginDescriptor pluginDescriptor) {
+    public boolean validateVersion(PluginDescriptor pluginDescriptor) {
       return true;
     }
   };
@@ -45,7 +44,6 @@ public class PluginValidator {
 
   static List<String> ourDisabledPlugins = null;
 
-  @Nonnull
   static List<String> getDisabledPlugins() {
     if (ourDisabledPlugins == null) {
       ourDisabledPlugins = new ArrayList<String>();
@@ -115,7 +113,6 @@ public class PluginValidator {
     }
   }
 
-  @Nonnull
   static PluginManager.PluginSkipReason calcPluginSkipReason(final PluginDescriptor descriptor) {
     final String idString = descriptor.getPluginId().getIdString();
     if (PluginIds.isPlatformPlugin(descriptor.getPluginId())) {
@@ -162,7 +159,7 @@ public class PluginValidator {
     }
   }
 
-  static boolean shouldSkipPlugin(@Nonnull PluginDescriptor descriptor) {
+  static boolean shouldSkipPlugin(PluginDescriptor descriptor) {
     if (descriptor instanceof PluginDescriptorImpl) {
       PluginDescriptorImpl descriptorImpl = (PluginDescriptorImpl)descriptor;
       Boolean skipped = descriptorImpl.getSkipped();

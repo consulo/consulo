@@ -4,8 +4,6 @@ package consulo.util.nodep.classloader;
 import consulo.util.nodep.io.DataInputOutputUtilRt;
 import consulo.util.nodep.io.FileUtilRt;
 import consulo.util.nodep.text.StringUtilRt;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 import java.io.*;
 import java.net.URISyntaxException;
@@ -84,7 +82,6 @@ class FileLoader extends Loader {
   private final DirEntry root = new DirEntry(0, null);
 
   @Override
-  @Nullable
   Resource getResource(final String name) {
     try {
       if (myConfiguration.myLazyClassloadingCaches) {
@@ -118,7 +115,7 @@ class FileLoader extends Loader {
     return null;
   }
 
-  @Nonnull
+  
   private static DirEntry findOrCreateNextDirEntry(DirEntry lastEntry, String name, int prevIndex, int nameEnd, int nameHash) {
     DirEntry nextEntry = null;
     DirEntry[] directories = lastEntry.childrenDirectories; // volatile read
@@ -251,12 +248,12 @@ class FileLoader extends Loader {
     }
   }
 
-  @Nonnull
+  
   private File getIndexFileFile() {
     return new File(myRootDir, "classpath.index");
   }
 
-  @Nonnull
+  
   @Override
   public ClasspathCache.LoaderData buildData() {
     ClasspathCache.LoaderData loaderData = tryReadFromIndex();
@@ -327,8 +324,15 @@ class FileLoader extends Loader {
     }
 
     if (doFsActivityLogging) {
-      System.out.println("Scanning: " + (currentScanningTime / nsMsFactor) + "ms, saving: " + (totalSaving.get() / nsMsFactor) +
-                         "ms, loading:" + (totalReading.get() / nsMsFactor) + "ms for " + currentLoaders + " loaders");
+      System.out.println("Scanning: " +
+                         (currentScanningTime / nsMsFactor) +
+                         "ms, saving: " +
+                         (totalSaving.get() / nsMsFactor) +
+                         "ms, loading:" +
+                         (totalReading.get() / nsMsFactor) +
+                         "ms for " +
+                         currentLoaders +
+                         " loaders");
     }
 
     return loaderData;
@@ -370,7 +374,7 @@ class FileLoader extends Loader {
     return "FileLoader [" + myRootDir + "]";
   }
 
-  private static int stringHashCodeInsensitive(@Nonnull String s, int from, int to) {
+  private static int stringHashCodeInsensitive( String s, int from, int to) {
     int h = 0;
     for (int off = from; off < to; off++) {
       h = 31 * h + StringUtilRt.toLowerCase(s.charAt(off));

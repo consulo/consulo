@@ -24,8 +24,6 @@ import consulo.util.nodep.xml.SimpleXmlParsingException;
 import consulo.util.nodep.xml.SimpleXmlReader;
 import consulo.util.nodep.xml.node.SimpleXmlElement;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -60,7 +58,7 @@ public class PluginDescriptorImpl extends PluginDescriptorStub {
   private PluginId[] myIncompatibleWithPluginds = PluginId.EMPTY_ARRAY;
   private Map<PluginId, String> myOptionalConfigs;
   private Map<PluginId, PluginDescriptorImpl> myOptionalDescriptors;
-  @Nonnull
+
   private List<SimpleXmlElement> myActionsElements = Collections.emptyList();
   private List<ComponentConfig> myAppComponents = Collections.emptyList();
   private List<ComponentConfig> myProjectComponents = Collections.emptyList();
@@ -76,9 +74,9 @@ public class PluginDescriptorImpl extends PluginDescriptorStub {
   private Object myModuleLayer;
 
   private Collection<HelpSetPath> myHelpSets = Collections.emptyList();
-  @Nonnull
+
   private SimpleMultiMap<String, ExtensionInfo> myExtensions = SimpleMultiMap.emptyMap();
-  @Nonnull
+
   private SimpleMultiMap<String, SimpleXmlElement> myExtensionsPoints = SimpleMultiMap.emptyMap();
 
   private Set<String> myTags = Collections.emptySet();
@@ -88,7 +86,7 @@ public class PluginDescriptorImpl extends PluginDescriptorStub {
   private Boolean mySkipped;
   private boolean myExperimental;
 
-  public PluginDescriptorImpl(@Nonnull File pluginPath, @Nonnull byte[] iconBytes, @Nonnull byte[] darkIconBytes, boolean isPreInstalled) {
+  public PluginDescriptorImpl(File pluginPath, byte[] iconBytes, byte[] darkIconBytes, boolean isPreInstalled) {
     myPath = pluginPath;
     myIconBytes = iconBytes;
     myDarkIconBytes = darkIconBytes;
@@ -100,12 +98,12 @@ public class PluginDescriptorImpl extends PluginDescriptorStub {
     return myPath;
   }
 
-  public void readExternal(@Nonnull InputStream stream, @Nullable ZipFile zipFile, @Nonnull ContainerLogger log) throws SimpleXmlParsingException {
+  public void readExternal(InputStream stream, ZipFile zipFile, ContainerLogger log) throws SimpleXmlParsingException {
     SimpleXmlElement element = SimpleXmlReader.parse(stream);
     readExternal(element, zipFile, log);
   }
 
-  private void readExternal(@Nonnull SimpleXmlElement element, @Nullable ZipFile zipFile, @Nonnull ContainerLogger log) throws SimpleXmlParsingException {
+  private void readExternal(SimpleXmlElement element, ZipFile zipFile, ContainerLogger log) throws SimpleXmlParsingException {
     final PluginBean pluginBean = PluginBeanParser.parseBean(element, null);
     assert pluginBean != null;
     url = pluginBean.url;
@@ -178,7 +176,7 @@ public class PluginDescriptorImpl extends PluginDescriptorStub {
       myTags = Collections.unmodifiableSet(pluginBean.tags);
     }
 
-    if(pluginBean.experimental) {
+    if (pluginBean.experimental) {
       Set<String> oldTags = new TreeSet<String>(myTags);
       oldTags.add(EXPERIMENTAL_TAG);
 
@@ -276,8 +274,8 @@ public class PluginDescriptorImpl extends PluginDescriptorStub {
     }
   }
 
-  @Nonnull
-  private static <T> List<T> mergeElements(@Nonnull List<T> original, @Nonnull List<T> additional) {
+
+  private static <T> List<T> mergeElements(List<T> original, List<T> additional) {
     if (additional.isEmpty()) {
       return original;
     }
@@ -319,7 +317,7 @@ public class PluginDescriptorImpl extends PluginDescriptorStub {
     }
   }
 
-  @Nonnull
+
   @Override
   public Set<String> getTags() {
     return myTags;
@@ -335,10 +333,10 @@ public class PluginDescriptorImpl extends PluginDescriptorStub {
     return myChangeNotes;
   }
 
-  @Nonnull
+
   @Override
   public byte[] getIconBytes(boolean isDarkTheme) {
-    if(isDarkTheme && myDarkIconBytes.length > 0) {
+    if (isDarkTheme && myDarkIconBytes.length > 0) {
       return myDarkIconBytes;
     }
     return myIconBytes;
@@ -350,18 +348,18 @@ public class PluginDescriptorImpl extends PluginDescriptorStub {
   }
 
   @Override
-  @Nonnull
+
   public PluginId[] getDependentPluginIds() {
     return myDependencies;
   }
 
   @Override
-  @Nonnull
+
   public PluginId[] getOptionalDependentPluginIds() {
     return myOptionalDependencies;
   }
 
-  @Nonnull
+
   @Override
   public PluginId[] getIncompatibleWithPlugindIds() {
     return myIncompatibleWithPluginds;
@@ -387,7 +385,7 @@ public class PluginDescriptorImpl extends PluginDescriptorStub {
     return myResourceBundleBaseName;
   }
 
-  @Nullable
+
   @Override
   public String getLocalize() {
     return myLocalize;
@@ -409,17 +407,17 @@ public class PluginDescriptorImpl extends PluginDescriptorStub {
     myCategory = category;
   }
 
-  @Nonnull
+
   public SimpleMultiMap<String, SimpleXmlElement> getExtensionsPoints() {
     return myExtensionsPoints;
   }
 
-  @Nonnull
+
   public SimpleMultiMap<String, ExtensionInfo> getExtensions() {
     return myExtensions;
   }
 
-  @Nonnull
+
   public List<File> getClassPath() {
     if (myPath.isDirectory()) {
       final List<File> result = new ArrayList<File>();
@@ -448,19 +446,19 @@ public class PluginDescriptorImpl extends PluginDescriptorStub {
   }
 
   @Override
-  @Nonnull
+
   public List<SimpleXmlElement> getActionsDescriptionElements() {
     return myActionsElements;
   }
 
   @Override
-  @Nonnull
+
   public List<ComponentConfig> getAppComponents() {
     return myAppComponents;
   }
 
   @Override
-  @Nonnull
+
   public List<ComponentConfig> getProjectComponents() {
     return myProjectComponents;
   }
@@ -480,27 +478,27 @@ public class PluginDescriptorImpl extends PluginDescriptorStub {
     return url;
   }
 
-  @Nonnull
+
   @Override
   public List<PluginListenerDescriptor> getApplicationListeners() {
     return myApplicationListeners;
   }
 
-  @Nonnull
+
   @Override
   public List<PluginListenerDescriptor> getProjectListeners() {
     return myProjectListeners;
   }
 
-  @Nonnull
+
   @Override
   public List<PluginListenerDescriptor> getModuleListeners() {
     return myModuleListeners;
   }
 
-  @Nullable
+
   @Override
-  public PluginPermissionDescriptor getPermissionDescriptor(@Nonnull PluginPermissionType permissionType) {
+  public PluginPermissionDescriptor getPermissionDescriptor(PluginPermissionType permissionType) {
     return myPermissionDescriptors.get(permissionType);
   }
 
@@ -546,18 +544,18 @@ public class PluginDescriptorImpl extends PluginDescriptorStub {
   }
 
   @Override
-  @Nonnull
+
   public Collection<HelpSetPath> getHelpSets() {
     return myHelpSets;
   }
 
-  @Nonnull
+
   @Override
   public PluginId getPluginId() {
     return myId;
   }
 
-  @Nonnull
+
   @Override
   public ClassLoader getPluginClassLoader() {
     if (myLoader == null) {
@@ -576,12 +574,12 @@ public class PluginDescriptorImpl extends PluginDescriptorStub {
     myEnabled = enabled;
   }
 
-  @Nullable
+
   public Map<PluginId, String> getOptionalConfigs() {
     return myOptionalConfigs;
   }
 
-  @Nullable
+
   public Map<PluginId, PluginDescriptorImpl> getOptionalDescriptors() {
     return myOptionalDescriptors;
   }

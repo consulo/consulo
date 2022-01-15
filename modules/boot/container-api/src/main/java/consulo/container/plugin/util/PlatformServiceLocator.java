@@ -20,7 +20,6 @@ import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginIds;
 import consulo.container.plugin.PluginManager;
 
-import javax.annotation.Nonnull;
 import java.util.Iterator;
 import java.util.ServiceLoader;
 
@@ -29,8 +28,7 @@ import java.util.ServiceLoader;
  * @since 2019-07-25
  */
 public class PlatformServiceLocator {
-  @Nonnull
-  public static <T> T findImplementation(@Nonnull Class<T> interfaceClass) {
+  public static <T> T findImplementation(Class<T> interfaceClass) {
     for (T value : ServiceLoader.load(interfaceClass, interfaceClass.getClassLoader())) {
       return value;
     }

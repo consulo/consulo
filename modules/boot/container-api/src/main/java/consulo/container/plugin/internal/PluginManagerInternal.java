@@ -18,8 +18,6 @@ package consulo.container.plugin.internal;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginManager;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.io.File;
 import java.util.List;
 
@@ -28,21 +26,17 @@ import java.util.List;
  * @since 2019-07-25
  */
 public interface PluginManagerInternal {
-  @Nonnull
   List<PluginDescriptor> getPlugins();
 
   boolean isInitialized();
 
-  @Nullable
-  File getPluginPath(@Nonnull Class<?> pluginClass);
+  File getPluginPath(Class<?> pluginClass);
 
-  @Nullable
-  PluginDescriptor getPlugin(@Nonnull Class<?> pluginClass);
+  PluginDescriptor getPlugin(Class<?> pluginClass);
 
-  @Nonnull
   List<String> getDisabledPlugins();
 
-  boolean shouldSkipPlugin(@Nonnull PluginDescriptor descriptor);
+  boolean shouldSkipPlugin(PluginDescriptor descriptor);
 
   PluginManager.PluginSkipReason calcPluginSkipReason(final PluginDescriptor descriptor);
 

@@ -15,7 +15,6 @@
  */
 package consulo.container.plugin;
 
-import javax.annotation.Nonnull;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
@@ -38,15 +37,14 @@ public final class PluginIds {
 
   private static final Set<PluginId> ourPlatformIds = new HashSet<PluginId>(Arrays.asList(CONSULO_PLATFORM_DESKTOP_AWT, CONSULO_PLATFORM_DESKTOP_SWT, CONSULO_PLATFORM_WEB));
 
-  public static boolean isPlatformImplementationPlugin(@Nonnull PluginId pluginId) {
+  public static boolean isPlatformImplementationPlugin(PluginId pluginId) {
     return ourPlatformIds.contains(pluginId);
   }
 
-  public static boolean isPlatformPlugin(@Nonnull PluginId pluginId) {
+  public static boolean isPlatformPlugin(PluginId pluginId) {
     return CONSULO_PLATFORM_BASE.equals(pluginId) || isPlatformImplementationPlugin(pluginId);
   }
 
-  @Nonnull
   public static Set<PluginId> getObsoletePlugins() {
     return ourMergedObsoletePlugins;
   }

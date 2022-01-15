@@ -1,8 +1,6 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.util.nodep.classloader;
 
-import javax.annotation.Nonnull;
-
 import java.lang.ref.ReferenceQueue;
 import java.lang.ref.WeakReference;
 import java.util.concurrent.ConcurrentHashMap;
@@ -16,7 +14,6 @@ class ClassLoadingLocks {
   private final ConcurrentMap<String, WeakLockReference> myMap = new ConcurrentHashMap<String, WeakLockReference>();
   private final ReferenceQueue<Object> myQueue = new ReferenceQueue<Object>();
 
-  @Nonnull
   Object getOrCreateLock(String className) {
     WeakLockReference lockReference = myMap.get(className);
     if (lockReference != null) {
@@ -53,7 +50,7 @@ class ClassLoadingLocks {
   private static class WeakLockReference extends WeakReference<Object> {
     final String myClassName;
 
-    private WeakLockReference(@Nonnull String className, Object lock, ReferenceQueue<Object> q) {
+    private WeakLockReference(String className, Object lock, ReferenceQueue<Object> q) {
       super(lock, q);
       myClassName = className;
     }

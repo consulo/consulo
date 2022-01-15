@@ -19,8 +19,6 @@ import consulo.container.classloader.PluginClassLoader;
 import consulo.container.plugin.*;
 import consulo.util.nodep.function.Getter;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.net.URLPermission;
 import java.security.Permission;
 import java.util.*;
@@ -30,9 +28,9 @@ import java.util.*;
  * @since 23/10/2021
  */
 public class ConsuloSecurityManager extends SecurityManager {
-  public static void runPrivilegedAction(@Nonnull Runnable runnable) {
+  public static void runPrivilegedAction(Runnable runnable) {
     SecurityManager securityManager = System.getSecurityManager();
-    
+
     if (!(securityManager instanceof ConsuloSecurityManager)) {
       runnable.run();
       return;
@@ -50,8 +48,7 @@ public class ConsuloSecurityManager extends SecurityManager {
     }
   }
 
-  @Nullable
-  public static <T> T runPrivilegedAction(@Nonnull Getter<T> getter) {
+  public static <T> T runPrivilegedAction(Getter<T> getter) {
     SecurityManager securityManager = System.getSecurityManager();
 
     if (!(securityManager instanceof ConsuloSecurityManager)) {
@@ -207,11 +204,11 @@ public class ConsuloSecurityManager extends SecurityManager {
     checkPermission(PluginPermissionType.SOCKET_CONNECT, host + ":" + port);
   }
 
-  private void checkPermission(PluginPermissionType pluginPermissionType, @Nullable String target) {
+  private void checkPermission(PluginPermissionType pluginPermissionType, String target) {
     checkPermission(pluginPermissionType, target, null);
   }
 
-  private void checkPermission(PluginPermissionType pluginPermissionType, @Nullable String target, @Nullable Class<?>[] alreadyCalledContext) {
+  private void checkPermission(PluginPermissionType pluginPermissionType, String target, Class<?>[] alreadyCalledContext) {
     if (!myEnabled || myPrivilegedAction.get()) {
       return;
     }
@@ -246,7 +243,7 @@ public class ConsuloSecurityManager extends SecurityManager {
     }
   }
 
-  private Set<ClassLoader> mergeClassLoaders(@Nullable Class<?>[] alreadyCalledContext) {
+  private Set<ClassLoader> mergeClassLoaders(Class<?>[] alreadyCalledContext) {
     Class<?>[] classContext = alreadyCalledContext == null ? getClassContext() : alreadyCalledContext;
 
     Set<ClassLoader> classLoaders = new LinkedHashSet<ClassLoader>();
@@ -255,8 +252,8 @@ public class ConsuloSecurityManager extends SecurityManager {
       if (classLoader == null || myPlatformClassLoader == classLoader || mySystemClassLoader == classLoader || myPrimaryClassLoader == classLoader) {
         continue;
       }
-      
-      if(classLoader.getClass().getName().equals("jdk.internal.reflect.DelegatingClassLoader")) {
+
+      if (classLoader.getClass().getName().equals("jdk.internal.reflect.DelegatingClassLoader")) {
         continue;
       }
       classLoaders.add(classLoader);

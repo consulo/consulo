@@ -22,12 +22,10 @@ import consulo.container.impl.ContainerLogger;
 import consulo.container.impl.PluginDescriptorImpl;
 import consulo.container.impl.PluginDescriptorLoader;
 import consulo.container.impl.PluginHolderModificator;
-import consulo.container.impl.securityManager.impl.ConsuloSecurityManager;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.util.StatCollector;
 import consulo.util.nodep.SystemInfoRt;
 
-import javax.annotation.Nonnull;
 import java.io.File;
 import java.net.URL;
 import java.util.*;
@@ -38,7 +36,6 @@ import java.util.*;
 public class BootstrapClassLoaderUtil {
   private static final String CONSULO_PLATFORM_BASE = "consulo.platform.base";
 
-  @Nonnull
   public static ContainerStartup buildContainerStartup(Map<String, Object> args, File modulesDirectory, ContainerLogger containerLogger, Java9ModuleProcessor processor) throws Exception {
     StatCollector stat = (StatCollector)args.get(ContainerStartup.STAT_COLLECTOR);
 
@@ -103,7 +100,6 @@ public class BootstrapClassLoaderUtil {
     throw new StartupError("Instance of ContainerStartup not found");
   }
 
-  @Nonnull
   private static PluginDescriptorImpl initializePlatformBase(File modulesDirectory, ContainerLogger containerLogger, Java9ModuleProcessor processor) throws Exception {
     File platformBaseDirectory = new File(modulesDirectory, CONSULO_PLATFORM_BASE);
 
@@ -137,7 +133,6 @@ public class BootstrapClassLoaderUtil {
     return urls;
   }
 
-  @Nonnull
   public static File getModulesDirectory() throws Exception {
     Class<BootstrapClassLoaderUtil> aClass = BootstrapClassLoaderUtil.class;
 

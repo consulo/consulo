@@ -1,12 +1,11 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.util.nodep.classloader;
 
-import consulo.util.nodep.io.DataInputOutputUtilRt;
-import consulo.util.nodep.text.StringHash;
 import consulo.util.nodep.ArrayUtilRt;
 import consulo.util.nodep.BloomFilterBase;
+import consulo.util.nodep.io.DataInputOutputUtilRt;
+import consulo.util.nodep.text.StringHash;
 
-import javax.annotation.Nullable;
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
@@ -125,11 +124,9 @@ public class ClasspathCache {
   }
 
   abstract static class LoaderIterator<ResultType, ParameterType, ParameterType2> {
-    @Nullable
     abstract ResultType process(Loader loader, ParameterType parameter, ParameterType2 parameter2, String shortName);
   }
 
-  @Nullable
   <ResultType, ParameterType, ParameterType2> ResultType iterateLoaders(String resourcePath,
                                                                         LoaderIterator<ResultType, ParameterType, ParameterType2> iterator,
                                                                         ParameterType parameter,
@@ -168,7 +165,9 @@ public class ClasspathCache {
 
   private static void addResourceEntry(int hash, IntObjectHashMap map, Loader loader) {
     Object o = map.get(hash);
-    if (o == null) map.put(hash, loader);
+    if (o == null) {
+      map.put(hash, loader);
+    }
     else if (o instanceof Loader) {
       if (ClassPath.ourLogTiming) assert loader != o;
       map.put(hash, new Loader[]{(Loader)o, loader});
@@ -190,7 +189,9 @@ public class ClasspathCache {
     if (name.endsWith(UrlClassLoader.CLASS_EXTENSION)) {
       String name1 = name;
       int $ = name1.indexOf('$');
-      if ($ != -1) name1 = name1.substring(0, $);
+      if ($ != -1) {
+        name1 = name1.substring(0, $);
+      }
       else {
         int index = name1.lastIndexOf('.');
         if (index >= 0) name1 = name1.substring(0, index);

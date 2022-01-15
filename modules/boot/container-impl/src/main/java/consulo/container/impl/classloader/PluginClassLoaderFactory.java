@@ -18,7 +18,6 @@ package consulo.container.impl.classloader;
 import consulo.container.classloader.PluginClassLoader;
 import consulo.container.plugin.PluginDescriptor;
 
-import javax.annotation.Nonnull;
 import java.net.URL;
 import java.util.List;
 
@@ -28,14 +27,12 @@ import java.util.List;
  */
 public class PluginClassLoaderFactory {
   @SuppressWarnings("unchecked")
-  @Nonnull
-  public static <C extends ClassLoader & PluginClassLoader> C create(@Nonnull List<URL> urls, @Nonnull ClassLoader parent, PluginDescriptor pluginDescriptor) {
+  public static <C extends ClassLoader & PluginClassLoader> C create(List<URL> urls, ClassLoader parent, PluginDescriptor pluginDescriptor) {
     return (C)new PluginClassLoaderImpl(urls, parent, pluginDescriptor);
   }
 
   @SuppressWarnings("unchecked")
-  @Nonnull
-  public static <C extends ClassLoader & PluginClassLoader> C create(@Nonnull List<URL> urls, @Nonnull ClassLoader[] parents, PluginDescriptor pluginDescriptor) {
+  public static <C extends ClassLoader & PluginClassLoader> C create(List<URL> urls, ClassLoader[] parents, PluginDescriptor pluginDescriptor) {
     return (C)new PluginClassLoaderImpl(urls, parents, pluginDescriptor);
   }
 }

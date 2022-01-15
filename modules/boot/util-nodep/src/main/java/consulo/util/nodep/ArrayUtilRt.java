@@ -17,8 +17,6 @@ package consulo.util.nodep;
 
 import consulo.util.nodep.collection.ContainerUtilRt;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.io.File;
 import java.util.Collection;
 
@@ -43,21 +41,19 @@ public class ArrayUtilRt {
   public static final File[] EMPTY_FILE_ARRAY = new File[0];
   public static final Runnable[] EMPTY_RUNNABLE_ARRAY = new Runnable[0];
 
-  @Nonnull
-  public static String[] toStringArray(@Nullable Collection<String> collection) {
-    return collection == null || collection.isEmpty()
-           ? EMPTY_STRING_ARRAY : ContainerUtilRt.toArray(collection, new String[collection.size()]);
+  public static String[] toStringArray(Collection<String> collection) {
+    return collection == null || collection.isEmpty() ? EMPTY_STRING_ARRAY : ContainerUtilRt.toArray(collection, new String[collection.size()]);
   }
 
   /**
    * @param src source array.
    * @param obj object to be found.
    * @return index of <code>obj</code> in the <code>src</code> array.
-   *         Returns <code>-1</code> if passed object isn't found. This method uses
-   *         <code>equals</code> of arrays elements to compare <code>obj</code> with
-   *         these elements.
+   * Returns <code>-1</code> if passed object isn't found. This method uses
+   * <code>equals</code> of arrays elements to compare <code>obj</code> with
+   * these elements.
    */
-  public static <T> int find(@Nonnull final T[] src, final T obj) {
+  public static <T> int find(final T[] src, final T obj) {
     for (int i = 0; i < src.length; i++) {
       final T o = src[i];
       if (o == null) {

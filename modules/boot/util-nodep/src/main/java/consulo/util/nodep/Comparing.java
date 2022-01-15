@@ -16,8 +16,6 @@
 package consulo.util.nodep;
 
 import consulo.util.nodep.text.StringUtilRt;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 import java.util.*;
 
@@ -25,9 +23,10 @@ import java.util.*;
  * Null-safe {@code equal} methods.
  */
 public class Comparing {
-  private Comparing() { }
+  private Comparing() {
+  }
 
-  public static <T> boolean equal(@Nullable T arg1, @Nullable T arg2) {
+  public static <T> boolean equal(T arg1, T arg2) {
     if (arg1 == arg2) return true;
     if (arg1 == null || arg2 == null) {
       return false;
@@ -43,7 +42,7 @@ public class Comparing {
     return arg1.equals(arg2);
   }
 
-  public static <T> boolean equal(@Nullable T[] arr1, @Nullable T[] arr2) {
+  public static <T> boolean equal(T[] arr1, T[] arr2) {
     if (arr1 == null || arr2 == null) {
       return arr1 == arr2;
     }
@@ -54,11 +53,11 @@ public class Comparing {
     return equal(s1, s2, true);
   }
 
-  public static boolean equal(@Nullable String arg1, @Nullable String arg2) {
+  public static boolean equal(String arg1, String arg2) {
     return arg1 == null ? arg2 == null : arg1.equals(arg2);
   }
 
-  public static boolean equal(@Nullable CharSequence s1, @Nullable CharSequence s2, boolean caseSensitive) {
+  public static boolean equal(CharSequence s1, CharSequence s2, boolean caseSensitive) {
     if (s1 == s2) return true;
     if (s1 == null || s2 == null) return false;
 
@@ -82,7 +81,7 @@ public class Comparing {
     return true;
   }
 
-  public static boolean equal(@Nullable String arg1, @Nullable String arg2, boolean caseSensitive) {
+  public static boolean equal(String arg1, String arg2, boolean caseSensitive) {
     if (arg1 == null || arg2 == null) {
       return arg1 == arg2;
     }
@@ -91,15 +90,15 @@ public class Comparing {
     }
   }
 
-  public static boolean strEqual(@Nullable String arg1, @Nullable String arg2) {
+  public static boolean strEqual(String arg1, String arg2) {
     return strEqual(arg1, arg2, true);
   }
 
-  public static boolean strEqual(@Nullable String arg1, @Nullable String arg2, boolean caseSensitive) {
+  public static boolean strEqual(String arg1, String arg2, boolean caseSensitive) {
     return equal(arg1 == null ? "" : arg1, arg2 == null ? "" : arg2, caseSensitive);
   }
 
-  public static <T> boolean haveEqualElements(@Nonnull Collection<? extends T> a, @Nonnull Collection<? extends T> b) {
+  public static <T> boolean haveEqualElements(Collection<? extends T> a, Collection<? extends T> b) {
     if (a.size() != b.size()) {
       return false;
     }
@@ -114,7 +113,7 @@ public class Comparing {
     return true;
   }
 
-  public static <T> boolean haveEqualElements(@Nullable T[] a, @Nullable T[] b) {
+  public static <T> boolean haveEqualElements(T[] a, T[] b) {
     if (a == null || b == null) {
       return a == b;
     }
@@ -134,7 +133,7 @@ public class Comparing {
   }
 
   @SuppressWarnings("MethodNamesDifferingOnlyByCase")
-  public static int hashcode(@Nullable Object obj) {
+  public static int hashcode(Object obj) {
     return obj == null ? 0 : obj.hashCode();
   }
 
@@ -162,7 +161,7 @@ public class Comparing {
     return o1 < o2 ? -1 : o1 == o2 ? 0 : 1;
   }
 
-  public static int compare(@Nullable byte[] o1, @Nullable byte[] o2) {
+  public static int compare(byte[] o1, byte[] o2) {
     if (o1 == o2) return 0;
     if (o1 == null) return 1;
     if (o2 == null) return -1;
@@ -171,21 +170,23 @@ public class Comparing {
     if (o1.length < o2.length) return -1;
 
     for (int i = 0; i < o1.length; i++) {
-      if (o1[i] > o2[i]) return 1;
+      if (o1[i] > o2[i]) {
+        return 1;
+      }
       else if (o1[i] < o2[i]) return -1;
     }
 
     return 0;
   }
 
-  public static <T extends Comparable<T>> int compare(@Nullable T o1, @Nullable T o2) {
+  public static <T extends Comparable<T>> int compare(T o1, T o2) {
     if (o1 == o2) return 0;
     if (o1 == null) return -1;
     if (o2 == null) return 1;
     return o1.compareTo(o2);
   }
 
-  public static <T> int compare(@Nullable T o1, @Nullable T o2, @Nonnull Comparator<T> notNullComparator) {
+  public static <T> int compare(T o1, T o2, Comparator<T> notNullComparator) {
     if (o1 == o2) return 0;
     if (o1 == null) return -1;
     if (o2 == null) return 1;

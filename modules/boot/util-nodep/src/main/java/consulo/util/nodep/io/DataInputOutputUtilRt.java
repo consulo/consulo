@@ -15,14 +15,13 @@
  */
 package consulo.util.nodep.io;
 
-import javax.annotation.Nonnull;
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 
 public class DataInputOutputUtilRt {
-  public static int readINT(@Nonnull DataInput record) throws IOException {
+  public static int readINT(DataInput record) throws IOException {
     final int val = record.readUnsignedByte();
     if (val < 192) {
       return val;
@@ -38,7 +37,7 @@ public class DataInputOutputUtilRt {
     }
   }
 
-  public static int readINT(@Nonnull ByteBuffer byteBuffer) {
+  public static int readINT(ByteBuffer byteBuffer) {
     final int val = byteBuffer.get() & 0xFF;
     if (val < 192) {
       return val;
@@ -54,7 +53,7 @@ public class DataInputOutputUtilRt {
     }
   }
 
-  public static void writeINT(@Nonnull DataOutput record, int val) throws IOException {
+  public static void writeINT(DataOutput record, int val) throws IOException {
     if (0 > val || val >= 192) {
       record.writeByte(192 + (val & 0x3F));
       val >>>= 6;
@@ -66,7 +65,7 @@ public class DataInputOutputUtilRt {
     record.writeByte(val);
   }
 
-  public static void writeINT(@Nonnull ByteBuffer byteBuffer, int val) {
+  public static void writeINT(ByteBuffer byteBuffer, int val) {
     if (0 > val || val >= 192) {
       byteBuffer.put((byte)(192 + (val & 0x3F)));
       val >>>= 6;

@@ -15,7 +15,6 @@
  */
 package consulo.container.util;
 
-import javax.annotation.Nonnull;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -30,7 +29,6 @@ public class StatCollector {
 
   private final Map<String, Long> myTimes = new ConcurrentHashMap<String, Long>();
 
-  @Nonnull
   public Runnable mark(final String id) {
     final long start = System.currentTimeMillis();
 
@@ -59,7 +57,6 @@ public class StatCollector {
     }
   }
 
-  @Nonnull
   public Set<Map.Entry<String, Long>> data() {
     return myTimes.entrySet();
   }

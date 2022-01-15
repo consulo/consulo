@@ -10,8 +10,6 @@ import consulo.util.nodep.io.UnsyncByteArrayInputStream;
 import consulo.util.nodep.map.SimpleMultiMap;
 import consulo.util.nodep.reference.SoftReference;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -65,7 +63,7 @@ class JarLoader extends Loader {
     }
   }
 
-  protected MemoryResource createMemoryResource(URL baseUrl, @Nonnull ZipFile zipFile, @Nonnull ZipEntry entry, @Nullable Map<Resource.Attribute, String> attributes) throws IOException {
+  protected MemoryResource createMemoryResource(URL baseUrl, ZipFile zipFile, ZipEntry entry, Map<Resource.Attribute, String> attributes) throws IOException {
     String name = entry.getName();
     URL url = new URL(baseUrl, name);
 
@@ -88,7 +86,7 @@ class JarLoader extends Loader {
     return myAttributes;
   }
 
-  @Nullable
+
   String getClassPathManifestAttribute() {
     loadManifestAttributes();
     String manifestAttribute = myClassPathManifestAttribute;
@@ -104,8 +102,8 @@ class JarLoader extends Loader {
     }
   }
 
-  @Nullable
-  private static Map<Resource.Attribute, String> getAttributes(@Nullable Attributes attributes) {
+
+  private static Map<Resource.Attribute, String> getAttributes(Attributes attributes) {
     if (attributes == null) return null;
     Map<Resource.Attribute, String> map = null;
 
@@ -150,8 +148,8 @@ class JarLoader extends Loader {
     }
   }
 
-  @Nullable
-  protected Attributes loadManifestAttributes(@Nonnull ZipFile zipFile, @Nullable InputStream stream) {
+
+  protected Attributes loadManifestAttributes(ZipFile zipFile, InputStream stream) {
     if (stream == null) return null;
     try {
       try {
@@ -166,7 +164,7 @@ class JarLoader extends Loader {
     return null;
   }
 
-  @Nonnull
+
   @Override
   public ClasspathCache.LoaderData buildData() throws IOException {
     if (myMemoryLoader != null) {
@@ -229,7 +227,6 @@ class JarLoader extends Loader {
   }
 
   @Override
-  @Nullable
   Resource getResource(String name) {
     if (myConfiguration.myLazyClassloadingCaches) {
       int numberOfHits = myNumberOfRequests.incrementAndGet();
@@ -289,7 +286,7 @@ class JarLoader extends Loader {
     return null;
   }
 
-  @Nonnull
+
   private Map<String, String> buildRemapMultiVersions(Iterator<String> zipNameIterator) {
     SimpleMultiMap<Integer, String> byVersions = SimpleMultiMap.newHashMap();
 
@@ -403,7 +400,7 @@ class JarLoader extends Loader {
 
   private static final Object ourLock = new Object();
 
-  @Nonnull
+
   protected ZipFile getZipFile() throws IOException {
     // This code is executed at least 100K times (O(number of classes needed to load)) and it takes considerable time to open ZipFile's
     // such number of times so we store reference to ZipFile if we allowed to lock the file (assume it isn't changed)
@@ -426,7 +423,7 @@ class JarLoader extends Loader {
     }
   }
 
-  @Nonnull
+
   protected ZipFile createZipFile(String path) throws IOException {
     return new ZipFile(path);
   }

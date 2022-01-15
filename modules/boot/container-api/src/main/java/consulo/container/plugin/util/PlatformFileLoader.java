@@ -15,10 +15,9 @@
  */
 package consulo.container.plugin.util;
 
-import consulo.util.nodep.SystemInfoRt;
 import consulo.container.plugin.PluginManager;
+import consulo.util.nodep.SystemInfoRt;
 
-import javax.annotation.Nonnull;
 import java.io.File;
 import java.util.Arrays;
 
@@ -27,8 +26,7 @@ import java.util.Arrays;
  * @since 2019-07-27
  */
 public class PlatformFileLoader {
-  @Nonnull
-  public static File findFile(@Nonnull String fileName, @Nonnull Class<?> callerClass) {
+  public static File findFile( String fileName,  Class<?> callerClass) {
     File pluginPath = PluginManager.getPluginPath(callerClass);
 
     File nativeDirectory = new File(pluginPath, "native");
@@ -36,7 +34,7 @@ public class PlatformFileLoader {
     return new File(nativeDirectory, fileName);
   }
 
-  public static void loadLibrary(@Nonnull String libName, @Nonnull Class<?> callerClass) {
+  public static void loadLibrary( String libName,  Class<?> callerClass) {
     String libFileName = mapLibraryName(libName);
 
     File pluginPath = PluginManager.getPluginPath(callerClass);
@@ -56,8 +54,7 @@ public class PlatformFileLoader {
     System.load(libPath);
   }
 
-  @Nonnull
-  private static String mapLibraryName(@Nonnull String libName) {
+  private static String mapLibraryName( String libName) {
     String baseName = libName;
     if (SystemInfoRt.is64Bit) {
       baseName = baseName.replace("32", "") + "64";

@@ -15,9 +15,6 @@
  */
 package consulo.util.nodep.function;
 
-import javax.annotation.Nullable;
-
 public interface Getter<A> {
-  @Nullable
   A get();
 }
