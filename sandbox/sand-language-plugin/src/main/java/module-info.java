@@ -5,5 +5,5 @@
 open module consulo.sand.language.plugin {
   requires java.desktop;
   
-  requires consulo.base.ide;
+  requires consulo.ide.impl;
 }

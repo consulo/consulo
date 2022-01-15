@@ -26,7 +26,7 @@
         <!--TODO obsolete artifact-->
         <include>consulo:consulo-annotations</include>
         <include>consulo:consulo-annotation</include>
-        <include>consulo:consulo-base-ide</include>
+        <include>consulo:consulo-base-ide-impl</include>
         <include>consulo:consulo-disposer-api</include>
         <include>consulo:consulo-disposer-impl</include>
         <include>consulo:consulo-injecting-api</include>

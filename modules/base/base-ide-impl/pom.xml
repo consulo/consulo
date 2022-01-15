@@ -26,7 +26,7 @@
 
   <modelVersion>4.0.0</modelVersion>
 
-  <artifactId>consulo-base-ide</artifactId>
+  <artifactId>consulo-base-ide-impl</artifactId>
   <version>3-SNAPSHOT</version>
 
   <packaging>jar</packaging>
@@ -52,10 +52,10 @@
         <artifactId>maven-compiler-plugin</artifactId>
         <configuration>
           <compilerArgs>
-            <compilerArg>--add-exports=java.desktop/sun.font=consulo.base.ide</compilerArg>
-            <compilerArg>--add-exports=java.desktop/sun.awt=consulo.base.ide</compilerArg>
-            <compilerArg>--add-exports=java.desktop/sun.awt.datatransfer=consulo.base.ide</compilerArg>
-            <compilerArg>--add-exports=java.desktop/java.awt.peer=consulo.base.ide</compilerArg>
+            <compilerArg>--add-exports=java.desktop/sun.font=consulo.ide.impl</compilerArg>
+            <compilerArg>--add-exports=java.desktop/sun.awt=consulo.ide.impl</compilerArg>
+            <compilerArg>--add-exports=java.desktop/sun.awt.datatransfer=consulo.ide.impl</compilerArg>
+            <compilerArg>--add-exports=java.desktop/java.awt.peer=consulo.ide.impl</compilerArg>
           </compilerArgs>
         </configuration>
       </plugin>

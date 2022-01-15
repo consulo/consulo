@@ -50,7 +50,7 @@
     <module>modules/base/annotations</module>
     <module>modules/base/base-localize-library</module>
     <module>modules/base/base-icon-library</module>
-    <module>modules/base/base-ide</module>
+    <module>modules/base/base-ide-impl</module>
     <module>modules/base/base-plugin</module>
     <module>modules/base/disposer-api</module>
     <module>modules/base/disposer-impl</module>

@@ -24,8 +24,8 @@ module consulo.ui.impl {
   exports consulo.ui.impl.style;
 
   // TODO  exports impl packages only to impl modules
-  //exports consulo.ui.impl to consulo.base.ide, consulo.desktop.awt.ide;
-  //exports consulo.ui.impl.image to consulo.base.ide, consulo.desktop.awt.ide;
-  //exports consulo.ui.impl.model to consulo.base.ide, consulo.desktop.awt.ide;
-  //exports consulo.ui.impl.style to consulo.base.ide, consulo.desktop.awt.ide;
+  //exports consulo.ui.impl to consulo.ide.impl, consulo.desktop.awt.ide;
+  //exports consulo.ui.impl.image to consulo.ide.impl, consulo.desktop.awt.ide;
+  //exports consulo.ui.impl.model to consulo.ide.impl, consulo.desktop.awt.ide;
+  //exports consulo.ui.impl.style to consulo.ide.impl, consulo.desktop.awt.ide;
 }

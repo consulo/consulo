@@ -2,7 +2,7 @@
  * @author VISTALL
  * @since 13/01/2022
  */
-open module consulo.base.ide {
+open module consulo.ide.impl {
   requires java.desktop;
   requires java.xml;
   requires java.rmi;
