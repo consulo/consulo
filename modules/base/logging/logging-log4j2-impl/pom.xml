@@ -81,7 +81,7 @@
 
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>consulo-runtime-api</artifactId>
+      <artifactId>consulo-platform-api</artifactId>
       <version>${project.version}</version>
     </dependency>
 

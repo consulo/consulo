@@ -27,6 +27,8 @@ import java.util.*;
 /**
  * @author VISTALL
  * @since 2019-11-19
+ *
+ * TODO remove reflection, since now we require java9 for compilation
  */
 public class Java9ModuleInitializer {
   private static final Method java_io_File_toPath = findMethod(File.class, "toPath");

@@ -28,7 +28,7 @@ open module consulo.desktop.awt.ide {
   requires consulo.container.api;
   requires consulo.container.impl;
   requires consulo.bootstrap;
-  requires consulo.base.runtime.impl;
+  requires consulo.platform.impl;
   requires consulo.ui.impl;
   requires consulo.ide.impl;
 

@@ -37,8 +37,8 @@
         <include>consulo:consulo-logging-log4j2-impl</include>
         <include>consulo:consulo-logging-slf4j-binding-impl</include>
         <include>consulo:consulo-remote-servers-agent-rt</include>
-        <include>consulo:consulo-runtime-api</include>
-        <include>consulo:consulo-runtime-impl</include>
+        <include>consulo:consulo-platform-api</include>
+        <include>consulo:consulo-platform-impl</include>
         <include>consulo:consulo-ui-api</include>
         <include>consulo:consulo-ui-impl</include>
         <include>consulo:consulo-xcoverage-data</include>

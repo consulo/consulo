@@ -2,9 +2,9 @@
  * @author VISTALL
  * @since 14/01/2022
  */
-module consulo.base.runtime.impl {
+module consulo.platform.impl {
   requires consulo.annotation;
-  requires consulo.base.runtime.api;
+  requires consulo.platform.api;
   requires consulo.util.lang;
   
   requires com.sun.jna;

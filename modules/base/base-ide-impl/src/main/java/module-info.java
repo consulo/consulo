@@ -22,7 +22,7 @@ open module consulo.ide.impl {
   requires transitive consulo.injecting.api;
   requires transitive consulo.annotation;
   requires transitive consulo.proxy;
-  requires transitive consulo.base.runtime.api;
+  requires transitive consulo.platform.api;
   requires transitive consulo.base.localize.library;
   requires transitive consulo.base.icon.library;
   requires transitive consulo.ui.api;

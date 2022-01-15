@@ -2,7 +2,7 @@
  * @author VISTALL
  * @since 13/01/2022
  */
-module consulo.base.runtime.api {
+module consulo.platform.api {
   requires consulo.ui.api;
   requires consulo.annotation;
   requires consulo.container.api;
