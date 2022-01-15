@@ -2,7 +2,7 @@
  * @author VISTALL
  * @since 13/01/2022
  */
-module consulo.base.proxy {
+module consulo.proxy {
   requires consulo.disposer.api;
   requires consulo.logging.api;
   requires consulo.container.api;

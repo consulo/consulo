@@ -7,7 +7,7 @@ module consulo.localize.impl {
   requires consulo.localize.api;
   requires consulo.util.lang;
   requires consulo.util.io;
-  requires consulo.base.proxy;
+  requires consulo.proxy;
 
   requires org.yaml.snakeyaml;
 

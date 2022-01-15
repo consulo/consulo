@@ -9,7 +9,7 @@ module consulo.container.impl {
 
   exports consulo.container.impl;
   exports consulo.container.impl.classloader;
-  exports consulo.container.impl.classloader.proxy to consulo.base.proxy;
+  exports consulo.container.impl.classloader.proxy to consulo.proxy;
   exports consulo.container.impl.parser;
   // TODO [VISTALL] export only to core module
   exports consulo.container.impl.securityManager.impl;

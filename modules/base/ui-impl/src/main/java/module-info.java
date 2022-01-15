@@ -4,7 +4,7 @@
  */
 module consulo.ui.impl {
   requires consulo.annotation;
-  requires consulo.base.proxy;
+  requires consulo.proxy;
   requires consulo.disposer.api;
   requires consulo.logging.api;
   requires consulo.container.api;
