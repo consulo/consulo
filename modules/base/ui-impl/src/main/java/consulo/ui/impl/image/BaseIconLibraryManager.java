@@ -23,6 +23,7 @@ import consulo.ui.image.IconLibrary;
 import consulo.ui.image.IconLibraryDescriptor;
 import consulo.ui.image.IconLibraryManager;
 import consulo.ui.image.Image;
+import consulo.ui.image.internal.IconLibraryDescriptorLoader;
 import consulo.ui.style.Style;
 import consulo.ui.style.StyleManager;
 import consulo.util.io.StreamUtil;
@@ -185,14 +186,12 @@ public abstract class BaseIconLibraryManager implements IconLibraryManager {
   private static Map<String, IconLibraryDescriptor> getAllDescriptors() {
     Map<String, IconLibraryDescriptor> list = new HashMap<>();
 
-    for (IconLibraryDescriptor value : ServiceLoader.load(IconLibraryDescriptor.class, BaseIconLibraryManager.class.getClassLoader())) {
+    for (IconLibraryDescriptor value : IconLibraryDescriptorLoader.getAll(BaseIconLibraryManager.class.getClassLoader())) {
       list.putIfAbsent(value.getLibraryId(), value);
     }
 
     for (PluginDescriptor descriptor : PluginManager.getEnabledPlugins()) {
-      ServiceLoader<IconLibraryDescriptor> loader = ServiceLoader.load(IconLibraryDescriptor.class, descriptor.getPluginClassLoader());
-
-      for (IconLibraryDescriptor libraryDescriptor : loader) {
+      for (IconLibraryDescriptor libraryDescriptor : IconLibraryDescriptorLoader.getAll(descriptor.getPluginClassLoader())) {
         list.putIfAbsent(libraryDescriptor.getLibraryId(), libraryDescriptor);
       }
     }

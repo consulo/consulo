@@ -5,7 +5,7 @@
   <localize>consulo.sandbox.SandboxLocalize</localize>
   <experimental>true</experimental>
 
-  <depends config-file="consulo.platform.desktop.xml" optional="true">consulo.platform.desktop</depends>
+  <depends config-file="consulo.platform.desktop.xml" optional="true">consulo.platform.desktop.awt</depends>
 
   <tags>
     <tag>database</tag>

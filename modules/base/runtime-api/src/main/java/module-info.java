@@ -7,6 +7,10 @@ module consulo.base.runtime.api {
   requires consulo.annotation;
   requires consulo.container.api;
 
+  uses consulo.platform.internal.PlatformInternal;
+  
   exports consulo.platform;
-  exports consulo.platform.internal to consulo.desktop.awt.ide;
+  //TODO restrict to impl module
+  exports consulo.platform.internal;
+  //exports consulo.platform.internal to consulo.desktop.awt.ide;
 }

@@ -136,7 +136,7 @@ public abstract class PluginDescriptorStub implements PluginDescriptor {
   }
 
   @Override
-  public Object getModuleLayer() {
+  public ModuleLayer getModuleLayer() {
     return null;
   }
 

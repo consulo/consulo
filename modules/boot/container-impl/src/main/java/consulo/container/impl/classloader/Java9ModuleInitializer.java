@@ -129,17 +129,27 @@ public class Java9ModuleInitializer {
   public static Object initializeEtcModules(List<Object> moduleLayers, List<File> files, final ClassLoader targetClassLoader) {
     Object moduleFinder = moduleFinderOf(files);
 
-    List<String> toResolve = new ArrayList<String>();
+    Set<String> toResolve = new LinkedHashSet<>();
 
-    //TODO [VISTALL] we need resolve all modules, but for now - nothing
+    if (ourConsuloModulePathBoot) {
+      Set findAll = instanceInvoke(java_lang_module_ModuleFinder_findAll, moduleFinder);
+
+      for (Object moduleReference : findAll) {
+        Object moduleDescriptor = instanceInvoke(java_lang_module_ModuleReference_descriptor, moduleReference);
+
+        String moduleName = instanceInvoke(java_lang_module_ModuleDescriptor_name, moduleDescriptor);
+
+        toResolve.add(moduleName);
+      }
+    }
 
     List<Object> layerConfiguration = new ArrayList<Object>(moduleLayers.size());
     for (Object moduleLayer : moduleLayers) {
       layerConfiguration.add(instanceInvoke(java_lang_ModuleLayer_configuration, moduleLayer));
     }
 
-    Object configuration =
-            staticInvoke(java_lang_module_Configuration_resolve, moduleFinder, layerConfiguration, staticInvoke(java_lang_module_ModuleFinder_of, empyArray_java_nio_file_Path), toResolve);
+    Object configuration = staticInvoke(java_lang_module_Configuration_resolve, moduleFinder, layerConfiguration, staticInvoke(java_lang_module_ModuleFinder_of, empyArray_java_nio_file_Path),
+                                        new ArrayList<>(toResolve));
 
     Object functionLambda = directFunction(targetClassLoader);
 

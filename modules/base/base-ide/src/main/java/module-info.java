@@ -2,7 +2,7 @@
  * @author VISTALL
  * @since 13/01/2022
  */
-module consulo.base.ide {
+open module consulo.base.ide {
   requires java.desktop;
   requires java.xml;
   requires java.rmi;
@@ -96,6 +96,8 @@ module consulo.base.ide {
   requires transitive org.slf4j;
 
   uses consulo.awt.TargetAWTFacade;
+
+  provides consulo.ui.image.IconLibraryDescriptor with consulo.ui.ex.impl.LightIconLibraryDescriptor, consulo.ui.ex.impl.DarkIconLibraryDescriptor;
 
   exports com.intellij;
   exports com.intellij.analysis;
@@ -1171,8 +1173,6 @@ module consulo.base.ide {
   exports consulo.desktop.editor;
   exports consulo.desktop.editor.impl;
   exports consulo.desktop.editor.impl.ui;
-  //exports consulo.desktop.jvm;
-  exports consulo.desktop.jvm.plugin;
   //exports consulo.desktop.ui;
   exports consulo.desktop.ui.swing;
   //exports consulo.desktop.util;

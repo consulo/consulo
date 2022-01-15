@@ -1,5 +1,3 @@
-import consulo.ui.internal.UIInternal;
-
 /**
  * @author VISTALL
  * @since 2020-10-24
@@ -29,7 +27,13 @@ module consulo.ui.api {
   exports consulo.ui.style;
   exports consulo.ui.util;
 
-  exports consulo.ui.internal to consulo.desktop.awt.ide;
+  // TODO [VISTALL] this is not supported by classloader? its throw exception
+  // Caused by: java.lang.IllegalAccessError: superclass access check failed: class consulo.desktop.awt.ui.impl.DesktopUIInternalImpl (in module consulo.desktop.awt.ide) cannot access class consulo.ui.internal.UIInternal (in module consulo.ui.api) because module consulo.ui.api does not export consulo.ui.internal to module consulo.desktop.awt.ide
 
-  uses UIInternal;
+  exports consulo.ui.internal;
+  exports consulo.ui.image.internal;
+  //exports consulo.ui.internal to consulo.desktop.awt.ide;
+
+  uses consulo.ui.image.IconLibraryDescriptor;
+  uses consulo.ui.internal.UIInternal;
 }

@@ -96,9 +96,9 @@ public interface PluginDescriptor {
   PluginPermissionDescriptor getPermissionDescriptor(PluginPermissionType permissionType);
 
   /**
-   * If return not null, plugin loaded in module mode. Object instance of {@link ModuleLayer}
+   * If return not null, plugin loaded in module mode.
    */
-  Object getModuleLayer();
+  ModuleLayer getModuleLayer();
 
   @Deprecated
   //@DeprecationInfo("use #getIconBytes(darkOrLight)")

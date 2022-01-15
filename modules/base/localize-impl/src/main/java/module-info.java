@@ -12,4 +12,6 @@ module consulo.localize.impl {
   requires org.yaml.snakeyaml;
 
   exports consulo.localize.impl;
+
+  provides consulo.localize.LocalizeManager with consulo.localize.impl.LocalizeManagerImpl;
 }

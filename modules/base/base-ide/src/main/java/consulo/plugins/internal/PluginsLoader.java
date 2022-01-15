@@ -217,7 +217,7 @@ public class PluginsLoader {
         if (SystemInfo.IS_AT_LEAST_JAVA9) {
           List<Object> parentModuleLayer = getParentModuleLayer(idToDescriptorMap, dependentPluginIds);
 
-          pluginDescriptor.setModuleLayer(Java9ModuleInitializer.initializeEtcModules(parentModuleLayer, pluginDescriptor.getClassPath(), pluginClassLoader));
+          pluginDescriptor.setModuleLayer((ModuleLayer)Java9ModuleInitializer.initializeEtcModules(parentModuleLayer, pluginDescriptor.getClassPath(), pluginClassLoader));
         }
 
         pluginDescriptor.setLoader(pluginClassLoader);

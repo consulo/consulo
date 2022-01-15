@@ -71,7 +71,7 @@ public class PluginDescriptorImpl extends PluginDescriptorStub {
 
   private boolean myDeleted = false;
   private ClassLoader myLoader;
-  private Object myModuleLayer;
+  private ModuleLayer myModuleLayer;
 
   private Collection<HelpSetPath> myHelpSets = Collections.emptyList();
 
@@ -520,11 +520,12 @@ public class PluginDescriptorImpl extends PluginDescriptorStub {
     myLoader = loader;
   }
 
-  public void setModuleLayer(Object moduleLayer) {
+  public void setModuleLayer(ModuleLayer moduleLayer) {
     myModuleLayer = moduleLayer;
   }
 
-  public Object getModuleLayer() {
+  @Override
+  public ModuleLayer getModuleLayer() {
     return myModuleLayer;
   }
 

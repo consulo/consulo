@@ -10,5 +10,6 @@ module consulo.base.runtime.impl {
   requires com.sun.jna;
   requires com.sun.jna.platform;
 
-  exports consulo.platform.impl to consulo.desktop.awt.ide;
+  exports consulo.platform.impl;
+  // TODO exports consulo.platform.impl to consulo.desktop.awt.ide;
 }

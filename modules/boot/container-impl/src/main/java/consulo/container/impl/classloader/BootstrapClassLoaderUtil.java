@@ -68,7 +68,7 @@ public class BootstrapClassLoaderUtil {
       ClassLoader loader = PluginClassLoaderFactory.create(filesToUrls(descriptor.getClassPath()), basePluginClassLoader, descriptor);
 
       if (SystemInfoRt.IS_AT_LEAST_JAVA9) {
-        descriptor.setModuleLayer(Java9ModuleInitializer.initializeEtcModules(Collections.singletonList(base.getModuleLayer()), descriptor.getClassPath(), loader));
+        descriptor.setModuleLayer((ModuleLayer)Java9ModuleInitializer.initializeEtcModules(Collections.singletonList(base.getModuleLayer()), descriptor.getClassPath(), loader));
       }
 
       descriptors.add(descriptor);
@@ -114,7 +114,7 @@ public class BootstrapClassLoaderUtil {
     ClassLoader loader = PluginClassLoaderFactory.create(filesToUrls(platformBasePlugin.getClassPath()), parent, platformBasePlugin);
 
     if (SystemInfoRt.IS_AT_LEAST_JAVA9) {
-      platformBasePlugin.setModuleLayer(Java9ModuleInitializer.initializeBaseModules(platformBasePlugin.getClassPath(), loader, containerLogger, processor));
+      platformBasePlugin.setModuleLayer((ModuleLayer)Java9ModuleInitializer.initializeBaseModules(platformBasePlugin.getClassPath(), loader, containerLogger, processor));
     }
 
     platformBasePlugin.setLoader(loader);

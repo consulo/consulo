@@ -4,7 +4,7 @@ import consulo.desktop.awt.facade.DesktopAwtTargetAWTImpl;
  * @author VISTALL
  * @since 14/01/2022
  */
-module consulo.desktop.awt.ide {
+open module consulo.desktop.awt.ide {
   requires java.desktop;
   requires java.management;
 
@@ -41,6 +41,6 @@ module consulo.desktop.awt.ide {
   provides consulo.container.boot.ContainerStartup with consulo.desktop.awt.container.impl.DesktopContainerStartup;
   provides consulo.awt.TargetAWTFacade with DesktopAwtTargetAWTImpl;
 
-  // TODO it's will not due different classloaders?
+  // TODO it's will not work due different classloaders?
   provides javax.imageio.spi.ImageReaderSpi with consulo.desktop.awt.spi.CommonsImagingImageReaderSpi;
 }

@@ -25,7 +25,6 @@ import java.lang.ref.Reference;
 import java.lang.ref.SoftReference;
 import java.util.Locale;
 import java.util.Map;
-import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
 /**
@@ -79,15 +78,7 @@ public abstract class AbstractBundle {
     Map<String, ResourceBundle> map = ourCache.get(loader);
     ResourceBundle result = map.get(pathToBundle);
     if (result == null) {
-      try {
-        ResourceBundle.Control control = ResourceBundle.Control.getControl(ResourceBundle.Control.FORMAT_PROPERTIES);
-        result = ResourceBundle.getBundle(pathToBundle, Locale.getDefault(), loader, control);
-      }
-      catch (MissingResourceException e) {
-        LOG.info("Cannot load resource bundle from *.properties file, falling back to slow class loading: " + pathToBundle);
-        ResourceBundle.clearCache(loader);
-        result = ResourceBundle.getBundle(pathToBundle, Locale.getDefault(), loader);
-      }
+      result = ResourceBundle.getBundle(pathToBundle, Locale.getDefault(), loader);
       map.put(pathToBundle, result);
     }
     return result;
