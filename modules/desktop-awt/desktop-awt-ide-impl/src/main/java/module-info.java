@@ -4,7 +4,7 @@ import consulo.desktop.awt.facade.DesktopAwtTargetAWTImpl;
  * @author VISTALL
  * @since 14/01/2022
  */
-open module consulo.desktop.awt.ide {
+open module consulo.desktop.awt.ide.impl {
   requires java.desktop;
   requires java.management;
 
