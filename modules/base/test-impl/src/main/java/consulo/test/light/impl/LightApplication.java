@@ -20,7 +20,6 @@ import com.intellij.openapi.components.impl.ComponentManagerImpl;
 import com.intellij.openapi.extensions.impl.ExtensionAreaId;
 import com.intellij.openapi.extensions.impl.ExtensionsAreaImpl;
 import com.intellij.openapi.util.Computable;
-import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.ThrowableComputable;
 import com.intellij.util.containers.MultiMap;
 import consulo.annotation.access.RequiredReadAction;
@@ -37,6 +36,7 @@ import javax.annotation.Nonnull;
 import java.awt.*;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
+import java.util.function.BooleanSupplier;
 
 /**
  * @author VISTALL
@@ -175,22 +175,22 @@ public class LightApplication extends ComponentManagerImpl implements Applicatio
   }
 
   @Override
-  public void invokeLater(@Nonnull Runnable runnable, @Nonnull Condition expired) {
+  public void invokeLater(@Nonnull Runnable runnable, @Nonnull BooleanSupplier expired) {
     throw new UnsupportedOperationException();
   }
 
   @Override
-  public void invokeLater(@Nonnull Runnable runnable, @Nonnull ModalityState state) {
+  public void invokeLater(@Nonnull Runnable runnable, @Nonnull consulo.ui.ModalityState state) {
     throw new UnsupportedOperationException();
   }
 
   @Override
-  public void invokeLater(@Nonnull Runnable runnable, @Nonnull ModalityState state, @Nonnull Condition expired) {
+  public void invokeLater(@Nonnull Runnable runnable, @Nonnull consulo.ui.ModalityState state, @Nonnull BooleanSupplier expired) {
     throw new UnsupportedOperationException();
   }
 
   @Override
-  public void invokeAndWait(@Nonnull Runnable runnable, @Nonnull ModalityState modalityState) {
+  public void invokeAndWait(@Nonnull Runnable runnable, @Nonnull consulo.ui.ModalityState modalityState) {
     throw new UnsupportedOperationException();
   }
 

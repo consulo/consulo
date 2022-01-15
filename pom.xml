@@ -58,6 +58,7 @@
     <module>modules/base/localize-api</module>
     <module>modules/base/localize-impl</module>
     <module>modules/base/remote-servers-agent-rt</module>
+    <module>modules/base/test-impl</module>
 
     <module>modules/base/proxy</module>
     <module>modules/base/xcoverage-data</module>

@@ -43,7 +43,7 @@ public class LightFileTypeRegistry extends FileTypeRegistry {
   }
 
   @Override
-  public boolean isFileIgnored(@NonNls @Nonnull VirtualFile file) {
+  public boolean isFileIgnored(@Nonnull VirtualFile file) {
     return false;
   }
 
