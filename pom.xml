@@ -47,7 +47,6 @@
     <module>modules/boot/util-nodep</module>
 
     <module>modules/base/annotation</module>
-    <module>modules/base/annotations</module>
     <module>modules/base/base-localize-library</module>
     <module>modules/base/base-icon-library</module>
     <module>modules/base/base-ide-impl</module>

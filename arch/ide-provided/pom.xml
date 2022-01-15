@@ -62,7 +62,7 @@
     </dependency>
     <dependency>
       <groupId>${project.parent.groupId}</groupId>
-      <artifactId>consulo-annotations</artifactId>
+      <artifactId>consulo-annotation</artifactId>
       <version>${project.parent.version}</version>
       <scope>provided</scope>
     </dependency>
