@@ -55,7 +55,7 @@ import consulo.application.ApplicationProperties;
 import consulo.application.impl.BaseApplication;
 import consulo.awt.hacking.AWTAccessorHacking;
 import consulo.awt.hacking.AWTAutoShutdownHacking;
-import consulo.desktop.awt.application.util.Restarter;
+import consulo.desktop.application.util.Restarter;
 import consulo.desktop.awt.boot.main.windows.WindowsCommandLineProcessor;
 import consulo.desktop.awt.ui.impl.AWTUIAccessImpl;
 import consulo.disposer.Disposable;

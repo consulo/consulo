@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.desktop.awt.application.util;
+package consulo.desktop.application.util;
 
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.util.SystemInfo;

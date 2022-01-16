@@ -24,7 +24,7 @@ import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.VerticalFlowLayout;
 import com.intellij.openapi.updateSettings.impl.PluginDownloader;
 import com.intellij.ui.components.JBLabel;
-import consulo.desktop.awt.application.util.Restarter;
+import consulo.desktop.application.util.Restarter;
 import com.intellij.util.ui.UIUtil;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.localize.LocalizeValue;

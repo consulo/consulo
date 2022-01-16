@@ -47,7 +47,7 @@ import consulo.container.plugin.PluginManager;
 import consulo.container.util.StatCollector;
 import consulo.desktop.awt.wm.impl.MacTopMenuInitializer;
 import consulo.desktop.awt.wm.impl.TopMenuInitializer;
-import consulo.desktop.awt.application.util.WindowsAutoRestartManager;
+import consulo.desktop.application.util.WindowsAutoRestartManager;
 import consulo.desktop.awt.startup.splash.DesktopSplash;
 import consulo.desktop.awt.startup.customize.FirstStartCustomizeUtil;
 import consulo.ide.plugins.PluginsConfigurable;

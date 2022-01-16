@@ -31,6 +31,7 @@ open module consulo.desktop.awt.ide.impl {
   requires consulo.platform.impl;
   requires consulo.ui.impl;
   requires consulo.ide.impl;
+  requires consulo.desktop.ide.impl;
 
   requires consulo.desktop.awt.bootstrap;
   requires consulo.desktop.awt.hacking;

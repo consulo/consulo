@@ -23,6 +23,7 @@
       <includes>
         <include>consulo:consulo-platform-desktop-awt-plugin</include>
 
+        <include>consulo:consulo-desktop-ide-impl</include>
         <include>consulo:consulo-desktop-awt-ide-impl</include>
       </includes>
     </dependencySet>
