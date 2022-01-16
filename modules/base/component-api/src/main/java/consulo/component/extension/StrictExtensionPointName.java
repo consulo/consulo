@@ -27,11 +27,11 @@ public final class StrictExtensionPointName<C extends ComponentManager, T> {
   private final Class<C> myComponentClass;
 
   @Nonnull
-  private final ExtensionPointName<T> myExtensionPointName;
+  private final ExtensionPointId<T> myExtensionPointId;
 
   public StrictExtensionPointName(@Nonnull Class<C> componentClass, @Nonnull String name) {
     myComponentClass = componentClass;
-    myExtensionPointName = ExtensionPointName.create(name);
+    myExtensionPointId = ExtensionPointId.of(name);
   }
 
   private void checkComponent(@Nonnull C component) {
@@ -42,28 +42,28 @@ public final class StrictExtensionPointName<C extends ComponentManager, T> {
 
   public boolean hasAnyExtensions(@Nonnull C component) {
     checkComponent(component);
-    return component.getExtensionPoint(myExtensionPointName).hasAnyExtensions();
+    return component.getExtensionPoint(myExtensionPointId).hasAnyExtensions();
   }
 
   @Nonnull
   public List<T> getExtensionList(@Nonnull C component) {
     checkComponent(component);
-    return component.getExtensionList(myExtensionPointName);
+    return component.getExtensionPoint(myExtensionPointId).getExtensionList();
   }
 
   @Nullable
   public <V extends T> V findExtension(@Nonnull C component, @Nonnull Class<V> instanceOf) {
     checkComponent(component);
-    return component.findExtension(myExtensionPointName, instanceOf);
+    return component.getExtensionPoint(myExtensionPointId).findExtension(instanceOf);
   }
 
   @Nonnull
   public <V extends T> V findExtensionOrFail(@Nonnull C component, @Nonnull Class<V> instanceOf) {
     checkComponent(component);
 
-    V extension = component.findExtension(myExtensionPointName, instanceOf);
+    V extension = component.getExtensionPoint(myExtensionPointId).findExtension(instanceOf);
     if (extension == null) {
-      throw new IllegalArgumentException("Extension point: " + myExtensionPointName.getName() + " not contains extension of type: " + instanceOf);
+      throw new IllegalArgumentException("Extension point: " + myExtensionPointId + " not contains extension of type: " + instanceOf);
     }
     return extension;
   }
@@ -82,6 +82,6 @@ public final class StrictExtensionPointName<C extends ComponentManager, T> {
   public void processWithPluginDescriptor(@Nonnull C component, @Nonnull BiConsumer<? super T, ? super PluginDescriptor> consumer) {
     checkComponent(component);
 
-    component.getExtensionPoint(myExtensionPointName).processWithPluginDescriptor(consumer);
+    component.getExtensionPoint(myExtensionPointId).processWithPluginDescriptor(consumer);
   }
 }

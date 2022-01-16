@@ -18,22 +18,22 @@ package com.intellij.openapi.components.impl;
 import com.intellij.ide.plugins.PluginManagerCore;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.components.BaseComponent;
-import com.intellij.openapi.progress.ProgressIndicatorProvider;
-import consulo.component.ComponentManager;
 import com.intellij.openapi.components.NamedComponent;
 import com.intellij.openapi.components.ServiceDescriptor;
-import consulo.component.extension.ExtensionPoint;
-import consulo.component.extension.ExtensionPointName;
 import com.intellij.openapi.extensions.impl.ExtensionAreaId;
 import com.intellij.openapi.extensions.impl.ExtensionPointImpl;
 import com.intellij.openapi.extensions.impl.ExtensionsAreaImpl;
 import com.intellij.openapi.progress.ProgressIndicator;
+import com.intellij.openapi.progress.ProgressIndicatorProvider;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.util.containers.MultiMap;
-import consulo.component.messagebus.MessageBus;
 import com.intellij.util.messages.impl.MessageBusFactory;
 import com.intellij.util.messages.impl.MessageBusImpl;
 import consulo.application.ApplicationProperties;
+import consulo.component.ComponentManager;
+import consulo.component.extension.ExtensionPoint;
+import consulo.component.extension.ExtensionPointId;
+import consulo.component.messagebus.MessageBus;
 import consulo.container.plugin.ComponentConfig;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginListenerDescriptor;
@@ -280,7 +280,7 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
   }
 
   private void loadServices(List<Class> notLazyServices, InjectingContainerBuilder builder) {
-    ExtensionPointName<ServiceDescriptor> ep = getServiceExtensionPointName();
+    ExtensionPointId<ServiceDescriptor> ep = getServiceExtensionPointName();
     if (ep != null) {
       ExtensionPointImpl<ServiceDescriptor> extensionPoint = myExtensionsArea.getExtensionPointImpl(ep);
       // there no injector at that level - build it via hardcode
@@ -337,7 +337,7 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
   }
 
   @Nullable
-  protected ExtensionPointName<ServiceDescriptor> getServiceExtensionPointName() {
+  protected ExtensionPointId<ServiceDescriptor> getServiceExtensionPointName() {
     return null;
   }
 
@@ -453,8 +453,8 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
 
   @Nonnull
   @Override
-  public <T> ExtensionPoint<T> getExtensionPoint(@Nonnull ExtensionPointName<T> extensionPointName) {
-    return myExtensionsArea.getExtensionPoint(extensionPointName);
+  public <T> ExtensionPoint<T> getExtensionPoint(@Nonnull ExtensionPointId<T> extensionPointId) {
+    return myExtensionsArea.getExtensionPoint(extensionPointId);
   }
 
   @TestOnly

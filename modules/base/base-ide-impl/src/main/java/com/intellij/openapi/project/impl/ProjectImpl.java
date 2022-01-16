@@ -21,7 +21,6 @@ import com.intellij.openapi.application.ex.ApplicationEx;
 import com.intellij.openapi.components.ProjectComponent;
 import com.intellij.openapi.components.ServiceDescriptor;
 import com.intellij.openapi.components.impl.ProjectPathMacroManager;
-import consulo.component.extension.ExtensionPointName;
 import com.intellij.openapi.extensions.impl.ExtensionAreaId;
 import com.intellij.openapi.module.impl.ModuleManagerImpl;
 import com.intellij.openapi.progress.ProgressIndicator;
@@ -40,6 +39,7 @@ import com.intellij.openapi.wm.impl.FrameTitleBuilder;
 import com.intellij.psi.impl.DebugUtil;
 import com.intellij.util.TimedReference;
 import consulo.application.AccessRule;
+import consulo.component.extension.ExtensionPointId;
 import consulo.components.impl.PlatformComponentManagerImpl;
 import consulo.components.impl.stores.DefaultProjectStoreImpl;
 import consulo.components.impl.stores.IProjectStore;
@@ -68,7 +68,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public class ProjectImpl extends PlatformComponentManagerImpl implements ProjectEx {
   private static final Logger LOG = Logger.getInstance(ProjectImpl.class);
-  private static final ExtensionPointName<ServiceDescriptor> PROJECT_SERVICES = ExtensionPointName.create("com.intellij.projectService");
+  private static final ExtensionPointId<ServiceDescriptor> PROJECT_SERVICES = ExtensionPointId.of("com.intellij.projectService");
 
   public static final String NAME_FILE = ".name";
 
@@ -128,7 +128,7 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
 
   @Nullable
   @Override
-  protected ExtensionPointName<ServiceDescriptor> getServiceExtensionPointName() {
+  protected ExtensionPointId<ServiceDescriptor> getServiceExtensionPointName() {
     return PROJECT_SERVICES;
   }
 

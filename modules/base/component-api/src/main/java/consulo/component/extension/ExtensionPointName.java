@@ -35,17 +35,18 @@ import java.util.function.Predicate;
 /**
  * @author mike
  * <p>
- * Prefer {@link StrictExtensionPointName}
  */
+@Deprecated
+@DeprecationInfo("Prefer StrictExtensionPointName")
 public class ExtensionPointName<T> {
   private static final Logger LOG = Logger.getInstance(ExtensionPointName.class);
 
-  private final String myName;
+  private final ExtensionPointId<T> myId;
 
   @Deprecated
   @DeprecationInfo("Use #create()")
   public ExtensionPointName(@Nonnull String name) {
-    myName = name;
+    myId = ExtensionPointId.of(name);
   }
 
   @SuppressWarnings("deprecation")
@@ -54,12 +55,17 @@ public class ExtensionPointName<T> {
   }
 
   public String getName() {
-    return myName;
+    return myId.toString();
+  }
+
+  @Nonnull
+  public ExtensionPointId<T> getId() {
+    return myId;
   }
 
   @Override
   public String toString() {
-    return myName;
+    return myId.toString();
   }
 
   @Nonnull

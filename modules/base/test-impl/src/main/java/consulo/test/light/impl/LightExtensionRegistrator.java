@@ -56,7 +56,7 @@ public abstract class LightExtensionRegistrator {
   private final PluginDescriptorImpl myDescriptor = new PluginDescriptorImpl(getClass().getClassLoader());
 
   protected <T> void registerExtension(ExtensionsAreaImpl area, ExtensionPointName<T> extensionPointName, T value) {
-    ExtensionPointImpl<T> point = area.getExtensionPointImpl(extensionPointName);
+    ExtensionPointImpl<T> point = area.getExtensionPointImpl(extensionPointName.getId());
     point.registerExtensionAdapter(new SimpleInstanceComponentAdapter<>(area.getComponentManager(), value));
   }
 

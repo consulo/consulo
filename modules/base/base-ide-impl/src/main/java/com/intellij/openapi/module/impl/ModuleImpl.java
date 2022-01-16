@@ -18,7 +18,6 @@ package com.intellij.openapi.module.impl;
 
 import com.intellij.openapi.components.ServiceDescriptor;
 import com.intellij.openapi.components.impl.ModulePathMacroManager;
-import consulo.component.extension.ExtensionPointName;
 import com.intellij.openapi.extensions.impl.ExtensionAreaId;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
@@ -28,6 +27,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointer;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointerManager;
+import consulo.component.extension.ExtensionPointId;
 import consulo.components.impl.PlatformComponentManagerImpl;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginListenerDescriptor;
@@ -41,7 +41,7 @@ import java.util.List;
  * @author max
  */
 public class ModuleImpl extends PlatformComponentManagerImpl implements ModuleEx {
-  private static final ExtensionPointName<ServiceDescriptor> MODULE_SERVICES = ExtensionPointName.create("com.intellij.moduleService");
+  private static final ExtensionPointId<ServiceDescriptor> MODULE_SERVICES = ExtensionPointId.of("com.intellij.moduleService");
 
   @Nonnull
   private String myName;
@@ -65,7 +65,7 @@ public class ModuleImpl extends PlatformComponentManagerImpl implements ModuleEx
 
   @Nullable
   @Override
-  protected ExtensionPointName<ServiceDescriptor> getServiceExtensionPointName() {
+  protected ExtensionPointId<ServiceDescriptor> getServiceExtensionPointName() {
     return MODULE_SERVICES;
   }
 

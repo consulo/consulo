@@ -15,10 +15,10 @@
  */
 package com.intellij.openapi.extensions.impl;
 
+import com.intellij.openapi.util.text.StringUtil;
 import consulo.component.ComponentManager;
 import consulo.component.extension.ExtensionPoint;
-import consulo.component.extension.ExtensionPointName;
-import com.intellij.openapi.util.text.StringUtil;
+import consulo.component.extension.ExtensionPointId;
 import consulo.container.impl.parser.ExtensionInfo;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginId;
@@ -200,16 +200,16 @@ public class ExtensionsAreaImpl {
 
   @Nonnull
   @SuppressWarnings({"unchecked"})
-  public <T> ExtensionPointImpl<T> getExtensionPointImpl(@Nonnull ExtensionPointName<T> extensionPointName) {
-    return getExtensionPointImpl(extensionPointName.getName());
+  public <T> ExtensionPointImpl<T> getExtensionPointImpl(@Nonnull ExtensionPointId<T> extensionPointName) {
+    return getExtensionPointImpl(extensionPointName.toString());
   }
 
   @Nonnull
   @SuppressWarnings({"unchecked"})
-  public <T> ExtensionPoint<T> getExtensionPoint(@Nonnull ExtensionPointName<T> extensionPointName) {
-    ExtensionPointImpl<T> extensionPoint = myExtensionPoints.get(extensionPointName.getName());
+  public <T> ExtensionPoint<T> getExtensionPoint(@Nonnull ExtensionPointId<T> extensionPointId) {
+    ExtensionPointImpl<T> extensionPoint = myExtensionPoints.get(extensionPointId.toString());
     if (extensionPoint == null) {
-      LOG.error("Missing extension point: " + extensionPointName + " in area " + myComponentManager);
+      LOG.error("Missing extension point: " + extensionPointId + " in area " + myComponentManager);
       return EmptyExtensionPoint.get();
     }
     return extensionPoint;

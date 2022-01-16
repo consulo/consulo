@@ -28,7 +28,6 @@ import com.intellij.openapi.application.impl.ReadMostlyRWLock;
 import com.intellij.openapi.components.ServiceDescriptor;
 import com.intellij.openapi.components.StateStorageException;
 import com.intellij.openapi.components.impl.ApplicationPathMacroManager;
-import consulo.component.extension.ExtensionPointName;
 import com.intellij.openapi.extensions.impl.ExtensionAreaId;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.fileTypes.FileTypeManager;
@@ -54,6 +53,7 @@ import com.intellij.util.ui.EDT;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.application.ApplicationProperties;
 import consulo.application.internal.ApplicationWithIntentWriteLock;
+import consulo.component.extension.ExtensionPointId;
 import consulo.components.impl.PlatformComponentManagerImpl;
 import consulo.components.impl.stores.ApplicationStoreImpl;
 import consulo.components.impl.stores.IApplicationStore;
@@ -167,7 +167,7 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
   public static final boolean USE_SEPARATE_WRITE_THREAD = Boolean.getBoolean("idea.use.separate.write.thread");
 
   private static final Logger LOG = Logger.getInstance(BaseApplication.class);
-  private static final ExtensionPointName<ServiceDescriptor> APP_SERVICES = ExtensionPointName.create("com.intellij.applicationService");
+  private static final ExtensionPointId<ServiceDescriptor> APP_SERVICES = ExtensionPointId.of("com.intellij.applicationService");
 
   private static final int ourDumpThreadsOnLongWriteActionWaiting = Integer.getInteger("dump.threads.on.long.write.action.waiting", 0);
 
@@ -243,7 +243,7 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
 
   @Nullable
   @Override
-  protected ExtensionPointName<ServiceDescriptor> getServiceExtensionPointName() {
+  protected ExtensionPointId<ServiceDescriptor> getServiceExtensionPointName() {
     return APP_SERVICES;
   }
 
