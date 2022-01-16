@@ -1,4 +1,4 @@
-package consulo.desktop.awt.util.io.win32;
+package consulo.desktop.util.windows;
 
 import com.intellij.openapi.util.AtomicNotNullLazyValue;
 import com.intellij.openapi.util.SystemInfo;

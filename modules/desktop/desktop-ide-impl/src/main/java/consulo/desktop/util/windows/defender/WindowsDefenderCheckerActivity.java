@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.desktop.awt.util.windows.defender;
+package consulo.desktop.util.windows.defender;
 
 import com.intellij.diagnostic.DiagnosticBundle;
 import com.intellij.notification.Notification;
@@ -25,9 +25,9 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.ui.UIAccess;
 import jakarta.inject.Inject;
+import jakarta.inject.Provider;
 
 import javax.annotation.Nonnull;
-import jakarta.inject.Provider;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;

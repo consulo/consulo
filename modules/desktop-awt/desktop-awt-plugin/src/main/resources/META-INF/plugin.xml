@@ -232,8 +232,8 @@
 
     <projectService serviceInterface="com.intellij.codeInsight.daemon.impl.EditorTracker" serviceImplementation="consulo.desktop.awt.daemon.impl.DesktopEditorTrackerImpl"/>
 
-    <backgroundPostStartupActivity implementation="consulo.desktop.awt.util.windows.defender.WindowsDefenderCheckerActivity"/>
-    <applicationService serviceImplementation="consulo.desktop.awt.util.windows.defender.WindowsDefenderChecker"/>
+    <backgroundPostStartupActivity implementation="consulo.desktop.util.windows.defender.WindowsDefenderCheckerActivity"/>
+    <applicationService serviceImplementation="consulo.desktop.util.windows.defender.WindowsDefenderChecker"/>
 
     <projectService serviceInterface="com.intellij.codeInsight.daemon.impl.IntentionsUI"
                     serviceImplementation="com.intellij.codeInsight.daemon.impl.IntentionsUIImpl"/>

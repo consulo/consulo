@@ -13,17 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.desktop.awt.startup;
+package consulo.desktop.startup;
 
 import com.intellij.ide.IdeBundle;
 import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationType;
 import com.intellij.notification.Notifications;
 import com.intellij.openapi.application.JetBrainsProtocolHandler;
-import consulo.disposer.Disposer;
-import consulo.logging.Logger;
 import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.openapi.util.io.FileUtilRt;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.CharsetToolkit;
 import com.intellij.util.ArrayUtil;
@@ -33,6 +30,8 @@ import com.intellij.util.containers.MultiMap;
 import consulo.builtInServer.impl.net.http.BuiltInServer;
 import consulo.builtInServer.impl.net.http.ImportantFolderLockerViaBuiltInServer;
 import consulo.builtInServer.impl.net.http.MessageDecoder;
+import consulo.disposer.Disposer;
+import consulo.logging.Logger;
 import consulo.start.CommandLineArgs;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufOutputStream;
@@ -172,9 +171,9 @@ public final class DesktopImportantFolderLocker implements ImportantFolderLocker
   }
 
   private <V> V underLocks(@Nonnull Callable<V> action) throws Exception {
-    FileUtilRt.createDirectory(new File(myConfigPath));
+    FileUtil.createDirectory(new File(myConfigPath));
     try (@SuppressWarnings("unused") FileOutputStream lock1 = new FileOutputStream(new File(myConfigPath, PORT_LOCK_FILE), true)) {
-      FileUtilRt.createDirectory(new File(mySystemPath));
+      FileUtil.createDirectory(new File(mySystemPath));
       try (@SuppressWarnings("unused") FileOutputStream lock2 = new FileOutputStream(new File(mySystemPath, PORT_LOCK_FILE), true)) {
         return action.call();
       }
@@ -184,7 +183,7 @@ public final class DesktopImportantFolderLocker implements ImportantFolderLocker
   private static void addExistingPort(@Nonnull File portMarker, @Nonnull String path, @Nonnull MultiMap<Integer, String> portToPath) {
     if (portMarker.exists()) {
       try {
-        portToPath.putValue(Integer.parseInt(FileUtilRt.loadFile(portMarker)), path);
+        portToPath.putValue(Integer.parseInt(FileUtil.loadFile(portMarker)), path);
       }
       catch (Exception e) {
         log(e);

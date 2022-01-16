@@ -17,11 +17,13 @@ package consulo.desktop.swt.startup.customize;
 
 import consulo.startup.customize.StartupCustomizeManager;
 import consulo.ui.annotation.RequiredUIAccess;
+import jakarta.inject.Singleton;
 
 /**
  * @author VISTALL
  * @since 29/04/2021
  */
+@Singleton
 public class DesktopSwtStartupCustomizeManager implements StartupCustomizeManager {
   @RequiredUIAccess
   @Override

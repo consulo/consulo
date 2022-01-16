@@ -1,4 +1,4 @@
-package consulo.desktop.awt.startup.netty;
+package consulo.desktop.startup.netty;
 
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;

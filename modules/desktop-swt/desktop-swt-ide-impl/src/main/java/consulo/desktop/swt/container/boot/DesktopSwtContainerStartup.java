@@ -24,8 +24,9 @@ import consulo.bootstrap.concurrent.IdeaForkJoinWorkerThreadFactory;
 import consulo.container.boot.ContainerPathManager;
 import consulo.container.boot.ContainerStartup;
 import consulo.container.util.StatCollector;
+import consulo.desktop.container.impl.DesktopContainerPathManager;
+import consulo.desktop.startup.DesktopImportantFolderLocker;
 import consulo.desktop.swt.starter.DesktopSwtApplicationStarter;
-import consulo.desktop.swt.starter.DesktopSwtImportantFolderLocker;
 import consulo.logging.Logger;
 
 import javax.annotation.Nonnull;
@@ -40,7 +41,7 @@ public class DesktopSwtContainerStartup implements ContainerStartup {
   @Nonnull
   @Override
   public ContainerPathManager createPathManager(@Nonnull Map<String, Object> args) {
-    return new DesktopSwtContainerPathManager();
+    return new DesktopContainerPathManager();
   }
 
   @Override
@@ -92,7 +93,7 @@ public class DesktopSwtContainerStartup implements ContainerStartup {
       return;
     }
 
-    StartupUtil.prepareAndStart(args, stat, DesktopSwtImportantFolderLocker::new, (newConfigFolder, commandLineArgs) -> {
+    StartupUtil.prepareAndStart(args, stat, DesktopImportantFolderLocker::new, (newConfigFolder, commandLineArgs) -> {
       ApplicationStarter app = new DesktopSwtApplicationStarter(commandLineArgs, stat);
 
       AppExecutorUtil.getAppExecutorService().execute(() -> app.run(stat, appInitalizeMark, newConfigFolder));

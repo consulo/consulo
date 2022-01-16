@@ -4,6 +4,7 @@ package com.intellij.openapi.util.io;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.SystemInfoRt;
 import com.intellij.openapi.util.text.StringUtilRt;
+import consulo.annotation.DeprecationInfo;
 import consulo.logging.Logger;
 import consulo.util.collection.ArrayUtil;
 import org.jetbrains.annotations.Contract;
@@ -20,6 +21,8 @@ import java.util.*;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 @SuppressWarnings("UtilityClassWithoutPrivateConstructor")
+@Deprecated
+@DeprecationInfo("Use FileUtil")
 public class FileUtilRt {
   private static final int KILOBYTE = 1024;
   private static final int DEFAULT_INTELLISENSE_LIMIT = 2500 * KILOBYTE;

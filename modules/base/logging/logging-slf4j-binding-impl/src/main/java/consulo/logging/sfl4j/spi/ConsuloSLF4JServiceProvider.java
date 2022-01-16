@@ -47,7 +47,7 @@ public class ConsuloSLF4JServiceProvider implements SLF4JServiceProvider {
 
   @Override
   public String getRequestedApiVersion() {
-    return "1.8";
+    return "2.0";
   }
 
   @Override

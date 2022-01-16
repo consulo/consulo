@@ -18,7 +18,7 @@ package consulo.desktop.awt.container.impl;
 import com.intellij.ide.plugins.PluginManager;
 import com.intellij.ide.startup.StartupActionScriptManager;
 import com.intellij.idea.ApplicationStarter;
-import consulo.desktop.awt.startup.DesktopImportantFolderLocker;
+import consulo.desktop.startup.DesktopImportantFolderLocker;
 import com.intellij.idea.StartupUtil;
 import consulo.desktop.awt.startup.DesktopApplicationStarter;
 import com.intellij.util.concurrency.AppExecutorUtil;
@@ -26,6 +26,7 @@ import consulo.bootstrap.concurrent.IdeaForkJoinWorkerThreadFactory;
 import consulo.container.boot.ContainerPathManager;
 import consulo.container.boot.ContainerStartup;
 import consulo.container.util.StatCollector;
+import consulo.desktop.container.impl.DesktopContainerPathManager;
 import consulo.logging.Logger;
 import consulo.vfs.impl.mediator.FileSystemMediatorOverride;
 
