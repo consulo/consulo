@@ -20,25 +20,19 @@ import com.intellij.openapi.compiler.CompilerBundle;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.NotNullComputable;
-import consulo.compiler.CompilationType;
 import consulo.disposer.Disposable;
-import consulo.localize.LocalizeValue;
 import consulo.options.SimpleConfigurable;
 import consulo.ui.CheckBox;
-import consulo.ui.ComboBox;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.VerticalLayout;
-import consulo.ui.util.LabeledBuilder;
 import jakarta.inject.Inject;
 
 import javax.annotation.Nonnull;
 
 public class CompilerConfigurable extends SimpleConfigurable<CompilerConfigurable.Root> implements Configurable {
   protected static class Root implements NotNullComputable<Component> {
-    private ComboBox<CompilationType> myCompilerOptions;
     private CheckBox myCbClearOutputDirectory;
     private CheckBox myCbAutoShowFirstError;
 
@@ -47,11 +41,6 @@ public class CompilerConfigurable extends SimpleConfigurable<CompilerConfigurabl
     @RequiredUIAccess
     public Root() {
       myLayout = VerticalLayout.create();
-
-      myCompilerOptions = ComboBox.<CompilationType>builder().fillByEnum(CompilationType.class, Enum::name).build();
-      Component compilerOptions = LabeledBuilder.sided(LocalizeValue.localizeTODO("Compilation type:"), myCompilerOptions);
-      myLayout.add(compilerOptions);
-      compilerOptions.setVisible(false);
 
       myCbClearOutputDirectory = CheckBox.create(CompilerBundle.message("label.option.clear.output.directory.on.rebuild"));
       myLayout.add(myCbClearOutputDirectory);
@@ -84,8 +73,7 @@ public class CompilerConfigurable extends SimpleConfigurable<CompilerConfigurabl
   @RequiredUIAccess
   @Override
   protected boolean isModified(@Nonnull Root component) {
-    boolean isModified = !Comparing.equal(component.myCompilerOptions.getValue(), myCompilerWorkspaceConfiguration.COMPILATION_TYPE);
-    isModified |= component.myCbClearOutputDirectory.getValue() != myCompilerWorkspaceConfiguration.CLEAR_OUTPUT_DIRECTORY;
+    boolean isModified = component.myCbClearOutputDirectory.getValue() != myCompilerWorkspaceConfiguration.CLEAR_OUTPUT_DIRECTORY;
     isModified |= component.myCbAutoShowFirstError.getValue() != myCompilerWorkspaceConfiguration.AUTO_SHOW_ERRORS_IN_EDITOR;
     return isModified;
   }
@@ -93,7 +81,6 @@ public class CompilerConfigurable extends SimpleConfigurable<CompilerConfigurabl
   @RequiredUIAccess
   @Override
   protected void reset(@Nonnull Root component) {
-    component.myCompilerOptions.setValue(myCompilerWorkspaceConfiguration.COMPILATION_TYPE);
     component.myCbAutoShowFirstError.setValue(myCompilerWorkspaceConfiguration.AUTO_SHOW_ERRORS_IN_EDITOR);
     component.myCbClearOutputDirectory.setValue(myCompilerWorkspaceConfiguration.CLEAR_OUTPUT_DIRECTORY);
   }
@@ -101,7 +88,6 @@ public class CompilerConfigurable extends SimpleConfigurable<CompilerConfigurabl
   @RequiredUIAccess
   @Override
   protected void apply(@Nonnull Root component) throws ConfigurationException {
-    myCompilerWorkspaceConfiguration.COMPILATION_TYPE = component.myCompilerOptions.getValue();
     myCompilerWorkspaceConfiguration.AUTO_SHOW_ERRORS_IN_EDITOR = component.myCbAutoShowFirstError.getValue();
     myCompilerWorkspaceConfiguration.CLEAR_OUTPUT_DIRECTORY = component.myCbClearOutputDirectory.getValue();
   }

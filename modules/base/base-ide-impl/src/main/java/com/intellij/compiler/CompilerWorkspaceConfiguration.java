@@ -19,17 +19,18 @@
  */
 package com.intellij.compiler;
 
-import com.intellij.openapi.components.*;
+import com.intellij.openapi.components.ServiceManager;
+import com.intellij.openapi.components.State;
+import com.intellij.openapi.components.Storage;
+import com.intellij.openapi.components.StoragePathMacros;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.xmlb.XmlSerializerUtil;
-import consulo.compiler.CompilationType;
 import consulo.component.persist.PersistentStateComponent;
 import jakarta.inject.Singleton;
 
 @Singleton
 @State(name = "CompilerWorkspaceConfiguration", storages = @Storage(StoragePathMacros.WORKSPACE_FILE))
 public class CompilerWorkspaceConfiguration implements PersistentStateComponent<CompilerWorkspaceConfiguration> {
-  public CompilationType COMPILATION_TYPE = CompilationType.IN_PROGRESS;
   public boolean AUTO_SHOW_ERRORS_IN_EDITOR = true;
   public boolean CLEAR_OUTPUT_DIRECTORY = true;
 
