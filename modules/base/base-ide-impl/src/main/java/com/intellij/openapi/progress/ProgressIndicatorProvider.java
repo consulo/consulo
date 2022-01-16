@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.progress;
 
-import consulo.component.extension.internal.RootComponentManager;
+import consulo.component.extension.internal.RootComponentHolder;
 
 import javax.annotation.Nullable;
 
@@ -24,7 +24,7 @@ import javax.annotation.Nullable;
  */
 public abstract class ProgressIndicatorProvider {
   public static ProgressIndicatorProvider getInstance() {
-    return RootComponentManager.getRootComponent().getInstance(ProgressIndicatorProvider.class);
+    return RootComponentHolder.getRootComponent().getInstance(ProgressIndicatorProvider.class);
   }
 
   public abstract ProgressIndicator getProgressIndicator();

@@ -22,8 +22,10 @@ import javax.annotation.Nullable;
 /**
  * @author VISTALL
  * @since 28/12/2021
+ *
+ * This is holder of Application instance for ExtensionPointName (deprecated methods without ComponentManager)
  */
-public class RootComponentManager {
+public class RootComponentHolder {
   private static ComponentManager ourRootComponent;
 
   public static void setRootComponent(@Nullable ComponentManager rootComponent) {

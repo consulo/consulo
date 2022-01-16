@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.application;
 
-import consulo.component.extension.internal.RootComponentManager;
+import consulo.component.extension.internal.RootComponentHolder;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 
@@ -40,13 +40,13 @@ public class ApplicationManager {
 
   public static void setApplication(@Nullable Application instance) {
     ourApplication = instance;
-    RootComponentManager.setRootComponent(instance);
+    RootComponentHolder.setRootComponent(instance);
   }
 
   public static void setApplication(@Nonnull Application instance, @Nonnull Disposable parent) {
     Disposer.register(parent, () -> {
       setApplication(null);
-      RootComponentManager.setRootComponent(null);
+      RootComponentHolder.setRootComponent(null);
     });
 
     setApplication(instance);

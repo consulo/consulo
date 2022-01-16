@@ -3,7 +3,7 @@ package com.intellij.openapi.vfs.pointers;
 
 import com.intellij.openapi.util.ModificationTracker;
 import com.intellij.openapi.vfs.VirtualFile;
-import consulo.component.extension.internal.RootComponentManager;
+import consulo.component.extension.internal.RootComponentHolder;
 import consulo.disposer.Disposable;
 
 import javax.annotation.Nonnull;
@@ -11,7 +11,7 @@ import javax.annotation.Nullable;
 
 public interface VirtualFilePointerManager extends ModificationTracker {
   public static VirtualFilePointerManager getInstance() {
-    return RootComponentManager.getRootComponent().getComponent(VirtualFilePointerManager.class);
+    return RootComponentHolder.getRootComponent().getComponent(VirtualFilePointerManager.class);
   }
 
   @Nonnull

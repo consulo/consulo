@@ -19,7 +19,7 @@ import consulo.component.ComponentManager;
 import consulo.annotation.DeprecationInfo;
 import consulo.component.extension.ExtensionPoint;
 import consulo.component.extension.ExtensionPointName;
-import consulo.component.extension.internal.RootComponentManager;
+import consulo.component.extension.internal.RootComponentHolder;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -51,7 +51,7 @@ public class Extensions {
   @Nonnull
   @Deprecated
   public static <T> T[] getExtensions(String extensionPointName, @Nullable ComponentManager target) {
-    ComponentManager componentManager = target == null ? RootComponentManager.getRootComponent() : target;
+    ComponentManager componentManager = target == null ? RootComponentHolder.getRootComponent() : target;
     ExtensionPoint<T> extensionPoint = componentManager.getExtensionPoint(ExtensionPointName.create(extensionPointName));
     return extensionPoint.getExtensions();
   }

@@ -5,7 +5,7 @@ import consulo.component.extension.ExtensionPointName;
 import com.intellij.openapi.util.io.ByteSequence;
 import com.intellij.openapi.vfs.VirtualFile;
 import consulo.annotation.DeprecationInfo;
-import consulo.component.extension.internal.RootComponentManager;
+import consulo.component.extension.internal.RootComponentHolder;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -42,7 +42,7 @@ public abstract class FileTypeRegistry {
   @Deprecated
   @DeprecationInfo("Use contructor injection")
   public static FileTypeRegistry getInstance() {
-    return RootComponentManager.getRootComponent().getInstance(FileTypeRegistry.class);
+    return RootComponentHolder.getRootComponent().getInstance(FileTypeRegistry.class);
   }
 
   public abstract boolean isFileIgnored(@Nonnull VirtualFile file);

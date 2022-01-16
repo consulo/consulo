@@ -19,7 +19,7 @@ import com.intellij.openapi.util.ModificationTracker;
 import com.intellij.openapi.vfs.newvfs.BulkFileListener;
 import consulo.component.messagebus.Topic;
 import consulo.annotation.DeprecationInfo;
-import consulo.component.extension.internal.RootComponentManager;
+import consulo.component.extension.internal.RootComponentHolder;
 import consulo.disposer.Disposable;
 import consulo.util.io.URLUtil;
 
@@ -46,7 +46,7 @@ public abstract class VirtualFileManager implements ModificationTracker {
   @Deprecated
   @DeprecationInfo("Use constructor injection")
   public static VirtualFileManager getInstance() {
-    return RootComponentManager.getRootComponent().getInstance(VirtualFileManager.class);
+    return RootComponentHolder.getRootComponent().getInstance(VirtualFileManager.class);
   }
 
   /**

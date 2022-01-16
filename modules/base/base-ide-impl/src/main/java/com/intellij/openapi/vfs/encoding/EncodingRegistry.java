@@ -3,7 +3,7 @@ package com.intellij.openapi.vfs.encoding;
 
 import com.intellij.openapi.vfs.VirtualFile;
 import consulo.annotation.DeprecationInfo;
-import consulo.component.extension.internal.RootComponentManager;
+import consulo.component.extension.internal.RootComponentHolder;
 import consulo.util.lang.function.ThrowableSupplier;
 
 import javax.annotation.Nonnull;
@@ -57,7 +57,7 @@ public abstract class EncodingRegistry {
   @Deprecated
   @DeprecationInfo("Use constructor injection")
   public static EncodingRegistry getInstance() {
-    return RootComponentManager.getRootComponent().getInstance(EncodingRegistry.class);
+    return RootComponentHolder.getRootComponent().getInstance(EncodingRegistry.class);
   }
 
   @Deprecated
