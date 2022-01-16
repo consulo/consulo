@@ -10,6 +10,7 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.codeStyle.CodeStyleManager;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.IncorrectOperationException;
+import consulo.container.plugin.PluginIds;
 import consulo.logging.Logger;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -22,7 +23,7 @@ import javax.annotation.Nullable;
  */
 public class EnterBetweenBracesDelegate {
   private static final Logger LOG = Logger.getInstance(EnterBetweenBracesDelegate.class);
-  static final LanguageExtension<EnterBetweenBracesDelegate> EP_NAME = new LanguageExtension<>("com.intellij.enterBetweenBracesDelegate");
+  static final LanguageExtension<EnterBetweenBracesDelegate> EP_NAME = new LanguageExtension<>(PluginIds.CONSULO_BASE + ".enterBetweenBracesDelegate");
 
   /**
    * Checks that the braces belong to the same syntax element, and whether there is a need to calculate indentation or it can be simplified.

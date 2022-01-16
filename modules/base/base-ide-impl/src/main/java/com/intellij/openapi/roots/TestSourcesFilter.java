@@ -23,7 +23,7 @@ import javax.annotation.Nonnull;
  * @see JpsModuleSourceRootType#isForTests()
  */
 public abstract class TestSourcesFilter {
-  private static final ExtensionPointName<TestSourcesFilter> EP_NAME = ExtensionPointName.create("com.intellij.testSourcesFilter");
+  private static final ExtensionPointName<TestSourcesFilter> EP_NAME = ExtensionPointName.create("consulo.base.testSourcesFilter");
 
   public static boolean isTestSources(@Nonnull VirtualFile file, @Nonnull Project project) {
     for (TestSourcesFilter filter : EP_NAME.getExtensionList()) {

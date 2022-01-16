@@ -26,7 +26,7 @@ import javax.annotation.Nullable;
  *         Time: 11:43 AM
  */
 public interface PatchEP {
-  ExtensionPointName<PatchEP> EP_NAME = ExtensionPointName.create("com.intellij.patch.extension");
+  ExtensionPointName<PatchEP> EP_NAME = ExtensionPointName.create("consulo.base.patch.extension");
   @Nonnull
   String getName();
   /**

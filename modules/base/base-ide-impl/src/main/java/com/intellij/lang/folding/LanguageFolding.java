@@ -23,6 +23,8 @@ import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.psi.PsiElement;
 import consulo.annotation.access.RequiredReadAction;
+import consulo.container.plugin.PluginIds;
+
 import javax.annotation.Nonnull;
 
 import java.util.Collections;
@@ -36,7 +38,7 @@ public class LanguageFolding extends LanguageExtension<FoldingBuilder> {
   public static final LanguageFolding INSTANCE = new LanguageFolding();
 
   private LanguageFolding() {
-    super("com.intellij.lang.foldingBuilder");
+    super(PluginIds.CONSULO_BASE + ".lang.foldingBuilder");
   }
 
   @Override

@@ -17,6 +17,7 @@
 package com.intellij.lang;
 
 import com.intellij.refactoring.classMembers.ClassMembersRefactoringSupport;
+import consulo.container.plugin.PluginIds;
 
 /**
  * @author Dennis.Ushakov
@@ -25,6 +26,6 @@ public class LanguageDependentMembersRefactoringSupport extends LanguageExtensio
   public static final LanguageDependentMembersRefactoringSupport INSTANCE = new LanguageDependentMembersRefactoringSupport();
 
   private LanguageDependentMembersRefactoringSupport() {
-    super("com.intellij.lang.refactoringSupport.classMembersRefactoringSupport");
+    super(PluginIds.CONSULO_BASE + ".lang.refactoringSupport.classMembersRefactoringSupport");
   }
 }

@@ -23,9 +23,9 @@ import javax.annotation.Nonnull;
  * Allows a plugin to add items to "Goto Class" and "Goto Symbol" lists.
  */
 public interface ChooseByNameContributor {
-  ExtensionPointName<ChooseByNameContributor> CLASS_EP_NAME = ExtensionPointName.create("com.intellij.gotoClassContributor");
-  ExtensionPointName<ChooseByNameContributor> SYMBOL_EP_NAME = ExtensionPointName.create("com.intellij.gotoSymbolContributor");
-  ExtensionPointName<ChooseByNameContributor> FILE_EP_NAME = ExtensionPointName.create("com.intellij.gotoFileContributor");
+  ExtensionPointName<ChooseByNameContributor> CLASS_EP_NAME = ExtensionPointName.create("consulo.base.gotoClassContributor");
+  ExtensionPointName<ChooseByNameContributor> SYMBOL_EP_NAME = ExtensionPointName.create("consulo.base.gotoSymbolContributor");
+  ExtensionPointName<ChooseByNameContributor> FILE_EP_NAME = ExtensionPointName.create("consulo.base.gotoFileContributor");
 
 
   /**

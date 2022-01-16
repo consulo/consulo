@@ -19,7 +19,7 @@ import consulo.component.extension.ExtensionPointName;
 import com.intellij.util.xmlb.annotations.Attribute;
 
 public class PathMacroExpendableProtocolBean {
-  public static ExtensionPointName<PathMacroExpendableProtocolBean> EP_NAME = ExtensionPointName.create("com.intellij.pathMacroExpendableProtocol");
+  public static ExtensionPointName<PathMacroExpendableProtocolBean> EP_NAME = ExtensionPointName.create("consulo.base.pathMacroExpendableProtocol");
 
    @Attribute("protocol")
    public String protocol;

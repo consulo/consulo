@@ -20,7 +20,7 @@ import consulo.component.extension.ExtensionPointName;
 import javax.annotation.Nonnull;
 
 public interface DiffTool {
-  ExtensionPointName<DiffTool> EP_NAME = ExtensionPointName.create("com.intellij.diff.DiffTool");
+  ExtensionPointName<DiffTool> EP_NAME = ExtensionPointName.create("consulo.base.diff.DiffTool");
 
   @Nonnull
   String getName();

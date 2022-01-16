@@ -28,7 +28,7 @@ import java.util.Comparator;
  * @author konstantin.aleev
  */
 public interface DashboardGroupingRule extends TreeAction {
-  ExtensionPointName<DashboardGroupingRule> EP_NAME = ExtensionPointName.create("com.intellij.runDashboardGroupingRule");
+  ExtensionPointName<DashboardGroupingRule> EP_NAME = ExtensionPointName.create("consulo.base.runDashboardGroupingRule");
 
   Comparator<DashboardGroupingRule> PRIORITY_COMPARATOR = (o1, o2) -> {
     final int res = o2.getPriority() - o1.getPriority();

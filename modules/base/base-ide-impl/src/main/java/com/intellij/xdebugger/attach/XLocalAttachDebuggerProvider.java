@@ -15,7 +15,7 @@ import java.util.List;
  */
 @Deprecated
 public interface XLocalAttachDebuggerProvider extends XAttachDebuggerProvider {
-  ExtensionPointName<XAttachDebuggerProvider> EP = ExtensionPointName.create("com.intellij.xdebugger.localAttachDebuggerProvider");
+  ExtensionPointName<XAttachDebuggerProvider> EP = ExtensionPointName.create("consulo.base.xdebugger.localAttachDebuggerProvider");
 
   /**
    * @deprecated use {@link XAttachDebuggerProvider#getAvailableDebuggers(Project, XAttachHost, ProcessInfo, UserDataHolder)} instead

@@ -28,13 +28,14 @@ import com.intellij.psi.tree.ILazyParseableElementTypeBase;
 import com.intellij.psi.tree.TokenSet;
 import com.intellij.testFramework.LightVirtualFile;
 import com.intellij.util.CharTable;
-import consulo.util.lang.LocalTimeCounter;
 import com.intellij.util.ReflectionUtil;
 import consulo.annotation.access.RequiredReadAction;
+import consulo.container.plugin.PluginIds;
 import consulo.lang.LanguageVersion;
 import consulo.lang.LanguageVersionResolvers;
 import consulo.localize.LocalizeValue;
 import consulo.ui.image.Image;
+import consulo.util.lang.LocalTimeCounter;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -45,7 +46,7 @@ import java.util.function.Function;
  */
 public class TemplateDataElementType extends IFileElementType implements ITemplateDataElementType {
   private static final int CHECK_PROGRESS_AFTER_TOKENS = 1000;
-  public static final LanguageExtension<TreePatcher> TREE_PATCHER = new LanguageExtension<>("com.intellij.lang.treePatcher", new SimpleTreePatcher());
+  public static final LanguageExtension<TreePatcher> TREE_PATCHER = new LanguageExtension<>(PluginIds.CONSULO_BASE + ".lang.treePatcher", new SimpleTreePatcher());
 
   @Nonnull
   private final IElementType myTemplateElementType;
@@ -384,7 +385,7 @@ public class TemplateDataElementType extends IFileElementType implements ITempla
    */
   public interface OuterLanguageRangePatcher {
 
-    LanguageExtension<OuterLanguageRangePatcher> EXTENSION = new LanguageExtension<>("com.intellij.outerLanguageRangePatcher");
+    LanguageExtension<OuterLanguageRangePatcher> EXTENSION = new LanguageExtension<>(PluginIds.CONSULO_BASE + ".outerLanguageRangePatcher");
 
     /**
      * @return Text to be inserted for parsing in outer element insertion ranges provided by

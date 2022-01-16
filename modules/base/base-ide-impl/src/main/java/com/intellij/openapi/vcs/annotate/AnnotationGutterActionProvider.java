@@ -26,7 +26,7 @@ import javax.annotation.Nonnull;
  */
 public interface AnnotationGutterActionProvider {
 
-  ExtensionPointName<AnnotationGutterActionProvider> EP_NAME = ExtensionPointName.create("com.intellij.vcsAnnotationGutterActionProvider");
+  ExtensionPointName<AnnotationGutterActionProvider> EP_NAME = ExtensionPointName.create("consulo.base.vcsAnnotationGutterActionProvider");
 
   /**
    * Create an action that will be added to the annotation gutter popup.

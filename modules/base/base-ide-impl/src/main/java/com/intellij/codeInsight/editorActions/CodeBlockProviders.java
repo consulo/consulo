@@ -16,6 +16,7 @@
 package com.intellij.codeInsight.editorActions;
 
 import com.intellij.lang.LanguageExtension;
+import consulo.container.plugin.PluginIds;
 
 /**
  * @author yole
@@ -24,6 +25,6 @@ public class CodeBlockProviders extends LanguageExtension<CodeBlockProvider> {
   public static CodeBlockProviders INSTANCE = new CodeBlockProviders();
   
   private CodeBlockProviders() {
-    super("com.intellij.codeBlockProvider");
+    super(PluginIds.CONSULO_BASE + ".codeBlockProvider");
   }
 }

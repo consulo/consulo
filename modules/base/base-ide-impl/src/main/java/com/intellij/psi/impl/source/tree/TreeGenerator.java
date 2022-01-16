@@ -27,7 +27,7 @@ import com.intellij.util.CharTable;
 import javax.annotation.Nullable;
 
 public interface TreeGenerator {
-  ExtensionPointName<TreeGenerator> EP_NAME = ExtensionPointName.create("com.intellij.treeGenerator");
+  ExtensionPointName<TreeGenerator> EP_NAME = ExtensionPointName.create("consulo.base.treeGenerator");
   
   @Nullable
   TreeElement generateTreeFor(PsiElement original, CharTable table, final PsiManager manager);

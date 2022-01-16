@@ -25,7 +25,7 @@ import javax.annotation.Nonnull;
  * @since 23:48/15.10.13
  */
 public interface GraphProvider {
-  ExtensionPointName<GraphProvider> EP_NAME = ExtensionPointName.create("com.intellij.graphProvider");
+  ExtensionPointName<GraphProvider> EP_NAME = ExtensionPointName.create("consulo.base.graphProvider");
 
   @Nonnull
   GraphBuilder createBuilder(@Nonnull PsiElement element);

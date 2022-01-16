@@ -32,7 +32,7 @@ import java.beans.PropertyChangeListener;
  * @see com.intellij.psi.search.searches.IndexPatternSearch
  */
 public interface IndexPatternProvider {
-  ExtensionPointName<IndexPatternProvider> EP_NAME = ExtensionPointName.create("com.intellij.indexPatternProvider");
+  ExtensionPointName<IndexPatternProvider> EP_NAME = ExtensionPointName.create("consulo.base.indexPatternProvider");
 
   Topic<PropertyChangeListener> INDEX_PATTERNS_CHANGED = new Topic<PropertyChangeListener>("index patterns changed", PropertyChangeListener.class);
 

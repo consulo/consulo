@@ -27,7 +27,7 @@ import javax.annotation.Nullable;
  * @since 09.05.2015
  */
 public interface ProjectViewPaneOptionProvider<T> {
-  ExtensionPointName<ProjectViewPaneOptionProvider> EX_NAME = ExtensionPointName.create("com.intellij.projectViewOptionProvider");
+  ExtensionPointName<ProjectViewPaneOptionProvider> EX_NAME = ExtensionPointName.create("consulo.base.projectViewOptionProvider");
 
   abstract class BoolValue implements ProjectViewPaneOptionProvider<Boolean> {
     @Nonnull

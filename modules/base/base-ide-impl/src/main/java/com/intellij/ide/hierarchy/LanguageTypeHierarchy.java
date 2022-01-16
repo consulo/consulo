@@ -17,6 +17,7 @@
 package com.intellij.ide.hierarchy;
 
 import com.intellij.lang.LanguageExtension;
+import consulo.container.plugin.PluginIds;
 
 /**
  * Provides language-specific implementations of type hierarchy providers.
@@ -27,6 +28,6 @@ public class LanguageTypeHierarchy extends LanguageExtension<HierarchyProvider> 
   public static final LanguageTypeHierarchy INSTANCE = new LanguageTypeHierarchy();
 
   public LanguageTypeHierarchy() {
-    super("com.intellij.typeHierarchyProvider");
+    super(PluginIds.CONSULO_BASE + ".typeHierarchyProvider");
   }
 }

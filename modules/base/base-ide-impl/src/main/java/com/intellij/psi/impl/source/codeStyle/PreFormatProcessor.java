@@ -25,7 +25,7 @@ import javax.annotation.Nonnull;
  * @author yole
  */
 public interface PreFormatProcessor {
-  ExtensionPointName<PreFormatProcessor> EP_NAME = ExtensionPointName.create("com.intellij.preFormatProcessor");
+  ExtensionPointName<PreFormatProcessor> EP_NAME = ExtensionPointName.create("consulo.base.preFormatProcessor");
 
   /**
    * Callback to be invoked before formatting. Implementation is allowed to do the following:

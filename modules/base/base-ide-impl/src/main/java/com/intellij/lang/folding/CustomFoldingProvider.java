@@ -23,7 +23,7 @@ import consulo.component.extension.ExtensionPointName;
  * @author Rustam Vishnyakov
  */
 public abstract class CustomFoldingProvider {
-  public static final ExtensionPointName<CustomFoldingProvider> EP_NAME = ExtensionPointName.create("com.intellij.customFoldingProvider");
+  public static final ExtensionPointName<CustomFoldingProvider> EP_NAME = ExtensionPointName.create("consulo.base.customFoldingProvider");
 
   public abstract boolean isCustomRegionStart(String elementText);
   public abstract boolean isCustomRegionEnd(String elementText);

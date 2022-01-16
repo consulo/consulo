@@ -19,19 +19,20 @@ import com.intellij.lang.Language;
 import com.intellij.lang.LanguageExtension;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
+import consulo.container.plugin.PluginIds;
+
 import javax.annotation.Nonnull;
 
 /**
  * @author Rustam Vishnyakov
  */
 public class LanguageIndentStrategy extends LanguageExtension<IndentStrategy> {
-  public static final String EP_NAME = "com.intellij.lang.indentStrategy";
   public static final LanguageIndentStrategy INSTANCE = new LanguageIndentStrategy();
 
   private static final DefaultIndentStrategy DEFAULT_INDENT_STRATEGY = new DefaultIndentStrategy();
 
   public LanguageIndentStrategy() {
-    super(EP_NAME, DEFAULT_INDENT_STRATEGY);
+    super(PluginIds.CONSULO_BASE + ".lang.indentStrategy", DEFAULT_INDENT_STRATEGY);
   }
 
   public static @Nonnull

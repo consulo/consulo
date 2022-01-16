@@ -17,6 +17,7 @@
 package com.intellij.lang.findUsages;
 
 import com.intellij.lang.LanguageExtension;
+import consulo.container.plugin.PluginIds;
 
 /**
  * @author yole
@@ -25,6 +26,6 @@ public class LanguageFindUsages extends LanguageExtension<FindUsagesProvider> {
   public static final LanguageFindUsages INSTANCE = new LanguageFindUsages();
 
   private LanguageFindUsages() {
-    super("com.intellij.lang.findUsagesProvider", new EmptyFindUsagesProvider());
+    super(PluginIds.CONSULO_BASE + ".lang.findUsagesProvider", new EmptyFindUsagesProvider());
   }
 }

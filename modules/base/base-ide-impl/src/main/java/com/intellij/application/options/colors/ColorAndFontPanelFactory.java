@@ -27,7 +27,7 @@ import javax.annotation.Nonnull;
  */
 public interface ColorAndFontPanelFactory {
 
-  ExtensionPointName<ColorAndFontPanelFactory> EP_NAME = ExtensionPointName.create("com.intellij.colorAndFontPanelFactory");
+  ExtensionPointName<ColorAndFontPanelFactory> EP_NAME = ExtensionPointName.create("consulo.base.colorAndFontPanelFactory");
   
   @Nonnull
   NewColorAndFontPanel createPanel(@Nonnull ColorAndFontOptions options);

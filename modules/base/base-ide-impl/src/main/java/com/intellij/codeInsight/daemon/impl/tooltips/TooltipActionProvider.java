@@ -20,7 +20,7 @@ import javax.annotation.Nullable;
  * @see com.intellij.codeInsight.daemon.impl.DaemonTooltipActionProvider
  */
 public interface TooltipActionProvider {
-  ExtensionPointName<TooltipActionProvider> EXTENSION_POINT_NAME = ExtensionPointName.create("com.intellij.daemon.tooltipActionProvider");
+  ExtensionPointName<TooltipActionProvider> EXTENSION_POINT_NAME = ExtensionPointName.create("consulo.base.daemon.tooltipActionProvider");
 
   String SHOW_FIXES_KEY = "tooltips.show.actions.in.key";
   boolean SHOW_FIXES_DEFAULT_VALUE = true;

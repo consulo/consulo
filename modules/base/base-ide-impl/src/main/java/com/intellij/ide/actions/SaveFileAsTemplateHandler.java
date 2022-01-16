@@ -24,7 +24,7 @@ import javax.annotation.Nullable;
  * @author yole
  */
 public interface SaveFileAsTemplateHandler {
-  ExtensionPointName<SaveFileAsTemplateHandler> EP_NAME = ExtensionPointName.create("com.intellij.saveFileAsTemplateHandler");
+  ExtensionPointName<SaveFileAsTemplateHandler> EP_NAME = ExtensionPointName.create("consulo.base.saveFileAsTemplateHandler");
 
   @Nullable
   String getTemplateText(PsiFile file, String fileText, String nameWithoutExtension);

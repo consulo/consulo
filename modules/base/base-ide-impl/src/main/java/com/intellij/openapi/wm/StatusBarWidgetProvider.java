@@ -1,8 +1,10 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.openapi.wm;
 
-import consulo.component.extension.ExtensionPointName;
 import com.intellij.openapi.project.Project;
+import consulo.component.extension.ExtensionPointName;
+import consulo.container.plugin.PluginIds;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -14,7 +16,7 @@ import javax.annotation.Nullable;
  */
 @Deprecated
 public interface StatusBarWidgetProvider {
-  ExtensionPointName<StatusBarWidgetProvider> EP_NAME = new ExtensionPointName<>("com.intellij.statusBarWidgetProvider");
+  ExtensionPointName<StatusBarWidgetProvider> EP_NAME = new ExtensionPointName<>(PluginIds.CONSULO_BASE + ".statusBarWidgetProvider");
 
   /**
    * Returns a widget to be added to the status bar.

@@ -16,6 +16,7 @@
 package consulo.lang;
 
 import com.intellij.lang.LanguageExtension;
+import consulo.container.plugin.PluginIds;
 
 /**
  * @author VISTALL
@@ -25,6 +26,6 @@ public class LanguageVersionResolvers extends LanguageExtension<LanguageVersionR
   public static final LanguageVersionResolvers INSTANCE = new LanguageVersionResolvers();
 
   private LanguageVersionResolvers() {
-    super("com.intellij.lang.versionResolver", LanguageVersionResolver.DEFAULT);
+    super(PluginIds.CONSULO_BASE + ".lang.versionResolver", LanguageVersionResolver.DEFAULT);
   }
 }

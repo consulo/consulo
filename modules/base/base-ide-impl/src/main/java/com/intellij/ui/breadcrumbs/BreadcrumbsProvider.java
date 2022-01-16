@@ -17,7 +17,7 @@ import java.util.List;
  * @author Sergey.Malenkov
  */
 public interface BreadcrumbsProvider {
-  ExtensionPointName<BreadcrumbsProvider> EP_NAME = ExtensionPointName.create("com.intellij.breadcrumbsInfoProvider");
+  ExtensionPointName<BreadcrumbsProvider> EP_NAME = ExtensionPointName.create("consulo.base.breadcrumbsInfoProvider");
 
   /**
    * @return an array of languages supported by this provider

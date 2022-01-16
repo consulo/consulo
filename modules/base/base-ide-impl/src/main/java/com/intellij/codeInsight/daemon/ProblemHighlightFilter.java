@@ -28,7 +28,7 @@ import java.util.List;
  * and return true otherwise.
  */
 public abstract class ProblemHighlightFilter {
-  public static final ExtensionPointName<ProblemHighlightFilter> EP_NAME = ExtensionPointName.create("com.intellij.problemHighlightFilter");
+  public static final ExtensionPointName<ProblemHighlightFilter> EP_NAME = ExtensionPointName.create("consulo.base.problemHighlightFilter");
 
   /**
    * @param psiFile file to decide about

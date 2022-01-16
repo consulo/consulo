@@ -16,6 +16,7 @@
 package consulo.lang;
 
 import com.intellij.lang.LanguageExtension;
+import consulo.container.plugin.PluginIds;
 import consulo.ui.image.Image;
 
 /**
@@ -26,6 +27,6 @@ public class LanguageElementIcons extends LanguageExtension<Image> {
   public static final LanguageElementIcons INSTANCE = new LanguageElementIcons();
 
   public LanguageElementIcons() {
-    super("com.intellij.lang.elementIcon");
+    super(PluginIds.CONSULO_BASE + ".lang.elementIcon");
   }
 }

@@ -39,6 +39,7 @@ import java.util.List;
  * @see com.intellij.util.EventDispatcher
  * @since 20.04.2015
  */
+@Deprecated
 public abstract class CompositeExtensionPointName<T> {
   public static final Logger LOGGER = Logger.getInstance(CompositeExtensionPointName.class);
 

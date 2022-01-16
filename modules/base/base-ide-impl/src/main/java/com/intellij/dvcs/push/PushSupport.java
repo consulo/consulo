@@ -29,7 +29,7 @@ import javax.annotation.Nullable;
 public abstract class PushSupport<Repo extends Repository, Source extends PushSource, Target extends PushTarget> {
 
   public static final ExtensionPointName<PushSupport<? extends Repository, ? extends PushSource, ? extends PushTarget>> PUSH_SUPPORT_EP =
-          ExtensionPointName.create("com.intellij.pushSupport");
+          ExtensionPointName.create("consulo.base.pushSupport");
 
   @Nonnull
   public abstract AbstractVcs getVcs();

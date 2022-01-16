@@ -25,7 +25,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import javax.annotation.Nonnull;
 
 public abstract class FileDocumentSynchronizationVetoer {
-  public static final ExtensionPointName<FileDocumentSynchronizationVetoer> EP_NAME = ExtensionPointName.create("com.intellij.fileDocumentSynchronizationVetoer");
+  public static final ExtensionPointName<FileDocumentSynchronizationVetoer> EP_NAME = ExtensionPointName.create("consulo.base.fileDocumentSynchronizationVetoer");
 
   public boolean maySaveDocument(@Nonnull Document document, boolean isSaveExplicit) {
     return true;

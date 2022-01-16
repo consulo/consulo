@@ -23,7 +23,7 @@ import javax.annotation.Nullable;
  * @author Eugene.Kudelevsky
  */
 public interface CustomLiveTemplate {
-  ExtensionPointName<CustomLiveTemplate> EP_NAME = ExtensionPointName.create("com.intellij.customLiveTemplate");
+  ExtensionPointName<CustomLiveTemplate> EP_NAME = ExtensionPointName.create("consulo.base.customLiveTemplate");
 
   @Nullable
   String computeTemplateKey(@Nonnull CustomTemplateCallback callback);

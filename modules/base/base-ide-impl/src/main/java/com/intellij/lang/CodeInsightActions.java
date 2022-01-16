@@ -19,18 +19,20 @@
  */
 package com.intellij.lang;
 
+import consulo.container.plugin.PluginIds;
+
 public class CodeInsightActions {
   public static final LanguageExtension<LanguageCodeInsightActionHandler>
-    IMPLEMENT_METHOD = new LanguageExtension<LanguageCodeInsightActionHandler>("com.intellij.codeInsight.implementMethod");
+    IMPLEMENT_METHOD = new LanguageExtension<>(PluginIds.CONSULO_BASE + ".codeInsight.implementMethod");
 
   public static final LanguageExtension<LanguageCodeInsightActionHandler>
-    OVERRIDE_METHOD = new LanguageExtension<LanguageCodeInsightActionHandler>("com.intellij.codeInsight.overrideMethod");
+    OVERRIDE_METHOD = new LanguageExtension<>(PluginIds.CONSULO_BASE + ".codeInsight.overrideMethod");
 
   public static final LanguageExtension<LanguageCodeInsightActionHandler>
-    DELEGATE_METHODS = new LanguageExtension<LanguageCodeInsightActionHandler>("com.intellij.codeInsight.delegateMethods");
+    DELEGATE_METHODS = new LanguageExtension<>(PluginIds.CONSULO_BASE + ".codeInsight.delegateMethods");
 
   public static final LanguageExtension<LanguageCodeInsightActionHandler>
-    GOTO_SUPER = new LanguageExtension<LanguageCodeInsightActionHandler>("com.intellij.codeInsight.gotoSuper");
+    GOTO_SUPER = new LanguageExtension<>(PluginIds.CONSULO_BASE + ".codeInsight.gotoSuper");
 
   private CodeInsightActions() {
   }

@@ -24,8 +24,7 @@ import java.util.Set;
  * @since 2019-07-16
  */
 public final class PluginIds {
-  // TODO [VISTALL] rename later. consulo.base
-  public static final PluginId CONSULO_PLATFORM_BASE = PluginId.getId("com.intellij");
+  public static final PluginId CONSULO_BASE = PluginId.getId("consulo.base");
 
   public static final PluginId CONSULO_DESKTOP_AWT = PluginId.getId("consulo.desktop.awt");
 
@@ -42,7 +41,7 @@ public final class PluginIds {
   }
 
   public static boolean isPlatformPlugin(PluginId pluginId) {
-    return CONSULO_PLATFORM_BASE.equals(pluginId) || isPlatformImplementationPlugin(pluginId);
+    return CONSULO_BASE.equals(pluginId) || isPlatformImplementationPlugin(pluginId);
   }
 
   public static Set<PluginId> getObsoletePlugins() {

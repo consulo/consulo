@@ -20,7 +20,7 @@ import com.intellij.openapi.vcs.AbstractVcs;
 import javax.annotation.Nonnull;
 
 public interface VcsIgnoredFilesHolder extends IgnoredFilesHolder {
-  ExtensionPointName<VcsIgnoredFilesHolder> VCS_IGNORED_FILES_HOLDER_EP = ExtensionPointName.create("com.intellij.vcs.ignoredFilesHolder");
+  ExtensionPointName<VcsIgnoredFilesHolder> VCS_IGNORED_FILES_HOLDER_EP = ExtensionPointName.create("consulo.base.vcs.ignoredFilesHolder");
 
   default boolean isInUpdatingMode() {return false;}
 

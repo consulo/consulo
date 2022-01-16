@@ -25,7 +25,7 @@ import javax.annotation.Nullable;
  * @author yole
  */
 public interface SurroundWithRangeAdjuster {
-  ExtensionPointName<SurroundWithRangeAdjuster> EP_NAME = ExtensionPointName.create("com.intellij.codeInsight.surroundWithRangeAdjuster");
+  ExtensionPointName<SurroundWithRangeAdjuster> EP_NAME = ExtensionPointName.create("consulo.base.codeInsight.surroundWithRangeAdjuster");
 
   @javax.annotation.Nullable
   TextRange adjustSurroundWithRange(PsiFile file, TextRange selectedRange);

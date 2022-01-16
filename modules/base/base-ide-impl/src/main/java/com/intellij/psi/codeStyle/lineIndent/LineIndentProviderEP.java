@@ -23,7 +23,7 @@ import javax.annotation.Nullable;
  * Line indent provider extension point
  */
 public class LineIndentProviderEP {
-  public final static ExtensionPointName<LineIndentProvider> EP_NAME = ExtensionPointName.create("com.intellij.lineIndentProvider");
+  public final static ExtensionPointName<LineIndentProvider> EP_NAME = ExtensionPointName.create("consulo.base.lineIndentProvider");
 
   @Nullable
   public static LineIndentProvider findLineIndentProvider(@Nullable Language language) {

@@ -23,7 +23,7 @@ import com.intellij.usages.rules.UsageGroupingRule;
 import javax.annotation.Nullable;
 
 public interface FileStructureGroupRuleProvider {
-  ExtensionPointName<FileStructureGroupRuleProvider> EP_NAME = ExtensionPointName.create("com.intellij.fileStructureGroupRuleProvider");
+  ExtensionPointName<FileStructureGroupRuleProvider> EP_NAME = ExtensionPointName.create("consulo.base.fileStructureGroupRuleProvider");
 
   @Nullable
   UsageGroupingRule getUsageGroupingRule(final Project project);

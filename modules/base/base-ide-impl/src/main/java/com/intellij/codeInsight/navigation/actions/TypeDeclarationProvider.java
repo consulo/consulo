@@ -27,7 +27,7 @@ import consulo.annotation.access.RequiredReadAction;
  * @author yole
  */
 public abstract class TypeDeclarationProvider {
-  public static final ExtensionPointName<TypeDeclarationProvider> EP_NAME = ExtensionPointName.create("com.intellij.typeDeclarationProvider");
+  public static final ExtensionPointName<TypeDeclarationProvider> EP_NAME = ExtensionPointName.create("consulo.base.typeDeclarationProvider");
 
   @Nullable
   @RequiredReadAction

@@ -19,11 +19,12 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiReference;
+import consulo.container.plugin.PluginIds;
+import consulo.extensions.CompositeExtensionPointName;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import consulo.extensions.CompositeExtensionPointName;
-
 import java.util.Collection;
 import java.util.Set;
 
@@ -33,7 +34,7 @@ import java.util.Set;
  */
 public interface TargetElementUtilEx {
   CompositeExtensionPointName<TargetElementUtilEx> EP_NAME =
-          CompositeExtensionPointName.applicationPoint("com.intellij.targetElementUtilEx", TargetElementUtilEx.class);
+          CompositeExtensionPointName.applicationPoint(PluginIds.CONSULO_BASE + ".targetElementUtilEx", TargetElementUtilEx.class);
 
   class Adapter implements TargetElementUtilEx {
     @Override

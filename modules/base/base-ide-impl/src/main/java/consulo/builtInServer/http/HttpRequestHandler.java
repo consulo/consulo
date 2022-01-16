@@ -27,7 +27,7 @@ import javax.annotation.Nonnull;
 import java.io.IOException;
 
 public abstract class HttpRequestHandler {
-  public static final ExtensionPointName<HttpRequestHandler> EP_NAME = ExtensionPointName.create("com.intellij.httpRequestHandler");
+  public static final ExtensionPointName<HttpRequestHandler> EP_NAME = ExtensionPointName.create("consulo.base.httpRequestHandler");
 
   public static boolean checkPrefix(String uri, String prefix) {
     if (uri.length() > prefix.length() && uri.charAt(0) == '/' && uri.regionMatches(true, 1, prefix, 0, prefix.length())) {

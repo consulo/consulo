@@ -47,6 +47,7 @@ import consulo.components.impl.stores.ProjectStoreImpl;
 import consulo.components.impl.stores.StoreUtil;
 import consulo.container.plugin.ComponentConfig;
 import consulo.container.plugin.PluginDescriptor;
+import consulo.container.plugin.PluginIds;
 import consulo.container.plugin.PluginListenerDescriptor;
 import consulo.injecting.InjectingContainerBuilder;
 import consulo.logging.Logger;
@@ -68,7 +69,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public class ProjectImpl extends PlatformComponentManagerImpl implements ProjectEx {
   private static final Logger LOG = Logger.getInstance(ProjectImpl.class);
-  private static final ExtensionPointId<ServiceDescriptor> PROJECT_SERVICES = ExtensionPointId.of("com.intellij.projectService");
+  private static final ExtensionPointId<ServiceDescriptor> PROJECT_SERVICES = ExtensionPointId.of(PluginIds.CONSULO_BASE + ".projectService");
 
   public static final String NAME_FILE = ".name";
 

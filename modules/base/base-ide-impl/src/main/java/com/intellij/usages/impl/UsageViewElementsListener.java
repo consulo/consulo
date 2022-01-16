@@ -7,7 +7,7 @@ import com.intellij.usages.UsageView;
 import javax.annotation.Nonnull;
 
 public interface UsageViewElementsListener {
-  ExtensionPointName<UsageViewElementsListener> EP_NAME = ExtensionPointName.create("com.intellij.usageViewElementsListener");
+  ExtensionPointName<UsageViewElementsListener> EP_NAME = ExtensionPointName.create("consulo.base.usageViewElementsListener");
 
   default void beforeUsageAdded(@Nonnull UsageView view, @Nonnull Usage usage) {
   }

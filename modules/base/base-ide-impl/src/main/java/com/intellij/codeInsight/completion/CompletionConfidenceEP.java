@@ -18,15 +18,16 @@ package com.intellij.codeInsight.completion;
 import com.intellij.lang.Language;
 import com.intellij.lang.LanguageExtension;
 import com.intellij.lang.LanguageExtensionPoint;
-import javax.annotation.Nonnull;
+import consulo.container.plugin.PluginIds;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 /**
  * @author peter
  */
 public class CompletionConfidenceEP extends LanguageExtensionPoint<CompletionContributor> {
-  private static final LanguageExtension<CompletionConfidence> INSTANCE = new LanguageExtension<CompletionConfidence>("com.intellij.completion.confidence");
+  private static final LanguageExtension<CompletionConfidence> INSTANCE = new LanguageExtension<>(PluginIds.CONSULO_BASE + ".completion.confidence");
 
   public static List<CompletionConfidence> forLanguage(@Nonnull Language language) {
     return INSTANCE.forKey(language);

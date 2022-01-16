@@ -22,14 +22,13 @@ package com.intellij.lang;
 import com.intellij.ide.structureView.StructureViewBuilder;
 import com.intellij.psi.PsiFile;
 
+import javax.annotation.Nullable;
+
 /**
  * Should be registered as language extension
  * @see LanguageStructureViewBuilder
  */
 public interface PsiStructureViewFactory {
-
-  String EP_NAME = "com.intellij.lang.psiStructureViewFactory";
-
-  @javax.annotation.Nullable
+  @Nullable
   StructureViewBuilder getStructureViewBuilder(PsiFile psiFile);
 }

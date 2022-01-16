@@ -30,6 +30,7 @@ import com.intellij.openapi.vfs.pointers.VirtualFilePointerManager;
 import consulo.component.extension.ExtensionPointId;
 import consulo.components.impl.PlatformComponentManagerImpl;
 import consulo.container.plugin.PluginDescriptor;
+import consulo.container.plugin.PluginIds;
 import consulo.container.plugin.PluginListenerDescriptor;
 import consulo.injecting.InjectingContainerBuilder;
 
@@ -41,7 +42,7 @@ import java.util.List;
  * @author max
  */
 public class ModuleImpl extends PlatformComponentManagerImpl implements ModuleEx {
-  private static final ExtensionPointId<ServiceDescriptor> MODULE_SERVICES = ExtensionPointId.of("com.intellij.moduleService");
+  private static final ExtensionPointId<ServiceDescriptor> MODULE_SERVICES = ExtensionPointId.of(PluginIds.CONSULO_BASE + ".moduleService");
 
   @Nonnull
   private String myName;

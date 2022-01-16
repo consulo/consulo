@@ -26,7 +26,7 @@ import javax.annotation.Nullable;
  * A macro which can be used in live templates.
  */
 public abstract class Macro {
-  public static final ExtensionPointName<Macro> EP_NAME = ExtensionPointName.create("com.intellij.liveTemplateMacro");
+  public static final ExtensionPointName<Macro> EP_NAME = ExtensionPointName.create("consulo.base.liveTemplateMacro");
   
   @NonNls
   public abstract String getName();

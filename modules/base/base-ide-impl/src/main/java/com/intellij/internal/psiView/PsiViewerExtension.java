@@ -29,7 +29,7 @@ import javax.swing.*;
  * @author Konstantin Bulenkov
  */
 public interface PsiViewerExtension {
-  ExtensionPointName<PsiViewerExtension> EP_NAME = ExtensionPointName.create("com.intellij.psiViewerExtension");
+  ExtensionPointName<PsiViewerExtension> EP_NAME = ExtensionPointName.create("consulo.base.psiViewerExtension");
 
   String getName();
   Icon getIcon();

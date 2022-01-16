@@ -76,7 +76,7 @@ import java.util.function.Predicate;
 
 public abstract class AbstractProjectViewPane extends UserDataHolderBase implements DataProvider, Disposable, BusyObject {
   private static final Logger LOG = Logger.getInstance(AbstractProjectViewPane.class);
-  public static final ExtensionPointName<AbstractProjectViewPane> EP_NAME = ExtensionPointName.create("com.intellij.projectViewPane");
+  public static final ExtensionPointName<AbstractProjectViewPane> EP_NAME = ExtensionPointName.create("consulo.base.projectViewPane");
 
   @Nonnull
   protected final Project myProject;

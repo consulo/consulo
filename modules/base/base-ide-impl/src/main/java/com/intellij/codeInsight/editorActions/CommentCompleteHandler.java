@@ -24,7 +24,7 @@ import com.intellij.psi.PsiComment;
  * @author Alexander Podkhalyuzin
  */
 public interface CommentCompleteHandler {
-  ExtensionPointName<CommentCompleteHandler> EP_NAME = ExtensionPointName.create("com.intellij.commentCompleteHandler");
+  ExtensionPointName<CommentCompleteHandler> EP_NAME = ExtensionPointName.create("consulo.base.commentCompleteHandler");
 
   boolean isCommentComplete(PsiComment comment, CodeDocumentationAwareCommenter commenter, Editor editor);
 

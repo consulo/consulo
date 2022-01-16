@@ -156,7 +156,7 @@
     <extensionPoint name="lookAndFeelProvider" interface="consulo.desktop.awt.ui.LookAndFeelProvider"/>
   </extensionPoints>
 
-  <extensions defaultExtensionNs="com.intellij">
+  <extensions defaultExtensionNs="consulo.base">
     <eapDescriptor implementation="consulo.desktop.awt.ui.plaf.GTKPlusEAPDescriptor"/>
 
     <uiDebuggerExtension implementation="consulo.desktop.awt.uiOld.debugger.extensions.PlaybackDebugger"/>

@@ -33,7 +33,7 @@ import javax.annotation.Nonnull;
  *
  */
 public class DefinitionsScopedSearch extends ExtensibleQueryFactory<PsiElement, DefinitionsScopedSearch.SearchParameters> {
-  public static final ExtensionPointName<QueryExecutor> EP_NAME = ExtensionPointName.create("com.intellij.definitionsScopedSearch");
+  public static final ExtensionPointName<QueryExecutor> EP_NAME = ExtensionPointName.create("consulo.base.definitionsScopedSearch");
   public static final DefinitionsScopedSearch INSTANCE = new DefinitionsScopedSearch();
 
   public static Query<PsiElement> search(PsiElement definitionsOf) {

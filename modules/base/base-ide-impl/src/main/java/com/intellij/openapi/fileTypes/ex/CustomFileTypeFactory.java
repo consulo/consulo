@@ -21,7 +21,7 @@ import org.jdom.Element;
 import javax.annotation.Nullable;
 
 public interface CustomFileTypeFactory {
-  ExtensionPointName<CustomFileTypeFactory> EP_NAME = ExtensionPointName.create("com.intellij.customFileTypeFactory");
+  ExtensionPointName<CustomFileTypeFactory> EP_NAME = ExtensionPointName.create("consulo.base.customFileTypeFactory");
 
   @Nullable
   UserFileType createFileType(Element element);

@@ -18,6 +18,7 @@ package consulo.psi.tree;
 import com.intellij.psi.impl.source.tree.LazyParseableElement;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.ILazyParseableElementType;
+import consulo.container.plugin.PluginIds;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -28,7 +29,7 @@ import java.util.function.Predicate;
  * @since 2:10/02.04.13
  */
 public interface ASTLazyFactory extends Predicate<IElementType> {
-  ElementTypeEntryExtensionCollector<ASTLazyFactory> EP = ElementTypeEntryExtensionCollector.create("com.intellij.lang.ast.lazyFactory");
+  ElementTypeEntryExtensionCollector<ASTLazyFactory> EP = ElementTypeEntryExtensionCollector.create(PluginIds.CONSULO_BASE + ".lang.ast.lazyFactory");
 
   @Nonnull
   LazyParseableElement createLazy(@Nonnull ILazyParseableElementType type, @Nullable CharSequence text);

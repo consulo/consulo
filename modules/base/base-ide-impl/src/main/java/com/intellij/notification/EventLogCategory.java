@@ -22,7 +22,7 @@ import javax.annotation.Nonnull;
  * @author gregsh
  */
 public abstract class EventLogCategory {
-  public static final ExtensionPointName<EventLogCategory> EP_NAME = ExtensionPointName.create("com.intellij.eventLogCategory");
+  public static final ExtensionPointName<EventLogCategory> EP_NAME = ExtensionPointName.create("consulo.base.eventLogCategory");
 
   private final String myDisplayName;
 

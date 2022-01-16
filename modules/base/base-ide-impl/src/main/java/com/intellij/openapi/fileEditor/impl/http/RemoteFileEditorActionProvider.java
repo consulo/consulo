@@ -25,7 +25,7 @@ import javax.annotation.Nonnull;
  * @author nik
  */
 public abstract class RemoteFileEditorActionProvider {
-  public static final ExtensionPointName<RemoteFileEditorActionProvider> EP_NAME = ExtensionPointName.create("com.intellij.http.fileEditorActionProvider");
+  public static final ExtensionPointName<RemoteFileEditorActionProvider> EP_NAME = ExtensionPointName.create("consulo.base.http.fileEditorActionProvider");
 
   @Nonnull
   public abstract AnAction[] createToolbarActions(@Nonnull Project project, @Nonnull HttpVirtualFile file);

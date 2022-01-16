@@ -33,7 +33,7 @@ import java.util.List;
  */
 public abstract class ProjectStructureValidator {
 
-  private static final ExtensionPointName<ProjectStructureValidator> EP_NAME = ExtensionPointName.create("com.intellij.projectStructureValidator");
+  private static final ExtensionPointName<ProjectStructureValidator> EP_NAME = ExtensionPointName.create("consulo.base.projectStructureValidator");
 
   public static List<ProjectStructureElementUsage> getUsagesInElement(final ProjectStructureElement element) {
     for (ProjectStructureValidator validator : EP_NAME.getExtensionList()) {

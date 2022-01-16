@@ -14,7 +14,7 @@ import java.util.Collection;
  * Several search engines can be used at the same moment to achieve best performance (time-to-result).
  */
 public interface FindInProjectSearchEngine {
-  ExtensionPointName<FindInProjectSearchEngine> EP_NAME = ExtensionPointName.create("com.intellij.findInProjectSearchEngine");
+  ExtensionPointName<FindInProjectSearchEngine> EP_NAME = ExtensionPointName.create("consulo.base.findInProjectSearchEngine");
 
   /**
    * Constructs a searcher for a given {@param findModel} which serves as a input query.
