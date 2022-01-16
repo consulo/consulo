@@ -14,8 +14,8 @@
   - limitations under the License.
   -->
 <consulo-plugin>
-  <id>consulo.platform.desktop.swt</id>
-  <name>Platform: desktop swt</name>
+  <id>consulo.desktop.swt</id>
+  <name>Consulo [desktop] [SWT]</name>
 
   <project-components>
     <component>

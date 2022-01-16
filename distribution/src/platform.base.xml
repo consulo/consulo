@@ -17,12 +17,10 @@
   <!--FIXME [VISTALL] if you update this file - update _mac file too-->
   <dependencySets>
     <dependencySet>
-      <outputDirectory>Consulo/platform/buildSNAPSHOT/modules/consulo.platform.base/lib</outputDirectory>
+      <outputDirectory>Consulo/platform/buildSNAPSHOT/modules/consulo.base/lib</outputDirectory>
       <outputFileNameMapping>${artifact.artifactId}.${artifact.extension}</outputFileNameMapping>
       <unpack>false</unpack>
       <includes>
-        <include>consulo:consulo-platform-base-plugin</include>
-
         <include>consulo:consulo-annotation</include>
         <include>consulo:consulo-base-ide-impl</include>
         <include>consulo:consulo-disposer-api</include>

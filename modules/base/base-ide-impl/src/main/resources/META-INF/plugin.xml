@@ -15,7 +15,7 @@
   -->
 <consulo-plugin>
   <id>com.intellij</id>
-  <name>Platform: base</name>
+  <name>Consulo</name>
   <localize>consulo.platform.base.ActionLocalize</localize>
 
   <import path="/META-INF/Actions.xml"/>

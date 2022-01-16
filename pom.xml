@@ -25,7 +25,6 @@
     <module>sandbox/sand-language-plugin</module>
 
     <module>modules/desktop-awt/desktop-awt-hacking</module>
-    <module>modules/desktop-awt/desktop-awt-plugin</module>
     <module>modules/desktop-awt/desktop-awt-ide-impl</module>
     <module>modules/desktop-awt/desktop-awt-bootstrap</module>
     <module>modules/desktop-awt/desktop-awt-eawt-wrapper</module>
@@ -34,9 +33,7 @@
 
     <module>modules/desktop-swt/desktop-swt-bootstrap</module>
     <module>modules/desktop-swt/desktop-swt-ide-impl</module>
-    <module>modules/desktop-swt/desktop-swt-plugin</module>
 
-    <module>modules/web/web-plugin</module>
     <module>modules/web/web-bootstrap</module>
     <module>modules/web/web-ide</module>
     <module>modules/web/web-ui-impl-client</module>
@@ -52,7 +49,6 @@
     <module>modules/base/base-localize-library</module>
     <module>modules/base/base-icon-library</module>
     <module>modules/base/base-ide-impl</module>
-    <module>modules/base/base-plugin</module>
     <module>modules/base/disposer-api</module>
     <module>modules/base/disposer-impl</module>
     <module>modules/base/platform-api</module>

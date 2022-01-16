@@ -14,8 +14,8 @@
   - limitations under the License.
   -->
 <consulo-plugin>
-  <id>consulo.platform.desktop.awt</id>
-  <name>Platform: desktop awt</name>
+  <id>consulo.desktop.awt</id>
+  <name>Consulo [desktop] [AWT]</name>
 
   <actions>
     <group id="FileChooser">

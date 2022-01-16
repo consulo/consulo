@@ -26,7 +26,7 @@ import java.util.function.Consumer;
  * @since 2019-11-03
  */
 public interface LookAndFeelProvider {
-  ExtensionPointName<LookAndFeelProvider> EP_NAME = ExtensionPointName.create("consulo.platform.desktop.awt.lookAndFeelProvider");
+  ExtensionPointName<LookAndFeelProvider> EP_NAME = ExtensionPointName.create("consulo.desktop.awt.lookAndFeelProvider");
 
   void register(@Nonnull Consumer<UIManager.LookAndFeelInfo> consumer);
 }

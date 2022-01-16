@@ -34,14 +34,14 @@ import java.util.*;
  * @author max
  */
 public class BootstrapClassLoaderUtil {
-  private static final String CONSULO_PLATFORM_BASE = "consulo.platform.base";
+  private static final String CONSULO_BASE = "consulo.base";
 
   public static ContainerStartup buildContainerStartup(Map<String, Object> args, File modulesDirectory, ContainerLogger containerLogger, Java9ModuleProcessor processor) throws Exception {
     StatCollector stat = (StatCollector)args.get(ContainerStartup.STAT_COLLECTOR);
 
     Runnable bootInitialize = stat.mark("boot.classloader.initialize");
 
-    Runnable mark = stat.mark(CONSULO_PLATFORM_BASE + ".initialize");
+    Runnable mark = stat.mark(CONSULO_BASE + ".initialize");
     PluginDescriptorImpl base = initializePlatformBase(modulesDirectory, containerLogger, processor);
     mark.run();
 
@@ -51,7 +51,7 @@ public class BootstrapClassLoaderUtil {
     File[] files = modulesDirectory.listFiles();
     assert files != null;
     for (File moduleDirectory : files) {
-      if (CONSULO_PLATFORM_BASE.equals(moduleDirectory.getName())) {
+      if (CONSULO_BASE.equals(moduleDirectory.getName())) {
         continue;
       }
 
@@ -101,7 +101,7 @@ public class BootstrapClassLoaderUtil {
   }
 
   private static PluginDescriptorImpl initializePlatformBase(File modulesDirectory, ContainerLogger containerLogger, Java9ModuleProcessor processor) throws Exception {
-    File platformBaseDirectory = new File(modulesDirectory, CONSULO_PLATFORM_BASE);
+    File platformBaseDirectory = new File(modulesDirectory, CONSULO_BASE);
 
     PluginDescriptorImpl platformBasePlugin = PluginDescriptorLoader.loadDescriptor(platformBaseDirectory, false, true, containerLogger);
 

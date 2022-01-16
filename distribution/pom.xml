@@ -74,16 +74,6 @@
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>consulo-platform-base-plugin</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>consulo-platform-desktop-awt-plugin</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>${project.groupId}</groupId>
       <artifactId>consulo-sand-language-plugin</artifactId>
       <version>${project.version}</version>
     </dependency>
@@ -180,11 +170,6 @@
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>consulo-web-ide</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>consulo-platform-web-plugin</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
