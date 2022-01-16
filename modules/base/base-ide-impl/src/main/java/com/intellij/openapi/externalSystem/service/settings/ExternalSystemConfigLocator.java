@@ -1,6 +1,6 @@
 package com.intellij.openapi.externalSystem.service.settings;
 
-import com.intellij.openapi.extensions.ExtensionPointName;
+import consulo.component.extension.ExtensionPointName;
 import com.intellij.openapi.externalSystem.model.ProjectSystemId;
 import com.intellij.openapi.externalSystem.settings.ExternalProjectSettings;
 import com.intellij.openapi.vfs.VirtualFile;

@@ -17,7 +17,7 @@
 package com.intellij.ide.bookmarks;
 
 import com.intellij.ide.IdeBundle;
-import com.intellij.openapi.components.PersistentStateComponent;
+import consulo.component.persist.PersistentStateComponent;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.components.StoragePathMacros;
@@ -39,7 +39,7 @@ import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.psi.PsiDocumentListener;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;
-import com.intellij.util.messages.MessageBus;
+import consulo.component.messagebus.MessageBus;
 import com.intellij.util.ui.UIUtil;
 import consulo.project.startup.StartupActivity;
 import consulo.ui.UIAccess;

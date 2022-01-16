@@ -16,6 +16,7 @@
 package com.intellij.openapi.components;
 
 import com.intellij.openapi.util.ModificationTracker;
+import consulo.component.persist.PersistentStateComponent;
 
 /**
  * To check that component stat is changed and must be saved, `getState` is called.

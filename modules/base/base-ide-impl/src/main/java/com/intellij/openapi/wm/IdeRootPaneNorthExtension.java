@@ -21,7 +21,7 @@
 package com.intellij.openapi.wm;
 
 import com.intellij.ide.ui.UISettings;
-import com.intellij.openapi.extensions.ExtensionPointName;
+import consulo.component.extension.ExtensionPointName;
 import consulo.disposer.Disposable;
 
 import javax.swing.*;

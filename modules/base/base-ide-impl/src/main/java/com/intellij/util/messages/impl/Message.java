@@ -5,7 +5,7 @@
  */
 package com.intellij.util.messages.impl;
 
-import com.intellij.util.messages.Topic;
+import consulo.component.messagebus.Topic;
 import javax.annotation.Nonnull;
 
 import java.lang.reflect.Method;

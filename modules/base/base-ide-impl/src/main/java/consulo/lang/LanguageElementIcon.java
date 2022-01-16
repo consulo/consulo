@@ -17,7 +17,7 @@ package consulo.lang;
 
 import com.intellij.openapi.extensions.AbstractExtensionPointBean;
 import com.intellij.openapi.util.NullableLazyValue;
-import com.intellij.util.KeyedLazyInstance;
+import consulo.component.extension.KeyedLazyInstance;
 import com.intellij.util.xmlb.annotations.Attribute;
 import consulo.annotation.DeprecationInfo;
 import consulo.ui.image.Image;

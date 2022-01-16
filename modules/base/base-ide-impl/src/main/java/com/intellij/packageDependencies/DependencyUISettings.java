@@ -21,6 +21,7 @@ import com.intellij.openapi.extensions.Extensions;
 import com.intellij.packageDependencies.ui.PatternDialectProvider;
 import com.intellij.util.xmlb.XmlSerializerUtil;
 
+import consulo.component.persist.PersistentStateComponent;
 import jakarta.inject.Singleton;
 
 @Singleton

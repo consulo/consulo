@@ -15,7 +15,7 @@
  */
 package consulo.project.startup;
 
-import com.intellij.openapi.extensions.ExtensionPointName;
+import consulo.component.extension.ExtensionPointName;
 import com.intellij.openapi.project.Project;
 import consulo.ui.UIAccess;
 

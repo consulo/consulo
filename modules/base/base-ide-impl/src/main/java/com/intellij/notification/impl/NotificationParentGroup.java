@@ -16,7 +16,7 @@
 package com.intellij.notification.impl;
 
 import com.intellij.notification.NotificationGroup;
-import com.intellij.openapi.extensions.ExtensionPointName;
+import consulo.component.extension.ExtensionPointName;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

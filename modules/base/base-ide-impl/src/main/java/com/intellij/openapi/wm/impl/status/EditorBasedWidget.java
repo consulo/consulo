@@ -11,7 +11,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.*;
 import com.intellij.ui.EditorTextField;
 import com.intellij.util.ArrayUtil;
-import com.intellij.util.messages.MessageBusConnection;
+import consulo.component.messagebus.MessageBusConnection;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
 

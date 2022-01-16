@@ -20,6 +20,7 @@ import com.google.common.collect.Collections2;
 import com.intellij.openapi.components.*;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.component.persist.PersistentStateComponent;
 import jakarta.inject.Singleton;
 
 import javax.annotation.Nullable;

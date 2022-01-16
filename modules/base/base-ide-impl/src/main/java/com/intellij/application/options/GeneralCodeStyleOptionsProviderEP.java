@@ -16,7 +16,7 @@
 package com.intellij.application.options;
 
 import com.intellij.openapi.application.Application;
-import com.intellij.openapi.extensions.ExtensionPointName;
+import consulo.component.extension.ExtensionPointName;
 import consulo.options.ApplicationConfigurableEP;
 
 import jakarta.inject.Inject;

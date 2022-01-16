@@ -20,6 +20,7 @@ import com.intellij.internal.statistic.beans.UsageDescriptor;
 import com.intellij.openapi.components.*;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.Function;
+import consulo.component.persist.PersistentStateComponent;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
 

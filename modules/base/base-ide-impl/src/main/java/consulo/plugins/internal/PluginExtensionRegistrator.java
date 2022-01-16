@@ -16,7 +16,7 @@
 package consulo.plugins.internal;
 
 import com.intellij.ide.plugins.PluginManagerCore;
-import com.intellij.openapi.extensions.ExtensionPoint;
+import consulo.component.extension.ExtensionPoint;
 import com.intellij.openapi.extensions.impl.ExtensionAreaId;
 import com.intellij.openapi.extensions.impl.ExtensionsAreaImpl;
 import consulo.container.impl.PluginDescriptorImpl;

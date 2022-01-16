@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.progress;
 
-import consulo.component.internal.RootComponentManager;
+import consulo.component.extension.internal.RootComponentManager;
 
 import javax.annotation.Nullable;
 

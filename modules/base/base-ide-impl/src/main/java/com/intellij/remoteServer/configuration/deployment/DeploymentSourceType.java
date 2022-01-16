@@ -16,7 +16,7 @@
 package com.intellij.remoteServer.configuration.deployment;
 
 import com.intellij.execution.configurations.RunConfiguration;
-import com.intellij.openapi.extensions.ExtensionPointName;
+import consulo.component.extension.ExtensionPointName;
 import com.intellij.openapi.project.Project;
 import org.jdom.Element;
 import javax.annotation.Nonnull;

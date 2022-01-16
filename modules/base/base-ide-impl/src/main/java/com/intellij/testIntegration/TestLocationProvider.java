@@ -16,7 +16,7 @@
 package com.intellij.testIntegration;
 
 import com.intellij.execution.Location;
-import com.intellij.openapi.extensions.ExtensionPointName;
+import consulo.component.extension.ExtensionPointName;
 import com.intellij.openapi.project.Project;
 import javax.annotation.Nonnull;
 

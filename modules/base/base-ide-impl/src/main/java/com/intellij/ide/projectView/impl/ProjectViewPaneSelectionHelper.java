@@ -2,7 +2,7 @@
 package com.intellij.ide.projectView.impl;
 
 import com.intellij.ide.util.treeView.AbstractTreeNode;
-import com.intellij.openapi.extensions.ExtensionPointName;
+import consulo.component.extension.ExtensionPointName;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.util.containers.ContainerUtil;

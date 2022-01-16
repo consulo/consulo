@@ -33,7 +33,7 @@ import com.intellij.psi.impl.PsiManagerImpl;
 import com.intellij.psi.impl.PsiTreeChangeEventImpl;
 import com.intellij.util.FileContentUtilCore;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.messages.MessageBusConnection;
+import consulo.component.messagebus.MessageBusConnection;
 import consulo.logging.Logger;
 import consulo.project.startup.StartupActivity;
 import consulo.ui.UIAccess;

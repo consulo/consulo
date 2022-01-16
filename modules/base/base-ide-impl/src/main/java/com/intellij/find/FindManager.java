@@ -23,7 +23,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.search.SearchScope;
-import com.intellij.util.messages.Topic;
+import consulo.component.messagebus.Topic;
 import org.intellij.lang.annotations.MagicConstant;
 import javax.annotation.Nonnull;
 

@@ -15,7 +15,7 @@
  */
 package consulo.ide.plugins;
 
-import com.intellij.util.messages.Topic;
+import consulo.component.messagebus.Topic;
 import consulo.container.plugin.PluginId;
 
 import javax.annotation.Nonnull;

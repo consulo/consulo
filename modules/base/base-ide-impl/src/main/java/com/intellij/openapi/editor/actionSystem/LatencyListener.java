@@ -2,10 +2,11 @@
 package com.intellij.openapi.editor.actionSystem;
 
 import com.intellij.openapi.editor.Editor;
-import com.intellij.util.messages.Topic;
+import consulo.component.messagebus.Topic;
+import consulo.component.messagebus.MessageBus;
 
 /**
- * Reports typing latency measurements on the application-level {@link com.intellij.util.messages.MessageBus}.
+ * Reports typing latency measurements on the application-level {@link MessageBus}.
  */
 public interface LatencyListener {
   Topic<LatencyListener> TOPIC = new Topic<>("Typing latency notifications", LatencyListener.class);

@@ -17,7 +17,7 @@ import com.intellij.openapi.roots.impl.PushedFilePropertiesUpdater;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.openapi.vfs.newvfs.RefreshQueue;
-import com.intellij.util.messages.MessageBusConnection;
+import consulo.component.messagebus.MessageBusConnection;
 import consulo.logging.Logger;
 import consulo.ui.UIAccess;
 

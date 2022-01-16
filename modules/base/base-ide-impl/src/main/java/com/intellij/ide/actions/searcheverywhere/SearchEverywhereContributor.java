@@ -2,7 +2,7 @@
 package com.intellij.ide.actions.searcheverywhere;
 
 import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.extensions.ExtensionPointName;
+import consulo.component.extension.ExtensionPointName;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.project.PossiblyDumbAware;
 import consulo.util.dataholder.Key;

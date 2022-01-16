@@ -17,7 +17,7 @@
 package com.intellij.codeInsight.template;
 
 import com.intellij.codeInsight.lookup.LookupElement;
-import com.intellij.openapi.extensions.ExtensionPointName;
+import consulo.component.extension.ExtensionPointName;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

@@ -16,7 +16,7 @@
 package consulo.sandboxPlugin.ide.remoteServer;
 
 import com.intellij.icons.AllIcons;
-import com.intellij.openapi.components.PersistentStateComponent;
+import consulo.component.persist.PersistentStateComponent;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.module.ModulePointerManager;

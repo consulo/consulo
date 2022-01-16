@@ -23,6 +23,7 @@ import com.intellij.openapi.components.*;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.xmlb.XmlSerializerUtil;
 import consulo.compiler.CompilationType;
+import consulo.component.persist.PersistentStateComponent;
 import jakarta.inject.Singleton;
 
 @Singleton

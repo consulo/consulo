@@ -3,9 +3,10 @@ package com.intellij.psi.util;
 
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
+import consulo.component.messagebus.MessageBus;
 import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.ModificationTracker;
-import com.intellij.util.messages.Topic;
+import consulo.component.messagebus.Topic;
 import javax.annotation.Nonnull;
 
 /**
@@ -79,7 +80,7 @@ public interface PsiModificationTracker extends ModificationTracker {
   /**
    * A topic to subscribe for all PSI modification count changes.
    *
-   * @see com.intellij.util.messages.MessageBus
+   * @see MessageBus
    */
   Topic<Listener> TOPIC = new Topic<>("modification tracker", Listener.class, Topic.BroadcastDirection.TO_PARENT);
 

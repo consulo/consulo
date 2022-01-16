@@ -17,7 +17,7 @@
 package com.intellij.ide.passwordSafe.impl.providers.masterKey;
 
 import com.intellij.ide.passwordSafe.impl.providers.ByteArrayWrapper;
-import com.intellij.openapi.components.PersistentStateComponent;
+import consulo.component.persist.PersistentStateComponent;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.components.StoragePathMacros;

@@ -14,7 +14,7 @@ import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.util.PsiModificationTracker;
 import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.util.containers.ConcurrentFactoryMap;
-import com.intellij.util.messages.MessageBus;
+import consulo.component.messagebus.MessageBus;
 import consulo.application.TransactionGuardEx;
 
 import javax.annotation.Nonnull;

@@ -19,7 +19,7 @@
  */
 package com.intellij.util.messages.impl;
 
-import com.intellij.util.messages.MessageBus;
+import consulo.component.messagebus.MessageBus;
 import consulo.injecting.InjectingContainerOwner;
 
 import javax.annotation.Nonnull;

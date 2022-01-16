@@ -16,7 +16,7 @@
 package com.intellij.openapi.project.ex;
 
 import com.intellij.openapi.project.Project;
-import com.intellij.util.messages.Topic;
+import consulo.component.messagebus.Topic;
 import consulo.components.impl.stores.IProjectStore;
 
 import javax.annotation.Nonnull;

@@ -50,7 +50,7 @@ public class DefaultIdeaErrorLogger {
       final MemoryKind kind = getOOMErrorKind(throwable);
       if (kind != null) {
         ourOomOccurred = true;
-        SwingUtilities.invokeAndWait(() -> new OutOfMemoryDialog(kind).show());
+        SwingUtilities.invokeAndWait(() -> new OutOfMemoryDialog(kind).showAsync());
       }
       else if (throwable instanceof MappingFailedException) {
         processMappingFailed(event);

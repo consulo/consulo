@@ -54,7 +54,7 @@ import com.intellij.util.Processor;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.diff.Diff;
 import com.intellij.util.diff.FilesTooBigForDiffException;
-import com.intellij.util.messages.MessageBusConnection;
+import consulo.component.messagebus.MessageBusConnection;
 import com.intellij.util.text.MatcherHolder;
 import com.intellij.util.ui.JBInsets;
 import com.intellij.util.ui.JBUI;

@@ -16,7 +16,7 @@
 package com.intellij.codeInsight.lookup;
 
 import com.intellij.util.Consumer;
-import com.intellij.openapi.extensions.ExtensionPointName;
+import consulo.component.extension.ExtensionPointName;
 
 /**
  * @author peter

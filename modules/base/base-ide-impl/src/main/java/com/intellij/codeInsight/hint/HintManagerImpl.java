@@ -27,7 +27,7 @@ import com.intellij.ui.*;
 import com.intellij.ui.awt.RelativePoint;
 import com.intellij.util.Alarm;
 import com.intellij.util.BitUtil;
-import com.intellij.util.messages.MessageBusConnection;
+import consulo.component.messagebus.MessageBusConnection;
 import com.intellij.util.ui.TimerUtil;
 import com.intellij.util.ui.accessibility.AccessibleContextUtil;
 import consulo.awt.TargetAWT;

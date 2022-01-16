@@ -16,7 +16,7 @@
 
 package com.intellij.openapi.paths;
 
-import com.intellij.openapi.extensions.ExtensionPointName;
+import consulo.component.extension.ExtensionPointName;
 import com.intellij.psi.PsiElement;
 
 /**

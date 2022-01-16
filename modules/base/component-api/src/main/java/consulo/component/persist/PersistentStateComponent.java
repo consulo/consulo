@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.intellij.openapi.components;
+package consulo.component.persist;
 
 import javax.annotation.Nullable;
 

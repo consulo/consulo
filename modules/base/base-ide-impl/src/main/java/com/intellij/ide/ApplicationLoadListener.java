@@ -15,7 +15,7 @@
  */
 package com.intellij.ide;
 
-import com.intellij.openapi.extensions.ExtensionPointName;
+import consulo.component.extension.ExtensionPointName;
 
 
 public interface ApplicationLoadListener {

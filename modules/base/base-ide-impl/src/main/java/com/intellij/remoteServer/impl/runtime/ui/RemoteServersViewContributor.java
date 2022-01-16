@@ -1,7 +1,7 @@
 package com.intellij.remoteServer.impl.runtime.ui;
 
 import com.intellij.ide.util.treeView.AbstractTreeNode;
-import com.intellij.openapi.extensions.ExtensionPointName;
+import consulo.component.extension.ExtensionPointName;
 import com.intellij.openapi.project.Project;
 import consulo.util.dataholder.Key;
 import com.intellij.remoteServer.impl.runtime.ui.tree.TreeBuilderBase;

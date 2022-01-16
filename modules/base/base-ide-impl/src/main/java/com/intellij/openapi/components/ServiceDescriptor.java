@@ -18,7 +18,7 @@ package com.intellij.openapi.components;
 
 import com.intellij.util.xmlb.annotations.Attribute;
 import consulo.container.plugin.PluginDescriptor;
-import consulo.extensions.PluginAware;
+import consulo.component.extension.PluginAware;
 
 public class ServiceDescriptor implements PluginAware {
   @Attribute("serviceInterface")

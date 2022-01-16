@@ -17,6 +17,7 @@ package consulo.ide.updateSettings;
 
 import com.intellij.openapi.components.*;
 import consulo.application.ApplicationProperties;
+import consulo.component.persist.PersistentStateComponent;
 import consulo.container.boot.ContainerPathManager;
 import consulo.ide.updateSettings.impl.PlatformOrPluginUpdateResult;
 import consulo.util.lang.ObjectUtil;

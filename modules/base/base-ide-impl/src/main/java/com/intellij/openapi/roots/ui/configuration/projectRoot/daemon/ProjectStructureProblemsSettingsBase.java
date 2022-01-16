@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.roots.ui.configuration.projectRoot.daemon;
 
-import com.intellij.openapi.components.PersistentStateComponent;
+import consulo.component.persist.PersistentStateComponent;
 import com.intellij.util.containers.SortedList;
 import com.intellij.util.xmlb.XmlSerializerUtil;
 import com.intellij.util.xmlb.annotations.AbstractCollection;

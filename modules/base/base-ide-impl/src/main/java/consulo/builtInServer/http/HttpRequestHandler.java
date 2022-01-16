@@ -15,7 +15,7 @@
  */
 package consulo.builtInServer.http;
 
-import com.intellij.openapi.extensions.ExtensionPointName;
+import consulo.component.extension.ExtensionPointName;
 import consulo.builtInServer.http.util.HttpRequestUtil;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.http.FullHttpRequest;

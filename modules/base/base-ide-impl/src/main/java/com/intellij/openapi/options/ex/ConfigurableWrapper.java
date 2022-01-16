@@ -15,8 +15,8 @@
  */
 package com.intellij.openapi.options.ex;
 
-import com.intellij.openapi.extensions.ExtensionPoint;
-import com.intellij.openapi.extensions.ExtensionPointName;
+import consulo.component.extension.ExtensionPoint;
+import consulo.component.extension.ExtensionPointName;
 import com.intellij.openapi.options.*;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.ArrayUtil;

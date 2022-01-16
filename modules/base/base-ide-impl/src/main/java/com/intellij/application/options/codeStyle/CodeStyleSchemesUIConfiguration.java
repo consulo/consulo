@@ -21,6 +21,8 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.xmlb.XmlSerializerUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
+import consulo.component.persist.PersistentStateComponent;
 import jakarta.inject.Singleton;
 
 import java.net.MalformedURLException;

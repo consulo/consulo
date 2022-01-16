@@ -20,13 +20,14 @@
  * Date: Nov 1, 2006
  * Time: 11:49:58 PM
  */
-package com.intellij.util.messages;
+package consulo.component.messagebus;
 
 import java.lang.reflect.Method;
 
 /**
  * Defines contract for generic messages subscriber processor.
  */
+@FunctionalInterface
 public interface MessageHandler {
 
   /**

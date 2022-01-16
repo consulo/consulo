@@ -4,7 +4,7 @@ package com.intellij.diagnostic;
 import consulo.container.plugin.PluginId;
 import consulo.container.plugin.PluginManager;
 import consulo.logging.Logger;
-import consulo.util.PluginExceptionUtil;
+import consulo.component.util.PluginExceptionUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

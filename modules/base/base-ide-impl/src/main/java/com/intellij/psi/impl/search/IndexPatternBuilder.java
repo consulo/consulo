@@ -3,7 +3,7 @@
 package com.intellij.psi.impl.search;
 
 import com.intellij.lexer.Lexer;
-import com.intellij.openapi.extensions.ExtensionPointName;
+import consulo.component.extension.ExtensionPointName;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.TokenSet;

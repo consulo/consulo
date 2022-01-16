@@ -19,6 +19,7 @@ import com.intellij.openapi.application.Application;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.NotNullLazyKey;
+import consulo.component.ComponentManager;
 
 import javax.annotation.Nonnull;
 

@@ -20,6 +20,8 @@ import com.intellij.openapi.components.*;
 import com.intellij.openapi.util.JDOMUtil;
 import com.intellij.util.containers.ContainerUtil;
 import java.util.HashMap;
+
+import consulo.component.persist.PersistentStateComponent;
 import jakarta.inject.Singleton;
 import org.jdom.Attribute;
 import org.jdom.Element;

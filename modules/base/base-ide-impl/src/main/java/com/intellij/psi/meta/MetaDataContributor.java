@@ -16,7 +16,7 @@
 
 package com.intellij.psi.meta;
 
-import com.intellij.openapi.extensions.ExtensionPointName;
+import consulo.component.extension.ExtensionPointName;
 
 /**
  * @author yole

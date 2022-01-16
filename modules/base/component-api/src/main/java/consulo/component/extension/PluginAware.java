@@ -13,14 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package consulo.component.extension;
 
-/*
- * @author max
+import consulo.container.plugin.PluginDescriptor;
+
+/**
+ * Extensions should implement this interface when it is important to find out what particular plugin has provided this extension.
+ *
+ * @author akireyev
  */
-package com.intellij.util;
-
-public interface KeyedLazyInstance<T> {
-  String getKey();
-
-  T getInstance();
+public interface PluginAware {
+  /**
+   * Called by extensions framework when extension is loaded from plugin.xml descriptor.
+   *
+   * @param pluginDescriptor descriptor of the plugin that provided this particular extension.
+   */
+  void setPluginDescriptor(PluginDescriptor pluginDescriptor);
 }

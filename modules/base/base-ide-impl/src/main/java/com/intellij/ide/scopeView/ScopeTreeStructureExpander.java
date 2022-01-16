@@ -20,7 +20,7 @@
  */
 package com.intellij.ide.scopeView;
 
-import com.intellij.openapi.extensions.ExtensionPointName;
+import consulo.component.extension.ExtensionPointName;
 
 import javax.swing.event.TreeWillExpandListener;
 

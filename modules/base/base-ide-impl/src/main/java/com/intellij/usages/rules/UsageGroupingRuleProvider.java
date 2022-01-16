@@ -4,7 +4,7 @@
 package com.intellij.usages.rules;
 
 import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.extensions.ExtensionPointName;
+import consulo.component.extension.ExtensionPointName;
 import com.intellij.openapi.project.Project;
 import com.intellij.usages.UsageView;
 import com.intellij.usages.UsageViewSettings;

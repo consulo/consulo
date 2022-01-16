@@ -17,6 +17,7 @@
 package com.intellij.execution.ui.layout.impl;
 
 import com.intellij.openapi.components.*;
+import consulo.component.persist.PersistentStateComponent;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
 import javax.annotation.Nonnull;

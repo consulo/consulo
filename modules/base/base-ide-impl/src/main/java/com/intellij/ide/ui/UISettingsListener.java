@@ -19,7 +19,7 @@
  */
 package com.intellij.ide.ui;
 
-import com.intellij.util.messages.Topic;
+import consulo.component.messagebus.Topic;
 
 import java.util.EventListener;
 

@@ -17,7 +17,7 @@ package consulo.roots.ui.configuration.classpath;
 
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.roots.ui.configuration.classpath.ClasspathPanel;
-import consulo.extensions.StrictExtensionPointName;
+import consulo.component.extension.StrictExtensionPointName;
 import consulo.localize.LocalizeValue;
 import consulo.roots.ModuleRootLayer;
 import consulo.roots.ui.configuration.LibrariesConfigurator;
@@ -33,7 +33,7 @@ import javax.annotation.Nonnull;
  * @since 27.09.14
  */
 public interface AddModuleDependencyActionProvider<T, C extends AddModuleDependencyContext<T>> {
-  StrictExtensionPointName<Application, AddModuleDependencyActionProvider> EP_NAME = StrictExtensionPointName.create(Application.class, "com.intellij.addModuleDependencyActionProvider");
+  StrictExtensionPointName<Application, AddModuleDependencyActionProvider> EP_NAME = StrictExtensionPointName.of(Application.class, "com.intellij.addModuleDependencyActionProvider");
 
   C createContext(@Nonnull ClasspathPanel classpathPanel, @Nonnull ModulesConfigurator modulesConfigurator, @Nonnull LibrariesConfigurator librariesConfigurator);
 

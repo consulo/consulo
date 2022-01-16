@@ -20,7 +20,7 @@ import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.concurrency.NonUrgentExecutor;
-import com.intellij.util.messages.MessageBusConnection;
+import consulo.component.messagebus.MessageBusConnection;
 import consulo.disposer.Disposable;
 import org.jetbrains.annotations.TestOnly;
 

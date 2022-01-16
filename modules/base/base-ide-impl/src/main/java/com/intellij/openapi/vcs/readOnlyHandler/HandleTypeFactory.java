@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.vcs.readOnlyHandler;
 
-import com.intellij.openapi.extensions.ExtensionPointName;
+import consulo.component.extension.ExtensionPointName;
 import com.intellij.openapi.vfs.VirtualFile;
 import javax.annotation.Nullable;
 

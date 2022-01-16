@@ -19,7 +19,7 @@ import com.intellij.execution.configurations.ConfigurationType;
 import com.intellij.execution.process.ProcessHandler;
 import com.intellij.execution.ui.RunContentDescriptor;
 import com.intellij.ide.projectView.PresentationData;
-import com.intellij.openapi.extensions.ExtensionPointName;
+import consulo.component.extension.ExtensionPointName;
 import com.intellij.openapi.util.registry.Registry;
 
 /**

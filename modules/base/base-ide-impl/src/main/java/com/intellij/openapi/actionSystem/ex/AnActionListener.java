@@ -27,7 +27,7 @@ package com.intellij.openapi.actionSystem.ex;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.DataContext;
-import com.intellij.util.messages.Topic;
+import consulo.component.messagebus.Topic;
 import consulo.annotation.DeprecationInfo;
 
 /**

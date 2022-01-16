@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-package com.intellij.openapi.extensions;
+package consulo.component.extension;
 
-import com.intellij.openapi.components.ComponentManager;
+import consulo.component.ComponentManager;
 import consulo.annotation.DeprecationInfo;
-import consulo.component.internal.RootComponentManager;
+import consulo.component.extension.internal.RootComponentManager;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.logging.Logger;
-import consulo.util.PluginExceptionUtil;
+import consulo.component.util.PluginExceptionUtil;
 import consulo.util.lang.ControlFlowException;
 
 import javax.annotation.Nonnull;

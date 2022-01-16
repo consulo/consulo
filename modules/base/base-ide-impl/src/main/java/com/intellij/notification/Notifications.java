@@ -19,7 +19,7 @@ import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.Alarm;
-import com.intellij.util.messages.Topic;
+import consulo.component.messagebus.Topic;
 import com.intellij.util.ui.UIUtil;
 import consulo.disposer.Disposer;
 

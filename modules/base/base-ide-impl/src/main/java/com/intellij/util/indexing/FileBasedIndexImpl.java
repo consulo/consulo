@@ -68,7 +68,7 @@ import com.intellij.util.indexing.provided.ProvidedIndexExtensionLocator;
 import com.intellij.util.io.DataOutputStream;
 import com.intellij.util.io.IOUtil;
 import com.intellij.util.io.storage.HeavyProcessLatch;
-import com.intellij.util.messages.MessageBusConnection;
+import consulo.component.messagebus.MessageBusConnection;
 import com.intellij.util.ui.UIUtil;
 import consulo.container.boot.ContainerPathManager;
 import consulo.disposer.Disposable;
@@ -79,9 +79,7 @@ import consulo.util.collection.primitive.ints.IntLists;
 import consulo.util.collection.primitive.ints.IntObjectMap;
 import consulo.util.collection.primitive.ints.IntSet;
 import consulo.util.dataholder.Key;
-import gnu.trove.THashMap;
-import gnu.trove.TIntArrayList;
-import gnu.trove.TIntHashSet;
+
 import javax.annotation.Nonnull;
 import org.jetbrains.annotations.TestOnly;
 

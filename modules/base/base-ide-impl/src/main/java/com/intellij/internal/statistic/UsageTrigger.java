@@ -25,6 +25,8 @@ import com.intellij.util.xmlb.annotations.Tag;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
+import consulo.component.persist.PersistentStateComponent;
 import jakarta.inject.Singleton;
 import java.util.HashMap;
 import java.util.Map;

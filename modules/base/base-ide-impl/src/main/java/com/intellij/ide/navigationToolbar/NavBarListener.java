@@ -42,7 +42,7 @@ import com.intellij.psi.PsiManager;
 import com.intellij.psi.PsiTreeChangeEvent;
 import com.intellij.psi.PsiTreeChangeListener;
 import com.intellij.ui.ScrollingUtil;
-import com.intellij.util.messages.MessageBusConnection;
+import consulo.component.messagebus.MessageBusConnection;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;

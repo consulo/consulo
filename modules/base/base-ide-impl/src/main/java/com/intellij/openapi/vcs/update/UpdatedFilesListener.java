@@ -16,7 +16,7 @@
 package com.intellij.openapi.vcs.update;
 
 import com.intellij.util.Consumer;
-import com.intellij.util.messages.Topic;
+import consulo.component.messagebus.Topic;
 
 import java.util.Set;
 

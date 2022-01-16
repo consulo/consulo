@@ -15,7 +15,7 @@
  */
 package com.intellij.psi.search;
 
-import com.intellij.openapi.extensions.ExtensionPointName;
+import consulo.component.extension.ExtensionPointName;
 import com.intellij.psi.PsiElement;
 import javax.annotation.Nonnull;
 

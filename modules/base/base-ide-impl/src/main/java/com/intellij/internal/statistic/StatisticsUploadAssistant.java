@@ -22,7 +22,7 @@ import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.Pair;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.logging.Logger;
-import consulo.util.PluginExceptionUtil;
+import consulo.component.util.PluginExceptionUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

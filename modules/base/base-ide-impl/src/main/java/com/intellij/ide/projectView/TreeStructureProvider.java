@@ -16,7 +16,7 @@
 package com.intellij.ide.projectView;
 
 import com.intellij.ide.util.treeView.AbstractTreeNode;
-import com.intellij.openapi.extensions.ExtensionPointName;
+import consulo.component.extension.ExtensionPointName;
 import consulo.util.dataholder.Key;
 
 import javax.annotation.Nullable;

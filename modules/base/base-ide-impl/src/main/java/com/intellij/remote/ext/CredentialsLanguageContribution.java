@@ -15,7 +15,7 @@
  */
 package com.intellij.remote.ext;
 
-import com.intellij.openapi.extensions.ExtensionPointName;
+import consulo.component.extension.ExtensionPointName;
 
 public abstract class CredentialsLanguageContribution<T> {
 

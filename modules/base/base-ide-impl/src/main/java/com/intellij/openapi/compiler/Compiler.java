@@ -17,7 +17,7 @@ package com.intellij.openapi.compiler;
 
 import com.intellij.openapi.fileTypes.FileType;
 import javax.annotation.Nonnull;
-import com.intellij.openapi.extensions.ExtensionPointName;
+import consulo.component.extension.ExtensionPointName;
 
 import java.util.function.Consumer;
 

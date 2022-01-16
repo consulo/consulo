@@ -15,9 +15,11 @@
  */
 package com.intellij.openapi.extensions;
 
-import com.intellij.openapi.components.ComponentManager;
+import consulo.component.ComponentManager;
 import consulo.annotation.DeprecationInfo;
-import consulo.component.internal.RootComponentManager;
+import consulo.component.extension.ExtensionPoint;
+import consulo.component.extension.ExtensionPointName;
+import consulo.component.extension.internal.RootComponentManager;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

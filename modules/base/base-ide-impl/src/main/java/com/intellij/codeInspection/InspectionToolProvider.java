@@ -15,7 +15,7 @@
  */
 package com.intellij.codeInspection;
 
-import com.intellij.openapi.extensions.ExtensionPointName;
+import consulo.component.extension.ExtensionPointName;
 import consulo.annotation.DeprecationInfo;
 
 @Deprecated

@@ -29,7 +29,7 @@ import com.intellij.openapi.util.MultiValuesMap;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.messages.MessageBusConnection;
+import consulo.component.messagebus.MessageBusConnection;
 import consulo.roots.ContentFolderScopes;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;

@@ -21,6 +21,8 @@ import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.registry.Registry;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
+import consulo.component.persist.PersistentStateComponent;
 import jakarta.inject.Singleton;
 
 import java.awt.*;

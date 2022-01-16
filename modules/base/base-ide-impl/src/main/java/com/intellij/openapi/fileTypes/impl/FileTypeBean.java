@@ -8,7 +8,7 @@ import com.intellij.util.SmartList;
 import com.intellij.util.xmlb.annotations.Attribute;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginId;
-import consulo.extensions.PluginAware;
+import consulo.component.extension.PluginAware;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;

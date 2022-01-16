@@ -17,7 +17,7 @@
 package com.intellij.openapi.wm;
 
 import com.intellij.openapi.application.Application;
-import com.intellij.openapi.extensions.ExtensionPointName;
+import consulo.component.extension.ExtensionPointName;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Condition;
 import com.intellij.util.xmlb.annotations.Attribute;

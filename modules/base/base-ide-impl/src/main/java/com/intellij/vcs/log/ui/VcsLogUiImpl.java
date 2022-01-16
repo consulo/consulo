@@ -3,7 +3,7 @@ package com.intellij.vcs.log.ui;
 import com.google.common.util.concurrent.SettableFuture;
 import consulo.disposer.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.extensions.ExtensionPointName;
+import consulo.component.extension.ExtensionPointName;
 import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.project.Project;

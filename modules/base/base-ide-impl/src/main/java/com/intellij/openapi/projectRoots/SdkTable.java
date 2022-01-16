@@ -18,7 +18,7 @@ package com.intellij.openapi.projectRoots;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Condition;
-import com.intellij.util.messages.Topic;
+import consulo.component.messagebus.Topic;
 import consulo.annotation.DeprecationInfo;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.bundle.BundleHolder;

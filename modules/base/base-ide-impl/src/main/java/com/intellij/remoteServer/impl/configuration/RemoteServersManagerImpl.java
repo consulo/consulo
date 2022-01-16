@@ -7,9 +7,10 @@ import com.intellij.remoteServer.configuration.RemoteServer;
 import com.intellij.remoteServer.configuration.RemoteServerListener;
 import com.intellij.remoteServer.configuration.RemoteServersManager;
 import com.intellij.remoteServer.configuration.ServerConfiguration;
-import com.intellij.util.messages.MessageBus;
+import consulo.component.messagebus.MessageBus;
 import com.intellij.util.xmlb.SkipDefaultValuesSerializationFilters;
 import com.intellij.util.xmlb.XmlSerializer;
+import consulo.component.persist.PersistentStateComponent;
 import jakarta.inject.Inject;
 
 import javax.annotation.Nonnull;

@@ -20,7 +20,7 @@
  */
 package com.intellij.execution.testframework;
 
-import com.intellij.openapi.extensions.ExtensionPointName;
+import consulo.component.extension.ExtensionPointName;
 
 public interface ToggleModelActionProvider {
   ExtensionPointName<ToggleModelActionProvider> EP_NAME = ExtensionPointName.create("com.intellij.testActionProvider");

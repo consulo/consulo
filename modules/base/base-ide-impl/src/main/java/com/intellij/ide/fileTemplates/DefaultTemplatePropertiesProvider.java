@@ -16,7 +16,7 @@
 
 package com.intellij.ide.fileTemplates;
 
-import com.intellij.openapi.extensions.ExtensionPointName;
+import consulo.component.extension.ExtensionPointName;
 import com.intellij.psi.PsiDirectory;
 import consulo.annotation.DeprecationInfo;
 

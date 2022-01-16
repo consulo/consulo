@@ -30,7 +30,7 @@ import com.intellij.psi.impl.source.tree.ForeignLeafPsiElement;
 import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.util.ExceptionUtil;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.messages.MessageBus;
+import consulo.component.messagebus.MessageBus;
 import com.intellij.util.text.CharArrayUtil;
 import com.intellij.util.text.ImmutableCharSequence;
 import consulo.logging.Logger;

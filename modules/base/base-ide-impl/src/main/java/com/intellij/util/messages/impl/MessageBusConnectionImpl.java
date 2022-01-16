@@ -6,9 +6,9 @@ import consulo.disposer.Disposer;
 import consulo.logging.Logger;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.util.SmartFMap;
-import com.intellij.util.messages.MessageBusConnection;
-import com.intellij.util.messages.MessageHandler;
-import com.intellij.util.messages.Topic;
+import consulo.component.messagebus.MessageBusConnection;
+import consulo.component.messagebus.MessageHandler;
+import consulo.component.messagebus.Topic;
 import javax.annotation.Nonnull;
 
 import java.lang.reflect.InvocationTargetException;

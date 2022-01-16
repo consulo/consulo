@@ -12,10 +12,9 @@ import com.intellij.util.EventDispatcher;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.MultiMap;
 import com.intellij.util.lang.CompoundRuntimeException;
-import com.intellij.util.messages.MessageBus;
-import com.intellij.util.messages.Topic;
+import consulo.component.messagebus.MessageBus;
+import consulo.component.messagebus.Topic;
 import consulo.injecting.InjectingContainerOwner;
-import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;

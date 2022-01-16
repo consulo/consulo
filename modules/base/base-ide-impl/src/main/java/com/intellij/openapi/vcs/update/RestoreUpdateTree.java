@@ -22,6 +22,7 @@ import com.intellij.openapi.startup.StartupActivity;
 import com.intellij.openapi.vcs.VcsBundle;
 import com.intellij.openapi.vcs.changes.committed.CommittedChangesCache;
 import com.intellij.openapi.vcs.ex.ProjectLevelVcsManagerEx;
+import consulo.component.persist.PersistentStateComponent;
 import consulo.ui.UIAccess;
 import org.jdom.Element;
 

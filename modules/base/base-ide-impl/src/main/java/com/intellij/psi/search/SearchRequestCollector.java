@@ -3,7 +3,7 @@ package com.intellij.psi.search;
 
 import com.intellij.codeInsight.ContainerProvider;
 import com.intellij.openapi.application.ReadAction;
-import com.intellij.openapi.extensions.ExtensionPointName;
+import consulo.component.extension.ExtensionPointName;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFileSystemItem;

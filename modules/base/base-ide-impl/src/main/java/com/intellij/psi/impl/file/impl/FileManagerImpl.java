@@ -24,7 +24,7 @@ import com.intellij.psi.impl.file.PsiDirectoryImpl;
 import com.intellij.testFramework.LightVirtualFile;
 import com.intellij.util.ConcurrencyUtil;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.messages.MessageBusConnection;
+import consulo.component.messagebus.MessageBusConnection;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
 import consulo.util.dataholder.Key;

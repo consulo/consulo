@@ -15,7 +15,7 @@
  */
 package com.intellij.ide.util;
 
-import com.intellij.openapi.components.PersistentStateComponent;
+import consulo.component.persist.PersistentStateComponent;
 import com.intellij.openapi.util.text.StringUtil;
 import org.jdom.Element;
 import org.jetbrains.annotations.TestOnly;

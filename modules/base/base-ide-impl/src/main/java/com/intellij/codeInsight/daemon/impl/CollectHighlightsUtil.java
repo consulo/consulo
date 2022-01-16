@@ -16,7 +16,7 @@
 
 package com.intellij.codeInsight.daemon.impl;
 
-import com.intellij.openapi.extensions.ExtensionPointName;
+import consulo.component.extension.ExtensionPointName;
 import com.intellij.openapi.progress.ProgressIndicatorProvider;
 import com.intellij.openapi.util.Condition;
 import com.intellij.psi.PsiElement;

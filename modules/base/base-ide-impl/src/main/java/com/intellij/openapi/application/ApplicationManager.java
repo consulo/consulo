@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.application;
 
-import consulo.component.internal.RootComponentManager;
+import consulo.component.extension.internal.RootComponentManager;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 

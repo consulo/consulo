@@ -30,8 +30,8 @@ import com.intellij.openapi.vcs.update.UpdateFilesHelper;
 import com.intellij.openapi.vcs.update.UpdatedFiles;
 import com.intellij.util.Consumer;
 import com.intellij.openapi.vcs.changes.ui.PlusMinus;
-import com.intellij.util.messages.MessageBusConnection;
-import com.intellij.util.messages.Topic;
+import consulo.component.messagebus.MessageBusConnection;
+import consulo.component.messagebus.Topic;
 import consulo.logging.Logger;
 
 import jakarta.inject.Inject;

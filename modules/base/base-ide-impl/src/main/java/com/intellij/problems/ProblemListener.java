@@ -2,7 +2,7 @@
 package com.intellij.problems;
 
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.util.messages.Topic;
+import consulo.component.messagebus.Topic;
 import javax.annotation.Nonnull;
 
 public interface ProblemListener {

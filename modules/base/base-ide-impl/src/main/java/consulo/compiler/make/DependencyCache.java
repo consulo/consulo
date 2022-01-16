@@ -18,7 +18,7 @@ package consulo.compiler.make;
 import com.intellij.compiler.impl.ExitException;
 import com.intellij.compiler.make.CacheCorruptedException;
 import com.intellij.openapi.compiler.ex.CompileContextEx;
-import com.intellij.openapi.extensions.ExtensionPointName;
+import consulo.component.extension.ExtensionPointName;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.Trinity;

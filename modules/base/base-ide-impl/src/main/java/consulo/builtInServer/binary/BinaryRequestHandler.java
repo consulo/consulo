@@ -15,7 +15,7 @@
  */
 package consulo.builtInServer.binary;
 
-import com.intellij.openapi.extensions.ExtensionPointName;
+import consulo.component.extension.ExtensionPointName;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import javax.annotation.Nonnull;

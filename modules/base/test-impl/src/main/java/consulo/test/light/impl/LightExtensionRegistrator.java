@@ -15,8 +15,8 @@
  */
 package consulo.test.light.impl;
 
-import com.intellij.openapi.extensions.ExtensionPoint;
-import com.intellij.openapi.extensions.ExtensionPointName;
+import consulo.component.extension.ExtensionPoint;
+import consulo.component.extension.ExtensionPointName;
 import com.intellij.openapi.extensions.impl.ExtensionPointImpl;
 import com.intellij.openapi.extensions.impl.ExtensionsAreaImpl;
 import consulo.container.plugin.PluginDescriptor;

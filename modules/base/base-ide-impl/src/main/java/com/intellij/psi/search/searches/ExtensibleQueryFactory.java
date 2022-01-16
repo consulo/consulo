@@ -17,8 +17,8 @@
 package com.intellij.psi.search.searches;
 
 import com.intellij.openapi.application.Application;
-import com.intellij.openapi.extensions.ExtensionPoint;
-import com.intellij.openapi.extensions.ExtensionPointName;
+import consulo.component.extension.ExtensionPoint;
+import consulo.component.extension.ExtensionPointName;
 import com.intellij.openapi.extensions.SimpleSmartExtensionPoint;
 import com.intellij.openapi.util.NotNullLazyValue;
 import com.intellij.openapi.util.text.StringUtil;

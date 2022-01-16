@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.roots.libraries;
 
-import com.intellij.openapi.components.PersistentStateComponent;
+import consulo.component.persist.PersistentStateComponent;
 
 /**
  * @author nik

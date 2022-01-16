@@ -1,10 +1,9 @@
-package consulo.extensions;
+package consulo.component.extension;
 
-import com.intellij.openapi.components.ComponentManager;
-import com.intellij.openapi.extensions.ExtensionPointName;
+import consulo.component.ComponentManager;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.logging.Logger;
-import consulo.util.PluginExceptionUtil;
+import consulo.component.util.PluginExceptionUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -20,7 +19,7 @@ public final class StrictExtensionPointName<C extends ComponentManager, T> {
   private static final Logger LOG = Logger.getInstance(StrictExtensionPointName.class);
 
   @Nonnull
-  public static <C1 extends ComponentManager, T1> StrictExtensionPointName<C1, T1> create(@Nonnull Class<C1> componentClass, @Nonnull String name) {
+  public static <C1 extends ComponentManager, T1> StrictExtensionPointName<C1, T1> of(@Nonnull Class<C1> componentClass, @Nonnull String name) {
     return new StrictExtensionPointName<>(componentClass, name);
   }
 

@@ -19,7 +19,7 @@ import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.project.Project;
-import com.intellij.util.messages.Topic;
+import consulo.component.messagebus.Topic;
 
 /**
  * Created with IntelliJ IDEA.

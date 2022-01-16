@@ -20,7 +20,7 @@
 package com.intellij.openapi.fileTypes;
 
 import com.intellij.openapi.application.Application;
-import com.intellij.openapi.extensions.ExtensionPointName;
+import consulo.component.extension.ExtensionPointName;
 import com.intellij.openapi.extensions.KeyedFactoryEPBean;
 import com.intellij.openapi.util.KeyedExtensionFactory;
 import org.jetbrains.annotations.NonNls;

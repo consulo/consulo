@@ -2,7 +2,7 @@
 package com.intellij.ui.breadcrumbs;
 
 import com.intellij.lang.Language;
-import com.intellij.openapi.extensions.ExtensionPointName;
+import consulo.component.extension.ExtensionPointName;
 import com.intellij.psi.PsiElement;
 import consulo.ui.image.Image;
 import javax.annotation.Nonnull;

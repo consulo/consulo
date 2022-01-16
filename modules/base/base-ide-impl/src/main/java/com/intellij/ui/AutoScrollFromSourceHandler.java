@@ -29,7 +29,7 @@ import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import consulo.disposer.Disposer;
 import com.intellij.util.Alarm;
-import com.intellij.util.messages.MessageBusConnection;
+import consulo.component.messagebus.MessageBusConnection;
 import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;

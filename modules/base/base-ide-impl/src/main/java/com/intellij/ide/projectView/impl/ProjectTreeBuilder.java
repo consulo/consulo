@@ -39,7 +39,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiManager;
 import com.intellij.util.Alarm;
 import com.intellij.util.SmartList;
-import com.intellij.util.messages.MessageBusConnection;
+import consulo.component.messagebus.MessageBusConnection;
 import consulo.annotation.access.RequiredReadAction;
 
 import javax.annotation.Nonnull;

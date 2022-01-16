@@ -54,7 +54,7 @@ import com.intellij.util.Function;
 import com.intellij.util.IJSwingUtilities;
 import com.intellij.util.ObjectUtil;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.messages.MessageBusConnection;
+import consulo.component.messagebus.MessageBusConnection;
 import com.intellij.util.ui.GridBag;
 import com.intellij.util.ui.JBInsets;
 import com.intellij.util.ui.JBUI;

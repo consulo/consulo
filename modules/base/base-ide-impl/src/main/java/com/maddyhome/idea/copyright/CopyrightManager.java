@@ -24,6 +24,7 @@ import com.intellij.packageDependencies.DependencyValidationManager;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.search.scope.packageSet.NamedScope;
 import com.intellij.psi.search.scope.packageSet.PackageSet;
+import consulo.component.persist.PersistentStateComponent;
 import consulo.copyright.config.CopyrightFileConfig;
 import consulo.copyright.config.CopyrightFileConfigManager;
 import consulo.logging.Logger;

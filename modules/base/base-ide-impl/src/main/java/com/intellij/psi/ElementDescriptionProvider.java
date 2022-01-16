@@ -17,7 +17,7 @@
 package com.intellij.psi;
 
 import javax.annotation.Nonnull;
-import com.intellij.openapi.extensions.ExtensionPointName;
+import consulo.component.extension.ExtensionPointName;
 
 /**
  * Provides location-dependent element description.

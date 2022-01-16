@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.diff.impl.patch;
 
-import com.intellij.openapi.extensions.ExtensionPointName;
+import consulo.component.extension.ExtensionPointName;
 import com.intellij.openapi.vcs.changes.CommitContext;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

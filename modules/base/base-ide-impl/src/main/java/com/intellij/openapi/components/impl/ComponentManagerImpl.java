@@ -18,18 +18,19 @@ package com.intellij.openapi.components.impl;
 import com.intellij.ide.plugins.PluginManagerCore;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.components.BaseComponent;
-import com.intellij.openapi.components.ComponentManager;
+import com.intellij.openapi.progress.ProgressIndicatorProvider;
+import consulo.component.ComponentManager;
 import com.intellij.openapi.components.NamedComponent;
 import com.intellij.openapi.components.ServiceDescriptor;
-import com.intellij.openapi.extensions.ExtensionPoint;
-import com.intellij.openapi.extensions.ExtensionPointName;
+import consulo.component.extension.ExtensionPoint;
+import consulo.component.extension.ExtensionPointName;
 import com.intellij.openapi.extensions.impl.ExtensionAreaId;
 import com.intellij.openapi.extensions.impl.ExtensionPointImpl;
 import com.intellij.openapi.extensions.impl.ExtensionsAreaImpl;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.util.containers.MultiMap;
-import com.intellij.util.messages.MessageBus;
+import consulo.component.messagebus.MessageBus;
 import com.intellij.util.messages.impl.MessageBusFactory;
 import com.intellij.util.messages.impl.MessageBusImpl;
 import consulo.application.ApplicationProperties;
@@ -356,12 +357,13 @@ public abstract class ComponentManagerImpl extends UserDataHolderBase implements
   }
 
   @Override
-  public void initNotLazyServices(@Nullable ProgressIndicator progressIndicator) {
+  public void initNotLazyServices() {
     try {
       if (myNotLazyStepFinished) {
         throw new IllegalArgumentException("Injector already build");
       }
 
+      ProgressIndicator progressIndicator = ProgressIndicatorProvider.getGlobalProgressIndicator();
       if (progressIndicator != null) {
         progressIndicator.setIndeterminate(false);
         progressIndicator.setFraction(0);

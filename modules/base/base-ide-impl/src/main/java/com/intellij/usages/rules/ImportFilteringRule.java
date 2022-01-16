@@ -15,8 +15,7 @@
  */
 package com.intellij.usages.rules;
 
-import com.intellij.openapi.extensions.ExtensionPointName;
-import com.intellij.usages.rules.UsageFilteringRule;
+import consulo.component.extension.ExtensionPointName;
 
 /**
  * User: Maxim.Mossienko

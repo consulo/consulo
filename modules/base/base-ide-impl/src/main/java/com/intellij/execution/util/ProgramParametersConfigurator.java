@@ -21,7 +21,7 @@ import com.intellij.execution.configurations.RuntimeConfigurationWarning;
 import com.intellij.execution.configurations.SimpleProgramParameters;
 import com.intellij.openapi.components.PathMacroManager;
 import com.intellij.openapi.components.PathMacroUtil;
-import com.intellij.openapi.extensions.ExtensionPointName;
+import consulo.component.extension.ExtensionPointName;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.WorkingDirectoryProvider;
 import com.intellij.openapi.project.Project;

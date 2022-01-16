@@ -2,7 +2,7 @@
 package com.intellij.openapi.util;
 
 import com.intellij.ide.ui.UISettings;
-import com.intellij.openapi.components.PersistentStateComponent;
+import consulo.component.persist.PersistentStateComponent;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.text.StringUtilRt;
 import com.intellij.openapi.wm.WindowManager;

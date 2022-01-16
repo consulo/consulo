@@ -18,7 +18,7 @@ package com.intellij.ide.hierarchy;
 
 import com.intellij.lang.LanguageExtensionPoint;
 import com.intellij.openapi.actionSystem.DataContext;
-import com.intellij.openapi.extensions.ExtensionPointName;
+import consulo.component.extension.ExtensionPointName;
 import com.intellij.psi.PsiElement;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

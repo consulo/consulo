@@ -21,7 +21,7 @@ import com.intellij.openapi.application.ex.ApplicationEx;
 import com.intellij.openapi.components.ProjectComponent;
 import com.intellij.openapi.components.ServiceDescriptor;
 import com.intellij.openapi.components.impl.ProjectPathMacroManager;
-import com.intellij.openapi.extensions.ExtensionPointName;
+import consulo.component.extension.ExtensionPointName;
 import com.intellij.openapi.extensions.impl.ExtensionAreaId;
 import com.intellij.openapi.module.impl.ModuleManagerImpl;
 import com.intellij.openapi.progress.ProgressIndicator;
@@ -276,10 +276,10 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
   }
 
   @Override
-  public void initNotLazyServices(ProgressIndicator progressIndicator) {
+  public void initNotLazyServices() {
     long start = System.currentTimeMillis();
 //    ProfilingUtil.startCPUProfiling();
-    super.initNotLazyServices(progressIndicator);
+    super.initNotLazyServices();
 //    ProfilingUtil.captureCPUSnapshot();
     long time = System.currentTimeMillis() - start;
     LOG.info(getNotLazyServicesCount() + " project components initialized in " + time + " ms");

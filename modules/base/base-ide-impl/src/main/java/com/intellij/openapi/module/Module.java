@@ -16,7 +16,7 @@
 package com.intellij.openapi.module;
 
 import com.intellij.openapi.application.Application;
-import com.intellij.openapi.components.ComponentManager;
+import consulo.component.ComponentManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.ArrayFactory;

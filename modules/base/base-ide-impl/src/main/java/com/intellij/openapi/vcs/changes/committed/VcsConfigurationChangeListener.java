@@ -18,7 +18,7 @@ package com.intellij.openapi.vcs.changes.committed;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vcs.versionBrowser.CommittedChangeList;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.util.messages.Topic;
+import consulo.component.messagebus.Topic;
 
 import java.util.List;
 

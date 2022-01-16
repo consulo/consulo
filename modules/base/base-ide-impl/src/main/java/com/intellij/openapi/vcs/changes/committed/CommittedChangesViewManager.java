@@ -25,15 +25,14 @@ package com.intellij.openapi.vcs.changes.committed;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.MessageType;
-import com.intellij.openapi.util.Condition;
 import consulo.disposer.Disposer;
 import com.intellij.openapi.vcs.*;
 import com.intellij.openapi.vcs.changes.ui.ChangesViewContentProvider;
 import com.intellij.openapi.vcs.ui.VcsBalloonProblemNotifier;
 import com.intellij.openapi.vcs.versionBrowser.CommittedChangeList;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.util.messages.MessageBus;
-import com.intellij.util.messages.MessageBusConnection;
+import consulo.component.messagebus.MessageBus;
+import consulo.component.messagebus.MessageBusConnection;
 import javax.annotation.Nullable;
 
 import javax.swing.*;

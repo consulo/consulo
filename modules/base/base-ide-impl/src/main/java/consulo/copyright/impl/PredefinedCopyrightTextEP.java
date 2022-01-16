@@ -17,7 +17,7 @@ package consulo.copyright.impl;
 
 import consulo.logging.Logger;
 import com.intellij.openapi.extensions.AbstractExtensionPointBean;
-import com.intellij.openapi.extensions.ExtensionPointName;
+import consulo.component.extension.ExtensionPointName;
 import com.intellij.openapi.util.NotNullLazyValue;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.util.xmlb.annotations.Attribute;

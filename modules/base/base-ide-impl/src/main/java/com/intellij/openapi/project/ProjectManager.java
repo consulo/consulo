@@ -17,7 +17,7 @@ package com.intellij.openapi.project;
 
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.util.messages.Topic;
+import consulo.component.messagebus.Topic;
 import consulo.annotation.DeprecationInfo;
 import consulo.disposer.Disposable;
 import consulo.ui.UIAccess;

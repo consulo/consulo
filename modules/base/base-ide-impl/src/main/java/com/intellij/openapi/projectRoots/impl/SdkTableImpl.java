@@ -17,7 +17,7 @@
 package com.intellij.openapi.projectRoots.impl;
 
 import com.intellij.openapi.application.Application;
-import com.intellij.openapi.components.PersistentStateComponent;
+import consulo.component.persist.PersistentStateComponent;
 import com.intellij.openapi.components.RoamingType;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
@@ -37,7 +37,7 @@ import com.intellij.openapi.vfs.newvfs.BulkFileListener;
 import com.intellij.openapi.vfs.newvfs.events.VFileCreateEvent;
 import com.intellij.openapi.vfs.newvfs.events.VFileEvent;
 import com.intellij.util.containers.SmartHashSet;
-import com.intellij.util.messages.MessageBusConnection;
+import consulo.component.messagebus.MessageBusConnection;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.fileTypes.ArchiveFileType;
 import jakarta.inject.Inject;

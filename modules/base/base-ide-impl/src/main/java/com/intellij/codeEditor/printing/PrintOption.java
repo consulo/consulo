@@ -20,7 +20,7 @@
  */
 package com.intellij.codeEditor.printing;
 
-import com.intellij.openapi.extensions.ExtensionPointName;
+import consulo.component.extension.ExtensionPointName;
 import com.intellij.openapi.options.UnnamedConfigurable;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiReference;

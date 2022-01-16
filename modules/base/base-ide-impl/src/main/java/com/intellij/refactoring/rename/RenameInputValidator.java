@@ -16,7 +16,7 @@
 
 package com.intellij.refactoring.rename;
 
-import com.intellij.openapi.extensions.ExtensionPointName;
+import consulo.component.extension.ExtensionPointName;
 import com.intellij.patterns.ElementPattern;
 import com.intellij.psi.PsiElement;
 import com.intellij.util.ProcessingContext;

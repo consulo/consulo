@@ -20,8 +20,8 @@ import consulo.disposer.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.startup.StartupManager;
-import com.intellij.util.messages.MessageBus;
-import com.intellij.util.messages.Topic;
+import consulo.component.messagebus.MessageBus;
+import consulo.component.messagebus.Topic;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

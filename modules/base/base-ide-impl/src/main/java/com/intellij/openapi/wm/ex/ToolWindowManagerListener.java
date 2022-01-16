@@ -16,7 +16,7 @@
 package com.intellij.openapi.wm.ex;
 
 import com.intellij.openapi.wm.ToolWindowManager;
-import com.intellij.util.messages.Topic;
+import consulo.component.messagebus.Topic;
 import consulo.annotation.DeprecationInfo;
 
 import javax.annotation.Nonnull;

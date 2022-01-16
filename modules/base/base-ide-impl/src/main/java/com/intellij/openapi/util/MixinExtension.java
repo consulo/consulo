@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.util;
 
-import com.intellij.openapi.extensions.ExtensionPointName;
+import consulo.component.extension.ExtensionPointName;
 import com.intellij.util.MixinEP;
 
 import javax.annotation.Nullable;

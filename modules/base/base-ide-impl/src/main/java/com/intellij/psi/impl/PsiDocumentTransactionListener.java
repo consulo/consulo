@@ -21,7 +21,7 @@ package com.intellij.psi.impl;
 
 import com.intellij.openapi.editor.Document;
 import com.intellij.psi.PsiFile;
-import com.intellij.util.messages.Topic;
+import consulo.component.messagebus.Topic;
 import javax.annotation.Nonnull;
 
 public interface PsiDocumentTransactionListener {

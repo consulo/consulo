@@ -29,6 +29,7 @@ open module consulo.ide.impl {
   requires transitive consulo.disposer.api;
   requires transitive consulo.logging.api;
   requires transitive consulo.localize.api;
+  requires transitive consulo.component.api;
 
   requires consulo.ui.impl;
   requires consulo.localize.impl;
@@ -892,7 +893,6 @@ open module consulo.ide.impl {
   exports com.intellij.remoteServer.runtime.ui;
   exports com.intellij.reporting;
   exports com.intellij.semantic;
-  exports com.intellij.serviceContainer;
   exports com.intellij.ssh;
   exports com.intellij.tasks;
   exports com.intellij.tasks.actions;
@@ -997,7 +997,6 @@ open module consulo.ide.impl {
   exports com.intellij.util.io.zip;
   exports com.intellij.util.lang;
   exports com.intellij.util.loader;
-  exports com.intellij.util.messages;
   exports com.intellij.util.messages.impl;
   exports com.intellij.util.net;
   exports com.intellij.util.net.ssl;
@@ -1154,9 +1153,6 @@ open module consulo.ide.impl {
   exports consulo.compiler.options;
   exports consulo.compiler.roots;
   exports consulo.compiler.server;
-  exports consulo.component;
-  exports consulo.component.internal;
-  //exports consulo.components;
   exports consulo.components.impl;
   exports consulo.components.impl.stores;
   exports consulo.components.impl.stores.storage;

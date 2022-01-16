@@ -15,7 +15,7 @@
  */
 package com.intellij.semantic;
 
-import com.intellij.openapi.extensions.ExtensionPointName;
+import consulo.component.extension.ExtensionPointName;
 
 /**
  * Register sem providers via extension point {@code com.intellij.semContributor}.

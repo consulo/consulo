@@ -22,7 +22,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.ui.content.ContentManager;
-import com.intellij.util.messages.Topic;
+import consulo.component.messagebus.Topic;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;

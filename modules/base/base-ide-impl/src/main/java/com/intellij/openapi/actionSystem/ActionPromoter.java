@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.actionSystem;
 
-import com.intellij.openapi.extensions.ExtensionPointName;
+import consulo.component.extension.ExtensionPointName;
 
 import java.util.List;
 

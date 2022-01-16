@@ -20,6 +20,7 @@ import com.intellij.openapi.components.*;
 import com.intellij.util.io.HttpRequests;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.xmlb.XmlSerializerUtil;
+import consulo.component.persist.PersistentStateComponent;
 import consulo.externalService.ExternalService;
 import consulo.externalService.ExternalServiceConfiguration;
 import consulo.externalService.ExternalServiceConfigurationListener;

@@ -32,7 +32,7 @@ import com.intellij.openapi.util.Trinity;
 import com.intellij.util.containers.ContainerUtil;
 import java.util.HashMap;
 
-import com.intellij.util.messages.MessageBusConnection;
+import consulo.component.messagebus.MessageBusConnection;
 import consulo.disposer.Disposable;
 import consulo.logging.Logger;
 import consulo.ui.UIAccess;

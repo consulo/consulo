@@ -16,7 +16,7 @@
 package com.intellij.diff;
 
 import com.intellij.diff.requests.DiffRequest;
-import com.intellij.openapi.extensions.ExtensionPointName;
+import consulo.component.extension.ExtensionPointName;
 import javax.annotation.Nonnull;
 
 public interface DiffTool {

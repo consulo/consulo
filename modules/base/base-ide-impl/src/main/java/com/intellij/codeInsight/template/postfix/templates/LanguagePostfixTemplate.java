@@ -18,7 +18,7 @@ package com.intellij.codeInsight.template.postfix.templates;
 import com.intellij.lang.Language;
 import com.intellij.lang.LanguageExtension;
 import com.intellij.lang.LanguageExtensionPoint;
-import com.intellij.openapi.extensions.ExtensionPointName;
+import consulo.component.extension.ExtensionPointName;
 import com.intellij.util.containers.ContainerUtil;
 
 import javax.annotation.Nonnull;

@@ -19,9 +19,9 @@
  */
 package com.intellij.openapi.util;
 
-import com.intellij.openapi.extensions.ExtensionPointName;
+import consulo.component.extension.ExtensionPointName;
 import com.intellij.openapi.progress.ProcessCanceledException;
-import com.intellij.util.KeyedLazyInstance;
+import consulo.component.extension.KeyedLazyInstance;
 import consulo.logging.Logger;
 
 import javax.annotation.Nonnull;

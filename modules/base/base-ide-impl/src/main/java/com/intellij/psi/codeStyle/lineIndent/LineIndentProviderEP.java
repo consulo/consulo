@@ -16,7 +16,7 @@
 package com.intellij.psi.codeStyle.lineIndent;
 
 import com.intellij.lang.Language;
-import com.intellij.openapi.extensions.ExtensionPointName;
+import consulo.component.extension.ExtensionPointName;
 import javax.annotation.Nullable;
 
 /**

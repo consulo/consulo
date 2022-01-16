@@ -16,7 +16,7 @@
 package com.intellij.psi.search.scope.packageSet;
 
 import consulo.disposer.Disposable;
-import com.intellij.openapi.components.PersistentStateComponent;
+import consulo.component.persist.PersistentStateComponent;
 import com.intellij.openapi.project.Project;
 import consulo.disposer.Disposer;
 import com.intellij.openapi.vfs.VirtualFile;

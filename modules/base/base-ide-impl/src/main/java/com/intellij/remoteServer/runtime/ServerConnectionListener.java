@@ -15,7 +15,7 @@
  */
 package com.intellij.remoteServer.runtime;
 
-import com.intellij.util.messages.Topic;
+import consulo.component.messagebus.Topic;
 import javax.annotation.Nonnull;
 
 import java.util.EventListener;

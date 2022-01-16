@@ -23,7 +23,7 @@
 package com.intellij.psi.codeStyle;
 
 import com.intellij.application.options.IndentOptionsEditor;
-import com.intellij.openapi.extensions.ExtensionPointName;
+import consulo.component.extension.ExtensionPointName;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.psi.PsiFile;
 import org.jetbrains.annotations.NonNls;

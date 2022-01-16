@@ -17,7 +17,7 @@
 package com.intellij.codeInsight.editorActions.moveUpDown;
 
 import com.intellij.openapi.editor.*;
-import com.intellij.openapi.extensions.ExtensionPointName;
+import consulo.component.extension.ExtensionPointName;
 import com.intellij.openapi.util.Pair;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiElement;

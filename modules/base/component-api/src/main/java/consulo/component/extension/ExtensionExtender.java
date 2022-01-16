@@ -13,11 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.extensions;
+package consulo.component.extension;
 
-import com.intellij.openapi.components.ComponentManager;
-import com.intellij.openapi.extensions.ExtensionPointName;
-import com.intellij.util.KeyedLazyInstanceEP;
+import consulo.component.ComponentManager;
 
 import javax.annotation.Nonnull;
 import java.util.function.Consumer;

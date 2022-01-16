@@ -8,7 +8,7 @@ import com.intellij.psi.util.CachedValueProvider;
 import com.intellij.util.containers.ConcurrentFactoryMap;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.logging.Logger;
-import consulo.util.PluginExceptionUtil;
+import consulo.component.util.PluginExceptionUtil;
 import consulo.util.dataholder.Key;
 import org.jetbrains.annotations.NonNls;
 

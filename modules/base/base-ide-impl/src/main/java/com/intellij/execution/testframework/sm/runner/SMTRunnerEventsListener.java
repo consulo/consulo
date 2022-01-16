@@ -15,7 +15,7 @@
  */
 package com.intellij.execution.testframework.sm.runner;
 
-import com.intellij.util.messages.Topic;
+import consulo.component.messagebus.Topic;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

@@ -16,7 +16,7 @@
 package com.intellij.diff.merge;
 
 import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.extensions.ExtensionPointName;
+import consulo.component.extension.ExtensionPointName;
 import com.intellij.openapi.util.BooleanGetter;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

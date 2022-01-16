@@ -19,6 +19,7 @@ import com.intellij.openapi.components.*;
 import com.intellij.openapi.editor.colors.EditorColorsManager;
 import com.intellij.openapi.editor.colors.EditorColorsScheme;
 import com.intellij.util.xmlb.XmlSerializerUtil;
+import consulo.component.persist.PersistentStateComponent;
 import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;

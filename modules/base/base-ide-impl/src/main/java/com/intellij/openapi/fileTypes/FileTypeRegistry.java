@@ -1,11 +1,11 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.openapi.fileTypes;
 
-import com.intellij.openapi.extensions.ExtensionPointName;
+import consulo.component.extension.ExtensionPointName;
 import com.intellij.openapi.util.io.ByteSequence;
 import com.intellij.openapi.vfs.VirtualFile;
 import consulo.annotation.DeprecationInfo;
-import consulo.component.internal.RootComponentManager;
+import consulo.component.extension.internal.RootComponentManager;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

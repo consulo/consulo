@@ -33,7 +33,7 @@ import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.FileContentUtil;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.messages.MessageBusConnection;
+import consulo.component.messagebus.MessageBusConnection;
 import jakarta.inject.Singleton;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.TestOnly;

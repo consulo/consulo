@@ -15,7 +15,7 @@
  */
 package com.intellij.codeInsight.completion.originInfo;
 
-import com.intellij.openapi.extensions.ExtensionPointName;
+import consulo.component.extension.ExtensionPointName;
 import com.intellij.psi.PsiElement;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

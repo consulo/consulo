@@ -17,7 +17,7 @@
 package com.intellij.ide.fileTemplates;
 
 import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.extensions.ExtensionPointName;
+import consulo.component.extension.ExtensionPointName;
 
 import javax.annotation.Nullable;
 

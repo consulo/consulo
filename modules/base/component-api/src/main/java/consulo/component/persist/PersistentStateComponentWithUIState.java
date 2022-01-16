@@ -13,9 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.component;
+package consulo.component.persist;
 
-import com.intellij.openapi.components.PersistentStateComponent;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.ui.annotation.RequiredUIAccess;
 

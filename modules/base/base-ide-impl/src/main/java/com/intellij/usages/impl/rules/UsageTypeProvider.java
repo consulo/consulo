@@ -23,7 +23,7 @@
 package com.intellij.usages.impl.rules;
 
 import com.intellij.psi.PsiElement;
-import com.intellij.openapi.extensions.ExtensionPointName;
+import consulo.component.extension.ExtensionPointName;
 
 import javax.annotation.Nullable;
 

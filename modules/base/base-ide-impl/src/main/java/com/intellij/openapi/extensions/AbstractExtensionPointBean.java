@@ -15,10 +15,10 @@
  */
 package com.intellij.openapi.extensions;
 
-import com.intellij.openapi.components.ComponentManager;
+import consulo.component.ComponentManager;
 import consulo.container.plugin.PluginDescriptor;
-import consulo.extensions.ComponentAware;
-import consulo.extensions.PluginAware;
+import consulo.component.extension.ComponentAware;
+import consulo.component.extension.PluginAware;
 import consulo.injecting.InjectingContainer;
 import consulo.logging.Logger;
 

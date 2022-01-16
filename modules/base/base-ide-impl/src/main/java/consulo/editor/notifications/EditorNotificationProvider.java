@@ -15,7 +15,7 @@
  */
 package consulo.editor.notifications;
 
-import com.intellij.openapi.extensions.ExtensionPointName;
+import consulo.component.extension.ExtensionPointName;
 import com.intellij.openapi.fileEditor.FileEditor;
 import consulo.util.dataholder.Key;
 import com.intellij.openapi.vfs.VirtualFile;

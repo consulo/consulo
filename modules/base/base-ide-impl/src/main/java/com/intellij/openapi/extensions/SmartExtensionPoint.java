@@ -15,6 +15,8 @@
  */
 package com.intellij.openapi.extensions;
 
+import consulo.component.extension.ExtensionPoint;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;

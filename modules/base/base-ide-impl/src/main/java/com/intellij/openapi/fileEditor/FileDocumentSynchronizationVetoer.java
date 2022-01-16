@@ -20,7 +20,7 @@
 package com.intellij.openapi.fileEditor;
 
 import com.intellij.openapi.editor.Document;
-import com.intellij.openapi.extensions.ExtensionPointName;
+import consulo.component.extension.ExtensionPointName;
 import com.intellij.openapi.vfs.VirtualFile;
 import javax.annotation.Nonnull;
 

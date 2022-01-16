@@ -19,7 +19,7 @@ import com.intellij.openapi.project.Project;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import com.intellij.util.containers.ContainerUtilRt;
-import com.intellij.util.messages.Topic;
+import consulo.component.messagebus.Topic;
 import javax.annotation.Nonnull;
 
 import java.util.*;

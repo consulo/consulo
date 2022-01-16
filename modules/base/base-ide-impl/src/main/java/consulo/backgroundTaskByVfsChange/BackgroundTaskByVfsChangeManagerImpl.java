@@ -35,6 +35,7 @@ import com.intellij.openapi.vfs.pointers.VirtualFilePointer;
 import com.intellij.openapi.vfs.pointers.VirtualFilePointerManager;
 import com.intellij.util.xmlb.XmlSerializer;
 import consulo.backgroundTaskByVfsChange.ui.BackgroundTaskByVfsChangeManageDialog;
+import consulo.component.persist.PersistentStateComponent;
 import consulo.disposer.Disposable;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.annotation.RequiredUIAccess;

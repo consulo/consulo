@@ -8,6 +8,7 @@ import com.intellij.util.graph.CachingSemiGraph;
 import com.intellij.util.graph.DFSTBuilder;
 import com.intellij.util.graph.GraphGenerator;
 import com.intellij.util.graph.InboundSemiGraph;
+import consulo.component.extension.ExtensionPoint;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;

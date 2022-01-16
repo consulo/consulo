@@ -18,7 +18,7 @@ package consulo.components.impl;
 import com.intellij.ide.plugins.PluginManager;
 import com.intellij.openapi.application.AccessToken;
 import com.intellij.openapi.application.Application;
-import com.intellij.openapi.components.ComponentManager;
+import consulo.component.ComponentManager;
 import com.intellij.openapi.components.ServiceDescriptor;
 import com.intellij.openapi.components.impl.ComponentManagerImpl;
 import com.intellij.openapi.extensions.impl.ExtensionAreaId;

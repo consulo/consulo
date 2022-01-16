@@ -19,6 +19,8 @@ import com.intellij.openapi.components.*;
 import com.intellij.openapi.components.StoragePathMacros;
 import com.intellij.openapi.project.Project;
 import java.util.HashMap;
+
+import consulo.component.persist.PersistentStateComponent;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;

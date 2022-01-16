@@ -15,7 +15,7 @@
  */
 package com.intellij.refactoring.changeSignature;
 
-import com.intellij.openapi.extensions.ExtensionPointName;
+import consulo.component.extension.ExtensionPointName;
 import com.intellij.openapi.util.Ref;
 import com.intellij.psi.PsiElement;
 import com.intellij.refactoring.rename.ResolveSnapshotProvider;

@@ -16,9 +16,9 @@
 package com.intellij.remoteServer.impl.configuration.deployment;
 
 import com.intellij.execution.configurations.ConfigurationType;
-import com.intellij.openapi.components.ComponentManager;
+import consulo.component.ComponentManager;
 import com.intellij.remoteServer.ServerType;
-import consulo.extensions.ExtensionExtender;
+import consulo.component.extension.ExtensionExtender;
 import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;

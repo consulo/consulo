@@ -16,7 +16,7 @@
 package com.intellij.openapi.vcs.annotate;
 
 import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.extensions.ExtensionPointName;
+import consulo.component.extension.ExtensionPointName;
 import javax.annotation.Nonnull;
 
 /**

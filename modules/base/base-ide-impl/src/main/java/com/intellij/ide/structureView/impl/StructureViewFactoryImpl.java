@@ -19,7 +19,7 @@ package com.intellij.ide.structureView.impl;
 import com.intellij.ide.impl.StructureViewWrapperImpl;
 import com.intellij.ide.structureView.*;
 import com.intellij.ide.structureView.newStructureView.StructureViewComponent;
-import com.intellij.openapi.components.PersistentStateComponent;
+import consulo.component.persist.PersistentStateComponent;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.components.StoragePathMacros;

@@ -20,7 +20,7 @@ import com.intellij.execution.ExecutionResult;
 import com.intellij.execution.Executor;
 import com.intellij.execution.configurations.*;
 import com.intellij.execution.ui.RunContentDescriptor;
-import com.intellij.openapi.extensions.ExtensionPointName;
+import consulo.component.extension.ExtensionPointName;
 import com.intellij.openapi.options.SettingsEditor;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;

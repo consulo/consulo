@@ -16,7 +16,7 @@
 package com.intellij.openapi.application;
 
 import com.intellij.openapi.wm.IdeFrame;
-import com.intellij.util.messages.Topic;
+import consulo.component.messagebus.Topic;
 
 /**
  * @author yole

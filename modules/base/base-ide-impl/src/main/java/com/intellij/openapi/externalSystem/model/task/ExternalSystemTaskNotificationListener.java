@@ -1,6 +1,6 @@
 package com.intellij.openapi.externalSystem.model.task;
 
-import com.intellij.openapi.extensions.ExtensionPointName;
+import consulo.component.extension.ExtensionPointName;
 import javax.annotation.Nonnull;
 
 /**

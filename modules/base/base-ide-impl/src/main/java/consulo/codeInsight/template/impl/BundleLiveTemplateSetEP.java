@@ -16,7 +16,7 @@
 package consulo.codeInsight.template.impl;
 
 import com.intellij.openapi.extensions.AbstractExtensionPointBean;
-import com.intellij.openapi.extensions.ExtensionPointName;
+import consulo.component.extension.ExtensionPointName;
 import com.intellij.util.xmlb.annotations.Attribute;
 
 /**

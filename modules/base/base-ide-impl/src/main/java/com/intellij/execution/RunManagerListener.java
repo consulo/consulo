@@ -15,7 +15,7 @@
  */
 package com.intellij.execution;
 
-import com.intellij.util.messages.Topic;
+import consulo.component.messagebus.Topic;
 import consulo.annotation.DeprecationInfo;
 
 import javax.annotation.Nonnull;

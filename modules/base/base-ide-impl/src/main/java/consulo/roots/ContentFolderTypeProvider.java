@@ -17,7 +17,7 @@ package consulo.roots;
 
 import com.google.common.base.Predicate;
 import com.intellij.icons.AllIcons;
-import com.intellij.openapi.extensions.ExtensionPointName;
+import consulo.component.extension.ExtensionPointName;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.psi.PsiDirectory;
 import consulo.annotation.access.RequiredReadAction;

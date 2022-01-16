@@ -32,7 +32,7 @@ import com.intellij.openapi.wm.ex.ToolWindowEx;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
 import com.intellij.openapi.wm.impl.InternalDecoratorListener;
 import com.intellij.openapi.wm.impl.WindowInfoImpl;
-import com.intellij.util.messages.MessageBusConnection;
+import consulo.component.messagebus.MessageBusConnection;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.localize.LocalizeValue;
 import consulo.ui.Component;

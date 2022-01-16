@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.fileEditor.impl;
 
-import com.intellij.openapi.extensions.ExtensionPointName;
+import consulo.component.extension.ExtensionPointName;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import consulo.fileEditor.impl.EditorWindow;

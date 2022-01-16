@@ -4,7 +4,7 @@ package com.intellij.ide.actions.runAnything.groups;
 import com.intellij.ide.actions.runAnything.activity.RunAnythingProvider;
 import com.intellij.ide.actions.runAnything.items.RunAnythingItem;
 import com.intellij.openapi.actionSystem.DataContext;
-import com.intellij.openapi.extensions.ExtensionPointName;
+import consulo.component.extension.ExtensionPointName;
 import com.intellij.util.containers.ContainerUtil;
 
 import javax.annotation.Nonnull;

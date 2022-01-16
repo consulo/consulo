@@ -25,7 +25,7 @@ import com.intellij.openapi.roots.ModuleRootAdapter;
 import com.intellij.openapi.roots.ModuleRootEvent;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.problems.ProblemListener;
-import com.intellij.util.messages.MessageBusConnection;
+import consulo.component.messagebus.MessageBusConnection;
 
 import javax.annotation.Nonnull;
 import jakarta.inject.Inject;

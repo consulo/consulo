@@ -15,7 +15,7 @@
  */
 package com.intellij.application.options;
 
-import com.intellij.openapi.extensions.ExtensionPointName;
+import consulo.component.extension.ExtensionPointName;
 import com.intellij.util.xmlb.annotations.Attribute;
 
 public class PathMacroExpendableProtocolBean {

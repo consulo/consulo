@@ -30,7 +30,7 @@ import com.intellij.util.NullableFunction;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.MultiMap;
-import com.intellij.util.messages.MessageBusConnection;
+import consulo.component.messagebus.MessageBusConnection;
 import consulo.util.collection.primitive.ints.ConcurrentIntObjectMap;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;

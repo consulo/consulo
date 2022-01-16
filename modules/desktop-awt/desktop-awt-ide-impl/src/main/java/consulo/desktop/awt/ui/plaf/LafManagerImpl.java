@@ -25,7 +25,7 @@ import consulo.desktop.awt.ui.plaf.darcula.DarculaLookAndFeelInfo;
 import consulo.desktop.awt.ui.plaf.intellij.IntelliJLaf;
 import consulo.desktop.awt.ui.plaf.intellij.IntelliJLookAndFeelInfo;
 import com.intellij.openapi.actionSystem.impl.ActionToolbarImpl;
-import com.intellij.openapi.components.PersistentStateComponent;
+import consulo.component.persist.PersistentStateComponent;
 import com.intellij.openapi.components.RoamingType;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;

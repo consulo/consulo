@@ -20,7 +20,7 @@
 package com.intellij.openapi.util;
 
 import com.intellij.openapi.extensions.AbstractExtensionPointBean;
-import com.intellij.util.KeyedLazyInstance;
+import consulo.component.extension.KeyedLazyInstance;
 import com.intellij.util.xmlb.annotations.Attribute;
 
 public class ClassExtensionPoint<T> extends AbstractExtensionPointBean implements KeyedLazyInstance<T> {

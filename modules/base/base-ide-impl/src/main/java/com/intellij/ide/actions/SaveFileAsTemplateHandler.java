@@ -16,7 +16,7 @@
 
 package com.intellij.ide.actions;
 
-import com.intellij.openapi.extensions.ExtensionPointName;
+import consulo.component.extension.ExtensionPointName;
 import com.intellij.psi.PsiFile;
 import javax.annotation.Nullable;
 

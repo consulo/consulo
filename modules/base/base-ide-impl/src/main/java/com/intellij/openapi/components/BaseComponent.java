@@ -15,6 +15,7 @@
  */
 package com.intellij.openapi.components;
 
+import consulo.component.persist.PersistentStateComponent;
 import consulo.util.lang.ControlFlowException;
 
 /**

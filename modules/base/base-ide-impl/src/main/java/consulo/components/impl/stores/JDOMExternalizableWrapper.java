@@ -15,7 +15,7 @@
  */
 package consulo.components.impl.stores;
 
-import com.intellij.openapi.components.PersistentStateComponent;
+import consulo.component.persist.PersistentStateComponent;
 import com.intellij.openapi.util.JDOMExternalizable;
 import org.jdom.Element;
 

@@ -16,7 +16,7 @@
 package com.intellij.psi.codeStyle.arrangement.std;
 
 import com.intellij.application.options.codeStyle.arrangement.color.ArrangementColorsProvider;
-import com.intellij.openapi.extensions.ExtensionPointName;
+import consulo.component.extension.ExtensionPointName;
 import com.intellij.psi.codeStyle.arrangement.model.ArrangementMatchCondition;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

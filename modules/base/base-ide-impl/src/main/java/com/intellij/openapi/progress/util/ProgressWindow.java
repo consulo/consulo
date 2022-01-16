@@ -28,7 +28,7 @@ import com.intellij.openapi.util.EmptyRunnable;
 import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.openapi.wm.ex.ProgressIndicatorEx;
 import com.intellij.util.IncorrectOperationException;
-import com.intellij.util.messages.Topic;
+import consulo.component.messagebus.Topic;
 import com.intellij.util.ui.UIUtil;
 import consulo.application.internal.ApplicationWithIntentWriteLock;
 import consulo.disposer.Disposable;

@@ -15,14 +15,14 @@
  */
 package com.intellij.openapi.extensions.impl;
 
-import com.intellij.openapi.components.ComponentManager;
+import consulo.component.ComponentManager;
 import com.intellij.openapi.extensions.LoadingOrder;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.util.xmlb.XmlSerializer;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginId;
-import consulo.extensions.ComponentAware;
-import consulo.extensions.PluginAware;
+import consulo.component.extension.ComponentAware;
+import consulo.component.extension.PluginAware;
 import consulo.injecting.InjectingProblemException;
 import org.jdom.Element;
 

@@ -15,7 +15,7 @@
  */
 package consulo.roots.orderEntry;
 
-import com.intellij.openapi.extensions.ExtensionPointName;
+import consulo.component.extension.ExtensionPointName;
 import consulo.roots.ModuleRootLayer;
 import com.intellij.openapi.roots.OrderEntry;
 import com.intellij.openapi.util.InvalidDataException;

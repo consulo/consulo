@@ -15,7 +15,7 @@
  */
 package com.intellij.packaging.artifacts;
 
-import com.intellij.openapi.extensions.ExtensionPointName;
+import consulo.component.extension.ExtensionPointName;
 import com.intellij.openapi.roots.ui.configuration.ModulesProvider;
 import com.intellij.packaging.elements.*;
 import com.intellij.packaging.ui.ArtifactProblemsHolder;

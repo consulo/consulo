@@ -24,7 +24,7 @@ import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.ui.tree.*;
 import com.intellij.ui.tree.project.ProjectFileNodeUpdater;
 import com.intellij.util.SmartList;
-import com.intellij.util.messages.MessageBusConnection;
+import consulo.component.messagebus.MessageBusConnection;
 import com.intellij.util.ui.tree.TreeUtil;
 import javax.annotation.Nonnull;
 

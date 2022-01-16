@@ -16,7 +16,7 @@
 package com.intellij.lang;
 
 import com.intellij.lang.annotation.ExternalAnnotator;
-import com.intellij.openapi.extensions.ExtensionPointName;
+import consulo.component.extension.ExtensionPointName;
 import com.intellij.psi.PsiFile;
 
 /**

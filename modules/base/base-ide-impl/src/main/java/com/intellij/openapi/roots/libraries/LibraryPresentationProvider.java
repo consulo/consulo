@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.roots.libraries;
 
-import com.intellij.openapi.extensions.ExtensionPointName;
+import consulo.component.extension.ExtensionPointName;
 import com.intellij.openapi.vfs.VirtualFile;
 import consulo.ui.image.Image;
 

@@ -15,6 +15,7 @@
  */
 package com.intellij.openapi.progress;
 
+import consulo.component.extension.ExtensionPointName;
 import consulo.util.lang.ControlFlowException;
 
 import javax.annotation.Nullable;
@@ -24,7 +25,7 @@ import javax.annotation.Nullable;
  * Normally this exception should not be caught, swallowed, logged or handled in any way.
  * It should be rethrown so that the infrastructure could handle it correctly.
  * This exception can happen during almost any IDE activity, e.g. any PSI query,
- * {@link com.intellij.openapi.extensions.ExtensionPointName#getExtensions},
+ * {@link ExtensionPointName#getExtensions},
  * {@link com.intellij.openapi.actionSystem.AnAction#update}, etc.<p></p>
  *
  * @see com.intellij.openapi.progress.ProgressIndicator#checkCanceled()

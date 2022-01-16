@@ -1,6 +1,6 @@
 package com.intellij.psi.targets;
 
-import com.intellij.openapi.extensions.ExtensionPointName;
+import consulo.component.extension.ExtensionPointName;
 import com.intellij.pom.PomTarget;
 import javax.annotation.Nonnull;
 

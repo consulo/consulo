@@ -19,6 +19,7 @@ import com.intellij.openapi.components.*;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.xmlb.annotations.Tag;
 
+import consulo.component.persist.PersistentStateComponent;
 import jakarta.inject.Singleton;
 
 /**

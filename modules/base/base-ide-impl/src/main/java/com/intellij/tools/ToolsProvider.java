@@ -15,7 +15,7 @@
  */
 package com.intellij.tools;
 
-import com.intellij.openapi.extensions.ExtensionPointName;
+import consulo.component.extension.ExtensionPointName;
 
 import java.util.ArrayList;
 import java.util.List;

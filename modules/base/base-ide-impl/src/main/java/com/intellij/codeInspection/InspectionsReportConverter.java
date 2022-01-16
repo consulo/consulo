@@ -1,7 +1,7 @@
 package com.intellij.codeInspection;
 
 import com.intellij.codeInspection.ex.Tools;
-import com.intellij.openapi.extensions.ExtensionPointName;
+import consulo.component.extension.ExtensionPointName;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

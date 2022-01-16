@@ -3,7 +3,7 @@ package com.intellij.openapi.vfs.pointers;
 
 import com.intellij.openapi.util.ModificationTracker;
 import com.intellij.openapi.vfs.VirtualFile;
-import consulo.component.internal.RootComponentManager;
+import consulo.component.extension.internal.RootComponentManager;
 import consulo.disposer.Disposable;
 
 import javax.annotation.Nonnull;

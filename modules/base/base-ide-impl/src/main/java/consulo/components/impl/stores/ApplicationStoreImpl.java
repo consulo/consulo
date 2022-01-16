@@ -20,18 +20,18 @@ import com.intellij.openapi.application.Application;
 import com.intellij.openapi.components.StoragePathMacros;
 import com.intellij.openapi.components.TrackingPathMacroSubstitutor;
 import com.intellij.openapi.components.impl.ApplicationPathMacroManager;
-import consulo.container.boot.ContainerPathManager;
-import consulo.logging.Logger;
-import com.intellij.util.messages.MessageBus;
+import consulo.component.messagebus.MessageBus;
 import consulo.components.impl.stores.storage.DirectoryStorageData;
 import consulo.components.impl.stores.storage.StateStorageFacade;
 import consulo.components.impl.stores.storage.StateStorageManager;
 import consulo.components.impl.stores.storage.StateStorageManagerImpl;
-
-import javax.annotation.Nonnull;
+import consulo.container.boot.ContainerPathManager;
+import consulo.logging.Logger;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
+
+import javax.annotation.Nonnull;
 import java.io.IOException;
 
 @Singleton
@@ -72,7 +72,7 @@ public class ApplicationStoreImpl extends ComponentStoreImpl implements IApplica
   @Override
   public void load() throws IOException {
     long t = System.currentTimeMillis();
-    myApplication.initNotLazyServices(null);
+    myApplication.initNotLazyServices();
     t = System.currentTimeMillis() - t;
     LOG.info(myApplication.getNotLazyServicesCount() + " application services initialized in " + t + " ms");
   }

@@ -17,6 +17,7 @@ package com.intellij.tasks.config;
 
 import com.intellij.openapi.components.*;
 import com.intellij.util.xmlb.XmlSerializerUtil;
+import consulo.component.persist.PersistentStateComponent;
 
 /**
  * @author Dmitry Avdeev

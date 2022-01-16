@@ -5,7 +5,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.psi.search.scope.packageSet.CustomScopesProvider;
 import com.intellij.psi.search.scope.packageSet.NamedScope;
 import consulo.logging.Logger;
-import consulo.util.PluginExceptionUtil;
+import consulo.component.util.PluginExceptionUtil;
 import javax.annotation.Nonnull;
 
 import java.util.ArrayList;

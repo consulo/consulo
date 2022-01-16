@@ -22,7 +22,7 @@ package com.intellij.codeInsight.daemon.impl;
 
 import com.intellij.lang.annotation.HighlightSeverity;
 import com.intellij.openapi.editor.markup.TextAttributes;
-import com.intellij.openapi.extensions.ExtensionPointName;
+import consulo.component.extension.ExtensionPointName;
 import consulo.ui.color.ColorValue;
 
 import javax.annotation.Nonnull;

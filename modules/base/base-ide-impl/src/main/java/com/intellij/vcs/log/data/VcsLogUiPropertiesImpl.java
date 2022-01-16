@@ -15,7 +15,7 @@
  */
 package com.intellij.vcs.log.data;
 
-import com.intellij.openapi.components.PersistentStateComponent;
+import consulo.component.persist.PersistentStateComponent;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.vcs.log.graph.PermanentGraph;
 import javax.annotation.Nonnull;

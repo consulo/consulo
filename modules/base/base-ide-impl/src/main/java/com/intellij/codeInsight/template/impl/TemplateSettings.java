@@ -33,6 +33,7 @@ import com.intellij.util.containers.MultiMap;
 import com.intellij.util.xmlb.Converter;
 import com.intellij.util.xmlb.annotations.OptionTag;
 import consulo.codeInsight.template.impl.BundleLiveTemplateSetEP;
+import consulo.component.persist.PersistentStateComponent;
 import consulo.container.classloader.PluginClassLoader;
 import consulo.logging.Logger;
 import jakarta.inject.Inject;

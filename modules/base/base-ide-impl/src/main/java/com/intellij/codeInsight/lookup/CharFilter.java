@@ -24,7 +24,7 @@
  */
 package com.intellij.codeInsight.lookup;
 
-import com.intellij.openapi.extensions.ExtensionPointName;
+import consulo.component.extension.ExtensionPointName;
 import javax.annotation.Nullable;
 
 public abstract class CharFilter {

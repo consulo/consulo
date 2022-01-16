@@ -25,6 +25,7 @@ import com.intellij.openapi.options.SchemesManagerFactory;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.component.persist.PersistentStateComponent;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import jakarta.inject.Inject;

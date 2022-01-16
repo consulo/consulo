@@ -18,7 +18,7 @@ package com.intellij.openapi.fileTypes;
 import com.intellij.lang.Language;
 import com.intellij.lexer.Lexer;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
-import com.intellij.openapi.extensions.ExtensionPointName;
+import consulo.component.extension.ExtensionPointName;
 import com.intellij.openapi.extensions.KeyedFactoryEPBean;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;

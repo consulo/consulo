@@ -1,7 +1,7 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package com.intellij.serviceContainer;
+package consulo.component.extension;
 
-import com.intellij.openapi.components.ComponentManager;
+import consulo.component.ComponentManager;
 import consulo.container.PluginException;
 import consulo.container.plugin.PluginDescriptor;
 
@@ -12,7 +12,7 @@ import java.util.function.BiConsumer;
 /**
  * Use only if you need to cache created instance.
  *
- * @see com.intellij.openapi.extensions.ExtensionPointName#processWithPluginDescriptor(BiConsumer)
+ * @see ExtensionPointName#processWithPluginDescriptor(BiConsumer)
  */
 public abstract class LazyExtensionInstance<T> {
   private volatile T instance;

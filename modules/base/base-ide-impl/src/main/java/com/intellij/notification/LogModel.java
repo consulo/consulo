@@ -22,7 +22,7 @@ import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.Trinity;
 import com.intellij.openapi.wm.StatusBar;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.messages.Topic;
+import consulo.component.messagebus.Topic;
 import com.intellij.util.ui.UIUtil;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;

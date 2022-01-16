@@ -19,7 +19,7 @@
  */
 package com.intellij.psi.impl.source.tree;
 
-import com.intellij.openapi.extensions.ExtensionPointName;
+import consulo.component.extension.ExtensionPointName;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiManager;
 import com.intellij.util.CharTable;

@@ -22,7 +22,7 @@ package com.intellij;
 import com.intellij.openapi.project.ModuleListener;
 import consulo.roots.ModuleRootLayerListener;
 import com.intellij.openapi.roots.ModuleRootListener;
-import com.intellij.util.messages.Topic;
+import consulo.component.messagebus.Topic;
 
 public interface ProjectTopics {
   Topic<ModuleRootListener> PROJECT_ROOTS = new Topic<ModuleRootListener>("project root changes", ModuleRootListener.class);

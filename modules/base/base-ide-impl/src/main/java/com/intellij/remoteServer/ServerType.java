@@ -1,6 +1,6 @@
 package com.intellij.remoteServer;
 
-import com.intellij.openapi.extensions.ExtensionPointName;
+import consulo.component.extension.ExtensionPointName;
 import com.intellij.openapi.options.UnnamedConfigurable;
 import com.intellij.openapi.project.Project;
 import com.intellij.remoteServer.configuration.RemoteServersManager;

@@ -15,8 +15,8 @@
  */
 package consulo.roots.ui.configuration.session.internal;
 
-import com.intellij.openapi.components.ComponentManager;
-import com.intellij.openapi.components.PersistentStateComponent;
+import consulo.component.ComponentManager;
+import consulo.component.persist.PersistentStateComponent;
 
 /**
  * @author VISTALL

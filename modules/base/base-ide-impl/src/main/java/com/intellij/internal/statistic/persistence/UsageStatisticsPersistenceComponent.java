@@ -21,6 +21,7 @@ import com.intellij.internal.statistic.beans.UsageDescriptor;
 import com.intellij.internal.statistic.configurable.SendPeriod;
 import com.intellij.openapi.components.*;
 import com.intellij.openapi.util.text.StringUtil;
+import consulo.component.persist.PersistentStateComponent;
 import consulo.externalService.ExternalService;
 import consulo.externalService.ExternalServiceConfiguration;
 import consulo.util.lang.ThreeState;

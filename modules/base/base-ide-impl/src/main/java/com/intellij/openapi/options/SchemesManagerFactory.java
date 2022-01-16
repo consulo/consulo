@@ -18,7 +18,7 @@ package com.intellij.openapi.options;
 import com.intellij.openapi.components.RoamingType;
 import com.intellij.openapi.components.ServiceBean;
 import com.intellij.openapi.components.ServiceManager;
-import com.intellij.openapi.extensions.ExtensionPointName;
+import consulo.component.extension.ExtensionPointName;
 import consulo.annotation.DeprecationInfo;
 
 public abstract class SchemesManagerFactory {

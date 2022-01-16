@@ -5,7 +5,7 @@ import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.event.*;
 import com.intellij.openapi.editor.ex.*;
 import com.intellij.openapi.editor.impl.EditorDocumentPriorities;
-import com.intellij.openapi.extensions.ExtensionPointName;
+import consulo.component.extension.ExtensionPointName;
 import com.intellij.util.EventDispatcher;
 import consulo.disposer.Disposable;
 import consulo.editor.internal.EditorInternal;

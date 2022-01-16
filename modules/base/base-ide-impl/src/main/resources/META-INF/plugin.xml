@@ -59,8 +59,8 @@
     <extensionPoint name="projectService" beanClass="com.intellij.openapi.components.ServiceDescriptor" area="PROJECT"/>
     <extensionPoint name="moduleService" beanClass="com.intellij.openapi.components.ServiceDescriptor" area="MODULE"/>
 
-    <extensionPoint name="extensionExtender" beanClass="com.intellij.util.KeyedLazyInstanceEP">
-      <with attribute="implementationClass" implements="consulo.extensions.ExtensionExtender"/>
+    <extensionPoint name="extensionExtender" beanClass="consulo.component.extension.KeyedLazyInstanceEP">
+      <with attribute="implementationClass" implements="consulo.component.extension.ExtensionExtender"/>
     </extensionPoint>
 
     <extensionPoint name="dateTimeFormatter" beanClass="com.intellij.util.text.DateTimeFormatterBean"/>
@@ -908,7 +908,7 @@
 
     <extensionPoint name="scopeParserExtension" interface="com.intellij.psi.search.scope.packageSet.PackageSetParserExtension"/>
 
-    <extensionPoint name="referenceProviderType" beanClass="com.intellij.util.KeyedLazyInstanceEP"/>
+    <extensionPoint name="referenceProviderType" beanClass="consulo.component.extension.KeyedLazyInstanceEP"/>
 
     <extensionPoint name="colorSettingsPage" interface="com.intellij.openapi.options.colors.ColorSettingsPage"/>
     <extensionPoint name="colorAndFontPanelFactory" interface="com.intellij.application.options.colors.ColorAndFontPanelFactory"/>

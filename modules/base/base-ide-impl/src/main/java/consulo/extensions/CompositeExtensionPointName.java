@@ -16,13 +16,12 @@
 package consulo.extensions;
 
 import com.intellij.openapi.application.Application;
-import com.intellij.openapi.components.ComponentManager;
-import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
-import consulo.util.dataholder.Key;
+import consulo.component.ComponentManager;
+import consulo.component.extension.ExtensionPointName;
 import consulo.logging.Logger;
-import org.jetbrains.annotations.NonNls;
+import consulo.util.dataholder.Key;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -84,10 +83,9 @@ public abstract class CompositeExtensionPointName<T> {
     }
 
     @Override
-    @NonNls
     public Object invoke(Object proxy, final Method method, final Object[] args) throws Throwable {
       if (method.getDeclaringClass().getName().equals("java.lang.Object")) {
-        @NonNls String methodName = method.getName();
+        String methodName = method.getName();
         if (methodName.equals("toString")) {
           return "CompositeValue: " + myName;
         }

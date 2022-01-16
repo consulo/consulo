@@ -17,6 +17,7 @@ package com.intellij.openapi.components;
 
 import com.intellij.util.ReflectionUtil;
 import com.intellij.util.xmlb.XmlSerializer;
+import consulo.component.persist.PersistentStateComponent;
 import org.jdom.Element;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

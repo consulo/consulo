@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.vcs.impl;
 
-import com.intellij.util.messages.Topic;
+import consulo.component.messagebus.Topic;
 
 public interface LineStatusTrackerSettingListener {
   Topic<LineStatusTrackerSettingListener> TOPIC = Topic.create("line status tracker settings changed", LineStatusTrackerSettingListener.class);

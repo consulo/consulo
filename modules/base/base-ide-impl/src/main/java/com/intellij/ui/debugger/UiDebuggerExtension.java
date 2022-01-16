@@ -16,7 +16,7 @@
 
 package com.intellij.ui.debugger;
 
-import com.intellij.openapi.extensions.ExtensionPointName;
+import consulo.component.extension.ExtensionPointName;
 
 import javax.swing.*;
 

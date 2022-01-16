@@ -17,9 +17,9 @@ package com.intellij.openapi.vfs;
 
 import com.intellij.openapi.util.ModificationTracker;
 import com.intellij.openapi.vfs.newvfs.BulkFileListener;
-import com.intellij.util.messages.Topic;
+import consulo.component.messagebus.Topic;
 import consulo.annotation.DeprecationInfo;
-import consulo.component.internal.RootComponentManager;
+import consulo.component.extension.internal.RootComponentManager;
 import consulo.disposer.Disposable;
 import consulo.util.io.URLUtil;
 

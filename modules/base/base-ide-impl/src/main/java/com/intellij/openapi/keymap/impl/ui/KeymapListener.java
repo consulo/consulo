@@ -16,7 +16,7 @@
 package com.intellij.openapi.keymap.impl.ui;
 
 import com.intellij.openapi.actionSystem.ex.QuickList;
-import com.intellij.util.messages.Topic;
+import consulo.component.messagebus.Topic;
 
 /**
  * @author Dmitry Avdeev

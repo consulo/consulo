@@ -20,7 +20,7 @@
  */
 package com.intellij.codeInspection;
 
-import com.intellij.openapi.extensions.ExtensionPointName;
+import consulo.component.extension.ExtensionPointName;
 
 /**
  * This will be removed in future versions.

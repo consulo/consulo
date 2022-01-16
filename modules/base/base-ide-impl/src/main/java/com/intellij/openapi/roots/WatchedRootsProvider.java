@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.roots;
 
-import com.intellij.openapi.extensions.ExtensionPointName;
+import consulo.component.extension.ExtensionPointName;
 import javax.annotation.Nonnull;
 
 import java.util.Set;

@@ -20,6 +20,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.WindowManager;
 import consulo.awt.TargetAWT;
 
+import consulo.component.persist.PersistentStateComponent;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import java.awt.*;

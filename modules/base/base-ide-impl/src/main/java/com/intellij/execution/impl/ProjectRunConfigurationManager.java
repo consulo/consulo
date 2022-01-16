@@ -24,6 +24,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.util.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.application.AccessRule;
+import consulo.component.persist.PersistentStateComponent;
 import consulo.project.startup.StartupActivity;
 import consulo.ui.UIAccess;
 import consulo.util.lang.Pair;

@@ -15,9 +15,9 @@
  */
 package com.intellij.openapi.extensions.impl;
 
-import com.intellij.openapi.components.ComponentManager;
-import com.intellij.openapi.extensions.ExtensionPoint;
-import com.intellij.openapi.extensions.ExtensionPointName;
+import consulo.component.ComponentManager;
+import consulo.component.extension.ExtensionPoint;
+import consulo.component.extension.ExtensionPointName;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.container.impl.parser.ExtensionInfo;
 import consulo.container.plugin.PluginDescriptor;

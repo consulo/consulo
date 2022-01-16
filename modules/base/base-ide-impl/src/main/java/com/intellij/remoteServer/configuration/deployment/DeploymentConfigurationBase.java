@@ -1,6 +1,6 @@
 package com.intellij.remoteServer.configuration.deployment;
 
-import com.intellij.openapi.components.PersistentStateComponent;
+import consulo.component.persist.PersistentStateComponent;
 import com.intellij.util.xmlb.XmlSerializerUtil;
 import javax.annotation.Nullable;
 

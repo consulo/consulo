@@ -16,7 +16,7 @@
 package com.intellij.packaging.artifacts;
 
 import com.intellij.openapi.compiler.CompileContext;
-import com.intellij.openapi.components.PersistentStateComponent;
+import consulo.component.persist.PersistentStateComponent;
 import com.intellij.packaging.ui.ArtifactEditorContext;
 import com.intellij.packaging.ui.ArtifactPropertiesEditor;
 import javax.annotation.Nonnull;

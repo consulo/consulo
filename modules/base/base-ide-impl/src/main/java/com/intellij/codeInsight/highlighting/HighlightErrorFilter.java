@@ -16,7 +16,7 @@
 
 package com.intellij.codeInsight.highlighting;
 
-import com.intellij.openapi.extensions.ExtensionPointName;
+import consulo.component.extension.ExtensionPointName;
 import com.intellij.psi.PsiErrorElement;
 import javax.annotation.Nonnull;
 

@@ -15,7 +15,7 @@
  */
 package com.intellij.ide.caches;
 
-import com.intellij.openapi.extensions.ExtensionPointName;
+import consulo.component.extension.ExtensionPointName;
 import consulo.localize.LocalizeValue;
 
 import javax.annotation.Nonnull;

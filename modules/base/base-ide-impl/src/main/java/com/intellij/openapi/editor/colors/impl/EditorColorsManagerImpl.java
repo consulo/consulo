@@ -35,6 +35,7 @@ import com.intellij.util.ThrowableConvertor;
 import com.intellij.util.io.URLUtil;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.xmlb.annotations.OptionTag;
+import consulo.component.persist.PersistentStateComponent;
 import consulo.logging.Logger;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;

@@ -17,7 +17,7 @@ package com.intellij.openapi.editor.colors;
 
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.ServiceManager;
-import com.intellij.util.messages.Topic;
+import consulo.component.messagebus.Topic;
 import consulo.disposer.Disposable;
 
 import javax.annotation.Nonnull;

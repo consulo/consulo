@@ -40,6 +40,7 @@ import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.openapi.util.WriteExternalException;
 import com.intellij.profile.Profile;
 import com.intellij.util.ArrayUtil;
+import consulo.component.persist.PersistentStateComponent;
 import consulo.logging.Logger;
 import consulo.ui.image.Image;
 import jakarta.inject.Inject;

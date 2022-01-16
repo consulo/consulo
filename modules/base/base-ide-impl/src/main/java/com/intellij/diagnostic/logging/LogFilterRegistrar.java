@@ -16,7 +16,7 @@
 
 package com.intellij.diagnostic.logging;
 
-import com.intellij.openapi.components.PersistentStateComponent;
+import consulo.component.persist.PersistentStateComponent;
 import org.jdom.Element;
 
 import java.util.List;

@@ -5,7 +5,7 @@ import com.intellij.codeInsight.daemon.impl.HighlightInfo;
 import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.ex.TooltipAction;
-import com.intellij.openapi.extensions.ExtensionPointName;
+import consulo.component.extension.ExtensionPointName;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.registry.Registry;
 import com.intellij.psi.PsiDocumentManager;

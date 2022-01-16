@@ -4,7 +4,7 @@
  */
 package com.intellij.coverage;
 
-import com.intellij.openapi.extensions.ExtensionPointName;
+import consulo.component.extension.ExtensionPointName;
 import com.intellij.rt.coverage.data.ProjectData;
 import org.jetbrains.annotations.NonNls;
 

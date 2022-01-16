@@ -47,7 +47,7 @@ import com.intellij.util.ExceptionUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.Interner;
 import com.intellij.util.graph.*;
-import com.intellij.util.messages.MessageBus;
+import consulo.component.messagebus.MessageBus;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.application.AccessRule;
@@ -772,7 +772,7 @@ public abstract class ModuleManagerImpl extends ModuleManager implements Persist
       myModulesCache = null;
       myModules.add(module);
 
-      module.initNotLazyServices(null);
+      module.initNotLazyServices();
     }
 
     @Override

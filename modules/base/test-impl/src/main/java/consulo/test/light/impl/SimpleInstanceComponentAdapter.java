@@ -15,7 +15,7 @@
  */
 package consulo.test.light.impl;
 
-import com.intellij.openapi.components.ComponentManager;
+import consulo.component.ComponentManager;
 import com.intellij.openapi.extensions.impl.ExtensionComponentAdapter;
 import org.jdom.Element;
 

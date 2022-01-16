@@ -22,7 +22,7 @@ import com.intellij.execution.runners.ProgramRunner;
 import com.intellij.execution.ui.ExecutionConsole;
 import com.intellij.execution.ui.RunContentDescriptor;
 import com.intellij.openapi.project.Project;
-import com.intellij.util.messages.Topic;
+import consulo.component.messagebus.Topic;
 import com.intellij.xdebugger.breakpoints.XBreakpointManager;
 import consulo.ui.image.Image;
 

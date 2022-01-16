@@ -42,6 +42,7 @@ import com.intellij.ui.debugger.extensions.UiScriptFileType;
 import com.intellij.util.WaitFor;
 import com.intellij.util.ui.UIUtil;
 import consulo.awt.TargetAWT;
+import consulo.component.persist.PersistentStateComponent;
 import consulo.desktop.awt.wm.impl.DesktopIdeFrameImpl;
 import consulo.logging.Logger;
 import consulo.ui.Window;

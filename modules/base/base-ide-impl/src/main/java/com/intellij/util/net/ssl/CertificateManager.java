@@ -4,6 +4,7 @@ import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.components.*;
+import consulo.component.persist.PersistentStateComponent;
 import consulo.container.boot.ContainerPathManager;
 import consulo.logging.Logger;
 import com.intellij.openapi.ui.DialogWrapper;

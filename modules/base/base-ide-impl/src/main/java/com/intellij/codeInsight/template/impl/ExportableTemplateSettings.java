@@ -17,6 +17,7 @@ package com.intellij.codeInsight.template.impl;
 
 import com.intellij.openapi.components.*;
 import com.intellij.util.SmartList;
+import consulo.component.persist.PersistentStateComponent;
 import jakarta.inject.Singleton;
 
 import javax.annotation.Nullable;

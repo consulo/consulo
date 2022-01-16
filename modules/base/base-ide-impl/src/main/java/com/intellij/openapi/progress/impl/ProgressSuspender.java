@@ -25,7 +25,7 @@ import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolder;
 import com.intellij.openapi.wm.ex.ProgressIndicatorEx;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.messages.Topic;
+import consulo.component.messagebus.Topic;
 import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;

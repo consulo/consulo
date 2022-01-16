@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.updateSettings.impl.pluginsAdvertisement;
 
-import com.intellij.openapi.extensions.ExtensionPointName;
+import consulo.component.extension.ExtensionPointName;
 
 /**
  * User: anna

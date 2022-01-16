@@ -20,7 +20,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.ModificationTracker;
 import com.intellij.packaging.elements.PackagingElement;
 import com.intellij.packaging.elements.PackagingElementResolvingContext;
-import com.intellij.util.messages.Topic;
+import consulo.component.messagebus.Topic;
 
 import javax.annotation.Nonnull;
 import java.util.Collection;

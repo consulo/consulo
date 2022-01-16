@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.extensions.impl;
 
-import com.intellij.openapi.extensions.ExtensionPoint;
+import consulo.component.extension.ExtensionPoint;
 import consulo.container.plugin.PluginDescriptor;
 
 import javax.annotation.Nonnull;

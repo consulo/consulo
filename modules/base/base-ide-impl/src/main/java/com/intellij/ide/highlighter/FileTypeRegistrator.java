@@ -16,7 +16,7 @@
 package com.intellij.ide.highlighter;
 
 import com.intellij.openapi.fileTypes.FileType;
-import com.intellij.openapi.extensions.ExtensionPointName;
+import consulo.component.extension.ExtensionPointName;
 
 public interface FileTypeRegistrator {
   ExtensionPointName<FileTypeRegistrator> EP_NAME = ExtensionPointName.create("com.intellij.fileTypeRegistrator");

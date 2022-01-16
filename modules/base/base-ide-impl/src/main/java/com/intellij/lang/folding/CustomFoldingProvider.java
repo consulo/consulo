@@ -15,7 +15,7 @@
  */
 package com.intellij.lang.folding;
 
-import com.intellij.openapi.extensions.ExtensionPointName;
+import consulo.component.extension.ExtensionPointName;
 
 /**
  * Base class and extension point for custom folding providers.

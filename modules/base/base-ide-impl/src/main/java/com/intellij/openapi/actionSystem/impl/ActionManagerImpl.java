@@ -28,7 +28,7 @@ import com.intellij.util.ObjectUtils;
 import com.intellij.util.ReflectionUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.MultiMap;
-import com.intellij.util.messages.MessageBusConnection;
+import consulo.component.messagebus.MessageBusConnection;
 import com.intellij.util.ui.UIUtil;
 import consulo.actionSystem.ActionToolbarFactory;
 import consulo.actionSystem.impl.LocalizeHelper;

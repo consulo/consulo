@@ -15,17 +15,17 @@
  */
 package com.intellij.openapi.extensions.impl;
 
-import com.intellij.openapi.components.ComponentManager;
-import com.intellij.openapi.extensions.ExtensionPoint;
+import consulo.component.ComponentManager;
+import consulo.component.extension.ExtensionPoint;
 import com.intellij.openapi.extensions.LoadingOrder;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.util.AtomicNotNullLazyValue;
-import com.intellij.util.KeyedLazyInstanceEP;
+import consulo.component.extension.KeyedLazyInstanceEP;
 import com.intellij.util.ObjectUtil;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginManager;
-import consulo.extensions.ExtensionExtender;
+import consulo.component.extension.ExtensionExtender;
 import consulo.logging.Logger;
 import consulo.util.lang.Pair;
 

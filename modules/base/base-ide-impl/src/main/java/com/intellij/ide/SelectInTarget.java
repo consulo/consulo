@@ -16,12 +16,12 @@
 package com.intellij.ide;
 
 import com.intellij.openapi.project.Project;
-import consulo.extensions.StrictExtensionPointName;
+import consulo.component.extension.StrictExtensionPointName;
 
 import javax.annotation.Nullable;
 
 public interface SelectInTarget {
-  StrictExtensionPointName<Project, SelectInTarget> EP_NAME = StrictExtensionPointName.create(Project.class, "com.intellij.selectInTarget");
+  StrictExtensionPointName<Project, SelectInTarget> EP_NAME = StrictExtensionPointName.of(Project.class, "com.intellij.selectInTarget");
 
   String toString();
 

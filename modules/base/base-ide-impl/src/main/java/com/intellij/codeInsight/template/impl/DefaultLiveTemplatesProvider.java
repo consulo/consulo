@@ -16,7 +16,7 @@
 
 package com.intellij.codeInsight.template.impl;
 
-import com.intellij.openapi.extensions.ExtensionPointName;
+import consulo.component.extension.ExtensionPointName;
 import javax.annotation.Nullable;
 import consulo.annotation.DeprecationInfo;
 

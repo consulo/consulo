@@ -15,10 +15,11 @@
  */
 package com.intellij.openapi.util;
 
+import consulo.component.persist.PersistentStateComponent;
 import org.jdom.Element;
 
 /**
- * @deprecated Use {@link com.intellij.openapi.components.PersistentStateComponent} instead.
+ * @deprecated Use {@link PersistentStateComponent} instead.
  */
 public interface JDOMExternalizable {
   void readExternal(Element element) throws InvalidDataException;

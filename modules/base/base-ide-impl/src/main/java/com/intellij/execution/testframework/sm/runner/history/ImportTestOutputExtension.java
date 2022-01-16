@@ -16,7 +16,7 @@
 package com.intellij.execution.testframework.sm.runner.history;
 
 import com.intellij.execution.testframework.sm.runner.GeneralTestEventsProcessor;
-import com.intellij.openapi.extensions.ExtensionPointName;
+import consulo.component.extension.ExtensionPointName;
 import org.xml.sax.helpers.DefaultHandler;
 
 import javax.annotation.Nonnull;

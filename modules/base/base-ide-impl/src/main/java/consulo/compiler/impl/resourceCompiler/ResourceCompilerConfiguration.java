@@ -32,6 +32,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.ArrayUtil;
+import consulo.component.persist.PersistentStateComponent;
 import consulo.logging.Logger;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;

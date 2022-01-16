@@ -17,7 +17,7 @@ package com.intellij.dvcs.push;
 
 import com.intellij.dvcs.repo.Repository;
 import com.intellij.dvcs.repo.RepositoryManager;
-import com.intellij.openapi.extensions.ExtensionPointName;
+import consulo.component.extension.ExtensionPointName;
 import com.intellij.openapi.vcs.AbstractVcs;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

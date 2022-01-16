@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.command.impl;
 
-import com.intellij.openapi.extensions.ExtensionPointName;
+import consulo.component.extension.ExtensionPointName;
 import com.intellij.openapi.project.Project;
 
 public interface UndoProvider {

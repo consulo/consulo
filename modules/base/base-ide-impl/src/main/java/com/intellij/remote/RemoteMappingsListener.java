@@ -15,7 +15,7 @@
  */
 package com.intellij.remote;
 
-import com.intellij.util.messages.Topic;
+import consulo.component.messagebus.Topic;
 import javax.annotation.Nonnull;
 
 /**

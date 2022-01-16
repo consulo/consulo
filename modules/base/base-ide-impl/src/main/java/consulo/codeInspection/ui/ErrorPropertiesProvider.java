@@ -15,7 +15,7 @@
  */
 package consulo.codeInspection.ui;
 
-import com.intellij.openapi.extensions.ExtensionPointName;
+import consulo.component.extension.ExtensionPointName;
 import consulo.options.SimpleConfigurableByProperties;
 import consulo.ui.Component;
 

@@ -16,14 +16,16 @@
 package com.intellij.ide.file;
 
 import com.intellij.openapi.project.Project;
-import com.intellij.util.messages.Topic;
+import consulo.component.messagebus.Topic;
+import consulo.component.messagebus.MessageBus;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
  * This listener is notified when some operation performs a massive batch file change, and when this change is completed.
  * <p/>
- * To subscribe to such batch file changes, connect to the Project's {@link com.intellij.util.messages.MessageBus}
+ * To subscribe to such batch file changes, connect to the Project's {@link MessageBus}
  * via the {@link #TOPIC} defined below.
  */
 public interface BatchFileChangeListener {

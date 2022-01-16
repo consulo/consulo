@@ -15,7 +15,7 @@
  */
 package consulo.builtInServer.websocket;
 
-import com.intellij.openapi.extensions.ExtensionPointName;
+import consulo.component.extension.ExtensionPointName;
 
 import javax.annotation.Nonnull;
 

@@ -44,7 +44,7 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.SLRUCache;
 import com.intellij.util.indexing.FileBasedIndex;
 import com.intellij.util.io.DataOutputStream;
-import com.intellij.util.messages.MessageBusConnection;
+import consulo.component.messagebus.MessageBusConnection;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.compiler.impl.TranslatingCompilerFilesMonitor;
 import consulo.compiler.impl.TranslatingCompilerFilesMonitorHelper;

@@ -55,6 +55,7 @@ import com.intellij.util.xmlb.XmlSerializerUtil;
 import com.intellij.util.xmlb.annotations.AbstractCollection;
 import com.intellij.util.xmlb.annotations.Property;
 import com.intellij.util.xmlb.annotations.Tag;
+import consulo.component.persist.PersistentStateComponent;
 import consulo.logging.Logger;
 import consulo.task.api.repository.ReconfigureRepository;
 import jakarta.inject.Inject;

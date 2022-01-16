@@ -3,7 +3,7 @@ package com.intellij.remote;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
-import com.intellij.openapi.extensions.ExtensionPointName;
+import consulo.component.extension.ExtensionPointName;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.PathMappingSettings;
 import javax.annotation.Nonnull;

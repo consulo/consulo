@@ -25,7 +25,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.PathUtilRt;
 import com.intellij.util.ReflectionUtil;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.messages.MessageBus;
+import consulo.component.messagebus.MessageBus;
 import consulo.components.impl.stores.StreamProvider;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;

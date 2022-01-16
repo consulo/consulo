@@ -13,12 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.components;
+package consulo.component;
 
-import com.intellij.openapi.extensions.ExtensionPoint;
-import com.intellij.openapi.extensions.ExtensionPointName;
-import com.intellij.openapi.progress.ProgressIndicator;
-import com.intellij.util.messages.MessageBus;
+import consulo.component.extension.ExtensionPoint;
+import consulo.component.extension.ExtensionPointName;
+import consulo.component.messagebus.MessageBus;
 import consulo.disposer.Disposable;
 import consulo.injecting.InjectingContainer;
 import consulo.injecting.InjectingContainerOwner;
@@ -39,7 +38,7 @@ import java.util.function.Supplier;
  * @see Project
  */
 public interface ComponentManager extends UserDataHolder, Disposable, InjectingContainerOwner {
-  default void initNotLazyServices(@Nullable ProgressIndicator progressIndicator) {
+  default void initNotLazyServices() {
     throw new UnsupportedOperationException();
   }
 
@@ -93,7 +92,7 @@ public interface ComponentManager extends UserDataHolder, Disposable, InjectingC
 
   /**
    * @return condition for this component being disposed.
-   * see {@link Application#invokeLater(Runnable, Condition)} for the usage example.
+   * see {@link Application#invokeLater(Runnable, BooleanSupplier)} for the usage example.
    */
   @Nonnull
   BooleanSupplier getDisposed();

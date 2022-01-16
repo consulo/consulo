@@ -36,8 +36,8 @@ import com.intellij.openapi.vcs.ProjectLevelVcsManager;
 import com.intellij.openapi.vcs.VcsBundle;
 import com.intellij.openapi.vcs.VcsDirectoryMapping;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.util.messages.MessageBus;
-import com.intellij.util.messages.MessageBusConnection;
+import consulo.component.messagebus.MessageBus;
+import consulo.component.messagebus.MessageBusConnection;
 import consulo.disposer.Disposable;
 import jakarta.inject.Inject;
 

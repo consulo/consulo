@@ -16,7 +16,7 @@
 
 package com.intellij.codeInsight.editorActions.wordSelection;
 
-import com.intellij.openapi.extensions.ExtensionPointName;
+import consulo.component.extension.ExtensionPointName;
 import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.util.Condition;
 import com.intellij.psi.*;

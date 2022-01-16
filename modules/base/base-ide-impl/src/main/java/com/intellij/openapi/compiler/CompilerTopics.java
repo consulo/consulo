@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.compiler;
 
-import com.intellij.util.messages.Topic;
+import consulo.component.messagebus.Topic;
 
 /**
  * @author yole

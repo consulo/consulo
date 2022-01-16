@@ -16,7 +16,7 @@
 package com.intellij.openapi.project.impl;
 
 import com.intellij.openapi.application.Application;
-import com.intellij.openapi.components.PersistentStateComponent;
+import consulo.component.persist.PersistentStateComponent;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.project.DefaultProjectFactory;
@@ -50,7 +50,7 @@ public class DefaultProjectFactoryImpl extends DefaultProjectFactory implements 
   @Inject
   public DefaultProjectFactoryImpl(@Nonnull Application application, @Nonnull ProjectManager projectManager) {
     myDefaultProject = new DefaultProjectImpl(application, projectManager, "", application.isUnitTestMode());
-    myDefaultProject.initNotLazyServices(null);
+    myDefaultProject.initNotLazyServices();
     myDefaultProject.setInitialized();
   }
 

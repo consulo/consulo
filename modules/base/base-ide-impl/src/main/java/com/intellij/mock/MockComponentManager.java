@@ -15,8 +15,8 @@
  */
 package com.intellij.mock;
 
-import com.intellij.openapi.components.ComponentManager;
-import com.intellij.util.messages.MessageBus;
+import consulo.component.ComponentManager;
+import consulo.component.messagebus.MessageBus;
 import com.intellij.util.messages.impl.MessageBusFactory;
 import consulo.disposer.Disposable;
 import consulo.util.dataholder.UserDataHolderBase;

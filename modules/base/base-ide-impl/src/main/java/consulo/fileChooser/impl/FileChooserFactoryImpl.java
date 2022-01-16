@@ -16,7 +16,7 @@
 package consulo.fileChooser.impl;
 
 import com.intellij.openapi.application.PathMacros;
-import com.intellij.openapi.extensions.ExtensionPointName;
+import consulo.component.extension.ExtensionPointName;
 import com.intellij.openapi.fileChooser.*;
 import com.intellij.openapi.project.Project;
 import consulo.disposer.Disposable;

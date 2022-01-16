@@ -17,6 +17,7 @@ package com.intellij.lang.customFolding;
 
 import com.intellij.openapi.components.*;
 import com.intellij.openapi.project.Project;
+import consulo.component.persist.PersistentStateComponent;
 
 /**
  * @author Rustam Vishnyakov

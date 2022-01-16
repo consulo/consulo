@@ -20,7 +20,7 @@
  */
 package com.intellij.psi.search.scope.packageSet;
 
-import com.intellij.openapi.extensions.ExtensionPointName;
+import consulo.component.extension.ExtensionPointName;
 import com.intellij.util.containers.ContainerUtil;
 import javax.annotation.Nonnull;
 

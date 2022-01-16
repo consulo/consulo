@@ -17,7 +17,7 @@ package com.intellij.xdebugger.impl;
 
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.extensions.ExtensionPointName;
+import consulo.component.extension.ExtensionPointName;
 import com.intellij.openapi.project.Project;
 import com.intellij.xdebugger.AbstractDebuggerSession;
 import com.intellij.xdebugger.XDebuggerManager;

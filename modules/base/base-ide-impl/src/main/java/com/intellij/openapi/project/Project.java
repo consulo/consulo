@@ -16,7 +16,7 @@
 package com.intellij.openapi.project;
 
 import com.intellij.openapi.application.Application;
-import com.intellij.openapi.components.ComponentManager;
+import consulo.component.ComponentManager;
 import com.intellij.openapi.vfs.VirtualFile;
 import consulo.ui.UIAccess;
 import consulo.util.concurrent.AsyncResult;

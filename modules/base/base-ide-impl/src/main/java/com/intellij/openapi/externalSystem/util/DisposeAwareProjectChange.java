@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.externalSystem.util;
 
-import com.intellij.openapi.components.ComponentManager;
+import consulo.component.ComponentManager;
 import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;

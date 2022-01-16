@@ -15,7 +15,7 @@
  */
 package com.intellij.ide.fileTemplates;
 
-import com.intellij.openapi.extensions.ExtensionPointName;
+import consulo.component.extension.ExtensionPointName;
 
 /**
  * Should be implemented in an extension point

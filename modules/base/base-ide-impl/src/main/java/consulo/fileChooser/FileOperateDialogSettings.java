@@ -17,6 +17,7 @@ package consulo.fileChooser;
 
 import com.intellij.openapi.components.*;
 import com.intellij.util.xmlb.XmlSerializerUtil;
+import consulo.component.persist.PersistentStateComponent;
 import consulo.ui.fileOperateDialog.FileOperateDialogProvider;
 
 import javax.annotation.Nonnull;

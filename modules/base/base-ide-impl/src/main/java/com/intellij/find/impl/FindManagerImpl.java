@@ -59,7 +59,7 @@ import com.intellij.usages.ChunkExtractor;
 import com.intellij.usages.UsageViewManager;
 import com.intellij.usages.impl.SyntaxHighlighterOverEditorHighlighter;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.messages.MessageBus;
+import consulo.component.messagebus.MessageBus;
 import com.intellij.util.text.CharArrayUtil;
 import com.intellij.util.text.ImmutableCharSequence;
 import com.intellij.util.text.StringSearcher;

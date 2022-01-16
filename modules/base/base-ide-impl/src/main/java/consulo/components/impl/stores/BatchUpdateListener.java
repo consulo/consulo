@@ -15,7 +15,7 @@
  */
 package consulo.components.impl.stores;
 
-import com.intellij.util.messages.Topic;
+import consulo.component.messagebus.Topic;
 
 public interface BatchUpdateListener {
   Topic<BatchUpdateListener> TOPIC = new Topic<>("batch update listener", BatchUpdateListener.class);

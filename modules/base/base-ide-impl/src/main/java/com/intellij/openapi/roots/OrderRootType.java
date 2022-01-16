@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.roots;
 
-import com.intellij.openapi.extensions.ExtensionPointName;
+import consulo.component.extension.ExtensionPointName;
 import com.intellij.openapi.util.NotNullLazyValue;
 import consulo.annotation.DeprecationInfo;
 import consulo.roots.types.BinariesOrderRootType;

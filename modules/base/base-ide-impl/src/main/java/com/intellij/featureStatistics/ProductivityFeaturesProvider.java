@@ -15,7 +15,7 @@
  */
 package com.intellij.featureStatistics;
 
-import com.intellij.openapi.extensions.ExtensionPointName;
+import consulo.component.extension.ExtensionPointName;
 
 /**
  * User: anna

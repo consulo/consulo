@@ -19,7 +19,7 @@ import com.intellij.codeInsight.daemon.HighlightDisplayKey;
 import com.intellij.codeInspection.LocalQuickFix;
 import com.intellij.codeInspection.ex.InspectionToolWrapper;
 import com.intellij.openapi.components.ServiceManager;
-import com.intellij.openapi.extensions.ExtensionPointName;
+import consulo.component.extension.ExtensionPointName;
 import com.intellij.psi.PsiElement;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolder;

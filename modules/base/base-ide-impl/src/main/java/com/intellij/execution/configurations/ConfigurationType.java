@@ -15,7 +15,7 @@
  */
 package com.intellij.execution.configurations;
 
-import com.intellij.openapi.extensions.ExtensionPointName;
+import consulo.component.extension.ExtensionPointName;
 import consulo.annotation.DeprecationInfo;
 import consulo.ui.image.Image;
 

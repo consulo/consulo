@@ -24,8 +24,8 @@ import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.project.ProjectManagerListener;
-import com.intellij.util.messages.MessageBus;
-import com.intellij.util.messages.MessageBusConnection;
+import consulo.component.messagebus.MessageBus;
+import consulo.component.messagebus.MessageBusConnection;
 import jakarta.inject.Inject;
 
 import javax.annotation.Nonnull;

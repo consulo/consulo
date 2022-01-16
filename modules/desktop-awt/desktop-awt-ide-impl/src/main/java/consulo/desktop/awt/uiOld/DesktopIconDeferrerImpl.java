@@ -30,7 +30,7 @@ import com.intellij.openapi.vfs.newvfs.events.VFileEvent;
 import com.intellij.psi.util.PsiModificationTracker;
 import com.intellij.ui.IconDeferrer;
 import com.intellij.util.Function;
-import com.intellij.util.messages.MessageBusConnection;
+import consulo.component.messagebus.MessageBusConnection;
 import consulo.disposer.Disposable;
 import consulo.ui.UIAccess;
 import consulo.ui.image.Image;

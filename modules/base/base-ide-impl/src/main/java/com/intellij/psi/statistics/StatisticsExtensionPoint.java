@@ -15,7 +15,7 @@
  */
 package com.intellij.psi.statistics;
 
-import com.intellij.util.KeyedLazyInstanceEP;
+import consulo.component.extension.KeyedLazyInstanceEP;
 
 /**
  * @author peter

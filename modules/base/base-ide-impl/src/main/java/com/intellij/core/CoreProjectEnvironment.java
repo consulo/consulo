@@ -20,7 +20,7 @@ import com.intellij.mock.MockFileIndexFacade;
 import com.intellij.mock.MockProject;
 import com.intellij.mock.MockResolveScopeManager;
 import consulo.disposer.Disposable;
-import com.intellij.openapi.extensions.ExtensionPointName;
+import consulo.component.extension.ExtensionPointName;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.roots.FileIndexFacade;
 import com.intellij.psi.PsiDocumentManager;

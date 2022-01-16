@@ -15,7 +15,7 @@
  */
 package com.intellij.xdebugger.attach;
 
-import com.intellij.openapi.extensions.ExtensionPointName;
+import consulo.component.extension.ExtensionPointName;
 import com.intellij.openapi.project.Project;
 import javax.annotation.Nonnull;
 

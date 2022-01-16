@@ -16,7 +16,7 @@
 package com.intellij.openapi.fileEditor.impl.http;
 
 import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.extensions.ExtensionPointName;
+import consulo.component.extension.ExtensionPointName;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.impl.http.HttpVirtualFile;
 import javax.annotation.Nonnull;

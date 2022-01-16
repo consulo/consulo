@@ -41,7 +41,7 @@ import com.intellij.ui.components.breadcrumbs.Crumb;
 import com.intellij.util.DocumentUtil;
 import com.intellij.util.concurrency.SynchronizedClearableLazy;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.messages.MessageBusConnection;
+import consulo.component.messagebus.MessageBusConnection;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

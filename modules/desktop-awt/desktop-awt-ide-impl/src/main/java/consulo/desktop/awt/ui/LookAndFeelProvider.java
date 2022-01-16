@@ -15,7 +15,7 @@
  */
 package consulo.desktop.awt.ui;
 
-import com.intellij.openapi.extensions.ExtensionPointName;
+import consulo.component.extension.ExtensionPointName;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;

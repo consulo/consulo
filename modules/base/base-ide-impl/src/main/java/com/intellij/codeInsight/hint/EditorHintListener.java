@@ -17,7 +17,7 @@ package com.intellij.codeInsight.hint;
 
 import com.intellij.openapi.project.Project;
 import com.intellij.ui.LightweightHint;
-import com.intellij.util.messages.Topic;
+import consulo.component.messagebus.Topic;
 
 /**
  * @author yole

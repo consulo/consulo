@@ -15,8 +15,8 @@
  */
 package com.intellij.psi.search;
 
-import com.intellij.openapi.extensions.ExtensionPointName;
-import com.intellij.util.messages.Topic;
+import consulo.component.extension.ExtensionPointName;
+import consulo.component.messagebus.Topic;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 

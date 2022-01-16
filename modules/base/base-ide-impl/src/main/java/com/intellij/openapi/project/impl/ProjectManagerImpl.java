@@ -51,8 +51,8 @@ import com.intellij.ui.GuiUtils;
 import com.intellij.util.*;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.MultiMap;
-import com.intellij.util.messages.MessageBus;
-import com.intellij.util.messages.MessageBusConnection;
+import consulo.component.messagebus.MessageBus;
+import consulo.component.messagebus.MessageBusConnection;
 import com.intellij.util.ui.UIUtil;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.awt.TargetAWT;
@@ -262,7 +262,7 @@ public class ProjectManagerImpl extends ProjectManagerEx implements Disposable {
       else {
         project.getStateStore().load();
       }
-      project.initNotLazyServices(null);
+      project.initNotLazyServices();
 
       ModuleManagerImpl moduleManager = ModuleManagerImpl.getInstanceImpl(project);
       moduleManager.setReady(true);
@@ -926,7 +926,7 @@ public class ProjectManagerImpl extends ProjectManagerEx implements Disposable {
       else {
         project.getStateStore().load();
       }
-      project.initNotLazyServices(progressIndicator);
+      project.initNotLazyServices();
       succeed = true;
     }
     catch (Throwable e) {

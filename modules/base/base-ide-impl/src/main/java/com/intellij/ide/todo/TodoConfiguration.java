@@ -17,13 +17,13 @@
 package com.intellij.ide.todo;
 
 import com.intellij.openapi.application.Application;
-import com.intellij.openapi.components.PersistentStateComponent;
+import consulo.component.persist.PersistentStateComponent;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
 import com.intellij.psi.search.*;
-import com.intellij.util.messages.MessageBus;
-import com.intellij.util.messages.Topic;
+import consulo.component.messagebus.MessageBus;
+import consulo.component.messagebus.Topic;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Element;

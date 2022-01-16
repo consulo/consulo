@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.vcs.changes.ui;
 
-import com.intellij.openapi.extensions.ExtensionPointName;
+import consulo.component.extension.ExtensionPointName;
 import com.intellij.openapi.vcs.changes.LocalChangeList;
 import com.intellij.ui.EditorTextField;
 import com.intellij.util.Consumer;

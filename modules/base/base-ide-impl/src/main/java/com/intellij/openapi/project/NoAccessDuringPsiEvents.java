@@ -21,7 +21,7 @@ import consulo.logging.Logger;
 import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.psi.impl.DebugUtil;
 import com.intellij.psi.util.PsiModificationTracker;
-import com.intellij.util.messages.MessageBus;
+import consulo.component.messagebus.MessageBus;
 
 import java.util.HashSet;
 import java.util.Set;

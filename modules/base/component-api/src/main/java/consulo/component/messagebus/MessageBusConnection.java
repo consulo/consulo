@@ -17,7 +17,7 @@
 /*
  * @author max
  */
-package com.intellij.util.messages;
+package consulo.component.messagebus;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

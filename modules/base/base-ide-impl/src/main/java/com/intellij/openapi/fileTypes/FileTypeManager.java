@@ -4,7 +4,7 @@ package com.intellij.openapi.fileTypes;
 import com.intellij.lang.Language;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.util.messages.Topic;
+import consulo.component.messagebus.Topic;
 import consulo.application.internal.PerApplicationInstance;
 import org.jetbrains.annotations.NonNls;
 

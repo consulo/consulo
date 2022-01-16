@@ -15,12 +15,12 @@
  */
 package consulo.module.extension;
 
-import com.intellij.openapi.components.PersistentStateComponent;
+import consulo.component.persist.PersistentStateComponent;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.roots.ModuleRootLayer;
-import com.intellij.util.messages.Topic;
+import consulo.component.messagebus.Topic;
 import org.jdom.Element;
 import javax.annotation.Nonnull;
 

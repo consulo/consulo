@@ -24,6 +24,8 @@ import com.intellij.util.xmlb.annotations.AbstractCollection;
 import com.intellij.util.xmlb.annotations.Tag;
 
 import javax.annotation.Nonnull;
+
+import consulo.component.persist.PersistentStateComponent;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 

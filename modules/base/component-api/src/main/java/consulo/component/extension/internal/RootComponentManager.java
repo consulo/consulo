@@ -13,16 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.extensions;
+package consulo.component.extension.internal;
 
-import com.intellij.openapi.components.ComponentManager;
+import consulo.component.ComponentManager;
 
-import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
  * @since 28/12/2021
  */
-public interface ComponentAware {
-  void setComponent(@Nonnull ComponentManager component);
+public class RootComponentManager {
+  private static ComponentManager ourRootComponent;
+
+  public static void setRootComponent(@Nullable ComponentManager rootComponent) {
+    ourRootComponent = rootComponent;
+  }
+
+  public static ComponentManager getRootComponent() {
+    return ourRootComponent;
+  }
 }

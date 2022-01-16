@@ -28,7 +28,7 @@ import com.intellij.openapi.ui.JBPopupMenu;
 import com.intellij.openapi.util.Getter;
 import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.ui.ComponentUtil;
-import com.intellij.util.messages.MessageBusConnection;
+import consulo.component.messagebus.MessageBusConnection;
 import com.intellij.util.ui.UIUtil;
 import consulo.annotation.DeprecationInfo;
 import consulo.awt.TargetAWT;

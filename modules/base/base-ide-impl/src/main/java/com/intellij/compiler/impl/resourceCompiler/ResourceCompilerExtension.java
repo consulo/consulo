@@ -1,6 +1,6 @@
 package com.intellij.compiler.impl.resourceCompiler;
 
-import com.intellij.openapi.extensions.ExtensionPointName;
+import consulo.component.extension.ExtensionPointName;
 import com.intellij.openapi.module.Module;
 import javax.annotation.Nonnull;
 

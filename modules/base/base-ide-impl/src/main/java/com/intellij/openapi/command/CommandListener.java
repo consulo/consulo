@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.command;
 
-import com.intellij.util.messages.Topic;
+import consulo.component.messagebus.Topic;
 
 import java.util.EventListener;
 

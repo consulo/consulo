@@ -16,7 +16,7 @@
 
 package com.intellij.application.options.colors;
 
-import com.intellij.openapi.extensions.ExtensionPointName;
+import consulo.component.extension.ExtensionPointName;
 import com.intellij.openapi.options.colors.ColorSettingsPage;
 import javax.annotation.Nonnull;
 
