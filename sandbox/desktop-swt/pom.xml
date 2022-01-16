@@ -83,6 +83,10 @@
       <groupId>org.apache.logging.log4j</groupId>
       <artifactId>log4j-core</artifactId>
     </dependency>
+    <dependency>
+      <groupId>jgraph</groupId>
+      <artifactId>jgraph</artifactId>
+    </dependency>
 
     <dependency>
       <groupId>${project.groupId}</groupId>
@@ -117,7 +121,12 @@
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>consulo-desktop-swt-ide</artifactId>
+      <artifactId>consulo-desktop-swt-ide-impl</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>consulo-desktop-awt-eawt-wrapper</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
