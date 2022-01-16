@@ -13,12 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.extensions;
+package consulo.component.extension;
 
-import consulo.component.ComponentManager;
 import consulo.annotation.DeprecationInfo;
-import consulo.component.extension.ExtensionPoint;
-import consulo.component.extension.ExtensionPointName;
+import consulo.component.ComponentManager;
 import consulo.component.extension.internal.RootComponentHolder;
 
 import javax.annotation.Nonnull;

@@ -16,12 +16,14 @@
 package com.intellij.ide;
 
 import com.intellij.openapi.project.Project;
-import consulo.component.extension.StrictExtensionPointName;
+import consulo.component.extension.Extension;
+import consulo.component.extension.ExtensionList;
 
 import javax.annotation.Nullable;
 
+@Extension(name = "selectInTarget", component = Project.class)
 public interface SelectInTarget {
-  StrictExtensionPointName<Project, SelectInTarget> EP_NAME = StrictExtensionPointName.of(Project.class, "com.intellij.selectInTarget");
+  ExtensionList<SelectInTarget, Project> EP_NAME = ExtensionList.of(SelectInTarget.class);
 
   String toString();
 
@@ -32,16 +34,21 @@ public interface SelectInTarget {
 
   void selectIn(SelectInContext context, final boolean requestFocus);
 
-  /** Tool window this target is supposed to select in */
+  /**
+   * Tool window this target is supposed to select in
+   */
   @Nullable
   String getToolWindowId();
 
-  /** aux view id specific for tool window, e.g. Project/Packages/J2EE tab inside project View */
+  /**
+   * aux view id specific for tool window, e.g. Project/Packages/J2EE tab inside project View
+   */
   @Nullable
   String getMinorViewId();
 
   /**
    * Weight is used to provide an order in SelectIn popup. Lesser weights come first.
+   *
    * @return weight of this particular target.
    */
   float getWeight();

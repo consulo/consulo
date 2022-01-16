@@ -17,7 +17,7 @@
 package com.intellij.packageDependencies;
 
 import com.intellij.openapi.components.*;
-import com.intellij.openapi.extensions.Extensions;
+import consulo.component.extension.Extensions;
 import com.intellij.packageDependencies.ui.PatternDialectProvider;
 import com.intellij.util.xmlb.XmlSerializerUtil;
 

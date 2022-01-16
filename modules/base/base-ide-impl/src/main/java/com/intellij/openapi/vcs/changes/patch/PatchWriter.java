@@ -19,7 +19,7 @@ import com.intellij.codeStyle.CodeStyleFacade;
 import com.intellij.openapi.diff.impl.patch.FilePatch;
 import com.intellij.openapi.diff.impl.patch.PatchEP;
 import com.intellij.openapi.diff.impl.patch.UnifiedDiffWriter;
-import com.intellij.openapi.extensions.Extensions;
+import consulo.component.extension.Extensions;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vcs.changes.CommitContext;
 import javax.annotation.Nonnull;

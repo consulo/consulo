@@ -19,7 +19,7 @@ package com.intellij.refactoring.copy;
 import com.intellij.ide.TwoPaneIdeView;
 import com.intellij.ide.projectView.ProjectView;
 import com.intellij.ide.structureView.StructureViewFactoryEx;
-import com.intellij.openapi.extensions.Extensions;
+import consulo.component.extension.Extensions;
 import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.project.Project;

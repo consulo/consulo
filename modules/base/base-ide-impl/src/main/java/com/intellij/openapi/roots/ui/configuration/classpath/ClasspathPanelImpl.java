@@ -36,7 +36,6 @@ import com.intellij.openapi.roots.ui.OrderEntryAppearanceService;
 import com.intellij.openapi.roots.ui.configuration.LibraryTableModifiableModelProvider;
 import com.intellij.openapi.roots.ui.configuration.ModuleConfigurationState;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.FindUsagesInProjectStructureActionBase;
-import com.intellij.openapi.roots.ui.configuration.projectRoot.ModuleStructureConfigurable;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.LibraryProjectStructureElement;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.ModuleProjectStructureElement;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureElement;
@@ -302,7 +301,7 @@ public class ClasspathPanelImpl extends JPanel implements ClasspathPanel {
   private void showAddPopup(@Nonnull AnActionButton button) {
     Map<AddModuleDependencyActionProvider, AddModuleDependencyContext> contexts = new LinkedHashMap<>();
 
-    AddModuleDependencyActionProvider.EP_NAME.forEachExtensionSafe(getProject().getApplication(), it -> {
+    AddModuleDependencyActionProvider.EP.forEachExtensionSafe(getProject().getApplication(), it -> {
       AddModuleDependencyContext context = it.createContext(this, myState.getModulesConfigurator(), myState.getLibrariesConfigurator());
       if (it.isAvailable(context)) {
         contexts.put(it, context);

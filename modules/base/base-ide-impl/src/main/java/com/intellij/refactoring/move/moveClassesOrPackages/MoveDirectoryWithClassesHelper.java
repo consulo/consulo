@@ -1,7 +1,7 @@
 package com.intellij.refactoring.move.moveClassesOrPackages;
 
 import consulo.component.extension.ExtensionPointName;
-import com.intellij.openapi.extensions.Extensions;
+import consulo.component.extension.Extensions;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.ProperTextRange;
 import com.intellij.psi.*;

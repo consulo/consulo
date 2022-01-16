@@ -21,7 +21,7 @@ import com.intellij.lang.FileASTNode;
 import com.intellij.lexer.Lexer;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.actions.EditorActionUtil;
-import com.intellij.openapi.extensions.Extensions;
+import consulo.component.extension.Extensions;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.FileViewProvider;

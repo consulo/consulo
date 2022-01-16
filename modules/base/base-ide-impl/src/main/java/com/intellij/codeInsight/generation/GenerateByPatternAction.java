@@ -17,7 +17,7 @@ package com.intellij.codeInsight.generation;
 
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.extensions.Extensions;
+import consulo.component.extension.Extensions;
 import com.intellij.util.ArrayUtil;
 
 /**

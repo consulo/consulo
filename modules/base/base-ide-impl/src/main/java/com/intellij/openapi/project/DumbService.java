@@ -14,7 +14,7 @@ import com.intellij.openapi.util.*;
 import com.intellij.util.ThrowableRunnable;
 import consulo.component.messagebus.Topic;
 import consulo.disposer.Disposable;
-import consulo.component.extension.StrictExtensionPointName;
+import consulo.component.extension.ExtensionList;
 import consulo.util.lang.ref.SimpleReference;
 
 import javax.annotation.Nonnull;
@@ -75,7 +75,7 @@ public abstract class DumbService {
   }
 
   @Nonnull
-  public static <C extends ComponentManager, T> List<T> getDumbAwareExtensions(@Nonnull Project project, @Nonnull C component, @Nonnull StrictExtensionPointName<C, T> extensionPoint) {
+  public static <C extends ComponentManager, T> List<T> getDumbAwareExtensions(@Nonnull Project project, @Nonnull C component, @Nonnull ExtensionList<T, C> extensionPoint) {
     List<T> list = extensionPoint.getExtensionList(component);
     if (list.isEmpty()) {
       return list;

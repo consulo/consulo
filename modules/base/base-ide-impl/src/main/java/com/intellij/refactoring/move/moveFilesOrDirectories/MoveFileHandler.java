@@ -17,7 +17,7 @@
 package com.intellij.refactoring.move.moveFilesOrDirectories;
 
 import consulo.component.extension.ExtensionPointName;
-import com.intellij.openapi.extensions.Extensions;
+import consulo.component.extension.Extensions;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;

@@ -32,7 +32,7 @@ import com.intellij.codeInspection.lang.HTMLComposerExtension;
 import com.intellij.codeInspection.lang.InspectionExtensionsFactory;
 import com.intellij.codeInspection.reference.*;
 import com.intellij.lang.Language;
-import com.intellij.openapi.extensions.Extensions;
+import consulo.component.extension.Extensions;
 import com.intellij.openapi.project.ProjectUtilCore;
 import consulo.util.dataholder.Key;
 import com.intellij.openapi.vfs.VirtualFile;

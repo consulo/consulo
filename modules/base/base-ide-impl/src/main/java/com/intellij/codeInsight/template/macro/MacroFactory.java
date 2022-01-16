@@ -17,7 +17,7 @@
 package com.intellij.codeInsight.template.macro;
 
 import com.intellij.codeInsight.template.Macro;
-import com.intellij.openapi.extensions.Extensions;
+import consulo.component.extension.Extensions;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.MultiMap;
 import org.jetbrains.annotations.NonNls;

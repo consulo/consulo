@@ -17,7 +17,6 @@ package com.intellij.util;
 
 import com.intellij.codeInsight.highlighting.HighlightErrorFilter;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Computable;
 import consulo.util.dataholder.Key;

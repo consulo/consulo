@@ -18,14 +18,16 @@ package com.intellij.find.impl;
 import com.intellij.find.FindModel;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.application.Application;
-import consulo.component.extension.StrictExtensionPointName;
+import consulo.component.extension.Extension;
+import consulo.component.extension.ExtensionList;
 
 /**
  * @author VISTALL
  * @since 12/12/2021
  */
+@Extension(name = "findInProjectExtension", component = Application.class)
 public interface FindInProjectExtension {
-  public static final StrictExtensionPointName<Application, FindInProjectExtension> EP_NAME = StrictExtensionPointName.of(Application.class, "com.intellij.findInProjectExtension");
+  ExtensionList<FindInProjectExtension, Application> EP_NAME = ExtensionList.of(FindInProjectExtension.class);
 
-  public boolean initModelFromContext(FindModel model, DataContext dataContext);
+  boolean initModelFromContext(FindModel model, DataContext dataContext);
 }

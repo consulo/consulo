@@ -17,7 +17,7 @@
 package com.intellij.ui.debugger;
 
 import com.intellij.openapi.actionSystem.ActionManager;
-import com.intellij.openapi.extensions.Extensions;
+import consulo.component.extension.Extensions;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
