@@ -17,6 +17,7 @@
 package com.intellij.lang.parameterInfo;
 
 import com.intellij.lang.LanguageExtension;
+import consulo.container.plugin.PluginIds;
 
 /**
  * @author yole
@@ -25,6 +26,6 @@ public class LanguageParameterInfo extends LanguageExtension<ParameterInfoHandle
   public static final LanguageParameterInfo INSTANCE = new LanguageParameterInfo();
 
   private LanguageParameterInfo() {
-    super("com.intellij.codeInsight.parameterInfo");
+    super(PluginIds.CONSULO_BASE + ".codeInsight.parameterInfo");
   }
 }

@@ -37,7 +37,7 @@ import java.util.Collection;
  * @author yole
  */
 public abstract class FavoriteNodeProvider {
-  public static final ExtensionPointName<FavoriteNodeProvider> EP_NAME = ExtensionPointName.create("com.intellij.favoriteNodeProvider");
+  public static final ExtensionPointName<FavoriteNodeProvider> EP_NAME = ExtensionPointName.create("consulo.base.favoriteNodeProvider");
 
   @Nullable
   public abstract Collection<AbstractTreeNode> getFavoriteNodes(DataContext context, final ViewSettings viewSettings);

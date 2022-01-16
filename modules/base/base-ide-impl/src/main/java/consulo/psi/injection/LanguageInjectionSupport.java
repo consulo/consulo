@@ -40,8 +40,8 @@ import javax.annotation.Nullable;
  * @author Gregory.Shrago
  */
 public abstract class LanguageInjectionSupport {
-  public static final ExtensionPointName<LanguageInjectionSupport> EP_NAME = ExtensionPointName.create("com.intellij.injectionLanguageSupport");
-  public static final ExtensionPointName<LanguageInjectionConfigBean> CONFIG_EP_NAME = ExtensionPointName.create("com.intellij.injectionConfig");
+  public static final ExtensionPointName<LanguageInjectionSupport> EP_NAME = ExtensionPointName.create("consulo.base.injectionLanguageSupport");
+  public static final ExtensionPointName<LanguageInjectionConfigBean> CONFIG_EP_NAME = ExtensionPointName.create("consulo.base.injectionConfig");
 
 
   public static Key<InjectedLanguage> TEMPORARY_INJECTED_LANGUAGE = Key.create("TEMPORARY_INJECTED_LANGUAGE");

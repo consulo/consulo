@@ -38,6 +38,12 @@ public final class EmptyExtensionPoint<T> implements ExtensionPoint<T> {
 
   @Nonnull
   @Override
+  public T[] getExtensions() {
+    return (T[])new Object[0];
+  }
+
+  @Nonnull
+  @Override
   public String getName() {
     return "";
   }

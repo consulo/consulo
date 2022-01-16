@@ -31,7 +31,7 @@ import javax.annotation.Nullable;
  * @author spleaner
  */
 public abstract class StatementUpDownMover {
-  public static final ExtensionPointName<StatementUpDownMover> STATEMENT_UP_DOWN_MOVER_EP = ExtensionPointName.create("com.intellij.statementUpDownMover");
+  public static final ExtensionPointName<StatementUpDownMover> STATEMENT_UP_DOWN_MOVER_EP = ExtensionPointName.create("consulo.base.statementUpDownMover");
 
   public static class MoveInfo {
     /** Source line range */

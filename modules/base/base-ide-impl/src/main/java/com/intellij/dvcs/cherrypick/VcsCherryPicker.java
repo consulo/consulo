@@ -29,7 +29,7 @@ import java.util.Map;
 
 public abstract class VcsCherryPicker {
 
-  public static final ExtensionPointName<VcsCherryPicker> EXTENSION_POINT_NAME = ExtensionPointName.create("com.intellij.cherryPicker");
+  public static final ExtensionPointName<VcsCherryPicker> EXTENSION_POINT_NAME = ExtensionPointName.create("consulo.base.cherryPicker");
   /**
    * @return - return vcs for current cherryPicker
    */

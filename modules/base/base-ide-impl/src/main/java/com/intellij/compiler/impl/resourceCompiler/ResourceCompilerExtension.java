@@ -6,7 +6,7 @@ import javax.annotation.Nonnull;
 
 public abstract class ResourceCompilerExtension {
   public static final ExtensionPointName<ResourceCompilerExtension> EP_NAME =
-    ExtensionPointName.create("com.intellij.compiler.resourceCompilerExtension");
+    ExtensionPointName.create("consulo.base.compiler.resourceCompilerExtension");
 
   public boolean skipStandardResourceCompiler(final @Nonnull Module module) {
     return false;

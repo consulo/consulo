@@ -16,6 +16,7 @@
 package consulo.lang;
 
 import com.intellij.lang.LanguageExtension;
+import consulo.container.plugin.PluginIds;
 
 /**
  * @author VISTALL
@@ -25,6 +26,6 @@ public class LanguageVersionDefines extends LanguageExtension<LanguageVersion> {
   public static final LanguageVersionDefines INSTANCE = new LanguageVersionDefines();
 
   private LanguageVersionDefines() {
-    super("com.intellij.lang.defineVersion");
+    super(PluginIds.CONSULO_BASE + ".lang.defineVersion");
   }
 }

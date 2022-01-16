@@ -20,7 +20,7 @@ import javax.annotation.Nonnull;
  * @author yole
  */
 public abstract class TypedHandlerDelegate {
-  public static final ExtensionPointName<TypedHandlerDelegate> EP_NAME = ExtensionPointName.create("com.intellij.typedHandler");
+  public static final ExtensionPointName<TypedHandlerDelegate> EP_NAME = ExtensionPointName.create("consulo.base.typedHandler");
 
   /**
    * If the specified character triggers auto-popup, schedules the auto-popup appearance. This method is called even

@@ -26,7 +26,7 @@ import javax.annotation.Nullable;
  * @author yole
  */
 public interface HighlightUsagesHandlerFactory {
-  ExtensionPointName<HighlightUsagesHandlerFactory> EP_NAME = ExtensionPointName.create("com.intellij.highlightUsagesHandlerFactory");
+  ExtensionPointName<HighlightUsagesHandlerFactory> EP_NAME = ExtensionPointName.create("consulo.base.highlightUsagesHandlerFactory");
 
   @Nullable
   HighlightUsagesHandlerBase createHighlightUsagesHandler(Editor editor, PsiFile file);

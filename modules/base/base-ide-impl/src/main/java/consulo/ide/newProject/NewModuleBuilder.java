@@ -15,7 +15,9 @@
  */
 package consulo.ide.newProject;
 
+import consulo.container.plugin.PluginIds;
 import consulo.extensions.CompositeExtensionPointName;
+
 import javax.annotation.Nonnull;
 
 /**
@@ -23,7 +25,7 @@ import javax.annotation.Nonnull;
  * @since 05.06.14
  */
 public interface NewModuleBuilder {
-  CompositeExtensionPointName<NewModuleBuilder> EP_NAME = CompositeExtensionPointName.applicationPoint("com.intellij.newModuleBuilder", NewModuleBuilder.class);
+  CompositeExtensionPointName<NewModuleBuilder> EP_NAME = CompositeExtensionPointName.applicationPoint(PluginIds.CONSULO_BASE + ".newModuleBuilder", NewModuleBuilder.class);
 
   void setupContext(@Nonnull NewModuleContext context);
 }

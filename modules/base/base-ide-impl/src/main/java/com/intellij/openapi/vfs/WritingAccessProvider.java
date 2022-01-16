@@ -29,7 +29,7 @@ import java.util.List;
  */
 public abstract class WritingAccessProvider {
 
-  private static final ExtensionPointName<WritingAccessProvider> EP_NAME = ExtensionPointName.create("com.intellij.writingAccessProvider");
+  private static final ExtensionPointName<WritingAccessProvider> EP_NAME = ExtensionPointName.create("consulo.base.writingAccessProvider");
 
   /**
    * @param files files to be checked

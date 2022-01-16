@@ -27,7 +27,7 @@ import javax.swing.*;
  * @author nik
  */
 public abstract class DeploymentSourceType<S extends DeploymentSource> {
-  public static final ExtensionPointName<DeploymentSourceType<?>> EP_NAME = ExtensionPointName.create("com.intellij.remoteServer.deploymentSource.type");
+  public static final ExtensionPointName<DeploymentSourceType<?>> EP_NAME = ExtensionPointName.create("consulo.base.remoteServer.deploymentSource.type");
   private final String myId;
 
   protected DeploymentSourceType(@Nonnull String id) {

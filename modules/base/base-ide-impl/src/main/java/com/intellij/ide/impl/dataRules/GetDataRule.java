@@ -22,7 +22,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public interface GetDataRule<T> {
-  ExtensionPointName<GetDataRule> EP_NAME = ExtensionPointName.create("com.intellij.getDataRule");
+  ExtensionPointName<GetDataRule> EP_NAME = ExtensionPointName.create("consulo.base.getDataRule");
 
   @Nonnull
   Key<T> getKey();

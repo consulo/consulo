@@ -16,7 +16,7 @@ import javax.annotation.Nullable;
 import java.util.Optional;
 
 public interface ExternalFormatProcessor {
-  ExtensionPointName<ExternalFormatProcessor> EP_NAME = ExtensionPointName.create("com.intellij.externalFormatProcessor");
+  ExtensionPointName<ExternalFormatProcessor> EP_NAME = ExtensionPointName.create("consulo.base.externalFormatProcessor");
 
   /**
    * @param source the source file with code

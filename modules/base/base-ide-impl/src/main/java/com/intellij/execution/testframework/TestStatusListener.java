@@ -21,7 +21,7 @@ import com.intellij.openapi.project.Project;
 import javax.annotation.Nullable;
 
 public abstract class TestStatusListener {
-  public static final ExtensionPointName<TestStatusListener> EP_NAME = ExtensionPointName.create("com.intellij.testStatusListener");
+  public static final ExtensionPointName<TestStatusListener> EP_NAME = ExtensionPointName.create("consulo.base.testStatusListener");
 
   public abstract void testSuiteFinished(@Nullable AbstractTestProxy root);
 

@@ -20,11 +20,12 @@
 package com.intellij.lang;
 
 import com.intellij.lang.surroundWith.SurroundDescriptor;
+import consulo.container.plugin.PluginIds;
 
 public class LanguageSurrounders extends LanguageExtension<SurroundDescriptor> {
   public static final LanguageSurrounders INSTANCE = new LanguageSurrounders();
 
   private LanguageSurrounders() {
-    super("com.intellij.lang.surroundDescriptor");
+    super(PluginIds.CONSULO_BASE + ".lang.surroundDescriptor");
   }
 }

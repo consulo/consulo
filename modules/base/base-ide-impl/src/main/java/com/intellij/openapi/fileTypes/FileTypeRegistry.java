@@ -124,7 +124,7 @@ public abstract class FileTypeRegistry {
    * Pluggable file type detector by content
    */
   public interface FileTypeDetector {
-    ExtensionPointName<FileTypeDetector> EP_NAME = ExtensionPointName.create("com.intellij.fileTypeDetector");
+    ExtensionPointName<FileTypeDetector> EP_NAME = ExtensionPointName.create("consulo.base.fileTypeDetector");
 
     /**
      * Detects file type by its content

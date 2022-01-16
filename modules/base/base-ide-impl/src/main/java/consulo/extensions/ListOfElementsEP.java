@@ -32,7 +32,7 @@ import java.util.List;
  * @since 0:44/07.11.13
  */
 public class ListOfElementsEP {
-  public static final ExtensionPointName<ListOfElementsEP> EP_NAME = ExtensionPointName.create("com.intellij.listOfElements");
+  public static final ExtensionPointName<ListOfElementsEP> EP_NAME = ExtensionPointName.create("consulo.base.listOfElements");
 
   public static final String LIST_VARIABLE_START = "@@";
 

@@ -2,7 +2,6 @@
 package com.intellij.openapi.vcs.impl;
 
 import com.intellij.openapi.application.ApplicationManager;
-import consulo.component.extension.ExtensionPointName;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.progress.Task;
@@ -34,8 +33,6 @@ import java.util.function.Predicate;
 @Singleton
 public final class VcsInitialization {
   private static final Logger LOG = Logger.getInstance(VcsInitialization.class);
-  private static final ExtensionPointName<VcsStartupActivity> EP_NAME = new ExtensionPointName<>("com.intellij.vcsStartupActivity");
-
   @Nonnull
   public static VcsInitialization getInstance(Project project) {
     return project.getInstance(VcsInitialization.class);
@@ -131,7 +128,7 @@ public final class VcsInitialization {
   }
 
   private void runInitStep(@Nonnull Status current, @Nonnull Status next, @Nonnull Condition<VcsStartupActivity> extensionFilter, @Nonnull List<VcsStartupActivity> pendingActivities) {
-    List<VcsStartupActivity> epActivities = ContainerUtil.filter(EP_NAME.getExtensionList(), extensionFilter);
+    List<VcsStartupActivity> epActivities = ContainerUtil.filter(VcsStartupActivity.EP.getExtensionList(myProject.getApplication()), extensionFilter);
 
     List<VcsStartupActivity> activities = new ArrayList<>();
     synchronized (myLock) {

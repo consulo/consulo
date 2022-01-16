@@ -16,6 +16,7 @@
 package com.intellij.psi.formatter;
 
 import com.intellij.lang.LanguageExtension;
+import consulo.container.plugin.PluginIds;
 
 /**
  * Exposes pre-configured {@link WhiteSpaceFormattingStrategy} objects to use in a per-language manner.
@@ -25,10 +26,9 @@ import com.intellij.lang.LanguageExtension;
  */
 public class LanguageWhiteSpaceFormattingStrategy extends LanguageExtension<WhiteSpaceFormattingStrategy> {
 
-  public static final String EP_NAME = "com.intellij.lang.whiteSpaceFormattingStrategy";
   public static final LanguageWhiteSpaceFormattingStrategy INSTANCE = new LanguageWhiteSpaceFormattingStrategy();
 
   private LanguageWhiteSpaceFormattingStrategy() {
-    super(EP_NAME);
+    super(PluginIds.CONSULO_BASE + ".lang.whiteSpaceFormattingStrategy");
   }
 }

@@ -19,7 +19,7 @@ import javax.annotation.Nullable;
  * @author nik
  */
 public abstract class ServerType<C extends ServerConfiguration> {
-  public static final ExtensionPointName<ServerType> EP_NAME = ExtensionPointName.create("com.intellij.remoteServer.type");
+  public static final ExtensionPointName<ServerType> EP_NAME = ExtensionPointName.create("consulo.base.remoteServer.type");
   private final String myId;
 
   protected ServerType(String id) {

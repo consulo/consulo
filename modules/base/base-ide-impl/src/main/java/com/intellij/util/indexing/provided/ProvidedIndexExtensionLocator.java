@@ -9,7 +9,7 @@ import javax.annotation.Nullable;
 import java.util.Objects;
 
 public interface ProvidedIndexExtensionLocator {
-  ExtensionPointName<ProvidedIndexExtensionLocator> EP_NAME = ExtensionPointName.create("com.intellij.fileBasedIndex.providedLocator");
+  ExtensionPointName<ProvidedIndexExtensionLocator> EP_NAME = ExtensionPointName.create("consulo.base.fileBasedIndex.providedLocator");
 
   @Nullable
   <K, V> ProvidedIndexExtension<K, V> findProvidedIndexExtension(@Nonnull FileBasedIndexExtension<K, V> originalExtension);

@@ -40,7 +40,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ProgramParametersConfigurator {
-  private static final ExtensionPointName<WorkingDirectoryProvider> WORKING_DIRECTORY_PROVIDER_EP_NAME = ExtensionPointName.create("com.intellij.module.workingDirectoryProvider");
+  private static final ExtensionPointName<WorkingDirectoryProvider> WORKING_DIRECTORY_PROVIDER_EP_NAME = ExtensionPointName.create("consulo.base.module.workingDirectoryProvider");
 
   public void configureConfiguration(SimpleProgramParameters parameters, CommonProgramRunConfigurationParameters configuration) {
     Project project = configuration.getProject();

@@ -21,7 +21,7 @@ import consulo.component.extension.ExtensionPointName;
  * Should be implemented in an extension point
  */
 public interface FileTemplateGroupDescriptorFactory {
-  ExtensionPointName<FileTemplateGroupDescriptorFactory> EP_NAME = ExtensionPointName.create("com.intellij.fileTemplateGroup");
+  ExtensionPointName<FileTemplateGroupDescriptorFactory> EP_NAME = ExtensionPointName.create("consulo.base.fileTemplateGroup");
 
   @javax.annotation.Nullable
   FileTemplateGroupDescriptor getFileTemplatesDescriptor();

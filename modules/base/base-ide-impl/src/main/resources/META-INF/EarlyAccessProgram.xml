@@ -18,7 +18,7 @@
     <extensionPoint name="eapDescriptor" interface="consulo.ide.eap.EarlyAccessProgramDescriptor"/>
   </extensionPoints>
 
-  <extensions defaultExtensionNs="com.intellij">
+  <extensions defaultExtensionNs="consulo.base">
     <eapDescriptor implementation="consulo.diagram.actions.ShowDiagramAction$DiagramSupport"/>
     <eapDescriptor implementation="consulo.ui.ex.impl.ModalityPerProjectEAPDescriptor"/>
     <eapDescriptor implementation="consulo.ide.eap.plugins.ExperimentalPluginsDescriptor"/>

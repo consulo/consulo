@@ -33,7 +33,7 @@ import javax.annotation.Nonnull;
  * @since 6.0
  */
 public interface ImplicitUsageProvider {
-  ExtensionPointName<ImplicitUsageProvider> EP_NAME = ExtensionPointName.create("com.intellij.implicitUsageProvider");
+  ExtensionPointName<ImplicitUsageProvider> EP_NAME = ExtensionPointName.create("consulo.base.implicitUsageProvider");
 
   /**
    * @return true if element should not be reported as unused

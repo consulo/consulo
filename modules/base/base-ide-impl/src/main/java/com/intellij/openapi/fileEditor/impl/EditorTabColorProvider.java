@@ -28,7 +28,7 @@ import java.awt.*;
  * @author spleaner
  */
 public interface EditorTabColorProvider {
-  ExtensionPointName<EditorTabColorProvider> EP_NAME = ExtensionPointName.create("com.intellij.editorTabColorProvider"); 
+  ExtensionPointName<EditorTabColorProvider> EP_NAME = ExtensionPointName.create("consulo.base.editorTabColorProvider");
 
   @Nullable
   Color getEditorTabColor(Project project, VirtualFile file);

@@ -27,7 +27,7 @@ import javax.annotation.Nullable;
  *         Time: 1:12 PM
  */
 public interface VcsBaseContentProvider {
-  ExtensionPointName<VcsBaseContentProvider> EP_NAME = ExtensionPointName.create("com.intellij.vcs.baseContentProvider");
+  ExtensionPointName<VcsBaseContentProvider> EP_NAME = ExtensionPointName.create("consulo.base.vcs.baseContentProvider");
 
   @Nullable
   BaseContent getBaseRevision(@Nonnull VirtualFile file);

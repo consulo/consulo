@@ -27,9 +27,9 @@ import java.util.*;
  */
 public class NotificationParentGroup {
   private static final ExtensionPointName<NotificationParentGroupBean> EP_NAME =
-          ExtensionPointName.create("com.intellij.notification.parentGroup");
+          ExtensionPointName.create("consulo.base.notification.parentGroup");
   private static final ExtensionPointName<NotificationGroupBean> EP_CHILD_NAME =
-          ExtensionPointName.create("com.intellij.notification.group");
+          ExtensionPointName.create("consulo.base.notification.group");
 
   private static Map<String, NotificationParentGroupBean> myParents;
   private static Map<NotificationParentGroupBean, List<NotificationParentGroupBean>> myChildren;

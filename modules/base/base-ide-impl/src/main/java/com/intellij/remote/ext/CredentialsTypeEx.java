@@ -21,7 +21,7 @@ import com.intellij.remote.RemoteCredentials;
 
 public abstract class CredentialsTypeEx<T> extends CredentialsType<T> {
 
-  public static final ExtensionPointName<CredentialsTypeEx> EP_NAME = ExtensionPointName.create("com.intellij.remote.credentialsType");
+  public static final ExtensionPointName<CredentialsTypeEx> EP_NAME = ExtensionPointName.create("consulo.base.remote.credentialsType");
 
   protected CredentialsTypeEx(String name, String prefix) {
     super(name, prefix);

@@ -37,7 +37,7 @@ import javax.annotation.Nonnull;
  * @since 06-Jun-16
  */
 public abstract interface OrderEntryTypeEditor<T extends OrderEntry> {
-  ExtensionPointName<KeyedFactoryEPBean> EP_NAME = ExtensionPointName.create("com.intellij.orderEntryTypeEditor");
+  ExtensionPointName<KeyedFactoryEPBean> EP_NAME = ExtensionPointName.create("consulo.base.orderEntryTypeEditor");
 
   KeyedExtensionFactory<OrderEntryTypeEditor, OrderEntryType> FACTORY = new KeyedExtensionFactory<OrderEntryTypeEditor, OrderEntryType>(OrderEntryTypeEditor.class, EP_NAME, Application.get()) {
     @Override

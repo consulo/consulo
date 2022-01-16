@@ -32,7 +32,7 @@ import java.util.List;
  * @author yole
  */
 public abstract class CopyPastePostProcessor<T extends TextBlockTransferableData> {
-  public static final ExtensionPointName<CopyPastePostProcessor<? extends TextBlockTransferableData>> EP_NAME = ExtensionPointName.create("com.intellij.copyPastePostProcessor");
+  public static final ExtensionPointName<CopyPastePostProcessor<? extends TextBlockTransferableData>> EP_NAME = ExtensionPointName.create("consulo.base.copyPastePostProcessor");
 
   @Nonnull
   public abstract List<T> collectTransferableData(final PsiFile file, final Editor editor, final int[] startOffsets, final int[] endOffsets);

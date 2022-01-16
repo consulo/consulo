@@ -22,7 +22,7 @@ public interface FileDocumentManagerListener extends EventListener {
    * That's why this interface is exposed via extension point as well - it's possible to modify document content from
    * the extension callback.
    */
-  ExtensionPointName<FileDocumentManagerListener> EP_NAME = ExtensionPointName.create("com.intellij.fileDocumentManagerListener");
+  ExtensionPointName<FileDocumentManagerListener> EP_NAME = ExtensionPointName.create("consulo.base.fileDocumentManagerListener");
 
   /**
    * Fired before processing FileDocumentManager.saveAllDocuments(). Can be used by plugins

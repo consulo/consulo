@@ -31,7 +31,7 @@ import static com.intellij.ui.GuiUtils.getTextWithoutMnemonicEscaping;
  */
 
 public interface CheckoutProvider {
-  ExtensionPointName<CheckoutProvider> EXTENSION_POINT_NAME = ExtensionPointName.create("com.intellij.checkoutProvider");
+  ExtensionPointName<CheckoutProvider> EXTENSION_POINT_NAME = ExtensionPointName.create("consulo.base.checkoutProvider");
 
   void doCheckout(@Nonnull final Project project, @Nullable Listener listener);
 

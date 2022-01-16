@@ -28,7 +28,7 @@ import consulo.component.extension.ExtensionPointName;
  */
 @Deprecated
 public interface InspectionToolsFactory {
-  ExtensionPointName<InspectionToolsFactory> EXTENSION_POINT_NAME = ExtensionPointName.create("com.intellij.inspectionToolsFactory");
+  ExtensionPointName<InspectionToolsFactory> EXTENSION_POINT_NAME = ExtensionPointName.create("consulo.base.inspectionToolsFactory");
 
   InspectionProfileEntry[] createTools();
 }

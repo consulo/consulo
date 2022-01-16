@@ -18,7 +18,7 @@ package com.intellij.openapi.ide;
 import consulo.component.extension.ExtensionPointName;
 
 public interface CutElementMarker {
-  ExtensionPointName<CutElementMarker> EP_NAME = ExtensionPointName.create("com.intellij.cutElementMarker");
+  ExtensionPointName<CutElementMarker> EP_NAME = ExtensionPointName.create("consulo.base.cutElementMarker");
 
   boolean isCutElement(Object element);
 }

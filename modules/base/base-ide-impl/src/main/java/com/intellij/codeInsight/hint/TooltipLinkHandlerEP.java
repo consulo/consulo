@@ -29,7 +29,7 @@ import javax.annotation.Nullable;
  * @author peter
  */
 public class TooltipLinkHandlerEP extends AbstractExtensionPointBean {
-  public static final ExtensionPointName<TooltipLinkHandlerEP> EP_NAME = ExtensionPointName.create("com.intellij.codeInsight.linkHandler");
+  public static final ExtensionPointName<TooltipLinkHandlerEP> EP_NAME = ExtensionPointName.create("consulo.base.codeInsight.linkHandler");
 
   @Attribute("prefix")
   public String prefix;

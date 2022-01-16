@@ -24,7 +24,7 @@ import com.intellij.psi.PsiFile;
  * @author yole
  */
 public interface JoinLinesHandlerDelegate {
-  ExtensionPointName<JoinLinesHandlerDelegate> EP_NAME = ExtensionPointName.create("com.intellij.joinLinesHandler");
+  ExtensionPointName<JoinLinesHandlerDelegate> EP_NAME = ExtensionPointName.create("consulo.base.joinLinesHandler");
 
   /**
    * Tries to join lines at the specified position of the specified file.

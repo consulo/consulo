@@ -19,6 +19,8 @@ import com.intellij.lang.LanguageExtension;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;
+import consulo.container.plugin.PluginIds;
+
 import javax.annotation.Nonnull;
 
 /**
@@ -29,11 +31,10 @@ import javax.annotation.Nonnull;
  */
 public class LanguageLineWrapPositionStrategy extends LanguageExtension<LineWrapPositionStrategy> {
 
-  public static final String EP_NAME = "com.intellij.lang.lineWrapStrategy";
   public static final LanguageLineWrapPositionStrategy INSTANCE = new LanguageLineWrapPositionStrategy();
 
   private LanguageLineWrapPositionStrategy() {
-    super(EP_NAME, new DefaultLineWrapPositionStrategy());
+    super(PluginIds.CONSULO_BASE + ".lang.lineWrapStrategy", new DefaultLineWrapPositionStrategy());
   }
 
   /**

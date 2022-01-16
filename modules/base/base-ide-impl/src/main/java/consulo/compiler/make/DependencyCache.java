@@ -36,7 +36,7 @@ import java.util.Set;
  */
 public interface DependencyCache {
 
-  ExtensionPointName<DependencyCacheEP> EP_NAME = ExtensionPointName.create("com.intellij.compiler.dependencyCache");
+  ExtensionPointName<DependencyCacheEP> EP_NAME = ExtensionPointName.create("consulo.base.compiler.dependencyCache");
 
   void findDependentFiles(CompileContextEx context,
                           Ref<CacheCorruptedException> exceptionRef,

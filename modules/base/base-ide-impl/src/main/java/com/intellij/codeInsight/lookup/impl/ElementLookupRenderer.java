@@ -26,7 +26,7 @@ import consulo.component.extension.ExtensionPointName;
  */
 @Deprecated
 public interface ElementLookupRenderer<T> {
-  ExtensionPointName<ElementLookupRenderer> EP_NAME = ExtensionPointName.create("com.intellij.elementLookupRenderer");
+  ExtensionPointName<ElementLookupRenderer> EP_NAME = ExtensionPointName.create("consulo.base.elementLookupRenderer");
 
   boolean handlesItem(Object element);
   void renderElement(final LookupItem item, T element, LookupElementPresentation presentation);

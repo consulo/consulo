@@ -32,7 +32,7 @@ import javax.annotation.Nonnull;
  */
 public interface InlineHandler {
 
-  ExtensionPointName<InlineHandler> EP_NAME = ExtensionPointName.create("com.intellij.refactoring.inlineHandler");
+  ExtensionPointName<InlineHandler> EP_NAME = ExtensionPointName.create("consulo.base.refactoring.inlineHandler");
 
   interface Settings {
     /**

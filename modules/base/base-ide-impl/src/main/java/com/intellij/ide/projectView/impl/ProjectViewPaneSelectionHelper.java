@@ -16,7 +16,7 @@ import java.util.List;
  * Implement this extension to customise selection process in the project view.
  */
 public interface ProjectViewPaneSelectionHelper {
-  public static final ExtensionPointName<ProjectViewPaneSelectionHelper> EP_NAME = ExtensionPointName.create("com.intellij.projectViewPaneSelectionHelper");
+  public static final ExtensionPointName<ProjectViewPaneSelectionHelper> EP_NAME = ExtensionPointName.create("consulo.base.projectViewPaneSelectionHelper");
 
   /**
    * @param selectionDescriptor information about target elements and potential {@link TreePath tree paths} for selection found by {@link AbstractProjectViewPane#createVisitor(PsiElement, VirtualFile, List)}  node visitor}

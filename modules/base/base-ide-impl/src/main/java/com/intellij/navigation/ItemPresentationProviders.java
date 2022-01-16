@@ -16,6 +16,8 @@
 package com.intellij.navigation;
 
 import com.intellij.openapi.util.ClassExtension;
+import consulo.container.plugin.PluginIds;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -26,7 +28,7 @@ public class ItemPresentationProviders extends ClassExtension<ItemPresentationPr
   public static final ItemPresentationProviders INSTANCE = new ItemPresentationProviders();
 
   private ItemPresentationProviders() {
-    super("com.intellij.itemPresentationProvider");
+    super(PluginIds.CONSULO_BASE + ".itemPresentationProvider");
   }
 
   @Nullable

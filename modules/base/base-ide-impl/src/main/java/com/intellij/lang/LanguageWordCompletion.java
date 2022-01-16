@@ -21,14 +21,16 @@ package com.intellij.lang;
 
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.tree.IElementType;
+import consulo.container.plugin.PluginIds;
 import consulo.lang.util.LanguageVersionUtil;
+
 import javax.annotation.Nonnull;
 
 public class LanguageWordCompletion extends LanguageExtension<WordCompletionElementFilter> {
   public static final LanguageWordCompletion INSTANCE = new LanguageWordCompletion();
 
   private LanguageWordCompletion() {
-    super("com.intellij.codeInsight.wordCompletionFilter", new DefaultWordCompletionFilter());
+    super(PluginIds.CONSULO_BASE + ".codeInsight.wordCompletionFilter", new DefaultWordCompletionFilter());
   }
 
   public boolean isEnabledIn(@Nonnull ASTNode astNode) {

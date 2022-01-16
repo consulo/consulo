@@ -132,8 +132,8 @@ public class PluginDescriptorImpl extends PluginDescriptorStub {
     // preserve items order as specified in xml (filterBadPlugins will not fail if module comes first)
     Set<PluginId> dependentPlugins = new LinkedHashSet<PluginId>();
     // we always depend to core plugin, but prevent recursion
-    if (!PluginIds.CONSULO_PLATFORM_BASE.equals(myId)) {
-      dependentPlugins.add(PluginIds.CONSULO_PLATFORM_BASE);
+    if (!PluginIds.CONSULO_BASE.equals(myId)) {
+      dependentPlugins.add(PluginIds.CONSULO_BASE);
     }
     Set<PluginId> optionalDependentPlugins = new LinkedHashSet<PluginId>();
     if (pluginBean.dependencies != null) {

@@ -24,7 +24,7 @@ import consulo.component.extension.ExtensionPointName;
  * @author yole
  */
 public interface TemplateCompletionProcessor {
-  ExtensionPointName<TemplateCompletionProcessor> EP_NAME = ExtensionPointName.create("com.intellij.templateCompletionProcessor");
+  ExtensionPointName<TemplateCompletionProcessor> EP_NAME = ExtensionPointName.create("consulo.base.templateCompletionProcessor");
 
   boolean nextTabOnItemSelected(ExpressionContext context, final LookupElement item);
 }

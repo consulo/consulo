@@ -25,7 +25,7 @@ import javax.annotation.Nonnull;
  */
 public abstract class PredefinedCodeStyle {
   public static final ExtensionPointName<PredefinedCodeStyle> EP_NAME =
-    ExtensionPointName.create("com.intellij.predefinedCodeStyle");
+    ExtensionPointName.create("consulo.base.predefinedCodeStyle");
 
   public final static PredefinedCodeStyle[] EMPTY_ARRAY = new PredefinedCodeStyle[]{};
   private final String myName;

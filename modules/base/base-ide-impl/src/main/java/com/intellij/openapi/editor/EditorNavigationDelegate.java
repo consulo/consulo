@@ -12,7 +12,7 @@ import javax.annotation.Nonnull;
  */
 public interface EditorNavigationDelegate {
 
-  ExtensionPointName<EditorNavigationDelegate> EP_NAME = ExtensionPointName.create("com.intellij.editorNavigation");
+  ExtensionPointName<EditorNavigationDelegate> EP_NAME = ExtensionPointName.create("consulo.base.editorNavigation");
   
   enum Result {
     /**

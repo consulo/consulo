@@ -22,6 +22,7 @@ import com.intellij.openapi.roots.ProjectFileIndex;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.indexing.DataIndexer;
 import com.intellij.util.indexing.FileContent;
+import consulo.container.plugin.PluginIds;
 
 import javax.annotation.Nonnull;
 
@@ -32,15 +33,10 @@ public class TodoIndexers extends FileTypeExtension<DataIndexer<TodoIndexEntry, 
   public static TodoIndexers INSTANCE = new TodoIndexers();
 
   private TodoIndexers() {
-    super("com.intellij.todoIndexer");
+    super(PluginIds.CONSULO_BASE + ".todoIndexer");
   }
 
   public static boolean belongsToProject(@Nonnull Project project, @Nonnull VirtualFile file) {
-    //for (ExtraPlaceChecker checker : EP_NAME.getExtensionList()) {
-    //  if (checker.accept(project, file)) {
-    //    return true;
-    //  }
-    //}
     if (!ProjectFileIndex.getInstance(project).isInContent(file)) {
       return false;
     }

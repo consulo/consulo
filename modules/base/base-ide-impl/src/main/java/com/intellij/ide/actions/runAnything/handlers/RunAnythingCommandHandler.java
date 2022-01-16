@@ -14,7 +14,7 @@ import java.util.Arrays;
  * This class customizes 'run anything' command execution settings depending on input command
  */
 public abstract class RunAnythingCommandHandler {
-  public static final ExtensionPointName<RunAnythingCommandHandler> EP_NAME = ExtensionPointName.create("com.intellij.runAnything.commandHandler");
+  public static final ExtensionPointName<RunAnythingCommandHandler> EP_NAME = ExtensionPointName.create("consulo.base.runAnything.commandHandler");
 
   public abstract boolean isMatched(@Nonnull String commandLine);
 

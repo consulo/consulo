@@ -25,7 +25,7 @@ import javax.annotation.Nonnull;
  * @see com.intellij.psi.PsiLanguageInjectionHost
  */
 public interface LanguageInjector {
-  ExtensionPointName<LanguageInjector> EXTENSION_POINT_NAME = ExtensionPointName.create("com.intellij.languageInjector");
+  ExtensionPointName<LanguageInjector> EXTENSION_POINT_NAME = ExtensionPointName.create("consulo.base.languageInjector");
 
   /**
    * @param host PSI element inside which your language will be injected.

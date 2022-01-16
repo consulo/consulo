@@ -21,11 +21,12 @@
 package com.intellij.codeInsight.hint;
 
 import com.intellij.lang.LanguageExtension;
+import consulo.container.plugin.PluginIds;
 
 public class LanguageImplementationTextSelectioner extends LanguageExtension<ImplementationTextSelectioner>{
   public static final LanguageImplementationTextSelectioner INSTANCE = new LanguageImplementationTextSelectioner();
 
   public LanguageImplementationTextSelectioner() {
-    super("com.intellij.lang.implementationTextSelectioner", new DefaultImplementationTextSelectioner());
+    super(PluginIds.CONSULO_BASE + ".lang.implementationTextSelectioner", new DefaultImplementationTextSelectioner());
   }
 }

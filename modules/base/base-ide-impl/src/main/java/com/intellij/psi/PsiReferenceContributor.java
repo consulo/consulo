@@ -26,7 +26,7 @@ import consulo.disposer.Disposable;
  * @see PsiReferenceProviderBean
  */
 public abstract class PsiReferenceContributor implements Disposable {
-  public static final ExtensionPointName<PsiReferenceContributor> EP_NAME = ExtensionPointName.create("com.intellij.psi.referenceContributor");
+  public static final ExtensionPointName<PsiReferenceContributor> EP_NAME = ExtensionPointName.create("consulo.base.psi.referenceContributor");
 
   public abstract void registerReferenceProviders(PsiReferenceRegistrar registrar);
 

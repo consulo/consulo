@@ -31,7 +31,7 @@ import java.util.Properties;
  * @since 8.0
  */
 public interface DefaultTemplatePropertiesProvider {
-  ExtensionPointName<DefaultTemplatePropertiesProvider> EP_NAME = ExtensionPointName.create("com.intellij.defaultTemplatePropertiesProvider");
+  ExtensionPointName<DefaultTemplatePropertiesProvider> EP_NAME = ExtensionPointName.create("consulo.base.defaultTemplatePropertiesProvider");
 
   /**
    * Fills the default properties for a file which is created in the specified directory.

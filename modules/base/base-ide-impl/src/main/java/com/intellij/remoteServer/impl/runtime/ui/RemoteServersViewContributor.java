@@ -18,7 +18,7 @@ import java.util.List;
  * @author nik
  */
 public abstract class RemoteServersViewContributor {
-  public static final ExtensionPointName<RemoteServersViewContributor> EP_NAME = ExtensionPointName.create("com.intellij.remoteServer.viewContributor");
+  public static final ExtensionPointName<RemoteServersViewContributor> EP_NAME = ExtensionPointName.create("consulo.base.remoteServer.viewContributor");
 
   public abstract boolean canContribute(@Nonnull Project project);
 

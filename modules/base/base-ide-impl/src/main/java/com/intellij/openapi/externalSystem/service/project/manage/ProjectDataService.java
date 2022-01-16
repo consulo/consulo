@@ -50,7 +50,7 @@ import java.util.Collection;
  */
 public interface ProjectDataService<E, I> {
 
-  ExtensionPointName<ProjectDataService<?, ?>> EP_NAME = ExtensionPointName.create("com.intellij.externalProjectDataService");
+  ExtensionPointName<ProjectDataService<?, ?>> EP_NAME = ExtensionPointName.create("consulo.base.externalProjectDataService");
 
   /**
    * @return key of project data supported by the current manager

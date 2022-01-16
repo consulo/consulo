@@ -20,7 +20,7 @@ import java.util.List;
  */
 public interface SearchEverywhereContributor<Item> extends PossiblyDumbAware {
 
-  ExtensionPointName<SearchEverywhereContributorFactory<?>> EP_NAME = ExtensionPointName.create("com.intellij.searchEverywhereContributor");
+  ExtensionPointName<SearchEverywhereContributorFactory<?>> EP_NAME = ExtensionPointName.create("consulo.base.searchEverywhereContributor");
 
   @Nonnull
   String getSearchProviderId();

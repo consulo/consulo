@@ -28,7 +28,7 @@ import java.util.function.Consumer;
  * @see CompilerManager#removeCompiler(Compiler)
  */
 public interface Compiler {
-  ExtensionPointName<Compiler> EP_NAME = ExtensionPointName.create("com.intellij.compiler");
+  ExtensionPointName<Compiler> EP_NAME = ExtensionPointName.create("consulo.base.compiler");
   
   /**
    * Returns the description of the compiler. All registered compilers should have unique description.

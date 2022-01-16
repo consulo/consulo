@@ -13,7 +13,7 @@ import javax.annotation.Nonnull;
  */
 //@ApiStatus.Internal
 public interface IntentionMenuContributor {
-  ExtensionPointName<IntentionMenuContributor> EP_NAME = ExtensionPointName.create("com.intellij.intentionMenuContributor");
+  ExtensionPointName<IntentionMenuContributor> EP_NAME = ExtensionPointName.create("consulo.base.intentionMenuContributor");
 
   void collectActions(@Nonnull Editor hostEditor, @Nonnull PsiFile hostFile, @Nonnull final ShowIntentionsPass.IntentionsInfo intentions, int passIdToShowIntentionsFor, int offset);
 }

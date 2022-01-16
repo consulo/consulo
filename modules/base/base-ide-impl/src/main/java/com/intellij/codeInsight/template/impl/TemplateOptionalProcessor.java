@@ -28,7 +28,7 @@ import org.jetbrains.annotations.Nls;
  * @author yole
  */
 public interface TemplateOptionalProcessor {
-  ExtensionPointName<TemplateOptionalProcessor> EP_NAME = ExtensionPointName.create("com.intellij.liveTemplateOptionalProcessor");
+  ExtensionPointName<TemplateOptionalProcessor> EP_NAME = ExtensionPointName.create("consulo.base.liveTemplateOptionalProcessor");
 
   void processText(final Project project, final Template template, final Document document, final RangeMarker templateRange, final Editor editor);
   @Nls

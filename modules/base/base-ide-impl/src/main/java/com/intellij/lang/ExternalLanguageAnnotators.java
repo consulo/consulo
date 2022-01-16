@@ -22,6 +22,7 @@ package com.intellij.lang;
 import com.intellij.lang.annotation.ExternalAnnotator;
 import com.intellij.psi.PsiFile;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.container.plugin.PluginIds;
 
 import java.util.List;
 
@@ -30,7 +31,7 @@ public class ExternalLanguageAnnotators extends LanguageExtension<ExternalAnnota
   private static final ExternalLanguageAnnotators INSTANCE = new ExternalLanguageAnnotators();
 
   private ExternalLanguageAnnotators() {
-    super("com.intellij.externalAnnotator");
+    super(PluginIds.CONSULO_BASE + ".externalAnnotator");
   }
 
   public static List<ExternalAnnotator> allForFile(Language language, final PsiFile file) {

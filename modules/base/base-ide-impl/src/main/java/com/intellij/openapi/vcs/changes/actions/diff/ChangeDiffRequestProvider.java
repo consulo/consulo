@@ -29,7 +29,7 @@ import javax.annotation.Nullable;
 
 public interface ChangeDiffRequestProvider {
   ExtensionPointName<ChangeDiffRequestProvider> EP_NAME =
-          ExtensionPointName.create("com.intellij.openapi.vcs.changes.actions.diff.ChangeDiffRequestProvider");
+          ExtensionPointName.create("consulo.base.openapi.vcs.changes.actions.diff.ChangeDiffRequestProvider");
 
   @Nonnull
   ThreeState isEquals(@Nonnull Change change1, @Nonnull Change change2);

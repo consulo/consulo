@@ -18,6 +18,7 @@ package com.intellij.lang.refactoring;
 
 import com.intellij.lang.Language;
 import com.intellij.lang.LanguageExtension;
+import consulo.container.plugin.PluginIds;
 
 import java.util.List;
 
@@ -29,7 +30,7 @@ public class InlineHandlers extends LanguageExtension<InlineHandler> {
   private final static InlineHandlers INSTANCE = new InlineHandlers();
 
   private InlineHandlers() {
-    super("com.intellij.refactoring.inlineHandler");
+    super(PluginIds.CONSULO_BASE + ".refactoring.inlineHandler");
   }
 
   public static List<InlineHandler> getInlineHandlers(Language language) {

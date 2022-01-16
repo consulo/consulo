@@ -36,6 +36,7 @@ import com.intellij.util.ProcessingContext;
 import com.intellij.util.containers.MultiMap;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.codeInsight.completion.CompletionProvider;
+import consulo.container.plugin.PluginIds;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
@@ -261,7 +262,7 @@ public abstract class CompletionContributor {
     public static final MyExtensionPointManager INSTANCE = new MyExtensionPointManager();
 
     MyExtensionPointManager() {
-      super("com.intellij.completion.contributor");
+      super(PluginIds.CONSULO_BASE + ".completion.contributor");
     }
 
     @Override

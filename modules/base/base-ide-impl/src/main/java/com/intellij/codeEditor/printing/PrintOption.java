@@ -31,7 +31,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 public abstract class PrintOption {
-  public static final ExtensionPointName<PrintOption> EP_NAME = ExtensionPointName.create("com.intellij.printOption");
+  public static final ExtensionPointName<PrintOption> EP_NAME = ExtensionPointName.create("consulo.base.printOption");
   
   @Nullable
   public abstract TreeMap<Integer, PsiReference> collectReferences(PsiFile psiFile, Map<PsiFile, PsiFile> filesMap);

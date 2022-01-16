@@ -26,7 +26,7 @@ import javax.annotation.Nullable;
  * @since 12:55/20.12.13
  */
 public interface CompileModuleScopeFactory {
-  ExtensionPointName<CompileModuleScopeFactory> EP_NAME = ExtensionPointName.create("com.intellij.compiler.moduleScopeFactory");
+  ExtensionPointName<CompileModuleScopeFactory> EP_NAME = ExtensionPointName.create("consulo.base.compiler.moduleScopeFactory");
 
   @Nullable
   FileIndexCompileScope createScope(@Nonnull final Module module, final boolean includeDependentModules);

@@ -22,7 +22,7 @@ import com.intellij.psi.PsiElement;
  * @author Konstantin Bulenkov
  */
 public interface AnonymousElementProvider {
-  ExtensionPointName<AnonymousElementProvider> EP_NAME = ExtensionPointName.create("com.intellij.anonymousElementProvider");
+  ExtensionPointName<AnonymousElementProvider> EP_NAME = ExtensionPointName.create("consulo.base.anonymousElementProvider");
 
   PsiElement[] getAnonymousElements(PsiElement parent);
 }

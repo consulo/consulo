@@ -17,6 +17,7 @@ package consulo.psi.tree;
 
 import com.intellij.psi.impl.source.tree.CompositeElement;
 import com.intellij.psi.tree.IElementType;
+import consulo.container.plugin.PluginIds;
 
 import javax.annotation.Nonnull;
 import java.util.function.Predicate;
@@ -26,7 +27,7 @@ import java.util.function.Predicate;
  * @since 2:13/02.04.13
  */
 public interface ASTCompositeFactory extends Predicate<IElementType> {
-  ElementTypeEntryExtensionCollector<ASTCompositeFactory> EP = ElementTypeEntryExtensionCollector.create("com.intellij.lang.ast.compositeFactory");
+  ElementTypeEntryExtensionCollector<ASTCompositeFactory> EP = ElementTypeEntryExtensionCollector.create(PluginIds.CONSULO_BASE + ".lang.ast.compositeFactory");
 
   @Nonnull
   CompositeElement createComposite(@Nonnull IElementType type);

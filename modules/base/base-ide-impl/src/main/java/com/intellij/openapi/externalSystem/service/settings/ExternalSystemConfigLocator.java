@@ -15,7 +15,7 @@ import java.util.List;
  */
 public interface ExternalSystemConfigLocator {
 
-  ExtensionPointName<ExternalSystemConfigLocator> EP_NAME = ExtensionPointName.create("com.intellij.externalSystemConfigLocator");
+  ExtensionPointName<ExternalSystemConfigLocator> EP_NAME = ExtensionPointName.create("consulo.base.externalSystemConfigLocator");
 
   @Nonnull
   ProjectSystemId getTargetExternalSystemId();

@@ -17,9 +17,11 @@ package com.intellij.psi.statistics;
 
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.components.SettingsSavingComponent;
-import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.KeyedExtensionCollector;
+import consulo.container.plugin.PluginIds;
+import consulo.util.dataholder.Key;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -36,7 +38,7 @@ public abstract class StatisticsManager implements SettingsSavingComponent {
    */
   public static final int RECENCY_OBLIVION_THRESHOLD = 10000;
 
-  private static final KeyedExtensionCollector<Statistician,Key> COLLECTOR = new KeyedExtensionCollector<Statistician, Key>("com.intellij.statistician") {
+  private static final KeyedExtensionCollector<Statistician,Key> COLLECTOR = new KeyedExtensionCollector<Statistician, Key>(PluginIds.CONSULO_BASE + ".statistician") {
     @Override
     @Nonnull
     protected String keyToString(@Nonnull final Key key) {

@@ -25,7 +25,7 @@ import com.intellij.openapi.project.Project;
 import javax.annotation.Nonnull;
 
 public interface ScopeDescriptorProvider {
-  ExtensionPointName<ScopeDescriptorProvider> EP_NAME = ExtensionPointName.create("com.intellij.scopeDescriptorProvider");
+  ExtensionPointName<ScopeDescriptorProvider> EP_NAME = ExtensionPointName.create("consulo.base.scopeDescriptorProvider");
 
   @Nonnull
   ScopeDescriptor[] getScopeDescriptors(Project project);

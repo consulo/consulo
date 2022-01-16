@@ -16,20 +16,20 @@
 package com.intellij.psi;
 
 import com.intellij.openapi.util.KeyedExtensionCollector;
+import consulo.container.plugin.PluginIds;
 import consulo.logging.Logger;
-import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 /**
  * @author peter
  */
 public class ReferenceProviderType {
-  @NonNls public static final String EP_NAME = "com.intellij.referenceProviderType";
   private static final Logger LOG = Logger.getInstance(ReferenceProviderType.class);
   private static final KeyedExtensionCollector<PsiReferenceProvider,ReferenceProviderType> COLLECTOR =
-    new KeyedExtensionCollector<PsiReferenceProvider, ReferenceProviderType>(EP_NAME) {
+    new KeyedExtensionCollector<PsiReferenceProvider, ReferenceProviderType>(PluginIds.CONSULO_BASE + ".referenceProviderType") {
+    @Nonnull
     @Override
     protected String keyToString(final ReferenceProviderType key) {
       return key.myId;
@@ -37,7 +37,7 @@ public class ReferenceProviderType {
   };
   private final String myId;
 
-  public ReferenceProviderType(@NonNls @Nonnull String id) {
+  public ReferenceProviderType(@Nonnull String id) {
     myId = id;
   }
 

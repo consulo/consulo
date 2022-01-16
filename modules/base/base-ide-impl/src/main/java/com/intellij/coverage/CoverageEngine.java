@@ -39,7 +39,7 @@ import java.util.TreeMap;
  *         Ruby engine works with RCov
  */
 public abstract class CoverageEngine {
-  public static final ExtensionPointName<CoverageEngine> EP_NAME = ExtensionPointName.create("com.intellij.coverageEngine");
+  public static final ExtensionPointName<CoverageEngine> EP_NAME = ExtensionPointName.create("consulo.base.coverageEngine");
 
   /**
    * Checks whether coverage feature is supported by this engine for given configuration or not.

@@ -14,7 +14,7 @@ import java.util.List;
  * @author Roman.Chernyatchik
  */
 public interface VcsQuickListContentProvider {
-  ExtensionPointName<VcsQuickListContentProvider> EP_NAME = ExtensionPointName.create("com.intellij.vcsPopupProvider");
+  ExtensionPointName<VcsQuickListContentProvider> EP_NAME = ExtensionPointName.create("consulo.base.vcsPopupProvider");
 
   /**
    * Allows to customise VCS actions popup for both custom VCS and general list 

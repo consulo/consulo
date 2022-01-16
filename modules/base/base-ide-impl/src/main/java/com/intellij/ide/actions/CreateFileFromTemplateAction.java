@@ -32,6 +32,7 @@ import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.util.IncorrectOperationException;
+import consulo.container.plugin.PluginIds;
 import consulo.extensions.CompositeExtensionPointName;
 import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -48,7 +49,7 @@ import java.util.Map;
  */
 public abstract class CreateFileFromTemplateAction extends CreateFromTemplateAction<PsiFile> {
   public static interface ModuleResolver {
-    public static final CompositeExtensionPointName<ModuleResolver> EP_NAME = CompositeExtensionPointName.applicationPoint("com.intellij.createFromTemplateActionModuleResolver", ModuleResolver.class);
+    public static final CompositeExtensionPointName<ModuleResolver> EP_NAME = CompositeExtensionPointName.applicationPoint(PluginIds.CONSULO_BASE + ".createFromTemplateActionModuleResolver", ModuleResolver.class);
 
     @Nullable
     Module resolveModule(@Nonnull PsiDirectory directory, @Nonnull FileType fileType);

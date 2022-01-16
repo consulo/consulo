@@ -15,7 +15,7 @@ import java.util.List;
  * @author yole
  */
 public abstract class MetaLanguage extends Language {
-  public static final ExtensionPointName<MetaLanguage> EP_NAME = ExtensionPointName.create("com.intellij.metaLanguage");
+  public static final ExtensionPointName<MetaLanguage> EP_NAME = ExtensionPointName.create("consulo.base.metaLanguage");
 
   protected MetaLanguage(@Nonnull String ID) {
     super(ID);

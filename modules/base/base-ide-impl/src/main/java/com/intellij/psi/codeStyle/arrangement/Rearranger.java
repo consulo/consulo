@@ -21,10 +21,12 @@ import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.codeStyle.CodeStyleSettings;
+import com.intellij.psi.codeStyle.arrangement.std.ArrangementStandardSettingsAware;
 import com.intellij.psi.codeStyle.arrangement.std.StdArrangementTokens;
+import consulo.container.plugin.PluginIds;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.Collection;
 import java.util.List;
 
@@ -39,7 +41,7 @@ import java.util.List;
  */
 public interface Rearranger<E extends ArrangementEntry> {
 
-  LanguageExtension<Rearranger<?>> EXTENSION = new LanguageExtension<Rearranger<?>>("com.intellij.lang.rearranger");
+  LanguageExtension<Rearranger<?>> EXTENSION = new LanguageExtension<>(PluginIds.CONSULO_BASE + ".lang.rearranger");
 
   /**
    * Tries to wrap given element into arrangement entry at the target context.
@@ -55,9 +57,9 @@ public interface Rearranger<E extends ArrangementEntry> {
    *                  available at the given context plus newly created entry for the given element;
    *                  <code>null</code> otherwise
    */
-  @javax.annotation.Nullable
+  @Nullable
   Pair<E, List<E>> parseWithNew(@Nonnull PsiElement root,
-                                @javax.annotation.Nullable Document document,
+                                @Nullable Document document,
                                 @Nonnull Collection<TextRange> ranges,
                                 @Nonnull PsiElement element,
                                 @Nonnull ArrangementSettings settings);
@@ -75,7 +77,7 @@ public interface Rearranger<E extends ArrangementEntry> {
    */
   @Nonnull
   List<E> parse(@Nonnull PsiElement root,
-                @javax.annotation.Nullable Document document,
+                @Nullable Document document,
                 @Nonnull Collection<TextRange> ranges,
                 @Nonnull ArrangementSettings settings);
 
@@ -89,15 +91,15 @@ public interface Rearranger<E extends ArrangementEntry> {
    * @return          number of blank lines to insert before the target entry;
    *                  negative as an indication that no blank lines adjustment is necessary
    */
-  int getBlankLines(@Nonnull CodeStyleSettings settings, @javax.annotation.Nullable E parent, @Nullable E previous, @Nonnull E target);
+  int getBlankLines(@Nonnull CodeStyleSettings settings, @Nullable E parent, @Nullable E previous, @Nonnull E target);
 
 
   /**
-   * @return serializer to save {@link com.intellij.psi.codeStyle.arrangement.ArrangementSettings arrangement settings}.
+   * @return serializer to save {@link ArrangementSettings arrangement settings}.
    * Serializer is expected to be lazy and don't save
-   * {@link com.intellij.psi.codeStyle.arrangement.std.ArrangementStandardSettingsAware.getDefaultSettings() default settings}.
+   * {@link ArrangementStandardSettingsAware.getDefaultSettings() default settings}.
    * <p/>
-   * @see com.intellij.psi.codeStyle.arrangement.DefaultArrangementSettingsSerializer
+   * @see DefaultArrangementSettingsSerializer
    */
   @Nonnull
   ArrangementSettingsSerializer getSerializer();

@@ -49,7 +49,7 @@ import java.io.IOException;
  * restore <code>SomeLanguageDialect</code> by name where needed.
  */
 public interface FilePropertyPusher<T> {
-  ExtensionPointName<FilePropertyPusher<?>> EP_NAME = ExtensionPointName.create("com.intellij.filePropertyPusher");
+  ExtensionPointName<FilePropertyPusher<?>> EP_NAME = ExtensionPointName.create("consulo.base.filePropertyPusher");
 
   default void initExtra(@Nonnull Project project) {
     initExtra(project, project.getMessageBus());

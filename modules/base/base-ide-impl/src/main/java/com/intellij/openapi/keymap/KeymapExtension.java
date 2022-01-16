@@ -30,7 +30,7 @@ import com.intellij.openapi.util.Condition;
 import javax.annotation.Nullable;
 
 public interface KeymapExtension {
-  ExtensionPointName<KeymapExtension> EXTENSION_POINT_NAME = ExtensionPointName.create("com.intellij.keymapExtension");
+  ExtensionPointName<KeymapExtension> EXTENSION_POINT_NAME = ExtensionPointName.create("consulo.base.keymapExtension");
 
   @Nullable
   KeymapGroup createGroup(Condition<AnAction> filtered, Project project);

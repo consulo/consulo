@@ -28,7 +28,7 @@ import java.util.Collection;
  */
 public abstract class OrderEnumerationHandler {
   public static final ExtensionPointName<Factory> EP_NAME =
-    ExtensionPointName.create("com.intellij.orderEnumerationHandlerFactory");
+    ExtensionPointName.create("consulo.base.orderEnumerationHandlerFactory");
 
   public static abstract class Factory {
 

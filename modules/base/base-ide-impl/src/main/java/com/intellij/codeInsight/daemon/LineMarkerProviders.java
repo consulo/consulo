@@ -17,7 +17,7 @@
 package com.intellij.codeInsight.daemon;
 
 import com.intellij.lang.LanguageExtension;
-import org.jetbrains.annotations.NonNls;
+import consulo.container.plugin.PluginIds;
 
 /**
  * @author yole
@@ -25,9 +25,8 @@ import org.jetbrains.annotations.NonNls;
  */
 public class LineMarkerProviders extends LanguageExtension<LineMarkerProvider> {
   public static LineMarkerProviders INSTANCE = new LineMarkerProviders();
-  @NonNls public static final String EP_NAME = "com.intellij.codeInsight.lineMarkerProvider";
 
   private LineMarkerProviders() {
-    super(EP_NAME);
+    super(PluginIds.CONSULO_BASE + ".codeInsight.lineMarkerProvider");
   }
 }

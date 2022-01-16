@@ -19,10 +19,12 @@
  */
 package com.intellij.lang;
 
+import consulo.container.plugin.PluginIds;
+
 public class LanguageExpressionTypes extends LanguageExtension<ExpressionTypeProvider> {
   public static final LanguageExpressionTypes INSTANCE = new LanguageExpressionTypes();
 
   private LanguageExpressionTypes() {
-    super("com.intellij.codeInsight.typeInfo");
+    super(PluginIds.CONSULO_BASE + ".codeInsight.typeInfo");
   }
 }

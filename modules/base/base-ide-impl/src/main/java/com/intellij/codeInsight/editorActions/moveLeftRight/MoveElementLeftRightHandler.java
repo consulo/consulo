@@ -18,6 +18,7 @@ package com.intellij.codeInsight.editorActions.moveLeftRight;
 import com.intellij.lang.LanguageExtension;
 import com.intellij.psi.PsiElement;
 import consulo.annotation.access.RequiredReadAction;
+import consulo.container.plugin.PluginIds;
 
 import javax.annotation.Nonnull;
 
@@ -25,7 +26,7 @@ import javax.annotation.Nonnull;
  * Instances of this class implement language-specific logic of 'move element left/right' actions
  */
 public interface MoveElementLeftRightHandler {
-  LanguageExtension<MoveElementLeftRightHandler> EXTENSION = new LanguageExtension<MoveElementLeftRightHandler>("com.intellij.moveLeftRightHandler");
+  LanguageExtension<MoveElementLeftRightHandler> EP = new LanguageExtension<>(PluginIds.CONSULO_BASE + ".moveLeftRightHandler");
 
   /**
    * Returns a list of sub-elements (usually children) of given PSI element, which can be moved using 'move element left/right' actions.

@@ -19,6 +19,8 @@ import com.intellij.openapi.fileTypes.FileTypeExtension;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiFile;
 import com.maddyhome.idea.copyright.psi.UpdateCopyrightsProvider;
+import consulo.container.plugin.PluginIds;
+
 import javax.annotation.Nonnull;
 
 /**
@@ -28,7 +30,7 @@ public class CopyrightUpdaters extends FileTypeExtension<UpdateCopyrightsProvide
   public static CopyrightUpdaters INSTANCE = new CopyrightUpdaters();
 
   private CopyrightUpdaters() {
-    super("com.intellij.copyright.updater");
+    super(PluginIds.CONSULO_BASE + ".copyright.updater");
   }
 
   public static boolean hasExtension(@Nonnull PsiFile psiFile) {

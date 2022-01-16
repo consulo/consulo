@@ -21,6 +21,7 @@ package com.intellij.lang;
 
 import com.intellij.psi.PsiFile;
 import consulo.annotation.access.RequiredReadAction;
+import consulo.container.plugin.PluginIds;
 
 import javax.annotation.Nonnull;
 import java.util.HashSet;
@@ -31,7 +32,7 @@ public class LanguageImportStatements extends LanguageExtension<ImportOptimizer>
   public static final LanguageImportStatements INSTANCE = new LanguageImportStatements();
 
   private LanguageImportStatements() {
-    super("com.intellij.lang.importOptimizer");
+    super(PluginIds.CONSULO_BASE + ".lang.importOptimizer");
   }
 
   @Nonnull

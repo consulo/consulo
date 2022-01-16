@@ -14,7 +14,7 @@ import javax.annotation.Nonnull;
  * Implement this interface to enable custom diff preview in Colors & Fonts Settings page
  */
 public abstract class DiffPreviewProvider {
-  //public static final ExtensionPointName<DiffPreviewProvider> EP_NAME = ExtensionPointName.create("com.intellij.diffPreviewProvider");
+  //public static final ExtensionPointName<DiffPreviewProvider> EP_NAME = ExtensionPointName.create("consulo.base.diffPreviewProvider");
 
   @Nonnull
   public abstract DiffContent[] createContents();

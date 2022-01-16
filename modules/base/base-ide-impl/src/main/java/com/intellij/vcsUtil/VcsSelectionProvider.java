@@ -22,7 +22,7 @@ import com.intellij.openapi.vcs.actions.VcsContext;
  * @author yole
  */
 public interface VcsSelectionProvider {
-  ExtensionPointName<VcsSelectionProvider> EP_NAME = ExtensionPointName.create("com.intellij.vcsSelectionProvider");
+  ExtensionPointName<VcsSelectionProvider> EP_NAME = ExtensionPointName.create("consulo.base.vcsSelectionProvider");
 
   @javax.annotation.Nullable
   VcsSelection getSelection(VcsContext context);

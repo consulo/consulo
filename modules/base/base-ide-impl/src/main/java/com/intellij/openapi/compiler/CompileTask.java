@@ -22,8 +22,8 @@ import consulo.component.extension.ExtensionPointName;
  */
 @FunctionalInterface
 public interface CompileTask {
-  ExtensionPointName<CompileTask> BEFORE_EP_NAME = ExtensionPointName.create("com.intellij.compiler.beforeTask");
-  ExtensionPointName<CompileTask> AFTER_EP_NAME = ExtensionPointName.create("com.intellij.compiler.afterTask");
+  ExtensionPointName<CompileTask> BEFORE_EP_NAME = ExtensionPointName.create("consulo.base.compiler.beforeTask");
+  ExtensionPointName<CompileTask> AFTER_EP_NAME = ExtensionPointName.create("consulo.base.compiler.afterTask");
 
   /**
    * Executes the task.

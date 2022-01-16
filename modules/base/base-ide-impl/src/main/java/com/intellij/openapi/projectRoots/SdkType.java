@@ -33,7 +33,7 @@ import java.util.Collection;
 import java.util.Collections;
 
 public abstract class SdkType implements SdkTypeId {
-  public static final ExtensionPointName<SdkType> EP_NAME = ExtensionPointName.create("com.intellij.sdkType");
+  public static final ExtensionPointName<SdkType> EP_NAME = ExtensionPointName.create("consulo.base.sdkType");
 
   private final String myId;
 

@@ -16,8 +16,12 @@
 package com.intellij.openapi.editor.colors.impl;
 
 import com.intellij.ide.ui.LafManager;
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.components.*;
+import com.intellij.openapi.components.RoamingType;
+import com.intellij.openapi.components.State;
+import com.intellij.openapi.components.Storage;
+import com.intellij.openapi.components.StoragePathMacros;
 import com.intellij.openapi.editor.EditorFactory;
 import com.intellij.openapi.editor.colors.EditorColorsListener;
 import com.intellij.openapi.editor.colors.EditorColorsManager;
@@ -31,7 +35,6 @@ import com.intellij.openapi.util.JDOMUtil;
 import com.intellij.openapi.util.WriteExternalException;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.ComponentTreeEventDispatcher;
-import com.intellij.util.ThrowableConvertor;
 import com.intellij.util.io.URLUtil;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.xmlb.annotations.OptionTag;
@@ -68,7 +71,7 @@ public class EditorColorsManagerImpl extends EditorColorsManager implements Pers
   private final Map<String, EditorColorsScheme> myDefaultColorsSchemes = new LinkedHashMap<>();
 
   @Inject
-  public EditorColorsManagerImpl(SchemesManagerFactory schemesManagerFactory) {
+  public EditorColorsManagerImpl(@Nonnull Application application, @Nonnull SchemesManagerFactory schemesManagerFactory) {
     mySchemesManager = schemesManagerFactory.createSchemesManager(FILE_SPEC, new BaseSchemeProcessor<EditorColorsScheme, EditorColorsSchemeImpl>() {
       @Nonnull
       @Override
@@ -123,22 +126,19 @@ public class EditorColorsManagerImpl extends EditorColorsManager implements Pers
     addDefaultSchemes();
 
     // Load default schemes from providers
-    for (BundledColorSchemeEP ep : BundledColorSchemeEP.EP_NAME.getExtensionList()) {
-      mySchemesManager.loadBundledScheme(ep.path, ep, new ThrowableConvertor<Element, EditorColorsScheme, Throwable>() {
-        @Override
-        public EditorColorsScheme convert(Element element) throws Throwable {
-          DefaultColorsScheme defaultColorsScheme = new DefaultColorsScheme(EditorColorsManagerImpl.this);
-          defaultColorsScheme.readExternal(element);
+    for (BundledColorSchemeEP ep : BundledColorSchemeEP.EP.getExtensionList(application)) {
+      mySchemesManager.loadBundledScheme(ep.path, ep, element -> {
+        DefaultColorsScheme defaultColorsScheme = new DefaultColorsScheme(EditorColorsManagerImpl.this);
+        defaultColorsScheme.readExternal(element);
 
-          myDefaultColorsSchemes.put(defaultColorsScheme.getName(), defaultColorsScheme);
-          return defaultColorsScheme;
-        }
+        myDefaultColorsSchemes.put(defaultColorsScheme.getName(), defaultColorsScheme);
+        return defaultColorsScheme;
       });
     }
 
     mySchemesManager.loadSchemes();
 
-    loadAdditionalTextAttributes();
+    loadAdditionalTextAttributes(application);
 
     setGlobalSchemeInner(getDefaultScheme());
   }
@@ -162,8 +162,8 @@ public class EditorColorsManagerImpl extends EditorColorsManager implements Pers
     return getScheme(dark ? "Darcula" : EditorColorsScheme.DEFAULT_SCHEME_NAME).getAttributes(key);
   }
 
-  private void loadAdditionalTextAttributes() {
-    for (AdditionalTextAttributesEP attributesEP : AdditionalTextAttributesEP.EP_NAME.getExtensionList()) {
+  private void loadAdditionalTextAttributes(@Nonnull Application application) {
+    for (AdditionalTextAttributesEP attributesEP : AdditionalTextAttributesEP.EP.getExtensionList(application)) {
       EditorColorsScheme editorColorsScheme = mySchemesManager.findSchemeByName(attributesEP.scheme);
       if (editorColorsScheme == null) {
         if (!isUnitTestOrHeadlessMode()) {

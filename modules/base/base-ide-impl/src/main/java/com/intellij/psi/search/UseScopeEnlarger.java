@@ -23,7 +23,7 @@ import javax.annotation.Nonnull;
  * @author nik
  */
 public abstract class UseScopeEnlarger {
-  public static final ExtensionPointName<UseScopeEnlarger> EP_NAME = ExtensionPointName.create("com.intellij.useScopeEnlarger");
+  public static final ExtensionPointName<UseScopeEnlarger> EP_NAME = ExtensionPointName.create("consulo.base.useScopeEnlarger");
 
   @javax.annotation.Nullable
   public abstract SearchScope getAdditionalUseScope(@Nonnull PsiElement element);

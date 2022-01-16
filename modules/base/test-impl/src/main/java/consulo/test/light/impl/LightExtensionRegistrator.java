@@ -49,7 +49,7 @@ public abstract class LightExtensionRegistrator {
     @Nonnull
     @Override
     public PluginId getPluginId() {
-      return PluginIds.CONSULO_PLATFORM_BASE;
+      return PluginIds.CONSULO_BASE;
     }
   }
 

@@ -17,6 +17,8 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiFileFactory;
 import com.intellij.psi.codeStyle.CodeStyleManager;
 import com.intellij.util.PathUtil;
+import consulo.container.plugin.PluginIds;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -24,7 +26,7 @@ import javax.annotation.Nullable;
  * @author gregsh
  */
 public abstract class ScratchFileCreationHelper {
-  public static final LanguageExtension<ScratchFileCreationHelper> EXTENSION = new LanguageExtension<>("com.intellij.scratch.creationHelper", new ScratchFileCreationHelper() {
+  public static final LanguageExtension<ScratchFileCreationHelper> EXTENSION = new LanguageExtension<>(PluginIds.CONSULO_BASE + ".scratch.creationHelper", new ScratchFileCreationHelper() {
   });
 
   /**

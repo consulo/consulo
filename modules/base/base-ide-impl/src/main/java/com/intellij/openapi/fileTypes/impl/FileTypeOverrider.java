@@ -18,7 +18,7 @@ import javax.annotation.Nullable;
  * by the change, or {@link FileTypeManagerEx#makeFileTypesChange(String, Runnable)} ()} if the change affects an unknown number of files.
  */
 public interface FileTypeOverrider {
-  ExtensionPointName<FileTypeOverrider> EP_NAME = ExtensionPointName.create("com.intellij.fileTypeOverrider");
+  ExtensionPointName<FileTypeOverrider> EP_NAME = ExtensionPointName.create("consulo.base.fileTypeOverrider");
 
   @Nullable
   FileType getOverriddenFileType(@Nonnull VirtualFile file);

@@ -34,7 +34,7 @@ import java.util.List;
  * @see IntentionAction
  */
 public abstract class IntentionManager  {
-  public static final ExtensionPointName<IntentionActionBean> EP_INTENTION_ACTIONS = ExtensionPointName.create("com.intellij.intentionAction");
+  public static final ExtensionPointName<IntentionActionBean> EP_INTENTION_ACTIONS = ExtensionPointName.create("consulo.base.intentionAction");
 
   /**
    * Key to be used within {@link UserDataHolder} in order to check presence of explicit indication on if intentions sub-menu

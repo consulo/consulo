@@ -44,7 +44,7 @@ public abstract class BackgroundTaskByVfsChangeProvider {
     }
   }
 
-  public static final ExtensionPointName<BackgroundTaskByVfsChangeProvider> EP_NAME = ExtensionPointName.create("com.intellij.taskByVfsChange");
+  public static final ExtensionPointName<BackgroundTaskByVfsChangeProvider> EP_NAME = ExtensionPointName.create("consulo.base.taskByVfsChange");
 
   public boolean validate(@Nonnull Project project, @Nonnull VirtualFile virtualFile) {
     return true;

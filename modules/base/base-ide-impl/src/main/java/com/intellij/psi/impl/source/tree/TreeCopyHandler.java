@@ -25,7 +25,7 @@ import consulo.component.extension.ExtensionPointName;
 import java.util.Map;
 
 public interface TreeCopyHandler {
-  ExtensionPointName<TreeCopyHandler> EP_NAME = ExtensionPointName.create("com.intellij.treeCopyHandler");
+  ExtensionPointName<TreeCopyHandler> EP_NAME = ExtensionPointName.create("consulo.base.treeCopyHandler");
 
   void encodeInformation(TreeElement element, ASTNode original, Map<Object, Object> encodingState);
   TreeElement decodeInformation(TreeElement element, Map<Object, Object> decodingState);

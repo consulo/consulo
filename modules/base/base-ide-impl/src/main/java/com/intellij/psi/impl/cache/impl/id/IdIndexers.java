@@ -17,6 +17,7 @@
 package com.intellij.psi.impl.cache.impl.id;
 
 import com.intellij.openapi.fileTypes.FileTypeExtension;
+import consulo.container.plugin.PluginIds;
 
 /**
  * @author yole
@@ -25,6 +26,6 @@ public class IdIndexers extends FileTypeExtension<IdIndexer> {
   public static IdIndexers INSTANCE = new IdIndexers();
 
   private IdIndexers() {
-    super("com.intellij.idIndexer");
+    super(PluginIds.CONSULO_BASE + ".idIndexer");
   }
 }

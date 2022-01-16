@@ -31,7 +31,7 @@ import javax.annotation.Nonnull;
  * @see com.intellij.psi.PsiLanguageInjectionHost
  */
 public interface MultiHostInjector {
-  ExtensionPointName<MultiHostInjectorExtensionPoint> EP_NAME = ExtensionPointName.create("com.intellij.multiHostInjector");
+  ExtensionPointName<MultiHostInjectorExtensionPoint> EP_NAME = ExtensionPointName.create("consulo.base.multiHostInjector");
 
   void injectLanguages(@Nonnull MultiHostRegistrar registrar, @Nonnull PsiElement context);
 }

@@ -25,7 +25,7 @@ import com.intellij.openapi.project.Project;
 import javax.annotation.Nonnull;
 
 public interface ConsoleFilterProvider {
-  ExtensionPointName<ConsoleFilterProvider> FILTER_PROVIDERS = ExtensionPointName.create("com.intellij.consoleFilterProvider");
+  ExtensionPointName<ConsoleFilterProvider> FILTER_PROVIDERS = ExtensionPointName.create("consulo.base.consoleFilterProvider");
 
   @Nonnull
   Filter[] getDefaultFilters(@Nonnull Project project);

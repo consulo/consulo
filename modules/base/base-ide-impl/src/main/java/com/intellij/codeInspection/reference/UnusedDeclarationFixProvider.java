@@ -28,7 +28,7 @@ import javax.annotation.Nonnull;
  */
 public interface UnusedDeclarationFixProvider {
 
-  ExtensionPointName<UnusedDeclarationFixProvider> EP_NAME = ExtensionPointName.create("com.intellij.unusedDeclarationFixProvider");
+  ExtensionPointName<UnusedDeclarationFixProvider> EP_NAME = ExtensionPointName.create("consulo.base.unusedDeclarationFixProvider");
 
   @Nonnull
   IntentionAction[] getQuickFixes(PsiElement unusedElement);

@@ -29,7 +29,7 @@ import java.util.Collection;
  * @author Rustam Vishnyakov
  */
 public interface DisabledIndentRangesProvider {
-  ExtensionPointName<DisabledIndentRangesProvider> EP_NAME = ExtensionPointName.create("com.intellij.disabledIndentRangesProvider");
+  ExtensionPointName<DisabledIndentRangesProvider> EP_NAME = ExtensionPointName.create("consulo.base.disabledIndentRangesProvider");
 
   /**
    * Collects ranges which should never be indented inside the given PSI element.

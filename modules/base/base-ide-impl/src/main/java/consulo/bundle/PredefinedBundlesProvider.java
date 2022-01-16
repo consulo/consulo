@@ -36,7 +36,7 @@ public abstract class PredefinedBundlesProvider {
     }
   }
 
-  public static final ExtensionPointName<PredefinedBundlesProvider> EP_NAME = ExtensionPointName.create("com.intellij.predefinedBundlesProvider");
+  public static final ExtensionPointName<PredefinedBundlesProvider> EP_NAME = ExtensionPointName.create("consulo.base.predefinedBundlesProvider");
 
   public abstract void createBundles(@Nonnull Context context);
 }

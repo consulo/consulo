@@ -24,7 +24,7 @@ import com.intellij.psi.PsiElement;
  */
 public interface DynamicContextProvider {
 
-  ExtensionPointName<DynamicContextProvider> EP_NAME = ExtensionPointName.create("com.intellij.dynamicContextProvider");
+  ExtensionPointName<DynamicContextProvider> EP_NAME = ExtensionPointName.create("consulo.base.dynamicContextProvider");
 
   /**
    * Returns starting position for file references

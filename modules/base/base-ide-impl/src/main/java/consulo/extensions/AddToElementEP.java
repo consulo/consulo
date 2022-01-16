@@ -24,7 +24,7 @@ import com.intellij.util.xmlb.annotations.Text;
  * @since 0:46/07.11.13
  */
 public class AddToElementEP {
-  public static final ExtensionPointName<AddToElementEP> EP_NAME = ExtensionPointName.create("com.intellij.addTo.listOfElements");
+  public static final ExtensionPointName<AddToElementEP> EP_NAME = ExtensionPointName.create("consulo.base.addTo.listOfElements");
 
   @Attribute("name")
   public String myName;

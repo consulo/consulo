@@ -21,7 +21,7 @@ import javax.annotation.Nonnull;
 
 public interface NonProjectFileWritingAccessExtension {
   ExtensionPointName<NonProjectFileWritingAccessExtension> EP_NAME =
-          ExtensionPointName.create("com.intellij.nonProjectFileWritingAccessExtension");
+          ExtensionPointName.create("consulo.base.nonProjectFileWritingAccessExtension");
 
   /**
    * @return true if the file should not be protected from accidental writing. false to use default logic.

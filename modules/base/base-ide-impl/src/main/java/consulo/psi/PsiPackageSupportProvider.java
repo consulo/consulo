@@ -31,7 +31,7 @@ import javax.annotation.Nonnull;
  * @since 8:21/20.05.13
  */
 public interface PsiPackageSupportProvider {
-  ExtensionPointName<PsiPackageSupportProvider> EP_NAME = ExtensionPointName.create("com.intellij.psi.packageSupportProvider");
+  ExtensionPointName<PsiPackageSupportProvider> EP_NAME = ExtensionPointName.create("consulo.base.psi.packageSupportProvider");
 
   boolean isSupported(@Nonnull ModuleExtension<?> moduleExtension);
 

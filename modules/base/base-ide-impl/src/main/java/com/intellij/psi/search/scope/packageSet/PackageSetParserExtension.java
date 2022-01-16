@@ -25,7 +25,7 @@ import consulo.component.extension.ExtensionPointName;
 import javax.annotation.Nullable;
 
 public interface PackageSetParserExtension {
-  ExtensionPointName<PackageSetParserExtension> EP_NAME = ExtensionPointName.create("com.intellij.scopeParserExtension");
+  ExtensionPointName<PackageSetParserExtension> EP_NAME = ExtensionPointName.create("consulo.base.scopeParserExtension");
 
   @Nullable
   PackageSet parsePackageSet(Lexer lexer, final String scope, String modulePattern) throws ParsingException;

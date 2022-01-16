@@ -16,18 +16,19 @@
 package com.intellij.psi;
 
 import com.intellij.openapi.util.Computable;
-import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.KeyedExtensionCollector;
 import com.intellij.util.containers.ContainerUtil;
-import javax.annotation.Nonnull;
+import consulo.container.plugin.PluginIds;
+import consulo.util.dataholder.Key;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 /**
  * @author peter
  */
 public class WeighingService {
-  private static final KeyedExtensionCollector<Weigher,Key> COLLECTOR = new KeyedExtensionCollector<Weigher, Key>("com.intellij.weigher") {
+  private static final KeyedExtensionCollector<Weigher,Key> COLLECTOR = new KeyedExtensionCollector<Weigher, Key>(PluginIds.CONSULO_BASE + ".weigher") {
     @Override
     protected String keyToString(final Key key) {
       return key.toString();

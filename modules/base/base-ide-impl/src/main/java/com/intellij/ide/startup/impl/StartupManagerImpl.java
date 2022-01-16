@@ -394,7 +394,7 @@ public class StartupManagerImpl extends StartupManagerEx implements Disposable {
       long startTime = StartUpMeasurer.getCurrentTime();
 
       PluginDescriptor plugin = PluginManager.getPlugin(startupActivity.getClass());
-      PluginId pluginId = plugin != null ? plugin.getPluginId() : PluginIds.CONSULO_PLATFORM_BASE;
+      PluginId pluginId = plugin != null ? plugin.getPluginId() : PluginIds.CONSULO_BASE;
 
       runActivity(uiAccess, startupActivity);
 

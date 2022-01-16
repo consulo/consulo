@@ -18,6 +18,7 @@ package com.intellij.refactoring.lang;
 
 import com.intellij.lang.LanguageExtension;
 import com.intellij.refactoring.RefactoringActionHandler;
+import consulo.container.plugin.PluginIds;
 
 /**
  * @author yole
@@ -26,6 +27,6 @@ public class LanguageExtractInclude extends LanguageExtension<RefactoringActionH
   public static final LanguageExtractInclude INSTANCE = new LanguageExtractInclude();
 
   private LanguageExtractInclude() {
-    super("com.intellij.refactoring.extractIncludeHandler");
+    super(PluginIds.CONSULO_BASE + ".refactoring.extractIncludeHandler");
   }
 }

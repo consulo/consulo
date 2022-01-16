@@ -22,7 +22,7 @@ import consulo.component.extension.ExtensionPointName;
  * @author peter
  */
 public interface LookupActionProvider {
-  ExtensionPointName<LookupActionProvider> EP_NAME = ExtensionPointName.create("com.intellij.lookup.actionProvider");
+  ExtensionPointName<LookupActionProvider> EP_NAME = ExtensionPointName.create("consulo.base.lookup.actionProvider");
 
   void fillActions(LookupElement element, Lookup lookup, Consumer<LookupElementAction> consumer);
 

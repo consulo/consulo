@@ -20,9 +20,10 @@ import com.intellij.openapi.editor.highlighter.EditorHighlighter;
 import com.intellij.openapi.editor.highlighter.EditorHighlighterFactory;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
+import consulo.container.plugin.PluginIds;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.Collections;
 import java.util.List;
 
@@ -33,7 +34,7 @@ public class FileTypeEditorHighlighterProviders extends FileTypeExtension<Editor
   public static final FileTypeEditorHighlighterProviders INSTANCE = new FileTypeEditorHighlighterProviders();
 
   private FileTypeEditorHighlighterProviders() {
-    super("com.intellij.editorHighlighterProvider");
+    super(PluginIds.CONSULO_BASE + ".editorHighlighterProvider");
   }
 
   @Override

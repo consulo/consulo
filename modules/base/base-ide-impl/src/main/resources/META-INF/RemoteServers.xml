@@ -31,7 +31,7 @@
     <extensionPoint name="remoteServer.viewContributor" interface="com.intellij.remoteServer.impl.runtime.ui.RemoteServersViewContributor"/>
   </extensionPoints>
 
-  <extensions defaultExtensionNs="com.intellij">
+  <extensions defaultExtensionNs="consulo.base">
     <applicationService serviceInterface="com.intellij.remoteServer.configuration.RemoteServersManager"
                         serviceImplementation="com.intellij.remoteServer.impl.configuration.RemoteServersManagerImpl"/>
     <applicationService serviceInterface="com.intellij.remoteServer.runtime.ServerConnectionManager"

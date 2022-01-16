@@ -24,7 +24,7 @@ import javax.annotation.Nullable;
  * @author yole
  */
 public interface MethodNavigationOffsetProvider {
-  ExtensionPointName<MethodNavigationOffsetProvider> EP_NAME = ExtensionPointName.create("com.intellij.methodNavigationOffsetProvider");
+  ExtensionPointName<MethodNavigationOffsetProvider> EP_NAME = ExtensionPointName.create("consulo.base.methodNavigationOffsetProvider");
 
   @Nullable
   int[] getMethodNavigationOffsets(PsiFile file, int caretOffset);

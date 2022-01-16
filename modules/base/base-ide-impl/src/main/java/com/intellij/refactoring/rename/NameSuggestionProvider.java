@@ -27,7 +27,7 @@ import java.util.Set;
  * @author yole
  */
 public interface NameSuggestionProvider {
-  ExtensionPointName<NameSuggestionProvider> EP_NAME = ExtensionPointName.create("com.intellij.nameSuggestionProvider");
+  ExtensionPointName<NameSuggestionProvider> EP_NAME = ExtensionPointName.create("consulo.base.nameSuggestionProvider");
 
   @javax.annotation.Nullable
   SuggestedNameInfo getSuggestedNames(PsiElement element, @Nullable PsiElement nameSuggestionContext, Set<String> result);

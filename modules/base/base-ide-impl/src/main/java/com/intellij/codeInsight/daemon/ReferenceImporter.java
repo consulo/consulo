@@ -25,7 +25,7 @@ import javax.annotation.Nonnull;
  * @author yole
  */
 public interface ReferenceImporter {
-  ExtensionPointName<ReferenceImporter> EP_NAME = ExtensionPointName.create("com.intellij.referenceImporter");
+  ExtensionPointName<ReferenceImporter> EP_NAME = ExtensionPointName.create("consulo.base.referenceImporter");
 
   boolean autoImportReferenceAtCursor(@Nonnull Editor editor, @Nonnull PsiFile file);
 

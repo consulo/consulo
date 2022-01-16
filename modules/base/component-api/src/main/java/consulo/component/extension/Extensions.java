@@ -17,7 +17,6 @@ package consulo.component.extension;
 
 import consulo.annotation.DeprecationInfo;
 import consulo.component.ComponentManager;
-import consulo.component.extension.internal.RootComponentHolder;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -25,11 +24,6 @@ import javax.annotation.Nullable;
 @DeprecationInfo("Use com.intellij.openapi.extensions.ExtensionPointName")
 public class Extensions {
   private Extensions() {
-  }
-  @Nonnull
-  @Deprecated
-  public static Object[] getExtensions(@Nonnull String extensionPointName) {
-    return getExtensions(extensionPointName, null);
   }
 
   @Nonnull
@@ -44,25 +38,5 @@ public class Extensions {
   @Deprecated
   public static <T> T[] getExtensions(@Nonnull ExtensionPointName<T> extensionPointName, @Nullable ComponentManager areaInstance) {
     return areaInstance == null ? getExtensions(extensionPointName) : areaInstance.getExtensions(extensionPointName);
-  }
-
-  @Nonnull
-  @Deprecated
-  public static <T> T[] getExtensions(String extensionPointName, @Nullable ComponentManager target) {
-    ComponentManager componentManager = target == null ? RootComponentHolder.getRootComponent() : target;
-    ExtensionPoint<T> extensionPoint = componentManager.getExtensionPoint(ExtensionPointName.create(extensionPointName));
-    return extensionPoint.getExtensions();
-  }
-
-  @Nonnull
-  @Deprecated
-  public static <T, U extends T> U findExtension(@Nonnull ExtensionPointName<T> extensionPointName, @Nonnull Class<U> extClass) {
-    return extensionPointName.findExtensionOrFail(extClass);
-  }
-
-  @Nonnull
-  @Deprecated
-  public static <T, U extends T> U findExtension(@Nonnull ExtensionPointName<T> extensionPointName, ComponentManager componentManager, @Nonnull Class<U> extClass) {
-    return extensionPointName.findExtensionOrFail(componentManager, extClass);
   }
 }

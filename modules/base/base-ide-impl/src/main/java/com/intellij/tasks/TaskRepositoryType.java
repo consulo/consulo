@@ -15,18 +15,18 @@
  */
 package com.intellij.tasks;
 
-import java.util.Arrays;
-import java.util.EnumSet;
-import java.util.List;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
-import consulo.component.extension.ExtensionPointName;
 import com.intellij.openapi.project.Project;
 import com.intellij.tasks.config.TaskRepositoryEditor;
 import com.intellij.util.Consumer;
+import consulo.component.extension.ExtensionPointName;
+import consulo.container.plugin.PluginIds;
 import consulo.ui.image.Image;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.Arrays;
+import java.util.EnumSet;
+import java.util.List;
 
 /**
  * The main extension point for issue tracking integration.
@@ -35,7 +35,7 @@ import consulo.ui.image.Image;
  */
 public abstract class TaskRepositoryType<T extends TaskRepository> implements TaskRepositorySubtype {
 
-  public static final ExtensionPointName<TaskRepositoryType> EP_NAME = new ExtensionPointName<TaskRepositoryType>("com.intellij.tasks.repositoryType");
+  public static final ExtensionPointName<TaskRepositoryType> EP_NAME = ExtensionPointName.create(PluginIds.CONSULO_BASE + ".tasks.repositoryType");
   
   public static TaskRepositoryType[] getRepositoryTypes() {
     return EP_NAME.getExtensions();

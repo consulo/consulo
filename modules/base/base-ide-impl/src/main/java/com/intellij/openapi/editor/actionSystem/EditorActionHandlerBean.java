@@ -29,7 +29,7 @@ import consulo.logging.Logger;
 public class EditorActionHandlerBean extends AbstractExtensionPointBean {
   private static final Logger LOG = Logger.getInstance(EditorActionHandlerBean.class);
 
-  public static final ExtensionPointName<EditorActionHandlerBean> EP_NAME = ExtensionPointName.create("com.intellij.editorActionHandler");
+  public static final ExtensionPointName<EditorActionHandlerBean> EP_NAME = ExtensionPointName.create("consulo.base.editorActionHandler");
 
   // these must be public for scrambling compatibility
   @Attribute("action")

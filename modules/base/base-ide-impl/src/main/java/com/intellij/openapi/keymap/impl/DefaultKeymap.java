@@ -15,6 +15,7 @@
  */
 package com.intellij.openapi.keymap.impl;
 
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.keymap.Keymap;
 import com.intellij.openapi.keymap.KeymapManager;
@@ -46,8 +47,8 @@ public class DefaultKeymap {
     return ServiceManager.getService(DefaultKeymap.class);
   }
 
-  public DefaultKeymap() {
-    for (BundledKeymapEP bundledKeymapEP : BundledKeymapEP.EP_NAME.getExtensionList()) {
+  public DefaultKeymap(@Nonnull Application application) {
+    for (BundledKeymapEP bundledKeymapEP : BundledKeymapEP.EP_NAME.getExtensionList(application)) {
       try {
         String file = bundledKeymapEP.file;
         if (!file.endsWith(".xml")) {

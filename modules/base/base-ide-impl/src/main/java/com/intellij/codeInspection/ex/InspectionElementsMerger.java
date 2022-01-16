@@ -27,7 +27,7 @@ import java.util.*;
  * Merges multiple inspections settings {@link #getSourceToolNames()} into another one {@link #getMergedToolName()}
  */
 public abstract class InspectionElementsMerger {
-  public static final ExtensionPointName<InspectionElementsMerger> EP_NAME = ExtensionPointName.create("com.intellij.inspectionElementsMerger");
+  public static final ExtensionPointName<InspectionElementsMerger> EP_NAME = ExtensionPointName.create("consulo.base.inspectionElementsMerger");
 
   protected abstract String   getMergedToolName();
   protected abstract String[] getSourceToolNames();

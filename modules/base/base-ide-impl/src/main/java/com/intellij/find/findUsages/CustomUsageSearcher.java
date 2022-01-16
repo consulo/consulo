@@ -25,7 +25,7 @@ import com.intellij.util.Processor;
  * @author gregsh
  */
 public abstract class CustomUsageSearcher {
-  public static final ExtensionPointName<CustomUsageSearcher> EP_NAME = ExtensionPointName.create("com.intellij.customUsageSearcher");
+  public static final ExtensionPointName<CustomUsageSearcher> EP_NAME = ExtensionPointName.create("consulo.base.customUsageSearcher");
 
   public abstract void processElementUsages(final PsiElement element, final Processor<Usage> processor, final FindUsagesOptions options);
 }

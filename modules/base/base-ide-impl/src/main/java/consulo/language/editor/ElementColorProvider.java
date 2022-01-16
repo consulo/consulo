@@ -28,7 +28,7 @@ import javax.annotation.Nullable;
  * @author Konstantin Bulenkov
  */
 public interface ElementColorProvider {
-  ExtensionPointName<ElementColorProvider> EP_NAME = ExtensionPointName.create("com.intellij.colorProvider");
+  ExtensionPointName<ElementColorProvider> EP_NAME = ExtensionPointName.create("consulo.base.colorProvider");
 
   @Nullable
   @RequiredReadAction

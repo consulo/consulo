@@ -32,8 +32,8 @@ import java.util.ArrayList;
  * @see PathReferenceProvider
  */
 public abstract class PathReferenceManager {
-  public static final ExtensionPointName<PathReferenceProvider> PATH_REFERENCE_PROVIDER_EP = ExtensionPointName.create("com.intellij.pathReferenceProvider");
-  public static final ExtensionPointName<PathReferenceProvider> ANCHOR_REFERENCE_PROVIDER_EP = ExtensionPointName.create("com.intellij.anchorReferenceProvider");
+  public static final ExtensionPointName<PathReferenceProvider> PATH_REFERENCE_PROVIDER_EP = ExtensionPointName.create("consulo.base.pathReferenceProvider");
+  public static final ExtensionPointName<PathReferenceProvider> ANCHOR_REFERENCE_PROVIDER_EP = ExtensionPointName.create("consulo.base.anchorReferenceProvider");
 
   @Nonnull
   public static PathReferenceManager getInstance(){

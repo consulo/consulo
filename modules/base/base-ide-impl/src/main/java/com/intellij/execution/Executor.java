@@ -31,7 +31,7 @@ import javax.annotation.Nullable;
  * @author spleaner
  */
 public abstract class Executor {
-  public static final ExtensionPointName<Executor> EP_NAME = ExtensionPointName.create("com.intellij.executor");
+  public static final ExtensionPointName<Executor> EP_NAME = ExtensionPointName.create("consulo.base.executor");
 
   public abstract String getToolWindowId();
 

@@ -36,7 +36,7 @@ public interface ExternalSystemManager<
   extends ParametersEnhancer
 {
   
-  ExtensionPointName<ExternalSystemManager> EP_NAME = ExtensionPointName.create("com.intellij.externalSystemManager");
+  ExtensionPointName<ExternalSystemManager> EP_NAME = ExtensionPointName.create("consulo.base.externalSystemManager");
   
   /**
    * @return    id of the external system represented by the current manager

@@ -28,7 +28,7 @@ import javax.annotation.Nonnull;
  * @since 144
  */
 public abstract class PreloadingActivity {
-  public static final ExtensionPointName<PreloadingActivity> EP_NAME = ExtensionPointName.create("com.intellij.preloadingActivity");
+  public static final ExtensionPointName<PreloadingActivity> EP_NAME = ExtensionPointName.create("consulo.base.preloadingActivity");
 
   /**
    * Perform the preloading

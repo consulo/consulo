@@ -21,15 +21,16 @@ package com.intellij.lang;
 
 import com.intellij.lang.documentation.CompositeDocumentationProvider;
 import com.intellij.lang.documentation.DocumentationProvider;
-import javax.annotation.Nonnull;
+import consulo.container.plugin.PluginIds;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 public class LanguageDocumentation extends LanguageExtension<DocumentationProvider> {
   public static final LanguageDocumentation INSTANCE = new LanguageDocumentation();
 
   private LanguageDocumentation() {
-    super("com.intellij.lang.documentationProvider");
+    super(PluginIds.CONSULO_BASE + ".lang.documentationProvider");
   }
 
   @Override

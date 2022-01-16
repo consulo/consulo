@@ -21,13 +21,15 @@ package com.intellij.lang;
 
 import com.intellij.ide.structureView.StructureViewBuilder;
 import com.intellij.psi.PsiFile;
+import consulo.container.plugin.PluginIds;
+
 import javax.annotation.Nullable;
 
 public class LanguageStructureViewBuilder extends LanguageExtension<PsiStructureViewFactory>{
   public static final LanguageStructureViewBuilder INSTANCE = new LanguageStructureViewBuilder();
 
   private LanguageStructureViewBuilder() {
-    super(PsiStructureViewFactory.EP_NAME);
+    super(PluginIds.CONSULO_BASE + ".lang.psiStructureViewFactory");
   }
 
   @Nullable

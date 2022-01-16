@@ -17,6 +17,7 @@
 package com.intellij.psi;
 
 import com.intellij.lang.LanguageExtension;
+import consulo.container.plugin.PluginIds;
 
 /**
  * @author yole
@@ -25,6 +26,6 @@ public class LanguageFileViewProviders extends LanguageExtension<FileViewProvide
   public static final LanguageFileViewProviders INSTANCE = new LanguageFileViewProviders();
 
   private LanguageFileViewProviders() {
-    super("com.intellij.lang.fileViewProviderFactory");
+    super(PluginIds.CONSULO_BASE + ".lang.fileViewProviderFactory");
   }
 }

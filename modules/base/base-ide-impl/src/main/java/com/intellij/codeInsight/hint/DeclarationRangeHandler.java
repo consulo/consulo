@@ -28,7 +28,7 @@ import javax.annotation.Nonnull;
  * parameter list.
  */
 public interface DeclarationRangeHandler<T extends PsiElement>{
-  ExtensionPointName<MixinEP<DeclarationRangeHandler>> EP_NAME = ExtensionPointName.create("com.intellij.declarationRangeHandler");
+  ExtensionPointName<MixinEP<DeclarationRangeHandler>> EP_NAME = ExtensionPointName.create("consulo.base.declarationRangeHandler");
 
   /**
    * Returns the declaration range for the specified container.

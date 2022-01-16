@@ -17,12 +17,13 @@ package com.intellij.refactoring.changeSignature.inplace;
 
 import com.intellij.lang.LanguageExtension;
 import com.intellij.refactoring.changeSignature.ChangeInfo;
+import consulo.container.plugin.PluginIds;
 
 public class LanguageChangeSignatureDetectors extends LanguageExtension<LanguageChangeSignatureDetector<ChangeInfo>> {
   public static final LanguageChangeSignatureDetectors INSTANCE = new LanguageChangeSignatureDetectors();
 
   LanguageChangeSignatureDetectors() {
-    super("com.intellij.changeSignatureDetector");
+    super(PluginIds.CONSULO_BASE + ".changeSignatureDetector");
   }
 
 }

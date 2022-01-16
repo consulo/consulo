@@ -61,6 +61,7 @@ import consulo.components.impl.stores.StoreUtil;
 import consulo.container.boot.ContainerPathManager;
 import consulo.container.plugin.ComponentConfig;
 import consulo.container.plugin.PluginDescriptor;
+import consulo.container.plugin.PluginIds;
 import consulo.container.plugin.PluginListenerDescriptor;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
@@ -167,7 +168,7 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
   public static final boolean USE_SEPARATE_WRITE_THREAD = Boolean.getBoolean("idea.use.separate.write.thread");
 
   private static final Logger LOG = Logger.getInstance(BaseApplication.class);
-  private static final ExtensionPointId<ServiceDescriptor> APP_SERVICES = ExtensionPointId.of("com.intellij.applicationService");
+  private static final ExtensionPointId<ServiceDescriptor> APP_SERVICES = ExtensionPointId.of(PluginIds.CONSULO_BASE + ".applicationService");
 
   private static final int ourDumpThreadsOnLongWriteActionWaiting = Integer.getInteger("dump.threads.on.long.write.action.waiting", 0);
 

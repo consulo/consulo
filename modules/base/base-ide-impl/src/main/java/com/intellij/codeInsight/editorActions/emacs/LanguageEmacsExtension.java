@@ -16,17 +16,17 @@
 package com.intellij.codeInsight.editorActions.emacs;
 
 import com.intellij.lang.LanguageExtension;
+import consulo.container.plugin.PluginIds;
 
 /**
  * @author Denis Zhdanov
  * @since 4/11/11 2:21 PM
  */
 public class LanguageEmacsExtension extends LanguageExtension<EmacsProcessingHandler> {
-  
-  public static final String EP_NAME = "com.intellij.lang.emacs";
+
   public static final LanguageEmacsExtension INSTANCE = new LanguageEmacsExtension();
 
   public LanguageEmacsExtension() {
-    super(EP_NAME, new DefaultEmacsProcessingHandler());
+    super(PluginIds.CONSULO_BASE + ".lang.emacs", new DefaultEmacsProcessingHandler());
   }
 }

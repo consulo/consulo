@@ -15,15 +15,18 @@
  */
 package com.intellij.openapi.editor.colors.impl;
 
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.extensions.AbstractExtensionPointBean;
-import consulo.component.extension.ExtensionPointName;
 import com.intellij.util.xmlb.annotations.Attribute;
+import consulo.component.extension.Extension;
+import consulo.component.extension.ExtensionList;
 
 /**
  * @author yole
  */
+@Extension(name = "bundledColorScheme", component = Application.class)
 public class BundledColorSchemeEP extends AbstractExtensionPointBean {
-  public static final ExtensionPointName<BundledColorSchemeEP> EP_NAME = ExtensionPointName.create("com.intellij.bundledColorScheme");
+  public static final ExtensionList<BundledColorSchemeEP, Application> EP = ExtensionList.of(BundledColorSchemeEP.class);
 
   @Attribute("path")
   public String path;

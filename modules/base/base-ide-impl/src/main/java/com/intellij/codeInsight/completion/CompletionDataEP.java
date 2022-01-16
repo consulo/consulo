@@ -25,7 +25,7 @@ import com.intellij.util.xmlb.annotations.Attribute;
  * @author yole
  */
 public class CompletionDataEP extends AbstractExtensionPointBean {
-  public static final ExtensionPointName<CompletionDataEP> EP_NAME = ExtensionPointName.create("com.intellij.completionData");
+  public static final ExtensionPointName<CompletionDataEP> EP_NAME = ExtensionPointName.create("consulo.base.completionData");
 
   // these must be public for scrambling compatibility
   @Attribute("fileType")

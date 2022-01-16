@@ -30,7 +30,7 @@ import javax.annotation.Nonnull;
  * @author Dmitry Avdeev
  */
 public interface StartupActivity {
-  ExtensionPointName<StartupActivity> POST_STARTUP_ACTIVITY = ExtensionPointName.create("com.intellij.postStartupActivity");
+  ExtensionPointName<StartupActivity> POST_STARTUP_ACTIVITY = ExtensionPointName.create("consulo.base.postStartupActivity");
 
   /**
    * <p>Executed some time after startup on a background thread with no visible progress indicator. Such activities may produce
@@ -42,7 +42,7 @@ public interface StartupActivity {
    * immediately when this happens, so if you need to access other components, you're responsible for doing this in a
    * thread-safe way (e.g. by taking a read action to collect all the state you need).</p>
    */
-  ExtensionPointName<StartupActivity.Background> BACKGROUND_POST_STARTUP_ACTIVITY = ExtensionPointName.create("com.intellij.backgroundPostStartupActivity");
+  ExtensionPointName<StartupActivity.Background> BACKGROUND_POST_STARTUP_ACTIVITY = ExtensionPointName.create("consulo.base.backgroundPostStartupActivity");
 
   interface DumbAware extends StartupActivity, com.intellij.openapi.project.DumbAware {
   }

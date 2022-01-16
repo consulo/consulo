@@ -37,7 +37,7 @@ import java.util.List;
 import java.util.Map;
 
 final class PsiChangeHandler extends PsiTreeChangeAdapter implements Disposable {
-  private static final ExtensionPointName<ChangeLocalityDetector> EP_NAME = ExtensionPointName.create("com.intellij.daemon.changeLocalityDetector");
+  private static final ExtensionPointName<ChangeLocalityDetector> EP_NAME = ExtensionPointName.create("consulo.base.daemon.changeLocalityDetector");
   private /*NOT STATIC!!!*/ final Key<Boolean> UPDATE_ON_COMMIT_ENGAGED = Key.create("UPDATE_ON_COMMIT_ENGAGED");
 
   private final Project myProject;

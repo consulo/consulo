@@ -20,7 +20,8 @@
       <with attribute="implementationClass" implements="com.intellij.codeInsight.template.postfix.templates.PostfixTemplateProvider"/>
     </extensionPoint>
   </extensionPoints>
-  <extensions defaultExtensionNs="com.intellij">
+
+  <extensions defaultExtensionNs="consulo.base">
     <!-- Postfix templates -->
     <applicationService id="postfixCompletionSettings" serviceImplementation="com.intellij.codeInsight.template.postfix.settings.PostfixTemplatesSettings"/>
     <customLiveTemplate implementation="com.intellij.codeInsight.template.postfix.templates.PostfixLiveTemplate"/>

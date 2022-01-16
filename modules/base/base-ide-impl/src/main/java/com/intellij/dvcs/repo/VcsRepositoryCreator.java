@@ -26,7 +26,7 @@ import javax.annotation.Nonnull;
  */
 public abstract class VcsRepositoryCreator {
   @NonNls public static final ExtensionPointName<VcsRepositoryCreator> EXTENSION_POINT_NAME =
-          ExtensionPointName.create("com.intellij.vcsRepositoryCreator");
+          ExtensionPointName.create("consulo.base.vcsRepositoryCreator");
 
   @javax.annotation.Nullable
   public abstract Repository createRepositoryIfValid(@Nonnull VirtualFile root);

@@ -29,7 +29,7 @@ import javax.annotation.Nullable;
  * Implement {@link com.intellij.openapi.project.DumbAware} interface to allow implementation to be called in dumb mode
  */
 public abstract class DefaultHighlightingSettingProvider {
-  public static final ExtensionPointName<DefaultHighlightingSettingProvider> EP_NAME = ExtensionPointName.create("com.intellij.defaultHighlightingSettingProvider");
+  public static final ExtensionPointName<DefaultHighlightingSettingProvider> EP_NAME = ExtensionPointName.create("consulo.base.defaultHighlightingSettingProvider");
 
   @Nullable
   public abstract FileHighlightingSetting getDefaultSetting(@Nonnull Project project, @Nonnull VirtualFile file);

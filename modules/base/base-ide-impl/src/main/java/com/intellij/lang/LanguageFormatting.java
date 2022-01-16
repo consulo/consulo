@@ -22,6 +22,7 @@ package com.intellij.lang;
 import com.intellij.formatting.CustomFormattingModelBuilder;
 import com.intellij.formatting.FormattingModelBuilder;
 import com.intellij.psi.PsiElement;
+import consulo.container.plugin.PluginIds;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -30,7 +31,7 @@ public class LanguageFormatting extends LanguageExtension<FormattingModelBuilder
   public static final LanguageFormatting INSTANCE = new LanguageFormatting();
 
   private LanguageFormatting() {
-    super("com.intellij.lang.formatter");
+    super(PluginIds.CONSULO_BASE + ".lang.formatter");
   }
 
   @Nullable

@@ -11,7 +11,7 @@ import com.intellij.util.io.KeyDescriptor;
 import javax.annotation.Nonnull;
 
 public interface StubIndexExtension<Key, Psi extends PsiElement> {
-  ExtensionPointName<StubIndexExtension<?, ?>> EP_NAME = ExtensionPointName.create("com.intellij.stubIndex");
+  ExtensionPointName<StubIndexExtension<?, ?>> EP_NAME = ExtensionPointName.create("consulo.base.stubIndex");
 
   @Nonnull
   StubIndexKey<Key, Psi> getKey();

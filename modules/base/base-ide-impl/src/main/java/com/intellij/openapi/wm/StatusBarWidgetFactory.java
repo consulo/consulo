@@ -1,10 +1,12 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.openapi.wm;
 
-import consulo.component.extension.ExtensionPointName;
 import com.intellij.openapi.project.Project;
+import consulo.component.extension.ExtensionPointName;
+import consulo.container.plugin.PluginIds;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 
 /**
@@ -15,7 +17,7 @@ import javax.annotation.Nonnull;
  * Prohibiting the widget for the main IDE could be done in the {@link StatusBarWidgetFactory#isAvailable(Project)} method.
  */
 public interface StatusBarWidgetFactory {
-  ExtensionPointName<StatusBarWidgetFactory> EP_NAME = new ExtensionPointName<>("com.intellij.statusBarWidgetFactory");
+  ExtensionPointName<StatusBarWidgetFactory> EP_NAME = new ExtensionPointName<>(PluginIds.CONSULO_BASE + ".statusBarWidgetFactory");
 
   /**
    * @return Widget identifier. Used to store visibility settings.

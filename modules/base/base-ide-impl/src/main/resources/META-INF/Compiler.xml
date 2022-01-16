@@ -26,7 +26,7 @@
     <extensionPoint name="compiler.afterTask" interface="com.intellij.openapi.compiler.CompileTask"/>
   </extensionPoints>
 
-  <extensions defaultExtensionNs="com.intellij">
+  <extensions defaultExtensionNs="consulo.base">
     <packaging.elementType implementation="com.intellij.packaging.impl.elements.DirectoryElementType"/>
     <packaging.elementType implementation="com.intellij.packaging.impl.elements.FileCopyElementType"/>
     <packaging.elementType implementation="com.intellij.packaging.impl.elements.DirectoryCopyElementType"/>

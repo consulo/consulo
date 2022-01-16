@@ -29,7 +29,7 @@ import static com.intellij.psi.codeStyle.CommonCodeStyleSettings.IndentOptions;
  */
 public abstract class FileIndentOptionsProvider {
 
-  public final static ExtensionPointName<FileIndentOptionsProvider> EP_NAME = ExtensionPointName.create("com.intellij.fileIndentOptionsProvider");
+  public final static ExtensionPointName<FileIndentOptionsProvider> EP_NAME = ExtensionPointName.create("consulo.base.fileIndentOptionsProvider");
 
   /**
    * Retrieves indent options for PSI file.

@@ -33,7 +33,7 @@ import java.io.InputStream;
 public class PredefinedCopyrightTextEP extends AbstractExtensionPointBean {
   private static final Logger LOG = Logger.getInstance(PredefinedCopyrightTextEP.class);
 
-  public static final ExtensionPointName<PredefinedCopyrightTextEP> EP_NAME = ExtensionPointName.create("com.intellij.predefinedCopyright");
+  public static final ExtensionPointName<PredefinedCopyrightTextEP> EP_NAME = ExtensionPointName.create("consulo.base.predefinedCopyright");
   @Attribute("name")
   public String name;
   @Attribute("file")

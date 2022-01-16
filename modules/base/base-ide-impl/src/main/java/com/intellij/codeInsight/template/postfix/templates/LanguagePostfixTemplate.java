@@ -18,8 +18,9 @@ package com.intellij.codeInsight.template.postfix.templates;
 import com.intellij.lang.Language;
 import com.intellij.lang.LanguageExtension;
 import com.intellij.lang.LanguageExtensionPoint;
-import consulo.component.extension.ExtensionPointName;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.component.extension.ExtensionPointName;
+import consulo.container.plugin.PluginIds;
 
 import javax.annotation.Nonnull;
 import java.util.List;
@@ -27,12 +28,11 @@ import java.util.Set;
 
 public class LanguagePostfixTemplate extends LanguageExtension<PostfixTemplateProvider> {
   public static final LanguagePostfixTemplate LANG_EP = new LanguagePostfixTemplate();
-  private static final String EP_ID = "com.intellij.codeInsight.template.postfixTemplateProvider";
 
-  public static final ExtensionPointName<LanguageExtensionPoint> EP_NAME = ExtensionPointName.create(EP_ID);
+  public static final ExtensionPointName<LanguageExtensionPoint> EP_NAME = ExtensionPointName.create(PluginIds.CONSULO_BASE + ".codeInsight.template.postfixTemplateProvider");
 
   private LanguagePostfixTemplate() {
-    super(EP_ID);
+    super(PluginIds.CONSULO_BASE + ".codeInsight.template.postfixTemplateProvider");
   }
 
   @Nonnull

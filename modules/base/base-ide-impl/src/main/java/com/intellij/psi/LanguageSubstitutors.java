@@ -20,6 +20,7 @@ import com.intellij.lang.Language;
 import com.intellij.lang.LanguageExtension;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
+import consulo.container.plugin.PluginIds;
 import consulo.logging.Logger;
 import com.intellij.openapi.project.Project;
 import consulo.util.dataholder.Key;
@@ -38,7 +39,7 @@ public final class LanguageSubstitutors extends LanguageExtension<LanguageSubsti
   private static final Key<Boolean> REPARSING_SCHEDULED = Key.create("REPARSING_SCHEDULED");
 
   private LanguageSubstitutors() {
-    super("com.intellij.lang.substitutor");
+    super(PluginIds.CONSULO_BASE + ".lang.substitutor");
   }
 
   @Nonnull

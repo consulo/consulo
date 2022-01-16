@@ -34,7 +34,7 @@ import javax.annotation.Nullable;
 public class ToolWindowEP extends ExtensionPointBeanWithModuleExtensionCondition {
   private static final Logger LOG = Logger.getInstance(ToolWindowEP.class);
 
-  public static final ExtensionPointName<ToolWindowEP> EP_NAME = ExtensionPointName.create("com.intellij.toolWindow");
+  public static final ExtensionPointName<ToolWindowEP> EP_NAME = ExtensionPointName.create("consulo.base.toolWindow");
 
   @Attribute("id")
   public String id;

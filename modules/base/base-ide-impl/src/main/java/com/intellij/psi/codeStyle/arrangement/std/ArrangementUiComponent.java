@@ -123,7 +123,7 @@ public interface ArrangementUiComponent {
   boolean alwaysCanBeActive();
 
   interface Factory {
-    ExtensionPointName<Factory> EP_NAME = ExtensionPointName.create("com.intellij.rearranger.ui");
+    ExtensionPointName<Factory> EP_NAME = ExtensionPointName.create("consulo.base.rearranger.ui");
 
     @Nullable
     ArrangementUiComponent build(@Nonnull StdArrangementTokenUiRole role,

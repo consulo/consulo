@@ -23,7 +23,8 @@
                     interface="com.intellij.openapi.vcs.changes.actions.diff.ChangeDiffViewerWrapperProvider"/>
     <extensionPoint name="diff.DiffExtension" interface="com.intellij.diff.DiffExtension"/>
   </extensionPoints>
-  <extensions defaultExtensionNs="com.intellij">
+
+  <extensions defaultExtensionNs="consulo.base">
     <applicationService serviceInterface="com.intellij.diff.impl.DiffSettingsHolder"
                         serviceImplementation="com.intellij.diff.impl.DiffSettingsHolder"/>
     <applicationService serviceInterface="com.intellij.diff.tools.util.base.TextDiffSettingsHolder"

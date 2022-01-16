@@ -25,7 +25,7 @@ import javax.annotation.Nullable;
  * @author nik
  */
 public abstract class LocalFileFinder {
-  public static final ExtensionPointName<LocalFileFinder> EP_NAME = ExtensionPointName.create("com.intellij.http.localFileFinder");
+  public static final ExtensionPointName<LocalFileFinder> EP_NAME = ExtensionPointName.create("consulo.base.http.localFileFinder");
 
   @Nullable
   public abstract VirtualFile findLocalFile(@Nonnull String url, @Nonnull Project project);

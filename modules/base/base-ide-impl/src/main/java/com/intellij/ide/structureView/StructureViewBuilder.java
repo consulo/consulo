@@ -34,7 +34,7 @@ import javax.annotation.Nonnull;
  */
 
 public interface StructureViewBuilder {
-  ExtensionPointName<KeyedFactoryEPBean> EP_NAME = ExtensionPointName.create("com.intellij.structureViewBuilder");
+  ExtensionPointName<KeyedFactoryEPBean> EP_NAME = ExtensionPointName.create("consulo.base.structureViewBuilder");
 
   StructureViewBuilderProvider PROVIDER = new FileTypeExtensionFactory<>(StructureViewBuilderProvider.class, EP_NAME).get();
 

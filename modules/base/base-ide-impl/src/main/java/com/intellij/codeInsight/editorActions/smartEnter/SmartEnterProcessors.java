@@ -17,6 +17,7 @@
 package com.intellij.codeInsight.editorActions.smartEnter;
 
 import com.intellij.lang.LanguageExtension;
+import consulo.container.plugin.PluginIds;
 
 /**
  * @author spleaner
@@ -26,6 +27,6 @@ public class SmartEnterProcessors extends LanguageExtension<SmartEnterProcessor>
   public static final SmartEnterProcessors INSTANCE = new SmartEnterProcessors();
 
   public SmartEnterProcessors() {
-    super("com.intellij.lang.smartEnterProcessor");
+    super(PluginIds.CONSULO_BASE + ".lang.smartEnterProcessor");
   }
 }

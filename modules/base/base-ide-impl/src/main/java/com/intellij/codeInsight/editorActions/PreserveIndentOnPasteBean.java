@@ -22,7 +22,7 @@ import com.intellij.util.xmlb.annotations.Attribute;
  * @author yole
  */
 public class PreserveIndentOnPasteBean {
-  public static final ExtensionPointName<PreserveIndentOnPasteBean> EP_NAME = ExtensionPointName.create("com.intellij.preserveIndentOnPaste");
+  public static final ExtensionPointName<PreserveIndentOnPasteBean> EP_NAME = ExtensionPointName.create("consulo.base.preserveIndentOnPaste");
 
   @Attribute("fileType")
   public String fileType;

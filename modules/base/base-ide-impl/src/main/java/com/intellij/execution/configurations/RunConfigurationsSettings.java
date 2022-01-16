@@ -20,7 +20,7 @@ import com.intellij.openapi.options.UnnamedConfigurable;
 import javax.annotation.Nonnull;
 
 public interface RunConfigurationsSettings {
-  ExtensionPointName<RunConfigurationsSettings> EXTENSION_POINT = ExtensionPointName.create("com.intellij.runConfigurationsSettings");
+  ExtensionPointName<RunConfigurationsSettings> EXTENSION_POINT = ExtensionPointName.create("consulo.base.runConfigurationsSettings");
 
   @Nonnull
   UnnamedConfigurable createConfigurable();

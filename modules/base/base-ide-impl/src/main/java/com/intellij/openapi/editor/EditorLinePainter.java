@@ -27,7 +27,7 @@ import java.util.Collection;
  * @author Konstantin Bulenkov
  */
 public abstract class EditorLinePainter {
-  public static final ExtensionPointName<EditorLinePainter> EP_NAME = ExtensionPointName.create("com.intellij.editor.linePainter");
+  public static final ExtensionPointName<EditorLinePainter> EP_NAME = ExtensionPointName.create("consulo.base.editor.linePainter");
 
   @Nullable
   public abstract Collection<LineExtensionInfo> getLineExtensions(@Nonnull Project project, @Nonnull VirtualFile file, int lineNumber);

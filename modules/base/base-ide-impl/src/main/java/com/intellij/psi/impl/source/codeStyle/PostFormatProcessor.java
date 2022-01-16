@@ -23,7 +23,7 @@ import com.intellij.psi.codeStyle.CodeStyleSettings;
 import javax.annotation.Nonnull;
 
 public interface PostFormatProcessor {
-  ExtensionPointName<PostFormatProcessor> EP_NAME = ExtensionPointName.create("com.intellij.postFormatProcessor");
+  ExtensionPointName<PostFormatProcessor> EP_NAME = ExtensionPointName.create("consulo.base.postFormatProcessor");
 
   PsiElement processElement(@Nonnull PsiElement source, @Nonnull CodeStyleSettings settings);
   TextRange processText(@Nonnull PsiFile source, @Nonnull TextRange rangeToReformat, @Nonnull CodeStyleSettings settings);

@@ -30,7 +30,7 @@ import com.intellij.ui.ColoredTreeCellRenderer;
  * interface need to be registered as project components.
  */
 public interface ChangeListDecorator {
-  ExtensionPointName<ChangeListDecorator> EP_NAME = ExtensionPointName.create("com.intellij.changeListDecorator");
+  ExtensionPointName<ChangeListDecorator> EP_NAME = ExtensionPointName.create("consulo.base.changeListDecorator");
 
   void decorateChangeList(LocalChangeList changeList, ColoredTreeCellRenderer cellRenderer, boolean selected, boolean expanded, boolean hasFocus);
 }

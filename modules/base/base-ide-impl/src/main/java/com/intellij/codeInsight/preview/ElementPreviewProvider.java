@@ -25,7 +25,7 @@ import javax.annotation.Nullable;
 import java.awt.*;
 
 public interface ElementPreviewProvider {
-  ExtensionPointName<ElementPreviewProvider> EP_NAME = ExtensionPointName.create("com.intellij.elementPreviewProvider");
+  ExtensionPointName<ElementPreviewProvider> EP_NAME = ExtensionPointName.create("consulo.base.elementPreviewProvider");
 
   boolean isSupportedFile(@Nonnull PsiFile psiFile);
 

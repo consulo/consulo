@@ -19,6 +19,7 @@ package com.intellij.codeInsight.hints;
 import com.intellij.lang.Language;
 import com.intellij.lang.LanguageExtension;
 import com.intellij.psi.PsiElement;
+import consulo.container.plugin.PluginIds;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -29,7 +30,7 @@ import java.util.Set;
  * convert from kotlin
  */
 public interface InlayParameterHintsProvider {
-  LanguageExtension<InlayParameterHintsProvider> EP = new LanguageExtension<>("com.intellij.codeInsight.parameterNameHints");
+  LanguageExtension<InlayParameterHintsProvider> EP = new LanguageExtension<>(PluginIds.CONSULO_BASE + ".codeInsight.parameterNameHints");
 
   /**
    * Hints for params to be shown

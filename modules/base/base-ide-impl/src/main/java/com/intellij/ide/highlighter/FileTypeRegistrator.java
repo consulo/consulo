@@ -19,7 +19,7 @@ import com.intellij.openapi.fileTypes.FileType;
 import consulo.component.extension.ExtensionPointName;
 
 public interface FileTypeRegistrator {
-  ExtensionPointName<FileTypeRegistrator> EP_NAME = ExtensionPointName.create("com.intellij.fileTypeRegistrator");
+  ExtensionPointName<FileTypeRegistrator> EP_NAME = ExtensionPointName.create("consulo.base.fileTypeRegistrator");
 
   void initFileType(FileType fileType);
 }

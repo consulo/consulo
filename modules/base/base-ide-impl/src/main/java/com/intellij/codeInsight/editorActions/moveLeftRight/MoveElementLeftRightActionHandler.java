@@ -86,7 +86,7 @@ public class MoveElementLeftRightActionHandler extends EditorWriteActionHandler 
     if (endElement == null) return null;
     PsiElement element = PsiTreeUtil.findCommonParent(startElement, endElement);
     while (element != null) {
-      List<MoveElementLeftRightHandler> handlers = MoveElementLeftRightHandler.EXTENSION.allForLanguage(element.getLanguage());
+      List<MoveElementLeftRightHandler> handlers = MoveElementLeftRightHandler.EP.allForLanguage(element.getLanguage());
       for (MoveElementLeftRightHandler handler : handlers) {
         PsiElement[] elementList = handler.getMovableSubElements(element);
         if (elementList.length > 1) {

@@ -19,6 +19,7 @@ import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.tree.IElementType;
 import consulo.annotation.access.RequiredReadAction;
+import consulo.container.plugin.PluginIds;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -29,7 +30,7 @@ import java.util.function.Predicate;
  * @since 17:38/30.03.13
  */
 public interface PsiElementFactory extends Predicate<IElementType> {
-  ElementTypeEntryExtensionCollector<PsiElementFactory> EP = ElementTypeEntryExtensionCollector.create("com.intellij.lang.psi.elementFactory");
+  ElementTypeEntryExtensionCollector<PsiElementFactory> EP = ElementTypeEntryExtensionCollector.create(PluginIds.CONSULO_BASE + ".lang.psi.elementFactory");
 
   @Nullable
   @RequiredReadAction

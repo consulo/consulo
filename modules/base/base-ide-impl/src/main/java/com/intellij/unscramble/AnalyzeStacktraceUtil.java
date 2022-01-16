@@ -53,7 +53,7 @@ import java.awt.datatransfer.DataFlavor;
  * @author yole
  */
 public class AnalyzeStacktraceUtil {
-  public static final ExtensionPointName<Filter> EP_NAME = ExtensionPointName.create("com.intellij.analyzeStacktraceFilter");
+  public static final ExtensionPointName<Filter> EP_NAME = ExtensionPointName.create("consulo.base.analyzeStacktraceFilter");
 
   private AnalyzeStacktraceUtil() {
   }

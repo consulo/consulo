@@ -15,7 +15,7 @@ import javax.annotation.Nullable;
  * @see com.intellij.psi.impl.cache.impl.todo.LexerBasedTodoIndexer
  */
 public interface IndexPatternBuilder {
-  ExtensionPointName<IndexPatternBuilder> EP_NAME = ExtensionPointName.create("com.intellij.indexPatternBuilder");
+  ExtensionPointName<IndexPatternBuilder> EP_NAME = ExtensionPointName.create("consulo.base.indexPatternBuilder");
 
   @Nullable
   Lexer getIndexingLexer(@Nonnull PsiFile file);

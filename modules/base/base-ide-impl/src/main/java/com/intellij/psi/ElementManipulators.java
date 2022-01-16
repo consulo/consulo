@@ -17,6 +17,7 @@ package com.intellij.psi;
 
 import com.intellij.openapi.util.ClassExtension;
 import com.intellij.openapi.util.TextRange;
+import consulo.container.plugin.PluginIds;
 import consulo.logging.Logger;
 
 import javax.annotation.Nonnull;
@@ -26,14 +27,12 @@ import javax.annotation.Nonnull;
  */
 public class ElementManipulators extends ClassExtension<ElementManipulator> {
 
-  public static final String EP_NAME = "com.intellij.lang.elementManipulator";
   public static final ElementManipulators INSTANCE = new ElementManipulators();
-
 
   private static final Logger LOG = Logger.getInstance(ElementManipulators.class);
 
   private ElementManipulators() {
-    super(EP_NAME);
+    super(PluginIds.CONSULO_BASE + ".lang.elementManipulator");
   }
 
   /**

@@ -32,7 +32,7 @@ import javax.annotation.Nullable;
 public class ChangesViewContentEP implements PluginAware {
   private static final Logger LOG = Logger.getInstance(ChangesViewContentEP.class);
 
-  public static final ExtensionPointName<ChangesViewContentEP> EP_NAME = ExtensionPointName.create("com.intellij.changesViewContent");
+  public static final ExtensionPointName<ChangesViewContentEP> EP_NAME = ExtensionPointName.create("consulo.base.changesViewContent");
 
   @Attribute("tabName") public String tabName;
 

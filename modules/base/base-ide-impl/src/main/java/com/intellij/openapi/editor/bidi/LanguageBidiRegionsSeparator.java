@@ -17,6 +17,8 @@ package com.intellij.openapi.editor.bidi;
 
 import com.intellij.lang.LanguageExtension;
 import com.intellij.psi.tree.IElementType;
+import consulo.container.plugin.PluginIds;
+
 import javax.annotation.Nonnull;
 
 /**
@@ -26,7 +28,7 @@ public class LanguageBidiRegionsSeparator extends LanguageExtension<BidiRegionsS
   public static final LanguageBidiRegionsSeparator INSTANCE = new LanguageBidiRegionsSeparator();
 
   private LanguageBidiRegionsSeparator() {
-    super("com.intellij.bidiRegionsSeparator", new BidiRegionsSeparator() {
+    super(PluginIds.CONSULO_BASE + ".bidiRegionsSeparator", new BidiRegionsSeparator() {
       @Override
       public boolean createBorderBetweenTokens(@Nonnull IElementType previousTokenType, @Nonnull IElementType tokenType) {
         return true;

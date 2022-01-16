@@ -27,7 +27,7 @@ import javax.annotation.Nullable;
  * @author yole
  */
 public interface QualifiedNameProvider {
-  ExtensionPointName<QualifiedNameProvider> EP_NAME = ExtensionPointName.create("com.intellij.qualifiedNameProvider");
+  ExtensionPointName<QualifiedNameProvider> EP_NAME = ExtensionPointName.create("consulo.base.qualifiedNameProvider");
 
   @Nullable
   PsiElement adjustElementToCopy(PsiElement element);

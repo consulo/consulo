@@ -19,6 +19,7 @@ import com.intellij.psi.PsiManager;
 import com.intellij.psi.TokenType;
 import com.intellij.psi.impl.source.tree.Factory;
 import com.intellij.psi.util.PsiUtilCore;
+import consulo.container.plugin.PluginIds;
 
 /**
  * @author yole
@@ -27,7 +28,7 @@ public class LanguageTokenSeparatorGenerators extends LanguageExtension<TokenSep
   public static final LanguageTokenSeparatorGenerators INSTANCE = new LanguageTokenSeparatorGenerators();
 
   private LanguageTokenSeparatorGenerators() {
-    super("com.intellij.lang.tokenSeparatorGenerator", new TokenSeparatorGenerator() {
+    super(PluginIds.CONSULO_BASE + ".lang.tokenSeparatorGenerator", new TokenSeparatorGenerator() {
       @Override
       public ASTNode generateWhitespaceBetweenTokens(ASTNode left, ASTNode right) {
         Language l = PsiUtilCore.getNotAnyLanguage(left);

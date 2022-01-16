@@ -26,7 +26,7 @@ import javax.annotation.Nonnull;
  * @author nik
  */
 public abstract class GeneratedSourcesFilter {
-  public static final ExtensionPointName<GeneratedSourcesFilter> EP_NAME = ExtensionPointName.create("com.intellij.generatedSourcesFilter");
+  public static final ExtensionPointName<GeneratedSourcesFilter> EP_NAME = ExtensionPointName.create("consulo.base.generatedSourcesFilter");
 
   @RequiredReadAction
   public abstract boolean isGeneratedSource(@Nonnull VirtualFile file, @Nonnull Project project);

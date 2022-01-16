@@ -26,7 +26,7 @@ import javax.annotation.Nonnull;
  * @author yole
  */
 public interface DirectoryIndexExcludePolicy {
-  ExtensionPointName<DirectoryIndexExcludePolicy> EP_NAME = ExtensionPointName.create("com.intellij.directoryIndexExcludePolicy");
+  ExtensionPointName<DirectoryIndexExcludePolicy> EP_NAME = ExtensionPointName.create("consulo.base.directoryIndexExcludePolicy");
 
    @Nonnull
   VirtualFile[] getExcludeRootsForProject();

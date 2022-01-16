@@ -24,7 +24,7 @@ import javax.annotation.Nullable;
  * @author Konstantin Bulenkov
  */
 public interface VcsConfigurableProvider {
-  ExtensionPointName<VcsConfigurableProvider> EP_NAME = ExtensionPointName.create("com.intellij.vcsConfigurableProvider");
+  ExtensionPointName<VcsConfigurableProvider> EP_NAME = ExtensionPointName.create("consulo.base.vcsConfigurableProvider");
 
   @Nullable
   Configurable getConfigurable(Project project);

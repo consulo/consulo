@@ -8,7 +8,7 @@ import com.intellij.util.xmlb.annotations.Attribute;
  * @author peter
  */
 public class CustomizableConsoleFoldingBean extends AbstractExtensionPointBean {
-  public static final ExtensionPointName<CustomizableConsoleFoldingBean> EP_NAME = ExtensionPointName.create("com.intellij.stacktrace.fold");
+  public static final ExtensionPointName<CustomizableConsoleFoldingBean> EP_NAME = ExtensionPointName.create("consulo.base.stacktrace.fold");
 
   @Attribute("substring")
   public String substring;

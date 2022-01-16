@@ -37,7 +37,7 @@ public class PsiPackageSupportProviders {
   public static boolean isPackageSupported(@Nonnull Project project) {
     return CachedValuesManager.getManager(project).getCachedValue(project, () -> {
       boolean result = false;
-      List<PsiPackageSupportProvider> extensions = PsiPackageSupportProvider.EP_NAME.getExtensionList();
+      List<PsiPackageSupportProvider> extensions = PsiPackageSupportProvider.EP_NAME.getExtensionList(project.getApplication());
       ModuleManager moduleManager = ModuleManager.getInstance(project);
       loop:
       for (Module module : moduleManager.getModules()) {

@@ -17,19 +17,19 @@
 package com.intellij.psi.search.searches;
 
 import com.intellij.openapi.application.Application;
-import consulo.component.extension.ExtensionPoint;
-import consulo.component.extension.ExtensionPointName;
 import com.intellij.openapi.extensions.SimpleSmartExtensionPoint;
 import com.intellij.openapi.util.NotNullLazyValue;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.QueryExecutor;
 import com.intellij.util.QueryFactory;
-import com.intellij.util.SmartList;
+import consulo.component.extension.ExtensionPoint;
+import consulo.component.extension.ExtensionPointId;
+import consulo.container.plugin.PluginIds;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -39,15 +39,15 @@ public class ExtensibleQueryFactory<Result, Parameters> extends QueryFactory<Res
   private final NotNullLazyValue<SimpleSmartExtensionPoint<QueryExecutor<Result,Parameters>>> myPoint;
 
   protected ExtensibleQueryFactory() {
-    this("com.intellij");
+    this(PluginIds.CONSULO_BASE.getIdString());
   }
 
-  protected ExtensibleQueryFactory(@NonNls final String epNamespace) {
-    myPoint = new NotNullLazyValue<SimpleSmartExtensionPoint<QueryExecutor<Result, Parameters>>>() {
+  protected ExtensibleQueryFactory(final String epNamespace) {
+    myPoint = new NotNullLazyValue<>() {
       @Override
       @Nonnull
       protected SimpleSmartExtensionPoint<QueryExecutor<Result, Parameters>> compute() {
-        return new SimpleSmartExtensionPoint<QueryExecutor<Result, Parameters>>(new SmartList<QueryExecutor<Result, Parameters>>()){
+        return new SimpleSmartExtensionPoint<>(new ArrayList<>()){
           @Override
           @Nonnull
           protected ExtensionPoint<QueryExecutor<Result, Parameters>> getExtensionPoint() {
@@ -57,7 +57,7 @@ public class ExtensibleQueryFactory<Result, Parameters> extends QueryFactory<Res
               epName = epName.substring(pos+1);
             }
             epName = epNamespace + "." + StringUtil.decapitalize(epName);
-            return Application.get().getExtensionPoint(ExtensionPointName.create(epName));
+            return Application.get().getExtensionPoint(ExtensionPointId.of(epName));
           }
         };
       }
@@ -66,12 +66,7 @@ public class ExtensibleQueryFactory<Result, Parameters> extends QueryFactory<Res
 
   public void registerExecutor(final QueryExecutor<Result, Parameters> queryExecutor, Disposable parentDisposable) {
     registerExecutor(queryExecutor);
-    Disposer.register(parentDisposable, new Disposable() {
-      @Override
-      public void dispose() {
-        unregisterExecutor(queryExecutor);
-      }
-    });
+    Disposer.register(parentDisposable, () -> unregisterExecutor(queryExecutor));
   }
 
   @Override

@@ -32,7 +32,7 @@ import java.util.List;
  * @author cdr
  */
 public abstract class WolfTheProblemSolver {
-  public static final ExtensionPointName<Condition<VirtualFile>> FILTER_EP_NAME = ExtensionPointName.create("com.intellij.problemFileHighlightFilter");
+  public static final ExtensionPointName<Condition<VirtualFile>> FILTER_EP_NAME = ExtensionPointName.create("consulo.base.problemFileHighlightFilter");
 
   public static WolfTheProblemSolver getInstance(Project project) {
     return project.getComponent(WolfTheProblemSolver.class);

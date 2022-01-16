@@ -22,7 +22,7 @@ import javax.annotation.Nonnull;
 import java.util.List;
 
 public interface GutterMarkPreprocessor {
-  ExtensionPointName<GutterMarkPreprocessor> EP_NAME = ExtensionPointName.create("com.intellij.gutterMarkPreprocessor");
+  ExtensionPointName<GutterMarkPreprocessor> EP_NAME = ExtensionPointName.create("consulo.base.gutterMarkPreprocessor");
 
   @Nonnull
   List<GutterMark> processMarkers(@Nonnull List<GutterMark> list);

@@ -22,13 +22,14 @@ import com.intellij.openapi.actionSystem.impl.SimpleDataContext;
 import com.intellij.psi.PsiElement;
 import com.intellij.util.Function;
 import consulo.annotation.access.RequiredReadAction;
+import consulo.container.plugin.PluginIds;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public abstract class RunLineMarkerContributor {
-  static final LanguageExtension<RunLineMarkerContributor> EXTENSION = new LanguageExtension<>("com.intellij.runLineMarkerContributor");
+  static final LanguageExtension<RunLineMarkerContributor> EXTENSION = new LanguageExtension<>(PluginIds.CONSULO_BASE + ".runLineMarkerContributor");
 
   public static class Info {
     public final Image icon;

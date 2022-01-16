@@ -21,12 +21,13 @@ package com.intellij.lang;
 
 import com.intellij.lang.refactoring.NamesValidator;
 import com.intellij.openapi.project.Project;
+import consulo.container.plugin.PluginIds;
 
 public class LanguageNamesValidation extends LanguageExtension<NamesValidator> {
   public static final LanguageNamesValidation INSTANCE = new LanguageNamesValidation();
 
   private LanguageNamesValidation() {
-    super("com.intellij.lang.namesValidator", new DefaultNamesValidator());
+    super(PluginIds.CONSULO_BASE + ".lang.namesValidator", new DefaultNamesValidator());
   }
 
   protected static class DefaultNamesValidator implements NamesValidator {

@@ -23,7 +23,7 @@ import javax.annotation.Nonnull;
  * @author yole
  */
 public interface PsiTreeChangePreprocessor {
-  ExtensionPointName<PsiTreeChangePreprocessor> EP_NAME = ExtensionPointName.create("com.intellij.psi.treeChangePreprocessor");
+  ExtensionPointName<PsiTreeChangePreprocessor> EP_NAME = ExtensionPointName.create("consulo.base.psi.treeChangePreprocessor");
 
   void treeChanged(@Nonnull PsiTreeChangeEventImpl event);
 }

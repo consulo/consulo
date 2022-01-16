@@ -29,7 +29,7 @@ import com.intellij.openapi.util.registry.Registry;
  * @author konstantin.aleev
  */
 public abstract class RunDashboardContributor {
-  public static final ExtensionPointName<RunDashboardContributor> EP_NAME = ExtensionPointName.create("com.intellij.runDashboardContributor");
+  public static final ExtensionPointName<RunDashboardContributor> EP_NAME = ExtensionPointName.create("consulo.base.runDashboardContributor");
 
   private final ConfigurationType myType;
 

@@ -22,7 +22,7 @@
     <extensionPoint name="bundleLiveTemplateSet" beanClass="consulo.codeInsight.template.impl.BundleLiveTemplateSetEP"/>
   </extensionPoints>
 
-  <extensions defaultExtensionNs="com.intellij">
+  <extensions defaultExtensionNs="consulo.base">
     <bundledKeymap file="/keymap/Keymap_Default.xml"/>
     <bundledKeymap file="/keymap/Keymap_DefaultXWin.xml"/>
     <bundledKeymap file="/keymap/Keymap_DefaultGNOME.xml"/>

@@ -26,7 +26,7 @@ import javax.annotation.Nullable;
  * @author yole
  */
 public interface GotoDeclarationHandler {
-  ExtensionPointName<GotoDeclarationHandler> EP_NAME = ExtensionPointName.create("com.intellij.gotoDeclarationHandler");
+  ExtensionPointName<GotoDeclarationHandler> EP_NAME = ExtensionPointName.create("consulo.base.gotoDeclarationHandler");
 
   /**
    * Provides an array of target declarations for given {@code sourceElement}.

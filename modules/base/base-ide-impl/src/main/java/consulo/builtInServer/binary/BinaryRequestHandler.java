@@ -23,7 +23,7 @@ import javax.annotation.Nonnull;
 import java.util.UUID;
 
 public abstract class BinaryRequestHandler {
-  public static final ExtensionPointName<BinaryRequestHandler> EP_NAME = ExtensionPointName.create("com.intellij.binaryRequestHandler");
+  public static final ExtensionPointName<BinaryRequestHandler> EP_NAME = ExtensionPointName.create("consulo.base.binaryRequestHandler");
 
   /**
    * uuidgen on Mac OS X could be used to generate UUID

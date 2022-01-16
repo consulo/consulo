@@ -21,7 +21,7 @@ import javax.annotation.Nonnull;
 import consulo.ui.annotation.RequiredUIAccess;
 
 public abstract class DiffExtension {
-  public static final ExtensionPointName<DiffExtension> EP_NAME = ExtensionPointName.create("com.intellij.diff.DiffExtension");
+  public static final ExtensionPointName<DiffExtension> EP_NAME = ExtensionPointName.create("consulo.base.diff.DiffExtension");
 
   @RequiredUIAccess
   public abstract void onViewerCreated(@Nonnull FrameDiffTool.DiffViewer viewer,

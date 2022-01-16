@@ -23,7 +23,7 @@ import javax.annotation.Nullable;
  * @author yole
  */
 public interface HandleTypeFactory {
-  ExtensionPointName<HandleTypeFactory> EP_NAME = ExtensionPointName.create("com.intellij.handleTypeFactory"); 
+  ExtensionPointName<HandleTypeFactory> EP_NAME = ExtensionPointName.create("consulo.base.handleTypeFactory");
 
   @Nullable
   HandleType createHandleType(VirtualFile file);

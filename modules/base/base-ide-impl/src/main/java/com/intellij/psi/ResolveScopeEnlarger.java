@@ -26,7 +26,7 @@ import javax.annotation.Nullable;
  * @author peter
  */
 public abstract class ResolveScopeEnlarger {
-  public static final ExtensionPointName<ResolveScopeEnlarger> EP_NAME = ExtensionPointName.create("com.intellij.resolveScopeEnlarger");
+  public static final ExtensionPointName<ResolveScopeEnlarger> EP_NAME = ExtensionPointName.create("consulo.base.resolveScopeEnlarger");
 
   @Nullable
   public SearchScope getAdditionalResolveScope(@Nonnull VirtualFile file, Project project) {

@@ -23,7 +23,7 @@ import com.intellij.util.xmlb.annotations.Attribute;
  * @author yole
  */
 public class InternalTemplateBean {
-  public static ExtensionPointName<InternalTemplateBean> EP_NAME = ExtensionPointName.create("com.intellij.internalFileTemplate");
+  public static ExtensionPointName<InternalTemplateBean> EP_NAME = ExtensionPointName.create("consulo.base.internalFileTemplate");
   
   @Attribute("name")
   public String name;

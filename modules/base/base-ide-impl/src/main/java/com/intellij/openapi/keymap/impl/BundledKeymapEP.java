@@ -15,15 +15,18 @@
  */
 package com.intellij.openapi.keymap.impl;
 
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.extensions.AbstractExtensionPointBean;
-import consulo.component.extension.ExtensionPointName;
 import com.intellij.util.xmlb.annotations.Attribute;
+import consulo.component.extension.Extension;
+import consulo.component.extension.ExtensionList;
 
 /**
  * @author yole
  */
+@Extension(name = "bundledKeymap", component = Application.class)
 public class BundledKeymapEP extends AbstractExtensionPointBean {
-  public static final ExtensionPointName<BundledKeymapEP> EP_NAME = ExtensionPointName.create("com.intellij.bundledKeymap");
+  public static final ExtensionList<BundledKeymapEP, Application> EP_NAME = ExtensionList.of(BundledKeymapEP.class);
 
   @Attribute("file")
   public String file;

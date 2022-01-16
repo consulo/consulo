@@ -50,7 +50,7 @@ import java.util.*;
  * Date: Jan 20, 2005
  */
 @Singleton
-@State(name = "com.intellij.ide.ui.customization.CustomActionsSchema", storages = @Storage("customization.xml"))
+@State(name = "CustomActionsSchema", storages = @Storage("customization.xml"))
 public class CustomActionsSchema implements JDOMExternalizable {
   @NonNls
   private static final String ACTIONS_SCHEMA = "custom_actions_schema";

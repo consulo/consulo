@@ -14,7 +14,7 @@ import javax.annotation.Nonnull;
  * @author max
  */
 public interface UsageGroupingRuleProvider {
-  ExtensionPointName<UsageGroupingRuleProvider> EP_NAME = ExtensionPointName.create("com.intellij.usageGroupingRuleProvider");
+  ExtensionPointName<UsageGroupingRuleProvider> EP_NAME = ExtensionPointName.create("consulo.base.usageGroupingRuleProvider");
 
   @Nonnull
   UsageGroupingRule[] getActiveRules(@Nonnull Project project);

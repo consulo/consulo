@@ -25,7 +25,7 @@ import org.jdom.Text;
  * @author yole
  */
 public abstract class PathMacroFilter {
-  public static final ExtensionPointName<PathMacroFilter> EP_NAME = ExtensionPointName.create("com.intellij.pathMacroFilter");
+  public static final ExtensionPointName<PathMacroFilter> EP_NAME = ExtensionPointName.create("consulo.base.pathMacroFilter");
 
   public boolean skipPathMacros(Text element) {
     return false;

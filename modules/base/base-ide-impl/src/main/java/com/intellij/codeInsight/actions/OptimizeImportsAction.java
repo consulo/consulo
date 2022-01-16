@@ -22,6 +22,7 @@ import com.intellij.idea.ActionsBundle;
 import com.intellij.lang.ImportOptimizer;
 import com.intellij.lang.LanguageImportStatements;
 import com.intellij.openapi.actionSystem.*;
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.ex.EditorSettingsExternalizable;
@@ -47,8 +48,8 @@ public class OptimizeImportsAction extends AnAction {
   private static final String NO_IMPORTS_OPTIMIZED = "Unused imports not found";
   private static boolean myProcessVcsChangedFilesInTests;
 
-  public OptimizeImportsAction() {
-    List<ImportOptimizer> extensions = LanguageImportStatements.INSTANCE.getExtensions();
+  public OptimizeImportsAction(@Nonnull Application application) {
+    List<ImportOptimizer> extensions = LanguageImportStatements.INSTANCE.getExtensions(application);
 
     updatePresentation(getTemplatePresentation(), extensions);
   }

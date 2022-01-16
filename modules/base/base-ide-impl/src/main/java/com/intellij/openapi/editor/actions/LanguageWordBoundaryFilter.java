@@ -2,11 +2,12 @@
 package com.intellij.openapi.editor.actions;
 
 import com.intellij.lang.LanguageExtension;
+import consulo.container.plugin.PluginIds;
 
 public final class LanguageWordBoundaryFilter extends LanguageExtension<WordBoundaryFilter> {
   public static final LanguageWordBoundaryFilter INSTANCE = new LanguageWordBoundaryFilter();
 
   private LanguageWordBoundaryFilter() {
-    super("com.intellij.wordBoundaryFilter", new WordBoundaryFilter());
+    super(PluginIds.CONSULO_BASE + ".wordBoundaryFilter", new WordBoundaryFilter());
   }
 }

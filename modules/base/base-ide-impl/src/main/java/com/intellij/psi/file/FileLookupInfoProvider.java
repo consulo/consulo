@@ -27,7 +27,7 @@ import javax.annotation.Nonnull;
  * @author spleaner
  */
 public abstract class FileLookupInfoProvider {
-  public static ExtensionPointName<FileLookupInfoProvider> EP_NAME = ExtensionPointName.create("com.intellij.fileLookupInfoProvider");
+  public static ExtensionPointName<FileLookupInfoProvider> EP_NAME = ExtensionPointName.create("consulo.base.fileLookupInfoProvider");
 
   @Nonnull
   public abstract FileType[] getFileTypes();

@@ -16,6 +16,7 @@
 package com.intellij.lang;
 
 import com.intellij.codeInsight.editorActions.QuoteHandler;
+import consulo.container.plugin.PluginIds;
 
 /**
  * @author gregsh
@@ -24,6 +25,6 @@ public class LanguageQuoteHandling extends LanguageExtension<QuoteHandler> {
   public static final LanguageQuoteHandling INSTANCE = new LanguageQuoteHandling();
 
   private LanguageQuoteHandling() {
-    super("com.intellij.lang.quoteHandler");
+    super(PluginIds.CONSULO_BASE + ".lang.quoteHandler");
   }
 }

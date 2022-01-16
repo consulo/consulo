@@ -19,6 +19,7 @@
  */
 package com.intellij.openapi.util;
 
+import com.intellij.openapi.application.Application;
 import consulo.component.extension.ExtensionPointName;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import consulo.component.extension.KeyedLazyInstance;
@@ -100,6 +101,27 @@ public class KeyedExtensionCollector<T, KeyT> {
     return myEPName.hasAnyExtensions();
   }
 
+  @Nonnull
+  public List<T> getExtensions(@Nonnull Application application) {
+    List<? extends KeyedLazyInstance<T>> extensionList = myEPName.getExtensionList(application);
+
+    List<T> result = new ArrayList<>();
+    for (KeyedLazyInstance<T> bean : extensionList) {
+      try {
+        result.add(bean.getInstance());
+      }
+      catch (ProcessCanceledException e) {
+        throw e;
+      }
+      catch (Throwable e) {
+        LOG.error(e);
+      }
+    }
+
+    return result;
+  }
+
+  @Deprecated
   @Nonnull
   public List<T> getExtensions() {
     List<? extends KeyedLazyInstance<T>> extensionList = myEPName.getExtensionList();

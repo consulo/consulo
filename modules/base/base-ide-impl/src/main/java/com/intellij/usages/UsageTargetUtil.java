@@ -28,7 +28,7 @@ import java.util.Collections;
 import java.util.List;
 
 public class UsageTargetUtil {
-  private static final ExtensionPointName<UsageTargetProvider> EP_NAME = ExtensionPointName.create("com.intellij.usageTargetProvider");
+  private static final ExtensionPointName<UsageTargetProvider> EP_NAME = ExtensionPointName.create("consulo.base.usageTargetProvider");
 
   public static UsageTarget[] findUsageTargets(DataProvider dataProvider) {
     Editor editor = dataProvider.getDataUnchecked(PlatformDataKeys.EDITOR);

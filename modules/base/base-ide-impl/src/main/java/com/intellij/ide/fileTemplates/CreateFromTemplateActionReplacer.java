@@ -23,7 +23,7 @@ import javax.annotation.Nullable;
 
 public interface CreateFromTemplateActionReplacer {
   ExtensionPointName<CreateFromTemplateActionReplacer> CREATE_FROM_TEMPLATE_REPLACER =
-    ExtensionPointName.create("com.intellij.createFromTemplateActionReplacer");
+    ExtensionPointName.create("consulo.base.createFromTemplateActionReplacer");
 
   @Nullable
   AnAction replaceCreateFromFileTemplateAction(FileTemplate fileTemplate);

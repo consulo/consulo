@@ -31,7 +31,7 @@ import java.util.function.Consumer;
  * @since 2019-02-25
  */
 public interface ExtensionExtender<T> {
-  ExtensionPointName<KeyedLazyInstanceEP<ExtensionExtender>> EP_NAME = ExtensionPointName.create("com.intellij.extensionExtender");
+  ExtensionPointName<KeyedLazyInstanceEP<ExtensionExtender>> EP_NAME = ExtensionPointName.create("consulo.base.extensionExtender");
 
   void extend(@Nonnull ComponentManager componentManager, @Nonnull Consumer<T> consumer);
 }

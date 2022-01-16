@@ -24,7 +24,7 @@ import consulo.component.messagebus.Topic;
 import javax.annotation.Nonnull;
 
 public interface UsageFilteringRuleProvider {
-  ExtensionPointName<UsageFilteringRuleProvider> EP_NAME = ExtensionPointName.create("com.intellij.usageFilteringRuleProvider");
+  ExtensionPointName<UsageFilteringRuleProvider> EP_NAME = ExtensionPointName.create("consulo.base.usageFilteringRuleProvider");
 
   Topic<Runnable> RULES_CHANGED = new Topic<Runnable>("usave view rules changed", Runnable.class);
 

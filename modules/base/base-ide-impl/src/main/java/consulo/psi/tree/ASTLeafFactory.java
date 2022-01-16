@@ -17,6 +17,7 @@ package consulo.psi.tree;
 
 import com.intellij.psi.impl.source.tree.LeafElement;
 import com.intellij.psi.tree.IElementType;
+import consulo.container.plugin.PluginIds;
 import consulo.lang.LanguageVersion;
 
 import javax.annotation.Nonnull;
@@ -27,7 +28,7 @@ import java.util.function.Predicate;
  * @since 2:13/02.04.13
  */
 public interface ASTLeafFactory extends Predicate<IElementType> {
-  ElementTypeEntryExtensionCollector<ASTLeafFactory> EP = ElementTypeEntryExtensionCollector.create("com.intellij.lang.ast.leafFactory");
+  ElementTypeEntryExtensionCollector<ASTLeafFactory> EP = ElementTypeEntryExtensionCollector.create(PluginIds.CONSULO_BASE + ".lang.ast.leafFactory");
 
   @Nonnull
   LeafElement createLeaf(@Nonnull IElementType type, @Nonnull LanguageVersion languageVersion, @Nonnull CharSequence text);

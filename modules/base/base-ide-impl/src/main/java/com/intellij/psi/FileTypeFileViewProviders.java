@@ -20,11 +20,12 @@
 package com.intellij.psi;
 
 import com.intellij.openapi.fileTypes.FileTypeExtension;
+import consulo.container.plugin.PluginIds;
 
 public class FileTypeFileViewProviders extends FileTypeExtension<FileViewProviderFactory> {
   public static FileTypeFileViewProviders INSTANCE = new FileTypeFileViewProviders();
 
   private FileTypeFileViewProviders() {
-    super("com.intellij.fileType.fileViewProviderFactory");
+    super(PluginIds.CONSULO_BASE + ".fileType.fileViewProviderFactory");
   }
 }

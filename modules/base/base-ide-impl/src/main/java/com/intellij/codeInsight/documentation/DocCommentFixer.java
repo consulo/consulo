@@ -19,6 +19,8 @@ import com.intellij.lang.LanguageExtension;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiComment;
+import consulo.container.plugin.PluginIds;
+
 import javax.annotation.Nonnull;
 
 /**
@@ -27,7 +29,7 @@ import javax.annotation.Nonnull;
  */
 public interface DocCommentFixer {
 
-  LanguageExtension<DocCommentFixer> EXTENSION = new LanguageExtension<DocCommentFixer>("com.intellij.lang.documentationFixer");
+  LanguageExtension<DocCommentFixer> EXTENSION = new LanguageExtension<>(PluginIds.CONSULO_BASE + ".lang.documentationFixer");
 
   // TODO den add doc
   void fixComment(@Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiComment comment);

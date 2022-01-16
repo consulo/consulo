@@ -28,7 +28,7 @@ import consulo.logging.Logger;
 public class CacheBuilderEP implements PluginAware {
   private static final Logger LOG = Logger.getInstance(CacheBuilderEP.class);
 
-  public static final ExtensionPointName<CacheBuilderEP> EP_NAME = ExtensionPointName.create("com.intellij.cacheBuilder");
+  public static final ExtensionPointName<CacheBuilderEP> EP_NAME = ExtensionPointName.create("consulo.base.cacheBuilder");
 
 
   @Attribute("fileType")

@@ -24,7 +24,7 @@ import java.util.List;
 
 public abstract class ExecutionTargetProvider {
   public static final ExtensionPointName<ExecutionTargetProvider> EXTENSION_NAME =
-    ExtensionPointName.create("com.intellij.executionTargetProvider");
+    ExtensionPointName.create("consulo.base.executionTargetProvider");
 
   @Nonnull
   public abstract List<ExecutionTarget> getTargets(@Nonnull Project project, @Nonnull RunnerAndConfigurationSettings configuration);

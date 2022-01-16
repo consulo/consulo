@@ -72,7 +72,7 @@ public interface TextEditorHighlightingPassFactory {
 
   }
 
-  ExtensionPointName<TextEditorHighlightingPassFactory> EP_NAME = ExtensionPointName.create("com.intellij.textEditorHighlightingPassFactory");
+  ExtensionPointName<TextEditorHighlightingPassFactory> EP_NAME = ExtensionPointName.create("consulo.base.textEditorHighlightingPassFactory");
 
   void register(@Nonnull Registrar registrar);
 

@@ -28,7 +28,7 @@ public final class AsyncEventSupport {
   private static final Logger LOG = Logger.getInstance(AsyncEventSupport.class);
 
   //@ApiStatus.Internal
-  public static final ExtensionPointName<AsyncFileListener> EP_NAME = ExtensionPointName.create("com.intellij.vfs.asyncListener");
+  public static final ExtensionPointName<AsyncFileListener> EP_NAME = ExtensionPointName.create("consulo.base.vfs.asyncListener");
   private static boolean ourSuppressAppliers;
 
   public static void startListening() {

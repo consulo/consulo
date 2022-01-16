@@ -31,7 +31,7 @@ import java.util.Map;
  */
 @Singleton
 public class PatternCompilerFactoryImpl extends PatternCompilerFactory {
-  public static final ExtensionPointName<PatternClassBean> PATTERN_CLASS_EP = ExtensionPointName.create("com.intellij.patterns.patternClass");
+  public static final ExtensionPointName<PatternClassBean> PATTERN_CLASS_EP = ExtensionPointName.create("consulo.base.patterns.patternClass");
 
 
   private final Map<String, Class[]> myClasses = ConcurrentFactoryMap.createMap(key -> {

@@ -34,7 +34,7 @@ import java.util.function.Supplier;
  * @since 25-Nov-16.
  */
 public class ModuleExtensionProviders {
-  private static final ExtensionPointName<ModuleExtensionProviderEP> EP_NAME = ExtensionPointName.create("com.intellij.moduleExtensionProvider");
+  private static final ExtensionPointName<ModuleExtensionProviderEP> EP_NAME = ExtensionPointName.create("consulo.base.moduleExtensionProvider");
 
   private static final Supplier<List<ModuleExtensionProviderEP>> ourExtensions = AtomicNotNullLazyValue.createValue(() -> {
     List<ModuleExtensionProviderEP> extensions = EP_NAME.getExtensionList();

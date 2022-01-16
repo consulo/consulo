@@ -18,7 +18,7 @@
     <extensionPoint name="taskByVfsChange" interface="consulo.backgroundTaskByVfsChange.BackgroundTaskByVfsChangeProvider" />
   </extensionPoints>
 
-  <extensions defaultExtensionNs="com.intellij">
+  <extensions defaultExtensionNs="consulo.base">
     <treeStructureProvider implementation="consulo.backgroundTaskByVfsChange.BackgroundTaskByVfsProjectViewProvider" order="last" />
     <generatedSourcesFilter implementation="consulo.backgroundTaskByVfsChange.BackgroundTaskByVfsGeneratedSourcesFilter" />
     <projectService serviceInterface="consulo.backgroundTaskByVfsChange.BackgroundTaskByVfsChangeManager"

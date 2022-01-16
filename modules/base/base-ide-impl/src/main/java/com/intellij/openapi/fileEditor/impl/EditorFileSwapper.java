@@ -28,7 +28,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public abstract class EditorFileSwapper {
-  public static final ExtensionPointName<EditorFileSwapper> EP_NAME = ExtensionPointName.create("com.intellij.editorFileSwapper");
+  public static final ExtensionPointName<EditorFileSwapper> EP_NAME = ExtensionPointName.create("consulo.base.editorFileSwapper");
 
   @Nullable
   public abstract Pair<VirtualFile, Integer> getFileToSwapTo(Project project, EditorWithProviderComposite editorWithProviderComposite);

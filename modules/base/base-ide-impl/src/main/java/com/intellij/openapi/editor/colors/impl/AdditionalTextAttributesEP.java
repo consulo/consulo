@@ -15,11 +15,11 @@
  */
 package com.intellij.openapi.editor.colors.impl;
 
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.extensions.AbstractExtensionPointBean;
-import consulo.component.extension.ExtensionPointName;
 import com.intellij.util.xmlb.annotations.Attribute;
-
-import java.lang.String;
+import consulo.component.extension.Extension;
+import consulo.component.extension.ExtensionList;
 
 /**
  * A way to provide additional colors to color schemes.
@@ -28,8 +28,9 @@ import java.lang.String;
  * @author VISTALL
  * @since 12.1
  */
+@Extension(name = "additionalTextAttributes", component = Application.class)
 public class AdditionalTextAttributesEP extends AbstractExtensionPointBean {
-  public static final ExtensionPointName<AdditionalTextAttributesEP> EP_NAME = ExtensionPointName.create("com.intellij.additionalTextAttributes");
+  public static final ExtensionList<AdditionalTextAttributesEP, Application> EP = ExtensionList.of(AdditionalTextAttributesEP.class);
 
   @Attribute("scheme")
   public String scheme;

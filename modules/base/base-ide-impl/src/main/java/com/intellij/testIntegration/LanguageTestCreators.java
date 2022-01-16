@@ -17,11 +17,12 @@
 package com.intellij.testIntegration;
 
 import com.intellij.lang.LanguageExtension;
+import consulo.container.plugin.PluginIds;
 
 public class LanguageTestCreators extends LanguageExtension<TestCreator> {
   public static final LanguageTestCreators INSTANCE = new LanguageTestCreators();
 
   public LanguageTestCreators() {
-    super("com.intellij.testCreator");
+    super(PluginIds.CONSULO_BASE + ".testCreator");
   }
 }

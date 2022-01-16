@@ -16,7 +16,7 @@ import java.util.List;
  * @author traff
  */
 public abstract class PathMappingProvider {
-  public static ExtensionPointName<PathMappingProvider> EP_NAME = ExtensionPointName.create("com.intellij.remote.pathMappingProvider");
+  public static ExtensionPointName<PathMappingProvider> EP_NAME = ExtensionPointName.create("consulo.base.remote.pathMappingProvider");
 
   public static List<PathMappingProvider> getSuitableMappingProviders(final RemoteSdkAdditionalData data) {
     return Lists

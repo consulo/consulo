@@ -26,7 +26,7 @@ import com.intellij.util.xmlb.annotations.Attribute;
  * @author yole
  */
 public class QuoteHandlerEP extends AbstractExtensionPointBean implements KeyedLazyInstance<QuoteHandler> {
-  public static final ExtensionPointName<QuoteHandlerEP> EP_NAME = ExtensionPointName.create("com.intellij.quoteHandler");
+  public static final ExtensionPointName<QuoteHandlerEP> EP_NAME = ExtensionPointName.create("consulo.base.quoteHandler");
 
   // these must be public for scrambling compatibility
   @Attribute("fileType")

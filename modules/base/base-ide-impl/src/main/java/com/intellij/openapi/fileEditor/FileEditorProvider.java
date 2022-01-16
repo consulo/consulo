@@ -34,7 +34,7 @@ import javax.annotation.Nonnull;
  * @see DumbAware
  */
 public interface FileEditorProvider {
-  ExtensionPointName<FileEditorProvider> EP_FILE_EDITOR_PROVIDER = ExtensionPointName.create("com.intellij.fileEditorProvider");
+  ExtensionPointName<FileEditorProvider> EP_FILE_EDITOR_PROVIDER = ExtensionPointName.create("consulo.base.fileEditorProvider");
   Key<FileEditorProvider> KEY = Key.create("com.intellij.fileEditorProvider");
 
   /**

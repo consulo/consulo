@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
  */
 
 public class RunAnythingHelpGroup<P extends RunAnythingProvider> extends RunAnythingGroupBase {
-  public static final ExtensionPointName<RunAnythingGroup> EP_NAME = ExtensionPointName.create("com.intellij.runAnything.helpGroup");
+  public static final ExtensionPointName<RunAnythingGroup> EP_NAME = ExtensionPointName.create("consulo.base.runAnything.helpGroup");
 
   @Nonnull
   private String myTitle = "undefined";
